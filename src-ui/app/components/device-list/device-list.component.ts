@@ -16,6 +16,10 @@ import { LighthouseService } from 'src-ui/app/services/lighthouse.service';
 import { filterInPlace } from 'src-ui/app/utils/arrays';
 import { combineLatest, debounceTime, distinctUntilChanged, firstValueFrom, map, tap } from 'rxjs';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
+import {
+  DevicePowerState,
+  DevicePowerAction,
+} from '../device-power-button/device-power-button.component';
 
 type DisplayCategory = OpenVRDisplayCategory | LighthouseDisplayCategory;
 
@@ -360,5 +364,34 @@ export class DeviceListComponent implements OnInit {
       devices: 'ALL',
     } as EventLogLighthouseSetPowerState);
     await Promise.all(devices.map(async (device) => this.lighthouse.setPowerState(device, state)));
+  }
+
+  // Helper methods for power button component
+  getBulkLighthousePowerState(category: LighthouseDisplayCategory): DevicePowerState {
+    if (category.canBulkPowerOn) {
+      return 'off';
+    } else if (category.canBulkPowerOff) {
+      return 'on';
+    }
+    return 'unknown';
+  }
+
+  canShowBulkLighthousePowerButton(category: LighthouseDisplayCategory): boolean {
+    return category.canBulkPowerOn || category.canBulkPowerOff;
+  }
+
+  async handleBulkLighthousePowerAction(
+    category: LighthouseDisplayCategory,
+    action: DevicePowerAction
+  ) {
+    if (action === 'power-on' || action === 'power-off') {
+      await this.clickBulkPowerLighthouseDevices(category);
+    }
+  }
+
+  async handleTurnOffAllAction(action: DevicePowerAction) {
+    if (action === 'power-off') {
+      await this.turnOffAllOVRDevices();
+    }
   }
 }

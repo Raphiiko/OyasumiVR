@@ -1,0 +1,131 @@
+:host {
+  display: inline-block;
+}
+
+.btn-power {
+  background: var(--color-surface-1);
+  color: var(--color-text-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.25em;
+  border: 1px solid transparent;
+  position: relative;
+  transition: all 0.1s ease;
+  padding: 0.25em 0.25em;
+  overflow: hidden;
+  border-color: var(--color-surface-3);
+  min-width: 2.5em;
+  min-height: 2.5em;
+  width: 2.5em;
+  height: 2.5em;
+
+  .material-icons {
+    font-size: 1.5em;
+    line-height: 1;
+  }
+
+  .small-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5em;
+    height: 1.5em;
+    position: relative;
+    --spinner-color: var(--color-text-2);
+
+    &:after {
+      content: ' ';
+      display: block;
+      width: 1.2em;
+      height: 1.2em;
+      border-radius: 50%;
+      border: 2px solid var(--spinner-color);
+      border-color: var(--spinner-color) transparent var(--spinner-color) transparent;
+      animation: small-spinner 0.75s linear infinite;
+    }
+
+    &.power-on {
+      --spinner-color: var(--color-alert-success);
+    }
+
+    &.power-off {
+      --spinner-color: var(--color-alert-error);
+    }
+
+    &.power-unknown {
+      --spinner-color: var(--color-text-1);
+    }
+  }
+
+  &:disabled {
+    color: var(--color-text-4);
+    cursor: not-allowed;
+  }
+
+  &:not(:disabled) {
+    cursor: pointer;
+
+    &.power-off {
+      &:hover {
+        background: var(--color-alert-error);
+        color: var(--color-on-alert-error);
+      }
+    }
+
+    &.power-on {
+      &:hover {
+        background: var(--color-alert-success);
+        color: var(--color-on-alert-success);
+      }
+    }
+
+    &.power-unknown {
+      &:hover {
+        background: var(--color-text-1);
+        color: var(--color-surface-1);
+      }
+    }
+
+    &:active:after {
+      opacity: 0.25;
+    }
+  }
+
+  &:after {
+    content: '';
+    transition: opacity 0.1s ease;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    opacity: 0;
+  }
+
+  &.power-attention {
+    color: var(--color-alert-warning);
+  }
+
+  &.power-off {
+    color: var(--color-alert-error);
+  }
+
+  &.power-on {
+    color: var(--color-alert-success);
+  }
+
+  &.power-unknown {
+    color: var(--color-text-1);
+  }
+}
+
+@keyframes small-spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

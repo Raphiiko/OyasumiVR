@@ -31,8 +31,8 @@ export class TurnOnLighthousesOnOyasumiStartAutomationService {
       // Turn on any lighthouse that is detected within the next 20 seconds
       this.lighthouse.devices
         .pipe(
-          // Stop detection after 20 seconds
-          takeUntil(of(null).pipe(delay(20000))),
+          // Stop detection after 30 seconds
+          takeUntil(of(null).pipe(delay(30000))),
           // Try to get most in one go
           debounceTime(500)
         )
@@ -54,7 +54,6 @@ export class TurnOnLighthousesOnOyasumiStartAutomationService {
               devices: 'ALL',
               state: 'on',
             } as EventLogLighthouseSetPowerState);
-            console.warn('Turning on lighthouses on oyasumi start automation', devices);
           }
           devices.forEach((lighthouse) => this.lighthouse.setPowerState(lighthouse, 'on'));
         });

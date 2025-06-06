@@ -77,14 +77,31 @@
   filter: invert(91%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%) contrast(100%);
 }
 
+.btn-turn-off-all-wrapper {
+  display: flex;
+  align-items: center;
+}
+
 .btn-turn-off-all {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  padding: 0.25em 0.5em;
+  border: none;
+  cursor: pointer;
+
   .category-icon {
-    margin-right: 0.4em;
+    width: 1.5em;
+    height: 1.5em;
+    margin-right: 0;
     filter: invert(24%) sepia(84%) saturate(1782%) hue-rotate(340deg) brightness(106%) contrast(93%);
+    transition: filter 0.1s ease;
   }
 
-  > i.material-icons {
-    margin-left: -0.3em;
+  .material-icons {
+    font-size: 1.5em;
+    line-height: 1;
   }
 
   &:hover {

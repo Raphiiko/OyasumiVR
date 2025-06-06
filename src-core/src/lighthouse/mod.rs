@@ -356,7 +356,7 @@ async fn handle_discovered_device(device: Device) {
         }
     };
     // Check if it starts with known prefixes
-    if !device_name.starts_with("LHB-") && !device_name.starts_with("HTC BS") {
+    if (!device_name.starts_with("LHB-") && !device_name.starts_with("HTC BS")) || device_name == "LHB-00000000" {
         return;
     }
     // Get the device's services

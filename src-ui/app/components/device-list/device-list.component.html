@@ -1,17 +1,17 @@
 <div class="pane">
   <div class="pane-title">
     <span translate>comp.device-list.title</span>
-    <button
-      class="btn-power power-off btn-turn-off-all"
-      *ngIf="devicesCanPowerOff"
-      [@fade]
-      (click)="turnOffAllOVRDevices()"
-    >
-      <img [src]="'/assets/img/icon_controller.png'" class="category-icon" />
-      <img [src]="'/assets/img/icon_tracker.png'" class="category-icon" />
-      &nbsp;
-      <i class="material-icons">power_settings_new</i>
-    </button>
+    <div class="btn-turn-off-all-wrapper" *ngIf="devicesCanPowerOff" [@fade]>
+      <button
+        class="btn-turn-off-all btn-power power-off"
+        [title]="'Turn off all devices'"
+        (click)="turnOffAllOVRDevices()"
+      >
+        <img [src]="'/assets/img/icon_controller.png'" class="category-icon" />
+        <img [src]="'/assets/img/icon_tracker.png'" class="category-icon" />
+        <i class="material-icons">power_settings_new</i>
+      </button>
+    </div>
   </div>
   <div class="device-list">
     <div
@@ -24,14 +24,6 @@
           <div class="device-list-category-header-label">
             <span>{{ category.label | translate }}</span>
           </div>
-          <button
-            class="btn-power power-off"
-            *ngIf="category.canBulkPowerOff"
-            [@fade]
-            (click)="turnOffOVRDevices(category)"
-          >
-            <i class="material-icons">power_settings_new</i>
-          </button>
         </div>
         <app-device-list-item
           *ngFor="let device of category.devices"
@@ -46,29 +38,25 @@
             <span>{{ category.label | translate }}</span>
           </div>
 
-          <button
-            class="btn-power"
+          <app-device-power-button
             id="btn-lh-bulk-power"
-            [class.power-off]="category.canBulkPowerOff"
-            [class.power-on]="category.canBulkPowerOn"
-            *ngIf="category.canBulkPowerOff || category.canBulkPowerOn"
-            (click)="clickBulkPowerLighthouseDevices(category)"
-            (contextmenu)="rightClickBulkPowerLighthouseDevices()"
-            [ngStyle]="{ 'anchor-name': '--anchor-lh-bulk-power-button' }"
+            *ngIf="canShowBulkLighthousePowerButton(category)"
+            [powerState]="getBulkLighthousePowerState(category)"
+            [anchorName]="'--anchor-lh-bulk-power-button'"
+            (powerAction)="handleBulkLighthousePowerAction(category, $event)"
+            (rightClick)="rightClickBulkPowerLighthouseDevices()"
             @fade
-          >
-            <i class="material-icons">power_settings_new</i>
-          </button>
+          ></app-device-power-button>
           <div
             @fade
             (clickOutside)="onClickOutsideLHStatePopover($event)"
             *ngIf="showLHStatePopover"
           >
-            <app-device-list-lh-state-popover
+            <app-lighthouse-force-state-popover
               (action)="onForceLHState($event)"
               [style.position-anchor]="'--anchor-lh-bulk-power-button'"
             >
-            </app-device-list-lh-state-popover>
+            </app-lighthouse-force-state-popover>
           </div>
         </div>
         <app-device-list-item

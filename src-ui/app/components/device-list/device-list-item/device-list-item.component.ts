@@ -30,6 +30,10 @@ import {
   LighthouseV1IdWizardModalInputModel,
   LighthouseV1IdWizardModalOutputModel,
 } from '../../lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
+import {
+  DevicePowerState,
+  DevicePowerAction,
+} from '../../device-power-button/device-power-button.component';
 import { isEqual } from 'lodash';
 
 @Component({
@@ -308,5 +312,35 @@ export class DeviceListItemComponent implements OnInit {
     const targetId = ($event.target as HTMLElement).id;
     if (targetId === 'btn-power-' + this.cssId) return;
     this.showLHStatePopover = false;
+  }
+
+  // Helper methods for the new power button component
+  getDevicePowerState(): DevicePowerState {
+    switch (this.powerButtonState) {
+      case 'turn_off':
+        return 'on';
+      case 'turn_on':
+        return 'off';
+      case 'turn_off_busy':
+        return 'turning-off';
+      case 'turn_on_busy':
+        return 'turning-on';
+      case 'turn_on_off':
+      case 'turn_on_off_busy':
+      case 'attention':
+      case 'hide':
+      default:
+        return 'unknown';
+    }
+  }
+
+  canShowPowerButton(): boolean {
+    return this.powerButtonState !== 'hide';
+  }
+
+  async handleDevicePowerAction(action: DevicePowerAction) {
+    if (action === 'power-off' || action === 'power-on') {
+      await this.clickDevicePowerButton();
+    }
   }
 }

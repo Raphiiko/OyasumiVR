@@ -103,20 +103,6 @@
   }
 }
 
-.small-spinner {
-  &.power-on {
-    --spinner-color: var(--color-alert-success);
-  }
-
-  &.power-off {
-    --spinner-color: var(--color-alert-error);
-  }
-
-  &.power-unknown {
-    --spinner-color: var(--color-text-1);
-  }
-}
-
 .category-icon {
   width: 1.5em;
   height: 1.5em;
