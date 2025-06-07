@@ -1,6 +1,0 @@
----
-description: 
-globs: 
-alwaysApply: false
----
-Never create new angular modules. This software has a single angular module, called AppModule. You can register everything in there.
