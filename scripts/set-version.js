@@ -7,7 +7,7 @@ if (process.argv.length <= 2) {
 }
 let version = process.argv[2];
 if (version !== 'DEV' && !semver(version)) {
-  console.error('Provided version from id semver format');
+  console.error('Provided version is not a valid semver');
   process.exit(1);
 }
 

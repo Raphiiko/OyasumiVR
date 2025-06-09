@@ -45,6 +45,7 @@ jobs:
         uses: mindsers/changelog-reader-action@v2
         with:
           validation_level: warn
+          validation_depth: 1
           version: Unreleased
           path: ./CHANGELOG.md
       - name: Build and release OyasumiVR development build
