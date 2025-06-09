@@ -12,17 +12,17 @@ export abstract class EventLogEntryParser<T extends EventLogBase> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  headerInfoTitleParams(entry: T): { [s: string]: string } {
+  headerInfoTitleParams(_entry: T): { [s: string]: string } {
     return {};
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  headerInfoSubTitle(entry: T): string {
+  headerInfoSubTitle(_entry: T): string {
     return '';
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  headerInfoSubTitleParams(entry: T): { [s: string]: string } {
+  headerInfoSubTitleParams(_entry: T): { [s: string]: string } {
     return {};
   }
 }
