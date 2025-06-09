@@ -53,6 +53,7 @@ encodeImageToBlurhash('./src-ui/assets/splashscreen/splash.jpg').then((hash) => 
   );
 });
 
+
 //
 // COPY DEPENDENCIES
 //

@@ -16,7 +16,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { vshrink } from '../../../../utils/animations';
 import { shuffle } from 'lodash';
 import { warn } from '@tauri-apps/plugin-log';
-import translationContributors from '../../../../../../docs/translation_contributors.json';
+import translationContributorData from '../../../../../../docs/translation_contributors.json';
 import { fetch } from '@tauri-apps/plugin-http';
 
 interface SupporterTier {
@@ -42,7 +42,7 @@ interface TranslationContributor {
 })
 export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
   protected readonly FLAVOUR = FLAVOUR;
-  protected translationContributors: TranslationContributor[] = translationContributors;
+  protected translationContributors: TranslationContributor[] = [];
   private supportersScrolling = false;
 
   version?: string;
@@ -59,6 +59,7 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
     private background: BackgroundService,
     private destroyRef: DestroyRef
   ) {
+    let translationContributors: TranslationContributor[] = translationContributorData;
     // Change flags in translation contributors for CN compliance.
     if (FLAVOUR === 'STEAM_CN') {
       const cnComplianceFix = (author: TranslationContributor): TranslationContributor => {
@@ -67,30 +68,37 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
         return author;
       };
 
-      this.translationContributors = this.translationContributors.map(cnComplianceFix);
+      translationContributors = translationContributors.map((contribs) =>
+        cnComplianceFix(contribs)
+      );
     }
 
-    function reorderList<T>(arr: T[], colCount: number): T[] {
-      // Determine the number of items in each column (row fill order)
-      const itemsInCol: number[] = [];
-      const rowCount = Math.ceil(arr.length / colCount);
-      for (let i = 0; i < colCount; i++)
-        itemsInCol.push(i < arr.length % colCount ? rowCount : rowCount - 1);
+    this.buildTranslationContributors(translationContributors, 4);
+  }
 
-      // Put the items in columns (column fill order)
-      const columns: T[][] = itemsInCol.reduce((acc, e, i, source) => {
-        const offset = source.slice(0, i).reduce((_acc, _e) => _acc + _e, 0);
-        acc[i] = arr.slice(offset, offset + e);
-        return acc;
-      }, [] as T[][]);
-
-      // Reconstruct the array from the columns
-      return new Array<T>(arr.length)
-        .fill(undefined as T)
-        .map((_, index) => columns[index % colCount][Math.floor(index / colCount)]);
+  private buildTranslationContributors(
+    translationContributors: TranslationContributor[],
+    columns: 4
+  ) {
+    const matrix: TranslationContributor[][] = [];
+    const rows = Math.ceil(translationContributors.length / columns);
+    let i = 0;
+    for (let column = 0; column < columns; column++) {
+      for (let row = 0; row < rows; row++) {
+        if (i < translationContributors.length) {
+          if (!matrix[column]) matrix[column] = [];
+          matrix[column][row] = translationContributors[i];
+          i++;
+        }
+      }
     }
-
-    this.translationContributors = reorderList(this.translationContributors, 3);
+    for (let row = 0; row < rows; row++) {
+      for (let column = 0; column < columns; column++) {
+        if (matrix[column][row]) {
+          this.translationContributors.push(matrix[column][row]);
+        }
+      }
+    }
   }
 
   async ngOnInit() {
