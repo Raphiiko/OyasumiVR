@@ -251,6 +251,7 @@ import { RunAutomationsViewComponent } from './views/dashboard-view/views/run-au
 import { VRChatGroupAutomationsService } from './services/vrchat-group-automations.service';
 import { RunAutomationsService } from './services/run-automations.service';
 import { openUrl } from '@tauri-apps/plugin-opener';
+import { emit as globalEmit } from '@tauri-apps/api/event';
 
 [
   localeEN,
@@ -539,6 +540,10 @@ export class AppModule {
   private async logInit<T>(action: string, promise: Promise<T>): Promise<T> {
     const TIMEOUT = 30000;
     await info(`[Init] Running ${action}`);
+    await globalEmit('init_action', {
+      action,
+      done: false,
+    });
     try {
       const result = await pTimeout<T>(
         promise,
@@ -565,109 +570,87 @@ export class AppModule {
         (async () => {
           if (!(await this.elevationCheck())) return;
           const initStartTime = Date.now();
-          await this.logInit(
-            'DeveloperDebugService initialization',
-            this.developerDebugService.init()
-          );
+          await this.logInit('Initializing dev debug services', this.developerDebugService.init());
           // Clean cache
-          await this.logInit('cache clean', CachedValue.cleanCache()).catch(() => {}); // Allow initialization to continue if failed
+          await this.logInit('Cleaning cache', CachedValue.cleanCache()).catch(() => {}); // Allow initialization to continue if failed
           // Preload assets (Not blocking)
-          this.logInit('asset preload', this.preloadAssets());
+          this.logInit('Preloading assets', this.preloadAssets());
           // Initialize base utilities
           await Promise.all([
-            this.logInit('AppSettingsService initialization', this.appSettingsService.init()),
-            this.logInit('EventLogService initialization', this.eventLog.init()),
-            this.logInit(
-              'AutomationConfigService initialization',
-              this.automationConfigService.init()
-            ),
-            this.logInit('DeepLinkService initialization', this.deepLinkService.init()),
+            this.logInit('Initializing app settings', this.appSettingsService.init()),
+            this.logInit('Initializing event log', this.eventLog.init()),
+            this.logInit('Initializing automation config', this.automationConfigService.init()),
+            this.logInit('Initializing deep linking', this.deepLinkService.init()),
           ]);
-          await this.logInit('SystemTrayService initialization', this.systemTrayService.init());
+          await this.logInit('Initializing system tray', this.systemTrayService.init());
           // Initialize telemetry
-          await Promise.all([
-            this.logInit('TelemetryService initialization', this.telemetryService.init()),
-          ]);
+          await Promise.all([this.logInit('Initializing telemetry', this.telemetryService.init())]);
           // Initialize "base" services
           await Promise.all([
-            this.logInit('OpenVRService initialization', this.openvrService.init()),
-            this.logInit('OscService initialization', this.oscService.init())
+            this.logInit('Initializing OpenVR', this.openvrService.init()),
+            this.logInit('Initializing OSC', this.oscService.init())
+              .then(() => this.logInit('Initializing OSC control', this.oscControlService.init()))
               .then(() =>
-                this.logInit('OscControlService initialization', this.oscControlService.init())
-              )
-              .then(() =>
-                this.logInit(
-                  'AvatarContextService initialization',
-                  this.avatarContextService.init()
-                )
+                this.logInit('Initializing avatar context', this.avatarContextService.init())
               ),
-            this.logInit('SleepService initialization', this.sleepService.init()),
-            this.logInit('VRChatService initialization', this.vrchatService.init()),
-            this.logInit('VRChatLogService initialization', this.vrchatLogService.init()),
-            this.logInit('ImageCacheService initialization', this.imageCacheService.init()),
-            this.logInit('FontLoaderService initialization', this.fontLoaderService.init()),
-            this.logInit('LighthouseService initialization', this.lighthouseService.init()),
-            this.logInit('NotificationService initialization', this.notificationService.init()),
-            this.logInit('FrameLimiterService initialization', this.frameLimiterService.init()),
+            this.logInit('Initializing sleep services', this.sleepService.init()),
+            this.logInit('Initializing VRChat services', this.vrchatService.init()),
+            this.logInit('Initializing VRChat log handling', this.vrchatLogService.init()),
+            this.logInit('Initializing image cache', this.imageCacheService.init()),
+            this.logInit('Initializing fonts', this.fontLoaderService.init()),
+            this.logInit('Initializing lighthouse services', this.lighthouseService.init()),
+            this.logInit('Initializing notifications', this.notificationService.init()),
+            this.logInit('Initializing frame limiting', this.frameLimiterService.init()),
+            this.logInit('Initializing sleep preparation', this.sleepPreparationService.init()),
+            this.logInit('Initializing Pulsoid', this.pulsoidService.init()),
+            this.logInit('Initializing quitting with SteamVR', this.quitWithSteamVRService.init()),
+            this.logInit('Initializing audio device services', this.audioDeviceService.init()),
+            this.logInit('Initializing OpenVR input', this.openvrInputService.init()),
+            this.logInit('Initializing Windows services', this.windowsService.init()),
+            this.logInit('Initializing hotkey service', this.hotkeyService.init()),
+            this.logInit('Initializing hotkey handlers', this.hotkeyHandlerService.init()),
+            this.logInit('Initializing message centers', this.messageCenterService.init()),
             this.logInit(
-              'SleepPreparationService initialization',
-              this.sleepPreparationService.init()
-            ),
-            this.logInit('PulsoidService initialization', this.pulsoidService.init()),
-            this.logInit(
-              'QuitWithSteamVRService initialization',
-              this.quitWithSteamVRService.init()
-            ),
-            this.logInit('AudioDeviceService initialization', this.audioDeviceService.init()),
-            this.logInit('OpenVRInputService initialization', this.openvrInputService.init()),
-            this.logInit('WindowsService initialization', this.windowsService.init()),
-            this.logInit('HotkeyService initialization', this.hotkeyService.init()),
-            this.logInit('HotkeyHandlerService initialization', this.hotkeyHandlerService.init()),
-            this.logInit('MessageCenterService initialization', this.messageCenterService.init()),
-            this.logInit(
-              'MqttService initialization',
+              'Initializing MQTT',
               this.mqttService
                 .init()
                 .then(() => this.mqttDiscoveryService.init())
                 .then(() => this.mqttIntegrationService.init())
             ),
             // Initialize GPU control services
-            this.logInit(
-              'ElevatedSidecarService initialization',
-              this.elevatedSidecarService.init()
-            ).then(async () => {
-              await this.logInit('NVMLService initialization', this.nvmlService.init());
-            }),
+            this.logInit('Initializing elevated sidecar', this.elevatedSidecarService.init()).then(
+              async () => {
+                await this.logInit('Initializing NVML services', this.nvmlService.init());
+              }
+            ),
           ]);
           await Promise.all([
             // Initialize Steam support
-            await this.logInit('SteamService initialization', this.steamService.init()),
+            await this.logInit('Initializing Steam', this.steamService.init()),
             // Initialize Discord support
-            await this.logInit('DiscordService initialization', this.discordService.init()),
+            await this.logInit('Initializing Discord', this.discordService.init()),
             // Initialize IPC
-            await this.logInit('IpcService initialization', this.ipcService.init()).then(
-              async () => {
-                await this.logInit('OverlayService initialization', this.overlayService.init());
-                await this.logInit(
-                  'OverlayAppStateSyncService initialization',
-                  this.overlayAppStateSyncService.init()
-                );
-              }
-            ),
+            await this.logInit('Initializing IPC', this.ipcService.init()).then(async () => {
+              await this.logInit('Initializing overlay services', this.overlayService.init());
+              await this.logInit(
+                'Initializing overlay synchronization',
+                this.overlayAppStateSyncService.init()
+              );
+            }),
             // Initialize Brightness Control
             await Promise.all([
-              this.logInit('CCTControlService initialization', this.cctControlService.init()),
+              this.logInit('Initializing CCT control', this.cctControlService.init()),
               this.logInit(
-                'HardwareBrightnessControlService initialization',
+                'Initializing hardware brightness control',
                 this.hardwareBrightnessControlService.init()
               ),
               this.logInit(
-                'SoftwareBrightnessControlService initialization',
+                'Initializing software brightness control',
                 this.softwareBrightnessControlService.init()
               ),
             ]).then(async () => {
               await this.logInit(
-                'simpleBrightnessControlService initialization',
+                'Initializing simple brightness control',
                 this.simpleBrightnessControlService.init()
               );
             }),
@@ -675,174 +658,172 @@ export class AppModule {
           // Initialize automations
           await Promise.all([
             // GPU automations
-            await this.logInit('GpuAutomationsService initialization', this.gpuAutomations.init()),
+            await this.logInit('Initializing GPU automations', this.gpuAutomations.init()),
             // Sleep mode automations
             this.logInit(
-              'SleepModeForSleepDetectorAutomationService initialization',
+              'Initializing sleep detection',
               this.sleepModeForSleepDetectorAutomationService.init()
             ),
             this.logInit(
-              'SleepModeEnableOnControllersPoweredOffAutomation initialization',
+              'Initializing sleep mode automation (#1)',
               this.sleepModeEnableOnControllersPoweredOffAutomation.init()
             ),
             this.logInit(
-              'SleepModeEnableAtBatteryPercentageAutomation initialization',
+              'Initializing sleep mode automation (#2)',
               this.sleepModeEnableAtBatteryPercentageAutomation.init()
             ),
             this.logInit(
-              'SleepModeEnableAtTimeAutomationService initialization',
+              'Initializing sleep mode automation (#3)',
               this.sleepModeEnableAtTimeAutomationService.init()
             ),
             this.logInit(
-              'SleepModeEnableOnHeartRateCalmPeriodAutomationService initialization',
+              'Initializing sleep mode automation (#4)',
               this.sleepModeEnableOnHeartRateCalmPeriodAutomationService.init()
             ),
             this.logInit(
-              'SleepModeChangeOnSteamVRStatusAutomationService initialization',
+              'Initializing sleep mode automation (#5)',
               this.sleepModeChangeOnSteamVRStatusAutomationService.init()
             ),
             this.logInit(
-              'SleepModeDisableAtTimeAutomationService initialization',
+              'Initializing sleep mode automation (#6)',
               this.sleepModeDisableAtTimeAutomationService.init()
             ),
             this.logInit(
-              'SleepModeDisableAfterTimeAutomationService initialization',
+              'Initializing sleep mode automation (#7)',
               this.sleepModeDisableAfterTimeAutomationService.init()
             ),
             this.logInit(
-              'SleepModeDisableOnDevicePowerOnAutomationService initialization',
+              'Initializing sleep mode automation (#8)',
               this.sleepModeDisableOnDevicePowerOnAutomationService.init()
             ),
             this.logInit(
-              'SleepModeDisableOnUprightPoseAutomationService initialization',
+              'Initializing sleep mode automation (#9)',
               this.sleepModeDisableOnUprightPoseAutomationService.init()
             ),
             this.logInit(
-              'SleepModeDisableOnPlayerJoinLeaveAutomationService initialization',
+              'Initializing sleep mode automation (#10)',
               this.sleepModeDisableOnPlayerJoinLeaveAutomationService.init()
             ),
             // Power automations
             this.logInit(
-              'TurnOffDevicesOnSleepModeEnableAutomationService initialization',
+              'Initializing power automations (#1)',
               this.turnOffDevicesOnSleepModeEnableAutomationService.init()
             ),
             this.logInit(
-              'TurnOffDevicesWhenChargingAutomationService initialization',
+              'Initializing power automations (#2)',
               this.turnOffDevicesWhenChargingAutomationService.init()
             ),
             this.logInit(
-              'TurnOffDevicesOnBatteryLevelAutomationService initialization',
+              'Initializing power automations (#3)',
               this.turnOffDevicesOnBatteryLevelAutomationService.init()
             ),
             this.logInit(
-              'TurnOnLighthousesOnOyasumiStartAutomationService initialization',
+              'Initializing power automations (#4)',
               this.turnOnLighthousesOnOyasumiStartAutomationService.init()
             ),
             this.logInit(
-              'TurnOnLighthousesOnSteamVRStartAutomationService initialization',
+              'Initializing power automations (#5)',
               this.turnOnLighthousesOnSteamVRStartAutomationService.init()
             ),
             this.logInit(
-              'TurnOffLighthousesOnSteamVRStopAutomationService initialization',
+              'Initializing power automations (#6)',
               this.turnOffLighthousesOnSteamVRStopAutomationService.init()
             ),
             // OSC automations
             this.logInit(
-              'OSCGeneralAutomationsService initialization',
+              'Initializing general OSC automations',
               this.oscGeneralAutomationsService.init()
             ),
             this.logInit(
-              'SleepingAnimationsAutomationService initialization',
+              'Initializing sleeping animation automations',
               this.sleepingAnimationsAutomationService.init()
             ),
             this.logInit(
-              'VRChatMicMuteAutomationService initialization',
+              'Initializing VRChat mic mute automations',
               this.vrchatMicMuteAutomationService.init()
             ),
             // Join notifications
-            this.logInit(
-              'JoinNotificationsService initialization',
-              this.joinNotificationsService.init()
-            ),
+            this.logInit('Initializing join notifications', this.joinNotificationsService.init()),
             // Status automations
             this.logInit(
-              'StatusChangeForPlayerCountAutomationService initialization',
+              'Initializing VRChat status automations (#1)',
               this.statusChangeForPlayerCountAutomationService.init()
             ),
             this.logInit(
-              'StatusChangeGenericEventsAutomationService initialization',
+              'Initializing VRChat status automations (#2)',
               this.statusChangeGenericEventsAutomationService.init()
             ),
             // Invite automations
-            this.logInit(
-              'InviteAutomationsService initialization',
-              this.inviteAutomationsService.init()
-            ),
+            this.logInit('Initializing invite automations', this.inviteAutomationsService.init()),
             // Brightness automations
             this.logInit(
-              'BrightnessControlAutomationService initialization',
+              'Initializing brightness control automations',
               this.brightnessControlAutomationService.init()
             ),
             // Resolution automations
             this.logInit(
-              'RenderResolutionAutomationService initialization',
+              'Initializing render resolution automations',
               this.renderResolutionAutomationService.init()
             ),
             // Fade distance automations
             this.logInit(
-              'ChaperoneFadeDistanceAutomationService initialization',
+              'Initializing chaperone automations',
               this.chaperoneFadeDistanceAutomationService.init()
             ),
             // Shutdown automations
             this.logInit(
-              'ShutdownAutomationsService initialization',
+              'Initializing shutdown automations',
               this.shutdownAutomationsService.init()
             ),
             // Windows power policy automations
             this.logInit(
-              'SetWindowsPowerPolicyOnSleepModeAutomationService initialization',
+              'Initializing Windows power policy automations',
               this.setWindowsPowerPolicyOnSleepModeAutomationService.init()
             ),
             // Miscellaneous automations
             this.logInit(
-              'AudioDeviceAutomationsService initialization',
+              'Initializing audio device automations',
               this.audioDeviceAutomationsService.init()
             ),
             this.logInit(
-              'SystemMicMuteAutomationsService initialization',
+              'Initializing system mic mute automations',
               this.systemMicMuteAutomationsService.init()
             ),
             this.logInit(
-              'NightmareDetectionAutomationService initialization',
+              'Initializing nightmare detection automation',
               this.nightmareDetectionAutomationService.init()
             ),
             this.logInit(
-              'BigsceenBeyondLedAutomationService initialization',
+              'Initializing Bigscreen Beyond LED automation',
               this.bigscreenBeyondLedAutomationService.init()
             ),
             this.logInit(
-              'BigsceenBeyondFanAutomationService initialization',
+              'Initializing Bigscreen Beyond fan automation',
               this.bigscreenBeyondFanAutomationService.init()
             ),
             this.logInit(
-              'VRChatAvatarAutomationsService initialization',
+              'Initializing VRChat avatar automations',
               this.vrchatAvatarAutomationsService.init()
             ),
             this.logInit(
-              'VRChatGroupAutomationsService initialization',
+              'Initializing VRChat group automations',
               this.vrchatGroupAutomationsService.init()
             ),
-            this.logInit('RunAutomationsService initialization', this.runAutomationsService.init()),
+            this.logInit('Initializing run automations', this.runAutomationsService.init()),
             this.logInit(
-              'FBTAvatarReloadHotfixService initialization',
+              'Initializing FBT avatar reload hotfix',
               this.fbtAvatarReloadWorkaroundService.init()
             ),
             this.logInit(
-              'FrameLimitAutomationsService initialization',
+              'Initializing frame limit automations',
               this.frameLimitAutomationsService.init()
             ),
           ]);
           await info(`[Init] Initialization complete! (took ${Date.now() - initStartTime}ms)`);
+          await globalEmit('init_action', {
+            action: 'Finishing up',
+            done: true,
+          });
         })(),
         SPLASH_MIN_DURATION
       );

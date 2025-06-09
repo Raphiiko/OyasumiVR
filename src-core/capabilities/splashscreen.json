@@ -4,6 +4,8 @@
   "local": true,
   "windows": ["splashscreen"],
   "permissions": [
-    "core:default"
+    "core:default",
+    "core:event:default",
+    "core:window:allow-set-focus"
   ]
 }

@@ -218,11 +218,13 @@ img[data-src]:not(.no-fade) {
 .bottom-bar .left {
   align-items: flex-start;
   padding: 0 1em;
+  margin-right: 1em;
 }
 
 .bottom-bar .right {
   align-items: flex-end;
   padding: 0 1em;
+  min-width: 0;
 }
 
 #info1 {
@@ -234,6 +236,10 @@ img[data-src]:not(.no-fade) {
 }
 #info3 {
   font-size: 1.2em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 #info4 {
   opacity: 0.7;
