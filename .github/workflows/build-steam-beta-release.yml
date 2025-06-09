@@ -27,7 +27,6 @@ jobs:
         id: changelog_reader
         uses: mindsers/changelog-reader-action@v2
         with:
-          validation_level: warn
           version: Unreleased
           path: ./CHANGELOG.md
       - name: Prepare Steamworks SDK

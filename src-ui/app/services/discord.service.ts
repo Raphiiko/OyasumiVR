@@ -64,7 +64,7 @@ export class DiscordService {
       assetLabel: this.translate.instant(
         sleepMode ? 'discord.label.sleeping' : 'discord.label.awake'
       ),
-      asset: sleepMode ? 'asleep' : 'awake',
+      asset: sleepMode ? 'asleep2' : 'awake2',
     });
     this.activityCleared = false;
   }
