@@ -54,28 +54,41 @@
       </div>
     </div>
     <script>
-      const buildId = '1234567';
-      [].forEach.call(document.querySelectorAll('img[data-src]'), function (img) {
-        img.setAttribute('src', img.getAttribute('data-src'));
-        img.onload = function () {
-          setTimeout(() => {
-            img.removeAttribute('data-src');
-            let parent = img;
-            for (let i = 0; i < 2; i++) {
-              parent = parent.parentElement;
-              if (!parent) break;
-              parent.classList.remove('pending-child');
+      try {
+        const buildId = '1234567';
+        [].forEach.call(document.querySelectorAll('img[data-src]'), function (img) {
+          img.setAttribute('src', img.getAttribute('data-src'));
+          img.onload = function () {
+            setTimeout(() => {
+              img.removeAttribute('data-src');
+              let parent = img;
+              for (let i = 0; i < 2; i++) {
+                parent = parent.parentElement;
+                if (!parent) break;
+                parent.classList.remove('pending-child');
+              }
+            }, 250);
+          };
+        });
+        if (window.__TAURI__) {
+          window.__TAURI__.event.listen('init_action', (event) => {
+            if (event.payload.action) {
+              document.getElementById('info3').innerHTML = event.payload.action;
             }
-          }, 250);
-        };
-      });
-      const version = window.__TAURI__
-        ? window.__TAURI__.app.getVersion().then(function (version) {
-            return version === '0.0.0' ? 'DEV' : version;
-          })
-        : Promise.resolve('0.0.0');
-      version.then((version) => (document.getElementById('version').innerHTML = `v${version}`));
-      document.getElementById('buildId').innerHTML = `${buildId}`;
+            window.__TAURI__.window.getCurrentWindow().setFocus();
+          });
+        }
+        if (window.__TAURI__) window.__TAURI__.window.getCurrentWindow((win) => win.setFocus());
+        const version = window.__TAURI__
+          ? window.__TAURI__.app.getVersion().then(function (version) {
+              return version;
+            })
+          : Promise.resolve('0.0.0');
+        version.then((version) => (document.getElementById('version').innerHTML = `v${version}`));
+        document.getElementById('buildId').innerHTML = `${buildId}`;
+      } catch (e) {
+        console.error('SPLASH ERROR', e);
+      }
     </script>
   </body>
 </html>

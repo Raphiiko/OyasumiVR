@@ -138,6 +138,23 @@
     "withGlobalTauri": true,
     "windows": [
       {
+        "label": "splashscreen",
+        "visible": true,
+        "width": 700,
+        "height": 475,
+        "decorations": false,
+        "url": "assets/splashscreen/splashscreen.html",
+        "resizable": false,
+        "center": true,
+        "shadow": false,
+        "transparent": true,
+        "skipTaskbar": true,
+        "minimizable": false,
+        "focus": true,
+        "userAgent": "OyasumiVR/25.6.0 (https://github.com/Raphiiko/OyasumiVR)",
+        "useHttpsScheme": false
+      },
+      {
         "fullscreen": false,
         "height": 620,
         "decorations": false,
@@ -150,22 +167,6 @@
         "theme": "Dark",
         "visible": false,
         "transparent": true,
-        "userAgent": "OyasumiVR/25.6.0 (https://github.com/Raphiiko/OyasumiVR)",
-        "useHttpsScheme": false
-      },
-      {
-        "label": "splashscreen",
-        "width": 700,
-        "height": 475,
-        "decorations": false,
-        "url": "assets/splashscreen/splashscreen.html",
-        "resizable": false,
-        "center": true,
-        "shadow": false,
-        "transparent": true,
-        "skipTaskbar": true,
-        "minimizable": false,
-        "focus": true,
         "userAgent": "OyasumiVR/25.6.0 (https://github.com/Raphiiko/OyasumiVR)",
         "useHttpsScheme": false
       }
