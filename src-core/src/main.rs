@@ -40,6 +40,8 @@ use tauri_plugin_cli::CliExt;
 use tauri_plugin_log::RotationStrategy;
 use webview2_com::Microsoft::Web::WebView2::Win32::ICoreWebView2Settings6;
 
+use crate::globals::APTABASE_HOST;
+
 #[tokio::main]
 async fn main() {
     // Attach to parent console if we're running from a command line
@@ -106,6 +108,14 @@ fn configure_tauri_plugin_single_instance() -> TauriPlugin<Wry> {
 
 fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
     tauri_plugin_aptabase::Builder::new(APTABASE_APP_KEY)
+        .with_options(tauri_plugin_aptabase::InitOptions {
+            host: if APTABASE_HOST.is_empty() {
+                None
+            } else {
+                Some(APTABASE_HOST.to_string())
+            },
+            flush_interval: tauri_plugin_aptabase::InitOptions::default().flush_interval,
+        })
         .with_panic_hook(Box::new(|client, info, msg| {
             let location = info
                 .location()
