@@ -881,14 +881,14 @@ export class AppModule {
       error('[Init] Failed to preload assets: (Could not load preload-assets.json) ' + e);
       throw e;
     }
-    try {
-      await Promise.all(
-        preloadAssets.imageUrls.map((imageUrl) => this.preloadImageAsset(imageUrl))
-      );
-    } catch (e) {
-      error(`[Init] Failed to preload assets: (Could not load images) ${JSON.stringify(e)}`);
-      throw e;
-    }
+    await Promise.all(
+      preloadAssets.imageUrls.map((imageUrl) =>
+        this.preloadImageAsset(imageUrl).catch((e) => {
+          error(`[Init] Failed to preload asset: (${imageUrl}) ${JSON.stringify(e)}`);
+          throw e;
+        })
+      )
+    );
   }
 
   private async preloadImageAsset(imageUrl: string) {

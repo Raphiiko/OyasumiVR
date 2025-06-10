@@ -109,6 +109,7 @@ fn configure_tauri_plugin_single_instance() -> TauriPlugin<Wry> {
 fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
     tauri_plugin_aptabase::Builder::new(APTABASE_APP_KEY)
         .with_options(tauri_plugin_aptabase::InitOptions {
+            #[allow(clippy::const_is_empty)]
             host: if APTABASE_HOST.is_empty() {
                 None
             } else {
