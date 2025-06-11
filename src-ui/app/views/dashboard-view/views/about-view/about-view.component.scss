@@ -210,9 +210,10 @@
 
 .translation-author-list {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   grid-gap: 0 1em;
   padding-bottom: 0.5em;
+  font-size: 0.8em;
 
   &-entry {
     display: flex;
@@ -222,7 +223,7 @@
     .fi {
       margin: 0 0.5em 0 0;
     }
-    &:nth-child(3n) {
+    &:nth-child(4n) {
       flex-direction: row-reverse;
       .fi {
         margin: 0 0 0 0.5em;

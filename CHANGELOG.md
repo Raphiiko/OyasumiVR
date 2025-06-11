@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+and this project (now) adheres to [Calendar Versioning](https://calver.org/#scheme).
 
 ## [Unreleased]
 
@@ -26,12 +26,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Switched to calendar versioning
 - Replaced manual scanning for lighthouses with continuous scanning
 - Migrated to Tauri v2, and upgraded various dependencies
 - Localized system tray menu
 - Replaced one-time location based updates of sunset/sunrise times with a toggle to update them automatically.
 - Updated theming & some component styling
-- Various illustrations (Thanks to [Jun](https://x.com/JunHakase)) 
+- Updated various illustrations and splash screen (Thanks to [Jun](https://x.com/JunHakase)) 
 
 ### Fixed
 

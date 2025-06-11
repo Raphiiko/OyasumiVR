@@ -17,9 +17,9 @@
     <link rel="stylesheet" type="text/css" href="splash-blurhash.css" />
   </head>
   <body>
-    <div class="splashscreen">
+    <div class="splashscreen pending-child">
       <div class="splash-blurhash"></div>
-      <img class="splash-image" data-src="splash.jpg" />
+      <img class="splash-image" data-src="./splash.jpg" />
       <div class="vignette"></div>
       <div class="info-container">
         <div class="logo-container pending-child">
@@ -36,94 +36,59 @@
             <div class="tag-line">VR Sleeping Utilities</div>
           </div>
         </div>
-        <div id="version">&nbsp;</div>
-        <div class="loader"></div>
-        <div id="status">Initializing...</div>
       </div>
+      <div class="artist-attribution">Art @JunHakase</div>
       <div class="bottom-bar">
+        <div class="loader"></div>
         <div class="left">
-          <span class="author">oyasumivr.raphii.co</span>
+          <div id="info1"
+            ><span style="font-weight: 400">Oyasumi</span><span style="font-weight: 600">VR</span>
+            <span id="version"></span
+          ></div>
+          <div id="info2">By Raphiiko</div>
         </div>
         <div class="right">
-          <span class="author">By Raphiiko</span>
+          <div id="info3">Starting</div>
+          <div id="info4">Build <span id="buildId"></span></div>
         </div>
       </div>
     </div>
     <script>
-      const buildId = '1234567';
-      [].forEach.call(document.querySelectorAll('img[data-src]'), function (img) {
-        img.setAttribute('src', img.getAttribute('data-src'));
-        img.onload = function () {
-          img.removeAttribute('data-src');
-          let parent = img;
-          for (let i = 0; i < 2; i++) {
-            parent = parent.parentElement;
-            if (!parent) break;
-            parent.classList.remove('pending-child');
-          }
-        };
-      });
-      const version = window.__TAURI__
-        ? window.__TAURI__.app.getVersion().then(function (version) {
-            return version === '0.0.0' ? 'DEV' : version;
-          })
-        : Promise.resolve('0.0.0');
-      version.then(
-        (version) => (document.getElementById('version').innerHTML = `v${version} [${buildId}]`)
-      );
+      try {
+        const buildId = '1234567';
+        [].forEach.call(document.querySelectorAll('img[data-src]'), function (img) {
+          img.setAttribute('src', img.getAttribute('data-src'));
+          img.onload = function () {
+            setTimeout(() => {
+              img.removeAttribute('data-src');
+              let parent = img;
+              for (let i = 0; i < 2; i++) {
+                parent = parent.parentElement;
+                if (!parent) break;
+                parent.classList.remove('pending-child');
+              }
+            }, 250);
+          };
+        });
+        if (window.__TAURI__) {
+          window.__TAURI__.event.listen('init_action', (event) => {
+            if (event.payload.action) {
+              document.getElementById('info3').innerHTML = event.payload.action;
+            }
+            window.__TAURI__.window.getCurrentWindow().setFocus();
+          });
+        }
+        if (window.__TAURI__) window.__TAURI__.window.getCurrentWindow((win) => win.setFocus());
+        const version = window.__TAURI__
+          ? window.__TAURI__.app.getVersion().then(function (version) {
+              return version;
+            })
+          : Promise.resolve('0.0.0');
+        version.then((version) => (document.getElementById('version').innerHTML = `v${version}`));
+        document.getElementById('buildId').innerHTML = `${buildId}`;
+      } catch (e) {
+        console.error('SPLASH ERROR', e);
+      }
     </script>
-    <!--AMBILIGHT-->
-    <svg width="0" height="0">
-      <filter
-        id="ambilight"
-        width="1000%"
-        height="1000%"
-        x="-1"
-        y="-3"
-        color-interpolation-filters="sRGB"
-      >
-        <feOffset in="SourceGraphic" result="source-copy" />
-        <feColorMatrix in="source-copy" type="saturate" values="1" result="saturated-copy" />
-        <feColorMatrix
-          in="saturated-copy"
-          type="matrix"
-          values="1 0 0 0 0
-                    0 1 0 0 0
-                    0 0 1 0 0
-                    33 33 33 101 -132"
-          result="bright-colors"
-        />
-        <feMorphology in="bright-colors" operator="dilate" radius="10" result="spread" />
-        <feGaussianBlur in="spread" stdDeviation="30" result="ambilight-light" />
-        <feOffset in="SourceGraphic" result="source" />
-        <feComposite in="source" in2="ambilight-light" operator="over" />
-      </filter>
-    </svg>
-    <svg width="0" height="0">
-      <filter
-        id="ambilight2"
-        width="1000%"
-        height="1000%"
-        x="-0.75"
-        y="-5"
-        color-interpolation-filters="sRGB"
-      >
-        <feOffset in="SourceGraphic" result="source-copy" />
-        <feColorMatrix in="source-copy" type="saturate" values="3" result="saturated-copy" />
-        <feColorMatrix
-          in="saturated-copy"
-          type="matrix"
-          values="1 0 0 0 0
-                    0 1 0 0 0
-                    0 0 1 0 0
-                    33 33 33 101 -132"
-          result="bright-colors"
-        />
-        <feMorphology in="bright-colors" operator="dilate" radius="10" result="spread" />
-        <feGaussianBlur in="spread" stdDeviation="30" result="ambilight-light" />
-        <feOffset in="SourceGraphic" result="source" />
-        <feComposite in="source" in2="ambilight-light" operator="over" />
-      </filter>
-    </svg>
   </body>
 </html>

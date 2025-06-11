@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [windows-latest]
+        platform: [self-hosted]
     runs-on: ${{ matrix.platform }}
 
     steps:
@@ -20,7 +20,7 @@ jobs:
       - name: Setup NodeJS
         uses: actions/setup-node@v3
         with:
-          node-version: 22.14
+          node-version: 22.16
           cache: npm
       - name: Initialize the project
         run: npm run ci
@@ -32,36 +32,20 @@ jobs:
         run: npm run set-flavour DEV
       - name: Set build id
         run: npm run set-build-id
-      - name: Install Rust stable toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: 1.85.0
-          default: true
-          components: clippy
-      - name: Install Protoc
-        uses: arduino/setup-protoc@v2
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Configure Rust cache
-        uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: |
-            src-shared-rust
-            src-elevated-sidecar
-            src-core
       - name: Ensure dist directory exists
         run: mkdir -p dist/oyasumivr
       - name: Run Clippy (shared)
-        run: cd src-shared-rust && cargo clippy -- -D warnings
+        run: cd src-shared-rust; cargo clippy -- -D warnings
       - name: Run Clippy (elevated-sidecar)
-        run: cd src-elevated-sidecar && cargo clippy -- -D warnings
+        run: cd src-elevated-sidecar; cargo clippy -- -D warnings
       - name: Run Clippy (core)
-        run: cd src-core && cargo clippy -- -D warnings
+        run: cd src-core; cargo clippy -- -D warnings
       - name: Get Changelog Entry
         id: changelog_reader
         uses: mindsers/changelog-reader-action@v2
         with:
           validation_level: warn
+          validation_depth: 1
           version: Unreleased
           path: ./CHANGELOG.md
       - name: Build and release OyasumiVR development build
@@ -78,7 +62,6 @@ jobs:
           includeDebug: true
           includeRelease: false
           includeUpdaterJson: true
-      #          tauriScript: cargo-tauri
       - name: Update release data
         uses: actions/github-script@v3
         with:
