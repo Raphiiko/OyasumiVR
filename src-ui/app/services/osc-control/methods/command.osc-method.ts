@@ -100,9 +100,7 @@ export class CommandOscMethod extends OscMethod<number> {
   }
 
   private async handleTurnOffAllLighthouses() {
-    const devices = await firstValueFrom(this.lighthouse.devices).then((devices) =>
-      devices.filter((d) => !this.lighthouse.isDeviceIgnored(d))
-    );
+    const devices = await firstValueFrom(this.lighthouse.devices);
     const appSettings = await firstValueFrom(this.appSettings.settings);
     for (const device of devices) {
       await this.lighthouse.setPowerState(device, appSettings.lighthousePowerOffState);
@@ -111,7 +109,7 @@ export class CommandOscMethod extends OscMethod<number> {
 
   private async handleTurnOnAllLighthouses() {
     const devices = await firstValueFrom(this.lighthouse.devices).then((devices) =>
-      devices.filter((d) => !this.lighthouse.isDeviceIgnored(d) && d.powerState !== 'on')
+      devices.filter((d) => d.powerState !== 'on')
     );
     for (const device of devices) {
       await this.lighthouse.setPowerState(device, 'on');

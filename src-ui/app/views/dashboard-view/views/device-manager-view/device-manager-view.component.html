@@ -1,0 +1,19 @@
+<div class="pane">
+  <div class="pane-title" translate>device-manager.title</div>
+  <div class="tab-bar">
+    <div class="tab" [class.active]="activeTab === 'devices'" (click)="activeTab = 'devices'">
+      <div class="tab-label" translate>device-manager.tabs.devices</div>
+    </div>
+    <div class="tab" [class.active]="activeTab === 'tags'" (click)="activeTab = 'tags'">
+      <div class="tab-label" translate>device-manager.tabs.tags</div>
+    </div>
+  </div>
+  <div class="pane-content">
+    <div class="setting-view-container">
+      <app-device-manager-devices-tab
+        *ngIf="activeTab === 'devices'"
+      ></app-device-manager-devices-tab>
+      <app-device-manager-tags-tab *ngIf="activeTab === 'tags'"></app-device-manager-tags-tab>
+    </div>
+  </div>
+</div>

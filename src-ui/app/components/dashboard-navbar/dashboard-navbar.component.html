@@ -103,6 +103,13 @@
       <div class="menu-item-label" translate>comp.dashboard-navbar.shutdownAutomations</div>
     </div>
 
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'deviceManager'">
+      <div class="menu-item-icon-prefix">
+        <img draggable="false" src="/assets/img/icon_controller.png" class="device-manager-icon" />
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.deviceManager</div>
+    </div>
+
     <div
       class="menu-item"
       (click)="openSubMenu('SETTINGS')"

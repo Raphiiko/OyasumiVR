@@ -1,74 +1,3 @@
-button.btn-power {
-  background: var(--color-surface-1);
-  color: var(--color-text-2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.25em;
-  border: 1px solid transparent;
-  position: relative;
-  transition: all 0.1s ease;
-  padding: 0.25em 0.25em;
-  overflow: hidden;
-  border-color: var(--color-surface-3);
-
-  &:disabled {
-    color: var(--color-text-4);
-  }
-
-  &:not(:disabled) {
-    cursor: pointer;
-
-    &:hover {
-      &.power-off {
-        background: var(--color-alert-error);
-        color: var(--color-on-alert-error);
-      }
-
-      &.power-on {
-        background: var(--color-alert-success);
-        color: var(--color-on-alert-success);
-      }
-
-      &.power-unknown {
-        background: var(--color-text-1);
-        color: var(--color-surface-1);
-      }
-    }
-
-    &:active:after {
-      opacity: 0.25;
-    }
-  }
-
-  &:after {
-    content: '';
-    transition: opacity 0.1s ease;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: black;
-    opacity: 0;
-  }
-
-  &.power-attention {
-    color: var(--color-alert-warning);
-  }
-  &.power-off {
-    color: var(--color-alert-error);
-  }
-
-  &.power-on {
-    color: var(--color-alert-success);
-  }
-
-  &.power-unknown {
-    color: var(--color-text-1);
-  }
-}
-
 a.btn,
 button.btn {
   --scoped-bg-color: var(--color-surface);
@@ -168,5 +97,82 @@ button.btn {
   &.btn-unavailable {
     --scoped-bg-color: var(--color-button-unavailable);
     --scoped-color: var(--color-on-button-unavailable);
+  }
+}
+
+button.btn-power {
+  background: var(--color-surface-1);
+  color: var(--color-text-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.25em;
+  border: 1px solid transparent;
+  position: relative;
+  transition: all 0.1s ease;
+  padding: 0.25em 0.25em;
+  overflow: hidden;
+  border-color: var(--color-surface-3);
+
+  &:disabled {
+    color: var(--color-text-4);
+    cursor: not-allowed;
+  }
+
+  &:not(:disabled) {
+    cursor: pointer;
+
+    &.power-off {
+      &:hover {
+        background: var(--color-alert-error);
+        color: var(--color-on-alert-error);
+      }
+    }
+
+    &.power-on {
+      &:hover {
+        background: var(--color-alert-success);
+        color: var(--color-on-alert-success);
+      }
+    }
+
+    &.power-unknown {
+      &:hover {
+        background: var(--color-text-1);
+        color: var(--color-surface-1);
+      }
+    }
+
+    &:active:after {
+      opacity: 0.25;
+    }
+  }
+
+  &:after {
+    content: '';
+    transition: opacity 0.1s ease;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    opacity: 0;
+  }
+
+  &.power-attention {
+    color: var(--color-alert-warning);
+  }
+
+  &.power-off {
+    color: var(--color-alert-error);
+  }
+
+  &.power-on {
+    color: var(--color-alert-success);
+  }
+
+  &.power-unknown {
+    color: var(--color-text-1);
   }
 }

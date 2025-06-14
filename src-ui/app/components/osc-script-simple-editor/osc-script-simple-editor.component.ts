@@ -240,8 +240,6 @@ export class OscScriptSimpleEditorComponent implements OnInit {
             break;
         }
 
-        console.warn({ selection, command, param, isVRChatParameter, oscType });
-
         // Update the parameter type
         this.updateParameterType(command, 0, oscType);
       }

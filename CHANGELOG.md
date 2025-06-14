@@ -11,7 +11,6 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 
 - Frame limiting automations on native SteamVR headsets, for VRChat, Resonite and ChilloutVR
 - Options for automatically declining invites and invite requests
-- GPU acceleration for SteamVR overlays (Community contribution by [BenjaminZehowlt](https://github.com/BenjaminZehowlt))
 - Message center for automatically diagnosing common issues
 - Sleep mode toggle and sleep preparation to system tray menu
 - Notification sounds for invites and invite requests
@@ -23,6 +22,7 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 - Device list: VR Headset device & battery level
 - MQTT: Headset battery level and charging status
 - More configuration options for notification sounds
+- GPU acceleration for SteamVR overlays (Thanks to help from [BenjaminZehowlt](https://github.com/BenjaminZehowlt))
 
 ### Changed
 

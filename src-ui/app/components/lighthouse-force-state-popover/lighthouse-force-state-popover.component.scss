@@ -27,7 +27,8 @@
     align-items: center;
     justify-content: space-around;
     padding: 0.75em;
-    button {
+
+    app-device-power-button {
       &:not(:last-child) {
         margin-right: 0.5em;
       }

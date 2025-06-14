@@ -49,7 +49,6 @@ export class NotificationSoundModalComponent
   }
 
   public async playSound(sound: NotificationSound): Promise<void> {
-    console.warn(sound);
     if (this.playingSounds$.value.includes(sound.id)) {
       return;
     }

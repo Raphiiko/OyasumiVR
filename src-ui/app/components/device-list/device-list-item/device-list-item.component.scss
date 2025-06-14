@@ -34,15 +34,11 @@
 
     .device-subtitle {
       color: var(--color-text-4);
-      &.nickname {
-        width: 100%;
-        overflow: hidden;
-        color: var(--color-text-4);
-        font-weight: 700;
-        white-space: nowrap;
-        min-height: 0;
-        text-overflow: ellipsis;
-      }
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      min-height: 0;
+      text-overflow: ellipsis;
     }
 
     &:hover {
@@ -103,20 +99,6 @@
   }
 }
 
-.small-spinner {
-  &.power-on {
-    --spinner-color: var(--color-alert-success);
-  }
-
-  &.power-off {
-    --spinner-color: var(--color-alert-error);
-  }
-
-  &.power-unknown {
-    --spinner-color: var(--color-text-1);
-  }
-}
-
 .category-icon {
   width: 1.5em;
   height: 1.5em;
@@ -127,8 +109,4 @@
 
 .wrapper {
   transition: all 0.15s;
-}
-
-.device-ignored {
-  opacity: 0.6;
 }

@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, DestroyRef, OnInit } from '@angular/core';
-import { flatten, groupBy, isEqual, uniq } from 'lodash';
+import { flatten, groupBy, uniq } from 'lodash';
 import { fade, hshrink, triggerChildren, vshrink } from 'src-ui/app/utils/animations';
 import { OVRDevice, OVRDeviceClass } from 'src-ui/app/models/ovr-device';
 import { LighthouseConsoleService } from '../../services/lighthouse-console.service';
@@ -14,8 +14,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LighthouseDevice, LighthouseDevicePowerState } from 'src-ui/app/models/lighthouse-device';
 import { LighthouseService } from 'src-ui/app/services/lighthouse.service';
 import { filterInPlace } from 'src-ui/app/utils/arrays';
-import { combineLatest, debounceTime, distinctUntilChanged, firstValueFrom, map, tap } from 'rxjs';
+import { combineLatest, debounceTime, firstValueFrom, tap } from 'rxjs';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
+import {
+  DevicePowerState,
+  DevicePowerAction,
+} from '../device-power-button/device-power-button.component';
 
 type DisplayCategory = OpenVRDisplayCategory | LighthouseDisplayCategory;
 
@@ -69,15 +73,9 @@ export class DeviceListComponent implements OnInit {
         takeUntilDestroyed(this.destroyRef),
         tap((devices) => this.processOpenVRDevices(devices))
       ),
-      combineLatest([
-        this.lighthouse.devices,
-        this.appSettings.settings.pipe(
-          map((s) => s.ignoredLighthouses),
-          distinctUntilChanged((prev, curr) => isEqual(prev, curr))
-        ),
-      ]).pipe(
+      this.lighthouse.devices.pipe(
         takeUntilDestroyed(this.destroyRef),
-        tap(([devices, ignored]) => this.processLighthouseDevices(devices, ignored))
+        tap((devices) => this.processLighthouseDevices(devices))
       ),
     ])
       .pipe(tap(() => this.sortDeviceCategories()))
@@ -91,7 +89,7 @@ export class DeviceListComponent implements OnInit {
   }
 
   processOpenVRDevices(devices: OVRDevice[]) {
-    // Filter out non-controller and non-tracker devices
+    // Filter out non-hmd, non-controller and non-tracker devices
     devices = devices.filter((device) =>
       ['HMD', 'Controller', 'GenericTracker'].includes(device.class)
     );
@@ -161,7 +159,7 @@ export class DeviceListComponent implements OnInit {
     }
   }
 
-  processLighthouseDevices(devices: LighthouseDevice[], ignoredDevices: string[]) {
+  processLighthouseDevices(devices: LighthouseDevice[]) {
     // Add missing device category
     if (devices.length && !this.deviceCategories.some((c) => c.type === 'Lighthouse')) {
       this.deviceCategories.push({
@@ -198,29 +196,15 @@ export class DeviceListComponent implements OnInit {
     filterInPlace(category.devices, (d) => devices.some((device) => device.id === d.id));
     // Sort devices in place
     category.devices.sort((a, b) => {
-      const aIgnored = ignoredDevices.includes(a.id);
-      const bIgnored = ignoredDevices.includes(b.id);
-      if (aIgnored && !bIgnored) {
-        return 1;
-      } else if (!aIgnored && bIgnored) {
-        return -1;
-      } else {
-        return a.id.localeCompare(b.id);
-      }
+      return a.id.localeCompare(b.id);
     });
     // Update category power state
     category.canBulkPowerOn = category.devices.some(
-      (d) =>
-        !this.lighthouse.isDeviceIgnored(d) &&
-        (d.powerState === 'standby' || d.powerState === 'sleep')
+      (d) => d.powerState === 'standby' || d.powerState === 'sleep'
     );
     category.canBulkPowerOff =
       !category.canBulkPowerOn &&
-      category.devices.some(
-        (d) =>
-          !this.lighthouse.isDeviceIgnored(d) &&
-          (d.powerState === 'on' || d.powerState === 'booting')
-      );
+      category.devices.some((d) => d.powerState === 'on' || d.powerState === 'booting');
   }
 
   sortDeviceCategories() {
@@ -288,9 +272,7 @@ export class DeviceListComponent implements OnInit {
   async bulkPowerLighthouseDevices(category: LighthouseDisplayCategory) {
     if (category.canBulkPowerOn) {
       const devices = category.devices.filter(
-        (d) =>
-          (d.powerState === 'standby' || d.powerState === 'sleep' || d.powerState === 'unknown') &&
-          !this.lighthouse.isDeviceIgnored(d)
+        (d) => d.powerState === 'standby' || d.powerState === 'sleep' || d.powerState === 'unknown'
       );
       this.eventLog.logEvent({
         type: 'lighthouseSetPowerState',
@@ -303,9 +285,7 @@ export class DeviceListComponent implements OnInit {
       const powerOffState = (await firstValueFrom(this.appSettings.settings))
         .lighthousePowerOffState;
       const devices = category.devices.filter(
-        (d) =>
-          (d.powerState === 'on' || d.powerState === 'unknown' || d.powerState === 'booting') &&
-          !this.lighthouse.isDeviceIgnored(d)
+        (d) => d.powerState === 'on' || d.powerState === 'unknown' || d.powerState === 'booting'
       );
       this.eventLog.logEvent({
         type: 'lighthouseSetPowerState',
@@ -347,8 +327,7 @@ export class DeviceListComponent implements OnInit {
     let devices = this.deviceCategories
       .filter((c) => c.type === 'Lighthouse')
       .map((c) => (c as LighthouseDisplayCategory).devices)
-      .flat()
-      .filter((d) => !this.lighthouse.isDeviceIgnored(d));
+      .flat();
     if (state === 'on') {
       devices = devices.filter((d) => d.powerState !== 'on');
     }
@@ -360,5 +339,28 @@ export class DeviceListComponent implements OnInit {
       devices: 'ALL',
     } as EventLogLighthouseSetPowerState);
     await Promise.all(devices.map(async (device) => this.lighthouse.setPowerState(device, state)));
+  }
+
+  // Helper methods for power button component
+  getBulkLighthousePowerState(category: LighthouseDisplayCategory): DevicePowerState {
+    if (category.canBulkPowerOn) {
+      return 'off';
+    } else if (category.canBulkPowerOff) {
+      return 'on';
+    }
+    return 'unknown';
+  }
+
+  canShowBulkLighthousePowerButton(category: LighthouseDisplayCategory): boolean {
+    return category.canBulkPowerOn || category.canBulkPowerOff;
+  }
+
+  async handleBulkLighthousePowerAction(
+    category: LighthouseDisplayCategory,
+    action: DevicePowerAction
+  ) {
+    if (action === 'power-on' || action === 'power-off') {
+      await this.clickBulkPowerLighthouseDevices(category);
+    }
   }
 }

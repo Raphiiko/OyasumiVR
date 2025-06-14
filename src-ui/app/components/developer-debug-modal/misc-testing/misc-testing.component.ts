@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { BaseModalComponent } from '../../base-modal/base-modal.component';
-import { VRChatService } from 'src-ui/app/services/vrchat-api/vrchat.service';
-import { LimitedUserGroups } from 'vrchat/dist/api';
+import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 
 @Component({
   selector: 'app-misc-testing',
@@ -10,20 +9,13 @@ import { LimitedUserGroups } from 'vrchat/dist/api';
   standalone: false,
 })
 export class MiscTestingComponent {
-  groups?: LimitedUserGroups[];
   @Input() modal?: BaseModalComponent<any, any>;
 
-  constructor(private vrchatService: VRChatService) {}
+  constructor(private appSettings: AppSettingsService) {}
 
-  async representGroup(groupId: string) {
-    try {
-      await this.vrchatService.representGroup(groupId, true);
-    } catch (e) {
-      console.error('Error representing group', e);
-    }
-  }
-
-  async fetchGroups(force = false) {
-    this.groups = await this.vrchatService.getUserGroups(force);
+  clearLighthouseV1Ids() {
+    this.appSettings.updateSettings({
+      v1LighthouseIdentifiers: {},
+    });
   }
 }
