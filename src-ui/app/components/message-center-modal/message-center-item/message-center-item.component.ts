@@ -36,6 +36,14 @@ export class MessageCenterItemComponent {
         });
       }
     }
+    if (message.closeable) {
+      actions.push({
+        label: 'shared.modals.close',
+        action: () => {
+          this.messageCenter.removeMessage(message.id);
+        },
+      });
+    }
     return actions;
   });
 

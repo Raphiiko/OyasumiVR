@@ -1444,6 +1444,15 @@
       "vrcOscMissing": {
         "message": "Although VRChat seems to be running, its OSC and/or OSCQuery services could not be detected. Without these services, certain OyasumiVR features will not work.\n\nPlease make sure you've got OSC enabled within VRChat to ensure OyasumiVR can work properly.",
         "title": "VRChat OSC(Query) services unavailable"
+      },
+      "vrcWebsocketDisconnected": {
+        "message": "You are currently logged in with your VRChat account, but OyasumiVR was not able to connect to VRChat's websocket. This means certain features, like automatically accepting invite requests, currently won't work.",
+        "title": "VRChat Websocket Unavailable"
+      },
+      "vrcInviteRequestFailedWorldUnknown": {
+        "title": "Invite Request Unhandled",
+        "message": "You received an invite request from your friend ''{senderUsername}'', but OyasumiVR couldn't handle it because your current world instance is unknown.\n\nThis may be due to OyasumiVR not being able to read your VRChat log files.",
+        "unknownFriend": "Unknown friend"
       }
     },
     "title": "Message Center",

@@ -221,7 +221,7 @@ export class SettingsStatusInfoViewComponent {
         name: 'VRChat',
         entries: [
           {
-            key: 'Client',
+            key: 'Client Process',
             value: vrchat.vrchatProcessActive.pipe(
               map((active) => (active ? 'Running' : 'Inactive'))
             ),
@@ -285,6 +285,26 @@ export class SettingsStatusInfoViewComponent {
               })
             ),
           },
+          {
+            key: 'Websocket Status',
+            value: vrchat.websocketStatus,
+          },
+          {
+            key: 'World Instance',
+            value: vrchat.world.pipe(
+              map((w) => {
+                return w?.instanceId ?? 'Unknown';
+              })
+            ),
+          },
+          {
+            key: 'Players In World',
+            value: vrchat.world.pipe(
+              map((w) => {
+                return `${w?.playerCount ?? 'Unknown'}`;
+              })
+            ),
+          },
         ],
       },
     ];
@@ -308,5 +328,18 @@ export class SettingsStatusInfoViewComponent {
       }
     }
     await writeText('```json\n' + JSON.stringify(data, null, 2) + '\n```');
+  }
+
+  async copyValue(entry: { key: TString; value: Observable<TString> }) {
+    const keyString = this.tsTranslate.transform(entry.key) as string;
+    const value = await firstValueFrom(entry.value);
+    const valueString = this.tsTranslate.transform(value) as string;
+    this.copiedToClipboard.push(keyString);
+    setTimeout(() => {
+      const index = this.copiedToClipboard.findIndex((s) => s === keyString);
+      if (index > -1) this.copiedToClipboard.splice(index, 1);
+    }, 1000);
+
+    await writeText(valueString);
   }
 }

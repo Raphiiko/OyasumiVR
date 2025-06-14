@@ -16,6 +16,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { AppSettingsService } from './app-settings.service';
 import { AutoAcceptInviteRequestsAutomationConfig } from '../models/automations';
 import { SleepPreparationService } from './sleep-preparation.service';
+import { MessageCenterService } from './message-center/message-center.service';
+import { openUrl } from '@tauri-apps/plugin-opener';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +31,8 @@ export class InviteAutomationsService {
     private eventLog: EventLogService,
     private notifications: NotificationService,
     private translate: TranslateService,
-    private sleepPreparation: SleepPreparationService
+    private sleepPreparation: SleepPreparationService,
+    private messageCenter: MessageCenterService
   ) {}
 
   async init() {
@@ -47,6 +50,7 @@ export class InviteAutomationsService {
   }
 
   private async handleInviteNotification(notification: Notification) {
+    info(`[VRChat] Received invite from ${notification.senderUsername}`);
     // Get the current user
     const user = await firstValueFrom(this.vrchat.user);
     if (!user) return;
@@ -95,6 +99,14 @@ export class InviteAutomationsService {
     const config = await firstValueFrom(this.automationConfig.configs).then(
       (c) => c.AUTO_ACCEPT_INVITE_REQUESTS
     );
+    // Stop if VRChat is not currently running
+    if (!(await firstValueFrom(this.vrchat.vrchatProcessActive))) {
+      warn(
+        `[VRChat] Ignoring invite request from ${notification.senderUsername}, as VRChat is not currently running.`
+      );
+      this.playInviteRequestSound(config, false, sleepMode);
+      return;
+    }
     // Stop if the automation is disabled
     if (!config.enabled) {
       warn(
@@ -110,6 +122,32 @@ export class InviteAutomationsService {
         `[VRChat] Ignoring invite request from ${notification.senderUsername}, as the user's current world is not currently known.`
       );
       this.playInviteRequestSound(config, false, sleepMode);
+      this.messageCenter.addMessage({
+        id: `vrcInviteRequestFailedWorldUnknown_${notification.senderUsername}`,
+        title: 'message-center.messages.vrcInviteRequestFailedWorldUnknown.title',
+        message: {
+          string: 'message-center.messages.vrcInviteRequestFailedWorldUnknown.message',
+          values: {
+            senderUsername:
+              notification.senderUsername ??
+              this.translate.instant(
+                'message-center.messages.vrcInviteRequestFailedWorldUnknown.unknownFriend'
+              ),
+          },
+        },
+        closeable: true,
+        actions: [
+          {
+            label: 'message-center.actions.moreInfo',
+            action: () => {
+              openUrl(
+                'https://raphii.co/oyasumivr/hidden/troubleshooting/vrchat-invite-request-auto-accept-world-unknown/'
+              );
+            },
+          },
+        ],
+        type: 'warning',
+      });
       return;
     }
     // Automatically accept invite requests when on blue, in case the VRChat client does not.

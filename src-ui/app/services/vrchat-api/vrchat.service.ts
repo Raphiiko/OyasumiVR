@@ -201,6 +201,10 @@ export class VRChatService {
   // Utility methods
   //
 
+  public get websocketStatus(): Observable<'CLOSED' | 'OPEN' | 'OPENING'> {
+    return this.socket.status;
+  }
+
   public imageUrlForPlayer(player: LimitedUser) {
     return player.userIcon || player.profilePicOverride || player.currentAvatarThumbnailImageUrl;
   }
