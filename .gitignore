@@ -56,3 +56,8 @@ src-ui/assets/splashscreen/splash-blurhash.css
 /SteamSDK/
 /steamsdk.zip
 /config/config.vdf
+
+# Cursor
+.cursorrules
+.cursorignore
+/.cursor

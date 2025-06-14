@@ -1,5 +1,6 @@
 import { error, info } from '@tauri-apps/plugin-log';
 import {
+  BehaviorSubject,
   distinctUntilChanged,
   filter,
   firstValueFrom,
@@ -23,6 +24,11 @@ export interface VRChatEventHandler {
 }
 
 export class VRChatSocket {
+  private _status: BehaviorSubject<'CLOSED' | 'OPEN' | 'OPENING'> = new BehaviorSubject<
+    'CLOSED' | 'OPEN' | 'OPENING'
+  >('CLOSED');
+  public readonly status = this._status.asObservable();
+
   private socket?: WebSocket;
   private handlers: VRChatEventHandler[] = [];
   private _notifications: Subject<Notification> = new Subject<Notification>();
@@ -47,6 +53,7 @@ export class VRChatSocket {
   public async init() {
     const buildSocket = async () => {
       if (this.socket) {
+        info(`[VRChat] Closing existing socket connection`);
         try {
           this.socket.close();
         } catch (e) {
@@ -54,6 +61,8 @@ export class VRChatSocket {
         }
         this.socket = undefined;
       }
+      info(`[VRChat] Opening new socket connection`);
+      this._status.next('OPENING');
       this.socket = new WebSocket(
         'wss://pipeline.vrchat.cloud/?authToken=' + (await firstValueFrom(this.settings)).authCookie
       );
@@ -66,6 +75,7 @@ export class VRChatSocket {
     this.vrchatAuth.status.pipe(distinctUntilChanged()).subscribe((status) => {
       switch (status) {
         case 'LOGGED_OUT':
+          this._status.next('CLOSED');
           if (this.socket) {
             try {
               this.socket.close();
@@ -105,13 +115,26 @@ export class VRChatSocket {
   ) {
     switch (event) {
       case 'OPEN':
+        this._status.next('OPEN');
         info(`[VRChat] Websocket connection opened`);
         return;
       case 'CLOSE':
+        this._status.next('CLOSED');
         info(`[VRChat] Websocket connection closed`);
+        try {
+          this.socket?.close();
+        } finally {
+          this.socket = undefined;
+        }
         return;
       case 'ERROR':
+        this._status.next('CLOSED');
         error(`[VRChat] Websocket connection error: ${JSON.stringify(message)}`);
+        try {
+          this.socket?.close();
+        } finally {
+          this.socket = undefined;
+        }
         return;
       case 'MESSAGE':
         break;
@@ -120,8 +143,6 @@ export class VRChatSocket {
     const data = JSON.parse(message?.data as string);
     const handler = this.handlers.find((handler) => handler.type === data.type);
     if (!handler) return;
-    info(`[VRChat] Received event: ${data.type}`);
-    // info(`[VRChat] Received event: ${data.type}`);
     handler.handle(data.content);
   }
 

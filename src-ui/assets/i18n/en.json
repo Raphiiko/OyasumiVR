@@ -353,6 +353,7 @@
       "autoInviteRequestAccept": "Auto Accept \nInvite Requests",
       "brightnessAutomations": "Brightness Automations",
       "chaperoneAutomations": "Chaperone Automations",
+      "deviceManager": "Device Manager",
       "frameLimiter": "Frame Limit Automations",
       "gpuAutomations": "GPU Automations",
       "hardwareAutomations": "Hardware Automations",
@@ -1443,6 +1444,15 @@
       "vrcOscMissing": {
         "message": "Although VRChat seems to be running, its OSC and/or OSCQuery services could not be detected. Without these services, certain OyasumiVR features will not work.\n\nPlease make sure you've got OSC enabled within VRChat to ensure OyasumiVR can work properly.",
         "title": "VRChat OSC(Query) services unavailable"
+      },
+      "vrcWebsocketDisconnected": {
+        "message": "You are currently logged in with your VRChat account, but OyasumiVR was not able to connect to VRChat's websocket. This means certain features, like automatically accepting invite requests, currently won't work.",
+        "title": "VRChat Websocket Unavailable"
+      },
+      "vrcInviteRequestFailedWorldUnknown": {
+        "title": "Invite Request Unhandled",
+        "message": "You received an invite request from your friend ''{senderUsername}'', but OyasumiVR couldn't handle it because your current world instance is unknown.\n\nThis may be due to OyasumiVR not being able to read your VRChat log files.",
+        "unknownFriend": "Unknown friend"
       }
     },
     "title": "Message Center",
@@ -1509,6 +1519,85 @@
   "notification-sound": {
     "title": "Select a sound",
     "volume": "Volume"
+  },
+  "device-manager": {
+    "title": "Device Manager",
+    "tabs": {
+      "devices": "Devices",
+      "tags": "Tags"
+    },
+    "search": {
+      "placeholder": "Search devices..."
+    },
+    "filter": {
+      "allTags": "All tags"
+    },
+    "deviceType": {
+      "HMD": "Headsets",
+      "CONTROLLER": "Controllers",
+      "TRACKER": "Trackers",
+      "LIGHTHOUSE": "Lighthouses",
+      "PREVIOUSLY_SEEN": "Previously Seen"
+    },
+    "status": {
+      "observed": "Connected",
+      "notObserved": "Not Connected",
+      "turningOff": "Turning Off...",
+      "turningOn": "Turning On..."
+    },
+    "actions": {
+      "powerOff": "Power Off",
+      "powerOn": "Power On",
+      "forget": "Forget Device"
+    },
+    "config": {
+      "title": "Configure {deviceName}",
+      "nickname": {
+        "title": "Device Nickname",
+        "description": "Set a custom name for this device to make it easier to identify"
+      },
+      "tags": {
+        "title": "Device Tags",
+        "description": "Assign tags to organize and filter your devices",
+        "noTags": "No tags available. Create some in the Tags tab."
+      },
+      "newTag": {
+        "title": "Create New Tag",
+        "description": "Create a new tag and assign it to this device",
+        "create": "Create Tag"
+      }
+    },
+    "tags": {
+      "create": {
+        "title": "Create New Tag",
+        "namePlaceholder": "Tag name",
+        "button": "Create Tag"
+      },
+      "existing": {
+        "title": "Existing Tags"
+      },
+      "edit": "Edit Tag",
+      "delete": "Delete Tag",
+      "save": "Save",
+      "cancel": "Cancel",
+      "empty": {
+        "noTags": "No tags created yet. Create your first tag above."
+      }
+    },
+    "empty": {
+      "noDevices": "No devices have been detected yet. Connect a device, like a controller or tracker, to get started.",
+      "noDevicesMatchingSearch": "No devices found matching your search criteria."
+    },
+    "forget": {
+      "title": "Forget Device",
+      "message": "Are you sure you want to forget this device? It will be re-added if detected again.",
+      "confirm": "Forget Device"
+    },
+    "deleteTag": {
+      "title": "Delete Tag",
+      "message": "Are you sure you want to delete this tag? It will be removed from all devices.",
+      "confirm": "Delete Tag"
+    }
   },
   "notifications": {
     "autoAcceptedInviteRequest": {

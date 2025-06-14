@@ -9,9 +9,8 @@ export class ImageFallbackDirective {
 
   constructor(private eRef: ElementRef) {}
 
-  @HostListener('error', ['$event'])
-  loadFallbackOnError(event: any) {
-    console.warn(event);
+  @HostListener('error')
+  loadFallbackOnError() {
     const element: HTMLImageElement = <HTMLImageElement>this.eRef.nativeElement;
     element.src = this.appImgFallback || 'https://via.placeholder.com/200';
   }

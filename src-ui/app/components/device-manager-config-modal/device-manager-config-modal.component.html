@@ -1,0 +1,89 @@
+<div class="pane modal modal-xl" @fadeUp>
+  <div class="pane-title" translate [translateParams]="{ deviceName: getDisplayName() }">
+    device-manager.config.title
+  </div>
+  <div class="pane-content">
+    <div class="settings">
+      <!-- Nickname Section -->
+      <div class="setting-row">
+        <div class="setting-row-label">
+          <span translate>device-manager.config.nickname.title</span>
+          <span translate>device-manager.config.nickname.description</span>
+        </div>
+        <div class="setting-row-action">
+          <div class="nickname-input">
+            <div class="input-wrapper">
+              <input
+                type="text"
+                [placeholder]="device.defaultName"
+                [(ngModel)]="nickname"
+                [maxlength]="32"
+              />
+            </div>
+            <button
+              class="btn-clear"
+              *ngIf="nickname"
+              (click)="clearNickname()"
+              [tooltip]="'Clear nickname'"
+              [tooltipMode]="'left'"
+            >
+              <i class="material-icons">clear</i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tags Section -->
+      <div class="setting-row">
+        <div class="setting-row-label">
+          <span translate>device-manager.config.tags.title</span>
+          <span translate>device-manager.config.tags.description</span>
+        </div>
+        <div class="setting-row-action">
+          <div class="tag-selector">
+            <div class="available-tags" *ngIf="availableTags.length > 0">
+              <div
+                class="tag-item"
+                *ngFor="let tag of availableTags; trackBy: trackTagBy"
+                [class.selected]="isTagAssigned(tag)"
+                (click)="toggleTag(tag)"
+              >
+                <div class="tag-color" [style.background-color]="tag.color"></div>
+                <span class="tag-name">{{ tag.name }}</span>
+                <i class="material-icons tag-check" *ngIf="isTagAssigned(tag)">check</i>
+              </div>
+            </div>
+            <div class="no-tags" *ngIf="availableTags.length === 0" translate>
+              device-manager.config.tags.noTags
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lighthouse V1 Identifier Section -->
+      <div class="setting-row" *ngIf="v1LighthouseMode !== 'NONE'">
+        <div class="setting-row-label" translate>
+          <span translate>comp.device-edit-modal.v1Identifier.title</span>
+          <span translate>comp.device-edit-modal.v1Identifier.description</span>
+        </div>
+        <div class="setting-row-action">
+          <button
+            class="btn"
+            (click)="openLighthouseV1IdWizard()"
+            [ngClass]="v1LighthouseMode === 'NEEDS_ID' ? 'btn-primary' : 'btn-secondary'"
+          >
+            {{
+              (v1LighthouseMode === 'NEEDS_ID'
+                ? 'comp.device-edit-modal.v1Identifier.set'
+                : 'comp.device-edit-modal.v1Identifier.change'
+              ) | translate
+            }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pane-actions spread">
+    <button class="btn btn-secondary" (click)="close()" translate> shared.modals.close </button>
+  </div>
+</div>

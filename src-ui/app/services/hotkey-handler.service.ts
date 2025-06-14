@@ -111,9 +111,7 @@ export class HotkeyHandlerService {
 
   private async toggleLighthouseDevices() {
     const offState = (await firstValueFrom(this.appSettings.settings)).lighthousePowerOffState;
-    const devices = (await firstValueFrom(this.lighthouseService.devices)).filter(
-      (d) => !this.lighthouseService.isDeviceIgnored(d)
-    );
+    const devices = await firstValueFrom(this.lighthouseService.devices);
     if (devices.some((d) => d.powerState === 'standby' || d.powerState === 'sleep')) {
       // Power on
       const devicesToPowerOn = devices.filter((d) => !['on', 'booting'].includes(d.powerState));
@@ -145,13 +143,7 @@ export class HotkeyHandlerService {
     this.lighthouseService.devices
       .pipe(
         take(1),
-        map((devices) =>
-          devices.filter(
-            (d) =>
-              !this.lighthouseService.isDeviceIgnored(d) &&
-              !['on', 'booting'].includes(d.powerState)
-          )
-        ),
+        map((devices) => devices.filter((d) => !['on', 'booting'].includes(d.powerState))),
         filter((devices) => devices.length > 0)
       )
       .subscribe((devices) => {
@@ -172,13 +164,7 @@ export class HotkeyHandlerService {
     this.lighthouseService.devices
       .pipe(
         take(1),
-        map((devices) =>
-          devices.filter(
-            (d) =>
-              !this.lighthouseService.isDeviceIgnored(d) &&
-              !['sleep', 'standby'].includes(d.powerState)
-          )
-        ),
+        map((devices) => devices.filter((d) => !['sleep', 'standby'].includes(d.powerState))),
         filter((devices) => devices.length > 0)
       )
       .subscribe((devices) => {

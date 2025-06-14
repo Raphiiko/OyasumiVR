@@ -8,6 +8,7 @@
   z-index: 500;
   transition: all 0.3s var(--ease-cubic-custom-1);
   transform: scale(0.9);
+  pointer-events: none;
 
   &.shown {
     & > .ovr-tooltip-container {

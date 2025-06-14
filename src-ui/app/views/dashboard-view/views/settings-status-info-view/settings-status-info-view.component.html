@@ -43,7 +43,7 @@
                 <span></span>
               </div>
               <div class="setting-row-action">
-                <span
+                <span (click)="copyValue(entry)"
                   ><b>{{ (entry.value | async) ?? '' | tsTranslate }}</b></span
                 >
               </div>

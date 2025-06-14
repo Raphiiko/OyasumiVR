@@ -12,6 +12,7 @@ import { GpuAutomationMessageMonitor } from './monitors/gpu-automation-message-m
 import { LighthouseConsoleMonitor } from './monitors/lighthouse-console-monitor';
 import { TString } from 'src-ui/app/models/translatable-string';
 import { VRChatOSCMessageMonitor } from './monitors/vrchat-osc-message-monitor';
+import { VRChatWebsocketConnectionMonitor } from './monitors/vrchat-websocket-connection-monitor';
 
 export interface MessageAction {
   label: string;
@@ -23,7 +24,8 @@ export interface MessageItem {
   title: TString;
   message: TString;
   actions: MessageAction[];
-  hideable: boolean;
+  hideable?: boolean;
+  closeable?: boolean;
   type: 'info' | 'warning' | 'error';
 }
 
@@ -56,6 +58,7 @@ export class MessageCenterService {
       new GpuAutomationMessageMonitor(this),
       new LighthouseConsoleMonitor(this),
       new VRChatOSCMessageMonitor(this),
+      new VRChatWebsocketConnectionMonitor(this),
     ];
   }
 

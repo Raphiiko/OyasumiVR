@@ -16,6 +16,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { AppSettingsService } from './app-settings.service';
 import { AutoAcceptInviteRequestsAutomationConfig } from '../models/automations';
 import { SleepPreparationService } from './sleep-preparation.service';
+import { MessageCenterService } from './message-center/message-center.service';
+import { openUrl } from '@tauri-apps/plugin-opener';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +31,8 @@ export class InviteAutomationsService {
     private eventLog: EventLogService,
     private notifications: NotificationService,
     private translate: TranslateService,
-    private sleepPreparation: SleepPreparationService
+    private sleepPreparation: SleepPreparationService,
+    private messageCenter: MessageCenterService
   ) {}
 
   async init() {
@@ -47,6 +50,7 @@ export class InviteAutomationsService {
   }
 
   private async handleInviteNotification(notification: Notification) {
+    info(`[VRChat] Received invite from ${notification.senderUsername}`);
     // Get the current user
     const user = await firstValueFrom(this.vrchat.user);
     if (!user) return;
@@ -78,7 +82,6 @@ export class InviteAutomationsService {
     handled: boolean,
     sleepMode: boolean
   ) {
-    console.warn({ config, handled, sleepMode });
     if (!config.playSoundOnInviteRequest) return;
     if (handled && config.playSoundOnInviteRequest_onlyWhenUnhandled) return;
     if (!sleepMode && config.playSoundOnInviteRequest_onlyWhenAsleep) return;
@@ -86,6 +89,7 @@ export class InviteAutomationsService {
   }
 
   private async handleRequestInviteNotification(notification: Notification) {
+    info(`[VRChat] Received invite request from ${notification.senderUsername}`);
     // Get the current user
     const user = await firstValueFrom(this.vrchat.user);
     if (!user) return;
@@ -95,8 +99,19 @@ export class InviteAutomationsService {
     const config = await firstValueFrom(this.automationConfig.configs).then(
       (c) => c.AUTO_ACCEPT_INVITE_REQUESTS
     );
+    // Stop if VRChat is not currently running
+    if (!(await firstValueFrom(this.vrchat.vrchatProcessActive))) {
+      warn(
+        `[VRChat] Ignoring invite request from ${notification.senderUsername}, as VRChat is not currently running.`
+      );
+      this.playInviteRequestSound(config, false, sleepMode);
+      return;
+    }
     // Stop if the automation is disabled
     if (!config.enabled) {
+      warn(
+        '[VRChat] Ignoring invite request because the auto-accept invite requests automation is disabled'
+      );
       this.playInviteRequestSound(config, false, sleepMode);
       return;
     }
@@ -104,9 +119,35 @@ export class InviteAutomationsService {
     const world = await firstValueFrom(this.vrchat.world);
     if (!world?.instanceId) {
       warn(
-        `Ignoring invite request from ${notification.senderUsername}, as the user's current world is not currently known.`
+        `[VRChat] Ignoring invite request from ${notification.senderUsername}, as the user's current world is not currently known.`
       );
       this.playInviteRequestSound(config, false, sleepMode);
+      this.messageCenter.addMessage({
+        id: `vrcInviteRequestFailedWorldUnknown_${notification.senderUsername}`,
+        title: 'message-center.messages.vrcInviteRequestFailedWorldUnknown.title',
+        message: {
+          string: 'message-center.messages.vrcInviteRequestFailedWorldUnknown.message',
+          values: {
+            senderUsername:
+              notification.senderUsername ??
+              this.translate.instant(
+                'message-center.messages.vrcInviteRequestFailedWorldUnknown.unknownFriend'
+              ),
+          },
+        },
+        closeable: true,
+        actions: [
+          {
+            label: 'message-center.actions.moreInfo',
+            action: () => {
+              openUrl(
+                'https://raphii.co/oyasumivr/hidden/troubleshooting/vrchat-invite-request-auto-accept-world-unknown/'
+              );
+            },
+          },
+        ],
+        type: 'warning',
+      });
       return;
     }
     // Automatically accept invite requests when on blue, in case the VRChat client does not.
@@ -121,7 +162,7 @@ export class InviteAutomationsService {
     }
     // Stop if sleep mode is disabled and it's required to be enabled
     if (config.onlyIfSleepModeEnabled && !sleepMode) {
-      warn('Ignoring invite because sleep mode is disabled');
+      warn('[VRChat] Ignoring invite request because sleep mode is disabled');
       const message = await this.getDeclineMessage(config);
       if (message) {
         await this.vrchat.declineInviteOrInviteRequest(notification.id, 'requestInvite', message);
@@ -140,7 +181,7 @@ export class InviteAutomationsService {
       const world = await firstValueFrom(this.vrchat.world);
       if (world.playerCount >= config.onlyBelowPlayerCount) {
         warn(
-          `Ignoring invite because there are too many players in the instance (${world.playerCount}>=${config.onlyBelowPlayerCount})`
+          `[VRChat] Ignoring invite request because there are too many players in the instance (${world.playerCount}>=${config.onlyBelowPlayerCount})`
         );
         const message = await this.getDeclineMessage(config);
         if (message) {
@@ -163,7 +204,7 @@ export class InviteAutomationsService {
       case 'WHITELIST':
         // Stop if the player is not on the whitelist
         if (!config.playerIds.includes(notification.senderUserId)) {
-          warn('Ignoring invite because player is not on whitelist');
+          warn('[VRChat] Ignoring invite request because player is not on whitelist');
           const message = await this.getDeclineMessage(config);
           if (message) {
             await this.vrchat.declineInviteOrInviteRequest(
@@ -185,7 +226,7 @@ export class InviteAutomationsService {
       case 'BLACKLIST':
         // Stop if the player is on the blacklist
         if (config.playerIds.includes(notification.senderUserId)) {
-          warn('Ignoring invite because player is on blacklist');
+          warn('[VRChat] Ignoring invite request because player is on blacklist');
           const message = await this.getDeclineMessage(config);
           if (message) {
             await this.vrchat.declineInviteOrInviteRequest(

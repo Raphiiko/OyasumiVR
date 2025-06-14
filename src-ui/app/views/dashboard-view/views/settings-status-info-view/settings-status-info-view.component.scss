@@ -19,5 +19,35 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    white-space: nowrap !important;
+  }
+}
+
+.setting-row-action {
+  flex-shrink: 1 !important;
+  min-width: 0;
+  max-width: 50%;
+  text-align: right;
+
+  span,
+  b {
+    word-break: normal;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    white-space: pre-wrap;
+    line-break: anywhere;
+  }
+
+  span {
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 0.7;
+    }
+
+    &:active {
+      opacity: 0.5;
+    }
   }
 }

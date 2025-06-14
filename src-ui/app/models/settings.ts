@@ -17,13 +17,9 @@ export interface AppSettings {
   notificationsEnabled: { types: NotificationType[] };
   quitWithSteamVR: QuitWithSteamVRMode;
   generalNotificationVolume: number;
-  deviceNicknames: {
-    [deviceId: string]: string;
-  };
   v1LighthouseIdentifiers: {
     [deviceId: string]: string;
   };
-  ignoredLighthouses: string[];
   hotkeys: { [hotkeyId: string]: string[] };
   oscServerEnabled: boolean;
   playerListPresets: PlayerListPreset[];
@@ -104,8 +100,6 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   overlayGpuAcceleration: true,
   overlayMenuOnlyOpenWhenVRChatIsRunning: false,
   generalNotificationVolume: 100,
-  deviceNicknames: {},
-  ignoredLighthouses: [],
   v1LighthouseIdentifiers: {},
   hotkeys: {},
   hideSnowverlay: false,

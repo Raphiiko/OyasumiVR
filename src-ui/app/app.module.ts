@@ -155,7 +155,6 @@ import { AudioVolumeEntriesComponent } from './views/dashboard-view/views/audio-
 import { AudioDevicePickerComponent } from './views/dashboard-view/views/audio-volume-automations-view/audio-device-picker/audio-device-picker.component';
 import { AudioDeviceAutomationsService } from './services/audio-device-automations.service';
 import { WindowsService } from './services/windows.service';
-import { DeviceEditModalComponent } from './components/device-list/device-edit-modal/device-edit-modal.component';
 import { SettingsAdvancedViewComponent } from './views/dashboard-view/views/settings-advanced-view/settings-advanced-view.component';
 import { SettingsNotificationsViewComponent } from './views/dashboard-view/views/settings-notifications-view/settings-notifications-view.component';
 import { SettingsGeneralViewComponent } from './views/dashboard-view/views/settings-general-view/settings-general-view.component';
@@ -206,7 +205,6 @@ import { SleepDetectionDetectionTabComponent } from './views/dashboard-view/view
 import { SleepDetectionSleepEnableTabComponent } from './views/dashboard-view/views/sleep-detection-view/tabs/sleep-detection-sleep-enable-tab/sleep-detection-sleep-enable-tab.component';
 import { SleepDetectionSleepDisableTabComponent } from './views/dashboard-view/views/sleep-detection-view/tabs/sleep-detection-sleep-disable-tab/sleep-detection-sleep-disable-tab.component';
 import { SleepDetectionViewComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detection-view.component';
-import { DeviceListLhStatePopoverComponent } from './components/device-list/device-list-lh-state-popover/device-list-lh-state-popover.component';
 import { WindowTitlebarComponent } from './components/window-titlebar/window-titlebar.component';
 import { ShutdownAutomationsTriggersTabComponent } from './views/dashboard-view/views/shutdown-automations-view/tabs/shutdown-automations-triggers-tab/shutdown-automations-triggers-tab.component';
 import { ShutdownAutomationsSettingsTabComponent } from './views/dashboard-view/views/shutdown-automations-view/tabs/shutdown-automations-settings-tab/shutdown-automations-settings-tab.component';
@@ -252,6 +250,13 @@ import { VRChatGroupAutomationsService } from './services/vrchat-group-automatio
 import { RunAutomationsService } from './services/run-automations.service';
 import { openUrl } from '@tauri-apps/plugin-opener';
 import { emit as globalEmit } from '@tauri-apps/api/event';
+import { DeviceManagerViewComponent } from './views/dashboard-view/views/device-manager-view/device-manager-view.component';
+import { DeviceManagerService } from './services/device-manager.service';
+import { DeviceManagerConfigModalComponent } from './components/device-manager-config-modal/device-manager-config-modal.component';
+import { DevicePowerButtonComponent } from './components/device-power-button/device-power-button.component';
+import { DeviceManagerDevicesTabComponent } from './views/dashboard-view/views/device-manager-view/tabs/device-manager-devices-tab/device-manager-devices-tab.component';
+import { DeviceManagerTagsTabComponent } from './views/dashboard-view/views/device-manager-view/tabs/device-manager-tags-tab/device-manager-tags-tab.component';
+import { LighthouseForceStatePopoverComponent } from './components/lighthouse-force-state-popover/lighthouse-force-state-popover.component';
 
 [
   localeEN,
@@ -359,7 +364,6 @@ export function createTranslateLoader(http: HttpClient) {
     AudioVolumeAutomationsViewComponent,
     AudioVolumeEntriesComponent,
     AudioDevicePickerComponent,
-    DeviceEditModalComponent,
     SettingsHotkeyViewComponent,
     HotkeySelectorComponent,
     HotkeySelectorModalComponent,
@@ -377,7 +381,6 @@ export function createTranslateLoader(http: HttpClient) {
     SleepDetectionDetectionTabComponent,
     SleepDetectionSleepEnableTabComponent,
     SleepDetectionSleepDisableTabComponent,
-    DeviceListLhStatePopoverComponent,
     WindowTitlebarComponent,
     ShutdownAutomationsTriggersTabComponent,
     ShutdownAutomationsSettingsTabComponent,
@@ -408,6 +411,12 @@ export function createTranslateLoader(http: HttpClient) {
     NotificationSoundModalComponent,
     VRChatGroupAutomationsViewComponent,
     RunAutomationsViewComponent,
+    DeviceManagerViewComponent,
+    DeviceManagerConfigModalComponent,
+    DevicePowerButtonComponent,
+    DeviceManagerDevicesTabComponent,
+    DeviceManagerTagsTabComponent,
+    LighthouseForceStatePopoverComponent,
   ],
   exports: [SelectBoxComponent],
   imports: [
@@ -479,6 +488,7 @@ export class AppModule {
     private updateService: UpdateService,
     private messageCenterService: MessageCenterService,
     private frameLimiterService: FrameLimiterService,
+    private deviceManagerService: DeviceManagerService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -625,6 +635,8 @@ export class AppModule {
             ),
           ]);
           await Promise.all([
+            // Initialize Device Manager
+            this.logInit('DeviceManagerService initialization', this.deviceManagerService.init()),
             // Initialize Steam support
             await this.logInit('Initializing Steam', this.steamService.init()),
             // Initialize Discord support
