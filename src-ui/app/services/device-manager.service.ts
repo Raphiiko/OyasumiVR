@@ -5,6 +5,7 @@ import {
   distinctUntilChanged,
   map,
   switchMap,
+  tap,
   throttleTime,
 } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
@@ -51,7 +52,7 @@ export class DeviceManagerService {
       .subscribe();
   }
 
-  public getKnownDeviceById(id: string) {
+  public getKnownDeviceById(id: string): DMKnownDevice | undefined {
     return this._data.value.knownDevices.find((device) => device.id === id);
   }
 
@@ -167,6 +168,22 @@ export class DeviceManagerService {
           devices,
           deviceIds: devices.map((d) => this.getIdForOpenVRDevice(d)),
         })),
+        // Update any already known devices that have received a different default name
+        tap(({ devices, deviceIds }) => {
+          devices.forEach((device, deviceIndex) => {
+            const deviceId = deviceIds[deviceIndex];
+            const knownDevice = this.getKnownDeviceById(deviceId);
+            const defaultName = this.determineDefaultNameForOVRDevice(device);
+            if (knownDevice?.defaultName !== defaultName) {
+              this._data.next({
+                ...this._data.value,
+                knownDevices: this._data.value.knownDevices.map((d) =>
+                  d.id === deviceId ? { ...d, defaultName } : d
+                ),
+              });
+            }
+          });
+        }),
         distinctUntilChanged((a, b) => isEqual(a.deviceIds, b.deviceIds))
       )
       .subscribe(({ devices, deviceIds }) => {
@@ -199,9 +216,10 @@ export class DeviceManagerService {
               }
             })();
             if (!deviceType) return null;
+            const defaultName = this.determineDefaultNameForOVRDevice(device);
             return {
               id,
-              defaultName: device.modelNumber ?? device.serialNumber,
+              defaultName,
               deviceType,
               lastSeen: Date.now(),
               tagIds: [],
@@ -216,6 +234,22 @@ export class DeviceManagerService {
           });
         }
       });
+  }
+
+  private determineDefaultNameForOVRDevice(device: OVRDevice): string {
+    switch (device.class) {
+      case 'HMD':
+        return device.serialNumber ?? 'Unknown Device';
+      case 'Controller':
+      case 'GenericTracker':
+        if (device.handleType) {
+          return 'comp.device-list.deviceRole.' + device.handleType;
+        } else {
+          return device.serialNumber ?? 'Unknown Device';
+        }
+      default:
+        return device.modelNumber ?? device.serialNumber ?? 'Unknown Device';
+    }
   }
 
   private listenForLighthouseDevices() {
@@ -265,12 +299,24 @@ export class DeviceManagerService {
       });
   }
 
-  private getIdForOpenVRDevice(device: OVRDevice): string {
+  public getIdForOpenVRDevice(device: OVRDevice): string {
     return `OVR_${device.class}_${device.serialNumber}`;
   }
 
-  private getIdForLighthouseDevice(device: LighthouseDevice): string {
+  public getIdForLighthouseDevice(device: LighthouseDevice): string {
     return `LH_${device.deviceType}_${device.id}`;
+  }
+
+  public getOpenVRIdForKnownDevice(device: DMKnownDevice): string {
+    if (!device.id.startsWith('OVR_'))
+      throw Error('Attempted getting OpenVR Device ID for non-OpenVR known device');
+    return device.id.split('_')[2];
+  }
+
+  public getLighthouseIdForKnownDevice(device: DMKnownDevice): string {
+    if (!device.id.startsWith('LH_'))
+      throw Error('Attempted getting Lighthouse Device ID for non-Lighthouse known device');
+    return device.id.split('_')[2];
   }
 
   private async loadData() {

@@ -1576,7 +1576,7 @@
       }
     },
     "empty": {
-      "noDevices": "No devices have been detected yet. Connect a VR device to get started.",
+      "noDevices": "No devices have been detected yet. Connect a device, like a controller or tracker, to get started.",
       "noDevicesMatchingSearch": "No devices found matching your search criteria."
     },
     "forget": {

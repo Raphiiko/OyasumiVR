@@ -87,6 +87,13 @@
       }
     }
 
+    &.power-attention {
+      &:hover {
+        background: var(--color-alert-warning);
+        color: var(--color-on-alert-warning);
+      }
+    }
+
     &:active:after {
       opacity: 0.25;
     }

@@ -36,7 +36,7 @@ export class DeviceManagerTagsTabComponent implements OnInit {
     private deviceManager: DeviceManagerService,
     private modalService: ModalService,
     private destroyRef: DestroyRef
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     // Subscribe to device manager data

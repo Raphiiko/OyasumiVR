@@ -16,7 +16,10 @@ import {
 } from '../../../../../../components/confirm-modal/confirm-modal.component';
 import { DMKnownDevice, DMDeviceType, DMDeviceTag } from '../../../../../../models/device-manager';
 import { OVRDevice } from '../../../../../../models/ovr-device';
-import { LighthouseDevice, LighthouseDevicePowerState } from '../../../../../../models/lighthouse-device';
+import {
+  LighthouseDevice,
+  LighthouseDevicePowerState,
+} from '../../../../../../models/lighthouse-device';
 import { combineLatest, firstValueFrom } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -27,6 +30,11 @@ import { fade, vshrink } from '../../../../../../utils/animations';
 import { SelectBoxItem } from '../../../../../../components/select-box/select-box.component';
 import { DomSanitizer } from '@angular/platform-browser';
 import Fuse from 'fuse.js';
+import {
+  LighthouseV1IdWizardModalComponent,
+  LighthouseV1IdWizardModalOutputModel,
+} from 'src-ui/app/components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
+import { LighthouseV1IdWizardModalInputModel } from 'src-ui/app/components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
 
 type DeviceGroupType = DMDeviceType | 'PREVIOUSLY_SEEN';
 
@@ -71,7 +79,7 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     private modalService: ModalService,
     private destroyRef: DestroyRef,
     private domSanitizer: DomSanitizer
-  ) { }
+  ) {}
 
   ngOnInit() {
     // Subscribe to device manager data
@@ -101,11 +109,9 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     // Watch for tag changes to update filter options
-    this.deviceManager.tags
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.updateTagFilterOptions();
-      });
+    this.deviceManager.tags.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.updateTagFilterOptions();
+    });
   }
 
   private updateTagFilterOptions() {
@@ -166,7 +172,7 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     if (this.searchQuery.trim()) {
       if (this._fuse) {
         const searchResults = this._fuse.search(this.searchQuery.trim());
-        filtered = searchResults.map(result => result.item);
+        filtered = searchResults.map((result) => result.item);
       } else {
         // Fallback to simple search if Fuse is not initialized
         const query = this.searchQuery.toLowerCase().trim();
@@ -357,6 +363,7 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
 
     // Handle lighthouse devices
     if (lighthouseDevice) {
+      if (this.lighthouse.deviceNeedsIdentifier(lighthouseDevice)) return 'attention';
       switch (lighthouseDevice.powerState) {
         case 'on':
           return 'on';
@@ -420,6 +427,17 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
 
   async handleDevicePowerAction(device: DMKnownDevice, action: DevicePowerAction) {
     const lighthouseDevice = this.getDeviceLighthouse(device);
+    if (!lighthouseDevice) return;
+
+    if (this.lighthouse.deviceNeedsIdentifier(lighthouseDevice)) {
+      this.modalService
+        .addModal<
+          LighthouseV1IdWizardModalInputModel,
+          LighthouseV1IdWizardModalOutputModel
+        >(LighthouseV1IdWizardModalComponent, { device: lighthouseDevice }, { closeOnEscape: false })
+        .subscribe();
+      return;
+    }
 
     // For lighthouse devices with unknown state, open the force state popover
     if (lighthouseDevice && lighthouseDevice.powerState === 'unknown') {
@@ -526,7 +544,9 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
 
   onClickOutsideLHStatePopover($event: MouseEvent) {
     const targetId = ($event.target as HTMLElement).id;
-    const deviceId = this.selectedPopoverDevice ? this.sanitizeIdForCSS(this.selectedPopoverDevice.id) : '';
+    const deviceId = this.selectedPopoverDevice
+      ? this.sanitizeIdForCSS(this.selectedPopoverDevice.id)
+      : '';
     if (targetId === 'btn-power-dm-' + deviceId) return;
     this.showLHStatePopover = false;
     this.selectedPopoverDevice = null;

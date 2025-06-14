@@ -59,6 +59,28 @@
           </div>
         </div>
       </div>
+
+      <!-- Lighthouse V1 Identifier Section -->
+      <div class="setting-row" *ngIf="v1LighthouseMode !== 'NONE'">
+        <div class="setting-row-label" translate>
+          <span translate>comp.device-edit-modal.v1Identifier.title</span>
+          <span translate>comp.device-edit-modal.v1Identifier.description</span>
+        </div>
+        <div class="setting-row-action">
+          <button
+            class="btn"
+            (click)="openLighthouseV1IdWizard()"
+            [ngClass]="v1LighthouseMode === 'NEEDS_ID' ? 'btn-primary' : 'btn-secondary'"
+          >
+            {{
+              (v1LighthouseMode === 'NEEDS_ID'
+                ? 'comp.device-edit-modal.v1Identifier.set'
+                : 'comp.device-edit-modal.v1Identifier.change'
+              ) | translate
+            }}
+          </button>
+        </div>
+      </div>
     </div>
   </div>
   <div class="pane-actions spread">

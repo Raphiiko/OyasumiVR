@@ -65,7 +65,9 @@ export class DevicePowerButtonComponent {
   }
 
   get canClick(): boolean {
-    return !this.disabled && !this.isLoading && (this.powerState !== 'unknown' || this.allowUnknownClick);
+    return (
+      !this.disabled && !this.isLoading && (this.powerState !== 'unknown' || this.allowUnknownClick)
+    );
   }
 
   get spinnerClass(): string {

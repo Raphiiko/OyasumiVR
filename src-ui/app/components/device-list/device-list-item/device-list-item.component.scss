@@ -34,15 +34,11 @@
 
     .device-subtitle {
       color: var(--color-text-4);
-      &.nickname {
-        width: 100%;
-        overflow: hidden;
-        color: var(--color-text-4);
-        font-weight: 700;
-        white-space: nowrap;
-        min-height: 0;
-        text-overflow: ellipsis;
-      }
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      min-height: 0;
+      text-overflow: ellipsis;
     }
 
     &:hover {
@@ -113,8 +109,4 @@
 
 .wrapper {
   transition: all 0.15s;
-}
-
-.device-ignored {
-  opacity: 0.6;
 }

@@ -120,8 +120,6 @@ export class VRChatSocket {
     const data = JSON.parse(message?.data as string);
     const handler = this.handlers.find((handler) => handler.type === data.type);
     if (!handler) return;
-    info(`[VRChat] Received event: ${data.type}`);
-    // info(`[VRChat] Received event: ${data.type}`);
     handler.handle(data.content);
   }
 

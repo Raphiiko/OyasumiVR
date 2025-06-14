@@ -59,11 +59,11 @@ export class TurnOnLighthousesOnSteamVRStartAutomationService {
       .subscribe(async () => {
         const devices = (await firstValueFrom(this.lighthouse.devices)).filter(
           (d) =>
-            (d.powerState === 'sleep' ||
-              d.powerState === 'standby' ||
-              d.powerState === 'booting' ||
-              d.powerState === 'unknown') &&
-            !this.lighthouse.isDeviceIgnored(d)
+            d.powerState === 'sleep' ||
+            d.powerState === 'standby' ||
+            d.powerState === 'booting' ||
+            d.powerState === 'unknown'
+          // && TODO: Filter only applicable devices
         );
         if (devices.length) {
           this.eventLog.logEvent({
@@ -84,10 +84,10 @@ export class TurnOnLighthousesOnSteamVRStartAutomationService {
         // Stop if the automation is disabled
         filter(() => this.config.enabled),
         // Get the newly discovered devices
-        map(([oldDevices, newDevices]) =>
-          newDevices
-            .filter((d) => !oldDevices.some((_d) => _d.id === d.id))
-            .filter((d) => !this.lighthouse.isDeviceIgnored(d))
+        map(
+          ([oldDevices, newDevices]) =>
+            newDevices.filter((d) => !oldDevices.some((_d) => _d.id === d.id))
+          // TODO: Filter only applicable devices
         ),
         // Handle the new devices
         tap((newDevices) => {

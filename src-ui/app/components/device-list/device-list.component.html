@@ -24,6 +24,13 @@
           <div class="device-list-category-header-label">
             <span>{{ category.label | translate }}</span>
           </div>
+          <app-device-power-button
+            id="btn-lh-bulk-power"
+            *ngIf="category.canBulkPowerOff"
+            [powerState]="'on'"
+            (powerAction)="turnOffOVRDevices(category)"
+            @fade
+          ></app-device-power-button>
         </div>
         <app-device-list-item
           *ngFor="let device of category.devices"

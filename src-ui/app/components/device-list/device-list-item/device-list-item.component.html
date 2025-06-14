@@ -1,17 +1,17 @@
 <ng-container *ngIf="mode">
-  <div class="wrapper" [class.device-ignored]="isDeviceIgnored">
+  <div class="wrapper">
     <div class="header-bar">
       <div class="header-bar-icon">
         <img [src]="'/assets/img/icon_' + icon + '.png'" class="category-icon" />
       </div>
-      <div class="header-bar-info" (click)="editDevice()">
-        <div class="device-name" translate>{{ deviceName }}</div>
-        <div class="device-subtitle" [class.nickname]="deviceHasNickname">
-          {{ deviceSubtitle ?? '' | translate }}
+      <div class="header-bar-info">
+        <div class="device-name" translate>{{ deviceTypeName }}</div>
+        <div class="device-subtitle">
+          {{ deviceName | translate }}
         </div>
       </div>
       <div class="header-bar-spacer"></div>
-      <div class="header-bar-action" *ngIf="!isDeviceIgnored">
+      <div class="header-bar-action">
         <app-device-power-button
           *ngIf="canShowPowerButton()"
           [id]="'btn-power-' + cssId"
@@ -31,10 +31,10 @@
         </div>
       </div>
     </div>
-    <div class="status-info" @vshrink *ngIf="status && !isDeviceIgnored">
+    <div class="status-info" @vshrink *ngIf="status">
       <span *ngFor="let s of status ? [status] : []" [@vshrink]>{{ s | translate }}</span></div
     >
-    <div class="battery-info" @vshrink *ngIf="showBattery && !isDeviceIgnored">
+    <div class="battery-info" @vshrink *ngIf="showBattery">
       <div class="battery-info-bar">
         <div
           class="battery-info-bar-fill"

@@ -89,6 +89,12 @@ function from9to10(data: any): any {
     );
   }
 
+  // Remove device nicknames
+  delete data.deviceNicknames;
+
+  // Remove ignored lighthouses
+  delete data.ignoredLighthouses;
+
   return data;
 }
 

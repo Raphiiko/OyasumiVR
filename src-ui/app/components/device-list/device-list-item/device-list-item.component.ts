@@ -12,11 +12,6 @@ import { LighthouseDevice, LighthouseDevicePowerState } from 'src-ui/app/models/
 import { LighthouseService } from 'src-ui/app/services/lighthouse.service';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 import { distinctUntilChanged, firstValueFrom, map, skip } from 'rxjs';
-import {
-  DeviceEditModalComponent,
-  DeviceEditModalInputModel,
-  DeviceEditModalOutputModel,
-} from '../device-edit-modal/device-edit-modal.component';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { OpenVRService } from '../../../services/openvr.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -35,6 +30,7 @@ import {
   DevicePowerAction,
 } from '../../device-power-button/device-power-button.component';
 import { isEqual } from 'lodash';
+import { DeviceManagerService } from 'src-ui/app/services/device-manager.service';
 
 @Component({
   selector: 'app-device-list-item',
@@ -48,10 +44,16 @@ export class DeviceListItemComponent implements OnInit {
 
   @Input() set ovrDevice(device: OVRDevice | undefined) {
     if (!device) return;
-    this.mode = 'openvr';
     this._lighthouseDevice = undefined;
     this._ovrDevice = device;
-    this.deviceName = device.modelNumber ?? '';
+    const knownDevice = this.deviceManager.getKnownDeviceById(
+      this.deviceManager.getIdForOpenVRDevice(device)
+    );
+    if (!knownDevice) return;
+
+    this.mode = 'openvr';
+    this.deviceTypeName = device.modelNumber ?? '';
+    this.deviceName = knownDevice.nickname ?? knownDevice.defaultName;
     this.showBattery = Boolean(device.providesBatteryStatus || device.isCharging);
     this.isCharging = this.showBattery && (device.isCharging ?? false);
     this.batteryPercentage = this.showBattery ? device.battery * 100 : 0;
@@ -62,28 +64,23 @@ export class DeviceListItemComponent implements OnInit {
     if (device.isTurningOff) this.powerButtonState = 'turn_off_busy';
     else if (device.canPowerOff && device.dongleId) this.powerButtonState = 'turn_off';
     else this.powerButtonState = 'hide';
-    this.isDeviceIgnored = false;
     this.cssId = this.sanitizeIdentifierForCSS(device.serialNumber ?? '');
     this.powerButtonAnchorId = '--anchor-device-pwr-btn-' + this.cssId;
     this.showLHStatePopover = false;
-
-    const nickname = this.openvr.getDeviceNickname(device);
-    this.deviceHasNickname = Boolean(nickname);
-    if (nickname) this.deviceSubtitle = nickname;
-    else if (device.handleType && ['Controller', 'GenericTracker'].includes(device.class))
-      this.deviceSubtitle = 'comp.device-list.deviceRole.' + device.handleType;
-    else this.deviceSubtitle = device.serialNumber ?? '';
   }
 
   @Input() set lighthouseDevice(device: LighthouseDevice | undefined) {
     if (!device) return;
-    this.mode = 'lighthouse';
     this._lighthouseDevice = device;
     this._ovrDevice = undefined;
-    this.deviceName = 'comp.device-list.deviceName.' + device.deviceType;
-    const nickname = this.lighthouse.getDeviceNickname(device);
-    this.deviceSubtitle = nickname ?? device.deviceName;
-    this.deviceHasNickname = Boolean(nickname);
+    const knownDevice = this.deviceManager.getKnownDeviceById(
+      this.deviceManager.getIdForLighthouseDevice(device)
+    );
+    if (!knownDevice) return;
+
+    this.mode = 'lighthouse';
+    this.deviceTypeName = 'comp.device-list.deviceName.' + device.deviceType;
+    this.deviceName = knownDevice.nickname ?? knownDevice.defaultName;
     this.showBattery = false;
     this.isCharging = false;
     this.batteryPercentage = 100;
@@ -128,15 +125,13 @@ export class DeviceListItemComponent implements OnInit {
         }
       }
     })();
-    this.isDeviceIgnored = this.lighthouse.isDeviceIgnored(device);
     this.cssId = this.sanitizeIdentifierForCSS(device.id);
     this.powerButtonAnchorId = '--anchor-device-pwr-btn-' + this.cssId;
   }
 
   mode?: 'lighthouse' | 'openvr';
+  deviceTypeName = '';
   deviceName = '';
-  deviceSubtitle: string | null = null;
-  deviceHasNickname = false;
   showBattery = false;
   isCharging = false;
   batteryPercentage = 100;
@@ -151,7 +146,6 @@ export class DeviceListItemComponent implements OnInit {
     | 'turn_on'
     | 'turn_off_busy'
     | 'turn_on_busy' = 'hide';
-  isDeviceIgnored = false;
   powerButtonAnchorId = '';
   showLHStatePopover = false;
   cssId = '';
@@ -165,7 +159,8 @@ export class DeviceListItemComponent implements OnInit {
     private eventLog: EventLogService,
     private appSettings: AppSettingsService,
     private destroyRef: DestroyRef,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private deviceManager: DeviceManagerService
   ) {}
 
   ngOnInit(): void {
@@ -186,6 +181,10 @@ export class DeviceListItemComponent implements OnInit {
       .subscribe(() => {
         if (this._lighthouseDevice) this.lighthouseDevice = this._lighthouseDevice;
       });
+    this.deviceManager.knownDevices.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      if (this._ovrDevice) this.ovrDevice = this._ovrDevice;
+      if (this._lighthouseDevice) this.lighthouseDevice = this._lighthouseDevice;
+    });
   }
 
   async onForceLHState(state: LighthouseDevicePowerState) {
@@ -283,27 +282,6 @@ export class DeviceListItemComponent implements OnInit {
     }
   }
 
-  editDevice() {
-    let input: DeviceEditModalInputModel;
-    if (this._ovrDevice) {
-      input = {
-        deviceType: 'OPENVR',
-        ovrDevice: this._ovrDevice,
-      };
-    } else if (this._lighthouseDevice) {
-      input = {
-        deviceType: 'LIGHTHOUSE',
-        lighthouseDevice: this._lighthouseDevice,
-      };
-    } else return;
-    this.modalService
-      .addModal<
-        DeviceEditModalInputModel,
-        DeviceEditModalOutputModel
-      >(DeviceEditModalComponent, input)
-      .subscribe();
-  }
-
   private sanitizeIdentifierForCSS(serialNumber: string) {
     return serialNumber.replace(/[^a-zA-Z0-9]/g, '');
   }
@@ -325,9 +303,10 @@ export class DeviceListItemComponent implements OnInit {
         return 'turning-off';
       case 'turn_on_busy':
         return 'turning-on';
+      case 'attention':
+        return 'attention';
       case 'turn_on_off':
       case 'turn_on_off_busy':
-      case 'attention':
       case 'hide':
       default:
         return 'unknown';

@@ -164,7 +164,6 @@ export class VRChatMicMuteAutomationService {
       }
       return false;
     } catch (e) {
-      console.warn(e);
       return false;
     }
   }

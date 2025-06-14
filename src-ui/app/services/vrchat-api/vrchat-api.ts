@@ -438,9 +438,6 @@ export class VRChatAPI {
       );
       // Cache the retrieved messages
       cache.set(messages!);
-      console.warn('RETRIEVED MESSAGES', { collection: type, messages });
-    } else {
-      console.warn('CACHED MESSAGES', { collection: type, messages });
     }
     // If we have a message that exactly matches the one we want, return that
     let slot = messages!.find((m) => m.message === message);
@@ -476,7 +473,6 @@ export class VRChatAPI {
     );
     // Cache the new messages
     cache.set(messages!);
-    console.warn('UPDATED MESSAGES', { collection: type, messages });
 
     return messages?.find((m) => m.slot === slot.slot) ?? null;
   }
