@@ -52,6 +52,7 @@ export class VRChatSocket {
 
   public async init() {
     const buildSocket = async () => {
+      info(`[VRChat] Opening new socket connection`);
       if (this.socket) {
         info(`[VRChat] Closing existing socket connection`);
         try {
@@ -61,7 +62,6 @@ export class VRChatSocket {
         }
         this.socket = undefined;
       }
-      info(`[VRChat] Opening new socket connection`);
       this._status.next('OPENING');
       this.socket = new WebSocket(
         'wss://pipeline.vrchat.cloud/?authToken=' + (await firstValueFrom(this.settings)).authCookie
@@ -90,19 +90,16 @@ export class VRChatSocket {
           break;
       }
     });
-    // Check connection intermittently in case of dropouts
+    // Check connection intermittently in case of dropouts, and rebuild the socket connection if needed
     interval(10000)
       .pipe(
-        switchMap(() => this.vrchatAuth.status),
-        take(1),
-        filter((status) => status === 'LOGGED_IN')
+        switchMap(() => this.vrchatAuth.status.pipe(take(1))),
+        filter(
+          (status) =>
+            status === 'LOGGED_IN' && !(this.socket && this.socket.readyState === WebSocket.OPEN)
+        )
       )
-      .subscribe(() => {
-        // Stop if we have an active connection
-        if (this.socket && this.socket.readyState === WebSocket.OPEN) return;
-        // (Re)build a connection
-        buildSocket();
-      });
+      .subscribe(() => buildSocket());
   }
 
   //
