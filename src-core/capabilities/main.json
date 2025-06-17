@@ -11,6 +11,7 @@
     "fs:allow-write-file",
     "fs:allow-read-dir",
     "fs:allow-exists",
+    "fs:allow-write-text-file",
     {
       "identifier": "fs:scope",
       "allow": [
