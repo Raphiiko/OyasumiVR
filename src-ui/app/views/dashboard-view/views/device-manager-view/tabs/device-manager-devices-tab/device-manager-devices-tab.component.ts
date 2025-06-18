@@ -328,6 +328,10 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     if (ovrDevice && ovrDevice.serialNumber) {
       return ovrDevice.serialNumber;
     }
+    const lighthouseDevice = this.getDeviceLighthouse(device);
+    if (lighthouseDevice && lighthouseDevice.deviceName) {
+      return lighthouseDevice.deviceName;
+    }
     return null;
   }
 

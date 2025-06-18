@@ -219,6 +219,7 @@ export class DeviceManagerService {
             const defaultName = this.determineDefaultNameForOVRDevice(device);
             return {
               id,
+              typeName: device.modelNumber,
               defaultName,
               deviceType,
               lastSeen: Date.now(),
@@ -237,19 +238,7 @@ export class DeviceManagerService {
   }
 
   private determineDefaultNameForOVRDevice(device: OVRDevice): string {
-    switch (device.class) {
-      case 'HMD':
-        return device.serialNumber ?? 'Unknown Device';
-      case 'Controller':
-      case 'GenericTracker':
-        if (device.handleType) {
-          return 'comp.device-list.deviceRole.' + device.handleType;
-        } else {
-          return device.serialNumber ?? 'Unknown Device';
-        }
-      default:
-        return device.modelNumber ?? device.serialNumber ?? 'Unknown Device';
-    }
+    return device.serialNumber ?? 'Unknown Device';
   }
 
   private listenForLighthouseDevices() {
@@ -280,8 +269,18 @@ export class DeviceManagerService {
             knownDevice.defaultName = d.deviceName;
             updated = true;
           } else if (!knownDevice) {
+            let typeName = 'Lighthouse';
+            switch (d.deviceType) {
+              case 'lighthouseV1':
+                typeName = 'Lighthouse V1';
+                break;
+              case 'lighthouseV2':
+                typeName = 'Lighthouse V2';
+                break;
+            }
             knownDevices.push({
               id,
+              typeName,
               defaultName: d.deviceName,
               deviceType: 'LIGHTHOUSE',
               lastSeen: Date.now(),

@@ -413,10 +413,6 @@
         "Lighthouse": "Base Stations",
         "other": "Others"
       },
-      "deviceName": {
-        "lighthouseV1": "V1 Lighthouse",
-        "lighthouseV2": "V2 Lighthouse"
-      },
       "deviceRole": {
         "AnkleLeft": "Left Ankle",
         "AnkleRight": "Right Ankle",
