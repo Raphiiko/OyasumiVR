@@ -175,9 +175,9 @@ export class DeviceManagerService {
       lighthouseDevices: [],
       ovrDevices: [],
     };
-    
+
     // Device types
-    for (let type of selection.types) {
+    for (const type of selection.types) {
       switch (type) {
         case 'HMD':
         case 'CONTROLLER':
@@ -212,9 +212,9 @@ export class DeviceManagerService {
     // Device tags
     const openvrDevices = await firstValueFrom(this.openvr.devices);
     const lighthouseDevices = await firstValueFrom(this.lighthouse.devices);
-    for (let tagId of selection.tagIds) {
+    for (const tagId of selection.tagIds) {
       const devices = this._data.value.knownDevices.filter((d) => d.tagIds.includes(tagId));
-      for (let device of devices) {
+      for (const device of devices) {
         const ovrDeviceId = this.getOpenVRIdForKnownDevice(device);
         const ovrDevice = openvrDevices.find((d) => d.serialNumber === ovrDeviceId);
         if (ovrDevice && !result.ovrDevices.find((d) => d.serialNumber === ovrDeviceId))
@@ -232,7 +232,7 @@ export class DeviceManagerService {
     }
 
     // Individual devices
-    for (let deviceId of selection.devices) {
+    for (const deviceId of selection.devices) {
       const device = this.getKnownDeviceById(deviceId);
       if (!device) continue;
       const ovrDeviceId = this.getOpenVRIdForKnownDevice(device);
