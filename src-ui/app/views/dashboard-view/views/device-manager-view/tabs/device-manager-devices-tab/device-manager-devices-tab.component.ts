@@ -368,16 +368,32 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     // Handle lighthouse devices
     if (lighthouseDevice) {
       if (this.lighthouse.deviceNeedsIdentifier(lighthouseDevice)) return 'attention';
-      switch (lighthouseDevice.powerState) {
-        case 'on':
-          return 'on';
-        case 'sleep':
-        case 'standby':
-          return 'off';
-        case 'booting':
-          return 'turning-on';
-        default:
-          return 'unknown';
+
+      if (lighthouseDevice.transitioningToPowerState) {
+        switch (lighthouseDevice.transitioningToPowerState) {
+          case 'on':
+            return 'turning-on';
+          case 'sleep':
+          case 'standby':
+            return 'turning-off';
+          case 'booting':
+            return 'turning-on';
+          case 'unknown':
+          default:
+            return 'unknown';
+        }
+      } else {
+        switch (lighthouseDevice.powerState) {
+          case 'on':
+            return 'on';
+          case 'sleep':
+          case 'standby':
+            return 'off';
+          case 'booting':
+            return 'turning-on';
+          default:
+            return 'unknown';
+        }
       }
     }
 
@@ -431,22 +447,23 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
 
   async handleDevicePowerAction(device: DMKnownDevice, action: DevicePowerAction) {
     const lighthouseDevice = this.getDeviceLighthouse(device);
-    if (!lighthouseDevice) return;
 
-    if (this.lighthouse.deviceNeedsIdentifier(lighthouseDevice)) {
-      this.modalService
-        .addModal<
-          LighthouseV1IdWizardModalInputModel,
-          LighthouseV1IdWizardModalOutputModel
-        >(LighthouseV1IdWizardModalComponent, { device: lighthouseDevice }, { closeOnEscape: false })
-        .subscribe();
-      return;
-    }
+    if (lighthouseDevice) {
+      if (this.lighthouse.deviceNeedsIdentifier(lighthouseDevice)) {
+        this.modalService
+          .addModal<
+            LighthouseV1IdWizardModalInputModel,
+            LighthouseV1IdWizardModalOutputModel
+          >(LighthouseV1IdWizardModalComponent, { device: lighthouseDevice }, { closeOnEscape: false })
+          .subscribe();
+        return;
+      }
 
-    // For lighthouse devices with unknown state, open the force state popover
-    if (lighthouseDevice && lighthouseDevice.powerState === 'unknown') {
-      this.rightClickDevicePowerButton(device);
-      return;
+      // For lighthouse devices with unknown state, open the force state popover
+      if (lighthouseDevice && lighthouseDevice.powerState === 'unknown') {
+        this.rightClickDevicePowerButton(device);
+        return;
+      }
     }
 
     if (action === 'power-off') {
