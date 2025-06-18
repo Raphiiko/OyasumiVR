@@ -17,7 +17,7 @@ export class DeviceSelectorComponent {
   private _selection?: DeviceSelection;
   private lastSelection?: DeviceSelection;
 
-  @Input() 
+  @Input()
   set selection(value: DeviceSelection | undefined) {
     this._selection = value;
     this.checkSelectionChange();
@@ -31,7 +31,10 @@ export class DeviceSelectorComponent {
 
   protected deviceCount = 0;
 
-  constructor(private modalService: ModalService, private deviceManagerService: DeviceManagerService) {}
+  constructor(
+    private modalService: ModalService,
+    private deviceManagerService: DeviceManagerService
+  ) {}
 
   get hasSelection(): boolean {
     return !!(
@@ -51,10 +54,14 @@ export class DeviceSelectorComponent {
 
   openModal() {
     this.modalService
-      .addModal(DeviceSelectorModalComponent, { 
-        selection: structuredClone(this.selection),
-        allowedDeviceTypes: this.allowedDeviceTypes 
-      }, {})
+      .addModal(
+        DeviceSelectorModalComponent,
+        {
+          selection: structuredClone(this.selection),
+          allowedDeviceTypes: this.allowedDeviceTypes,
+        },
+        {}
+      )
       .subscribe((result) => {
         if (result && result.save) {
           this.selection = result.selection;
@@ -93,4 +100,4 @@ export class DeviceSelectorComponent {
       this.deviceCount = 0;
     }
   }
-} 
+}

@@ -2,16 +2,16 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  
+
   .deselect-all-btn {
     padding: 0.5rem 1rem;
     font-size: 0.85rem;
-    
+
     i {
       margin-right: 0.4rem;
       font-size: 0.9rem;
     }
-    
+
     &:disabled {
       opacity: 0.5;
       cursor: not-allowed;
@@ -72,7 +72,8 @@
       width: 1.5rem;
       height: 1.5rem;
       flex-shrink: 0;
-      filter: invert(91%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%) contrast(100%);
+      filter: invert(91%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%)
+        contrast(100%);
     }
 
     .device-type-name {
@@ -144,10 +145,10 @@
     &.disabled {
       opacity: 0.6;
       pointer-events: none;
-      
+
       .device-group-header {
         color: var(--color-text-3);
-        
+
         .category-icon {
           opacity: 0.5;
         }
@@ -165,7 +166,8 @@
         width: 1.5rem;
         height: 1.5rem;
         margin-right: 0.75rem;
-        filter: invert(91%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%) contrast(100%);
+        filter: invert(91%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%)
+          contrast(100%);
       }
 
       .group-label {
@@ -218,7 +220,7 @@
           opacity: 0.6;
           cursor: not-allowed;
           pointer-events: none;
-          
+
           &:hover {
             background: var(--color-surface-1);
           }
@@ -245,7 +247,8 @@
           width: 2rem;
           height: 2rem;
           flex-shrink: 0;
-          filter: invert(91%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%) contrast(100%);
+          filter: invert(91%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%)
+            contrast(100%);
         }
 
         .device-info {
@@ -387,4 +390,3 @@
     grid-template-columns: 1fr;
   }
 }
-

@@ -1,12 +1,12 @@
 import { Component, OnInit, DestroyRef } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fadeUp } from 'src-ui/app/utils/animations';
-import { 
-  DeviceSelection, 
-  DMKnownDevice, 
-  DMDeviceTag, 
-  DMDeviceType, 
-  DMDeviceTypes 
+import {
+  DeviceSelection,
+  DMKnownDevice,
+  DMDeviceTag,
+  DMDeviceType,
+  DMDeviceTypes,
 } from 'src-ui/app/models/device-manager';
 import { DeviceManagerService } from 'src-ui/app/services/device-manager.service';
 import { OpenVRService } from 'src-ui/app/services/openvr.service';
@@ -46,7 +46,7 @@ export class DeviceSelectorModalComponent
 {
   selection?: DeviceSelection;
   allowedDeviceTypes?: DMDeviceType[];
-  
+
   // Data
   knownDevices: DMKnownDevice[] = [];
   tags: DMDeviceTag[] = [];
@@ -80,28 +80,30 @@ export class DeviceSelectorModalComponent
     }
 
     // Initialize filtered device types based on allowed types
-    this.filteredDeviceTypes = this.allowedDeviceTypes ? 
-      this.deviceTypes.filter(type => this.allowedDeviceTypes!.includes(type)) : 
-      [...this.deviceTypes];
+    this.filteredDeviceTypes = this.allowedDeviceTypes
+      ? this.deviceTypes.filter((type) => this.allowedDeviceTypes!.includes(type))
+      : [...this.deviceTypes];
 
     // Subscribe to device manager data
     combineLatest([
       this.deviceManager.knownDevices,
       this.deviceManager.tags,
       this.openVRService.devices,
-      this.lighthouseService.devices
-    ]).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(([knownDevices, tags, ovrDevices, lighthouseDevices]) => {
-      this.knownDevices = knownDevices;
-      this.tags = tags;
-      this.ovrDevices = ovrDevices;
-      this.lighthouseDevices = lighthouseDevices;
-      this.updateDeviceGroups();
-    });
+      this.lighthouseService.devices,
+    ])
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(([knownDevices, tags, ovrDevices, lighthouseDevices]) => {
+        this.knownDevices = knownDevices;
+        this.tags = tags;
+        this.ovrDevices = ovrDevices;
+        this.lighthouseDevices = lighthouseDevices;
+        this.updateDeviceGroups();
+      });
   }
 
   private updateDeviceGroups() {
     const groupMap = new Map<DMDeviceType, DMKnownDevice[]>();
-    
+
     // Initialize groups for filtered device types only
     for (const type of this.filteredDeviceTypes) {
       groupMap.set(type, []);
@@ -124,7 +126,9 @@ export class DeviceSelectorModalComponent
       if (devices.length > 0) {
         this.deviceGroups.push({
           type,
-          devices: devices.sort((a, b) => this.getDeviceDisplayName(a).localeCompare(this.getDeviceDisplayName(b))),
+          devices: devices.sort((a, b) =>
+            this.getDeviceDisplayName(a).localeCompare(this.getDeviceDisplayName(b))
+          ),
           icon: this.getDeviceTypeIcon(type),
           label: `device-manager.deviceType.${type}`,
         });
@@ -151,11 +155,12 @@ export class DeviceSelectorModalComponent
 
   private deselectDevicesOfType(deviceType: DMDeviceType) {
     const devicesOfType = this.knownDevices
-      .filter(device => device.deviceType === deviceType)
-      .map(device => device.id);
-    
-    this.result!.selection.devices = this.result!.selection.devices
-      .filter(deviceId => !devicesOfType.includes(deviceId));
+      .filter((device) => device.deviceType === deviceType)
+      .map((device) => device.id);
+
+    this.result!.selection.devices = this.result!.selection.devices.filter(
+      (deviceId) => !devicesOfType.includes(deviceId)
+    );
   }
 
   // Tag selection methods
@@ -179,7 +184,7 @@ export class DeviceSelectorModalComponent
   }
 
   toggleDevice(deviceId: string) {
-    const device = this.knownDevices.find(d => d.id === deviceId);
+    const device = this.knownDevices.find((d) => d.id === deviceId);
     if (!device || this.isDeviceGroupDisabled(device.deviceType)) {
       return; // Don't allow selection if device type is selected
     }
@@ -207,9 +212,9 @@ export class DeviceSelectorModalComponent
 
   hasAnySelection(): boolean {
     const selection = this.result!.selection;
-    return selection.devices.length > 0 || 
-           selection.types.length > 0 || 
-           selection.tagIds.length > 0;
+    return (
+      selection.devices.length > 0 || selection.types.length > 0 || selection.tagIds.length > 0
+    );
   }
 
   // Utility methods
@@ -237,7 +242,7 @@ export class DeviceSelectorModalComponent
   }
 
   getDeviceTags(device: DMKnownDevice): DMDeviceTag[] {
-    return this.tags.filter(tag => device.tagIds.includes(tag.id));
+    return this.tags.filter((tag) => device.tagIds.includes(tag.id));
   }
 
   getDeviceSerialNumber(device: DMKnownDevice): string | null {
@@ -298,4 +303,4 @@ export class DeviceSelectorModalComponent
     this.result!.save = true;
     await this.close();
   }
-} 
+}

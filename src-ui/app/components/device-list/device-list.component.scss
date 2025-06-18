@@ -24,7 +24,7 @@
   //noinspection CssInvalidPropertyValue
   overflow-y: overlay;
   flex: 1;
-  margin-bottom: 0; 
+  margin-bottom: 0;
 
   .device-list-category-header {
     margin: 0.5em 0;
@@ -103,11 +103,12 @@
     background: var(--color-surface-3);
     color: var(--color-text-1);
     border-color: var(--color-surface-4);
-    
+
     .device-manager-icon {
-      filter: invert(100%) sepia(0%) saturate(7493%) hue-rotate(15deg) brightness(103%) contrast(103%);
+      filter: invert(100%) sepia(0%) saturate(7493%) hue-rotate(15deg) brightness(103%)
+        contrast(103%);
     }
-    
+
     .material-icons-round {
       transform: translateX(0.2em);
     }
@@ -118,11 +119,12 @@
     border-color: var(--color-surface-3);
     color: var(--color-text-2);
     transform: translateY(1px);
-    
+
     .device-manager-icon {
-      filter: invert(60%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%) contrast(100%);
+      filter: invert(60%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%)
+        contrast(100%);
     }
-    
+
     .material-icons-round {
       transform: translateX(0);
       opacity: 0.5;

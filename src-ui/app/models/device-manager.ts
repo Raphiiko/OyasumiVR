@@ -4,7 +4,6 @@ export interface DeviceSelection {
   tagIds: string[];
 }
 
-
 export interface DeviceManagerData {
   version: 1;
   knownDevices: DMKnownDevice[];

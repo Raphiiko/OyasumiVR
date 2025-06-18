@@ -93,7 +93,9 @@
   z-index: 5;
 
   .menu-item {
-    transition: background-color 0.25s ease, transform 0.2s ease;
+    transition:
+      background-color 0.25s ease,
+      transform 0.2s ease;
 
     &:hover {
       background: var(--color-surface-2);
@@ -109,7 +111,9 @@
 .submenu,
 .rootmenu.translucent {
   .menu-item {
-    transition: background-color 0.25s ease, transform 0.2s ease;
+    transition:
+      background-color 0.25s ease,
+      transform 0.2s ease;
 
     &:hover {
       background: rgba(white, 0.08);
@@ -270,7 +274,9 @@
       i.material-icons-round {
         font-size: 0.75em;
         color: var(--color-text-4);
-        transition: color 0.2s ease, transform 0.2s ease;
+        transition:
+          color 0.2s ease,
+          transform 0.2s ease;
       }
     }
 

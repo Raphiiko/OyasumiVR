@@ -1,8 +1,8 @@
 <div class="pane modal modal-lg" @fadeUp>
   <div class="pane-title">
     <span translate>device-manager.deviceSelector.title</span>
-    <button 
-      class="btn btn-secondary btn-small deselect-all-btn" 
+    <button
+      class="btn btn-secondary btn-small deselect-all-btn"
       (click)="deselectAll()"
       [disabled]="!hasAnySelection()"
     >
@@ -61,10 +61,7 @@
           [class.disabled]="isDeviceGroupDisabled(group.type)"
         >
           <div class="device-group-header">
-            <img
-              [src]="'/assets/img/icon_' + group.icon + '.png'"
-              class="category-icon"
-            />
+            <img [src]="'/assets/img/icon_' + group.icon + '.png'" class="category-icon" />
             <span class="group-label" translate>{{ group.label }}</span>
             <span class="group-count">({{ group.devices.length }})</span>
           </div>
@@ -92,11 +89,14 @@
                 [src]="'/assets/img/icon_' + getDeviceTypeIcon(device.deviceType) + '.png'"
                 class="device-icon"
               />
-              
+
               <div class="device-info">
                 <div class="device-name-line">
                   <span class="device-name">{{ device.typeName }}</span>
-                  <span class="device-serial" *ngIf="getDeviceSerialNumber(device) && device.nickname">
+                  <span
+                    class="device-serial"
+                    *ngIf="getDeviceSerialNumber(device) && device.nickname"
+                  >
                     S/N: {{ getDeviceSerialNumber(device) }}
                   </span>
                 </div>
@@ -110,7 +110,10 @@
                     {{ getDeviceRole(device) }}
                   </span>
                 </div>
-                <div class="device-tags" *ngIf="getDeviceTags(device).length > 0 && device.deviceType !== 'LIGHTHOUSE'">
+                <div
+                  class="device-tags"
+                  *ngIf="getDeviceTags(device).length > 0 && device.deviceType !== 'LIGHTHOUSE'"
+                >
                   <div
                     class="tag-chip"
                     *ngFor="let tag of getDeviceTags(device); trackBy: trackTagBy"
@@ -121,7 +124,9 @@
                 </div>
               </div>
 
-              <i class="material-icons selection-indicator" *ngIf="isDeviceSelected(device.id)">check</i>
+              <i class="material-icons selection-indicator" *ngIf="isDeviceSelected(device.id)"
+                >check</i
+              >
             </div>
           </div>
         </div>
@@ -140,4 +145,4 @@
       <span translate>device-manager.deviceSelector.selectDevices</span>
     </button>
   </div>
-</div> 
+</div>
