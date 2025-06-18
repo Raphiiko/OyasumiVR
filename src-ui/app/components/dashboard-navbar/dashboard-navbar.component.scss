@@ -134,7 +134,7 @@
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
-  padding: 1.2em;
+  padding: 0.8em;
   position: relative;
 
   .menu-header {
@@ -142,7 +142,7 @@
     flex-direction: row;
     align-items: center;
     color: var(--color-text-2);
-    margin: -1.2em -1.2em 1.5em -1.2em;
+    margin: -0.8em -0.8em 1.2em -0.8em;
     background: var(--color-surface-0);
     border-radius: var(--surface-border-radius);
     border: 0.25em solid var(--color-surface-1);
@@ -183,14 +183,14 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 0.85em 0.75em;
+    padding: 0.9em 0.8em;
     border-radius: 6px;
     color: var(--color-text-2);
     cursor: pointer;
     position: relative;
 
     &:not(:last-child) {
-      margin-bottom: 0.4em;
+      margin-bottom: 0.35em;
     }
 
     &-icon-prefix,
@@ -200,7 +200,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-right: 0.5em;
+      margin-right: 0.6em;
 
       i {
         font-size: 1.4em;
@@ -248,7 +248,7 @@
 
     &-label {
       flex: 1;
-      font-weight: 450;
+      font-weight: 475;
       white-space: pre-wrap;
       font-size: 0.95em;
       transition: color 0.2s ease;
@@ -262,15 +262,13 @@
       display: flex;
       flex-direction: row;
       align-items: center;
+      justify-content: center;
       position: relative;
-      width: 0.8em;
+      width: 1.4em;
+      margin-left: 0.2em;
 
       i.material-icons-round {
-        position: absolute;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 0.8em;
+        font-size: 0.75em;
         color: var(--color-text-4);
         transition: color 0.2s ease, transform 0.2s ease;
       }
@@ -278,7 +276,7 @@
 
     &:hover &-submenu-icon i {
       color: var(--color-text-3);
-      transform: translateY(-50%) translateX(1px);
+      transform: translateX(1px);
     }
 
     .active-effect {
