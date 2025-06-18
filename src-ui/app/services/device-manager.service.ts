@@ -3,6 +3,7 @@ import {
   asyncScheduler,
   BehaviorSubject,
   distinctUntilChanged,
+  firstValueFrom,
   map,
   switchMap,
   tap,
@@ -12,6 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 import {
   DEVICE_MANAGER_DATA_DEFAULT,
   DeviceManagerData,
+  DeviceSelection,
   DMDeviceTag,
   DMDeviceType,
   DMKnownDevice,
@@ -23,6 +25,7 @@ import { LighthouseService } from './lighthouse.service';
 import { OVRDevice } from '../models/ovr-device';
 import { LighthouseDevice } from '../models/lighthouse-device';
 import { isEqual, uniq } from 'lodash';
+import { error } from '@tauri-apps/plugin-log';
 
 @Injectable({
   providedIn: 'root',
@@ -159,6 +162,92 @@ export class DeviceManagerService {
 
   public isDeviceObserved(deviceId: string): boolean {
     return this._observedDevices.value.includes(deviceId);
+  }
+
+  public async getDevicesForSelection(selection: DeviceSelection): Promise<{
+    lighthouseDevices: LighthouseDevice[];
+    ovrDevices: OVRDevice[];
+  }> {
+    const result: {
+      lighthouseDevices: LighthouseDevice[];
+      ovrDevices: OVRDevice[];
+    } = {
+      lighthouseDevices: [],
+      ovrDevices: [],
+    };
+    
+    // Device types
+    for (let type of selection.types) {
+      switch (type) {
+        case 'HMD':
+        case 'CONTROLLER':
+        case 'TRACKER': {
+          const devices = await firstValueFrom(this.openvr.devices);
+          switch (type) {
+            case 'HMD':
+              result.ovrDevices.push(...devices.filter((d) => d.class === 'HMD'));
+              break;
+            case 'CONTROLLER':
+              result.ovrDevices.push(...devices.filter((d) => d.class === 'Controller'));
+              break;
+            case 'TRACKER':
+              result.ovrDevices.push(...devices.filter((d) => d.class === 'GenericTracker'));
+              break;
+          }
+          break;
+        }
+        case 'LIGHTHOUSE': {
+          const _devices = await firstValueFrom(this.lighthouse.devices);
+          result.lighthouseDevices.push(..._devices);
+          break;
+        }
+        default:
+          error(
+            `[DeviceManagerService] getDevicesForSelection attempted to get devices for unknown device type (${type})`
+          );
+          break;
+      }
+    }
+
+    // Device tags
+    const openvrDevices = await firstValueFrom(this.openvr.devices);
+    const lighthouseDevices = await firstValueFrom(this.lighthouse.devices);
+    for (let tagId of selection.tagIds) {
+      const devices = this._data.value.knownDevices.filter((d) => d.tagIds.includes(tagId));
+      for (let device of devices) {
+        const ovrDeviceId = this.getOpenVRIdForKnownDevice(device);
+        const ovrDevice = openvrDevices.find((d) => d.serialNumber === ovrDeviceId);
+        if (ovrDevice && !result.ovrDevices.find((d) => d.serialNumber === ovrDeviceId))
+          result.ovrDevices.push(ovrDevice);
+        else {
+          const lighthouseDeviceId = this.getLighthouseIdForKnownDevice(device);
+          const lighthouseDevice = lighthouseDevices.find((d) => d.id === lighthouseDeviceId);
+          if (
+            lighthouseDevice &&
+            !result.lighthouseDevices.find((d) => d.id === lighthouseDeviceId)
+          )
+            result.lighthouseDevices.push(lighthouseDevice);
+        }
+      }
+    }
+
+    // Individual devices
+    for (let deviceId of selection.devices) {
+      const device = this.getKnownDeviceById(deviceId);
+      if (!device) continue;
+      const ovrDeviceId = this.getOpenVRIdForKnownDevice(device);
+      const ovrDevice = openvrDevices.find((d) => d.serialNumber === ovrDeviceId);
+      if (ovrDevice && !result.ovrDevices.find((d) => d.serialNumber === ovrDeviceId))
+        result.ovrDevices.push(ovrDevice);
+      else {
+        const lighthouseDeviceId = this.getLighthouseIdForKnownDevice(device);
+        const lighthouseDevice = lighthouseDevices.find((d) => d.id === lighthouseDeviceId);
+        if (lighthouseDevice && !result.lighthouseDevices.find((d) => d.id === lighthouseDeviceId))
+          result.lighthouseDevices.push(lighthouseDevice);
+      }
+    }
+
+    return result;
   }
 
   private listenForOpenVRDevices() {
