@@ -19,8 +19,6 @@
     align-items: flex-start;
     justify-content: center;
     background: transparent;
-    transition: all 0.15s;
-    cursor: pointer;
     padding: 0.5em;
     margin: -0.5em 0.5em -0.5em -0.5em;
     border-radius: var(--surface-border-radius);
@@ -39,14 +37,6 @@
       white-space: nowrap;
       min-height: 0;
       text-overflow: ellipsis;
-    }
-
-    &:hover {
-      background: var(--color-surface-1);
-    }
-
-    &:active {
-      background: var(--color-surface-0);
     }
   }
 
