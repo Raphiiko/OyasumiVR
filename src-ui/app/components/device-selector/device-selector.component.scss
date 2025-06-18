@@ -1,0 +1,53 @@
+:host {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+button {
+  $radius: 0.5em;
+  outline: none;
+  background: var(--color-surface-0);
+  padding: 0.5em 0.75em;
+  border-radius: $radius;
+  color: var(--color-text-2);
+  border: 1px solid var(--color-surface-2);
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    background: var(--color-surface-1);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  &.btn-main {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    & > div {
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    &.selected {
+      border-radius: 0 $radius $radius 0;
+    }
+  }
+
+  &.btn-clear {
+    border-radius: $radius 0 0 $radius;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-right: none;
+
+    i.material-icons {
+      font-size: 1em;
+    }
+  }
+} 

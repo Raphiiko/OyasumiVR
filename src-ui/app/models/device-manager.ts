@@ -1,3 +1,10 @@
+export interface DeviceSelection {
+  devices: string[];
+  types: DMDeviceType[];
+  tagIds: string[];
+}
+
+
 export interface DeviceManagerData {
   version: 1;
   knownDevices: DMKnownDevice[];
@@ -9,6 +16,7 @@ export type DMDeviceType = (typeof DMDeviceTypes)[number];
 
 export interface DMKnownDevice {
   id: string;
+  typeName: string;
   defaultName: string;
   nickname?: string;
   deviceType: DMDeviceType;

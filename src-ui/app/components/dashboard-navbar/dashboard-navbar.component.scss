@@ -13,7 +13,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 2em 1em;
+  padding: 2.2em 1.2em;
   flex-shrink: 0;
 
   .logo-text {
@@ -24,7 +24,7 @@
     flex: 1;
 
     .logo-title {
-      font-size: 2em;
+      font-size: 2.1em;
       font-weight: 300;
 
       b {
@@ -34,6 +34,8 @@
 
     .logo-tagline {
       color: var(--color-text-4);
+      font-size: 0.9em;
+      margin-top: 0.3em;
     }
   }
 
@@ -43,11 +45,17 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    margin-right: 1em;
+    margin-right: 1.1em;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 0.8;
+    }
 
     img {
-      width: 3.5em;
-      height: 3.5em;
+      width: 3.6em;
+      height: 3.6em;
     }
   }
 }
@@ -85,8 +93,11 @@
   z-index: 5;
 
   .menu-item {
+    transition: background-color 0.25s ease, transform 0.2s ease;
+
     &:hover {
       background: var(--color-surface-2);
+      transform: translateX(2px);
     }
 
     &.active {
@@ -98,12 +109,15 @@
 .submenu,
 .rootmenu.translucent {
   .menu-item {
+    transition: background-color 0.25s ease, transform 0.2s ease;
+
     &:hover {
-      background: rgba(white, 0.1);
+      background: rgba(white, 0.08);
+      transform: translateX(2px);
     }
 
     &.active {
-      background: rgba(white, 0.1);
+      background: rgba(white, 0.15);
     }
   }
 }
@@ -120,7 +134,7 @@
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
-  padding: 1em;
+  padding: 1.2em;
   position: relative;
 
   .menu-header {
@@ -128,7 +142,7 @@
     flex-direction: row;
     align-items: center;
     color: var(--color-text-2);
-    margin: -1em -1em 1em -1em;
+    margin: -1.2em -1.2em 1.5em -1.2em;
     background: var(--color-surface-0);
     border-radius: var(--surface-border-radius);
     border: 0.25em solid var(--color-surface-1);
@@ -141,6 +155,11 @@
       display: flex;
       flex-direction: row;
       align-items: center;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background: var(--color-surface-1);
+      }
 
       i.material-icons-round {
         font-size: 1.25em;
@@ -156,6 +175,7 @@
       align-items: center;
       justify-content: flex-start;
       text-align: left;
+      font-weight: 500;
     }
   }
 
@@ -163,29 +183,33 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 0.75em 0.5em;
-    border-radius: 99999px;
-    transition: all 0.15s ease;
+    padding: 0.85em 0.75em;
+    border-radius: 6px;
     color: var(--color-text-2);
     cursor: pointer;
     position: relative;
 
     &:not(:last-child) {
-      margin-bottom: 0.5em;
+      margin-bottom: 0.4em;
     }
 
     &-icon-prefix,
     &-icon-suffix {
-      width: 2em;
+      width: 2.2em;
       height: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-right: 0.25em;
+      margin-right: 0.5em;
 
       i {
-        font-size: 1.5em;
+        font-size: 1.4em;
+        transition: color 0.2s ease;
       }
+    }
+
+    &:hover &-icon-prefix i {
+      color: var(--color-text-1);
     }
 
     &-icon-suffix {
@@ -202,11 +226,12 @@
     }
 
     &-icon-prefix {
-      color: var(--color-text-1);
+      color: var(--color-text-2);
 
       img {
-        width: 1.5em;
-        height: 1.5em;
+        width: 1.4em;
+        height: 1.4em;
+        transition: opacity 0.2s ease;
 
         &.vrchat-icon,
         &.device-manager-icon,
@@ -217,10 +242,20 @@
       }
     }
 
+    &:hover &-icon-prefix img {
+      opacity: 0.9;
+    }
+
     &-label {
       flex: 1;
-      font-weight: 500;
+      font-weight: 450;
       white-space: pre-wrap;
+      font-size: 0.95em;
+      transition: color 0.2s ease;
+    }
+
+    &:hover &-label {
+      color: var(--color-text-1);
     }
 
     &-submenu-icon {
@@ -228,18 +263,22 @@
       flex-direction: row;
       align-items: center;
       position: relative;
-      width: 0.75em;
+      width: 0.8em;
 
       i.material-icons-round {
         position: absolute;
         right: 0;
-        top: 0;
-        height: 100%;
+        top: 50%;
+        transform: translateY(-50%);
         font-size: 0.8em;
         color: var(--color-text-4);
-        line-height: 0;
-        vertical-align: middle;
+        transition: color 0.2s ease, transform 0.2s ease;
       }
+    }
+
+    &:hover &-submenu-icon i {
+      color: var(--color-text-3);
+      transform: translateY(-50%) translateX(1px);
     }
 
     .active-effect {
@@ -252,7 +291,7 @@
       @include effects.attention-glow(0.05);
       z-index: 20;
       transition: all 0.25s ease;
-      border-radius: 99999px;
+      border-radius: 6px;
     }
   }
 }

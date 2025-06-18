@@ -8,9 +8,12 @@
 .pane {
   height: 100%;
   background: var(--color-surface-1);
+  display: flex;
+  flex-direction: column;
 
   &-title {
     padding-right: 0.75em;
+    flex-shrink: 0;
   }
 }
 
@@ -21,6 +24,7 @@
   //noinspection CssInvalidPropertyValue
   overflow-y: overlay;
   flex: 1;
+  margin-bottom: 0; 
 
   .device-list-category-header {
     margin: 0.5em 0;
@@ -66,6 +70,83 @@
     button {
       flex-shrink: 0;
     }
+  }
+}
+
+// Sticky Footer Styles
+.device-list-footer {
+  position: sticky;
+  bottom: 0;
+  background: var(--color-surface-1);
+  border-top: 1px solid var(--color-surface-3);
+  padding: 0.75em;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.device-manager-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75em 1em;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-surface-3);
+  border-radius: 0.5em;
+  color: var(--color-text-2);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9em;
+
+  &:hover {
+    background: var(--color-surface-3);
+    color: var(--color-text-1);
+    border-color: var(--color-surface-4);
+    
+    .device-manager-icon {
+      filter: invert(100%) sepia(0%) saturate(7493%) hue-rotate(15deg) brightness(103%) contrast(103%);
+    }
+    
+    .material-icons-round {
+      transform: translateX(0.2em);
+    }
+  }
+
+  &:active {
+    background: var(--color-surface-2);
+    border-color: var(--color-surface-3);
+    color: var(--color-text-2);
+    transform: translateY(1px);
+    
+    .device-manager-icon {
+      filter: invert(60%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%) contrast(100%);
+    }
+    
+    .material-icons-round {
+      transform: translateX(0);
+      opacity: 0.5;
+    }
+  }
+
+  .device-manager-icon {
+    width: 1.2em;
+    height: 1.2em;
+    filter: invert(70%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%) contrast(100%);
+    transition: filter 0.2s ease;
+  }
+
+  .device-manager-label {
+    flex: 1;
+    text-align: left;
+    margin-left: 0.75em;
+    font-weight: 500;
+  }
+
+  .material-icons-round {
+    font-size: 1em;
+    opacity: 0.7;
+    transition: all 0.2s ease;
   }
 }
 

@@ -75,15 +75,15 @@
 
           <div class="device-info">
             <div class="device-name-line">
-              <span class="device-name">{{ getDeviceDisplayName(device) }}</span>
-              <span class="device-serial" *ngIf="getDeviceSerialNumber(device)">
+              <span class="device-name">{{ device.typeName }}</span>
+              <span class="device-serial" *ngIf="getDeviceSerialNumber(device) && device.nickname">
                 S/N: {{ getDeviceSerialNumber(device) }}
               </span>
             </div>
             <div class="device-details">
-              <!-- Show default name if nickname is set -->
-              <span class="device-default-name" *ngIf="device.nickname">
-                {{ device.defaultName }}
+              <!-- Show nickname if set, otherwise show default name -->
+              <span class="device-default-name">
+                {{ device.nickname || device.defaultName }}
               </span>
               <!-- Show role if available -->
               <span class="device-role" *ngIf="getDeviceRole(device)" translate>

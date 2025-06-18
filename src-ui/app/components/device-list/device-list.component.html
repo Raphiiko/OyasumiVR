@@ -78,4 +78,16 @@
       <span translate>comp.device-list.noDevices</span>
     </div>
   </div>
+  
+  <div class="device-list-footer" [@fade]>
+    <button 
+      class="device-manager-button"
+      [routerLink]="'/dashboard/deviceManager'"
+      [title]="'comp.dashboard-navbar.deviceManager' | translate"
+    >
+      <img src="/assets/img/icon_controller.png" class="device-manager-icon" />
+      <span class="device-manager-label" translate>comp.dashboard-navbar.deviceManager</span>
+      <i class="material-icons-round">arrow_forward_ios</i>
+    </button>
+  </div>
 </div>

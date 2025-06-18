@@ -413,10 +413,6 @@
         "Lighthouse": "Base Stations",
         "other": "Others"
       },
-      "deviceName": {
-        "lighthouseV1": "V1 Lighthouse",
-        "lighthouseV2": "V2 Lighthouse"
-      },
       "deviceRole": {
         "AnkleLeft": "Left Ankle",
         "AnkleRight": "Right Ankle",
@@ -1597,6 +1593,21 @@
       "title": "Delete Tag",
       "message": "Are you sure you want to delete this tag? It will be removed from all devices.",
       "confirm": "Delete Tag"
+    },
+    "deviceSelector": {
+      "title": "Select Devices",
+      "deselectAll": "Deselect All",
+      "deviceTags": "Device Tags",
+      "individualDevices": "Individual Devices",
+      "deviceTypes": {
+        "HMD": "All Headsets",
+        "CONTROLLER": "All Controllers",
+        "TRACKER": "All Trackers",
+        "LIGHTHOUSE": "All Lighthouses"
+      },
+      "noTagsConfigured": "No tags are currently configured",
+      "noApplicableDevicesKnown": "No applicable devices are yet known",
+      "selectDevices": "Select Devices"
     }
   },
   "notifications": {

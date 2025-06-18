@@ -164,6 +164,8 @@ import { SettingsIntegrationsViewComponent } from './views/dashboard-view/views/
 import { SettingsHotkeyViewComponent } from './views/dashboard-view/views/settings-hotkey-view/settings-hotkey-view.component';
 import { HotkeySelectorComponent } from './components/hotkey-selector/hotkey-selector.component';
 import { HotkeySelectorModalComponent } from './components/hotkey-selector-modal/hotkey-selector-modal.component';
+import { DeviceSelectorComponent } from './components/device-selector/device-selector.component';
+import { DeviceSelectorModalComponent } from './components/device-selector-modal/device-selector-modal.component';
 import { HotkeyService } from './services/hotkey.service';
 import { HotkeyHandlerService } from './services/hotkey-handler.service';
 import { SettingsStatusInfoViewComponent } from './views/dashboard-view/views/settings-status-info-view/settings-status-info-view.component';
@@ -367,6 +369,8 @@ export function createTranslateLoader(http: HttpClient) {
     SettingsHotkeyViewComponent,
     HotkeySelectorComponent,
     HotkeySelectorModalComponent,
+    DeviceSelectorComponent,
+    DeviceSelectorModalComponent,
     SettingsStatusInfoViewComponent,
     SnowverlayComponent,
     HmdAutomationsViewComponent,

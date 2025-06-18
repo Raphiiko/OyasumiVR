@@ -52,7 +52,7 @@ export class DeviceListItemComponent implements OnInit {
     if (!knownDevice) return;
 
     this.mode = 'openvr';
-    this.deviceTypeName = device.modelNumber ?? '';
+    this.deviceTypeName = knownDevice.typeName;
     this.deviceName = knownDevice.nickname ?? knownDevice.defaultName;
     this.showBattery = Boolean(device.providesBatteryStatus || device.isCharging);
     this.isCharging = this.showBattery && (device.isCharging ?? false);
@@ -79,7 +79,7 @@ export class DeviceListItemComponent implements OnInit {
     if (!knownDevice) return;
 
     this.mode = 'lighthouse';
-    this.deviceTypeName = 'comp.device-list.deviceName.' + device.deviceType;
+    this.deviceTypeName = knownDevice.typeName;
     this.deviceName = knownDevice.nickname ?? knownDevice.defaultName;
     this.showBattery = false;
     this.isCharging = false;
