@@ -150,7 +150,7 @@ export class OscService {
   async send_float(address: string, value: number) {
     await this.send_command(address, [
       {
-        type: 'FLOAT',
+        type: 'Float',
         value: value + '',
       },
     ]);
@@ -159,7 +159,7 @@ export class OscService {
   async send_int(address: string, value: number) {
     await this.send_command(address, [
       {
-        type: 'INT',
+        type: 'Int',
         value: value + '',
       },
     ]);
@@ -168,7 +168,7 @@ export class OscService {
   async send_bool(address: string, value: boolean) {
     await this.send_command(address, [
       {
-        type: 'BOOLEAN',
+        type: 'Boolean',
         value: value + '',
       },
     ]);
@@ -177,7 +177,7 @@ export class OscService {
   async send_string(address: string, value: string) {
     await this.send_command(address, [
       {
-        type: 'STRING',
+        type: 'String',
         value: value,
       },
     ]);
@@ -192,7 +192,7 @@ export class OscService {
     const _parameters = structuredClone(parameters); // copy parameter array because some parameters may be modified before sending
     _parameters.forEach((parameter) => {
       // handle "\n" in string values to insert newlines
-      if (parameter.type === 'STRING') {
+      if (parameter.type === 'String') {
         parameter.value = parameter.value.replace(/\\n/g, '\n');
       }
     });

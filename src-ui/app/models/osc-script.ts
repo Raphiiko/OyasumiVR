@@ -1,7 +1,9 @@
 import { TString } from './translatable-string';
 
+export const OSC_SCRIPT_VERSION = 3;
+
 export interface OscScript {
-  version: 2;
+  version: typeof OSC_SCRIPT_VERSION;
   commands: OscScriptAction[];
 }
 
@@ -23,7 +25,7 @@ export type OscParameter = {
   value: string;
 };
 
-export type OscParameterType = 'INT' | 'FLOAT' | 'BOOLEAN' | 'STRING';
+export type OscParameterType = 'Int' | 'Float' | 'Boolean' | 'String';
 
 export interface OscScriptCodeValidationError {
   line: number;
