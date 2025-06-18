@@ -35,7 +35,7 @@ interface ValidationError {
 })
 export class OscScriptSimpleEditorComponent implements OnInit {
   private validationTrigger: Subject<void> = new Subject<void>();
-  protected _script: OscScript = { version: 2, commands: [] };
+  protected _script: OscScript = { version: 3, commands: [] };
   @Input() set script(script: OscScript) {
     if (isEqual(script, this._script)) return;
     this._script = structuredClone(script);
@@ -150,7 +150,7 @@ export class OscScriptSimpleEditorComponent implements OnInit {
           address: '',
           parameters: [
             {
-              type: 'BOOLEAN',
+              type: 'Boolean',
               value: 'true',
             },
           ],
@@ -169,7 +169,7 @@ export class OscScriptSimpleEditorComponent implements OnInit {
   addParameter(commandIndex: number) {
     const command = this._script.commands[commandIndex] as OscScriptCommandAction;
     command.parameters.push({
-      type: 'BOOLEAN',
+      type: 'Boolean',
       value: 'true',
     });
   }
@@ -223,20 +223,20 @@ export class OscScriptSimpleEditorComponent implements OnInit {
         let oscType: OscParameterType;
         switch (param.type) {
           case 'Bool':
-            oscType = 'BOOLEAN';
+            oscType = 'Boolean';
             break;
           case 'Float':
-            oscType = 'FLOAT';
+            oscType = 'Float';
             break;
           case 'Int':
-            oscType = 'INT';
+            oscType = 'Int';
             break;
           case 'String':
-            oscType = 'STRING';
+            oscType = 'String';
             break;
           default:
             // Default to INT if unknown type (shouldn't happen)
-            oscType = 'INT';
+            oscType = 'Int';
             break;
         }
 
@@ -262,16 +262,16 @@ export class OscScriptSimpleEditorComponent implements OnInit {
 
       // Set appropriate default value based on type
       switch (newType) {
-        case 'INT':
+        case 'Int':
           command.parameters[parameterIndex].value = '1';
           break;
-        case 'FLOAT':
+        case 'Float':
           command.parameters[parameterIndex].value = '1.0';
           break;
-        case 'BOOLEAN':
+        case 'Boolean':
           command.parameters[parameterIndex].value = 'true';
           break;
-        case 'STRING':
+        case 'String':
           command.parameters[parameterIndex].value = '';
           break;
       }
@@ -309,16 +309,16 @@ export class OscScriptSimpleEditorComponent implements OnInit {
     const parameter = command.parameters[parameterIndex];
     parameter.type = item.id as OscParameterType;
     switch (parameter.type) {
-      case 'INT':
+      case 'Int':
         parameter.value = '1';
         break;
-      case 'FLOAT':
+      case 'Float':
         parameter.value = '1.0';
         break;
-      case 'BOOLEAN':
+      case 'Boolean':
         parameter.value = 'true';
         break;
-      case 'STRING':
+      case 'String':
         parameter.value = '';
         break;
     }
@@ -358,7 +358,7 @@ export class OscScriptSimpleEditorComponent implements OnInit {
           }
           command.parameters.forEach((parameter) => {
             switch (parameter.type) {
-              case 'INT': {
+              case 'Int': {
                 const intValue = parseInt(parameter.value);
                 if (isNaN(intValue) || intValue < 0 || intValue > 255) {
                   this.errors.push({
@@ -368,7 +368,7 @@ export class OscScriptSimpleEditorComponent implements OnInit {
                 }
                 break;
               }
-              case 'FLOAT': {
+              case 'Float': {
                 const floatValue = parseFloat(parameter.value);
                 if (isNaN(floatValue) || floatValue < -1.0 || floatValue > 1.0) {
                   this.errors.push({
@@ -383,7 +383,7 @@ export class OscScriptSimpleEditorComponent implements OnInit {
                 }
                 break;
               }
-              case 'STRING': {
+              case 'String': {
                 if (parameter.value.length > this.MAX_STRING_VALUE_LENGTH) {
                   this.errors.push({
                     actionIndex,

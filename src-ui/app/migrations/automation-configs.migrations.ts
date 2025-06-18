@@ -3,6 +3,7 @@ import { AUTOMATION_CONFIGS_DEFAULT, AutomationConfigs } from '../models/automat
 import { error, info } from '@tauri-apps/plugin-log';
 import { message } from '@tauri-apps/plugin-dialog';
 import { BaseDirectory, writeTextFile } from '@tauri-apps/plugin-fs';
+import { migrateOscScript } from './osc-script.migrations';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: resetToLatest,
@@ -107,6 +108,24 @@ function from17to18(data: any): any {
   };
   delete data.NIGHTMARE_DETECTION.playSound;
   delete data.NIGHTMARE_DETECTION.soundVolume;
+
+  if (data.OSC_GENERAL.onSleepModeEnable) {
+    data.OSC_GENERAL.onSleepModeEnable = migrateOscScript(data.OSC_GENERAL.onSleepModeEnable);
+  }
+  if (data.OSC_GENERAL.onSleepModeDisable) {
+    data.OSC_GENERAL.onSleepModeDisable = migrateOscScript(data.OSC_GENERAL.onSleepModeDisable);
+  }
+  if (data.OSC_GENERAL.onSleepPreparation) {
+    data.OSC_GENERAL.onSleepPreparation = migrateOscScript(data.OSC_GENERAL.onSleepPreparation);
+  }
+  if (Object.keys(data.SLEEPING_ANIMATIONS.oscScripts).length) {
+    Object.keys(data.SLEEPING_ANIMATIONS.oscScripts).forEach((key) => {
+      data.SLEEPING_ANIMATIONS.oscScripts[key] = migrateOscScript(
+        data.SLEEPING_ANIMATIONS.oscScripts[key]
+      );
+    });
+  }
+
   return data;
 }
 

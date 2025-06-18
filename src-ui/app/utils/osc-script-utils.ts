@@ -44,7 +44,7 @@ export function parseOscScriptFromCode(code: string): {
   errors: OscScriptCodeValidationError[];
 } {
   const script: OscScript = {
-    version: 2,
+    version: 3,
     commands: [],
   };
   const errors: OscScriptCodeValidationError[] = [];
@@ -99,7 +99,7 @@ export function parseOscScriptFromCode(code: string): {
             const floatValue = parseFloat(match.groups!['FLOAT_VALUE']);
             if (!isNaN(floatValue)) {
               parameters.push({
-                type: 'FLOAT',
+                type: 'Float',
                 value: floatValue + '',
               });
             } else {
@@ -114,7 +114,7 @@ export function parseOscScriptFromCode(code: string): {
             const intValue = parseInt(match.groups!['INT_VALUE'], 10);
             if (!isNaN(intValue)) {
               parameters.push({
-                type: 'INT',
+                type: 'Int',
                 value: intValue + '',
               });
             } else {
@@ -130,7 +130,7 @@ export function parseOscScriptFromCode(code: string): {
               match.groups!['BOOL_VALUE'].toLowerCase()
             );
             parameters.push({
-              type: 'BOOLEAN',
+              type: 'Boolean',
               value: boolValue + '',
             });
           }
@@ -140,7 +140,7 @@ export function parseOscScriptFromCode(code: string): {
 
             if (stringValue.length < MAX_STRING_VALUE_LENGTH) {
               parameters.push({
-                type: 'STRING',
+                type: 'String',
                 value: stringValue.replace(/\\"/g, '"'), // un-escape escaped quotes when adding to array
               });
             } else {
