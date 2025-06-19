@@ -4,6 +4,7 @@
       "role": "开发者"
     },
     "contributionType": {
+      "programming": "编程",
       "soundFx": "音效"
     },
     "contributions": "贡献者们",
@@ -79,6 +80,14 @@
     "loadingFriends": "正在加载好友列表...",
     "noPlayersAdded": "目前没有任何玩家在此列表中",
     "options": {
+      "acceptMessage": {
+        "customMessage": {
+          "placeholder": "OyasumiVR 已接受请求",
+          "title": "邀请消息"
+        },
+        "description": "当 OyasumiVR 接受邀请请求时附带一条消息",
+        "title": "附带消息接受"
+      },
       "changeListPreset": {
         "onSleepDisable": {
           "description": "当睡眠模式禁用时，加载保存的列表预设",
@@ -92,6 +101,29 @@
           "description": "当你准备进入睡眠模式时，加载保存的列表预设",
           "title": "当我准备睡觉时加载预设"
         }
+      },
+      "declineOnInviteWhileAsleep": {
+        "customMessage": {
+          "description": "输入当拒绝邀请时发送的消息",
+          "placeholder": "我正在睡觉哦！（由 OyasumiVR 自动拒绝）",
+          "title": "自定义消息"
+        },
+        "description": "在睡眠模式开启时自动拒绝邀请",
+        "title": "睡觉时自动拒绝邀请"
+      },
+      "declineOnRequest": {
+        "customMessage": {
+          "description": "输入在请求被拒绝时要发送的消",
+          "placeholder": "请求已被 OyasumiVR 拒绝",
+          "title": "自定义消息"
+        },
+        "description": "如果 OyasumiVR 未自动接受邀请请求，将自动发送一条拒绝消息",
+        "options": {
+          "ALWAYS": "始终发送",
+          "DISABLED": "从不发送",
+          "WHEN_SLEEPING": "仅在我睡觉时发送"
+        },
+        "title": "拒绝邀请请求"
       },
       "enable": {
         "description": "自动接受好友的加入请求",
@@ -122,6 +154,26 @@
       "onlyIfSleepModeEnabled": {
         "title": "仅当睡眠模式开启时生效"
       },
+      "playSoundOnInvite": {
+        "description": "收到邀请时播放提示音",
+        "onlyWhenAsleep": {
+          "description": "仅在睡眠模式启用时播放提示音",
+          "title": "仅在睡觉时"
+        },
+        "title": "邀请时播放提示音"
+      },
+      "playSoundOnInviteRequest": {
+        "description": "收到邀请请求时播放提示音",
+        "onlyWhenAsleep": {
+          "description": "仅在睡眠模式启用时播放提示音",
+          "title": "仅在睡觉时"
+        },
+        "onlyWhenUnhandled": {
+          "description": "仅在邀请请求未被自动接受或拒绝时播放提示音",
+          "title": "仅在未自动处理时"
+        },
+        "title": "邀请请求时播放提示音"
+      },
       "presetOptions": {
         "options": {
           "NONE": "不改变"
@@ -142,6 +194,7 @@
     },
     "savePreset": "保存为预设",
     "title": "邀请 / 加入请求",
+    "userOnBusyStatus": "当你处于请勿打扰状态（红灯）时，好友将无法正常发送加入请求。但通过 VRCX 等第三方工具发送的邀请请求，OyasumiVR 仍会接受。",
     "userOnJoinMeStatus": "无论你的设置如何，VRChat 都会自动接受所有加入请求，因为你的状态是加入我（蓝色）",
     "whitelist": "玩家白名单"
   },
@@ -177,6 +230,7 @@
         "title": "日落时间"
       }
     },
+    "autoUpdateTimeTooltip": "根据你所在位置的日出/日落时间自动更新时间",
     "brightness": {
       "title": "将亮度改为"
     },
@@ -191,13 +245,15 @@
       "title": "更改色温"
     },
     "copyBrightness": "复制当前亮度值",
-    "description": "让OyasumiVR在不同时间自动调整你的VR头戴设备的亮度和/或色温，比如在你入睡时或醒来时！",
+    "description": "让OyasumiVR在不同时间自动调整你的VR头戴设备的亮度或色温，比如在你入睡时或醒来时！",
     "detailsTitle": "事件",
     "events": "事件",
     "hardwareBrightness": {
       "description": "调整显示屏本身的亮度",
       "title": "将硬件亮度更改为"
     },
+    "hmdConnectEventTooltip": "这些设置将在您的头显连接到 SteamVR 时应用",
+    "hmdConnectPotentialEventTooltip": "如果满足条件，这些设置将在您的头显连接到 SteamVR 时应用",
     "miscConfig": "其他选项",
     "mode": {
       "advanced": "高级模式",
@@ -297,15 +353,19 @@
       "autoInviteRequestAccept": "邀请 / 加入请求",
       "brightnessAutomations": "亮度",
       "chaperoneAutomations": "SteamVR 保护墙",
+      "deviceManager": "设备管理",
+      "frameLimiter": "帧率限制自动化",
       "gpuAutomations": "显卡",
       "hardwareAutomations": "硬件自动化",
       "hmdAutomations": "特定 HMD 的自动化",
       "joinNotifications": "加入通知",
+      "miscAutomations": "通用自动化",
       "nightmareDetection": "噩梦检测",
       "oscAutomations": "OSC 自动化",
       "overview": "首页",
       "powerAutomations": "电源",
       "resolutionAutomations": "分辨率",
+      "runAutomations": "执行自动化命令",
       "settings": {
         "advanced": "高级选项",
         "brightnessCct": "亮度与色温",
@@ -325,6 +385,7 @@
       "systemMicMuteAutomations": "麦克风",
       "vrcAutomations": "VRChat 自动化",
       "vrchatAvatarAutomations": "模型",
+      "vrchatGroupAutomations": "群组自动化",
       "vrchatMicMuteAutomations": "麦克风"
     },
     "device-edit-modal": {
@@ -351,10 +412,6 @@
         "HMD": "头戴设备",
         "Lighthouse": "基站",
         "other": "其他"
-      },
-      "deviceName": {
-        "lighthouseV1": "Lighthouse V1",
-        "lighthouseV2": "Lighthouse V2"
       },
       "deviceRole": {
         "AnkleLeft": "左脚踝",
@@ -430,6 +487,8 @@
         },
         "cctChanged": {
           "reason": {
+            "AT_SUNRISE": "在日出时触发",
+            "AT_SUNSET": "在日落时触发",
             "SLEEP_MODE_DISABLE": "因为已关闭睡眠模式",
             "SLEEP_MODE_ENABLE": "因为已开启睡眠模式",
             "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
@@ -487,6 +546,30 @@
           },
           "title": "保护墙的淡化距离已设置为 {value}。"
         },
+        "declinedInvite": {
+          "reason": {
+            "SLEEP_MODE_ENABLED": "因为睡眠模式已开启"
+          },
+          "title": "已自动拒绝来自“{displayName}”的邀请"
+        },
+        "declinedInviteRequest": {
+          "reason": {
+            "NOT_ON_WHITELIST": "该玩家不在白名单中",
+            "ON_BLACKLIST": "该玩家在黑名单中",
+            "PLAYER_COUNT_CONDITION_FAILED": "房间中的玩家过多",
+            "SLEEP_MODE_ENABLED_CONDITION_FAILED": "因为睡眠模式未开启"
+          },
+          "title": "已自动拒绝来自“{displayName}”的加入请求"
+        },
+        "frameLimitChanged": {
+          "reason": {
+            "HMD_CONNECT": "因为头显连接而触发",
+            "SLEEP_MODE_DISABLED": "因为已关闭睡眠模式",
+            "SLEEP_MODE_ENABLED": "因为已开启睡眠模式",
+            "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
+          },
+          "title": "为“{appName}”设置帧率限制为 {limit}"
+        },
         "gpuPowerLimitChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "因为已关闭睡眠模式",
@@ -499,6 +582,8 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
+            "AT_SUNRISE": "在日出时触发",
+            "AT_SUNSET": "在日落时触发",
             "SLEEP_MODE_DISABLE": "因为已关闭睡眠模式",
             "SLEEP_MODE_ENABLE": "因为已开启睡眠模式",
             "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
@@ -599,6 +684,14 @@
             "custom": "SteamVR 的渲染分辨率设置为 {value}"
           }
         },
+        "runAutomationExecuted": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "因为已关闭睡眠模式",
+            "SLEEP_MODE_ENABLED": "因为已开启睡眠模式",
+            "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
+          },
+          "title": "通过命令提示符执行了用户定义的指令"
+        },
         "shutdownSequenceCancelled": {
           "reason": {
             "MANUAL": "已手动取消"
@@ -671,6 +764,8 @@
         },
         "softwareBrightnessChanged": {
           "reason": {
+            "AT_SUNRISE": "在日出时触发",
+            "AT_SUNSET": "在日落时触发",
             "SLEEP_MODE_DISABLE": "因为已关闭睡眠模式",
             "SLEEP_MODE_ENABLE": "因为已开启睡眠模式",
             "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
@@ -729,6 +824,17 @@
           },
           "title": "已将你的模型更改为 ''{avatarName}''"
         },
+        "vrchatGroupChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "因为已关闭睡眠模式",
+            "SLEEP_MODE_ENABLED": "因为已开启睡眠模式",
+            "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
+          },
+          "title": {
+            "clear": "已停止显示 VRChat 群组“{groupName}",
+            "set": "已将显示的 VRChat 群组更改为“{groupName}"
+          }
+        },
         "windowsPowerPolicySet": {
           "reason": {
             "SLEEP_MODE_DISABLED": "因为已关闭睡眠模式",
@@ -756,9 +862,17 @@
           "description": "与设备开关（如追踪器、控制器和基站）相关的事件",
           "title": "设备电源"
         },
+        "FRAME_LIMITING": {
+          "description": "与应用程序帧率限制相关的事件",
+          "title": "帧率限制"
+        },
         "GPU_CONTROL": {
           "description": "与显卡控制相关的事件",
           "title": "GPU 控制事件"
+        },
+        "RUN_AUTOMATIONS": {
+          "description": "与通过命令提示符运行自动化命令相关的事件",
+          "title": "执行自动化命令"
         },
         "SHUTDOWN_SEQUENCE": {
           "description": "与关机序列相关的事件",
@@ -775,6 +889,10 @@
         "VRCHAT_AVATAR": {
           "description": "与 VRChat 模型切换相关的事件",
           "title": "VRChat 模型事件"
+        },
+        "VRCHAT_GROUP": {
+          "description": "与 OyasumiVR 更改你所显示的 VRChat 群组相关的事件",
+          "title": "VRChat 群组"
         },
         "VRCHAT_INVITES": {
           "description": "与你的 VRChat 好友邀请相关的事件",
@@ -976,7 +1094,8 @@
         }
       },
       "errorCounter": "{count}个错误",
-      "test": "测试"
+      "test": "测试",
+      "vrchatAutofillInfo": "启动 VRChat 来启用头像参数的自动补全功能。"
     },
     "player-list-preset-modal": {
       "confirmDelete": {
@@ -1057,6 +1176,100 @@
       "title": "双重认证"
     }
   },
+  "device-manager": {
+    "actions": {
+      "forget": "忘记设备",
+      "powerOff": "关闭电源",
+      "powerOn": "开启电源"
+    },
+    "config": {
+      "newTag": {
+        "create": "创建标签",
+        "description": "创建一个新标签并分配给此设备",
+        "title": "创建新标签"
+      },
+      "nickname": {
+        "description": "为此设备设置一个自定义名称，方便识别",
+        "title": "设备昵称"
+      },
+      "tags": {
+        "description": "为设备分配标签以便分类和筛选",
+        "noTags": "暂无可用标签，请在“标签”选项卡中创建",
+        "title": "设备标签"
+      },
+      "title": "配置 {deviceName}"
+    },
+    "deleteTag": {
+      "confirm": "删除标签",
+      "message": "确定要删除该标签吗？它将从所有设备中移除。",
+      "title": "删除标签"
+    },
+    "deviceSelector": {
+      "deselectAll": "取消全选",
+      "deviceTags": "设备标签",
+      "deviceTypes": {
+        "CONTROLLER": "所有控制器",
+        "HMD": "所有头显",
+        "LIGHTHOUSE": "所有定位基站",
+        "TRACKER": "所有追踪器"
+      },
+      "individualDevices": "单独设备",
+      "noApplicableDevicesKnown": "尚未识别到适用设备",
+      "noTagsConfigured": "当前未配置任何标签",
+      "selectDevices": "选择设备",
+      "title": "选择设备"
+    },
+    "deviceType": {
+      "CONTROLLER": "控制器",
+      "HMD": "头显",
+      "LIGHTHOUSE": "基站",
+      "PREVIOUSLY_SEEN": "已识别过的设备",
+      "TRACKER": "追踪器"
+    },
+    "empty": {
+      "noDevices": "尚未检测到设备。请连接控制器或追踪器等设备开始使用。",
+      "noDevicesMatchingSearch": "未找到匹配搜索条件的设备。"
+    },
+    "filter": {
+      "allTags": "全部标签"
+    },
+    "forget": {
+      "confirm": "忘记设备",
+      "message": "确定要忘记该设备？若再次连接将重新添加。",
+      "title": "忘记设备"
+    },
+    "search": {
+      "placeholder": "搜索设备..."
+    },
+    "status": {
+      "notObserved": "未连接",
+      "observed": "已连接",
+      "turningOff": "正在关闭...",
+      "turningOn": "正在开启..."
+    },
+    "tabs": {
+      "devices": "设备",
+      "tags": "标签"
+    },
+    "tags": {
+      "cancel": "取消",
+      "create": {
+        "button": "创建标签",
+        "namePlaceholder": "标签名称",
+        "title": "创建新标签"
+      },
+      "delete": "删除标签",
+      "edit": "编辑标签",
+      "empty": {
+        "noTags": "尚未创建标签，请在上方创建第一个标签。"
+      },
+      "existing": {
+        "title": "已有标签"
+      },
+      "save": "保存"
+    },
+    "title": "设备管理"
+  },
   "discord": {
     "details": "VR 睡眠小工具",
     "label": {
@@ -1067,6 +1280,31 @@
       "awake": "十分有活力的清醒着",
       "sleeping": "正在安详的睡眠"
     }
+  },
+  "frame-limiter": {
+    "add-application-modal": {
+      "add": "新增",
+      "instruction": "选择要配置帧率限制的应用程序",
+      "notListedHelp": "找不到你的应用？请在我们的 <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a> 中申请添加。",
+      "title": "选择应用程序"
+    },
+    "addLimiter": "添加应用",
+    "description": "OyasumiVR 可自动限制多款游戏的帧率。当你不需要高性能（如睡觉时），可用来降低系统功耗。",
+    "frameLimits": "帧率限制",
+    "noLimits": "你尚未配置任何应用的帧率限制！",
+    "onSleepDisable": "当我醒来时",
+    "onSleepEnable": "当我入睡时",
+    "onSleepPreparation": "当我准备入睡时",
+    "removeLimiter": "移除应用",
+    "selector": {
+      "auto": "自动",
+      "autoDescription": "在自动模式下，SteamVR 会自动判断最佳帧率限制。",
+      "disabled": "保持原样",
+      "noLimit": "无限制"
+    },
+    "steamvrRequired": "仅在 SteamVR 运行时可直接更改帧率限制及查看估算帧率。你仍可配置下方的自动化设置。",
+    "supportedHardwareWarning": "SteamVR 仅支持在原生头显（如 Valve Index、Vive Pro、Bigscreen Beyond）上限制帧率。非原生头显（如 Quest）不支持此功能。",
+    "title": "帧率限制自动化"
   },
   "gpu-automations": {
     "automations": "自动化操作",
@@ -1197,9 +1435,9 @@
       "description": "当有人加入你的世界时显示通知",
       "title": "加入通知"
     },
-    "joinSoundVolume": {
-      "description": "当玩家进入或离开你的世界时播放的声音的音量",
-      "title": "声音音量"
+    "joinSound": {
+      "description": "当玩家加入你的世界时播放的提示音",
+      "title": "加入提示音"
     },
     "joinSounds": {
       "description": "当有人加入你的世界时播放声音",
@@ -1208,6 +1446,10 @@
     "leaveNotifications": {
       "description": "当有人离开你的世界时显示通知",
       "title": "离开通知"
+    },
+    "leaveSound": {
+      "description": "当玩家离开你的世界时播放的提示音",
+      "title": "离开提示音"
     },
     "leaveSounds": {
       "description": "当有人离开你的世界时播放声音",
@@ -1238,11 +1480,73 @@
     "title": "加入通知"
   },
   "message-center": {
+    "actions": {
+      "configure": "配置",
+      "hide": "隐藏",
+      "moreInfo": "更多信息",
+      "showHidden": "显示隐藏",
+      "unhide": "取消隐藏"
+    },
     "messages": {
+      "gpuAutomationsAfterburnerError": {
+        "actions": {
+          "disable": "禁用自动化"
+        },
+        "message": {
+          "INVALID_EXECUTABLE": "无法验证 MSI Afterburner 安装路径。请重新配置安装路径以确保自动化功能正常。",
+          "INVALID_SIGNATURE": "MSI Afterburner 安装包验证失败。出于安全考虑无法使用。请重新配置安装路径。",
+          "NOT_FOUND": "未找到 MSI Afterburner 安装。请重新配置安装路径。",
+          "UNKNOWN_ERROR": "使用 MSI Afterburner 时出现未知错误。请重新配置安装路径。"
+        },
+        "title": "MSI Afterburner 自动化不可用"
+      },
+      "gpuAutomationsNvmlError": {
+        "actions": {
+          "disable": "禁用自动化"
+        },
+        "title": "GPU 功率限制自动化不可用"
+      },
+      "gpuAutomationsSidecarNotRunning": {
+        "actions": {
+          "disable": "关闭 GPU 自动化",
+          "elevate": "授予管理员权限"
+        },
+        "message": "尽管启用了 GPU 自动化，OyasumiVR 目前无管理员权限，无法运行相关功能。\\n请给予管理员权限，或禁用 GPU 自动化。",
+        "title": "GPU 自动化不可用"
+      },
+      "lighthouseConsoleError": {
+        "message": "未找到或无法正常访问 Lighthouse 控制台。OyasumiVR 可能无法关闭控制器和追踪器，请检查配置。",
+        "title": "Lighthouse 控制台不可用"
+      },
       "manyLighthousesDetected": {
-        "message": "看起来你连接了很多基站！\n\n请注意，大多数蓝牙适配器只能同时处理7个已连接设备（包括耳机等其他蓝牙设备）超出部分的稳定性没有任何保证。\n\n请记住，如果你同时连接过多的基站，或者连接了太多其他的蓝牙设备，OyasumiVR 可能会在尝试控制基站时遇到麻烦。"
+        "message": "看起来你连接了很多基站！\n\n请注意，大多数蓝牙适配器只能同时处理7个已连接设备（包括耳机等其他蓝牙设备）超出部分的稳定性没有任何保证。\n\n请记住，如果你同时连接过多的基站，或者连接了太多其他的蓝牙设备，OyasumiVR 可能会在尝试控制基站时遇到麻烦。",
+        "title": "检测到多个基站"
+      },
+      "sleepCalibrationRequired": {
+        "calibrate": "现在校准",
+        "message": "已启用睡眠检测，但尚未校准。使用前请至少校准一次以提高准确性。",
+        "title": "睡眠校准待完成"
+      },
+      "vrcInviteRequestFailedWorldUnknown": {
+        "message": "你收到好友“{senderUsername}”的邀请请求，但 OyasumiVR 无法处理，因为当前世界实例未知。\\n这可能是因为无法读取 VRChat 日志文件。",
+        "title": "邀请请求未处理",
+        "unknownFriend": "未知好友"
+      },
+      "vrcLogMissing": {
+        "message": "虽然 VRChat 正在运行，但未检测到日志文件。缺少日志文件会导致自动接受邀请等功能无法使用。\\n请确保 VRChat 已启用日志记录以保证 OyasumiVR 正常工作。",
+        "title": "未找到 VRChat 日志文件"
+      },
+      "vrcOscMissing": {
+        "message": "虽然 VRChat 正在运行，但未检测到 OSC 和/或 OSCQuery 服务。缺少这些服务会导致部分功能无法使用。\\n请确保 VRChat 中已启用 OSC 以保证 OyasumiVR 正常工作。",
+        "title": "VRChat OSC(Query) 服务不可用"
+      },
+      "vrcWebsocketDisconnected": {
+        "message": "你已登录 VRChat 账号，但 OyasumiVR 无法连接 VRChat 的 websocket，部分功能（如自动接受邀请请求）将无法使用。",
+        "title": "VRChat Websocket 不可用"
       }
-    }
+    },
+    "title": "消息中心",
+    "tooltip": "消息中心"
   },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "这个预设使用的处理方法存在一些问题。 如果你不能使用 GoGo Loco 的新版本，请使用这个预设。 即使是这样，依然建议你将模型更新到最新的 GoGo Loco 版本",
@@ -1251,6 +1555,10 @@
       "CCT_CONTROL_WARNING_DIALOG": {
         "message": "请注意，色温控制仅适用于某些原生的 SteamVR 头显，例如Valve Index、Bigscreen Beyond 或 HTC Vive（Pro）。\n\n如果你不使用这些头显，这个功能可能对你来说没什么效果。\n\n因此，如果你觉得这比较多余，那么可以在设置中禁用色温控制。",
         "title": "功能可用性"
+      },
+      "OSC_SCRIPT_SIMPLE_EDITOR_VRCHAT_AUTOCOMPLETE_INFO": {
+        "message": "要获取 VRChat 模型参数的自动补全，请确保 VRChat 正在运行且已使用目标模型。\\n未运行 VRChat 时仍可使用简易编辑器，但无法获得自动补全。",
+        "title": "自动补全"
       },
       "acknowledge": "我知道了"
     },
@@ -1294,14 +1602,13 @@
     "notification": "检测到你可能做噩梦了，因为你的心率在持续且不寻常的升高。",
     "playSound": {
       "description": "当检测到你可能做噩梦时，让 OyasumiVR 用声音唤醒你",
-      "title": "播放声音",
-      "volume": {
-        "description": "设置音效播放时的音量",
-        "test": "测试",
-        "title": "音量"
-      }
+      "title": "播放声音"
     },
     "title": "噩梦检测"
+  },
+  "notification-sound": {
+    "title": "选择提示音",
+    "volume": "音量"
   },
   "notifications": {
     "autoAcceptedInviteRequest": {
@@ -1603,6 +1910,24 @@
       "title": "将渲染分辨率改为"
     },
     "title": "分辨率"
+  },
+  "runAutomations": {
+    "commandsToRun": "要运行的命令",
+    "description": "你可以设置 OyasumiVR 在你入睡、醒来或准备入睡时，通过 Windows 命令提示符自动执行命令。\\n所有命令均通过 cmd.exe 运行。",
+    "onSleepDisable": {
+      "description": "运行命令",
+      "title": "当我醒来时"
+    },
+    "onSleepEnable": {
+      "description": "运行命令",
+      "title": "当我入睡时"
+    },
+    "onSleepPreparation": {
+      "description": "运行命令",
+      "title": "当我准备入睡时"
+    },
+    "testCommands": "测试",
+    "title": "执行自动化命令"
   },
   "settings": {
     "advanced": {
@@ -2576,6 +2901,26 @@
       "title": "当我准备入睡时"
     },
     "title": "模型自动化"
+  },
+  "vrchatGroupAutomations": {
+    "description": "你可以设置 OyasumiVR 在你入睡或醒来时，自动切换你想显示的 VRChat 群组。",
+    "onSleepDisable": {
+      "description": "将我显示的群组更改为",
+      "title": "当我醒来时"
+    },
+    "onSleepEnable": {
+      "description": "将我显示的群组更改为",
+      "title": "当我入睡时"
+    },
+    "onSleepPreparation": {
+      "description": "将我显示的群组更改为",
+      "title": "当我准备入睡时"
+    },
+    "options": {
+      "clearGroup": "清除群组",
+      "dontChange": "保持原样"
+    },
+    "title": "群组自动化"
   },
   "vrchatMicMuteAutomations": {
     "automations": {
