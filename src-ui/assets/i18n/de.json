@@ -351,10 +351,6 @@
         "Lighthouse": "Basisstationen",
         "other": "Andere"
       },
-      "deviceName": {
-        "lighthouseV1": "V1 Lighthouse",
-        "lighthouseV2": "V2 Lighthouse"
-      },
       "deviceRole": {
         "AnkleLeft": "Linker Knöchel",
         "AnkleRight": "Rechter Knöchel",
@@ -1196,10 +1192,6 @@
       "description": "Zeig die Benachrichtigungen, wenn ein Spieler meiner Welt beitritt",
       "title": "Beitrittsbenachrichtigung"
     },
-    "joinSoundVolume": {
-      "description": "Die Lautstärke für das Geräusch bei Betreten/Verlassen der Welt",
-      "title": "Lautstärke"
-    },
     "joinSounds": {
       "description": "Mache ein Geräusch, wenn ein Spieler meiner Welt beitritt",
       "title": "Beitrittsgeräusch"
@@ -1293,12 +1285,7 @@
     "notification": "Entdeckte einen möglichen Albtraum anhand einer langanhaltigen erhöhten Herzfrequenz.",
     "playSound": {
       "description": "OyasumiVR weckt dich mittels Geräuschen, wenn du einen Albtraum hast",
-      "title": "Spiele ein Geräusch",
-      "volume": {
-        "description": "Lautstärke des Geräusches",
-        "test": "Test",
-        "title": "Lautstärke"
-      }
+      "title": "Spiele ein Geräusch"
     },
     "title": "Albtraumerkennung"
   },

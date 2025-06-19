@@ -154,9 +154,16 @@
       "onlyIfSleepModeEnabled": {
         "title": "Only when sleep mode is enabled"
       },
+      "playSoundOnInvite": {
+        "description": "Play a sound when you receive an invite",
+        "onlyWhenAsleep": {
+          "description": "Only play the sound when sleep mode is enabled",
+          "title": "Only when asleep"
+        },
+        "title": "Play sound on invite"
+      },
       "playSoundOnInviteRequest": {
         "description": "Play a sound when you receive an invite request",
-        "title": "Play sound on invite request",
         "onlyWhenAsleep": {
           "description": "Only play the sound when sleep mode is enabled",
           "title": "Only when asleep"
@@ -164,15 +171,8 @@
         "onlyWhenUnhandled": {
           "description": "Only play the sound when the invite request is not automatically accepted or declined",
           "title": "Only when not automatically handled"
-        }
-      },
-      "playSoundOnInvite": {
-        "description": "Play a sound when you receive an invite",
-        "title": "Play sound on invite",
-        "onlyWhenAsleep": {
-          "description": "Only play the sound when sleep mode is enabled",
-          "title": "Only when asleep"
-        }
+        },
+        "title": "Play sound on invite request"
       },
       "presetOptions": {
         "options": {
@@ -385,8 +385,8 @@
       "systemMicMuteAutomations": "System Microphone Mute Automations",
       "vrcAutomations": "VRChat Automations",
       "vrchatAvatarAutomations": "Avatar Automations",
-      "vrchatMicMuteAutomations": "VRChat Microphone Mute Automations",
-      "vrchatGroupAutomations": "Group Automations"
+      "vrchatGroupAutomations": "Group Automations",
+      "vrchatMicMuteAutomations": "VRChat Microphone Mute Automations"
     },
     "device-edit-modal": {
       "deviceNickname": {
@@ -831,8 +831,8 @@
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
           "title": {
-            "set": "Changed the VRChat group you represent to ''{groupName}''",
-            "clear": "Stopped representing VRChat group ''{groupName}''"
+            "clear": "Stopped representing VRChat group ''{groupName}''",
+            "set": "Changed the VRChat group you represent to ''{groupName}''"
           }
         },
         "windowsPowerPolicySet": {
@@ -1176,6 +1176,100 @@
       "title": "Two Factor Authentication"
     }
   },
+  "device-manager": {
+    "actions": {
+      "forget": "Forget Device",
+      "powerOff": "Power Off",
+      "powerOn": "Power On"
+    },
+    "config": {
+      "newTag": {
+        "create": "Create Tag",
+        "description": "Create a new tag and assign it to this device",
+        "title": "Create New Tag"
+      },
+      "nickname": {
+        "description": "Set a custom name for this device to make it easier to identify",
+        "title": "Device Nickname"
+      },
+      "tags": {
+        "description": "Assign tags to organize and filter your devices",
+        "noTags": "No tags available. Create some in the Tags tab.",
+        "title": "Device Tags"
+      },
+      "title": "Configure {deviceName}"
+    },
+    "deleteTag": {
+      "confirm": "Delete Tag",
+      "message": "Are you sure you want to delete this tag? It will be removed from all devices.",
+      "title": "Delete Tag"
+    },
+    "deviceSelector": {
+      "deselectAll": "Deselect All",
+      "deviceTags": "Device Tags",
+      "deviceTypes": {
+        "CONTROLLER": "All Controllers",
+        "HMD": "All Headsets",
+        "LIGHTHOUSE": "All Lighthouses",
+        "TRACKER": "All Trackers"
+      },
+      "individualDevices": "Individual Devices",
+      "noApplicableDevicesKnown": "No applicable devices are yet known",
+      "noTagsConfigured": "No tags are currently configured",
+      "selectDevices": "Select Devices",
+      "title": "Select Devices"
+    },
+    "deviceType": {
+      "CONTROLLER": "Controllers",
+      "HMD": "Headsets",
+      "LIGHTHOUSE": "Lighthouses",
+      "PREVIOUSLY_SEEN": "Previously Seen",
+      "TRACKER": "Trackers"
+    },
+    "empty": {
+      "noDevices": "No devices have been detected yet. Connect a device, like a controller or tracker, to get started.",
+      "noDevicesMatchingSearch": "No devices found matching your search criteria."
+    },
+    "filter": {
+      "allTags": "All tags"
+    },
+    "forget": {
+      "confirm": "Forget Device",
+      "message": "Are you sure you want to forget this device? It will be re-added if detected again.",
+      "title": "Forget Device"
+    },
+    "search": {
+      "placeholder": "Search devices..."
+    },
+    "status": {
+      "notObserved": "Not Connected",
+      "observed": "Connected",
+      "turningOff": "Turning Off...",
+      "turningOn": "Turning On..."
+    },
+    "tabs": {
+      "devices": "Devices",
+      "tags": "Tags"
+    },
+    "tags": {
+      "cancel": "Cancel",
+      "create": {
+        "button": "Create Tag",
+        "namePlaceholder": "Tag name",
+        "title": "Create New Tag"
+      },
+      "delete": "Delete Tag",
+      "edit": "Edit Tag",
+      "empty": {
+        "noTags": "No tags created yet. Create your first tag above."
+      },
+      "existing": {
+        "title": "Existing Tags"
+      },
+      "save": "Save"
+    },
+    "title": "Device Manager"
+  },
   "discord": {
     "details": "VR Sleeping Software",
     "label": {
@@ -1196,13 +1290,13 @@
     },
     "addLimiter": "Add Application",
     "description": "OyasumiVR can automatically limit the framerate of various games. You can use this to reduce the power draw of your system when you don't need high performance, like when you are asleep.",
+    "directControlRequiresSteamVR": "Launch SteamVR to directly control frame limits",
     "frameLimits": "Frame Limits",
     "noLimits": "You have not yet configured any applications to limit!",
     "onSleepDisable": "When I wake up",
     "onSleepEnable": "When I go to sleep",
     "onSleepPreparation": "When I prepare to go to sleep",
     "removeLimiter": "Remove",
-    "supportedHardwareWarning": "Note that SteamVR only supports frame limiting on native SteamVR headsets, like the Valve Index, Vive (Pro), or Bigscreen Beyond. Non-native headsets, like Quest devices, are unsupported.",
     "selector": {
       "auto": "Auto",
       "autoDescription": "In auto mode, SteamVR will determine the optimal frame limit.",
@@ -1210,8 +1304,8 @@
       "noLimit": "Unlimited"
     },
     "steamvrRequired": "OyasumiVR can show more accurate frame limit targets for your specific VR headset while SteamVR is running. Launch SteamVR to view more info.",
-    "title": "Frame Limit Automations",
-    "directControlRequiresSteamVR": "Launch SteamVR to directly control frame limits"
+    "supportedHardwareWarning": "Note that SteamVR only supports frame limiting on native SteamVR headsets, like the Valve Index, Vive (Pro), or Bigscreen Beyond. Non-native headsets, like Quest devices, are unsupported.",
+    "title": "Frame Limit Automations"
   },
   "gpu-automations": {
     "automations": "Sleep Automations",
@@ -1342,21 +1436,21 @@
       "description": "Show a notification when a player joins your world",
       "title": "Join Notifications"
     },
+    "joinSound": {
+      "description": "The sound to play when a player joins your world",
+      "title": "Join sound effect"
+    },
     "joinSounds": {
       "description": "Play a sound when a player joins your world",
       "title": "Join Sounds"
     },
-    "joinSound": {
-      "title": "Join sound effect",
-      "description": "The sound to play when a player joins your world"
-    },
-    "leaveSound": {
-      "title": "Leave sound effect",
-      "description": "The sound to play when a player leaves your world"
-    },
     "leaveNotifications": {
       "description": "Show a notification when a player leaves your world",
       "title": "Leave Notifications"
+    },
+    "leaveSound": {
+      "description": "The sound to play when a player leaves your world",
+      "title": "Leave sound effect"
     },
     "leaveSounds": {
       "description": "Play a sound when a player leaves your world",
@@ -1434,6 +1528,11 @@
         "message": "Sleep detection is enabled, but still uncalibrated. Before using it, you should calibrate at least once to improve its accuracy.",
         "title": "Sleep Calibration Pending"
       },
+      "vrcInviteRequestFailedWorldUnknown": {
+        "message": "You received an invite request from your friend ''{senderUsername}'', but OyasumiVR couldn't handle it because your current world instance is unknown.\n\nThis may be due to OyasumiVR not being able to read your VRChat log files.",
+        "title": "Invite Request Unhandled",
+        "unknownFriend": "Unknown friend"
+      },
       "vrcLogMissing": {
         "message": "Although VRChat seems to be running, its log files could not be detected. Without these log files, certain OyasumiVR features like automatically accepting invite requests will not work.\n\nPlease make sure you've got logging enabled within VRChat to ensure OyasumiVR can work properly.",
         "title": "VRChat log files not found"
@@ -1445,11 +1544,6 @@
       "vrcWebsocketDisconnected": {
         "message": "You are currently logged in with your VRChat account, but OyasumiVR was not able to connect to VRChat's websocket. This means certain features, like automatically accepting invite requests, currently won't work.",
         "title": "VRChat Websocket Unavailable"
-      },
-      "vrcInviteRequestFailedWorldUnknown": {
-        "title": "Invite Request Unhandled",
-        "message": "You received an invite request from your friend ''{senderUsername}'', but OyasumiVR couldn't handle it because your current world instance is unknown.\n\nThis may be due to OyasumiVR not being able to read your VRChat log files.",
-        "unknownFriend": "Unknown friend"
       }
     },
     "title": "Message Center",
@@ -1516,100 +1610,6 @@
   "notification-sound": {
     "title": "Select a sound",
     "volume": "Volume"
-  },
-  "device-manager": {
-    "title": "Device Manager",
-    "tabs": {
-      "devices": "Devices",
-      "tags": "Tags"
-    },
-    "search": {
-      "placeholder": "Search devices..."
-    },
-    "filter": {
-      "allTags": "All tags"
-    },
-    "deviceType": {
-      "HMD": "Headsets",
-      "CONTROLLER": "Controllers",
-      "TRACKER": "Trackers",
-      "LIGHTHOUSE": "Lighthouses",
-      "PREVIOUSLY_SEEN": "Previously Seen"
-    },
-    "status": {
-      "observed": "Connected",
-      "notObserved": "Not Connected",
-      "turningOff": "Turning Off...",
-      "turningOn": "Turning On..."
-    },
-    "actions": {
-      "powerOff": "Power Off",
-      "powerOn": "Power On",
-      "forget": "Forget Device"
-    },
-    "config": {
-      "title": "Configure {deviceName}",
-      "nickname": {
-        "title": "Device Nickname",
-        "description": "Set a custom name for this device to make it easier to identify"
-      },
-      "tags": {
-        "title": "Device Tags",
-        "description": "Assign tags to organize and filter your devices",
-        "noTags": "No tags available. Create some in the Tags tab."
-      },
-      "newTag": {
-        "title": "Create New Tag",
-        "description": "Create a new tag and assign it to this device",
-        "create": "Create Tag"
-      }
-    },
-    "tags": {
-      "create": {
-        "title": "Create New Tag",
-        "namePlaceholder": "Tag name",
-        "button": "Create Tag"
-      },
-      "existing": {
-        "title": "Existing Tags"
-      },
-      "edit": "Edit Tag",
-      "delete": "Delete Tag",
-      "save": "Save",
-      "cancel": "Cancel",
-      "empty": {
-        "noTags": "No tags created yet. Create your first tag above."
-      }
-    },
-    "empty": {
-      "noDevices": "No devices have been detected yet. Connect a device, like a controller or tracker, to get started.",
-      "noDevicesMatchingSearch": "No devices found matching your search criteria."
-    },
-    "forget": {
-      "title": "Forget Device",
-      "message": "Are you sure you want to forget this device? It will be re-added if detected again.",
-      "confirm": "Forget Device"
-    },
-    "deleteTag": {
-      "title": "Delete Tag",
-      "message": "Are you sure you want to delete this tag? It will be removed from all devices.",
-      "confirm": "Delete Tag"
-    },
-    "deviceSelector": {
-      "title": "Select Devices",
-      "deselectAll": "Deselect All",
-      "deviceTags": "Device Tags",
-      "individualDevices": "Individual Devices",
-      "deviceTypes": {
-        "HMD": "All Headsets",
-        "CONTROLLER": "All Controllers",
-        "TRACKER": "All Trackers",
-        "LIGHTHOUSE": "All Lighthouses"
-      },
-      "noTagsConfigured": "No tags are currently configured",
-      "noApplicableDevicesKnown": "No applicable devices are yet known",
-      "selectDevices": "Select Devices"
-    }
   },
   "notifications": {
     "autoAcceptedInviteRequest": {
@@ -1911,6 +1911,24 @@
       "title": "Change the render resolution to"
     },
     "title": "Resolution Automations"
+  },
+  "runAutomations": {
+    "commandsToRun": "Commands to run",
+    "description": "Here you can have OyasumiVR automatically run commands through the Windows command prompt when you fall asleep, wake up, or prepare to sleep.\n\nAny commands will be interpreted through cmd.exe.",
+    "onSleepDisable": {
+      "description": "Run commands",
+      "title": "When I wake up"
+    },
+    "onSleepEnable": {
+      "description": "Run commands",
+      "title": "When I go to sleep"
+    },
+    "onSleepPreparation": {
+      "description": "Run commands",
+      "title": "When I prepare to go to sleep"
+    },
+    "testCommands": "Test",
+    "title": "Run Automations"
   },
   "settings": {
     "advanced": {
@@ -2323,7 +2341,9 @@
       "none": "None",
       "vrcLoginRequired": "This feature requires you to be logged in with a VRChat account."
     },
-    "logo": { "tagline": "VR Sleeping Utilities" },
+    "logo": {
+      "tagline": "VR Sleeping Utilities"
+    },
     "modals": {
       "back": "Back",
       "cancel": "Cancel",
@@ -2897,11 +2917,11 @@
       "description": "Change the group I represent to",
       "title": "When I prepare to go to sleep"
     },
-    "title": "Group Automations",
     "options": {
-      "dontChange": "Do not change",
-      "clearGroup": "Clear Group"
-    }
+      "clearGroup": "Clear Group",
+      "dontChange": "Do not change"
+    },
+    "title": "Group Automations"
   },
   "vrchatMicMuteAutomations": {
     "automations": {
@@ -2942,23 +2962,5 @@
       "unmuted": "Unmuted"
     },
     "title": "VRChat Microphone Mute Automations"
-  },
-  "runAutomations": {
-    "description": "Here you can have OyasumiVR automatically run commands through the Windows command prompt when you fall asleep, wake up, or prepare to sleep.\n\nAny commands will be interpreted through cmd.exe.",
-    "onSleepDisable": {
-      "description": "Run commands",
-      "title": "When I wake up"
-    },
-    "onSleepEnable": {
-      "description": "Run commands",
-      "title": "When I go to sleep"
-    },
-    "onSleepPreparation": {
-      "description": "Run commands",
-      "title": "When I prepare to go to sleep"
-    },
-    "title": "Run Automations",
-    "commandsToRun": "Commands to run",
-    "testCommands": "Test"
   }
 }

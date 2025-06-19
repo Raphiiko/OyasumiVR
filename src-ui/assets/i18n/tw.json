@@ -351,10 +351,6 @@
         "Lighthouse": "基地台",
         "other": "其他"
       },
-      "deviceName": {
-        "lighthouseV1": "V1 Lighthouse",
-        "lighthouseV2": "V2 基地台"
-      },
       "deviceRole": {
         "AnkleLeft": "左腳踝",
         "AnkleRight": "右腳踝",
@@ -1196,10 +1192,6 @@
       "description": "玩家加入你的世界時會顯示通知",
       "title": "加入通知"
     },
-    "joinSoundVolume": {
-      "description": "玩家進入或離開你的世界時播放的音效音量",
-      "title": "音量"
-    },
     "joinSounds": {
       "description": "玩家加入你的世界時會播放聲音",
       "title": "加入通知音效"
@@ -1293,12 +1285,7 @@
     "notification": "偵測到可能性的惡夢，因為你的心跳率升高持續時間過長。",
     "playSound": {
       "description": "當可能有惡夢時，使用音效喚醒你",
-      "title": "播放音效",
-      "volume": {
-        "description": "設定音效播放的音量",
-        "test": "測試",
-        "title": "音效音量"
-      }
+      "title": "播放音效"
     },
     "title": "惡夢偵測"
   },

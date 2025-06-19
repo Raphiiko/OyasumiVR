@@ -152,9 +152,6 @@
         "Lighthouse": "Base Stations",
         "other": "Lainnya"
       },
-      "deviceName": {
-        "lighthouseV2": "Lighthouse V2"
-      },
       "lighthouseStatus": {
         "booting": "Booting",
         "on": "Aktif",
@@ -621,12 +618,7 @@
     "notification": "Mendeteksi kemungkinan mimpi buruk, karena Anda mengalami peningkatan detak jantung yang berkepanjangan.",
     "playSound": {
       "description": "Minta OyasumiVR membangunkan Anda dengan suara saat Anda mungkin mengalami mimpi buruk",
-      "title": "Mainkan suara",
-      "volume": {
-        "description": "Konfigurasikan volume saat efek suara diputar",
-        "test": "Tes",
-        "title": "Volume suara"
-      }
+      "title": "Mainkan suara"
     },
     "title": "Deteksi Mimpi Buruk"
   },

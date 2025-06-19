@@ -351,10 +351,6 @@
         "Lighthouse": "Estaciones base",
         "other": "Otros"
       },
-      "deviceName": {
-        "lighthouseV1": "V1 faro",
-        "lighthouseV2": "V2 Faro"
-      },
       "deviceRole": {
         "AnkleLeft": "Tobillo izquierdo",
         "AnkleRight": "Tobillo derecho",
@@ -1196,10 +1192,6 @@
       "description": "Mostrar una notificación cuando un jugador se une a tu mundo",
       "title": "Notificaciones de ingreso"
     },
-    "joinSoundVolume": {
-      "description": "El volumen del efecto de sonido que se reproduce cuando un jugador entra o sale de tu mundo.",
-      "title": "Volumen del sonido"
-    },
     "joinSounds": {
       "description": "Reproduce un sonido cuando un jugador se una a tu mundo",
       "title": "Sonido al unirse"
@@ -1293,12 +1285,7 @@
     "notification": "Detección de una posible pesadilla, ya que ha tenido una frecuencia cardíaca elevada prolongada.",
     "playSound": {
       "description": "Haz que Oyasumivr te despierte con un sonido cuando posiblemente tengas una pesadilla",
-      "title": "Reproducir un sonido",
-      "volume": {
-        "description": "Configure el volumen en el que se reproduce el efecto de sonido",
-        "test": "Test",
-        "title": "Volumen de sonido"
-      }
+      "title": "Reproducir un sonido"
     },
     "title": "Detección de pesadilla"
   },

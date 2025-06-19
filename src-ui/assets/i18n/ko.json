@@ -351,10 +351,6 @@
         "Lighthouse": "베이스스테이션",
         "other": "기타"
       },
-      "deviceName": {
-        "lighthouseV1": "V1 Lighthouse",
-        "lighthouseV2": "V2 Lighthouse"
-      },
       "deviceRole": {
         "AnkleLeft": "왼쪽 발목",
         "AnkleRight": "오른쪽 발목",
@@ -1196,10 +1192,6 @@
       "description": "플레이어가 월드에 참여할 때 알림을 표시해요",
       "title": "참여 알림"
     },
-    "joinSoundVolume": {
-      "description": "플레이어가 월드에 들어오거나 나갈 때 재생되는 효과음의 볼륨",
-      "title": "효과음 볼륨"
-    },
     "joinSounds": {
       "description": "플레이어가 월드에 참여할 때 소리를 재생해요",
       "title": "참여 효과음"
@@ -1293,12 +1285,7 @@
     "notification": "심박수가 장기간 상승했기 때문에 악몽을 탐지해요.",
     "playSound": {
       "description": "OyasumiVR이 악몽을 꾸고 있을 때 소리로 깨우도록 해요.",
-      "title": "사운드 재생",
-      "volume": {
-        "description": "효과음이 재생되는 볼륨",
-        "test": "테스트",
-        "title": "사운드 볼륨"
-      }
+      "title": "사운드 재생"
     },
     "title": "악몽 감지"
   },

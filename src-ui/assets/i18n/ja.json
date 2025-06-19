@@ -351,10 +351,6 @@
         "Lighthouse": "ベースステーション",
         "other": "その他"
       },
-      "deviceName": {
-        "lighthouseV1": "V1 Lighthouse",
-        "lighthouseV2": "V2 Lighthouse"
-      },
       "deviceRole": {
         "AnkleLeft": "左足首",
         "AnkleRight": "右足首",
@@ -1196,10 +1192,6 @@
       "description": "他のプレイヤーがJoinしたときに通知を表示する",
       "title": "Join通知"
     },
-    "joinSoundVolume": {
-      "description": "他のプレイヤーがJoin、退出したときに再生される効果音の音量",
-      "title": "サウンド音量"
-    },
     "joinSounds": {
       "description": "他のプレイヤーがJoinしたときにサウンドを再生する",
       "title": "Join音"
@@ -1293,12 +1285,7 @@
     "notification": "心拍数が持続的に高いため、悪夢を見ていると判断しました。",
     "playSound": {
       "description": "悪夢を検出したときにアラームを鳴らします",
-      "title": "音を再生",
-      "volume": {
-        "description": "効果音が再生される音量を設定",
-        "test": "テスト",
-        "title": "音量"
-      }
+      "title": "音を再生"
     },
     "title": "悪夢の検知"
   },
