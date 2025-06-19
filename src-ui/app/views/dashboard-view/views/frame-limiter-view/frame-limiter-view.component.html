@@ -35,7 +35,14 @@
                 <a (click)="removeLimiter(config.appId)" translate>frame-limiter.removeLimiter</a>
               </span>
             </div>
-            <div class="setting-row-action">
+            <div class="setting-row-action" style="position: relative">
+              <div
+                class="steamvr-unavailable-control-overlay"
+                *ngIf="(openvr.status | async) !== 'INITIALIZED'"
+                @fade
+              >
+                <span translate>frame-limiter.directControlRequiresSteamVR</span>
+              </div>
               <app-frame-limiter-selector
                 [activeValue]="getActiveValueForId(config.appId)"
                 (valueRequested)="onFrameLimitRequested(config.appId, $event)"

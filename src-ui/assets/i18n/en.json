@@ -1209,8 +1209,9 @@
       "disabled": "Do not change",
       "noLimit": "Unlimited"
     },
-    "steamvrRequired": "Changing frame limits directly and viewing estimated frame rates is only available while SteamVR is running. You can still configure the automation settings below.",
-    "title": "Frame Limit Automations"
+    "steamvrRequired": "OyasumiVR can show more accurate frame limit targets for your specific VR headset while SteamVR is running. Launch SteamVR to view more info.",
+    "title": "Frame Limit Automations",
+    "directControlRequiresSteamVR": "Launch SteamVR to directly control frame limits"
   },
   "gpu-automations": {
     "automations": "Sleep Automations",

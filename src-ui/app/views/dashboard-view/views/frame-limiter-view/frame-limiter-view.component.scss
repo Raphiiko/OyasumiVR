@@ -15,7 +15,12 @@
 }
 
 .alert {
-  margin-bottom: 1em;
+  &:not(:last-child) {
+    margin-bottom: 1em;
+  }
+  &:not(:first-child) {
+    margin-top: 1em;
+  }
 }
 
 .no-limits-container {
@@ -62,4 +67,23 @@ app-frame-limiter-selector {
     opacity: 0.5;
     pointer-events: none;
   }
+}
+
+.steamvr-unavailable-control-overlay {
+  position: absolute;
+  top: -0.25em;
+  right: -0.75em;
+  width: calc(100% - 0.5em);
+  height: calc(100% + 0.75em);
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  padding: 1em;
+  border-radius: 1em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
 }
