@@ -4,7 +4,6 @@
       "role": "개발자"
     },
     "contributionType": {
-      "feature": "기능",
       "soundFx": "효과음"
     },
     "contributions": "기여",
@@ -143,7 +142,6 @@
     },
     "savePreset": "프리셋으로 저장하기",
     "title": "인바이트 리퀘스트 자동 수락",
-    "userOnBusyStatus": "스테이터스가 busy(빨간색)이므로 다른 친구의 초대 요청을 수락할 수 없어요.",
     "userOnJoinMeStatus": "스테이터스가 join me(파란색)이므로 VRChat이 설정과 관계없이 모든 초대 요청을 수락해요.",
     "whitelist": "플레이어 화이트리스트"
   },
@@ -179,7 +177,6 @@
         "title": "일몰 시간"
       }
     },
-    "autoDetermineSunsetSunrise": "자동으로 시간 예측",
     "brightness": {
       "title": "조절할 밝기"
     },
@@ -210,7 +207,6 @@
       "message": "OyasumiVR에는 VR 헤드셋의 밝기를 제어하는 두 가지 방식이 있어요: 각각 소프트웨어 제어 방식과 하드웨어 제어 방식이에요:\n\n소프트웨어 제어는 모든 헤드셋에서 사용할 수 있어요. 이미지의 밝기를 조절하여 VR 헤드셋의 밝기를 조절합니다.\n\n하드웨어 제어는 지원되는 헤드셋( Valve Index, Bigscreen Beyond)에서만 사용할 수 있어요. 지원되는 범위 내에서 헤드셋 디스플레이의 밝기를 직접 조절합니다.\n\n단순 모드에서는 OyasumiVR이 소프트웨어와 하드웨어 밝기를 유연하게 제어하며, 하드웨어 밝기가 지원되지 않는 경우 소프트웨어 밝기로만 제어합니다. \n\n직접적인 제어를 선호하는 경우 고급 모드를 사용하면 소프트웨어와 하드웨어 밝기를 각각 개별적으로 제어할 수 있어 각각에 대한 정확한 밝기 값을 설정할 수 있습니다.",
       "title": "밝기 제어 모드"
     },
-    "onHmdConnectInfo": "“해가 질 때”와 “해가 뜰 때”를 모두 활성화하면 하루 중 시간에 따라 헤드셋이 연결되었을 때 자동으로 실행되어요. 그렇지 않은 경우 “수면 모드 활성화 시” 및 “수면 모드 비활성화 시”의 설정값이 대신 적용되어요!",
     "onlyWhenSleepModeDisabled": {
       "description": "수면 모드가 비활성화된 상태에서만 이 자동화 기능을 실행해요.",
       "title": "수면 모드가 비활성화된 경우에만"
@@ -305,7 +301,6 @@
       "hardwareAutomations": "하드웨어 자동화",
       "hmdAutomations": "HMD별 자동화",
       "joinNotifications": "참여 알림",
-      "miscAutomations": "기타 자동화",
       "nightmareDetection": "악몽 감지",
       "oscAutomations": "OSC 자동화",
       "overview": "개요",
@@ -1241,14 +1236,17 @@
     },
     "title": "참여 알림"
   },
+  "message-center": {
+    "messages": {
+      "manyLighthousesDetected": {
+        "message": "베이스 스테이션이 많은 것 같아요!\n\n대부분의 블루투스 어댑터는 헤드폰 및 기타 주변기기와 같은 다른 블루투스 장치를 포함하여 최대 7개까지만 동시에 연결할 수 있다는 점에 유의해주세요.\n\n동시에 너무 많은 베이스 스테이션을 연결하거나 다른 블루투스 장치를 너무 많이 연결하면 OyasumiVR이 모든 베이스 스테이션을 제어하는 데 문제가 생길 수 있으니, 이 점도 기억해주세요!"
+      }
+    }
+  },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "이 프리셋은 몇 가지 문제가 있는 워크어라운드를 사용하고 있어요. 새로은 GoGo Loco 프리셋을 사용할 수 없는 경우에만 이 프리셋을 사용하도록 부닥드립니다. 또한 당신의 아바타가 구버전의 Gogo Loco를 사용하고 있다면 최신 버전의 Gogo Loco 버전으로 업데이트하는 것을 추천해요.",
     "GORONE_LEGACY_PRESET_WARNING": "이 프리팹의 v4.0 이상 버전에는 이미 회전 기능이 포함되어 있으며 이 프리셋과 호환되지 않아요. 아바타가 이전 버전의 이 프리팹을 사용하는 경우에 이 프리셋을 계속 사용할 수 있어요.",
     "oneTimeFlagDialogs": {
-      "BASESTATION_COUNT_WARNING_DIALOG": {
-        "message": "베이스 스테이션이 많은 것 같아요!\n\n대부분의 블루투스 어댑터는 헤드폰 및 기타 주변기기와 같은 다른 블루투스 장치를 포함하여 최대 7개까지만 동시에 연결할 수 있다는 점에 유의해주세요.\n\n동시에 너무 많은 베이스 스테이션을 연결하거나 다른 블루투스 장치를 너무 많이 연결하면 OyasumiVR이 모든 베이스 스테이션을 제어하는 데 문제가 생길 수 있으니, 이 점도 기억해주세요!",
-        "title": "경고"
-      },
       "CCT_CONTROL_WARNING_DIALOG": {
         "message": "디스플레이 색온도 조절 기능은 Valve Index, Bigscreen Beyond, HTC Vive(Pro)와 같은 일부 SteamVR 헤드셋에서만 사용할 수 있어요.\n\n이 헤드셋을 사용하지 않으면 이 기능이 작동하지 않을 수 있어요.\n\n원하시면 설정에서 디스플레이 색온도 조절 기능을 비활성화할 수 있어요.",
         "title": "기능 사용 가능성"
@@ -1996,13 +1994,11 @@
   },
   "shared": {
     "common": {
-      "none": "없음"
+      "none": "없음",
+      "vrcLoginRequired": "이 기능을 사용하려면 VRChat 계정으로 로그인해야 해요."
     },
     "logo": {
       "tagline": "VR수면 유틸리티"
-    },
-    "misc": {
-      "vrcLoginRequired": "이 기능을 사용하려면 VRChat 계정으로 로그인해야 해요."
     },
     "modals": {
       "back": "뒤로",

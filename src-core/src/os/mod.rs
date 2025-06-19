@@ -2,10 +2,11 @@ mod audio_devices;
 pub mod commands;
 mod models;
 mod sounds_gen;
+pub mod elevation;
 
 use self::audio_devices::manager::AudioDeviceManager;
 use lazy_static::lazy_static;
-use log::{error, info};
+use log::{error, info, warn};
 use rodio::{source::Source, Decoder};
 use rodio::{OutputStream, Sink};
 use std::collections::HashMap;
@@ -15,6 +16,7 @@ use std::io::BufReader;
 use std::os::windows::ffi::OsStringExt;
 use std::ptr::null_mut;
 use std::slice;
+use std::env;
 use std::time::Duration;
 use tokio::sync::mpsc::Sender;
 use tokio::sync::Mutex;
@@ -68,12 +70,25 @@ async fn watch_processes() {
 }
 
 pub async fn init_sound_playback() {
-    // Create channel
-    let (tx, mut rx) = tokio::sync::mpsc::channel::<(String, f32)>(32);
-    *PLAY_SOUND_TX.lock().await = Some(tx);
+    // Create channels
+    let (tokio_tx, mut tokio_rx) = tokio::sync::mpsc::channel::<(String, f32)>(32);
+    let (std_tx, std_rx) = std::sync::mpsc::channel::<(String, f32)>();
 
-    // Spawn task to play sounds
-    tokio::task::spawn(async move {
+    // Store the tokio sender
+    *PLAY_SOUND_TX.lock().await = Some(tokio_tx);
+
+    // Forward messages from tokio channel to std channel
+    std::thread::spawn(move || {
+        let rt = tokio::runtime::Runtime::new().unwrap();
+        rt.block_on(async {
+            while let Some(msg) = tokio_rx.recv().await {
+                let _ = std_tx.send(msg);
+            }
+        });
+    });
+
+    // Spawn standard thread to play sounds
+    std::thread::spawn(move || {
         // Load sound files
         let mut sounds = HashMap::new();
         sounds_gen::SOUND_FILES.iter().for_each(|sound| {
@@ -99,35 +114,76 @@ pub async fn init_sound_playback() {
             };
             sounds.insert(String::from(*sound), source);
         });
+
+        // Initialize output stream
+        let (_stream, stream_handle) = match OutputStream::try_default() {
+            Ok((stream, handle)) => (stream, handle),
+            Err(e) => {
+                error!("[Core] Failed to initialize audio output stream: {}", e);
+                return;
+            }
+        };
+
         // Play sounds when requested
-        while let Some((sound, volume)) = rx.recv().await {
+        while let Ok((sound, volume)) = std_rx.recv() {
             if let Some(source) = sounds.get(&sound) {
-                // Initialize output stream
-                let (_stream, stream_handle) = match OutputStream::try_default() {
-                    Ok((stream, handle)) => (stream, handle),
-                    Err(e) => {
-                        error!("[Core] Failed to initialize audio output stream: {}", e);
-                        return;
-                    }
-                };
                 // Play sound
                 let source = source.clone();
                 let sink = match Sink::try_new(&stream_handle) {
                     Ok(s) => s,
                     Err(e) => {
                         error!("[Core] Failed to create audio sink: {}", e);
-                        return;
+                        continue;
                     }
                 };
                 sink.set_volume(volume);
                 sink.append(source.clone());
-                // sink.detach();
-                sink.sleep_until_end();
+                sink.detach();
             } else {
                 error!("[Core] Sound not found: {}", sound);
             }
         }
     });
+}
+
+/// Cleanup old batch files created by run_cmd_commands
+pub async fn cleanup_batch_files() {
+    let temp_dir = env::temp_dir();
+
+    match tokio::fs::read_dir(&temp_dir).await {
+        Ok(mut entries) => {
+            let mut cleanup_count = 0;
+            while let Ok(Some(entry)) = entries.next_entry().await {
+                if let Some(filename) = entry.file_name().to_str() {
+                    // Check if this is one of our batch files
+                    if filename.starts_with("oyasumi_") && filename.ends_with(".bat") {
+                        let file_path = entry.path();
+                        match tokio::fs::remove_file(&file_path).await {
+                            Ok(_) => {
+                                cleanup_count += 1;
+                            }
+                            Err(e) => {
+                                // Log but don't fail - file might be in use or already deleted
+                                warn!("[Core] Could not remove batch file {:?}: {}", file_path, e);
+                            }
+                        }
+                    }
+                }
+            }
+            if cleanup_count > 0 {
+                info!(
+                    "[Core] Cleaned up {} old batch files from temp directory",
+                    cleanup_count
+                );
+            }
+        }
+        Err(e) => {
+            error!(
+                "[Core] Failed to read temp directory for batch file cleanup: {}",
+                e
+            );
+        }
+    }
 }
 
 fn get_windows_power_policies() -> Vec<GUID> {
@@ -201,8 +257,7 @@ fn get_friendly_name_for_windows_power_policy(scheme_guid: &GUID) -> Option<Stri
         return None;
     }
 
-    let mut buffer: Vec<UCHAR> = Vec::with_capacity(buffer_size as usize);
-    buffer.resize(buffer_size as usize, 0);
+    let mut buffer: Vec<UCHAR> = vec![0; buffer_size as usize];
 
     // Second call to actually get the friendly name
     let result = unsafe {

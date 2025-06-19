@@ -7,7 +7,7 @@ import {
 
 import { AutomationConfigService } from './automation-config.service';
 import { SleepService } from './sleep.service';
-import { VRChatService } from './vrchat.service';
+import { VRChatService } from './vrchat-api/vrchat.service';
 import { NotificationService } from './notification.service';
 import {
   concatMap,
@@ -40,9 +40,9 @@ export class JoinNotificationsService {
   private worldLoaded = false;
   private playNotification = new Subject<{
     id?: string;
+    type: 'join' | 'leave';
     notification?: {
       displayName: string;
-      type: 'join' | 'leave';
     };
     sound?: boolean;
   }>();
@@ -125,18 +125,22 @@ export class JoinNotificationsService {
           this.queuedNotifications = this.queuedNotifications.filter((id) => id !== val.id);
           // Send notification
           if (val.notification) {
-            const message = this.translate.instant(
-              `join-notifications.notification.${val.notification.type}`,
-              { name: val.notification.displayName }
-            );
+            const message = this.translate.instant(`join-notifications.notification.${val.type}`, {
+              name: val.notification.displayName,
+            });
             await this.notification.send(message, 5000);
           }
           // Send sound
           if (val.sound) {
-            await this.notification.playSound(
-              'material_alarm_gentle_short_1',
-              this.config.joinSoundVolume / 100
-            );
+            // TODO: Play the sound
+            switch (val.type) {
+              case 'join':
+                await this.notification.playSoundConfig(this.config.joinSound);
+                break;
+              case 'leave':
+                await this.notification.playSoundConfig(this.config.leaveSound);
+                break;
+            }
           }
           // Max 1 notification/sound per 3 seconds
           await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -172,7 +176,7 @@ export class JoinNotificationsService {
 
     // Mode check
     const notification = this.appliesForPlayer(this.config.joinNotification, displayName);
-    const sound = this.appliesForPlayer(this.config.joinSound, displayName);
+    const sound = this.appliesForPlayer(this.config.joinSoundMode, displayName);
 
     // Stop here if no notification or sound
     if (!notification && !sound) return;
@@ -188,7 +192,8 @@ export class JoinNotificationsService {
     // Queue the notification and/or sound
     if (notification || sound) {
       this.playNotification.next({
-        notification: notification ? { displayName, type: 'join' } : undefined,
+        notification: notification ? { displayName } : undefined,
+        type: 'join',
         sound,
       });
     }
@@ -204,10 +209,10 @@ export class JoinNotificationsService {
 
     // Mode check
     const notification = this.appliesForPlayer(this.config.leaveNotification, displayName);
-    const sound = this.appliesForPlayer(this.config.leaveSound, displayName);
+    const sound = this.appliesForPlayer(this.config.leaveSoundMode, displayName);
 
     // Stop here if no notification or sound
-    if (!notification && !sound) return;
+    if (!notification) return;
 
     // World player count check
     if (this.config.onlyWhenLeftAlone) {
@@ -220,7 +225,8 @@ export class JoinNotificationsService {
     // Queue the notification and/or sound
     if (notification || sound) {
       this.playNotification.next({
-        notification: notification ? { displayName, type: 'leave' } : undefined,
+        notification: notification ? { displayName } : undefined,
+        type: 'leave',
         sound,
       });
     }

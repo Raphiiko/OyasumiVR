@@ -16,7 +16,10 @@ export const VALVE_INDEX_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: HardwareBrig
   };
 
 export class ValveIndexHardwareBrightnessControlDriver extends HardwareBrightnessControlDriver {
-  constructor(appSettings: Observable<AppSettings>, private openvr: OpenVRService) {
+  constructor(
+    appSettings: Observable<AppSettings>,
+    private openvr: OpenVRService
+  ) {
     super(appSettings);
   }
 

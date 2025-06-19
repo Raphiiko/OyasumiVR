@@ -10,7 +10,7 @@ import {
 } from 'rxjs';
 import { invoke } from '@tauri-apps/api/core';
 import { TranslateService } from '@ngx-translate/core';
-import { VRChatService } from './vrchat.service';
+import { VRChatService } from './vrchat-api/vrchat.service';
 import { AppSettingsService } from './app-settings.service';
 
 @Injectable({
@@ -64,7 +64,7 @@ export class DiscordService {
       assetLabel: this.translate.instant(
         sleepMode ? 'discord.label.sleeping' : 'discord.label.awake'
       ),
-      asset: sleepMode ? 'asleep' : 'awake',
+      asset: sleepMode ? 'asleep2' : 'awake2',
     });
     this.activityCleared = false;
   }

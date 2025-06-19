@@ -4,7 +4,6 @@
       "role": "Entwickler"
     },
     "contributionType": {
-      "feature": "Funktion",
       "soundFx": "Sound Effekt"
     },
     "contributions": "Beiträge",
@@ -143,7 +142,6 @@
     },
     "savePreset": "Als Voreinstellung speichern",
     "title": "Automatisch Einladungsanfragen annehmen",
-    "userOnBusyStatus": "Du kannst keine Einladungsanfragen von Spielern annehmen, während dein Status beschäftigt (rot) ist.",
     "userOnJoinMeStatus": "VRChat nimmt automatisch alle Einladungsanfragen an, unabhängig von deinen Einstellung, da dein Status auf Tritt mir bei (blau) gesetzt ist.",
     "whitelist": "Spieler Whitelist"
   },
@@ -179,7 +177,6 @@
         "title": "Zeit des Sonnenuntergangs"
       }
     },
-    "autoDetermineSunsetSunrise": "Automatische Zeiterkennung",
     "brightness": {
       "title": "Helligkeit ändern auf"
     },
@@ -210,7 +207,6 @@
       "message": "OyasumiVR hat zwei Methoden um die Helligkeit deines VR Headsets anzupassen: Softwaresteuerung und Hardwaresteuerung:\n\nSoftwaresteuerung ist für jedes Headset verfügbar. Sie beeinflusst die Helligkeit deines Headsets indem sie die Helligkeit des Bildes anpasst.\n\nHardwaresteuerung ist nur für kompatible Headset verfügbar (Valve Index, Bigscreen Beyond). Sie beeinflusst die Helligkeit deines Headsets indem sie direkt die Helligkeit des Displays in deinem Headset innerhalb der unterstützten Reichweite anpasst.\n\nIm einfachen Modus wechselt OyasumiVR flüssig zwischen Hardware- und Softwaresteuerung, oder benutzt nur Softwaresteuerung falls Hardwaresteuerung nicht unterstützt ist.\n\nWenn du direkte Kontrolle bevorzugsts, kannst du im erweiterten Modus sowohl Hardware- als auch Softwaresteuerung seperat auf die exakt von dir gewünschten Werte einstellen.",
       "title": "Helligkeitssteuerungsmodus"
     },
-    "onHmdConnectInfo": "Wenn du die 'bei Sonnenuntergang' und 'bei Sonnenaufgang' Automationen beide aktivierst werden beide automatisch laufen, wenn du dein Headset verbindest (abhängig von der derzeitigen Tageszeit). Wenn nicht werden die Werte von \"Wenn ich schlafen gehe\" und \"Wenn ich aufwache\" stattdessen verwendet.",
     "onlyWhenSleepModeDisabled": {
       "description": "Nur aktivieren, wenn der Schlafmodus deaktiviert ist",
       "title": "Nur wenn der Schlafmodus aktiviert ist ausführen"
@@ -305,7 +301,6 @@
       "hardwareAutomations": "Hardware-Automatisierungen",
       "hmdAutomations": "Headset spezifische Automatisierungen",
       "joinNotifications": "Beitritts-Benachrichtigung",
-      "miscAutomations": "Andere Automatisierungen",
       "nightmareDetection": "Albtraumerkennung",
       "oscAutomations": "OSC-Automatisierungen",
       "overview": "Übersicht",
@@ -1241,14 +1236,17 @@
     },
     "title": "Beitrittsbenachrichtigung"
   },
+  "message-center": {
+    "messages": {
+      "manyLighthousesDetected": {
+        "message": "Es scheint, als ob du viele Basisstationen hast\n\nBeachte, dass die meisten Bluetooth-Adapter nur 7 gleichzeitige Verbindungen verarbeiten können, einschließlich anderer Bluetooth-Geräte wie Kopfhörer und andere Peripheriegeräte.Denken Sie daran, dass OyasumiVR möglicherweise Probleme hat, alle Ihre Basisstationen zu steuern, wenn Sie zu viele von ihnen gleichzeitig angeschlossen haben oder zu viele andere Bluetooth-Geräte angeschlossen sind."
+      }
+    }
+  },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "Die Voreinstellung verwendet einen Workaround, der derzeit ein paar Fehler hat. Bitte nutze diese Voreinstellungen nur, wenn du die neueren GoGo Loco Voreinstellungen nicht verwenden kannst. Solltest du einen Avatar mit einer älteren Version verwenden, solltest du diesen auf die aktuellste GoGo Loco Version updaten",
     "GORONE_LEGACY_PRESET_WARNING": "Version v4.0 und höher dieser Voreinstellung beinhalten bereits Drehfunktionen und sind nicht kompatibel mit dieser Voreinstellung. Die Voreinstellung ist immernoch verfühbar wenn dein Avatar eine ältere Version dieser Voreinstellung verwendet",
     "oneTimeFlagDialogs": {
-      "BASESTATION_COUNT_WARNING_DIALOG": {
-        "message": "Es scheint, als ob du viele Basisstationen hast\n\nBeachte, dass die meisten Bluetooth-Adapter nur 7 gleichzeitige Verbindungen verarbeiten können, einschließlich anderer Bluetooth-Geräte wie Kopfhörer und andere Peripheriegeräte.Denken Sie daran, dass OyasumiVR möglicherweise Probleme hat, alle Ihre Basisstationen zu steuern, wenn Sie zu viele von ihnen gleichzeitig angeschlossen haben oder zu viele andere Bluetooth-Geräte angeschlossen sind.",
-        "title": "Warnung"
-      },
       "CCT_CONTROL_WARNING_DIALOG": {
         "message": "Bitte beachten , dass die Steuerung der Farbtemperatur der Anzeige nur mit bestimmten nativen SteamVR-Headsets verfügbar ist, z. B. dem Valve Index, Bigscreen Beyond oder HTC Vive (Pro).\n\nWenn keines dieser Headsets verwenden, wird diese Funktion wahrscheinlich keine Auswirkungen für Sie haben.\n\nSie können die Steuerung der Farbtemperatur in den Einstellungen deaktivieren, wenn Sie dies wünschen.",
         "title": "Feature Verfügbarkeit"
@@ -1996,13 +1994,11 @@
   },
   "shared": {
     "common": {
-      "none": "Keine"
+      "none": "Keine",
+      "vrcLoginRequired": "Diese Funktion benötigt Zugriff auf deinen VRChat Account"
     },
     "logo": {
       "tagline": "VR Sleeping Utilities"
-    },
-    "misc": {
-      "vrcLoginRequired": "Diese Funktion benötigt Zugriff auf deinen VRChat Account"
     },
     "modals": {
       "back": "Zurück",

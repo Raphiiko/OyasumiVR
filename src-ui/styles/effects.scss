@@ -17,14 +17,16 @@
 }
 
 @mixin attention-glow($size) {
-  box-shadow: 0 0 ($size * 15px) ($size * 7.5px) rgba(white, 0.8),
+  box-shadow:
+    0 0 ($size * 15px) ($size * 7.5px) rgba(white, 0.8),
     /* inner white */ 0 0 ($size * 100px) ($size * 60px) rgba(#f0f, 0.6),
     /* middle magenta */ 0 0 ($size * 140px) ($size * 90px) rgba(#0ff, 0.3); /* outer cyan */
   animation: breathing 3s ease-out infinite normal;
 }
 
 @mixin pane-radial-gradient($colorA, $colorB: $colorA, $opacity: 6%) {
-  background-image: radial-gradient(
+  background-image:
+    radial-gradient(
       ellipse at 40% 0%,
       color-mix(in srgb, $colorA $opacity, transparent) 0,
       transparent 75%

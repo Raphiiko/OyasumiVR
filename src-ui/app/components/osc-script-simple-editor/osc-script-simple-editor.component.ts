@@ -11,10 +11,15 @@ import { SelectBoxItem } from '../select-box/select-box.component';
 import { fade, hshrink, noop, vshrink } from 'src-ui/app/utils/animations';
 import { TString } from '../../models/translatable-string';
 import { floatPrecision } from '../../utils/number-utils';
-import { debounceTime, startWith, Subject, tap } from 'rxjs';
+import { combineLatest, debounceTime, firstValueFrom, startWith, Subject, tap } from 'rxjs';
 import { OscService } from '../../services/osc.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MAX_PARAMETERS_PER_COMMAND, MAX_STRING_VALUE_LENGTH } from '../../utils/osc-script-utils';
+import { AvatarContextService } from 'src-ui/app/services/avatar-context.service';
+import { OscAddressSelection } from './osc-address-autocomplete/osc-address-autocomplete.component';
+import { AvatarContext, VRChatAvatarParameter } from '../../models/avatar-context';
+import { VRChatService } from 'src-ui/app/services/vrchat-api/vrchat.service';
+import { AppSettingsService } from '../../services/app-settings.service';
 
 interface ValidationError {
   actionIndex: number;
@@ -30,7 +35,7 @@ interface ValidationError {
 })
 export class OscScriptSimpleEditorComponent implements OnInit {
   private validationTrigger: Subject<void> = new Subject<void>();
-  protected _script: OscScript = { version: 2, commands: [] };
+  protected _script: OscScript = { version: 3, commands: [] };
   @Input() set script(script: OscScript) {
     if (isEqual(script, this._script)) return;
     this._script = structuredClone(script);
@@ -53,6 +58,8 @@ export class OscScriptSimpleEditorComponent implements OnInit {
   errors: ValidationError[] = [];
   tooltipErrors: ValidationError[] = [];
   tooltipPosition: { x: number; y: number } = { x: 0, y: 0 };
+  tooltipVisible = false;
+  private tooltipUpdateId = 0;
   testing = false;
   addCommandItems: DropdownItem[] = [
     {
@@ -84,11 +91,19 @@ export class OscScriptSimpleEditorComponent implements OnInit {
       label: 'String',
     },
   ];
+  knownOscAddresses: string[] = [];
+  currentAvatarContext: AvatarContext | null = null;
 
   protected readonly MAX_PARAMETERS_PER_COMMAND = MAX_PARAMETERS_PER_COMMAND;
   protected readonly MAX_STRING_VALUE_LENGTH = MAX_STRING_VALUE_LENGTH;
 
-  constructor(private osc: OscService, private destroyRef: DestroyRef) {}
+  constructor(
+    private osc: OscService,
+    private destroyRef: DestroyRef,
+    private avatarContextService: AvatarContextService,
+    protected vrchat: VRChatService,
+    private appSettings: AppSettingsService
+  ) {}
 
   ngOnInit(): void {
     this.validationTrigger
@@ -104,6 +119,27 @@ export class OscScriptSimpleEditorComponent implements OnInit {
         this.errorCount.emit(this.errors.length);
         this.scriptChange.emit(this._script);
       });
+
+    combineLatest([this.avatarContextService.avatarContext]).subscribe(([avatarContext]) => {
+      this.currentAvatarContext = avatarContext;
+      this.knownOscAddresses = [...(avatarContext?.parameters ?? []).map((p) => p.address)].sort();
+
+      // Check if we should show the VRChat autocomplete info dialog
+    });
+
+    setTimeout(() => {
+      this.checkShowVRChatAutocompleteInfo();
+    }, 1000);
+  }
+
+  private async checkShowVRChatAutocompleteInfo() {
+    // Only show if VRChat is not running and avatar context is unavailable
+    const isVRChatRunning = await firstValueFrom(this.vrchat.vrchatProcessActive);
+    if (!this.currentAvatarContext && !isVRChatRunning) {
+      await this.appSettings.promptDialogForOneTimeFlag(
+        'OSC_SCRIPT_SIMPLE_EDITOR_VRCHAT_AUTOCOMPLETE_INFO'
+      );
+    }
   }
 
   onAdd(item: DropdownItem) {
@@ -114,7 +150,7 @@ export class OscScriptSimpleEditorComponent implements OnInit {
           address: '',
           parameters: [
             {
-              type: 'BOOLEAN',
+              type: 'Boolean',
               value: 'true',
             },
           ],
@@ -133,7 +169,7 @@ export class OscScriptSimpleEditorComponent implements OnInit {
   addParameter(commandIndex: number) {
     const command = this._script.commands[commandIndex] as OscScriptCommandAction;
     command.parameters.push({
-      type: 'BOOLEAN',
+      type: 'Boolean',
       value: 'true',
     });
   }
@@ -161,6 +197,85 @@ export class OscScriptSimpleEditorComponent implements OnInit {
   setAddress(command: OscScriptCommandAction, event: Event) {
     command.address = (event.target as HTMLInputElement).value;
     this.validationTrigger.next();
+  }
+
+  onAddressChange(address: string, command: OscScriptCommandAction) {
+    command.address = address;
+    this.validationTrigger.next();
+  }
+
+  onAddressSelected(selection: OscAddressSelection, command: OscScriptCommandAction) {
+    const isVRChatParameter = selection.address.startsWith('/avatar/parameters/');
+
+    // If this is a VRChat parameter, try to find its type in the avatarContext
+    if (
+      isVRChatParameter &&
+      this.currentAvatarContext &&
+      this.currentAvatarContext.type === 'VRCHAT'
+    ) {
+      // Find the parameter by address
+      const param = this.currentAvatarContext.parameters.find(
+        (p: VRChatAvatarParameter) => p.address === selection.address
+      );
+
+      if (param) {
+        // Map VRChat parameter type to OSC parameter type
+        let oscType: OscParameterType;
+        switch (param.type) {
+          case 'Bool':
+            oscType = 'Boolean';
+            break;
+          case 'Float':
+            oscType = 'Float';
+            break;
+          case 'Int':
+            oscType = 'Int';
+            break;
+          case 'String':
+            oscType = 'String';
+            break;
+          default:
+            // Default to INT if unknown type (shouldn't happen)
+            oscType = 'Int';
+            break;
+        }
+
+        // Update the parameter type
+        this.updateParameterType(command, 0, oscType);
+      }
+    }
+
+    this.validationTrigger.next();
+  }
+
+  updateParameterType(
+    command: OscScriptCommandAction,
+    parameterIndex: number,
+    newType: OscParameterType
+  ) {
+    if (parameterIndex >= command.parameters.length) return;
+
+    const currentType = command.parameters[parameterIndex].type;
+    // Only change if the type is different
+    if (currentType !== newType) {
+      command.parameters[parameterIndex].type = newType;
+
+      // Set appropriate default value based on type
+      switch (newType) {
+        case 'Int':
+          command.parameters[parameterIndex].value = '1';
+          break;
+        case 'Float':
+          command.parameters[parameterIndex].value = '1.0';
+          break;
+        case 'Boolean':
+          command.parameters[parameterIndex].value = 'true';
+          break;
+        case 'String':
+          command.parameters[parameterIndex].value = '';
+          break;
+      }
+    }
   }
 
   setBoolValue(
@@ -194,16 +309,16 @@ export class OscScriptSimpleEditorComponent implements OnInit {
     const parameter = command.parameters[parameterIndex];
     parameter.type = item.id as OscParameterType;
     switch (parameter.type) {
-      case 'INT':
+      case 'Int':
         parameter.value = '1';
         break;
-      case 'FLOAT':
+      case 'Float':
         parameter.value = '1.0';
         break;
-      case 'BOOLEAN':
+      case 'Boolean':
         parameter.value = 'true';
         break;
-      case 'STRING':
+      case 'String':
         parameter.value = '';
         break;
     }
@@ -243,7 +358,7 @@ export class OscScriptSimpleEditorComponent implements OnInit {
           }
           command.parameters.forEach((parameter) => {
             switch (parameter.type) {
-              case 'INT': {
+              case 'Int': {
                 const intValue = parseInt(parameter.value);
                 if (isNaN(intValue) || intValue < 0 || intValue > 255) {
                   this.errors.push({
@@ -253,7 +368,7 @@ export class OscScriptSimpleEditorComponent implements OnInit {
                 }
                 break;
               }
-              case 'FLOAT': {
+              case 'Float': {
                 const floatValue = parseFloat(parameter.value);
                 if (isNaN(floatValue) || floatValue < -1.0 || floatValue > 1.0) {
                   this.errors.push({
@@ -268,7 +383,7 @@ export class OscScriptSimpleEditorComponent implements OnInit {
                 }
                 break;
               }
-              case 'STRING': {
+              case 'String': {
                 if (parameter.value.length > this.MAX_STRING_VALUE_LENGTH) {
                   this.errors.push({
                     actionIndex,
@@ -299,7 +414,7 @@ export class OscScriptSimpleEditorComponent implements OnInit {
           if (command.duration > 5000) {
             this.errors.push({
               actionIndex: actionIndex,
-              message: 'misc.oscScriptEditorErrors.durationTooHigh',
+              message: 'misc.oscScriptEditorErrors.durationTooLong',
             });
           }
           totalSleepDuration += command.duration;
@@ -331,11 +446,20 @@ export class OscScriptSimpleEditorComponent implements OnInit {
   }
 
   hoverOnAction(lineNumber: number, event?: MouseEvent) {
+    if (!event) {
+      this.tooltipErrors = [];
+      return;
+    }
+
     this.tooltipErrors = this.getErrorsForAction(lineNumber);
-    if (!event) return;
     const el: HTMLElement = event.target as HTMLElement;
-    const x = el.offsetLeft + el.offsetWidth + 6;
-    const y = el.offsetTop;
-    this.tooltipPosition = { x, y };
+
+    // Position the tooltip to the left of the icon
+    // We'll use a fixed width that's large enough for our error messages
+    const estimatedTooltipWidth = 300;
+    this.tooltipPosition = {
+      x: el.offsetLeft - estimatedTooltipWidth - 6,
+      y: el.offsetTop,
+    };
   }
 }

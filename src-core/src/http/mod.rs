@@ -101,10 +101,10 @@ async fn handle_font_request(path: &str) -> Result<Response<Body>, Infallible> {
         }
     };
     // Serve font
-    return Ok(Response::builder()
+    Ok(Response::builder()
         .status(200)
         .header("Content-Type", "font/woff2")
         .header("Access-Control-Allow-Origin", "*")
         .body(font_data.into())
-        .unwrap());
+        .unwrap())
 }

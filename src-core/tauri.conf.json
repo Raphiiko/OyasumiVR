@@ -67,15 +67,21 @@
   },
   "productName": "OyasumiVR",
   "mainBinaryName": "OyasumiVR",
-  "version": "1.15.0",
+  "version": "25.6.0",
   "identifier": "co.raphii.oyasumi",
   "plugins": {
     "cli": {
       "description": "OyasumiVR - VR Sleep Utilities",
-      "longDescription": "",
-      "beforeHelp": "",
-      "afterHelp": "",
       "args": [
+        {
+          "name": "dont-need-security-where-im-going-uwu",
+          "description": "Permanently enables the main process to run with administrative privileges",
+          "longDescription": "WARNING: Enabling this has significant security risks!\n\nLaunching OyasumiVR with this flag will allow OyasumiVR to be ran as administrator from then on. Requires OyasumiVR.exe to be run with administrative privileges. This action can be undone by running the application again with the --reset-elevation-security flag.\n\nMore information can be found at https://raphii.co/oyasumivr/hidden/troubleshooting/launch-as-admin"
+        },
+        {
+          "name": "reset-elevation-security",
+          "description": "Restores the default elevation security settings. Requires OyasumiVR.exe to be ran with administrative privileges."
+        },
         {
           "name": "core-mode",
           "short": "c",
@@ -132,6 +138,23 @@
     "withGlobalTauri": true,
     "windows": [
       {
+        "label": "splashscreen",
+        "visible": true,
+        "width": 700,
+        "height": 475,
+        "decorations": false,
+        "url": "assets/splashscreen/splashscreen.html",
+        "resizable": false,
+        "center": true,
+        "shadow": false,
+        "transparent": true,
+        "skipTaskbar": true,
+        "minimizable": false,
+        "focus": true,
+        "userAgent": "OyasumiVR/25.6.0 (https://github.com/Raphiiko/OyasumiVR)",
+        "useHttpsScheme": false
+      },
+      {
         "fullscreen": false,
         "height": 620,
         "decorations": false,
@@ -144,23 +167,7 @@
         "theme": "Dark",
         "visible": false,
         "transparent": true,
-        "userAgent": "OyasumiVR/1.15.0 (https://github.com/Raphiiko/OyasumiVR)",
-        "useHttpsScheme": false
-      },
-      {
-        "label": "splashscreen",
-        "width": 700,
-        "height": 475,
-        "decorations": false,
-        "url": "assets/splashscreen/splashscreen.html",
-        "resizable": false,
-        "center": true,
-        "shadow": false,
-        "transparent": true,
-        "skipTaskbar": true,
-        "minimizable": false,
-        "alwaysOnTop": true,
-        "userAgent": "OyasumiVR/1.15.0 (https://github.com/Raphiiko/OyasumiVR)",
+        "userAgent": "OyasumiVR/25.6.0 (https://github.com/Raphiiko/OyasumiVR)",
         "useHttpsScheme": false
       }
     ],

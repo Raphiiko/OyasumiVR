@@ -1,6 +1,6 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { VRChatService } from '../../../../services/vrchat.service';
+import { VRChatService } from '../../../../services/vrchat-api/vrchat.service';
 import { vshrink } from '../../../../utils/animations';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
 import {

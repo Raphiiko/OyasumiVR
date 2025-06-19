@@ -345,7 +345,7 @@ export class GpuAutomationsService {
         )
       )
       .subscribe((msiAfterburnerPath) => {
-        this.setMSIAfterburnerPath(msiAfterburnerPath, false);
+        this.setMSIAfterburnerPath(msiAfterburnerPath as string, false);
       });
   }
 
@@ -415,21 +415,23 @@ export class GpuAutomationsService {
 
   async handleMSIAfterburnerError(e: string) {
     switch (e) {
-      case 'EXE_NOT_FOUND':
+      case 'ExeNotFound':
         this._msiAfterburnerStatus.next('NOT_FOUND');
         break;
-      case 'EXE_CANNOT_EXECUTE':
-      case 'EXE_UNVERIFIABLE':
+      case 'ExeCannotExecute':
+      case 'ExeUnverifiable':
         this._msiAfterburnerStatus.next('INVALID_EXECUTABLE');
         break;
-      case 'EXE_NOT_SIGNED':
-      case 'EXE_SIGNATURE_DISALLOWED':
+      case 'ExeNotSigned':
+      case 'ExeSignatureDisallowedNonEmbedded':
+      case 'ExeSignatureDisallowedNoIssuer':
+      case 'ExeSignatureDisallowedNoSubject':
+      case 'ExeSignatureDisallowedNoMatch':
         this._msiAfterburnerStatus.next('INVALID_SIGNATURE');
         break;
       // Should never happen
-      case 'INVALID_PROFILE_INDEX':
-      case 'ELEVATED_SIDECAR_INACTIVE':
-      case 'UNKNOWN_ERROR':
+      case 'InvalidProfileIndex':
+      case 'UnknownError':
       default:
         this._msiAfterburnerStatus.next('UNKNOWN_ERROR');
         break;

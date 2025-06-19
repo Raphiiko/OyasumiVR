@@ -62,7 +62,7 @@ impl AudioDeviceManagerState {
     }
 
     pub async fn evaluate_capture_device_metering(&self) {
-        let mic_activity_enabled = self.mic_activity_enabled.lock().await.clone();
+        let mic_activity_enabled = *self.mic_activity_enabled.lock().await;
         let device_id = match self.mic_activity_device_id.lock().await.as_ref() {
             Some(device_id) => device_id.clone(),
             None => String::from(""),
@@ -71,7 +71,7 @@ impl AudioDeviceManagerState {
         for device in devices.iter() {
             if !mic_activity_enabled {
                 device.disable_metering().await;
-            } else if device_id == String::from("DEFAULT") {
+            } else if device_id == *"DEFAULT" {
                 if device.get_device_type() == AudioDeviceType::Capture {
                     if device.is_default().await {
                         device.enable_metering().await;
@@ -102,7 +102,8 @@ impl AudioDeviceManager {
                 CoCreateInstance(&MMDeviceEnumerator, None, CLSCTX_ALL)?;
             // Setup refresh channel for notification callbacks
             let (refresh_tx, refresh_rx) = channel::<DeviceNotification>(10);
-            let notification_client = AudioDeviceManagerNotificationClient::new(refresh_tx);
+            let notification_client = AudioDeviceManagerNotificationClient::new(refresh_tx)?;
+            let notification_client: IMMNotificationClient = notification_client.into();
             enumerator.RegisterEndpointNotificationCallback(&notification_client)?;
             // Construct AudioDeviceManager
             let manager = Self {
@@ -441,12 +442,11 @@ struct AudioDeviceManagerNotificationClient {
 }
 
 impl AudioDeviceManagerNotificationClient {
-    fn new(refresh_tx: Sender<DeviceNotification>) -> IMMNotificationClient {
-        let val = Self {
+    fn new(refresh_tx: Sender<DeviceNotification>) -> windows::core::Result<Self> {
+        Ok(Self {
             refresh_tx,
             handle: Handle::current(),
-        };
-        val.into()
+        })
     }
 }
 
@@ -457,7 +457,7 @@ impl IMMNotificationClient_Impl for AudioDeviceManagerNotificationClient {
         pwstrdeviceid: &PCWSTR,
         dwnewstate: u32,
     ) -> windows::core::Result<()> {
-        let device_id = AudioDevicePCWSTR(pwstrdeviceid.clone());
+        let device_id = AudioDevicePCWSTR(*pwstrdeviceid);
         let tx = self.refresh_tx.clone();
         self.handle.spawn(async move {
             if let Err(e) = tx
@@ -478,7 +478,7 @@ impl IMMNotificationClient_Impl for AudioDeviceManagerNotificationClient {
 
     #[allow(non_snake_case)]
     fn OnDeviceAdded(&self, pwstrdeviceid: &PCWSTR) -> windows::core::Result<()> {
-        let device_id = AudioDevicePCWSTR(pwstrdeviceid.clone());
+        let device_id = AudioDevicePCWSTR(*pwstrdeviceid);
         let tx = self.refresh_tx.clone();
         self.handle.spawn(async move {
             if let Err(e) = tx.send(DeviceNotification::Added { device_id }).await {
@@ -493,7 +493,7 @@ impl IMMNotificationClient_Impl for AudioDeviceManagerNotificationClient {
 
     #[allow(non_snake_case)]
     fn OnDeviceRemoved(&self, pwstrdeviceid: &PCWSTR) -> windows::core::Result<()> {
-        let device_id = AudioDevicePCWSTR(pwstrdeviceid.clone());
+        let device_id = AudioDevicePCWSTR(*pwstrdeviceid);
         let tx = self.refresh_tx.clone();
         self.handle.spawn(async move {
             if let Err(e) = tx.send(DeviceNotification::Removed { device_id }).await {
@@ -513,7 +513,7 @@ impl IMMNotificationClient_Impl for AudioDeviceManagerNotificationClient {
         _role: ERole,
         pwstrdeviceid: &PCWSTR,
     ) -> windows::core::Result<()> {
-        let device_id = AudioDevicePCWSTR(pwstrdeviceid.clone());
+        let device_id = AudioDevicePCWSTR(*pwstrdeviceid);
         let tx = self.refresh_tx.clone();
         self.handle.spawn(async move {
             if let Err(e) = tx
@@ -535,7 +535,7 @@ impl IMMNotificationClient_Impl for AudioDeviceManagerNotificationClient {
         pwstrdeviceid: &PCWSTR,
         _key: &windows::Win32::UI::Shell::PropertiesSystem::PROPERTYKEY,
     ) -> windows::core::Result<()> {
-        let device_id = AudioDevicePCWSTR(pwstrdeviceid.clone());
+        let device_id = AudioDevicePCWSTR(*pwstrdeviceid);
         let tx = self.refresh_tx.clone();
         self.handle.spawn(async move {
             if let Err(e) = tx

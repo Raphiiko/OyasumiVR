@@ -6,7 +6,7 @@
       <i class="material-icons"> warning </i>
     </div>
     <div class="alert-content">
-      <span>{{ 'shared.misc.vrcLoginRequired' | translate }}</span>
+      <span>{{ 'shared.common.vrcLoginRequired' | translate }}</span>
       <button class="btn btn-secondary" (click)="login()" translate>shared.modals.login</button>
     </div>
   </div>
@@ -49,7 +49,7 @@
             [checked]="config.changeStatusMessageOnSleepModeEnable"
             (change)="
               updateConfig({
-                changeStatusMessageOnSleepModeEnable: !config.changeStatusMessageOnSleepModeEnable
+                changeStatusMessageOnSleepModeEnable: !config.changeStatusMessageOnSleepModeEnable,
               })
             "
           />
@@ -77,7 +77,7 @@
             [checked]="config.changeStatusOnSleepModeDisable"
             (change)="
               updateConfig({
-                changeStatusOnSleepModeDisable: !config.changeStatusOnSleepModeDisable
+                changeStatusOnSleepModeDisable: !config.changeStatusOnSleepModeDisable,
               })
             "
           />
@@ -105,7 +105,8 @@
             [checked]="config.changeStatusMessageOnSleepModeDisable"
             (change)="
               updateConfig({
-                changeStatusMessageOnSleepModeDisable: !config.changeStatusMessageOnSleepModeDisable
+                changeStatusMessageOnSleepModeDisable:
+                  !config.changeStatusMessageOnSleepModeDisable,
               })
             "
           />
@@ -133,7 +134,7 @@
             [checked]="config.changeStatusOnSleepPreparation"
             (change)="
               updateConfig({
-                changeStatusOnSleepPreparation: !config.changeStatusOnSleepPreparation
+                changeStatusOnSleepPreparation: !config.changeStatusOnSleepPreparation,
               })
             "
           />
@@ -163,7 +164,8 @@
             [checked]="config.changeStatusMessageOnSleepPreparation"
             (change)="
               updateConfig({
-                changeStatusMessageOnSleepPreparation: !config.changeStatusMessageOnSleepPreparation
+                changeStatusMessageOnSleepPreparation:
+                  !config.changeStatusMessageOnSleepPreparation,
               })
             "
           />

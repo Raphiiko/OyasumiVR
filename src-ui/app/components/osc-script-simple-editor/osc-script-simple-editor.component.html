@@ -10,6 +10,19 @@
     [translateParams]="{ count: errors.length }"
   ></span>
   <span style="flex: 1"></span>
+  <span
+    *ngIf="
+      !currentAvatarContext ||
+      currentAvatarContext.type !== 'VRCHAT' ||
+      (vrchat.vrchatProcessActive | async) !== true
+    "
+    class="info-icon"
+    [tooltip]="'comp.osc-script-simple-editor.vrchatAutofillInfo'"
+    [tooltipMode]="'bottom'"
+    [tooltipTextAlign]="'center'"
+  >
+    <i class="material-symbols-outlined">info</i>
+  </span>
   <div class="header-row-buttons">
     <app-dropdown-button [items]="addCommandItems" (itemSelect)="onAdd($event)">
       <i class="material-icons">add</i>
@@ -25,14 +38,6 @@
 <div class="simple-commands" @noop>
   <div class="simple-command" *ngFor="let command of _script.commands; let i = index" @vshrink>
     <ng-container *ngIf="command.type === 'COMMAND'">
-      <div
-        class="simple-command-error-icon"
-        @hshrink
-        *ngIf="getErrorsForAction(i).length"
-        (mouseenter)="hoverOnAction(i, $event)"
-      >
-        <i class="material-icons-round">error</i>
-      </div>
       <div class="simple-command-index">{{ i + 1 }}.</div>
       <div class="simple-command-action" translate>comp.osc-script-simple-editor.action.osc</div>
       <div class="simple-command-parameters-container">
@@ -56,7 +61,7 @@
             [selected]="{ id: parameter.value, label: parameter.value }"
             [items]="[
               { id: 'true', label: 'true' },
-              { id: 'false', label: 'false' }
+              { id: 'false', label: 'false' },
             ]"
             (selectedChange)="setBoolValue(command, j, $event!)"
             [showPlaceholderInDropdown]="false"
@@ -117,18 +122,13 @@
         </div>
       </div>
       <div class="input-wrapper simple-command-address-input">
-        <input
-          type="text"
-          placeholder="OSC Address"
+        <app-osc-address-autocomplete
+          [addresses]="knownOscAddresses"
           [value]="command.address"
-          (change)="setAddress(command, $event)"
-        />
+          (valueChange)="onAddressChange($event, command)"
+          (addressSelected)="onAddressSelected($event, command)"
+        ></app-osc-address-autocomplete>
       </div>
-      <button class="btn simple-command-remove-button" (click)="removeCommand(command)">
-        <i class="material-icons">clear</i>
-      </button>
-    </ng-container>
-    <ng-container *ngIf="command.type === 'SLEEP'">
       <div
         class="simple-command-error-icon"
         @hshrink
@@ -137,6 +137,11 @@
       >
         <i class="material-icons-round">error</i>
       </div>
+      <button class="btn simple-command-remove-button" (click)="removeCommand(command)">
+        <i class="material-icons">clear</i>
+      </button>
+    </ng-container>
+    <ng-container *ngIf="command.type === 'SLEEP'">
       <div class="simple-command-index">{{ i + 1 }}.</div>
       <div class="simple-command-action" translate>comp.osc-script-simple-editor.action.sleep</div>
       <div style="flex: 1"></div>
@@ -148,6 +153,14 @@
           (change)="setSleepDuration(command, $event)"
         />
         <span>ms</span>
+      </div>
+      <div
+        class="simple-command-error-icon"
+        @hshrink
+        *ngIf="getErrorsForAction(i).length"
+        (mouseenter)="hoverOnAction(i, $event)"
+      >
+        <i class="material-icons-round">error</i>
       </div>
       <button class="btn simple-command-remove-button" (click)="removeCommand(command)">
         <i class="material-icons">clear</i>

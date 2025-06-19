@@ -46,6 +46,11 @@ export function migratePulsoidApiSettings(data: any): PulsoidApiSettings {
     );
   }
   data = mergeWith(structuredClone(PULSOID_API_SETTINGS_DEFAULT), data, (objValue, srcValue) => {
+    // Delete irrelevant keys
+    if (objValue === undefined) {
+      return undefined;
+    }
+    // Do not merge array values
     if (Array.isArray(objValue)) {
       return srcValue;
     }

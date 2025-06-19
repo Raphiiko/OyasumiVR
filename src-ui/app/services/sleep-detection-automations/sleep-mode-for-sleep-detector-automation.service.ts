@@ -24,6 +24,7 @@ import { OpenVRInputService } from '../openvr-input.service';
 import { OVRInputEventAction } from '../../models/ovr-input-event';
 import { SleepingPose } from '../../models/sleeping-pose';
 import { TelemetryService } from '../telemetry.service';
+import { getBuiltInNotificationSound } from 'src-ui/app/models/notification-sounds';
 
 export type SleepDetectorStateReportHandlingResult =
   | 'AUTOMATION_DISABLED'
@@ -134,7 +135,8 @@ export class SleepModeForSleepDetectorAutomationService {
         type: 'sleepDetectorEnableCancelled',
       });
       this._lastStateReportHandlingResult.next('SLEEP_CHECK_USER_AWAKE');
-      await this.notifications.playSound('material_hero_simple-celebration-01');
+      const sound = getBuiltInNotificationSound('pebbles');
+      await this.notifications.playSound(sound);
       await this.notifications.send(
         this.translate.instant('notifications.sleepCheckCancel.content')
       );

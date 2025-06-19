@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AutomationConfigService } from '../automation-config.service';
-import { VRChatService } from '../vrchat.service';
+import { VRChatService } from '../vrchat-api/vrchat.service';
 import { SleepService } from '../sleep.service';
 import { SleepPreparationService } from '../sleep-preparation.service';
 import { NotificationService } from '../notification.service';

@@ -1,6 +1,6 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { SleepService } from '../../services/sleep.service';
-import { VRChatService } from '../../services/vrchat.service';
+import { VRChatService } from '../../services/vrchat-api/vrchat.service';
 import { UserStatus } from 'vrchat/dist';
 import { hshrink, noop } from '../../utils/animations';
 import { firstValueFrom } from 'rxjs';

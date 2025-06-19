@@ -4,6 +4,7 @@ import { SelectBoxItem } from '../../../../components/select-box/select-box.comp
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   NightmareDetectionAutomationsConfig,
+  SoundEffectConfig,
 } from '../../../../models/automations';
 
 import { AutomationConfigService } from '../../../../services/automation-config.service';
@@ -11,8 +12,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import { clamp } from '../../../../utils/number-utils';
 import { hshrink } from '../../../../utils/animations';
-import { NotificationService } from '../../../../services/notification.service';
-import { NIGHTMARE_DETECTION_NOTIFICATION_SOUND } from '../../../../services/nightmare-detection-automation.service';
 
 @Component({
   selector: 'app-nightmare-detection-view',
@@ -37,14 +36,11 @@ export class NightmareDetectionViewComponent implements OnInit {
   ];
   protected durationUnitOption?: SelectBoxItem;
   protected durationValue = 0;
-  protected playingTestSound = false;
-  private playingTestSoundTimeout: any;
 
   constructor(
     private router: Router,
     private destroyRef: DestroyRef,
-    private automationConfigService: AutomationConfigService,
-    private notifications: NotificationService
+    private automationConfigService: AutomationConfigService
   ) {}
 
   ngOnInit() {
@@ -67,19 +63,6 @@ export class NightmareDetectionViewComponent implements OnInit {
     if ((event.target as HTMLElement).className !== 'integrationsPageLink') return;
     event.preventDefault();
     this.router.navigate(['/dashboard/settings/integrations']);
-  }
-
-  async testSound() {
-    await this.notifications.playSound(
-      NIGHTMARE_DETECTION_NOTIFICATION_SOUND,
-      this.config.soundVolume / 100
-    );
-    this.playingTestSound = true;
-    if (this.playingTestSoundTimeout) clearTimeout(this.playingTestSoundTimeout);
-    this.playingTestSoundTimeout = setTimeout(() => {
-      this.playingTestSound = false;
-      this.playingTestSoundTimeout = undefined;
-    }, 21000);
   }
 
   async onChangeDuration(value: number, unit?: SelectBoxItem) {
@@ -148,20 +131,11 @@ export class NightmareDetectionViewComponent implements OnInit {
     );
   }
 
-  async togglePlaySound() {
+  async updateSound(config: SoundEffectConfig) {
     await this.automationConfigService.updateAutomationConfig<NightmareDetectionAutomationsConfig>(
       'NIGHTMARE_DETECTION',
       {
-        playSound: !this.config.playSound,
-      }
-    );
-  }
-
-  async setSoundVolume(volume: number) {
-    await this.automationConfigService.updateAutomationConfig<NightmareDetectionAutomationsConfig>(
-      'NIGHTMARE_DETECTION',
-      {
-        soundVolume: volume,
+        sound: config,
       }
     );
   }

@@ -10,19 +10,21 @@ import { UserStatus } from 'vrchat';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AutomationConfigService } from '../../../../../../services/automation-config.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { VRChatService } from '../../../../../../services/vrchat.service';
+import { VRChatService } from '../../../../../../services/vrchat-api/vrchat.service';
 import {
   ConfirmModalComponent,
   ConfirmModalInputModel,
   ConfirmModalOutputModel,
 } from '../../../../../../components/confirm-modal/confirm-modal.component';
 import { ModalService } from '../../../../../../services/modal.service';
+import { vshrink } from 'src-ui/app/utils/animations';
 
 @Component({
   selector: 'app-status-automations-general-tab',
   templateUrl: './status-automations-general-tab.component.html',
   styleUrls: ['./status-automations-general-tab.component.scss'],
   standalone: false,
+  animations: [vshrink()],
 })
 export class StatusAutomationsGeneralTabComponent implements OnInit {
   UserStatus = UserStatus;
@@ -132,8 +134,8 @@ export class StatusAutomationsGeneralTabComponent implements OnInit {
       automation === 'ON_SLEEP_ENABLE'
         ? 'statusMessageOnSleepModeEnable'
         : automation === 'ON_SLEEP_DISABLE'
-        ? 'statusMessageOnSleepModeDisable'
-        : 'statusMessageOnSleepPreparation';
+          ? 'statusMessageOnSleepModeDisable'
+          : 'statusMessageOnSleepPreparation';
     await this.updateConfig({
       [key]: value,
     });

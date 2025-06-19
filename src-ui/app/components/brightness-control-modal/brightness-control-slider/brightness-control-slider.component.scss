@@ -88,7 +88,9 @@
       transition: background-color 0.15s ease;
 
       &:not(.dragging):not(.transition-active) {
-        transition: background-color 0.15s ease, width 0.3s ease;
+        transition:
+          background-color 0.15s ease,
+          width 0.3s ease;
       }
     }
 

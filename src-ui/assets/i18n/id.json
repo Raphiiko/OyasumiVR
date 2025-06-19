@@ -4,7 +4,6 @@
       "role": "Developer"
     },
     "contributionType": {
-      "feature": "Fitur",
       "soundFx": "Efek Suara"
     },
     "contributions": "Kontribusi",
@@ -54,7 +53,6 @@
       "title": "Konfirmasi penghapusan"
     },
     "title": "Terima Otomatis Permintaan Undangan",
-    "userOnBusyStatus": "Anda tidak dapat menerima permintaan undangan dari pengguna saat status Anda sedang sibuk (merah).",
     "userOnJoinMeStatus": "VRChat akan secara otomatis menerima semua permintaan undangan terlepas dari pengaturan Anda, karena status Anda dalam keadaan join me (biru).",
     "whitelist": "Whitelist Player"
   },
@@ -134,7 +132,6 @@
       "chaperoneAutomations": "Otomatisasi Chaperone",
       "gpuAutomations": "Otomatisasi GPU",
       "hardwareAutomations": "Otomatisasi Hardware",
-      "miscAutomations": "Otomatisasi Lain-Lain",
       "nightmareDetection": "Deteksi Mimpi Buruk",
       "oscAutomations": "Otomatisasi OSC",
       "overview": "Ikhtisar",
@@ -1163,13 +1160,11 @@
   },
   "shared": {
     "common": {
-      "none": "Kosong"
+      "none": "Kosong",
+      "vrcLoginRequired": "Fitur ini memerlukan kamu untuk masuk dengan akun VRChat."
     },
     "logo": {
       "tagline": "Utilitas VR Sleeping"
-    },
-    "misc": {
-      "vrcLoginRequired": "Fitur ini memerlukan kamu untuk masuk dengan akun VRChat."
     },
     "modals": {
       "cancel": "Batalkan",

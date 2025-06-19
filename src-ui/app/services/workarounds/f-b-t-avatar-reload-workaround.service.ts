@@ -15,7 +15,7 @@ import { OscService } from '../osc.service';
 import { sleep } from '../../utils/promise-utils';
 import { info } from '@tauri-apps/plugin-log';
 import { SleepingAnimationsAutomationService } from '../osc-automations/sleeping-animations-automation.service';
-import { VRChatService } from '../vrchat.service';
+import { VRChatService } from '../vrchat-api/vrchat.service';
 import { AutomationConfigService } from '../automation-config.service';
 
 @Injectable({

@@ -25,10 +25,16 @@ export class OscScriptButtonComponent implements OnInit {
 
   editScript() {
     this.modalService
-      .addModal(OscScriptModalComponent, {
-        scriptName: this.label,
-        script: this.script,
-      })
+      .addModal(
+        OscScriptModalComponent,
+        {
+          scriptName: this.label,
+          script: this.script,
+        },
+        {
+          closeOnEscape: false,
+        }
+      )
       .pipe(filter((data) => !!data))
       .subscribe((data) => {
         this.script = data?.script?.commands?.length ? data.script : undefined;

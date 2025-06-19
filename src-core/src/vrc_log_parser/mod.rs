@@ -4,6 +4,7 @@ use crate::utils::send_event;
 use chrono::{Local, NaiveDateTime, TimeZone};
 use log::{debug, info, trace, warn};
 use serde::{Deserialize, Serialize};
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::{
     fs::{read_dir, File},
     io::{BufRead, BufReader},
@@ -22,38 +23,62 @@ struct VRCLogEvent {
     initial_load: bool,
 }
 
-static mut MUTE_LOG_DIR_NO_EXIST_WARNINGS: bool = false;
+static MUTE_LOG_DIR_NO_EXIST_WARNINGS: AtomicBool = AtomicBool::new(false);
 
 fn get_latest_log_path() -> Option<String> {
     // Get all files in the log directory
-    let dir = read_dir(
-        dirs::home_dir()
-            .unwrap()
-            .join("AppData\\LocalLow\\VRChat\\VRChat"),
-    );
+    let home_dir = dirs::home_dir()?;
+    let dir = read_dir(home_dir.join("AppData\\LocalLow\\VRChat\\VRChat"));
     // If log directory doesn't exist, return no path
-    unsafe {
-        if dir.is_err() {
-            if !MUTE_LOG_DIR_NO_EXIST_WARNINGS {
-                warn!("[Core] VRChat log directory doesn't exist (yet)");
-                MUTE_LOG_DIR_NO_EXIST_WARNINGS = true;
-            }
-            return None;
+    if dir.is_err() {
+        if !MUTE_LOG_DIR_NO_EXIST_WARNINGS.load(Ordering::Relaxed) {
+            warn!("[Core] VRChat log directory doesn't exist (yet)");
+            MUTE_LOG_DIR_NO_EXIST_WARNINGS.store(true, Ordering::Relaxed);
         }
-        MUTE_LOG_DIR_NO_EXIST_WARNINGS = false;
+        return None;
     }
+    MUTE_LOG_DIR_NO_EXIST_WARNINGS.store(false, Ordering::Relaxed);
     // Get the latest log file
-    dir.unwrap()
+    dir.ok()?
         .filter_map(|entry| entry.ok())
         // Only get log files
         .filter(|entry| {
             let name = entry.file_name().to_string_lossy().to_string();
             name.starts_with("output_log_") && name.ends_with(".txt")
         })
+        // Only get files that are created in the last 24 hours
+        .filter(|entry| {
+            entry
+                .path()
+                .metadata()
+                .ok()
+                .and_then(|metadata| {
+                    metadata.created().ok().and_then(|created_time| {
+                        SystemTime::now()
+                            .duration_since(created_time)
+                            .ok()
+                            .map(|duration| duration <= Duration::from_secs(24 * 60 * 60))
+                    })
+                })
+                .unwrap_or(false)
+        })
+        // Ignore files that are 0 bytes
+        .filter(|entry| {
+            entry
+                .path()
+                .metadata()
+                .ok().map(|metadata| metadata.len() > 0)
+                .unwrap_or(false)
+        })
         // Find most recent log file
-        .max_by_key(|entry| entry.path().metadata().unwrap().creation_time())
+        .max_by_key(|entry| {
+            entry
+                .path()
+                .metadata()
+                .ok().map(|m| m.creation_time())
+        })
         // Get the path for it
-        .map(|entry| String::from(entry.path().to_str().unwrap()))
+        .and_then(|entry| entry.path().to_str().map(String::from))
 }
 
 fn parse_datetime_from_line(line: String) -> Option<u64> {
@@ -61,10 +86,7 @@ fn parse_datetime_from_line(line: String) -> Option<u64> {
     // In the case of a DST rollback, we pick the latest possible time
     // During this hour, the logs will still be parsed in order, but their timestamps will be out of order.
     let time = Local.from_local_datetime(&localtime).latest();
-    match time {
-        Some(v) => Some(v.timestamp_millis() as u64),
-        None => return None,
-    }
+    time.map(|v| v.timestamp_millis() as u64)
 }
 
 async fn process_log_line(line: String, initial_load: bool) {
@@ -89,7 +111,7 @@ async fn parse_on_player_joined(line: String, initial_load: bool) -> bool {
             None => return true,
         };
         let event = VRCLogEvent {
-            time: time,
+            time,
             event: String::from("OnPlayerJoined"),
             data: display_name,
             initial_load,
@@ -124,7 +146,7 @@ async fn parse_on_player_left(line: String, initial_load: bool) -> bool {
             None => return true,
         };
         let event = VRCLogEvent {
-            time: time,
+            time,
             event: String::from("OnPlayerLeft"),
             data: display_name,
             initial_load,
@@ -159,7 +181,7 @@ async fn parse_on_location_change(line: String, initial_load: bool) -> bool {
             None => return true,
         };
         let event = VRCLogEvent {
-            time: time,
+            time,
             event: String::from("OnLocationChange"),
             data: instance_id,
             initial_load,
@@ -246,6 +268,17 @@ pub fn start_log_locator_task() -> CancellationToken {
             // Check the current log file path
             let log_path_option = get_latest_log_path();
             if log_path_option.is_none() {
+                // If we are currently reading a log file, stop the reader task
+                if ctx.current_log_path.is_some() {
+                    if let Some(token) = &ctx.reader_task_cancellation_token {
+                        send_event("VRC_LOG_CURRENT_FILE", None::<String>).await;
+                        token.cancel();
+                    }
+                    *ctx = LoopContext {
+                        current_log_path: None,
+                        reader_task_cancellation_token: None,
+                    };
+                }
                 continue;
             }
             let log_path = log_path_option.unwrap();
@@ -256,6 +289,7 @@ pub fn start_log_locator_task() -> CancellationToken {
             }
             // We need to watch a new file. Terminate the old reader task first if it exists.
             if let Some(token) = &ctx.reader_task_cancellation_token {
+                send_event("VRC_LOG_CURRENT_FILE", None::<String>).await;
                 token.cancel();
             }
             // Start watching the new file
@@ -264,11 +298,15 @@ pub fn start_log_locator_task() -> CancellationToken {
                 current_log_path: Some(log_path.clone()),
                 reader_task_cancellation_token: Some(start_log_watch_task(log_path.clone())),
             };
+            // Inform the front of the current log path
+            send_event("VRC_LOG_CURRENT_FILE", Some(log_path.clone())).await;
         }
         // Terminate any reader task
         if let Some(token) = &ctx.reader_task_cancellation_token {
             token.cancel();
         }
+        // Inform the front of the current log path
+        send_event("VRC_LOG_CURRENT_FILE", None::<String>).await;
         // Break to terminate this task
         info!("[Core] Terminated VRChat log watcher");
     });

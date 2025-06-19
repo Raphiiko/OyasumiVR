@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
 import {
-  asyncScheduler,
   BehaviorSubject,
   combineLatest,
   debounceTime,
@@ -17,7 +16,6 @@ import {
   of,
   shareReplay,
   take,
-  throttleTime,
 } from 'rxjs';
 import { LighthouseDevice, LighthouseDevicePowerState } from '../models/lighthouse-device';
 import { AppSettingsService } from './app-settings.service';
@@ -57,8 +55,6 @@ export class LighthouseService {
     LighthouseDevice[]
   >([]);
   public readonly devices: Observable<LighthouseDevice[]> = this._devices.asObservable();
-  private deviceNicknames: { [id: string]: string } = {};
-  private ignoredDevices: string[] = [];
   private v1Identifiers: { [id: string]: string } = {};
 
   constructor(private appSettings: AppSettingsService) {}
@@ -78,9 +74,7 @@ export class LighthouseService {
       (event) => this.handleDevicePowerStateChange(event.payload)
     );
     this.appSettings.settings.subscribe((settings) => {
-      this.deviceNicknames = settings.deviceNicknames;
       this.v1Identifiers = settings.v1LighthouseIdentifiers;
-      this.ignoredDevices = settings.ignoredLighthouses;
     });
     // Respond to lighthouse power control being turned on or off
     this.appSettings.settings
@@ -120,18 +114,6 @@ export class LighthouseService {
       .subscribe(() => {
         invoke('lighthouse_start_scan', { duration: DEFAULT_SCAN_DURATION });
       });
-    // Show warning when more than 5 lighthouses are detected
-    this._devices
-      .pipe(
-        filter((d) => d.length >= 6),
-        throttleTime(60000, asyncScheduler, {
-          leading: true,
-          trailing: true,
-        })
-      )
-      .subscribe(() =>
-        this.appSettings.promptDialogForOneTimeFlag('BASESTATION_COUNT_WARNING_DIALOG')
-      );
   }
 
   public async setPowerState(
@@ -227,39 +209,6 @@ export class LighthouseService {
       }
     });
     return devices;
-  }
-
-  public getDeviceNickname(device: LighthouseDevice): string | null {
-    return this.deviceNicknames['LIGHTHOUSE_' + device.id] ?? null;
-  }
-
-  public async setDeviceNickname(device: LighthouseDevice, nickname: string) {
-    const settings = await firstValueFrom(this.appSettings.settings);
-    const deviceNicknames = structuredClone(settings.deviceNicknames);
-    nickname = nickname.trim();
-    if (nickname) {
-      deviceNicknames['LIGHTHOUSE_' + device.id] = nickname;
-    } else {
-      delete deviceNicknames['LIGHTHOUSE_' + device.id];
-    }
-    this.appSettings.updateSettings({
-      deviceNicknames,
-    });
-  }
-
-  public async ignoreDevice(device: LighthouseDevice, ignore: boolean) {
-    const settings = await firstValueFrom(this.appSettings.settings);
-    const ignoredLighthouses = structuredClone(settings.ignoredLighthouses);
-    if (ignore && !ignoredLighthouses.includes(device.id)) ignoredLighthouses.push(device.id);
-    else if (!ignore && ignoredLighthouses.includes(device.id))
-      ignoredLighthouses.splice(ignoredLighthouses.indexOf(device.id), 1);
-    this.appSettings.updateSettings({
-      ignoredLighthouses,
-    });
-  }
-
-  public isDeviceIgnored(device: LighthouseDevice) {
-    return this.ignoredDevices.includes(device.id);
   }
 
   public testV1LighthouseIdentifier(

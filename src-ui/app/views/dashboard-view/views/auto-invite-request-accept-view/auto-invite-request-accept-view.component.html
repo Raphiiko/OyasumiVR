@@ -9,7 +9,7 @@
           <i class="material-icons"> warning </i>
         </div>
         <div class="alert-content">
-          <span>{{ 'shared.misc.vrcLoginRequired' | translate }}</span>
+          <span>{{ 'shared.common.vrcLoginRequired' | translate }}</span>
           <button class="btn btn-secondary" (click)="login()" translate>shared.modals.login</button>
         </div>
       </div>
@@ -62,6 +62,103 @@
             ></app-select-box>
           </div>
         </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>auto-invite-request-accept.options.acceptMessage.title</span>
+            <span translate>auto-invite-request-accept.options.acceptMessage.description</span>
+          </div>
+          <div class="setting-row-action">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="config.acceptMessageEnabled"
+                (change)="updateConfig({ acceptMessageEnabled: !config.acceptMessageEnabled })"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="setting-row-group" @vshrink *ngIf="config.acceptMessageEnabled">
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate
+                >auto-invite-request-accept.options.acceptMessage.customMessage.title</span
+              >
+              <span></span>
+            </div>
+            <div class="setting-row-action">
+              <input
+                maxlength="64"
+                type="text"
+                class="input"
+                [value]="config.acceptInviteRequestMessage"
+                (change)="
+                  updateAcceptInviteRequestCustomMessage.next(
+                    acceptOnRequestCustomMessageInput.value
+                  )
+                "
+                (blur)="acceptOnRequestCustomMessageInput.value = config.acceptInviteRequestMessage"
+                [placeholder]="
+                  'auto-invite-request-accept.options.acceptMessage.customMessage.placeholder'
+                    | translate
+                "
+                #acceptOnRequestCustomMessageInput
+              />
+            </div>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>auto-invite-request-accept.options.declineOnRequest.title</span>
+            <span translate>auto-invite-request-accept.options.declineOnRequest.description</span>
+          </div>
+          <div class="setting-row-action">
+            <app-select-box
+              [class]="'small-select-box'"
+              [type]="'SMALL'"
+              [items]="declineOnRequestOptions"
+              [selected]="declineOnRequestOption"
+              (selectedChange)="setDeclineOnRequestOption($event?.id)"
+            ></app-select-box>
+          </div>
+        </div>
+        <div
+          class="setting-row-group"
+          @vshrink
+          *ngIf="['ALWAYS', 'WHEN_SLEEPING'].includes(declineOnRequestOption?.id ?? '')"
+        >
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate
+                >auto-invite-request-accept.options.declineOnRequest.customMessage.title</span
+              >
+              <span translate
+                >auto-invite-request-accept.options.declineOnRequest.customMessage.description</span
+              >
+            </div>
+            <div class="setting-row-action">
+              <input
+                maxlength="64"
+                type="text"
+                class="input"
+                [value]="config.declineInviteRequestMessage"
+                (change)="
+                  updateDeclineInviteRequestCustomMessage.next(
+                    declineOnRequestCustomMessageInput.value
+                  )
+                "
+                (blur)="
+                  declineOnRequestCustomMessageInput.value = config.declineInviteRequestMessage
+                "
+                [placeholder]="
+                  'auto-invite-request-accept.options.declineOnRequest.customMessage.placeholder'
+                    | translate
+                "
+                #declineOnRequestCustomMessageInput
+              />
+            </div>
+          </div>
+        </div>
       </div>
       <h2 translate>auto-invite-request-accept.conditions.title</h2>
       <p translate>auto-invite-request-accept.conditions.description</p>
@@ -91,7 +188,7 @@
                 'auto-invite-request-accept.options.onlyBelowPlayerCount.title'
                   | translate
                     : {
-                        count: config.onlyBelowPlayerCount
+                        count: config.onlyBelowPlayerCount,
                       }
               "
             ></span>
@@ -115,7 +212,7 @@
                 [checked]="config.onlyBelowPlayerCountEnabled"
                 (change)="
                   updateConfig({
-                    onlyBelowPlayerCountEnabled: !config.onlyBelowPlayerCountEnabled
+                    onlyBelowPlayerCountEnabled: !config.onlyBelowPlayerCountEnabled,
                   })
                 "
               />
@@ -124,10 +221,164 @@
           </div>
         </div>
       </div>
-
       <h2 translate>auto-invite-request-accept.otherAutomations.title</h2>
       <p translate>auto-invite-request-accept.otherAutomations.description</p>
       <div class="settings">
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>auto-invite-request-accept.options.playSoundOnInviteRequest.title</span>
+            <span translate
+              >auto-invite-request-accept.options.playSoundOnInviteRequest.description</span
+            >
+          </div>
+          <div class="setting-row-action">
+            <app-notification-sound-button
+              [soundConfig]="config.playSoundOnInviteRequest"
+              (soundConfigChange)="updateConfig({ playSoundOnInviteRequest: $event })"
+            ></app-notification-sound-button>
+          </div>
+        </div>
+        <div class="setting-row-group" @vshrink *ngIf="config.playSoundOnInviteRequest">
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate
+                >auto-invite-request-accept.options.playSoundOnInviteRequest.onlyWhenAsleep.title</span
+              >
+              <span translate
+                >auto-invite-request-accept.options.playSoundOnInviteRequest.onlyWhenAsleep.description</span
+              >
+            </div>
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="config.playSoundOnInviteRequest_onlyWhenAsleep"
+                  (change)="
+                    updateConfig({
+                      playSoundOnInviteRequest_onlyWhenAsleep:
+                        !config.playSoundOnInviteRequest_onlyWhenAsleep,
+                    })
+                  "
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate
+                >auto-invite-request-accept.options.playSoundOnInviteRequest.onlyWhenUnhandled.title</span
+              >
+              <span translate
+                >auto-invite-request-accept.options.playSoundOnInviteRequest.onlyWhenUnhandled.description</span
+              >
+            </div>
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="config.playSoundOnInviteRequest_onlyWhenUnhandled"
+                  (change)="
+                    updateConfig({
+                      playSoundOnInviteRequest_onlyWhenUnhandled:
+                        !config.playSoundOnInviteRequest_onlyWhenUnhandled,
+                    })
+                  "
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>auto-invite-request-accept.options.playSoundOnInvite.title</span>
+            <span translate>auto-invite-request-accept.options.playSoundOnInvite.description</span>
+          </div>
+          <div class="setting-row-action">
+            <app-notification-sound-button
+              [soundConfig]="config.playSoundOnInvite"
+              (soundConfigChange)="updateConfig({ playSoundOnInvite: $event })"
+            ></app-notification-sound-button>
+          </div>
+        </div>
+        <div class="setting-row-group" @vshrink *ngIf="config.playSoundOnInvite">
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate
+                >auto-invite-request-accept.options.playSoundOnInvite.onlyWhenAsleep.title</span
+              >
+              <span translate
+                >auto-invite-request-accept.options.playSoundOnInvite.onlyWhenAsleep.description</span
+              >
+            </div>
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="config.playSoundOnInvite_onlyWhenAsleep"
+                  (change)="
+                    updateConfig({
+                      playSoundOnInvite_onlyWhenAsleep: !config.playSoundOnInvite_onlyWhenAsleep,
+                    })
+                  "
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate
+              >auto-invite-request-accept.options.declineOnInviteWhileAsleep.title</span
+            >
+            <span translate
+              >auto-invite-request-accept.options.declineOnInviteWhileAsleep.description</span
+            >
+          </div>
+          <div class="setting-row-action">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="config.declineInvitesWhileAsleep"
+                (change)="
+                  updateConfig({ declineInvitesWhileAsleep: !config.declineInvitesWhileAsleep })
+                "
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="setting-row-group" @vshrink *ngIf="config.declineInvitesWhileAsleep">
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate
+                >auto-invite-request-accept.options.declineOnInviteWhileAsleep.customMessage.title</span
+              >
+              <span></span>
+            </div>
+            <div class="setting-row-action">
+              <input
+                maxlength="64"
+                type="text"
+                class="input"
+                [value]="config.declineInviteMessage"
+                (change)="
+                  updateDeclineInviteWhileAsleepCustomMessage.next(
+                    declineOnInviteCustomMessageInput.value
+                  )
+                "
+                (blur)="declineOnInviteCustomMessageInput.value = config.declineInviteMessage"
+                [placeholder]="
+                  'auto-invite-request-accept.options.declineOnInviteWhileAsleep.customMessage.placeholder'
+                    | translate
+                "
+                #declineOnInviteCustomMessageInput
+              />
+            </div>
+          </div>
+        </div>
         <div class="setting-row">
           <div class="setting-row-label" translate>
             <span translate
@@ -195,7 +446,7 @@
   [title]="
     {
       WHITELIST: 'auto-invite-request-accept.whitelist',
-      BLACKLIST: 'auto-invite-request-accept.blacklist'
+      BLACKLIST: 'auto-invite-request-accept.blacklist',
     }[config.listMode]
   "
   [playerIds]="playerIds"

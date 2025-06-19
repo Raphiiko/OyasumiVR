@@ -40,9 +40,19 @@ use tauri_plugin_cli::CliExt;
 use tauri_plugin_log::RotationStrategy;
 use webview2_com::Microsoft::Web::WebView2::Win32::ICoreWebView2Settings6;
 
-fn main() {
-    // Construct Oyasumi Tauri application
+use crate::globals::APTABASE_HOST;
+
+#[tokio::main]
+async fn main() {
+    // Attach to parent console if we're running from a command line
+    #[cfg(windows)]
+    {
+        use windows::Win32::System::Console::{AttachConsole, ATTACH_PARENT_PROCESS};
+        let _ = unsafe { AttachConsole(ATTACH_PARENT_PROCESS) };
+    }
+    // Construct OyasumiVR Tauri application
     tauri::Builder::default()
+        .plugin(tauri_plugin_opener::init())
         .plugin(configure_tauri_plugin_single_instance())
         .plugin(tauri_plugin_deep_link::init())
         .plugin(configure_tauri_plugin_log())
@@ -61,10 +71,10 @@ fn main() {
         .plugin(configure_tauri_plugin_aptabase())
         .setup(|app| {
             let matches = app.cli().matches().unwrap();
-            tauri::async_runtime::block_on(async {
+            futures::executor::block_on(async {
                 *globals::TAURI_CLI_MATCHES.lock().await = Some(matches);
             });
-            match tauri::async_runtime::block_on(tauri::async_runtime::spawn(app_setup(
+            match futures::executor::block_on(tauri::async_runtime::spawn(app_setup(
                 app.handle().clone(),
             ))) {
                 Ok(_) => {}
@@ -98,11 +108,20 @@ fn configure_tauri_plugin_single_instance() -> TauriPlugin<Wry> {
 
 fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
     tauri_plugin_aptabase::Builder::new(APTABASE_APP_KEY)
+        .with_options(tauri_plugin_aptabase::InitOptions {
+            #[allow(clippy::const_is_empty)]
+            host: if APTABASE_HOST.is_empty() {
+                None
+            } else {
+                Some(APTABASE_HOST.to_string())
+            },
+            flush_interval: tauri_plugin_aptabase::InitOptions::default().flush_interval,
+        })
         .with_panic_hook(Box::new(|client, info, msg| {
             let location = info
                 .location()
                 .map(|loc| format!("{}:{}:{}", loc.file(), loc.line(), loc.column()))
-                .unwrap_or_else(|| "".to_string());
+                .unwrap_or_default();
 
             // Upload crash report if telemetry is enabled
             if telemetry::TELEMETRY_ENABLED.load(Ordering::Relaxed) {
@@ -127,7 +146,8 @@ fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
 }
 
 fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
-    let mut builder = tauri_plugin_log::Builder::default()
+    let mut builder = tauri_plugin_log::Builder::new()
+        .clear_targets()
         .format(move |out, message, record| {
             let format = time::format_description::parse(
                 "[[[year]-[month]-[day]][[[hour]:[minute]:[second]]",
@@ -142,25 +162,29 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
         })
         .rotation_strategy(RotationStrategy::KeepAll);
 
-    // #[cfg(debug_assertions)]
-    // {
     builder = builder
         .level(LevelFilter::Info)
-        .target(tauri_plugin_log::Target::new(
-            tauri_plugin_log::TargetKind::Webview,
-        ))
         .target(tauri_plugin_log::Target::new(
             tauri_plugin_log::TargetKind::Stdout,
         ))
         .target(tauri_plugin_log::Target::new(
             tauri_plugin_log::TargetKind::LogDir { file_name: None },
         ));
-    // }
+
+    #[cfg(debug_assertions)]
+    {
+        builder = builder.target(tauri_plugin_log::Target::new(
+            tauri_plugin_log::TargetKind::Webview,
+        ));
+    }
 
     builder.build()
 }
 
 async fn app_setup(app_handle: tauri::AppHandle) {
+    // Process elevation security args
+    os::elevation::process_elevation_cli_args().await;
+
     info!(
         "[Core] Starting OyasumiVR in {} mode",
         crate::utils::cli_core_mode().await
@@ -172,6 +196,8 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     };
     info!("[Core] Setting working directory to: {:?}", executable_path);
     std::env::set_current_dir(&executable_path).unwrap();
+    // Clean up old batch files from previous runs
+    os::cleanup_batch_files().await;
     // Run any migrations first
     migrations::run_migrations().await;
     // Load configs
@@ -287,7 +313,7 @@ async fn load_configs() {
 }
 
 fn on_cron_minute_start(_: &str) {
-    tauri::async_runtime::block_on(utils::send_event("CRON_MINUTE_START", ()));
+    futures::executor::block_on(utils::send_event("CRON_MINUTE_START", ()));
 }
 
 fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
@@ -307,12 +333,15 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         openvr::commands::openvr_reregister_manifest,
         openvr::commands::openvr_set_init_delay_fix,
         openvr::commands::openvr_set_analog_color_temp,
+        openvr::commands::openvr_set_app_framelimit,
+        openvr::commands::openvr_get_app_framelimit,
         hardware::beyond::commands::bigscreen_beyond_is_connected,
         hardware::beyond::commands::bigscreen_beyond_set_brightness,
         hardware::beyond::commands::bigscreen_beyond_set_led_color,
         hardware::beyond::commands::bigscreen_beyond_set_fan_speed,
         hardware::beyond::commands::bigscreen_beyond_get_saved_preferences,
         os::commands::run_command,
+        os::commands::run_cmd_commands,
         os::commands::play_sound,
         os::commands::show_in_folder,
         os::commands::quit_steamvr,
@@ -324,6 +353,7 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         os::commands::windows_sleep,
         os::commands::windows_logout,
         os::commands::windows_hibernate,
+        os::commands::windows_is_elevated,
         os::commands::get_audio_devices,
         os::commands::set_audio_device_volume,
         os::commands::set_audio_device_mute,
@@ -331,6 +361,7 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         os::commands::set_hardware_mic_activity_enabled,
         os::commands::set_hardware_mic_activivation_threshold,
         os::commands::is_vrchat_active,
+        os::commands::is_elevation_security_disabled,
         osc::commands::osc_send_command,
         osc::commands::osc_valid_addr,
         osc::commands::start_osc_server,
@@ -371,6 +402,7 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         commands::nvml::nvml_get_devices,
         commands::nvml::nvml_set_power_management_limit,
         commands::debug::open_dev_tools,
+        commands::debug::is_flag_set,
         commands::time::get_sunrise_sunset_time,
         grpc::commands::get_core_grpc_port,
         grpc::commands::get_core_grpc_web_port,

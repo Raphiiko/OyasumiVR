@@ -34,13 +34,13 @@ pub async fn init() {
     let app = app_guard.as_ref().unwrap();
     let tray = app.tray_by_id("oyasumivr-tray").unwrap();
     tray.on_tray_icon_event(|icon, event| {
-        tauri::async_runtime::block_on(on_tray_icon_event(icon, event))
+        futures::executor::block_on(on_tray_icon_event(icon, event))
     });
 }
 
 pub fn handle_window_events(window: &tauri::Window, event: &tauri::WindowEvent) {
     if let tauri::WindowEvent::CloseRequested { api, .. } = event {
-        let manager_guard = tauri::async_runtime::block_on(SYSTEMTRAY_MANAGER.lock());
+        let manager_guard = futures::executor::block_on(SYSTEMTRAY_MANAGER.lock());
         let manager = manager_guard.as_ref().unwrap();
         handle_window_close_request(window, Some(api), manager.close_to_tray);
     }

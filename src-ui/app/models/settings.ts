@@ -17,13 +17,9 @@ export interface AppSettings {
   notificationsEnabled: { types: NotificationType[] };
   quitWithSteamVR: QuitWithSteamVRMode;
   generalNotificationVolume: number;
-  deviceNicknames: {
-    [deviceId: string]: string;
-  };
   v1LighthouseIdentifiers: {
     [deviceId: string]: string;
   };
-  ignoredLighthouses: string[];
   hotkeys: { [hotkeyId: string]: string[] };
   oscServerEnabled: boolean;
   playerListPresets: PlayerListPreset[];
@@ -31,6 +27,8 @@ export interface AppSettings {
   openVrInitDelayFix: boolean;
   oneTimeFlags: OneTimeFlag[];
   eventLogTypesHidden: EventLogType[];
+  // Message center
+  hiddenMessageIds: string[];
   // Overlay
   overlayMenuEnabled: boolean;
   overlayGpuAcceleration: boolean;
@@ -102,8 +100,6 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   overlayGpuAcceleration: true,
   overlayMenuOnlyOpenWhenVRChatIsRunning: false,
   generalNotificationVolume: 100,
-  deviceNicknames: {},
-  ignoredLighthouses: [],
   v1LighthouseIdentifiers: {},
   hotkeys: {},
   hideSnowverlay: false,
@@ -126,6 +122,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   cctSoftwareMode: false,
   oneTimeFlags: [],
   eventLogTypesHidden: [],
+  hiddenMessageIds: [],
 };
 
 export type ExecutableReferenceStatus =

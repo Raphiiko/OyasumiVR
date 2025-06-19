@@ -1,0 +1,173 @@
+<div class="pane">
+  <div class="pane-title" translate>runAutomations.title</div>
+  <div class="pane-content">
+    <div class="setting-view-container">
+      <div class="setting-category">
+        <p translate>runAutomations.description</p>
+        <div class="settings">
+          <!-- On Sleep Enable -->
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>runAutomations.onSleepEnable.title</span>
+              <span translate>runAutomations.onSleepEnable.description</span>
+            </div>
+            <div class="setting-row-action">
+              <button
+                class="btn btn-icon expand-button"
+                type="button"
+                [class.expanded]="onSleepModeEnableExpanded"
+                (click)="onSleepModeEnableExpanded = !onSleepModeEnableExpanded"
+                [title]="(onSleepModeEnableExpanded ? 'Collapse' : 'Expand') + ' command input'"
+              >
+                <i class="material-symbols-outlined">expand_more</i>
+              </button>
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="config.onSleepModeEnable"
+                  (change)="toggleSleepModeEnable()"
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Command input for On Sleep Enable -->
+          <div class="setting-row-group" *ngIf="onSleepModeEnableExpanded" @vshrink>
+            <div class="setting-row">
+              <div class="setting-row-label">
+                <span translate>runAutomations.commandsToRun</span>
+                <span></span>
+              </div>
+              <div class="setting-row-action command-input">
+                <textarea
+                  class="code-input"
+                  appTextareaAutoResize
+                  [ngModel]="onSleepModeEnableCommands"
+                  (ngModelChange)="updateOnSleepModeEnable($event)"
+                ></textarea>
+                <button
+                  class="btn btn-secondary"
+                  type="button"
+                  (click)="testCommands(onSleepModeEnableCommands)"
+                  [disabled]="!onSleepModeEnableCommands.trim()"
+                >
+                  <i class="material-symbols-outlined icon-filled">play_arrow</i>
+                  <span translate>runAutomations.testCommands</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- On Sleep Disable -->
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>runAutomations.onSleepDisable.title</span>
+              <span translate>runAutomations.onSleepDisable.description</span>
+            </div>
+            <div class="setting-row-action">
+              <button
+                class="btn btn-icon expand-button"
+                type="button"
+                [class.expanded]="onSleepModeDisableExpanded"
+                (click)="onSleepModeDisableExpanded = !onSleepModeDisableExpanded"
+                [title]="(onSleepModeDisableExpanded ? 'Collapse' : 'Expand') + ' command input'"
+              >
+                <i class="material-symbols-outlined">expand_more</i>
+              </button>
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="config.onSleepModeDisable"
+                  (change)="toggleSleepModeDisable()"
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Command input for On Sleep Disable -->
+          <div class="setting-row-group" *ngIf="onSleepModeDisableExpanded" @vshrink>
+            <div class="setting-row">
+              <div class="setting-row-label">
+                <span translate>runAutomations.commandsToRun</span>
+                <span></span>
+              </div>
+              <div class="setting-row-action command-input">
+                <textarea
+                  class="code-input"
+                  appTextareaAutoResize
+                  [ngModel]="onSleepModeDisableCommands"
+                  (ngModelChange)="updateOnSleepModeDisable($event)"
+                ></textarea>
+                <button
+                  class="btn btn-secondary"
+                  type="button"
+                  (click)="testCommands(onSleepModeDisableCommands)"
+                  [disabled]="!onSleepModeDisableCommands.trim()"
+                >
+                  <i class="material-symbols-outlined icon-filled">play_arrow</i>
+                  <span translate>runAutomations.testCommands</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- On Sleep Preparation -->
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>runAutomations.onSleepPreparation.title</span>
+              <span translate>runAutomations.onSleepPreparation.description</span>
+            </div>
+            <div class="setting-row-action">
+              <button
+                class="btn btn-icon expand-button"
+                type="button"
+                [class.expanded]="onSleepPreparationExpanded"
+                (click)="onSleepPreparationExpanded = !onSleepPreparationExpanded"
+                [title]="(onSleepPreparationExpanded ? 'Collapse' : 'Expand') + ' command input'"
+              >
+                <i class="material-symbols-outlined">expand_more</i>
+              </button>
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="config.onSleepPreparation"
+                  (change)="toggleSleepPreparation()"
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Command input for On Sleep Preparation -->
+          <div class="setting-row-group" *ngIf="onSleepPreparationExpanded" @vshrink>
+            <div class="setting-row">
+              <div class="setting-row-label">
+                <span translate>runAutomations.commandsToRun</span>
+                <span></span>
+              </div>
+              <div class="setting-row-action command-input">
+                <textarea
+                  class="code-input"
+                  appTextareaAutoResize
+                  [ngModel]="onSleepPreparationCommands"
+                  (ngModelChange)="updateOnSleepPreparation($event)"
+                ></textarea>
+                <button
+                  class="btn btn-secondary"
+                  type="button"
+                  (click)="testCommands(onSleepPreparationCommands)"
+                  [disabled]="!onSleepPreparationCommands.trim()"
+                >
+                  <i class="material-symbols-outlined icon-filled">play_arrow</i>
+                  <span translate>runAutomations.testCommands</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

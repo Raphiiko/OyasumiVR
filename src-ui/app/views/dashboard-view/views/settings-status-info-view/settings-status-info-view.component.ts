@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { TString } from '../../../../models/translatable-string';
 import { firstValueFrom, from, interval, map, Observable, of, startWith, switchMap } from 'rxjs';
-import { VRChatService } from '../../../../services/vrchat.service';
+import { VRChatService } from '../../../../services/vrchat-api/vrchat.service';
 import { getVersion } from '../../../../utils/app-utils';
 import { BUILD_ID, FLAVOUR } from 'src-ui/build';
 import { OscService } from '../../../../services/osc.service';
@@ -100,9 +100,7 @@ export class SettingsStatusInfoViewComponent {
           {
             key: 'HMD Activity (Debug)',
             value: openvr.devices.pipe(
-              map(
-                (devices) => devices.find((d) => d.class === 'HMD')?.debugHmdActivity ?? 'No Value'
-              )
+              map((devices) => devices.find((d) => d.class === 'HMD')?.hmdActivity ?? 'No Value')
             ),
           },
         ],
@@ -223,7 +221,7 @@ export class SettingsStatusInfoViewComponent {
         name: 'VRChat',
         entries: [
           {
-            key: 'Client',
+            key: 'Client Process',
             value: vrchat.vrchatProcessActive.pipe(
               map((active) => (active ? 'Running' : 'Inactive'))
             ),
@@ -287,6 +285,26 @@ export class SettingsStatusInfoViewComponent {
               })
             ),
           },
+          {
+            key: 'Websocket Status',
+            value: vrchat.websocketStatus,
+          },
+          {
+            key: 'World Instance',
+            value: vrchat.world.pipe(
+              map((w) => {
+                return w?.instanceId ?? 'Unknown';
+              })
+            ),
+          },
+          {
+            key: 'Players In World',
+            value: vrchat.world.pipe(
+              map((w) => {
+                return `${w?.playerCount ?? 'Unknown'}`;
+              })
+            ),
+          },
         ],
       },
     ];
@@ -310,5 +328,18 @@ export class SettingsStatusInfoViewComponent {
       }
     }
     await writeText('```json\n' + JSON.stringify(data, null, 2) + '\n```');
+  }
+
+  async copyValue(entry: { key: TString; value: Observable<TString> }) {
+    const keyString = this.tsTranslate.transform(entry.key) as string;
+    const value = await firstValueFrom(entry.value);
+    const valueString = this.tsTranslate.transform(value) as string;
+    this.copiedToClipboard.push(keyString);
+    setTimeout(() => {
+      const index = this.copiedToClipboard.findIndex((s) => s === keyString);
+      if (index > -1) this.copiedToClipboard.splice(index, 1);
+    }, 1000);
+
+    await writeText(valueString);
   }
 }

@@ -131,7 +131,7 @@
             <div
               class="setting-row-action"
               *ngIf="{
-                mqttClient: (mqttService.client | async)
+                mqttClient: (mqttService.client | async),
               } as data"
             >
               <div class="connected" *ngIf="data.mqttClient" @hshrink>

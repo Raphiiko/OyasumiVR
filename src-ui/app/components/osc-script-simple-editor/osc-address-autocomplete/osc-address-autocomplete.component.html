@@ -1,0 +1,68 @@
+<div class="osc-address-autocomplete">
+  <input
+    type="text"
+    placeholder="OSC Address"
+    [value]="value"
+    [class.showing-preview]="autocompleteState.focusedIndex >= 0 && autocompleteState.showResults"
+    (input)="onInputChange($event)"
+    (focus)="onFocus()"
+    (blur)="onBlur()"
+    (keydown)="onKeydown($event)"
+    #addressInput
+  />
+  <div
+    class="autocomplete-preview"
+    *ngIf="
+      (autocompleteState.focusedIndex >= 0 && autocompleteState.showResults && isFocused) ||
+      (autocompleteState.previewValue &&
+        value &&
+        autocompleteState.focusedIndex === -1 &&
+        isFocused)
+    "
+  >
+    <ng-container
+      *ngIf="
+        autocompleteState.focusedIndex >= 0 && autocompleteState.showResults;
+        else standardPreview
+      "
+    >
+      <span class="typed-part">{{
+        autocompleteState.results[autocompleteState.focusedIndex]
+      }}</span>
+    </ng-container>
+    <ng-template #standardPreview>
+      <span class="typed-part">{{ value }}</span
+      ><span class="suggested-part">{{
+        autocompleteState.previewValue!.substring(value.length)
+      }}</span>
+    </ng-template>
+  </div>
+  <div class="autocomplete-dropdown-container" *ngIf="autocompleteState.showResults && isFocused">
+    <div
+      class="autocomplete-dropdown"
+      @vshrink
+      #resultsContainer
+      (mouseleave)="autocompleteState.focusedIndex = -1; autocompleteState.previewValue = null"
+    >
+      <div
+        class="autocomplete-item"
+        *ngFor="let address of autocompleteState.results; let idx = index"
+        [class.focused]="idx === autocompleteState.focusedIndex"
+        (mousedown)="selectAddress(address)"
+        (mouseenter)="autocompleteState.focusedIndex = idx"
+      >
+        <ng-container *ngIf="address.startsWith('/avatar/parameters/'); else normalAddress">
+          <span
+            class="source-label vrchat"
+            [class.in-focus]="idx === autocompleteState.focusedIndex"
+            >Avatar</span
+          >
+          <span>{{ address.substring('/avatar/parameters/'.length) }}</span>
+        </ng-container>
+        <ng-template #normalAddress>
+          {{ address }}
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

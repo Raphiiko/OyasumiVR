@@ -5,7 +5,7 @@
     <i class="material-icons"> warning </i>
   </div>
   <div class="alert-content">
-    <span>{{ 'shared.misc.vrcLoginRequired' | translate }}</span>
+    <span>{{ 'shared.common.vrcLoginRequired' | translate }}</span>
     <button class="btn btn-secondary" (click)="login()" translate>shared.modals.login</button>
   </div>
 </div>
@@ -162,7 +162,7 @@
           [checked]="config.statusMessageAtLimitOrAboveEnabled"
           (change)="
             updateConfig({
-              statusMessageAtLimitOrAboveEnabled: !config.statusMessageAtLimitOrAboveEnabled
+              statusMessageAtLimitOrAboveEnabled: !config.statusMessageAtLimitOrAboveEnabled,
             })
           "
         />

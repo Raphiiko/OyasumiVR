@@ -8,6 +8,7 @@ mod gesture_detector;
 mod models;
 mod sleep_detector;
 mod supersampling;
+mod framelimiter;
 
 use crate::{
     globals::STEAM_APP_KEY,
@@ -25,21 +26,13 @@ use std::time::Duration;
 use substring::Substring;
 use tokio::sync::Mutex;
 
+#[derive(Default)]
 pub struct OpenVRInputContext {
     pub actions: Vec<OpenVRAction>,
     pub action_sets: Vec<OpenVRActionSet>,
     pub active_sets: Vec<ActiveActionSet>,
 }
 
-impl Default for OpenVRInputContext {
-    fn default() -> Self {
-        OpenVRInputContext {
-            actions: vec![],
-            action_sets: vec![],
-            active_sets: vec![],
-        }
-    }
-}
 
 lazy_static! {
     static ref OVR_CONTEXT: Mutex<Option<ovr::Context>> = Default::default();
@@ -129,16 +122,14 @@ pub async fn task() {
                             None
                         }
                     };
-                    let install_for_flavours = vec![
-                        crate::flavour::BuildFlavour::Standalone,
-                        crate::flavour::BuildFlavour::Dev,
-                    ];
+                    let install_for_flavours = [crate::flavour::BuildFlavour::Standalone,
+                        crate::flavour::BuildFlavour::Dev];
                     let should_install_for_flavour =
                         install_for_flavours.contains(&crate::flavour::BUILD_FLAVOUR);
 
                     // Unregister if needed
-                    if is_installed.is_some_and(|v| v == true) && !should_install_for_flavour {
-                        match applications.remove_application_manifest(&manifest_path) {
+                    if is_installed.is_some_and(|v| v) && !should_install_for_flavour {
+                        match applications.remove_application_manifest(manifest_path) {
                             Ok(_) => {
                                 info!(
                                     "[Core] Steam app manifest unregistered, as it's not required for this build flavour ({}) ({})",
@@ -156,7 +147,7 @@ pub async fn task() {
                     };
 
                     // Register if needed
-                    if is_installed.is_some_and(|v| v == false) && should_install_for_flavour {
+                    if is_installed.is_some_and(|v| !v) && should_install_for_flavour {
                         if let Err(e) = applications.add_application_manifest(manifest_path, false)
                         {
                             error!(

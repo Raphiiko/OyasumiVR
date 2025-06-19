@@ -35,7 +35,8 @@ import {
 } from '../models/event-log-entry';
 import { EventLogService } from './event-log.service';
 import { invoke } from '@tauri-apps/api/core';
-import { VRChatService } from './vrchat.service';
+import { VRChatService } from './vrchat-api/vrchat.service';
+import { getBuiltInNotificationSound } from '../models/notification-sounds';
 
 @Injectable({
   providedIn: 'root',
@@ -227,21 +228,19 @@ export class SystemMicMuteAutomationService {
           const isMuted = await firstValueFrom(this.isMicMuted);
           if (isMuted === null) break;
           if (pressed) {
-            await this.notificationService.playSound(
-              isMuted ? 'mic_unmute' : 'mic_mute',
-              this.config.muteSoundVolume / 100
-            );
+            const sound = getBuiltInNotificationSound(isMuted ? 'mic_unmute' : 'mic_mute');
+            await this.notificationService.playSound(sound, this.config.muteSoundVolume / 100);
+
             await this.setMute(!isMuted);
           }
           break;
         }
-        case 'PUSH_TO_TALK':
-          await this.notificationService.playSound(
-            pressed ? 'mic_unmute' : 'mic_mute',
-            this.config.muteSoundVolume / 100
-          );
+        case 'PUSH_TO_TALK': {
+          const sound = getBuiltInNotificationSound(pressed ? 'mic_unmute' : 'mic_mute');
+          await this.notificationService.playSound(sound, this.config.muteSoundVolume / 100);
           await this.setMute(!pressed);
           break;
+        }
       }
     });
     // Reevaluate mute state when the behavior changes

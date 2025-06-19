@@ -38,7 +38,10 @@ export class AppSettingsService {
   >(undefined);
   public loadedDefaults: Observable<boolean | undefined> = this._loadedDefaults.asObservable();
 
-  constructor(private translateService: TranslateService, private modalService: ModalService) {}
+  constructor(
+    private translateService: TranslateService,
+    private modalService: ModalService
+  ) {}
 
   async init() {
     await this.loadSettings();
@@ -52,9 +55,8 @@ export class AppSettingsService {
   }
 
   async loadSettings() {
-    let settings: AppSettings | undefined = await SETTINGS_STORE.get<AppSettings>(
-      SETTINGS_KEY_APP_SETTINGS
-    );
+    let settings: AppSettings | undefined =
+      await SETTINGS_STORE.get<AppSettings>(SETTINGS_KEY_APP_SETTINGS);
     let loadedDefaults = false;
     if (settings) {
       const oldSettings = structuredClone(settings);
@@ -98,8 +100,8 @@ export class AppSettingsService {
     this.updateSettings({ oneTimeFlags: uniq(oneTimeFlags) });
   }
 
-  public async promptDialogForOneTimeFlag(flag: OneTimeFlag): Promise<boolean> {
-    if (this.oneTimeFlagSet(flag)) return false;
+  public async promptDialogForOneTimeFlag(flag: OneTimeFlag, force = false): Promise<boolean> {
+    if (this.oneTimeFlagSet(flag) && !force) return false;
     const result: ConfirmModalOutputModel | undefined = await firstValueFrom(
       this.modalService.addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(
         ConfirmModalComponent,

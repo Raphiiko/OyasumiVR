@@ -1,4 +1,8 @@
-<button class="btn btn-primary" (click)="clearV1Ids()">Clear V1 Ids</button>
-<button class="btn btn-primary" (click)="pullOvrData()">PULL OVR DATA</button>
-<pre>{{ ovrData | json }}</pre>
-<pre>{{ (appSettings.settings | async)?.v1LighthouseIdentifiers | json }}</pre>
+<button (click)="clearLighthouseV1Ids()" class="btn btn-primary">CLEAR LIGHTHOUSE V1 IDS</button>
+<br />
+<button (click)="addTestMessage()" class="btn btn-primary">ADD TEST MESSAGE</button>
+<br />
+<button (click)="testOscScriptMigration()" class="btn btn-primary"
+  >TEST OSC SCRIPT MIGRATION</button
+>
+<br />

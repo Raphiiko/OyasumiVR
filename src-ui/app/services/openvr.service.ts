@@ -3,15 +3,7 @@ import { listen } from '@tauri-apps/api/event';
 import { DeviceUpdateEvent } from '../models/events';
 import { invoke } from '@tauri-apps/api/core';
 import { OVRDevice, OVRDevicePose } from '../models/ovr-device';
-import {
-  BehaviorSubject,
-  distinctUntilChanged,
-  firstValueFrom,
-  map,
-  Observable,
-  skip,
-  startWith,
-} from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, map, Observable, skip, startWith } from 'rxjs';
 import { orderBy } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
 import { error, info } from '@tauri-apps/plugin-log';
@@ -32,15 +24,14 @@ export class OpenVRService {
   }> = new BehaviorSubject<{ [p: number]: OVRDevicePose }>({});
   public devicePoses: Observable<{ [trackingIndex: number]: OVRDevicePose }> =
     this._devicePoses.asObservable();
-  private deviceNicknames: { [id: string]: string } = {};
 
-  constructor(private appRef: ApplicationRef, private appSettings: AppSettingsService) {}
+  constructor(
+    private appRef: ApplicationRef,
+    private appSettings: AppSettingsService
+  ) {}
 
   async init() {
     this._status.next(await invoke<OpenVRStatus>('openvr_status'));
-    this.appSettings.settings.subscribe((settings) => {
-      this.deviceNicknames = settings.deviceNicknames;
-    });
     this.appSettings.settings
       .pipe(
         map((settings) => settings.openVrInitDelayFix),
@@ -149,24 +140,6 @@ export class OpenVRService {
     });
     // Return newly fetched devices
     return devices;
-  }
-
-  public getDeviceNickname(device: OVRDevice): string | null {
-    return this.deviceNicknames['OVRDEVICE_' + device.serialNumber] ?? null;
-  }
-
-  public async setDeviceNickname(device: OVRDevice, nickname: string) {
-    const settings = await firstValueFrom(this.appSettings.settings);
-    const deviceNicknames = structuredClone(settings.deviceNicknames);
-    nickname = nickname.trim();
-    if (nickname) {
-      deviceNicknames['OVRDEVICE_' + device.serialNumber] = nickname;
-    } else {
-      delete deviceNicknames['OVRDEVICE_' + device.serialNumber];
-    }
-    this.appSettings.updateSettings({
-      deviceNicknames,
-    });
   }
 
   private async applyOpenVrInitDelayFix(enabled: boolean) {

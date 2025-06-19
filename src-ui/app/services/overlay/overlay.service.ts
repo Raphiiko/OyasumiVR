@@ -13,7 +13,7 @@ import { APP_SETTINGS_DEFAULT, AppSettings } from '../../models/settings';
 
 import { OVRInputEventAction } from '../../models/ovr-input-event';
 import { invoke } from '@tauri-apps/api/core';
-import { VRChatService } from '../vrchat.service';
+import { VRChatService } from '../vrchat-api/vrchat.service';
 
 @Injectable({
   providedIn: 'root',

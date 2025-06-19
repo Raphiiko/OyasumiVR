@@ -16,7 +16,10 @@ export class LighthouseConsoleService {
     new BehaviorSubject<ExecutableReferenceStatus>('UNKNOWN');
   public consoleStatus: Observable<ExecutableReferenceStatus> = this._consoleStatus.asObservable();
 
-  constructor(private appSettings: AppSettingsService, private openvr: OpenVRService) {
+  constructor(
+    private appSettings: AppSettingsService,
+    private openvr: OpenVRService
+  ) {
     this.init();
   }
 

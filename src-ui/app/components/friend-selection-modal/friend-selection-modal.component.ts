@@ -2,7 +2,7 @@ import { Component, DestroyRef, OnInit } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, hshrink, noop, vshrink } from '../../utils/animations';
 import { LimitedUser, UserStatus } from 'vrchat/dist';
-import { VRChatService } from '../../services/vrchat.service';
+import { VRChatService } from '../../services/vrchat-api/vrchat.service';
 import {
   BehaviorSubject,
   debounceTime,
@@ -66,7 +66,10 @@ export class FriendSelectionModalComponent
   loadingState: 'LOADING' | 'LOADED' | 'ERROR' = 'LOADING';
   moreResults = false;
 
-  constructor(protected vrchat: VRChatService, private destroyRef: DestroyRef) {
+  constructor(
+    protected vrchat: VRChatService,
+    private destroyRef: DestroyRef
+  ) {
     super();
   }
 

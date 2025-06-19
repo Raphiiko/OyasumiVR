@@ -51,7 +51,10 @@ export class MsiAfterburnerPaneComponent implements OnInit {
   onDisableProfile: SelectBoxItem = this.profileOptions[0];
   onEnableProfile: SelectBoxItem = this.profileOptions[0];
 
-  constructor(protected gpuAutomations: GpuAutomationsService, private destroyRef: DestroyRef) {}
+  constructor(
+    protected gpuAutomations: GpuAutomationsService,
+    private destroyRef: DestroyRef
+  ) {}
 
   ngOnInit() {
     this.gpuAutomations.msiAfterburnerConfig
@@ -71,16 +74,16 @@ export class MsiAfterburnerPaneComponent implements OnInit {
     const statusToAlertType: {
       [s: string]: 'INFO' | 'SUCCESS' | 'ERROR';
     } = { CHECKING: 'INFO', SUCCESS: 'SUCCESS' };
-    this.msiAfterburnerPathAlert = [
-      'NOT_FOUND',
-      'INVALID_EXECUTABLE',
-      'INVALID_SIGNATURE',
-      'PERMISSION_DENIED',
-      'INVALID_FILENAME',
-      'UNKNOWN_ERROR',
-      'CHECKING',
-      'SUCCESS',
-    ].includes(status)
+    this.msiAfterburnerPathAlert = (
+      [
+        'NOT_FOUND',
+        'INVALID_EXECUTABLE',
+        'INVALID_SIGNATURE',
+        'UNKNOWN_ERROR',
+        'CHECKING',
+        'SUCCESS',
+      ] as ExecutableReferenceStatus[]
+    ).includes(status)
       ? {
           type: statusToAlertType[status] || 'ERROR',
           text: 'gpu-automations.msiAfterburner.executable.status.' + status,

@@ -249,7 +249,7 @@ impl ImageCache {
                     .into_owned()
                     .collect()
             })
-            .unwrap_or_else(HashMap::new);
+            .unwrap_or_default();
 
         // Get URL parameter
         let url = match params.get("url") {

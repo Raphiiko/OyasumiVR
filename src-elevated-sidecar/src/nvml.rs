@@ -30,11 +30,8 @@ pub fn init() -> bool {
                 nvml_wrapper::error::NvmlError::NoPermission => {
                     *NVML_STATUS.lock().unwrap() = NvmlStatus::NoPermission;
                 }
-                nvml_wrapper::error::NvmlError::Unknown => {
-                    *NVML_STATUS.lock().unwrap() = NvmlStatus::NvmlUnknownError;
-                }
                 _ => {
-                    *NVML_STATUS.lock().unwrap() = NvmlStatus::UnknownError;
+                    *NVML_STATUS.lock().unwrap() = NvmlStatus::NvmlUnknownError;
                 }
             };
             false
@@ -43,7 +40,7 @@ pub fn init() -> bool {
 }
 
 pub async fn nvml_status() -> NvmlStatus {
-    NVML_STATUS.lock().unwrap().clone()
+    *NVML_STATUS.lock().unwrap()
 }
 
 pub fn nvml_get_devices() -> Vec<NvmlDevice> {

@@ -214,8 +214,10 @@ export class HotkeyService {
       await unregisterAll();
       this.hotkeys = structuredClone(settings.hotkeys);
       for (const hotkeyString of Object.keys(this.hotkeys)) {
-        await register(hotkeyString, () => {
-          this.onHotkeyPressed(hotkeyString);
+        await register(hotkeyString, (event) => {
+          if (event.state === 'Pressed') {
+            this.onHotkeyPressed(hotkeyString);
+          }
         });
       }
     });
@@ -237,8 +239,10 @@ export class HotkeyService {
     if (!this.paused) return;
     this.paused = false;
     for (const hotkeyString of Object.keys(this.hotkeys)) {
-      await register(hotkeyString, () => {
-        this.onHotkeyPressed(hotkeyString);
+      await register(hotkeyString, (event) => {
+        if (event.state === 'Pressed') {
+          this.onHotkeyPressed(hotkeyString);
+        }
       });
     }
   }

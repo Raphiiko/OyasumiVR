@@ -24,6 +24,8 @@ export type EventLogEntry =
   | EventLogHardwareBrightnessChanged
   | EventLogSoftwareBrightnessChanged
   | EventLogAcceptedInviteRequest
+  | EventLogDeclinedInviteRequest
+  | EventLogDeclinedInvite
   | EventLogStatusChangedOnPlayerCountChange
   | EventLogStatusChangedOnGeneralEvent
   | EventLogSleepDetectorEnableCancelled
@@ -42,7 +44,10 @@ export type EventLogEntry =
   | EventLogBSBFanSpeedChanged
   | EventLogBSBLedChanged
   | EventLogVRChatAvatarChanged
-  | EventLogCCTChanged;
+  | EventLogVRChatGroupChanged
+  | EventLogFrameLimitChanged
+  | EventLogCCTChanged
+  | EventLogRunAutomationExecuted;
 
 export type EventLogDraft = Omit<EventLogEntry, 'time' | 'id'>;
 
@@ -56,6 +61,8 @@ export type EventLogType =
   | 'hardwareBrightnessChanged'
   | 'softwareBrightnessChanged'
   | 'acceptedInviteRequest'
+  | 'declinedInviteRequest'
+  | 'declinedInvite'
   | 'statusChangedOnPlayerCountChange'
   | 'statusChangedOnGeneralEvent'
   | 'sleepDetectorEnableCancelled'
@@ -73,8 +80,11 @@ export type EventLogType =
   | 'unmutedAudioDevice'
   | 'bsbFanSpeedChanged'
   | 'bsbLedChanged'
+  | 'vrchatAvatarChanged'
+  | 'vrchatGroupChanged'
   | 'cctChanged'
-  | 'vrchatAvatarChanged';
+  | 'frameLimitChanged'
+  | 'runAutomationExecuted';
 
 export interface EventLogBase {
   id: string;
@@ -190,6 +200,22 @@ export interface EventLogAcceptedInviteRequest extends EventLogBase {
   mode: 'DISABLED' | 'WHITELIST' | 'BLACKLIST';
 }
 
+export interface EventLogDeclinedInviteRequest extends EventLogBase {
+  type: 'declinedInviteRequest';
+  displayName: string;
+  reason:
+    | 'SLEEP_MODE_ENABLED_CONDITION_FAILED'
+    | 'PLAYER_COUNT_CONDITION_FAILED'
+    | 'NOT_ON_WHITELIST'
+    | 'ON_BLACKLIST';
+}
+
+export interface EventLogDeclinedInvite extends EventLogBase {
+  type: 'declinedInvite';
+  displayName: string;
+  reason: 'SLEEP_MODE_ENABLED';
+}
+
 export interface EventLogStatusChangedOnPlayerCountChange extends EventLogBase {
   type: 'statusChangedOnPlayerCountChange';
   reason: 'BELOW_LIMIT' | 'AT_LIMIT_OR_ABOVE';
@@ -295,4 +321,26 @@ export interface EventLogVRChatAvatarChanged extends EventLogBase {
   type: 'vrchatAvatarChanged';
   avatarName: string;
   reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+}
+
+export interface EventLogVRChatGroupChanged extends EventLogBase {
+  type: 'vrchatGroupChanged';
+  groupId: string;
+  groupName?: string;
+  isClearing: boolean;
+  reason?: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+}
+
+export interface EventLogFrameLimitChanged extends EventLogBase {
+  type: 'frameLimitChanged';
+  appName: string;
+  limit: string;
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+}
+
+export interface EventLogRunAutomationExecuted extends EventLogBase {
+  type: 'runAutomationExecuted';
+  automationName: string;
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+  commands: string;
 }

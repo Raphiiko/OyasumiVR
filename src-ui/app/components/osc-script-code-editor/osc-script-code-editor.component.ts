@@ -63,7 +63,10 @@ export class OscScriptCodeEditorComponent implements OnInit, AfterViewInit {
     })
   );
 
-  constructor(private osc: OscService, private destroyRef: DestroyRef) {}
+  constructor(
+    private osc: OscService,
+    private destroyRef: DestroyRef
+  ) {}
 
   protected setScript(script: OscScript, force = false) {
     const { script: currentScript } = parseOscScriptFromCode(this._code.value);
@@ -117,14 +120,14 @@ export class OscScriptCodeEditorComponent implements OnInit, AfterViewInit {
           case 'COMMAND': {
             let commandParametersString = '';
             command.parameters.forEach((parameter) => {
-              const type = { FLOAT: 'f', INT: 'i', BOOLEAN: 'b', STRING: 's' }[
+              const type = { Float: 'f', Int: 'i', Boolean: 'b', String: 's' }[
                 parameter.type
               ] as OscParameterType;
               const value = {
-                FLOAT: (v: string) => parseFloat(v),
-                INT: (v: string) => parseInt(v),
-                BOOLEAN: (v: string) => (v === 'true' ? 'true' : 'false'),
-                STRING: (v: string) => `"${v.replace(/"/g, '\\"')}"`, // put string into quotes and escape all inner quoutes
+                Float: (v: string) => parseFloat(v),
+                Int: (v: string) => parseInt(v),
+                Boolean: (v: string) => (v === 'true' ? 'true' : 'false'),
+                String: (v: string) => `"${v.replace(/"/g, '\\"')}"`, // put string into quotes and escape all inner quoutes
               }[parameter.type](parameter.value);
               commandParametersString += `${type} ${value} `;
             });

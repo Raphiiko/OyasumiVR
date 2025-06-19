@@ -4,7 +4,6 @@
       "role": "Ontwikkelaar"
     },
     "contributionType": {
-      "feature": "Feature",
       "soundFx": "Geluid FX"
     },
     "contributions": "Contributies",
@@ -143,7 +142,6 @@
     },
     "savePreset": "Opslaan Als Preset",
     "title": "Invite Requests Automatisch Accepteren",
-    "userOnBusyStatus": "Je kan geen invite requests accepteren als je status op busy (rood) staat.",
     "userOnJoinMeStatus": "VRChat za onafhankelijk van je instellingen automatisch alle invite requests accepteren, omdat je status op join me (blauw) staat.",
     "whitelist": "Speler Whitelist"
   },
@@ -179,7 +177,6 @@
         "title": "Zonsondergang"
       }
     },
-    "autoDetermineSunsetSunrise": "Automatisch de tijd bepalen",
     "brightness": {
       "title": "Zet de helderheid naar"
     },
@@ -210,7 +207,6 @@
       "message": "OyasumiVR kan op twee manieren de helderheid van je VR headset aansturen: Software besturing en Hardware besturing:\n\nSoftware besturing is beschikbaar voor elke headset. Het past de helderheid aan door de helderheid van het getoonde beeld aan te passen.\n\nHardware besturing is alleen beschikbaar voor ondersteunde headsets (Valve Index, Bigscreen Beyond). Het past de helderheid aan door direct het scherm in je headset aan te sturen, binnen de mogelijke waarden.\n\nIn de simpele modus, OyasumiVR zal vloeiend schakelen tussen software- en hardware besturing, of alleen software besturing als hardware besturing niet word ondersteund.\n\nAls je liever directe controle hebt, kun je met de geavanceerde modus software en hardware helderheid los van elkaar instellen, met de mogelijkheid om exacte waarden te gebruiken.",
       "title": "Modus voor Helderheidsbesturing"
     },
-    "onHmdConnectInfo": "Wanneer je beide de \"Bij zonsondergang\" en \"Bij zonsopkomst\" automatiseringen aan zet, zullen ze automatisch worden toegepast wanneer je je VR headset aan sluit, afhankelijk van de tijd. Doe je dit niet, dan zullen de waardes van de \"Wanneer ik ga slapen\" en \"Wanneer ik wakker word\" automatiseringen gebruikt worden.",
     "onlyWhenSleepModeDisabled": {
       "description": "Draai deze automatiswering alleen wanneer de slaap modus is uitgeschakeld",
       "title": "Alleen wanneer de slaap modus is uitgeschakeld"
@@ -305,7 +301,6 @@
       "hardwareAutomations": "Hardware Automatiseringen",
       "hmdAutomations": "HMD Specifieke Automatiseringen",
       "joinNotifications": "Join Notificaties",
-      "miscAutomations": "Overige Automatiseringen",
       "nightmareDetection": "Nachtmerrie Detectie",
       "oscAutomations": "OSC Automatiseringen",
       "overview": "Overzicht",
@@ -330,6 +325,7 @@
       "systemMicMuteAutomations": "Systeem Microfoon Dempings Automatiseringen",
       "vrcAutomations": "VRChat Automatiseringen",
       "vrchatAvatarAutomations": "Avatar Automatiseringen",
+      "vrchatGroupAutomations": "Groep Automatiseringen",
       "vrchatMicMuteAutomations": "VRChat Microfoon Dempings Automatiseringen"
     },
     "device-edit-modal": {
@@ -733,6 +729,17 @@
           },
           "title": "Je VRChat avatar is veranderd naar \"{avatarName}\""
         },
+        "vrchatGroupChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
+            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
+            "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
+          },
+          "title": {
+            "set": "Je VRChat groepsrepresentatie is veranderd naar \"{groupName}\"",
+            "clear": "Representatie van VRChat groep \"{groupName}\" is gestopt"
+          }
+        },
         "windowsPowerPolicySet": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
@@ -760,6 +767,10 @@
           "description": "Events gerelateerd aan het aan en uit zetten van apparaten zoals trackers, controllers, en base stations",
           "title": "Apparaat Besturing"
         },
+        "FRAME_LIMITING": {
+          "description": "Events gerelateerd aan het limiteren van de framerate van applicaties",
+          "title": "Framerate Limiet"
+        },
         "GPU_CONTROL": {
           "description": "Events gerelateerd aan de besturing van je grafische kaart",
           "title": "GPU Besturing"
@@ -779,6 +790,10 @@
         "VRCHAT_AVATAR": {
           "description": "Events gerelateerd aan het instellen van je VRChat avatar",
           "title": "VRChat Avatar"
+        },
+        "VRCHAT_GROUP": {
+          "description": "Events gerelateerd aan het wijzigen van je VRChat groepsrepresentatie",
+          "title": "VRChat Groep"
         },
         "VRCHAT_INVITES": {
           "description": "Events gerelateerd aan VRChat invites en invite requests",
@@ -1241,14 +1256,17 @@
     },
     "title": "Join Notificaties"
   },
+  "message-center": {
+    "messages": {
+      "manyLighthousesDetected": {
+        "message": "Het lijkt er op dat je een hoop base stations hebt!\n\nLet op dat de meeste Bluetooth adapters maar tot 7 gelijktijdige connecties kunnen hebben, inclusief met andere Bluetooth apparaten zoals hoofdtelefoons en andere randapparatuur.\n\nHet kan zijn dat OyasumiVR moeite heeft met het besturen van al je base stations als je er te veel tegelijk ingeplugt hebt, of te veel andere Bluetooth apparaten verbonden hebt."
+      }
+    }
+  },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "Deze preset gebruikt een workaround die niet helemaal goed werkt. Gebruik deze preset alleen als je de nieuwere GoGo Loco preset niet kunt gebruiken. Als je avatar nog een oudere versie van GoGo Loco gebruikt, is het aan te raden om je avatar te updaten naar de nieuwste versie van GoGo Loco.",
     "GORONE_LEGACY_PRESET_WARNING": "Versies v4.0 van deze prefab bevatten al functionaliteit om automatisch om te rollen, en zijn niet compatible met deze preset. Deze preset is alleen nog beschikbaar als je avatar oudere versies van deze prefab gebruikt.",
     "oneTimeFlagDialogs": {
-      "BASESTATION_COUNT_WARNING_DIALOG": {
-        "message": "Het lijkt er op dat je een hoop base stations hebt!\n\nLet op dat de meeste Bluetooth adapters maar tot 7 gelijktijdige connecties kunnen hebben, inclusief met andere Bluetooth apparaten zoals hoofdtelefoons en andere randapparatuur.\n\nHet kan zijn dat OyasumiVR moeite heeft met het besturen van al je base stations als je er te veel tegelijk ingeplugt hebt, of te veel andere Bluetooth apparaten verbonden hebt.",
-        "title": "Waarschuwing"
-      },
       "CCT_CONTROL_WARNING_DIALOG": {
         "message": "Let op dat het aanpassen van de kleur temperatuur alleen beschikbaar is op sommige native SteamVR headsets, zoals de Valve Index, Bigscreen Beyond, of HTC Vive (Pro).\n\nAls een andere headset gebruikt, is de kans groot dat deze feature geen effect zal hebben.\n\nJe kan kleur temperatuur besturing uitschakelen in de instellingen als je dat wilt.",
         "title": "Feature Beschikbaarheid"
@@ -1996,13 +2014,11 @@
   },
   "shared": {
     "common": {
-      "none": "Geen"
+      "none": "Geen",
+      "vrcLoginRequired": "Deze feature vereist dat je bent ingelogd bent met je VRChat account."
     },
     "logo": {
       "tagline": "VR Slaap Tools"
-    },
-    "misc": {
-      "vrcLoginRequired": "Deze feature vereist dat je bent ingelogd bent met je VRChat account."
     },
     "modals": {
       "back": "Terug",
@@ -2561,6 +2577,22 @@
       "title": "Wanneer ik me voorbereid om te gaan slapen"
     },
     "title": "Avatar Automatiseringen"
+  },
+  "vrchatGroupAutomations": {
+    "description": "Hier kan je OyasumiVR configureren om automatisch je vertegenwoordigde VRChat groep te veranderen bij verschillende gebeurtenissen. Dit kan handig zijn als je je groepsvertegenwoordiging wilt wijzigen wanneer je in slaap valt, of wakker word!",
+    "onSleepDisable": {
+      "description": "Verander mijn vertegenwoordigde groep naar",
+      "title": "Wanneer ik wakker word"
+    },
+    "onSleepEnable": {
+      "description": "Verander mijn vertegenwoordigde groep naar",
+      "title": "Wanneer ik ga slapen"
+    },
+    "onSleepPreparation": {
+      "description": "Verander mijn vertegenwoordigde groep naar",
+      "title": "Wanneer ik me voorbereid om te gaan slapen"
+    },
+    "title": "Groep Automatiseringen"
   },
   "vrchatMicMuteAutomations": {
     "automations": {

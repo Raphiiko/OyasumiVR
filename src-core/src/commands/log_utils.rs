@@ -22,10 +22,8 @@ pub async fn clear_log_files() {
     for entry in std::fs::read_dir(log_dir).unwrap() {
         let entry = entry.unwrap();
         let path = entry.path();
-        if path.is_file() {
-            if std::fs::remove_file(path).is_ok() {
-                logs_deleted += 1;
-            }
+        if path.is_file() && std::fs::remove_file(path).is_ok() {
+            logs_deleted += 1;
         }
     }
     info!("[Core] Deleted {} log file(s)", logs_deleted);
@@ -125,10 +123,8 @@ pub async fn clean_log_files() {
                     false
                 }
             };
-            if too_large || too_old {
-                if std::fs::remove_file(path.clone()).is_ok() {
-                    logs_deleted += 1;
-                }
+            if (too_large || too_old) && std::fs::remove_file(path.clone()).is_ok() {
+                logs_deleted += 1;
             }
         }
     }

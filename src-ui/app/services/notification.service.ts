@@ -10,7 +10,8 @@ import { error, info, warn } from '@tauri-apps/plugin-log';
 import { IPCService } from './ipc.service';
 import { AddNotificationRequest } from '../../../src-grpc-web-client/oyasumi-core_pb';
 import { listen } from '@tauri-apps/api/event';
-import { NotificationSound } from '../models/notification-sounds.generated';
+import { NotificationSound } from '../models/notification-sounds';
+import { SoundEffectConfig } from '../models/automations';
 
 interface XSOMessage {
   messageType: number;
@@ -33,7 +34,10 @@ interface XSOMessage {
 export class NotificationService {
   private ovrtSocket?: WebSocket;
 
-  constructor(private appSettingsService: AppSettingsService, private ipcService: IPCService) {}
+  constructor(
+    private appSettingsService: AppSettingsService,
+    private ipcService: IPCService
+  ) {}
 
   public async init() {
     await listen<AddNotificationRequest>('addNotification', async (request) => {
@@ -44,16 +48,28 @@ export class NotificationService {
     await this.manageOVRTSocketConnection();
   }
 
+  public async playSoundConfig(config: SoundEffectConfig) {
+    if (config.enabled) {
+      await this.playSound(config.sound, config.volume / 100.0);
+    }
+  }
+
   public async playSound(sound: NotificationSound, volume: number | null = null) {
     if (volume === null) {
       const settings = await firstValueFrom(this.appSettingsService.settings);
       volume = settings.generalNotificationVolume / 100.0;
     }
     if (volume > 0) {
-      await invoke('play_sound', {
-        name: sound,
-        volume,
-      });
+      switch (sound.type) {
+        case 'BUILT_IN':
+          await invoke('play_sound', {
+            name: sound.id,
+            volume,
+          });
+          break;
+        default:
+          error(`[Notification] Unknown sound type: ${sound.type}`);
+      }
     }
   }
 

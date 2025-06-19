@@ -51,6 +51,11 @@ export function migrateAppSettings(data: any): AppSettings {
     info(`[app-settings-migrations] Migrated app settings to version ${currentVersion + ''}`);
   }
   data = mergeWith(structuredClone(APP_SETTINGS_DEFAULT), data, (objValue, srcValue) => {
+    // Delete irrelevant keys
+    if (objValue === undefined) {
+      return undefined;
+    }
+    // Do not merge array values
     if (Array.isArray(objValue)) {
       return srcValue;
     }
@@ -74,6 +79,22 @@ function from9to10(data: any): any {
   data.version = 10;
   data.overlayGpuAcceleration = !(data.overlayGpuFix ?? false);
   delete data.overlayGpuFix;
+
+  // Remove unused one-time flags
+  if (data.oneTimeFlags) {
+    data.oneTimeFlags = data.oneTimeFlags.filter(
+      (flag: string) =>
+        flag !== 'BRIGHTNESS_AUTOMATION_ON_HMD_CONNECT_EVENT_FEATURE' &&
+        flag !== 'BASESTATION_COUNT_WARNING_DIALOG'
+    );
+  }
+
+  // Remove device nicknames
+  delete data.deviceNicknames;
+
+  // Remove ignored lighthouses
+  delete data.ignoredLighthouses;
+
   return data;
 }
 

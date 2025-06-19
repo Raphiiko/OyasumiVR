@@ -26,5 +26,8 @@ export class VarDirective {
 
   private hasView = false;
 
-  constructor(private templateRef: TemplateRef<any>, private vcRef: ViewContainerRef) {}
+  constructor(
+    private templateRef: TemplateRef<any>,
+    private vcRef: ViewContainerRef
+  ) {}
 }

@@ -6,7 +6,10 @@ import { PulsoidService } from '../../integrations/pulsoid.service';
   providedIn: 'root',
 })
 export class HeartRateMqttIntegrationService {
-  constructor(private mqtt: MqttDiscoveryService, private pulsoid: PulsoidService) {}
+  constructor(
+    private mqtt: MqttDiscoveryService,
+    private pulsoid: PulsoidService
+  ) {}
 
   async init() {
     // Init property

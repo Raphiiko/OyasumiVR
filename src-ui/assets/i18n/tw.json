@@ -4,7 +4,6 @@
       "role": "開發者"
     },
     "contributionType": {
-      "feature": "功能設計",
       "soundFx": "音效設計"
     },
     "contributions": "貢獻",
@@ -143,7 +142,6 @@
     },
     "savePreset": "儲存為預設值",
     "title": "自動接受加入請求",
-    "userOnBusyStatus": "當你的狀態為忙碌（紅色）時，你不能接受玩家的加入請求",
     "userOnJoinMeStatus": "無論你的設定如何，VRChat 都會自動接受所有邀請請求，因為你的狀態是加入我（藍色）",
     "whitelist": "玩家白名單"
   },
@@ -179,7 +177,6 @@
         "title": "日落時間"
       }
     },
-    "autoDetermineSunsetSunrise": "自動估計時間",
     "brightness": {
       "title": "將亮度改為"
     },
@@ -210,7 +207,6 @@
       "message": "當使用 OyasumiVR 來控制 VR 頭戴式顯示器的亮度時，可以選擇兩種不同的控制方法：軟體控制與硬體控制。\n\n軟體控制適用於所有類型的頭戴式顯示器，它透過調整影像的亮度來改變顯示器的亮度。\n\n硬體控制則只適用於特定支援的顯示器（如 Valve Index、Bigscreen Beyond），此方法會直接在支援的範圍內調整顯示器顯示的亮度。\n\n在簡易模式下，OyasumiVR 會平滑地在軟體和硬體亮度控制之間進行切換，或者在不支援硬體亮度的情況下只控制軟體亮度。\n\n如果你偏好直接控制，進階模式允許你分別獨立控制軟體和硬體亮度，讓你可以為每一種設置確切的亮度值。",
       "title": "亮度控制模式"
     },
-    "onHmdConnectInfo": "當你同時啟用 \"At sunset「（日落時）和 」At sunrise\"（日出時）自動化功能時，它們會根據一天中的時間，在你連接耳機時自動執行。如果沒有，則會使用 \"When I go to sleep「（我睡覺時）和 」When I wake up\"（我起床時）自動化的值！",
     "onlyWhenSleepModeDisabled": {
       "description": "僅在睡眠模式停用時執行此自動化",
       "title": "僅當睡眠模式停用時"
@@ -305,7 +301,6 @@
       "hardwareAutomations": "硬體自動化",
       "hmdAutomations": "頭顯專用自動化",
       "joinNotifications": "加入通知",
-      "miscAutomations": "其他自動化",
       "nightmareDetection": "惡夢偵測",
       "oscAutomations": "OSC 自動化",
       "overview": "首頁",
@@ -1241,14 +1236,17 @@
     },
     "title": "加入通知"
   },
+  "message-center": {
+    "messages": {
+      "manyLighthousesDetected": {
+        "message": "看起來您有很多基站！\n\n請注意，大多數藍牙適配器只能處理 7 個同時連接，包括耳機和其他外圍設備等其他藍牙設備。\n\n請記住，如果您同時插入了太多基站，或者有太多其他藍牙設備連接，OyasumiVR 可能無法控制所有基站。"
+      }
+    }
+  },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "此預設檔使用的解決方法存在一些問題。 如果你不能使用較新的 GoGo Loco 預設，請僅使用此預設檔。 如果你的角色仍然使用舊版本的 GoGo Loco，建議你將你的角色更新使用最新的 GoGo Loco 版本",
     "GORONE_LEGACY_PRESET_WARNING": "v4.0 及以上版本的此預製件已包含轉向功能，與此預設不兼容。如果您的模型使用的是較舊版本的預製件，該預設仍然可用。",
     "oneTimeFlagDialogs": {
-      "BASESTATION_COUNT_WARNING_DIALOG": {
-        "message": "看起來您有很多基站！\n\n請注意，大多數藍牙適配器只能處理 7 個同時連接，包括耳機和其他外圍設備等其他藍牙設備。\n\n請記住，如果您同時插入了太多基站，或者有太多其他藍牙設備連接，OyasumiVR 可能無法控制所有基站。",
-        "title": "警告"
-      },
       "CCT_CONTROL_WARNING_DIALOG": {
         "message": "請注意，顯示器色溫控制僅適用於某些原生 SteamVR 頭戴裝置，例如 Valve Index、大螢幕 Beyond 或 HTC Vive（Pro）。\n\n如果您未使用這些頭戴裝置，該功能可能對您無效。\n\n如果需要，您可以在設定中禁用顯示器色溫控制。",
         "title": "功能可用性"
@@ -1996,13 +1994,11 @@
   },
   "shared": {
     "common": {
-      "none": "無"
+      "none": "無",
+      "vrcLoginRequired": "這個功能需要你登入你的 VRChat 帳號"
     },
     "logo": {
       "tagline": "VR 睡眠輔助功能"
-    },
-    "misc": {
-      "vrcLoginRequired": "這個功能需要你登入你的 VRChat 帳號"
     },
     "modals": {
       "back": "返回",

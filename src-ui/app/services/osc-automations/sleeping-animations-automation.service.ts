@@ -22,7 +22,7 @@ import { SleepingPose } from '../../models/sleeping-pose';
 import { OscService } from '../osc.service';
 import { OscScript } from '../../models/osc-script';
 import { getOscScriptDuration } from '../../utils/osc-script-utils';
-import { VRChatService } from '../vrchat.service';
+import { VRChatService } from '../vrchat-api/vrchat.service';
 import { AvatarContextService } from '../avatar-context.service';
 
 @Injectable({
@@ -82,7 +82,7 @@ export class SleepingAnimationsAutomationService {
         if (!this.config.enabled) return;
         if (this.config.onlyIfSleepModeEnabled && !(await firstValueFrom(this.sleep.mode))) return;
         // Combine OSC scripts
-        const script: OscScript = { version: 2, commands: [] };
+        const script: OscScript = { version: 3, commands: [] };
         // Foot unlock script
         const enableFootUnlock = !!(
           this.config.releaseFootLockOnPoseChange && this.config.oscScripts.FOOT_UNLOCK

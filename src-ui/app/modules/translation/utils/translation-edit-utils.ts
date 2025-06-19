@@ -3,10 +3,13 @@ export class TranslationEditUtils {
     // Make sure to sort the keys before unflattening
     const keys = Object.keys(ob);
     keys.sort();
-    ob = keys.reduce((acc, e) => {
-      acc[e] = ob[e];
-      return acc;
-    }, {} as Record<string, unknown>);
+    ob = keys.reduce(
+      (acc, e) => {
+        acc[e] = ob[e];
+        return acc;
+      },
+      {} as Record<string, unknown>
+    );
     // Unflatten
     const result = {};
     for (const i in ob) {
@@ -32,9 +35,12 @@ export class TranslationEditUtils {
     // Sort the resulting flattened object
     const keys = Object.keys(result);
     keys.sort();
-    return keys.reduce((acc, e) => {
-      acc[e] = result[e];
-      return acc;
-    }, {} as Record<string, unknown>);
+    return keys.reduce(
+      (acc, e) => {
+        acc[e] = result[e];
+        return acc;
+      },
+      {} as Record<string, unknown>
+    );
   }
 }

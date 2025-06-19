@@ -5,6 +5,8 @@ import { EventLogSleepModeDisabledEntryParser } from './entry-parsers/sleep-mode
 import { EventLogTurnedOffOpenVRDevicesEntryParser } from './entry-parsers/openvr-device-turned-off';
 import { EventLogGpuPowerLimitChangedEntryParser } from './entry-parsers/gpu-power-limit-changed';
 import { EventLogAcceptedInviteRequestEntryParser } from './entry-parsers/accepted-invite-request';
+import { EventLogDeclinedInviteRequestEntryParser } from './entry-parsers/declined-invite-request';
+import { EventLogDeclinedInviteEntryParser } from './entry-parsers/declined-invite';
 import { EventLogStatusChangedOnPlayerCountChangeEntryParser } from './entry-parsers/status-changed-on-player-count-change';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
@@ -30,7 +32,10 @@ import { EventLogBSBFanSpeedChangedEntryParser } from './entry-parsers/bsb-fan-s
 import { EventLogBSBLedChangedEntryParser } from './entry-parsers/bsb-led-changed';
 import { EventLogStatusChangedOnGeneralEventEntryParser } from './entry-parsers/status-changed-on-general-event';
 import { EventLogVRChatAvatarChangedEntryParser } from './entry-parsers/vrchat-avatar-changed';
+import { EventLogVRChatGroupChangedEntryParser } from './entry-parsers/vrchat-group-changed';
 import { EventLogCCTChangedEntryParser } from './entry-parsers/cct-changed';
+import { EventLogFrameLimitChangedEntryParser } from './entry-parsers/frame-limit-changed';
+import { EventLogRunAutomationExecutedEntryParser } from './entry-parsers/run-automation-executed';
 import { EventLogEntry } from '../../../models/event-log-entry';
 
 @Component({
@@ -54,6 +59,8 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
     new EventLogHardwareBrightnessChangedEntryParser(),
     new EventLogSoftwareBrightnessChangedEntryParser(),
     new EventLogAcceptedInviteRequestEntryParser(),
+    new EventLogDeclinedInviteRequestEntryParser(),
+    new EventLogDeclinedInviteEntryParser(),
     new EventLogStatusChangedOnPlayerCountChangeEntryParser(),
     new EventLogStatusChangedOnGeneralEventEntryParser(),
     new EventLogSleepDetectorEnableCancelledEntryParser(),
@@ -72,7 +79,10 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
     new EventLogBSBFanSpeedChangedEntryParser(),
     new EventLogBSBLedChangedEntryParser(),
     new EventLogVRChatAvatarChangedEntryParser(),
+    new EventLogVRChatGroupChangedEntryParser(),
     new EventLogCCTChangedEntryParser(),
+    new EventLogFrameLimitChangedEntryParser(),
+    new EventLogRunAutomationExecutedEntryParser(),
   ];
 
   constructor(

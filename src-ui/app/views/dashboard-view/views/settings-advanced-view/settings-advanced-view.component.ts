@@ -248,9 +248,8 @@ export class SettingsAdvancedViewComponent {
   }
 
   async openLogsFolder() {
-    await invoke('show_in_folder', {
-      path: await appLogDir().then((dir) => dir + 'OyasumiVR.log'),
-    });
+    const path = await appLogDir().then((dir) => dir + '\\OyasumiVR.log');
+    await invoke('show_in_folder', { path });
   }
 
   async reregisterVRManifest() {
@@ -293,8 +292,6 @@ export class SettingsAdvancedViewComponent {
       })
       .subscribe();
   }
-
-  protected readonly open = open;
 
   async openDevTools() {
     await invoke('open_dev_tools');

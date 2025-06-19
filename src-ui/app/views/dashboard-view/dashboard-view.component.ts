@@ -13,7 +13,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class DashboardViewComponent implements OnInit {
   protected backgroundImage: string | null = null;
 
-  constructor(private background: BackgroundService, private destroyRef: DestroyRef) {}
+  constructor(
+    private background: BackgroundService,
+    private destroyRef: DestroyRef
+  ) {}
 
   ngOnInit(): void {
     this.background.background.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((url) => {

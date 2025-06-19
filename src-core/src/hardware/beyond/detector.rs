@@ -160,7 +160,7 @@ impl PnPDetector {
             }
             _ => return DefWindowProcW(hwnd, msg, wparam, lparam),
         }
-        return 0;
+        0
     }
 
     /// Create an invisible window to handle WM_DEVICECHANGE message

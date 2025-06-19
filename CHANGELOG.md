@@ -3,25 +3,42 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+and this project (now) adheres to [Calendar Versioning](https://calver.org/#scheme).
 
 ## [Unreleased]
 
 ### Added
 
-- GPU acceleration for SteamVR overlays (Community contribution by [BenjaminZehowlt](https://github.com/BenjaminZehowlt))
-- VR Headset device & battery level to the device list
+- Frame limiting automations on native SteamVR headsets, for VRChat, Resonite and ChilloutVR
+- Options for automatically declining invites and invite requests
+- Message center for automatically diagnosing common issues
 - Sleep mode toggle and sleep preparation to system tray menu
+- Notification sounds for invites and invite requests
+- Automations for automatically changing your represented VRChat group
+- Automations for running custom commands through the Windows command prompt
+- Brightness automation that runs when your VR headset connects to SteamVR
+- Brightness automations will now indicate if they (could) run when your HMD connects
+- Auto completion for the OSC addresses of VRChat avatar parameters in the simple osc script editor
+- Device list: VR Headset device & battery level
+- MQTT: Headset battery level and charging status
+- More configuration options for notification sounds
+- GPU acceleration for SteamVR overlays (Thanks to help from [BenjaminZehowlt](https://github.com/BenjaminZehowlt))
 
 ### Changed
 
-- Added continuous scanning for lighthouses to replace manual scanning. 
-- Migrated to Tauri v2, and upgraded various dependencies.
+- Switched to calendar versioning
+- Replaced manual scanning for lighthouses with continuous scanning
+- Migrated to Tauri v2, and upgraded various dependencies
 - Localized system tray menu
+- Replaced one-time location based updates of sunset/sunrise times with a toggle to update them automatically.
+- Updated theming & some component styling
+- Updated various illustrations and splash screen (Thanks to [Jun](https://x.com/JunHakase)) 
 
 ### Fixed
 
-- "Activate when you've been left alone" trigger for the shutdown sequence not triggering correctly.  
+- "Activate when you've been left alone" trigger for the shutdown sequence not triggering correctly
+- Battery and charging levels exposed over MQTT becoming unavailable randomly
+- Notification sounds queueing up instead of being played immediately
 
 ## [1.14.7]
 

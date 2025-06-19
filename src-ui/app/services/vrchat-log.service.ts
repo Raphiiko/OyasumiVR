@@ -16,15 +16,23 @@ interface RawLogEvent {
   providedIn: 'root',
 })
 export class VRChatLogService {
-  private _initialLoadComplete: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  public initialLoadComplete: Observable<boolean> = this._initialLoadComplete.asObservable();
-  private _logEvents: Subject<VRChatLogEvent> = new Subject<VRChatLogEvent>();
-  public logEvents: Observable<VRChatLogEvent> = this._logEvents.asObservable();
+  private readonly _initialLoadComplete: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
+    false
+  );
+  public readonly initialLoadComplete: Observable<boolean> =
+    this._initialLoadComplete.asObservable();
+  private readonly _logEvents: Subject<VRChatLogEvent> = new Subject<VRChatLogEvent>();
+  public readonly logEvents: Observable<VRChatLogEvent> = this._logEvents.asObservable();
+  private readonly _logPath = new BehaviorSubject<string | null>(null);
+  public readonly logPath: Observable<string | null> = this._logPath.asObservable();
 
   constructor() {}
 
   async init() {
     await listen<RawLogEvent>('VRC_LOG_EVENT', (event) => this.handleLogEvent(event.payload));
+    await listen<string | null>('VRC_LOG_CURRENT_FILE', (event) =>
+      this._logPath.next(event.payload)
+    );
     await invoke('init_vrc_log_watcher');
   }
 

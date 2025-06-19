@@ -99,7 +99,7 @@ pub fn set_led_color(device: &HidDevice, r: u8, g: u8, b: u8) -> Result<(), Stri
                 "[Core][Beyond] Could not send data to Bigscreen Beyond: {}",
                 e
             );
-            return Ok(());
+            Ok(())
             //             return Err("DEVICE_WRITE_ERROR".to_string());
         }
     }
@@ -113,14 +113,14 @@ pub fn set_fan_speed(device: &HidDevice, speed: u8) -> Result<(), String> {
         );
         return Err("OUT_OF_BOUNDS".to_string());
     }
-    match device.send_feature_report(&[0, 0x46, speed as u8]) {
+    match device.send_feature_report(&[0, 0x46, speed]) {
         Ok(_) => Ok(()),
         Err(e) => {
             error!(
                 "[Core][Beyond] Could not send data to Bigscreen Beyond: {}",
                 e
             );
-            return Ok(());
+            Ok(())
             //             return Err("DEVICE_WRITE_ERROR".to_string());
         }
     }
@@ -146,7 +146,7 @@ pub fn set_brightness(device: &HidDevice, brightness: u16) -> Result<(), String>
                 "[Core][Beyond] Could not send data to Bigscreen Beyond: {}",
                 e
             );
-            return Ok(());
+            Ok(())
             //             return Err("DEVICE_WRITE_ERROR".to_string());
         }
     }

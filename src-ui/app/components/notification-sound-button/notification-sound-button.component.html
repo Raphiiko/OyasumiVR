@@ -1,0 +1,29 @@
+<div class="button-container">
+  <button
+    class="btn-play"
+    (click)="previewSound()"
+    [disabled]="(playingSound$ | async) || !soundConfig?.enabled"
+  >
+    <i class="material-symbols-outlined icon-filled">play_arrow</i>
+  </button>
+
+  <button
+    [class.unset]="!soundConfig?.sound?.name"
+    [class.set]="soundConfig?.sound?.name"
+    [disabled]="!soundConfig?.enabled"
+    (click)="openSoundModal()"
+  >
+    <i class="material-symbols-outlined icon-filled">music_note</i>
+    <span>{{ soundConfig?.sound?.name || (label | translate) }}</span>
+    <span
+      *ngIf="soundConfig?.volume !== undefined && soundConfig?.volume !== null"
+      class="volume-badge"
+      >{{ soundConfig?.volume }}%</span
+    >
+  </button>
+
+  <label class="switch-toggle" *ngIf="toggleable">
+    <input type="checkbox" [checked]="soundConfig?.enabled" (change)="toggleSound()" />
+    <span class="switch-toggle-slider"></span>
+  </label>
+</div>

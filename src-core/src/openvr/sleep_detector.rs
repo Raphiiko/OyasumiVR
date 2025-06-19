@@ -99,7 +99,7 @@ impl SleepDetector {
         self.rotation_in_last_1_minute = self.rotation_in_window(60000);
         self.rotation_in_last_10_seconds = self.rotation_in_window(10000);
         // Set new start time if there hasn't been any data in over a minute
-        if get_time() - self.last_log > 60000 {
+        if get_time().saturating_sub(self.last_log) > 60000 {
             self.start_time = get_time();
         }
         // Update the last log time

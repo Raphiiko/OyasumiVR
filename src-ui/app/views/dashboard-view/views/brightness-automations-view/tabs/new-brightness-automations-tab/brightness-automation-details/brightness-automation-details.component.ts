@@ -177,6 +177,18 @@ export class BrightnessAutomationDetailsComponent implements OnInit {
     });
   }
 
+  protected async toggleAutoUpdateTime() {
+    const autoUpdateTime = !this.asSunConfig(this.config()).autoUpdateTime;
+    await this.updateConfig({
+      autoUpdateTime,
+    });
+
+    // If auto update is enabled, immediately determine the time
+    if (autoUpdateTime) {
+      await this.autoDetermineActivationTime();
+    }
+  }
+
   protected async updateActivationTime(value: string) {
     if (!value.match(/[0-9]{2}:[0-9]{2}/)) return;
     await this.updateConfig({

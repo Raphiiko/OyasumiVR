@@ -6,10 +6,13 @@ on:
 
 jobs:
   build-steam-beta-release:
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
     strategy:
       fail-fast: false
       matrix:
-        platform: [ windows-latest ]
+        platform: [self-hosted]
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v2
@@ -19,36 +22,14 @@ jobs:
       - name: Setup NodeJS
         uses: actions/setup-node@v3
         with:
-          node-version: 22.14
+          node-version: 22.16
           cache: npm
       - name: Initialize the project
         run: npm run ci
-#      - name: Setup LLVM
-#        uses: ZhongRuoyu/setup-llvm@v0
-#        with:
-#          llvm-version: 18
-#          github-token: ${{ github.token }}
-      - name: Install Rust stable toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: 1.85.0
-          default: true
-      - name: Install Protoc
-        uses: arduino/setup-protoc@v2
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Configure Rust cache
-        uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: |
-            src-shared-rust
-            src-elevated-sidecar
-            src-core
       - name: Get Changelog Entry
         id: changelog_reader
         uses: mindsers/changelog-reader-action@v2
         with:
-          validation_level: warn
           version: Unreleased
           path: ./CHANGELOG.md
       - name: Prepare Steamworks SDK

@@ -25,10 +25,13 @@ export const EventLogFilters = [
   'VRCHAT_STATUS',
   'VRCHAT_INVITES',
   'VRCHAT_AVATAR',
+  'VRCHAT_GROUP',
   'AUDIO_CONTROL',
   'STEAMVR_SETTINGS',
   'SHUTDOWN_SEQUENCE',
   'BSB_CONTROL',
+  'FRAME_LIMITING',
+  'RUN_AUTOMATIONS',
 ] as const;
 
 export type EventLogFilter = (typeof EventLogFilters)[number];
@@ -76,11 +79,15 @@ export class EventLogFilterDialogComponent
     },
     {
       id: 'VRCHAT_INVITES',
-      eventLogTypes: ['acceptedInviteRequest'],
+      eventLogTypes: ['acceptedInviteRequest', 'declinedInviteRequest', 'declinedInvite'],
     },
     {
       id: 'VRCHAT_AVATAR',
       eventLogTypes: ['vrchatAvatarChanged'],
+    },
+    {
+      id: 'VRCHAT_GROUP',
+      eventLogTypes: ['vrchatGroupChanged'],
     },
     {
       id: 'AUDIO_CONTROL',
@@ -104,6 +111,14 @@ export class EventLogFilterDialogComponent
     {
       id: 'BSB_CONTROL',
       eventLogTypes: ['bsbFanSpeedChanged', 'bsbLedChanged'],
+    },
+    {
+      id: 'FRAME_LIMITING',
+      eventLogTypes: ['frameLimitChanged'],
+    },
+    {
+      id: 'RUN_AUTOMATIONS',
+      eventLogTypes: ['runAutomationExecuted'],
     },
   ];
   // Type this as the id field of the Filter interface

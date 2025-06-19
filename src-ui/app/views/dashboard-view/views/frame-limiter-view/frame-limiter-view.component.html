@@ -1,0 +1,124 @@
+<div class="pane">
+  <div class="pane-title" translate>frame-limiter.title</div>
+  <div class="pane-content">
+    <div class="setting-view-container">
+      <p translate>frame-limiter.description</p>
+      <div class="alert warning" *ngIf="(openvr.status | async) !== 'INITIALIZED'" @vshrink>
+        <div class="alert-bg"></div>
+        <div class="alert-icon">
+          <i class="material-icons">warning</i>
+        </div>
+        <div class="alert-content">
+          <span translate>frame-limiter.steamvrRequired</span>
+        </div>
+      </div>
+      <div class="list-header">
+        <h3 translate>frame-limiter.frameLimits</h3>
+        <button class="btn btn-primary" (click)="addLimiter()">
+          <i class="material-icons">add</i>
+          <span translate>frame-limiter.addLimiter</span>
+        </button>
+      </div>
+      <div class="no-limits-container" *ngIf="!config.configs.length" @vshrink>
+        <p translate>frame-limiter.noLimits</p>
+      </div>
+
+      <div class="setting-category" *ngFor="let config of config.configs; trackBy: trackByAppId">
+        <div class="settings">
+          <div class="setting-row">
+            <div class="setting-row-icon">
+              <img [src]="getAppIconForId(config.appId)" class="app-icon" />
+            </div>
+            <div class="setting-row-label" translate>
+              <span translate>{{ config.appLabel }}</span>
+              <span>
+                <a (click)="removeLimiter(config.appId)" translate>frame-limiter.removeLimiter</a>
+              </span>
+            </div>
+            <div class="setting-row-action">
+              <app-frame-limiter-selector
+                [activeValue]="getActiveValueForId(config.appId)"
+                (valueRequested)="onFrameLimitRequested(config.appId, $event)"
+                [class.disabled]="(openvr.status | async) !== 'INITIALIZED'"
+              ></app-frame-limiter-selector>
+            </div>
+          </div>
+          <div class="setting-row-group">
+            <div class="setting-row">
+              <div class="setting-row-label">
+                <label class="check-toggle">
+                  <input
+                    type="checkbox"
+                    [checked]="config.onSleepEnable !== 'DISABLED'"
+                    (change)="toggleEventFrameLimit(config.appId, 'onSleepEnable')"
+                  />
+                  <span class="check-toggle-checkmark"></span>
+                  <span class="check-toggle-label" translate> frame-limiter.onSleepEnable </span>
+                </label>
+                <span></span>
+              </div>
+              <div class="setting-row-action">
+                <app-frame-limiter-selector
+                  [configuredValue]="config.onSleepEnable"
+                  (valueRequested)="setEventFrameLimit(config.appId, $event, 'onSleepEnable')"
+                ></app-frame-limiter-selector>
+              </div>
+            </div>
+            <div class="setting-row">
+              <div class="setting-row-label">
+                <label class="check-toggle">
+                  <input
+                    type="checkbox"
+                    [checked]="config.onSleepDisable !== 'DISABLED'"
+                    (change)="toggleEventFrameLimit(config.appId, 'onSleepDisable')"
+                  />
+                  <span class="check-toggle-checkmark"></span>
+                  <span class="check-toggle-label" translate> frame-limiter.onSleepDisable </span>
+                </label>
+                <span></span>
+              </div>
+              <div class="setting-row-action">
+                <app-frame-limiter-selector
+                  [configuredValue]="config.onSleepDisable"
+                  (valueRequested)="setEventFrameLimit(config.appId, $event, 'onSleepDisable')"
+                ></app-frame-limiter-selector>
+              </div>
+            </div>
+            <div class="setting-row">
+              <div class="setting-row-label">
+                <label class="check-toggle">
+                  <input
+                    type="checkbox"
+                    [checked]="config.onSleepPreparation !== 'DISABLED'"
+                    (change)="toggleEventFrameLimit(config.appId, 'onSleepPreparation')"
+                  />
+                  <span class="check-toggle-checkmark"></span>
+                  <span class="check-toggle-label" translate>
+                    frame-limiter.onSleepPreparation
+                  </span>
+                </label>
+                <span></span>
+              </div>
+              <div class="setting-row-action">
+                <app-frame-limiter-selector
+                  [configuredValue]="config.onSleepPreparation"
+                  (valueRequested)="setEventFrameLimit(config.appId, $event, 'onSleepPreparation')"
+                ></app-frame-limiter-selector>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert">
+        <div class="alert-bg"></div>
+        <div class="alert-icon">
+          <i class="material-symbols-outlined">info</i>
+        </div>
+        <div class="alert-content">
+          <span translate>frame-limiter.supportedHardwareWarning</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { SleepModeMqttIntegrationService } from './integrations/sleep-mode.mqtt-integration.service';
 import { SleepPreparationMqttIntegrationService } from './integrations/sleep-preparation.mqtt-integration.service';
 import { BaseStationMqttIntegrationService } from './integrations/base-station.mqtt-integration.service';
-import { TrackerControllerMqttIntegrationService } from './integrations/tracker-controller.mqtt-integration';
+import { HmdTrackerControllerMqttIntegrationService } from './integrations/hmd-tracker-controller.mqtt-integration';
 import { HMDDataMqttIntegrationService } from './integrations/hmd-data.mqtt-integration';
 import { SleepingPositionMqttIntegrationService } from './integrations/sleeping-position.mqtt-integration.service';
 import { ProcessActiveMqttIntegrationService } from './integrations/process-active.mqtt-integration.service';
@@ -20,7 +20,7 @@ export class MqttIntegrationService {
     private sleepModeMqttIntegrationService: SleepModeMqttIntegrationService,
     private sleepPreparationMqttIntegrationService: SleepPreparationMqttIntegrationService,
     private baseStationMqttIntegrationService: BaseStationMqttIntegrationService,
-    private trackerControllerMqttIntegrationService: TrackerControllerMqttIntegrationService,
+    private trackerControllerMqttIntegrationService: HmdTrackerControllerMqttIntegrationService,
     private hmdDataMqttIntegrationService: HMDDataMqttIntegrationService,
     private sleepingPositionMqttIntegrationService: SleepingPositionMqttIntegrationService,
     private processActiveMqttIntegrationService: ProcessActiveMqttIntegrationService,

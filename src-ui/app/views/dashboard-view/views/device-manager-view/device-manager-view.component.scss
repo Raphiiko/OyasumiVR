@@ -1,0 +1,17 @@
+:host {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.pane {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.pane-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1em;
+}

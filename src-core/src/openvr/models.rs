@@ -78,6 +78,7 @@ impl From<ovr_overlay::sys::ETrackedControllerRole> for TrackedControllerRole {
 }
 
 #[derive(Clone, Serialize, Deserialize, PartialEq)]
+#[allow(clippy::upper_case_acronyms)]
 pub enum TrackedDeviceClass {
     Invalid,
     HMD,
@@ -130,7 +131,8 @@ pub struct OVRDevice {
     pub model_number: Option<String>,
     pub handle_type: Option<OVRHandleType>,
     pub hmd_on_head: Option<bool>,
-    pub debug_hmd_activity: Option<String>,
+    pub hmd_activity: Option<String>,
+    pub display_frequency: Option<f32>,
 }
 
 #[derive(Clone, Serialize, Deserialize)]
@@ -224,4 +226,11 @@ pub struct SleepDetectorStateReport {
 #[serde(rename_all = "camelCase")]
 pub struct GestureDetected {
     pub gesture: String,
+}
+
+#[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct OVRFrameLimits {
+    pub additional_frames_to_predict: u8,
+    pub frames_to_throttle: u8,
 }

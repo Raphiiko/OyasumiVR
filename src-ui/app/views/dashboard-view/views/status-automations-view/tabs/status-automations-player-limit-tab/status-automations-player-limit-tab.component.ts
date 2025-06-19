@@ -7,7 +7,7 @@ import {
 
 import { SelectBoxItem } from '../../../../../../components/select-box/select-box.component';
 import { vrcStatusToString } from '../../../../../../utils/status-utils';
-import { VRChatService } from '../../../../../../services/vrchat.service';
+import { VRChatService } from '../../../../../../services/vrchat-api/vrchat.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AutomationConfigService } from '../../../../../../services/automation-config.service';
 import { ModalService } from '../../../../../../services/modal.service';

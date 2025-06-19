@@ -41,21 +41,22 @@ export type OVRHandleType =
 export interface OVRDevice {
   // Native properties
   battery: number;
-  canPowerOff: boolean;
+  canPowerOff?: boolean;
   class: OVRDeviceClass;
   role: OVRDeviceRole;
   handleType?: OVRHandleType;
-  dongleId: string;
-  hardwareRevision: string;
+  dongleId?: string;
+  hardwareRevision?: string;
   index: number;
-  isCharging: boolean;
-  manufacturerName: string;
-  modelNumber: string;
-  providesBatteryStatus: boolean;
-  serialNumber: string;
+  isCharging?: boolean;
+  manufacturerName?: string;
+  modelNumber?: string;
+  providesBatteryStatus?: boolean;
+  serialNumber?: string;
   pose: any;
-  hmdOnHead: boolean;
-  debugHmdActivity: string;
+  hmdOnHead?: boolean;
+  hmdActivity?: string;
+  displayFrequency?: number;
 
   // Status properties
   isTurningOff: boolean;

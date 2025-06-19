@@ -11,6 +11,7 @@
     "fs:allow-write-file",
     "fs:allow-read-dir",
     "fs:allow-exists",
+    "fs:allow-write-text-file",
     {
       "identifier": "fs:scope",
       "allow": [
@@ -72,6 +73,7 @@
     "shell:default",
     "deep-link:default",
     "log:default",
-    "aptabase:allow-track-event"
+    "aptabase:allow-track-event",
+    "opener:default"
   ]
 }

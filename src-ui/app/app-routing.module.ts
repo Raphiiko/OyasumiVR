@@ -10,6 +10,7 @@ import { OscAutomationsViewComponent } from './views/dashboard-view/views/osc-au
 import { StatusAutomationsViewComponent } from './views/dashboard-view/views/status-automations-view/status-automations-view.component';
 import { AutoInviteRequestAcceptViewComponent } from './views/dashboard-view/views/auto-invite-request-accept-view/auto-invite-request-accept-view.component';
 import { BrightnessAutomationsViewComponent } from './views/dashboard-view/views/brightness-automations-view/brightness-automations-view.component';
+import { FrameLimiterViewComponent } from './views/dashboard-view/views/frame-limiter-view/frame-limiter-view.component';
 import { ResolutionAutomationsViewComponent } from './views/dashboard-view/views/resolution-automations-view/resolution-automations-view.component';
 import { ChaperoneAutomationsViewComponent } from './views/dashboard-view/views/chaperone-automations-view/chaperone-automations-view.component';
 import { SleepAnimationsViewComponent } from './views/dashboard-view/views/sleep-animations-view/sleep-animations-view.component';
@@ -31,7 +32,10 @@ import { SettingsStatusInfoViewComponent } from './views/dashboard-view/views/se
 import { HmdAutomationsViewComponent } from './views/dashboard-view/views/hmd-automations-view/hmd-automations-view.component';
 import { JoinNotificationsViewComponent } from './views/dashboard-view/views/join-notifications-view/join-notifications-view.component';
 import { VRChatAvatarAutomationsViewComponent } from './views/dashboard-view/views/vrchat-avatar-automations-view/vrchat-avatar-automations-view.component';
+import { VRChatGroupAutomationsViewComponent } from './views/dashboard-view/views/vrchat-group-automations-view/vrchat-group-automations-view.component';
 import { SettingsBrightnessCctViewComponent } from './views/dashboard-view/views/settings-brightness-cct-view/settings-brightness-cct-view.component';
+import { RunAutomationsViewComponent } from './views/dashboard-view/views/run-automations-view/run-automations-view.component';
+import { DeviceManagerViewComponent } from './views/dashboard-view/views/device-manager-view/device-manager-view.component';
 
 const routes: Routes = [
   {
@@ -46,6 +50,10 @@ const routes: Routes = [
       {
         path: 'sleepDetection',
         component: SleepDetectionViewComponent,
+      },
+      {
+        path: 'deviceManager',
+        component: DeviceManagerViewComponent,
       },
       {
         path: 'oscAutomations',
@@ -84,8 +92,20 @@ const routes: Routes = [
         component: VRChatAvatarAutomationsViewComponent,
       },
       {
+        path: 'vrchatGroupAutomations',
+        component: VRChatGroupAutomationsViewComponent,
+      },
+      {
+        path: 'runAutomations',
+        component: RunAutomationsViewComponent,
+      },
+      {
         path: 'brightnessAutomations',
         component: BrightnessAutomationsViewComponent,
+      },
+      {
+        path: 'frameLimitAutomations',
+        component: FrameLimiterViewComponent,
       },
       {
         path: 'resolutionAutomations',

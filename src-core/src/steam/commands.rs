@@ -38,13 +38,11 @@ pub async fn steam_achievement_set(achievement_id: String, unlocked: bool) -> Re
         return Ok(());
     }
     if unlocked {
-        if let Err(_) = achievement.set() {
+        if achievement.set().is_err() {
             return Err("FAILED_TO_SET_STATUS".to_string());
         }
-    } else {
-        if let Err(_) = achievement.clear() {
-            return Err("FAILED_TO_SET_STATUS".to_string());
-        }
+    } else if achievement.clear().is_err() {
+        return Err("FAILED_TO_SET_STATUS".to_string());
     }
     match stats.store_stats() {
         Ok(_) => Ok(()),

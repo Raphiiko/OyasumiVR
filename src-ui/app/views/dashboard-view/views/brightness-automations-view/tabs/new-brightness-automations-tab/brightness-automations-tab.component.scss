@@ -18,3 +18,9 @@ app-brightness-automation-details {
   width: 100%;
   height: 100%;
 }
+
+.setting-view-container {
+  position: relative;
+  height: 100%;
+  overflow-y: overlay;
+}
