@@ -1,16 +1,19 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, DestroyRef, HostListener, OnInit } from '@angular/core';
 import { SleepDetectionTabComponent } from '../sleep-detection-tab.component';
 import { TimeEnableSleepModeModalComponent } from '../../modals/time-enable-sleepmode-modal/time-enable-sleep-mode-modal.component';
-import { filter } from 'rxjs';
+import { combineLatest, distinctUntilChanged, filter, map } from 'rxjs';
 import {
   SleepModeEnableAtBatteryPercentageAutomationConfig,
   SleepModeEnableAtTimeAutomationConfig,
   SleepModeEnableOnHeartRateCalmPeriodAutomationConfig,
 } from '../../../../../../models/automations';
 import { BatteryPercentageEnableSleepModeModalComponent } from '../../modals/battery-percentage-enable-sleepmode-modal/battery-percentage-enable-sleep-mode-modal.component';
-import { uniq } from 'lodash';
+import { isEqual, uniq } from 'lodash';
 import { HeartRateCalmPeriodEnableSleepModeModalComponent } from '../../modals/heart-rate-calm-period-enable-sleepmode-modal/heart-rate-calm-period-enable-sleep-mode-modal.component';
 import { Router } from '@angular/router';
+import { AutomationConfigService } from 'src-ui/app/services/automation-config.service';
+import { DeviceManagerService } from 'src-ui/app/services/device-manager.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-sleep-detection-sleep-enable-tab',
@@ -22,12 +25,32 @@ export class SleepDetectionSleepEnableTabComponent
   extends SleepDetectionTabComponent
   implements OnInit
 {
-  constructor(private router: Router) {
+  batteryLevelAutomationEnabledForController = false;
+
+  constructor(
+    private router: Router,
+    private deviceManager: DeviceManagerService
+  ) {
     super();
   }
 
   ngOnInit() {
     super.ngOnInit();
+    // Determine batteryLevelAutomationEnabledForController, required for a conflict warning
+    combineLatest([
+      this.deviceManager.knownDevices,
+      this.automationConfigService.configs.pipe(
+        map((configs) => configs.DEVICE_POWER_AUTOMATIONS.turnOffDevicesBelowBatteryLevel),
+        distinctUntilChanged((a, b) => isEqual(a, b))
+      ),
+    ])
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(async ([, config]) => {
+        const applicableDevices = await this.deviceManager.getDevicesForSelection(config);
+        this.batteryLevelAutomationEnabledForController = applicableDevices.knownDevices.some(
+          (d) => d.deviceType === 'CONTROLLER'
+        );
+      });
   }
 
   @HostListener('click', ['$event'])

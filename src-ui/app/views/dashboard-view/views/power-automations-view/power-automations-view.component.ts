@@ -3,7 +3,7 @@ import { noop } from '../../../../utils/animations';
 import { firstValueFrom } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
-type PowerAutomationsTab = 'CONTROLLERS_AND_TRACKERS' | 'BASE_STATIONS' | 'WINDOWS_POWER_POLICY';
+type PowerAutomationsTab = 'DEVICES' | 'WINDOWS_POWER_POLICY';
 
 @Component({
   selector: 'app-power-automations-view',
@@ -13,7 +13,7 @@ type PowerAutomationsTab = 'CONTROLLERS_AND_TRACKERS' | 'BASE_STATIONS' | 'WINDO
   standalone: false,
 })
 export class PowerAutomationsViewComponent implements OnInit {
-  activeTab: PowerAutomationsTab = 'CONTROLLERS_AND_TRACKERS';
+  activeTab: PowerAutomationsTab = 'DEVICES';
 
   constructor(private activatedRoute: ActivatedRoute) {}
 

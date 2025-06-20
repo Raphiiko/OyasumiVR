@@ -152,9 +152,6 @@
         "Lighthouse": "Base Stations",
         "other": "Lainnya"
       },
-      "deviceName": {
-        "lighthouseV2": "Lighthouse V2"
-      },
       "lighthouseStatus": {
         "booting": "Booting",
         "on": "Aktif",
@@ -228,66 +225,6 @@
         "hardwareBrightnessChanged": {
           "reason": {
             "SLEEP_PREPARATION": "Saat Anda bersiap untuk tidur"
-          }
-        },
-        "lighthouseSetPowerState": {
-          "ALL": {
-            "on": {
-              "reasons": {
-                "MANUAL": "Dinyalakan manual",
-                "OYASUMI_START": "Disaat OyasumiVR dimulai",
-                "STEAMVR_START": "Disaat SteamVR Menyala",
-                "STEAMVR_STOP": "Disaat SteamVR Dimatikan"
-              },
-              "title": "Nyalakan semua base station"
-            },
-            "sleep": {
-              "reasons": {
-                "MANUAL": "Dinyalakan manual",
-                "OYASUMI_START": "Disaat OyasumiVR dimulai",
-                "STEAMVR_START": "Disaat SteamVR Menyala",
-                "STEAMVR_STOP": "Disaat SteamVR Dimatikan"
-              },
-              "title": "Atur semua base station ke mode tidur"
-            },
-            "standby": {
-              "reasons": {
-                "MANUAL": "Dinyalakan manual",
-                "OYASUMI_START": "Disaat OyasumiVR dimulai",
-                "STEAMVR_START": "Disaat SteamVR Menyala",
-                "STEAMVR_STOP": "Disaat SteamVR Dimatikan"
-              },
-              "title": "Atur semua base station ke mode siaga"
-            }
-          },
-          "SINGLE": {
-            "on": {
-              "reasons": {
-                "MANUAL": "Dinyalakan manual",
-                "OYASUMI_START": "Disaat OyasumiVR dimulai",
-                "STEAMVR_START": "Disaat SteamVR Menyala",
-                "STEAMVR_STOP": "Disaat SteamVR Dimatikan"
-              },
-              "title": "Menyalakan Base Station"
-            },
-            "sleep": {
-              "reasons": {
-                "MANUAL": "Dinyalakan manual",
-                "OYASUMI_START": "Disaat OyasumiVR dimulai",
-                "STEAMVR_START": "Disaat SteamVR Menyala",
-                "STEAMVR_STOP": "Disaat SteamVR Dimatikan"
-              },
-              "title": "Mengatur base station ke mode tidur"
-            },
-            "standby": {
-              "reasons": {
-                "MANUAL": "Dinyalakan manual",
-                "OYASUMI_START": "Disaat OyasumiVR dimulai",
-                "STEAMVR_START": "Disaat SteamVR Menyala",
-                "STEAMVR_STOP": "Disaat SteamVR Dimatikan"
-              },
-              "title": "Mengatur semua base station ke mode siaga"
-            }
           }
         },
         "msiAfterburnerProfileSet": {
@@ -621,12 +558,7 @@
     "notification": "Mendeteksi kemungkinan mimpi buruk, karena Anda mengalami peningkatan detak jantung yang berkepanjangan.",
     "playSound": {
       "description": "Minta OyasumiVR membangunkan Anda dengan suara saat Anda mungkin mengalami mimpi buruk",
-      "title": "Mainkan suara",
-      "volume": {
-        "description": "Konfigurasikan volume saat efek suara diputar",
-        "test": "Tes",
-        "title": "Volume suara"
-      }
+      "title": "Mainkan suara"
     },
     "title": "Deteksi Mimpi Buruk"
   },

@@ -20,6 +20,9 @@ export class SleepPreparationService {
       [
         configs.CHANGE_STATUS_GENERAL_EVENTS.changeStatusOnSleepPreparation,
         configs.CHANGE_STATUS_GENERAL_EVENTS.changeStatusMessageOnSleepPreparation,
+        configs.DEVICE_POWER_AUTOMATIONS.turnOffDevicesOnSleepPreparation.devices.length > 0,
+        configs.DEVICE_POWER_AUTOMATIONS.turnOffDevicesOnSleepPreparation.tagIds.length > 0,
+        configs.DEVICE_POWER_AUTOMATIONS.turnOffDevicesOnSleepPreparation.types.length > 0,
         configs.VRCHAT_AVATAR_AUTOMATIONS.onSleepPreparation,
         (configs.OSC_GENERAL.onSleepPreparation?.commands.length ?? 0) > 0,
         configs.AUTO_ACCEPT_INVITE_REQUESTS.presetOnSleepPreparation !== null,

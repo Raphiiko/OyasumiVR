@@ -89,7 +89,6 @@ export class HmdAutomationsBigscreenBeyondTabComponent implements OnInit {
         config['onSleepDisableFanSpeed'] = MIN_SAFE_FAN_SPEED;
       if (this.fanControlConfig.onSleepPreparationFanSpeed < MIN_SAFE_FAN_SPEED)
         config['onSleepPreparationFanSpeed'] = MIN_SAFE_FAN_SPEED;
-      // TODO: SET THE FAN SPEED BACK TO SAFE LEVELS IF NEEDED
     }
     await this.automationConfigService.updateAutomationConfig<BigscreenBeyondFanControlAutomationsConfig>(
       'BIGSCREEN_BEYOND_FAN_CONTROL',

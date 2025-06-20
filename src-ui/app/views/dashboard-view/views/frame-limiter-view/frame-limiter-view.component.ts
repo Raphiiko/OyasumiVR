@@ -13,7 +13,7 @@ import {
   FrameLimiterService,
 } from 'src-ui/app/services/frame-limiter.service';
 import { ModalService } from 'src-ui/app/services/modal.service';
-import { vshrink } from 'src-ui/app/utils/animations';
+import { fade, vshrink } from 'src-ui/app/utils/animations';
 import { OpenVRService } from 'src-ui/app/services/openvr.service';
 import {
   FrameLimiterAddApplicationModalComponent,
@@ -25,7 +25,7 @@ import {
   templateUrl: './frame-limiter-view.component.html',
   styleUrls: ['./frame-limiter-view.component.scss'],
   standalone: false,
-  animations: [vshrink()],
+  animations: [vshrink(), fade()],
 })
 export class FrameLimiterViewComponent implements OnInit {
   config: FrameLimitAutomationsConfig = structuredClone(

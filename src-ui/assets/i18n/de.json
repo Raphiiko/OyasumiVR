@@ -351,10 +351,6 @@
         "Lighthouse": "Basisstationen",
         "other": "Andere"
       },
-      "deviceName": {
-        "lighthouseV1": "V1 Lighthouse",
-        "lighthouseV2": "V2 Lighthouse"
-      },
       "deviceRole": {
         "AnkleLeft": "Linker Knöchel",
         "AnkleRight": "Rechter Knöchel",
@@ -509,68 +505,27 @@
         },
         "lighthouseSetPowerState": {
           "ALL": {
-            "on": {
-              "reasons": {
-                "HOTKEY": "Da ein Hotkey gedrückt wurde",
-                "MANUAL": "Manuell eingeschaltet",
-                "OYASUMI_START": "Da OyasumiVR gestartet ist",
-                "STEAMVR_START": "Da SteamVR gestartet ist",
-                "STEAMVR_STOP": "Da SteamVR gestoppt ist"
-              },
-              "title": "Alle Basisstationen eingeschaltet"
-            },
-            "sleep": {
-              "reasons": {
-                "HOTKEY": "Da ein Hotkey gedrückt wurde",
-                "MANUAL": "Manuell gesetzt",
-                "OYASUMI_START": "Da OyasumiVR gestartet ist",
-                "STEAMVR_START": "Da SteamVR gestartet ist",
-                "STEAMVR_STOP": "Da SteamVR gestoppt ist"
-              },
-              "title": "Versetze alle Basisstationen in den Bereitschaftsmodus"
-            },
-            "standby": {
-              "reasons": {
-                "HOTKEY": "Da ein Hotkey gedrückt wurde",
-                "MANUAL": "Manuell gesetzt",
-                "OYASUMI_START": "Da OyasumiVR gestartet ist",
-                "STEAMVR_START": "Da SteamVR gestartet ist",
-                "STEAMVR_STOP": "Da SteamVR gestoppt ist"
-              },
-              "title": "Versetze alle Basisstationen in den Stand-by-Modus"
-            }
+            "on": "Alle Basisstationen eingeschaltet",
+            "sleep": "Versetze alle Basisstationen in den Bereitschaftsmodus",
+            "standby": "Versetze alle Basisstationen in den Stand-by-Modus"
           },
           "SINGLE": {
-            "on": {
-              "reasons": {
-                "HOTKEY": "Da ein Hotkey gedrückt wurde",
-                "MANUAL": "Manuell eingeschaltet",
-                "OYASUMI_START": "Da OyasumiVR gestartet ist",
-                "STEAMVR_START": "Da SteamVR gestartet ist",
-                "STEAMVR_STOP": "Da SteamVR gestoppt ist"
-              },
-              "title": "Basisstation eingeschaltet"
-            },
-            "sleep": {
-              "reasons": {
-                "HOTKEY": "Da ein Hotkey gedrückt wurde",
-                "MANUAL": "Manuell gesetzt",
-                "OYASUMI_START": "Da OyasumiVR gestartet ist",
-                "STEAMVR_START": "Da SteamVR gestartet ist",
-                "STEAMVR_STOP": "Da SteamVR gestoppt ist"
-              },
-              "title": "Versetze eine Basisstation in den Bereitschaftsmodus"
-            },
-            "standby": {
-              "reasons": {
-                "HOTKEY": "Da ein Hotkey gedrückt wurde",
-                "MANUAL": "Manuell gesetzt",
-                "OYASUMI_START": "Da OyasumiVR gestartet ist",
-                "STEAMVR_START": "Da SteamVR gestartet ist",
-                "STEAMVR_STOP": "Da SteamVR gestoppt ist"
-              },
-              "title": "Versetze eine Basisstation in den Stand-by-Modus"
-            }
+            "on": "Basisstation eingeschaltet",
+            "sleep": "Versetze eine Basisstation in den Bereitschaftsmodus",
+            "standby": "Versetze eine Basisstation in den Stand-by-Modus"
+          },
+          "VARIOUS": {
+            "on": "Verschiedene Basisstationen eingeschaltet",
+            "sleep": "Versetze verschiedene Basisstationen in den Bereitschaftsmodus",
+            "standby": "Versetze verschiedene Basisstationen in den Stand-by-Modus"
+          },
+          "reasons": {
+            "HOTKEY": "Da ein Hotkey gedrückt wurde",
+            "MANUAL": "Manuell eingeschaltet",
+            "OYASUMI_START": "Da OyasumiVR gestartet ist",
+            "SLEEP_MODE_DISABLED": "Da der Schlafmodus ausgeschaltet war",
+            "STEAMVR_START": "Da SteamVR gestartet ist",
+            "STEAMVR_STOP": "Da SteamVR gestoppt ist"
           }
         },
         "msiAfterburnerProfileSet": {
@@ -701,7 +656,9 @@
             "HOTKEY": "Da ein Hotkey gedrückt wurde",
             "MANUAL": "Manuell ausgeschaltet",
             "OSC_CONTROL": "Via OSC ausgeschaltet",
-            "SLEEP_MODE_ENABLED": "Da der Schlafmodus eingeschaltet war"
+            "SLEEP_MODE_DISABLED": "Da der Schlafmodus ausgeschaltet war",
+            "SLEEP_MODE_ENABLED": "Da der Schlafmodus eingeschaltet war",
+            "SLEEP_PREPARATION": "Da du dich aufs Schlafen vorbereitet hast"
           },
           "title": {
             "ALL": "Alle Geräte ausgeschaltet",
@@ -1196,10 +1153,6 @@
       "description": "Zeig die Benachrichtigungen, wenn ein Spieler meiner Welt beitritt",
       "title": "Beitrittsbenachrichtigung"
     },
-    "joinSoundVolume": {
-      "description": "Die Lautstärke für das Geräusch bei Betreten/Verlassen der Welt",
-      "title": "Lautstärke"
-    },
     "joinSounds": {
       "description": "Mache ein Geräusch, wenn ein Spieler meiner Welt beitritt",
       "title": "Beitrittsgeräusch"
@@ -1293,12 +1246,7 @@
     "notification": "Entdeckte einen möglichen Albtraum anhand einer langanhaltigen erhöhten Herzfrequenz.",
     "playSound": {
       "description": "OyasumiVR weckt dich mittels Geräuschen, wenn du einen Albtraum hast",
-      "title": "Spiele ein Geräusch",
-      "volume": {
-        "description": "Lautstärke des Geräusches",
-        "test": "Test",
-        "title": "Lautstärke"
-      }
+      "title": "Spiele ein Geräusch"
     },
     "title": "Albtraumerkennung"
   },

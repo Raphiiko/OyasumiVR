@@ -352,10 +352,6 @@
         "Lighthouse": "Base Stations",
         "other": "Overige"
       },
-      "deviceName": {
-        "lighthouseV1": "V1 Lighthouse",
-        "lighthouseV2": "V2 Lighthouse"
-      },
       "deviceRole": {
         "AnkleLeft": "Linker Enkel",
         "AnkleRight": "Rechter Enkel",
@@ -506,72 +502,6 @@
           "title": {
             "set": "Headset hardware helderheid naar {value} gezet",
             "transition": "Headset hardware helderheid gaat over naar {value}"
-          }
-        },
-        "lighthouseSetPowerState": {
-          "ALL": {
-            "on": {
-              "reasons": {
-                "HOTKEY": "Omdat een hotkey was geactiveerd",
-                "MANUAL": "Handmatig aangezet",
-                "OYASUMI_START": "Omdat Oyasumi is gestart",
-                "STEAMVR_START": "Omdat SteamVR is gestart",
-                "STEAMVR_STOP": "Omdat SteamVR is gestopt"
-              },
-              "title": "Alle base stations aangezet"
-            },
-            "sleep": {
-              "reasons": {
-                "HOTKEY": "Omdat een hotkey was geactiveerd",
-                "MANUAL": "Handmatig veranderd",
-                "OYASUMI_START": "Omdat Oyasumi is gestart",
-                "STEAMVR_START": "Omdat SteamVR is gestart",
-                "STEAMVR_STOP": "Omdat SteamVR is gestopt"
-              },
-              "title": "Alle base stations in slaap modus gezet"
-            },
-            "standby": {
-              "reasons": {
-                "HOTKEY": "Omdat een hotkey was geactiveerd",
-                "MANUAL": "Handmatig veranderd",
-                "OYASUMI_START": "Omdat Oyasumi is gestart",
-                "STEAMVR_START": "Omdat SteamVR is gestart",
-                "STEAMVR_STOP": "Omdat SteamVR is gestopt"
-              },
-              "title": "Alle base stations in standby modus gezet"
-            }
-          },
-          "SINGLE": {
-            "on": {
-              "reasons": {
-                "HOTKEY": "Omdat een hotkey was geactiveerd",
-                "MANUAL": "Handmatig aangezet",
-                "OYASUMI_START": "Omdat Oyasumi is gestart",
-                "STEAMVR_START": "Omdat SteamVR is gestart",
-                "STEAMVR_STOP": "Omdat SteamVR is gestopt"
-              },
-              "title": "Een base station aangezet"
-            },
-            "sleep": {
-              "reasons": {
-                "HOTKEY": "Omdat een hotkey was geactiveerd",
-                "MANUAL": "Handmatig aangezet",
-                "OYASUMI_START": "Omdat Oyasumi is gestart",
-                "STEAMVR_START": "Omdat SteamVR is gestart",
-                "STEAMVR_STOP": "Omdat SteamVR is gestopt"
-              },
-              "title": "Een base station in slaap modus gezet"
-            },
-            "standby": {
-              "reasons": {
-                "HOTKEY": "Omdat een hotkey was geactiveerd",
-                "MANUAL": "Handmatig aangezet",
-                "OYASUMI_START": "Omdat Oyasumi is gestart",
-                "STEAMVR_START": "Omdat SteamVR is gestart",
-                "STEAMVR_STOP": "Omdat SteamVR is gestopt"
-              },
-              "title": "Een base station in standby modus gezet"
-            }
           }
         },
         "msiAfterburnerProfileSet": {
@@ -736,8 +666,8 @@
             "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
           },
           "title": {
-            "set": "Je VRChat groepsrepresentatie is veranderd naar \"{groupName}\"",
-            "clear": "Representatie van VRChat groep \"{groupName}\" is gestopt"
+            "clear": "Representatie van VRChat groep \"{groupName}\" is gestopt",
+            "set": "Je VRChat groepsrepresentatie is veranderd naar \"{groupName}\""
           }
         },
         "windowsPowerPolicySet": {
@@ -1216,10 +1146,6 @@
       "description": "Stuur een notificatie wanneer een speler je wereld betreed",
       "title": "Join Notificaties"
     },
-    "joinSoundVolume": {
-      "description": "Het volume van het geluidseffect dat speelt wanneer een speler je wereld betreed of verlaat.",
-      "title": "Geluids Volume"
-    },
     "joinSounds": {
       "description": "Speel een geluid wanneer een speler je wereld betreed.",
       "title": "Geluid bij betreding"
@@ -1313,12 +1239,7 @@
     "notification": "Vanwege een doorzettende verhoogde hartslag wordt dit gedetecteerd als een mogelijke nachtmerrie.",
     "playSound": {
       "description": "Laat OyasumiVR je wakker proberen te maken met een geluid wanneer je mogelijk een nachtmerrie hebt.",
-      "title": "Speel een geluid",
-      "volume": {
-        "description": "Configureer het volume waarop het geluid wordt gespeeld",
-        "test": "Test",
-        "title": "Geluid volume"
-      }
+      "title": "Speel een geluid"
     },
     "title": "Nachtmerrie Detectie"
   },
