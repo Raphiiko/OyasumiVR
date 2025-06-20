@@ -15,7 +15,6 @@ import {
   map,
   pairwise,
   startWith,
-  tap,
   throttleTime,
 } from 'rxjs';
 import { OpenVRService } from '../openvr.service';
@@ -115,7 +114,7 @@ export class OyasumiVRSteamVRDevicePowerAutomationsService {
       this.eventLog.logEvent({
         type: 'lighthouseSetPowerState',
         reason: 'STEAMVR_STOP',
-        devices: applicableLighthouses.length > 1 ? 'VARIOUS' : 'SINGLE', 
+        devices: applicableLighthouses.length > 1 ? 'VARIOUS' : 'SINGLE',
         state: this.appSettings.settingsSync.lighthousePowerOffState,
       } as EventLogLighthouseSetPowerState);
     }
@@ -135,7 +134,7 @@ export class OyasumiVRSteamVRDevicePowerAutomationsService {
       this.eventLog.logEvent({
         type: 'lighthouseSetPowerState',
         reason: 'STEAMVR_START',
-        devices: applicableLighthouses.length > 1 ? 'VARIOUS' : 'SINGLE', 
+        devices: applicableLighthouses.length > 1 ? 'VARIOUS' : 'SINGLE',
         state: 'on',
       } as EventLogLighthouseSetPowerState);
     }

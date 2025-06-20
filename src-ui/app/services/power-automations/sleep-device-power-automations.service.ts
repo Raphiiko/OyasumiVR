@@ -5,13 +5,12 @@ import { AUTOMATION_CONFIGS_DEFAULT, DevicePowerAutomationsConfig } from '../../
 import { LighthouseConsoleService } from '../lighthouse-console.service';
 import { SleepService } from '../sleep.service';
 import { EventLogService } from '../event-log.service';
-import { error } from '@tauri-apps/plugin-log';
 import { SleepPreparationService } from '../sleep-preparation.service';
 import { DeviceManagerService } from '../device-manager.service';
 import { LighthouseService } from '../lighthouse.service';
 import { AppSettingsService } from '../app-settings.service';
 import { map, skip } from 'rxjs';
-import { DeviceSelection, DMKnownDevice } from 'src-ui/app/models/device-manager';
+import { DeviceSelection } from 'src-ui/app/models/device-manager';
 import { LighthouseDevice } from 'src-ui/app/models/lighthouse-device';
 import { OVRDevice } from 'src-ui/app/models/ovr-device';
 import {

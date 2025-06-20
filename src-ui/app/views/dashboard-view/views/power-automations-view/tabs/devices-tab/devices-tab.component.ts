@@ -1,4 +1,4 @@
-import { Component, DestroyRef } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
@@ -15,7 +15,7 @@ import { LighthouseService, LighthouseStatus } from 'src-ui/app/services/lightho
   styleUrls: ['./devices-tab.component.scss'],
   standalone: false,
 })
-export class DevicesTabComponent {
+export class DevicesTabComponent implements OnInit {
   lighthouseStatus: LighthouseStatus = 'uninitialized';
   lighthousePowerControlDisabled = false;
   devicePowerAutomations: DevicePowerAutomationsConfig = structuredClone(
