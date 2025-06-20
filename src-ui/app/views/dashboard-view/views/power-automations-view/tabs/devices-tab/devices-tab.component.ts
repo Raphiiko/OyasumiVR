@@ -8,12 +8,14 @@ import { DeviceSelection } from 'src-ui/app/models/device-manager';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 import { AutomationConfigService } from 'src-ui/app/services/automation-config.service';
 import { LighthouseService, LighthouseStatus } from 'src-ui/app/services/lighthouse.service';
+import { vshrink } from 'src-ui/app/utils/animations';
 
 @Component({
   selector: 'app-devices-tab',
   templateUrl: './devices-tab.component.html',
   styleUrls: ['./devices-tab.component.scss'],
   standalone: false,
+  animations: [vshrink()],
 })
 export class DevicesTabComponent implements OnInit {
   lighthouseStatus: LighthouseStatus = 'uninitialized';

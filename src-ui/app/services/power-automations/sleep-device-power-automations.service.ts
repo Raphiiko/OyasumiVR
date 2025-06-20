@@ -56,12 +56,12 @@ export class SleepDevicePowerAutomationsService {
   }
 
   private async handleSleepPreparation() {
-    await this.turnOffSelectedDevices(this.config.turnOffDevicesOnSleepPreparation);
     this.eventLog.logEvent({
       type: 'turnedOffOpenVRDevices',
       reason: 'SLEEP_PREPARATION',
       devices: 'VARIOUS',
     } as EventLogTurnedOffOpenVRDevices);
+    await this.turnOffSelectedDevices(this.config.turnOffDevicesOnSleepPreparation);
   }
 
   private async handleSleepModeDisable() {
@@ -89,12 +89,12 @@ export class SleepDevicePowerAutomationsService {
   }
 
   private async handleSleepModeEnable() {
-    await this.turnOffSelectedDevices(this.config.turnOffDevicesOnSleepModeEnable);
     this.eventLog.logEvent({
       type: 'turnedOffOpenVRDevices',
       reason: 'SLEEP_MODE_ENABLED',
       devices: 'VARIOUS',
     } as EventLogTurnedOffOpenVRDevices);
+    await this.turnOffSelectedDevices(this.config.turnOffDevicesOnSleepModeEnable);
   }
 
   private async turnOffSelectedDevices(deviceSelection: DeviceSelection): Promise<{

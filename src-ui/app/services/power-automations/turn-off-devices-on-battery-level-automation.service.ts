@@ -69,8 +69,6 @@ export class TurnOffDevicesOnBatteryLevelAutomationService {
     // Check if the battery level is below the threshold
     if (currentLevel * 100 > this.config.turnOffDevicesBelowBatteryLevel_threshold) return;
     threshold = this.config.turnOffDevicesBelowBatteryLevel_threshold;
-    // Turn off the device
-    await this.lighthouse.turnOffDevices([device]);
     // Log the event
     this.eventLog.logEvent({
       type: 'turnedOffOpenVRDevices',
@@ -91,5 +89,7 @@ export class TurnOffDevicesOnBatteryLevelAutomationService {
         }
       })(),
     } as EventLogTurnedOffOpenVRDevices);
+    // Turn off the device
+    await this.lighthouse.turnOffDevices([device]);
   }
 }

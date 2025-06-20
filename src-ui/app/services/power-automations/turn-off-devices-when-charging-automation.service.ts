@@ -59,7 +59,6 @@ export class TurnOffDevicesWhenChargingAutomationService {
           info(
             `[TurnOffDevicesWhenChargingAutomationService] Detected device being put on charger. Turning off device (${device.class}:${device.serialNumber})`
           );
-          this.lighthouse.turnOffDevices([device]);
           this.eventLog.logEvent({
             type: 'turnedOffOpenVRDevices',
             reason: 'CHARGING',
@@ -78,6 +77,7 @@ export class TurnOffDevicesWhenChargingAutomationService {
               }
             })(),
           } as EventLogTurnedOffOpenVRDevices);
+          this.lighthouse.turnOffDevices([device]);
         } else if (!device.isCharging && this.chargingDevices.includes(device.index)) {
           this.chargingDevices = this.chargingDevices.filter((d) => d !== device.index);
         }

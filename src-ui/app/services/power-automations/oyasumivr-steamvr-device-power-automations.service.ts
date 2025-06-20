@@ -30,6 +30,7 @@ export class OyasumiVRSteamVRDevicePowerAutomationsService {
   config: DevicePowerAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.DEVICE_POWER_AUTOMATIONS
   );
+  seenLighthouseIds = new Set<string>();
 
   constructor(
     private automationConfig: AutomationConfigService,
@@ -80,15 +81,8 @@ export class OyasumiVRSteamVRDevicePowerAutomationsService {
         debounceTime(2000),
         startWith([]),
         // Only get devices for which the state is known
-        filter((devices) => devices.every((d) => d.powerState !== 'unknown')),
-        // Pair the devices to compare
-        pairwise(),
-        // Stop if the automation is disabled
-        filter(() => this.config.enabled),
-        // Get the newly discovered devices
-        map(([oldDevices, newDevices]) =>
-          newDevices.filter((d) => !oldDevices.some((_d) => _d.id === d.id))
-        )
+        map((devices) => devices.filter((d) => d.powerState !== 'unknown')),
+        map((devices) => devices.filter((d) => !this.seenLighthouseIds.has(d.id)))
       )
       .subscribe((newDevices) => {
         newDevices.forEach((device) => this.handleNewLighthouseDevice(device));
@@ -103,6 +97,12 @@ export class OyasumiVRSteamVRDevicePowerAutomationsService {
       (d) => d.powerState === 'on' || d.powerState === 'booting'
     );
     if (applicableLighthouses.length) {
+      this.eventLog.logEvent({
+        type: 'lighthouseSetPowerState',
+        reason: 'STEAMVR_STOP',
+        devices: applicableLighthouses.length > 1 ? 'VARIOUS' : 'SINGLE',
+        state: this.appSettings.settingsSync.lighthousePowerOffState,
+      } as EventLogLighthouseSetPowerState);
       await Promise.all(
         applicableLighthouses.map((lighthouse) =>
           this.lighthouse.setPowerState(
@@ -111,12 +111,6 @@ export class OyasumiVRSteamVRDevicePowerAutomationsService {
           )
         )
       );
-      this.eventLog.logEvent({
-        type: 'lighthouseSetPowerState',
-        reason: 'STEAMVR_STOP',
-        devices: applicableLighthouses.length > 1 ? 'VARIOUS' : 'SINGLE',
-        state: this.appSettings.settingsSync.lighthousePowerOffState,
-      } as EventLogLighthouseSetPowerState);
     }
   }
 
@@ -128,20 +122,21 @@ export class OyasumiVRSteamVRDevicePowerAutomationsService {
       (d) => d.powerState === 'sleep' || d.powerState === 'standby'
     );
     if (applicableLighthouses.length) {
-      await Promise.all(
-        applicableLighthouses.map((lighthouse) => this.lighthouse.setPowerState(lighthouse, 'on'))
-      );
       this.eventLog.logEvent({
         type: 'lighthouseSetPowerState',
         reason: 'STEAMVR_START',
         devices: applicableLighthouses.length > 1 ? 'VARIOUS' : 'SINGLE',
         state: 'on',
       } as EventLogLighthouseSetPowerState);
+      await Promise.all(
+        applicableLighthouses.map((lighthouse) => this.lighthouse.setPowerState(lighthouse, 'on'))
+      );
     }
   }
 
   // This handler turns newly discovered lighthouses on or off based on the SteamVR status, if they are configured to be affected.
   private async handleNewLighthouseDevice(device: LighthouseDevice) {
+    this.seenLighthouseIds.add(device.id);
     let lighthouseStateChanged = false;
 
     // Handle SteamVR status based changesz
@@ -158,13 +153,13 @@ export class OyasumiVRSteamVRDevicePowerAutomationsService {
         (device.powerState === 'sleep' || device.powerState === 'standby');
       if (shouldPowerOn) {
         lighthouseStateChanged = true;
-        await this.lighthouse.setPowerState(device, 'on');
         this.eventLog.logEvent({
           type: 'lighthouseSetPowerState',
           reason: 'STEAMVR_START',
           devices: 'SINGLE',
           state: 'on',
         } as EventLogLighthouseSetPowerState);
+        await this.lighthouse.setPowerState(device, 'on');
       }
     } else {
       const applicableDevices = this.deviceManager.getDevicesForSelection(
@@ -177,36 +172,39 @@ export class OyasumiVRSteamVRDevicePowerAutomationsService {
         isLighthouseApplicable && (device.powerState === 'on' || device.powerState === 'booting');
       if (shouldPowerOff) {
         lighthouseStateChanged = true;
-        await this.lighthouse.setPowerState(
-          device,
-          this.appSettings.settingsSync.lighthousePowerOffState
-        );
         this.eventLog.logEvent({
           type: 'lighthouseSetPowerState',
           reason: 'STEAMVR_STOP',
           devices: 'SINGLE',
           state: this.appSettings.settingsSync.lighthousePowerOffState,
         } as EventLogLighthouseSetPowerState);
+        await this.lighthouse.setPowerState(
+          device,
+          this.appSettings.settingsSync.lighthousePowerOffState
+        );
       }
     }
 
-    if (!lighthouseStateChanged) return;
+    // If the lighthouse state was already changed, we don't need to do anything else.
+    if (lighthouseStateChanged) return;
+
     const applicableDevices = await this.deviceManager.getDevicesForSelection(
       this.config.turnOnDevicesOnOyasumiStart
     );
-    const applicableLighthouses = applicableDevices.lighthouseDevices.filter(
+    const isLighthouseApplicable = applicableDevices.lighthouseDevices.some(
       (d) => d.id === device.id
     );
-    if (applicableLighthouses.length) {
-      await Promise.all(
-        applicableLighthouses.map((lighthouse) => this.lighthouse.setPowerState(lighthouse, 'on'))
-      );
+    const shouldPowerOn =
+      isLighthouseApplicable && (device.powerState === 'sleep' || device.powerState === 'standby');
+    if (shouldPowerOn) {
+      lighthouseStateChanged = true;
       this.eventLog.logEvent({
         type: 'lighthouseSetPowerState',
         reason: 'OYASUMI_START',
         devices: 'SINGLE',
         state: 'on',
       } as EventLogLighthouseSetPowerState);
+      await this.lighthouse.setPowerState(device, 'on');
     }
   }
 }
