@@ -167,17 +167,23 @@ export class DeviceManagerService {
   public async getDevicesForSelection(selection: DeviceSelection): Promise<{
     lighthouseDevices: LighthouseDevice[];
     ovrDevices: OVRDevice[];
+    knownDevices: DMKnownDevice[];
   }> {
     const result: {
       lighthouseDevices: LighthouseDevice[];
       ovrDevices: OVRDevice[];
+      knownDevices: DMKnownDevice[];
     } = {
       lighthouseDevices: [],
       ovrDevices: [],
+      knownDevices: [],
     };
 
     // Device types
     for (const type of selection.types) {
+      result.knownDevices.push(
+        ...this._data.value.knownDevices.filter((d) => d.deviceType === type)
+      );
       switch (type) {
         case 'HMD':
         case 'CONTROLLER':
@@ -215,6 +221,9 @@ export class DeviceManagerService {
     for (const tagId of selection.tagIds) {
       const devices = this._data.value.knownDevices.filter((d) => d.tagIds.includes(tagId));
       for (const device of devices) {
+        if (!result.knownDevices.find((d) => d.id === device.id)) {
+          result.knownDevices.push(device);
+        }
         const ovrDeviceId = this.getOpenVRIdForKnownDevice(device);
         const ovrDevice = openvrDevices.find((d) => d.serialNumber === ovrDeviceId);
         if (ovrDevice && !result.ovrDevices.find((d) => d.serialNumber === ovrDeviceId))
@@ -235,6 +244,9 @@ export class DeviceManagerService {
     for (const deviceId of selection.devices) {
       const device = this.getKnownDeviceById(deviceId);
       if (!device) continue;
+      if (!result.knownDevices.find((d) => d.id === device.id)) {
+        result.knownDevices.push(device);
+      }
       const ovrDeviceId = this.getOpenVRIdForKnownDevice(device);
       const ovrDevice = openvrDevices.find((d) => d.serialNumber === ovrDeviceId);
       if (ovrDevice && !result.ovrDevices.find((d) => d.serialNumber === ovrDeviceId))
@@ -395,15 +407,13 @@ export class DeviceManagerService {
     return `LH_${device.deviceType}_${device.id}`;
   }
 
-  public getOpenVRIdForKnownDevice(device: DMKnownDevice): string {
-    if (!device.id.startsWith('OVR_'))
-      throw Error('Attempted getting OpenVR Device ID for non-OpenVR known device');
+  public getOpenVRIdForKnownDevice(device: DMKnownDevice): string | null {
+    if (!device.id.startsWith('OVR_')) return null;
     return device.id.split('_')[2];
   }
 
-  public getLighthouseIdForKnownDevice(device: DMKnownDevice): string {
-    if (!device.id.startsWith('LH_'))
-      throw Error('Attempted getting Lighthouse Device ID for non-Lighthouse known device');
+  public getLighthouseIdForKnownDevice(device: DMKnownDevice): string | null {
+    if (!device.id.startsWith('LH_')) return null;
     return device.id.split('_')[2];
   }
 

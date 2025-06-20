@@ -38,6 +38,7 @@
           class="device-tag-item"
           *ngFor="let tag of tags; trackBy: trackTagBy"
           [class.selected]="isTagSelected(tag.id)"
+          [class.disabled]="!isTagApplicable(tag.id)"
           (click)="toggleTag(tag.id)"
         >
           <div class="tag-color" [style.background-color]="tag.color"></div>

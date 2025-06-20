@@ -595,68 +595,27 @@
         },
         "lighthouseSetPowerState": {
           "ALL": {
-            "on": {
-              "reasons": {
-                "HOTKEY": "由于你按下了快捷键",
-                "MANUAL": "手动设置",
-                "OYASUMI_START": "由于 OyasumiVR 开启",
-                "STEAMVR_START": "由于 SteamVR 开启",
-                "STEAMVR_STOP": "由于 SteamVR 关闭"
-              },
-              "title": "打开所有的基站"
-            },
-            "sleep": {
-              "reasons": {
-                "HOTKEY": "由于你按下了快捷键",
-                "MANUAL": "手动设置",
-                "OYASUMI_START": "由于 OyasumiVR 开启",
-                "STEAMVR_START": "由于 SteamVR 开启",
-                "STEAMVR_STOP": "由于 SteamVR 关闭"
-              },
-              "title": "将所有基站设置为睡眠模式"
-            },
-            "standby": {
-              "reasons": {
-                "HOTKEY": "由于你按下了快捷键",
-                "MANUAL": "手动设置",
-                "OYASUMI_START": "由于 OyasumiVR 开启",
-                "STEAMVR_START": "由于 SteamVR 开启",
-                "STEAMVR_STOP": "由于 SteamVR 关闭"
-              },
-              "title": "将所有基站设置为待机模式"
-            }
+            "on": "打开所有的基站",
+            "sleep": "将所有基站设置为睡眠模式",
+            "standby": "将所有基站设置为待机模式"
           },
           "SINGLE": {
-            "on": {
-              "reasons": {
-                "HOTKEY": "由于你按下了快捷键",
-                "MANUAL": "手动开启",
-                "OYASUMI_START": "由于 OyasumiVR 开启",
-                "STEAMVR_START": "由于 SteamVR 开启",
-                "STEAMVR_STOP": "由于 SteamVR 关闭"
-              },
-              "title": "打开了一个基站"
-            },
-            "sleep": {
-              "reasons": {
-                "HOTKEY": "由于你按下了快捷键",
-                "MANUAL": "手动设置",
-                "OYASUMI_START": "由于 OyasumiVR 开启",
-                "STEAMVR_START": "由于 SteamVR 开启",
-                "STEAMVR_STOP": "由于 SteamVR 关闭"
-              },
-              "title": "将基站设置为睡眠模式"
-            },
-            "standby": {
-              "reasons": {
-                "HOTKEY": "由于你按下了快捷键",
-                "MANUAL": "手动设置",
-                "OYASUMI_START": "由于 OyasumiVR 开启",
-                "STEAMVR_START": "由于 SteamVR 开启",
-                "STEAMVR_STOP": "由于 SteamVR 关闭"
-              },
-              "title": "将基站设置为待机模式"
-            }
+            "on": "打开了一个基站",
+            "sleep": "将基站设置为睡眠模式",
+            "standby": "将基站设置为待机模式"
+          },
+          "VARIOUS": {
+            "on": "打开多个基站",
+            "sleep": "将多个基站设置为睡眠模式",
+            "standby": "将多个基站设置为待机模式"
+          },
+          "reasons": {
+            "HOTKEY": "由于你按下了快捷键",
+            "MANUAL": "手动设置",
+            "OYASUMI_START": "由于 OyasumiVR 开启",
+            "SLEEP_MODE_DISABLED": "因为已关闭睡眠模式",
+            "STEAMVR_START": "由于 SteamVR 开启",
+            "STEAMVR_STOP": "由于 SteamVR 关闭"
           }
         },
         "msiAfterburnerProfileSet": {
@@ -797,7 +756,9 @@
             "HOTKEY": "因为你按下了快捷键",
             "MANUAL": "手动关闭",
             "OSC_CONTROL": "通过 OSC 关闭",
-            "SLEEP_MODE_ENABLED": "因为已开启睡眠模式"
+            "SLEEP_MODE_DISABLED": "因为已关闭睡眠模式",
+            "SLEEP_MODE_ENABLED": "因为已开启睡眠模式",
+            "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
           },
           "title": {
             "ALL": "关闭全部设备",

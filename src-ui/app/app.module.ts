@@ -97,13 +97,7 @@ import { ImgSmoothLoaderDirective } from './directives/img-smooth-loader.directi
 import { LighthouseService } from './services/lighthouse.service';
 import { ChaperoneAutomationsViewComponent } from './views/dashboard-view/views/chaperone-automations-view/chaperone-automations-view.component';
 import { PowerAutomationsViewComponent } from './views/dashboard-view/views/power-automations-view/power-automations-view.component';
-import { ControllersAndTrackersTabComponent } from './views/dashboard-view/views/power-automations-view/tabs/controllers-and-trackers-tab/controllers-and-trackers-tab.component';
-import { BaseStationsTabComponent } from './views/dashboard-view/views/power-automations-view/tabs/base-stations-tab/base-stations-tab.component';
-import { TurnOffDevicesOnSleepModeEnableAutomationService } from './services/power-automations/turn-off-devices-on-sleep-mode-enable-automation.service';
-import { TurnOffDevicesWhenChargingAutomationService } from './services/power-automations/turn-off-devices-when-charging-automation.service';
-import { TurnOnLighthousesOnOyasumiStartAutomationService } from './services/power-automations/turn-on-lighthouses-on-oyasumi-start-automation.service';
-import { TurnOnLighthousesOnSteamVRStartAutomationService } from './services/power-automations/turn-on-lighthouses-on-steamvr-start-automation.service';
-import { TurnOffLighthousesOnSteamVRStopAutomationService } from './services/power-automations/turn-off-lighthouses-on-steamvr-stop-automation.service';
+import { DevicesTabComponent } from './views/dashboard-view/views/power-automations-view/tabs/devices-tab/devices-tab.component';
 import { ShutdownAutomationsViewComponent } from './views/dashboard-view/views/shutdown-automations-view/shutdown-automations-view.component';
 import { ShutdownAutomationsService } from './services/shutdown-automations.service';
 import { ShutdownSequenceOverlayComponent } from './components/shutdown-sequence-overlay/shutdown-sequence-overlay.component';
@@ -259,6 +253,9 @@ import { DevicePowerButtonComponent } from './components/device-power-button/dev
 import { DeviceManagerDevicesTabComponent } from './views/dashboard-view/views/device-manager-view/tabs/device-manager-devices-tab/device-manager-devices-tab.component';
 import { DeviceManagerTagsTabComponent } from './views/dashboard-view/views/device-manager-view/tabs/device-manager-tags-tab/device-manager-tags-tab.component';
 import { LighthouseForceStatePopoverComponent } from './components/lighthouse-force-state-popover/lighthouse-force-state-popover.component';
+import { OyasumiVRSteamVRDevicePowerAutomationsService } from './services/power-automations/oyasumivr-steamvr-device-power-automations.service';
+import { SleepDevicePowerAutomationsService } from './services/power-automations/sleep-device-power-automations.service';
+import { TurnOffDevicesWhenChargingAutomationService } from './services/power-automations/turn-off-devices-when-charging-automation.service';
 
 [
   localeEN,
@@ -340,8 +337,7 @@ export function createTranslateLoader(http: HttpClient) {
     BaseModalComponent,
     SleepAnimationsViewComponent,
     ImgSmoothLoaderDirective,
-    ControllersAndTrackersTabComponent,
-    BaseStationsTabComponent,
+    DevicesTabComponent,
     ShutdownAutomationsViewComponent,
     ShutdownSequenceOverlayComponent,
     DeveloperDebugModalComponent,
@@ -508,12 +504,11 @@ export class AppModule {
     private sleepModeDisableOnUprightPoseAutomationService: SleepModeDisableOnUprightPoseAutomationService,
     private sleepModeDisableOnPlayerJoinLeaveAutomationService: SleepModeDisableOnPlayerJoinLeaveAutomationService,
     // Power automations
-    private turnOffDevicesOnSleepModeEnableAutomationService: TurnOffDevicesOnSleepModeEnableAutomationService,
-    private turnOffDevicesWhenChargingAutomationService: TurnOffDevicesWhenChargingAutomationService,
+    private oyasumivrSteamvrDevicePowerAutomationsService: OyasumiVRSteamVRDevicePowerAutomationsService,
+    private sleepDevicePowerAutomationsService: SleepDevicePowerAutomationsService,
     private turnOffDevicesOnBatteryLevelAutomationService: TurnOffDevicesOnBatteryLevelAutomationService,
-    private turnOnLighthousesOnOyasumiStartAutomationService: TurnOnLighthousesOnOyasumiStartAutomationService,
-    private turnOnLighthousesOnSteamVRStartAutomationService: TurnOnLighthousesOnSteamVRStartAutomationService,
-    private turnOffLighthousesOnSteamVRStopAutomationService: TurnOffLighthousesOnSteamVRStopAutomationService,
+    private turnOffDevicesWhenChargingAutomationService: TurnOffDevicesWhenChargingAutomationService,
+    private setWindowsPowerPolicyOnSleepModeAutomationService: SetWindowsPowerPolicyOnSleepModeAutomationService,
     // OSC automations
     private oscGeneralAutomationsService: OscGeneralAutomationsService,
     private sleepingAnimationsAutomationService: SleepingAnimationsAutomationService,
@@ -532,8 +527,6 @@ export class AppModule {
     private renderResolutionAutomationService: RenderResolutionAutomationService,
     // Chaperone fade dinstance automations
     private chaperoneFadeDistanceAutomationService: ChaperoneFadeDistanceAutomationService,
-    // Windows power policy automations
-    private setWindowsPowerPolicyOnSleepModeAutomationService: SetWindowsPowerPolicyOnSleepModeAutomationService,
     // Miscellaneous automations
     private frameLimitAutomationsService: FrameLimitAutomationsService,
     private joinNotificationsService: JoinNotificationsService,
@@ -722,28 +715,24 @@ export class AppModule {
             ),
             // Power automations
             this.logInit(
-              'Initializing power automations (#1)',
-              this.turnOffDevicesOnSleepModeEnableAutomationService.init()
+              'Initializing device power automations (SteamVR/OyasumiVR)',
+              this.oyasumivrSteamvrDevicePowerAutomationsService.init()
             ),
             this.logInit(
-              'Initializing power automations (#2)',
-              this.turnOffDevicesWhenChargingAutomationService.init()
+              'Initializing device power automations (sleep)',
+              this.sleepDevicePowerAutomationsService.init()
             ),
             this.logInit(
-              'Initializing power automations (#3)',
+              'Initializing device power automations (battery level)',
               this.turnOffDevicesOnBatteryLevelAutomationService.init()
             ),
             this.logInit(
-              'Initializing power automations (#4)',
-              this.turnOnLighthousesOnOyasumiStartAutomationService.init()
+              'Initializing device power automations (charging)',
+              this.turnOffDevicesWhenChargingAutomationService.init()
             ),
             this.logInit(
-              'Initializing power automations (#5)',
-              this.turnOnLighthousesOnSteamVRStartAutomationService.init()
-            ),
-            this.logInit(
-              'Initializing power automations (#6)',
-              this.turnOffLighthousesOnSteamVRStopAutomationService.init()
+              'Initializing Windows power policy automations',
+              this.setWindowsPowerPolicyOnSleepModeAutomationService.init()
             ),
             // OSC automations
             this.logInit(
@@ -790,11 +779,6 @@ export class AppModule {
             this.logInit(
               'Initializing shutdown automations',
               this.shutdownAutomationsService.init()
-            ),
-            // Windows power policy automations
-            this.logInit(
-              'Initializing Windows power policy automations',
-              this.setWindowsPowerPolicyOnSleepModeAutomationService.init()
             ),
             // Miscellaneous automations
             this.logInit(

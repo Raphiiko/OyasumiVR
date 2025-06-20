@@ -6,6 +6,7 @@ import { AudioDeviceParsedName, AudioDeviceType } from './audio-device';
 import { PersistedAvatar } from './vrchat';
 import { FrameLimiterPresets } from '../services/frame-limiter.service';
 import { getBuiltInNotificationSound, NotificationSound } from './notification-sounds';
+import { DeviceSelection } from './device-manager';
 
 export type AutomationType =
   | 'GPU_POWER_LIMITS'
@@ -21,12 +22,7 @@ export type AutomationType =
   | 'SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON'
   | 'SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE'
   | 'SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE'
-  | 'TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE'
-  | 'TURN_OFF_DEVICES_WHEN_CHARGING'
-  | 'TURN_OFF_DEVICES_ON_BATTERY_LEVEL'
-  | 'TURN_ON_LIGHTHOUSES_ON_OYASUMI_START'
-  | 'TURN_ON_LIGHTHOUSES_ON_STEAMVR_START'
-  | 'TURN_OFF_LIGHTHOUSES_ON_STEAMVR_STOP'
+  | 'DEVICE_POWER_AUTOMATIONS'
   | 'OSC_GENERAL'
   | 'SLEEPING_ANIMATIONS'
   | 'VRCHAT_MIC_MUTE_AUTOMATIONS'
@@ -69,12 +65,7 @@ export interface AutomationConfigs {
   NIGHTMARE_DETECTION: NightmareDetectionAutomationsConfig;
 
   // DEVICE MANAGEMENT
-  TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE: TurnOffDevicesOnSleepModeEnableAutomationConfig;
-  TURN_OFF_DEVICES_WHEN_CHARGING: TurnOffDevicesWhenChargingAutomationConfig;
-  TURN_OFF_DEVICES_ON_BATTERY_LEVEL: TurnOffDevicesOnBatteryLevelAutomationConfig;
-  TURN_ON_LIGHTHOUSES_ON_OYASUMI_START: TurnOnLighthousesOnOyasumiStartAutomationConfig;
-  TURN_ON_LIGHTHOUSES_ON_STEAMVR_START: TurnOnLighthousesOnSteamVRStartAutomationConfig;
-  TURN_OFF_LIGHTHOUSES_ON_STEAMVR_STOP: TurnOffLighthousesOnSteamVRStopAutomationConfig;
+  DEVICE_POWER_AUTOMATIONS: DevicePowerAutomationsConfig;
 
   // DISPLAY & VISUAL
   BRIGHTNESS_AUTOMATIONS: BrightnessAutomationsConfig;
@@ -254,28 +245,19 @@ export interface SleepModeDisableOnPlayerJoinOrLeaveAutomationConfig extends Aut
 }
 
 // DEVICE POWER AUTOMATIONS
-export interface TurnOffDevicesOnSleepModeEnableAutomationConfig extends AutomationConfig {
-  deviceClasses: OVRDeviceClass[];
+export interface DevicePowerAutomationsConfig extends AutomationConfig {
+  turnOffDevicesOnSleepModeEnable: DeviceSelection;
+  turnOffDevicesOnSleepModeDisable: DeviceSelection;
+  turnOffDevicesOnSleepPreparation: DeviceSelection;
+  turnOffDevicesWhenCharging: DeviceSelection;
+  turnOffDevicesBelowBatteryLevel: DeviceSelection;
+  turnOffDevicesBelowBatteryLevel_threshold: number;
+  turnOffDevicesBelowBatteryLevel_onlyWhileAsleep: boolean;
+  turnOffDevicesOnSteamVRStop: DeviceSelection;
+  turnOnDevicesOnSteamVRStart: DeviceSelection;
+  turnOnDevicesOnOyasumiStart: DeviceSelection;
+  turnOnDevicesOnSleepModeDisable: DeviceSelection;
 }
-
-export interface TurnOffDevicesWhenChargingAutomationConfig extends AutomationConfig {
-  deviceClasses: OVRDeviceClass[];
-}
-
-export interface TurnOffDevicesOnBatteryLevelAutomationConfig extends AutomationConfig {
-  turnOffControllers: boolean;
-  turnOffControllersAtLevel: number;
-  turnOffControllersOnlyDuringSleepMode: boolean;
-  turnOffTrackers: boolean;
-  turnOffTrackersAtLevel: number;
-  turnOffTrackersOnlyDuringSleepMode: boolean;
-}
-
-export interface TurnOnLighthousesOnOyasumiStartAutomationConfig extends AutomationConfig {}
-
-export interface TurnOnLighthousesOnSteamVRStartAutomationConfig extends AutomationConfig {}
-
-export interface TurnOffLighthousesOnSteamVRStopAutomationConfig extends AutomationConfig {}
 
 // OSC AUTOMATIONS
 export interface OscGeneralAutomationConfig extends AutomationConfig {
@@ -610,33 +592,56 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   },
 
   // DEVICE MANAGEMENT
-  TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE: {
+  DEVICE_POWER_AUTOMATIONS: {
     enabled: true,
-    deviceClasses: [],
+    turnOffDevicesOnSleepModeEnable: {
+      devices: [],
+      types: [],
+      tagIds: [],
+    },
+    turnOffDevicesOnSleepModeDisable: {
+      devices: [],
+      types: [],
+      tagIds: [],
+    },
+    turnOffDevicesOnSleepPreparation: {
+      devices: [],
+      types: [],
+      tagIds: [],
+    },
+    turnOffDevicesWhenCharging: {
+      devices: [],
+      types: [],
+      tagIds: [],
+    },
+    turnOffDevicesBelowBatteryLevel: {
+      devices: [],
+      types: [],
+      tagIds: [],
+    },
+    turnOffDevicesBelowBatteryLevel_threshold: 50,
+    turnOffDevicesBelowBatteryLevel_onlyWhileAsleep: false,
+    turnOffDevicesOnSteamVRStop: {
+      devices: [],
+      types: [],
+      tagIds: [],
+    },
+    turnOnDevicesOnSteamVRStart: {
+      devices: [],
+      types: [],
+      tagIds: [],
+    },
+    turnOnDevicesOnOyasumiStart: {
+      devices: [],
+      types: [],
+      tagIds: [],
+    },
+    turnOnDevicesOnSleepModeDisable: {
+      devices: [],
+      types: [],
+      tagIds: [],
+    },
   },
-  TURN_OFF_DEVICES_WHEN_CHARGING: {
-    enabled: true,
-    deviceClasses: [],
-  },
-  TURN_OFF_DEVICES_ON_BATTERY_LEVEL: {
-    enabled: true,
-    turnOffControllers: false,
-    turnOffControllersAtLevel: 50,
-    turnOffControllersOnlyDuringSleepMode: false,
-    turnOffTrackers: false,
-    turnOffTrackersAtLevel: 50,
-    turnOffTrackersOnlyDuringSleepMode: false,
-  },
-  TURN_ON_LIGHTHOUSES_ON_OYASUMI_START: {
-    enabled: false,
-  },
-  TURN_ON_LIGHTHOUSES_ON_STEAMVR_START: {
-    enabled: false,
-  },
-  TURN_OFF_LIGHTHOUSES_ON_STEAMVR_STOP: {
-    enabled: false,
-  },
-
   // DISPLAY & VISUAL
   BRIGHTNESS_AUTOMATIONS: {
     enabled: true,

@@ -1,19 +1,8 @@
 <div class="pane">
   <div class="pane-title" translate>power-automations.title</div>
   <div class="tab-bar">
-    <div
-      class="tab"
-      [class.active]="activeTab === 'CONTROLLERS_AND_TRACKERS'"
-      (click)="activeTab = 'CONTROLLERS_AND_TRACKERS'"
-    >
-      <div class="tab-label" translate>power-automations.tabs.controllersAndTrackers</div>
-    </div>
-    <div
-      class="tab"
-      [class.active]="activeTab === 'BASE_STATIONS'"
-      (click)="activeTab = 'BASE_STATIONS'"
-    >
-      <div class="tab-label" translate>power-automations.tabs.baseStations</div>
+    <div class="tab" [class.active]="activeTab === 'DEVICES'" (click)="activeTab = 'DEVICES'">
+      <div class="tab-label">Devices</div>
     </div>
     <div
       class="tab"
@@ -25,10 +14,7 @@
   </div>
   <div class="pane-content">
     <div class="setting-view-container">
-      <app-controllers-and-trackers-tab
-        *ngIf="activeTab === 'CONTROLLERS_AND_TRACKERS'"
-      ></app-controllers-and-trackers-tab>
-      <app-base-stations-tab *ngIf="activeTab === 'BASE_STATIONS'"></app-base-stations-tab>
+      <app-devices-tab *ngIf="activeTab === 'DEVICES'"></app-devices-tab>
       <app-windows-power-policy-tab
         *ngIf="activeTab === 'WINDOWS_POWER_POLICY'"
       ></app-windows-power-policy-tab>

@@ -11,18 +11,13 @@ export class EventLogLighthouseSetPowerStateEntryParser extends EventLogEntryPar
       'comp.event-log-entry.type.lighthouseSetPowerState.' +
       entry.devices +
       '.' +
-      entry.state +
-      '.title'
+      entry.state
     );
   }
 
   override headerInfoSubTitle(entry: EventLogLighthouseSetPowerState): string {
     return (
-      'comp.event-log-entry.type.lighthouseSetPowerState.' +
-      entry.devices +
-      '.' +
-      entry.state +
-      '.reasons.' +
+      'comp.event-log-entry.type.lighthouseSetPowerState.reasons.' +
       entry.reason
     );
   }

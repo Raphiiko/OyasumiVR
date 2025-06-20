@@ -134,6 +134,9 @@ export class DeviceSelectorModalComponent
         });
       }
     }
+
+    // Auto-deselect tags that are no longer applicable
+    this.autoDeselectInapplicableTags();
   }
 
   // Device type selection methods
@@ -169,6 +172,11 @@ export class DeviceSelectorModalComponent
   }
 
   toggleTag(tagId: string) {
+    // Don't allow selection of inapplicable tags
+    if (!this.isTagApplicable(tagId)) {
+      return;
+    }
+
     const tagIds = this.result!.selection.tagIds;
     const index = tagIds.indexOf(tagId);
     if (index >= 0) {
@@ -302,5 +310,27 @@ export class DeviceSelectorModalComponent
   async confirm() {
     this.result!.save = true;
     await this.close();
+  }
+
+  isTagApplicable(tagId: string): boolean {
+    // A tag is applicable if at least one known device with allowed type has this tag
+    return this.knownDevices.some(
+      (device) =>
+        this.filteredDeviceTypes.includes(device.deviceType) && device.tagIds.includes(tagId)
+    );
+  }
+
+  private autoDeselectInapplicableTags() {
+    // Auto-deselect tags that are no longer applicable
+    const inapplicableSelectedTags = this.result!.selection.tagIds.filter(
+      (tagId) => !this.isTagApplicable(tagId)
+    );
+    
+    for (const tagId of inapplicableSelectedTags) {
+      const index = this.result!.selection.tagIds.indexOf(tagId);
+      if (index >= 0) {
+        this.result!.selection.tagIds.splice(index, 1);
+      }
+    }
   }
 }

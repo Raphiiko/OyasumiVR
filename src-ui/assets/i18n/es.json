@@ -505,68 +505,27 @@
         },
         "lighthouseSetPowerState": {
           "ALL": {
-            "on": {
-              "reasons": {
-                "HOTKEY": "Como se presionó una tecla de acceso rápido",
-                "MANUAL": "Encendido manual",
-                "OYASUMI_START": "Cuando OyasumiVR comenzó",
-                "STEAMVR_START": "Cuando SteamVR comenzó",
-                "STEAMVR_STOP": "Cuando SteamVR se detuvo"
-              },
-              "title": "Encendido de todas las estaciones base"
-            },
-            "sleep": {
-              "reasons": {
-                "HOTKEY": "Como se presionó una tecla de acceso rápido",
-                "MANUAL": "Ajustar manualmente",
-                "OYASUMI_START": "Cuando OyasumiVR comenzó",
-                "STEAMVR_START": "Cuando SteamVR comenzó",
-                "STEAMVR_STOP": "Cuando SteamVR comenzó"
-              },
-              "title": "Poner todas las estaciones base en modo reposo"
-            },
-            "standby": {
-              "reasons": {
-                "HOTKEY": "Como se presionó una tecla de acceso rápido",
-                "MANUAL": "Ajustar manualmente",
-                "OYASUMI_START": "Cuando OyasumiVR comenzó",
-                "STEAMVR_START": "Cuando SteamVR comenzó",
-                "STEAMVR_STOP": "Cuando SteamVR comenzó"
-              },
-              "title": "Poner todas las estaciones base en modo de espera"
-            }
+            "on": "Encendido de todas las estaciones base",
+            "sleep": "Poner todas las estaciones base en modo reposo",
+            "standby": "Poner todas las estaciones base en modo de espera"
           },
           "SINGLE": {
-            "on": {
-              "reasons": {
-                "HOTKEY": "Como se presionó una tecla de acceso rápido",
-                "MANUAL": "Encendido manual",
-                "OYASUMI_START": "Cuando OyasumiVR comenzó",
-                "STEAMVR_START": "Cuando SteamVR empezó",
-                "STEAMVR_STOP": "Cuando SteamVR se detuvo"
-              },
-              "title": "Encendido de una estación base"
-            },
-            "sleep": {
-              "reasons": {
-                "HOTKEY": "Como se presionó una tecla de acceso rápido",
-                "MANUAL": "Ajustar manualmente",
-                "OYASUMI_START": "Cuando OyasumiVR comenzó",
-                "STEAMVR_START": "Cuando empezó SteamVR",
-                "STEAMVR_STOP": "Cuando SteamVR se detuvo"
-              },
-              "title": "Poner una estación base en modo reposo"
-            },
-            "standby": {
-              "reasons": {
-                "HOTKEY": "Como se presionó una tecla de acceso rápido",
-                "MANUAL": "Ajustar manualmente",
-                "OYASUMI_START": "Cuando OyasumiVR comenzó",
-                "STEAMVR_START": "Cuando SteamVR comenzó",
-                "STEAMVR_STOP": "Cuando SteamVR se detuvo"
-              },
-              "title": "Poner una estación base en modo de espera"
-            }
+            "on": "Encendido de una estación base",
+            "sleep": "Poner una estación base en modo reposo",
+            "standby": "Poner una estación base en modo de espera"
+          },
+          "VARIOUS": {
+            "on": "Encendido de varias estaciones base",
+            "sleep": "Poner varias estaciones base en modo reposo",
+            "standby": "Poner varias estaciones base en modo de espera"
+          },
+          "reasons": {
+            "HOTKEY": "Como se presionó una tecla de acceso rápido",
+            "MANUAL": "Encendido manual",
+            "OYASUMI_START": "Cuando OyasumiVR comenzó",
+            "SLEEP_MODE_DISABLED": "Cuando el modo sueño estaba desactivado",
+            "STEAMVR_START": "Cuando SteamVR comenzó",
+            "STEAMVR_STOP": "Cuando SteamVR se detuvo"
           }
         },
         "msiAfterburnerProfileSet": {
@@ -697,7 +656,9 @@
             "HOTKEY": "Como se presionó una tecla de acceso rápido",
             "MANUAL": "Apagado manual",
             "OSC_CONTROL": "Apagado sobre OSC",
-            "SLEEP_MODE_ENABLED": "Cuando el modo de suspensión estaba activado"
+            "SLEEP_MODE_DISABLED": "Cuando el modo sueño estaba desactivado",
+            "SLEEP_MODE_ENABLED": "Cuando el modo de suspensión estaba activado",
+            "SLEEP_PREPARATION": "Mientras te preparabas para dormir"
           },
           "title": {
             "ALL": "Apagado todos los dispositivos",

@@ -1,0 +1,180 @@
+<div
+  class="alert warning"
+  @vshrink
+  *ngIf="
+    !lighthousePowerControlDisabled &&
+    (lighthouseStatus === 'noAdapter' || lighthouseStatus === 'adapterError')
+  "
+>
+  <div class="alert-bg"></div>
+  <div class="alert-icon">
+    <i class="material-icons"> warning </i>
+  </div>
+  <div class="alert-content">
+    <span>{{ 'power-automations.error.' + lighthouseStatus | translate }}</span>
+  </div>
+</div>
+
+<div class="alert info" *ngIf="!lighthousePowerControlDisabled" @vshrink>
+  <div class="alert-bg"></div>
+  <div class="alert-icon">
+    <i class="material-icons"> info </i>
+  </div>
+  <div class="alert-content">
+    <span>{{ 'power-automations.powerManagementWarning' | translate }}</span>
+  </div>
+</div>
+
+<div class="setting-category">
+  <h2>Turn off devices</h2>
+  <p
+    >You can have OyasumiVR turn off your controllers, trackers, or even your base stations on
+    certain events. For example, turn off your trackers when you fall asleep, so they still have
+    some battery when you wake up!</p
+  >
+
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label">
+        <span>When I go to sleep</span>
+        <span></span>
+      </div>
+      <div class="setting-row-action">
+        <app-device-selector
+          [allowedDeviceTypes]="['CONTROLLER', 'TRACKER', 'LIGHTHOUSE']"
+          [selection]="devicePowerAutomations.turnOffDevicesOnSleepModeEnable"
+          (selectionChange)="updateDeviceSelection('turnOffDevicesOnSleepModeEnable', $event)"
+        ></app-device-selector>
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-row-label">
+        <span>When I wake up</span>
+        <span></span>
+      </div>
+      <div class="setting-row-action">
+        <app-device-selector
+          [allowedDeviceTypes]="['CONTROLLER', 'TRACKER', 'LIGHTHOUSE']"
+          [selection]="devicePowerAutomations.turnOffDevicesOnSleepModeDisable"
+          (selectionChange)="updateDeviceSelection('turnOffDevicesOnSleepModeDisable', $event)"
+        ></app-device-selector>
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-row-label">
+        <span>When I prepare to go to sleep</span>
+        <span></span>
+      </div>
+      <div class="setting-row-action">
+        <app-device-selector
+          [allowedDeviceTypes]="['CONTROLLER', 'TRACKER', 'LIGHTHOUSE']"
+          [selection]="devicePowerAutomations.turnOffDevicesOnSleepPreparation"
+          (selectionChange)="updateDeviceSelection('turnOffDevicesOnSleepPreparation', $event)"
+        ></app-device-selector>
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-row-label">
+        <span>When the device is charging</span>
+        <span></span>
+      </div>
+      <div class="setting-row-action">
+        <app-device-selector
+          [allowedDeviceTypes]="['CONTROLLER', 'TRACKER']"
+          [selection]="devicePowerAutomations.turnOffDevicesWhenCharging"
+          (selectionChange)="updateDeviceSelection('turnOffDevicesWhenCharging', $event)"
+        ></app-device-selector>
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-row-label">
+        <span>When SteamVR stops</span>
+        <span></span>
+      </div>
+      <div class="setting-row-action">
+        <app-device-selector
+          [allowedDeviceTypes]="['CONTROLLER', 'TRACKER', 'LIGHTHOUSE']"
+          [selection]="devicePowerAutomations.turnOffDevicesOnSteamVRStop"
+          (selectionChange)="updateDeviceSelection('turnOffDevicesOnSteamVRStop', $event)"
+        ></app-device-selector>
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-row-label">
+        <span>When the device's battery level drops below</span>
+        <span></span>
+      </div>
+      <div class="setting-row-action">
+        <app-slider-setting
+          class="slider-battery-level"
+          unit="%"
+          [min]="5"
+          [max]="99"
+          [snapValues]="[25, 50, 75]"
+          [snapDistance]="4"
+          [value]="devicePowerAutomations.turnOffDevicesBelowBatteryLevel_threshold"
+          (valueChange)="updateBatteryLevelAutomationThreshold($event)"
+        ></app-slider-setting>
+        <app-device-selector
+          [allowedDeviceTypes]="['CONTROLLER', 'TRACKER', 'LIGHTHOUSE']"
+          [selection]="devicePowerAutomations.turnOffDevicesBelowBatteryLevel"
+          (selectionChange)="updateDeviceSelection('turnOffDevicesBelowBatteryLevel', $event)"
+        ></app-device-selector>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="setting-category">
+  <h2>Turn on base stations</h2>
+  <p>Base stations can be turned on from sleep or standby mode.</p>
+
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label">
+        <span>When I wake up</span>
+        <span></span>
+      </div>
+      <div class="setting-row-action">
+        <app-device-selector
+          [allowedDeviceTypes]="['LIGHTHOUSE']"
+          [selection]="devicePowerAutomations.turnOnDevicesOnSleepModeDisable"
+          (selectionChange)="updateDeviceSelection('turnOnDevicesOnSleepModeDisable', $event)"
+        ></app-device-selector>
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-row-label">
+        <span>When OyasumiVR starts</span>
+        <span></span>
+      </div>
+      <div class="setting-row-action">
+        <app-device-selector
+          [allowedDeviceTypes]="['LIGHTHOUSE']"
+          [selection]="devicePowerAutomations.turnOnDevicesOnOyasumiStart"
+          (selectionChange)="updateDeviceSelection('turnOnDevicesOnOyasumiStart', $event)"
+        ></app-device-selector>
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-row-label">
+        <span>When SteamVR starts</span>
+        <span></span>
+      </div>
+      <div class="setting-row-action">
+        <app-device-selector
+          [allowedDeviceTypes]="['LIGHTHOUSE']"
+          [selection]="devicePowerAutomations.turnOnDevicesOnSteamVRStart"
+          (selectionChange)="updateDeviceSelection('turnOnDevicesOnSteamVRStart', $event)"
+        ></app-device-selector>
+      </div>
+    </div>
+  </div>
+</div>

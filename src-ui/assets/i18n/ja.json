@@ -505,68 +505,27 @@
         },
         "lighthouseSetPowerState": {
           "ALL": {
-            "on": {
-              "reasons": {
-                "HOTKEY": "ショートカットキーが押下されたため",
-                "MANUAL": "手動でオンにした",
-                "OYASUMI_START": "OyasumiVRの起動に合わせて",
-                "STEAMVR_START": "SteamVRの起動に合わせて",
-                "STEAMVR_STOP": "SteamVRが停止したため"
-              },
-              "title": "すべてのベースステーションをオンにする"
-            },
-            "sleep": {
-              "reasons": {
-                "HOTKEY": "ショートカットキーが押されたため",
-                "MANUAL": "手動で設定した",
-                "OYASUMI_START": "OyasumiVRの起動に合わせて",
-                "STEAMVR_START": "SteamVRの起動に合わせて",
-                "STEAMVR_STOP": "SteamVRが停止したため"
-              },
-              "title": "すべてのベースステーションをスリープモードにする"
-            },
-            "standby": {
-              "reasons": {
-                "HOTKEY": "ショートカットキーが押されたため",
-                "MANUAL": "手動で設定した",
-                "OYASUMI_START": "OyasumiVRの起動に合わせて",
-                "STEAMVR_START": "SteamVRの起動に合わせて",
-                "STEAMVR_STOP": "SteamVRが停止したため"
-              },
-              "title": "すべてのベースステーションをスタンバイモードにする"
-            }
+            "on": "すべてのベースステーションをオンにする",
+            "sleep": "すべてのベースステーションをスリープモードにする",
+            "standby": "すべてのベースステーションをスタンバイモードにする"
           },
           "SINGLE": {
-            "on": {
-              "reasons": {
-                "HOTKEY": "ショートカットキーが押されたため",
-                "MANUAL": "手動でオンにした",
-                "OYASUMI_START": "OyasumiVRの起動に合わせて",
-                "STEAMVR_START": "SteamVRの起動に合わせて",
-                "STEAMVR_STOP": "SteamVRが停止したため"
-              },
-              "title": "ベースステーションの電源を入れた"
-            },
-            "sleep": {
-              "reasons": {
-                "HOTKEY": "ショートカットキーが押されたため",
-                "MANUAL": "手動で設定した",
-                "OYASUMI_START": "OyasumiVRの起動に合わせて",
-                "STEAMVR_START": "SteamVRの起動に合わせて",
-                "STEAMVR_STOP": "SteamVRが停止したため"
-              },
-              "title": "ベースステーションをスリープモードにする"
-            },
-            "standby": {
-              "reasons": {
-                "HOTKEY": "ショートカットキーが押されたため",
-                "MANUAL": "手動で設定した",
-                "OYASUMI_START": "OyasumiVRの起動に合わせて",
-                "STEAMVR_START": "SteamVRの起動に合わせて",
-                "STEAMVR_STOP": "SteamVRが停止したため"
-              },
-              "title": "ベースステーションをスタンバイモードにする"
-            }
+            "on": "ベースステーションの電源を入れた",
+            "sleep": "ベースステーションをスリープモードにする",
+            "standby": "ベースステーションをスタンバイモードにする"
+          },
+          "VARIOUS": {
+            "on": "複数のベースステーションの電源を入れた",
+            "sleep": "複数のベースステーションをスリープモードにする",
+            "standby": "複数のベースステーションをスタンバイモードにする"
+          },
+          "reasons": {
+            "HOTKEY": "ショートカットキーが押下されたため",
+            "MANUAL": "手動でオンにした",
+            "OYASUMI_START": "OyasumiVRの起動に合わせて",
+            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
+            "STEAMVR_START": "SteamVRの起動に合わせて",
+            "STEAMVR_STOP": "SteamVRが停止したため"
           }
         },
         "msiAfterburnerProfileSet": {
@@ -697,7 +656,9 @@
             "HOTKEY": "ショートカットキーが押されたため",
             "MANUAL": "手動でオフにした",
             "OSC_CONTROL": "OSCによってオフになった",
-            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった"
+            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
+            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
+            "SLEEP_PREPARATION": "就寝準備をした"
           },
           "title": {
             "ALL": "全ての機器の電源をオフ",

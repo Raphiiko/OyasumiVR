@@ -227,66 +227,6 @@
             "SLEEP_PREPARATION": "Saat Anda bersiap untuk tidur"
           }
         },
-        "lighthouseSetPowerState": {
-          "ALL": {
-            "on": {
-              "reasons": {
-                "MANUAL": "Dinyalakan manual",
-                "OYASUMI_START": "Disaat OyasumiVR dimulai",
-                "STEAMVR_START": "Disaat SteamVR Menyala",
-                "STEAMVR_STOP": "Disaat SteamVR Dimatikan"
-              },
-              "title": "Nyalakan semua base station"
-            },
-            "sleep": {
-              "reasons": {
-                "MANUAL": "Dinyalakan manual",
-                "OYASUMI_START": "Disaat OyasumiVR dimulai",
-                "STEAMVR_START": "Disaat SteamVR Menyala",
-                "STEAMVR_STOP": "Disaat SteamVR Dimatikan"
-              },
-              "title": "Atur semua base station ke mode tidur"
-            },
-            "standby": {
-              "reasons": {
-                "MANUAL": "Dinyalakan manual",
-                "OYASUMI_START": "Disaat OyasumiVR dimulai",
-                "STEAMVR_START": "Disaat SteamVR Menyala",
-                "STEAMVR_STOP": "Disaat SteamVR Dimatikan"
-              },
-              "title": "Atur semua base station ke mode siaga"
-            }
-          },
-          "SINGLE": {
-            "on": {
-              "reasons": {
-                "MANUAL": "Dinyalakan manual",
-                "OYASUMI_START": "Disaat OyasumiVR dimulai",
-                "STEAMVR_START": "Disaat SteamVR Menyala",
-                "STEAMVR_STOP": "Disaat SteamVR Dimatikan"
-              },
-              "title": "Menyalakan Base Station"
-            },
-            "sleep": {
-              "reasons": {
-                "MANUAL": "Dinyalakan manual",
-                "OYASUMI_START": "Disaat OyasumiVR dimulai",
-                "STEAMVR_START": "Disaat SteamVR Menyala",
-                "STEAMVR_STOP": "Disaat SteamVR Dimatikan"
-              },
-              "title": "Mengatur base station ke mode tidur"
-            },
-            "standby": {
-              "reasons": {
-                "MANUAL": "Dinyalakan manual",
-                "OYASUMI_START": "Disaat OyasumiVR dimulai",
-                "STEAMVR_START": "Disaat SteamVR Menyala",
-                "STEAMVR_STOP": "Disaat SteamVR Dimatikan"
-              },
-              "title": "Mengatur semua base station ke mode siaga"
-            }
-          }
-        },
         "msiAfterburnerProfileSet": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Saat mode tidur dimatikan",

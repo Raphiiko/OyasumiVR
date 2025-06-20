@@ -457,6 +457,10 @@
       "title": "Devices",
       "turnOffAll": "ALL"
     },
+    "device-selector": {
+      "noSelection": "Select Devices",
+      "withDevices": "{count, plural, one {1 Device} other {# Devices}}"
+    },
     "event-log-entry": {
       "type": {
         "acceptedInviteRequest": {
@@ -595,68 +599,27 @@
         },
         "lighthouseSetPowerState": {
           "ALL": {
-            "on": {
-              "reasons": {
-                "HOTKEY": "As a hotkey was pressed",
-                "MANUAL": "Turned on manually",
-                "OYASUMI_START": "As OyasumiVR started",
-                "STEAMVR_START": "As SteamVR started",
-                "STEAMVR_STOP": "As SteamVR stopped"
-              },
-              "title": "Turned on all base stations"
-            },
-            "sleep": {
-              "reasons": {
-                "HOTKEY": "As a hotkey was pressed",
-                "MANUAL": "Set manually",
-                "OYASUMI_START": "As OyasumiVR started",
-                "STEAMVR_START": "As SteamVR started",
-                "STEAMVR_STOP": "As SteamVR stopped"
-              },
-              "title": "Set all base stations to sleep mode"
-            },
-            "standby": {
-              "reasons": {
-                "HOTKEY": "As a hotkey was pressed",
-                "MANUAL": "Set manually",
-                "OYASUMI_START": "As OyasumiVR started",
-                "STEAMVR_START": "As SteamVR started",
-                "STEAMVR_STOP": "As SteamVR stopped"
-              },
-              "title": "Set all base stations to standby mode"
-            }
+            "on": "Turned on all base stations",
+            "sleep": "Set all base stations to sleep mode",
+            "standby": "Set all base stations to standby mode"
           },
           "SINGLE": {
-            "on": {
-              "reasons": {
-                "HOTKEY": "As a hotkey was pressed",
-                "MANUAL": "Turned on manually",
-                "OYASUMI_START": "As OyasumiVR started",
-                "STEAMVR_START": "As SteamVR started",
-                "STEAMVR_STOP": "As SteamVR stopped"
-              },
-              "title": "Turned on a base station"
-            },
-            "sleep": {
-              "reasons": {
-                "HOTKEY": "As a hotkey was pressed",
-                "MANUAL": "Set manually",
-                "OYASUMI_START": "As OyasumiVR started",
-                "STEAMVR_START": "As SteamVR started",
-                "STEAMVR_STOP": "As SteamVR stopped"
-              },
-              "title": "Set a base station to sleep mode"
-            },
-            "standby": {
-              "reasons": {
-                "HOTKEY": "As a hotkey was pressed",
-                "MANUAL": "Set manually",
-                "OYASUMI_START": "As OyasumiVR started",
-                "STEAMVR_START": "As SteamVR started",
-                "STEAMVR_STOP": "As SteamVR stopped"
-              },
-              "title": "Set a base station to standby mode"
-            }
+            "on": "Turned on a base station",
+            "sleep": "Set a base station to sleep mode",
+            "standby": "Set a base station to standby mode"
+          },
+          "VARIOUS": {
+            "on": "Turned on various base stations",
+            "sleep": "Set various base stations to sleep mode",
+            "standby": "Set various base stations to standby mode"
+          },
+          "reasons": {
+            "HOTKEY": "As a hotkey was pressed",
+            "MANUAL": "Turned on manually",
+            "OYASUMI_START": "As OyasumiVR started",
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "STEAMVR_START": "As SteamVR started",
+            "STEAMVR_STOP": "As SteamVR stopped"
           }
         },
         "msiAfterburnerProfileSet": {
@@ -797,7 +760,9 @@
             "HOTKEY": "As a hotkey was pressed",
             "MANUAL": "Turned off manually",
             "OSC_CONTROL": "Turned off over OSC",
-            "SLEEP_MODE_ENABLED": "As sleep mode was enabled"
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
           "title": {
             "ALL": "Turned off all devices",
