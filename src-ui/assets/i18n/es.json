@@ -1434,52 +1434,6 @@
     }
   },
   "power-automations": {
-    "devicePowerOff": {
-      "onBatteryLevel": {
-        "controllers": {
-          "description": "Cuando el nivel de batería es inferior a",
-          "onlyDuringSleepMode": {
-            "description": "Sólo apague los controladores de esta manera mientras el modo de dormir está activado",
-            "title": "Sólo mientras el modo dormir está activado"
-          },
-          "powerOffConflict": {
-            "action": "Detección de dormir",
-            "description": "Como ha configurado el modo de dormir para que se active cuando todos los controladores estén apagados, encender esta automatización puede hacer que active involuntariamente el modo de dormir. Otras automatizaciones podrían responder a esto, lo que podría no ser lo que usted desea. Puede desactivar este comportamiento en los ajustes de Detección de dormir.",
-            "title": "Atención: Esto podría desencadenar otra automatización!"
-          },
-          "title": "Apagar un controlador"
-        },
-        "description": "Haz que los dispositivos se apaguen cuando su nivel de batería descienda por debajo de un determinado porcentaje.",
-        "title": "Nivel de batería",
-        "trackers": {
-          "description": "Cuando el nivel de batería es inferior a",
-          "onlyDuringSleepMode": {
-            "description": "Sólo apaga los rastreadores de esta manera mientras el modo de dormir está activado",
-            "title": "Sólo mientras el modo dormir está activado"
-          },
-          "title": "Apagar un tracker"
-        }
-      },
-      "onCharge": {
-        "description": "Haz que los dispositivos se apaguen automáticamente al ponerlos en el cargador.",
-        "optionControllers": {
-          "description": "Cuando se está cargando",
-          "title": "Apagar un mando"
-        },
-        "optionTrackers": {
-          "description": "Cuando se está cargando",
-          "title": "Apagar un tracker"
-        },
-        "title": "Cuando se cargan"
-      },
-      "onSleepModeEnable": {
-        "description": "Apaga los dispositivos cuando el modo sueño esté activado.",
-        "hint": "Puede configurar cuándo se activa el modo de suspensión en <a class=\"sleepDetectionLink\">Detección del sueño</a>.",
-        "optionControllers": "Apagar todos los controladores",
-        "optionTrackers": "Apagar todos los rastreadores",
-        "title": "Cuando me voy a dormir"
-      }
-    },
     "enableLighthouseControl": "Habilitar",
     "error": {
       "adapterError": "Se ha producido un error al intentar comunicarse con el adaptador Bluetooth. Asegúrese de que el adaptador Bluetooth está activado e inténtelo de nuevo.",

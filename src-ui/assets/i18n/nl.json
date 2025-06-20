@@ -1427,52 +1427,6 @@
     }
   },
   "power-automations": {
-    "devicePowerOff": {
-      "onBatteryLevel": {
-        "controllers": {
-          "description": "Wanneer het batterijniveau valt onder",
-          "onlyDuringSleepMode": {
-            "description": "Schakel alleen controllers uit als de slaap modus is geactiveerd",
-            "title": "Alleen wanneer de slaap modus is geactiveerd"
-          },
-          "powerOffConflict": {
-            "action": "Slaap Detectie",
-            "description": "Omdat je hebt ingesteld dat de slaapmodus geactiveerd wordt wanneer alle controllers zijn uitgeschakeld, kan het zijn dat je met deze automatisering de slaapmodus onverwacht activeert. Andere automatiseringen kunnen hier weer op reageren, wat misschien niet is wat je wilt. Je kunt dit aanpassen in de slaap detectie instellingen.",
-            "title": "Waarschuwing: Dit kan perongeluk een andere automatisering activeren!"
-          },
-          "title": "Schakel een controller uit"
-        },
-        "description": "Schakel apparaten uit wanneer hun batterijniveau onder een bepaald niveau komt.",
-        "title": "Batterijniveau",
-        "trackers": {
-          "description": "Wanneer het batterijniveau valt onder",
-          "onlyDuringSleepMode": {
-            "description": "Schakel alleen trackers uit als de slaap modus is geactiveerd",
-            "title": "Alleen wanneer de slaap modus is geactiveerd"
-          },
-          "title": "Schakel een tracker uit"
-        }
-      },
-      "onCharge": {
-        "description": "Zorg dat apparaten worden uitgezet wanneer je ze aan de lader legt.",
-        "optionControllers": {
-          "description": "Wanneer hij aan het opladen is",
-          "title": "Schakel een controller uit"
-        },
-        "optionTrackers": {
-          "description": "Wanneer hij aan het opladen is",
-          "title": "Schakel een tracker uit"
-        },
-        "title": "Wanneer ik ze oplaad"
-      },
-      "onSleepModeEnable": {
-        "description": "Zet apparaten uit wanneer slaap modus wordt ingeschakeld.",
-        "hint": "Je kan configureren wanneer slaap modus wordt ingeschakeld in <a class=\"sleepDetectionLink\">Slaap Detectie</a>.",
-        "optionControllers": "Alle controllers uitzetten",
-        "optionTrackers": "Alle trackers uitzetten",
-        "title": "Wanneer ik ga slapen"
-      }
-    },
     "enableLighthouseControl": "Zet aan",
     "error": {
       "adapterError": "Er is een fout opgetreden bij het verbinden met je bluetooth adapter. Check of je bluetooth adapter is ingeschakeld, en probeer het nog eens.",

@@ -508,26 +508,6 @@
     }
   },
   "power-automations": {
-    "devicePowerOff": {
-      "onBatteryLevel": {
-        "controllers": {
-          "powerOffConflict": {
-            "action": "Détection de sommeil"
-          }
-        }
-      },
-      "onCharge": {
-        "description": "Éteindre les appareils lorsqu'ils sont en charge.",
-        "title": "Lors de la recharge"
-      },
-      "onSleepModeEnable": {
-        "description": "Éteindre tous mes appareils lorsque le mode sommeil est activé.",
-        "hint": "Vous pouvez configurer l'activation du mode sommeil avec la <a class=\"sleepDetectionLink\">détection de sommeil</a>.",
-        "optionControllers": "Éteindre tous les contrôleurs",
-        "optionTrackers": "Éteindre tous les trackers",
-        "title": "Quand je vais dormir"
-      }
-    },
     "enableLighthouseControl": "Activer",
     "windowsPowerPolicy": {
       "sleepModeDisable": {

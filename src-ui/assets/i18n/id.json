@@ -723,52 +723,6 @@
     }
   },
   "power-automations": {
-    "devicePowerOff": {
-      "onBatteryLevel": {
-        "controllers": {
-          "description": "Ketika level baterainya turun di bawah",
-          "onlyDuringSleepMode": {
-            "description": "Matikan pengontrol dengan cara ini hanya saat mode tidur diaktifkan",
-            "title": "Hanya saat mode tidur diaktifkan"
-          },
-          "powerOffConflict": {
-            "action": "Deteksi Tidur",
-            "description": "Karena Anda telah mengatur mode tidur untuk diaktifkan ketika semua pengontrol dimatikan, mengaktifkan otomatisasi ini mungkin menyebabkan Anda mengaktifkan mode tidur secara tidak sengaja. Otomatisasi lain mungkin merespons hal ini, dan mungkin bukan yang Anda inginkan. Anda dapat menonaktifkan perilaku ini di pengaturan Deteksi Tidur.",
-            "title": "Peringatan: Ini mungkin memicu otomatisasi lain!"
-          },
-          "title": "Matikan kontroler"
-        },
-        "description": "Matikan perangkat saat level baterai turun di bawah persentase tertentu.",
-        "title": "Level baterai",
-        "trackers": {
-          "description": "Ketika level baterainya turun di bawah",
-          "onlyDuringSleepMode": {
-            "description": "Hanya matikan tracker dengan cara ini saat mode tidur diaktifkan",
-            "title": "Hanya saat mode tidur diaktifkan"
-          },
-          "title": "Matikan tracker"
-        }
-      },
-      "onCharge": {
-        "description": "Mematikan perangkat secara otomatis saat Anda meletakkannya di pengisi daya.",
-        "optionControllers": {
-          "description": "Saat sedang mengisi daya",
-          "title": "Matikan kontroler"
-        },
-        "optionTrackers": {
-          "description": "Saat sedang mengisi daya",
-          "title": "Matikan tracker"
-        },
-        "title": "Saat mengisi daya"
-      },
-      "onSleepModeEnable": {
-        "description": "Matikan perangkat saat mode tidur diaktifkan.",
-        "hint": "Anda dapat mengonfigurasi kapan mode tidur diaktifkan di <a class=\"sleepDetectionLink\">Deteksi Tidur</a>",
-        "optionControllers": "Matikan semua kontroler",
-        "optionTrackers": "Matikan semua tracker",
-        "title": "Ketika saya pergi tidur"
-      }
-    },
     "enableLighthouseControl": "Aktifkan",
     "error": {
       "adapterError": "Terjadi kesalahan saat mencoba berkomunikasi dengan adaptor Bluetooth. Pastikan adaptor Bluetooth Anda telah diaktifkan dan coba lagi.",
