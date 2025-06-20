@@ -1,4 +1,4 @@
-import { Component, DestroyRef, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { SleepDetectionTabComponent } from '../sleep-detection-tab.component';
 import { TimeEnableSleepModeModalComponent } from '../../modals/time-enable-sleepmode-modal/time-enable-sleep-mode-modal.component';
 import { combineLatest, distinctUntilChanged, filter, map } from 'rxjs';
@@ -11,7 +11,6 @@ import { BatteryPercentageEnableSleepModeModalComponent } from '../../modals/bat
 import { isEqual, uniq } from 'lodash';
 import { HeartRateCalmPeriodEnableSleepModeModalComponent } from '../../modals/heart-rate-calm-period-enable-sleepmode-modal/heart-rate-calm-period-enable-sleep-mode-modal.component';
 import { Router } from '@angular/router';
-import { AutomationConfigService } from 'src-ui/app/services/automation-config.service';
 import { DeviceManagerService } from 'src-ui/app/services/device-manager.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 

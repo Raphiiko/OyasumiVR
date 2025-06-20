@@ -325,7 +325,7 @@ export class DeviceSelectorModalComponent
     const inapplicableSelectedTags = this.result!.selection.tagIds.filter(
       (tagId) => !this.isTagApplicable(tagId)
     );
-    
+
     for (const tagId of inapplicableSelectedTags) {
       const index = this.result!.selection.tagIds.indexOf(tagId);
       if (index >= 0) {

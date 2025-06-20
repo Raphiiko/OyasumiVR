@@ -5,13 +5,12 @@ import { AUTOMATION_CONFIGS_DEFAULT, DevicePowerAutomationsConfig } from '../../
 import { LighthouseConsoleService } from '../lighthouse-console.service';
 import { SleepService } from '../sleep.service';
 import { EventLogService } from '../event-log.service';
-import { error } from '@tauri-apps/plugin-log';
 import { SleepPreparationService } from '../sleep-preparation.service';
 import { DeviceManagerService } from '../device-manager.service';
 import { LighthouseService } from '../lighthouse.service';
 import { AppSettingsService } from '../app-settings.service';
 import { map, skip } from 'rxjs';
-import { DeviceSelection, DMKnownDevice } from 'src-ui/app/models/device-manager';
+import { DeviceSelection } from 'src-ui/app/models/device-manager';
 import { LighthouseDevice } from 'src-ui/app/models/lighthouse-device';
 import { OVRDevice } from 'src-ui/app/models/ovr-device';
 import {
@@ -57,12 +56,12 @@ export class SleepDevicePowerAutomationsService {
   }
 
   private async handleSleepPreparation() {
-    await this.turnOffSelectedDevices(this.config.turnOffDevicesOnSleepPreparation);
     this.eventLog.logEvent({
       type: 'turnedOffOpenVRDevices',
       reason: 'SLEEP_PREPARATION',
       devices: 'VARIOUS',
     } as EventLogTurnedOffOpenVRDevices);
+    await this.turnOffSelectedDevices(this.config.turnOffDevicesOnSleepPreparation);
   }
 
   private async handleSleepModeDisable() {
@@ -90,12 +89,12 @@ export class SleepDevicePowerAutomationsService {
   }
 
   private async handleSleepModeEnable() {
-    await this.turnOffSelectedDevices(this.config.turnOffDevicesOnSleepModeEnable);
     this.eventLog.logEvent({
       type: 'turnedOffOpenVRDevices',
       reason: 'SLEEP_MODE_ENABLED',
       devices: 'VARIOUS',
     } as EventLogTurnedOffOpenVRDevices);
+    await this.turnOffSelectedDevices(this.config.turnOffDevicesOnSleepModeEnable);
   }
 
   private async turnOffSelectedDevices(deviceSelection: DeviceSelection): Promise<{

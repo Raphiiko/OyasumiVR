@@ -618,8 +618,8 @@
             "MANUAL": "Turned on manually",
             "OYASUMI_START": "As OyasumiVR started",
             "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
-            "STEAMVR_START": "As SteamVR started",
-            "STEAMVR_STOP": "As SteamVR stopped"
+            "STEAMVR_START": "As SteamVR is running",
+            "STEAMVR_STOP": "As SteamVR is stopped"
           }
         },
         "msiAfterburnerProfileSet": {
