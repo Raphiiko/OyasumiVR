@@ -1,11 +1,15 @@
 pub mod commands;
 pub mod models;
 
-use std::{collections::HashMap, sync::Arc, time::Duration};
+use std::{
+    collections::{HashMap, HashSet},
+    sync::Arc,
+    time::Duration,
+};
 
 use bluest::{Adapter, Characteristic, Device, DeviceId, Service, Uuid};
 use futures_util::StreamExt;
-use log::{error, info, trace, warn};
+use log::{debug, error, info, trace, warn};
 use models::LighthouseDevice;
 use tokio::{sync::Mutex, time::sleep};
 
@@ -32,7 +36,6 @@ static EVENT_DEVICE_POWER_STATE_CHANGED: &str = "LIGHTHOUSE_DEVICE_POWER_STATE_C
 //     Uuid::from_u128(0x00008421_1212_EFDE_1523_785FEABCD124);
 
 lazy_static! {
-    static ref DISCOVERED_DEVICES: Mutex<Vec<DeviceId>> = Mutex::new(Vec::new());
     static ref LIGHTHOUSE_DEVICES: Arc<Mutex<Vec<LighthouseDevice>>> =
         Arc::new(Mutex::new(Vec::new()));
     static ref LIGHTHOUSE_DEVICE_POWER_STATES: Mutex<HashMap<String, LighthousePowerState>> =
@@ -42,6 +45,7 @@ lazy_static! {
     static ref SCANNING: Mutex<bool> = Mutex::new(false);
     static ref ADAPTER: Mutex<Option<Adapter>> = Mutex::default();
     static ref STATUS: Mutex<LighthouseStatus> = Mutex::new(LighthouseStatus::Uninitialized);
+    static ref PROCESSING_DEVICES: Mutex<HashSet<DeviceId>> = Mutex::new(HashSet::new());
 }
 
 pub async fn init() {
@@ -97,11 +101,6 @@ pub async fn start_scan(duration: Duration) {
         }
     }
     set_scanning_status(true).await;
-    // Empty the lists of (discovered) devices
-    {
-        let mut discovered_devices_guard = DISCOVERED_DEVICES.lock().await;
-        discovered_devices_guard.clear();
-    }
     // Start the scan
     let mut scan = match adapter.scan(&[]).await {
         Ok(scan) => scan,
@@ -199,30 +198,39 @@ pub async fn get_device_power_state(
         }
     };
 
-    // Get currently known power state and timeout
-    let current_state = match LIGHTHOUSE_DEVICE_POWER_STATES.lock().await.get(&device_id) {
-        Some(state) => state.clone(),
-        None => LighthousePowerState::Unknown,
-    };
-    let current_v1_timeout = LIGHTHOUSE_DEVICE_V1_TIMEOUTS
-        .lock()
-        .await
-        .get(&device_id)
-        .copied();
-    // Set the new state and send an event if the state or timeout has changed
-    if current_state != state || current_v1_timeout != v1_timeout {
-        LIGHTHOUSE_DEVICE_POWER_STATES
-            .lock()
-            .await
-            .insert(device_id.clone(), state.clone());
-        {
-            let mut guard = LIGHTHOUSE_DEVICE_V1_TIMEOUTS.lock().await;
+    // Get currently known power state and timeout, and update atomically
+    let (state_changed, timeout_changed) = {
+        let mut power_states_guard = LIGHTHOUSE_DEVICE_POWER_STATES.lock().await;
+        let mut timeouts_guard = LIGHTHOUSE_DEVICE_V1_TIMEOUTS.lock().await;
+
+        let current_state = power_states_guard
+            .get(&device_id)
+            .cloned()
+            .unwrap_or(LighthousePowerState::Unknown);
+        let current_v1_timeout = timeouts_guard.get(&device_id).copied();
+
+        let state_changed = current_state != state;
+        let timeout_changed = current_v1_timeout != v1_timeout;
+
+        // Update state if changed
+        if state_changed {
+            power_states_guard.insert(device_id.clone(), state.clone());
+        }
+
+        // Update timeout if changed
+        if timeout_changed {
             if let Some(timeout) = v1_timeout {
-                guard.insert(device_id.clone(), timeout);
-            } else if guard.contains_key(&device_id) {
-                guard.remove(&device_id);
+                timeouts_guard.insert(device_id.clone(), timeout);
+            } else if timeouts_guard.contains_key(&device_id) {
+                timeouts_guard.remove(&device_id);
             }
         }
+
+        (state_changed, timeout_changed)
+    };
+
+    // Send event if either state or timeout changed
+    if state_changed || timeout_changed {
         send_event(
             EVENT_DEVICE_POWER_STATE_CHANGED,
             LighthouseDevicePowerStateChangedEvent {
@@ -329,18 +337,29 @@ pub async fn set_device_power_state(
 
 async fn handle_discovered_device(device: Device) {
     let device_id = device.id();
-    // Check if the device has already been discovered this scan
+
+    // Check if this device is already being processed and add it atomically
     {
-        let mut discovered_devices_guard = DISCOVERED_DEVICES.lock().await;
-        if discovered_devices_guard.contains(&device_id) {
+        let mut processing_devices_guard = PROCESSING_DEVICES.lock().await;
+        if processing_devices_guard.contains(&device_id) {
             return;
         }
-        discovered_devices_guard.push(device_id.clone());
+        processing_devices_guard.insert(device_id.clone());
     }
+
+    // Helper closure to clean up processing device on early return
+    let cleanup = |device_id: DeviceId| {
+        tokio::spawn(async move {
+            let mut processing_devices_guard = PROCESSING_DEVICES.lock().await;
+            processing_devices_guard.remove(&device_id);
+        });
+    };
+
     // Check if the device is already known
     {
         let lighthouse_devices_guard = LIGHTHOUSE_DEVICES.lock().await;
         if lighthouse_devices_guard.iter().any(|d| d.id.eq(&device_id)) {
+            cleanup(device_id.clone());
             return;
         }
     }
@@ -349,28 +368,39 @@ async fn handle_discovered_device(device: Device) {
         Ok(name) => name,
         Err(err) => {
             trace!("[Core] Failed to get name of discovered device: {}", err);
-            // Remove it from the discovered devices so that we may try again within the current scan period
-            let mut discovered_devices_guard = DISCOVERED_DEVICES.lock().await;
-            discovered_devices_guard.retain(|d| !d.eq(&device_id));
+            cleanup(device_id.clone());
             return;
         }
     };
     // Check if it starts with known prefixes
-    if (!device_name.starts_with("LHB-") && !device_name.starts_with("HTC BS")) || device_name == "LHB-00000000" {
+    if (!device_name.starts_with("LHB-") && !device_name.starts_with("HTC BS"))
+        || device_name == "LHB-00000000"
+    {
+        cleanup(device_id.clone());
         return;
     }
     // Get the device's services
-    let services = match device.services().await {
-        Ok(services) => services,
-        Err(err) => {
+    debug!(
+        "[Core] Getting services of discovered device: {}",
+        device_name.clone()
+    );
+    let services = match tokio::time::timeout(Duration::from_secs(15), device.services()).await {
+        Ok(Ok(services)) => services,
+        Ok(Err(err)) => {
             warn!(
                 "[Core] Failed to get services of discovered device ({}): {}",
                 device_name.clone(),
                 err
             );
-            // Remove it from the discovered devices so that we may try again within the current scan period
-            let mut discovered_devices_guard = DISCOVERED_DEVICES.lock().await;
-            discovered_devices_guard.retain(|d| !d.eq(&device_id));
+            cleanup(device_id.clone());
+            return;
+        }
+        Err(_) => {
+            debug!(
+                "[Core] Timeout getting services of discovered device: {}",
+                device_name.clone()
+            );
+            cleanup(device_id.clone());
             return;
         }
     };
@@ -391,18 +421,24 @@ async fn handle_discovered_device(device: Device) {
                 "[Core] Discovered device does not contain a lighthouse control service: {}",
                 device_name
             );
+            cleanup(device_id);
             return;
         }
     };
     // Add the device to the list of lighthouse devices
     let discovered_device = LighthouseDevice {
-        id: device_id,
+        id: device_id.clone(),
         device_name: device_name.clone(),
         device_type: device_type.clone(),
         bt_device: device.clone(),
     };
     {
         let mut lighthouse_devices_guard = LIGHTHOUSE_DEVICES.lock().await;
+        // Double-check that device hasn't been added by another thread
+        if lighthouse_devices_guard.iter().any(|d| d.id.eq(&device_id)) {
+            cleanup(device_id.clone());
+            return;
+        }
         lighthouse_devices_guard.push(discovered_device.clone());
     }
     // Send an event
@@ -418,6 +454,9 @@ async fn handle_discovered_device(device: Device) {
         device_type.clone(),
         device_name
     );
+
+    // Clean up processing device
+    cleanup(device_id.clone());
 }
 
 async fn set_lighthouse_status(status: LighthouseStatus) {
@@ -545,11 +584,6 @@ async fn reset() {
         let mut lighthouse_devices_guard = LIGHTHOUSE_DEVICES.lock().await;
         lighthouse_devices_guard.clear();
     }
-    // Clear all discovered devices
-    {
-        let mut discovered_devices_guard = DISCOVERED_DEVICES.lock().await;
-        discovered_devices_guard.clear();
-    }
     // Clear all known power states
     {
         let mut lighthouse_device_power_states_guard = LIGHTHOUSE_DEVICE_POWER_STATES.lock().await;
@@ -559,5 +593,10 @@ async fn reset() {
     {
         let mut lighthouse_device_v1_timeouts_guard = LIGHTHOUSE_DEVICE_V1_TIMEOUTS.lock().await;
         lighthouse_device_v1_timeouts_guard.clear();
+    }
+    // Clear all processing devices
+    {
+        let mut processing_devices_guard = PROCESSING_DEVICES.lock().await;
+        processing_devices_guard.clear();
     }
 }
