@@ -63,4 +63,21 @@ export class DevicesTabComponent {
       }
     );
   }
+
+  get hasBatteryLevelDeviceSelection(): boolean {
+    return !!(
+      this.devicePowerAutomations.turnOffDevicesBelowBatteryLevel.devices.length > 0 ||
+      this.devicePowerAutomations.turnOffDevicesBelowBatteryLevel.types.length > 0 ||
+      this.devicePowerAutomations.turnOffDevicesBelowBatteryLevel.tagIds.length > 0
+    );
+  }
+
+  async updateBatteryLevelOnlyWhileAsleep(onlyWhileAsleep: boolean) {
+    await this.automationConfigService.updateAutomationConfig<DevicePowerAutomationsConfig>(
+      'DEVICE_POWER_AUTOMATIONS',
+      {
+        turnOffDevicesBelowBatteryLevel_onlyWhileAsleep: onlyWhileAsleep,
+      }
+    );
+  }
 }

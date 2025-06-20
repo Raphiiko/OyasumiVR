@@ -1407,52 +1407,6 @@
     }
   },
   "power-automations": {
-    "devicePowerOff": {
-      "onBatteryLevel": {
-        "controllers": {
-          "description": "배터리 잔량이 기준 아래로 떨어질 때",
-          "onlyDuringSleepMode": {
-            "description": "수면 모드가 활성화된 상태에서만 이 방법으로 컨트롤러를 끄도록 설정해요.",
-            "title": "수면 모드가 활성화된 상태에서만"
-          },
-          "powerOffConflict": {
-            "action": "수면 감지",
-            "description": "모든 컨트롤러가 꺼져 있을 때 수면 모드가 활성화되도록 설정한 경우, 이 자동화를 켜면 의도치 않게 수면 모드가 활성화될 수 있어요. 다른 자동화 기능이 이에 반응할 수 있으며, 이는 사용자가 원하는 것이 아닐 수도 있습니다. 수면 감지 설정에서 이 동작을 끌 수 있습니다.",
-            "title": "경고: 다른 자동화 기능이 의도치 않게 실행될 수 있어요!"
-          },
-          "title": "컨트롤러 끄기"
-        },
-        "description": "기기의 배터리 잔량이 일정 비율 이하로 떨어지면 자동으로 전원이 꺼지도록 설정해요.",
-        "title": "배터리 잔량",
-        "trackers": {
-          "description": "배터리 잔량이 기준 아래로 떨어질 때",
-          "onlyDuringSleepMode": {
-            "description": "수면 모드가 활성화된 상태에서만 이 방법으로 트래커를 끄도록 설정해요.",
-            "title": "수면 모드가 활성화된 상태에서만"
-          },
-          "title": "트래커 끄기"
-        }
-      },
-      "onCharge": {
-        "description": "기기를 충전기에 꽂으면 자동으로 전원이 꺼지도록 설정해요.",
-        "optionControllers": {
-          "description": "충전중일 때",
-          "title": "컨트롤러 끄기"
-        },
-        "optionTrackers": {
-          "description": "충전중일 때",
-          "title": "트래커 끄기"
-        },
-        "title": "충전할 때"
-      },
-      "onSleepModeEnable": {
-        "description": "수면 모드 활성화 시 기기의 전원을 꺼요.",
-        "hint": "수면 모드가 활성화되는 타이밍은 <a class=\"sleepDetectionLink\">수면 감지</a>로 설정할 수 있어요.",
-        "optionControllers": "모든 컨트롤러를 끄기",
-        "optionTrackers": "모든 트래커를 끄기",
-        "title": "수면 모드 활성화 시"
-      }
-    },
     "enableLighthouseControl": "활성화",
     "error": {
       "adapterError": "블루투스 어댑터와 통신하는 동안 오류가 발생했어요. 블루투스 어댑터가 활성화되어 있는지 확인한 후 다시 시도해주세요.",

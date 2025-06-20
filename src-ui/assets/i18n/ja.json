@@ -1434,52 +1434,6 @@
     }
   },
   "power-automations": {
-    "devicePowerOff": {
-      "onBatteryLevel": {
-        "controllers": {
-          "description": "バッテリー残量が一定の割合以下になったとき",
-          "onlyDuringSleepMode": {
-            "description": "睡眠モードが有効な場合のみ、コントローラーをこの方法でオフにします",
-            "title": "睡眠モードが有効な場合のみ"
-          },
-          "powerOffConflict": {
-            "action": "睡眠検出",
-            "description": "全てのコントローラーがオフになると睡眠モードが有効になるように設定されているため、意図しないタイミングで睡眠モードが有効になる可能性があります。これを回避するには睡眠モードの設定からオフにできます。",
-            "title": "警告: 別の自動化を誘発する可能性があります！"
-          },
-          "title": "コントローラーをオフにする"
-        },
-        "description": "デバイスのバッテリー残量が一定の割合以下になったときにデバイスをオフにします。",
-        "title": "バッテリー残量",
-        "trackers": {
-          "description": "バッテリー残量が一定の割合以下になったとき",
-          "onlyDuringSleepMode": {
-            "description": "睡眠モードが有効な場合のみ、この方法でトラッカーをオフにする",
-            "title": "睡眠モードが有効な場合のみ"
-          },
-          "title": "トラッカーをオフにする"
-        }
-      },
-      "onCharge": {
-        "description": "充電器に繋いだとき電源をオフにします。",
-        "optionControllers": {
-          "description": "充電中の場合",
-          "title": "コントローラーをオフにする"
-        },
-        "optionTrackers": {
-          "description": "充電中の場合",
-          "title": "トラッカーをオフにする"
-        },
-        "title": "充電時"
-      },
-      "onSleepModeEnable": {
-        "description": "睡眠モードが有効化された際に電源をオフにします。",
-        "hint": "有効になるタイミングは、<a class=\"sleepDetectionLink\">睡眠検出</a>から設定できます。",
-        "optionControllers": "すべてのコントローラーをオフにする",
-        "optionTrackers": "すべてのトラッカーをオフにする",
-        "title": "睡眠時"
-      }
-    },
     "enableLighthouseControl": "有効にする",
     "error": {
       "adapterError": "Bluetoothアダプターとの通信を試みている間にエラーが発生しました。Bluetoothアダプターが有効になっていることを確認し、再度お試しください。",

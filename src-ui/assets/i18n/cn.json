@@ -1755,52 +1755,6 @@
     }
   },
   "power-automations": {
-    "devicePowerOff": {
-      "onBatteryLevel": {
-        "controllers": {
-          "description": "当电池电量低于",
-          "onlyDuringSleepMode": {
-            "description": "只有在开启睡眠模式时，才以这种方式关闭控制器",
-            "title": "仅当睡眠模式开启时"
-          },
-          "powerOffConflict": {
-            "action": "睡眠检测",
-            "description": "由于你已将睡眠模式设置为在所有控制器关闭时启动，因此启用此自动化操作可能会导致你无意中开启睡眠模式。其他自动化功能可能会对此做出反应，这可能不是你想要的。你可以在睡眠检测的设置中关闭这种行为。",
-            "title": "警告： 这可能会触发另一个自动化操作！"
-          },
-          "title": "关闭控制器"
-        },
-        "description": "当控制器或追踪器的电量低于一定百分比时，关闭其电源。",
-        "title": "电池电量",
-        "trackers": {
-          "description": "当电池电量低于",
-          "onlyDuringSleepMode": {
-            "description": "只有在睡眠模式开启时，才以这种方法关闭追踪器",
-            "title": "仅当睡眠模式开启时生效"
-          },
-          "title": "关闭追踪器"
-        }
-      },
-      "onCharge": {
-        "description": "当设备接入充电器时，将其关闭",
-        "optionControllers": {
-          "description": "当它正在充电时",
-          "title": "关闭控制器"
-        },
-        "optionTrackers": {
-          "description": "当它正在充电时",
-          "title": "关闭追踪器"
-        },
-        "title": "充电时"
-      },
-      "onSleepModeEnable": {
-        "description": "开启睡眠模式时关闭设备。",
-        "hint": "你可以在 <a class=\"sleepDetectionLink\"> 睡眠检测 </a>中配置何时开启睡眠模式。",
-        "optionControllers": "关闭所有控制器",
-        "optionTrackers": "关闭所有追踪器",
-        "title": "当我入睡时"
-      }
-    },
     "enableLighthouseControl": "启用",
     "error": {
       "adapterError": "在试图与你的蓝牙适配器进行通信时发生了错误。请确保你的蓝牙适配器已启用，然后再试一次。",

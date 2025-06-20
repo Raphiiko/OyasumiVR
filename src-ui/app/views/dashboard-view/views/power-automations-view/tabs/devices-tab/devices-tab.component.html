@@ -26,18 +26,14 @@
 </div>
 
 <div class="setting-category">
-  <h2>Turn off devices</h2>
-  <p
-    >You can have OyasumiVR turn off your controllers, trackers, or even your base stations on
-    certain events. For example, turn off your trackers when you fall asleep, so they still have
-    some battery when you wake up!</p
-  >
+  <h2>{{ 'power-automations.devices.turnOff.title' | translate }}</h2>
+  <p>{{ 'power-automations.devices.turnOff.description' | translate }}</p>
 
   <div class="settings">
     <div class="setting-row">
       <div class="setting-row-label">
-        <span>When I go to sleep</span>
-        <span></span>
+        <span>{{ 'power-automations.devices.turnOff.triggers.onSleepModeEnable' | translate }}</span>
+        <span>{{ 'power-automations.devices.turnOff.subtitle' | translate }}</span>
       </div>
       <div class="setting-row-action">
         <app-device-selector
@@ -50,8 +46,8 @@
 
     <div class="setting-row">
       <div class="setting-row-label">
-        <span>When I wake up</span>
-        <span></span>
+        <span>{{ 'power-automations.devices.turnOff.triggers.onSleepModeDisable' | translate }}</span>
+        <span>{{ 'power-automations.devices.turnOff.subtitle' | translate }}</span>
       </div>
       <div class="setting-row-action">
         <app-device-selector
@@ -64,8 +60,8 @@
 
     <div class="setting-row">
       <div class="setting-row-label">
-        <span>When I prepare to go to sleep</span>
-        <span></span>
+        <span>{{ 'power-automations.devices.turnOff.triggers.onSleepPreparation' | translate }}</span>
+        <span>{{ 'power-automations.devices.turnOff.subtitle' | translate }}</span>
       </div>
       <div class="setting-row-action">
         <app-device-selector
@@ -78,8 +74,8 @@
 
     <div class="setting-row">
       <div class="setting-row-label">
-        <span>When the device is charging</span>
-        <span></span>
+        <span>{{ 'power-automations.devices.turnOff.triggers.onDeviceCharging' | translate }}</span>
+        <span>{{ 'power-automations.devices.turnOff.subtitle' | translate }}</span>
       </div>
       <div class="setting-row-action">
         <app-device-selector
@@ -92,8 +88,8 @@
 
     <div class="setting-row">
       <div class="setting-row-label">
-        <span>When SteamVR stops</span>
-        <span></span>
+        <span>{{ 'power-automations.devices.turnOff.triggers.onSteamVRStop' | translate }}</span>
+        <span>{{ 'power-automations.devices.turnOff.subtitle' | translate }}</span>
       </div>
       <div class="setting-row-action">
         <app-device-selector
@@ -106,8 +102,8 @@
 
     <div class="setting-row">
       <div class="setting-row-label">
-        <span>When the device's battery level drops below</span>
-        <span></span>
+        <span>{{ 'power-automations.devices.turnOff.triggers.onBatteryLevel' | translate }}</span>
+        <span>{{ 'power-automations.devices.turnOff.subtitle' | translate }}</span>
       </div>
       <div class="setting-row-action">
         <app-slider-setting
@@ -127,18 +123,42 @@
         ></app-device-selector>
       </div>
     </div>
+
+    <div class="setting-row-group">
+      <div class="setting-row" [class.disabled]="!hasBatteryLevelDeviceSelection">
+        <div class="setting-row-label">
+          <span>{{ 'power-automations.devices.turnOff.triggers.onlyWhileSleepModeEnabled' | translate }}</span>
+          <span></span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="devicePowerAutomations.turnOffDevicesBelowBatteryLevel_onlyWhileAsleep"
+              (change)="
+                updateBatteryLevelOnlyWhileAsleep(
+                  !devicePowerAutomations.turnOffDevicesBelowBatteryLevel_onlyWhileAsleep
+                )
+              "
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
 <div class="setting-category">
-  <h2>Turn on base stations</h2>
-  <p>Base stations can be turned on from sleep or standby mode.</p>
+  <h2>{{ 'power-automations.devices.turnOn.title' | translate }}</h2>
+
+  <p>{{ 'power-automations.devices.turnOn.description' | translate }}</p>
 
   <div class="settings">
     <div class="setting-row">
       <div class="setting-row-label">
-        <span>When I wake up</span>
-        <span></span>
+        <span>{{ 'power-automations.devices.turnOn.triggers.onSleepModeDisable' | translate }}</span>
+        <span>{{ 'power-automations.devices.turnOn.subtitle' | translate }}</span>
       </div>
       <div class="setting-row-action">
         <app-device-selector
@@ -151,8 +171,8 @@
 
     <div class="setting-row">
       <div class="setting-row-label">
-        <span>When OyasumiVR starts</span>
-        <span></span>
+        <span>{{ 'power-automations.devices.turnOn.triggers.onOyasumiStart' | translate }}</span>
+        <span>{{ 'power-automations.devices.turnOn.subtitle' | translate }}</span>
       </div>
       <div class="setting-row-action">
         <app-device-selector
@@ -165,8 +185,8 @@
 
     <div class="setting-row">
       <div class="setting-row-label">
-        <span>When SteamVR starts</span>
-        <span></span>
+        <span>{{ 'power-automations.devices.turnOn.triggers.onSteamVRStart' | translate }}</span>
+        <span>{{ 'power-automations.devices.turnOn.subtitle' | translate }}</span>
       </div>
       <div class="setting-row-action">
         <app-device-selector

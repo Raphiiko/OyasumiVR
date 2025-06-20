@@ -1434,52 +1434,6 @@
     }
   },
   "power-automations": {
-    "devicePowerOff": {
-      "onBatteryLevel": {
-        "controllers": {
-          "description": "Wenn die Batterie niedriger ist als",
-          "onlyDuringSleepMode": {
-            "description": "Kontroller nur ausschalten, wenn der Schalfmodus aktiviert ist",
-            "title": "Nur im Schlafmodus einschalten"
-          },
-          "powerOffConflict": {
-            "action": "Schlaferkennung",
-            "description": "Da du eingestellt hast, dass der Schlafmodus aktiviert wird, wenn alle Kontroller ausgeschaltet sind, könnte diese Automatition möglicherweise ungewollt deinen Schlafmodus auslösen. Wodurch andere Automationen ausgelöst werden können. Du kannst diese Einstellung in den Schlafdetektoreinstellungen ändern.",
-            "title": "Warnung: Dies könnte eine andere Automatition aktivieren"
-          },
-          "title": "Einen Kontroller ausschalten"
-        },
-        "description": "Geräte ausschalten, wenn deren Batterie unter eine bestimmte %Grenze fällt.",
-        "title": "Batteriestand",
-        "trackers": {
-          "description": "Wenn die Batterie niedriger ist als",
-          "onlyDuringSleepMode": {
-            "description": "Tracker nur im Schlafmodus ausschalten",
-            "title": "Nur im Schlafmodus einschalten"
-          },
-          "title": "Einen Tracker ausschalten"
-        }
-      },
-      "onCharge": {
-        "description": "Geräte automatisch ausschalten, wenn du diese lädst",
-        "optionControllers": {
-          "description": "Wenn es lädt",
-          "title": "Einen Kontroller ausschalten"
-        },
-        "optionTrackers": {
-          "description": "Wenn es lädt",
-          "title": "Einen Tracker ausschalten"
-        },
-        "title": "Wenn es lädt"
-      },
-      "onSleepModeEnable": {
-        "description": "Deaktiviere die Geräte, wenn der Schlafmodus aktiviert ist",
-        "hint": "Du kannst in <a class=\"sleepDetectionLink\">Sleep Detection</a> einstellen wann der Schlafmodus aktiviert wird.",
-        "optionControllers": "Alle Kontroller ausschalten",
-        "optionTrackers": "Alle Tracker ausschalten",
-        "title": "Wenn ich einschlafe"
-      }
-    },
     "enableLighthouseControl": "Einschalten",
     "error": {
       "adapterError": "Ein Fehler ist bei der Kommunikation mit deinem Bluetoothadapter eingetreten. Bitte stelle sicher, dass dieser funktioniert.",

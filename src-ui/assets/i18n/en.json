@@ -1760,50 +1760,30 @@
     }
   },
   "power-automations": {
-    "devicePowerOff": {
-      "onBatteryLevel": {
-        "controllers": {
-          "description": "When its battery level falls below",
-          "onlyDuringSleepMode": {
-            "description": "Only turn off controllers this way while sleep mode is enabled",
-            "title": "Only while sleep mode is enabled"
-          },
-          "powerOffConflict": {
-            "action": "Sleep Detection",
-            "description": "As you have set up the sleep mode to activate when all controllers are turned off, turning this automation on might cause you to unintentionally enable the sleep mode. Other automations might respond to this, which might not be what you want. You can turn off this behaviour in the Sleep Detection settings.",
-            "title": "Warning: This might trigger another automation!"
-          },
-          "title": "Turn off a controller"
-        },
-        "description": "Have devices power off when their battery level falls below a certain percentage.",
-        "title": "Battery level",
-        "trackers": {
-          "description": "When its battery level falls below",
-          "onlyDuringSleepMode": {
-            "description": "Only turn off trackers this way while sleep mode is enabled",
-            "title": "Only while sleep mode is enabled"
-          },
-          "title": "Turn off a tracker"
+    "devices": {
+      "turnOff": {
+        "description": "OyasumiVR can turn off your controllers, trackers, or even your base stations on certain events. For example, turn off your trackers when you fall asleep, so they still have some battery when you wake up!",
+        "subtitle": "Turn off the following devices",
+        "title": "Turn off devices",
+        "triggers": {
+          "onBatteryLevel": "When the device's battery level drops below",
+          "onDeviceCharging": "When the device is charging",
+          "onSleepModeDisable": "When I wake up",
+          "onSleepModeEnable": "When I go to sleep",
+          "onSleepPreparation": "When I prepare to go to sleep",
+          "onSteamVRStop": "When SteamVR stops",
+          "onlyWhileSleepModeEnabled": "Only while sleep mode is enabled"
         }
       },
-      "onCharge": {
-        "description": "Have devices turn off automatically when you put them on the charger.",
-        "optionControllers": {
-          "description": "When it is charging",
-          "title": "Turn off a controller"
-        },
-        "optionTrackers": {
-          "description": "When it is charging",
-          "title": "Turn off a tracker"
-        },
-        "title": "When charging"
-      },
-      "onSleepModeEnable": {
-        "description": "Turn off devices when sleep mode is enabled.",
-        "hint": "You can configure when sleep mode is enabled in <a class=\"sleepDetectionLink\">Sleep Detection</a>.",
-        "optionControllers": "Turn off all controllers",
-        "optionTrackers": "Turn off all trackers",
-        "title": "When I go to sleep"
+      "turnOn": {
+        "description": "OyasumiVR can turn on certain devices as well. Currently, only base stations can be turned on.",
+        "subtitle": "Turn on the following devices",
+        "title": "Turn on devices",
+        "triggers": {
+          "onOyasumiStart": "When OyasumiVR starts",
+          "onSleepModeDisable": "When I wake up",
+          "onSteamVRStart": "When SteamVR starts"
+        }
       }
     },
     "enableLighthouseControl": "Enable",
