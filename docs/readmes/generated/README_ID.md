@@ -78,7 +78,7 @@ Jika Anda ingin ikut mengobrol, bergabunglah dengan <a href="https://discord.gg/
 
 ## Download & Instal
 
-<img align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/8a18be5c-6698-420e-847a-a5b6f533c8ed" width="180">
+<img align="right" src="https://github.com/user-attachments/assets/f68dbaeb-717c-4862-8c52-b7639d65cb32" width="180">
 Dapatkan installer terbaru kami dari tempat mana pun yang Anda inginkan:
 
 - [Steam](https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/) (_**Metode rekomendasi**_)
