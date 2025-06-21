@@ -20,6 +20,7 @@ import { QuitWithSteamVRMode } from '../../../../../../models/settings';
 import { SelectBoxItem } from '../../../../../../components/select-box/select-box.component';
 import { Router } from '@angular/router';
 import { fade, vshrink } from '../../../../../../utils/animations';
+import { DeviceSelection } from 'src-ui/app/models/device-manager';
 
 @Component({
   selector: 'app-shutdown-automations-settings-tab',
@@ -97,9 +98,9 @@ export class ShutdownAutomationsSettingsTabComponent implements OnInit {
   get noOptionsSelected() {
     return (
       !this.config.quitSteamVR &&
-      !this.config.turnOffControllers &&
-      !this.config.turnOffTrackers &&
-      (!this.config.turnOffBaseStations || this.lighthouseControlDisabled) &&
+      this.config.turnOffDevices.devices.length === 0 &&
+      this.config.turnOffDevices.types.length === 0 &&
+      this.config.turnOffDevices.tagIds.length === 0 &&
       !this.config.powerDownWindows
     );
   }
@@ -113,29 +114,11 @@ export class ShutdownAutomationsSettingsTabComponent implements OnInit {
     );
   }
 
-  async toggleTurnOffControllers() {
+  async onChangeDeviceSelection(selection: DeviceSelection) {
     await this.automationConfigs.updateAutomationConfig<ShutdownAutomationsConfig>(
       'SHUTDOWN_AUTOMATIONS',
       {
-        turnOffControllers: !this.config.turnOffControllers,
-      }
-    );
-  }
-
-  async toggleTurnOffTrackers() {
-    await this.automationConfigs.updateAutomationConfig<ShutdownAutomationsConfig>(
-      'SHUTDOWN_AUTOMATIONS',
-      {
-        turnOffTrackers: !this.config.turnOffTrackers,
-      }
-    );
-  }
-
-  async toggleTurnOffBaseStations() {
-    await this.automationConfigs.updateAutomationConfig<ShutdownAutomationsConfig>(
-      'SHUTDOWN_AUTOMATIONS',
-      {
-        turnOffBaseStations: !this.config.turnOffBaseStations,
+        turnOffDevices: selection,
       }
     );
   }

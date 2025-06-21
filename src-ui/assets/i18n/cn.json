@@ -2290,10 +2290,7 @@
       "cancel": "立即取消",
       "stage": {
         "POWERING_DOWN": "正在关闭",
-        "QUITTING_STEAMVR": "退出 SteamVR...",
-        "TURNING_OFF_BASESTATIONS": "关闭基站...",
-        "TURNING_OFF_CONTROLLERS": "关闭控制器...",
-        "TURNING_OFF_TRACKERS": "关闭追踪器..."
+        "QUITTING_STEAMVR": "退出 SteamVR..."
       },
       "title": "正在关闭"
     },

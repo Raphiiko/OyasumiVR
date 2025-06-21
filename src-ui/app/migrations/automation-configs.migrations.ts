@@ -222,6 +222,27 @@ function from17to18(data: any): any {
   delete data.TURN_ON_LIGHTHOUSES_ON_STEAMVR_START;
   delete data.TURN_OFF_LIGHTHOUSES_ON_STEAMVR_STOP;
 
+  // Migrate shutdown automations
+  if (data.SHUTDOWN_AUTOMATIONS) {
+    data.SHUTDOWN_AUTOMATIONS.turnOffDevices = {
+      devices: [],
+      types: [],
+      tagIds: [],
+    };
+    if (data.SHUTDOWN_AUTOMATIONS.turnOffControllers) {
+      data.SHUTDOWN_AUTOMATIONS.turnOffDevices.types.push('CONTROLLER');
+    }
+    if (data.SHUTDOWN_AUTOMATIONS.turnOffTrackers) {
+      data.SHUTDOWN_AUTOMATIONS.turnOffDevices.types.push('TRACKER');
+    }
+    if (data.SHUTDOWN_AUTOMATIONS.turnOffBaseStations) {
+      data.SHUTDOWN_AUTOMATIONS.turnOffDevices.types.push('LIGHTHOUSE');
+    }
+    delete data.SHUTDOWN_AUTOMATIONS.turnOffControllers;
+    delete data.SHUTDOWN_AUTOMATIONS.turnOffTrackers;
+    delete data.SHUTDOWN_AUTOMATIONS.turnOffBaseStations;
+  }
+
   return data;
 }
 

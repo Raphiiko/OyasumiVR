@@ -460,9 +460,7 @@ export interface ShutdownAutomationsConfig extends AutomationConfig {
   triggerWhenAloneActivationWindowStart: [number, number];
   triggerWhenAloneActivationWindowEnd: [number, number];
   quitSteamVR: boolean;
-  turnOffControllers: boolean;
-  turnOffTrackers: boolean;
-  turnOffBaseStations: boolean;
+  turnOffDevices: DeviceSelection;
   powerDownWindows: boolean;
   powerDownWindowsMode: PowerDownWindowsMode;
 }
@@ -912,9 +910,11 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     triggerWhenAloneActivationWindowStart: [23, 0],
     triggerWhenAloneActivationWindowEnd: [7, 0],
     quitSteamVR: true,
-    turnOffControllers: true,
-    turnOffTrackers: true,
-    turnOffBaseStations: true,
+    turnOffDevices: {
+      devices: [],
+      types: [],
+      tagIds: [],
+    },
     powerDownWindows: true,
     powerDownWindowsMode: 'SHUTDOWN',
   },

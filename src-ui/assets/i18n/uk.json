@@ -1902,10 +1902,7 @@
       "cancel": "Скасувати зараз",
       "stage": {
         "POWERING_DOWN": "Вимикання Windows...",
-        "QUITTING_STEAMVR": "Вихід із SteamVR...",
-        "TURNING_OFF_BASESTATIONS": "Вимкнення базових станцій...",
-        "TURNING_OFF_CONTROLLERS": "Вимкнення контролерів...",
-        "TURNING_OFF_TRACKERS": "Вимкнення трекерів..."
+        "QUITTING_STEAMVR": "Вихід із SteamVR..."
       },
       "title": "Вимикання"
     },

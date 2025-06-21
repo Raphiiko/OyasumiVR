@@ -1932,10 +1932,7 @@
       "cancel": "Cancelar ahora",
       "stage": {
         "POWERING_DOWN": "Apagando Windows...",
-        "QUITTING_STEAMVR": "Dejando SteamVR...",
-        "TURNING_OFF_BASESTATIONS": "Apagar las estaciones base...",
-        "TURNING_OFF_CONTROLLERS": "Apagando controladores...",
-        "TURNING_OFF_TRACKERS": "Apagando trackers..."
+        "QUITTING_STEAMVR": "Dejando SteamVR..."
       },
       "title": "Apagado"
     },

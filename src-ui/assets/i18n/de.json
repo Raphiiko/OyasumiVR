@@ -1932,10 +1932,7 @@
       "cancel": "Jetzt Abbrechen",
       "stage": {
         "POWERING_DOWN": "Fahre Windows herunter...",
-        "QUITTING_STEAMVR": "Schließe SteamVR...",
-        "TURNING_OFF_BASESTATIONS": "Fahre alle Basisstationen herunter...",
-        "TURNING_OFF_CONTROLLERS": "Fahre alle Kontroller herunter...",
-        "TURNING_OFF_TRACKERS": "Fahre alle Tracker herunter..."
+        "QUITTING_STEAMVR": "Schließe SteamVR..."
       },
       "title": "Herunterfahren"
     },
