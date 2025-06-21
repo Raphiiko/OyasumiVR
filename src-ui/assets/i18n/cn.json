@@ -1026,11 +1026,6 @@
       "powerOn": "开启电源"
     },
     "config": {
-      "newTag": {
-        "create": "创建标签",
-        "description": "创建一个新标签并分配给此设备",
-        "title": "创建新标签"
-      },
       "nickname": {
         "description": "为此设备设置一个自定义名称，方便识别",
         "title": "设备昵称"

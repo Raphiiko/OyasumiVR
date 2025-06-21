@@ -10,35 +10,44 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 ### Added
 
 - Frame limiting automations on native SteamVR headsets, for VRChat, Resonite and ChilloutVR
-- Options for automatically declining invites and invite requests
-- Message center for automatically diagnosing common issues
-- Sleep mode toggle and sleep preparation to system tray menu
-- Notification sounds for invites and invite requests
 - Automations for automatically changing your represented VRChat group
 - Automations for running custom commands through the Windows command prompt
+- Options for automatically declining invites and invite requests
+- Include a message when automatically accepting/declining invites and invite requests
+- Optional notification sounds for invites and invite requests
+- Device manager for managing all seen devices
+- Device tagging functionality for grouping devices
+- Device power automations for sleep events, battery/charge events, and SteamVR events, that can target specific devices, device types, or device groups
 - Brightness automation that runs when your VR headset connects to SteamVR
-- Brightness automations will now indicate if they (could) run when your HMD connects
+- Brightness automations will now indicate if they run when your HMD connects
 - Auto completion for the OSC addresses of VRChat avatar parameters in the simple osc script editor
+- Message center for automatically diagnosing common issues
+- GPU acceleration for SteamVR overlays (Thanks to help from [BenjaminZehowlt](https://github.com/BenjaminZehowlt))
+- Sleep mode toggle and sleep preparation to the system tray menu
 - Device list: VR Headset device & battery level
 - MQTT: Headset battery level and charging status
 - More configuration options for notification sounds
-- GPU acceleration for SteamVR overlays (Thanks to help from [BenjaminZehowlt](https://github.com/BenjaminZehowlt))
 
 ### Changed
 
-- Switched to calendar versioning
 - Replaced manual scanning for lighthouses with continuous scanning
 - Migrated to Tauri v2, and upgraded various dependencies
+- Switched to calendar versioning
 - Localized system tray menu
 - Replaced one-time location based updates of sunset/sunrise times with a toggle to update them automatically.
 - Updated theming & some component styling
 - Updated various illustrations and splash screen (Thanks to [Jun](https://x.com/JunHakase)) 
+
+### Removed
+
+- Controller & Tracker, Basestation power automations (superceded by device power automations)
 
 ### Fixed
 
 - "Activate when you've been left alone" trigger for the shutdown sequence not triggering correctly
 - Battery and charging levels exposed over MQTT becoming unavailable randomly
 - Notification sounds queueing up instead of being played immediately
+- Some lighthouse automations not triggering correctly
 
 ## [1.14.7]
 

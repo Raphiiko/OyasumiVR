@@ -1031,11 +1031,6 @@
       "powerOn": "Power On"
     },
     "config": {
-      "newTag": {
-        "create": "Create Tag",
-        "description": "Create a new tag and assign it to this device",
-        "title": "Create New Tag"
-      },
       "nickname": {
         "description": "Set a custom name for this device to make it easier to identify",
         "title": "Device Nickname"
