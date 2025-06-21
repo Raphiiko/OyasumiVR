@@ -13,7 +13,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 2.2em 1.2em;
+  padding: 2em 1em;
   flex-shrink: 0;
 
   .logo-text {
@@ -24,7 +24,7 @@
     flex: 1;
 
     .logo-title {
-      font-size: 2.1em;
+      font-size: 2em;
       font-weight: 300;
 
       b {
@@ -34,8 +34,6 @@
 
     .logo-tagline {
       color: var(--color-text-4);
-      font-size: 0.9em;
-      margin-top: 0.3em;
     }
   }
 
@@ -45,17 +43,11 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    margin-right: 1.1em;
-    cursor: pointer;
-    transition: opacity 0.2s ease;
-
-    &:hover {
-      opacity: 0.8;
-    }
+    margin-right: 1em;
 
     img {
-      width: 3.6em;
-      height: 3.6em;
+      width: 3.5em;
+      height: 3.5em;
     }
   }
 }
