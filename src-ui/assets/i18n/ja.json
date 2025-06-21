@@ -402,6 +402,13 @@
           },
           "title": "ガーディアンのフェード距離を{value}に設定した。"
         },
+        "frameLimitChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
+            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
+            "SLEEP_PREPARATION": "就寝準備をした"
+          }
+        },
         "gpuPowerLimitChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
@@ -471,6 +478,13 @@
           "title": {
             "auto": "SteamVRのレンダリング解像度を「自動」に設定",
             "custom": "SteamVRのレンダリング解像度を{value}に設定"
+          }
+        },
+        "runAutomationExecuted": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
+            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
+            "SLEEP_PREPARATION": "就寝準備をした"
           }
         },
         "shutdownSequenceCancelled": {
@@ -604,6 +618,13 @@
             "SLEEP_PREPARATION": "就寝準備をした"
           },
           "title": "アバターを''{avatarName}''に変更"
+        },
+        "vrchatGroupChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
+            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
+            "SLEEP_PREPARATION": "就寝準備をした"
+          }
         },
         "windowsPowerPolicySet": {
           "reason": {
@@ -947,6 +968,19 @@
       "title": "二要素認証"
     }
   },
+  "device-manager": {
+    "deviceType": {
+      "CONTROLLER": "コントローラー",
+      "TRACKER": "トラッカー"
+    },
+    "tabs": {
+      "devices": "機器"
+    },
+    "tags": {
+      "cancel": "キャンセル",
+      "save": "保存"
+    }
+  },
   "discord": {
     "details": "VR睡眠ソフトウェア",
     "label": {
@@ -956,6 +990,19 @@
     "state": {
       "awake": "起床中",
       "sleeping": "睡眠中"
+    }
+  },
+  "frame-limiter": {
+    "add-application-modal": {
+      "add": "追加"
+    },
+    "onSleepDisable": "起床時",
+    "onSleepEnable": "睡眠時",
+    "onSleepPreparation": "就寝準備時",
+    "removeLimiter": "削除",
+    "selector": {
+      "auto": "自動",
+      "disabled": "変更しない"
     }
   },
   "gpu-automations": {
@@ -1193,9 +1240,22 @@
     "title": "Join通知"
   },
   "message-center": {
+    "actions": {
+      "configure": "設定",
+      "moreInfo": "詳細"
+    },
     "messages": {
+      "gpuAutomationsSidecarNotRunning": {
+        "actions": {
+          "disable": "GPU自動化を無効にする",
+          "elevate": "管理者権限を付与する"
+        }
+      },
       "manyLighthousesDetected": {
         "message": "ベースステーションの数が多いようです！\n\nほとんどのBluetoothアダプターは、ヘッドフォンや他の周辺機器などのBluetoothデバイスを含め、同時に7つの接続しか処理できません。\n\n多くのベースステーションを接続している、または他のBluetoothデバイスを接続している場合、OyasumiVRがすべてのベースステーションを正しく制御できない可能性があります。"
+      },
+      "sleepCalibrationRequired": {
+        "calibrate": "今すぐキャリブレーション"
       }
     }
   },
@@ -1252,6 +1312,9 @@
       "title": "音を再生"
     },
     "title": "悪夢の検知"
+  },
+  "notification-sound": {
+    "volume": "音量"
   },
   "notifications": {
     "autoAcceptedInviteRequest": {
@@ -1437,6 +1500,24 @@
     }
   },
   "power-automations": {
+    "devices": {
+      "turnOff": {
+        "title": "デバイスをオフにする",
+        "triggers": {
+          "onSleepModeDisable": "起床時",
+          "onSleepModeEnable": "睡眠時",
+          "onSleepPreparation": "就寝準備時",
+          "onSteamVRStop": "SteamVRを停止したとき"
+        }
+      },
+      "turnOn": {
+        "triggers": {
+          "onOyasumiStart": "OyasumiVRを起動したとき",
+          "onSleepModeDisable": "起床時",
+          "onSteamVRStart": "SteamVRを起動したとき"
+        }
+      }
+    },
     "enableLighthouseControl": "有効にする",
     "error": {
       "adapterError": "Bluetoothアダプターとの通信を試みている間にエラーが発生しました。Bluetoothアダプターが有効になっていることを確認し、再度お試しください。",
@@ -1507,6 +1588,18 @@
       "title": "レンダリング解像度を変更"
     },
     "title": "解像度の自動化"
+  },
+  "runAutomations": {
+    "onSleepDisable": {
+      "title": "起床時"
+    },
+    "onSleepEnable": {
+      "title": "睡眠時"
+    },
+    "onSleepPreparation": {
+      "title": "就寝準備時"
+    },
+    "testCommands": "テスト"
   },
   "settings": {
     "advanced": {
@@ -2432,6 +2525,10 @@
       }
     }
   },
+  "systemTray": {
+    "prepareForSleep": "就寝準備",
+    "sleepMode": "睡眠モード"
+  },
   "updater": {
     "modals": {
       "error": {
@@ -2458,6 +2555,20 @@
       "title": "就寝準備時"
     },
     "title": "アバター変更"
+  },
+  "vrchatGroupAutomations": {
+    "onSleepDisable": {
+      "title": "起床時"
+    },
+    "onSleepEnable": {
+      "title": "睡眠時"
+    },
+    "onSleepPreparation": {
+      "title": "就寝準備時"
+    },
+    "options": {
+      "dontChange": "変更しない"
+    }
   },
   "vrchatMicMuteAutomations": {
     "automations": {
