@@ -178,7 +178,7 @@ import { BigscreenBeyondFanAutomationService } from './services/hmd-specific-aut
 import { BSBFanSpeedControlModalComponent } from './components/bsb-fan-speed-control-modal/bsb-fan-speed-control-modal.component';
 import { DiscordService } from './services/discord.service';
 import { trackEvent } from '@aptabase/tauri';
-import { pTimeout } from './utils/promise-utils';
+import { pTimeout, sleep } from './utils/promise-utils';
 import { PlayerListPresetModalComponent } from './components/player-list-preset-modal/player-list-preset-modal.component';
 import { PlayerCountSleepVisualizationComponent } from './components/player-count-sleep-visualization/player-count-sleep-visualization.component';
 import { SleepModeDisableOnUprightPoseAutomationService } from './services/sleep-detection-automations/sleep-mode-disable-on-upright-pose-automation.service';
@@ -957,6 +957,7 @@ export class AppModule {
         }
       );
       if (!result) openUrl('https://raphii.co/oyasumivr/hidden/troubleshooting/launch-as-admin');
+      await sleep(2000);
       await exit(1);
       return false;
     }
