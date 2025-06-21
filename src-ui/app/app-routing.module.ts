@@ -8,7 +8,7 @@ import { SleepDetectionViewComponent } from './views/dashboard-view/views/sleep-
 import { GpuAutomationsViewComponent } from './views/dashboard-view/views/gpu-automations-view/gpu-automations-view.component';
 import { OscAutomationsViewComponent } from './views/dashboard-view/views/osc-automations-view/osc-automations-view.component';
 import { StatusAutomationsViewComponent } from './views/dashboard-view/views/status-automations-view/status-automations-view.component';
-import { AutoInviteRequestAcceptViewComponent } from './views/dashboard-view/views/auto-invite-request-accept-view/auto-invite-request-accept-view.component';
+import { InviteAndInviteRequestViewComponent } from './views/dashboard-view/views/invite-and-invite-request-view/invite-and-invite-request-view.component';
 import { BrightnessAutomationsViewComponent } from './views/dashboard-view/views/brightness-automations-view/brightness-automations-view.component';
 import { FrameLimiterViewComponent } from './views/dashboard-view/views/frame-limiter-view/frame-limiter-view.component';
 import { ResolutionAutomationsViewComponent } from './views/dashboard-view/views/resolution-automations-view/resolution-automations-view.component';
@@ -117,7 +117,7 @@ const routes: Routes = [
       },
       {
         path: 'autoInviteRequestAccept',
-        component: AutoInviteRequestAcceptViewComponent,
+        component: InviteAndInviteRequestViewComponent,
       },
       {
         path: 'shutdownAutomations',

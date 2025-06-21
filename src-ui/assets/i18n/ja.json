@@ -66,85 +66,6 @@
       "title": "音量"
     }
   },
-  "auto-invite-request-accept": {
-    "addFriends": "フレンドを追加",
-    "blacklist": "ブラックリスト",
-    "clearPlayers": "全てクリア",
-    "conditions": {
-      "description": "特定の条件が満たされた場合のみReq Inviteを許可できるように設定できます。",
-      "title": "条件"
-    },
-    "description": "自分が受け取ったReq Inviteを自動的に許可できます。ホワイトリストやブラックリストを利用すると、特定のフレンドに対してのみ許可することも可能です。",
-    "loadPreset": "プリセットを読み込む",
-    "loadingFriends": "フレンドを読み込み中…",
-    "noPlayersAdded": "現在、リストに登録されているプレイヤーはいません",
-    "options": {
-      "changeListPreset": {
-        "onSleepDisable": {
-          "description": "睡眠モードが無効化された際にプリセットを読み込みます",
-          "title": "起床時"
-        },
-        "onSleepEnable": {
-          "description": "睡眠モードが有効化された際にプリセットを読み込みます",
-          "title": "睡眠時"
-        },
-        "onSleepPreparation": {
-          "description": "就寝準備が押下された際にプリセットを読み込みます",
-          "title": "就寝準備時"
-        }
-      },
-      "enable": {
-        "description": "フレンドからのReq Inviteを自動承認する",
-        "title": "自動承認を有効にする"
-      },
-      "listMode": {
-        "description": "プレイヤーリストの設定",
-        "options": {
-          "BLACKLIST": {
-            "label": "ブラックリスト",
-            "subLabel": "リストのフレンドは承認しない"
-          },
-          "DISABLED": {
-            "label": "オフ",
-            "subLabel": "全て承認する"
-          },
-          "WHITELIST": {
-            "label": "ホワイトリスト",
-            "subLabel": "リストのフレンドを承認する"
-          }
-        },
-        "title": "リストモード"
-      },
-      "onlyBelowPlayerCount": {
-        "description": "これにはあなた自身も含まれます",
-        "title": "ワールド内のプレイヤーが<strong>{count}</strong>人未満の場合にのみ"
-      },
-      "onlyIfSleepModeEnabled": {
-        "title": "睡眠モード有効時のみ"
-      },
-      "presetOptions": {
-        "options": {
-          "NONE": "変更しない"
-        }
-      }
-    },
-    "otherAutomations": {
-      "description": "この機能の動作を自動的に変更する自動化を見つけることができます",
-      "title": "その他の自動化"
-    },
-    "removeModal": {
-      "message": "''{name}''をリストから削除しますか？",
-      "title": "確認"
-    },
-    "removeModalBulk": {
-      "message": "全員をリストから削除しますか？",
-      "title": "確認"
-    },
-    "savePreset": "プリセットとして保存",
-    "title": "Req Inviteの自動承認",
-    "userOnJoinMeStatus": "VRChatは、自分のステータスが青(Join Me)になっている場合、設定に関わらず、すべてのReq Inviteを自動的に受け入れます。",
-    "whitelist": "ホワイトリスト"
-  },
   "brightness-automations": {
     "AT_SUNRISE": {
       "title": "日の出時"
@@ -294,7 +215,6 @@
     "dashboard-navbar": {
       "about": "OyasumiVRについて",
       "audioVolumeAutomations": "音量の自動化",
-      "autoInviteRequestAccept": "Req Inviteの承認",
       "brightnessAutomations": "明るさ",
       "chaperoneAutomations": "ガーディアンの自動化",
       "gpuAutomations": "GPUの電力",
@@ -958,6 +878,20 @@
       }
     },
     "player-list": {
+      "addFriends": "フレンドを追加",
+      "clearPlayers": "全てクリア",
+      "loadPreset": "プリセットを読み込む",
+      "loadingFriends": "フレンドを読み込み中…",
+      "noPlayersAdded": "現在、リストに登録されているプレイヤーはいません",
+      "removeModal": {
+        "message": "''{name}''をリストから削除しますか？",
+        "title": "確認"
+      },
+      "removeModalBulk": {
+        "message": "全員をリストから削除しますか？",
+        "title": "確認"
+      },
+      "savePreset": "プリセットとして保存",
       "title": "プレイヤーリスト"
     },
     "select-box": {
@@ -1146,6 +1080,75 @@
       "bigscreenBeyond": "Bigscreen Beyond"
     },
     "title": "HMDの自動化"
+  },
+  "invite-and-invite-requests": {
+    "inviteRequestsTab": {
+      "conditions": {
+        "description": "特定の条件が満たされた場合のみReq Inviteを許可できるように設定できます。",
+        "title": "条件"
+      },
+      "description": "自分が受け取ったReq Inviteを自動的に許可できます。ホワイトリストやブラックリストを利用すると、特定のフレンドに対してのみ許可することも可能です。",
+      "options": {
+        "listMode": {
+          "description": "プレイヤーリストの設定",
+          "options": {
+            "BLACKLIST": {
+              "label": "ブラックリスト",
+              "subLabel": "リストのフレンドは承認しない"
+            },
+            "DISABLED": {
+              "label": "オフ",
+              "subLabel": "全て承認する"
+            },
+            "WHITELIST": {
+              "label": "ホワイトリスト",
+              "subLabel": "リストのフレンドを承認する"
+            }
+          },
+          "title": "リストモード"
+        },
+        "onlyBelowPlayerCount": {
+          "description": "これにはあなた自身も含まれます",
+          "title": "ワールド内のプレイヤーが<strong>{count}</strong>人未満の場合にのみ"
+        },
+        "onlyIfSleepModeEnabled": {
+          "title": "睡眠モード有効時のみ"
+        },
+        "presetOptions": {
+          "options": {
+            "NONE": "変更しない"
+          }
+        }
+      },
+      "otherAutomations": {
+        "changeListPreset": {
+          "onSleepDisable": {
+            "description": "睡眠モードが無効化された際にプリセットを読み込みます",
+            "title": "起床時"
+          },
+          "onSleepEnable": {
+            "description": "睡眠モードが有効化された際にプリセットを読み込みます",
+            "title": "睡眠時"
+          },
+          "onSleepPreparation": {
+            "description": "就寝準備が押下された際にプリセットを読み込みます",
+            "title": "就寝準備時"
+          }
+        },
+        "description": "この機能の動作を自動的に変更する自動化を見つけることができます",
+        "title": "その他の自動化"
+      },
+      "userOnJoinMeStatus": "VRChatは、自分のステータスが青(Join Me)になっている場合、設定に関わらず、すべてのReq Inviteを自動的に受け入れます。"
+    },
+    "playerList": {
+      "blacklist": "ブラックリスト",
+      "whitelist": "ホワイトリスト"
+    },
+    "tabs": {
+      "inviteRequests": "招待リクエスト",
+      "invites": "招待",
+      "sounds": "音声"
+    }
   },
   "join-notifications": {
     "description": "他のプレイヤーがJoinまたは退出すると、通知メッセージまたはサウンドを再生します。Joinしてくれた人に起きて会いたい場合に使用します",

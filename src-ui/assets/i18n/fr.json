@@ -8,50 +8,6 @@
     "sourceLink": "Code source @ GitHub",
     "translations": "Traductions"
   },
-  "auto-invite-request-accept": {
-    "addFriends": "Ajouter des amis",
-    "blacklist": "Liste noire",
-    "description": "OyasumiVR peut accepter les demandes d'invitation automatiquement. Grâce à la liste blanche et la liste noire, vous pouvez choisir parmi vos amis qui sera accepté ou non.",
-    "noPlayersAdded": "Aucun joueur n'a été ajouté sur la liste",
-    "options": {
-      "enable": {
-        "description": "Accepter automatiquement les demandes de vos amis.",
-        "title": "Activer"
-      },
-      "listMode": {
-        "description": "Comment la liste de joueurs fonctionne",
-        "options": {
-          "BLACKLIST": {
-            "label": "Liste noire",
-            "subLabel": "Accepter les requêtes des amis qui ne sont pas membres de cette liste."
-          },
-          "DISABLED": {
-            "label": "Désactivé",
-            "subLabel": "Accepter les requêtes de tout le monde"
-          },
-          "WHITELIST": {
-            "label": "Liste blanche",
-            "subLabel": "Accepter les requêtes des amis de cette liste"
-          }
-        },
-        "title": "Mode liste"
-      },
-      "onlyIfSleepModeEnabled": {
-        "title": "Seulement quand le mode sommeil est actif."
-      }
-    },
-    "removeModal": {
-      "message": "Voulez vous supprimer ''{name}'' de votre liste?",
-      "title": "Confirmer la suppression"
-    },
-    "removeModalBulk": {
-      "message": "Voulez vous supprimer tout le monde de votre liste ?",
-      "title": "Confirmer la suppression"
-    },
-    "title": "Accepter les demandes d'invitation automatiquement",
-    "userOnJoinMeStatus": "VRChat acceptera automatiquement toute demande d'invitation, peu importe vos paramètres OyasumiVR, car votre statut est 'join me' (bleu).",
-    "whitelist": "Liste blanche"
-  },
   "brightness-automations": {
     "brightness": {
       "title": "Changer la luminosité pour"
@@ -72,7 +28,6 @@
     },
     "dashboard-navbar": {
       "about": "A propos",
-      "autoInviteRequestAccept": "Gestion des demandes",
       "brightnessAutomations": "Automatisation de luminosité",
       "gpuAutomations": "Automatisations GPU",
       "oscAutomations": "Automatisations OSC",
@@ -274,6 +229,18 @@
       "errorCounter": "{value, plural, one {1 Erreur de validation} other {# Erreurs de validation}}",
       "test": "Test"
     },
+    "player-list": {
+      "addFriends": "Ajouter des amis",
+      "noPlayersAdded": "Aucun joueur n'a été ajouté sur la liste",
+      "removeModal": {
+        "message": "Voulez vous supprimer ''{name}'' de votre liste?",
+        "title": "Confirmer la suppression"
+      },
+      "removeModalBulk": {
+        "message": "Voulez vous supprimer tout le monde de votre liste ?",
+        "title": "Confirmer la suppression"
+      }
+    },
     "select-box": {
       "defaultPlaceholder": "Sélectionner..."
     },
@@ -379,6 +346,44 @@
       "powerLimiting": "Economie d'énergie"
     },
     "title": "Automatisations du GPU"
+  },
+  "invite-and-invite-requests": {
+    "inviteRequestsTab": {
+      "description": "OyasumiVR peut accepter les demandes d'invitation automatiquement. Grâce à la liste blanche et la liste noire, vous pouvez choisir parmi vos amis qui sera accepté ou non.",
+      "options": {
+        "listMode": {
+          "description": "Comment la liste de joueurs fonctionne",
+          "options": {
+            "BLACKLIST": {
+              "label": "Liste noire",
+              "subLabel": "Accepter les requêtes des amis qui ne sont pas membres de cette liste."
+            },
+            "DISABLED": {
+              "label": "Désactivé",
+              "subLabel": "Accepter les requêtes de tout le monde"
+            },
+            "WHITELIST": {
+              "label": "Liste blanche",
+              "subLabel": "Accepter les requêtes des amis de cette liste"
+            }
+          },
+          "title": "Mode liste"
+        },
+        "onlyIfSleepModeEnabled": {
+          "title": "Seulement quand le mode sommeil est actif."
+        }
+      },
+      "userOnJoinMeStatus": "VRChat acceptera automatiquement toute demande d'invitation, peu importe vos paramètres OyasumiVR, car votre statut est 'join me' (bleu)."
+    },
+    "playerList": {
+      "blacklist": "Liste noire",
+      "whitelist": "Liste blanche"
+    },
+    "tabs": {
+      "inviteRequests": "Demandes d'invitation",
+      "invites": "Invitations",
+      "sounds": "Sons"
+    }
   },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "Ce preset peut mal fonctionner. Merci de l'utiliser si vous ne pouvez pas utiliser le nouveau preset de GoGo Loco. Si votre avatar utilise une ancienne version de GoGo Loco, il est recommandé de mettre à jour votre avatar pour utiliser la dernière version.",

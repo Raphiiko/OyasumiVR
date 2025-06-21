@@ -66,85 +66,6 @@
       "title": "Volume"
     }
   },
-  "auto-invite-request-accept": {
-    "addFriends": "Vrienden toevoegen",
-    "blacklist": "Speler Blacklist",
-    "clearPlayers": "Leegmaken",
-    "conditions": {
-      "description": "Hier kan je voorwaarden configureren voor OyasumiVR om invite requests automatisch te accepteren.",
-      "title": "Voorwaarden"
-    },
-    "description": "OyasumiVR kan invite requests die je ontvangt automatisch accepteren. Door het gebruiken van een speler whitelist of blacklist, kan je ervoor zorgen dat je alleen invite requests accepteert van vrienden die jij zelf kiest.",
-    "loadPreset": "Laad Opgeslagen Preset",
-    "loadingFriends": "Vrienden worden geladen...",
-    "noPlayersAdded": "Je hebt nog geen spelers toegevoegd aan de lijst.",
-    "options": {
-      "changeListPreset": {
-        "onSleepDisable": {
-          "description": "Laad een opgeslagen preset voor de speler lijst wanneer de slaap modus word uitgeschakeld",
-          "title": "Laad een preset wanneer ik wakker word"
-        },
-        "onSleepEnable": {
-          "description": "Laad een opgeslagen preset voor de speler lijst wanneer de slaap modus word ingeschakeld",
-          "title": "Laad een preset wanneer ik in slaap val"
-        },
-        "onSleepPreparation": {
-          "description": "Laad een opgeslagen preset wanneer je je voorbereid om naar bed te gaan",
-          "title": "Laad een preset wanneer je je voorbereid om naar bed te gaan"
-        }
-      },
-      "enable": {
-        "description": "Accepteer automatisch invite requests die je van vrienden ontvangt.",
-        "title": "Activeren"
-      },
-      "listMode": {
-        "description": "Hoe de speler lijst moet worden gebruikt.",
-        "options": {
-          "BLACKLIST": {
-            "label": "Blacklist",
-            "subLabel": "Accepteer van iedereen behalve vrienden op de lijst"
-          },
-          "DISABLED": {
-            "label": "Uitgeschakeld",
-            "subLabel": "Accepteer van iedereen"
-          },
-          "WHITELIST": {
-            "label": "Whitelist",
-            "subLabel": "Accepteer van vrienden op de lijst"
-          }
-        },
-        "title": "Lijst Modus"
-      },
-      "onlyBelowPlayerCount": {
-        "description": "Dit is inclusief jezelf",
-        "title": "Alleen als er minder dan <strong>{count, plural, one {#</strong> speler in je wereld is} other {#</strong> spelers in je wereld zijn}}"
-      },
-      "onlyIfSleepModeEnabled": {
-        "title": "Alleen als de slaap modus is geactiveerd"
-      },
-      "presetOptions": {
-        "options": {
-          "NONE": "Niets wijzigen"
-        }
-      }
-    },
-    "otherAutomations": {
-      "description": "Hier kan je overige automatiseringen vinden die automatisch de werking van deze functie beinvloeden.",
-      "title": "Overige Automatiseringen"
-    },
-    "removeModal": {
-      "message": "Weet je zeker dat je ''{name}'' van de lijst wilt verwijderen?",
-      "title": "Bevestig verwijderen"
-    },
-    "removeModalBulk": {
-      "message": "Weet je zeker dat je iedereen van de lijst wilt verwijderen?",
-      "title": "Bevestig verwijderen"
-    },
-    "savePreset": "Opslaan Als Preset",
-    "title": "Invite Requests Automatisch Accepteren",
-    "userOnJoinMeStatus": "VRChat za onafhankelijk van je instellingen automatisch alle invite requests accepteren, omdat je status op join me (blauw) staat.",
-    "whitelist": "Speler Whitelist"
-  },
   "brightness-automations": {
     "AT_SUNRISE": {
       "title": "Bij zonsopkomst"
@@ -294,7 +215,6 @@
     "dashboard-navbar": {
       "about": "Over OyasumiVR",
       "audioVolumeAutomations": "Volume Automatiseringen",
-      "autoInviteRequestAccept": "Invite Requests Automatisch Accepteren",
       "brightnessAutomations": "Helderheid Automatiseringen",
       "chaperoneAutomations": "Chaperone Automatiseringen",
       "gpuAutomations": "GPU Automatiseringen",
@@ -951,6 +871,20 @@
       }
     },
     "player-list": {
+      "addFriends": "Vrienden toevoegen",
+      "clearPlayers": "Leegmaken",
+      "loadPreset": "Laad Opgeslagen Preset",
+      "loadingFriends": "Vrienden worden geladen...",
+      "noPlayersAdded": "Je hebt nog geen spelers toegevoegd aan de lijst.",
+      "removeModal": {
+        "message": "Weet je zeker dat je ''{name}'' van de lijst wilt verwijderen?",
+        "title": "Bevestig verwijderen"
+      },
+      "removeModalBulk": {
+        "message": "Weet je zeker dat je iedereen van de lijst wilt verwijderen?",
+        "title": "Bevestig verwijderen"
+      },
+      "savePreset": "Opslaan Als Preset",
       "title": "Speler Lijst"
     },
     "select-box": {
@@ -1139,6 +1073,75 @@
       "bigscreenBeyond": "Bigscreen Beyond"
     },
     "title": "HMD Specifieke Automatiseringen"
+  },
+  "invite-and-invite-requests": {
+    "inviteRequestsTab": {
+      "conditions": {
+        "description": "Hier kan je voorwaarden configureren voor OyasumiVR om invite requests automatisch te accepteren.",
+        "title": "Voorwaarden"
+      },
+      "description": "OyasumiVR kan invite requests die je ontvangt automatisch accepteren. Door het gebruiken van een speler whitelist of blacklist, kan je ervoor zorgen dat je alleen invite requests accepteert van vrienden die jij zelf kiest.",
+      "options": {
+        "listMode": {
+          "description": "Hoe de speler lijst moet worden gebruikt.",
+          "options": {
+            "BLACKLIST": {
+              "label": "Blacklist",
+              "subLabel": "Accepteer van iedereen behalve vrienden op de lijst"
+            },
+            "DISABLED": {
+              "label": "Uitgeschakeld",
+              "subLabel": "Accepteer van iedereen"
+            },
+            "WHITELIST": {
+              "label": "Whitelist",
+              "subLabel": "Accepteer van vrienden op de lijst"
+            }
+          },
+          "title": "Lijst Modus"
+        },
+        "onlyBelowPlayerCount": {
+          "description": "Dit is inclusief jezelf",
+          "title": "Alleen als er minder dan <strong>{count, plural, one {#</strong> speler in je wereld is} other {#</strong> spelers in je wereld zijn}}"
+        },
+        "onlyIfSleepModeEnabled": {
+          "title": "Alleen als de slaap modus is geactiveerd"
+        },
+        "presetOptions": {
+          "options": {
+            "NONE": "Niets wijzigen"
+          }
+        }
+      },
+      "otherAutomations": {
+        "changeListPreset": {
+          "onSleepDisable": {
+            "description": "Laad een opgeslagen preset voor de speler lijst wanneer de slaap modus word uitgeschakeld",
+            "title": "Laad een preset wanneer ik wakker word"
+          },
+          "onSleepEnable": {
+            "description": "Laad een opgeslagen preset voor de speler lijst wanneer de slaap modus word ingeschakeld",
+            "title": "Laad een preset wanneer ik in slaap val"
+          },
+          "onSleepPreparation": {
+            "description": "Laad een opgeslagen preset wanneer je je voorbereid om naar bed te gaan",
+            "title": "Laad een preset wanneer je je voorbereid om naar bed te gaan"
+          }
+        },
+        "description": "Hier kan je overige automatiseringen vinden die automatisch de werking van deze functie beinvloeden.",
+        "title": "Overige Automatiseringen"
+      },
+      "userOnJoinMeStatus": "VRChat za onafhankelijk van je instellingen automatisch alle invite requests accepteren, omdat je status op join me (blauw) staat."
+    },
+    "playerList": {
+      "blacklist": "Speler Blacklist",
+      "whitelist": "Speler Whitelist"
+    },
+    "tabs": {
+      "inviteRequests": "Uitnodigingsverzoeken",
+      "invites": "Uitnodigingen",
+      "sounds": "Geluiden"
+    }
   },
   "join-notifications": {
     "description": "Stuur een notificatie bericht of geluid wanneer een andere speler je wereld betreed of verlaat. Dit kan handig zijn als je wilt dat OyasumiVR je wakker maakt als iemand je joint.",

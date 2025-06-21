@@ -88,9 +88,9 @@ export class PlayerListComponent implements OnInit {
   async removePlayer(player: LimitedUser) {
     this.modalService
       .addModal(ConfirmModalComponent, {
-        title: 'auto-invite-request-accept.removeModal.title',
+        title: 'comp.player-list.removeModal.title',
         message: {
-          string: 'auto-invite-request-accept.removeModal.message',
+          string: 'comp.player-list.removeModal.message',
           values: { name: player.displayName },
         },
       })
@@ -104,9 +104,9 @@ export class PlayerListComponent implements OnInit {
   async clearPlayers() {
     this.modalService
       .addModal(ConfirmModalComponent, {
-        title: 'auto-invite-request-accept.removeModalBulk.title',
+        title: 'comp.player-list.removeModalBulk.title',
         message: {
-          string: 'auto-invite-request-accept.removeModalBulk.message',
+          string: 'comp.player-list.removeModalBulk.message',
         },
       })
       .subscribe(async (data) => {

@@ -67,137 +67,6 @@
       "title": "Volume"
     }
   },
-  "auto-invite-request-accept": {
-    "addFriends": "Add Friends",
-    "blacklist": "Player Blacklist",
-    "clearPlayers": "Clear All",
-    "conditions": {
-      "description": "Here you can configure OyasumiVR to only accept invite requests when certain conditions are met.",
-      "title": "Conditions"
-    },
-    "description": "OyasumiVR can automatically accept invite requests you receive. By using the player whitelist or blacklist, you can make sure only the friends you pick will have their invite requests automatically accepted.",
-    "loadPreset": "Load Saved Preset",
-    "loadingFriends": "Loading friends...",
-    "noPlayersAdded": "No players are currently added to the list.",
-    "options": {
-      "acceptMessage": {
-        "customMessage": {
-          "placeholder": "Request accepted by OyasumiVR",
-          "title": "Invite message"
-        },
-        "description": "Include a message when OyasumiVR accepts an invite request",
-        "title": "Accept with message"
-      },
-      "changeListPreset": {
-        "onSleepDisable": {
-          "description": "Load a saved preset for the player list when the sleep mode disables",
-          "title": "Load preset when I wake up"
-        },
-        "onSleepEnable": {
-          "description": "Load a saved preset for the player list when the sleep mode enables",
-          "title": "Load preset when I go to sleep"
-        },
-        "onSleepPreparation": {
-          "description": "Load a saved preset for the player list when you prepare to go to sleep",
-          "title": "Load preset when I prepare to go to sleep"
-        }
-      },
-      "declineOnInviteWhileAsleep": {
-        "customMessage": {
-          "description": "Enter the message to send when an invite is declined",
-          "placeholder": "I'm currently asleep! (Declined by OyasumiVR)",
-          "title": "Custom message"
-        },
-        "description": "Automatically decline invites while the sleep mode is enabled",
-        "title": "Decline invites while asleep"
-      },
-      "declineOnRequest": {
-        "customMessage": {
-          "description": "Enter the message to send when a request is declined",
-          "placeholder": "Request declined by OyasumiVR",
-          "title": "Custom message"
-        },
-        "description": "Automatically send a decline message if OyasumiVR does not automatically accept an invite request",
-        "options": {
-          "ALWAYS": "Yes",
-          "DISABLED": "Never",
-          "WHEN_SLEEPING": "Only while I'm sleeping"
-        },
-        "title": "Decline invite requests"
-      },
-      "enable": {
-        "description": "Automatically accept invite requests from friends",
-        "title": "Enable"
-      },
-      "listMode": {
-        "description": "How the player list operates",
-        "options": {
-          "BLACKLIST": {
-            "label": "Blacklist",
-            "subLabel": "Accept from friends not on the list"
-          },
-          "DISABLED": {
-            "label": "Disabled",
-            "subLabel": "Accept from everyone"
-          },
-          "WHITELIST": {
-            "label": "Whitelist",
-            "subLabel": "Accept from friends on the list"
-          }
-        },
-        "title": "List mode"
-      },
-      "onlyBelowPlayerCount": {
-        "description": "This includes yourself",
-        "title": "Only when there are fewer than <strong>{count, plural, one {#</strong> player} other {#</strong> players}} in your world"
-      },
-      "onlyIfSleepModeEnabled": {
-        "title": "Only when sleep mode is enabled"
-      },
-      "playSoundOnInvite": {
-        "description": "Play a sound when you receive an invite",
-        "onlyWhenAsleep": {
-          "description": "Only play the sound when sleep mode is enabled",
-          "title": "Only when asleep"
-        },
-        "title": "Play sound on invite"
-      },
-      "playSoundOnInviteRequest": {
-        "description": "Play a sound when you receive an invite request",
-        "onlyWhenAsleep": {
-          "description": "Only play the sound when sleep mode is enabled",
-          "title": "Only when asleep"
-        },
-        "onlyWhenUnhandled": {
-          "description": "Only play the sound when the invite request is not automatically accepted or declined",
-          "title": "Only when not automatically handled"
-        },
-        "title": "Play sound on invite request"
-      },
-      "presetOptions": {
-        "options": {
-          "NONE": "Don't change"
-        }
-      }
-    },
-    "otherAutomations": {
-      "description": "Here you can find automations that will automatically change how this feature works.",
-      "title": "Other Automations"
-    },
-    "removeModal": {
-      "message": "Are you sure you want to remove ''{name}'' from your list?",
-      "title": "Confirm Removal"
-    },
-    "removeModalBulk": {
-      "message": "Are you sure you want to remove everyone from your list?",
-      "title": "Confirm Removal"
-    },
-    "savePreset": "Save As Preset",
-    "title": "Auto Accept Invite Requests",
-    "userOnBusyStatus": "Friends won't be able to request to join you normally while your status is on busy (red). OyasumiVR will still accept invite requests sent through 3rd party tools like VRCX.",
-    "userOnJoinMeStatus": "VRChat will automatically accept all invite requests regardless of your settings, because your status is on join me (blue).",
-    "whitelist": "Player Whitelist"
-  },
   "brightness-automations": {
     "AT_SUNRISE": {
       "title": "At sunrise"
@@ -350,7 +219,7 @@
     "dashboard-navbar": {
       "about": "About OyasumiVR",
       "audioVolumeAutomations": "Audio Volume Automations",
-      "autoInviteRequestAccept": "Auto Accept \nInvite Requests",
+      "autoInviteRequestAccept": "Invites & Invite Requests",
       "brightnessAutomations": "Brightness Automations",
       "chaperoneAutomations": "Chaperone Automations",
       "deviceManager": "Device Manager",
@@ -1086,6 +955,20 @@
       }
     },
     "player-list": {
+      "addFriends": "Add Friends",
+      "clearPlayers": "Clear All",
+      "loadPreset": "Load Saved Preset",
+      "loadingFriends": "Loading friends...",
+      "noPlayersAdded": "No players are currently added to the list.",
+      "removeModal": {
+        "message": "Are you sure you want to remove ''{name}'' from your list?",
+        "title": "Confirm Removal"
+      },
+      "removeModalBulk": {
+        "message": "Are you sure you want to remove everyone from your list?",
+        "title": "Confirm Removal"
+      },
+      "savePreset": "Save As Preset",
       "title": "Player List"
     },
     "select-box": {
@@ -1394,6 +1277,140 @@
       "bigscreenBeyond": "Bigscreen Beyond"
     },
     "title": "HMD Specific Automations"
+  },
+  "invite-and-invite-requests": {
+    "inviteRequestsTab": {
+      "conditions": {
+        "description": "Here you can configure OyasumiVR to only accept invite requests when certain conditions are met.",
+        "title": "Conditions"
+      },
+      "description": "OyasumiVR can automatically accept invite requests you receive. By using the player whitelist or blacklist, you can make sure only the friends you pick will have their invite requests automatically accepted.",
+      "options": {
+        "acceptMessage": {
+          "customMessage": {
+            "placeholder": "Request accepted by OyasumiVR",
+            "title": "Invite message"
+          },
+          "description": "Include a message when OyasumiVR accepts an invite request",
+          "title": "Accept with message"
+        },
+        "declineOnRequest": {
+          "customMessage": {
+            "description": "Enter the message to send when a request is declined",
+            "placeholder": "Request declined by OyasumiVR",
+            "title": "Custom message"
+          },
+          "description": "Automatically send a decline message if OyasumiVR does not automatically accept an invite request",
+          "options": {
+            "ALWAYS": "Yes",
+            "DISABLED": "Never",
+            "WHEN_SLEEPING": "Only while I'm sleeping"
+          },
+          "title": "Decline unhandled invite requests"
+        },
+        "enable": {
+          "description": "Have OyasumiVR automatically accept invite requests from friends",
+          "title": "Auto-accept invite requests"
+        },
+        "listMode": {
+          "description": "How the player list operates",
+          "options": {
+            "BLACKLIST": {
+              "label": "Blacklist",
+              "subLabel": "Accept from friends not on the list"
+            },
+            "DISABLED": {
+              "label": "Disabled",
+              "subLabel": "Accept from everyone"
+            },
+            "WHITELIST": {
+              "label": "Whitelist",
+              "subLabel": "Accept from friends on the list"
+            }
+          },
+          "title": "List mode"
+        },
+        "onlyBelowPlayerCount": {
+          "description": "This includes yourself",
+          "title": "Only when there are fewer than <strong>{count, plural, one {#</strong> player} other {#</strong> players}} in your world"
+        },
+        "onlyIfSleepModeEnabled": {
+          "title": "Only when sleep mode is enabled"
+        },
+        "presetOptions": {
+          "options": {
+            "NONE": "Don't change"
+          }
+        }
+      },
+      "otherAutomations": {
+        "changeListPreset": {
+          "onSleepDisable": {
+            "description": "Load a saved preset for the player list when the sleep mode disables",
+            "title": "Load preset when I wake up"
+          },
+          "onSleepEnable": {
+            "description": "Load a saved preset for the player list when the sleep mode enables",
+            "title": "Load preset when I go to sleep"
+          },
+          "onSleepPreparation": {
+            "description": "Load a saved preset for the player list when you prepare to go to sleep",
+            "title": "Load preset when I prepare to go to sleep"
+          }
+        },
+        "description": "Here you can find automations that will automatically change how this feature works.",
+        "title": "Other Automations"
+      },
+      "userOnBusyStatus": "Friends won't be able to request to join you normally while your status is on busy (red). OyasumiVR will still accept invite requests sent through 3rd party tools like VRCX.",
+      "userOnJoinMeStatus": "VRChat will automatically accept all invite requests regardless of your settings, because your status is on join me (blue)."
+    },
+    "invitesTab": {
+      "options": {
+        "declineOnInviteWhileAsleep": {
+          "customMessage": {
+            "description": "Enter the message to send when an invite is declined",
+            "placeholder": "I'm currently asleep! (Declined by OyasumiVR)",
+            "title": "Custom message"
+          },
+          "description": "Automatically decline invites while the sleep mode is enabled",
+          "title": "Decline invites while asleep"
+        }
+      }
+    },
+    "playerList": {
+      "blacklist": "Player Blacklist",
+      "whitelist": "Player Whitelist"
+    },
+    "soundsTab": {
+      "options": {
+        "playSoundOnInvite": {
+          "description": "Play a sound when you receive an invite",
+          "onlyWhenAsleep": {
+            "description": "Only play the sound when sleep mode is enabled",
+            "title": "Only when asleep"
+          },
+          "title": "Play sound on invite"
+        },
+        "playSoundOnInviteRequest": {
+          "description": "Play a sound when you receive an invite request",
+          "onlyWhenAsleep": {
+            "description": "Only play the sound when sleep mode is enabled",
+            "title": "Only when asleep"
+          },
+          "onlyWhenUnhandled": {
+            "description": "Only play the sound when the invite request is not automatically accepted or declined",
+            "title": "Only when not automatically handled"
+          },
+          "title": "Play sound on invite request"
+        }
+      }
+    },
+    "tabs": {
+      "inviteRequests": "Invite Requests",
+      "invites": "Invites",
+      "sounds": "Sounds"
+    },
+    "title": "Invites & Invite Requests"
   },
   "join-notifications": {
     "description": "Play a notification message and/or sound when another player enters or leaves your world. This can be useful if you want OyasumiVR to wake you up when someone joins you.",
