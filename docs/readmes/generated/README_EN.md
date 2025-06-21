@@ -78,7 +78,7 @@ If you want to come chat, join our <a href="https://discord.gg/7MqdPJhYxC"><img 
 
 ## Download & Install
 
-<img align="right" src="https://github.com/user-attachments/assets/f68dbaeb-717c-4862-8c52-b7639d65cb32" width="180">
+<img align="right" src="https://github.com/user-attachments/assets/f68dbaeb-717c-4862-8c52-b7639d65cb32" width="130">
 Grab our latest installer from whichever place you prefer:
 
 - [Steam](https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/) (_The **recommended method**_)

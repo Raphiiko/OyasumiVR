@@ -78,7 +78,7 @@
 
 ## 下载与安装
 
-<img align="right" src="https://github.com/user-attachments/assets/f68dbaeb-717c-4862-8c52-b7639d65cb32" width="180">
+<img align="right" src="https://github.com/user-attachments/assets/f68dbaeb-717c-4862-8c52-b7639d65cb32" width="130">
 从你喜欢的地方下载最新的版本：
 
 - [Steam](https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/) (_**推荐**_)

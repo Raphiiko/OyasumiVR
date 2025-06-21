@@ -78,7 +78,7 @@
 
 ## {{DOWNLOAD_AND_INSTALL_HEADER}}
 
-<img align="right" src="https://github.com/user-attachments/assets/f68dbaeb-717c-4862-8c52-b7639d65cb32" width="180">
+<img align="right" src="https://github.com/user-attachments/assets/f68dbaeb-717c-4862-8c52-b7639d65cb32" width="130">
 {{DOWNLOAD_AND_INSTALL_BODY}}
 
 ## {{WHAT_IS_OYASUMIVR_HEADER}}
