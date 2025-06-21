@@ -1,20 +1,3 @@
-:host {
-  display: flex;
-  flex-direction: row;
-  height: 100%;
-}
-
-.pane.main {
-  flex: 1;
-
-  .pane-content {
-    overflow-y: overlay;
-    app-select-box {
-      width: 18em;
-    }
-  }
-}
-
 .alert {
   &:not(:last-child) {
     margin-bottom: 1em;
@@ -40,9 +23,9 @@
 }
 
 .preset-select-box {
-  max-width: 14em;
+  min-width: 12em;
 }
 
 .small-select-box {
-  max-width: 10em;
+  min-width: 10em;
 }

@@ -66,85 +66,6 @@
       "title": "音量"
     }
   },
-  "auto-invite-request-accept": {
-    "addFriends": "新增朋友",
-    "blacklist": "玩家黑名單",
-    "clearPlayers": "全部清除",
-    "conditions": {
-      "description": "你可以在此設定 OyasumiVR，使其僅在符合特定條件時接受邀請請求。",
-      "title": "條件"
-    },
-    "description": "OyasumiVR 可以自動接受你收到的加入請求。 透過使用玩家白名單或黑名單，可確保只有你選擇的朋友才會自動接受他們的邀請請求",
-    "loadPreset": "載入儲存的預設值",
-    "loadingFriends": "正在載入好友...",
-    "noPlayersAdded": "目前沒有任何玩家在此列表中",
-    "options": {
-      "changeListPreset": {
-        "onSleepDisable": {
-          "description": "睡眠模式停用時，為玩家清單載入已儲存的預設值",
-          "title": "起床時載入預設值"
-        },
-        "onSleepEnable": {
-          "description": "睡眠模式啟動時，為玩家清單載入儲存的預設值",
-          "title": "睡眠時載入預設值"
-        },
-        "onSleepPreparation": {
-          "description": "準備入睡時，為玩家清單載入儲存的預設值",
-          "title": "準備入睡時載入預設值"
-        }
-      },
-      "enable": {
-        "description": "自動接受好友的加入請求",
-        "title": "開啟"
-      },
-      "listMode": {
-        "description": "玩家列表的運作模式",
-        "options": {
-          "BLACKLIST": {
-            "label": "黑名單",
-            "subLabel": "接受所有非此列表的朋友加入邀請"
-          },
-          "DISABLED": {
-            "label": "關閉",
-            "subLabel": "接受所有人"
-          },
-          "WHITELIST": {
-            "label": "白名單",
-            "subLabel": "接受所有來自此列表的朋友加入邀請"
-          }
-        },
-        "title": "列表模式"
-      },
-      "onlyBelowPlayerCount": {
-        "description": "這包括你自己",
-        "title": "只有當你的世界中少於<strong>{count, plural, one {#</strong> 位玩家} other {#</strong> 位玩家}}時"
-      },
-      "onlyIfSleepModeEnabled": {
-        "title": "當睡眠模式啟動時"
-      },
-      "presetOptions": {
-        "options": {
-          "NONE": "不要變更"
-        }
-      }
-    },
-    "otherAutomations": {
-      "description": "你可以在此找到自動化功能，自動變更此功能的運作方式。",
-      "title": "其他自動化"
-    },
-    "removeModal": {
-      "message": "你確定要從列表中刪除「{name}」嗎？",
-      "title": "確認刪除"
-    },
-    "removeModalBulk": {
-      "message": "你確定要把每個人都從你的名單中刪除嗎？",
-      "title": "確認刪除"
-    },
-    "savePreset": "儲存為預設值",
-    "title": "自動接受加入請求",
-    "userOnJoinMeStatus": "無論你的設定如何，VRChat 都會自動接受所有邀請請求，因為你的狀態是加入我（藍色）",
-    "whitelist": "玩家白名單"
-  },
   "brightness-automations": {
     "AT_SUNRISE": {
       "title": "在日出時"
@@ -294,7 +215,6 @@
     "dashboard-navbar": {
       "about": "關於 OyasumiVR",
       "audioVolumeAutomations": "音量自動化",
-      "autoInviteRequestAccept": "自動接受邀請請求",
       "brightnessAutomations": "亮度自動化",
       "chaperoneAutomations": "Chaperone 導護自動化",
       "gpuAutomations": "GPU 自動化",
@@ -931,6 +851,20 @@
       }
     },
     "player-list": {
+      "addFriends": "新增朋友",
+      "clearPlayers": "全部清除",
+      "loadPreset": "載入儲存的預設值",
+      "loadingFriends": "正在載入好友...",
+      "noPlayersAdded": "目前沒有任何玩家在此列表中",
+      "removeModal": {
+        "message": "你確定要從列表中刪除「{name}」嗎？",
+        "title": "確認刪除"
+      },
+      "removeModalBulk": {
+        "message": "你確定要把每個人都從你的名單中刪除嗎？",
+        "title": "確認刪除"
+      },
+      "savePreset": "儲存為預設值",
       "title": "球員名單"
     },
     "select-box": {
@@ -1119,6 +1053,75 @@
       "bigscreenBeyond": "Bigscreen Beyond"
     },
     "title": "頭顯專用自動化"
+  },
+  "invite-and-invite-requests": {
+    "inviteRequestsTab": {
+      "conditions": {
+        "description": "你可以在此設定 OyasumiVR，使其僅在符合特定條件時接受邀請請求。",
+        "title": "條件"
+      },
+      "description": "OyasumiVR 可以自動接受你收到的加入請求。 透過使用玩家白名單或黑名單，可確保只有你選擇的朋友才會自動接受他們的邀請請求",
+      "options": {
+        "listMode": {
+          "description": "玩家列表的運作模式",
+          "options": {
+            "BLACKLIST": {
+              "label": "黑名單",
+              "subLabel": "接受所有非此列表的朋友加入邀請"
+            },
+            "DISABLED": {
+              "label": "關閉",
+              "subLabel": "接受所有人"
+            },
+            "WHITELIST": {
+              "label": "白名單",
+              "subLabel": "接受所有來自此列表的朋友加入邀請"
+            }
+          },
+          "title": "列表模式"
+        },
+        "onlyBelowPlayerCount": {
+          "description": "這包括你自己",
+          "title": "只有當你的世界中少於<strong>{count, plural, one {#</strong> 位玩家} other {#</strong> 位玩家}}時"
+        },
+        "onlyIfSleepModeEnabled": {
+          "title": "當睡眠模式啟動時"
+        },
+        "presetOptions": {
+          "options": {
+            "NONE": "不要變更"
+          }
+        }
+      },
+      "otherAutomations": {
+        "changeListPreset": {
+          "onSleepDisable": {
+            "description": "睡眠模式停用時，為玩家清單載入已儲存的預設值",
+            "title": "起床時載入預設值"
+          },
+          "onSleepEnable": {
+            "description": "睡眠模式啟動時，為玩家清單載入儲存的預設值",
+            "title": "睡眠時載入預設值"
+          },
+          "onSleepPreparation": {
+            "description": "準備入睡時，為玩家清單載入儲存的預設值",
+            "title": "準備入睡時載入預設值"
+          }
+        },
+        "description": "你可以在此找到自動化功能，自動變更此功能的運作方式。",
+        "title": "其他自動化"
+      },
+      "userOnJoinMeStatus": "無論你的設定如何，VRChat 都會自動接受所有邀請請求，因為你的狀態是加入我（藍色）"
+    },
+    "playerList": {
+      "blacklist": "玩家黑名單",
+      "whitelist": "玩家白名單"
+    },
+    "tabs": {
+      "inviteRequests": "邀請請求",
+      "invites": "邀請",
+      "sounds": "聲音"
+    }
   },
   "join-notifications": {
     "description": "當其他玩家進入或離開你的世界時，播放通知訊息和/或聲音。如果你想讓 OyasumiVR 在有人加入時喚醒你，這會很有用。",

@@ -8,54 +8,28 @@
     "sourceLink": "Code source @ GitHub",
     "translations": "Traductions"
   },
-  "auto-invite-request-accept": {
-    "addFriends": "Ajouter des amis",
-    "blacklist": "Liste noire",
-    "description": "OyasumiVR peut accepter les demandes d'invitation automatiquement. Grâce à la liste blanche et la liste noire, vous pouvez choisir parmi vos amis qui sera accepté ou non.",
-    "noPlayersAdded": "Aucun joueur n'a été ajouté sur la liste",
-    "options": {
-      "enable": {
-        "description": "Accepter automatiquement les demandes de vos amis.",
-        "title": "Activer"
-      },
-      "listMode": {
-        "description": "Comment la liste de joueurs fonctionne",
-        "options": {
-          "BLACKLIST": {
-            "label": "Liste noire",
-            "subLabel": "Accepter les requêtes des amis qui ne sont pas membres de cette liste."
-          },
-          "DISABLED": {
-            "label": "Désactivé",
-            "subLabel": "Accepter les requêtes de tout le monde"
-          },
-          "WHITELIST": {
-            "label": "Liste blanche",
-            "subLabel": "Accepter les requêtes des amis de cette liste"
-          }
-        },
-        "title": "Mode liste"
-      },
-      "onlyIfSleepModeEnabled": {
-        "title": "Seulement quand le mode sommeil est actif."
-      }
+  "audio-volume-automations": {
+    "config": {
+      "title": "Configuration"
     },
-    "removeModal": {
-      "message": "Voulez vous supprimer ''{name}'' de votre liste?",
-      "title": "Confirmer la suppression"
+    "onSleepDisable": {
+      "title": "Quand je me réveille"
     },
-    "removeModalBulk": {
-      "message": "Voulez vous supprimer tout le monde de votre liste ?",
-      "title": "Confirmer la suppression"
-    },
-    "title": "Accepter les demandes d'invitation automatiquement",
-    "userOnJoinMeStatus": "VRChat acceptera automatiquement toute demande d'invitation, peu importe vos paramètres OyasumiVR, car votre statut est 'join me' (bleu).",
-    "whitelist": "Liste blanche"
+    "onSleepEnable": {
+      "title": "Quand je vais dormir"
+    }
   },
   "brightness-automations": {
+    "SLEEP_MODE_DISABLE": {
+      "title": "Quand je me réveille"
+    },
+    "SLEEP_MODE_ENABLE": {
+      "title": "Quand je vais dormir"
+    },
     "brightness": {
       "title": "Changer la luminosité pour"
     },
+    "events": "Évènements",
     "title": "Automatisation de luminosité"
   },
   "chaperone-automations": {
@@ -72,7 +46,6 @@
     },
     "dashboard-navbar": {
       "about": "A propos",
-      "autoInviteRequestAccept": "Gestion des demandes",
       "brightnessAutomations": "Automatisation de luminosité",
       "gpuAutomations": "Automatisations GPU",
       "oscAutomations": "Automatisations OSC",
@@ -103,6 +76,30 @@
           },
           "title": "Invitation de ''{displayName}'' acceptée automatiquement"
         },
+        "bsbFanSpeedChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
+            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
+          }
+        },
+        "bsbLedChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
+            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
+          }
+        },
+        "cctChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLE": "Car le mode sommeil a été désactivé",
+            "SLEEP_MODE_ENABLE": "Car le mode sommeil a été activé"
+          }
+        },
+        "changedAudioDeviceVolume": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
+            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
+          }
+        },
         "changedSystemMicControllerButtonBehavior": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
@@ -127,6 +124,12 @@
             "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
           }
         },
+        "frameLimitChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
+            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
+          }
+        },
         "gpuPowerLimitChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
@@ -137,7 +140,24 @@
             "set": "Limite de consommation pour ''{device}'' définie à {limit}"
           }
         },
+        "hardwareBrightnessChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLE": "Car le mode sommeil a été désactivé",
+            "SLEEP_MODE_ENABLE": "Car le mode sommeil a été activé"
+          }
+        },
+        "lighthouseSetPowerState": {
+          "reasons": {
+            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé"
+          }
+        },
         "msiAfterburnerProfileSet": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
+            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
+          }
+        },
+        "mutedAudioDevice": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
             "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
@@ -151,6 +171,18 @@
           "title": {
             "auto": "Résolution d'affichage de SteamVR passée à 'auto'",
             "custom": "Résolution d'affichage de SteamVR passée à {value}"
+          }
+        },
+        "runAutomationExecuted": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
+            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
+          }
+        },
+        "simpleBrightnessChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLE": "Car le mode sommeil a été désactivé",
+            "SLEEP_MODE_ENABLE": "Car le mode sommeil a été activé"
           }
         },
         "sleepDetectorEnableCancelled": {
@@ -184,6 +216,19 @@
           },
           "title": "Mode sommeil activé"
         },
+        "softwareBrightnessChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLE": "Car le mode sommeil a été désactivé",
+            "SLEEP_MODE_ENABLE": "Car le mode sommeil a été activé"
+          }
+        },
+        "statusChangedOnGeneralEvent": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
+            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
+          },
+          "title": "Votre statut VRChat a été changé de {oldStatus} pour {newStatus}"
+        },
         "statusChangedOnPlayerCountChange": {
           "reason": {
             "AT_LIMIT_OR_ABOVE": "Car le nombre de joueurs dans votre monde a dépassé {threshold}",
@@ -196,6 +241,7 @@
             "CHARGING": "À la mise en charge",
             "MANUAL": "Éteint manuellement",
             "OSC_CONTROL": "Éteint via OSC",
+            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
             "SLEEP_MODE_ENABLED": "À l'activation du mode sommeil"
           },
           "title": {
@@ -207,11 +253,36 @@
             "VARIOUS": "Divers appareils ont été éteints"
           }
         },
+        "unmutedAudioDevice": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
+            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
+          }
+        },
+        "vrchatAvatarChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
+            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
+          }
+        },
+        "vrchatGroupChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
+            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
+          }
+        },
         "windowsPowerPolicySet": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
             "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
           }
+        }
+      }
+    },
+    "event-log-filter-dialog": {
+      "filters": {
+        "SLEEP_MODE": {
+          "title": "Mode sommeil"
         }
       }
     },
@@ -236,10 +307,18 @@
       "active": "Actif",
       "inactive": "Inactif",
       "loggedOut": "Déconnecté",
+      "sleepMode": {
+        "label": "Mode sommeil"
+      },
       "steamvr": {
         "INACTIVE": "Inactif",
         "INITIALIZED": "Actif",
         "INITIALIZING": "En attente"
+      }
+    },
+    "mqtt-config-modal": {
+      "password": {
+        "title": "Mot de passe"
       }
     },
     "osc-script-code-editor": {
@@ -274,6 +353,18 @@
       "errorCounter": "{value, plural, one {1 Erreur de validation} other {# Erreurs de validation}}",
       "test": "Test"
     },
+    "player-list": {
+      "addFriends": "Ajouter des amis",
+      "noPlayersAdded": "Aucun joueur n'a été ajouté sur la liste",
+      "removeModal": {
+        "message": "Voulez vous supprimer ''{name}'' de votre liste?",
+        "title": "Confirmer la suppression"
+      },
+      "removeModalBulk": {
+        "message": "Voulez vous supprimer tout le monde de votre liste ?",
+        "title": "Confirmer la suppression"
+      }
+    },
     "select-box": {
       "defaultPlaceholder": "Sélectionner..."
     },
@@ -304,6 +395,29 @@
         "LAST_CODE_INVALID": "Le code d'identification est invalide."
       },
       "title": "Autentification à deux facteurs"
+    }
+  },
+  "device-manager": {
+    "deviceType": {
+      "CONTROLLER": "Contrôleurs",
+      "TRACKER": "Trackers"
+    },
+    "tabs": {
+      "devices": "Appareils"
+    },
+    "tags": {
+      "cancel": "Annuler",
+      "save": "Sauvegarder"
+    }
+  },
+  "frame-limiter": {
+    "add-application-modal": {
+      "add": "Ajouter"
+    },
+    "onSleepDisable": "Quand je me réveille",
+    "onSleepEnable": "Quand je vais dormir",
+    "selector": {
+      "auto": "Auto"
     }
   },
   "gpu-automations": {
@@ -380,6 +494,82 @@
     },
     "title": "Automatisations du GPU"
   },
+  "hmd-automations": {
+    "bigscreenBeyond": {
+      "fanControl": {
+        "onSleepDisable": {
+          "title": "Quand je me réveille"
+        },
+        "onSleepEnable": {
+          "title": "Quand je vais dormir"
+        }
+      },
+      "rgb": {
+        "onSleepDisable": {
+          "title": "Quand je me réveille"
+        },
+        "onSleepEnable": {
+          "title": "Quand je vais dormir"
+        }
+      }
+    }
+  },
+  "invite-and-invite-requests": {
+    "inviteRequestsTab": {
+      "description": "OyasumiVR peut accepter les demandes d'invitation automatiquement. Grâce à la liste blanche et la liste noire, vous pouvez choisir parmi vos amis qui sera accepté ou non.",
+      "options": {
+        "listMode": {
+          "description": "Comment la liste de joueurs fonctionne",
+          "options": {
+            "BLACKLIST": {
+              "label": "Liste noire",
+              "subLabel": "Accepter les requêtes des amis qui ne sont pas membres de cette liste."
+            },
+            "DISABLED": {
+              "label": "Désactivé",
+              "subLabel": "Accepter les requêtes de tout le monde"
+            },
+            "WHITELIST": {
+              "label": "Liste blanche",
+              "subLabel": "Accepter les requêtes des amis de cette liste"
+            }
+          },
+          "title": "Mode liste"
+        },
+        "onlyIfSleepModeEnabled": {
+          "title": "Seulement quand le mode sommeil est actif."
+        }
+      },
+      "userOnJoinMeStatus": "VRChat acceptera automatiquement toute demande d'invitation, peu importe vos paramètres OyasumiVR, car votre statut est 'join me' (bleu)."
+    },
+    "playerList": {
+      "blacklist": "Liste noire",
+      "whitelist": "Liste blanche"
+    },
+    "tabs": {
+      "inviteRequests": "Demandes d'invitation",
+      "invites": "Invitations",
+      "sounds": "Sons"
+    }
+  },
+  "join-notifications": {
+    "onlyWhenSleepModeActive": {
+      "title": "Seulement quand le mode sommeil est actif."
+    }
+  },
+  "message-center": {
+    "actions": {
+      "moreInfo": "Plus d'informations"
+    },
+    "messages": {
+      "gpuAutomationsSidecarNotRunning": {
+        "actions": {
+          "disable": "Désactiver les automatisations GPU",
+          "elevate": "Donner les droits administrateur"
+        }
+      }
+    }
+  },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "Ce preset peut mal fonctionner. Merci de l'utiliser si vous ne pouvez pas utiliser le nouveau preset de GoGo Loco. Si votre avatar utilise une ancienne version de GoGo Loco, il est recommandé de mettre à jour votre avatar pour utiliser la dernière version.",
     "oscScriptEditorErrors": {
@@ -396,6 +586,11 @@
       "noFloatMilliseconds": "Les valeurs en millisecondes doivent être un nombre entier.",
       "tooManyCommands": "Un script OSC ne peut avoir plus de {value} actions.",
       "totalDurationTooLong": "La durée totale du script ne peut dépasser 10 secondes."
+    }
+  },
+  "nightmare-detection": {
+    "disableSleepMode": {
+      "title": "Désactiver le mode sommeil"
     }
   },
   "notifications": {
@@ -424,6 +619,9 @@
         "description": "Envoyer ces commandes OSC",
         "script": "Mode sommeil activé",
         "title": "Lors du sommeil"
+      },
+      "onSleepPreparation": {
+        "description": "Envoyer ces commandes OSC"
       }
     },
     "sleepingAnimations": {
@@ -508,6 +706,19 @@
     }
   },
   "power-automations": {
+    "devices": {
+      "turnOff": {
+        "triggers": {
+          "onSleepModeDisable": "Quand je me réveille",
+          "onSleepModeEnable": "Quand je vais dormir"
+        }
+      },
+      "turnOn": {
+        "triggers": {
+          "onSleepModeDisable": "Quand je me réveille"
+        }
+      }
+    },
     "enableLighthouseControl": "Activer",
     "windowsPowerPolicy": {
       "sleepModeDisable": {
@@ -535,12 +746,28 @@
     },
     "title": "Automatisations de résolution"
   },
+  "runAutomations": {
+    "onSleepDisable": {
+      "title": "Quand je me réveille"
+    },
+    "onSleepEnable": {
+      "title": "Quand je vais dormir"
+    },
+    "testCommands": "Test"
+  },
   "settings": {
     "general": {
       "adminPrivileges": {
         "description": "OyasumiVR a besoin des droits administrateurs pour gérer la consommation de votre GPU. Les privilèges seront demandés au démarrage du programme.",
         "label": "Demander les droits administrateurs au démarrage",
         "title": "Droits administrateur"
+      },
+      "discord": {
+        "activityMode": {
+          "options": {
+            "DISABLED": "Désactivé"
+          }
+        }
       },
       "language": {
         "description": "Vous pouvez choisir la langue de l'interface ci-dessous. S'il manque des traductions ou si vous voulez traduire OyasumiVR dans votre propre langue, n'hésitez pas à nous contacter.",
@@ -670,9 +897,18 @@
       "description": "Active automatiquement le mode sommeil selon plusieurs critères"
     },
     "modals": {
+      "disableAfterTime": {
+        "title": "Désactiver le mode sommeil"
+      },
       "disableAtTime": {
         "description": "Désactiver le mode sommeil à une heure spécifique.",
         "time": "Heure",
+        "title": "Désactiver le mode sommeil"
+      },
+      "disableForPlayerJoinLeave": {
+        "title": "Désactiver le mode sommeil"
+      },
+      "disableForUprightPose": {
         "title": "Désactiver le mode sommeil"
       },
       "disableOnDevicePowerOn": {
@@ -760,10 +996,28 @@
         "title": "Calibrer la détection de sommeil"
       }
     },
+    "sleepDetection": {
+      "automation": {
+        "title": "Détection de sommeil"
+      },
+      "configuration": {
+        "title": "Configuration"
+      }
+    },
     "title": "Détection de sommeil"
   },
   "status-automations": {
     "behaviourWarningFAQ": "Vous pouvez trouver réponse à vos questions sur le changement de statut ici:\n\nQ: Est-ce que les demandes seront automatiquement acceptées, même si VRChat ne montre pas que je suis en statut 'bleu'?\nR:Si OyasumiVR change votre statut à 'bleu' (join me), le programme prendra la main et acceptera automatiquement les requêtes que vous recevez.\n\nQ:Les joueurs ne peuvent pas me rejoindre car mon statut ne se met pas à jour pour eux.\nR: Les mises à jour de statut peuvent avoir un délai avant d'être affichées aux autres utilisateurs. S'ils veulent vous rejoindre mais ne peuvent pas, ils peuvent forcer la mise à jour de votre statut en ouvrant votre profil dans le menu principal.",
+    "general": {
+      "onSleepDisable": {
+        "script": "Mode sommeil désactivé",
+        "title": "Quand je me réveille"
+      },
+      "onSleepEnable": {
+        "script": "Mode sommeil activé",
+        "title": "Quand je vais dormir"
+      }
+    },
     "moreInfo": "Plus d'informations",
     "playerLimit": {
       "atLimitOrAbove": {
@@ -782,6 +1036,10 @@
       "onlyIfSleepModeEnabled": "Seulement quand le mode sommeil est activé",
       "playerLimit": "Limite de joueurs",
       "playerLimitLabel": "{count, plural, one {1 jouer} other {# joueurs}}"
+    },
+    "tabs": {
+      "general": "Général",
+      "playerLimit": "Limite de joueurs"
     },
     "title": "Automatisations de statut"
   },
@@ -806,12 +1064,33 @@
       }
     }
   },
+  "systemTray": {
+    "sleepMode": "Mode sommeil"
+  },
   "updater": {
     "modals": {
       "error": {
         "message": "L'installation de la mise à jour a échouée. Veuillez réessayer ultérieurement.",
         "title": "Mise à jour échouée"
       }
+    }
+  },
+  "vrchatAvatarAutomations": {
+    "onSleepDisable": {
+      "script": "Mode sommeil désactivé",
+      "title": "Quand je me réveille"
+    },
+    "onSleepEnable": {
+      "script": "Mode sommeil activé",
+      "title": "Quand je vais dormir"
+    }
+  },
+  "vrchatGroupAutomations": {
+    "onSleepDisable": {
+      "title": "Quand je me réveille"
+    },
+    "onSleepEnable": {
+      "title": "Quand je vais dormir"
     }
   },
   "vrchatMicMuteAutomations": {

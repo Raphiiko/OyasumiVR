@@ -66,85 +66,6 @@
       "title": "Lautstärke"
     }
   },
-  "auto-invite-request-accept": {
-    "addFriends": "Freunde hinzufügen",
-    "blacklist": "Spieler-Blacklist",
-    "clearPlayers": "Spieler löschen",
-    "conditions": {
-      "description": "Hier kannst du OyasumiVR einstellen um nur Einladeanfragen zu akzeptieren, wenn bestimmte Voraussetzungen vorliegen",
-      "title": "Voraussetzungen"
-    },
-    "description": "OyasumiVR kann Einladugsanfragen automatisch für dich annehmen. Indem du die White- oder Blacklist benutzt, kannst du sicherstellen, dass nur Anfragen von Freunden die du auswählst automatisch angenommen werden.",
-    "loadPreset": "Gespeicherte Voreinstellungen Laden",
-    "loadingFriends": "Freunde werden geladen...",
-    "noPlayersAdded": "Es sind aktuell keine Spieler in die Liste eingetragen.",
-    "options": {
-      "changeListPreset": {
-        "onSleepDisable": {
-          "description": "Lade eine gespeicherte Voreinstellung der Spielerlistem wenn sich der Schlafmodus ausschaltet",
-          "title": "Voreinstellungen beim aufwachen laden"
-        },
-        "onSleepEnable": {
-          "description": "Gespeicherte Voreinstellungen der Spielerliste laden, wenn der Schlafmodus eingeschaltet wird",
-          "title": "Voreinstellungen laden, wenn ich den Schlafmodus aktiviere"
-        },
-        "onSleepPreparation": {
-          "description": "Lade eine gespeicherte Voreinstellung für die Spielerliste, wenn du dich vorbereitest schlafen zu gehen",
-          "title": "Voreinstellungen laden, wenn ich mich den Schlafmodus vorbereite"
-        }
-      },
-      "enable": {
-        "description": "Automatisch Einladugsanfragen von Freunden annehmen.",
-        "title": "Einschalten"
-      },
-      "listMode": {
-        "description": "Wie die Spielerliste funktioniert",
-        "options": {
-          "BLACKLIST": {
-            "label": "Blacklist",
-            "subLabel": "Anfragen von Freunden die nicht auf der Liste stehen annehmen"
-          },
-          "DISABLED": {
-            "label": "Deaktiviert",
-            "subLabel": "Anfragen von allen annehmen"
-          },
-          "WHITELIST": {
-            "label": "Whitelist",
-            "subLabel": "Anfragen von Freunden die auf der Liste stehen annehmen"
-          }
-        },
-        "title": "Listenmodus"
-      },
-      "onlyBelowPlayerCount": {
-        "description": "Dich inkludiert",
-        "title": "Nur wenn weniger als <strong>{count, plural, one {#</strong> player} other {#</strong> players}} in deiner Welt sind"
-      },
-      "onlyIfSleepModeEnabled": {
-        "title": "Nur wenn der Schlafmodus aktiviert ist"
-      },
-      "presetOptions": {
-        "options": {
-          "NONE": "Nicht Ändern"
-        }
-      }
-    },
-    "otherAutomations": {
-      "description": "Hier kannst du Automationen finden, welche automatisch die Vorgaben der Funktion ändern",
-      "title": "Andere Automationen"
-    },
-    "removeModal": {
-      "message": "Bist du dir sicher, dass du \"{name}\" von deiner Liste entfernen willst?",
-      "title": "Entfernen bestätigen"
-    },
-    "removeModalBulk": {
-      "message": "Bist du dir sicher, dass du alle Spieler von deiner Liste entfernen willst?",
-      "title": "Entfernen bestätigen"
-    },
-    "savePreset": "Als Voreinstellung speichern",
-    "title": "Automatisch Einladungsanfragen annehmen",
-    "userOnJoinMeStatus": "VRChat nimmt automatisch alle Einladungsanfragen an, unabhängig von deinen Einstellung, da dein Status auf Tritt mir bei (blau) gesetzt ist.",
-    "whitelist": "Spieler Whitelist"
-  },
   "brightness-automations": {
     "AT_SUNRISE": {
       "title": "Bei Sonnenaufgang"
@@ -294,7 +215,6 @@
     "dashboard-navbar": {
       "about": "Über OyasumiVR",
       "audioVolumeAutomations": "Lautstärke-Automatisierungen",
-      "autoInviteRequestAccept": "Automatisch Einladungsanfragen annehmen",
       "brightnessAutomations": "Helligkeits-Automatisierungen",
       "chaperoneAutomations": "Chaperone-Automatisierungen",
       "gpuAutomations": "Grafikkarten-Automatisierungen",
@@ -958,6 +878,20 @@
       }
     },
     "player-list": {
+      "addFriends": "Freunde hinzufügen",
+      "clearPlayers": "Spieler löschen",
+      "loadPreset": "Gespeicherte Voreinstellungen Laden",
+      "loadingFriends": "Freunde werden geladen...",
+      "noPlayersAdded": "Es sind aktuell keine Spieler in die Liste eingetragen.",
+      "removeModal": {
+        "message": "Bist du dir sicher, dass du \"{name}\" von deiner Liste entfernen willst?",
+        "title": "Entfernen bestätigen"
+      },
+      "removeModalBulk": {
+        "message": "Bist du dir sicher, dass du alle Spieler von deiner Liste entfernen willst?",
+        "title": "Entfernen bestätigen"
+      },
+      "savePreset": "Als Voreinstellung speichern",
       "title": "Spieler Liste"
     },
     "select-box": {
@@ -1146,6 +1080,75 @@
       "bigscreenBeyond": "Bigscreen Beyond"
     },
     "title": "Headset spezifische Automatisierungen"
+  },
+  "invite-and-invite-requests": {
+    "inviteRequestsTab": {
+      "conditions": {
+        "description": "Hier kannst du OyasumiVR einstellen um nur Einladeanfragen zu akzeptieren, wenn bestimmte Voraussetzungen vorliegen",
+        "title": "Voraussetzungen"
+      },
+      "description": "OyasumiVR kann Einladugsanfragen automatisch für dich annehmen. Indem du die White- oder Blacklist benutzt, kannst du sicherstellen, dass nur Anfragen von Freunden die du auswählst automatisch angenommen werden.",
+      "options": {
+        "listMode": {
+          "description": "Wie die Spielerliste funktioniert",
+          "options": {
+            "BLACKLIST": {
+              "label": "Blacklist",
+              "subLabel": "Anfragen von Freunden die nicht auf der Liste stehen annehmen"
+            },
+            "DISABLED": {
+              "label": "Deaktiviert",
+              "subLabel": "Anfragen von allen annehmen"
+            },
+            "WHITELIST": {
+              "label": "Whitelist",
+              "subLabel": "Anfragen von Freunden die auf der Liste stehen annehmen"
+            }
+          },
+          "title": "Listenmodus"
+        },
+        "onlyBelowPlayerCount": {
+          "description": "Dich inkludiert",
+          "title": "Nur wenn weniger als <strong>{count, plural, one {#</strong> player} other {#</strong> players}} in deiner Welt sind"
+        },
+        "onlyIfSleepModeEnabled": {
+          "title": "Nur wenn der Schlafmodus aktiviert ist"
+        },
+        "presetOptions": {
+          "options": {
+            "NONE": "Nicht Ändern"
+          }
+        }
+      },
+      "otherAutomations": {
+        "changeListPreset": {
+          "onSleepDisable": {
+            "description": "Lade eine gespeicherte Voreinstellung der Spielerlistem wenn sich der Schlafmodus ausschaltet",
+            "title": "Voreinstellungen beim aufwachen laden"
+          },
+          "onSleepEnable": {
+            "description": "Gespeicherte Voreinstellungen der Spielerliste laden, wenn der Schlafmodus eingeschaltet wird",
+            "title": "Voreinstellungen laden, wenn ich den Schlafmodus aktiviere"
+          },
+          "onSleepPreparation": {
+            "description": "Lade eine gespeicherte Voreinstellung für die Spielerliste, wenn du dich vorbereitest schlafen zu gehen",
+            "title": "Voreinstellungen laden, wenn ich mich den Schlafmodus vorbereite"
+          }
+        },
+        "description": "Hier kannst du Automationen finden, welche automatisch die Vorgaben der Funktion ändern",
+        "title": "Andere Automationen"
+      },
+      "userOnJoinMeStatus": "VRChat nimmt automatisch alle Einladungsanfragen an, unabhängig von deinen Einstellung, da dein Status auf Tritt mir bei (blau) gesetzt ist."
+    },
+    "playerList": {
+      "blacklist": "Spieler-Blacklist",
+      "whitelist": "Spieler Whitelist"
+    },
+    "tabs": {
+      "inviteRequests": "Einladungsanfragen",
+      "invites": "Einladungen",
+      "sounds": "Töne"
+    }
   },
   "join-notifications": {
     "description": "Spiele ein Geräusch ab oder zeige eine Benachrichtigung an, wenn ein anderer Spieler deiner Welt beitritt oder diese verlässt. Dies ist nützlich, wenn du durch den Beitritt von Spielern geweckt werden willst.",

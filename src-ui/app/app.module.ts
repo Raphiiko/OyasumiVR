@@ -51,7 +51,10 @@ import { SleepingAnimationPresetModalComponent } from './components/sleeping-ani
 import { VRChatLogService } from './services/vrchat-log.service';
 import { StatusChangeForPlayerCountAutomationService } from './services/status-automations/status-change-for-player-count-automation.service';
 import { MainStatusBarComponent } from './components/main-status-bar/main-status-bar.component';
-import { AutoInviteRequestAcceptViewComponent } from './views/dashboard-view/views/auto-invite-request-accept-view/auto-invite-request-accept-view.component';
+import { InviteAndInviteRequestViewComponent } from './views/dashboard-view/views/invite-and-invite-request-view/invite-and-invite-request-view.component';
+import { InviteRequestsTabComponent } from './views/dashboard-view/views/invite-and-invite-request-view/tabs/invite-requests-tab/invite-requests-tab.component';
+import { InvitesTabComponent } from './views/dashboard-view/views/invite-and-invite-request-view/tabs/invites-tab/invites-tab.component';
+import { SoundsTabComponent } from './views/dashboard-view/views/invite-and-invite-request-view/tabs/sounds-tab/sounds-tab.component';
 import { FriendSelectionModalComponent } from './components/friend-selection-modal/friend-selection-modal.component';
 import { CachedValue } from './utils/cached-value';
 import { ImageCacheService } from './services/image-cache.service';
@@ -323,7 +326,10 @@ export function createTranslateLoader(http: HttpClient) {
     StatusAutomationsViewComponent,
     SleepingAnimationPresetModalComponent,
     MainStatusBarComponent,
-    AutoInviteRequestAcceptViewComponent,
+    InviteAndInviteRequestViewComponent,
+    InviteRequestsTabComponent,
+    InvitesTabComponent,
+    SoundsTabComponent,
     FriendSelectionModalComponent,
     GpuPowerlimitingPaneComponent,
     MsiAfterburnerPaneComponent,

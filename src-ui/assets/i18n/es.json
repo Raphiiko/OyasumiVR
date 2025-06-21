@@ -66,85 +66,6 @@
       "title": "Volumen"
     }
   },
-  "auto-invite-request-accept": {
-    "addFriends": "Añadir amigos",
-    "blacklist": "Jugador Blacklist",
-    "clearPlayers": "Borrar todo",
-    "conditions": {
-      "description": "Aquí puedes configurar OyasumiVR para que sólo acepte solicitudes de invitación cuando se cumplan ciertas condiciones.",
-      "title": "Condiciones"
-    },
-    "description": "OyasumiVR puede aceptar automáticamente las solicitudes de invitación que recibas. Utilizando la lista blanca o negra de jugadores, puedes asegurarte de que solo se acepten automáticamente las solicitudes de invitación de los amigos que elijas.",
-    "loadPreset": "Cargar preajuste guardado",
-    "loadingFriends": "Cargando amigos...",
-    "noPlayersAdded": "Actualmente no hay jugadores añadidos a la lista.",
-    "options": {
-      "changeListPreset": {
-        "onSleepDisable": {
-          "description": "Cargar un preajuste guardado para la lista de reproductores cuando se desactiva el modo de dormir",
-          "title": "Cargar preajuste al despertar"
-        },
-        "onSleepEnable": {
-          "description": "Cargar un preajuste guardado para la lista de reproductores cuando se activa el modo de dormir",
-          "title": "Cargar preajuste cuando me voy a dormir"
-        },
-        "onSleepPreparation": {
-          "description": "Cargar un preajuste guardado para la lista de reproductores cuando se prepara para ir a dormir",
-          "title": "Cargar preajuste cuando me dispongo a dormir"
-        }
-      },
-      "enable": {
-        "description": "Acepta automáticamente las solicitudes de invitación de tus amigos.",
-        "title": "Habilitar"
-      },
-      "listMode": {
-        "description": "Funcionamiento de la lista de jugadores",
-        "options": {
-          "BLACKLIST": {
-            "label": "Blacklist",
-            "subLabel": "Aceptar de amigos que no estén en la lista"
-          },
-          "DISABLED": {
-            "label": "Desactivado",
-            "subLabel": "Aceptar a todos"
-          },
-          "WHITELIST": {
-            "label": "Whitelist",
-            "subLabel": "Aceptar de los amigos de la lista"
-          }
-        },
-        "title": "Modo Lista"
-      },
-      "onlyBelowPlayerCount": {
-        "description": "Esto te incluye a ti",
-        "title": "Sólo cuando haya menos <strong>{count, plural, one {#</strong> player} de otro {#</strong> players}} en tu mundo"
-      },
-      "onlyIfSleepModeEnabled": {
-        "title": "Sólo cuando el modo dormir está activado"
-      },
-      "presetOptions": {
-        "options": {
-          "NONE": "No cambiar"
-        }
-      }
-    },
-    "otherAutomations": {
-      "description": "Aquí puede encontrar automatizaciones que cambiarán automáticamente el funcionamiento de esta función.",
-      "title": "Otras automatizaciones"
-    },
-    "removeModal": {
-      "message": "¿Está seguro de que desea eliminar ''{name}'' de tu lista?",
-      "title": "Confirmar eliminación"
-    },
-    "removeModalBulk": {
-      "message": "¿Estás seguro de que quieres eliminar a todo el mundo de tu lista?",
-      "title": "Confirmar eliminación"
-    },
-    "savePreset": "Guardar como preajuste",
-    "title": "Aceptar automáticamente solicitudes de invitación",
-    "userOnJoinMeStatus": "VRChat aceptará automáticamente todas las solicitudes de invitación, independientemente de su configuración, porque su estado es en unirse a mí (blue).",
-    "whitelist": "Jugador Whitelist"
-  },
   "brightness-automations": {
     "AT_SUNRISE": {
       "title": "Al amanecer"
@@ -294,7 +215,6 @@
     "dashboard-navbar": {
       "about": "Acerca de OyasumiVR",
       "audioVolumeAutomations": "Automatización volumen de audio",
-      "autoInviteRequestAccept": "Auto Aceptar \nSolicitudes de invitación",
       "brightnessAutomations": "Automatizaciones de brillo",
       "chaperoneAutomations": "Automatizaciones Chaperone",
       "gpuAutomations": "Automatizaciones de GPU",
@@ -958,6 +878,20 @@
       }
     },
     "player-list": {
+      "addFriends": "Añadir amigos",
+      "clearPlayers": "Borrar todo",
+      "loadPreset": "Cargar preajuste guardado",
+      "loadingFriends": "Cargando amigos...",
+      "noPlayersAdded": "Actualmente no hay jugadores añadidos a la lista.",
+      "removeModal": {
+        "message": "¿Está seguro de que desea eliminar ''{name}'' de tu lista?",
+        "title": "Confirmar eliminación"
+      },
+      "removeModalBulk": {
+        "message": "¿Estás seguro de que quieres eliminar a todo el mundo de tu lista?",
+        "title": "Confirmar eliminación"
+      },
+      "savePreset": "Guardar como preajuste",
       "title": "Lista de jugadores"
     },
     "select-box": {
@@ -1146,6 +1080,75 @@
       "bigscreenBeyond": "Más allá de la pantalla grande"
     },
     "title": "Automatizaciones específicas de HMD"
+  },
+  "invite-and-invite-requests": {
+    "inviteRequestsTab": {
+      "conditions": {
+        "description": "Aquí puedes configurar OyasumiVR para que sólo acepte solicitudes de invitación cuando se cumplan ciertas condiciones.",
+        "title": "Condiciones"
+      },
+      "description": "OyasumiVR puede aceptar automáticamente las solicitudes de invitación que recibas. Utilizando la lista blanca o negra de jugadores, puedes asegurarte de que solo se acepten automáticamente las solicitudes de invitación de los amigos que elijas.",
+      "options": {
+        "listMode": {
+          "description": "Funcionamiento de la lista de jugadores",
+          "options": {
+            "BLACKLIST": {
+              "label": "Blacklist",
+              "subLabel": "Aceptar de amigos que no estén en la lista"
+            },
+            "DISABLED": {
+              "label": "Desactivado",
+              "subLabel": "Aceptar a todos"
+            },
+            "WHITELIST": {
+              "label": "Whitelist",
+              "subLabel": "Aceptar de los amigos de la lista"
+            }
+          },
+          "title": "Modo Lista"
+        },
+        "onlyBelowPlayerCount": {
+          "description": "Esto te incluye a ti",
+          "title": "Sólo cuando haya menos <strong>{count, plural, one {#</strong> player} de otro {#</strong> players}} en tu mundo"
+        },
+        "onlyIfSleepModeEnabled": {
+          "title": "Sólo cuando el modo dormir está activado"
+        },
+        "presetOptions": {
+          "options": {
+            "NONE": "No cambiar"
+          }
+        }
+      },
+      "otherAutomations": {
+        "changeListPreset": {
+          "onSleepDisable": {
+            "description": "Cargar un preajuste guardado para la lista de reproductores cuando se desactiva el modo de dormir",
+            "title": "Cargar preajuste al despertar"
+          },
+          "onSleepEnable": {
+            "description": "Cargar un preajuste guardado para la lista de reproductores cuando se activa el modo de dormir",
+            "title": "Cargar preajuste cuando me voy a dormir"
+          },
+          "onSleepPreparation": {
+            "description": "Cargar un preajuste guardado para la lista de reproductores cuando se prepara para ir a dormir",
+            "title": "Cargar preajuste cuando me dispongo a dormir"
+          }
+        },
+        "description": "Aquí puede encontrar automatizaciones que cambiarán automáticamente el funcionamiento de esta función.",
+        "title": "Otras automatizaciones"
+      },
+      "userOnJoinMeStatus": "VRChat aceptará automáticamente todas las solicitudes de invitación, independientemente de su configuración, porque su estado es en unirse a mí (blue)."
+    },
+    "playerList": {
+      "blacklist": "Jugador Blacklist",
+      "whitelist": "Jugador Whitelist"
+    },
+    "tabs": {
+      "inviteRequests": "Solicitudes de invitación",
+      "invites": "Invitaciones",
+      "sounds": "Sonidos"
+    }
   },
   "join-notifications": {
     "description": "Reproduce un mensaje de notificación y/o sonido cuando otro jugador entre o salga de tu mundo. Esto puede ser útil si quieres que OyasumiVR te despierte cuando alguien se una a ti.",

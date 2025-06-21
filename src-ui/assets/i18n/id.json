@@ -12,50 +12,6 @@
     "sourceLink": "Kode Sumber @ GitHub",
     "translations": "Terjemahan"
   },
-  "auto-invite-request-accept": {
-    "addFriends": "Tambahkan teman",
-    "blacklist": "Blacklist Player",
-    "description": "OyasumiVR dapat secara otomatis menerima permintaan undangan yang Anda terima. Dengan menggunakan daftar putih atau daftar hitam pemain, Anda dapat memastikan hanya teman yang Anda pilih yang permintaan undangannya akan diterima secara otomatis.",
-    "noPlayersAdded": "Tidak ada pemain yang saat ini ditambahkan ke dalam daftar.",
-    "options": {
-      "enable": {
-        "description": "Secara otomatis menerima permintaan undangan dari teman.",
-        "title": "Nyalakan"
-      },
-      "listMode": {
-        "description": "Bagaimana daftar pemain beroperasi",
-        "options": {
-          "BLACKLIST": {
-            "label": "Blacklist",
-            "subLabel": "Menerima dari teman yang tidak ada dalam daftar"
-          },
-          "DISABLED": {
-            "label": "Matikan",
-            "subLabel": "Terima dari semua orang"
-          },
-          "WHITELIST": {
-            "label": "Whitelist",
-            "subLabel": "Menerima dari teman dalam daftar"
-          }
-        },
-        "title": "Mode Daftar"
-      },
-      "onlyIfSleepModeEnabled": {
-        "title": "Hanya jika mode tidur diaktifkan"
-      }
-    },
-    "removeModal": {
-      "message": "Apakah Anda yakin ingin menghapus ''{name}'' dari daftar Anda?",
-      "title": "Konfirmasi Penghapusan"
-    },
-    "removeModalBulk": {
-      "message": "Apakah Anda yakin ingin menghapus semua orang dari daftar Anda?",
-      "title": "Konfirmasi penghapusan"
-    },
-    "title": "Terima Otomatis Permintaan Undangan",
-    "userOnJoinMeStatus": "VRChat akan secara otomatis menerima semua permintaan undangan terlepas dari pengaturan Anda, karena status Anda dalam keadaan join me (biru).",
-    "whitelist": "Whitelist Player"
-  },
   "brightness-automations": {
     "brightness": {
       "title": "Atur Kecerahan ke"
@@ -127,7 +83,6 @@
     },
     "dashboard-navbar": {
       "about": "Tentang OyasumiVR",
-      "autoInviteRequestAccept": "Terima Otomatis \nPermintaan Invite",
       "brightnessAutomations": "Otomatisasi Kecerahan",
       "chaperoneAutomations": "Otomatisasi Chaperone",
       "gpuAutomations": "Otomatisasi GPU",
@@ -408,6 +363,18 @@
       "errorCounter": "{value} Validasi Error",
       "test": "Tes"
     },
+    "player-list": {
+      "addFriends": "Tambahkan teman",
+      "noPlayersAdded": "Tidak ada pemain yang saat ini ditambahkan ke dalam daftar.",
+      "removeModal": {
+        "message": "Apakah Anda yakin ingin menghapus ''{name}'' dari daftar Anda?",
+        "title": "Konfirmasi Penghapusan"
+      },
+      "removeModalBulk": {
+        "message": "Apakah Anda yakin ingin menghapus semua orang dari daftar Anda?",
+        "title": "Konfirmasi penghapusan"
+      }
+    },
     "select-box": {
       "defaultPlaceholder": "Pilih..."
     },
@@ -518,6 +485,44 @@
       "powerLimiting": "Limitasi Daya"
     },
     "title": "Otomatisasi GPU"
+  },
+  "invite-and-invite-requests": {
+    "inviteRequestsTab": {
+      "description": "OyasumiVR dapat secara otomatis menerima permintaan undangan yang Anda terima. Dengan menggunakan daftar putih atau daftar hitam pemain, Anda dapat memastikan hanya teman yang Anda pilih yang permintaan undangannya akan diterima secara otomatis.",
+      "options": {
+        "listMode": {
+          "description": "Bagaimana daftar pemain beroperasi",
+          "options": {
+            "BLACKLIST": {
+              "label": "Blacklist",
+              "subLabel": "Menerima dari teman yang tidak ada dalam daftar"
+            },
+            "DISABLED": {
+              "label": "Matikan",
+              "subLabel": "Terima dari semua orang"
+            },
+            "WHITELIST": {
+              "label": "Whitelist",
+              "subLabel": "Menerima dari teman dalam daftar"
+            }
+          },
+          "title": "Mode Daftar"
+        },
+        "onlyIfSleepModeEnabled": {
+          "title": "Hanya jika mode tidur diaktifkan"
+        }
+      },
+      "userOnJoinMeStatus": "VRChat akan secara otomatis menerima semua permintaan undangan terlepas dari pengaturan Anda, karena status Anda dalam keadaan join me (biru)."
+    },
+    "playerList": {
+      "blacklist": "Blacklist Player",
+      "whitelist": "Whitelist Player"
+    },
+    "tabs": {
+      "inviteRequests": "Permintaan Undangan",
+      "invites": "Undangan",
+      "sounds": "Suara"
+    }
   },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "Preset ini menggunakan solusi yang memiliki beberapa masalah. Harap gunakan preset ini hanya jika Anda tidak dapat menggunakan preset GoGo Loco yang lebih baru. Jika avatar Anda masih menggunakan versi GoGo Loco yang lebih lama, Anda disarankan untuk memperbarui avatar Anda untuk menggunakan versi GoGo Loco terbaru.",

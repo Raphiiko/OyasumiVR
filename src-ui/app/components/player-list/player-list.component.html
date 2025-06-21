@@ -9,7 +9,7 @@
     >
       <div class="players-loading" *ngIf="data.isFetchingFriends">
         <div class="large-spinner"></div>
-        <span translate>auto-invite-request-accept.loadingFriends</span>
+        <span translate>comp.player-list.loadingFriends</span>
       </div>
       <ng-container *ngIf="data.isFetchingFriends === false">
         <div class="player-list-action-bar">
@@ -17,7 +17,7 @@
             class="player-list-action"
             (click)="addPlayer()"
             [disabled]="!loggedIn"
-            [tooltip]="'auto-invite-request-accept.addFriends'"
+            [tooltip]="'comp.player-list.addFriends'"
             [tooltipMode]="'right'"
           >
             <i class="material-icons">add</i>
@@ -26,7 +26,7 @@
             class="player-list-action"
             (click)="clearPlayers()"
             [disabled]="!loggedIn || !playerList.length"
-            [tooltip]="'auto-invite-request-accept.clearPlayers'"
+            [tooltip]="'comp.player-list.clearPlayers'"
             [tooltipMode]="'right'"
           >
             <i class="material-icons">clear</i>
@@ -35,7 +35,7 @@
             class="player-list-action"
             (click)="savePreset()"
             [disabled]="!loggedIn || !playerList.length"
-            [tooltip]="'auto-invite-request-accept.savePreset'"
+            [tooltip]="'comp.player-list.savePreset'"
             [tooltipMode]="'right'"
           >
             <i class="material-icons">save</i>
@@ -44,7 +44,7 @@
             class="player-list-action"
             (click)="loadPreset()"
             [disabled]="!loggedIn"
-            [tooltip]="'auto-invite-request-accept.loadPreset'"
+            [tooltip]="'comp.player-list.loadPreset'"
             [tooltipMode]="'right'"
           >
             <i class="material-icons">file_open</i>
@@ -70,7 +70,7 @@
             </div>
           </div>
           <div class="no-players" *ngIf="!playerList?.length">
-            <span translate>auto-invite-request-accept.noPlayersAdded</span>
+            <span translate>comp.player-list.noPlayersAdded</span>
           </div>
         </div>
       </ng-container>

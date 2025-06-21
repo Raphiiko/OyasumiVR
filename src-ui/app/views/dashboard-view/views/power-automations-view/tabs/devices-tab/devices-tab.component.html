@@ -77,7 +77,8 @@
         ></app-device-selector>
       </div>
     </div>
-
+  </div>
+  <div class="settings">
     <div class="setting-row">
       <div class="setting-row-label">
         <span>{{ 'power-automations.devices.turnOff.triggers.onDeviceCharging' | translate }}</span>
@@ -88,20 +89,6 @@
           [allowedDeviceTypes]="['CONTROLLER', 'TRACKER']"
           [selection]="devicePowerAutomations.turnOffDevicesWhenCharging"
           (selectionChange)="updateDeviceSelection('turnOffDevicesWhenCharging', $event)"
-        ></app-device-selector>
-      </div>
-    </div>
-
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span>{{ 'power-automations.devices.turnOff.triggers.onSteamVRStop' | translate }}</span>
-        <span>{{ 'power-automations.devices.turnOff.subtitle' | translate }}</span>
-      </div>
-      <div class="setting-row-action">
-        <app-device-selector
-          [allowedDeviceTypes]="['CONTROLLER', 'TRACKER', 'LIGHTHOUSE']"
-          [selection]="devicePowerAutomations.turnOffDevicesOnSteamVRStop"
-          (selectionChange)="updateDeviceSelection('turnOffDevicesOnSteamVRStop', $event)"
         ></app-device-selector>
       </div>
     </div>
@@ -155,6 +142,21 @@
       </div>
     </div>
   </div>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label">
+        <span>{{ 'power-automations.devices.turnOff.triggers.onSteamVRStop' | translate }}</span>
+        <span>{{ 'power-automations.devices.turnOff.subtitle' | translate }}</span>
+      </div>
+      <div class="setting-row-action">
+        <app-device-selector
+          [allowedDeviceTypes]="['CONTROLLER', 'TRACKER', 'LIGHTHOUSE']"
+          [selection]="devicePowerAutomations.turnOffDevicesOnSteamVRStop"
+          (selectionChange)="updateDeviceSelection('turnOffDevicesOnSteamVRStop', $event)"
+        ></app-device-selector>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="setting-category">
@@ -178,7 +180,8 @@
         ></app-device-selector>
       </div>
     </div>
-
+  </div>
+  <div class="settings">
     <div class="setting-row">
       <div class="setting-row-label">
         <span>{{ 'power-automations.devices.turnOn.triggers.onOyasumiStart' | translate }}</span>
