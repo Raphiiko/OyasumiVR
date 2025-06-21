@@ -403,6 +403,13 @@
           },
           "title": "Chaperone activatie afstand ingesteld op {value}"
         },
+        "frameLimitChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
+            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
+            "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
+          }
+        },
         "gpuPowerLimitChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
@@ -422,6 +429,12 @@
           "title": {
             "set": "Headset hardware helderheid naar {value} gezet",
             "transition": "Headset hardware helderheid gaat over naar {value}"
+          }
+        },
+        "lighthouseSetPowerState": {
+          "reasons": {
+            "HOTKEY": "Omdat een hotkey was geactiveerd",
+            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld"
           }
         },
         "msiAfterburnerProfileSet": {
@@ -447,6 +460,13 @@
           "title": {
             "auto": "SteamVR render resolutie ingesteld op 'auto'",
             "custom": "SteamVR render resolutie ingesteld op {value}"
+          }
+        },
+        "runAutomationExecuted": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
+            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
+            "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
           }
         },
         "shutdownSequenceCancelled": {
@@ -552,7 +572,9 @@
             "HOTKEY": "Omdat een hotkey was geactiveerd",
             "MANUAL": "Handmatig uitgeschakeld",
             "OSC_CONTROL": "Uitgeschakeld via OSC",
-            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld"
+            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
+            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
+            "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
           },
           "title": {
             "ALL": "Alle apparaten uitgeschakeld",
@@ -940,6 +962,19 @@
       "title": "Twee-Factor Authenticatie"
     }
   },
+  "device-manager": {
+    "deviceType": {
+      "CONTROLLER": "Controllers",
+      "TRACKER": "Trackers"
+    },
+    "tabs": {
+      "devices": "Apparaten"
+    },
+    "tags": {
+      "cancel": "Annuleren",
+      "save": "Opslaan"
+    }
+  },
   "discord": {
     "details": "VR Slaap Software",
     "label": {
@@ -949,6 +984,19 @@
     "state": {
       "awake": "Wakker",
       "sleeping": "Slaap modus"
+    }
+  },
+  "frame-limiter": {
+    "add-application-modal": {
+      "add": "Voeg Toe"
+    },
+    "onSleepDisable": "Wanneer ik wakker word",
+    "onSleepEnable": "Wanneer ik ga slapen",
+    "onSleepPreparation": "Wanneer ik me voorbereid om te gaan slapen",
+    "removeLimiter": "Verwijder",
+    "selector": {
+      "auto": "Auto",
+      "disabled": "Niets veranderen"
     }
   },
   "gpu-automations": {
@@ -1186,9 +1234,22 @@
     "title": "Join Notificaties"
   },
   "message-center": {
+    "actions": {
+      "configure": "Configureer",
+      "moreInfo": "Meer info"
+    },
     "messages": {
+      "gpuAutomationsSidecarNotRunning": {
+        "actions": {
+          "disable": "Deactiveer GPU Automatiseringen",
+          "elevate": "Geef Beheerders Rechten"
+        }
+      },
       "manyLighthousesDetected": {
         "message": "Het lijkt er op dat je een hoop base stations hebt!\n\nLet op dat de meeste Bluetooth adapters maar tot 7 gelijktijdige connecties kunnen hebben, inclusief met andere Bluetooth apparaten zoals hoofdtelefoons en andere randapparatuur.\n\nHet kan zijn dat OyasumiVR moeite heeft met het besturen van al je base stations als je er te veel tegelijk ingeplugt hebt, of te veel andere Bluetooth apparaten verbonden hebt."
+      },
+      "sleepCalibrationRequired": {
+        "calibrate": "Calibreer Nu"
       }
     }
   },
@@ -1245,6 +1306,9 @@
       "title": "Speel een geluid"
     },
     "title": "Nachtmerrie Detectie"
+  },
+  "notification-sound": {
+    "volume": "Volume"
   },
   "notifications": {
     "autoAcceptedInviteRequest": {
@@ -1430,6 +1494,24 @@
     }
   },
   "power-automations": {
+    "devices": {
+      "turnOff": {
+        "title": "Zet apparaten uit",
+        "triggers": {
+          "onSleepModeDisable": "Wanneer ik wakker word",
+          "onSleepModeEnable": "Wanneer ik ga slapen",
+          "onSleepPreparation": "Wanneer ik me voorbereid om te gaan slapen",
+          "onSteamVRStop": "Wanneer SteamVR stopt"
+        }
+      },
+      "turnOn": {
+        "triggers": {
+          "onOyasumiStart": "Wanneer OyasumiVR start",
+          "onSleepModeDisable": "Wanneer ik wakker word",
+          "onSteamVRStart": "Wanneer SteamVR start"
+        }
+      }
+    },
     "enableLighthouseControl": "Zet aan",
     "error": {
       "adapterError": "Er is een fout opgetreden bij het verbinden met je bluetooth adapter. Check of je bluetooth adapter is ingeschakeld, en probeer het nog eens.",
@@ -1500,6 +1582,18 @@
       "title": "Zet de render resolutie naar"
     },
     "title": "Resolutie Automatiseringen"
+  },
+  "runAutomations": {
+    "onSleepDisable": {
+      "title": "Wanneer ik wakker word"
+    },
+    "onSleepEnable": {
+      "title": "Wanneer ik ga slapen"
+    },
+    "onSleepPreparation": {
+      "title": "Wanneer ik me voorbereid om te gaan slapen"
+    },
+    "testCommands": "Test"
   },
   "settings": {
     "advanced": {
@@ -2426,6 +2520,7 @@
     }
   },
   "systemTray": {
+    "prepareForSleep": "Slaapvoorbereiding",
     "quit": "Stop OyasumiVR",
     "sleepMode": "Slaap Modus"
   },
@@ -2469,6 +2564,9 @@
     "onSleepPreparation": {
       "description": "Verander mijn vertegenwoordigde groep naar",
       "title": "Wanneer ik me voorbereid om te gaan slapen"
+    },
+    "options": {
+      "dontChange": "Niets veranderen"
     },
     "title": "Groep Automatiseringen"
   },
