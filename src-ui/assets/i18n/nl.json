@@ -2327,6 +2327,7 @@
     "overlay": {
       "cancel": "Annuleer",
       "stage": {
+        "TURNING_OFF_DEVICES": "Apparaten uitschakelen...",
         "POWERING_DOWN": "Windows Afsluiten...",
         "QUITTING_STEAMVR": "Stoppen van SteamVR..."
       },
