@@ -2025,10 +2025,7 @@
       "cancel": "キャンセル",
       "stage": {
         "POWERING_DOWN": "Windowsをシャットダウン中...",
-        "QUITTING_STEAMVR": "SteamVRを終了する...",
-        "TURNING_OFF_BASESTATIONS": "ベースステーションをオフにする...",
-        "TURNING_OFF_CONTROLLERS": "コントローラーをオフにする...",
-        "TURNING_OFF_TRACKERS": "トラッカーをオフにする..."
+        "QUITTING_STEAMVR": "SteamVRを終了する..."
       },
       "title": "シャットダウン"
     },

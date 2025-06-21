@@ -1905,10 +1905,7 @@
       "cancel": "취소",
       "stage": {
         "POWERING_DOWN": "Windows를 종료하는 중...",
-        "QUITTING_STEAMVR": "SteamVR 종료 중...",
-        "TURNING_OFF_BASESTATIONS": "베이스스테이션을 끄는 중...",
-        "TURNING_OFF_CONTROLLERS": "컨트롤러를 끄는 중...",
-        "TURNING_OFF_TRACKERS": "트래커를 끄는 중..."
+        "QUITTING_STEAMVR": "SteamVR 종료 중..."
       },
       "title": "끄는 중"
     },

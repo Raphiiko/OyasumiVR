@@ -1905,10 +1905,7 @@
       "cancel": "Отменить сейчас",
       "stage": {
         "POWERING_DOWN": "Выключение Windows...",
-        "QUITTING_STEAMVR": "Выход из SteamVR...",
-        "TURNING_OFF_BASESTATIONS": "Выключение базовых станций...",
-        "TURNING_OFF_CONTROLLERS": "Выключение контроллеров...",
-        "TURNING_OFF_TRACKERS": "Выключение трекеров..."
+        "QUITTING_STEAMVR": "Выход из SteamVR..."
       },
       "title": "Выключение"
     },

@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import {
   asyncScheduler,
   BehaviorSubject,
+  combineLatest,
   distinctUntilChanged,
   firstValueFrom,
   map,
+  Observable,
   switchMap,
   tap,
   throttleTime,
@@ -162,6 +164,23 @@ export class DeviceManagerService {
 
   public isDeviceObserved(deviceId: string): boolean {
     return this._observedDevices.value.includes(deviceId);
+  }
+
+  public getDevicesForSelectionStream(selection: DeviceSelection): Observable<{
+    lighthouseDevices: LighthouseDevice[];
+    ovrDevices: OVRDevice[];
+    knownDevices: DMKnownDevice[];
+  }> {
+    return combineLatest([
+      this.openvr.devices.pipe(
+        map((devices) => devices.map((d) => d.index)),
+        distinctUntilChanged((a, b) => isEqual(a, b))
+      ),
+      this.lighthouse.devices.pipe(
+        map((devices) => devices.map((d) => d.id)),
+        distinctUntilChanged((a, b) => isEqual(a, b))
+      ),
+    ]).pipe(switchMap(() => this.getDevicesForSelection(selection)));
   }
 
   public async getDevicesForSelection(selection: DeviceSelection): Promise<{

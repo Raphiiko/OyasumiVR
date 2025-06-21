@@ -2328,10 +2328,7 @@
       "cancel": "Annuleer",
       "stage": {
         "POWERING_DOWN": "Windows Afsluiten...",
-        "QUITTING_STEAMVR": "Stoppen van SteamVR...",
-        "TURNING_OFF_BASESTATIONS": "Uitschakelen van basestations...",
-        "TURNING_OFF_CONTROLLERS": "Uischakelen van controllers...",
-        "TURNING_OFF_TRACKERS": "Uitschakelen van trackers..."
+        "QUITTING_STEAMVR": "Stoppen van SteamVR..."
       },
       "title": "Uitschakelen..."
     },

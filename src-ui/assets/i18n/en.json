@@ -2329,9 +2329,7 @@
       "stage": {
         "POWERING_DOWN": "Powering down Windows...",
         "QUITTING_STEAMVR": "Quitting SteamVR...",
-        "TURNING_OFF_BASESTATIONS": "Turning off base stations...",
-        "TURNING_OFF_CONTROLLERS": "Turning off controllers...",
-        "TURNING_OFF_TRACKERS": "Turning off trackers..."
+        "TURNING_OFF_DEVICES": "Turning off devices..."
       },
       "title": "Shutting Down"
     },

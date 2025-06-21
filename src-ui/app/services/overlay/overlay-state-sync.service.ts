@@ -267,9 +267,7 @@ export class OverlayStateSyncService {
             configs.SHUTDOWN_AUTOMATIONS.triggerOnSleep,
             configs.SHUTDOWN_AUTOMATIONS.triggerWhenAlone,
           ].filter(Boolean).length;
-          automation.canStart =
-            this.shutdownAutomationsService.getApplicableStages(configs.SHUTDOWN_AUTOMATIONS)
-              .length > 0;
+          automation.canStart = this.shutdownAutomationsService.getApplicableStages().length > 0;
         }
         {
           state.brightnessState!.advancedMode = configs.BRIGHTNESS_AUTOMATIONS.advancedMode;

@@ -1081,10 +1081,7 @@
       "cancel": "Batalkan",
       "stage": {
         "POWERING_DOWN": "Mematikan Windows...",
-        "QUITTING_STEAMVR": "Mematikan SteamVR...",
-        "TURNING_OFF_BASESTATIONS": "Mematikan base stations...",
-        "TURNING_OFF_CONTROLLERS": "Mematikan kontroler...",
-        "TURNING_OFF_TRACKERS": "Mematikan tracker..."
+        "QUITTING_STEAMVR": "Mematikan SteamVR..."
       },
       "title": "Mematikan"
     },
