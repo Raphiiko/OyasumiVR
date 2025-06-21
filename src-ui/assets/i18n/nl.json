@@ -4,8 +4,8 @@
       "role": "Ontwikkelaar"
     },
     "contributionType": {
-      "soundFx": "Geluid FX",
-      "programming": "Programmeren"
+      "programming": "Programmeren",
+      "soundFx": "Geluid FX"
     },
     "contributions": "Contributies",
     "discordInvite": "Discord Server",
@@ -99,6 +99,7 @@
         "title": "Zonsondergang"
       }
     },
+    "autoUpdateTimeTooltip": "Zonsopgang/zonsondergang tijden automatisch bijwerken op basis van je locatie",
     "brightness": {
       "title": "Zet de helderheid naar"
     },
@@ -120,6 +121,8 @@
       "description": "Past de helderheid van het fysieke scherm aan",
       "title": "Zet de hardware helderheid naar"
     },
+    "hmdConnectEventTooltip": "Deze instellingen worden toegepast wanneer je headset verbinding maakt met SteamVR",
+    "hmdConnectPotentialEventTooltip": "Deze instellingen kunnen worden toegepast wanneer je headset verbinding maakt met SteamVR, als dit van toepassing is",
     "miscConfig": "Andere opties",
     "mode": {
       "advanced": "Geavanceerde Modus",
@@ -148,10 +151,7 @@
     "transitionTime": {
       "description": "Hoe lang de transitie moet duren",
       "title": "Transitie tijd"
-    },
-    "autoUpdateTimeTooltip": "Zonsopgang/zonsondergang tijden automatisch bijwerken op basis van je locatie",
-    "hmdConnectEventTooltip": "Deze instellingen worden toegepast wanneer je headset verbinding maakt met SteamVR",
-    "hmdConnectPotentialEventTooltip": "Deze instellingen kunnen worden toegepast wanneer je headset verbinding maakt met SteamVR, als dit van toepassing is"
+    }
   },
   "chaperone-automations": {
     "description": "OyasumiVR kan automatisch de activatie afstand van SteamVR's chaperone aanpassen wanneer de slaap modus wordt ingeschakeld of uitgeschakeld.",
@@ -219,17 +219,22 @@
     "dashboard-navbar": {
       "about": "Over OyasumiVR",
       "audioVolumeAutomations": "Volume Automatiseringen",
+      "autoInviteRequestAccept": "Uitnodigingen & Uitnodigingsverzoeken",
       "brightnessAutomations": "Helderheid Automatiseringen",
       "chaperoneAutomations": "Chaperone Automatiseringen",
+      "deviceManager": "Apparaatbeheer",
+      "frameLimiter": "Framelimit Automatiseringen",
       "gpuAutomations": "GPU Automatiseringen",
       "hardwareAutomations": "Hardware Automatiseringen",
       "hmdAutomations": "HMD Specifieke Automatiseringen",
       "joinNotifications": "Join Notificaties",
+      "miscAutomations": "Algemene Automatiseringen",
       "nightmareDetection": "Nachtmerrie Detectie",
       "oscAutomations": "OSC Automatiseringen",
       "overview": "Overzicht",
       "powerAutomations": "Energie Automatiseringen",
       "resolutionAutomations": "Resolutie Automatiseringen",
+      "runAutomations": "Uitvoer Automatiseringen",
       "settings": {
         "advanced": "Geavanceerde Instellingen",
         "brightnessCct": "Helderheid & CCT Instellingen",
@@ -250,12 +255,7 @@
       "vrcAutomations": "VRChat Automatiseringen",
       "vrchatAvatarAutomations": "Avatar Automatiseringen",
       "vrchatGroupAutomations": "Groep Automatiseringen",
-      "vrchatMicMuteAutomations": "VRChat Microfoon Dempings Automatiseringen",
-      "autoInviteRequestAccept": "Uitnodigingen & Uitnodigingsverzoeken",
-      "deviceManager": "Apparaatbeheer",
-      "frameLimiter": "Framelimit Automatiseringen",
-      "miscAutomations": "Algemene Automatiseringen",
-      "runAutomations": "Uitvoer Automatiseringen"
+      "vrchatMicMuteAutomations": "VRChat Microfoon Dempings Automatiseringen"
     },
     "device-edit-modal": {
       "deviceNickname": {
@@ -278,9 +278,9 @@
       "category": {
         "Controller": "Controllers",
         "GenericTracker": "Trackers",
+        "HMD": "Headset",
         "Lighthouse": "Base Stations",
-        "other": "Overige",
-        "HMD": "Headset"
+        "other": "Overige"
       },
       "deviceRole": {
         "AnkleLeft": "Linker Enkel",
@@ -326,6 +326,10 @@
       "title": "Apparaten",
       "turnOffAll": "ALLE"
     },
+    "device-selector": {
+      "noSelection": "Selecteer Apparaten",
+      "withDevices": "{count, plural, one {1 Apparaat} other {# Apparaten}}"
+    },
     "event-log-entry": {
       "type": {
         "acceptedInviteRequest": {
@@ -356,11 +360,11 @@
         },
         "cctChanged": {
           "reason": {
+            "AT_SUNRISE": "Vanwege de zonsopgang",
+            "AT_SUNSET": "Vanwege de zonsondergang",
             "SLEEP_MODE_DISABLE": "Omdat de slaap modus is uitgeschakeld",
             "SLEEP_MODE_ENABLE": "Omdat de slaap modus is ingeschakeld",
-            "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen",
-            "AT_SUNRISE": "Vanwege de zonsopgang",
-            "AT_SUNSET": "Vanwege de zonsondergang"
+            "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
           },
           "title": {
             "set": "Headset kleur temperatuur aangepast naar {icon} {temperature}K",
@@ -415,12 +419,27 @@
           },
           "title": "Chaperone activatie afstand ingesteld op {value}"
         },
+        "declinedInvite": {
+          "reason": {
+            "SLEEP_MODE_ENABLED": "Omdat de slaapmodus actief was"
+          },
+          "title": "Uitnodiging van ''{displayName}'' automatisch geweigerd"
+        },
+        "declinedInviteRequest": {
+          "reason": {
+            "NOT_ON_WHITELIST": "Omdat deze speler niet op de whitelist stond",
+            "ON_BLACKLIST": "Omdat deze speler op de blacklist stond",
+            "PLAYER_COUNT_CONDITION_FAILED": "Omdat er te veel spelers in je wereld waren",
+            "SLEEP_MODE_ENABLED_CONDITION_FAILED": "Omdat de slaapmodus inactief was"
+          },
+          "title": "Uitnodigingsverzoek van ''{displayName}'' automatisch geweigerd"
+        },
         "frameLimitChanged": {
           "reason": {
+            "HMD_CONNECT": "Omdat je headset verbonden werd",
             "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
             "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
-            "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen",
-            "HMD_CONNECT": "Omdat je headset verbonden werd"
+            "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
           },
           "title": "Framelimit voor ''{appName}'' ingesteld op {limit}"
         },
@@ -436,11 +455,11 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
+            "AT_SUNRISE": "Vanwege de zonsopgang",
+            "AT_SUNSET": "Vanwege de zonsondergang",
             "SLEEP_MODE_DISABLE": "Omdat de slaap modus is uitgeschakeld",
             "SLEEP_MODE_ENABLE": "Omdat de slaap modus is ingeschakeld",
-            "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen",
-            "AT_SUNRISE": "Vanwege de zonsopgang",
-            "AT_SUNSET": "Vanwege de zonsondergang"
+            "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
           },
           "title": {
             "set": "Headset hardware helderheid naar {value} gezet",
@@ -448,14 +467,6 @@
           }
         },
         "lighthouseSetPowerState": {
-          "reasons": {
-            "HOTKEY": "Omdat een hotkey was geactiveerd",
-            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
-            "MANUAL": "Handmatig aangezet",
-            "OYASUMI_START": "Omdat OyasumiVR opstartte",
-            "STEAMVR_START": "Omdat SteamVR draait",
-            "STEAMVR_STOP": "Omdat SteamVR gestopt is"
-          },
           "ALL": {
             "on": "Alle basisstations aangezet",
             "sleep": "Alle basisstations in slaapmodus gezet",
@@ -470,6 +481,14 @@
             "on": "Verschillende basisstations aangezet",
             "sleep": "Verschillende basisstations in slaapmodus gezet",
             "standby": "Verschillende basisstations in standby-modus gezet"
+          },
+          "reasons": {
+            "HOTKEY": "Omdat een hotkey was geactiveerd",
+            "MANUAL": "Handmatig aangezet",
+            "OYASUMI_START": "Omdat OyasumiVR opstartte",
+            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
+            "STEAMVR_START": "Omdat SteamVR draait",
+            "STEAMVR_STOP": "Omdat SteamVR gestopt is"
           }
         },
         "msiAfterburnerProfileSet": {
@@ -577,11 +596,11 @@
         },
         "softwareBrightnessChanged": {
           "reason": {
+            "AT_SUNRISE": "Vanwege de zonsopgang",
+            "AT_SUNSET": "Vanwege de zonsondergang",
             "SLEEP_MODE_DISABLE": "Omdat de slaap modus is uitgeschakeld",
             "SLEEP_MODE_ENABLE": "Omdat de slaap modus is ingeschakeld",
-            "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen",
-            "AT_SUNRISE": "Vanwege de zonsopgang",
-            "AT_SUNSET": "Vanwege de zonsondergang"
+            "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
           },
           "title": {
             "set": "Headset software helderheid naar {value} gezet",
@@ -656,21 +675,6 @@
             "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld"
           },
           "title": "Het Windows energiebeheerschema is ingesteld op ''{policy}''"
-        },
-        "declinedInvite": {
-          "reason": {
-            "SLEEP_MODE_ENABLED": "Omdat de slaapmodus actief was"
-          },
-          "title": "Uitnodiging van ''{displayName}'' automatisch geweigerd"
-        },
-        "declinedInviteRequest": {
-          "reason": {
-            "NOT_ON_WHITELIST": "Omdat deze speler niet op de whitelist stond",
-            "ON_BLACKLIST": "Omdat deze speler op de blacklist stond",
-            "PLAYER_COUNT_CONDITION_FAILED": "Omdat er te veel spelers in je wereld waren",
-            "SLEEP_MODE_ENABLED_CONDITION_FAILED": "Omdat de slaapmodus inactief was"
-          },
-          "title": "Uitnodigingsverzoek van ''{displayName}'' automatisch geweigerd"
         }
       }
     },
@@ -699,6 +703,10 @@
         "GPU_CONTROL": {
           "description": "Events gerelateerd aan de besturing van je grafische kaart",
           "title": "GPU Besturing"
+        },
+        "RUN_AUTOMATIONS": {
+          "description": "Gebeurtenissen gerelateerd aan automatiseringen die commando's uitvoeren via de Windows opdrachtprompt",
+          "title": "Uitvoer Automatiseringen"
         },
         "SHUTDOWN_SEQUENCE": {
           "description": "Events gerelateerd aan de afsluit procedure",
@@ -731,10 +739,6 @@
         "WINDOWS_POWER_POLICY": {
           "description": "Events gerelateerd aan veranderingen in de Windows power policy",
           "title": "Windows Power Policy"
-        },
-        "RUN_AUTOMATIONS": {
-          "description": "Gebeurtenissen gerelateerd aan automatiseringen die commando's uitvoeren via de Windows opdrachtprompt",
-          "title": "Uitvoer Automatiseringen"
         }
       },
       "selectAll": "Selecteer Alles",
@@ -1018,27 +1022,9 @@
       },
       "logginInAs": "Je logt in bij VRChat als:",
       "title": "Twee-Factor Authenticatie"
-    },
-    "device-selector": {
-      "noSelection": "Selecteer Apparaten",
-      "withDevices": "{count, plural, one {1 Apparaat} other {# Apparaten}}"
     }
   },
   "device-manager": {
-    "deviceType": {
-      "CONTROLLER": "Controllers",
-      "TRACKER": "Trackers",
-      "HMD": "Headsets",
-      "LIGHTHOUSE": "Lighthouses",
-      "PREVIOUSLY_SEEN": "Eerder Gezien"
-    },
-    "tabs": {
-      "devices": "Apparaten"
-    },
-    "tags": {
-      "cancel": "Annuleren",
-      "save": "Opslaan"
-    },
     "actions": {
       "forget": "Apparaat Vergeten",
       "powerOff": "Uitschakelen",
@@ -1076,6 +1062,13 @@
       "selectDevices": "Apparaten Selecteren",
       "title": "Apparaten Selecteren"
     },
+    "deviceType": {
+      "CONTROLLER": "Controllers",
+      "HMD": "Headsets",
+      "LIGHTHOUSE": "Lighthouses",
+      "PREVIOUSLY_SEEN": "Eerder Gezien",
+      "TRACKER": "Trackers"
+    },
     "empty": {
       "noDevices": "Er zijn nog geen apparaten gedetecteerd. Verbind een apparaat, zoals een controller of tracker, om te beginnen.",
       "noDevicesMatchingSearch": "Geen apparaten gevonden die overeenkomen met je zoekcriteria."
@@ -1096,7 +1089,29 @@
       "observed": "Verbonden",
       "turningOff": "Uitschakelen...",
       "turningOn": "Inschakelen..."
-    }
+    },
+    "tabs": {
+      "devices": "Apparaten",
+      "tags": "Tags"
+    },
+    "tags": {
+      "cancel": "Annuleren",
+      "create": {
+        "button": "Tag Aanmaken",
+        "namePlaceholder": "Tag naam",
+        "title": "Nieuwe Tag Aanmaken"
+      },
+      "delete": "Tag Verwijderen",
+      "edit": "Tag Bewerken",
+      "empty": {
+        "noTags": "Er zijn nog geen tags aangemaakt. Maak je eerste tag hier boven aan."
+      },
+      "existing": {
+        "title": "Bestaande Tags"
+      },
+      "save": "Opslaan"
+    },
+    "title": "Apparaatbeheer"
   },
   "discord": {
     "details": "VR Slaap Software",
@@ -1111,16 +1126,28 @@
   },
   "frame-limiter": {
     "add-application-modal": {
-      "add": "Voeg Toe"
+      "add": "Voeg Toe",
+      "instruction": "Selecteer een applicatie waar voor je framelimits wilt configureren",
+      "notListedHelp": "Staat je applicatie niet in de lijst? Vraag hem aan in onze <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a>.",
+      "title": "Kies Applicatie"
     },
+    "addLimiter": "Voeg Applicatie Toe",
+    "description": "OyasumiVR kan automatisch de framerate van verschillende games limiteren. Dit kun je doen om het stroomverbruik van je systeem te verlagen wanneer je geen hoge prestaties nodig hebt, zoals wanneer je slaapt.",
+    "directControlRequiresSteamVR": "Start SteamVR om direct framelimits te kunnen instellen",
+    "frameLimits": "Framelimits",
+    "noLimits": "Je hebt nog geen applicaties geconfigureerd om te limiteren!",
     "onSleepDisable": "Wanneer ik wakker word",
     "onSleepEnable": "Wanneer ik ga slapen",
     "onSleepPreparation": "Wanneer ik me voorbereid om te gaan slapen",
     "removeLimiter": "Verwijder",
     "selector": {
       "auto": "Auto",
-      "disabled": "Niets veranderen"
+      "autoDescription": "In auto modus zal SteamVR zelf de optimale frame limit bepalen.",
+      "disabled": "Niets veranderen",
+      "noLimit": "Ongelimiteerd"
     },
+    "steamvrRequired": "OyasumiVR kan meer accurate frame limit targets tonen voor jouw specifieke VR headset, wanneer SteamVR actief is. Start SteamVR om meer informatie in te zien.",
+    "supportedHardwareWarning": "Let op dat SteamVR alleen framelimiting ondersteunt op native SteamVR headsets, als de Valve Index, Vive (Pro), of de Bigscreen Beyond. Niet-native headsets, zoals Quest headsets, worden niet ondersteund.",
     "title": "Framelimit Automatiseringen"
   },
   "gpu-automations": {
@@ -1254,6 +1281,32 @@
       },
       "description": "OyasumiVR kan invite requests die je ontvangt automatisch accepteren. Door het gebruiken van een speler whitelist of blacklist, kan je ervoor zorgen dat je alleen invite requests accepteert van vrienden die jij zelf kiest.",
       "options": {
+        "acceptMessage": {
+          "customMessage": {
+            "placeholder": "Verzoek geaccepteerd door OyasumiVR",
+            "title": "Uitnodigingsbericht"
+          },
+          "description": "Voeg een bericht toe wanneer OyasumiVR een uitnodigingsverzoek accepteert",
+          "title": "Accepteren met bericht"
+        },
+        "declineOnRequest": {
+          "customMessage": {
+            "description": "Het bericht om te versturen wanneer een uitnodigingsverzoek word afgewezen",
+            "placeholder": "Verzoek afgewezebn door OyasumiVR",
+            "title": "Aangepast bericht"
+          },
+          "description": "Stuur automatisch een weigeringsbericht als OyasumiVR niet automatisch een uitnodigingsverzoek accepteert.",
+          "options": {
+            "ALWAYS": "Ja",
+            "DISABLED": "Nooit",
+            "WHEN_SLEEPING": "Alleen terwijl ik slaap"
+          },
+          "title": "Weiger ongeaccepteerde uitnodigingsverzoeken"
+        },
+        "enable": {
+          "description": "Laat OyasumiVR automatisch uitnodigingsverzoeken van vrienden accepteren",
+          "title": "Auto-accepteer uitnodigingsverzoeken"
+        },
         "listMode": {
           "description": "Hoe de speler lijst moet worden gebruikt.",
           "options": {
@@ -1283,14 +1336,6 @@
           "options": {
             "NONE": "Niets wijzigen"
           }
-        },
-        "acceptMessage": {
-          "customMessage": {
-            "placeholder": "Verzoek geaccepteerd door OyasumiVR",
-            "title": "Uitnodigingsbericht"
-          },
-          "description": "Voeg een bericht toe wanneer OyasumiVR een uitnodigingsverzoek accepteert",
-          "title": "Accepteren met bericht"
         }
       },
       "otherAutomations": {
@@ -1311,32 +1356,66 @@
         "description": "Hier kan je overige automatiseringen vinden die automatisch de werking van deze functie beinvloeden.",
         "title": "Overige Automatiseringen"
       },
+      "userOnBusyStatus": "Vrienden zullen je normaal gesproken niet een uitnodigingsverzoek kunnen sturen als je status op bezig staat (rood). OyasumiVR kan nog wel uitnodigingsverzoeken accepteren die verstuurd zijn via 3rd party software, zoals VRCX.",
       "userOnJoinMeStatus": "VRChat za onafhankelijk van je instellingen automatisch alle invite requests accepteren, omdat je status op join me (blauw) staat."
+    },
+    "invitesTab": {
+      "options": {
+        "declineOnInviteWhileAsleep": {
+          "customMessage": {
+            "description": "Voer het bericht in om te verzenden wanneer een uitnodiging wordt geweigerd",
+            "placeholder": "Ik slaap op dit moment! (Afgewezen door OyasumiVR)",
+            "title": "Aangepast bericht"
+          },
+          "description": "Weiger automatisch uitnodigingen wanneer de slaap modus actief is",
+          "title": "Uitnodigingen weigeren wanneer je slaapt"
+        }
+      }
     },
     "playerList": {
       "blacklist": "Speler Blacklist",
       "whitelist": "Speler Whitelist"
+    },
+    "soundsTab": {
+      "options": {
+        "playSoundOnInvite": {
+          "description": "Speel een geluid wanneer je een uitnodiging ontvangt",
+          "onlyWhenAsleep": {
+            "description": "Speel het geluid alleen af wanneer de slaap modus actief is",
+            "title": "Alleen als ik slaap"
+          },
+          "title": "Geluid bij uitnodiging"
+        },
+        "playSoundOnInviteRequest": {
+          "description": "Speel een geluid wanneer je een uitnodigingsverzoek ontvangt",
+          "onlyWhenAsleep": {
+            "description": "Speel het geluid alleen af wanneer de slaap modus actief is",
+            "title": "Alleen als ik slaap"
+          },
+          "onlyWhenUnhandled": {
+            "description": "Speel het geluid alleen als het uitnodigingsverzoek niet automatisch geaccepteerd of geweigerd word",
+            "title": "Alleen onafgehandelde verzoeken"
+          },
+          "title": "Geluid bij uitnodigingsverzoek"
+        }
+      }
     },
     "tabs": {
       "inviteRequests": "Uitnodigingsverzoeken",
       "invites": "Uitnodigingen",
       "sounds": "Geluiden"
     },
-    "invitesTab": {
-      "options": {
-        "declineOnInviteWhileAsleep": {
-          "customMessage": {
-            "description": "Voer het bericht in om te verzenden wanneer een uitnodiging wordt geweigerd"
-          }
-        }
-      }
-    }
+    "title": "Uitnodigingen & Uitnodigingsverzoeken"
   },
   "join-notifications": {
     "description": "Stuur een notificatie bericht of geluid wanneer een andere speler je wereld betreed of verlaat. Dit kan handig zijn als je wilt dat OyasumiVR je wakker maakt als iemand je joint.",
     "joinNotifications": {
       "description": "Stuur een notificatie wanneer een speler je wereld betreed",
       "title": "Join Notificaties"
+    },
+    "joinSound": {
+      "description": "Het geluid dat word gespeeld als een speler je wereld joint",
+      "title": "Join geluids effect"
     },
     "joinSounds": {
       "description": "Speel een geluid wanneer een speler je wereld betreed.",
@@ -1345,6 +1424,10 @@
     "leaveNotifications": {
       "description": "Stuur een notificatie wanneer een speler je wereld verlaat",
       "title": "Leave Notificaties"
+    },
+    "leaveSound": {
+      "description": "Het geluid dat word gespeeld als een speler je wereld verlaat",
+      "title": "Leave geluids effect"
     },
     "leaveSounds": {
       "description": "Speel een geluid wanneer een speler je wereld verlaat.",
@@ -1377,14 +1460,41 @@
   "message-center": {
     "actions": {
       "configure": "Configureer",
-      "moreInfo": "Meer info"
+      "hide": "Verberg",
+      "moreInfo": "Meer info",
+      "showHidden": "Toon verborgen",
+      "unhide": "Tonen"
     },
     "messages": {
+      "gpuAutomationsAfterburnerError": {
+        "actions": {
+          "disable": "Automatiseringen Uitschakelen"
+        },
+        "message": {
+          "INVALID_EXECUTABLE": "OyasumiVR kon je MSI Afterburner installatie niet verifieren om te zien dat deze werkt. Kijk even naar het pad naar de MSI Afterburner installatie dat is ingesteld, om te zorgen dat je automatiseringen blijven werken.",
+          "INVALID_SIGNATURE": "OyasumiVR kon niet verifieren dat je MSI Afterburner installatie ook echt van MSI af komt. Kijk even naar het pad naar de MSI Afterburner installatie dat is ingesteld, om te zorgen dat je automatiseringen blijven werken.",
+          "NOT_FOUND": "MSI Afterburner kon niet worden gevonden op de geconfigureerde locatie. Kijk even naar het pad naar de MSI Afterburner installatie dat is ingesteld, om te zorgen dat je automatiseringen blijven werken.",
+          "UNKNOWN_ERROR": "Een onbekende error is ontstaan bij het vinden van je MSI Afterburner installatie. Kijk even naar het pad naar de MSI Afterburner installatie dat is ingesteld, om te zorgen dat je automatiseringen blijven werken."
+        },
+        "title": "MSI Afterburner Automatiseringen Onbeschikbaar"
+      },
+      "gpuAutomationsNvmlError": {
+        "actions": {
+          "disable": "Automatiseringen Uitschakelen"
+        },
+        "title": "GPU Power Limit Automatiseringen Onbeschikbaar"
+      },
       "gpuAutomationsSidecarNotRunning": {
         "actions": {
           "disable": "Deactiveer GPU Automatiseringen",
           "elevate": "Geef Beheerders Rechten"
-        }
+        },
+        "message": "Je hebt GPU automatiseringen geactiveert, maar OyasumiVR heeft op dit moment geen beheerdersrechten om deze uit te kunnen voeren\n\nGeef OyasumiVR a.u.b. beheerdersrechten, of schakel GPU automatiseringen uit.",
+        "title": "GPU Automatiseringen Onbeschikbaar"
+      },
+      "lighthouseConsoleError": {
+        "message": "De lighthouse console kon niet worden gevonden of werkt niet goed. Zonder toegang tot de lighthouse console kan OyasumiVR waarschijnlijk je controllers en trackers niet uitschakelen. Controleer je configuratie.",
+        "title": "Lighthouse Console Niet Beschikbaar"
       },
       "manyLighthousesDetected": {
         "message": "Het lijkt er op dat je een hoop base stations hebt!\n\nLet op dat de meeste Bluetooth adapters maar tot 7 gelijktijdige connecties kunnen hebben, inclusief met andere Bluetooth apparaten zoals hoofdtelefoons en andere randapparatuur.\n\nHet kan zijn dat OyasumiVR moeite heeft met het besturen van al je base stations als je er te veel tegelijk ingeplugt hebt, of te veel andere Bluetooth apparaten verbonden hebt.",
@@ -1394,10 +1504,6 @@
         "calibrate": "Calibreer Nu",
         "message": "Slaapdetectie is ingeschakeld, maar nog niet gekalibreerd. Voordat je het gebruikt, moet je het minstens één keer kalibreren om de nauwkeurigheid te verbeteren.",
         "title": "Slaapkalibratie In Behandeling"
-      },
-      "lighthouseConsoleError": {
-        "message": "De lighthouse console kon niet worden gevonden of werkt niet goed. Zonder toegang tot de lighthouse console kan OyasumiVR waarschijnlijk je controllers en trackers niet uitschakelen. Controleer je configuratie.",
-        "title": "Lighthouse Console Niet Beschikbaar"
       },
       "vrcInviteRequestFailedWorldUnknown": {
         "message": "Je ontving een uitnodigingsverzoek van je vriend ''{senderUsername}'', maar OyasumiVR kon het niet verwerken omdat je huidige wereldinstantie onbekend is.\\n\\nDit kan komen doordat OyasumiVR je VRChat logbestanden niet kan lezen.",
@@ -1428,11 +1534,11 @@
         "message": "Let op dat het aanpassen van de kleur temperatuur alleen beschikbaar is op sommige native SteamVR headsets, zoals de Valve Index, Bigscreen Beyond, of HTC Vive (Pro).\n\nAls een andere headset gebruikt, is de kans groot dat deze feature geen effect zal hebben.\n\nJe kan kleur temperatuur besturing uitschakelen in de instellingen als je dat wilt.",
         "title": "Feature Beschikbaarheid"
       },
-      "acknowledge": "Ik begrijp het",
       "OSC_SCRIPT_SIMPLE_EDITOR_VRCHAT_AUTOCOMPLETE_INFO": {
         "message": "Om automatische aanvullingen voor je VRChat avatar parameters te krijgen, moet VRChat draaien en moet je je gewenste avatar dragen.\\n\\nAls VRChat niet draait, kun je nog steeds de eenvoudige editor gebruiken, maar je krijgt geen automatische aanvullingen.",
         "title": "Automatische Aanvullingen"
-      }
+      },
+      "acknowledge": "Ik begrijp het"
     },
     "oscScriptEditorErrors": {
       "addressNoSlash": "Een correct OSC adres begint altijd met een '/' symbool.",
@@ -1479,8 +1585,8 @@
     "title": "Nachtmerrie Detectie"
   },
   "notification-sound": {
-    "volume": "Volume",
-    "title": "Selecteer een geluid"
+    "title": "Selecteer een geluid",
+    "volume": "Volume"
   },
   "notifications": {
     "autoAcceptedInviteRequest": {
@@ -1668,28 +1774,28 @@
   "power-automations": {
     "devices": {
       "turnOff": {
+        "description": "OyasumiVR kan je controllers, trackers of zelfs je basisstations uitschakelen bij bepaalde gebeurtenissen. Schakel bijvoorbeeld je trackers uit wanneer je in slaap valt, zodat ze nog wat batterij hebben wanneer je wakker wordt!",
+        "subtitle": "Schakel de volgende apparaten uit",
         "title": "Zet apparaten uit",
         "triggers": {
+          "onBatteryLevel": "Wanneer het batterijniveau van het apparaat onder komt",
+          "onDeviceCharging": "Wanneer het apparaat aan het opladen is",
           "onSleepModeDisable": "Wanneer ik wakker word",
           "onSleepModeEnable": "Wanneer ik ga slapen",
           "onSleepPreparation": "Wanneer ik me voorbereid om te gaan slapen",
           "onSteamVRStop": "Wanneer SteamVR stopt",
-          "onBatteryLevel": "Wanneer het batterijniveau van het apparaat onder komt",
-          "onDeviceCharging": "Wanneer het apparaat aan het opladen is",
           "onlyWhileSleepModeEnabled": "Alleen terwijl slaapmodus is ingeschakeld"
-        },
-        "description": "OyasumiVR kan je controllers, trackers of zelfs je basisstations uitschakelen bij bepaalde gebeurtenissen. Schakel bijvoorbeeld je trackers uit wanneer je in slaap valt, zodat ze nog wat batterij hebben wanneer je wakker wordt!",
-        "subtitle": "Schakel de volgende apparaten uit"
+        }
       },
       "turnOn": {
+        "description": "OyasumiVR kan ook bepaalde apparaten inschakelen. Momenteel kunnen alleen basisstations worden ingeschakeld.",
+        "subtitle": "Schakel de volgende apparaten in",
+        "title": "Apparaten inschakelen",
         "triggers": {
           "onOyasumiStart": "Wanneer OyasumiVR start",
           "onSleepModeDisable": "Wanneer ik wakker word",
           "onSteamVRStart": "Wanneer SteamVR start"
-        },
-        "description": "OyasumiVR kan ook bepaalde apparaten inschakelen. Momenteel kunnen alleen basisstations worden ingeschakeld.",
-        "subtitle": "Schakel de volgende apparaten in",
-        "title": "Apparaten inschakelen"
+        }
       }
     },
     "enableLighthouseControl": "Zet aan",
@@ -1764,25 +1870,40 @@
     "title": "Resolutie Automatiseringen"
   },
   "runAutomations": {
-    "onSleepDisable": {
-      "title": "Wanneer ik wakker word",
-      "description": "Commando's uitvoeren"
-    },
-    "onSleepEnable": {
-      "title": "Wanneer ik ga slapen",
-      "description": "Commando's uitvoeren"
-    },
-    "onSleepPreparation": {
-      "title": "Wanneer ik me voorbereid om te gaan slapen",
-      "description": "Commando's uitvoeren"
-    },
-    "testCommands": "Test",
     "commandsToRun": "Uit te voeren commando's",
     "description": "Hier kun je OyasumiVR automatisch commando's laten uitvoeren via de Windows opdrachtprompt wanneer je in slaap valt, wakker wordt of je voorbereidt om te slapen.\\n\\nAlle commando's worden geïnterpreteerd via cmd.exe.",
+    "onSleepDisable": {
+      "description": "Commando's uitvoeren",
+      "title": "Wanneer ik wakker word"
+    },
+    "onSleepEnable": {
+      "description": "Commando's uitvoeren",
+      "title": "Wanneer ik ga slapen"
+    },
+    "onSleepPreparation": {
+      "description": "Commando's uitvoeren",
+      "title": "Wanneer ik me voorbereid om te gaan slapen"
+    },
+    "testCommands": "Test",
     "title": "Uitvoer Automatiseringen"
   },
   "settings": {
     "advanced": {
+      "application": {
+        "openVrInitDelayFix": {
+          "description": "Het inschakelen hiervan zorgt ervoor dat OyasumiVR even wacht om te interacteren met SteamVR zodra het is gedetecteerd, waardoor SteamVR wat extra tijd krijgt om op te starten. Als je problemen ondervindt met het starten van SteamVR terwijl OyasumiVR al draait, kan dit helpen.",
+          "title": "OpenVR Initialisatie Vertragen"
+        },
+        "oscServerEnabled": {
+          "description": "Dit uitschakelen deactiveert de ingebouwde OSC en OSCQuery servers. Let op dat verschillende functies van OyasumiVR stoppen met werken als je dit uitschakelt, zonder waarschuwingen. Deze optie bestaat puur voor debugging doeleinden en mag niet worden uitgeschakeld tijdens normaal gebruik.",
+          "title": "OSC & OSCQuery Servers"
+        },
+        "overlayGpuAcceleration": {
+          "description": "Als je problemen ondervindt met de overlay die niet goed wordt weergegeven, kan het uitschakelen van deze optie het probleem oplossen op sommige systemen (bijv. die met hybride graphics).",
+          "title": "VR Overlay GPU Accelleratie"
+        },
+        "title": "Applicatie"
+      },
       "logs": {
         "openFolder": {
           "action": "Open Map",
@@ -1868,11 +1989,13 @@
         "title": "Taal & Vertalen"
       },
       "troubleshooting": {
+        "description": "Deze sectie bevat enkele opties gerelateerd aan probleemoplossing. Je hoeft deze over het algemeen niet te gebruiken, tenzij je wordt gevraagd om ze te gebruiken bij het krijgen van ondersteuning.",
         "devTools": {
           "action": "Open DevTools",
           "description": "Opent de Edge Developer Tools, om fouten mee op te sporen",
           "title": "Open Developer Tools"
         },
+        "title": "Probleemoplossing",
         "vrManifestReregister": {
           "action": "Herregistreer Manifest",
           "description": "Herregistreert OyasumiVR's VR application manifest met SteamVR",
@@ -1907,24 +2030,7 @@
             }
           },
           "title": "Herregistreet SteamVR application manifest"
-        },
-        "description": "Deze sectie bevat enkele opties gerelateerd aan probleemoplossing. Je hoeft deze over het algemeen niet te gebruiken, tenzij je wordt gevraagd om ze te gebruiken bij het krijgen van ondersteuning.",
-        "title": "Probleemoplossing"
-      },
-      "application": {
-        "openVrInitDelayFix": {
-          "description": "Het inschakelen hiervan zorgt ervoor dat OyasumiVR even wacht om te interacteren met SteamVR zodra het is gedetecteerd, waardoor SteamVR wat extra tijd krijgt om op te starten. Als je problemen ondervindt met het starten van SteamVR terwijl OyasumiVR al draait, kan dit helpen.",
-          "title": "OpenVR Initialisatie Vertragen"
-        },
-        "oscServerEnabled": {
-          "description": "Dit uitschakelen deactiveert de ingebouwde OSC en OSCQuery servers. Let op dat verschillende functies van OyasumiVR stoppen met werken als je dit uitschakelt, zonder waarschuwingen. Deze optie bestaat puur voor debugging doeleinden en mag niet worden uitgeschakeld tijdens normaal gebruik.",
-          "title": "OSC & OSCQuery Servers"
-        },
-        "overlayGpuAcceleration": {
-          "description": "Als je problemen ondervindt met de overlay die niet goed wordt weergegeven, kan het uitschakelen van deze optie het probleem oplossen op sommige systemen (bijv. die met hybride graphics).",
-          "title": "VR Overlay GPU Accelleratie"
-        },
-        "title": "Applicatie"
+        }
       }
     },
     "brightnessCct": {
@@ -2769,8 +2875,8 @@
       "title": "Wanneer ik me voorbereid om te gaan slapen"
     },
     "options": {
-      "dontChange": "Niets veranderen",
-      "clearGroup": "Groep Wissen"
+      "clearGroup": "Groep Wissen",
+      "dontChange": "Niets veranderen"
     },
     "title": "Groep Automatiseringen"
   },
