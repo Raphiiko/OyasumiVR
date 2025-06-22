@@ -20,6 +20,7 @@ import { VRChatAPI } from './vrchat-api';
 import { VRChatAuth, VRChatAuthStatus } from './vrchat-auth';
 import { VRChatSocket } from './vrchat-socket';
 import { error } from '@tauri-apps/plugin-log';
+import { uniq } from 'lodash';
 
 @Injectable({
   providedIn: 'root',
@@ -28,8 +29,8 @@ export class VRChatService {
   private _settings = new BehaviorSubject<VRChatApiSettings>(VRCHAT_API_SETTINGS_DEFAULT);
   private _vrchatProcessActive = new BehaviorSubject(false);
   private _world: BehaviorSubject<WorldContext> = new BehaviorSubject<WorldContext>({
-    playerCount: 1,
     loaded: false,
+    players: [],
   });
 
   private api: VRChatAPI;
@@ -86,18 +87,29 @@ export class VRChatService {
     this.logService.logEvents.subscribe(async (event) => {
       switch (event.type) {
         case 'OnPlayerJoined': {
+          const currentPlayers = [...this._world.value.players];
+          const existingPlayer = currentPlayers.find((player) => player.userId === event.userId);
+          if (existingPlayer) {
+            existingPlayer.displayName = event.displayName;
+          } else {
+            currentPlayers.push({ displayName: event.displayName, userId: event.userId });
+          }
           const context = {
             ...structuredClone(this._world.value),
-            playerCount: this._world.value.playerCount + 1,
+            players: currentPlayers,
           };
           if (event.userId === (await firstValueFrom(this.auth.user))?.id) context.loaded = true;
           this._world.next(context);
           break;
         }
         case 'OnPlayerLeft': {
-          const context = {
+          const currentPlayers = [...this._world.value.players];
+          const existingPlayer = currentPlayers.find((player) => player.userId === event.userId);
+          if (existingPlayer) {
+            currentPlayers.splice(currentPlayers.indexOf(existingPlayer), 1);
+          }          const context = {
             ...structuredClone(this._world.value),
-            playerCount: Math.max(this._world.value.playerCount - 1, 0),
+            players: currentPlayers,
           };
           if (event.userId === (await firstValueFrom(this.auth.user))?.id) context.loaded = false;
           this._world.next(context);
@@ -106,9 +118,9 @@ export class VRChatService {
         case 'OnLocationChange':
           this._world.next({
             ...structuredClone(this._world.value),
-            playerCount: 0,
             instanceId: event.instanceId,
             loaded: false,
+            players: [],
           });
           break;
       }

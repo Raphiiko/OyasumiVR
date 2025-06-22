@@ -52,7 +52,7 @@ export class StatusChangeForPlayerCountAutomationService {
       // React to player count changes
       this.vrchat.world.pipe(
         filter((w) => w.loaded),
-        map((w) => w.playerCount),
+        map((w) => w.players.length),
         debounceTime(1000)
       ),
       // React to the user logging in
