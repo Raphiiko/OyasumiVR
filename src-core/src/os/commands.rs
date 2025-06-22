@@ -9,7 +9,7 @@ use super::{
 use log::{debug, error, info};
 use oyasumivr_shared::windows::is_elevated;
 use std::process::Command;
-use std::{env, os::windows::process::CommandExt, path::PathBuf};
+use std::{env, path::PathBuf};
 use tauri_plugin_shell::{process::CommandEvent, Error, ShellExt};
 use tokio::fs::File;
 use tokio::io::AsyncWriteExt;
@@ -166,7 +166,7 @@ pub async fn run_cmd_commands(commands: String) {
     );
 
     match cmd_builder.spawn() {
-        Ok(mut child) => {
+        Ok(child) => {
             debug!(
                 "[Core] Successfully spawned cmd.exe process with PID: {:?}",
                 child.id()
