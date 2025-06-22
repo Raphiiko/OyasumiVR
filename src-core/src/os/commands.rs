@@ -6,7 +6,7 @@ use super::{
     models::{Output, WindowsPowerPolicy},
     VRCHAT_ACTIVE,
 };
-use log::{error, info};
+use log::{debug, error, info};
 use oyasumivr_shared::windows::is_elevated;
 use std::process::Command;
 use std::{env, os::windows::process::CommandExt, path::PathBuf};
@@ -114,13 +114,27 @@ pub async fn run_cmd_commands(commands: String) {
     let filename = format!("oyasumi_{}.bat", Uuid::new_v4());
     batch_path.push(filename);
 
+    info!("[Core] Creating batch file at: {}", batch_path.display());
+
     // Write the commands to the batch file
     match File::create(&batch_path).await {
         Ok(mut file) => {
+            debug!("[Core] Successfully created batch file");
             if let Err(e) = file.write_all(commands.as_bytes()).await {
                 error!("[Core] Failed to write to batch file: {}", e);
                 return;
             }
+            debug!(
+                "[Core] Successfully wrote {} bytes to batch file",
+                commands.len()
+            );
+
+            // Ensure file is written and closed
+            if let Err(e) = file.flush().await {
+                error!("[Core] Failed to flush batch file: {}", e);
+                return;
+            }
+            debug!("[Core] Successfully flushed batch file to disk");
         }
         Err(e) => {
             error!("[Core] Failed to create batch file: {}", e);
@@ -128,18 +142,59 @@ pub async fn run_cmd_commands(commands: String) {
         }
     }
 
+    // Verify the file exists before trying to execute it
+    if !batch_path.exists() {
+        error!(
+            "[Core] Batch file does not exist after creation: {}",
+            batch_path.display()
+        );
+        return;
+    }
+    debug!(
+        "[Core] Verified batch file exists: {}",
+        batch_path.display()
+    );
+
     // Log the path of the batch file
     let mut cmd_builder = Command::new("cmd");
     cmd_builder.args(["/C", batch_path.to_str().unwrap()]);
-    // DETACHED_PROCESS flag (0x00000008)
-    cmd_builder.creation_flags(0x00000008);
+    // DETACHED_PROCESS flag (0x00000008) - REMOVED due to issues in beta builds
+    // cmd_builder.creation_flags(0x00000008);
 
-    info!(
-        "[Core] Running batch file: {}",
+    debug!(
+        "[Core] Attempting to spawn cmd.exe process with batch file: {}",
         batch_path.to_str().unwrap()
     );
-    if let Err(e) = cmd_builder.spawn() {
-        error!("[Core] Failed to spawn detached cmd.exe process: {}", e);
+
+    match cmd_builder.spawn() {
+        Ok(mut child) => {
+            debug!(
+                "[Core] Successfully spawned cmd.exe process with PID: {:?}",
+                child.id()
+            );
+        }
+        Err(e) => {
+            error!("[Core] Failed to spawn cmd.exe process: {}", e);
+            error!("[Core] Error kind: {:?}", e.kind());
+
+            // Additional debug information
+            match e.kind() {
+                std::io::ErrorKind::NotFound => {
+                    error!("[Core] cmd.exe not found - this should not happen on Windows");
+                }
+                std::io::ErrorKind::PermissionDenied => {
+                    error!("[Core] Permission denied when trying to execute cmd.exe");
+                    error!("[Core] This might be due to security policies or antivirus software");
+                }
+                std::io::ErrorKind::InvalidInput => {
+                    error!("[Core] Invalid input provided to cmd.exe");
+                    error!("[Core] Batch file path: {}", batch_path.display());
+                }
+                _ => {
+                    error!("[Core] Unexpected error kind: {:?}", e.kind());
+                }
+            }
+        }
     }
 }
 
