@@ -158,7 +158,6 @@ pub async fn run_cmd_commands(commands: String) {
     // Log the path of the batch file
     let mut cmd_builder = Command::new("cmd");
     cmd_builder.args(["/C", batch_path.to_str().unwrap()]);
-    // DETACHED_PROCESS flag (0x00000008) - REMOVED due to issues in beta builds
     // cmd_builder.creation_flags(0x00000008);
 
     debug!(
@@ -399,77 +398,4 @@ pub async fn set_mic_activity_device_id(device_id: Option<String>) {
 #[oyasumivr_macros::command_profiling]
 pub async fn is_elevation_security_disabled() -> bool {
     crate::os::elevation::is_elevation_security_disabled()
-}
-
-#[tauri::command]
-#[oyasumivr_macros::command_profiling]
-pub async fn run_cmd_commands_with_output(commands: String) -> Result<Output, String> {
-    info!("[Core] Running commands with output capture:\n{}", commands);
-
-    // Get the system temp directory
-    let mut batch_path: PathBuf = env::temp_dir();
-    // Generate a unique filename
-    let filename = format!("oyasumi_{}.bat", Uuid::new_v4());
-    batch_path.push(filename);
-
-    info!("[Core] Creating batch file at: {}", batch_path.display());
-
-    // Write the commands to the batch file
-    match File::create(&batch_path).await {
-        Ok(mut file) => {
-            info!("[Core] Successfully created batch file");
-            if let Err(e) = file.write_all(commands.as_bytes()).await {
-                error!("[Core] Failed to write to batch file: {}", e);
-                return Err(format!("Failed to write to batch file: {}", e));
-            }
-            info!("[Core] Successfully wrote {} bytes to batch file", commands.len());
-            
-            // Ensure file is written and closed
-            if let Err(e) = file.flush().await {
-                error!("[Core] Failed to flush batch file: {}", e);
-                return Err(format!("Failed to flush batch file: {}", e));
-            }
-            info!("[Core] Successfully flushed batch file to disk");
-        }
-        Err(e) => {
-            error!("[Core] Failed to create batch file: {}", e);
-            return Err(format!("Failed to create batch file: {}", e));
-        }
-    }
-
-    // Verify the file exists before trying to execute it
-    if !batch_path.exists() {
-        error!("[Core] Batch file does not exist after creation: {}", batch_path.display());
-        return Err("Batch file does not exist after creation".to_string());
-    }
-    info!("[Core] Verified batch file exists: {}", batch_path.display());
-
-    // Execute the batch file and wait for completion
-    info!("[Core] Executing batch file with output capture: {}", batch_path.display());
-    
-    let result = run_command("cmd".to_string(), vec!["/C".to_string(), batch_path.to_str().unwrap().to_string()]).await;
-    
-    // Clean up the batch file
-    if let Err(e) = std::fs::remove_file(&batch_path) {
-        error!("[Core] Failed to clean up batch file {}: {}", batch_path.display(), e);
-    } else {
-        info!("[Core] Successfully cleaned up batch file: {}", batch_path.display());
-    }
-    
-    match &result {
-        Ok(output) => {
-            info!("[Core] Batch file execution completed with status: {}", output.status);
-            if !output.stdout.is_empty() {
-                info!("[Core] Batch file stdout:\n{}", output.stdout);
-            }
-            if !output.stderr.is_empty() {
-                error!("[Core] Batch file stderr:\n{}", output.stderr);
-            }
-        }
-        Err(e) => {
-            error!("[Core] Batch file execution failed: {}", e);
-        }
-    }
-    
-    result
 }
