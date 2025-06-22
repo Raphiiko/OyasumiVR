@@ -10,7 +10,7 @@ import {
   serializeStorageCryptoKey,
 } from '../utils/crypto';
 import { firstValueFrom, ReplaySubject } from 'rxjs';
-import { info, warn } from '@tauri-apps/plugin-log';
+import { debug, info, warn } from '@tauri-apps/plugin-log';
 import { invoke } from '@tauri-apps/api/core';
 import { SleepService } from './sleep.service';
 import { SleepPreparationService } from './sleep-preparation.service';
@@ -71,6 +71,7 @@ export class RunAutomationsService {
   }
 
   public async testCommands(commands: string): Promise<void> {
+    debug(`[RunAutomationsService] Testing commands:\n${commands}`);
     await invoke('run_cmd_commands', { commands });
   }
 

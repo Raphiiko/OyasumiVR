@@ -106,6 +106,8 @@ pub async fn run_command(command: String, args: Vec<String>) -> Result<Output, S
 #[tauri::command]
 #[oyasumivr_macros::command_profiling]
 pub async fn run_cmd_commands(commands: String) {
+    info!("[Core] Running commands:\n{}", commands);
+
     // Get the system temp directory
     let mut batch_path: PathBuf = env::temp_dir();
     // Generate a unique filename
@@ -126,12 +128,16 @@ pub async fn run_cmd_commands(commands: String) {
         }
     }
 
-    // Launch the batch file in a detached process
+    // Log the path of the batch file
     let mut cmd_builder = Command::new("cmd");
     cmd_builder.args(["/C", batch_path.to_str().unwrap()]);
     // DETACHED_PROCESS flag (0x00000008)
     cmd_builder.creation_flags(0x00000008);
 
+    info!(
+        "[Core] Running batch file: {}",
+        batch_path.to_str().unwrap()
+    );
     if let Err(e) = cmd_builder.spawn() {
         error!("[Core] Failed to spawn detached cmd.exe process: {}", e);
     }
