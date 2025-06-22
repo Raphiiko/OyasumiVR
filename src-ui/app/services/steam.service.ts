@@ -106,7 +106,7 @@ export class SteamService {
           const fiveSecondsAgo = now - 5000;
           return [...timestamps, now].filter((timestamp) => timestamp > fiveSecondsAgo);
         }, [] as number[]),
-        filter((timestamps: number[]) => timestamps.length === 10),
+        filter((timestamps: number[]) => timestamps.length === 6),
         throttleTime(10000, asyncScheduler, { leading: true, trailing: false }),
         switchMap(() => this.getAchievement(SteamAchievements.SMSPAM)),
         filter((unlocked) => !unlocked),
@@ -171,7 +171,7 @@ export class SteamService {
   }
 
   private async handleAchievement_DEV_SLEEP() {
-    const condition = combineLatest([
+    combineLatest([
       this.vrchat.world.pipe(
         map((world) => !!world.players.find((p) => p.userId === DEV_VRCHAT_USER_ID)),
         distinctUntilChanged()
@@ -187,7 +187,7 @@ export class SteamService {
         debounceTime(2000),
         switchMap(async (condition) => {
           if (condition) {
-            await sleep(3600000);
+            await sleep(1000 * 60 * 5);
             return true;
           } else {
             return false;
