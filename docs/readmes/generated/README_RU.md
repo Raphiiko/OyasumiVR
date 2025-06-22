@@ -16,7 +16,6 @@
     <a href="https://raphiiko.booth.pm/items/4216880"><img alt="Страница BOOTH.pm" src="https://img.shields.io/badge/Store-Booth.pm-red"/></a>
     <a href="https://raphiiko.gumroad.com/l/oyasumi?layout=profile"><img alt="Страница Gumroad" src="https://img.shields.io/badge/Store-Gumroad-important"/></a>
     <br>
-    <a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
     <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
     <br>
     <br>
