@@ -728,31 +728,9 @@
     }
   },
   "power-automations": {
-    "enableLighthouseControl": "Aktifkan",
     "error": {
       "adapterError": "Terjadi kesalahan saat mencoba berkomunikasi dengan adaptor Bluetooth. Pastikan adaptor Bluetooth Anda telah diaktifkan dan coba lagi.",
       "noAdapter": "Tidak ada adaptor Bluetooth yang ditemukan di sistem Anda. Pastikan sistem Anda dilengkapi dengan adaptor Bluetooth dan adaptor tersebut diaktifkan."
-    },
-    "lighthouseControlDisabledWarning": "Otomatisasi ini tidak tersedia karena Anda telah menonaktifkan kontrol daya base station dalam pengaturan OyasumiVR. Aktifkan ini jika Anda ingin menggunakan otomatisasi ini.",
-    "lighthousePowerOff": {
-      "description": "Minta OyasumiVR secara otomatis mematikan stasiun pangkalan Anda.",
-      "onSteamVRStop": {
-        "description": "Secara otomatis mematikan base station Anda ketika SteamVR berhenti",
-        "title": "Ketika SteamVR berhenti"
-      },
-      "title": "Matikan Base Station"
-    },
-    "lighthousePowerOn": {
-      "description": "Minta OyasumiVR secara otomatis menyalakan base station Anda.",
-      "onOyasumiStart": {
-        "description": "Secara otomatis menghidupkan base station Anda ketika OyasumiVR dimulai",
-        "title": "Ketika OyasumiVR dimulai"
-      },
-      "onSteamVRStart": {
-        "description": "Secara otomatis menghidupkan base station Anda ketika SteamVR dimulai",
-        "title": "Saat SteamVR dimulai"
-      },
-      "title": "Nyalakan Base Station"
     },
     "powerManagementWarning": "Ketika memilih untuk menggunakan otomatisasi OyasumiVR untuk menghidupkan atau mematikan base station Anda, Anda disarankan untuk menonaktifkan manajemen daya dalam pengaturan base station SteamVR.",
     "tabs": {

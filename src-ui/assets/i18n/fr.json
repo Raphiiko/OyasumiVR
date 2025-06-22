@@ -719,7 +719,6 @@
         }
       }
     },
-    "enableLighthouseControl": "Activer",
     "windowsPowerPolicy": {
       "sleepModeDisable": {
         "title": "Lorsque de la désactivation du mode sommeil"

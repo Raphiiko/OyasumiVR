@@ -1798,31 +1798,9 @@
         }
       }
     },
-    "enableLighthouseControl": "Enable",
     "error": {
       "adapterError": "An error occurred while trying to communicate with your Bluetooth adapter. Please make sure your Bluetooth adapter is enabled and try again.",
       "noAdapter": "No Bluetooth adapter could be found in your system. Please make sure your system is equipped with a Bluetooth adapter and that it is enabled."
-    },
-    "lighthouseControlDisabledWarning": "These automations are unavailable because you have disabled base station power control in OyasumiVR's settings. Enable this if you want to use these automations.",
-    "lighthousePowerOff": {
-      "description": "Have OyasumiVR automatically turn off your base stations.",
-      "onSteamVRStop": {
-        "description": "Automatically turn off your base stations when SteamVR stops",
-        "title": "When SteamVR stops"
-      },
-      "title": "Turn off base stations"
-    },
-    "lighthousePowerOn": {
-      "description": "Have OyasumiVR automatically turn on your base stations.",
-      "onOyasumiStart": {
-        "description": "Automatically turn on your base stations when OyasumiVR starts",
-        "title": "When OyasumiVR starts"
-      },
-      "onSteamVRStart": {
-        "description": "Automatically turn on your base stations when SteamVR starts",
-        "title": "When SteamVR starts"
-      },
-      "title": "Turn on base stations"
     },
     "powerManagementWarning": "When choosing to use OyasumiVR's automations for turning your base stations on or off, it is recommended that you disable power management in SteamVR's base station settings.",
     "tabs": {

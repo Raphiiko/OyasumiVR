@@ -1437,31 +1437,9 @@
     }
   },
   "power-automations": {
-    "enableLighthouseControl": "Habilitar",
     "error": {
       "adapterError": "Se ha producido un error al intentar comunicarse con el adaptador Bluetooth. Asegúrese de que el adaptador Bluetooth está activado e inténtelo de nuevo.",
       "noAdapter": "No se ha encontrado ningún adaptador Bluetooth en su sistema. Por favor, asegúrese de que su sistema está equipado con un adaptador Bluetooth y que está habilitado."
-    },
-    "lighthouseControlDisabledWarning": "Estas automatizaciones no están disponibles porque has desactivado el control de potencia de la estación base en la configuración de OyasumiVR. Habilítelo si desea utilizar estas automatizaciones.",
-    "lighthousePowerOff": {
-      "description": "Haz que OyasumiVR apague automáticamente tus estaciones base.",
-      "onSteamVRStop": {
-        "description": "Apaga automáticamente tus estaciones base cuando SteamVR se detenga",
-        "title": "Cuando SteamVR se detiene"
-      },
-      "title": "Apagar las estaciones base"
-    },
-    "lighthousePowerOn": {
-      "description": "Haz que OyasumiVR encienda automáticamente tus estaciones base.",
-      "onOyasumiStart": {
-        "description": "Enciende automáticamente tus estaciones base cuando se inicia OyasumiVR",
-        "title": "Cuándo empieza OyasumiVR"
-      },
-      "onSteamVRStart": {
-        "description": "Enciende automáticamente tus estaciones base cuando se inicie SteamVR",
-        "title": "Cuando se inicia SteamVR"
-      },
-      "title": "Encender las estaciones base"
     },
     "powerManagementWarning": "Si optas por utilizar las automatizaciones de OyasumiVR para encender o apagar tus estaciones base, es recomendable que desactives la gestión de energía en la configuración de la estación base de SteamVR.",
     "tabs": {

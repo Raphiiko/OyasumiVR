@@ -1410,31 +1410,9 @@
     }
   },
   "power-automations": {
-    "enableLighthouseControl": "활성화",
     "error": {
       "adapterError": "블루투스 어댑터와 통신하는 동안 오류가 발생했어요. 블루투스 어댑터가 활성화되어 있는지 확인한 후 다시 시도해주세요.",
       "noAdapter": "시스템에서 블루투스 어댑터를 찾을 수 없어요. 시스템에 블루투스 어댑터가 장착되어 있고 활성화되어 있는지 확인해주세요."
-    },
-    "lighthouseControlDisabledWarning": "OyasumiVR의 설정에서 베이스스테이션의 전원 제어 기능을 비활성화했기 때문에 이러한 자동화를 사용할 수 없어요. 이 자동화를 사용하려면 이 기능을 활성화하세요.",
-    "lighthousePowerOff": {
-      "description": "OyasumiVR이 자동으로 베이스스테이션을 끄도록 설정해요.",
-      "onSteamVRStop": {
-        "description": "SteamVR이 중지되면 자동으로 베이스스테이션을 꺼요.",
-        "title": "SteamVR이 중지될 때"
-      },
-      "title": "베이스스테이션 끄기"
-    },
-    "lighthousePowerOn": {
-      "description": "OyasumiVR이 자동으로 베이스스테이션을 켜도록 설정해요.",
-      "onOyasumiStart": {
-        "description": "OyasumiVR이 시작되면 자동으로 베이스스테이션을 켜요.",
-        "title": "OyasumiVR이 시작될 때"
-      },
-      "onSteamVRStart": {
-        "description": "SteamVR이 시작되면 자동으로 베이스스테이션을 켜요.",
-        "title": "SteamVR이 시작될 때"
-      },
-      "title": "베이스스테이션 켜기"
     },
     "powerManagementWarning": "베이스스테이션을 켜거나 끄는 데 OyasumiVR의 자동화 기능을 사용하려면 SteamVR의 베이스스테이션 설정에서 전원 관리 기능을 비활성화할 것을 권장해요.",
     "tabs": {

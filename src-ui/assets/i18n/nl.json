@@ -1798,31 +1798,9 @@
         }
       }
     },
-    "enableLighthouseControl": "Zet aan",
     "error": {
       "adapterError": "Er is een fout opgetreden bij het verbinden met je bluetooth adapter. Check of je bluetooth adapter is ingeschakeld, en probeer het nog eens.",
       "noAdapter": "Er kon geen bluetooth adapter worden gevonden in je systeem. Zorg dat je computer beschikt over een bluetooth adapter, en dat deze is ingeschakeld."
-    },
-    "lighthouseControlDisabledWarning": "Deze automatiseringen zijn niet beschikbaar omdat je base station aansturing hebt uitgeschakeld in OyasumiVR's instellingen. Zet dit weer aan als je gebruik wilt maken van deze automatiseringen.",
-    "lighthousePowerOff": {
-      "description": "Laat OyasumiVR automatisch je base stations uitzetten.",
-      "onSteamVRStop": {
-        "description": "Zet al je base stations uit wanneer SteamVR stopt",
-        "title": "Wanneer SteamVR stopt"
-      },
-      "title": "Base stations uitzetten"
-    },
-    "lighthousePowerOn": {
-      "description": "Laat OyasumiVR automatisch je base stations aanzetten.",
-      "onOyasumiStart": {
-        "description": "Zet al je base stations aan wanneer OyasumiVR start",
-        "title": "Wanneer OyasumiVR start"
-      },
-      "onSteamVRStart": {
-        "description": "Zet al je base stations aan wanneer SteamVR start",
-        "title": "Wanneer SteamVR start"
-      },
-      "title": "Base stations aanzetten"
     },
     "powerManagementWarning": "Als je OyasumiVR's automatiseringen gebruikt om je base stations aan of uit te zetten, wordt het aangeraden om Power Management uit te zetten in SteamVR's base station instellingen.",
     "tabs": {
@@ -2327,9 +2305,9 @@
     "overlay": {
       "cancel": "Annuleer",
       "stage": {
-        "TURNING_OFF_DEVICES": "Apparaten uitschakelen...",
         "POWERING_DOWN": "Windows Afsluiten...",
-        "QUITTING_STEAMVR": "Stoppen van SteamVR..."
+        "QUITTING_STEAMVR": "Stoppen van SteamVR...",
+        "TURNING_OFF_DEVICES": "Apparaten uitschakelen..."
       },
       "title": "Uitschakelen..."
     },

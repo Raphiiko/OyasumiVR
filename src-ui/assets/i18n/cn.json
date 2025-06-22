@@ -1760,31 +1760,9 @@
     }
   },
   "power-automations": {
-    "enableLighthouseControl": "启用",
     "error": {
       "adapterError": "在试图与你的蓝牙适配器进行通信时发生了错误。请确保你的蓝牙适配器已启用，然后再试一次。",
       "noAdapter": "在你的系统中找不到蓝牙适配器。请确认你的系统配备了蓝牙适配器，并且已经启用。"
-    },
-    "lighthouseControlDisabledWarning": "由于你在 OyasumiVR 的设置中禁用了基站的功耗控制，所以这些自动化功能不可用。如果你想使用这些自动化功能，请启用该功能。",
-    "lighthousePowerOff": {
-      "description": "让 OyasumiVR 自动关闭你的基站。",
-      "onSteamVRStop": {
-        "description": "当 SteamVR 停止时，自动关闭你的基站",
-        "title": "当 SteamVR 停止时"
-      },
-      "title": "关闭基站"
-    },
-    "lighthousePowerOn": {
-      "description": "让 OyasumiVR 自动打开你的基站。",
-      "onOyasumiStart": {
-        "description": "当 OyasumiVR 启动时，自动打开你的基站",
-        "title": "当 OyasumiVR 启动时"
-      },
-      "onSteamVRStart": {
-        "description": "当 SteamVR 启动时，自动打开你的基站",
-        "title": "当 SteamVR 启动时"
-      },
-      "title": "开启基站"
     },
     "powerManagementWarning": "当选择使用 OyasumiVR 的自动化操作来打开或关闭你的基站时，建议你在 SteamVR 的基站设置中禁用电源管理。",
     "tabs": {

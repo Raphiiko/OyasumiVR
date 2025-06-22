@@ -1437,31 +1437,9 @@
     }
   },
   "power-automations": {
-    "enableLighthouseControl": "Einschalten",
     "error": {
       "adapterError": "Ein Fehler ist bei der Kommunikation mit deinem Bluetoothadapter eingetreten. Bitte stelle sicher, dass dieser funktioniert.",
       "noAdapter": "Kein Bluetoothadapter konnte gefunden werden. Bitte stelle sicher, dass einer in deinem System integriert, angeschlossen und aktiviert ist."
-    },
-    "lighthouseControlDisabledWarning": "Diese Automationen sind nicht verfügbar, weil du deine Bassistationenergiekontrolle in OyasumiVRs Einstellungen deaktiviert hast. Aktiviere diese, wenn du diese Automation nutzen willst.",
-    "lighthousePowerOff": {
-      "description": "Basisstationen automatisch von OyasumiVR herunterfahren lassen.",
-      "onSteamVRStop": {
-        "description": "Basisstationen automatisch mit SteamVR herunterfahren",
-        "title": "Wenn SteamVR herunterfährt"
-      },
-      "title": "Alle Basisstationen ausschalten"
-    },
-    "lighthousePowerOn": {
-      "description": "Basistationen automatisch von OyasumiVR hochfahren lassen",
-      "onOyasumiStart": {
-        "description": "Basisstationen automatisch mit SteamVR hochfahren",
-        "title": "Wenn OyasumiVR startet"
-      },
-      "onSteamVRStart": {
-        "description": "Basisstationen automatisch mit SteamVR hochfahren",
-        "title": "Wenn SteamVR startet"
-      },
-      "title": "Basisstationen anschalten"
     },
     "powerManagementWarning": "Für die Verwendung der OyasumiVR Automationen um deine Basisstationen aus oder an zu schalten wird empfohlen, dass du dein Energiemangement in den SteamVR Basistationseinstellungen deaktivierst.",
     "tabs": {

@@ -1518,31 +1518,9 @@
         }
       }
     },
-    "enableLighthouseControl": "有効にする",
     "error": {
       "adapterError": "Bluetoothアダプターとの通信を試みている間にエラーが発生しました。Bluetoothアダプターが有効になっていることを確認し、再度お試しください。",
       "noAdapter": "お使いのシステムでBluetoothアダプターが見つかりませんでした。システムにBluetoothアダプターが搭載され、有効になっているかを確認してください。"
-    },
-    "lighthouseControlDisabledWarning": "OyasumiVRの設定でベースステーションの電力制御を無効にしているため、この機能は利用できません。使用する場合は、これを有効にしてください。",
-    "lighthousePowerOff": {
-      "description": "ベースステーションを自動でオフにする。",
-      "onSteamVRStop": {
-        "description": "SteamVRの停止時にベースステーションを自動でオフにする",
-        "title": "SteamVRを停止したとき"
-      },
-      "title": "ベースステーションをオフにする"
-    },
-    "lighthousePowerOn": {
-      "description": "ベースステーションを自動でオンにします。",
-      "onOyasumiStart": {
-        "description": "OyasumiVRの起動時にベースステーションを自動でオンにする",
-        "title": "OyasumiVRを起動したとき"
-      },
-      "onSteamVRStart": {
-        "description": "SteamVRの起動時にベースステーションを自動でオンにする",
-        "title": "SteamVRを起動したとき"
-      },
-      "title": "ベースステーションをオンにする"
     },
     "powerManagementWarning": "OyasumiVRでベースステーションの電源を自動化する場合、SteamVRの設定でベースステーションの電源管理を無効にすることを推奨します。",
     "tabs": {
