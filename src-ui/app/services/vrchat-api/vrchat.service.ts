@@ -20,7 +20,6 @@ import { VRChatAPI } from './vrchat-api';
 import { VRChatAuth, VRChatAuthStatus } from './vrchat-auth';
 import { VRChatSocket } from './vrchat-socket';
 import { error } from '@tauri-apps/plugin-log';
-import { uniq } from 'lodash';
 
 @Injectable({
   providedIn: 'root',
