@@ -186,12 +186,8 @@ export class SteamService {
         distinctUntilChanged(),
         debounceTime(2000),
         switchMap(async (condition) => {
-          if (condition) {
-            await sleep(1000 * 60 * 5);
-            return true;
-          } else {
-            return false;
-          }
+          if (condition) await sleep(1000 * 60 * 5);
+          return condition;
         }),
         filter(Boolean),
         switchMap(() => this.getAchievement(SteamAchievements.DEV_SLEEP)),
