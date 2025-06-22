@@ -158,7 +158,6 @@ pub async fn run_cmd_commands(commands: String) {
     // Log the path of the batch file
     let mut cmd_builder = Command::new("cmd");
     cmd_builder.args(["/C", batch_path.to_str().unwrap()]);
-    // DETACHED_PROCESS flag (0x00000008) - REMOVED due to issues in beta builds
     // cmd_builder.creation_flags(0x00000008);
 
     debug!(
