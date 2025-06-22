@@ -48,6 +48,7 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 - Battery and charging levels exposed over MQTT becoming unavailable randomly
 - Notification sounds queueing up instead of being played immediately
 - Some lighthouse automations not triggering correctly
+- Duration of XSOverlay notifications being too short
 
 ## [1.14.7]
 
