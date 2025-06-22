@@ -40,6 +40,15 @@ export class SleepService {
   private poseDetector: SleepingPoseDetector = new SleepingPoseDetector();
   private forcePose$: Subject<SleepingPose> = new Subject<SleepingPose>();
 
+  private readonly _onSleepModeChange = new Subject<{
+    mode: boolean;
+    reason: SleepModeStatusChangeReason;
+  }>();
+  public readonly onSleepModeChange: Observable<{
+    mode: boolean;
+    reason: SleepModeStatusChangeReason;
+  }> = this._onSleepModeChange.asObservable();
+
   public pose: Observable<SleepingPose> = merge(
     combineLatest([this.openvr.devices, this.openvr.devicePoses]).pipe(
       map(([devices, poses]) => {
@@ -107,6 +116,7 @@ export class SleepService {
       reason: reason,
     } as EventLogSleepModeEnabled);
     this._mode.next(true);
+    this._onSleepModeChange.next({ mode: true, reason });
     await SETTINGS_STORE.set(SETTINGS_KEY_SLEEP_MODE, true);
     await SETTINGS_STORE.save();
     if (await this.notifications.notificationTypeEnabled('SLEEP_MODE_ENABLED')) {
@@ -125,6 +135,7 @@ export class SleepService {
       reason,
     } as EventLogSleepModeDisabled);
     this._mode.next(false);
+    this._onSleepModeChange.next({ mode: false, reason });
     await SETTINGS_STORE.set(SETTINGS_KEY_SLEEP_MODE, false);
     await SETTINGS_STORE.save();
     if (await this.notifications.notificationTypeEnabled('SLEEP_MODE_DISABLED')) {

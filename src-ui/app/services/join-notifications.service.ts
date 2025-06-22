@@ -83,7 +83,7 @@ export class JoinNotificationsService {
     });
     // Track alone status
     this.vrchat.world.subscribe((w) => {
-      const alone = w.playerCount <= 1;
+      const alone = w.players.length <= 1;
       const wasAlone = this.alone;
       if (wasAlone && !alone) this.notAloneSince = Date.now();
       this.alone = alone;
