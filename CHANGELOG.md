@@ -19,6 +19,7 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 - Closing the event log filter dialog with the esc key resetting all the filters to their defaults
 - Broken achievement trigger
 - Run automations not loading into the view correctly in some cases
+- Updater in standalone releases
 
 ## [25.6.0]
 
