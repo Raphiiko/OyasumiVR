@@ -357,13 +357,13 @@ export class DeviceListComponent implements OnInit {
   private isOpenVRDeviceHidden(device: OVRDevice): boolean {
     const deviceId = this.deviceManager.getIdForOpenVRDevice(device);
     const knownDevice = this.deviceManager.getKnownDeviceById(deviceId);
-    return knownDevice?.hidden ?? false;
+    return knownDevice?.disabled ?? false;
   }
 
   private isLighthouseDeviceHidden(device: LighthouseDevice): boolean {
     const deviceId = this.deviceManager.getIdForLighthouseDevice(device);
     const knownDevice = this.deviceManager.getKnownDeviceById(deviceId);
-    return knownDevice?.hidden ?? false;
+    return knownDevice?.disabled ?? false;
   }
 
   // Helper methods for power button component

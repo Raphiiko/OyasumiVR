@@ -9,7 +9,7 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 
 ### Added
 
-- Added "hidden" functionality for known devices to replace the old "ignore" feature for base stations that was removed
+- Allow known devices to be disabled, to replace the old "ignore" feature for base stations
 - Missing Japanese translations
 - Missing Simplified Chinese Translations
 

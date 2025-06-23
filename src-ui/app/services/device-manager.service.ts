@@ -129,12 +129,12 @@ export class DeviceManagerService {
     return patchedDevice;
   }
 
-  public setHiddenForKnownDevice(device: DMKnownDevice, hidden: boolean): DMKnownDevice {
+  public disableKnownDevice(device: DMKnownDevice, disabled: boolean): DMKnownDevice {
     const patchedDevice = structuredClone(
       this._data.value.knownDevices.find((d) => d.id === device.id)
     );
     if (!patchedDevice) return device;
-    patchedDevice.hidden = hidden;
+    patchedDevice.disabled = disabled;
     this._data.next({
       ...this._data.value,
       knownDevices: this._data.value.knownDevices.map((d) =>
@@ -216,7 +216,7 @@ export class DeviceManagerService {
     // Device types
     for (const type of selection.types) {
       result.knownDevices.push(
-        ...this._data.value.knownDevices.filter((d) => d.deviceType === type)
+        ...this._data.value.knownDevices.filter((d) => d.deviceType === type && !d.disabled)
       );
       switch (type) {
         case 'HMD':
@@ -225,20 +225,44 @@ export class DeviceManagerService {
           const devices = await firstValueFrom(this.openvr.devices);
           switch (type) {
             case 'HMD':
-              result.ovrDevices.push(...devices.filter((d) => d.class === 'HMD'));
+              result.ovrDevices.push(
+                ...devices
+                  .filter((d) => d.class === 'HMD')
+                  .filter((d) => {
+                    const knownDevice = this.getKnownDeviceById(this.getIdForOpenVRDevice(d));
+                    return !knownDevice?.disabled;
+                  })
+              );
               break;
             case 'CONTROLLER':
-              result.ovrDevices.push(...devices.filter((d) => d.class === 'Controller'));
+              result.ovrDevices.push(
+                ...devices
+                  .filter((d) => d.class === 'Controller')
+                  .filter((d) => {
+                    const knownDevice = this.getKnownDeviceById(this.getIdForOpenVRDevice(d));
+                    return !knownDevice?.disabled;
+                  })
+              );
               break;
             case 'TRACKER':
-              result.ovrDevices.push(...devices.filter((d) => d.class === 'GenericTracker'));
+              result.ovrDevices.push(
+                ...devices
+                  .filter((d) => d.class === 'GenericTracker')
+                  .filter((d) => {
+                    const knownDevice = this.getKnownDeviceById(this.getIdForOpenVRDevice(d));
+                    return !knownDevice?.disabled;
+                  })
+              );
               break;
           }
           break;
         }
         case 'LIGHTHOUSE': {
           const _devices = await firstValueFrom(this.lighthouse.devices);
-          result.lighthouseDevices.push(..._devices);
+          _devices.forEach((d) => {
+            const knownDevice = this.getKnownDeviceById(this.getIdForLighthouseDevice(d));
+            if (!knownDevice?.disabled) result.lighthouseDevices.push(d);
+          });
           break;
         }
         default:
@@ -253,7 +277,9 @@ export class DeviceManagerService {
     const openvrDevices = await firstValueFrom(this.openvr.devices);
     const lighthouseDevices = await firstValueFrom(this.lighthouse.devices);
     for (const tagId of selection.tagIds) {
-      const devices = this._data.value.knownDevices.filter((d) => d.tagIds.includes(tagId));
+      const devices = this._data.value.knownDevices.filter(
+        (d) => d.tagIds.includes(tagId) && !d.disabled
+      );
       for (const device of devices) {
         if (!result.knownDevices.find((d) => d.id === device.id)) {
           result.knownDevices.push(device);
@@ -277,7 +303,7 @@ export class DeviceManagerService {
     // Individual devices
     for (const deviceId of selection.devices) {
       const device = this.getKnownDeviceById(deviceId);
-      if (!device) continue;
+      if (!device || device.disabled) continue;
       if (!result.knownDevices.find((d) => d.id === device.id)) {
         result.knownDevices.push(device);
       }
@@ -359,7 +385,7 @@ export class DeviceManagerService {
               deviceType,
               lastSeen: Date.now(),
               tagIds: [],
-              hidden: false,
+              disabled: false,
             } as DMKnownDevice;
           })
           .filter(Boolean) as DMKnownDevice[];
@@ -421,7 +447,7 @@ export class DeviceManagerService {
               deviceType: 'LIGHTHOUSE',
               lastSeen: Date.now(),
               tagIds: [],
-              hidden: false,
+              disabled: false,
             });
             updated = true;
           }
