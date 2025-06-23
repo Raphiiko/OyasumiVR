@@ -315,7 +315,7 @@ export class OverlayStateSyncService {
           const knownDevice = this.deviceManager.getKnownDeviceById(
             this.deviceManager.getIdForOpenVRDevice(device)
           );
-          if (knownDevice?.hidden) continue;
+          if (knownDevice?.disabled) continue;
           switch (device.class) {
             case 'Controller':
               deviceInfo.controllers.push(this.mapOVRDevice(device));

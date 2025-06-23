@@ -1014,10 +1014,10 @@
       "powerOn": "Power On"
     },
     "config": {
-      "hidden": {
-        "description": "Hidden devices are not shown in the device list, or affected by bulk actions",
-        "title": "Hide device",
-        "tooltip": "This device is hidden from the device list and is not affected by bulk actions"
+      "disabled": {
+        "description": "Disabled devices not affected by automations bulk actions, and not shown in the device list",
+        "title": "Disable device",
+        "tooltip": "This device is disabled"
       },
       "nickname": {
         "description": "Set a custom name for this device to make it easier to identify",

@@ -78,8 +78,8 @@
               <span class="device-name">{{ device.typeName }}</span>
               <i
                 class="material-icons hidden-icon"
-                *ngIf="device.hidden"
-                [tooltip]="'device-manager.config.hidden.tooltip' | translate"
+                *ngIf="device.disabled"
+                [tooltip]="'device-manager.config.disabled.tooltip' | translate"
                 [tooltipMode]="'right'"
               >
                 visibility_off

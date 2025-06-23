@@ -63,12 +63,12 @@
       <!-- Hidden Section -->
       <div class="setting-row">
         <div class="setting-row-label">
-          <span translate>device-manager.config.hidden.title</span>
-          <span translate>device-manager.config.hidden.description</span>
+          <span translate>device-manager.config.disabled.title</span>
+          <span translate>device-manager.config.disabled.description</span>
         </div>
         <div class="setting-row-action">
           <label class="switch-toggle">
-            <input type="checkbox" [checked]="device.hidden" (change)="toggleHidden()" />
+            <input type="checkbox" [checked]="device.disabled" (change)="toggleDisabled()" />
             <span class="switch-toggle-slider"></span>
           </label>
         </div>
