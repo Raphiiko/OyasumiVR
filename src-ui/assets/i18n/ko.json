@@ -247,23 +247,6 @@
       "vrchatAvatarAutomations": "아바타 자동화",
       "vrchatMicMuteAutomations": "VRChat 마이크 음소거 자동화"
     },
-    "device-edit-modal": {
-      "deviceNickname": {
-        "description": "이 장치의 사용자 지정 이름 (선택)",
-        "title": "닉네임"
-      },
-      "ignoreLighthouse": {
-        "description": "무시한 베이스스테이션은 숨겨지며 자동화의 영향을 받지 않아요.",
-        "title": "베이스스테이션 무시"
-      },
-      "title": "장치 수정: {deviceId}",
-      "v1Identifier": {
-        "change": "ID 변경",
-        "description": "OyasumiVR이 V1 베이스스테이션을 제어하려면 해당 ID를 알아야 해요.",
-        "set": "ID 설정",
-        "title": "Lighthouse V1 ID"
-      }
-    },
     "device-list": {
       "category": {
         "Controller": "컨트롤러",
@@ -918,6 +901,16 @@
       },
       "logginInAs": "다음과 같이 VRChat에 로그인하고 있어요:",
       "title": "2단계 인증"
+    }
+  },
+  "device-manager": {
+    "config": {
+      "v1Identifier": {
+        "change": "ID 변경",
+        "description": "OyasumiVR이 V1 베이스스테이션을 제어하려면 해당 ID를 알아야 해요.",
+        "set": "ID 설정",
+        "title": "Lighthouse V1 ID"
+      }
     }
   },
   "discord": {
@@ -2201,7 +2194,9 @@
   },
   "status-automations": {
     "behaviourWarning": "OyasumiVR의 스테이터스 변동은 즉시 표시되지 않을 수 있어요. 다른 플레이어에게도 상태 업데이트가 표시되기까지 약간의 시간이 걸릴 수 있습니다. 이는 VRChat의 캐싱 때문이지만, 실제로는 스테이터스가 업데이트되므로 안심하셔도 괜찮아요.",
-    "behaviourWarningFAQ": "스테이터스 변경에 관한 질문에 대한 답변은 여기를 참조해주세요.\n\nQ:VRChat에서 파란색으로 표시되지 않아도 자동으로 초대를 받을 수 있나요?\nA: OyasumiVR이 여러분의 스테이터스를 파란색(join me)으로 설정한 경우 당신이 받은 초대 요청을 자동 수락하게 되어요.\n\nQ: 스테이터스가 업데이트되지 않아 참여할 수 없어요.\nA: 스테이터스 업데이트는 다른 사용자에게 표시되기까지 시간이 걸릴 수 있어요. 참여하고 싶은데 참여할 수 없는 경우 메인 메뉴에서 프로필을 열어 여러분의 스테이터스를 강제로 업데이트할 수 있어요.",
+    "behaviourWarningFAQ": {
+      "message": "스테이터스 변경에 관한 질문에 대한 답변은 여기를 참조해주세요.\n\nQ:VRChat에서 파란색으로 표시되지 않아도 자동으로 초대를 받을 수 있나요?\nA: OyasumiVR이 여러분의 스테이터스를 파란색(join me)으로 설정한 경우 당신이 받은 초대 요청을 자동 수락하게 되어요.\n\nQ: 스테이터스가 업데이트되지 않아 참여할 수 없어요.\nA: 스테이터스 업데이트는 다른 사용자에게 표시되기까지 시간이 걸릴 수 있어요. 참여하고 싶은데 참여할 수 없는 경우 메인 메뉴에서 프로필을 열어 여러분의 스테이터스를 강제로 업데이트할 수 있어요."
+    },
     "general": {
       "description": "여기에서 특정 상황에 대해 VRChat 스테이터스를 업데이트하도록 OyasumiVR을 설정할 수 있어요. 예를 들어, 잠들거나 일어날 때 스테이터스를 변경할 수 있습니다!",
       "onSleepDisable": {

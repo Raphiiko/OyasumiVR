@@ -41,6 +41,7 @@ import { SoftwareBrightnessControlService } from '../brightness-control/software
 import { SleepPreparationService } from '../sleep-preparation.service';
 import { SystemMicMuteAutomationService } from '../system-mic-mute-automation.service';
 import { CCTControlService } from '../cct-control/cct-control.service';
+import { DeviceManagerService } from '../device-manager.service';
 
 @Injectable({
   providedIn: 'root',
@@ -140,7 +141,8 @@ export class OverlayStateSyncService {
     private hardwareBrightness: HardwareBrightnessControlService,
     private softwareBrightness: SoftwareBrightnessControlService,
     private sleepPreparation: SleepPreparationService,
-    private systemMicMuteAutomationService: SystemMicMuteAutomationService
+    private systemMicMuteAutomationService: SystemMicMuteAutomationService,
+    private deviceManager: DeviceManagerService
   ) {}
 
   async init() {
@@ -301,15 +303,19 @@ export class OverlayStateSyncService {
   }
 
   private updateState_WhenOVRDevicesChange() {
-    this.openvr.devices
+    combineLatest([this.openvr.devices, this.deviceManager.knownDevices])
       .pipe(throttleTime(100, asyncScheduler, { leading: true, trailing: true }))
-      .subscribe((devices) => {
+      .subscribe(([devices]) => {
         const state = structuredClone(this.state.value);
         const deviceInfo: OyasumiSidecarDeviceInfo = {
           controllers: [],
           trackers: [],
         };
         for (const device of devices) {
+          const knownDevice = this.deviceManager.getKnownDeviceById(
+            this.deviceManager.getIdForOpenVRDevice(device)
+          );
+          if (knownDevice?.hidden) continue;
           switch (device.class) {
             case 'Controller':
               deviceInfo.controllers.push(this.mapOVRDevice(device));

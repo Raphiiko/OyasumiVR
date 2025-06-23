@@ -1006,7 +1006,9 @@
     "title": "Détection de sommeil"
   },
   "status-automations": {
-    "behaviourWarningFAQ": "Vous pouvez trouver réponse à vos questions sur le changement de statut ici:\n\nQ: Est-ce que les demandes seront automatiquement acceptées, même si VRChat ne montre pas que je suis en statut 'bleu'?\nR:Si OyasumiVR change votre statut à 'bleu' (join me), le programme prendra la main et acceptera automatiquement les requêtes que vous recevez.\n\nQ:Les joueurs ne peuvent pas me rejoindre car mon statut ne se met pas à jour pour eux.\nR: Les mises à jour de statut peuvent avoir un délai avant d'être affichées aux autres utilisateurs. S'ils veulent vous rejoindre mais ne peuvent pas, ils peuvent forcer la mise à jour de votre statut en ouvrant votre profil dans le menu principal.",
+    "behaviourWarningFAQ": {
+      "message": "Vous pouvez trouver réponse à vos questions sur le changement de statut ici:\n\nQ: Est-ce que les demandes seront automatiquement acceptées, même si VRChat ne montre pas que je suis en statut 'bleu'?\nR:Si OyasumiVR change votre statut à 'bleu' (join me), le programme prendra la main et acceptera automatiquement les requêtes que vous recevez.\n\nQ:Les joueurs ne peuvent pas me rejoindre car mon statut ne se met pas à jour pour eux.\nR: Les mises à jour de statut peuvent avoir un délai avant d'être affichées aux autres utilisateurs. S'ils veulent vous rejoindre mais ne peuvent pas, ils peuvent forcer la mise à jour de votre statut en ouvrant votre profil dans le menu principal."
+    },
     "general": {
       "onSleepDisable": {
         "script": "Mode sommeil désactivé",

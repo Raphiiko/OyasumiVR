@@ -256,23 +256,6 @@
       "vrchatGroupAutomations": "群组自动化",
       "vrchatMicMuteAutomations": "麦克风"
     },
-    "device-edit-modal": {
-      "deviceNickname": {
-        "description": "为这个设备指定",
-        "title": "设备名称"
-      },
-      "ignoreLighthouse": {
-        "description": "被忽略的基站将被彻底隐藏，不会受到任何自动化操作的影响",
-        "title": "忽略基站"
-      },
-      "title": "编辑设备: {deviceId}",
-      "v1Identifier": {
-        "change": "更改 ID",
-        "description": "OyasumiVR 需要V1基站的ID来控制它",
-        "set": "设置 ID",
-        "title": "Lighthouse V1 ID"
-      }
-    },
     "device-list": {
       "category": {
         "Controller": "控制器",
@@ -1035,7 +1018,13 @@
         "noTags": "暂无可用标签，请在“标签”选项卡中创建",
         "title": "设备标签"
       },
-      "title": "配置 {deviceName}"
+      "title": "配置 {deviceName}",
+      "v1Identifier": {
+        "change": "更改 ID",
+        "description": "OyasumiVR 需要V1基站的ID来控制它",
+        "set": "设置 ID",
+        "title": "Lighthouse V1 ID"
+      }
     },
     "deleteTag": {
       "confirm": "删除标签",
@@ -2586,7 +2575,9 @@
   },
   "status-automations": {
     "behaviourWarning": "OyasumiVR 所做的状态更改可能不会立即可见。对其他玩家而言，状态更新也可能需要一些时间。这是因为 VRChat 的缓存机制，但请放心，你的状态实际上是已经更新了的。",
-    "behaviourWarningFAQ": "在这里，你可以找到关于状态变更行为的一些问题的答案：\n\n 问：即使 VRChat 没有显示我处于蓝色状态，我仍然可以自动接受加入请求吗？\n 答：如果你使用 OyasumiVR 将你的状态设置为蓝色（加入我），它将接管账户并自动接受你收到的任何邀请加入请求。\n\n 问：其他玩家无法加入我，因为我的状态对他们来说没有更新。\n 答：状态更新可能需要一段时间才会显示给其他玩家。 如果他们想加入你，但是没法加入，他们可以通过在主菜单中打开你的个人资料来强制刷新你的状态。",
+    "behaviourWarningFAQ": {
+      "message": "在这里，你可以找到关于状态变更行为的一些问题的答案：\n\n 问：即使 VRChat 没有显示我处于蓝色状态，我仍然可以自动接受加入请求吗？\n 答：如果你使用 OyasumiVR 将你的状态设置为蓝色（加入我），它将接管账户并自动接受你收到的任何邀请加入请求。\n\n 问：其他玩家无法加入我，因为我的状态对他们来说没有更新。\n 答：状态更新可能需要一段时间才会显示给其他玩家。 如果他们想加入你，但是没法加入，他们可以通过在主菜单中打开你的个人资料来强制刷新你的状态。"
+    },
     "general": {
       "description": "在这里，你可以配置 OyasumiVR 在特定事件发生时自动更新你的 VRChat 状态。例如，当你去睡觉（或醒来）时更改你的状态！",
       "onSleepDisable": {

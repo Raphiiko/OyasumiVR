@@ -129,6 +129,21 @@ export class DeviceManagerService {
     return patchedDevice;
   }
 
+  public setHiddenForKnownDevice(device: DMKnownDevice, hidden: boolean): DMKnownDevice {
+    const patchedDevice = structuredClone(
+      this._data.value.knownDevices.find((d) => d.id === device.id)
+    );
+    if (!patchedDevice) return device;
+    patchedDevice.hidden = hidden;
+    this._data.next({
+      ...this._data.value,
+      knownDevices: this._data.value.knownDevices.map((d) =>
+        d.id === device.id ? patchedDevice : d
+      ),
+    });
+    return patchedDevice;
+  }
+
   public createTag(name: string, color: string): DMDeviceTag {
     const tag: DMDeviceTag = {
       id: `TAG_${uuidv4()}`,
@@ -344,6 +359,7 @@ export class DeviceManagerService {
               deviceType,
               lastSeen: Date.now(),
               tagIds: [],
+              hidden: false,
             } as DMKnownDevice;
           })
           .filter(Boolean) as DMKnownDevice[];
@@ -405,6 +421,7 @@ export class DeviceManagerService {
               deviceType: 'LIGHTHOUSE',
               lastSeen: Date.now(),
               tagIds: [],
+              hidden: false,
             });
             updated = true;
           }
