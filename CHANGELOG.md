@@ -7,6 +7,8 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 
 ## [Unreleased]
 
+## [25.6.1]
+
 ### Added
 
 - Allow known devices to be disabled, to replace the old "ignore" feature for base stations
