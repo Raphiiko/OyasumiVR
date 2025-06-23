@@ -1015,7 +1015,7 @@
     },
     "config": {
       "disabled": {
-        "description": "Disabled devices not affected by automations bulk actions, and not shown in the device list",
+        "description": "Disabled devices are not affected by automations or bulk actions, and are not shown in the device list",
         "title": "Disable device",
         "tooltip": "This device is disabled"
       },

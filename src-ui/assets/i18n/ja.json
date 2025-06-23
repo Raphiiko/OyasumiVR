@@ -219,7 +219,7 @@
     "dashboard-navbar": {
       "about": "OyasumiVRについて",
       "audioVolumeAutomations": "音量",
-      "autoInviteRequestAccept": "InviteとReqest Invite",
+      "autoInviteRequestAccept": "InviteとRequest Invite",
       "brightnessAutomations": "明るさ",
       "chaperoneAutomations": "ガーディアン",
       "deviceManager": "デバイス管理",
@@ -899,7 +899,7 @@
       },
       "addCommand": "追加",
       "addParameter": "パラメータ追加",
-      "commandCounter": "{value} コマンド",
+      "commandCounter": "{count} コマンド",
       "commands": {
         "COMMAND": {
           "description": "OSCコマンドを実行します",
@@ -910,7 +910,7 @@
           "title": "睡眠"
         }
       },
-      "errorCounter": "{value}個の検証エラー",
+      "errorCounter": "{count}個の検証エラー",
       "test": "テスト",
       "vrchatAutofillInfo": "アバターのパラメータを自動補完する"
     },
