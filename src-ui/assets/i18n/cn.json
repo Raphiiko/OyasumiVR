@@ -219,6 +219,7 @@
     "dashboard-navbar": {
       "about": "关于 OyasumiVR",
       "audioVolumeAutomations": "音量",
+      "autoInviteRequestAccept": "邀请与邀请请求",
       "brightnessAutomations": "亮度",
       "chaperoneAutomations": "SteamVR 保护墙",
       "deviceManager": "设备管理",
@@ -307,6 +308,10 @@
       "noDevices": "没有检测到控制器或追踪器",
       "title": "设备",
       "turnOffAll": "全部"
+    },
+    "device-selector": {
+      "noSelection": "选择设备",
+      "withDevices": "{count, plural, one {1 个设备} other {# 个设备}}"
     },
     "event-log-entry": {
       "type": {
@@ -1117,6 +1122,7 @@
     },
     "addLimiter": "添加应用",
     "description": "OyasumiVR 可自动限制多款游戏的帧率。当你不需要高性能（如睡觉时），可用来降低系统功耗。",
+    "directControlRequiresSteamVR": "启动 SteamVR 来控制帧率限制",
     "frameLimits": "帧率限制",
     "noLimits": "你尚未配置任何应用的帧率限制！",
     "onSleepDisable": "当我醒来时",
@@ -1283,7 +1289,12 @@
             "ALWAYS": "始终发送",
             "DISABLED": "从不发送",
             "WHEN_SLEEPING": "仅在我睡觉时发送"
-          }
+          },
+          "title": "拒绝未处理的邀请请求"
+        },
+        "enable": {
+          "description": "让 OyasumiVR 自动接受来自好友的邀请请求",
+          "title": "自动接受邀请请求"
         },
         "listMode": {
           "description": "玩家列表的运作模式",
@@ -1382,7 +1393,8 @@
       "inviteRequests": "邀请请求",
       "invites": "邀请",
       "sounds": "声音"
-    }
+    },
+    "title": "邀请与邀请请求"
   },
   "join-notifications": {
     "description": "当其他玩家进入或离开你的世界时，显示通知消息并播放提示音。如果你希望 OyasumiVR 在有人加入你时唤醒你，这个功能将会非常实用。",
@@ -1749,6 +1761,32 @@
     }
   },
   "power-automations": {
+    "devices": {
+      "turnOff": {
+        "description": "OyasumiVR 可在特定事件发生时关闭你的控制器、追踪器，甚至基站。例如，在你入睡时关闭追踪器，以便醒来时仍有电量。",
+        "subtitle": "关闭以下设备",
+        "title": "关闭设备",
+        "triggers": {
+          "onBatteryLevel": "当设备电量低于",
+          "onDeviceCharging": "当设备正在充电时",
+          "onSleepModeDisable": "当我醒来时",
+          "onSleepModeEnable": "当我入睡时",
+          "onSleepPreparation": "当我准备入睡时",
+          "onSteamVRStop": "当 SteamVR 停止运行时",
+          "onlyWhileSleepModeEnabled": "仅在睡眠模式启用时"
+        }
+      },
+      "turnOn": {
+        "description": "OyasumiVR 也可以开启特定设备。目前仅支持开启基站。",
+        "subtitle": "开启以下设备",
+        "title": "开启设备",
+        "triggers": {
+          "onOyasumiStart": "当 OyasumiVR 启动时",
+          "onSleepModeDisable": "当我醒来时",
+          "onSteamVRStart": "当 SteamVR 启动时"
+        }
+      }
+    },
     "error": {
       "adapterError": "在试图与你的蓝牙适配器进行通信时发生了错误。请确保你的蓝牙适配器已启用，然后再试一次。",
       "noAdapter": "在你的系统中找不到蓝牙适配器。请确认你的系统配备了蓝牙适配器，并且已经启用。"
@@ -2257,7 +2295,8 @@
       "cancel": "立即取消",
       "stage": {
         "POWERING_DOWN": "正在关闭",
-        "QUITTING_STEAMVR": "退出 SteamVR..."
+        "QUITTING_STEAMVR": "退出 SteamVR...",
+        "TURNING_OFF_DEVICES": "正在关闭设备…"
       },
       "title": "正在关闭"
     },
