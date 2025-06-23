@@ -20,6 +20,7 @@ import {
   DevicePowerState,
   DevicePowerAction,
 } from '../device-power-button/device-power-button.component';
+import { DeviceManagerService } from '../../services/device-manager.service';
 
 type DisplayCategory = OpenVRDisplayCategory | LighthouseDisplayCategory;
 
@@ -64,7 +65,8 @@ export class DeviceListComponent implements OnInit {
     private lighthouse: LighthouseService,
     private eventLog: EventLogService,
     private destroyRef: DestroyRef,
-    private appSettings: AppSettingsService
+    private appSettings: AppSettingsService,
+    private deviceManager: DeviceManagerService
   ) {}
 
   ngOnInit(): void {
@@ -93,6 +95,8 @@ export class DeviceListComponent implements OnInit {
     devices = devices.filter((device) =>
       ['HMD', 'Controller', 'GenericTracker'].includes(device.class)
     );
+    // Filter out hidden devices
+    devices = devices.filter((device) => !this.isOpenVRDeviceHidden(device));
     // Add missing device categories
     uniq(devices.map((device) => device.class))
       .filter(
@@ -160,6 +164,8 @@ export class DeviceListComponent implements OnInit {
   }
 
   processLighthouseDevices(devices: LighthouseDevice[]) {
+    // Filter out hidden devices
+    devices = devices.filter((device) => !this.isLighthouseDeviceHidden(device));
     // Add missing device category
     if (devices.length && !this.deviceCategories.some((c) => c.type === 'Lighthouse')) {
       this.deviceCategories.push({
@@ -239,7 +245,7 @@ export class DeviceListComponent implements OnInit {
   }
 
   async turnOffOVRDevices(category: OpenVRDisplayCategory) {
-    const devices = category.devices.filter((d) => d.canPowerOff);
+    const devices = category.devices.filter((d) => d.canPowerOff && !this.isOpenVRDeviceHidden(d));
     if (!devices.length) return;
     await this.lighthouseConsole.turnOffDevices(devices);
     this.eventLog.logEvent({
@@ -272,7 +278,9 @@ export class DeviceListComponent implements OnInit {
   async bulkPowerLighthouseDevices(category: LighthouseDisplayCategory) {
     if (category.canBulkPowerOn) {
       const devices = category.devices.filter(
-        (d) => d.powerState === 'standby' || d.powerState === 'sleep' || d.powerState === 'unknown'
+        (d) =>
+          (d.powerState === 'standby' || d.powerState === 'sleep' || d.powerState === 'unknown') &&
+          !this.isLighthouseDeviceHidden(d)
       );
       this.eventLog.logEvent({
         type: 'lighthouseSetPowerState',
@@ -285,7 +293,9 @@ export class DeviceListComponent implements OnInit {
       const powerOffState = (await firstValueFrom(this.appSettings.settings))
         .lighthousePowerOffState;
       const devices = category.devices.filter(
-        (d) => d.powerState === 'on' || d.powerState === 'unknown' || d.powerState === 'booting'
+        (d) =>
+          (d.powerState === 'on' || d.powerState === 'unknown' || d.powerState === 'booting') &&
+          !this.isLighthouseDeviceHidden(d)
       );
       this.eventLog.logEvent({
         type: 'lighthouseSetPowerState',
@@ -306,7 +316,7 @@ export class DeviceListComponent implements OnInit {
       this.deviceCategories
         .filter((c) => c.type === 'OpenVR')
         .map((c) => (c as OpenVRDisplayCategory).devices)
-    ).filter((d) => d.canPowerOff);
+    ).filter((d) => d.canPowerOff && !this.isOpenVRDeviceHidden(d));
     if (!devices.length) return;
     await this.lighthouseConsole.turnOffDevices(devices);
     this.eventLog.logEvent({
@@ -331,6 +341,8 @@ export class DeviceListComponent implements OnInit {
     if (state === 'on') {
       devices = devices.filter((d) => d.powerState !== 'on');
     }
+    // Filter out hidden devices
+    devices = devices.filter((d) => !this.isLighthouseDeviceHidden(d));
     if (!devices.length) return;
     this.eventLog.logEvent({
       type: 'lighthouseSetPowerState',
@@ -339,6 +351,19 @@ export class DeviceListComponent implements OnInit {
       devices: 'ALL',
     } as EventLogLighthouseSetPowerState);
     await Promise.all(devices.map(async (device) => this.lighthouse.setPowerState(device, state)));
+  }
+
+  // Helper methods for checking if devices are hidden
+  private isOpenVRDeviceHidden(device: OVRDevice): boolean {
+    const deviceId = this.deviceManager.getIdForOpenVRDevice(device);
+    const knownDevice = this.deviceManager.getKnownDeviceById(deviceId);
+    return knownDevice?.disabled ?? false;
+  }
+
+  private isLighthouseDeviceHidden(device: LighthouseDevice): boolean {
+    const deviceId = this.deviceManager.getIdForLighthouseDevice(device);
+    const knownDevice = this.deviceManager.getKnownDeviceById(deviceId);
+    return knownDevice?.disabled ?? false;
   }
 
   // Helper methods for power button component

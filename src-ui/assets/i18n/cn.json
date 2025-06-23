@@ -219,6 +219,7 @@
     "dashboard-navbar": {
       "about": "关于 OyasumiVR",
       "audioVolumeAutomations": "音量",
+      "autoInviteRequestAccept": "邀请与邀请请求",
       "brightnessAutomations": "亮度",
       "chaperoneAutomations": "SteamVR 保护墙",
       "deviceManager": "设备管理",
@@ -255,23 +256,6 @@
       "vrchatAvatarAutomations": "模型",
       "vrchatGroupAutomations": "群组自动化",
       "vrchatMicMuteAutomations": "麦克风"
-    },
-    "device-edit-modal": {
-      "deviceNickname": {
-        "description": "为这个设备指定",
-        "title": "设备名称"
-      },
-      "ignoreLighthouse": {
-        "description": "被忽略的基站将被彻底隐藏，不会受到任何自动化操作的影响",
-        "title": "忽略基站"
-      },
-      "title": "编辑设备: {deviceId}",
-      "v1Identifier": {
-        "change": "更改 ID",
-        "description": "OyasumiVR 需要V1基站的ID来控制它",
-        "set": "设置 ID",
-        "title": "Lighthouse V1 ID"
-      }
     },
     "device-list": {
       "category": {
@@ -324,6 +308,10 @@
       "noDevices": "没有检测到控制器或追踪器",
       "title": "设备",
       "turnOffAll": "全部"
+    },
+    "device-selector": {
+      "noSelection": "选择设备",
+      "withDevices": "{count, plural, one {1 个设备} other {# 个设备}}"
     },
     "event-log-entry": {
       "type": {
@@ -1035,7 +1023,13 @@
         "noTags": "暂无可用标签，请在“标签”选项卡中创建",
         "title": "设备标签"
       },
-      "title": "配置 {deviceName}"
+      "title": "配置 {deviceName}",
+      "v1Identifier": {
+        "change": "更改 ID",
+        "description": "OyasumiVR 需要V1基站的ID来控制它",
+        "set": "设置 ID",
+        "title": "Lighthouse V1 ID"
+      }
     },
     "deleteTag": {
       "confirm": "删除标签",
@@ -1128,6 +1122,7 @@
     },
     "addLimiter": "添加应用",
     "description": "OyasumiVR 可自动限制多款游戏的帧率。当你不需要高性能（如睡觉时），可用来降低系统功耗。",
+    "directControlRequiresSteamVR": "启动 SteamVR 来控制帧率限制",
     "frameLimits": "帧率限制",
     "noLimits": "你尚未配置任何应用的帧率限制！",
     "onSleepDisable": "当我醒来时",
@@ -1294,7 +1289,12 @@
             "ALWAYS": "始终发送",
             "DISABLED": "从不发送",
             "WHEN_SLEEPING": "仅在我睡觉时发送"
-          }
+          },
+          "title": "拒绝未处理的邀请请求"
+        },
+        "enable": {
+          "description": "让 OyasumiVR 自动接受来自好友的邀请请求",
+          "title": "自动接受邀请请求"
         },
         "listMode": {
           "description": "玩家列表的运作模式",
@@ -1393,7 +1393,8 @@
       "inviteRequests": "邀请请求",
       "invites": "邀请",
       "sounds": "声音"
-    }
+    },
+    "title": "邀请与邀请请求"
   },
   "join-notifications": {
     "description": "当其他玩家进入或离开你的世界时，显示通知消息并播放提示音。如果你希望 OyasumiVR 在有人加入你时唤醒你，这个功能将会非常实用。",
@@ -1760,31 +1761,35 @@
     }
   },
   "power-automations": {
-    "enableLighthouseControl": "启用",
+    "devices": {
+      "turnOff": {
+        "description": "OyasumiVR 可在特定事件发生时关闭你的控制器、追踪器，甚至基站。例如，在你入睡时关闭追踪器，以便醒来时仍有电量。",
+        "subtitle": "关闭以下设备",
+        "title": "关闭设备",
+        "triggers": {
+          "onBatteryLevel": "当设备电量低于",
+          "onDeviceCharging": "当设备正在充电时",
+          "onSleepModeDisable": "当我醒来时",
+          "onSleepModeEnable": "当我入睡时",
+          "onSleepPreparation": "当我准备入睡时",
+          "onSteamVRStop": "当 SteamVR 停止运行时",
+          "onlyWhileSleepModeEnabled": "仅在睡眠模式启用时"
+        }
+      },
+      "turnOn": {
+        "description": "OyasumiVR 也可以开启特定设备。目前仅支持开启基站。",
+        "subtitle": "开启以下设备",
+        "title": "开启设备",
+        "triggers": {
+          "onOyasumiStart": "当 OyasumiVR 启动时",
+          "onSleepModeDisable": "当我醒来时",
+          "onSteamVRStart": "当 SteamVR 启动时"
+        }
+      }
+    },
     "error": {
       "adapterError": "在试图与你的蓝牙适配器进行通信时发生了错误。请确保你的蓝牙适配器已启用，然后再试一次。",
       "noAdapter": "在你的系统中找不到蓝牙适配器。请确认你的系统配备了蓝牙适配器，并且已经启用。"
-    },
-    "lighthouseControlDisabledWarning": "由于你在 OyasumiVR 的设置中禁用了基站的功耗控制，所以这些自动化功能不可用。如果你想使用这些自动化功能，请启用该功能。",
-    "lighthousePowerOff": {
-      "description": "让 OyasumiVR 自动关闭你的基站。",
-      "onSteamVRStop": {
-        "description": "当 SteamVR 停止时，自动关闭你的基站",
-        "title": "当 SteamVR 停止时"
-      },
-      "title": "关闭基站"
-    },
-    "lighthousePowerOn": {
-      "description": "让 OyasumiVR 自动打开你的基站。",
-      "onOyasumiStart": {
-        "description": "当 OyasumiVR 启动时，自动打开你的基站",
-        "title": "当 OyasumiVR 启动时"
-      },
-      "onSteamVRStart": {
-        "description": "当 SteamVR 启动时，自动打开你的基站",
-        "title": "当 SteamVR 启动时"
-      },
-      "title": "开启基站"
     },
     "powerManagementWarning": "当选择使用 OyasumiVR 的自动化操作来打开或关闭你的基站时，建议你在 SteamVR 的基站设置中禁用电源管理。",
     "tabs": {
@@ -2290,7 +2295,8 @@
       "cancel": "立即取消",
       "stage": {
         "POWERING_DOWN": "正在关闭",
-        "QUITTING_STEAMVR": "退出 SteamVR..."
+        "QUITTING_STEAMVR": "退出 SteamVR...",
+        "TURNING_OFF_DEVICES": "正在关闭设备…"
       },
       "title": "正在关闭"
     },
@@ -2608,7 +2614,9 @@
   },
   "status-automations": {
     "behaviourWarning": "OyasumiVR 所做的状态更改可能不会立即可见。对其他玩家而言，状态更新也可能需要一些时间。这是因为 VRChat 的缓存机制，但请放心，你的状态实际上是已经更新了的。",
-    "behaviourWarningFAQ": "在这里，你可以找到关于状态变更行为的一些问题的答案：\n\n 问：即使 VRChat 没有显示我处于蓝色状态，我仍然可以自动接受加入请求吗？\n 答：如果你使用 OyasumiVR 将你的状态设置为蓝色（加入我），它将接管账户并自动接受你收到的任何邀请加入请求。\n\n 问：其他玩家无法加入我，因为我的状态对他们来说没有更新。\n 答：状态更新可能需要一段时间才会显示给其他玩家。 如果他们想加入你，但是没法加入，他们可以通过在主菜单中打开你的个人资料来强制刷新你的状态。",
+    "behaviourWarningFAQ": {
+      "message": "在这里，你可以找到关于状态变更行为的一些问题的答案：\n\n 问：即使 VRChat 没有显示我处于蓝色状态，我仍然可以自动接受加入请求吗？\n 答：如果你使用 OyasumiVR 将你的状态设置为蓝色（加入我），它将接管账户并自动接受你收到的任何邀请加入请求。\n\n 问：其他玩家无法加入我，因为我的状态对他们来说没有更新。\n 答：状态更新可能需要一段时间才会显示给其他玩家。 如果他们想加入你，但是没法加入，他们可以通过在主菜单中打开你的个人资料来强制刷新你的状态。"
+    },
     "general": {
       "description": "在这里，你可以配置 OyasumiVR 在特定事件发生时自动更新你的 VRChat 状态。例如，当你去睡觉（或醒来）时更改你的状态！",
       "onSleepDisable": {
