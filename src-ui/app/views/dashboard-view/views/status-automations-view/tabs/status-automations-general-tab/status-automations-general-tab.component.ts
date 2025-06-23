@@ -148,8 +148,8 @@ export class StatusAutomationsGeneralTabComponent implements OnInit {
   showFAQ() {
     this.modalService
       .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
-        title: 'Status Automations FAQ',
-        message: 'status-automations.behaviourWarningFAQ',
+        title: 'status-automations.behaviourWarningFAQ.title',
+        message: 'status-automations.behaviourWarningFAQ.message',
         confirmButtonText: 'shared.modals.ok',
         showCancel: false,
       })

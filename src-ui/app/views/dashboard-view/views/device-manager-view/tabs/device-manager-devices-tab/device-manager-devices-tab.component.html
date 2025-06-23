@@ -76,6 +76,14 @@
           <div class="device-info">
             <div class="device-name-line">
               <span class="device-name">{{ device.typeName }}</span>
+              <i
+                class="material-icons hidden-icon"
+                *ngIf="device.hidden"
+                [tooltip]="'device-manager.config.hidden.tooltip' | translate"
+                [tooltipMode]="'right'"
+              >
+                visibility_off
+              </i>
               <span class="device-serial" *ngIf="getDeviceSerialNumber(device) && device.nickname">
                 S/N: {{ getDeviceSerialNumber(device) }}
               </span>

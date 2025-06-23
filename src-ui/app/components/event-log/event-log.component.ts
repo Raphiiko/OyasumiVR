@@ -110,7 +110,7 @@ export class EventLogComponent implements OnInit, AfterViewInit {
         }
       )
       .subscribe((data) => {
-        if (data) this.filters.next(data.hiddenLogTypes);
+        if (data?.madeChanges) this.filters.next(data.hiddenLogTypes);
         this.appSettings.updateSettings({ eventLogTypesHidden: this.filters.value });
       });
   }
