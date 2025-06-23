@@ -1,0 +1,213 @@
+<div
+  class="alert warning"
+  @vshrink
+  *ngIf="
+    !lighthousePowerControlDisabled &&
+    (lighthouseStatus === 'noAdapter' || lighthouseStatus === 'adapterError')
+  "
+>
+  <div class="alert-bg"></div>
+  <div class="alert-icon">
+    <i class="material-icons"> warning </i>
+  </div>
+  <div class="alert-content">
+    <span>{{ 'power-automations.error.' + lighthouseStatus | translate }}</span>
+  </div>
+</div>
+
+<div class="alert info" *ngIf="!lighthousePowerControlDisabled" @vshrink>
+  <div class="alert-bg"></div>
+  <div class="alert-icon">
+    <i class="material-icons"> info </i>
+  </div>
+  <div class="alert-content">
+    <span>{{ 'power-automations.powerManagementWarning' | translate }}</span>
+  </div>
+</div>
+
+<div class="setting-category">
+  <h2>{{ 'power-automations.devices.turnOff.title' | translate }}</h2>
+  <p>{{ 'power-automations.devices.turnOff.description' | translate }}</p>
+
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label">
+        <span>{{
+          'power-automations.devices.turnOff.triggers.onSleepModeEnable' | translate
+        }}</span>
+        <span>{{ 'power-automations.devices.turnOff.subtitle' | translate }}</span>
+      </div>
+      <div class="setting-row-action">
+        <app-device-selector
+          [allowedDeviceTypes]="['CONTROLLER', 'TRACKER', 'LIGHTHOUSE']"
+          [selection]="devicePowerAutomations.turnOffDevicesOnSleepModeEnable"
+          (selectionChange)="updateDeviceSelection('turnOffDevicesOnSleepModeEnable', $event)"
+        ></app-device-selector>
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-row-label">
+        <span>{{
+          'power-automations.devices.turnOff.triggers.onSleepModeDisable' | translate
+        }}</span>
+        <span>{{ 'power-automations.devices.turnOff.subtitle' | translate }}</span>
+      </div>
+      <div class="setting-row-action">
+        <app-device-selector
+          [allowedDeviceTypes]="['CONTROLLER', 'TRACKER', 'LIGHTHOUSE']"
+          [selection]="devicePowerAutomations.turnOffDevicesOnSleepModeDisable"
+          (selectionChange)="updateDeviceSelection('turnOffDevicesOnSleepModeDisable', $event)"
+        ></app-device-selector>
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-row-label">
+        <span>{{
+          'power-automations.devices.turnOff.triggers.onSleepPreparation' | translate
+        }}</span>
+        <span>{{ 'power-automations.devices.turnOff.subtitle' | translate }}</span>
+      </div>
+      <div class="setting-row-action">
+        <app-device-selector
+          [allowedDeviceTypes]="['CONTROLLER', 'TRACKER', 'LIGHTHOUSE']"
+          [selection]="devicePowerAutomations.turnOffDevicesOnSleepPreparation"
+          (selectionChange)="updateDeviceSelection('turnOffDevicesOnSleepPreparation', $event)"
+        ></app-device-selector>
+      </div>
+    </div>
+  </div>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label">
+        <span>{{ 'power-automations.devices.turnOff.triggers.onDeviceCharging' | translate }}</span>
+        <span>{{ 'power-automations.devices.turnOff.subtitle' | translate }}</span>
+      </div>
+      <div class="setting-row-action">
+        <app-device-selector
+          [allowedDeviceTypes]="['CONTROLLER', 'TRACKER']"
+          [selection]="devicePowerAutomations.turnOffDevicesWhenCharging"
+          (selectionChange)="updateDeviceSelection('turnOffDevicesWhenCharging', $event)"
+        ></app-device-selector>
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-row-label">
+        <span>{{ 'power-automations.devices.turnOff.triggers.onBatteryLevel' | translate }}</span>
+        <span>{{ 'power-automations.devices.turnOff.subtitle' | translate }}</span>
+      </div>
+      <div class="setting-row-action">
+        <app-slider-setting
+          class="slider-battery-level"
+          unit="%"
+          [min]="5"
+          [max]="99"
+          [snapValues]="[25, 50, 75]"
+          [snapDistance]="4"
+          [value]="devicePowerAutomations.turnOffDevicesBelowBatteryLevel_threshold"
+          (valueChange)="updateBatteryLevelAutomationThreshold($event)"
+        ></app-slider-setting>
+        <app-device-selector
+          [allowedDeviceTypes]="['CONTROLLER', 'TRACKER', 'LIGHTHOUSE']"
+          [selection]="devicePowerAutomations.turnOffDevicesBelowBatteryLevel"
+          (selectionChange)="updateDeviceSelection('turnOffDevicesBelowBatteryLevel', $event)"
+        ></app-device-selector>
+      </div>
+    </div>
+
+    <div class="setting-row-group">
+      <div class="setting-row" [class.disabled]="!hasBatteryLevelDeviceSelection">
+        <div class="setting-row-label">
+          <span>{{
+            'power-automations.devices.turnOff.triggers.onlyWhileSleepModeEnabled' | translate
+          }}</span>
+          <span></span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="devicePowerAutomations.turnOffDevicesBelowBatteryLevel_onlyWhileAsleep"
+              (change)="
+                updateBatteryLevelOnlyWhileAsleep(
+                  !devicePowerAutomations.turnOffDevicesBelowBatteryLevel_onlyWhileAsleep
+                )
+              "
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label">
+        <span>{{ 'power-automations.devices.turnOff.triggers.onSteamVRStop' | translate }}</span>
+        <span>{{ 'power-automations.devices.turnOff.subtitle' | translate }}</span>
+      </div>
+      <div class="setting-row-action">
+        <app-device-selector
+          [allowedDeviceTypes]="['CONTROLLER', 'TRACKER', 'LIGHTHOUSE']"
+          [selection]="devicePowerAutomations.turnOffDevicesOnSteamVRStop"
+          (selectionChange)="updateDeviceSelection('turnOffDevicesOnSteamVRStop', $event)"
+        ></app-device-selector>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="setting-category">
+  <h2>{{ 'power-automations.devices.turnOn.title' | translate }}</h2>
+
+  <p>{{ 'power-automations.devices.turnOn.description' | translate }}</p>
+
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label">
+        <span>{{
+          'power-automations.devices.turnOn.triggers.onSleepModeDisable' | translate
+        }}</span>
+        <span>{{ 'power-automations.devices.turnOn.subtitle' | translate }}</span>
+      </div>
+      <div class="setting-row-action">
+        <app-device-selector
+          [allowedDeviceTypes]="['LIGHTHOUSE']"
+          [selection]="devicePowerAutomations.turnOnDevicesOnSleepModeDisable"
+          (selectionChange)="updateDeviceSelection('turnOnDevicesOnSleepModeDisable', $event)"
+        ></app-device-selector>
+      </div>
+    </div>
+  </div>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label">
+        <span>{{ 'power-automations.devices.turnOn.triggers.onOyasumiStart' | translate }}</span>
+        <span>{{ 'power-automations.devices.turnOn.subtitle' | translate }}</span>
+      </div>
+      <div class="setting-row-action">
+        <app-device-selector
+          [allowedDeviceTypes]="['LIGHTHOUSE']"
+          [selection]="devicePowerAutomations.turnOnDevicesOnOyasumiStart"
+          (selectionChange)="updateDeviceSelection('turnOnDevicesOnOyasumiStart', $event)"
+        ></app-device-selector>
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-row-label">
+        <span>{{ 'power-automations.devices.turnOn.triggers.onSteamVRStart' | translate }}</span>
+        <span>{{ 'power-automations.devices.turnOn.subtitle' | translate }}</span>
+      </div>
+      <div class="setting-row-action">
+        <app-device-selector
+          [allowedDeviceTypes]="['LIGHTHOUSE']"
+          [selection]="devicePowerAutomations.turnOnDevicesOnSteamVRStart"
+          (selectionChange)="updateDeviceSelection('turnOnDevicesOnSteamVRStart', $event)"
+        ></app-device-selector>
+      </div>
+    </div>
+  </div>
+</div>

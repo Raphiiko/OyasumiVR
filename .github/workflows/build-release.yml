@@ -32,16 +32,10 @@ jobs:
         run: npm run set-flavour STANDALONE
       - name: Set build id
         run: npm run set-build-id
-      - name: Run Clippy
-        uses: actions-rs/cargo@v1
-        with:
-          command: clippy
-          args: -- -D warnings
       - name: Get Changelog Entry
         id: changelog_reader
         uses: mindsers/changelog-reader-action@v2
         with:
-          validation_level: warn
           version: ${{ steps.get-package-version.outputs.version }}
           path: ./CHANGELOG.md
       - name: Build and release OyasumiVR

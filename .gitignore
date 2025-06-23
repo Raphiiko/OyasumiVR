@@ -57,7 +57,8 @@ src-ui/assets/splashscreen/splash-blurhash.css
 /steamsdk.zip
 /config/config.vdf
 
-# Cursor
+# AI Tools
 .cursorrules
 .cursorignore
 /.cursor
+.claude/

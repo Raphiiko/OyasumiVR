@@ -66,85 +66,6 @@
       "title": "音量"
     }
   },
-  "auto-invite-request-accept": {
-    "addFriends": "フレンドを追加",
-    "blacklist": "ブラックリスト",
-    "clearPlayers": "全てクリア",
-    "conditions": {
-      "description": "特定の条件が満たされた場合のみReq Inviteを許可できるように設定できます。",
-      "title": "条件"
-    },
-    "description": "自分が受け取ったReq Inviteを自動的に許可できます。ホワイトリストやブラックリストを利用すると、特定のフレンドに対してのみ許可することも可能です。",
-    "loadPreset": "プリセットを読み込む",
-    "loadingFriends": "フレンドを読み込み中…",
-    "noPlayersAdded": "現在、リストに登録されているプレイヤーはいません",
-    "options": {
-      "changeListPreset": {
-        "onSleepDisable": {
-          "description": "睡眠モードが無効化された際にプリセットを読み込みます",
-          "title": "起床時"
-        },
-        "onSleepEnable": {
-          "description": "睡眠モードが有効化された際にプリセットを読み込みます",
-          "title": "睡眠時"
-        },
-        "onSleepPreparation": {
-          "description": "就寝準備が押下された際にプリセットを読み込みます",
-          "title": "就寝準備時"
-        }
-      },
-      "enable": {
-        "description": "フレンドからのReq Inviteを自動承認する",
-        "title": "自動承認を有効にする"
-      },
-      "listMode": {
-        "description": "プレイヤーリストの設定",
-        "options": {
-          "BLACKLIST": {
-            "label": "ブラックリスト",
-            "subLabel": "リストのフレンドは承認しない"
-          },
-          "DISABLED": {
-            "label": "オフ",
-            "subLabel": "全て承認する"
-          },
-          "WHITELIST": {
-            "label": "ホワイトリスト",
-            "subLabel": "リストのフレンドを承認する"
-          }
-        },
-        "title": "リストモード"
-      },
-      "onlyBelowPlayerCount": {
-        "description": "これにはあなた自身も含まれます",
-        "title": "ワールド内のプレイヤーが<strong>{count}</strong>人未満の場合にのみ"
-      },
-      "onlyIfSleepModeEnabled": {
-        "title": "睡眠モード有効時のみ"
-      },
-      "presetOptions": {
-        "options": {
-          "NONE": "変更しない"
-        }
-      }
-    },
-    "otherAutomations": {
-      "description": "この機能の動作を自動的に変更する自動化を見つけることができます",
-      "title": "その他の自動化"
-    },
-    "removeModal": {
-      "message": "''{name}''をリストから削除しますか？",
-      "title": "確認"
-    },
-    "removeModalBulk": {
-      "message": "全員をリストから削除しますか？",
-      "title": "確認"
-    },
-    "savePreset": "プリセットとして保存",
-    "title": "Req Inviteの自動承認",
-    "userOnJoinMeStatus": "VRChatは、自分のステータスが青(Join Me)になっている場合、設定に関わらず、すべてのReq Inviteを自動的に受け入れます。",
-    "whitelist": "ホワイトリスト"
-  },
   "brightness-automations": {
     "AT_SUNRISE": {
       "title": "日の出時"
@@ -294,7 +215,6 @@
     "dashboard-navbar": {
       "about": "OyasumiVRについて",
       "audioVolumeAutomations": "音量の自動化",
-      "autoInviteRequestAccept": "Req Inviteの承認",
       "brightnessAutomations": "明るさ",
       "chaperoneAutomations": "ガーディアンの自動化",
       "gpuAutomations": "GPUの電力",
@@ -350,10 +270,6 @@
         "GenericTracker": "トラッカー",
         "Lighthouse": "ベースステーション",
         "other": "その他"
-      },
-      "deviceName": {
-        "lighthouseV1": "V1 Lighthouse",
-        "lighthouseV2": "V2 Lighthouse"
       },
       "deviceRole": {
         "AnkleLeft": "左足首",
@@ -486,6 +402,13 @@
           },
           "title": "ガーディアンのフェード距離を{value}に設定した。"
         },
+        "frameLimitChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
+            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
+            "SLEEP_PREPARATION": "就寝準備をした"
+          }
+        },
         "gpuPowerLimitChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
@@ -509,68 +432,27 @@
         },
         "lighthouseSetPowerState": {
           "ALL": {
-            "on": {
-              "reasons": {
-                "HOTKEY": "ショートカットキーが押下されたため",
-                "MANUAL": "手動でオンにした",
-                "OYASUMI_START": "OyasumiVRの起動に合わせて",
-                "STEAMVR_START": "SteamVRの起動に合わせて",
-                "STEAMVR_STOP": "SteamVRが停止したため"
-              },
-              "title": "すべてのベースステーションをオンにする"
-            },
-            "sleep": {
-              "reasons": {
-                "HOTKEY": "ショートカットキーが押されたため",
-                "MANUAL": "手動で設定した",
-                "OYASUMI_START": "OyasumiVRの起動に合わせて",
-                "STEAMVR_START": "SteamVRの起動に合わせて",
-                "STEAMVR_STOP": "SteamVRが停止したため"
-              },
-              "title": "すべてのベースステーションをスリープモードにする"
-            },
-            "standby": {
-              "reasons": {
-                "HOTKEY": "ショートカットキーが押されたため",
-                "MANUAL": "手動で設定した",
-                "OYASUMI_START": "OyasumiVRの起動に合わせて",
-                "STEAMVR_START": "SteamVRの起動に合わせて",
-                "STEAMVR_STOP": "SteamVRが停止したため"
-              },
-              "title": "すべてのベースステーションをスタンバイモードにする"
-            }
+            "on": "すべてのベースステーションをオンにする",
+            "sleep": "すべてのベースステーションをスリープモードにする",
+            "standby": "すべてのベースステーションをスタンバイモードにする"
           },
           "SINGLE": {
-            "on": {
-              "reasons": {
-                "HOTKEY": "ショートカットキーが押されたため",
-                "MANUAL": "手動でオンにした",
-                "OYASUMI_START": "OyasumiVRの起動に合わせて",
-                "STEAMVR_START": "SteamVRの起動に合わせて",
-                "STEAMVR_STOP": "SteamVRが停止したため"
-              },
-              "title": "ベースステーションの電源を入れた"
-            },
-            "sleep": {
-              "reasons": {
-                "HOTKEY": "ショートカットキーが押されたため",
-                "MANUAL": "手動で設定した",
-                "OYASUMI_START": "OyasumiVRの起動に合わせて",
-                "STEAMVR_START": "SteamVRの起動に合わせて",
-                "STEAMVR_STOP": "SteamVRが停止したため"
-              },
-              "title": "ベースステーションをスリープモードにする"
-            },
-            "standby": {
-              "reasons": {
-                "HOTKEY": "ショートカットキーが押されたため",
-                "MANUAL": "手動で設定した",
-                "OYASUMI_START": "OyasumiVRの起動に合わせて",
-                "STEAMVR_START": "SteamVRの起動に合わせて",
-                "STEAMVR_STOP": "SteamVRが停止したため"
-              },
-              "title": "ベースステーションをスタンバイモードにする"
-            }
+            "on": "ベースステーションの電源を入れた",
+            "sleep": "ベースステーションをスリープモードにする",
+            "standby": "ベースステーションをスタンバイモードにする"
+          },
+          "VARIOUS": {
+            "on": "複数のベースステーションの電源を入れた",
+            "sleep": "複数のベースステーションをスリープモードにする",
+            "standby": "複数のベースステーションをスタンバイモードにする"
+          },
+          "reasons": {
+            "HOTKEY": "ショートカットキーが押下されたため",
+            "MANUAL": "手動でオンにした",
+            "OYASUMI_START": "OyasumiVRの起動に合わせて",
+            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
+            "STEAMVR_START": "SteamVRの起動に合わせて",
+            "STEAMVR_STOP": "SteamVRが停止したため"
           }
         },
         "msiAfterburnerProfileSet": {
@@ -596,6 +478,13 @@
           "title": {
             "auto": "SteamVRのレンダリング解像度を「自動」に設定",
             "custom": "SteamVRのレンダリング解像度を{value}に設定"
+          }
+        },
+        "runAutomationExecuted": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
+            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
+            "SLEEP_PREPARATION": "就寝準備をした"
           }
         },
         "shutdownSequenceCancelled": {
@@ -701,7 +590,9 @@
             "HOTKEY": "ショートカットキーが押されたため",
             "MANUAL": "手動でオフにした",
             "OSC_CONTROL": "OSCによってオフになった",
-            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった"
+            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
+            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
+            "SLEEP_PREPARATION": "就寝準備をした"
           },
           "title": {
             "ALL": "全ての機器の電源をオフ",
@@ -727,6 +618,13 @@
             "SLEEP_PREPARATION": "就寝準備をした"
           },
           "title": "アバターを''{avatarName}''に変更"
+        },
+        "vrchatGroupChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
+            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
+            "SLEEP_PREPARATION": "就寝準備をした"
+          }
         },
         "windowsPowerPolicySet": {
           "reason": {
@@ -1001,6 +899,20 @@
       }
     },
     "player-list": {
+      "addFriends": "フレンドを追加",
+      "clearPlayers": "全てクリア",
+      "loadPreset": "プリセットを読み込む",
+      "loadingFriends": "フレンドを読み込み中…",
+      "noPlayersAdded": "現在、リストに登録されているプレイヤーはいません",
+      "removeModal": {
+        "message": "''{name}''をリストから削除しますか？",
+        "title": "確認"
+      },
+      "removeModalBulk": {
+        "message": "全員をリストから削除しますか？",
+        "title": "確認"
+      },
+      "savePreset": "プリセットとして保存",
       "title": "プレイヤーリスト"
     },
     "select-box": {
@@ -1056,6 +968,19 @@
       "title": "二要素認証"
     }
   },
+  "device-manager": {
+    "deviceType": {
+      "CONTROLLER": "コントローラー",
+      "TRACKER": "トラッカー"
+    },
+    "tabs": {
+      "devices": "機器"
+    },
+    "tags": {
+      "cancel": "キャンセル",
+      "save": "保存"
+    }
+  },
   "discord": {
     "details": "VR睡眠ソフトウェア",
     "label": {
@@ -1065,6 +990,19 @@
     "state": {
       "awake": "起床中",
       "sleeping": "睡眠中"
+    }
+  },
+  "frame-limiter": {
+    "add-application-modal": {
+      "add": "追加"
+    },
+    "onSleepDisable": "起床時",
+    "onSleepEnable": "睡眠時",
+    "onSleepPreparation": "就寝準備時",
+    "removeLimiter": "削除",
+    "selector": {
+      "auto": "自動",
+      "disabled": "変更しない"
     }
   },
   "gpu-automations": {
@@ -1190,15 +1128,80 @@
     },
     "title": "HMDの自動化"
   },
+  "invite-and-invite-requests": {
+    "inviteRequestsTab": {
+      "conditions": {
+        "description": "特定の条件が満たされた場合のみReq Inviteを許可できるように設定できます。",
+        "title": "条件"
+      },
+      "description": "自分が受け取ったReq Inviteを自動的に許可できます。ホワイトリストやブラックリストを利用すると、特定のフレンドに対してのみ許可することも可能です。",
+      "options": {
+        "listMode": {
+          "description": "プレイヤーリストの設定",
+          "options": {
+            "BLACKLIST": {
+              "label": "ブラックリスト",
+              "subLabel": "リストのフレンドは承認しない"
+            },
+            "DISABLED": {
+              "label": "オフ",
+              "subLabel": "全て承認する"
+            },
+            "WHITELIST": {
+              "label": "ホワイトリスト",
+              "subLabel": "リストのフレンドを承認する"
+            }
+          },
+          "title": "リストモード"
+        },
+        "onlyBelowPlayerCount": {
+          "description": "これにはあなた自身も含まれます",
+          "title": "ワールド内のプレイヤーが<strong>{count}</strong>人未満の場合にのみ"
+        },
+        "onlyIfSleepModeEnabled": {
+          "title": "睡眠モード有効時のみ"
+        },
+        "presetOptions": {
+          "options": {
+            "NONE": "変更しない"
+          }
+        }
+      },
+      "otherAutomations": {
+        "changeListPreset": {
+          "onSleepDisable": {
+            "description": "睡眠モードが無効化された際にプリセットを読み込みます",
+            "title": "起床時"
+          },
+          "onSleepEnable": {
+            "description": "睡眠モードが有効化された際にプリセットを読み込みます",
+            "title": "睡眠時"
+          },
+          "onSleepPreparation": {
+            "description": "就寝準備が押下された際にプリセットを読み込みます",
+            "title": "就寝準備時"
+          }
+        },
+        "description": "この機能の動作を自動的に変更する自動化を見つけることができます",
+        "title": "その他の自動化"
+      },
+      "userOnJoinMeStatus": "VRChatは、自分のステータスが青(Join Me)になっている場合、設定に関わらず、すべてのReq Inviteを自動的に受け入れます。"
+    },
+    "playerList": {
+      "blacklist": "ブラックリスト",
+      "whitelist": "ホワイトリスト"
+    },
+    "tabs": {
+      "inviteRequests": "招待リクエスト",
+      "invites": "招待",
+      "sounds": "音声"
+    }
+  },
   "join-notifications": {
     "description": "他のプレイヤーがJoinまたは退出すると、通知メッセージまたはサウンドを再生します。Joinしてくれた人に起きて会いたい場合に使用します",
     "joinNotifications": {
       "description": "他のプレイヤーがJoinしたときに通知を表示する",
       "title": "Join通知"
-    },
-    "joinSoundVolume": {
-      "description": "他のプレイヤーがJoin、退出したときに再生される効果音の音量",
-      "title": "サウンド音量"
     },
     "joinSounds": {
       "description": "他のプレイヤーがJoinしたときにサウンドを再生する",
@@ -1237,9 +1240,22 @@
     "title": "Join通知"
   },
   "message-center": {
+    "actions": {
+      "configure": "設定",
+      "moreInfo": "詳細"
+    },
     "messages": {
+      "gpuAutomationsSidecarNotRunning": {
+        "actions": {
+          "disable": "GPU自動化を無効にする",
+          "elevate": "管理者権限を付与する"
+        }
+      },
       "manyLighthousesDetected": {
         "message": "ベースステーションの数が多いようです！\n\nほとんどのBluetoothアダプターは、ヘッドフォンや他の周辺機器などのBluetoothデバイスを含め、同時に7つの接続しか処理できません。\n\n多くのベースステーションを接続している、または他のBluetoothデバイスを接続している場合、OyasumiVRがすべてのベースステーションを正しく制御できない可能性があります。"
+      },
+      "sleepCalibrationRequired": {
+        "calibrate": "今すぐキャリブレーション"
       }
     }
   },
@@ -1293,14 +1309,12 @@
     "notification": "心拍数が持続的に高いため、悪夢を見ていると判断しました。",
     "playSound": {
       "description": "悪夢を検出したときにアラームを鳴らします",
-      "title": "音を再生",
-      "volume": {
-        "description": "効果音が再生される音量を設定",
-        "test": "テスト",
-        "title": "音量"
-      }
+      "title": "音を再生"
     },
     "title": "悪夢の検知"
+  },
+  "notification-sound": {
+    "volume": "音量"
   },
   "notifications": {
     "autoAcceptedInviteRequest": {
@@ -1486,77 +1500,27 @@
     }
   },
   "power-automations": {
-    "devicePowerOff": {
-      "onBatteryLevel": {
-        "controllers": {
-          "description": "バッテリー残量が一定の割合以下になったとき",
-          "onlyDuringSleepMode": {
-            "description": "睡眠モードが有効な場合のみ、コントローラーをこの方法でオフにします",
-            "title": "睡眠モードが有効な場合のみ"
-          },
-          "powerOffConflict": {
-            "action": "睡眠検出",
-            "description": "全てのコントローラーがオフになると睡眠モードが有効になるように設定されているため、意図しないタイミングで睡眠モードが有効になる可能性があります。これを回避するには睡眠モードの設定からオフにできます。",
-            "title": "警告: 別の自動化を誘発する可能性があります！"
-          },
-          "title": "コントローラーをオフにする"
-        },
-        "description": "デバイスのバッテリー残量が一定の割合以下になったときにデバイスをオフにします。",
-        "title": "バッテリー残量",
-        "trackers": {
-          "description": "バッテリー残量が一定の割合以下になったとき",
-          "onlyDuringSleepMode": {
-            "description": "睡眠モードが有効な場合のみ、この方法でトラッカーをオフにする",
-            "title": "睡眠モードが有効な場合のみ"
-          },
-          "title": "トラッカーをオフにする"
+    "devices": {
+      "turnOff": {
+        "title": "デバイスをオフにする",
+        "triggers": {
+          "onSleepModeDisable": "起床時",
+          "onSleepModeEnable": "睡眠時",
+          "onSleepPreparation": "就寝準備時",
+          "onSteamVRStop": "SteamVRを停止したとき"
         }
       },
-      "onCharge": {
-        "description": "充電器に繋いだとき電源をオフにします。",
-        "optionControllers": {
-          "description": "充電中の場合",
-          "title": "コントローラーをオフにする"
-        },
-        "optionTrackers": {
-          "description": "充電中の場合",
-          "title": "トラッカーをオフにする"
-        },
-        "title": "充電時"
-      },
-      "onSleepModeEnable": {
-        "description": "睡眠モードが有効化された際に電源をオフにします。",
-        "hint": "有効になるタイミングは、<a class=\"sleepDetectionLink\">睡眠検出</a>から設定できます。",
-        "optionControllers": "すべてのコントローラーをオフにする",
-        "optionTrackers": "すべてのトラッカーをオフにする",
-        "title": "睡眠時"
+      "turnOn": {
+        "triggers": {
+          "onOyasumiStart": "OyasumiVRを起動したとき",
+          "onSleepModeDisable": "起床時",
+          "onSteamVRStart": "SteamVRを起動したとき"
+        }
       }
     },
-    "enableLighthouseControl": "有効にする",
     "error": {
       "adapterError": "Bluetoothアダプターとの通信を試みている間にエラーが発生しました。Bluetoothアダプターが有効になっていることを確認し、再度お試しください。",
       "noAdapter": "お使いのシステムでBluetoothアダプターが見つかりませんでした。システムにBluetoothアダプターが搭載され、有効になっているかを確認してください。"
-    },
-    "lighthouseControlDisabledWarning": "OyasumiVRの設定でベースステーションの電力制御を無効にしているため、この機能は利用できません。使用する場合は、これを有効にしてください。",
-    "lighthousePowerOff": {
-      "description": "ベースステーションを自動でオフにする。",
-      "onSteamVRStop": {
-        "description": "SteamVRの停止時にベースステーションを自動でオフにする",
-        "title": "SteamVRを停止したとき"
-      },
-      "title": "ベースステーションをオフにする"
-    },
-    "lighthousePowerOn": {
-      "description": "ベースステーションを自動でオンにします。",
-      "onOyasumiStart": {
-        "description": "OyasumiVRの起動時にベースステーションを自動でオンにする",
-        "title": "OyasumiVRを起動したとき"
-      },
-      "onSteamVRStart": {
-        "description": "SteamVRの起動時にベースステーションを自動でオンにする",
-        "title": "SteamVRを起動したとき"
-      },
-      "title": "ベースステーションをオンにする"
     },
     "powerManagementWarning": "OyasumiVRでベースステーションの電源を自動化する場合、SteamVRの設定でベースステーションの電源管理を無効にすることを推奨します。",
     "tabs": {
@@ -1602,6 +1566,18 @@
       "title": "レンダリング解像度を変更"
     },
     "title": "解像度の自動化"
+  },
+  "runAutomations": {
+    "onSleepDisable": {
+      "title": "起床時"
+    },
+    "onSleepEnable": {
+      "title": "睡眠時"
+    },
+    "onSleepPreparation": {
+      "title": "就寝準備時"
+    },
+    "testCommands": "テスト"
   },
   "settings": {
     "advanced": {
@@ -2027,10 +2003,7 @@
       "cancel": "キャンセル",
       "stage": {
         "POWERING_DOWN": "Windowsをシャットダウン中...",
-        "QUITTING_STEAMVR": "SteamVRを終了する...",
-        "TURNING_OFF_BASESTATIONS": "ベースステーションをオフにする...",
-        "TURNING_OFF_CONTROLLERS": "コントローラーをオフにする...",
-        "TURNING_OFF_TRACKERS": "トラッカーをオフにする..."
+        "QUITTING_STEAMVR": "SteamVRを終了する..."
       },
       "title": "シャットダウン"
     },
@@ -2527,6 +2500,10 @@
       }
     }
   },
+  "systemTray": {
+    "prepareForSleep": "就寝準備",
+    "sleepMode": "睡眠モード"
+  },
   "updater": {
     "modals": {
       "error": {
@@ -2553,6 +2530,20 @@
       "title": "就寝準備時"
     },
     "title": "アバター変更"
+  },
+  "vrchatGroupAutomations": {
+    "onSleepDisable": {
+      "title": "起床時"
+    },
+    "onSleepEnable": {
+      "title": "睡眠時"
+    },
+    "onSleepPreparation": {
+      "title": "就寝準備時"
+    },
+    "options": {
+      "dontChange": "変更しない"
+    }
   },
   "vrchatMicMuteAutomations": {
     "automations": {

@@ -3,23 +3,21 @@ import { Injectable } from '@angular/core';
 import { AutomationConfigService } from '../automation-config.service';
 import { OpenVRService } from '../openvr.service';
 import { combineLatest, map } from 'rxjs';
-import {
-  AUTOMATION_CONFIGS_DEFAULT,
-  TurnOffDevicesOnBatteryLevelAutomationConfig,
-} from '../../models/automations';
+import { AUTOMATION_CONFIGS_DEFAULT, DevicePowerAutomationsConfig } from '../../models/automations';
 import { EventLogService } from '../event-log.service';
 import { OVRDevice, OVRDeviceClass } from '../../models/ovr-device';
 import { LighthouseConsoleService } from '../lighthouse-console.service';
 import { error } from '@tauri-apps/plugin-log';
 import { EventLogTurnedOffOpenVRDevices } from '../../models/event-log-entry';
 import { SleepService } from '../sleep.service';
+import { DeviceManagerService } from '../device-manager.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TurnOffDevicesOnBatteryLevelAutomationService {
-  config: TurnOffDevicesOnBatteryLevelAutomationConfig = structuredClone(
-    AUTOMATION_CONFIGS_DEFAULT.TURN_OFF_DEVICES_ON_BATTERY_LEVEL
+  config: DevicePowerAutomationsConfig = structuredClone(
+    AUTOMATION_CONFIGS_DEFAULT.DEVICE_POWER_AUTOMATIONS
   );
   private batteryLevelCache: {
     [deviceIndex: number]: {
@@ -33,12 +31,13 @@ export class TurnOffDevicesOnBatteryLevelAutomationService {
     private openvr: OpenVRService,
     private lighthouse: LighthouseConsoleService,
     private eventLog: EventLogService,
-    private sleep: SleepService
+    private sleep: SleepService,
+    private deviceManager: DeviceManagerService
   ) {}
 
   async init() {
     this.automationConfig.configs
-      .pipe(map((configs) => configs.TURN_OFF_DEVICES_ON_BATTERY_LEVEL))
+      .pipe(map((configs) => configs.DEVICE_POWER_AUTOMATIONS))
       .subscribe((config) => (this.config = config));
 
     combineLatest([this.openvr.devices, this.sleep.mode]).subscribe(([devices, sleepMode]) => {
@@ -59,25 +58,18 @@ export class TurnOffDevicesOnBatteryLevelAutomationService {
     sleepMode: boolean
   ) {
     if (previousLevel === null || previousLevel <= currentLevel) return;
-    if (!['Controller', 'GenericTracker'].includes(device.class)) return;
     let threshold = 0;
-    switch (device.class) {
-      case 'Controller':
-        if (!this.config.turnOffControllers) return;
-        if (this.config.turnOffControllersOnlyDuringSleepMode && !sleepMode) return;
-        if (currentLevel * 100 > this.config.turnOffControllersAtLevel) return;
-        threshold = this.config.turnOffControllersAtLevel;
-        break;
-      case 'GenericTracker':
-        if (!this.config.turnOffTrackers) return;
-        if (this.config.turnOffTrackersOnlyDuringSleepMode && !sleepMode) return;
-        if (currentLevel * 100 > this.config.turnOffTrackersAtLevel) return;
-        threshold = this.config.turnOffTrackersAtLevel;
-        break;
-      default:
-        return;
-    }
-    await this.lighthouse.turnOffDevices([device]);
+    // Check if this automation is currently applicable based on the slepe mode
+    if (this.config.turnOffDevicesBelowBatteryLevel_onlyWhileAsleep && !sleepMode) return;
+    // Check if this automation applies to this device
+    const devices = await this.deviceManager.getDevicesForSelection(
+      this.config.turnOffDevicesBelowBatteryLevel
+    );
+    if (!devices.ovrDevices.find((d) => d.index === device.index)) return;
+    // Check if the battery level is below the threshold
+    if (currentLevel * 100 > this.config.turnOffDevicesBelowBatteryLevel_threshold) return;
+    threshold = this.config.turnOffDevicesBelowBatteryLevel_threshold;
+    // Log the event
     this.eventLog.logEvent({
       type: 'turnedOffOpenVRDevices',
       reason: 'BATTERY_LEVEL',
@@ -97,5 +89,7 @@ export class TurnOffDevicesOnBatteryLevelAutomationService {
         }
       })(),
     } as EventLogTurnedOffOpenVRDevices);
+    // Turn off the device
+    await this.lighthouse.turnOffDevices([device]);
   }
 }

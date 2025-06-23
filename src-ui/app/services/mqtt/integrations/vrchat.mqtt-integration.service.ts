@@ -58,7 +58,7 @@ export class VRChatMqttIntegrationService {
         await this.mqtt.setSensorPropertyValue('vrcWorldInstanceId', world.instanceId ?? 'null');
         await this.mqtt.setSensorPropertyValue(
           'vrcWorldPlayerCount',
-          world.playerCount.toString(10)
+          world.players.length.toString(10)
         );
       }
     );

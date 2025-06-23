@@ -11,14 +11,14 @@ import { AutomationConfigService } from '../../../../services/automation-config.
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import { NotificationService } from '../../../../services/notification.service';
-import { hshrink } from 'src-ui/app/utils/animations';
+import { hshrink, vshrink } from 'src-ui/app/utils/animations';
 import { VRChatService } from '../../../../services/vrchat-api/vrchat.service';
 
 @Component({
   selector: 'app-join-notifications-view',
   templateUrl: './join-notifications-view.component.html',
   styleUrls: ['./join-notifications-view.component.scss'],
-  animations: [hshrink()],
+  animations: [hshrink(), vshrink()],
   standalone: false,
 })
 export class JoinNotificationsViewComponent implements OnInit {

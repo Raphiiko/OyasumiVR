@@ -109,6 +109,44 @@ async function printTranslationCoverage() {
   console.table(coverage);
 }
 
+async function printMissingKeys(args) {
+  const lang = args[1];
+  if (!lang) {
+    console.error('Language code is required. Usage: npm run tl missing <lang>');
+    process.exit(1);
+  }
+
+  const enFile = getLangFilePath('en');
+  const langFile = getLangFilePath(lang);
+
+  if (!fs.existsSync(langFile)) {
+    console.error(`Language file for '${lang}' not found at ${langFile}`);
+    process.exit(1);
+  }
+
+  const enFileContent = JSON.parse(fs.readFileSync(enFile, 'utf8'));
+  const langFileContent = JSON.parse(fs.readFileSync(langFile, 'utf8'));
+
+  const enFileContentFlattened = flattenObj(enFileContent);
+  const langFileContentFlattened = flattenObj(langFileContent);
+
+  const missingKeys = Object.keys(enFileContentFlattened).filter(
+    (key) => !langFileContentFlattened[key]
+  );
+
+  if (missingKeys.length === 0) {
+    console.log(`No missing keys found for language '${lang}'!`);
+    return;
+  }
+
+  console.log(`Missing keys for language '${lang}' (${missingKeys.length} total):`);
+  console.log('');
+
+  missingKeys.forEach((key) => {
+    console.log(`${key}: "${enFileContentFlattened[key]}"`);
+  });
+}
+
 function unflattenObj(ob) {
   // Make sure to sort the keys before unflattening
   const keys = Object.keys(ob);
@@ -178,6 +216,10 @@ async function main() {
     }
     case 'coverage': {
       await printTranslationCoverage();
+      break;
+    }
+    case 'missing': {
+      await printMissingKeys(args);
       break;
     }
     default:

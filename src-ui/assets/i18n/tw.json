@@ -66,85 +66,6 @@
       "title": "音量"
     }
   },
-  "auto-invite-request-accept": {
-    "addFriends": "新增朋友",
-    "blacklist": "玩家黑名單",
-    "clearPlayers": "全部清除",
-    "conditions": {
-      "description": "你可以在此設定 OyasumiVR，使其僅在符合特定條件時接受邀請請求。",
-      "title": "條件"
-    },
-    "description": "OyasumiVR 可以自動接受你收到的加入請求。 透過使用玩家白名單或黑名單，可確保只有你選擇的朋友才會自動接受他們的邀請請求",
-    "loadPreset": "載入儲存的預設值",
-    "loadingFriends": "正在載入好友...",
-    "noPlayersAdded": "目前沒有任何玩家在此列表中",
-    "options": {
-      "changeListPreset": {
-        "onSleepDisable": {
-          "description": "睡眠模式停用時，為玩家清單載入已儲存的預設值",
-          "title": "起床時載入預設值"
-        },
-        "onSleepEnable": {
-          "description": "睡眠模式啟動時，為玩家清單載入儲存的預設值",
-          "title": "睡眠時載入預設值"
-        },
-        "onSleepPreparation": {
-          "description": "準備入睡時，為玩家清單載入儲存的預設值",
-          "title": "準備入睡時載入預設值"
-        }
-      },
-      "enable": {
-        "description": "自動接受好友的加入請求",
-        "title": "開啟"
-      },
-      "listMode": {
-        "description": "玩家列表的運作模式",
-        "options": {
-          "BLACKLIST": {
-            "label": "黑名單",
-            "subLabel": "接受所有非此列表的朋友加入邀請"
-          },
-          "DISABLED": {
-            "label": "關閉",
-            "subLabel": "接受所有人"
-          },
-          "WHITELIST": {
-            "label": "白名單",
-            "subLabel": "接受所有來自此列表的朋友加入邀請"
-          }
-        },
-        "title": "列表模式"
-      },
-      "onlyBelowPlayerCount": {
-        "description": "這包括你自己",
-        "title": "只有當你的世界中少於<strong>{count, plural, one {#</strong> 位玩家} other {#</strong> 位玩家}}時"
-      },
-      "onlyIfSleepModeEnabled": {
-        "title": "當睡眠模式啟動時"
-      },
-      "presetOptions": {
-        "options": {
-          "NONE": "不要變更"
-        }
-      }
-    },
-    "otherAutomations": {
-      "description": "你可以在此找到自動化功能，自動變更此功能的運作方式。",
-      "title": "其他自動化"
-    },
-    "removeModal": {
-      "message": "你確定要從列表中刪除「{name}」嗎？",
-      "title": "確認刪除"
-    },
-    "removeModalBulk": {
-      "message": "你確定要把每個人都從你的名單中刪除嗎？",
-      "title": "確認刪除"
-    },
-    "savePreset": "儲存為預設值",
-    "title": "自動接受加入請求",
-    "userOnJoinMeStatus": "無論你的設定如何，VRChat 都會自動接受所有邀請請求，因為你的狀態是加入我（藍色）",
-    "whitelist": "玩家白名單"
-  },
   "brightness-automations": {
     "AT_SUNRISE": {
       "title": "在日出時"
@@ -294,7 +215,6 @@
     "dashboard-navbar": {
       "about": "關於 OyasumiVR",
       "audioVolumeAutomations": "音量自動化",
-      "autoInviteRequestAccept": "自動接受邀請請求",
       "brightnessAutomations": "亮度自動化",
       "chaperoneAutomations": "Chaperone 導護自動化",
       "gpuAutomations": "GPU 自動化",
@@ -350,10 +270,6 @@
         "GenericTracker": "定位器",
         "Lighthouse": "基地台",
         "other": "其他"
-      },
-      "deviceName": {
-        "lighthouseV1": "V1 Lighthouse",
-        "lighthouseV2": "V2 基地台"
       },
       "deviceRole": {
         "AnkleLeft": "左腳踝",
@@ -505,72 +421,6 @@
           "title": {
             "set": "頭顯硬體亮度設定到 {value}",
             "transition": "頭顯硬體亮度過渡到 {value}"
-          }
-        },
-        "lighthouseSetPowerState": {
-          "ALL": {
-            "on": {
-              "reasons": {
-                "HOTKEY": "由於按下快捷鍵",
-                "MANUAL": "手動設定",
-                "OYASUMI_START": "由於 OyasumiVR 開啟",
-                "STEAMVR_START": "由於 SteamVR 開啟",
-                "STEAMVR_STOP": "由於 SteamVR 關閉"
-              },
-              "title": "打開所有的基地台"
-            },
-            "sleep": {
-              "reasons": {
-                "HOTKEY": "由於按下快捷鍵",
-                "MANUAL": "手動設定",
-                "OYASUMI_START": "由於 OyasumiVR 開啟",
-                "STEAMVR_START": "由於 SteamVR 開啟",
-                "STEAMVR_STOP": "由於 SteamVR 關閉"
-              },
-              "title": "將所有基地台設定為睡眠模式"
-            },
-            "standby": {
-              "reasons": {
-                "HOTKEY": "由於按下快捷鍵",
-                "MANUAL": "手動設定",
-                "OYASUMI_START": "由於 OyasumiVR 開啟",
-                "STEAMVR_START": "由於 SteamVR 開啟",
-                "STEAMVR_STOP": "由於 SteamVR 關閉"
-              },
-              "title": "將所有基地台設定為待機模式"
-            }
-          },
-          "SINGLE": {
-            "on": {
-              "reasons": {
-                "HOTKEY": "由於按下快捷鍵",
-                "MANUAL": "手動開啟",
-                "OYASUMI_START": "由於 OyasumiVR 開啟",
-                "STEAMVR_START": "由於 SteamVR 開啟",
-                "STEAMVR_STOP": "由於 SteamVR 關閉"
-              },
-              "title": "打開了一個基地台"
-            },
-            "sleep": {
-              "reasons": {
-                "HOTKEY": "由於按下快捷鍵",
-                "MANUAL": "手動設定",
-                "OYASUMI_START": "由於 OyasumiVR 開啟",
-                "STEAMVR_START": "由於 SteamVR 開啟",
-                "STEAMVR_STOP": "由於 SteamVR 關閉"
-              },
-              "title": "將基地台設定為睡眠模式"
-            },
-            "standby": {
-              "reasons": {
-                "HOTKEY": "由於按下快捷鍵",
-                "MANUAL": "手動設定",
-                "OYASUMI_START": "由於 OyasumiVR 開啟",
-                "STEAMVR_START": "由於 SteamVR 開啟",
-                "STEAMVR_STOP": "由於 SteamVR 關閉"
-              },
-              "title": "將基地台設定為待機模式"
-            }
           }
         },
         "msiAfterburnerProfileSet": {
@@ -1001,6 +851,20 @@
       }
     },
     "player-list": {
+      "addFriends": "新增朋友",
+      "clearPlayers": "全部清除",
+      "loadPreset": "載入儲存的預設值",
+      "loadingFriends": "正在載入好友...",
+      "noPlayersAdded": "目前沒有任何玩家在此列表中",
+      "removeModal": {
+        "message": "你確定要從列表中刪除「{name}」嗎？",
+        "title": "確認刪除"
+      },
+      "removeModalBulk": {
+        "message": "你確定要把每個人都從你的名單中刪除嗎？",
+        "title": "確認刪除"
+      },
+      "savePreset": "儲存為預設值",
       "title": "球員名單"
     },
     "select-box": {
@@ -1190,15 +1054,80 @@
     },
     "title": "頭顯專用自動化"
   },
+  "invite-and-invite-requests": {
+    "inviteRequestsTab": {
+      "conditions": {
+        "description": "你可以在此設定 OyasumiVR，使其僅在符合特定條件時接受邀請請求。",
+        "title": "條件"
+      },
+      "description": "OyasumiVR 可以自動接受你收到的加入請求。 透過使用玩家白名單或黑名單，可確保只有你選擇的朋友才會自動接受他們的邀請請求",
+      "options": {
+        "listMode": {
+          "description": "玩家列表的運作模式",
+          "options": {
+            "BLACKLIST": {
+              "label": "黑名單",
+              "subLabel": "接受所有非此列表的朋友加入邀請"
+            },
+            "DISABLED": {
+              "label": "關閉",
+              "subLabel": "接受所有人"
+            },
+            "WHITELIST": {
+              "label": "白名單",
+              "subLabel": "接受所有來自此列表的朋友加入邀請"
+            }
+          },
+          "title": "列表模式"
+        },
+        "onlyBelowPlayerCount": {
+          "description": "這包括你自己",
+          "title": "只有當你的世界中少於<strong>{count, plural, one {#</strong> 位玩家} other {#</strong> 位玩家}}時"
+        },
+        "onlyIfSleepModeEnabled": {
+          "title": "當睡眠模式啟動時"
+        },
+        "presetOptions": {
+          "options": {
+            "NONE": "不要變更"
+          }
+        }
+      },
+      "otherAutomations": {
+        "changeListPreset": {
+          "onSleepDisable": {
+            "description": "睡眠模式停用時，為玩家清單載入已儲存的預設值",
+            "title": "起床時載入預設值"
+          },
+          "onSleepEnable": {
+            "description": "睡眠模式啟動時，為玩家清單載入儲存的預設值",
+            "title": "睡眠時載入預設值"
+          },
+          "onSleepPreparation": {
+            "description": "準備入睡時，為玩家清單載入儲存的預設值",
+            "title": "準備入睡時載入預設值"
+          }
+        },
+        "description": "你可以在此找到自動化功能，自動變更此功能的運作方式。",
+        "title": "其他自動化"
+      },
+      "userOnJoinMeStatus": "無論你的設定如何，VRChat 都會自動接受所有邀請請求，因為你的狀態是加入我（藍色）"
+    },
+    "playerList": {
+      "blacklist": "玩家黑名單",
+      "whitelist": "玩家白名單"
+    },
+    "tabs": {
+      "inviteRequests": "邀請請求",
+      "invites": "邀請",
+      "sounds": "聲音"
+    }
+  },
   "join-notifications": {
     "description": "當其他玩家進入或離開你的世界時，播放通知訊息和/或聲音。如果你想讓 OyasumiVR 在有人加入時喚醒你，這會很有用。",
     "joinNotifications": {
       "description": "玩家加入你的世界時會顯示通知",
       "title": "加入通知"
-    },
-    "joinSoundVolume": {
-      "description": "玩家進入或離開你的世界時播放的音效音量",
-      "title": "音量"
     },
     "joinSounds": {
       "description": "玩家加入你的世界時會播放聲音",
@@ -1293,12 +1222,7 @@
     "notification": "偵測到可能性的惡夢，因為你的心跳率升高持續時間過長。",
     "playSound": {
       "description": "當可能有惡夢時，使用音效喚醒你",
-      "title": "播放音效",
-      "volume": {
-        "description": "設定音效播放的音量",
-        "test": "測試",
-        "title": "音效音量"
-      }
+      "title": "播放音效"
     },
     "title": "惡夢偵測"
   },
@@ -1486,77 +1410,9 @@
     }
   },
   "power-automations": {
-    "devicePowerOff": {
-      "onBatteryLevel": {
-        "controllers": {
-          "description": "當電量低於",
-          "onlyDuringSleepMode": {
-            "description": "只有在啟用睡眠模式時，才能以這種方式關閉控制器",
-            "title": "僅在睡眠模式啟用時"
-          },
-          "powerOffConflict": {
-            "action": "睡眠檢測",
-            "description": "由於你已將睡眠模式設定為在所有控制器關閉時啟動，因此開啟此自動操作可能會導致你無意中啟用睡眠模式。其他自動裝置可能會對此做出反應，這可能不是你想要的。你可以在睡眠檢測設定中關閉這種行為",
-            "title": "警告： 這可能會觸發另一個自動化！"
-          },
-          "title": "關閉控制器"
-        },
-        "description": "當裝置電池電量低於一定百分比時，關閉裝置電源",
-        "title": "電池電量",
-        "trackers": {
-          "description": "當電量低於",
-          "onlyDuringSleepMode": {
-            "description": "只有在睡眠模式啟用時，才能用這種方法關閉定位器",
-            "title": "僅在睡眠模式啟用時"
-          },
-          "title": "關閉定位器"
-        }
-      },
-      "onCharge": {
-        "description": "將裝置放在充電器上時自動關閉",
-        "optionControllers": {
-          "description": "給它們充電時",
-          "title": "關閉控制器"
-        },
-        "optionTrackers": {
-          "description": "給它們充電時",
-          "title": "關閉定位器"
-        },
-        "title": "給它們充電時"
-      },
-      "onSleepModeEnable": {
-        "description": "啟用睡眠模式時關閉裝置",
-        "hint": "你可以在<a class=\"sleepDetectionLink\">睡眠檢測</a>中設定何時啟用睡眠模式。.",
-        "optionControllers": "關掉所有的控制器",
-        "optionTrackers": "關閉所有定位器",
-        "title": "當我入睡時"
-      }
-    },
-    "enableLighthouseControl": "啟用",
     "error": {
       "adapterError": "在試圖與你的藍牙接收器進行通信時發生了錯誤。請確保你的藍牙接收器已啟用，然後再試一次",
       "noAdapter": "在你的系統中找不到藍牙。請確認你的系統具有藍芽功能，並且已經啟用"
-    },
-    "lighthouseControlDisabledWarning": "由於你在 OyasumiVR 的設定中停用了基地台功率控制，所以這些自動化功能不可用。如果你想使用這些自動化功能，請啟用該功能",
-    "lighthousePowerOff": {
-      "description": "讓 OyasumiVR 自動關閉你的基地台",
-      "onSteamVRStop": {
-        "description": "當SteamVR停止時，自動關閉你的基地台",
-        "title": "當 SteamVR 停止時"
-      },
-      "title": "關掉基地台"
-    },
-    "lighthousePowerOn": {
-      "description": "讓 OyasumiVR 自動開啟你的基地台",
-      "onOyasumiStart": {
-        "description": "當 OyasumiVR 啟動時，自動打開你的基地台",
-        "title": "當 OyasumiVR 啟動時"
-      },
-      "onSteamVRStart": {
-        "description": "當 SteamVR 啟動時，自動打開你的基地台",
-        "title": "當 SteamVR 啟動時"
-      },
-      "title": "開啟基地台"
     },
     "powerManagementWarning": "當選擇使用OyasumiVR的自動裝置來打開或關閉你的基地台時，建議你在SteamVR的基地台設定中停用電源管理",
     "tabs": {
@@ -2027,10 +1883,7 @@
       "cancel": "立即取消",
       "stage": {
         "POWERING_DOWN": "正在關閉 Windows...",
-        "QUITTING_STEAMVR": "正在退出 SteamVR...",
-        "TURNING_OFF_BASESTATIONS": "正在關閉基地站...",
-        "TURNING_OFF_CONTROLLERS": "正在關閉控制器...",
-        "TURNING_OFF_TRACKERS": "正在關閉定位器......"
+        "QUITTING_STEAMVR": "正在退出 SteamVR..."
       },
       "title": "關機功能"
     },

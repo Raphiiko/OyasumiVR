@@ -115,6 +115,24 @@
       color: var(--color-text-1);
     }
 
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+
+      &:hover {
+        background: var(--color-surface-1);
+      }
+
+      .tag-color {
+        opacity: 0.6;
+      }
+
+      .tag-name {
+        color: var(--color-text-3);
+      }
+    }
+
     .tag-color {
       width: 1rem;
       height: 1rem;

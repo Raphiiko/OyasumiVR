@@ -67,137 +67,6 @@
       "title": "音量"
     }
   },
-  "auto-invite-request-accept": {
-    "addFriends": "添加朋友",
-    "blacklist": "玩家黑名单",
-    "clearPlayers": "清除所有",
-    "conditions": {
-      "description": "在这里，你可以配置 OyasumiVR 只在满足某些条件时接受邀请请求",
-      "title": "条件"
-    },
-    "description": "OyasumiVR 可以自动处理你收到的加入请求。通过使用玩家白名单或黑名单，可确保只有你选择的朋友才会自动接受他们的加入请求",
-    "loadPreset": "加载已保存的预设",
-    "loadingFriends": "正在加载好友列表...",
-    "noPlayersAdded": "目前没有任何玩家在此列表中",
-    "options": {
-      "acceptMessage": {
-        "customMessage": {
-          "placeholder": "OyasumiVR 已接受请求",
-          "title": "邀请消息"
-        },
-        "description": "当 OyasumiVR 接受邀请请求时附带一条消息",
-        "title": "附带消息接受"
-      },
-      "changeListPreset": {
-        "onSleepDisable": {
-          "description": "当睡眠模式禁用时，加载保存的列表预设",
-          "title": "当我醒来时加载预设"
-        },
-        "onSleepEnable": {
-          "description": "当睡眠模式开启时，加载保存的列表预设",
-          "title": "当我进入睡眠模式时加载预设"
-        },
-        "onSleepPreparation": {
-          "description": "当你准备进入睡眠模式时，加载保存的列表预设",
-          "title": "当我准备睡觉时加载预设"
-        }
-      },
-      "declineOnInviteWhileAsleep": {
-        "customMessage": {
-          "description": "输入当拒绝邀请时发送的消息",
-          "placeholder": "我正在睡觉哦！（由 OyasumiVR 自动拒绝）",
-          "title": "自定义消息"
-        },
-        "description": "在睡眠模式开启时自动拒绝邀请",
-        "title": "睡觉时自动拒绝邀请"
-      },
-      "declineOnRequest": {
-        "customMessage": {
-          "description": "输入在请求被拒绝时要发送的消",
-          "placeholder": "请求已被 OyasumiVR 拒绝",
-          "title": "自定义消息"
-        },
-        "description": "如果 OyasumiVR 未自动接受邀请请求，将自动发送一条拒绝消息",
-        "options": {
-          "ALWAYS": "始终发送",
-          "DISABLED": "从不发送",
-          "WHEN_SLEEPING": "仅在我睡觉时发送"
-        },
-        "title": "拒绝邀请请求"
-      },
-      "enable": {
-        "description": "自动接受好友的加入请求",
-        "title": "开启"
-      },
-      "listMode": {
-        "description": "玩家列表的运作模式",
-        "options": {
-          "BLACKLIST": {
-            "label": "黑名单",
-            "subLabel": "接受所有非此列表的朋友的加入邀请"
-          },
-          "DISABLED": {
-            "label": "关闭",
-            "subLabel": "接受所有人"
-          },
-          "WHITELIST": {
-            "label": "白名单",
-            "subLabel": "接受所有来自此列表的朋友的加入邀请"
-          }
-        },
-        "title": "列表模式"
-      },
-      "onlyBelowPlayerCount": {
-        "description": "这包括你自己",
-        "title": "只有当你的世界中少于<strong>{count}</strong> 个玩家时"
-      },
-      "onlyIfSleepModeEnabled": {
-        "title": "仅当睡眠模式开启时生效"
-      },
-      "playSoundOnInvite": {
-        "description": "收到邀请时播放提示音",
-        "onlyWhenAsleep": {
-          "description": "仅在睡眠模式启用时播放提示音",
-          "title": "仅在睡觉时"
-        },
-        "title": "邀请时播放提示音"
-      },
-      "playSoundOnInviteRequest": {
-        "description": "收到邀请请求时播放提示音",
-        "onlyWhenAsleep": {
-          "description": "仅在睡眠模式启用时播放提示音",
-          "title": "仅在睡觉时"
-        },
-        "onlyWhenUnhandled": {
-          "description": "仅在邀请请求未被自动接受或拒绝时播放提示音",
-          "title": "仅在未自动处理时"
-        },
-        "title": "邀请请求时播放提示音"
-      },
-      "presetOptions": {
-        "options": {
-          "NONE": "不改变"
-        }
-      }
-    },
-    "otherAutomations": {
-      "description": "在这里，你可以找到改变各功能工作方式的自动化",
-      "title": "其他自动化"
-    },
-    "removeModal": {
-      "message": "你确定要从列表中删除 “{name}” 吗？",
-      "title": "确认删除"
-    },
-    "removeModalBulk": {
-      "message": "你确定要把所有人从列表中删除吗？",
-      "title": "确认删除"
-    },
-    "savePreset": "保存为预设",
-    "title": "邀请 / 加入请求",
-    "userOnBusyStatus": "当你处于请勿打扰状态（红灯）时，好友将无法正常发送加入请求。但通过 VRCX 等第三方工具发送的邀请请求，OyasumiVR 仍会接受。",
-    "userOnJoinMeStatus": "无论你的设置如何，VRChat 都会自动接受所有加入请求，因为你的状态是加入我（蓝色）",
-    "whitelist": "玩家白名单"
-  },
   "brightness-automations": {
     "AT_SUNRISE": {
       "title": "在日出时"
@@ -350,7 +219,6 @@
     "dashboard-navbar": {
       "about": "关于 OyasumiVR",
       "audioVolumeAutomations": "音量",
-      "autoInviteRequestAccept": "邀请 / 加入请求",
       "brightnessAutomations": "亮度",
       "chaperoneAutomations": "SteamVR 保护墙",
       "deviceManager": "设备管理",
@@ -595,68 +463,27 @@
         },
         "lighthouseSetPowerState": {
           "ALL": {
-            "on": {
-              "reasons": {
-                "HOTKEY": "由于你按下了快捷键",
-                "MANUAL": "手动设置",
-                "OYASUMI_START": "由于 OyasumiVR 开启",
-                "STEAMVR_START": "由于 SteamVR 开启",
-                "STEAMVR_STOP": "由于 SteamVR 关闭"
-              },
-              "title": "打开所有的基站"
-            },
-            "sleep": {
-              "reasons": {
-                "HOTKEY": "由于你按下了快捷键",
-                "MANUAL": "手动设置",
-                "OYASUMI_START": "由于 OyasumiVR 开启",
-                "STEAMVR_START": "由于 SteamVR 开启",
-                "STEAMVR_STOP": "由于 SteamVR 关闭"
-              },
-              "title": "将所有基站设置为睡眠模式"
-            },
-            "standby": {
-              "reasons": {
-                "HOTKEY": "由于你按下了快捷键",
-                "MANUAL": "手动设置",
-                "OYASUMI_START": "由于 OyasumiVR 开启",
-                "STEAMVR_START": "由于 SteamVR 开启",
-                "STEAMVR_STOP": "由于 SteamVR 关闭"
-              },
-              "title": "将所有基站设置为待机模式"
-            }
+            "on": "打开所有的基站",
+            "sleep": "将所有基站设置为睡眠模式",
+            "standby": "将所有基站设置为待机模式"
           },
           "SINGLE": {
-            "on": {
-              "reasons": {
-                "HOTKEY": "由于你按下了快捷键",
-                "MANUAL": "手动开启",
-                "OYASUMI_START": "由于 OyasumiVR 开启",
-                "STEAMVR_START": "由于 SteamVR 开启",
-                "STEAMVR_STOP": "由于 SteamVR 关闭"
-              },
-              "title": "打开了一个基站"
-            },
-            "sleep": {
-              "reasons": {
-                "HOTKEY": "由于你按下了快捷键",
-                "MANUAL": "手动设置",
-                "OYASUMI_START": "由于 OyasumiVR 开启",
-                "STEAMVR_START": "由于 SteamVR 开启",
-                "STEAMVR_STOP": "由于 SteamVR 关闭"
-              },
-              "title": "将基站设置为睡眠模式"
-            },
-            "standby": {
-              "reasons": {
-                "HOTKEY": "由于你按下了快捷键",
-                "MANUAL": "手动设置",
-                "OYASUMI_START": "由于 OyasumiVR 开启",
-                "STEAMVR_START": "由于 SteamVR 开启",
-                "STEAMVR_STOP": "由于 SteamVR 关闭"
-              },
-              "title": "将基站设置为待机模式"
-            }
+            "on": "打开了一个基站",
+            "sleep": "将基站设置为睡眠模式",
+            "standby": "将基站设置为待机模式"
+          },
+          "VARIOUS": {
+            "on": "打开多个基站",
+            "sleep": "将多个基站设置为睡眠模式",
+            "standby": "将多个基站设置为待机模式"
+          },
+          "reasons": {
+            "HOTKEY": "由于你按下了快捷键",
+            "MANUAL": "手动设置",
+            "OYASUMI_START": "由于 OyasumiVR 开启",
+            "SLEEP_MODE_DISABLED": "因为已关闭睡眠模式",
+            "STEAMVR_START": "由于 SteamVR 开启",
+            "STEAMVR_STOP": "由于 SteamVR 关闭"
           }
         },
         "msiAfterburnerProfileSet": {
@@ -797,7 +624,9 @@
             "HOTKEY": "因为你按下了快捷键",
             "MANUAL": "手动关闭",
             "OSC_CONTROL": "通过 OSC 关闭",
-            "SLEEP_MODE_ENABLED": "因为已开启睡眠模式"
+            "SLEEP_MODE_DISABLED": "因为已关闭睡眠模式",
+            "SLEEP_MODE_ENABLED": "因为已开启睡眠模式",
+            "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
           },
           "title": {
             "ALL": "关闭全部设备",
@@ -1121,6 +950,20 @@
       }
     },
     "player-list": {
+      "addFriends": "添加朋友",
+      "clearPlayers": "清除所有",
+      "loadPreset": "加载已保存的预设",
+      "loadingFriends": "正在加载好友列表...",
+      "noPlayersAdded": "目前没有任何玩家在此列表中",
+      "removeModal": {
+        "message": "你确定要从列表中删除 “{name}” 吗？",
+        "title": "确认删除"
+      },
+      "removeModalBulk": {
+        "message": "你确定要把所有人从列表中删除吗？",
+        "title": "确认删除"
+      },
+      "savePreset": "保存为预设",
       "title": "玩家列表"
     },
     "select-box": {
@@ -1183,11 +1026,6 @@
       "powerOn": "开启电源"
     },
     "config": {
-      "newTag": {
-        "create": "创建标签",
-        "description": "创建一个新标签并分配给此设备",
-        "title": "创建新标签"
-      },
       "nickname": {
         "description": "为此设备设置一个自定义名称，方便识别",
         "title": "设备昵称"
@@ -1428,6 +1266,134 @@
       "bigscreenBeyond": "Bigscreen Beyond"
     },
     "title": "特定于 HMD 的自动化"
+  },
+  "invite-and-invite-requests": {
+    "inviteRequestsTab": {
+      "conditions": {
+        "description": "在这里，你可以配置 OyasumiVR 只在满足某些条件时接受邀请请求",
+        "title": "条件"
+      },
+      "description": "OyasumiVR 可以自动处理你收到的加入请求。通过使用玩家白名单或黑名单，可确保只有你选择的朋友才会自动接受他们的加入请求",
+      "options": {
+        "acceptMessage": {
+          "customMessage": {
+            "placeholder": "OyasumiVR 已接受请求",
+            "title": "邀请消息"
+          },
+          "description": "当 OyasumiVR 接受邀请请求时附带一条消息",
+          "title": "附带消息接受"
+        },
+        "declineOnRequest": {
+          "customMessage": {
+            "description": "输入在请求被拒绝时要发送的消",
+            "placeholder": "请求已被 OyasumiVR 拒绝",
+            "title": "自定义消息"
+          },
+          "description": "如果 OyasumiVR 未自动接受邀请请求，将自动发送一条拒绝消息",
+          "options": {
+            "ALWAYS": "始终发送",
+            "DISABLED": "从不发送",
+            "WHEN_SLEEPING": "仅在我睡觉时发送"
+          }
+        },
+        "listMode": {
+          "description": "玩家列表的运作模式",
+          "options": {
+            "BLACKLIST": {
+              "label": "黑名单",
+              "subLabel": "接受所有非此列表的朋友的加入邀请"
+            },
+            "DISABLED": {
+              "label": "关闭",
+              "subLabel": "接受所有人"
+            },
+            "WHITELIST": {
+              "label": "白名单",
+              "subLabel": "接受所有来自此列表的朋友的加入邀请"
+            }
+          },
+          "title": "列表模式"
+        },
+        "onlyBelowPlayerCount": {
+          "description": "这包括你自己",
+          "title": "只有当你的世界中少于<strong>{count}</strong> 个玩家时"
+        },
+        "onlyIfSleepModeEnabled": {
+          "title": "仅当睡眠模式开启时生效"
+        },
+        "presetOptions": {
+          "options": {
+            "NONE": "不改变"
+          }
+        }
+      },
+      "otherAutomations": {
+        "changeListPreset": {
+          "onSleepDisable": {
+            "description": "当睡眠模式禁用时，加载保存的列表预设",
+            "title": "当我醒来时加载预设"
+          },
+          "onSleepEnable": {
+            "description": "当睡眠模式开启时，加载保存的列表预设",
+            "title": "当我进入睡眠模式时加载预设"
+          },
+          "onSleepPreparation": {
+            "description": "当你准备进入睡眠模式时，加载保存的列表预设",
+            "title": "当我准备睡觉时加载预设"
+          }
+        },
+        "description": "在这里，你可以找到改变各功能工作方式的自动化",
+        "title": "其他自动化"
+      },
+      "userOnBusyStatus": "当你处于请勿打扰状态（红灯）时，好友将无法正常发送加入请求。但通过 VRCX 等第三方工具发送的邀请请求，OyasumiVR 仍会接受。",
+      "userOnJoinMeStatus": "无论你的设置如何，VRChat 都会自动接受所有加入请求，因为你的状态是加入我（蓝色）"
+    },
+    "invitesTab": {
+      "options": {
+        "declineOnInviteWhileAsleep": {
+          "customMessage": {
+            "description": "输入当拒绝邀请时发送的消息",
+            "placeholder": "我正在睡觉哦！（由 OyasumiVR 自动拒绝）",
+            "title": "自定义消息"
+          },
+          "description": "在睡眠模式开启时自动拒绝邀请",
+          "title": "睡觉时自动拒绝邀请"
+        }
+      }
+    },
+    "playerList": {
+      "blacklist": "玩家黑名单",
+      "whitelist": "玩家白名单"
+    },
+    "soundsTab": {
+      "options": {
+        "playSoundOnInvite": {
+          "description": "收到邀请时播放提示音",
+          "onlyWhenAsleep": {
+            "description": "仅在睡眠模式启用时播放提示音",
+            "title": "仅在睡觉时"
+          },
+          "title": "邀请时播放提示音"
+        },
+        "playSoundOnInviteRequest": {
+          "description": "收到邀请请求时播放提示音",
+          "onlyWhenAsleep": {
+            "description": "仅在睡眠模式启用时播放提示音",
+            "title": "仅在睡觉时"
+          },
+          "onlyWhenUnhandled": {
+            "description": "仅在邀请请求未被自动接受或拒绝时播放提示音",
+            "title": "仅在未自动处理时"
+          },
+          "title": "邀请请求时播放提示音"
+        }
+      }
+    },
+    "tabs": {
+      "inviteRequests": "邀请请求",
+      "invites": "邀请",
+      "sounds": "声音"
+    }
   },
   "join-notifications": {
     "description": "当其他玩家进入或离开你的世界时，显示通知消息并播放提示音。如果你希望 OyasumiVR 在有人加入你时唤醒你，这个功能将会非常实用。",
@@ -1794,77 +1760,9 @@
     }
   },
   "power-automations": {
-    "devicePowerOff": {
-      "onBatteryLevel": {
-        "controllers": {
-          "description": "当电池电量低于",
-          "onlyDuringSleepMode": {
-            "description": "只有在开启睡眠模式时，才以这种方式关闭控制器",
-            "title": "仅当睡眠模式开启时"
-          },
-          "powerOffConflict": {
-            "action": "睡眠检测",
-            "description": "由于你已将睡眠模式设置为在所有控制器关闭时启动，因此启用此自动化操作可能会导致你无意中开启睡眠模式。其他自动化功能可能会对此做出反应，这可能不是你想要的。你可以在睡眠检测的设置中关闭这种行为。",
-            "title": "警告： 这可能会触发另一个自动化操作！"
-          },
-          "title": "关闭控制器"
-        },
-        "description": "当控制器或追踪器的电量低于一定百分比时，关闭其电源。",
-        "title": "电池电量",
-        "trackers": {
-          "description": "当电池电量低于",
-          "onlyDuringSleepMode": {
-            "description": "只有在睡眠模式开启时，才以这种方法关闭追踪器",
-            "title": "仅当睡眠模式开启时生效"
-          },
-          "title": "关闭追踪器"
-        }
-      },
-      "onCharge": {
-        "description": "当设备接入充电器时，将其关闭",
-        "optionControllers": {
-          "description": "当它正在充电时",
-          "title": "关闭控制器"
-        },
-        "optionTrackers": {
-          "description": "当它正在充电时",
-          "title": "关闭追踪器"
-        },
-        "title": "充电时"
-      },
-      "onSleepModeEnable": {
-        "description": "开启睡眠模式时关闭设备。",
-        "hint": "你可以在 <a class=\"sleepDetectionLink\"> 睡眠检测 </a>中配置何时开启睡眠模式。",
-        "optionControllers": "关闭所有控制器",
-        "optionTrackers": "关闭所有追踪器",
-        "title": "当我入睡时"
-      }
-    },
-    "enableLighthouseControl": "启用",
     "error": {
       "adapterError": "在试图与你的蓝牙适配器进行通信时发生了错误。请确保你的蓝牙适配器已启用，然后再试一次。",
       "noAdapter": "在你的系统中找不到蓝牙适配器。请确认你的系统配备了蓝牙适配器，并且已经启用。"
-    },
-    "lighthouseControlDisabledWarning": "由于你在 OyasumiVR 的设置中禁用了基站的功耗控制，所以这些自动化功能不可用。如果你想使用这些自动化功能，请启用该功能。",
-    "lighthousePowerOff": {
-      "description": "让 OyasumiVR 自动关闭你的基站。",
-      "onSteamVRStop": {
-        "description": "当 SteamVR 停止时，自动关闭你的基站",
-        "title": "当 SteamVR 停止时"
-      },
-      "title": "关闭基站"
-    },
-    "lighthousePowerOn": {
-      "description": "让 OyasumiVR 自动打开你的基站。",
-      "onOyasumiStart": {
-        "description": "当 OyasumiVR 启动时，自动打开你的基站",
-        "title": "当 OyasumiVR 启动时"
-      },
-      "onSteamVRStart": {
-        "description": "当 SteamVR 启动时，自动打开你的基站",
-        "title": "当 SteamVR 启动时"
-      },
-      "title": "开启基站"
     },
     "powerManagementWarning": "当选择使用 OyasumiVR 的自动化操作来打开或关闭你的基站时，建议你在 SteamVR 的基站设置中禁用电源管理。",
     "tabs": {
@@ -2370,10 +2268,7 @@
       "cancel": "立即取消",
       "stage": {
         "POWERING_DOWN": "正在关闭",
-        "QUITTING_STEAMVR": "退出 SteamVR...",
-        "TURNING_OFF_BASESTATIONS": "关闭基站...",
-        "TURNING_OFF_CONTROLLERS": "关闭控制器...",
-        "TURNING_OFF_TRACKERS": "关闭追踪器..."
+        "QUITTING_STEAMVR": "退出 SteamVR..."
       },
       "title": "正在关闭"
     },

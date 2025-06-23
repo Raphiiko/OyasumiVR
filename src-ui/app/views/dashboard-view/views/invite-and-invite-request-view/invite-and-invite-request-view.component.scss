@@ -1,0 +1,24 @@
+:host {
+  height: 100%;
+  display: flex;
+  overflow: hidden;
+}
+
+.pane {
+  width: 100%;
+  .pane.main {
+    flex: 1;
+  }
+}
+
+.pane-content {
+  padding: 2em;
+  overflow-y: overlay;
+  width: 100%;
+}
+
+.player-list-animation-wrapper {
+  app-player-list {
+    min-width: max-content;
+  }
+}

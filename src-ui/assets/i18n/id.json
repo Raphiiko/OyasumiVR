@@ -12,50 +12,6 @@
     "sourceLink": "Kode Sumber @ GitHub",
     "translations": "Terjemahan"
   },
-  "auto-invite-request-accept": {
-    "addFriends": "Tambahkan teman",
-    "blacklist": "Blacklist Player",
-    "description": "OyasumiVR dapat secara otomatis menerima permintaan undangan yang Anda terima. Dengan menggunakan daftar putih atau daftar hitam pemain, Anda dapat memastikan hanya teman yang Anda pilih yang permintaan undangannya akan diterima secara otomatis.",
-    "noPlayersAdded": "Tidak ada pemain yang saat ini ditambahkan ke dalam daftar.",
-    "options": {
-      "enable": {
-        "description": "Secara otomatis menerima permintaan undangan dari teman.",
-        "title": "Nyalakan"
-      },
-      "listMode": {
-        "description": "Bagaimana daftar pemain beroperasi",
-        "options": {
-          "BLACKLIST": {
-            "label": "Blacklist",
-            "subLabel": "Menerima dari teman yang tidak ada dalam daftar"
-          },
-          "DISABLED": {
-            "label": "Matikan",
-            "subLabel": "Terima dari semua orang"
-          },
-          "WHITELIST": {
-            "label": "Whitelist",
-            "subLabel": "Menerima dari teman dalam daftar"
-          }
-        },
-        "title": "Mode Daftar"
-      },
-      "onlyIfSleepModeEnabled": {
-        "title": "Hanya jika mode tidur diaktifkan"
-      }
-    },
-    "removeModal": {
-      "message": "Apakah Anda yakin ingin menghapus ''{name}'' dari daftar Anda?",
-      "title": "Konfirmasi Penghapusan"
-    },
-    "removeModalBulk": {
-      "message": "Apakah Anda yakin ingin menghapus semua orang dari daftar Anda?",
-      "title": "Konfirmasi penghapusan"
-    },
-    "title": "Terima Otomatis Permintaan Undangan",
-    "userOnJoinMeStatus": "VRChat akan secara otomatis menerima semua permintaan undangan terlepas dari pengaturan Anda, karena status Anda dalam keadaan join me (biru).",
-    "whitelist": "Whitelist Player"
-  },
   "brightness-automations": {
     "brightness": {
       "title": "Atur Kecerahan ke"
@@ -127,7 +83,6 @@
     },
     "dashboard-navbar": {
       "about": "Tentang OyasumiVR",
-      "autoInviteRequestAccept": "Terima Otomatis \nPermintaan Invite",
       "brightnessAutomations": "Otomatisasi Kecerahan",
       "chaperoneAutomations": "Otomatisasi Chaperone",
       "gpuAutomations": "Otomatisasi GPU",
@@ -151,9 +106,6 @@
         "GenericTracker": "Tracker",
         "Lighthouse": "Base Stations",
         "other": "Lainnya"
-      },
-      "deviceName": {
-        "lighthouseV2": "Lighthouse V2"
       },
       "lighthouseStatus": {
         "booting": "Booting",
@@ -228,66 +180,6 @@
         "hardwareBrightnessChanged": {
           "reason": {
             "SLEEP_PREPARATION": "Saat Anda bersiap untuk tidur"
-          }
-        },
-        "lighthouseSetPowerState": {
-          "ALL": {
-            "on": {
-              "reasons": {
-                "MANUAL": "Dinyalakan manual",
-                "OYASUMI_START": "Disaat OyasumiVR dimulai",
-                "STEAMVR_START": "Disaat SteamVR Menyala",
-                "STEAMVR_STOP": "Disaat SteamVR Dimatikan"
-              },
-              "title": "Nyalakan semua base station"
-            },
-            "sleep": {
-              "reasons": {
-                "MANUAL": "Dinyalakan manual",
-                "OYASUMI_START": "Disaat OyasumiVR dimulai",
-                "STEAMVR_START": "Disaat SteamVR Menyala",
-                "STEAMVR_STOP": "Disaat SteamVR Dimatikan"
-              },
-              "title": "Atur semua base station ke mode tidur"
-            },
-            "standby": {
-              "reasons": {
-                "MANUAL": "Dinyalakan manual",
-                "OYASUMI_START": "Disaat OyasumiVR dimulai",
-                "STEAMVR_START": "Disaat SteamVR Menyala",
-                "STEAMVR_STOP": "Disaat SteamVR Dimatikan"
-              },
-              "title": "Atur semua base station ke mode siaga"
-            }
-          },
-          "SINGLE": {
-            "on": {
-              "reasons": {
-                "MANUAL": "Dinyalakan manual",
-                "OYASUMI_START": "Disaat OyasumiVR dimulai",
-                "STEAMVR_START": "Disaat SteamVR Menyala",
-                "STEAMVR_STOP": "Disaat SteamVR Dimatikan"
-              },
-              "title": "Menyalakan Base Station"
-            },
-            "sleep": {
-              "reasons": {
-                "MANUAL": "Dinyalakan manual",
-                "OYASUMI_START": "Disaat OyasumiVR dimulai",
-                "STEAMVR_START": "Disaat SteamVR Menyala",
-                "STEAMVR_STOP": "Disaat SteamVR Dimatikan"
-              },
-              "title": "Mengatur base station ke mode tidur"
-            },
-            "standby": {
-              "reasons": {
-                "MANUAL": "Dinyalakan manual",
-                "OYASUMI_START": "Disaat OyasumiVR dimulai",
-                "STEAMVR_START": "Disaat SteamVR Menyala",
-                "STEAMVR_STOP": "Disaat SteamVR Dimatikan"
-              },
-              "title": "Mengatur semua base station ke mode siaga"
-            }
           }
         },
         "msiAfterburnerProfileSet": {
@@ -471,6 +363,18 @@
       "errorCounter": "{value} Validasi Error",
       "test": "Tes"
     },
+    "player-list": {
+      "addFriends": "Tambahkan teman",
+      "noPlayersAdded": "Tidak ada pemain yang saat ini ditambahkan ke dalam daftar.",
+      "removeModal": {
+        "message": "Apakah Anda yakin ingin menghapus ''{name}'' dari daftar Anda?",
+        "title": "Konfirmasi Penghapusan"
+      },
+      "removeModalBulk": {
+        "message": "Apakah Anda yakin ingin menghapus semua orang dari daftar Anda?",
+        "title": "Konfirmasi penghapusan"
+      }
+    },
     "select-box": {
       "defaultPlaceholder": "Pilih..."
     },
@@ -582,6 +486,44 @@
     },
     "title": "Otomatisasi GPU"
   },
+  "invite-and-invite-requests": {
+    "inviteRequestsTab": {
+      "description": "OyasumiVR dapat secara otomatis menerima permintaan undangan yang Anda terima. Dengan menggunakan daftar putih atau daftar hitam pemain, Anda dapat memastikan hanya teman yang Anda pilih yang permintaan undangannya akan diterima secara otomatis.",
+      "options": {
+        "listMode": {
+          "description": "Bagaimana daftar pemain beroperasi",
+          "options": {
+            "BLACKLIST": {
+              "label": "Blacklist",
+              "subLabel": "Menerima dari teman yang tidak ada dalam daftar"
+            },
+            "DISABLED": {
+              "label": "Matikan",
+              "subLabel": "Terima dari semua orang"
+            },
+            "WHITELIST": {
+              "label": "Whitelist",
+              "subLabel": "Menerima dari teman dalam daftar"
+            }
+          },
+          "title": "Mode Daftar"
+        },
+        "onlyIfSleepModeEnabled": {
+          "title": "Hanya jika mode tidur diaktifkan"
+        }
+      },
+      "userOnJoinMeStatus": "VRChat akan secara otomatis menerima semua permintaan undangan terlepas dari pengaturan Anda, karena status Anda dalam keadaan join me (biru)."
+    },
+    "playerList": {
+      "blacklist": "Blacklist Player",
+      "whitelist": "Whitelist Player"
+    },
+    "tabs": {
+      "inviteRequests": "Permintaan Undangan",
+      "invites": "Undangan",
+      "sounds": "Suara"
+    }
+  },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "Preset ini menggunakan solusi yang memiliki beberapa masalah. Harap gunakan preset ini hanya jika Anda tidak dapat menggunakan preset GoGo Loco yang lebih baru. Jika avatar Anda masih menggunakan versi GoGo Loco yang lebih lama, Anda disarankan untuk memperbarui avatar Anda untuk menggunakan versi GoGo Loco terbaru.",
     "oscScriptEditorErrors": {
@@ -621,12 +563,7 @@
     "notification": "Mendeteksi kemungkinan mimpi buruk, karena Anda mengalami peningkatan detak jantung yang berkepanjangan.",
     "playSound": {
       "description": "Minta OyasumiVR membangunkan Anda dengan suara saat Anda mungkin mengalami mimpi buruk",
-      "title": "Mainkan suara",
-      "volume": {
-        "description": "Konfigurasikan volume saat efek suara diputar",
-        "test": "Tes",
-        "title": "Volume suara"
-      }
+      "title": "Mainkan suara"
     },
     "title": "Deteksi Mimpi Buruk"
   },
@@ -791,77 +728,9 @@
     }
   },
   "power-automations": {
-    "devicePowerOff": {
-      "onBatteryLevel": {
-        "controllers": {
-          "description": "Ketika level baterainya turun di bawah",
-          "onlyDuringSleepMode": {
-            "description": "Matikan pengontrol dengan cara ini hanya saat mode tidur diaktifkan",
-            "title": "Hanya saat mode tidur diaktifkan"
-          },
-          "powerOffConflict": {
-            "action": "Deteksi Tidur",
-            "description": "Karena Anda telah mengatur mode tidur untuk diaktifkan ketika semua pengontrol dimatikan, mengaktifkan otomatisasi ini mungkin menyebabkan Anda mengaktifkan mode tidur secara tidak sengaja. Otomatisasi lain mungkin merespons hal ini, dan mungkin bukan yang Anda inginkan. Anda dapat menonaktifkan perilaku ini di pengaturan Deteksi Tidur.",
-            "title": "Peringatan: Ini mungkin memicu otomatisasi lain!"
-          },
-          "title": "Matikan kontroler"
-        },
-        "description": "Matikan perangkat saat level baterai turun di bawah persentase tertentu.",
-        "title": "Level baterai",
-        "trackers": {
-          "description": "Ketika level baterainya turun di bawah",
-          "onlyDuringSleepMode": {
-            "description": "Hanya matikan tracker dengan cara ini saat mode tidur diaktifkan",
-            "title": "Hanya saat mode tidur diaktifkan"
-          },
-          "title": "Matikan tracker"
-        }
-      },
-      "onCharge": {
-        "description": "Mematikan perangkat secara otomatis saat Anda meletakkannya di pengisi daya.",
-        "optionControllers": {
-          "description": "Saat sedang mengisi daya",
-          "title": "Matikan kontroler"
-        },
-        "optionTrackers": {
-          "description": "Saat sedang mengisi daya",
-          "title": "Matikan tracker"
-        },
-        "title": "Saat mengisi daya"
-      },
-      "onSleepModeEnable": {
-        "description": "Matikan perangkat saat mode tidur diaktifkan.",
-        "hint": "Anda dapat mengonfigurasi kapan mode tidur diaktifkan di <a class=\"sleepDetectionLink\">Deteksi Tidur</a>",
-        "optionControllers": "Matikan semua kontroler",
-        "optionTrackers": "Matikan semua tracker",
-        "title": "Ketika saya pergi tidur"
-      }
-    },
-    "enableLighthouseControl": "Aktifkan",
     "error": {
       "adapterError": "Terjadi kesalahan saat mencoba berkomunikasi dengan adaptor Bluetooth. Pastikan adaptor Bluetooth Anda telah diaktifkan dan coba lagi.",
       "noAdapter": "Tidak ada adaptor Bluetooth yang ditemukan di sistem Anda. Pastikan sistem Anda dilengkapi dengan adaptor Bluetooth dan adaptor tersebut diaktifkan."
-    },
-    "lighthouseControlDisabledWarning": "Otomatisasi ini tidak tersedia karena Anda telah menonaktifkan kontrol daya base station dalam pengaturan OyasumiVR. Aktifkan ini jika Anda ingin menggunakan otomatisasi ini.",
-    "lighthousePowerOff": {
-      "description": "Minta OyasumiVR secara otomatis mematikan stasiun pangkalan Anda.",
-      "onSteamVRStop": {
-        "description": "Secara otomatis mematikan base station Anda ketika SteamVR berhenti",
-        "title": "Ketika SteamVR berhenti"
-      },
-      "title": "Matikan Base Station"
-    },
-    "lighthousePowerOn": {
-      "description": "Minta OyasumiVR secara otomatis menyalakan base station Anda.",
-      "onOyasumiStart": {
-        "description": "Secara otomatis menghidupkan base station Anda ketika OyasumiVR dimulai",
-        "title": "Ketika OyasumiVR dimulai"
-      },
-      "onSteamVRStart": {
-        "description": "Secara otomatis menghidupkan base station Anda ketika SteamVR dimulai",
-        "title": "Saat SteamVR dimulai"
-      },
-      "title": "Nyalakan Base Station"
     },
     "powerManagementWarning": "Ketika memilih untuk menggunakan otomatisasi OyasumiVR untuk menghidupkan atau mematikan base station Anda, Anda disarankan untuk menonaktifkan manajemen daya dalam pengaturan base station SteamVR.",
     "tabs": {
@@ -1190,10 +1059,7 @@
       "cancel": "Batalkan",
       "stage": {
         "POWERING_DOWN": "Mematikan Windows...",
-        "QUITTING_STEAMVR": "Mematikan SteamVR...",
-        "TURNING_OFF_BASESTATIONS": "Mematikan base stations...",
-        "TURNING_OFF_CONTROLLERS": "Mematikan kontroler...",
-        "TURNING_OFF_TRACKERS": "Mematikan tracker..."
+        "QUITTING_STEAMVR": "Mematikan SteamVR..."
       },
       "title": "Mematikan"
     },

@@ -1,0 +1,46 @@
+<div class="pane main">
+  <div class="pane-title" translate>invite-and-invite-requests.title</div>
+  <div class="tab-bar">
+    <div
+      class="tab"
+      [class.active]="activeTab === 'invite-requests'"
+      (click)="activeTab = 'invite-requests'"
+    >
+      <div class="tab-label" translate>invite-and-invite-requests.tabs.inviteRequests</div>
+    </div>
+    <div class="tab" [class.active]="activeTab === 'invites'" (click)="activeTab = 'invites'">
+      <div class="tab-label" translate>invite-and-invite-requests.tabs.invites</div>
+    </div>
+    <div class="tab" [class.active]="activeTab === 'sounds'" (click)="activeTab = 'sounds'">
+      <div class="tab-label" translate>invite-and-invite-requests.tabs.sounds</div>
+    </div>
+  </div>
+  <div class="pane-content">
+    <div class="setting-view-container">
+      <app-invite-requests-tab
+        *ngIf="activeTab === 'invite-requests'"
+        [loggedIn]="loggedIn"
+        [isOnBusyStatus]="isOnBusyStatus"
+        [isOnJoinMeStatus]="isOnJoinMeStatus"
+      ></app-invite-requests-tab>
+      <app-invites-tab *ngIf="activeTab === 'invites'"></app-invites-tab>
+      <app-sounds-tab *ngIf="activeTab === 'sounds'"></app-sounds-tab>
+    </div>
+  </div>
+</div>
+<div
+  *ngIf="config.listMode !== 'DISABLED' && activeTab === 'invite-requests'"
+  @hshrink
+  class="player-list-animation-wrapper"
+>
+  <app-player-list
+    [title]="
+      {
+        WHITELIST: 'invite-and-invite-requests.playerList.whitelist',
+        BLACKLIST: 'invite-and-invite-requests.playerList.blacklist',
+      }[config.listMode]
+    "
+    [playerIds]="playerIds"
+    (playerIdsChange)="updatePlayerIds($event)"
+  ></app-player-list>
+</div>

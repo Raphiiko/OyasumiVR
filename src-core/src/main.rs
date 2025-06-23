@@ -173,9 +173,11 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
 
     #[cfg(debug_assertions)]
     {
-        builder = builder.target(tauri_plugin_log::Target::new(
-            tauri_plugin_log::TargetKind::Webview,
-        ));
+        builder = builder
+            .target(tauri_plugin_log::Target::new(
+                tauri_plugin_log::TargetKind::Webview,
+            ))
+            .level(LevelFilter::Debug);
     }
 
     builder.build()

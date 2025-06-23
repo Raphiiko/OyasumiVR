@@ -91,6 +91,7 @@ function resetToLatest(data: any): any {
 
 function from17to18(data: any): any {
   data.version = 18;
+  // Migrate notification sounds
   if (data.JOIN_NOTIFICATIONS) {
     if (data.JOIN_NOTIFICATIONS.joinSound) {
       data.JOIN_NOTIFICATIONS.joinSoundMode = data.JOIN_NOTIFICATIONS.joinSound;
@@ -109,6 +110,7 @@ function from17to18(data: any): any {
   delete data.NIGHTMARE_DETECTION.playSound;
   delete data.NIGHTMARE_DETECTION.soundVolume;
 
+  // Migrate OSC scripts
   if (data.OSC_GENERAL.onSleepModeEnable) {
     data.OSC_GENERAL.onSleepModeEnable = migrateOscScript(data.OSC_GENERAL.onSleepModeEnable);
   }
@@ -124,6 +126,121 @@ function from17to18(data: any): any {
         data.SLEEPING_ANIMATIONS.oscScripts[key]
       );
     });
+  }
+
+  // Helper function to map OVRDeviceClass to DMDeviceType
+  const mapOVRDeviceClassToDMDeviceType = (ovrClass: string): string | null => {
+    switch (ovrClass) {
+      case 'HMD':
+        return 'HMD';
+      case 'Controller':
+        return 'CONTROLLER';
+      case 'GenericTracker':
+        return 'TRACKER';
+      case 'TrackingReference':
+        return 'LIGHTHOUSE';
+      default:
+        return null;
+    }
+  };
+
+  // Migrate device power automations
+  data.DEVICE_POWER_AUTOMATIONS = structuredClone(
+    AUTOMATION_CONFIGS_DEFAULT.DEVICE_POWER_AUTOMATIONS
+  );
+
+  // Migrate TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE
+  if (
+    data.TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE?.enabled &&
+    data.TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE.deviceClasses?.length
+  ) {
+    const mappedTypes = data.TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE.deviceClasses
+      .map(mapOVRDeviceClassToDMDeviceType)
+      .filter(Boolean);
+    if (mappedTypes.length > 0) {
+      data.DEVICE_POWER_AUTOMATIONS.turnOffDevicesOnSleepModeEnable.types = mappedTypes;
+    }
+  }
+
+  // Migrate TURN_OFF_DEVICES_WHEN_CHARGING
+  if (
+    data.TURN_OFF_DEVICES_WHEN_CHARGING?.enabled &&
+    data.TURN_OFF_DEVICES_WHEN_CHARGING.deviceClasses?.length
+  ) {
+    const mappedTypes = data.TURN_OFF_DEVICES_WHEN_CHARGING.deviceClasses
+      .map(mapOVRDeviceClassToDMDeviceType)
+      .filter(Boolean);
+    if (mappedTypes.length > 0) {
+      data.DEVICE_POWER_AUTOMATIONS.turnOffDevicesWhenCharging.types = mappedTypes;
+    }
+  }
+
+  // Migrate TURN_OFF_DEVICES_ON_BATTERY_LEVEL
+  if (data.TURN_OFF_DEVICES_ON_BATTERY_LEVEL?.enabled) {
+    const batteryConfig = data.TURN_OFF_DEVICES_ON_BATTERY_LEVEL;
+    const deviceTypes = [];
+
+    if (batteryConfig.turnOffControllers) {
+      deviceTypes.push('CONTROLLER');
+      data.DEVICE_POWER_AUTOMATIONS.turnOffDevicesBelowBatteryLevel_threshold =
+        batteryConfig.turnOffControllersAtLevel;
+      data.DEVICE_POWER_AUTOMATIONS.turnOffDevicesBelowBatteryLevel_onlyWhileAsleep =
+        batteryConfig.turnOffControllersOnlyDuringSleepMode;
+    }
+
+    if (batteryConfig.turnOffTrackers) {
+      deviceTypes.push('TRACKER');
+      data.DEVICE_POWER_AUTOMATIONS.turnOffDevicesBelowBatteryLevel_threshold =
+        batteryConfig.turnOffTrackersAtLevel;
+      data.DEVICE_POWER_AUTOMATIONS.turnOffDevicesBelowBatteryLevel_onlyWhileAsleep =
+        batteryConfig.turnOffTrackersOnlyDuringSleepMode;
+    }
+
+    if (deviceTypes.length > 0) {
+      data.DEVICE_POWER_AUTOMATIONS.turnOffDevicesBelowBatteryLevel.types = deviceTypes;
+    }
+  }
+
+  // Migrate lighthouse automations
+  if (data.TURN_ON_LIGHTHOUSES_ON_OYASUMI_START?.enabled) {
+    data.DEVICE_POWER_AUTOMATIONS.turnOnDevicesOnOyasumiStart.types.push('LIGHTHOUSE');
+  }
+
+  if (data.TURN_ON_LIGHTHOUSES_ON_STEAMVR_START?.enabled) {
+    data.DEVICE_POWER_AUTOMATIONS.turnOnDevicesOnSteamVRStart.types.push('LIGHTHOUSE');
+  }
+
+  if (data.TURN_OFF_LIGHTHOUSES_ON_STEAMVR_STOP?.enabled) {
+    data.DEVICE_POWER_AUTOMATIONS.turnOffDevicesOnSteamVRStop.types.push('LIGHTHOUSE');
+  }
+
+  // Delete old automation configs
+  delete data.TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE;
+  delete data.TURN_OFF_DEVICES_WHEN_CHARGING;
+  delete data.TURN_OFF_DEVICES_ON_BATTERY_LEVEL;
+  delete data.TURN_ON_LIGHTHOUSES_ON_OYASUMI_START;
+  delete data.TURN_ON_LIGHTHOUSES_ON_STEAMVR_START;
+  delete data.TURN_OFF_LIGHTHOUSES_ON_STEAMVR_STOP;
+
+  // Migrate shutdown automations
+  if (data.SHUTDOWN_AUTOMATIONS) {
+    data.SHUTDOWN_AUTOMATIONS.turnOffDevices = {
+      devices: [],
+      types: [],
+      tagIds: [],
+    };
+    if (data.SHUTDOWN_AUTOMATIONS.turnOffControllers) {
+      data.SHUTDOWN_AUTOMATIONS.turnOffDevices.types.push('CONTROLLER');
+    }
+    if (data.SHUTDOWN_AUTOMATIONS.turnOffTrackers) {
+      data.SHUTDOWN_AUTOMATIONS.turnOffDevices.types.push('TRACKER');
+    }
+    if (data.SHUTDOWN_AUTOMATIONS.turnOffBaseStations) {
+      data.SHUTDOWN_AUTOMATIONS.turnOffDevices.types.push('LIGHTHOUSE');
+    }
+    delete data.SHUTDOWN_AUTOMATIONS.turnOffControllers;
+    delete data.SHUTDOWN_AUTOMATIONS.turnOffTrackers;
+    delete data.SHUTDOWN_AUTOMATIONS.turnOffBaseStations;
   }
 
   return data;

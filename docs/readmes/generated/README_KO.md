@@ -16,7 +16,6 @@
     <a href="https://raphiiko.booth.pm/items/4216880"><img alt="BOOTH.pm Page" src="https://img.shields.io/badge/Store-Booth.pm-red"/></a>
     <a href="https://raphiiko.gumroad.com/l/oyasumi?layout=profile"><img alt="Gumroad Page" src="https://img.shields.io/badge/Store-Gumroad-important"/></a>
     <br>
-    <a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
     <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
     <br>
     <br>
@@ -78,7 +77,7 @@
 
 ## 다운로드 및 설치
 
-<img align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/8a18be5c-6698-420e-847a-a5b6f533c8ed" width="180">
+<img align="right" src="https://github.com/user-attachments/assets/f68dbaeb-717c-4862-8c52-b7639d65cb32" width="130">
 원하는 곳에서 최신 인스톨러를 다운로드할 수 있어요:
 
 - [Steam](https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/) (_**권장 설치 방법**_)

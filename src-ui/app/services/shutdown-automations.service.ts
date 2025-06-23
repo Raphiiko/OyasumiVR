@@ -36,13 +36,15 @@ import { EventLogService } from './event-log.service';
 import { listen } from '@tauri-apps/api/event';
 import { TranslateService } from '@ngx-translate/core';
 import { VRChatService } from './vrchat-api/vrchat.service';
+import { DeviceManagerService } from './device-manager.service';
+import { DMKnownDevice } from '../models/device-manager';
+import { LighthouseDevice } from '../models/lighthouse-device';
+import { OVRDevice } from '../models/ovr-device';
 
 export type ShutdownSequenceStage = (typeof ShutdownSequenceStageOrder)[number];
 export const ShutdownSequenceStageOrder = [
   'IDLE',
-  'TURNING_OFF_CONTROLLERS',
-  'TURNING_OFF_TRACKERS',
-  'TURNING_OFF_BASESTATIONS',
+  'TURNING_OFF_DEVICES',
   'QUITTING_STEAMVR',
   'POWERING_DOWN',
 ];
@@ -64,6 +66,9 @@ export class ShutdownAutomationsService {
   public stage = this._stage.asObservable();
   private cancelFlag = false;
   private cancelEvent = new Subject<void>();
+  private turnOffOvrDevices: OVRDevice[] = [];
+  private turnOffLighthouseDevices: LighthouseDevice[] = [];
+  private turnOffKnownDevices: DMKnownDevice[] = [];
 
   constructor(
     private sleepService: SleepService,
@@ -74,7 +79,8 @@ export class ShutdownAutomationsService {
     private lighthouse: LighthouseService,
     private eventLog: EventLogService,
     private translate: TranslateService,
-    private vrchat: VRChatService
+    private vrchat: VRChatService,
+    private deviceManager: DeviceManagerService
   ) {}
 
   async init() {
@@ -85,6 +91,16 @@ export class ShutdownAutomationsService {
         tap((config) => (this.config = config))
       )
       .subscribe();
+    this.automationConfigService.configs
+      .pipe(
+        map((configs) => configs.SHUTDOWN_AUTOMATIONS.turnOffDevices),
+        switchMap((selection) => this.deviceManager.getDevicesForSelectionStream(selection))
+      )
+      .subscribe((devices) => {
+        this.turnOffOvrDevices = devices.ovrDevices;
+        this.turnOffLighthouseDevices = devices.lighthouseDevices;
+        this.turnOffKnownDevices = devices.knownDevices;
+      });
     this.automationConfigService.configs
       .pipe(
         map((configs) => configs.SHUTDOWN_AUTOMATIONS),
@@ -133,10 +149,10 @@ export class ShutdownAutomationsService {
     combineLatest([this.vrchat.world, this.vrchat.vrchatProcessActive])
       .pipe(
         tap(([world, active]) => {
-          if (world.playerCount > 1) this.wasNotAlone = true;
+          if (world.players.length > 1) this.wasNotAlone = true;
           if (!active) this.wasNotAlone = false;
         }),
-        map(([world, active]) => (active && world.loaded ? world.playerCount : 0)),
+        map(([world, active]) => (active && world.loaded ? world.players.length : 0)),
         distinctUntilChanged(),
         map((playerCount) => playerCount === 1 && this.wasNotAlone)
       )
@@ -153,14 +169,11 @@ export class ShutdownAutomationsService {
     });
   }
 
-  getApplicableStages(config?: ShutdownAutomationsConfig): ShutdownSequenceStage[] {
-    config ??= this.config;
+  getApplicableStages(): ShutdownSequenceStage[] {
     const stages: ShutdownSequenceStage[] = [];
-    if (config.turnOffControllers) stages.push('TURNING_OFF_CONTROLLERS');
-    if (config.turnOffTrackers) stages.push('TURNING_OFF_TRACKERS');
-    if (config.turnOffBaseStations) stages.push('TURNING_OFF_BASESTATIONS');
-    if (config.quitSteamVR) stages.push('QUITTING_STEAMVR');
-    if (config.powerDownWindows) stages.push('POWERING_DOWN');
+    if (this.turnOffKnownDevices.length) stages.push('TURNING_OFF_DEVICES');
+    if (this.config.quitSteamVR) stages.push('QUITTING_STEAMVR');
+    if (this.config.powerDownWindows) stages.push('POWERING_DOWN');
     return stages;
   }
 
@@ -187,9 +200,7 @@ export class ShutdownAutomationsService {
       reason,
       stages,
     } as EventLogShutdownSequenceStarted);
-    if (!(await this.turnOffControllers())) return;
-    if (!(await this.turnOffTrackers())) return;
-    if (!(await this.turnOffBaseStations())) return;
+    if (!(await this.turnOffDevices())) return;
     if (!(await this.quitSteamVR())) return;
     if (!(await this.powerDownWindows())) return;
     this._stage.next('IDLE');
@@ -294,24 +305,26 @@ export class ShutdownAutomationsService {
     return true;
   }
 
-  private async turnOffControllers(): Promise<boolean> {
+  private async turnOffDevices(): Promise<boolean> {
     if (this.cancelFlag) {
       this.cancelFlag = false;
       this._stage.next('IDLE');
       return false;
     }
-    if (!this.config.turnOffControllers) return true;
-    this._stage.next('TURNING_OFF_CONTROLLERS');
-    // Get devices to turn off
-    const devices = await firstValueFrom(
-      this.openvr.devices.pipe(
-        map((devices) => devices.filter((d) => d.canPowerOff && d.class === 'Controller'))
-      )
-    );
-    if (devices?.length) {
-      // Turn off controllers
+
+    if (
+      !this.turnOffOvrDevices.length &&
+      (!this.turnOffLighthouseDevices.length ||
+        !this.appSettings.settingsSync.lighthousePowerControl)
+    )
+      return true;
+    this._stage.next('TURNING_OFF_DEVICES');
+
+    if (this.turnOffOvrDevices.length) {
+      // Turn off controllers and trackers
+      const devices = structuredClone(this.turnOffOvrDevices).filter((d) => d.canPowerOff);
       this.lighthouseConsole.turnOffDevices(devices);
-      // Wait for controllers to turn off with a timeout of 10 seconds
+      // Wait for controllers and trackers to turn off with a timeout of 10 seconds
       await firstValueFrom(
         merge(
           interval(250).pipe(
@@ -329,72 +342,16 @@ export class ShutdownAutomationsService {
         )
       );
     }
-    await firstValueFrom(merge(of(null).pipe(delay(1000)), this.cancelEvent));
-    return true;
-  }
 
-  private async turnOffTrackers(): Promise<boolean> {
-    if (this.cancelFlag) {
-      this.cancelFlag = false;
-      this._stage.next('IDLE');
-      return false;
-    }
-    if (!this.config.turnOffTrackers) return true;
-    this._stage.next('TURNING_OFF_TRACKERS');
-    // Get devices to turn off
-    const devices = await firstValueFrom(
-      this.openvr.devices.pipe(
-        map((devices) => devices.filter((d) => d.canPowerOff && d.class === 'GenericTracker'))
-      )
-    );
-    if (devices?.length) {
-      // Turn off trackers
-      this.lighthouseConsole.turnOffDevices(devices);
-      // Wait for trackers to turn off with a timeout of 10 seconds
-      await firstValueFrom(
-        merge(
-          interval(250).pipe(
-            switchMap(() =>
-              this.openvr.devices.pipe(
-                map((newDevices) =>
-                  newDevices.filter((d) => devices.some((d2) => d2.index === d.index))
-                )
-              )
-            ),
-            filter((devices) => devices.every((d) => !d.isTurningOff && !d.canPowerOff))
-          ),
-          of(null).pipe(delay(10000)),
-          this.cancelEvent
-        )
-      );
-    }
-    await firstValueFrom(merge(of(null).pipe(delay(1000)), this.cancelEvent));
-    return true;
-  }
-
-  private async turnOffBaseStations(): Promise<boolean> {
-    if (this.cancelFlag) {
-      this.cancelFlag = false;
-      this._stage.next('IDLE');
-      return false;
-    }
-    const lighthousePowerControl = await firstValueFrom(
-      this.appSettings.settings.pipe(map((settings) => settings.lighthousePowerControl))
-    );
-    if (!this.config.turnOffBaseStations || !lighthousePowerControl) return true;
-    this._stage.next('TURNING_OFF_BASESTATIONS');
-    // Get base stations to turn off
-    const devices = await firstValueFrom(
-      this.lighthouse.devices.pipe(
-        map((devices) => devices.filter((d) => ['on', 'booting'].includes(d.powerState)))
-      )
-    );
-    // Turn them off
-    if (devices?.length) {
-      const offPowerState = await firstValueFrom(
-        this.appSettings.settings.pipe(map((settings) => settings.lighthousePowerOffState))
-      );
-      devices.forEach((device) => this.lighthouse.setPowerState(device, offPowerState));
+    if (
+      this.turnOffLighthouseDevices.length &&
+      this.appSettings.settingsSync.lighthousePowerControl
+    ) {
+      const offPowerState = this.appSettings.settingsSync.lighthousePowerOffState;
+      const devices = structuredClone(this.turnOffLighthouseDevices);
+      devices
+        .filter((d) => d.powerState === 'on' || d.powerState === 'booting')
+        .forEach((device) => this.lighthouse.setPowerState(device, offPowerState));
       // Wait for all base stations to turn off with a timeout of 10 seconds
       await firstValueFrom(
         merge(
@@ -411,6 +368,7 @@ export class ShutdownAutomationsService {
         )
       );
     }
+
     await firstValueFrom(merge(of(null).pipe(delay(1000)), this.cancelEvent));
     return true;
   }

@@ -179,9 +179,9 @@ export class InviteAutomationsService {
     // Stop if there is a player count limit set, and there are more people in the instance than the limit
     if (config.onlyBelowPlayerCountEnabled) {
       const world = await firstValueFrom(this.vrchat.world);
-      if (world.playerCount >= config.onlyBelowPlayerCount) {
+      if (world.players.length >= config.onlyBelowPlayerCount) {
         warn(
-          `[VRChat] Ignoring invite request because there are too many players in the instance (${world.playerCount}>=${config.onlyBelowPlayerCount})`
+          `[VRChat] Ignoring invite request because there are too many players in the instance (${world.players.length}>=${config.onlyBelowPlayerCount})`
         );
         const message = await this.getDeclineMessage(config);
         if (message) {

@@ -301,7 +301,7 @@ export class SettingsStatusInfoViewComponent {
             key: 'Players In World',
             value: vrchat.world.pipe(
               map((w) => {
-                return `${w?.playerCount ?? 'Unknown'}`;
+                return `${w?.players.length ?? 'Unknown'}`;
               })
             ),
           },

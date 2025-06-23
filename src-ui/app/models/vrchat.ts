@@ -1,7 +1,10 @@
 import type { Avatar, InviteMessageType } from 'vrchat/dist';
 
 export interface WorldContext {
-  playerCount: number;
+  players: {
+    displayName: string;
+    userId: string;
+  }[];
   instanceId?: string;
   loaded: boolean;
 }

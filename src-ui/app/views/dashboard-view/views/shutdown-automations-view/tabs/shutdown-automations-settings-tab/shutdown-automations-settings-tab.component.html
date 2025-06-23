@@ -34,59 +34,12 @@
         <span translate>shutdown-automations.sequence.turnOffDevices.title</span>
         <span></span>
       </div>
-      <div class="setting-row-action"></div>
-    </div>
-
-    <div class="setting-row-group">
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>shutdown-automations.sequence.turnOffControllers.title</span>
-          <span translate>shutdown-automations.sequence.turnOffControllers.description</span>
-        </div>
-        <div class="setting-row-action">
-          <label class="switch-toggle">
-            <input
-              type="checkbox"
-              [checked]="config.turnOffControllers"
-              (change)="toggleTurnOffControllers()"
-            />
-            <span class="switch-toggle-slider"></span>
-          </label>
-        </div>
-      </div>
-
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>shutdown-automations.sequence.turnOffTrackers.title</span>
-          <span translate>shutdown-automations.sequence.turnOffTrackers.description</span>
-        </div>
-        <div class="setting-row-action">
-          <label class="switch-toggle">
-            <input
-              type="checkbox"
-              [checked]="config.turnOffTrackers"
-              (change)="toggleTurnOffTrackers()"
-            />
-            <span class="switch-toggle-slider"></span>
-          </label>
-        </div>
-      </div>
-
-      <div class="setting-row" [class.disabled]="lighthouseControlDisabled">
-        <div class="setting-row-label" translate>
-          <span translate>shutdown-automations.sequence.turnOffBaseStations.title</span>
-          <span translate>shutdown-automations.sequence.turnOffBaseStations.description</span>
-        </div>
-        <div class="setting-row-action">
-          <label class="switch-toggle">
-            <input
-              type="checkbox"
-              [checked]="config.turnOffBaseStations"
-              (change)="toggleTurnOffBaseStations()"
-            />
-            <span class="switch-toggle-slider"></span>
-          </label>
-        </div>
+      <div class="setting-row-action">
+        <app-device-selector
+          [allowedDeviceTypes]="['CONTROLLER', 'TRACKER', 'LIGHTHOUSE']"
+          [selection]="config.turnOffDevices"
+          (selectionChange)="onChangeDeviceSelection($event)"
+        ></app-device-selector>
       </div>
     </div>
 

@@ -111,7 +111,7 @@ export class DeviceManagerConfigModalComponent
         map((devices) => devices.find((d) => d.id === lighthouseId))
       )
       .subscribe((device) => {
-        if (!device) this.v1LighthouseMode = 'NONE';
+        if (!device || device.deviceType !== 'lighthouseV1') this.v1LighthouseMode = 'NONE';
         else
           this.v1LighthouseMode = this.lighthouseService.deviceNeedsIdentifier(device)
             ? 'NEEDS_ID'

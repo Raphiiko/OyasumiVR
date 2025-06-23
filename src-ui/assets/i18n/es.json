@@ -66,85 +66,6 @@
       "title": "Volumen"
     }
   },
-  "auto-invite-request-accept": {
-    "addFriends": "Añadir amigos",
-    "blacklist": "Jugador Blacklist",
-    "clearPlayers": "Borrar todo",
-    "conditions": {
-      "description": "Aquí puedes configurar OyasumiVR para que sólo acepte solicitudes de invitación cuando se cumplan ciertas condiciones.",
-      "title": "Condiciones"
-    },
-    "description": "OyasumiVR puede aceptar automáticamente las solicitudes de invitación que recibas. Utilizando la lista blanca o negra de jugadores, puedes asegurarte de que solo se acepten automáticamente las solicitudes de invitación de los amigos que elijas.",
-    "loadPreset": "Cargar preajuste guardado",
-    "loadingFriends": "Cargando amigos...",
-    "noPlayersAdded": "Actualmente no hay jugadores añadidos a la lista.",
-    "options": {
-      "changeListPreset": {
-        "onSleepDisable": {
-          "description": "Cargar un preajuste guardado para la lista de reproductores cuando se desactiva el modo de dormir",
-          "title": "Cargar preajuste al despertar"
-        },
-        "onSleepEnable": {
-          "description": "Cargar un preajuste guardado para la lista de reproductores cuando se activa el modo de dormir",
-          "title": "Cargar preajuste cuando me voy a dormir"
-        },
-        "onSleepPreparation": {
-          "description": "Cargar un preajuste guardado para la lista de reproductores cuando se prepara para ir a dormir",
-          "title": "Cargar preajuste cuando me dispongo a dormir"
-        }
-      },
-      "enable": {
-        "description": "Acepta automáticamente las solicitudes de invitación de tus amigos.",
-        "title": "Habilitar"
-      },
-      "listMode": {
-        "description": "Funcionamiento de la lista de jugadores",
-        "options": {
-          "BLACKLIST": {
-            "label": "Blacklist",
-            "subLabel": "Aceptar de amigos que no estén en la lista"
-          },
-          "DISABLED": {
-            "label": "Desactivado",
-            "subLabel": "Aceptar a todos"
-          },
-          "WHITELIST": {
-            "label": "Whitelist",
-            "subLabel": "Aceptar de los amigos de la lista"
-          }
-        },
-        "title": "Modo Lista"
-      },
-      "onlyBelowPlayerCount": {
-        "description": "Esto te incluye a ti",
-        "title": "Sólo cuando haya menos <strong>{count, plural, one {#</strong> player} de otro {#</strong> players}} en tu mundo"
-      },
-      "onlyIfSleepModeEnabled": {
-        "title": "Sólo cuando el modo dormir está activado"
-      },
-      "presetOptions": {
-        "options": {
-          "NONE": "No cambiar"
-        }
-      }
-    },
-    "otherAutomations": {
-      "description": "Aquí puede encontrar automatizaciones que cambiarán automáticamente el funcionamiento de esta función.",
-      "title": "Otras automatizaciones"
-    },
-    "removeModal": {
-      "message": "¿Está seguro de que desea eliminar ''{name}'' de tu lista?",
-      "title": "Confirmar eliminación"
-    },
-    "removeModalBulk": {
-      "message": "¿Estás seguro de que quieres eliminar a todo el mundo de tu lista?",
-      "title": "Confirmar eliminación"
-    },
-    "savePreset": "Guardar como preajuste",
-    "title": "Aceptar automáticamente solicitudes de invitación",
-    "userOnJoinMeStatus": "VRChat aceptará automáticamente todas las solicitudes de invitación, independientemente de su configuración, porque su estado es en unirse a mí (blue).",
-    "whitelist": "Jugador Whitelist"
-  },
   "brightness-automations": {
     "AT_SUNRISE": {
       "title": "Al amanecer"
@@ -294,7 +215,6 @@
     "dashboard-navbar": {
       "about": "Acerca de OyasumiVR",
       "audioVolumeAutomations": "Automatización volumen de audio",
-      "autoInviteRequestAccept": "Auto Aceptar \nSolicitudes de invitación",
       "brightnessAutomations": "Automatizaciones de brillo",
       "chaperoneAutomations": "Automatizaciones Chaperone",
       "gpuAutomations": "Automatizaciones de GPU",
@@ -350,10 +270,6 @@
         "GenericTracker": "Trackers",
         "Lighthouse": "Estaciones base",
         "other": "Otros"
-      },
-      "deviceName": {
-        "lighthouseV1": "V1 faro",
-        "lighthouseV2": "V2 Faro"
       },
       "deviceRole": {
         "AnkleLeft": "Tobillo izquierdo",
@@ -509,68 +425,27 @@
         },
         "lighthouseSetPowerState": {
           "ALL": {
-            "on": {
-              "reasons": {
-                "HOTKEY": "Como se presionó una tecla de acceso rápido",
-                "MANUAL": "Encendido manual",
-                "OYASUMI_START": "Cuando OyasumiVR comenzó",
-                "STEAMVR_START": "Cuando SteamVR comenzó",
-                "STEAMVR_STOP": "Cuando SteamVR se detuvo"
-              },
-              "title": "Encendido de todas las estaciones base"
-            },
-            "sleep": {
-              "reasons": {
-                "HOTKEY": "Como se presionó una tecla de acceso rápido",
-                "MANUAL": "Ajustar manualmente",
-                "OYASUMI_START": "Cuando OyasumiVR comenzó",
-                "STEAMVR_START": "Cuando SteamVR comenzó",
-                "STEAMVR_STOP": "Cuando SteamVR comenzó"
-              },
-              "title": "Poner todas las estaciones base en modo reposo"
-            },
-            "standby": {
-              "reasons": {
-                "HOTKEY": "Como se presionó una tecla de acceso rápido",
-                "MANUAL": "Ajustar manualmente",
-                "OYASUMI_START": "Cuando OyasumiVR comenzó",
-                "STEAMVR_START": "Cuando SteamVR comenzó",
-                "STEAMVR_STOP": "Cuando SteamVR comenzó"
-              },
-              "title": "Poner todas las estaciones base en modo de espera"
-            }
+            "on": "Encendido de todas las estaciones base",
+            "sleep": "Poner todas las estaciones base en modo reposo",
+            "standby": "Poner todas las estaciones base en modo de espera"
           },
           "SINGLE": {
-            "on": {
-              "reasons": {
-                "HOTKEY": "Como se presionó una tecla de acceso rápido",
-                "MANUAL": "Encendido manual",
-                "OYASUMI_START": "Cuando OyasumiVR comenzó",
-                "STEAMVR_START": "Cuando SteamVR empezó",
-                "STEAMVR_STOP": "Cuando SteamVR se detuvo"
-              },
-              "title": "Encendido de una estación base"
-            },
-            "sleep": {
-              "reasons": {
-                "HOTKEY": "Como se presionó una tecla de acceso rápido",
-                "MANUAL": "Ajustar manualmente",
-                "OYASUMI_START": "Cuando OyasumiVR comenzó",
-                "STEAMVR_START": "Cuando empezó SteamVR",
-                "STEAMVR_STOP": "Cuando SteamVR se detuvo"
-              },
-              "title": "Poner una estación base en modo reposo"
-            },
-            "standby": {
-              "reasons": {
-                "HOTKEY": "Como se presionó una tecla de acceso rápido",
-                "MANUAL": "Ajustar manualmente",
-                "OYASUMI_START": "Cuando OyasumiVR comenzó",
-                "STEAMVR_START": "Cuando SteamVR comenzó",
-                "STEAMVR_STOP": "Cuando SteamVR se detuvo"
-              },
-              "title": "Poner una estación base en modo de espera"
-            }
+            "on": "Encendido de una estación base",
+            "sleep": "Poner una estación base en modo reposo",
+            "standby": "Poner una estación base en modo de espera"
+          },
+          "VARIOUS": {
+            "on": "Encendido de varias estaciones base",
+            "sleep": "Poner varias estaciones base en modo reposo",
+            "standby": "Poner varias estaciones base en modo de espera"
+          },
+          "reasons": {
+            "HOTKEY": "Como se presionó una tecla de acceso rápido",
+            "MANUAL": "Encendido manual",
+            "OYASUMI_START": "Cuando OyasumiVR comenzó",
+            "SLEEP_MODE_DISABLED": "Cuando el modo sueño estaba desactivado",
+            "STEAMVR_START": "Cuando SteamVR comenzó",
+            "STEAMVR_STOP": "Cuando SteamVR se detuvo"
           }
         },
         "msiAfterburnerProfileSet": {
@@ -701,7 +576,9 @@
             "HOTKEY": "Como se presionó una tecla de acceso rápido",
             "MANUAL": "Apagado manual",
             "OSC_CONTROL": "Apagado sobre OSC",
-            "SLEEP_MODE_ENABLED": "Cuando el modo de suspensión estaba activado"
+            "SLEEP_MODE_DISABLED": "Cuando el modo sueño estaba desactivado",
+            "SLEEP_MODE_ENABLED": "Cuando el modo de suspensión estaba activado",
+            "SLEEP_PREPARATION": "Mientras te preparabas para dormir"
           },
           "title": {
             "ALL": "Apagado todos los dispositivos",
@@ -1001,6 +878,20 @@
       }
     },
     "player-list": {
+      "addFriends": "Añadir amigos",
+      "clearPlayers": "Borrar todo",
+      "loadPreset": "Cargar preajuste guardado",
+      "loadingFriends": "Cargando amigos...",
+      "noPlayersAdded": "Actualmente no hay jugadores añadidos a la lista.",
+      "removeModal": {
+        "message": "¿Está seguro de que desea eliminar ''{name}'' de tu lista?",
+        "title": "Confirmar eliminación"
+      },
+      "removeModalBulk": {
+        "message": "¿Estás seguro de que quieres eliminar a todo el mundo de tu lista?",
+        "title": "Confirmar eliminación"
+      },
+      "savePreset": "Guardar como preajuste",
       "title": "Lista de jugadores"
     },
     "select-box": {
@@ -1190,15 +1081,80 @@
     },
     "title": "Automatizaciones específicas de HMD"
   },
+  "invite-and-invite-requests": {
+    "inviteRequestsTab": {
+      "conditions": {
+        "description": "Aquí puedes configurar OyasumiVR para que sólo acepte solicitudes de invitación cuando se cumplan ciertas condiciones.",
+        "title": "Condiciones"
+      },
+      "description": "OyasumiVR puede aceptar automáticamente las solicitudes de invitación que recibas. Utilizando la lista blanca o negra de jugadores, puedes asegurarte de que solo se acepten automáticamente las solicitudes de invitación de los amigos que elijas.",
+      "options": {
+        "listMode": {
+          "description": "Funcionamiento de la lista de jugadores",
+          "options": {
+            "BLACKLIST": {
+              "label": "Blacklist",
+              "subLabel": "Aceptar de amigos que no estén en la lista"
+            },
+            "DISABLED": {
+              "label": "Desactivado",
+              "subLabel": "Aceptar a todos"
+            },
+            "WHITELIST": {
+              "label": "Whitelist",
+              "subLabel": "Aceptar de los amigos de la lista"
+            }
+          },
+          "title": "Modo Lista"
+        },
+        "onlyBelowPlayerCount": {
+          "description": "Esto te incluye a ti",
+          "title": "Sólo cuando haya menos <strong>{count, plural, one {#</strong> player} de otro {#</strong> players}} en tu mundo"
+        },
+        "onlyIfSleepModeEnabled": {
+          "title": "Sólo cuando el modo dormir está activado"
+        },
+        "presetOptions": {
+          "options": {
+            "NONE": "No cambiar"
+          }
+        }
+      },
+      "otherAutomations": {
+        "changeListPreset": {
+          "onSleepDisable": {
+            "description": "Cargar un preajuste guardado para la lista de reproductores cuando se desactiva el modo de dormir",
+            "title": "Cargar preajuste al despertar"
+          },
+          "onSleepEnable": {
+            "description": "Cargar un preajuste guardado para la lista de reproductores cuando se activa el modo de dormir",
+            "title": "Cargar preajuste cuando me voy a dormir"
+          },
+          "onSleepPreparation": {
+            "description": "Cargar un preajuste guardado para la lista de reproductores cuando se prepara para ir a dormir",
+            "title": "Cargar preajuste cuando me dispongo a dormir"
+          }
+        },
+        "description": "Aquí puede encontrar automatizaciones que cambiarán automáticamente el funcionamiento de esta función.",
+        "title": "Otras automatizaciones"
+      },
+      "userOnJoinMeStatus": "VRChat aceptará automáticamente todas las solicitudes de invitación, independientemente de su configuración, porque su estado es en unirse a mí (blue)."
+    },
+    "playerList": {
+      "blacklist": "Jugador Blacklist",
+      "whitelist": "Jugador Whitelist"
+    },
+    "tabs": {
+      "inviteRequests": "Solicitudes de invitación",
+      "invites": "Invitaciones",
+      "sounds": "Sonidos"
+    }
+  },
   "join-notifications": {
     "description": "Reproduce un mensaje de notificación y/o sonido cuando otro jugador entre o salga de tu mundo. Esto puede ser útil si quieres que OyasumiVR te despierte cuando alguien se una a ti.",
     "joinNotifications": {
       "description": "Mostrar una notificación cuando un jugador se une a tu mundo",
       "title": "Notificaciones de ingreso"
-    },
-    "joinSoundVolume": {
-      "description": "El volumen del efecto de sonido que se reproduce cuando un jugador entra o sale de tu mundo.",
-      "title": "Volumen del sonido"
     },
     "joinSounds": {
       "description": "Reproduce un sonido cuando un jugador se una a tu mundo",
@@ -1293,12 +1249,7 @@
     "notification": "Detección de una posible pesadilla, ya que ha tenido una frecuencia cardíaca elevada prolongada.",
     "playSound": {
       "description": "Haz que Oyasumivr te despierte con un sonido cuando posiblemente tengas una pesadilla",
-      "title": "Reproducir un sonido",
-      "volume": {
-        "description": "Configure el volumen en el que se reproduce el efecto de sonido",
-        "test": "Test",
-        "title": "Volumen de sonido"
-      }
+      "title": "Reproducir un sonido"
     },
     "title": "Detección de pesadilla"
   },
@@ -1486,77 +1437,9 @@
     }
   },
   "power-automations": {
-    "devicePowerOff": {
-      "onBatteryLevel": {
-        "controllers": {
-          "description": "Cuando el nivel de batería es inferior a",
-          "onlyDuringSleepMode": {
-            "description": "Sólo apague los controladores de esta manera mientras el modo de dormir está activado",
-            "title": "Sólo mientras el modo dormir está activado"
-          },
-          "powerOffConflict": {
-            "action": "Detección de dormir",
-            "description": "Como ha configurado el modo de dormir para que se active cuando todos los controladores estén apagados, encender esta automatización puede hacer que active involuntariamente el modo de dormir. Otras automatizaciones podrían responder a esto, lo que podría no ser lo que usted desea. Puede desactivar este comportamiento en los ajustes de Detección de dormir.",
-            "title": "Atención: Esto podría desencadenar otra automatización!"
-          },
-          "title": "Apagar un controlador"
-        },
-        "description": "Haz que los dispositivos se apaguen cuando su nivel de batería descienda por debajo de un determinado porcentaje.",
-        "title": "Nivel de batería",
-        "trackers": {
-          "description": "Cuando el nivel de batería es inferior a",
-          "onlyDuringSleepMode": {
-            "description": "Sólo apaga los rastreadores de esta manera mientras el modo de dormir está activado",
-            "title": "Sólo mientras el modo dormir está activado"
-          },
-          "title": "Apagar un tracker"
-        }
-      },
-      "onCharge": {
-        "description": "Haz que los dispositivos se apaguen automáticamente al ponerlos en el cargador.",
-        "optionControllers": {
-          "description": "Cuando se está cargando",
-          "title": "Apagar un mando"
-        },
-        "optionTrackers": {
-          "description": "Cuando se está cargando",
-          "title": "Apagar un tracker"
-        },
-        "title": "Cuando se cargan"
-      },
-      "onSleepModeEnable": {
-        "description": "Apaga los dispositivos cuando el modo sueño esté activado.",
-        "hint": "Puede configurar cuándo se activa el modo de suspensión en <a class=\"sleepDetectionLink\">Detección del sueño</a>.",
-        "optionControllers": "Apagar todos los controladores",
-        "optionTrackers": "Apagar todos los rastreadores",
-        "title": "Cuando me voy a dormir"
-      }
-    },
-    "enableLighthouseControl": "Habilitar",
     "error": {
       "adapterError": "Se ha producido un error al intentar comunicarse con el adaptador Bluetooth. Asegúrese de que el adaptador Bluetooth está activado e inténtelo de nuevo.",
       "noAdapter": "No se ha encontrado ningún adaptador Bluetooth en su sistema. Por favor, asegúrese de que su sistema está equipado con un adaptador Bluetooth y que está habilitado."
-    },
-    "lighthouseControlDisabledWarning": "Estas automatizaciones no están disponibles porque has desactivado el control de potencia de la estación base en la configuración de OyasumiVR. Habilítelo si desea utilizar estas automatizaciones.",
-    "lighthousePowerOff": {
-      "description": "Haz que OyasumiVR apague automáticamente tus estaciones base.",
-      "onSteamVRStop": {
-        "description": "Apaga automáticamente tus estaciones base cuando SteamVR se detenga",
-        "title": "Cuando SteamVR se detiene"
-      },
-      "title": "Apagar las estaciones base"
-    },
-    "lighthousePowerOn": {
-      "description": "Haz que OyasumiVR encienda automáticamente tus estaciones base.",
-      "onOyasumiStart": {
-        "description": "Enciende automáticamente tus estaciones base cuando se inicia OyasumiVR",
-        "title": "Cuándo empieza OyasumiVR"
-      },
-      "onSteamVRStart": {
-        "description": "Enciende automáticamente tus estaciones base cuando se inicie SteamVR",
-        "title": "Cuando se inicia SteamVR"
-      },
-      "title": "Encender las estaciones base"
     },
     "powerManagementWarning": "Si optas por utilizar las automatizaciones de OyasumiVR para encender o apagar tus estaciones base, es recomendable que desactives la gestión de energía en la configuración de la estación base de SteamVR.",
     "tabs": {
@@ -2027,10 +1910,7 @@
       "cancel": "Cancelar ahora",
       "stage": {
         "POWERING_DOWN": "Apagando Windows...",
-        "QUITTING_STEAMVR": "Dejando SteamVR...",
-        "TURNING_OFF_BASESTATIONS": "Apagar las estaciones base...",
-        "TURNING_OFF_CONTROLLERS": "Apagando controladores...",
-        "TURNING_OFF_TRACKERS": "Apagando trackers..."
+        "QUITTING_STEAMVR": "Dejando SteamVR..."
       },
       "title": "Apagado"
     },

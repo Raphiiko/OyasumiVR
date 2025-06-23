@@ -1,10 +1,12 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, DestroyRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { DeviceSelection, DMDeviceType } from 'src-ui/app/models/device-manager';
 import { DeviceSelectorModalComponent } from '../device-selector-modal/device-selector-modal.component';
 import { hshrink, noop } from '../../utils/animations';
 import { DeviceManagerService } from 'src-ui/app/services/device-manager.service';
+import { TranslateService } from '@ngx-translate/core';
 import { isEqual } from 'lodash';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-device-selector',
@@ -13,7 +15,7 @@ import { isEqual } from 'lodash';
   animations: [hshrink(), noop()],
   standalone: false,
 })
-export class DeviceSelectorComponent {
+export class DeviceSelectorComponent implements OnInit {
   private _selection?: DeviceSelection;
   private lastSelection?: DeviceSelection;
 
@@ -33,8 +35,18 @@ export class DeviceSelectorComponent {
 
   constructor(
     private modalService: ModalService,
-    private deviceManagerService: DeviceManagerService
+    private deviceManagerService: DeviceManagerService,
+    private translateService: TranslateService,
+    private destroyRef: DestroyRef
   ) {}
+
+  ngOnInit() {
+    this.deviceManagerService.knownDevices
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.updateDeviceCount();
+      });
+  }
 
   get hasSelection(): boolean {
     return !!(
@@ -47,9 +59,11 @@ export class DeviceSelectorComponent {
 
   get buttonText(): string {
     if (!this.hasSelection) {
-      return 'Select Devices';
+      return this.translateService.instant('comp.device-selector.noSelection');
     }
-    return `${this.deviceCount} Device${this.deviceCount === 1 ? '' : 's'}`;
+    return this.translateService.instant('comp.device-selector.withDevices', {
+      count: this.deviceCount,
+    });
   }
 
   openModal() {
@@ -94,7 +108,7 @@ export class DeviceSelectorComponent {
 
     try {
       const devices = await this.deviceManagerService.getDevicesForSelection(this.selection);
-      this.deviceCount = devices.lighthouseDevices.length + devices.ovrDevices.length;
+      this.deviceCount = devices.knownDevices.length;
     } catch (error) {
       console.error('Failed to get devices for selection:', error);
       this.deviceCount = 0;

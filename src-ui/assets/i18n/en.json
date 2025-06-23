@@ -67,137 +67,6 @@
       "title": "Volume"
     }
   },
-  "auto-invite-request-accept": {
-    "addFriends": "Add Friends",
-    "blacklist": "Player Blacklist",
-    "clearPlayers": "Clear All",
-    "conditions": {
-      "description": "Here you can configure OyasumiVR to only accept invite requests when certain conditions are met.",
-      "title": "Conditions"
-    },
-    "description": "OyasumiVR can automatically accept invite requests you receive. By using the player whitelist or blacklist, you can make sure only the friends you pick will have their invite requests automatically accepted.",
-    "loadPreset": "Load Saved Preset",
-    "loadingFriends": "Loading friends...",
-    "noPlayersAdded": "No players are currently added to the list.",
-    "options": {
-      "acceptMessage": {
-        "customMessage": {
-          "placeholder": "Request accepted by OyasumiVR",
-          "title": "Invite message"
-        },
-        "description": "Include a message when OyasumiVR accepts an invite request",
-        "title": "Accept with message"
-      },
-      "changeListPreset": {
-        "onSleepDisable": {
-          "description": "Load a saved preset for the player list when the sleep mode disables",
-          "title": "Load preset when I wake up"
-        },
-        "onSleepEnable": {
-          "description": "Load a saved preset for the player list when the sleep mode enables",
-          "title": "Load preset when I go to sleep"
-        },
-        "onSleepPreparation": {
-          "description": "Load a saved preset for the player list when you prepare to go to sleep",
-          "title": "Load preset when I prepare to go to sleep"
-        }
-      },
-      "declineOnInviteWhileAsleep": {
-        "customMessage": {
-          "description": "Enter the message to send when an invite is declined",
-          "placeholder": "I'm currently asleep! (Declined by OyasumiVR)",
-          "title": "Custom message"
-        },
-        "description": "Automatically decline invites while the sleep mode is enabled",
-        "title": "Decline invites while asleep"
-      },
-      "declineOnRequest": {
-        "customMessage": {
-          "description": "Enter the message to send when a request is declined",
-          "placeholder": "Request declined by OyasumiVR",
-          "title": "Custom message"
-        },
-        "description": "Automatically send a decline message if OyasumiVR does not automatically accept an invite request",
-        "options": {
-          "ALWAYS": "Yes",
-          "DISABLED": "Never",
-          "WHEN_SLEEPING": "Only while I'm sleeping"
-        },
-        "title": "Decline invite requests"
-      },
-      "enable": {
-        "description": "Automatically accept invite requests from friends",
-        "title": "Enable"
-      },
-      "listMode": {
-        "description": "How the player list operates",
-        "options": {
-          "BLACKLIST": {
-            "label": "Blacklist",
-            "subLabel": "Accept from friends not on the list"
-          },
-          "DISABLED": {
-            "label": "Disabled",
-            "subLabel": "Accept from everyone"
-          },
-          "WHITELIST": {
-            "label": "Whitelist",
-            "subLabel": "Accept from friends on the list"
-          }
-        },
-        "title": "List mode"
-      },
-      "onlyBelowPlayerCount": {
-        "description": "This includes yourself",
-        "title": "Only when there are fewer than <strong>{count, plural, one {#</strong> player} other {#</strong> players}} in your world"
-      },
-      "onlyIfSleepModeEnabled": {
-        "title": "Only when sleep mode is enabled"
-      },
-      "playSoundOnInviteRequest": {
-        "description": "Play a sound when you receive an invite request",
-        "title": "Play sound on invite request",
-        "onlyWhenAsleep": {
-          "description": "Only play the sound when sleep mode is enabled",
-          "title": "Only when asleep"
-        },
-        "onlyWhenUnhandled": {
-          "description": "Only play the sound when the invite request is not automatically accepted or declined",
-          "title": "Only when not automatically handled"
-        }
-      },
-      "playSoundOnInvite": {
-        "description": "Play a sound when you receive an invite",
-        "title": "Play sound on invite",
-        "onlyWhenAsleep": {
-          "description": "Only play the sound when sleep mode is enabled",
-          "title": "Only when asleep"
-        }
-      },
-      "presetOptions": {
-        "options": {
-          "NONE": "Don't change"
-        }
-      }
-    },
-    "otherAutomations": {
-      "description": "Here you can find automations that will automatically change how this feature works.",
-      "title": "Other Automations"
-    },
-    "removeModal": {
-      "message": "Are you sure you want to remove ''{name}'' from your list?",
-      "title": "Confirm Removal"
-    },
-    "removeModalBulk": {
-      "message": "Are you sure you want to remove everyone from your list?",
-      "title": "Confirm Removal"
-    },
-    "savePreset": "Save As Preset",
-    "title": "Auto Accept Invite Requests",
-    "userOnBusyStatus": "Friends won't be able to request to join you normally while your status is on busy (red). OyasumiVR will still accept invite requests sent through 3rd party tools like VRCX.",
-    "userOnJoinMeStatus": "VRChat will automatically accept all invite requests regardless of your settings, because your status is on join me (blue).",
-    "whitelist": "Player Whitelist"
-  },
   "brightness-automations": {
     "AT_SUNRISE": {
       "title": "At sunrise"
@@ -350,7 +219,7 @@
     "dashboard-navbar": {
       "about": "About OyasumiVR",
       "audioVolumeAutomations": "Audio Volume Automations",
-      "autoInviteRequestAccept": "Auto Accept \nInvite Requests",
+      "autoInviteRequestAccept": "Invites & Invite Requests",
       "brightnessAutomations": "Brightness Automations",
       "chaperoneAutomations": "Chaperone Automations",
       "deviceManager": "Device Manager",
@@ -385,8 +254,8 @@
       "systemMicMuteAutomations": "System Microphone Mute Automations",
       "vrcAutomations": "VRChat Automations",
       "vrchatAvatarAutomations": "Avatar Automations",
-      "vrchatMicMuteAutomations": "VRChat Microphone Mute Automations",
-      "vrchatGroupAutomations": "Group Automations"
+      "vrchatGroupAutomations": "Group Automations",
+      "vrchatMicMuteAutomations": "VRChat Microphone Mute Automations"
     },
     "device-edit-modal": {
       "deviceNickname": {
@@ -456,6 +325,10 @@
       "noDevices": "No devices detected",
       "title": "Devices",
       "turnOffAll": "ALL"
+    },
+    "device-selector": {
+      "noSelection": "Select Devices",
+      "withDevices": "{count, plural, one {1 Device} other {# Devices}}"
     },
     "event-log-entry": {
       "type": {
@@ -595,68 +468,27 @@
         },
         "lighthouseSetPowerState": {
           "ALL": {
-            "on": {
-              "reasons": {
-                "HOTKEY": "As a hotkey was pressed",
-                "MANUAL": "Turned on manually",
-                "OYASUMI_START": "As OyasumiVR started",
-                "STEAMVR_START": "As SteamVR started",
-                "STEAMVR_STOP": "As SteamVR stopped"
-              },
-              "title": "Turned on all base stations"
-            },
-            "sleep": {
-              "reasons": {
-                "HOTKEY": "As a hotkey was pressed",
-                "MANUAL": "Set manually",
-                "OYASUMI_START": "As OyasumiVR started",
-                "STEAMVR_START": "As SteamVR started",
-                "STEAMVR_STOP": "As SteamVR stopped"
-              },
-              "title": "Set all base stations to sleep mode"
-            },
-            "standby": {
-              "reasons": {
-                "HOTKEY": "As a hotkey was pressed",
-                "MANUAL": "Set manually",
-                "OYASUMI_START": "As OyasumiVR started",
-                "STEAMVR_START": "As SteamVR started",
-                "STEAMVR_STOP": "As SteamVR stopped"
-              },
-              "title": "Set all base stations to standby mode"
-            }
+            "on": "Turned on all base stations",
+            "sleep": "Set all base stations to sleep mode",
+            "standby": "Set all base stations to standby mode"
           },
           "SINGLE": {
-            "on": {
-              "reasons": {
-                "HOTKEY": "As a hotkey was pressed",
-                "MANUAL": "Turned on manually",
-                "OYASUMI_START": "As OyasumiVR started",
-                "STEAMVR_START": "As SteamVR started",
-                "STEAMVR_STOP": "As SteamVR stopped"
-              },
-              "title": "Turned on a base station"
-            },
-            "sleep": {
-              "reasons": {
-                "HOTKEY": "As a hotkey was pressed",
-                "MANUAL": "Set manually",
-                "OYASUMI_START": "As OyasumiVR started",
-                "STEAMVR_START": "As SteamVR started",
-                "STEAMVR_STOP": "As SteamVR stopped"
-              },
-              "title": "Set a base station to sleep mode"
-            },
-            "standby": {
-              "reasons": {
-                "HOTKEY": "As a hotkey was pressed",
-                "MANUAL": "Set manually",
-                "OYASUMI_START": "As OyasumiVR started",
-                "STEAMVR_START": "As SteamVR started",
-                "STEAMVR_STOP": "As SteamVR stopped"
-              },
-              "title": "Set a base station to standby mode"
-            }
+            "on": "Turned on a base station",
+            "sleep": "Set a base station to sleep mode",
+            "standby": "Set a base station to standby mode"
+          },
+          "VARIOUS": {
+            "on": "Turned on various base stations",
+            "sleep": "Set various base stations to sleep mode",
+            "standby": "Set various base stations to standby mode"
+          },
+          "reasons": {
+            "HOTKEY": "As a hotkey was pressed",
+            "MANUAL": "Turned on manually",
+            "OYASUMI_START": "As OyasumiVR started",
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "STEAMVR_START": "As SteamVR is running",
+            "STEAMVR_STOP": "As SteamVR is stopped"
           }
         },
         "msiAfterburnerProfileSet": {
@@ -797,7 +629,9 @@
             "HOTKEY": "As a hotkey was pressed",
             "MANUAL": "Turned off manually",
             "OSC_CONTROL": "Turned off over OSC",
-            "SLEEP_MODE_ENABLED": "As sleep mode was enabled"
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
           "title": {
             "ALL": "Turned off all devices",
@@ -831,8 +665,8 @@
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
           "title": {
-            "set": "Changed the VRChat group you represent to ''{groupName}''",
-            "clear": "Stopped representing VRChat group ''{groupName}''"
+            "clear": "Stopped representing VRChat group ''{groupName}''",
+            "set": "Changed the VRChat group you represent to ''{groupName}''"
           }
         },
         "windowsPowerPolicySet": {
@@ -1121,6 +955,20 @@
       }
     },
     "player-list": {
+      "addFriends": "Add Friends",
+      "clearPlayers": "Clear All",
+      "loadPreset": "Load Saved Preset",
+      "loadingFriends": "Loading friends...",
+      "noPlayersAdded": "No players are currently added to the list.",
+      "removeModal": {
+        "message": "Are you sure you want to remove ''{name}'' from your list?",
+        "title": "Confirm Removal"
+      },
+      "removeModalBulk": {
+        "message": "Are you sure you want to remove everyone from your list?",
+        "title": "Confirm Removal"
+      },
+      "savePreset": "Save As Preset",
       "title": "Player List"
     },
     "select-box": {
@@ -1176,6 +1024,95 @@
       "title": "Two Factor Authentication"
     }
   },
+  "device-manager": {
+    "actions": {
+      "forget": "Forget Device",
+      "powerOff": "Power Off",
+      "powerOn": "Power On"
+    },
+    "config": {
+      "nickname": {
+        "description": "Set a custom name for this device to make it easier to identify",
+        "title": "Device Nickname"
+      },
+      "tags": {
+        "description": "Assign tags to organize and filter your devices",
+        "noTags": "No tags available. Create some in the Tags tab.",
+        "title": "Device Tags"
+      },
+      "title": "Configure {deviceName}"
+    },
+    "deleteTag": {
+      "confirm": "Delete Tag",
+      "message": "Are you sure you want to delete this tag? It will be removed from all devices.",
+      "title": "Delete Tag"
+    },
+    "deviceSelector": {
+      "deselectAll": "Deselect All",
+      "deviceTags": "Device Tags",
+      "deviceTypes": {
+        "CONTROLLER": "All Controllers",
+        "HMD": "All Headsets",
+        "LIGHTHOUSE": "All Lighthouses",
+        "TRACKER": "All Trackers"
+      },
+      "individualDevices": "Individual Devices",
+      "noApplicableDevicesKnown": "No applicable devices are yet known",
+      "noTagsConfigured": "No tags are currently configured",
+      "selectDevices": "Select Devices",
+      "title": "Select Devices"
+    },
+    "deviceType": {
+      "CONTROLLER": "Controllers",
+      "HMD": "Headsets",
+      "LIGHTHOUSE": "Lighthouses",
+      "PREVIOUSLY_SEEN": "Previously Seen",
+      "TRACKER": "Trackers"
+    },
+    "empty": {
+      "noDevices": "No devices have been detected yet. Connect a device, like a controller or tracker, to get started.",
+      "noDevicesMatchingSearch": "No devices found matching your search criteria."
+    },
+    "filter": {
+      "allTags": "All tags"
+    },
+    "forget": {
+      "confirm": "Forget Device",
+      "message": "Are you sure you want to forget this device? It will be re-added if detected again.",
+      "title": "Forget Device"
+    },
+    "search": {
+      "placeholder": "Search devices..."
+    },
+    "status": {
+      "notObserved": "Not Connected",
+      "observed": "Connected",
+      "turningOff": "Turning Off...",
+      "turningOn": "Turning On..."
+    },
+    "tabs": {
+      "devices": "Devices",
+      "tags": "Tags"
+    },
+    "tags": {
+      "cancel": "Cancel",
+      "create": {
+        "button": "Create Tag",
+        "namePlaceholder": "Tag name",
+        "title": "Create New Tag"
+      },
+      "delete": "Delete Tag",
+      "edit": "Edit Tag",
+      "empty": {
+        "noTags": "No tags created yet. Create your first tag above."
+      },
+      "existing": {
+        "title": "Existing Tags"
+      },
+      "save": "Save"
+    },
+    "title": "Device Manager"
+  },
   "discord": {
     "details": "VR Sleeping Software",
     "label": {
@@ -1196,20 +1133,21 @@
     },
     "addLimiter": "Add Application",
     "description": "OyasumiVR can automatically limit the framerate of various games. You can use this to reduce the power draw of your system when you don't need high performance, like when you are asleep.",
+    "directControlRequiresSteamVR": "Launch SteamVR to directly control frame limits",
     "frameLimits": "Frame Limits",
     "noLimits": "You have not yet configured any applications to limit!",
     "onSleepDisable": "When I wake up",
     "onSleepEnable": "When I go to sleep",
     "onSleepPreparation": "When I prepare to go to sleep",
     "removeLimiter": "Remove",
-    "supportedHardwareWarning": "Note that SteamVR only supports frame limiting on native SteamVR headsets, like the Valve Index, Vive (Pro), or Bigscreen Beyond. Non-native headsets, like Quest devices, are unsupported.",
     "selector": {
       "auto": "Auto",
       "autoDescription": "In auto mode, SteamVR will determine the optimal frame limit.",
       "disabled": "Do not change",
       "noLimit": "Unlimited"
     },
-    "steamvrRequired": "Changing frame limits directly and viewing estimated frame rates is only available while SteamVR is running. You can still configure the automation settings below.",
+    "steamvrRequired": "OyasumiVR can show more accurate frame limit targets for your specific VR headset while SteamVR is running. Launch SteamVR to view more info.",
+    "supportedHardwareWarning": "Note that SteamVR only supports frame limiting on native SteamVR headsets, like the Valve Index, Vive (Pro), or Bigscreen Beyond. Non-native headsets, like Quest devices, are unsupported.",
     "title": "Frame Limit Automations"
   },
   "gpu-automations": {
@@ -1335,27 +1273,161 @@
     },
     "title": "HMD Specific Automations"
   },
+  "invite-and-invite-requests": {
+    "inviteRequestsTab": {
+      "conditions": {
+        "description": "Here you can configure OyasumiVR to only accept invite requests when certain conditions are met.",
+        "title": "Conditions"
+      },
+      "description": "OyasumiVR can automatically accept invite requests you receive. By using the player whitelist or blacklist, you can make sure only the friends you pick will have their invite requests automatically accepted.",
+      "options": {
+        "acceptMessage": {
+          "customMessage": {
+            "placeholder": "Request accepted by OyasumiVR",
+            "title": "Invite message"
+          },
+          "description": "Include a message when OyasumiVR accepts an invite request",
+          "title": "Accept with message"
+        },
+        "declineOnRequest": {
+          "customMessage": {
+            "description": "Enter the message to send when a request is declined",
+            "placeholder": "Request declined by OyasumiVR",
+            "title": "Custom message"
+          },
+          "description": "Automatically send a decline message if OyasumiVR does not automatically accept an invite request",
+          "options": {
+            "ALWAYS": "Yes",
+            "DISABLED": "Never",
+            "WHEN_SLEEPING": "Only while I'm sleeping"
+          },
+          "title": "Decline unhandled invite requests"
+        },
+        "enable": {
+          "description": "Have OyasumiVR automatically accept invite requests from friends",
+          "title": "Auto-accept invite requests"
+        },
+        "listMode": {
+          "description": "How the player list operates",
+          "options": {
+            "BLACKLIST": {
+              "label": "Blacklist",
+              "subLabel": "Accept from friends not on the list"
+            },
+            "DISABLED": {
+              "label": "Disabled",
+              "subLabel": "Accept from everyone"
+            },
+            "WHITELIST": {
+              "label": "Whitelist",
+              "subLabel": "Accept from friends on the list"
+            }
+          },
+          "title": "List mode"
+        },
+        "onlyBelowPlayerCount": {
+          "description": "This includes yourself",
+          "title": "Only when there are fewer than <strong>{count, plural, one {#</strong> player} other {#</strong> players}} in your world"
+        },
+        "onlyIfSleepModeEnabled": {
+          "title": "Only when sleep mode is enabled"
+        },
+        "presetOptions": {
+          "options": {
+            "NONE": "Don't change"
+          }
+        }
+      },
+      "otherAutomations": {
+        "changeListPreset": {
+          "onSleepDisable": {
+            "description": "Load a saved preset for the player list when the sleep mode disables",
+            "title": "Load preset when I wake up"
+          },
+          "onSleepEnable": {
+            "description": "Load a saved preset for the player list when the sleep mode enables",
+            "title": "Load preset when I go to sleep"
+          },
+          "onSleepPreparation": {
+            "description": "Load a saved preset for the player list when you prepare to go to sleep",
+            "title": "Load preset when I prepare to go to sleep"
+          }
+        },
+        "description": "Here you can find automations that will automatically change how this feature works.",
+        "title": "Other Automations"
+      },
+      "userOnBusyStatus": "Friends won't be able to request to join you normally while your status is on busy (red). OyasumiVR will still accept invite requests sent through 3rd party tools like VRCX.",
+      "userOnJoinMeStatus": "VRChat will automatically accept all invite requests regardless of your settings, because your status is on join me (blue)."
+    },
+    "invitesTab": {
+      "options": {
+        "declineOnInviteWhileAsleep": {
+          "customMessage": {
+            "description": "Enter the message to send when an invite is declined",
+            "placeholder": "I'm currently asleep! (Declined by OyasumiVR)",
+            "title": "Custom message"
+          },
+          "description": "Automatically decline invites while the sleep mode is enabled",
+          "title": "Decline invites while asleep"
+        }
+      }
+    },
+    "playerList": {
+      "blacklist": "Player Blacklist",
+      "whitelist": "Player Whitelist"
+    },
+    "soundsTab": {
+      "options": {
+        "playSoundOnInvite": {
+          "description": "Play a sound when you receive an invite",
+          "onlyWhenAsleep": {
+            "description": "Only play the sound when sleep mode is enabled",
+            "title": "Only when asleep"
+          },
+          "title": "Play sound on invite"
+        },
+        "playSoundOnInviteRequest": {
+          "description": "Play a sound when you receive an invite request",
+          "onlyWhenAsleep": {
+            "description": "Only play the sound when sleep mode is enabled",
+            "title": "Only when asleep"
+          },
+          "onlyWhenUnhandled": {
+            "description": "Only play the sound when the invite request is not automatically accepted or declined",
+            "title": "Only when not automatically handled"
+          },
+          "title": "Play sound on invite request"
+        }
+      }
+    },
+    "tabs": {
+      "inviteRequests": "Invite Requests",
+      "invites": "Invites",
+      "sounds": "Sounds"
+    },
+    "title": "Invites & Invite Requests"
+  },
   "join-notifications": {
     "description": "Play a notification message and/or sound when another player enters or leaves your world. This can be useful if you want OyasumiVR to wake you up when someone joins you.",
     "joinNotifications": {
       "description": "Show a notification when a player joins your world",
       "title": "Join Notifications"
     },
+    "joinSound": {
+      "description": "The sound to play when a player joins your world",
+      "title": "Join sound effect"
+    },
     "joinSounds": {
       "description": "Play a sound when a player joins your world",
       "title": "Join Sounds"
     },
-    "joinSound": {
-      "title": "Join sound effect",
-      "description": "The sound to play when a player joins your world"
-    },
-    "leaveSound": {
-      "title": "Leave sound effect",
-      "description": "The sound to play when a player leaves your world"
-    },
     "leaveNotifications": {
       "description": "Show a notification when a player leaves your world",
       "title": "Leave Notifications"
+    },
+    "leaveSound": {
+      "description": "The sound to play when a player leaves your world",
+      "title": "Leave sound effect"
     },
     "leaveSounds": {
       "description": "Play a sound when a player leaves your world",
@@ -1433,6 +1505,11 @@
         "message": "Sleep detection is enabled, but still uncalibrated. Before using it, you should calibrate at least once to improve its accuracy.",
         "title": "Sleep Calibration Pending"
       },
+      "vrcInviteRequestFailedWorldUnknown": {
+        "message": "You received an invite request from your friend ''{senderUsername}'', but OyasumiVR couldn't handle it because your current world instance is unknown.\n\nThis may be due to OyasumiVR not being able to read your VRChat log files.",
+        "title": "Invite Request Unhandled",
+        "unknownFriend": "Unknown friend"
+      },
       "vrcLogMissing": {
         "message": "Although VRChat seems to be running, its log files could not be detected. Without these log files, certain OyasumiVR features like automatically accepting invite requests will not work.\n\nPlease make sure you've got logging enabled within VRChat to ensure OyasumiVR can work properly.",
         "title": "VRChat log files not found"
@@ -1444,11 +1521,6 @@
       "vrcWebsocketDisconnected": {
         "message": "You are currently logged in with your VRChat account, but OyasumiVR was not able to connect to VRChat's websocket. This means certain features, like automatically accepting invite requests, currently won't work.",
         "title": "VRChat Websocket Unavailable"
-      },
-      "vrcInviteRequestFailedWorldUnknown": {
-        "title": "Invite Request Unhandled",
-        "message": "You received an invite request from your friend ''{senderUsername}'', but OyasumiVR couldn't handle it because your current world instance is unknown.\n\nThis may be due to OyasumiVR not being able to read your VRChat log files.",
-        "unknownFriend": "Unknown friend"
       }
     },
     "title": "Message Center",
@@ -1515,100 +1587,6 @@
   "notification-sound": {
     "title": "Select a sound",
     "volume": "Volume"
-  },
-  "device-manager": {
-    "title": "Device Manager",
-    "tabs": {
-      "devices": "Devices",
-      "tags": "Tags"
-    },
-    "search": {
-      "placeholder": "Search devices..."
-    },
-    "filter": {
-      "allTags": "All tags"
-    },
-    "deviceType": {
-      "HMD": "Headsets",
-      "CONTROLLER": "Controllers",
-      "TRACKER": "Trackers",
-      "LIGHTHOUSE": "Lighthouses",
-      "PREVIOUSLY_SEEN": "Previously Seen"
-    },
-    "status": {
-      "observed": "Connected",
-      "notObserved": "Not Connected",
-      "turningOff": "Turning Off...",
-      "turningOn": "Turning On..."
-    },
-    "actions": {
-      "powerOff": "Power Off",
-      "powerOn": "Power On",
-      "forget": "Forget Device"
-    },
-    "config": {
-      "title": "Configure {deviceName}",
-      "nickname": {
-        "title": "Device Nickname",
-        "description": "Set a custom name for this device to make it easier to identify"
-      },
-      "tags": {
-        "title": "Device Tags",
-        "description": "Assign tags to organize and filter your devices",
-        "noTags": "No tags available. Create some in the Tags tab."
-      },
-      "newTag": {
-        "title": "Create New Tag",
-        "description": "Create a new tag and assign it to this device",
-        "create": "Create Tag"
-      }
-    },
-    "tags": {
-      "create": {
-        "title": "Create New Tag",
-        "namePlaceholder": "Tag name",
-        "button": "Create Tag"
-      },
-      "existing": {
-        "title": "Existing Tags"
-      },
-      "edit": "Edit Tag",
-      "delete": "Delete Tag",
-      "save": "Save",
-      "cancel": "Cancel",
-      "empty": {
-        "noTags": "No tags created yet. Create your first tag above."
-      }
-    },
-    "empty": {
-      "noDevices": "No devices have been detected yet. Connect a device, like a controller or tracker, to get started.",
-      "noDevicesMatchingSearch": "No devices found matching your search criteria."
-    },
-    "forget": {
-      "title": "Forget Device",
-      "message": "Are you sure you want to forget this device? It will be re-added if detected again.",
-      "confirm": "Forget Device"
-    },
-    "deleteTag": {
-      "title": "Delete Tag",
-      "message": "Are you sure you want to delete this tag? It will be removed from all devices.",
-      "confirm": "Delete Tag"
-    },
-    "deviceSelector": {
-      "title": "Select Devices",
-      "deselectAll": "Deselect All",
-      "deviceTags": "Device Tags",
-      "individualDevices": "Individual Devices",
-      "deviceTypes": {
-        "HMD": "All Headsets",
-        "CONTROLLER": "All Controllers",
-        "TRACKER": "All Trackers",
-        "LIGHTHOUSE": "All Lighthouses"
-      },
-      "noTagsConfigured": "No tags are currently configured",
-      "noApplicableDevicesKnown": "No applicable devices are yet known",
-      "selectDevices": "Select Devices"
-    }
   },
   "notifications": {
     "autoAcceptedInviteRequest": {
@@ -1794,77 +1772,35 @@
     }
   },
   "power-automations": {
-    "devicePowerOff": {
-      "onBatteryLevel": {
-        "controllers": {
-          "description": "When its battery level falls below",
-          "onlyDuringSleepMode": {
-            "description": "Only turn off controllers this way while sleep mode is enabled",
-            "title": "Only while sleep mode is enabled"
-          },
-          "powerOffConflict": {
-            "action": "Sleep Detection",
-            "description": "As you have set up the sleep mode to activate when all controllers are turned off, turning this automation on might cause you to unintentionally enable the sleep mode. Other automations might respond to this, which might not be what you want. You can turn off this behaviour in the Sleep Detection settings.",
-            "title": "Warning: This might trigger another automation!"
-          },
-          "title": "Turn off a controller"
-        },
-        "description": "Have devices power off when their battery level falls below a certain percentage.",
-        "title": "Battery level",
-        "trackers": {
-          "description": "When its battery level falls below",
-          "onlyDuringSleepMode": {
-            "description": "Only turn off trackers this way while sleep mode is enabled",
-            "title": "Only while sleep mode is enabled"
-          },
-          "title": "Turn off a tracker"
+    "devices": {
+      "turnOff": {
+        "description": "OyasumiVR can turn off your controllers, trackers, or even your base stations on certain events. For example, turn off your trackers when you fall asleep, so they still have some battery when you wake up!",
+        "subtitle": "Turn off the following devices",
+        "title": "Turn off devices",
+        "triggers": {
+          "onBatteryLevel": "When the device's battery level drops below",
+          "onDeviceCharging": "When the device is charging",
+          "onSleepModeDisable": "When I wake up",
+          "onSleepModeEnable": "When I go to sleep",
+          "onSleepPreparation": "When I prepare to go to sleep",
+          "onSteamVRStop": "When SteamVR stops",
+          "onlyWhileSleepModeEnabled": "Only while sleep mode is enabled"
         }
       },
-      "onCharge": {
-        "description": "Have devices turn off automatically when you put them on the charger.",
-        "optionControllers": {
-          "description": "When it is charging",
-          "title": "Turn off a controller"
-        },
-        "optionTrackers": {
-          "description": "When it is charging",
-          "title": "Turn off a tracker"
-        },
-        "title": "When charging"
-      },
-      "onSleepModeEnable": {
-        "description": "Turn off devices when sleep mode is enabled.",
-        "hint": "You can configure when sleep mode is enabled in <a class=\"sleepDetectionLink\">Sleep Detection</a>.",
-        "optionControllers": "Turn off all controllers",
-        "optionTrackers": "Turn off all trackers",
-        "title": "When I go to sleep"
+      "turnOn": {
+        "description": "OyasumiVR can turn on certain devices as well. Currently, only base stations can be turned on.",
+        "subtitle": "Turn on the following devices",
+        "title": "Turn on devices",
+        "triggers": {
+          "onOyasumiStart": "When OyasumiVR starts",
+          "onSleepModeDisable": "When I wake up",
+          "onSteamVRStart": "When SteamVR starts"
+        }
       }
     },
-    "enableLighthouseControl": "Enable",
     "error": {
       "adapterError": "An error occurred while trying to communicate with your Bluetooth adapter. Please make sure your Bluetooth adapter is enabled and try again.",
       "noAdapter": "No Bluetooth adapter could be found in your system. Please make sure your system is equipped with a Bluetooth adapter and that it is enabled."
-    },
-    "lighthouseControlDisabledWarning": "These automations are unavailable because you have disabled base station power control in OyasumiVR's settings. Enable this if you want to use these automations.",
-    "lighthousePowerOff": {
-      "description": "Have OyasumiVR automatically turn off your base stations.",
-      "onSteamVRStop": {
-        "description": "Automatically turn off your base stations when SteamVR stops",
-        "title": "When SteamVR stops"
-      },
-      "title": "Turn off base stations"
-    },
-    "lighthousePowerOn": {
-      "description": "Have OyasumiVR automatically turn on your base stations.",
-      "onOyasumiStart": {
-        "description": "Automatically turn on your base stations when OyasumiVR starts",
-        "title": "When OyasumiVR starts"
-      },
-      "onSteamVRStart": {
-        "description": "Automatically turn on your base stations when SteamVR starts",
-        "title": "When SteamVR starts"
-      },
-      "title": "Turn on base stations"
     },
     "powerManagementWarning": "When choosing to use OyasumiVR's automations for turning your base stations on or off, it is recommended that you disable power management in SteamVR's base station settings.",
     "tabs": {
@@ -1910,6 +1846,24 @@
       "title": "Change the render resolution to"
     },
     "title": "Resolution Automations"
+  },
+  "runAutomations": {
+    "commandsToRun": "Commands to run",
+    "description": "Here you can have OyasumiVR automatically run commands through the Windows command prompt when you fall asleep, wake up, or prepare to sleep.\n\nAny commands will be interpreted through cmd.exe.",
+    "onSleepDisable": {
+      "description": "Run commands",
+      "title": "When I wake up"
+    },
+    "onSleepEnable": {
+      "description": "Run commands",
+      "title": "When I go to sleep"
+    },
+    "onSleepPreparation": {
+      "description": "Run commands",
+      "title": "When I prepare to go to sleep"
+    },
+    "testCommands": "Test",
+    "title": "Run Automations"
   },
   "settings": {
     "advanced": {
@@ -2322,7 +2276,9 @@
       "none": "None",
       "vrcLoginRequired": "This feature requires you to be logged in with a VRChat account."
     },
-    "logo": { "tagline": "VR Sleeping Utilities" },
+    "logo": {
+      "tagline": "VR Sleeping Utilities"
+    },
     "modals": {
       "back": "Back",
       "cancel": "Cancel",
@@ -2351,9 +2307,7 @@
       "stage": {
         "POWERING_DOWN": "Powering down Windows...",
         "QUITTING_STEAMVR": "Quitting SteamVR...",
-        "TURNING_OFF_BASESTATIONS": "Turning off base stations...",
-        "TURNING_OFF_CONTROLLERS": "Turning off controllers...",
-        "TURNING_OFF_TRACKERS": "Turning off trackers..."
+        "TURNING_OFF_DEVICES": "Turning off devices..."
       },
       "title": "Shutting Down"
     },
@@ -2896,11 +2850,11 @@
       "description": "Change the group I represent to",
       "title": "When I prepare to go to sleep"
     },
-    "title": "Group Automations",
     "options": {
-      "dontChange": "Do not change",
-      "clearGroup": "Clear Group"
-    }
+      "clearGroup": "Clear Group",
+      "dontChange": "Do not change"
+    },
+    "title": "Group Automations"
   },
   "vrchatMicMuteAutomations": {
     "automations": {
@@ -2941,23 +2895,5 @@
       "unmuted": "Unmuted"
     },
     "title": "VRChat Microphone Mute Automations"
-  },
-  "runAutomations": {
-    "description": "Here you can have OyasumiVR automatically run commands through the Windows command prompt when you fall asleep, wake up, or prepare to sleep.\n\nAny commands will be interpreted through cmd.exe.",
-    "onSleepDisable": {
-      "description": "Run commands",
-      "title": "When I wake up"
-    },
-    "onSleepEnable": {
-      "description": "Run commands",
-      "title": "When I go to sleep"
-    },
-    "onSleepPreparation": {
-      "description": "Run commands",
-      "title": "When I prepare to go to sleep"
-    },
-    "title": "Run Automations",
-    "commandsToRun": "Commands to run",
-    "testCommands": "Test"
   }
 }
