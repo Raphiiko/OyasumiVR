@@ -60,11 +60,25 @@
         </div>
       </div>
 
+      <!-- Hidden Section -->
+      <div class="setting-row">
+        <div class="setting-row-label">
+          <span translate>device-manager.config.hidden.title</span>
+          <span translate>device-manager.config.hidden.description</span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input type="checkbox" [checked]="device.hidden" (change)="toggleHidden()" />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
       <!-- Lighthouse V1 Identifier Section -->
       <div class="setting-row" *ngIf="v1LighthouseMode !== 'NONE'">
         <div class="setting-row-label" translate>
-          <span translate>comp.device-edit-modal.v1Identifier.title</span>
-          <span translate>comp.device-edit-modal.v1Identifier.description</span>
+          <span translate>device-manager.config.v1Identifier.title</span>
+          <span translate>device-manager.config.v1Identifier.description</span>
         </div>
         <div class="setting-row-action">
           <button
@@ -74,8 +88,8 @@
           >
             {{
               (v1LighthouseMode === 'NEEDS_ID'
-                ? 'comp.device-edit-modal.v1Identifier.set'
-                : 'comp.device-edit-modal.v1Identifier.change'
+                ? 'device-manager.config.v1Identifier.set'
+                : 'device-manager.config.v1Identifier.change'
               ) | translate
             }}
           </button>

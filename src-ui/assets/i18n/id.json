@@ -1269,7 +1269,9 @@
     "title": "Animasi Tidur"
   },
   "status-automations": {
-    "behaviourWarningFAQ": "Di sini Anda dapat menemukan jawaban atas beberapa pertanyaan yang mungkin Anda miliki tentang perilaku perubahan status:\n\nT: Apakah saya masih bisa secara otomatis menerima permintaan undangan, meskipun VRChat tidak menunjukkan bahwa saya berwarna biru?\nJ: Jika Anda mengatur status OyasumiVR menjadi biru (join me), OyasumiVR akan mengambil alih tanggung jawab untuk secara otomatis menerima permintaan undangan yang Anda terima.\n\nT: Orang-orang tidak dapat bergabung dengan saya karena status saya tidak diperbarui untuk mereka.\nJ: Pembaruan status dapat memakan waktu beberapa saat untuk ditampilkan ke pengguna lain. Jika mereka ingin bergabung dengan Anda tetapi tidak bisa, mereka dapat memaksa status Anda untuk disegarkan dengan membuka profil Anda di menu utama.",
+    "behaviourWarningFAQ": {
+      "message": "Di sini Anda dapat menemukan jawaban atas beberapa pertanyaan yang mungkin Anda miliki tentang perilaku perubahan status:\n\nT: Apakah saya masih bisa secara otomatis menerima permintaan undangan, meskipun VRChat tidak menunjukkan bahwa saya berwarna biru?\nJ: Jika Anda mengatur status OyasumiVR menjadi biru (join me), OyasumiVR akan mengambil alih tanggung jawab untuk secara otomatis menerima permintaan undangan yang Anda terima.\n\nT: Orang-orang tidak dapat bergabung dengan saya karena status saya tidak diperbarui untuk mereka.\nJ: Pembaruan status dapat memakan waktu beberapa saat untuk ditampilkan ke pengguna lain. Jika mereka ingin bergabung dengan Anda tetapi tidak bisa, mereka dapat memaksa status Anda untuk disegarkan dengan membuka profil Anda di menu utama."
+    },
     "moreInfo": "Info lanjut",
     "playerLimit": {
       "atLimitOrAbove": {

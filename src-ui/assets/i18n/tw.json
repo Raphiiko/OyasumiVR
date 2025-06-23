@@ -247,23 +247,6 @@
       "vrchatAvatarAutomations": "角色自動化",
       "vrchatMicMuteAutomations": "VRChat 麥克風靜音自動化"
     },
-    "device-edit-modal": {
-      "deviceNickname": {
-        "description": "可對此裝置設定自訂暱稱",
-        "title": "暱稱"
-      },
-      "ignoreLighthouse": {
-        "description": "被忽略的基地台將被隱藏，不受任何自動化的影響",
-        "title": "忽略基地台"
-      },
-      "title": "編輯裝置： {deviceId}",
-      "v1Identifier": {
-        "change": "更改 ID",
-        "description": "OyasumiVR 需要知道 V1 基站的 ID 以進行控制",
-        "set": "設置 ID",
-        "title": "Lighthouse V1 ID"
-      }
-    },
     "device-list": {
       "category": {
         "Controller": "控制器",
@@ -918,6 +901,16 @@
       },
       "logginInAs": "你正在以以下身份登入 VRChat：",
       "title": "雙重認證"
+    }
+  },
+  "device-manager": {
+    "config": {
+      "v1Identifier": {
+        "change": "更改 ID",
+        "description": "OyasumiVR 需要知道 V1 基站的 ID 以進行控制",
+        "set": "設置 ID",
+        "title": "Lighthouse V1 ID"
+      }
     }
   },
   "discord": {
@@ -2201,7 +2194,9 @@
   },
   "status-automations": {
     "behaviourWarning": "你可能無法立即看到 OyasumiVR 的狀態變更。對其他玩家而言，狀態更新也可能需要一些時間才能顯示。這是由於 VRChat 的快取所造成，但請放心，你的狀態確實會更新。",
-    "behaviourWarningFAQ": "在這裡，你可以找到關於狀態變更行為的一些問題的答案：\n\n問：即使 VRChat 沒有顯示我處於藍色狀態，我仍然可以自動接受邀請請求嗎？\n答：如果你有 OyasumiVR 將你的狀態設定為藍色（加入我），它將接管自動接受你收到的任何邀請加入請求。\n\n問：其他玩家無法加入我，因為我的狀態對他們來說沒有更新。\n答：狀態更新可能需要一段時間才會顯示給其他玩家。 如果他們想加入但不能，他們可以透過在主選單中中打開你的個人資料來強制刷新你的狀態",
+    "behaviourWarningFAQ": {
+      "message": "在這裡，你可以找到關於狀態變更行為的一些問題的答案：\n\n問：即使 VRChat 沒有顯示我處於藍色狀態，我仍然可以自動接受邀請請求嗎？\n答：如果你有 OyasumiVR 將你的狀態設定為藍色（加入我），它將接管自動接受你收到的任何邀請加入請求。\n\n問：其他玩家無法加入我，因為我的狀態對他們來說沒有更新。\n答：狀態更新可能需要一段時間才會顯示給其他玩家。 如果他們想加入但不能，他們可以透過在主選單中中打開你的個人資料來強制刷新你的狀態"
+    },
     "general": {
       "description": "在這裡你可以設定 OyasumiVR 在特定事件中更新你的 VRChat 狀態。例如，在你睡覺或起床時變更你的狀態！",
       "onSleepDisable": {

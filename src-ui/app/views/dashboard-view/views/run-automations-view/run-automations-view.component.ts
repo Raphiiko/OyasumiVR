@@ -4,7 +4,7 @@ import { vshrink } from '../../../../utils/animations';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
 import { AUTOMATION_CONFIGS_DEFAULT, RunAutomationsConfig } from '../../../../models/automations';
 import { RunAutomationsService } from 'src-ui/app/services/run-automations.service';
-import { distinctUntilChanged, map, debounceTime, share, tap, switchMap, skip } from 'rxjs';
+import { distinctUntilChanged, map, debounceTime, share, tap, switchMap, filter, take } from 'rxjs';
 import { Subject } from 'rxjs';
 import { isEqual } from 'lodash';
 
@@ -26,8 +26,6 @@ export class RunAutomationsViewComponent implements OnInit {
   onSleepModeDisableExpanded: boolean = false;
   onSleepPreparationExpanded: boolean = false;
 
-  private isInitialLoad: boolean = true;
-
   private onSleepModeEnableSubject = new Subject<string>();
   private onSleepModeDisableSubject = new Subject<string>();
   private onSleepPreparationSubject = new Subject<string>();
@@ -40,20 +38,10 @@ export class RunAutomationsViewComponent implements OnInit {
 
   ngOnInit(): void {
     const config = this.automationConfigService.configs.pipe(
-      skip(1),
       takeUntilDestroyed(this.destroyRef),
       map((configs) => configs.RUN_AUTOMATIONS),
       distinctUntilChanged((a, b) => isEqual(a, b)),
-      tap((config) => {
-        this.config = config;
-        // Initialize expanded states based on automation enabled state only on first load
-        if (this.isInitialLoad) {
-          this.onSleepModeEnableExpanded = config.onSleepModeEnable;
-          this.onSleepModeDisableExpanded = config.onSleepModeDisable;
-          this.onSleepPreparationExpanded = config.onSleepPreparation;
-          this.isInitialLoad = false;
-        }
-      }),
+      tap((config) => (this.config = config)),
       share()
     );
 
@@ -62,6 +50,33 @@ export class RunAutomationsViewComponent implements OnInit {
       'onSleepModeDisable',
       'onSleepPreparation',
     ];
+
+    config
+      .pipe(
+        debounceTime(500),
+        takeUntilDestroyed(this.destroyRef),
+        filter((config) => !isEqual(AUTOMATION_CONFIGS_DEFAULT.RUN_AUTOMATIONS, config)),
+        take(1)
+      )
+      .subscribe(async (config) => {
+        // Initialize expanded states based on automation enabled state only on first load
+        this.onSleepModeEnableExpanded = config.onSleepModeEnable;
+        this.onSleepModeDisableExpanded = config.onSleepModeDisable;
+        this.onSleepPreparationExpanded = config.onSleepPreparation;
+
+        for (const event of events) {
+          const commands = await this.runAutomationsService.getCommands(event);
+          this[
+            `${event}Commands` as keyof Pick<
+              RunAutomationsViewComponent,
+              | 'onSleepModeEnableCommands'
+              | 'onSleepModeDisableCommands'
+              | 'onSleepPreparationCommands'
+            >
+          ] = commands;
+        }
+      });
+
     for (const event of events) {
       config
         .pipe(

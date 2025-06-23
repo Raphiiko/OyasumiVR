@@ -106,7 +106,8 @@ export class VRChatService {
           const existingPlayer = currentPlayers.find((player) => player.userId === event.userId);
           if (existingPlayer) {
             currentPlayers.splice(currentPlayers.indexOf(existingPlayer), 1);
-          }          const context = {
+          }
+          const context = {
             ...structuredClone(this._world.value),
             players: currentPlayers,
           };

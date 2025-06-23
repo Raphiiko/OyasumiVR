@@ -9,6 +9,7 @@ export interface EventLogFilterDialogInputModel {
 
 export interface EventLogFilterDialogOutputModel {
   hiddenLogTypes: EventLogType[];
+  madeChanges: boolean;
 }
 
 interface Filter {
@@ -132,13 +133,13 @@ export class EventLogFilterDialogComponent
 
   constructor() {
     super();
-    this.result = { hiddenLogTypes: [] };
+    this.result = { hiddenLogTypes: [], madeChanges: false };
   }
 
   ngOnInit(): void {}
 
   async save() {
-    this.result = { hiddenLogTypes: this.getHiddenTypesForFilters() };
+    this.result = { hiddenLogTypes: this.getHiddenTypesForFilters(), madeChanges: true };
     await this.close();
   }
 

@@ -15,6 +15,7 @@ import {
   shareReplay,
   combineLatest,
   debounceTime,
+  take,
 } from 'rxjs';
 import { error, info } from '@tauri-apps/plugin-log';
 import { SleepService } from './sleep.service';
@@ -26,7 +27,7 @@ export const SteamAchievements = {
   START_OYASUMIVR: 'START_OYASUMIVR',
   SMSPAM: 'SMSPAM',
   SLEEP_8H: 'SLEEP_8H',
-  QUICK_EEPER: 'QUICK_EEPER',
+  QUICK_EEPER: 'QUICK_EEPER2',
   DEV_SLEEP: 'DEV_SLEEP',
 } as const;
 
@@ -161,7 +162,7 @@ export class SteamService {
             change.reason.automation === 'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR'
           );
         }),
-        switchMap(() => lastWorldChange),
+        switchMap(() => lastWorldChange.pipe(take(1))),
         filter((timestamp) => Date.now() - timestamp < 1000 * 60 * 20),
         switchMap(() => this.getAchievement(SteamAchievements.QUICK_EEPER)),
         filter((unlocked) => !unlocked),
