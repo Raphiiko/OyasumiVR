@@ -10,6 +10,8 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 ### Added
 
 - Added "hidden" functionality for known devices to replace the old "ignore" feature for base stations that was removed
+- Missing Japanese translations
+- Missing Simplified Chinese Translations
 
 ### Fixed
 
@@ -17,7 +19,6 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 - Closing the event log filter dialog with the esc key resetting all the filters to their defaults
 - Broken achievement trigger
 - Run automations not loading into the view correctly in some cases
-
 
 ## [25.6.0]
 
