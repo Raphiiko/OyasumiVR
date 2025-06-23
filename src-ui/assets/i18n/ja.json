@@ -247,23 +247,6 @@
       "vrchatAvatarAutomations": "アバター変更",
       "vrchatMicMuteAutomations": "マイクミュート"
     },
-    "device-edit-modal": {
-      "deviceNickname": {
-        "description": "このデバイスのカスタム名をオプションで設定",
-        "title": "カスタム名"
-      },
-      "ignoreLighthouse": {
-        "description": "無視されたベースステーションは非表示にされ、自動化の影響を受けなくなります",
-        "title": "ベースステーションを無視"
-      },
-      "title": "デバイスの編集: {deviceId}",
-      "v1Identifier": {
-        "change": "IDを変更",
-        "description": "V1ベースステーションを制御するためにはそのIDを認識する必要があります",
-        "set": "IDを設定",
-        "title": "Lighthouse V1 ID"
-      }
-    },
     "device-list": {
       "category": {
         "Controller": "コントローラー",
@@ -969,6 +952,14 @@
     }
   },
   "device-manager": {
+    "config": {
+      "v1Identifier": {
+        "change": "IDを変更",
+        "description": "V1ベースステーションを制御するためにはそのIDを認識する必要があります",
+        "set": "IDを設定",
+        "title": "Lighthouse V1 ID"
+      }
+    },
     "deviceType": {
       "CONTROLLER": "コントローラー",
       "TRACKER": "トラッカー"
@@ -1518,31 +1509,9 @@
         }
       }
     },
-    "enableLighthouseControl": "有効にする",
     "error": {
       "adapterError": "Bluetoothアダプターとの通信を試みている間にエラーが発生しました。Bluetoothアダプターが有効になっていることを確認し、再度お試しください。",
       "noAdapter": "お使いのシステムでBluetoothアダプターが見つかりませんでした。システムにBluetoothアダプターが搭載され、有効になっているかを確認してください。"
-    },
-    "lighthouseControlDisabledWarning": "OyasumiVRの設定でベースステーションの電力制御を無効にしているため、この機能は利用できません。使用する場合は、これを有効にしてください。",
-    "lighthousePowerOff": {
-      "description": "ベースステーションを自動でオフにする。",
-      "onSteamVRStop": {
-        "description": "SteamVRの停止時にベースステーションを自動でオフにする",
-        "title": "SteamVRを停止したとき"
-      },
-      "title": "ベースステーションをオフにする"
-    },
-    "lighthousePowerOn": {
-      "description": "ベースステーションを自動でオンにします。",
-      "onOyasumiStart": {
-        "description": "OyasumiVRの起動時にベースステーションを自動でオンにする",
-        "title": "OyasumiVRを起動したとき"
-      },
-      "onSteamVRStart": {
-        "description": "SteamVRの起動時にベースステーションを自動でオンにする",
-        "title": "SteamVRを起動したとき"
-      },
-      "title": "ベースステーションをオンにする"
     },
     "powerManagementWarning": "OyasumiVRでベースステーションの電源を自動化する場合、SteamVRの設定でベースステーションの電源管理を無効にすることを推奨します。",
     "tabs": {
@@ -2343,7 +2312,9 @@
   },
   "status-automations": {
     "behaviourWarning": "OyasumiVRによるステータス変更は、すぐに反映されない場合があります。これはVRChatのキャッシュによるものであり、時間が少し経てば更新されます。",
-    "behaviourWarningFAQ": "ステータス変更の挙動に関する質問に対する回答は、こちらをご覧下さい。\n\nQ: VRChat上で青(Join Me)に表示されていなくても、Req Inviteは自動的に承認されますか？\nA: OyasumiVRがステータスを青(Join Me)に変更した場合は、受け取ったReq Inviteを自動承認します。\n\nQ: ステータスが更新されないのでJoinできません。\nA: ステータスの更新は、他のユーザーに表示されるまでに時間がかかる場合があります。Joinできない場合は、メインメニューからプロフィールを開いて自身のステータスを強制的に更新することも可能です。",
+    "behaviourWarningFAQ": {
+      "message": "ステータス変更の挙動に関する質問に対する回答は、こちらをご覧下さい。\n\nQ: VRChat上で青(Join Me)に表示されていなくても、Req Inviteは自動的に承認されますか？\nA: OyasumiVRがステータスを青(Join Me)に変更した場合は、受け取ったReq Inviteを自動承認します。\n\nQ: ステータスが更新されないのでJoinできません。\nA: ステータスの更新は、他のユーザーに表示されるまでに時間がかかる場合があります。Joinできない場合は、メインメニューからプロフィールを開いて自身のステータスを強制的に更新することも可能です。"
+    },
     "general": {
       "description": "特定の状況でVRChatステータスを更新できます。例えば、寝るときや起きるときにステータスを変更します！",
       "onSleepDisable": {

@@ -247,23 +247,6 @@
       "vrchatAvatarAutomations": "아바타 자동화",
       "vrchatMicMuteAutomations": "VRChat 마이크 음소거 자동화"
     },
-    "device-edit-modal": {
-      "deviceNickname": {
-        "description": "이 장치의 사용자 지정 이름 (선택)",
-        "title": "닉네임"
-      },
-      "ignoreLighthouse": {
-        "description": "무시한 베이스스테이션은 숨겨지며 자동화의 영향을 받지 않아요.",
-        "title": "베이스스테이션 무시"
-      },
-      "title": "장치 수정: {deviceId}",
-      "v1Identifier": {
-        "change": "ID 변경",
-        "description": "OyasumiVR이 V1 베이스스테이션을 제어하려면 해당 ID를 알아야 해요.",
-        "set": "ID 설정",
-        "title": "Lighthouse V1 ID"
-      }
-    },
     "device-list": {
       "category": {
         "Controller": "컨트롤러",
@@ -920,6 +903,16 @@
       "title": "2단계 인증"
     }
   },
+  "device-manager": {
+    "config": {
+      "v1Identifier": {
+        "change": "ID 변경",
+        "description": "OyasumiVR이 V1 베이스스테이션을 제어하려면 해당 ID를 알아야 해요.",
+        "set": "ID 설정",
+        "title": "Lighthouse V1 ID"
+      }
+    }
+  },
   "discord": {
     "details": "VR 수면 소프트웨어",
     "label": {
@@ -1410,31 +1403,9 @@
     }
   },
   "power-automations": {
-    "enableLighthouseControl": "활성화",
     "error": {
       "adapterError": "블루투스 어댑터와 통신하는 동안 오류가 발생했어요. 블루투스 어댑터가 활성화되어 있는지 확인한 후 다시 시도해주세요.",
       "noAdapter": "시스템에서 블루투스 어댑터를 찾을 수 없어요. 시스템에 블루투스 어댑터가 장착되어 있고 활성화되어 있는지 확인해주세요."
-    },
-    "lighthouseControlDisabledWarning": "OyasumiVR의 설정에서 베이스스테이션의 전원 제어 기능을 비활성화했기 때문에 이러한 자동화를 사용할 수 없어요. 이 자동화를 사용하려면 이 기능을 활성화하세요.",
-    "lighthousePowerOff": {
-      "description": "OyasumiVR이 자동으로 베이스스테이션을 끄도록 설정해요.",
-      "onSteamVRStop": {
-        "description": "SteamVR이 중지되면 자동으로 베이스스테이션을 꺼요.",
-        "title": "SteamVR이 중지될 때"
-      },
-      "title": "베이스스테이션 끄기"
-    },
-    "lighthousePowerOn": {
-      "description": "OyasumiVR이 자동으로 베이스스테이션을 켜도록 설정해요.",
-      "onOyasumiStart": {
-        "description": "OyasumiVR이 시작되면 자동으로 베이스스테이션을 켜요.",
-        "title": "OyasumiVR이 시작될 때"
-      },
-      "onSteamVRStart": {
-        "description": "SteamVR이 시작되면 자동으로 베이스스테이션을 켜요.",
-        "title": "SteamVR이 시작될 때"
-      },
-      "title": "베이스스테이션 켜기"
     },
     "powerManagementWarning": "베이스스테이션을 켜거나 끄는 데 OyasumiVR의 자동화 기능을 사용하려면 SteamVR의 베이스스테이션 설정에서 전원 관리 기능을 비활성화할 것을 권장해요.",
     "tabs": {
@@ -2223,7 +2194,9 @@
   },
   "status-automations": {
     "behaviourWarning": "OyasumiVR의 스테이터스 변동은 즉시 표시되지 않을 수 있어요. 다른 플레이어에게도 상태 업데이트가 표시되기까지 약간의 시간이 걸릴 수 있습니다. 이는 VRChat의 캐싱 때문이지만, 실제로는 스테이터스가 업데이트되므로 안심하셔도 괜찮아요.",
-    "behaviourWarningFAQ": "스테이터스 변경에 관한 질문에 대한 답변은 여기를 참조해주세요.\n\nQ:VRChat에서 파란색으로 표시되지 않아도 자동으로 초대를 받을 수 있나요?\nA: OyasumiVR이 여러분의 스테이터스를 파란색(join me)으로 설정한 경우 당신이 받은 초대 요청을 자동 수락하게 되어요.\n\nQ: 스테이터스가 업데이트되지 않아 참여할 수 없어요.\nA: 스테이터스 업데이트는 다른 사용자에게 표시되기까지 시간이 걸릴 수 있어요. 참여하고 싶은데 참여할 수 없는 경우 메인 메뉴에서 프로필을 열어 여러분의 스테이터스를 강제로 업데이트할 수 있어요.",
+    "behaviourWarningFAQ": {
+      "message": "스테이터스 변경에 관한 질문에 대한 답변은 여기를 참조해주세요.\n\nQ:VRChat에서 파란색으로 표시되지 않아도 자동으로 초대를 받을 수 있나요?\nA: OyasumiVR이 여러분의 스테이터스를 파란색(join me)으로 설정한 경우 당신이 받은 초대 요청을 자동 수락하게 되어요.\n\nQ: 스테이터스가 업데이트되지 않아 참여할 수 없어요.\nA: 스테이터스 업데이트는 다른 사용자에게 표시되기까지 시간이 걸릴 수 있어요. 참여하고 싶은데 참여할 수 없는 경우 메인 메뉴에서 프로필을 열어 여러분의 스테이터스를 강제로 업데이트할 수 있어요."
+    },
     "general": {
       "description": "여기에서 특정 상황에 대해 VRChat 스테이터스를 업데이트하도록 OyasumiVR을 설정할 수 있어요. 예를 들어, 잠들거나 일어날 때 스테이터스를 변경할 수 있습니다!",
       "onSleepDisable": {

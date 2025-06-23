@@ -21,6 +21,7 @@ export interface DMKnownDevice {
   deviceType: DMDeviceType;
   lastSeen: number;
   tagIds: string[];
+  hidden: boolean;
 }
 
 export interface DMDeviceTag {

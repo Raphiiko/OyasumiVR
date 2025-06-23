@@ -86,6 +86,10 @@ export class DeviceManagerConfigModalComponent
     this.nickname = '';
   }
 
+  toggleHidden() {
+    this.device = this.deviceManager.setHiddenForKnownDevice(this.device, !this.device.hidden);
+  }
+
   close() {
     this.saveNickname();
     super.close();

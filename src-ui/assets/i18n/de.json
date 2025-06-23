@@ -247,23 +247,6 @@
       "vrchatAvatarAutomations": "Avatar Automationen",
       "vrchatMicMuteAutomations": "Stummschalten (VRChat)"
     },
-    "device-edit-modal": {
-      "deviceNickname": {
-        "description": "Optional setze einen eigenen Namen für dieses Gerät",
-        "title": "Nickname"
-      },
-      "ignoreLighthouse": {
-        "description": "Ignorierte Basisstationen werden versteckt und sind nicht von Automatisierungen betroffen",
-        "title": "Basisstationen ignorieren"
-      },
-      "title": "Gerät bearbeiten: {deviceid}",
-      "v1Identifier": {
-        "change": "ID ändern",
-        "description": "OyasumiVR muss die ID von deinen V1 Basis Stationen wissen um diese zu kontrollieren",
-        "set": "ID festlegen",
-        "title": "Lighthouse V1 ID"
-      }
-    },
     "device-list": {
       "category": {
         "Controller": "Controller",
@@ -947,6 +930,16 @@
       "title": "Zwei Faktor Authentifizierung"
     }
   },
+  "device-manager": {
+    "config": {
+      "v1Identifier": {
+        "change": "ID ändern",
+        "description": "OyasumiVR muss die ID von deinen V1 Basis Stationen wissen um diese zu kontrollieren",
+        "set": "ID festlegen",
+        "title": "Lighthouse V1 ID"
+      }
+    }
+  },
   "discord": {
     "details": "VR Schlaf Software",
     "label": {
@@ -1437,31 +1430,9 @@
     }
   },
   "power-automations": {
-    "enableLighthouseControl": "Einschalten",
     "error": {
       "adapterError": "Ein Fehler ist bei der Kommunikation mit deinem Bluetoothadapter eingetreten. Bitte stelle sicher, dass dieser funktioniert.",
       "noAdapter": "Kein Bluetoothadapter konnte gefunden werden. Bitte stelle sicher, dass einer in deinem System integriert, angeschlossen und aktiviert ist."
-    },
-    "lighthouseControlDisabledWarning": "Diese Automationen sind nicht verfügbar, weil du deine Bassistationenergiekontrolle in OyasumiVRs Einstellungen deaktiviert hast. Aktiviere diese, wenn du diese Automation nutzen willst.",
-    "lighthousePowerOff": {
-      "description": "Basisstationen automatisch von OyasumiVR herunterfahren lassen.",
-      "onSteamVRStop": {
-        "description": "Basisstationen automatisch mit SteamVR herunterfahren",
-        "title": "Wenn SteamVR herunterfährt"
-      },
-      "title": "Alle Basisstationen ausschalten"
-    },
-    "lighthousePowerOn": {
-      "description": "Basistationen automatisch von OyasumiVR hochfahren lassen",
-      "onOyasumiStart": {
-        "description": "Basisstationen automatisch mit SteamVR hochfahren",
-        "title": "Wenn OyasumiVR startet"
-      },
-      "onSteamVRStart": {
-        "description": "Basisstationen automatisch mit SteamVR hochfahren",
-        "title": "Wenn SteamVR startet"
-      },
-      "title": "Basisstationen anschalten"
     },
     "powerManagementWarning": "Für die Verwendung der OyasumiVR Automationen um deine Basisstationen aus oder an zu schalten wird empfohlen, dass du dein Energiemangement in den SteamVR Basistationseinstellungen deaktivierst.",
     "tabs": {
@@ -2250,7 +2221,9 @@
   },
   "status-automations": {
     "behaviourWarning": "Statusänderungen von OyasumiVR sind evtl. nicht direkt sichtbar. Andere Spieler können evtl. auch etwas Zeit brauchen bis diese bei ihnen umgesetzt werden. Dies liegt an der Zwschenspeicherung von VRChat, jedoch wird dein Status garantiert geändert.",
-    "behaviourWarningFAQ": "Hier findest du Antworten auf einige Fragen, die du möglicherweise zu Statusänderungsverhalten hast:\n\nF: Kann ich Einladungsanfragen trotzdem automatisch annehmen, auch wenn VRChat nicht anzeigt, dass ich auf Blau bin?\nA: Wenn OyasumiVR deinen Status auf Blau (beitreten) gesetzt hat, übernimmt es die Verantwortung für die automatische Annahme aller Einladungsanfragen, die du erhältst.\n\nF: Die Leute können mir nicht beitreten, weil mein Status für sie nicht aktualisiert wird.\nA: Es kann eine Weile dauern, bis Statusaktualisierungen anderen Benutzern angezeigt werden. Wenn sie dir beitreten möchten, dies aber nicht können, kannst du die Aktualisierung deines Statuses erzwingen, indem du dein Profil im Hauptmenü öffnen",
+    "behaviourWarningFAQ": {
+      "message": "Hier findest du Antworten auf einige Fragen, die du möglicherweise zu Statusänderungsverhalten hast:\n\nF: Kann ich Einladungsanfragen trotzdem automatisch annehmen, auch wenn VRChat nicht anzeigt, dass ich auf Blau bin?\nA: Wenn OyasumiVR deinen Status auf Blau (beitreten) gesetzt hat, übernimmt es die Verantwortung für die automatische Annahme aller Einladungsanfragen, die du erhältst.\n\nF: Die Leute können mir nicht beitreten, weil mein Status für sie nicht aktualisiert wird.\nA: Es kann eine Weile dauern, bis Statusaktualisierungen anderen Benutzern angezeigt werden. Wenn sie dir beitreten möchten, dies aber nicht können, kannst du die Aktualisierung deines Statuses erzwingen, indem du dein Profil im Hauptmenü öffnen"
+    },
     "general": {
       "description": "Hier kannst du OyasumiVR einstellen um deinen VRChat Status automatisch umzustellen, wenn bestimmte Events eintretten. Zum Beispiel, wenn du aufwachst  oder einschläfst.",
       "onSleepDisable": {
