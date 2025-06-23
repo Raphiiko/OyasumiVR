@@ -136,7 +136,7 @@ export class BrightnessCctAutomationService {
     // Run automation when sleep preparation is activated
     this.sleepPreparation.onSleepPreparation
       .pipe(
-        switchMap(() => this.automationConfigService.configs),
+        switchMap(() => this.automationConfigService.configs.pipe(take(1))),
         switchMap((configs) =>
           this.onAutomationTrigger(
             'SLEEP_PREPARATION',
@@ -443,6 +443,15 @@ export class BrightnessCctAutomationService {
     runBrightness = true,
     runCCT = true
   ) {
+    console.warn('onAutomationTrigger', {
+      automationType,
+      config,
+      forceInstant,
+      logging,
+      runBrightness,
+      runCCT,
+    });
+    console.trace();
     // Stop if the automation is disabled
     if (!config.enabled || (!config.changeBrightness && !config.changeColorTemperature)) return;
     // Determine the log reason

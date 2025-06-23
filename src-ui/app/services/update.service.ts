@@ -6,7 +6,7 @@ import { ModalService } from 'src-ui/app/services/modal.service';
 import { UpdateModalComponent } from '../components/update-modal/update-modal.component';
 import { FLAVOUR } from '../../build';
 import { info } from '@tauri-apps/plugin-log';
-import { Update } from '@tauri-apps/plugin-updater';
+import { check, Update } from '@tauri-apps/plugin-updater';
 
 @Injectable({
   providedIn: 'root',
@@ -45,8 +45,7 @@ export class UpdateService {
     }
     // Check for updates
     info(`[Update] Checking for updates...`);
-    // const update = (await check()) ?? undefined;
-    const update = { version: '1.2.3', currentVersion: '1.2.2' } as Update;
+    const update = (await check()) ?? undefined;
     if (update) {
       info(
         `[Update] Update available! New version: ${update.version}, Current version: ${update.currentVersion}`
