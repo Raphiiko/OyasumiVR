@@ -443,15 +443,6 @@ export class BrightnessCctAutomationService {
     runBrightness = true,
     runCCT = true
   ) {
-    console.warn('onAutomationTrigger', {
-      automationType,
-      config,
-      forceInstant,
-      logging,
-      runBrightness,
-      runCCT,
-    });
-    console.trace();
     // Stop if the automation is disabled
     if (!config.enabled || (!config.changeBrightness && !config.changeColorTemperature)) return;
     // Determine the log reason
