@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project (now) adheres to [Calendar Versioning](https://calver.org/#scheme).
 
+## [Unreleased]
+
+### [25.6.2]
+
+### Fixed
+
+- Broken achievement trigger
+
 ## [25.6.1]
 
 ### Added
@@ -17,7 +25,6 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 
 - Some strings not being translateable
 - Closing the event log filter dialog with the esc key resetting all the filters to their defaults
-- Broken achievement trigger
 - Run automations not loading into the view correctly in some cases
 - Update detection in standalone releases
 - The sleep preparation brightness automation triggering on configuration updates

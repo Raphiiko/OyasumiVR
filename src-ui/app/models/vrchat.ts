@@ -7,6 +7,7 @@ export interface WorldContext {
   }[];
   instanceId?: string;
   loaded: boolean;
+  joinedAt?: number;
 }
 
 export type AvatarEx = Avatar & {
