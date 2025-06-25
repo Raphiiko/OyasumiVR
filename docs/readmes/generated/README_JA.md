@@ -3,7 +3,7 @@
 </h1>
 
 <h3 align="center">
-💤 VR睡眠をサポートするソフトウェア 💤
+💤 あなたのVR睡眠をサポートします 💤
 </h3>
 
 <p align="center">
@@ -19,7 +19,7 @@
     <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
     <br>
     <br>
-<a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server</a>への参加もお待ちしています！
+<a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord </a>への参加もお待ちしています！
     <br>
     <br>
     <table align="center">
@@ -75,7 +75,7 @@
     <img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/563abe4d-2a8d-43e2-9515-39ea8d772d09" width="640">
 </p>
 
-## ダウンロード&インストール
+## ダウンロードとインストール
 
 <img align="right" src="https://github.com/user-attachments/assets/f68dbaeb-717c-4862-8c52-b7639d65cb32" width="130">
 任意の場所から最新のインストーラーを入手できます。
@@ -89,49 +89,49 @@
 
 ## OyasumiVRとは?
 
-HMDを被りながら眠るのに便利な機能を実装したデスクトップアプリケーションです。主にVRChatでの使用を想定しています。
+HMDを被りながら眠るのに便利な機能を実装したデスクトップアプリです。主にVRChatでの使用を想定しています。
 
 あなたの睡眠を検知して以下のような機能を実行できます。
 - 🔋 電力の節約
 - 🔅 明るさの調整
-- ✨ 寝相に合わせたアバターポーズの変更
+- ✨ 寝相に合わせたポーズの変更
 - 📩 Request Inviteの自動承認
-- 🔵 Automating your VRChat status
+- 🔵 VRChatステータスの変更
 - 🎤 マイクミュート
-- 🛠 SteamVRの設定の自動化
+- 🛠 SteamVRの設定変更
 
-…他にもまだまだあります！詳細は次の「機能」の項目をご確認ください。
+他にもたくさんの機能があります！詳細は次の「機能」の項目をご確認ください。
 
 ## OyasumiVRをサポート
 
-OyasumiVR自体は現在も、そしてこれからも完全に無料です。しかしながら私とOyasumiVRの開発を以下の方法でサポートしていただくことも可能です。
+OyasumiVRは現在も、そしてこれからも完全に無料です。ですが、以下の方法でサポートしていただくことも可能です。
 
 <a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
 <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
 
-サポートは、新機能の開発, 機能の改善, 開発プロセスに伴うコストの一部へと…… そして何より、私のコーヒー依存症を促進させることができます☕
+サポートは、新機能の開発, 機能の改善, 開発プロセスに伴うコストの一部…… そして、開発者のコーヒー依存症を促進させるのに用いられます☕
 
 OyasumiVRはすぐに終わるわけではありません。**やりたいことはまだまだ残っています！**
 
 ## 機能
 
-### 💤 睡眠検出
+### 💤 寝落ち検知
 
 <table>
   <tr>
     <td>
-HMDの動きを分析して寝落ちを自動で検出します！一度キャリブレーションを行うだけで設定完了します。
+HMDの動きを分析して寝落ちを自動で検知します！一度キャリブレーションを行うだけで設定完了します。
 <br><br>
-他にも、以下の項目に応じて自動化の機能を使用できます。
+他にも、以下の項目に応じて自動化を使用できます。
 <br><br>
 <ul>
   <li>時刻指定</li>
   <li>コントローラー, トラッカーのバッテリー残量</li>
   <li>コントローラー, トラッカーの充電状態</li>
   <li>SteamVRの状態</li>
-  <li>Heart Rate</li>
-  <li>Sitting Upright</li>
-  <li>VRChat players joining or leaving</li>
+  <li>心拍数</li>
+  <li>姿勢</li>
+  <li>プレイヤーのJoinや退出</li>
 </ul> 
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/48775fe7-2646-4d0b-ba8c-f7d7eb3a5d86"></td>
@@ -143,7 +143,7 @@ HMDの動きを分析して寝落ちを自動で検出します！一度キャ�
 <table>
   <tr>
     <td>
-一部の機能は独自のSteamVRオーバーレイを使ってVR内から直接操作できます！
+一部の機能は独自のVRオーバーレイを使ってVR内から直接操作できます！
 <br><br>
 デフォルトでは右コントローラーのAを2回押すと表示されるようになっています。 
     </td>
@@ -156,12 +156,12 @@ HMDの動きを分析して寝落ちを自動で検出します！一度キャ�
 <table>
   <tr>
     <td>
-<b>コントローラー & トラッカー</b>
+<b>コントローラーとトラッカー</b>
 <br>
-電源を切ることでバッテリーを節約します。朝起きたときのバッテリー切れを防ぎます！
+電源をオフにすることでバッテリーを節約します。朝起きたときのバッテリー切れを防ぎます！
 <br>
 <br>
-他にも、充電器に繋いだときに電源を切るようにすることもできます。コントローラーの入れ替えに便利！ 
+充電器に繋いだときに電源を切るようにすることも可能です。コントローラーの入れ替えに便利！ 
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/aff14677-c2fe-4309-8b96-950dff59e3b9"></td>
   </tr>
@@ -177,20 +177,20 @@ HMDの動きを分析して寝落ちを自動で検出します！一度キャ�
     <td>
 <b>ベースステーション</b>
 <br>
-SteamVRと共にベースステーションの電源を操作します。SteamVR独自の電源管理のようなものですが、どのHMDにも対応します！PCがBluetoothに対応し、ベースステーションの範囲にあれば機能します。 
+SteamVRと共にベースステーションの電源を操作します。SteamVR独自の電源管理と違い、どのHMDにも対応します！PCがBluetoothに対応し、ベースステーションと接続があれば機能します。 
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/f624681d-7e52-4b83-900d-6d7f7b45428d"></td>
   </tr>
 </table>
 
-### 🎮 Device Control
+### 🎮 デバイス管理
 
 <table>
   <tr>
     <td>
-OyasumiVR can allow you to easily control many of your SteamVR devices, from controllers, to trackers, to base stations.
+コントローラー、トラッカー、ベースステーションなど、多くのSteamVRデバイスを簡単に管理することができます。
 <br><br>
-Easily read detailed battery level and charge status for your controllers and trackers, or turn your base stations on and off with a single click! 
+バッテリー残量や充電状態を読み取り、ベースステーションのオン/オフをワンクリックで切り替えることができます！ 
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7c6a6f7d-fa5a-44e0-bc0f-b690e26dad31"></td>
   </tr>
@@ -255,43 +255,42 @@ GPUの電力を制限してPCの消費電力を節約します。希望の消費
     <td>
 📧 <b>Request Inviteの自動承認</b>
 <br>
-寝ている間に来たReqInを自動的に承認できます！ホワイトリストやブラックリストを使って、承認するフレンドを制限することもできます。
+寝ている間に来たReqInviteを自動的に承認できます！ホワイトリストやブラックリストを使って、承認するフレンドを限定することもできます。
     </td>    
     <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/0b96c76a-4ecb-415d-a446-0430f9e0c233"></td>
   </tr>
   <tr>
     <td>
-🔵 <b>Status Automations</b>
+🔵 <b>ステータスの自動化</b>
 <br>
-OyasumiVR offers multiple automations for controlling your VRChat visibility and status message, like when you fall asleep, or wake up!
+VRChatのステータスやメッセージを制御するために複数の機能があります。
 <br><br>
-Additionally, you can have OyasumiVR automatically switch your status based on the amount of people around you in VRChat. For example: Switch to blue when you are sleeping alone so your friends can join you, and switch to orange when there's enough people around!
+また、ワールド人数に合わせてステータスを変更することもできます。一人のときはステータスを青(Join Me)に設定したり、誰かが参加すれば橙(Ask Me)に設定したりできます！
     </td>    
     <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/8ff25c9c-8888-4c12-b149-1f68db17eb01"></td>
   </tr>
   <tr>
     <td>
-🔔 <b>Join Notifications</b>
+🔔 <b>Join通知</b>
 <br>
-OyasumiVR can notify you when people join or leave your VRChat world. This is useful if you want to be woken up in certain situations.
+プレイヤーのJoinや退出に合わせて通知を出すことができます。
 
-It can configured to only notify you in specific situations, like only:
+特定の状況でのみ通知することも可能です。
 <br>
 <ul>
-  <li>For your friends</li>
-  <li>For certain specific players</li>
-  <li>When you're being left alone</li>
-  <li>When you're no longer alone</li>
+  <li>フレンド</li>
+  <li>特定のプレイヤー</li>
+  <li>最後の一人になったとき</li>
+  <li>一人ではなくなったとき</li>
 </ul>
     </td>
     <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/bc2e2f9b-9ee5-402c-a7a7-8b998af7d81f"></td>
   </tr>
   <tr>
     <td>
-🏃 <b>Avatar Automations</b>
+🏃 <b>アバターの自動化</b>
 <br>
-You can have OyasumiVR automatically switch your avatar when you prepare for bed, when you fall asleep, or when you wake up!
-Useful if you have a specific avatar you use for sleeping.
+睡眠時、起床時にアバターを切り替えることができます。寝るとき専用のアバターを用意している場合に活用できます！
     </td>
     <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e492c6e7-ddda-44ba-b62a-768b01729bdd"></td>
   </tr>
@@ -299,61 +298,61 @@ Useful if you have a specific avatar you use for sleeping.
     <td>
 🔧 <b>OSC自動化</b>
 <br>
-任意のOSCメッセージをVRChatに送信できます。内臓のOSCスクリプトエディタを使って、送信したいメッセージを正確に作成できます。
+任意のOSCメッセージをVRChatに送信できます。内蔵のOSCスクリプトエディタを使って、送信したいメッセージを正確に作成できます。
 <br><br>
-これはより高度な機能であり、アバターに特定の機能を実行させるために使用できます！例えば、寝ているときには眠そうな表情をさせる場合など活用方法は様々です！
+これは高度な機能であり、アバターに特定の機能を実行させるために使用します！寝ているときには眠そうな表情をさせる場合など、活用方法は様々です！
     </td>
     <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/dd98c34b-2cce-4037-aaa9-85cdf722cd83"></td>
   </tr>
 </table>
 
-### ⛔ シャットダウン機能
+### ⛔ シャットダウン機能⛔ シャットダウン機能
 
 <table>
   <tr>
     <td>
-Ever wanted to fall asleep in VR, but not stay in VR all night? The shutdown sequence has you covered!
+VR睡眠したいけどVRをつけっぱなしにするのに躊躇ったことはありませんか？ぜひシャットダウン機能を活用してください！
 <br><br>
-While you can trigger the shutdown sequence manually, there are several automated triggers you can configure:
-<br><br>
-<ul>
-  <li>When you've been asleep for a certain amount of time. </li>
-  <li>When you're left alone in your VRChat world for a certain amount of time.</li>
-</ul>
-<br>
-Depending on which actions you configure, it will do any of the following:
+手動で操作することもできますが、もちろん自動化にも対応しています。
 <br><br>
 <ul>
-  <li>Turn off your controllers and/or Trackers</li>
-  <li>Turn off your Base Stations</li>
-  <li>Quit SteamVR <i>(And any running game or overlay along with it)</i></li>
-  <li>Shut down Windows</li>
+  <li>一定時間、眠ったとき</li>
+  <li>VRChatのワールドで一定時間、一人になったとき</li>
 </ul>
 <br>
-With the shutdown sequence configured, you can fall asleep soundly in VR, knowing that everything will shut down when you don't need to be in VR anymore!
+項目に分けて以下を設定できます。
+<br><br>
+<ul>
+  <li>コントローラーやトラッカーをオフにする</li>
+  <li>ベースステーションをオフにする</li>
+  <li>SteamVRを終了する<i>（関係するすべてのアプリも終了します）</i></li>
+  <li>Windowsのシャットダウン</li>
+</ul>
+<br>
+この機能を活用すればVRでいる必要がなくなったとき、何も気にせず、何も操作せず睡眠を継続することができます！
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/4254eb51-6d40-4200-a8ef-af97279a9072"></td>
   </tr>
 </table>
 
-### 🔅 Display Brightness & Color Temperature Automations
+### 🔅 画面の明るさと色温度
 
 <table>
   <tr>
     <td>
-🌆 <b>Brightness</b>
+🌆 <b>明るさ</b>
 <br>
-Automate your brightness for when you sleep and wake up. OyasumiVR can smoothly transition your VR headset's brightness, so it falls down gradually as you sleep without waking you up.
+睡眠時や起床時の明るさを変更できます。ゆっくりとスムーズに変更することも可能です。
 <br><br>
-It allows you to control both software brightness, as well as hardware brightness if your headset supports it (e.g. Valve Index or Bigscreen Beyond). In addition to providing you with several automations, you can easily control your brightness levels right from the SteamVR overlay menu!
+ソフトウェアの明るさだけではなく、対応しているHMD(Valve Index, Bigscreen Beyondなど)である場合はハードウェアの輝度を変更することもできます。自動化だけでなく、オーバーレイから簡単に変更することも可能です。
 <br><br>
-🌡️ <b>Color Temperature</b>
+🌡️ <b>色温度</b>
 <br>
-OyasumiVR can also control the color temperature of your VR headset's display. By reducing blue light, it can help reduce eye strain during the late hours, and make it easier to fall asleep.
+色温度も変更できます。ブルーライトを減らして眠りにつきやすいようにできます。
 <br><br>
-With the sunset and sunrise triggers, you can have OyasumiVR automatically adjust the color temperature of your display to match the time of day.
+太陽との連動機能を使えば、日の出や日の入りに合わせて自動的に調整できます。
 <br><br>
-<i>Note that this feature is only supported on some native SteamVR headsets, such as the Valve Index, Bigscreen Beyond, and HTC Vive (Pro).</i>
+<i>ただし、色温度機能は一部のHMD(Valve Index, Bigscreen Beyondなど)にしか対応していません。</i>
     </td>
     <td width="380"><img src="https://github.com/user-attachments/assets/bfa3fd71-9ec1-4d61-8255-8a716b2ea09c"></td>
   </tr>
@@ -400,7 +399,7 @@ VR内にマイクアイコンを表示できます。オプションでキーバ
   <tr>
     <td colspan="2">
       <img width="60" align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e6e73a94-b9c0-4a4b-a3ec-2859e5c01179" />
-この機能にはオンライン心拍数サービス <a href="https://pulsoid.net/pricing?promo_campaign_id=86680152-707d-4771-8a12-740bad1b4545">Pulsoid</a> を利用します。このため、Bluetooth心拍数モニター, WearOS スマートウォッチ, Apple Watchなど、Pulsoidがサポートするハードウェアを使用できます。
+この機能にはオンライン心拍数サービス <a href="https://pulsoid.net/pricing?promo_campaign_id=86680152-707d-4771-8a12-740bad1b4545">Pulsoid</a> を利用します。Bluetooth心拍数モニター, WearOS スマートウォッチ, Apple Watchなど、Pulsoidがサポートするハードウェアを使用できます。
 <br><br>
 <i>連携を行うには、PulsoidのOyasumiVR連携を購入するか、Pulsoidの「BRO」サブスクリプションを有効にする必要があります。お持ちのデバイスが対応されているか、事前にご確認ください。</i>
     </td>
@@ -462,16 +461,15 @@ SteamVRのガーディアンのフェード距離を調整できます。眠っ�
   </tr>
 </table>
 
-### 🏠 Home Assistant Integration
+### 🏠 Home Assistant連携
 
 <table>
   <tr>
     <td colspan="2">
 <img width="100" align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/88eff4c6-a251-43f8-9759-baecedf94a32"><br>
-OyasumiVR can expose many of its own features, as well as SteamVR's, to Home Assistant over MQTT! This allows you to integrate OyasumiVR with various smart devices you might have in your home, as well as enable you to build your own powerful automations within Home Assistant.
-For example, you can use this to automatically turn off your smart lights when you fall asleep, or turn them back on when needed!
+SteamVRだけではなく、独自の機能をMQTT経由でHome Assistanに公開できます！これにより様々なスマートデバイスと連携したり、独自の自動化を構築したりできます。例えば、睡眠時にライトを消したり、起床時に点灯させることが可能になります。
 <br><br>
-Here is a list of features exposed that you'll be able to read, or control, through Home Assistant:
+以下にHome Assistantから読み取り、またはコントロールできる機能のリストをまとめています。
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/0476e18c-5509-4b08-932f-f49b943d9965"></td>
   </tr>
@@ -542,7 +540,7 @@ Here is a list of features exposed that you'll be able to read, or control, thro
 </tr>
 </table>
 
-## 翻訳 & ローカライズ
+## 翻訳とローカライズ
 
 OyasumiVRは現在、以下の言語に対応しています。
 
@@ -598,10 +596,9 @@ HMDのハードウェア輝度のコントロールはValve IndexとBigscreen Be
 
 ソフトウェアの明るさは全てのHMDで利用可能です。
 
-### Color Temperature Automations
+### 色温度の自動化
 
-Controlling the color temperature of the VR headset's display is currently only supported on some native SteamVR headsets, such as the Valve Index, Bigscreen Beyond, and HTC Vive (Pro).
-It might work on other headsets, but your mileage may vary.
+HMDの色温度制御は現在、Valve Index, Bigscreen Beyond, HTC Vive(Pro)など、一部のネイティブSteamVRに対応したHMDでのみサポートされています。他のHMDでも動作する可能性がありますが、ご利用の環境によって異なります。
 
 ## ビルド
 
