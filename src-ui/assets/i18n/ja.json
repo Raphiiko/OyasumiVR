@@ -511,7 +511,7 @@
           "reason": {
             "MANUAL": "手動でキャンセルした"
           },
-          "title": "シャットダウン機能がキャンセルされた"
+          "title": "シャットダウン処理がキャンセルされた"
         },
         "shutdownSequenceStarted": {
           "reason": {
@@ -521,7 +521,7 @@
             "SLEEP_TRIGGER": "指定時間、眠っていた",
             "VRC_ALONE_TRIGGER": "指定時間、一人だった"
           },
-          "title": "シャットダウン機能を開始した"
+          "title": "シャットダウン処理を開始した"
         },
         "simpleBrightnessChanged": {
           "reason": {
@@ -1295,7 +1295,7 @@
             "DISABLED": "送信しない",
             "WHEN_SLEEPING": "睡眠時のみ"
           },
-          "title": "未処理のReq Inviteを辞退する"
+          "title": "承認しないReq Inviteを辞退する"
         },
         "enable": {
           "description": "フレンドからのReq Inviteを自動で承認",
@@ -1388,7 +1388,7 @@
           },
           "onlyWhenUnhandled": {
             "description": "Req Inviteが自動で承認や辞退されなかった場合のみサウンドを再生します",
-            "title": "未処理時のみ"
+            "title": "承認しない時のみ"
           },
           "title": "Req Invite受信で再生"
         }
@@ -1501,11 +1501,11 @@
       },
       "vrcInviteRequestFailedWorldUnknown": {
         "message": "''{senderUsername}''からReq Inviteが届きましたが、ワールドが不明なため処理できませんでした。VRChatログが読み取れなかった可能性があります。",
-        "title": "Req Invite未処理",
+        "title": "Req Invite応答不可",
         "unknownFriend": "不明なフレンド"
       },
       "vrcLogMissing": {
-        "message": "VRChatは起動していますが、ログファイルが確認できませんでした。ログがないと自動Invite承認などの機能は動作しません。VRChatでログを有効にしてください。",
+        "message": "VRChatは起動していますが、ログファイルが確認できませんでした。ログがないとInvite自動承認などの機能は動作しません。VRChatでログを有効にしてください。",
         "title": "VRChatログファイルが見つかりません"
       },
       "vrcOscMissing": {
@@ -1513,7 +1513,7 @@
         "title": "VRChat OSC(Query)が無効"
       },
       "vrcWebsocketDisconnected": {
-        "message": "VRChatにはログインしていますが、WebSocketに接続できませんでした。一部機能（自動Invite承認など）が現在使用できません。",
+        "message": "VRChatにはログインしていますが、WebSocketに接続できませんでした。一部機能（Invite自動承認など）が現在使用できません。",
         "title": "VRChat WebSocketが未接続"
       }
     },
@@ -1736,7 +1736,7 @@
           "automations": "自動化",
           "deviceControl": "デバイス制御",
           "prepareForSleep": "就寝準備",
-          "shutdown": "シャットダウン機能",
+          "shutdown": "シャットダウン処理",
           "sliderMode": {
             "BRIGHTNESS": "輝度コントロール",
             "COLOR_TEMP": "色温度コントロール"
@@ -1747,7 +1747,7 @@
         "dialog": {
           "message": "シャットダウンを開始します。\n本当によろしいですか？\n\nメインウィンドウで、動作の詳細を設定できます。",
           "start": "シャットダウン開始",
-          "title": "シャットダウン機能"
+          "title": "シャットダウン処理"
         }
       }
     }
@@ -1842,22 +1842,22 @@
     "title": "解像度の自動化"
   },
   "runAutomations": {
-    "commandsToRun": "実行するコマンド",
+    "commandsToRun": "コマンド",
     "description": "Windowsコマンドプロンプト経由でコマンドを自動実行できます。\n\nコマンドはcmd.exeを通じて実行されます。",
     "onSleepDisable": {
-      "description": "コマンドを実行",
+      "description": "コマンドを実行します",
       "title": "起床時"
     },
     "onSleepEnable": {
-      "description": "コマンドを実行",
+      "description": "コマンドを実行します",
       "title": "睡眠時"
     },
     "onSleepPreparation": {
-      "description": "コマンドを実行",
+      "description": "コマンドを実行します",
       "title": "就寝準備時"
     },
     "testCommands": "テスト",
-    "title": "コマンドを実行"
+    "title": "コマンドの実行"
   },
   "settings": {
     "advanced": {
@@ -2291,7 +2291,7 @@
   },
   "shutdown-automations": {
     "confirm-modal": {
-      "message": "今すぐシャットダウン機能を実行させますか？",
+      "message": "今すぐシャットダウン処理を実行させますか？",
       "title": "確認"
     },
     "description": "ゲームや周辺デバイス、もしくはPCをシャットダウンさせ、VR外での快適な睡眠をサポートします。手動で実行することも可能です。",
@@ -2350,10 +2350,10 @@
       "settings": "設定",
       "triggers": "自動化"
     },
-    "title": "シャットダウン機能",
+    "title": "シャットダウン処理",
     "triggers": {
       "enabled": {
-        "description": "有効にすると任意の条件によって自動的にシャットダウン機能を実行します",
+        "description": "有効にすると任意の条件によって自動的にシャットダウン処理を実行します",
         "title": "シャットダウンの自動化"
       },
       "triggers": "条件",
@@ -2410,7 +2410,7 @@
       "description": "任意の設定に基づいて睡眠モードを有効にします。",
       "onControllersPoweredOff": {
         "batteryLevelAutomationConflict": {
-          "action": "デバイスの電源：\nコントローラー＆トラッカー",
+          "action": "デバイスの電源：\nコントローラーとトラッカー",
           "description": "コントローラーのバッテリー残量によってデバイスがオフになるように設定されているため、意図しないタイミングで睡眠モードを有効にしてしまう可能性があります。これを回避するには「デバイスの電源」の「コントローラー＆トラッカー」から設定をオフにできます。",
           "title": "警告: 他の自動化機能によって誘発される可能性があります！"
         },
@@ -2451,11 +2451,11 @@
         },
         "title": "睡眠モードの無効化",
         "triggerOptions": {
-          "BLACKLIST": "リストのプレイヤー以外に対して",
-          "DISABLED": "誰一人として",
-          "EVERYONE": "全員に対して",
-          "FRIEND": "友達に対して",
-          "WHITELIST": "リストのプレイヤーに対して"
+          "BLACKLIST": "リストにないプレイヤー",
+          "DISABLED": "使用しない",
+          "EVERYONE": "全員",
+          "FRIEND": "フレンド",
+          "WHITELIST": "リスト上のプレイヤー"
         }
       },
       "disableForUprightPose": {
