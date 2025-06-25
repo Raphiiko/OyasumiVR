@@ -91,11 +91,11 @@
     },
     "activationTime": {
       "SUNRISE": {
-        "description": "朝日が昇る時刻",
+        "description": "日が昇る時刻",
         "title": "日の出時刻"
       },
       "SUNSET": {
-        "description": "夕日が沈む時刻",
+        "description": "日が沈む時刻",
         "title": "日没時刻"
       }
     },
