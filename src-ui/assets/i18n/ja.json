@@ -69,13 +69,13 @@
   },
   "brightness-automations": {
     "AT_SUNRISE": {
-      "title": "日の出時"
+      "title": "日の出"
     },
     "AT_SUNSET": {
-      "title": "日没時"
+      "title": "日没"
     },
     "HMD_CONNECT": {
-      "title": "HMDがSteamVRに接続されたとき"
+      "title": "SteamVR接続時"
     },
     "SLEEP_MODE_DISABLE": {
       "title": "起床時"
@@ -91,11 +91,11 @@
     },
     "activationTime": {
       "SUNRISE": {
-        "description": "日の出の時刻",
+        "description": "日が昇る時刻",
         "title": "日の出時刻"
       },
       "SUNSET": {
-        "description": "日没の時刻",
+        "description": "日が沈む時刻",
         "title": "日没時刻"
       }
     },
@@ -113,7 +113,7 @@
       "description": "HMDに表示される映像の色温度を調整",
       "title": "色温度を変更"
     },
-    "copyBrightness": "現在の明るさの値をコピーする",
+    "copyBrightness": "明るさの現在値を適用する",
     "description": "HMDの輝度や色温度を調整します",
     "detailsTitle": "イベント",
     "events": "イベント",
@@ -511,7 +511,7 @@
           "reason": {
             "MANUAL": "手動でキャンセルした"
           },
-          "title": "シャットダウン機能がキャンセルされた"
+          "title": "シャットダウン処理がキャンセルされた"
         },
         "shutdownSequenceStarted": {
           "reason": {
@@ -521,7 +521,7 @@
             "SLEEP_TRIGGER": "指定時間、眠っていた",
             "VRC_ALONE_TRIGGER": "指定時間、一人だった"
           },
-          "title": "シャットダウン機能を開始した"
+          "title": "シャットダウン処理を開始した"
         },
         "simpleBrightnessChanged": {
           "reason": {
@@ -747,7 +747,7 @@
       "noFriends": "フレンドリストがありません",
       "noFriendsSelected": "選択されたフレンドはいません",
       "noResultsFor": "''{query}''の結果が見つかりません",
-      "searchPlaceholder": "名前からフレンドを検索する…",
+      "searchPlaceholder": "名前からフレンドを検索する……",
       "title": "フレンドを選択する"
     },
     "hotkey-selector-modal": {
@@ -899,7 +899,7 @@
       },
       "addCommand": "追加",
       "addParameter": "パラメータ追加",
-      "commandCounter": "{count} コマンド",
+      "commandCounter": "{count}コマンド",
       "commands": {
         "COMMAND": {
           "description": "OSCコマンドを実行します",
@@ -941,7 +941,7 @@
       "addFriends": "フレンドを追加",
       "clearPlayers": "全てクリア",
       "loadPreset": "プリセットを読み込む",
-      "loadingFriends": "フレンドを読み込み中…",
+      "loadingFriends": "フレンドを読み込み中……",
       "noPlayersAdded": "リストに登録されているプレイヤーはいません",
       "removeModal": {
         "message": "''{name}''をリストから削除しますか？",
@@ -1015,17 +1015,17 @@
     },
     "config": {
       "disabled": {
-        "description": "無効化されたデバイスはオートメーションやバルクアクションの影響を受けず、デバイスリストに表示されません",
-        "title": "デバイスを無効にする",
-        "tooltip": "このデバイスは無効になっている"
+        "description": "無効化されたデバイスは自動処理や一括処理の影響を受けず、デバイスリストにも表示されません",
+        "title": "デバイスを無効化",
+        "tooltip": "無効化されたデバイス"
       },
       "nickname": {
         "description": "識別用のカスタム名を設定",
         "title": "デバイス名"
       },
       "tags": {
-        "description": "デバイスを整理、フィルタリングするためにタグを割り当てます",
-        "noTags": "利用可能なタグがありません。タグタブで作成してください。",
+        "description": "整理、フィルタリングするためにタグを割り当てます",
+        "noTags": "利用可能なタグがありません。タグを作成してください",
         "title": "デバイスタグ"
       },
       "title": "設定",
@@ -1295,7 +1295,7 @@
             "DISABLED": "送信しない",
             "WHEN_SLEEPING": "睡眠時のみ"
           },
-          "title": "未処理のReq Inviteを辞退する"
+          "title": "承認しないReq Inviteを辞退する"
         },
         "enable": {
           "description": "フレンドからのReq Inviteを自動で承認",
@@ -1388,7 +1388,7 @@
           },
           "onlyWhenUnhandled": {
             "description": "Req Inviteが自動で承認や辞退されなかった場合のみサウンドを再生します",
-            "title": "未処理時のみ"
+            "title": "承認しない時のみ"
           },
           "title": "Req Invite受信で再生"
         }
@@ -1501,11 +1501,11 @@
       },
       "vrcInviteRequestFailedWorldUnknown": {
         "message": "''{senderUsername}''からReq Inviteが届きましたが、ワールドが不明なため処理できませんでした。VRChatログが読み取れなかった可能性があります。",
-        "title": "Req Invite未処理",
+        "title": "Req Invite応答不可",
         "unknownFriend": "不明なフレンド"
       },
       "vrcLogMissing": {
-        "message": "VRChatは起動していますが、ログファイルが確認できませんでした。ログがないと自動Invite承認などの機能は動作しません。VRChatでログを有効にしてください。",
+        "message": "VRChatは起動していますが、ログファイルが確認できませんでした。ログがないとInvite自動承認などの機能は動作しません。VRChatでログを有効にしてください。",
         "title": "VRChatログファイルが見つかりません"
       },
       "vrcOscMissing": {
@@ -1513,7 +1513,7 @@
         "title": "VRChat OSC(Query)が無効"
       },
       "vrcWebsocketDisconnected": {
-        "message": "VRChatにはログインしていますが、WebSocketに接続できませんでした。一部機能（自動Invite承認など）が現在使用できません。",
+        "message": "VRChatにはログインしていますが、WebSocketに接続できませんでした。一部機能（Invite自動承認など）が現在使用できません。",
         "title": "VRChat WebSocketが未接続"
       }
     },
@@ -1522,7 +1522,7 @@
   },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "このプリセットは応急対応のため、複数の問題を抱えています。新しいGoGo Locoプリセットを使用できない場合にのみ、このプリセットを使用してください。また、まだ古いバージョンのGoGo Locoを使用している場合は、最新のGoGo Locoを使用し、更新することをお勧めします。",
-    "GORONE_LEGACY_PRESET_WARNING": "このプリセットのv4.0以降ではすでに回転機能が含まれており、この機能が不要になりました。古いバージョンを使用している場合に限りこのプリセットを使用してください。",
+    "GORONE_LEGACY_PRESET_WARNING": "このプリセットのv4.0以降ではすでに回転機能が含まれており、この機能は不要になりました。古いバージョンを使用している場合に限りこのプリセットを使用してください。",
     "oneTimeFlagDialogs": {
       "CCT_CONTROL_WARNING_DIALOG": {
         "message": "ディスプレイの色温度制御は、一部のHMD（例: Valve Index, Bigscreen Beyondなど）でのみ利用可能です。\n\nこれらのHMDを使用していない場合は効果がありません。\n\n必要ない場合は、設定からディスプレイの色温度制御を無効にできます。",
@@ -1545,7 +1545,7 @@
       "floatTooPrecise": "値の精度は最大で小数点以下3桁までです。",
       "intOutOfBounds": "値は0から255の間の有効な整数でなければなりません。",
       "invalidSyntax": "無効な構文です。",
-      "maxParameterCountExceeded": "コマンドごとに許可される最大パラメーター数は{value}です。",
+      "maxParameterCountExceeded": "コマンドごとに許可される最大パラメータ数は{value}です。",
       "noFloatMilliseconds": "ミリ秒値は整数で定義されなければなりません。",
       "stringTooLong": "文字列の値は{value}文字を超えてはなりません。",
       "tooManyCommands": "OSCスクリプトは、{value}以上のアクションを持つことはできません。",
@@ -1736,7 +1736,7 @@
           "automations": "自動化",
           "deviceControl": "デバイス制御",
           "prepareForSleep": "就寝準備",
-          "shutdown": "シャットダウン機能",
+          "shutdown": "シャットダウン処理",
           "sliderMode": {
             "BRIGHTNESS": "輝度コントロール",
             "COLOR_TEMP": "色温度コントロール"
@@ -1747,7 +1747,7 @@
         "dialog": {
           "message": "シャットダウンを開始します。\n本当によろしいですか？\n\nメインウィンドウで、動作の詳細を設定できます。",
           "start": "シャットダウン開始",
-          "title": "シャットダウン機能"
+          "title": "シャットダウン処理"
         }
       }
     }
@@ -1842,22 +1842,22 @@
     "title": "解像度の自動化"
   },
   "runAutomations": {
-    "commandsToRun": "実行するコマンド",
+    "commandsToRun": "コマンド",
     "description": "Windowsコマンドプロンプト経由でコマンドを自動実行できます。\n\nコマンドはcmd.exeを通じて実行されます。",
     "onSleepDisable": {
-      "description": "コマンドを実行",
+      "description": "コマンドを実行します",
       "title": "起床時"
     },
     "onSleepEnable": {
-      "description": "コマンドを実行",
+      "description": "コマンドを実行します",
       "title": "睡眠時"
     },
     "onSleepPreparation": {
-      "description": "コマンドを実行",
+      "description": "コマンドを実行します",
       "title": "就寝準備時"
     },
     "testCommands": "テスト",
-    "title": "コマンドを実行"
+    "title": "コマンドの実行"
   },
   "settings": {
     "advanced": {
@@ -2008,7 +2008,7 @@
     "brightnessCct": {
       "bigscreenBeyond": {
         "forceFanSafety": {
-          "description": "輝度が100%を超える場合、ファン速度を強制的に100%にします。",
+          "description": "輝度が100%を超える場合、ファン速度を強制的に100%にします",
           "title": "過熱防止機能",
           "warning": "この機能は公式のBigscreen Beyondドライバーの安全なファンパラメータを模倣します。この制限を無効にするとHMDを損傷する可能性があります。自己責任にてご利用ください。"
         },
@@ -2017,7 +2017,7 @@
           "title": "最大輝度"
         },
         "permitRiskRange": {
-          "description": "150%を超えないように制限します。",
+          "description": "150%を超えないように制限します",
           "title": "安全な輝度レベルに制限",
           "warning": "この機能はメーカーによってサポートされていません。\n\nこの制限を無効にするとHMDを損傷する可能性があります。自己責任にてご利用ください。"
         },
@@ -2025,7 +2025,7 @@
       },
       "cctControl": {
         "enabled": {
-          "description": "他のアプリケーション（例: LuxVRやOVR Advanced Settings）でディスプレイの色温度を制御している場合は、これを無効にしてください。",
+          "description": "他のアプリケーション（例: LuxVRやOVR Advanced Settings）でディスプレイの色温度を制御している場合は、これを無効にしてください",
           "title": "色温度制御を有効にする"
         },
         "title": "色温度"
@@ -2034,7 +2034,7 @@
       "title": "輝度と色温度",
       "valveIndex": {
         "maxBrightness": {
-          "description": "OyasumiVRが設定する最大輝度の値を制限します。",
+          "description": "OyasumiVRが設定する最大輝度の値を制限します",
           "title": "最大輝度"
         },
         "title": "Valve Index"
@@ -2062,7 +2062,7 @@
         "title": "Discord"
       },
       "language": {
-        "description": "希望の言語を選択できます。翻訳されていない箇所がある場合や、言語を追加したい場合はご連絡ください。",
+        "description": "希望の言語を選択できます。翻訳されていない箇所がある場合や、新しく言語を追加したい場合はご連絡ください。",
         "title": "言語"
       },
       "lighthouseConsole": {
@@ -2255,12 +2255,12 @@
       "changelog": "変更履歴",
       "checkForUpdates": "アップデートを確認する",
       "install": "v{version}をインストール",
-      "noUpdate": "現在、最新版であるOyasumiVR v{version} を利用しています！",
+      "noUpdate": "最新版のOyasumiVR（v{version}）を利用しています！",
       "notChecked": "まだアップデートを確認をしていません",
       "title": "アップデート",
       "updateAvailable": "OyasumiVRの最新版が登場！現在、あなたはv{currentVersion}を利用しています。\n最新版はv{latestVersion}です",
       "updatesDisabled": {
-        "DEV": "新しいバージョンのOyasumiVRをインストールしたい場合は、手動でインストーラーをダウンロードして実行してください",
+        "DEV": "新バージョンのOyasumiVRをインストールしたい場合は、手動でインストーラーをダウンロードして実行してください",
         "STEAM": "Steam版をインストールしているため、新しいアップデートはSteamを通じて提供されます！"
       }
     }
@@ -2271,7 +2271,7 @@
       "vrcLoginRequired": "VRChatアカウントでログインする必要があります。"
     },
     "logo": {
-      "tagline": "VR睡眠ソフトウェア"
+      "tagline": "VR睡眠ソフト"
     },
     "modals": {
       "back": "戻る",
@@ -2291,7 +2291,7 @@
   },
   "shutdown-automations": {
     "confirm-modal": {
-      "message": "今すぐシャットダウン機能を実行させますか？",
+      "message": "今すぐシャットダウン処理を実行させますか？",
       "title": "確認"
     },
     "description": "ゲームや周辺デバイス、もしくはPCをシャットダウンさせ、VR外での快適な睡眠をサポートします。手動で実行することも可能です。",
@@ -2350,10 +2350,10 @@
       "settings": "設定",
       "triggers": "自動化"
     },
-    "title": "シャットダウン機能",
+    "title": "シャットダウン処理",
     "triggers": {
       "enabled": {
-        "description": "有効にすると任意の条件によって自動的にシャットダウン機能を実行します",
+        "description": "有効にすると任意の条件によって自動的にシャットダウン処理を実行します",
         "title": "シャットダウンの自動化"
       },
       "triggers": "条件",
@@ -2410,7 +2410,7 @@
       "description": "任意の設定に基づいて睡眠モードを有効にします。",
       "onControllersPoweredOff": {
         "batteryLevelAutomationConflict": {
-          "action": "デバイスの電源：\nコントローラー＆トラッカー",
+          "action": "デバイスの電源：\nコントローラーとトラッカー",
           "description": "コントローラーのバッテリー残量によってデバイスがオフになるように設定されているため、意図しないタイミングで睡眠モードを有効にしてしまう可能性があります。これを回避するには「デバイスの電源」の「コントローラー＆トラッカー」から設定をオフにできます。",
           "title": "警告: 他の自動化機能によって誘発される可能性があります！"
         },
@@ -2451,11 +2451,11 @@
         },
         "title": "睡眠モードの無効化",
         "triggerOptions": {
-          "BLACKLIST": "リストのプレイヤー以外に対して",
-          "DISABLED": "誰一人として",
-          "EVERYONE": "全員に対して",
-          "FRIEND": "友達に対して",
-          "WHITELIST": "リストのプレイヤーに対して"
+          "BLACKLIST": "リストにないプレイヤー",
+          "DISABLED": "使用しない",
+          "EVERYONE": "全員",
+          "FRIEND": "フレンド",
+          "WHITELIST": "リスト上のプレイヤー"
         }
       },
       "disableForUprightPose": {
@@ -2552,7 +2552,7 @@
       },
       "sleepDetectorCalibration": {
         "calibrating": {
-          "countdown": "残り{counter}秒…",
+          "countdown": "残り{counter}秒……",
           "instruction": "キャリブレーション中",
           "note": "じっとしてください。"
         },
@@ -2674,7 +2674,7 @@
       },
       "onlyIfSleepModeEnabled": "睡眠モード有効時のみ",
       "playerLimit": "人数制限",
-      "playerLimitLabel": "{count} 人のプレイヤー（自分を含む）"
+      "playerLimitLabel": "{count}人のプレイヤー（自分を含む）"
     },
     "tabs": {
       "general": "一般",
