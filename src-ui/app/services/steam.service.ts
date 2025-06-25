@@ -22,6 +22,8 @@ import { SleepService } from './sleep.service';
 import { VRChatService } from './vrchat-api/vrchat.service';
 import { DEV_VRCHAT_USER_ID } from '../globals';
 import { sleep } from '../utils/promise-utils';
+import { AppSettingsService } from './app-settings.service';
+import { MqttService } from './mqtt/mqtt.service';
 
 export const SteamAchievements = {
   START_OYASUMIVR: 'START_OYASUMIVR',
@@ -29,6 +31,7 @@ export const SteamAchievements = {
   SLEEP_8H: 'SLEEP_8H',
   QUICK_EEPER: 'QUICK_EEPER3',
   DEV_SLEEP: 'DEV_SLEEP',
+  HASS_CON: 'HASS_CON',
 } as const;
 
 @Injectable({
@@ -40,7 +43,9 @@ export class SteamService {
 
   constructor(
     private sleep: SleepService,
-    private vrchat: VRChatService
+    private vrchat: VRChatService,
+    private appSettings: AppSettingsService,
+    private mqttService: MqttService
   ) {
     this.active
       .pipe(distinctUntilChanged(), filter(Boolean))
@@ -61,12 +66,14 @@ export class SteamService {
         );
       }
     }, 5000);
+
     // Handle achievements
     this.handleAchievement_START_OYASUMIVR();
     this.handleAchievement_SMSPAM();
     this.handleAchievement_SLEEP_8H();
     this.handleAchievement_QUICK_EEPER();
     this.handleAchievement_DEV_SLEEP();
+    this.handleAchievement_CONNECT_HASS();
   }
 
   public async getSteamActive(): Promise<boolean> {
@@ -90,11 +97,16 @@ export class SteamService {
   // ACHIEVEMENT HANDLERS
   private async handleAchievement_START_OYASUMIVR() {
     // Set START_OYASUMIVR achievement when Steamworks becomes active
-    this.active.pipe(distinctUntilChanged(), filter(Boolean)).subscribe(async () => {
-      if (!(await this.getAchievement(SteamAchievements.START_OYASUMIVR))) {
-        await this.setAchievement(SteamAchievements.START_OYASUMIVR, true);
-      }
-    });
+    this.active
+      .pipe(
+        distinctUntilChanged(),
+        filter(Boolean),
+        switchMap(() => this.getAchievement(SteamAchievements.START_OYASUMIVR)),
+        filter((unlocked) => !unlocked),
+        switchMap(() => this.setAchievement(SteamAchievements.START_OYASUMIVR, true)),
+        take(1)
+      )
+      .subscribe();
   }
 
   private async handleAchievement_SMSPAM() {
@@ -199,6 +211,20 @@ export class SteamService {
         switchMap(() => this.getAchievement(SteamAchievements.DEV_SLEEP)),
         filter((unlocked) => !unlocked),
         switchMap(() => this.setAchievement(SteamAchievements.DEV_SLEEP, true))
+      )
+      .subscribe();
+  }
+
+  private async handleAchievement_CONNECT_HASS() {
+    this.mqttService.clientStatus
+      .pipe(
+        distinctUntilChanged(),
+        debounceTime(1000),
+        filter((status) => status === 'CONNECTED'),
+        switchMap(() => this.getAchievement(SteamAchievements.HASS_CON)),
+        filter((unlocked) => !unlocked),
+        switchMap(() => this.setAchievement(SteamAchievements.HASS_CON, true)),
+        take(1)
       )
       .subscribe();
   }
