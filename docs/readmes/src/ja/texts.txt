@@ -1,11 +1,11 @@
 {{HEADER_TAGLINE}}
-💤 VR睡眠をサポートするソフトウェア 💤
+💤 あなたのVR睡眠をサポートします 💤
 
 {{DISCORD_INVITE}}
-<a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server</a>への参加もお待ちしています！
+<a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord </a>への参加もお待ちしています！
 
 {{DOWNLOAD_AND_INSTALL_HEADER}}
-ダウンロード&インストール
+ダウンロードとインストール
 
 {{DOWNLOAD_AND_INSTALL_BODY}}
 任意の場所から最新のインストーラーを入手できます。
@@ -21,29 +21,29 @@
 OyasumiVRとは?
 
 {{WHAT_IS_OYASUMIVR_BODY}}
-HMDを被りながら眠るのに便利な機能を実装したデスクトップアプリケーションです。主にVRChatでの使用を想定しています。
+HMDを被りながら眠るのに便利な機能を実装したデスクトップアプリです。主にVRChatでの使用を想定しています。
 
 あなたの睡眠を検知して以下のような機能を実行できます。
 - 🔋 電力の節約
 - 🔅 明るさの調整
-- ✨ 寝相に合わせたアバターポーズの変更
+- ✨ 寝相に合わせたポーズの変更
 - 📩 Request Inviteの自動承認
-- 🔵 Automating your VRChat status
+- 🔵 VRChatステータスの変更
 - 🎤 マイクミュート
-- 🛠 SteamVRの設定の自動化
+- 🛠 SteamVRの設定変更
 
-…他にもまだまだあります！詳細は次の「機能」の項目をご確認ください。
+他にもたくさんの機能があります！詳細は次の「機能」の項目をご確認ください。
 
 {{SUPPORT_OYASUMIVR_HEADER}}
 OyasumiVRをサポート
 
 {{SUPPORT_OYASUMIVR_BODY}}
-OyasumiVR自体は現在も、そしてこれからも完全に無料です。しかしながら私とOyasumiVRの開発を以下の方法でサポートしていただくことも可能です。
+OyasumiVRは現在も、そしてこれからも完全に無料です。ですが、以下の方法でサポートしていただくことも可能です。
 
 <a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
 <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
 
-サポートは、新機能の開発, 機能の改善, 開発プロセスに伴うコストの一部へと…… そして何より、私のコーヒー依存症を促進させることができます☕
+サポートは、新機能の開発, 機能の改善, 開発プロセスに伴うコストの一部…… そして、開発者のコーヒー依存症を促進させるのに用いられます☕
 
 OyasumiVRはすぐに終わるわけではありません。**やりたいことはまだまだ残っています！**
 
@@ -51,28 +51,28 @@ OyasumiVRはすぐに終わるわけではありません。**やりたいこと
 機能
 
 {{SLEEP_DETECTION_HEADER}}
-💤 睡眠検出
+💤 寝落ち検知
 
 {{SLEEP_DETECTION_BODY}}
-HMDの動きを分析して寝落ちを自動で検出します！一度キャリブレーションを行うだけで設定完了します。
+HMDの動きを分析して寝落ちを自動で検知します！一度キャリブレーションを行うだけで設定完了します。
 <br><br>
-他にも、以下の項目に応じて自動化の機能を使用できます。
+他にも、以下の項目に応じて自動化を使用できます。
 <br><br>
 <ul>
   <li>時刻指定</li>
   <li>コントローラー, トラッカーのバッテリー残量</li>
   <li>コントローラー, トラッカーの充電状態</li>
   <li>SteamVRの状態</li>
-  <li>Heart Rate</li>
-  <li>Sitting Upright</li>
-  <li>VRChat players joining or leaving</li>
+  <li>心拍数</li>
+  <li>姿勢</li>
+  <li>プレイヤーのJoinや退出</li>
 </ul>
 
 {{STEAMVR_OVERLAY_HEADER}}
 📲 SteamVRオーバーレイ
 
 {{STEAMVR_OVERLAY_BODY}}
-一部の機能は独自のSteamVRオーバーレイを使ってVR内から直接操作できます！
+一部の機能は独自のVRオーバーレイを使ってVR内から直接操作できます！
 <br><br>
 デフォルトでは右コントローラーのAを2回押すと表示されるようになっています。
 
@@ -80,12 +80,12 @@ HMDの動きを分析して寝落ちを自動で検出します！一度キャ�
 🔋 電源の自動化
 
 {{POWER_AUTOMATIONS_BODY_CONTROLLERS_AND_TRACKERS}}
-<b>コントローラー & トラッカー</b>
+<b>コントローラーとトラッカー</b>
 <br>
-電源を切ることでバッテリーを節約します。朝起きたときのバッテリー切れを防ぎます！
+電源をオフにすることでバッテリーを節約します。朝起きたときのバッテリー切れを防ぎます！
 <br>
 <br>
-他にも、充電器に繋いだときに電源を切るようにすることもできます。コントローラーの入れ替えに便利！
+充電器に繋いだときに電源を切るようにすることも可能です。コントローラーの入れ替えに便利！
 
 {{POWER_AUTOMATIONS_BODY_WINDOWS_POWER_POLICY}}
 <b>Windowsの電源オプション</b>
@@ -95,7 +95,7 @@ HMDの動きを分析して寝落ちを自動で検出します！一度キャ�
 {{POWER_AUTOMATIONS_BODY_BASE_STATIONS}}
 <b>ベースステーション</b>
 <br>
-SteamVRと共にベースステーションの電源を操作します。SteamVR独自の電源管理のようなものですが、どのHMDにも対応します！PCがBluetoothに対応し、ベースステーションの範囲にあれば機能します。
+SteamVRと共にベースステーションの電源を操作します。SteamVR独自の電源管理と違い、どのHMDにも対応します！PCがBluetoothに対応し、ベースステーションと接続があれば機能します。
 
 {{GPU_AUTOMATIONS_HEADER}}
 🔌 GPU自動化
@@ -139,17 +139,17 @@ GPUの電力を制限してPCの消費電力を節約します。希望の消費
 {{VRCHAT_AUTOMATIONS_BODY_AUTO_ACCEPT_INVITE_REQUESTS}}
 📧 <b>Request Inviteの自動承認</b>
 <br>
-寝ている間に来たReqInを自動的に承認できます！ホワイトリストやブラックリストを使って、承認するフレンドを制限することもできます。
+寝ている間に来たReqInviteを自動的に承認できます！ホワイトリストやブラックリストを使って、承認するフレンドを限定することもできます。
 
 {{VRCHAT_AUTOMATIONS_OSC_AUTOMATIONS}}
 🔧 <b>OSC自動化</b>
 <br>
-任意のOSCメッセージをVRChatに送信できます。内臓のOSCスクリプトエディタを使って、送信したいメッセージを正確に作成できます。
+任意のOSCメッセージをVRChatに送信できます。内蔵のOSCスクリプトエディタを使って、送信したいメッセージを正確に作成できます。
 <br><br>
-これはより高度な機能であり、アバターに特定の機能を実行させるために使用できます！例えば、寝ているときには眠そうな表情をさせる場合など活用方法は様々です！
+これは高度な機能であり、アバターに特定の機能を実行させるために使用します！寝ているときには眠そうな表情をさせる場合など、活用方法は様々です！
 
 {{SHUTDOWN_SEQUENCE_HEADER}}
-⛔ シャットダウン機能
+⛔ シャットダウン機能⛔ シャットダウン機能
 
 {{MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
 🎤 マイクミュートの自動化
@@ -176,7 +176,7 @@ VR内にマイクアイコンを表示できます。オプションでキーバ
 ♥️ 心拍数による自動化 (Pulsoid Integration)
 
 {{HEART_RATE_AUTOMATIONS_INTRO}}
-この機能にはオンライン心拍数サービス <a href="https://pulsoid.net/pricing?promo_campaign_id=86680152-707d-4771-8a12-740bad1b4545">Pulsoid</a> を利用します。このため、Bluetooth心拍数モニター, WearOS スマートウォッチ, Apple Watchなど、Pulsoidがサポートするハードウェアを使用できます。
+この機能にはオンライン心拍数サービス <a href="https://pulsoid.net/pricing?promo_campaign_id=86680152-707d-4771-8a12-740bad1b4545">Pulsoid</a> を利用します。Bluetooth心拍数モニター, WearOS スマートウォッチ, Apple Watchなど、Pulsoidがサポートするハードウェアを使用できます。
 <br><br>
 <i>連携を行うには、PulsoidのOyasumiVR連携を購入するか、Pulsoidの「BRO」サブスクリプションを有効にする必要があります。お持ちのデバイスが対応されているか、事前にご確認ください。</i>
 
@@ -215,7 +215,7 @@ SteamVRのレンダリング解像度を調整できます！眠っていると�
 SteamVRのガーディアンのフェード距離を調整できます。眠っているときにガーディアンを非表示にし、起きたときに再度表示させることができます。
 
 {{TRANSLATION_AND_LOCALIZATION_HEADER}}
-翻訳 & ローカライズ
+翻訳とローカライズ
 
 {{TRANSLATION_AND_LOCALIZATION_BODY}}
 OyasumiVRは現在、以下の言語に対応しています。
@@ -323,39 +323,155 @@ OyasumiVRでお困りのことがありましたら [Discord Server](https://dis
 OyasumiVR is available under the [MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md) license.
 
 {{DEVICE_CONTROL_HEADER}}
-
+🎮 デバイス管理
 
 {{DEVICE_CONTROL_BODY}}
-
+コントローラー、トラッカー、ベースステーションなど、多くのSteamVRデバイスを簡単に管理することができます。
+<br><br>
+バッテリー残量や充電状態を読み取り、ベースステーションのオン/オフをワンクリックで切り替えることができます！
 
 {{VRCHAT_AUTOMATIONS_BODY_STATUS_AUTOMATIONS}}
-
+🔵 <b>ステータスの自動化</b>
+<br>
+VRChatのステータスやメッセージを制御するために複数の機能があります。
+<br><br>
+また、ワールド人数に合わせてステータスを変更することもできます。一人のときはステータスを青(Join Me)に設定したり、誰かが参加すれば橙(Ask Me)に設定したりできます！
 
 {{VRCHAT_AUTOMATIONS_JOIN_NOTIFICATIONS}}
+🔔 <b>Join通知</b>
+<br>
+プレイヤーのJoinや退出に合わせて通知を出すことができます。
 
+特定の状況でのみ通知することも可能です。
+<br>
+<ul>
+  <li>フレンド</li>
+  <li>特定のプレイヤー</li>
+  <li>最後の一人になったとき</li>
+  <li>一人ではなくなったとき</li>
+</ul>
 
 {{VRCHAT_AUTOMATIONS_AVATAR_AUTOMATIONS}}
-
+🏃 <b>アバターの自動化</b>
+<br>
+睡眠時、起床時にアバターを切り替えることができます。寝るとき専用のアバターを用意している場合に活用できます！
 
 {{SHUTDOWN_SEQUENCE_BODY}}
-
+VR睡眠したいけどVRをつけっぱなしにするのに躊躇ったことはありませんか？ぜひシャットダウン機能を活用してください！
+<br><br>
+手動で操作することもできますが、もちろん自動化にも対応しています。
+<br><br>
+<ul>
+  <li>一定時間、眠ったとき</li>
+  <li>VRChatのワールドで一定時間、一人になったとき</li>
+</ul>
+<br>
+項目に分けて以下を設定できます。
+<br><br>
+<ul>
+  <li>コントローラーやトラッカーをオフにする</li>
+  <li>ベースステーションをオフにする</li>
+  <li>SteamVRを終了する<i>（関係するすべてのアプリも終了します）</i></li>
+  <li>Windowsのシャットダウン</li>
+</ul>
+<br>
+この機能を活用すればVRでいる必要がなくなったとき、何も気にせず、何も操作せず睡眠を継続することができます！
 
 {{BRIGHTNESS_CCT_AUTOMATIONS_HEADER}}
-
+🔅 画面の明るさと色温度
 
 {{BRIGHTNESS_CCT_AUTOMATIONS_BODY}}
-
+🌆 <b>明るさ</b>
+<br>
+睡眠時や起床時の明るさを変更できます。ゆっくりとスムーズに変更することも可能です。
+<br><br>
+ソフトウェアの明るさだけではなく、対応しているHMD(Valve Index, Bigscreen Beyondなど)である場合はハードウェアの輝度を変更することもできます。自動化だけでなく、オーバーレイから簡単に変更することも可能です。
+<br><br>
+🌡️ <b>色温度</b>
+<br>
+色温度も変更できます。ブルーライトを減らして眠りにつきやすいようにできます。
+<br><br>
+太陽との連動機能を使えば、日の出や日の入りに合わせて自動的に調整できます。
+<br><br>
+<i>ただし、色温度機能は一部のHMD(Valve Index, Bigscreen Beyondなど)にしか対応していません。</i>
 
 {{MQTT_CONTROL_HEADER}}
-
+🏠 Home Assistant連携
 
 {{MQTT_CONTROL_BODY}}
-
+SteamVRだけではなく、独自の機能をMQTT経由でHome Assistanに公開できます！これにより様々なスマートデバイスと連携したり、独自の自動化を構築したりできます。例えば、睡眠時にライトを消したり、起床時に点灯させることが可能になります。
+<br><br>
+以下にHome Assistantから読み取り、またはコントロールできる機能のリストをまとめています。
 
 {{MQTT_CONTROL_FEATURES}}
-
+<tr>
+  <td>
+    <b>OyasumiVR Features</b>
+    <ul>
+      <li>Sleep Mode (Switch)</li>
+      <li>Shutdown Sequence (Button)</li>
+      <li>Sleep Preparation (Button)</li>
+      <li>Heart Rate (Sensor)</li>
+      <li>Sleeping Position (Sensor)</li>
+      <li>
+        Base Station
+        <ul>
+          <li>Power (Switch)</li>
+          <li>Power State (Sensor)</li>
+        </ul>
+      </li>
+      <li>
+        HMD Brightness
+        <ul>
+          <li>Advanced Mode (Switch)</li>
+          <li>Simple Brightness (Number)</li>
+          <li>Software Brightness (Number)</li>
+          <li>Hardware Brightness (Number)</li>
+        </ul>
+      </li>
+    </ul>
+  </td>
+  <td colspan="2">
+    <b>VRChat Features</b>
+    <ul>
+      <li>VRChat Running (Sensor)</li>
+      <li>Player Name (Sensor)</li>
+      <li># Players In World (Sensor)</li>
+      <li>Status Visibility (Sensor)</li>
+      <li>World Instance ID (Sensor)</li>
+    </ul>
+  </td>
+</tr>
+<tr>
+  <td>
+    <b>SteamVR Features</b>
+    <ul>
+      <li>VR Headset Model (Sensor)</li>
+      <li>SteamVR Running (Sensor)</li>
+      <li>
+        Controller & Tracker
+        <ul>
+          <li>Power (Switch) (Only Powering Off)</li>
+          <li>Charging State (Sensor)</li>
+          <li>Battery Level (Sensor)</li>
+          <li>Device Roles (Sensor)</li>
+        </ul>
+      </li>
+    </ul>
+    <br />
+  </td>
+  <td colspan="2">
+    <b>Bigscreen Beyond Features</b>
+    <ul>
+      <li>Fan Speed (Number)</li>
+      <li>RGB LED (Light)</li>
+      <li>Brightness (Number)</li>
+    </ul>
+  </td>
+</tr>
 
 {{SUPPORTED_HARDWARE_CCT_HEADER}}
-
+色温度の自動化
 
 {{SUPPORTED_HARDWARE_CCT_BODY}}
+HMDの色温度制御は現在、Valve Index, Bigscreen Beyond, HTC Vive(Pro)など、一部のネイティブSteamVRに対応したHMDでのみサポートされています。他のHMDでも動作する可能性がありますが、ご利用の環境によって異なります。
