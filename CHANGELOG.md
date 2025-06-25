@@ -7,6 +7,16 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 
 ## [Unreleased]
 
+## [25.6.3]
+
+### Added
+
+- Achievement
+
+### Changed
+
+- Improved Japanese Translations
+
 ## [25.6.2]
 
 ### Fixed
