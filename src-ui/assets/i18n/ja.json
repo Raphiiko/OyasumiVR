@@ -69,13 +69,13 @@
   },
   "brightness-automations": {
     "AT_SUNRISE": {
-      "title": "日の出時"
+      "title": "日の出"
     },
     "AT_SUNSET": {
-      "title": "日没時"
+      "title": "日没"
     },
     "HMD_CONNECT": {
-      "title": "HMDがSteamVRに接続されたとき"
+      "title": "SteamVR接続時"
     },
     "SLEEP_MODE_DISABLE": {
       "title": "起床時"
@@ -91,11 +91,11 @@
     },
     "activationTime": {
       "SUNRISE": {
-        "description": "日の出の時刻",
+        "description": "朝日が昇る時刻",
         "title": "日の出時刻"
       },
       "SUNSET": {
-        "description": "日没の時刻",
+        "description": "夕日が沈む時刻",
         "title": "日没時刻"
       }
     },
@@ -113,7 +113,7 @@
       "description": "HMDに表示される映像の色温度を調整",
       "title": "色温度を変更"
     },
-    "copyBrightness": "現在の明るさの値をコピーする",
+    "copyBrightness": "明るさの現在値を適用する",
     "description": "HMDの輝度や色温度を調整します",
     "detailsTitle": "イベント",
     "events": "イベント",
@@ -1522,7 +1522,7 @@
   },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "このプリセットは応急対応のため、複数の問題を抱えています。新しいGoGo Locoプリセットを使用できない場合にのみ、このプリセットを使用してください。また、まだ古いバージョンのGoGo Locoを使用している場合は、最新のGoGo Locoを使用し、更新することをお勧めします。",
-    "GORONE_LEGACY_PRESET_WARNING": "このプリセットのv4.0以降ではすでに回転機能が含まれており、この機能が不要になりました。古いバージョンを使用している場合に限りこのプリセットを使用してください。",
+    "GORONE_LEGACY_PRESET_WARNING": "このプリセットのv4.0以降ではすでに回転機能が含まれており、この機能は不要になりました。古いバージョンを使用している場合に限りこのプリセットを使用してください。",
     "oneTimeFlagDialogs": {
       "CCT_CONTROL_WARNING_DIALOG": {
         "message": "ディスプレイの色温度制御は、一部のHMD（例: Valve Index, Bigscreen Beyondなど）でのみ利用可能です。\n\nこれらのHMDを使用していない場合は効果がありません。\n\n必要ない場合は、設定からディスプレイの色温度制御を無効にできます。",
