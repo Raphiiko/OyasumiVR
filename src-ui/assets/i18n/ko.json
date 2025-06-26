@@ -1409,8 +1409,6 @@
     },
     "powerManagementWarning": "베이스스테이션을 켜거나 끄는 데 OyasumiVR의 자동화 기능을 사용하려면 SteamVR의 베이스스테이션 설정에서 전원 관리 기능을 비활성화할 것을 권장해요.",
     "tabs": {
-      "baseStations": "베이스스테이션",
-      "controllersAndTrackers": "컨트롤러 및 트래커",
       "windowsPowerPolicy": "전원 정책"
     },
     "title": "전원 자동화",

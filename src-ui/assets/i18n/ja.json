@@ -1798,8 +1798,6 @@
     },
     "powerManagementWarning": "OyasumiVRでベースステーションの電源を自動化する場合、SteamVRの設定でベースステーションの電源管理を無効にすることを推奨します。",
     "tabs": {
-      "baseStations": "ベースステーション",
-      "controllersAndTrackers": "コントローラー & トラッカー",
       "windowsPowerPolicy": "電源オプション"
     },
     "title": "電源の自動化",
