@@ -1798,8 +1798,7 @@
     },
     "powerManagementWarning": "Als je OyasumiVR's automatiseringen gebruikt om je base stations aan of uit te zetten, wordt het aangeraden om Power Management uit te zetten in SteamVR's base station instellingen.",
     "tabs": {
-      "baseStations": "Base Stations",
-      "controllersAndTrackers": "Controllers & Trackers",
+      "devices": "Apparaten",
       "windowsPowerPolicy": "Energiebeheer"
     },
     "title": "Energie Automatiseringen",
