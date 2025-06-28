@@ -7,6 +7,11 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed the foot lock being toggled at an interval, even when the sleeping pose did not change.
+- Missing Japanese and Dutch translations
+
 ## [25.6.3]
 
 ### Added

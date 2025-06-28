@@ -17,6 +17,7 @@ import { OSCQSerializedNode } from '../models/osc-query-serialized-node';
 import { warn } from '@tauri-apps/plugin-log';
 import { OscService } from './osc.service';
 import { fetch } from '@tauri-apps/plugin-http';
+import { isEqual } from 'lodash';
 
 @Injectable({
   providedIn: 'root',
@@ -106,7 +107,7 @@ export class AvatarContextService {
         id: avatarId,
         parameters,
       };
-      this._avatarContext.next(context);
+      if (!isEqual(context, this._avatarContext.value)) this._avatarContext.next(context);
     }
   }
 
