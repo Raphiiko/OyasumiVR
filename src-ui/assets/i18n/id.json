@@ -734,8 +734,6 @@
     },
     "powerManagementWarning": "Ketika memilih untuk menggunakan otomatisasi OyasumiVR untuk menghidupkan atau mematikan base station Anda, Anda disarankan untuk menonaktifkan manajemen daya dalam pengaturan base station SteamVR.",
     "tabs": {
-      "baseStations": "Base Station",
-      "controllersAndTrackers": "Kontroler & Tracker",
       "windowsPowerPolicy": "Kebijakan daya"
     },
     "title": "Otomatisasi Daya",

@@ -10,6 +10,7 @@ import {
   combineLatest,
   debounceTime,
   delay,
+  distinctUntilChanged,
   filter,
   firstValueFrom,
   map,
@@ -75,7 +76,12 @@ export class SleepingAnimationsAutomationService {
         startWith(false)
       ),
       // Retrigger when the avatar is changed
-      this.avatarContext.avatarContext.pipe(filter(Boolean), delay(3000)),
+      this.avatarContext.avatarContext.pipe(
+        map((ctx) => ctx?.id),
+        distinctUntilChanged(),
+        filter(Boolean),
+        delay(3000)
+      ),
     ])
       .pipe(debounceTime(0))
       .subscribe(async ([pose]) => {

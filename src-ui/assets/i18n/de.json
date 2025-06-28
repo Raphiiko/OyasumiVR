@@ -1436,8 +1436,6 @@
     },
     "powerManagementWarning": "Für die Verwendung der OyasumiVR Automationen um deine Basisstationen aus oder an zu schalten wird empfohlen, dass du dein Energiemangement in den SteamVR Basistationseinstellungen deaktivierst.",
     "tabs": {
-      "baseStations": "Basisstationen",
-      "controllersAndTrackers": "Kontroller und Tracker",
       "windowsPowerPolicy": "Energieeinstellungen"
     },
     "title": "Energie-Automatisierungen",

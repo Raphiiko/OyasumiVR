@@ -1409,8 +1409,6 @@
     },
     "powerManagementWarning": "當選擇使用OyasumiVR的自動裝置來打開或關閉你的基地台時，建議你在SteamVR的基地台設定中停用電源管理",
     "tabs": {
-      "baseStations": "基地台",
-      "controllersAndTrackers": "控制器和定位器",
       "windowsPowerPolicy": "電源策略"
     },
     "title": "電源自動化",

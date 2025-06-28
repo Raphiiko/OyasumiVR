@@ -1436,8 +1436,6 @@
     },
     "powerManagementWarning": "Si optas por utilizar las automatizaciones de OyasumiVR para encender o apagar tus estaciones base, es recomendable que desactives la gestión de energía en la configuración de la estación base de SteamVR.",
     "tabs": {
-      "baseStations": "Estaciones base",
-      "controllersAndTrackers": "Controladores & Trackers",
       "windowsPowerPolicy": "Política energética"
     },
     "title": "Automatizaciones de energía",

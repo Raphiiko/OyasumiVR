@@ -1793,8 +1793,6 @@
     },
     "powerManagementWarning": "当选择使用 OyasumiVR 的自动化操作来打开或关闭你的基站时，建议你在 SteamVR 的基站设置中禁用电源管理。",
     "tabs": {
-      "baseStations": "基站",
-      "controllersAndTrackers": "控制器和追踪器",
       "windowsPowerPolicy": "电源计划"
     },
     "title": "电源自动化",
