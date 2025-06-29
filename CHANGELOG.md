@@ -7,9 +7,12 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 
 ## [Unreleased]
 
+## [25.6.5]
+
 ### Fixed
 
 - Moved sidecar process logs to the correct log directory
+- Parsing of some cli parameters
 
 ## [25.6.4]
 

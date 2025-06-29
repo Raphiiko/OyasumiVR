@@ -9,8 +9,15 @@
     "active": true,
     "category": "Utility",
     "copyright": "Copyright (c) 2022 Raphiiko",
-    "targets": ["nsis"],
-    "resources": ["./openvr_api.dll", "./flags.toml", "./steam_api64.dll", "./resources/**/*"],
+    "targets": [
+      "nsis"
+    ],
+    "resources": [
+      "./openvr_api.dll",
+      "./flags.toml",
+      "./steam_api64.dll",
+      "./resources/**/*"
+    ],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
@@ -60,7 +67,7 @@
   },
   "productName": "OyasumiVR",
   "mainBinaryName": "OyasumiVR",
-  "version": "25.6.4",
+  "version": "25.6.5",
   "identifier": "co.raphii.oyasumi",
   "plugins": {
     "cli": {
@@ -82,7 +89,10 @@
           "longDescription": "See developer notes for more information",
           "takesValue": true,
           "multiple": false,
-          "possibleValues": ["release", "dev"]
+          "possibleValues": [
+            "release",
+            "dev"
+          ]
         },
         {
           "name": "overlay-sidecar-mode",
@@ -91,13 +101,18 @@
           "longDescription": "See developer notes for more information",
           "takesValue": true,
           "multiple": false,
-          "possibleValues": ["release", "dev"]
+          "possibleValues": [
+            "release",
+            "dev"
+          ]
         }
       ]
     },
     "deep-link": {
       "desktop": {
-        "schemes": ["oyasumivr"]
+        "schemes": [
+          "oyasumivr"
+        ]
       }
     },
     "updater": {
@@ -124,7 +139,7 @@
         "skipTaskbar": true,
         "minimizable": false,
         "focus": true,
-        "userAgent": "OyasumiVR/25.6.4 (https://github.com/Raphiiko/OyasumiVR)",
+        "userAgent": "OyasumiVR/25.6.5 (https://github.com/Raphiiko/OyasumiVR)",
         "useHttpsScheme": false
       },
       {
@@ -140,7 +155,7 @@
         "theme": "Dark",
         "visible": false,
         "transparent": true,
-        "userAgent": "OyasumiVR/25.6.4 (https://github.com/Raphiiko/OyasumiVR)",
+        "userAgent": "OyasumiVR/25.6.5 (https://github.com/Raphiiko/OyasumiVR)",
         "useHttpsScheme": false
       }
     ],
