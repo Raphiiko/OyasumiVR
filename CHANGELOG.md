@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project (now) adheres to [Calendar Versioning](https://calver.org/#scheme).
 
+## [25.6.5]
+
+### Fixed
+
+- Moved sidecar process logs to the correct log directory
+- Parsing of some cli parameters
+
 ## [25.6.4]
 
 ### Fixed
