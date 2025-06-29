@@ -30,10 +30,10 @@ async fn main() {
     // Initialize logging
     let log_path = if let Some(base_dirs) = BaseDirs::new() {
         base_dirs
-            .preference_dir()
-            .join("co.raphii.oyasumi/logs/OyasumiSidecar.log")
+            .data_local_dir()
+            .join("co.raphii.oyasumi/logs/OyasumiVR_Elevated_Sidecar.log")
     } else {
-        Path::new("co.raphii.oyasumi/logs/OyasumiSidecar.log").to_path_buf()
+        Path::new("co.raphii.oyasumi/logs/OyasumiVR_Elevated_Sidecar.log").to_path_buf()
     };
     CombinedLogger::init(vec![
         TermLogger::new(
