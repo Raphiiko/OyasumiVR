@@ -70,9 +70,16 @@ async fn main() {
         .plugin(tauri_plugin_store::Builder::default().build())
         .plugin(configure_tauri_plugin_aptabase())
         .setup(|app| {
-            let matches = app.cli().matches().unwrap();
+            let matches = match app.cli().matches() {
+                Ok(matches) => Some(matches),
+                Err(e) => {
+                    eprintln!("Error parsing command line arguments: {e}");
+                    app.handle().exit(1);
+                    None
+                }
+            };
             futures::executor::block_on(async {
-                *globals::TAURI_CLI_MATCHES.lock().await = Some(matches);
+                *globals::TAURI_CLI_MATCHES.lock().await = matches;
             });
             match futures::executor::block_on(tauri::async_runtime::spawn(app_setup(
                 app.handle().clone(),
