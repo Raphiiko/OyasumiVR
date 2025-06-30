@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 
 @Directive({
-  // eslint-disable-next-line @angular-eslint/directive-selector
   selector: '[imgSmoothLoader]',
   standalone: false,
 })

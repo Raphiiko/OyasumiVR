@@ -5,7 +5,7 @@
       class="btn btn-secondary btn-small deselect-all-btn"
       (click)="deselectAll()"
       [disabled]="!hasAnySelection()"
-    >
+      >
       <i class="material-icons">clear_all</i>
       <span translate>device-manager.deviceSelector.deselectAll</span>
     </button>
@@ -14,136 +14,158 @@
     <!-- Device Types Section -->
     <div class="selection-section">
       <div class="device-types-list">
-        <div
-          class="device-type-item"
-          *ngFor="let type of filteredDeviceTypes; trackBy: trackDeviceTypeBy"
-          [class.selected]="isDeviceTypeSelected(type)"
-          (click)="toggleDeviceType(type)"
-        >
-          <img
-            [src]="'/assets/img/icon_' + getDeviceTypeIcon(type) + '.png'"
-            class="device-type-icon"
-          />
-          <span class="device-type-name" translate>{{ getDeviceTypeDisplayName(type) }}</span>
-          <i class="material-icons selection-indicator" *ngIf="isDeviceTypeSelected(type)">check</i>
-        </div>
+        @for (type of filteredDeviceTypes; track trackDeviceTypeBy($index, type)) {
+          <div
+            class="device-type-item"
+            [class.selected]="isDeviceTypeSelected(type)"
+            (click)="toggleDeviceType(type)"
+            >
+            <img
+              [src]="'/assets/img/icon_' + getDeviceTypeIcon(type) + '.png'"
+              class="device-type-icon"
+              />
+            <span class="device-type-name" translate>{{ getDeviceTypeDisplayName(type) }}</span>
+            @if (isDeviceTypeSelected(type)) {
+              <i class="material-icons selection-indicator">check</i>
+            }
+          </div>
+        }
       </div>
     </div>
 
     <!-- Device Tags Section -->
     <div class="selection-section">
       <h3 class="section-title" translate>device-manager.deviceSelector.deviceTags</h3>
-      <div class="device-tags-list" *ngIf="tags.length > 0">
-        <div
-          class="device-tag-item"
-          *ngFor="let tag of tags; trackBy: trackTagBy"
-          [class.selected]="isTagSelected(tag.id)"
-          [class.disabled]="!isTagApplicable(tag.id)"
-          (click)="toggleTag(tag.id)"
-        >
-          <div class="tag-color" [style.background-color]="tag.color"></div>
-          <span class="tag-name">{{ tag.name }}</span>
-          <i class="material-icons selection-indicator" *ngIf="isTagSelected(tag.id)">check</i>
+      @if (tags.length > 0) {
+        <div class="device-tags-list">
+          @for (tag of tags; track trackTagBy($index, tag)) {
+            <div
+              class="device-tag-item"
+              [class.selected]="isTagSelected(tag.id)"
+              [class.disabled]="!isTagApplicable(tag.id)"
+              (click)="toggleTag(tag.id)"
+              >
+              <div class="tag-color" [style.background-color]="tag.color"></div>
+              <span class="tag-name">{{ tag.name }}</span>
+              @if (isTagSelected(tag.id)) {
+                <i class="material-icons selection-indicator">check</i>
+              }
+            </div>
+          }
         </div>
-      </div>
-      <div class="empty-state-inline" *ngIf="tags.length === 0">
-        <i class="material-icons">label_outline</i>
-        <span translate>device-manager.deviceSelector.noTagsConfigured</span>
-      </div>
+      }
+      @if (tags.length === 0) {
+        <div class="empty-state-inline">
+          <i class="material-icons">label_outline</i>
+          <span translate>device-manager.deviceSelector.noTagsConfigured</span>
+        </div>
+      }
     </div>
 
     <!-- Individual Devices Section -->
     <div class="selection-section">
       <h3 class="section-title" translate>device-manager.deviceSelector.individualDevices</h3>
-      <div class="device-groups-list" *ngIf="deviceGroups.length > 0">
-        <div
-          class="device-group"
-          *ngFor="let group of deviceGroups; trackBy: trackDeviceGroupBy"
-          [class.disabled]="isDeviceGroupDisabled(group.type)"
-        >
-          <div class="device-group-header">
-            <img [src]="'/assets/img/icon_' + group.icon + '.png'" class="category-icon" />
-            <span class="group-label" translate>{{ group.label }}</span>
-            <span class="group-count">({{ group.devices.length }})</span>
-          </div>
-
-          <div class="device-items">
+      @if (deviceGroups.length > 0) {
+        <div class="device-groups-list">
+          @for (group of deviceGroups; track trackDeviceGroupBy($index, group)) {
             <div
-              class="device-item"
-              *ngFor="let device of group.devices; trackBy: trackDeviceBy"
-              [class.selected]="isDeviceSelected(device.id)"
-              [class.has-tags]="getDeviceTags(device).length > 0"
-              [class.has-nickname]="!!device.nickname"
-              [class.disabled]="isDeviceGroupDisabled(device.deviceType)"
-              (click)="toggleDevice(device.id)"
-            >
-              <!-- Tag-based left border -->
-              <div class="tag-border" *ngIf="getDeviceTags(device).length > 0">
-                <div
-                  class="tag-border-segment"
-                  *ngFor="let tag of getDeviceTags(device); trackBy: trackTagBy"
-                  [style.background-color]="tag.color"
-                ></div>
-              </div>
-
-              <img
-                [src]="'/assets/img/icon_' + getDeviceTypeIcon(device.deviceType) + '.png'"
-                class="device-icon"
-              />
-
-              <div class="device-info">
-                <div class="device-name-line">
-                  <span class="device-name">{{ device.typeName }}</span>
-                  <span
-                    class="device-serial"
-                    *ngIf="getDeviceSerialNumber(device) && device.nickname"
-                  >
-                    S/N: {{ getDeviceSerialNumber(device) }}
-                  </span>
-                </div>
-                <div class="device-details">
-                  <!-- Show nickname if set, otherwise show default name -->
-                  <span class="device-default-name">
-                    {{ device.nickname || device.defaultName }}
-                  </span>
-                  <!-- Show role if available -->
-                  <span class="device-role" *ngIf="getDeviceRole(device)" translate>
-                    {{ getDeviceRole(device) }}
-                  </span>
-                </div>
-                <div
-                  class="device-tags"
-                  *ngIf="getDeviceTags(device).length > 0 && device.deviceType !== 'LIGHTHOUSE'"
-                >
-                  <div
-                    class="tag-chip"
-                    *ngFor="let tag of getDeviceTags(device); trackBy: trackTagBy"
-                  >
-                    <div class="tag-chip-color" [style.background-color]="tag.color"></div>
-                    <span class="tag-chip-name">{{ tag.name }}</span>
-                  </div>
-                </div>
-              </div>
-
-              <i class="material-icons selection-indicator" *ngIf="isDeviceSelected(device.id)"
-                >check</i
+              class="device-group"
+              [class.disabled]="isDeviceGroupDisabled(group.type)"
               >
-            </div>
+              <div class="device-group-header">
+                <img [src]="'/assets/img/icon_' + group.icon + '.png'" class="category-icon" />
+                <span class="group-label" translate>{{ group.label }}</span>
+                <span class="group-count">({{ group.devices.length }})</span>
+              </div>
+              <div class="device-items">
+                @for (device of group.devices; track trackDeviceBy($index, device)) {
+                  <div
+                    class="device-item"
+                    [class.selected]="isDeviceSelected(device.id)"
+                    [class.has-tags]="getDeviceTags(device).length > 0"
+                    [class.has-nickname]="!!device.nickname"
+                    [class.disabled]="isDeviceGroupDisabled(device.deviceType)"
+                    (click)="toggleDevice(device.id)"
+                    >
+                    <!-- Tag-based left border -->
+                    @if (getDeviceTags(device).length > 0) {
+                      <div class="tag-border">
+                        @for (tag of getDeviceTags(device); track trackTagBy($index, tag)) {
+                          <div
+                            class="tag-border-segment"
+                            [style.background-color]="tag.color"
+                          ></div>
+                        }
+                      </div>
+                    }
+                    <img
+                      [src]="'/assets/img/icon_' + getDeviceTypeIcon(device.deviceType) + '.png'"
+                      class="device-icon"
+                      />
+                    <div class="device-info">
+                      <div class="device-name-line">
+                        <span class="device-name">{{ device.typeName }}</span>
+                        @if (getDeviceSerialNumber(device) && device.nickname) {
+                          <span
+                            class="device-serial"
+                            >
+                            S/N: {{ getDeviceSerialNumber(device) }}
+                          </span>
+                        }
+                      </div>
+                      <div class="device-details">
+                        <!-- Show nickname if set, otherwise show default name -->
+                        <span class="device-default-name">
+                          {{ device.nickname || device.defaultName }}
+                        </span>
+                        <!-- Show role if available -->
+                        @if (getDeviceRole(device)) {
+                          <span class="device-role" translate>
+                            {{ getDeviceRole(device) }}
+                          </span>
+                        }
+                      </div>
+                      @if (getDeviceTags(device).length > 0 && device.deviceType !== 'LIGHTHOUSE') {
+                        <div
+                          class="device-tags"
+                          >
+                          @for (tag of getDeviceTags(device); track trackTagBy($index, tag)) {
+                            <div
+                              class="tag-chip"
+                              >
+                              <div class="tag-chip-color" [style.background-color]="tag.color"></div>
+                              <span class="tag-chip-name">{{ tag.name }}</span>
+                            </div>
+                          }
+                        </div>
+                      }
+                    </div>
+                    @if (isDeviceSelected(device.id)) {
+                      <i class="material-icons selection-indicator"
+                        >check</i
+                        >
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+            }
           </div>
-        </div>
-      </div>
-      <div class="empty-state-inline" *ngIf="deviceGroups.length === 0">
-        <i class="material-icons">devices</i>
-        <span translate>device-manager.deviceSelector.noApplicableDevicesKnown</span>
+        }
+        @if (deviceGroups.length === 0) {
+          <div class="empty-state-inline">
+            <i class="material-icons">devices</i>
+            <span translate>device-manager.deviceSelector.noApplicableDevicesKnown</span>
+          </div>
+        }
       </div>
     </div>
+    <div class="pane-actions spread">
+      <button class="btn btn-secondary" (click)="cancel()">
+        <span translate>shared.modals.cancel</span>
+      </button>
+      <button class="btn btn-primary" (click)="confirm()">
+        <span translate>device-manager.deviceSelector.selectDevices</span>
+      </button>
+    </div>
   </div>
-  <div class="pane-actions spread">
-    <button class="btn btn-secondary" (click)="cancel()">
-      <span translate>shared.modals.cancel</span>
-    </button>
-    <button class="btn btn-primary" (click)="confirm()">
-      <span translate>device-manager.deviceSelector.selectDevices</span>
-    </button>
-  </div>
-</div>

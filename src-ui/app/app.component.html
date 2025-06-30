@@ -2,8 +2,10 @@
 <div
   [@routeAnimations]="o && o.activatedRouteData && o.activatedRouteData['animation']"
   class="route-container"
->
+  >
   <router-outlet #o="outlet"></router-outlet>
 </div>
-<app-snowverlay *ngIf="showSnowverlay" @fade></app-snowverlay>
+@if (showSnowverlay) {
+  <app-snowverlay @fade></app-snowverlay>
+}
 <app-shutdown-sequence-overlay></app-shutdown-sequence-overlay>

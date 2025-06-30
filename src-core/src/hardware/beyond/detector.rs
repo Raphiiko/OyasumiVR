@@ -1,22 +1,15 @@
-use std::os::windows::ffi::OsStrExt;
-use std::{ffi::OsStr, iter::once};
-
 use hidapi::HidApi;
 use log::error;
+use std::ffi::OsStr;
+use std::iter::once;
+use std::os::windows::ffi::OsStrExt;
 use tokio::sync::mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender};
-use winapi::shared::minwindef::{LPARAM, LRESULT, UINT, WPARAM};
-use winapi::um::libloaderapi::GetModuleHandleW;
-use winapi::um::winuser::{
-    DefWindowProcW, DispatchMessageW, GetMessageW, GetWindowLongPtrW, PostQuitMessage,
-    SetWindowLongPtrW, TranslateMessage, GWLP_USERDATA, MSG, WM_CREATE, WM_DESTROY,
-    WM_DEVICECHANGE,
-};
-use winapi::{
-    shared::{
-        ntdef::LPCWSTR,
-        windef::{HBRUSH, HCURSOR, HICON, HWND},
-    },
-    um::winuser::{CreateWindowExW, RegisterClassW, WNDCLASSW},
+use windows::Win32::Foundation::{HWND, LPARAM, LRESULT, WPARAM};
+use windows::Win32::System::LibraryLoader::GetModuleHandleW;
+use windows::Win32::UI::WindowsAndMessaging::{
+    CreateWindowExW, DefWindowProcW, DispatchMessageW, GetMessageW, GetWindowLongPtrW,
+    PostQuitMessage, RegisterClassW, SetWindowLongPtrW, TranslateMessage, GWLP_USERDATA, MSG,
+    WNDCLASSW, WM_CREATE, WM_DESTROY, WM_DEVICECHANGE,
 };
 
 pub enum PnPDetectorEvent {
@@ -49,7 +42,7 @@ impl PnPDetector {
                 }
             };
             let mut detector = Self {
-                hwnd: std::ptr::null_mut(),
+                hwnd: HWND::default(),
                 hidapi,
                 tx,
                 known_devices: Vec::new(),
@@ -127,7 +120,7 @@ impl PnPDetector {
             let mut msg: MSG = std::mem::MaybeUninit::zeroed().assume_init();
             loop {
                 let val = GetMessageW(&mut msg, self.hwnd, 0, 0);
-                if val == 0 {
+                if val.0 == 0 {
                     break;
                 } else {
                     TranslateMessage(&msg);
@@ -140,13 +133,14 @@ impl PnPDetector {
     /// Window procedure function to handle events
     pub unsafe extern "system" fn window_proc(
         hwnd: HWND,
-        msg: UINT,
+        msg: u32,
         wparam: WPARAM,
         lparam: LPARAM,
     ) -> LRESULT {
         match msg {
             WM_CREATE => {
-                let create_struct = lparam as *mut winapi::um::winuser::CREATESTRUCTW;
+                use windows::Win32::UI::WindowsAndMessaging::CREATESTRUCTW;
+                let create_struct = lparam.0 as *mut CREATESTRUCTW;
                 let window_state_ptr = create_struct.as_ref().unwrap().lpCreateParams;
                 SetWindowLongPtrW(hwnd, GWLP_USERDATA, window_state_ptr as isize);
             }
@@ -160,28 +154,29 @@ impl PnPDetector {
             }
             _ => return DefWindowProcW(hwnd, msg, wparam, lparam),
         }
-        0
+        LRESULT(0)
     }
 
     /// Create an invisible window to handle WM_DEVICECHANGE message
     fn create_window(&mut self) {
-        let winapi_class_name: Vec<u16> = OsStr::new("OyasumiVRPnPDetectWindowClass")
+        let class_name: Vec<u16> = OsStr::new("OyasumiVRPnPDetectWindowClass")
             .encode_wide()
             .chain(once(0))
             .collect();
-        let hinstance = unsafe { GetModuleHandleW(std::ptr::null()) };
+        
+        let hinstance = unsafe { GetModuleHandleW(None) }.unwrap_or_default();
 
         let wc = WNDCLASSW {
-            style: 0,
+            style: Default::default(),
             lpfnWndProc: Some(Self::window_proc),
             cbClsExtra: 0,
             cbWndExtra: 0,
-            hInstance: hinstance,
-            hIcon: 0 as HICON,
-            hCursor: 0 as HCURSOR,
-            hbrBackground: 0 as HBRUSH,
-            lpszMenuName: 0 as LPCWSTR,
-            lpszClassName: winapi_class_name.as_ptr(),
+            hInstance: hinstance.into(),
+            hIcon: Default::default(),
+            hCursor: Default::default(),
+            hbrBackground: Default::default(),
+            lpszMenuName: windows::core::PCWSTR::null(),
+            lpszClassName: windows::core::PCWSTR(class_name.as_ptr()),
         };
 
         let error_code = unsafe { RegisterClassW(&wc) };
@@ -194,22 +189,22 @@ impl PnPDetector {
 
         let hwnd = unsafe {
             CreateWindowExW(
-                0,
-                winapi_class_name.as_ptr(),
-                window_name.as_ptr(),
-                0,
-                0,
-                0,
+                Default::default(),
+                windows::core::PCWSTR(class_name.as_ptr()),
+                windows::core::PCWSTR(window_name.as_ptr()),
+                Default::default(),
                 0,
                 0,
-                std::ptr::null_mut(),
-                std::ptr::null_mut(),
+                0,
+                0,
+                None,
+                None,
                 hinstance,
-                self as *mut _ as *mut _,
+                Some(self as *mut _ as *mut _),
             )
         };
 
-        if hwnd.is_null() {
+        if hwnd == HWND::default() {
             panic!("Something went wrong while creating a window");
         }
         self.hwnd = hwnd;

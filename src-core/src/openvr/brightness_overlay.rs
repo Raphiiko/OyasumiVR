@@ -1,13 +1,11 @@
 use super::OVR_CONTEXT;
 use log::error;
 use ovr_overlay as ovr;
+use std::sync::LazyLock;
 use tokio::sync::Mutex;
 
-lazy_static! {
-    static ref OVERLAY_HANDLE: Mutex<Option<ovr_overlay::overlay::OverlayHandle>> =
-        Default::default();
-    static ref BRIGHTNESS: Mutex<f64> = Mutex::new(1.0);
-}
+static OVERLAY_HANDLE: LazyLock<Mutex<Option<ovr_overlay::overlay::OverlayHandle>>> = LazyLock::new(Default::default);
+static BRIGHTNESS: LazyLock<Mutex<f64>> = LazyLock::new(|| Mutex::new(1.0));
 
 pub async fn on_ovr_init(context: &ovr::Context) -> Result<(), String> {
     // Dispose of any existing overlay

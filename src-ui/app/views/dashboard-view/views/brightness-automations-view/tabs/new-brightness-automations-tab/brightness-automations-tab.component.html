@@ -5,10 +5,11 @@
     [class.details-open]="!!editEvent"
   ></app-brightness-automations-list>
 </div>
-<app-brightness-automation-details
-  @triggerChildren
-  *ngIf="editEvent"
-  (close)="editEvent = undefined"
-  [eventId]="editEvent!.name"
-  [sunMode]="editEvent!.sunMode"
-></app-brightness-automation-details>
+@if (editEvent) {
+  <app-brightness-automation-details
+    @triggerChildren
+    (close)="editEvent = undefined"
+    [eventId]="editEvent!.name"
+    [sunMode]="editEvent!.sunMode"
+  ></app-brightness-automation-details>
+}

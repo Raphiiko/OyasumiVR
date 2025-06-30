@@ -20,7 +20,7 @@
     [tooltip]="'Export these translations to a file'"
     [tooltipMode]="'right'"
     (click)="export()"
-  >
+    >
     <i class="material-icons">save</i>
     <span>Export</span>
   </button>
@@ -31,7 +31,7 @@
     "
     [tooltipMode]="'right'"
     (click)="updateTranslations()"
-  >
+    >
     <i class="material-icons">refresh</i>
     <span>Update</span>
   </button>
@@ -40,7 +40,7 @@
     [tooltip]="'Tries to determine suggestions for the current translations'"
     [tooltipMode]="'right'"
     (click)="checkForSuggestions()"
-  >
+    >
     <i class="material-icons">comment</i>
     <span>Check for suggestions</span>
   </button>
@@ -49,77 +49,79 @@
     class="btn btn-secondary btn-action btn-action-square"
     (click)="goPreviousPage()"
     [disabled]="paginationStart <= 0"
-  >
+    >
     <i class="material-icons">arrow_back_ios_new</i>
   </button>
   <span class="pagination-label"
     >{{ paginationStart + 1 }}-{{ paginationEnd }} ({{ entries.length }})</span
-  >
-  <button
-    class="btn btn-secondary btn-action btn-action-square"
-    (click)="goNextPage()"
-    [disabled]="paginationEnd >= entries.length"
-  >
-    <i class="material-icons">arrow_forward_ios</i>
-  </button>
-</div>
+    >
+    <button
+      class="btn btn-secondary btn-action btn-action-square"
+      (click)="goNextPage()"
+      [disabled]="paginationEnd >= entries.length"
+      >
+      <i class="material-icons">arrow_forward_ios</i>
+    </button>
+  </div>
 
-<div class="editor-table">
-  <div class="editor-table-header-cell">
-    <span>Translation Key</span>
-  </div>
-  <div class="editor-table-header-cell">
-    <span>English Translation</span>
-  </div>
-  <div class="editor-table-header-cell">
-    <span>'{{ locale }}' Translation</span>
-  </div>
-  <div
-    class="editor-table-row"
-    *ngFor="let entry of entries | slice: paginationStart : paginationEnd"
-  >
-    <div class="editor-table-cell">
-      <span [innerHtml]="entry.htmlKey" class="key"></span>
+  <div class="editor-table">
+    <div class="editor-table-header-cell">
+      <span>Translation Key</span>
     </div>
-    <div class="editor-table-cell">
-      <span>{{ entry.values['en'] }}</span>
+    <div class="editor-table-header-cell">
+      <span>English Translation</span>
     </div>
-    <div class="editor-table-cell">
-      <div class="editor-table-cell-textinput">
-        <textarea
-          [spellcheck]="false"
-          rows="1"
-          appTextareaAutoResize
-          [ngModel]="entry.values[locale!]"
-          (change)="onTranslationChange(entry, locale!, $event)"
-        ></textarea>
-      </div>
-      <div *ngIf="entry.suggestion" class="entry-suggestion" @vshrink>
-        <div class="entry-suggestion-title">Suggestion:</div>
-        <div class="entry-suggestion-value">{{ entry.suggestion }}</div>
-        <div class="entry-suggestion-actions">
-          <button class="btn btn-primary" (click)="applySuggestion(entry)">
-            <i class="material-icons">check</i>
-            <span>Apply</span>
-          </button>
-
-          <button class="btn btn-secondary" (click)="discardSuggestion(entry)">
-            <i class="material-icons">close</i>
-            <span>Discard</span>
-          </button>
+    <div class="editor-table-header-cell">
+      <span>'{{ locale }}' Translation</span>
+    </div>
+    @for (entry of entries | slice: paginationStart : paginationEnd; track entry) {
+      <div
+        class="editor-table-row"
+        >
+        <div class="editor-table-cell">
+          <span [innerHtml]="entry.htmlKey" class="key"></span>
+        </div>
+        <div class="editor-table-cell">
+          <span>{{ entry.values['en'] }}</span>
+        </div>
+        <div class="editor-table-cell">
+          <div class="editor-table-cell-textinput">
+            <textarea
+              [spellcheck]="false"
+              rows="1"
+              appTextareaAutoResize
+              [ngModel]="entry.values[locale!]"
+              (change)="onTranslationChange(entry, locale!, $event)"
+            ></textarea>
+          </div>
+          @if (entry.suggestion) {
+            <div class="entry-suggestion" @vshrink>
+              <div class="entry-suggestion-title">Suggestion:</div>
+              <div class="entry-suggestion-value">{{ entry.suggestion }}</div>
+              <div class="entry-suggestion-actions">
+                <button class="btn btn-primary" (click)="applySuggestion(entry)">
+                  <i class="material-icons">check</i>
+                  <span>Apply</span>
+                </button>
+                <button class="btn btn-secondary" (click)="discardSuggestion(entry)">
+                  <i class="material-icons">close</i>
+                  <span>Discard</span>
+                </button>
+              </div>
+            </div>
+          }
         </div>
       </div>
-    </div>
+    }
   </div>
-</div>
 
-<div class="footer-row">
-  <div class="left">
-    <span
-      >Keys translated: {{ entriesTranslated }}/{{ entries.length }} ({{
+  <div class="footer-row">
+    <div class="left">
+      <span
+        >Keys translated: {{ entriesTranslated }}/{{ entries.length }} ({{
         entriesTranslatedPercentage
-      }}%)</span
-    >
-  </div>
-  <div class="right"></div>
-</div>
+        }}%)</span
+        >
+      </div>
+      <div class="right"></div>
+    </div>

@@ -14,7 +14,7 @@ function getTranslationLoader(locale: string): () => Promise<Record<any, any>> {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 const config: Config<{ [s: string]: any }> = {
   parser: parser({}),
   fallbackLocale: "en",

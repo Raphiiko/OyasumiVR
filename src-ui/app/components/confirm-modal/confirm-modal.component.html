@@ -6,9 +6,11 @@
     <p [innerHtml]="message || '' | tsTranslate"></p>
   </div>
   <div class="pane-actions spread">
-    <button class="btn btn-secondary" (click)="cancel()" *ngIf="showCancel">
-      {{ cancelButtonText || 'shared.modals.cancel' | tsTranslate }}
-    </button>
+    @if (showCancel) {
+      <button class="btn btn-secondary" (click)="cancel()">
+        {{ cancelButtonText || 'shared.modals.cancel' | tsTranslate }}
+      </button>
+    }
     <button class="btn btn-primary" (click)="confirm()">
       {{ confirmButtonText || 'shared.modals.confirm' | tsTranslate }}
     </button>

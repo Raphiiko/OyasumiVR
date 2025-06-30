@@ -1,6 +1,10 @@
 <div class="wrapper">
-  <canvas id="chart-canvas" *ngIf="hasEnoughData"></canvas>
-  <div *ngIf="!hasEnoughData" class="not-enough-data">
-    <span translate>sleep-detection.modals.enableOnHeartRateCalmPeriod.notEnoughData</span>
-  </div>
+  @if (hasEnoughData) {
+    <canvas id="chart-canvas"></canvas>
+  }
+  @if (!hasEnoughData) {
+    <div class="not-enough-data">
+      <span translate>sleep-detection.modals.enableOnHeartRateCalmPeriod.notEnoughData</span>
+    </div>
+  }
 </div>

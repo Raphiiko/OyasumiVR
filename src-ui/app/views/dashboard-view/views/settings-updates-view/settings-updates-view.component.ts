@@ -1,7 +1,6 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { Update } from '@tauri-apps/plugin-updater';
 import { firstValueFrom } from 'rxjs';
-import { marked } from 'marked';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -10,6 +9,7 @@ import { hshrink } from 'src-ui/app/utils/animations';
 import { UpdateService } from '../../../../services/update.service';
 import { AppSettingsService } from '../../../../services/app-settings.service';
 import { getVersion } from '../../../../utils/app-utils';
+import { marked } from 'marked';
 
 @Component({
   selector: 'app-settings-updates-view',
@@ -58,7 +58,7 @@ export class SettingsUpdatesViewComponent implements OnInit {
     }
     const firstIndex = changelog.indexOf('##');
     changelog = changelog.slice(firstIndex, changelog.length);
-    changelog = marked.parse(changelog);
+    changelog = await marked.parse(changelog);
     changelog = changelog.replace(/<a /g, '<a target="_blank" ');
     return this.sanitizer.bypassSecurityTrustHtml(changelog);
   }

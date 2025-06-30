@@ -1,14 +1,16 @@
 <p translate>status-automations.playerLimit.description</p>
-<div class="alert warning" *ngIf="!loggedIn" @vshrink>
-  <div class="alert-bg"></div>
-  <div class="alert-icon">
-    <i class="material-icons"> warning </i>
+@if (!loggedIn) {
+  <div class="alert warning" @vshrink>
+    <div class="alert-bg"></div>
+    <div class="alert-icon">
+      <i class="material-icons"> warning </i>
+    </div>
+    <div class="alert-content">
+      <span>{{ 'shared.common.vrcLoginRequired' | translate }}</span>
+      <button class="btn btn-secondary" (click)="login()" translate>shared.modals.login</button>
+    </div>
   </div>
-  <div class="alert-content">
-    <span>{{ 'shared.common.vrcLoginRequired' | translate }}</span>
-    <button class="btn btn-secondary" (click)="login()" translate>shared.modals.login</button>
-  </div>
-</div>
+}
 <div class="settings">
   <div class="setting-row">
     <div class="setting-row-label" translate>
@@ -21,22 +23,24 @@
           type="checkbox"
           [checked]="config.enabled"
           (change)="updateConfig({ enabled: !config.enabled })"
-        />
+          />
         <span class="switch-toggle-slider"></span>
       </label>
     </div>
   </div>
 </div>
 <div class="settings" [class.disabled]="config.enabled">
-  <div class="alert" @vshrink *ngIf="config.enabled">
-    <div class="alert-bg"></div>
-    <div class="alert-icon">
-      <i class="material-icons"> info </i>
+  @if (config.enabled) {
+    <div class="alert" @vshrink>
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons"> info </i>
+      </div>
+      <div class="alert-content"
+        >{{ 'status-automations.playerLimit.disableToEdit' | translate }}
+      </div>
     </div>
-    <div class="alert-content"
-      >{{ 'status-automations.playerLimit.disableToEdit' | translate }}
-    </div>
-  </div>
+  }
   <div class="limit-setting">
     <h3 translate>status-automations.playerLimit.playerLimit</h3>
     <app-player-count-sleep-visualization
@@ -63,7 +67,7 @@
           (input)="onLimitChange(limitNumberInput.value)"
           (blur)="limitNumberInput.value = limit.value.toString()"
           #limitNumberInput
-        />
+          />
       </div>
     </div>
     <div
@@ -83,7 +87,7 @@
           type="checkbox"
           [checked]="config.statusBelowLimitEnabled"
           (change)="updateConfig({ statusBelowLimitEnabled: !config.statusBelowLimitEnabled })"
-        />
+          />
         <span class="switch-toggle-slider"></span>
       </label>
       <app-select-box
@@ -109,7 +113,7 @@
           (change)="
             updateConfig({ statusMessageBelowLimitEnabled: !config.statusMessageBelowLimitEnabled })
           "
-        />
+          />
         <span class="switch-toggle-slider"></span>
       </label>
       <input
@@ -121,7 +125,7 @@
           onChangeStatusMessage('statusMessageBelowLimit', belowLimitStatusMessageInput.value)
         "
         #belowLimitStatusMessageInput
-      />
+        />
     </div>
   </div>
   <div class="setting-row">
@@ -137,7 +141,7 @@
           (change)="
             updateConfig({ statusAtLimitOrAboveEnabled: !config.statusAtLimitOrAboveEnabled })
           "
-        />
+          />
         <span class="switch-toggle-slider"></span>
       </label>
       <app-select-box
@@ -165,7 +169,7 @@
               statusMessageAtLimitOrAboveEnabled: !config.statusMessageAtLimitOrAboveEnabled,
             })
           "
-        />
+          />
         <span class="switch-toggle-slider"></span>
       </label>
       <input
@@ -180,7 +184,7 @@
           )
         "
         #atLimitOrAboveStatusMessageInput
-      />
+        />
     </div>
   </div>
   <div class="setting-row">
@@ -194,7 +198,7 @@
           type="checkbox"
           [checked]="config.onlyIfSleepModeEnabled"
           (change)="updateConfig({ onlyIfSleepModeEnabled: !config.onlyIfSleepModeEnabled })"
-        />
+          />
         <span class="switch-toggle-slider"></span>
       </label>
     </div>

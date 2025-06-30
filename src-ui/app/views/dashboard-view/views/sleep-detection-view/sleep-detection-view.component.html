@@ -13,15 +13,18 @@
   </div>
   <div class="pane-content">
     <div class="setting-view-container">
-      <app-sleep-detection-detection-tab
-        *ngIf="activeTab === 'DETECTION'"
-      ></app-sleep-detection-detection-tab>
-      <app-sleep-detection-sleep-enable-tab
-        *ngIf="activeTab === 'ENABLE'"
-      ></app-sleep-detection-sleep-enable-tab>
-      <app-sleep-detection-sleep-disable-tab
-        *ngIf="activeTab === 'DISABLE'"
-      ></app-sleep-detection-sleep-disable-tab>
+      @if (activeTab === 'DETECTION') {
+        <app-sleep-detection-detection-tab
+        ></app-sleep-detection-detection-tab>
+      }
+      @if (activeTab === 'ENABLE') {
+        <app-sleep-detection-sleep-enable-tab
+        ></app-sleep-detection-sleep-enable-tab>
+      }
+      @if (activeTab === 'DISABLE') {
+        <app-sleep-detection-sleep-disable-tab
+        ></app-sleep-detection-sleep-disable-tab>
+      }
     </div>
   </div>
 </div>

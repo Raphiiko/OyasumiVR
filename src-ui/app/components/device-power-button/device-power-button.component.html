@@ -6,7 +6,11 @@
   [style.anchor-name]="anchorName"
   (click)="onClick()"
   (contextmenu)="onRightClick($event)"
->
-  <i class="material-icons" *ngIf="!isLoading">{{ iconName }}</i>
-  <div class="small-spinner" [class]="spinnerClass" *ngIf="isLoading"></div>
+  >
+  @if (!isLoading) {
+    <i class="material-icons">{{ iconName }}</i>
+  }
+  @if (isLoading) {
+    <div class="small-spinner" [class]="spinnerClass"></div>
+  }
 </button>

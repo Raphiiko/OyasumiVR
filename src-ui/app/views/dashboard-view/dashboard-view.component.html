@@ -1,6 +1,8 @@
-<div class="bg" *ngFor="let img of [backgroundImage]" @fade>
-  <img [imgSmoothLoader]="img" />
-</div>
+@for (img of [backgroundImage]; track img) {
+  <div class="bg" @fade>
+    <img [imgSmoothLoader]="img" />
+  </div>
+}
 <div class="main-pane">
   <app-dashboard-navbar></app-dashboard-navbar>
   <div class="route-container">

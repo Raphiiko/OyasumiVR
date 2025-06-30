@@ -1,8 +1,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-#[macro_use(lazy_static)]
-extern crate lazy_static;
-
 mod commands;
 mod discord;
 mod elevated_sidecar;

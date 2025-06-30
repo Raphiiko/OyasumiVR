@@ -1,1 +1,3 @@
-<div class="snow" *ngFor="let flake of flakes"></div>
+@for (flake of flakes; track flake) {
+  <div class="snow"></div>
+}

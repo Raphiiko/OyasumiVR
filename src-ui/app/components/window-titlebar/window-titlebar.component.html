@@ -6,41 +6,43 @@
     (mouseenter)="showVersionExtras = true"
     (mouseleave)="showVersionExtras = false"
     >&nbsp;v{{ version }}</span
-  >
-  <span
-    class="version-extra"
-    data-tauri-drag-region
-    [style.opacity]="showVersionExtras ? '100%' : '0%'"
-  >
-    -{{ FLAVOUR }} ({{ BUILD_ID }})
-  </span>
-</div>
-<div class="action-area">
-  <button
-    class="titlebar-button btn-message-center"
-    [tooltip]="'message-center.tooltip'"
-    [tooltipMode]="'bottom'"
-    (click)="messageCenter.toggle()"
-  >
-    <i
-      class="material-symbols-outlined icon-filled"
-      [class.wiggle]="(messageCenter.messages | async)?.length"
-      >mode_comment</i
     >
-    <div class="message-center-badge-bg" *ngIf="(messageCenter.messages | async)?.length" @fade>
-      <div class="message-center-badge"></div>
-    </div>
-  </button>
-  <div class="action-spacer">
-    <span class="separator">|</span>
+    <span
+      class="version-extra"
+      data-tauri-drag-region
+      [style.opacity]="showVersionExtras ? '100%' : '0%'"
+      >
+      -{{ FLAVOUR }} ({{ BUILD_ID }})
+    </span>
   </div>
-  <button class="titlebar-button btn-minimize" (click)="minimize()">
-    <i class="material-symbols-outlined">remove</i>
-  </button>
-  <button class="titlebar-button btn-maximize" (click)="maximize()">
-    <i class="material-symbols-outlined">check_box_outline_blank</i>
-  </button>
-  <button class="titlebar-button btn-close" (click)="close()">
-    <i class="material-icons">close</i>
-  </button>
-</div>
+  <div class="action-area">
+    <button
+      class="titlebar-button btn-message-center"
+      [tooltip]="'message-center.tooltip'"
+      [tooltipMode]="'bottom'"
+      (click)="messageCenter.toggle()"
+      >
+      <i
+        class="material-symbols-outlined icon-filled"
+        [class.wiggle]="(messageCenter.messages | async)?.length"
+        >mode_comment</i
+        >
+        @if ((messageCenter.messages | async)?.length) {
+          <div class="message-center-badge-bg" @fade>
+            <div class="message-center-badge"></div>
+          </div>
+        }
+      </button>
+      <div class="action-spacer">
+        <span class="separator">|</span>
+      </div>
+      <button class="titlebar-button btn-minimize" (click)="minimize()">
+        <i class="material-symbols-outlined">remove</i>
+      </button>
+      <button class="titlebar-button btn-maximize" (click)="maximize()">
+        <i class="material-symbols-outlined">check_box_outline_blank</i>
+      </button>
+      <button class="titlebar-button btn-close" (click)="close()">
+        <i class="material-icons">close</i>
+      </button>
+    </div>

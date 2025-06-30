@@ -4,186 +4,211 @@
     [translateParams]="{ count: _script.commands.length }"
   ></span>
   <span>&nbsp;|&nbsp;</span>
-  <div class="small-spinner" *ngIf="!validated" @hshrink style="margin-right: 0.5em"></div>
+  @if (!validated) {
+    <div class="small-spinner" @hshrink style="margin-right: 0.5em"></div>
+  }
   <span
     [translate]="'comp.osc-script-simple-editor.errorCounter'"
     [translateParams]="{ count: errors.length }"
   ></span>
   <span style="flex: 1"></span>
-  <span
-    *ngIf="
-      !currentAvatarContext ||
-      currentAvatarContext.type !== 'VRCHAT' ||
-      (vrchat.vrchatProcessActive | async) !== true
-    "
-    class="info-icon"
-    [tooltip]="'comp.osc-script-simple-editor.vrchatAutofillInfo'"
-    [tooltipMode]="'bottom'"
-    [tooltipTextAlign]="'center'"
-  >
-    <i class="material-symbols-outlined">info</i>
-  </span>
+  @if (
+    !currentAvatarContext ||
+    currentAvatarContext.type !== 'VRCHAT' ||
+    (vrchat.vrchatProcessActive | async) !== true
+    ) {
+    <span
+      class="info-icon"
+      [tooltip]="'comp.osc-script-simple-editor.vrchatAutofillInfo'"
+      [tooltipMode]="'bottom'"
+      [tooltipTextAlign]="'center'"
+      >
+      <i class="material-symbols-outlined">info</i>
+    </span>
+  }
   <div class="header-row-buttons">
     <app-dropdown-button [items]="addCommandItems" (itemSelect)="onAdd($event)">
       <i class="material-icons">add</i>
       <span translate>comp.osc-script-simple-editor.addCommand</span>
     </app-dropdown-button>
     <button class="btn btn-secondary" (click)="testCode()" [disabled]="testing || !validated">
-      <div class="small-spinner" *ngIf="testing" @hshrink></div>
-      <i class="material-icons" *ngIf="!testing" @hshrink>play_arrow</i>
-      <span *ngIf="!testing" @hshrink translate>comp.osc-script-simple-editor.test</span>
+      @if (testing) {
+        <div class="small-spinner" @hshrink></div>
+      }
+      @if (!testing) {
+        <i class="material-icons" @hshrink>play_arrow</i>
+      }
+      @if (!testing) {
+        <span @hshrink translate>comp.osc-script-simple-editor.test</span>
+      }
     </button>
   </div>
 </div>
 <div class="simple-commands" @noop>
-  <div class="simple-command" *ngFor="let command of _script.commands; let i = index" @vshrink>
-    <ng-container *ngIf="command.type === 'COMMAND'">
-      <div class="simple-command-index">{{ i + 1 }}.</div>
-      <div class="simple-command-action" translate>comp.osc-script-simple-editor.action.osc</div>
-      <div class="simple-command-parameters-container">
-        <div
-          *ngFor="let parameter of command.parameters; let j = index"
-          class="simple-command-parameter-row"
-          @vshrink
-        >
-          <app-select-box
-            [type]="'SMALL'"
-            [selected]="getCommandParameterType(command, j)"
-            [items]="parameterTypeSelectItems"
-            (selectedChange)="setCommandParameterType(command, j, $event!)"
-            [showPlaceholderInDropdown]="false"
-            class="simple-command-type-input"
-          ></app-select-box>
-          <app-select-box
-            class="simple-command-boolean-input"
-            *ngIf="getCommandParameterType(command, j)?.id === 'BOOLEAN'"
-            [type]="'SMALL'"
-            [selected]="{ id: parameter.value, label: parameter.value }"
+  @for (command of _script.commands; track command; let i = $index) {
+    <div class="simple-command" @vshrink>
+      @if (command.type === 'COMMAND') {
+        <div class="simple-command-index">{{ i + 1 }}.</div>
+        <div class="simple-command-action" translate>comp.osc-script-simple-editor.action.osc</div>
+        <div class="simple-command-parameters-container">
+          @for (parameter of command.parameters; track parameter; let j = $index) {
+            <div
+              class="simple-command-parameter-row"
+              @vshrink
+              >
+              <app-select-box
+                [type]="'SMALL'"
+                [selected]="getCommandParameterType(command, j)"
+                [items]="parameterTypeSelectItems"
+                (selectedChange)="setCommandParameterType(command, j, $event!)"
+                [showPlaceholderInDropdown]="false"
+                class="simple-command-type-input"
+              ></app-select-box>
+              @if (getCommandParameterType(command, j)?.id === 'BOOLEAN') {
+                <app-select-box
+                  class="simple-command-boolean-input"
+                  [type]="'SMALL'"
+                  [selected]="{ id: parameter.value, label: parameter.value }"
             [items]="[
               { id: 'true', label: 'true' },
               { id: 'false', label: 'false' },
             ]"
-            (selectedChange)="setBoolValue(command, j, $event!)"
-            [showPlaceholderInDropdown]="false"
-          ></app-select-box>
-          <div
-            class="input-wrapper simple-command-integer-input"
-            *ngIf="getCommandParameterType(command, j)?.id === 'INT'"
-          >
-            <input
-              type="number"
-              step="1"
-              min="0"
-              max="255"
-              [value]="parameter.value"
-              (change)="setIntValue(command, j, $event)"
-            />
+                  (selectedChange)="setBoolValue(command, j, $event!)"
+                  [showPlaceholderInDropdown]="false"
+                ></app-select-box>
+              }
+              @if (getCommandParameterType(command, j)?.id === 'INT') {
+                <div
+                  class="input-wrapper simple-command-integer-input"
+                  >
+                  <input
+                    type="number"
+                    step="1"
+                    min="0"
+                    max="255"
+                    [value]="parameter.value"
+                    (change)="setIntValue(command, j, $event)"
+                    />
+                </div>
+              }
+              @if (getCommandParameterType(command, j)?.id === 'FLOAT') {
+                <div
+                  class="input-wrapper simple-command-float-input"
+                  >
+                  <input
+                    type="number"
+                    step="0.001"
+                    [value]="parameter.value"
+                    (change)="setFloatValue(command, j, $event)"
+                    />
+                </div>
+              }
+              @if (getCommandParameterType(command, j)?.id === 'STRING') {
+                <div
+                  class="input-wrapper simple-command-string-input"
+                  >
+                  <input
+                    type="text"
+                    [max]="MAX_STRING_VALUE_LENGTH"
+                    [value]="parameter.value"
+                    (change)="setStringValue(command, j, $event)"
+                    />
+                </div>
+              }
+              @if (command.parameters.length > 1) {
+                <button
+                  class="btn simple-command-remove-button"
+                  (click)="removeParameter(i, j)"
+                  @hshrink
+                  >
+                  <i class="material-icons">clear</i>
+                </button>
+              }
+            </div>
+          }
+          <div>
+            @if (command.parameters.length < MAX_PARAMETERS_PER_COMMAND) {
+              <button
+                class="btn btn-secondary btn-add-parameter"
+                (click)="addParameter(i)"
+                >
+                <i class="material-icons">add</i>
+                <span translate>comp.osc-script-simple-editor.addParameter</span>
+              </button>
+            }
           </div>
+        </div>
+        <div class="input-wrapper simple-command-address-input">
+          <app-osc-address-autocomplete
+            [addresses]="knownOscAddresses"
+            [value]="command.address"
+            (valueChange)="onAddressChange($event, command)"
+            (addressSelected)="onAddressSelected($event, command)"
+          ></app-osc-address-autocomplete>
+        </div>
+        @if (getErrorsForAction(i).length) {
           <div
-            class="input-wrapper simple-command-float-input"
-            *ngIf="getCommandParameterType(command, j)?.id === 'FLOAT'"
-          >
-            <input
-              type="number"
-              step="0.001"
-              [value]="parameter.value"
-              (change)="setFloatValue(command, j, $event)"
-            />
-          </div>
-          <div
-            class="input-wrapper simple-command-string-input"
-            *ngIf="getCommandParameterType(command, j)?.id === 'STRING'"
-          >
-            <input
-              type="text"
-              [max]="MAX_STRING_VALUE_LENGTH"
-              [value]="parameter.value"
-              (change)="setStringValue(command, j, $event)"
-            />
-          </div>
-          <button
-            class="btn simple-command-remove-button"
-            *ngIf="command.parameters.length > 1"
-            (click)="removeParameter(i, j)"
+            class="simple-command-error-icon"
             @hshrink
-          >
-            <i class="material-icons">clear</i>
-          </button>
+            (mouseenter)="hoverOnAction(i, $event)"
+            >
+            <i class="material-icons-round">error</i>
+          </div>
+        }
+        <button class="btn simple-command-remove-button" (click)="removeCommand(command)">
+          <i class="material-icons">clear</i>
+        </button>
+      }
+      @if (command.type === 'SLEEP') {
+        <div class="simple-command-index">{{ i + 1 }}.</div>
+        <div class="simple-command-action" translate>comp.osc-script-simple-editor.action.sleep</div>
+        <div style="flex: 1"></div>
+        <div class="input-wrapper with-unit simple-command-duration-input">
+          <input
+            type="number"
+            step="any"
+            [value]="command.duration"
+            (change)="setSleepDuration(command, $event)"
+            />
+          <span>ms</span>
         </div>
-        <div>
-          <button
-            class="btn btn-secondary btn-add-parameter"
-            *ngIf="command.parameters.length < MAX_PARAMETERS_PER_COMMAND"
-            (click)="addParameter(i)"
-          >
-            <i class="material-icons">add</i>
-            <span translate>comp.osc-script-simple-editor.addParameter</span>
-          </button>
-        </div>
-      </div>
-      <div class="input-wrapper simple-command-address-input">
-        <app-osc-address-autocomplete
-          [addresses]="knownOscAddresses"
-          [value]="command.address"
-          (valueChange)="onAddressChange($event, command)"
-          (addressSelected)="onAddressSelected($event, command)"
-        ></app-osc-address-autocomplete>
-      </div>
-      <div
-        class="simple-command-error-icon"
-        @hshrink
-        *ngIf="getErrorsForAction(i).length"
-        (mouseenter)="hoverOnAction(i, $event)"
+        @if (getErrorsForAction(i).length) {
+          <div
+            class="simple-command-error-icon"
+            @hshrink
+            (mouseenter)="hoverOnAction(i, $event)"
+            >
+            <i class="material-icons-round">error</i>
+          </div>
+        }
+        <button class="btn simple-command-remove-button" (click)="removeCommand(command)">
+          <i class="material-icons">clear</i>
+        </button>
+      }
+    </div>
+  }
+  @if (!_script.commands.length) {
+    <div class="no-commands" @vshrink>
+      <i class="material-icons-round">add_circle_outline</i>
+      <span translate>comp.osc-script-simple-editor.action.none</span>
+    </div>
+  }
+  @if (tooltipErrors.length) {
+    <div
+      class="error-tooltip"
+      [style.top]="tooltipPosition.y + 'px'"
+      [style.left]="tooltipPosition.x + 'px'"
+      @fade
+      (mouseleave)="hoverOnAction(-1, undefined)"
       >
-        <i class="material-icons-round">error</i>
-      </div>
-      <button class="btn simple-command-remove-button" (click)="removeCommand(command)">
-        <i class="material-icons">clear</i>
-      </button>
-    </ng-container>
-    <ng-container *ngIf="command.type === 'SLEEP'">
-      <div class="simple-command-index">{{ i + 1 }}.</div>
-      <div class="simple-command-action" translate>comp.osc-script-simple-editor.action.sleep</div>
-      <div style="flex: 1"></div>
-      <div class="input-wrapper with-unit simple-command-duration-input">
-        <input
-          type="number"
-          step="any"
-          [value]="command.duration"
-          (change)="setSleepDuration(command, $event)"
-        />
-        <span>ms</span>
-      </div>
-      <div
-        class="simple-command-error-icon"
-        @hshrink
-        *ngIf="getErrorsForAction(i).length"
-        (mouseenter)="hoverOnAction(i, $event)"
-      >
-        <i class="material-icons-round">error</i>
-      </div>
-      <button class="btn simple-command-remove-button" (click)="removeCommand(command)">
-        <i class="material-icons">clear</i>
-      </button>
-    </ng-container>
-  </div>
-  <div class="no-commands" *ngIf="!_script.commands.length" @vshrink>
-    <i class="material-icons-round">add_circle_outline</i>
-    <span translate>comp.osc-script-simple-editor.action.none</span>
-  </div>
-  <div
-    class="error-tooltip"
-    [style.top]="tooltipPosition.y + 'px'"
-    [style.left]="tooltipPosition.x + 'px'"
-    *ngIf="tooltipErrors.length"
-    @fade
-    (mouseleave)="hoverOnAction(-1, undefined)"
-  >
-    <div class="error-tooltip-bg"></div>
-    <div class="error-tooltip-content">
-      <div class="error-tooltip-error" *ngFor="let error of tooltipErrors">
-        {{ error.message | tsTranslate }}
+      <div class="error-tooltip-bg"></div>
+      <div class="error-tooltip-content">
+        @for (error of tooltipErrors; track error) {
+          <div class="error-tooltip-error">
+            {{ error.message | tsTranslate }}
+          </div>
+        }
       </div>
     </div>
-  </div>
+  }
 </div>

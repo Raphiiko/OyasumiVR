@@ -18,7 +18,7 @@
             draggable="false"
             appImgFallback="assets/img/raphiiko.png"
             [imgSmoothLoader]="'https://avatars.githubusercontent.com/u/111654848'"
-          />
+            />
         </div>
         <div class="author-info">
           <div class="role" translate>about.author.role</div>
@@ -45,88 +45,99 @@
           <span
             ><a href="https://github.com/neuroblack" target="_blank">neuroblack</a> |
             <span translate>about.contributionType.programming</span></span
-          >
-        </div>
-        <div class="contributor-list-entry">
-          <span
-            ><a href="https://github.com/TheMrGong" target="_blank">góngo</a> |
-            <span translate>about.contributionType.programming</span></span
-          >
-        </div>
-        <div class="contributor-list-entry">
-          <span
-            ><a href="https://fanyat.su" target="_blank">Fanyatsu</a> |
-            <span translate>about.contributionType.programming</span></span
-          >
-        </div>
-        <div class="contributor-list-entry">
-          <span
-            ><a href="https://github.com/BenjaminZehowlt" target="_blank">BenjaminZehowlt</a> |
-            <span translate>about.contributionType.programming</span></span
-          >
-        </div>
-        <div class="contributor-list-entry">
-          <span>spaecd | <span translate>about.contributionType.soundFx</span></span>
-        </div>
-      </div>
-      <div class="project-info-title" translate>about.projectLinks</div>
-      <div class="project-links">
-        <a href="https://github.com/Raphiiko/OyasumiVR" target="_blank" translate
-          >about.sourceLink</a
-        >
-        <br />
-        <a href="https://discord.gg/7MqdPJhYxC" target="_blank" translate>about.discordInvite</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="row" @vshrink *ngIf="supporterCache.get()?.length">
-    <div class="supporters-row">
-      <div class="supporters-list" #supportersList>
-        <div class="supporters-tier" *ngFor="let tier of supporterCache.get() ?? []">
-          <div class="supporters-tier-label">
-            {{ tier.name }}
+            >
           </div>
-          <div class="supporters-tier-members">
-            <div class="supporters-tier-member" *ngFor="let supporter of tier.supporters">
-              {{ supporter }}
+          <div class="contributor-list-entry">
+            <span
+              ><a href="https://github.com/TheMrGong" target="_blank">góngo</a> |
+              <span translate>about.contributionType.programming</span></span
+              >
             </div>
-          </div>
-        </div>
-      </div>
-      <div class="supporters-label" translate>about.supporters</div>
-    </div>
-  </div>
+            <div class="contributor-list-entry">
+              <span
+                ><a href="https://fanyat.su" target="_blank">Fanyatsu</a> |
+                <span translate>about.contributionType.programming</span></span
+                >
+              </div>
+              <div class="contributor-list-entry">
+                <span
+                  ><a href="https://github.com/BenjaminZehowlt" target="_blank">BenjaminZehowlt</a> |
+                  <span translate>about.contributionType.programming</span></span
+                  >
+                </div>
+                <div class="contributor-list-entry">
+                  <span>spaecd | <span translate>about.contributionType.soundFx</span></span>
+                </div>
+              </div>
+              <div class="project-info-title" translate>about.projectLinks</div>
+              <div class="project-links">
+                <a href="https://github.com/Raphiiko/OyasumiVR" target="_blank" translate
+                  >about.sourceLink</a
+                  >
+                  <br />
+                  <a href="https://discord.gg/7MqdPJhYxC" target="_blank" translate>about.discordInvite</a>
+                </div>
+              </div>
+            </div>
 
-  <div class="row">
-    <div class="left"></div>
-    <div class="right">
-      <div class="project-info-title" translate>about.translations</div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="translation-author-list">
-      <div
-        class="translation-author-list-entry"
-        *ngFor="let contributor of translationContributors"
-      >
-        <span [ngClass]="['fi', 'fi-' + (contributor.flagCode ?? contributor.langCode)]"></span>
-        <span>{{ contributor.langNameNative }}</span>
-        <span>&nbsp;|&nbsp;</span>
-        <a *ngIf="contributor.url" [href]="contributor.url" target="_blank">{{
-          contributor.name
-        }}</a
-        ><span *ngIf="!contributor.url">{{ contributor.name }}</span>
-      </div>
-    </div>
-  </div>
+            @if (supporterCache.get()?.length) {
+              <div class="row" @vshrink>
+                <div class="supporters-row">
+                  <div class="supporters-list" #supportersList>
+                    @for (tier of supporterCache.get() ?? []; track tier) {
+                      <div class="supporters-tier">
+                        <div class="supporters-tier-label">
+                          {{ tier.name }}
+                        </div>
+                        <div class="supporters-tier-members">
+                          @for (supporter of tier.supporters; track supporter) {
+                            <div class="supporters-tier-member">
+                              {{ supporter }}
+                            </div>
+                          }
+                        </div>
+                      </div>
+                    }
+                  </div>
+                  <div class="supporters-label" translate>about.supporters</div>
+                </div>
+              </div>
+            }
 
-  <div class="row" style="margin-top: 1em">
-    <div class="left">
-      <div class="build-info">
-        <div>Oyasumi<b>VR</b> v{{ version }}-{{ FLAVOUR }} ({{ BUILD_ID }})</div>
-      </div>
-    </div>
-    <div class="right"></div>
-  </div>
-</div>
+            <div class="row">
+              <div class="left"></div>
+              <div class="right">
+                <div class="project-info-title" translate>about.translations</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="translation-author-list">
+                @for (contributor of translationContributors; track contributor) {
+                  <div
+                    class="translation-author-list-entry"
+                    >
+                    <span [ngClass]="['fi', 'fi-' + (contributor.flagCode ?? contributor.langCode)]"></span>
+                    <span>{{ contributor.langNameNative }}</span>
+                    <span>&nbsp;|&nbsp;</span>
+                    @if (contributor.url) {
+                      <a [href]="contributor.url" target="_blank">{{
+                        contributor.name
+                        }}</a
+                        >
+                        }@if (!contributor.url) {
+                        <span>{{ contributor.name }}</span>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <div class="row" style="margin-top: 1em">
+                <div class="left">
+                  <div class="build-info">
+                    <div>Oyasumi<b>VR</b> v{{ version }}-{{ FLAVOUR }} ({{ BUILD_ID }})</div>
+                  </div>
+                </div>
+                <div class="right"></div>
+              </div>
+            </div>
