@@ -3,57 +3,75 @@
   <div class="pane-content">
     <div class="setting-view-container">
       <div class="setting-category">
-        <div class="updates-disabled" *ngIf="FLAVOUR !== 'STANDALONE'">
-          <img src="/assets/img/icon_150x150.png" *ngIf="FLAVOUR === 'DEV'" />
-          <img
-            src="/assets/img/steam_icon.png"
-            *ngIf="FLAVOUR === 'STEAM' || FLAVOUR === 'STEAM_CN'"
-          />
-          <span *ngIf="FLAVOUR === 'DEV'" translate>settings.updates.updatesDisabled.DEV</span>
-          <span *ngIf="FLAVOUR === 'STEAM' || FLAVOUR === 'STEAM_CN'" translate
-            >settings.updates.updatesDisabled.STEAM</span
-          >
-        </div>
-        <div class="update-checker" *ngIf="FLAVOUR === 'STANDALONE'">
-          <button
-            class="btn"
-            [class.btn-secondary]="!updateAvailable.update"
-            [class.btn-primary]="updateAvailable.update"
-            (click)="updateOrCheck()"
-            [disabled]="updateOrCheckInProgress"
-          >
-            <div class="small-spinner" *ngIf="updateOrCheckInProgress" @hshrink></div>
-            <span
-              *ngIf="!updateOrCheckInProgress"
+        @if (FLAVOUR !== 'STANDALONE') {
+          <div class="updates-disabled">
+            @if (FLAVOUR === 'DEV') {
+              <img src="/assets/img/icon_150x150.png" />
+            }
+            @if (FLAVOUR === 'STEAM' || FLAVOUR === 'STEAM_CN') {
+              <img
+                src="/assets/img/steam_icon.png"
+                />
+            }
+            @if (FLAVOUR === 'DEV') {
+              <span translate>settings.updates.updatesDisabled.DEV</span>
+            }
+            @if (FLAVOUR === 'STEAM' || FLAVOUR === 'STEAM_CN') {
+              <span translate
+                >settings.updates.updatesDisabled.STEAM</span
+                >
+              }
+            </div>
+          }
+          @if (FLAVOUR === 'STANDALONE') {
+            <div class="update-checker">
+              <button
+                class="btn"
+                [class.btn-secondary]="!updateAvailable.update"
+                [class.btn-primary]="updateAvailable.update"
+                (click)="updateOrCheck()"
+                [disabled]="updateOrCheckInProgress"
+                >
+                @if (updateOrCheckInProgress) {
+                  <div class="small-spinner" @hshrink></div>
+                }
+                @if (!updateOrCheckInProgress) {
+                  <span
               [translate]="
                 updateAvailable.update
                   ? 'settings.updates.install'
                   : 'settings.updates.checkForUpdates'
               "
-              [translateParams]="{ version: updateAvailable.update?.version || '' }"
-              @hshrink
-            ></span>
-          </button>
-          <p *ngIf="!updateAvailable.checked" translate="settings.updates.notChecked"></p>
-          <p
-            *ngIf="updateAvailable.checked && updateAvailable.update"
-            translate="settings.updates.updateAvailable"
+                    [translateParams]="{ version: updateAvailable.update?.version || '' }"
+                    @hshrink
+                  ></span>
+                }
+              </button>
+              @if (!updateAvailable.checked) {
+                <p translate="settings.updates.notChecked"></p>
+              }
+              @if (updateAvailable.checked && updateAvailable.update) {
+                <p
+                  translate="settings.updates.updateAvailable"
             [translateParams]="{
               currentVersion: version,
               latestVersion: updateAvailable.update.version,
             }"
-          ></p>
-          <p
-            *ngIf="updateAvailable.checked && !updateAvailable.update"
-            translate="settings.updates.noUpdate"
-            [translateParams]="{ version: version }"
-          ></p>
+                ></p>
+              }
+              @if (updateAvailable.checked && !updateAvailable.update) {
+                <p
+                  translate="settings.updates.noUpdate"
+                  [translateParams]="{ version: version }"
+                ></p>
+              }
+            </div>
+          }
         </div>
-      </div>
-      <div class="setting-category">
-        <h2 translate>settings.updates.changelog</h2>
-        <div class="pane-changelog" [innerHtml]="changelog"></div>
+        <div class="setting-category">
+          <h2 translate>settings.updates.changelog</h2>
+          <div class="pane-changelog" [innerHtml]="changelog"></div>
+        </div>
       </div>
     </div>
   </div>
-</div>

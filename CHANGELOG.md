@@ -7,6 +7,10 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 
 ## [Unreleased]
 
+### Changes
+
+- Various dependency upgrades
+
 ## [25.6.5]
 
 ### Fixed

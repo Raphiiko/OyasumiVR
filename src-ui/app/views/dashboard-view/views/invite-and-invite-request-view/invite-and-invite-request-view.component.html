@@ -5,7 +5,7 @@
       class="tab"
       [class.active]="activeTab === 'invite-requests'"
       (click)="activeTab = 'invite-requests'"
-    >
+      >
       <div class="tab-label" translate>invite-and-invite-requests.tabs.inviteRequests</div>
     </div>
     <div class="tab" [class.active]="activeTab === 'invites'" (click)="activeTab = 'invites'">
@@ -17,30 +17,36 @@
   </div>
   <div class="pane-content">
     <div class="setting-view-container">
-      <app-invite-requests-tab
-        *ngIf="activeTab === 'invite-requests'"
-        [loggedIn]="loggedIn"
-        [isOnBusyStatus]="isOnBusyStatus"
-        [isOnJoinMeStatus]="isOnJoinMeStatus"
-      ></app-invite-requests-tab>
-      <app-invites-tab *ngIf="activeTab === 'invites'"></app-invites-tab>
-      <app-sounds-tab *ngIf="activeTab === 'sounds'"></app-sounds-tab>
+      @if (activeTab === 'invite-requests') {
+        <app-invite-requests-tab
+          [loggedIn]="loggedIn"
+          [isOnBusyStatus]="isOnBusyStatus"
+          [isOnJoinMeStatus]="isOnJoinMeStatus"
+        ></app-invite-requests-tab>
+      }
+      @if (activeTab === 'invites') {
+        <app-invites-tab></app-invites-tab>
+      }
+      @if (activeTab === 'sounds') {
+        <app-sounds-tab></app-sounds-tab>
+      }
     </div>
   </div>
 </div>
-<div
-  *ngIf="config.listMode !== 'DISABLED' && activeTab === 'invite-requests'"
-  @hshrink
-  class="player-list-animation-wrapper"
->
-  <app-player-list
+@if (config.listMode !== 'DISABLED' && activeTab === 'invite-requests') {
+  <div
+    @hshrink
+    class="player-list-animation-wrapper"
+    >
+    <app-player-list
     [title]="
       {
         WHITELIST: 'invite-and-invite-requests.playerList.whitelist',
         BLACKLIST: 'invite-and-invite-requests.playerList.blacklist',
       }[config.listMode]
     "
-    [playerIds]="playerIds"
-    (playerIdsChange)="updatePlayerIds($event)"
-  ></app-player-list>
-</div>
+      [playerIds]="playerIds"
+      (playerIdsChange)="updatePlayerIds($event)"
+    ></app-player-list>
+  </div>
+}

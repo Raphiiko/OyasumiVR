@@ -11,46 +11,50 @@
           </div>
           <div class="setting-row-action">
             <button class="btn btn-primary btn-copy" translate (click)="copyToClipboard()">
-              <span @hshrink *ngIf="!copiedToClipboard.includes('ALL_DATA')">
-                <i class="material-icons">copy_all</i>
-                <span translate>settings.statusInfo.copy.action</span>
-              </span>
-              <i
-                class="material-icons success"
-                *ngIf="copiedToClipboard.includes('ALL_DATA')"
-                @hshrink
-                >check</i
-              >
-            </button>
-          </div>
-        </div>
-        <ng-container *ngFor="let category of categories">
-          <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span>{{ category.name | tsTranslate }}</span>
-              <span></span>
+              @if (!copiedToClipboard.includes('ALL_DATA')) {
+                <span @hshrink>
+                  <i class="material-icons">copy_all</i>
+                  <span translate>settings.statusInfo.copy.action</span>
+                </span>
+              }
+              @if (copiedToClipboard.includes('ALL_DATA')) {
+                <i
+                  class="material-icons success"
+                  @hshrink
+                  >check</i
+                  >
+                }
+              </button>
             </div>
-            <div class="setting-row-action"></div>
           </div>
-          <div class="setting-row-group">
-            <div
-              class="setting-row"
-              [class.compact]="compact"
-              *ngFor="let entry of category.entries"
-            >
+          @for (category of categories; track category) {
+            <div class="setting-row">
               <div class="setting-row-label" translate>
-                <span>{{ entry.key | tsTranslate }}</span>
+                <span>{{ category.name | tsTranslate }}</span>
                 <span></span>
               </div>
-              <div class="setting-row-action">
-                <span (click)="copyValue(entry)"
-                  ><b>{{ (entry.value | async) ?? '' | tsTranslate }}</b></span
-                >
-              </div>
+              <div class="setting-row-action"></div>
             </div>
+            <div class="setting-row-group">
+              @for (entry of category.entries; track entry) {
+                <div
+                  class="setting-row"
+                  [class.compact]="compact"
+                  >
+                  <div class="setting-row-label" translate>
+                    <span>{{ entry.key | tsTranslate }}</span>
+                    <span></span>
+                  </div>
+                  <div class="setting-row-action">
+                    <span (click)="copyValue(entry)"
+                      ><b>{{ (entry.value | async) ?? '' | tsTranslate }}</b></span
+                      >
+                    </div>
+                  </div>
+                }
+              </div>
+            }
           </div>
-        </ng-container>
+        </div>
       </div>
     </div>
-  </div>
-</div>

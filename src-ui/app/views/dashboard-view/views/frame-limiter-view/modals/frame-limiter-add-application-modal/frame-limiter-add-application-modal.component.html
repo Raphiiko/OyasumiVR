@@ -3,29 +3,32 @@
   <div class="pane-content">
     <p translate>frame-limiter.add-application-modal.instruction</p>
     <div class="settings">
-      <div class="setting-row" *ngFor="let app of appPresets">
-        <div class="setting-row-icon">
-          <img
-            *ngIf="app.appIcon"
-            [src]="app.appIcon"
-            class="app-icon"
-            alt="{{ app.appLabel }} icon"
-          />
-        </div>
-        <div class="setting-row-label">
-          <span>{{ app.appLabel }}</span>
-          <span></span>
-        </div>
-        <div class="setting-row-action">
-          <button class="btn btn-secondary" (click)="selectApp(app.appId)" translate
-            >frame-limiter.add-application-modal.add</button
-          >
-        </div>
+      @for (app of appPresets; track app) {
+        <div class="setting-row">
+          <div class="setting-row-icon">
+            @if (app.appIcon) {
+              <img
+                [src]="app.appIcon"
+                class="app-icon"
+                alt="{{ app.appLabel }} icon"
+                />
+            }
+          </div>
+          <div class="setting-row-label">
+            <span>{{ app.appLabel }}</span>
+            <span></span>
+          </div>
+          <div class="setting-row-action">
+            <button class="btn btn-secondary" (click)="selectApp(app.appId)" translate
+              >frame-limiter.add-application-modal.add</button
+              >
+            </div>
+          </div>
+        }
       </div>
+      <span [innerHTML]="'frame-limiter.add-application-modal.notListedHelp' | translate"></span>
     </div>
-    <span [innerHTML]="'frame-limiter.add-application-modal.notListedHelp' | translate"></span>
+    <div class="pane-actions spread">
+      <button class="btn btn-secondary" (click)="close()" translate>shared.modals.cancel</button>
+    </div>
   </div>
-  <div class="pane-actions spread">
-    <button class="btn btn-secondary" (click)="close()" translate>shared.modals.cancel</button>
-  </div>
-</div>

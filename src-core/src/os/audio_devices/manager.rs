@@ -13,7 +13,7 @@ use tokio::sync::Mutex;
 use windows::core::PCWSTR;
 use windows::Win32::Media::Audio::{
     eAll, eCapture, eCommunications, eMultimedia, eRender, EDataFlow, ERole, IMMDeviceEnumerator,
-    IMMNotificationClient, IMMNotificationClient_Impl, MMDeviceEnumerator, DEVICE_STATE_ACTIVE,
+    IMMNotificationClient, IMMNotificationClient_Impl, MMDeviceEnumerator, DEVICE_STATE, DEVICE_STATE_ACTIVE,
 };
 use windows::Win32::System::Com::{
     CoCreateInstance, CoInitializeEx, CLSCTX_ALL, COINIT_MULTITHREADED,
@@ -96,7 +96,7 @@ impl AudioDeviceManager {
     pub async fn create() -> windows::core::Result<Self> {
         unsafe {
             // Initialize com library
-            CoInitializeEx(None, COINIT_MULTITHREADED).ok();
+            let _ = CoInitializeEx(None, COINIT_MULTITHREADED).ok();
             // // Initialize MMDeviceEnumerator
             let enumerator: IMMDeviceEnumerator =
                 CoCreateInstance(&MMDeviceEnumerator, None, CLSCTX_ALL)?;
@@ -199,7 +199,7 @@ impl AudioDeviceManager {
                     .await
                     .iter()
                     .any(|device| device.get_id() == device_id);
-                let is_active = device_state == DEVICE_STATE_ACTIVE;
+                let is_active = device_state == DEVICE_STATE_ACTIVE.0;
                 // If the device is active, we might need to add it.
                 if is_active && !known_device {
                     AudioDeviceManager::process_event(
@@ -455,7 +455,7 @@ impl IMMNotificationClient_Impl for AudioDeviceManagerNotificationClient {
     fn OnDeviceStateChanged(
         &self,
         pwstrdeviceid: &PCWSTR,
-        dwnewstate: u32,
+        dwnewstate: DEVICE_STATE,
     ) -> windows::core::Result<()> {
         let device_id = AudioDevicePCWSTR(*pwstrdeviceid);
         let tx = self.refresh_tx.clone();
@@ -463,7 +463,7 @@ impl IMMNotificationClient_Impl for AudioDeviceManagerNotificationClient {
             if let Err(e) = tx
                 .send(DeviceNotification::StateChanged {
                     device_id,
-                    state: dwnewstate,
+                    state: dwnewstate.0,
                 })
                 .await
             {

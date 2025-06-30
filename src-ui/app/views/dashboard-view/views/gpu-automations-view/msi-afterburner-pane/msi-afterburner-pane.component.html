@@ -13,28 +13,33 @@
           [value]="config.msiAfterburnerPath"
           (keyup)="msiAfterburnerPathInputChange.next(msiAfterburnerPathInput.value)"
           #msiAfterburnerPathInput
-        />
+          />
       </div>
       <button class="file-path-bar-btn-browse" (click)="browseForMsiAfterburner()">
         <i class="material-icons">folder</i>
       </button>
     </div>
-    <div
-      class="alert"
-      [class.success]="msiAfterburnerPathAlert.type === 'SUCCESS'"
-      [class.error]="msiAfterburnerPathAlert.type === 'ERROR'"
-      *ngIf="msiAfterburnerPathAlert"
-      @vshrink
-    >
-      <div class="alert-bg"></div>
-      <div class="alert-icon">
-        <i class="material-icons" *ngIf="!msiAfterburnerPathAlert.loadingIndicator">
-          check_circle_outline
-        </i>
-        <div class="small-spinner" *ngIf="msiAfterburnerPathAlert.loadingIndicator"></div>
+    @if (msiAfterburnerPathAlert) {
+      <div
+        class="alert"
+        [class.success]="msiAfterburnerPathAlert.type === 'SUCCESS'"
+        [class.error]="msiAfterburnerPathAlert.type === 'ERROR'"
+        @vshrink
+        >
+        <div class="alert-bg"></div>
+        <div class="alert-icon">
+          @if (!msiAfterburnerPathAlert.loadingIndicator) {
+            <i class="material-icons">
+              check_circle_outline
+            </i>
+          }
+          @if (msiAfterburnerPathAlert.loadingIndicator) {
+            <div class="small-spinner"></div>
+          }
+        </div>
+        <div class="alert-content" [innerHTML]="msiAfterburnerPathAlert.text | translate"></div>
       </div>
-      <div class="alert-content" [innerHTML]="msiAfterburnerPathAlert.text | translate"></div>
-    </div>
+    }
     <h3>Automations</h3>
     <div class="settings">
       <div class="setting-row">

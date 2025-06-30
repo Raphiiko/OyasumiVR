@@ -1,8 +1,10 @@
 <div class="modal-inner-wrapper">
   <div class="pane modal modal-lg" [@fadeUp]>
-    <div class="pane-title" *ngIf="scriptName">
-      {{ 'comp.osc-script-modal.title' | translate }}: {{ scriptName | translate }}
-    </div>
+    @if (scriptName) {
+      <div class="pane-title">
+        {{ 'comp.osc-script-modal.title' | translate }}: {{ scriptName | translate }}
+      </div>
+    }
     <div class="tab-bar">
       <div class="tab" [class.active]="activeTab === 'SIMPLE'" (click)="activeTab = 'SIMPLE'">
         <div class="tab-label" translate>
@@ -17,21 +19,25 @@
         </div>
       </div>
     </div>
-    <div class="pane-content simple-tab" *ngIf="activeTab === 'SIMPLE' && script">
-      <app-osc-script-simple-editor
-        [(script)]="script"
-        (errorCount)="setErrorCount($event)"
-        (validatedChange)="setValidated($event)"
-      ></app-osc-script-simple-editor>
-    </div>
-    <div class="pane-content script-tab" *ngIf="activeTab === 'SCRIPT' && script">
-      <app-osc-script-code-editor
-        [minHeight]="21"
-        [(script)]="script"
-        (errorCount)="setErrorCount($event)"
-        (validatedChange)="setValidated($event)"
-      ></app-osc-script-code-editor>
-    </div>
+    @if (activeTab === 'SIMPLE' && script) {
+      <div class="pane-content simple-tab">
+        <app-osc-script-simple-editor
+          [(script)]="script"
+          (errorCount)="setErrorCount($event)"
+          (validatedChange)="setValidated($event)"
+        ></app-osc-script-simple-editor>
+      </div>
+    }
+    @if (activeTab === 'SCRIPT' && script) {
+      <div class="pane-content script-tab">
+        <app-osc-script-code-editor
+          [minHeight]="21"
+          [(script)]="script"
+          (errorCount)="setErrorCount($event)"
+          (validatedChange)="setValidated($event)"
+        ></app-osc-script-code-editor>
+      </div>
+    }
     <div class="pane-actions">
       <button class="btn btn-secondary" (click)="close()" translate>shared.modals.cancel</button>
       <button
@@ -39,7 +45,7 @@
         (click)="save()"
         [disabled]="!validated || errorCount > 0"
         translate
-      >
+        >
         shared.modals.save
       </button>
     </div>

@@ -8,7 +8,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   template: ``,
   standalone: false,
 })
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class BaseModalComponent<_ModalInput extends { [k: string]: any } | void, ModalOutput> {
   result?: ModalOutput;
   close$ = new BehaviorSubject(false);

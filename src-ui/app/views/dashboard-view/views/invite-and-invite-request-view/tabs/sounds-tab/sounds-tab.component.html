@@ -4,109 +4,113 @@
       <div class="setting-row-label" translate>
         <span translate
           >invite-and-invite-requests.soundsTab.options.playSoundOnInviteRequest.title</span
-        >
-        <span translate
-          >invite-and-invite-requests.soundsTab.options.playSoundOnInviteRequest.description</span
-        >
-      </div>
-      <div class="setting-row-action">
-        <app-notification-sound-button
-          [soundConfig]="config.playSoundOnInviteRequest"
-          (soundConfigChange)="updateConfig({ playSoundOnInviteRequest: $event })"
-        ></app-notification-sound-button>
-      </div>
-    </div>
-    <div class="setting-row-group" @vshrink *ngIf="config.playSoundOnInviteRequest">
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate
-            >invite-and-invite-requests.soundsTab.options.playSoundOnInviteRequest.onlyWhenAsleep.title</span
           >
           <span translate
-            >invite-and-invite-requests.soundsTab.options.playSoundOnInviteRequest.onlyWhenAsleep.description</span
-          >
+            >invite-and-invite-requests.soundsTab.options.playSoundOnInviteRequest.description</span
+            >
+          </div>
+          <div class="setting-row-action">
+            <app-notification-sound-button
+              [soundConfig]="config.playSoundOnInviteRequest"
+              (soundConfigChange)="updateConfig({ playSoundOnInviteRequest: $event })"
+            ></app-notification-sound-button>
+          </div>
         </div>
-        <div class="setting-row-action">
-          <label class="switch-toggle">
-            <input
-              type="checkbox"
-              [checked]="config.playSoundOnInviteRequest_onlyWhenAsleep"
+        @if (config.playSoundOnInviteRequest) {
+          <div class="setting-row-group" @vshrink>
+            <div class="setting-row">
+              <div class="setting-row-label" translate>
+                <span translate
+                  >invite-and-invite-requests.soundsTab.options.playSoundOnInviteRequest.onlyWhenAsleep.title</span
+                  >
+                  <span translate
+                    >invite-and-invite-requests.soundsTab.options.playSoundOnInviteRequest.onlyWhenAsleep.description</span
+                    >
+                  </div>
+                  <div class="setting-row-action">
+                    <label class="switch-toggle">
+                      <input
+                        type="checkbox"
+                        [checked]="config.playSoundOnInviteRequest_onlyWhenAsleep"
               (change)="
                 updateConfig({
                   playSoundOnInviteRequest_onlyWhenAsleep:
                     !config.playSoundOnInviteRequest_onlyWhenAsleep,
                 })
               "
-            />
-            <span class="switch-toggle-slider"></span>
-          </label>
-        </div>
-      </div>
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate
-            >invite-and-invite-requests.soundsTab.options.playSoundOnInviteRequest.onlyWhenUnhandled.title</span
-          >
-          <span translate
-            >invite-and-invite-requests.soundsTab.options.playSoundOnInviteRequest.onlyWhenUnhandled.description</span
-          >
-        </div>
-        <div class="setting-row-action">
-          <label class="switch-toggle">
-            <input
-              type="checkbox"
-              [checked]="config.playSoundOnInviteRequest_onlyWhenUnhandled"
+                        />
+                      <span class="switch-toggle-slider"></span>
+                    </label>
+                  </div>
+                </div>
+                <div class="setting-row">
+                  <div class="setting-row-label" translate>
+                    <span translate
+                      >invite-and-invite-requests.soundsTab.options.playSoundOnInviteRequest.onlyWhenUnhandled.title</span
+                      >
+                      <span translate
+                        >invite-and-invite-requests.soundsTab.options.playSoundOnInviteRequest.onlyWhenUnhandled.description</span
+                        >
+                      </div>
+                      <div class="setting-row-action">
+                        <label class="switch-toggle">
+                          <input
+                            type="checkbox"
+                            [checked]="config.playSoundOnInviteRequest_onlyWhenUnhandled"
               (change)="
                 updateConfig({
                   playSoundOnInviteRequest_onlyWhenUnhandled:
                     !config.playSoundOnInviteRequest_onlyWhenUnhandled,
                 })
               "
-            />
-            <span class="switch-toggle-slider"></span>
-          </label>
-        </div>
-      </div>
-    </div>
-    <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate>invite-and-invite-requests.soundsTab.options.playSoundOnInvite.title</span>
-        <span translate
-          >invite-and-invite-requests.soundsTab.options.playSoundOnInvite.description</span
-        >
-      </div>
-      <div class="setting-row-action">
-        <app-notification-sound-button
-          [soundConfig]="config.playSoundOnInvite"
-          (soundConfigChange)="updateConfig({ playSoundOnInvite: $event })"
-        ></app-notification-sound-button>
-      </div>
-    </div>
-    <div class="setting-row-group" @vshrink *ngIf="config.playSoundOnInvite">
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate
-            >invite-and-invite-requests.soundsTab.options.playSoundOnInvite.onlyWhenAsleep.title</span
-          >
-          <span translate
-            >invite-and-invite-requests.soundsTab.options.playSoundOnInvite.onlyWhenAsleep.description</span
-          >
-        </div>
-        <div class="setting-row-action">
-          <label class="switch-toggle">
-            <input
-              type="checkbox"
-              [checked]="config.playSoundOnInvite_onlyWhenAsleep"
+                            />
+                          <span class="switch-toggle-slider"></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                }
+                <div class="setting-row">
+                  <div class="setting-row-label" translate>
+                    <span translate>invite-and-invite-requests.soundsTab.options.playSoundOnInvite.title</span>
+                    <span translate
+                      >invite-and-invite-requests.soundsTab.options.playSoundOnInvite.description</span
+                      >
+                    </div>
+                    <div class="setting-row-action">
+                      <app-notification-sound-button
+                        [soundConfig]="config.playSoundOnInvite"
+                        (soundConfigChange)="updateConfig({ playSoundOnInvite: $event })"
+                      ></app-notification-sound-button>
+                    </div>
+                  </div>
+                  @if (config.playSoundOnInvite) {
+                    <div class="setting-row-group" @vshrink>
+                      <div class="setting-row">
+                        <div class="setting-row-label" translate>
+                          <span translate
+                            >invite-and-invite-requests.soundsTab.options.playSoundOnInvite.onlyWhenAsleep.title</span
+                            >
+                            <span translate
+                              >invite-and-invite-requests.soundsTab.options.playSoundOnInvite.onlyWhenAsleep.description</span
+                              >
+                            </div>
+                            <div class="setting-row-action">
+                              <label class="switch-toggle">
+                                <input
+                                  type="checkbox"
+                                  [checked]="config.playSoundOnInvite_onlyWhenAsleep"
               (change)="
                 updateConfig({
                   playSoundOnInvite_onlyWhenAsleep: !config.playSoundOnInvite_onlyWhenAsleep,
                 })
               "
-            />
-            <span class="switch-toggle-slider"></span>
-          </label>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+                                  />
+                                <span class="switch-toggle-slider"></span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  </div>

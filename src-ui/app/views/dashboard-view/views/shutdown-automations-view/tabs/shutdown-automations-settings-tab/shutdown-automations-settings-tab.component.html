@@ -19,15 +19,17 @@
       >shutdown-automations.sequence.run
     </button>
   </h2>
-  <div class="alert warning" *ngIf="noOptionsSelected" @vshrink>
-    <div class="alert-bg"></div>
-    <div class="alert-icon">
-      <i class="material-icons"> warning </i>
+  @if (noOptionsSelected) {
+    <div class="alert warning" @vshrink>
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons"> warning </i>
+      </div>
+      <div class="alert-content">
+        <span>{{ 'shutdown-automations.noOptionsSelected' | translate }}</span>
+      </div>
     </div>
-    <div class="alert-content">
-      <span>{{ 'shutdown-automations.noOptionsSelected' | translate }}</span>
-    </div>
-  </div>
+  }
   <div class="settings">
     <div class="setting-row">
       <div class="setting-row-label" translate>
@@ -56,26 +58,27 @@
       </div>
     </div>
 
-    <div
-      class="setting-row-group"
-      *ngIf="config.quitSteamVR && quitWithSteamVRMode === 'IMMEDIATELY'"
-      @vshrink
-    >
-      <div class="setting-row">
-        <div class="setting-row-label conflict" translate>
-          <span>
-            <span><i class="material-icons">warning</i></span>
-            <span translate>shutdown-automations.sequence.quitSteamVR.conflict.title</span>
-          </span>
-          <span translate>shutdown-automations.sequence.quitSteamVR.conflict.description</span>
-        </div>
-        <div class="setting-row-action">
-          <button class="btn btn-secondary" (click)="goToGeneralSettings()" translate>
-            shutdown-automations.sequence.quitSteamVR.conflict.goToSettings
-          </button>
+    @if (config.quitSteamVR && quitWithSteamVRMode === 'IMMEDIATELY') {
+      <div
+        class="setting-row-group"
+        @vshrink
+        >
+        <div class="setting-row">
+          <div class="setting-row-label conflict" translate>
+            <span>
+              <span><i class="material-icons">warning</i></span>
+              <span translate>shutdown-automations.sequence.quitSteamVR.conflict.title</span>
+            </span>
+            <span translate>shutdown-automations.sequence.quitSteamVR.conflict.description</span>
+          </div>
+          <div class="setting-row-action">
+            <button class="btn btn-secondary" (click)="goToGeneralSettings()" translate>
+              shutdown-automations.sequence.quitSteamVR.conflict.goToSettings
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    }
 
     <div class="setting-row">
       <div class="setting-row-label" translate>
@@ -83,22 +86,24 @@
         <span translate>shutdown-automations.sequence.powerDownWindows.description</span>
       </div>
       <div class="setting-row-action">
-        <div class="power-down-select-box-wrapper" *ngIf="config.powerDownWindows" @fade>
-          <app-select-box
-            type="SMALL"
-            class="power-down-options-select-box"
-            [expandUp]="true"
-            [items]="powerDownOptions"
-            [selected]="powerDownOption"
-            (selectedChange)="onChangePowerDownOption($event)"
-          ></app-select-box>
-        </div>
+        @if (config.powerDownWindows) {
+          <div class="power-down-select-box-wrapper" @fade>
+            <app-select-box
+              type="SMALL"
+              class="power-down-options-select-box"
+              [expandUp]="true"
+              [items]="powerDownOptions"
+              [selected]="powerDownOption"
+              (selectedChange)="onChangePowerDownOption($event)"
+            ></app-select-box>
+          </div>
+        }
         <label class="switch-toggle">
           <input
             type="checkbox"
             [checked]="config.powerDownWindows"
             (change)="togglePowerDownWindows()"
-          />
+            />
           <span class="switch-toggle-slider"></span>
         </label>
       </div>

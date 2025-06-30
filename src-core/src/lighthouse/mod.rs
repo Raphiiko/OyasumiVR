@@ -3,7 +3,7 @@ pub mod models;
 
 use std::{
     collections::{HashMap, HashSet},
-    sync::Arc,
+    sync::{Arc, LazyLock},
     time::Duration,
 };
 
@@ -35,18 +35,13 @@ static EVENT_DEVICE_POWER_STATE_CHANGED: &str = "LIGHTHOUSE_DEVICE_POWER_STATE_C
 // const LIGHTHOUSE_V2_IDENTIFY_CHARACTERISTIC: Uuid =
 //     Uuid::from_u128(0x00008421_1212_EFDE_1523_785FEABCD124);
 
-lazy_static! {
-    static ref LIGHTHOUSE_DEVICES: Arc<Mutex<Vec<LighthouseDevice>>> =
-        Arc::new(Mutex::new(Vec::new()));
-    static ref LIGHTHOUSE_DEVICE_POWER_STATES: Mutex<HashMap<String, LighthousePowerState>> =
-        Mutex::new(HashMap::new());
-    static ref LIGHTHOUSE_DEVICE_V1_TIMEOUTS: Mutex<HashMap<String, u16>> =
-        Mutex::new(HashMap::new());
-    static ref SCANNING: Mutex<bool> = Mutex::new(false);
-    static ref ADAPTER: Mutex<Option<Adapter>> = Mutex::default();
-    static ref STATUS: Mutex<LighthouseStatus> = Mutex::new(LighthouseStatus::Uninitialized);
-    static ref PROCESSING_DEVICES: Mutex<HashSet<DeviceId>> = Mutex::new(HashSet::new());
-}
+static LIGHTHOUSE_DEVICES: LazyLock<Arc<Mutex<Vec<LighthouseDevice>>>> = LazyLock::new(|| Arc::new(Mutex::new(Vec::new())));
+static LIGHTHOUSE_DEVICE_POWER_STATES: LazyLock<Mutex<HashMap<String, LighthousePowerState>>> = LazyLock::new(|| Mutex::new(HashMap::new()));
+static LIGHTHOUSE_DEVICE_V1_TIMEOUTS: LazyLock<Mutex<HashMap<String, u16>>> = LazyLock::new(|| Mutex::new(HashMap::new()));
+static SCANNING: LazyLock<Mutex<bool>> = LazyLock::new(|| Mutex::new(false));
+static ADAPTER: LazyLock<Mutex<Option<Adapter>>> = LazyLock::new(Mutex::default);
+static STATUS: LazyLock<Mutex<LighthouseStatus>> = LazyLock::new(|| Mutex::new(LighthouseStatus::Uninitialized));
+static PROCESSING_DEVICES: LazyLock<Mutex<HashSet<DeviceId>>> = LazyLock::new(|| Mutex::new(HashSet::new()));
 
 pub async fn init() {
     // Initialize adapter

@@ -1,6 +1,8 @@
-<button class="btn-clear" *ngIf="hasSelection" @hshrink (click)="clearSelection()">
-  <i class="material-icons">clear</i>
-</button>
+@if (hasSelection) {
+  <button class="btn-clear" @hshrink (click)="clearSelection()">
+    <i class="material-icons">clear</i>
+  </button>
+}
 <button class="btn-main" [class.selected]="hasSelection" (click)="openModal()" @noop>
   <div @hshrink>
     {{ buttonText }}

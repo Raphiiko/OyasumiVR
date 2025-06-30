@@ -2,29 +2,33 @@
   <ng-content></ng-content>
 </button>
 <div class="dropdown-container">
-  <div class="dropdown" *ngIf="!collapsed" [@fadeDown]>
-    <div
-      class="dropdown-item"
-      *ngFor="let item of items"
-      (click)="selectItem(item, $event)"
-      [class.has-subtitle]="item.subLabel"
-    >
-      <div class="dropdown-item-content">
-        <div class="dropdown-item-title">
-          {{ item.label | tsTranslate }}
+  @if (!collapsed) {
+    <div class="dropdown" [@fadeDown]>
+      @for (item of items; track item) {
+        <div
+          class="dropdown-item"
+          (click)="selectItem(item, $event)"
+          [class.has-subtitle]="item.subLabel"
+          >
+          <div class="dropdown-item-content">
+            <div class="dropdown-item-title">
+              {{ item.label | tsTranslate }}
+            </div>
+            <div class="dropdown-item-subtitle">
+              {{ item.subLabel | tsTranslate }}
+            </div>
+          </div>
+          @if (item.infoLink) {
+            <a
+              class="dropdown-item-info noselect"
+              [href]="item.infoLink"
+              target="_blank"
+              >
+              <i class="material-icons-round noselect">info</i>
+            </a>
+          }
         </div>
-        <div class="dropdown-item-subtitle">
-          {{ item.subLabel | tsTranslate }}
-        </div>
-      </div>
-      <a
-        class="dropdown-item-info noselect"
-        *ngIf="item.infoLink"
-        [href]="item.infoLink"
-        target="_blank"
-      >
-        <i class="material-icons-round noselect">info</i>
-      </a>
+      }
     </div>
-  </div>
+  }
 </div>

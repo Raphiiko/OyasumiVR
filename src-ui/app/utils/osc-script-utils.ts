@@ -11,7 +11,6 @@ export const MAX_PARAMETERS_PER_COMMAND = 5;
 export const MAX_STRING_VALUE_LENGTH = 144;
 const SLEEP_ACTION_REGEX = /^\s*sleep\s+(?<VALUE>[0-9]+([.][0-9]+)?)(?<UNIT>ms|s)?\s*$/i;
 const COMMAND_ACTION_REGEX =
-  // eslint-disable-next-line no-control-regex
   /(?:(?<FLOAT_TYPE>f)\s+(?<FLOAT_VALUE>-?[0-9]+(?:\.[0-9]+)?)|(?<INT_TYPE>i)\s+(?<INT_VALUE>[0-9]+)|(?<BOOL_TYPE>b)\s+(?<BOOL_VALUE>true|false|1|0|yes|no)|(?<STRING_TYPE>s)\s+"(?<STRING_VALUE>(?:\\"|[^"])*)")|(?:(?<ADDRESS>\/[^\n\r]+))/gi;
 
 function checkSyntax(scriptLineContent: string) {

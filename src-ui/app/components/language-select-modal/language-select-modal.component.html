@@ -3,19 +3,20 @@
     <h2>Welcome to OyasumiVR!</h2>
     <p>Please select your preferred language:</p>
     <div class="options">
-      <div
-        class="language-option"
-        *ngFor="let language of languages"
-        (click)="selectLanguage(language)"
-      >
-        <span class="fi fi-{{ language.flag || language.code }}"></span>
-        <span class="label">{{ language.label }}</span>
-      </div>
+      @for (language of languages; track language) {
+        <div
+          class="language-option"
+          (click)="selectLanguage(language)"
+          >
+          <span class="fi fi-{{ language.flag || language.code }}"></span>
+          <span class="label">{{ language.label }}</span>
+        </div>
+      }
       <a
         href="https://github.com/Raphiiko/OyasumiVR/wiki/Adding-Translations"
         target="_blank"
         class="language-option"
-      >
+        >
         <div class="flag-add">
           <i class="material-icons">add</i>
         </div>

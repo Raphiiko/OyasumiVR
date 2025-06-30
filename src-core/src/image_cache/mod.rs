@@ -11,12 +11,11 @@ use std::{
     path::{Path, PathBuf},
     str::FromStr,
 };
+use std::sync::LazyLock;
 use tokio::sync::Mutex;
 use urlencoding::decode;
 
-lazy_static! {
-    pub static ref INSTANCE: Mutex<Option<ImageCache>> = Default::default();
-}
+pub static INSTANCE: LazyLock<Mutex<Option<ImageCache>>> = LazyLock::new(Default::default);
 
 pub async fn init(cache_dir: PathBuf) {
     let image_cache_dir = cache_dir.join("image_cache");

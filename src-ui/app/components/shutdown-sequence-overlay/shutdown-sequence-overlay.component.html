@@ -1,84 +1,91 @@
-<div class="overlay-container" [@fade] *ngIf="currentStage !== 'IDLE'">
-  <div class="overlay-bg"></div>
-  <div class="overlay-content">
-    <h1 class="title" translate>shutdown-automations.overlay.title</h1>
-    <div class="stages">
-      <div class="stage" *ngFor="let stage of stages" [ngStyle]="getStageStyle(stage)">
-        <div class="stage-icon">
-          <div class="small-spinner" *ngIf="stage === currentStage" @fade></div>
-        </div>
-        <span>{{ 'shutdown-automations.overlay.stage.' + stage | translate }}</span>
+@if (currentStage !== 'IDLE') {
+  <div class="overlay-container" [@fade]>
+    <div class="overlay-bg"></div>
+    <div class="overlay-content">
+      <h1 class="title" translate>shutdown-automations.overlay.title</h1>
+      <div class="stages">
+        @for (stage of stages; track stage) {
+          <div class="stage" [ngStyle]="getStageStyle(stage)">
+            <div class="stage-icon">
+              @if (stage === currentStage) {
+                <div class="small-spinner" @fade></div>
+              }
+            </div>
+            <span>{{ 'shutdown-automations.overlay.stage.' + stage | translate }}</span>
+          </div>
+        }
       </div>
+      @if (canCancel) {
+        <button
+          class="btn-cancel"
+          (click)="cancel()"
+          @vshrinkSlow
+          [disabled]="!canCancel"
+          ><span translate>shutdown-automations.overlay.cancel</span></button
+          >
+        }
+      </div>
+      <svg width="0" height="0">
+        <filter
+          id="ambilight"
+          width="300%"
+          height="300%"
+          x="-0.75"
+          y="-0.75"
+          color-interpolation-filters="sRGB"
+          >
+          <feOffset in="SourceGraphic" result="source-copy"></feOffset>
+          <feColorMatrix
+            in="source-copy"
+            type="saturate"
+            values="3"
+            result="saturated-copy"
+          ></feColorMatrix>
+          <feColorMatrix
+            in="saturated-copy"
+            type="matrix"
+        values="1 0 0 0 0
+    0 1 0 0 0
+    0 0 1 0 0
+    33 33 33 101 -132"
+            result="bright-colors"
+          ></feColorMatrix>
+          <feMorphology in="bright-colors" operator="dilate" radius="3" result="spread"></feMorphology>
+          <feGaussianBlur in="spread" stdDeviation="40" result="ambilight-light"></feGaussianBlur>
+          <feOffset in="SourceGraphic" result="source"></feOffset>
+          <feComposite in="source" in2="ambilight-light" operator="over"></feComposite>
+        </filter>
+      </svg>
+      <svg width="0" height="0">
+        <filter
+          id="ambilight2"
+          width="3000%"
+          height="3000%"
+          x="-5"
+          y="-5"
+          color-interpolation-filters="sRGB"
+          >
+          <feOffset in="SourceGraphic" result="source-copy"></feOffset>
+          <feColorMatrix
+            in="source-copy"
+            type="saturate"
+            values="3"
+            result="saturated-copy"
+          ></feColorMatrix>
+          <feColorMatrix
+            in="saturated-copy"
+            type="matrix"
+        values="1 0 0 0 0
+    0 1 0 0 0
+    0 0 1 0 0
+    33 33 33 101 -132"
+            result="bright-colors"
+          ></feColorMatrix>
+          <feMorphology in="bright-colors" operator="dilate" radius="3" result="spread"></feMorphology>
+          <feGaussianBlur in="spread" stdDeviation="40" result="ambilight-light"></feGaussianBlur>
+          <feOffset in="SourceGraphic" result="source"></feOffset>
+          <feComposite in="source" in2="ambilight-light" operator="over"></feComposite>
+        </filter>
+      </svg>
     </div>
-    <button
-      class="btn-cancel"
-      (click)="cancel()"
-      *ngIf="canCancel"
-      @vshrinkSlow
-      [disabled]="!canCancel"
-      ><span translate>shutdown-automations.overlay.cancel</span></button
-    >
-  </div>
-  <svg width="0" height="0">
-    <filter
-      id="ambilight"
-      width="300%"
-      height="300%"
-      x="-0.75"
-      y="-0.75"
-      color-interpolation-filters="sRGB"
-    >
-      <feOffset in="SourceGraphic" result="source-copy"></feOffset>
-      <feColorMatrix
-        in="source-copy"
-        type="saturate"
-        values="3"
-        result="saturated-copy"
-      ></feColorMatrix>
-      <feColorMatrix
-        in="saturated-copy"
-        type="matrix"
-        values="1 0 0 0 0
-    0 1 0 0 0
-    0 0 1 0 0
-    33 33 33 101 -132"
-        result="bright-colors"
-      ></feColorMatrix>
-      <feMorphology in="bright-colors" operator="dilate" radius="3" result="spread"></feMorphology>
-      <feGaussianBlur in="spread" stdDeviation="40" result="ambilight-light"></feGaussianBlur>
-      <feOffset in="SourceGraphic" result="source"></feOffset>
-      <feComposite in="source" in2="ambilight-light" operator="over"></feComposite>
-    </filter>
-  </svg>
-  <svg width="0" height="0">
-    <filter
-      id="ambilight2"
-      width="3000%"
-      height="3000%"
-      x="-5"
-      y="-5"
-      color-interpolation-filters="sRGB"
-    >
-      <feOffset in="SourceGraphic" result="source-copy"></feOffset>
-      <feColorMatrix
-        in="source-copy"
-        type="saturate"
-        values="3"
-        result="saturated-copy"
-      ></feColorMatrix>
-      <feColorMatrix
-        in="saturated-copy"
-        type="matrix"
-        values="1 0 0 0 0
-    0 1 0 0 0
-    0 0 1 0 0
-    33 33 33 101 -132"
-        result="bright-colors"
-      ></feColorMatrix>
-      <feMorphology in="bright-colors" operator="dilate" radius="3" result="spread"></feMorphology>
-      <feGaussianBlur in="spread" stdDeviation="40" result="ambilight-light"></feGaussianBlur>
-      <feOffset in="SourceGraphic" result="source"></feOffset>
-      <feComposite in="source" in2="ambilight-light" operator="over"></feComposite>
-    </filter>
-  </svg>
-</div>
+  }

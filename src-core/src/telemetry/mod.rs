@@ -1,5 +1,5 @@
 use std::{
-    sync::atomic::{AtomicBool, Ordering},
+    sync::{atomic::{AtomicBool, Ordering}, LazyLock},
     time::Duration,
 };
 
@@ -12,10 +12,8 @@ use crate::BUILD_FLAVOUR;
 
 pub mod commands;
 
-lazy_static! {
-    pub static ref TELEMETRY_INITIALIZED: Mutex<bool> = Mutex::new(false);
-    pub static ref TELEMETRY_ENABLED: AtomicBool = AtomicBool::new(false);
-}
+pub static TELEMETRY_INITIALIZED: LazyLock<Mutex<bool>> = LazyLock::new(|| Mutex::new(false));
+pub static TELEMETRY_ENABLED: LazyLock<AtomicBool> = LazyLock::new(|| AtomicBool::new(false));
 
 pub async fn init_telemetry(handle: &tauri::AppHandle) {
     *TELEMETRY_INITIALIZED.lock().await = true;

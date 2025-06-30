@@ -5,7 +5,7 @@ mod sounds_gen;
 pub mod elevation;
 
 use self::audio_devices::manager::AudioDeviceManager;
-use lazy_static::lazy_static;
+use std::sync::LazyLock;
 use log::{error, info, warn};
 use rodio::{source::Source, Decoder};
 use rodio::{OutputStream, Sink};
@@ -14,22 +14,23 @@ use std::ffi::OsString;
 use std::fs::File;
 use std::io::BufReader;
 use std::os::windows::ffi::OsStringExt;
-use std::ptr::null_mut;
 use std::slice;
 use std::env;
 use std::time::Duration;
 use tokio::sync::mpsc::Sender;
 use tokio::sync::Mutex;
-use winapi::shared::guiddef::GUID;
-use winapi::shared::minwindef::{DWORD, UCHAR, ULONG};
-use winapi::um::powersetting::{PowerGetActiveScheme, PowerSetActiveScheme};
-use winapi::um::powrprof::{PowerEnumerate, PowerReadFriendlyName};
+use windows::core::GUID;
+use windows::Win32::Foundation::ERROR_SUCCESS;
+use windows::Win32::System::Power::{
+    PowerEnumerate, PowerGetActiveScheme, PowerReadFriendlyName, PowerSetActiveScheme,
+    ACCESS_SCHEME,
+};
 
-lazy_static! {
-    static ref PLAY_SOUND_TX: Mutex<Option<Sender<(String, f32)>>> = Mutex::default();
-    static ref AUDIO_DEVICE_MANAGER: Mutex<Option<AudioDeviceManager>> = Mutex::default();
-    static ref VRCHAT_ACTIVE: Mutex<bool> = Mutex::new(false);
-}
+type PlaySoundSender = LazyLock<Mutex<Option<Sender<(String, f32)>>>>;
+
+static PLAY_SOUND_TX: PlaySoundSender = LazyLock::new(Mutex::default);
+static AUDIO_DEVICE_MANAGER: LazyLock<Mutex<Option<AudioDeviceManager>>> = LazyLock::new(Mutex::default);
+static VRCHAT_ACTIVE: LazyLock<Mutex<bool>> = LazyLock::new(|| Mutex::new(false));
 
 pub async fn init_audio_device_manager() {
     let mut manager = AUDIO_DEVICE_MANAGER.lock().await;
@@ -188,24 +189,24 @@ pub async fn cleanup_batch_files() {
 
 fn get_windows_power_policies() -> Vec<GUID> {
     let mut power_schemes = Vec::new();
-    let mut index: ULONG = 0;
-    let mut buffer_size: DWORD = std::mem::size_of::<GUID>() as DWORD;
+    let mut index: u32 = 0;
+    let mut buffer_size: u32 = std::mem::size_of::<GUID>() as u32;
 
     loop {
         let mut buffer: GUID = unsafe { std::mem::zeroed() };
         let result = unsafe {
             PowerEnumerate(
-                null_mut(),
-                null_mut(),
-                null_mut(),
-                winapi::um::powrprof::ACCESS_SCHEME,
+                None,
+                None,
+                None,
+                ACCESS_SCHEME,
                 index,
-                &mut buffer as *mut _ as *mut UCHAR,
-                &mut buffer_size as *mut _ as *mut DWORD,
+                Some(&mut buffer as *mut _ as *mut u8),
+                &mut buffer_size as *mut _,
             )
         };
 
-        if result == winapi::shared::winerror::ERROR_SUCCESS {
+        if result == ERROR_SUCCESS {
             power_schemes.push(buffer);
             index += 1;
         } else {
@@ -219,7 +220,7 @@ fn get_windows_power_policies() -> Vec<GUID> {
 fn active_windows_power_policy() -> Option<GUID> {
     unsafe {
         let mut guid: *mut GUID = std::ptr::null_mut();
-        if PowerGetActiveScheme(std::ptr::null_mut(), &mut guid) == 0 && !guid.is_null() {
+        if PowerGetActiveScheme(None, &mut guid).is_ok() && !guid.is_null() {
             Some(*guid)
         } else {
             None
@@ -228,50 +229,50 @@ fn active_windows_power_policy() -> Option<GUID> {
 }
 
 fn set_windows_power_policy(guid: &GUID) -> bool {
-    let result = unsafe { PowerSetActiveScheme(std::ptr::null_mut(), guid) };
-    if result != 0 {
+    let result = unsafe { PowerSetActiveScheme(None, Some(guid)) };
+    if result.is_err() {
         error!(
             "[Core] Failed to set Windows power policy. Result code {:?}",
             result
         );
     };
-    result == 0
+    result.is_ok()
 }
 
 fn get_friendly_name_for_windows_power_policy(scheme_guid: &GUID) -> Option<String> {
-    let mut buffer_size: DWORD = 0;
+    let mut buffer_size: u32 = 0;
 
     // First call to determine the buffer size needed
     let result = unsafe {
         PowerReadFriendlyName(
-            null_mut(),
-            scheme_guid as *const _,
-            null_mut(),
-            null_mut(),
-            null_mut() as *mut UCHAR,
+            None,
+            Some(scheme_guid as *const _),
+            None,
+            None,
+            None,
             &mut buffer_size,
         )
     };
 
-    if result != winapi::shared::winerror::ERROR_SUCCESS || buffer_size == 0 {
+    if result != ERROR_SUCCESS || buffer_size == 0 {
         return None;
     }
 
-    let mut buffer: Vec<UCHAR> = vec![0; buffer_size as usize];
+    let mut buffer: Vec<u8> = vec![0; buffer_size as usize];
 
     // Second call to actually get the friendly name
     let result = unsafe {
         PowerReadFriendlyName(
-            null_mut(),
-            scheme_guid as *const _,
-            null_mut(),
-            null_mut(),
-            buffer.as_mut_ptr(),
+            None,
+            Some(scheme_guid as *const _),
+            None,
+            None,
+            Some(buffer.as_mut_ptr()),
             &mut buffer_size,
         )
     };
 
-    if result != winapi::shared::winerror::ERROR_SUCCESS {
+    if result != ERROR_SUCCESS {
         return None;
     }
 
