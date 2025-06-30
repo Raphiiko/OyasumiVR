@@ -18,7 +18,7 @@
                 [placeholder]="device.defaultName"
                 [(ngModel)]="nickname"
                 [maxlength]="32"
-                />
+              />
             </div>
             @if (nickname) {
               <button
@@ -26,7 +26,7 @@
                 (click)="clearNickname()"
                 [tooltip]="'Clear nickname'"
                 [tooltipMode]="'left'"
-                >
+              >
                 <i class="material-icons">clear</i>
               </button>
             }
@@ -49,7 +49,7 @@
                     class="tag-item"
                     [class.selected]="isTagAssigned(tag)"
                     (click)="toggleTag(tag)"
-                    >
+                  >
                     <div class="tag-color" [style.background-color]="tag.color"></div>
                     <span class="tag-name">{{ tag.name }}</span>
                     @if (isTagAssigned(tag)) {
@@ -60,9 +60,7 @@
               </div>
             }
             @if (availableTags.length === 0) {
-              <div class="no-tags" translate>
-                device-manager.config.tags.noTags
-              </div>
+              <div class="no-tags" translate> device-manager.config.tags.noTags </div>
             }
           </div>
         </div>
@@ -94,12 +92,12 @@
               class="btn"
               (click)="openLighthouseV1IdWizard()"
               [ngClass]="v1LighthouseMode === 'NEEDS_ID' ? 'btn-primary' : 'btn-secondary'"
-              >
+            >
               {{
-              (v1LighthouseMode === 'NEEDS_ID'
-              ? 'device-manager.config.v1Identifier.set'
-              : 'device-manager.config.v1Identifier.change'
-              ) | translate
+                (v1LighthouseMode === 'NEEDS_ID'
+                  ? 'device-manager.config.v1Identifier.set'
+                  : 'device-manager.config.v1Identifier.change'
+                ) | translate
               }}
             </button>
           </div>

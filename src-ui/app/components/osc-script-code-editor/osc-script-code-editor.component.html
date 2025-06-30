@@ -7,7 +7,7 @@
       href="https://github.com/Raphiiko/OyasumiVR/wiki/OSC-Script-Editor-&-Syntax-Guide#script-editor"
       target="_blank"
       translate
-      >
+    >
       comp.osc-script-code-editor.syntaxGuide
     </a>
     <span>]</span>
@@ -37,7 +37,7 @@
           class="line-number"
           [class.has-error]="getErrorsForLine(i).length"
           (mouseenter)="hoverOnLine(i, $event)"
-          >
+        >
           @if (getErrorsForLine(i).length) {
             <i class="material-icons-round">error</i>
           }
@@ -62,7 +62,7 @@
       [style.left]="tooltipPosition.x + 'px'"
       @fade
       (mouseleave)="hoverOnLine(-1, undefined)"
-      >
+    >
       <div class="error-tooltip-bg"></div>
       <div class="error-tooltip-content">
         @for (error of tooltipErrors; track error) {

@@ -18,12 +18,12 @@
           [(ngModel)]="saveName"
           [placeholder]="'comp.player-list-preset-modal.namePlaceholder' | translate"
           maxlength="24"
-          />
+        />
         <button
           class="btn btn-primary"
           [disabled]="saved || !validSaveName"
           (click)="saveNewPreset()"
-          >
+        >
           <i class="material-icons">save</i>
           <span translate>shared.modals.save</span>
         </button>
@@ -41,7 +41,7 @@
             <span>{{ list.name }}</span>
             <span>{{
               'comp.player-list-preset-modal.preset.subtitle'
-              | translate: { count: list.playerIds.length }
+                | translate: { count: list.playerIds.length }
             }}</span>
           </div>
           <div class="preset-actions">
@@ -51,7 +51,7 @@
               (click)="deletePreset(list)"
               [tooltip]="'comp.player-list-preset-modal.delete'"
               [tooltipMode]="'left'"
-              >
+            >
               <i class="material-icons">delete</i>
             </button>
             @if (mode === 'save') {
@@ -61,7 +61,7 @@
                 (click)="overwritePreset(list)"
                 [tooltip]="'comp.player-list-preset-modal.overwrite'"
                 [tooltipMode]="'left'"
-                >
+              >
                 <i class="material-icons">save</i>
               </button>
             }
@@ -71,7 +71,7 @@
                 (click)="loadPreset(list)"
                 [tooltip]="'comp.player-list-preset-modal.load'"
                 [tooltipMode]="'left'"
-                >
+              >
                 <i class="material-icons">file_open</i>
               </button>
             }

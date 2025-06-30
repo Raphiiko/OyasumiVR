@@ -7,7 +7,7 @@
           class="btn-turn-off-all btn-power power-off"
           [title]="'Turn off all devices'"
           (click)="turnOffAllOVRDevices()"
-          >
+        >
           <img [src]="'/assets/img/icon_controller.png'" class="category-icon" />
           <img [src]="'/assets/img/icon_tracker.png'" class="category-icon" />
           <i class="material-icons">power_settings_new</i>
@@ -17,10 +17,7 @@
   </div>
   <div class="device-list">
     @for (category of deviceCategories; track trackDeviceCategoryBy($index, category)) {
-      <div
-        class="device-list-category"
-        [@triggerChildren]
-        >
+      <div class="device-list-category" [@triggerChildren]>
         @if (category.type === 'OpenVR') {
           <div>
             <div class="device-list-category-header" [@vshrink]>
@@ -61,14 +58,11 @@
                 ></app-device-power-button>
               }
               @if (showLHStatePopover) {
-                <div
-                  @fade
-                  (clickOutside)="onClickOutsideLHStatePopover($event)"
-                  >
+                <div @fade (clickOutside)="onClickOutsideLHStatePopover($event)">
                   <app-lighthouse-force-state-popover
                     (action)="onForceLHState($event)"
                     [style.position-anchor]="'--anchor-lh-bulk-power-button'"
-                    >
+                  >
                   </app-lighthouse-force-state-popover>
                 </div>
               }
@@ -96,7 +90,7 @@
       class="device-manager-button"
       [routerLink]="'/dashboard/deviceManager'"
       [title]="'comp.dashboard-navbar.deviceManager' | translate"
-      >
+    >
       <img src="/assets/img/icon_controller.png" class="device-manager-icon" />
       <span class="device-manager-label" translate>comp.dashboard-navbar.deviceManager</span>
       <i class="material-icons-round">arrow_forward_ios</i>

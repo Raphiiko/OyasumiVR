@@ -11,47 +11,36 @@
     </div>
     <div class="bottom">
       @if (!sleepModeActive) {
-        <button
-          class="btn btn-primary"
-          (click)="setSleepMode(true)"
-          translate
-          >
+        <button class="btn btn-primary" (click)="setSleepMode(true)" translate>
           overview.sleep-mode.activate
         </button>
       }
       @if (sleepModeActive) {
-        <button
-          class="btn btn-secondary"
-          (click)="setSleepMode(false)"
-          translate
-          >
+        <button class="btn btn-secondary" (click)="setSleepMode(false)" translate>
           overview.sleep-mode.deactivate
         </button>
       }
       @if (!sleepModeActive) {
         <div
-        [tooltip]="
-          (sleepPreparation.sleepPreparationAvailable | async) === true
-            ? undefined
-            : 'overview.sleep-preparation.disabledTooltip'
-        "
+          [tooltip]="
+            (sleepPreparation.sleepPreparationAvailable | async) === true
+              ? undefined
+              : 'overview.sleep-preparation.disabledTooltip'
+          "
           [tooltipMode]="'top'"
           [tooltipMargin]="28"
           @fade
-          >
+        >
           <button
             class="btn btn-secondary btn-sleep-preparation"
-          [disabled]="
-            (sleepPreparation.sleepPreparationAvailable | async) === false ||
-            (sleepPreparation.sleepPreparationTimedOut | async)
-          "
+            [disabled]="
+              (sleepPreparation.sleepPreparationAvailable | async) === false ||
+              (sleepPreparation.sleepPreparationTimedOut | async)
+            "
             (click)="sleepPreparation.prepareForSleep()"
-            >
+          >
             @if (sleepPreparation.sleepPreparationTimedOut | async) {
-              <div
-                class="small-spinner"
-                @hshrink
-              ></div>
+              <div class="small-spinner" @hshrink></div>
             }
             <span translate>overview.sleep-preparation.activate</span>
           </button>
@@ -59,17 +48,14 @@
       }
     </div>
     @for (i of ['sleep', 'peek', 'awake', 'awake-hover']; track i) {
-      <div
-        class="illustration"
-        [ngClass]="[i, illustration === i ? 'active' : '']"
-        >
+      <div class="illustration" [ngClass]="[i, illustration === i ? 'active' : '']">
         <img [attr.src]="'assets/img/illustration_' + i + '.png'" class="bg" />
         <img
           [attr.src]="'assets/img/illustration_' + i + '.png'"
           (click)="setSleepMode(!sleepModeActive)"
           (mouseenter)="determineIllustration(true)"
           (mouseleave)="determineIllustration(false)"
-          />
+        />
       </div>
     }
   </div>

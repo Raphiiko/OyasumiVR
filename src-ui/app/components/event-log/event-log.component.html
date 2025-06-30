@@ -7,7 +7,7 @@
       (mouseleave)="filterHover = false"
       [class.active]="(filters | async)?.length ?? 0 > 0"
       (click)="openFilterDialog()"
-      >
+    >
       <span>&nbsp;</span>
       <i class="material-icons-round">filter_list</i>
       <span>&nbsp;</span>
@@ -21,7 +21,7 @@
       (mouseleave)="clearHover = false"
       (click)="clearLog()"
       [disabled]="entries === 0"
-      >
+    >
       <span>&nbsp;</span>
       <i class="material-icons-round">clear</i>
       <span>&nbsp;</span>

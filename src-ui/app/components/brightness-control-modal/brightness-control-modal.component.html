@@ -1,11 +1,7 @@
 <div class="b-modal-container" @fadeUp (clickOutside)="close()">
   <div class="sliders-container">
     @if (advancedMode) {
-      <div
-        class="brightness-slider"
-        @vshrink
-        [class.disabled]="!driverAvailable"
-        >
+      <div class="brightness-slider" @vshrink [class.disabled]="!driverAvailable">
         @if (driverChecked) {
           <app-brightness-control-slider
             [value]="(hardwareBrightnessControl.brightnessStream | async) ?? 0"
@@ -57,20 +53,12 @@
 
   <div class="link-bar">
     @if (!isActive('/dashboard/settings/brightnessCct')) {
-      <a
-        class="link"
-        [routerLink]="['dashboard', 'settings', 'brightnessCct']"
-        (click)="close()"
-        >
+      <a class="link" [routerLink]="['dashboard', 'settings', 'brightnessCct']" (click)="close()">
         <i class="material-symbols-outlined icon-filled">settings</i>
       </a>
     }
     @if (!isActive('/dashboard/brightnessAutomations')) {
-      <a
-        class="link"
-        [routerLink]="['dashboard', 'brightnessAutomations']"
-        (click)="close()"
-        >
+      <a class="link" [routerLink]="['dashboard', 'brightnessAutomations']" (click)="close()">
         <i class="material-symbols-outlined icon-filled">automation</i>
       </a>
     }

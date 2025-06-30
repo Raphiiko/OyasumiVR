@@ -12,7 +12,7 @@
             type="checkbox"
             [checked]="automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.enabled"
             (change)="toggleAutomation('SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR')"
-            />
+          />
           <span class="switch-toggle-slider"></span>
         </label>
       </div>
@@ -26,9 +26,9 @@
           <div class="setting-row-label" translate>
             <span
               style="display: initial"
-            [innerHtml]="
-              'sleep-detection.sleepDetection.automation.calibrationPending.title' | translate
-            "
+              [innerHtml]="
+                'sleep-detection.sleepDetection.automation.calibrationPending.title' | translate
+              "
             ></span>
             <span></span>
           </div>
@@ -36,183 +36,175 @@
             <button class="btn btn-secondary" (click)="calibrate()">
               <span translate
                 >sleep-detection.sleepDetection.automation.calibrationPending.calibrate</span
-                >
-              </button>
-            </div>
+              >
+            </button>
           </div>
         </div>
-      }
-    </div>
+      </div>
+    }
   </div>
+</div>
 
-  <div class="setting-category">
-    <h2 translate>sleep-detection.sleepDetection.configuration.title</h2>
-    <div class="settings">
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>sleep-detection.modals.enableForSleepDetector.calibration.title</span>
-          <span translate>sleep-detection.modals.enableForSleepDetector.calibration.description</span>
-        </div>
-        <div class="setting-row-action">
-          <button class="btn btn-primary" (click)="calibrate()" translate>
-            sleep-detection.modals.enableForSleepDetector.calibration.action
-          </button>
-        </div>
+<div class="setting-category">
+  <h2 translate>sleep-detection.sleepDetection.configuration.title</h2>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>sleep-detection.modals.enableForSleepDetector.calibration.title</span>
+        <span translate>sleep-detection.modals.enableForSleepDetector.calibration.description</span>
       </div>
-
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>sleep-detection.modals.enableForSleepDetector.sensitivity.title</span>
-          <span translate>sleep-detection.modals.enableForSleepDetector.sensitivity.description</span>
-        </div>
-        <div class="setting-row-action">
-          <app-select-box
-            type="SMALL"
-            [items]="sensitivityOptions"
-            [selected]="sensitivityOption"
-            (selectedChange)="setSensitivityOption($event?.id)"
-          ></app-select-box>
-        </div>
+      <div class="setting-row-action">
+        <button class="btn btn-primary" (click)="calibrate()" translate>
+          sleep-detection.modals.enableForSleepDetector.calibration.action
+        </button>
       </div>
+    </div>
 
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>sleep-detection.modals.enableForSleepDetector.sleepCheck.title</span>
-          <span
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>sleep-detection.modals.enableForSleepDetector.sensitivity.title</span>
+        <span translate>sleep-detection.modals.enableForSleepDetector.sensitivity.description</span>
+      </div>
+      <div class="setting-row-action">
+        <app-select-box
+          type="SMALL"
+          [items]="sensitivityOptions"
+          [selected]="sensitivityOption"
+          (selectedChange)="setSensitivityOption($event?.id)"
+        ></app-select-box>
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>sleep-detection.modals.enableForSleepDetector.sleepCheck.title</span>
+        <span
           [innerHtml]="
             'sleep-detection.modals.enableForSleepDetector.sleepCheck.description' | translate
           "
-          ></span>
-        </div>
-        <div class="setting-row-action">
-          <label class="switch-toggle">
-            <input
-              [checked]="automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.sleepCheck"
-              (change)="toggleSleepCheck()"
-              type="checkbox"
-              />
-            <span class="switch-toggle-slider"></span>
-          </label>
-        </div>
+        ></span>
       </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            [checked]="automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.sleepCheck"
+            (change)="toggleSleepCheck()"
+            type="checkbox"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </div>
+    </div>
 
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>sleep-detection.modals.enableForSleepDetector.timeWindow.title</span>
-          <span translate>sleep-detection.modals.enableForSleepDetector.timeWindow.description</span>
-        </div>
-        <div class="setting-row-action">
-          @if (automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindow) {
-            <div
-              class="input-wrapper"
-              @fade
-              >
-              <input
-                type="time"
-                [value]="activationWindowStart"
-                (change)="onChangeActivationWindowStart(activationWindowStartInput.value)"
-                #activationWindowStartInput
-                />
-            </div>
-          }
-          @if (automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindow) {
-            <span @fade>
-              to
-            </span>
-          }
-          @if (automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindow) {
-            <div
-              class="input-wrapper"
-              @fade
-              >
-              <input
-                type="time"
-                [value]="activationWindowEnd"
-                (change)="onChangeActivationWindowEnd(activationWindowEndInput.value)"
-                #activationWindowEndInput
-                />
-            </div>
-          }
-          <label class="switch-toggle">
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>sleep-detection.modals.enableForSleepDetector.timeWindow.title</span>
+        <span translate>sleep-detection.modals.enableForSleepDetector.timeWindow.description</span>
+      </div>
+      <div class="setting-row-action">
+        @if (automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindow) {
+          <div class="input-wrapper" @fade>
             <input
-              type="checkbox"
-              [checked]="automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindow"
-              (change)="toggleActivationWindow()"
-              />
-            <span class="switch-toggle-slider"></span>
-          </label>
-        </div>
+              type="time"
+              [value]="activationWindowStart"
+              (change)="onChangeActivationWindowStart(activationWindowStartInput.value)"
+              #activationWindowStartInput
+            />
+          </div>
+        }
+        @if (automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindow) {
+          <span @fade> to </span>
+        }
+        @if (automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindow) {
+          <div class="input-wrapper" @fade>
+            <input
+              type="time"
+              [value]="activationWindowEnd"
+              (change)="onChangeActivationWindowEnd(activationWindowEndInput.value)"
+              #activationWindowEndInput
+            />
+          </div>
+        }
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindow"
+            (change)="toggleActivationWindow()"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="setting-category">
-    <h2 translate>sleep-detection.sleepDetection.advanced.title</h2>
-    <p translate>sleep-detection.sleepDetection.advanced.description</p>
-    <div class="settings">
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>sleep-detection.modals.enableForSleepDetector.detectionWindow.title</span>
-          <span translate
-            >sleep-detection.modals.enableForSleepDetector.detectionWindow.description</span
-            >
-          </div>
-          <div class="setting-row-action">
-            <app-slider-setting
-              [unit]="'sleep-detection.modals.enableForSleepDetector.detectionWindow.unit' | translate"
-              [min]="15"
-              [max]="60"
-              [value]="automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.detectionWindowMinutes"
-              (valueChange)="onDetectionWindowChange($event)"
-              [snapValues]="[15]"
-              [snapDistance]="5"
-              [step]="1"
-            ></app-slider-setting>
-          </div>
-        </div>
+<div class="setting-category">
+  <h2 translate>sleep-detection.sleepDetection.advanced.title</h2>
+  <p translate>sleep-detection.sleepDetection.advanced.description</p>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>sleep-detection.modals.enableForSleepDetector.detectionWindow.title</span>
+        <span translate
+          >sleep-detection.modals.enableForSleepDetector.detectionWindow.description</span
+        >
+      </div>
+      <div class="setting-row-action">
+        <app-slider-setting
+          [unit]="'sleep-detection.modals.enableForSleepDetector.detectionWindow.unit' | translate"
+          [min]="15"
+          [max]="60"
+          [value]="automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.detectionWindowMinutes"
+          (valueChange)="onDetectionWindowChange($event)"
+          [snapValues]="[15]"
+          [snapDistance]="5"
+          [step]="1"
+        ></app-slider-setting>
+      </div>
+    </div>
 
-        <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate
-              >sleep-detection.modals.enableForSleepDetector.considerControllerPresence.title</span
-              >
-              <span translate
-                >sleep-detection.modals.enableForSleepDetector.considerControllerPresence.description</span
-                >
-              </div>
-              <div class="setting-row-action">
-                <label class="switch-toggle">
-                  <input
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate
+          >sleep-detection.modals.enableForSleepDetector.considerControllerPresence.title</span
+        >
+        <span translate
+          >sleep-detection.modals.enableForSleepDetector.considerControllerPresence.description</span
+        >
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
             [checked]="
               automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.considerControllerPresence
             "
-                    (change)="toggleControllerPresence()"
-                    type="checkbox"
-                    />
-                  <span class="switch-toggle-slider"></span>
-                </label>
-              </div>
-            </div>
+            (change)="toggleControllerPresence()"
+            type="checkbox"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </div>
+    </div>
 
-            <div class="setting-row">
-              <div class="setting-row-label" translate>
-                <span translate
-                  >sleep-detection.modals.enableForSleepDetector.considerSleepingPose.title</span
-                  >
-                  <span translate
-                    >sleep-detection.modals.enableForSleepDetector.considerSleepingPose.description</span
-                    >
-                  </div>
-                  <div class="setting-row-action">
-                    <label class="switch-toggle">
-                      <input
-                        [checked]="automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.considerSleepingPose"
-                        (change)="toggleSleepingPose()"
-                        type="checkbox"
-                        />
-                      <span class="switch-toggle-slider"></span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate
+          >sleep-detection.modals.enableForSleepDetector.considerSleepingPose.title</span
+        >
+        <span translate
+          >sleep-detection.modals.enableForSleepDetector.considerSleepingPose.description</span
+        >
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            [checked]="automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.considerSleepingPose"
+            (change)="toggleSleepingPose()"
+            type="checkbox"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>

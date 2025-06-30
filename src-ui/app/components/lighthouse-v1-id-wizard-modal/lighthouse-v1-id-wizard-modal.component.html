@@ -23,7 +23,7 @@
               (keydown.enter)="verifyManualId()"
               autofocus
               #manualIdInput
-              />
+            />
           </div>
           @if (errorMessage) {
             <div class="alert error" @vshrink>
@@ -61,12 +61,7 @@
             <div class="verify-bar-inner" [style.width]="verifyPercentage + '%'"></div>
           </div>
           @if (verifyAutomatic && verifyPercentage !== 100) {
-            <p
-              class="muted-text"
-              style="margin-top: 2em"
-              @slowFade
-              translate
-              >
+            <p class="muted-text" style="margin-top: 2em" @slowFade translate>
               comp.lv1-id-wizard-modal.verifyId.idAutodetected
             </p>
           }
@@ -94,22 +89,16 @@
       </div>
     }
     @if (['INTRO', 'MANUAL_INPUT', 'AUTOMATIC_DETECTION'].includes(step)) {
-      <div
-        class="right"
-        @imgShrink
-        >
+      <div class="right" @imgShrink>
         <img
           [imgSmoothLoader]="'/assets/img/v1-lighthouse-id.png'"
           [draggable]="false"
           [class.dimmed]="step === 'AUTOMATIC_DETECTION'"
-          />
+        />
         @if (step === 'AUTOMATIC_DETECTION') {
           <div @fade class="automatic-detection-steps">
             @for (step of automaticDetectionSteps; track trackByIndex($index, step)) {
-              <div
-                class="step"
-                @vshrink
-                >
+              <div class="step" @vshrink>
                 <div class="step-icon">
                   @if (step.icon) {
                     <i class="material-icons-round">{{ step.icon }}</i>
@@ -161,7 +150,7 @@
         (click)="verifyManualId()"
         [disabled]="!validManualId()"
         translate
-        >
+      >
         comp.lv1-id-wizard-modal.verifyIdAction
       </button>
     </div>

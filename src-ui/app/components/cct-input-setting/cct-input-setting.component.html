@@ -7,14 +7,14 @@
     (mouseleave)="mouseLeave('INPUT')"
     [disabled]="disabled"
     [style.background-color]="cctColor"
-    />
+  />
   @if (inputOpen) {
     <div
       class="input-container"
       @fade
       (mouseenter)="mouseEnter('CONTAINER')"
       (mouseleave)="mouseLeave('CONTAINER')"
-      >
+    >
       <app-slider
         [min]="1000"
         [max]="10000"

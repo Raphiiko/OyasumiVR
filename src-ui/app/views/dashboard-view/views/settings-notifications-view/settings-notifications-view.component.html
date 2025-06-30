@@ -27,59 +27,57 @@
             <div class="setting-row-action">
               <button class="btn btn-secondary" (click)="testSound()">
                 @if (!playingTestSound) {
-                  <span translate @hshrink
-                    >settings.notifications.volume.test</span
-                    >
-                  }
-                  @if (playingTestSound) {
-                    <i class="material-icons" @hshrink>volume_up</i>
-                  }
-                </button>
-                <app-slider-setting
-                  [value]="generalNotificationVolume"
-                  [max]="200"
-                  [snapValues]="[50, 100, 150]"
-                  (valueChange)="setGeneralNotificationVolume($event)"
-                  [unit]="'%'"
-                ></app-slider-setting>
-              </div>
+                  <span translate @hshrink>settings.notifications.volume.test</span>
+                }
+                @if (playingTestSound) {
+                  <i class="material-icons" @hshrink>volume_up</i>
+                }
+              </button>
+              <app-slider-setting
+                [value]="generalNotificationVolume"
+                [max]="200"
+                [snapValues]="[50, 100, 150]"
+                (valueChange)="setGeneralNotificationVolume($event)"
+                [unit]="'%'"
+              ></app-slider-setting>
             </div>
-            <div class="setting-row">
-              <div class="setting-row-label">
-                <span translate>settings.notifications.notifications.title</span>
-                <span translate>settings.notifications.notifications.description</span>
-              </div>
-              <div class="setting-row-action"></div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-row-label">
+              <span translate>settings.notifications.notifications.title</span>
+              <span translate>settings.notifications.notifications.description</span>
             </div>
-            <div class="setting-row-group">
-              @for (notificationType of notificationTypes; track notificationType) {
-                <div class="setting-row compact">
-                  <div class="setting-row-label" translate>
-                    <span>{{
-                      'settings.notifications.notifications.category.' + notificationType + '.title'
+            <div class="setting-row-action"></div>
+          </div>
+          <div class="setting-row-group">
+            @for (notificationType of notificationTypes; track notificationType) {
+              <div class="setting-row compact">
+                <div class="setting-row-label" translate>
+                  <span>{{
+                    'settings.notifications.notifications.category.' + notificationType + '.title'
                       | translate
-                    }}</span>
-                    <span>{{
-                      'settings.notifications.notifications.category.' +
+                  }}</span>
+                  <span>{{
+                    'settings.notifications.notifications.category.' +
                       notificationType +
                       '.description' | translate
-                    }}</span>
-                  </div>
-                  <div class="setting-row-action">
-                    <label class="check-toggle">
-                      <input
-                        type="checkbox"
-                        [checked]="isNotificationTypeChecked(notificationType)"
-                        (change)="toggleNotificationType(notificationType)"
-                        />
-                      <span class="check-toggle-checkmark"></span>
-                    </label>
-                  </div>
+                  }}</span>
                 </div>
-              }
-            </div>
+                <div class="setting-row-action">
+                  <label class="check-toggle">
+                    <input
+                      type="checkbox"
+                      [checked]="isNotificationTypeChecked(notificationType)"
+                      (change)="toggleNotificationType(notificationType)"
+                    />
+                    <span class="check-toggle-checkmark"></span>
+                  </label>
+                </div>
+              </div>
+            }
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>

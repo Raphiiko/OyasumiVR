@@ -2,26 +2,22 @@
   class="select-box-wrapper"
   (clickOutside)="clickOutsideDropdown()"
   [class.expand-up]="expandUp"
-  >
+>
   <div
     class="select-box"
     [class.small]="type === 'SMALL'"
     (click)="clickBox()"
     [class.disabled]="disabled"
     [class.active]="!collapsed"
-    >
+  >
     @if (selected) {
       <div
         class="select-item selected"
         [class.has-subtitle]="selected.subLabel"
         [class.small]="type === 'SMALL'"
-        >
+      >
         @if (selected.htmlPrefix) {
-          <div
-            class="select-item-html-prefix"
-            [innerHtml]="selected.htmlPrefix"
-            >
-          </div>
+          <div class="select-item-html-prefix" [innerHtml]="selected.htmlPrefix"> </div>
         }
         <div class="select-item-content">
           <div class="select-item-title">{{ selected.label | tsTranslate }}</div>
@@ -59,20 +55,16 @@
           (click)="select(item, $event)"
           [class.has-subtitle]="item.subLabel"
           [class.small]="type === 'SMALL'"
-          >
+        >
           @if (item.htmlPrefix) {
-            <div class="select-item-html-prefix" [innerHtml]="item.htmlPrefix">
-            </div>
+            <div class="select-item-html-prefix" [innerHtml]="item.htmlPrefix"> </div>
           }
           <div class="select-item-content">
             <div class="select-item-title" [innerHtml]="item.label | tsTranslate">
               {{ item.label | tsTranslate }}
             </div>
             @if (item.subLabel && type !== 'SMALL') {
-              <div
-                class="select-item-subtitle"
-                [innerHtml]="item.subLabel | tsTranslate"
-                >
+              <div class="select-item-subtitle" [innerHtml]="item.subLabel | tsTranslate">
                 {{ item.subLabel | tsTranslate }}
               </div>
             }

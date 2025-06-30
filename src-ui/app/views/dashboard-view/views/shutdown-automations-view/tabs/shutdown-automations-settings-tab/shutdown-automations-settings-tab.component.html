@@ -59,10 +59,7 @@
     </div>
 
     @if (config.quitSteamVR && quitWithSteamVRMode === 'IMMEDIATELY') {
-      <div
-        class="setting-row-group"
-        @vshrink
-        >
+      <div class="setting-row-group" @vshrink>
         <div class="setting-row">
           <div class="setting-row-label conflict" translate>
             <span>
@@ -103,7 +100,7 @@
             type="checkbox"
             [checked]="config.powerDownWindows"
             (change)="togglePowerDownWindows()"
-            />
+          />
           <span class="switch-toggle-slider"></span>
         </label>
       </div>

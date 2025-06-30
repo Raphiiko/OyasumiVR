@@ -8,19 +8,17 @@
       class="tab"
       [class.active]="activeTab === 'PLAYER_LIMIT'"
       (click)="activeTab = 'PLAYER_LIMIT'"
-      >
+    >
       <div class="tab-label" translate>status-automations.tabs.playerLimit</div>
     </div>
   </div>
   <div class="pane-content">
     <div class="setting-view-container">
       @if (activeTab === 'GENERAL') {
-        <app-status-automations-general-tab
-        ></app-status-automations-general-tab>
+        <app-status-automations-general-tab></app-status-automations-general-tab>
       }
       @if (activeTab === 'PLAYER_LIMIT') {
-        <app-status-automations-player-limit-tab
-        ></app-status-automations-player-limit-tab>
+        <app-status-automations-player-limit-tab></app-status-automations-player-limit-tab>
       }
     </div>
   </div>

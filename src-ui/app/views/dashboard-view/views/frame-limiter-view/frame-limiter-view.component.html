@@ -42,10 +42,7 @@
               </div>
               <div class="setting-row-action" style="position: relative">
                 @if ((openvr.status | async) !== 'INITIALIZED') {
-                  <div
-                    class="steamvr-unavailable-control-overlay"
-                    @fade
-                    >
+                  <div class="steamvr-unavailable-control-overlay" @fade>
                     <span translate>frame-limiter.directControlRequiresSteamVR</span>
                   </div>
                 }
@@ -64,7 +61,7 @@
                       type="checkbox"
                       [checked]="config.onSleepEnable !== 'DISABLED'"
                       (change)="toggleEventFrameLimit(config.appId, 'onSleepEnable')"
-                      />
+                    />
                     <span class="check-toggle-checkmark"></span>
                     <span class="check-toggle-label" translate> frame-limiter.onSleepEnable </span>
                   </label>
@@ -84,7 +81,7 @@
                       type="checkbox"
                       [checked]="config.onSleepDisable !== 'DISABLED'"
                       (change)="toggleEventFrameLimit(config.appId, 'onSleepDisable')"
-                      />
+                    />
                     <span class="check-toggle-checkmark"></span>
                     <span class="check-toggle-label" translate> frame-limiter.onSleepDisable </span>
                   </label>
@@ -104,7 +101,7 @@
                       type="checkbox"
                       [checked]="config.onSleepPreparation !== 'DISABLED'"
                       (change)="toggleEventFrameLimit(config.appId, 'onSleepPreparation')"
-                      />
+                    />
                     <span class="check-toggle-checkmark"></span>
                     <span class="check-toggle-label" translate>
                       frame-limiter.onSleepPreparation
@@ -115,7 +112,9 @@
                 <div class="setting-row-action">
                   <app-frame-limiter-selector
                     [configuredValue]="config.onSleepPreparation"
-                    (valueRequested)="setEventFrameLimit(config.appId, $event, 'onSleepPreparation')"
+                    (valueRequested)="
+                      setEventFrameLimit(config.appId, $event, 'onSleepPreparation')
+                    "
                   ></app-frame-limiter-selector>
                 </div>
               </div>

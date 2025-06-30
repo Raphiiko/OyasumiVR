@@ -7,14 +7,14 @@
     (mouseleave)="mouseLeave('INPUT')"
     (click)="mouseClickInput()"
     [disabled]="disabled"
-    />
+  />
   @if (inputOpen) {
     <div
       class="input-container"
       @fade
       (mouseenter)="mouseEnter('CONTAINER')"
       (mouseleave)="mouseLeave('CONTAINER')"
-      >
+    >
       <div class="input-container-labels">
         <span>H</span>
         <span>M</span>
@@ -28,7 +28,7 @@
           max="24"
           (input)="setHours(hourInput.value)"
           #hourInput
-          />
+        />
         <input
           type="number"
           [value]="minutes()"
@@ -36,7 +36,7 @@
           max="60"
           (input)="setMinutes(minuteInput.value)"
           #minuteInput
-          />
+        />
         <input
           type="number"
           [value]="seconds()"
@@ -44,7 +44,7 @@
           max="60"
           (input)="setSeconds(secondInput.value)"
           #secondInput
-          />
+        />
       </div>
     </div>
   }

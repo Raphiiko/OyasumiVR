@@ -6,12 +6,10 @@
       [class.active]="activeValue === option"
       [class.selected]="configuredValue === option"
       (click)="selectOption(option)"
-      >
+    >
       <span translate class="selector-option-label-top">{{ getLabelForOption(option) }}</span>
       @if (getFpsForOption(option).trim()) {
-        <span class="selector-option-label-bottom" @vshrink>{{
-          getFpsForOption(option)
-        }}</span>
+        <span class="selector-option-label-bottom" @vshrink>{{ getFpsForOption(option) }}</span>
       }
     </button>
   }
@@ -27,12 +25,10 @@
           (click)="selectOption(option)"
           [tooltip]="getTooltipForOption(option)"
           [tooltipMode]="'left'"
-          >
+        >
           <span translate class="selector-option-label-top">{{ getLabelForOption(option) }}</span>
           @if (getFpsForOption(option).trim()) {
-            <span @vshrink class="selector-option-label-bottom">{{
-              getFpsForOption(option)
-            }}</span>
+            <span @vshrink class="selector-option-label-bottom">{{ getFpsForOption(option) }}</span>
           }
         </button>
       }

@@ -22,13 +22,13 @@
               class="hmd-connect-indicator"
               @fade
               [ngClass]="{ potential: hmdConnectAutomations[event.name] === 'potential' }"
-          [tooltip]="
-            hmdConnectAutomations[event.name] === 'potential'
-              ? 'brightness-automations.hmdConnectPotentialEventTooltip'
-              : 'brightness-automations.hmdConnectEventTooltip'
-          "
+              [tooltip]="
+                hmdConnectAutomations[event.name] === 'potential'
+                  ? 'brightness-automations.hmdConnectPotentialEventTooltip'
+                  : 'brightness-automations.hmdConnectEventTooltip'
+              "
               [tooltipMode]="'left'"
-              >
+            >
               <i class="material-symbols-outlined">head_mounted_device</i>
             </div>
           }
@@ -43,7 +43,7 @@
               type="checkbox"
               [checked]="config[event.name].enabled"
               (change)="toggleEvent(event.name)"
-              />
+            />
             <span class="switch-toggle-slider"></span>
           </label>
         </div>

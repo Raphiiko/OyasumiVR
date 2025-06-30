@@ -26,7 +26,7 @@
             (change)="
               updateConfig({ changeStatusOnSleepModeEnable: !config.changeStatusOnSleepModeEnable })
             "
-            />
+          />
           <span class="switch-toggle-slider"></span>
         </label>
         <app-select-box
@@ -54,7 +54,7 @@
                 changeStatusMessageOnSleepModeEnable: !config.changeStatusMessageOnSleepModeEnable,
               })
             "
-            />
+          />
           <span class="switch-toggle-slider"></span>
         </label>
         <input
@@ -64,7 +64,7 @@
           [value]="config.statusMessageOnSleepModeEnable"
           (input)="updateStatusMessage('ON_SLEEP_ENABLE', onSleepEnableStatusMessageInput.value)"
           #onSleepEnableStatusMessageInput
-          />
+        />
       </div>
     </div>
     <div class="setting-row">
@@ -82,7 +82,7 @@
                 changeStatusOnSleepModeDisable: !config.changeStatusOnSleepModeDisable,
               })
             "
-            />
+          />
           <span class="switch-toggle-slider"></span>
         </label>
         <app-select-box
@@ -111,7 +111,7 @@
                   !config.changeStatusMessageOnSleepModeDisable,
               })
             "
-            />
+          />
           <span class="switch-toggle-slider"></span>
         </label>
         <input
@@ -121,7 +121,7 @@
           [value]="config.statusMessageOnSleepModeDisable"
           (input)="updateStatusMessage('ON_SLEEP_DISABLE', onSleepDisableStatusMessageInput.value)"
           #onSleepDisableStatusMessageInput
-          />
+        />
       </div>
     </div>
     <div class="setting-row">
@@ -139,7 +139,7 @@
                 changeStatusOnSleepPreparation: !config.changeStatusOnSleepPreparation,
               })
             "
-            />
+          />
           <span class="switch-toggle-slider"></span>
         </label>
         <app-select-box
@@ -157,45 +157,45 @@
         <span></span>
         <span translate
           >status-automations.general.onSleepPreparation.description.statusMessage</span
-          >
-        </div>
-        <div class="setting-row-action">
-          <label class="switch-toggle">
-            <input
-              type="checkbox"
-              [checked]="config.changeStatusMessageOnSleepPreparation"
+        >
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="config.changeStatusMessageOnSleepPreparation"
             (change)="
               updateConfig({
                 changeStatusMessageOnSleepPreparation:
                   !config.changeStatusMessageOnSleepPreparation,
               })
             "
-              />
-            <span class="switch-toggle-slider"></span>
-          </label>
-          <input
-            type="text"
-            [disabled]="!config.changeStatusMessageOnSleepPreparation"
-            maxlength="32"
-            [value]="config.statusMessageOnSleepPreparation"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+        <input
+          type="text"
+          [disabled]="!config.changeStatusMessageOnSleepPreparation"
+          maxlength="32"
+          [value]="config.statusMessageOnSleepPreparation"
           (input)="
             updateStatusMessage('ON_SLEEP_PREPARATION', onSleepPreparationStatusMessageInput.value)
           "
-            #onSleepPreparationStatusMessageInput
-            />
-        </div>
+          #onSleepPreparationStatusMessageInput
+        />
       </div>
     </div>
   </div>
-  <div class="alert warning" style="margin-top: 1em">
-    <div class="alert-bg"></div>
-    <div class="alert-icon">
-      <i class="material-icons"> warning </i>
-    </div>
-    <div class="alert-content">
-      <span>{{ 'status-automations.behaviourWarning' | translate }}</span>
-      <button class="btn btn-secondary" (click)="showFAQ()" translate style="margin-left: 1em">
-        status-automations.moreInfo
-      </button>
-    </div>
+</div>
+<div class="alert warning" style="margin-top: 1em">
+  <div class="alert-bg"></div>
+  <div class="alert-icon">
+    <i class="material-icons"> warning </i>
   </div>
+  <div class="alert-content">
+    <span>{{ 'status-automations.behaviourWarning' | translate }}</span>
+    <button class="btn btn-secondary" (click)="showFAQ()" translate style="margin-left: 1em">
+      status-automations.moreInfo
+    </button>
+  </div>
+</div>

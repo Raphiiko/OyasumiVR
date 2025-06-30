@@ -8,11 +8,7 @@
     </div>
     <div class="people">
       @for (_ of [].constructor(bedLimit); track _; let i = $index) {
-        <div
-          class="person"
-          @hshrink
-          [class.yourself]="i === 0"
-          >
+        <div class="person" @hshrink [class.yourself]="i === 0">
           <img draggable="false" src="/assets/img/sleeping-person.png" alt="sleeping person" />
         </div>
       }

@@ -8,52 +8,54 @@
             class="sound-item"
             [class.selected]="soundConfig.sound.id === sound.id"
             (click)="selectSound(sound)"
-            >
+          >
             <div class="selection-indicator">
               <i class="material-symbols-outlined">{{
-                soundConfig.sound.id === sound.id ? 'radio_button_checked' : 'radio_button_unchecked'
+                soundConfig.sound.id === sound.id
+                  ? 'radio_button_checked'
+                  : 'radio_button_unchecked'
               }}</i>
             </div>
             <div class="sound-info">
               <div class="sound-name"
                 >{{ sound.name }} <span class="sound-duration">{{ sound.duration }}s</span></div
-                >
-              </div>
-              <button
-                class="btn btn-icon-only"
-                (click)="playSound(sound); $event.stopPropagation()"
-                [disabled]="((playingSounds$ | async) ?? []).includes(sound.id)"
-                >
-                <i class="material-symbols-outlined icon-filled">play_arrow</i>
-              </button>
+              >
             </div>
-          }
-        </div>
-        <div class="settings-wrapper">
-          <div class="settings">
-            <div class="setting-row">
-              <div class="setting-row-label">
-                <span translate>notification-sound.volume</span>
-                <span></span>
-              </div>
-              <div class="setting-row-action">
-                <app-slider-setting
-                  [min]="0"
-                  [max]="200"
-                  [unit]="'%'"
-                  [snapValues]="[50, 100, 150]"
-                  [value]="soundConfig.volume"
-                  (valueChange)="setVolume($event)"
-                ></app-slider-setting>
-              </div>
+            <button
+              class="btn btn-icon-only"
+              (click)="playSound(sound); $event.stopPropagation()"
+              [disabled]="((playingSounds$ | async) ?? []).includes(sound.id)"
+            >
+              <i class="material-symbols-outlined icon-filled">play_arrow</i>
+            </button>
+          </div>
+        }
+      </div>
+      <div class="settings-wrapper">
+        <div class="settings">
+          <div class="setting-row">
+            <div class="setting-row-label">
+              <span translate>notification-sound.volume</span>
+              <span></span>
+            </div>
+            <div class="setting-row-action">
+              <app-slider-setting
+                [min]="0"
+                [max]="200"
+                [unit]="'%'"
+                [snapValues]="[50, 100, 150]"
+                [value]="soundConfig.volume"
+                (valueChange)="setVolume($event)"
+              ></app-slider-setting>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="pane-actions spread">
-        <button class="btn btn-secondary" (click)="cancel()" translate>shared.modals.cancel</button>
-        <button class="btn btn-primary" (click)="save()" translate>shared.modals.save</button>
-      </div>
+    <div class="pane-actions spread">
+      <button class="btn btn-secondary" (click)="cancel()" translate>shared.modals.cancel</button>
+      <button class="btn btn-primary" (click)="save()" translate>shared.modals.save</button>
     </div>
   </div>
+</div>

@@ -8,7 +8,7 @@
       class="tab"
       [class.active]="activeTab === 'WINDOWS_POWER_POLICY'"
       (click)="activeTab = 'WINDOWS_POWER_POLICY'"
-      >
+    >
       <div class="tab-label" translate>power-automations.tabs.windowsPowerPolicy</div>
     </div>
   </div>
@@ -18,8 +18,7 @@
         <app-devices-tab></app-devices-tab>
       }
       @if (activeTab === 'WINDOWS_POWER_POLICY') {
-        <app-windows-power-policy-tab
-        ></app-windows-power-policy-tab>
+        <app-windows-power-policy-tab></app-windows-power-policy-tab>
       }
     </div>
   </div>

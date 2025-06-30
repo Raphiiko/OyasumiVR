@@ -5,21 +5,20 @@
       class="tab"
       [class.active]="activeTab === 'SLEEP_DETECTION_DEBUGGER'"
       (click)="activeTab = 'SLEEP_DETECTION_DEBUGGER'"
-      >
+    >
       <div class="tab-label">Sleep Detection Debugger</div>
     </div>
     <div
       class="tab"
       [class.active]="activeTab === 'MISC_TESTING'"
       (click)="activeTab = 'MISC_TESTING'"
-      >
+    >
       <div class="tab-label">Miscellaneous Testing</div>
     </div>
   </div>
   <div class="pane-content">
     @if (activeTab === 'SLEEP_DETECTION_DEBUGGER') {
-      <app-debug-sleep-detection-debugger
-      ></app-debug-sleep-detection-debugger>
+      <app-debug-sleep-detection-debugger></app-debug-sleep-detection-debugger>
     }
     @if (activeTab === 'MISC_TESTING') {
       <app-misc-testing [modal]="this"></app-misc-testing>

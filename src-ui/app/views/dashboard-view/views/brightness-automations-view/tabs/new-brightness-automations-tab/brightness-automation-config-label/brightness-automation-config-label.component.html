@@ -1,10 +1,7 @@
 @if (config) {
   <div class="label">
     @if (config?.changeColorTemperature && cctControlEnabled) {
-      <div
-        class="colortemp-container"
-        @hshrink
-        >
+      <div class="colortemp-container" @hshrink>
         <div
           class="colortemp-icon"
           [style.background-color]="getCSSColorForCCT(config.colorTemperature)"
