@@ -3,54 +3,39 @@
     <i class="material-icons brightness-level-icon">brightness_5</i>
   }
   @if (mode === 'CCT') {
-    <i class="material-symbols-outlined brightness-level-icon"
-      >thermometer_minus</i
-      >
-    }
-    @if (mode === 'FAN_SPEED') {
-      <i
-        class="material-symbols-outlined brightness-level-icon icon-filled"
-        >mode_fan_off</i
-        >
-      }
-      <div class="brightness-slider-bar" (mousedown)="onDragStart($event)" [class.cct]="mode === 'CCT'">
-        <div
-          class="brightness-slider-bar-inner"
-          [class.dragging]="dragging"
-          [class.transition-active]="transitionActive"
-          [style.width]="innerWidth"
-          >
-          <div class="brightness-slider-bar-label">
-            @if (['BRIGHTNESS', 'FAN_SPEED'].includes(mode)) {
-              <span
-                >{{ (dragging ? dragValue : value) | number: '1.0-0' }} %</span
-                >
-              }
-              @if (['CCT'].includes(mode)) {
-                <div
-                  class="colortemp-icon"
-                  [style.background-color]="cctColor"
-                ></div>
-              }
-              @if (['CCT'].includes(mode)) {
-                <span>{{ dragging ? dragValue : value }}K</span>
-              }
-            </div>
-          </div>
-          <div class="brightness-slider-bar-range-guide" #rangeGuideEl></div>
-        </div>
-        @if (mode === 'BRIGHTNESS') {
-          <i class="material-icons brightness-level-icon">brightness_7</i>
+    <i class="material-symbols-outlined brightness-level-icon">thermometer_minus</i>
+  }
+  @if (mode === 'FAN_SPEED') {
+    <i class="material-symbols-outlined brightness-level-icon icon-filled">mode_fan_off</i>
+  }
+  <div class="brightness-slider-bar" (mousedown)="onDragStart($event)" [class.cct]="mode === 'CCT'">
+    <div
+      class="brightness-slider-bar-inner"
+      [class.dragging]="dragging"
+      [class.transition-active]="transitionActive"
+      [style.width]="innerWidth"
+    >
+      <div class="brightness-slider-bar-label">
+        @if (['BRIGHTNESS', 'FAN_SPEED'].includes(mode)) {
+          <span>{{ (dragging ? dragValue : value) | number: '1.0-0' }} %</span>
         }
-        @if (mode === 'CCT') {
-          <i class="material-symbols-outlined brightness-level-icon"
-            >thermometer_add</i
-            >
-          }
-          @if (mode === 'FAN_SPEED') {
-            <i
-              class="material-symbols-outlined brightness-level-icon icon-filled"
-              >mode_fan</i
-              >
-            }
-          </div>
+        @if (['CCT'].includes(mode)) {
+          <div class="colortemp-icon" [style.background-color]="cctColor"></div>
+        }
+        @if (['CCT'].includes(mode)) {
+          <span>{{ dragging ? dragValue : value }}K</span>
+        }
+      </div>
+    </div>
+    <div class="brightness-slider-bar-range-guide" #rangeGuideEl></div>
+  </div>
+  @if (mode === 'BRIGHTNESS') {
+    <i class="material-icons brightness-level-icon">brightness_7</i>
+  }
+  @if (mode === 'CCT') {
+    <i class="material-symbols-outlined brightness-level-icon">thermometer_add</i>
+  }
+  @if (mode === 'FAN_SPEED') {
+    <i class="material-symbols-outlined brightness-level-icon icon-filled">mode_fan</i>
+  }
+</div>

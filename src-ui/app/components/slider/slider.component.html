@@ -2,7 +2,7 @@
   class="track-container"
   [class.style-audio-level]="style === 'AUDIO_LEVEL'"
   (mousedown)="onDragStart($event)"
-  >
+>
   <div class="track" [class.style-audio-level]="style === 'AUDIO_LEVEL'">
     <div
       class="track-fill"
@@ -35,7 +35,7 @@
       class="snap-indicator"
       [style.left]="snapIndicatorStyleLeft[i]"
       [class.surpassed]="snapValue < value"
-      >
+    >
       <i class="material-icons-round">arrow_drop_up</i>
     </div>
   }

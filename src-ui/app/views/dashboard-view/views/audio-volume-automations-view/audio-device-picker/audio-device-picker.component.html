@@ -36,7 +36,7 @@
           <div
             class="audio-device"
             [class.disabled]="(disablePersistentIds || []).includes(device.persistentId!)"
-            >
+          >
             <div class="audio-device-icon">
               @if (device.deviceType === 'Render') {
                 <i class="material-icons-round">volume_up</i>
@@ -53,9 +53,7 @@
               }
               <div class="audio-device-name-label">{{ device.parsedName!.display }}</div>
               @if (device.parsedName!.driver) {
-                <div class="audio-device-name-label"
-                  >{{ device.parsedName!.driver }}
-                </div>
+                <div class="audio-device-name-label">{{ device.parsedName!.driver }} </div>
               }
             </div>
             <div class="audio-device-actions">
@@ -63,7 +61,7 @@
                 class="btn btn-secondary btn-add"
                 (click)="selectDevice(device)"
                 [disabled]="(disablePersistentIds || []).includes(device.persistentId!)"
-                >
+              >
                 <i class="material-icons-round">add</i>
               </button>
             </div>

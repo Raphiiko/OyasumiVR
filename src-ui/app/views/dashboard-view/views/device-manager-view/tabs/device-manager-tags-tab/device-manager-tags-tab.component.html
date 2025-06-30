@@ -8,7 +8,7 @@
         [(ngModel)]="newTagName"
         placeholder="{{ 'device-manager.tags.create.namePlaceholder' | translate }}"
         [maxlength]="32"
-        />
+      />
     </div>
     <div style="flex: 1"></div>
     <div class="color-picker">
@@ -44,7 +44,7 @@
                 (click)="editTag(tag)"
                 [tooltip]="'device-manager.tags.edit' | translate"
                 [tooltipMode]="'left'"
-                >
+              >
                 <i class="material-icons">edit</i>
               </button>
               <button
@@ -52,7 +52,7 @@
                 (click)="deleteTag(tag)"
                 [tooltip]="'device-manager.tags.delete' | translate"
                 [tooltipMode]="'left'"
-                >
+              >
                 <i class="material-icons">delete</i>
               </button>
             </div>
@@ -80,7 +80,7 @@
                 (click)="saveTag()"
                 [tooltip]="'device-manager.tags.save' | translate"
                 [tooltipMode]="'left'"
-                >
+              >
                 <i class="material-icons">check</i>
               </button>
               <button
@@ -88,7 +88,7 @@
                 (click)="cancelEditTag()"
                 [tooltip]="'device-manager.tags.cancel' | translate"
                 [tooltipMode]="'left'"
-                >
+              >
                 <i class="material-icons">close</i>
               </button>
             </div>

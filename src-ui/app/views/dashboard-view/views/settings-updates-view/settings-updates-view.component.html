@@ -9,69 +9,62 @@
               <img src="/assets/img/icon_150x150.png" />
             }
             @if (FLAVOUR === 'STEAM' || FLAVOUR === 'STEAM_CN') {
-              <img
-                src="/assets/img/steam_icon.png"
-                />
+              <img src="/assets/img/steam_icon.png" />
             }
             @if (FLAVOUR === 'DEV') {
               <span translate>settings.updates.updatesDisabled.DEV</span>
             }
             @if (FLAVOUR === 'STEAM' || FLAVOUR === 'STEAM_CN') {
-              <span translate
-                >settings.updates.updatesDisabled.STEAM</span
-                >
+              <span translate>settings.updates.updatesDisabled.STEAM</span>
+            }
+          </div>
+        }
+        @if (FLAVOUR === 'STANDALONE') {
+          <div class="update-checker">
+            <button
+              class="btn"
+              [class.btn-secondary]="!updateAvailable.update"
+              [class.btn-primary]="updateAvailable.update"
+              (click)="updateOrCheck()"
+              [disabled]="updateOrCheckInProgress"
+            >
+              @if (updateOrCheckInProgress) {
+                <div class="small-spinner" @hshrink></div>
               }
-            </div>
-          }
-          @if (FLAVOUR === 'STANDALONE') {
-            <div class="update-checker">
-              <button
-                class="btn"
-                [class.btn-secondary]="!updateAvailable.update"
-                [class.btn-primary]="updateAvailable.update"
-                (click)="updateOrCheck()"
-                [disabled]="updateOrCheckInProgress"
-                >
-                @if (updateOrCheckInProgress) {
-                  <div class="small-spinner" @hshrink></div>
-                }
-                @if (!updateOrCheckInProgress) {
-                  <span
-              [translate]="
-                updateAvailable.update
-                  ? 'settings.updates.install'
-                  : 'settings.updates.checkForUpdates'
-              "
-                    [translateParams]="{ version: updateAvailable.update?.version || '' }"
-                    @hshrink
-                  ></span>
-                }
-              </button>
-              @if (!updateAvailable.checked) {
-                <p translate="settings.updates.notChecked"></p>
+              @if (!updateOrCheckInProgress) {
+                <span
+                  [translate]="
+                    updateAvailable.update
+                      ? 'settings.updates.install'
+                      : 'settings.updates.checkForUpdates'
+                  "
+                  [translateParams]="{ version: updateAvailable.update?.version || '' }"
+                  @hshrink
+                ></span>
               }
-              @if (updateAvailable.checked && updateAvailable.update) {
-                <p
-                  translate="settings.updates.updateAvailable"
-            [translateParams]="{
-              currentVersion: version,
-              latestVersion: updateAvailable.update.version,
-            }"
-                ></p>
-              }
-              @if (updateAvailable.checked && !updateAvailable.update) {
-                <p
-                  translate="settings.updates.noUpdate"
-                  [translateParams]="{ version: version }"
-                ></p>
-              }
-            </div>
-          }
-        </div>
-        <div class="setting-category">
-          <h2 translate>settings.updates.changelog</h2>
-          <div class="pane-changelog" [innerHtml]="changelog"></div>
-        </div>
+            </button>
+            @if (!updateAvailable.checked) {
+              <p translate="settings.updates.notChecked"></p>
+            }
+            @if (updateAvailable.checked && updateAvailable.update) {
+              <p
+                translate="settings.updates.updateAvailable"
+                [translateParams]="{
+                  currentVersion: version,
+                  latestVersion: updateAvailable.update.version,
+                }"
+              ></p>
+            }
+            @if (updateAvailable.checked && !updateAvailable.update) {
+              <p translate="settings.updates.noUpdate" [translateParams]="{ version: version }"></p>
+            }
+          </div>
+        }
+      </div>
+      <div class="setting-category">
+        <h2 translate>settings.updates.changelog</h2>
+        <div class="pane-changelog" [innerHtml]="changelog"></div>
       </div>
     </div>
   </div>
+</div>

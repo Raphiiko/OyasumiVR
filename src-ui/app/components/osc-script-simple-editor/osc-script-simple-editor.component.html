@@ -16,13 +16,13 @@
     !currentAvatarContext ||
     currentAvatarContext.type !== 'VRCHAT' ||
     (vrchat.vrchatProcessActive | async) !== true
-    ) {
+  ) {
     <span
       class="info-icon"
       [tooltip]="'comp.osc-script-simple-editor.vrchatAutofillInfo'"
       [tooltipMode]="'bottom'"
       [tooltipTextAlign]="'center'"
-      >
+    >
       <i class="material-symbols-outlined">info</i>
     </span>
   }
@@ -52,10 +52,7 @@
         <div class="simple-command-action" translate>comp.osc-script-simple-editor.action.osc</div>
         <div class="simple-command-parameters-container">
           @for (parameter of command.parameters; track parameter; let j = $index) {
-            <div
-              class="simple-command-parameter-row"
-              @vshrink
-              >
+            <div class="simple-command-parameter-row" @vshrink>
               <app-select-box
                 [type]="'SMALL'"
                 [selected]="getCommandParameterType(command, j)"
@@ -69,18 +66,16 @@
                   class="simple-command-boolean-input"
                   [type]="'SMALL'"
                   [selected]="{ id: parameter.value, label: parameter.value }"
-            [items]="[
-              { id: 'true', label: 'true' },
-              { id: 'false', label: 'false' },
-            ]"
+                  [items]="[
+                    { id: 'true', label: 'true' },
+                    { id: 'false', label: 'false' },
+                  ]"
                   (selectedChange)="setBoolValue(command, j, $event!)"
                   [showPlaceholderInDropdown]="false"
                 ></app-select-box>
               }
               @if (getCommandParameterType(command, j)?.id === 'INT') {
-                <div
-                  class="input-wrapper simple-command-integer-input"
-                  >
+                <div class="input-wrapper simple-command-integer-input">
                   <input
                     type="number"
                     step="1"
@@ -88,31 +83,27 @@
                     max="255"
                     [value]="parameter.value"
                     (change)="setIntValue(command, j, $event)"
-                    />
+                  />
                 </div>
               }
               @if (getCommandParameterType(command, j)?.id === 'FLOAT') {
-                <div
-                  class="input-wrapper simple-command-float-input"
-                  >
+                <div class="input-wrapper simple-command-float-input">
                   <input
                     type="number"
                     step="0.001"
                     [value]="parameter.value"
                     (change)="setFloatValue(command, j, $event)"
-                    />
+                  />
                 </div>
               }
               @if (getCommandParameterType(command, j)?.id === 'STRING') {
-                <div
-                  class="input-wrapper simple-command-string-input"
-                  >
+                <div class="input-wrapper simple-command-string-input">
                   <input
                     type="text"
                     [max]="MAX_STRING_VALUE_LENGTH"
                     [value]="parameter.value"
                     (change)="setStringValue(command, j, $event)"
-                    />
+                  />
                 </div>
               }
               @if (command.parameters.length > 1) {
@@ -120,7 +111,7 @@
                   class="btn simple-command-remove-button"
                   (click)="removeParameter(i, j)"
                   @hshrink
-                  >
+                >
                   <i class="material-icons">clear</i>
                 </button>
               }
@@ -128,10 +119,7 @@
           }
           <div>
             @if (command.parameters.length < MAX_PARAMETERS_PER_COMMAND) {
-              <button
-                class="btn btn-secondary btn-add-parameter"
-                (click)="addParameter(i)"
-                >
+              <button class="btn btn-secondary btn-add-parameter" (click)="addParameter(i)">
                 <i class="material-icons">add</i>
                 <span translate>comp.osc-script-simple-editor.addParameter</span>
               </button>
@@ -147,11 +135,7 @@
           ></app-osc-address-autocomplete>
         </div>
         @if (getErrorsForAction(i).length) {
-          <div
-            class="simple-command-error-icon"
-            @hshrink
-            (mouseenter)="hoverOnAction(i, $event)"
-            >
+          <div class="simple-command-error-icon" @hshrink (mouseenter)="hoverOnAction(i, $event)">
             <i class="material-icons-round">error</i>
           </div>
         }
@@ -161,7 +145,9 @@
       }
       @if (command.type === 'SLEEP') {
         <div class="simple-command-index">{{ i + 1 }}.</div>
-        <div class="simple-command-action" translate>comp.osc-script-simple-editor.action.sleep</div>
+        <div class="simple-command-action" translate
+          >comp.osc-script-simple-editor.action.sleep</div
+        >
         <div style="flex: 1"></div>
         <div class="input-wrapper with-unit simple-command-duration-input">
           <input
@@ -169,15 +155,11 @@
             step="any"
             [value]="command.duration"
             (change)="setSleepDuration(command, $event)"
-            />
+          />
           <span>ms</span>
         </div>
         @if (getErrorsForAction(i).length) {
-          <div
-            class="simple-command-error-icon"
-            @hshrink
-            (mouseenter)="hoverOnAction(i, $event)"
-            >
+          <div class="simple-command-error-icon" @hshrink (mouseenter)="hoverOnAction(i, $event)">
             <i class="material-icons-round">error</i>
           </div>
         }
@@ -200,7 +182,7 @@
       [style.left]="tooltipPosition.x + 'px'"
       @fade
       (mouseleave)="hoverOnAction(-1, undefined)"
-      >
+    >
       <div class="error-tooltip-bg"></div>
       <div class="error-tooltip-content">
         @for (error of tooltipErrors; track error) {

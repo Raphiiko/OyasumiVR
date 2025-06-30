@@ -1,11 +1,8 @@
 @if (
   !lighthousePowerControlDisabled &&
   (lighthouseStatus === 'noAdapter' || lighthouseStatus === 'adapterError')
-  ) {
-  <div
-    class="alert warning"
-    @vshrink
-    >
+) {
+  <div class="alert warning" @vshrink>
     <div class="alert-bg"></div>
     <div class="alert-icon">
       <i class="material-icons"> warning </i>
@@ -138,7 +135,7 @@
                   !devicePowerAutomations.turnOffDevicesBelowBatteryLevel_onlyWhileAsleep
                 )
               "
-              />
+            />
             <span class="switch-toggle-slider"></span>
           </label>
         </div>

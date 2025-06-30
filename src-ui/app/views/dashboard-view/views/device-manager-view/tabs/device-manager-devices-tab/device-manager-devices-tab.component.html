@@ -8,7 +8,7 @@
           type="text"
           [(ngModel)]="searchQuery"
           placeholder="{{ 'device-manager.search.placeholder' | translate }}"
-          />
+        />
       </div>
     </div>
 
@@ -29,22 +29,16 @@
 <!-- Device List -->
 <div class="device-list">
   @for (group of deviceGroups; track trackDeviceGroupBy($index, group)) {
-    <div
-      class="device-group"
-      @vshrink
-      >
+    <div class="device-group" @vshrink>
       <div class="device-group-header">
         @if (group.type !== 'PREVIOUSLY_SEEN') {
-          <img
-            [src]="'/assets/img/icon_' + group.icon + '.png'"
-            class="category-icon"
-            />
+          <img [src]="'/assets/img/icon_' + group.icon + '.png'" class="category-icon" />
         }
         @if (group.type === 'PREVIOUSLY_SEEN') {
           <i
             class="material-icons category-icon-text"
             style="color: var(--color-text-3); font-size: 1.5em; margin-right: 0.75em"
-            >
+          >
             history
           </i>
         }
@@ -57,15 +51,12 @@
           [class.has-nickname]="!!device.nickname"
           [class.has-tags]="getDeviceTags(device).length > 0"
           @vshrink
-          >
+        >
           <!-- Tag-based left border -->
           @if (getDeviceTags(device).length > 0) {
             <div class="tag-border">
               @for (tag of getDeviceTags(device); track trackTagBy($index, tag)) {
-                <div
-                  class="tag-border-segment"
-                  [style.background-color]="tag.color"
-                ></div>
+                <div class="tag-border-segment" [style.background-color]="tag.color"></div>
               }
             </div>
           }
@@ -76,7 +67,7 @@
               <img
                 [src]="'/assets/img/icon_' + getDeviceTypeIconForDevice(device.deviceType) + '.png'"
                 class="device-icon"
-                />
+              />
               <div class="device-info">
                 <div class="device-name-line">
                   <span class="device-name">{{ device.typeName }}</span>
@@ -85,14 +76,12 @@
                       class="material-icons hidden-icon"
                       [tooltip]="'device-manager.config.disabled.tooltip' | translate"
                       [tooltipMode]="'right'"
-                      >
+                    >
                       visibility_off
                     </i>
                   }
                   @if (getDeviceSerialNumber(device) && device.nickname) {
-                    <span class="device-serial">
-                      S/N: {{ getDeviceSerialNumber(device) }}
-                    </span>
+                    <span class="device-serial"> S/N: {{ getDeviceSerialNumber(device) }} </span>
                   }
                 </div>
                 <div class="device-details">
@@ -136,12 +125,12 @@
                     (clickOutside)="onClickOutsideLHStatePopover($event)"
                     @fade
                     class="lh-popover-container"
-                    >
+                  >
                     <app-lighthouse-force-state-popover
                       (action)="onForceLHState(device, $event)"
                       [style.position-anchor]="getPowerButtonAnchorId(device)"
                       [type]="getDeviceLighthouse(device)?.deviceType"
-                      >
+                    >
                     </app-lighthouse-force-state-popover>
                   </div>
                 }
@@ -152,7 +141,7 @@
                     (click)="forgetDevice(device)"
                     [tooltip]="'device-manager.actions.forget' | translate"
                     [tooltipMode]="'left'"
-                    >
+                  >
                     <i class="material-icons">delete</i>
                   </button>
                 }
@@ -163,11 +152,7 @@
               <div class="device-tags-row">
                 <div class="device-tags-responsive">
                   @for (tag of getDeviceTags(device); track trackTagBy($index, tag)) {
-                    <div
-                      class="tag-chip"
-                      [tooltip]="tag.name"
-                      [tooltipMode]="'left'"
-                      >
+                    <div class="tag-chip" [tooltip]="tag.name" [tooltipMode]="'left'">
                       <div class="tag-color" [style.background-color]="tag.color"></div>
                       <span class="tag-name">{{ tag.name }}</span>
                     </div>

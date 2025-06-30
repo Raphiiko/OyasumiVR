@@ -6,10 +6,7 @@
   </div>
 }
 @if (bottomSize() > 0) {
-  <div
-    class="bottom-blur-container"
-    [style.--bottom-size]="bottomSize() + 'em'"
-    >
+  <div class="bottom-blur-container" [style.--bottom-size]="bottomSize() + 'em'">
     @for (item of [].constructor(5); track $index) {
       <div class="bottom-blur"></div>
     }

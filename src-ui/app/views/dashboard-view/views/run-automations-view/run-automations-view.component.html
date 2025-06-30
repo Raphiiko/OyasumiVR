@@ -18,7 +18,7 @@
                 [class.expanded]="onSleepModeEnableExpanded"
                 (click)="onSleepModeEnableExpanded = !onSleepModeEnableExpanded"
                 [title]="(onSleepModeEnableExpanded ? 'Collapse' : 'Expand') + ' command input'"
-                >
+              >
                 <i class="material-symbols-outlined">expand_more</i>
               </button>
               <label class="switch-toggle">
@@ -26,7 +26,7 @@
                   type="checkbox"
                   [checked]="config.onSleepModeEnable"
                   (change)="toggleSleepModeEnable()"
-                  />
+                />
                 <span class="switch-toggle-slider"></span>
               </label>
             </div>
@@ -52,7 +52,7 @@
                     type="button"
                     (click)="testCommands(onSleepModeEnableCommands)"
                     [disabled]="!onSleepModeEnableCommands.trim()"
-                    >
+                  >
                     <i class="material-symbols-outlined icon-filled">play_arrow</i>
                     <span translate>runAutomations.testCommands</span>
                   </button>
@@ -74,7 +74,7 @@
                 [class.expanded]="onSleepModeDisableExpanded"
                 (click)="onSleepModeDisableExpanded = !onSleepModeDisableExpanded"
                 [title]="(onSleepModeDisableExpanded ? 'Collapse' : 'Expand') + ' command input'"
-                >
+              >
                 <i class="material-symbols-outlined">expand_more</i>
               </button>
               <label class="switch-toggle">
@@ -82,7 +82,7 @@
                   type="checkbox"
                   [checked]="config.onSleepModeDisable"
                   (change)="toggleSleepModeDisable()"
-                  />
+                />
                 <span class="switch-toggle-slider"></span>
               </label>
             </div>
@@ -108,7 +108,7 @@
                     type="button"
                     (click)="testCommands(onSleepModeDisableCommands)"
                     [disabled]="!onSleepModeDisableCommands.trim()"
-                    >
+                  >
                     <i class="material-symbols-outlined icon-filled">play_arrow</i>
                     <span translate>runAutomations.testCommands</span>
                   </button>
@@ -130,7 +130,7 @@
                 [class.expanded]="onSleepPreparationExpanded"
                 (click)="onSleepPreparationExpanded = !onSleepPreparationExpanded"
                 [title]="(onSleepPreparationExpanded ? 'Collapse' : 'Expand') + ' command input'"
-                >
+              >
                 <i class="material-symbols-outlined">expand_more</i>
               </button>
               <label class="switch-toggle">
@@ -138,7 +138,7 @@
                   type="checkbox"
                   [checked]="config.onSleepPreparation"
                   (change)="toggleSleepPreparation()"
-                  />
+                />
                 <span class="switch-toggle-slider"></span>
               </label>
             </div>
@@ -164,7 +164,7 @@
                     type="button"
                     (click)="testCommands(onSleepPreparationCommands)"
                     [disabled]="!onSleepPreparationCommands.trim()"
-                    >
+                  >
                     <i class="material-symbols-outlined icon-filled">play_arrow</i>
                     <span translate>runAutomations.testCommands</span>
                   </button>

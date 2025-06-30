@@ -22,7 +22,7 @@
   (mouseenter)="onMouseEnter()"
   [class.overlay-active]="showOverlay"
   [class.disabled]="disabled"
-  >
+>
   <input
     type="number"
     class="small"
@@ -30,7 +30,7 @@
     (input)="input$.next(inputValue.value)"
     (blur)="onInputBlur()"
     #inputValue
-    />
+  />
   @if (unit) {
     <div class="unit"><span [innerHTML]="unit"></span></div>
   }

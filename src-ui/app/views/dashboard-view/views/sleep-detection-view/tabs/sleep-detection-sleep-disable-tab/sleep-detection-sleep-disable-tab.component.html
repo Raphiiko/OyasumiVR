@@ -21,7 +21,7 @@
             type="checkbox"
             [checked]="automationConfigs.SLEEP_MODE_DISABLE_AT_TIME.enabled"
             (change)="toggleAutomation('SLEEP_MODE_DISABLE_AT_TIME')"
-            />
+          />
           <span class="switch-toggle-slider"></span>
         </label>
       </div>
@@ -47,7 +47,7 @@
             type="checkbox"
             [checked]="automationConfigs.SLEEP_MODE_DISABLE_AFTER_TIME.enabled"
             (change)="toggleAutomation('SLEEP_MODE_DISABLE_AFTER_TIME')"
-            />
+          />
           <span class="switch-toggle-slider"></span>
         </label>
       </div>
@@ -58,8 +58,8 @@
         <span translate>sleep-detection.disableAutomations.onDevicePowerOn</span>
         <span>{{
           deviceClassesToString(
-          automationConfigs.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON.triggerClasses,
-          'sleep-detection.modals.disableOnDevicePowerOn.'
+            automationConfigs.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON.triggerClasses,
+            'sleep-detection.modals.disableOnDevicePowerOn.'
           )
         }}</span>
       </div>
@@ -67,7 +67,7 @@
         <button
           class="btn btn-automation-settings"
           (click)="openModal_DisableSleepModeOnDevicePowerOn()"
-          >
+        >
           <i class="material-icons">settings</i>
         </button>
         <label class="switch-toggle">
@@ -75,7 +75,7 @@
             type="checkbox"
             [checked]="automationConfigs.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON.enabled"
             (change)="toggleAutomation('SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON')"
-            />
+          />
           <span class="switch-toggle-slider"></span>
         </label>
       </div>
@@ -94,7 +94,7 @@
             (change)="
               toggleAutomation('SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS', 'disableOnSteamVRStop')
             "
-            />
+          />
           <span class="switch-toggle-slider"></span>
         </label>
       </div>
@@ -109,7 +109,7 @@
         <button
           class="btn btn-automation-settings"
           (click)="openModal_DisableSleepModeOnUprightPose()"
-          >
+        >
           <i class="material-icons">settings</i>
         </button>
         <label class="switch-toggle">
@@ -117,7 +117,7 @@
             type="checkbox"
             [checked]="automationConfigs.SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE.enabled"
             (change)="toggleAutomation('SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE', 'enabled')"
-            />
+          />
           <span class="switch-toggle-slider"></span>
         </label>
       </div>
@@ -132,7 +132,7 @@
         <button
           class="btn btn-automation-settings"
           (click)="openModal_DisableSleepModeOnPlayerJoinOrLeave()"
-          >
+        >
           <i class="material-icons">settings</i>
         </button>
         <label class="switch-toggle">
@@ -140,7 +140,7 @@
             type="checkbox"
             [checked]="automationConfigs.SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE.enabled"
             (change)="toggleAutomation('SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE', 'enabled')"
-            />
+          />
           <span class="switch-toggle-slider"></span>
         </label>
       </div>

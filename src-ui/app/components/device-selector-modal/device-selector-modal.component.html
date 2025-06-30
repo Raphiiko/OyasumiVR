@@ -5,7 +5,7 @@
       class="btn btn-secondary btn-small deselect-all-btn"
       (click)="deselectAll()"
       [disabled]="!hasAnySelection()"
-      >
+    >
       <i class="material-icons">clear_all</i>
       <span translate>device-manager.deviceSelector.deselectAll</span>
     </button>
@@ -19,11 +19,11 @@
             class="device-type-item"
             [class.selected]="isDeviceTypeSelected(type)"
             (click)="toggleDeviceType(type)"
-            >
+          >
             <img
               [src]="'/assets/img/icon_' + getDeviceTypeIcon(type) + '.png'"
               class="device-type-icon"
-              />
+            />
             <span class="device-type-name" translate>{{ getDeviceTypeDisplayName(type) }}</span>
             @if (isDeviceTypeSelected(type)) {
               <i class="material-icons selection-indicator">check</i>
@@ -44,7 +44,7 @@
               [class.selected]="isTagSelected(tag.id)"
               [class.disabled]="!isTagApplicable(tag.id)"
               (click)="toggleTag(tag.id)"
-              >
+            >
               <div class="tag-color" [style.background-color]="tag.color"></div>
               <span class="tag-name">{{ tag.name }}</span>
               @if (isTagSelected(tag.id)) {
@@ -68,10 +68,7 @@
       @if (deviceGroups.length > 0) {
         <div class="device-groups-list">
           @for (group of deviceGroups; track trackDeviceGroupBy($index, group)) {
-            <div
-              class="device-group"
-              [class.disabled]="isDeviceGroupDisabled(group.type)"
-              >
+            <div class="device-group" [class.disabled]="isDeviceGroupDisabled(group.type)">
               <div class="device-group-header">
                 <img [src]="'/assets/img/icon_' + group.icon + '.png'" class="category-icon" />
                 <span class="group-label" translate>{{ group.label }}</span>
@@ -86,7 +83,7 @@
                     [class.has-nickname]="!!device.nickname"
                     [class.disabled]="isDeviceGroupDisabled(device.deviceType)"
                     (click)="toggleDevice(device.id)"
-                    >
+                  >
                     <!-- Tag-based left border -->
                     @if (getDeviceTags(device).length > 0) {
                       <div class="tag-border">
@@ -101,14 +98,12 @@
                     <img
                       [src]="'/assets/img/icon_' + getDeviceTypeIcon(device.deviceType) + '.png'"
                       class="device-icon"
-                      />
+                    />
                     <div class="device-info">
                       <div class="device-name-line">
                         <span class="device-name">{{ device.typeName }}</span>
                         @if (getDeviceSerialNumber(device) && device.nickname) {
-                          <span
-                            class="device-serial"
-                            >
+                          <span class="device-serial">
                             S/N: {{ getDeviceSerialNumber(device) }}
                           </span>
                         }
@@ -126,14 +121,13 @@
                         }
                       </div>
                       @if (getDeviceTags(device).length > 0 && device.deviceType !== 'LIGHTHOUSE') {
-                        <div
-                          class="device-tags"
-                          >
+                        <div class="device-tags">
                           @for (tag of getDeviceTags(device); track trackTagBy($index, tag)) {
-                            <div
-                              class="tag-chip"
-                              >
-                              <div class="tag-chip-color" [style.background-color]="tag.color"></div>
+                            <div class="tag-chip">
+                              <div
+                                class="tag-chip-color"
+                                [style.background-color]="tag.color"
+                              ></div>
                               <span class="tag-chip-name">{{ tag.name }}</span>
                             </div>
                           }
@@ -141,31 +135,29 @@
                       }
                     </div>
                     @if (isDeviceSelected(device.id)) {
-                      <i class="material-icons selection-indicator"
-                        >check</i
-                        >
-                      }
-                    </div>
-                  }
-                </div>
+                      <i class="material-icons selection-indicator">check</i>
+                    }
+                  </div>
+                }
               </div>
-            }
-          </div>
-        }
-        @if (deviceGroups.length === 0) {
-          <div class="empty-state-inline">
-            <i class="material-icons">devices</i>
-            <span translate>device-manager.deviceSelector.noApplicableDevicesKnown</span>
-          </div>
-        }
-      </div>
-    </div>
-    <div class="pane-actions spread">
-      <button class="btn btn-secondary" (click)="cancel()">
-        <span translate>shared.modals.cancel</span>
-      </button>
-      <button class="btn btn-primary" (click)="confirm()">
-        <span translate>device-manager.deviceSelector.selectDevices</span>
-      </button>
+            </div>
+          }
+        </div>
+      }
+      @if (deviceGroups.length === 0) {
+        <div class="empty-state-inline">
+          <i class="material-icons">devices</i>
+          <span translate>device-manager.deviceSelector.noApplicableDevicesKnown</span>
+        </div>
+      }
     </div>
   </div>
+  <div class="pane-actions spread">
+    <button class="btn btn-secondary" (click)="cancel()">
+      <span translate>shared.modals.cancel</span>
+    </button>
+    <button class="btn btn-primary" (click)="confirm()">
+      <span translate>device-manager.deviceSelector.selectDevices</span>
+    </button>
+  </div>
+</div>

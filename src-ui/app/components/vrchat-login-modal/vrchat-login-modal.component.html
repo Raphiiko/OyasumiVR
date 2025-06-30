@@ -25,7 +25,7 @@
             [checked]="rememberCredentials"
             (change)="toggleRememberCredentials()"
             type="checkbox"
-            />
+          />
           <span class="switch-toggle-slider"></span>
         </label>
       </div>
@@ -42,7 +42,7 @@
       class="btn btn-primary"
       [disabled]="loggingIn || !username.trim() || !password.trim()"
       (click)="login()"
-      >
+    >
       @if (loggingIn) {
         <div class="small-spinner" @hshrink></div>
       }

@@ -15,31 +15,27 @@
         <div class="filter" (click)="toggleFilter(filter.id)">
           <div class="filter-icon">
             @if (selectedFilters.includes(filter.id)) {
-              <div class="material-symbols-outlined"
-                >radio_button_checked</div
-                >
-              }
-              @if (!selectedFilters.includes(filter.id)) {
-                <div class="material-symbols-outlined"
-                  >radio_button_unchecked
-                </div>
-              }
-            </div>
-            <div class="filter-labels">
-              <span>{{
-                'comp.event-log-filter-dialog.filters.' + filter.id + '.title' | translate
-              }}</span>
-              <span>{{
-                'comp.event-log-filter-dialog.filters.' + filter.id + '.description' | translate
-              }}</span>
-            </div>
+              <div class="material-symbols-outlined">radio_button_checked</div>
+            }
+            @if (!selectedFilters.includes(filter.id)) {
+              <div class="material-symbols-outlined">radio_button_unchecked </div>
+            }
           </div>
-        }
-      </div>
-    </div>
-    <div class="pane-actions spread">
-      <button class="btn btn-primary" (click)="save()" translate [disabled]="!selectedFilters.length">
-        shared.modals.save
-      </button>
+          <div class="filter-labels">
+            <span>{{
+              'comp.event-log-filter-dialog.filters.' + filter.id + '.title' | translate
+            }}</span>
+            <span>{{
+              'comp.event-log-filter-dialog.filters.' + filter.id + '.description' | translate
+            }}</span>
+          </div>
+        </div>
+      }
     </div>
   </div>
+  <div class="pane-actions spread">
+    <button class="btn btn-primary" (click)="save()" translate [disabled]="!selectedFilters.length">
+      shared.modals.save
+    </button>
+  </div>
+</div>

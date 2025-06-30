@@ -23,7 +23,7 @@
           type="checkbox"
           [checked]="config.enabled"
           (change)="updateConfig({ enabled: !config.enabled })"
-          />
+        />
         <span class="switch-toggle-slider"></span>
       </label>
     </div>
@@ -67,7 +67,7 @@
           (input)="onLimitChange(limitNumberInput.value)"
           (blur)="limitNumberInput.value = limit.value.toString()"
           #limitNumberInput
-          />
+        />
       </div>
     </div>
     <div
@@ -87,7 +87,7 @@
           type="checkbox"
           [checked]="config.statusBelowLimitEnabled"
           (change)="updateConfig({ statusBelowLimitEnabled: !config.statusBelowLimitEnabled })"
-          />
+        />
         <span class="switch-toggle-slider"></span>
       </label>
       <app-select-box
@@ -113,7 +113,7 @@
           (change)="
             updateConfig({ statusMessageBelowLimitEnabled: !config.statusMessageBelowLimitEnabled })
           "
-          />
+        />
         <span class="switch-toggle-slider"></span>
       </label>
       <input
@@ -125,7 +125,7 @@
           onChangeStatusMessage('statusMessageBelowLimit', belowLimitStatusMessageInput.value)
         "
         #belowLimitStatusMessageInput
-        />
+      />
     </div>
   </div>
   <div class="setting-row">
@@ -141,7 +141,7 @@
           (change)="
             updateConfig({ statusAtLimitOrAboveEnabled: !config.statusAtLimitOrAboveEnabled })
           "
-          />
+        />
         <span class="switch-toggle-slider"></span>
       </label>
       <app-select-box
@@ -169,7 +169,7 @@
               statusMessageAtLimitOrAboveEnabled: !config.statusMessageAtLimitOrAboveEnabled,
             })
           "
-          />
+        />
         <span class="switch-toggle-slider"></span>
       </label>
       <input
@@ -184,7 +184,7 @@
           )
         "
         #atLimitOrAboveStatusMessageInput
-        />
+      />
     </div>
   </div>
   <div class="setting-row">
@@ -198,7 +198,7 @@
           type="checkbox"
           [checked]="config.onlyIfSleepModeEnabled"
           (change)="updateConfig({ onlyIfSleepModeEnabled: !config.onlyIfSleepModeEnabled })"
-          />
+        />
         <span class="switch-toggle-slider"></span>
       </label>
     </div>

@@ -5,7 +5,7 @@
       class="tab"
       [class.active]="activeTab === 'invite-requests'"
       (click)="activeTab = 'invite-requests'"
-      >
+    >
       <div class="tab-label" translate>invite-and-invite-requests.tabs.inviteRequests</div>
     </div>
     <div class="tab" [class.active]="activeTab === 'invites'" (click)="activeTab = 'invites'">
@@ -34,17 +34,14 @@
   </div>
 </div>
 @if (config.listMode !== 'DISABLED' && activeTab === 'invite-requests') {
-  <div
-    @hshrink
-    class="player-list-animation-wrapper"
-    >
+  <div @hshrink class="player-list-animation-wrapper">
     <app-player-list
-    [title]="
-      {
-        WHITELIST: 'invite-and-invite-requests.playerList.whitelist',
-        BLACKLIST: 'invite-and-invite-requests.playerList.blacklist',
-      }[config.listMode]
-    "
+      [title]="
+        {
+          WHITELIST: 'invite-and-invite-requests.playerList.whitelist',
+          BLACKLIST: 'invite-and-invite-requests.playerList.blacklist',
+        }[config.listMode]
+      "
       [playerIds]="playerIds"
       (playerIdsChange)="updatePlayerIds($event)"
     ></app-player-list>

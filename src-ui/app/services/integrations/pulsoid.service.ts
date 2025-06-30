@@ -277,7 +277,7 @@ export class PulsoidService {
       if (this.socket) {
         try {
           this.socket.close();
-        } catch (e) {
+        } catch {
           // Ignore any error, we just want to disconnect
         }
         this.socket = undefined;
@@ -304,7 +304,7 @@ export class PulsoidService {
           if (this.socket) {
             try {
               this.socket.close();
-            } catch (e) {
+            } catch {
               // Ignore any error, we just want to disconnect
             }
             this.socket = undefined;
@@ -347,7 +347,7 @@ export class PulsoidService {
     let message: PulsoidMessage;
     try {
       message = JSON.parse(messageData);
-    } catch (e) {
+    } catch {
       warn('[Pulsoid] Could not parse socket message: ' + messageData);
       return;
     }

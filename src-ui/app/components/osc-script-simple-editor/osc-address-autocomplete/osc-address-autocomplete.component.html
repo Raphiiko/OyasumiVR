@@ -9,25 +9,19 @@
     (blur)="onBlur()"
     (keydown)="onKeydown($event)"
     #addressInput
-    />
+  />
   @if (
     (autocompleteState.focusedIndex >= 0 && autocompleteState.showResults && isFocused) ||
-    (autocompleteState.previewValue &&
-    value &&
-    autocompleteState.focusedIndex === -1 &&
-    isFocused)
-    ) {
-    <div
-      class="autocomplete-preview"
-      >
-      @if (
-        autocompleteState.focusedIndex >= 0 && autocompleteState.showResults) {
+    (autocompleteState.previewValue && value && autocompleteState.focusedIndex === -1 && isFocused)
+  ) {
+    <div class="autocomplete-preview">
+      @if (autocompleteState.focusedIndex >= 0 && autocompleteState.showResults) {
         <span class="typed-part">{{
           autocompleteState.results[autocompleteState.focusedIndex]
         }}</span>
       } @else {
         <span class="typed-part">{{ value }}</span
-          ><span class="suggested-part">{{
+        ><span class="suggested-part">{{
           autocompleteState.previewValue!.substring(value.length)
         }}</span>
       }
@@ -40,27 +34,27 @@
         @vshrink
         #resultsContainer
         (mouseleave)="autocompleteState.focusedIndex = -1; autocompleteState.previewValue = null"
-        >
+      >
         @for (address of autocompleteState.results; track address; let idx = $index) {
           <div
             class="autocomplete-item"
             [class.focused]="idx === autocompleteState.focusedIndex"
             (mousedown)="selectAddress(address)"
             (mouseenter)="autocompleteState.focusedIndex = idx"
-            >
+          >
             @if (address.startsWith('/avatar/parameters/')) {
               <span
                 class="source-label vrchat"
                 [class.in-focus]="idx === autocompleteState.focusedIndex"
                 >Avatar</span
-                >
-                <span>{{ address.substring('/avatar/parameters/'.length) }}</span>
-              } @else {
-                {{ address }}
-              }
-            </div>
-          }
-        </div>
+              >
+              <span>{{ address.substring('/avatar/parameters/'.length) }}</span>
+            } @else {
+              {{ address }}
+            }
+          </div>
+        }
       </div>
-    }
-  </div>
+    </div>
+  }
+</div>

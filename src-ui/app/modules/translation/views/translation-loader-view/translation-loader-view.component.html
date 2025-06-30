@@ -34,106 +34,106 @@
               <span>Edit existing language</span>
               <span
                 >Choose this if you want to edit or add translations for an existing language</span
-                >
-              </div>
-              <div class="setting-row-action"></div>
+              >
             </div>
-            <div class="setting-row-group">
-              <div class="setting-row">
-                <div class="setting-row-label">
-                  <span>Language</span>
-                  <span>Select which language you're going to edit</span>
-                </div>
-                <div class="setting-row-action">
-                  <app-select-box
-                    [items]="translationOptions"
-                    (selectedChange)="translationOption = $event"
-                  ></app-select-box>
-                </div>
+            <div class="setting-row-action"></div>
+          </div>
+          <div class="setting-row-group">
+            <div class="setting-row">
+              <div class="setting-row-label">
+                <span>Language</span>
+                <span>Select which language you're going to edit</span>
               </div>
-              <div class="setting-row">
-                <div class="setting-row-label">
-                  <span>Fresh Start</span>
-                  <span>Pull the most recent translation files from the web</span>
-                </div>
-                <div class="setting-row-action">
-                  <button
-                    class="btn btn-primary"
-                    [disabled]="!translationOption"
-                    (click)="downloadForExistingLanguage()"
-                    >Download
-                  </button>
-                </div>
-              </div>
-              <div class="setting-row">
-                <div class="setting-row-label">
-                  <span>Import File</span>
-                  <span>Load an existing translation file for this language</span>
-                </div>
-                <div class="setting-row-action">
-                  <button
-                    class="btn btn-primary"
-                    [disabled]="!translationOption"
-                    (click)="openForExistingLanguage()"
-                    >Open File
-                  </button>
-                </div>
+              <div class="setting-row-action">
+                <app-select-box
+                  [items]="translationOptions"
+                  (selectedChange)="translationOption = $event"
+                ></app-select-box>
               </div>
             </div>
             <div class="setting-row">
               <div class="setting-row-label">
-                <span>Add a new language</span>
-                <span>Choose this if you want to add translations for a new language</span>
+                <span>Fresh Start</span>
+                <span>Pull the most recent translation files from the web</span>
               </div>
-              <div class="setting-row-action"></div>
-            </div>
-            <div class="setting-row-group">
-              <div class="setting-row">
-                <div class="setting-row-label">
-                  <span>Language</span>
-                  <span
-                    >Enter the
-                    <a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes"
-                      >two-letter ISO 639-1 identifier</a
-                      >
-                      for the language you want to translate to</span
-                      >
-                    </div>
-                    <div class="setting-row-action">
-                      <input type="text" maxlength="2" [(ngModel)]="languageCode" />
-                    </div>
-                  </div>
-                  <div class="setting-row">
-                    <div class="setting-row-label">
-                      <span>Fresh Start</span>
-                      <span>Pull the most recent translations file from the web</span>
-                    </div>
-                    <div class="setting-row-action">
-                      <button
-                        class="btn btn-primary"
-                        [disabled]="!hasValidLanguageCode"
-                        (click)="startNewLanguage()"
-                        >Download
-                      </button>
-                    </div>
-                  </div>
-                  <div class="setting-row">
-                    <div class="setting-row-label">
-                      <span>Import File</span>
-                      <span>Load an existing translation file for this language</span>
-                    </div>
-                    <div class="setting-row-action">
-                      <button
-                        class="btn btn-primary"
-                        [disabled]="!hasValidLanguageCode"
-                        (click)="openForNewLanguage()"
-                        >Open File
-                      </button>
-                    </div>
-                  </div>
-                </div>
+              <div class="setting-row-action">
+                <button
+                  class="btn btn-primary"
+                  [disabled]="!translationOption"
+                  (click)="downloadForExistingLanguage()"
+                  >Download
+                </button>
               </div>
             </div>
-          }
+            <div class="setting-row">
+              <div class="setting-row-label">
+                <span>Import File</span>
+                <span>Load an existing translation file for this language</span>
+              </div>
+              <div class="setting-row-action">
+                <button
+                  class="btn btn-primary"
+                  [disabled]="!translationOption"
+                  (click)="openForExistingLanguage()"
+                  >Open File
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-row-label">
+              <span>Add a new language</span>
+              <span>Choose this if you want to add translations for a new language</span>
+            </div>
+            <div class="setting-row-action"></div>
+          </div>
+          <div class="setting-row-group">
+            <div class="setting-row">
+              <div class="setting-row-label">
+                <span>Language</span>
+                <span
+                  >Enter the
+                  <a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes"
+                    >two-letter ISO 639-1 identifier</a
+                  >
+                  for the language you want to translate to</span
+                >
+              </div>
+              <div class="setting-row-action">
+                <input type="text" maxlength="2" [(ngModel)]="languageCode" />
+              </div>
+            </div>
+            <div class="setting-row">
+              <div class="setting-row-label">
+                <span>Fresh Start</span>
+                <span>Pull the most recent translations file from the web</span>
+              </div>
+              <div class="setting-row-action">
+                <button
+                  class="btn btn-primary"
+                  [disabled]="!hasValidLanguageCode"
+                  (click)="startNewLanguage()"
+                  >Download
+                </button>
+              </div>
+            </div>
+            <div class="setting-row">
+              <div class="setting-row-label">
+                <span>Import File</span>
+                <span>Load an existing translation file for this language</span>
+              </div>
+              <div class="setting-row-action">
+                <button
+                  class="btn btn-primary"
+                  [disabled]="!hasValidLanguageCode"
+                  (click)="openForNewLanguage()"
+                  >Open File
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+    }
+  </div>
+</div>

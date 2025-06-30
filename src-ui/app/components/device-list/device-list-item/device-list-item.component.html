@@ -28,7 +28,7 @@
               (action)="onForceLHState($event)"
               [style.position-anchor]="powerButtonAnchorId"
               [type]="_lighthouseDevice?.deviceType"
-              >
+            >
             </app-lighthouse-force-state-popover>
           </div>
         }
@@ -38,31 +38,27 @@
       <div class="status-info" @vshrink>
         @for (s of status ? [status] : []; track s) {
           <span [@vshrink]>{{ s | translate }}</span>
-          }</div
-          >
-        }
-        @if (showBattery) {
-          <div class="battery-info" @vshrink>
-            <div class="battery-info-bar">
-              @if (showBattery) {
-                <div
-                  class="battery-info-bar-fill"
-                  @fade
-                  [style.width]="batteryPercentage + '%'"
-                ></div>
-              }
-            </div>
-            <div class="battery-info-label">
-              @if (showBattery) {
-                <span @fade>
-                  {{ batteryPercentageString }}
-                </span>
-              }
-              <i class="material-icons">
-                {{ isCharging ? 'battery_charging_full' : 'battery_std' }}
-              </i>
-            </div>
-          </div>
         }
       </div>
     }
+    @if (showBattery) {
+      <div class="battery-info" @vshrink>
+        <div class="battery-info-bar">
+          @if (showBattery) {
+            <div class="battery-info-bar-fill" @fade [style.width]="batteryPercentage + '%'"></div>
+          }
+        </div>
+        <div class="battery-info-label">
+          @if (showBattery) {
+            <span @fade>
+              {{ batteryPercentageString }}
+            </span>
+          }
+          <i class="material-icons">
+            {{ isCharging ? 'battery_charging_full' : 'battery_std' }}
+          </i>
+        </div>
+      </div>
+    }
+  </div>
+}

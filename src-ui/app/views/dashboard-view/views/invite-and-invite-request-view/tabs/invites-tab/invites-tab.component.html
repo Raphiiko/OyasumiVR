@@ -4,54 +4,54 @@
       <div class="setting-row-label" translate>
         <span translate
           >invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.title</span
-          >
-          <span translate
-            >invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.description</span
-            >
-          </div>
-          <div class="setting-row-action">
-            <label class="switch-toggle">
-              <input
-                type="checkbox"
-                [checked]="config.declineInvitesWhileAsleep"
+        >
+        <span translate
+          >invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.description</span
+        >
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="config.declineInvitesWhileAsleep"
             (change)="
               updateConfig({ declineInvitesWhileAsleep: !config.declineInvitesWhileAsleep })
             "
-                />
-              <span class="switch-toggle-slider"></span>
-            </label>
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    @if (config.declineInvitesWhileAsleep) {
+      <div class="setting-row-group" @vshrink>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate
+              >invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.customMessage.title</span
+            >
+            <span></span>
+          </div>
+          <div class="setting-row-action">
+            <input
+              maxlength="64"
+              type="text"
+              class="input"
+              [value]="config.declineInviteMessage"
+              (change)="
+                updateDeclineInviteWhileAsleepCustomMessage.next(
+                  declineOnInviteCustomMessageInput.value
+                )
+              "
+              (blur)="declineOnInviteCustomMessageInput.value = config.declineInviteMessage"
+              [placeholder]="
+                'invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.customMessage.placeholder'
+                  | translate
+              "
+              #declineOnInviteCustomMessageInput
+            />
           </div>
         </div>
-        @if (config.declineInvitesWhileAsleep) {
-          <div class="setting-row-group" @vshrink>
-            <div class="setting-row">
-              <div class="setting-row-label" translate>
-                <span translate
-                  >invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.customMessage.title</span
-                  >
-                  <span></span>
-                </div>
-                <div class="setting-row-action">
-                  <input
-                    maxlength="64"
-                    type="text"
-                    class="input"
-                    [value]="config.declineInviteMessage"
-            (change)="
-              updateDeclineInviteWhileAsleepCustomMessage.next(
-                declineOnInviteCustomMessageInput.value
-              )
-            "
-                    (blur)="declineOnInviteCustomMessageInput.value = config.declineInviteMessage"
-            [placeholder]="
-              'invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.customMessage.placeholder'
-                | translate
-            "
-                    #declineOnInviteCustomMessageInput
-                    />
-                </div>
-              </div>
-            </div>
-          }
-        </div>
       </div>
+    }
+  </div>
+</div>

@@ -3,14 +3,12 @@
   [tooltip]="(tooltipText() ?? '' | translate) ?? undefined"
   [tooltipMode]="'left'"
   (click)="toggleDropdown()"
-  >
+>
   <div class="icon-wrapper">
     <img src="/assets/img/icon_controller.png" />
   </div>
   @if (error && error !== 'MISSING_CONTROLLER' && error !== 'NO_CONTROLLERS') {
-    <div
-      class="text-wrapper"
-      >
+    <div class="text-wrapper">
       @if (error === 'MISSING_KEY') {
         <div class="line1" translate> No Action Set</div>
       }

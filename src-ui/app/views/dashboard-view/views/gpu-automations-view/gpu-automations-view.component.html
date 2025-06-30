@@ -3,12 +3,7 @@
   <div class="pane-title" translate
     ><span translate>gpu-automations.title</span>
     @if (!['DISABLED'].includes(panel)) {
-      <button
-        class="btn btn-secondary"
-        (click)="gpuAutomations.disable()"
-        translate
-        @fade
-        >
+      <button class="btn btn-secondary" (click)="gpuAutomations.disable()" translate @fade>
         gpu-automations.disable
       </button>
     }
@@ -20,14 +15,10 @@
         class="tab"
         [class.active]="activeTab === 'POWER_LIMITS'"
         (click)="activeTab = 'POWER_LIMITS'"
-        >
+      >
         <div class="tab-label">
           @if (nvmlErrors | async) {
-            <i
-              class="material-icons"
-              style="color: var(--color-warning)"
-              @hshrink
-              >
+            <i class="material-icons" style="color: var(--color-warning)" @hshrink>
               error_outline
             </i>
           }
@@ -38,14 +29,10 @@
         class="tab"
         [class.active]="activeTab === 'MSI_AFTERBURNER'"
         (click)="activeTab = 'MSI_AFTERBURNER'"
-        >
+      >
         <div class="tab-label">
           @if (msiAfterburnerErrors | async) {
-            <i
-              class="material-icons"
-              style="color: var(--color-warning)"
-              @hshrink
-              >
+            <i class="material-icons" style="color: var(--color-warning)" @hshrink>
               error_outline
             </i>
           }
@@ -56,12 +43,10 @@
   }
   <!-- PANES-->
   @if (panel === 'ENABLED' && activeTab === 'POWER_LIMITS') {
-    <app-gpu-powerlimiting-pane
-    ></app-gpu-powerlimiting-pane>
+    <app-gpu-powerlimiting-pane></app-gpu-powerlimiting-pane>
   }
   @if (panel === 'ENABLED' && activeTab === 'MSI_AFTERBURNER') {
-    <app-msi-afterburner-pane
-    ></app-msi-afterburner-pane>
+    <app-msi-afterburner-pane></app-msi-afterburner-pane>
   }
   <!--  DISABLED-->
   @if (panel !== 'ENABLED') {
@@ -77,20 +62,12 @@
       <div class="description" [innerHTML]="disabledMessage | translate"></div>
       <div class="btn-row">
         @if (panel === 'NO_SIDECAR') {
-          <button
-            class="btn btn-primary action"
-            (click)="startSidecar()"
-            translate
-            >
+          <button class="btn btn-primary action" (click)="startSidecar()" translate>
             gpu-automations.requestAdministrator
           </button>
         }
         @if (!['DISABLED'].includes(panel)) {
-          <button
-            class="btn btn-secondary action"
-            (click)="gpuAutomations.disable()"
-            translate
-            >
+          <button class="btn btn-secondary action" (click)="gpuAutomations.disable()" translate>
             gpu-automations.disable
           </button>
         }

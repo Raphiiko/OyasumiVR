@@ -13,7 +13,7 @@
           [value]="config.msiAfterburnerPath"
           (keyup)="msiAfterburnerPathInputChange.next(msiAfterburnerPathInput.value)"
           #msiAfterburnerPathInput
-          />
+        />
       </div>
       <button class="file-path-bar-btn-browse" (click)="browseForMsiAfterburner()">
         <i class="material-icons">folder</i>
@@ -25,13 +25,11 @@
         [class.success]="msiAfterburnerPathAlert.type === 'SUCCESS'"
         [class.error]="msiAfterburnerPathAlert.type === 'ERROR'"
         @vshrink
-        >
+      >
         <div class="alert-bg"></div>
         <div class="alert-icon">
           @if (!msiAfterburnerPathAlert.loadingIndicator) {
-            <i class="material-icons">
-              check_circle_outline
-            </i>
+            <i class="material-icons"> check_circle_outline </i>
           }
           @if (msiAfterburnerPathAlert.loadingIndicator) {
             <div class="small-spinner"></div>

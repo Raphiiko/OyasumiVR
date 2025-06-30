@@ -49,7 +49,7 @@ export class SettingsUpdatesViewComponent implements OnInit {
           responseType: 'text',
         })
       );
-    } catch (e) {
+    } catch {
       changelog = await firstValueFrom(
         this.http.get('/assets/CHANGELOG.md', {
           responseType: 'text',

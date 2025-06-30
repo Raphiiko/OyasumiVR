@@ -4,10 +4,7 @@
     <p>Please select your preferred language:</p>
     <div class="options">
       @for (language of languages; track language) {
-        <div
-          class="language-option"
-          (click)="selectLanguage(language)"
-          >
+        <div class="language-option" (click)="selectLanguage(language)">
           <span class="fi fi-{{ language.flag || language.code }}"></span>
           <span class="label">{{ language.label }}</span>
         </div>
@@ -16,7 +13,7 @@
         href="https://github.com/Raphiiko/OyasumiVR/wiki/Adding-Translations"
         target="_blank"
         class="language-option"
-        >
+      >
         <div class="flag-add">
           <i class="material-icons">add</i>
         </div>

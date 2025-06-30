@@ -289,7 +289,7 @@ export class HotkeyService {
         if (!load) this.saveHotkeys();
         return true;
       } catch (e) {
-        warn('[HotkeyService] Could not register hotkey: ' + error);
+        warn('[HotkeyService] Could not register hotkey: ' + e);
         return false;
       }
     }
@@ -305,7 +305,7 @@ export class HotkeyService {
           try {
             await unregister(hotkeyString);
           } catch (e) {
-            error('[HotkeyService] Could not unregister hotkey: ' + error);
+            error('[HotkeyService] Could not unregister hotkey: ' + e);
           }
         }
       }

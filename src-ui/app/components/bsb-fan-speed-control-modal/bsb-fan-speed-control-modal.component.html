@@ -17,11 +17,7 @@
   @if (!isActive('/dashboard/hmdAutomations')) {
     <div class="link-bar" @hshrink>
       @if (!isActive('/dashboard/hmdAutomations')) {
-        <a
-          class="link"
-          [routerLink]="['dashboard', 'hmdAutomations']"
-          (click)="close()"
-          >
+        <a class="link" [routerLink]="['dashboard', 'hmdAutomations']" (click)="close()">
           <i class="material-symbols-outlined icon-filled">settings</i>
         </a>
       }

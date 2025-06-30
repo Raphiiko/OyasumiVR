@@ -79,7 +79,7 @@ export class ObfuscatedValueDirective implements AfterViewInit, OnChanges {
         domainExt.substr(domainExt.length - 1) +
         (domainExtExt ? '.' + domainExtExt : '')
       );
-    } catch (e) {
+    } catch {
       return '***@***.***';
     }
   }

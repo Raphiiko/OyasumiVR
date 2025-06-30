@@ -14,58 +14,58 @@
               <span>{{ 'shared.common.vrcLoginRequired' | translate }}</span>
               <button class="btn btn-secondary" (click)="login()" translate
                 >shared.modals.login</button
-                >
-              </div>
+              >
             </div>
-          }
-          <div class="settings">
-            <div class="setting-row">
-              <div class="setting-row-label" translate>
-                <span translate>vrchatGroupAutomations.onSleepEnable.title</span>
-                <span translate>vrchatGroupAutomations.onSleepEnable.description</span>
-              </div>
-              <div class="setting-row-action">
-                <app-select-box
-                  [disabled]="!loggedIn"
-                  [items]="groupOptions"
-                  [selected]="selectedOnSleepEnable"
-                  [type]="'SMALL'"
-                  (selectedChange)="updateGroupOnSleepEnable($event!.id)"
-                ></app-select-box>
-              </div>
+          </div>
+        }
+        <div class="settings">
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>vrchatGroupAutomations.onSleepEnable.title</span>
+              <span translate>vrchatGroupAutomations.onSleepEnable.description</span>
             </div>
-            <div class="setting-row">
-              <div class="setting-row-label" translate>
-                <span translate>vrchatGroupAutomations.onSleepDisable.title</span>
-                <span translate>vrchatGroupAutomations.onSleepDisable.description</span>
-              </div>
-              <div class="setting-row-action">
-                <app-select-box
-                  [disabled]="!loggedIn"
-                  [items]="groupOptions"
-                  [selected]="selectedOnSleepDisable"
-                  [type]="'SMALL'"
-                  (selectedChange)="updateGroupOnSleepDisable($event!.id)"
-                ></app-select-box>
-              </div>
+            <div class="setting-row-action">
+              <app-select-box
+                [disabled]="!loggedIn"
+                [items]="groupOptions"
+                [selected]="selectedOnSleepEnable"
+                [type]="'SMALL'"
+                (selectedChange)="updateGroupOnSleepEnable($event!.id)"
+              ></app-select-box>
             </div>
-            <div class="setting-row">
-              <div class="setting-row-label" translate>
-                <span translate>vrchatGroupAutomations.onSleepPreparation.title</span>
-                <span translate>vrchatGroupAutomations.onSleepPreparation.description</span>
-              </div>
-              <div class="setting-row-action">
-                <app-select-box
-                  [disabled]="!loggedIn"
-                  [items]="groupOptions"
-                  [selected]="selectedOnSleepPreparation"
-                  [type]="'SMALL'"
-                  (selectedChange)="updateGroupOnSleepPreparation($event!.id)"
-                ></app-select-box>
-              </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>vrchatGroupAutomations.onSleepDisable.title</span>
+              <span translate>vrchatGroupAutomations.onSleepDisable.description</span>
+            </div>
+            <div class="setting-row-action">
+              <app-select-box
+                [disabled]="!loggedIn"
+                [items]="groupOptions"
+                [selected]="selectedOnSleepDisable"
+                [type]="'SMALL'"
+                (selectedChange)="updateGroupOnSleepDisable($event!.id)"
+              ></app-select-box>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>vrchatGroupAutomations.onSleepPreparation.title</span>
+              <span translate>vrchatGroupAutomations.onSleepPreparation.description</span>
+            </div>
+            <div class="setting-row-action">
+              <app-select-box
+                [disabled]="!loggedIn"
+                [items]="groupOptions"
+                [selected]="selectedOnSleepPreparation"
+                [type]="'SMALL'"
+                (selectedChange)="updateGroupOnSleepPreparation($event!.id)"
+              ></app-select-box>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>

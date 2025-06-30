@@ -1,12 +1,13 @@
 <div class="pane-player-list-wrapper">
   <div class="pane pane-player-list">
     <div class="pane-title" translate>{{ title | tsTranslate }}</div>
-    @if ({
-      isFetchingFriends: vrchat.isFetchingFriends | async,
-      }; as data) {
-      <div
-        class="pane-content"
-        >
+    @if (
+      {
+        isFetchingFriends: vrchat.isFetchingFriends | async,
+      };
+      as data
+    ) {
+      <div class="pane-content">
         @if (data.isFetchingFriends) {
           <div class="players-loading">
             <div class="large-spinner"></div>
@@ -21,7 +22,7 @@
               [disabled]="!loggedIn"
               [tooltip]="'comp.player-list.addFriends'"
               [tooltipMode]="'right'"
-              >
+            >
               <i class="material-icons">add</i>
             </button>
             <button
@@ -30,7 +31,7 @@
               [disabled]="!loggedIn || !playerList.length"
               [tooltip]="'comp.player-list.clearPlayers'"
               [tooltipMode]="'right'"
-              >
+            >
               <i class="material-icons">clear</i>
             </button>
             <button
@@ -39,7 +40,7 @@
               [disabled]="!loggedIn || !playerList.length"
               [tooltip]="'comp.player-list.savePreset'"
               [tooltipMode]="'right'"
-              >
+            >
               <i class="material-icons">save</i>
             </button>
             <button
@@ -48,7 +49,7 @@
               [disabled]="!loggedIn"
               [tooltip]="'comp.player-list.loadPreset'"
               [tooltipMode]="'right'"
-              >
+            >
               <i class="material-icons">file_open</i>
             </button>
           </div>
@@ -62,7 +63,7 @@
                       onerror="this.style.display='none'"
                       loading="lazy"
                       [imgSmoothLoader]="vrchat.imageUrlForPlayer(player) | imageCache: 3600 * 6"
-                      />
+                    />
                   </div>
                   <div class="player-name">{{ player.displayName }}</div>
                 </div>

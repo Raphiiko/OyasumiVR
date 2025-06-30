@@ -16,13 +16,13 @@ export class DeepLinkService {
         info(`[DeepLinkService] Received deep link call: ${strurl}`);
         try {
           url = new URL(strurl);
-        } catch (e) {
+        } catch {
           await warn(`[DeepLinkService] Failed to parse deep link URL: ${strurl}`);
           return;
         }
         try {
           await this.handleDeepLinkCall(url);
-        } catch (e) {
+        } catch {
           await warn(`[DeepLinkService] Failed to handle deep link call for URL: ${strurl}`);
         }
       }
@@ -71,7 +71,7 @@ export class DeepLinkService {
         if (fragmentParams.hasOwnProperty(key)) fragmentParams[key].push(value);
         else fragmentParams[key] = [value];
       }
-    } catch (e) {
+    } catch {
       // It's ok if we can't parse the fragment
     }
     switch (integration) {

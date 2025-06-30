@@ -10,206 +10,206 @@
               <span translate>settings.advanced.application.overlayGpuAcceleration.title</span>
               <span translate
                 >settings.advanced.application.overlayGpuAcceleration.description</span
-                >
-              </div>
-              <div class="setting-row-action">
-                <label class="switch-toggle">
-                  <input
-                    type="checkbox"
-                    [checked]="overlayGpuAcceleration"
-                    (change)="setOverlayGpuAcceleration(!overlayGpuAcceleration)"
-                    />
-                  <span class="switch-toggle-slider"></span>
-                </label>
-              </div>
-            </div>
-            <div class="setting-row">
-              <div class="setting-row-label" translate>
-                <span translate>settings.advanced.application.oscServerEnabled.title</span>
-                <span translate>settings.advanced.application.oscServerEnabled.description</span>
-              </div>
-              <div class="setting-row-action">
-                <label class="switch-toggle">
-                  <input
-                    type="checkbox"
-                    [checked]="oscServerEnabled"
-                    (change)="setOscServerEnabled(!oscServerEnabled)"
-                    />
-                  <span class="switch-toggle-slider"></span>
-                </label>
-              </div>
-            </div>
-            <div class="setting-row">
-              <div class="setting-row-label" translate>
-                <span translate>settings.advanced.application.openVrInitDelayFix.title</span>
-                <span translate>settings.advanced.application.openVrInitDelayFix.description</span>
-              </div>
-              <div class="setting-row-action">
-                <label class="switch-toggle">
-                  <input
-                    type="checkbox"
-                    [checked]="openVrInitDelayFix"
-                    (change)="setOpenVrInitDelayFix(!openVrInitDelayFix)"
-                    />
-                  <span class="switch-toggle-slider"></span>
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="setting-category">
-          <h2 translate>settings.advanced.translation.title</h2>
-          <div class="settings">
-            <div class="setting-row">
-              <div class="setting-row-label" translate>
-                <span translate>settings.advanced.translation.loadFile.title</span>
-                <span translate>settings.advanced.translation.loadFile.description</span>
-              </div>
-              <div class="setting-row-action">
-                <button class="btn btn-primary" (click)="loadLanguageFile()">
-                  <i class="material-icons-round">file_open</i>
-                  <span translate>settings.advanced.translation.loadFile.action</span>
-                </button>
-              </div>
-            </div>
-            <div class="setting-row">
-              <div class="setting-row-label" translate>
-                <span translate>settings.advanced.translation.contribute.title</span>
-                <span translate>settings.advanced.translation.contribute.description</span>
-              </div>
-              <div class="setting-row-action">
-                <a
-                  class="btn btn-primary"
-                  target="_blank"
-                  href="https://github.com/Raphiiko/OyasumiVR/wiki/Adding-Translations"
-                  >
-                  <span translate>settings.advanced.translation.contribute.docs</span>
-                </a>
-              </div>
-            </div>
-            <div class="setting-row">
-              <div class="setting-row-label" translate>
-                <span>
-                  <span translate>settings.advanced.translation.editor.title</span>
-                </span>
-                <span translate>settings.advanced.translation.editor.description</span>
-              </div>
-              <div class="setting-row-action">
-                <button class="btn btn-primary" [routerLink]="['/translation', 'loader']" translate>
-                  <span translate>settings.advanced.translation.editor.action</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="setting-category">
-          <h2 translate>settings.advanced.logs.title</h2>
-          <div class="settings">
-            <div class="setting-row">
-              <div class="setting-row-label" translate>
-                <span translate>settings.advanced.logs.openFolder.title</span>
-                <span translate>settings.advanced.logs.openFolder.description</span>
-              </div>
-              <div class="setting-row-action">
-                <button class="btn btn-primary" (click)="openLogsFolder()">
-                  <i class="material-icons-round">folder</i>
-                  <span translate>settings.advanced.logs.openFolder.action</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="setting-category">
-          <h2 translate>settings.advanced.persistentData.title</h2>
-          <div class="action-row">
-            <p translate>settings.advanced.persistentData.description</p>
-            <button
-              class="btn btn-secondary"
-              [disabled]="checkedPersistentStorageItems.length === 0"
-              (click)="clearPersistentStorage()"
               >
-              <i class="material-icons-round">delete_forever</i>
-              <span translate>settings.advanced.persistentData.clearData</span>
-            </button>
-          </div>
-          <div class="settings">
-            <div class="setting-row">
-              <div class="setting-row-label" translate>
-                <span translate>settings.advanced.persistentData.dataType.all.title</span>
-                <span translate>settings.advanced.persistentData.dataType.all.description</span>
-              </div>
-              <div class="setting-row-action">
-                <label class="check-toggle">
-                  <input
-                    [checked]="isPersistentStorageItemChecked('ALL')"
-                    (change)="togglePersistentStorageItem('ALL')"
-                    type="checkbox"
-                    />
-                  <span class="check-toggle-checkmark"></span>
-                </label>
-              </div>
             </div>
-            <div class="setting-row-group">
-              @for (item of persistentStorageItems; track item) {
-                <div class="setting-row compact">
-                  <div class="setting-row-label" translate>
-                    <span translate>{{
-                      'settings.advanced.persistentData.dataType.' + item.key + '.title' | translate
-                    }}</span>
-                    <span translate>{{
-                      'settings.advanced.persistentData.dataType.' + item.key + '.description'
-                      | translate
-                    }}</span>
-                  </div>
-                  <div class="setting-row-action">
-                    <label class="check-toggle">
-                      <input
-                        type="checkbox"
-                        [checked]="isPersistentStorageItemChecked(item.key)"
-                        (change)="togglePersistentStorageItem(item.key)"
-                        />
-                      <span class="check-toggle-checkmark"></span>
-                    </label>
-                  </div>
-                </div>
-              }
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="overlayGpuAcceleration"
+                  (change)="setOverlayGpuAcceleration(!overlayGpuAcceleration)"
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>settings.advanced.application.oscServerEnabled.title</span>
+              <span translate>settings.advanced.application.oscServerEnabled.description</span>
+            </div>
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="oscServerEnabled"
+                  (change)="setOscServerEnabled(!oscServerEnabled)"
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>settings.advanced.application.openVrInitDelayFix.title</span>
+              <span translate>settings.advanced.application.openVrInitDelayFix.description</span>
+            </div>
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="openVrInitDelayFix"
+                  (change)="setOpenVrInitDelayFix(!openVrInitDelayFix)"
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
             </div>
           </div>
         </div>
-        <div class="setting-category">
-          <h2 translate>settings.advanced.troubleshooting.title</h2>
-          <p translate>settings.advanced.troubleshooting.description</p>
-          <div class="settings">
-            <div class="setting-row">
-              <div class="setting-row-label" translate>
-                <span translate>settings.advanced.troubleshooting.vrManifestReregister.title</span>
-                <span translate
-                  >settings.advanced.troubleshooting.vrManifestReregister.description</span
-                  >
-                </div>
-                <div class="setting-row-action">
-                  <button
-                    class="btn btn-primary"
-                    (click)="reregisterVRManifest()"
-                    [disabled]="(openvr.status | async) !== 'INITIALIZED'"
-                    >
-                    <span translate>settings.advanced.troubleshooting.vrManifestReregister.action</span>
-                  </button>
-                </div>
-              </div>
-              <div class="setting-row">
+      </div>
+      <div class="setting-category">
+        <h2 translate>settings.advanced.translation.title</h2>
+        <div class="settings">
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>settings.advanced.translation.loadFile.title</span>
+              <span translate>settings.advanced.translation.loadFile.description</span>
+            </div>
+            <div class="setting-row-action">
+              <button class="btn btn-primary" (click)="loadLanguageFile()">
+                <i class="material-icons-round">file_open</i>
+                <span translate>settings.advanced.translation.loadFile.action</span>
+              </button>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>settings.advanced.translation.contribute.title</span>
+              <span translate>settings.advanced.translation.contribute.description</span>
+            </div>
+            <div class="setting-row-action">
+              <a
+                class="btn btn-primary"
+                target="_blank"
+                href="https://github.com/Raphiiko/OyasumiVR/wiki/Adding-Translations"
+              >
+                <span translate>settings.advanced.translation.contribute.docs</span>
+              </a>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span>
+                <span translate>settings.advanced.translation.editor.title</span>
+              </span>
+              <span translate>settings.advanced.translation.editor.description</span>
+            </div>
+            <div class="setting-row-action">
+              <button class="btn btn-primary" [routerLink]="['/translation', 'loader']" translate>
+                <span translate>settings.advanced.translation.editor.action</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="setting-category">
+        <h2 translate>settings.advanced.logs.title</h2>
+        <div class="settings">
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>settings.advanced.logs.openFolder.title</span>
+              <span translate>settings.advanced.logs.openFolder.description</span>
+            </div>
+            <div class="setting-row-action">
+              <button class="btn btn-primary" (click)="openLogsFolder()">
+                <i class="material-icons-round">folder</i>
+                <span translate>settings.advanced.logs.openFolder.action</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="setting-category">
+        <h2 translate>settings.advanced.persistentData.title</h2>
+        <div class="action-row">
+          <p translate>settings.advanced.persistentData.description</p>
+          <button
+            class="btn btn-secondary"
+            [disabled]="checkedPersistentStorageItems.length === 0"
+            (click)="clearPersistentStorage()"
+          >
+            <i class="material-icons-round">delete_forever</i>
+            <span translate>settings.advanced.persistentData.clearData</span>
+          </button>
+        </div>
+        <div class="settings">
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>settings.advanced.persistentData.dataType.all.title</span>
+              <span translate>settings.advanced.persistentData.dataType.all.description</span>
+            </div>
+            <div class="setting-row-action">
+              <label class="check-toggle">
+                <input
+                  [checked]="isPersistentStorageItemChecked('ALL')"
+                  (change)="togglePersistentStorageItem('ALL')"
+                  type="checkbox"
+                />
+                <span class="check-toggle-checkmark"></span>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row-group">
+            @for (item of persistentStorageItems; track item) {
+              <div class="setting-row compact">
                 <div class="setting-row-label" translate>
-                  <span translate>settings.advanced.troubleshooting.devTools.title</span>
-                  <span translate>settings.advanced.troubleshooting.devTools.description</span>
+                  <span translate>{{
+                    'settings.advanced.persistentData.dataType.' + item.key + '.title' | translate
+                  }}</span>
+                  <span translate>{{
+                    'settings.advanced.persistentData.dataType.' + item.key + '.description'
+                      | translate
+                  }}</span>
                 </div>
                 <div class="setting-row-action">
-                  <button class="btn btn-primary" (click)="openDevTools()">
-                    <span translate>settings.advanced.troubleshooting.devTools.action</span>
-                  </button>
+                  <label class="check-toggle">
+                    <input
+                      type="checkbox"
+                      [checked]="isPersistentStorageItemChecked(item.key)"
+                      (change)="togglePersistentStorageItem(item.key)"
+                    />
+                    <span class="check-toggle-checkmark"></span>
+                  </label>
                 </div>
               </div>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="setting-category">
+        <h2 translate>settings.advanced.troubleshooting.title</h2>
+        <p translate>settings.advanced.troubleshooting.description</p>
+        <div class="settings">
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>settings.advanced.troubleshooting.vrManifestReregister.title</span>
+              <span translate
+                >settings.advanced.troubleshooting.vrManifestReregister.description</span
+              >
+            </div>
+            <div class="setting-row-action">
+              <button
+                class="btn btn-primary"
+                (click)="reregisterVRManifest()"
+                [disabled]="(openvr.status | async) !== 'INITIALIZED'"
+              >
+                <span translate>settings.advanced.troubleshooting.vrManifestReregister.action</span>
+              </button>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>settings.advanced.troubleshooting.devTools.title</span>
+              <span translate>settings.advanced.troubleshooting.devTools.description</span>
+            </div>
+            <div class="setting-row-action">
+              <button class="btn btn-primary" (click)="openDevTools()">
+                <span translate>settings.advanced.troubleshooting.devTools.action</span>
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
+</div>
