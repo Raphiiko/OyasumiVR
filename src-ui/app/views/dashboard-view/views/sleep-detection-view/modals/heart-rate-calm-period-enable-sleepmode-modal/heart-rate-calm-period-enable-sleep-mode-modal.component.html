@@ -57,27 +57,23 @@
               >
             </div>
             <div class="setting-row-action">
-              <button
-                class="btn btn-primary"
-                translate
-                (click)="mode = 'HISTORY'"
-                *ngIf="mode === 'SETTINGS'"
-              >
-                sleep-detection.modals.enableOnHeartRateCalmPeriod.viewHistory.actionShow
-              </button>
-              <button
-                class="btn btn-primary"
-                translate
-                (click)="mode = 'SETTINGS'"
-                *ngIf="mode === 'HISTORY'"
-              >
-                sleep-detection.modals.enableOnHeartRateCalmPeriod.viewHistory.actionHide
-              </button>
+              @if (mode === 'SETTINGS') {
+                <button class="btn btn-primary" translate (click)="mode = 'HISTORY'">
+                  sleep-detection.modals.enableOnHeartRateCalmPeriod.viewHistory.actionShow
+                </button>
+              }
+              @if (mode === 'HISTORY') {
+                <button class="btn btn-primary" translate (click)="mode = 'SETTINGS'">
+                  sleep-detection.modals.enableOnHeartRateCalmPeriod.viewHistory.actionHide
+                </button>
+              }
             </div>
           </div>
-          <div class="setting-row" @vshrink *ngIf="mode === 'HISTORY'">
-            <app-heart-rate-chart></app-heart-rate-chart>
-          </div>
+          @if (mode === 'HISTORY') {
+            <div class="setting-row" @vshrink>
+              <app-heart-rate-chart></app-heart-rate-chart>
+            </div>
+          }
         </div>
       </div>
     </div>

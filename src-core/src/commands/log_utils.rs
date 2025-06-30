@@ -1,10 +1,8 @@
 use log::{error, info};
-use std::{path::PathBuf, time::SystemTime};
+use std::{path::PathBuf, sync::LazyLock, time::SystemTime};
 use tokio::sync::Mutex;
 
-lazy_static! {
-    pub static ref LOG_DIR: Mutex<Option<PathBuf>> = Default::default();
-}
+pub static LOG_DIR: LazyLock<Mutex<Option<PathBuf>>> = LazyLock::new(Default::default);
 
 pub async fn init(path: PathBuf) {
     *LOG_DIR.lock().await = Some(path);

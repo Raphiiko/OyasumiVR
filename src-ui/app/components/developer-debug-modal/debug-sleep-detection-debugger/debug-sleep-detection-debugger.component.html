@@ -30,22 +30,21 @@
   </div>
   <div class="state-handling-timeline">
     <h3>Report Handling Timeline</h3>
-    <div
-      class="state-handling-timeline-entry"
-      *ngFor="let entry of debug.sleepDetectionDebugger.reportHandlingData"
-    >
-      <div class="left">
-        <pre>{{ entry.result }}</pre>
+    @for (entry of debug.sleepDetectionDebugger.reportHandlingData; track entry) {
+      <div class="state-handling-timeline-entry">
+        <div class="left">
+          <pre>{{ entry.result }}</pre>
+        </div>
+        <div class="right">
+          <span>{{ entry.amountSeen }} Reports</span>
+          <span>&nbsp;|&nbsp;</span>
+          <span>First: {{ entry.firstSeen | localizedDate: 'HH:mm:ss' }}</span>
+          <span>&nbsp;-&nbsp;</span>
+          <span>Last: {{ entry.lastSeen | localizedDate: 'HH:mm:ss' }}</span>
+          <span>&nbsp;</span>
+          <span>({{ entry.lastSeen - entry.firstSeen | amDuration: 'milliseconds' }})</span>
+        </div>
       </div>
-      <div class="right">
-        <span>{{ entry.amountSeen }} Reports</span>
-        <span>&nbsp;|&nbsp;</span>
-        <span>First: {{ entry.firstSeen | localizedDate: 'HH:mm:ss' }}</span>
-        <span>&nbsp;-&nbsp;</span>
-        <span>Last: {{ entry.lastSeen | localizedDate: 'HH:mm:ss' }}</span>
-        <span>&nbsp;</span>
-        <span>({{ entry.lastSeen - entry.firstSeen | amDuration: 'milliseconds' }})</span>
-      </div>
-    </div>
+    }
   </div>
 </div>

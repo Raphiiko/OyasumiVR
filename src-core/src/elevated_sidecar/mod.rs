@@ -7,14 +7,12 @@ use crate::{
     Models::oyasumi_core::ElevatedSidecarStartArgs,
 };
 use log::info;
+use std::sync::LazyLock;
 use tokio::sync::Mutex;
 use tonic::transport::Channel;
 
-lazy_static! {
-    pub static ref SIDECAR_GRPC_CLIENT: Mutex<Option<OyasumiElevatedSidecarClient<Channel>>> =
-        Default::default();
-    static ref SIDECAR_MANAGER: Mutex<Option<SidecarManager>> = Default::default();
-}
+pub static SIDECAR_GRPC_CLIENT: LazyLock<Mutex<Option<OyasumiElevatedSidecarClient<Channel>>>> = LazyLock::new(Default::default);
+static SIDECAR_MANAGER: LazyLock<Mutex<Option<SidecarManager>>> = LazyLock::new(Default::default);
 
 pub async fn init() {
     let (tx, mut rx) = tokio::sync::mpsc::channel(10);

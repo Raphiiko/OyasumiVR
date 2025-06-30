@@ -1,147 +1,172 @@
 <div class="pane modal modal-xl" @fadeUp>
   <div class="pane-title" translate>comp.lv1-id-wizard-modal.title</div>
   <div class="pane-content no-padding dual-pane">
-    <div class="left" *ngIf="step === 'INTRO'">
-      <div class="left-inner">
-        <h2 translate>comp.lv1-id-wizard-modal.intro.message</h2>
-      </div>
-    </div>
-    <div class="left" *ngIf="step === 'MANUAL_INPUT'">
-      <div class="left-inner">
-        <h2 translate>comp.lv1-id-wizard-modal.manualInput.message</h2>
-        <div class="manual-input">
-          <input
-            type="text"
-            maxlength="8"
-            minlength="8"
-            placeholder="XXXXXXXX"
-            (input)="manualIdInput.value = manualIdInput.value.toUpperCase()"
-            [(ngModel)]="manualId"
-            (keydown.enter)="verifyManualId()"
-            autofocus
-            #manualIdInput
-          />
+    @if (step === 'INTRO') {
+      <div class="left">
+        <div class="left-inner">
+          <h2 translate>comp.lv1-id-wizard-modal.intro.message</h2>
         </div>
-        <div class="alert error" @vshrink *ngIf="errorMessage">
-          <div class="alert-bg"></div>
-          <div class="alert-icon">
-            <i class="material-icons">error</i>
+      </div>
+    }
+    @if (step === 'MANUAL_INPUT') {
+      <div class="left">
+        <div class="left-inner">
+          <h2 translate>comp.lv1-id-wizard-modal.manualInput.message</h2>
+          <div class="manual-input">
+            <input
+              type="text"
+              maxlength="8"
+              minlength="8"
+              placeholder="XXXXXXXX"
+              (input)="manualIdInput.value = manualIdInput.value.toUpperCase()"
+              [(ngModel)]="manualId"
+              (keydown.enter)="verifyManualId()"
+              autofocus
+              #manualIdInput
+            />
           </div>
-          <div class="alert-content">{{ errorMessage | translate }}</div>
-        </div>
-        <div class="muted-text" translate>
-          comp.lv1-id-wizard-modal.manualInput.formatDescription
-        </div>
-      </div>
-    </div>
-    <div class="left" *ngIf="step === 'AUTOMATIC_DETECTION'">
-      <div class="left-inner automatic-detection">
-        <h2 translate>comp.lv1-id-wizard-modal.automaticDetection.detecting</h2>
-        <p translate>comp.lv1-id-wizard-modal.automaticDetection.instructions</p>
-      </div>
-    </div>
-    <div class="left verification-pane" *ngIf="step === 'VERIFY_ID'">
-      <div class="left-inner">
-        <div class="row" @slowFade *ngIf="verifyPercentage !== 100">
-          <div class="small-spinner"></div>
-          <h2 translate>comp.lv1-id-wizard-modal.verifyId.verifying</h2>
-        </div>
-        <div class="verify-bar">
-          <div class="verify-bar-inner" [style.width]="verifyPercentage + '%'"></div>
-        </div>
-        <p
-          class="muted-text"
-          style="margin-top: 2em"
-          *ngIf="verifyAutomatic && verifyPercentage !== 100"
-          @slowFade
-          translate
-        >
-          comp.lv1-id-wizard-modal.verifyId.idAutodetected
-        </p>
-      </div>
-    </div>
-    <div class="left" *ngIf="step === 'SUCCESS'" @fade>
-      <div class="left-inner">
-        <div class="success-checkmark">
-          <div class="check-icon">
-            <span class="icon-line line-tip"></span>
-            <span class="icon-line line-long"></span>
-            <div class="icon-circle"></div>
-            <div class="icon-fix"></div>
+          @if (errorMessage) {
+            <div class="alert error" @vshrink>
+              <div class="alert-bg"></div>
+              <div class="alert-icon">
+                <i class="material-icons">error</i>
+              </div>
+              <div class="alert-content">{{ errorMessage | translate }}</div>
+            </div>
+          }
+          <div class="muted-text" translate>
+            comp.lv1-id-wizard-modal.manualInput.formatDescription
           </div>
         </div>
-        <h2 *ngIf="step === 'SUCCESS'" @fade translate>comp.lv1-id-wizard-modal.success.title</h2>
-        <p *ngIf="step === 'SUCCESS'" @fade translate>comp.lv1-id-wizard-modal.success.subtitle</p>
       </div>
-    </div>
-    <div
-      class="right"
-      @imgShrink
-      *ngIf="['INTRO', 'MANUAL_INPUT', 'AUTOMATIC_DETECTION'].includes(step)"
-    >
-      <img
-        [imgSmoothLoader]="'/assets/img/v1-lighthouse-id.png'"
-        [draggable]="false"
-        [class.dimmed]="step === 'AUTOMATIC_DETECTION'"
-      />
+    }
+    @if (step === 'AUTOMATIC_DETECTION') {
+      <div class="left">
+        <div class="left-inner automatic-detection">
+          <h2 translate>comp.lv1-id-wizard-modal.automaticDetection.detecting</h2>
+          <p translate>comp.lv1-id-wizard-modal.automaticDetection.instructions</p>
+        </div>
+      </div>
+    }
+    @if (step === 'VERIFY_ID') {
+      <div class="left verification-pane">
+        <div class="left-inner">
+          @if (verifyPercentage !== 100) {
+            <div class="row" @slowFade>
+              <div class="small-spinner"></div>
+              <h2 translate>comp.lv1-id-wizard-modal.verifyId.verifying</h2>
+            </div>
+          }
+          <div class="verify-bar">
+            <div class="verify-bar-inner" [style.width]="verifyPercentage + '%'"></div>
+          </div>
+          @if (verifyAutomatic && verifyPercentage !== 100) {
+            <p class="muted-text" style="margin-top: 2em" @slowFade translate>
+              comp.lv1-id-wizard-modal.verifyId.idAutodetected
+            </p>
+          }
+        </div>
+      </div>
+    }
+    @if (step === 'SUCCESS') {
+      <div class="left" @fade>
+        <div class="left-inner">
+          <div class="success-checkmark">
+            <div class="check-icon">
+              <span class="icon-line line-tip"></span>
+              <span class="icon-line line-long"></span>
+              <div class="icon-circle"></div>
+              <div class="icon-fix"></div>
+            </div>
+          </div>
+          @if (step === 'SUCCESS') {
+            <h2 @fade translate>comp.lv1-id-wizard-modal.success.title</h2>
+          }
+          @if (step === 'SUCCESS') {
+            <p @fade translate>comp.lv1-id-wizard-modal.success.subtitle</p>
+          }
+        </div>
+      </div>
+    }
+    @if (['INTRO', 'MANUAL_INPUT', 'AUTOMATIC_DETECTION'].includes(step)) {
+      <div class="right" @imgShrink>
+        <img
+          [imgSmoothLoader]="'/assets/img/v1-lighthouse-id.png'"
+          [draggable]="false"
+          [class.dimmed]="step === 'AUTOMATIC_DETECTION'"
+        />
+        @if (step === 'AUTOMATIC_DETECTION') {
+          <div @fade class="automatic-detection-steps">
+            @for (step of automaticDetectionSteps; track trackByIndex($index, step)) {
+              <div class="step" @vshrink>
+                <div class="step-icon">
+                  @if (step.icon) {
+                    <i class="material-icons-round">{{ step.icon }}</i>
+                  }
+                  @if (step.loader) {
+                    <span class="small-spinner"></span>
+                  }
+                </div>
+                <div class="step-label">{{ step.title | translate }}</div>
+                <div class="step-subtitle">{{ step.subtitle | translate }}</div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
 
-      <div *ngIf="step === 'AUTOMATIC_DETECTION'" @fade class="automatic-detection-steps">
-        <div
-          class="step"
-          *ngFor="let step of automaticDetectionSteps; trackBy: trackByIndex"
-          @vshrink
-        >
-          <div class="step-icon">
-            <i class="material-icons-round" *ngIf="step.icon">{{ step.icon }}</i>
-            <span class="small-spinner" *ngIf="step.loader"></span>
-          </div>
-          <div class="step-label">{{ step.title | translate }}</div>
-          <div class="step-subtitle">{{ step.subtitle | translate }}</div>
-        </div>
-      </div>
+  @if (step === 'INTRO') {
+    <div class="pane-actions spread">
+      <button class="btn btn-secondary" (click)="cancel()">
+        {{ 'shared.modals.cancel' | tsTranslate }}
+      </button>
+      <button class="btn btn-secondary" (click)="goToManualInput()" translate
+        >comp.lv1-id-wizard-modal.inputManually
+      </button>
+      <button class="btn btn-primary" (click)="goToAutomaticDetection()" translate>
+        comp.lv1-id-wizard-modal.detectAutomatically
+      </button>
     </div>
-  </div>
-
-  <div class="pane-actions spread" *ngIf="step === 'INTRO'">
-    <button class="btn btn-secondary" (click)="cancel()">
-      {{ 'shared.modals.cancel' | tsTranslate }}
-    </button>
-    <button class="btn btn-secondary" (click)="goToManualInput()" translate
-      >comp.lv1-id-wizard-modal.inputManually
-    </button>
-    <button class="btn btn-primary" (click)="goToAutomaticDetection()" translate>
-      comp.lv1-id-wizard-modal.detectAutomatically
-    </button>
-  </div>
-  <div class="pane-actions spread" *ngIf="step === 'AUTOMATIC_DETECTION'">
-    <button class="btn btn-secondary" (click)="cancel()">
-      {{ 'shared.modals.cancel' | tsTranslate }}
-    </button>
-    <button class="btn btn-secondary" (click)="goToManualInput()" translate
-      >comp.lv1-id-wizard-modal.inputManually
-    </button>
-  </div>
-  <div class="pane-actions spread" *ngIf="step === 'MANUAL_INPUT'">
-    <button class="btn btn-secondary" (click)="goToIntro()">
-      {{ 'shared.modals.back' | tsTranslate }}
-    </button>
-    <button
-      class="btn btn-primary"
-      (click)="verifyManualId()"
-      [disabled]="!validManualId()"
-      translate
-    >
-      comp.lv1-id-wizard-modal.verifyIdAction
-    </button>
-  </div>
-  <div class="pane-actions spread" *ngIf="step === 'VERIFY_ID'">
-    <button class="btn btn-secondary" (click)="cancel()" disabled>
-      {{ 'shared.modals.cancel' | tsTranslate }}
-    </button>
-  </div>
-  <div class="pane-actions spread" *ngIf="step === 'SUCCESS'">
-    <button class="btn btn-secondary" (click)="cancel()">
-      {{ 'shared.modals.close' | tsTranslate }}
-    </button>
-  </div>
+  }
+  @if (step === 'AUTOMATIC_DETECTION') {
+    <div class="pane-actions spread">
+      <button class="btn btn-secondary" (click)="cancel()">
+        {{ 'shared.modals.cancel' | tsTranslate }}
+      </button>
+      <button class="btn btn-secondary" (click)="goToManualInput()" translate
+        >comp.lv1-id-wizard-modal.inputManually
+      </button>
+    </div>
+  }
+  @if (step === 'MANUAL_INPUT') {
+    <div class="pane-actions spread">
+      <button class="btn btn-secondary" (click)="goToIntro()">
+        {{ 'shared.modals.back' | tsTranslate }}
+      </button>
+      <button
+        class="btn btn-primary"
+        (click)="verifyManualId()"
+        [disabled]="!validManualId()"
+        translate
+      >
+        comp.lv1-id-wizard-modal.verifyIdAction
+      </button>
+    </div>
+  }
+  @if (step === 'VERIFY_ID') {
+    <div class="pane-actions spread">
+      <button class="btn btn-secondary" (click)="cancel()" disabled>
+        {{ 'shared.modals.cancel' | tsTranslate }}
+      </button>
+    </div>
+  }
+  @if (step === 'SUCCESS') {
+    <div class="pane-actions spread">
+      <button class="btn btn-secondary" (click)="cancel()">
+        {{ 'shared.modals.close' | tsTranslate }}
+      </button>
+    </div>
+  }
 </div>

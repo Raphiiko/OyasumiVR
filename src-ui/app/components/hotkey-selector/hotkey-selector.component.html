@@ -1,9 +1,15 @@
-<button class="btn-clear" *ngIf="selected" @hshrink (click)="deselectHotkey()">
-  <i class="material-icons">clear</i>
-</button>
+@if (selected) {
+  <button class="btn-clear" @hshrink (click)="deselectHotkey()">
+    <i class="material-icons">clear</i>
+  </button>
+}
 <button class="btn-main" [class.selected]="selected" (click)="selectHotkey()" @noop>
-  <div *ngIf="selected" @hshrink>
-    {{ hotkeyString }}
-  </div>
-  <div *ngIf="!selected" @hshrink translate> comp.hotkey-selector.select</div>
+  @if (selected) {
+    <div @hshrink>
+      {{ hotkeyString }}
+    </div>
+  }
+  @if (!selected) {
+    <div @hshrink translate> comp.hotkey-selector.select</div>
+  }
 </button>

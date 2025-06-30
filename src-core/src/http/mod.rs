@@ -5,14 +5,12 @@ use hyper::{
     Body, Method, Request, Response, Server,
 };
 use log::{error, info};
-use std::{convert::Infallible, net::SocketAddr};
+use std::{convert::Infallible, net::SocketAddr, sync::LazyLock};
 use tokio::sync::Mutex;
 
 use crate::utils::models::CoreMode;
 
-lazy_static! {
-    pub static ref PORT: Mutex<Option<u32>> = Default::default();
-}
+pub static PORT: LazyLock<Mutex<Option<u32>>> = LazyLock::new(Default::default);
 
 pub async fn init() {
     // Start server

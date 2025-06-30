@@ -1,4 +1,4 @@
-use std::time::{Duration, SystemTime};
+use std::{sync::LazyLock, time::{Duration, SystemTime}};
 
 pub use discord_sdk as ds;
 use log::error;
@@ -7,11 +7,9 @@ use tokio::{sync::Mutex, time::timeout};
 pub mod commands;
 pub const APP_ID: ds::AppId = 1223302812021035169;
 
-lazy_static! {
-    static ref DISCORD_ACTIVE: Mutex<bool> = Mutex::new(false);
-    static ref DISCORD_CLIENT: Mutex<Option<Client>> = Default::default();
-    static ref LAST_ACTIVITY_UPDATE: Mutex<Option<ActivityUpdate>> = Default::default();
-}
+static DISCORD_ACTIVE: LazyLock<Mutex<bool>> = LazyLock::new(|| Mutex::new(false));
+static DISCORD_CLIENT: LazyLock<Mutex<Option<Client>>> = LazyLock::new(Default::default);
+static LAST_ACTIVITY_UPDATE: LazyLock<Mutex<Option<ActivityUpdate>>> = LazyLock::new(Default::default);
 
 pub async fn init() {
     tokio::task::spawn(async {

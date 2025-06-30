@@ -7,15 +7,14 @@
       <div class="stripe"></div>
     </div>
     <div class="people">
-      <div
-        class="person"
-        *ngFor="let _ of [].constructor(bedLimit); let i = index"
-        @hshrink
-        [class.yourself]="i === 0"
-      >
-        <img draggable="false" src="/assets/img/sleeping-person.png" alt="sleeping person" />
-      </div>
-      <div class="person-limit-exceeded" *ngIf="count > bedLimit"> +{{ count - bedLimit }} </div>
+      @for (_ of [].constructor(bedLimit); track _; let i = $index) {
+        <div class="person" @hshrink [class.yourself]="i === 0">
+          <img draggable="false" src="/assets/img/sleeping-person.png" alt="sleeping person" />
+        </div>
+      }
+      @if (count > bedLimit) {
+        <div class="person-limit-exceeded"> +{{ count - bedLimit }} </div>
+      }
     </div>
   </div>
 </div>

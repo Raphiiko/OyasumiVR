@@ -20,15 +20,16 @@
                 [maxlength]="32"
               />
             </div>
-            <button
-              class="btn-clear"
-              *ngIf="nickname"
-              (click)="clearNickname()"
-              [tooltip]="'Clear nickname'"
-              [tooltipMode]="'left'"
-            >
-              <i class="material-icons">clear</i>
-            </button>
+            @if (nickname) {
+              <button
+                class="btn-clear"
+                (click)="clearNickname()"
+                [tooltip]="'Clear nickname'"
+                [tooltipMode]="'left'"
+              >
+                <i class="material-icons">clear</i>
+              </button>
+            }
           </div>
         </div>
       </div>
@@ -41,21 +42,26 @@
         </div>
         <div class="setting-row-action">
           <div class="tag-selector">
-            <div class="available-tags" *ngIf="availableTags.length > 0">
-              <div
-                class="tag-item"
-                *ngFor="let tag of availableTags; trackBy: trackTagBy"
-                [class.selected]="isTagAssigned(tag)"
-                (click)="toggleTag(tag)"
-              >
-                <div class="tag-color" [style.background-color]="tag.color"></div>
-                <span class="tag-name">{{ tag.name }}</span>
-                <i class="material-icons tag-check" *ngIf="isTagAssigned(tag)">check</i>
+            @if (availableTags.length > 0) {
+              <div class="available-tags">
+                @for (tag of availableTags; track trackTagBy($index, tag)) {
+                  <div
+                    class="tag-item"
+                    [class.selected]="isTagAssigned(tag)"
+                    (click)="toggleTag(tag)"
+                  >
+                    <div class="tag-color" [style.background-color]="tag.color"></div>
+                    <span class="tag-name">{{ tag.name }}</span>
+                    @if (isTagAssigned(tag)) {
+                      <i class="material-icons tag-check">check</i>
+                    }
+                  </div>
+                }
               </div>
-            </div>
-            <div class="no-tags" *ngIf="availableTags.length === 0" translate>
-              device-manager.config.tags.noTags
-            </div>
+            }
+            @if (availableTags.length === 0) {
+              <div class="no-tags" translate> device-manager.config.tags.noTags </div>
+            }
           </div>
         </div>
       </div>
@@ -75,26 +81,28 @@
       </div>
 
       <!-- Lighthouse V1 Identifier Section -->
-      <div class="setting-row" *ngIf="v1LighthouseMode !== 'NONE'">
-        <div class="setting-row-label" translate>
-          <span translate>device-manager.config.v1Identifier.title</span>
-          <span translate>device-manager.config.v1Identifier.description</span>
+      @if (v1LighthouseMode !== 'NONE') {
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>device-manager.config.v1Identifier.title</span>
+            <span translate>device-manager.config.v1Identifier.description</span>
+          </div>
+          <div class="setting-row-action">
+            <button
+              class="btn"
+              (click)="openLighthouseV1IdWizard()"
+              [ngClass]="v1LighthouseMode === 'NEEDS_ID' ? 'btn-primary' : 'btn-secondary'"
+            >
+              {{
+                (v1LighthouseMode === 'NEEDS_ID'
+                  ? 'device-manager.config.v1Identifier.set'
+                  : 'device-manager.config.v1Identifier.change'
+                ) | translate
+              }}
+            </button>
+          </div>
         </div>
-        <div class="setting-row-action">
-          <button
-            class="btn"
-            (click)="openLighthouseV1IdWizard()"
-            [ngClass]="v1LighthouseMode === 'NEEDS_ID' ? 'btn-primary' : 'btn-secondary'"
-          >
-            {{
-              (v1LighthouseMode === 'NEEDS_ID'
-                ? 'device-manager.config.v1Identifier.set'
-                : 'device-manager.config.v1Identifier.change'
-              ) | translate
-            }}
-          </button>
-        </div>
-      </div>
+      }
     </div>
   </div>
   <div class="pane-actions spread">

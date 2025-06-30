@@ -1,3 +1,4 @@
+use std::sync::LazyLock;
 use tauri::{
     tray::{MouseButton, MouseButtonState},
     Manager, Runtime,
@@ -8,9 +9,7 @@ pub mod commands;
 
 use crate::{globals::TAURI_APP_HANDLE, utils::send_event};
 
-lazy_static! {
-    pub static ref SYSTEMTRAY_MANAGER: Mutex<Option<SystemTrayManager>> = Default::default();
-}
+pub static SYSTEMTRAY_MANAGER: LazyLock<Mutex<Option<SystemTrayManager>>> = LazyLock::new(Default::default);
 
 #[derive(Debug, Clone)]
 pub struct SystemTrayManager {

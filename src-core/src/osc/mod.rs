@@ -5,6 +5,7 @@ mod vrchat;
 use std::{
     io,
     net::{Ipv4Addr, UdpSocket},
+    sync::LazyLock,
 };
 
 use log::{error, info, warn};
@@ -15,13 +16,11 @@ use tokio_util::sync::CancellationToken;
 
 use crate::utils::send_event;
 
-lazy_static! {
-    static ref OSC_SEND_SOCKET: Mutex<Option<UdpSocket>> = Default::default();
-    static ref OSC_RECEIVE_SOCKET: Mutex<Option<UdpSocket>> = Default::default();
-    static ref OSC_RECEIVE_ADDRESS_WHITELIST: Mutex<Vec<String>> = Default::default();
-    static ref VRC_OSC_ADDRESS: Mutex<Option<String>> = Mutex::new(None);
-    static ref VRC_OSCQUERY_ADDRESS: Mutex<Option<String>> = Mutex::new(None);
-}
+pub static OSC_SEND_SOCKET: LazyLock<Mutex<Option<UdpSocket>>> = LazyLock::new(Default::default);
+pub static OSC_RECEIVE_SOCKET: LazyLock<Mutex<Option<UdpSocket>>> = LazyLock::new(Default::default);
+pub static OSC_RECEIVE_ADDRESS_WHITELIST: LazyLock<Mutex<Vec<String>>> = LazyLock::new(Default::default);
+pub static VRC_OSC_ADDRESS: LazyLock<Mutex<Option<String>>> = LazyLock::new(|| Mutex::new(None));
+pub static VRC_OSCQUERY_ADDRESS: LazyLock<Mutex<Option<String>>> = LazyLock::new(|| Mutex::new(None));
 
 pub async fn init() {
     // Setup sending socket

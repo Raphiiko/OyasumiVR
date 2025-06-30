@@ -33,12 +33,12 @@
                 <span></span>
               </div>
               <div class="setting-row-action">
-                <span translate *ngIf="onSleepModeEnableConfig.resolution !== null"
-                  >resolution-automations.renderResolution.custom</span
-                >
-                <span translate *ngIf="onSleepModeEnableConfig.resolution === null"
-                  >resolution-automations.renderResolution.auto</span
-                >
+                @if (onSleepModeEnableConfig.resolution !== null) {
+                  <span translate>resolution-automations.renderResolution.custom</span>
+                }
+                @if (onSleepModeEnableConfig.resolution === null) {
+                  <span translate>resolution-automations.renderResolution.auto</span>
+                }
                 <label class="switch-toggle">
                   <input
                     type="checkbox"
@@ -98,12 +98,12 @@
                 <span></span>
               </div>
               <div class="setting-row-action">
-                <span translate *ngIf="onSleepModeDisableConfig.resolution !== null"
-                  >resolution-automations.renderResolution.custom</span
-                >
-                <span translate *ngIf="onSleepModeDisableConfig.resolution === null"
-                  >resolution-automations.renderResolution.auto</span
-                >
+                @if (onSleepModeDisableConfig.resolution !== null) {
+                  <span translate>resolution-automations.renderResolution.custom</span>
+                }
+                @if (onSleepModeDisableConfig.resolution === null) {
+                  <span translate>resolution-automations.renderResolution.auto</span>
+                }
                 <label class="switch-toggle">
                   <input
                     type="checkbox"

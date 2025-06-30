@@ -1,14 +1,16 @@
 <p translate>status-automations.playerLimit.description</p>
-<div class="alert warning" *ngIf="!loggedIn" @vshrink>
-  <div class="alert-bg"></div>
-  <div class="alert-icon">
-    <i class="material-icons"> warning </i>
+@if (!loggedIn) {
+  <div class="alert warning" @vshrink>
+    <div class="alert-bg"></div>
+    <div class="alert-icon">
+      <i class="material-icons"> warning </i>
+    </div>
+    <div class="alert-content">
+      <span>{{ 'shared.common.vrcLoginRequired' | translate }}</span>
+      <button class="btn btn-secondary" (click)="login()" translate>shared.modals.login</button>
+    </div>
   </div>
-  <div class="alert-content">
-    <span>{{ 'shared.common.vrcLoginRequired' | translate }}</span>
-    <button class="btn btn-secondary" (click)="login()" translate>shared.modals.login</button>
-  </div>
-</div>
+}
 <div class="settings">
   <div class="setting-row">
     <div class="setting-row-label" translate>
@@ -28,15 +30,17 @@
   </div>
 </div>
 <div class="settings" [class.disabled]="config.enabled">
-  <div class="alert" @vshrink *ngIf="config.enabled">
-    <div class="alert-bg"></div>
-    <div class="alert-icon">
-      <i class="material-icons"> info </i>
+  @if (config.enabled) {
+    <div class="alert" @vshrink>
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons"> info </i>
+      </div>
+      <div class="alert-content"
+        >{{ 'status-automations.playerLimit.disableToEdit' | translate }}
+      </div>
     </div>
-    <div class="alert-content"
-      >{{ 'status-automations.playerLimit.disableToEdit' | translate }}
-    </div>
-  </div>
+  }
   <div class="limit-setting">
     <h3 translate>status-automations.playerLimit.playerLimit</h3>
     <app-player-count-sleep-visualization

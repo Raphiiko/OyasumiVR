@@ -1,28 +1,28 @@
 [package]
 name = "oyasumivr-elevated-sidecar"
-version = "25.6.5"
+version = "25.6.6"
 authors = ["Raphiiko"]
 license = "MIT"
 edition = "2021"
 
 [build-dependencies]
-tonic-build = "0.13.0"
+tonic-build = "0.13.1"
 
 [dependencies]
 oyasumivr-shared = { path = "../src-shared-rust", version = '*' }
 serde_json = "1.0.140"
 serde = { version = "1.0.219", features = ["derive"] }
 nvml-wrapper = "0.10.0"
-lazy_static = "1.4.0"
-reqwest = "0.12.15"
-sysinfo = "0.27.2"
+lazy_static = "1.5.0"
+reqwest = "0.12.20"
+sysinfo = "0.35.2"
 codesigned = { git = "https://github.com/rustysec/codesigned-rs" }
 log = "0.4.17"
 simplelog = "^0.12.2"
 directories = "6.0.0"
-tonic = "0.13.0"
-tonic-web = "0.13.0"
-prost = "0.13.5"
+tonic = "0.13.1"
+tonic-web = "0.13.1"
+prost = "0.13"
 tokio-stream = { version = "0.1.17", features = ["full"] }
 
 [dependencies.windows-sys]

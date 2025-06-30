@@ -13,46 +13,61 @@
         </div>
       </div>
     </div>
-    <div class="no-audio-devices" *ngIf="!(options | async)?.length">
-      <div class="no-audio-devices-icon">
-        <i class="material-icons-round">volume_off</i>
-      </div>
-      <div class="no-audio-devices-label" translate *ngIf="deviceType === 'Capture'">
-        audio-volume-automations.picker.noCaptureDevices
-      </div>
-      <div class="no-audio-devices-label" translate *ngIf="deviceType === 'Render'">
-        audio-volume-automations.picker.noPlaybackDevices
-      </div>
-    </div>
-    <div class="audio-devices" *ngIf="(options | async)?.length">
-      <div
-        class="audio-device"
-        *ngFor="let device of options | async"
-        [class.disabled]="(disablePersistentIds || []).includes(device.persistentId!)"
-      >
-        <div class="audio-device-icon">
-          <i class="material-icons-round" *ngIf="device.deviceType === 'Render'">volume_up</i>
-          <i class="material-icons-round" *ngIf="device.deviceType === 'Capture'">mic</i>
+    @if (!(options | async)?.length) {
+      <div class="no-audio-devices">
+        <div class="no-audio-devices-icon">
+          <i class="material-icons-round">volume_off</i>
         </div>
-        <div class="audio-device-name">
-          <div class="audio-device-name-label" *ngIf="device.persistentId?.startsWith('DEFAULT_')"
-            ><b translate>audio-volume-automations.picker.defaultDevice</b>
+        @if (deviceType === 'Capture') {
+          <div class="no-audio-devices-label" translate>
+            audio-volume-automations.picker.noCaptureDevices
           </div>
-          <div class="audio-device-name-label">{{ device.parsedName!.display }}</div>
-          <div class="audio-device-name-label" *ngIf="device.parsedName!.driver"
-            >{{ device.parsedName!.driver }}
+        }
+        @if (deviceType === 'Render') {
+          <div class="no-audio-devices-label" translate>
+            audio-volume-automations.picker.noPlaybackDevices
           </div>
-        </div>
-        <div class="audio-device-actions">
-          <button
-            class="btn btn-secondary btn-add"
-            (click)="selectDevice(device)"
-            [disabled]="(disablePersistentIds || []).includes(device.persistentId!)"
+        }
+      </div>
+    }
+    @if ((options | async)?.length) {
+      <div class="audio-devices">
+        @for (device of options | async; track device) {
+          <div
+            class="audio-device"
+            [class.disabled]="(disablePersistentIds || []).includes(device.persistentId!)"
           >
-            <i class="material-icons-round">add</i>
-          </button>
-        </div>
+            <div class="audio-device-icon">
+              @if (device.deviceType === 'Render') {
+                <i class="material-icons-round">volume_up</i>
+              }
+              @if (device.deviceType === 'Capture') {
+                <i class="material-icons-round">mic</i>
+              }
+            </div>
+            <div class="audio-device-name">
+              @if (device.persistentId?.startsWith('DEFAULT_')) {
+                <div class="audio-device-name-label"
+                  ><b translate>audio-volume-automations.picker.defaultDevice</b>
+                </div>
+              }
+              <div class="audio-device-name-label">{{ device.parsedName!.display }}</div>
+              @if (device.parsedName!.driver) {
+                <div class="audio-device-name-label">{{ device.parsedName!.driver }} </div>
+              }
+            </div>
+            <div class="audio-device-actions">
+              <button
+                class="btn btn-secondary btn-add"
+                (click)="selectDevice(device)"
+                [disabled]="(disablePersistentIds || []).includes(device.persistentId!)"
+              >
+                <i class="material-icons-round">add</i>
+              </button>
+            </div>
+          </div>
+        }
       </div>
-    </div>
+    }
   </div>
 </div>

@@ -1,7 +1,7 @@
 use log::{error, info, warn};
 use std::sync::Arc;
 use std::time::Duration;
-use sysinfo::{Pid, PidExt, System, SystemExt};
+use sysinfo::{Pid, System};
 use tokio::sync::{mpsc, Mutex};
 
 const LAUNCH_RETRY_INTERVALS: [Duration; 9] = [
@@ -222,9 +222,9 @@ impl SidecarManager {
                 loop {
                     tokio::time::sleep(Duration::from_secs(1)).await;
                     let self_guard = self_arc.lock().await;
-                    s.refresh_processes();
+                    s.refresh_processes(sysinfo::ProcessesToUpdate::All, true);
                     // Check if the child process is no longer found
-                    if s.process(Pid::from_u32(pid)).is_none() {
+                    if s.process(Pid::from(pid as usize)).is_none() {
                         let current_sidecar_pid = {
                             self_guard.sidecar_pid.lock().await.as_ref().map(|pid| *pid)
                         };

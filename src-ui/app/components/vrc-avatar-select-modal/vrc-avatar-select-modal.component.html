@@ -1,42 +1,49 @@
 <div class="pane modal modal-lg" @fadeUp>
   <div class="pane-title" translate> comp.vrc-avatar-select-modal.title</div>
-  <div class="tab-bar" *ngIf="categories.length" @vshrink>
-    <div
-      class="tab"
-      *ngFor="let category of categories"
-      [class.active]="activeCategory === category"
-      (click)="setActiveCategory(category)"
-    >
-      {{ category | translate }}
+  @if (categories.length) {
+    <div class="tab-bar" @vshrink>
+      @for (category of categories; track category) {
+        <div
+          class="tab"
+          [class.active]="activeCategory === category"
+          (click)="setActiveCategory(category)"
+        >
+          {{ category | translate }}
+        </div>
+      }
     </div>
-  </div>
-  <div class="pane-content loading" *ngIf="activeCategory === 'LOADING'" @vshrink>
-    <div class="large-spinner"></div>
-  </div>
-  <div class="pane-content no-avatars" *ngIf="activeCategory === 'NO_AVATARS'" @vshrink>
-    <span translate>comp.vrc-avatar-select-modal.noAvatars</span>
-  </div>
-  <div
-    class="pane-content no-padding"
-    *ngIf="activeCategory !== 'LOADING' && activeCategory !== 'NO_AVATARS'"
-    @vshrink
-  >
-    <div class="avatars">
-      <div class="avatar" *ngFor="let avatar of results" (click)="selectResult(avatar)">
-        <div class="avatar-image">
-          <img
-            draggable="false"
-            onerror="this.style.display='none'"
-            loading="lazy"
-            [imgSmoothLoader]="avatar.imageUrl | imageCache: 3600 * 6"
-          />
-        </div>
-        <div class="avatar-name" [title]="avatar.name">
-          <span>{{ avatar.name }}</span>
-        </div>
+  }
+  @if (activeCategory === 'LOADING') {
+    <div class="pane-content loading" @vshrink>
+      <div class="large-spinner"></div>
+    </div>
+  }
+  @if (activeCategory === 'NO_AVATARS') {
+    <div class="pane-content no-avatars" @vshrink>
+      <span translate>comp.vrc-avatar-select-modal.noAvatars</span>
+    </div>
+  }
+  @if (activeCategory !== 'LOADING' && activeCategory !== 'NO_AVATARS') {
+    <div class="pane-content no-padding" @vshrink>
+      <div class="avatars">
+        @for (avatar of results; track avatar) {
+          <div class="avatar" (click)="selectResult(avatar)">
+            <div class="avatar-image">
+              <img
+                draggable="false"
+                onerror="this.style.display='none'"
+                loading="lazy"
+                [imgSmoothLoader]="avatar.imageUrl | imageCache: 3600 * 6"
+              />
+            </div>
+            <div class="avatar-name" [title]="avatar.name">
+              <span>{{ avatar.name }}</span>
+            </div>
+          </div>
+        }
       </div>
     </div>
-  </div>
+  }
   <div class="pane-actions stretch">
     <button class="btn btn-secondary" (click)="refresh()" translate
       >comp.vrc-avatar-select-modal.refreshAvatars</button

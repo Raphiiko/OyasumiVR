@@ -1,82 +1,88 @@
 <div class="pane">
   <div class="pane-title">
     <span translate>comp.device-list.title</span>
-    <div class="btn-turn-off-all-wrapper" *ngIf="devicesCanPowerOff" [@fade]>
-      <button
-        class="btn-turn-off-all btn-power power-off"
-        [title]="'Turn off all devices'"
-        (click)="turnOffAllOVRDevices()"
-      >
-        <img [src]="'/assets/img/icon_controller.png'" class="category-icon" />
-        <img [src]="'/assets/img/icon_tracker.png'" class="category-icon" />
-        <i class="material-icons">power_settings_new</i>
-      </button>
-    </div>
+    @if (devicesCanPowerOff) {
+      <div class="btn-turn-off-all-wrapper" [@fade]>
+        <button
+          class="btn-turn-off-all btn-power power-off"
+          [title]="'Turn off all devices'"
+          (click)="turnOffAllOVRDevices()"
+        >
+          <img [src]="'/assets/img/icon_controller.png'" class="category-icon" />
+          <img [src]="'/assets/img/icon_tracker.png'" class="category-icon" />
+          <i class="material-icons">power_settings_new</i>
+        </button>
+      </div>
+    }
   </div>
   <div class="device-list">
-    <div
-      class="device-list-category"
-      *ngFor="let category of deviceCategories; trackBy: trackDeviceCategoryBy"
-      [@triggerChildren]
-    >
-      <div *ngIf="category.type === 'OpenVR'">
-        <div class="device-list-category-header" [@vshrink]>
-          <div class="device-list-category-header-label">
-            <span>{{ category.label | translate }}</span>
+    @for (category of deviceCategories; track trackDeviceCategoryBy($index, category)) {
+      <div class="device-list-category" [@triggerChildren]>
+        @if (category.type === 'OpenVR') {
+          <div>
+            <div class="device-list-category-header" [@vshrink]>
+              <div class="device-list-category-header-label">
+                <span>{{ category.label | translate }}</span>
+              </div>
+              @if (category.canBulkPowerOff) {
+                <app-device-power-button
+                  id="btn-lh-bulk-power"
+                  [powerState]="'on'"
+                  (powerAction)="turnOffOVRDevices(category)"
+                  @fade
+                ></app-device-power-button>
+              }
+            </div>
+            @for (device of category.devices; track device) {
+              <app-device-list-item
+                [ovrDevice]="device"
+                [icon]="category.icon"
+              ></app-device-list-item>
+            }
           </div>
-          <app-device-power-button
-            id="btn-lh-bulk-power"
-            *ngIf="category.canBulkPowerOff"
-            [powerState]="'on'"
-            (powerAction)="turnOffOVRDevices(category)"
-            @fade
-          ></app-device-power-button>
-        </div>
-        <app-device-list-item
-          *ngFor="let device of category.devices"
-          [ovrDevice]="device"
-          [icon]="category.icon"
-        ></app-device-list-item>
+        }
+        @if (category.type === 'Lighthouse') {
+          <div>
+            <div class="device-list-category-header" [@vshrink]>
+              <div class="device-list-category-header-label">
+                <span>{{ category.label | translate }}</span>
+              </div>
+              @if (canShowBulkLighthousePowerButton(category)) {
+                <app-device-power-button
+                  id="btn-lh-bulk-power"
+                  [powerState]="getBulkLighthousePowerState(category)"
+                  [anchorName]="'--anchor-lh-bulk-power-button'"
+                  (powerAction)="handleBulkLighthousePowerAction(category, $event)"
+                  (rightClick)="rightClickBulkPowerLighthouseDevices()"
+                  @fade
+                ></app-device-power-button>
+              }
+              @if (showLHStatePopover) {
+                <div @fade (clickOutside)="onClickOutsideLHStatePopover($event)">
+                  <app-lighthouse-force-state-popover
+                    (action)="onForceLHState($event)"
+                    [style.position-anchor]="'--anchor-lh-bulk-power-button'"
+                  >
+                  </app-lighthouse-force-state-popover>
+                </div>
+              }
+            </div>
+            @for (device of category.devices; track device) {
+              <app-device-list-item
+                [lighthouseDevice]="device"
+                [icon]="'lighthouse'"
+              ></app-device-list-item>
+            }
+          </div>
+        }
       </div>
-
-      <div *ngIf="category.type === 'Lighthouse'">
-        <div class="device-list-category-header" [@vshrink]>
-          <div class="device-list-category-header-label">
-            <span>{{ category.label | translate }}</span>
-          </div>
-
-          <app-device-power-button
-            id="btn-lh-bulk-power"
-            *ngIf="canShowBulkLighthousePowerButton(category)"
-            [powerState]="getBulkLighthousePowerState(category)"
-            [anchorName]="'--anchor-lh-bulk-power-button'"
-            (powerAction)="handleBulkLighthousePowerAction(category, $event)"
-            (rightClick)="rightClickBulkPowerLighthouseDevices()"
-            @fade
-          ></app-device-power-button>
-          <div
-            @fade
-            (clickOutside)="onClickOutsideLHStatePopover($event)"
-            *ngIf="showLHStatePopover"
-          >
-            <app-lighthouse-force-state-popover
-              (action)="onForceLHState($event)"
-              [style.position-anchor]="'--anchor-lh-bulk-power-button'"
-            >
-            </app-lighthouse-force-state-popover>
-          </div>
-        </div>
-        <app-device-list-item
-          *ngFor="let device of category.devices"
-          [lighthouseDevice]="device"
-          [icon]="'lighthouse'"
-        ></app-device-list-item>
+    }
+    @if (!deviceCategories.length) {
+      <div class="device-list-empty" [@vshrink]>
+        <i class="material-icons">info</i>
+        <span translate>comp.device-list.noDevices</span>
       </div>
-    </div>
-    <div class="device-list-empty" *ngIf="!deviceCategories.length" [@vshrink]>
-      <i class="material-icons">info</i>
-      <span translate>comp.device-list.noDevices</span>
-    </div>
+    }
   </div>
 
   <div class="device-list-footer" [@fade]>

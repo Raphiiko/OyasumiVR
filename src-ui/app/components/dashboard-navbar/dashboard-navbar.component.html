@@ -130,9 +130,11 @@
         <i class="material-icons-round">settings</i>
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.settings.subMenu</div>
-      <div class="menu-item-icon-suffix update" @fade *ngIf="updateAvailable | async">
-        <i class="material-icons-round">notification_important</i>
-      </div>
+      @if (updateAvailable | async) {
+        <div class="menu-item-icon-suffix update" @fade>
+          <i class="material-icons-round">notification_important</i>
+        </div>
+      }
       <div class="menu-item-submenu-icon">
         <i class="material-icons-round">arrow_forward_ios</i>
       </div>
@@ -146,246 +148,241 @@
     </div>
   </div>
   <!-- VRChat Automations Submenu -->
-  <div class="submenu" *ngIf="subMenu === 'VRCHAT'" @subMenu>
-    <div class="menu-header">
-      <button class="btn" (click)="openSubMenu('GENERAL')">
-        <i class="material-icons-round">arrow_back_ios_new</i>
-        <div class="menu-header-label" translate>comp.dashboard-navbar.vrcAutomations</div>
-      </button>
-    </div>
-
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'statusAutomations'">
-      <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">brightness_1</i>
+  @if (subMenu === 'VRCHAT') {
+    <div class="submenu" @subMenu>
+      <div class="menu-header">
+        <button class="btn" (click)="openSubMenu('GENERAL')">
+          <i class="material-icons-round">arrow_back_ios_new</i>
+          <div class="menu-header-label" translate>comp.dashboard-navbar.vrcAutomations</div>
+        </button>
       </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.statusAutomations</div>
-    </div>
-
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'autoInviteRequestAccept'">
-      <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">mark_email_read</i>
+      <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'statusAutomations'">
+        <div class="menu-item-icon-prefix">
+          <i class="material-icons-round">brightness_1</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.statusAutomations</div>
       </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.autoInviteRequestAccept</div>
-    </div>
-
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'vrchatMicMuteAutomations'">
-      <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">mic_off</i>
+      <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'autoInviteRequestAccept'">
+        <div class="menu-item-icon-prefix">
+          <i class="material-icons-round">mark_email_read</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.autoInviteRequestAccept</div>
       </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.vrchatMicMuteAutomations</div>
-    </div>
-
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'vrchatAvatarAutomations'">
-      <div class="menu-item-icon-prefix">
-        <i class="material-symbols-outlined">groups_3</i>
-      </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.vrchatAvatarAutomations</div>
-    </div>
-
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'vrchatGroupAutomations'">
-      <div class="menu-item-icon-prefix">
-        <i class="material-symbols-outlined">group</i>
-      </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.vrchatGroupAutomations</div>
-    </div>
-
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'joinNotifications'">
-      <div class="menu-item-icon-prefix">
-        <i class="material-symbols-outlined icon-filled">person_alert</i>
-      </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.joinNotifications</div>
-    </div>
-
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'oscAutomations'">
-      <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">terminal</i>
-      </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.oscAutomations</div>
-    </div>
-
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'sleepAnimations'">
-      <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">settings_accessibility</i>
-      </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.sleepAnimations</div>
-    </div>
-  </div>
-  <!-- Hardware Automations Submenu -->
-  <div class="submenu" *ngIf="subMenu === 'HARDWARE'" @subMenu>
-    <div class="menu-header">
-      <button class="btn" (click)="openSubMenu('GENERAL')">
-        <i class="material-icons-round">arrow_back_ios_new</i>
-        <div class="menu-header-label" translate>comp.dashboard-navbar.hardwareAutomations</div>
-      </button>
-    </div>
-
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'powerAutomations'">
-      <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">battery_charging_full</i>
-      </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.powerAutomations</div>
-    </div>
-
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'gpuAutomations'">
-      <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">energy_savings_leaf</i>
-      </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.gpuAutomations</div>
-    </div>
-
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'brightnessAutomations'">
-      <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">brightness_6</i>
-      </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.brightnessAutomations</div>
       <div
-        class="active-effect"
-        @fade
-        *ngIf="brightnessAutomation.anyBrightnessTransitionActive | async"
-      ></div>
-    </div>
-
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'hmdAutomations'">
-      <div class="menu-item-icon-prefix">
-        <i class="material-symbols-outlined">head_mounted_device</i>
+        class="menu-item"
+        [routerLinkActive]="'active'"
+        [routerLink]="'vrchatMicMuteAutomations'"
+      >
+        <div class="menu-item-icon-prefix">
+          <i class="material-icons-round">mic_off</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.vrchatMicMuteAutomations</div>
       </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.hmdAutomations</div>
-    </div>
-
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'audioVolumeAutomations'">
-      <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">volume_up</i>
+      <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'vrchatAvatarAutomations'">
+        <div class="menu-item-icon-prefix">
+          <i class="material-symbols-outlined">groups_3</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.vrchatAvatarAutomations</div>
       </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.audioVolumeAutomations</div>
-    </div>
-
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'systemMicMuteAutomations'">
-      <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">mic_off</i>
+      <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'vrchatGroupAutomations'">
+        <div class="menu-item-icon-prefix">
+          <i class="material-symbols-outlined">group</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.vrchatGroupAutomations</div>
       </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.systemMicMuteAutomations</div>
-    </div>
-
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'resolutionAutomations'">
-      <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">blur_on</i>
+      <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'joinNotifications'">
+        <div class="menu-item-icon-prefix">
+          <i class="material-symbols-outlined icon-filled">person_alert</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.joinNotifications</div>
       </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.resolutionAutomations</div>
+      <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'oscAutomations'">
+        <div class="menu-item-icon-prefix">
+          <i class="material-icons-round">terminal</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.oscAutomations</div>
+      </div>
+      <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'sleepAnimations'">
+        <div class="menu-item-icon-prefix">
+          <i class="material-icons-round">settings_accessibility</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.sleepAnimations</div>
+      </div>
     </div>
-  </div>
+  }
+  <!-- Hardware Automations Submenu -->
+  @if (subMenu === 'HARDWARE') {
+    <div class="submenu" @subMenu>
+      <div class="menu-header">
+        <button class="btn" (click)="openSubMenu('GENERAL')">
+          <i class="material-icons-round">arrow_back_ios_new</i>
+          <div class="menu-header-label" translate>comp.dashboard-navbar.hardwareAutomations</div>
+        </button>
+      </div>
+      <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'powerAutomations'">
+        <div class="menu-item-icon-prefix">
+          <i class="material-icons-round">battery_charging_full</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.powerAutomations</div>
+      </div>
+      <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'gpuAutomations'">
+        <div class="menu-item-icon-prefix">
+          <i class="material-icons-round">energy_savings_leaf</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.gpuAutomations</div>
+      </div>
+      <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'brightnessAutomations'">
+        <div class="menu-item-icon-prefix">
+          <i class="material-icons-round">brightness_6</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.brightnessAutomations</div>
+        @if (brightnessAutomation.anyBrightnessTransitionActive | async) {
+          <div class="active-effect" @fade></div>
+        }
+      </div>
+      <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'hmdAutomations'">
+        <div class="menu-item-icon-prefix">
+          <i class="material-symbols-outlined">head_mounted_device</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.hmdAutomations</div>
+      </div>
+      <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'audioVolumeAutomations'">
+        <div class="menu-item-icon-prefix">
+          <i class="material-icons-round">volume_up</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.audioVolumeAutomations</div>
+      </div>
+      <div
+        class="menu-item"
+        [routerLinkActive]="'active'"
+        [routerLink]="'systemMicMuteAutomations'"
+      >
+        <div class="menu-item-icon-prefix">
+          <i class="material-icons-round">mic_off</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.systemMicMuteAutomations</div>
+      </div>
+      <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'resolutionAutomations'">
+        <div class="menu-item-icon-prefix">
+          <i class="material-icons-round">blur_on</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.resolutionAutomations</div>
+      </div>
+    </div>
+  }
 
   <!-- Miscellaneous Automations Submenu -->
-  <div class="submenu" *ngIf="subMenu === 'MISCELLANEOUS'" @subMenu>
-    <div class="menu-header">
-      <button class="btn" (click)="openSubMenu('GENERAL')">
-        <i class="material-icons-round">arrow_back_ios_new</i>
-        <div class="menu-header-label" translate>comp.dashboard-navbar.miscAutomations</div>
-      </button>
-    </div>
-
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'chaperoneAutomations'">
-      <div class="menu-item-icon-prefix">
-        <i class="material-symbols-outlined">guardian</i>
+  @if (subMenu === 'MISCELLANEOUS') {
+    <div class="submenu" @subMenu>
+      <div class="menu-header">
+        <button class="btn" (click)="openSubMenu('GENERAL')">
+          <i class="material-icons-round">arrow_back_ios_new</i>
+          <div class="menu-header-label" translate>comp.dashboard-navbar.miscAutomations</div>
+        </button>
       </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.chaperoneAutomations</div>
-    </div>
-
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'nightmareDetection'">
-      <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">notification_important</i>
+      <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'chaperoneAutomations'">
+        <div class="menu-item-icon-prefix">
+          <i class="material-symbols-outlined">guardian</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.chaperoneAutomations</div>
       </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.nightmareDetection</div>
-    </div>
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'frameLimitAutomations'">
-      <div class="menu-item-icon-prefix"> <i class="material-symbols-outlined">speed</i> </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.frameLimiter</div>
-    </div>
-
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'runAutomations'">
-      <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">terminal</i>
+      <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'nightmareDetection'">
+        <div class="menu-item-icon-prefix">
+          <i class="material-icons-round">notification_important</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.nightmareDetection</div>
       </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.runAutomations</div>
+      <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'frameLimitAutomations'">
+        <div class="menu-item-icon-prefix"> <i class="material-symbols-outlined">speed</i> </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.frameLimiter</div>
+      </div>
+      <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'runAutomations'">
+        <div class="menu-item-icon-prefix">
+          <i class="material-icons-round">terminal</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.runAutomations</div>
+      </div>
     </div>
-  </div>
+  }
 
   <!--Settings Submenu-->
-  <div class="submenu" *ngIf="subMenu === 'SETTINGS'" @subMenu>
-    <div class="menu-header">
-      <button class="btn" (click)="openSubMenu('GENERAL')">
-        <i class="material-icons-round">arrow_back_ios_new</i>
-        <div class="menu-header-label" translate>comp.dashboard-navbar.settings.subMenu</div>
-      </button>
-    </div>
-
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'general']">
-      <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">settings</i>
+  @if (subMenu === 'SETTINGS') {
+    <div class="submenu" @subMenu>
+      <div class="menu-header">
+        <button class="btn" (click)="openSubMenu('GENERAL')">
+          <i class="material-icons-round">arrow_back_ios_new</i>
+          <div class="menu-header-label" translate>comp.dashboard-navbar.settings.subMenu</div>
+        </button>
       </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.general</div>
-    </div>
-
-    <div
-      class="menu-item"
-      [routerLinkActive]="'active'"
-      [routerLink]="['settings', 'notifications']"
-    >
-      <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">notification_important</i>
+      <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'general']">
+        <div class="menu-item-icon-prefix">
+          <i class="material-icons-round">settings</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.settings.general</div>
       </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.notifications</div>
-    </div>
-
-    <div
-      class="menu-item"
-      [routerLinkActive]="'active'"
-      [routerLink]="['settings', 'brightnessCct']"
-    >
-      <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">brightness_6</i>
+      <div
+        class="menu-item"
+        [routerLinkActive]="'active'"
+        [routerLink]="['settings', 'notifications']"
+      >
+        <div class="menu-item-icon-prefix">
+          <i class="material-icons-round">notification_important</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.settings.notifications</div>
       </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.brightnessCct</div>
-    </div>
-
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'hotkeys']">
-      <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">keyboard</i>
+      <div
+        class="menu-item"
+        [routerLinkActive]="'active'"
+        [routerLink]="['settings', 'brightnessCct']"
+      >
+        <div class="menu-item-icon-prefix">
+          <i class="material-icons-round">brightness_6</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.settings.brightnessCct</div>
       </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.hotkeys</div>
-    </div>
-
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'updates']">
-      <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">update</i>
+      <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'hotkeys']">
+        <div class="menu-item-icon-prefix">
+          <i class="material-icons-round">keyboard</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.settings.hotkeys</div>
       </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.updates</div>
-      <div class="menu-item-icon-suffix update" @fade *ngIf="updateAvailable | async">
-        <i class="material-icons-round">notification_important</i>
+      <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'updates']">
+        <div class="menu-item-icon-prefix">
+          <i class="material-icons-round">update</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.settings.updates</div>
+        @if (updateAvailable | async) {
+          <div class="menu-item-icon-suffix update" @fade>
+            <i class="material-icons-round">notification_important</i>
+          </div>
+        }
+      </div>
+      <div
+        class="menu-item"
+        [routerLinkActive]="'active'"
+        [routerLink]="['settings', 'integrations']"
+      >
+        <div class="menu-item-icon-prefix">
+          <i class="material-icons-round">power</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.settings.integrations</div>
+      </div>
+      <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'advanced']">
+        <div class="menu-item-icon-prefix">
+          <i class="material-icons-round">build</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.settings.advanced</div>
+      </div>
+      <div
+        class="menu-item"
+        [routerLinkActive]="'active'"
+        [routerLink]="['settings', 'statusInfo']"
+      >
+        <div class="menu-item-icon-prefix">
+          <i class="material-icons-round">checklist</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.settings.statusInfo</div>
       </div>
     </div>
-
-    <div
-      class="menu-item"
-      [routerLinkActive]="'active'"
-      [routerLink]="['settings', 'integrations']"
-    >
-      <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">power</i>
-      </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.integrations</div>
-    </div>
-
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'advanced']">
-      <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">build</i>
-      </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.advanced</div>
-    </div>
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'statusInfo']">
-      <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">checklist</i>
-      </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.statusInfo</div>
-    </div>
-  </div>
+  }
 </div>

@@ -1,4 +1,5 @@
 use log::error;
+use std::sync::LazyLock;
 use steamworks::{AppId, CallbackHandle, Client, SingleClient, UserStatsReceived};
 use tokio::sync::Mutex;
 
@@ -6,11 +7,9 @@ pub mod commands;
 
 pub const STEAM_APP_ID: AppId = AppId(2538150);
 
-lazy_static! {
-    pub static ref STEAMWORKS_CLIENT: Mutex<Option<Client>> = Mutex::default();
-    pub static ref STEAMWORKS_SINGLE_CLIENT: Mutex<Option<SingleClient>> = Mutex::default();
-    pub static ref STEAMWORKS_USER_STATS_FETCHED: Mutex<bool> = Mutex::new(false);
-}
+pub static STEAMWORKS_CLIENT: LazyLock<Mutex<Option<Client>>> = LazyLock::new(Mutex::default);
+pub static STEAMWORKS_SINGLE_CLIENT: LazyLock<Mutex<Option<SingleClient>>> = LazyLock::new(Mutex::default);
+pub static STEAMWORKS_USER_STATS_FETCHED: LazyLock<Mutex<bool>> = LazyLock::new(|| Mutex::new(false));
 
 pub async fn init() {
     if crate::BUILD_FLAVOUR != crate::flavour::BuildFlavour::Steam

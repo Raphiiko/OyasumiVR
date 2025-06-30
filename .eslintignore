@@ -1,7 +1,0 @@
-src-core/
-src-shared-rust/
-src-elevated-sidecar/
-src-overlay-sidecar/
-proto/
-node_modules/
-dist/

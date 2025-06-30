@@ -23,7 +23,7 @@ export function migrateOscScript(data: any): OscScript {
       console.log(1, currentVersion + 0, structuredClone(data));
       data = migrations[++currentVersion](structuredClone(data));
       console.log(2, currentVersion + 0, structuredClone(data));
-    } catch (e) {
+    } catch {
       error(
         "[osc-script-migrations] Couldn't migrate osc script to version " +
           currentVersion +

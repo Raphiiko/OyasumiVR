@@ -12,13 +12,14 @@
     </div>
     <div style="flex: 1"></div>
     <div class="color-picker">
-      <div
-        class="color-option"
-        *ngFor="let color of tagColors; trackBy: trackColorBy"
-        [class.selected]="newTagColor === color"
-        [style.background-color]="color"
-        (click)="newTagColor = color"
-      ></div>
+      @for (color of tagColors; track trackColorBy($index, color)) {
+        <div
+          class="color-option"
+          [class.selected]="newTagColor === color"
+          [style.background-color]="color"
+          (click)="newTagColor = color"
+        ></div>
+      }
     </div>
     <button class="btn btn-primary" (click)="createTag()" [disabled]="!newTagName.trim()" translate>
       device-manager.tags.create.button
@@ -27,72 +28,81 @@
 </div>
 
 <!-- Existing Tags -->
-<div class="tags-list" *ngIf="tags.length > 0">
-  <h3 translate>device-manager.tags.existing.title</h3>
-  <div class="tag-list-item" *ngFor="let tag of tags; trackBy: trackTagBy" @vshrink>
-    <div class="tag-color" [style.background-color]="tag.color"></div>
-
-    <!-- Normal View -->
-    <div class="tag-content" *ngIf="!editingTag || editingTag.id !== tag.id">
-      <span class="tag-name">{{ tag.name }}</span>
-      <div class="tag-actions">
-        <button
-          class="btn-icon"
-          (click)="editTag(tag)"
-          [tooltip]="'device-manager.tags.edit' | translate"
-          [tooltipMode]="'left'"
-        >
-          <i class="material-icons">edit</i>
-        </button>
-        <button
-          class="btn-icon"
-          (click)="deleteTag(tag)"
-          [tooltip]="'device-manager.tags.delete' | translate"
-          [tooltipMode]="'left'"
-        >
-          <i class="material-icons">delete</i>
-        </button>
+@if (tags.length > 0) {
+  <div class="tags-list">
+    <h3 translate>device-manager.tags.existing.title</h3>
+    @for (tag of tags; track trackTagBy($index, tag)) {
+      <div class="tag-list-item" @vshrink>
+        <div class="tag-color" [style.background-color]="tag.color"></div>
+        <!-- Normal View -->
+        @if (!editingTag || editingTag.id !== tag.id) {
+          <div class="tag-content">
+            <span class="tag-name">{{ tag.name }}</span>
+            <div class="tag-actions">
+              <button
+                class="btn-icon"
+                (click)="editTag(tag)"
+                [tooltip]="'device-manager.tags.edit' | translate"
+                [tooltipMode]="'left'"
+              >
+                <i class="material-icons">edit</i>
+              </button>
+              <button
+                class="btn-icon"
+                (click)="deleteTag(tag)"
+                [tooltip]="'device-manager.tags.delete' | translate"
+                [tooltipMode]="'left'"
+              >
+                <i class="material-icons">delete</i>
+              </button>
+            </div>
+          </div>
+        }
+        <!-- Edit View -->
+        @if (editingTag && editingTag.id === tag.id) {
+          <div class="tag-content edit-mode">
+            <div class="input-wrapper">
+              <input type="text" [(ngModel)]="editingTag.name" [maxlength]="32" />
+            </div>
+            <div class="color-picker">
+              @for (color of tagColors; track trackColorBy($index, color)) {
+                <div
+                  class="color-option small"
+                  [class.selected]="editingTag.color === color"
+                  [style.background-color]="color"
+                  (click)="editingTag.color = color"
+                ></div>
+              }
+            </div>
+            <div class="tag-actions">
+              <button
+                class="btn-icon success"
+                (click)="saveTag()"
+                [tooltip]="'device-manager.tags.save' | translate"
+                [tooltipMode]="'left'"
+              >
+                <i class="material-icons">check</i>
+              </button>
+              <button
+                class="btn-icon"
+                (click)="cancelEditTag()"
+                [tooltip]="'device-manager.tags.cancel' | translate"
+                [tooltipMode]="'left'"
+              >
+                <i class="material-icons">close</i>
+              </button>
+            </div>
+          </div>
+        }
       </div>
-    </div>
-
-    <!-- Edit View -->
-    <div class="tag-content edit-mode" *ngIf="editingTag && editingTag.id === tag.id">
-      <div class="input-wrapper">
-        <input type="text" [(ngModel)]="editingTag.name" [maxlength]="32" />
-      </div>
-      <div class="color-picker">
-        <div
-          class="color-option small"
-          *ngFor="let color of tagColors; trackBy: trackColorBy"
-          [class.selected]="editingTag.color === color"
-          [style.background-color]="color"
-          (click)="editingTag.color = color"
-        ></div>
-      </div>
-      <div class="tag-actions">
-        <button
-          class="btn-icon success"
-          (click)="saveTag()"
-          [tooltip]="'device-manager.tags.save' | translate"
-          [tooltipMode]="'left'"
-        >
-          <i class="material-icons">check</i>
-        </button>
-        <button
-          class="btn-icon"
-          (click)="cancelEditTag()"
-          [tooltip]="'device-manager.tags.cancel' | translate"
-          [tooltipMode]="'left'"
-        >
-          <i class="material-icons">close</i>
-        </button>
-      </div>
-    </div>
+    }
   </div>
-</div>
+}
 
 <!-- No Tags State -->
-<div class="empty-state" *ngIf="tags.length === 0" @vshrink>
-  <i class="material-icons">label_outline</i>
-  <span translate>device-manager.tags.empty.noTags</span>
-</div>
+@if (tags.length === 0) {
+  <div class="empty-state" @vshrink>
+    <i class="material-icons">label_outline</i>
+    <span translate>device-manager.tags.empty.noTags</span>
+  </div>
+}

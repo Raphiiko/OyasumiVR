@@ -1,29 +1,29 @@
-<div
-  class="alert warning"
-  @vshrink
-  *ngIf="
-    !lighthousePowerControlDisabled &&
-    (lighthouseStatus === 'noAdapter' || lighthouseStatus === 'adapterError')
-  "
->
-  <div class="alert-bg"></div>
-  <div class="alert-icon">
-    <i class="material-icons"> warning </i>
+@if (
+  !lighthousePowerControlDisabled &&
+  (lighthouseStatus === 'noAdapter' || lighthouseStatus === 'adapterError')
+) {
+  <div class="alert warning" @vshrink>
+    <div class="alert-bg"></div>
+    <div class="alert-icon">
+      <i class="material-icons"> warning </i>
+    </div>
+    <div class="alert-content">
+      <span>{{ 'power-automations.error.' + lighthouseStatus | translate }}</span>
+    </div>
   </div>
-  <div class="alert-content">
-    <span>{{ 'power-automations.error.' + lighthouseStatus | translate }}</span>
-  </div>
-</div>
+}
 
-<div class="alert info" *ngIf="!lighthousePowerControlDisabled" @vshrink>
-  <div class="alert-bg"></div>
-  <div class="alert-icon">
-    <i class="material-icons"> info </i>
+@if (!lighthousePowerControlDisabled) {
+  <div class="alert info" @vshrink>
+    <div class="alert-bg"></div>
+    <div class="alert-icon">
+      <i class="material-icons"> info </i>
+    </div>
+    <div class="alert-content">
+      <span>{{ 'power-automations.powerManagementWarning' | translate }}</span>
+    </div>
   </div>
-  <div class="alert-content">
-    <span>{{ 'power-automations.powerManagementWarning' | translate }}</span>
-  </div>
-</div>
+}
 
 <div class="setting-category">
   <h2>{{ 'power-automations.devices.turnOff.title' | translate }}</h2>

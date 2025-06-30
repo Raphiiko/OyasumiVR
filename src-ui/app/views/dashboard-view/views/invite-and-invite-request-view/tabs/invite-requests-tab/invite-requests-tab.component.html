@@ -1,37 +1,43 @@
 <div class="setting-view-container">
   <p translate>invite-and-invite-requests.inviteRequestsTab.description</p>
-  <div class="alert warning" *ngIf="!loggedIn" @vshrink>
-    <div class="alert-bg"></div>
-    <div class="alert-icon">
-      <i class="material-icons"> warning </i>
+  @if (!loggedIn) {
+    <div class="alert warning" @vshrink>
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons"> warning </i>
+      </div>
+      <div class="alert-content">
+        <span>{{ 'shared.common.vrcLoginRequired' | translate }}</span>
+        <button class="btn btn-secondary" (click)="login()" translate>shared.modals.login</button>
+      </div>
     </div>
-    <div class="alert-content">
-      <span>{{ 'shared.common.vrcLoginRequired' | translate }}</span>
-      <button class="btn btn-secondary" (click)="login()" translate>shared.modals.login</button>
+  }
+  @if (isOnBusyStatus) {
+    <div class="alert warning" @vshrink>
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons"> warning </i>
+      </div>
+      <div class="alert-content">
+        <span>{{
+          'invite-and-invite-requests.inviteRequestsTab.userOnBusyStatus' | translate
+        }}</span></div
+      >
     </div>
-  </div>
-  <div class="alert warning" *ngIf="isOnBusyStatus" @vshrink>
-    <div class="alert-bg"></div>
-    <div class="alert-icon">
-      <i class="material-icons"> warning </i>
+  }
+  @if (isOnJoinMeStatus) {
+    <div class="alert warning" @vshrink>
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons"> warning </i>
+      </div>
+      <div class="alert-content">
+        <span>{{
+          'invite-and-invite-requests.inviteRequestsTab.userOnJoinMeStatus' | translate
+        }}</span></div
+      >
     </div>
-    <div class="alert-content">
-      <span>{{
-        'invite-and-invite-requests.inviteRequestsTab.userOnBusyStatus' | translate
-      }}</span></div
-    >
-  </div>
-  <div class="alert warning" *ngIf="isOnJoinMeStatus" @vshrink>
-    <div class="alert-bg"></div>
-    <div class="alert-icon">
-      <i class="material-icons"> warning </i>
-    </div>
-    <div class="alert-content">
-      <span>{{
-        'invite-and-invite-requests.inviteRequestsTab.userOnJoinMeStatus' | translate
-      }}</span></div
-    >
-  </div>
+  }
   <div class="settings">
     <div class="setting-row">
       <div class="setting-row-label">
@@ -88,33 +94,35 @@
         </label>
       </div>
     </div>
-    <div class="setting-row-group" @vshrink *ngIf="config.acceptMessageEnabled">
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate
-            >invite-and-invite-requests.inviteRequestsTab.options.acceptMessage.customMessage.title</span
-          >
-          <span></span>
-        </div>
-        <div class="setting-row-action">
-          <input
-            maxlength="64"
-            type="text"
-            class="input"
-            [value]="config.acceptInviteRequestMessage"
-            (change)="
-              updateAcceptInviteRequestCustomMessage.next(acceptOnRequestCustomMessageInput.value)
-            "
-            (blur)="acceptOnRequestCustomMessageInput.value = config.acceptInviteRequestMessage"
-            [placeholder]="
-              'invite-and-invite-requests.inviteRequestsTab.options.acceptMessage.customMessage.placeholder'
-                | translate
-            "
-            #acceptOnRequestCustomMessageInput
-          />
+    @if (config.acceptMessageEnabled) {
+      <div class="setting-row-group" @vshrink>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate
+              >invite-and-invite-requests.inviteRequestsTab.options.acceptMessage.customMessage.title</span
+            >
+            <span></span>
+          </div>
+          <div class="setting-row-action">
+            <input
+              maxlength="64"
+              type="text"
+              class="input"
+              [value]="config.acceptInviteRequestMessage"
+              (change)="
+                updateAcceptInviteRequestCustomMessage.next(acceptOnRequestCustomMessageInput.value)
+              "
+              (blur)="acceptOnRequestCustomMessageInput.value = config.acceptInviteRequestMessage"
+              [placeholder]="
+                'invite-and-invite-requests.inviteRequestsTab.options.acceptMessage.customMessage.placeholder'
+                  | translate
+              "
+              #acceptOnRequestCustomMessageInput
+            />
+          </div>
         </div>
       </div>
-    </div>
+    }
     <div class="setting-row">
       <div class="setting-row-label" translate>
         <span translate
@@ -134,39 +142,39 @@
         ></app-select-box>
       </div>
     </div>
-    <div
-      class="setting-row-group"
-      @vshrink
-      *ngIf="['ALWAYS', 'WHEN_SLEEPING'].includes(declineOnRequestOption?.id ?? '')"
-    >
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate
-            >invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.customMessage.title</span
-          >
-          <span translate
-            >invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.customMessage.description</span
-          >
-        </div>
-        <div class="setting-row-action">
-          <input
-            maxlength="64"
-            type="text"
-            class="input"
-            [value]="config.declineInviteRequestMessage"
-            (change)="
-              updateDeclineInviteRequestCustomMessage.next(declineOnRequestCustomMessageInput.value)
-            "
-            (blur)="declineOnRequestCustomMessageInput.value = config.declineInviteRequestMessage"
-            [placeholder]="
-              'invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.customMessage.placeholder'
-                | translate
-            "
-            #declineOnRequestCustomMessageInput
-          />
+    @if (['ALWAYS', 'WHEN_SLEEPING'].includes(declineOnRequestOption?.id ?? '')) {
+      <div class="setting-row-group" @vshrink>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate
+              >invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.customMessage.title</span
+            >
+            <span translate
+              >invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.customMessage.description</span
+            >
+          </div>
+          <div class="setting-row-action">
+            <input
+              maxlength="64"
+              type="text"
+              class="input"
+              [value]="config.declineInviteRequestMessage"
+              (change)="
+                updateDeclineInviteRequestCustomMessage.next(
+                  declineOnRequestCustomMessageInput.value
+                )
+              "
+              (blur)="declineOnRequestCustomMessageInput.value = config.declineInviteRequestMessage"
+              [placeholder]="
+                'invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.customMessage.placeholder'
+                  | translate
+              "
+              #declineOnRequestCustomMessageInput
+            />
+          </div>
         </div>
       </div>
-    </div>
+    }
   </div>
   <h2 translate>invite-and-invite-requests.inviteRequestsTab.conditions.title</h2>
   <p translate>invite-and-invite-requests.inviteRequestsTab.conditions.description</p>

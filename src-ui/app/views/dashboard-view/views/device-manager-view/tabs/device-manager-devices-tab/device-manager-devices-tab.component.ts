@@ -29,7 +29,7 @@ import {
 import { fade, vshrink } from '../../../../../../utils/animations';
 import { SelectBoxItem } from '../../../../../../components/select-box/select-box.component';
 import { DomSanitizer } from '@angular/platform-browser';
-import Fuse from 'fuse.js';
+import Fuse, { IFuseOptions } from 'fuse.js';
 import {
   LighthouseV1IdWizardModalComponent,
   LighthouseV1IdWizardModalOutputModel,
@@ -151,7 +151,7 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
   }
 
   private initializeFuse() {
-    const fuseOptions: Fuse.IFuseOptions<DMKnownDevice> = {
+    const fuseOptions: IFuseOptions<DMKnownDevice> = {
       keys: [
         { name: 'nickname', weight: 2 },
         { name: 'defaultName', weight: 1.5 },

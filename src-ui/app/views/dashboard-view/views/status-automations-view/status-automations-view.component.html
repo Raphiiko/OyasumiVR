@@ -14,12 +14,12 @@
   </div>
   <div class="pane-content">
     <div class="setting-view-container">
-      <app-status-automations-general-tab
-        *ngIf="activeTab === 'GENERAL'"
-      ></app-status-automations-general-tab>
-      <app-status-automations-player-limit-tab
-        *ngIf="activeTab === 'PLAYER_LIMIT'"
-      ></app-status-automations-player-limit-tab>
+      @if (activeTab === 'GENERAL') {
+        <app-status-automations-general-tab></app-status-automations-general-tab>
+      }
+      @if (activeTab === 'PLAYER_LIMIT') {
+        <app-status-automations-player-limit-tab></app-status-automations-player-limit-tab>
+      }
     </div>
   </div>
 </div>

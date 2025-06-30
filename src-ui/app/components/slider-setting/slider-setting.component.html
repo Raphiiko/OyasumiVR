@@ -1,19 +1,21 @@
-<div class="overlay-container" *ngIf="showOverlay" (mouseleave)="showOverlay = false" @fade>
-  <div class="bg"></div>
-  <div class="slider-container">
-    <app-slider
-      [min]="min"
-      [max]="max"
-      [step]="step"
-      [snapDistance]="snapDistance"
-      [snapValues]="snapValues"
-      [value]="value"
-      (valueChange)="onSliderChange($event)"
-      [style]="style"
-      #slider
-    ></app-slider>
+@if (showOverlay) {
+  <div class="overlay-container" (mouseleave)="showOverlay = false" @fade>
+    <div class="bg"></div>
+    <div class="slider-container">
+      <app-slider
+        [min]="min"
+        [max]="max"
+        [step]="step"
+        [snapDistance]="snapDistance"
+        [snapValues]="snapValues"
+        [value]="value"
+        (valueChange)="onSliderChange($event)"
+        [style]="style"
+        #slider
+      ></app-slider>
+    </div>
   </div>
-</div>
+}
 <div
   class="input-container"
   [class.has-unit]="!!unit"
@@ -29,5 +31,7 @@
     (blur)="onInputBlur()"
     #inputValue
   />
-  <div class="unit" *ngIf="unit"><span [innerHTML]="unit"></span></div>
+  @if (unit) {
+    <div class="unit"><span [innerHTML]="unit"></span></div>
+  }
 </div>

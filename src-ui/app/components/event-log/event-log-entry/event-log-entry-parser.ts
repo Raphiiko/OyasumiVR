@@ -11,17 +11,14 @@ export abstract class EventLogEntryParser<T extends EventLogBase> {
     return 'comp.event-log-entry.type.' + entry.type + '.title';
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   headerInfoTitleParams(_entry: T): { [s: string]: string } {
     return {};
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   headerInfoSubTitle(_entry: T): string {
     return '';
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   headerInfoSubTitleParams(_entry: T): { [s: string]: string } {
     return {};
   }
