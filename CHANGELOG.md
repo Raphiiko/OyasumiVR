@@ -7,6 +7,8 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 
 ## [Unreleased]
 
+## [25.6.7]
+
 ### Fixed
 
 - Fixed translation references for invite (request) reply placeholders
