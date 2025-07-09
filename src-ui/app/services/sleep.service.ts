@@ -118,7 +118,6 @@ export class SleepService {
     this._mode.next(true);
     this._onSleepModeChange.next({ mode: true, reason });
     await SETTINGS_STORE.set(SETTINGS_KEY_SLEEP_MODE, true);
-    await SETTINGS_STORE.save();
     if (await this.notifications.notificationTypeEnabled('SLEEP_MODE_ENABLED')) {
       await this.notifications.send(
         this.translate.instant('notifications.sleepModeEnabled.content')
@@ -137,7 +136,6 @@ export class SleepService {
     this._mode.next(false);
     this._onSleepModeChange.next({ mode: false, reason });
     await SETTINGS_STORE.set(SETTINGS_KEY_SLEEP_MODE, false);
-    await SETTINGS_STORE.save();
     if (await this.notifications.notificationTypeEnabled('SLEEP_MODE_DISABLED')) {
       await this.notifications.send(
         this.translate.instant('notifications.sleepModeDisabled.content')

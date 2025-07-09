@@ -490,6 +490,5 @@ export class DeviceManagerService {
 
   private async saveData() {
     await SETTINGS_STORE.set(SETTINGS_KEY_DEVICE_MANAGER, this._data.value);
-    await SETTINGS_STORE.save();
   }
 }

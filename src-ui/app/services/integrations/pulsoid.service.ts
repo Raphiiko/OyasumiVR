@@ -269,7 +269,6 @@ export class PulsoidService {
 
   private async saveSettings() {
     await SETTINGS_STORE.set(SETTINGS_KEY_PULSOID_API, this.settings.value);
-    await SETTINGS_STORE.save();
   }
 
   private async manageSocketConnection() {

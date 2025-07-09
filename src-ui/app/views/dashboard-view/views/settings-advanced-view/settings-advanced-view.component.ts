@@ -227,8 +227,6 @@ export class SettingsAdvancedViewComponent {
             }
           })
         );
-        await SETTINGS_STORE.save();
-        await CACHE_STORE.save();
         info('[Settings] Finished clearing of persistent storage');
         this.checkedPersistentStorageItems = [];
         if (askForRelaunch) {
