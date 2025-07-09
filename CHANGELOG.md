@@ -7,6 +7,10 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed type usage in simple OSC script editor
+
 ## [25.6.7]
 
 ### Fixed
