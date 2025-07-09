@@ -7,6 +7,8 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 
 ## [Unreleased]
 
+## [25.6.8]
+
 ### Fixed
 
 - Fixed type usage in simple OSC script editor

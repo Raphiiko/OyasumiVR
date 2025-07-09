@@ -1039,7 +1039,7 @@ checksum = "04744f49eae99ab78e0d5c0b603ab218f515ea8cfe5a456d7629ad883a3b6e7d"
 
 [[package]]
 name = "oyasumivr-elevated-sidecar"
-version = "25.6.7"
+version = "25.6.8"
 dependencies = [
  "codesigned",
  "directories",
@@ -1063,7 +1063,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumivr-shared"
-version = "25.6.7"
+version = "25.6.8"
 dependencies = [
  "windows",
 ]
