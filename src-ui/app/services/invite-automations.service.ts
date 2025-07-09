@@ -267,7 +267,9 @@ export class InviteAutomationsService {
     } as EventLogAcceptedInviteRequest);
   }
 
-  private getInviteRequestAcceptMessage(config: AutoAcceptInviteRequestsAutomationConfig): string | undefined {
+  private getInviteRequestAcceptMessage(
+    config: AutoAcceptInviteRequestsAutomationConfig
+  ): string | undefined {
     if (!config.acceptMessageEnabled) return undefined;
     let message = config.acceptInviteRequestMessage;
     message = message.replace(/\s+/g, ' ').trim();
