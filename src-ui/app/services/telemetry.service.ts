@@ -92,7 +92,6 @@ export class TelemetryService {
 
   async saveSettings() {
     await SETTINGS_STORE.set(SETTINGS_KEY_TELEMETRY_SETTINGS, this._settings.value);
-    await SETTINGS_STORE.save();
   }
 
   async updateSettings(settings: Partial<TelemetrySettings>) {

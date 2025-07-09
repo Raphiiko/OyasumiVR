@@ -3,6 +3,7 @@ import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
 import {
   asyncScheduler,
   BehaviorSubject,
+  distinctUntilChanged,
   firstValueFrom,
   map,
   Observable,
@@ -49,6 +50,7 @@ export class AppSettingsService {
       .pipe(
         skip(1),
         throttleTime(500, asyncScheduler, { leading: true, trailing: true }),
+        distinctUntilChanged((a, b) => isEqual(a, b)),
         switchMap(() => this.saveSettings())
       )
       .subscribe();
@@ -76,7 +78,6 @@ export class AppSettingsService {
 
   async saveSettings() {
     await SETTINGS_STORE.set(SETTINGS_KEY_APP_SETTINGS, this._settings.value);
-    await SETTINGS_STORE.save();
   }
 
   public updateSettings(settings: Partial<AppSettings>) {

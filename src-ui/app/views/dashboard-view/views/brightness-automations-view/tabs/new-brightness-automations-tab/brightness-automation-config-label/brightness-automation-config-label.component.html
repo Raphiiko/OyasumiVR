@@ -1,6 +1,6 @@
 @if (config) {
   <div class="label">
-    @if (config?.changeColorTemperature && cctControlEnabled) {
+    @if (config.changeColorTemperature && cctControlEnabled) {
       <div class="colortemp-container" @hshrink>
         <div
           class="colortemp-icon"
@@ -9,7 +9,7 @@
         <span class="monospace">{{ config.colorTemperature }}K</span>
       </div>
     }
-    @if (config?.changeBrightness) {
+    @if (config.changeBrightness) {
       <div class="brightness-container" @hshrink>
         @if (!advancedMode) {
           <div class="brightness-value" @vshrink>
