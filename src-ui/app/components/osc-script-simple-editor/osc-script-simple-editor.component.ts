@@ -75,19 +75,19 @@ export class OscScriptSimpleEditorComponent implements OnInit {
   ];
   parameterTypeSelectItems: SelectBoxItem[] = [
     {
-      id: 'BOOLEAN',
+      id: 'Boolean',
       label: 'Boolean',
     },
     {
-      id: 'INT',
+      id: 'Int',
       label: 'Integer',
     },
     {
-      id: 'FLOAT',
+      id: 'Float',
       label: 'Float',
     },
     {
-      id: 'STRING',
+      id: 'String',
       label: 'String',
     },
   ];

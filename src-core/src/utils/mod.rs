@@ -1,19 +1,19 @@
 use log::error;
 use serde::Serialize;
 use std::{
+    ffi::OsStr,
     os::raw::c_char,
+    sync::LazyLock,
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
-use sysinfo::{ProcessExt, Signal, System, SystemExt};
+use sysinfo::{ProcessesToUpdate, Signal, System};
 use tauri::Emitter;
 use tokio::sync::Mutex;
 
 use crate::globals::{TAURI_APP_HANDLE, TAURI_CLI_MATCHES};
 
-lazy_static! {
-    static ref SYSINFO: Mutex<System> = Mutex::new(System::new_all());
-    static ref LAST_MEM_DIALOG: Mutex<u128> = Mutex::new(0);
-}
+static SYSINFO: LazyLock<Mutex<System>> = LazyLock::new(|| Mutex::new(System::new_all()));
+
 
 pub mod models;
 pub mod profiling;
@@ -27,7 +27,7 @@ pub fn init() {
             {
                 let mut sysinfo_guard = SYSINFO.lock().await;
                 let sysinfo = &mut *sysinfo_guard;
-                sysinfo.refresh_processes();
+                sysinfo.refresh_processes(ProcessesToUpdate::All, true);
             }
             tokio::time::sleep(Duration::from_secs(1)).await;
         }
@@ -38,17 +38,17 @@ pub async fn is_process_active(process_name: &str, refresh_processes: bool) -> b
     let mut sysinfo_guard = SYSINFO.lock().await;
     let sysinfo = &mut *sysinfo_guard;
     if refresh_processes {
-        sysinfo.refresh_processes();
+        sysinfo.refresh_processes(ProcessesToUpdate::All, true);
     }
-    let processes = sysinfo.processes_by_exact_name(process_name);
+    let processes = sysinfo.processes_by_exact_name(OsStr::new(process_name));
     processes.count() > 0
 }
 
 pub async fn stop_process(process_name: &str, kill: bool) {
     let mut sysinfo_guard = SYSINFO.lock().await;
     let sysinfo = &mut *sysinfo_guard;
-    sysinfo.refresh_processes();
-    let processes = sysinfo.processes_by_exact_name(process_name);
+    sysinfo.refresh_processes(ProcessesToUpdate::All, true);
+    let processes = sysinfo.processes_by_exact_name(OsStr::new(process_name));
     for process in processes {
         if kill
             || (process.kill_with(Signal::Term).is_none()

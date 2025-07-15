@@ -257,23 +257,6 @@
       "vrchatGroupAutomations": "Groep Automatiseringen",
       "vrchatMicMuteAutomations": "VRChat Microfoon Dempings Automatiseringen"
     },
-    "device-edit-modal": {
-      "deviceNickname": {
-        "description": "Geef optioneel een aangepaste naam voor dit apparaat",
-        "title": "Nickname"
-      },
-      "ignoreLighthouse": {
-        "description": "Genegeerde basestations zullen worden verborgen en worden niet aangestuurd door automatiseringen",
-        "title": "Negeer Basestation"
-      },
-      "title": "Bewerk Device: {deviceId}",
-      "v1Identifier": {
-        "change": "Verander ID",
-        "description": "Om een V1 base station te kunnen besturen, moet OyasumiVR het ID er van weten.",
-        "set": "ID Instellen",
-        "title": "Lighthouse V1 ID"
-      }
-    },
     "device-list": {
       "category": {
         "Controller": "Controllers",
@@ -1031,6 +1014,11 @@
       "powerOn": "Inschakelen"
     },
     "config": {
+      "disabled": {
+        "description": "Gedeactiveerde apparaten worden niet meegenomen in automatiseringen, en worden niet in de apparatenlijst getoont.",
+        "title": "Deactiveer apparaat",
+        "tooltip": "Dit apparaat is gedeactiveerd"
+      },
       "nickname": {
         "description": "Stel een nickname in voor dit apparaat om het makkelijker te herkennen",
         "title": "Apparaat Nickname"
@@ -1040,7 +1028,13 @@
         "noTags": "Geen tags beschikbaar. Maak er een paar aan in het Tags tabblad.",
         "title": "Apparaat Tags"
       },
-      "title": "{deviceName} Configureren"
+      "title": "{deviceName} Configureren",
+      "v1Identifier": {
+        "change": "Verander ID",
+        "description": "Om een V1 base station te kunnen besturen, moet OyasumiVR het ID er van weten.",
+        "set": "ID Instellen",
+        "title": "Lighthouse V1 ID"
+      }
     },
     "deleteTag": {
       "confirm": "Tag Verwijderen",
@@ -1804,8 +1798,7 @@
     },
     "powerManagementWarning": "Als je OyasumiVR's automatiseringen gebruikt om je base stations aan of uit te zetten, wordt het aangeraden om Power Management uit te zetten in SteamVR's base station instellingen.",
     "tabs": {
-      "baseStations": "Base Stations",
-      "controllersAndTrackers": "Controllers & Trackers",
+      "devices": "Apparaten",
       "windowsPowerPolicy": "Energiebeheer"
     },
     "title": "Energie Automatiseringen",
@@ -2625,7 +2618,10 @@
   },
   "status-automations": {
     "behaviourWarning": "Status veranderingen van OyasumiVR zullen niet meteen voor jou zichtbaar zijn. Voor andere spelers kan het ook even duren voordat de status word geupdate. Dit komt door VRChat's cache gedrag. Hoewel het niet meteen zichtbaar is, kan je er wel van uit gaan dat je status is veranderd.",
-    "behaviourWarningFAQ": "Hier zijn wat antwoorden voor vragen die je misschien nog hebt over status automatiseringen:\n\nV: Kan ik nog steeds automatisch invite requests accepteren, ook als VRChat zelf niet aangeeft dat mijn status op blauw staat?\nA: In het geval dat OyasumiVR je status op blauw zet, zal het de taak van het automatisch accepteren van invite requests overnemen van VRChat zelf.\n\nV: Mn vrienden kunnen niet op mn joinen omdat mijn status voor hun niet veranderd!\nA: Status updates kunnen even duren voordat anderen ze kunnen zien. Als ze je willen joinen maar dat niet kunnen, kunnen ze het forceren om je status te updaten door je profiel te openen in het grotere menu.",
+    "behaviourWarningFAQ": {
+      "message": "Hier zijn wat antwoorden voor vragen die je misschien nog hebt over status automatiseringen:\n\nV: Kan ik nog steeds automatisch invite requests accepteren, ook als VRChat zelf niet aangeeft dat mijn status op blauw staat?\nA: In het geval dat OyasumiVR je status op blauw zet, zal het de taak van het automatisch accepteren van invite requests overnemen van VRChat zelf.\n\nV: Mn vrienden kunnen niet op mn joinen omdat mijn status voor hun niet veranderd!\nA: Status updates kunnen even duren voordat anderen ze kunnen zien. Als ze je willen joinen maar dat niet kunnen, kunnen ze het forceren om je status te updaten door je profiel te openen in het grotere menu.",
+      "title": "Status Automatiseringen FAQ"
+    },
     "general": {
       "description": "Hier kan je OyasumiVR configureren om je VRChat status te updaten met verschillende gebeurtenissen. Als voorbeeld, kun je je status aanpassen wanneer je in slaap bent gevallen, of wakker word!",
       "onSleepDisable": {

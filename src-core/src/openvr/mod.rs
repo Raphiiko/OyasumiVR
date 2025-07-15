@@ -22,7 +22,7 @@ use models::OpenVRStatus;
 use ovr::input::ActiveActionSet;
 use ovr_overlay as ovr;
 use sleep_detector::SleepDetector;
-use std::time::Duration;
+use std::{sync::LazyLock, time::Duration};
 use substring::Substring;
 use tokio::sync::Mutex;
 
@@ -34,13 +34,11 @@ pub struct OpenVRInputContext {
 }
 
 
-lazy_static! {
-    static ref OVR_CONTEXT: Mutex<Option<ovr::Context>> = Default::default();
-    static ref OVR_STATUS: Mutex<OpenVRStatus> = Mutex::new(OpenVRStatus::Inactive);
-    static ref OVR_ACTIVE: Mutex<bool> = Mutex::new(false);
-    static ref OVR_INPUT_CONTEXT: Mutex<OpenVRInputContext> = Mutex::default();
-    static ref OVR_INIT_DELAY_FIX: Mutex<bool> = Mutex::new(false);
-}
+pub static OVR_CONTEXT: LazyLock<Mutex<Option<ovr::Context>>> = LazyLock::new(Default::default);
+static OVR_STATUS: LazyLock<Mutex<OpenVRStatus>> = LazyLock::new(|| Mutex::new(OpenVRStatus::Inactive));
+static OVR_ACTIVE: LazyLock<Mutex<bool>> = LazyLock::new(|| Mutex::new(false));
+pub static OVR_INPUT_CONTEXT: LazyLock<Mutex<OpenVRInputContext>> = LazyLock::new(Mutex::default);
+static OVR_INIT_DELAY_FIX: LazyLock<Mutex<bool>> = LazyLock::new(|| Mutex::new(false));
 
 pub async fn init() {
     *OVR_ACTIVE.lock().await = true;

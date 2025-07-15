@@ -1,35 +1,37 @@
-<div *ngIf="isEnabled" @vshrink>
-  <div class="default-toggle">
-    <label class="check-toggle">
-      <input type="checkbox" [checked]="powerLimit?.default" (change)="toggleDefault()" />
-      <span class="check-toggle-checkmark"></span>
-      <span class="check-toggle-label" translate>
-        <span translate>gpu-automations.powerLimiting.inputDefault</span>
-        <br />
-        ({{ defaultPowerLimit | floor }}W /
-        {{ (defaultPowerLimit / maxPowerLimit) * 100 | floor }}%)
-      </span>
-    </label>
-  </div>
-  <div class="input-container" [class.input-disabled]="powerLimit?.default">
-    <div class="label-container">
-      <div class="label label-value-absolute">{{ powerLimit?.limit ?? 0 | floor }}W</div>
-      <div class="label label-value-percentage">
-        {{ ((powerLimit?.limit ?? 0) / maxPowerLimit) * 100 | floor }}%
+@if (isEnabled) {
+  <div @vshrink>
+    <div class="default-toggle">
+      <label class="check-toggle">
+        <input type="checkbox" [checked]="powerLimit?.default" (change)="toggleDefault()" />
+        <span class="check-toggle-checkmark"></span>
+        <span class="check-toggle-label" translate>
+          <span translate>gpu-automations.powerLimiting.inputDefault</span>
+          <br />
+          ({{ defaultPowerLimit | floor }}W /
+          {{ (defaultPowerLimit / maxPowerLimit) * 100 | floor }}%)
+        </span>
+      </label>
+    </div>
+    <div class="input-container" [class.input-disabled]="powerLimit?.default">
+      <div class="label-container">
+        <div class="label label-value-absolute">{{ powerLimit?.limit ?? 0 | floor }}W</div>
+        <div class="label label-value-percentage">
+          {{ ((powerLimit?.limit ?? 0) / maxPowerLimit) * 100 | floor }}%
+        </div>
+      </div>
+      <div class="slider-container">
+        <app-slider
+          [min]="minPowerLimit"
+          [max]="maxPowerLimit"
+          [value]="powerLimit?.limit ?? 0"
+          (valueChange)="onSliderChange($event)"
+        >
+        </app-slider>
+      </div>
+      <div class="label-container">
+        <span>{{ minPowerLimit | floor }}W</span>
+        <span>{{ maxPowerLimit | floor }}W</span>
       </div>
     </div>
-    <div class="slider-container">
-      <app-slider
-        [min]="minPowerLimit"
-        [max]="maxPowerLimit"
-        [value]="powerLimit?.limit ?? 0"
-        (valueChange)="onSliderChange($event)"
-      >
-      </app-slider>
-    </div>
-    <div class="label-container">
-      <span>{{ minPowerLimit | floor }}W</span>
-      <span>{{ maxPowerLimit | floor }}W</span>
-    </div>
   </div>
-</div>
+}

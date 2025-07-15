@@ -273,7 +273,7 @@ export class LighthouseService {
           }
           // Success!
           subscriber.next('SUCCESS');
-        } catch (e) {
+        } catch {
           subscriber.next('ERROR');
         } finally {
           subscriber.complete();

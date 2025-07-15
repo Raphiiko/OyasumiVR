@@ -21,22 +21,26 @@
       <div class="pill-icon">
         <i class="material-icons-round">nights_stay</i>
       </div>
-      <span @hshrink *ngIf="state.hover"
-        >{{ 'comp.main-status-bar.sleepMode.label' | translate }}:&nbsp;</span
-      >
-      <span *ngIf="sleepMode | async" @hshrink translate>comp.main-status-bar.active</span>
-      <span *ngIf="(sleepMode | async) === false" @hshrink translate
-        >comp.main-status-bar.inactive</span
-      >
+      @if (state.hover) {
+        <span @hshrink>{{ 'comp.main-status-bar.sleepMode.label' | translate }}:&nbsp;</span>
+      }
+      @if (sleepMode | async) {
+        <span @hshrink translate>comp.main-status-bar.active</span>
+      }
+      @if ((sleepMode | async) === false) {
+        <span @hshrink translate>comp.main-status-bar.inactive</span>
+      }
     </div>
-    <div class="pill clickable snowverlay" (click)="toggleSnowverlay()" *ngIf="snowverlayAvailable">
-      <div class="pill-icon" [class.active]="snowverlayActive">
-        <i class="material-icons-round">ac_unit</i>
+    @if (snowverlayAvailable) {
+      <div class="pill clickable snowverlay" (click)="toggleSnowverlay()">
+        <div class="pill-icon" [class.active]="snowverlayActive">
+          <i class="material-icons-round">ac_unit</i>
+        </div>
       </div>
-    </div>
+    }
   </div>
   <div class="right">
-    <ng-container *ngIf="(systemMicMuteAutomation.isMicMuted | async) === true">
+    @if ((systemMicMuteAutomation.isMicMuted | async) === true) {
       <div
         class="pill system-mic-mute clickable"
         *ngVar="{ hover: false }; let state"
@@ -51,12 +55,14 @@
         <div class="pill-icon nomargin" @hshrink>
           <i class="material-icons-round mic-muted">mic_off</i>
         </div>
-        <span @hshrink *ngIf="state.hover" translate style="margin-left: 0.25em"
-          >comp.main-status-bar.systemMicMuted.label</span
-        >
+        @if (state.hover) {
+          <span @hshrink translate style="margin-left: 0.25em"
+            >comp.main-status-bar.systemMicMuted.label</span
+          >
+        }
       </div>
-    </ng-container>
-    <ng-container *ngIf="mqttStatus !== 'DISABLED'">
+    }
+    @if (mqttStatus !== 'DISABLED') {
       <div
         class="pill mqtt-status clickable"
         *ngVar="{ hover: false }; let state"
@@ -76,13 +82,13 @@
             [class.img-red]="mqttStatus === 'ERROR'"
           />
         </div>
-        <span @hshrink *ngIf="state.hover">{{
-          'comp.main-status-bar.mqttStatus.label' | translate
-        }}</span>
+        @if (state.hover) {
+          <span @hshrink>{{ 'comp.main-status-bar.mqttStatus.label' | translate }}</span>
+        }
       </div>
-    </ng-container>
+    }
 
-    <ng-container *ngIf="pulsoid.heartRate | async">
+    @if (pulsoid.heartRate | async) {
       <div
         class="pill heartrate"
         *ngVar="{ hover: false }; let state"
@@ -97,13 +103,13 @@
             >favorite</i
           >
         </div>
-        <span @hshrink *ngIf="state.hover"
-          >{{ 'comp.main-status-bar.heartrate' | translate }}:&nbsp;</span
-        >
+        @if (state.hover) {
+          <span @hshrink>{{ 'comp.main-status-bar.heartrate' | translate }}:&nbsp;</span>
+        }
         <span class="monospace">{{ pulsoid.heartRate | async }}&nbsp;BPM</span>
       </div>
-    </ng-container>
-    <ng-container *ngIf="(bigscreenBeyondFanAutomation.bsbConnected | async) === true">
+    }
+    @if ((bigscreenBeyondFanAutomation.bsbConnected | async) === true) {
       <div
         class="pill bsb-fanctl clickable"
         *ngVar="{ hover: false }; let state"
@@ -118,15 +124,15 @@
         <div class="pill-icon" @hshrink>
           <i class="material-symbols-outlined icon-filled">mode_fan</i>
         </div>
-        <span @hshrink *ngIf="state.hover"
-          >{{ 'comp.main-status-bar.bsbFanSpeed.label' | translate }}:&nbsp;</span
-        >
+        @if (state.hover) {
+          <span @hshrink>{{ 'comp.main-status-bar.bsbFanSpeed.label' | translate }}:&nbsp;</span>
+        }
         <span class="monospace"
           >{{ bigscreenBeyondFanAutomation.fanSpeed | async | number: '1.0-0' }}%</span
         >
       </div>
-    </ng-container>
-    <ng-container *ngIf="cctControlEnabled">
+    }
+    @if (cctControlEnabled) {
       <div
         class="pill cct-control clickable"
         *ngVar="{ hover: false }; let state"
@@ -142,13 +148,13 @@
         <div class="pill-icon" @hshrink>
           <div class="colortemp-icon" [style.background-color]="cctControl.cctCSSColor"></div>
         </div>
-        <span @hshrink *ngIf="state.hover"
-          >{{ 'comp.main-status-bar.cctControl.label' | translate }}:&nbsp;</span
-        >
+        @if (state.hover) {
+          <span @hshrink>{{ 'comp.main-status-bar.cctControl.label' | translate }}:&nbsp;</span>
+        }
         <span class="monospace">{{ cctControl.cctStream | async }}K</span>
       </div>
-    </ng-container>
-    <ng-container *ngIf="(simpleBrightnessControl.advancedMode | async) === false">
+    }
+    @if ((simpleBrightnessControl.advancedMode | async) === false) {
       <div
         class="pill brightness-simple clickable"
         *ngVar="{ hover: false }; let state"
@@ -164,15 +170,15 @@
         <div class="pill-icon" @hshrink>
           <i class="material-icons-round">brightness_medium</i>
         </div>
-        <span @hshrink *ngIf="state.hover"
-          >{{ 'comp.main-status-bar.brightness.simple' | translate }}:&nbsp;</span
-        >
+        @if (state.hover) {
+          <span @hshrink>{{ 'comp.main-status-bar.brightness.simple' | translate }}:&nbsp;</span>
+        }
         <span class="monospace"
           >{{ simpleBrightnessControl.brightnessStream | async | number: '1.0-0' }}%</span
         >
       </div>
-    </ng-container>
-    <ng-container *ngIf="(simpleBrightnessControl.advancedMode | async) === true">
+    }
+    @if ((simpleBrightnessControl.advancedMode | async) === true) {
       <div
         class="pill brightness-advanced clickable"
         *ngVar="{ hover: false }; let state"
@@ -203,28 +209,26 @@
           <i class="material-icons-round">image</i>
         </div>
       </div>
-    </ng-container>
+    }
     <div
       class="pill steamvr-status"
       *ngVar="{ hover: false }; let state"
       (mouseenter)="state.hover = true"
       (mouseleave)="state.hover = false"
     >
-      <div
-        class="pill-icon"
-        @hshrink
-        *ngIf="['INACTIVE', 'INITIALIZED'].includes((openvr.status | async) ?? '')"
-      >
-        <img draggable="false" src="/assets/img/steamvr_icon.png" />
-      </div>
-      <div
-        class="pill-icon"
-        @hshrink
-        *ngIf="['INITIALIZING'].includes((openvr.status | async) ?? '')"
-      >
-        <div class="small-spinner"></div>
-      </div>
-      <span @hshrink *ngIf="state.hover">{{ 'SteamVR' }}:&nbsp;</span>
+      @if (['INACTIVE', 'INITIALIZED'].includes((openvr.status | async) ?? '')) {
+        <div class="pill-icon" @hshrink>
+          <img draggable="false" src="/assets/img/steamvr_icon.png" />
+        </div>
+      }
+      @if (['INITIALIZING'].includes((openvr.status | async) ?? '')) {
+        <div class="pill-icon" @hshrink>
+          <div class="small-spinner"></div>
+        </div>
+      }
+      @if (state.hover) {
+        <span @hshrink>{{ 'SteamVR' }}:&nbsp;</span>
+      }
       <span>{{ 'comp.main-status-bar.steamvr.' + (openvr.status | async) | translate }}</span>
     </div>
     <div
@@ -236,17 +240,27 @@
       [tooltip]="'comp.main-status-bar.vrchat.tooltip'"
     >
       <ng-container *ngVar="user | async as user">
-        <div class="pill-icon" *ngIf="!user || user.status === 'offline'" @hshrink>
-          <img draggable="false" src="/assets/img/vrc_icon.png" />
-        </div>
-        <div class="pill-icon" *ngIf="user && user.status !== 'offline'" @hshrink>
-          <i class="material-icons-round" [style.color]="getStatusColor(user.status)"
-            >brightness_1</i
-          >
-        </div>
-        <span translate @hshrink *ngIf="state.hover">VRChat:&nbsp;</span>
-        <span *ngIf="user">{{ user?.displayName }}</span>
-        <span translate *ngIf="!user">comp.main-status-bar.loggedOut</span>
+        @if (!user || user.status === 'offline') {
+          <div class="pill-icon" @hshrink>
+            <img draggable="false" src="/assets/img/vrc_icon.png" />
+          </div>
+        }
+        @if (user && user.status !== 'offline') {
+          <div class="pill-icon" @hshrink>
+            <i class="material-icons-round" [style.color]="getStatusColor(user.status)"
+              >brightness_1</i
+            >
+          </div>
+        }
+        @if (state.hover) {
+          <span translate @hshrink>VRChat:&nbsp;</span>
+        }
+        @if (user) {
+          <span>{{ user?.displayName }}</span>
+        }
+        @if (!user) {
+          <span translate>comp.main-status-bar.loggedOut</span>
+        }
       </ng-container>
     </div>
   </div>

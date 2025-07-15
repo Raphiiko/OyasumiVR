@@ -2,33 +2,35 @@
 <div class="setting-category">
   <h2 translate>hmd-automations.bigscreenBeyond.fanControl.title</h2>
   <div class="settings">
-    <div class="setting-row" *ngFor="let automation of fanAutomationEnableKeys">
-      <div class="setting-row-label" translate>
-        <span translate>hmd-automations.bigscreenBeyond.fanControl.{{ automation }}.title</span>
-        <span translate
-          >hmd-automations.bigscreenBeyond.fanControl.{{ automation }}.description</span
-        >
+    @for (automation of fanAutomationEnableKeys; track automation) {
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>hmd-automations.bigscreenBeyond.fanControl.{{ automation }}.title</span>
+          <span translate
+            >hmd-automations.bigscreenBeyond.fanControl.{{ automation }}.description</span
+          >
+        </div>
+        <div class="setting-row-action">
+          <app-slider-setting
+            class="with-margin"
+            [min]="fanControlConfig.allowUnsafeFanSpeed ? 0 : MIN_SAFE_FAN_SPEED"
+            [max]="100"
+            [value]="asNumber(fanControlConfig[asFanControlKey(automation + 'FanSpeed')])"
+            (valueChange)="updateFanAutomationSpeed(automation, $event)"
+            unit="%"
+            [disabled]="!fanControlConfig[automation]"
+          ></app-slider-setting>
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="fanControlConfig[automation]"
+              (change)="toggleFanAutomation(automation)"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
       </div>
-      <div class="setting-row-action">
-        <app-slider-setting
-          class="with-margin"
-          [min]="fanControlConfig.allowUnsafeFanSpeed ? 0 : MIN_SAFE_FAN_SPEED"
-          [max]="100"
-          [value]="asNumber(fanControlConfig[asFanControlKey(automation + 'FanSpeed')])"
-          (valueChange)="updateFanAutomationSpeed(automation, $event)"
-          unit="%"
-          [disabled]="!fanControlConfig[automation]"
-        ></app-slider-setting>
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="fanControlConfig[automation]"
-            (change)="toggleFanAutomation(automation)"
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
-      </div>
-    </div>
+    }
   </div>
   <div class="settings">
     <div class="setting-row">
@@ -90,28 +92,30 @@
 <div class="setting-category">
   <h2 translate>hmd-automations.bigscreenBeyond.rgb.title</h2>
   <div class="settings">
-    <div class="setting-row" *ngFor="let automation of rgbAutomationEnableKeys">
-      <div class="setting-row-label" translate>
-        <span translate>hmd-automations.bigscreenBeyond.rgb.{{ automation }}.title</span>
-        <span translate>hmd-automations.bigscreenBeyond.rgb.{{ automation }}.description</span>
+    @for (automation of rgbAutomationEnableKeys; track automation) {
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>hmd-automations.bigscreenBeyond.rgb.{{ automation }}.title</span>
+          <span translate>hmd-automations.bigscreenBeyond.rgb.{{ automation }}.description</span>
+        </div>
+        <div class="setting-row-action">
+          <app-color-picker
+            class="with-margin"
+            [disabled]="!rgbControlConfig[automation]"
+            [color]="asColor(rgbControlConfig[asRgbControlKey(automation + 'Rgb')])"
+            [title]="'hmd-automations.bigscreenBeyond.rgb.pickerTitle.' + automation"
+            (colorChange)="updateRgbAutomation(automation, $event)"
+          ></app-color-picker>
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="rgbControlConfig[automation]"
+              (change)="toggleRgbAutomation(automation)"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
       </div>
-      <div class="setting-row-action">
-        <app-color-picker
-          class="with-margin"
-          [disabled]="!rgbControlConfig[automation]"
-          [color]="asColor(rgbControlConfig[asRgbControlKey(automation + 'Rgb')])"
-          [title]="'hmd-automations.bigscreenBeyond.rgb.pickerTitle.' + automation"
-          (colorChange)="updateRgbAutomation(automation, $event)"
-        ></app-color-picker>
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="rgbControlConfig[automation]"
-            (change)="toggleRgbAutomation(automation)"
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
-      </div>
-    </div>
+    }
   </div>
 </div>

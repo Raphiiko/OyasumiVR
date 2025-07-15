@@ -38,7 +38,7 @@ export class LighthouseConsoleService {
       let deviceIndices: number[];
       try {
         deviceIndices = JSON.parse(event.payload);
-      } catch (e) {
+      } catch {
         return;
       }
       const devices = (await firstValueFrom(this.openvr.devices)).filter((d) =>

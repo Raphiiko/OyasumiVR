@@ -7,6 +7,70 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 
 ## [Unreleased]
 
+## [25.6.8]
+
+### Fixed
+
+- Fixed type usage in simple OSC script editor
+
+## [25.6.7]
+
+### Fixed
+
+- Fixed translation references for invite (request) reply placeholders
+
+## [25.6.6]
+
+### Changes
+
+- Various dependency upgrades
+
+## [25.6.5]
+
+### Fixed
+
+- Moved sidecar process logs to the correct log directory
+- Parsing of some cli parameters
+
+## [25.6.4]
+
+### Fixed
+
+- Fixed the foot lock being toggled at an interval, even when the sleeping pose did not change.
+- Missing Japanese and Dutch translations
+
+## [25.6.3]
+
+### Added
+
+- Achievement
+
+### Changed
+
+- Improved Japanese Translations
+
+## [25.6.2]
+
+### Fixed
+
+- Broken achievement trigger
+
+## [25.6.1]
+
+### Added
+
+- Allow known devices to be disabled, to replace the old "ignore" feature for base stations
+- Missing Japanese translations
+- Missing Simplified Chinese Translations
+
+### Fixed
+
+- Some strings not being translateable
+- Closing the event log filter dialog with the esc key resetting all the filters to their defaults
+- Run automations not loading into the view correctly in some cases
+- Update detection in standalone releases
+- The sleep preparation brightness automation triggering on configuration updates
+
 ## [25.6.0]
 
 ### Added

@@ -136,7 +136,7 @@ export class BrightnessCctAutomationService {
     // Run automation when sleep preparation is activated
     this.sleepPreparation.onSleepPreparation
       .pipe(
-        switchMap(() => this.automationConfigService.configs),
+        switchMap(() => this.automationConfigService.configs.pipe(take(1))),
         switchMap((configs) =>
           this.onAutomationTrigger(
             'SLEEP_PREPARATION',

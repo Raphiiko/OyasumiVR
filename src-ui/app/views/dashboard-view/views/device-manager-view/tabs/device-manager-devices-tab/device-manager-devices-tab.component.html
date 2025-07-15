@@ -12,156 +12,165 @@
       </div>
     </div>
 
-    <div class="tag-filter" *ngIf="tags.length > 0">
-      <app-select-box
-        type="SMALL"
-        class="tag-filter-select"
-        [items]="tagFilterOptions"
-        [selected]="selectedTagFilterOption"
-        (selectedChange)="onTagFilterChange($event)"
-      ></app-select-box>
-    </div>
+    @if (tags.length > 0) {
+      <div class="tag-filter">
+        <app-select-box
+          type="SMALL"
+          class="tag-filter-select"
+          [items]="tagFilterOptions"
+          [selected]="selectedTagFilterOption"
+          (selectedChange)="onTagFilterChange($event)"
+        ></app-select-box>
+      </div>
+    }
   </div>
 </div>
 
 <!-- Device List -->
 <div class="device-list">
-  <div
-    class="device-group"
-    *ngFor="let group of deviceGroups; trackBy: trackDeviceGroupBy"
-    @vshrink
-  >
-    <div class="device-group-header">
-      <img
-        *ngIf="group.type !== 'PREVIOUSLY_SEEN'"
-        [src]="'/assets/img/icon_' + group.icon + '.png'"
-        class="category-icon"
-      />
-      <i
-        *ngIf="group.type === 'PREVIOUSLY_SEEN'"
-        class="material-icons category-icon-text"
-        style="color: var(--color-text-3); font-size: 1.5em; margin-right: 0.75em"
-      >
-        history
-      </i>
-      <span class="group-label" translate>{{ group.label }}</span>
-      <span class="group-count">({{ group.devices.length }})</span>
-    </div>
-
-    <div
-      class="device-item"
-      *ngFor="let device of group.devices; trackBy: trackDeviceBy"
-      [class.has-nickname]="!!device.nickname"
-      [class.has-tags]="getDeviceTags(device).length > 0"
-      @vshrink
-    >
-      <!-- Tag-based left border -->
-      <div class="tag-border" *ngIf="getDeviceTags(device).length > 0">
+  @for (group of deviceGroups; track trackDeviceGroupBy($index, group)) {
+    <div class="device-group" @vshrink>
+      <div class="device-group-header">
+        @if (group.type !== 'PREVIOUSLY_SEEN') {
+          <img [src]="'/assets/img/icon_' + group.icon + '.png'" class="category-icon" />
+        }
+        @if (group.type === 'PREVIOUSLY_SEEN') {
+          <i
+            class="material-icons category-icon-text"
+            style="color: var(--color-text-3); font-size: 1.5em; margin-right: 0.75em"
+          >
+            history
+          </i>
+        }
+        <span class="group-label" translate>{{ group.label }}</span>
+        <span class="group-count">({{ group.devices.length }})</span>
+      </div>
+      @for (device of group.devices; track trackDeviceBy($index, device)) {
         <div
-          class="tag-border-segment"
-          *ngFor="let tag of getDeviceTags(device); trackBy: trackTagBy"
-          [style.background-color]="tag.color"
-        ></div>
-      </div>
-
-      <!-- Device Header -->
-      <div class="device-header" (click)="configureDevice(device)">
-        <!-- Main Row with core device info -->
-        <div class="device-main-row">
-          <img
-            [src]="'/assets/img/icon_' + getDeviceTypeIconForDevice(device.deviceType) + '.png'"
-            class="device-icon"
-          />
-
-          <div class="device-info">
-            <div class="device-name-line">
-              <span class="device-name">{{ device.typeName }}</span>
-              <span class="device-serial" *ngIf="getDeviceSerialNumber(device) && device.nickname">
-                S/N: {{ getDeviceSerialNumber(device) }}
-              </span>
+          class="device-item"
+          [class.has-nickname]="!!device.nickname"
+          [class.has-tags]="getDeviceTags(device).length > 0"
+          @vshrink
+        >
+          <!-- Tag-based left border -->
+          @if (getDeviceTags(device).length > 0) {
+            <div class="tag-border">
+              @for (tag of getDeviceTags(device); track trackTagBy($index, tag)) {
+                <div class="tag-border-segment" [style.background-color]="tag.color"></div>
+              }
             </div>
-            <div class="device-details">
-              <!-- Show nickname if set, otherwise show default name -->
-              <span class="device-default-name">
-                {{ device.nickname || device.defaultName }}
-              </span>
-              <!-- Show role if available -->
-              <span class="device-role" *ngIf="getDeviceRole(device)" translate>
-                {{ getDeviceRole(device) }}
-              </span>
+          }
+          <!-- Device Header -->
+          <div class="device-header" (click)="configureDevice(device)">
+            <!-- Main Row with core device info -->
+            <div class="device-main-row">
+              <img
+                [src]="'/assets/img/icon_' + getDeviceTypeIconForDevice(device.deviceType) + '.png'"
+                class="device-icon"
+              />
+              <div class="device-info">
+                <div class="device-name-line">
+                  <span class="device-name">{{ device.typeName }}</span>
+                  @if (device.disabled) {
+                    <i
+                      class="material-icons hidden-icon"
+                      [tooltip]="'device-manager.config.disabled.tooltip' | translate"
+                      [tooltipMode]="'right'"
+                    >
+                      visibility_off
+                    </i>
+                  }
+                  @if (getDeviceSerialNumber(device) && device.nickname) {
+                    <span class="device-serial"> S/N: {{ getDeviceSerialNumber(device) }} </span>
+                  }
+                </div>
+                <div class="device-details">
+                  <!-- Show nickname if set, otherwise show default name -->
+                  <span class="device-default-name">
+                    {{ device.nickname || device.defaultName }}
+                  </span>
+                  <!-- Show role if available -->
+                  @if (getDeviceRole(device)) {
+                    <span class="device-role" translate>
+                      {{ getDeviceRole(device) }}
+                    </span>
+                  }
+                </div>
+              </div>
+              <!-- Battery Info -->
+              @if (getDeviceBatteryInfo(device); as battery) {
+                <div class="battery-info">
+                  <span class="battery-level">{{ battery.level }}%</span>
+                  <i class="material-icons battery-icon" [class.charging]="battery.isCharging">
+                    {{ battery.isCharging ? 'battery_charging_full' : 'battery_std' }}
+                  </i>
+                </div>
+              }
+              <!-- Action Buttons -->
+              <div class="device-actions" (click)="$event.stopPropagation()">
+                <!-- Power Button -->
+                @if (canShowPowerButton(device)) {
+                  <app-device-power-button
+                    [id]="'btn-power-dm-' + sanitizeIdForCSS(device.id)"
+                    [powerState]="getDevicePowerState(device)"
+                    [anchorName]="getPowerButtonAnchorId(device)"
+                    [allowUnknownClick]="!!getDeviceLighthouse(device)"
+                    (powerAction)="handleDevicePowerAction(device, $event)"
+                    (rightClick)="rightClickDevicePowerButton(device)"
+                  ></app-device-power-button>
+                }
+                <!-- Lighthouse Force State Popover -->
+                @if (showLHStatePopover && selectedPopoverDevice?.id === device.id) {
+                  <div
+                    (clickOutside)="onClickOutsideLHStatePopover($event)"
+                    @fade
+                    class="lh-popover-container"
+                  >
+                    <app-lighthouse-force-state-popover
+                      (action)="onForceLHState(device, $event)"
+                      [style.position-anchor]="getPowerButtonAnchorId(device)"
+                      [type]="getDeviceLighthouse(device)?.deviceType"
+                    >
+                    </app-lighthouse-force-state-popover>
+                  </div>
+                }
+                <!-- Forget Button -->
+                @if (!isDeviceObserved(device.id)) {
+                  <button
+                    class="btn-forget"
+                    (click)="forgetDevice(device)"
+                    [tooltip]="'device-manager.actions.forget' | translate"
+                    [tooltipMode]="'left'"
+                  >
+                    <i class="material-icons">delete</i>
+                  </button>
+                }
+              </div>
             </div>
-          </div>
-
-          <!-- Battery Info -->
-          <div class="battery-info" *ngIf="getDeviceBatteryInfo(device) as battery">
-            <span class="battery-level">{{ battery.level }}%</span>
-            <i class="material-icons battery-icon" [class.charging]="battery.isCharging">
-              {{ battery.isCharging ? 'battery_charging_full' : 'battery_std' }}
-            </i>
-          </div>
-
-          <!-- Action Buttons -->
-          <div class="device-actions" (click)="$event.stopPropagation()">
-            <!-- Power Button -->
-            <app-device-power-button
-              *ngIf="canShowPowerButton(device)"
-              [id]="'btn-power-dm-' + sanitizeIdForCSS(device.id)"
-              [powerState]="getDevicePowerState(device)"
-              [anchorName]="getPowerButtonAnchorId(device)"
-              [allowUnknownClick]="!!getDeviceLighthouse(device)"
-              (powerAction)="handleDevicePowerAction(device, $event)"
-              (rightClick)="rightClickDevicePowerButton(device)"
-            ></app-device-power-button>
-
-            <!-- Lighthouse Force State Popover -->
-            <div
-              *ngIf="showLHStatePopover && selectedPopoverDevice?.id === device.id"
-              (clickOutside)="onClickOutsideLHStatePopover($event)"
-              @fade
-              class="lh-popover-container"
-            >
-              <app-lighthouse-force-state-popover
-                (action)="onForceLHState(device, $event)"
-                [style.position-anchor]="getPowerButtonAnchorId(device)"
-                [type]="getDeviceLighthouse(device)?.deviceType"
-              >
-              </app-lighthouse-force-state-popover>
-            </div>
-
-            <!-- Forget Button -->
-            <button
-              class="btn-forget"
-              *ngIf="!isDeviceObserved(device.id)"
-              (click)="forgetDevice(device)"
-              [tooltip]="'device-manager.actions.forget' | translate"
-              [tooltipMode]="'left'"
-            >
-              <i class="material-icons">delete</i>
-            </button>
+            <!-- Tags Row (separate row for better responsiveness) -->
+            @if (getDeviceTags(device).length > 0) {
+              <div class="device-tags-row">
+                <div class="device-tags-responsive">
+                  @for (tag of getDeviceTags(device); track trackTagBy($index, tag)) {
+                    <div class="tag-chip" [tooltip]="tag.name" [tooltipMode]="'left'">
+                      <div class="tag-color" [style.background-color]="tag.color"></div>
+                      <span class="tag-name">{{ tag.name }}</span>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
           </div>
         </div>
-
-        <!-- Tags Row (separate row for better responsiveness) -->
-        <div class="device-tags-row" *ngIf="getDeviceTags(device).length > 0">
-          <div class="device-tags-responsive">
-            <div
-              class="tag-chip"
-              *ngFor="let tag of getDeviceTags(device); trackBy: trackTagBy"
-              [tooltip]="tag.name"
-              [tooltipMode]="'left'"
-            >
-              <div class="tag-color" [style.background-color]="tag.color"></div>
-              <span class="tag-name">{{ tag.name }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      }
     </div>
-  </div>
+  }
 
   <!-- Empty State -->
-  <div class="empty-state" *ngIf="deviceGroups.length === 0" @vshrink>
-    <i class="material-icons">info</i>
-    <span translate>{{ emptyStateMessage }}</span>
-  </div>
+  @if (deviceGroups.length === 0) {
+    <div class="empty-state" @vshrink>
+      <i class="material-icons">info</i>
+      <span translate>{{ emptyStateMessage }}</span>
+    </div>
+  }
 </div>

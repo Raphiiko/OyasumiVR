@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 use std::{
     net::{SocketAddrV4, UdpSocket},
     str::FromStr,
+    sync::LazyLock,
 };
 use tokio::sync::Mutex;
 use tokio_util::sync::CancellationToken;
@@ -20,9 +21,7 @@ pub enum SupportedOscType {
     String,
 }
 
-lazy_static! {
-    static ref CANCELLATION_TOKEN: Mutex<Option<CancellationToken>> = Default::default();
-}
+static CANCELLATION_TOKEN: LazyLock<Mutex<Option<CancellationToken>>> = LazyLock::new(Default::default);
 
 #[tauri::command]
 #[oyasumivr_macros::command_profiling]

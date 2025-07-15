@@ -7,12 +7,14 @@
       translate="comp.update-modal.message"
       [translateParams]="{ newVersion: update?.version, currentVersion: update?.currentVersion }"
     ></p>
-    <div class="steam-ad" *ngIf="FLAVOUR === 'STANDALONE'">
-      <div class="steam-ad-logo">
-        <img src="/assets/img/steam_icon.png" />
+    @if (FLAVOUR === 'STANDALONE') {
+      <div class="steam-ad">
+        <div class="steam-ad-logo">
+          <img src="/assets/img/steam_icon.png" />
+        </div>
+        <div class="steam-ad-text" [innerHtml]="'comp.update-modal.steamAd' | translate"></div>
       </div>
-      <div class="steam-ad-text" [innerHtml]="'comp.update-modal.steamAd' | translate"></div>
-    </div>
+    }
   </div>
   <div class="pane-actions spread">
     <button class="btn btn-secondary" (click)="updateLater()" [disabled]="installing">
@@ -24,10 +26,14 @@
       (click)="install()"
       [disabled]="installing"
     >
-      <div class="small-spinner" *ngIf="installing" @hshrink></div>
-      <span *ngIf="!installing" @hshrink translate [translateParams]="{ version: update?.version }">
-        comp.update-modal.updateNow
-      </span>
+      @if (installing) {
+        <div class="small-spinner" @hshrink></div>
+      }
+      @if (!installing) {
+        <span @hshrink translate [translateParams]="{ version: update?.version }">
+          comp.update-modal.updateNow
+        </span>
+      }
     </button>
   </div>
 </div>

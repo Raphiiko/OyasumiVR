@@ -97,7 +97,10 @@ export class VRChatService {
             ...structuredClone(this._world.value),
             players: currentPlayers,
           };
-          if (event.userId === (await firstValueFrom(this.auth.user))?.id) context.loaded = true;
+          if (event.userId === (await firstValueFrom(this.auth.user))?.id) {
+            context.loaded = true;
+            context.joinedAt = event.timestamp.getTime();
+          }
           this._world.next(context);
           break;
         }
@@ -106,11 +109,15 @@ export class VRChatService {
           const existingPlayer = currentPlayers.find((player) => player.userId === event.userId);
           if (existingPlayer) {
             currentPlayers.splice(currentPlayers.indexOf(existingPlayer), 1);
-          }          const context = {
+          }
+          const context = {
             ...structuredClone(this._world.value),
             players: currentPlayers,
           };
-          if (event.userId === (await firstValueFrom(this.auth.user))?.id) context.loaded = false;
+          if (event.userId === (await firstValueFrom(this.auth.user))?.id) {
+            context.loaded = false;
+            context.joinedAt = undefined;
+          }
           this._world.next(context);
           break;
         }
@@ -120,6 +127,7 @@ export class VRChatService {
             instanceId: event.instanceId,
             loaded: false,
             players: [],
+            joinedAt: undefined,
           });
           break;
       }
@@ -247,6 +255,5 @@ export class VRChatService {
 
   private async saveSettings() {
     await SETTINGS_STORE.set(SETTINGS_KEY_VRCHAT_API, this._settings.value);
-    await SETTINGS_STORE.save();
   }
 }

@@ -1,33 +1,38 @@
-<div class="pane" *ngIf="type">
-  <div class="label" @hshrink *ngFor="let label of hoverAction ? [hoverAction] : []">
-    <span>{{ label | translate }}</span>
+@if (type) {
+  <div class="pane">
+    @for (label of hoverAction ? [hoverAction] : []; track label) {
+      <div class="label" @hshrink>
+        <span>{{ label | translate }}</span>
+      </div>
+    }
+    <div class="action-row">
+      <app-device-power-button
+        [powerState]="'off'"
+        [customIcon]="'power_settings_new'"
+        [title]="getButtonTitle('on') | translate"
+        (powerAction)="this.onPowerAction('on', $event)"
+        (mouseenter)="setHoverAction('comp.device-list.lhForceState.on')"
+        (mouseleave)="hoverAction = ''"
+      ></app-device-power-button>
+      @if (type === 'lighthouseV2') {
+        <app-device-power-button
+          [powerState]="'on'"
+          [customIcon]="'mode_standby'"
+          [title]="getButtonTitle('standby') | translate"
+          (powerAction)="this.onPowerAction('standby', $event)"
+          (mouseenter)="setHoverAction('comp.device-list.lhForceState.standby')"
+          (mouseleave)="hoverAction = ''"
+        ></app-device-power-button>
+      }
+      <app-device-power-button
+        [powerState]="'on'"
+        [customIcon]="'nights_stay'"
+        [title]="getButtonTitle('sleep') | translate"
+        (powerAction)="this.onPowerAction('sleep', $event)"
+        (mouseenter)="setHoverAction('comp.device-list.lhForceState.sleep')"
+        (mouseleave)="hoverAction = ''"
+      ></app-device-power-button>
+    </div>
   </div>
-  <div class="action-row">
-    <app-device-power-button
-      [powerState]="'off'"
-      [customIcon]="'power_settings_new'"
-      [title]="getButtonTitle('on') | translate"
-      (powerAction)="this.onPowerAction('on', $event)"
-      (mouseenter)="setHoverAction('comp.device-list.lhForceState.on')"
-      (mouseleave)="hoverAction = ''"
-    ></app-device-power-button>
-    <app-device-power-button
-      *ngIf="type === 'lighthouseV2'"
-      [powerState]="'on'"
-      [customIcon]="'mode_standby'"
-      [title]="getButtonTitle('standby') | translate"
-      (powerAction)="this.onPowerAction('standby', $event)"
-      (mouseenter)="setHoverAction('comp.device-list.lhForceState.standby')"
-      (mouseleave)="hoverAction = ''"
-    ></app-device-power-button>
-    <app-device-power-button
-      [powerState]="'on'"
-      [customIcon]="'nights_stay'"
-      [title]="getButtonTitle('sleep') | translate"
-      (powerAction)="this.onPowerAction('sleep', $event)"
-      (mouseenter)="setHoverAction('comp.device-list.lhForceState.sleep')"
-      (mouseleave)="hoverAction = ''"
-    ></app-device-power-button>
-  </div>
-</div>
+}
 <div class="spacer"></div>

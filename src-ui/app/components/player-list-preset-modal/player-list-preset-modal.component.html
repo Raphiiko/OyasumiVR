@@ -1,71 +1,83 @@
 <div class="pane modal modal-lg" @fadeUp>
   <div class="pane-title">
-    <span *ngIf="mode === 'save'" translate>comp.player-list-preset-modal.title.save</span>
-    <span *ngIf="mode === 'load'" translate>comp.player-list-preset-modal.title.load</span>
+    @if (mode === 'save') {
+      <span translate>comp.player-list-preset-modal.title.save</span>
+    }
+    @if (mode === 'load') {
+      <span translate>comp.player-list-preset-modal.title.load</span>
+    }
     <button class="btn btn-secondary btn-icon btn-close" (click)="close()">
       <i class="material-icons">close</i>
     </button>
   </div>
   <div class="pane-content">
-    <div class="save-input" *ngIf="mode === 'save'">
-      <input
-        type="text"
-        [(ngModel)]="saveName"
-        [placeholder]="'comp.player-list-preset-modal.namePlaceholder' | translate"
-        maxlength="24"
-      />
-      <button
-        class="btn btn-primary"
-        [disabled]="saved || !validSaveName"
-        (click)="saveNewPreset()"
-      >
-        <i class="material-icons">save</i>
-        <span translate>shared.modals.save</span>
-      </button>
-    </div>
+    @if (mode === 'save') {
+      <div class="save-input">
+        <input
+          type="text"
+          [(ngModel)]="saveName"
+          [placeholder]="'comp.player-list-preset-modal.namePlaceholder' | translate"
+          maxlength="24"
+        />
+        <button
+          class="btn btn-primary"
+          [disabled]="saved || !validSaveName"
+          (click)="saveNewPreset()"
+        >
+          <i class="material-icons">save</i>
+          <span translate>shared.modals.save</span>
+        </button>
+      </div>
+    }
     <div class="presets-list">
-      <div class="no-presets" *ngIf="!lists.length" @vshrink>
-        <span translate>comp.player-list-preset-modal.noPresets</span>
-      </div>
-      <div class="preset" *ngFor="let list of lists; trackBy: trackPresetBy" @vshrink>
-        <div class="preset-info">
-          <span>{{ list.name }}</span>
-          <span>{{
-            'comp.player-list-preset-modal.preset.subtitle'
-              | translate: { count: list.playerIds.length }
-          }}</span>
+      @if (!lists.length) {
+        <div class="no-presets" @vshrink>
+          <span translate>comp.player-list-preset-modal.noPresets</span>
         </div>
-        <div class="preset-actions">
-          <button
-            class="btn btn-secondary"
-            [disabled]="saved"
-            (click)="deletePreset(list)"
-            [tooltip]="'comp.player-list-preset-modal.delete'"
-            [tooltipMode]="'left'"
-          >
-            <i class="material-icons">delete</i>
-          </button>
-          <button
-            class="btn btn-secondary"
-            *ngIf="mode === 'save'"
-            [disabled]="saved"
-            (click)="overwritePreset(list)"
-            [tooltip]="'comp.player-list-preset-modal.overwrite'"
-            [tooltipMode]="'left'"
-          >
-            <i class="material-icons">save</i>
-          </button>
-          <button
-            class="btn btn-secondary"
-            *ngIf="mode === 'load'"
-            (click)="loadPreset(list)"
-            [tooltip]="'comp.player-list-preset-modal.load'"
-            [tooltipMode]="'left'"
-          >
-            <i class="material-icons">file_open</i>
-          </button>
+      }
+      @for (list of lists; track trackPresetBy($index, list)) {
+        <div class="preset" @vshrink>
+          <div class="preset-info">
+            <span>{{ list.name }}</span>
+            <span>{{
+              'comp.player-list-preset-modal.preset.subtitle'
+                | translate: { count: list.playerIds.length }
+            }}</span>
+          </div>
+          <div class="preset-actions">
+            <button
+              class="btn btn-secondary"
+              [disabled]="saved"
+              (click)="deletePreset(list)"
+              [tooltip]="'comp.player-list-preset-modal.delete'"
+              [tooltipMode]="'left'"
+            >
+              <i class="material-icons">delete</i>
+            </button>
+            @if (mode === 'save') {
+              <button
+                class="btn btn-secondary"
+                [disabled]="saved"
+                (click)="overwritePreset(list)"
+                [tooltip]="'comp.player-list-preset-modal.overwrite'"
+                [tooltipMode]="'left'"
+              >
+                <i class="material-icons">save</i>
+              </button>
+            }
+            @if (mode === 'load') {
+              <button
+                class="btn btn-secondary"
+                (click)="loadPreset(list)"
+                [tooltip]="'comp.player-list-preset-modal.load'"
+                [tooltipMode]="'left'"
+              >
+                <i class="material-icons">file_open</i>
+              </button>
+            }
+          </div>
         </div>
-      </div>
+      }
     </div>
   </div>
 </div>

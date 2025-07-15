@@ -57,7 +57,7 @@ export class VRChatSocket {
         info(`[VRChat] Closing existing socket connection`);
         try {
           this.socket.close();
-        } catch (e) {
+        } catch {
           // Ignore any error, we just want to disconnect
         }
         this.socket = undefined;
@@ -79,7 +79,7 @@ export class VRChatSocket {
           if (this.socket) {
             try {
               this.socket.close();
-            } catch (e) {
+            } catch {
               // Ignore any error, we just want to disconnect
             }
             this.socket = undefined;

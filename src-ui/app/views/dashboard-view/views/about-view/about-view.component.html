@@ -80,23 +80,29 @@
     </div>
   </div>
 
-  <div class="row" @vshrink *ngIf="supporterCache.get()?.length">
-    <div class="supporters-row">
-      <div class="supporters-list" #supportersList>
-        <div class="supporters-tier" *ngFor="let tier of supporterCache.get() ?? []">
-          <div class="supporters-tier-label">
-            {{ tier.name }}
-          </div>
-          <div class="supporters-tier-members">
-            <div class="supporters-tier-member" *ngFor="let supporter of tier.supporters">
-              {{ supporter }}
+  @if (supporterCache.get()?.length) {
+    <div class="row" @vshrink>
+      <div class="supporters-row">
+        <div class="supporters-list" #supportersList>
+          @for (tier of supporterCache.get() ?? []; track tier) {
+            <div class="supporters-tier">
+              <div class="supporters-tier-label">
+                {{ tier.name }}
+              </div>
+              <div class="supporters-tier-members">
+                @for (supporter of tier.supporters; track supporter) {
+                  <div class="supporters-tier-member">
+                    {{ supporter }}
+                  </div>
+                }
+              </div>
             </div>
-          </div>
+          }
         </div>
+        <div class="supporters-label" translate>about.supporters</div>
       </div>
-      <div class="supporters-label" translate>about.supporters</div>
     </div>
-  </div>
+  }
 
   <div class="row">
     <div class="left"></div>
@@ -106,18 +112,19 @@
   </div>
   <div class="row">
     <div class="translation-author-list">
-      <div
-        class="translation-author-list-entry"
-        *ngFor="let contributor of translationContributors"
-      >
-        <span [ngClass]="['fi', 'fi-' + (contributor.flagCode ?? contributor.langCode)]"></span>
-        <span>{{ contributor.langNameNative }}</span>
-        <span>&nbsp;|&nbsp;</span>
-        <a *ngIf="contributor.url" [href]="contributor.url" target="_blank">{{
-          contributor.name
-        }}</a
-        ><span *ngIf="!contributor.url">{{ contributor.name }}</span>
-      </div>
+      @for (contributor of translationContributors; track contributor) {
+        <div class="translation-author-list-entry">
+          <span [ngClass]="['fi', 'fi-' + (contributor.flagCode ?? contributor.langCode)]"></span>
+          <span>{{ contributor.langNameNative }}</span>
+          <span>&nbsp;|&nbsp;</span>
+          @if (contributor.url) {
+            <a [href]="contributor.url" target="_blank">{{ contributor.name }}</a>
+          }
+          @if (!contributor.url) {
+            <span>{{ contributor.name }}</span>
+          }
+        </div>
+      }
     </div>
   </div>
 

@@ -150,27 +150,29 @@
             </div>
           </div>
           <div class="setting-row-group">
-            <div class="setting-row compact" *ngFor="let item of persistentStorageItems">
-              <div class="setting-row-label" translate>
-                <span translate>{{
-                  'settings.advanced.persistentData.dataType.' + item.key + '.title' | translate
-                }}</span>
-                <span translate>{{
-                  'settings.advanced.persistentData.dataType.' + item.key + '.description'
-                    | translate
-                }}</span>
+            @for (item of persistentStorageItems; track item) {
+              <div class="setting-row compact">
+                <div class="setting-row-label" translate>
+                  <span translate>{{
+                    'settings.advanced.persistentData.dataType.' + item.key + '.title' | translate
+                  }}</span>
+                  <span translate>{{
+                    'settings.advanced.persistentData.dataType.' + item.key + '.description'
+                      | translate
+                  }}</span>
+                </div>
+                <div class="setting-row-action">
+                  <label class="check-toggle">
+                    <input
+                      type="checkbox"
+                      [checked]="isPersistentStorageItemChecked(item.key)"
+                      (change)="togglePersistentStorageItem(item.key)"
+                    />
+                    <span class="check-toggle-checkmark"></span>
+                  </label>
+                </div>
               </div>
-              <div class="setting-row-action">
-                <label class="check-toggle">
-                  <input
-                    type="checkbox"
-                    [checked]="isPersistentStorageItemChecked(item.key)"
-                    (change)="togglePersistentStorageItem(item.key)"
-                  />
-                  <span class="check-toggle-checkmark"></span>
-                </label>
-              </div>
-            </div>
+            }
           </div>
         </div>
       </div>

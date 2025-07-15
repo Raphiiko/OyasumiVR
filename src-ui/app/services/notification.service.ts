@@ -224,7 +224,7 @@ export class NotificationService {
       if (this.ovrtSocket) {
         try {
           this.ovrtSocket.close();
-        } catch (e) {
+        } catch {
           // Ignore any error, we just want to disconnect
         }
         this.ovrtSocket = undefined;
@@ -248,7 +248,7 @@ export class NotificationService {
           if (this.ovrtSocket) {
             try {
               this.ovrtSocket.close();
-            } catch (e) {
+            } catch {
               // Ignore any error, we just want to disconnect
             }
             this.ovrtSocket = undefined;

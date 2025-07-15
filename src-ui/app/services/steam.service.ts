@@ -12,22 +12,26 @@ import {
   distinctUntilChanged,
   skip,
   map,
-  shareReplay,
   combineLatest,
   debounceTime,
+  take,
+  tap,
 } from 'rxjs';
-import { error, info } from '@tauri-apps/plugin-log';
+import { debug, error, info } from '@tauri-apps/plugin-log';
 import { SleepService } from './sleep.service';
 import { VRChatService } from './vrchat-api/vrchat.service';
 import { DEV_VRCHAT_USER_ID } from '../globals';
 import { sleep } from '../utils/promise-utils';
+import { AppSettingsService } from './app-settings.service';
+import { MqttService } from './mqtt/mqtt.service';
 
 export const SteamAchievements = {
   START_OYASUMIVR: 'START_OYASUMIVR',
   SMSPAM: 'SMSPAM',
   SLEEP_8H: 'SLEEP_8H',
-  QUICK_EEPER: 'QUICK_EEPER',
+  QUICK_EEPER: 'QUICK_EEPER3',
   DEV_SLEEP: 'DEV_SLEEP',
+  HASS_CON: 'HASS_CON',
 } as const;
 
 @Injectable({
@@ -39,7 +43,9 @@ export class SteamService {
 
   constructor(
     private sleep: SleepService,
-    private vrchat: VRChatService
+    private vrchat: VRChatService,
+    private appSettings: AppSettingsService,
+    private mqttService: MqttService
   ) {
     this.active
       .pipe(distinctUntilChanged(), filter(Boolean))
@@ -60,12 +66,14 @@ export class SteamService {
         );
       }
     }, 5000);
+
     // Handle achievements
     this.handleAchievement_START_OYASUMIVR();
     this.handleAchievement_SMSPAM();
     this.handleAchievement_SLEEP_8H();
     this.handleAchievement_QUICK_EEPER();
     this.handleAchievement_DEV_SLEEP();
+    this.handleAchievement_CONNECT_HASS();
   }
 
   public async getSteamActive(): Promise<boolean> {
@@ -89,11 +97,16 @@ export class SteamService {
   // ACHIEVEMENT HANDLERS
   private async handleAchievement_START_OYASUMIVR() {
     // Set START_OYASUMIVR achievement when Steamworks becomes active
-    this.active.pipe(distinctUntilChanged(), filter(Boolean)).subscribe(async () => {
-      if (!(await this.getAchievement(SteamAchievements.START_OYASUMIVR))) {
-        await this.setAchievement(SteamAchievements.START_OYASUMIVR, true);
-      }
-    });
+    this.active
+      .pipe(
+        distinctUntilChanged(),
+        filter(Boolean),
+        switchMap(() => this.getAchievement(SteamAchievements.START_OYASUMIVR)),
+        filter((unlocked) => !unlocked),
+        switchMap(() => this.setAchievement(SteamAchievements.START_OYASUMIVR, true)),
+        take(1)
+      )
+      .subscribe();
   }
 
   private async handleAchievement_SMSPAM() {
@@ -108,6 +121,7 @@ export class SteamService {
         }, [] as number[]),
         filter((timestamps: number[]) => timestamps.length === 6),
         throttleTime(10000, asyncScheduler, { leading: true, trailing: false }),
+        tap(() => debug('[Steam] SMSPAM achievement triggered')),
         switchMap(() => this.getAchievement(SteamAchievements.SMSPAM)),
         filter((unlocked) => !unlocked),
         switchMap(() => this.setAchievement(SteamAchievements.SMSPAM, true))
@@ -136,6 +150,8 @@ export class SteamService {
           {} as { enabledTimestamp?: number; trigger?: boolean }
         ),
         filter((acc) => !!acc.trigger),
+        switchMap(() => this.vrchat.vrchatProcessActive.pipe(take(1))),
+        tap(() => debug('[Steam] SLEEP_8H achievement triggered')),
         switchMap(() => this.getAchievement(SteamAchievements.SLEEP_8H)),
         filter((unlocked) => !unlocked),
         switchMap(() => this.setAchievement(SteamAchievements.SLEEP_8H, true))
@@ -144,14 +160,6 @@ export class SteamService {
   }
 
   private async handleAchievement_QUICK_EEPER() {
-    const lastWorldChange = this.vrchat.world.pipe(
-      map((world) => world.instanceId ?? null),
-      distinctUntilChanged(),
-      filter(Boolean),
-      map(() => Date.now()),
-      shareReplay(1)
-    );
-
     this.sleep.onSleepModeChange
       .pipe(
         filter((change) => {
@@ -161,8 +169,17 @@ export class SteamService {
             change.reason.automation === 'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR'
           );
         }),
-        switchMap(() => lastWorldChange),
+        switchMap(() => this.vrchat.vrchatProcessActive.pipe(take(1))),
+        filter(Boolean),
+        switchMap(() =>
+          this.vrchat.world.pipe(
+            map((world) => world.joinedAt ?? null),
+            take(1)
+          )
+        ),
+        filter(Boolean),
         filter((timestamp) => Date.now() - timestamp < 1000 * 60 * 20),
+        tap(() => debug('[Steam] QUICK_EEPER achievement triggered')),
         switchMap(() => this.getAchievement(SteamAchievements.QUICK_EEPER)),
         filter((unlocked) => !unlocked),
         switchMap(() => this.setAchievement(SteamAchievements.QUICK_EEPER, true))
@@ -190,9 +207,24 @@ export class SteamService {
           return condition;
         }),
         filter(Boolean),
+        tap(() => debug('[Steam] DEV_SLEEP achievement triggered')),
         switchMap(() => this.getAchievement(SteamAchievements.DEV_SLEEP)),
         filter((unlocked) => !unlocked),
         switchMap(() => this.setAchievement(SteamAchievements.DEV_SLEEP, true))
+      )
+      .subscribe();
+  }
+
+  private async handleAchievement_CONNECT_HASS() {
+    this.mqttService.clientStatus
+      .pipe(
+        distinctUntilChanged(),
+        debounceTime(1000),
+        filter((status) => status === 'CONNECTED'),
+        switchMap(() => this.getAchievement(SteamAchievements.HASS_CON)),
+        filter((unlocked) => !unlocked),
+        switchMap(() => this.setAchievement(SteamAchievements.HASS_CON, true)),
+        take(1)
       )
       .subscribe();
   }

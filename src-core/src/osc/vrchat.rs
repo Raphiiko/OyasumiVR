@@ -1,4 +1,4 @@
-use std::time::Duration;
+use std::{sync::LazyLock, time::Duration};
 
 use chrono::{DateTime, Utc};
 use tokio::sync::Mutex;
@@ -7,11 +7,9 @@ use crate::Models::overlay_sidecar::MicrophoneActivityMode;
 
 const VOICE_ACTIVITY_TIMEOUT: u64 = 1000;
 
-lazy_static! {
-    static ref VOICE_ACTIVE: Mutex<bool> = Mutex::new(false);
-    static ref VOICE_LAST_VALUE: Mutex<f32> = Mutex::new(0.0);
-    static ref VOICE_LAST_ACTIVE: Mutex<DateTime::<Utc>> = Mutex::new(Utc::now());
-}
+static VOICE_ACTIVE: LazyLock<Mutex<bool>> = LazyLock::new(|| Mutex::new(false));
+static VOICE_LAST_VALUE: LazyLock<Mutex<f32>> = LazyLock::new(|| Mutex::new(0.0));
+static VOICE_LAST_ACTIVE: LazyLock<Mutex<DateTime<Utc>>> = LazyLock::new(|| Mutex::new(Utc::now()));
 
 async fn process_voice_parameter(value: Option<f32>) {
     let value = match value {

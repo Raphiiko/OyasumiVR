@@ -3,30 +3,33 @@
     <div class="pane-title" translate>notification-sound.title</div>
     <div class="pane-content no-padding">
       <div class="sound-list">
-        <div
-          *ngFor="let sound of availableSounds"
-          class="sound-item"
-          [class.selected]="soundConfig.sound.id === sound.id"
-          (click)="selectSound(sound)"
-        >
-          <div class="selection-indicator">
-            <i class="material-symbols-outlined">{{
-              soundConfig.sound.id === sound.id ? 'radio_button_checked' : 'radio_button_unchecked'
-            }}</i>
-          </div>
-          <div class="sound-info">
-            <div class="sound-name"
-              >{{ sound.name }} <span class="sound-duration">{{ sound.duration }}s</span></div
-            >
-          </div>
-          <button
-            class="btn btn-icon-only"
-            (click)="playSound(sound); $event.stopPropagation()"
-            [disabled]="((playingSounds$ | async) ?? []).includes(sound.id)"
+        @for (sound of availableSounds; track sound) {
+          <div
+            class="sound-item"
+            [class.selected]="soundConfig.sound.id === sound.id"
+            (click)="selectSound(sound)"
           >
-            <i class="material-symbols-outlined icon-filled">play_arrow</i>
-          </button>
-        </div>
+            <div class="selection-indicator">
+              <i class="material-symbols-outlined">{{
+                soundConfig.sound.id === sound.id
+                  ? 'radio_button_checked'
+                  : 'radio_button_unchecked'
+              }}</i>
+            </div>
+            <div class="sound-info">
+              <div class="sound-name"
+                >{{ sound.name }} <span class="sound-duration">{{ sound.duration }}s</span></div
+              >
+            </div>
+            <button
+              class="btn btn-icon-only"
+              (click)="playSound(sound); $event.stopPropagation()"
+              [disabled]="((playingSounds$ | async) ?? []).includes(sound.id)"
+            >
+              <i class="material-symbols-outlined icon-filled">play_arrow</i>
+            </button>
+          </div>
+        }
       </div>
       <div class="settings-wrapper">
         <div class="settings">

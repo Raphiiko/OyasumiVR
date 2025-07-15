@@ -3,18 +3,20 @@
   <div class="pane-content">
     <div class="setting-view-container">
       <p translate>join-notifications.description</p>
-      <div class="alert warning" *ngIf="(vrchat.user | async) === null" @vshrink>
-        <div class="alert-bg"></div>
-        <div class="alert-icon">
-          <i class="material-icons"> warning </i>
+      @if ((vrchat.user | async) === null) {
+        <div class="alert warning" @vshrink>
+          <div class="alert-bg"></div>
+          <div class="alert-icon">
+            <i class="material-icons"> warning </i>
+          </div>
+          <div class="alert-content">
+            <span>{{ 'shared.common.vrcLoginRequired' | translate }}</span>
+            <button class="btn btn-secondary" (click)="vrchat.showLoginModal()" translate
+              >shared.modals.login
+            </button>
+          </div>
         </div>
-        <div class="alert-content">
-          <span>{{ 'shared.common.vrcLoginRequired' | translate }}</span>
-          <button class="btn btn-secondary" (click)="vrchat.showLoginModal()" translate
-            >shared.modals.login
-          </button>
-        </div>
-      </div>
+      }
       <div class="settings">
         <div class="setting-row">
           <div class="setting-row-label" translate>
@@ -46,21 +48,23 @@
             ></app-select-box>
           </div>
         </div>
-        <div class="setting-row-group" @vshrink *ngIf="joinSoundOption?.id !== 'DISABLED'">
-          <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate>join-notifications.joinSound.title</span>
-              <span translate>join-notifications.joinSound.description</span>
-            </div>
-            <div class="setting-row-action">
-              <app-notification-sound-button
-                [toggleable]="false"
-                [soundConfig]="config.joinSound"
-                (soundConfigChange)="updateJoinSound($event)"
-              ></app-notification-sound-button>
+        @if (joinSoundOption?.id !== 'DISABLED') {
+          <div class="setting-row-group" @vshrink>
+            <div class="setting-row">
+              <div class="setting-row-label" translate>
+                <span translate>join-notifications.joinSound.title</span>
+                <span translate>join-notifications.joinSound.description</span>
+              </div>
+              <div class="setting-row-action">
+                <app-notification-sound-button
+                  [toggleable]="false"
+                  [soundConfig]="config.joinSound"
+                  (soundConfigChange)="updateJoinSound($event)"
+                ></app-notification-sound-button>
+              </div>
             </div>
           </div>
-        </div>
+        }
         <div class="setting-row">
           <div class="setting-row-label" translate>
             <span translate>join-notifications.onlyWhenPreviouslyAlone.title</span>
@@ -109,21 +113,23 @@
             ></app-select-box>
           </div>
         </div>
-        <div class="setting-row-group" @vshrink *ngIf="leaveSoundOption?.id !== 'DISABLED'">
-          <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate>join-notifications.leaveSound.title</span>
-              <span translate>join-notifications.leaveSound.description</span>
-            </div>
-            <div class="setting-row-action">
-              <app-notification-sound-button
-                [toggleable]="false"
-                [soundConfig]="config.leaveSound"
-                (soundConfigChange)="updateLeaveSound($event)"
-              ></app-notification-sound-button>
+        @if (leaveSoundOption?.id !== 'DISABLED') {
+          <div class="setting-row-group" @vshrink>
+            <div class="setting-row">
+              <div class="setting-row-label" translate>
+                <span translate>join-notifications.leaveSound.title</span>
+                <span translate>join-notifications.leaveSound.description</span>
+              </div>
+              <div class="setting-row-action">
+                <app-notification-sound-button
+                  [toggleable]="false"
+                  [soundConfig]="config.leaveSound"
+                  (soundConfigChange)="updateLeaveSound($event)"
+                ></app-notification-sound-button>
+              </div>
             </div>
           </div>
-        </div>
+        }
         <div class="setting-row">
           <div class="setting-row-label" translate>
             <span translate>join-notifications.onlyWhenLeftAlone.title</span>

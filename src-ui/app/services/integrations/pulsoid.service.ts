@@ -269,7 +269,6 @@ export class PulsoidService {
 
   private async saveSettings() {
     await SETTINGS_STORE.set(SETTINGS_KEY_PULSOID_API, this.settings.value);
-    await SETTINGS_STORE.save();
   }
 
   private async manageSocketConnection() {
@@ -277,7 +276,7 @@ export class PulsoidService {
       if (this.socket) {
         try {
           this.socket.close();
-        } catch (e) {
+        } catch {
           // Ignore any error, we just want to disconnect
         }
         this.socket = undefined;
@@ -304,7 +303,7 @@ export class PulsoidService {
           if (this.socket) {
             try {
               this.socket.close();
-            } catch (e) {
+            } catch {
               // Ignore any error, we just want to disconnect
             }
             this.socket = undefined;
@@ -347,7 +346,7 @@ export class PulsoidService {
     let message: PulsoidMessage;
     try {
       message = JSON.parse(messageData);
-    } catch (e) {
+    } catch {
       warn('[Pulsoid] Could not parse socket message: ' + messageData);
       return;
     }

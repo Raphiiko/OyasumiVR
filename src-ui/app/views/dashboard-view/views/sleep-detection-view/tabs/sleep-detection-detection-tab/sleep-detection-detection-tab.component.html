@@ -17,29 +17,31 @@
         </label>
       </div>
     </div>
-    <div class="setting-row-group" @vshrink *ngIf="showSleepDetectionCalibrationWarning">
-      <div class="setting-row">
-        <div class="setting-row-icon">
-          <i class="material-icons warning-icon">warning</i>
-        </div>
-        <div class="setting-row-label" translate>
-          <span
-            style="display: initial"
-            [innerHtml]="
-              'sleep-detection.sleepDetection.automation.calibrationPending.title' | translate
-            "
-          ></span>
-          <span></span>
-        </div>
-        <div class="setting-row-action">
-          <button class="btn btn-secondary" (click)="calibrate()">
-            <span translate
-              >sleep-detection.sleepDetection.automation.calibrationPending.calibrate</span
-            >
-          </button>
+    @if (showSleepDetectionCalibrationWarning) {
+      <div class="setting-row-group" @vshrink>
+        <div class="setting-row">
+          <div class="setting-row-icon">
+            <i class="material-icons warning-icon">warning</i>
+          </div>
+          <div class="setting-row-label" translate>
+            <span
+              style="display: initial"
+              [innerHtml]="
+                'sleep-detection.sleepDetection.automation.calibrationPending.title' | translate
+              "
+            ></span>
+            <span></span>
+          </div>
+          <div class="setting-row-action">
+            <button class="btn btn-secondary" (click)="calibrate()">
+              <span translate
+                >sleep-detection.sleepDetection.automation.calibrationPending.calibrate</span
+              >
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    }
   </div>
 </div>
 
@@ -100,33 +102,29 @@
         <span translate>sleep-detection.modals.enableForSleepDetector.timeWindow.description</span>
       </div>
       <div class="setting-row-action">
-        <div
-          class="input-wrapper"
-          *ngIf="automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindow"
-          @fade
-        >
-          <input
-            type="time"
-            [value]="activationWindowStart"
-            (change)="onChangeActivationWindowStart(activationWindowStartInput.value)"
-            #activationWindowStartInput
-          />
-        </div>
-        <span *ngIf="automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindow" @fade>
-          to
-        </span>
-        <div
-          class="input-wrapper"
-          *ngIf="automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindow"
-          @fade
-        >
-          <input
-            type="time"
-            [value]="activationWindowEnd"
-            (change)="onChangeActivationWindowEnd(activationWindowEndInput.value)"
-            #activationWindowEndInput
-          />
-        </div>
+        @if (automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindow) {
+          <div class="input-wrapper" @fade>
+            <input
+              type="time"
+              [value]="activationWindowStart"
+              (change)="onChangeActivationWindowStart(activationWindowStartInput.value)"
+              #activationWindowStartInput
+            />
+          </div>
+        }
+        @if (automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindow) {
+          <span @fade> to </span>
+        }
+        @if (automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindow) {
+          <div class="input-wrapper" @fade>
+            <input
+              type="time"
+              [value]="activationWindowEnd"
+              (change)="onChangeActivationWindowEnd(activationWindowEndInput.value)"
+              #activationWindowEndInput
+            />
+          </div>
+        }
         <label class="switch-toggle">
           <input
             type="checkbox"

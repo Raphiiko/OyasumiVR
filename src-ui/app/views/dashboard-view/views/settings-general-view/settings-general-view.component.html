@@ -6,20 +6,22 @@
         <h2 translate>settings.general.language.title</h2>
         <p translate>settings.general.language.description</p>
         <div class="settings-language">
-          <label class="radio-button" *ngFor="let language of languages">
-            <input
-              type="radio"
-              name="radio-language"
-              [value]="language.code"
-              [checked]="appSettings.userLanguage === language.code"
-              (change)="setUserLanguage(language.code)"
-            />
-            <span class="radio-button-dot"></span>
-            <span class="radio-button-label">
-              <span class="fi fi-{{ language.flag || language.code }}"></span>
-              <span>{{ language.label }}</span>
-            </span>
-          </label>
+          @for (language of languages; track language) {
+            <label class="radio-button">
+              <input
+                type="radio"
+                name="radio-language"
+                [value]="language.code"
+                [checked]="appSettings.userLanguage === language.code"
+                (change)="setUserLanguage(language.code)"
+              />
+              <span class="radio-button-dot"></span>
+              <span class="radio-button-label">
+                <span class="fi fi-{{ language.flag || language.code }}"></span>
+                <span>{{ language.label }}</span>
+              </span>
+            </label>
+          }
         </div>
       </div>
 
@@ -266,25 +268,28 @@
               <i class="material-icons">folder</i>
             </button>
           </div>
-          <div
-            class="alert"
-            [class.success]="lighthouseConsolePathAlert.type === 'SUCCESS'"
-            [class.error]="lighthouseConsolePathAlert.type === 'ERROR'"
-            *ngIf="lighthouseConsolePathAlert"
-            [@vshrink]
-          >
-            <div class="alert-bg"></div>
-            <div class="alert-icon">
-              <i class="material-icons" *ngIf="!lighthouseConsolePathAlert.loadingIndicator">
-                check_circle_outline
-              </i>
-              <div class="small-spinner" *ngIf="lighthouseConsolePathAlert.loadingIndicator"></div>
-            </div>
+          @if (lighthouseConsolePathAlert) {
             <div
-              class="alert-content"
-              [innerHTML]="lighthouseConsolePathAlert.text | translate"
-            ></div>
-          </div>
+              class="alert"
+              [class.success]="lighthouseConsolePathAlert.type === 'SUCCESS'"
+              [class.error]="lighthouseConsolePathAlert.type === 'ERROR'"
+              [@vshrink]
+            >
+              <div class="alert-bg"></div>
+              <div class="alert-icon">
+                @if (!lighthouseConsolePathAlert.loadingIndicator) {
+                  <i class="material-icons"> check_circle_outline </i>
+                }
+                @if (lighthouseConsolePathAlert.loadingIndicator) {
+                  <div class="small-spinner"></div>
+                }
+              </div>
+              <div
+                class="alert-content"
+                [innerHTML]="lighthouseConsolePathAlert.text | translate"
+              ></div>
+            </div>
+          }
         </div>
       </div>
 

@@ -3,10 +3,19 @@ import { listen } from '@tauri-apps/api/event';
 import { DeviceUpdateEvent } from '../models/events';
 import { invoke } from '@tauri-apps/api/core';
 import { OVRDevice, OVRDevicePose } from '../models/ovr-device';
-import { BehaviorSubject, distinctUntilChanged, map, Observable, skip, startWith } from 'rxjs';
+import {
+  BehaviorSubject,
+  distinctUntilChanged,
+  filter,
+  map,
+  Observable,
+  skip,
+  startWith,
+} from 'rxjs';
 import { orderBy } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
 import { error, info } from '@tauri-apps/plugin-log';
+import { TelemetryService } from './telemetry.service';
 
 export type OpenVRStatus = 'INACTIVE' | 'INITIALIZING' | 'INITIALIZED';
 
@@ -27,7 +36,8 @@ export class OpenVRService {
 
   constructor(
     private appRef: ApplicationRef,
-    private appSettings: AppSettingsService
+    private appSettings: AppSettingsService,
+    private telemetry: TelemetryService
   ) {}
 
   async init() {
@@ -65,6 +75,8 @@ export class OpenVRService {
         this.appRef.tick();
       }),
     ]);
+
+    this.handleTelemetry();
   }
 
   public onDeviceUpdate(device: OVRDevice) {
@@ -144,5 +156,26 @@ export class OpenVRService {
 
   private async applyOpenVrInitDelayFix(enabled: boolean) {
     await invoke('openvr_set_init_delay_fix', { enabled });
+  }
+
+  private handleTelemetry() {
+    this._devices
+      .pipe(
+        map((devices) => devices.find((d) => d.class === 'HMD')),
+        filter(Boolean),
+        distinctUntilChanged()
+      )
+      .subscribe((hmdName) => {
+        this.telemetry.trackThrottledEvent(
+          'vr_hmd',
+          {
+            manufacturerName: hmdName.manufacturerName ?? 'Unknown',
+            modelNumber: hmdName.modelNumber ?? 'Unknown',
+            hmdName: `${hmdName.manufacturerName} ${hmdName.modelNumber}`,
+          },
+          1000 * 60 * 60 * 24,
+          true
+        );
+      });
   }
 }

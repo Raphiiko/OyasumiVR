@@ -10,63 +10,54 @@
       ></div>
     </div>
     <div class="bottom">
-      <button
-        class="btn btn-primary"
-        *ngIf="!sleepModeActive"
-        (click)="setSleepMode(true)"
-        translate
-      >
-        overview.sleep-mode.activate
-      </button>
-      <button
-        class="btn btn-secondary"
-        *ngIf="sleepModeActive"
-        (click)="setSleepMode(false)"
-        translate
-      >
-        overview.sleep-mode.deactivate
-      </button>
-      <div
-        *ngIf="!sleepModeActive"
-        [tooltip]="
-          (sleepPreparation.sleepPreparationAvailable | async) === true
-            ? undefined
-            : 'overview.sleep-preparation.disabledTooltip'
-        "
-        [tooltipMode]="'top'"
-        [tooltipMargin]="28"
-        @fade
-      >
-        <button
-          class="btn btn-secondary btn-sleep-preparation"
-          [disabled]="
-            (sleepPreparation.sleepPreparationAvailable | async) === false ||
-            (sleepPreparation.sleepPreparationTimedOut | async)
-          "
-          (click)="sleepPreparation.prepareForSleep()"
-        >
-          <div
-            class="small-spinner"
-            *ngIf="sleepPreparation.sleepPreparationTimedOut | async"
-            @hshrink
-          ></div>
-          <span translate>overview.sleep-preparation.activate</span>
+      @if (!sleepModeActive) {
+        <button class="btn btn-primary" (click)="setSleepMode(true)" translate>
+          overview.sleep-mode.activate
         </button>
+      }
+      @if (sleepModeActive) {
+        <button class="btn btn-secondary" (click)="setSleepMode(false)" translate>
+          overview.sleep-mode.deactivate
+        </button>
+      }
+      @if (!sleepModeActive) {
+        <div
+          [tooltip]="
+            (sleepPreparation.sleepPreparationAvailable | async) === true
+              ? undefined
+              : 'overview.sleep-preparation.disabledTooltip'
+          "
+          [tooltipMode]="'top'"
+          [tooltipMargin]="28"
+          @fade
+        >
+          <button
+            class="btn btn-secondary btn-sleep-preparation"
+            [disabled]="
+              (sleepPreparation.sleepPreparationAvailable | async) === false ||
+              (sleepPreparation.sleepPreparationTimedOut | async)
+            "
+            (click)="sleepPreparation.prepareForSleep()"
+          >
+            @if (sleepPreparation.sleepPreparationTimedOut | async) {
+              <div class="small-spinner" @hshrink></div>
+            }
+            <span translate>overview.sleep-preparation.activate</span>
+          </button>
+        </div>
+      }
+    </div>
+    @for (i of ['sleep', 'peek', 'awake', 'awake-hover']; track i) {
+      <div class="illustration" [ngClass]="[i, illustration === i ? 'active' : '']">
+        <img [attr.src]="'assets/img/illustration_' + i + '.png'" class="bg" />
+        <img
+          [attr.src]="'assets/img/illustration_' + i + '.png'"
+          (click)="setSleepMode(!sleepModeActive)"
+          (mouseenter)="determineIllustration(true)"
+          (mouseleave)="determineIllustration(false)"
+        />
       </div>
-    </div>
-    <div
-      *ngFor="let i of ['sleep', 'peek', 'awake', 'awake-hover']"
-      class="illustration"
-      [ngClass]="[i, illustration === i ? 'active' : '']"
-    >
-      <img [attr.src]="'assets/img/illustration_' + i + '.png'" class="bg" />
-      <img
-        [attr.src]="'assets/img/illustration_' + i + '.png'"
-        (click)="setSleepMode(!sleepModeActive)"
-        (mouseenter)="determineIllustration(true)"
-        (mouseleave)="determineIllustration(false)"
-      />
-    </div>
+    }
   </div>
   <app-event-log></app-event-log>
 </div>

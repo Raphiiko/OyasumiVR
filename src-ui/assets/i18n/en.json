@@ -257,23 +257,6 @@
       "vrchatGroupAutomations": "Group Automations",
       "vrchatMicMuteAutomations": "VRChat Microphone Mute Automations"
     },
-    "device-edit-modal": {
-      "deviceNickname": {
-        "description": "Optionally set a custom name for this device",
-        "title": "Nickname"
-      },
-      "ignoreLighthouse": {
-        "description": "Ignored basestations will be hidden and are not affected by any automations",
-        "title": "Ignore Basestation"
-      },
-      "title": "Edit Device: {deviceId}",
-      "v1Identifier": {
-        "change": "Change ID",
-        "description": "OyasumiVR needs to know the ID of a V1 base station in order to control it",
-        "set": "Set ID",
-        "title": "Lighthouse V1 ID"
-      }
-    },
     "device-list": {
       "category": {
         "Controller": "Controllers",
@@ -1031,6 +1014,11 @@
       "powerOn": "Power On"
     },
     "config": {
+      "disabled": {
+        "description": "Disabled devices are not affected by automations or bulk actions, and are not shown in the device list",
+        "title": "Disable device",
+        "tooltip": "This device is disabled"
+      },
       "nickname": {
         "description": "Set a custom name for this device to make it easier to identify",
         "title": "Device Nickname"
@@ -1040,7 +1028,13 @@
         "noTags": "No tags available. Create some in the Tags tab.",
         "title": "Device Tags"
       },
-      "title": "Configure {deviceName}"
+      "title": "Configure {deviceName}",
+      "v1Identifier": {
+        "change": "Change ID",
+        "description": "OyasumiVR needs to know the ID of a V1 base station in order to control it",
+        "set": "Set ID",
+        "title": "Lighthouse V1 ID"
+      }
     },
     "deleteTag": {
       "confirm": "Delete Tag",
@@ -1804,8 +1798,7 @@
     },
     "powerManagementWarning": "When choosing to use OyasumiVR's automations for turning your base stations on or off, it is recommended that you disable power management in SteamVR's base station settings.",
     "tabs": {
-      "baseStations": "Base Stations",
-      "controllersAndTrackers": "Controllers & Trackers",
+      "devices": "Devices",
       "windowsPowerPolicy": "Power Policy"
     },
     "title": "Power Automations",
@@ -2625,7 +2618,10 @@
   },
   "status-automations": {
     "behaviourWarning": "Status changes by OyasumiVR might not be instantly visible to you. To other players, it too can take a bit of time for a status update to show. This is due to caching on VRChat's part, but rest assured that your status does in fact update.",
-    "behaviourWarningFAQ": "Here you can find the answers to some questions you might have about the status change behaviour:\n\nQ: Can I still automatically accept invite requests, even if VRChat does not show that I am on blue?\nA: If you have OyasumiVR set your status to blue (join me), it will take over the responsibility of automatically accepting any invite requests you receive.\n\nQ: People cannot join me because my status does not update for them.\nA: Status updates can take a while to be shown to other users. If they want to join you but can't, they can force your status to refresh by opening your profile in the main menu.",
+    "behaviourWarningFAQ": {
+      "message": "Here you can find the answers to some questions you might have about the status change behaviour:\n\nQ: Can I still automatically accept invite requests, even if VRChat does not show that I am on blue?\nA: If you have OyasumiVR set your status to blue (join me), it will take over the responsibility of automatically accepting any invite requests you receive.\n\nQ: People cannot join me because my status does not update for them.\nA: Status updates can take a while to be shown to other users. If they want to join you but can't, they can force your status to refresh by opening your profile in the main menu.",
+      "title": "Status Automations FAQ"
+    },
     "general": {
       "description": "Here you can configure OyasumiVR to update your VRChat status for certain events. For example, change your status when you go to sleep or wake up!",
       "onSleepDisable": {

@@ -2,74 +2,101 @@
   <div class="pane-title">
     {{ 'comp.friend-selection-modal.title' | translate }}
   </div>
-  <div class="pane-content" *ngIf="loadingState === 'LOADING'">
-    <div class="info-container">
-      <span class="large-spinner"></span>
-      <span translate>comp.friend-selection-modal.loading</span>
-    </div>
-  </div>
-  <div class="pane-content" *ngIf="loadingState === 'ERROR'">
-    <div class="info-container">
-      <span class="large-spinner"></span>
-      <span translate>comp.friend-selection-modal.loadingError</span>
-    </div>
-  </div>
-  <div class="pane-content" *ngIf="loadingState === 'LOADED'">
-    <div class="search">
-      <input
-        type="text"
-        class="input"
-        placeholder="{{ 'comp.friend-selection-modal.searchPlaceholder' | translate }}"
-        (input)="query.next(searchEl.value)"
-        #searchEl
-      />
-    </div>
-    <div class="pills">
-      <span class="none-selected" @fade *ngIf="!selection.length" translate
-        >comp.friend-selection-modal.noFriendsSelected</span
-      >
-      <div class="pill" *ngFor="let item of selection" (click)="removeItem(item)" @hshrink>
-        <div class="pill-label">{{ item.type === 'player' ? item.playerName : 'GROUP' }}</div>
-        <i class="material-icons-round">clear</i>
+  @if (loadingState === 'LOADING') {
+    <div class="pane-content">
+      <div class="info-container">
+        <span class="large-spinner"></span>
+        <span translate>comp.friend-selection-modal.loading</span>
       </div>
     </div>
-    <div class="friend-list" @noop *ngIf="results.length">
-      <div class="friend" *ngFor="let result of results">
-        <div class="friend-icon">
-          <img
-            draggable="false"
-            onerror="this.style.display='none'"
-            loading="lazy"
-            [imgSmoothLoader]="vrchat.imageUrlForPlayer(result) | imageCache: 3600 * 6"
-          />
+  }
+  @if (loadingState === 'ERROR') {
+    <div class="pane-content">
+      <div class="info-container">
+        <span class="large-spinner"></span>
+        <span translate>comp.friend-selection-modal.loadingError</span>
+      </div>
+    </div>
+  }
+  @if (loadingState === 'LOADED') {
+    <div class="pane-content">
+      <div class="search">
+        <input
+          type="text"
+          class="input"
+          placeholder="{{ 'comp.friend-selection-modal.searchPlaceholder' | translate }}"
+          (input)="query.next(searchEl.value)"
+          #searchEl
+        />
+      </div>
+      <div class="pills">
+        @if (!selection.length) {
+          <span class="none-selected" @fade translate
+            >comp.friend-selection-modal.noFriendsSelected</span
+          >
+        }
+        @for (item of selection; track item) {
+          <div class="pill" (click)="removeItem(item)" @hshrink>
+            <div class="pill-label">{{ item.type === 'player' ? item.playerName : 'GROUP' }}</div>
+            <i class="material-icons-round">clear</i>
+          </div>
+        }
+      </div>
+      @if (results.length) {
+        <div class="friend-list" @noop>
+          @for (result of results; track result) {
+            <div class="friend">
+              <div class="friend-icon">
+                <img
+                  draggable="false"
+                  onerror="this.style.display='none'"
+                  loading="lazy"
+                  [imgSmoothLoader]="vrchat.imageUrlForPlayer(result) | imageCache: 3600 * 6"
+                />
+              </div>
+              <div class="friend-label">{{ result.displayName }}</div>
+              @if (!isSelected(result)) {
+                <button class="btn" (click)="addFriend(result)" @hshrink
+                  ><i class="material-icons-round">add</i></button
+                >
+              }
+              @if (isSelected(result)) {
+                <button class="btn" disabled @hshrink
+                  ><i class="material-icons-round">check</i></button
+                >
+              }
+            </div>
+          }
+          @if (moreResults) {
+            <div class="more-results-available">
+              <span translate>comp.friend-selection-modal.moreResultsAvailable</span>
+            </div>
+          }
         </div>
-        <div class="friend-label">{{ result.displayName }}</div>
-        <button class="btn" *ngIf="!isSelected(result)" (click)="addFriend(result)" @hshrink
-          ><i class="material-icons-round">add</i></button
-        >
-        <button class="btn" *ngIf="isSelected(result)" disabled @hshrink
-          ><i class="material-icons-round">check</i></button
-        >
-      </div>
-      <div class="more-results-available" *ngIf="moreResults">
-        <span translate>comp.friend-selection-modal.moreResultsAvailable</span>
-      </div>
+      }
+      @if (!results.length) {
+        <div class="no-results" @vshrink>
+          @if (activeQuery) {
+            <span
+              translate="comp.friend-selection-modal.noResultsFor"
+              [translateParams]="{ query: activeQuery }"
+            ></span>
+          }
+          @if (!activeQuery) {
+            <span translate>comp.friend-selection-modal.noFriends</span>
+          }
+        </div>
+      }
     </div>
-    <div class="no-results" *ngIf="!results.length" @vshrink>
-      <span
-        *ngIf="activeQuery"
-        translate="comp.friend-selection-modal.noResultsFor"
-        [translateParams]="{ query: activeQuery }"
-      ></span>
-      <span *ngIf="!activeQuery" translate>comp.friend-selection-modal.noFriends</span>
-    </div>
-  </div>
+  }
   <div class="pane-actions spread">
     <button class="btn btn-secondary" (click)="cancel()">
       {{ 'shared.modals.cancel' | translate }}
     </button>
-    <button class="btn btn-primary" (click)="confirm()" *ngIf="loadingState === 'LOADED'" @hshrink>
-      {{ 'shared.modals.confirm' | translate }}
-    </button>
+    @if (loadingState === 'LOADED') {
+      <button class="btn btn-primary" (click)="confirm()" @hshrink>
+        {{ 'shared.modals.confirm' | translate }}
+      </button>
+    }
   </div>
 </div>

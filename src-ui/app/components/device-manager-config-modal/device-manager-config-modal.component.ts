@@ -86,6 +86,10 @@ export class DeviceManagerConfigModalComponent
     this.nickname = '';
   }
 
+  toggleDisabled() {
+    this.device = this.deviceManager.disableKnownDevice(this.device, !this.device.disabled);
+  }
+
   close() {
     this.saveNickname();
     super.close();

@@ -1,18 +1,16 @@
 [package]
 name = "oyasumivr-shared"
-version = "25.6.0"
+version = "25.6.8"
 authors = ["Raphiiko"]
 edition = "2021"
 license = "MIT"
 
-[dependencies.winapi]
-version = "0.3.9"
+[dependencies.windows]
+version = "0.61.3"
 features = [
-  "handleapi",
-  "processthreadsapi",
-  "winnt",
-  "securitybaseapi",
-  "impl-default",
+  "Win32_Foundation",
+  "Win32_Security",
+  "Win32_System_Threading",
 ]
 
 [profile.release]

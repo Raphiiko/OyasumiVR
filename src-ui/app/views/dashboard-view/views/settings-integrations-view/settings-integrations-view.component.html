@@ -19,29 +19,28 @@
               >
             </div>
             <div class="setting-row-action">
-              <div class="connected" *ngIf="vrchat.user | async" @hshrink>
-                <div class="connected-info">
-                  <i class="material-icons-round">check_circle</i>
-                  <div class="connected-info-account">
-                    {{ (vrchat.user | async)?.displayName }}
+              @if (vrchat.user | async) {
+                <div class="connected" @hshrink>
+                  <div class="connected-info">
+                    <i class="material-icons-round">check_circle</i>
+                    <div class="connected-info-account">
+                      {{ (vrchat.user | async)?.displayName }}
+                    </div>
                   </div>
+                  <button
+                    class="btn btn-secondary connected-disconnect"
+                    (click)="vrchat.logout()"
+                    translate
+                  >
+                    settings.integrations.disconnect
+                  </button>
                 </div>
-                <button
-                  class="btn btn-secondary connected-disconnect"
-                  (click)="vrchat.logout()"
-                  translate
-                >
-                  settings.integrations.disconnect
+              }
+              @if ((vrchat.user | async) === null) {
+                <button class="btn btn-primary" (click)="vrchat.showLoginModal()" translate @hshrink
+                  >settings.integrations.connect
                 </button>
-              </div>
-              <button
-                class="btn btn-primary"
-                (click)="vrchat.showLoginModal()"
-                translate
-                *ngIf="(vrchat.user | async) === null"
-                @hshrink
-                >settings.integrations.connect
-              </button>
+              }
             </div>
           </div>
 
@@ -65,51 +64,52 @@
               >
             </div>
             <div class="setting-row-action">
-              <div class="connected" *ngIf="pulsoid.loggedInUser | async" @hshrink>
-                <div
-                  class="connected-info"
-                  [tooltip]="'settings.integrations.reveal'"
-                  [tooltipMode]="'top'"
-                >
-                  <i class="material-icons-round">check_circle</i>
+              @if (pulsoid.loggedInUser | async) {
+                <div class="connected" @hshrink>
                   <div
-                    class="connected-info-account obfuscated"
-                    [obfuscatedValue]="(pulsoid.loggedInUser | async) ?? ''"
-                    [obfuscatedMaxLength]="16"
-                    [deobfuscatedMaxLength]="32"
-                    [deobfuscate]="deobfuscated.includes('PULSOID')"
-                    (click)="deobfuscate('PULSOID')"
-                  ></div>
+                    class="connected-info"
+                    [tooltip]="'settings.integrations.reveal'"
+                    [tooltipMode]="'top'"
+                  >
+                    <i class="material-icons-round">check_circle</i>
+                    <div
+                      class="connected-info-account obfuscated"
+                      [obfuscatedValue]="(pulsoid.loggedInUser | async) ?? ''"
+                      [obfuscatedMaxLength]="16"
+                      [deobfuscatedMaxLength]="32"
+                      [deobfuscate]="deobfuscated.includes('PULSOID')"
+                      (click)="deobfuscate('PULSOID')"
+                    ></div>
+                  </div>
+                  <button
+                    class="btn btn-secondary connected-disconnect"
+                    (click)="pulsoid.logout()"
+                    translate
+                  >
+                    settings.integrations.disconnect
+                  </button>
                 </div>
-                <button
-                  class="btn btn-secondary connected-disconnect"
-                  (click)="pulsoid.logout()"
-                  translate
-                >
-                  settings.integrations.disconnect
-                </button>
-              </div>
-              <div *ngIf="(pulsoid.loggedInUser | async) === null" @hshrink class="connect-row">
-                <button
-                  class="btn btn-copy btn-secondary"
-                  tooltip="settings.integrations.copy"
-                  tooltipMode="left"
-                  (click)="copyToClipboard('PULSOID')"
-                >
-                  <i class="material-icons" *ngIf="!copiedToClipboard.includes('PULSOID')" @hshrink
-                    >copy_all</i
+              }
+              @if ((pulsoid.loggedInUser | async) === null) {
+                <div @hshrink class="connect-row">
+                  <button
+                    class="btn btn-copy btn-secondary"
+                    tooltip="settings.integrations.copy"
+                    tooltipMode="left"
+                    (click)="copyToClipboard('PULSOID')"
                   >
-                  <i
-                    class="material-icons success"
-                    *ngIf="copiedToClipboard.includes('PULSOID')"
-                    @hshrink
-                    >check</i
-                  >
-                </button>
-                <button class="btn btn-primary" (click)="pulsoid.login()" translate>
-                  settings.integrations.connect
-                </button>
-              </div>
+                    @if (!copiedToClipboard.includes('PULSOID')) {
+                      <i class="material-icons" @hshrink>copy_all</i>
+                    }
+                    @if (copiedToClipboard.includes('PULSOID')) {
+                      <i class="material-icons success" @hshrink>check</i>
+                    }
+                  </button>
+                  <button class="btn btn-primary" (click)="pulsoid.login()" translate>
+                    settings.integrations.connect
+                  </button>
+                </div>
+              }
             </div>
           </div>
 
@@ -128,36 +128,37 @@
                 >settings.integrations.providerLink</a
               >
             </div>
-            <div
-              class="setting-row-action"
-              *ngIf="{
+            @if (
+              {
                 mqttClient: (mqttService.client | async),
-              } as data"
-            >
-              <div class="connected" *ngIf="data.mqttClient" @hshrink>
-                <div class="connected-info">
-                  <i class="material-icons-round">check_circle</i>
-                  <div class="connected-info-account">
-                    {{ data.mqttClient.options.host }}
+              };
+              as data
+            ) {
+              <div class="setting-row-action">
+                @if (data.mqttClient) {
+                  <div class="connected" @hshrink>
+                    <div class="connected-info">
+                      <i class="material-icons-round">check_circle</i>
+                      <div class="connected-info-account">
+                        {{ data.mqttClient.options.host }}
+                      </div>
+                    </div>
+                    <button
+                      class="btn btn-secondary connected-disconnect"
+                      (click)="showMqttConfigModal()"
+                      translate
+                      @hshrink
+                      >settings.integrations.configure
+                    </button>
                   </div>
-                </div>
-                <button
-                  class="btn btn-secondary connected-disconnect"
-                  (click)="showMqttConfigModal()"
-                  translate
-                  @hshrink
-                  >settings.integrations.configure
-                </button>
+                }
+                @if (!data.mqttClient) {
+                  <button class="btn btn-primary" (click)="showMqttConfigModal()" translate @hshrink
+                    >settings.integrations.configure
+                  </button>
+                }
               </div>
-              <button
-                *ngIf="!data.mqttClient"
-                class="btn btn-primary"
-                (click)="showMqttConfigModal()"
-                translate
-                @hshrink
-                >settings.integrations.configure
-              </button>
-            </div>
+            }
           </div>
         </div>
       </div>

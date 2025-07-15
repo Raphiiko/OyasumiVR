@@ -2,7 +2,7 @@ use crate::utils::models::CoreMode;
 use log::{error, info};
 use models::oyasumi_core::oyasumi_core_server::OyasumiCoreServer;
 use server::OyasumiCoreServerImpl;
-use std::net::SocketAddr;
+use std::{net::SocketAddr, sync::LazyLock};
 use tokio::sync::Mutex;
 use tokio_stream::wrappers::TcpListenerStream;
 use tonic::transport::Server;
@@ -24,10 +24,8 @@ pub mod models {
     }
 }
 
-lazy_static! {
-    pub static ref SERVER_PORT: Mutex<Option<u32>> = Default::default();
-    pub static ref SERVER_WEB_PORT: Mutex<Option<u32>> = Default::default();
-}
+pub static SERVER_PORT: LazyLock<Mutex<Option<u32>>> = LazyLock::new(Default::default);
+pub static SERVER_WEB_PORT: LazyLock<Mutex<Option<u32>>> = LazyLock::new(Default::default);
 
 pub async fn init_server() -> u16 {
     info!("[Core] Starting gRPC server");

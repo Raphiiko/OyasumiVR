@@ -2,7 +2,7 @@
   <div class="pane-title" translate>power-automations.title</div>
   <div class="tab-bar">
     <div class="tab" [class.active]="activeTab === 'DEVICES'" (click)="activeTab = 'DEVICES'">
-      <div class="tab-label">Devices</div>
+      <div class="tab-label" translate>power-automations.tabs.devices</div>
     </div>
     <div
       class="tab"
@@ -14,10 +14,12 @@
   </div>
   <div class="pane-content">
     <div class="setting-view-container">
-      <app-devices-tab *ngIf="activeTab === 'DEVICES'"></app-devices-tab>
-      <app-windows-power-policy-tab
-        *ngIf="activeTab === 'WINDOWS_POWER_POLICY'"
-      ></app-windows-power-policy-tab>
+      @if (activeTab === 'DEVICES') {
+        <app-devices-tab></app-devices-tab>
+      }
+      @if (activeTab === 'WINDOWS_POWER_POLICY') {
+        <app-windows-power-policy-tab></app-windows-power-policy-tab>
+      }
     </div>
   </div>
 </div>

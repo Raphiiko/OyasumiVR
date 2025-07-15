@@ -11,7 +11,9 @@
       <span>&nbsp;</span>
       <i class="material-icons-round">filter_list</i>
       <span>&nbsp;</span>
-      <span translate @hshrink *ngIf="filterHover" class="label">comp.event-log.openFilters</span>
+      @if (filterHover) {
+        <span translate @hshrink class="label">comp.event-log.openFilters</span>
+      }
     </button>
     <button
       class="btn btn-secondary btn-header"
@@ -23,24 +25,31 @@
       <span>&nbsp;</span>
       <i class="material-icons-round">clear</i>
       <span>&nbsp;</span>
-      <span translate @hshrink *ngIf="clearHover" class="label">comp.event-log.clearLog</span>
+      @if (clearHover) {
+        <span translate @hshrink class="label">comp.event-log.clearLog</span>
+      }
     </button>
   </div>
   <div class="pane-content">
-    <div class="no-event-logs" *ngIf="entries === 0" @fade @noop>
-      <i class="material-icons-round">info</i>
-      <span translate>comp.event-log.no-logs</span>
-    </div>
-    <div class="event-logs" @noop>
-      <app-event-log-entry
-        [entry]="entry"
-        *ngFor="let entry of logsInView | async; trackBy: trackLogEntryBy"
-        @vshrink
-        [@.disabled]="animationPause"
-      ></app-event-log-entry>
-      <div class="show-more" @vshrink *ngIf="hasMore()" [@.disabled]="animationPause">
-        <span (click)="showMore()" translate>comp.event-log.show-more</span>
+    @if (entries === 0) {
+      <div class="no-event-logs" @fade @noop>
+        <i class="material-icons-round">info</i>
+        <span translate>comp.event-log.no-logs</span>
       </div>
+    }
+    <div class="event-logs" @noop>
+      @for (entry of logsInView | async; track trackLogEntryBy($index, entry)) {
+        <app-event-log-entry
+          [entry]="entry"
+          @vshrink
+          [@.disabled]="animationPause"
+        ></app-event-log-entry>
+      }
+      @if (hasMore()) {
+        <div class="show-more" @vshrink [@.disabled]="animationPause">
+          <span (click)="showMore()" translate>comp.event-log.show-more</span>
+        </div>
+      }
     </div>
   </div>
 </div>

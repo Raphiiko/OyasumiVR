@@ -64,6 +64,5 @@ export class ThemeService {
 
   private async saveSettings() {
     await SETTINGS_STORE.set(SETTINGS_KEY_THEMING_SETTINGS, this.settings);
-    await SETTINGS_STORE.save();
   }
 }

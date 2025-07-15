@@ -5,12 +5,18 @@
     </span>
     <div class="text-content">
       <span>{{ message().title | tsTranslate }}</span>
-      <span *ngIf="message().message">{{ message().message | tsTranslate }}</span>
+      @if (message().message) {
+        <span>{{ message().message | tsTranslate }}</span>
+      }
     </div>
   </div>
-  <div class="actions" *ngIf="actions().length > 0">
-    <button *ngFor="let action of actions()" (click)="action.action()">
-      {{ action.label | translate }}
-    </button>
-  </div>
+  @if (actions().length > 0) {
+    <div class="actions">
+      @for (action of actions(); track action) {
+        <button (click)="action.action()">
+          {{ action.label | translate }}
+        </button>
+      }
+    </div>
+  }
 </div>

@@ -121,7 +121,7 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
           warn('Could not fetch supporters list: ' + JSON.stringify(response));
         }
-      } catch (e) {
+      } catch {
         // Ignore failure, we'll just not show the list.
       }
     } else {

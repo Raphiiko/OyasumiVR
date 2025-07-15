@@ -1,4 +1,4 @@
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::{atomic::{AtomicBool, Ordering}, LazyLock};
 
 use hidapi::{HidApi, HidDevice};
 use log::{error, info, warn};
@@ -12,10 +12,8 @@ mod detector;
 const BIGSCREEN_VID: u16 = 0x35bd;
 const BEYOND_PID: u16 = 0x0101;
 
-lazy_static! {
-    static ref BSB_CONNECTED: AtomicBool = AtomicBool::new(false);
-    static ref BSB_DEVICE: Mutex<Option<HidDevice>> = Mutex::new(None);
-}
+static BSB_CONNECTED: LazyLock<AtomicBool> = LazyLock::new(|| AtomicBool::new(false));
+static BSB_DEVICE: LazyLock<Mutex<Option<HidDevice>>> = LazyLock::new(|| Mutex::new(None));
 
 pub async fn init() {
     tokio::spawn(async move {

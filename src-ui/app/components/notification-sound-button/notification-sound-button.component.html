@@ -15,15 +15,15 @@
   >
     <i class="material-symbols-outlined icon-filled">music_note</i>
     <span>{{ soundConfig?.sound?.name || (label | translate) }}</span>
-    <span
-      *ngIf="soundConfig?.volume !== undefined && soundConfig?.volume !== null"
-      class="volume-badge"
-      >{{ soundConfig?.volume }}%</span
-    >
+    @if (soundConfig?.volume !== undefined && soundConfig?.volume !== null) {
+      <span class="volume-badge">{{ soundConfig?.volume }}%</span>
+    }
   </button>
 
-  <label class="switch-toggle" *ngIf="toggleable">
-    <input type="checkbox" [checked]="soundConfig?.enabled" (change)="toggleSound()" />
-    <span class="switch-toggle-slider"></span>
-  </label>
+  @if (toggleable) {
+    <label class="switch-toggle">
+      <input type="checkbox" [checked]="soundConfig?.enabled" (change)="toggleSound()" />
+      <span class="switch-toggle-slider"></span>
+    </label>
+  }
 </div>

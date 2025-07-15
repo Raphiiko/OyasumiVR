@@ -2,96 +2,90 @@
   <!-- TITLE-->
   <div class="pane-title" translate
     ><span translate>gpu-automations.title</span>
-    <button
-      class="btn btn-secondary"
-      *ngIf="!['DISABLED'].includes(panel)"
-      (click)="gpuAutomations.disable()"
-      translate
-      @fade
-    >
-      gpu-automations.disable
-    </button>
-  </div>
-  <!-- TAB BAR-->
-  <div class="tab-bar" *ngIf="panel === 'ENABLED'" @vshrink>
-    <div
-      class="tab"
-      [class.active]="activeTab === 'POWER_LIMITS'"
-      (click)="activeTab = 'POWER_LIMITS'"
-    >
-      <div class="tab-label">
-        <i
-          class="material-icons"
-          style="color: var(--color-warning)"
-          @hshrink
-          *ngIf="nvmlErrors | async"
-        >
-          error_outline
-        </i>
-        <span translate>gpu-automations.tabs.powerLimiting</span>
-      </div>
-    </div>
-    <div
-      class="tab"
-      [class.active]="activeTab === 'MSI_AFTERBURNER'"
-      (click)="activeTab = 'MSI_AFTERBURNER'"
-    >
-      <div class="tab-label">
-        <i
-          class="material-icons"
-          style="color: var(--color-warning)"
-          @hshrink
-          *ngIf="msiAfterburnerErrors | async"
-        >
-          error_outline
-        </i>
-        <span translate>gpu-automations.tabs.msiAfterburner</span>
-      </div>
-    </div>
-  </div>
-  <!-- PANES-->
-  <app-gpu-powerlimiting-pane
-    *ngIf="panel === 'ENABLED' && activeTab === 'POWER_LIMITS'"
-  ></app-gpu-powerlimiting-pane>
-  <app-msi-afterburner-pane
-    *ngIf="panel === 'ENABLED' && activeTab === 'MSI_AFTERBURNER'"
-  ></app-msi-afterburner-pane>
-  <!--  DISABLED-->
-  <div class="pane-content pane-content-disabled" *ngIf="panel !== 'ENABLED'">
-    <div class="icon">
-      <i class="material-icons" *ngIf="['DISABLED'].includes(panel)">info</i>
-      <i class="material-icons" *ngIf="['NO_SIDECAR'].includes(panel)"> warning </i>
-    </div>
-    <div class="description" [innerHTML]="disabledMessage | translate"></div>
-    <div class="btn-row">
-      <button
-        class="btn btn-primary action"
-        *ngIf="panel === 'NO_SIDECAR'"
-        (click)="startSidecar()"
-        translate
-      >
-        gpu-automations.requestAdministrator
-      </button>
-      <button
-        class="btn btn-secondary action"
-        *ngIf="!['DISABLED'].includes(panel)"
-        (click)="gpuAutomations.disable()"
-        translate
-      >
+    @if (!['DISABLED'].includes(panel)) {
+      <button class="btn btn-secondary" (click)="gpuAutomations.disable()" translate @fade>
         gpu-automations.disable
       </button>
-    </div>
-    <div class="alert" *ngIf="panel === 'DISABLED'">
-      <div class="alert-bg"></div>
-      <div class="alert-icon">
-        <i class="material-icons">warning</i>
-      </div>
-      <div class="alert-content flex-row">
-        <span [innerHTML]="'gpu-automations.enableWarning' | translate"></span>
-        <button class="btn btn-primary" (click)="gpuAutomations.enable()" translate>
-          gpu-automations.enable
-        </button>
-      </div>
-    </div>
+    }
   </div>
+  <!-- TAB BAR-->
+  @if (panel === 'ENABLED') {
+    <div class="tab-bar" @vshrink>
+      <div
+        class="tab"
+        [class.active]="activeTab === 'POWER_LIMITS'"
+        (click)="activeTab = 'POWER_LIMITS'"
+      >
+        <div class="tab-label">
+          @if (nvmlErrors | async) {
+            <i class="material-icons" style="color: var(--color-warning)" @hshrink>
+              error_outline
+            </i>
+          }
+          <span translate>gpu-automations.tabs.powerLimiting</span>
+        </div>
+      </div>
+      <div
+        class="tab"
+        [class.active]="activeTab === 'MSI_AFTERBURNER'"
+        (click)="activeTab = 'MSI_AFTERBURNER'"
+      >
+        <div class="tab-label">
+          @if (msiAfterburnerErrors | async) {
+            <i class="material-icons" style="color: var(--color-warning)" @hshrink>
+              error_outline
+            </i>
+          }
+          <span translate>gpu-automations.tabs.msiAfterburner</span>
+        </div>
+      </div>
+    </div>
+  }
+  <!-- PANES-->
+  @if (panel === 'ENABLED' && activeTab === 'POWER_LIMITS') {
+    <app-gpu-powerlimiting-pane></app-gpu-powerlimiting-pane>
+  }
+  @if (panel === 'ENABLED' && activeTab === 'MSI_AFTERBURNER') {
+    <app-msi-afterburner-pane></app-msi-afterburner-pane>
+  }
+  <!--  DISABLED-->
+  @if (panel !== 'ENABLED') {
+    <div class="pane-content pane-content-disabled">
+      <div class="icon">
+        @if (['DISABLED'].includes(panel)) {
+          <i class="material-icons">info</i>
+        }
+        @if (['NO_SIDECAR'].includes(panel)) {
+          <i class="material-icons"> warning </i>
+        }
+      </div>
+      <div class="description" [innerHTML]="disabledMessage | translate"></div>
+      <div class="btn-row">
+        @if (panel === 'NO_SIDECAR') {
+          <button class="btn btn-primary action" (click)="startSidecar()" translate>
+            gpu-automations.requestAdministrator
+          </button>
+        }
+        @if (!['DISABLED'].includes(panel)) {
+          <button class="btn btn-secondary action" (click)="gpuAutomations.disable()" translate>
+            gpu-automations.disable
+          </button>
+        }
+      </div>
+      @if (panel === 'DISABLED') {
+        <div class="alert">
+          <div class="alert-bg"></div>
+          <div class="alert-icon">
+            <i class="material-icons">warning</i>
+          </div>
+          <div class="alert-content flex-row">
+            <span [innerHTML]="'gpu-automations.enableWarning' | translate"></span>
+            <button class="btn btn-primary" (click)="gpuAutomations.enable()" translate>
+              gpu-automations.enable
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
 </div>

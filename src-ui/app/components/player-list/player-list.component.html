@@ -1,79 +1,87 @@
 <div class="pane-player-list-wrapper">
   <div class="pane pane-player-list">
     <div class="pane-title" translate>{{ title | tsTranslate }}</div>
-    <div
-      class="pane-content"
-      *ngIf="{
+    @if (
+      {
         isFetchingFriends: vrchat.isFetchingFriends | async,
-      } as data"
-    >
-      <div class="players-loading" *ngIf="data.isFetchingFriends">
-        <div class="large-spinner"></div>
-        <span translate>comp.player-list.loadingFriends</span>
-      </div>
-      <ng-container *ngIf="data.isFetchingFriends === false">
-        <div class="player-list-action-bar">
-          <button
-            class="player-list-action"
-            (click)="addPlayer()"
-            [disabled]="!loggedIn"
-            [tooltip]="'comp.player-list.addFriends'"
-            [tooltipMode]="'right'"
-          >
-            <i class="material-icons">add</i>
-          </button>
-          <button
-            class="player-list-action"
-            (click)="clearPlayers()"
-            [disabled]="!loggedIn || !playerList.length"
-            [tooltip]="'comp.player-list.clearPlayers'"
-            [tooltipMode]="'right'"
-          >
-            <i class="material-icons">clear</i>
-          </button>
-          <button
-            class="player-list-action"
-            (click)="savePreset()"
-            [disabled]="!loggedIn || !playerList.length"
-            [tooltip]="'comp.player-list.savePreset'"
-            [tooltipMode]="'right'"
-          >
-            <i class="material-icons">save</i>
-          </button>
-          <button
-            class="player-list-action"
-            (click)="loadPreset()"
-            [disabled]="!loggedIn"
-            [tooltip]="'comp.player-list.loadPreset'"
-            [tooltipMode]="'right'"
-          >
-            <i class="material-icons">file_open</i>
-          </button>
-        </div>
-        <div class="players-list" @noop>
-          <div class="player" *ngFor="let player of playerList" @vshrink>
-            <div class="player-left">
-              <div class="player-icon">
-                <img
-                  draggable="false"
-                  onerror="this.style.display='none'"
-                  loading="lazy"
-                  [imgSmoothLoader]="vrchat.imageUrlForPlayer(player) | imageCache: 3600 * 6"
-                />
+      };
+      as data
+    ) {
+      <div class="pane-content">
+        @if (data.isFetchingFriends) {
+          <div class="players-loading">
+            <div class="large-spinner"></div>
+            <span translate>comp.player-list.loadingFriends</span>
+          </div>
+        }
+        @if (data.isFetchingFriends === false) {
+          <div class="player-list-action-bar">
+            <button
+              class="player-list-action"
+              (click)="addPlayer()"
+              [disabled]="!loggedIn"
+              [tooltip]="'comp.player-list.addFriends'"
+              [tooltipMode]="'right'"
+            >
+              <i class="material-icons">add</i>
+            </button>
+            <button
+              class="player-list-action"
+              (click)="clearPlayers()"
+              [disabled]="!loggedIn || !playerList.length"
+              [tooltip]="'comp.player-list.clearPlayers'"
+              [tooltipMode]="'right'"
+            >
+              <i class="material-icons">clear</i>
+            </button>
+            <button
+              class="player-list-action"
+              (click)="savePreset()"
+              [disabled]="!loggedIn || !playerList.length"
+              [tooltip]="'comp.player-list.savePreset'"
+              [tooltipMode]="'right'"
+            >
+              <i class="material-icons">save</i>
+            </button>
+            <button
+              class="player-list-action"
+              (click)="loadPreset()"
+              [disabled]="!loggedIn"
+              [tooltip]="'comp.player-list.loadPreset'"
+              [tooltipMode]="'right'"
+            >
+              <i class="material-icons">file_open</i>
+            </button>
+          </div>
+          <div class="players-list" @noop>
+            @for (player of playerList; track player) {
+              <div class="player" @vshrink>
+                <div class="player-left">
+                  <div class="player-icon">
+                    <img
+                      draggable="false"
+                      onerror="this.style.display='none'"
+                      loading="lazy"
+                      [imgSmoothLoader]="vrchat.imageUrlForPlayer(player) | imageCache: 3600 * 6"
+                    />
+                  </div>
+                  <div class="player-name">{{ player.displayName }}</div>
+                </div>
+                <div class="player-right">
+                  <button class="btn" (click)="removePlayer(player)">
+                    <i class="material-icons">clear</i>
+                  </button>
+                </div>
               </div>
-              <div class="player-name">{{ player.displayName }}</div>
-            </div>
-            <div class="player-right">
-              <button class="btn" (click)="removePlayer(player)">
-                <i class="material-icons">clear</i>
-              </button>
-            </div>
+            }
+            @if (!playerList.length) {
+              <div class="no-players">
+                <span translate>comp.player-list.noPlayersAdded</span>
+              </div>
+            }
           </div>
-          <div class="no-players" *ngIf="!playerList?.length">
-            <span translate>comp.player-list.noPlayersAdded</span>
-          </div>
-        </div>
-      </ng-container>
-    </div>
+        }
+      </div>
+    }
   </div>
 </div>

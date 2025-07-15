@@ -17,9 +17,11 @@
     </div>
   </div>
   <div class="pane-content">
-    <app-debug-sleep-detection-debugger
-      *ngIf="activeTab === 'SLEEP_DETECTION_DEBUGGER'"
-    ></app-debug-sleep-detection-debugger>
-    <app-misc-testing *ngIf="activeTab === 'MISC_TESTING'" [modal]="this"></app-misc-testing>
+    @if (activeTab === 'SLEEP_DETECTION_DEBUGGER') {
+      <app-debug-sleep-detection-debugger></app-debug-sleep-detection-debugger>
+    }
+    @if (activeTab === 'MISC_TESTING') {
+      <app-misc-testing [modal]="this"></app-misc-testing>
+    }
   </div>
 </div>

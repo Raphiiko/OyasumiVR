@@ -67,7 +67,7 @@
   },
   "productName": "OyasumiVR",
   "mainBinaryName": "OyasumiVR",
-  "version": "25.6.0",
+  "version": "25.6.8",
   "identifier": "co.raphii.oyasumi",
   "plugins": {
     "cli": {
@@ -87,8 +87,8 @@
           "short": "c",
           "description": "Mode for running the core module",
           "longDescription": "See developer notes for more information",
-          "maxValues": 1,
           "takesValue": true,
+          "multiple": false,
           "possibleValues": [
             "release",
             "dev"
@@ -99,20 +99,8 @@
           "short": "o",
           "description": "Mode for handling the overlay sidecar",
           "longDescription": "See developer notes for more information",
-          "maxValues": 1,
           "takesValue": true,
-          "possibleValues": [
-            "release",
-            "dev"
-          ]
-        },
-        {
-          "name": "mdns-sidecar-mode",
-          "short": "m",
-          "description": "Mode for handling the mdns sidecar",
-          "longDescription": "See developer notes for more information",
-          "maxValues": 1,
-          "takesValue": true,
+          "multiple": false,
           "possibleValues": [
             "release",
             "dev"
@@ -151,7 +139,7 @@
         "skipTaskbar": true,
         "minimizable": false,
         "focus": true,
-        "userAgent": "OyasumiVR/25.6.0 (https://github.com/Raphiiko/OyasumiVR)",
+        "userAgent": "OyasumiVR/25.6.8 (https://github.com/Raphiiko/OyasumiVR)",
         "useHttpsScheme": false
       },
       {
@@ -167,7 +155,7 @@
         "theme": "Dark",
         "visible": false,
         "transparent": true,
-        "userAgent": "OyasumiVR/25.6.0 (https://github.com/Raphiiko/OyasumiVR)",
+        "userAgent": "OyasumiVR/25.6.8 (https://github.com/Raphiiko/OyasumiVR)",
         "useHttpsScheme": false
       }
     ],

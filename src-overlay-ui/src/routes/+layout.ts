@@ -1,4 +1,3 @@
-import { browser } from '$app/environment';
 import ipcService from '$lib/services/ipc.service';
 import type { Load } from '@sveltejs/kit';
 import { loadTranslations } from '$lib/translations';

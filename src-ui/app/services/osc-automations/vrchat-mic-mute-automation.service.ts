@@ -163,7 +163,7 @@ export class VRChatMicMuteAutomationService {
         return true;
       }
       return false;
-    } catch (e) {
+    } catch {
       return false;
     }
   }

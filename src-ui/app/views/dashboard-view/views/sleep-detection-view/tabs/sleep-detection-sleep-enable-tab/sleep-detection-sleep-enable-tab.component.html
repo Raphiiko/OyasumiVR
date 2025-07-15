@@ -5,9 +5,11 @@
       <div class="setting-row-label" translate>
         <span translate>sleep-detection.enableAutomations.atTime</span>
         <span>
-          <span *ngIf="automationConfigs.SLEEP_MODE_ENABLE_AT_TIME.time" [@fade]>
-            {{ automationConfigs.SLEEP_MODE_ENABLE_AT_TIME.time }}
-          </span>
+          @if (automationConfigs.SLEEP_MODE_ENABLE_AT_TIME.time) {
+            <span [@fade]>
+              {{ automationConfigs.SLEEP_MODE_ENABLE_AT_TIME.time }}
+            </span>
+          }
         </span>
       </div>
       <div class="setting-row-action">
@@ -75,39 +77,37 @@
         </label>
       </div>
     </div>
-    <div
-      class="setting-row-group"
-      *ngIf="
-        automationConfigs.SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF.enabled &&
-        batteryLevelAutomationEnabledForController
-      "
-      @vshrink
-    >
-      <div class="setting-row">
-        <div class="setting-row-label conflict" translate>
-          <span>
-            <span><i class="material-icons">warning</i></span>
+    @if (
+      automationConfigs.SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF.enabled &&
+      batteryLevelAutomationEnabledForController
+    ) {
+      <div class="setting-row-group" @vshrink>
+        <div class="setting-row">
+          <div class="setting-row-label conflict" translate>
+            <span>
+              <span><i class="material-icons">warning</i></span>
+              <span translate
+                >sleep-detection.enableAutomations.onControllersPoweredOff.batteryLevelAutomationConflict.title</span
+              >
+            </span>
             <span translate
-              >sleep-detection.enableAutomations.onControllersPoweredOff.batteryLevelAutomationConflict.title</span
+              >sleep-detection.enableAutomations.onControllersPoweredOff.batteryLevelAutomationConflict.description</span
             >
-          </span>
-          <span translate
-            >sleep-detection.enableAutomations.onControllersPoweredOff.batteryLevelAutomationConflict.description</span
-          >
-        </div>
-        <div class="setting-row-action">
-          <button
-            class="btn btn-secondary"
-            style="white-space: pre-line"
-            (click)="goToPowerAutomations('CONTROLLERS_AND_TRACKERS')"
-            [innerHtml]="
-              'sleep-detection.enableAutomations.onControllersPoweredOff.batteryLevelAutomationConflict.action'
-                | translate
-            "
-          ></button>
+          </div>
+          <div class="setting-row-action">
+            <button
+              class="btn btn-secondary"
+              style="white-space: pre-line"
+              (click)="goToPowerAutomations('CONTROLLERS_AND_TRACKERS')"
+              [innerHtml]="
+                'sleep-detection.enableAutomations.onControllersPoweredOff.batteryLevelAutomationConflict.action'
+                  | translate
+              "
+            ></button>
+          </div>
         </div>
       </div>
-    </div>
+    }
 
     <div class="setting-row">
       <div class="setting-row-label" translate>

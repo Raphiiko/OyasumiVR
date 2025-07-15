@@ -12,7 +12,7 @@ public static class LogConfigurator {
 
   public static void Init()
   {
-    var logPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+    var logPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
       "co.raphii.oyasumi\\logs\\OyasumiVR_Overlay_Sidecar_.log");
     var config = new LoggerConfiguration()
       .Filter.ByExcluding(Matching.FromSource("Microsoft"))

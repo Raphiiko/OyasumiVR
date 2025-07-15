@@ -247,23 +247,6 @@
       "vrchatAvatarAutomations": "Automatizaciones Avatar",
       "vrchatMicMuteAutomations": "Silenciamiento del micrófono VRChat"
     },
-    "device-edit-modal": {
-      "deviceNickname": {
-        "description": "Opcionalmente, configure un nombre personalizado para este dispositivo",
-        "title": "Apodo"
-      },
-      "ignoreLighthouse": {
-        "description": "Las bases ignoradas estarán ocultas y no se ven afectadas por ninguna automatización",
-        "title": "Ignorar la base"
-      },
-      "title": "Editar dispositivo: {deviceID}",
-      "v1Identifier": {
-        "change": "Cambiar ID",
-        "description": "OyasumiVR necesita conocer el ID de una estación base V1 para poder controlarla.",
-        "set": "establecer ID",
-        "title": "Faro V1 ID"
-      }
-    },
     "device-list": {
       "category": {
         "Controller": "Controladores",
@@ -947,6 +930,16 @@
       "title": "Autenticación de dos factores"
     }
   },
+  "device-manager": {
+    "config": {
+      "v1Identifier": {
+        "change": "Cambiar ID",
+        "description": "OyasumiVR necesita conocer el ID de una estación base V1 para poder controlarla.",
+        "set": "establecer ID",
+        "title": "Faro V1 ID"
+      }
+    }
+  },
   "discord": {
     "details": "Software VR para dormir",
     "label": {
@@ -1443,8 +1436,6 @@
     },
     "powerManagementWarning": "Si optas por utilizar las automatizaciones de OyasumiVR para encender o apagar tus estaciones base, es recomendable que desactives la gestión de energía en la configuración de la estación base de SteamVR.",
     "tabs": {
-      "baseStations": "Estaciones base",
-      "controllersAndTrackers": "Controladores & Trackers",
       "windowsPowerPolicy": "Política energética"
     },
     "title": "Automatizaciones de energía",
@@ -2228,7 +2219,9 @@
   },
   "status-automations": {
     "behaviourWarning": "Es posible que los cambios de estado de OyasumiVR no sean visibles al instante para ti. Para otros jugadores, también puede tardar un poco en mostrarse una actualización de estado. Esto se debe al almacenamiento en caché de VRChat, pero puedes estar seguro de que tu estado se actualiza.",
-    "behaviourWarningFAQ": "Aquí puedes encontrar las respuestas a algunas preguntas que puedas tener sobre el comportamiento de cambio de estado:\n\nQ: ¿Puedo aceptar automáticamente las solicitudes de invitación, incluso si VRChat no muestra que estoy en azul? (join me), se encargará de aceptar automáticamente las solicitudes de invitación que reciba.\n\nQ: La gente no puede unirse a mí porque mi estado no se actualiza para ellos.\nA: Las actualizaciones de estado pueden tardar un poco en mostrarse a otros usuarios. Si quieren unirse a ti pero no pueden, pueden forzar la actualización de tu estado abriendo tu perfil en el menú principal.",
+    "behaviourWarningFAQ": {
+      "message": "Aquí puedes encontrar las respuestas a algunas preguntas que puedas tener sobre el comportamiento de cambio de estado:\n\nQ: ¿Puedo aceptar automáticamente las solicitudes de invitación, incluso si VRChat no muestra que estoy en azul? (join me), se encargará de aceptar automáticamente las solicitudes de invitación que reciba.\n\nQ: La gente no puede unirse a mí porque mi estado no se actualiza para ellos.\nA: Las actualizaciones de estado pueden tardar un poco en mostrarse a otros usuarios. Si quieren unirse a ti pero no pueden, pueden forzar la actualización de tu estado abriendo tu perfil en el menú principal."
+    },
     "general": {
       "description": "Aquí puedes configurar OyasumiVR para actualizar tu estado de VRChat para ciertos eventos. Por ejemplo, ¡cambia tu estado cuando te vayas a dormir o te despiertes!",
       "onSleepDisable": {

@@ -17,7 +17,7 @@ use std::env;
 use std::fs::File;
 use std::path::Path;
 use std::time::Duration;
-use sysinfo::{Pid, PidExt, System, SystemExt};
+use sysinfo::{Pid, System, ProcessesToUpdate};
 use windows::relaunch_with_elevation;
 
 mod afterburner;
@@ -30,10 +30,10 @@ async fn main() {
     // Initialize logging
     let log_path = if let Some(base_dirs) = BaseDirs::new() {
         base_dirs
-            .preference_dir()
-            .join("co.raphii.oyasumi/logs/OyasumiSidecar.log")
+            .data_local_dir()
+            .join("co.raphii.oyasumi/logs/OyasumiVR_Elevated_Sidecar.log")
     } else {
-        Path::new("co.raphii.oyasumi/logs/OyasumiSidecar.log").to_path_buf()
+        Path::new("co.raphii.oyasumi/logs/OyasumiVR_Elevated_Sidecar.log").to_path_buf()
     };
     CombinedLogger::init(vec![
         TermLogger::new(
@@ -118,10 +118,10 @@ async fn main() {
 }
 
 async fn watch_main_process(main_pid: u32) {
-    let pid = Pid::from_u32(main_pid);
+    let pid = Pid::from(main_pid as usize);
     let mut s = System::new_all();
     loop {
-        s.refresh_processes();
+        s.refresh_processes(ProcessesToUpdate::All, true);
         if s.process(pid).is_none() {
             info!("Main process has exited. Stopping elevated sidecar.");
             std::process::exit(0);

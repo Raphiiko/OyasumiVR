@@ -8,11 +8,13 @@
       <app-message-center-item [message]="item" @vshrink></app-message-center-item>
     }
   </div>
-  <div *ngIf="((messages | async)?.length ?? 0) === 0" class="mc-items-none" @fade>
-    <img src="/assets/img/illustration_ok.png" />
-    <span translate>No messages</span>
-    <span translate>Everything is ok!</span>
-  </div>
+  @if (((messages | async)?.length ?? 0) === 0) {
+    <div class="mc-items-none" @fade>
+      <img src="/assets/img/illustration_ok.png" />
+      <span translate>No messages</span>
+      <span translate>Everything is ok!</span>
+    </div>
+  }
   <div class="mc-header" (click)="$event.target === $event.currentTarget && close()">
     <div class="mc-header-bar" [class.scrolled]="scrolled()">
       <span class="mc-header-title" translate>message-center.title</span>
@@ -22,17 +24,18 @@
             >check</i
           >
           <span translate>message-center.actions.showHidden</span>
-          <ng-container
-            *ngIf="{
+          @if (
+            {
               hiddenMessageCount: (messageCenter.hiddenMessages | async)?.length ?? 0,
-            } as data"
-          >
+            };
+            as data
+          ) {
             <span
               class="mc-hidden-count-indicator"
               [style.opacity]="data.hiddenMessageCount > 0 ? 1.0 : 0.0"
               >{{ data.hiddenMessageCount }}</span
             >
-          </ng-container>
+          }
         </button>
         <button class="mc-header-close" (click)="close()">
           <i class="material-symbols-outlined">clear</i>

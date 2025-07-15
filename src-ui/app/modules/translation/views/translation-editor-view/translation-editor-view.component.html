@@ -74,43 +74,43 @@
   <div class="editor-table-header-cell">
     <span>'{{ locale }}' Translation</span>
   </div>
-  <div
-    class="editor-table-row"
-    *ngFor="let entry of entries | slice: paginationStart : paginationEnd"
-  >
-    <div class="editor-table-cell">
-      <span [innerHtml]="entry.htmlKey" class="key"></span>
-    </div>
-    <div class="editor-table-cell">
-      <span>{{ entry.values['en'] }}</span>
-    </div>
-    <div class="editor-table-cell">
-      <div class="editor-table-cell-textinput">
-        <textarea
-          [spellcheck]="false"
-          rows="1"
-          appTextareaAutoResize
-          [ngModel]="entry.values[locale!]"
-          (change)="onTranslationChange(entry, locale!, $event)"
-        ></textarea>
+  @for (entry of entries | slice: paginationStart : paginationEnd; track entry) {
+    <div class="editor-table-row">
+      <div class="editor-table-cell">
+        <span [innerHtml]="entry.htmlKey" class="key"></span>
       </div>
-      <div *ngIf="entry.suggestion" class="entry-suggestion" @vshrink>
-        <div class="entry-suggestion-title">Suggestion:</div>
-        <div class="entry-suggestion-value">{{ entry.suggestion }}</div>
-        <div class="entry-suggestion-actions">
-          <button class="btn btn-primary" (click)="applySuggestion(entry)">
-            <i class="material-icons">check</i>
-            <span>Apply</span>
-          </button>
-
-          <button class="btn btn-secondary" (click)="discardSuggestion(entry)">
-            <i class="material-icons">close</i>
-            <span>Discard</span>
-          </button>
+      <div class="editor-table-cell">
+        <span>{{ entry.values['en'] }}</span>
+      </div>
+      <div class="editor-table-cell">
+        <div class="editor-table-cell-textinput">
+          <textarea
+            [spellcheck]="false"
+            rows="1"
+            appTextareaAutoResize
+            [ngModel]="entry.values[locale!]"
+            (change)="onTranslationChange(entry, locale!, $event)"
+          ></textarea>
         </div>
+        @if (entry.suggestion) {
+          <div class="entry-suggestion" @vshrink>
+            <div class="entry-suggestion-title">Suggestion:</div>
+            <div class="entry-suggestion-value">{{ entry.suggestion }}</div>
+            <div class="entry-suggestion-actions">
+              <button class="btn btn-primary" (click)="applySuggestion(entry)">
+                <i class="material-icons">check</i>
+                <span>Apply</span>
+              </button>
+              <button class="btn btn-secondary" (click)="discardSuggestion(entry)">
+                <i class="material-icons">close</i>
+                <span>Discard</span>
+              </button>
+            </div>
+          </div>
+        }
       </div>
     </div>
-  </div>
+  }
 </div>
 
 <div class="footer-row">

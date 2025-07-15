@@ -135,7 +135,7 @@ export class FrameLimiterService {
       });
       if (result === null) return 'AUTO';
       return Math.max(result.framesToThrottle, result.additionalFramesToPredict);
-    } catch (e) {
+    } catch {
       return null;
     }
   }

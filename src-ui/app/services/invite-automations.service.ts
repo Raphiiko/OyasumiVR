@@ -163,7 +163,7 @@ export class InviteAutomationsService {
     // Stop if sleep mode is disabled and it's required to be enabled
     if (config.onlyIfSleepModeEnabled && !sleepMode) {
       warn('[VRChat] Ignoring invite request because sleep mode is disabled');
-      const message = await this.getDeclineMessage(config);
+      const message = await this.getInviteRequestDeclineMessage(config);
       if (message) {
         await this.vrchat.declineInviteOrInviteRequest(notification.id, 'requestInvite', message);
         await this.vrchat.deleteNotification(notification.id);
@@ -183,7 +183,7 @@ export class InviteAutomationsService {
         warn(
           `[VRChat] Ignoring invite request because there are too many players in the instance (${world.players.length}>=${config.onlyBelowPlayerCount})`
         );
-        const message = await this.getDeclineMessage(config);
+        const message = await this.getInviteRequestDeclineMessage(config);
         if (message) {
           await this.vrchat.declineInviteOrInviteRequest(notification.id, 'requestInvite', message);
           await this.vrchat.deleteNotification(notification.id);
@@ -205,7 +205,7 @@ export class InviteAutomationsService {
         // Stop if the player is not on the whitelist
         if (!config.playerIds.includes(notification.senderUserId)) {
           warn('[VRChat] Ignoring invite request because player is not on whitelist');
-          const message = await this.getDeclineMessage(config);
+          const message = await this.getInviteRequestDeclineMessage(config);
           if (message) {
             await this.vrchat.declineInviteOrInviteRequest(
               notification.id,
@@ -227,7 +227,7 @@ export class InviteAutomationsService {
         // Stop if the player is on the blacklist
         if (config.playerIds.includes(notification.senderUserId)) {
           warn('[VRChat] Ignoring invite request because player is on blacklist');
-          const message = await this.getDeclineMessage(config);
+          const message = await this.getInviteRequestDeclineMessage(config);
           if (message) {
             await this.vrchat.declineInviteOrInviteRequest(
               notification.id,
@@ -250,7 +250,7 @@ export class InviteAutomationsService {
     info(`[VRChat] Automatically accepting invite request from ${notification.senderUserId}`);
     await this.vrchat.deleteNotification(notification.id);
     await this.vrchat.inviteUser(notification.senderUserId, {
-      message: this.getAcceptMessage(config),
+      message: this.getInviteRequestAcceptMessage(config),
     });
     this.playInviteRequestSound(config, true, sleepMode);
     if (await this.notifications.notificationTypeEnabled('AUTO_ACCEPTED_INVITE_REQUEST')) {
@@ -267,20 +267,22 @@ export class InviteAutomationsService {
     } as EventLogAcceptedInviteRequest);
   }
 
-  private getAcceptMessage(config: AutoAcceptInviteRequestsAutomationConfig): string | undefined {
+  private getInviteRequestAcceptMessage(
+    config: AutoAcceptInviteRequestsAutomationConfig
+  ): string | undefined {
     if (!config.acceptMessageEnabled) return undefined;
     let message = config.acceptInviteRequestMessage;
     message = message.replace(/\s+/g, ' ').trim();
     if (message.length === 0) {
       message = this.translate.instant(
-        'auto-invite-request-accept.options.acceptMessage.customMessage.placeholder'
+        'invite-and-invite-requests.inviteRequestsTab.options.acceptMessage.customMessage.placeholder'
       );
       message = message.replace(/\s+/g, ' ').trim();
     }
     return message;
   }
 
-  private async getDeclineMessage(
+  private async getInviteRequestDeclineMessage(
     config: AutoAcceptInviteRequestsAutomationConfig
   ): Promise<string | undefined> {
     if (config.declineOnRequest === 'DISABLED') return undefined;
@@ -290,7 +292,7 @@ export class InviteAutomationsService {
     message = message.replace(/\s+/g, ' ').trim();
     if (message.length === 0) {
       message = this.translate.instant(
-        'auto-invite-request-accept.options.declineOnRequest.customMessage.placeholder'
+        'invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.customMessage.placeholder'
       );
       message = message.replace(/\s+/g, ' ').trim();
     }
@@ -306,7 +308,7 @@ export class InviteAutomationsService {
     message = message.replace(/\s+/g, ' ').trim();
     if (message.length === 0) {
       message = this.translate.instant(
-        'auto-invite-request-accept.options.declineOnInviteWhileAsleep.customMessage.placeholder'
+        'invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.customMessage.placeholder'
       );
       message = message.replace(/\s+/g, ' ').trim();
     }

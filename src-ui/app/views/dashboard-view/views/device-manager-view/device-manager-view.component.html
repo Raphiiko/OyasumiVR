@@ -10,10 +10,12 @@
   </div>
   <div class="pane-content">
     <div class="setting-view-container">
-      <app-device-manager-devices-tab
-        *ngIf="activeTab === 'devices'"
-      ></app-device-manager-devices-tab>
-      <app-device-manager-tags-tab *ngIf="activeTab === 'tags'"></app-device-manager-tags-tab>
+      @if (activeTab === 'devices') {
+        <app-device-manager-devices-tab></app-device-manager-devices-tab>
+      }
+      @if (activeTab === 'tags') {
+        <app-device-manager-tags-tab></app-device-manager-tags-tab>
+      }
     </div>
   </div>
 </div>

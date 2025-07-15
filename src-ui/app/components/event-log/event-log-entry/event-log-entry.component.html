@@ -1,12 +1,14 @@
-<div class="container" *ngIf="!!entry && !!parser">
-  <div class="header">
-    <div class="header-info">
-      <span [innerHtml]="headerInfoTitle"></span>
-      <span [innerHtml]="headerInfoSubTitle"></span>
-    </div>
-    <div class="header-time">
-      <span>{{ entry.time | localizedDate: 'EVENT_LOG_TIME' }}</span>
-      <span>{{ entry.time | localizedDate: 'EVENT_LOG_DATE' }}</span>
+@if (!!entry && !!parser) {
+  <div class="container">
+    <div class="header">
+      <div class="header-info">
+        <span [innerHtml]="headerInfoTitle"></span>
+        <span [innerHtml]="headerInfoSubTitle"></span>
+      </div>
+      <div class="header-time">
+        <span>{{ entry.time | localizedDate: 'EVENT_LOG_TIME' }}</span>
+        <span>{{ entry.time | localizedDate: 'EVENT_LOG_DATE' }}</span>
+      </div>
     </div>
   </div>
-</div>
+}
