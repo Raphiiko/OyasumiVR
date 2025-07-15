@@ -1017,7 +1017,7 @@
       "disabled": {
         "description": "已禁用的设备不会受到自动化操作或批量操作的影响，也不会显示在设备列表中",
         "title": "禁用设备",
-        "tooltip": "该设备已被禁用"
+        "tooltip": "此设备已被禁用"
       },
       "nickname": {
         "description": "为此设备设置一个自定义名称，方便识别",
