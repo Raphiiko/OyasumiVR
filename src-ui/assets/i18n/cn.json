@@ -143,7 +143,7 @@
     "temperature": {
       "title": "将色温更改为"
     },
-    "title": "亮度自动化",
+    "title": "亮度",
     "transition": {
       "description": "使亮度和/或色温随时间平滑过渡",
       "title": "平滑过渡"
@@ -166,7 +166,7 @@
       "description": "调整我的保护墙的淡化距离",
       "title": "当我入睡时"
     },
-    "title": "保护墙自动化"
+    "title": "保护墙"
   },
   "comp": {
     "brightness-control-modal": {
@@ -1634,7 +1634,7 @@
       "currentPose": "目前姿势",
       "customPreset": "自定义动画",
       "description": "OyasumiVR 可以在你改变睡姿时自动改变你的模型动画。 如果你没有全身追踪，或者如果你在睡觉时会关闭你的追踪器（又或者你有 OyasumiVR），这将会很有用。\n 请查看 <a href=\"https://youtu.be/3T54bTAzT7o\"target=\"_blank\"> 示例视频 </a>来了解这个功能的运作方式 \n\n 此功能默认包含多个模型动作的预制配置，但你也可以指定自己的动画。",
-      "enable": "开启睡眠动画自动化",
+      "enable": "开启睡眠动画",
       "manualControl": "手动控制",
       "options": {
         "footLock": {
@@ -1801,7 +1801,7 @@
       "devices": "设备",
       "windowsPowerPolicy": "电源计划"
     },
-    "title": "电源自动化",
+    "title": "电源",
     "windowsPowerPolicy": {
       "automations": "自动化功能",
       "description": "OyasumiVR 可以在你进入睡眠或醒来时自动更改 Windows 的电源计划。这对于在你睡觉时降低能耗并在你醒来后恢复高性能策略时非常有用。",
@@ -2679,7 +2679,7 @@
       "general": "通用",
       "playerLimit": "人数限制"
     },
-    "title": "状态自动化"
+    "title": "状态"
   },
   "systemMicMuteAutomations": {
     "audioDevice": {
@@ -2786,7 +2786,7 @@
       },
       "title": "自动静音"
     },
-    "title": "麦克风状态自动化",
+    "title": "麦克风状态",
     "vrchat": {
       "title": "VRChat 选项",
       "worldJoinBehaviour": {
@@ -2830,7 +2830,7 @@
       "script": "睡眠准备",
       "title": "当我准备入睡时"
     },
-    "title": "模型自动化"
+    "title": "模型"
   },
   "vrchatGroupAutomations": {
     "description": "你可以设置 OyasumiVR 在你入睡或醒来时，自动切换你想显示的 VRChat 群组。",
@@ -2850,7 +2850,7 @@
       "clearGroup": "清除群组",
       "dontChange": "保持原样"
     },
-    "title": "群组自动化"
+    "title": "群组"
   },
   "vrchatMicMuteAutomations": {
     "automations": {
@@ -2890,6 +2890,6 @@
       "unknown": "未知",
       "unmuted": "已开麦"
     },
-    "title": "VRChat 麦克风自动化"
+    "title": "VRChat 麦克风"
   }
 }
