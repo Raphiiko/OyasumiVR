@@ -255,6 +255,5 @@ export class VRChatService {
 
   private async saveSettings() {
     await SETTINGS_STORE.set(SETTINGS_KEY_VRCHAT_API, this._settings.value);
-    await SETTINGS_STORE.save();
   }
 }

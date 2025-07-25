@@ -65,6 +65,5 @@ export class AutomationConfigService {
 
   async saveConfigs() {
     await SETTINGS_STORE.set(SETTINGS_KEY_AUTOMATION_CONFIGS, this._configs.value);
-    await SETTINGS_STORE.save();
   }
 }

@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project (now) adheres to [Calendar Versioning](https://calver.org/#scheme).
 
+## [25.6.9]
+
+### Fixed
+
+- Fixed parameter values in simple OSC script editor
+
 ## [25.6.8]
 
 ### Fixed

@@ -24,7 +24,6 @@ export class CachedValue<T> {
         if (ttlExpired) await CACHE_STORE.delete(entry[0]);
       }
     }
-    await CACHE_STORE.save();
   }
 
   constructor(
@@ -65,12 +64,12 @@ export class CachedValue<T> {
       value: this.value,
       lastSet: this.lastSet,
       ttl: this.ttl,
-    }).then(() => CACHE_STORE.save());
+    })
   }
 
   private async clearFromDisk() {
     if (!this.persistenceKey) return;
-    await CACHE_STORE.delete(this.persistenceKey).then(() => CACHE_STORE.save());
+    await CACHE_STORE.delete(this.persistenceKey)
   }
 
   private async loadFromDisk() {
