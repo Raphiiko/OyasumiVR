@@ -7,6 +7,12 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 
 ## [Unreleased]
 
+## [25.6.9]
+
+### Fixed
+
+- Fixed parameter values in simple OSC script editor
+
 ## [25.6.8]
 
 ### Fixed

@@ -1,16 +1,14 @@
 <div class="header-row" @noop>
-  <span
-    [translate]="'comp.osc-script-simple-editor.commandCounter'"
-    [translateParams]="{ count: _script.commands.length }"
-  ></span>
+  <span>{{
+    'comp.osc-script-simple-editor.commandCounter' | translate: { count: _script.commands.length }
+  }}</span>
   <span>&nbsp;|&nbsp;</span>
   @if (!validated) {
     <div class="small-spinner" @hshrink style="margin-right: 0.5em"></div>
   }
-  <span
-    [translate]="'comp.osc-script-simple-editor.errorCounter'"
-    [translateParams]="{ count: errors.length }"
-  ></span>
+  <span>{{
+    'comp.osc-script-simple-editor.errorCounter' | translate: { count: errors.length }
+  }}</span>
   <span style="flex: 1"></span>
   @if (
     !currentAvatarContext ||
@@ -61,7 +59,7 @@
                 [showPlaceholderInDropdown]="false"
                 class="simple-command-type-input"
               ></app-select-box>
-              @if (getCommandParameterType(command, j)?.id === 'BOOLEAN') {
+              @if (getCommandParameterType(command, j)?.id === 'Boolean') {
                 <app-select-box
                   class="simple-command-boolean-input"
                   [type]="'SMALL'"
@@ -74,7 +72,7 @@
                   [showPlaceholderInDropdown]="false"
                 ></app-select-box>
               }
-              @if (getCommandParameterType(command, j)?.id === 'INT') {
+              @if (getCommandParameterType(command, j)?.id === 'Int') {
                 <div class="input-wrapper simple-command-integer-input">
                   <input
                     type="number"
@@ -86,7 +84,7 @@
                   />
                 </div>
               }
-              @if (getCommandParameterType(command, j)?.id === 'FLOAT') {
+              @if (getCommandParameterType(command, j)?.id === 'Float') {
                 <div class="input-wrapper simple-command-float-input">
                   <input
                     type="number"
@@ -96,7 +94,7 @@
                   />
                 </div>
               }
-              @if (getCommandParameterType(command, j)?.id === 'STRING') {
+              @if (getCommandParameterType(command, j)?.id === 'String') {
                 <div class="input-wrapper simple-command-string-input">
                   <input
                     type="text"
