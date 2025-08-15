@@ -2,12 +2,12 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
 <!--    <OutputType>Exe</OutputType>-->
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <RuntimeFrameworkVersion>9.0.6</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>8.0.19</RuntimeFrameworkVersion>
     <SelfContained>true</SelfContained>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
@@ -15,18 +15,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CefSharp.OffScreen.NETCore" Version="129.0.110" />
-    <PackageReference Include="Grpc.AspNetCore.Web" Version="2.54.0"/>
-    <PackageReference Include="Serilog" Version="3.0.1"/>
-    <PackageReference Include="Serilog.AspNetCore" Version="7.0.0"/>
-    <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0"/>
-    <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0"/>
-    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0"/>
+    <PackageReference Include="CefSharp.OffScreen.NETCore" Version="138.0.340" />
+    <PackageReference Include="Grpc.AspNetCore.Web" Version="2.71.0"/>
+    <PackageReference Include="Serilog" Version="4.3.0"/>
+    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0"/>
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0"/>
+    <PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0"/>
+    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0"/>
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0"/>
-    <PackageReference Include="Grpc.AspNetCore" Version="2.54.0"/>
-    <PackageReference Include="Google.Protobuf" Version="3.23.3"/>
-    <PackageReference Include="Grpc.Net.Client" Version="2.54.0"/>
-    <PackageReference Include="Grpc.Tools" Version="2.54.0" PrivateAssets="All"/>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.71.0"/>
+    <PackageReference Include="Google.Protobuf" Version="3.32.0"/>
+    <PackageReference Include="Grpc.Net.Client" Version="2.71.0"/>
+    <PackageReference Include="Grpc.Tools" Version="2.72.0" PrivateAssets="All"/>
+    <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
