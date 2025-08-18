@@ -2,7 +2,7 @@
   "name": "src-shared-ts",
   "description": "Shared typescript code for Oyasumi modules",
   "scripts": {},
-  "version": "25.6.9",
+  "version": "25.6.10",
   "author": "Raphiiko",
   "license": "MIT",
   "type": "module",
