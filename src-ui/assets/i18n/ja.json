@@ -1865,10 +1865,6 @@
           "description": "SteamVRが検出された後、OyasumiVRは少し待ってから処理を開始します。",
           "title": "OpenVR初期化の遅延"
         },
-        "oscServerEnabled": {
-          "description": "オフにするとOyasumiVRの内蔵OSC及びOSCQueryサーバーが無効になります。多くの機能が警告なしに使えなくなるため、通常はオフにしないでください。これはデバッグ用です。",
-          "title": "OSCとOSCQueryサーバー"
-        },
         "overlayGpuAcceleration": {
           "description": "オーバーレイが正しく描画されない場合、この設定を無効にすると一部の環境（例：ハイブリッドGPU）で問題が解決することがあります。",
           "title": "VRオーバーレイのGPUアクセラレーション"
@@ -2239,6 +2235,14 @@
         "description": "一部の通知タイプがサウンドを再生する音量レベルを設定します",
         "test": "テスト",
         "title": "一般通知の音量"
+      }
+    },
+    "osc": {
+      "advanced": {
+        "oscServerEnabled": {
+          "description": "オフにするとOyasumiVRの内蔵OSC及びOSCQueryサーバーが無効になります。多くの機能が警告なしに使えなくなるため、通常はオフにしないでください。これはデバッグ用です。",
+          "title": "OSCとOSCQueryサーバー"
+        }
       }
     },
     "statusInfo": {
