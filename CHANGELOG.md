@@ -7,6 +7,13 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 
 ## [Unreleased]
 
+## [25.6.10]
+
+### Fixed
+
+- Fixed overlay sidecar not running on some systems (.net 8 downgrade)
+- Fixed Pulsoid account linking for new installs (restored schema registration)
+
 ## [25.6.9]
 
 ### Fixed

@@ -1,6 +1,6 @@
 [package]
 name = "oyasumivr"
-version = "25.6.9"
+version = "25.6.10"
 description = ""
 authors = ["Raphiiko"]
 license = "MIT"
@@ -62,7 +62,7 @@ system_shutdown = "4.0.1"
 tauri-plugin-aptabase = { git = "https://github.com/aptabase/tauri-plugin-aptabase", rev = "7cc36ccce0052352bda7272a4acb25a214c4b804" }
 tauri-plugin-cli = "2.4.0"
 tauri-plugin-clipboard-manager = "2.3.0"
-tauri-plugin-deep-link = "2.4.0"
+tauri-plugin-deep-link = "2.4.1"
 tauri-plugin-dialog = "2.3.0"
 tauri-plugin-fs = "2.4.0"
 tauri-plugin-http = { version = "2.5.0", features = ["unsafe-headers"] }
@@ -71,7 +71,7 @@ tauri-plugin-notification = "2.3.0"
 tauri-plugin-opener = "2.4.0"
 tauri-plugin-process = "2.3.0"
 tauri-plugin-shell = "2.3.0"
-tauri-plugin-single-instance = { version = "2.3.0", features = ["deep-link"] }
+tauri-plugin-single-instance = { version = "2.3.2", features = ["deep-link"] }
 tauri-plugin-store = "2.3.0"
 tempfile = "3.20.0"
 time = "0.3.41"

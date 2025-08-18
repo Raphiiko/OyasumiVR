@@ -1,6 +1,6 @@
 {
   "name": "oyasumivr-overlay-ui",
-  "version": "25.6.9",
+  "version": "25.6.10",
   "private": true,
   "scripts": {
     "dev": "vite dev",
