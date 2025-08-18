@@ -7,6 +7,11 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed overlay sidecar not running on some systems (Downgraded sidecar to .net 8)
+- Fixed oyasumivr:// schema for deep links no longer being registered automatically
+
 ## [25.6.9]
 
 ### Fixed

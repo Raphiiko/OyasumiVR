@@ -12,6 +12,8 @@
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
     <RootNamespace>oyasumivr-overlay-sidecar</RootNamespace>
+<!--    TODO: Uncomment this when we upgrade to dotnet 9+-->
+<!--    <CETCompat>false</CETCompat-->
   </PropertyGroup>
 
   <ItemGroup>
