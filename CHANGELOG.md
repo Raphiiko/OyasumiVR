@@ -7,6 +7,12 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 
 ## [Unreleased]
 
+## Added
+
+- OSC Settings view
+  - Custom target for OSC messages (e.g. for use with Resonite, OSC routers, or when OSCQuery is not available)
+  - VRChat (OSCQuery) target (allows for disabling OSC messages being sent to VRChat)
+
 ## [25.6.10]
 
 ### Fixed

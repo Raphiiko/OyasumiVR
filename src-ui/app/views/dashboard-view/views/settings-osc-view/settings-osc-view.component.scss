@@ -1,0 +1,64 @@
+:host {
+  height: 100%;
+  display: flex;
+  overflow: hidden;
+}
+
+.pane {
+  width: 100%;
+}
+
+.pane-content {
+  padding: 2em;
+  overflow-y: overlay;
+  width: 100%;
+}
+
+.input-with-validation {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .validation-icon {
+    margin-right: 0.5rem;
+    display: flex;
+    align-items: center;
+    min-width: 1.4rem;
+
+    .validation-tooltip-wrapper {
+      display: flex;
+      align-items: center;
+
+      .material-symbols-outlined {
+        font-size: 1.6em;
+
+        &.validation-error {
+          color: var(--color-caution);
+        }
+
+        &.validation-pending {
+          color: var(--color-warning);
+          animation: pulse 1.5s ease-in-out infinite;
+        }
+      }
+    }
+  }
+
+  input {
+    flex: 1;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.alert {
+  margin-bottom: 1em;
+}

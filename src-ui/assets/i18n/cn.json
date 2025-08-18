@@ -1865,10 +1865,6 @@
           "description": "启用此选项后，OyasumiVR 将在检测到 SteamVR 后稍作等待再进行交互，从而给予 SteamVR 额外的启动时间。如果你在 OyasumiVR 运行时遇到 SteamVR 启动问题，开启此选项可能有所帮助。",
           "title": "延迟初始化 OpenVR"
         },
-        "oscServerEnabled": {
-          "description": "关闭此选项将禁用内置的 OSCQuery 服务器。请注意，关闭后 OyasumiVR 的部分功能将无法使用，且不会有任何警告。此选项仅用于调试目的，一般使用时不应关闭。",
-          "title": "OSC 与 OSCQuery 服务器"
-        },
         "overlayGpuAcceleration": {
           "description": "如果你遇到叠加层渲染异常的问题，禁用此选项可能能在某些系统（如使用混合输出的笔记本）上解决问题。",
           "title": "VR叠加层GPU加速"
@@ -2239,6 +2235,14 @@
         "description": "设置通知的音量大小",
         "test": "测试",
         "title": "一般通知的音量"
+      }
+    },
+    "osc": {
+      "advanced": {
+        "oscServerEnabled": {
+          "description": "关闭此选项将禁用内置的 OSCQuery 服务器。请注意，关闭后 OyasumiVR 的部分功能将无法使用，且不会有任何警告。此选项仅用于调试目的，一般使用时不应关闭。",
+          "title": "OSC 与 OSCQuery 服务器"
+        }
       }
     },
     "statusInfo": {

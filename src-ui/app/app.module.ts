@@ -154,6 +154,7 @@ import { AudioDeviceAutomationsService } from './services/audio-device-automatio
 import { WindowsService } from './services/windows.service';
 import { SettingsAdvancedViewComponent } from './views/dashboard-view/views/settings-advanced-view/settings-advanced-view.component';
 import { SettingsNotificationsViewComponent } from './views/dashboard-view/views/settings-notifications-view/settings-notifications-view.component';
+import { SettingsOscViewComponent } from './views/dashboard-view/views/settings-osc-view/settings-osc-view.component';
 import { SettingsGeneralViewComponent } from './views/dashboard-view/views/settings-general-view/settings-general-view.component';
 import { SettingsUpdatesViewComponent } from './views/dashboard-view/views/settings-updates-view/settings-updates-view.component';
 import { StartWithSteamVRHowToModalComponent } from './views/dashboard-view/views/settings-general-view/start-with-steamvr-how-to-modal/start-with-steamvr-how-to-modal.component';
@@ -319,6 +320,7 @@ export function createTranslateLoader(http: HttpClient) {
     LanguageSelectModalComponent,
     SettingsGeneralViewComponent,
     SettingsNotificationsViewComponent,
+    SettingsOscViewComponent,
     SettingsUpdatesViewComponent,
     SettingsAdvancedViewComponent,
     VRChatLoginModalComponent,
