@@ -11,6 +11,7 @@ import { BrightnessMqttIntegrationService } from './integrations/brightness.mqtt
 import { BigscreenBeyondMqttIntegrationService } from './integrations/bigscreen-beyond.mqtt-integration.service';
 import { HeartRateMqttIntegrationService } from './integrations/heart-rate.mqtt-integration.service';
 import { ShutdownSequenceMqttIntegrationService } from './integrations/shutdown-sequence.mqtt-integration.service';
+import { VRChatMicMuteMqttIntegrationService } from './integrations/vrchat-mic-mute.mqtt-integration.service';
 
 @Injectable({
   providedIn: 'root',
@@ -28,7 +29,8 @@ export class MqttIntegrationService {
     private brightnessMqttIntegrationService: BrightnessMqttIntegrationService,
     private bsbMqttIntegrationService: BigscreenBeyondMqttIntegrationService,
     private heartRateMqttIntegrationService: HeartRateMqttIntegrationService,
-    private shutdownSequenceMqttIntegrationService: ShutdownSequenceMqttIntegrationService
+    private shutdownSequenceMqttIntegrationService: ShutdownSequenceMqttIntegrationService,
+    private vrchatMicMuteMqttIntegrationService: VRChatMicMuteMqttIntegrationService
   ) {}
 
   async init() {
@@ -45,6 +47,7 @@ export class MqttIntegrationService {
       this.bsbMqttIntegrationService.init(),
       this.heartRateMqttIntegrationService.init(),
       this.shutdownSequenceMqttIntegrationService.init(),
+      this.vrchatMicMuteMqttIntegrationService.init(),
     ]);
   }
 }
