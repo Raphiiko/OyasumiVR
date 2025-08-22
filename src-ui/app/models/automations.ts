@@ -312,6 +312,7 @@ export interface ChangeStatusGeneralEventsAutomationConfig extends AutomationCon
   statusOnSleepModeDisable: UserStatus;
   changeStatusMessageOnSleepModeDisable: boolean;
   statusMessageOnSleepModeDisable: string;
+  savedStatusMessage: string | null;
   changeStatusOnSleepPreparation: boolean;
   statusOnSleepPreparation: UserStatus;
   changeStatusMessageOnSleepPreparation: boolean;
@@ -838,6 +839,7 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     statusOnSleepPreparation: UserStatus.JoinMe,
     changeStatusMessageOnSleepPreparation: false,
     statusMessageOnSleepPreparation: '',
+    savedStatusMessage: null
   },
   AUTO_ACCEPT_INVITE_REQUESTS: {
     enabled: false,

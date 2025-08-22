@@ -2664,7 +2664,7 @@
       "onSleepDisable": {
         "description": {
           "status": "Set my status to",
-          "statusMessage": "Set my status message to"
+          "statusMessage": "Set my status message to\n(Restores status if disabled)"
         },
         "script": "Sleep Mode Disabled",
         "title": "When I wake up"

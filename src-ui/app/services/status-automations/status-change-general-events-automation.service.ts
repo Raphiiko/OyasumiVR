@@ -62,11 +62,19 @@ export class StatusChangeGeneralEventsAutomationService {
               status = this.config.statusOnSleepModeEnable;
             if (this.config.changeStatusMessageOnSleepModeEnable)
               statusMessage = this.config.statusMessageOnSleepModeEnable;
+              if (this.config.savedStatusMessage == null)
+              {
+                const oldStatusMessage = this.vrcUser?.statusDescription;
+                this.config.savedStatusMessage=oldStatusMessage ?? "";
+              }
           } else {
             if (this.config.changeStatusOnSleepModeDisable)
               status = this.config.statusOnSleepModeDisable;
             if (this.config.changeStatusMessageOnSleepModeDisable)
               statusMessage = this.config.statusMessageOnSleepModeDisable;
+            else
+              statusMessage = this.config.savedStatusMessage;
+            this.config.savedStatusMessage = null;  
           }
           return { status, statusMessage, sleepMode };
         }),
@@ -122,6 +130,7 @@ export class StatusChangeGeneralEventsAutomationService {
       .subscribe(async ({ status, statusMessage }) => {
         const oldStatus = this.vrcUser?.status;
         const oldStatusMessage = this.vrcUser?.statusDescription;
+        this.config.savedStatusMessage=oldStatusMessage ?? "";
         await this.vrchat.setStatus(status, statusMessage);
         if (await this.notifications.notificationTypeEnabled('AUTO_UPDATED_VRC_STATUS')) {
           await this.notifications.send(
