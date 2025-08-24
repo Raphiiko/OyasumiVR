@@ -40,6 +40,7 @@ md5 = "0.8.0"
 mime = "0.3.17"
 mime_guess = "2.0.5"
 nalgebra = "0.33.2"
+named_pipe = "0.4.1"
 oyasumivr-shared = { path = "../src-shared-rust", version = '*' }
 oyasumivr_macros = { path = "./macros" }
 prost = "0.13.5"
