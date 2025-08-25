@@ -2163,7 +2163,7 @@
         "title": "Telemetry"
       },
       "vrcx": {
-        "label": "Log sleep mode change to VRCX",
+        "label": "Log sleep mode changes to VRCX",
         "title": "VRCX"
       },
       "title": "General Settings"

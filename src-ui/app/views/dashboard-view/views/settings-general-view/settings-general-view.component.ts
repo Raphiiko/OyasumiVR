@@ -193,8 +193,16 @@ export class SettingsGeneralViewComponent implements OnInit {
   setAskForAdminOnStart(enabled: boolean) {
     this.settingsService.updateSettings({ askForAdminOnStart: enabled });
   }
-  setvrcxLogSleepMode(enabled: boolean) {
-    this.settingsService.updateSettings({ vrcxLogSleepMode: enabled });
+  setVrcxLogSleepMode(enabled: boolean) {
+    if (enabled && !this.settingsService.settingsSync.vrcxLogsEnabled.includes('SleepMode')) {
+      this.settingsService.settingsSync.vrcxLogsEnabled.push('SleepMode');
+    } else if (
+      !enabled &&
+      this.settingsService.settingsSync.vrcxLogsEnabled.includes('SleepMode')
+    ) {
+      const idx = this.settingsService.settingsSync.vrcxLogsEnabled.indexOf('SleepMode');
+      this.settingsService.settingsSync.vrcxLogsEnabled.splice(idx, 1);
+    }
   }
 
   setTelemetryEnabled(enabled: boolean) {

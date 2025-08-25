@@ -60,8 +60,10 @@ export interface AppSettings {
   bigscreenBeyondUnsafeBrightness: boolean; // Allow brightness above 150%
   bigscreenBeyondBrightnessFanSafety: boolean; // Force fan to 100% if brightness is above 100%
   // VRCX
-  vrcxLogSleepMode: boolean;
+  vrcxLogsEnabled: VRCXEventLogType[];
 }
+
+export type VRCXEventLogType = 'SleepMode';
 
 export type DiscordActivityMode = 'ENABLED' | 'ONLY_ASLEEP' | 'DISABLED';
 
@@ -146,7 +148,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   bigscreenBeyondUnsafeBrightness: false,
   bigscreenBeyondBrightnessFanSafety: true,
   // VRCX
-  vrcxLogSleepMode: true
+  vrcxLogsEnabled: ['SleepMode'],
 };
 
 export type ExecutableReferenceStatus =

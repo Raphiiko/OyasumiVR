@@ -347,8 +347,8 @@
               <label class="switch-toggle">
                 <input
                   type="checkbox"
-                  [checked]="appSettings.vrcxLogSleepMode"
-                  (change)="setvrcxLogSleepMode(!appSettings.vrcxLogSleepMode)"
+                  [checked]="appSettings.vrcxLogsEnabled.includes('SleepMode')"
+                  (change)="setVrcxLogSleepMode(!appSettings.vrcxLogsEnabled.includes('SleepMode'))"
                 />
                 <span class="switch-toggle-slider"></span>
               </label>
