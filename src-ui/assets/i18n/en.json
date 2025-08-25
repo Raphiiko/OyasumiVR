@@ -2162,6 +2162,10 @@
         "label": "Send anonymous usage data",
         "title": "Telemetry"
       },
+      "vrcx": {
+        "label": "Log sleep mode change to VRCX",
+        "title": "VRCX"
+      },
       "title": "General Settings"
     },
     "hotkeys": {

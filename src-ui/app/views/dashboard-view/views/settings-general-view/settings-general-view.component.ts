@@ -193,6 +193,9 @@ export class SettingsGeneralViewComponent implements OnInit {
   setAskForAdminOnStart(enabled: boolean) {
     this.settingsService.updateSettings({ askForAdminOnStart: enabled });
   }
+  setvrcxLogSleepMode(enabled: boolean) {
+    this.settingsService.updateSettings({ vrcxLogSleepMode: enabled });
+  }
 
   setTelemetryEnabled(enabled: boolean) {
     this.telemetry.updateSettings({ enabled });

@@ -336,6 +336,26 @@
           </div>
         </div>
       </div>
+      <div class="setting-category">
+        <h2 translate>settings.general.vrcx.title</h2>
+        <div class="settings">
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>settings.general.vrcx.label</span>
+            </div>
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="appSettings.vrcxLogSleepMode"
+                  (change)="setvrcxLogSleepMode(!appSettings.vrcxLogSleepMode)"
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
