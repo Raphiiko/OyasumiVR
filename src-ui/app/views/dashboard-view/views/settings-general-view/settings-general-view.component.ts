@@ -89,21 +89,6 @@ export class SettingsGeneralViewComponent implements OnInit {
     },
   ];
   stopWithSteamVROption: SelectBoxItem | undefined;
-  discordActivityModeOptions: SelectBoxItem[] = [
-    {
-      id: 'ENABLED',
-      label: 'settings.general.discord.activityMode.options.ENABLED',
-    },
-    {
-      id: 'ONLY_ASLEEP',
-      label: 'settings.general.discord.activityMode.options.ONLY_ASLEEP',
-    },
-    {
-      id: 'DISABLED',
-      label: 'settings.general.discord.activityMode.options.DISABLED',
-    },
-  ];
-  discordActivityModeOption: SelectBoxItem | undefined;
 
   constructor(
     private lighthouse: LighthouseConsoleService,
@@ -141,9 +126,6 @@ export class SettingsGeneralViewComponent implements OnInit {
         );
         this.stopWithSteamVROption = this.stopWithSteamVROptions.find(
           (o) => o.id === settings.quitWithSteamVR
-        );
-        this.discordActivityModeOption = this.discordActivityModeOptions.find(
-          (o) => o.id === settings.discordActivityMode
         );
       });
   }
@@ -193,6 +175,7 @@ export class SettingsGeneralViewComponent implements OnInit {
   setAskForAdminOnStart(enabled: boolean) {
     this.settingsService.updateSettings({ askForAdminOnStart: enabled });
   }
+ 
 
   setTelemetryEnabled(enabled: boolean) {
     this.telemetry.updateSettings({ enabled });
@@ -232,21 +215,10 @@ export class SettingsGeneralViewComponent implements OnInit {
     this.settingsService.updateSettings({ overlayMenuOnlyOpenWhenVRChatIsRunning: enabled });
   }
 
-  setDiscordActivityOnlyWhenVRChatIsRunning(enabled: boolean) {
-    this.settingsService.updateSettings({ discordActivityOnlyWhileVRChatIsRunning: enabled });
-  }
-
   onChangeStopWithSteamVROption(option: SelectBoxItem | undefined) {
     if (!option) return;
     this.settingsService.updateSettings({
       quitWithSteamVR: option!.id as QuitWithSteamVRMode,
-    });
-  }
-
-  onChangeDiscordActivityMode(option: SelectBoxItem | undefined) {
-    if (!option) return;
-    this.settingsService.updateSettings({
-      discordActivityMode: option!.id as DiscordActivityMode,
     });
   }
 

@@ -1647,21 +1647,6 @@
         "label": "Solicitar privilegios de administrador al inicio",
         "title": "Privilegios de administrador"
       },
-      "discord": {
-        "activityMode": {
-          "description": "Mostrar OyasumiVR como tu actividad actual en Discord",
-          "options": {
-            "DISABLED": "Desactivado",
-            "ENABLED": "Habilitado",
-            "ONLY_ASLEEP": "Sólo mientras duerme"
-          },
-          "title": "Presencia rica en discord"
-        },
-        "activityModeVRCCondition": {
-          "title": "Mostrar sólo la actividad mientras VRChat está funcionando"
-        },
-        "title": "Discord"
-      },
       "language": {
         "description": "Aquí puede seleccionar el idioma que desee. Si falta alguna traducción o desea añadirla a su idioma, póngase en contacto con nosotros.",
         "title": "Idioma"
@@ -1793,6 +1778,21 @@
       "copy": "Copiar enlace al portapapeles",
       "description": "Algunas de las funcionalidades de OyasumiVR pueden hacer uso de servicios externos. Si quieres conectar OyasumiVR a uno de ellos, ¡estás en el lugar adecuado!",
       "disconnect": "Desconectar",
+      "discord": {
+        "activityMode": {
+          "description": "Mostrar OyasumiVR como tu actividad actual en Discord",
+          "options": {
+            "DISABLED": "Desactivado",
+            "ENABLED": "Habilitado",
+            "ONLY_ASLEEP": "Sólo mientras duerme"
+          },
+          "title": "Presencia rica en discord"
+        },
+        "activityModeVRCCondition": {
+          "title": "Mostrar sólo la actividad mientras VRChat está funcionando"
+        },
+        "title": "Discord"
+      },
       "homeAssistant": {
         "description": "Integre OyasumiVR con el resto de su hogar inteligente conectándolo a su instancia del Asistente para el Hogar, lo que le permitirá crear sus propias automatizaciones potentes y controlar varios dispositivos inteligentes.",
         "title": "Asistente a domicilio (por MQTT)"

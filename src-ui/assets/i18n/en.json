@@ -2042,21 +2042,6 @@
         "label": "Ask for administrator privileges on startup",
         "title": "Administrator Privileges"
       },
-      "discord": {
-        "activityMode": {
-          "description": "Show OyasumiVR as your current activity on Discord",
-          "options": {
-            "DISABLED": "Disabled",
-            "ENABLED": "Enabled",
-            "ONLY_ASLEEP": "Only while asleep"
-          },
-          "title": "Discord Rich Presence"
-        },
-        "activityModeVRCCondition": {
-          "title": "Only show activity while VRChat is running"
-        },
-        "title": "Discord"
-      },
       "language": {
         "description": "You can select your desired language here. If there are any missing translations, or you would like like to add support for your language, please get in contact!",
         "title": "Language"
@@ -2188,6 +2173,33 @@
       "copy": "Copy link to clipboard",
       "description": "Some of OyasumiVR's functionalities can make use of external services. If you're looking to connect OyasumiVR to one of them, you're in the right place!",
       "disconnect": "Disconnect",
+      "discord": {
+        "activityMode": {
+          "description": "Show OyasumiVR as your current activity on Discord",
+          "options": {
+            "DISABLED": "Disabled",
+            "ENABLED": "Enabled",
+            "ONLY_ASLEEP": "Only while asleep"
+          },
+          "title": "Discord Rich Presence"
+        },
+        "activityModeVRCCondition": {
+          "title": "Only show activity while VRChat is running"
+        },
+        "title": "Discord"
+      },
+      "vrcx": {
+        "sleepModeChanges": {
+          "title": "Sleep mode",
+          "description": "Log changes to sleep mode to the game log in VRCX"
+        },
+        "logs": {
+          "onSleepDisable": "Sleep mode disabled",
+          "onSleepEnable": "Sleep mode enabled",
+          "onSleepPreparation": "Preparing for sleep"
+        },
+        "title": "VRCX Logging"
+      },
       "homeAssistant": {
         "description": "Integrate OyasumiVR with the rest of your smart home by connecting it up to your Home Assistant instance, enabling you to build your own powerful automations and control various smart devices.",
         "title": "Home Assistant (over MQTT)"

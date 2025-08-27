@@ -2042,21 +2042,6 @@
         "label": "啟動時請求管理員權限",
         "title": "管理員權限"
       },
-      "discord": {
-        "activityMode": {
-          "description": "在 Discord 上顯示 OyasumiVR 為你目前的活動",
-          "options": {
-            "DISABLED": "關閉",
-            "ENABLED": "已啟用",
-            "ONLY_ASLEEP": "只有在睡覺時"
-          },
-          "title": "Discord 遊戲狀態"
-        },
-        "activityModeVRCCondition": {
-          "title": "僅在 VRChat 執行時顯示活動"
-        },
-        "title": "Discord"
-      },
       "language": {
         "description": "你可以在此處選擇你的語言。如果有任何遺漏的翻譯，或者你想新增對你所屬國家語言的支持，請聯絡我們！",
         "title": "語言"
@@ -2188,6 +2173,21 @@
       "copy": "將連結複製到剪貼簿",
       "description": "OyasumiVR 的某些功能可以使用外部服務。如果你想將 OyasumiVR 與外部服務連接起來，那就找對地方了！",
       "disconnect": "斷開",
+      "discord": {
+        "activityMode": {
+          "description": "在 Discord 上顯示 OyasumiVR 為你目前的活動",
+          "options": {
+            "DISABLED": "關閉",
+            "ENABLED": "已啟用",
+            "ONLY_ASLEEP": "只有在睡覺時"
+          },
+          "title": "Discord 遊戲狀態"
+        },
+        "activityModeVRCCondition": {
+          "title": "僅在 VRChat 執行時顯示活動"
+        },
+        "title": "Discord"
+      },
       "homeAssistant": {
         "description": "透過將 OyasumiVR 連接到居家助理房間，將 OyasumiVR 與其他智慧型居家助理整合，讓你能夠建立自己的強大自動化功能，並控制各種智慧型裝置。",
         "title": "居家助理 (透過 MQTT)"

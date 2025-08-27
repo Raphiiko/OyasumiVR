@@ -260,6 +260,7 @@ import { LighthouseForceStatePopoverComponent } from './components/lighthouse-fo
 import { OyasumiVRSteamVRDevicePowerAutomationsService } from './services/power-automations/oyasumivr-steamvr-device-power-automations.service';
 import { SleepDevicePowerAutomationsService } from './services/power-automations/sleep-device-power-automations.service';
 import { TurnOffDevicesWhenChargingAutomationService } from './services/power-automations/turn-off-devices-when-charging-automation.service';
+import { VRCXService } from './services/vrcx.service';
 
 [
   localeEN,
@@ -489,6 +490,7 @@ export class AppModule {
     private hotkeyService: HotkeyService,
     private hotkeyHandlerService: HotkeyHandlerService,
     private discordService: DiscordService,
+    private vrcxService: VRCXService,
     private mqttService: MqttService,
     private mqttDiscoveryService: MqttDiscoveryService,
     private mqttIntegrationService: MqttIntegrationService,
@@ -646,6 +648,8 @@ export class AppModule {
             await this.logInit('Initializing Steam', this.steamService.init()),
             // Initialize Discord support
             await this.logInit('Initializing Discord', this.discordService.init()),
+            // Initialize VRCX support
+            await this.logInit('Initializing VRCX', this.vrcxService.init()),
             // Initialize IPC
             await this.logInit('Initializing IPC', this.ipcService.init()).then(async () => {
               await this.logInit('Initializing overlay services', this.overlayService.init());

@@ -2041,21 +2041,6 @@
         "label": "启动时请求管理员权限",
         "title": "管理员权限"
       },
-      "discord": {
-        "activityMode": {
-          "description": "在 Discord 上显示 OyasumiVR 当前的状态",
-          "options": {
-            "DISABLED": "禁用",
-            "ENABLED": "启用",
-            "ONLY_ASLEEP": "只在睡眠时"
-          },
-          "title": "Discord 状态面板"
-        },
-        "activityModeVRCCondition": {
-          "title": "只有在 VRChat 运行时才显示"
-        },
-        "title": "Discord"
-      },
       "language": {
         "description": "你可以在此处选择你的语言。如果有任何遗漏的翻译，或者你想添加对你所属区域的语言支持，请联系我们！",
         "title": "语言"
@@ -2187,6 +2172,21 @@
       "copy": "复制链接到剪贴板",
       "description": "OyasumiVR 的某些功能可以使用外部服务。如果你想将 OyasumiVR 与外部服务连接起来，那就找对地方了！",
       "disconnect": "断开连接",
+      "discord": {
+        "activityMode": {
+          "description": "在 Discord 上显示 OyasumiVR 当前的状态",
+          "options": {
+            "DISABLED": "禁用",
+            "ENABLED": "启用",
+            "ONLY_ASLEEP": "只在睡眠时"
+          },
+          "title": "Discord 状态面板"
+        },
+        "activityModeVRCCondition": {
+          "title": "只有在 VRChat 运行时才显示"
+        },
+        "title": "Discord"
+      },
       "homeAssistant": {
         "description": "通过将 OyasumiVR 连接到你的 Home Assistant 实例，可以让它与你的智能家居整合，使你能够构建自己强大的自动化设施",
         "title": "Home Assistant（通过 MQTT 支持）"
