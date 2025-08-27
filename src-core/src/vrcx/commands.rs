@@ -1,6 +1,7 @@
 use log::debug;
 
 use crate::vrcx::*;
+
 #[tauri::command]
 #[oyasumivr_macros::command_profiling]
 pub async fn vrcx_log(msg: String) -> bool {

@@ -18,25 +18,22 @@ export class VRCXService {
   ) {}
 
   async init() {
-    this.sleep.mode.pipe(skip(1), distinctUntilChanged()).subscribe(async (sleepmode) => {
+    // Log sleep mode to VRCX
+    this.sleep.mode.pipe(skip(1), distinctUntilChanged()).subscribe(async (sleepMode) => {
       if (this.appSettingsService.settingsSync.vrcxLogsEnabled.includes('SleepMode')) {
-        if (sleepmode) {
-          const msg: string = this.translate.instant('oscAutomations.general.onSleepEnable.script');
-          const _ = await invoke<boolean>('vrcx_log', { msg });
-        } else {
-          const msg: string = this.translate.instant(
-            'oscAutomations.general.onSleepDisable.script'
-          );
-          const _ = await invoke<boolean>('vrcx_log', { msg });
-        }
+        await invoke<boolean>('vrcx_log', {
+          msg: this.translate.instant(
+            `settings.integrations.vrcx.logs.${sleepMode ? 'onSleepEnable' : 'onSleepDisable'}`
+          ),
+        });
       }
     });
+    // Log sleep preparation to VRCX
     this.sleepPreparation.onSleepPreparation.subscribe(async () => {
       if (this.appSettingsService.settingsSync.vrcxLogsEnabled.includes('SleepMode')) {
-        const msg: string = this.translate.instant(
-          'oscAutomations.general.onSleepPreparation.script'
-        );
-        const _ = await invoke<boolean>('vrcx_log', { msg });
+        await invoke<boolean>('vrcx_log', {
+          msg: this.translate.instant('settings.integrations.vrcx.logs.onSleepPreparation'),
+        });
       }
     });
   }

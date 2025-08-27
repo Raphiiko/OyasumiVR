@@ -19,6 +19,7 @@ pub struct NotificationSender {
 }
 
 impl NotificationSender {
+
     pub fn connect(&mut self) -> Result<(), VrcxNotificationSenderError> {
         let mut sender = PipeClient::connect_ms(
             get_pipe_path(),
@@ -30,6 +31,7 @@ impl NotificationSender {
         self.sender = Some(sender);
         Ok(())
     }
+
     pub fn send_msg(&mut self, msg: String) -> Result<(), VrcxNotificationSenderError> {
         if let Some(sender) = &mut self.sender {
             let msg = VrcxMsg {
@@ -38,7 +40,7 @@ impl NotificationSender {
                 data: Some(msg),
                 notify: false,
                 user_id: None,
-                display_name: None,
+                display_name: Some("OyasumiVR".to_string()),
             };
             if let Err(err) =
                 sender.write(format!("{}\0", serde_json::to_string(&msg).unwrap()).as_bytes())
@@ -56,6 +58,7 @@ impl NotificationSender {
             Err(VrcxNotificationSenderError::NotConnected)
         }
     }
+
 }
 pub fn init() {
     //try to connect
@@ -73,7 +76,7 @@ fn get_pipe_path() -> String {
     let hash = env::var(&username_env_name)
         .unwrap_or_else(|err| {
             warn!(
-                "[VRCX] failed getting '{}' enviroment variable: {:?}",
+                "[Core] failed getting '{}' enviroment variable: {:?}",
                 username_env_name, err
             );
             "".to_string()

@@ -761,13 +761,6 @@
         "label": "Demander les droits administrateurs au démarrage",
         "title": "Droits administrateur"
       },
-      "discord": {
-        "activityMode": {
-          "options": {
-            "DISABLED": "Désactivé"
-          }
-        }
-      },
       "language": {
         "description": "Vous pouvez choisir la langue de l'interface ci-dessous. S'il manque des traductions ou si vous voulez traduire OyasumiVR dans votre propre langue, n'hésitez pas à nous contacter.",
         "title": "Langue"
@@ -827,6 +820,13 @@
       }
     },
     "integrations": {
+      "discord": {
+        "activityMode": {
+          "options": {
+            "DISABLED": "Désactivé"
+          }
+        }
+      },
       "vrchat": {
         "title": "VRChat"
       }

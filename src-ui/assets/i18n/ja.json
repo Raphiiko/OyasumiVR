@@ -2041,21 +2041,6 @@
         "label": "起動時に管理者権限を要求する",
         "title": "管理者権限"
       },
-      "discord": {
-        "activityMode": {
-          "description": "OyasumiVRを現在のアクティビティとして表示します",
-          "options": {
-            "DISABLED": "無効",
-            "ENABLED": "有効",
-            "ONLY_ASLEEP": "睡眠時のみ"
-          },
-          "title": "Discord Rich Presence"
-        },
-        "activityModeVRCCondition": {
-          "title": "VRChat実行中の場合のみ表示する"
-        },
-        "title": "Discord"
-      },
       "language": {
         "description": "希望の言語を選択できます。翻訳されていない箇所がある場合や、新しく言語を追加したい場合はご連絡ください。",
         "title": "言語"
@@ -2187,6 +2172,21 @@
       "copy": "リンクをクリップボードにコピー",
       "description": "OyasumiVRの一部の機能は外部サービスを利用できます。OyasumiVRとの連携はここから行います！",
       "disconnect": "切断",
+      "discord": {
+        "activityMode": {
+          "description": "OyasumiVRを現在のアクティビティとして表示します",
+          "options": {
+            "DISABLED": "無効",
+            "ENABLED": "有効",
+            "ONLY_ASLEEP": "睡眠時のみ"
+          },
+          "title": "Discord Rich Presence"
+        },
+        "activityModeVRCCondition": {
+          "title": "VRChat実行中の場合のみ表示する"
+        },
+        "title": "Discord"
+      },
       "homeAssistant": {
         "description": "Home Assistantインスタンスに接続して、スマートホームデバイスと連携し、更なる自動化環境を構築したり、さまざまなスマートデバイスを制御したりできます。",
         "title": "Home Assistant（MQTT経由）"
