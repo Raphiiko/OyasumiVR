@@ -41,7 +41,7 @@ public class BaseWebOverlay : RenderableOverlay
     // Set up overlay
     ulong overlayHandle = 0;
     {
-      var err = OpenVR.Overlay.CreateOverlay(overlayKey, overlayName, ref overlayHandle);
+      var err = OvrUtils.getOrCreateOverlay(overlayKey, overlayName, ref overlayHandle);
       if (err != EVROverlayError.None)
       {
         Log.Error("Could not create overlay: " + err);
