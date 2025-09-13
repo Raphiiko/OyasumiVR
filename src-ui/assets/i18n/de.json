@@ -303,7 +303,7 @@
         "acceptedInviteRequest": {
           "subtitle": {
             "blacklist": "Da dieser Spieler nicht geblacklistet war",
-            "whitelist": "Da dieser Spieler nicht gewhitelistet war"
+            "whitelist": "Da dieser Spieler gewhitelistet war"
           },
           "title": "Einladungsanfrage von \"{displayName}\" automatisch angenommen"
         },
