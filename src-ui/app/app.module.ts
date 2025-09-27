@@ -159,6 +159,7 @@ import { SettingsGeneralViewComponent } from './views/dashboard-view/views/setti
 import { SettingsUpdatesViewComponent } from './views/dashboard-view/views/settings-updates-view/settings-updates-view.component';
 import { StartWithSteamVRHowToModalComponent } from './views/dashboard-view/views/settings-general-view/start-with-steamvr-how-to-modal/start-with-steamvr-how-to-modal.component';
 import { SettingsIntegrationsViewComponent } from './views/dashboard-view/views/settings-integrations-view/settings-integrations-view.component';
+import { SettingsAdbViewComponent } from './views/dashboard-view/views/settings-adb-view/settings-adb-view.component';
 import { SettingsHotkeyViewComponent } from './views/dashboard-view/views/settings-hotkey-view/settings-hotkey-view.component';
 import { HotkeySelectorComponent } from './components/hotkey-selector/hotkey-selector.component';
 import { HotkeySelectorModalComponent } from './components/hotkey-selector-modal/hotkey-selector-modal.component';
@@ -261,6 +262,8 @@ import { OyasumiVRSteamVRDevicePowerAutomationsService } from './services/power-
 import { SleepDevicePowerAutomationsService } from './services/power-automations/sleep-device-power-automations.service';
 import { TurnOffDevicesWhenChargingAutomationService } from './services/power-automations/turn-off-devices-when-charging-automation.service';
 import { VRCXService } from './services/vrcx.service';
+import { ADBService } from './services/adb.service';
+import { ADBConnectionStepperComponent } from './components/adb-connection-stepper/adb-connection-stepper.component';
 
 [
   localeEN,
@@ -356,6 +359,7 @@ export function createTranslateLoader(http: HttpClient) {
     BrightnessControlSliderComponent,
     ClickOutsideDirective,
     SettingsIntegrationsViewComponent,
+    SettingsAdbViewComponent,
     ObfuscatedValueDirective,
     HeartRateCalmPeriodEnableSleepModeModalComponent,
     HeartRateChartComponent,
@@ -426,6 +430,7 @@ export function createTranslateLoader(http: HttpClient) {
     DeviceManagerDevicesTabComponent,
     DeviceManagerTagsTabComponent,
     LighthouseForceStatePopoverComponent,
+    ADBConnectionStepperComponent,
   ],
   exports: [SelectBoxComponent],
   imports: [
@@ -499,6 +504,7 @@ export class AppModule {
     private messageCenterService: MessageCenterService,
     private frameLimiterService: FrameLimiterService,
     private deviceManagerService: DeviceManagerService,
+    private adbService: ADBService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -627,6 +633,7 @@ export class AppModule {
             this.logInit('Initializing hotkey service', this.hotkeyService.init()),
             this.logInit('Initializing hotkey handlers', this.hotkeyHandlerService.init()),
             this.logInit('Initializing message centers', this.messageCenterService.init()),
+            this.logInit('Initializing ADB service', this.adbService.init()),
             this.logInit(
               'Initializing MQTT',
               this.mqttService

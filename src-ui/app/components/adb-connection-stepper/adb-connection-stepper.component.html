@@ -1,0 +1,40 @@
+<div class="adb-stepper">
+  <!-- Horizontal Stepper -->
+  <div class="stepper-container">
+    @for (step of steps(); track $index; let i = $index) {
+      <div class="step-wrapper">
+        <!-- Step Circle -->
+        <div class="step-circle" [ngClass]="step.status">
+          @if (step.icon === 'steamvr') {
+            <img draggable="false" src="/assets/img/steamvr_icon.png" />
+          } @else {
+            <i class="material-symbols-outlined">{{ step.icon }}</i>
+          }
+        </div>
+
+        <!-- Step Content -->
+        <div class="step-content">
+          <div class="step-title" [ngClass]="step.status">
+            {{ step.title }}
+          </div>
+          @if (step.subtitle) {
+            <div class="step-subtitle" [ngClass]="step.status">
+              {{ step.subtitle }}
+            </div>
+          }
+        </div>
+      </div>
+    }
+    
+    <!-- Connection lines positioned absolutely -->
+    @for (step of steps(); track $index; let i = $index) {
+      @if (i < steps().length - 1) {
+        <div class="step-line" 
+             [style.left.%]="((i + 1) / steps().length) * 100 - (50 / steps().length)"
+             [style.width.%]="(100 / steps().length)"
+             [ngClass]="step.status === 'complete' ? 'complete' : 'upcoming'">
+        </div>
+      }
+    }
+  </div>
+</div>

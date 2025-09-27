@@ -14,6 +14,7 @@ import { invoke } from '@tauri-apps/api/core';
 import { hshrink } from '../../../../utils/animations';
 import { TStringTranslatePipe } from '../../../../pipes/tstring-translate.pipe';
 import { writeText } from '@tauri-apps/plugin-clipboard-manager';
+import { ADBService } from 'src-ui/app/services/adb.service';
 
 @Component({
   selector: 'app-settings-status-info-view',
@@ -41,6 +42,7 @@ export class SettingsStatusInfoViewComponent {
     openvr: OpenVRService,
     ipc: IPCService,
     fontLoader: FontLoaderService,
+    adb: ADBService,
     private tsTranslate: TStringTranslatePipe
   ) {
     this.categories = [
@@ -90,6 +92,26 @@ export class SettingsStatusInfoViewComponent {
             value: openvr.devices.pipe(map((devices) => devices.length + '')),
           },
           {
+            key: 'HMD Manufacturer Name',
+            value: openvr.devices.pipe(
+              map(
+                (devices) => devices.find((d) => d.class === 'HMD')?.manufacturerName ?? 'Unknown'
+              )
+            ),
+          },
+          {
+            key: 'HMD Modelnumber',
+            value: openvr.devices.pipe(
+              map((devices) => devices.find((d) => d.class === 'HMD')?.modelNumber ?? 'Unknown')
+            ),
+          },
+          {
+            key: 'HMD Serial Number',
+            value: openvr.devices.pipe(
+              map((devices) => devices.find((d) => d.class === 'HMD')?.serialNumber ?? 'Unknown')
+            ),
+          },
+          {
             key: 'HMD On Head',
             value: openvr.devices.pipe(
               map((devices) =>
@@ -102,6 +124,29 @@ export class SettingsStatusInfoViewComponent {
             value: openvr.devices.pipe(
               map((devices) => devices.find((d) => d.class === 'HMD')?.hmdActivity ?? 'No Value')
             ),
+          },
+        ],
+      },
+      {
+        name: 'ADB',
+        entries: [
+          {
+            key: 'ADB Server Status',
+            value: adb.serverStatus.pipe(
+              map((s) => {
+                let str: string = s?.status ?? 'Unknown';
+                if ((s as any)?.message) str += ` (${(s as any).message})`;
+                return str;
+              })
+            ),
+          },
+          {
+            key: 'Target Model',
+            value: adb.targetModel.pipe(map((m) => m ?? 'Unknown')),
+          },
+          {
+            key: 'Device State',
+            value: adb.activeDevice.pipe(map((d) => d?.state ?? 'Unknown')),
           },
         ],
       },

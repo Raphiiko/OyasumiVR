@@ -1,0 +1,60 @@
+:host {
+  height: 100%;
+  display: flex;
+  overflow: hidden;
+}
+
+.pane {
+  width: 100%;
+}
+
+.pane-content {
+  padding: 2em;
+  overflow-y: overlay;
+  width: 100%;
+}
+
+.alert {
+  margin-bottom: 1em;
+  a {
+    white-space: nowrap;
+  }
+}
+
+.stepper-wrapper {
+  background: var(--color-surface-1);
+  border-radius: var(--surface-border-radius);
+  padding: 1em 0;
+}
+
+.status-context {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  background: var(--color-surface-1);
+  border-radius: var(--surface-border-radius);
+  padding: 1em;
+  margin-top: 1em;
+
+  .title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5em;
+    i.material-symbols-outlined {
+      color: var(--color-warning);
+      font-size: 1.5em;
+    }
+    span {
+      color: var(--color-text-1);
+      flex: 1;
+      font-weight: 500;
+      font-size: 1.25em;
+    }
+  }
+
+  .message {
+    color: var(--color-text-2);
+    white-space: pre-line;
+  }
+}

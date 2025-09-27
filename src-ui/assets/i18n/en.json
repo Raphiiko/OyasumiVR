@@ -236,6 +236,7 @@
       "resolutionAutomations": "Resolution Automations",
       "runAutomations": "Run Automations",
       "settings": {
+        "adb": "ADB Settings",
         "advanced": "Advanced Settings",
         "brightnessCct": "Brightness & CCT Settings",
         "general": "General Settings",
@@ -2166,6 +2167,15 @@
       "actions": "Hotkey Actions",
       "description": "Here you can bind system-wide hotkeys to certain actions within OyasumiVR.",
       "title": "Hotkey Settings"
+    },
+    "adb": {
+      "description": "With some standalone headsets, like Meta Quest devices, you can unlock additional features by connecting them via ADB.",
+      "warning": {
+        "message": "Be aware that this is advanced functionality, and requires you to perform some additional setup.",
+        "action": "More Info"
+      },
+      "title": "ADB Settings",
+      "status": "ADB Status"
     },
     "integrations": {
       "configure": "Configure",

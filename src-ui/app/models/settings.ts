@@ -59,6 +59,8 @@ export interface AppSettings {
   bigscreenBeyondMaxBrightness: number; // User limit
   bigscreenBeyondUnsafeBrightness: boolean; // Allow brightness above 150%
   bigscreenBeyondBrightnessFanSafety: boolean; // Force fan to 100% if brightness is above 100%
+  // ADB
+  adbWirelessDeviceMap: Record<string, { host: string; port: number }>; // Last seen mapping, serialNumber -> { host, port }
   // VRCX
   vrcxLogsEnabled: VRCXEventLogType[];
 }
@@ -147,6 +149,8 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   bigscreenBeyondMaxBrightness: 150,
   bigscreenBeyondUnsafeBrightness: false,
   bigscreenBeyondBrightnessFanSafety: true,
+  // ADB
+  adbWirelessDeviceMap: {},
   // VRCX
   vrcxLogsEnabled: ['SleepMode'],
 };

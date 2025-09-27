@@ -21,6 +21,7 @@ tauri-plugin-global-shortcut = "2"
 tauri-plugin-updater = "2"
 
 [dependencies]
+adb_client = "2.1.16"
 async-recursion = "1.1.1"
 bluest = { version = "0.6.9", features = ["serde"] }
 byteorder = "1.5.0"

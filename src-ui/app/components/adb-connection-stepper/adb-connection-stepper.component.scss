@@ -1,0 +1,143 @@
+.adb-stepper {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+
+.stepper-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  position: relative;
+  padding: 1em 0;
+}
+
+.step-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex: 1;
+
+  &:not(:last-child) {
+    margin-right: 2em;
+  }
+}
+
+.step-circle {
+  width: 4.5em;
+  height: 4.5em;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s ease;
+  border: 2px solid var(--color-surface-3);
+  background: var(--color-surface-1);
+
+  img {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+  }
+
+  .material-icons-round {
+    font-size: 1.5em;
+    color: var(--color-text-3);
+    transition: color 0.3s ease;
+  }
+
+  &.upcoming {
+    border-color: var(--color-surface-3);
+    background: var(--color-surface-1);
+
+    .material-icons-round {
+      color: var(--color-text-4);
+    }
+  }
+
+  &.current {
+    border-color: var(--color-primary);
+    background: var(--color-surface-1);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 20%, transparent);
+    animation: pulse 2s infinite;
+
+    .material-icons-round {
+      color: var(--color-primary);
+    }
+  }
+
+  &.complete {
+    border-color: var(--color-success);
+    background: var(--color-success);
+
+    .material-icons-round {
+      color: var(--color-on-success);
+    }
+  }
+}
+
+.step-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 0.75em;
+  max-width: 12em;
+}
+
+.step-title {
+  font-weight: 600;
+  font-size: 0.95em;
+  color: var(--color-text-1);
+  margin-bottom: 0.25em;
+}
+
+.step-subtitle {
+  font-size: 0.85em;
+  color: var(--color-text-3);
+  transition: color 0.3s ease;
+  white-space: pre-wrap;
+
+  &.active {
+    color: var(--color-primary);
+    font-weight: 500;
+  }
+
+  &.complete {
+    color: var(--color-success);
+    font-weight: 500;
+  }
+}
+
+/* Individual connection lines between steps */
+.step-line {
+  position: absolute;
+  top: calc(1em + 2.25em); /* padding-top + circle center */
+  height: 2px;
+  background: var(--color-surface-3);
+  z-index: 1;
+  transition: background-color 0.3s ease;
+
+  &.complete {
+    background: var(--color-success);
+  }
+  
+  &.upcoming {
+    background: var(--color-surface-3);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-primary) 80%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 0.5em transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}

@@ -1,5 +1,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod adb;
 mod commands;
 mod discord;
 mod elevated_sidecar;
@@ -185,6 +186,9 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
             .level(LevelFilter::Debug);
     }
 
+    let disabled_targets = vec!["adb_client::server::adb_server"].clone();
+    builder = builder.filter(move |metadata| !disabled_targets.contains(&metadata.target()));
+
     builder.build()
 }
 
@@ -235,7 +239,7 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     // Register deep link schemas if needed
     {
         use tauri_plugin_deep_link::DeepLinkExt;
-        if let Err(e) =  app_handle.deep_link().register_all()  {
+        if let Err(e) = app_handle.deep_link().register_all() {
             error!("[Core] Failed to register deep link schemas: {}", e);
         }
     }
@@ -332,6 +336,12 @@ fn on_cron_minute_start(_: &str) {
 
 fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
     tauri::generate_handler![
+        adb::commands::adb_get_server_status,
+        adb::commands::adb_get_devices,
+        adb::commands::adb_get_device_status,
+        adb::commands::adb_set_brightness,
+        adb::commands::adb_get_brightness,
+        adb::commands::adb_connect_device,
         openvr::commands::openvr_get_devices,
         openvr::commands::openvr_status,
         openvr::commands::openvr_get_analog_gain,

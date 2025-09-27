@@ -1,0 +1,40 @@
+<div class="pane">
+  <div class="pane-title" translate>settings.adb.title</div>
+  <div class="pane-content">
+    <div class="setting-view-container">
+      <p translate>settings.adb.description</p>
+      @if (showWarning | async) {
+        <div class="alert warning" @vshrink>
+          <div class="alert-bg"></div>
+          <div class="alert-icon">
+            <i class="material-icons">warning</i>
+          </div>
+          <div class="alert-content flex-row">
+            <span translate>settings.adb.warning.message</span>
+            <a
+              class="btn btn-secondary"
+              href="https://github.com/Raphiiko/OyasumiVR/wiki/ADB-Connection"
+              target="_blank"
+              translate
+              >settings.adb.warning.action</a
+            >
+          </div>
+        </div>
+      }
+      <h2 translate>settings.adb.status</h2>
+      <div class="stepper-wrapper">
+        <app-adb-connection-stepper [steps]="stepperState"></app-adb-connection-stepper>
+      </div>
+
+      @if (statusContext()) {
+        <div class="status-context" @vshrink>
+          <div class="title" translate>
+            <i class="material-symbols-outlined icon-filled">{{ statusContext()?.icon }}</i>
+            <span>{{ statusContext()?.title }}</span>
+          </div>
+          <div class="message" translate>{{ statusContext()?.message }}</div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

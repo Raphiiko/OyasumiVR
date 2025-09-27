@@ -1,1 +1,9 @@
-<button (click)="test()">Test</button>
+<button (click)="getDevices()">ADB Get Devices</button>
+<pre>{{devices | json}}</pre>
+<button (click)="getDeviceStatus()">ADB Get Device Status</button>
+<pre>{{deviceStatus | json}}</pre>
+<button (click)="setBrightness(0)">ADB Set Brightness 0</button>
+<button (click)="setBrightness(1)">ADB Set Brightness 1</button>
+<button (click)="setBrightness(255)">ADB Set Brightness 255</button>
+<button (click)="getBrightness()">ADB Get Brightness</button>
+<pre>{{brightness | json}}</pre>

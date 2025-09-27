@@ -37,6 +37,7 @@ import { VRChatGroupAutomationsViewComponent } from './views/dashboard-view/view
 import { SettingsBrightnessCctViewComponent } from './views/dashboard-view/views/settings-brightness-cct-view/settings-brightness-cct-view.component';
 import { RunAutomationsViewComponent } from './views/dashboard-view/views/run-automations-view/run-automations-view.component';
 import { DeviceManagerViewComponent } from './views/dashboard-view/views/device-manager-view/device-manager-view.component';
+import { SettingsAdbViewComponent } from './views/dashboard-view/views/settings-adb-view/settings-adb-view.component';
 
 const routes: Routes = [
   {
@@ -166,6 +167,10 @@ const routes: Routes = [
           {
             path: 'integrations',
             component: SettingsIntegrationsViewComponent,
+          },
+          {
+            path: 'adb',
+            component: SettingsAdbViewComponent,
           },
           {
             path: 'advanced',

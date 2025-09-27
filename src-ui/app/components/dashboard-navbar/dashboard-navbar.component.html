@@ -123,6 +123,7 @@
           'settings/osc',
           'settings/updates',
           'settings/integrations',
+          'settings/adb',
           'settings/advanced',
         ])
       "
@@ -353,17 +354,6 @@
         </div>
         <div class="menu-item-label" translate>comp.dashboard-navbar.settings.osc</div>
       </div>
-      <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'updates']">
-        <div class="menu-item-icon-prefix">
-          <i class="material-icons-round">update</i>
-        </div>
-        <div class="menu-item-label" translate>comp.dashboard-navbar.settings.updates</div>
-        @if (updateAvailable | async) {
-          <div class="menu-item-icon-suffix update" @fade>
-            <i class="material-icons-round">notification_important</i>
-          </div>
-        }
-      </div>
       <div
         class="menu-item"
         [routerLinkActive]="'active'"
@@ -373,6 +363,16 @@
           <i class="material-icons-round">power</i>
         </div>
         <div class="menu-item-label" translate>comp.dashboard-navbar.settings.integrations</div>
+      </div>
+      <div
+        class="menu-item"
+        [routerLinkActive]="'active'"
+        [routerLink]="['settings', 'adb']"
+      >
+        <div class="menu-item-icon-prefix">
+          <i class="material-icons-round">android</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.settings.adb</div>
       </div>
       <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'advanced']">
         <div class="menu-item-icon-prefix">
@@ -389,6 +389,17 @@
           <i class="material-icons-round">checklist</i>
         </div>
         <div class="menu-item-label" translate>comp.dashboard-navbar.settings.statusInfo</div>
+      </div>
+      <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'updates']">
+        <div class="menu-item-icon-prefix">
+          <i class="material-icons-round">update</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.settings.updates</div>
+        @if (updateAvailable | async) {
+          <div class="menu-item-icon-suffix update" @fade>
+            <i class="material-icons-round">notification_important</i>
+          </div>
+        }
       </div>
     </div>
   }
