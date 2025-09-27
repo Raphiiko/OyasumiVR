@@ -1160,7 +1160,7 @@
     "enable": "开启 GPU 自动化",
     "enableWarning": "这些功能是给一些进阶用户的！\n 设置错误的功耗限制可能会导致你的系统变得不稳定 \n 请牢记这一点，最好不要随意调整它，除非你知道自己在做什么",
     "msiAfterburner": {
-      "description": "OyasumiVR 可以在你入睡或醒来时自动调整你的 GPU 设置，其会使用你在 MSI Afterburner 中所建立的预设。 此功能的其中一个用途是在你入睡时节省电力，并在你醒来时重新调整 GPU 功耗。<br><br > 你必须在 MSI Afterburner 进行配置。<br > 你可以在这里 < a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\"target=\"_blank\"> 下载 </a> MSI Afterburner",
+      "description": "OyasumiVR 可以在你入睡或醒来时自动调整你的 GPU 设置，其会使用你在 MSI Afterburner 中所建立的预设。 此功能的其中一个用途是在你入睡时节省电力，并在你醒来时重新调整 GPU 功耗。<br><br > 你必须在 MSI Afterburner 进行配置。<br > 你可以在这里 <a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\"target=\"_blank\"> 下载 </a> MSI Afterburner",
       "enabledWarning": "请注意，在 MSI Afterburner 中错误的设置 GPU 可能会导致系统变得不稳定。如果你不知道自己在做什么，请关闭此功能",
       "executable": {
         "description": "OyasumiVR 需要知道你的 <strong>MSIAfterburner.exe</strong> 可执行文件的位置 \n 如果 OyasumiVR 在默认位置找不到它，那么需要你手动设置它的位置",
@@ -1842,7 +1842,7 @@
   },
   "runAutomations": {
     "commandsToRun": "要运行的命令",
-    "description": "你可以设置 OyasumiVR 在你入睡、醒来或准备入睡时，通过 Windows 命令提示符自动执行命令。\\n所有命令均通过 cmd.exe 运行。",
+    "description": "你可以设置 OyasumiVR 在你入睡、醒来或准备入睡时，通过 Windows 命令提示符自动执行命令。\n\n所有命令均通过 cmd.exe 运行。",
     "onSleepDisable": {
       "description": "运行命令",
       "title": "当我醒来时"
