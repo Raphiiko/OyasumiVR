@@ -303,7 +303,7 @@
         "acceptedInviteRequest": {
           "subtitle": {
             "blacklist": "Da dieser Spieler nicht geblacklistet war",
-            "whitelist": "Da dieser Spieler nicht gewhitelistet war"
+            "whitelist": "Da dieser Spieler gewhitelistet war"
           },
           "title": "Einladungsanfrage von \"{displayName}\" automatisch angenommen"
         },
@@ -1647,21 +1647,6 @@
         "label": "Frag nach Adminrechten beim Hochfahren",
         "title": "Adminrechte"
       },
-      "discord": {
-        "activityMode": {
-          "description": "OyasumiVR als deine aktuelle Aktivität auf Discord anzeigen",
-          "options": {
-            "DISABLED": "Deaktiviert",
-            "ENABLED": "Einschalten",
-            "ONLY_ASLEEP": "Nur während des Schlafes"
-          },
-          "title": "Discord Rich Presence"
-        },
-        "activityModeVRCCondition": {
-          "title": "Nur zeigen während VRChat läuft"
-        },
-        "title": "Discord"
-      },
       "language": {
         "description": "Du kannst hier deine gewünschte Sprache auswählen. Wenn es eine fehlende Übersetzung gibt oder du eine weitere Sprache unterstützen möchtest, dann kontaktiere uns!",
         "title": "Sprache"
@@ -1793,6 +1778,21 @@
       "copy": "Link in Zwischenablage kopieren",
       "description": "Manche OyasumiVR Funktionen können externe Anbieter verwenden. Wenn du OyasumiVR zu diesen Anbietern verbinden willst, dann schaue hier!",
       "disconnect": "Verbindung auflösen",
+      "discord": {
+        "activityMode": {
+          "description": "OyasumiVR als deine aktuelle Aktivität auf Discord anzeigen",
+          "options": {
+            "DISABLED": "Deaktiviert",
+            "ENABLED": "Einschalten",
+            "ONLY_ASLEEP": "Nur während des Schlafes"
+          },
+          "title": "Discord Rich Presence"
+        },
+        "activityModeVRCCondition": {
+          "title": "Nur zeigen während VRChat läuft"
+        },
+        "title": "Discord"
+      },
       "homeAssistant": {
         "description": "Integriere OyasumiVR mit dem Rest deines Smart Homes durch die Verbindung mit Home Assistant. Dies erlaubt es dir deine eigenen nützlichen Automationen zu erstellen und viele diverse smart Geräte zu steuern.",
         "title": "Home Assistant (über MQTT)"

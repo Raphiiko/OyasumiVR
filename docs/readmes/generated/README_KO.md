@@ -551,7 +551,7 @@ OyasumiVR은 현재 다음 언어를 지원하고 있어요:
 - 繁體中文 (Traditional Chinese): Community contribution by [狐Kon](https://github.com/XoF-eLtTiL).
 - 简体中文 (Simplified Chinese): Community contributions by [狐Kon](https://github.com/XoF-eLtTiL), [雾雨花精灵](https://github.com/flower-elf), [いんく](https://twitter.com/sayonara_natsu) and [Yingxue](https://github.com/a1175815821).
 - Français (French): Community contribution by [neuroblack](https://github.com/neuroblack).
-- Español (Spanish): Community contribution by [aacal666](https://twitter.com/aacalde666).
+- Español (Spanish): Community contributions by [aacal666](https://twitter.com/aacalde666) and [B4sicallyF0x](https://github.com/B4sicallyF0x).
 - Bahasa Indonesia (Indonesian): Community contribution by [a9ito](https://twitter.com/a9ito).
 - Українська (Ukrainian): Community contributions by [senkodev](https://x.com/senkodev) and [Fanyatsu](https://fanyat.su/).
 - Русский (Russian): Community contributions by [Kanjir0](https://twitter.com/Kanjiro_vrc), [Pacmard](https://github.com/pacmard) and Dimrical.

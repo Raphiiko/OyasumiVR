@@ -2041,21 +2041,6 @@
         "label": "Vraag om beheerders rechten bij het opstarten",
         "title": "Beheerders Rechten"
       },
-      "discord": {
-        "activityMode": {
-          "description": "Toon OyasumiVR als je huidige activiteit op Discord",
-          "options": {
-            "DISABLED": "Uitgeschakeld",
-            "ENABLED": "Ingeschakeld",
-            "ONLY_ASLEEP": "Alleen wanneer je slaapt"
-          },
-          "title": "Discord Rich Presence"
-        },
-        "activityModeVRCCondition": {
-          "title": "Alleen de activiteit tonen wanneer VRChat actief is"
-        },
-        "title": "Discord"
-      },
       "language": {
         "description": "Je kan hier je voorkeurstaal selecteren. Als er vertalingen missen, neem a.u.b. contact op!",
         "title": "Taal"
@@ -2187,6 +2172,21 @@
       "copy": "Kopieer link naar klembord",
       "description": "Sommige features van OyasumiVR kunnen gebruik maken van externe services. Als je OyasumiVR wilt koppelen met een externe service, dan zit je op de goede plek!",
       "disconnect": "Loskoppelen",
+      "discord": {
+        "activityMode": {
+          "description": "Toon OyasumiVR als je huidige activiteit op Discord",
+          "options": {
+            "DISABLED": "Uitgeschakeld",
+            "ENABLED": "Ingeschakeld",
+            "ONLY_ASLEEP": "Alleen wanneer je slaapt"
+          },
+          "title": "Discord Rich Presence"
+        },
+        "activityModeVRCCondition": {
+          "title": "Alleen de activiteit tonen wanneer VRChat actief is"
+        },
+        "title": "Discord"
+      },
       "homeAssistant": {
         "description": "Door OyasumiVR met Home Assistant te verbinden, kun je integreren met de rest van je smart home. Hiermee kan je verschillende slimme apparaten bedienen en je eigen krachtige automatiseringen bouwen.",
         "title": "Home Assistant (via MQTT)"

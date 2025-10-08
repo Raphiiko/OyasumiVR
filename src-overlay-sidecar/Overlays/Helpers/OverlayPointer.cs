@@ -22,14 +22,14 @@ public class OverlayPointer {
     {
       LastUvPosition = Vector2.Zero
     };
-    OpenVR.Overlay.CreateOverlay(
+    OvrUtils.getOrCreateOverlay(
       "co.raphii.oyasumivr:PointerRight", "OyasumiVR Right Pointer", ref _rightPointer.OverlayHandle);
     OpenVR.Overlay.SetOverlayWidthInMeters(_rightPointer.OverlayHandle, 0.02f);
     _leftPointer = new PointerData()
     {
       LastUvPosition = Vector2.Zero
     };
-    OpenVR.Overlay.CreateOverlay(
+    OvrUtils.getOrCreateOverlay(
       "co.raphii.oyasumivr:PointerLeft", "OyasumiVR Left Pointer", ref _leftPointer.OverlayHandle);
     OpenVR.Overlay.SetOverlayWidthInMeters(_leftPointer.OverlayHandle, 0.02f);
     // Set sort order for pointer overlays

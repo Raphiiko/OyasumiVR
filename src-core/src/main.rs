@@ -20,6 +20,7 @@ mod system_tray;
 mod telemetry;
 mod utils;
 mod vrc_log_parser;
+mod vrcx;
 
 use std::{mem, sync::atomic::Ordering};
 
@@ -420,5 +421,6 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         grpc::commands::get_core_grpc_port,
         grpc::commands::get_core_grpc_web_port,
         telemetry::commands::set_telemetry_enabled,
+        vrcx::commands::vrcx_log,
     ]
 }
