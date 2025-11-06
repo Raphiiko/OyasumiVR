@@ -5,13 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project (now) adheres to [Calendar Versioning](https://calver.org/#scheme).
 
-## [Unreleased]
+## [25.6.11]
 
 ## Added
 
 - OSC Settings view
   - Custom target for OSC messages (e.g. for use with Resonite, OSC routers, or when OSCQuery is not available)
   - VRChat (OSCQuery) target (allows for disabling OSC messages being sent to VRChat)
+
+### Fixed
+
+- Fixed settings sometimes resetting during a system crash or power loss, while OyasumiVR was running.
 
 ## [25.6.10]
 
