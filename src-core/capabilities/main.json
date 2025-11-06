@@ -2,9 +2,7 @@
   "identifier": "main",
   "description": "permissions that were migrated from v1",
   "local": true,
-  "windows": [
-    "main"
-  ],
+  "windows": ["main"],
   "permissions": [
     "core:default",
     "fs:allow-read-file",
@@ -12,12 +10,11 @@
     "fs:allow-read-dir",
     "fs:allow-exists",
     "fs:allow-write-text-file",
+    { "identifier": "fs:allow-rename", "allow": ["$APPDATA/**/*"] },
+    { "identifier": "fs:allow-copy-file", "allow": ["$APPDATA/**/*"] },
     {
       "identifier": "fs:scope",
-      "allow": [
-        "$HOME/AppData/LocalLow/VRChat/**/*",
-        "$RESOURCE/*"
-      ]
+      "allow": ["$HOME/AppData/LocalLow/VRChat/**/*", "$RESOURCE/*", "$APPDATA/**/*"]
     },
     "core:window:allow-maximize",
     "core:window:allow-unmaximize",

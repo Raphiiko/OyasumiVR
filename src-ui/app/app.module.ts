@@ -259,6 +259,7 @@ import { LighthouseForceStatePopoverComponent } from './components/lighthouse-fo
 import { OyasumiVRSteamVRDevicePowerAutomationsService } from './services/power-automations/oyasumivr-steamvr-device-power-automations.service';
 import { SleepDevicePowerAutomationsService } from './services/power-automations/sleep-device-power-automations.service';
 import { TurnOffDevicesWhenChargingAutomationService } from './services/power-automations/turn-off-devices-when-charging-automation.service';
+import { StoreSnapshotService } from './services/store-snapshot.service';
 
 [
   localeEN,
@@ -495,6 +496,7 @@ export class AppModule {
     private messageCenterService: MessageCenterService,
     private frameLimiterService: FrameLimiterService,
     private deviceManagerService: DeviceManagerService,
+    private storeSnapshotService: StoreSnapshotService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -584,6 +586,8 @@ export class AppModule {
           if (!(await this.elevationCheck())) return;
           const initStartTime = Date.now();
           await this.logInit('Initializing dev debug services', this.developerDebugService.init());
+          // Set up store snapshots (and restore them if needed)
+          await this.logInit('Initializing store snapshots', this.storeSnapshotService.init());
           // Clean cache
           await this.logInit('Cleaning cache', CachedValue.cleanCache()).catch(() => {}); // Allow initialization to continue if failed
           // Preload assets (Not blocking)
