@@ -7,15 +7,15 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 
 ## [25.6.11]
 
-### Fixed
-
-- Fixed settings sometimes resetting during a system crash or power loss, while OyasumiVR was running.
-
 ## Added
 
 - OSC Settings view
   - Custom target for OSC messages (e.g. for use with Resonite, OSC routers, or when OSCQuery is not available)
   - VRChat (OSCQuery) target (allows for disabling OSC messages being sent to VRChat)
+
+### Fixed
+
+- Fixed settings sometimes resetting during a system crash or power loss, while OyasumiVR was running.
 
 ## [25.6.10]
 
