@@ -167,6 +167,7 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
         .rotation_strategy(RotationStrategy::KeepAll);
 
     builder = builder
+        //also set in Cargo.toml
         .level(LevelFilter::Info)
         .target(tauri_plugin_log::Target::new(
             tauri_plugin_log::TargetKind::Stdout,
