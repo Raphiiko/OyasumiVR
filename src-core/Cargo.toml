@@ -35,7 +35,7 @@ futures = "0.3.31"
 futures-util = "0.3.31"
 hidapi = "2.6.3"
 hyper = { version = "0.14.26", features = ["full"] }
-log = "0.4.27"
+log = { version = "0.4.27", features = ["release_max_level_info"] }
 md5 = "0.8.0"
 mime = "0.3.17"
 mime_guess = "2.0.5"
