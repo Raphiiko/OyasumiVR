@@ -112,11 +112,7 @@ winreg = "0.55.0"
 git = "https://github.com/Raphiiko/ipgeolocate_oyasumi.git"
 rev = "5f24925"
 
-[dependencies.ovr_overlay]
-git = "https://github.com/Raphiiko/ovr_overlay_oyasumi"
-rev = "a2afdea5fa9171b0151f8da271fcdd7cdc2beb41"
-# path = "../../ovr_overlay_oyasumi"
-features = ["ovr_system", "ovr_settings"]
+
 
 [dependencies.oyasumivr_oscquery]
 git = "https://github.com/Raphiiko/oyasumivr_oscquery.git"
