@@ -23,6 +23,7 @@ import { BSBFanSpeedControlModalComponent } from '../bsb-fan-speed-control-modal
 import { MqttService } from '../../services/mqtt/mqtt.service';
 import { CCTControlService } from '../../services/cct-control/cct-control.service';
 import { CCTControlModalComponent } from '../cct-control-modal/cct-control-modal.component';
+import { isHolidaysEventActive } from 'src-ui/app/utils/event-utils';
 
 @Component({
   selector: 'app-main-status-bar',
@@ -37,7 +38,7 @@ export class MainStatusBarComponent implements OnInit {
   private brightnessControlModalOpen = false;
   private bsbFanSpeedControlModalOpen = false;
   private cctControlModalOpen = false;
-  protected snowverlayAvailable = new Date().getDate() >= 18 && new Date().getMonth() == 11;
+  protected snowverlayAvailable = isHolidaysEventActive(); 
   protected snowverlayActive = false;
   protected mqttStatus: 'DISABLED' | 'CONNECTED' | 'DISCONNECTED' | 'ERROR' = 'DISABLED';
   protected cctControlEnabled = false;

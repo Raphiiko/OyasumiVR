@@ -75,7 +75,7 @@ app-event-log {
     display: inline-block;
     position: absolute;
     height: 100%;
-    padding: 1em 2em;
+    padding: 0.5em 1em;
     opacity: 0;
     top: 0;
     right: 0;
@@ -94,7 +94,7 @@ app-event-log {
     img {
       pointer-events: all;
       height: 100%;
-      transform: translateY(-0.5em);
+      transform: translateY(0);
       cursor: pointer;
       transition: all 0.15s ease-in-out;
 
@@ -103,7 +103,7 @@ app-event-log {
       }
 
       &:first-child {
-        transform: translate(100%, -0.5em);
+        transform: translate(100%, 0);
         filter: blur(4px);
         opacity: 0.5;
       }

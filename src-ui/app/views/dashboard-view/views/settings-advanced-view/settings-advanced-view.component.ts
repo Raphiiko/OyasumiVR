@@ -56,7 +56,6 @@ export class SettingsAdvancedViewComponent {
   ];
   checkedPersistentStorageItems: string[] = [];
   memoryWatcherActive = FLAVOUR === 'DEV';
-  oscServerEnabled = true;
   overlayGpuAcceleration = true;
   openVrInitDelayFix = false;
 
@@ -66,11 +65,10 @@ export class SettingsAdvancedViewComponent {
     private modalService: ModalService,
     private eventLogService: EventLogService,
     private ipcService: IPCService,
-    protected openvr: OpenVRService,
-    private settingsService: AppSettingsService
+    private settingsService: AppSettingsService,
+    protected openvr: OpenVRService
   ) {
     this.settingsService.settings.pipe(takeUntilDestroyed()).subscribe((settings) => {
-      this.oscServerEnabled = settings.oscServerEnabled;
       this.overlayGpuAcceleration = settings.overlayGpuAcceleration;
       this.openVrInitDelayFix = settings.openVrInitDelayFix;
     });
@@ -293,12 +291,6 @@ export class SettingsAdvancedViewComponent {
 
   async openDevTools() {
     await invoke('open_dev_tools');
-  }
-
-  setOscServerEnabled(enabled: boolean) {
-    this.settingsService.updateSettings({
-      oscServerEnabled: enabled,
-    });
   }
 
   setOverlayGpuAcceleration(enabled: boolean) {

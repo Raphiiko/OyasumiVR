@@ -242,6 +242,7 @@
         "hotkeys": "Hotkey Settings",
         "integrations": "Integrations",
         "notifications": "Notification Settings",
+        "osc": "OSC Settings",
         "statusInfo": "Status Information",
         "subMenu": "Settings",
         "updates": "Updates",
@@ -1865,10 +1866,6 @@
           "description": "Enabling this will make OyasumiVR wait a bit to interact with SteamVR once it has been detected, giving SteamVR some extra time to start. If you're experiencing issues with launching SteamVR while OyasumiVR is already running, this can help.",
           "title": "Delay OpenVR Initialization"
         },
-        "oscServerEnabled": {
-          "description": "Turning this off disables the built-in OSC and OSCQuery servers. Note that several features of OyasumiVR will stop working if you turn this off, with no warnings. This option purely exists for debugging purposes and should not be turned off during general use.",
-          "title": "OSC & OSCQuery Servers"
-        },
         "overlayGpuAcceleration": {
           "description": "If you are experiencing issues with the overlay not rendering properly, disabling this option could fix the issue on some systems (e.g. those with hybrid graphics).",
           "title": "VR Overlay GPU Acceleration"
@@ -2045,21 +2042,6 @@
         "label": "Ask for administrator privileges on startup",
         "title": "Administrator Privileges"
       },
-      "discord": {
-        "activityMode": {
-          "description": "Show OyasumiVR as your current activity on Discord",
-          "options": {
-            "DISABLED": "Disabled",
-            "ENABLED": "Enabled",
-            "ONLY_ASLEEP": "Only while asleep"
-          },
-          "title": "Discord Rich Presence"
-        },
-        "activityModeVRCCondition": {
-          "title": "Only show activity while VRChat is running"
-        },
-        "title": "Discord"
-      },
       "language": {
         "description": "You can select your desired language here. If there are any missing translations, or you would like like to add support for your language, please get in contact!",
         "title": "Language"
@@ -2191,6 +2173,33 @@
       "copy": "Copy link to clipboard",
       "description": "Some of OyasumiVR's functionalities can make use of external services. If you're looking to connect OyasumiVR to one of them, you're in the right place!",
       "disconnect": "Disconnect",
+      "discord": {
+        "activityMode": {
+          "description": "Show OyasumiVR as your current activity on Discord",
+          "options": {
+            "DISABLED": "Disabled",
+            "ENABLED": "Enabled",
+            "ONLY_ASLEEP": "Only while asleep"
+          },
+          "title": "Discord Rich Presence"
+        },
+        "activityModeVRCCondition": {
+          "title": "Only show activity while VRChat is running"
+        },
+        "title": "Discord"
+      },
+      "vrcx": {
+        "sleepModeChanges": {
+          "title": "Sleep mode",
+          "description": "Log changes to sleep mode to the game log in VRCX"
+        },
+        "logs": {
+          "onSleepDisable": "Sleep mode disabled",
+          "onSleepEnable": "Sleep mode enabled",
+          "onSleepPreparation": "Preparing for sleep"
+        },
+        "title": "VRCX Logging"
+      },
       "homeAssistant": {
         "description": "Integrate OyasumiVR with the rest of your smart home by connecting it up to your Home Assistant instance, enabling you to build your own powerful automations and control various smart devices.",
         "title": "Home Assistant (over MQTT)"
@@ -2240,6 +2249,46 @@
         "test": "Test",
         "title": "General Notification Volume"
       }
+    },
+    "osc": {
+      "advanced": {
+        "oscServerEnabled": {
+          "description": "Turning this off disables the built-in OSC and OSCQuery servers. Note that several features of OyasumiVR will stop working if you turn this off, with no warnings. This option purely exists for debugging purposes and should not be turned off during general use.",
+          "title": "Enable OSC & OSCQuery Servers"
+        },
+        "title": "Advanced Options"
+      },
+      "description": "Various of OyasumiVR's features exchange messages over OSC (Open Sound Control) with applications like VRChat.\n\nThe default settings here should work out of the box to send and receive messages to and from VRChat. In case you need to change these, there are options for it below.",
+      "targets": {
+        "custom": {
+          "description": "Manually configure the IP address and port of your target",
+          "host": {
+            "description": "The IP address or hostname of your target",
+            "title": "OSC Host Address",
+            "validation": {
+              "invalid": "Please enter a valid hostname or IP address",
+              "validating": "Validating hostname..."
+            }
+          },
+          "port": {
+            "description": "The port number of your target",
+            "title": "OSC Port",
+            "validation": {
+              "invalid": "Please enter a valid port number (1-65535)",
+              "validating": "Validating port number..."
+            }
+          },
+          "title": "Custom Target"
+        },
+        "description": "Here you can configure where OSC messages should be sent. You can enable multiple targets at the same time.",
+        "title": "OSC Targets",
+        "vrchat": {
+          "description": "VRChat will be automatically discovered via OSCQuery",
+          "title": "VRChat"
+        },
+        "vrchatTargetWarning": "Multiple targets are likely to be targeting VRChat. This can result in unexpected behaviour, as the same messages could be sent to VRChat more than once. Please check your target configurations below."
+      },
+      "title": "OSC Settings"
     },
     "statusInfo": {
       "copy": {

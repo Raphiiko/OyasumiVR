@@ -20,6 +20,7 @@ mod system_tray;
 mod telemetry;
 mod utils;
 mod vrc_log_parser;
+mod vrcx;
 
 use std::{mem, sync::atomic::Ordering};
 
@@ -167,6 +168,7 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
         .rotation_strategy(RotationStrategy::KeepAll);
 
     builder = builder
+        //also set in Cargo.toml
         .level(LevelFilter::Info)
         .target(tauri_plugin_log::Target::new(
             tauri_plugin_log::TargetKind::Stdout,
@@ -420,5 +422,6 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         grpc::commands::get_core_grpc_port,
         grpc::commands::get_core_grpc_web_port,
         telemetry::commands::set_telemetry_enabled,
+        vrcx::commands::vrcx_log,
     ]
 }

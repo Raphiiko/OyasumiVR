@@ -154,6 +154,7 @@ import { AudioDeviceAutomationsService } from './services/audio-device-automatio
 import { WindowsService } from './services/windows.service';
 import { SettingsAdvancedViewComponent } from './views/dashboard-view/views/settings-advanced-view/settings-advanced-view.component';
 import { SettingsNotificationsViewComponent } from './views/dashboard-view/views/settings-notifications-view/settings-notifications-view.component';
+import { SettingsOscViewComponent } from './views/dashboard-view/views/settings-osc-view/settings-osc-view.component';
 import { SettingsGeneralViewComponent } from './views/dashboard-view/views/settings-general-view/settings-general-view.component';
 import { SettingsUpdatesViewComponent } from './views/dashboard-view/views/settings-updates-view/settings-updates-view.component';
 import { StartWithSteamVRHowToModalComponent } from './views/dashboard-view/views/settings-general-view/start-with-steamvr-how-to-modal/start-with-steamvr-how-to-modal.component';
@@ -259,6 +260,7 @@ import { LighthouseForceStatePopoverComponent } from './components/lighthouse-fo
 import { OyasumiVRSteamVRDevicePowerAutomationsService } from './services/power-automations/oyasumivr-steamvr-device-power-automations.service';
 import { SleepDevicePowerAutomationsService } from './services/power-automations/sleep-device-power-automations.service';
 import { TurnOffDevicesWhenChargingAutomationService } from './services/power-automations/turn-off-devices-when-charging-automation.service';
+import { VRCXService } from './services/vrcx.service';
 import { StoreSnapshotService } from './services/store-snapshot.service';
 
 [
@@ -320,6 +322,7 @@ export function createTranslateLoader(http: HttpClient) {
     LanguageSelectModalComponent,
     SettingsGeneralViewComponent,
     SettingsNotificationsViewComponent,
+    SettingsOscViewComponent,
     SettingsUpdatesViewComponent,
     SettingsAdvancedViewComponent,
     VRChatLoginModalComponent,
@@ -488,6 +491,7 @@ export class AppModule {
     private hotkeyService: HotkeyService,
     private hotkeyHandlerService: HotkeyHandlerService,
     private discordService: DiscordService,
+    private vrcxService: VRCXService,
     private mqttService: MqttService,
     private mqttDiscoveryService: MqttDiscoveryService,
     private mqttIntegrationService: MqttIntegrationService,
@@ -648,6 +652,8 @@ export class AppModule {
             await this.logInit('Initializing Steam', this.steamService.init()),
             // Initialize Discord support
             await this.logInit('Initializing Discord', this.discordService.init()),
+            // Initialize VRCX support
+            await this.logInit('Initializing VRCX', this.vrcxService.init()),
             // Initialize IPC
             await this.logInit('Initializing IPC', this.ipcService.init()).then(async () => {
               await this.logInit('Initializing overlay services', this.overlayService.init());

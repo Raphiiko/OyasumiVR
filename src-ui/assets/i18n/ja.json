@@ -1865,10 +1865,6 @@
           "description": "SteamVRが検出された後、OyasumiVRは少し待ってから処理を開始します。",
           "title": "OpenVR初期化の遅延"
         },
-        "oscServerEnabled": {
-          "description": "オフにするとOyasumiVRの内蔵OSC及びOSCQueryサーバーが無効になります。多くの機能が警告なしに使えなくなるため、通常はオフにしないでください。これはデバッグ用です。",
-          "title": "OSCとOSCQueryサーバー"
-        },
         "overlayGpuAcceleration": {
           "description": "オーバーレイが正しく描画されない場合、この設定を無効にすると一部の環境（例：ハイブリッドGPU）で問題が解決することがあります。",
           "title": "VRオーバーレイのGPUアクセラレーション"
@@ -2045,21 +2041,6 @@
         "label": "起動時に管理者権限を要求する",
         "title": "管理者権限"
       },
-      "discord": {
-        "activityMode": {
-          "description": "OyasumiVRを現在のアクティビティとして表示します",
-          "options": {
-            "DISABLED": "無効",
-            "ENABLED": "有効",
-            "ONLY_ASLEEP": "睡眠時のみ"
-          },
-          "title": "Discord Rich Presence"
-        },
-        "activityModeVRCCondition": {
-          "title": "VRChat実行中の場合のみ表示する"
-        },
-        "title": "Discord"
-      },
       "language": {
         "description": "希望の言語を選択できます。翻訳されていない箇所がある場合や、新しく言語を追加したい場合はご連絡ください。",
         "title": "言語"
@@ -2191,6 +2172,21 @@
       "copy": "リンクをクリップボードにコピー",
       "description": "OyasumiVRの一部の機能は外部サービスを利用できます。OyasumiVRとの連携はここから行います！",
       "disconnect": "切断",
+      "discord": {
+        "activityMode": {
+          "description": "OyasumiVRを現在のアクティビティとして表示します",
+          "options": {
+            "DISABLED": "無効",
+            "ENABLED": "有効",
+            "ONLY_ASLEEP": "睡眠時のみ"
+          },
+          "title": "Discord Rich Presence"
+        },
+        "activityModeVRCCondition": {
+          "title": "VRChat実行中の場合のみ表示する"
+        },
+        "title": "Discord"
+      },
       "homeAssistant": {
         "description": "Home Assistantインスタンスに接続して、スマートホームデバイスと連携し、更なる自動化環境を構築したり、さまざまなスマートデバイスを制御したりできます。",
         "title": "Home Assistant（MQTT経由）"
@@ -2239,6 +2235,14 @@
         "description": "一部の通知タイプがサウンドを再生する音量レベルを設定します",
         "test": "テスト",
         "title": "一般通知の音量"
+      }
+    },
+    "osc": {
+      "advanced": {
+        "oscServerEnabled": {
+          "description": "オフにするとOyasumiVRの内蔵OSC及びOSCQueryサーバーが無効になります。多くの機能が警告なしに使えなくなるため、通常はオフにしないでください。これはデバッグ用です。",
+          "title": "OSCとOSCQueryサーバー"
+        }
       }
     },
     "statusInfo": {

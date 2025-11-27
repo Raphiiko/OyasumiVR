@@ -13,8 +13,6 @@
     <br>
     <a href="https://discord.gg/7MqdPJhYxC"><img alt="Discord Badge" src="https://img.shields.io/discord/1023672078672609382?color=5865f2&label=Discord&logo=discord&logoColor=https%3A%2F%2Fshields.io%2Fcategory%2Fother"/></a>
     <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities"><img alt="Steam Page" src="https://img.shields.io/badge/Store-Steam-black?logo=steam"/></a>
-    <a href="https://raphiiko.booth.pm/items/4216880"><img alt="BOOTH.pm Page" src="https://img.shields.io/badge/Store-Booth.pm-red"/></a>
-    <a href="https://raphiiko.gumroad.com/l/oyasumi?layout=profile"><img alt="Gumroad Page" src="https://img.shields.io/badge/Store-Gumroad-important"/></a>
     <br>
     <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
     <br>
@@ -30,10 +28,10 @@
         </tr>
         <tr>
             <td align="center">
-                <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=english">Steam</a>&nbsp;|&nbsp;<a href="https://raphiiko.gumroad.com/l/oyasumi?layout=profile">Gumroad</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_EN.md">Readme</a>
+                <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=english">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_EN.md">Readme</a>
             </td>
             <td align="center">
-                <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=japanese">Steam</a>&nbsp;|&nbsp;<a href="https://raphiiko.booth.pm/items/4216880">Booth</a> | <a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_JA.md">Readme</a>
+                <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=japanese">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_JA.md">Readme</a>
             </td>
             <td align="center">
                 <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=korean">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_KO.md">Readme</a>
@@ -82,8 +80,6 @@
 
 - [Steam](https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/) (_**推荐**_)
 - 我们的[Github releases](https://github.com/Raphiiko/Oyasumi/releases)
-- 我们在[BOOTH.pm](https://raphiiko.booth.pm/items/4216880)的商店页面
-- 我们在[Gumroad](https://raphiiko.gumroad.com/l/oyasumi?layout=profile)的商店页面
 
 只需双击安装程序来安装它。安装完成后，你就可以开始使用了！
 
@@ -107,7 +103,6 @@ OyasumiVR可以**检测你何时入睡**，并以各种方式帮助你，例如�
 
 Oyasumi VR 完全且永久免费。不过，如果你愿意支持我继续开发 Oyasumi VR, 欢迎你在这些地方赞助我：
 
-<a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
 <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
 
 ## 功能
@@ -540,7 +535,7 @@ OyasumiVR目前支持以下语言：OyasumiVR 目前支持以下语言：
 - 繁體中文 (Traditional Chinese): Community contribution by [狐Kon](https://github.com/XoF-eLtTiL).
 - 简体中文 (Simplified Chinese): Community contributions by [狐Kon](https://github.com/XoF-eLtTiL), [雾雨花精灵](https://github.com/flower-elf), [いんく](https://twitter.com/sayonara_natsu) and [Yingxue](https://github.com/a1175815821).
 - Français (French): Community contribution by [neuroblack](https://github.com/neuroblack).
-- Español (Spanish): Community contribution by [aacal666](https://twitter.com/aacalde666).
+- Español (Spanish): Community contributions by [aacal666](https://twitter.com/aacalde666) and [B4sicallyF0x](https://github.com/B4sicallyF0x).
 - Bahasa Indonesia (Indonesian): Community contribution by [a9ito](https://twitter.com/a9ito).
 - Українська (Ukrainian): Community contributions by [senkodev](https://x.com/senkodev) and [Fanyatsu](https://fanyat.su/).
 - Русский (Russian): Community contributions by [Kanjir0](https://twitter.com/Kanjiro_vrc), [Pacmard](https://github.com/pacmard) and Dimrical.

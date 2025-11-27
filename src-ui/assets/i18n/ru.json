@@ -1620,21 +1620,6 @@
         "label": "Запрашивать права администратора при запуске",
         "title": "Права администратора"
       },
-      "discord": {
-        "activityMode": {
-          "description": "Показывать OyasumiVR как вашу текущую активность на Discord",
-          "options": {
-            "DISABLED": "Отключено",
-            "ENABLED": "Включено",
-            "ONLY_ASLEEP": "Только во время сна"
-          },
-          "title": "Активность Discord (Rich Presence)"
-        },
-        "activityModeVRCCondition": {
-          "title": "Показывать активность только во время работы VRChat"
-        },
-        "title": "Discord"
-      },
       "language": {
         "description": "Здесь вы можете выбрать язык. Если какой-либо перевод отсутствует или вы хотите добавить Ваш язык, свяжитесь с нами!",
         "title": "Язык интерфейса"
@@ -1766,6 +1751,21 @@
       "copy": "Скопировать ссылку в буфер обмена",
       "description": "Некоторые функции OyasumiVR могут использовать внешние сервисы. Если вы хотите подключить OyasumiVR к одному из них, вы по адресу!",
       "disconnect": "Отсоединить",
+      "discord": {
+        "activityMode": {
+          "description": "Показывать OyasumiVR как вашу текущую активность на Discord",
+          "options": {
+            "DISABLED": "Отключено",
+            "ENABLED": "Включено",
+            "ONLY_ASLEEP": "Только во время сна"
+          },
+          "title": "Активность Discord (Rich Presence)"
+        },
+        "activityModeVRCCondition": {
+          "title": "Показывать активность только во время работы VRChat"
+        },
+        "title": "Discord"
+      },
       "homeAssistant": {
         "description": "Интегрируйте OyasumiVR с остальной частью вашего умного дома, подключив его к Home Assistant, что позволит вам создавать собственные средства автоматизации и управлять различными интеллектуальными устройствами.",
         "title": "Home Assistant (через MQTT)"

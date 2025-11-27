@@ -1160,7 +1160,7 @@
     "enable": "开启 GPU 自动化",
     "enableWarning": "这些功能是给一些进阶用户的！\n 设置错误的功耗限制可能会导致你的系统变得不稳定 \n 请牢记这一点，最好不要随意调整它，除非你知道自己在做什么",
     "msiAfterburner": {
-      "description": "OyasumiVR 可以在你入睡或醒来时自动调整你的 GPU 设置，其会使用你在 MSI Afterburner 中所建立的预设。 此功能的其中一个用途是在你入睡时节省电力，并在你醒来时重新调整 GPU 功耗。<br><br > 你必须在 MSI Afterburner 进行配置。<br > 你可以在这里 < a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\"target=\"_blank\"> 下载 </a> MSI Afterburner",
+      "description": "OyasumiVR 可以在你入睡或醒来时自动调整你的 GPU 设置，其会使用你在 MSI Afterburner 中所建立的预设。 此功能的其中一个用途是在你入睡时节省电力，并在你醒来时重新调整 GPU 功耗。<br><br > 你必须在 MSI Afterburner 进行配置。<br > 你可以在这里 <a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\"target=\"_blank\"> 下载 </a> MSI Afterburner",
       "enabledWarning": "请注意，在 MSI Afterburner 中错误的设置 GPU 可能会导致系统变得不稳定。如果你不知道自己在做什么，请关闭此功能",
       "executable": {
         "description": "OyasumiVR 需要知道你的 <strong>MSIAfterburner.exe</strong> 可执行文件的位置 \n 如果 OyasumiVR 在默认位置找不到它，那么需要你手动设置它的位置",
@@ -1842,7 +1842,7 @@
   },
   "runAutomations": {
     "commandsToRun": "要运行的命令",
-    "description": "你可以设置 OyasumiVR 在你入睡、醒来或准备入睡时，通过 Windows 命令提示符自动执行命令。\\n所有命令均通过 cmd.exe 运行。",
+    "description": "你可以设置 OyasumiVR 在你入睡、醒来或准备入睡时，通过 Windows 命令提示符自动执行命令。\n\n所有命令均通过 cmd.exe 运行。",
     "onSleepDisable": {
       "description": "运行命令",
       "title": "当我醒来时"
@@ -1864,10 +1864,6 @@
         "openVrInitDelayFix": {
           "description": "启用此选项后，OyasumiVR 将在检测到 SteamVR 后稍作等待再进行交互，从而给予 SteamVR 额外的启动时间。如果你在 OyasumiVR 运行时遇到 SteamVR 启动问题，开启此选项可能有所帮助。",
           "title": "延迟初始化 OpenVR"
-        },
-        "oscServerEnabled": {
-          "description": "关闭此选项将禁用内置的 OSCQuery 服务器。请注意，关闭后 OyasumiVR 的部分功能将无法使用，且不会有任何警告。此选项仅用于调试目的，一般使用时不应关闭。",
-          "title": "OSC 与 OSCQuery 服务器"
         },
         "overlayGpuAcceleration": {
           "description": "如果你遇到叠加层渲染异常的问题，禁用此选项可能能在某些系统（如使用混合输出的笔记本）上解决问题。",
@@ -2045,21 +2041,6 @@
         "label": "启动时请求管理员权限",
         "title": "管理员权限"
       },
-      "discord": {
-        "activityMode": {
-          "description": "在 Discord 上显示 OyasumiVR 当前的状态",
-          "options": {
-            "DISABLED": "禁用",
-            "ENABLED": "启用",
-            "ONLY_ASLEEP": "只在睡眠时"
-          },
-          "title": "Discord 状态面板"
-        },
-        "activityModeVRCCondition": {
-          "title": "只有在 VRChat 运行时才显示"
-        },
-        "title": "Discord"
-      },
       "language": {
         "description": "你可以在此处选择你的语言。如果有任何遗漏的翻译，或者你想添加对你所属区域的语言支持，请联系我们！",
         "title": "语言"
@@ -2191,6 +2172,21 @@
       "copy": "复制链接到剪贴板",
       "description": "OyasumiVR 的某些功能可以使用外部服务。如果你想将 OyasumiVR 与外部服务连接起来，那就找对地方了！",
       "disconnect": "断开连接",
+      "discord": {
+        "activityMode": {
+          "description": "在 Discord 上显示 OyasumiVR 当前的状态",
+          "options": {
+            "DISABLED": "禁用",
+            "ENABLED": "启用",
+            "ONLY_ASLEEP": "只在睡眠时"
+          },
+          "title": "Discord 状态面板"
+        },
+        "activityModeVRCCondition": {
+          "title": "只有在 VRChat 运行时才显示"
+        },
+        "title": "Discord"
+      },
       "homeAssistant": {
         "description": "通过将 OyasumiVR 连接到你的 Home Assistant 实例，可以让它与你的智能家居整合，使你能够构建自己强大的自动化设施",
         "title": "Home Assistant（通过 MQTT 支持）"
@@ -2239,6 +2235,14 @@
         "description": "设置通知的音量大小",
         "test": "测试",
         "title": "一般通知的音量"
+      }
+    },
+    "osc": {
+      "advanced": {
+        "oscServerEnabled": {
+          "description": "关闭此选项将禁用内置的 OSCQuery 服务器。请注意，关闭后 OyasumiVR 的部分功能将无法使用，且不会有任何警告。此选项仅用于调试目的，一般使用时不应关闭。",
+          "title": "OSC 与 OSCQuery 服务器"
+        }
       }
     },
     "statusInfo": {
