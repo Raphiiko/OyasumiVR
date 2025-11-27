@@ -4410,7 +4410,7 @@ dependencies = [
 [[package]]
 name = "openvr"
 version = "0.9.0"
-source = "git+https://github.com/sofoxe1/rust-openvr?rev=d48a26ba1f7ab4f07d27ec3400a7649a699879e8#d48a26ba1f7ab4f07d27ec3400a7649a699879e8"
+source = "git+https://github.com/sofoxe1/rust-openvr?rev=03ab1620c30f6de831d8f42f161d58e7c58bfdda#03ab1620c30f6de831d8f42f161d58e7c58bfdda"
 dependencies = [
  "enumset",
  "lazy_static",
@@ -4527,6 +4527,7 @@ dependencies = [
  "mime",
  "mime_guess",
  "nalgebra",
+ "named_pipe",
  "openvr",
  "openvr_sys 2.1.3 (git+https://github.com/rust-openvr/rust-openvr-sys?rev=2027d7b571127f15a6e18ce5ce3dd6ae51a86c10)",
  "oyasumivr-shared",
