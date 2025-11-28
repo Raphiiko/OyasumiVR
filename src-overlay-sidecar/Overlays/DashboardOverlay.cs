@@ -44,6 +44,7 @@ public class DashboardOverlay : BaseWebOverlay {
       ref transform
     );
     _closing = false;
+    Browser.GetBrowserHost().WasHidden(false);
     OvrManager.Instance.OverlayPointer!.StartForOverlay(this);
     ShowDashboard();
     OpenVR.Overlay.ShowOverlay(OverlayHandle);
@@ -62,6 +63,7 @@ public class DashboardOverlay : BaseWebOverlay {
       OnClose?.Invoke();
       _isOpen = false;
       OpenVR.Overlay.DestroyOverlay(OverlayHandle);
+        Browser.GetBrowserHost().WasHidden(true);
     }, TimeSpan.FromSeconds(1));
   }
 
