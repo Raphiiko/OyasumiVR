@@ -30,7 +30,7 @@ config = "0.15.11"
 cronjob = "0.4.17"
 dirs = "6.0.0"
 discord-sdk = "0.4.0"
-enumset = "1.1.6"
+enumset = "1.1.10"
 futures = "0.3.31"
 futures-util = "0.3.31"
 hidapi = "2.6.3"
@@ -40,6 +40,8 @@ md5 = "0.8.0"
 mime = "0.3.17"
 mime_guess = "2.0.5"
 nalgebra = "0.33.2"
+openvr = { version = "0.9.0", git = "https://github.com/sofoxe1/rust-openvr",rev="03ab1620c30f6de831d8f42f161d58e7c58bfdda" }
+openvr_sys = { version = "2.1.3", git = "https://github.com/rust-openvr/rust-openvr-sys",rev="2027d7b571127f15a6e18ce5ce3dd6ae51a86c10" }
 named_pipe = "0.4.1"
 oyasumivr-shared = { path = "../src-shared-rust", version = '*' }
 oyasumivr_macros = { path = "./macros" }
@@ -91,7 +93,7 @@ widestring = "1.2.0"
 windows = { version = "0.54", features = [
   "implement",
   "Win32_Foundation",
-  "Win32_Devices_FunctionDiscovery", 
+  "Win32_Devices_FunctionDiscovery",
   "Win32_Media_Audio_Endpoints",
   "Win32_System_Com_StructuredStorage",
   "Win32_UI_Shell_PropertiesSystem",
@@ -113,11 +115,7 @@ winreg = "0.55.0"
 git = "https://github.com/Raphiiko/ipgeolocate_oyasumi.git"
 rev = "5f24925"
 
-[dependencies.ovr_overlay]
-git = "https://github.com/Raphiiko/ovr_overlay_oyasumi"
-rev = "a2afdea5fa9171b0151f8da271fcdd7cdc2beb41"
-# path = "../../ovr_overlay_oyasumi"
-features = ["ovr_system", "ovr_settings"]
+
 
 [dependencies.oyasumivr_oscquery]
 git = "https://github.com/Raphiiko/oyasumivr_oscquery.git"

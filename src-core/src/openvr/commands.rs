@@ -6,8 +6,7 @@ use super::{
 };
 use enumset::EnumSet;
 use log::error;
-use ovr::input::{InputString, InputValueHandle};
-use ovr_overlay as ovr;
+use openvr::input::{InputString, VRInputValueHandle};
 use substring::Substring;
 
 #[tauri::command]
@@ -104,18 +103,18 @@ pub async fn openvr_set_image_brightness(
 pub async fn openvr_launch_binding_configuration(show_on_desktop: bool) {
     let context = OVR_CONTEXT.lock().await;
     let mut input = match context.as_ref() {
-        Some(context) => context.input_mngr(),
+        Some(context) => context.input().unwrap(),
         None => return,
     };
     let input_handle = match input.get_input_source_handle("/user/hand/right") {
         Ok(handle) => handle,
         Err(e) => {
-            error!("[Core] Failed to get input source handle: {}", e);
+            error!("[Core] Failed to get input source handle: {:?}", e);
             return;
         }
     };
     if let Err(e) = input.open_binding_ui(None, None, input_handle, show_on_desktop) {
-        error!("[Core] Failed to open SteamVR binding UI: {}", e);
+        error!("[Core] Failed to open SteamVR binding UI: {:?}", e);
     }
 }
 
@@ -124,7 +123,7 @@ pub async fn openvr_launch_binding_configuration(show_on_desktop: bool) {
 pub async fn openvr_is_dashboard_visible() -> bool {
     let context = OVR_CONTEXT.lock().await;
     let mut manager = match context.as_ref() {
-        Some(context) => context.overlay_mngr(),
+        Some(context) => context.overlay().unwrap(),
         None => return false,
     };
     manager.is_dashboard_visible()
@@ -134,7 +133,11 @@ pub async fn openvr_is_dashboard_visible() -> bool {
 #[oyasumivr_macros::command_profiling]
 pub async fn openvr_reregister_manifest() -> Result<(), String> {
     let ctx = OVR_CONTEXT.lock().await;
-    let mut applications = ctx.as_ref().unwrap().applications_mngr();
+    let ctx=match ctx.as_ref(){
+        Some(v) =>v ,
+        None => panic!("openvr not running"),
+    };
+    let mut applications = ctx.application().unwrap();
     let manifest_path_buf = std::fs::canonicalize("resources/manifest.vrmanifest").unwrap();
     let manifest_path: &std::path::Path = manifest_path_buf.as_ref();
     match applications.is_application_installed(STEAM_APP_KEY) {
@@ -154,7 +157,7 @@ pub async fn openvr_reregister_manifest() -> Result<(), String> {
                                     return Ok(());
                                 }
                                 Err(e) => {
-                                    error!("[Core] Failed to add VR manifest: {}", e);
+                                    error!("[Core] Failed to add VR manifest: {:?}", e);
                                     return Err(String::from("MANIFEST_ADD_FAILED"));
                                 }
                             };
@@ -163,7 +166,7 @@ pub async fn openvr_reregister_manifest() -> Result<(), String> {
                         }
                     }
                     Err(e) => {
-                        error!("[Core] Failed to remove VR manifest: {}", e);
+                        error!("[Core] Failed to remove VR manifest: {:?}", e);
                         return Err(String::from("MANIFEST_REMOVE_FAILED"));
                     }
                 }
@@ -172,7 +175,7 @@ pub async fn openvr_reregister_manifest() -> Result<(), String> {
         Err(e) => {
             error!(
                 "[Core] Failed to check if VR manifest is registered: {:#?}",
-                e.description()
+                e
             );
             return Err(String::from("MANIFEST_CHECK_FAILED"));
         }
@@ -203,11 +206,11 @@ pub async fn openvr_get_binding_origins(
     // Get the input service
     let context = OVR_CONTEXT.lock().await;
     let mut input = match context.as_ref() {
-        Some(context) => context.input_mngr(),
+        Some(context) => context.input().unwrap(),
         None => return None,
     };
     if let Err(e) = input.update_actions(input_ctx.active_sets.as_mut_slice()) {
-        error!("[Core] Failed to update actions: {}", e);
+        error!("[Core] Failed to update actions: {:?}", e);
         return None;
     }
     // Get all of the origins for this action
@@ -218,7 +221,7 @@ pub async fn openvr_get_binding_origins(
             .cloned()
             .collect(),
         Err(e) => {
-            error!("[Core] Failed to get action origins: {}", e);
+            error!("[Core] Failed to get action origins: {:?}", e);
             return None;
         }
     };
@@ -227,14 +230,14 @@ pub async fn openvr_get_binding_origins(
         .iter()
         .filter_map(|origin| {
             match input.get_origin_localized_name(
-                InputValueHandle(*origin),
+                VRInputValueHandle(*origin),
                 EnumSet::only(InputString::ControllerType),
             ) {
                 Ok(name) => Some(name),
                 Err(e) => {
                     error!(
-                        "[Core] Failed to get origin localized name controller types: {}",
-                        e.description()
+                        "[Core] Failed to get origin localized name controller types: {:?}",
+                        e
                     );
                     None
                 }
@@ -246,14 +249,14 @@ pub async fn openvr_get_binding_origins(
         .iter()
         .filter_map(|origin| {
             match input.get_origin_localized_name(
-                InputValueHandle(*origin),
+                VRInputValueHandle(*origin),
                 EnumSet::only(InputString::Hand),
             ) {
                 Ok(name) => Some(name),
                 Err(e) => {
                     error!(
-                        "[Core] Failed to get origin localized name controller types: {}",
-                        e.description()
+                        "[Core] Failed to get origin localized name controller types: {:?}",
+                        e
                     );
                     None
                 }
@@ -265,14 +268,14 @@ pub async fn openvr_get_binding_origins(
         .iter()
         .filter_map(|origin| {
             match input.get_origin_localized_name(
-                InputValueHandle(*origin),
+                VRInputValueHandle(*origin),
                 EnumSet::only(InputString::InputSource),
             ) {
                 Ok(name) => Some(name),
                 Err(e) => {
                     error!(
-                        "[Core] Failed to get origin localized name controller types: {}",
-                        e.description()
+                        "[Core] Failed to get origin localized name controller types: {:?}",
+                        e
                     );
                     None
                 }
@@ -282,11 +285,11 @@ pub async fn openvr_get_binding_origins(
 
     // Get extra information about each binding
     let result = {
-        let result: Vec<ovr::sys::InputBindingInfo_t> = match input.get_action_binding_info(action)
+        let result: Vec<openvr_sys::InputBindingInfo_t> = match input.get_action_binding_info(action)
         {
             Ok(result) => result,
             Err(e) => {
-                error!("[Core] Failed to get action binding info: {}", e);
+                error!("[Core] Failed to get action binding info: {:?}", e);
                 return None;
             }
         };

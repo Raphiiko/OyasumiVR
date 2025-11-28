@@ -1,4 +1,3 @@
-use ovr_overlay as ovr;
 use std::ffi::CStr;
 
 use crate::openvr::{devices::get_devices, models::TrackedDeviceClass, OVR_CONTEXT};
@@ -48,20 +47,20 @@ pub async fn set_color_temp(mut temperature: Option<u32>) -> Result<(f64, f64, f
         let blue = 138.5177312231 * blue.ln() - 305.0447927307;
         blue.clamp(0.0, 255.0)
     } / 255.0;
-    let settings = &mut context.settings_mngr();
+    let settings = &mut context.settings().unwrap();
     let _ = settings.set_float(
-        CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_Section).unwrap(),
-        CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_HmdDisplayColorGainR_Float).unwrap(),
+        CStr::from_bytes_with_nul(openvr_sys::k_pch_SteamVR_Section).unwrap(),
+        CStr::from_bytes_with_nul(openvr_sys::k_pch_SteamVR_HmdDisplayColorGainR_Float).unwrap(),
         red as f32,
     );
     let _ = settings.set_float(
-        CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_Section).unwrap(),
-        CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_HmdDisplayColorGainG_Float).unwrap(),
+        CStr::from_bytes_with_nul(openvr_sys::k_pch_SteamVR_Section).unwrap(),
+        CStr::from_bytes_with_nul(openvr_sys::k_pch_SteamVR_HmdDisplayColorGainG_Float).unwrap(),
         green as f32,
     );
     let _ = settings.set_float(
-        CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_Section).unwrap(),
-        CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_HmdDisplayColorGainB_Float).unwrap(),
+        CStr::from_bytes_with_nul(openvr_sys::k_pch_SteamVR_Section).unwrap(),
+        CStr::from_bytes_with_nul(openvr_sys::k_pch_SteamVR_HmdDisplayColorGainB_Float).unwrap(),
         blue as f32,
     );
     Ok((red, green, blue))

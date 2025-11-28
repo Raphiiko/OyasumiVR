@@ -4,5 +4,11 @@
     "options": [
       "--proto_path=proto"
     ],
-  }
+  },
+  "i18n-ally.localesPaths": [
+    "src-ui/assets/i18n",
+    "src-core/resources/dotnet-sidecars/locales",
+    "src-overlay-sidecar/bin/Release/net8.0-windows/win-x64/locales",
+    "src-overlay-sidecar/bin/Release/net8.0-windows/win-x64/publish/locales"
+  ]
 }
