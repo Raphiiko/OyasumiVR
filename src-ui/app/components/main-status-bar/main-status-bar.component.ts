@@ -38,7 +38,7 @@ export class MainStatusBarComponent implements OnInit {
   private brightnessControlModalOpen = false;
   private bsbFanSpeedControlModalOpen = false;
   private cctControlModalOpen = false;
-  protected snowverlayAvailable = isHolidaysEventActive(); 
+  protected snowverlayAvailable = isHolidaysEventActive();
   protected snowverlayActive = false;
   protected mqttStatus: 'DISABLED' | 'CONNECTED' | 'DISCONNECTED' | 'ERROR' = 'DISABLED';
   protected cctControlEnabled = false;

@@ -41,8 +41,7 @@ export interface AutomationSleepModeStatusChangeReason extends SleepModeStatusCh
   automation: Exclude<AutomationType, 'SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE'>;
 }
 
-export interface SleepModeDisableOnPlayerJoinOrLeaveAutomationSleepModeStatusChangeReason
-  extends SleepModeStatusChangeReasonBase {
+export interface SleepModeDisableOnPlayerJoinOrLeaveAutomationSleepModeStatusChangeReason extends SleepModeStatusChangeReasonBase {
   type: 'AUTOMATION';
   automation: 'SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE';
   event: 'join' | 'leave';
