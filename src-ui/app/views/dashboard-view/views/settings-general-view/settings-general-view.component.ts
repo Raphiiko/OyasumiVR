@@ -4,7 +4,6 @@ import { open as openFile } from '@tauri-apps/plugin-dialog';
 import {
   APP_SETTINGS_DEFAULT,
   AppSettings,
-  DiscordActivityMode,
   ExecutableReferenceStatus,
   QuitWithSteamVRMode,
 } from 'src-ui/app/models/settings';
@@ -175,7 +174,6 @@ export class SettingsGeneralViewComponent implements OnInit {
   setAskForAdminOnStart(enabled: boolean) {
     this.settingsService.updateSettings({ askForAdminOnStart: enabled });
   }
- 
 
   setTelemetryEnabled(enabled: boolean) {
     this.telemetry.updateSettings({ enabled });

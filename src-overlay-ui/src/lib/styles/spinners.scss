@@ -1,55 +1,55 @@
 .small-spinner {
-  display: inline-block;
-  width: 1.5em;
-  height: 1.5em;
-  --spinner-color: white;
+	display: inline-block;
+	width: 1.5em;
+	height: 1.5em;
+	--spinner-color: white;
 }
 
 .small-spinner:after {
-  content: ' ';
-  display: block;
-  margin: 0.1em;
-  width: 1em;
-  height: 1em;
-  border-radius: 50%;
-  border: 2px solid var(--spinner-color);
-  border-color: var(--spinner-color) transparent var(--spinner-color) transparent;
-  animation: small-spinner 0.75s linear infinite;
+	content: ' ';
+	display: block;
+	margin: 0.1em;
+	width: 1em;
+	height: 1em;
+	border-radius: 50%;
+	border: 2px solid var(--spinner-color);
+	border-color: var(--spinner-color) transparent var(--spinner-color) transparent;
+	animation: small-spinner 0.75s linear infinite;
 }
 
 @keyframes small-spinner {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
 }
 
 .large-spinner {
-  display: inline-block;
-  width: 3em;
-  height: 3em;
-  --spinner-color: white;
+	display: inline-block;
+	width: 3em;
+	height: 3em;
+	--spinner-color: white;
 }
 
 .large-spinner:after {
-  content: ' ';
-  display: block;
-  margin: 0.1em;
-  width: 3em;
-  height: 3em;
-  border-radius: 50%;
-  border: 2px solid var(--spinner-color);
-  border-color: var(--spinner-color) transparent var(--spinner-color) transparent;
-  animation: large-spinner 0.75s linear infinite;
+	content: ' ';
+	display: block;
+	margin: 0.1em;
+	width: 3em;
+	height: 3em;
+	border-radius: 50%;
+	border: 2px solid var(--spinner-color);
+	border-color: var(--spinner-color) transparent var(--spinner-color) transparent;
+	animation: large-spinner 0.75s linear infinite;
 }
 
 @keyframes large-spinner {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
 }
