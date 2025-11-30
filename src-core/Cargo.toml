@@ -1,6 +1,6 @@
 [package]
 name = "oyasumivr"
-version = "25.6.11"
+version = "25.6.12"
 description = ""
 authors = ["Raphiiko"]
 license = "MIT"

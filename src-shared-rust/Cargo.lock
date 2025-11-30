@@ -4,7 +4,7 @@ version = 4
 
 [[package]]
 name = "oyasumivr-shared"
-version = "25.6.11"
+version = "25.6.12"
 dependencies = [
  "windows",
 ]
