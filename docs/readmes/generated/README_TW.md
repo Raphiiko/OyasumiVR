@@ -38,7 +38,7 @@
             </td>
         </tr>
         <tr>
-            <td align="center">Simplified Chinese<br>简体中文</td>
+            <td align="center">Simplified Chinese<br>簡體中文</td>
             <td align="center">Traditional Chinese<br>繁體中文</td>
             <td align="center">Bahasa Indonesia</td>
         </tr>
@@ -90,23 +90,23 @@ OyasumiVR 是一個桌面應用程式，包含各種工具和自動化功能，*
 OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，例如：
 - 🔋 在夜間節省電力
 - 🔅 調暗你的頭戴式顯示器亮度
-- ✨ 根據你的睡姿觸發頭像動畫
+- ✨ 根據你的睡姿觸發角色動畫
 - 📩 自動處理好友邀請
-- 🔵 Automating your VRChat status
-- 🎤 當你睡着時自動關閉麥克風
+- 🔵 自動化你的 VRChat 狀態
+- 🎤 當你睡著時自動關閉麥克風
 - 🛠 自動化各種 SteamVR 設定
 
 ...還有更多！請查看即將推出的「功能」部分，深入了解 OyasumiVR 所提供的功能。
 
-## Support OyasumiVR
+## 支持 OyasumiVR
 
-OyasumiVR itself is completely free, and will always be free. However, if you want to support me and the development of OyasumiVR, here's a few places you can do so:
+OyasumiVR 本身完全免費，且將永遠保持免費。不過，如果你想支持我以及 OyasumiVR 的開發，可以透過以下方式：
 
 <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
 
-By supporting me, you help me dedicate more time to developing new features, improving the current functionality, offsetting some of the costs that come with the development process, and fueling my coffee addiction ☕.
+支持我，你將幫助我投入更多時間開發新功能、改善現有功能、補貼開發過程中的部分成本，並滿足我的咖啡癮 ☕。
 
-I'm not done with OyasumiVR anytime soon: **there is a lot more I want to work on!**
+我對 OyasumiVR 還遠未完成：**我還有很多想要實現的功能！**
 
 ## 功能
 
@@ -178,14 +178,14 @@ OyasumiVR 配備了自己的 SteamVR 疊層畫面，允許你在虛擬實境中�
   </tr>
 </table>
 
-### 🎮 Device Control
+### 🎮 裝置控制
 
 <table>
   <tr>
     <td>
-OyasumiVR can allow you to easily control many of your SteamVR devices, from controllers, to trackers, to base stations.
+OyasumiVR 讓你可以輕鬆控制多數 SteamVR 裝置，包括控制器、定位器以及基地台。  
 <br><br>
-Easily read detailed battery level and charge status for your controllers and trackers, or turn your base stations on and off with a single click! 
+你可以輕鬆查看控制器與定位器的詳細電池電量與充電狀態，或只需單擊即可開啟或關閉基地台！
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7c6a6f7d-fa5a-44e0-bc0f-b690e26dad31"></td>
   </tr>
@@ -256,39 +256,39 @@ OyasumiVR 可以偵測你睡覺時的姿勢，並在你的角色上觸發相應�
   </tr>
   <tr>
     <td>
-🔵 <b>Status Automations</b>
+🔵 <b>狀態自動化</b>
 <br>
-OyasumiVR offers multiple automations for controlling your VRChat visibility and status message, like when you fall asleep, or wake up!
+OyasumiVR 提供多種自動化功能，用於控制你在 VRChat 的可見性與狀態訊息，例如當你入睡或醒來時！  
 <br><br>
-Additionally, you can have OyasumiVR automatically switch your status based on the amount of people around you in VRChat. For example: Switch to blue when you are sleeping alone so your friends can join you, and switch to orange when there's enough people around!
+此外，你還可以讓 OyasumiVR 根據 VRChat 中周圍的人數，自動切換你的狀態。例如：當你獨自入睡時切換為藍色，方便好友加入你；當周圍有足夠人數時切換為橙色！
     </td>    
     <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/8ff25c9c-8888-4c12-b149-1f68db17eb01"></td>
   </tr>
   <tr>
     <td>
-🔔 <b>Join Notifications</b>
+🔔 <b>加入通知</b>
 <br>
-OyasumiVR can notify you when people join or leave your VRChat world. This is useful if you want to be woken up in certain situations.
+OyasumiVR 能在有人加入或離開你的 VRChat 世界時通知你。這在某些情況下可以用來喚醒你。  
 
-It can configured to only notify you in specific situations, like only:
+你可以設定僅在特定情況下接收通知，例如：
 <br>
 <ul>
-  <li>For your friends</li>
-  <li>For certain specific players</li>
-  <li>When you're being left alone</li>
-  <li>When you're no longer alone</li>
+  <li>僅針對你的好友</li>
+  <li>僅針對特定玩家</li>
+  <li>當你被獨自留下時</li>
+  <li>當你不再孤單時</li>
 </ul>
     </td>
     <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/bc2e2f9b-9ee5-402c-a7a7-8b998af7d81f"></td>
   </tr>
   <tr>
     <td>
-🏃 <b>Avatar Automations</b>
+🏃 <b>角色自動化</b>
 <br>
-You can have OyasumiVR automatically switch your avatar when you prepare for bed, when you fall asleep, or when you wake up!
-Useful if you have a specific avatar you use for sleeping.
+你可以讓 OyasumiVR 在你準備睡覺、入睡或醒來時，自動切換你的角色！  
+如果你有專門用於睡覺的角色，這功能會非常實用。
     </td>
-    <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e492c6e7-ddda-44ba-b62a-768b01729bdd"></td>
+    <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e492c6e7-ddda-44ba-b62a-768b01729bdd"></td>768b01729bdd"></td>
   </tr>
   <tr>
     <td>
@@ -307,83 +307,83 @@ Useful if you have a specific avatar you use for sleeping.
 <table>
   <tr>
     <td>
-Ever wanted to fall asleep in VR, but not stay in VR all night? The shutdown sequence has you covered!
+是否曾想過在 VR 中入睡，但又不想整晚都待在 VR 裡？關機程序正是為此而設計的！
 <br><br>
-While you can trigger the shutdown sequence manually, there are several automated triggers you can configure:
-<br><br>
-<ul>
-  <li>When you've been asleep for a certain amount of time. </li>
-  <li>When you're left alone in your VRChat world for a certain amount of time.</li>
-</ul>
-<br>
-Depending on which actions you configure, it will do any of the following:
+你可以手動啟動關機程序，但也能設定多種自動觸發條件：
 <br><br>
 <ul>
-  <li>Turn off your controllers and/or Trackers</li>
-  <li>Turn off your Base Stations</li>
-  <li>Quit SteamVR <i>(And any running game or overlay along with it)</i></li>
-  <li>Shut down Windows</li>
+  <li>當你已經睡了一段指定的時間。</li>
+  <li>當你在 VRChat 的世界中獨自待了某段時間。</li>
 </ul>
 <br>
-With the shutdown sequence configured, you can fall asleep soundly in VR, knowing that everything will shut down when you don't need to be in VR anymore!
+根據你設定的動作，關機程序可以執行以下任一項或多項操作：
+<br><br>
+<ul>
+  <li>關閉你的控制器與／或定位器</li>
+  <li>關閉你的基地台</li>
+  <li>退出 SteamVR <i>（以及任何正在運行的遊戲或覆蓋層）</i></li>
+  <li>關閉 Windows</li>
+</ul>
+<br>
+設定好關機程序後，你就能安心在 VR 中入睡，因為當你不再需要待在 VR 裡時，它會自動將一切安全關閉！
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/4254eb51-6d40-4200-a8ef-af97279a9072"></td>
   </tr>
 </table>
 
-### 🔅 Display Brightness & Color Temperature Automations
+### 🔅 顯示亮度與色溫自動化
 
 <table>
   <tr>
     <td>
-🌆 <b>Brightness</b>
+🌆 <b>亮度</b>
 <br>
-Automate your brightness for when you sleep and wake up. OyasumiVR can smoothly transition your VR headset's brightness, so it falls down gradually as you sleep without waking you up.
+為你的睡眠與醒來自動調整亮度。OyasumiVR 能平滑地調整 VR 頭顯的亮度，使其在你入睡時逐漸變暗，而不會把你吵醒。  
 <br><br>
-It allows you to control both software brightness, as well as hardware brightness if your headset supports it (e.g. Valve Index or Bigscreen Beyond). In addition to providing you with several automations, you can easily control your brightness levels right from the SteamVR overlay menu!
+它允許你控制軟體亮度，以及在支援的頭顯上控制硬體亮度（例如 Valve Index 或 Bigscreen Beyond）。除了提供多項自動化，你也能直接在 SteamVR 的覆蓋選單中輕鬆調整亮度！  
 <br><br>
-🌡️ <b>Color Temperature</b>
+🌡️ <b>色溫</b>
 <br>
-OyasumiVR can also control the color temperature of your VR headset's display. By reducing blue light, it can help reduce eye strain during the late hours, and make it easier to fall asleep.
+OyasumiVR 也能控制 VR 頭顯顯示器的色溫。透過降低藍光，可以減少深夜的眼睛疲勞，並讓你更容易入睡。  
 <br><br>
-With the sunset and sunrise triggers, you can have OyasumiVR automatically adjust the color temperature of your display to match the time of day.
+使用日落與日出觸發器時，你可以讓 OyasumiVR 自動調整顯示器的色溫，使其與一天中的時間匹配。  
 <br><br>
-<i>Note that this feature is only supported on some native SteamVR headsets, such as the Valve Index, Bigscreen Beyond, and HTC Vive (Pro).</i>
+<i>請注意，此功能僅支援部分原生 SteamVR 頭顯，例如 Valve Index、Bigscreen Beyond，以及 HTC Vive（Pro）。</i>
     </td>
     <td width="380"><img src="https://github.com/user-attachments/assets/bfa3fd71-9ec1-4d61-8255-8a716b2ea09c"></td>
   </tr>
 
 </table>
 
-### 🎤 Microphone Mute Automations
+### 🎤 麥克風靜音自動化
 
 <table>
    <tr>
     <td>
-<b>VRChat Microphone Mute Automations</b><br>
-You can have OyasumiVR automatically mute or unmute your mic in VRChat when you go to sleep and wake up.
-<br><br>Perfect if you'd like to prevent others from hearing you snore!
+<b>VRChat 麥克風靜音自動化</b><br>
+當你入睡與醒來時，你可以讓 OyasumiVR 自動在 VRChat 中將你的麥克風靜音或取消靜音。  
+<br><br>非常適合想避免其他人聽到你打呼的情況！
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6c3d3f13-0c88-4af7-96b0-d9ea72acf69c"></td>
   </tr>
   <tr>
     <td>
-<b>System Microphone Mute Automations</b><br>
-OyasumiVR can also do the same, but on a system level, muting your Microphone's audio device instead.
-With this, you can even switch between mute toggle mode and push-to-talk.
+<b>系統麥克風靜音自動化</b><br>
+OyasumiVR 也能在系統層級做同樣的事情，直接靜音你的麥克風音訊裝置。  
+透過這項功能，你甚至可以在「切換靜音模式」與「按鍵說話（Push-to-Talk）」之間切換。  
 <br><br>
-This comes with an optional mute indicator in the VR overlay, and the option for binding a controller button so that you can have it completely replace the microphone muting functionality of VRChat or any other VR game you play.
+這還提供可選的 VR 覆蓋層靜音指示器，以及綁定控制器按鍵的選項，使其能完全取代 VRChat 或任何其他 VR 遊戲的麥克風靜音功能。
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6c3d3f13-0c88-4af7-96b0-d9ea72acf69c"></td>
   </tr>
 </table>
 
-### 🔉 Audio Volume Automations
+### 🔉 音量自動化
 
 <table>
    <tr>
     <td>
-Automatically change the volume of your audio devices when you fall asleep, or wake up! This can be useful if you want to prevent other players, or other applications from disturbing your sleep.
+當你入睡或醒來時，自動調整你的音訊裝置音量！  如果你想避免其他玩家或應用程式在睡眠時打擾你，這功能會非常實用。
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e5043544-b426-4b45-8131-4f63dcc6a184"></td>
   </tr>
@@ -395,7 +395,7 @@ Automatically change the volume of your audio devices when you fall asleep, or w
   <tr>
     <td colspan="2">
       <img width="60" align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e6e73a94-b9c0-4a4b-a3ec-2859e5c01179" />
-為了支援基於心跳率的自動化，OyasumiVR 整合了在線心跳率服務 <a href="https://pulsoid.net/pricing?promo_campaign_id=86680152-707d-4771-8a12-740bad1b4545">Pulsoid</a>。你可以使用 Pulsoid 支援的任何硬件，如藍牙心跳率監測器、WearOS 智能手錶，或 Apple Watches。
+為了支援基於心跳率的自動化，OyasumiVR 整合了在線心跳率服務 <a href="https://pulsoid.net/pricing?promo_campaign_id=86680152-707d-4771-8a12-740bad1b4545">Pulsoid</a>。你可以使用 Pulsoid 支援的任何硬體，如藍牙心跳率監測器、WearOS 智慧手錶，或 Apple Watches。
 <br><br>
 <i>請注意，此整合需要一次性購買 Pulsoid 的 OyasumiVR 整合，或擁有活躍的 Pulsoid 「BRO」 訂閱。請在購買前確保你有可用的設備。</i>
     </td>
@@ -418,17 +418,17 @@ OyasumiVR 可以檢測到你的心跳率持續異常升高，這可能表示你�
   </tr>
 </table>
 
-### 🚨 HMD Specific Automations
+### 🚨 特定 HMD 自動化
 
 <table>
    <tr>
     <td>
-OyasumiVR has various automations for controlling certain features specific to certain VR Headsets. Currently, this includes the following:
+OyasumiVR 提供多種自動化功能，用於控制部分 VR 頭顯的專屬特性。目前支援以下內容：  
 <br><br>
 <b>Bigscreen Beyond</b>
 <ul>
-<li>RGB Led Control</li>
-<li>Fan Speed Control</li>
+<li>RGB LED 控制</li>
+<li>風扇轉速控制</li>
 </ul>
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/9909caa0-deeb-41da-a56e-148a09d0303c"></td>
@@ -457,94 +457,94 @@ OyasumiVR has various automations for controlling certain features specific to c
   </tr>
 </table>
 
-### 🏠 Home Assistant Integration
+### 🏠 Home Assistant 整合
 
 <table>
   <tr>
     <td colspan="2">
 <img width="100" align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/88eff4c6-a251-43f8-9759-baecedf94a32"><br>
-OyasumiVR can expose many of its own features, as well as SteamVR's, to Home Assistant over MQTT! This allows you to integrate OyasumiVR with various smart devices you might have in your home, as well as enable you to build your own powerful automations within Home Assistant.
-For example, you can use this to automatically turn off your smart lights when you fall asleep, or turn them back on when needed!
+OyasumiVR 能透過 MQTT 將自身的多項功能，以及 SteamVR 的部分功能，暴露給 Home Assistant！  
+這讓你能將 OyasumiVR 與家中各種智慧裝置整合，並在 Home Assistant 中建立強大的自動化流程。例如，你可以用它在入睡時自動關閉智慧燈光，或在需要時自動重新開啟！  
 <br><br>
-Here is a list of features exposed that you'll be able to read, or control, through Home Assistant:
+以下是可透過 Home Assistant 讀取或控制的功能清單：
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/0476e18c-5509-4b08-932f-f49b943d9965"></td>
   </tr>
 <tr>
   <td>
-    <b>OyasumiVR Features</b>
+    <b>OyasumiVR 功能</b>
     <ul>
-      <li>Sleep Mode (Switch)</li>
-      <li>Shutdown Sequence (Button)</li>
-      <li>Sleep Preparation (Button)</li>
-      <li>Heart Rate (Sensor)</li>
-      <li>Sleeping Position (Sensor)</li>
+      <li>睡眠模式 (開關)</li>
+      <li>關機程序 (按鈕)</li>
+      <li>睡前準備 (按鈕)</li>
+      <li>心率 (感測器)</li>
+      <li>睡姿 (感測器)</li>
       <li>
-        Base Station
+        基地台
         <ul>
-          <li>Power (Switch)</li>
-          <li>Power State (Sensor)</li>
+          <li>電源 (開關)</li>
+          <li>電源狀態 (感測器)</li>
         </ul>
       </li>
       <li>
-        HMD Brightness
+        頭顯亮度
         <ul>
-          <li>Advanced Mode (Switch)</li>
-          <li>Simple Brightness (Number)</li>
-          <li>Software Brightness (Number)</li>
-          <li>Hardware Brightness (Number)</li>
+          <li>進階模式 (開關)</li>
+          <li>簡單亮度 (數值)</li>
+          <li>軟體亮度 (數值)</li>
+          <li>硬體亮度 (數值)</li>
         </ul>
       </li>
     </ul>
   </td>
   <td colspan="2">
-    <b>VRChat Features</b>
+    <b>VRChat 功能</b>
     <ul>
-      <li>VRChat Running (Sensor)</li>
-      <li>Player Name (Sensor)</li>
-      <li># Players In World (Sensor)</li>
-      <li>Status Visibility (Sensor)</li>
-      <li>World Instance ID (Sensor)</li>
+      <li>VRChat 運行中 (感測器)</li>
+      <li>玩家名稱 (感測器)</li>
+      <li>世界內玩家數量 (感測器)</li>
+      <li>狀態可見性 (感測器)</li>
+      <li>世界實例 ID (感測器)</li>
     </ul>
   </td>
 </tr>
 <tr>
   <td>
-    <b>SteamVR Features</b>
+    <b>SteamVR 功能</b>
     <ul>
-      <li>VR Headset Model (Sensor)</li>
-      <li>SteamVR Running (Sensor)</li>
+      <li>VR 頭顯型號 (感測器)</li>
+      <li>SteamVR 運行中 (感測器)</li>
       <li>
-        Controller & Tracker
+        控制器與定位器
         <ul>
-          <li>Power (Switch) (Only Powering Off)</li>
-          <li>Charging State (Sensor)</li>
-          <li>Battery Level (Sensor)</li>
-          <li>Device Roles (Sensor)</li>
+          <li>電源 (開關) (僅可關閉)</li>
+          <li>充電狀態 (感測器)</li>
+          <li>電池電量 (感測器)</li>
+          <li>裝置角色 (感測器)</li>
         </ul>
       </li>
     </ul>
     <br />
   </td>
   <td colspan="2">
-    <b>Bigscreen Beyond Features</b>
+    <b>Bigscreen Beyond 功能</b>
     <ul>
-      <li>Fan Speed (Number)</li>
-      <li>RGB LED (Light)</li>
-      <li>Brightness (Number)</li>
+      <li>風扇轉速 (數值)</li>
+      <li>RGB LED (燈光)</li>
+      <li>亮度 (數值)</li>
     </ul>
   </td>
 </tr>
 </table>
 
-## 翻譯與本地化
+## 翻譯與在地化
 
 目前 OyasumiVR 支援以下語言：
 
 - 日本語 (Japanese): Community contributions by [なき](https://twitter.com/NoYu_idea) and [Milix-M](https://github.com/Milix-M).
 - 한국어 (Korean): Community contribution by [Soumt](https://github.com/soumt-r).
 - 繁體中文 (Traditional Chinese): Community contribution by [狐Kon](https://github.com/XoF-eLtTiL).
-- 简体中文 (Simplified Chinese): Community contributions by [狐Kon](https://github.com/XoF-eLtTiL), [雾雨花精灵](https://github.com/flower-elf), [いんく](https://twitter.com/sayonara_natsu) and [Yingxue](https://github.com/a1175815821).
+- 簡體中文 (Simplified Chinese): Community contributions by [狐Kon](https://github.com/XoF-eLtTiL), [霧雨花精靈](https://github.com/flower-elf), [いんく](https://twitter.com/sayonara_natsu) and [Yingxue](https://github.com/a1175815821).
 - Français (French): Community contribution by [neuroblack](https://github.com/neuroblack).
 - Español (Spanish): Community contributions by [aacal666](https://twitter.com/aacalde666) and [B4sicallyF0x](https://github.com/B4sicallyF0x).
 - Bahasa Indonesia (Indonesian): Community contribution by [a9ito](https://twitter.com/a9ito).
@@ -588,14 +588,14 @@ _(\*) Tundra 定位器的電池水平和充電狀態報告非常延遲。這意�
 
 ### 亮度自動化
 
-Controlling the hardware brightness of the VR headset's display is currently only supported on the Valve Index, and the Bigscreen Beyond.
+控制 VR 頭顯顯示器的硬體亮度目前僅支援 Valve Index 與 Bigscreen Beyond。
 
-Image brightness control is available on all headsets.
+影像亮度控制則適用於所有頭顯。
 
-### Color Temperature Automations
+### 色溫自動化
 
-Controlling the color temperature of the VR headset's display is currently only supported on some native SteamVR headsets, such as the Valve Index, Bigscreen Beyond, and HTC Vive (Pro).
-It might work on other headsets, but your mileage may vary.
+控制 VR 頭顯顯示器的色溫目前只在部分原生 SteamVR 頭顯上支援，例如 Valve Index、Bigscreen Beyond，以及 HTC Vive（Pro）。
+它也可能在其他頭顯上運作，但實際情況可能因裝置而異。
 
 ## 使用的技術
 
@@ -625,11 +625,11 @@ OyasumiVR 的開發者和項目貢獻者對 OyasumiVR 導致的任何問題（�
 
 <img align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/dfdab6c8-c952-4e0d-be12-017d14262a49" width="180">
 
-OyasumiVR's telemetry is provided by [Aptabase](https://aptabase.com), which provides open source, privacy first and simple analytics for mobile and desktop apps. Aptabase was picked because it aids OyasumiVR's development by providing crash reports and anonymous usage statistics, while still respecting your privacy as best as possible.
+OyasumiVR 的遙測服務由 [Aptabase](https://aptabase.com) 提供。Aptabase 是一個開源、隱私優先、且簡潔易用的行動與桌面應用分析工具。選擇 Aptabase 是因為它能透過提供錯誤回報與匿名使用統計，協助 OyasumiVR 的開發，同時最大程度地尊重你的隱私。
 
-The telemetry is completely anonymous and sends no personally identifiable information. Its only purpose is to provide the aformentioned crash reporting, and basic anonymous usage statistics such as application starts and language preferences. This data is only used for finding and fixing bugs, and other general improvements to OyasumiVR.
+所有遙測資料皆為完全匿名，且不會傳送任何可識別個人身份的資訊。這些資料僅用於前述的錯誤回報，以及一些基礎的匿名使用統計，例如應用程式啟動次數與語言偏好。這些數據僅用於找出與修復問題，並協助 OyasumiVR 的一般改進工作。
 
-You are able to opt out of telemetry within OyasumiVR's general settings. For more (technical) information, please check out the (very short!) [Aptabase Privacy Policy](https://aptabase.com/legal/privacy).
+你可以在 OyasumiVR 的一般設定中選擇停用遙測功能。若想了解更多（技術性）資訊，請參考這篇非常簡短的 [Aptabase 隱私權政策](https://aptabase.com/legal/privacy)。
 
 ## 支援
 
@@ -640,4 +640,3 @@ You are able to opt out of telemetry within OyasumiVR's general settings. For mo
 ## 授權條款
 
 OyasumiVR 是使用 [MIT 授權](https://github.com/Raphiiko/Oyasumi/blob/develop/LICENSE)進行發布。這意味著你可以自由地使用、修改和分發它，只要你遵從授權條款。
-
