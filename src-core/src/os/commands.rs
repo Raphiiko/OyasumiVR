@@ -35,7 +35,7 @@ pub async fn play_sound(name: String, volume: f32) {
 #[tauri::command]
 #[oyasumivr_macros::command_profiling]
 pub async fn quit_steamvr(kill: bool) {
-    crate::utils::stop_process("vrmonitor.exe", kill).await;
+    crate::utils::quit_steamvr(kill).await;
 }
 
 #[tauri::command]

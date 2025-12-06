@@ -17,7 +17,7 @@ use std::env;
 use std::fs::File;
 use std::path::Path;
 use std::time::Duration;
-use sysinfo::{Pid, System, ProcessesToUpdate};
+use sysinfo::{Pid, ProcessRefreshKind, ProcessesToUpdate, System};
 use windows::relaunch_with_elevation;
 
 mod afterburner;
@@ -119,9 +119,9 @@ async fn main() {
 
 async fn watch_main_process(main_pid: u32) {
     let pid = Pid::from(main_pid as usize);
-    let mut s = System::new_all();
+    let mut s = System::new();
     loop {
-        s.refresh_processes(ProcessesToUpdate::All, true);
+        s.refresh_processes_specifics(ProcessesToUpdate::Some(&[pid]), true, ProcessRefreshKind::nothing().without_tasks());
         if s.process(pid).is_none() {
             info!("Main process has exited. Stopping elevated sidecar.");
             std::process::exit(0);
