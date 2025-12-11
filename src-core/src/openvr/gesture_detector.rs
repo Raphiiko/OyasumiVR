@@ -4,17 +4,17 @@ use crate::utils::{get_time, send_event};
 
 use super::models::GestureDetected;
 
-const MAX_EVENT_AGE_MS: u128 = 5000; // 5 seconds
+const MAX_EVENT_AGE_MS: u64 = 5000; // 5 seconds
 
 #[derive(Clone, Copy)]
 struct YawEvent {
-    yaw: f64,
-    timestamp: u128,
+    yaw: f32,
+    timestamp: u64,
 }
 
 pub struct GestureDetector {
     events: Vec<YawEvent>,
-    last_detection: u128,
+    last_detection: u64,
 }
 
 impl GestureDetector {

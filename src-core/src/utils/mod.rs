@@ -4,7 +4,7 @@ use std::{
     ffi::OsStr,
     os::raw::c_char,
     sync::LazyLock,
-    time::{Duration, SystemTime, UNIX_EPOCH},
+    time::{Duration, Instant, SystemTime, UNIX_EPOCH},
 };
 use sysinfo::{ProcessesToUpdate, Signal, System};
 use tauri::Emitter;
@@ -59,10 +59,11 @@ pub async fn stop_process(process_name: &str, kill: bool) {
     }
 }
 
-pub fn get_time() -> u128 {
+pub fn get_time() -> u64 {
     let now = SystemTime::now();
     let since_the_epoch = now.duration_since(UNIX_EPOCH).expect("Time went backwards");
-    since_the_epoch.as_millis()
+    //in a year 584544016 this will become a problem 
+    since_the_epoch.as_millis() as u64
 }
 
 pub async fn send_event<S: Serialize + Clone>(event: &str, payload: S) {

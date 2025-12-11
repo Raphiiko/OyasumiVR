@@ -208,10 +208,10 @@ pub struct DeviceUpdateEvent {
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SleepDetectorStateReport {
-    pub distance_in_last_15_minutes: f64,
-    pub distance_in_last_10_seconds: f64,
-    pub start_time: u128,
-    pub last_log: u128,
+    pub distance_in_last_15_minutes: f32,
+    pub distance_in_last_10_seconds: f32,
+    pub start_time: u64,
+    pub last_log: u64,
 }
 
 #[derive(Clone, Serialize, Deserialize)]

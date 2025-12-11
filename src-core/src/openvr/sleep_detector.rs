@@ -2,7 +2,7 @@ use crate::utils::{get_time, send_event};
 
 use super::models::SleepDetectorStateReport;
 
-const MAX_EVENT_AGE_MS: u128 = 900000; // 15 minutes
+const MAX_EVENT_AGE_MS: u64 = 900000; // 15 minutes
 
 #[derive(Clone, Copy)]
 struct PoseEvent {
@@ -10,15 +10,16 @@ struct PoseEvent {
     y: f32,
     z: f32,
     // quaternion: [f64; 4],
-    timestamp: u128, // in milliseconds
+    timestamp: u64, // in milliseconds
 }
 
 impl PoseEvent {
-    fn distance_to(&self, other: &PoseEvent) -> f64 {
-        let dx: f64 = (self.x - other.x).into();
-        let dy: f64 = (self.y - other.y).into();
-        let dz: f64 = (self.z - other.z).into();
+    fn distance_to(&self, other: &PoseEvent) -> f32 {
+        let dx: f32 = (self.x - other.x).into();
+        let dy: f32 = (self.y - other.y).into();
+        let dz: f32 = (self.z - other.z).into();
         (dx * dx + dy * dy + dz * dz).sqrt()
+
     }
     // fn angular_distance_degrees(&self, other: &PoseEvent) -> f64 {
     //     let q1 = self.quaternion;
@@ -32,12 +33,12 @@ impl PoseEvent {
 
 pub struct SleepDetector {
     events: Vec<PoseEvent>,
-    distance_in_last_15_minutes: f64,
-    distance_in_last_10_seconds: f64,
+    distance_in_last_15_minutes: f32,
+    distance_in_last_10_seconds: f32,
     // reqwest_client: reqwest::Client,
-    start_time: u128,
-    last_log: u128,
-    next_state_report: u128,
+    start_time: u64,
+    last_log: u64,
+    next_state_report: u64,
 }
 
 impl SleepDetector {
@@ -86,7 +87,7 @@ impl SleepDetector {
         }
     }
 
-    fn distance_in_window(&mut self, window_ms: u128) -> f64 {
+    fn distance_in_window(&mut self, window_ms: u64) -> f32 {
         let start_time = get_time() - window_ms;
         let start_index = self
             .events
