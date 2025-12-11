@@ -2,7 +2,6 @@ use nalgebra::{Quaternion, UnitQuaternion};
 
 use crate::utils::{get_time, send_event};
 
-use super::models::GestureDetected;
 
 const MAX_EVENT_AGE_MS: u64 = 5000; // 5 seconds
 
@@ -72,9 +71,7 @@ impl GestureDetector {
             self.last_detection = get_time();
             send_event(
                 "GESTURE_DETECTED",
-                GestureDetected {
-                    gesture: "head_shake".to_string(),
-                },
+                "",
             )
             .await;
         }

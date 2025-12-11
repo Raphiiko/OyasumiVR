@@ -216,12 +216,6 @@ pub struct SleepDetectorStateReport {
 
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct GestureDetected {
-    pub gesture: String,
-}
-
-#[derive(Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
 pub struct OVRFrameLimits {
     pub additional_frames_to_predict: u8,
     pub frames_to_throttle: u8,
