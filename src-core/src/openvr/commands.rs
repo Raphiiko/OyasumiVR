@@ -1,4 +1,4 @@
-use crate::globals::STEAM_APP_KEY;
+use crate::{globals::STEAM_APP_KEY, openvr::devices::HEAD_SHAKE_DETECTION_NEEDED};
 
 use super::{
     models::{BindingOriginData, OVRDevice, OVRFrameLimits},
@@ -87,6 +87,10 @@ pub async fn openvr_set_analog_color_temp(
     temperature: Option<u32>,
 ) -> Result<(f64, f64, f64), String> {
     super::colortemp_analog::set_color_temp(temperature).await
+}
+#[tauri::command]
+pub async fn head_shake_detection_needed(v:bool){
+    unsafe {HEAD_SHAKE_DETECTION_NEEDED=v;}
 }
 
 #[tauri::command]

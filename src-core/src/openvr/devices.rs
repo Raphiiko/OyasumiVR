@@ -274,7 +274,7 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
         send_event("OVR_DEVICE_UPDATE", event).await;
     }
 }
-
+pub static mut HEAD_SHAKE_DETECTION_NEEDED:bool=false;
 async fn refresh_device_poses() {
     let poses = {
         let context = OVR_CONTEXT.lock().await;
@@ -323,11 +323,13 @@ async fn refresh_device_poses() {
                     .await
                     .log_pose(pos.v)
                     .await;
+                if unsafe{HEAD_SHAKE_DETECTION_NEEDED}{
                 GESTURE_DETECTOR
                     .lock()
                     .await
                     .log_pose(pos.v, [q.x as f32, q.y as f32, q.z as f32, q.w as f32])
                     .await;
+                }
             }
             // Emit event
             if n == 0 {

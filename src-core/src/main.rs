@@ -350,6 +350,7 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         openvr::commands::openvr_set_analog_color_temp,
         openvr::commands::openvr_set_app_framelimit,
         openvr::commands::openvr_get_app_framelimit,
+        openvr::commands::head_shake_detection_needed,
         hardware::beyond::commands::bigscreen_beyond_is_connected,
         hardware::beyond::commands::bigscreen_beyond_set_brightness,
         hardware::beyond::commands::bigscreen_beyond_set_led_color,

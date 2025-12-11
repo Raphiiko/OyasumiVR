@@ -67,7 +67,7 @@ impl GestureDetector {
             movements.push(yaw_diff);
         }
         // Detect head shake
-        if get_time() - self.last_detection >= 5000 && self.detect_head_shake(movements) {
+        if now - self.last_detection >= 5000 && self.detect_head_shake(movements) {
             self.last_detection = get_time();
             send_event(
                 "GESTURE_DETECTED",
