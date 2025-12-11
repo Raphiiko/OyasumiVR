@@ -96,9 +96,9 @@ impl SleepDetector {
     fn distance_in_window(&mut self, window_ms: u64) -> f32 {
         let start_time = get_time() - window_ms;
         let start_index = self
-            .events
+            .events_timestamps
             .iter()
-            .position(|e| e.timestamp >= start_time)
+            .position(|t| *t >= start_time)
             .unwrap_or(0);
         let events = &self.events[start_index..];
         let mut total_distance = 0.0;

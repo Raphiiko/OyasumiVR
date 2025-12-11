@@ -8,7 +8,7 @@ const MAX_EVENT_AGE_MS: u64 = 5000; // 5 seconds
 
 #[derive(Clone, Copy)]
 struct YawEvent {
-    yaw: f32,
+    yaw: f64,
     timestamp: u64,
 }
 
