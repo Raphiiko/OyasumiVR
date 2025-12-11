@@ -326,7 +326,7 @@ async fn refresh_device_poses() {
                 GESTURE_DETECTOR
                     .lock()
                     .await
-                    .log_pose(pos.v, [q.x, q.y, q.z, q.w])
+                    .log_pose(pos.v, [q.x as f32, q.y as f32, q.z as f32, q.w as f32])
                     .await;
             }
             // Emit event
