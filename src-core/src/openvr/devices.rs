@@ -321,7 +321,7 @@ async fn refresh_device_poses() {
                 SLEEP_DETECTOR
                     .lock()
                     .await
-                    .log_pose(pos.v, [q.x, q.y, q.z, q.w])
+                    .log_pose(pos.v)
                     .await;
                 GESTURE_DETECTOR
                     .lock()
