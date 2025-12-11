@@ -10,7 +10,6 @@ struct PoseEvent {
     y: f32,
     z: f32,
     // quaternion: [f64; 4],
-    timestamp: u64, // in milliseconds
 }
 
 impl PoseEvent {
@@ -33,6 +32,9 @@ impl PoseEvent {
 
 pub struct SleepDetector {
     events: Vec<PoseEvent>,
+    ///not storing timestamp next to vec3 is slightly faster in bechmark 
+    ///i only tested math so there is a possibility it's actully worse (doubt it but maybe)
+    events_timestamps:Vec<u64>,
     distance_in_last_15_minutes: f32,
     distance_in_last_10_seconds: f32,
     // reqwest_client: reqwest::Client,
@@ -45,6 +47,7 @@ impl SleepDetector {
     pub fn new() -> Self {
         Self {
             events: Vec::new(),
+            events_timestamps: Vec::new(),
             distance_in_last_10_seconds: 0.0,
             distance_in_last_15_minutes: 0.0,
             // reqwest_client: reqwest::Client::new(),
@@ -55,34 +58,37 @@ impl SleepDetector {
     }
 
     pub async fn log_pose(&mut self, position: [f32; 3]) {
+        let now=get_time();
         // Add the event
         let event = PoseEvent {
             x: position[0],
             y: position[1],
             z: position[2],
-            timestamp: get_time(),
         };
+        debug_assert_eq!(self.events_timestamps.len(),self.events.len());
         self.events.push(event);
+        self.events_timestamps.push(now);
         // Remove old events
-        let oldest_time = event.timestamp - MAX_EVENT_AGE_MS;
+        let oldest_time = now - MAX_EVENT_AGE_MS;
         let old_event_count = self
-            .events
+            .events_timestamps
             .iter()
-            .take_while(|e| e.timestamp < oldest_time)
+            .take_while(|t| **t < oldest_time)
             .count();
         self.events.drain(..old_event_count);
+        self.events_timestamps.drain(..old_event_count);
         // Calculate new distances
         self.distance_in_last_15_minutes = self.distance_in_window(900000);
         self.distance_in_last_10_seconds = self.distance_in_window(10000);
         // Set new start time if there hasn't been any data in over a minute
-        if get_time().saturating_sub(self.last_log) > 60000 {
-            self.start_time = get_time();
+        if now.saturating_sub(self.last_log) > 60000 {
+            self.start_time = now;
         }
         // Update the last log time
-        self.last_log = event.timestamp;
+        self.last_log =now;
         // Send a state report if it's been over a second since the last one
-        if get_time() > self.next_state_report {
-            self.next_state_report = get_time() + 1000;
+        if now > self.next_state_report {
+            self.next_state_report =now + 1000;
             self.send_state_report().await;
         }
     }
