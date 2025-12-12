@@ -25,6 +25,7 @@ import { OVRInputEventAction } from '../../models/ovr-input-event';
 import { SleepingPose } from '../../models/sleeping-pose';
 import { TelemetryService } from '../telemetry.service';
 import { getBuiltInNotificationSound } from 'src-ui/app/models/notification-sounds';
+import { invoke } from '@tauri-apps/api/core';
 
 export type SleepDetectorStateReportHandlingResult =
   | 'AUTOMATION_DISABLED'
@@ -102,8 +103,7 @@ export class SleepModeForSleepDetectorAutomationService {
         this._lastStateReportHandlingResult.next(result);
       });
       // Dismiss sleep check for head shake
-      await listen<{ gesture: string }>('GESTURE_DETECTED', (event) => {
-        if (event.payload.gesture !== 'head_shake') return;
+      await listen<{ gesture: string }>('GESTURE_DETECTED', (_) => {
         this.dismissSleepCheck();
       });
       // Detect controller button presence indication
@@ -129,6 +129,7 @@ export class SleepModeForSleepDetectorAutomationService {
 
   async dismissSleepCheck() {
     if (this.sleepEnableTimeoutId) {
+      await invoke("head_shake_detection_needed",{v:false});
       clearTimeout(this.sleepEnableTimeoutId);
       this.sleepEnableTimeoutId = null;
       this.eventLog.logEvent({
@@ -195,6 +196,7 @@ export class SleepModeForSleepDetectorAutomationService {
       return 'POSE_UPRIGHT_TOO_RECENTLY';
     // Attempt enabling sleep mode
     this.lastEnableAttempt = Date.now();
+    await invoke("head_shake_detection_needed",{v:true});
     // If necessary, first check if the user is asleep, allowing them to cancel.
     if (this.enableConfig.sleepCheck) {
       this.sleepCheckNotificationId = await this.notifications.send(
@@ -203,6 +205,7 @@ export class SleepModeForSleepDetectorAutomationService {
       );
       if (this.sleepEnableTimeoutId) return 'SLEEP_CHECK_ALREADY_IN_PROGRESS';
       this.sleepEnableTimeoutId = setTimeout(async () => {
+           await invoke("head_shake_detection_needed",{v:false});
         this.sleepEnableTimeoutId = null;
         this._lastStateReportHandlingResult.next('SLEEP_CHECK_USER_ASLEEP');
         await this.sleep.enableSleepMode({
