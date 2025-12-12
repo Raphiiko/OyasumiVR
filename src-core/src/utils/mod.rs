@@ -4,7 +4,7 @@ use std::{
     ffi::OsStr,
     os::raw::c_char,
     sync::LazyLock,
-    time::{Duration, Instant, SystemTime, UNIX_EPOCH},
+    time::{Duration, SystemTime, UNIX_EPOCH},
 };
 use sysinfo::{ProcessesToUpdate, Signal, System};
 use tauri::Emitter;
