@@ -14,9 +14,9 @@ struct PoseEvent {
 
 impl PoseEvent {
     fn distance_to(&self, other: &PoseEvent) -> f32 {
-        let dx: f32 = (self.x - other.x).into();
-        let dy: f32 = (self.y - other.y).into();
-        let dz: f32 = (self.z - other.z).into();
+        let dx: f32 = self.x - other.x;
+        let dy: f32 = self.y - other.y;
+        let dz: f32 = self.z - other.z;
         (dx * dx + dy * dy + dz * dz).sqrt()
 
     }
