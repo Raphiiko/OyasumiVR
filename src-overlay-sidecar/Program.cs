@@ -1,4 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
+// See https://aka.ms/new-console-template for more information
 
 using System.Diagnostics;
 using CefSharp;
@@ -57,6 +57,12 @@ public static class Program {
   private static void InitCef()
   {
     var settings = new CefSettings();
+    
+    // In-memory cache - no disk persistence
+    settings.CachePath = null;
+    settings.PersistSessionCookies = false;
+    settings.PersistUserPreferences = false;
+    
     if (InReleaseMode())
     {
       settings.LogSeverity = LogSeverity.Disable;
