@@ -1,12 +1,12 @@
 [package]
 name = "oyasumivr-shared"
-version = "25.6.11"
+version = "25.6.12"
 authors = ["Raphiiko"]
 edition = "2021"
 license = "MIT"
 
 [dependencies.windows]
-version = "0.61.3"
+version = "0.62.2"
 features = [
   "Win32_Foundation",
   "Win32_Security",

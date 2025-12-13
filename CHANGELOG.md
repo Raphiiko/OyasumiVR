@@ -5,13 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project (now) adheres to [Calendar Versioning](https://calver.org/#scheme).
 
-## [25.6.11]
+## [Unreleased]
 
 ## Added
 
 - OSC Settings view
   - Custom target for OSC messages (e.g. for use with Resonite, OSC routers, or when OSCQuery is not available)
   - VRChat (OSCQuery) target (allows for disabling OSC messages being sent to VRChat)
+
+### Fixed
+
+- Disabled CEF disk cache
+
+## [25.6.12]
+
+### Added
+
+- Holiday cheer
+- Various dependency upgrades
+
+## [25.6.11]
 
 ### Fixed
 

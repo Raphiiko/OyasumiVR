@@ -148,8 +148,10 @@ export interface GenericBrightnessEventAutomationConfig extends AutomationConfig
   colorTemperature: number;
 }
 
-export interface SunBrightnessEventAutomationConfig
-  extends Omit<GenericBrightnessEventAutomationConfig, 'type'> {
+export interface SunBrightnessEventAutomationConfig extends Omit<
+  GenericBrightnessEventAutomationConfig,
+  'type'
+> {
   type: 'SUN';
   onlyWhenSleepDisabled: boolean;
   activationTime: string | null;

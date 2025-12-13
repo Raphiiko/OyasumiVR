@@ -29,7 +29,7 @@ export async function serializeStorageCryptoKey(key: CryptoKey): Promise<string>
     iv,
     tagLength: 128,
   });
-  return arrayBufferToBase64(wrappedKey) + '$' + arrayBufferToBase64(iv);
+  return arrayBufferToBase64(wrappedKey) + '$' + arrayBufferToBase64(iv.buffer);
 }
 
 export async function deserializeStorageCryptoKey(wrappedKey: string): Promise<CryptoKey> {
@@ -65,7 +65,7 @@ export async function encryptStorageData(data: string, key: CryptoKey): Promise<
     key,
     new TextEncoder().encode(data)
   );
-  return arrayBufferToBase64(encryptedData) + '$' + arrayBufferToBase64(iv);
+  return arrayBufferToBase64(encryptedData) + '$' + arrayBufferToBase64(iv.buffer);
 }
 
 export async function decryptStorageData(data: string, key: CryptoKey): Promise<string> {

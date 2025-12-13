@@ -5,6 +5,9 @@ import { OpenVRService } from '../../../../services/openvr.service';
 import { OscService } from '../../../../services/osc.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SleepPreparationService } from '../../../../services/sleep-preparation.service';
+import { isHolidaysEventActive } from 'src-ui/app/utils/event-utils';
+
+type IllustrationVariant = 'sleep' | 'peek' | 'awake' | 'awake-hover';
 
 @Component({
   selector: 'app-overview-view',
@@ -15,7 +18,8 @@ import { SleepPreparationService } from '../../../../services/sleep-preparation.
 })
 export class OverviewViewComponent implements OnInit {
   sleepModeActive = false;
-  illustration: 'sleep' | 'peek' | 'awake' | 'awake-hover' | null = null;
+  illustrationPath: string | null = null;
+  illustrationVariant: IllustrationVariant | null = null;
   mouseover = false;
 
   constructor(
@@ -29,7 +33,7 @@ export class OverviewViewComponent implements OnInit {
   ngOnInit(): void {
     this.sleep.mode.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((sleepModeActive) => {
       this.sleepModeActive = sleepModeActive;
-      this.determineIllustration();
+      this.determineIllustrationPath();
     });
   }
 
@@ -41,12 +45,21 @@ export class OverviewViewComponent implements OnInit {
     }
   }
 
-  protected determineIllustration(mouseover: boolean | null = null) {
+  protected determineIllustrationPath(mouseover: boolean | null = null) {
     if (mouseover !== null) this.mouseover = mouseover;
+    const tags = ['illustration'];
+
+    if (isHolidaysEventActive()) tags.push('holidays');
+
+    let variant: IllustrationVariant = 'awake';
     if (this.sleepModeActive) {
-      this.illustration = this.mouseover ? 'peek' : 'sleep';
+      variant = this.mouseover ? 'peek' : 'sleep';
     } else {
-      this.illustration = this.mouseover ? 'awake-hover' : 'awake';
+      variant = this.mouseover ? 'awake-hover' : 'awake';
     }
+    tags.push(variant);
+
+    this.illustrationVariant = variant;
+    this.illustrationPath = `assets/img/${tags.join('_')}.png`;
   }
 }
