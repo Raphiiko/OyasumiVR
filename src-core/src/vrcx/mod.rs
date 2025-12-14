@@ -19,7 +19,6 @@ pub struct NotificationSender {
 }
 
 impl NotificationSender {
-
     pub fn connect(&mut self) -> Result<(), VrcxNotificationSenderError> {
         let mut sender = PipeClient::connect_ms(
             get_pipe_path(),
@@ -58,7 +57,6 @@ impl NotificationSender {
             Err(VrcxNotificationSenderError::NotConnected)
         }
     }
-
 }
 pub fn init() {
     //try to connect
@@ -75,14 +73,11 @@ fn get_pipe_path() -> String {
     };
     let hash = env::var(&username_env_name)
         .unwrap_or_else(|err| {
-            warn!(
-                "[Core] failed getting '{}' enviroment variable: {:?}",
-                username_env_name, err
-            );
+            warn!("[Core] failed getting '{username_env_name}' enviroment variable: {err:?}");
             "".to_string()
         })
         .chars()
         .map(|x| x as u32)
         .sum::<u32>();
-    format!("\\\\.\\pipe\\vrcx-ipc-{}", hash)
+    format!("\\\\.\\pipe\\vrcx-ipc-{hash}")
 }

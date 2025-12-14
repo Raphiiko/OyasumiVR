@@ -4,11 +4,11 @@ mod chaperone;
 mod colortemp_analog;
 pub mod commands;
 mod devices;
+mod framelimiter;
 mod gesture_detector;
 mod models;
 mod sleep_detector;
 mod supersampling;
-mod framelimiter;
 
 use crate::{
     globals::STEAM_APP_KEY,
@@ -33,9 +33,9 @@ pub struct OpenVRInputContext {
     pub active_sets: Vec<ActiveActionSet>,
 }
 
-
 pub static OVR_CONTEXT: LazyLock<Mutex<Option<ovr::Context>>> = LazyLock::new(Default::default);
-static OVR_STATUS: LazyLock<Mutex<OpenVRStatus>> = LazyLock::new(|| Mutex::new(OpenVRStatus::Inactive));
+static OVR_STATUS: LazyLock<Mutex<OpenVRStatus>> =
+    LazyLock::new(|| Mutex::new(OpenVRStatus::Inactive));
 static OVR_ACTIVE: LazyLock<Mutex<bool>> = LazyLock::new(|| Mutex::new(false));
 pub static OVR_INPUT_CONTEXT: LazyLock<Mutex<OpenVRInputContext>> = LazyLock::new(Mutex::default);
 static OVR_INIT_DELAY_FIX: LazyLock<Mutex<bool>> = LazyLock::new(|| Mutex::new(false));
@@ -76,12 +76,8 @@ pub async fn task() {
                     tokio::time::sleep(Duration::from_secs(1)).await;
                 }
                 // Try to initialize OpenVR
-                let ctx = match ovr::Context::init(
-                    ovr::sys::EVRApplicationType::VRApplication_Background,
-                ) {
-                    Ok(ctx) => Some(ctx),
-                    Err(_) => None,
-                };
+                let ctx =
+                    ovr::Context::init(ovr::sys::EVRApplicationType::VRApplication_Background).ok();
                 // If we failed, continue to try again later
                 if ctx.is_none() {
                     *OVR_CONTEXT.lock().await = None;
@@ -120,8 +116,10 @@ pub async fn task() {
                             None
                         }
                     };
-                    let install_for_flavours = [crate::flavour::BuildFlavour::Standalone,
-                        crate::flavour::BuildFlavour::Dev];
+                    let install_for_flavours = [
+                        crate::flavour::BuildFlavour::Standalone,
+                        crate::flavour::BuildFlavour::Dev,
+                    ];
                     let should_install_for_flavour =
                         install_for_flavours.contains(&crate::flavour::BUILD_FLAVOUR);
 
@@ -153,7 +151,7 @@ pub async fn task() {
                                 e.description()
                             );
                         } else {
-                            info!("[Core] Steam app manifest registered ({})", STEAM_APP_KEY)
+                            info!("[Core] Steam app manifest registered ({STEAM_APP_KEY})")
                         }
                     }
                 }

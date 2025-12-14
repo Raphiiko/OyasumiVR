@@ -13,7 +13,7 @@ pub async fn run() {
     {
         Ok(key) => key,
         Err(e) => {
-            warn!("[Core] Failed to open read uninstall key from Windows registry for migrating old versions: {}", e);
+            warn!("[Core] Failed to open read uninstall key from Windows registry for migrating old versions: {e}");
             return;
         }
     };
@@ -65,8 +65,7 @@ pub async fn run() {
                 && (version_major < 1 || (version_major == 1 && version_minor <= 6));
             if has_match {
                 info!(
-                    "[Core] Found old Oyasumi version ({}.{}). Uninstalling it...",
-                    version_major, version_minor
+                    "[Core] Found old Oyasumi version ({version_major}.{version_minor}). Uninstalling it..."
                 );
             }
             has_match
@@ -80,10 +79,7 @@ pub async fn run() {
     let uninstall_entry = match uninstall.open_subkey(old_version) {
         Ok(key) => key,
         Err(e) => {
-            warn!(
-                "[Core] Failed to get uninstall entry for old Oyasumi version: {}",
-                e
-            );
+            warn!("[Core] Failed to get uninstall entry for old Oyasumi version: {e}");
             return;
         }
     };
@@ -91,10 +87,7 @@ pub async fn run() {
     let uninstall_string: String = match uninstall_entry.get_value("UninstallString") {
         Ok(uninstall_string) => uninstall_string,
         Err(e) => {
-            warn!(
-                "[Core] Failed to get uninstall string for old Oyasumi version: {}",
-                e
-            );
+            warn!("[Core] Failed to get uninstall string for old Oyasumi version: {e}");
             return;
         }
     };
@@ -106,7 +99,7 @@ pub async fn run() {
             info!("[Core] Old Oyasumi version was uninstalled successfully!");
         }
         Err(e) => {
-            warn!("[Core] Failed to uninstall old Oyasumi version: {}", e);
+            warn!("[Core] Failed to uninstall old Oyasumi version: {e}");
         }
     }
 }

@@ -21,7 +21,8 @@ pub enum SupportedOscType {
     String,
 }
 
-static CANCELLATION_TOKEN: LazyLock<Mutex<Option<CancellationToken>>> = LazyLock::new(Default::default);
+static CANCELLATION_TOKEN: LazyLock<Mutex<Option<CancellationToken>>> =
+    LazyLock::new(Default::default);
 
 #[tauri::command]
 #[oyasumivr_macros::command_profiling]
@@ -48,11 +49,11 @@ pub async fn stop_osc_server() {
         *cancellation_token = None;
         // Terminate OSCQuery server
         if let Err(err) = oyasumivr_oscquery::server::deinit().await {
-            error!("[Core] Could not terminate OSCQuery server: {:#?}", err)
+            error!("[Core] Could not terminate OSCQuery server: {err:#?}")
         };
         // Terminate OSCQuery client
         if let Err(err) = oyasumivr_oscquery::client::deinit().await {
-            error!("[Core] Could not terminate OSCQuery client: {:#?}", err)
+            error!("[Core] Could not terminate OSCQuery client: {err:#?}")
         };
     }
     let mut receive_socket_guard = OSC_RECEIVE_SOCKET.lock().await;
@@ -68,10 +69,7 @@ pub async fn start_osc_server() -> Option<(String, String)> {
     let receive_addr = match SocketAddrV4::from_str("0.0.0.0:0") {
         Ok(addr) => addr,
         Err(err) => {
-            error!(
-                "[Core] Could not initialize receive socket for OSC module (addr init): {}",
-                err
-            );
+            error!("[Core] Could not initialize receive socket for OSC module (addr init): {err}");
             return None;
         }
     };
@@ -79,8 +77,7 @@ pub async fn start_osc_server() -> Option<(String, String)> {
         Ok(s) => s,
         Err(err) => {
             error!(
-                "[Core] Could not initialize receive socket for OSC module (socket init): {}",
-                err
+                "[Core] Could not initialize receive socket for OSC module (socket init): {err}"
             );
             return None;
         }
@@ -88,7 +85,7 @@ pub async fn start_osc_server() -> Option<(String, String)> {
     receive_socket.set_nonblocking(true).unwrap();
     let osc_addr_string = receive_socket.local_addr().unwrap().to_string();
     let osc_addr_port = receive_socket.local_addr().unwrap().port();
-    info!("[Core] OSC server listening on {}", osc_addr_string);
+    info!("[Core] OSC server listening on {osc_addr_string}");
     *OSC_RECEIVE_SOCKET.lock().await = Some(receive_socket);
     // Process incoming messages
     let cancellation_token = super::spawn_receiver_task().await;
@@ -98,18 +95,18 @@ pub async fn start_osc_server() -> Option<(String, String)> {
         match oyasumivr_oscquery::server::init("OyasumiVR", osc_addr_port, MDNS_SIDECAR_PATH).await
         {
             Ok((addr, port)) => {
-                info!("[Core] OSCQuery server listening on {}:{}", addr, port);
-                format!("{}:{}", addr, port)
+                info!("[Core] OSCQuery server listening on {addr}:{port}");
+                format!("{addr}:{port}")
             }
             Err(e) => {
-                error!("[Core] Failed to start OSCQuery server: {:#?}", e);
+                error!("[Core] Failed to start OSCQuery server: {e:#?}");
                 stop_osc_server().await;
                 return None;
             }
         };
     oyasumivr_oscquery::server::receive_vrchat_avatar_parameters().await;
     if let Err(e) = oyasumivr_oscquery::server::advertise().await {
-        error!("[Core] Failed to advertise OSCQuery server: {:#?}", e);
+        error!("[Core] Failed to advertise OSCQuery server: {e:#?}");
         stop_osc_server().await;
         let _ = oyasumivr_oscquery::server::deinit().await;
         return None;
@@ -120,7 +117,7 @@ pub async fn start_osc_server() -> Option<(String, String)> {
             info!("[Core] OSCQuery client initialized");
         }
         Err(e) => {
-            error!("[Core] Failed to initialize OSCQuery client: {:#?}", e);
+            error!("[Core] Failed to initialize OSCQuery client: {e:#?}");
             stop_osc_server().await;
             let _ = oyasumivr_oscquery::client::deinit().await;
             let _ = oyasumivr_oscquery::server::deinit().await;
@@ -151,10 +148,7 @@ pub async fn osc_send_command(
     types: Vec<SupportedOscType>,
     values: Vec<String>,
 ) -> Result<bool, String> {
-    debug!(
-        "[Core] Sending OSC command (address={}, types={:?}, values={:?})",
-        osc_addr, types, values
-    );
+    debug!("[Core] Sending OSC command (address={osc_addr}, types={types:?}, values={values:?})");
 
     let mut data = Vec::new();
 
@@ -207,8 +201,7 @@ async fn osc_send(addr: String, osc_addr: String, data: Vec<OscType>) -> Result<
     // Send message
     if socket.send_to(&msg_buf, to_addr).is_err() {
         error!(
-            "[Core] Failed to send OSC message (addr={}, osc_addr={}, data={:?})",
-            addr, osc_addr, data
+            "[Core] Failed to send OSC message (addr={addr}, osc_addr={osc_addr}, data={data:?})"
         );
         return Err(String::from("SENDING_ERROR"));
     }

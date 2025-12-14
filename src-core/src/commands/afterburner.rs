@@ -21,10 +21,7 @@ pub async fn msi_afterburner_set_profile(
     {
         Ok(response) => response.into_inner(),
         Err(e) => {
-            error!(
-                "[Core] Could not apply a new MSI Afterburner profile: {}",
-                e
-            );
+            error!("[Core] Could not apply a new MSI Afterburner profile: {e}");
             return Err(SetMsiAfterburnerProfileError::UnknownError);
         }
     };

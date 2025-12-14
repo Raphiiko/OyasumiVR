@@ -130,7 +130,7 @@ fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
 
             // Upload crash report if telemetry is enabled
             if telemetry::TELEMETRY_ENABLED.load(Ordering::Relaxed) {
-                println!("Uploading panic data to Aptabase: {} ({})", msg, location);
+                println!("Uploading panic data to Aptabase: {msg} ({location})");
                 let _ = client.track_event(
                     "rust_panic",
                     Some(json!({
@@ -144,8 +144,8 @@ fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
                 let full_path = std::env::current_exe().unwrap();
                 full_path.parent().unwrap().to_path_buf().join("panic.log")
             };
-            println!("Writing panic log to {:#?}", panic_log_path);
-            let _ = std::fs::write(panic_log_path, format!("{} ({})\n", msg, location));
+            println!("Writing panic log to {panic_log_path:#?}");
+            let _ = std::fs::write(panic_log_path, format!("{msg} ({location})\n"));
         }))
         .build()
 }
@@ -202,7 +202,7 @@ async fn app_setup(app_handle: tauri::AppHandle) {
         let full_path = std::env::current_exe().unwrap();
         full_path.parent().unwrap().to_path_buf()
     };
-    info!("[Core] Setting working directory to: {:?}", executable_path);
+    info!("[Core] Setting working directory to: {executable_path:?}");
     std::env::set_current_dir(&executable_path).unwrap();
     // Clean up old batch files from previous runs
     os::cleanup_batch_files().await;
@@ -236,8 +236,8 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     // Register deep link schemas if needed
     {
         use tauri_plugin_deep_link::DeepLinkExt;
-        if let Err(e) =  app_handle.deep_link().register_all()  {
-            error!("[Core] Failed to register deep link schemas: {}", e);
+        if let Err(e) = app_handle.deep_link().register_all() {
+            error!("[Core] Failed to register deep link schemas: {e}");
         }
     }
     // Initialize utility module
@@ -321,7 +321,7 @@ async fn load_configs() {
                 warn!("[Core] Could not find flags config. Using default values.");
             }
             _ => {
-                warn!("[Core] Could not load flags config: {:#?}", e);
+                warn!("[Core] Could not load flags config: {e:#?}");
             }
         },
     };

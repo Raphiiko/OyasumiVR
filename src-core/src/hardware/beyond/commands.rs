@@ -15,10 +15,7 @@ pub async fn bigscreen_beyond_get_saved_preferences() -> Result<Option<String>, 
     let steamdir = match SteamDir::locate() {
         Ok(dir) => dir,
         Err(e) => {
-            warn!(
-                "[Core] Failed to locate Steam installation directory: {}",
-                e
-            );
+            warn!("[Core] Failed to locate Steam installation directory: {e}");
             return Ok(None);
         }
     };
@@ -31,10 +28,7 @@ pub async fn bigscreen_beyond_get_saved_preferences() -> Result<Option<String>, 
             }
         },
         Err(e) => {
-            warn!(
-                "[Core] Failed to locate Bigscreen Beyond Driver installation directory: {}",
-                e
-            );
+            warn!("[Core] Failed to locate Bigscreen Beyond Driver installation directory: {e}");
             return Ok(None);
         }
     };
@@ -48,10 +42,7 @@ pub async fn bigscreen_beyond_get_saved_preferences() -> Result<Option<String>, 
     match tokio::fs::read_to_string(path).await {
         Ok(contents) => Ok(Some(contents)),
         Err(e) => {
-            error!(
-                "[Core] Failed to read Bigscreen Beyond settings file: {}",
-                e
-            );
+            error!("[Core] Failed to read Bigscreen Beyond settings file: {e}");
             Err("READ_ERROR".to_string())
         }
     }

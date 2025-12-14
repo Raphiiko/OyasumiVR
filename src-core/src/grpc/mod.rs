@@ -33,12 +33,12 @@ pub async fn init_server() -> u16 {
         CoreMode::Dev => crate::globals::CORE_GRPC_DEV_PORT,
         CoreMode::Release => 0,
     };
-    let addr: SocketAddr = format!("127.0.0.1:{}", port).parse().unwrap();
-    info!("[Core] Starting gRPC server on {}", addr);
+    let addr: SocketAddr = format!("127.0.0.1:{port}").parse().unwrap();
+    info!("[Core] Starting gRPC server on {addr}");
     let listener = match tokio::net::TcpListener::bind(addr).await {
         Ok(listener) => listener,
         Err(e) => {
-            error!("[Core] Failed to bind gRPC server: {}", e);
+            error!("[Core] Failed to bind gRPC server: {e}");
             return 0;
         }
     };
@@ -47,16 +47,16 @@ pub async fn init_server() -> u16 {
     let port = match listener.local_addr() {
         Ok(addr) => addr.port(),
         Err(e) => {
-            error!("[Core] Failed to get gRPC server port: {}", e);
+            error!("[Core] Failed to get gRPC server port: {e}");
             return 0;
         }
     };
-    info!("[Core] gRPC server listening on port {}", port);
+    info!("[Core] gRPC server listening on port {port}");
     *SERVER_PORT.lock().await = Some(port as u32);
     tokio::spawn(async move {
         let stream = TcpListenerStream::new(listener);
         if let Err(e) = server.serve_with_incoming(stream).await {
-            error!("[Core] Failed to start gRPC server: {}", e);
+            error!("[Core] Failed to start gRPC server: {e}");
         };
     });
     port
@@ -68,7 +68,7 @@ pub async fn init_web_server() -> u16 {
     let listener = match tokio::net::TcpListener::bind(addr).await {
         Ok(listener) => listener,
         Err(e) => {
-            error!("[Core] Failed to bind gRPC-Web server: {}", e);
+            error!("[Core] Failed to bind gRPC-Web server: {e}");
             return 0;
         }
     };
@@ -78,16 +78,16 @@ pub async fn init_web_server() -> u16 {
     let port = match listener.local_addr() {
         Ok(addr) => addr.port(),
         Err(e) => {
-            error!("[Core] Failed to get gRPC-Web server port: {}", e);
+            error!("[Core] Failed to get gRPC-Web server port: {e}");
             return 0;
         }
     };
-    info!("[Core] gRPC-Web server listening on port {}", port);
+    info!("[Core] gRPC-Web server listening on port {port}");
     *SERVER_WEB_PORT.lock().await = Some(port as u32);
     tokio::spawn(async move {
         let stream = TcpListenerStream::new(listener);
         if let Err(e) = server.serve_with_incoming(stream).await {
-            error!("[Core] Failed to start gRPC-Web server: {}", e);
+            error!("[Core] Failed to start gRPC-Web server: {e}");
         };
     });
     port

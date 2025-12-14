@@ -1,4 +1,7 @@
-use std::{sync::LazyLock, time::{Duration, SystemTime}};
+use std::{
+    sync::LazyLock,
+    time::{Duration, SystemTime},
+};
 
 pub use discord_sdk as ds;
 use log::error;
@@ -9,7 +12,8 @@ pub const APP_ID: ds::AppId = 1223302812021035169;
 
 static DISCORD_ACTIVE: LazyLock<Mutex<bool>> = LazyLock::new(|| Mutex::new(false));
 static DISCORD_CLIENT: LazyLock<Mutex<Option<Client>>> = LazyLock::new(Default::default);
-static LAST_ACTIVITY_UPDATE: LazyLock<Mutex<Option<ActivityUpdate>>> = LazyLock::new(Default::default);
+static LAST_ACTIVITY_UPDATE: LazyLock<Mutex<Option<ActivityUpdate>>> =
+    LazyLock::new(Default::default);
 
 pub async fn init() {
     tokio::task::spawn(async {
@@ -38,7 +42,7 @@ pub async fn on_discord_started() {
     let client = match make_client(ds::Subscriptions::ACTIVITY).await {
         Ok(client) => Some(client),
         Err(err) => {
-            error!("[Core] Could not initialize Discord SDK: {}", err);
+            error!("[Core] Could not initialize Discord SDK: {err}");
             None
         }
     };
@@ -178,23 +182,23 @@ struct Client {
 
 async fn make_client(subs: ds::Subscriptions) -> Result<Client, String> {
     let (wheel, handler) = ds::wheel::Wheel::new(Box::new(|err| {
-        error!("[Core] Could not initialize Discord SDK Client: {}", err);
+        error!("[Core] Could not initialize Discord SDK Client: {err}");
     }));
 
     let discord = match ds::Discord::new(ds::DiscordApp::PlainId(APP_ID), subs, Box::new(handler)) {
         Ok(discord) => discord,
-        Err(err) => return Err(format!("failed to create Discord client: {}", err)),
+        Err(err) => return Err(format!("failed to create Discord client: {err}")),
     };
 
     let mut user = wheel.user();
     match user.0.changed().await {
         Ok(_) => {}
-        Err(err) => return Err(format!("failed to get user state: {}", err)),
+        Err(err) => return Err(format!("failed to get user state: {err}")),
     }
     let _user = match &*user.0.borrow() {
         ds::wheel::UserState::Connected(user) => user.clone(),
         ds::wheel::UserState::Disconnected(err) => {
-            return Err(format!("failed to connect to Discord: {}", err))
+            return Err(format!("failed to connect to Discord: {err}"))
         }
     };
 

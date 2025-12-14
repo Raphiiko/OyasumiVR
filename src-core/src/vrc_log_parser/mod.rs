@@ -67,16 +67,12 @@ fn get_latest_log_path() -> Option<String> {
             entry
                 .path()
                 .metadata()
-                .ok().map(|metadata| metadata.len() > 0)
+                .ok()
+                .map(|metadata| metadata.len() > 0)
                 .unwrap_or(false)
         })
         // Find most recent log file
-        .max_by_key(|entry| {
-            entry
-                .path()
-                .metadata()
-                .ok().map(|m| m.creation_time())
-        })
+        .max_by_key(|entry| entry.path().metadata().ok().map(|m| m.creation_time()))
         // Get the path for it
         .and_then(|entry| entry.path().to_str().map(String::from))
 }
@@ -118,9 +114,9 @@ async fn parse_on_player_joined(line: String, initial_load: bool) -> bool {
         };
         send_event("VRC_LOG_EVENT", event.clone()).await;
         if initial_load {
-            trace!("[Core] VRC Log Event: {:#?}", event);
+            trace!("[Core] VRC Log Event: {event:#?}");
         } else {
-            debug!("[Core] VRC Log Event: {:#?}", event);
+            debug!("[Core] VRC Log Event: {event:#?}");
         }
         return true;
     }
@@ -153,9 +149,9 @@ async fn parse_on_player_left(line: String, initial_load: bool) -> bool {
         };
         send_event("VRC_LOG_EVENT", event.clone()).await;
         if initial_load {
-            trace!("[Core] VRC Log Event: {:#?}", event);
+            trace!("[Core] VRC Log Event: {event:#?}");
         } else {
-            debug!("[Core] VRC Log Event: {:#?}", event);
+            debug!("[Core] VRC Log Event: {event:#?}");
         }
         return true;
     }
@@ -188,9 +184,9 @@ async fn parse_on_location_change(line: String, initial_load: bool) -> bool {
         };
         send_event("VRC_LOG_EVENT", event.clone()).await;
         if initial_load {
-            trace!("[Core] VRC Log Event: {:?}", event);
+            trace!("[Core] VRC Log Event: {event:?}");
         } else {
-            debug!("[Core] VRC Log Event: {:?}", event);
+            debug!("[Core] VRC Log Event: {event:?}");
         }
         return true;
     }
@@ -224,10 +220,7 @@ fn start_log_watch_task(path: String) -> CancellationToken {
             }
 
             if first_run {
-                debug!(
-                    "[Core] Initial read of VRChat log file complete. ({})",
-                    path
-                );
+                debug!("[Core] Initial read of VRChat log file complete. ({path})");
                 send_event(
                     "VRC_LOG_EVENT",
                     VRCLogEvent {
@@ -245,7 +238,7 @@ fn start_log_watch_task(path: String) -> CancellationToken {
             }
         }
 
-        info!("[Core] Log reader task terminated. ({})", path);
+        info!("[Core] Log reader task terminated. ({path})");
     });
     cancellation_token
 }

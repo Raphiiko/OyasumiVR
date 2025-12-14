@@ -19,7 +19,7 @@ pub async fn init() {
         CoreMode::Dev => crate::globals::CORE_HTTP_DEV_PORT,
         CoreMode::Release => 0,
     };
-    let addr: SocketAddr = format!("127.0.0.1:{}", port).parse().unwrap();
+    let addr: SocketAddr = format!("127.0.0.1:{port}").parse().unwrap();
     let make_svc =
         make_service_fn(|_conn| async { Ok::<_, Infallible>(service_fn(request_handler)) });
     let server = Server::bind(&addr).serve(make_svc);
@@ -32,7 +32,7 @@ pub async fn init() {
     // Run server forever
     tokio::spawn(async move {
         if let Err(e) = server.await {
-            error!("[Core] HTTP server error: {}", e);
+            error!("[Core] HTTP server error: {e}");
         }
     });
 }
@@ -78,7 +78,7 @@ async fn handle_font_request(path: &str) -> Result<Response<Body>, Infallible> {
             .unwrap());
     }
     // Determine font path
-    let font_path = format!("resources/fonts/{}", font_name);
+    let font_path = format!("resources/fonts/{font_name}");
     // Check if font exists
     if !std::path::Path::new(&font_path).exists() {
         return Ok(Response::builder()

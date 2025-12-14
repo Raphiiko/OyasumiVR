@@ -18,19 +18,18 @@ use crate::utils::send_event;
 
 pub static OSC_SEND_SOCKET: LazyLock<Mutex<Option<UdpSocket>>> = LazyLock::new(Default::default);
 pub static OSC_RECEIVE_SOCKET: LazyLock<Mutex<Option<UdpSocket>>> = LazyLock::new(Default::default);
-pub static OSC_RECEIVE_ADDRESS_WHITELIST: LazyLock<Mutex<Vec<String>>> = LazyLock::new(Default::default);
+pub static OSC_RECEIVE_ADDRESS_WHITELIST: LazyLock<Mutex<Vec<String>>> =
+    LazyLock::new(Default::default);
 pub static VRC_OSC_ADDRESS: LazyLock<Mutex<Option<String>>> = LazyLock::new(|| Mutex::new(None));
-pub static VRC_OSCQUERY_ADDRESS: LazyLock<Mutex<Option<String>>> = LazyLock::new(|| Mutex::new(None));
+pub static VRC_OSCQUERY_ADDRESS: LazyLock<Mutex<Option<String>>> =
+    LazyLock::new(|| Mutex::new(None));
 
 pub async fn init() {
     // Setup sending socket
     *OSC_SEND_SOCKET.lock().await = match UdpSocket::bind((Ipv4Addr::UNSPECIFIED, 0)) {
         Ok(s) => Some(s),
         Err(err) => {
-            error!(
-                "[Core] Could not initialize send socket for OSC module: {}",
-                err
-            );
+            error!("[Core] Could not initialize send socket for OSC module: {err}");
             return;
         }
     };
@@ -44,7 +43,7 @@ async fn spawn_oscquery_client_task() {
             tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
             let mut oscquery_addr = oyasumivr_oscquery::client::get_vrchat_oscquery_address().await;
             if let Some((host, port)) = oscquery_addr.clone() {
-                let response = reqwest::get(format!("http://{}:{}/?HOST_INFO", host, port)).await;
+                let response = reqwest::get(format!("http://{host}:{port}/?HOST_INFO")).await;
                 if response.is_err() || response.as_ref().unwrap().status() != 200 {
                     oscquery_addr = None;
                 }
@@ -80,8 +79,7 @@ async fn spawn_receiver_task() -> CancellationToken {
                             Ok((_, packet)) => Some(packet),
                             Err(err) => {
                                 warn!(
-                                    "[Core] Expected OSC packet, but UDP packet was malformed: {}",
-                                    err
+                                    "[Core] Expected OSC packet, but UDP packet was malformed: {err}"
                                 );
                                 None
                             }
@@ -134,7 +132,7 @@ async fn spawn_receiver_task() -> CancellationToken {
                         break;
                     }
                     Err(e) => {
-                        error!("[Core] Error receiving on OSC socket: {}", e);
+                        error!("[Core] Error receiving on OSC socket: {e}");
                         error!("[Core] Terminated OSC receiver task.");
                         break 'outer;
                     }
@@ -147,12 +145,12 @@ async fn spawn_receiver_task() -> CancellationToken {
 }
 
 pub async fn set_vr_chat_osc_query_address(addr: Option<(String, u16)>) {
-    let address = addr.map(|(host, port)| format!("{}:{}", host, port));
+    let address = addr.map(|(host, port)| format!("{host}:{port}"));
     let current_address = VRC_OSCQUERY_ADDRESS.lock().await.clone();
 
     if current_address != address {
         if let Some(ref addr) = address.clone() {
-            info!("[Core] Found VRChat OSCQuery address on {}", addr);
+            info!("[Core] Found VRChat OSCQuery address on {addr}");
         }
         *VRC_OSCQUERY_ADDRESS.lock().await = address.clone();
         send_event("VRC_OSCQUERY_ADDRESS_CHANGED", address.clone()).await;
@@ -160,12 +158,12 @@ pub async fn set_vr_chat_osc_query_address(addr: Option<(String, u16)>) {
 }
 
 pub async fn set_vr_chat_osc_address(addr: Option<(String, u16)>) {
-    let address = addr.map(|(host, port)| format!("{}:{}", host, port));
+    let address = addr.map(|(host, port)| format!("{host}:{port}"));
     let current_address = VRC_OSC_ADDRESS.lock().await.clone();
 
     if current_address != address {
         if let Some(ref addr) = address {
-            info!("[Core] Found VRChat OSC address on {}", addr);
+            info!("[Core] Found VRChat OSC address on {addr}");
         }
         *VRC_OSC_ADDRESS.lock().await = address.clone();
         send_event("VRC_OSC_ADDRESS_CHANGED", address).await;

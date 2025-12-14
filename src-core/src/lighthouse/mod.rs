@@ -35,13 +35,18 @@ static EVENT_DEVICE_POWER_STATE_CHANGED: &str = "LIGHTHOUSE_DEVICE_POWER_STATE_C
 // const LIGHTHOUSE_V2_IDENTIFY_CHARACTERISTIC: Uuid =
 //     Uuid::from_u128(0x00008421_1212_EFDE_1523_785FEABCD124);
 
-static LIGHTHOUSE_DEVICES: LazyLock<Arc<Mutex<Vec<LighthouseDevice>>>> = LazyLock::new(|| Arc::new(Mutex::new(Vec::new())));
-static LIGHTHOUSE_DEVICE_POWER_STATES: LazyLock<Mutex<HashMap<String, LighthousePowerState>>> = LazyLock::new(|| Mutex::new(HashMap::new()));
-static LIGHTHOUSE_DEVICE_V1_TIMEOUTS: LazyLock<Mutex<HashMap<String, u16>>> = LazyLock::new(|| Mutex::new(HashMap::new()));
+static LIGHTHOUSE_DEVICES: LazyLock<Arc<Mutex<Vec<LighthouseDevice>>>> =
+    LazyLock::new(|| Arc::new(Mutex::new(Vec::new())));
+static LIGHTHOUSE_DEVICE_POWER_STATES: LazyLock<Mutex<HashMap<String, LighthousePowerState>>> =
+    LazyLock::new(|| Mutex::new(HashMap::new()));
+static LIGHTHOUSE_DEVICE_V1_TIMEOUTS: LazyLock<Mutex<HashMap<String, u16>>> =
+    LazyLock::new(|| Mutex::new(HashMap::new()));
 static SCANNING: LazyLock<Mutex<bool>> = LazyLock::new(|| Mutex::new(false));
 static ADAPTER: LazyLock<Mutex<Option<Adapter>>> = LazyLock::new(Mutex::default);
-static STATUS: LazyLock<Mutex<LighthouseStatus>> = LazyLock::new(|| Mutex::new(LighthouseStatus::Uninitialized));
-static PROCESSING_DEVICES: LazyLock<Mutex<HashSet<DeviceId>>> = LazyLock::new(|| Mutex::new(HashSet::new()));
+static STATUS: LazyLock<Mutex<LighthouseStatus>> =
+    LazyLock::new(|| Mutex::new(LighthouseStatus::Uninitialized));
+static PROCESSING_DEVICES: LazyLock<Mutex<HashSet<DeviceId>>> =
+    LazyLock::new(|| Mutex::new(HashSet::new()));
 
 pub async fn init() {
     // Initialize adapter
@@ -81,10 +86,7 @@ pub async fn start_scan(duration: Duration) {
     };
     // Wait until the adapter is available
     if let Err(e) = adapter.wait_available().await {
-        warn!(
-            "[Core] Failed to wait for bluetooth adapter to become available: {}",
-            e
-        );
+        warn!("[Core] Failed to wait for bluetooth adapter to become available: {e}");
         set_scanning_status(false).await;
         return;
     }
@@ -100,7 +102,7 @@ pub async fn start_scan(duration: Duration) {
     let mut scan = match adapter.scan(&[]).await {
         Ok(scan) => scan,
         Err(err) => {
-            warn!("[Core] Failed to scan for lighthouse devices: {}", err);
+            warn!("[Core] Failed to scan for lighthouse devices: {err}");
             set_scanning_status(false).await;
             return;
         }
@@ -362,7 +364,7 @@ async fn handle_discovered_device(device: Device) {
     let device_name = match device.name_async().await {
         Ok(name) => name,
         Err(err) => {
-            trace!("[Core] Failed to get name of discovered device: {}", err);
+            trace!("[Core] Failed to get name of discovered device: {err}");
             cleanup(device_id.clone());
             return;
         }
@@ -413,8 +415,7 @@ async fn handle_discovered_device(device: Device) {
             LighthouseDeviceType::LighthouseV2
         } else {
             warn!(
-                "[Core] Discovered device does not contain a lighthouse control service: {}",
-                device_name
+                "[Core] Discovered device does not contain a lighthouse control service: {device_name}"
             );
             cleanup(device_id);
             return;
@@ -549,7 +550,7 @@ async fn map_discovered_device_to_lighthouse_device(d: LighthouseDevice) -> Ligh
         v1_timeout,
     };
     if ld.device_type == LighthouseDeviceType::LighthouseV1 {
-        info!("LD: {:?}", ld);
+        info!("LD: {ld:?}");
     }
     ld
 }

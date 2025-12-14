@@ -35,7 +35,7 @@ async fn reset_elevation_security() {
             println!("[Core] Elevation security has been reset. OyasumiVR will no longer run with administrative privileges.");
         }
         Err(e) => {
-            eprintln!("[Core] Failed to reset elevation security: {}", e);
+            eprintln!("[Core] Failed to reset elevation security: {e}");
         }
     }
     std::process::exit(0);
@@ -53,7 +53,7 @@ async fn disable_elevation_security() {
             println!("Elevation security has been disabled. You can now run OyasumiVR with administrative privileges.");
         }
         Err(e) => {
-            eprintln!("[Core] Failed to disable elevation security: {}", e);
+            eprintln!("[Core] Failed to disable elevation security: {e}");
         }
     }
     std::process::exit(0);

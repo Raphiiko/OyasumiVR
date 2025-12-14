@@ -26,12 +26,12 @@ pub fn string_to_guid(guid_str: &str) -> Result<GUID, String> {
         return Err("Invalid GUID format".to_string());
     }
 
-    let data1 = u32::from_str_radix(segments[0], 16)
-        .map_err(|e| format!("Failed to parse Data1: {}", e))?;
-    let data2 = u16::from_str_radix(segments[1], 16)
-        .map_err(|e| format!("Failed to parse Data2: {}", e))?;
-    let data3 = u16::from_str_radix(segments[2], 16)
-        .map_err(|e| format!("Failed to parse Data3: {}", e))?;
+    let data1 =
+        u32::from_str_radix(segments[0], 16).map_err(|e| format!("Failed to parse Data1: {e}"))?;
+    let data2 =
+        u16::from_str_radix(segments[1], 16).map_err(|e| format!("Failed to parse Data2: {e}"))?;
+    let data3 =
+        u16::from_str_radix(segments[2], 16).map_err(|e| format!("Failed to parse Data3: {e}"))?;
 
     let mut data4_bytes = [0u8; 8];
 
@@ -42,7 +42,7 @@ pub fn string_to_guid(guid_str: &str) -> Result<GUID, String> {
     for (i, byte_str) in data4_str.collect::<Vec<&char>>().chunks(2).enumerate() {
         let byte_str = byte_str.iter().map(|&&c| c).collect::<String>();
         data4_bytes[i] = u8::from_str_radix(&byte_str, 16)
-            .map_err(|e| format!("Failed to parse Data4 segment {}: {}", i, e))?;
+            .map_err(|e| format!("Failed to parse Data4 segment {i}: {e}"))?;
     }
 
     Ok(GUID {
