@@ -17,7 +17,7 @@ pub async fn nvml_status() -> NvmlStatus {
     let response = match client.get_nvml_status(tonic::Request::new(Empty {})).await {
         Ok(response) => response.into_inner(),
         Err(e) => {
-            error!("[Core] Could not get the current NVML status: {}", e);
+            error!("[Core] Could not get the current NVML status: {e}");
             return NvmlStatus::SidecarUnavailable;
         }
     };
@@ -52,10 +52,7 @@ pub async fn nvml_set_power_management_limit(
     {
         Ok(response) => response.into_inner(),
         Err(e) => {
-            error!(
-                "[Core] Could not set the NVML power management limit: {}",
-                e
-            );
+            error!("[Core] Could not set the NVML power management limit: {e}");
             return Err(NvmlSetPowerManagementLimitError::UnknownError);
         }
     };

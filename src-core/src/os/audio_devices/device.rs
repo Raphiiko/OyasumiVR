@@ -425,10 +425,7 @@ impl IAudioEndpointVolumeCallback_Impl for AudioDeviceVolumeNotificationClient {
         let tx = self.channel.clone();
         self.handle.spawn(async move {
             if let Err(e) = tx.send(()).await {
-                error!(
-                    "[Core] onNotify could not send channel notification: {:?}",
-                    e
-                );
+                error!("[Core] onNotify could not send channel notification: {e:?}");
             }
         });
         Ok(())

@@ -225,9 +225,8 @@ impl SidecarManager {
                     s.refresh_processes(sysinfo::ProcessesToUpdate::All, true);
                     // Check if the child process is no longer found
                     if s.process(Pid::from(pid as usize)).is_none() {
-                        let current_sidecar_pid = {
-                            self_guard.sidecar_pid.lock().await.as_ref().map(|pid| *pid)
-                        };
+                        let current_sidecar_pid =
+                            { self_guard.sidecar_pid.lock().await.as_ref().map(|pid| *pid) };
                         // Check if the sidecar pid is still the same.
                         // If it is, then we can assume the sidecar stopped.
                         // If not, it likely got replaced by another instance of the sidecar.

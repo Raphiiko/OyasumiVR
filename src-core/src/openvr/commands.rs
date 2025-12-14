@@ -110,12 +110,12 @@ pub async fn openvr_launch_binding_configuration(show_on_desktop: bool) {
     let input_handle = match input.get_input_source_handle("/user/hand/right") {
         Ok(handle) => handle,
         Err(e) => {
-            error!("[Core] Failed to get input source handle: {}", e);
+            error!("[Core] Failed to get input source handle: {e}");
             return;
         }
     };
     if let Err(e) = input.open_binding_ui(None, None, input_handle, show_on_desktop) {
-        error!("[Core] Failed to open SteamVR binding UI: {}", e);
+        error!("[Core] Failed to open SteamVR binding UI: {e}");
     }
 }
 
@@ -144,8 +144,10 @@ pub async fn openvr_reregister_manifest() -> Result<(), String> {
             } else {
                 match applications.remove_application_manifest(manifest_path) {
                     Ok(_) => {
-                        let install_for_flavours = [crate::flavour::BuildFlavour::Standalone,
-                            crate::flavour::BuildFlavour::Dev];
+                        let install_for_flavours = [
+                            crate::flavour::BuildFlavour::Standalone,
+                            crate::flavour::BuildFlavour::Dev,
+                        ];
                         let should_install_for_flavour =
                             install_for_flavours.contains(&crate::flavour::BUILD_FLAVOUR);
                         if should_install_for_flavour {
@@ -154,7 +156,7 @@ pub async fn openvr_reregister_manifest() -> Result<(), String> {
                                     return Ok(());
                                 }
                                 Err(e) => {
-                                    error!("[Core] Failed to add VR manifest: {}", e);
+                                    error!("[Core] Failed to add VR manifest: {e}");
                                     return Err(String::from("MANIFEST_ADD_FAILED"));
                                 }
                             };
@@ -163,7 +165,7 @@ pub async fn openvr_reregister_manifest() -> Result<(), String> {
                         }
                     }
                     Err(e) => {
-                        error!("[Core] Failed to remove VR manifest: {}", e);
+                        error!("[Core] Failed to remove VR manifest: {e}");
                         return Err(String::from("MANIFEST_REMOVE_FAILED"));
                     }
                 }
@@ -207,7 +209,7 @@ pub async fn openvr_get_binding_origins(
         None => return None,
     };
     if let Err(e) = input.update_actions(input_ctx.active_sets.as_mut_slice()) {
-        error!("[Core] Failed to update actions: {}", e);
+        error!("[Core] Failed to update actions: {e}");
         return None;
     }
     // Get all of the origins for this action
@@ -218,7 +220,7 @@ pub async fn openvr_get_binding_origins(
             .cloned()
             .collect(),
         Err(e) => {
-            error!("[Core] Failed to get action origins: {}", e);
+            error!("[Core] Failed to get action origins: {e}");
             return None;
         }
     };
@@ -286,7 +288,7 @@ pub async fn openvr_get_binding_origins(
         {
             Ok(result) => result,
             Err(e) => {
-                error!("[Core] Failed to get action binding info: {}", e);
+                error!("[Core] Failed to get action binding info: {e}");
                 return None;
             }
         };

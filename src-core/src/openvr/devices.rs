@@ -17,12 +17,18 @@ use strum::IntoEnumIterator;
 use tokio::sync::Mutex;
 
 static OVR_DEVICES: LazyLock<Mutex<Vec<OVRDevice>>> = LazyLock::new(|| Mutex::new(Vec::new()));
-static SLEEP_DETECTOR: LazyLock<Mutex<SleepDetector>> = LazyLock::new(|| Mutex::new(SleepDetector::new()));
-static GESTURE_DETECTOR: LazyLock<Mutex<GestureDetector>> = LazyLock::new(|| Mutex::new(GestureDetector::new()));
-static NEXT_DEVICE_REFRESH: LazyLock<Mutex<DateTime<Utc>>> = LazyLock::new(|| Mutex::new(DateTime::from_timestamp_millis(0).unwrap()));
-static NEXT_POSE_BROADCAST: LazyLock<Mutex<DateTime<Utc>>> = LazyLock::new(|| Mutex::new(DateTime::from_timestamp_millis(0).unwrap()));
-static DEVICE_CLASS_CACHE: LazyLock<Mutex<HashMap<u32, TrackedDeviceClass>>> = LazyLock::new(|| Mutex::new(HashMap::new()));
-static DEVICE_HANDLE_TYPE_CACHE: LazyLock<Mutex<HashMap<u32, OVRHandleType>>> = LazyLock::new(|| Mutex::new(HashMap::new()));
+static SLEEP_DETECTOR: LazyLock<Mutex<SleepDetector>> =
+    LazyLock::new(|| Mutex::new(SleepDetector::new()));
+static GESTURE_DETECTOR: LazyLock<Mutex<GestureDetector>> =
+    LazyLock::new(|| Mutex::new(GestureDetector::new()));
+static NEXT_DEVICE_REFRESH: LazyLock<Mutex<DateTime<Utc>>> =
+    LazyLock::new(|| Mutex::new(DateTime::from_timestamp_millis(0).unwrap()));
+static NEXT_POSE_BROADCAST: LazyLock<Mutex<DateTime<Utc>>> =
+    LazyLock::new(|| Mutex::new(DateTime::from_timestamp_millis(0).unwrap()));
+static DEVICE_CLASS_CACHE: LazyLock<Mutex<HashMap<u32, TrackedDeviceClass>>> =
+    LazyLock::new(|| Mutex::new(HashMap::new()));
+static DEVICE_HANDLE_TYPE_CACHE: LazyLock<Mutex<HashMap<u32, OVRHandleType>>> =
+    LazyLock::new(|| Mutex::new(HashMap::new()));
 
 pub async fn on_ovr_tick() {
     // Refresh all devices when needed
@@ -252,7 +258,7 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
         handle_type,
         hmd_on_head,
         hmd_activity,
-        display_frequency
+        display_frequency,
     };
 
     // Add or update device in list

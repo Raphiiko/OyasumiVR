@@ -1,4 +1,7 @@
-use std::sync::{atomic::{AtomicBool, Ordering}, LazyLock};
+use std::sync::{
+    atomic::{AtomicBool, Ordering},
+    LazyLock,
+};
 
 use hidapi::{HidApi, HidDevice};
 use log::{error, info, warn};
@@ -20,7 +23,7 @@ pub async fn init() {
         let mut api = match HidApi::new() {
             Ok(a) => a,
             Err(e) => {
-                error!("[Core] Failed to initialize HIDAPI: {}", e);
+                error!("[Core] Failed to initialize HIDAPI: {e}");
                 return;
             }
         };
@@ -28,7 +31,7 @@ pub async fn init() {
         match api.refresh_devices() {
             Ok(_) => {}
             Err(e) => {
-                error!("[Core][Beyond] Could not refresh device list: {}", e);
+                error!("[Core][Beyond] Could not refresh device list: {e}");
                 return;
             }
         }
@@ -69,10 +72,7 @@ async fn on_bsb_plugged(api: &HidApi) {
     let device = match api.open(BIGSCREEN_VID, BEYOND_PID) {
         Ok(d) => d,
         Err(e) => {
-            error!(
-                "[Core][Beyond] Could not open device for Bigscreen Beyond: {}",
-                e
-            );
+            error!("[Core][Beyond] Could not open device for Bigscreen Beyond: {e}");
             return;
         }
     };
@@ -93,10 +93,7 @@ pub fn set_led_color(device: &HidDevice, r: u8, g: u8, b: u8) -> Result<(), Stri
     match device.send_feature_report(&[0, 0x4c, r, g, b]) {
         Ok(_) => Ok(()),
         Err(e) => {
-            error!(
-                "[Core][Beyond] Could not send data to Bigscreen Beyond: {}",
-                e
-            );
+            error!("[Core][Beyond] Could not send data to Bigscreen Beyond: {e}");
             Ok(())
             //             return Err("DEVICE_WRITE_ERROR".to_string());
         }
@@ -106,18 +103,14 @@ pub fn set_led_color(device: &HidDevice, r: u8, g: u8, b: u8) -> Result<(), Stri
 pub fn set_fan_speed(device: &HidDevice, speed: u8) -> Result<(), String> {
     if speed > 100 {
         error!(
-            "[Core][Beyond] Attempted to set fan speed of Bigscreen Beyond to an out of bounds value: {}",
-            speed
+            "[Core][Beyond] Attempted to set fan speed of Bigscreen Beyond to an out of bounds value: {speed}"
         );
         return Err("OUT_OF_BOUNDS".to_string());
     }
     match device.send_feature_report(&[0, 0x46, speed]) {
         Ok(_) => Ok(()),
         Err(e) => {
-            error!(
-                "[Core][Beyond] Could not send data to Bigscreen Beyond: {}",
-                e
-            );
+            error!("[Core][Beyond] Could not send data to Bigscreen Beyond: {e}");
             Ok(())
             //             return Err("DEVICE_WRITE_ERROR".to_string());
         }
@@ -127,8 +120,7 @@ pub fn set_fan_speed(device: &HidDevice, speed: u8) -> Result<(), String> {
 pub fn set_brightness(device: &HidDevice, brightness: u16) -> Result<(), String> {
     if brightness >= 0x0400 {
         error!(
-            "[Core][Beyond] Attempted to set brightness of Bigscreen Beyond to an out of bounds value: {}",
-            brightness
+            "[Core][Beyond] Attempted to set brightness of Bigscreen Beyond to an out of bounds value: {brightness}"
         );
         return Err("OUT_OF_BOUNDS".to_string());
     }
@@ -140,10 +132,7 @@ pub fn set_brightness(device: &HidDevice, brightness: u16) -> Result<(), String>
     ]) {
         Ok(_) => Ok(()),
         Err(e) => {
-            error!(
-                "[Core][Beyond] Could not send data to Bigscreen Beyond: {}",
-                e
-            );
+            error!("[Core][Beyond] Could not send data to Bigscreen Beyond: {e}");
             Ok(())
             //             return Err("DEVICE_WRITE_ERROR".to_string());
         }

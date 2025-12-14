@@ -1,5 +1,8 @@
 use std::{
-    sync::{atomic::{AtomicBool, Ordering}, LazyLock},
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        LazyLock,
+    },
     time::Duration,
 };
 

@@ -24,21 +24,21 @@ pub async fn clear_log_files() {
             logs_deleted += 1;
         }
     }
-    info!("[Core] Deleted {} log file(s)", logs_deleted);
+    info!("[Core] Deleted {logs_deleted} log file(s)");
 }
 
 pub async fn print_file_debug_data(path: PathBuf) {
     error!("<FILE DEBUG DATA>");
-    error!("Path: {:?}", path);
+    error!("Path: {path:?}");
     let now = SystemTime::now();
-    error!("System Time: {:?}", now);
+    error!("System Time: {now:?}");
     // Print now as unix time
     match now.duration_since(SystemTime::UNIX_EPOCH) {
         Ok(duration) => {
             error!("System Time [UNIX]: {}", duration.as_secs())
         }
         Err(e) => {
-            error!("Error getting unix time for now: {}", e);
+            error!("Error getting unix time for now: {e}");
         }
     };
     match std::fs::metadata(&path) {
@@ -46,18 +46,18 @@ pub async fn print_file_debug_data(path: PathBuf) {
             // Print modified time
             match metadata.modified() {
                 Ok(modified) => {
-                    error!("Modified Time: {:?}", modified);
+                    error!("Modified Time: {modified:?}");
                     match modified.elapsed() {
                         Ok(elapsed) => {
-                            error!("Elapsed Time: {:?}", elapsed);
+                            error!("Elapsed Time: {elapsed:?}");
                         }
                         Err(e) => {
-                            error!("Error getting elapsed time for log file: {}", e);
+                            error!("Error getting elapsed time for log file: {e}");
                         }
                     };
                 }
                 Err(e) => {
-                    error!("Error getting modified time for log file: {}", e);
+                    error!("Error getting modified time for log file: {e}");
                 }
             };
             // Print elapsed time
@@ -67,11 +67,11 @@ pub async fn print_file_debug_data(path: PathBuf) {
                         error!("Elapsed Time [UNIX]: {}", elapsed.as_secs());
                     }
                     Err(e) => {
-                        error!("Error getting elapsed time for log file: {}", e);
+                        error!("Error getting elapsed time for log file: {e}");
                     }
                 },
                 Err(e) => {
-                    error!("Error getting modified time for log file: {}", e);
+                    error!("Error getting modified time for log file: {e}");
                 }
             };
             // Print modified as unix time
@@ -84,12 +84,12 @@ pub async fn print_file_debug_data(path: PathBuf) {
                     error!("Modified Time [UNIX]: {}", duration.as_secs())
                 }
                 Err(e) => {
-                    error!("Error getting unix time for modified: {}", e);
+                    error!("Error getting unix time for modified: {e}");
                 }
             };
         }
         Err(e) => {
-            error!("Error getting metadata for log file: {}", e);
+            error!("Error getting metadata for log file: {e}");
         }
     };
     error!("</FILE DEBUG DATA>");
@@ -110,13 +110,13 @@ pub async fn clean_log_files() {
                 Ok(modified) => match modified.elapsed() {
                     Ok(elapsed) => elapsed.as_secs() > 60 * 60 * 24 * 30, // 30 Days
                     Err(e) => {
-                        error!("Error getting elapsed time for log file: {}", e);
+                        error!("Error getting elapsed time for log file: {e}");
                         print_file_debug_data(path.clone()).await;
                         false
                     }
                 },
                 Err(e) => {
-                    error!("Error getting modified time for log file: {}", e);
+                    error!("Error getting modified time for log file: {e}");
                     print_file_debug_data(path.clone()).await;
                     false
                 }
@@ -126,5 +126,5 @@ pub async fn clean_log_files() {
             }
         }
     }
-    info!("[Core] Deleted {} log file(s)", logs_deleted);
+    info!("[Core] Deleted {logs_deleted} log file(s)");
 }
