@@ -59,9 +59,9 @@ public static class Program {
     var settings = new CefSettings();
     
     // In-memory cache - no disk persistence
-    settings.CachePath = null;
+    settings.CachePath = "";
     settings.PersistSessionCookies = false;
-    settings.PersistUserPreferences = false;
+    settings.CefCommandLineArgs.Add("disable-features", "MetricsService");
     
     if (InReleaseMode())
     {
