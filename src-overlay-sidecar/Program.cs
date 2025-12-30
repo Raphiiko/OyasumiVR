@@ -60,8 +60,11 @@ public static class Program {
     
     // In-memory cache - no disk persistence
     settings.CachePath = "";
+    settings.RootCachePath = "";
     settings.PersistSessionCookies = false;
-    settings.CefCommandLineArgs.Add("disable-features", "MetricsService");
+    settings.CefCommandLineArgs.Add("disable-features", "MetricsService,PersistentHistograms");
+    settings.CefCommandLineArgs.Add("disable-crash-reporter", "true");
+    settings.CefCommandLineArgs.Add("disable-spell-checking", "true");
     
     if (InReleaseMode())
     {
