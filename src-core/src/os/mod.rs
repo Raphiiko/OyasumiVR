@@ -14,16 +14,25 @@ use std::ffi::OsString;
 use std::fs::File;
 use std::io::BufReader;
 use std::os::windows::ffi::OsStringExt;
+use std::path::PathBuf;
+use std::ptr::null;
 use std::slice;
 use std::sync::LazyLock;
 use std::time::Duration;
 use tokio::sync::mpsc::Sender;
 use tokio::sync::Mutex;
 use windows::core::GUID;
-use windows::Win32::Foundation::ERROR_SUCCESS;
+use windows::Win32::Foundation::{CloseHandle, ERROR_SUCCESS, HANDLE, INVALID_HANDLE_VALUE, SetLastError};
+use windows::Win32::System::Ioctl::FSCTL_SET_COMPRESSION;
 use windows::Win32::System::Power::{
     PowerEnumerate, PowerGetActiveScheme, PowerReadFriendlyName, PowerSetActiveScheme,
     ACCESS_SCHEME,
+};
+use windows::Win32::System::IO::DeviceIoControl;
+use windows_sys::Win32::Foundation::GENERIC_ALL;
+use windows_sys::Win32::Storage::FileSystem::{
+    CreateFileA, COMPRESSION_FORMAT_LZNT1, FILE_ATTRIBUTE_NORMAL, FILE_SHARE_NONE,
+    OPEN_EXISTING,
 };
 
 type PlaySoundSender = LazyLock<Mutex<Option<Sender<(String, f32)>>>>;
@@ -275,5 +284,41 @@ fn get_friendly_name_for_windows_power_policy(scheme_guid: &GUID) -> Option<Stri
     match os_str.to_string_lossy().into_owned() {
         s if !s.is_empty() => Some(s.trim_end_matches('\0').to_string()),
         _ => None,
+    }
+}
+pub fn enable_directory_compression(path: &PathBuf) -> windows::core::Result<()> {
+    debug_assert!(path.is_dir());
+    let handle = unsafe {
+        SetLastError(ERROR_SUCCESS);
+        let file_name = path.as_os_str();
+        let handle=HANDLE(CreateFileA(
+            file_name.as_encoded_bytes().as_ptr(),
+            GENERIC_ALL,
+            FILE_SHARE_NONE,
+            null(),
+            OPEN_EXISTING,
+            FILE_ATTRIBUTE_NORMAL,
+            0,
+        ));
+
+        if handle==INVALID_HANDLE_VALUE{
+            return Err(windows::core::Error::from_win32());
+        }
+        handle
+    };
+    let mode = COMPRESSION_FORMAT_LZNT1;
+    let mut idk: u32 = 0;
+    unsafe {
+        DeviceIoControl(
+            handle,
+            FSCTL_SET_COMPRESSION,
+            Some((&raw const mode).cast()),
+            size_of_val(&mode) as u32,
+            None,
+            0,
+            Some((&raw mut idk).cast()),
+            None,
+        )?;
+        CloseHandle(handle)
     }
 }

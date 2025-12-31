@@ -1,8 +1,10 @@
 use log::{error, info, warn};
-use std::sync::Arc;
 use std::time::Duration;
+use std::{path::PathBuf, sync::Arc};
 use sysinfo::{Pid, System};
 use tokio::sync::{mpsc, Mutex};
+
+use crate::os::enable_directory_compression;
 
 const LAUNCH_RETRY_INTERVALS: [Duration; 9] = [
     Duration::from_millis(100),
@@ -131,6 +133,7 @@ impl SidecarManager {
                 args.push(arg.clone());
             }
         }
+        clear_overlay_cef_cache();
         let child = std::process::Command::new(exe_path)
             .current_dir(exe_dir)
             .args(args)
@@ -275,5 +278,15 @@ impl SidecarManager {
                 break;
             }
         });
+    }
+}
+pub fn clear_overlay_cef_cache() {
+    let mut path = PathBuf::from(std::env::var("LocalAppData").unwrap());
+    path.push("co.raphii.oyasumi");
+    path.push("cef_cache");
+    std::fs::remove_dir_all(&path).ok();
+    std::fs::create_dir_all(&path).ok();
+    if let Err(err)=enable_directory_compression(&path){
+        log::warn!("failed to enable compression for overlay cache: {:?}",err);
     }
 }

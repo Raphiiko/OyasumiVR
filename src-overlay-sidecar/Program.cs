@@ -69,6 +69,9 @@ public static class Program {
     if (InReleaseMode())
     {
       settings.LogSeverity = LogSeverity.Disable;
+       var cache_path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+      "co.raphii.oyasumi\\cef_cache");
+      settings.RootCachePath=cache_path;
       var cefDebugLogPath = Path.Combine(Path.GetDirectoryName(Environment.ProcessPath)!, @"debug.log");
       if (File.Exists(cefDebugLogPath)) File.Delete(cefDebugLogPath);
     }

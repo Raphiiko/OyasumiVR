@@ -29,7 +29,7 @@ public class BrowserManager {
           return cachedBrowser.Browser;
         }
       }
-
+      Log.Information("creating browser");
       OffscreenBrowser browser = Program.GpuAccelerated ? new AcceleratedOffscreenBrowser(url, width, height) : new NonAcceleratedOffscreenBrowser(url, width, height);
       _browsers.Add(new CachedBrowser(browser, false, width, height));
 
