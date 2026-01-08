@@ -6,7 +6,8 @@ using Valve.VR;
 
 namespace overlay_sidecar;
 
-public class MicMuteIndicatorOverlay : RenderableOverlay {
+public class MicMuteIndicatorOverlay : RenderableOverlay
+{
   public static readonly Matrix4x4 VRC_MIC_ICON_TRANSLATION = Matrix4x4.CreateTranslation(-0.48f, -0.405f, -1.15f);
   private readonly ulong _overlayHandle;
   private readonly (byte[], uint, uint) _muteImage;
@@ -68,6 +69,11 @@ public class MicMuteIndicatorOverlay : RenderableOverlay {
 
   private void OnStateChanged(object? sender, OyasumiSidecarState state)
   {
+    if (state.Settings == null)
+    {
+      Log.Error("state.Setting is null");
+      return;
+    }
     if (state.SystemMicMuted != _muteState) setMuteState(state.SystemMicMuted);
     _maxOpacity = state.Settings.SystemMicIndicatorOpacity;
     _fadeOut = state.Settings.SystemMicIndicatorFadeout;

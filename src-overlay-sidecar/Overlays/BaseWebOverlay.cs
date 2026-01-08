@@ -38,6 +38,7 @@ public class BaseWebOverlay : RenderableOverlay
     if (Program.InDevMode()) Log.Information("Using UI URL: {url}", uiUrl);
     Browser = BrowserManager.Instance.GetBrowser(uiUrl, resolution, resolution);
     Browser!.JavascriptObjectRepository.Register("OyasumiIPCOut", this);
+    OnStateChanged(null,StateManager.Instance.GetAppState());
     // Set up overlay
     ulong overlayHandle = 0;
     {

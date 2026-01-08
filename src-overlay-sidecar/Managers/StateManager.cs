@@ -1,4 +1,5 @@
 using GrcpOverlaySidecar;
+using Serilog;
 
 namespace overlay_sidecar;
 
@@ -14,6 +15,10 @@ public class StateManager {
 
   public OyasumiSidecarState GetAppState()
   {
+    if (!Program.state_recived.WaitOne(0)){
+      Log.Error("tried to get Overlay state before it was set, exiting");
+      Environment.Exit(1);
+    }
     lock (_state)
     {
       return _state.Clone();
@@ -29,5 +34,6 @@ public class StateManager {
       _state = newState;
       StateChanged?.Invoke(this, _state);
     }
+    Program.state_recived.Set();
   }
 }

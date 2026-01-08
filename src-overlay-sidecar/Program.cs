@@ -6,8 +6,9 @@ using CefSharp.OffScreen;
 using Serilog;
 
 namespace overlay_sidecar;
-
-public static class Program {
+public static class Program
+{
+  public static EventWaitHandle state_recived = new EventWaitHandle(false, EventResetMode.ManualReset);
   public static bool GpuAccelerated = true;
   public static SidecarMode Mode = SidecarMode.Release;
 
@@ -49,15 +50,20 @@ public static class Program {
 
     // Initialize
     WatchMainProcess(mainProcessId);
-    InitCef();
     IpcManager.Instance.Init(coreGrpcPort);
+    //i think waiting here is better as it avoids starting the browser and openvr in case state never gets set
+    if (!state_recived.WaitOne(1000)){
+      Log.Error("no state recived after 1 second, exiting");
+      Environment.Exit(1);
+    }
+    InitCef();
     OvrManager.Instance.Init();
   }
 
   private static void InitCef()
   {
     var settings = new CefSettings();
-    
+
     // In-memory cache - no disk persistence
     settings.CachePath = "";
     settings.RootCachePath = "";
@@ -65,7 +71,7 @@ public static class Program {
     settings.CefCommandLineArgs.Add("disable-features", "MetricsService,PersistentHistograms");
     settings.CefCommandLineArgs.Add("disable-crash-reporter", "true");
     settings.CefCommandLineArgs.Add("disable-spell-checking", "true");
-    
+
     if (InReleaseMode())
     {
       settings.LogSeverity = LogSeverity.Disable;
@@ -117,7 +123,8 @@ public static class Program {
     return Mode == SidecarMode.Release;
   }
 
-  public enum SidecarMode {
+  public enum SidecarMode
+  {
     Release,
     Dev
   }
