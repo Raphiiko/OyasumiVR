@@ -58,23 +58,22 @@ pub async fn run_command(command: String, args: Vec<String>) -> Result<Output, S
         Err(error) => match error {
             Error::Io(io_err) => match io_err.kind() {
                 std::io::ErrorKind::NotFound => {
-                    error!("[Core] [run_command] Executable not found: {}", io_err);
+                    error!("[Core] [run_command] Executable not found: {io_err}");
                     return Err(String::from("NOT_FOUND"));
                 }
                 std::io::ErrorKind::PermissionDenied => {
-                    error!("[Core] [run_command] Permission Denied: {}", io_err);
+                    error!("[Core] [run_command] Permission Denied: {io_err}");
                     return Err(String::from("PERMISSION_DENIED"));
                 }
                 other => {
                     error!(
-                        "[Core] [run_command] Unknown IO error occurred: (kind={}, error={})",
-                        other, io_err
+                        "[Core] [run_command] Unknown IO error occurred: (kind={other}, error={io_err})"
                     );
                     return Err(String::from("UNKNOWN_ERROR"));
                 }
             },
             other => {
-                error!("[Core] [run_command] Unknown error occurred: {}", other);
+                error!("[Core] [run_command] Unknown error occurred: {other}");
                 return Err(String::from("UNKNOWN_ERROR"));
             }
         },
@@ -106,7 +105,7 @@ pub async fn run_command(command: String, args: Vec<String>) -> Result<Output, S
 #[tauri::command]
 #[oyasumivr_macros::command_profiling]
 pub async fn run_cmd_commands(commands: String) {
-    info!("[Core] Running commands:\n{}", commands);
+    info!("[Core] Running commands:\n{commands}");
 
     // Get the system temp directory
     let mut batch_path: PathBuf = env::temp_dir();
@@ -121,7 +120,7 @@ pub async fn run_cmd_commands(commands: String) {
         Ok(mut file) => {
             debug!("[Core] Successfully created batch file");
             if let Err(e) = file.write_all(commands.as_bytes()).await {
-                error!("[Core] Failed to write to batch file: {}", e);
+                error!("[Core] Failed to write to batch file: {e}");
                 return;
             }
             debug!(
@@ -131,13 +130,13 @@ pub async fn run_cmd_commands(commands: String) {
 
             // Ensure file is written and closed
             if let Err(e) = file.flush().await {
-                error!("[Core] Failed to flush batch file: {}", e);
+                error!("[Core] Failed to flush batch file: {e}");
                 return;
             }
             debug!("[Core] Successfully flushed batch file to disk");
         }
         Err(e) => {
-            error!("[Core] Failed to create batch file: {}", e);
+            error!("[Core] Failed to create batch file: {e}");
             return;
         }
     }
@@ -173,7 +172,7 @@ pub async fn run_cmd_commands(commands: String) {
             );
         }
         Err(e) => {
-            error!("[Core] Failed to spawn cmd.exe process: {}", e);
+            error!("[Core] Failed to spawn cmd.exe process: {e}");
             error!("[Core] Error kind: {:?}", e.kind());
 
             // Additional debug information
@@ -218,14 +217,11 @@ pub async fn set_windows_power_policy(guid: String) {
     let parsed_guid = match crate::utils::serialization::string_to_guid(&guid) {
         Ok(g) => g,
         Err(e) => {
-            error!(
-                "[Core] Could not parse GUID in set_windows_power_policy \"{}\": {}",
-                guid, e
-            );
+            error!("[Core] Could not parse GUID in set_windows_power_policy \"{guid}\": {e}");
             return;
         }
     };
-    info!("[Core] Setting Windows power policy to \"{}\" plan", guid);
+    info!("[Core] Setting Windows power policy to \"{guid}\" plan");
     super::set_windows_power_policy(&parsed_guid);
 }
 
@@ -308,7 +304,7 @@ pub async fn get_audio_devices(refresh: bool) -> Vec<AudioDeviceDto> {
     };
     if refresh {
         if let Err(e) = manager.refresh_audio_devices().await {
-            error!("[Core] Failed to refresh audio devices: {}", e);
+            error!("[Core] Failed to refresh audio devices: {e}");
         }
     }
     manager.get_devices().await

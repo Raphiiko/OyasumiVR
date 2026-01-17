@@ -64,12 +64,12 @@ export class CachedValue<T> {
       value: this.value,
       lastSet: this.lastSet,
       ttl: this.ttl,
-    })
+    });
   }
 
   private async clearFromDisk() {
     if (!this.persistenceKey) return;
-    await CACHE_STORE.delete(this.persistenceKey)
+    await CACHE_STORE.delete(this.persistenceKey);
   }
 
   private async loadFromDisk() {

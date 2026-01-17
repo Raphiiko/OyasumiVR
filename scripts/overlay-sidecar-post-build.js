@@ -3,7 +3,7 @@ import copy from 'recursive-copy';
 import { rimraf } from 'rimraf';
 
 async function main() {
-  const coreSourceDirectory = 'src-overlay-sidecar/bin/Release/net9.0/win-x64/publish';
+  const coreSourceDirectory = 'src-overlay-sidecar/bin/Release/net8.0-windows/win-x64/publish';
   const coreTargetDirectory = 'src-core/resources/dotnet-sidecars';
   await mkdirp(coreTargetDirectory);
   await copy(coreSourceDirectory, coreTargetDirectory, { overwrite: true });

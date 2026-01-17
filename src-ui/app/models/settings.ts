@@ -8,25 +8,26 @@ export interface AppSettings {
   // General Settings
   userLanguage: string;
   userLanguagePicked: boolean;
-  lighthouseConsolePath: string;
   askForAdminOnStart: boolean;
   exitInSystemTray: boolean;
   startInSystemTray: boolean;
   sleepModeStartupBehaviour: 'PERSIST' | 'ACTIVE' | 'INACTIVE';
-  notificationProvider: NotificationProvider;
-  notificationsEnabled: { types: NotificationType[] };
   quitWithSteamVR: QuitWithSteamVRMode;
-  generalNotificationVolume: number;
-  v1LighthouseIdentifiers: {
-    [deviceId: string]: string;
-  };
   hotkeys: { [hotkeyId: string]: string[] };
-  oscServerEnabled: boolean;
   playerListPresets: PlayerListPreset[];
   hideSnowverlay: boolean;
   openVrInitDelayFix: boolean;
   oneTimeFlags: OneTimeFlag[];
   eventLogTypesHidden: EventLogType[];
+  // Notifications
+  notificationProvider: NotificationProvider;
+  notificationsEnabled: { types: NotificationType[] };
+  generalNotificationVolume: number;
+  // OSC
+  oscServerEnabled: boolean;
+  oscTargets: OSCTarget[];
+  oscCustomTargetHost: string;
+  oscCustomTargetPort: number;
   // Message center
   hiddenMessageIds: string[];
   // Overlay
@@ -34,8 +35,12 @@ export interface AppSettings {
   overlayGpuAcceleration: boolean;
   overlayMenuOnlyOpenWhenVRChatIsRunning: boolean;
   // Lighthouse
+  lighthouseConsolePath: string;
   lighthousePowerControl: boolean;
   lighthousePowerOffState: LighthouseDevicePowerState;
+  v1LighthouseIdentifiers: {
+    [deviceId: string]: string;
+  };
   // Discord Rich Presence
   discordActivityMode: DiscordActivityMode;
   discordActivityOnlyWhileVRChatIsRunning: boolean;
@@ -54,11 +59,17 @@ export interface AppSettings {
   bigscreenBeyondMaxBrightness: number; // User limit
   bigscreenBeyondUnsafeBrightness: boolean; // Allow brightness above 150%
   bigscreenBeyondBrightnessFanSafety: boolean; // Force fan to 100% if brightness is above 100%
+  // VRCX
+  vrcxLogsEnabled: VRCXEventLogType[];
 }
+
+export type VRCXEventLogType = 'SleepMode';
 
 export type DiscordActivityMode = 'ENABLED' | 'ONLY_ASLEEP' | 'DISABLED';
 
 export type QuitWithSteamVRMode = 'DISABLED' | 'IMMEDIATELY' | 'AFTERDELAY';
+
+export type OSCTarget = 'VRCHAT_OSCQUERY' | 'CUSTOM';
 
 export type HotkeyId =
   | 'HOTKEY_TOGGLE_SLEEP_MODE'
@@ -83,46 +94,61 @@ export type NotificationType = (typeof NotificationTypes)[number];
 
 export const APP_SETTINGS_DEFAULT: AppSettings = {
   version: 10,
+  // General Settings
   userLanguage: 'en',
   userLanguagePicked: false,
   askForAdminOnStart: false,
-  lighthouseConsolePath:
-    'C:\\Program Files (x86)\\Steam\\steamapps\\common\\SteamVR\\tools\\lighthouse\\bin\\win64\\lighthouse_console.exe',
   exitInSystemTray: false,
   startInSystemTray: false,
-  lighthousePowerControl: true,
-  lighthousePowerOffState: 'sleep',
   sleepModeStartupBehaviour: 'PERSIST',
+  quitWithSteamVR: 'DISABLED',
+  hotkeys: {},
+  playerListPresets: [],
+  hideSnowverlay: false,
+  openVrInitDelayFix: false,
+  oneTimeFlags: [],
+  eventLogTypesHidden: [],
+  // Notifications
   notificationProvider: 'OYASUMIVR',
   notificationsEnabled: { types: [...NotificationTypes] as NotificationType[] },
-  quitWithSteamVR: 'DISABLED',
+  generalNotificationVolume: 100,
+  // OSC
+  oscServerEnabled: true,
+  oscTargets: ['VRCHAT_OSCQUERY'],
+  oscCustomTargetHost: '127.0.0.1',
+  oscCustomTargetPort: 9000,
+  // Message center
+  hiddenMessageIds: [],
+  // Overlay
   overlayMenuEnabled: true,
   overlayGpuAcceleration: true,
   overlayMenuOnlyOpenWhenVRChatIsRunning: false,
-  generalNotificationVolume: 100,
+  // Lighthouse
+  lighthouseConsolePath:
+    'C:\\Program Files (x86)\\Steam\\steamapps\\common\\SteamVR\\tools\\lighthouse\\bin\\win64\\lighthouse_console.exe',
+  lighthousePowerControl: true,
+  lighthousePowerOffState: 'sleep',
   v1LighthouseIdentifiers: {},
-  hotkeys: {},
-  hideSnowverlay: false,
-  oscServerEnabled: true,
-  valveIndexMaxBrightness: 160,
-  bigscreenBeyondMaxBrightness: 150,
-  bigscreenBeyondUnsafeBrightness: false,
-  bigscreenBeyondBrightnessFanSafety: true,
+  // Discord Rich Presence
   discordActivityMode: 'ENABLED',
   discordActivityOnlyWhileVRChatIsRunning: true,
-  playerListPresets: [],
+  // MQTT
   mqttEnabled: false,
   mqttHost: null,
   mqttPort: null,
   mqttUsername: null,
   mqttPassword: null,
   mqttSecureSocket: false,
-  openVrInitDelayFix: false,
+  // Brightness & CCT
   cctControlEnabled: true,
   cctSoftwareMode: false,
-  oneTimeFlags: [],
-  eventLogTypesHidden: [],
-  hiddenMessageIds: [],
+  // HW Specific
+  valveIndexMaxBrightness: 160,
+  bigscreenBeyondMaxBrightness: 150,
+  bigscreenBeyondUnsafeBrightness: false,
+  bigscreenBeyondBrightnessFanSafety: true,
+  // VRCX
+  vrcxLogsEnabled: ['SleepMode'],
 };
 
 export type ExecutableReferenceStatus =

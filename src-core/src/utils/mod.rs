@@ -14,7 +14,6 @@ use crate::globals::{TAURI_APP_HANDLE, TAURI_CLI_MATCHES};
 
 static SYSINFO: LazyLock<Mutex<System>> = LazyLock::new(|| Mutex::new(System::new_all()));
 
-
 pub mod models;
 pub mod profiling;
 pub mod serialization;
@@ -72,7 +71,7 @@ pub async fn send_event<S: Serialize + Clone>(event: &str, payload: S) {
     match app_handle.emit(event, payload) {
         Ok(_) => {}
         Err(e) => {
-            error!("[Core] Failed to send event {}: {}", event, e);
+            error!("[Core] Failed to send event {event}: {e}");
         }
     };
 }

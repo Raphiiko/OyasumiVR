@@ -1865,10 +1865,6 @@
           "description": "Het inschakelen hiervan zorgt ervoor dat OyasumiVR even wacht om te interacteren met SteamVR zodra het is gedetecteerd, waardoor SteamVR wat extra tijd krijgt om op te starten. Als je problemen ondervindt met het starten van SteamVR terwijl OyasumiVR al draait, kan dit helpen.",
           "title": "OpenVR Initialisatie Vertragen"
         },
-        "oscServerEnabled": {
-          "description": "Dit uitschakelen deactiveert de ingebouwde OSC en OSCQuery servers. Let op dat verschillende functies van OyasumiVR stoppen met werken als je dit uitschakelt, zonder waarschuwingen. Deze optie bestaat puur voor debugging doeleinden en mag niet worden uitgeschakeld tijdens normaal gebruik.",
-          "title": "OSC & OSCQuery Servers"
-        },
         "overlayGpuAcceleration": {
           "description": "Als je problemen ondervindt met de overlay die niet goed wordt weergegeven, kan het uitschakelen van deze optie het probleem oplossen op sommige systemen (bijv. die met hybride graphics).",
           "title": "VR Overlay GPU Accelleratie"
@@ -2045,21 +2041,6 @@
         "label": "Vraag om beheerders rechten bij het opstarten",
         "title": "Beheerders Rechten"
       },
-      "discord": {
-        "activityMode": {
-          "description": "Toon OyasumiVR als je huidige activiteit op Discord",
-          "options": {
-            "DISABLED": "Uitgeschakeld",
-            "ENABLED": "Ingeschakeld",
-            "ONLY_ASLEEP": "Alleen wanneer je slaapt"
-          },
-          "title": "Discord Rich Presence"
-        },
-        "activityModeVRCCondition": {
-          "title": "Alleen de activiteit tonen wanneer VRChat actief is"
-        },
-        "title": "Discord"
-      },
       "language": {
         "description": "Je kan hier je voorkeurstaal selecteren. Als er vertalingen missen, neem a.u.b. contact op!",
         "title": "Taal"
@@ -2191,6 +2172,21 @@
       "copy": "Kopieer link naar klembord",
       "description": "Sommige features van OyasumiVR kunnen gebruik maken van externe services. Als je OyasumiVR wilt koppelen met een externe service, dan zit je op de goede plek!",
       "disconnect": "Loskoppelen",
+      "discord": {
+        "activityMode": {
+          "description": "Toon OyasumiVR als je huidige activiteit op Discord",
+          "options": {
+            "DISABLED": "Uitgeschakeld",
+            "ENABLED": "Ingeschakeld",
+            "ONLY_ASLEEP": "Alleen wanneer je slaapt"
+          },
+          "title": "Discord Rich Presence"
+        },
+        "activityModeVRCCondition": {
+          "title": "Alleen de activiteit tonen wanneer VRChat actief is"
+        },
+        "title": "Discord"
+      },
       "homeAssistant": {
         "description": "Door OyasumiVR met Home Assistant te verbinden, kun je integreren met de rest van je smart home. Hiermee kan je verschillende slimme apparaten bedienen en je eigen krachtige automatiseringen bouwen.",
         "title": "Home Assistant (via MQTT)"
@@ -2239,6 +2235,14 @@
         "description": "Bepaal het volume waarop sommige notificatie types een geluid afspelen",
         "test": "Test",
         "title": "Algemene Notificatie Volume"
+      }
+    },
+    "osc": {
+      "advanced": {
+        "oscServerEnabled": {
+          "description": "Dit uitschakelen deactiveert de ingebouwde OSC en OSCQuery servers. Let op dat verschillende functies van OyasumiVR stoppen met werken als je dit uitschakelt, zonder waarschuwingen. Deze optie bestaat puur voor debugging doeleinden en mag niet worden uitgeschakeld tijdens normaal gebruik.",
+          "title": "OSC & OSCQuery Servers"
+        }
       }
     },
     "statusInfo": {

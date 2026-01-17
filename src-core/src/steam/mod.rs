@@ -8,8 +8,10 @@ pub mod commands;
 pub const STEAM_APP_ID: AppId = AppId(2538150);
 
 pub static STEAMWORKS_CLIENT: LazyLock<Mutex<Option<Client>>> = LazyLock::new(Mutex::default);
-pub static STEAMWORKS_SINGLE_CLIENT: LazyLock<Mutex<Option<SingleClient>>> = LazyLock::new(Mutex::default);
-pub static STEAMWORKS_USER_STATS_FETCHED: LazyLock<Mutex<bool>> = LazyLock::new(|| Mutex::new(false));
+pub static STEAMWORKS_SINGLE_CLIENT: LazyLock<Mutex<Option<SingleClient>>> =
+    LazyLock::new(Mutex::default);
+pub static STEAMWORKS_USER_STATS_FETCHED: LazyLock<Mutex<bool>> =
+    LazyLock::new(|| Mutex::new(false));
 
 pub async fn init() {
     if crate::BUILD_FLAVOUR != crate::flavour::BuildFlavour::Steam
@@ -21,7 +23,7 @@ pub async fn init() {
     let (client, single) = match Client::init_app(STEAM_APP_ID) {
         Ok((client, single)) => (client, single),
         Err(e) => {
-            error!("[Core] Failed to initialize Steamworks client. Steam-related functionality will be disabled. {:#?}", e);
+            error!("[Core] Failed to initialize Steamworks client. Steam-related functionality will be disabled. {e:#?}");
             return;
         }
     };
@@ -49,10 +51,7 @@ pub async fn init() {
                     });
                 }
                 Err(e) => {
-                    error!(
-                        "[Core] Failed to fetch user stats from Steamworks: {:#?}",
-                        e
-                    );
+                    error!("[Core] Failed to fetch user stats from Steamworks: {e:#?}");
                 }
             });
             client.user_stats().request_current_stats();

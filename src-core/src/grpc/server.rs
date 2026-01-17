@@ -18,7 +18,7 @@ impl OyasumiCore for OyasumiCoreServerImpl {
         match crate::overlay_sidecar::handle_overlay_sidecar_start(request.get_ref()).await {
             Ok(_) => Ok(Response::new(Empty {})),
             Err(e) => {
-                error!("[Core] Failed to handle overlay sidecar start: {}", e);
+                error!("[Core] Failed to handle overlay sidecar start: {e}");
                 Err(Status::internal("Failed to handle overlay sidecar start"))
             }
         }
@@ -31,7 +31,7 @@ impl OyasumiCore for OyasumiCoreServerImpl {
         match crate::elevated_sidecar::handle_elevated_sidecar_start(request.get_ref()).await {
             Ok(_) => Ok(Response::new(Empty {})),
             Err(e) => {
-                error!("[Core] Failed to handle elevated sidecar start: {}", e);
+                error!("[Core] Failed to handle elevated sidecar start: {e}");
                 Err(Status::internal("Failed to handle elevated sidecar start"))
             }
         }

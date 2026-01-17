@@ -64,8 +64,7 @@ fn update_mdns_sidecar_binary() {
     // Pull the needed revision if not already downloaded
     if current_rev.is_none() || (current_rev.is_some() && current_rev.unwrap().trim() != revision) {
         let mdns_sidecar_exe_url = format!(
-            "https://github.com/Raphiiko/oyasumivr_oscquery/raw/{}/lib/mdns-sidecar.exe",
-            revision
+            "https://github.com/Raphiiko/oyasumivr_oscquery/raw/{revision}/lib/mdns-sidecar.exe"
         );
         // Delete resources/mdns-sidecar.exe if it exists
         let _ = std::fs::remove_file("resources/oyasumivr-mdns-sidecar.exe");

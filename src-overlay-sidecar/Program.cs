@@ -1,4 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
+// See https://aka.ms/new-console-template for more information
 
 using System.Diagnostics;
 using CefSharp;
@@ -57,6 +57,15 @@ public static class Program {
   private static void InitCef()
   {
     var settings = new CefSettings();
+    
+    // In-memory cache - no disk persistence
+    settings.CachePath = "";
+    settings.RootCachePath = "";
+    settings.PersistSessionCookies = false;
+    settings.CefCommandLineArgs.Add("disable-features", "MetricsService,PersistentHistograms");
+    settings.CefCommandLineArgs.Add("disable-crash-reporter", "true");
+    settings.CefCommandLineArgs.Add("disable-spell-checking", "true");
+    
     if (InReleaseMode())
     {
       settings.LogSeverity = LogSeverity.Disable;

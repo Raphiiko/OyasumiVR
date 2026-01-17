@@ -13,7 +13,8 @@ use tokio::sync::Mutex;
 use windows::core::PCWSTR;
 use windows::Win32::Media::Audio::{
     eAll, eCapture, eCommunications, eMultimedia, eRender, EDataFlow, ERole, IMMDeviceEnumerator,
-    IMMNotificationClient, IMMNotificationClient_Impl, MMDeviceEnumerator, DEVICE_STATE, DEVICE_STATE_ACTIVE,
+    IMMNotificationClient, IMMNotificationClient_Impl, MMDeviceEnumerator, DEVICE_STATE,
+    DEVICE_STATE_ACTIVE,
 };
 use windows::Win32::System::Com::{
     CoCreateInstance, CoInitializeEx, CLSCTX_ALL, COINIT_MULTITHREADED,
@@ -151,7 +152,7 @@ impl AudioDeviceManager {
             DeviceNotification::Added { device_id } => {
                 // We'll just refresh all devices in this case
                 if let Err(e) = AudioDeviceManager::_refresh_audio_devices(state.clone()).await {
-                    error!("[Core] Could not refresh audio devices: {:?}", e);
+                    error!("[Core] Could not refresh audio devices: {e:?}");
                 }
                 state.notify_devices_changed().await;
                 state.evaluate_capture_device_metering().await;
@@ -161,8 +162,7 @@ impl AudioDeviceManager {
                     Ok(device_id) => device_id,
                     Err(err) => {
                         error!(
-                        "[Core] Could not determine removed audio device (removed, could not determine id): {:?}",
-                        err
+                        "[Core] Could not determine removed audio device (removed, could not determine id): {err:?}"
                     );
                         return;
                     }
@@ -187,8 +187,7 @@ impl AudioDeviceManager {
                     Ok(device_id) => device_id,
                     Err(err) => {
                         error!(
-                    "[Core] Could not determine audio device (state changed, could not determine id): {:?}",
-                    err
+                    "[Core] Could not determine audio device (state changed, could not determine id): {err:?}"
                 );
                         return;
                     }
@@ -231,7 +230,7 @@ impl AudioDeviceManager {
                     )
                     .await
                     {
-                        error!("[Core] Could not determine default render devices: {:?}", e);
+                        error!("[Core] Could not determine default render devices: {e:?}");
                     }
                 }
                 if flow == eAll || flow == eCapture {
@@ -243,10 +242,7 @@ impl AudioDeviceManager {
                     )
                     .await
                     {
-                        error!(
-                            "[Core] Could not determine default capture devices: {:?}",
-                            e
-                        );
+                        error!("[Core] Could not determine default capture devices: {e:?}");
                     }
                 }
                 state.notify_devices_changed().await;
@@ -257,8 +253,7 @@ impl AudioDeviceManager {
                     Ok(device_id) => device_id,
                     Err(err) => {
                         error!(
-                        "[Core] Could not determine audio device (property value changed, could not determine id): {:?}",
-                        err
+                        "[Core] Could not determine audio device (property value changed, could not determine id): {err:?}"
                     );
                         return;
                     }
@@ -270,7 +265,7 @@ impl AudioDeviceManager {
                 match index {
                     Some(index) => {
                         if let Err(e) = devices[index].update_state().await {
-                            error!("[Core] Could not fetch state: {:?}", e);
+                            error!("[Core] Could not fetch state: {e:?}");
                         }
                     }
                     None => {
@@ -296,16 +291,13 @@ impl AudioDeviceManager {
             AudioDeviceManager::determine_default_devices(state, AudioDeviceType::Capture, false)
                 .await
         {
-            error!(
-                "[Core] Could not determine default capture devices: {:?}",
-                e
-            );
+            error!("[Core] Could not determine default capture devices: {e:?}");
         }
         if let Err(e) =
             AudioDeviceManager::determine_default_devices(state, AudioDeviceType::Render, false)
                 .await
         {
-            error!("[Core] Could not determine default render devices: {:?}", e);
+            error!("[Core] Could not determine default render devices: {e:?}");
         }
         // Notify observers
         state.notify_devices_changed().await;
@@ -375,10 +367,10 @@ impl AudioDeviceManager {
                         let device = AudioDevice::new(device);
                         match device {
                             Ok(device) => devices.push(device),
-                            Err(err) => error!("Could not get audio endpoint: {:?}", err),
+                            Err(err) => error!("Could not get audio endpoint: {err:?}"),
                         }
                     }
-                    Err(err) => error!("Could not get audio endpoint: {:?}", err),
+                    Err(err) => error!("Could not get audio endpoint: {err:?}"),
                 }
             }
             devices
@@ -401,16 +393,10 @@ impl AudioDeviceManager {
             .find(|device| device.get_id() == device_id)
         {
             if let Err(e) = device.set_volume(volume).await {
-                error!(
-                    "[Core] Could not set volume for audio device ({}): {:?}",
-                    device_id, e
-                );
+                error!("[Core] Could not set volume for audio device ({device_id}): {e:?}");
             }
         } else {
-            error!(
-                "[Core] Attempted setting volume for unknown device: {}",
-                device_id
-            );
+            error!("[Core] Attempted setting volume for unknown device: {device_id}");
         }
     }
 
@@ -421,16 +407,10 @@ impl AudioDeviceManager {
             .find(|device| device.get_id() == device_id)
         {
             if let Err(e) = device.set_mute(mute).await {
-                error!(
-                    "[Core] Could not set mute state for audio device ({}): {:?}",
-                    device_id, e
-                );
+                error!("[Core] Could not set mute state for audio device ({device_id}): {e:?}");
             }
         } else {
-            error!(
-                "[Core] Attempted setting mute state for unknown device: {}",
-                device_id
-            );
+            error!("[Core] Attempted setting mute state for unknown device: {device_id}");
         }
     }
 }
@@ -467,10 +447,7 @@ impl IMMNotificationClient_Impl for AudioDeviceManagerNotificationClient {
                 })
                 .await
             {
-                error!(
-                    "[Core] OnDeviceStateChanged could not send channel notification: {:?}",
-                    e
-                );
+                error!("[Core] OnDeviceStateChanged could not send channel notification: {e:?}");
             }
         });
         Ok(())
@@ -482,10 +459,7 @@ impl IMMNotificationClient_Impl for AudioDeviceManagerNotificationClient {
         let tx = self.refresh_tx.clone();
         self.handle.spawn(async move {
             if let Err(e) = tx.send(DeviceNotification::Added { device_id }).await {
-                error!(
-                    "[Core] OnDeviceAdded could not send channel notification: {:?}",
-                    e
-                );
+                error!("[Core] OnDeviceAdded could not send channel notification: {e:?}");
             }
         });
         Ok(())
@@ -497,10 +471,7 @@ impl IMMNotificationClient_Impl for AudioDeviceManagerNotificationClient {
         let tx = self.refresh_tx.clone();
         self.handle.spawn(async move {
             if let Err(e) = tx.send(DeviceNotification::Removed { device_id }).await {
-                error!(
-                    "[Core] OnDeviceRemoved could not send channel notification: {:?}",
-                    e
-                );
+                error!("[Core] OnDeviceRemoved could not send channel notification: {e:?}");
             }
         });
         Ok(())
@@ -520,10 +491,7 @@ impl IMMNotificationClient_Impl for AudioDeviceManagerNotificationClient {
                 .send(DeviceNotification::DefaultDeviceChanged { device_id, flow })
                 .await
             {
-                error!(
-                    "[Core] OnDefaultDeviceChanged could not send channel notification: {:?}",
-                    e
-                );
+                error!("[Core] OnDefaultDeviceChanged could not send channel notification: {e:?}");
             }
         });
         Ok(())
@@ -542,10 +510,7 @@ impl IMMNotificationClient_Impl for AudioDeviceManagerNotificationClient {
                 .send(DeviceNotification::PropertyValueChanged { device_id })
                 .await
             {
-                error!(
-                    "[Core] OnPropertyValueChanged could not send channel notification: {:?}",
-                    e
-                );
+                error!("[Core] OnPropertyValueChanged could not send channel notification: {e:?}");
             }
         });
         Ok(())

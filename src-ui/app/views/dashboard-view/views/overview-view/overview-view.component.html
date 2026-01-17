@@ -48,13 +48,13 @@
       }
     </div>
     @for (i of ['sleep', 'peek', 'awake', 'awake-hover']; track i) {
-      <div class="illustration" [ngClass]="[i, illustration === i ? 'active' : '']">
-        <img [attr.src]="'assets/img/illustration_' + i + '.png'" class="bg" />
+      <div class="illustration" [ngClass]="[i, illustrationVariant === i ? 'active' : '']">
+        <img [attr.src]="illustrationPath" class="bg" />
         <img
-          [attr.src]="'assets/img/illustration_' + i + '.png'"
+          [attr.src]="illustrationPath"
           (click)="setSleepMode(!sleepModeActive)"
-          (mouseenter)="determineIllustration(true)"
-          (mouseleave)="determineIllustration(false)"
+          (mouseenter)="determineIllustrationPath(true)"
+          (mouseleave)="determineIllustrationPath(false)"
         />
       </div>
     }

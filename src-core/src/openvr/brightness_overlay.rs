@@ -4,7 +4,8 @@ use ovr_overlay as ovr;
 use std::sync::LazyLock;
 use tokio::sync::Mutex;
 
-static OVERLAY_HANDLE: LazyLock<Mutex<Option<ovr_overlay::overlay::OverlayHandle>>> = LazyLock::new(Default::default);
+static OVERLAY_HANDLE: LazyLock<Mutex<Option<ovr_overlay::overlay::OverlayHandle>>> =
+    LazyLock::new(Default::default);
 static BRIGHTNESS: LazyLock<Mutex<f64>> = LazyLock::new(|| Mutex::new(1.0));
 
 pub async fn on_ovr_init(context: &ovr::Context) -> Result<(), String> {
@@ -51,7 +52,7 @@ pub async fn set_brightness(brightness: f64, perceived_brightness_adjustment_gam
     };
     // Set the brightness
     if let Err(e) = manager.set_opacity(*overlay_handle, alpha as f32) {
-        error!("[Core] Failed to set overlay opacity: {}", e);
+        error!("[Core] Failed to set overlay opacity: {e}");
     };
 }
 
@@ -71,7 +72,7 @@ async fn create_overlay(
     };
     // Set overlay image data (1 black pixel)
     if let Err(e) = manager.set_raw_data(overlay, &[0x00, 0x00, 0x00, 0xff], 1, 1, 4) {
-        error!("[Core] Failed to set overlay image data: {}", e);
+        error!("[Core] Failed to set overlay image data: {e}");
         return Err(());
     }
     // Transform the overlay
@@ -82,27 +83,27 @@ async fn create_overlay(
         ovr_overlay::TrackedDeviceIndex::new(0).unwrap(), // HMD is always at 0
         &transformation_matrix,
     ) {
-        error!("[Core] Failed to set overlay transform: {}", e);
+        error!("[Core] Failed to set overlay transform: {e}");
         return Err(());
     }
     // Set overlay properties
     if let Err(e) = manager.set_sort_order(overlay, 200) {
-        error!("[Core] Failed to set overlay sort order: {}", e);
+        error!("[Core] Failed to set overlay sort order: {e}");
         return Err(());
     }
     if let Err(e) = manager.set_width(overlay, 1.) {
-        error!("[Core] Failed to set overlay width: {}", e);
+        error!("[Core] Failed to set overlay width: {e}");
         return Err(());
     }
     let brightness = BRIGHTNESS.lock().await;
     let alpha = 1.0 - *brightness;
     if let Err(e) = manager.set_opacity(overlay, alpha as f32) {
-        error!("[Core] Failed to set overlay opacity: {}", e);
+        error!("[Core] Failed to set overlay opacity: {e}");
         return Err(());
     }
     // Show overlay
     if let Err(e) = manager.set_visibility(overlay, true) {
-        error!("[Core] Failed to set overlay visibility: {}", e);
+        error!("[Core] Failed to set overlay visibility: {e}");
         return Err(());
     }
     // Return overlay

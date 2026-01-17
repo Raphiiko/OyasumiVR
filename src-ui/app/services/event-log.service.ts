@@ -7,10 +7,9 @@ import {
 } from '../models/event-log-entry';
 import { async, BehaviorSubject, Observable, throttleTime } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
-import { LazyStore } from '@tauri-apps/plugin-store';
-import { EVENT_LOG_FILE } from '../globals';
 
 import { migrateEventLog } from '../migrations/event-log.migrations';
+import { EVENT_LOG_STORE } from '../globals';
 
 const MAX_LOG_AGE = 48 * 60 * 60 * 1000;
 
@@ -18,7 +17,6 @@ const MAX_LOG_AGE = 48 * 60 * 60 * 1000;
   providedIn: 'root',
 })
 export class EventLogService {
-  private store = new LazyStore(EVENT_LOG_FILE);
   private _eventLog: BehaviorSubject<EventLog> = new BehaviorSubject<EventLog>(
     structuredClone(EVENT_LOG_DEFAULT)
   );
@@ -57,7 +55,7 @@ export class EventLogService {
   }
 
   private async loadEventLog() {
-    let log: EventLog | undefined = await this.store.get<EventLog>('EVENT_LOG');
+    let log: EventLog | undefined = await EVENT_LOG_STORE.get<EventLog>('EVENT_LOG');
     if (log) {
       log = migrateEventLog(log);
     } else {
@@ -79,7 +77,6 @@ export class EventLogService {
   }
 
   private async saveEventLog() {
-    await this.store.set('EVENT_LOG', this._eventLog.value);
-    await this.store.save();
+    await EVENT_LOG_STORE.set('EVENT_LOG', this._eventLog.value);
   }
 }

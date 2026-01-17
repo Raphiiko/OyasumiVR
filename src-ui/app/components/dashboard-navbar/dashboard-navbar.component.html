@@ -120,6 +120,7 @@
           'settings/vrchat',
           'settings/notifications',
           'settings/hotkeys',
+          'settings/osc',
           'settings/updates',
           'settings/integrations',
           'settings/advanced',
@@ -345,6 +346,12 @@
           <i class="material-icons-round">keyboard</i>
         </div>
         <div class="menu-item-label" translate>comp.dashboard-navbar.settings.hotkeys</div>
+      </div>
+      <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'osc']">
+        <div class="menu-item-icon-prefix">
+          <i class="material-icons-round">sync_alt</i>
+        </div>
+        <div class="menu-item-label" translate>comp.dashboard-navbar.settings.osc</div>
       </div>
       <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'updates']">
         <div class="menu-item-icon-prefix">

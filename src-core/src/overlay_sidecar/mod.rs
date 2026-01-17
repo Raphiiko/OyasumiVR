@@ -11,7 +11,8 @@ use std::sync::LazyLock;
 use tokio::sync::Mutex;
 use tonic::transport::Channel;
 
-pub static SIDECAR_GRPC_CLIENT: LazyLock<Mutex<Option<OyasumiOverlaySidecarClient<Channel>>>> = LazyLock::new(Default::default);
+pub static SIDECAR_GRPC_CLIENT: LazyLock<Mutex<Option<OyasumiOverlaySidecarClient<Channel>>>> =
+    LazyLock::new(Default::default);
 static SIDECAR_MANAGER: LazyLock<Mutex<Option<SidecarManager>>> = LazyLock::new(Default::default);
 
 pub async fn init() {

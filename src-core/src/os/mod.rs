@@ -1,21 +1,21 @@
 mod audio_devices;
 pub mod commands;
+pub mod elevation;
 mod models;
 mod sounds_gen;
-pub mod elevation;
 
 use self::audio_devices::manager::AudioDeviceManager;
-use std::sync::LazyLock;
 use log::{error, info, warn};
 use rodio::{source::Source, Decoder};
 use rodio::{OutputStream, Sink};
 use std::collections::HashMap;
+use std::env;
 use std::ffi::OsString;
 use std::fs::File;
 use std::io::BufReader;
 use std::os::windows::ffi::OsStringExt;
 use std::slice;
-use std::env;
+use std::sync::LazyLock;
 use std::time::Duration;
 use tokio::sync::mpsc::Sender;
 use tokio::sync::Mutex;
@@ -29,7 +29,8 @@ use windows::Win32::System::Power::{
 type PlaySoundSender = LazyLock<Mutex<Option<Sender<(String, f32)>>>>;
 
 static PLAY_SOUND_TX: PlaySoundSender = LazyLock::new(Mutex::default);
-static AUDIO_DEVICE_MANAGER: LazyLock<Mutex<Option<AudioDeviceManager>>> = LazyLock::new(Mutex::default);
+static AUDIO_DEVICE_MANAGER: LazyLock<Mutex<Option<AudioDeviceManager>>> =
+    LazyLock::new(Mutex::default);
 static VRCHAT_ACTIVE: LazyLock<Mutex<bool>> = LazyLock::new(|| Mutex::new(false));
 
 pub async fn init_audio_device_manager() {
@@ -40,13 +41,13 @@ pub async fn init_audio_device_manager() {
     let m = match AudioDeviceManager::create().await {
         Ok(m) => m,
         Err(e) => {
-            error!("[Core] Failed to create audio device manager: {}", e);
+            error!("[Core] Failed to create audio device manager: {e}");
             return;
         }
     };
     *manager = Some(m);
     if let Err(e) = manager.as_ref().unwrap().refresh_audio_devices().await {
-        error!("[Core] Failed to refresh audio devices: {}", e);
+        error!("[Core] Failed to refresh audio devices: {e}");
     }
     tokio::task::spawn(watch_processes());
 }
@@ -93,11 +94,11 @@ pub async fn init_sound_playback() {
         // Load sound files
         let mut sounds = HashMap::new();
         sounds_gen::SOUND_FILES.iter().for_each(|sound| {
-            let path = format!("resources/sounds/{}.ogg", sound);
+            let path = format!("resources/sounds/{sound}.ogg");
             let file = match File::open(path.clone()) {
                 Ok(f) => f,
                 Err(e) => {
-                    error!("[Core] Failed to open sound file: {}", e);
+                    error!("[Core] Failed to open sound file: {e}");
                     return;
                 }
             };
@@ -120,7 +121,7 @@ pub async fn init_sound_playback() {
         let (_stream, stream_handle) = match OutputStream::try_default() {
             Ok((stream, handle)) => (stream, handle),
             Err(e) => {
-                error!("[Core] Failed to initialize audio output stream: {}", e);
+                error!("[Core] Failed to initialize audio output stream: {e}");
                 return;
             }
         };
@@ -133,7 +134,7 @@ pub async fn init_sound_playback() {
                 let sink = match Sink::try_new(&stream_handle) {
                     Ok(s) => s,
                     Err(e) => {
-                        error!("[Core] Failed to create audio sink: {}", e);
+                        error!("[Core] Failed to create audio sink: {e}");
                         continue;
                     }
                 };
@@ -141,7 +142,7 @@ pub async fn init_sound_playback() {
                 sink.append(source.clone());
                 sink.detach();
             } else {
-                error!("[Core] Sound not found: {}", sound);
+                error!("[Core] Sound not found: {sound}");
             }
         }
     });
@@ -165,24 +166,18 @@ pub async fn cleanup_batch_files() {
                             }
                             Err(e) => {
                                 // Log but don't fail - file might be in use or already deleted
-                                warn!("[Core] Could not remove batch file {:?}: {}", file_path, e);
+                                warn!("[Core] Could not remove batch file {file_path:?}: {e}");
                             }
                         }
                     }
                 }
             }
             if cleanup_count > 0 {
-                info!(
-                    "[Core] Cleaned up {} old batch files from temp directory",
-                    cleanup_count
-                );
+                info!("[Core] Cleaned up {cleanup_count} old batch files from temp directory");
             }
         }
         Err(e) => {
-            error!(
-                "[Core] Failed to read temp directory for batch file cleanup: {}",
-                e
-            );
+            error!("[Core] Failed to read temp directory for batch file cleanup: {e}");
         }
     }
 }
@@ -231,10 +226,7 @@ fn active_windows_power_policy() -> Option<GUID> {
 fn set_windows_power_policy(guid: &GUID) -> bool {
     let result = unsafe { PowerSetActiveScheme(None, Some(guid)) };
     if result.is_err() {
-        error!(
-            "[Core] Failed to set Windows power policy. Result code {:?}",
-            result
-        );
+        error!("[Core] Failed to set Windows power policy. Result code {result:?}");
     };
     result.is_ok()
 }

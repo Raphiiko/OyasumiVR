@@ -12,8 +12,6 @@
 
 - [Steam](https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/) (_**推荐**_)
 - 我们的[Github releases](https://github.com/Raphiiko/Oyasumi/releases)
-- 我们在[BOOTH.pm](https://raphiiko.booth.pm/items/4216880)的商店页面
-- 我们在[Gumroad](https://raphiiko.gumroad.com/l/oyasumi?layout=profile)的商店页面
 
 只需双击安装程序来安装它。安装完成后，你就可以开始使用了！
 
@@ -283,7 +281,6 @@ OyasumiVR在[MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md)
 {{SUPPORT_OYASUMIVR_BODY}}
 Oyasumi VR 完全且永久免费。不过，如果你愿意支持我继续开发 Oyasumi VR, 欢迎你在这些地方赞助我：
 
-<a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
 <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
 
 {{DEVICE_CONTROL_HEADER}}

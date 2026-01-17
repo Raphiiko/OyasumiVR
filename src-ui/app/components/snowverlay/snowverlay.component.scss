@@ -10,6 +10,7 @@
   overflow: hidden;
   filter: drop-shadow(0 0 10px white);
   pointer-events: none;
+  z-index: 1000;
 }
 
 @function random_range($min, $max) {

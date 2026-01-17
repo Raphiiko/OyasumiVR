@@ -32,11 +32,11 @@
 
 	function handleMouseMove(event: MouseEvent) {
 		if (!dragging) return;
-    // Determine the progress
+		// Determine the progress
 		const rangeGuide = document.querySelector('.brightness-slider-bar-range-guide') as HTMLElement;
 		const barBounds = rangeGuide.getBoundingClientRect();
 		let progress = clamp((event.pageX - barBounds.left) / barBounds.width, 0.0, 1.0);
-    // Convert the progress to the value
+		// Convert the progress to the value
 		let value = Math.round(progress * (max - min) + min);
 		// Snap to the nearest snap value if it's within the snap distance
 		if (snapValues.length > 0) {
@@ -46,7 +46,7 @@
 		// Snap to the nearest step
 		if (step) value = Math.round(value / step) * step;
 		// Convert value back to progress
-    progress = (value - min) / (max - min);
+		progress = (value - min) / (max - min);
 		dragProgression = progress;
 		onValueChange(value);
 	}

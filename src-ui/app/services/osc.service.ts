@@ -184,35 +184,36 @@ export class OscService {
   }
 
   async send_command(address: string, parameters: OscParameter[]) {
-    const addr = this._vrchatOscAddress.value;
-    if (!addr) return;
-    // Replace spaces with underscores in address (This is default VRC behaviour for parameters, and spaces aren't supported in addresses according to the OSC spec anyways)
-    address = address.trim().replace(/\s+/g, '_');
+    const targetAddresses = this.getOscTargetAddresses();
+    for (let targetAddr of targetAddresses) {
+      // Replace spaces with underscores in address (This is default VRC behaviour for parameters, and spaces aren't supported in addresses according to the OSC spec anyways)
+      address = address.trim().replace(/\s+/g, '_');
 
-    const _parameters = structuredClone(parameters); // copy parameter array because some parameters may be modified before sending
-    _parameters.forEach((parameter) => {
-      // handle "\n" in string values to insert newlines
-      if (parameter.type === 'String') {
-        parameter.value = parameter.value.replace(/\\n/g, '\n');
-      }
-    });
-
-    const parametersString = _parameters
-      .map((parameter) => `${parameter.type} => ${parameter.value}`)
-      .join(', ');
-
-    const addresses = [...this.getAddressAliasesForAvatarContext(address)];
-    if (!addresses.length) addresses.push(address);
-
-    for (const oscAddr of addresses) {
-      info(`[OSC] Sending {${parametersString}} to ${oscAddr}`);
-
-      await invoke('osc_send_command', {
-        addr,
-        oscAddr,
-        types: _parameters.map((parameter) => parameter.type),
-        values: _parameters.map((parameter) => parameter.value),
+      const _parameters = structuredClone(parameters); // copy parameter array because some parameters may be modified before sending
+      _parameters.forEach((parameter) => {
+        // handle "\n" in string values to insert newlines
+        if (parameter.type === 'String') {
+          parameter.value = parameter.value.replace(/\\n/g, '\n');
+        }
       });
+
+      const parametersString = _parameters
+        .map((parameter) => `${parameter.type} => ${parameter.value}`)
+        .join(', ');
+
+      const oscAddresses = [...this.getAddressAliasesForAvatarContext(address)];
+      if (!oscAddresses.length) oscAddresses.push(address);
+
+      for (const oscAddr of oscAddresses) {
+        info(`[OSC] Sending {${parametersString}} on ${oscAddr} to ${targetAddr}`);
+
+        await invoke('osc_send_command', {
+          addr: targetAddr,
+          oscAddr,
+          types: _parameters.map((parameter) => parameter.type),
+          values: _parameters.map((parameter) => parameter.value),
+        });
+      }
     }
   }
 
@@ -277,5 +278,18 @@ export class OscService {
     if (!address.startsWith('/avatar/parameters')) return [];
     if (this.avatarContext.type !== 'VRCHAT') return [];
     return this.avatarContext.parameters.find((p) => p.address === address)?.modularAliases ?? [];
+  }
+
+  private getOscTargetAddresses(): string[] {
+    const targets: string[] = [];
+    if (this.appSettings.settingsSync.oscTargets.includes('VRCHAT_OSCQUERY')) {
+      targets.push(this._vrchatOscAddress.value ?? '');
+    }
+    if (this.appSettings.settingsSync.oscTargets.includes('CUSTOM')) {
+      targets.push(
+        `${this.appSettings.settingsSync.oscCustomTargetHost}:${this.appSettings.settingsSync.oscCustomTargetPort}`
+      );
+    }
+    return targets.filter(Boolean);
   }
 }

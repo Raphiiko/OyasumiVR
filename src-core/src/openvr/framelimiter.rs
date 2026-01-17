@@ -13,11 +13,11 @@ pub async fn set_app_framelimits(
     };
     let settings = &mut context.settings_mngr();
 
-    let section_string = format!("steam.app.{}\0", app_id);
+    let section_string = format!("steam.app.{app_id}\0");
     let pch_section = CStr::from_bytes_with_nul(section_string.as_bytes()).unwrap();
     let pch_settings_key_additional_frames_to_predict = c"additionalFramesToPredict";
     let pch_settings_key_frames_to_throttle = c"framesToThrottle";
-        
+
     if let Some(limits) = limits {
         let _ = settings.set_int32(
             pch_section,
@@ -46,7 +46,7 @@ pub async fn get_app_framelimits(app_id: u32) -> Result<Option<OVRFrameLimits>, 
     };
     let settings = &mut context.settings_mngr();
 
-    let section_string = format!("steam.app.{}\0", app_id);
+    let section_string = format!("steam.app.{app_id}\0");
     let pch_section = CStr::from_bytes_with_nul(section_string.as_bytes()).unwrap();
     let pch_settings_key_additional_frames_to_predict = c"additionalFramesToPredict";
     let pch_settings_key_frames_to_throttle = c"framesToThrottle";

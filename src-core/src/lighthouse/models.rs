@@ -41,13 +41,6 @@ pub enum LighthouseError {
     FailedToGetCharacteristicProperties(bluest::Error),
 }
 
-#[derive(Debug, Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct SerializedLighthouseError {
-    error: String,
-    message: Option<String>,
-}
-
 impl Serialize for LighthouseError {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where

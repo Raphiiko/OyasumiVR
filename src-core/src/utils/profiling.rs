@@ -1,6 +1,9 @@
 use std::{
     collections::HashMap,
-    sync::{atomic::{AtomicBool, Ordering}, LazyLock},
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        LazyLock,
+    },
 };
 
 use log::{info, warn};
@@ -15,10 +18,13 @@ struct CommandInvocation {
     pub time: u128,
 }
 
-static INVOCATION_COUNT: LazyLock<Mutex<HashMap<String, u64>>> = LazyLock::new(|| Mutex::new(HashMap::new()));
-static INVOCATION_TIMES: LazyLock<Mutex<HashMap<String, CommandInvocation>>> = LazyLock::new(|| Mutex::new(HashMap::new()));
+static INVOCATION_COUNT: LazyLock<Mutex<HashMap<String, u64>>> =
+    LazyLock::new(|| Mutex::new(HashMap::new()));
+static INVOCATION_TIMES: LazyLock<Mutex<HashMap<String, CommandInvocation>>> =
+    LazyLock::new(|| Mutex::new(HashMap::new()));
 static PROFILING_ENABLED: LazyLock<AtomicBool> = LazyLock::new(|| AtomicBool::new(false));
-static EVENT_COUNTER: LazyLock<Mutex<HashMap<String, u128>>> = LazyLock::new(|| Mutex::new(HashMap::new()));
+static EVENT_COUNTER: LazyLock<Mutex<HashMap<String, u128>>> =
+    LazyLock::new(|| Mutex::new(HashMap::new()));
 
 pub fn enable_profiling() {
     info!("[Core] [PROFILING] Profiling enabled!");
@@ -144,8 +150,7 @@ async fn detect_dead_invocations() {
         }
         // Log warning
         warn!(
-            "[Core] [PROFILING] Invocation of '{}' command is taking too long ({}ms)!",
-            command_name, duration
+            "[Core] [PROFILING] Invocation of '{command_name}' command is taking too long ({duration}ms)!"
         );
         // if BUILD_FLAVOUR != BuildFlavour::Dev {
         //     let handle = crate::globals::TAURI_APP_HANDLE.lock().await;

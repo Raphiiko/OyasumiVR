@@ -31,6 +31,14 @@ public class OvrUtils {
     };
   }
 
+  public static EVROverlayError getOrCreateOverlay(String key, String name, ref ulong handle)
+  {
+    var error = OpenVR.Overlay.FindOverlay(key, ref handle);
+    if (error == EVROverlayError.None) return EVROverlayError.None;
+    error = OpenVR.Overlay.CreateOverlay(key, name, ref handle);
+    return error;
+  }
+
   public static float GetRefreshRate(bool force = false)
   {
     if (!force && DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - _refreshRateLastSet <= 5000) return _refreshRate;

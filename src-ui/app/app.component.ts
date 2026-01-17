@@ -7,6 +7,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, map, skip, tap } from 'rxjs';
 import { fade } from './utils/animations';
 import { TelemetryService } from './services/telemetry.service';
+import { isHolidaysEventActive } from './utils/event-utils';
 
 @Component({
   selector: 'app-root',
@@ -43,8 +44,7 @@ export class AppComponent implements OnInit {
         distinctUntilChanged()
       )
       .subscribe((hideSnowverlay) => {
-        const now = new Date();
-        this.showSnowverlay = !hideSnowverlay && now.getMonth() === 11 && now.getDate() >= 18;
+        this.showSnowverlay = !hideSnowverlay && isHolidaysEventActive();
       });
   }
 

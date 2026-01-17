@@ -20,6 +20,7 @@ mod system_tray;
 mod telemetry;
 mod utils;
 mod vrc_log_parser;
+mod vrcx;
 
 use std::{mem, sync::atomic::Ordering};
 
@@ -29,7 +30,7 @@ pub use grpc::models as Models;
 
 use cronjob::CronJob;
 use globals::{APTABASE_APP_KEY, FLAGS, TAURI_APP_HANDLE};
-use log::{info, warn, LevelFilter};
+use log::{error, info, warn, LevelFilter};
 use oyasumivr_shared::windows::is_elevated;
 use serde_json::json;
 use tauri::{plugin::TauriPlugin, Manager, Wry};
@@ -129,7 +130,7 @@ fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
 
             // Upload crash report if telemetry is enabled
             if telemetry::TELEMETRY_ENABLED.load(Ordering::Relaxed) {
-                println!("Uploading panic data to Aptabase: {} ({})", msg, location);
+                println!("Uploading panic data to Aptabase: {msg} ({location})");
                 let _ = client.track_event(
                     "rust_panic",
                     Some(json!({
@@ -143,8 +144,8 @@ fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
                 let full_path = std::env::current_exe().unwrap();
                 full_path.parent().unwrap().to_path_buf().join("panic.log")
             };
-            println!("Writing panic log to {:#?}", panic_log_path);
-            let _ = std::fs::write(panic_log_path, format!("{} ({})\n", msg, location));
+            println!("Writing panic log to {panic_log_path:#?}");
+            let _ = std::fs::write(panic_log_path, format!("{msg} ({location})\n"));
         }))
         .build()
 }
@@ -167,6 +168,7 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
         .rotation_strategy(RotationStrategy::KeepAll);
 
     builder = builder
+        //also set in Cargo.toml
         .level(LevelFilter::Info)
         .target(tauri_plugin_log::Target::new(
             tauri_plugin_log::TargetKind::Stdout,
@@ -200,7 +202,7 @@ async fn app_setup(app_handle: tauri::AppHandle) {
         let full_path = std::env::current_exe().unwrap();
         full_path.parent().unwrap().to_path_buf()
     };
-    info!("[Core] Setting working directory to: {:?}", executable_path);
+    info!("[Core] Setting working directory to: {executable_path:?}");
     std::env::set_current_dir(&executable_path).unwrap();
     // Clean up old batch files from previous runs
     os::cleanup_batch_files().await;
@@ -231,6 +233,13 @@ async fn app_setup(app_handle: tauri::AppHandle) {
         .unwrap();
     // Get dependencies
     let cache_dir = app_handle.path().app_cache_dir().unwrap();
+    // Register deep link schemas if needed
+    {
+        use tauri_plugin_deep_link::DeepLinkExt;
+        if let Err(e) = app_handle.deep_link().register_all() {
+            error!("[Core] Failed to register deep link schemas: {e}");
+        }
+    }
     // Initialize utility module
     utils::init();
     // Initialize Steam module
@@ -312,7 +321,7 @@ async fn load_configs() {
                 warn!("[Core] Could not find flags config. Using default values.");
             }
             _ => {
-                warn!("[Core] Could not load flags config: {:#?}", e);
+                warn!("[Core] Could not load flags config: {e:#?}");
             }
         },
     };
@@ -413,5 +422,6 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         grpc::commands::get_core_grpc_port,
         grpc::commands::get_core_grpc_web_port,
         telemetry::commands::set_telemetry_enabled,
+        vrcx::commands::vrcx_log,
     ]
 }

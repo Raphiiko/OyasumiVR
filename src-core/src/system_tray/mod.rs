@@ -9,7 +9,8 @@ pub mod commands;
 
 use crate::{globals::TAURI_APP_HANDLE, utils::send_event};
 
-pub static SYSTEMTRAY_MANAGER: LazyLock<Mutex<Option<SystemTrayManager>>> = LazyLock::new(Default::default);
+pub static SYSTEMTRAY_MANAGER: LazyLock<Mutex<Option<SystemTrayManager>>> =
+    LazyLock::new(Default::default);
 
 #[derive(Debug, Clone)]
 pub struct SystemTrayManager {

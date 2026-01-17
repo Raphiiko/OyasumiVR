@@ -1620,21 +1620,6 @@
         "label": "부팅 시 관리자 권한을 요구하기",
         "title": "관리자 권한"
       },
-      "discord": {
-        "activityMode": {
-          "description": "Discord에서 OyasumiVR을 현재 활동으로 표시해요",
-          "options": {
-            "DISABLED": "비활성화",
-            "ENABLED": "활성화 됨",
-            "ONLY_ASLEEP": "수면 중에만"
-          },
-          "title": "Discord Rich Presence"
-        },
-        "activityModeVRCCondition": {
-          "title": "VRChat이 실행되는 동안에만 활동 표시"
-        },
-        "title": "디스코드"
-      },
       "language": {
         "description": "여기서는 원하는 언어를 선택할 수 있어요. 혹시 번역되지 않은 부분이 있거나 모국어를 추가하고 싶다면 연락해주세요.",
         "title": "언어"
@@ -1766,6 +1751,21 @@
       "copy": "클립보드에 복사",
       "description": "OyasumiVR의 일부 기능은 외부 서비스를 활용할 수 있어요. OyasumiVR을 이러한 서비스 중 하나에 연결하고 싶으시다면 잘 찾아오셨습니다!",
       "disconnect": "연결 해제",
+      "discord": {
+        "activityMode": {
+          "description": "Discord에서 OyasumiVR을 현재 활동으로 표시해요",
+          "options": {
+            "DISABLED": "비활성화",
+            "ENABLED": "활성화 됨",
+            "ONLY_ASLEEP": "수면 중에만"
+          },
+          "title": "Discord Rich Presence"
+        },
+        "activityModeVRCCondition": {
+          "title": "VRChat이 실행되는 동안에만 활동 표시"
+        },
+        "title": "디스코드"
+      },
       "homeAssistant": {
         "description": "Home Assistant 인스턴스에 연결하여 OyasumiVR을 나머지 스마트홈 시스템과 연동하여 자신만의 강력한 자동화 기능을 구축하고 다양한 스마트 기기를 제어할 수 있어요.",
         "title": "Home Assistant (MQTT를 통함)"

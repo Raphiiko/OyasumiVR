@@ -4,6 +4,7 @@ use hyper::{Body, Request, Response};
 use log::{error, info};
 use mime::Mime;
 use serde_json::json;
+use std::sync::LazyLock;
 use std::{
     collections::HashMap,
     convert::Infallible,
@@ -11,7 +12,6 @@ use std::{
     path::{Path, PathBuf},
     str::FromStr,
 };
-use std::sync::LazyLock;
 use tokio::sync::Mutex;
 use urlencoding::decode;
 
@@ -227,7 +227,7 @@ impl ImageCache {
             deleted += 1;
         }
         if deleted > 0 {
-            info!("[Core] Deleted {} image(s) from the cache.", deleted);
+            info!("[Core] Deleted {deleted} image(s) from the cache.");
         }
     }
 

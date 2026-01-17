@@ -13,8 +13,6 @@
     <br>
     <a href="https://discord.gg/7MqdPJhYxC"><img alt="{{token.discordBadge}}" src="https://img.shields.io/discord/1023672078672609382?color=5865f2&label=Discord&logo=discord&logoColor=https%3A%2F%2Fshields.io%2Fcategory%2Fother"/></a>
     <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities"><img alt="{{token.steamPage}}" src="https://img.shields.io/badge/Store-Steam-black?logo=steam"/></a>
-    <a href="https://raphiiko.booth.pm/items/4216880"><img alt="{{token.boothPmPage}}" src="https://img.shields.io/badge/Store-Booth.pm-red"/></a>
-    <a href="https://raphiiko.gumroad.com/l/oyasumi?layout=profile"><img alt="{{token.gumroadPage}}" src="https://img.shields.io/badge/Store-Gumroad-important"/></a>
     <br>
     <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
     <br>
@@ -30,10 +28,10 @@
         </tr>
         <tr>
             <td align="center">
-                <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=english">Steam</a>&nbsp;|&nbsp;<a href="https://raphiiko.gumroad.com/l/oyasumi?layout=profile">Gumroad</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_EN.md">Readme</a>
+                <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=english">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_EN.md">Readme</a>
             </td>
             <td align="center">
-                <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=japanese">Steam</a>&nbsp;|&nbsp;<a href="https://raphiiko.booth.pm/items/4216880">Booth</a> | <a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_JA.md">Readme</a>
+                <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=japanese">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_JA.md">Readme</a>
             </td>
             <td align="center">
                 <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=korean">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_KO.md">Readme</a>

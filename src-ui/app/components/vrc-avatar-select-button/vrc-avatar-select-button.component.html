@@ -8,7 +8,7 @@
     <div @hshrink class="image">
       <img
         draggable="false"
-        onerror="this.style.display='none'"
+        onerror="this.style.display = 'none'"
         loading="lazy"
         [imgSmoothLoader]="avatar.imageUrl | imageCache: 3600 * 6"
       />
