@@ -47,7 +47,7 @@ public class OverlayPointer {
     // Handle trigger events
     OvrManager.Instance.OnInputActionsChanged += OnInputAction;
     // Start tasks
-    new Thread(Start).Start();
+    new Thread(()=>Program.ThreadCatch(Start)).Start();
   }
 
 

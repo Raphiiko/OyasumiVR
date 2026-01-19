@@ -116,7 +116,27 @@ public static class Program {
   {
     return Mode == SidecarMode.Release;
   }
+  public static void ThreadCatch(Action func)
+  {
+    try
+    {
+      func.Invoke();
+    }
+    catch (Exception e)
+    {
+       //it's soo ugly
+      try
+      {
+        Log.Error(e.ToString());
+      }
+      catch
+      {
 
+      }
+      Environment.Exit(-1);
+    }
+
+  }
   public enum SidecarMode {
     Release,
     Dev

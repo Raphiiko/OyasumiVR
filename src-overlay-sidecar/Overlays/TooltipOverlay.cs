@@ -18,7 +18,7 @@ public class TooltipOverlay : BaseWebOverlay {
   {
     OpenVR.Overlay.SetOverlayWidthInMeters(OverlayHandle, 0.35f);
     OpenVR.Overlay.SetOverlaySortOrder(OverlayHandle, 150);
-    new Thread(() =>
+    new Thread(()=>Program.ThreadCatch(() =>
     {
       var timer = new RefreshRateTimer();
       while (!Disposed)
@@ -27,7 +27,7 @@ public class TooltipOverlay : BaseWebOverlay {
         UpdatePosition();
         timer.SleepUntilNextTick();
       }
-    }).Start();
+    })).Start();
   }
 
   public void SetPosition(Vector3 position)

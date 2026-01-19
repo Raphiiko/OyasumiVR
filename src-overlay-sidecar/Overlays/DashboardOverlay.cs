@@ -22,7 +22,7 @@ public class DashboardOverlay : BaseWebOverlay {
     Browser!.JavascriptObjectRepository.Register("OyasumiIPCOut_Dashboard", this);
     _tooltipOverlay = new TooltipOverlay();
     OpenVR.Overlay.SetOverlayWidthInMeters(OverlayHandle, 0.45f);
-    new Thread(UpdateTooltipPosition).Start();
+    new Thread(()=>Program.ThreadCatch(UpdateTooltipPosition)).Start();
   }
 
   public new void Dispose()
