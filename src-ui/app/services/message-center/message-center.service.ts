@@ -43,6 +43,7 @@ export class MessageCenterService {
   public readonly messages = combineLatest([this._messages, this.hiddenMessageIds]).pipe(
     map(([messages, hiddenIds]) => messages.filter((message) => !hiddenIds.includes(message.id)))
   );
+  public readonly animate = new BehaviorSubject(false);
   public readonly hiddenMessages = combineLatest([this._messages, this.hiddenMessageIds]).pipe(
     map(([messages, hiddenIds]) => messages.filter((message) => hiddenIds.includes(message.id)))
   );
@@ -85,9 +86,20 @@ export class MessageCenterService {
   }
 
   public addMessage(message: MessageItem) {
+    this.animate.next(true);
     let messages = this._messages.value.filter((m) => m.id !== message.id);
     messages = [...messages, message];
     this._messages.next(messages);
+    let id = message.id;
+    setTimeout(() => {
+      if (this._messages.value.length == 0) {
+        this.animate.next(false);
+        return;
+      }
+      if (this._messages.value[this._messages.value.length - 1].id == id) {
+        this.animate.next(false);
+      }
+    },10000); //10s
   }
 
   public removeMessage(id: string) {

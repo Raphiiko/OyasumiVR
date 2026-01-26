@@ -22,9 +22,10 @@
     [tooltipMode]="'bottom'"
     (click)="messageCenter.toggle()"
   >
+  
     <i
       class="material-symbols-outlined icon-filled"
-      [class.wiggle]="(messageCenter.messages | async)?.length"
+      [class.wiggle]="(messageCenter.messages | async)?.length && (messageCenter.animate| async)"
       >mode_comment</i
     >
     @if ((messageCenter.messages | async)?.length) {
