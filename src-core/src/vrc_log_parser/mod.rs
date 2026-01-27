@@ -77,32 +77,49 @@ fn get_latest_log_path() -> Option<String> {
         .and_then(|entry| entry.path().to_str().map(String::from))
 }
 
-fn parse_datetime_from_line(line: String) -> Option<u64> {
+fn parse_datetime_from_line(line: &str) -> Option<u64> {
     let localtime = NaiveDateTime::parse_from_str(&line[0..19], "%Y.%m.%d %H:%M:%S").unwrap();
     // In the case of a DST rollback, we pick the latest possible time
     // During this hour, the logs will still be parsed in order, but their timestamps will be out of order.
     let time = Local.from_local_datetime(&localtime).latest();
     time.map(|v| v.timestamp_millis() as u64)
 }
-
 async fn process_log_line(line: String, initial_load: bool) {
-    let _ = parse_on_player_joined(line.clone(), initial_load).await
-        || parse_on_player_left(line.clone(), initial_load).await
-        || parse_on_location_change(line.clone(), initial_load).await;
+    if line.is_empty() {
+        return;
+    }
+    static mut INFO_OFFSET: usize = 32;
+    unsafe {
+        if !(line.len() > INFO_OFFSET + 5
+        // && line.contains("-"))
+        && line
+            .chars()
+            .skip(INFO_OFFSET-1)
+            .next()
+            //how can this be none?????
+            .map_or(false, |c| c == '-'))
+        {
+            return;
+        }
+        let time = line.split_at("2026.01.27 21:55:57".len()).0;
+        let line = line.split_at(INFO_OFFSET+2).1;
+        if line.starts_with("[Behaviour]") {
+            let _ = parse_on_player_joined(line, initial_load, time).await
+                || parse_on_player_left(line, initial_load, time).await
+                || parse_on_location_change(line, initial_load, time).await;
+        }
+    }
 }
 
-async fn parse_on_player_joined(line: String, initial_load: bool) -> bool {
-    if line.contains("[Behaviour] OnPlayerJoined") && !line.contains("] OnPlayerJoined:") {
-        let mut offset = match line.rfind("] OnPlayerJoined") {
-            Some(v) => v,
-            None => return true,
-        };
-        offset += 17;
-        if offset >= line.len() {
+async fn parse_on_player_joined(line: &str, initial_load: bool, time: &str) -> bool {
+    const SEARCH_STRING: &str = "[Behaviour] OnPlayerJoined ";
+    if line.starts_with(SEARCH_STRING) {
+        let offset = 17;
+        if offset > line.len() {
             return true;
         }
         let display_name = line[offset..].to_string();
-        let time = match parse_datetime_from_line(line) {
+        let time = match parse_datetime_from_line(time) {
             Some(v) => v,
             None => return true,
         };
@@ -123,21 +140,15 @@ async fn parse_on_player_joined(line: String, initial_load: bool) -> bool {
     false
 }
 
-async fn parse_on_player_left(line: String, initial_load: bool) -> bool {
-    if line.contains("[Behaviour] OnPlayerLeft")
-        && !line.contains("] OnPlayerLeft:")
-        && !line.contains("] OnPlayerLeftRoom")
-    {
-        let mut offset = match line.rfind("] OnPlayerLeft") {
-            Some(v) => v,
-            None => return true,
-        };
-        offset += 15;
-        if offset >= line.len() {
+async fn parse_on_player_left(line: &str, initial_load: bool, time: &str) -> bool {
+    const SEARCH_STRING: &str = "[Behaviour] OnPlayerLeft ";
+    if line.starts_with(SEARCH_STRING) {
+        let offset = 15;
+        if offset > line.len() {
             return true;
         }
         let display_name = line[offset..].to_string();
-        let time = match parse_datetime_from_line(line) {
+        let time = match parse_datetime_from_line(time) {
             Some(v) => v,
             None => return true,
         };
@@ -158,21 +169,19 @@ async fn parse_on_player_left(line: String, initial_load: bool) -> bool {
     false
 }
 
-async fn parse_on_location_change(line: String, initial_load: bool) -> bool {
-    if line.contains("[Behaviour] Joining ")
-        && !line.contains("] Joining or Creating Room: ")
-        && !line.contains("] Joining friend: ")
+async fn parse_on_location_change(line: &str, initial_load: bool, time: &str) -> bool {
+    const SEARCH_STRING: &str = "[Behaviour] Joining ";
+    if line.starts_with(SEARCH_STRING)
+        && !line.starts_with("[Behaviour] Joining or Creating Room: ")
+        && !line.starts_with("[Behaviour] Joining friend: ")
     {
-        let mut offset = match line.rfind("] Joining ") {
-            Some(v) => v,
-            None => return true,
-        };
-        offset += 10;
-        if offset >= line.len() {
+
+        let offset = 10;
+        if offset > line.len() {
             return true;
         }
         let instance_id = line[offset..].to_string();
-        let time = match parse_datetime_from_line(line) {
+        let time = match parse_datetime_from_line(time) {
             Some(v) => v,
             None => return true,
         };
@@ -213,9 +222,6 @@ fn start_log_watch_task(path: String) -> CancellationToken {
             // Process new lines
             for line in lines_iterator.by_ref() {
                 let line = line.unwrap();
-                if line.trim().is_empty() {
-                    continue;
-                }
                 process_log_line(line, first_run).await;
             }
 
