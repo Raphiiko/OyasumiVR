@@ -2543,11 +2543,11 @@
           "title": "Calibration"
         },
         "considerControllerPresence": {
-          "description": "When enabled, the sleep detector will also consider your controller inputs.",
+          "description": "Sleep Mode will only be enabled if no controller input was detected during detection window period",
           "title": "Consider controller input"
         },
         "considerSleepingPose": {
-          "description": "When enabled, the sleep detector will also consider your sleeping pose.",
+          "description": "Sleep Mode will only be enabled if the headset wasn't in the upright orientation during detection window period",
           "title": "Consider sleeping pose"
         },
         "description": "With this feature enabled, OyasumiVR will automatically enable sleep mode when it guesses you're asleep based on your movement.",
