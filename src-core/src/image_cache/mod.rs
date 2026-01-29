@@ -145,12 +145,30 @@ impl ImageCache {
         let image_path = storage_path.join(&file_name);
         // Delete current storage directory if it exists
         if storage_path.exists() {
-            std::fs::remove_dir_all(&storage_path).unwrap();
+            if let Err(err) = std::fs::remove_dir_all(&storage_path) {
+                error!(
+                    "[core] failed to remove image storage path: {:?} with: {:?}",
+                    storage_path, err
+                );
+                return;
+            }
         }
         // Create storage directory
-        std::fs::create_dir_all(&storage_path).unwrap();
+        if let Err(err) = std::fs::create_dir_all(&storage_path) {
+            error!(
+                "[core] failed to create image storage path {:?} with {:?}",
+                storage_path, err
+            );
+            return;
+        }
         // Store image
-        std::fs::write(image_path, image_data).unwrap();
+        if let Err(err) = std::fs::write(&image_path, image_data) {
+            error!(
+                "[core] failed to write image to cache {:?} with {:?}",
+                storage_path, err
+            );
+            return;
+        }
         // Store manifest
         let manifest = json!({
             "url": url,
@@ -160,19 +178,45 @@ impl ImageCache {
             "created": chrono::Utc::now().timestamp(),
             "filename": file_name,
         });
-        std::fs::write(manifest_path, manifest.to_string()).unwrap();
+        if let Err(err) = std::fs::write(manifest_path, manifest.to_string()) {
+            error!(
+                "[core] failed to write manifest to cache {:?} with {:?}",
+                storage_path, err
+            );
+            if let Err(err) = std::fs::remove_file(image_path) {
+                error!(
+                    "[core] failed to remove image from cache {:?} with {:?}",
+                    storage_path, err
+                );
+            }
+        }
     }
 
     pub fn clean(&self, only_expired: bool) {
         // Create directory at cache_path if it doesn't exist
         let cache_path = Path::new(&self.cache_path_str);
         if !cache_path.exists() {
-            std::fs::create_dir_all(cache_path).unwrap();
+            if let Err(err) = std::fs::create_dir_all(cache_path) {
+                error!(
+                    "[core] failed to create image cache path {:?} with {:?}",
+                    cache_path, err
+                );
+            }
             return;
         }
         let mut deleted = 0;
+        let read_dir = match std::fs::read_dir(cache_path) {
+            Ok(v) => v,
+            Err(err) => {
+                error!(
+                    "[core] failed to read image cache path {:?} with {:?}",
+                    cache_path, err
+                );
+                return;
+            }
+        };
         // Iterate over all directories in cache_path
-        for entry in std::fs::read_dir(cache_path).unwrap() {
+        for entry in read_dir {
             let entry = entry.unwrap();
             let path = entry.path();
             // Skip if path is not a directory
@@ -189,11 +233,42 @@ impl ImageCache {
                         manifest_path.display()
                     );
                     // Delete path if manifest could not be read
-                    std::fs::remove_dir_all(&path).unwrap();
+
+                    if let Err(err) = std::fs::remove_dir_all(&path) {
+                        error!(
+                            "[core] failed to clear image path {:?} with {:?}",
+                            path, err
+                        );
+                    }
                     continue;
                 }
             };
-            let manifest: serde_json::Value = serde_json::from_str(&manifest).unwrap();
+            if manifest.is_empty() {
+                error!("[core] empty image cache manifes at {:?}", path);
+                if let Err(err) = std::fs::remove_dir_all(&path) {
+                    error!(
+                        "[core] failed to clear image path {:?} with {:?}",
+                        path, err
+                    );
+                }
+                continue;
+            }
+            let manifest: serde_json::Value = match serde_json::from_str(&manifest) {
+                Ok(v) => v,
+                Err(err) => {
+                    error!(
+                        "[core] failed to parse image cache manifes at {:?} with {:?}",
+                        path, err
+                    );
+                    if let Err(err) = std::fs::remove_dir_all(&path) {
+                        error!(
+                            "[core] failed to clear image path {:?} with {:?}",
+                            path, err
+                        );
+                    }
+                    continue;
+                }
+            };
             // Check if image is expired
             let ttl = match manifest["ttl"].as_u64() {
                 Some(ttl) => ttl,
@@ -217,13 +292,20 @@ impl ImageCache {
             };
             let now = std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
-                .unwrap()
-                .as_secs();
+                .map(|d| d.as_secs())
+                //default to deleting the files
+                .unwrap_or(u64::MAX);
             if only_expired && now - created < ttl {
                 continue;
             }
             // Delete storage directory
-            std::fs::remove_dir_all(&path).unwrap();
+
+            if let Err(err) = std::fs::remove_dir_all(&path) {
+                error!(
+                    "[core] failed to clear image path {:?} with {:?}",
+                    path, err
+                );
+            }
             deleted += 1;
         }
         if deleted > 0 {
