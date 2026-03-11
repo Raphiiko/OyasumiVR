@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { GPUPowerLimit } from '../../../../../models/gpu-device';
+import { GPUPowerLimit, GPUPowerLimitUnit } from '../../../../../models/gpu-device';
 import { vshrink } from '../../../../../utils/animations';
 
 @Component({
@@ -13,6 +13,7 @@ export class PowerLimitInputComponent implements OnInit {
   @Input() minPowerLimit = -1;
   @Input() maxPowerLimit = -1;
   @Input() defaultPowerLimit = -1;
+  @Input() unit: GPUPowerLimitUnit = 'W';
 
   @Input() powerLimit?: GPUPowerLimit;
   @Output() powerLimitChange: EventEmitter<GPUPowerLimit> = new EventEmitter<GPUPowerLimit>();
@@ -35,12 +36,40 @@ export class PowerLimitInputComponent implements OnInit {
     this.powerLimitChange.emit(this.powerLimit);
   }
 
+  formatPowerLimit(value: number): string {
+    const roundedValue = Math.floor(value);
+    if (this.unit === '%') {
+      return `${roundedValue > 0 ? '+' : ''}${roundedValue}%`;
+    }
+
+    return `${roundedValue}W`;
+  }
+
+  formatRelativePercentage(value: number): string {
+    return `${Math.floor((value / this.maxPowerLimit) * 100)}%`;
+  }
+
+  get defaultLimitSummary(): string {
+    if (this.unit === '%') {
+      return `(${this.formatPowerLimit(this.defaultPowerLimit)})`;
+    }
+
+    return `(${this.formatPowerLimit(this.defaultPowerLimit)} / ${this.formatRelativePercentage(this.defaultPowerLimit)})`;
+  }
+
+  get showRelativePercentage(): boolean {
+    return this.unit === 'W' && this.maxPowerLimit > 0;
+  }
+
   get isEnabled() {
     return (
       this.powerLimit &&
-      this.minPowerLimit >= 0 &&
-      this.maxPowerLimit > 0 &&
-      this.defaultPowerLimit >= 0
+      Number.isFinite(this.minPowerLimit) &&
+      Number.isFinite(this.maxPowerLimit) &&
+      Number.isFinite(this.defaultPowerLimit) &&
+      this.maxPowerLimit > this.minPowerLimit &&
+      this.defaultPowerLimit >= this.minPowerLimit &&
+      this.defaultPowerLimit <= this.maxPowerLimit
     );
   }
 }

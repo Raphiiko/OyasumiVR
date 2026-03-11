@@ -69,37 +69,39 @@
         >
           <div class="pane-content">
             <h3 translate>gpu-automations.powerLimiting.currentPowerLimit</h3>
+            @if (selectedGpu && selectedGpu.supportsPowerLimiting) {
+              <div class="power-limit-readout" @vshrink>
+                <span class="power-limit-readout-value">
+                  {{ formatPowerLimit(selectedGpu.powerLimit) }}
+                </span>
+                @if (getRelativePowerLimitPercentage()) {
+                  <span class="power-limit-readout-meta">
+                    {{ getRelativePowerLimitPercentage() }}
+                  </span>
+                }
+              </div>
+            }
             <div class="power-limit-bar">
               <div
                 class="power-limit-bar-fill"
                 [class.default]="selectedGpu?.powerLimit === selectedGpu?.defaultPowerLimit"
-                [style.width]="
-                  (((selectedGpu?.powerLimit || 1) / (selectedGpu?.maxPowerLimit || 1)) * 100
-                    | floor) + '%'
-                "
-                [style.justify-content]="selectedGpu ? 'flex-end' : 'center'"
-              >
-                @if (selectedGpu && selectedGpu.supportsPowerLimiting) {
-                  <span>
-                    {{ selectedGpu.powerLimit }}W &#11825;
-                    {{
-                      ((selectedGpu.powerLimit || 0) / (selectedGpu.maxPowerLimit || 1)) * 100
-                        | floor
-                    }}%
-                  </span>
-                }
-                @if (!selectedGpu) {
-                  <span translate>gpu-automations.powerLimiting.noGPUSelected</span>
-                }
-                @if (selectedGpu && !selectedGpu.supportsPowerLimiting) {
-                  <span translate>gpu-automations.powerLimiting.gpuUnsupported</span>
-                }
-              </div>
+                [style.width]="getCurrentPowerLimitFillPercent()"
+              ></div>
+              @if (!selectedGpu) {
+                <div class="power-limit-bar-status" translate>
+                  gpu-automations.powerLimiting.noGPUSelected
+                </div>
+              }
+              @if (selectedGpu && !selectedGpu.supportsPowerLimiting) {
+                <div class="power-limit-bar-status" translate>
+                  gpu-automations.powerLimiting.gpuUnsupported
+                </div>
+              }
             </div>
             @if (selectedGpu) {
               <div class="power-limit-labels" @vshrink>
-                <span>{{ selectedGpu.minPowerLimit ?? '-' }}W</span>
-                <span>{{ selectedGpu.maxPowerLimit ?? '-' }}W</span>
+                <span>{{ formatPowerLimit(selectedGpu.minPowerLimit) }}</span>
+                <span>{{ formatPowerLimit(selectedGpu.maxPowerLimit) }}</span>
               </div>
             }
           </div>
@@ -128,6 +130,7 @@
               [minPowerLimit]="selectedGpu?.minPowerLimit ?? -1"
               [maxPowerLimit]="selectedGpu?.maxPowerLimit ?? -1"
               [defaultPowerLimit]="selectedGpu?.defaultPowerLimit ?? -1"
+              [unit]="getInputUnit()"
               [powerLimit]="powerLimitOnSleepEnable"
               (powerLimitChange)="
                 powerLimitChange.next({ automation: 'SLEEP_ENABLE', limit: $event })
@@ -153,6 +156,7 @@
               [minPowerLimit]="selectedGpu?.minPowerLimit ?? -1"
               [maxPowerLimit]="selectedGpu?.maxPowerLimit ?? -1"
               [defaultPowerLimit]="selectedGpu?.defaultPowerLimit ?? -1"
+              [unit]="getInputUnit()"
               [powerLimit]="powerLimitOnSleepDisable"
               (powerLimitChange)="
                 powerLimitChange.next({ automation: 'SLEEP_DISABLE', limit: $event })

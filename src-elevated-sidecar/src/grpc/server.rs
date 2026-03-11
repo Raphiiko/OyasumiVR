@@ -1,6 +1,6 @@
 use std::time::Duration;
 use log::info;
-use crate::{afterburner, nvml, Models::NvmlStatus};
+use crate::{afterburner, gpu_power, Models::NvmlStatus};
 
 use super::oyasumi_elevated_sidecar::{
     oyasumi_elevated_sidecar_server::OyasumiElevatedSidecar, Empty, NvmlDevicesResponse,
@@ -35,7 +35,8 @@ impl OyasumiElevatedSidecar for OyasumiElevatedSidecarServerImpl {
         &self,
         _: Request<Empty>,
     ) -> Result<Response<NvmlStatusResponse>, Status> {
-        let status: NvmlStatus = nvml::nvml_status().await;
+        let status: NvmlStatus = gpu_power::status().await;
+        info!("[gRPC] get_nvml_status -> {:?}", status);
         Ok(Response::new(NvmlStatusResponse {
             status: status.into(),
         }))
@@ -45,7 +46,9 @@ impl OyasumiElevatedSidecar for OyasumiElevatedSidecarServerImpl {
         &self,
         _: Request<Empty>,
     ) -> Result<Response<NvmlDevicesResponse>, Status> {
-        let devices = nvml::nvml_get_devices();
+        info!("[gRPC] get_nvml_devices");
+        let devices = gpu_power::get_devices();
+        info!("[gRPC] get_nvml_devices -> {} devices", devices.len());
         Ok(Response::new(NvmlDevicesResponse { devices }))
     }
 
@@ -54,12 +57,21 @@ impl OyasumiElevatedSidecar for OyasumiElevatedSidecarServerImpl {
         request: Request<NvmlPowerManagementLimitRequest>,
     ) -> Result<Response<NvmlPowerManagementLimitResponse>, Status> {
         let request = request.into_inner();
-        let result = nvml::nvml_set_power_management_limit(request.uuid, request.power_limit).await;
+        info!(
+            "[gRPC] set_nvml_power_management_limit (uuid={}, power_limit={})",
+            request.uuid, request.power_limit
+        );
+        let result =
+            gpu_power::set_power_management_limit(request.uuid, request.power_limit).await;
         let success = result.is_ok();
         let error = match result {
             Ok(_) => None,
             Err(e) => Some(e),
         };
+        info!(
+            "[gRPC] set_nvml_power_management_limit -> success={}, error={:?}",
+            success, error
+        );
         Ok(Response::new(NvmlPowerManagementLimitResponse {
             success,
             error: error.map(|e| e.into()),

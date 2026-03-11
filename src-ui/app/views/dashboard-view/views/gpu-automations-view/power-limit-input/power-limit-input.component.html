@@ -7,17 +7,18 @@
         <span class="check-toggle-label" translate>
           <span translate>gpu-automations.powerLimiting.inputDefault</span>
           <br />
-          ({{ defaultPowerLimit | floor }}W /
-          {{ (defaultPowerLimit / maxPowerLimit) * 100 | floor }}%)
+          {{ defaultLimitSummary }}
         </span>
       </label>
     </div>
     <div class="input-container" [class.input-disabled]="powerLimit?.default">
       <div class="label-container">
-        <div class="label label-value-absolute">{{ powerLimit?.limit ?? 0 | floor }}W</div>
-        <div class="label label-value-percentage">
-          {{ ((powerLimit?.limit ?? 0) / maxPowerLimit) * 100 | floor }}%
-        </div>
+        <div class="label label-value-absolute">{{ formatPowerLimit(powerLimit?.limit ?? 0) }}</div>
+        @if (showRelativePercentage) {
+          <div class="label label-value-percentage">
+            {{ formatRelativePercentage(powerLimit?.limit ?? 0) }}
+          </div>
+        }
       </div>
       <div class="slider-container">
         <app-slider
@@ -29,8 +30,8 @@
         </app-slider>
       </div>
       <div class="label-container">
-        <span>{{ minPowerLimit | floor }}W</span>
-        <span>{{ maxPowerLimit | floor }}W</span>
+        <span>{{ formatPowerLimit(minPowerLimit) }}</span>
+        <span>{{ formatPowerLimit(maxPowerLimit) }}</span>
       </div>
     </div>
   </div>

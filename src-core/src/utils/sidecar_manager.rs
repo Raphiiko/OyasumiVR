@@ -227,13 +227,20 @@ impl SidecarManager {
                     if s.process(Pid::from(pid as usize)).is_none() {
                         let current_sidecar_pid =
                             { self_guard.sidecar_pid.lock().await.as_ref().map(|pid| *pid) };
-                        // Check if the sidecar pid is still the same.
-                        // If it is, then we can assume the sidecar stopped.
-                        // If not, it likely got replaced by another instance of the sidecar.
-                        if match current_sidecar_pid {
-                            Some(current_sidecar_pid) => current_sidecar_pid == pid,
-                            None => true,
-                        } {
+                        // If another pid took over, keep following the replacement sidecar.
+                        if let Some(current_sidecar_pid) = current_sidecar_pid {
+                            if current_sidecar_pid != pid {
+                                info!(
+                                    "[Core] {} sidecar process switched from pid {} to pid {}",
+                                    &self_guard.sidecar_id, pid, current_sidecar_pid
+                                );
+                                pid = current_sidecar_pid;
+                                drop(self_guard);
+                                continue;
+                            }
+                        }
+                        // The watched pid is still the active pid, so the sidecar actually stopped.
+                        {
                             let sidecar_pid = &self_guard.sidecar_pid;
                             *sidecar_pid.lock().await = None;
                             let sidecar_child = &self_guard.sidecar_child;
@@ -247,12 +254,12 @@ impl SidecarManager {
                             let started = &self_guard.started;
                             *started.lock().await = false;
                         }
-                        // Send signal that the sidecar has stopped
-                        let _ = &self_guard.on_stop_tx.send(());
-                        info!(
-                            "[Core] {} sidecar has stopped (pid={})",
-                            &self_guard.sidecar_id, pid
-                        );
+                        let on_stop_tx = self_guard.on_stop_tx.clone();
+                        let sidecar_id = self_guard.sidecar_id.clone();
+                        drop(self_guard);
+                        // Send signal that the sidecar has stopped.
+                        let _ = on_stop_tx.send(()).await;
+                        info!("[Core] {} sidecar has stopped (pid={})", sidecar_id, pid);
                         break;
                     } else {
                         retries = 0;

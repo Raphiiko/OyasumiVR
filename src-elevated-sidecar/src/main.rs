@@ -1,7 +1,10 @@
-#![cfg_attr(
-    all(not(debug_assertions), target_os = "windows"),
-    windows_subsystem = "windows"
-)]
+// #![cfg_attr(
+//     all(not(debug_assertions), target_os = "windows"),
+//     windows_subsystem = "windows"
+// )]
+#[cfg(not(target_os = "windows"))]
+compile_error!("oyasumivr-elevated-sidecar only supports Windows.");
+
 #[macro_use(lazy_static)]
 extern crate lazy_static;
 
@@ -11,22 +14,28 @@ pub use grpc::oyasumi_elevated_sidecar as Models;
 use log::{error, info};
 use oyasumivr_shared::windows::is_elevated;
 use simplelog::{
-    ColorChoice, CombinedLogger, Config, LevelFilter, TermLogger, TerminalMode, WriteLogger,
+    ColorChoice, CombinedLogger, Config, LevelFilter, SharedLogger, TermLogger, TerminalMode,
+    WriteLogger,
 };
 use std::env;
-use std::fs::File;
+use std::fs::{self, File};
 use std::path::Path;
-use std::time::Duration;
-use sysinfo::{Pid, System, ProcessesToUpdate};
+use std::panic;
 use windows::relaunch_with_elevation;
 
 mod afterburner;
+mod adlx_backend;
+mod gpu_power;
 mod grpc;
 mod nvml;
+mod nvml_backend;
 mod windows;
 
 #[tokio::main]
 async fn main() {
+    panic::set_hook(Box::new(|panic_info| {
+        error!("[PANIC] Elevated sidecar panicked: {panic_info}");
+    }));
     // Initialize logging
     let log_path = if let Some(base_dirs) = BaseDirs::new() {
         base_dirs
@@ -35,25 +44,34 @@ async fn main() {
     } else {
         Path::new("co.raphii.oyasumi/logs/OyasumiVR_Elevated_Sidecar.log").to_path_buf()
     };
-    CombinedLogger::init(vec![
-        TermLogger::new(
+    let mut loggers: Vec<Box<dyn SharedLogger>> = vec![TermLogger::new(
+        LevelFilter::Info,
+        Config::default(),
+        TerminalMode::Mixed,
+        ColorChoice::Auto,
+    )];
+    if let Some(log_dir) = log_path.parent() {
+        if let Err(e) = fs::create_dir_all(log_dir) {
+            eprintln!(
+                "Failed to create elevated sidecar log directory at {:?}: {}",
+                log_dir, e
+            );
+        }
+    }
+    match File::create(&log_path) {
+        Ok(log_file) => loggers.push(WriteLogger::new(
             LevelFilter::Info,
             Config::default(),
-            TerminalMode::Mixed,
-            ColorChoice::Auto,
-        ),
-        WriteLogger::new(
-            LevelFilter::Info,
-            Config::default(),
-            File::create(log_path).unwrap(),
-            // OpenOptions::new()
-            //     .create(true)
-            //     .append(true)
-            //     .open(log_path)
-            //     .unwrap(),
-        ),
-    ])
-    .unwrap();
+            log_file,
+        )),
+        Err(e) => {
+            eprintln!(
+                "Failed to create elevated sidecar log file at {:?}: {}",
+                log_path, e
+            );
+        }
+    }
+    CombinedLogger::init(loggers).unwrap();
     // Parse the arguments
     let args: Vec<String> = env::args().collect();
     if args.len() < 3 {
@@ -85,7 +103,10 @@ async fn main() {
     };
     // Relaunch as admin if not elevated
     if !is_elevated() {
-        relaunch_with_elevation(host_port, main_pid, true);
+        if !relaunch_with_elevation(host_port, main_pid, true) {
+            error!("Failed to request administrative privileges for elevated sidecar.");
+            std::process::exit(1);
+        }
         return;
     }
     // Setup the grpc server
@@ -111,21 +132,71 @@ async fn main() {
         error!("Could not inform main process of sidecar initialization");
         std::process::exit(0);
     }
-    // Init NVML
-    nvml::init();
+    // Initialize the shared GPU power backend layer.
+    let gpu_power_initialized = gpu_power::init();
+    info!(
+        "[GPU] Power-limit backend initialization finished (initialized={})",
+        gpu_power_initialized
+    );
     // Keep an eye on the main process and quit alongside it
     watch_main_process(main_pid).await;
 }
 
 async fn watch_main_process(main_pid: u32) {
-    let pid = Pid::from(main_pid as usize);
-    let mut s = System::new_all();
+    use windows_sys::Win32::Foundation::{CloseHandle, WAIT_FAILED, WAIT_TIMEOUT};
+    use windows_sys::Win32::System::Threading::{
+        OpenProcess, WaitForSingleObject, PROCESS_QUERY_LIMITED_INFORMATION,
+        PROCESS_SYNCHRONIZE, WAIT_OBJECT_0,
+    };
+
+    info!("[Core] Watching main process (pid={})", main_pid);
+    let process_handle = unsafe {
+        OpenProcess(
+            PROCESS_QUERY_LIMITED_INFORMATION | PROCESS_SYNCHRONIZE,
+            0,
+            main_pid,
+        )
+    };
+    if process_handle == 0 {
+        error!(
+            "Could not open handle for main process (pid={}). Stopping elevated sidecar.",
+            main_pid
+        );
+        std::process::exit(0);
+    }
+
     loop {
-        s.refresh_processes(ProcessesToUpdate::All, true);
-        if s.process(pid).is_none() {
-            info!("Main process has exited. Stopping elevated sidecar.");
-            std::process::exit(0);
+        let wait_result = unsafe { WaitForSingleObject(process_handle, 1000) };
+        match wait_result {
+            WAIT_TIMEOUT => {}
+            WAIT_OBJECT_0 => {
+                info!("Main process has exited. Stopping elevated sidecar.");
+                unsafe {
+                    CloseHandle(process_handle);
+                }
+                std::process::exit(0);
+            }
+            WAIT_FAILED => {
+                error!(
+                    "Failed while waiting for main process (pid={}). Stopping elevated sidecar.",
+                    main_pid
+                );
+                unsafe {
+                    CloseHandle(process_handle);
+                }
+                std::process::exit(0);
+            }
+            other => {
+                error!(
+                    "Unexpected wait result while watching main process (pid={}): {}",
+                    main_pid, other
+                );
+                unsafe {
+                    CloseHandle(process_handle);
+                }
+                std::process::exit(0);
+            }
         }
-        std::thread::sleep(Duration::from_secs(1));
     }
 }
+

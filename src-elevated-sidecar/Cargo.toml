@@ -23,11 +23,12 @@ directories = "6.0.0"
 tonic = "0.13.1"
 tonic-web = "0.13.1"
 prost = "0.13"
+adlx = "0.0.0-alpha.1"
 tokio-stream = { version = "0.1.17", features = ["full"] }
 
 [dependencies.windows-sys]
 version = "0.36.1"
-features = ["Win32_UI_Shell", "Win32_Foundation"]
+features = ["Win32_UI_Shell", "Win32_Foundation", "Win32_System_Threading"]
 
 [dependencies.tokio]
 version = "1.44.2"
