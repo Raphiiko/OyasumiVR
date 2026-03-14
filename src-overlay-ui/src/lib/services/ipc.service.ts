@@ -56,7 +56,7 @@ class IPCService {
 			};
 		}
 		// Define IPC IN functions
-		window.OyasumiIPCIn.setState = async (b64state) => {
+		window.OyasumiIPCIn.setState = async (b64state: string) => {
 			let state = OyasumiSidecarState.fromBinary(
 				Uint8Array.from(window.atob(b64state), (c) => c.charCodeAt(0))
 			);
@@ -66,11 +66,13 @@ class IPCService {
 				state,
 				(objValue: unknown, srcValue: unknown) => {
 					if (Array.isArray(objValue)) return srcValue;
+					return undefined;
 				}
 			);
 			this.state.set(state);
 		};
-		window.OyasumiIPCIn.showToolTip = async (tooltip) => this.events.showToolTip.set(tooltip);
+		window.OyasumiIPCIn.showToolTip = async (tooltip: string) =>
+			this.events.showToolTip.set(tooltip);
 		window.OyasumiIPCIn.clearNotification = async (notificationId: string) => {
 			this.events.clearNotification.set(notificationId);
 			await tick();
