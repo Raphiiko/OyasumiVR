@@ -5,7 +5,7 @@ import type {
 } from '$lib/models/OyasumiOverlayIPC';
 
 declare global {
-	declare interface Window {
+	interface Window {
 		OyasumiIPCIn: OyasumiOverlayIPCIn;
 		OyasumiIPCOut: OyasumiOverlayIPCOut;
 		OyasumiIPCOut_Dashboard: OyasumiOverlayIPCOut_Dashboard;
