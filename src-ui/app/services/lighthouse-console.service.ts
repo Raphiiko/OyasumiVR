@@ -98,15 +98,18 @@ export class LighthouseConsoleService {
     ovrDevices = ovrDevices.filter(
       (device) => device.canPowerOff && device.dongleId && !device.isTurningOff
     );
-    await Promise.all(
-      ovrDevices.map(async (device) => {
-        this.openvr.onDeviceUpdate(Object.assign({}, device, { isTurningOff: true }));
-        info(`[Lighthouse] Turning off device ${device.class}:${device.serialNumber}`);
-        await invoke('run_command', {
-          command: lighthouseConsolePath,
-          args: ['/serial', device.dongleId, 'poweroff'],
-        });
-      })
-    );
+    // Issue poweroff calls sequentially with a small delay between them.
+    // Firing all calls in parallel saturates SteamVR's lighthouse driver and
+    // can cause its HMD RunFrame thread to stall long enough to trip vrserver's
+    // watchdog (CLighthouseHmdDriver::RunFrame), crashing SteamVR.
+    for (const device of ovrDevices) {
+      this.openvr.onDeviceUpdate(Object.assign({}, device, { isTurningOff: true }));
+      info(`[Lighthouse] Turning off device ${device.class}:${device.serialNumber}`);
+      await invoke('run_command', {
+        command: lighthouseConsolePath,
+        args: ['/serial', device.dongleId, 'poweroff'],
+      });
+      await new Promise((resolve) => setTimeout(resolve, 250));
+    }
   }
 }
