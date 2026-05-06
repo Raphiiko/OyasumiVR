@@ -1,6 +1,6 @@
 {
   "build": {
-    "beforeBuildCommand": "npm run build:pre",
+    "beforeBuildCommand": "npm run _build:pre",
     "beforeDevCommand": "npm run start:ui",
     "frontendDist": "../dist/oyasumivr",
     "devUrl": "http://localhost:4200"

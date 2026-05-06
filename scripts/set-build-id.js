@@ -16,8 +16,8 @@ const revision = execSync('git rev-parse --short HEAD').toString().trim();
 {
   let splashScreenHtml = readFileSync('src-ui/assets/splashscreen/splashscreen.html').toString();
   splashScreenHtml = splashScreenHtml.replaceAll(
-    /\s+const buildId = ['"][a-fA-F0-9]+['"];\s+/g,
-    `\nconst buildId = '${revision}';\n`
+    /const buildId = ['"][a-fA-F0-9]+['"];/g,
+    `const buildId = '${revision}';`
   );
   writeFileSync('src-ui/assets/splashscreen/splashscreen.html', splashScreenHtml);
   console.log('Updated src-ui/assets/splashscreen/splashscreen.html');
