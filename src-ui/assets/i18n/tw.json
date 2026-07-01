@@ -411,7 +411,7 @@
         },
         "declinedInviteRequest": {
           "reason": {
-            "NOT_ON_WHITELIST": "由於這位用戶在白名單上",
+            "NOT_ON_WHITELIST": "由於這位用戶未在白名單上",
             "ON_BLACKLIST": "由於這位用戶在黑名單上",
             "PLAYER_COUNT_CONDITION_FAILED": "由於房間中有太多用戶",
             "SLEEP_MODE_ENABLED_CONDITION_FAILED": "由於睡眠模式未啟動"
