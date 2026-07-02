@@ -30,7 +30,7 @@ OyasumiVR 能夠 **偵測你何時入睡**，並透過以下各種方式協助�
 - 🎤 當你睡着時自動關閉麥克風
 - 🛠 自動化各種 SteamVR 設定
 
-……還有更多！ ...還有更多！請查看即將推出的「功能」部分，深入了解 OyasumiVR 所提供的功能。
+……還有更多！請查看即將推出的「功能」部分，深入了解 OyasumiVR 所提供的功能。
 
 {{SUPPORT_OYASUMIVR_HEADER}}
 支持 OyasumiVR
@@ -110,7 +110,7 @@ OyasumiVR 可讓你輕鬆控制多種 SteamVR 裝置，從控制器、定位器�
 <br>
 在你入睡時自動限制 GPU 功耗以節省電力，並在你醒來後恢復完整效能！ 只要設定好所需的功耗上限（瓦數），OyasumiVR 就會在需要時自動套用。
 <br><br>
-<i>功耗限制功能僅支援 NVIDIA 顯示卡。</i> AMD 顯示卡用戶則可改用 MSI Afterburner 自動化功能。</i>
+<i>功耗限制功能僅支援 NVIDIA 顯示卡。AMD 顯示卡用戶則可改用 MSI Afterburner 自動化功能。</i>
 
 {{GPU_AUTOMATIONS_BODY_MSI_AFTERBURNER}}
 <b>MSI Afterburner</b>
@@ -445,7 +445,7 @@ OyasumiVR 採用了以下技術：
 VRChat
 
 {{VRCHAT_BODY}}
-OyasumiVR 的部分功能需要登入你的 VRChat 帳號才能使用。 （例如： 狀態自動化)
+OyasumiVR 的部分功能需要登入你的 VRChat 帳號才能使用。（例如：狀態自動化）
 
 只有需要使用這些功能時，才需要登入。 即使不提供登入資訊，你仍然可以使用不需要登入的功能。
 你的登入資訊只會儲存在你的裝置上，絕不會儲存到其他地方，且僅會在驗證身分時傳送至 VRChat 的伺服器。
