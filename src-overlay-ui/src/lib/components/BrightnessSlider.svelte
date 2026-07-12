@@ -12,6 +12,7 @@
 	export let onValueChange: (value: number) => void = () => {};
 
 	let dragging = false;
+	let rangeGuideEl: HTMLElement;
 
 	let dragProgression = 0.65;
 
@@ -25,9 +26,9 @@
 	}
 
 	function handleMouseMove(event: MouseEvent) {
-		if (!dragging) return;
-		const rangeGuide = document.querySelector('.brightness-slider-bar-range-guide') as HTMLElement;
-		const barBounds = rangeGuide.getBoundingClientRect();
+		if (!dragging || !rangeGuideEl) return;
+		const barBounds = rangeGuideEl.getBoundingClientRect();
+		if (barBounds.width <= 0) return;
 		const progress = clamp((event.pageX - barBounds.left) / barBounds.width, 0.0, 1.0);
 		dragProgression = progress;
 		onValueChange(Math.round(progress * (max - min) + min));
@@ -62,7 +63,7 @@
 			<span>{renderPercentage}%</span>
 		</div>
 		<div class="brightness-slider-bar-post glow-80" style="flex: {(1 - renderProgression) * 100}" />
-		<div class="brightness-slider-bar-range-guide" />
+		<div class="brightness-slider-bar-range-guide" bind:this={rangeGuideEl} />
 	</div>
 </div>
 
