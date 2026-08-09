@@ -207,6 +207,7 @@ impl SidecarManager {
 
         tokio::spawn(async move {
             let mut retries = 0;
+            let mut alive_polls: u32 = 0;
             let mut pid = {
                 let self_guard = self_arc.lock().await;
                 let value = match self_guard.sidecar_pid.lock().await.as_ref() {
@@ -255,7 +256,14 @@ impl SidecarManager {
                         );
                         break;
                     } else {
-                        retries = 0;
+                        // Only consider the sidecar stable (and reset the restart backoff)
+                        // once it has stayed alive for a while, so that a sidecar that
+                        // repeatedly crashes shortly after starting doesn't get restarted
+                        // every few seconds indefinitely.
+                        alive_polls += 1;
+                        if alive_polls >= 20 {
+                            retries = 0;
+                        }
                     }
                     // Drop the lock here before the next iteration
                     drop(self_guard);
@@ -270,6 +278,7 @@ impl SidecarManager {
                     }
                     // KICKSTART THE SIDECAR
                     pid = self_arc.lock().await._start_internal(true).await;
+                    alive_polls = 0;
                     continue;
                 }
                 break;

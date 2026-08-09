@@ -57,10 +57,26 @@ public static class Program {
   private static void InitCef()
   {
     var settings = new CefSettings();
-    
-    // In-memory cache - no disk persistence
+
+    // CEF 122+ uses the Chrome bootstrap, which requires a unique RootCachePath per running
+    // process. When left empty, CEF falls back to the shared default user data directory
+    // (%LOCALAPPDATA%\CEF\User Data). That directory is guarded by Chromium's process
+    // singleton: if any process still holds it (a lingering previous sidecar instance, or any
+    // other CEF-based app using the default path), a newly started sidecar forwards its
+    // command line to that process and exits. The receiving process then opens our positional
+    // arguments as browser tabs (a bare port number like 24872 gets fixed up to the URL
+    // http://0.0.97.40/), and the core sees the exit as a crash and restarts us, repeating the
+    // cycle. Each such browser process launch also leaves a ~4MB .pma file in BrowserMetrics,
+    // which is never cleaned up because metrics reporting is disabled.
+    // See https://github.com/Raphiiko/OyasumiVR/issues/168 (and #166, #165), as well as
+    // https://github.com/cefsharp/CefSharp/discussions/4978
+    var cacheRoot = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+      "co.raphii.oyasumi", "cef-cache");
+    CleanUpCefCacheDirectories(cacheRoot);
+    settings.RootCachePath = Path.Combine(cacheRoot, Environment.ProcessId.ToString());
+
+    // In-memory cache - no disk persistence of browsing data
     settings.CachePath = "";
-    settings.RootCachePath = "";
     settings.PersistSessionCookies = false;
     settings.CefCommandLineArgs.Add("disable-features", "MetricsService,PersistentHistograms");
     settings.CefCommandLineArgs.Add("disable-crash-reporter", "true");
@@ -74,6 +90,74 @@ public static class Program {
     }
 
     Cef.Initialize(settings);
+  }
+
+  private static void CleanUpCefCacheDirectories(string cacheRoot)
+  {
+    // Remove cache directories left behind by previous sidecar instances. Deleting the cache
+    // directory of the running instance at shutdown is unreliable with the Chrome bootstrap
+    // (https://github.com/cefsharp/CefSharp/issues/4852), so each launch cleans up after
+    // instances that are no longer running instead.
+    try
+    {
+      if (Directory.Exists(cacheRoot))
+      {
+        foreach (var dir in Directory.GetDirectories(cacheRoot))
+        {
+          if (int.TryParse(Path.GetFileName(dir), out var pid))
+          {
+            try
+            {
+              Process.GetProcessById(pid);
+              continue; // Process still exists: leave its cache directory alone
+            }
+            catch (ArgumentException)
+            {
+              // Process no longer exists: safe to remove
+            }
+          }
+
+          try
+          {
+            Directory.Delete(dir, true);
+          }
+          catch (Exception e)
+          {
+            Log.Warning(e, "Could not clean up stale CEF cache directory: {dir}", dir);
+          }
+        }
+      }
+    }
+    catch (Exception e)
+    {
+      Log.Warning(e, "Could not clean up stale CEF cache directories");
+    }
+
+    // Best-effort cleanup of metrics files that older builds accumulated in CEF's shared
+    // default user data directory. Files held open by another process are skipped.
+    try
+    {
+      var legacyMetricsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "CEF", "User Data", "BrowserMetrics");
+      if (Directory.Exists(legacyMetricsDir))
+      {
+        foreach (var file in Directory.GetFiles(legacyMetricsDir, "*.pma"))
+        {
+          try
+          {
+            File.Delete(file);
+          }
+          catch (Exception)
+          {
+            // File is likely in use by another process
+          }
+        }
+      }
+    }
+    catch (Exception e)
+    {
+      Log.Warning(e, "Could not clean up legacy CEF browser metrics files");
+    }
   }
 
   private static void WatchMainProcess(int mainPid)
