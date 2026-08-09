@@ -3,6 +3,23 @@ use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::{mpsc, Mutex};
 
+// Liveness check for a process we did not spawn ourselves, and therefore have no Child
+// handle for. Opening a handle by pid is authoritative, unlike scanning the process table.
+fn process_is_running(pid: u32) -> bool {
+    use windows_sys::Win32::Foundation::{CloseHandle, WAIT_OBJECT_0};
+    use windows_sys::Win32::System::Threading::{OpenProcess, WaitForSingleObject};
+    const SYNCHRONIZE: u32 = 0x0010_0000;
+    unsafe {
+        let handle = OpenProcess(SYNCHRONIZE, 0, pid);
+        if handle.is_null() {
+            return false;
+        }
+        let running = WaitForSingleObject(handle, 0) != WAIT_OBJECT_0;
+        CloseHandle(handle);
+        running
+    }
+}
+
 const LAUNCH_RETRY_INTERVALS: [Duration; 9] = [
     Duration::from_millis(100),
     Duration::from_secs(1),
@@ -27,6 +44,7 @@ pub struct SidecarManager {
     pub started: Arc<Mutex<bool>>,
     pub sidecar_pid: Arc<Mutex<Option<u32>>>,
     pub sidecar_child: Arc<Mutex<Option<std::process::Child>>>,
+    pub watching: Arc<Mutex<bool>>,
     pub on_stop_tx: mpsc::Sender<()>,
     pub auto_restart: bool,
     pub args: Arc<Mutex<Vec<String>>>,
@@ -51,6 +69,7 @@ impl SidecarManager {
             started: Arc::new(Mutex::new(false)),
             sidecar_pid: Arc::new(Mutex::new(None)),
             sidecar_child: Arc::new(Mutex::new(None)),
+            watching: Arc::new(Mutex::new(false)),
             on_stop_tx,
             auto_restart,
             args: Arc::new(Mutex::new(args)),
@@ -75,22 +94,22 @@ impl SidecarManager {
     }
 
     pub async fn start_or_restart(&mut self) {
-        let active = *self.active.lock().await;
-        // Kill process if it is already active
-        if active {
-            info!(
-                "[Core] Killing running {} sidecar to prepare for restart...",
-                self.sidecar_id
-            );
+        // Kill whatever process we are currently holding, if any.
+        {
             let mut sidecar_child = self.sidecar_child.lock().await;
             if let Some(sidecar_child) = sidecar_child.as_mut() {
+                info!(
+                    "[Core] Killing running {} sidecar to prepare for restart...",
+                    self.sidecar_id
+                );
                 if let Err(e) = sidecar_child.kill() {
                     error!("[Core] Failed to kill {} sidecar: {}", self.sidecar_id, e);
                 }
             }
         }
-        // Start the process if it was not already running, or if auto_restart is not set
-        if !active || !self.auto_restart {
+        // A running watcher picks the restart up by itself. Starting one here as well would
+        // leave two processes and two watchers running alongside each other.
+        if !*self.watching.lock().await {
             self._start_internal(false).await;
         }
     }
@@ -130,15 +149,28 @@ impl SidecarManager {
                 args.push(arg.clone());
             }
         }
-        let child = std::process::Command::new(exe_path)
+        let child = match std::process::Command::new(&exe_path)
             .current_dir(exe_dir)
             .args(args)
             .spawn()
-            .expect("Could not spawn command");
+        {
+            Ok(child) => child,
+            Err(e) => {
+                error!(
+                    "[Core] Could not start {} sidecar ({}): {}",
+                    self.sidecar_id,
+                    exe_path.display(),
+                    e
+                );
+                *self.active.lock().await = false;
+                return 0;
+            }
+        };
         let child_pid = child.id();
         *self.sidecar_pid.lock().await = Some(child_pid);
         *self.sidecar_child.lock().await = Some(child);
-        if !relaunch {
+        if !relaunch && !*self.watching.lock().await {
+            *self.watching.lock().await = true;
             self.watch_process();
         }
         child_pid
@@ -164,23 +196,26 @@ impl SidecarManager {
     ) -> bool {
         // pid == 0 means that we are assuming the sidecar is running in development mode.
         if pid != 0 {
-            // If the sidecar is not active, ignore this signal
-            let active_guard = self.active.lock().await;
-            if !*active_guard {
-                warn!(
-                    "Ignoring start signal for {} sidecar with pid {} because it is not active",
-                    self.sidecar_id, pid
-                );
-                return false;
+            // If the sidecar is not active, ignore this signal, unless it carries an old pid
+            // and therefore comes from a process that replaced one we started.
+            if !*self.active.lock().await {
+                if old_pid.is_none() {
+                    warn!(
+                        "[Core] Ignoring start signal for {} sidecar with pid {} because it is not active",
+                        self.sidecar_id, pid
+                    );
+                    return false;
+                }
+                *self.active.lock().await = true;
             }
-            // If another sidecar is already running that does not have the old pid, ignore this signal
-            let current_pid = self.sidecar_pid.lock().await;
-            if current_pid.is_some()
-                && (current_pid.unwrap() != pid
-                    && (old_pid.is_some() && current_pid.unwrap() != old_pid.unwrap()))
-            {
-                warn!("Ignoring start signal for {} sidecar with pid {} because another {} sidecar is already running with pid {}", self.sidecar_id, pid, self.sidecar_id, current_pid.unwrap());
-                return false;
+            // If another sidecar is already running, only accept this signal when it comes
+            // from that same process, or from a process that replaced it.
+            let current_pid = *self.sidecar_pid.lock().await;
+            if let Some(current_pid) = current_pid {
+                if current_pid != pid && old_pid != Some(current_pid) {
+                    warn!("[Core] Ignoring start signal for {} sidecar with pid {} because another {} sidecar is already running with pid {}", self.sidecar_id, pid, self.sidecar_id, current_pid);
+                    return false;
+                }
             }
         } else {
             // We already expect it to run in development mode
@@ -201,64 +236,29 @@ impl SidecarManager {
     }
 
     fn watch_process(&mut self) {
-        let self_arc = Arc::new(Mutex::new(self.clone()));
+        let mut manager = self.clone();
 
         tokio::spawn(async move {
+            let last_retry_interval = LAUNCH_RETRY_INTERVALS.len() - 1;
             let mut retries = 0;
-            let mut alive_polls: u32 = 0;
-            let mut pid = {
-                let self_guard = self_arc.lock().await;
-                let value = match self_guard.sidecar_pid.lock().await.as_ref() {
-                    Some(pid) => *pid,
-                    None => {
-                        error!("[Core] Tried watching non-existant sidecar process");
-                        return;
-                    }
-                };
-                value
-            };
             loop {
-                loop {
-                    tokio::time::sleep(Duration::from_secs(1)).await;
-                    let self_guard = self_arc.lock().await;
-                    let exited = {
-                        let mut child_guard = self_guard.sidecar_child.lock().await;
-                        match child_guard.as_mut() {
-                            Some(child) => child.try_wait().map(|s| s.is_some()).unwrap_or(true),
-                            None => true,
+                // A pid of 0 means the last launch attempt failed, so there is nothing to
+                // watch and we go straight to backing off and trying again.
+                let pid = (*manager.sidecar_pid.lock().await).unwrap_or(0);
+                if pid != 0 {
+                    let mut alive_polls: u32 = 0;
+                    loop {
+                        tokio::time::sleep(Duration::from_secs(1)).await;
+                        let exited = {
+                            let mut child_guard = manager.sidecar_child.lock().await;
+                            match child_guard.as_mut() {
+                                Some(child) => child.try_wait().map(|s| s.is_some()).unwrap_or(true),
+                                None => !process_is_running(pid),
+                            }
+                        };
+                        if exited {
+                            break;
                         }
-                    };
-                    if exited {
-                        let current_sidecar_pid =
-                            { self_guard.sidecar_pid.lock().await.as_ref().map(|pid| *pid) };
-                        // Check if the sidecar pid is still the same.
-                        // If it is, then we can assume the sidecar stopped.
-                        // If not, it likely got replaced by another instance of the sidecar.
-                        if match current_sidecar_pid {
-                            Some(current_sidecar_pid) => current_sidecar_pid == pid,
-                            None => true,
-                        } {
-                            let sidecar_pid = &self_guard.sidecar_pid;
-                            *sidecar_pid.lock().await = None;
-                            let sidecar_child = &self_guard.sidecar_child;
-                            *sidecar_child.lock().await = None;
-                            let grpc_port = &self_guard.grpc_port;
-                            *grpc_port.lock().await = None;
-                            let grpc_web_port = &self_guard.grpc_web_port;
-                            *grpc_web_port.lock().await = None;
-                            let active = &self_guard.active;
-                            *active.lock().await = false;
-                            let started = &self_guard.started;
-                            *started.lock().await = false;
-                        }
-                        // Send signal that the sidecar has stopped
-                        let _ = &self_guard.on_stop_tx.send(());
-                        info!(
-                            "[Core] {} sidecar has stopped (pid={})",
-                            &self_guard.sidecar_id, pid
-                        );
-                        break;
-                    } else {
                         // Only consider the sidecar stable (and reset the restart backoff)
                         // once it has stayed alive for a while, so that a sidecar that
                         // repeatedly crashes shortly after starting doesn't get restarted
@@ -268,24 +268,42 @@ impl SidecarManager {
                             retries = 0;
                         }
                     }
-                    // Drop the lock here before the next iteration
-                    drop(self_guard);
-                }
-                // Automatically try restarting the sidecar if desired
-                if self_arc.lock().await.auto_restart {
-                    let retry_interval = LAUNCH_RETRY_INTERVALS[retries];
-                    tokio::time::sleep(retry_interval).await;
-                    retries += 1;
-                    if retries >= LAUNCH_RETRY_INTERVALS.len() {
-                        retries = LAUNCH_RETRY_INTERVALS.len() - 1;
+                    // A changed pid means the sidecar replaced itself with a process we did
+                    // not spawn (the elevated sidecar relaunches itself through UAC). Adopt
+                    // it and keep watching, by pid rather than by handle.
+                    let current_sidecar_pid = *manager.sidecar_pid.lock().await;
+                    match current_sidecar_pid {
+                        Some(current_sidecar_pid) if current_sidecar_pid != pid => {
+                            info!(
+                                "[Core] {} sidecar with pid {} was replaced by pid {}",
+                                manager.sidecar_id, pid, current_sidecar_pid
+                            );
+                            *manager.sidecar_child.lock().await = None;
+                            continue;
+                        }
+                        _ => {}
                     }
-                    // KICKSTART THE SIDECAR
-                    pid = self_arc.lock().await._start_internal(true).await;
-                    alive_polls = 0;
-                    continue;
+                    *manager.sidecar_pid.lock().await = None;
+                    *manager.sidecar_child.lock().await = None;
+                    *manager.grpc_port.lock().await = None;
+                    *manager.grpc_web_port.lock().await = None;
+                    *manager.active.lock().await = false;
+                    *manager.started.lock().await = false;
+                    info!(
+                        "[Core] {} sidecar has stopped (pid={})",
+                        manager.sidecar_id, pid
+                    );
+                    // Send signal that the sidecar has stopped
+                    let _ = manager.on_stop_tx.send(()).await;
                 }
-                break;
+                if !manager.auto_restart {
+                    break;
+                }
+                tokio::time::sleep(LAUNCH_RETRY_INTERVALS[retries]).await;
+                retries = (retries + 1).min(last_retry_interval);
+                manager._start_internal(true).await;
             }
+            *manager.watching.lock().await = false;
         });
     }
 }
