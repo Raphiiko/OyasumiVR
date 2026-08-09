@@ -1,7 +1,6 @@
 use log::{error, info, warn};
 use std::sync::Arc;
 use std::time::Duration;
-use sysinfo::{Pid, System};
 use tokio::sync::{mpsc, Mutex};
 
 const LAUNCH_RETRY_INTERVALS: [Duration; 9] = [
@@ -122,8 +121,8 @@ impl SidecarManager {
         let exe_dir = self.exe_dir.clone();
         let exe_path = std::path::Path::new(&exe_dir).join(&exe_file);
         let mut args = vec![
-            format!("{core_grpc_port}"),
-            format!("{}", std::process::id()),
+            format!("--core-grpc-port={core_grpc_port}"),
+            format!("--core-pid={}", std::process::id()),
         ];
         {
             let extra_args = self.args.lock().await;
@@ -202,7 +201,6 @@ impl SidecarManager {
     }
 
     fn watch_process(&mut self) {
-        let mut s = System::new_all();
         let self_arc = Arc::new(Mutex::new(self.clone()));
 
         tokio::spawn(async move {
@@ -223,9 +221,14 @@ impl SidecarManager {
                 loop {
                     tokio::time::sleep(Duration::from_secs(1)).await;
                     let self_guard = self_arc.lock().await;
-                    s.refresh_processes(sysinfo::ProcessesToUpdate::All, true);
-                    // Check if the child process is no longer found
-                    if s.process(Pid::from(pid as usize)).is_none() {
+                    let exited = {
+                        let mut child_guard = self_guard.sidecar_child.lock().await;
+                        match child_guard.as_mut() {
+                            Some(child) => child.try_wait().map(|s| s.is_some()).unwrap_or(true),
+                            None => true,
+                        }
+                    };
+                    if exited {
                         let current_sidecar_pid =
                             { self_guard.sidecar_pid.lock().await.as_ref().map(|pid| *pid) };
                         // Check if the sidecar pid is still the same.

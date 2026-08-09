@@ -10,9 +10,11 @@ pub fn relaunch_with_elevation(main_port: u32, main_pid: u32, force_exit: bool) 
     let path = path_result;
     // Get port parameter
     let old_pid = std::process::id();
-    let mut port_result: Vec<_> = OsStr::new(format!("{main_port} {main_pid} {old_pid}").as_str())
-        .encode_wide()
-        .collect();
+    let mut port_result: Vec<_> = OsStr::new(
+        format!("--core-grpc-port={main_port} --core-pid={main_pid} --old-pid={old_pid}").as_str(),
+    )
+    .encode_wide()
+    .collect();
     port_result.push(0);
     let port = port_result;
     // Run as administrator

@@ -56,33 +56,22 @@ async fn main() {
     .unwrap();
     // Parse the arguments
     let args: Vec<String> = env::args().collect();
-    if args.len() < 3 {
-        error!("Missing arguments. Expected format");
-        error!("oyasumivr-elevated-sidecar.exe [main-grpc-port] [main-process-id] [optional: old-process-id]");
-        std::process::exit(0);
-    }
-    let host_port = if let Ok(n) = args[1].parse::<u32>() {
-        n
-    } else {
-        error!("Invalid port number");
-        std::process::exit(0);
-    };
-    let main_pid = if let Ok(n) = args[2].parse::<u32>() {
-        n
-    } else {
-        error!("Invalid main process id");
-        std::process::exit(0);
-    };
-    let old_process_id = if args.len() > 3 {
-        if let Ok(n) = args[3].parse::<u32>() {
-            Some(n)
-        } else {
-            error!("Invalid old process id");
+    let host_port = match switch_value(&args, "core-grpc-port") {
+        Some(n) => n,
+        None => {
+            error!("Missing or invalid arguments. Expected format:");
+            error!("oyasumivr-elevated-sidecar.exe --core-grpc-port=<port> --core-pid=<pid> [--old-pid=<pid>]");
             std::process::exit(0);
         }
-    } else {
-        None
     };
+    let main_pid = match switch_value(&args, "core-pid") {
+        Some(n) => n,
+        None => {
+            error!("Missing or invalid --core-pid argument");
+            std::process::exit(0);
+        }
+    };
+    let old_process_id = switch_value(&args, "old-pid");
     // Relaunch as admin if not elevated
     if !is_elevated() {
         relaunch_with_elevation(host_port, main_pid, true);
@@ -117,14 +106,26 @@ async fn main() {
     watch_main_process(main_pid).await;
 }
 
+fn switch_value(args: &[String], name: &str) -> Option<u32> {
+    let prefix = format!("--{name}=");
+    args.iter()
+        .find_map(|arg| arg.strip_prefix(prefix.as_str())?.parse::<u32>().ok())
+}
+
 async fn watch_main_process(main_pid: u32) {
     let pid = Pid::from(main_pid as usize);
     let mut s = System::new_all();
+    let mut missed_polls = 0;
     loop {
         s.refresh_processes(ProcessesToUpdate::All, true);
         if s.process(pid).is_none() {
-            info!("Main process has exited. Stopping elevated sidecar.");
-            std::process::exit(0);
+            missed_polls += 1;
+            if missed_polls >= 3 {
+                info!("Main process has exited. Stopping elevated sidecar.");
+                std::process::exit(0);
+            }
+        } else {
+            missed_polls = 0;
         }
         std::thread::sleep(Duration::from_secs(1));
     }

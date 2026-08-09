@@ -28,15 +28,10 @@ public static class Program {
 
     if (Mode == SidecarMode.Release)
     {
-      if (args.Length < 1 || !int.TryParse(args[0], out coreGrpcPort))
+      if (!TryParseSwitch(args, "--core-grpc-port", out coreGrpcPort) ||
+          !TryParseSwitch(args, "--core-pid", out mainProcessId))
       {
-        Log.Error("Usage: oyasumivr-overlay-sidecar.exe <core grpc port> <core process id>");
-        return;
-      }
-
-      if (args.Length < 2 || !int.TryParse(args[1], out mainProcessId))
-      {
-        Log.Error("Usage: oyasumivr-overlay-sidecar.exe <core grpc port> <core process id>");
+        Log.Error("Usage: oyasumivr-overlay-sidecar.exe --core-grpc-port=<port> --core-pid=<pid>");
         return;
       }
     }
@@ -52,6 +47,13 @@ public static class Program {
     InitCef();
     IpcManager.Instance.Init(coreGrpcPort);
     OvrManager.Instance.Init();
+  }
+
+  private static bool TryParseSwitch(string[] args, string name, out int value)
+  {
+    var prefix = name + "=";
+    var arg = args.FirstOrDefault(a => a.StartsWith(prefix, StringComparison.Ordinal));
+    return int.TryParse(arg?[prefix.Length..], out value);
   }
 
   private static void InitCef()
