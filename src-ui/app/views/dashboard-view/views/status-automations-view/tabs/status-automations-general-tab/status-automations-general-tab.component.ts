@@ -6,7 +6,7 @@ import {
 
 import { SelectBoxItem } from '../../../../../../components/select-box/select-box.component';
 import { vrcStatusToString } from '../../../../../../utils/status-utils';
-import { UserStatus } from 'vrchat';
+import { UserStatus } from '../../../../../../models/vrchat';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AutomationConfigService } from '../../../../../../services/automation-config.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';

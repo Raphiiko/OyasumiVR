@@ -12,7 +12,7 @@ import {
 } from 'rxjs';
 import { UserUpdateHandler } from './event-handlers/user-update-handler';
 import { NotificationHandler } from './event-handlers/notification-handler';
-import type { Notification } from 'vrchat/dist';
+import type { Notification } from 'vrchat';
 import { VRChatAuth } from './vrchat-auth';
 import { VRChatApiSettings } from 'src-ui/app/models/vrchat-api-settings';
 import { GroupMemberUpdatedHandler } from './event-handlers/group-member-updated-handler';

@@ -17,7 +17,8 @@ import {
   ChangeStatusBasedOnPlayerCountAutomationConfig,
 } from '../../models/automations';
 import { SleepService } from '../sleep.service';
-import { CurrentUser, UserStatus } from 'vrchat/dist';
+import type { CurrentUser } from 'vrchat';
+import { UserStatus } from '../../models/vrchat';
 import { EventLogService } from '../event-log.service';
 import { EventLogStatusChangedOnPlayerCountChange } from '../../models/event-log-entry';
 import { NotificationService } from '../notification.service';

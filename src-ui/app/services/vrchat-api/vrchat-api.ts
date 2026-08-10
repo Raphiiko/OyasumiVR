@@ -4,16 +4,9 @@ import { getVersion } from 'src-ui/app/utils/app-utils';
 import { TaskQueue } from 'src-ui/app/utils/task-queue';
 import { parseSetCookie as parseSetCookieHeader } from 'set-cookie-parser';
 import { stringifySetCookie as serializeCookie } from 'cookie';
-import { InviteMessageType } from 'vrchat/dist';
-import type {
-  CurrentUser,
-  InviteMessage,
-  LimitedUser,
-  LimitedUserGroups,
-  UserStatus,
-} from 'vrchat/dist';
+import type { CurrentUser, InviteMessage, LimitedUserFriend, LimitedUserGroups } from 'vrchat';
 import { CachedValue } from 'src-ui/app/utils/cached-value';
-import { AvatarEx, InviteMessageEx } from 'src-ui/app/models/vrchat';
+import { AvatarEx, InviteMessageEx, InviteMessageType, UserStatus } from 'src-ui/app/models/vrchat';
 import { uniqBy } from 'lodash';
 import { BehaviorSubject, firstValueFrom, map, Observable, Subject } from 'rxjs';
 import { VRChatApiSettings } from 'src-ui/app/models/vrchat-api-settings';
@@ -69,7 +62,7 @@ export class VRChatAPI {
     5 * 60 * 1000, // Cache for 5 minutes
     'VRCHAT_CURRENT_USER'
   );
-  private _friendsCache: CachedValue<LimitedUser[]> = new CachedValue<LimitedUser[]>(
+  private _friendsCache: CachedValue<LimitedUserFriend[]> = new CachedValue<LimitedUserFriend[]>(
     undefined,
     60 * 60 * 1000, // Cache for 1 hour
     'VRCHAT_FRIENDS'
@@ -477,7 +470,7 @@ export class VRChatAPI {
     return messages?.find((m) => m.slot === slot.slot) ?? null;
   }
 
-  public async listFriends(force = false): Promise<LimitedUser[]> {
+  public async listFriends(force = false): Promise<LimitedUserFriend[]> {
     // If we have a valid cache and aren't forcing the fetch, return the cached value
     if (!force) {
       const cachedFriends = this._friendsCache.get();
@@ -497,12 +490,12 @@ export class VRChatAPI {
     // Fetch friends
     const friendFetchCompletion = new Subject<'SUCCESS' | 'FAILED'>();
     this._friendFetcher.next(friendFetchCompletion.asObservable());
-    const friends: LimitedUser[] = [];
+    const friends: LimitedUserFriend[] = [];
     // Fetch online and active friends
     let fetchResult: 'SUCCESS' | 'FAILED' = 'FAILED';
     try {
       for (const offline of ['false', 'true']) {
-        const response = await this.fetchPaginatedData<LimitedUser>({
+        const response = await this.fetchPaginatedData<LimitedUserFriend>({
           url: `${BASE_URL}/auth/user/friends`,
           apiCallTypeId: 'LIST_FRIENDS',
           query: {

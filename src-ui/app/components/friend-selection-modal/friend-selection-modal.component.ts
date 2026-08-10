@@ -1,7 +1,8 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, hshrink, noop, vshrink } from '../../utils/animations';
-import { LimitedUser, UserStatus } from 'vrchat/dist';
+import type { LimitedUserFriend } from 'vrchat';
+import { UserStatus } from '../../models/vrchat';
 import { VRChatService } from '../../services/vrchat-api/vrchat.service';
 import {
   BehaviorSubject,
@@ -58,11 +59,11 @@ export class FriendSelectionModalComponent
 {
   selection: SelectedFriend[] = [];
   initialSelection: SelectedFriend[] = [];
-  friends: LimitedUser[] = [];
-  results: LimitedUser[] = [];
+  friends: LimitedUserFriend[] = [];
+  results: LimitedUserFriend[] = [];
   query: BehaviorSubject<string> = new BehaviorSubject<string>('');
   activeQuery: string = this.query.value;
-  fuse?: Fuse<LimitedUser>;
+  fuse?: Fuse<LimitedUserFriend>;
   loadingState: 'LOADING' | 'LOADED' | 'ERROR' = 'LOADING';
   moreResults = false;
 
@@ -141,7 +142,7 @@ export class FriendSelectionModalComponent
     this.selection = this.selection.filter((i) => i !== item);
   }
 
-  addFriend(friend: LimitedUser) {
+  addFriend(friend: LimitedUserFriend) {
     if (this.selection.find((i) => i.type === 'player' && i.playerId === friend.id)) return;
     this.selection = [
       {
@@ -153,7 +154,7 @@ export class FriendSelectionModalComponent
     ];
   }
 
-  isSelected(user: LimitedUser): boolean {
+  isSelected(user: LimitedUserFriend): boolean {
     return !!this.selection.find((s) => s.type === 'player' && s.playerId === user.id);
   }
 }

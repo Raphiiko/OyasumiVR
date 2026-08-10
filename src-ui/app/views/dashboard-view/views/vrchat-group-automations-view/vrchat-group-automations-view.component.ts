@@ -8,7 +8,7 @@ import {
   VRChatGroupAutomationsConfig,
 } from '../../../../models/automations';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
-import type { LimitedUserGroups } from 'vrchat/dist';
+import type { LimitedUserGroups } from 'vrchat';
 import { combineLatest } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 import { error } from '@tauri-apps/plugin-log';

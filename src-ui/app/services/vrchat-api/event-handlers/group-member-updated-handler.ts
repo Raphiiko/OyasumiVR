@@ -26,7 +26,7 @@ export class GroupMemberUpdatedHandler implements VRChatEventHandler {
     this.vrchatApi.updateCachedGroup(groupId, {
       groupId,
       isRepresenting,
-      lastPostReadAt,
+      lastPostReadAt: new Date(lastPostReadAt),
     });
   }
 }

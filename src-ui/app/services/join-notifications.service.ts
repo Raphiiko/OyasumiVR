@@ -22,7 +22,7 @@ import {
 } from 'rxjs';
 import { VRChatLogService } from './vrchat-log.service';
 import { VRChatLogEvent } from '../models/vrchat-log-event';
-import type { LimitedUser } from 'vrchat/dist';
+import type { LimitedUserFriend } from 'vrchat';
 import { TranslateService } from '@ngx-translate/core';
 import { v4 as uuid } from 'uuid';
 
@@ -36,7 +36,7 @@ export class JoinNotificationsService {
   private ownVRChatDisplayName = '';
   private alone = false;
   private notAloneSince = 0;
-  private friends: LimitedUser[] = [];
+  private friends: LimitedUserFriend[] = [];
   private worldLoaded = false;
   private playNotification = new Subject<{
     id?: string;

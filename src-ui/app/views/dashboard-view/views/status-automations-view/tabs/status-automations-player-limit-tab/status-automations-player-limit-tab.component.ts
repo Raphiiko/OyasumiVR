@@ -12,7 +12,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { AutomationConfigService } from '../../../../../../services/automation-config.service';
 import { ModalService } from '../../../../../../services/modal.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { UserStatus } from 'vrchat';
+import { UserStatus } from '../../../../../../models/vrchat';
 import { clamp } from '../../../../../../utils/number-utils';
 import {
   ConfirmModalComponent,

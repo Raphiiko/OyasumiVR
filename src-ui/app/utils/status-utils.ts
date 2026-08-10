@@ -1,4 +1,4 @@
-import { UserStatus } from 'vrchat';
+import { UserStatus } from '../models/vrchat';
 
 export function vrcStatusToString(status: UserStatus): string {
   switch (status) {

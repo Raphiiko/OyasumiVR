@@ -10,9 +10,9 @@ import {
 } from '../../models/automations';
 
 import { debounceTime, distinctUntilChanged, filter, map, skip } from 'rxjs';
-import { UserStatus } from 'vrchat';
+import { UserStatus } from '../../models/vrchat';
 import { TranslateService } from '@ngx-translate/core';
-import type { CurrentUser } from 'vrchat/dist';
+import type { CurrentUser } from 'vrchat';
 import { EventLogStatusChangedOnGeneralEvent } from '../../models/event-log-entry';
 import { EventLogService } from '../event-log.service';
 

@@ -10,7 +10,7 @@ import {
   interval,
   Observable,
 } from 'rxjs';
-import { CurrentUser } from 'vrchat';
+import type { CurrentUser } from 'vrchat';
 import { VRChatApiSettings } from 'src-ui/app/models/vrchat-api-settings';
 import {
   decryptStorageData,

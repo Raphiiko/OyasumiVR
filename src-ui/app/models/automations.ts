@@ -1,7 +1,7 @@
 import { OVRDeviceClass } from './ovr-device';
 import { OscScript } from './osc-script';
 import { SleepingPose } from './sleeping-pose';
-import { UserStatus } from 'vrchat/dist';
+import { UserStatus } from './vrchat';
 import { AudioDeviceParsedName, AudioDeviceType } from './audio-device';
 import { PersistedAvatar } from './vrchat';
 import { FrameLimiterPresets } from '../services/frame-limiter.service';

@@ -1,7 +1,7 @@
 import { Component, DestroyRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TString } from '../../models/translatable-string';
 import { VRChatService } from '../../services/vrchat-api/vrchat.service';
-import { LimitedUser } from 'vrchat';
+import type { LimitedUserFriend } from 'vrchat';
 import {
   FriendSelectionModalComponent,
   SelectedFriendPlayer,
@@ -32,7 +32,7 @@ export class PlayerListComponent implements OnInit {
     this.refreshPlayerList(value);
   }
 
-  playerList: LimitedUser[] = [];
+  playerList: LimitedUserFriend[] = [];
   loggedIn = false;
 
   constructor(
@@ -85,7 +85,7 @@ export class PlayerListComponent implements OnInit {
       });
   }
 
-  async removePlayer(player: LimitedUser) {
+  async removePlayer(player: LimitedUserFriend) {
     this.modalService
       .addModal(ConfirmModalComponent, {
         title: 'comp.player-list.removeModal.title',

@@ -1,17 +1,11 @@
 import { Injectable } from '@angular/core';
-import type {
-  CurrentUser,
-  LimitedUser,
-  Notification,
-  LimitedUserGroups,
-  UserStatus,
-} from 'vrchat/dist';
+import type { CurrentUser, LimitedUserFriend, Notification, LimitedUserGroups } from 'vrchat';
 import { SETTINGS_KEY_VRCHAT_API, SETTINGS_STORE } from '../../globals';
 import { VRCHAT_API_SETTINGS_DEFAULT, VRChatApiSettings } from '../../models/vrchat-api-settings';
 import { migrateVRChatApiSettings } from '../../migrations/vrchat-api-settings.migrations';
 import { BehaviorSubject, combineLatest, filter, firstValueFrom, map, Observable } from 'rxjs';
 import { ModalService } from 'src-ui/app/services/modal.service';
-import { AvatarEx, WorldContext } from '../../models/vrchat';
+import { AvatarEx, UserStatus, WorldContext } from '../../models/vrchat';
 import { VRChatLogService } from '../vrchat-log.service';
 import { generateStorageCryptoKey, serializeStorageCryptoKey } from '../../utils/crypto';
 import { invoke } from '@tauri-apps/api/core';
@@ -196,7 +190,7 @@ export class VRChatService {
     await this.api.declineInviteOrInviteRequest(notificationId, notificationType, message);
   }
 
-  public async listFriends(): Promise<LimitedUser[]> {
+  public async listFriends(): Promise<LimitedUserFriend[]> {
     return await this.api.listFriends();
   }
 
@@ -224,7 +218,7 @@ export class VRChatService {
     return this.socket.status;
   }
 
-  public imageUrlForPlayer(player: LimitedUser) {
+  public imageUrlForPlayer(player: LimitedUserFriend) {
     return player.userIcon || player.profilePicOverride || player.currentAvatarThumbnailImageUrl;
   }
 
