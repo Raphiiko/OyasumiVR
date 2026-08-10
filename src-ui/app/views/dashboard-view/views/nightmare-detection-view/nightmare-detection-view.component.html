@@ -1,18 +1,18 @@
 <div class="pane">
-  <div class="pane-title" translate>nightmare-detection.title</div>
+  <div class="pane-title" transloco="nightmare-detection.title"></div>
   <div class="pane-content">
     <div class="setting-view-container">
       <div class="setting-category">
-        <p [innerHTML]="'nightmare-detection.description' | translate"></p>
+        <p [innerHTML]="'nightmare-detection.description' | transloco"></p>
         <div class="settings">
           <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate>nightmare-detection.bpmThreshold.title</span>
-              <span translate>nightmare-detection.bpmThreshold.description</span>
+            <div class="setting-row-label">
+              <span transloco="nightmare-detection.bpmThreshold.title"></span>
+              <span transloco="nightmare-detection.bpmThreshold.description"></span>
             </div>
             <div class="setting-row-action">
               <app-slider-setting
-                [unit]="'nightmare-detection.bpmThreshold.unit' | translate"
+                [unit]="'nightmare-detection.bpmThreshold.unit' | transloco"
                 [min]="60"
                 [max]="200"
                 [step]="1"
@@ -22,9 +22,9 @@
             </div>
           </div>
           <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate>nightmare-detection.duration.title</span>
-              <span translate>nightmare-detection.duration.description</span>
+            <div class="setting-row-label">
+              <span transloco="nightmare-detection.duration.title"></span>
+              <span transloco="nightmare-detection.duration.description"></span>
             </div>
             <div class="setting-row-action">
               <app-slider-setting
@@ -50,13 +50,13 @@
         </div>
       </div>
       <div class="setting-category">
-        <h3 translate>nightmare-detection.automations.title</h3>
-        <p translate>nightmare-detection.automations.description</p>
+        <h3 transloco="nightmare-detection.automations.title"></h3>
+        <p transloco="nightmare-detection.automations.description"></p>
         <div class="settings">
           <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate>nightmare-detection.disableSleepMode.title</span>
-              <span translate>nightmare-detection.disableSleepMode.description</span>
+            <div class="setting-row-label">
+              <span transloco="nightmare-detection.disableSleepMode.title"></span>
+              <span transloco="nightmare-detection.disableSleepMode.description"></span>
             </div>
             <div class="setting-row-action">
               <label class="switch-toggle">
@@ -70,9 +70,9 @@
             </div>
           </div>
           <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate>nightmare-detection.playSound.title</span>
-              <span translate>nightmare-detection.playSound.description</span>
+            <div class="setting-row-label">
+              <span transloco="nightmare-detection.playSound.title"></span>
+              <span transloco="nightmare-detection.playSound.description"></span>
             </div>
             <div class="setting-row-action">
               <app-notification-sound-button

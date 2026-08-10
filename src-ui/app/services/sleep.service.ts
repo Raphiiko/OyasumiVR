@@ -22,7 +22,7 @@ import { SleepingPoseDetector } from '../utils/sleeping-pose-detector';
 import * as THREE from 'three';
 import { info } from '@tauri-apps/plugin-log';
 import { NotificationService } from './notification.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { EventLogService } from './event-log.service';
 import { EventLogSleepModeDisabled, EventLogSleepModeEnabled } from '../models/event-log-entry';
 import { AppSettingsService } from './app-settings.service';
@@ -70,7 +70,7 @@ export class SleepService {
     private notifications: NotificationService,
     private eventLog: EventLogService,
     private appSettings: AppSettingsService,
-    private translate: TranslateService
+    private translate: TranslocoService
   ) {}
 
   async init() {
@@ -120,7 +120,7 @@ export class SleepService {
     await SETTINGS_STORE.set(SETTINGS_KEY_SLEEP_MODE, true);
     if (await this.notifications.notificationTypeEnabled('SLEEP_MODE_ENABLED')) {
       await this.notifications.send(
-        this.translate.instant('notifications.sleepModeEnabled.content')
+        this.translate.translate('notifications.sleepModeEnabled.content')
       );
     }
   }
@@ -138,7 +138,7 @@ export class SleepService {
     await SETTINGS_STORE.set(SETTINGS_KEY_SLEEP_MODE, false);
     if (await this.notifications.notificationTypeEnabled('SLEEP_MODE_DISABLED')) {
       await this.notifications.send(
-        this.translate.instant('notifications.sleepModeDisabled.content')
+        this.translate.translate('notifications.sleepModeDisabled.content')
       );
     }
   }

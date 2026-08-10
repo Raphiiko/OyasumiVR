@@ -2,7 +2,7 @@
 // Utility for storing store snapshots and restoring them in case of corruption
 //
 
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { appDataDir, join } from '@tauri-apps/api/path';
 import {
   copyFile,
@@ -29,7 +29,7 @@ export class StoreProtector {
     private store: LazyStore,
     private storeName: string,
     private storePath: string,
-    private translate: TranslateService
+    private translate: TranslocoService
   ) {}
 
   public async init() {

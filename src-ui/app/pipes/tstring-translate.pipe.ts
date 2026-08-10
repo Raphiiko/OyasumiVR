@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { TString } from '../models/translatable-string';
 
 @Pipe({
@@ -8,13 +8,13 @@ import { TString } from '../models/translatable-string';
   standalone: false,
 })
 export class TStringTranslatePipe implements PipeTransform {
-  constructor(private translate: TranslateService) {}
+  constructor(private translate: TranslocoService) {}
 
   transform(value?: TString): unknown {
     if (!value) return '';
     if (typeof value === 'string') {
-      return this.translate.instant(value);
+      return this.translate.translate(value);
     }
-    return this.translate.instant(value.string, value.values);
+    return this.translate.translate(value.string, value.values);
   }
 }

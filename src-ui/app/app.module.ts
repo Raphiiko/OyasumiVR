@@ -8,8 +8,9 @@ import { DashboardViewComponent } from './views/dashboard-view/dashboard-view.co
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { VarDirective } from './directives/var.directive';
 import { AboutViewComponent } from './views/dashboard-view/views/about-view/about-view.component';
-import { provideTranslateService, TranslateDirective, TranslatePipe } from '@ngx-translate/core';
-import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideTransloco, TRANSLOCO_TRANSPILER, TranslocoModule } from '@jsverse/transloco';
+import { TranslocoHttpLoader } from './transloco-loader';
+import { SafeMessageFormatTranspiler } from './transloco-transpiler';
 import {
   HttpClient,
   provideHttpClient,
@@ -97,7 +98,8 @@ import { ChaperoneFadeDistanceAutomationService } from './services/fade-distance
 import { OscGeneralAutomationsService } from './services/osc-automations/osc-general-automations.service';
 import { SystemTrayService } from './services/system-tray.service';
 import pMinDelay from 'p-min-delay';
-import { SPLASH_MIN_DURATION } from './globals';
+import { LANGUAGES, SPLASH_MIN_DURATION } from './globals';
+import { environment } from '../environments/environment';
 import { ModalService } from './services/modal.service';
 import { BaseModalComponent } from './components/base-modal/base-modal.component';
 import { SleepAnimationsViewComponent } from './views/dashboard-view/views/sleep-animations-view/sleep-animations-view.component';
@@ -127,7 +129,6 @@ import { SimpleBrightnessControlService } from './services/brightness-control/si
 import { DebugSleepDetectionDebuggerComponent } from './components/developer-debug-modal/debug-sleep-detection-debugger/debug-sleep-detection-debugger.component';
 import { BrightnessControlModalComponent } from './components/brightness-control-modal/brightness-control-modal.component';
 import { BrightnessControlSliderComponent } from './components/brightness-control-modal/brightness-control-slider/brightness-control-slider.component';
-import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
 import { DeepLinkService } from './services/deep-link.service';
 import { SleepPreparationService } from './services/sleep-preparation.service';
@@ -436,8 +437,7 @@ import { StoreSnapshotService } from './services/store-snapshot.service';
     BrowserAnimationsModule,
     AppRoutingModule,
     MomentModule,
-    TranslatePipe,
-    TranslateDirective,
+    TranslocoModule,
     NgPipesModule,
     FormsModule,
   ],
@@ -445,15 +445,18 @@ import { StoreSnapshotService } from './services/store-snapshot.service';
     ThemeService,
     TStringTranslatePipe,
     provideHttpClient(withXhr(), withInterceptorsFromDi()),
-    provideTranslateService({
-      fallbackLang: 'en',
-      loader: provideTranslateHttpLoader({
-        prefix: './assets/i18n/',
-        suffix: '.json',
-        failOnError: true,
-      }),
-      compiler: TranslateMessageFormatCompiler,
+    provideTransloco({
+      config: {
+        availableLangs: LANGUAGES.map((l) => l.code),
+        defaultLang: 'en',
+        fallbackLang: 'en',
+        missingHandler: { useFallbackTranslation: true },
+        reRenderOnLangChange: true,
+        prodMode: environment.production,
+      },
+      loader: TranslocoHttpLoader,
     }),
+    { provide: TRANSLOCO_TRANSPILER, useClass: SafeMessageFormatTranspiler },
   ],
 })
 export class AppModule {

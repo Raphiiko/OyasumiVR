@@ -1,11 +1,14 @@
 <div class="pane" [@noop]>
   <!-- TITLE-->
-  <div class="pane-title" translate
-    ><span translate>gpu-automations.title</span>
+  <div class="pane-title"
+    ><span transloco="gpu-automations.title"></span>
     @if (!['DISABLED'].includes(panel)) {
-      <button class="btn btn-secondary" (click)="gpuAutomations.disable()" translate @fade>
-        gpu-automations.disable
-      </button>
+      <button
+        class="btn btn-secondary"
+        (click)="gpuAutomations.disable()"
+        transloco="gpu-automations.disable"
+        @fade
+      ></button>
     }
   </div>
   <!-- TAB BAR-->
@@ -22,7 +25,7 @@
               error_outline
             </i>
           }
-          <span translate>gpu-automations.tabs.powerLimiting</span>
+          <span transloco="gpu-automations.tabs.powerLimiting"></span>
         </div>
       </div>
       <div
@@ -36,7 +39,7 @@
               error_outline
             </i>
           }
-          <span translate>gpu-automations.tabs.msiAfterburner</span>
+          <span transloco="gpu-automations.tabs.msiAfterburner"></span>
         </div>
       </div>
     </div>
@@ -59,17 +62,21 @@
           <i class="material-icons"> warning </i>
         }
       </div>
-      <div class="description" [innerHTML]="disabledMessage | translate"></div>
+      <div class="description" [innerHTML]="disabledMessage | transloco"></div>
       <div class="btn-row">
         @if (panel === 'NO_SIDECAR') {
-          <button class="btn btn-primary action" (click)="startSidecar()" translate>
-            gpu-automations.requestAdministrator
-          </button>
+          <button
+            class="btn btn-primary action"
+            (click)="startSidecar()"
+            transloco="gpu-automations.requestAdministrator"
+          ></button>
         }
         @if (!['DISABLED'].includes(panel)) {
-          <button class="btn btn-secondary action" (click)="gpuAutomations.disable()" translate>
-            gpu-automations.disable
-          </button>
+          <button
+            class="btn btn-secondary action"
+            (click)="gpuAutomations.disable()"
+            transloco="gpu-automations.disable"
+          ></button>
         }
       </div>
       @if (panel === 'DISABLED') {
@@ -79,10 +86,12 @@
             <i class="material-icons">warning</i>
           </div>
           <div class="alert-content flex-row">
-            <span [innerHTML]="'gpu-automations.enableWarning' | translate"></span>
-            <button class="btn btn-primary" (click)="gpuAutomations.enable()" translate>
-              gpu-automations.enable
-            </button>
+            <span [innerHTML]="'gpu-automations.enableWarning' | transloco"></span>
+            <button
+              class="btn btn-primary"
+              (click)="gpuAutomations.enable()"
+              transloco="gpu-automations.enable"
+            ></button>
           </div>
         </div>
       }

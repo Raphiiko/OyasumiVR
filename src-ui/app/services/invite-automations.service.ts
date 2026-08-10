@@ -13,7 +13,7 @@ import {
   EventLogDeclinedInviteRequest,
 } from '../models/event-log-entry';
 import { NotificationService } from './notification.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { AppSettingsService } from './app-settings.service';
 import { AutoAcceptInviteRequestsAutomationConfig } from '../models/automations';
 import { SleepPreparationService } from './sleep-preparation.service';
@@ -31,7 +31,7 @@ export class InviteAutomationsService {
     private sleep: SleepService,
     private eventLog: EventLogService,
     private notifications: NotificationService,
-    private translate: TranslateService,
+    private translate: TranslocoService,
     private sleepPreparation: SleepPreparationService,
     private messageCenter: MessageCenterService
   ) {}
@@ -162,7 +162,7 @@ export class InviteAutomationsService {
           values: {
             senderUsername:
               notification.senderUsername ??
-              this.translate.instant(
+              this.translate.translate(
                 'message-center.messages.vrcInviteRequestFailedWorldUnknown.unknownFriend'
               ),
           },
@@ -270,11 +270,7 @@ export class InviteAutomationsService {
           );
           if (message) {
             await this.withTimeout(
-              this.vrchat.declineInviteOrInviteRequest(
-                notification.id,
-                'requestInvite',
-                message
-              ),
+              this.vrchat.declineInviteOrInviteRequest(notification.id, 'requestInvite', message),
               'vrchat.declineInviteOrInviteRequest (whitelist check)'
             );
             await this.withTimeout(
@@ -301,11 +297,7 @@ export class InviteAutomationsService {
           );
           if (message) {
             await this.withTimeout(
-              this.vrchat.declineInviteOrInviteRequest(
-                notification.id,
-                'requestInvite',
-                message
-              ),
+              this.vrchat.declineInviteOrInviteRequest(notification.id, 'requestInvite', message),
               'vrchat.declineInviteOrInviteRequest (blacklist check)'
             );
             await this.withTimeout(
@@ -344,7 +336,7 @@ export class InviteAutomationsService {
     ) {
       await this.withTimeout(
         this.notifications.send(
-          this.translate.instant('notifications.autoAcceptedInviteRequest.content', {
+          this.translate.translate('notifications.autoAcceptedInviteRequest.content', {
             username: notification.senderUsername,
           })
         ),
@@ -365,7 +357,7 @@ export class InviteAutomationsService {
     let message = config.acceptInviteRequestMessage;
     message = message.replace(/\s+/g, ' ').trim();
     if (message.length === 0) {
-      message = this.translate.instant(
+      message = this.translate.translate(
         'invite-and-invite-requests.inviteRequestsTab.options.acceptMessage.customMessage.placeholder'
       );
       message = message.replace(/\s+/g, ' ').trim();
@@ -382,7 +374,7 @@ export class InviteAutomationsService {
     let message = config.declineInviteRequestMessage;
     message = message.replace(/\s+/g, ' ').trim();
     if (message.length === 0) {
-      message = this.translate.instant(
+      message = this.translate.translate(
         'invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.customMessage.placeholder'
       );
       message = message.replace(/\s+/g, ' ').trim();
@@ -398,7 +390,7 @@ export class InviteAutomationsService {
     let message = config.declineInviteMessage;
     message = message.replace(/\s+/g, ' ').trim();
     if (message.length === 0) {
-      message = this.translate.instant(
+      message = this.translate.translate(
         'invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.customMessage.placeholder'
       );
       message = message.replace(/\s+/g, ' ').trim();

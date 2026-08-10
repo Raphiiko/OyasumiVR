@@ -14,7 +14,7 @@
     (click)="openSoundModal()"
   >
     <i class="material-symbols-outlined icon-filled">music_note</i>
-    <span>{{ soundConfig?.sound?.name || (label | translate) }}</span>
+    <span>{{ soundConfig?.sound?.name || (label | transloco) }}</span>
     @if (
       $safeNavigationMigration(soundConfig?.volume) !== undefined &&
       $safeNavigationMigration(soundConfig?.volume) !== null

@@ -18,7 +18,7 @@ import {
 import { SleepService } from '../sleep.service';
 import { SleepDetectorStateReport } from '../../models/events';
 import { NotificationService } from '../notification.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { EventLogService } from '../event-log.service';
 import { OpenVRInputService } from '../openvr-input.service';
 import { OVRInputEventAction } from '../../models/ovr-input-event';
@@ -78,7 +78,7 @@ export class SleepModeForSleepDetectorAutomationService {
     private automationConfig: AutomationConfigService,
     private sleep: SleepService,
     private notifications: NotificationService,
-    private translate: TranslateService,
+    private translate: TranslocoService,
     private eventLog: EventLogService,
     private openvrInputService: OpenVRInputService,
     private telemetry: TelemetryService
@@ -138,7 +138,7 @@ export class SleepModeForSleepDetectorAutomationService {
       const sound = getBuiltInNotificationSound('pebbles');
       await this.notifications.playSound(sound);
       await this.notifications.send(
-        this.translate.instant('notifications.sleepCheckCancel.content')
+        this.translate.translate('notifications.sleepCheckCancel.content')
       );
       if (this.sleepCheckNotificationId) {
         await this.notifications.clearNotification(this.sleepCheckNotificationId);
@@ -198,7 +198,7 @@ export class SleepModeForSleepDetectorAutomationService {
     // If necessary, first check if the user is asleep, allowing them to cancel.
     if (this.enableConfig.sleepCheck) {
       this.sleepCheckNotificationId = await this.notifications.send(
-        this.translate.instant('notifications.sleepCheck.content'),
+        this.translate.translate('notifications.sleepCheck.content'),
         8000
       );
       if (this.sleepEnableTimeoutId) return 'SLEEP_CHECK_ALREADY_IN_PROGRESS';

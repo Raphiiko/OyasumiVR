@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api/core';
 import { fontLoader } from 'src-shared-ts/src/font-loader';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +12,7 @@ export class FontLoaderService {
     return this._httpServerPort;
   }
 
-  constructor(private translate: TranslateService) {}
+  constructor(private translate: TranslocoService) {}
 
   async init() {
     // Fetch http server port until it's available
@@ -21,10 +21,10 @@ export class FontLoaderService {
       await new Promise((resolve) => setTimeout(resolve, 50));
     }
     // Initialize font loader
-    fontLoader.init(this._httpServerPort, this.translate.getCurrentLang()!).then(() => {
+    fontLoader.init(this._httpServerPort, this.translate.getActiveLang()!).then(() => {
       // Load fonts for new locale
-      this.translate.onLangChange.subscribe(async (event) => {
-        await fontLoader.loadFontsForNewLocale(event.lang);
+      this.translate.langChanges$.subscribe(async (lang) => {
+        await fontLoader.loadFontsForNewLocale(lang);
       });
     });
   }

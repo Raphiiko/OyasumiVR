@@ -12,7 +12,7 @@ import { DeviceSelection, DMDeviceType } from 'src-ui/app/models/device-manager'
 import { DeviceSelectorModalComponent } from '../device-selector-modal/device-selector-modal.component';
 import { hshrink, noop } from '../../utils/animations';
 import { DeviceManagerService } from 'src-ui/app/services/device-manager.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { isEqual } from 'lodash';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -45,7 +45,7 @@ export class DeviceSelectorComponent implements OnInit {
   constructor(
     private modalService: ModalService,
     private deviceManagerService: DeviceManagerService,
-    private translateService: TranslateService,
+    private translateService: TranslocoService,
     private destroyRef: DestroyRef
   ) {}
 
@@ -68,9 +68,9 @@ export class DeviceSelectorComponent implements OnInit {
 
   get buttonText(): string {
     if (!this.hasSelection) {
-      return this.translateService.instant('comp.device-selector.noSelection');
+      return this.translateService.translate('comp.device-selector.noSelection');
     }
-    return this.translateService.instant('comp.device-selector.withDevices', {
+    return this.translateService.translate('comp.device-selector.withDevices', {
       count: this.deviceCount,
     });
   }

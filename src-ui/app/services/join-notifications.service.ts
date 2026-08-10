@@ -23,7 +23,7 @@ import {
 import { VRChatLogService } from './vrchat-log.service';
 import { VRChatLogEvent } from '../models/vrchat-log-event';
 import type { LimitedUserFriend } from 'vrchat';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { v4 as uuid } from 'uuid';
 
 @Injectable({
@@ -54,7 +54,7 @@ export class JoinNotificationsService {
     private vrchat: VRChatService,
     private notification: NotificationService,
     private vrchatLog: VRChatLogService,
-    private translate: TranslateService
+    private translate: TranslocoService
   ) {}
 
   public async init() {
@@ -125,9 +125,12 @@ export class JoinNotificationsService {
           this.queuedNotifications = this.queuedNotifications.filter((id) => id !== val.id);
           // Send notification
           if (val.notification) {
-            const message = this.translate.instant(`join-notifications.notification.${val.type}`, {
-              name: val.notification.displayName,
-            });
+            const message = this.translate.translate(
+              `join-notifications.notification.${val.type}`,
+              {
+                name: val.notification.displayName,
+              }
+            );
             await this.notification.send(message, 5000);
           }
           // Send sound

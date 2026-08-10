@@ -1,9 +1,9 @@
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { EventLogBase, EventLogType } from '../../../models/event-log-entry';
 import { inject } from '@angular/core';
 
 export abstract class EventLogEntryParser<T extends EventLogBase> {
-  protected translate = inject(TranslateService);
+  protected translate = inject(TranslocoService);
 
   abstract entryType(): EventLogType;
 

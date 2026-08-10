@@ -1,14 +1,14 @@
 <div class="pane">
-  <div class="pane-title" translate>resolution-automations.title</div>
+  <div class="pane-title" transloco="resolution-automations.title"></div>
   <div class="pane-content">
     <div class="setting-view-container">
       <div class="setting-category">
-        <p translate>resolution-automations.description</p>
+        <p transloco="resolution-automations.description"></p>
         <div class="settings">
           <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate>resolution-automations.onSleepEnable.title</span>
-              <span translate>resolution-automations.onSleepEnable.description</span>
+            <div class="setting-row-label">
+              <span transloco="resolution-automations.onSleepEnable.title"></span>
+              <span transloco="resolution-automations.onSleepEnable.description"></span>
             </div>
             <div class="setting-row-action">
               <label class="switch-toggle">
@@ -28,16 +28,16 @@
           </div>
           <div class="setting-row-group">
             <div class="setting-row" [class.disabled]="!onSleepModeEnableConfig.enabled">
-              <div class="setting-row-label" translate>
-                <span translate>resolution-automations.renderResolution.title</span>
+              <div class="setting-row-label">
+                <span transloco="resolution-automations.renderResolution.title"></span>
                 <span></span>
               </div>
               <div class="setting-row-action">
                 @if (onSleepModeEnableConfig.resolution !== null) {
-                  <span translate>resolution-automations.renderResolution.custom</span>
+                  <span transloco="resolution-automations.renderResolution.custom"></span>
                 }
                 @if (onSleepModeEnableConfig.resolution === null) {
-                  <span translate>resolution-automations.renderResolution.auto</span>
+                  <span transloco="resolution-automations.renderResolution.auto"></span>
                 }
                 <label class="switch-toggle">
                   <input
@@ -71,9 +71,9 @@
             </div>
           </div>
           <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate>resolution-automations.onSleepDisable.title</span>
-              <span translate>resolution-automations.onSleepDisable.description</span>
+            <div class="setting-row-label">
+              <span transloco="resolution-automations.onSleepDisable.title"></span>
+              <span transloco="resolution-automations.onSleepDisable.description"></span>
             </div>
             <div class="setting-row-action">
               <label class="switch-toggle">
@@ -93,16 +93,16 @@
           </div>
           <div class="setting-row-group">
             <div class="setting-row" [class.disabled]="!onSleepModeDisableConfig.enabled">
-              <div class="setting-row-label" translate>
-                <span translate>resolution-automations.renderResolution.title</span>
+              <div class="setting-row-label">
+                <span transloco="resolution-automations.renderResolution.title"></span>
                 <span></span>
               </div>
               <div class="setting-row-action">
                 @if (onSleepModeDisableConfig.resolution !== null) {
-                  <span translate>resolution-automations.renderResolution.custom</span>
+                  <span transloco="resolution-automations.renderResolution.custom"></span>
                 }
                 @if (onSleepModeDisableConfig.resolution === null) {
-                  <span translate>resolution-automations.renderResolution.auto</span>
+                  <span transloco="resolution-automations.renderResolution.auto"></span>
                 }
                 <label class="switch-toggle">
                   <input

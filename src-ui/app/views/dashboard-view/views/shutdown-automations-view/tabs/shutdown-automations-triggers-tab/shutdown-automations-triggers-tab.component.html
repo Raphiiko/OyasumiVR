@@ -1,9 +1,9 @@
 <div class="setting-category">
   <div class="settings">
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate>shutdown-automations.triggers.enabled.title</span>
-        <span translate>shutdown-automations.triggers.enabled.description</span>
+      <div class="setting-row-label">
+        <span transloco="shutdown-automations.triggers.enabled.title"></span>
+        <span transloco="shutdown-automations.triggers.enabled.description"></span>
       </div>
       <div class="setting-row-action">
         <label class="switch-toggle">
@@ -19,12 +19,12 @@
   </div>
 </div>
 <div class="setting-category" [class.disabled]="!config.triggersEnabled">
-  <h2 translate>shutdown-automations.triggers.triggers</h2>
+  <h2 transloco="shutdown-automations.triggers.triggers"></h2>
   <div class="settings">
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate>shutdown-automations.triggers.whenAsleep.title</span>
-        <span translate>shutdown-automations.triggers.whenAsleep.description</span>
+      <div class="setting-row-label">
+        <span transloco="shutdown-automations.triggers.whenAsleep.title"></span>
+        <span transloco="shutdown-automations.triggers.whenAsleep.description"></span>
       </div>
       <div class="setting-row-action">
         <label class="switch-toggle">
@@ -40,9 +40,9 @@
     @if (config.triggerOnSleep) {
       <div class="setting-row-group" @vshrink>
         <div class="setting-row" [class.disabled]="!config.triggerOnSleep">
-          <div class="setting-row-label" translate>
-            <span translate>shutdown-automations.triggers.whenAsleepDuration.title</span>
-            <span translate>shutdown-automations.triggers.whenAsleepDuration.description</span>
+          <div class="setting-row-label">
+            <span transloco="shutdown-automations.triggers.whenAsleepDuration.title"></span>
+            <span transloco="shutdown-automations.triggers.whenAsleepDuration.description"></span>
           </div>
           <div class="setting-row-action">
             <app-duration-input-setting
@@ -52,9 +52,9 @@
           </div>
         </div>
         <div class="setting-row" [class.disabled]="!config.triggerOnSleep">
-          <div class="setting-row-label" translate>
-            <span translate>shutdown-automations.triggers.whenAsleepTimeWindow.title</span>
-            <span translate>shutdown-automations.triggers.whenAsleepTimeWindow.description</span>
+          <div class="setting-row-label">
+            <span transloco="shutdown-automations.triggers.whenAsleepTimeWindow.title"></span>
+            <span transloco="shutdown-automations.triggers.whenAsleepTimeWindow.description"></span>
           </div>
           <div class="setting-row-action">
             @if (config.triggerOnSleepActivationWindow) {
@@ -99,9 +99,9 @@
   </div>
   <div class="settings">
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate>shutdown-automations.triggers.whenAlone.title</span>
-        <span translate>shutdown-automations.triggers.whenAlone.description</span>
+      <div class="setting-row-label">
+        <span transloco="shutdown-automations.triggers.whenAlone.title"></span>
+        <span transloco="shutdown-automations.triggers.whenAlone.description"></span>
       </div>
       <div class="setting-row-action">
         <label class="switch-toggle">
@@ -117,9 +117,9 @@
     @if (config.triggerWhenAlone) {
       <div class="setting-row-group" @vshrink>
         <div class="setting-row" [class.disabled]="!config.triggerWhenAlone">
-          <div class="setting-row-label" translate>
-            <span translate>shutdown-automations.triggers.whenAloneDuration.title</span>
-            <span translate>shutdown-automations.triggers.whenAloneDuration.description</span>
+          <div class="setting-row-label">
+            <span transloco="shutdown-automations.triggers.whenAloneDuration.title"></span>
+            <span transloco="shutdown-automations.triggers.whenAloneDuration.description"></span>
           </div>
           <div class="setting-row-action">
             <app-duration-input-setting
@@ -129,9 +129,9 @@
           </div>
         </div>
         <div class="setting-row" [class.disabled]="!config.triggerWhenAlone">
-          <div class="setting-row-label" translate>
-            <span translate>shutdown-automations.triggers.whenAloneTimeWindow.title</span>
-            <span translate>shutdown-automations.triggers.whenAloneTimeWindow.description</span>
+          <div class="setting-row-label">
+            <span transloco="shutdown-automations.triggers.whenAloneTimeWindow.title"></span>
+            <span transloco="shutdown-automations.triggers.whenAloneTimeWindow.description"></span>
           </div>
           <div class="setting-row-action">
             @if (config.triggerWhenAloneActivationWindow) {
@@ -174,13 +174,13 @@
           </div>
         </div>
         <div class="setting-row" [class.disabled]="!config.triggerWhenAlone">
-          <div class="setting-row-label" translate>
-            <span translate
-              >shutdown-automations.triggers.whenAloneOnlyWhenSleepModeEnabled.title</span
-            >
-            <span translate
-              >shutdown-automations.triggers.whenAloneOnlyWhenSleepModeEnabled.description</span
-            >
+          <div class="setting-row-label">
+            <span
+              transloco="shutdown-automations.triggers.whenAloneOnlyWhenSleepModeEnabled.title"
+            ></span>
+            <span
+              transloco="shutdown-automations.triggers.whenAloneOnlyWhenSleepModeEnabled.description"
+            ></span>
           </div>
           <div class="setting-row-action">
             <label class="switch-toggle">

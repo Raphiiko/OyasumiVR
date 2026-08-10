@@ -1,8 +1,8 @@
 <div class="pane">
-  <div class="pane-title" translate>frame-limiter.title</div>
+  <div class="pane-title" transloco="frame-limiter.title"></div>
   <div class="pane-content">
     <div class="setting-view-container">
-      <p translate>frame-limiter.description</p>
+      <p transloco="frame-limiter.description"></p>
       @if ((openvr.status | async) !== 'INITIALIZED') {
         <div class="alert warning" @vshrink>
           <div class="alert-bg"></div>
@@ -10,20 +10,20 @@
             <i class="material-icons">warning</i>
           </div>
           <div class="alert-content">
-            <span translate>frame-limiter.steamvrRequired</span>
+            <span transloco="frame-limiter.steamvrRequired"></span>
           </div>
         </div>
       }
       <div class="list-header">
-        <h3 translate>frame-limiter.frameLimits</h3>
+        <h3 transloco="frame-limiter.frameLimits"></h3>
         <button class="btn btn-primary" (click)="addLimiter()">
           <i class="material-icons">add</i>
-          <span translate>frame-limiter.addLimiter</span>
+          <span transloco="frame-limiter.addLimiter"></span>
         </button>
       </div>
       @if (!config.configs.length) {
         <div class="no-limits-container" @vshrink>
-          <p translate>frame-limiter.noLimits</p>
+          <p transloco="frame-limiter.noLimits"></p>
         </div>
       }
 
@@ -34,16 +34,19 @@
               <div class="setting-row-icon">
                 <img [src]="getAppIconForId(config.appId)" class="app-icon" />
               </div>
-              <div class="setting-row-label" translate>
-                <span translate>{{ config.appLabel }}</span>
+              <div class="setting-row-label">
+                <span [transloco]="config.appLabel"></span>
                 <span>
-                  <a (click)="removeLimiter(config.appId)" translate>frame-limiter.removeLimiter</a>
+                  <a
+                    (click)="removeLimiter(config.appId)"
+                    transloco="frame-limiter.removeLimiter"
+                  ></a>
                 </span>
               </div>
               <div class="setting-row-action" style="position: relative">
                 @if ((openvr.status | async) !== 'INITIALIZED') {
                   <div class="steamvr-unavailable-control-overlay" @fade>
-                    <span translate>frame-limiter.directControlRequiresSteamVR</span>
+                    <span transloco="frame-limiter.directControlRequiresSteamVR"></span>
                   </div>
                 }
                 <app-frame-limiter-selector
@@ -63,7 +66,7 @@
                       (change)="toggleEventFrameLimit(config.appId, 'onSleepEnable')"
                     />
                     <span class="check-toggle-checkmark"></span>
-                    <span class="check-toggle-label" translate> frame-limiter.onSleepEnable </span>
+                    <span class="check-toggle-label" transloco="frame-limiter.onSleepEnable"></span>
                   </label>
                   <span></span>
                 </div>
@@ -83,7 +86,10 @@
                       (change)="toggleEventFrameLimit(config.appId, 'onSleepDisable')"
                     />
                     <span class="check-toggle-checkmark"></span>
-                    <span class="check-toggle-label" translate> frame-limiter.onSleepDisable </span>
+                    <span
+                      class="check-toggle-label"
+                      transloco="frame-limiter.onSleepDisable"
+                    ></span>
                   </label>
                   <span></span>
                 </div>
@@ -103,9 +109,10 @@
                       (change)="toggleEventFrameLimit(config.appId, 'onSleepPreparation')"
                     />
                     <span class="check-toggle-checkmark"></span>
-                    <span class="check-toggle-label" translate>
-                      frame-limiter.onSleepPreparation
-                    </span>
+                    <span
+                      class="check-toggle-label"
+                      transloco="frame-limiter.onSleepPreparation"
+                    ></span>
                   </label>
                   <span></span>
                 </div>
@@ -129,7 +136,7 @@
           <i class="material-symbols-outlined">info</i>
         </div>
         <div class="alert-content">
-          <span translate>frame-limiter.supportedHardwareWarning</span>
+          <span transloco="frame-limiter.supportedHardwareWarning"></span>
         </div>
       </div>
     </div>

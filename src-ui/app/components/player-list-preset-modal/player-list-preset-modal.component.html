@@ -1,10 +1,10 @@
 <div class="pane modal modal-lg" @fadeUp>
   <div class="pane-title">
     @if (mode === 'save') {
-      <span translate>comp.player-list-preset-modal.title.save</span>
+      <span transloco="comp.player-list-preset-modal.title.save"></span>
     }
     @if (mode === 'load') {
-      <span translate>comp.player-list-preset-modal.title.load</span>
+      <span transloco="comp.player-list-preset-modal.title.load"></span>
     }
     <button class="btn btn-secondary btn-icon btn-close" (click)="close()">
       <i class="material-icons">close</i>
@@ -16,7 +16,7 @@
         <input
           type="text"
           [(ngModel)]="saveName"
-          [placeholder]="'comp.player-list-preset-modal.namePlaceholder' | translate"
+          [placeholder]="'comp.player-list-preset-modal.namePlaceholder' | transloco"
           maxlength="24"
         />
         <button
@@ -25,14 +25,14 @@
           (click)="saveNewPreset()"
         >
           <i class="material-icons">save</i>
-          <span translate>shared.modals.save</span>
+          <span transloco="shared.modals.save"></span>
         </button>
       </div>
     }
     <div class="presets-list">
       @if (!lists.length) {
         <div class="no-presets" @vshrink>
-          <span translate>comp.player-list-preset-modal.noPresets</span>
+          <span transloco="comp.player-list-preset-modal.noPresets"></span>
         </div>
       }
       @for (list of lists; track trackPresetBy($index, list)) {
@@ -41,7 +41,7 @@
             <span>{{ list.name }}</span>
             <span>{{
               'comp.player-list-preset-modal.preset.subtitle'
-                | translate: { count: list.playerIds.length }
+                | transloco: { count: list.playerIds.length }
             }}</span>
           </div>
           <div class="preset-actions">

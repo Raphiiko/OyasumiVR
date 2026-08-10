@@ -1,6 +1,6 @@
 <div class="pane">
   <div class="pane-title">
-    <span translate>comp.event-log.title</span>
+    <span transloco="comp.event-log.title"></span>
     <button
       class="btn btn-secondary btn-header"
       (mouseover)="filterHover = true"
@@ -12,7 +12,7 @@
       <i class="material-icons-round">filter_list</i>
       <span>&nbsp;</span>
       @if (filterHover) {
-        <span translate @hshrink class="label">comp.event-log.openFilters</span>
+        <span transloco="comp.event-log.openFilters" @hshrink class="label"></span>
       }
     </button>
     <button
@@ -26,7 +26,7 @@
       <i class="material-icons-round">clear</i>
       <span>&nbsp;</span>
       @if (clearHover) {
-        <span translate @hshrink class="label">comp.event-log.clearLog</span>
+        <span transloco="comp.event-log.clearLog" @hshrink class="label"></span>
       }
     </button>
   </div>
@@ -34,7 +34,7 @@
     @if (entries === 0) {
       <div class="no-event-logs" @fade @noop>
         <i class="material-icons-round">info</i>
-        <span translate>comp.event-log.no-logs</span>
+        <span transloco="comp.event-log.no-logs"></span>
       </div>
     }
     <div class="event-logs" @noop>
@@ -47,7 +47,7 @@
       }
       @if (hasMore()) {
         <div class="show-more" @vshrink [@.disabled]="animationPause">
-          <span (click)="showMore()" translate>comp.event-log.show-more</span>
+          <span (click)="showMore()" transloco="comp.event-log.show-more"></span>
         </div>
       }
     </div>

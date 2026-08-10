@@ -1,14 +1,14 @@
 <div class="pane">
-  <div class="pane-title" translate>sleep-detection.title</div>
+  <div class="pane-title" transloco="sleep-detection.title"></div>
   <div class="tab-bar">
     <div class="tab" [class.active]="activeTab === 'DETECTION'" (click)="activeTab = 'DETECTION'">
-      <div class="tab-label" translate>sleep-detection.tab.detection</div>
+      <div class="tab-label" transloco="sleep-detection.tab.detection"></div>
     </div>
     <div class="tab" [class.active]="activeTab === 'ENABLE'" (click)="activeTab = 'ENABLE'">
-      <div class="tab-label" translate>sleep-detection.tab.enabling</div>
+      <div class="tab-label" transloco="sleep-detection.tab.enabling"></div>
     </div>
     <div class="tab" [class.active]="activeTab === 'DISABLE'" (click)="activeTab = 'DISABLE'">
-      <div class="tab-label" translate>sleep-detection.tab.disabling</div>
+      <div class="tab-label" transloco="sleep-detection.tab.disabling"></div>
     </div>
   </div>
   <div class="pane-content">

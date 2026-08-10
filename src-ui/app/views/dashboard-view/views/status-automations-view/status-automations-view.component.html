@@ -1,15 +1,15 @@
 <div class="pane" [@noop]>
-  <div class="pane-title" translate>status-automations.title</div>
+  <div class="pane-title" transloco="status-automations.title"></div>
   <div class="tab-bar">
     <div class="tab" [class.active]="activeTab === 'GENERAL'" (click)="activeTab = 'GENERAL'">
-      <div class="tab-label" translate>status-automations.tabs.general</div>
+      <div class="tab-label" transloco="status-automations.tabs.general"></div>
     </div>
     <div
       class="tab"
       [class.active]="activeTab === 'PLAYER_LIMIT'"
       (click)="activeTab = 'PLAYER_LIMIT'"
     >
-      <div class="tab-label" translate>status-automations.tabs.playerLimit</div>
+      <div class="tab-label" transloco="status-automations.tabs.playerLimit"></div>
     </div>
   </div>
   <div class="pane-content">

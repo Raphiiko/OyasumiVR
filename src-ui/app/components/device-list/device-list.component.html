@@ -1,6 +1,6 @@
 <div class="pane">
   <div class="pane-title">
-    <span translate>comp.device-list.title</span>
+    <span transloco="comp.device-list.title"></span>
     @if (devicesCanPowerOff) {
       <div class="btn-turn-off-all-wrapper" [@fade]>
         <button
@@ -22,7 +22,7 @@
           <div>
             <div class="device-list-category-header" [@vshrink]>
               <div class="device-list-category-header-label">
-                <span>{{ category.label | translate }}</span>
+                <span>{{ category.label | transloco }}</span>
               </div>
               @if (category.canBulkPowerOff) {
                 <app-device-power-button
@@ -45,7 +45,7 @@
           <div>
             <div class="device-list-category-header" [@vshrink]>
               <div class="device-list-category-header-label">
-                <span>{{ category.label | translate }}</span>
+                <span>{{ category.label | transloco }}</span>
               </div>
               @if (canShowBulkLighthousePowerButton(category)) {
                 <app-device-power-button
@@ -80,7 +80,7 @@
     @if (!deviceCategories.length) {
       <div class="device-list-empty" [@vshrink]>
         <i class="material-icons">info</i>
-        <span translate>comp.device-list.noDevices</span>
+        <span transloco="comp.device-list.noDevices"></span>
       </div>
     }
   </div>
@@ -89,10 +89,10 @@
     <button
       class="device-manager-button"
       [routerLink]="'/dashboard/deviceManager'"
-      [title]="'comp.dashboard-navbar.deviceManager' | translate"
+      [title]="'comp.dashboard-navbar.deviceManager' | transloco"
     >
       <img src="/assets/img/icon_controller.png" class="device-manager-icon" />
-      <span class="device-manager-label" translate>comp.dashboard-navbar.deviceManager</span>
+      <span class="device-manager-label" transloco="comp.dashboard-navbar.deviceManager"></span>
       <i class="material-icons-round">arrow_forward_ios</i>
     </button>
   </div>

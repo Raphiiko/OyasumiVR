@@ -1,7 +1,7 @@
 import { Component, HostBinding, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../../utils/animations';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   JoinNotificationsMode,
@@ -65,7 +65,7 @@ export class PlayerJoinLeaveDisableSleepModeModalComponent
     return;
   }
 
-  constructor(private translate: TranslateService) {
+  constructor(private translate: TranslocoService) {
     super();
   }
 

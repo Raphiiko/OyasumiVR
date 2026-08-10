@@ -1,10 +1,10 @@
 <div class="setting-category">
-  <p translate>sleep-detection.sleepDetection.description</p>
+  <p transloco="sleep-detection.sleepDetection.description"></p>
   <div class="settings">
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate>sleep-detection.sleepDetection.automation.title</span>
-        <span translate>sleep-detection.sleepDetection.automation.description</span>
+      <div class="setting-row-label">
+        <span transloco="sleep-detection.sleepDetection.automation.title"></span>
+        <span transloco="sleep-detection.sleepDetection.automation.description"></span>
       </div>
       <div class="setting-row-action">
         <label class="switch-toggle">
@@ -23,20 +23,20 @@
           <div class="setting-row-icon">
             <i class="material-icons warning-icon">warning</i>
           </div>
-          <div class="setting-row-label" translate>
+          <div class="setting-row-label">
             <span
               style="display: initial"
               [innerHtml]="
-                'sleep-detection.sleepDetection.automation.calibrationPending.title' | translate
+                'sleep-detection.sleepDetection.automation.calibrationPending.title' | transloco
               "
             ></span>
             <span></span>
           </div>
           <div class="setting-row-action">
             <button class="btn btn-secondary" (click)="calibrate()">
-              <span translate
-                >sleep-detection.sleepDetection.automation.calibrationPending.calibrate</span
-              >
+              <span
+                transloco="sleep-detection.sleepDetection.automation.calibrationPending.calibrate"
+              ></span>
             </button>
           </div>
         </div>
@@ -46,24 +46,30 @@
 </div>
 
 <div class="setting-category">
-  <h2 translate>sleep-detection.sleepDetection.configuration.title</h2>
+  <h2 transloco="sleep-detection.sleepDetection.configuration.title"></h2>
   <div class="settings">
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate>sleep-detection.modals.enableForSleepDetector.calibration.title</span>
-        <span translate>sleep-detection.modals.enableForSleepDetector.calibration.description</span>
+      <div class="setting-row-label">
+        <span transloco="sleep-detection.modals.enableForSleepDetector.calibration.title"></span>
+        <span
+          transloco="sleep-detection.modals.enableForSleepDetector.calibration.description"
+        ></span>
       </div>
       <div class="setting-row-action">
-        <button class="btn btn-primary" (click)="calibrate()" translate>
-          sleep-detection.modals.enableForSleepDetector.calibration.action
-        </button>
+        <button
+          class="btn btn-primary"
+          (click)="calibrate()"
+          transloco="sleep-detection.modals.enableForSleepDetector.calibration.action"
+        ></button>
       </div>
     </div>
 
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate>sleep-detection.modals.enableForSleepDetector.sensitivity.title</span>
-        <span translate>sleep-detection.modals.enableForSleepDetector.sensitivity.description</span>
+      <div class="setting-row-label">
+        <span transloco="sleep-detection.modals.enableForSleepDetector.sensitivity.title"></span>
+        <span
+          transloco="sleep-detection.modals.enableForSleepDetector.sensitivity.description"
+        ></span>
       </div>
       <div class="setting-row-action">
         <app-select-box
@@ -76,11 +82,11 @@
     </div>
 
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate>sleep-detection.modals.enableForSleepDetector.sleepCheck.title</span>
+      <div class="setting-row-label">
+        <span transloco="sleep-detection.modals.enableForSleepDetector.sleepCheck.title"></span>
         <span
           [innerHtml]="
-            'sleep-detection.modals.enableForSleepDetector.sleepCheck.description' | translate
+            'sleep-detection.modals.enableForSleepDetector.sleepCheck.description' | transloco
           "
         ></span>
       </div>
@@ -97,9 +103,11 @@
     </div>
 
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate>sleep-detection.modals.enableForSleepDetector.timeWindow.title</span>
-        <span translate>sleep-detection.modals.enableForSleepDetector.timeWindow.description</span>
+      <div class="setting-row-label">
+        <span transloco="sleep-detection.modals.enableForSleepDetector.timeWindow.title"></span>
+        <span
+          transloco="sleep-detection.modals.enableForSleepDetector.timeWindow.description"
+        ></span>
       </div>
       <div class="setting-row-action">
         @if (automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindow) {
@@ -139,19 +147,21 @@
 </div>
 
 <div class="setting-category">
-  <h2 translate>sleep-detection.sleepDetection.advanced.title</h2>
-  <p translate>sleep-detection.sleepDetection.advanced.description</p>
+  <h2 transloco="sleep-detection.sleepDetection.advanced.title"></h2>
+  <p transloco="sleep-detection.sleepDetection.advanced.description"></p>
   <div class="settings">
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate>sleep-detection.modals.enableForSleepDetector.detectionWindow.title</span>
-        <span translate
-          >sleep-detection.modals.enableForSleepDetector.detectionWindow.description</span
-        >
+      <div class="setting-row-label">
+        <span
+          transloco="sleep-detection.modals.enableForSleepDetector.detectionWindow.title"
+        ></span>
+        <span
+          transloco="sleep-detection.modals.enableForSleepDetector.detectionWindow.description"
+        ></span>
       </div>
       <div class="setting-row-action">
         <app-slider-setting
-          [unit]="'sleep-detection.modals.enableForSleepDetector.detectionWindow.unit' | translate"
+          [unit]="'sleep-detection.modals.enableForSleepDetector.detectionWindow.unit' | transloco"
           [min]="15"
           [max]="60"
           [value]="automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.detectionWindowMinutes"
@@ -164,13 +174,13 @@
     </div>
 
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate
-          >sleep-detection.modals.enableForSleepDetector.considerControllerPresence.title</span
-        >
-        <span translate
-          >sleep-detection.modals.enableForSleepDetector.considerControllerPresence.description</span
-        >
+      <div class="setting-row-label">
+        <span
+          transloco="sleep-detection.modals.enableForSleepDetector.considerControllerPresence.title"
+        ></span>
+        <span
+          transloco="sleep-detection.modals.enableForSleepDetector.considerControllerPresence.description"
+        ></span>
       </div>
       <div class="setting-row-action">
         <label class="switch-toggle">
@@ -187,13 +197,13 @@
     </div>
 
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate
-          >sleep-detection.modals.enableForSleepDetector.considerSleepingPose.title</span
-        >
-        <span translate
-          >sleep-detection.modals.enableForSleepDetector.considerSleepingPose.description</span
-        >
+      <div class="setting-row-label">
+        <span
+          transloco="sleep-detection.modals.enableForSleepDetector.considerSleepingPose.title"
+        ></span>
+        <span
+          transloco="sleep-detection.modals.enableForSleepDetector.considerSleepingPose.description"
+        ></span>
       </div>
       <div class="setting-row-action">
         <label class="switch-toggle">

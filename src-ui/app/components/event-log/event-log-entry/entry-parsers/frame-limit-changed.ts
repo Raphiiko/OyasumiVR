@@ -13,7 +13,7 @@ export class EventLogFrameLimitChangedEntryParser extends EventLogEntryParser<Ev
   override headerInfoTitleParams(entry: EventLogFrameLimitChanged): { [p: string]: string } {
     return {
       appName: entry.appName,
-      limit: this.translate.instant(entry.limit),
+      limit: this.translate.translate(entry.limit),
     };
   }
 
