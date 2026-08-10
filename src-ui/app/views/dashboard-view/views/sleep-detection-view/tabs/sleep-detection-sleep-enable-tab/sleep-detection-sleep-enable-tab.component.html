@@ -1,9 +1,9 @@
 <div class="setting-category">
-  <p translate>sleep-detection.enableAutomations.description</p>
+  <p transloco="sleep-detection.enableAutomations.description"></p>
   <div class="settings">
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate>sleep-detection.enableAutomations.atTime</span>
+      <div class="setting-row-label">
+        <span transloco="sleep-detection.enableAutomations.atTime"></span>
         <span>
           @if (automationConfigs.SLEEP_MODE_ENABLE_AT_TIME.time) {
             <span [@fade]>
@@ -28,11 +28,11 @@
     </div>
 
     <div class="setting-row">
-      <div class="setting-row-label" translate>
+      <div class="setting-row-label">
         <span
           [innerHtml]="
             'sleep-detection.enableAutomations.atBatteryPercentage'
-              | translate
+              | transloco
                 : { value: automationConfigs.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.threshold }
           "
         ></span>
@@ -62,8 +62,8 @@
     </div>
 
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate>sleep-detection.enableAutomations.onControllersPoweredOff.title</span>
+      <div class="setting-row-label">
+        <span transloco="sleep-detection.enableAutomations.onControllersPoweredOff.title"></span>
         <span></span>
       </div>
       <div class="setting-row-action">
@@ -83,16 +83,16 @@
     ) {
       <div class="setting-row-group" @vshrink>
         <div class="setting-row">
-          <div class="setting-row-label conflict" translate>
+          <div class="setting-row-label conflict">
             <span>
               <span><i class="material-icons">warning</i></span>
-              <span translate
-                >sleep-detection.enableAutomations.onControllersPoweredOff.batteryLevelAutomationConflict.title</span
-              >
+              <span
+                transloco="sleep-detection.enableAutomations.onControllersPoweredOff.batteryLevelAutomationConflict.title"
+              ></span>
             </span>
-            <span translate
-              >sleep-detection.enableAutomations.onControllersPoweredOff.batteryLevelAutomationConflict.description</span
-            >
+            <span
+              transloco="sleep-detection.enableAutomations.onControllersPoweredOff.batteryLevelAutomationConflict.description"
+            ></span>
           </div>
           <div class="setting-row-action">
             <button
@@ -101,7 +101,7 @@
               (click)="goToPowerAutomations('CONTROLLERS_AND_TRACKERS')"
               [innerHtml]="
                 'sleep-detection.enableAutomations.onControllersPoweredOff.batteryLevelAutomationConflict.action'
-                  | translate
+                  | transloco
               "
             ></button>
           </div>
@@ -110,13 +110,13 @@
     }
 
     <div class="setting-row">
-      <div class="setting-row-label" translate>
+      <div class="setting-row-label">
         <span class="row-title">
-          <span translate>sleep-detection.enableAutomations.onHeartRateCalmPeriod.title</span>
+          <span transloco="sleep-detection.enableAutomations.onHeartRateCalmPeriod.title"></span>
         </span>
         <span
           [innerHtml]="
-            'sleep-detection.enableAutomations.onHeartRateCalmPeriod.description' | translate
+            'sleep-detection.enableAutomations.onHeartRateCalmPeriod.description' | transloco
           "
         ></span>
       </div>

@@ -14,7 +14,7 @@ import {
 import { SETTINGS_KEY_APP_SETTINGS, SETTINGS_STORE } from '../globals';
 import { isEqual, uniq } from 'lodash';
 import { migrateAppSettings } from '../migrations/app-settings.migrations';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { OneTimeFlag } from '../models/one-time-flags';
 import { ModalService } from './modal.service';
 import {
@@ -40,7 +40,7 @@ export class AppSettingsService {
   public loadedDefaults: Observable<boolean | undefined> = this._loadedDefaults.asObservable();
 
   constructor(
-    private translateService: TranslateService,
+    private translateService: TranslocoService,
     private modalService: ModalService
   ) {}
 
@@ -64,7 +64,7 @@ export class AppSettingsService {
       const oldSettings = structuredClone(settings);
       settings = migrateAppSettings(settings);
       if (oldSettings.userLanguage !== settings.userLanguage) {
-        this.translateService.use(settings.userLanguage);
+        this.translateService.setActiveLang(settings.userLanguage);
       }
     } else {
       settings = this._settings.value;

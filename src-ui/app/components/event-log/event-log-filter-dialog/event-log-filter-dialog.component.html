@@ -1,14 +1,18 @@
 <div class="pane modal modal-xl" @fadeUp>
-  <div class="pane-title" translate> comp.event-log-filter-dialog.title </div>
+  <div class="pane-title" transloco="comp.event-log-filter-dialog.title"></div>
   <div class="pane-content">
     <div class="action-row">
-      <p class="description" translate>comp.event-log-filter-dialog.selectDescription</p>
-      <button class="btn btn-secondary" translate (click)="selectAll()">
-        comp.event-log-filter-dialog.selectAll
-      </button>
-      <button class="btn btn-secondary" translate (click)="selectNone()">
-        comp.event-log-filter-dialog.selectNone
-      </button>
+      <p class="description" transloco="comp.event-log-filter-dialog.selectDescription"></p>
+      <button
+        class="btn btn-secondary"
+        transloco="comp.event-log-filter-dialog.selectAll"
+        (click)="selectAll()"
+      ></button>
+      <button
+        class="btn btn-secondary"
+        transloco="comp.event-log-filter-dialog.selectNone"
+        (click)="selectNone()"
+      ></button>
     </div>
     <div class="filter-container">
       @for (filter of filters; track filter) {
@@ -23,10 +27,10 @@
           </div>
           <div class="filter-labels">
             <span>{{
-              'comp.event-log-filter-dialog.filters.' + filter.id + '.title' | translate
+              'comp.event-log-filter-dialog.filters.' + filter.id + '.title' | transloco
             }}</span>
             <span>{{
-              'comp.event-log-filter-dialog.filters.' + filter.id + '.description' | translate
+              'comp.event-log-filter-dialog.filters.' + filter.id + '.description' | transloco
             }}</span>
           </div>
         </div>
@@ -34,8 +38,11 @@
     </div>
   </div>
   <div class="pane-actions spread">
-    <button class="btn btn-primary" (click)="save()" translate [disabled]="!selectedFilters.length">
-      shared.modals.save
-    </button>
+    <button
+      class="btn btn-primary"
+      (click)="save()"
+      transloco="shared.modals.save"
+      [disabled]="!selectedFilters.length"
+    ></button>
   </div>
 </div>

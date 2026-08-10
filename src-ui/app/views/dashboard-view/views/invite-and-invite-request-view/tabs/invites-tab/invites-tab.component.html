@@ -1,13 +1,13 @@
 <div class="setting-view-container">
   <div class="settings">
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate
-          >invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.title</span
-        >
-        <span translate
-          >invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.description</span
-        >
+      <div class="setting-row-label">
+        <span
+          transloco="invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.title"
+        ></span>
+        <span
+          transloco="invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.description"
+        ></span>
       </div>
       <div class="setting-row-action">
         <label class="switch-toggle">
@@ -25,10 +25,10 @@
     @if (config.declineInvitesWhileAsleep) {
       <div class="setting-row-group" @vshrink>
         <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate
-              >invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.customMessage.title</span
-            >
+          <div class="setting-row-label">
+            <span
+              transloco="invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.customMessage.title"
+            ></span>
             <span></span>
           </div>
           <div class="setting-row-action">
@@ -45,7 +45,7 @@
               (blur)="declineOnInviteCustomMessageInput.value = config.declineInviteMessage"
               [placeholder]="
                 'invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.customMessage.placeholder'
-                  | translate
+                  | transloco
               "
               #declineOnInviteCustomMessageInput
             />

@@ -917,7 +917,7 @@
     },
     "player-list-preset-modal": {
       "confirmDelete": {
-        "message": "¿Estás seguro de que quieres borrar tu preset llamado ''{name}''? Tiene {cuenta, plural, un {1 player} otros {# players}} en él.",
+        "message": "¿Estás seguro de que quieres borrar tu preset llamado ''{name}''? Tiene {count, plural, one {1 jugador} other {# jugadores}} en él.",
         "title": "¿Estás seguro?"
       },
       "confirmOverwrite": {
@@ -931,7 +931,7 @@
       "noPresets": "Aún no tienes preajustes guardados",
       "overwrite": "Sobrescribir preajuste",
       "preset": {
-        "subtitle": "Lista de {contar, plural, un {1 player} otros {# players}}"
+        "subtitle": "Lista de {count, plural, one {1 jugador} other {# jugadores}}"
       },
       "title": {
         "load": "Cargar lista de jugadores",
@@ -1296,7 +1296,7 @@
         },
         "onlyBelowPlayerCount": {
           "description": "Esto te incluye a ti",
-          "title": "Sólo cuando haya menos <strong>{count, plural, one {#</strong> player} de otro {#</strong> players}} en tu mundo"
+          "title": "Sólo cuando haya menos <strong>{count, plural, one {#</strong> jugador} other {#</strong> jugadores}} en tu mundo"
         },
         "onlyIfSleepModeEnabled": {
           "title": "Sólo cuando el modo sueño está activado"
@@ -2439,9 +2439,9 @@
     "disableAutomations": {
       "afterTime": {
         "description": {
-          "hours": "Después de {horas, plural, uno {1 hora} otro {# horas}}",
-          "hoursAndMinutes": "Después de {horas, plural, uno {1 hora} otro {# horas}} y {minutos, plural, uno {1 minuto} otro {# minutos}}",
-          "minutes": "Después de {minutos, plural, uno {1 minuto} otro {# minutos}}"
+          "hours": "Después de {hours, plural, one {1 hora} other {# horas}}",
+          "hoursAndMinutes": "Después de {hours, plural, one {1 hora} other {# horas}} y {minutes, plural, one {1 minuto} other {# minutos}}",
+          "minutes": "Después de {minutes, plural, one {1 minuto} other {# minutos}}"
         },
         "title": "Después de una cantidad específica de tiempo"
       },
@@ -2722,7 +2722,7 @@
       },
       "onlyIfSleepModeEnabled": "Sólo cuando el modo sueño está activado",
       "playerLimit": "Límite de jugadores",
-      "playerLimitLabel": "{count, plural, one {1 jugador}, other {# jugadores}} (incluido tú)"
+      "playerLimitLabel": "{count, plural, one {1 jugador} other {# jugadores}} (incluido tú)"
     },
     "tabs": {
       "general": "General",

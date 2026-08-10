@@ -1,12 +1,15 @@
 <div class="row-wrapper" @fadeUp>
   <div class="pane modal-lg">
-    <div class="pane-title" translate>sleep-detection.modals.disableForPlayerJoinLeave.title</div>
+    <div
+      class="pane-title"
+      transloco="sleep-detection.modals.disableForPlayerJoinLeave.title"
+    ></div>
     <div class="pane-content">
-      <p translate>sleep-detection.modals.disableForPlayerJoinLeave.description</p>
+      <p transloco="sleep-detection.modals.disableForPlayerJoinLeave.description"></p>
       <div class="settings">
         <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate>sleep-detection.modals.disableForPlayerJoinLeave.onJoin.title</span>
+          <div class="setting-row-label">
+            <span transloco="sleep-detection.modals.disableForPlayerJoinLeave.onJoin.title"></span>
             <span></span>
           </div>
           <div class="setting-row-action">
@@ -22,13 +25,13 @@
           </div>
         </div>
         <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate
-              >sleep-detection.modals.disableForPlayerJoinLeave.onlyWhenPreviouslyAlone.title</span
-            >
-            <span translate
-              >sleep-detection.modals.disableForPlayerJoinLeave.onlyWhenPreviouslyAlone.description</span
-            >
+          <div class="setting-row-label">
+            <span
+              transloco="sleep-detection.modals.disableForPlayerJoinLeave.onlyWhenPreviouslyAlone.title"
+            ></span>
+            <span
+              transloco="sleep-detection.modals.disableForPlayerJoinLeave.onlyWhenPreviouslyAlone.description"
+            ></span>
           </div>
           <div class="setting-row-action">
             <label class="switch-toggle">
@@ -44,8 +47,8 @@
       </div>
       <div class="settings">
         <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate>sleep-detection.modals.disableForPlayerJoinLeave.onLeave.title</span>
+          <div class="setting-row-label">
+            <span transloco="sleep-detection.modals.disableForPlayerJoinLeave.onLeave.title"></span>
             <span></span>
           </div>
           <div class="setting-row-action">
@@ -61,13 +64,13 @@
           </div>
         </div>
         <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate
-              >sleep-detection.modals.disableForPlayerJoinLeave.onlyWhenLeftAlone.title</span
-            >
-            <span translate
-              >sleep-detection.modals.disableForPlayerJoinLeave.onlyWhenLeftAlone.description</span
-            >
+          <div class="setting-row-label">
+            <span
+              transloco="sleep-detection.modals.disableForPlayerJoinLeave.onlyWhenLeftAlone.title"
+            ></span>
+            <span
+              transloco="sleep-detection.modals.disableForPlayerJoinLeave.onlyWhenLeftAlone.description"
+            ></span>
           </div>
           <div class="setting-row-action">
             <label class="switch-toggle">
@@ -82,8 +85,12 @@
         </div>
       </div>
       <div class="pane-actions spread">
-        <button class="btn btn-secondary" (click)="close()" translate>shared.modals.cancel</button>
-        <button class="btn btn-primary" (click)="save()" translate>shared.modals.save</button>
+        <button
+          class="btn btn-secondary"
+          (click)="close()"
+          transloco="shared.modals.cancel"
+        ></button>
+        <button class="btn btn-primary" (click)="save()" transloco="shared.modals.save"></button>
       </div>
     </div>
   </div>

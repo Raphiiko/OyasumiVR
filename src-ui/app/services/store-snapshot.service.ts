@@ -8,7 +8,7 @@ import {
   EVENT_LOG_FILE,
 } from '../globals';
 import { StoreProtector } from '../utils/store-protector';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 
 // Workaround for https://github.com/tauri-apps/plugins-workspace/issues/3085
 
@@ -16,7 +16,7 @@ import { TranslateService } from '@ngx-translate/core';
   providedIn: 'root',
 })
 export class StoreSnapshotService {
-  constructor(private translate: TranslateService) {}
+  constructor(private translate: TranslocoService) {}
 
   public async init() {
     const settingsStoreProtector = new StoreProtector(

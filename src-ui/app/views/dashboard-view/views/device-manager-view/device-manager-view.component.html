@@ -1,11 +1,11 @@
 <div class="pane">
-  <div class="pane-title" translate>device-manager.title</div>
+  <div class="pane-title" transloco="device-manager.title"></div>
   <div class="tab-bar">
     <div class="tab" [class.active]="activeTab === 'devices'" (click)="activeTab = 'devices'">
-      <div class="tab-label" translate>device-manager.tabs.devices</div>
+      <div class="tab-label" transloco="device-manager.tabs.devices"></div>
     </div>
     <div class="tab" [class.active]="activeTab === 'tags'" (click)="activeTab = 'tags'">
-      <div class="tab-label" translate>device-manager.tabs.tags</div>
+      <div class="tab-label" transloco="device-manager.tabs.tags"></div>
     </div>
   </div>
   <div class="pane-content">

@@ -1,23 +1,22 @@
-<p translate>shutdown-automations.description</p>
+<p transloco="shutdown-automations.description"></p>
 <div class="alert info" @vshrink>
   <div class="alert-bg"></div>
   <div class="alert-icon">
     <i class="material-icons"> info </i>
   </div>
   <div class="alert-content">
-    <span>{{ 'power-automations.powerManagementWarning' | translate }}</span>
+    <span>{{ 'power-automations.powerManagementWarning' | transloco }}</span>
   </div>
 </div>
 <div class="setting-category">
   <h2>
-    <span translate>shutdown-automations.sequence.title</span>
+    <span transloco="shutdown-automations.sequence.title"></span>
     <button
       class="btn btn-secondary"
-      translate
+      transloco="shutdown-automations.sequence.run"
       (click)="runSequence()"
       [disabled]="noOptionsSelected"
-      >shutdown-automations.sequence.run
-    </button>
+    ></button>
   </h2>
   @if (noOptionsSelected) {
     <div class="alert warning" @vshrink>
@@ -26,14 +25,14 @@
         <i class="material-icons"> warning </i>
       </div>
       <div class="alert-content">
-        <span>{{ 'shutdown-automations.noOptionsSelected' | translate }}</span>
+        <span>{{ 'shutdown-automations.noOptionsSelected' | transloco }}</span>
       </div>
     </div>
   }
   <div class="settings">
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate>shutdown-automations.sequence.turnOffDevices.title</span>
+      <div class="setting-row-label">
+        <span transloco="shutdown-automations.sequence.turnOffDevices.title"></span>
         <span></span>
       </div>
       <div class="setting-row-action">
@@ -46,9 +45,9 @@
     </div>
 
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate>shutdown-automations.sequence.quitSteamVR.title</span>
-        <span translate>shutdown-automations.sequence.quitSteamVR.description</span>
+      <div class="setting-row-label">
+        <span transloco="shutdown-automations.sequence.quitSteamVR.title"></span>
+        <span transloco="shutdown-automations.sequence.quitSteamVR.description"></span>
       </div>
       <div class="setting-row-action">
         <label class="switch-toggle">
@@ -61,26 +60,28 @@
     @if (config.quitSteamVR && quitWithSteamVRMode === 'IMMEDIATELY') {
       <div class="setting-row-group" @vshrink>
         <div class="setting-row">
-          <div class="setting-row-label conflict" translate>
+          <div class="setting-row-label conflict">
             <span>
               <span><i class="material-icons">warning</i></span>
-              <span translate>shutdown-automations.sequence.quitSteamVR.conflict.title</span>
+              <span transloco="shutdown-automations.sequence.quitSteamVR.conflict.title"></span>
             </span>
-            <span translate>shutdown-automations.sequence.quitSteamVR.conflict.description</span>
+            <span transloco="shutdown-automations.sequence.quitSteamVR.conflict.description"></span>
           </div>
           <div class="setting-row-action">
-            <button class="btn btn-secondary" (click)="goToGeneralSettings()" translate>
-              shutdown-automations.sequence.quitSteamVR.conflict.goToSettings
-            </button>
+            <button
+              class="btn btn-secondary"
+              (click)="goToGeneralSettings()"
+              transloco="shutdown-automations.sequence.quitSteamVR.conflict.goToSettings"
+            ></button>
           </div>
         </div>
       </div>
     }
 
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate>shutdown-automations.sequence.powerDownWindows.title</span>
-        <span translate>shutdown-automations.sequence.powerDownWindows.description</span>
+      <div class="setting-row-label">
+        <span transloco="shutdown-automations.sequence.powerDownWindows.title"></span>
+        <span transloco="shutdown-automations.sequence.powerDownWindows.description"></span>
       </div>
       <div class="setting-row-action">
         @if (config.powerDownWindows) {

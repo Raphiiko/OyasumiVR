@@ -1,5 +1,5 @@
 <div class="pane">
-  <div class="pane-title" translate>settings.updates.title</div>
+  <div class="pane-title" transloco="settings.updates.title"></div>
   <div class="pane-content">
     <div class="setting-view-container">
       <div class="setting-category">
@@ -12,10 +12,10 @@
               <img src="/assets/img/steam_icon.png" />
             }
             @if (FLAVOUR === 'DEV') {
-              <span translate>settings.updates.updatesDisabled.DEV</span>
+              <span transloco="settings.updates.updatesDisabled.DEV"></span>
             }
             @if (FLAVOUR === 'STEAM' || FLAVOUR === 'STEAM_CN') {
-              <span translate>settings.updates.updatesDisabled.STEAM</span>
+              <span transloco="settings.updates.updatesDisabled.STEAM"></span>
             }
           </div>
         }
@@ -33,36 +33,36 @@
               }
               @if (!updateOrCheckInProgress) {
                 <span
-                  [translate]="
+                  [transloco]="
                     updateAvailable.update
                       ? 'settings.updates.install'
                       : 'settings.updates.checkForUpdates'
                   "
-                  [translateParams]="{ version: updateAvailable.update?.version || '' }"
+                  [translocoParams]="{ version: updateAvailable.update?.version || '' }"
                   @hshrink
                 ></span>
               }
             </button>
             @if (!updateAvailable.checked) {
-              <p translate="settings.updates.notChecked"></p>
+              <p transloco="settings.updates.notChecked"></p>
             }
             @if (updateAvailable.checked && updateAvailable.update) {
               <p
-                translate="settings.updates.updateAvailable"
-                [translateParams]="{
+                transloco="settings.updates.updateAvailable"
+                [translocoParams]="{
                   currentVersion: version,
                   latestVersion: updateAvailable.update.version,
                 }"
               ></p>
             }
             @if (updateAvailable.checked && !updateAvailable.update) {
-              <p translate="settings.updates.noUpdate" [translateParams]="{ version: version }"></p>
+              <p transloco="settings.updates.noUpdate" [translocoParams]="{ version: version }"></p>
             }
           </div>
         }
       </div>
       <div class="setting-category">
-        <h2 translate>settings.updates.changelog</h2>
+        <h2 transloco="settings.updates.changelog"></h2>
         <div class="pane-changelog" [innerHtml]="changelog"></div>
       </div>
     </div>

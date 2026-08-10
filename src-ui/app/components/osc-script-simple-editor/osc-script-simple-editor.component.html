@@ -1,13 +1,13 @@
 <div class="header-row" @noop>
   <span>{{
-    'comp.osc-script-simple-editor.commandCounter' | translate: { count: _script.commands.length }
+    'comp.osc-script-simple-editor.commandCounter' | transloco: { count: _script.commands.length }
   }}</span>
   <span>&nbsp;|&nbsp;</span>
   @if (!validated) {
     <div class="small-spinner" @hshrink style="margin-right: 0.5em"></div>
   }
   <span>{{
-    'comp.osc-script-simple-editor.errorCounter' | translate: { count: errors.length }
+    'comp.osc-script-simple-editor.errorCounter' | transloco: { count: errors.length }
   }}</span>
   <span style="flex: 1"></span>
   @if (
@@ -27,7 +27,7 @@
   <div class="header-row-buttons">
     <app-dropdown-button [items]="addCommandItems" (itemSelect)="onAdd($event)">
       <i class="material-icons">add</i>
-      <span translate>comp.osc-script-simple-editor.addCommand</span>
+      <span transloco="comp.osc-script-simple-editor.addCommand"></span>
     </app-dropdown-button>
     <button class="btn btn-secondary" (click)="testCode()" [disabled]="testing || !validated">
       @if (testing) {
@@ -37,7 +37,7 @@
         <i class="material-icons" @hshrink>play_arrow</i>
       }
       @if (!testing) {
-        <span @hshrink translate>comp.osc-script-simple-editor.test</span>
+        <span @hshrink transloco="comp.osc-script-simple-editor.test"></span>
       }
     </button>
   </div>
@@ -47,7 +47,10 @@
     <div class="simple-command" @vshrink>
       @if (command.type === 'COMMAND') {
         <div class="simple-command-index">{{ i + 1 }}.</div>
-        <div class="simple-command-action" translate>comp.osc-script-simple-editor.action.osc</div>
+        <div
+          class="simple-command-action"
+          transloco="comp.osc-script-simple-editor.action.osc"
+        ></div>
         <div class="simple-command-parameters-container">
           @for (parameter of command.parameters; track parameter; let j = $index) {
             <div class="simple-command-parameter-row" @vshrink>
@@ -119,7 +122,7 @@
             @if (command.parameters.length < MAX_PARAMETERS_PER_COMMAND) {
               <button class="btn btn-secondary btn-add-parameter" (click)="addParameter(i)">
                 <i class="material-icons">add</i>
-                <span translate>comp.osc-script-simple-editor.addParameter</span>
+                <span transloco="comp.osc-script-simple-editor.addParameter"></span>
               </button>
             }
           </div>
@@ -143,9 +146,10 @@
       }
       @if (command.type === 'SLEEP') {
         <div class="simple-command-index">{{ i + 1 }}.</div>
-        <div class="simple-command-action" translate
-          >comp.osc-script-simple-editor.action.sleep</div
-        >
+        <div
+          class="simple-command-action"
+          transloco="comp.osc-script-simple-editor.action.sleep"
+        ></div>
         <div style="flex: 1"></div>
         <div class="input-wrapper with-unit simple-command-duration-input">
           <input
@@ -170,7 +174,7 @@
   @if (!_script.commands.length) {
     <div class="no-commands" @vshrink>
       <i class="material-icons-round">add_circle_outline</i>
-      <span translate>comp.osc-script-simple-editor.action.none</span>
+      <span transloco="comp.osc-script-simple-editor.action.none"></span>
     </div>
   }
   @if (tooltipErrors.length) {

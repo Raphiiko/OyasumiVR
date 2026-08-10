@@ -5,10 +5,10 @@
       <span class="switch-toggle-slider"></span>
     </label>
     @if (!advancedMode) {
-      <span @hshrink translate>brightness-automations.mode.simple</span>
+      <span @hshrink transloco="brightness-automations.mode.simple"></span>
     }
     @if (advancedMode) {
-      <span @hshrink translate>brightness-automations.mode.advanced</span>
+      <span @hshrink transloco="brightness-automations.mode.advanced"></span>
     }
   </div>
   <i class="material-icons-round help-icon" (click)="showModeInfoModal()">help</i>

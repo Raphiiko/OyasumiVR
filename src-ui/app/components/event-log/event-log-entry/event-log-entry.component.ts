@@ -16,7 +16,7 @@ import { EventLogDeclinedInviteRequestEntryParser } from './entry-parsers/declin
 import { EventLogDeclinedInviteEntryParser } from './entry-parsers/declined-invite';
 import { EventLogStatusChangedOnPlayerCountChangeEntryParser } from './entry-parsers/status-changed-on-player-count-change';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { EventLogSleepDetectorEnableCancelledEntryParser } from './entry-parsers/sleep-detector-enable-cancelled';
 import { EventLogRenderResolutionChangedEntryParser } from './entry-parsers/render-resolution-changed';
 import { EventLogFadeDistanceChangedEntryParser } from './entry-parsers/fade-distance-changed';
@@ -95,7 +95,7 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
 
   constructor(
     private sanitizer: DomSanitizer,
-    private translate: TranslateService,
+    private translate: TranslocoService,
     private destroyRef: DestroyRef
   ) {}
 
@@ -111,7 +111,7 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.ngOnChanges();
-    this.translate.onLangChange
+    this.translate.langChanges$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.rebuild());
   }
@@ -126,13 +126,13 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
     let key = this.parser.headerInfoTitle(this._entry);
     if (key) {
       this.headerInfoTitle = this.sanitizer.bypassSecurityTrustHtml(
-        this.translate.instant(key, this.parser?.headerInfoTitleParams(this._entry) ?? {})
+        this.translate.translate(key, this.parser?.headerInfoTitleParams(this._entry) ?? {})
       );
     }
     key = this.parser.headerInfoSubTitle(this._entry);
     if (key) {
       this.headerInfoSubTitle = this.sanitizer.bypassSecurityTrustHtml(
-        this.translate.instant(key, this.parser?.headerInfoSubTitleParams(this._entry) ?? {})
+        this.translate.translate(key, this.parser?.headerInfoSubTitleParams(this._entry) ?? {})
       );
     }
   }

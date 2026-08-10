@@ -812,7 +812,7 @@
     },
     "player-list-preset-modal": {
       "confirmDelete": {
-        "message": "''{name}''이라는 프리셋을 삭제하시겠어요? 여기에는 {count, plural, one {1명의 플레이어} other {#명의 플레이어}}가 포함되어 있어요.",
+        "message": "''{name}''이라는 프리셋을 삭제하시겠어요? 여기에는 {count, plural, other {#명의 플레이어}}가 포함되어 있어요.",
         "title": "확실한가요?"
       },
       "confirmOverwrite": {
@@ -826,7 +826,7 @@
       "noPresets": "아직 저장된 프리셋이 없어요",
       "overwrite": "프리셋 덮어쓰기",
       "preset": {
-        "subtitle": "{count, plural, one {1명} other {#명}}의 플레이어 목록"
+        "subtitle": "{count, plural, other {#명}}의 플레이어 목록"
       },
       "title": {
         "load": "플레이어 목록 불러오기",
@@ -1075,7 +1075,7 @@
         },
         "onlyBelowPlayerCount": {
           "description": "이건 여러분 자신을 포함해요",
-          "title": "월드에 <strong>{count, plural, one {#</strong>명} other {#</strong>명}} 보다 적은 인원이 있는 경우에만"
+          "title": "월드에 <strong>{count, plural, other {#</strong>명}} 보다 적은 인원이 있는 경우에만"
         },
         "onlyIfSleepModeEnabled": {
           "title": "수면 모드 활성화 시에만"
@@ -1342,7 +1342,7 @@
           "title": "스테이터스 자동화"
         },
         "shutdownAutomations": {
-          "subtitle": "자동화된 트리거 {triggerCount, plural, one {1개} other {#개}} 설정됨",
+          "subtitle": "자동화된 트리거 {triggerCount, plural, other {#개}} 설정됨",
           "title": "자동 종료"
         },
         "sleepModeEnableForSleepDetector": {

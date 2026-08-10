@@ -1,8 +1,8 @@
 <div class="pane main">
-  <div class="pane-title" translate>join-notifications.title</div>
+  <div class="pane-title" transloco="join-notifications.title"></div>
   <div class="pane-content">
     <div class="setting-view-container">
-      <p translate>join-notifications.description</p>
+      <p transloco="join-notifications.description"></p>
       @if ((vrchat.user | async) === null) {
         <div class="alert warning" @vshrink>
           <div class="alert-bg"></div>
@@ -10,18 +10,20 @@
             <i class="material-icons"> warning </i>
           </div>
           <div class="alert-content">
-            <span>{{ 'shared.common.vrcLoginRequired' | translate }}</span>
-            <button class="btn btn-secondary" (click)="vrchat.showLoginModal()" translate
-              >shared.modals.login
-            </button>
+            <span>{{ 'shared.common.vrcLoginRequired' | transloco }}</span>
+            <button
+              class="btn btn-secondary"
+              (click)="vrchat.showLoginModal()"
+              transloco="shared.modals.login"
+            ></button>
           </div>
         </div>
       }
       <div class="settings">
         <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate>join-notifications.joinNotifications.title</span>
-            <span translate>join-notifications.joinNotifications.description</span>
+          <div class="setting-row-label">
+            <span transloco="join-notifications.joinNotifications.title"></span>
+            <span transloco="join-notifications.joinNotifications.description"></span>
           </div>
           <div class="setting-row-action">
             <app-select-box
@@ -38,9 +40,9 @@
           </div>
         </div>
         <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate>join-notifications.joinSounds.title</span>
-            <span translate>join-notifications.joinSounds.description</span>
+          <div class="setting-row-label">
+            <span transloco="join-notifications.joinSounds.title"></span>
+            <span transloco="join-notifications.joinSounds.description"></span>
           </div>
           <div class="setting-row-action">
             <app-select-box
@@ -59,9 +61,9 @@
         @if (joinSoundOption?.id !== 'DISABLED') {
           <div class="setting-row-group" @vshrink>
             <div class="setting-row">
-              <div class="setting-row-label" translate>
-                <span translate>join-notifications.joinSound.title</span>
-                <span translate>join-notifications.joinSound.description</span>
+              <div class="setting-row-label">
+                <span transloco="join-notifications.joinSound.title"></span>
+                <span transloco="join-notifications.joinSound.description"></span>
               </div>
               <div class="setting-row-action">
                 <app-notification-sound-button
@@ -74,9 +76,9 @@
           </div>
         }
         <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate>join-notifications.onlyWhenPreviouslyAlone.title</span>
-            <span translate>join-notifications.onlyWhenPreviouslyAlone.description</span>
+          <div class="setting-row-label">
+            <span transloco="join-notifications.onlyWhenPreviouslyAlone.title"></span>
+            <span transloco="join-notifications.onlyWhenPreviouslyAlone.description"></span>
           </div>
           <div class="setting-row-action">
             <label class="switch-toggle">
@@ -92,9 +94,9 @@
       </div>
       <div class="settings">
         <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate>join-notifications.leaveNotifications.title</span>
-            <span translate>join-notifications.leaveNotifications.description</span>
+          <div class="setting-row-label">
+            <span transloco="join-notifications.leaveNotifications.title"></span>
+            <span transloco="join-notifications.leaveNotifications.description"></span>
           </div>
           <div class="setting-row-action">
             <app-select-box
@@ -111,9 +113,9 @@
           </div>
         </div>
         <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate>join-notifications.leaveSounds.title</span>
-            <span translate>join-notifications.leaveSounds.description</span>
+          <div class="setting-row-label">
+            <span transloco="join-notifications.leaveSounds.title"></span>
+            <span transloco="join-notifications.leaveSounds.description"></span>
           </div>
           <div class="setting-row-action">
             <app-select-box
@@ -132,9 +134,9 @@
         @if (leaveSoundOption?.id !== 'DISABLED') {
           <div class="setting-row-group" @vshrink>
             <div class="setting-row">
-              <div class="setting-row-label" translate>
-                <span translate>join-notifications.leaveSound.title</span>
-                <span translate>join-notifications.leaveSound.description</span>
+              <div class="setting-row-label">
+                <span transloco="join-notifications.leaveSound.title"></span>
+                <span transloco="join-notifications.leaveSound.description"></span>
               </div>
               <div class="setting-row-action">
                 <app-notification-sound-button
@@ -147,9 +149,9 @@
           </div>
         }
         <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate>join-notifications.onlyWhenLeftAlone.title</span>
-            <span translate>join-notifications.onlyWhenLeftAlone.description</span>
+          <div class="setting-row-label">
+            <span transloco="join-notifications.onlyWhenLeftAlone.title"></span>
+            <span transloco="join-notifications.onlyWhenLeftAlone.description"></span>
           </div>
           <div class="setting-row-action">
             <label class="switch-toggle">
@@ -165,8 +167,8 @@
       </div>
       <div class="settings">
         <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate>join-notifications.onlyWhenSleepModeActive.title</span>
+          <div class="setting-row-label">
+            <span transloco="join-notifications.onlyWhenSleepModeActive.title"></span>
             <span></span>
           </div>
           <div class="setting-row-action">

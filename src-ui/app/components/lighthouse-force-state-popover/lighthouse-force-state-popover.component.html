@@ -2,14 +2,14 @@
   <div class="pane">
     @for (label of hoverAction ? [hoverAction] : []; track label) {
       <div class="label" @hshrink>
-        <span>{{ label | translate }}</span>
+        <span>{{ label | transloco }}</span>
       </div>
     }
     <div class="action-row">
       <app-device-power-button
         [powerState]="'off'"
         [customIcon]="'power_settings_new'"
-        [title]="getButtonTitle('on') | translate"
+        [title]="getButtonTitle('on') | transloco"
         (powerAction)="this.onPowerAction('on', $event)"
         (mouseenter)="setHoverAction('comp.device-list.lhForceState.on')"
         (mouseleave)="hoverAction = ''"
@@ -18,7 +18,7 @@
         <app-device-power-button
           [powerState]="'on'"
           [customIcon]="'mode_standby'"
-          [title]="getButtonTitle('standby') | translate"
+          [title]="getButtonTitle('standby') | transloco"
           (powerAction)="this.onPowerAction('standby', $event)"
           (mouseenter)="setHoverAction('comp.device-list.lhForceState.standby')"
           (mouseleave)="hoverAction = ''"
@@ -27,7 +27,7 @@
       <app-device-power-button
         [powerState]="'on'"
         [customIcon]="'nights_stay'"
-        [title]="getButtonTitle('sleep') | translate"
+        [title]="getButtonTitle('sleep') | transloco"
         (powerAction)="this.onPowerAction('sleep', $event)"
         (mouseenter)="setHoverAction('comp.device-list.lhForceState.sleep')"
         (mouseleave)="hoverAction = ''"

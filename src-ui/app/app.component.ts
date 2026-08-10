@@ -1,10 +1,10 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { OpenVRService } from './services/openvr.service';
 import { routeAnimations } from './app-routing.module';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { AppSettingsService } from './services/app-settings.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { debounceTime, distinctUntilChanged, map, skip, tap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, skip, switchMap, tap } from 'rxjs';
 import { fade } from './utils/animations';
 import { TelemetryService } from './services/telemetry.service';
 import { isHolidaysEventActive } from './utils/event-utils';
@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
 
   constructor(
     public openvr: OpenVRService,
-    translate: TranslateService,
+    translate: TranslocoService,
     private settings: AppSettingsService,
     private telemetry: TelemetryService
   ) {
@@ -31,7 +31,9 @@ export class AppComponent implements OnInit {
         takeUntilDestroyed(),
         map((settings) => settings.userLanguage),
         distinctUntilChanged(),
-        tap((userLanguage) => translate.use(userLanguage)),
+        // The translation has to be in memory before anything calls translate() synchronously.
+        switchMap((userLanguage) => translate.load(userLanguage).pipe(map(() => userLanguage))),
+        tap((userLanguage) => translate.setActiveLang(userLanguage)),
         debounceTime(10000),
         tap((userLanguage) => this.telemetry.trackEvent('use_language', { language: userLanguage }))
       )

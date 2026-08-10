@@ -1,6 +1,6 @@
 <div class="modal-inner-wrapper">
   <div class="pane modal modal-lg" [@fadeUp]>
-    <div class="pane-title" translate>notification-sound.title</div>
+    <div class="pane-title" transloco="notification-sound.title"></div>
     <div class="pane-content no-padding">
       <div class="sound-list">
         @for (sound of availableSounds; track sound) {
@@ -35,7 +35,7 @@
         <div class="settings">
           <div class="setting-row">
             <div class="setting-row-label">
-              <span translate>notification-sound.volume</span>
+              <span transloco="notification-sound.volume"></span>
               <span></span>
             </div>
             <div class="setting-row-action">
@@ -54,8 +54,12 @@
     </div>
 
     <div class="pane-actions spread">
-      <button class="btn btn-secondary" (click)="cancel()" translate>shared.modals.cancel</button>
-      <button class="btn btn-primary" (click)="save()" translate>shared.modals.save</button>
+      <button
+        class="btn btn-secondary"
+        (click)="cancel()"
+        transloco="shared.modals.cancel"
+      ></button>
+      <button class="btn btn-primary" (click)="save()" transloco="shared.modals.save"></button>
     </div>
   </div>
 </div>

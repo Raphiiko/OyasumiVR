@@ -1,13 +1,13 @@
 <div class="pane modal modal-lg" @fadeUp>
   <div class="pane-title">
-    <span translate>device-manager.deviceSelector.title</span>
+    <span transloco="device-manager.deviceSelector.title"></span>
     <button
       class="btn btn-secondary btn-small deselect-all-btn"
       (click)="deselectAll()"
       [disabled]="!hasAnySelection()"
     >
       <i class="material-icons">clear_all</i>
-      <span translate>device-manager.deviceSelector.deselectAll</span>
+      <span transloco="device-manager.deviceSelector.deselectAll"></span>
     </button>
   </div>
   <div class="pane-content">
@@ -24,7 +24,7 @@
               [src]="'/assets/img/icon_' + getDeviceTypeIcon(type) + '.png'"
               class="device-type-icon"
             />
-            <span class="device-type-name" translate>{{ getDeviceTypeDisplayName(type) }}</span>
+            <span class="device-type-name" [transloco]="getDeviceTypeDisplayName(type)"></span>
             @if (isDeviceTypeSelected(type)) {
               <i class="material-icons selection-indicator">check</i>
             }
@@ -35,7 +35,7 @@
 
     <!-- Device Tags Section -->
     <div class="selection-section">
-      <h3 class="section-title" translate>device-manager.deviceSelector.deviceTags</h3>
+      <h3 class="section-title" transloco="device-manager.deviceSelector.deviceTags"></h3>
       @if (tags.length > 0) {
         <div class="device-tags-list">
           @for (tag of tags; track trackTagBy($index, tag)) {
@@ -57,21 +57,21 @@
       @if (tags.length === 0) {
         <div class="empty-state-inline">
           <i class="material-icons">label_outline</i>
-          <span translate>device-manager.deviceSelector.noTagsConfigured</span>
+          <span transloco="device-manager.deviceSelector.noTagsConfigured"></span>
         </div>
       }
     </div>
 
     <!-- Individual Devices Section -->
     <div class="selection-section">
-      <h3 class="section-title" translate>device-manager.deviceSelector.individualDevices</h3>
+      <h3 class="section-title" transloco="device-manager.deviceSelector.individualDevices"></h3>
       @if (deviceGroups.length > 0) {
         <div class="device-groups-list">
           @for (group of deviceGroups; track trackDeviceGroupBy($index, group)) {
             <div class="device-group" [class.disabled]="isDeviceGroupDisabled(group.type)">
               <div class="device-group-header">
                 <img [src]="'/assets/img/icon_' + group.icon + '.png'" class="category-icon" />
-                <span class="group-label" translate>{{ group.label }}</span>
+                <span class="group-label" [transloco]="group.label"></span>
                 <span class="group-count">({{ group.devices.length }})</span>
               </div>
               <div class="device-items">
@@ -115,9 +115,10 @@
                         </span>
                         <!-- Show role if available -->
                         @if (getDeviceRole(device)) {
-                          <span class="device-role" translate>
-                            {{ getDeviceRole(device) }}
-                          </span>
+                          <span
+                            class="device-role"
+                            [transloco]="getDeviceRole(device) ?? ''"
+                          ></span>
                         }
                       </div>
                       @if (getDeviceTags(device).length > 0 && device.deviceType !== 'LIGHTHOUSE') {
@@ -147,17 +148,17 @@
       @if (deviceGroups.length === 0) {
         <div class="empty-state-inline">
           <i class="material-icons">devices</i>
-          <span translate>device-manager.deviceSelector.noApplicableDevicesKnown</span>
+          <span transloco="device-manager.deviceSelector.noApplicableDevicesKnown"></span>
         </div>
       }
     </div>
   </div>
   <div class="pane-actions spread">
     <button class="btn btn-secondary" (click)="cancel()">
-      <span translate>shared.modals.cancel</span>
+      <span transloco="shared.modals.cancel"></span>
     </button>
     <button class="btn btn-primary" (click)="confirm()">
-      <span translate>device-manager.deviceSelector.selectDevices</span>
+      <span transloco="device-manager.deviceSelector.selectDevices"></span>
     </button>
   </div>
 </div>

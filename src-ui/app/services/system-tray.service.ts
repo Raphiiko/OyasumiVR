@@ -14,7 +14,7 @@ import {
   startWith,
 } from 'rxjs';
 import { SleepService } from './sleep.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { error } from '@tauri-apps/plugin-log';
 import { invoke } from '@tauri-apps/api/core';
 import { SleepPreparationService } from './sleep-preparation.service';
@@ -31,7 +31,7 @@ export class SystemTrayService {
     private readonly appSettingsService: AppSettingsService,
     private readonly sleepService: SleepService,
     private readonly sleepPreparationService: SleepPreparationService,
-    private readonly translateService: TranslateService
+    private readonly translateService: TranslocoService
   ) {}
 
   public async init() {
@@ -45,7 +45,7 @@ export class SystemTrayService {
       this.sleepService.mode,
       this.sleepPreparationService.sleepPreparationAvailable,
       this.sleepPreparationService.sleepPreparationTimedOut,
-      this.translateService.onLangChange.pipe(startWith(this.translateService.currentLang)),
+      this.translateService.langChanges$.pipe(startWith(this.translateService.getActiveLang())),
     ])
       .pipe(debounceTime(50))
       .subscribe(() => this.rebuildMenu());
@@ -79,7 +79,7 @@ export class SystemTrayService {
           item: 'Separator',
         },
         {
-          text: this.translateService.instant('systemTray.sleepMode'),
+          text: this.translateService.translate<string>('systemTray.sleepMode'),
           checked: await firstValueFrom(this.sleepService.mode),
           action: async () => {
             if (await firstValueFrom(this.sleepService.mode)) {
@@ -90,7 +90,7 @@ export class SystemTrayService {
           },
         },
         {
-          text: this.translateService.instant('systemTray.prepareForSleep'),
+          text: this.translateService.translate<string>('systemTray.prepareForSleep'),
           enabled:
             (await firstValueFrom(this.sleepPreparationService.sleepPreparationAvailable)) &&
             !(await firstValueFrom(this.sleepPreparationService.sleepPreparationTimedOut)),
@@ -102,7 +102,7 @@ export class SystemTrayService {
           item: 'Separator',
         },
         {
-          text: this.translateService.instant('systemTray.quit'),
+          text: this.translateService.translate<string>('systemTray.quit'),
           item: 'Quit',
         },
       ],

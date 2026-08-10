@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Pipe, PipeTransform } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { NG_LOCALE_MAP } from '../globals';
 
 @Pipe({
@@ -9,10 +9,10 @@ import { NG_LOCALE_MAP } from '../globals';
   standalone: false,
 })
 export class LocalizedDatePipe implements PipeTransform {
-  constructor(private translateService: TranslateService) {}
+  constructor(private translateService: TranslocoService) {}
 
   transform(value: any, pattern = 'mediumDate'): any {
-    let currentLang = this.translateService.getCurrentLang()!;
+    let currentLang = this.translateService.getActiveLang()!;
     if (currentLang === 'DEBUG') currentLang = 'en';
     const datePipe: DatePipe = new DatePipe(NG_LOCALE_MAP[currentLang]);
     pattern = this.getPatternFromPreset(currentLang, pattern);

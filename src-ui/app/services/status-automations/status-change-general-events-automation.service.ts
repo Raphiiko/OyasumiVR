@@ -11,7 +11,7 @@ import {
 
 import { debounceTime, distinctUntilChanged, filter, map, skip } from 'rxjs';
 import { UserStatus } from '../../models/vrchat';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import type { CurrentUser } from 'vrchat';
 import { EventLogStatusChangedOnGeneralEvent } from '../../models/event-log-entry';
 import { EventLogService } from '../event-log.service';
@@ -31,7 +31,7 @@ export class StatusChangeGeneralEventsAutomationService {
     private sleep: SleepService,
     private sleepPreparation: SleepPreparationService,
     private notifications: NotificationService,
-    private translate: TranslateService,
+    private translate: TranslocoService,
     private eventLog: EventLogService
   ) {}
 
@@ -80,7 +80,7 @@ export class StatusChangeGeneralEventsAutomationService {
         if (success) {
           if (await this.notifications.notificationTypeEnabled('AUTO_UPDATED_VRC_STATUS')) {
             await this.notifications.send(
-              this.translate.instant('notifications.vrcStatusChanged.content', {
+              this.translate.translate('notifications.vrcStatusChanged.content', {
                 newStatus: (
                   (statusMessage ?? oldStatusMessage) +
                   ' (' +
@@ -125,7 +125,7 @@ export class StatusChangeGeneralEventsAutomationService {
         await this.vrchat.setStatus(status, statusMessage);
         if (await this.notifications.notificationTypeEnabled('AUTO_UPDATED_VRC_STATUS')) {
           await this.notifications.send(
-            this.translate.instant('notifications.vrcStatusChanged.content', {
+            this.translate.translate('notifications.vrcStatusChanged.content', {
               newStatus: (
                 (statusMessage ?? oldStatusMessage) +
                 ' (' +

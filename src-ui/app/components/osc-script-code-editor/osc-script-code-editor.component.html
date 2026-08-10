@@ -1,21 +1,22 @@
 <div class="header-bar" @noop>
   <span>
-    <span translate>comp.osc-script-code-editor.title</span>
+    <span transloco="comp.osc-script-code-editor.title"></span>
     &nbsp;
     <span>[</span>
     <a
       href="https://github.com/Raphiiko/OyasumiVR/wiki/OSC-Script-Editor-&-Syntax-Guide#script-editor"
       target="_blank"
-      translate
-    >
-      comp.osc-script-code-editor.syntaxGuide
-    </a>
+      transloco="comp.osc-script-code-editor.syntaxGuide"
+    ></a>
     <span>]</span>
   </span>
   <div class="editor-actions">
-    <button class="btn btn-secondary" (click)="formatCode()" [disabled]="errors.length" translate>
-      comp.osc-script-code-editor.format
-    </button>
+    <button
+      class="btn btn-secondary"
+      (click)="formatCode()"
+      [disabled]="errors.length"
+      transloco="comp.osc-script-code-editor.format"
+    ></button>
     <button class="btn btn-secondary" (click)="testCode()" [disabled]="errors.length || testing">
       @if (testing) {
         <div class="small-spinner" @hshrink></div>
@@ -24,7 +25,7 @@
         <i class="material-icons" @hshrink>play_arrow</i>
       }
       @if (!testing) {
-        <span [@hshrink] translate>comp.osc-script-code-editor.test</span>
+        <span [@hshrink] transloco="comp.osc-script-code-editor.test"></span>
       }
     </button>
   </div>

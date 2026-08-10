@@ -1,5 +1,5 @@
 <div class="setting-category">
-  <p translate>status-automations.general.description</p>
+  <p transloco="status-automations.general.description"></p>
   @if (!loggedIn) {
     <div class="alert warning" @vshrink>
       <div class="alert-bg"></div>
@@ -7,16 +7,20 @@
         <i class="material-icons"> warning </i>
       </div>
       <div class="alert-content">
-        <span>{{ 'shared.common.vrcLoginRequired' | translate }}</span>
-        <button class="btn btn-secondary" (click)="login()" translate>shared.modals.login</button>
+        <span>{{ 'shared.common.vrcLoginRequired' | transloco }}</span>
+        <button
+          class="btn btn-secondary"
+          (click)="login()"
+          transloco="shared.modals.login"
+        ></button>
       </div>
     </div>
   }
   <div class="settings">
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate>status-automations.general.onSleepEnable.title</span>
-        <span translate>status-automations.general.onSleepEnable.description.status</span>
+      <div class="setting-row-label">
+        <span transloco="status-automations.general.onSleepEnable.title"></span>
+        <span transloco="status-automations.general.onSleepEnable.description.status"></span>
       </div>
       <div class="setting-row-action">
         <label class="switch-toggle">
@@ -40,9 +44,9 @@
       </div>
     </div>
     <div class="setting-row">
-      <div class="setting-row-label" translate>
+      <div class="setting-row-label">
         <span></span>
-        <span translate>status-automations.general.onSleepEnable.description.statusMessage</span>
+        <span transloco="status-automations.general.onSleepEnable.description.statusMessage"></span>
       </div>
       <div class="setting-row-action">
         <label class="switch-toggle">
@@ -68,9 +72,9 @@
       </div>
     </div>
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate>status-automations.general.onSleepDisable.title</span>
-        <span translate>status-automations.general.onSleepDisable.description.status</span>
+      <div class="setting-row-label">
+        <span transloco="status-automations.general.onSleepDisable.title"></span>
+        <span transloco="status-automations.general.onSleepDisable.description.status"></span>
       </div>
       <div class="setting-row-action">
         <label class="switch-toggle">
@@ -96,9 +100,11 @@
       </div>
     </div>
     <div class="setting-row">
-      <div class="setting-row-label" translate>
+      <div class="setting-row-label">
         <span></span>
-        <span translate>status-automations.general.onSleepDisable.description.statusMessage</span>
+        <span
+          transloco="status-automations.general.onSleepDisable.description.statusMessage"
+        ></span>
       </div>
       <div class="setting-row-action">
         <label class="switch-toggle">
@@ -125,9 +131,9 @@
       </div>
     </div>
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate>status-automations.general.onSleepPreparation.title</span>
-        <span translate>status-automations.general.onSleepPreparation.description.status</span>
+      <div class="setting-row-label">
+        <span transloco="status-automations.general.onSleepPreparation.title"></span>
+        <span transloco="status-automations.general.onSleepPreparation.description.status"></span>
       </div>
       <div class="setting-row-action">
         <label class="switch-toggle">
@@ -153,11 +159,11 @@
       </div>
     </div>
     <div class="setting-row">
-      <div class="setting-row-label" translate>
+      <div class="setting-row-label">
         <span></span>
-        <span translate
-          >status-automations.general.onSleepPreparation.description.statusMessage</span
-        >
+        <span
+          transloco="status-automations.general.onSleepPreparation.description.statusMessage"
+        ></span>
       </div>
       <div class="setting-row-action">
         <label class="switch-toggle">
@@ -193,9 +199,12 @@
     <i class="material-icons"> warning </i>
   </div>
   <div class="alert-content">
-    <span>{{ 'status-automations.behaviourWarning' | translate }}</span>
-    <button class="btn btn-secondary" (click)="showFAQ()" translate style="margin-left: 1em">
-      status-automations.moreInfo
-    </button>
+    <span>{{ 'status-automations.behaviourWarning' | transloco }}</span>
+    <button
+      class="btn btn-secondary"
+      (click)="showFAQ()"
+      transloco="status-automations.moreInfo"
+      style="margin-left: 1em"
+    ></button>
   </div>
 </div>

@@ -1,10 +1,10 @@
 <div class="pane">
-  <div class="pane-title" translate>sleepAnimations.title</div>
+  <div class="pane-title" transloco="sleepAnimations.title"></div>
   <div class="pane-content">
     <div class="setting-view-container">
       <p
         style="white-space: pre-wrap"
-        [innerHtml]="'oscAutomations.sleepingAnimations.description' | translate"
+        [innerHtml]="'oscAutomations.sleepingAnimations.description' | transloco"
       ></p>
       <!-- ENABLE/OSC PANE-->
       <div class="pane option-pane" @noop>
@@ -18,7 +18,7 @@
               />
               <span class="switch-toggle-slider"></span>
             </label>
-            <h3 translate>oscAutomations.sleepingAnimations.enable</h3>
+            <h3 transloco="oscAutomations.sleepingAnimations.enable"></h3>
             <div class="title-actions">
               <app-select-box
                 [items]="oscPresetOptions"
@@ -70,10 +70,12 @@
             <div class="option-pane-options" @vshrink>
               <div class="option">
                 <div class="option-label">
-                  <span translate>oscAutomations.sleepingAnimations.options.positions.title</span>
-                  <span translate>
-                    oscAutomations.sleepingAnimations.options.positions.description
-                  </span>
+                  <span
+                    transloco="oscAutomations.sleepingAnimations.options.positions.title"
+                  ></span>
+                  <span
+                    transloco="oscAutomations.sleepingAnimations.options.positions.description"
+                  ></span>
                 </div>
                 <div class="option-actions">
                   <app-osc-script-button
@@ -100,10 +102,10 @@
               </div>
               <div class="option">
                 <div class="option-label">
-                  <span translate>oscAutomations.sleepingAnimations.options.footLock.title</span>
-                  <span translate>
-                    oscAutomations.sleepingAnimations.options.footLock.description
-                  </span>
+                  <span transloco="oscAutomations.sleepingAnimations.options.footLock.title"></span>
+                  <span
+                    transloco="oscAutomations.sleepingAnimations.options.footLock.description"
+                  ></span>
                 </div>
                 <div class="option-actions">
                   <app-osc-script-button
@@ -121,12 +123,12 @@
               @if (showManualControl) {
                 <div class="manual-control-pane" @vshrink>
                   <div class="manual-control-pane-title">
-                    <h3 translate>oscAutomations.sleepingAnimations.manualControl</h3>
+                    <h3 transloco="oscAutomations.sleepingAnimations.manualControl"></h3>
                     <p class="current-pose">
-                      {{ 'oscAutomations.sleepingAnimations.currentPose' | translate }}:&nbsp;
+                      {{ 'oscAutomations.sleepingAnimations.currentPose' | transloco }}:&nbsp;
                       {{
                         'oscAutomations.sleepingAnimations.options.positions.' + currentPose
-                          | translate
+                          | transloco
                       }}
                     </p>
                   </div>
@@ -141,7 +143,7 @@
                         <span>
                           {{
                             'oscAutomations.sleepingAnimations.options.positions.' + action
-                              | translate
+                              | transloco
                           }}
                         </span>
                       </button>
@@ -158,7 +160,7 @@
                         <span>
                           {{
                             'oscAutomations.sleepingAnimations.options.footLock.' + action
-                              | translate
+                              | transloco
                           }}
                         </span>
                       </button>
@@ -172,16 +174,16 @@
       </div>
       <!-- GENERAL OPTIONS PANE-->
       <div class="setting-category">
-        <h3 translate>oscAutomations.sleepingAnimations.options.general.title</h3>
+        <h3 transloco="oscAutomations.sleepingAnimations.options.general.title"></h3>
         <div class="settings">
           <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate
-                >oscAutomations.sleepingAnimations.options.general.onlySwitchAnimations</span
-              >
-              <span translate
-                >oscAutomations.sleepingAnimations.options.general.onlyIfSleepModeEnabled</span
-              >
+            <div class="setting-row-label">
+              <span
+                transloco="oscAutomations.sleepingAnimations.options.general.onlySwitchAnimations"
+              ></span>
+              <span
+                transloco="oscAutomations.sleepingAnimations.options.general.onlyIfSleepModeEnabled"
+              ></span>
             </div>
             <div class="setting-row-action">
               <label class="switch-toggle">
@@ -199,14 +201,14 @@
         </div>
       </div>
       <div class="setting-category">
-        <h3 translate>oscAutomations.sleepingAnimations.options.general.footLock.title</h3>
-        <p translate>oscAutomations.sleepingAnimations.options.general.footLock.description</p>
+        <h3 transloco="oscAutomations.sleepingAnimations.options.general.footLock.title"></h3>
+        <p transloco="oscAutomations.sleepingAnimations.options.general.footLock.description"></p>
         <div class="settings">
           <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate
-                >oscAutomations.sleepingAnimations.options.general.lockFeetOnSleepModeEnable</span
-              >
+            <div class="setting-row-label">
+              <span
+                transloco="oscAutomations.sleepingAnimations.options.general.lockFeetOnSleepModeEnable"
+              ></span>
               <span></span>
             </div>
             <div class="setting-row-action">
@@ -223,10 +225,10 @@
             </div>
           </div>
           <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate
-                >oscAutomations.sleepingAnimations.options.general.unlockFeetOnSleepModeDisable</span
-              >
+            <div class="setting-row-label">
+              <span
+                transloco="oscAutomations.sleepingAnimations.options.general.unlockFeetOnSleepModeDisable"
+              ></span>
               <span></span>
             </div>
             <div class="setting-row-action">
@@ -245,10 +247,10 @@
             </div>
           </div>
           <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate
-                >oscAutomations.sleepingAnimations.options.general.unlockFeetOnAutomationDisable</span
-              >
+            <div class="setting-row-label">
+              <span
+                transloco="oscAutomations.sleepingAnimations.options.general.unlockFeetOnAutomationDisable"
+              ></span>
               <span></span>
             </div>
             <div class="setting-row-action">
@@ -267,10 +269,10 @@
             </div>
           </div>
           <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate
-                >oscAutomations.sleepingAnimations.options.general.releaseFootLockOnPoseChange</span
-              >
+            <div class="setting-row-label">
+              <span
+                transloco="oscAutomations.sleepingAnimations.options.general.releaseFootLockOnPoseChange"
+              ></span>
               <span></span>
             </div>
             <div class="setting-row-action">
@@ -290,10 +292,10 @@
           </div>
           <div class="setting-row-group">
             <div class="setting-row" [class.disabled]="!config.releaseFootLockOnPoseChange">
-              <div class="setting-row-label" translate>
-                <span translate
-                  >oscAutomations.sleepingAnimations.options.general.footLockReleaseWindow</span
-                >
+              <div class="setting-row-label">
+                <span
+                  transloco="oscAutomations.sleepingAnimations.options.general.footLockReleaseWindow"
+                ></span>
                 <span></span>
               </div>
               <div class="setting-row-action">
@@ -313,17 +315,17 @@
         </div>
       </div>
       <div class="setting-category">
-        <h3 translate>oscAutomations.sleepingAnimations.options.general.advanced.title</h3>
+        <h3 transloco="oscAutomations.sleepingAnimations.options.general.advanced.title"></h3>
         <div class="settings">
           <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate
-                >oscAutomations.sleepingAnimations.options.general.advanced.avatarReloadWorkaround.title</span
-              >
+            <div class="setting-row-label">
+              <span
+                transloco="oscAutomations.sleepingAnimations.options.general.advanced.avatarReloadWorkaround.title"
+              ></span>
               <span
                 [innerHtml]="
                   'oscAutomations.sleepingAnimations.options.general.advanced.avatarReloadWorkaround.description'
-                    | translate
+                    | transloco
                 "
               ></span>
             </div>

@@ -11,19 +11,19 @@
   @if (((messages | async)?.length ?? 0) === 0) {
     <div class="mc-items-none" @fade>
       <img src="/assets/img/illustration_ok.png" />
-      <span translate>No messages</span>
-      <span translate>Everything is ok!</span>
+      <span>No messages</span>
+      <span>Everything is ok!</span>
     </div>
   }
   <div class="mc-header" (click)="$event.target === $event.currentTarget && close()">
     <div class="mc-header-bar" [class.scrolled]="scrolled()">
-      <span class="mc-header-title" translate>message-center.title</span>
+      <span class="mc-header-title" transloco="message-center.title"></span>
       <div class="mc-header-actions">
         <button class="mc-header-toggle" (click)="toggleHidden()">
           <i class="material-symbols-outlined" [style.opacity]="hiddenShown() ? 1.0 : 0.25"
             >check</i
           >
-          <span translate>message-center.actions.showHidden</span>
+          <span transloco="message-center.actions.showHidden"></span>
           @if (
             {
               hiddenMessageCount: (messageCenter.hiddenMessages | async)?.length ?? 0,

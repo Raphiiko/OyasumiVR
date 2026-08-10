@@ -1,6 +1,6 @@
 <div class="pane-player-list-wrapper">
   <div class="pane pane-player-list">
-    <div class="pane-title" translate>{{ title | tsTranslate }}</div>
+    <div class="pane-title">{{ title | tsTranslate }}</div>
     @if (
       {
         isFetchingFriends: vrchat.isFetchingFriends | async,
@@ -11,7 +11,7 @@
         @if (data.isFetchingFriends) {
           <div class="players-loading">
             <div class="large-spinner"></div>
-            <span translate>comp.player-list.loadingFriends</span>
+            <span transloco="comp.player-list.loadingFriends"></span>
           </div>
         }
         @if (data.isFetchingFriends === false) {
@@ -76,7 +76,7 @@
             }
             @if (!playerList.length) {
               <div class="no-players">
-                <span translate>comp.player-list.noPlayersAdded</span>
+                <span transloco="comp.player-list.noPlayersAdded"></span>
               </div>
             }
           </div>

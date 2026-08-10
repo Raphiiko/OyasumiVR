@@ -8,7 +8,7 @@
       <i class="material-icons"> warning </i>
     </div>
     <div class="alert-content">
-      <span>{{ 'power-automations.error.' + lighthouseStatus | translate }}</span>
+      <span>{{ 'power-automations.error.' + lighthouseStatus | transloco }}</span>
     </div>
   </div>
 }
@@ -20,22 +20,22 @@
       <i class="material-icons"> info </i>
     </div>
     <div class="alert-content">
-      <span>{{ 'power-automations.powerManagementWarning' | translate }}</span>
+      <span>{{ 'power-automations.powerManagementWarning' | transloco }}</span>
     </div>
   </div>
 }
 
 <div class="setting-category">
-  <h2>{{ 'power-automations.devices.turnOff.title' | translate }}</h2>
-  <p>{{ 'power-automations.devices.turnOff.description' | translate }}</p>
+  <h2>{{ 'power-automations.devices.turnOff.title' | transloco }}</h2>
+  <p>{{ 'power-automations.devices.turnOff.description' | transloco }}</p>
 
   <div class="settings">
     <div class="setting-row">
       <div class="setting-row-label">
         <span>{{
-          'power-automations.devices.turnOff.triggers.onSleepModeEnable' | translate
+          'power-automations.devices.turnOff.triggers.onSleepModeEnable' | transloco
         }}</span>
-        <span>{{ 'power-automations.devices.turnOff.subtitle' | translate }}</span>
+        <span>{{ 'power-automations.devices.turnOff.subtitle' | transloco }}</span>
       </div>
       <div class="setting-row-action">
         <app-device-selector
@@ -49,9 +49,9 @@
     <div class="setting-row">
       <div class="setting-row-label">
         <span>{{
-          'power-automations.devices.turnOff.triggers.onSleepModeDisable' | translate
+          'power-automations.devices.turnOff.triggers.onSleepModeDisable' | transloco
         }}</span>
-        <span>{{ 'power-automations.devices.turnOff.subtitle' | translate }}</span>
+        <span>{{ 'power-automations.devices.turnOff.subtitle' | transloco }}</span>
       </div>
       <div class="setting-row-action">
         <app-device-selector
@@ -65,9 +65,9 @@
     <div class="setting-row">
       <div class="setting-row-label">
         <span>{{
-          'power-automations.devices.turnOff.triggers.onSleepPreparation' | translate
+          'power-automations.devices.turnOff.triggers.onSleepPreparation' | transloco
         }}</span>
-        <span>{{ 'power-automations.devices.turnOff.subtitle' | translate }}</span>
+        <span>{{ 'power-automations.devices.turnOff.subtitle' | transloco }}</span>
       </div>
       <div class="setting-row-action">
         <app-device-selector
@@ -81,8 +81,8 @@
   <div class="settings">
     <div class="setting-row">
       <div class="setting-row-label">
-        <span>{{ 'power-automations.devices.turnOff.triggers.onDeviceCharging' | translate }}</span>
-        <span>{{ 'power-automations.devices.turnOff.subtitle' | translate }}</span>
+        <span>{{ 'power-automations.devices.turnOff.triggers.onDeviceCharging' | transloco }}</span>
+        <span>{{ 'power-automations.devices.turnOff.subtitle' | transloco }}</span>
       </div>
       <div class="setting-row-action">
         <app-device-selector
@@ -95,8 +95,8 @@
 
     <div class="setting-row">
       <div class="setting-row-label">
-        <span>{{ 'power-automations.devices.turnOff.triggers.onBatteryLevel' | translate }}</span>
-        <span>{{ 'power-automations.devices.turnOff.subtitle' | translate }}</span>
+        <span>{{ 'power-automations.devices.turnOff.triggers.onBatteryLevel' | transloco }}</span>
+        <span>{{ 'power-automations.devices.turnOff.subtitle' | transloco }}</span>
       </div>
       <div class="setting-row-action">
         <app-slider-setting
@@ -121,7 +121,7 @@
       <div class="setting-row" [class.disabled]="!hasBatteryLevelDeviceSelection">
         <div class="setting-row-label">
           <span>{{
-            'power-automations.devices.turnOff.triggers.onlyWhileSleepModeEnabled' | translate
+            'power-automations.devices.turnOff.triggers.onlyWhileSleepModeEnabled' | transloco
           }}</span>
           <span></span>
         </div>
@@ -145,8 +145,8 @@
   <div class="settings">
     <div class="setting-row">
       <div class="setting-row-label">
-        <span>{{ 'power-automations.devices.turnOff.triggers.onSteamVRStop' | translate }}</span>
-        <span>{{ 'power-automations.devices.turnOff.subtitle' | translate }}</span>
+        <span>{{ 'power-automations.devices.turnOff.triggers.onSteamVRStop' | transloco }}</span>
+        <span>{{ 'power-automations.devices.turnOff.subtitle' | transloco }}</span>
       </div>
       <div class="setting-row-action">
         <app-device-selector
@@ -160,17 +160,17 @@
 </div>
 
 <div class="setting-category">
-  <h2>{{ 'power-automations.devices.turnOn.title' | translate }}</h2>
+  <h2>{{ 'power-automations.devices.turnOn.title' | transloco }}</h2>
 
-  <p>{{ 'power-automations.devices.turnOn.description' | translate }}</p>
+  <p>{{ 'power-automations.devices.turnOn.description' | transloco }}</p>
 
   <div class="settings">
     <div class="setting-row">
       <div class="setting-row-label">
         <span>{{
-          'power-automations.devices.turnOn.triggers.onSleepModeDisable' | translate
+          'power-automations.devices.turnOn.triggers.onSleepModeDisable' | transloco
         }}</span>
-        <span>{{ 'power-automations.devices.turnOn.subtitle' | translate }}</span>
+        <span>{{ 'power-automations.devices.turnOn.subtitle' | transloco }}</span>
       </div>
       <div class="setting-row-action">
         <app-device-selector
@@ -184,8 +184,8 @@
   <div class="settings">
     <div class="setting-row">
       <div class="setting-row-label">
-        <span>{{ 'power-automations.devices.turnOn.triggers.onOyasumiStart' | translate }}</span>
-        <span>{{ 'power-automations.devices.turnOn.subtitle' | translate }}</span>
+        <span>{{ 'power-automations.devices.turnOn.triggers.onOyasumiStart' | transloco }}</span>
+        <span>{{ 'power-automations.devices.turnOn.subtitle' | transloco }}</span>
       </div>
       <div class="setting-row-action">
         <app-device-selector
@@ -198,8 +198,8 @@
 
     <div class="setting-row">
       <div class="setting-row-label">
-        <span>{{ 'power-automations.devices.turnOn.triggers.onSteamVRStart' | translate }}</span>
-        <span>{{ 'power-automations.devices.turnOn.subtitle' | translate }}</span>
+        <span>{{ 'power-automations.devices.turnOn.triggers.onSteamVRStart' | transloco }}</span>
+        <span>{{ 'power-automations.devices.turnOn.subtitle' | transloco }}</span>
       </div>
       <div class="setting-row-action">
         <app-device-selector

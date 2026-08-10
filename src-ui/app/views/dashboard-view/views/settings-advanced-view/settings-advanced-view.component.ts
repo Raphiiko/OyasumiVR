@@ -13,7 +13,7 @@ import {
   SETTINGS_STORE,
 } from '../../../../globals';
 import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { error, info } from '@tauri-apps/plugin-log';
 import {
   ConfirmModalComponent,
@@ -62,7 +62,7 @@ export class SettingsAdvancedViewComponent {
 
   constructor(
     private router: Router,
-    private translate: TranslateService,
+    private translate: TranslocoService,
     private modalService: ModalService,
     private eventLogService: EventLogService,
     private ipcService: IPCService,
@@ -150,7 +150,7 @@ export class SettingsAdvancedViewComponent {
       } as SetDebugTranslationsRequest);
     }
     // Set translations in main application
-    this.translate.setTranslation('DEBUG', translations);
+    this.translate.setTranslation(translations, 'DEBUG');
     // Switch language to DEBUG
     this.setUserLanguage('DEBUG');
     await message('Translations have been loaded from ' + path, 'Translations loaded');
@@ -167,7 +167,9 @@ export class SettingsAdvancedViewComponent {
               .map(
                 (item) =>
                   ' • ' +
-                  this.translate.instant(`settings.advanced.persistentData.dataType.${item}.title`)
+                  this.translate.translate(
+                    `settings.advanced.persistentData.dataType.${item}.title`
+                  )
               )
               .join('\n'),
           },

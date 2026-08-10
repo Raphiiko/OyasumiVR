@@ -1,6 +1,6 @@
 <div class="setting-category">
-  <p translate>brightness-automations.description</p>
-  <h2 translate>brightness-automations.events</h2>
+  <p transloco="brightness-automations.description"></p>
+  <h2 transloco="brightness-automations.events"></h2>
   <div class="settings">
     @for (event of events; track event) {
       <div class="setting-row">
@@ -9,8 +9,8 @@
             event.icon
           }}</i>
         </div>
-        <div class="setting-row-label" translate>
-          <span>{{ 'brightness-automations.' + event.name + '.title' | translate }}</span>
+        <div class="setting-row-label">
+          <span>{{ 'brightness-automations.' + event.name + '.title' | transloco }}</span>
           <span></span>
         </div>
         <div class="setting-row-action">

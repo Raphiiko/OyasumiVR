@@ -2,7 +2,7 @@ import { Component, HostBinding, OnInit, ChangeDetectionStrategy } from '@angula
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../../utils/animations';
 import { OVRDeviceClass } from '../../../../../../models/ovr-device';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { uniq } from 'lodash';
 
 export interface BatteryPercentageEnableSleepModeModalInputModel {
@@ -37,7 +37,7 @@ export class BatteryPercentageEnableSleepModeModalComponent
     return;
   }
 
-  constructor(private translate: TranslateService) {
+  constructor(private translate: TranslocoService) {
     super();
   }
 

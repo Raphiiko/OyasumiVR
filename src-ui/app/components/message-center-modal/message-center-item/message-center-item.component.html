@@ -14,7 +14,7 @@
     <div class="actions">
       @for (action of actions(); track action) {
         <button (click)="action.action()">
-          {{ action.label | translate }}
+          {{ action.label | transloco }}
         </button>
       }
     </div>

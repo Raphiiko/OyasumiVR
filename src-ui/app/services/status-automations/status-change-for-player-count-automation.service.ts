@@ -22,7 +22,7 @@ import { UserStatus } from '../../models/vrchat';
 import { EventLogService } from '../event-log.service';
 import { EventLogStatusChangedOnPlayerCountChange } from '../../models/event-log-entry';
 import { NotificationService } from '../notification.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 
 @Injectable({
   providedIn: 'root',
@@ -39,7 +39,7 @@ export class StatusChangeForPlayerCountAutomationService {
     private sleep: SleepService,
     private eventLog: EventLogService,
     private notifications: NotificationService,
-    private translate: TranslateService
+    private translate: TranslocoService
   ) {}
 
   async init() {
@@ -88,7 +88,7 @@ export class StatusChangeForPlayerCountAutomationService {
         if (success) {
           if (await this.notifications.notificationTypeEnabled('AUTO_UPDATED_VRC_STATUS')) {
             await this.notifications.send(
-              this.translate.instant('notifications.vrcStatusChanged.content', {
+              this.translate.translate('notifications.vrcStatusChanged.content', {
                 newStatus: (
                   (newStatus.statusMessage ?? newStatus.oldStatusMessage) +
                   ' (' +

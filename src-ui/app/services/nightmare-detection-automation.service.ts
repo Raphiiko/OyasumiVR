@@ -18,7 +18,7 @@ import {
 } from '../models/automations';
 
 import { NotificationService } from './notification.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { NotificationSoundRef } from '../models/notification-sounds.generated';
 
 export const NIGHTMARE_DETECTION_NOTIFICATION_SOUND: NotificationSoundRef = 'gentle_chime_long';
@@ -39,7 +39,7 @@ export class NightmareDetectionAutomationService {
     private pulsoid: PulsoidService,
     private automationConfigService: AutomationConfigService,
     private notification: NotificationService,
-    private translate: TranslateService
+    private translate: TranslocoService
   ) {}
 
   async init() {
@@ -92,7 +92,7 @@ export class NightmareDetectionAutomationService {
 
   private async detectNightmare() {
     if (this.config.disableSleepMode || this.config.sound.enabled) {
-      await this.notification.send(this.translate.instant('nightmare-detection.notification'));
+      await this.notification.send(this.translate.translate('nightmare-detection.notification'));
     }
     if (this.config.disableSleepMode) {
       await this.sleepService.disableSleepMode({

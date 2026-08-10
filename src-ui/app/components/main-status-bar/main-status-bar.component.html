@@ -22,13 +22,13 @@
         <i class="material-icons-round">nights_stay</i>
       </div>
       @if (state.hover) {
-        <span @hshrink>{{ 'comp.main-status-bar.sleepMode.label' | translate }}:&nbsp;</span>
+        <span @hshrink>{{ 'comp.main-status-bar.sleepMode.label' | transloco }}:&nbsp;</span>
       }
       @if (sleepMode | async) {
-        <span @hshrink translate>comp.main-status-bar.active</span>
+        <span @hshrink transloco="comp.main-status-bar.active"></span>
       }
       @if ((sleepMode | async) === false) {
-        <span @hshrink translate>comp.main-status-bar.inactive</span>
+        <span @hshrink transloco="comp.main-status-bar.inactive"></span>
       }
     </div>
     @if (snowverlayAvailable) {
@@ -56,9 +56,11 @@
           <i class="material-icons-round mic-muted">mic_off</i>
         </div>
         @if (state.hover) {
-          <span @hshrink translate style="margin-left: 0.25em"
-            >comp.main-status-bar.systemMicMuted.label</span
-          >
+          <span
+            @hshrink
+            transloco="comp.main-status-bar.systemMicMuted.label"
+            style="margin-left: 0.25em"
+          ></span>
         }
       </div>
     }
@@ -83,7 +85,7 @@
           />
         </div>
         @if (state.hover) {
-          <span @hshrink>{{ 'comp.main-status-bar.mqttStatus.label' | translate }}</span>
+          <span @hshrink>{{ 'comp.main-status-bar.mqttStatus.label' | transloco }}</span>
         }
       </div>
     }
@@ -104,7 +106,7 @@
           >
         </div>
         @if (state.hover) {
-          <span @hshrink>{{ 'comp.main-status-bar.heartrate' | translate }}:&nbsp;</span>
+          <span @hshrink>{{ 'comp.main-status-bar.heartrate' | transloco }}:&nbsp;</span>
         }
         <span class="monospace">{{ pulsoid.heartRate | async }}&nbsp;BPM</span>
       </div>
@@ -125,7 +127,7 @@
           <i class="material-symbols-outlined icon-filled">mode_fan</i>
         </div>
         @if (state.hover) {
-          <span @hshrink>{{ 'comp.main-status-bar.bsbFanSpeed.label' | translate }}:&nbsp;</span>
+          <span @hshrink>{{ 'comp.main-status-bar.bsbFanSpeed.label' | transloco }}:&nbsp;</span>
         }
         <span class="monospace"
           >{{ bigscreenBeyondFanAutomation.fanSpeed | async | number: '1.0-0' }}%</span
@@ -149,7 +151,7 @@
           <div class="colortemp-icon" [style.background-color]="cctControl.cctCSSColor"></div>
         </div>
         @if (state.hover) {
-          <span @hshrink>{{ 'comp.main-status-bar.cctControl.label' | translate }}:&nbsp;</span>
+          <span @hshrink>{{ 'comp.main-status-bar.cctControl.label' | transloco }}:&nbsp;</span>
         }
         <span class="monospace">{{ cctControl.cctStream | async }}K</span>
       </div>
@@ -171,7 +173,7 @@
           <i class="material-icons-round">brightness_medium</i>
         </div>
         @if (state.hover) {
-          <span @hshrink>{{ 'comp.main-status-bar.brightness.simple' | translate }}:&nbsp;</span>
+          <span @hshrink>{{ 'comp.main-status-bar.brightness.simple' | transloco }}:&nbsp;</span>
         }
         <span class="monospace"
           >{{ simpleBrightnessControl.brightnessStream | async | number: '1.0-0' }}%</span
@@ -229,7 +231,7 @@
       @if (state.hover) {
         <span @hshrink>{{ 'SteamVR' }}:&nbsp;</span>
       }
-      <span>{{ 'comp.main-status-bar.steamvr.' + (openvr.status | async) | translate }}</span>
+      <span>{{ 'comp.main-status-bar.steamvr.' + (openvr.status | async) | transloco }}</span>
     </div>
     <div
       class="pill vrc-status clickable"
@@ -253,13 +255,13 @@
           </div>
         }
         @if (state.hover) {
-          <span translate @hshrink>VRChat:&nbsp;</span>
+          <span @hshrink>VRChat:&nbsp;</span>
         }
         @if (user) {
           <span>{{ user?.displayName }}</span>
         }
         @if (!user) {
-          <span translate>comp.main-status-bar.loggedOut</span>
+          <span transloco="comp.main-status-bar.loggedOut"></span>
         }
       </ng-container>
     </div>

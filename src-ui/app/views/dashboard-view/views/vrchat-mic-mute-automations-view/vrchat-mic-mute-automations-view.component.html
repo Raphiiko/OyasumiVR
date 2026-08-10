@@ -1,41 +1,41 @@
 <div class="pane">
-  <div class="pane-title" translate>vrchatMicMuteAutomations.title</div>
+  <div class="pane-title" transloco="vrchatMicMuteAutomations.title"></div>
   <div class="pane-content">
     <div class="setting-view-container">
       <div class="setting-category">
-        <p translate>vrchatMicMuteAutomations.description</p>
-        <h3 translate>vrchatMicMuteAutomations.config.title</h3>
+        <p transloco="vrchatMicMuteAutomations.description"></p>
+        <h3 transloco="vrchatMicMuteAutomations.config.title"></h3>
         <div class="settings">
           <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate>vrchatMicMuteAutomations.status.title</span>
-              <span translate>vrchatMicMuteAutomations.status.description</span>
+            <div class="setting-row-label">
+              <span transloco="vrchatMicMuteAutomations.status.title"></span>
+              <span transloco="vrchatMicMuteAutomations.status.description"></span>
             </div>
             <div class="setting-row-action">
               @if ((automation.muted | async) === false) {
                 <span @hshrink class="status">
-                  <span translate>vrchatMicMuteAutomations.status.unmuted</span>
+                  <span transloco="vrchatMicMuteAutomations.status.unmuted"></span>
                   <i class="material-icons status-icon-unmuted">mic</i>
                 </span>
               }
               @if ((automation.muted | async) === true) {
                 <span @hshrink class="status">
-                  <span translate>vrchatMicMuteAutomations.status.muted</span>
+                  <span transloco="vrchatMicMuteAutomations.status.muted"></span>
                   <i class="material-icons status-icon-muted">mic_off</i>
                 </span>
               }
               @if ((automation.muted | async) === null) {
                 <span @hshrink class="status">
-                  <span translate>vrchatMicMuteAutomations.status.unknown</span>
+                  <span transloco="vrchatMicMuteAutomations.status.unknown"></span>
                   <i class="material-icons status-icon-unknown">question_mark</i>
                 </span>
               }
             </div>
           </div>
           <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate>vrchatMicMuteAutomations.control.title</span>
-              <span translate>vrchatMicMuteAutomations.control.description</span>
+            <div class="setting-row-label">
+              <span transloco="vrchatMicMuteAutomations.control.title"></span>
+              <span transloco="vrchatMicMuteAutomations.control.description"></span>
             </div>
             <div class="setting-row-action">
               <button
@@ -55,12 +55,12 @@
             </div>
           </div>
         </div>
-        <h3 translate>vrchatMicMuteAutomations.automations.title</h3>
+        <h3 transloco="vrchatMicMuteAutomations.automations.title"></h3>
         <div class="settings">
           <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate>vrchatMicMuteAutomations.onSleepModeEnable.title</span>
-              <span translate>vrchatMicMuteAutomations.onSleepModeEnable.description</span>
+            <div class="setting-row-label">
+              <span transloco="vrchatMicMuteAutomations.onSleepModeEnable.title"></span>
+              <span transloco="vrchatMicMuteAutomations.onSleepModeEnable.description"></span>
             </div>
             <div class="setting-row-action">
               <app-select-box
@@ -73,9 +73,9 @@
             </div>
           </div>
           <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate>vrchatMicMuteAutomations.onSleepModeDisable.title</span>
-              <span translate>vrchatMicMuteAutomations.onSleepModeDisable.description</span>
+            <div class="setting-row-label">
+              <span transloco="vrchatMicMuteAutomations.onSleepModeDisable.title"></span>
+              <span transloco="vrchatMicMuteAutomations.onSleepModeDisable.description"></span>
             </div>
             <div class="setting-row-action">
               <app-select-box
@@ -88,9 +88,9 @@
             </div>
           </div>
           <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate>vrchatMicMuteAutomations.onSleepPreparation.title</span>
-              <span translate>vrchatMicMuteAutomations.onSleepPreparation.description</span>
+            <div class="setting-row-label">
+              <span transloco="vrchatMicMuteAutomations.onSleepPreparation.title"></span>
+              <span transloco="vrchatMicMuteAutomations.onSleepPreparation.description"></span>
             </div>
             <div class="setting-row-action">
               <app-select-box
