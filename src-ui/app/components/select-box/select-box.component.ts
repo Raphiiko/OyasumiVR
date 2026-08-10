@@ -23,7 +23,7 @@ export interface SelectBoxItem<T = string> {
   templateUrl: './select-box.component.html',
   styleUrls: ['./select-box.component.scss'],
   animations: [fadeDown(), fadeUp()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class SelectBoxComponent implements OnInit {

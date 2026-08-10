@@ -9,7 +9,7 @@ import {
   selector: 'app-message-center-item',
   standalone: false,
   templateUrl: './message-center-item.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './message-center-item.component.scss',
 })
 export class MessageCenterItemComponent {

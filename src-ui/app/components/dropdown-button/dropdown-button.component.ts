@@ -21,7 +21,7 @@ export interface DropdownItem {
   templateUrl: './dropdown-button.component.html',
   styleUrls: ['./dropdown-button.component.scss'],
   animations: [fadeDown()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DropdownButtonComponent implements OnInit {
