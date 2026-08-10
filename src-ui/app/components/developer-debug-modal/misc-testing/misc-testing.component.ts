@@ -6,7 +6,7 @@ import { SteamService } from 'src-ui/app/services/steam.service';
   selector: 'app-misc-testing',
   templateUrl: './misc-testing.component.html',
   styleUrls: ['./misc-testing.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class MiscTestingComponent {

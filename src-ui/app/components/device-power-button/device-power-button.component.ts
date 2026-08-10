@@ -8,7 +8,7 @@ export type DevicePowerAction = 'power-on' | 'power-off';
   selector: 'app-device-power-button',
   templateUrl: './device-power-button.component.html',
   styleUrls: ['./device-power-button.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DevicePowerButtonComponent {

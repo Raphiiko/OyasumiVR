@@ -8,7 +8,7 @@ import { hshrink, vshrink } from '../../../../../../../utils/animations';
   templateUrl: './brightness-automation-config-label.component.html',
   styleUrls: ['./brightness-automation-config-label.component.scss'],
   animations: [vshrink(), hshrink()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class BrightnessAutomationConfigLabelComponent {

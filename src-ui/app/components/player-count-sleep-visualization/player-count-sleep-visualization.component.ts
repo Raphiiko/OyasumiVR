@@ -6,7 +6,7 @@ import { hshrink } from '../../utils/animations';
   templateUrl: './player-count-sleep-visualization.component.html',
   styleUrls: ['./player-count-sleep-visualization.component.scss'],
   animations: [hshrink()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class PlayerCountSleepVisualizationComponent {

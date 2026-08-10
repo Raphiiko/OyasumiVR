@@ -4,7 +4,7 @@ import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from 
   selector: 'app-color-picker',
   templateUrl: './color-picker.component.html',
   styleUrls: ['./color-picker.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class ColorPickerComponent {

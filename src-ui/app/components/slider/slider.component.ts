@@ -22,7 +22,7 @@ export type SliderStyle = 'DEFAULT' | 'AUDIO_LEVEL';
   selector: 'app-slider',
   templateUrl: './slider.component.html',
   styleUrls: ['./slider.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class SliderComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
