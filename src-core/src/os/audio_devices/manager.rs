@@ -430,7 +430,7 @@ impl AudioDeviceManagerNotificationClient {
     }
 }
 
-impl IMMNotificationClient_Impl for AudioDeviceManagerNotificationClient {
+impl IMMNotificationClient_Impl for AudioDeviceManagerNotificationClient_Impl {
     #[allow(non_snake_case)]
     fn OnDeviceStateChanged(
         &self,
@@ -501,7 +501,7 @@ impl IMMNotificationClient_Impl for AudioDeviceManagerNotificationClient {
     fn OnPropertyValueChanged(
         &self,
         pwstrdeviceid: &PCWSTR,
-        _key: &windows::Win32::UI::Shell::PropertiesSystem::PROPERTYKEY,
+        _key: &windows::Win32::Foundation::PROPERTYKEY,
     ) -> windows::core::Result<()> {
         let device_id = AudioDevicePCWSTR(*pwstrdeviceid);
         let tx = self.refresh_tx.clone();

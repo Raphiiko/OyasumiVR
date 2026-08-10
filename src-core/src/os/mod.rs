@@ -7,7 +7,7 @@ mod sounds_gen;
 use self::audio_devices::manager::AudioDeviceManager;
 use log::{error, info, warn};
 use rodio::{source::Source, Decoder};
-use rodio::{OutputStream, Sink};
+use rodio::{DeviceSinkBuilder, Player};
 use std::collections::HashMap;
 use std::env;
 use std::ffi::OsString;
@@ -118,8 +118,8 @@ pub async fn init_sound_playback() {
         });
 
         // Initialize output stream
-        let (_stream, stream_handle) = match OutputStream::try_default() {
-            Ok((stream, handle)) => (stream, handle),
+        let _stream = match DeviceSinkBuilder::open_default_sink() {
+            Ok(stream) => stream,
             Err(e) => {
                 error!("[Core] Failed to initialize audio output stream: {e}");
                 return;
@@ -131,13 +131,7 @@ pub async fn init_sound_playback() {
             if let Some(source) = sounds.get(&sound) {
                 // Play sound
                 let source = source.clone();
-                let sink = match Sink::try_new(&stream_handle) {
-                    Ok(s) => s,
-                    Err(e) => {
-                        error!("[Core] Failed to create audio sink: {e}");
-                        continue;
-                    }
-                };
+                let sink = Player::connect_new(_stream.mixer());
                 sink.set_volume(volume);
                 sink.append(source.clone());
                 sink.detach();

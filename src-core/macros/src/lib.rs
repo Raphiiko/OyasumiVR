@@ -15,6 +15,7 @@ pub fn command_profiling(_args: TokenStream, input: TokenStream) -> TokenStream 
         vis,
         sig,
         block,
+        ..
     } = input_fn;
 
     // Extract the function name

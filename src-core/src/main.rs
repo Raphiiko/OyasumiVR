@@ -154,7 +154,7 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
     let mut builder = tauri_plugin_log::Builder::new()
         .clear_targets()
         .format(move |out, message, record| {
-            let format = time::format_description::parse(
+            let format = time::format_description::parse_borrowed::<1>(
                 "[[[year]-[month]-[day]][[[hour]:[minute]:[second]]",
             )
             .unwrap();

@@ -21,7 +21,7 @@ pub fn relaunch_with_elevation(main_port: u32, main_pid: u32, force_exit: bool) 
     let operation: Vec<u16> = OsStr::new("runas\0").encode_wide().collect();
     let r = unsafe {
         ShellExecuteW(
-            0,
+            ptr::null_mut(),
             operation.as_ptr(),
             path.as_ptr(),
             port.as_ptr(),
@@ -30,7 +30,7 @@ pub fn relaunch_with_elevation(main_port: u32, main_pid: u32, force_exit: bool) 
         )
     };
     // Quit non-admin process if successful (self)
-    if r > 32 || force_exit {
+    if r as isize > 32 || force_exit {
         std::process::exit(0);
     }
 }

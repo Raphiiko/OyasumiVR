@@ -124,7 +124,7 @@ impl AudioDevice {
             let id = AudioDevice::get_id_from_mmdevice(&mmdevice)?;
             let properties = mmdevice.OpenPropertyStore(STGM_READ)?;
             let name = properties.GetValue(&PKEY_Device_FriendlyName)?;
-            let name = U16Str::from_slice(PropVariantToBSTR(&name)?.as_wide()).to_string_lossy();
+            let name = U16Str::from_slice(&PropVariantToBSTR(&name)?).to_string_lossy();
             // Reference endpoint volume and listen for volume notifications
             let endpoint_volume = mmdevice.Activate::<IAudioEndpointVolume>(CLSCTX_ALL, None)?;
             let (on_notify_tx, on_notify_rx) = channel::<()>(10);
@@ -419,7 +419,7 @@ impl AudioDeviceVolumeNotificationClient {
     }
 }
 
-impl IAudioEndpointVolumeCallback_Impl for AudioDeviceVolumeNotificationClient {
+impl IAudioEndpointVolumeCallback_Impl for AudioDeviceVolumeNotificationClient_Impl {
     #[allow(non_snake_case)]
     fn OnNotify(&self, _notify: *mut AUDIO_VOLUME_NOTIFICATION_DATA) -> windows::core::Result<()> {
         let tx = self.channel.clone();

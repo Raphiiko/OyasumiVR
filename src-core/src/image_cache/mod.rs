@@ -1,6 +1,7 @@
 pub mod commands;
 
-use hyper::{Body, Request, Response};
+use crate::http::ResBody;
+use hyper::{body::Incoming, Request, Response};
 use log::{error, info};
 use mime::Mime;
 use serde_json::json;
@@ -238,7 +239,10 @@ impl ImageCache {
         }
     }
 
-    pub async fn handle_request(&self, req: Request<Body>) -> Result<Response<Body>, Infallible> {
+    pub async fn handle_request(
+        &self,
+        req: Request<Incoming>,
+    ) -> Result<Response<ResBody>, Infallible> {
         // Parse query parameters
         let params: HashMap<String, String> = req
             .uri()

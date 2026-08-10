@@ -1,14 +1,17 @@
 pub mod commands;
 
-use hyper::{
-    service::{make_service_fn, service_fn},
-    Body, Method, Request, Response, Server,
-};
+use bytes::Bytes;
+use http_body_util::Full;
+use hyper::{body::Incoming, server::conn::http1, service::service_fn, Method, Request, Response};
+use hyper_util::rt::TokioIo;
 use log::{error, info};
 use std::{convert::Infallible, net::SocketAddr, sync::LazyLock};
-use tokio::sync::Mutex;
+use tokio::{net::TcpListener, sync::Mutex};
 
 use crate::utils::models::CoreMode;
+
+/// Body type used for all responses served by the main HTTP server.
+pub type ResBody = Full<Bytes>;
 
 pub static PORT: LazyLock<Mutex<Option<u32>>> = LazyLock::new(Default::default);
 
@@ -20,24 +23,37 @@ pub async fn init() {
         CoreMode::Release => 0,
     };
     let addr: SocketAddr = format!("127.0.0.1:{port}").parse().unwrap();
-    let make_svc =
-        make_service_fn(|_conn| async { Ok::<_, Infallible>(service_fn(request_handler)) });
-    let server = Server::bind(&addr).serve(make_svc);
+    // Bind first, so we can read back the actually bound port (the release mode port is ephemeral)
+    let listener = TcpListener::bind(addr).await.unwrap();
     // Get port
-    *PORT.lock().await = Some(server.local_addr().port() as u32);
-    info!(
-        "[Core] Started HTTP server on port {}",
-        server.local_addr().port()
-    );
+    let local_port = listener.local_addr().unwrap().port();
+    *PORT.lock().await = Some(local_port as u32);
+    info!("[Core] Started HTTP server on port {local_port}");
     // Run server forever
     tokio::spawn(async move {
-        if let Err(e) = server.await {
-            error!("[Core] HTTP server error: {e}");
+        loop {
+            let stream = match listener.accept().await {
+                Ok((stream, _)) => stream,
+                Err(e) => {
+                    error!("[Core] HTTP server error: {e}");
+                    // Back off, so a persistent accept failure cannot busy-spin.
+                    tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+                    continue;
+                }
+            };
+            tokio::spawn(async move {
+                if let Err(e) = http1::Builder::new()
+                    .serve_connection(TokioIo::new(stream), service_fn(request_handler))
+                    .await
+                {
+                    error!("[Core] HTTP server error: {e}");
+                }
+            });
         }
     });
 }
 
-async fn request_handler(req: Request<Body>) -> Result<Response<Body>, Infallible> {
+async fn request_handler(req: Request<Incoming>) -> Result<Response<ResBody>, Infallible> {
     let path = req.uri().path();
     // GET /image_cache/get
     if req.method() == Method::GET && path == "/image_cache/get" {
@@ -55,14 +71,14 @@ async fn request_handler(req: Request<Body>) -> Result<Response<Body>, Infallibl
     response_404()
 }
 
-fn response_404() -> Result<Response<Body>, Infallible> {
+fn response_404() -> Result<Response<ResBody>, Infallible> {
     Ok(Response::builder()
         .status(404)
         .body("OyasumiVR Main HTTP Server".into())
         .unwrap())
 }
 
-async fn handle_font_request(path: &str) -> Result<Response<Body>, Infallible> {
+async fn handle_font_request(path: &str) -> Result<Response<ResBody>, Infallible> {
     let font_name = path.strip_prefix("/font/").unwrap();
     // Check if font name is valid (alphanumeric with dashes
     if !font_name
