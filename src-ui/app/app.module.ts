@@ -8,8 +8,8 @@ import { DashboardViewComponent } from './views/dashboard-view/dashboard-view.co
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { VarDirective } from './directives/var.directive';
 import { AboutViewComponent } from './views/dashboard-view/views/about-view/about-view.component';
-import { TranslateCompiler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideTranslateService, TranslateDirective, TranslatePipe } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { OverviewViewComponent } from './views/dashboard-view/views/overview-view/overview-view.component';
 import { SleepModeEnableOnControllersPoweredOffAutomationService } from './services/sleep-detection-automations/sleep-mode-enable-on-controllers-powered-off-automation.service';
@@ -277,10 +277,6 @@ import { StoreSnapshotService } from './services/store-snapshot.service';
   localeDE,
 ].forEach((locale) => registerLocaleData(locale));
 
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
-
 @NgModule({
   bootstrap: [AppComponent],
   declarations: [
@@ -435,22 +431,25 @@ export function createTranslateLoader(http: HttpClient) {
     BrowserAnimationsModule,
     AppRoutingModule,
     MomentModule,
-    TranslateModule.forRoot({
-      defaultLanguage: 'en',
-      loader: {
-        provide: TranslateLoader,
-        useFactory: createTranslateLoader,
-        deps: [HttpClient],
-      },
-      compiler: {
-        provide: TranslateCompiler,
-        useClass: TranslateMessageFormatCompiler,
-      },
-    }),
+    TranslatePipe,
+    TranslateDirective,
     NgPipesModule,
     FormsModule,
   ],
-  providers: [ThemeService, TStringTranslatePipe, provideHttpClient(withInterceptorsFromDi())],
+  providers: [
+    ThemeService,
+    TStringTranslatePipe,
+    provideHttpClient(withInterceptorsFromDi()),
+    provideTranslateService({
+      fallbackLang: 'en',
+      loader: provideTranslateHttpLoader({
+        prefix: './assets/i18n/',
+        suffix: '.json',
+        failOnError: true,
+      }),
+      compiler: TranslateMessageFormatCompiler,
+    }),
+  ],
 })
 export class AppModule {
   constructor(

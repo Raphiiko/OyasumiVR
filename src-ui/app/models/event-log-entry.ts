@@ -93,11 +93,7 @@ export interface EventLogBase {
 }
 
 export type EventLogShutdownSequenceStartedReason =
-  | 'MANUAL'
-  | 'HOTKEY'
-  | 'SLEEP_TRIGGER'
-  | 'VRC_ALONE_TRIGGER'
-  | 'MQTT';
+  'MANUAL' | 'HOTKEY' | 'SLEEP_TRIGGER' | 'VRC_ALONE_TRIGGER' | 'MQTT';
 
 export interface EventLogShutdownSequenceStarted extends EventLogBase {
   type: 'shutdownSequenceStarted';
@@ -159,11 +155,7 @@ export interface EventLogGpuPowerLimitChanged extends EventLogBase {
 export interface EventLogHardwareBrightnessChanged extends EventLogBase {
   type: 'hardwareBrightnessChanged';
   reason:
-    | 'SLEEP_MODE_ENABLED'
-    | 'SLEEP_MODE_DISABLED'
-    | 'SLEEP_PREPARATION'
-    | 'AT_SUNSET'
-    | 'AT_SUNRISE';
+    'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION' | 'AT_SUNSET' | 'AT_SUNRISE';
   transition: boolean;
   value: number;
   transitionTime: number;
@@ -172,11 +164,7 @@ export interface EventLogHardwareBrightnessChanged extends EventLogBase {
 export interface EventLogSoftwareBrightnessChanged extends EventLogBase {
   type: 'softwareBrightnessChanged';
   reason:
-    | 'SLEEP_MODE_ENABLED'
-    | 'SLEEP_MODE_DISABLED'
-    | 'SLEEP_PREPARATION'
-    | 'AT_SUNSET'
-    | 'AT_SUNRISE';
+    'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION' | 'AT_SUNSET' | 'AT_SUNRISE';
   transition: boolean;
   value: number;
   transitionTime: number;
@@ -185,11 +173,7 @@ export interface EventLogSoftwareBrightnessChanged extends EventLogBase {
 export interface EventLogSimpleBrightnessChanged extends EventLogBase {
   type: 'simpleBrightnessChanged';
   reason:
-    | 'SLEEP_MODE_ENABLED'
-    | 'SLEEP_MODE_DISABLED'
-    | 'SLEEP_PREPARATION'
-    | 'AT_SUNSET'
-    | 'AT_SUNRISE';
+    'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION' | 'AT_SUNSET' | 'AT_SUNRISE';
   transition: boolean;
   value: number;
   transitionTime: number;
@@ -198,11 +182,7 @@ export interface EventLogSimpleBrightnessChanged extends EventLogBase {
 export interface EventLogCCTChanged extends EventLogBase {
   type: 'cctChanged';
   reason:
-    | 'SLEEP_MODE_ENABLED'
-    | 'SLEEP_MODE_DISABLED'
-    | 'SLEEP_PREPARATION'
-    | 'AT_SUNSET'
-    | 'AT_SUNRISE';
+    'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION' | 'AT_SUNSET' | 'AT_SUNRISE';
   transition: boolean;
   value: number;
   transitionTime: number;

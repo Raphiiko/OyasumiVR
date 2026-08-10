@@ -12,7 +12,7 @@ export class LocalizedDatePipe implements PipeTransform {
   constructor(private translateService: TranslateService) {}
 
   transform(value: any, pattern = 'mediumDate'): any {
-    let currentLang = this.translateService.currentLang;
+    let currentLang = this.translateService.getCurrentLang()!;
     if (currentLang === 'DEBUG') currentLang = 'en';
     const datePipe: DatePipe = new DatePipe(NG_LOCALE_MAP[currentLang]);
     pattern = this.getPatternFromPreset(currentLang, pattern);

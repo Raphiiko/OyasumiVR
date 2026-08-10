@@ -1,9 +1,7 @@
 export type VRChatLogEventType = 'OnPlayerJoined' | 'OnPlayerLeft' | 'OnLocationChange';
 
 export type VRChatLogEvent =
-  | VRChatOnPlayerJoinedEvent
-  | VRChatOnPlayerLeftEvent
-  | VRChatOnLocationChangeEvent;
+  VRChatOnPlayerJoinedEvent | VRChatOnPlayerLeftEvent | VRChatOnLocationChangeEvent;
 
 interface VRChatLogEventBase {
   type: VRChatLogEventType;

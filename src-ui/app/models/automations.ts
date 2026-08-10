@@ -133,8 +133,7 @@ export type BrightnessAutomationsConfig = AutomationConfig & {
 };
 
 export type BrightnessEventAutomationConfig =
-  | GenericBrightnessEventAutomationConfig
-  | SunBrightnessEventAutomationConfig;
+  GenericBrightnessEventAutomationConfig | SunBrightnessEventAutomationConfig;
 
 export interface GenericBrightnessEventAutomationConfig extends AutomationConfig {
   type?: undefined;
@@ -360,9 +359,7 @@ export interface JoinNotificationsAutomationsConfig extends AutomationConfig {
 
 export type AudioVolumeAutomationType = 'SET_VOLUME' | 'MUTE' | 'UNMUTE';
 export type AudioVolumeAutomation =
-  | MuteAudioVolumeAutomation
-  | UnmuteAudioVolumeAutomation
-  | SetAudioVolumeAutomation;
+  MuteAudioVolumeAutomation | UnmuteAudioVolumeAutomation | SetAudioVolumeAutomation;
 
 export interface BaseAudioVolumeAutomation {
   type: AudioVolumeAutomationType;

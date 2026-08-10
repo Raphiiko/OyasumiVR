@@ -451,10 +451,11 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     if (lighthouseDevice) {
       if (this.lighthouse.deviceNeedsIdentifier(lighthouseDevice)) {
         this.modalService
-          .addModal<
-            LighthouseV1IdWizardModalInputModel,
-            LighthouseV1IdWizardModalOutputModel
-          >(LighthouseV1IdWizardModalComponent, { device: lighthouseDevice }, { closeOnEscape: false })
+          .addModal<LighthouseV1IdWizardModalInputModel, LighthouseV1IdWizardModalOutputModel>(
+            LighthouseV1IdWizardModalComponent,
+            { device: lighthouseDevice },
+            { closeOnEscape: false }
+          )
           .subscribe();
         return;
       }
@@ -475,10 +476,10 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
 
   async configureDevice(device: DMKnownDevice) {
     this.modalService
-      .addModal<
-        DeviceManagerConfigModalInputModel,
-        DeviceManagerConfigModalOutputModel
-      >(DeviceManagerConfigModalComponent, { device })
+      .addModal<DeviceManagerConfigModalInputModel, DeviceManagerConfigModalOutputModel>(
+        DeviceManagerConfigModalComponent,
+        { device }
+      )
       .subscribe();
   }
 

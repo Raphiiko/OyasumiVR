@@ -243,10 +243,11 @@ export class DeviceListItemComponent implements OnInit {
     if (this.mode === 'lighthouse') {
       if (this.lighthouse.deviceNeedsIdentifier(this._lighthouseDevice!)) {
         this.modalService
-          .addModal<
-            LighthouseV1IdWizardModalInputModel,
-            LighthouseV1IdWizardModalOutputModel
-          >(LighthouseV1IdWizardModalComponent, { device: this._lighthouseDevice! }, { closeOnEscape: false })
+          .addModal<LighthouseV1IdWizardModalInputModel, LighthouseV1IdWizardModalOutputModel>(
+            LighthouseV1IdWizardModalComponent,
+            { device: this._lighthouseDevice! },
+            { closeOnEscape: false }
+          )
           .subscribe();
         return;
       }

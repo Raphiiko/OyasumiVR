@@ -63,10 +63,9 @@ export class FrameLimiterViewComponent implements OnInit {
 
   addLimiter() {
     this.modalService
-      .addModal<
-        Record<string, never>,
-        FrameLimiterAddApplicationModalOutputModel
-      >(FrameLimiterAddApplicationModalComponent)
+      .addModal<Record<string, never>, FrameLimiterAddApplicationModalOutputModel>(
+        FrameLimiterAddApplicationModalComponent
+      )
       .subscribe((result) => {
         if (result?.appId) {
           this.addLimiterForAppId(result.appId);

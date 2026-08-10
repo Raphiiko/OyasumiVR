@@ -2,8 +2,8 @@ import { ClientOptions, fetch as tauriFetch } from '@tauri-apps/plugin-http';
 import { error, info, warn } from '@tauri-apps/plugin-log';
 import { getVersion } from 'src-ui/app/utils/app-utils';
 import { TaskQueue } from 'src-ui/app/utils/task-queue';
-import { parse as parseSetCookieHeader } from 'set-cookie-parser';
-import { serialize as serializeCookie } from 'cookie';
+import { parseSetCookie as parseSetCookieHeader } from 'set-cookie-parser';
+import { stringifySetCookie as serializeCookie } from 'cookie';
 import { InviteMessageType } from 'vrchat/dist';
 import type {
   CurrentUser,
@@ -786,9 +786,10 @@ export class VRChatAPI {
   ): Promise<Record<string, string>> {
     const settings = await firstValueFrom(this.settings);
     const cookies = [];
-    if (settings.authCookie) cookies.push(serializeCookie('auth', settings.authCookie));
+    if (settings.authCookie)
+      cookies.push(serializeCookie({ name: 'auth', value: settings.authCookie }));
     if (settings.twoFactorCookie)
-      cookies.push(serializeCookie('twoFactorAuth', settings.twoFactorCookie));
+      cookies.push(serializeCookie({ name: 'twoFactorAuth', value: settings.twoFactorCookie }));
     return {
       Cookie: cookies.join('; '),
       'User-Agent': this.userAgent,

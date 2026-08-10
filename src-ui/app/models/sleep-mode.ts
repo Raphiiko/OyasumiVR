@@ -1,11 +1,7 @@
 import { AutomationType } from './automations';
 
 export type SleepModeStatusChangeReasonType =
-  | 'MANUAL'
-  | 'MQTT'
-  | 'HOTKEY'
-  | 'OSC_CONTROL'
-  | 'AUTOMATION';
+  'MANUAL' | 'MQTT' | 'HOTKEY' | 'OSC_CONTROL' | 'AUTOMATION';
 
 export type SleepModeStatusChangeReason =
   | ManualSleepModeStatusChangeReason

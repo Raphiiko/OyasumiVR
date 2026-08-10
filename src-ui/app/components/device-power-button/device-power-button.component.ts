@@ -1,12 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 export type DevicePowerState =
-  | 'off'
-  | 'on'
-  | 'turning-off'
-  | 'turning-on'
-  | 'unknown'
-  | 'attention';
+  'off' | 'on' | 'turning-off' | 'turning-on' | 'unknown' | 'attention';
 export type DevicePowerAction = 'power-on' | 'power-off';
 
 @Component({

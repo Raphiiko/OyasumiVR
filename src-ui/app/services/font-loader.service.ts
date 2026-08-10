@@ -21,7 +21,7 @@ export class FontLoaderService {
       await new Promise((resolve) => setTimeout(resolve, 50));
     }
     // Initialize font loader
-    fontLoader.init(this._httpServerPort, this.translate.currentLang).then(() => {
+    fontLoader.init(this._httpServerPort, this.translate.getCurrentLang()!).then(() => {
       // Load fonts for new locale
       this.translate.onLangChange.subscribe(async (event) => {
         await fontLoader.loadFontsForNewLocale(event.lang);

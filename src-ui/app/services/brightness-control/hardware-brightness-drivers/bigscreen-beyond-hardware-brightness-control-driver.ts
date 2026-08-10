@@ -96,8 +96,7 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
     return invoke<string>('bigscreen_beyond_get_saved_preferences').then((result) => {
       if (!result) return null;
       let preferences:
-        | { brightness: number; overdrive: boolean; overdrive_brightness: number }
-        | undefined;
+        { brightness: number; overdrive: boolean; overdrive_brightness: number } | undefined;
       try {
         preferences = JSON.parse(result);
       } catch (e) {
