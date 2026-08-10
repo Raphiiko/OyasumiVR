@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TranslationEditService } from '../../services/translation-edit.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslationEntry } from '../../models/translation-entry';
@@ -29,6 +29,7 @@ interface TranslationRowEntry {
   templateUrl: './translation-editor-view.component.html',
   styleUrls: ['./translation-editor-view.component.scss'],
   animations: [vshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class TranslationEditorViewComponent {

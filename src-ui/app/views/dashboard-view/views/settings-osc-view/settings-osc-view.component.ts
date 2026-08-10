@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { vshrink } from 'src-ui/app/utils/animations';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
@@ -21,6 +21,7 @@ import { isEqual, pick } from 'lodash';
   templateUrl: './settings-osc-view.component.html',
   styleUrls: ['./settings-osc-view.component.scss'],
   animations: [vshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SettingsOscViewComponent implements OnInit {

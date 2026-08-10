@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { warn } from '@tauri-apps/plugin-log';
 import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { hshrink } from 'src-ui/app/utils/animations';
@@ -18,6 +18,7 @@ import { APP_SETTINGS_DEFAULT, AppSettings, DiscordActivityMode } from 'src-ui/a
   templateUrl: './settings-integrations-view.component.html',
   styleUrls: ['./settings-integrations-view.component.scss'],
   animations: [hshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SettingsIntegrationsViewComponent implements OnInit {

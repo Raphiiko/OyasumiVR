@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {
   ConfirmModalComponent,
   ConfirmModalInputModel,
@@ -15,6 +15,7 @@ import { hshrink } from '../../utils/animations';
   templateUrl: './brightness-advanced-mode-toggle.component.html',
   styleUrl: './brightness-advanced-mode-toggle.component.scss',
   animations: [hshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class BrightnessAdvancedModeToggleComponent {

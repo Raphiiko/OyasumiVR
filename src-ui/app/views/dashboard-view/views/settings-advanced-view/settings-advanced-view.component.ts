@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { message, open as openFile } from '@tauri-apps/plugin-dialog';
 import { readTextFile } from '@tauri-apps/plugin-fs';
 import {
@@ -38,6 +38,7 @@ import { firstValueFrom } from 'rxjs';
   templateUrl: './settings-advanced-view.component.html',
   styleUrls: ['./settings-advanced-view.component.scss'],
   animations: [],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SettingsAdvancedViewComponent {

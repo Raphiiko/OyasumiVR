@@ -1,4 +1,12 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { hshrink, noop } from '../../utils/animations';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { HotkeySelectorModalComponent } from '../hotkey-selector-modal/hotkey-selector-modal.component';
@@ -10,6 +18,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './hotkey-selector.component.html',
   styleUrls: ['./hotkey-selector.component.scss'],
   animations: [hshrink(), noop()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class HotkeySelectorComponent implements OnChanges, OnDestroy, OnInit {

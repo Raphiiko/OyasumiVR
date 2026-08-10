@@ -1,4 +1,12 @@
-import { Component, DestroyRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { TString } from '../../models/translatable-string';
 import { VRChatService } from '../../services/vrchat-api/vrchat.service';
 import type { LimitedUserFriend } from 'vrchat';
@@ -22,6 +30,7 @@ import { noop, vshrink } from '../../utils/animations';
   templateUrl: './player-list.component.html',
   styleUrls: ['./player-list.component.scss'],
   animations: [vshrink(), noop()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class PlayerListComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {
   ShutdownAutomationsService,
   ShutdownSequenceStage,
@@ -10,6 +10,7 @@ import { fade, vshrink } from 'src-ui/app/utils/animations';
   templateUrl: './shutdown-sequence-overlay.component.html',
   styleUrls: ['./shutdown-sequence-overlay.component.scss'],
   animations: [fade(), vshrink('vshrinkSlow', '.6s ease')],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ShutdownSequenceOverlayComponent {

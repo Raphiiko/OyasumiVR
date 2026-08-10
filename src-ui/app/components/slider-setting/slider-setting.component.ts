@@ -9,6 +9,7 @@ import {
   Output,
   SimpleChanges,
   ViewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { fade } from '../../utils/animations';
 import { debounceTime, Subject } from 'rxjs';
@@ -20,6 +21,7 @@ import { SliderComponent, SliderStyle } from '../slider/slider.component';
   templateUrl: './slider-setting.component.html',
   styleUrls: ['./slider-setting.component.scss'],
   animations: [fade()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SliderSettingComponent implements OnInit, OnChanges {

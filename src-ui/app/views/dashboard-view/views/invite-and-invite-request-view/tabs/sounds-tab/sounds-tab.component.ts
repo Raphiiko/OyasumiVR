@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { vshrink } from '../../../../../../utils/animations';
 import {
   AutoAcceptInviteRequestsAutomationConfig,
@@ -12,6 +12,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './sounds-tab.component.html',
   styleUrls: ['./sounds-tab.component.scss'],
   animations: [vshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SoundsTabComponent implements OnInit {

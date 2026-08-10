@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { OpenVRService } from '../../../../services/openvr.service';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
 import {
@@ -15,6 +15,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './resolution-automations-view.component.html',
   styleUrls: ['./resolution-automations-view.component.scss'],
   animations: [],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ResolutionAutomationsViewComponent implements OnInit {

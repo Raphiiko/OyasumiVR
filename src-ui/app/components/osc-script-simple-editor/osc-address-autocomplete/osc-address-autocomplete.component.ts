@@ -9,6 +9,7 @@ import {
   Output,
   SimpleChanges,
   ViewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { BehaviorSubject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -33,6 +34,7 @@ export interface OscAddressSelection {
   templateUrl: './osc-address-autocomplete.component.html',
   styleUrls: ['./osc-address-autocomplete.component.scss'],
   animations: [vshrink(), fade()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class OscAddressAutocompleteComponent implements OnInit, OnChanges {

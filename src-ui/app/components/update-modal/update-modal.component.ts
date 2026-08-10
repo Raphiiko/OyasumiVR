@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Update } from '@tauri-apps/plugin-updater';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { UpdateService } from '../../services/update.service';
@@ -17,6 +17,7 @@ interface UpdateModalOutputModel {}
   templateUrl: './update-modal.component.html',
   styleUrls: ['./update-modal.component.scss'],
   animations: [hshrink(), fadeUp()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class UpdateModalComponent

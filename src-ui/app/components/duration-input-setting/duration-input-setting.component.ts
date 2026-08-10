@@ -1,4 +1,12 @@
-import { Component, computed, ElementRef, Input, model, ViewChild } from '@angular/core';
+import {
+  Component,
+  computed,
+  ElementRef,
+  Input,
+  model,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { clamp } from '../../utils/number-utils';
 import { fade } from '../../utils/animations';
 
@@ -7,6 +15,7 @@ import { fade } from '../../utils/animations';
   templateUrl: './duration-input-setting.component.html',
   styleUrl: './duration-input-setting.component.scss',
   animations: [fade()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class DurationInputSettingComponent {

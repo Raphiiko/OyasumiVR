@@ -1,4 +1,4 @@
-import { Component, DestroyRef, Input, OnInit } from '@angular/core';
+import { Component, DestroyRef, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { SelectBoxItem } from '../../../../../../components/select-box/select-box.component';
 import { debounceTime, distinctUntilChanged, map, skip, Subject, tap } from 'rxjs';
 import { VRChatService } from '../../../../../../services/vrchat-api/vrchat.service';
@@ -22,6 +22,7 @@ interface PresetOptions {
   templateUrl: './invite-requests-tab.component.html',
   styleUrls: ['./invite-requests-tab.component.scss'],
   animations: [vshrink(), noop()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class InviteRequestsTabComponent implements OnInit {

@@ -15,7 +15,9 @@
               [type]="'SMALL'"
               [items]="triggerOptions"
               [selected]="joinTriggerOption"
-              (selectedChange)="setJoinTriggerOption(asJoinNotificationsMode($event?.id))"
+              (selectedChange)="
+                setJoinTriggerOption(asJoinNotificationsMode($safeNavigationMigration($event?.id)))
+              "
             ></app-select-box>
           </div>
         </div>
@@ -52,7 +54,9 @@
               [type]="'SMALL'"
               [items]="triggerOptions"
               [selected]="leaveTriggerOption"
-              (selectedChange)="setLeaveTriggerOption(asJoinNotificationsMode($event?.id))"
+              (selectedChange)="
+                setLeaveTriggerOption(asJoinNotificationsMode($safeNavigationMigration($event?.id)))
+              "
             ></app-select-box>
           </div>
         </div>

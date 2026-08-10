@@ -42,7 +42,10 @@
         >{{ activeBinding?.localizedHand }} {{ activeBinding?.localizedInputSource }}
       </div>
       <div class="line2"
-        >{{ 'comp.controller-binding.slot.' + activeBinding?.slotName | translate }}
+        >{{
+          'comp.controller-binding.slot.' + $safeNavigationMigration(activeBinding?.slotName)
+            | translate
+        }}
       </div>
     </div>
   }

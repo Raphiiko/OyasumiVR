@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { vshrink } from '../../../../utils/animations';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
@@ -13,6 +13,7 @@ import { isEqual } from 'lodash';
   templateUrl: './run-automations-view.component.html',
   styleUrls: ['./run-automations-view.component.scss'],
   animations: [vshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class RunAutomationsViewComponent implements OnInit {

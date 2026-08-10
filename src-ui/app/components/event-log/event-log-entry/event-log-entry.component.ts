@@ -1,4 +1,11 @@
-import { Component, DestroyRef, Input, OnChanges, OnInit } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  Input,
+  OnChanges,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { EventLogEntryParser } from './event-log-entry-parser';
 import { EventLogSleepModeEnabledEntryParser } from './entry-parsers/sleep-mode-enabled';
 import { EventLogSleepModeDisabledEntryParser } from './entry-parsers/sleep-mode-disabled';
@@ -42,6 +49,7 @@ import { EventLogEntry } from '../../../models/event-log-entry';
   selector: 'app-event-log-entry',
   templateUrl: './event-log-entry.component.html',
   styleUrls: ['./event-log-entry.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class EventLogEntryComponent implements OnInit, OnChanges {

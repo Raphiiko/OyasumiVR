@@ -6,6 +6,7 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { getVersion } from '../../../../utils/app-utils';
 import { BackgroundService } from '../../../../services/background.service';
@@ -38,6 +39,7 @@ interface TranslationContributor {
   templateUrl: './about-view.component.html',
   styleUrls: ['./about-view.component.scss'],
   animations: [vshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {

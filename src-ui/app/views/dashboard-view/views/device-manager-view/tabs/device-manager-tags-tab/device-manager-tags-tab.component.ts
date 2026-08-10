@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { DeviceManagerService } from '../../../../../../services/device-manager.service';
 import { ModalService } from '../../../../../../services/modal.service';
 import {
@@ -20,6 +20,7 @@ import { fade, vshrink } from '../../../../../../utils/animations';
   templateUrl: './device-manager-tags-tab.component.html',
   styleUrls: ['./device-manager-tags-tab.component.scss'],
   animations: [fade(), vshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class DeviceManagerTagsTabComponent implements OnInit {

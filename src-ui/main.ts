@@ -1,4 +1,4 @@
-import { enableProdMode, isDevMode } from '@angular/core';
+import { enableProdMode, isDevMode, provideZoneChangeDetection } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
@@ -23,5 +23,5 @@ getVersion().then((version) => {
 disableDefaultContextMenu();
 
 platformBrowserDynamic()
-  .bootstrapModule(AppModule)
+  .bootstrapModule(AppModule, { applicationProviders: [provideZoneChangeDetection()] })
   .catch((err) => error(err));

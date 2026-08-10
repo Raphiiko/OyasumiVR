@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
@@ -19,6 +19,7 @@ import { VRChatService } from '../../../../services/vrchat-api/vrchat.service';
   templateUrl: './join-notifications-view.component.html',
   styleUrls: ['./join-notifications-view.component.scss'],
   animations: [hshrink(), vshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class JoinNotificationsViewComponent implements OnInit {

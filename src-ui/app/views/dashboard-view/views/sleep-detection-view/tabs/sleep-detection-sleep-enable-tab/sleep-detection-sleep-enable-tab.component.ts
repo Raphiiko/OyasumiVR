@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { SleepDetectionTabComponent } from '../sleep-detection-tab.component';
 import { TimeEnableSleepModeModalComponent } from '../../modals/time-enable-sleepmode-modal/time-enable-sleep-mode-modal.component';
 import { combineLatest, distinctUntilChanged, filter, map } from 'rxjs';
@@ -18,6 +18,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   selector: 'app-sleep-detection-sleep-enable-tab',
   templateUrl: './sleep-detection-sleep-enable-tab.component.html',
   styleUrls: ['./sleep-detection-sleep-enable-tab.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SleepDetectionSleepEnableTabComponent

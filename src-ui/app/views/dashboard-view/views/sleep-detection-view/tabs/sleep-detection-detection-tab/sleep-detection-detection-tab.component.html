@@ -70,7 +70,7 @@
           type="SMALL"
           [items]="sensitivityOptions"
           [selected]="sensitivityOption"
-          (selectedChange)="setSensitivityOption($event?.id)"
+          (selectedChange)="setSensitivityOption($safeNavigationMigration($event?.id))"
         ></app-select-box>
       </div>
     </div>

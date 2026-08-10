@@ -27,7 +27,7 @@
             <app-lighthouse-force-state-popover
               (action)="onForceLHState($event)"
               [style.position-anchor]="powerButtonAnchorId"
-              [type]="_lighthouseDevice?.deviceType"
+              [type]="$safeNavigationMigration(_lighthouseDevice?.deviceType)"
             >
             </app-lighthouse-force-state-popover>
           </div>

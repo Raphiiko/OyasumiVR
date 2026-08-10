@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { combineLatest, map, switchMap } from 'rxjs';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
@@ -10,6 +10,7 @@ import { fade, vshrink } from 'src-ui/app/utils/animations';
   templateUrl: './message-center-modal.component.html',
   styleUrls: ['./message-center-modal.component.scss'],
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
   animations: [fade(), vshrink()],
 })
 export class MessageCenterModalComponent extends BaseModalComponent<void, void> implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
   AudioDeviceAutomationsConfig,
   AudioVolumeAutomation,
@@ -13,6 +13,7 @@ import { map } from 'rxjs';
   selector: 'app-audio-volume-automations-view',
   templateUrl: './audio-volume-automations-view.component.html',
   styleUrls: ['./audio-volume-automations-view.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class AudioVolumeAutomationsViewComponent implements OnInit {

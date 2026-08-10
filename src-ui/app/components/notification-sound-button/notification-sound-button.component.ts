@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { ModalService } from '../../services/modal.service';
 import { NotificationSoundModalComponent } from '../notification-sound-modal/notification-sound-modal.component';
 import { SoundEffectConfig } from '../../models/automations';
@@ -9,6 +9,7 @@ import { NotificationService } from '../../services/notification.service';
   selector: 'app-notification-sound-button',
   templateUrl: './notification-sound-button.component.html',
   styleUrls: ['./notification-sound-button.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class NotificationSoundButtonComponent {

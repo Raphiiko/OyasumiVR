@@ -1,4 +1,12 @@
-import { Component, DestroyRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { DropdownItem } from '../dropdown-button/dropdown-button.component';
 import {
   OscParameterType,
@@ -31,6 +39,7 @@ interface ValidationError {
   templateUrl: './osc-script-simple-editor.component.html',
   styleUrls: ['./osc-script-simple-editor.component.scss'],
   animations: [vshrink(), noop(), hshrink(), fade()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class OscScriptSimpleEditorComponent implements OnInit {

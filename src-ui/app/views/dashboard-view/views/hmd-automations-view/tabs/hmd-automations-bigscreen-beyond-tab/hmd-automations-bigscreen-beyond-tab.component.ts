@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { AutomationConfigService } from '../../../../../../services/automation-config.service';
 import { AppSettingsService } from '../../../../../../services/app-settings.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -21,6 +21,7 @@ const AUTOMATION_ENABLE_KEYS = ['onSleepEnable', 'onSleepDisable', 'onSleepPrepa
   templateUrl: './hmd-automations-bigscreen-beyond-tab.component.html',
   styleUrls: ['./hmd-automations-bigscreen-beyond-tab.component.scss'],
   animations: [hshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class HmdAutomationsBigscreenBeyondTabComponent implements OnInit {

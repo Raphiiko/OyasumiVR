@@ -10,7 +10,12 @@ import { VarDirective } from './directives/var.directive';
 import { AboutViewComponent } from './views/dashboard-view/views/about-view/about-view.component';
 import { provideTranslateService, TranslateDirective, TranslatePipe } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import {
+  HttpClient,
+  provideHttpClient,
+  withInterceptorsFromDi,
+  withXhr,
+} from '@angular/common/http';
 import { OverviewViewComponent } from './views/dashboard-view/views/overview-view/overview-view.component';
 import { SleepModeEnableOnControllersPoweredOffAutomationService } from './services/sleep-detection-automations/sleep-mode-enable-on-controllers-powered-off-automation.service';
 import { SleepModeEnableAtBatteryPercentageAutomationService } from './services/sleep-detection-automations/sleep-mode-enable-at-battery-percentage-automation.service';
@@ -439,7 +444,7 @@ import { StoreSnapshotService } from './services/store-snapshot.service';
   providers: [
     ThemeService,
     TStringTranslatePipe,
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withXhr(), withInterceptorsFromDi()),
     provideTranslateService({
       fallbackLang: 'en',
       loader: provideTranslateHttpLoader({

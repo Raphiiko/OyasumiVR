@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { OscScript } from '../../models/osc-script';
 import { fadeUp } from '../../utils/animations';
@@ -17,6 +17,7 @@ interface OscScriptModalOutputModel {
   templateUrl: './osc-script-modal.component.html',
   styleUrls: ['./osc-script-modal.component.scss'],
   animations: [fadeUp()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class OscScriptModalComponent

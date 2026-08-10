@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   OscGeneralAutomationConfig,
@@ -13,6 +13,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   selector: 'app-osc-automations-view',
   templateUrl: './osc-automations-view.component.html',
   styleUrls: ['./osc-automations-view.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class OscAutomationsViewComponent implements OnInit {

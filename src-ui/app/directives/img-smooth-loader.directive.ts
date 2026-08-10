@@ -29,7 +29,7 @@ export class ImgSmoothLoaderDirective implements OnChanges {
     }
   }
 
-  @HostListener('load', ['$event'])
+  @HostListener('load')
   onLoad() {
     this.elementRef.nativeElement.style.transition = 'opacity 0.5s';
     this.elementRef.nativeElement.style.opacity = '1';

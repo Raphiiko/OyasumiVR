@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   SleepModeEnableForSleepDetectorAutomationConfig,
@@ -18,6 +18,7 @@ import { fade, vshrink } from '../../../../../../utils/animations';
   templateUrl: './sleep-detection-detection-tab.component.html',
   styleUrls: ['./sleep-detection-detection-tab.component.scss'],
   animations: [fade(), vshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SleepDetectionDetectionTabComponent

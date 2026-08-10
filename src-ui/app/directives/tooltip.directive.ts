@@ -46,7 +46,7 @@ export class TooltipDirective implements AfterViewInit, OnChanges, OnDestroy {
     }
   }
 
-  @HostListener('mouseenter', ['$event'])
+  @HostListener('mouseenter')
   onMouseEnter() {
     if (!this.initialized || this.tooltipElement) return;
     if (!this.text) return;
@@ -68,7 +68,7 @@ export class TooltipDirective implements AfterViewInit, OnChanges, OnDestroy {
     setTimeout(() => tooltipElement.classList.add('shown'), 10);
   }
 
-  @HostListener('mouseleave', ['$event'])
+  @HostListener('mouseleave')
   onMouseLeave() {
     if (!this.initialized || !this.tooltipElement) return;
     const tooltipElement = this.tooltipElement;

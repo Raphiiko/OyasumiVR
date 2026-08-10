@@ -5,7 +5,10 @@
   <div class="pane-content">
     <p
       translate="comp.update-modal.message"
-      [translateParams]="{ newVersion: update?.version, currentVersion: update?.currentVersion }"
+      [translateParams]="{
+        newVersion: $safeNavigationMigration(update?.version),
+        currentVersion: $safeNavigationMigration(update?.currentVersion),
+      }"
     ></p>
     @if (FLAVOUR === 'STANDALONE') {
       <div class="steam-ad">
@@ -30,7 +33,11 @@
         <div class="small-spinner" @hshrink></div>
       }
       @if (!installing) {
-        <span @hshrink translate [translateParams]="{ version: update?.version }">
+        <span
+          @hshrink
+          translate
+          [translateParams]="{ version: $safeNavigationMigration(update?.version) }"
+        >
           comp.update-modal.updateNow
         </span>
       }

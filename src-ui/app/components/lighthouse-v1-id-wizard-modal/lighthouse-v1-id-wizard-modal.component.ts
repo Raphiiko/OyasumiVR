@@ -1,4 +1,10 @@
-import { Component, DestroyRef, OnInit, TrackByFunction } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  OnInit,
+  TrackByFunction,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, vshrink } from 'src-ui/app/utils/animations';
 import { LighthouseDevice } from '../../models/lighthouse-device';
@@ -55,6 +61,7 @@ export interface LighthouseV1IdWizardModalOutputModel {}
       ]),
     ]),
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class LighthouseV1IdWizardModalComponent

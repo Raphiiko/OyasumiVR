@@ -1,4 +1,11 @@
-import { ChangeDetectorRef, Component, DestroyRef, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnDestroy,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { fadeUp } from '../../utils/animations';
 import { fromEvent, map, merge, Subject, takeUntil } from 'rxjs';
@@ -16,6 +23,7 @@ export interface HotkeySelectorOutputModel {
   templateUrl: './hotkey-selector-modal.component.html',
   styleUrls: ['./hotkey-selector-modal.component.scss'],
   animations: [fadeUp()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class HotkeySelectorModalComponent

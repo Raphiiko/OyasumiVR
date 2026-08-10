@@ -1,4 +1,12 @@
-import { Component, DestroyRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { DeviceSelection, DMDeviceType } from 'src-ui/app/models/device-manager';
 import { DeviceSelectorModalComponent } from '../device-selector-modal/device-selector-modal.component';
@@ -13,6 +21,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './device-selector.component.html',
   styleUrls: ['./device-selector.component.scss'],
   animations: [hshrink(), noop()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class DeviceSelectorComponent implements OnInit {

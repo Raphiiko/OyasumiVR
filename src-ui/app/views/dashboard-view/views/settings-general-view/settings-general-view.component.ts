@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { open as openFile } from '@tauri-apps/plugin-dialog';
 import {
@@ -29,6 +29,7 @@ import { OVRInputEventAction } from 'src-ui/app/models/ovr-input-event';
   templateUrl: './settings-general-view.component.html',
   styleUrls: ['./settings-general-view.component.scss'],
   animations: [vshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SettingsGeneralViewComponent implements OnInit {

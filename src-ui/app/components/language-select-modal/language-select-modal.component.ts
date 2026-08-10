@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { fadeUp } from '../../utils/animations';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { LANGUAGES } from 'src-ui/app/globals';
@@ -9,6 +9,7 @@ import { AppSettingsService } from '../../services/app-settings.service';
   templateUrl: './language-select-modal.component.html',
   styleUrls: ['./language-select-modal.component.scss'],
   animations: [fadeUp()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class LanguageSelectModalComponent extends BaseModalComponent<void, void> {

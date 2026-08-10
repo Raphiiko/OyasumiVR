@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { SleepService } from '../../services/sleep.service';
 import { VRChatService } from '../../services/vrchat-api/vrchat.service';
 import { UserStatus } from '../../models/vrchat';
@@ -30,6 +30,7 @@ import { isHolidaysEventActive } from 'src-ui/app/utils/event-utils';
   templateUrl: './main-status-bar.component.html',
   styleUrls: ['./main-status-bar.component.scss'],
   animations: [hshrink(), noop()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class MainStatusBarComponent implements OnInit {

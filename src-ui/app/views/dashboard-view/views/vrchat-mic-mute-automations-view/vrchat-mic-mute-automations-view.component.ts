@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
 import { VRChatMicMuteAutomationsConfig } from '../../../../models/automations';
@@ -13,6 +13,7 @@ import { hshrink } from 'src-ui/app/utils/animations';
   templateUrl: './vrchat-mic-mute-automations-view.component.html',
   styleUrls: ['./vrchat-mic-mute-automations-view.component.scss'],
   animations: [hshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class VRChatMicMuteAutomationsViewComponent implements OnInit {

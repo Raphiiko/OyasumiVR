@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { OpenVRService } from './services/openvr.service';
 import { routeAnimations } from './app-routing.module';
 import { TranslateService } from '@ngx-translate/core';
@@ -14,6 +14,7 @@ import { isHolidaysEventActive } from './utils/event-utils';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   animations: [routeAnimations, fade()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class AppComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { fadeUp } from 'src-ui/app/utils/animations';
 import { DeveloperDebugService } from '../../services/developer-debug/developer-debug.service';
@@ -8,6 +8,7 @@ import { DeveloperDebugService } from '../../services/developer-debug/developer-
   templateUrl: './developer-debug-modal.component.html',
   styleUrls: ['./developer-debug-modal.component.scss'],
   animations: [fadeUp()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class DeveloperDebugModalComponent

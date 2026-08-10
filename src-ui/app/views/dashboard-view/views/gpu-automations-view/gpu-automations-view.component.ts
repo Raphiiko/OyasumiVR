@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { NvmlService, NvmlStatus } from '../../../../services/nvml.service';
 import { asyncScheduler, combineLatest, firstValueFrom, map, Observable, throttleTime } from 'rxjs';
 import { GpuAutomationsService } from '../../../../services/gpu-automations.service';
@@ -18,6 +18,7 @@ export type GpuAutomationsTab = 'POWER_LIMITS' | 'MSI_AFTERBURNER';
   templateUrl: './gpu-automations-view.component.html',
   styleUrls: ['./gpu-automations-view.component.scss'],
   animations: [vshrink(), fade(), noop(), hshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class GpuAutomationsViewComponent implements OnInit {

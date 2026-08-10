@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../../../models/settings';
 import { AppSettingsService } from '../../../../services/app-settings.service';
 import { HardwareBrightnessControlService } from '../../../../services/brightness-control/hardware-brightness-control.service';
@@ -12,6 +12,7 @@ import { clamp } from '../../../../utils/number-utils';
   selector: 'app-settings-brightness-cct-view',
   templateUrl: './settings-brightness-cct-view.component.html',
   styleUrl: './settings-brightness-cct-view.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SettingsBrightnessCctViewComponent implements OnInit {

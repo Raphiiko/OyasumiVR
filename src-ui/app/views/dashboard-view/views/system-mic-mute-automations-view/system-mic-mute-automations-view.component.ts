@@ -1,4 +1,11 @@
-import { Component, DestroyRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -24,6 +31,7 @@ import { listen, UnlistenFn } from '@tauri-apps/api/event';
   templateUrl: './system-mic-mute-automations-view.component.html',
   styleUrls: ['./system-mic-mute-automations-view.component.scss'],
   animations: [vshrink(), fade()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SystemMicMuteAutomationsViewComponent implements OnInit, OnDestroy {

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import {
@@ -25,6 +25,7 @@ import {
   templateUrl: './frame-limiter-view.component.html',
   styleUrls: ['./frame-limiter-view.component.scss'],
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
   animations: [vshrink(), fade()],
 })
 export class FrameLimiterViewComponent implements OnInit {

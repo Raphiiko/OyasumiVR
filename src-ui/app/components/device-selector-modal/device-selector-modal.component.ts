@@ -1,4 +1,4 @@
-import { Component, OnInit, DestroyRef } from '@angular/core';
+import { Component, OnInit, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fadeUp } from 'src-ui/app/utils/animations';
 import {
@@ -38,6 +38,7 @@ interface DeviceGroup {
   templateUrl: './device-selector-modal.component.html',
   styleUrls: ['./device-selector-modal.component.scss'],
   animations: [fadeUp()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class DeviceSelectorModalComponent

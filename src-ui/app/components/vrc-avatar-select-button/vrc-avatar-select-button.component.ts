@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import {
   VrcAvatarSelectModalComponent,
@@ -13,6 +13,7 @@ import { PersistedAvatar } from '../../models/vrchat';
   templateUrl: './vrc-avatar-select-button.component.html',
   styleUrls: ['./vrc-avatar-select-button.component.scss'],
   animations: [noop(), hshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class VrcAvatarSelectButtonComponent {

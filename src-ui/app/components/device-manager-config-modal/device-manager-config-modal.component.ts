@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { fadeUp } from '../../utils/animations';
 import { DMKnownDevice, DMDeviceTag } from '../../models/device-manager';
@@ -26,6 +26,7 @@ export interface DeviceManagerConfigModalOutputModel {
   templateUrl: './device-manager-config-modal.component.html',
   styleUrls: ['./device-manager-config-modal.component.scss'],
   animations: [fadeUp()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class DeviceManagerConfigModalComponent

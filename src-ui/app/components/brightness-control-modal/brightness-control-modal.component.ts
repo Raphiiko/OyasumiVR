@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { fadeUp, hshrink, vshrink } from '../../utils/animations';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { ModalOptions } from '../../services/modal.service';
@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
   templateUrl: './brightness-control-modal.component.html',
   styleUrls: ['./brightness-control-modal.component.scss'],
   animations: [fadeUp(), vshrink(), hshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class BrightnessControlModalComponent

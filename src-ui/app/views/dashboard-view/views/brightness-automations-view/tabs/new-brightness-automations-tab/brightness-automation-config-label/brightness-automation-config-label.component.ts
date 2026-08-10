@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { BrightnessEventAutomationConfig } from '../../../../../../../models/automations';
 import { getCSSColorForCCT } from 'src-shared-ts/src/cct-utils';
 import { hshrink, vshrink } from '../../../../../../../utils/animations';
@@ -8,6 +8,7 @@ import { hshrink, vshrink } from '../../../../../../../utils/animations';
   templateUrl: './brightness-automation-config-label.component.html',
   styleUrls: ['./brightness-automation-config-label.component.scss'],
   animations: [vshrink(), hshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class BrightnessAutomationConfigLabelComponent {

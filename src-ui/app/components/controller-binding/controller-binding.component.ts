@@ -1,4 +1,4 @@
-import { Component, DestroyRef, Input, OnInit } from '@angular/core';
+import { Component, DestroyRef, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { OVRInputEventAction, OVRInputEventActionSet } from '../../models/ovr-input-event';
 import { OpenVRInputService } from 'src-ui/app/services/openvr-input.service';
 import { filter, firstValueFrom, interval, pairwise, startWith, switchMap, tap } from 'rxjs';
@@ -12,6 +12,7 @@ import { fadeDown } from '../../utils/animations';
   templateUrl: './controller-binding.component.html',
   styleUrls: ['./controller-binding.component.scss'],
   animations: [fadeDown()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ControllerBindingComponent implements OnInit {

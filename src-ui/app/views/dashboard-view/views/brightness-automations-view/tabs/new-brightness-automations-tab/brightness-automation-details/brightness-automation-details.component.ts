@@ -7,6 +7,7 @@ import {
   OnInit,
   output,
   Signal,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { fade, fadeRight, vshrink } from '../../../../../../../utils/animations';
 import {
@@ -36,6 +37,7 @@ type BrightnessType = 'SIMPLE' | 'SOFTWARE' | 'HARDWARE';
   templateUrl: './brightness-automation-details.component.html',
   styleUrls: ['./brightness-automation-details.component.scss'],
   animations: [fade(), fadeRight(), vshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class BrightnessAutomationDetailsComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { GPUDevice, GPUPowerLimit } from '../../../../../models/gpu-device';
 import { NvmlService } from '../../../../../services/nvml.service';
 import { GpuAutomationsService } from '../../../../../services/gpu-automations.service';
@@ -12,6 +12,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './gpu-powerlimiting-pane.component.html',
   styleUrls: ['./gpu-powerlimiting-pane.component.scss'],
   animations: [vshrink(), noop()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class GpuPowerlimitingPaneComponent implements OnInit {

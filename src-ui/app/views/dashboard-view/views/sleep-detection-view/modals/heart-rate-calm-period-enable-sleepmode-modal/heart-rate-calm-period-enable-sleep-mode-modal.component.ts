@@ -1,4 +1,10 @@
-import { Component, HostBinding, HostListener, OnInit } from '@angular/core';
+import {
+  Component,
+  HostBinding,
+  HostListener,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../../utils/animations';
 import { Router } from '@angular/router';
@@ -18,6 +24,7 @@ export interface HeartRateCalmPeriodEnableSleepModeModalOutputModel {
   templateUrl: './heart-rate-calm-period-enable-sleep-mode-modal.component.html',
   styleUrls: ['./heart-rate-calm-period-enable-sleep-mode-modal.component.scss'],
   animations: [fadeUp(), fade(), triggerChildren(), vshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class HeartRateCalmPeriodEnableSleepModeModalComponent

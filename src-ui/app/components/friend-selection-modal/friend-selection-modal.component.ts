@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, hshrink, noop, vshrink } from '../../utils/animations';
 import type { LimitedUserFriend } from 'vrchat';
@@ -51,6 +51,7 @@ const STATUS_SORT_ORDER: Record<UserStatus, number> = {
   templateUrl: './friend-selection-modal.component.html',
   styleUrls: ['./friend-selection-modal.component.scss'],
   animations: [fadeUp(), vshrink(), hshrink(), fade(), noop()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class FriendSelectionModalComponent

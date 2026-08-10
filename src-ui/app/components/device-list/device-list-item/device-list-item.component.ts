@@ -1,4 +1,4 @@
-import { Component, DestroyRef, Input, OnInit } from '@angular/core';
+import { Component, DestroyRef, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { OVRDevice } from 'src-ui/app/models/ovr-device';
 import { fade, hshrink, vshrink } from 'src-ui/app/utils/animations';
 import { LighthouseConsoleService } from '../../../services/lighthouse-console.service';
@@ -37,6 +37,7 @@ import { DeviceManagerService } from 'src-ui/app/services/device-manager.service
   templateUrl: './device-list-item.component.html',
   styleUrls: ['./device-list-item.component.scss'],
   animations: [fade(), vshrink(), hshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class DeviceListItemComponent implements OnInit {

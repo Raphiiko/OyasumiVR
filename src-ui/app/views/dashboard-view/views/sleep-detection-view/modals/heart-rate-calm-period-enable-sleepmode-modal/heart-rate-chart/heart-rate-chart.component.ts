@@ -1,4 +1,11 @@
-import { AfterViewInit, Component, DestroyRef, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  DestroyRef,
+  OnDestroy,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   HeartbeatRecord,
   PulsoidService,
@@ -12,6 +19,7 @@ import 'chartjs-adapter-moment';
   selector: 'app-heart-rate-chart',
   templateUrl: './heart-rate-chart.component.html',
   styleUrls: ['./heart-rate-chart.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class HeartRateChartComponent implements OnInit, AfterViewInit, OnDestroy {

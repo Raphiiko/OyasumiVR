@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, DestroyRef, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { flatten, groupBy, uniq } from 'lodash';
 import { fade, hshrink, triggerChildren, vshrink } from 'src-ui/app/utils/animations';
 import { OVRDevice, OVRDeviceClass } from 'src-ui/app/models/ovr-device';
@@ -49,6 +55,7 @@ interface LighthouseDisplayCategory extends BaseDisplayCategory {
   templateUrl: './device-list.component.html',
   styleUrls: ['./device-list.component.scss'],
   animations: [vshrink(), triggerChildren(), fade(), hshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class DeviceListComponent implements OnInit {

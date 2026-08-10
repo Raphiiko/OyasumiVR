@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { noop } from '../../../../utils/animations';
 import { firstValueFrom } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -10,6 +10,7 @@ type PowerAutomationsTab = 'DEVICES' | 'WINDOWS_POWER_POLICY';
   templateUrl: './power-automations-view.component.html',
   styleUrls: ['./power-automations-view.component.scss'],
   animations: [noop()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class PowerAutomationsViewComponent implements OnInit {

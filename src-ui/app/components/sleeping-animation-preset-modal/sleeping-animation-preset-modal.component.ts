@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { SleepingAnimationPreset } from '../../models/sleeping-animation-presets';
 import { open } from '@tauri-apps/plugin-shell';
@@ -13,6 +13,7 @@ interface SleepingAnimationPresetModalInputModel {
   templateUrl: './sleeping-animation-preset-modal.component.html',
   styleUrls: ['./sleeping-animation-preset-modal.component.scss'],
   animations: [fadeUp()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SleepingAnimationPresetModalComponent

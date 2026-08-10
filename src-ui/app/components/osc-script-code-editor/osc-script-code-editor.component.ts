@@ -8,6 +8,7 @@ import {
   OnInit,
   Output,
   ViewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { BehaviorSubject, debounceTime, map, Observable, tap } from 'rxjs';
 import { OscParameterType, OscScript, OscScriptCodeValidationError } from '../../models/osc-script';
@@ -22,6 +23,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './osc-script-code-editor.component.html',
   styleUrls: ['./osc-script-code-editor.component.scss'],
   animations: [fade(), hshrink(), noop()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class OscScriptCodeEditorComponent implements OnInit, AfterViewInit {

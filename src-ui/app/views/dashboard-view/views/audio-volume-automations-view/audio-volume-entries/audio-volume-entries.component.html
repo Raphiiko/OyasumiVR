@@ -64,7 +64,7 @@
               [items]="actionOptions"
               [type]="'SMALL'"
               [selected]="getActionOptionForType(automation.type)"
-              (selectedChange)="setAutomationType(automation, $event?.id)"
+              (selectedChange)="setAutomationType(automation, $safeNavigationMigration($event?.id))"
             ></app-select-box>
             <button
               class="btn btn-secondary btn-remove-device"

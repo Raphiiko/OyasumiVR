@@ -15,14 +15,21 @@
   >
     <i class="material-symbols-outlined icon-filled">music_note</i>
     <span>{{ soundConfig?.sound?.name || (label | translate) }}</span>
-    @if (soundConfig?.volume !== undefined && soundConfig?.volume !== null) {
+    @if (
+      $safeNavigationMigration(soundConfig?.volume) !== undefined &&
+      $safeNavigationMigration(soundConfig?.volume) !== null
+    ) {
       <span class="volume-badge">{{ soundConfig?.volume }}%</span>
     }
   </button>
 
   @if (toggleable) {
     <label class="switch-toggle">
-      <input type="checkbox" [checked]="soundConfig?.enabled" (change)="toggleSound()" />
+      <input
+        type="checkbox"
+        [checked]="$safeNavigationMigration(soundConfig?.enabled)"
+        (change)="toggleSound()"
+      />
       <span class="switch-toggle-slider"></span>
     </label>
   }

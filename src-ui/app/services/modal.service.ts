@@ -1,13 +1,13 @@
 import {
   ApplicationRef,
-  ComponentFactoryResolver,
   ComponentRef,
+  createComponent,
   EmbeddedViewRef,
+  EnvironmentInjector,
   Injectable,
-  Injector,
   Type,
 } from '@angular/core';
-import { BaseModalComponent } from '../components/base-modal/base-modal.component';
+import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { delay, filter, fromEvent, map, Observable, of, switchMap, take, tap } from 'rxjs';
 
 export interface ModalOptions {
@@ -37,9 +37,8 @@ export class ModalService {
   private modalStack: ModalRef[] = [];
 
   constructor(
-    private componentFactoryResolver: ComponentFactoryResolver,
     private appRef: ApplicationRef,
-    private injector: Injector
+    private injector: EnvironmentInjector
   ) {
     fromEvent<KeyboardEvent>(document, 'keyup')
       .pipe(filter((event) => event.key === 'Escape'))
@@ -74,9 +73,9 @@ export class ModalService {
       delay(1),
       map(() => {
         // Create component
-        const componentRef = this.componentFactoryResolver
-          .resolveComponentFactory(modalComponent)
-          .create(this.injector);
+        const componentRef = createComponent(modalComponent, {
+          environmentInjector: this.injector,
+        });
         this.appRef.attachView(componentRef.hostView);
         const element = (componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement;
         document.body.appendChild(element);

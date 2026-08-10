@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { TString } from '../../models/translatable-string';
 import { fadeDown } from '../../utils/animations';
 
@@ -14,6 +21,7 @@ export interface DropdownItem {
   templateUrl: './dropdown-button.component.html',
   styleUrls: ['./dropdown-button.component.scss'],
   animations: [fadeDown()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class DropdownButtonComponent implements OnInit {

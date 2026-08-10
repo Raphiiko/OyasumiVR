@@ -29,7 +29,11 @@
               [type]="'SMALL'"
               [items]="notificationOptions"
               [selected]="joinNotificationOption"
-              (selectedChange)="setJoinNotificationModeOption(asJoinNotificationsMode($event?.id))"
+              (selectedChange)="
+                setJoinNotificationModeOption(
+                  asJoinNotificationsMode($safeNavigationMigration($event?.id))
+                )
+              "
             ></app-select-box>
           </div>
         </div>
@@ -44,7 +48,11 @@
               [type]="'SMALL'"
               [items]="notificationOptions"
               [selected]="joinSoundOption"
-              (selectedChange)="setJoinSoundModeOption(asJoinNotificationsMode($event?.id))"
+              (selectedChange)="
+                setJoinSoundModeOption(
+                  asJoinNotificationsMode($safeNavigationMigration($event?.id))
+                )
+              "
             ></app-select-box>
           </div>
         </div>
@@ -94,7 +102,11 @@
               [type]="'SMALL'"
               [items]="notificationOptions"
               [selected]="leaveNotificationOption"
-              (selectedChange)="setLeaveNotificationModeOption(asJoinNotificationsMode($event?.id))"
+              (selectedChange)="
+                setLeaveNotificationModeOption(
+                  asJoinNotificationsMode($safeNavigationMigration($event?.id))
+                )
+              "
             ></app-select-box>
           </div>
         </div>
@@ -109,7 +121,11 @@
               [type]="'SMALL'"
               [items]="notificationOptions"
               [selected]="leaveSoundOption"
-              (selectedChange)="setLeaveSoundModeOption(asJoinNotificationsMode($event?.id))"
+              (selectedChange)="
+                setLeaveSoundModeOption(
+                  asJoinNotificationsMode($safeNavigationMigration($event?.id))
+                )
+              "
             ></app-select-box>
           </div>
         </div>

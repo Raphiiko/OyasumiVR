@@ -1,4 +1,10 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { EventLogService } from '../../services/event-log.service';
 import { BehaviorSubject, combineLatest, map, Observable, tap } from 'rxjs';
 import { EventLogEntry, EventLogType } from '../../models/event-log-entry';
@@ -22,6 +28,7 @@ import { AppSettingsService } from '../../services/app-settings.service';
   templateUrl: './event-log.component.html',
   styleUrls: ['./event-log.component.scss'],
   animations: [vshrink(), noop(), fade(), hshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class EventLogComponent implements OnInit, AfterViewInit {

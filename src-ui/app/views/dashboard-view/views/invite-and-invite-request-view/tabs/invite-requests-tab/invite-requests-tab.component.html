@@ -70,7 +70,7 @@
         <app-select-box
           [items]="listModeOptions"
           [selected]="listModeOption"
-          (selectedChange)="setListMode($event?.id)"
+          (selectedChange)="setListMode($safeNavigationMigration($event?.id))"
         ></app-select-box>
       </div>
     </div>
@@ -138,7 +138,7 @@
           [type]="'SMALL'"
           [items]="declineOnRequestOptions"
           [selected]="declineOnRequestOption"
-          (selectedChange)="setDeclineOnRequestOption($event?.id)"
+          (selectedChange)="setDeclineOnRequestOption($safeNavigationMigration($event?.id))"
         ></app-select-box>
       </div>
     </div>

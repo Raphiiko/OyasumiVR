@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, map, Subject } from 'rxjs';
 import {
@@ -13,6 +13,7 @@ import { vshrink } from 'src-ui/app/utils/animations';
   templateUrl: './invites-tab.component.html',
   styleUrls: ['./invites-tab.component.scss'],
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
   animations: [vshrink()],
 })
 export class InvitesTabComponent implements OnInit {
