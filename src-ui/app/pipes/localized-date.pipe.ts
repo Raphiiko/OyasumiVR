@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
-import { Pipe, PipeTransform } from '@angular/core';
+import { ChangeDetectorRef, OnDestroy, Pipe, PipeTransform } from '@angular/core';
 import { TranslocoService } from '@jsverse/transloco';
+import { Subscription } from 'rxjs';
 import { NG_LOCALE_MAP } from '../globals';
 
 @Pipe({
@@ -8,8 +9,23 @@ import { NG_LOCALE_MAP } from '../globals';
   pure: false,
   standalone: false,
 })
-export class LocalizedDatePipe implements PipeTransform {
-  constructor(private translateService: TranslocoService) {}
+export class LocalizedDatePipe implements PipeTransform, OnDestroy {
+  private subscription: Subscription;
+
+  constructor(
+    private translateService: TranslocoService,
+    private cdr: ChangeDetectorRef
+  ) {
+    // markForCheck is what keeps an OnPush view in sync: the pipe is impure,
+    // so it only re-runs while its view is being checked.
+    this.subscription = this.translateService.langChanges$.subscribe(() =>
+      this.cdr.markForCheck()
+    );
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 
   transform(value: any, pattern = 'mediumDate'): any {
     let currentLang = this.translateService.getActiveLang()!;
