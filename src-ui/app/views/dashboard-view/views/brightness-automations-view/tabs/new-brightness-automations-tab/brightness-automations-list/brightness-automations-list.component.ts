@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   DestroyRef,
   EventEmitter,
@@ -27,7 +28,7 @@ import { uniq } from 'lodash';
   templateUrl: './brightness-automations-list.component.html',
   styleUrls: ['./brightness-automations-list.component.scss'],
   animations: [fade()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class BrightnessAutomationsListComponent implements OnInit {
@@ -51,7 +52,8 @@ export class BrightnessAutomationsListComponent implements OnInit {
     private brightnessCctAutomations: BrightnessCctAutomationService,
     private destroyRef: DestroyRef,
     private appSettingsService: AppSettingsService,
-    private sleepService: SleepService
+    private sleepService: SleepService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -59,6 +61,7 @@ export class BrightnessAutomationsListComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((settings) => {
         this.cctControlEnabled = settings.cctControlEnabled;
+        this.cdr.markForCheck();
       });
     this.events.forEach((event) => {
       combineLatest([
@@ -67,7 +70,10 @@ export class BrightnessAutomationsListComponent implements OnInit {
       ])
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(([brightnessActive, cctActive]) => {
+          // events is an @Input, mutated in place, so the parent's view is only
+          // rechecked because markForCheck also dirties every ancestor.
           event.inProgress = brightnessActive || cctActive;
+          this.cdr.markForCheck();
         });
     });
 
@@ -81,6 +87,7 @@ export class BrightnessAutomationsListComponent implements OnInit {
         this.config = config;
         // Request refresh of HMD connect indicators when configurations change
         this.updateHmdConnectIndicators();
+        this.cdr.markForCheck();
       });
 
     // Update HMD connect automation indicators based on sleep mode changes and timer
@@ -129,6 +136,8 @@ export class BrightnessAutomationsListComponent implements OnInit {
               }
             }
           );
+
+          this.cdr.markForCheck();
         }
       );
   }

@@ -15,7 +15,7 @@ export interface BrightnessEventViewModel {
   templateUrl: './brightness-automations-tab.component.html',
   styleUrls: ['./brightness-automations-tab.component.scss'],
   animations: [triggerChildren()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class BrightnessAutomationsTabComponent implements OnInit {
