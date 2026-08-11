@@ -20,7 +20,7 @@ export interface ConfirmModalOutputModel {
   templateUrl: './confirm-modal.component.html',
   styleUrls: ['./confirm-modal.component.scss'],
   animations: [fadeUp()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class ConfirmModalComponent

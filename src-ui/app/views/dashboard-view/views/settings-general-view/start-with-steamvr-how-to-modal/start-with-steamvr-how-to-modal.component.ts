@@ -7,7 +7,7 @@ import { fadeUp } from 'src-ui/app/utils/animations';
   templateUrl: './start-with-steamvr-how-to-modal.component.html',
   styleUrls: ['./start-with-steamvr-how-to-modal.component.scss'],
   animations: [fadeUp()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class StartWithSteamVRHowToModalComponent

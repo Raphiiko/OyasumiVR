@@ -17,7 +17,7 @@ export interface DurationDisableSleepModeModalOutputModel {
   templateUrl: './duration-disable-sleep-mode-modal.component.html',
   styleUrls: ['./duration-disable-mode-modal.component.scss'],
   animations: [fadeUp(), fade(), triggerChildren(), vshrink()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DurationDisableSleepModeModalComponent

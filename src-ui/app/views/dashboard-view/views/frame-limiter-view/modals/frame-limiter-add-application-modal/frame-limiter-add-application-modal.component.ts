@@ -19,7 +19,7 @@ export interface FrameLimiterAddApplicationModalOutputModel {
   templateUrl: './frame-limiter-add-application-modal.component.html',
   styleUrls: ['./frame-limiter-add-application-modal.component.scss'],
   animations: [fadeUp(), fade(), triggerChildren()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class FrameLimiterAddApplicationModalComponent

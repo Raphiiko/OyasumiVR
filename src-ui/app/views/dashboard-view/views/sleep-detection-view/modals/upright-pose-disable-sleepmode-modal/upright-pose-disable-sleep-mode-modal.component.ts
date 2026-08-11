@@ -16,7 +16,7 @@ export interface UprightPoseDisableSleepModeModalOutputModel {
   templateUrl: './upright-pose-disable-sleep-mode-modal.component.html',
   styleUrls: ['./upright-pose-disable-sleep-mode-modal.component.scss'],
   animations: [vshrink(), fadeUp(), fade(), triggerChildren()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class UprightPoseDisableSleepModeModalComponent

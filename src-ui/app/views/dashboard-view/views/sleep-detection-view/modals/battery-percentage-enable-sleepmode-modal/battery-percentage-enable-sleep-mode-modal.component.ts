@@ -20,7 +20,7 @@ export interface BatteryPercentageEnableSleepModeModalOutputModel {
   templateUrl: './battery-percentage-enable-sleep-mode-modal.component.html',
   styleUrls: ['./battery-percentage-enable-sleep-mode-modal.component.scss'],
   animations: [vshrink(), fadeUp(), fade(), triggerChildren()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class BatteryPercentageEnableSleepModeModalComponent

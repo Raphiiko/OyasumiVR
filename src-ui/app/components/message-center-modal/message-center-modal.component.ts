@@ -10,7 +10,7 @@ import { fade, vshrink } from 'src-ui/app/utils/animations';
   templateUrl: './message-center-modal.component.html',
   styleUrls: ['./message-center-modal.component.scss'],
   standalone: false,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [fade(), vshrink()],
 })
 export class MessageCenterModalComponent extends BaseModalComponent<void, void> implements OnInit {

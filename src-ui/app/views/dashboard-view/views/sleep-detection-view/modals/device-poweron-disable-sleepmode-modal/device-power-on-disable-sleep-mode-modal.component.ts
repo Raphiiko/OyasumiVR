@@ -16,7 +16,7 @@ export interface DevicePowerOnDisableSleepModeModalOutputModel {
   templateUrl: './device-power-on-disable-sleep-mode-modal.component.html',
   styleUrls: ['./device-power-on-disable-sleep-mode-modal.component.scss'],
   animations: [fadeUp(), fade(), triggerChildren()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DevicePowerOnDisableSleepModeModalComponent

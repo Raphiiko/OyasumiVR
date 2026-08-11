@@ -86,9 +86,12 @@ export class ModalService {
         this.modalStack.push(modalRef);
         // Set modal wrapper classes
         element.classList.add(options.wrapperDefaultClass);
-        // Set inputs
+        // Set inputs. These are plain properties rather than declared inputs, so
+        // assigning them bypasses Angular's input machinery and the view has to
+        // be marked by hand for OnPush modals to render them.
         const instance: any = componentRef.instance;
         Object.assign(instance, input ?? {});
+        componentRef.changeDetectorRef.markForCheck();
         return { element, componentRef, modalRef };
       }),
       // Apply wrapper class after a tick
