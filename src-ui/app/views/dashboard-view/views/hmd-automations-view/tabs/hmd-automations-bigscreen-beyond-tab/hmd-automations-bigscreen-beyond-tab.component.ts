@@ -1,4 +1,10 @@
-import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { AutomationConfigService } from '../../../../../../services/automation-config.service';
 import { AppSettingsService } from '../../../../../../services/app-settings.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -21,7 +27,7 @@ const AUTOMATION_ENABLE_KEYS = ['onSleepEnable', 'onSleepDisable', 'onSleepPrepa
   templateUrl: './hmd-automations-bigscreen-beyond-tab.component.html',
   styleUrls: ['./hmd-automations-bigscreen-beyond-tab.component.scss'],
   animations: [hshrink()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class HmdAutomationsBigscreenBeyondTabComponent implements OnInit {
@@ -43,7 +49,8 @@ export class HmdAutomationsBigscreenBeyondTabComponent implements OnInit {
     private automationConfigService: AutomationConfigService,
     private appSettingsService: AppSettingsService,
     private destroyRef: DestroyRef,
-    private hardwareBrightness: HardwareBrightnessControlService
+    private hardwareBrightness: HardwareBrightnessControlService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -52,11 +59,13 @@ export class HmdAutomationsBigscreenBeyondTabComponent implements OnInit {
       .subscribe((configs) => {
         this.rgbControlConfig = configs.BIGSCREEN_BEYOND_RGB_CONTROL;
         this.fanControlConfig = configs.BIGSCREEN_BEYOND_FAN_CONTROL;
+        this.cdr.markForCheck();
       });
     this.appSettingsService.settings
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((settings) => {
         this.appSettings = settings;
+        this.cdr.markForCheck();
       });
   }
 

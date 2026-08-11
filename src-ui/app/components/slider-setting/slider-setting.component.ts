@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   DestroyRef,
   ElementRef,
@@ -21,7 +22,7 @@ import { SliderComponent, SliderStyle } from '../slider/slider.component';
   templateUrl: './slider-setting.component.html',
   styleUrls: ['./slider-setting.component.scss'],
   animations: [fade()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class SliderSettingComponent implements OnInit, OnChanges {
@@ -56,7 +57,10 @@ export class SliderSettingComponent implements OnInit, OnChanges {
   @ViewChild('inputValue') inputEl?: ElementRef;
   @ViewChild('slider') sliderEl?: SliderComponent;
 
-  constructor(private destroyRef: DestroyRef) {}
+  constructor(
+    private destroyRef: DestroyRef,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.input$
@@ -68,6 +72,7 @@ export class SliderSettingComponent implements OnInit, OnChanges {
         if (value === this.value) return;
         this.value = value;
         this.valueChange.emit(value);
+        this.cdr.markForCheck();
       });
   }
 

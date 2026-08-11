@@ -1,4 +1,10 @@
-import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   ShutdownAutomationsConfig,
@@ -13,7 +19,7 @@ import { fade, vshrink } from '../../../../../../utils/animations';
   templateUrl: './shutdown-automations-triggers-tab.component.html',
   styleUrls: ['./shutdown-automations-triggers-tab.component.scss'],
   animations: [fade(), vshrink()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class ShutdownAutomationsTriggersTabComponent implements OnInit {
@@ -27,7 +33,8 @@ export class ShutdownAutomationsTriggersTabComponent implements OnInit {
 
   constructor(
     private automationConfigs: AutomationConfigService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -47,6 +54,7 @@ export class ShutdownAutomationsTriggersTabComponent implements OnInit {
         this.whenAloneActivationWindowEnd = this.config.triggerWhenAloneActivationWindowEnd
           .map((v) => v.toString().padStart(2, '0'))
           .join(':');
+        this.cdr.markForCheck();
       });
   }
 

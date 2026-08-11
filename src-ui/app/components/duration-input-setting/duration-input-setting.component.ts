@@ -1,7 +1,9 @@
 import {
+  ChangeDetectorRef,
   Component,
   computed,
   ElementRef,
+  inject,
   Input,
   model,
   ViewChild,
@@ -15,7 +17,7 @@ import { fade } from '../../utils/animations';
   templateUrl: './duration-input-setting.component.html',
   styleUrl: './duration-input-setting.component.scss',
   animations: [fade()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DurationInputSettingComponent {
@@ -34,6 +36,7 @@ export class DurationInputSettingComponent {
   @ViewChild('secondInput') secondInput?: ElementRef;
   inputOpen = false;
   @Input() disabled = false;
+  private cdr = inject(ChangeDetectorRef);
 
   openInput() {
     if (this.disabled) {
@@ -98,7 +101,10 @@ export class DurationInputSettingComponent {
   protected mouseLeave(input: 'INPUT' | 'CONTAINER') {
     this.mouseInside[input] = false;
     setTimeout(() => {
-      if (Object.values(this.mouseInside).every((v) => !v)) this.inputOpen = false;
+      if (Object.values(this.mouseInside).every((v) => !v)) {
+        this.inputOpen = false;
+        this.cdr.markForCheck();
+      }
     }, 200);
   }
 

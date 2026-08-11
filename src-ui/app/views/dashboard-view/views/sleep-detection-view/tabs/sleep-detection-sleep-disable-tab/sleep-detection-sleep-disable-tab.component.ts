@@ -18,7 +18,7 @@ import { PlayerJoinLeaveDisableSleepModeModalComponent } from '../../modals/play
   selector: 'app-sleep-detection-sleep-disable-tab',
   templateUrl: './sleep-detection-sleep-disable-tab.component.html',
   styleUrls: ['./sleep-detection-sleep-disable-tab.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class SleepDetectionSleepDisableTabComponent

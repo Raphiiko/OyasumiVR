@@ -5,7 +5,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   templateUrl: './sleep-detection-view.component.html',
   styleUrls: ['./sleep-detection-view.component.scss'],
   animations: [],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class SleepDetectionViewComponent {

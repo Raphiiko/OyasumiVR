@@ -6,14 +6,21 @@ import {
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AutomationConfigService } from '../../../../../services/automation-config.service';
-import { Component, DestroyRef, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ModalService } from '../../../../../services/modal.service';
 import { TranslocoService } from '@jsverse/transloco';
 import { OVRDeviceClass } from '../../../../../models/ovr-device';
 
 @Component({
   template: '',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export abstract class SleepDetectionTabComponent implements OnInit {
@@ -22,11 +29,20 @@ export abstract class SleepDetectionTabComponent implements OnInit {
   protected destroyRef = inject(DestroyRef);
   protected modalService = inject(ModalService);
   protected translate = inject(TranslocoService);
+  protected cdr = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
     this.automationConfigService.configs
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((configs) => (this.automationConfigs = configs));
+      .subscribe((configs) => {
+        this.automationConfigs = configs;
+        this.cdr.markForCheck();
+      });
+    // getStringForDuration and deviceClassesToString translate on read, so the
+    // view has to be rechecked when the active language changes.
+    this.translate.langChanges$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.cdr.markForCheck());
   }
 
   async toggleAutomation(automation: AutomationType, field = 'enabled') {

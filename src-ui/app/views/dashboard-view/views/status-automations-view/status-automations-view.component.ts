@@ -6,7 +6,7 @@ import { noop } from '../../../../utils/animations';
   templateUrl: './status-automations-view.component.html',
   styleUrls: ['./status-automations-view.component.scss'],
   animations: [noop()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class StatusAutomationsViewComponent {

@@ -4,7 +4,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   selector: 'app-shutdown-automations-view',
   templateUrl: './shutdown-automations-view.component.html',
   styleUrls: ['./shutdown-automations-view.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class ShutdownAutomationsViewComponent implements OnInit {

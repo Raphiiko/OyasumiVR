@@ -4,7 +4,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   selector: 'app-hmd-automations-view',
   templateUrl: './hmd-automations-view.component.html',
   styleUrls: ['./hmd-automations-view.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class HmdAutomationsViewComponent {

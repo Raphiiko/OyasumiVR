@@ -18,7 +18,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   selector: 'app-sleep-detection-sleep-enable-tab',
   templateUrl: './sleep-detection-sleep-enable-tab.component.html',
   styleUrls: ['./sleep-detection-sleep-enable-tab.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class SleepDetectionSleepEnableTabComponent
@@ -50,6 +50,7 @@ export class SleepDetectionSleepEnableTabComponent
         this.batteryLevelAutomationEnabledForController = applicableDevices.knownDevices.some(
           (d) => d.deviceType === 'CONTROLLER'
         );
+        this.cdr.markForCheck();
       });
   }
 

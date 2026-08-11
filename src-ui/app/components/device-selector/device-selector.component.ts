@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   DestroyRef,
   EventEmitter,
@@ -21,7 +22,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './device-selector.component.html',
   styleUrls: ['./device-selector.component.scss'],
   animations: [hshrink(), noop()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DeviceSelectorComponent implements OnInit {
@@ -46,7 +47,8 @@ export class DeviceSelectorComponent implements OnInit {
     private modalService: ModalService,
     private deviceManagerService: DeviceManagerService,
     private translateService: TranslocoService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -55,6 +57,11 @@ export class DeviceSelectorComponent implements OnInit {
       .subscribe(() => {
         this.updateDeviceCount();
       });
+    // buttonText is translated on read, so the view has to be rechecked when the
+    // active language changes.
+    this.translateService.langChanges$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.cdr.markForCheck());
   }
 
   get hasSelection(): boolean {
@@ -112,6 +119,7 @@ export class DeviceSelectorComponent implements OnInit {
   private async updateDeviceCount() {
     if (!this.selection) {
       this.deviceCount = 0;
+      this.cdr.markForCheck();
       return;
     }
 
@@ -122,5 +130,6 @@ export class DeviceSelectorComponent implements OnInit {
       console.error('Failed to get devices for selection:', error);
       this.deviceCount = 0;
     }
+    this.cdr.markForCheck();
   }
 }

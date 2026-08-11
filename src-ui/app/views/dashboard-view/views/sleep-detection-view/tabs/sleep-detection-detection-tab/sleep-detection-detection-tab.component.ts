@@ -18,7 +18,7 @@ import { fade, vshrink } from '../../../../../../utils/animations';
   templateUrl: './sleep-detection-detection-tab.component.html',
   styleUrls: ['./sleep-detection-detection-tab.component.scss'],
   animations: [fade(), vshrink()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class SleepDetectionDetectionTabComponent
@@ -71,6 +71,7 @@ export class SleepDetectionDetectionTabComponent
         this.activationWindowEnd = configs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindowEnd
           .map((v) => v.toString().padStart(2, '0'))
           .join(':');
+        this.cdr.markForCheck();
       });
   }
 

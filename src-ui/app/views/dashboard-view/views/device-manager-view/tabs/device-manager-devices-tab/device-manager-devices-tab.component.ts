@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   OnInit,
   AfterViewInit,
@@ -56,7 +57,7 @@ interface DeviceGroup {
   templateUrl: './device-manager-devices-tab.component.html',
   styleUrls: ['./device-manager-devices-tab.component.scss'],
   animations: [fade(), vshrink()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
@@ -85,7 +86,8 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     private lighthouseConsole: LighthouseConsoleService,
     private modalService: ModalService,
     private destroyRef: DestroyRef,
-    private domSanitizer: DomSanitizer
+    private domSanitizer: DomSanitizer,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -107,6 +109,7 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
 
         // Initialize Fuse.js with updated devices
         this.initializeFuse();
+        this.cdr.markForCheck();
       });
 
     // Initialize tag filter to "All tags"
@@ -118,6 +121,7 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     // Watch for tag changes to update filter options
     this.deviceManager.tags.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.updateTagFilterOptions();
+      this.cdr.markForCheck();
     });
   }
 

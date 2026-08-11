@@ -1,4 +1,10 @@
-import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   ChangeStatusGeneralEventsAutomationConfig,
@@ -24,7 +30,7 @@ import { vshrink } from 'src-ui/app/utils/animations';
   templateUrl: './status-automations-general-tab.component.html',
   styleUrls: ['./status-automations-general-tab.component.scss'],
   standalone: false,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [vshrink()],
 })
 export class StatusAutomationsGeneralTabComponent implements OnInit {
@@ -72,12 +78,14 @@ export class StatusAutomationsGeneralTabComponent implements OnInit {
     private automationConfigService: AutomationConfigService,
     private destroyRef: DestroyRef,
     private vrchat: VRChatService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     this.vrchat.status.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((status) => {
       this.loggedIn = status === 'LOGGED_IN';
+      this.cdr.markForCheck();
     });
     this.automationConfigService.configs
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -92,6 +100,7 @@ export class StatusAutomationsGeneralTabComponent implements OnInit {
         this.onSleepPreparationStatusOption = this.statusOptions.find(
           (s) => s.id === this.config.statusOnSleepPreparation
         );
+        this.cdr.markForCheck();
       });
   }
 

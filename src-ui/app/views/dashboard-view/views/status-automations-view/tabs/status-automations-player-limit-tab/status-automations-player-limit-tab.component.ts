@@ -1,4 +1,10 @@
-import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { BehaviorSubject, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
@@ -26,7 +32,7 @@ import { hshrink, noop, vshrink } from '../../../../../../utils/animations';
   templateUrl: './status-automations-player-limit-tab.component.html',
   styleUrls: ['./status-automations-player-limit-tab.component.scss'],
   animations: [vshrink(), noop(), hshrink()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class StatusAutomationsPlayerLimitTabComponent implements OnInit {
@@ -79,7 +85,8 @@ export class StatusAutomationsPlayerLimitTabComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private automationConfig: AutomationConfigService,
     private modalService: ModalService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -94,14 +101,19 @@ export class StatusAutomationsPlayerLimitTabComponent implements OnInit {
         this.optionSetStatusBelowLimit = this.statusOptions.find(
           (o) => o.id === this.config.statusBelowLimit
         )!;
+        this.cdr.markForCheck();
       });
     this.vrchat.status.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((status) => {
       this.loggedIn = status === 'LOGGED_IN';
+      this.cdr.markForCheck();
     });
     this.limit
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        tap((limit) => (this.bedLimit = Math.min(limit, 10))),
+        tap((limit) => {
+          this.bedLimit = Math.min(limit, 10);
+          this.cdr.markForCheck();
+        }),
         distinctUntilChanged(),
         filter((limit) => limit !== this.config.limit),
         debounceTime(300),

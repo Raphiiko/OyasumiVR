@@ -6,7 +6,7 @@ import { fade, vshrink } from '../../../../utils/animations';
   templateUrl: './device-manager-view.component.html',
   styleUrls: ['./device-manager-view.component.scss'],
   animations: [fade(), vshrink()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DeviceManagerViewComponent {
