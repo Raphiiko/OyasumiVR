@@ -4,7 +4,7 @@ import { AutomationConfigService } from './automation-config.service';
 import { SleepService } from './sleep.service';
 import type { Notification } from 'vrchat';
 import { NotificationType, UserStatus } from '../models/vrchat';
-import { error, info, warn } from '@tauri-apps/plugin-log';
+import { info, warn } from '@tauri-apps/plugin-log';
 import { firstValueFrom } from 'rxjs';
 import { EventLogService } from './event-log.service';
 import {
@@ -35,19 +35,6 @@ export class InviteAutomationsService {
     private sleepPreparation: SleepPreparationService,
     private messageCenter: MessageCenterService
   ) {}
-
-  // Debug helper to add timeouts to promises
-  private withTimeout<T>(promise: Promise<T>, label: string, timeoutMs = 10000): Promise<T> {
-    return Promise.race([
-      promise,
-      new Promise<T>((_, reject) =>
-        setTimeout(() => {
-          error(`[INVREQ-DEBUG] Timeout after ${timeoutMs}ms waiting for: ${label}`);
-          reject(new Error(`[INVREQ-DEBUG] Timeout: ${label}`));
-        }, timeoutMs)
-      ),
-    ]);
-  }
 
   async init() {
     this.vrchat.notifications.subscribe(async (notification) => {
@@ -105,31 +92,19 @@ export class InviteAutomationsService {
   private async handleRequestInviteNotification(notification: Notification) {
     info(`[VRChat] Received invite request from ${notification.senderUsername}`);
     // Get the current user
-    const user = await this.withTimeout(
-      firstValueFrom(this.vrchat.user),
-      'firstValueFrom(this.vrchat.user)'
-    );
+    const user = await firstValueFrom(this.vrchat.user);
     if (!user) {
       warn('[VRChat] Ignoring invite request because the current user is not available');
       return;
     }
     // Get the sleep mode
-    const sleepMode = await this.withTimeout(
-      firstValueFrom(this.sleep.mode),
-      'firstValueFrom(this.sleep.mode)'
-    );
+    const sleepMode = await firstValueFrom(this.sleep.mode);
     // Get the automation config
-    const config = await this.withTimeout(
-      firstValueFrom(this.automationConfig.configs).then((c) => c.AUTO_ACCEPT_INVITE_REQUESTS),
-      'firstValueFrom(this.automationConfig.configs)'
+    const config = await firstValueFrom(this.automationConfig.configs).then(
+      (c) => c.AUTO_ACCEPT_INVITE_REQUESTS
     );
     // Stop if VRChat is not currently running
-    if (
-      !(await this.withTimeout(
-        firstValueFrom(this.vrchat.vrchatProcessActive),
-        'firstValueFrom(this.vrchat.vrchatProcessActive)'
-      ))
-    ) {
+    if (!(await firstValueFrom(this.vrchat.vrchatProcessActive))) {
       warn(
         `[VRChat] Ignoring invite request from ${notification.senderUsername}, as VRChat is not currently running.`
       );
@@ -145,10 +120,7 @@ export class InviteAutomationsService {
       return;
     }
     // Stop here if the user's current world is not known
-    const world = await this.withTimeout(
-      firstValueFrom(this.vrchat.world),
-      'firstValueFrom(this.vrchat.world) [1]'
-    );
+    const world = await firstValueFrom(this.vrchat.world);
     if (!world?.instanceId) {
       warn(
         `[VRChat] Ignoring invite request from ${notification.senderUsername}, as the user's current world is not currently known.`
@@ -187,33 +159,18 @@ export class InviteAutomationsService {
       info(
         `[VRChat] Automatically accepting invite request from ${notification.senderUserId} (blue status)`
       );
-      await this.withTimeout(
-        this.vrchat.deleteNotification(notification.id),
-        'vrchat.deleteNotification (blue status)'
-      );
-      await this.withTimeout(
-        this.vrchat.inviteUser(notification.senderUserId),
-        'vrchat.inviteUser (blue status)'
-      );
+      await this.vrchat.deleteNotification(notification.id);
+      await this.vrchat.inviteUser(notification.senderUserId);
       this.playInviteRequestSound(config, true, sleepMode);
       return;
     }
     // Stop if sleep mode is disabled and it's required to be enabled
     if (config.onlyIfSleepModeEnabled && !sleepMode) {
       warn('[VRChat] Ignoring invite request because sleep mode is disabled');
-      const message = await this.withTimeout(
-        this.getInviteRequestDeclineMessage(config),
-        'getInviteRequestDeclineMessage (sleep mode check)'
-      );
+      const message = await this.getInviteRequestDeclineMessage(config);
       if (message) {
-        await this.withTimeout(
-          this.vrchat.declineInviteOrInviteRequest(notification.id, 'requestInvite', message),
-          'vrchat.declineInviteOrInviteRequest (sleep mode check)'
-        );
-        await this.withTimeout(
-          this.vrchat.deleteNotification(notification.id),
-          'vrchat.deleteNotification (sleep mode check)'
-        );
+        await this.vrchat.declineInviteOrInviteRequest(notification.id, 'requestInvite', message);
+        await this.vrchat.deleteNotification(notification.id);
         this.eventLog.logEvent({
           type: 'declinedInviteRequest',
           displayName: notification.senderUsername,
@@ -225,27 +182,15 @@ export class InviteAutomationsService {
     }
     // Stop if there is a player count limit set, and there are more people in the instance than the limit
     if (config.onlyBelowPlayerCountEnabled) {
-      const world = await this.withTimeout(
-        firstValueFrom(this.vrchat.world),
-        'firstValueFrom(this.vrchat.world) [2]'
-      );
+      const world = await firstValueFrom(this.vrchat.world);
       if (world.players.length >= config.onlyBelowPlayerCount) {
         warn(
           `[VRChat] Ignoring invite request because there are too many players in the instance (${world.players.length}>=${config.onlyBelowPlayerCount})`
         );
-        const message = await this.withTimeout(
-          this.getInviteRequestDeclineMessage(config),
-          'getInviteRequestDeclineMessage (player count check)'
-        );
+        const message = await this.getInviteRequestDeclineMessage(config);
         if (message) {
-          await this.withTimeout(
-            this.vrchat.declineInviteOrInviteRequest(notification.id, 'requestInvite', message),
-            'vrchat.declineInviteOrInviteRequest (player count check)'
-          );
-          await this.withTimeout(
-            this.vrchat.deleteNotification(notification.id),
-            'vrchat.deleteNotification (player count check)'
-          );
+          await this.vrchat.declineInviteOrInviteRequest(notification.id, 'requestInvite', message);
+          await this.vrchat.deleteNotification(notification.id);
           this.eventLog.logEvent({
             type: 'declinedInviteRequest',
             displayName: notification.senderUsername,
@@ -264,19 +209,14 @@ export class InviteAutomationsService {
         // Stop if the player is not on the whitelist
         if (!config.playerIds.includes(notification.senderUserId)) {
           warn('[VRChat] Ignoring invite request because player is not on whitelist');
-          const message = await this.withTimeout(
-            this.getInviteRequestDeclineMessage(config),
-            'getInviteRequestDeclineMessage (whitelist check)'
-          );
+          const message = await this.getInviteRequestDeclineMessage(config);
           if (message) {
-            await this.withTimeout(
-              this.vrchat.declineInviteOrInviteRequest(notification.id, 'requestInvite', message),
-              'vrchat.declineInviteOrInviteRequest (whitelist check)'
+            await this.vrchat.declineInviteOrInviteRequest(
+              notification.id,
+              'requestInvite',
+              message
             );
-            await this.withTimeout(
-              this.vrchat.deleteNotification(notification.id),
-              'vrchat.deleteNotification (whitelist check)'
-            );
+            await this.vrchat.deleteNotification(notification.id);
             this.eventLog.logEvent({
               type: 'declinedInviteRequest',
               displayName: notification.senderUsername,
@@ -291,19 +231,14 @@ export class InviteAutomationsService {
         // Stop if the player is on the blacklist
         if (config.playerIds.includes(notification.senderUserId)) {
           warn('[VRChat] Ignoring invite request because player is on blacklist');
-          const message = await this.withTimeout(
-            this.getInviteRequestDeclineMessage(config),
-            'getInviteRequestDeclineMessage (blacklist check)'
-          );
+          const message = await this.getInviteRequestDeclineMessage(config);
           if (message) {
-            await this.withTimeout(
-              this.vrchat.declineInviteOrInviteRequest(notification.id, 'requestInvite', message),
-              'vrchat.declineInviteOrInviteRequest (blacklist check)'
+            await this.vrchat.declineInviteOrInviteRequest(
+              notification.id,
+              'requestInvite',
+              message
             );
-            await this.withTimeout(
-              this.vrchat.deleteNotification(notification.id),
-              'vrchat.deleteNotification (blacklist check)'
-            );
+            await this.vrchat.deleteNotification(notification.id);
             this.eventLog.logEvent({
               type: 'declinedInviteRequest',
               displayName: notification.senderUsername,
@@ -317,30 +252,16 @@ export class InviteAutomationsService {
     }
     // Invite the player
     info(`[VRChat] Automatically accepting invite request from ${notification.senderUserId}`);
-    await this.withTimeout(
-      this.vrchat.deleteNotification(notification.id),
-      'vrchat.deleteNotification (accept path)'
-    );
-    await this.withTimeout(
-      this.vrchat.inviteUser(notification.senderUserId, {
-        message: this.getInviteRequestAcceptMessage(config),
-      }),
-      'vrchat.inviteUser (accept path)'
-    );
+    await this.vrchat.deleteNotification(notification.id);
+    await this.vrchat.inviteUser(notification.senderUserId, {
+      message: this.getInviteRequestAcceptMessage(config),
+    });
     this.playInviteRequestSound(config, true, sleepMode);
-    if (
-      await this.withTimeout(
-        this.notifications.notificationTypeEnabled('AUTO_ACCEPTED_INVITE_REQUEST'),
-        'notifications.notificationTypeEnabled'
-      )
-    ) {
-      await this.withTimeout(
-        this.notifications.send(
-          this.translate.translate('notifications.autoAcceptedInviteRequest.content', {
-            username: notification.senderUsername,
-          })
-        ),
-        'notifications.send'
+    if (await this.notifications.notificationTypeEnabled('AUTO_ACCEPTED_INVITE_REQUEST')) {
+      await this.notifications.send(
+        this.translate.translate('notifications.autoAcceptedInviteRequest.content', {
+          username: notification.senderUsername,
+        })
       );
     }
     this.eventLog.logEvent({
