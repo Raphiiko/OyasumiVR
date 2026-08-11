@@ -1,9 +1,12 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
-    "ignoreDeprecations": "6.0",
     "outDir": "./dist/out-tsc",
+    "paths": {
+      "src-ui/*": ["./src-ui/*"],
+      "src-shared-ts/*": ["./src-shared-ts/*"],
+      "src-grpc-web-client/*": ["./src-grpc-web-client/*"]
+    },
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,

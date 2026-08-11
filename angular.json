@@ -4,9 +4,7 @@
   "cli": {
     "packageManager": "npm",
     "analytics": false,
-    "schematicCollections": [
-      "@angular-eslint/schematics"
-    ]
+    "schematicCollections": ["@angular-eslint/schematics"]
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -31,32 +29,20 @@
               "browser": ""
             },
             "index": "src-ui/index.html",
-            "polyfills": [
-              "src-ui/polyfills.ts"
-            ],
+            "polyfills": ["src-ui/polyfills.ts"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              "src-ui/favicon.ico",
-              "src-ui/assets"
-            ],
-            "styles": [
-              "src-ui/styles.scss",
-              "node_modules/uplot/dist/uPlot.min.css"
-            ],
-            "scripts": [
-              "node_modules/uplot/dist/uPlot.iife.min.js"
-            ],
+            "assets": ["src-ui/favicon.ico", "src-ui/assets"],
+            "styles": ["src-ui/styles.scss", "node_modules/uplot/dist/uPlot.min.css"],
+            "scripts": ["node_modules/uplot/dist/uPlot.iife.min.js"],
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "src-ui/styles",
-                "."
-              ]
+              "includePaths": ["src-ui/styles", "."]
             },
             "allowedCommonJsDependencies": [
+              "@messageformat/core",
+              "cookie",
               "lodash",
               "moment",
-              "cookie",
               "set-cookie-parser",
               "typescript-debounce-decorator"
             ],

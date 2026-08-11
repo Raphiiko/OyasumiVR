@@ -4,7 +4,7 @@ import { OpenVRService } from './openvr.service';
 import { AppSettingsService } from './app-settings.service';
 import { invoke } from '@tauri-apps/api/core';
 import { OVRDevice } from '../models/ovr-device';
-import { info } from '@tauri-apps/plugin-log';
+import { error, info } from '@tauri-apps/plugin-log';
 import { ExecutableReferenceStatus } from '../models/settings';
 import { listen } from '@tauri-apps/api/event';
 
@@ -105,10 +105,17 @@ export class LighthouseConsoleService {
     for (const device of ovrDevices) {
       this.openvr.onDeviceUpdate(Object.assign({}, device, { isTurningOff: true }));
       info(`[Lighthouse] Turning off device ${device.class}:${device.serialNumber}`);
-      await invoke('run_command', {
-        command: lighthouseConsolePath,
-        args: ['/serial', device.dongleId, 'poweroff'],
-      });
+      try {
+        await invoke('run_command', {
+          command: lighthouseConsolePath,
+          args: ['/serial', device.dongleId, 'poweroff'],
+        });
+      } catch (e) {
+        // One unreachable dongle must not stop the devices queued behind it.
+        error(
+          `[Lighthouse] Could not turn off device ${device.class}:${device.serialNumber}: ${e}`
+        );
+      }
       await new Promise((resolve) => setTimeout(resolve, 250));
     }
   }

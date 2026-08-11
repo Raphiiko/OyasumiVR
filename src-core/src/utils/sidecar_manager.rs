@@ -225,6 +225,14 @@ impl SidecarManager {
         *self.started.lock().await = true;
         // Update the known pid
         *self.sidecar_pid.lock().await = Some(pid);
+        // A sidecar that relaunched itself through UAC reports in after the watcher for the
+        // process we spawned has already given up, so adopt it with a fresh watcher.
+        // Without one, its death would go unnoticed and the manager would stay active
+        // forever, refusing every later start.
+        if pid != 0 && !*self.watching.lock().await {
+            *self.watching.lock().await = true;
+            self.watch_process();
+        }
         // Store the GRPC ports
         *self.grpc_port.lock().await = grpc_port;
         *self.grpc_web_port.lock().await = grpc_web_port;
@@ -235,7 +243,7 @@ impl SidecarManager {
         true
     }
 
-    fn watch_process(&mut self) {
+    fn watch_process(&self) {
         let mut manager = self.clone();
 
         tokio::spawn(async move {
