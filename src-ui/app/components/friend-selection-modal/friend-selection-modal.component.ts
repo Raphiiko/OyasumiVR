@@ -1,4 +1,11 @@
-import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, hshrink, noop, vshrink } from '../../utils/animations';
 import type { LimitedUserFriend } from 'vrchat';
@@ -51,7 +58,7 @@ const STATUS_SORT_ORDER: Record<UserStatus, number> = {
   templateUrl: './friend-selection-modal.component.html',
   styleUrls: ['./friend-selection-modal.component.scss'],
   animations: [fadeUp(), vshrink(), hshrink(), fade(), noop()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class FriendSelectionModalComponent
@@ -67,6 +74,8 @@ export class FriendSelectionModalComponent
   fuse?: Fuse<LimitedUserFriend>;
   loadingState: 'LOADING' | 'LOADED' | 'ERROR' = 'LOADING';
   moreResults = false;
+
+  private cdr = inject(ChangeDetectorRef);
 
   constructor(
     protected vrchat: VRChatService,
@@ -100,6 +109,7 @@ export class FriendSelectionModalComponent
       ]);
     } catch (e) {
       this.loadingState = 'ERROR';
+      this.cdr.markForCheck();
       error('[FriendSelectionModal] Failed to load friends: ' + e);
       return;
     }
@@ -115,6 +125,7 @@ export class FriendSelectionModalComponent
       this.results = this.friends.slice(0, MAX_RESULTS);
     }
     this.loadingState = 'LOADED';
+    this.cdr.markForCheck();
   }
 
   async cancel() {

@@ -19,7 +19,7 @@ import { AutomationConfigService } from '../../../services/automation-config.ser
   selector: 'app-debug-sleep-detection-debugger',
   templateUrl: './debug-sleep-detection-debugger.component.html',
   styleUrls: ['./debug-sleep-detection-debugger.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DebugSleepDetectionDebuggerComponent implements OnInit, AfterViewInit {

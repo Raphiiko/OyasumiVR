@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   DestroyRef,
   OnDestroy,
@@ -19,7 +20,7 @@ import 'chartjs-adapter-moment';
   selector: 'app-heart-rate-chart',
   templateUrl: './heart-rate-chart.component.html',
   styleUrls: ['./heart-rate-chart.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class HeartRateChartComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -39,7 +40,8 @@ export class HeartRateChartComponent implements OnInit, AfterViewInit, OnDestroy
 
   constructor(
     private destroyRef: DestroyRef,
-    private pulsoid: PulsoidService
+    private pulsoid: PulsoidService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -51,6 +53,7 @@ export class HeartRateChartComponent implements OnInit, AfterViewInit, OnDestroy
       )
       .subscribe((data) => {
         this.processData(data, 24);
+        this.cdr.markForCheck();
       });
   }
 

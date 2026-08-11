@@ -1,4 +1,11 @@
-import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { fadeUp } from '../../utils/animations';
 import { DMKnownDevice, DMDeviceTag } from '../../models/device-manager';
@@ -26,7 +33,7 @@ export interface DeviceManagerConfigModalOutputModel {
   templateUrl: './device-manager-config-modal.component.html',
   styleUrls: ['./device-manager-config-modal.component.scss'],
   animations: [fadeUp()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DeviceManagerConfigModalComponent
@@ -41,6 +48,8 @@ export class DeviceManagerConfigModalComponent
   availableTags: DMDeviceTag[] = [];
 
   v1LighthouseMode: 'NONE' | 'NEEDS_ID' | 'HAS_ID' = 'NONE';
+
+  private cdr = inject(ChangeDetectorRef);
 
   constructor(
     protected lighthouseService: LighthouseService,
@@ -60,6 +69,7 @@ export class DeviceManagerConfigModalComponent
   private loadTags() {
     this.deviceManager.tags.subscribe((tags) => {
       this.availableTags = tags;
+      this.cdr.markForCheck();
     });
   }
 
@@ -121,6 +131,7 @@ export class DeviceManagerConfigModalComponent
           this.v1LighthouseMode = this.lighthouseService.deviceNeedsIdentifier(device)
             ? 'NEEDS_ID'
             : 'HAS_ID';
+        this.cdr.markForCheck();
       });
   }
 

@@ -24,7 +24,7 @@ export interface HeartRateCalmPeriodEnableSleepModeModalOutputModel {
   templateUrl: './heart-rate-calm-period-enable-sleep-mode-modal.component.html',
   styleUrls: ['./heart-rate-calm-period-enable-sleep-mode-modal.component.scss'],
   animations: [fadeUp(), fade(), triggerChildren(), vshrink()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class HeartRateCalmPeriodEnableSleepModeModalComponent

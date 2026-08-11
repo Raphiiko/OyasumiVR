@@ -1,4 +1,10 @@
-import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { fadeUp, hshrink, vshrink } from '../../utils/animations';
 import { VRChatService } from '../../services/vrchat-api/vrchat.service';
 import { firstValueFrom, map, take } from 'rxjs';
@@ -18,7 +24,7 @@ interface VRChatLoginModalOutputModel {}
   templateUrl: './vrchat-login-modal.component.html',
   styleUrls: ['./vrchat-login-modal.component.scss'],
   animations: [fadeUp(), vshrink(), hshrink()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class VRChatLoginModalComponent
@@ -35,7 +41,8 @@ export class VRChatLoginModalComponent
   constructor(
     private vrchat: VRChatService,
     private modalService: ModalService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private cdr: ChangeDetectorRef
   ) {
     super();
   }
@@ -57,6 +64,7 @@ export class VRChatLoginModalComponent
             await this.login();
           }
         }
+        this.cdr.markForCheck();
       });
   }
 
@@ -95,6 +103,7 @@ export class VRChatLoginModalComponent
           let lastCodeInvalid = false;
           while (true) {
             this.error = '';
+            this.cdr.markForCheck();
             const code = await this.get2FACode(lastCodeInvalid);
             if (!code) break;
             const method: 'totp' | 'otp' | 'emailotp' = {
@@ -136,6 +145,7 @@ export class VRChatLoginModalComponent
       }
     }
     this.loggingIn = false;
+    this.cdr.markForCheck();
   }
 
   async toggleRememberCredentials() {

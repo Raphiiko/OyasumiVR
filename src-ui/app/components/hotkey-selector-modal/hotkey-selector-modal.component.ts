@@ -23,7 +23,7 @@ export interface HotkeySelectorOutputModel {
   templateUrl: './hotkey-selector-modal.component.html',
   styleUrls: ['./hotkey-selector-modal.component.scss'],
   animations: [fadeUp()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class HotkeySelectorModalComponent

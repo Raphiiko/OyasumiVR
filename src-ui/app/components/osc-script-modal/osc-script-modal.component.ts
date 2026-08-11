@@ -1,4 +1,10 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { OscScript } from '../../models/osc-script';
 import { fadeUp } from '../../utils/animations';
@@ -17,7 +23,7 @@ interface OscScriptModalOutputModel {
   templateUrl: './osc-script-modal.component.html',
   styleUrls: ['./osc-script-modal.component.scss'],
   animations: [fadeUp()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class OscScriptModalComponent
@@ -29,6 +35,8 @@ export class OscScriptModalComponent
   activeTab: 'SIMPLE' | 'SCRIPT' = 'SIMPLE';
   errorCount = 0;
   validated = true;
+
+  private cdr = inject(ChangeDetectorRef);
 
   constructor() {
     super();
@@ -51,10 +59,16 @@ export class OscScriptModalComponent
   }
 
   setErrorCount(errorCount: number) {
-    setTimeout(() => (this.errorCount = errorCount));
+    setTimeout(() => {
+      this.errorCount = errorCount;
+      this.cdr.markForCheck();
+    });
   }
 
   setValidated(validated: boolean) {
-    setTimeout(() => (this.validated = validated));
+    setTimeout(() => {
+      this.validated = validated;
+      this.cdr.markForCheck();
+    });
   }
 }

@@ -13,7 +13,7 @@ interface SleepingAnimationPresetModalInputModel {
   templateUrl: './sleeping-animation-preset-modal.component.html',
   styleUrls: ['./sleeping-animation-preset-modal.component.scss'],
   animations: [fadeUp()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class SleepingAnimationPresetModalComponent

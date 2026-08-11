@@ -8,7 +8,7 @@ import { DeveloperDebugService } from '../../services/developer-debug/developer-
   templateUrl: './developer-debug-modal.component.html',
   styleUrls: ['./developer-debug-modal.component.scss'],
   animations: [fadeUp()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DeveloperDebugModalComponent

@@ -42,7 +42,7 @@ export type EventLogFilter = (typeof EventLogFilters)[number];
   templateUrl: './event-log-filter-dialog.component.html',
   styleUrl: './event-log-filter-dialog.component.scss',
   animations: [fadeUp()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class EventLogFilterDialogComponent

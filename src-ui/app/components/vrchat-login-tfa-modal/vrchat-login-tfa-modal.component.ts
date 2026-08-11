@@ -1,4 +1,11 @@
-import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fadeUp, hshrink, vshrink } from 'src-ui/app/utils/animations';
 import { BehaviorSubject, debounceTime, distinctUntilChanged, skip } from 'rxjs';
@@ -18,7 +25,7 @@ interface VRChatLoginTFAModalOutputModel {
   templateUrl: './vrchat-login-tfa-modal.component.html',
   styleUrls: ['./vrchat-login-tfa-modal.component.scss'],
   animations: [fadeUp(), vshrink(), hshrink()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class VRChatLoginTFAModalComponent
@@ -30,6 +37,8 @@ export class VRChatLoginTFAModalComponent
   codeValid = false;
   error = '';
   username?: string;
+
+  private cdr = inject(ChangeDetectorRef);
 
   constructor(private destroyRef: DestroyRef) {
     super();
@@ -48,6 +57,7 @@ export class VRChatLoginTFAModalComponent
           if (this.lastCodeInvalid)
             this.error = 'comp.vrchat-login-tfa-modal.errors.INVALID_FORMAT';
         }
+        this.cdr.markForCheck();
       });
   }
 

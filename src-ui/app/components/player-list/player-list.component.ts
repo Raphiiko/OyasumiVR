@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   DestroyRef,
   EventEmitter,
@@ -30,7 +31,7 @@ import { noop, vshrink } from '../../utils/animations';
   templateUrl: './player-list.component.html',
   styleUrls: ['./player-list.component.scss'],
   animations: [vshrink(), noop()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class PlayerListComponent implements OnInit {
@@ -47,7 +48,8 @@ export class PlayerListComponent implements OnInit {
   constructor(
     protected vrchat: VRChatService,
     private modalService: ModalService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -55,6 +57,7 @@ export class PlayerListComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef), distinctUntilChanged())
       .subscribe(async (status) => {
         this.loggedIn = status === 'LOGGED_IN';
+        this.cdr.markForCheck();
         if (this.loggedIn && this.playerList.length)
           await this.refreshPlayerList(this.playerList.map((p) => p.id));
       });
@@ -70,6 +73,7 @@ export class PlayerListComponent implements OnInit {
     if (input.join(',') === current.join(',')) return;
     const friends = await this.vrchat.listFriends();
     this.playerList = friends.filter((f) => playerIds.includes(f.id));
+    this.cdr.markForCheck();
     this.emitPlayerListChange();
   }
 

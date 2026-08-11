@@ -1,6 +1,8 @@
 import {
+  ChangeDetectorRef,
   Component,
   DestroyRef,
+  inject,
   OnInit,
   TrackByFunction,
   ChangeDetectionStrategy,
@@ -61,7 +63,7 @@ export interface LighthouseV1IdWizardModalOutputModel {}
       ]),
     ]),
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class LighthouseV1IdWizardModalComponent
@@ -85,6 +87,8 @@ export class LighthouseV1IdWizardModalComponent
     loader?: boolean;
   }> = [];
   verifying = false;
+
+  private cdr = inject(ChangeDetectorRef);
 
   constructor(
     private lighthouseService: LighthouseService,
@@ -152,6 +156,7 @@ export class LighthouseV1IdWizardModalComponent
           loader: true,
         };
         this.automaticDetectionSteps.push(detectBaseStationStep);
+        this.cdr.markForCheck();
       });
   }
 
@@ -181,6 +186,7 @@ export class LighthouseV1IdWizardModalComponent
     // Start verification test
     this.lighthouseService.testV1LighthouseIdentifier(this.device, id).subscribe({
       next: async (progress) => {
+        this.cdr.markForCheck();
         if (typeof progress === 'number') {
           this.verifyPercentage = Math.round(progress * 100);
         } else {
@@ -188,7 +194,10 @@ export class LighthouseV1IdWizardModalComponent
           switch (progress) {
             case 'SUCCESS':
               await this.saveId(id);
-              setTimeout(() => (this.step = 'SUCCESS'), 1000);
+              setTimeout(() => {
+                this.step = 'SUCCESS';
+                this.cdr.markForCheck();
+              }, 1000);
               setTimeout(() => this.close(), 3500);
               break;
             case 'ERROR':
@@ -209,10 +218,17 @@ export class LighthouseV1IdWizardModalComponent
               }
               break;
           }
+          this.cdr.markForCheck();
         }
       },
-      error: () => (this.verifying = false),
-      complete: () => (this.verifying = false),
+      error: () => {
+        this.verifying = false;
+        this.cdr.markForCheck();
+      },
+      complete: () => {
+        this.verifying = false;
+        this.cdr.markForCheck();
+      },
     });
   }
 

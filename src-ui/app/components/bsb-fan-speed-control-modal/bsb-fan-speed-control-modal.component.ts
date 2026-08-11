@@ -1,4 +1,10 @@
-import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { fadeUp, hshrink, vshrink } from '../../utils/animations';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { ModalOptions } from '../../services/modal.service';
@@ -13,7 +19,7 @@ import { BigscreenBeyondFanAutomationService } from '../../services/hmd-specific
   templateUrl: './bsb-fan-speed-control-modal.component.html',
   styleUrls: ['./bsb-fan-speed-control-modal.component.scss'],
   animations: [fadeUp(), vshrink(), hshrink()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class BSBFanSpeedControlModalComponent
@@ -28,14 +34,18 @@ export class BSBFanSpeedControlModalComponent
     protected fanControl: BigscreenBeyondFanAutomationService,
     protected router: Router,
     public automationConfigService: AutomationConfigService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private cdr: ChangeDetectorRef
   ) {
     super();
     this.automationConfigService.configs
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         map((c) => c.BIGSCREEN_BEYOND_FAN_CONTROL),
-        tap((config) => (this.fanSpeedBounds = [config.allowUnsafeFanSpeed ? 0 : 40, 100]))
+        tap((config) => {
+          this.fanSpeedBounds = [config.allowUnsafeFanSpeed ? 0 : 40, 100];
+          this.cdr.markForCheck();
+        })
       )
       .subscribe();
     this.setFanSpeed

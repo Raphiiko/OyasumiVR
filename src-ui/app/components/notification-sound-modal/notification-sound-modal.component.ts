@@ -19,7 +19,7 @@ export interface NotificationSoundModalOutputModel {
   templateUrl: './notification-sound-modal.component.html',
   styleUrls: ['./notification-sound-modal.component.scss'],
   animations: [fadeUp()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class NotificationSoundModalComponent

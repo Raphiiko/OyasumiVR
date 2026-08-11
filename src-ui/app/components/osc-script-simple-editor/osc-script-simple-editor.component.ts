@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   DestroyRef,
   EventEmitter,
@@ -39,7 +40,7 @@ interface ValidationError {
   templateUrl: './osc-script-simple-editor.component.html',
   styleUrls: ['./osc-script-simple-editor.component.scss'],
   animations: [vshrink(), noop(), hshrink(), fade()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class OscScriptSimpleEditorComponent implements OnInit {
@@ -111,7 +112,8 @@ export class OscScriptSimpleEditorComponent implements OnInit {
     private destroyRef: DestroyRef,
     private avatarContextService: AvatarContextService,
     protected vrchat: VRChatService,
-    private appSettings: AppSettingsService
+    private appSettings: AppSettingsService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -119,7 +121,10 @@ export class OscScriptSimpleEditorComponent implements OnInit {
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         startWith(void 0),
-        tap(() => (this.validated = false)),
+        tap(() => {
+          this.validated = false;
+          this.cdr.markForCheck();
+        }),
         debounceTime(500)
       )
       .subscribe(() => {
@@ -127,11 +132,13 @@ export class OscScriptSimpleEditorComponent implements OnInit {
         this.validated = true;
         this.errorCount.emit(this.errors.length);
         this.scriptChange.emit(this._script);
+        this.cdr.markForCheck();
       });
 
     combineLatest([this.avatarContextService.avatarContext]).subscribe(([avatarContext]) => {
       this.currentAvatarContext = avatarContext;
       this.knownOscAddresses = [...(avatarContext?.parameters ?? []).map((p) => p.address)].sort();
+      this.cdr.markForCheck();
 
       // Check if we should show the VRChat autocomplete info dialog
     });
@@ -443,11 +450,13 @@ export class OscScriptSimpleEditorComponent implements OnInit {
     this.validateScript();
     if (this.errors.length) return;
     this.testing = true;
+    this.cdr.markForCheck();
     await Promise.all([
       this.osc.runScript(this._script),
       new Promise((resolve) => setTimeout(resolve, 1000)),
     ]);
     this.testing = false;
+    this.cdr.markForCheck();
   }
 
   getErrorsForAction(actionIndex: number): ValidationError[] {

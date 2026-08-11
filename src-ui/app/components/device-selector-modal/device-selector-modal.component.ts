@@ -1,4 +1,11 @@
-import { Component, OnInit, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  DestroyRef,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fadeUp } from 'src-ui/app/utils/animations';
 import {
@@ -38,7 +45,7 @@ interface DeviceGroup {
   templateUrl: './device-selector-modal.component.html',
   styleUrls: ['./device-selector-modal.component.scss'],
   animations: [fadeUp()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DeviceSelectorModalComponent
@@ -56,6 +63,8 @@ export class DeviceSelectorModalComponent
   filteredDeviceTypes: DMDeviceType[] = [...DMDeviceTypes];
   ovrDevices: OVRDevice[] = [];
   lighthouseDevices: LighthouseDevice[] = [];
+
+  private cdr = inject(ChangeDetectorRef);
 
   constructor(
     private deviceManager: DeviceManagerService,
@@ -98,6 +107,7 @@ export class DeviceSelectorModalComponent
         this.tags = tags;
         this.ovrDevices = ovrDevices;
         this.lighthouseDevices = lighthouseDevices;
+        this.cdr.markForCheck();
         this.updateDeviceGroups();
       });
   }

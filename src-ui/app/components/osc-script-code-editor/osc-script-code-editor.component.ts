@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   DestroyRef,
   ElementRef,
@@ -23,7 +24,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './osc-script-code-editor.component.html',
   styleUrls: ['./osc-script-code-editor.component.scss'],
   animations: [fade(), hshrink(), noop()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class OscScriptCodeEditorComponent implements OnInit, AfterViewInit {
@@ -67,7 +68,8 @@ export class OscScriptCodeEditorComponent implements OnInit, AfterViewInit {
 
   constructor(
     private osc: OscService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private cdr: ChangeDetectorRef
   ) {}
 
   protected setScript(script: OscScript, force = false) {
@@ -82,7 +84,10 @@ export class OscScriptCodeEditorComponent implements OnInit, AfterViewInit {
     this._code
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        tap(() => (this.validated = false)),
+        tap(() => {
+          this.validated = false;
+          this.cdr.markForCheck();
+        }),
         debounceTime(500)
       )
       .subscribe((code) => {
@@ -92,6 +97,7 @@ export class OscScriptCodeEditorComponent implements OnInit, AfterViewInit {
         this.errors = errors;
         this.errorCount.emit(errors.length);
         this.scriptChange.emit(script);
+        this.cdr.markForCheck();
       });
   }
 
@@ -164,10 +170,12 @@ export class OscScriptCodeEditorComponent implements OnInit, AfterViewInit {
     const { script, errors } = parseOscScriptFromCode(this._code.value);
     if (errors.length) return;
     this.testing = true;
+    this.cdr.markForCheck();
     await Promise.all([
       this.osc.runScript(script),
       new Promise((resolve) => setTimeout(resolve, 1000)),
     ]);
     this.testing = false;
+    this.cdr.markForCheck();
   }
 }

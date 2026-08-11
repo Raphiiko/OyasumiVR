@@ -1,4 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Update } from '@tauri-apps/plugin-updater';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { UpdateService } from '../../services/update.service';
@@ -17,7 +22,7 @@ interface UpdateModalOutputModel {}
   templateUrl: './update-modal.component.html',
   styleUrls: ['./update-modal.component.scss'],
   animations: [hshrink(), fadeUp()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class UpdateModalComponent
@@ -28,12 +33,16 @@ export class UpdateModalComponent
   currentVersion = '';
   installing = false;
 
-  constructor(private updateService: UpdateService) {
+  constructor(
+    private updateService: UpdateService,
+    private cdr: ChangeDetectorRef
+  ) {
     super();
   }
 
   async ngOnInit() {
     this.currentVersion = await getVersion();
+    this.cdr.markForCheck();
   }
 
   async updateLater() {
