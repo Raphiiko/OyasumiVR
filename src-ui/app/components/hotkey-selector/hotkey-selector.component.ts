@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   Input,
   OnChanges,
@@ -18,7 +19,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './hotkey-selector.component.html',
   styleUrls: ['./hotkey-selector.component.scss'],
   animations: [hshrink(), noop()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class HotkeySelectorComponent implements OnChanges, OnDestroy, OnInit {
@@ -36,7 +37,8 @@ export class HotkeySelectorComponent implements OnChanges, OnDestroy, OnInit {
 
   constructor(
     private modalService: ModalService,
-    private hotkeyService: HotkeyService
+    private hotkeyService: HotkeyService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   async ngOnInit() {
@@ -51,6 +53,7 @@ export class HotkeySelectorComponent implements OnChanges, OnDestroy, OnInit {
     this.modalService.addModal(HotkeySelectorModalComponent, {}, {}).subscribe((result) => {
       this.hotkey = result?.hotkey ?? undefined;
       if (this.hotkey) this.hotkeyService.registerHotkey(this.action!, this.hotkey);
+      this.cdr.markForCheck();
     });
   }
 
@@ -70,6 +73,7 @@ export class HotkeySelectorComponent implements OnChanges, OnDestroy, OnInit {
     if (this.action) {
       this.hotkeySub = this.hotkeyService.getHotkeyStringForId(this.action).subscribe((hotkey) => {
         this.hotkey = hotkey;
+        this.cdr.markForCheck();
       });
     } else {
       this.hotkey = undefined;

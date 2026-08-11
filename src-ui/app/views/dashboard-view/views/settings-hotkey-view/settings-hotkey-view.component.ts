@@ -9,7 +9,7 @@ interface HotkeyAction {
   selector: 'app-settings-hotkey-view',
   templateUrl: './settings-hotkey-view.component.html',
   styleUrls: ['./settings-hotkey-view.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class SettingsHotkeyViewComponent {
