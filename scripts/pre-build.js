@@ -6,6 +6,58 @@ import Css from 'json-to-css';
 import { parseFile } from 'music-metadata';
 
 //
+// COPY FONTS
+//
+// Synced to src-core/resources/fonts/ (the source of truth Tauri bundles for
+// release builds) and to src-core/target/{debug,release}/resources/fonts/ when
+// those exist. The latter is needed because the core's HTTP server reads fonts
+// from a cwd-relative path, and main.rs sets cwd to the executable directory â€”
+// Tauri's resource copy populates target/<profile>/resources/ during an initial
+// build but doesn't pick up newly-added subdirectories on incremental rebuilds,
+// so we mirror them here.
+//
+{
+  const fontSources = [
+    { dir: 'node_modules/@fontsource/poppins/files/', prefix: 'poppins-latin-' },
+    { dir: 'node_modules/@fontsource/noto-sans-jp/files/', prefix: 'noto-sans-jp-japanese-' },
+    { dir: 'node_modules/@fontsource/noto-sans-kr/files/', prefix: 'noto-sans-kr-korean-' },
+    {
+      dir: 'node_modules/@fontsource/noto-sans-sc/files/',
+      prefix: 'noto-sans-sc-chinese-simplified-',
+    },
+    {
+      dir: 'node_modules/@fontsource/noto-sans-tc/files/',
+      prefix: 'noto-sans-tc-chinese-traditional-',
+    },
+  ];
+  const fontFiles = fontSources.flatMap(({ dir, prefix }) =>
+    fs
+      .readdirSync(dir)
+      .filter((f) => f.startsWith(prefix) && f.endsWith('.woff2'))
+      .map((f) => dir + f)
+  );
+  const fontTargets = [
+    { destDir: 'src-core/resources/fonts', requiredParent: 'src-core/resources' },
+    {
+      destDir: 'src-core/target/debug/resources/fonts',
+      requiredParent: 'src-core/target/debug',
+    },
+    {
+      destDir: 'src-core/target/release/resources/fonts',
+      requiredParent: 'src-core/target/release',
+    },
+  ];
+  for (const { destDir, requiredParent } of fontTargets) {
+    if (!fs.existsSync(requiredParent)) continue;
+    fs.mkdirSync(destDir, { recursive: true });
+    fontFiles.forEach((f) => {
+      fs.copyFileSync(f, destDir + '/' + f.split('/').pop());
+    });
+    console.log(`Copied ${fontFiles.length} fonts to ${destDir}/`);
+  }
+}
+
+//
 // BUILD PRELOAD ASSETS JSON
 //
 function getFilePaths(folder, prefix) {
