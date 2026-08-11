@@ -186,9 +186,9 @@ export class LighthouseV1IdWizardModalComponent
     // Start verification test
     this.lighthouseService.testV1LighthouseIdentifier(this.device, id).subscribe({
       next: async (progress) => {
-        this.cdr.markForCheck();
         if (typeof progress === 'number') {
           this.verifyPercentage = Math.round(progress * 100);
+          this.cdr.markForCheck();
         } else {
           this.verifyPercentage = 100;
           switch (progress) {

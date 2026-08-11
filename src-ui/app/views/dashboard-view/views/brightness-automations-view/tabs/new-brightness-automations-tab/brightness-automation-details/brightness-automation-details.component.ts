@@ -87,6 +87,11 @@ export class BrightnessAutomationDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
+    // The template calls appSettingsService.oneTimeFlagSet(), which no signal
+    // covers, so any settings change has to recheck the view.
+    this.appSettingsService.settings
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.cdr.markForCheck());
     this.hardwareBrightnessControl.brightnessBounds
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(async (bounds) => {

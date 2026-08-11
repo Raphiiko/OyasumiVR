@@ -143,11 +143,13 @@ export class FriendSelectionModalComponent
     if (!this.activeQuery) {
       this.moreResults = this.friends.length > MAX_RESULTS;
       this.results = this.friends.slice(0, MAX_RESULTS);
+      this.cdr.markForCheck();
       return;
     }
     const results = this.fuse!.search(this.activeQuery);
     this.moreResults = results.length > MAX_RESULTS;
     this.results = results.slice(0, MAX_RESULTS).map((r) => r.item);
+    this.cdr.markForCheck();
   }
 
   removeItem(item: SelectedFriendGroup | SelectedFriendPlayer) {

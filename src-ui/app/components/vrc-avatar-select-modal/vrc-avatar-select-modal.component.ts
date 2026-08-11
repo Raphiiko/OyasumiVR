@@ -56,6 +56,7 @@ export class VrcAvatarSelectModalComponent
 
   async fetchAvatars(force = false) {
     this.activeCategory = 'LOADING';
+    this.cdr.markForCheck();
     const currentUser = await firstValueFrom(this.vrchat.user);
     if (!currentUser) {
       this.close();

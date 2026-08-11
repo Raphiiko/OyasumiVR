@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   AfterViewInit,
   Component,
   DestroyRef,
@@ -43,7 +44,8 @@ export class DebugSleepDetectionDebuggerComponent implements OnInit, AfterViewIn
   constructor(
     public debug: DeveloperDebugService,
     private destroyRef: DestroyRef,
-    private automationConfigService: AutomationConfigService
+    private automationConfigService: AutomationConfigService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -51,8 +53,12 @@ export class DebugSleepDetectionDebuggerComponent implements OnInit, AfterViewIn
     combineLatest([this.debug.sleepDetectionDebugger.update, interval(2000)])
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(async () => {
+        // The template reads timeData and reportHandlingData straight off the
+        // service, so the view has to be rechecked on every update.
+        this.cdr.markForCheck();
         if (!this.sleepDetectionTimeSeriesPlot) return;
         this.sleepDetectionTimeSeriesPlot.setData(await this.buildSleepData());
+        this.cdr.markForCheck();
       });
   }
 
