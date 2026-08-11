@@ -7,15 +7,26 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 
 ## [Unreleased]
 
-## Added
+### Added
 
 - OSC Settings view
   - Custom target for OSC messages (e.g. for use with Resonite, OSC routers, or when OSCQuery is not available)
   - VRChat (OSCQuery) target (allows for disabling OSC messages being sent to VRChat)
 
+### Changed
+
+- Improved the Traditional Chinese translations
+- Updated the Russian translations
+- OyasumiVR's window now does less work while it is open
+- Updated OyasumiVR's internal components
+
 ### Fixed
 
-- Disabled CEF disk cache
+- Fixed SteamVR sometimes crashing when OyasumiVR turned off several base stations at once
+- Fixed the brightness and color temperature sliders in the VR overlay jumping to 100%
+- Fixed the VR overlay restarting itself over and over again on some systems
+- The VR overlay no longer leaves temporary files on your disk
+- Various stability improvements
 
 ## [25.6.12]
 
