@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   DestroyRef,
   Input,
@@ -49,7 +50,7 @@ import { EventLogEntry } from '../../../models/event-log-entry';
   selector: 'app-event-log-entry',
   templateUrl: './event-log-entry.component.html',
   styleUrls: ['./event-log-entry.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class EventLogEntryComponent implements OnInit, OnChanges {
@@ -96,7 +97,8 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
   constructor(
     private sanitizer: DomSanitizer,
     private translate: TranslocoService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private cdr: ChangeDetectorRef
   ) {}
 
   _entry?: EventLogEntry;
@@ -113,7 +115,10 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
     this.ngOnChanges();
     this.translate.langChanges$
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.rebuild());
+      .subscribe(() => {
+        this.rebuild();
+        this.cdr.markForCheck();
+      });
   }
 
   ngOnChanges() {

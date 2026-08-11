@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -15,7 +16,7 @@ import { OscScriptModalComponent } from '../osc-script-modal/osc-script-modal.co
   selector: 'app-osc-script-button',
   templateUrl: './osc-script-button.component.html',
   styleUrls: ['./osc-script-button.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class OscScriptButtonComponent implements OnInit {
@@ -23,7 +24,10 @@ export class OscScriptButtonComponent implements OnInit {
   @Input() script?: OscScript;
   @Output() scriptChange = new EventEmitter<OscScript>();
 
-  constructor(private modalService: ModalService) {}
+  constructor(
+    private modalService: ModalService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {}
 
@@ -46,6 +50,7 @@ export class OscScriptButtonComponent implements OnInit {
       .pipe(filter((data) => !!data))
       .subscribe((data) => {
         this.script = data?.script?.commands?.length ? data.script : undefined;
+        this.cdr.markForCheck();
         this.scriptChange.emit(this.script);
       });
   }

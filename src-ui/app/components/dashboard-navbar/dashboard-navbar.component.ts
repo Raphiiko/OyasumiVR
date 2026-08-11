@@ -122,7 +122,7 @@ type SubMenu = 'GENERAL' | 'VRCHAT' | 'HARDWARE' | 'MISCELLANEOUS' | 'SETTINGS';
     blurMenu('rootMenu', '.2s ease'),
     slideMenu('subMenu', '.2s ease', false),
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DashboardNavbarComponent implements OnInit {

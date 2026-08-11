@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import {
   VrcAvatarSelectModalComponent,
@@ -13,14 +20,17 @@ import { PersistedAvatar } from '../../models/vrchat';
   templateUrl: './vrc-avatar-select-button.component.html',
   styleUrls: ['./vrc-avatar-select-button.component.scss'],
   animations: [noop(), hshrink()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class VrcAvatarSelectButtonComponent {
   @Input() avatar: PersistedAvatar | null = null;
   @Output() avatarChange = new EventEmitter<PersistedAvatar | null>();
 
-  constructor(private modalService: ModalService) {}
+  constructor(
+    private modalService: ModalService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   deselect() {
     this.avatar = null;
@@ -44,6 +54,7 @@ export class VrcAvatarSelectButtonComponent {
                 };
           this.avatarChange.emit(this.avatar);
         }
+        this.cdr.markForCheck();
       });
   }
 }

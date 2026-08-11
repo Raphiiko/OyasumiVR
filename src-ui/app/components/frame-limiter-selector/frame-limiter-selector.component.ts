@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   Input,
   OnInit,
@@ -19,7 +20,7 @@ import { vshrink } from 'src-ui/app/utils/animations';
   templateUrl: './frame-limiter-selector.component.html',
   styleUrls: ['./frame-limiter-selector.component.scss'],
   standalone: false,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [vshrink()],
 })
 export class FrameLimiterSelectorComponent implements OnInit {
@@ -32,7 +33,8 @@ export class FrameLimiterSelectorComponent implements OnInit {
 
   constructor(
     private readonly openvr: OpenVRService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -44,6 +46,7 @@ export class FrameLimiterSelectorComponent implements OnInit {
       )
       .subscribe((displayFrequency) => {
         this.hmdDisplayFrequency = displayFrequency;
+        this.cdr.markForCheck();
       });
   }
 

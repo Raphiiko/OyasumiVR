@@ -55,7 +55,7 @@ interface LighthouseDisplayCategory extends BaseDisplayCategory {
   templateUrl: './device-list.component.html',
   styleUrls: ['./device-list.component.scss'],
   animations: [vshrink(), triggerChildren(), fade(), hshrink()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DeviceListComponent implements OnInit {
@@ -91,10 +91,14 @@ export class DeviceListComponent implements OnInit {
       .subscribe();
     this.lighthouse.scanning.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((scanning) => {
       this.scanningForLighthouses = scanning;
+      this.cdr.markForCheck();
     });
     this.appSettings.settings
       .pipe(takeUntilDestroyed(this.destroyRef), debounceTime(100))
-      .subscribe((settings) => (this.lighthousePowerControl = settings.lighthousePowerControl));
+      .subscribe((settings) => {
+        this.lighthousePowerControl = settings.lighthousePowerControl;
+        this.cdr.markForCheck();
+      });
   }
 
   processOpenVRDevices(devices: OVRDevice[]) {

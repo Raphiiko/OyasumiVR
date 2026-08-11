@@ -1,4 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { getVersion } from '../../utils/app-utils';
 import { BUILD_ID, FLAVOUR } from '../../../build';
@@ -12,17 +17,21 @@ const appWindow = getCurrentWebviewWindow();
   templateUrl: './window-titlebar.component.html',
   styleUrls: ['./window-titlebar.component.scss'],
   standalone: false,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [fade()],
 })
 export class WindowTitlebarComponent implements OnInit {
   version = '0.0.0';
   showVersionExtras = false;
 
-  constructor(protected messageCenter: MessageCenterService) {}
+  constructor(
+    protected messageCenter: MessageCenterService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   async ngOnInit() {
     this.version = await getVersion();
+    this.cdr.markForCheck();
   }
 
   async minimize() {

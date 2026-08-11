@@ -1,4 +1,11 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ModalService } from '../../services/modal.service';
 import { NotificationSoundModalComponent } from '../notification-sound-modal/notification-sound-modal.component';
 import { SoundEffectConfig } from '../../models/automations';
@@ -9,7 +16,7 @@ import { NotificationService } from '../../services/notification.service';
   selector: 'app-notification-sound-button',
   templateUrl: './notification-sound-button.component.html',
   styleUrls: ['./notification-sound-button.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class NotificationSoundButtonComponent {
@@ -23,7 +30,8 @@ export class NotificationSoundButtonComponent {
 
   constructor(
     private modalService: ModalService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   public openSoundModal(): void {
@@ -34,6 +42,7 @@ export class NotificationSoundButtonComponent {
           if (result) {
             this.soundConfig = result.soundConfig;
             this.soundConfigChange.emit(this.soundConfig);
+            this.cdr.markForCheck();
           }
         });
     }

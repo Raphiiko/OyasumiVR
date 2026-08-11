@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   DestroyRef,
   EventEmitter,
@@ -29,7 +30,7 @@ import {
   templateUrl: './audio-volume-entries.component.html',
   styleUrls: ['./audio-volume-entries.component.scss'],
   animations: [vshrink()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class AudioVolumeEntriesComponent implements OnInit {
@@ -66,7 +67,8 @@ export class AudioVolumeEntriesComponent implements OnInit {
     private domSanitizer: DomSanitizer,
     private modalService: ModalService,
     private audioDeviceService: AudioDeviceService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {}
@@ -124,6 +126,7 @@ export class AudioVolumeEntriesComponent implements OnInit {
         });
         this.collapsed = false;
         this.automationsChange.emit(this.automations);
+        this.cdr.markForCheck();
       });
   }
 

@@ -1,4 +1,10 @@
-import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { SleepService } from '../../services/sleep.service';
 import { VRChatService } from '../../services/vrchat-api/vrchat.service';
 import { UserStatus } from '../../models/vrchat';
@@ -30,7 +36,7 @@ import { isHolidaysEventActive } from 'src-ui/app/utils/event-utils';
   templateUrl: './main-status-bar.component.html',
   styleUrls: ['./main-status-bar.component.scss'],
   animations: [hshrink(), noop()],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class MainStatusBarComponent implements OnInit {
@@ -62,17 +68,25 @@ export class MainStatusBarComponent implements OnInit {
     protected brightnessCctAutomations: BrightnessCctAutomationService,
     protected pulsoid: PulsoidService,
     protected bigscreenBeyondFanAutomation: BigscreenBeyondFanAutomationService,
-    protected cctControl: CCTControlService
+    protected cctControl: CCTControlService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.settings.settings.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((settings) => {
       this.snowverlayActive = !settings.hideSnowverlay && this.snowverlayAvailable;
       this.cctControlEnabled = settings.cctControlEnabled;
+      this.cdr.markForCheck();
     });
     this.mqttService.clientStatus.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((status) => {
       this.mqttStatus = status;
+      this.cdr.markForCheck();
     });
+    // cctCSSColor is a plain property on the service, read straight from the
+    // template, so the view has to be rechecked whenever the CCT changes.
+    this.cctControl.cctStream
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.cdr.markForCheck());
   }
 
   getStatusColor(status: UserStatus) {
