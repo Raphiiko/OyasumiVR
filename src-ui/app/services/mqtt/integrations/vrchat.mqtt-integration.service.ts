@@ -54,19 +54,16 @@ export class VRChatMqttIntegrationService {
       value: false,
       available: false,
     });
-    combineLatest([this.micMute.muted, this.vrchat.vrchatProcessActive]).subscribe(
-      async ([muted, vrcActive]) => {
-        await this.mqtt.setPropertyAvailability('vrcMicMuted', muted !== null && vrcActive);
-        await this.mqtt.setTogglePropertyValue('vrcMicMuted', muted ?? false);
-      }
-    );
+    this.micMute.muted.subscribe(async (muted) => {
+      await this.mqtt.setPropertyAvailability('vrcMicMuted', muted !== null);
+      await this.mqtt.setTogglePropertyValue('vrcMicMuted', muted ?? false);
+    });
     this.mqtt
       .getCommandStreamForProperty<MqttToggleProperty>('vrcMicMuted')
       .subscribe(async (command) => {
         const muted = await firstValueFrom(this.micMute.muted);
-        const vrcActive = await firstValueFrom(this.vrchat.vrchatProcessActive);
-        if (muted === null || !vrcActive) {
-          await this.mqtt.setTogglePropertyValue('vrcMicMuted', muted ?? false);
+        if (muted === null) {
+          await this.mqtt.setTogglePropertyValue('vrcMicMuted', false);
           return;
         }
         await this.micMute.setMute(command.current.value);
