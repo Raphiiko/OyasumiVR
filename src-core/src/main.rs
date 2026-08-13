@@ -25,13 +25,12 @@ mod vrcx;
 
 use std::{mem, sync::atomic::Ordering};
 
-use config::Config;
 pub use flavour::BUILD_FLAVOUR;
 pub use grpc::models as Models;
 
 use cronjob::CronJob;
-use globals::{APTABASE_APP_KEY, FLAGS, TAURI_APP_HANDLE};
-use log::{error, info, warn, LevelFilter};
+use globals::{APTABASE_APP_KEY, TAURI_APP_HANDLE};
+use log::{error, info, LevelFilter};
 use oyasumivr_shared::windows::is_elevated;
 use serde_json::json;
 use tauri::{plugin::TauriPlugin, Manager, Wry};
@@ -209,8 +208,6 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     os::cleanup_batch_files().await;
     // Run any migrations first
     migrations::run_migrations().await;
-    // Load configs
-    load_configs().await;
     // Set up app reference
     *TAURI_APP_HANDLE.lock().await = Some(app_handle.clone());
     let window = app_handle.get_webview_window("main").unwrap();
@@ -296,36 +293,6 @@ async fn app_setup(app_handle: tauri::AppHandle) {
             "[Core] Main process is running without elevation. Elevated sidecar will be launched on demand."
         );
     }
-
-    // Start profiling if we're in debug mode
-    #[cfg(debug_assertions)]
-    {
-        utils::profiling::enable_profiling();
-    }
-    // Start profiling if the flag for it is set
-    #[cfg(not(debug_assertions))]
-    if globals::is_flag_set("ENABLE_PROFILING").await {
-        utils::profiling::enable_profiling();
-    }
-}
-
-async fn load_configs() {
-    match Config::builder()
-        .add_source(config::File::with_name("flags"))
-        .build()
-    {
-        Ok(flags) => {
-            *FLAGS.lock().await = Some(flags);
-        }
-        Err(e) => match e {
-            config::ConfigError::NotFound(_) => {
-                warn!("[Core] Could not find flags config. Using default values.");
-            }
-            _ => {
-                warn!("[Core] Could not load flags config: {e:#?}");
-            }
-        },
-    };
 }
 
 fn on_cron_minute_start(_: &str) {
@@ -418,7 +385,6 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         commands::nvml::nvml_get_devices,
         commands::nvml::nvml_set_power_management_limit,
         commands::debug::open_dev_tools,
-        commands::debug::is_flag_set,
         cn_compliance::cn_compliance_mode,
         commands::time::get_sunrise_sunset_time,
         grpc::commands::get_core_grpc_port,

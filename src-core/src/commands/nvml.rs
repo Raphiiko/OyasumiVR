@@ -6,7 +6,6 @@ use crate::Models::elevated_sidecar::{
 use log::error;
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn nvml_status() -> NvmlStatus {
     let mut client_guard = SIDECAR_GRPC_CLIENT.lock().await;
     let client = client_guard.as_mut();
@@ -25,7 +24,6 @@ pub async fn nvml_status() -> NvmlStatus {
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn nvml_get_devices() -> Vec<NvmlDevice> {
     let mut client_guard = SIDECAR_GRPC_CLIENT.lock().await;
     let client = client_guard.as_mut().unwrap();
@@ -36,7 +34,6 @@ pub async fn nvml_get_devices() -> Vec<NvmlDevice> {
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn nvml_set_power_management_limit(
     uuid: String,
     power_limit: u32,

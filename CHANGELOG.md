@@ -36,6 +36,10 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 - The VR overlay no longer leaves temporary files on your disk
 - Various stability improvements
 
+### Removed
+
+- Removed the `flags.toml` file, and the command profiling it could switch on. Both were developer debugging tools
+
 ## [25.6.12]
 
 ### Added

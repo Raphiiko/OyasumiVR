@@ -18,7 +18,6 @@ pub async fn is_cn_release() -> bool {
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn cn_compliance_mode() -> bool {
     is_cn_release().await
 }

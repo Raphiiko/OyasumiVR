@@ -64,7 +64,7 @@ const outputDir = join('dist', 'steam', contentDir);
 rmSync(outputDir, { recursive: true, force: true });
 mkdirSync(outputDir, { recursive: true });
 
-const buildArtifacts = [EXECUTABLE_NAME, 'flags.toml', 'openvr_api.dll', 'steam_api64.dll'];
+const buildArtifacts = [EXECUTABLE_NAME, 'openvr_api.dll', 'steam_api64.dll'];
 for (const file of buildArtifacts) {
   const src = join(sourceDir, file);
   if (!existsSync(src)) {
