@@ -24,6 +24,7 @@ import { EventLogService } from '../event-log.service';
 import { EventLogChangedVRChatMicMuteState } from '../../models/event-log-entry';
 import { info } from '@tauri-apps/plugin-log';
 import { fetch } from '@tauri-apps/plugin-http';
+import { VRChatService } from '../vrchat-api/vrchat.service';
 
 const READ_ADDR = '/avatar/parameters/MuteSelf';
 const WRITE_ADDR = '/input/Voice';
@@ -34,6 +35,9 @@ const WRITE_ADDR = '/input/Voice';
 export class VRChatMicMuteAutomationService {
   private _muted = new BehaviorSubject<boolean | null>(null);
   public muted = this._muted.asObservable();
+  // Serializes the OSC button pulses, as two overlapping pulses read as a single press in VRChat.
+  private muteQueue: Promise<void> = Promise.resolve();
+  private vrcActive = false;
   private config: VRChatMicMuteAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.VRCHAT_MIC_MUTE_AUTOMATIONS
   );
@@ -43,18 +47,24 @@ export class VRChatMicMuteAutomationService {
     private automationConfigs: AutomationConfigService,
     private sleep: SleepService,
     private sleepPreparation: SleepPreparationService,
-    private eventLog: EventLogService
+    private eventLog: EventLogService,
+    private vrchat: VRChatService
   ) {}
 
   async init() {
     this.automationConfigs.configs.subscribe((configs) => {
       this.config = configs.VRCHAT_MIC_MUTE_AUTOMATIONS;
     });
+    // Forget the muted state when VRChat stops, as the next session reports its own
+    this.vrchat.vrchatProcessActive.subscribe((active) => {
+      this.vrcActive = active;
+      if (!active) this._muted.next(null);
+    });
     // Listen for the muted state
     this.osc.messages.subscribe((message) => {
       if (message.address === READ_ADDR) {
         const value = message.values[0];
-        if (value.kind === 'bool') {
+        if (value.kind === 'bool' && this.vrcActive) {
           const muted = (value as OSCBoolValue).value;
           this._muted.next(muted);
         }
@@ -140,10 +150,14 @@ export class VRChatMicMuteAutomationService {
   }
 
   async setMute(state: boolean) {
-    if (this._muted.value !== state) {
-      if (this._muted.value !== null) this._muted.next(state);
-      await this.toggleMute(false);
-    }
+    const run = this.muteQueue.then(async () => {
+      if (this._muted.value !== state) {
+        if (this._muted.value !== null) this._muted.next(state);
+        await this.toggleMute(false);
+      }
+    });
+    this.muteQueue = run.catch(() => undefined);
+    return run;
   }
 
   private async fetchMutedState(): Promise<boolean> {
@@ -154,6 +168,7 @@ export class VRChatMicMuteAutomationService {
       const resp = await fetch(`http://${oscqAddr}/avatar/parameters/MuteSelf`);
       const data: { VALUE?: boolean[] } = await resp.json().catch(() => {});
       if (
+        this.vrcActive &&
         data.VALUE &&
         isArray(data.VALUE) &&
         data.VALUE.length &&
