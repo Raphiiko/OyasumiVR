@@ -25,6 +25,11 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 - Fixed SteamVR sometimes crashing when OyasumiVR turned off several base stations at once
 - Fixed the brightness and color temperature sliders in the VR overlay jumping to 100%
 - Fixed the VR overlay restarting itself over and over again on some systems
+- Fixed the VR overlay showing nothing but the cursor on systems with more than one graphics card. It now always
+  renders on the same graphics card as SteamVR, so assigning OyasumiVR to a specific card in the Windows graphics
+  settings is no longer needed
+- Fixed the "GPU acceleration" setting for the VR overlay. Turning it off left the overlay blank instead of switching
+  to software rendering
 - The VR overlay no longer leaves temporary files on your disk
 - Various stability improvements
 

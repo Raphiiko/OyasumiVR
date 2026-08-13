@@ -83,7 +83,16 @@ public static class Program {
     settings.CefCommandLineArgs.Add("disable-features", "MetricsService,PersistentHistograms");
     settings.CefCommandLineArgs.Add("disable-crash-reporter", "true");
     settings.CefCommandLineArgs.Add("disable-spell-checking", "true");
-    
+
+    if (GpuAccelerated)
+    {
+      // A shared texture can only be opened on the GPU that produced it, so Chromium has to
+      // render on the same adapter SteamVR does, which is the high performance one. Chromium
+      // offers no way to name an exact adapter, and this has to be decided here because CEF
+      // starts long before SteamVR is known to be running.
+      settings.CefCommandLineArgs.Add("force_high_performance_gpu", "");
+    }
+
     if (InReleaseMode())
     {
       settings.LogSeverity = LogSeverity.Disable;
