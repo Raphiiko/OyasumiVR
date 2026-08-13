@@ -15,7 +15,6 @@ use crate::globals::{TAURI_APP_HANDLE, TAURI_CLI_MATCHES};
 static SYSINFO: LazyLock<Mutex<System>> = LazyLock::new(|| Mutex::new(System::new_all()));
 
 pub mod models;
-pub mod profiling;
 pub mod serialization;
 pub mod sidecar_manager;
 
@@ -65,7 +64,6 @@ pub fn get_time() -> u128 {
 }
 
 pub async fn send_event<S: Serialize + Clone>(event: &str, payload: S) {
-    profiling::register_event(event).await;
     let app_handle_guard = TAURI_APP_HANDLE.lock().await;
     let app_handle = app_handle_guard.as_ref().unwrap();
     match app_handle.emit(event, payload) {

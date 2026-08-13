@@ -3,7 +3,6 @@ use log::debug;
 use crate::vrcx::*;
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn vrcx_log(msg: String) -> bool {
     let sender = &mut VRCX_NORITICATION_SENDER.lock().unwrap();
     if sender.sender.is_none() && sender.connect().is_err() {

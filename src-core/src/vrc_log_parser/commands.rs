@@ -7,7 +7,6 @@ static CANCELLATION_TOKEN: LazyLock<Mutex<Option<CancellationToken>>> =
     LazyLock::new(Default::default);
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn init_vrc_log_watcher() {
     info!("[Core] Initializing VRChat Log Watcher...");
     // Terminate existing task if it exists
