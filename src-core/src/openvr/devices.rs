@@ -45,7 +45,10 @@ pub async fn on_ovr_tick() {
 }
 
 pub async fn on_ovr_event(event: ovr::system::VREvent) {
-    match event.event_type {
+    let ovr::system::EventType::Known(event_type) = &event.event_type else {
+        return;
+    };
+    match event_type {
         ovr::sys::EVREventType::VREvent_TrackedDeviceActivated
         | ovr::sys::EVREventType::VREvent_TrackedDeviceDeactivated => {
             update_device(event.tracked_device_index, true).await;

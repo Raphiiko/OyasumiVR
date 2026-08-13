@@ -253,7 +253,7 @@ pub async fn task() {
                     event.unwrap()
                 };
                 // Handle Quit event
-                if event.event_type == ovr::sys::EVREventType::VREvent_Quit {
+                if event.is(ovr::sys::EVREventType::VREvent_Quit) {
                     info!("[Core] OpenVR is Quitting. Shutting down OpenVR module");
                     ovr_active = false;
                     update_status(OpenVRStatus::Inactive).await;

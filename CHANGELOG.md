@@ -23,6 +23,7 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 ### Fixed
 
 - Fixed SteamVR sometimes crashing when OyasumiVR turned off several base stations at once
+- Fixed OyasumiVR shutting down on its own when SteamVR reported an event it did not recognise
 - Fixed the brightness and color temperature sliders in the VR overlay jumping to 100%
 - Fixed the VR overlay restarting itself over and over again on some systems
 - Fixed the VR overlay showing nothing but the cursor on systems with more than one graphics card. It now always
