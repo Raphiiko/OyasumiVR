@@ -61,21 +61,7 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
     private background: BackgroundService,
     private destroyRef: DestroyRef
   ) {
-    let translationContributors: TranslationContributor[] = translationContributorData;
-    // Change flags in translation contributors for CN compliance.
-    if (FLAVOUR === 'STEAM_CN') {
-      const cnComplianceFix = (author: TranslationContributor): TranslationContributor => {
-        if (author.flagCode === 'tw') author.flagCode = 'hk';
-        if (author.langCode === 'tw') author.langCode = 'hk';
-        return author;
-      };
-
-      translationContributors = translationContributors.map((contribs) =>
-        cnComplianceFix(contribs)
-      );
-    }
-
-    this.buildTranslationContributors(translationContributors, 4);
+    this.buildTranslationContributors(translationContributorData, 4);
   }
 
   private buildTranslationContributors(

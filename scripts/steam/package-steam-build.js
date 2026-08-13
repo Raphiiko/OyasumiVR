@@ -1,18 +1,29 @@
-import { copyFileSync, cpSync, existsSync, mkdirSync, readFileSync, rmSync } from 'fs';
+import {
+  copyFileSync,
+  cpSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'fs';
 import { spawnSync } from 'child_process';
 import { join } from 'path';
 
-const FLAVOURS = {
+// Both depots get the same STEAM build. The Chinese depot carries a marker file, which switches
+// OyasumiVR to CN compliance mode at runtime.
+const DEPOTS = {
   STEAM: { contentDir: 'Win64' },
-  STEAM_CN: { contentDir: 'Win64_CN' },
+  STEAM_CN: { contentDir: 'Win64_CN', cnRelease: true },
 };
 
 const WEBVIEW2_INSTALLER_URL = 'https://go.microsoft.com/fwlink/p/?LinkId=2124703';
 const WEBVIEW2_INSTALLER_NAME = 'WebView2RuntimeInstaller.exe';
 const EXECUTABLE_NAME = 'OyasumiVR.exe';
+const CN_MARKER_NAME = 'cn_release';
 
-const flavourArg = (process.argv[2] || '').toUpperCase();
-if (!FLAVOURS[flavourArg]) {
+const depotArg = (process.argv[2] || '').toUpperCase();
+if (!DEPOTS[depotArg]) {
   console.error('Usage: node scripts/steam/package-steam-build.js <STEAM|STEAM_CN>');
   process.exit(1);
 }
@@ -24,10 +35,10 @@ if (!flavourMatch) {
   process.exit(1);
 }
 const currentFlavour = flavourMatch[1];
-if (currentFlavour !== flavourArg) {
+if (currentFlavour !== 'STEAM') {
   console.error(
-    `Current build flavour is ${currentFlavour}, but packaging requested ${flavourArg}. ` +
-      `Run \`npm run set-flavour ${flavourArg}\` and rebuild before packaging.`
+    `Current build flavour is ${currentFlavour}, but Steam depots need the STEAM flavour. ` +
+      'Run `npm run set-flavour STEAM` and rebuild before packaging.'
   );
   process.exit(1);
 }
@@ -47,7 +58,7 @@ if (existsSync(join(releaseDir, EXECUTABLE_NAME))) {
   process.exit(1);
 }
 
-const { contentDir } = FLAVOURS[flavourArg];
+const { contentDir, cnRelease } = DEPOTS[depotArg];
 const outputDir = join('dist', 'steam', contentDir);
 
 rmSync(outputDir, { recursive: true, force: true });
@@ -96,4 +107,8 @@ copyFileSync(
   join(outputDir, 'runtime_dependencies.vdf')
 );
 
-console.log(`Packaged Steam ${flavourArg} build to ${outputDir}`);
+if (cnRelease) {
+  writeFileSync(join(outputDir, CN_MARKER_NAME), '');
+}
+
+console.log(`Packaged Steam ${depotArg} build to ${outputDir}`);

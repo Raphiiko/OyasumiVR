@@ -1,5 +1,4 @@
 import { LazyStore } from '@tauri-apps/plugin-store';
-import { FLAVOUR } from '../build';
 
 export const SPLASH_MIN_DURATION = 3000;
 export const SETTINGS_KEY_AUTOMATION_CONFIGS = 'AUTOMATION_CONFIGS';
@@ -58,7 +57,7 @@ export const LANGUAGES: Array<{ code: string; label: string; flag?: string }> = 
   {
     code: 'tw',
     label: '繁體中文',
-    flag: FLAVOUR === 'STEAM_CN' ? 'hk' : 'tw',
+    flag: 'tw',
   },
   {
     code: 'cn',

@@ -7,6 +7,7 @@ import { attachConsole, error, info } from '@tauri-apps/plugin-log';
 import { getVersion } from './app/utils/app-utils';
 import { FLAVOUR } from './build';
 import { disableDefaultContextMenu } from './app/utils/browser-utils';
+import { initCnCompliance } from './app/cn-compliance';
 
 if (environment.production) {
   enableProdMode();
@@ -22,6 +23,10 @@ getVersion().then((version) => {
 
 disableDefaultContextMenu();
 
-platformBrowserDynamic()
-  .bootstrapModule(AppModule, { applicationProviders: [provideZoneChangeDetection()] })
-  .catch((err) => error(err));
+initCnCompliance()
+  .catch((err) => error(err))
+  .then(() =>
+    platformBrowserDynamic()
+      .bootstrapModule(AppModule, { applicationProviders: [provideZoneChangeDetection()] })
+      .catch((err) => error(err))
+  );
