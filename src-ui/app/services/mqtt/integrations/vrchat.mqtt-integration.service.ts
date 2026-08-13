@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { MqttDiscoveryService } from '../mqtt-discovery.service';
 import { VRChatService } from '../../vrchat-api/vrchat.service';
 import { combineLatest, firstValueFrom } from 'rxjs';
+import { VRChatMicMuteAutomationService } from '../../osc-automations/vrchat-mic-mute-automation.service';
+import { MqttToggleProperty } from '../../../models/mqtt';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +11,8 @@ import { combineLatest, firstValueFrom } from 'rxjs';
 export class VRChatMqttIntegrationService {
   constructor(
     private mqtt: MqttDiscoveryService,
-    private vrchat: VRChatService
+    private vrchat: VRChatService,
+    private micMute: VRChatMicMuteAutomationService
   ) {}
 
   async init() {
@@ -43,6 +46,23 @@ export class VRChatMqttIntegrationService {
       value: 'null',
       available: false,
     });
+    await this.mqtt.initProperty({
+      type: 'TOGGLE',
+      id: 'vrcMicMuted',
+      topicPath: 'vrcMicMuted',
+      displayName: 'VRChat Microphone Muted',
+      value: false,
+      available: false,
+    });
+    this.micMute.muted.subscribe(async (muted) => {
+      await this.mqtt.setPropertyAvailability('vrcMicMuted', muted !== null);
+      await this.mqtt.setTogglePropertyValue('vrcMicMuted', muted ?? false);
+    });
+    this.mqtt
+      .getCommandStreamForProperty<MqttToggleProperty>('vrcMicMuted')
+      .subscribe(async (command) => {
+        await this.micMute.setMute(command.current.value);
+      });
     this.vrchat.user.subscribe(async (user) => {
       await this.mqtt.setSensorPropertyValue('vrcPlayerName', user?.displayName ?? 'null');
       await this.mqtt.setSensorPropertyValue(
