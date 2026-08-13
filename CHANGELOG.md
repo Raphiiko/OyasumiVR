@@ -19,6 +19,8 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 - Updated the Russian translations
 - OyasumiVR's window now does less work while it is open
 - Updated OyasumiVR's internal components
+- The Chinese Steam release is now the same build as the international Steam release. It switches to
+  CN compliance mode at runtime.
 
 ### Fixed
 

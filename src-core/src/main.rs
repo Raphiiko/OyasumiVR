@@ -1,5 +1,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod cn_compliance;
 mod commands;
 mod discord;
 mod elevated_sidecar;
@@ -418,6 +419,7 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         commands::nvml::nvml_set_power_management_limit,
         commands::debug::open_dev_tools,
         commands::debug::is_flag_set,
+        cn_compliance::cn_compliance_mode,
         commands::time::get_sunrise_sunset_time,
         grpc::commands::get_core_grpc_port,
         grpc::commands::get_core_grpc_web_port,

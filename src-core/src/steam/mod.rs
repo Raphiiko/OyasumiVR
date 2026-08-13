@@ -13,7 +13,6 @@ pub static STEAMWORKS_USER_STATS_FETCHED: LazyLock<Mutex<bool>> =
 
 pub async fn init() {
     if crate::BUILD_FLAVOUR != crate::flavour::BuildFlavour::Steam
-        && crate::BUILD_FLAVOUR != crate::flavour::BuildFlavour::SteamCn
         && crate::BUILD_FLAVOUR != crate::flavour::BuildFlavour::Dev
     {
         return;
