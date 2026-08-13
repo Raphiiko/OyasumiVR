@@ -31,4 +31,5 @@ Follow `docs/COMMENT_POLICY.md`. Read it before you write or change a comment.
 ## Translations
 
 Add and change English strings only, in `src-ui/assets/i18n/en.json`. Translators fill in the other
-locales. Use `npm run tl` to move or set keys, so every locale file keeps the same shape.
+locales. `npm run tl set` writes `en.json` only, which is what you want. To rename or remove a key,
+use `npm run tl mv` or `npm run tl unset`, so the change reaches every locale file.

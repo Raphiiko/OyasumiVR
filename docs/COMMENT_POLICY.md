@@ -88,12 +88,14 @@ that costs a reviewer more than the comments do.
 
 ## Three tests, in order
 
-For a body comment. For a doc comment there is one test: could a caller answer this from the
-signature alone? If yes, cut it.
+For a body comment. Stop at the first test that answers. For a doc comment there is one test: could
+a caller answer this from the signature alone? If yes, cut it.
 
-1. Does it explain why, or what changed? PR description.
-2. Does it only repeat the statement under it? Delete it.
-3. Does it let a reader skip a block they would otherwise have to read line by line? Keep it.
+1. Is it a one-line invariant or an invisible contract, as above? Keep it, the rest of the tests do
+   not apply.
+2. Does it explain why, or what changed? PR description.
+3. Does it only repeat the statement under it? Delete it.
+4. Does it let a reader skip a block they would otherwise have to read line by line? Keep it.
 
 Nothing else earns a comment.
 
