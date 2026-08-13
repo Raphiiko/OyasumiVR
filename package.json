@@ -34,9 +34,10 @@
     "set-build-id": "node scripts/set-build-id.js",
     "prepare:dev": "npm run set-build-id && npm run set-flavour DEV",
     "//5": "=== Tools ===",
-    "format": "run-s format:eslint format:prettier",
-    "format:eslint": "eslint --no-error-on-unmatched-pattern --fix \"src-ui/**/*.ts\" \"src-shared-ts/**/*.ts\" \"src-overlay-ui/**/*.ts\" \"scripts/**/*.ts\"",
-    "format:prettier": "prettier --write \"src-ui/**/*.{svelte,html,css,scss,js,ts}\" \"src-shared-ts/**/*.{svelte,html,css,scss,js,ts}\" \"src-overlay-ui/**/*.{svelte,html,css,scss,js,ts}\" \"scripts/**/*.{svelte,html,css,scss,js,ts}\"",
+    "format": "run-s format:eslint format:prettier format:overlay-ui",
+    "format:eslint": "eslint --no-error-on-unmatched-pattern --fix \"src-ui/**/*.ts\" \"src-shared-ts/**/*.ts\" \"scripts/**/*.ts\"",
+    "format:prettier": "prettier --write \"src-ui/**/*.{html,css,scss,js,ts}\" \"src-shared-ts/**/*.{html,css,scss,js,ts}\" \"scripts/**/*.{html,css,scss,js,ts}\"",
+    "format:overlay-ui": "cd src-overlay-ui && npm run format",
     "lint": "ng lint",
     "clean": "rimraf dist && rimraf src-overlay-sidecar/bin && rimraf src-overlay-sidecar/obj && rimraf src-overlay-ui/build && rimraf src-elevated-sidecar/target && rimraf src-core/target && rimraf src-shared-rust/target && rimraf src-core/resources/elevated-sidecar && rimraf src-core/resources/overlay-sidecar && rimraf src-core/resources/fonts",
     "tl": "node scripts/translation-utils.js",
@@ -102,7 +103,6 @@
     "chartjs-adapter-moment": "^1.0.1",
     "colorjoe": "^4.2.0",
     "cookie": "^2.0.1",
-    "eslint-plugin-json": "^5.0.0",
     "flag-icons": "^7.5.0",
     "fuse.js": "^7.5.0",
     "lodash": "^4.18.1",
@@ -154,27 +154,10 @@
     "music-metadata": "11.14.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.9.6",
-    "prettier-plugin-svelte": "^4.1.1",
     "recursive-copy": "^2.0.14",
     "rimraf": "^6.1.3",
     "sharp": "^0.35.3",
     "typescript": "~6.0.3"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{ts,json,js}": [
-      "ng-lint-staged lint --fix --",
-      "prettier --write",
-      "git add"
-    ],
-    "*.{html,scss,md,html,yml,json}": [
-      "prettier --write",
-      "git add"
-    ]
   },
   "overrides": {
     "axios": "^1.7.8"

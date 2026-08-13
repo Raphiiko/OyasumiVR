@@ -16,8 +16,7 @@ export default [
       'proto/**',
       'node_modules/**',
       'dist/**',
-      'src-overlay-ui/.svelte-kit/**',
-      'src-overlay-ui/build/**',
+      'src-overlay-ui/**',
     ],
   },
 

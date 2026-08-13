@@ -35,8 +35,7 @@
 	const sliderMode = writable<'BRIGHTNESS' | 'COLOR_TEMP'>('BRIGHTNESS');
 	const sliderModeButtonMode = derived(sliderMode, (sliderMode) => {
 		return (sliderMode === 'BRIGHTNESS' ? 'COLOR_TEMP' : 'BRIGHTNESS') as
-			| 'BRIGHTNESS'
-			| 'COLOR_TEMP';
+			'BRIGHTNESS' | 'COLOR_TEMP';
 	});
 
 	// Set the slider mode back to BRIGHTNESS if CCT control is disabled
