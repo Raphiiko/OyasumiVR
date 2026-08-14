@@ -19,14 +19,14 @@ use std::sync::LazyLock;
 use std::time::Duration;
 use tokio::sync::mpsc::Sender;
 use tokio::sync::Mutex;
-use winreg::enums::HKEY_CURRENT_USER;
-use winreg::RegKey;
 use windows::core::GUID;
 use windows::Win32::Foundation::ERROR_SUCCESS;
 use windows::Win32::System::Power::{
     PowerEnumerate, PowerGetActiveScheme, PowerReadFriendlyName, PowerSetActiveScheme,
     ACCESS_SCHEME,
 };
+use winreg::enums::HKEY_CURRENT_USER;
+use winreg::RegKey;
 
 type PlaySoundSender = LazyLock<Mutex<Option<Sender<(String, f32)>>>>;
 
@@ -148,10 +148,27 @@ pub async fn init_sound_playback() {
 pub fn register_notification_app_id(app_handle: &tauri::AppHandle) {
     let config = app_handle.config();
     let app_id = config.identifier.clone();
-    let display_name = config.product_name.clone().unwrap_or_else(|| app_id.clone());
+    let display_name = config
+        .product_name
+        .clone()
+        .unwrap_or_else(|| app_id.clone());
+    let icon_uri = std::env::current_exe()
+        .ok()
+        .and_then(|exe| {
+            exe.parent()
+                .map(|dir| dir.join("resources").join("icon.png"))
+        })
+        .filter(|path| path.exists())
+        .map(|path| path.to_string_lossy().into_owned());
     let result = RegKey::predef(HKEY_CURRENT_USER)
         .create_subkey(format!("Software\\Classes\\AppUserModelId\\{app_id}"))
-        .and_then(|(key, _)| key.set_value("DisplayName", &display_name));
+        .and_then(|(key, _)| {
+            key.set_value("DisplayName", &display_name)?;
+            match &icon_uri {
+                Some(icon_uri) => key.set_value("IconUri", icon_uri),
+                None => Ok(()),
+            }
+        });
     match result {
         Ok(()) => info!("[Core] Registered notification app id \"{app_id}\""),
         Err(e) => error!("[Core] Failed to register notification app id \"{app_id}\": {e}"),
