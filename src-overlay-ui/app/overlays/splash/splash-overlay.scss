@@ -1,0 +1,109 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+main {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 1024px;
+  height: 1024px;
+  overflow: hidden;
+  user-select: none;
+}
+
+.stack-frame {
+  @include stack-frame;
+}
+
+.icon-shadow,
+.logo-text-shadow {
+  width: 50%;
+  height: 50%;
+  border-radius: 9999px;
+  background-color: black;
+  opacity: 0.2;
+}
+
+.icon-shadow {
+  filter: blur(75px);
+  transform: translateY(-20px);
+}
+
+.logo-text-shadow {
+  filter: blur(130px);
+  transform: translateY(150px) scaleY(0.3);
+}
+
+.icon-frame {
+  &.anim-blur-in {
+    --anim-duration: 800ms;
+  }
+
+  &.anim-blur-out {
+    --anim-duration: 1500ms;
+  }
+}
+
+.icon {
+  width: 250px;
+  height: 250px;
+  overflow: hidden;
+  border-radius: 50px;
+  transform: translateY(-100px);
+  @include glow(1, 16px);
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.logo-text-frame {
+  transform: translateY(120px);
+}
+
+.logo-text {
+  font-size: 80px;
+  color: white;
+
+  &.anim-fly-up-in {
+    --anim-duration: 800ms;
+    --anim-delay: 200ms;
+  }
+
+  &.anim-blur-out {
+    --anim-duration: 1500ms;
+  }
+}
+
+.logo-text-oyasumi {
+  font-weight: 200;
+}
+
+.logo-text-vr {
+  font-weight: 500;
+}
+
+.tagline-frame {
+  transform: translate(70px, 170px);
+}
+
+.tagline {
+  font-size: 28px;
+  color: white;
+  opacity: 0.8;
+
+  &.anim-fly-up-in {
+    --anim-duration: 800ms;
+    --anim-delay: 200ms;
+  }
+
+  &.anim-blur-out {
+    --anim-duration: 1500ms;
+  }
+}

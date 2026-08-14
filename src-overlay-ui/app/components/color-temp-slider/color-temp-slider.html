@@ -1,0 +1,32 @@
+<div
+  class="slider-container"
+  [class.disabled]="disabled()"
+  [class.transitioning]="isTransitioning()"
+>
+  <div class="slider-backdrop"></div>
+  <div class="slider-title-row">
+    @if (!dragging()) {
+      <span
+        class="glow-80"
+        animate.enter="anim-fade-in"
+        animate.leave="anim-fade-out"
+        style="--anim-duration: 100ms"
+        >{{ label() }}</span
+      >
+    } @else {
+      <span
+        class="glow-80"
+        animate.enter="anim-fade-in"
+        animate.leave="anim-fade-out"
+        style="--anim-duration: 100ms"
+        >{{ renderValue() }}</span
+      >
+    }
+  </div>
+  <div class="slider-bar-area" [class.dragging]="dragging()" (mousedown)="startDragging($event)">
+    <div class="slider-bar-pre glow-80" [style.flex]="renderProgression() * 100"></div>
+    <div class="slider-thumb glow-80" [style.background-color]="cssColorForCCT()"></div>
+    <div class="slider-bar-post glow-80" [style.flex]="(1 - renderProgression()) * 100"></div>
+    <div class="slider-bar-range-guide" #rangeGuide></div>
+  </div>
+</div>

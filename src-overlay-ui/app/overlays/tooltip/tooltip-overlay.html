@@ -1,0 +1,11 @@
+<div class="tooltip-overlay">
+  @if (tooltip()) {
+    <div animate.enter="anim-blur-in" animate.leave="anim-blur-out">
+      <div class="card">
+        <div class="tooltip">
+          <span>{{ tooltip() }}</span>
+        </div>
+      </div>
+    </div>
+  }
+</div>

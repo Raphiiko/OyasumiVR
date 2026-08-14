@@ -1,0 +1,14 @@
+<div class="stack">
+  @for (notification of shownNotifications(); track notification.id; let index = $index) {
+    @let depth = shownNotifications().length - index - 1;
+    <div class="scaler">
+      <div class="slot" [class]="'depth-' + depth">
+        <app-notification
+          [message]="notification.message"
+          [duration]="notification.duration"
+          [active]="isActive(notification)"
+        />
+      </div>
+    </div>
+  }
+</div>

@@ -49,6 +49,7 @@ Thumbs.db
 *.sln.DotSettings.user
 
 # Oyasumi specific
+src-overlay-ui/build
 src-ui/assets/preload-assets.json
 src-ui/assets/splashscreen/splash-blurhash.css
 

@@ -16,7 +16,7 @@ export default [
       'proto/**',
       'node_modules/**',
       'dist/**',
-      'src-overlay-ui/**',
+      'src-overlay-ui/build/**',
     ],
   },
 

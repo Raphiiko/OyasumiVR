@@ -1,0 +1,28 @@
+<div class="dialog">
+  <div class="card">
+    <div class="content">
+      <div class="title">
+        <span class="glow-40">{{ title() | transloco }}</span>
+      </div>
+      <div class="divider glow-40"></div>
+      <div class="message">
+        <p>{{ message() | transloco }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="buttons">
+    <div class="card card--clickable" (click)="cancelled.emit()">
+      <div class="button">{{ 'shared.modals.cancel' | transloco }}</div>
+    </div>
+    <div
+      class="card card--clickable"
+      [class.card--active]="confirmColor() !== 'normal'"
+      [class.card--active-blue]="confirmActiveColor() === 'blue'"
+      [class.card--active-red]="confirmActiveColor() === 'red'"
+      [class.card--disabled]="confirmDisabled()"
+      (click)="onConfirm()"
+    >
+      <div class="button">{{ confirmText() | transloco }}</div>
+    </div>
+  </div>
+</div>

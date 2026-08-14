@@ -430,9 +430,8 @@ GPU 自動化
 {{BUILT_WITH_BODY}}
 OyasumiVR 採用了以下技術：
 
-- [Angular](https://angular.io/)（TypeScript、主要 UI）
+- [Angular](https://angular.io/)（TypeScript、主要 UI 與嵌入介面 UI）
 - [Tauri](https://tauri.app/)（Rust、桌面應用程式框架）
-- [SvelteKit](https://kit.svelte.dev/)（TypeScript、嵌入介面 UI）
 - [.NET](https://dotnet.microsoft.com/en-us/)（C#、嵌入介面）
 
 {{DEVELOPMENT_HEADER}}

@@ -1,0 +1,62 @@
+<main [class.non-overlay]="!inOverlay">
+  @if (ready()) {
+    @switch (mode()) {
+      @case ('OVERVIEW') {
+        <div
+          class="stack-frame overview"
+          [class.obscured]="dialogShown() || inProgress()"
+          animate.leave="anim-blur-fly-out"
+          style="--anim-duration: 300ms"
+        >
+          <app-dashboard-overview
+            [shutdownSequenceDisabled]="!canStart()"
+            (navigate)="mode.set($event)"
+            (openShutdownSequence)="openShutdownSequence()"
+            (closeDashboard)="closeDashboard()"
+          />
+        </div>
+      }
+      @case ('AUTOMATIONS') {
+        <div class="stack-frame" animate.leave="anim-scale-out">
+          <app-dashboard-automation-config (navigate)="mode.set($event)" />
+        </div>
+      }
+      @case ('DEVICE_CONTROL') {
+        <div class="stack-frame" animate.leave="anim-scale-out">
+          <app-dashboard-device-control
+            (navigate)="mode.set($event)"
+            (closeDashboard)="closeDashboard()"
+          />
+        </div>
+      }
+    }
+    @if (dialogShown()) {
+      <div class="stack-frame" animate.enter="anim-blur-in" animate.leave="anim-blur-out">
+        <div animate.enter="anim-scale-in" animate.leave="anim-scale-out">
+          <app-dialog
+            title="overlay.dashboard.shutdownSequence.dialog.title"
+            message="overlay.dashboard.shutdownSequence.dialog.message"
+            confirmText="overlay.dashboard.shutdownSequence.dialog.start"
+            confirmColor="red"
+            [confirmDisabled]="startDisabled() || inProgress() || !canStart()"
+            (cancelled)="closeShutdownSequence()"
+            (confirmed)="startShutdownSequence()"
+          />
+        </div>
+      </div>
+    }
+    @if (inProgress()) {
+      <div class="stack-frame" animate.enter="anim-blur-in" animate.leave="anim-blur-out">
+        <div class="shutdown-backdrop"></div>
+      </div>
+      <div class="stack-frame" animate.enter="anim-blur-in" animate.leave="anim-blur-out">
+        <div class="shutdown-progress">
+          <span class="glow-100">{{ 'shutdown-automations.overlay.title' | transloco }}</span>
+          <div class="spinner glow-100">
+            <div class="large-spinner"></div>
+          </div>
+        </div>
+      </div>
+    }
+  }
+</main>

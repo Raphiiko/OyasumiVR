@@ -601,9 +601,8 @@ _（\*）Tundra 定位器回報電池電量與充電狀態的速度較慢，可�
 
 OyasumiVR 採用了以下技術：
 
-- [Angular](https://angular.io/)（TypeScript、主要 UI）
+- [Angular](https://angular.io/)（TypeScript、主要 UI 與嵌入介面 UI）
 - [Tauri](https://tauri.app/)（Rust、桌面應用程式框架）
-- [SvelteKit](https://kit.svelte.dev/)（TypeScript、嵌入介面 UI）
 - [.NET](https://dotnet.microsoft.com/en-us/)（C#、嵌入介面）
 
 ## 開發

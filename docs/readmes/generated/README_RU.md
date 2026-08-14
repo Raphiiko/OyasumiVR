@@ -601,9 +601,8 @@ _(\*) Tundra трекеры имеют большую задержу отчет�
 
 OyasumiVR's был сделан при помощи:
 
-- [Angular](https://angular.io/) (TypeScript, Основной интерфейс)
+- [Angular](https://angular.io/) (TypeScript, Основной интерфейс и интерфейс оверлея)
 - [Tauri](https://tauri.app/) (Rust, Desktop Framework)
-- [SvelteKit](https://kit.svelte.dev/) (TypeScript, Интерфейс оверлея)
 - [.NET](https://dotnet.microsoft.com/en-us/) (C#, Оверлей)
 
 ## Разработка

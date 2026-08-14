@@ -1,0 +1,34 @@
+$toggle-glow: drop-shadow(0 0 8px rgba(255, 255, 255, 0.4));
+
+.toggle {
+  position: relative;
+  width: 60px;
+  height: 35px;
+  border: 0.2em solid white;
+  border-radius: 9999px;
+  transition: all 0.15s ease;
+
+  // The fade runs before the glow, so a dimmed toggle also casts a dimmed shadow.
+  filter: opacity(0.25) $toggle-glow;
+
+  // The knob sits centred in a square as tall as the padding box.
+  &::after {
+    content: '';
+    position: absolute;
+    top: calc(8.5px - 0.2em);
+    left: calc(8.5px - 0.2em);
+    width: 18px;
+    height: 18px;
+    border-radius: 9999px;
+    background: white;
+    transition: all 0.15s ease;
+  }
+
+  &--active {
+    filter: opacity(1) $toggle-glow;
+
+    &::after {
+      transform: translateX(24px);
+    }
+  }
+}
