@@ -42,7 +42,6 @@ export const appConfig: ApplicationConfig = {
 function initFonts(): void {
   const corePort = parseInt(new URLSearchParams(window.location.search).get('corePort') ?? '0', 10);
   if (corePort <= 0 || corePort >= 65536) return;
-  // An overlay outlives a failed load without ever reloading, so report it rather than swallow it.
   fontLoader
     .init(corePort)
     .catch((e) => console.error(`Could not load fonts from the core on port ${corePort}`, e));

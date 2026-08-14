@@ -26,12 +26,12 @@ export class LocaleService {
     try {
       await Promise.all([fonts, firstValueFrom(this.transloco.load(locale))]);
     } catch (e) {
-      // Clear the guard so a later request for this locale can try again.
+      // Let a later request for this locale try again.
       this.requestedLocale = undefined;
       console.error(`Could not load translations for locale "${locale}"`, e);
       return;
     }
-    // A newer locale arrived while this one was loading.
+    // Skip if a newer locale arrived while this one was loading.
     if (this.requestedLocale === locale) this.transloco.setActiveLang(locale);
   }
 }
