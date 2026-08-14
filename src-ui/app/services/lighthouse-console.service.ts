@@ -102,7 +102,7 @@ export class LighthouseConsoleService {
     const settings = await firstValueFrom(this.appSettings.settings);
     const lighthouseConsolePath = settings.lighthouseConsolePath;
     if (this._consoleStatus.value !== 'SUCCESS') return;
-    // the queue can hold a batch back, so work from the device state as it is now
+    // resolve the devices as they are now, not as the caller saw them
     const requestedIndices = requestedDevices.map((device) => device.index);
     const ovrDevices = (await firstValueFrom(this.openvr.devices)).filter(
       (device) =>
