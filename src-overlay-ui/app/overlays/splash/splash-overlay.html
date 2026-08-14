@@ -1,64 +1,52 @@
 @if (ready()) {
-  <main [class.non-overlay]="!inOverlay">
-    @if (showIcon()) {
-      <div
-        class="stack-frame"
-        animate.enter="anim-fade-in"
-        animate.leave="anim-fade-out"
-        style="--anim-duration: 800ms"
-      >
-        <div class="icon-shadow"></div>
-      </div>
-    }
-    @if (showLogoText()) {
-      <div
-        class="stack-frame"
-        animate.enter="anim-fade-in"
-        animate.leave="anim-fade-out"
-        style="--anim-duration: 800ms"
-      >
-        <div class="logo-text-shadow"></div>
-      </div>
-    }
-    @if (showIcon()) {
-      <div
-        class="stack-frame icon-frame"
-        animate.enter="anim-blur-in"
-        animate.leave="anim-blur-out"
-      >
-        <div class="icon">
-          <img src="assets/images/logo_icon.png" alt="OyasumiVR" />
-        </div>
-      </div>
-    }
-    @if (showLogoText()) {
-      <div
-        class="stack-frame logo-text-frame"
-        animate.enter="anim-blur-in"
-        animate.leave="anim-blur-out"
-        style="--anim-duration: 1500ms"
-      >
-        <div
-          class="logo-text glow-100"
-          animate.enter="anim-fly-up-in"
-          animate.leave="anim-blur-out"
-        >
-          <span class="logo-text-oyasumi">Oyasumi</span>
-          <span class="logo-text-vr">VR</span>
-        </div>
-      </div>
-    }
-    @if (showTagLine()) {
-      <div
-        class="stack-frame tagline-frame"
-        animate.enter="anim-blur-in"
-        animate.leave="anim-blur-out"
-        style="--anim-duration: 1500ms"
-      >
-        <div class="tagline glow-100" animate.enter="anim-fly-up-in" animate.leave="anim-blur-out">
-          {{ 'shared.logo.tagline' | transloco }}
-        </div>
-      </div>
-    }
-  </main>
+<main [class.non-overlay]="!inOverlay">
+  @if (showIcon()) {
+  <div
+    class="stack-frame"
+    animate.enter="anim-fade-in"
+    animate.leave="anim-fade-out"
+    style="--anim-duration: 800ms"
+  >
+    <div class="icon-shadow"></div>
+  </div>
+  } @if (showLogoText()) {
+  <div
+    class="stack-frame"
+    animate.enter="anim-fade-in"
+    animate.leave="anim-fade-out"
+    style="--anim-duration: 800ms"
+  >
+    <div class="logo-text-shadow"></div>
+  </div>
+  } @if (showIcon()) {
+  <div class="stack-frame icon-frame" animate.enter="anim-blur-in" animate.leave="anim-blur-out">
+    <div class="icon">
+      <img src="assets/images/logo_icon.png" alt="OyasumiVR" />
+    </div>
+  </div>
+  } @if (showLogoText()) {
+  <div
+    class="stack-frame logo-text-frame"
+    animate.enter="anim-blur-in"
+    animate.leave="anim-blur-out"
+    style="--anim-duration: 1500ms"
+  >
+    <div class="logo-text glow-100" animate.enter="anim-fly-up-in" animate.leave="anim-blur-out">
+      <span class="logo-text-oyasumi">Oyasumi</span>
+      <span class="logo-text-vr">VR</span>
+    </div>
+  </div>
+  } @if (showTagLine()) {
+  <div
+    class="stack-frame tagline-frame"
+    animate.enter="anim-blur-in"
+    animate.leave="anim-blur-out"
+    style="--anim-duration: 1500ms"
+  >
+    <div class="tagline glow-100" animate.enter="anim-fly-up-in" animate.leave="anim-blur-out">
+      {{ 'shared.logo.tagline' | transloco }}
+    </div>
+  </div>
+  }
+</main>
 }

@@ -24,12 +24,8 @@
           <div class="labels">
             <span class="label">{{ 'overlay.dashboard.overview.sleepMode' | transloco }}</span>
             <span class="value">
-              {{
-                (state().sleepMode
-                  ? 'overlay.dashboard.overview.active'
-                  : 'overlay.dashboard.overview.inactive'
-                ) | transloco
-              }}
+              {{ (state().sleepMode ? 'overlay.dashboard.overview.active' :
+              'overlay.dashboard.overview.inactive' ) | transloco }}
             </span>
           </div>
         </div>
@@ -106,50 +102,49 @@
     style="--anim-duration: 300ms; --anim-delay: 300ms"
   >
     @if (cctState(); as cct) {
-      <div class="card" [class.span-5]="cct.enabled" [class.span-6]="!cct.enabled">
-        <div class="status-bar-content">
-          @if (vrcLoggedIn()) {
-            <div class="vrc-status" animate.enter="anim-fade-in" animate.leave="anim-fade-out">
-              <div class="status-dot glow" [class]="'vrc-status-color-' + state().vrcStatus"></div>
-              <span>{{ state().vrcUsername }}</span>
-            </div>
-          }
-          <div class="clock">
-            <span>{{ timeHours() }}</span><span class="blink">:</span><span>{{ timeMinutes() }}</span>
-            <i class="material-icons-round">access_time</i>
-          </div>
+    <div class="card" [class.span-5]="cct.enabled" [class.span-6]="!cct.enabled">
+      <div class="status-bar-content">
+        @if (vrcLoggedIn()) {
+        <div class="vrc-status" animate.enter="anim-fade-in" animate.leave="anim-fade-out">
+          <div class="status-dot glow" [class]="'vrc-status-color-' + state().vrcStatus"></div>
+          <span>{{ state().vrcUsername }}</span>
+        </div>
+        }
+        <div class="clock">
+          <span>{{ timeHours() }}</span><span class="blink">:</span><span>{{ timeMinutes() }}</span>
+          <i class="material-icons-round">access_time</i>
         </div>
       </div>
-      @if (cct.enabled) {
-        <div
-          class="card card--clickable"
-          [appTooltip]="
+    </div>
+    @if (cct.enabled) {
+    <div
+      class="card card--clickable"
+      [appTooltip]="
             'overlay.dashboard.overview.tooltip.sliderMode.' + sliderModeButtonMode() | transloco
           "
-          (click)="sliderMode.set(sliderModeButtonMode())"
-        >
-          @if (sliderModeButtonMode() === 'COLOR_TEMP') {
-            <div
-              class="slider-mode-icon"
-              animate.enter="anim-fade-in"
-              animate.leave="anim-fade-out"
-              style="--anim-duration: 100ms"
-            >
-              <i class="material-icons">thermostat</i>
-            </div>
-          } @else {
-            <div
-              class="slider-mode-icon"
-              animate.enter="anim-fade-in"
-              animate.leave="anim-fade-out"
-              style="--anim-duration: 100ms"
-            >
-              <i class="material-icons">wb_sunny</i>
-            </div>
-          }
-        </div>
+      (click)="sliderMode.set(sliderModeButtonMode())"
+    >
+      @if (sliderModeButtonMode() === 'COLOR_TEMP') {
+      <div
+        class="slider-mode-icon"
+        animate.enter="anim-fade-in"
+        animate.leave="anim-fade-out"
+        style="--anim-duration: 100ms"
+      >
+        <i class="material-icons">thermostat</i>
+      </div>
+      } @else {
+      <div
+        class="slider-mode-icon"
+        animate.enter="anim-fade-in"
+        animate.leave="anim-fade-out"
+        style="--anim-duration: 100ms"
+      >
+        <i class="material-icons">wb_sunny</i>
+      </div>
       }
-    }
+    </div>
+    } }
   </div>
   <div
     class="sliders"
@@ -158,31 +153,31 @@
     style="--anim-duration: 300ms; --anim-delay: 350ms"
   >
     @if (sliderMode() === 'BRIGHTNESS') {
-      <div
-        class="slider-slot"
-        animate.enter="anim-blur-fly-in"
-        animate.leave="anim-blur-fly-out"
-        style="--anim-duration: 300ms"
-      >
-        <app-brightness-sliders />
-      </div>
+    <div
+      class="slider-slot"
+      animate.enter="anim-blur-fly-in"
+      animate.leave="anim-blur-fly-out"
+      style="--anim-duration: 300ms"
+    >
+      <app-brightness-sliders />
+    </div>
     } @else if (cctState(); as cct) {
-      <div
-        class="slider-slot"
-        animate.enter="anim-blur-fly-in"
-        animate.leave="anim-blur-fly-out"
-        style="--anim-duration: 300ms"
-      >
-        <app-color-temp-slider
-          [label]="'overlay.colorTemp' | transloco"
-          [min]="cct.min"
-          [max]="cct.max"
-          [value]="cct.value"
-          [isTransitioning]="cct.transitioning"
-          [transitionTarget]="cct.transitionTarget"
-          (valueChange)="setColorTemperature($event)"
-        />
-      </div>
+    <div
+      class="slider-slot"
+      animate.enter="anim-blur-fly-in"
+      animate.leave="anim-blur-fly-out"
+      style="--anim-duration: 300ms"
+    >
+      <app-color-temp-slider
+        [label]="'overlay.colorTemp' | transloco"
+        [min]="cct.min"
+        [max]="cct.max"
+        [value]="cct.value"
+        [isTransitioning]="cct.transitioning"
+        [transitionTarget]="cct.transitionTarget"
+        (valueChange)="setColorTemperature($event)"
+      />
+    </div>
     }
   </div>
 </div>

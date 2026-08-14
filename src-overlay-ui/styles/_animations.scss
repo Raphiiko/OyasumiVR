@@ -1,7 +1,7 @@
 @use 'tokens' as *;
 
-// Enter/leave animations for `animate.enter` / `animate.leave`. Duration and delay are read from
-// custom properties so a call site can retune one usage without a new class.
+// Classes for `animate.enter` / `animate.leave`. Every one reads `--anim-duration` and
+// `--anim-delay`, and the fly ones `--anim-fly-y`, so a call site can retune a single usage:
 //
 //   <div animate.enter="anim-blur-fly-in" style="--anim-duration: 300ms; --anim-delay: 50ms">
 

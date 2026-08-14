@@ -1,7 +1,5 @@
-// Loaded by the development build only. In the overlay the core serves the fonts and the VR scene
-// shows through, neither of which exist when the UI is opened directly in a browser.
-//
-// Poppins is the only family worth bundling here: the locale arrives over IPC, so without the
+// Loaded by the development build only, standing in for the fonts and the VR scene that the
+// sidecar provides. Poppins is the only family needed: the locale arrives over IPC, so without a
 // sidecar the UI never leaves the `en` fallback and never asks for the CJK families.
 @use '@fontsource/poppins/latin-200.css';
 @use '@fontsource/poppins/latin-400.css';

@@ -1,9 +1,5 @@
 import { Translation } from '@jsverse/transloco';
 
-/**
- * Locale files are bundled rather than fetched: the overlay is served from the sidecar's static
- * mount, which has no route back to the main window's assets.
- */
 export const LOCALE_LOADERS: Record<string, () => Promise<{ default: Translation }>> = {
   en: () => import('../../../src-ui/assets/i18n/en.json'),
   cn: () => import('../../../src-ui/assets/i18n/cn.json'),

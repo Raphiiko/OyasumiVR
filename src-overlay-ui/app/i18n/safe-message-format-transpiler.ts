@@ -8,7 +8,6 @@ export class SafeMessageFormatTranspiler extends MessageFormatTranspiler {
     try {
       return super.transpile(params);
     } catch {
-      // community translations can contain malformed ICU
       return params.value;
     }
   }

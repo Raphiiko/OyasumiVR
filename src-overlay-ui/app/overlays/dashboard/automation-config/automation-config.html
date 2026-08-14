@@ -12,20 +12,20 @@
     </div>
     <div class="divider glow-100"></div>
     @for (automation of automations(); track automation.id) {
-      <div class="card card--clickable" (click)="toggle(automation.id)">
-        <div class="automation">
-          <div class="icon">
-            <i class="material-icons glow">{{ automation.icon }}</i>
-          </div>
-          <div class="labels">
-            <span class="title">{{ automation.title }}</span>
-            @if (automation.subtitle) {
-              <span class="subtitle">{{ automation.subtitle }}</span>
-            }
-          </div>
-          <div class="toggle" [class.toggle--active]="automation.enabled"></div>
+    <div class="card card--clickable" (click)="toggle(automation.id)">
+      <div class="automation">
+        <div class="icon">
+          <i class="material-icons glow">{{ automation.icon }}</i>
         </div>
+        <div class="labels">
+          <span class="title">{{ automation.title }}</span>
+          @if (automation.subtitle) {
+          <span class="subtitle">{{ automation.subtitle }}</span>
+          }
+        </div>
+        <div class="toggle" [class.toggle--active]="automation.enabled"></div>
       </div>
+    </div>
     }
   </div>
 </div>

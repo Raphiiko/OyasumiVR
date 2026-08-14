@@ -1,4 +1,4 @@
 package-lock.json
 dist
 .vscode/*
-src-overlay-ui
+src-overlay-ui/build

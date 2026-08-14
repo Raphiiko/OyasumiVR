@@ -44,10 +44,7 @@ export class IpcService {
     });
   }
 
-  /**
-   * Binds the sidecar's outgoing IPC object. Must complete before any send* call, so the caller
-   * awaits it before the UI reports itself ready.
-   */
+  /** Binds the sidecar's outgoing IPC object. Must complete before any `send*` call. */
   async initOutgoingIpc(): Promise<void> {
     if (!window.CefSharp) {
       this.installOutgoingIpcStub();

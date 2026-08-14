@@ -1,9 +1,6 @@
 import { Directive, input } from '@angular/core';
 
-/**
- * Raises a tooltip on the sidecar's tooltip overlay while the host is hovered, which has no way to
- * read a `title` attribute out of the browser.
- */
+/** Raises a tooltip on the sidecar's tooltip overlay while the host is hovered. */
 @Directive({
   selector: '[appTooltip]',
   host: {

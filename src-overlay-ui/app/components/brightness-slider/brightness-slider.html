@@ -7,11 +7,7 @@
   <div class="slider-title-row">
     <span class="glow-80">{{ label() }}</span>
   </div>
-  <div
-    class="slider-bar-area"
-    [class.dragging]="dragging()"
-    (mousedown)="startDragging($event)"
-  >
+  <div class="slider-bar-area" [class.dragging]="dragging()" (mousedown)="startDragging($event)">
     <div class="slider-bar-pre glow-80" [style.flex]="renderProgression() * 100"></div>
     <div class="slider-thumb glow-80">
       <span>{{ renderPercentage() }}%</span>

@@ -6,21 +6,21 @@
   <div class="slider-backdrop"></div>
   <div class="slider-title-row">
     @if (!dragging()) {
-      <span
-        class="glow-80"
-        animate.enter="anim-fade-in"
-        animate.leave="anim-fade-out"
-        style="--anim-duration: 100ms"
-        >{{ label() }}</span
-      >
+    <span
+      class="glow-80"
+      animate.enter="anim-fade-in"
+      animate.leave="anim-fade-out"
+      style="--anim-duration: 100ms"
+      >{{ label() }}</span
+    >
     } @else {
-      <span
-        class="glow-80"
-        animate.enter="anim-fade-in"
-        animate.leave="anim-fade-out"
-        style="--anim-duration: 100ms"
-        >{{ renderValue() }}</span
-      >
+    <span
+      class="glow-80"
+      animate.enter="anim-fade-in"
+      animate.leave="anim-fade-out"
+      style="--anim-duration: 100ms"
+      >{{ renderValue() }}</span
+    >
     }
   </div>
   <div class="slider-bar-area" [class.dragging]="dragging()" (mousedown)="startDragging($event)">
