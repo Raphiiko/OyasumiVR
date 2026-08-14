@@ -1,4 +1,4 @@
-use super::OVR_CONTEXT;
+use super::{overlay_interface_available, OVR_CONTEXT};
 use log::error;
 use ovr_overlay as ovr;
 use std::sync::LazyLock;
@@ -42,6 +42,9 @@ pub async fn set_brightness(brightness: f64, perceived_brightness_adjustment_gam
         Some(manager) => manager,
         None => return,
     };
+    if !overlay_interface_available() {
+        return;
+    }
     // Get the manager
     let mut manager = context.overlay_mngr();
     // Get the overlay handle
@@ -59,6 +62,10 @@ pub async fn set_brightness(brightness: f64, perceived_brightness_adjustment_gam
 async fn create_overlay(
     context: &ovr_overlay::Context,
 ) -> Result<ovr_overlay::overlay::OverlayHandle, ()> {
+    if !overlay_interface_available() {
+        error!("[Core] The OpenVR overlay interface is unavailable");
+        return Err(());
+    }
     // Get the manager
     let mut manager = context.overlay_mngr();
     // Create the overlay

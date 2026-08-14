@@ -7,7 +7,7 @@ import {
   OverlayMenuOpenRequest,
   OyasumiSidecarControllerRole,
 } from '../../../../src-grpc-web-client/overlay-sidecar_pb';
-import { info } from '@tauri-apps/plugin-log';
+import { info, warn } from '@tauri-apps/plugin-log';
 import { AppSettingsService } from '../app-settings.service';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../models/settings';
 
@@ -97,8 +97,13 @@ export class OverlayService {
           if (!active) return;
         }
         // Toggle the overlay
+        const client = this.ipcService.getOverlaySidecarClient();
+        if (!client) {
+          warn('[Overlay] Ignoring the overlay menu toggle: the overlay sidecar is not running');
+          return;
+        }
         info('[Overlay] Toggling overlay menu (controller action)');
-        this.ipcService.getOverlaySidecarClient()?.toggleOverlayMenu({
+        client.toggleOverlayMenu({
           controllerRole,
         } as OverlayMenuOpenRequest);
       });
