@@ -2048,6 +2048,10 @@
       },
       "lighthouseConsole": {
         "description": "OyasumiVR needs to know about the location of your SteamVR installation's <strong>lighthouse_console.exe</strong>.\nIf OyasumiVR cannot find it in the default location, you need to set where it can be found.",
+        "powerOffDelay": {
+          "description": "Enabling this makes OyasumiVR wait a moment between turning off each controller and tracker. If turning off your devices crashes SteamVR or leaves some devices on, this can help.",
+          "title": "Delay Between Device Power-Offs"
+        },
         "status": {
           "CHECKING": "Checking for valid <strong>lighthouse_console.exe</strong>",
           "INVALID_EXECUTABLE": "The <strong>lighthouse_console.exe</strong> at this location could not be verified as working.",

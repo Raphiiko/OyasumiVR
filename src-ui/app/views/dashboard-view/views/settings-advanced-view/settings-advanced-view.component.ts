@@ -59,6 +59,7 @@ export class SettingsAdvancedViewComponent {
   memoryWatcherActive = FLAVOUR === 'DEV';
   overlayGpuAcceleration = true;
   openVrInitDelayFix = false;
+  lighthousePowerOffDelay = false;
 
   constructor(
     private router: Router,
@@ -72,6 +73,7 @@ export class SettingsAdvancedViewComponent {
     this.settingsService.settings.pipe(takeUntilDestroyed()).subscribe((settings) => {
       this.overlayGpuAcceleration = settings.overlayGpuAcceleration;
       this.openVrInitDelayFix = settings.openVrInitDelayFix;
+      this.lighthousePowerOffDelay = settings.lighthousePowerOffDelay;
     });
   }
 
@@ -302,5 +304,9 @@ export class SettingsAdvancedViewComponent {
 
   setOpenVrInitDelayFix(enabled: boolean) {
     this.settingsService.updateSettings({ openVrInitDelayFix: enabled });
+  }
+
+  setLighthousePowerOffDelay(enabled: boolean) {
+    this.settingsService.updateSettings({ lighthousePowerOffDelay: enabled });
   }
 }
