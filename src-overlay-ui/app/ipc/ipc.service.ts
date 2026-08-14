@@ -23,7 +23,7 @@ export class IpcService {
   readonly tooltip = this._tooltip.asReadonly();
   readonly locale = computed(() => this.state().locale ?? 'en');
   readonly vrcLoggedIn = computed(
-    () => this.state().vrcUsername !== null && this.state().vrcStatus !== VrcStatus.Offline
+    () => !!this.state().vrcUsername && this.state().vrcStatus !== VrcStatus.Offline
   );
 
   readonly notificationAdded = new Subject<AddNotificationParams>();
@@ -37,7 +37,8 @@ export class IpcService {
       showToolTip: async (tooltip: string | null) => this._tooltip.set(tooltip),
       clearNotification: async (id: string) => this.notificationCleared.next(id),
       addNotification: async (notification: AddNotificationParams) => {
-        notification.id ??= Math.random().toString(36);
+        // An empty id would collide with the next one in the list's track expression.
+        if (!notification.id) notification.id = Math.random().toString(36);
         this.notificationAdded.next(notification);
         return notification.id;
       },

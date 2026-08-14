@@ -47,17 +47,17 @@ export class BrightnessSlider {
   );
 
   startDragging(event: MouseEvent): void {
-    if (this.dragging()) return;
+    if (this.dragging() || this.disabled()) return;
     this.dragging.set(true);
     this.onMouseMove(event);
   }
 
   onMouseMove(event: MouseEvent): void {
     const rangeGuide = this.rangeGuide()?.nativeElement;
-    if (!this.dragging() || !rangeGuide) return;
+    if (!this.dragging() || this.disabled() || !rangeGuide) return;
     const barBounds = rangeGuide.getBoundingClientRect();
     if (barBounds.width <= 0) return;
-    const progress = clamp((event.pageX - barBounds.left) / barBounds.width, 0, 1);
+    const progress = clamp((event.clientX - barBounds.left) / barBounds.width, 0, 1);
     this.dragProgression.set(progress);
     this.valueChange.emit(Math.round(progress * (this.max() - this.min()) + this.min()));
   }

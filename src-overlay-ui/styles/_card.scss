@@ -68,7 +68,7 @@
       background-color: $cyan-700;
       border-color: $cyan-600;
 
-      &:hover {
+      &:not(.card--disabled):hover {
         border-color: $cyan-400;
       }
 

@@ -222,11 +222,7 @@ OyasumiVR的使用技术与工具包括：
 
 - [Angular](https://angular.io/) (TypeScript, 界面主要组成部分和叠加层界面)
 - [Tauri](https://tauri.app/) (Rust, 桌面框架)
-- [.NET](https://dotnet.microsoft.com/en-us/) (C#, 叠加层界面)OyasumiVR 使用了以下技术构建：
-
-- [Angular](https://angular.io/)（TypeScript，用于主界面和叠加界面）
-- [Tauri](https://tauri.app/)（Rust，桌面框架）
-- [.NET](https://dotnet.microsoft.com/en-us/)（C#，用于叠加界面）
+- [.NET](https://dotnet.microsoft.com/en-us/) (C#, 叠加层界面)
 
 {{DEVELOPMENT_HEADER}}
 开发开发相关

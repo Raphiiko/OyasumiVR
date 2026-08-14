@@ -55,17 +55,17 @@ export class ColorTempSlider {
   );
 
   startDragging(event: MouseEvent): void {
-    if (this.dragging()) return;
+    if (this.dragging() || this.disabled()) return;
     this.dragging.set(true);
     this.onMouseMove(event);
   }
 
   onMouseMove(event: MouseEvent): void {
     const rangeGuide = this.rangeGuide()?.nativeElement;
-    if (!this.dragging() || !rangeGuide) return;
+    if (!this.dragging() || this.disabled() || !rangeGuide) return;
     const barBounds = rangeGuide.getBoundingClientRect();
     if (barBounds.width <= 0) return;
-    let progress = clamp((event.pageX - barBounds.left) / barBounds.width, 0, 1);
+    let progress = clamp((event.clientX - barBounds.left) / barBounds.width, 0, 1);
     let value = Math.round(progress * (this.max() - this.min()) + this.min());
     const snapValue = this.snapValues().find((v) => Math.abs(v - value) <= this.snapDistance());
     if (snapValue) value = snapValue;

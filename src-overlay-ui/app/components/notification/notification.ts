@@ -29,7 +29,7 @@ export class Notification {
 
   protected readonly progressing = signal(false);
   protected readonly progressTransition = computed(
-    () => `all ${this.duration() - PROGRESS_DELAY}ms linear`
+    () => `all ${Math.max(0, this.duration() - PROGRESS_DELAY)}ms linear`
   );
 
   constructor() {

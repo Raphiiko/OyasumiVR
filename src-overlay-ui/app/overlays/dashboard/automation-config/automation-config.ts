@@ -134,8 +134,9 @@ export class AutomationConfig {
     return this.transloco.translate<string>(key, params, lang);
   }
 
+  // The sidecar sends a repeated field, which arrives empty when it has no window configured.
   private formatTime(input: number[]): string {
-    const [hour, minute] = input;
+    const [hour = 0, minute = 0] = input;
     return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
   }
 }

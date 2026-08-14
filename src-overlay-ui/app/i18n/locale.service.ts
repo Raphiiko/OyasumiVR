@@ -26,8 +26,8 @@ export class LocaleService {
     try {
       await Promise.all([fonts, firstValueFrom(this.transloco.load(locale))]);
     } catch (e) {
-      // Let a later request for this locale try again.
-      this.requestedLocale = undefined;
+      // Let a later request for this locale try again, without disowning a newer one.
+      if (this.requestedLocale === locale) this.requestedLocale = undefined;
       console.error(`Could not load translations for locale "${locale}"`, e);
       return;
     }
