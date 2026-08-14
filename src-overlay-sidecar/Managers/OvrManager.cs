@@ -80,6 +80,7 @@ public class OvrManager
   private void MainLoop()
   {
     var nextInit = DateTime.MinValue;
+    var loggedMissingInterfaces = false;
     var e = new VREvent_t();
     var actionHandles = new Dictionary<string, ulong>();
     var actionSetHandles = new Dictionary<string, ulong>();
@@ -111,10 +112,18 @@ public class OvrManager
           // the overlays below and DetectInput dereference these interfaces immediately
           if (_input == null || OpenVR.Overlay == null)
           {
-            Log.Warning("OpenVR interfaces are not available yet. Retrying initialization later...");
+            // the retry runs every 5 seconds, so only the first attempt reports it
+            if (!loggedMissingInterfaces)
+            {
+              Log.Warning("OpenVR interfaces are not available yet. Retrying initialization later...");
+              loggedMissingInterfaces = true;
+            }
+
             OpenVR.Shutdown();
             continue;
           }
+
+          loggedMissingInterfaces = false;
 
           var inputError = _input.SetActionManifestPath(GetActionManifestPath());
           if (inputError != 0)
