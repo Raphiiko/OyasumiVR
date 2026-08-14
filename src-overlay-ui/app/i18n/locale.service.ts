@@ -11,7 +11,7 @@ export class LocaleService {
   private readonly ipc = inject(IpcService);
   private readonly transloco = inject(TranslocoService);
   private readonly injector = inject(Injector);
-  private activeLocale?: string;
+  private requestedLocale?: string;
 
   async init(): Promise<void> {
     await this.activate(FALLBACK_LOCALE);
@@ -19,12 +19,19 @@ export class LocaleService {
   }
 
   private async activate(locale: string): Promise<void> {
-    if (this.activeLocale === locale) return;
-    this.activeLocale = locale;
-    await Promise.all([
-      fontLoader.loadFontsForNewLocale(locale),
-      firstValueFrom(this.transloco.load(locale)),
-    ]);
-    this.transloco.setActiveLang(locale);
+    if (this.requestedLocale === locale) return;
+    this.requestedLocale = locale;
+    // A font the core cannot serve must not keep the UI in the previous language.
+    const fonts = fontLoader.loadFontsForNewLocale(locale).catch(() => undefined);
+    try {
+      await Promise.all([fonts, firstValueFrom(this.transloco.load(locale))]);
+    } catch (e) {
+      // Clear the guard so a later request for this locale can try again.
+      this.requestedLocale = undefined;
+      console.error(`Could not load translations for locale "${locale}"`, e);
+      return;
+    }
+    // A newer locale arrived while this one was loading.
+    if (this.requestedLocale === locale) this.transloco.setActiveLang(locale);
   }
 }

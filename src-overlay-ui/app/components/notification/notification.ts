@@ -3,6 +3,7 @@ import {
   Component,
   computed,
   DestroyRef,
+  effect,
   inject,
   input,
   signal,
@@ -32,7 +33,13 @@ export class Notification {
   );
 
   constructor() {
-    const timer = setTimeout(() => this.progressing.set(this.active()), PROGRESS_DELAY);
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    effect(() => {
+      const active = this.active();
+      clearTimeout(timer);
+      this.progressing.set(false);
+      timer = setTimeout(() => this.progressing.set(active), PROGRESS_DELAY);
+    });
     inject(DestroyRef).onDestroy(() => clearTimeout(timer));
   }
 }

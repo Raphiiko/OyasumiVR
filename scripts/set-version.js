@@ -27,13 +27,6 @@ if (version === 'DEV') version = '0.0.0';
   writeFileSync('src-shared-ts/package.json', JSON.stringify(packageJson, null, 2));
 }
 
-// Overlay UI package json
-{
-  const packageJson = JSON.parse(readFileSync('src-overlay-ui/package.json').toString());
-  packageJson.version = version;
-  writeFileSync('src-overlay-ui/package.json', JSON.stringify(packageJson, null, 2));
-}
-
 // Tauri config json
 const tauriConfJson = JSON.parse(readFileSync('src-core/tauri.conf.json').toString());
 tauriConfJson.version = version;
