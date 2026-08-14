@@ -1,0 +1,5 @@
+# eol=lf overrides core.autocrlf, so every platform checks out the same bytes.
+* text=auto eol=lf
+
+# Visual Studio rewrites this with CRLF.
+*.sln text eol=crlf
