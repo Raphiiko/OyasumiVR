@@ -1500,8 +1500,8 @@
           "disableGpuAcceleration": "Turn Off GPU Acceleration"
         },
         "message": {
-          "gpuAcceleration": "OyasumiVR's SteamVR overlays keep failing to start, so features like the overlay menu and notifications are unavailable.\n\nOn some systems this is caused by GPU acceleration. Turning it off makes the overlays render on your processor instead. This uses a little more processor power, but is more reliable.",
-          "unknown": "OyasumiVR's SteamVR overlays keep failing to start, so features like the overlay menu and notifications are unavailable.\n\nGPU acceleration is already turned off, so something else is causing this. Please report the problem, and include your overlay sidecar log file."
+          "gpuAcceleration": "OyasumiVR's SteamVR overlays keep failing to start.\n\nOn some systems this is caused by GPU acceleration. Try turning it off.",
+          "unknown": "OyasumiVR's SteamVR overlays keep failing to start.\n\nGPU acceleration is already off, so something else is causing this. Please report it, and include your log files."
         },
         "title": "Overlays Unavailable"
       },
