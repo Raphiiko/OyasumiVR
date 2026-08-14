@@ -37,6 +37,8 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 - The VR overlay no longer leaves temporary files on your disk
 - Fixed the Valve Index's hardware brightness being slightly off at levels in between the ones OyasumiVR had measured
   (Thanks to help from [coolGi](https://github.com/coolGi69))
+- Fixed OyasumiVR getting stuck on "Initializing" for SteamVR, which only a restart cleared
+- Fixed the VR overlay crashing on startup, and when SteamVR was restarted
 - Various stability improvements
 
 ### Removed
