@@ -19,6 +19,8 @@ use std::sync::LazyLock;
 use std::time::Duration;
 use tokio::sync::mpsc::Sender;
 use tokio::sync::Mutex;
+use winreg::enums::HKEY_CURRENT_USER;
+use winreg::RegKey;
 use windows::core::GUID;
 use windows::Win32::Foundation::ERROR_SUCCESS;
 use windows::Win32::System::Power::{
@@ -140,6 +142,20 @@ pub async fn init_sound_playback() {
             }
         }
     });
+}
+
+/// Must run before the first desktop notification, or Windows drops it.
+pub fn register_notification_app_id(app_handle: &tauri::AppHandle) {
+    let config = app_handle.config();
+    let app_id = config.identifier.clone();
+    let display_name = config.product_name.clone().unwrap_or_else(|| app_id.clone());
+    let result = RegKey::predef(HKEY_CURRENT_USER)
+        .create_subkey(format!("Software\\Classes\\AppUserModelId\\{app_id}"))
+        .and_then(|(key, _)| key.set_value("DisplayName", &display_name));
+    match result {
+        Ok(()) => info!("[Core] Registered notification app id \"{app_id}\""),
+        Err(e) => error!("[Core] Failed to register notification app id \"{app_id}\": {e}"),
+    }
 }
 
 /// Cleanup old batch files created by run_cmd_commands

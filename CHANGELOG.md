@@ -25,6 +25,7 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 
 ### Fixed
 
+- Fixed the Windows notification provider not showing any notifications
 - Fixed SteamVR sometimes crashing when OyasumiVR turned off several base stations at once
 - Fixed OyasumiVR shutting down on its own when SteamVR reported an event it did not recognise
 - Fixed the brightness and color temperature sliders in the VR overlay jumping to 100%
