@@ -2,7 +2,14 @@ import { inject } from '@angular/core';
 import { MessageMonitor } from './message-monitor';
 import { AppSettingsService } from '../../app-settings.service';
 import { listen } from '@tauri-apps/api/event';
-import { BehaviorSubject, combineLatest, distinctUntilChanged, map, skip } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  skip,
+} from 'rxjs';
 import { isEqual } from 'lodash';
 
 // the sidecar reports its start before it builds any overlays, so a crash loop reads as start then stop
@@ -29,7 +36,9 @@ export class OverlaySidecarMessageMonitor extends MessageMonitor {
       .pipe(
         map((settings) => settings.overlayGpuAcceleration),
         distinctUntilChanged(),
-        skip(1)
+        skip(1),
+        // the restart it triggers reports its stop first, so reset after that arrives
+        debounceTime(3000)
       )
       .subscribe(() => this.failedStarts.next(0));
 

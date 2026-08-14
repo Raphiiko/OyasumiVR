@@ -29,6 +29,10 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 
 - Fixed the Windows notification provider not showing any notifications
 - The VR overlay now writes the reason for an unexpected shutdown to its log file, instead of stopping without a trace
+- Changing the VR overlay's GPU acceleration setting now restarts it right away, instead of waiting out the retry delay
+  of up to five minutes
+- OyasumiVR now keeps retrying when the VR overlay cannot be started at all, instead of giving up for the rest of the
+  session
 - Fixed SteamVR sometimes crashing when OyasumiVR turned off several base stations at once
 - Fixed OyasumiVR shutting down on its own when SteamVR reported an event it did not recognise
 - Fixed the brightness and color temperature sliders in the VR overlay jumping to 100%

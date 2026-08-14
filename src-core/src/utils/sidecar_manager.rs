@@ -48,6 +48,7 @@ pub struct SidecarManager {
     pub on_stop_tx: mpsc::Sender<()>,
     pub auto_restart: bool,
     pub args: Arc<Mutex<Vec<String>>>,
+    pub restart_requested: Arc<tokio::sync::Notify>,
 }
 
 impl SidecarManager {
@@ -73,6 +74,7 @@ impl SidecarManager {
             on_stop_tx,
             auto_restart,
             args: Arc::new(Mutex::new(args)),
+            restart_requested: Arc::new(tokio::sync::Notify::new()),
         }
     }
 
@@ -111,6 +113,8 @@ impl SidecarManager {
         // leave two processes and two watchers running alongside each other.
         if !*self.watching.lock().await {
             self._start_internal(false).await;
+        } else {
+            self.restart_requested.notify_one();
         }
     }
 
@@ -163,6 +167,12 @@ impl SidecarManager {
                     e
                 );
                 *self.active.lock().await = false;
+                let _ = self.on_stop_tx.send(()).await;
+                // a launch that never happened still needs a watcher, or it is never retried
+                if !relaunch && !*self.watching.lock().await {
+                    *self.watching.lock().await = true;
+                    self.watch_process();
+                }
                 return 0;
             }
         };
@@ -307,8 +317,15 @@ impl SidecarManager {
                 if !manager.auto_restart {
                     break;
                 }
-                tokio::time::sleep(LAUNCH_RETRY_INTERVALS[retries]).await;
-                retries = (retries + 1).min(last_retry_interval);
+                // an explicit restart request must not wait out the backoff
+                tokio::select! {
+                    _ = tokio::time::sleep(LAUNCH_RETRY_INTERVALS[retries]) => {
+                        retries = (retries + 1).min(last_retry_interval);
+                    }
+                    _ = manager.restart_requested.notified() => {
+                        retries = 0;
+                    }
+                }
                 manager._start_internal(true).await;
             }
             *manager.watching.lock().await = false;
