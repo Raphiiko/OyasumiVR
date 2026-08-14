@@ -40,6 +40,7 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
   (Thanks to help from [coolGi](https://github.com/coolGi69))
 - Fixed OyasumiVR getting stuck on "Initializing" for SteamVR, which only a restart cleared
 - Fixed the VR overlay crashing on startup, and when SteamVR was restarted
+- The VR overlay now stops with an explanation in its log when its browser engine cannot start, instead of crashing
 - Various stability improvements
 
 ### Removed

@@ -100,7 +100,11 @@ public static class Program {
       if (File.Exists(cefDebugLogPath)) File.Delete(cefDebugLogPath);
     }
 
-    Cef.Initialize(settings);
+    if (!Cef.Initialize(settings))
+    {
+      Log.Fatal("CEF failed to initialize. The overlays cannot run without it.");
+      Environment.Exit(1);
+    }
   }
 
   private static void CleanUpCefCacheDirectories(string cacheRoot)
