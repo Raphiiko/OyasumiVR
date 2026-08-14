@@ -15,7 +15,6 @@ export class LighthouseConsoleService {
   private _consoleStatus: BehaviorSubject<ExecutableReferenceStatus> =
     new BehaviorSubject<ExecutableReferenceStatus>('UNKNOWN');
   public consoleStatus: Observable<ExecutableReferenceStatus> = this._consoleStatus.asObservable();
-  // every caller shares this queue, so power-off batches never overlap
   private powerOffQueue: Promise<void> = Promise.resolve();
 
   constructor(

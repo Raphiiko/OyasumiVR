@@ -13,8 +13,7 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
   - Custom target for OSC messages (e.g. for use with Resonite, OSC routers, or when OSCQuery is not available)
   - VRChat (OSCQuery) target (allows for disabling OSC messages being sent to VRChat)
 - Home Assistant switch for the VRChat microphone mute
-- Setting to wait a moment between turning off each controller and tracker, for systems where turning them off
-  crashes SteamVR or leaves some devices on
+- Setting to wait a moment between turning off each controller and tracker, for systems where turning them off crashes SteamVR
 
 ### Changed
 
@@ -28,8 +27,6 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 ### Fixed
 
 - Fixed SteamVR sometimes crashing when OyasumiVR turned off several base stations at once
-- Fixed OyasumiVR turning off several controllers or trackers at the same time when more than one automation,
-  hotkey or button asked for it at once
 - Fixed OyasumiVR shutting down on its own when SteamVR reported an event it did not recognise
 - Fixed the brightness and color temperature sliders in the VR overlay jumping to 100%
 - Fixed the VR overlay restarting itself over and over again on some systems
