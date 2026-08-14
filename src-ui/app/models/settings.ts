@@ -38,6 +38,7 @@ export interface AppSettings {
   lighthouseConsolePath: string;
   lighthousePowerControl: boolean;
   lighthousePowerOffState: LighthouseDevicePowerState;
+  lighthousePowerOffDelay: boolean;
   v1LighthouseIdentifiers: {
     [deviceId: string]: string;
   };
@@ -128,6 +129,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
     'C:\\Program Files (x86)\\Steam\\steamapps\\common\\SteamVR\\tools\\lighthouse\\bin\\win64\\lighthouse_console.exe',
   lighthousePowerControl: true,
   lighthousePowerOffState: 'sleep',
+  lighthousePowerOffDelay: false,
   v1LighthouseIdentifiers: {},
   // Discord Rich Presence
   discordActivityMode: 'ENABLED',

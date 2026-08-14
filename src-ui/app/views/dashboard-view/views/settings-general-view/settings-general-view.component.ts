@@ -192,6 +192,10 @@ export class SettingsGeneralViewComponent implements OnInit {
     this.settingsService.updateSettings({ lighthousePowerControl: enabled });
   }
 
+  setLighthousePowerOffDelay(enabled: boolean) {
+    this.settingsService.updateSettings({ lighthousePowerOffDelay: enabled });
+  }
+
   onChangeLighthousePowerOffMode(option: SelectBoxItem | undefined) {
     if (!option) return;
     this.settingsService.updateSettings({

@@ -15,6 +15,7 @@ export class LighthouseConsoleService {
   private _consoleStatus: BehaviorSubject<ExecutableReferenceStatus> =
     new BehaviorSubject<ExecutableReferenceStatus>('UNKNOWN');
   public consoleStatus: Observable<ExecutableReferenceStatus> = this._consoleStatus.asObservable();
+  private powerOffQueue: Promise<void> = Promise.resolve();
 
   constructor(
     private appSettings: AppSettingsService,
@@ -91,18 +92,26 @@ export class LighthouseConsoleService {
   }
 
   async turnOffDevices(ovrDevices: OVRDevice[]) {
-    const lighthouseConsolePath = await firstValueFrom(this.appSettings.settings).then(
-      (settings) => settings.lighthouseConsolePath
-    );
+    const batch = this.powerOffQueue.then(() => this.runTurnOffDevices(ovrDevices));
+    this.powerOffQueue = batch.catch(() => {});
+    return batch;
+  }
+
+  private async runTurnOffDevices(requestedDevices: OVRDevice[]) {
+    const settings = await firstValueFrom(this.appSettings.settings);
+    const lighthouseConsolePath = settings.lighthouseConsolePath;
     if (this._consoleStatus.value !== 'SUCCESS') return;
-    ovrDevices = ovrDevices.filter(
-      (device) => device.canPowerOff && device.dongleId && !device.isTurningOff
+    // resolve the devices as they are now, not as the caller saw them
+    const requestedIndices = requestedDevices.map((device) => device.index);
+    const ovrDevices = (await firstValueFrom(this.openvr.devices)).filter(
+      (device) =>
+        requestedIndices.includes(device.index) &&
+        device.canPowerOff &&
+        device.dongleId &&
+        !device.isTurningOff
     );
-    // Issue poweroff calls sequentially with a small delay between them.
-    // Firing all calls in parallel saturates SteamVR's lighthouse driver and
-    // can cause its HMD RunFrame thread to stall long enough to trip vrserver's
-    // watchdog (CLighthouseHmdDriver::RunFrame), crashing SteamVR.
-    for (const device of ovrDevices) {
+    // sequential on purpose: parallel poweroffs can crash SteamVR
+    for (const [index, device] of ovrDevices.entries()) {
       this.openvr.onDeviceUpdate(Object.assign({}, device, { isTurningOff: true }));
       info(`[Lighthouse] Turning off device ${device.class}:${device.serialNumber}`);
       try {
@@ -116,7 +125,9 @@ export class LighthouseConsoleService {
           `[Lighthouse] Could not turn off device ${device.class}:${device.serialNumber}: ${e}`
         );
       }
-      await new Promise((resolve) => setTimeout(resolve, 250));
+      if (settings.lighthousePowerOffDelay && index < ovrDevices.length - 1) {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+      }
     }
   }
 }

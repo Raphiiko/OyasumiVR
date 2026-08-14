@@ -250,6 +250,24 @@
             </div>
           }
         </div>
+        <div class="settings">
+          <div class="setting-row">
+            <div class="setting-row-label">
+              <span transloco="settings.general.lighthouseConsole.powerOffDelay.title"></span>
+              <span transloco="settings.general.lighthouseConsole.powerOffDelay.description"></span>
+            </div>
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="appSettings.lighthousePowerOffDelay"
+                  (change)="setLighthousePowerOffDelay(!appSettings.lighthousePowerOffDelay)"
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="setting-category">
