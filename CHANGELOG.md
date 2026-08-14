@@ -13,6 +13,7 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
   - Custom target for OSC messages (e.g. for use with Resonite, OSC routers, or when OSCQuery is not available)
   - VRChat (OSCQuery) target (allows for disabling OSC messages being sent to VRChat)
 - Home Assistant switch for the VRChat microphone mute
+- Message Center warning for when the VR overlay repeatedly fails to start, offering to turn off GPU acceleration
 - Setting to wait a moment between turning off each controller and tracker, for systems where turning them off crashes SteamVR
 
 ### Changed
@@ -27,6 +28,7 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 ### Fixed
 
 - Fixed the Windows notification provider not showing any notifications
+- The VR overlay now writes the reason for an unexpected shutdown to its log file, instead of stopping without a trace
 - Fixed SteamVR sometimes crashing when OyasumiVR turned off several base stations at once
 - Fixed OyasumiVR shutting down on its own when SteamVR reported an event it did not recognise
 - Fixed the brightness and color temperature sliders in the VR overlay jumping to 100%

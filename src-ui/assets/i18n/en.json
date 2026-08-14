@@ -1495,6 +1495,16 @@
         "message": "It looks like you have a lot of base stations!\n\nBe warned that most Bluetooth adapters can only handle 7 simultaneous connections, including other Bluetooth devices like headphones and other peripherals.\n\nKeep in mind that OyasumiVR might have trouble controlling all of your base stations if you have too many of them plugged in at the same time, or have too many other Bluetooth devices connected.",
         "title": "Many base stations detected"
       },
+      "overlaySidecarKeepsFailing": {
+        "actions": {
+          "disableGpuAcceleration": "Turn Off GPU Acceleration"
+        },
+        "message": {
+          "gpuAcceleration": "OyasumiVR's SteamVR overlays keep failing to start, so features like the overlay menu and notifications are unavailable.\n\nOn some systems this is caused by GPU acceleration. Turning it off makes the overlays render on your processor instead. This uses a little more processor power, but is more reliable.",
+          "unknown": "OyasumiVR's SteamVR overlays keep failing to start, so features like the overlay menu and notifications are unavailable.\n\nGPU acceleration is already turned off, so something else is causing this. Please report the problem, and include your overlay sidecar log file."
+        },
+        "title": "Overlays Unavailable"
+      },
       "sleepCalibrationRequired": {
         "calibrate": "Calibrate Now",
         "message": "Sleep detection is enabled, but still uncalibrated. Before using it, you should calibrate at least once to improve its accuracy.",
