@@ -122,6 +122,7 @@ public class OvrManager
           if (inputError != 0)
           {
             Log.Error($"Could not set action manifest path: {Enum.GetName(typeof(EVRInputError), inputError)}");
+            OpenVR.Shutdown();
             continue;
           }
 

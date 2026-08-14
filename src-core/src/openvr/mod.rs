@@ -292,7 +292,8 @@ pub async fn task() {
             ovr_active = false;
             info!("[Core] Shutting down OpenVR module");
             update_status(OpenVRStatus::Inactive).await;
-            if OVR_CONTEXT.lock().await.is_some() {
+            let has_context = OVR_CONTEXT.lock().await.is_some();
+            if has_context {
                 shutdown_ovr().await;
             }
         }
@@ -303,13 +304,17 @@ pub async fn task() {
 /// has to go through here: leaving OpenVR initialized without a context makes every later
 /// initialization attempt fail, which wedges the module at `Initializing` forever.
 async fn shutdown_ovr() {
+    // Hold the context lock across the shutdown. `VR_Shutdown` invalidates every interface
+    // pointer, so a task that still reads the context in between constructs a manager over a
+    // null pointer and panics.
+    let mut context = OVR_CONTEXT.lock().await;
     // Shutdown modules
     brightness_overlay::on_ovr_quit().await;
     // Shutdown OpenVR
     unsafe {
         ovr::sys::VR_Shutdown();
     }
-    *OVR_CONTEXT.lock().await = None;
+    *context = None;
 }
 
 /// SteamVR can drop the OpenVR interfaces before it sends us its quit event, and every manager
