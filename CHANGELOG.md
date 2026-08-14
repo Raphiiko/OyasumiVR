@@ -35,6 +35,8 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 - Fixed the "GPU acceleration" setting for the VR overlay. Turning it off left the overlay blank instead of switching
   to software rendering
 - The VR overlay no longer leaves temporary files on your disk
+- Fixed the Valve Index's hardware brightness being slightly off at levels in between the ones OyasumiVR had measured
+  (Thanks to help from [coolGi](https://github.com/coolGi69))
 - Various stability improvements
 
 ### Removed
