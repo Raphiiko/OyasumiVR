@@ -15,6 +15,8 @@ export class LighthouseConsoleService {
   private _consoleStatus: BehaviorSubject<ExecutableReferenceStatus> =
     new BehaviorSubject<ExecutableReferenceStatus>('UNKNOWN');
   public consoleStatus: Observable<ExecutableReferenceStatus> = this._consoleStatus.asObservable();
+  // every caller shares this queue, so power-off batches never overlap
+  private powerOffQueue: Promise<void> = Promise.resolve();
 
   constructor(
     private appSettings: AppSettingsService,
@@ -91,13 +93,25 @@ export class LighthouseConsoleService {
   }
 
   async turnOffDevices(ovrDevices: OVRDevice[]) {
+    const batch = this.powerOffQueue.then(() => this.runTurnOffDevices(ovrDevices));
+    this.powerOffQueue = batch.catch(() => {});
+    return batch;
+  }
+
+  private async runTurnOffDevices(requestedDevices: OVRDevice[]) {
     const settings = await firstValueFrom(this.appSettings.settings);
     const lighthouseConsolePath = settings.lighthouseConsolePath;
     if (this._consoleStatus.value !== 'SUCCESS') return;
-    ovrDevices = ovrDevices.filter(
-      (device) => device.canPowerOff && device.dongleId && !device.isTurningOff
+    // the queue can hold a batch back, so work from the device state as it is now
+    const requestedIndices = requestedDevices.map((device) => device.index);
+    const ovrDevices = (await firstValueFrom(this.openvr.devices)).filter(
+      (device) =>
+        requestedIndices.includes(device.index) &&
+        device.canPowerOff &&
+        device.dongleId &&
+        !device.isTurningOff
     );
-    // these calls must stay sequential: parallel poweroffs can crash SteamVR
+    // sequential on purpose: parallel poweroffs can crash SteamVR
     for (const [index, device] of ovrDevices.entries()) {
       this.openvr.onDeviceUpdate(Object.assign({}, device, { isTurningOff: true }));
       info(`[Lighthouse] Turning off device ${device.class}:${device.serialNumber}`);
