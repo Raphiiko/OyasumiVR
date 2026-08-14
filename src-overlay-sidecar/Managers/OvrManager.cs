@@ -108,9 +108,7 @@ public class OvrManager
           _system = OpenVR.System;
 
           _input = OpenVR.Input;
-          // Every overlay we construct below dereferences the overlay interface right away, and
-          // DetectInput needs the input interface. Shut down again if either is still missing, so
-          // the next attempt starts from a clean initialization.
+          // the overlays below and DetectInput dereference these interfaces immediately
           if (_input == null || OpenVR.Overlay == null)
           {
             Log.Warning("OpenVR interfaces are not available yet. Retrying initialization later...");

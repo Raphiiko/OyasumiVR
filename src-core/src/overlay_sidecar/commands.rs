@@ -21,8 +21,7 @@ pub async fn start_overlay_sidecar(gpu_acceleration: bool) {
                 .await;
             sidecar_manager.start_or_restart().await;
         }
-        // In development mode, we expect the sidecar to be started in development mode manually,
-        // which can happen at any point after the core comes up, so keep watching for it.
+        // in development mode the sidecar is started manually, so wait for it to appear
         OverlaySidecarMode::Dev => {
             if DEV_SIDECAR_WATCHER_RUNNING.swap(true, Ordering::SeqCst) {
                 return;
@@ -32,8 +31,7 @@ pub async fn start_overlay_sidecar(gpu_acceleration: bool) {
                     "[Core] Waiting for the OVERLAY sidecar to start on port {OVERLAY_SIDECAR_GRPC_DEV_PORT}"
                 );
                 loop {
-                    // Only announce the sidecar once its GRPC port accepts connections, so we
-                    // don't log a start we cannot follow up on.
+                    // only announce the sidecar once its GRPC port accepts connections
                     let reachable =
                         tokio::net::TcpStream::connect(("127.0.0.1", OVERLAY_SIDECAR_GRPC_DEV_PORT))
                             .await

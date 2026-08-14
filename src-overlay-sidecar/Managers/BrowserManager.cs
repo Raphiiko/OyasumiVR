@@ -56,7 +56,6 @@ public class BrowserManager {
     }
   }
 
-  // Browsers are pooled and reused across overlays, so the current address identifies the overlay.
   private static void LogBrowserEvents(OffscreenBrowser browser)
   {
     browser.ConsoleMessage += (_, e) =>

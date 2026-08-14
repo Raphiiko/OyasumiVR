@@ -80,7 +80,6 @@ pub async fn task() {
                     ovr::sys::EVRApplicationType::VRApplication_Background,
                 ) {
                     Ok(ctx) => ctx,
-                    // If we failed, continue to try again later
                     Err(e) => {
                         let reason = match e {
                             ovr::InitError::AlreadyInitialized => {
@@ -300,25 +299,19 @@ pub async fn task() {
     }
 }
 
-/// Drops the OpenVR context and shuts OpenVR itself down. Every path that clears `OVR_CONTEXT`
-/// has to go through here: leaving OpenVR initialized without a context makes every later
-/// initialization attempt fail, which wedges the module at `Initializing` forever.
+/// Every path that clears `OVR_CONTEXT` has to use this, or OpenVR stays initialized without a
+/// context and every later initialization attempt fails.
 async fn shutdown_ovr() {
-    // Hold the context lock across the shutdown. `VR_Shutdown` invalidates every interface
-    // pointer, so a task that still reads the context in between constructs a manager over a
-    // null pointer and panics.
+    // the lock stays held across the shutdown: VR_Shutdown invalidates every interface pointer
     let mut context = OVR_CONTEXT.lock().await;
-    // Shutdown modules
     brightness_overlay::on_ovr_quit().await;
-    // Shutdown OpenVR
     unsafe {
         ovr::sys::VR_Shutdown();
     }
     *context = None;
 }
 
-/// SteamVR can drop the OpenVR interfaces before it sends us its quit event, and every manager
-/// dereferences its interface pointer as soon as it is constructed.
+/// Constructing an overlay manager while this is false panics.
 pub fn overlay_interface_available() -> bool {
     !unsafe { ovr::sys::VROverlay() }.is_null()
 }

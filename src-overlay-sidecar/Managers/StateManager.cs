@@ -4,10 +4,10 @@ namespace overlay_sidecar;
 
 public class StateManager {
   public static StateManager Instance { get; } = new();
-  // Consumers read sub-messages without null checks, so the state always carries them.
+  // consumers read sub-messages without null checks, so the state always carries them
   private OyasumiSidecarState _state = NewDefaultState();
 
-  // _state is replaced on every sync, so it cannot serve as its own lock.
+  // _state is replaced on every sync, so it cannot serve as its own lock
   private readonly object _lock = new();
 
   public event EventHandler<OyasumiSidecarState>? StateChanged;
