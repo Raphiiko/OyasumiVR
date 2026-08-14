@@ -2,7 +2,7 @@ use crate::globals::STEAM_APP_KEY;
 
 use super::{
     models::{BindingOriginData, OVRDevice, OVRFrameLimits},
-    OVR_CONTEXT,
+    overlay_interface_available, OVR_CONTEXT,
 };
 use enumset::EnumSet;
 use log::error;
@@ -108,6 +108,9 @@ pub async fn openvr_launch_binding_configuration(show_on_desktop: bool) {
 #[tauri::command]
 pub async fn openvr_is_dashboard_visible() -> bool {
     let context = OVR_CONTEXT.lock().await;
+    if !overlay_interface_available() {
+        return false;
+    }
     let mut manager = match context.as_ref() {
         Some(context) => context.overlay_mngr(),
         None => return false,
@@ -118,8 +121,10 @@ pub async fn openvr_is_dashboard_visible() -> bool {
 #[tauri::command]
 pub async fn openvr_reregister_manifest() -> Result<(), String> {
     let ctx = OVR_CONTEXT.lock().await;
-    let mut applications = ctx.as_ref().unwrap().applications_mngr();
-    let manifest_path_buf = std::fs::canonicalize("resources/manifest.vrmanifest").unwrap();
+    let ctx = ctx.as_ref().ok_or("OPENVR_NOT_INITIALIZED")?;
+    let mut applications = ctx.applications_mngr();
+    let manifest_path_buf = std::fs::canonicalize("resources/manifest.vrmanifest")
+        .map_err(|e| format!("MANIFEST_NOT_FOUND: {e}"))?;
     let manifest_path: &std::path::Path = manifest_path_buf.as_ref();
     match applications.is_application_installed(STEAM_APP_KEY) {
         Ok(value) => {

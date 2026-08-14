@@ -3,6 +3,11 @@ use crate::{
     utils::models::OverlaySidecarMode,
     Models::oyasumi_core::OverlaySidecarStartArgs,
 };
+use log::info;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::time::Duration;
+
+static DEV_SIDECAR_WATCHER_RUNNING: AtomicBool = AtomicBool::new(false);
 
 #[tauri::command]
 pub async fn start_overlay_sidecar(gpu_acceleration: bool) {
@@ -16,14 +21,36 @@ pub async fn start_overlay_sidecar(gpu_acceleration: bool) {
                 .await;
             sidecar_manager.start_or_restart().await;
         }
-        // In development mode, we expect the sidecar to be started in development mode manually
+        // in development mode the sidecar is started manually, so wait for it to appear
         OverlaySidecarMode::Dev => {
-            let _ = super::handle_overlay_sidecar_start(&OverlaySidecarStartArgs {
-                pid: 0,
-                grpc_port: OVERLAY_SIDECAR_GRPC_DEV_PORT as u32,
-                grpc_web_port: OVERLAY_SIDECAR_GRPC_WEB_DEV_PORT as u32,
-            })
-            .await;
+            if DEV_SIDECAR_WATCHER_RUNNING.swap(true, Ordering::SeqCst) {
+                return;
+            }
+            tokio::spawn(async move {
+                info!(
+                    "[Core] Waiting for the OVERLAY sidecar to start on port {OVERLAY_SIDECAR_GRPC_DEV_PORT}"
+                );
+                loop {
+                    // only announce the sidecar once its GRPC port accepts connections
+                    let reachable =
+                        tokio::net::TcpStream::connect(("127.0.0.1", OVERLAY_SIDECAR_GRPC_DEV_PORT))
+                            .await
+                            .is_ok();
+                    if reachable
+                        && super::handle_overlay_sidecar_start(&OverlaySidecarStartArgs {
+                            pid: 0,
+                            grpc_port: OVERLAY_SIDECAR_GRPC_DEV_PORT as u32,
+                            grpc_web_port: OVERLAY_SIDECAR_GRPC_WEB_DEV_PORT as u32,
+                        })
+                        .await
+                        .is_ok()
+                    {
+                        break;
+                    }
+                    tokio::time::sleep(Duration::from_secs(3)).await;
+                }
+                DEV_SIDECAR_WATCHER_RUNNING.store(false, Ordering::SeqCst);
+            });
         }
     }
 }

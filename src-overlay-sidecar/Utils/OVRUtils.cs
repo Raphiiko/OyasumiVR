@@ -33,9 +33,12 @@ public class OvrUtils {
 
   public static EVROverlayError getOrCreateOverlay(String key, String name, ref ulong handle)
   {
-    var error = OpenVR.Overlay.FindOverlay(key, ref handle);
+    var overlay = OpenVR.Overlay;
+    // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+    if (overlay == null) return EVROverlayError.RequestFailed; // This can be null sometimes...
+    var error = overlay.FindOverlay(key, ref handle);
     if (error == EVROverlayError.None) return EVROverlayError.None;
-    error = OpenVR.Overlay.CreateOverlay(key, name, ref handle);
+    error = overlay.CreateOverlay(key, name, ref handle);
     return error;
   }
 

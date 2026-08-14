@@ -1,5 +1,6 @@
 using CefSharp;
 using overlay_sidecar.Browsers;
+using Serilog;
 
 namespace overlay_sidecar;
 
@@ -31,6 +32,7 @@ public class BrowserManager {
       }
 
       OffscreenBrowser browser = Program.GpuAccelerated ? new AcceleratedOffscreenBrowser(url, width, height) : new NonAcceleratedOffscreenBrowser(url, width, height);
+      if (Program.InDevMode()) LogBrowserEvents(browser);
       _browsers.Add(new CachedBrowser(browser, false, width, height));
 
       return browser;
@@ -52,6 +54,18 @@ public class BrowserManager {
         }
       }
     }
+  }
+
+  private static void LogBrowserEvents(OffscreenBrowser browser)
+  {
+    browser.ConsoleMessage += (_, e) =>
+      Log.Information("[Browser {address}] {level} {message} ({source}:{line})", browser.Address, e.Level,
+        e.Message, e.Source, e.Line);
+    browser.LoadError += (_, e) =>
+      Log.Error("[Browser {address}] Failed to load {url}: {error} ({text})", browser.Address, e.FailedUrl,
+        e.ErrorCode, e.ErrorText);
+    browser.LoadingStateChanged += (_, e) =>
+      Log.Information("[Browser {address}] Loading={loading}", browser.Address, e.IsLoading);
   }
 
   class CachedBrowser {
