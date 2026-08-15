@@ -5,8 +5,7 @@
 //
 //   <div animate.enter="anim-blur-fly-in" style="--anim-duration: 300ms; --anim-delay: 50ms">
 
-// Staggered entries set a delay on a container whose descendants animate too, and a plain custom
-// property would inherit into them and hold every later animation back.
+// Must not inherit, or a container's stagger delay holds back every animation inside it.
 @property --anim-delay {
   syntax: '<time>';
   inherits: false;

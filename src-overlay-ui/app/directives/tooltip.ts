@@ -14,8 +14,7 @@ export class Tooltip {
   private tooltipShown = false;
 
   constructor() {
-    // Clicking a button can navigate away while it is hovered, and the host is then removed
-    // without ever raising mouseleave, leaving its tooltip on screen.
+    // A hovered host can be removed by its own click, which never raises mouseleave.
     inject(DestroyRef).onDestroy(() => this.onLeave());
   }
 
