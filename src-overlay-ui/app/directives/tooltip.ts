@@ -1,4 +1,4 @@
-import { Directive, input } from '@angular/core';
+import { DestroyRef, Directive, inject, input } from '@angular/core';
 
 /** Raises a tooltip on the sidecar's tooltip overlay while the host is hovered. */
 @Directive({
@@ -13,6 +13,12 @@ export class Tooltip {
 
   private tooltipShown = false;
 
+  constructor() {
+    // Clicking a button can navigate away while it is hovered, and the host is then removed
+    // without ever raising mouseleave, leaving its tooltip on screen.
+    inject(DestroyRef).onDestroy(() => this.onLeave());
+  }
+
   onEnter(): void {
     if (!this.appTooltip()) return;
     this.tooltipShown = true;
@@ -20,7 +26,7 @@ export class Tooltip {
   }
 
   onLeave(): void {
-    if (!this.appTooltip() && !this.tooltipShown) return;
+    if (!this.tooltipShown) return;
     this.tooltipShown = false;
     void window.OyasumiIPCOut.showToolTip(null);
   }
