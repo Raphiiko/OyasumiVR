@@ -44,6 +44,11 @@
     width: 100%;
     height: 100%;
 
+    // The row is a full width click target, but only the icon carries the card.
+    > .card {
+      width: auto;
+    }
+
     i {
       margin: 1rem;
     }
