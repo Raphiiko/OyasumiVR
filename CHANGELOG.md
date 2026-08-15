@@ -17,6 +17,8 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 
 ### Changed
 
+- Turning devices on when OyasumiVR starts now takes precedence over turning them off for a stopped
+  SteamVR, so devices covered by both automations are left on
 - Improved the Traditional Chinese translations
 - Updated the Russian translations
 - OyasumiVR's window now does less work while it is open
