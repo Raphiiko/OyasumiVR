@@ -48,6 +48,8 @@ pub struct SidecarManager {
     pub on_stop_tx: mpsc::Sender<()>,
     pub auto_restart: bool,
     pub args: Arc<Mutex<Vec<String>>>,
+    pub restart_requested: Arc<tokio::sync::Notify>,
+    pub launching: Arc<Mutex<()>>,
 }
 
 impl SidecarManager {
@@ -73,6 +75,8 @@ impl SidecarManager {
             on_stop_tx,
             auto_restart,
             args: Arc::new(Mutex::new(args)),
+            restart_requested: Arc::new(tokio::sync::Notify::new()),
+            launching: Arc::new(Mutex::new(())),
         }
     }
 
@@ -94,8 +98,10 @@ impl SidecarManager {
     }
 
     pub async fn start_or_restart(&mut self) {
-        // Kill whatever process we are currently holding, if any.
-        {
+        // Wait out a launch that is already in flight, so that its process cannot escape the
+        // kill below and keep running with the arguments it was given.
+        let watching = {
+            let _launching = self.launching.lock().await;
             let mut sidecar_child = self.sidecar_child.lock().await;
             if let Some(sidecar_child) = sidecar_child.as_mut() {
                 info!(
@@ -106,10 +112,13 @@ impl SidecarManager {
                     error!("[Core] Failed to kill {} sidecar: {}", self.sidecar_id, e);
                 }
             }
-        }
+            *self.watching.lock().await
+        };
         // A running watcher picks the restart up by itself. Starting one here as well would
         // leave two processes and two watchers running alongside each other.
-        if !*self.watching.lock().await {
+        if watching {
+            self.restart_requested.notify_one();
+        } else {
             self._start_internal(false).await;
         }
     }
@@ -119,6 +128,8 @@ impl SidecarManager {
     }
 
     async fn _start_internal(&mut self, relaunch: bool) -> u32 {
+        // held until the new process is stored, so start_or_restart cannot miss it
+        let _launching = self.launching.lock().await;
         let core_grpc_port_guard = crate::grpc::SERVER_PORT.lock().await;
         let core_grpc_port = match core_grpc_port_guard.as_ref() {
             Some(port) => *port,
@@ -163,6 +174,12 @@ impl SidecarManager {
                     e
                 );
                 *self.active.lock().await = false;
+                let _ = self.on_stop_tx.send(()).await;
+                // a launch that never happened still needs a watcher, or it is never retried
+                if !relaunch && !*self.watching.lock().await {
+                    *self.watching.lock().await = true;
+                    self.watch_process();
+                }
                 return 0;
             }
         };
@@ -307,8 +324,15 @@ impl SidecarManager {
                 if !manager.auto_restart {
                     break;
                 }
-                tokio::time::sleep(LAUNCH_RETRY_INTERVALS[retries]).await;
-                retries = (retries + 1).min(last_retry_interval);
+                // an explicit restart request must not wait out the backoff
+                tokio::select! {
+                    _ = tokio::time::sleep(LAUNCH_RETRY_INTERVALS[retries]) => {
+                        retries = (retries + 1).min(last_retry_interval);
+                    }
+                    _ = manager.restart_requested.notified() => {
+                        retries = 0;
+                    }
+                }
                 manager._start_internal(true).await;
             }
             *manager.watching.lock().await = false;

@@ -14,6 +14,8 @@ public static class Program {
   public static void Main(string[] args)
   {
     LogConfigurator.Init();
+    AppDomain.CurrentDomain.UnhandledException += (_, e) =>
+      Log.Fatal(e.ExceptionObject as Exception, "The overlay sidecar is stopping on an unhandled exception.");
     var coreGrpcPort = (int)Globals.CORE_GRPC_DEV_PORT;
     var mainProcessId = 0;
 
