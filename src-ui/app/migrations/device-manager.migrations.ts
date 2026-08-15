@@ -3,10 +3,32 @@ import { error, info } from '@tauri-apps/plugin-log';
 import { DEVICE_MANAGER_DATA_DEFAULT, DeviceManagerData } from '../models/device-manager';
 import { BaseDirectory, writeTextFile } from '@tauri-apps/plugin-fs';
 import { message } from '@tauri-apps/plugin-dialog';
+import { migrateKnownLighthouseDeviceId } from './lighthouse-device-id';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: resetToLatest,
+  2: from1to2,
 };
+
+function from1to2(data: any): any {
+  data.version = 2;
+  const knownDevices: any[] = [];
+  for (const device of data.knownDevices ?? []) {
+    device.id = migrateKnownLighthouseDeviceId(device.id) ?? device.id;
+    // Both id formats can be present for one device, each with its own entry
+    const existing = knownDevices.find((d) => d.id === device.id);
+    if (!existing) {
+      knownDevices.push(device);
+      continue;
+    }
+    existing.nickname = existing.nickname ?? device.nickname;
+    existing.tagIds = existing.tagIds?.length ? existing.tagIds : (device.tagIds ?? []);
+    existing.disabled = existing.disabled || device.disabled;
+    existing.lastSeen = Math.max(existing.lastSeen ?? 0, device.lastSeen ?? 0);
+  }
+  data.knownDevices = knownDevices;
+  return data;
+}
 
 export function migrateDeviceManagerData(data: any): DeviceManagerData {
   let currentVersion = data.version || 0;

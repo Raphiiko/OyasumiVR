@@ -4,6 +4,7 @@ import { error, info } from '@tauri-apps/plugin-log';
 import { message } from '@tauri-apps/plugin-dialog';
 import { BaseDirectory, writeTextFile } from '@tauri-apps/plugin-fs';
 import { migrateOscScript } from './osc-script.migrations';
+import { migrateKnownLighthouseDeviceId } from './lighthouse-device-id';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: resetToLatest,
@@ -24,7 +25,31 @@ const migrations: { [v: number]: (data: any) => any } = {
   16: from15to16,
   17: from16to17,
   18: from17to18,
+  19: from18to19,
 };
+
+function from18to19(data: any): any {
+  data.version = 19;
+  migrateSelectedDeviceIds(data);
+  return data;
+}
+
+// Rewrites the base station ids in every device selection, wherever it sits in the config tree
+function migrateSelectedDeviceIds(value: any) {
+  if (Array.isArray(value)) {
+    value.forEach(migrateSelectedDeviceIds);
+    return;
+  }
+  if (!value || typeof value !== 'object') return;
+  if (Array.isArray(value.devices)) {
+    value.devices = [
+      ...new Set(
+        value.devices.map((id: string) => migrateKnownLighthouseDeviceId(id) ?? id) as string[]
+      ),
+    ];
+  }
+  Object.values(value).forEach(migrateSelectedDeviceIds);
+}
 
 export function migrateAutomationConfigs(data: any): AutomationConfigs {
   let currentVersion = data.version || 0;

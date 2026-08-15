@@ -1,5 +1,8 @@
-use bluest::{Device, DeviceId};
+use std::sync::Arc;
+
+use btleplug::platform::{Peripheral, PeripheralId};
 use serde::{ser::SerializeStruct, Deserialize, Serialize, Serializer};
+use tokio::sync::Mutex;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -30,15 +33,14 @@ pub enum LighthouseDeviceType {
 #[derive(Debug)]
 pub enum LighthouseError {
     DeviceNotFound,
-    FailedToGetServices(bluest::Error),
+    FailedToConnect(btleplug::Error),
+    FailedToGetServices(btleplug::Error),
     ServiceNotFound,
-    FailedToGetCharacteristics(bluest::Error),
     CharacteristicNotFound,
-    FailedToReadCharacteristic(bluest::Error),
-    FailedToWriteCharacteristic(bluest::Error),
+    FailedToReadCharacteristic(btleplug::Error),
+    FailedToWriteCharacteristic(btleplug::Error),
     InvalidCharacteristicValue,
     CharacteristicDoesNotSupportRead,
-    FailedToGetCharacteristicProperties(bluest::Error),
 }
 
 impl Serialize for LighthouseError {
@@ -52,6 +54,10 @@ impl Serialize for LighthouseError {
                 error.serialize_field("error", "DeviceNotFound")?;
                 error.serialize_field("message", &None::<String>)?;
             }
+            LighthouseError::FailedToConnect(e) => {
+                error.serialize_field("error", "FailedToConnect")?;
+                error.serialize_field("message", &Some(e.to_string()))?;
+            }
             LighthouseError::FailedToGetServices(e) => {
                 error.serialize_field("error", "FailedToGetServices")?;
                 error.serialize_field("message", &Some(e.to_string()))?;
@@ -59,10 +65,6 @@ impl Serialize for LighthouseError {
             LighthouseError::ServiceNotFound => {
                 error.serialize_field("error", "ServiceNotFound")?;
                 error.serialize_field("message", &None::<String>)?;
-            }
-            LighthouseError::FailedToGetCharacteristics(e) => {
-                error.serialize_field("error", "FailedToGetCharacteristics")?;
-                error.serialize_field("message", &Some(e.to_string()))?;
             }
             LighthouseError::CharacteristicNotFound => {
                 error.serialize_field("error", "CharacteristicNotFound")?;
@@ -84,10 +86,6 @@ impl Serialize for LighthouseError {
                 error.serialize_field("error", "CharacteristicCoesNotSupportRead")?;
                 error.serialize_field("message", &None::<String>)?;
             }
-            LighthouseError::FailedToGetCharacteristicProperties(e) => {
-                error.serialize_field("error", "FailedToReadCharacteristicProperties")?;
-                error.serialize_field("message", &Some(e.to_string()))?;
-            }
         };
         error.end()
     }
@@ -105,10 +103,12 @@ pub struct LighthouseDeviceModel {
 
 #[derive(Debug, Clone)]
 pub struct LighthouseDevice {
-    pub id: DeviceId,
-    pub bt_device: Device,
+    pub id: PeripheralId,
+    pub bt_device: Peripheral,
     pub device_name: String,
     pub device_type: LighthouseDeviceType,
+    /// Reconnecting closes the GATT handles, so operations on one device must not overlap
+    pub op_lock: Arc<Mutex<()>>,
 }
 
 //

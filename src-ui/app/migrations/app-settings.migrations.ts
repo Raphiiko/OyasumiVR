@@ -3,6 +3,7 @@ import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
 import { error, info } from '@tauri-apps/plugin-log';
 import { BaseDirectory, writeTextFile } from '@tauri-apps/plugin-fs';
 import { message } from '@tauri-apps/plugin-dialog';
+import { migrateLighthouseDeviceId } from './lighthouse-device-id';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: resetToLatest,
@@ -15,6 +16,7 @@ const migrations: { [v: number]: (data: any) => any } = {
   8: from7to8,
   9: from8to9,
   10: from9to10,
+  11: from10to11,
 };
 
 export function migrateAppSettings(data: any): AppSettings {
@@ -72,6 +74,19 @@ async function saveBackup(oldData: any) {
 function resetToLatest(data: any): any {
   // Reset to latest
   data = structuredClone(APP_SETTINGS_DEFAULT);
+  return data;
+}
+
+function from10to11(data: any): any {
+  data.version = 11;
+  if (data.v1LighthouseIdentifiers) {
+    data.v1LighthouseIdentifiers = Object.fromEntries(
+      Object.entries(data.v1LighthouseIdentifiers).map(([id, identifier]) => [
+        migrateLighthouseDeviceId(id) ?? id,
+        identifier,
+      ])
+    );
+  }
   return data;
 }
 

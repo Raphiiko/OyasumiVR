@@ -26,6 +26,9 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 
 ### Fixed
 
+- Fixed base station control leaking memory in the Windows Bluetooth service, which could use up all
+  of the system's memory
+- Fixed base stations not being controllable again after they briefly went out of Bluetooth range
 - Fixed the Windows notification provider not showing any notifications
 - Fixed SteamVR sometimes crashing when OyasumiVR turned off several base stations at once
 - Fixed OyasumiVR shutting down on its own when SteamVR reported an event it did not recognise
