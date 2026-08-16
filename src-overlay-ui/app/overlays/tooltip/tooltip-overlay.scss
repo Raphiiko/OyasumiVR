@@ -12,17 +12,13 @@
   padding: 0 2rem;
 }
 
-// The card stays mounted so a new hover reverses this fade instead of restarting it.
-.fader {
-  opacity: 0;
-  filter: blur(5px);
-  transition:
-    opacity 0.4s ease-in-out,
-    filter 0.4s ease-in-out;
+// Shown and hidden without a transition. Tooltips follow the pointer between buttons, and fading
+// each one made them feel slower than the hover that asked for them.
+.tooltip-card {
+  visibility: hidden;
 
   &.shown {
-    opacity: 1;
-    filter: blur(0);
+    visibility: visible;
   }
 }
 
