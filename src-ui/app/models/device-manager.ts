@@ -5,7 +5,7 @@ export interface DeviceSelection {
 }
 
 export interface DeviceManagerData {
-  version: 1;
+  version: 2;
   knownDevices: DMKnownDevice[];
   tags: DMDeviceTag[];
 }
@@ -31,7 +31,7 @@ export interface DMDeviceTag {
 }
 
 export const DEVICE_MANAGER_DATA_DEFAULT: DeviceManagerData = {
-  version: 1,
+  version: 2,
   knownDevices: [],
   tags: [],
 };
