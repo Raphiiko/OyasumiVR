@@ -22,7 +22,7 @@ function from1to2(data: any): any {
       continue;
     }
     existing.nickname = existing.nickname ?? device.nickname;
-    existing.tagIds = existing.tagIds?.length ? existing.tagIds : (device.tagIds ?? []);
+    existing.tagIds = [...new Set([...(existing.tagIds ?? []), ...(device.tagIds ?? [])])];
     existing.disabled = existing.disabled || device.disabled;
     existing.lastSeen = Math.max(existing.lastSeen ?? 0, device.lastSeen ?? 0);
   }

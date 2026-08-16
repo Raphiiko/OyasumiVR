@@ -1,5 +1,3 @@
-// Superseded ids are the Windows device path, `BluetoothLE#BluetoothLE<adapter mac>-<device mac>`.
-// Current ids are the base station's own MAC address.
 const LIGHTHOUSE_ID_PATTERN =
   /^BluetoothLE#BluetoothLE[0-9a-f]{2}(?::[0-9a-f]{2}){5}-([0-9a-f]{2}(?::[0-9a-f]{2}){5})$/i;
 const KNOWN_DEVICE_ID_PATTERN = /^(LH_[A-Za-z0-9]+_)(.+)$/;
@@ -12,10 +10,7 @@ export function migrateLighthouseDeviceId(id: string): string | null {
   return match ? match[1].toUpperCase() : null;
 }
 
-/**
- * Same as {@link migrateLighthouseDeviceId}, for the `LH_<type>_<device id>` ids the device manager
- * keeps for known devices.
- */
+/** Same as {@link migrateLighthouseDeviceId}, for the device manager's `LH_<type>_<device id>` ids. */
 export function migrateKnownLighthouseDeviceId(id: string): string | null {
   const match = KNOWN_DEVICE_ID_PATTERN.exec(id);
   if (!match) return null;
