@@ -167,7 +167,6 @@ export class OyasumiVRSteamVRDevicePowerAutomationsService {
         await this.lighthouse.setPowerState(device, 'on');
       }
     } else if (!turnOnAtStart) {
-      // Turning devices on at startup takes precedence over turning them off for a stopped SteamVR
       const applicableDevices = this.deviceManager.getDevicesForSelection(
         this.config.turnOffDevicesOnSteamVRStop
       );

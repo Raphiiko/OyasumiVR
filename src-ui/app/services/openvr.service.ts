@@ -81,7 +81,7 @@ export class OpenVRService {
     ]);
     // A status update sent while the listener above was still being registered is never delivered
     const status = await invoke<OpenVRStatus>('openvr_status');
-    if (!statusReceived) this._status.next(status);
+    if (!statusReceived) this.onStatusUpdate(status);
 
     this.handleTelemetry();
   }
