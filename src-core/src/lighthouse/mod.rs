@@ -103,7 +103,7 @@ pub async fn init() {
 }
 
 /// Every scan needs its own adapter: btleplug registers an advertisement handler per `start_scan`
-/// call and never removes it, while a fresh adapter carries a fresh watcher.
+/// call and never removes it.
 async fn scan_adapter() -> Option<Adapter> {
     let manager_guard = MANAGER.lock().await;
     let manager = manager_guard.as_ref()?;
@@ -562,8 +562,7 @@ async fn get_power_characteristic(
             (LIGHTHOUSE_V2_PWR_SERVICE, LIGHTHOUSE_V2_PWR_CHARACTERISTIC)
         }
     };
-    // Service discovery skips services whose characteristics it could not enumerate, so an
-    // incomplete cache has to be dropped instead of being kept for every later operation
+    // Discovery leaves out services it could not enumerate, so an incomplete cache is dropped
     let service = match device
         .bt_device
         .services()
