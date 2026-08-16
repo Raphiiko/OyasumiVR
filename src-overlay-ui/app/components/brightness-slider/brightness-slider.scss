@@ -1,0 +1,122 @@
+@use 'slider' as *;
+
+@keyframes brightness-thumb-glow {
+  0% {
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.5));
+    opacity: 0.25;
+    transform: scale(0.9);
+  }
+
+  40% {
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 1));
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  80% {
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.5));
+    opacity: 0.25;
+    transform: scale(0.9);
+  }
+
+  100% {
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.5));
+    opacity: 0.25;
+    transform: scale(0.9);
+  }
+}
+
+@keyframes brightness-track-glow {
+  0% {
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.5));
+    opacity: 0.25;
+  }
+
+  40% {
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 1));
+    opacity: 1;
+  }
+
+  80% {
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.5));
+    opacity: 0.25;
+  }
+
+  100% {
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.5));
+    opacity: 0.25;
+  }
+}
+
+.slider-container.transitioning .slider-bar-area {
+  .slider-bar-pre,
+  .slider-bar-post {
+    animation: brightness-track-glow 2s ease-out infinite normal;
+  }
+
+  .slider-thumb {
+    animation: brightness-thumb-glow 2s ease-out infinite normal;
+
+    span {
+      opacity: 1;
+    }
+  }
+}
+
+.slider-title-row {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 1rem;
+  z-index: 10;
+
+  span {
+    flex: 1;
+    display: inline-block;
+    color: white;
+    font-size: 1.5rem;
+    line-height: 2rem;
+    text-align: center;
+  }
+}
+
+.slider-bar-area {
+  &:hover,
+  &.dragging {
+    .slider-thumb span {
+      opacity: 1;
+      font-size: 1rem;
+      line-height: 1.5rem;
+    }
+  }
+}
+
+.slider-thumb {
+  flex: 1;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid white;
+  border-radius: 9999px;
+  transition: $slider-transition;
+
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    color: white;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 600;
+    text-align: center;
+    vertical-align: middle;
+    opacity: 0;
+    transition: $slider-transition;
+  }
+}

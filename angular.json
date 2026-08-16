@@ -94,9 +94,82 @@
               "src-ui/**/*.js",
               "src-ui/**/*.html",
               "src-ui/**/*.json",
+              "src-overlay-ui/**/*.ts",
+              "src-overlay-ui/**/*.html",
               "scripts/*.js"
             ]
           }
+        }
+      }
+    },
+    "overlay-ui": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss",
+          "standalone": true
+        }
+      },
+      "root": "",
+      "sourceRoot": "src-overlay-ui",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "outputHashing": "media",
+            "outputPath": {
+              "base": "src-overlay-ui/build",
+              "browser": ""
+            },
+            "index": "src-overlay-ui/index.html",
+            "browser": "src-overlay-ui/main.ts",
+            "tsConfig": "tsconfig.overlay.json",
+            "inlineStyleLanguage": "scss",
+            "assets": ["src-overlay-ui/assets"],
+            "styles": ["src-overlay-ui/styles.scss"],
+            "stylePreprocessorOptions": {
+              "includePaths": ["src-overlay-ui/styles"]
+            },
+            "allowedCommonJsDependencies": ["@messageformat/core", "lodash"]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [],
+              "outputHashing": "all",
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": false
+              }
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "styles": ["src-overlay-ui/styles.scss", "src-overlay-ui/styles/dev.scss"]
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "options": {
+            "port": 5173
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "overlay-ui:build:production"
+            },
+            "development": {
+              "buildTarget": "overlay-ui:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
         }
       }
     }

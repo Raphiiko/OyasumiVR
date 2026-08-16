@@ -601,9 +601,8 @@ It might work on other headsets, but your mileage may vary.
 
 OyasumiVR telah dibuat dengan:
 
-- [Angular](https://angular.io/) (TypeScript, Main UI)
+- [Angular](https://angular.io/) (TypeScript, Main UI & Overlay UI)
 - [Tauri](https://tauri.app/) (Rust, Desktop Framework)
-- [SvelteKit](https://kit.svelte.dev/) (TypeScript, Overlay UI)
 - [.NET](https://dotnet.microsoft.com/en-us/) (C#, Overlay)
 
 ## Pengembangan

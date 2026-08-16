@@ -587,15 +587,9 @@ OyasumiVR针对显卡的功耗限制功能只支持NVIDIA显卡。AMD用户必�
 
 OyasumiVR的使用技术与工具包括：
 
-- [Angular](https://angular.io/) (TypeScript, 界面主要组成部分)
+- [Angular](https://angular.io/) (TypeScript, 界面主要组成部分和叠加层界面)
 - [Tauri](https://tauri.app/) (Rust, 桌面框架)
-- [SvelteKit](https://kit.svelte.dev/) (TypeScript, 叠加层界面)
-- [.NET](https://dotnet.microsoft.com/en-us/) (C#, 叠加层界面)OyasumiVR 使用了以下技术构建：
-
-- [Angular](https://angular.io/)（TypeScript，用于主界面）
-- [Tauri](https://tauri.app/)（Rust，桌面框架）
-- [SvelteKit](https://kit.svelte.dev/)（TypeScript，用于叠加界面）
-- [.NET](https://dotnet.microsoft.com/en-us/)（C#，用于叠加界面）
+- [.NET](https://dotnet.microsoft.com/en-us/) (C#, 叠加层界面)
 
 ## 开发开发相关
 

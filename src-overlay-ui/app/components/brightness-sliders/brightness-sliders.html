@@ -1,0 +1,43 @@
+<div class="sliders-container" [style.height]="brightnessState()?.advancedMode ? '14em' : '7em'">
+  @if (brightnessState(); as state) { @if (!state.advancedMode) {
+  <div
+    animate.enter="anim-blur-fly-in"
+    animate.leave="anim-blur-fly-out"
+    style="--anim-duration: 300ms"
+  >
+    <app-brightness-slider
+      [label]="'overlay.brightness.simple' | transloco"
+      [value]="state.brightness"
+      [min]="5"
+      [isTransitioning]="state.brightnessTransitioning"
+      [transitionTarget]="state.brightnessTransitionTarget"
+      (valueChange)="setSimpleBrightness($event)"
+    />
+  </div>
+  } @else {
+  <div
+    animate.enter="anim-blur-fly-in"
+    animate.leave="anim-blur-fly-out"
+    style="--anim-duration: 300ms"
+  >
+    <app-brightness-slider
+      [label]="'overlay.brightness.software' | transloco"
+      [min]="5"
+      [value]="state.softwareBrightness"
+      [isTransitioning]="state.softwareBrightnessTransitioning"
+      [transitionTarget]="state.softwareBrightnessTransitionTarget"
+      (valueChange)="setSoftwareBrightness($event)"
+    />
+    <app-brightness-slider
+      [label]="'overlay.brightness.hardware' | transloco"
+      [min]="state.hardwareMinBrightness"
+      [max]="state.hardwareMaxBrightness"
+      [value]="state.hardwareBrightness"
+      [disabled]="!state.hardwareBrightnessAvailable"
+      [isTransitioning]="state.hardwareBrightnessTransitioning"
+      [transitionTarget]="state.hardwareBrightnessTransitionTarget"
+      (valueChange)="setHardwareBrightness($event)"
+    />
+  </div>
+  } }
+</div>

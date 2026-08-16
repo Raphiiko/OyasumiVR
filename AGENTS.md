@@ -11,7 +11,7 @@ OyasumiVR is a Windows desktop app for VRChat users, built with Tauri.
 | `src-ui`               | Angular frontend (the main window)                |
 | `src-core`             | Rust Tauri backend                                |
 | `src-overlay-sidecar`  | C# sidecar, renders the SteamVR overlays          |
-| `src-overlay-ui`       | SvelteKit frontend for the overlays               |
+| `src-overlay-ui`       | Angular frontend for the SteamVR overlays         |
 | `src-elevated-sidecar` | Rust sidecar for actions that need admin rights   |
 | `src-shared-ts`        | TypeScript shared between the frontends           |
 | `src-shared-rust`      | Rust shared between the core and elevated sidecar |

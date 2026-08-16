@@ -599,9 +599,8 @@ HMDの色温度制御は現在、Valve Index, Bigscreen Beyond, HTC Vive(Pro)な
 
 OyasumiVRは以下により構築されています。
 
-- [Angular](https://angular.io/) (TypeScript, Main UI)
+- [Angular](https://angular.io/) (TypeScript, Main UI & Overlay UI)
 - [Tauri](https://tauri.app/) (Rust, Desktop Framework)
-- [SvelteKit](https://kit.svelte.dev/) (TypeScript, Overlay UI)
 - [.NET](https://dotnet.microsoft.com/en-us/) (C#, Overlay)
 
 ## 開発

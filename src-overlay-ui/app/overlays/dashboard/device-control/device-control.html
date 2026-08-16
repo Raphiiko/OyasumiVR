@@ -1,0 +1,50 @@
+<div animate.enter="anim-scale-in" animate.leave="anim-scale-out">
+  <div class="panel" animate.enter="anim-blur-in" animate.leave="anim-blur-out">
+    <div class="header">
+      <div class="title dark-glow-80">
+        <span class="glow-80">{{ 'overlay.dashboard.deviceControl.title' | transloco }}</span>
+      </div>
+      <div class="back" (click)="navigate.emit('OVERVIEW')">
+        <div class="card card--clickable card--small">
+          <div><i class="material-icons glow">arrow_back</i></div>
+        </div>
+      </div>
+    </div>
+    <div class="divider glow-100"></div>
+    <div class="action-grid">
+      <div
+        class="card card--clickable first"
+        [class.card--disabled]="!canTurnOffControllers()"
+        [appTooltip]="'overlay.dashboard.deviceControl.turnOff.AllControllers' | transloco"
+        (click)="turnOffControllers()"
+      >
+        <div class="tile">
+          <img src="assets/images/icon_controller.png" alt="" class="glow large" />
+        </div>
+      </div>
+      <div
+        class="card card--clickable"
+        [class.card--disabled]="!canTurnOffTrackers()"
+        [appTooltip]="'overlay.dashboard.deviceControl.turnOff.AllTrackers' | transloco"
+        (click)="turnOffTrackers()"
+      >
+        <div class="tile">
+          <img src="assets/images/icon_tracker.png" alt="" class="glow large" />
+        </div>
+      </div>
+      <div
+        class="card card--clickable"
+        [class.card--disabled]="!canTurnOffBoth()"
+        [appTooltip]="
+          'overlay.dashboard.deviceControl.turnOff.AllControllersAndTrackers' | transloco
+        "
+        (click)="turnOffControllersAndTrackers()"
+      >
+        <div class="tile">
+          <img src="assets/images/icon_controller.png" alt="" class="glow" />
+          <img src="assets/images/icon_tracker.png" alt="" class="glow" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

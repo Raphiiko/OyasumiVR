@@ -1,0 +1,165 @@
+@use 'tokens' as *;
+
+// Classes for `animate.enter` / `animate.leave`. Every one reads `--anim-duration` and
+// `--anim-delay`, and the fly ones `--anim-fly-y`, so a call site can retune a single usage:
+//
+//   <div animate.enter="anim-blur-fly-in" style="--anim-duration: 300ms; --anim-delay: 50ms">
+
+// Must not inherit, or a container's stagger delay holds back every animation inside it.
+@property --anim-delay {
+  syntax: '<time>';
+  inherits: false;
+  initial-value: 0ms;
+}
+
+@keyframes anim-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes anim-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes anim-blur-in {
+  from {
+    opacity: 0;
+    filter: blur(5px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@keyframes anim-blur-out {
+  from {
+    opacity: 1;
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    filter: blur(5px);
+  }
+}
+
+@keyframes anim-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes anim-scale-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+
+@keyframes anim-blur-fly-in {
+  from {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translateY(var(--anim-fly-y, 30px));
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes anim-blur-fly-out {
+  from {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translateY(var(--anim-fly-y, 30px));
+  }
+}
+
+@keyframes anim-fly-up-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--anim-fly-y, 100px));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes anim-slide-in {
+  from {
+    grid-template-rows: 0fr;
+  }
+  to {
+    grid-template-rows: 1fr;
+  }
+}
+
+@mixin anim($name, $default-duration, $easing) {
+  animation: $name var(--anim-duration, $default-duration) $easing var(--anim-delay, 0ms) both;
+}
+
+.anim-fade-in {
+  @include anim(anim-fade-in, 400ms, linear);
+}
+
+.anim-fade-out {
+  @include anim(anim-fade-out, 400ms, linear);
+}
+
+.anim-blur-in {
+  @include anim(anim-blur-in, 400ms, $ease-cubic-in-out);
+}
+
+.anim-blur-out {
+  @include anim(anim-blur-out, 400ms, $ease-cubic-in-out);
+}
+
+.anim-scale-in {
+  @include anim(anim-scale-in, 400ms, $ease-cubic-out);
+}
+
+.anim-scale-out {
+  @include anim(anim-scale-out, 400ms, $ease-cubic-out);
+}
+
+.anim-blur-fly-in {
+  @include anim(anim-blur-fly-in, 300ms, $ease-back-out);
+}
+
+.anim-blur-fly-out {
+  @include anim(anim-blur-fly-out, 300ms, $ease-back-out);
+}
+
+.anim-fly-up-in {
+  @include anim(anim-fly-up-in, 800ms, $ease-cubic-out);
+}
+
+.anim-slide-in {
+  @include anim(anim-slide-in, 400ms, $ease-cubic-out);
+}

@@ -1,7 +1,6 @@
 # Comment policy
 
-Applies to every language in this repository: TypeScript, Rust, C#, and templates (Angular HTML,
-Svelte).
+Applies to every language in this repository: TypeScript, Rust, C#, and Angular templates.
 
 A comment exists to make the code faster to read. That is the whole rule. Everything below follows
 from it.

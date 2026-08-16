@@ -1,0 +1,31 @@
+<div animate.enter="anim-scale-in" animate.leave="anim-scale-out">
+  <div class="panel" animate.enter="anim-blur-in" animate.leave="anim-blur-out">
+    <div class="header">
+      <div class="title dark-glow-80">
+        <span class="glow-80">{{ 'overlay.dashboard.automations.title' | transloco }}</span>
+      </div>
+      <div class="back" (click)="navigate.emit('OVERVIEW')">
+        <div class="card card--clickable card--small">
+          <div><i class="material-icons glow">arrow_back</i></div>
+        </div>
+      </div>
+    </div>
+    <div class="divider glow-100"></div>
+    @for (automation of automations(); track automation.id) {
+    <div class="card card--clickable" (click)="toggle(automation.id)">
+      <div class="automation">
+        <div class="icon">
+          <i class="material-icons glow">{{ automation.icon }}</i>
+        </div>
+        <div class="labels">
+          <span class="title">{{ automation.title }}</span>
+          @if (automation.subtitle) {
+          <span class="subtitle">{{ automation.subtitle }}</span>
+          }
+        </div>
+        <div class="toggle" [class.toggle--active]="automation.enabled"></div>
+      </div>
+    </div>
+    }
+  </div>
+</div>

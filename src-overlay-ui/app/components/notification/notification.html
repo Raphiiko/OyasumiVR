@@ -1,0 +1,23 @@
+<div class="card">
+  <div class="notification">
+    <div class="handle"></div>
+    <div class="handle-glow-clip">
+      <div class="handle-glow"></div>
+    </div>
+    <div class="content-wrapper" animate.enter="anim-slide-in" style="--anim-duration: 800ms">
+      <div class="content">
+        <img src="assets/images/logo.png" alt="Oyasumi Logo" class="logo" />
+        <div class="progress" animate.enter="anim-blur-in" animate.leave="anim-blur-out">
+          <div
+            class="progress-bar"
+            [style.width]="progressing() ? '100%' : '0%'"
+            [style.transition]="progressTransition()"
+          ></div>
+        </div>
+        <span class="message" animate.enter="anim-blur-in" animate.leave="anim-blur-out"
+          >{{ message() }}</span
+        >
+      </div>
+    </div>
+  </div>
+</div>

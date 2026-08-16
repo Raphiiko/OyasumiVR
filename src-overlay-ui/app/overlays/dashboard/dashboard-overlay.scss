@@ -1,0 +1,56 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+main {
+  position: relative;
+  width: 1024px;
+  height: 1024px;
+  user-select: none;
+  overflow: hidden;
+}
+
+.stack-frame {
+  @include stack-frame;
+}
+
+.overview {
+  transition: all 700ms;
+
+  &.obscured {
+    filter: blur(4px);
+    opacity: 0.8;
+  }
+}
+
+.shutdown-backdrop {
+  width: 600px;
+  height: 500px;
+  border-radius: 9999px;
+  background-color: black;
+  opacity: 0.8;
+  filter: blur(64px);
+}
+
+.shutdown-progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  > span {
+    color: white;
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+  }
+
+  .spinner {
+    margin-top: 110px;
+  }
+
+  .large-spinner {
+    transform: scale(3);
+  }
+}
