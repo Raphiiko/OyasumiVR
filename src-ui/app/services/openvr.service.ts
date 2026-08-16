@@ -41,6 +41,7 @@ export class OpenVRService {
   ) {}
 
   async init() {
+    let statusReceived = false;
     this._status.next(await invoke<OpenVRStatus>('openvr_status'));
     this.appSettings.settings
       .pipe(
@@ -58,7 +59,10 @@ export class OpenVRService {
       listen<DeviceUpdateEvent>('OVR_DEVICE_UPDATE', (event) =>
         this.onDeviceUpdate(event.payload.device)
       ),
-      listen<OpenVRStatus>('OVR_STATUS_UPDATE', (event) => this.onStatusUpdate(event.payload)),
+      listen<OpenVRStatus>('OVR_STATUS_UPDATE', (event) => {
+        statusReceived = true;
+        this.onStatusUpdate(event.payload);
+      }),
       listen<any>('OVR_POSE_UPDATE', (event) => {
         const poses = structuredClone(this._devicePoses.value);
         const {
@@ -75,6 +79,9 @@ export class OpenVRService {
         this.appRef.tick();
       }),
     ]);
+    // A status update sent while the listener above was still being registered is never delivered
+    const status = await invoke<OpenVRStatus>('openvr_status');
+    if (!statusReceived) this._status.next(status);
 
     this.handleTelemetry();
   }
