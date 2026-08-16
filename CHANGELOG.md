@@ -28,6 +28,7 @@ and this project (now) adheres to [Calendar Versioning](https://calver.org/#sche
 
 ### Fixed
 
+- Fixed base stations being turned off when OyasumiVR was started while SteamVR was already running
 - Fixed base station control leaking memory in the Windows Bluetooth service, which could use up all
   of the system's memory
 - Fixed base stations not being controllable again after they briefly went out of Bluetooth range
