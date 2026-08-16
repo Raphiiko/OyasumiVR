@@ -12,8 +12,7 @@
   padding: 0 2rem;
 }
 
-// Shown and hidden without a transition. Tooltips follow the pointer between buttons, and fading
-// each one made them feel slower than the hover that asked for them.
+// Deliberately not animated, so it keeps up with a pointer moving between buttons.
 .tooltip-card {
   visibility: hidden;
 
