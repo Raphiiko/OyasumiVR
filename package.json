@@ -22,9 +22,11 @@
     "build:steam:release": "npm run clean && npm run _prepare:steam && npm run tauri -- build --no-bundle && npm run _package:steam",
     "upload:steam:beta": "node scripts/steam/upload-steam-build.js beta",
     "upload:steam:release": "node scripts/steam/upload-steam-build.js release",
-    "deploy:steam:beta": "npm run build:steam:beta && npm run upload:steam:beta && npm run prepare:dev",
+    "deploy:steam:beta": "npm run bump:beta && npm run build:steam:beta && npm run upload:steam:beta && npm run _commit:version-bump && npm run prepare:dev",
     "deploy:steam:release": "npm run build:steam:release && npm run upload:steam:release && npm run prepare:dev",
     "//4": "=== State setters ===",
+    "bump:beta": "node scripts/bump-version.js beta",
+    "bump:release": "node scripts/bump-version.js release",
     "set-version": "node scripts/set-version.js",
     "set-flavour": "node scripts/set-flavour.js",
     "set-build-id": "node scripts/set-build-id.js",
@@ -54,7 +56,8 @@
     "_build:sidecar:overlay:core": "cd src-overlay-sidecar && dotnet publish -r win-x64 -c Release && cd ..",
     "_build:sidecar:overlay:post": "node scripts/overlay-sidecar-post-build.js",
     "_prepare:steam": "npm run set-build-id && npm run set-flavour STEAM",
-    "_package:steam": "node scripts/steam/package-steam-build.js STEAM && node scripts/steam/package-steam-build.js STEAM_CN"
+    "_package:steam": "node scripts/steam/package-steam-build.js STEAM && node scripts/steam/package-steam-build.js STEAM_CN",
+    "_commit:version-bump": "node scripts/commit-version-bump.js"
   },
   "private": true,
   "dependencies": {
@@ -139,7 +142,6 @@
     "@typescript-eslint/parser": "^8.67.0",
     "blurhash": "^2.0.5",
     "blurhash-to-css": "^0.5.5",
-    "check-more-types": "^2.24.0",
     "eslint": "^9.39.5",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-unused-imports": "^4.4.1",

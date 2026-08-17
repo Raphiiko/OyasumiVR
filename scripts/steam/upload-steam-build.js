@@ -52,6 +52,19 @@ loadLocalEnv(LOCAL_ENV_FILE);
 const packageJson = JSON.parse(readFileSync('package.json', 'utf8'));
 if (!packageJson.version) fail('Could not read version from package.json');
 const packageVersion = packageJson.version;
+const isPrerelease = /^[0-9]+\.[0-9]+\.[0-9]+-[0-9A-Za-z.-]+$/.test(packageVersion);
+if (modeArg === 'beta' && !isPrerelease) {
+  fail(
+    `Version "${packageVersion}" has no prerelease suffix. ` +
+      `Set one before uploading a beta build, e.g.: npm run set-version ${packageVersion}-beta.1`
+  );
+}
+if (modeArg === 'release' && isPrerelease) {
+  fail(
+    `Version "${packageVersion}" still carries a prerelease suffix. ` +
+      `Set the release version first, e.g.: npm run set-version ${packageVersion.split('-')[0]}`
+  );
+}
 
 const buildTs = readFileSync('src-ui/build.ts', 'utf8');
 const buildIdMatch = buildTs.match(/export const BUILD_ID = '([^']+)';/);
@@ -75,7 +88,7 @@ const steamPassword = process.env.STEAM_PASSWORD;
 const steamGuardCode = process.env.STEAM_GUARD_CODE;
 const setLiveBranch = process.env.STEAM_SET_LIVE_BRANCH || '';
 const preview = process.env.STEAM_PREVIEW === '1' ? '1' : '0';
-const versionLabel = modeArg === 'beta' ? `${packageVersion}-beta` : packageVersion;
+const versionLabel = packageVersion;
 const buildDescription =
   process.env.STEAM_BUILD_DESC ||
   `OyasumiVR v${versionLabel} build ${buildId} ${new Date()

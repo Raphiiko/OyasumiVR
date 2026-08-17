@@ -3,7 +3,17 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project (now) adheres to [Calendar Versioning](https://calver.org/#scheme).
+and this project (now) adheres to [Calendar Versioning](https://calver.org/#scheme)
+with [SemVer](https://semver.org/) prerelease suffixes:
+
+- Stable releases are `YY.MM.BUILD`: `YY.MM` is the UTC month the release was published
+  in, and `BUILD` counts the stable releases of that month, starting at 0.
+- Pre-releases are `YY.MM.BUILD-beta.N`: the core is the version the pre-release would
+  carry if promoted to stable at that moment. `N` counts pre-releases since the last
+  stable release; it carries across month boundaries and resets only when a stable
+  release ships.
+- Pre-release numbering never predicts the version of the eventual stable release, and
+  versions are assigned when a build is published, never before.
 
 ## [Unreleased]
 
