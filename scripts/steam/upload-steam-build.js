@@ -86,7 +86,7 @@ const steamUsername = process.env.STEAM_USERNAME;
 if (!steamUsername) fail('Missing required environment variable: STEAM_USERNAME');
 const steamPassword = process.env.STEAM_PASSWORD;
 const steamGuardCode = process.env.STEAM_GUARD_CODE;
-const setLiveBranch = process.env.STEAM_SET_LIVE_BRANCH || '';
+const setLiveBranch = process.env.STEAM_SET_LIVE_BRANCH ?? (modeArg === 'beta' ? 'beta' : '');
 const preview = process.env.STEAM_PREVIEW === '1' ? '1' : '0';
 const versionLabel = packageVersion;
 const buildDescription =
