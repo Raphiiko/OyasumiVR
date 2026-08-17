@@ -1,6 +1,6 @@
 [package]
 name = "oyasumivr-elevated-sidecar"
-version = "26.8.0-beta.2"
+version = "26.8.0-beta.3"
 authors = ["Raphiiko"]
 license = "MIT"
 edition = "2021"

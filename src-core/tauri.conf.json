@@ -66,7 +66,7 @@
   },
   "productName": "OyasumiVR",
   "mainBinaryName": "OyasumiVR",
-  "version": "26.8.0-beta.2",
+  "version": "26.8.0-beta.3",
   "identifier": "co.raphii.oyasumi",
   "plugins": {
     "cli": {
@@ -138,7 +138,7 @@
         "skipTaskbar": true,
         "minimizable": false,
         "focus": true,
-        "userAgent": "OyasumiVR/26.8.0-beta.2 (https://github.com/Raphiiko/OyasumiVR)",
+        "userAgent": "OyasumiVR/26.8.0-beta.3 (https://github.com/Raphiiko/OyasumiVR)",
         "useHttpsScheme": false
       },
       {
@@ -154,7 +154,7 @@
         "theme": "Dark",
         "visible": false,
         "transparent": true,
-        "userAgent": "OyasumiVR/26.8.0-beta.2 (https://github.com/Raphiiko/OyasumiVR)",
+        "userAgent": "OyasumiVR/26.8.0-beta.3 (https://github.com/Raphiiko/OyasumiVR)",
         "useHttpsScheme": false
       }
     ],
