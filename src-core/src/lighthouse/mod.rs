@@ -49,7 +49,7 @@ static LIGHTHOUSE_DEVICE_POWER_STATES: LazyLock<Mutex<HashMap<String, Lighthouse
 static LIGHTHOUSE_DEVICE_V1_TIMEOUTS: LazyLock<Mutex<HashMap<String, u16>>> =
     LazyLock::new(|| Mutex::new(HashMap::new()));
 static SCANNING: LazyLock<Mutex<bool>> = LazyLock::new(|| Mutex::new(false));
-static MANAGER: LazyLock<Mutex<Option<Manager>>> = LazyLock::new(Mutex::default);
+static ADAPTER: LazyLock<Mutex<Option<Adapter>>> = LazyLock::new(Mutex::default);
 static STATUS: LazyLock<Mutex<LighthouseStatus>> =
     LazyLock::new(|| Mutex::new(LighthouseStatus::Uninitialized));
 static PROCESSING_DEVICES: LazyLock<Mutex<HashSet<PeripheralId>>> =
@@ -57,33 +57,39 @@ static PROCESSING_DEVICES: LazyLock<Mutex<HashSet<PeripheralId>>> =
 
 const CONNECT_TIMEOUT: Duration = Duration::from_secs(15);
 const CONNECT_RETRY_COOLDOWN: Duration = Duration::from_secs(10);
+const SCAN_START_RETRY_DELAY: Duration = Duration::from_secs(10);
 
 pub async fn init() {
     // Initialize adapter
-    let manager = match Manager::new().await {
-        Ok(manager) => manager,
-        Err(err) => {
-            error!("[Core] Failed to initialize the bluetooth manager: {err}");
-            set_lighthouse_status(LighthouseStatus::AdapterError).await;
-            return;
-        }
-    };
-    match manager.adapters().await {
-        Ok(adapters) => {
-            if adapters.is_empty() {
+    let adapter = {
+        let manager = match Manager::new().await {
+            Ok(manager) => manager,
+            Err(err) => {
+                error!("[Core] Failed to initialize the bluetooth manager: {err}");
+                set_lighthouse_status(LighthouseStatus::AdapterError).await;
+                return;
+            }
+        };
+        let adapter = match manager.adapters().await {
+            Ok(adapters) => adapters.into_iter().next(),
+            Err(err) => {
+                error!("[Core] Failed to list the bluetooth adapters: {err}");
+                set_lighthouse_status(LighthouseStatus::AdapterError).await;
+                return;
+            }
+        };
+        match adapter {
+            Some(adapter) => adapter,
+            None => {
                 set_lighthouse_status(LighthouseStatus::NoAdapter).await;
                 warn!("[Core] No bluetooth adapter was found. Disabling lighthouse module.");
                 return;
             }
         }
-        Err(err) => {
-            error!("[Core] Failed to list the bluetooth adapters: {err}");
-            set_lighthouse_status(LighthouseStatus::AdapterError).await;
-            return;
-        }
-    }
-    *MANAGER.lock().await = Some(manager);
+    };
+    *ADAPTER.lock().await = Some(adapter.clone());
     set_lighthouse_status(LighthouseStatus::Ready).await;
+    tokio::spawn(scan_for_devices(adapter));
     // Poll the status of connected lighthouses every few seconds in a separate task
     tokio::spawn(async move {
         loop {
@@ -102,21 +108,42 @@ pub async fn init() {
     });
 }
 
-/// Every scan needs its own adapter: btleplug registers an advertisement handler per `start_scan`
-/// call and never removes it.
-async fn scan_adapter() -> Option<Adapter> {
-    let manager_guard = MANAGER.lock().await;
-    let manager = manager_guard.as_ref()?;
-    match manager.adapters().await {
-        Ok(adapters) => adapters.into_iter().next(),
+/// Runs for the lifetime of the process because btleplug retains each scan handler.
+async fn scan_for_devices(adapter: Adapter) {
+    // Subscribing after the scan starts would miss the first advertisements
+    let mut events = match adapter.events().await {
+        Ok(events) => events,
         Err(err) => {
-            warn!("[Core] Failed to list the bluetooth adapters: {err}");
-            None
+            error!("[Core] Failed to listen for bluetooth adapter events: {err}");
+            return;
+        }
+    };
+    let mut reported = false;
+    while let Err(err) = adapter.start_scan(ScanFilter::default()).await {
+        if !reported {
+            warn!("[Core] Failed to scan for lighthouse devices: {err}");
+            reported = true;
+        }
+        sleep(SCAN_START_RETRY_DELAY).await;
+    }
+    while let Some(event) = events.next().await {
+        let device_id = match event {
+            CentralEvent::DeviceDiscovered(id) | CentralEvent::DeviceUpdated(id) => id,
+            _ => continue,
+        };
+        if !*SCANNING.lock().await {
+            continue;
+        }
+        if let Ok(peripheral) = adapter.peripheral(&device_id).await {
+            tokio::spawn(handle_discovered_device(peripheral));
         }
     }
 }
 
 pub async fn start_scan(duration: Duration) {
+    if ADAPTER.lock().await.is_none() {
+        return;
+    }
     // Claim the scanning state, so two commands cannot open a window at the same time
     {
         let mut scanning_guard = SCANNING.lock().await;
@@ -131,49 +158,8 @@ pub async fn start_scan(duration: Duration) {
         LighthouseScanningStatusChangedEvent { scanning: true },
     )
     .await;
-    scan_for_devices(duration).await;
+    sleep(duration).await;
     set_scanning_status(false).await;
-}
-
-async fn scan_for_devices(duration: Duration) {
-    let adapter = match scan_adapter().await {
-        Some(adapter) => adapter,
-        None => return,
-    };
-    // Subscribing after the scan starts would miss the first advertisements
-    let mut events = match adapter.events().await {
-        Ok(events) => events,
-        Err(err) => {
-            warn!("[Core] Failed to listen for bluetooth adapter events: {err}");
-            return;
-        }
-    };
-    if let Err(err) = adapter.start_scan(ScanFilter::default()).await {
-        warn!("[Core] Failed to scan for lighthouse devices: {err}");
-        return;
-    }
-    // Listen for scan results
-    let mut timer = Box::pin(sleep(duration));
-    loop {
-        tokio::select! {
-            _ = timer.as_mut() => {
-                break;
-            }
-            event = events.next() => {
-                let device_id = match event {
-                    Some(CentralEvent::DeviceDiscovered(id)) | Some(CentralEvent::DeviceUpdated(id)) => id,
-                    Some(_) => continue,
-                    None => break,
-                };
-                if let Ok(peripheral) = adapter.peripheral(&device_id).await {
-                    tokio::spawn(handle_discovered_device(peripheral));
-                }
-            }
-        }
-    }
-    if let Err(err) = adapter.stop_scan().await {
-        warn!("[Core] Failed to stop scanning for lighthouse devices: {err}");
-    }
 }
 
 pub async fn get_devices() -> Vec<LighthouseDeviceModel> {
