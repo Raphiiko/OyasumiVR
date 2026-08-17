@@ -33,6 +33,7 @@ pub enum LighthouseDeviceType {
 #[derive(Debug)]
 pub enum LighthouseError {
     DeviceNotFound,
+    ConnectBackoff,
     FailedToConnect(btleplug::Error),
     FailedToGetServices(btleplug::Error),
     ServiceNotFound,
@@ -52,6 +53,10 @@ impl Serialize for LighthouseError {
         match self {
             LighthouseError::DeviceNotFound => {
                 error.serialize_field("error", "DeviceNotFound")?;
+                error.serialize_field("message", &None::<String>)?;
+            }
+            LighthouseError::ConnectBackoff => {
+                error.serialize_field("error", "ConnectBackoff")?;
                 error.serialize_field("message", &None::<String>)?;
             }
             LighthouseError::FailedToConnect(e) => {

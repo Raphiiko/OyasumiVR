@@ -3,8 +3,11 @@ pub mod models;
 
 use std::{
     collections::{HashMap, HashSet},
-    sync::{Arc, LazyLock},
-    time::Duration,
+    sync::{
+        atomic::{AtomicU32, Ordering},
+        Arc, LazyLock,
+    },
+    time::{Duration, Instant},
 };
 
 use btleplug::{
@@ -54,9 +57,18 @@ static STATUS: LazyLock<Mutex<LighthouseStatus>> =
     LazyLock::new(|| Mutex::new(LighthouseStatus::Uninitialized));
 static PROCESSING_DEVICES: LazyLock<Mutex<HashSet<PeripheralId>>> =
     LazyLock::new(|| Mutex::new(HashSet::new()));
+// Per device: consecutive connect failures, and when the last one happened
+static CONNECT_BACKOFFS: LazyLock<std::sync::Mutex<HashMap<PeripheralId, (u32, Instant)>>> =
+    LazyLock::new(|| std::sync::Mutex::new(HashMap::new()));
+static CONNECT_FAILURE_STREAK: AtomicU32 = AtomicU32::new(0);
+static LAST_RADIO_RECOVERY: LazyLock<Mutex<Option<Instant>>> = LazyLock::new(|| Mutex::new(None));
 
 const CONNECT_TIMEOUT: Duration = Duration::from_secs(15);
 const CONNECT_RETRY_COOLDOWN: Duration = Duration::from_secs(10);
+const CONNECT_BACKOFF_MAX: Duration = Duration::from_secs(300);
+// Failing connects to every device at once is the signature of a wedged stack
+const RADIO_RECOVERY_THRESHOLD: u32 = 6;
+const RADIO_RECOVERY_COOLDOWN: Duration = Duration::from_secs(300);
 
 pub async fn init() {
     // Initialize adapter
@@ -532,17 +544,107 @@ async fn ensure_connected(device: &Peripheral, device_name: &str) -> Result<(), 
     if device.is_connected().await.unwrap_or(false) {
         return Ok(());
     }
+    let device_id = device.id();
+    if !backoff_elapsed(&device_id) {
+        return Err(LighthouseError::ConnectBackoff);
+    }
     debug!("[Core] Connecting to lighthouse device: {device_name}");
     // The cached service handles are invalid after a reconnect, so drop them first
     let _ = device.disconnect().await;
-    device
-        .connect_with_timeout(CONNECT_TIMEOUT)
-        .await
-        .map_err(LighthouseError::FailedToConnect)?;
+    match device.connect_with_timeout(CONNECT_TIMEOUT).await {
+        Ok(()) => {
+            CONNECT_BACKOFFS.lock().unwrap().remove(&device_id);
+            CONNECT_FAILURE_STREAK.store(0, Ordering::Relaxed);
+        }
+        Err(err) => {
+            register_connect_failure(&device_id).await;
+            return Err(LighthouseError::FailedToConnect(err));
+        }
+    }
     if let Err(err) = device.discover_services_with_timeout(CONNECT_TIMEOUT).await {
         // Leaving it connected without services would make every later operation fail
         let _ = device.disconnect().await;
         return Err(LighthouseError::FailedToGetServices(err));
+    }
+    Ok(())
+}
+
+fn connect_backoff_delay(failures: u32) -> Duration {
+    let factor = 1u32.checked_shl((failures - 1).min(5)).unwrap_or(u32::MAX);
+    CONNECT_RETRY_COOLDOWN
+        .saturating_mul(factor)
+        .min(CONNECT_BACKOFF_MAX)
+}
+
+fn backoff_elapsed(device_id: &PeripheralId) -> bool {
+    let backoffs = CONNECT_BACKOFFS.lock().unwrap();
+    match backoffs.get(device_id) {
+        Some((failures, last_failure)) => {
+            last_failure.elapsed() >= connect_backoff_delay(*failures)
+        }
+        None => true,
+    }
+}
+
+async fn register_connect_failure(device_id: &PeripheralId) {
+    {
+        let mut backoffs = CONNECT_BACKOFFS.lock().unwrap();
+        let entry = backoffs
+            .entry(device_id.clone())
+            .or_insert((0, Instant::now()));
+        entry.0 += 1;
+        entry.1 = Instant::now();
+    }
+    let streak = CONNECT_FAILURE_STREAK.fetch_add(1, Ordering::Relaxed) + 1;
+    if streak < RADIO_RECOVERY_THRESHOLD {
+        return;
+    }
+    CONNECT_FAILURE_STREAK.store(0, Ordering::Relaxed);
+    let mut last_recovery = LAST_RADIO_RECOVERY.lock().await;
+    if last_recovery.is_some_and(|at| at.elapsed() < RADIO_RECOVERY_COOLDOWN) {
+        return;
+    }
+    *last_recovery = Some(Instant::now());
+    drop(last_recovery);
+    tokio::task::spawn_blocking(|| {
+        let Ok(runtime) = tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+        else {
+            warn!("[Core] Failed to start a runtime to cycle the bluetooth radio");
+            return;
+        };
+        runtime.block_on(async {
+            warn!("[Core] Bluetooth connects keep failing while devices are in range, cycling the bluetooth radio to recover");
+            if let Err(err) = cycle_bluetooth_radio().await {
+                warn!("[Core] Failed to cycle the bluetooth radio: {err}");
+            }
+        });
+    });
+}
+
+async fn cycle_bluetooth_radio() -> Result<(), String> {
+    use windows::Devices::Radios::{Radio, RadioKind, RadioState};
+    let radios = Radio::GetRadiosAsync()
+        .map_err(|e| e.to_string())?
+        .await
+        .map_err(|e| e.to_string())?;
+    for radio in radios {
+        if radio.Kind().map_err(|e| e.to_string())? != RadioKind::Bluetooth {
+            continue;
+        }
+        radio
+            .SetStateAsync(RadioState::Off)
+            .map_err(|e| e.to_string())?
+            .await
+            .map_err(|e| e.to_string())?;
+        sleep(Duration::from_secs(3)).await;
+        radio
+            .SetStateAsync(RadioState::On)
+            .map_err(|e| e.to_string())?
+            .await
+            .map_err(|e| e.to_string())?;
+        sleep(Duration::from_secs(5)).await;
     }
     Ok(())
 }
@@ -652,5 +754,21 @@ async fn reset() {
     {
         let mut processing_devices_guard = PROCESSING_DEVICES.lock().await;
         processing_devices_guard.clear();
+    }
+    CONNECT_BACKOFFS.lock().unwrap().clear();
+    CONNECT_FAILURE_STREAK.store(0, Ordering::Relaxed);
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn connect_backoff_grows_and_caps() {
+        assert_eq!(connect_backoff_delay(1), Duration::from_secs(10));
+        assert_eq!(connect_backoff_delay(2), Duration::from_secs(20));
+        assert_eq!(connect_backoff_delay(3), Duration::from_secs(40));
+        assert_eq!(connect_backoff_delay(6), CONNECT_BACKOFF_MAX);
+        assert_eq!(connect_backoff_delay(60), CONNECT_BACKOFF_MAX);
     }
 }
