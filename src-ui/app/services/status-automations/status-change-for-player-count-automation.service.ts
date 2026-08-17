@@ -31,7 +31,6 @@ export class StatusChangeForPlayerCountAutomationService {
   private config: ChangeStatusBasedOnPlayerCountAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.CHANGE_STATUS_BASED_ON_PLAYER_COUNT
   );
-  private sleepMode = false;
 
   constructor(
     private vrchat: VRChatService,
@@ -47,7 +46,6 @@ export class StatusChangeForPlayerCountAutomationService {
     this.automationConfig.configs.subscribe((configs) => {
       this.config = structuredClone(configs.CHANGE_STATUS_BASED_ON_PLAYER_COUNT);
     });
-    this.sleep.mode.subscribe((mode) => (this.sleepMode = mode));
 
     combineLatest([
       // React to player count changes
@@ -65,12 +63,13 @@ export class StatusChangeForPlayerCountAutomationService {
         distinctUntilChanged((a, b) => isEqual(a, b)),
         delay(100)
       ),
+      this.sleep.mode.pipe(distinctUntilChanged()),
     ])
       .pipe(
         // Automation must be enabled
         filter(() => this.config.enabled),
         // Sleep mode condition must be met or disabled
-        filter(() => this.sleepMode || !this.config.onlyIfSleepModeEnabled),
+        filter(([, , , sleepMode]) => sleepMode || !this.config.onlyIfSleepModeEnabled),
         // User must be currently online
         filter(([, user]) => !!user && user.status !== UserStatus.Offline),
         // Determine the new status
