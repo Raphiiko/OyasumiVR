@@ -42,7 +42,7 @@ mime = "0.3.17"
 mime_guess = "2.0.5"
 nalgebra = "0.35.0"
 named_pipe = "0.4.1"
-oyasumivr-shared = { path = "../src-shared-rust", version = '*' }
+oyasumivr-shared = { path = "../src-shared-rust" }
 prost = "0.14.4"
 public-ip = "0.2.2"
 readonly = "0.2.14"

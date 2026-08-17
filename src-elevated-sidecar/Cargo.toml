@@ -9,7 +9,7 @@ edition = "2021"
 tonic-prost-build = "0.14.6"
 
 [dependencies]
-oyasumivr-shared = { path = "../src-shared-rust", version = '*' }
+oyasumivr-shared = { path = "../src-shared-rust" }
 serde_json = "1.0.151"
 serde = { version = "1.0.229", features = ["derive"] }
 nvml-wrapper = "0.12.1"
