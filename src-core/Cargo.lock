@@ -4542,7 +4542,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumivr"
-version = "25.6.12"
+version = "26.8.0-beta.1"
 dependencies = [
  "async-recursion",
  "btleplug",
@@ -4626,7 +4626,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumivr-shared"
-version = "25.6.12"
+version = "26.8.0-beta.1"
 dependencies = [
  "windows 0.62.2",
 ]
