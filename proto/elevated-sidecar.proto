@@ -7,6 +7,7 @@ package OyasumiElevatedSidecar;
 service OyasumiElevatedSidecar {
     rpc Ping (Empty) returns (PingResponse) {}
     rpc RequestStop (Empty) returns (Empty) {}
+    rpc SetErrorReportingEnabled (SetErrorReportingEnabledRequest) returns (Empty) {}
     rpc GetNvmlStatus (Empty) returns (NvmlStatusResponse) {}
     rpc GetNvmlDevices (Empty) returns (NvmlDevicesResponse) {}
     rpc SetNvmlPowerManagementLimit (NvmlPowerManagementLimitRequest) returns (NvmlPowerManagementLimitResponse) {}
@@ -16,6 +17,10 @@ service OyasumiElevatedSidecar {
 // Requests & Responses
 message PingResponse {
     uint32 pid = 1;
+}
+
+message SetErrorReportingEnabledRequest {
+    bool enabled = 1;
 }
 
 message NvmlStatusResponse {
@@ -89,4 +94,3 @@ message NvmlDevice {
 }
 
 message Empty {}
-

@@ -2,6 +2,12 @@ import { readFileSync, readdirSync, rmSync } from 'fs';
 import { execFileSync } from 'child_process';
 import path from 'path';
 
+const hasCredentials = process.env.BUGSINK_AUTH_TOKEN && process.env.BUGSINK_PROJECT;
+if (process.argv.includes('--check')) {
+  if (!hasCredentials) throw new Error('BUGSINK_AUTH_TOKEN and BUGSINK_PROJECT are required');
+  process.exit(0);
+}
+
 const build = readFileSync('src-ui/build.ts', 'utf8');
 if (build.includes("FLAVOUR: BuildFlavour = 'DEV'")) process.exit(0);
 
@@ -12,7 +18,7 @@ const run = (args, env = process.env) =>
 
 run(['sourcemaps', 'inject', output]);
 
-if (process.env.BUGSINK_AUTH_TOKEN && process.env.BUGSINK_PROJECT) {
+if (hasCredentials) {
   run(
     [
       '--url',

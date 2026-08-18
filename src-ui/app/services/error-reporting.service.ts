@@ -25,12 +25,14 @@ export class ErrorReportingService {
       .subscribe((enabled) => {
         this.update = this.update.then(() => this.setEnabled(enabled)).catch(() => {});
       });
+    return this.update;
   }
 
   private async setEnabled(consented: boolean) {
     const enabled = consented && environment.production && FLAVOUR !== 'DEV';
     if (enabled === this.active) return;
     this.active = enabled;
+    await invoke('set_error_reporting_enabled', { enabled }).catch(() => {});
     if (!enabled) {
       await Sentry.close(0).catch(() => false);
       return;
@@ -99,6 +101,11 @@ function sanitize(event: Sentry.ErrorEvent, version: string) {
   event.extra = undefined;
   event.modules = undefined;
   event.transaction = undefined;
+  event.logentry = undefined;
+  event.logger = undefined;
+  event.fingerprint = undefined;
+  event.threads = undefined;
+  event.debug_meta = undefined;
   event.contexts = {
     os: { name: 'Windows' },
     runtime: { name: 'WebView2' },
@@ -106,6 +113,8 @@ function sanitize(event: Sentry.ErrorEvent, version: string) {
   event.tags = { component: 'ui', platform: 'windows', app_version: version };
   if (event.message) event.message = sanitizeText(event.message);
   for (const exception of event.exception?.values ?? []) {
+    exception.module = undefined;
+    if (exception.mechanism) exception.mechanism.data = undefined;
     if (exception.value) exception.value = sanitizeText(exception.value);
     for (const frame of exception.stacktrace?.frames ?? []) {
       frame.abs_path = undefined;
@@ -121,12 +130,14 @@ function sanitize(event: Sentry.ErrorEvent, version: string) {
 function sanitizeText(value: string): string {
   return value
     .replace(
-      /(token|password|secret|authorization|bearer|api[_-]?key)\s*[:=]?\s*\S+/gi,
+      /\bauthorization\s*[:=]\s*\S+(?:\s+\S+)?/gi,
       '[redacted]'
     )
+    .replace(/\bbearer\s+\S+/gi, '[redacted]')
+    .replace(/(token|password|secret|api[_-]?key)\s*[:=]?\s*\S+/gi, '[redacted]')
     .replace(/\b(user(name)?|display\s*name|account\s*id)\s*[:=]\s*\S+/gi, '[redacted]')
     .replace(/"[a-z]:\\[^"\r\n]+"/gi, '[redacted]')
-    .replace(/\b[a-z]:\\\S+/gi, '[redacted]')
+    .replace(/\b[a-z]:\\[^\r\n]+/gi, '[redacted]')
     .replace(/https?:\/\/\S+/gi, '[redacted]')
     .replace(/\b(device\s*)?serial(\s*number)?\s*[:=]\s*\S+/gi, '[redacted]')
     .replace(/\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b/gi, '[redacted]')

@@ -7,13 +7,17 @@ use crate::{
     Models::oyasumi_core::ElevatedSidecarStartArgs,
 };
 use log::info;
-use std::sync::LazyLock;
+use std::sync::{
+    atomic::{AtomicBool, Ordering},
+    LazyLock,
+};
 use tokio::sync::Mutex;
 use tonic::transport::Channel;
 
 pub static SIDECAR_GRPC_CLIENT: LazyLock<Mutex<Option<OyasumiElevatedSidecarClient<Channel>>>> =
     LazyLock::new(Default::default);
 static SIDECAR_MANAGER: LazyLock<Mutex<Option<SidecarManager>>> = LazyLock::new(Default::default);
+static ERROR_REPORTING_ENABLED: AtomicBool = AtomicBool::new(false);
 
 pub async fn init() {
     let (tx, mut rx) = tokio::sync::mpsc::channel(10);
@@ -35,19 +39,26 @@ pub async fn init() {
 }
 
 pub async fn set_error_reporting_enabled(enabled: bool) {
+    let enabled = enabled
+        && !cfg!(debug_assertions)
+        && crate::BUILD_FLAVOUR != crate::flavour::BuildFlavour::Dev;
+    ERROR_REPORTING_ENABLED.store(enabled, Ordering::Relaxed);
     let mut manager_guard = SIDECAR_MANAGER.lock().await;
     let Some(manager) = manager_guard.as_mut() else {
         return;
     };
     manager
-        .set_arg(
-            "--error-reporting-enabled",
-            enabled
-                && !cfg!(debug_assertions)
-                && crate::BUILD_FLAVOUR != crate::flavour::BuildFlavour::Dev,
-            true,
-        )
+        .set_arg("--error-reporting-enabled", enabled, true)
         .await;
+    drop(manager_guard);
+    let mut client_guard = SIDECAR_GRPC_CLIENT.lock().await;
+    if let Some(client) = client_guard.as_mut() {
+        let _ = client
+            .set_error_reporting_enabled(tonic::Request::new(
+                crate::Models::elevated_sidecar::SetErrorReportingEnabledRequest { enabled },
+            ))
+            .await;
+    }
 }
 
 #[allow(dead_code)]
@@ -83,9 +94,16 @@ pub async fn handle_elevated_sidecar_start(
         return Ok(());
     }
     // Create new GRPC client
-    let grpc_client =
+    let mut grpc_client =
         OyasumiElevatedSidecarClient::connect(format!("http://127.0.0.1:{}", args.grpc_port))
             .await?;
+    let _ = grpc_client
+        .set_error_reporting_enabled(tonic::Request::new(
+            crate::Models::elevated_sidecar::SetErrorReportingEnabledRequest {
+                enabled: ERROR_REPORTING_ENABLED.load(Ordering::Relaxed),
+            },
+        ))
+        .await;
     *SIDECAR_GRPC_CLIENT.lock().await = Some(grpc_client);
     send_event("ELEVATED_SIDECAR_STARTED", args.grpc_web_port).await;
     Ok(())

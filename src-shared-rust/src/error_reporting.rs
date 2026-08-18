@@ -7,9 +7,9 @@ use std::{
     path::{Path, PathBuf},
     sync::{
         atomic::{AtomicBool, Ordering},
-        mpsc, Arc, LazyLock, Mutex,
+        mpsc, Arc, Condvar, LazyLock, Mutex,
     },
-    time::{Duration, SystemTime, UNIX_EPOCH},
+    time::{Duration, Instant, SystemTime, UNIX_EPOCH},
 };
 
 pub const DSN: &str = "https://a08e4e04b7a24cafb5eb6c4ff701e52e@sentry.raphii.co/1";
@@ -105,13 +105,16 @@ pub fn init(
         .max_breadcrumbs(0)
         .enable_logs(false)
         .enable_metrics(false)
-        .shutdown_timeout(Duration::ZERO)
+        .shutdown_timeout(Duration::from_secs(2))
         .before_breadcrumb(|_| None)
         .before_send(move |mut event| {
             if !enabled.load(Ordering::Relaxed) {
                 return None;
             }
-            let budgeted = event.tags.get("budgeted").is_some_and(|value| value == "true");
+            let budgeted = event
+                .tags
+                .get("budgeted")
+                .is_some_and(|value| value == "true");
             sanitize_event(&mut event, component, version);
             (budgeted || issue_budget.allow(&issue_key(&event))).then_some(event)
         })
@@ -199,6 +202,14 @@ fn sanitize_event(event: &mut Event<'static>, component: &str, version: &str) {
     event.user = None;
     event.request = None;
     event.server_name = None;
+    event.culprit = None;
+    event.transaction = None;
+    event.logentry = None;
+    event.logger = None;
+    event.stacktrace = None;
+    event.template = None;
+    event.threads.values.clear();
+    event.debug_meta = Default::default();
     event.breadcrumbs.values.clear();
     event.extra.clear();
     event.modules.clear();
@@ -213,22 +224,35 @@ fn sanitize_event(event: &mut Event<'static>, component: &str, version: &str) {
         *message = sanitize_text(message, strict);
     }
     for exception in &mut event.exception.values {
+        exception.module = None;
+        exception.raw_stacktrace = None;
         exception.value = exception
             .value
             .as_deref()
             .map(|value| sanitize_text(value, strict));
+        if let Some(mechanism) = exception.mechanism.as_mut() {
+            mechanism.description = None;
+            mechanism.help_link = None;
+            mechanism.data.clear();
+            mechanism.meta = Default::default();
+        }
         if let Some(stacktrace) = exception.stacktrace.as_mut() {
             for frame in &mut stacktrace.frames {
-                frame.abs_path = None;
-                frame.vars.clear();
-                frame.pre_context.clear();
-                frame.context_line = None;
-                frame.post_context.clear();
-                if let Some(filename) = frame.filename.as_mut() {
-                    *filename = safe_filename(filename);
-                }
+                sanitize_frame(frame);
             }
         }
+    }
+}
+
+fn sanitize_frame(frame: &mut sentry::protocol::Frame) {
+    frame.abs_path = None;
+    frame.package = None;
+    frame.vars.clear();
+    frame.pre_context.clear();
+    frame.context_line = None;
+    frame.post_context.clear();
+    if let Some(filename) = frame.filename.as_mut() {
+        *filename = safe_filename(filename);
     }
 }
 
@@ -238,10 +262,12 @@ fn sanitize_text(value: &str, strict: bool) -> String {
     }
     static SENSITIVE: LazyLock<Vec<Regex>> = LazyLock::new(|| {
         [
-            r"(?i)(token|password|secret|authorization|bearer|api[_-]?key)\s*[:=]?\s*\S+",
+            r"(?i)\bauthorization\s*[:=]\s*\S+(?:\s+\S+)?",
+            r"(?i)\bbearer\s+\S+",
+            r"(?i)(token|password|secret|api[_-]?key)\s*[:=]?\s*\S+",
             r"(?i)\b(user(name)?|display\s*name|account\s*id)\s*[:=]\s*\S+",
             r#"(?i)"[a-z]:\\[^"\r\n]+""#,
-            r"(?i)\b[a-z]:\\\S+",
+            r"(?i)\b[a-z]:\\[^\r\n]+",
             r"(?i)https?://\S+",
             r"(?i)\b(device\s*)?serial(\s*number)?\s*[:=]\s*\S+",
             r"(?i)\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b",
@@ -283,51 +309,89 @@ impl sentry::TransportFactory for TinyTransportFactory {
 
 struct TinyTransport {
     sender: mpsc::SyncSender<Envelope>,
+    pending: Arc<(Mutex<usize>, Condvar)>,
 }
 
 impl TinyTransport {
     fn new(options: &ClientOptions) -> Self {
         let (sender, receiver) = mpsc::sync_channel::<Envelope>(2);
+        let pending = Arc::new((Mutex::new(0), Condvar::new()));
         let Some(dsn) = options.dsn.as_ref() else {
-            return Self { sender };
+            return Self { sender, pending };
         };
         let url = dsn.envelope_api_url().to_string();
         let auth = dsn.to_auth(Some(&options.user_agent)).to_string();
+        let worker_pending = pending.clone();
         let _ = std::thread::Builder::new().spawn(move || {
             let Ok(client) = reqwest::blocking::Client::builder()
-                .connect_timeout(Duration::from_secs(2))
-                .timeout(Duration::from_secs(4))
+                .connect_timeout(Duration::from_secs(1))
+                .timeout(Duration::from_millis(1500))
                 .build()
             else {
                 return;
             };
             while let Ok(envelope) = receiver.recv() {
                 let mut body = Vec::new();
-                if envelope.to_writer(&mut body).is_err() {
-                    continue;
+                if envelope.to_writer(&mut body).is_ok() {
+                    let _ = client
+                        .post(&url)
+                        .header("X-Sentry-Auth", &auth)
+                        .header("Content-Type", "application/x-sentry-envelope")
+                        .body(body)
+                        .send();
                 }
-                let _ = client
-                    .post(&url)
-                    .header("X-Sentry-Auth", &auth)
-                    .body(body)
-                    .send();
+                finish_pending(&worker_pending);
             }
         });
-        Self { sender }
+        Self { sender, pending }
     }
 }
 
 impl Transport for TinyTransport {
     fn send_envelope(&self, envelope: Envelope) {
-        let _ = self.sender.try_send(envelope);
+        let Ok(mut pending) = self.pending.0.lock() else {
+            return;
+        };
+        if *pending >= 2 {
+            return;
+        }
+        *pending += 1;
+        drop(pending);
+        if self.sender.try_send(envelope).is_err() {
+            finish_pending(&self.pending);
+        }
     }
 
-    fn flush(&self, _timeout: Duration) -> bool {
+    fn flush(&self, timeout: Duration) -> bool {
+        let deadline = Instant::now() + timeout;
+        let Ok(mut pending) = self.pending.0.lock() else {
+            return false;
+        };
+        while *pending != 0 {
+            let remaining = deadline.saturating_duration_since(Instant::now());
+            if remaining.is_zero() {
+                return false;
+            }
+            let Ok((next, result)) = self.pending.1.wait_timeout(pending, remaining) else {
+                return false;
+            };
+            pending = next;
+            if result.timed_out() && *pending != 0 {
+                return false;
+            }
+        }
         true
     }
 
-    fn shutdown(&self, _timeout: Duration) -> bool {
-        true
+    fn shutdown(&self, timeout: Duration) -> bool {
+        self.flush(timeout)
+    }
+}
+
+fn finish_pending(pending: &(Mutex<usize>, Condvar)) {
+    if let Ok(mut count) = pending.0.lock() {
+        *count = count.saturating_sub(1);
+        pending.1.notify_all();
     }
 }
 
@@ -357,13 +421,26 @@ mod tests {
     #[test]
     fn removes_sensitive_text_without_discarding_the_error() {
         let value = sanitize_text(
-            "Failed to read C:\\Users\\Raphi\\config.json for usr_12345678 token=secret-value",
+            "Failed to read C:\\Users\\John Doe\\config.json, Authorization: Bearer abc.def.ghi",
             false,
         );
         assert!(value.starts_with("Failed to read [redacted]"));
-        assert!(!value.contains("Raphi"));
-        assert!(!value.contains("usr_"));
-        assert!(!value.contains("secret-value"));
+        assert!(!value.contains("John Doe"));
+        assert!(!value.contains("abc.def.ghi"));
+        assert!(!sanitize_text("Authorization: Bearer abc.def.ghi", false).contains("abc.def.ghi"));
         assert_eq!(sanitize_text("anything", true), "elevated error");
+    }
+
+    #[test]
+    fn flush_waits_for_the_worker() {
+        let (sender, _receiver) = mpsc::sync_channel(2);
+        let pending = Arc::new((Mutex::new(1), Condvar::new()));
+        let worker_pending = pending.clone();
+        std::thread::spawn(move || {
+            std::thread::sleep(Duration::from_millis(20));
+            finish_pending(&worker_pending);
+        });
+        let transport = TinyTransport { sender, pending };
+        assert!(transport.flush(Duration::from_secs(1)));
     }
 }

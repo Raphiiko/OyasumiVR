@@ -1,14 +1,15 @@
-use std::time::Duration;
-use log::info;
+use crate::Models::PingResponse;
 use crate::{afterburner, nvml, Models::NvmlStatus};
+use log::info;
+use std::time::Duration;
 
 use super::oyasumi_elevated_sidecar::{
     oyasumi_elevated_sidecar_server::OyasumiElevatedSidecar, Empty, NvmlDevicesResponse,
     NvmlPowerManagementLimitRequest, NvmlPowerManagementLimitResponse, NvmlStatusResponse,
-    SetMsiAfterburnerProfileRequest, SetMsiAfterburnerProfileResponse,
+    SetErrorReportingEnabledRequest, SetMsiAfterburnerProfileRequest,
+    SetMsiAfterburnerProfileResponse,
 };
 use tonic::{Request, Response, Status};
-use crate::Models::PingResponse;
 
 #[derive(Debug, Default)]
 pub struct OyasumiElevatedSidecarServerImpl {}
@@ -28,6 +29,14 @@ impl OyasumiElevatedSidecar for OyasumiElevatedSidecarServerImpl {
             tokio::time::sleep(Duration::from_millis(500)).await;
             std::process::exit(0);
         });
+        Ok(Response::new(Empty {}))
+    }
+
+    async fn set_error_reporting_enabled(
+        &self,
+        request: Request<SetErrorReportingEnabledRequest>,
+    ) -> Result<Response<Empty>, Status> {
+        crate::set_error_reporting_enabled(request.into_inner().enabled);
         Ok(Response::new(Empty {}))
     }
 

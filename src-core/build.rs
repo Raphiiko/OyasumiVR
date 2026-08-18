@@ -1,6 +1,9 @@
 fn main() {
     println!("cargo:rerun-if-changed=build.rs");
     println!("cargo:rerun-if-changed=Cargo.lock");
+    println!("cargo:rerun-if-changed=../proto/oyasumi-core.proto");
+    println!("cargo:rerun-if-changed=../proto/overlay-sidecar.proto");
+    println!("cargo:rerun-if-changed=../proto/elevated-sidecar.proto");
 
     configure_tonic_build();
     update_mdns_sidecar_binary();

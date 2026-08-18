@@ -19,7 +19,7 @@
     "build:sidecar:overlay": "rimraf src-core/resources/overlay-sidecar && run-p _build:sidecar:overlay:ui _build:sidecar:overlay:core && run-s _build:sidecar:overlay:post",
     "//3": "=== Steam (build / upload / deploy) ===",
     "build:steam:beta": "npm run clean && npm run _prepare:steam && npm run tauri -- build --no-bundle --debug && npm run _package:steam",
-    "build:steam:release": "npm run clean && npm run _prepare:steam && npm run tauri -- build --no-bundle && npm run _package:steam",
+    "build:steam:release": "node scripts/upload-sourcemaps.js --check && npm run clean && npm run _prepare:steam && npm run tauri -- build --no-bundle && npm run _package:steam",
     "upload:steam:beta": "node scripts/steam/upload-steam-build.js beta",
     "upload:steam:release": "node scripts/steam/upload-steam-build.js release",
     "deploy:steam:beta": "npm run bump:beta && npm run build:steam:beta && npm run upload:steam:beta && npm run _commit:version-bump && npm run prepare:dev",

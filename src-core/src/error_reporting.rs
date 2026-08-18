@@ -62,6 +62,12 @@ pub fn set_enabled(app: &tauri::AppHandle, enabled: bool) {
 }
 
 #[tauri::command]
+pub async fn set_error_reporting_enabled(app: tauri::AppHandle, enabled: bool) {
+    set_enabled(&app, enabled);
+    crate::elevated_sidecar::set_error_reporting_enabled(enabled).await;
+}
+
+#[tauri::command]
 pub fn allow_ui_event(issue: String) -> bool {
     if !ENABLED.load(Ordering::Relaxed) || issue.len() > 512 {
         return false;
