@@ -32,6 +32,15 @@ jobs:
         run: npm run set-flavour STANDALONE
       - name: Set build id
         run: npm run set-build-id
+      - name: Check Bugsink sourcemap credentials
+        shell: powershell
+        env:
+          BUGSINK_AUTH_TOKEN: ${{ secrets.BUGSINK_AUTH_TOKEN }}
+          BUGSINK_PROJECT: ${{ secrets.BUGSINK_PROJECT }}
+        run: |
+          if (-not $env:BUGSINK_AUTH_TOKEN -or -not $env:BUGSINK_PROJECT) {
+            throw 'BUGSINK_AUTH_TOKEN and BUGSINK_PROJECT are required'
+          }
       - name: Get Changelog Entry
         id: changelog_reader
         uses: mindsers/changelog-reader-action@v2
@@ -44,6 +53,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
+          BUGSINK_AUTH_TOKEN: ${{ secrets.BUGSINK_AUTH_TOKEN }}
+          BUGSINK_PROJECT: ${{ secrets.BUGSINK_PROJECT }}
         with:
           tagName: oyasumivr-v${{ steps.get-package-version.outputs.version }}
           releaseName: OyasumiVR v${{ steps.get-package-version.outputs.version }}

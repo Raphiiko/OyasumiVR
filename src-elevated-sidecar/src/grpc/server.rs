@@ -56,10 +56,7 @@ impl OyasumiElevatedSidecar for OyasumiElevatedSidecarServerImpl {
         let request = request.into_inner();
         let result = nvml::nvml_set_power_management_limit(request.uuid, request.power_limit).await;
         let success = result.is_ok();
-        let error = match result {
-            Ok(_) => None,
-            Err(e) => Some(e),
-        };
+        let error = result.err();
         Ok(Response::new(NvmlPowerManagementLimitResponse {
             success,
             error: error.map(|e| e.into()),
@@ -73,10 +70,7 @@ impl OyasumiElevatedSidecar for OyasumiElevatedSidecarServerImpl {
         let request = request.into_inner();
         let result = afterburner::set_afterburner_profile(request.executable_path, request.profile);
         let success = result.is_ok();
-        let error = match result {
-            Ok(_) => None,
-            Err(e) => Some(e),
-        };
+        let error = result.err();
         Ok(Response::new(SetMsiAfterburnerProfileResponse {
             success,
             error: error.map(|e| e.into()),

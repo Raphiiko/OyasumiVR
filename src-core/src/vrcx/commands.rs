@@ -28,5 +28,5 @@ pub async fn vrcx_log(msg: String) -> bool {
             VrcxNotificationSenderError::UnableToConnect(_) => unreachable!(),
         };
     }
-    return true;
+    true
 }

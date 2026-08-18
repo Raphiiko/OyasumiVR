@@ -20,7 +20,7 @@ pub async fn nvml_status() -> NvmlStatus {
             return NvmlStatus::SidecarUnavailable;
         }
     };
-    return NvmlStatus::try_from(response.status).unwrap();
+    NvmlStatus::try_from(response.status).unwrap()
 }
 
 #[tauri::command]

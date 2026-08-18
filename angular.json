@@ -51,6 +51,12 @@
           "configurations": {
             "production": {
               "budgets": [],
+              "sourceMap": {
+                "scripts": true,
+                "styles": false,
+                "hidden": true,
+                "vendor": true
+              },
               "fileReplacements": [
                 {
                   "replace": "src-ui/environments/environment.ts",

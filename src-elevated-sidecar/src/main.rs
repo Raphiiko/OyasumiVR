@@ -16,8 +16,9 @@ use simplelog::{
 use std::env;
 use std::fs::File;
 use std::path::Path;
+use std::sync::{atomic::AtomicBool, Arc};
 use std::time::Duration;
-use sysinfo::{Pid, System, ProcessesToUpdate};
+use sysinfo::{Pid, ProcessesToUpdate, System};
 use windows::relaunch_with_elevation;
 
 mod afterburner;
@@ -72,11 +73,28 @@ async fn main() {
         }
     };
     let old_process_id = switch_value(&args, "old-pid");
+    let error_reporting_enabled = args.iter().any(|arg| arg == "--error-reporting-enabled");
     // Relaunch as admin if not elevated
     if !is_elevated() {
-        relaunch_with_elevation(host_port, main_pid, true);
+        relaunch_with_elevation(host_port, main_pid, error_reporting_enabled, true);
         return;
     }
+    let _error_reporting = error_reporting_enabled.then(|| {
+        let data_dir = BaseDirs::new()
+            .map(|dirs| dirs.data_local_dir().join("co.raphii.oyasumi"))
+            .unwrap_or_else(|| Path::new(".").to_path_buf());
+        oyasumivr_shared::error_reporting::init(
+            "elevated",
+            env!("CARGO_PKG_VERSION"),
+            Arc::new(oyasumivr_shared::error_reporting::EventBudget::new(
+                data_dir.join("error-reporting-elevated.json"),
+                10,
+                2,
+            )),
+            0.5,
+            Arc::new(AtomicBool::new(true)),
+        )
+    });
     // Setup the grpc server
     let grpc_port = grpc::init_server().await;
     let grpc_web_port = grpc::init_web_server().await;

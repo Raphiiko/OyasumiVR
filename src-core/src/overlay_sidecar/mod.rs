@@ -7,13 +7,17 @@ use crate::{
     Models::overlay_sidecar::oyasumi_overlay_sidecar_client::OyasumiOverlaySidecarClient,
     Models::oyasumi_core::OverlaySidecarStartArgs,
 };
-use std::sync::LazyLock;
+use std::sync::{
+    atomic::{AtomicBool, Ordering},
+    LazyLock,
+};
 use tokio::sync::Mutex;
 use tonic::transport::Channel;
 
 pub static SIDECAR_GRPC_CLIENT: LazyLock<Mutex<Option<OyasumiOverlaySidecarClient<Channel>>>> =
     LazyLock::new(Default::default);
 static SIDECAR_MANAGER: LazyLock<Mutex<Option<SidecarManager>>> = LazyLock::new(Default::default);
+static EXPECTED_STOP: AtomicBool = AtomicBool::new(false);
 
 pub async fn init() {
     let (tx, mut rx) = tokio::sync::mpsc::channel(10);
@@ -29,6 +33,9 @@ pub async fn init() {
     tokio::spawn(async move {
         while (rx.recv().await).is_some() {
             *SIDECAR_GRPC_CLIENT.lock().await = None;
+            if !EXPECTED_STOP.swap(false, Ordering::Relaxed) {
+                crate::error_reporting::capture_overlay_exit();
+            }
             send_event("OVERLAY_SIDECAR_STOPPED", ()).await;
         }
     });

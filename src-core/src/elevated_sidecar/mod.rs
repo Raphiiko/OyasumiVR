@@ -34,6 +34,22 @@ pub async fn init() {
     });
 }
 
+pub async fn set_error_reporting_enabled(enabled: bool) {
+    let mut manager_guard = SIDECAR_MANAGER.lock().await;
+    let Some(manager) = manager_guard.as_mut() else {
+        return;
+    };
+    manager
+        .set_arg(
+            "--error-reporting-enabled",
+            enabled
+                && !cfg!(debug_assertions)
+                && crate::BUILD_FLAVOUR != crate::flavour::BuildFlavour::Dev,
+            true,
+        )
+        .await;
+}
+
 #[allow(dead_code)]
 pub async fn request_stop() {
     let mut client_guard = SIDECAR_GRPC_CLIENT.lock().await;
