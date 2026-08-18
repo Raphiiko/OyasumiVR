@@ -4682,6 +4682,7 @@ dependencies = [
 name = "oyasumivr-shared"
 version = "26.8.0-beta.3"
 dependencies = [
+ "regex",
  "reqwest 0.13.4",
  "sentry",
  "serde",

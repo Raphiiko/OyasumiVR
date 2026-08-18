@@ -40,7 +40,6 @@ export class ErrorReportingService {
       Sentry.init({
         dsn: DSN,
         release: version,
-        sampleRate: 0.5,
         sendDefaultPii: false,
         sendClientReports: false,
         enableLogs: false,
@@ -54,8 +53,8 @@ export class ErrorReportingService {
           ),
         beforeSend: async (event) => {
           if (!this.active || isExpected(event)) return null;
-          const issue = issueKey(event);
           sanitize(event, version);
+          const issue = issueKey(event);
           return (await invoke<boolean>('allow_ui_event', { issue }).catch(() => false))
             ? event
             : null;
@@ -83,7 +82,12 @@ function isExpected(event: Sentry.ErrorEvent): boolean {
 function issueKey(event: Sentry.ErrorEvent): string {
   const exception = event.exception?.values?.[0];
   const frame = exception?.stacktrace?.frames?.at(-1);
-  return [exception?.type ?? 'error', frame?.filename ?? '', frame?.function ?? '']
+  return [
+    exception?.type ?? 'error',
+    exception?.value ?? event.message ?? '',
+    frame?.filename ?? '',
+    frame?.function ?? '',
+  ]
     .join(':')
     .slice(0, 512);
 }
@@ -100,9 +104,9 @@ function sanitize(event: Sentry.ErrorEvent, version: string) {
     runtime: { name: 'WebView2' },
   };
   event.tags = { component: 'ui', platform: 'windows', app_version: version };
-  if (event.message) event.message = 'ui error';
+  if (event.message) event.message = sanitizeText(event.message);
   for (const exception of event.exception?.values ?? []) {
-    exception.value = exception.type ?? 'ui error';
+    if (exception.value) exception.value = sanitizeText(exception.value);
     for (const frame of exception.stacktrace?.frames ?? []) {
       frame.abs_path = undefined;
       frame.vars = undefined;
@@ -112,6 +116,24 @@ function sanitize(event: Sentry.ErrorEvent, version: string) {
       if (frame.filename) frame.filename = safeFilename(frame.filename);
     }
   }
+}
+
+function sanitizeText(value: string): string {
+  return value
+    .replace(
+      /(token|password|secret|authorization|bearer|api[_-]?key)\s*[:=]?\s*\S+/gi,
+      '[redacted]'
+    )
+    .replace(/\b(user(name)?|display\s*name|account\s*id)\s*[:=]\s*\S+/gi, '[redacted]')
+    .replace(/"[a-z]:\\[^"\r\n]+"/gi, '[redacted]')
+    .replace(/\b[a-z]:\\\S+/gi, '[redacted]')
+    .replace(/https?:\/\/\S+/gi, '[redacted]')
+    .replace(/\b(device\s*)?serial(\s*number)?\s*[:=]\s*\S+/gi, '[redacted]')
+    .replace(/\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b/gi, '[redacted]')
+    .replace(/\b(?:usr|auth|file|avtr|wrld|grp)_[a-z0-9-]+\b/gi, '[redacted]')
+    .replace(/\b[0-9a-f]{8}-[0-9a-f-]{27,}\b/gi, '[redacted]')
+    .replace(/\b\d{8,}\b/g, '[redacted]')
+    .slice(0, 512);
 }
 
 function safeFilename(value: string): string {

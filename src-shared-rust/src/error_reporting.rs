@@ -1,3 +1,4 @@
+use regex::Regex;
 use sentry::{protocol::Event, ClientInitGuard, ClientOptions, Envelope, Transport};
 use serde::{Deserialize, Serialize};
 use std::{
@@ -6,7 +7,7 @@ use std::{
     path::{Path, PathBuf},
     sync::{
         atomic::{AtomicBool, Ordering},
-        mpsc, Arc, Mutex,
+        mpsc, Arc, LazyLock, Mutex,
     },
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
@@ -16,19 +17,28 @@ pub const DSN: &str = "https://a08e4e04b7a24cafb5eb6c4ff701e52e@sentry.raphii.co
 #[derive(Deserialize, Serialize)]
 struct BudgetState {
     day: u64,
-    total: u32,
+    first_events: u32,
+    recurrence_events: u32,
     issues: BTreeMap<String, u32>,
 }
 
 pub struct EventBudget {
     path: PathBuf,
-    daily_cap: u32,
+    first_event_cap: u32,
+    recurrence_cap: u32,
     issue_cap: u32,
+    recurrence_sample_rate: f32,
     state: Mutex<BudgetState>,
 }
 
 impl EventBudget {
-    pub fn new(path: PathBuf, daily_cap: u32, issue_cap: u32) -> Self {
+    pub fn new(
+        path: PathBuf,
+        first_event_cap: u32,
+        recurrence_cap: u32,
+        issue_cap: u32,
+        recurrence_sample_rate: f32,
+    ) -> Self {
         let day = current_day();
         let state = fs::read(&path)
             .ok()
@@ -36,13 +46,16 @@ impl EventBudget {
             .filter(|state: &BudgetState| state.day == day)
             .unwrap_or(BudgetState {
                 day,
-                total: 0,
+                first_events: 0,
+                recurrence_events: 0,
                 issues: BTreeMap::new(),
             });
         Self {
             path,
-            daily_cap,
+            first_event_cap,
+            recurrence_cap,
             issue_cap,
+            recurrence_sample_rate,
             state: Mutex::new(state),
         }
     }
@@ -55,16 +68,25 @@ impl EventBudget {
         if state.day != day {
             *state = BudgetState {
                 day,
-                total: 0,
+                first_events: 0,
+                recurrence_events: 0,
                 issues: BTreeMap::new(),
             };
         }
-        if state.total >= self.daily_cap
-            || state.issues.get(issue).copied().unwrap_or_default() >= self.issue_cap
+        let occurrences = state.issues.get(issue).copied().unwrap_or_default();
+        if occurrences == 0 {
+            if state.first_events >= self.first_event_cap {
+                return false;
+            }
+            state.first_events += 1;
+        } else if occurrences >= self.issue_cap
+            || state.recurrence_events >= self.recurrence_cap
+            || !sample(self.recurrence_sample_rate)
         {
             return false;
+        } else {
+            state.recurrence_events += 1;
         }
-        state.total += 1;
         *state.issues.entry(issue.to_owned()).or_default() += 1;
         persist(&self.path, &state).is_ok()
     }
@@ -74,13 +96,11 @@ pub fn init(
     component: &'static str,
     version: &'static str,
     budget: Arc<EventBudget>,
-    sample_rate: f32,
     enabled: Arc<AtomicBool>,
 ) -> ClientInitGuard {
     let issue_budget = budget.clone();
     let mut options = ClientOptions::new()
         .release(version)
-        .sample_rate(sample_rate)
         .send_default_pii(false)
         .max_breadcrumbs(0)
         .enable_logs(false)
@@ -91,8 +111,9 @@ pub fn init(
             if !enabled.load(Ordering::Relaxed) {
                 return None;
             }
+            let budgeted = event.tags.get("budgeted").is_some_and(|value| value == "true");
             sanitize_event(&mut event, component, version);
-            issue_budget.allow(&issue_key(&event)).then_some(event)
+            (budgeted || issue_budget.allow(&issue_key(&event))).then_some(event)
         })
         .transport(TinyTransportFactory);
     options.dsn = DSN.parse().ok();
@@ -114,6 +135,20 @@ fn current_day() -> u64 {
         / 86_400
 }
 
+fn sample(rate: f32) -> bool {
+    if rate >= 1.0 {
+        return true;
+    }
+    let mut value = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_nanos() as u64;
+    value ^= value >> 33;
+    value = value.wrapping_mul(0xff51afd7ed558ccd);
+    value ^= value >> 33;
+    value as f64 / (u64::MAX as f64) < rate as f64
+}
+
 fn persist(path: &Path, state: &BudgetState) -> Result<(), ()> {
     let parent = path.parent().ok_or(())?;
     fs::create_dir_all(parent).map_err(|_| ())?;
@@ -133,8 +168,9 @@ fn issue_key(event: &Event<'_>) -> String {
             .as_ref()
             .and_then(|stack| stack.frames.last());
         return format!(
-            "{}:{}:{}",
+            "{}:{}:{}:{}",
             exception.ty,
+            exception.value.as_deref().unwrap_or_default(),
             frame
                 .and_then(|frame| frame.module.as_deref())
                 .unwrap_or_default(),
@@ -159,7 +195,7 @@ fn sanitize_event(event: &mut Event<'static>, component: &str, version: &str) {
         .filter(|value| value.as_str() == "overlay")
         .cloned()
         .unwrap_or_else(|| component.to_owned());
-    let error_message = format!("{component} error");
+    let strict = component == "elevated";
     event.user = None;
     event.request = None;
     event.server_name = None;
@@ -174,10 +210,13 @@ fn sanitize_event(event: &mut Event<'static>, component: &str, version: &str) {
     event.tags.insert("platform".into(), "windows".into());
     event.tags.insert("app_version".into(), version.into());
     if let Some(message) = event.message.as_mut() {
-        *message = error_message.clone();
+        *message = sanitize_text(message, strict);
     }
     for exception in &mut event.exception.values {
-        exception.value = Some(error_message.clone());
+        exception.value = exception
+            .value
+            .as_deref()
+            .map(|value| sanitize_text(value, strict));
         if let Some(stacktrace) = exception.stacktrace.as_mut() {
             for frame in &mut stacktrace.frames {
                 frame.abs_path = None;
@@ -191,6 +230,34 @@ fn sanitize_event(event: &mut Event<'static>, component: &str, version: &str) {
             }
         }
     }
+}
+
+fn sanitize_text(value: &str, strict: bool) -> String {
+    if strict {
+        return "elevated error".to_owned();
+    }
+    static SENSITIVE: LazyLock<Vec<Regex>> = LazyLock::new(|| {
+        [
+            r"(?i)(token|password|secret|authorization|bearer|api[_-]?key)\s*[:=]?\s*\S+",
+            r"(?i)\b(user(name)?|display\s*name|account\s*id)\s*[:=]\s*\S+",
+            r#"(?i)"[a-z]:\\[^"\r\n]+""#,
+            r"(?i)\b[a-z]:\\\S+",
+            r"(?i)https?://\S+",
+            r"(?i)\b(device\s*)?serial(\s*number)?\s*[:=]\s*\S+",
+            r"(?i)\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b",
+            r"\b(?:usr|auth|file|avtr|wrld|grp)_[a-zA-Z0-9-]+\b",
+            r"\b[0-9a-fA-F]{8}-[0-9a-fA-F-]{27,}\b",
+            r"\b\d{8,}\b",
+        ]
+        .into_iter()
+        .filter_map(|pattern| Regex::new(pattern).ok())
+        .collect()
+    });
+    let mut result = value.to_owned();
+    for pattern in SENSITIVE.iter() {
+        result = pattern.replace_all(&result, "[redacted]").into_owned();
+    }
+    result.chars().take(512).collect()
 }
 
 fn safe_filename(value: &str) -> String {
@@ -275,14 +342,28 @@ mod tests {
             std::process::id(),
             current_day()
         ));
-        let budget = EventBudget::new(path.clone(), 3, 2);
+        let budget = EventBudget::new(path.clone(), 2, 2, 3, 1.0);
+        assert!(budget.allow("a"));
         assert!(budget.allow("a"));
         assert!(budget.allow("a"));
         assert!(!budget.allow("a"));
-        let budget = EventBudget::new(path.clone(), 3, 2);
+        let budget = EventBudget::new(path.clone(), 2, 2, 3, 1.0);
         assert!(!budget.allow("a"));
         assert!(budget.allow("b"));
         assert!(!budget.allow("c"));
         let _ = fs::remove_file(path);
+    }
+
+    #[test]
+    fn removes_sensitive_text_without_discarding_the_error() {
+        let value = sanitize_text(
+            "Failed to read C:\\Users\\Raphi\\config.json for usr_12345678 token=secret-value",
+            false,
+        );
+        assert!(value.starts_with("Failed to read [redacted]"));
+        assert!(!value.contains("Raphi"));
+        assert!(!value.contains("usr_"));
+        assert!(!value.contains("secret-value"));
+        assert_eq!(sanitize_text("anything", true), "elevated error");
     }
 }

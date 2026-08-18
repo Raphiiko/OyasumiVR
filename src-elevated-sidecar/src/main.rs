@@ -89,9 +89,10 @@ async fn main() {
             Arc::new(oyasumivr_shared::error_reporting::EventBudget::new(
                 data_dir.join("error-reporting-elevated.json"),
                 10,
-                2,
+                5,
+                3,
+                0.1,
             )),
-            0.5,
             Arc::new(AtomicBool::new(true)),
         )
     });

@@ -2157,7 +2157,7 @@
         "title": "System Tray"
       },
       "telemetry": {
-        "description": "When enabled, OyasumiVR sends anonymous usage statistics through Aptabase and privacy-filtered crash reports to the OyasumiVR error server. Crash reports contain error types, code locations, the app version, the source component, and rough platform information. They do not include usernames, account IDs, file paths, tokens, or device identifiers. This data is only used to track down bugs and understand general usage.<br>For details about usage analytics, see the <a target=\"_blank\" href=\"https://aptabase.com/legal/privacy\">Aptabase Privacy Policy</a>.",
+        "description": "When enabled, OyasumiVR sends anonymous usage statistics through Aptabase and privacy-filtered crash reports to the OyasumiVR error server. Crash reports contain sanitized error messages, error types, code locations, the app version, the source component, and rough platform information. They do not include usernames, account IDs, file paths, tokens, or device identifiers. This data is only used to track down bugs and understand general usage.<br>For details about usage analytics, see the <a target=\"_blank\" href=\"https://aptabase.com/legal/privacy\">Aptabase Privacy Policy</a>.",
         "label": "Send anonymous usage data",
         "title": "Telemetry"
       },

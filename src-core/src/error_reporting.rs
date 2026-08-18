@@ -1,11 +1,8 @@
 use oyasumivr_shared::error_reporting::{self, EventBudget};
 use sentry::{ClientInitGuard, Level};
-use std::{
-    sync::{
-        atomic::{AtomicBool, Ordering},
-        Arc, LazyLock, Mutex,
-    },
-    time::{SystemTime, UNIX_EPOCH},
+use std::sync::{
+    atomic::{AtomicBool, Ordering},
+    Arc, LazyLock, Mutex,
 };
 use tauri::Manager;
 
@@ -38,23 +35,28 @@ pub fn set_enabled(app: &tauri::AppHandle, enabled: bool) {
     let core_budget = Arc::new(EventBudget::new(
         data_dir.join("error-reporting-core.json"),
         20,
-        4,
+        10,
+        3,
+        0.1,
     ));
     *ui_budget = Some(Arc::new(EventBudget::new(
         data_dir.join("error-reporting-ui.json"),
         20,
-        4,
+        10,
+        3,
+        0.1,
     )));
     *overlay_budget = Some(Arc::new(EventBudget::new(
         data_dir.join("error-reporting-overlay.json"),
-        6,
+        4,
         2,
+        3,
+        0.1,
     )));
     *guard = Some(error_reporting::init(
         "core",
         env!("CARGO_PKG_VERSION"),
         core_budget,
-        0.5,
         ENABLED.clone(),
     ));
 }
@@ -72,7 +74,7 @@ pub fn allow_ui_event(issue: String) -> bool {
 }
 
 pub fn capture_overlay_exit() {
-    if !ENABLED.load(Ordering::Relaxed) || !sample_overlay_exit() {
+    if !ENABLED.load(Ordering::Relaxed) {
         return;
     }
     let allowed = OVERLAY_BUDGET
@@ -88,15 +90,10 @@ pub fn capture_overlay_exit() {
         return;
     }
     sentry::with_scope(
-        |scope| scope.set_tag("component", "overlay"),
+        |scope| {
+            scope.set_tag("component", "overlay");
+            scope.set_tag("budgeted", "true");
+        },
         || sentry::capture_message("overlay sidecar exited unexpectedly", Level::Error),
     );
-}
-
-fn sample_overlay_exit() -> bool {
-    SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap_or_default()
-        .subsec_nanos()
-        .is_multiple_of(10)
 }
