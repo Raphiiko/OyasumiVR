@@ -145,7 +145,7 @@ pub async fn osc_send_command(
 
     let mut data = Vec::new();
 
-    for (osc_type, value) in types.into_iter().zip(values.into_iter()) {
+    for (osc_type, value) in types.into_iter().zip(values) {
         let osc_value = match osc_type {
             SupportedOscType::Int => value
                 .parse::<i32>()

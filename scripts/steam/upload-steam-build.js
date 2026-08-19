@@ -7,7 +7,7 @@ const DEPOTS = {
   STEAM: { id: '2538151', contentDir: 'Win64' },
   STEAM_CN: { id: '2538152', contentDir: 'Win64_CN' },
 };
-const LOCAL_ENV_FILE = '.env.steam.local';
+const LOCAL_ENV_FILE = '.env.local';
 const EXECUTABLE_NAME = 'OyasumiVR.exe';
 
 function fail(message) {

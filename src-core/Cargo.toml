@@ -47,6 +47,7 @@ prost = "0.14.4"
 public-ip = "0.2.2"
 readonly = "0.2.14"
 regex = "1.13.1"
+sentry = { version = "0.49.1", default-features = false }
 reqwest = "0.13.4"
 rodio = "0.22.2"
 rosc = "0.11.4"

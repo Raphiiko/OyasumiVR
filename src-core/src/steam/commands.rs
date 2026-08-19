@@ -14,7 +14,7 @@ pub async fn steam_achievement_get(achievement_id: String) -> Result<bool, Strin
     let achievement = stats.achievement(achievement_id.as_str());
     match achievement.get() {
         Ok(status) => Ok(status),
-        Err(_) => return Err("FAILED_TO_GET_STATUS".to_string()),
+        Err(_) => Err("FAILED_TO_GET_STATUS".to_string()),
     }
 }
 
@@ -43,6 +43,6 @@ pub async fn steam_achievement_set(achievement_id: String, unlocked: bool) -> Re
     }
     match stats.store_stats() {
         Ok(_) => Ok(()),
-        Err(_) => return Err("FAILED_TO_STORE_STATS".to_string()),
+        Err(_) => Err("FAILED_TO_STORE_STATS".to_string()),
     }
 }

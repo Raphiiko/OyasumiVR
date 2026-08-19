@@ -1,7 +1,12 @@
 use std::{ffi::OsStr, os::windows::prelude::OsStrExt, ptr};
 use windows_sys::Win32::UI::Shell::ShellExecuteW;
 
-pub fn relaunch_with_elevation(main_port: u32, main_pid: u32, force_exit: bool) {
+pub fn relaunch_with_elevation(
+    main_port: u32,
+    main_pid: u32,
+    error_reporting_enabled: bool,
+    force_exit: bool,
+) {
     // Get executable path
     let exe_path = std::env::current_exe().unwrap();
     let path = exe_path.as_os_str();
@@ -10,8 +15,16 @@ pub fn relaunch_with_elevation(main_port: u32, main_pid: u32, force_exit: bool) 
     let path = path_result;
     // Get port parameter
     let old_pid = std::process::id();
+    let error_reporting_arg = if error_reporting_enabled {
+        " --error-reporting-enabled"
+    } else {
+        ""
+    };
     let mut port_result: Vec<_> = OsStr::new(
-        format!("--core-grpc-port={main_port} --core-pid={main_pid} --old-pid={old_pid}").as_str(),
+        format!(
+            "--core-grpc-port={main_port} --core-pid={main_pid} --old-pid={old_pid}{error_reporting_arg}"
+        )
+        .as_str(),
     )
     .encode_wide()
     .collect();

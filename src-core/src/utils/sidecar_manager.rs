@@ -1,5 +1,8 @@
 use log::{error, info, warn};
-use std::sync::Arc;
+use std::sync::{
+    atomic::{AtomicBool, Ordering},
+    Arc,
+};
 use std::time::Duration;
 use tokio::sync::{mpsc, Mutex};
 
@@ -45,7 +48,8 @@ pub struct SidecarManager {
     pub sidecar_pid: Arc<Mutex<Option<u32>>>,
     pub sidecar_child: Arc<Mutex<Option<std::process::Child>>>,
     pub watching: Arc<Mutex<bool>>,
-    pub on_stop_tx: mpsc::Sender<()>,
+    pub on_stop_tx: mpsc::Sender<bool>,
+    pub expected_stop: Arc<AtomicBool>,
     pub auto_restart: bool,
     pub args: Arc<Mutex<Vec<String>>>,
     pub restart_requested: Arc<tokio::sync::Notify>,
@@ -57,7 +61,7 @@ impl SidecarManager {
         sidecar_id: String,
         exe_dir: String,
         exe_file: String,
-        on_stop_tx: mpsc::Sender<()>,
+        on_stop_tx: mpsc::Sender<bool>,
         auto_restart: bool,
         args: Vec<String>,
     ) -> Self {
@@ -73,6 +77,7 @@ impl SidecarManager {
             sidecar_child: Arc::new(Mutex::new(None)),
             watching: Arc::new(Mutex::new(false)),
             on_stop_tx,
+            expected_stop: Arc::new(AtomicBool::new(false)),
             auto_restart,
             args: Arc::new(Mutex::new(args)),
             restart_requested: Arc::new(tokio::sync::Notify::new()),
@@ -108,8 +113,11 @@ impl SidecarManager {
                     "[Core] Killing running {} sidecar to prepare for restart...",
                     self.sidecar_id
                 );
-                if let Err(e) = sidecar_child.kill() {
-                    error!("[Core] Failed to kill {} sidecar: {}", self.sidecar_id, e);
+                match sidecar_child.kill() {
+                    Ok(()) => self.expected_stop.store(true, Ordering::Relaxed),
+                    Err(e) => {
+                        error!("[Core] Failed to kill {} sidecar: {}", self.sidecar_id, e)
+                    }
                 }
             }
             *self.watching.lock().await
@@ -174,7 +182,7 @@ impl SidecarManager {
                     e
                 );
                 *self.active.lock().await = false;
-                let _ = self.on_stop_tx.send(()).await;
+                let _ = self.on_stop_tx.send(false).await;
                 // a launch that never happened still needs a watcher, or it is never retried
                 if !relaunch && !*self.watching.lock().await {
                     *self.watching.lock().await = true;
@@ -319,7 +327,8 @@ impl SidecarManager {
                         manager.sidecar_id, pid
                     );
                     // Send signal that the sidecar has stopped
-                    let _ = manager.on_stop_tx.send(()).await;
+                    let unexpected = !manager.expected_stop.swap(false, Ordering::Relaxed);
+                    let _ = manager.on_stop_tx.send(unexpected).await;
                 }
                 if !manager.auto_restart {
                     break;

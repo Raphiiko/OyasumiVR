@@ -2157,7 +2157,7 @@
         "title": "System Tray"
       },
       "telemetry": {
-        "description": "When enabled, OyasumiVR will collect anonymous usage data such as version information and crash reports. This data is completely anonymous, and does not contain any personal data. It is only used for tracking down bugs and providing some general usage statistics.<br>For more information, you can check out the <a target=\"_blank\" href=\"https://aptabase.com/legal/privacy\">Aptabase Privacy Policy</a>.",
+        "description": "OyasumiVR collects anonymous telemetry to help find bugs and improve the application. This includes crash and error reports, version information, application starts, language preferences, and other basic usage statistics. Telemetry does not contain personally identifiable information and cannot be linked to a specific person. Because there is no way to determine which telemetry belongs to you, individual data deletion requests cannot be fulfilled. You can disable telemetry at any time in OyasumiVR's general settings.",
         "label": "Send anonymous usage data",
         "title": "Telemetry"
       },
@@ -2202,18 +2202,6 @@
         },
         "title": "Discord"
       },
-      "vrcx": {
-        "sleepModeChanges": {
-          "title": "Sleep mode",
-          "description": "Log changes to sleep mode to the game log in VRCX"
-        },
-        "logs": {
-          "onSleepDisable": "Sleep mode disabled",
-          "onSleepEnable": "Sleep mode enabled",
-          "onSleepPreparation": "Preparing for sleep"
-        },
-        "title": "VRCX Logging"
-      },
       "homeAssistant": {
         "description": "Integrate OyasumiVR with the rest of your smart home by connecting it up to your Home Assistant instance, enabling you to build your own powerful automations and control various smart devices.",
         "title": "Home Assistant (over MQTT)"
@@ -2228,6 +2216,18 @@
       "vrchat": {
         "description": "Linking your account provides access to some of OyasumiVR's VRChat-related automations.",
         "title": "VRChat"
+      },
+      "vrcx": {
+        "logs": {
+          "onSleepDisable": "Sleep mode disabled",
+          "onSleepEnable": "Sleep mode enabled",
+          "onSleepPreparation": "Preparing for sleep"
+        },
+        "sleepModeChanges": {
+          "description": "Log changes to sleep mode to the game log in VRCX",
+          "title": "Sleep mode"
+        },
+        "title": "VRCX Logging"
       }
     },
     "notifications": {

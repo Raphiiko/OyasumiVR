@@ -129,7 +129,7 @@ pub async fn openvr_reregister_manifest() -> Result<(), String> {
     match applications.is_application_installed(STEAM_APP_KEY) {
         Ok(value) => {
             if !value {
-                return Err(String::from("MANIFEST_NOT_REGISTERED"));
+                Err(String::from("MANIFEST_NOT_REGISTERED"))
             } else {
                 match applications.remove_application_manifest(manifest_path) {
                     Ok(_) => {
@@ -142,20 +142,20 @@ pub async fn openvr_reregister_manifest() -> Result<(), String> {
                         if should_install_for_flavour {
                             match applications.add_application_manifest(manifest_path, false) {
                                 Ok(_) => {
-                                    return Ok(());
+                                    Ok(())
                                 }
                                 Err(e) => {
                                     error!("[Core] Failed to add VR manifest: {e}");
-                                    return Err(String::from("MANIFEST_ADD_FAILED"));
+                                    Err(String::from("MANIFEST_ADD_FAILED"))
                                 }
-                            };
+                            }
                         } else {
-                            return Err(String::from("FLAVOUR_NOT_ELIGIBLE"));
+                            Err(String::from("FLAVOUR_NOT_ELIGIBLE"))
                         }
                     }
                     Err(e) => {
                         error!("[Core] Failed to remove VR manifest: {e}");
-                        return Err(String::from("MANIFEST_REMOVE_FAILED"));
+                        Err(String::from("MANIFEST_REMOVE_FAILED"))
                     }
                 }
             }
@@ -165,7 +165,7 @@ pub async fn openvr_reregister_manifest() -> Result<(), String> {
                 "[Core] Failed to check if VR manifest is registered: {:#?}",
                 e.description()
             );
-            return Err(String::from("MANIFEST_CHECK_FAILED"));
+            Err(String::from("MANIFEST_CHECK_FAILED"))
         }
     }
 }

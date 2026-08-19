@@ -1,4 +1,5 @@
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
+import * as Sentry from '@sentry/angular';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule, registerLocaleData } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
@@ -46,6 +47,7 @@ import { SleepingAnimationsAutomationService } from './services/osc-automations/
 import { ElevatedSidecarService } from './services/elevated-sidecar.service';
 import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
 import { TelemetryService } from './services/telemetry.service';
+import { ErrorReportingService } from './services/error-reporting.service';
 import { LanguageSelectModalComponent } from './components/language-select-modal/language-select-modal.component';
 import { AppSettingsService } from './services/app-settings.service';
 import { firstValueFrom } from 'rxjs';
@@ -457,6 +459,7 @@ import { StoreSnapshotService } from './services/store-snapshot.service';
       loader: TranslocoHttpLoader,
     }),
     { provide: TRANSLOCO_TRANSPILER, useClass: SafeMessageFormatTranspiler },
+    { provide: ErrorHandler, useValue: Sentry.createErrorHandler({ showDialog: false }) },
   ],
 })
 export class AppModule {
@@ -469,6 +472,7 @@ export class AppModule {
     private oscControlService: OscControlService,
     private elevatedSidecarService: ElevatedSidecarService,
     private telemetryService: TelemetryService,
+    private errorReportingService: ErrorReportingService,
     private appSettingsService: AppSettingsService,
     private modalService: ModalService,
     private vrchatService: VRChatService,
@@ -612,7 +616,11 @@ export class AppModule {
           ]);
           await this.logInit('Initializing system tray', this.systemTrayService.init());
           // Initialize telemetry
-          await Promise.all([this.logInit('Initializing telemetry', this.telemetryService.init())]);
+          await this.logInit('Initializing telemetry', this.telemetryService.init());
+          await this.logInit(
+            'Initializing error reporting',
+            Promise.resolve(this.errorReportingService.init())
+          );
           // Initialize "base" services
           await Promise.all([
             this.logInit('Initializing OpenVR', this.openvrService.init()),

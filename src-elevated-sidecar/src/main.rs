@@ -16,14 +16,23 @@ use simplelog::{
 use std::env;
 use std::fs::File;
 use std::path::Path;
+use std::sync::{
+    atomic::{AtomicBool, Ordering},
+    Arc, LazyLock, Mutex,
+};
 use std::time::Duration;
-use sysinfo::{Pid, System, ProcessesToUpdate};
+use sysinfo::{Pid, ProcessesToUpdate, System};
 use windows::relaunch_with_elevation;
 
 mod afterburner;
 mod grpc;
 mod nvml;
 mod windows;
+
+static ERROR_REPORTING_ENABLED: LazyLock<Arc<AtomicBool>> =
+    LazyLock::new(|| Arc::new(AtomicBool::new(false)));
+static ERROR_REPORTING_GUARD: LazyLock<Mutex<Option<sentry::ClientInitGuard>>> =
+    LazyLock::new(Default::default);
 
 #[tokio::main]
 async fn main() {
@@ -72,11 +81,13 @@ async fn main() {
         }
     };
     let old_process_id = switch_value(&args, "old-pid");
+    let error_reporting_enabled = args.iter().any(|arg| arg == "--error-reporting-enabled");
     // Relaunch as admin if not elevated
     if !is_elevated() {
-        relaunch_with_elevation(host_port, main_pid, true);
+        relaunch_with_elevation(host_port, main_pid, error_reporting_enabled, true);
         return;
     }
+    set_error_reporting_enabled(error_reporting_enabled);
     // Setup the grpc server
     let grpc_port = grpc::init_server().await;
     let grpc_web_port = grpc::init_web_server().await;
@@ -104,6 +115,40 @@ async fn main() {
     nvml::init();
     // Keep an eye on the main process and quit alongside it
     watch_main_process(main_pid).await;
+}
+
+pub fn set_error_reporting_enabled(enabled: bool) {
+    let enabled = enabled && !cfg!(debug_assertions);
+    if !enabled {
+        ERROR_REPORTING_ENABLED.store(false, Ordering::Relaxed);
+        return;
+    }
+    let Ok(mut guard) = ERROR_REPORTING_GUARD.lock() else {
+        ERROR_REPORTING_ENABLED.store(false, Ordering::Relaxed);
+        return;
+    };
+    if guard.is_some() {
+        ERROR_REPORTING_ENABLED.store(true, Ordering::Relaxed);
+        return;
+    }
+    let data_dir = BaseDirs::new()
+        .map(|dirs| dirs.data_local_dir().join("co.raphii.oyasumi"))
+        .unwrap_or_else(|| Path::new(".").to_path_buf());
+    *guard = Some(oyasumivr_shared::error_reporting::init(
+        "elevated",
+        env!("CARGO_PKG_VERSION"),
+        Arc::new(oyasumivr_shared::error_reporting::EventBudget::new(
+            data_dir.join("error-reporting-elevated.json"),
+            oyasumivr_shared::error_reporting::EventBudgetConfig {
+                first_event_cap: 10,
+                recurrence_cap: 5,
+                issue_cap: 3,
+                recurrence_sample_rate: 0.1,
+            },
+        )),
+        ERROR_REPORTING_ENABLED.clone(),
+    ));
+    ERROR_REPORTING_ENABLED.store(true, Ordering::Relaxed);
 }
 
 fn switch_value(args: &[String], name: &str) -> Option<u32> {

@@ -369,8 +369,6 @@
 
 ## {{TELEMETRY_HEADER}}
 
-<img align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/dfdab6c8-c952-4e0d-be12-017d14262a49" width="180">
-
 {{TELEMETRY_BODY}}
 
 ## {{SUPPORT_HEADER}}
@@ -380,4 +378,3 @@
 ## {{LICENSE_HEADER}}
 
 {{LICENSE_BODY}}
-

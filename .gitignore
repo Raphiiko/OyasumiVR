@@ -53,8 +53,8 @@ src-overlay-ui/build
 src-ui/assets/preload-assets.json
 src-ui/assets/splashscreen/splash-blurhash.css
 
-# Steam
-.env.steam.local
+# Local environment
+.env.local
 
 # AI Tools
 .cursorrules

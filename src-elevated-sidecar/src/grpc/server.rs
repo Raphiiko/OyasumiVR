@@ -1,14 +1,15 @@
-use std::time::Duration;
-use log::info;
+use crate::Models::PingResponse;
 use crate::{afterburner, nvml, Models::NvmlStatus};
+use log::info;
+use std::time::Duration;
 
 use super::oyasumi_elevated_sidecar::{
     oyasumi_elevated_sidecar_server::OyasumiElevatedSidecar, Empty, NvmlDevicesResponse,
     NvmlPowerManagementLimitRequest, NvmlPowerManagementLimitResponse, NvmlStatusResponse,
-    SetMsiAfterburnerProfileRequest, SetMsiAfterburnerProfileResponse,
+    SetErrorReportingEnabledRequest, SetMsiAfterburnerProfileRequest,
+    SetMsiAfterburnerProfileResponse,
 };
 use tonic::{Request, Response, Status};
-use crate::Models::PingResponse;
 
 #[derive(Debug, Default)]
 pub struct OyasumiElevatedSidecarServerImpl {}
@@ -28,6 +29,14 @@ impl OyasumiElevatedSidecar for OyasumiElevatedSidecarServerImpl {
             tokio::time::sleep(Duration::from_millis(500)).await;
             std::process::exit(0);
         });
+        Ok(Response::new(Empty {}))
+    }
+
+    async fn set_error_reporting_enabled(
+        &self,
+        request: Request<SetErrorReportingEnabledRequest>,
+    ) -> Result<Response<Empty>, Status> {
+        crate::set_error_reporting_enabled(request.into_inner().enabled);
         Ok(Response::new(Empty {}))
     }
 
@@ -56,10 +65,7 @@ impl OyasumiElevatedSidecar for OyasumiElevatedSidecarServerImpl {
         let request = request.into_inner();
         let result = nvml::nvml_set_power_management_limit(request.uuid, request.power_limit).await;
         let success = result.is_ok();
-        let error = match result {
-            Ok(_) => None,
-            Err(e) => Some(e),
-        };
+        let error = result.err();
         Ok(Response::new(NvmlPowerManagementLimitResponse {
             success,
             error: error.map(|e| e.into()),
@@ -73,10 +79,7 @@ impl OyasumiElevatedSidecar for OyasumiElevatedSidecarServerImpl {
         let request = request.into_inner();
         let result = afterburner::set_afterburner_profile(request.executable_path, request.profile);
         let success = result.is_ok();
-        let error = match result {
-            Ok(_) => None,
-            Err(e) => Some(e),
-        };
+        let error = result.err();
         Ok(Response::new(SetMsiAfterburnerProfileResponse {
             success,
             error: error.map(|e| e.into()),

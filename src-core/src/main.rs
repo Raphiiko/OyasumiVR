@@ -4,6 +4,7 @@ mod cn_compliance;
 mod commands;
 mod discord;
 mod elevated_sidecar;
+mod error_reporting;
 mod flavour;
 mod globals;
 mod grpc;
@@ -36,6 +37,7 @@ use serde_json::json;
 use tauri::{plugin::TauriPlugin, Manager, Wry};
 use tauri_plugin_cli::CliExt;
 use tauri_plugin_log::RotationStrategy;
+use tauri_plugin_store::StoreExt;
 use webview2_com::Microsoft::Web::WebView2::Win32::ICoreWebView2Settings6;
 
 use crate::globals::APTABASE_HOST;
@@ -200,6 +202,18 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
 }
 
 async fn app_setup(app_handle: tauri::AppHandle) {
+    let error_reporting_enabled = match app_handle.store("settings.dat") {
+        Ok(store) => store
+            .get("TELEMETRY_SETTINGS")
+            .and_then(|settings| {
+                settings
+                    .get("enabled")
+                    .and_then(|enabled| enabled.as_bool())
+            })
+            .unwrap_or(true),
+        Err(_) => false,
+    };
+    error_reporting::set_enabled(&app_handle, error_reporting_enabled);
     // Process elevation security args
     os::elevation::process_elevation_cli_args().await;
 
@@ -271,8 +285,10 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     commands::log_utils::init(app_handle.path().app_log_dir().unwrap()).await;
     // Initialize elevated sidecar module
     elevated_sidecar::init().await;
+    elevated_sidecar::set_error_reporting_enabled(error_reporting_enabled).await;
     // Initialize overlay sidecar module
     overlay_sidecar::init().await;
+    overlay_sidecar::set_error_reporting_enabled(error_reporting_enabled).await;
     // Initialize Discord module
     discord::init().await;
     // Initialize system tray
@@ -397,6 +413,8 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         grpc::commands::get_core_grpc_port,
         grpc::commands::get_core_grpc_web_port,
         telemetry::commands::set_telemetry_enabled,
+        error_reporting::set_error_reporting_enabled,
+        error_reporting::allow_ui_event,
         vrcx::commands::vrcx_log,
     ]
 }
