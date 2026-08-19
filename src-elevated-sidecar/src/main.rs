@@ -139,10 +139,12 @@ pub fn set_error_reporting_enabled(enabled: bool) {
         env!("CARGO_PKG_VERSION"),
         Arc::new(oyasumivr_shared::error_reporting::EventBudget::new(
             data_dir.join("error-reporting-elevated.json"),
-            10,
-            5,
-            3,
-            0.1,
+            oyasumivr_shared::error_reporting::EventBudgetConfig {
+                first_event_cap: 10,
+                recurrence_cap: 5,
+                issue_cap: 3,
+                recurrence_sample_rate: 0.1,
+            },
         )),
         ERROR_REPORTING_ENABLED.clone(),
     ));

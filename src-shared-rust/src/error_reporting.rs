@@ -31,14 +31,15 @@ pub struct EventBudget {
     state: Mutex<BudgetState>,
 }
 
+pub struct EventBudgetConfig {
+    pub first_event_cap: u32,
+    pub recurrence_cap: u32,
+    pub issue_cap: u32,
+    pub recurrence_sample_rate: f32,
+}
+
 impl EventBudget {
-    pub fn new(
-        path: PathBuf,
-        first_event_cap: u32,
-        recurrence_cap: u32,
-        issue_cap: u32,
-        recurrence_sample_rate: f32,
-    ) -> Self {
+    pub fn new(path: PathBuf, config: EventBudgetConfig) -> Self {
         let day = current_day();
         let state = fs::read(&path)
             .ok()
@@ -52,10 +53,10 @@ impl EventBudget {
             });
         Self {
             path,
-            first_event_cap,
-            recurrence_cap,
-            issue_cap,
-            recurrence_sample_rate,
+            first_event_cap: config.first_event_cap,
+            recurrence_cap: config.recurrence_cap,
+            issue_cap: config.issue_cap,
+            recurrence_sample_rate: config.recurrence_sample_rate,
             state: Mutex::new(state),
         }
     }
@@ -451,12 +452,28 @@ mod tests {
             std::process::id(),
             current_day()
         ));
-        let budget = EventBudget::new(path.clone(), 2, 2, 3, 1.0);
+        let budget = EventBudget::new(
+            path.clone(),
+            EventBudgetConfig {
+                first_event_cap: 2,
+                recurrence_cap: 2,
+                issue_cap: 3,
+                recurrence_sample_rate: 1.0,
+            },
+        );
         assert!(budget.allow("a"));
         assert!(budget.allow("a"));
         assert!(budget.allow("a"));
         assert!(!budget.allow("a"));
-        let budget = EventBudget::new(path.clone(), 2, 2, 3, 1.0);
+        let budget = EventBudget::new(
+            path.clone(),
+            EventBudgetConfig {
+                first_event_cap: 2,
+                recurrence_cap: 2,
+                issue_cap: 3,
+                recurrence_sample_rate: 1.0,
+            },
+        );
         assert!(!budget.allow("a"));
         assert!(budget.allow("b"));
         assert!(!budget.allow("c"));
@@ -470,7 +487,15 @@ mod tests {
             std::process::id()
         ));
         fs::write(&parent, []).unwrap();
-        let budget = EventBudget::new(parent.join("budget.json"), 1, 0, 1, 1.0);
+        let budget = EventBudget::new(
+            parent.join("budget.json"),
+            EventBudgetConfig {
+                first_event_cap: 1,
+                recurrence_cap: 0,
+                issue_cap: 1,
+                recurrence_sample_rate: 1.0,
+            },
+        );
         assert!(!budget.allow("a"));
         let state = budget.state.lock().unwrap();
         assert_eq!(state.first_events, 0);

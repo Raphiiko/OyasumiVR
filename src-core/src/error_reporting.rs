@@ -1,4 +1,4 @@
-use oyasumivr_shared::error_reporting::{self, EventBudget};
+use oyasumivr_shared::error_reporting::{self, EventBudget, EventBudgetConfig};
 use sentry::{ClientInitGuard, Level};
 use std::sync::{
     atomic::{AtomicBool, Ordering},
@@ -35,24 +35,30 @@ pub fn set_enabled(app: &tauri::AppHandle, enabled: bool) {
     }
     let core_budget = Arc::new(EventBudget::new(
         data_dir.join("error-reporting-core.json"),
-        20,
-        10,
-        3,
-        0.1,
+        EventBudgetConfig {
+            first_event_cap: 20,
+            recurrence_cap: 10,
+            issue_cap: 3,
+            recurrence_sample_rate: 0.1,
+        },
     ));
     *ui_budget = Some(Arc::new(EventBudget::new(
         data_dir.join("error-reporting-ui.json"),
-        20,
-        10,
-        3,
-        0.1,
+        EventBudgetConfig {
+            first_event_cap: 20,
+            recurrence_cap: 10,
+            issue_cap: 3,
+            recurrence_sample_rate: 0.1,
+        },
     )));
     *overlay_budget = Some(Arc::new(EventBudget::new(
         data_dir.join("error-reporting-overlay.json"),
-        4,
-        2,
-        3,
-        0.1,
+        EventBudgetConfig {
+            first_event_cap: 4,
+            recurrence_cap: 2,
+            issue_cap: 3,
+            recurrence_sample_rate: 0.1,
+        },
     )));
     *guard = Some(error_reporting::init(
         "core",
