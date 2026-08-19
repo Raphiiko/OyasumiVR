@@ -15,8 +15,8 @@ pub fn set_enabled(app: &tauri::AppHandle, enabled: bool) {
     let enabled = enabled
         && !cfg!(debug_assertions)
         && crate::BUILD_FLAVOUR != crate::flavour::BuildFlavour::Dev;
-    ENABLED.store(enabled, Ordering::Relaxed);
     if !enabled {
+        ENABLED.store(false, Ordering::Relaxed);
         return;
     }
     let Ok(data_dir) = app.path().app_data_dir() else {
@@ -30,6 +30,7 @@ pub fn set_enabled(app: &tauri::AppHandle, enabled: bool) {
         return;
     };
     if guard.is_some() {
+        ENABLED.store(true, Ordering::Relaxed);
         return;
     }
     let core_budget = Arc::new(EventBudget::new(
@@ -59,6 +60,7 @@ pub fn set_enabled(app: &tauri::AppHandle, enabled: bool) {
         core_budget,
         ENABLED.clone(),
     ));
+    ENABLED.store(true, Ordering::Relaxed);
 }
 
 #[tauri::command]

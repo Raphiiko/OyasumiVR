@@ -6,11 +6,12 @@ use crate::{
     Models::elevated_sidecar::oyasumi_elevated_sidecar_client::OyasumiElevatedSidecarClient,
     Models::oyasumi_core::ElevatedSidecarStartArgs,
 };
-use log::info;
+use log::{info, warn};
 use std::sync::{
     atomic::{AtomicBool, Ordering},
     LazyLock,
 };
+use std::time::Duration;
 use tokio::sync::Mutex;
 use tonic::transport::Channel;
 
@@ -53,11 +54,22 @@ pub async fn set_error_reporting_enabled(enabled: bool) {
     drop(manager_guard);
     let mut client_guard = SIDECAR_GRPC_CLIENT.lock().await;
     if let Some(client) = client_guard.as_mut() {
-        let _ = client
-            .set_error_reporting_enabled(tonic::Request::new(
-                crate::Models::elevated_sidecar::SetErrorReportingEnabledRequest { enabled },
-            ))
+        for attempt in 0..3 {
+            let result = tokio::time::timeout(
+                Duration::from_millis(500),
+                client.set_error_reporting_enabled(tonic::Request::new(
+                    crate::Models::elevated_sidecar::SetErrorReportingEnabledRequest { enabled },
+                )),
+            )
             .await;
+            if matches!(result, Ok(Ok(_))) {
+                return;
+            }
+            if attempt < 2 {
+                tokio::time::sleep(Duration::from_millis(100)).await;
+            }
+        }
+        warn!("[Core] Failed to update elevated sidecar error reporting consent");
     }
 }
 

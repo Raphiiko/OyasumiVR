@@ -118,8 +118,9 @@ async fn main() {
 }
 
 pub fn set_error_reporting_enabled(enabled: bool) {
-    ERROR_REPORTING_ENABLED.store(enabled && !cfg!(debug_assertions), Ordering::Relaxed);
-    if !ERROR_REPORTING_ENABLED.load(Ordering::Relaxed) {
+    let enabled = enabled && !cfg!(debug_assertions);
+    if !enabled {
+        ERROR_REPORTING_ENABLED.store(false, Ordering::Relaxed);
         return;
     }
     let Ok(mut guard) = ERROR_REPORTING_GUARD.lock() else {
@@ -127,6 +128,7 @@ pub fn set_error_reporting_enabled(enabled: bool) {
         return;
     };
     if guard.is_some() {
+        ERROR_REPORTING_ENABLED.store(true, Ordering::Relaxed);
         return;
     }
     let data_dir = BaseDirs::new()
@@ -144,6 +146,7 @@ pub fn set_error_reporting_enabled(enabled: bool) {
         )),
         ERROR_REPORTING_ENABLED.clone(),
     ));
+    ERROR_REPORTING_ENABLED.store(true, Ordering::Relaxed);
 }
 
 fn switch_value(args: &[String], name: &str) -> Option<u32> {

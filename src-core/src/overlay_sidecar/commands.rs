@@ -16,9 +16,6 @@ pub async fn start_overlay_sidecar(gpu_acceleration: bool) {
         OverlaySidecarMode::Release => {
             let mut sidecar_manager_guard = super::SIDECAR_MANAGER.lock().await;
             let sidecar_manager = sidecar_manager_guard.as_mut().unwrap();
-            if sidecar_manager.is_active().await {
-                super::EXPECTED_STOP.store(true, Ordering::Relaxed);
-            }
             sidecar_manager
                 .set_arg("--disable-gpu-acceleration", !gpu_acceleration, true)
                 .await;

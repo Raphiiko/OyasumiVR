@@ -14,7 +14,7 @@ use std::{
 
 pub const DSN: &str = "https://a08e4e04b7a24cafb5eb6c4ff701e52e@sentry.raphii.co/1";
 
-#[derive(Deserialize, Serialize)]
+#[derive(Clone, Deserialize, Serialize)]
 struct BudgetState {
     day: u64,
     first_events: u32,
@@ -64,6 +64,7 @@ impl EventBudget {
         let Ok(mut state) = self.state.lock() else {
             return false;
         };
+        let previous = state.clone();
         let day = current_day();
         if state.day != day {
             *state = BudgetState {
@@ -88,7 +89,11 @@ impl EventBudget {
             state.recurrence_events += 1;
         }
         *state.issues.entry(issue.to_owned()).or_default() += 1;
-        persist(&self.path, &state).is_ok()
+        if persist(&self.path, &state).is_err() {
+            *state = previous;
+            return false;
+        }
+        true
     }
 }
 
@@ -169,15 +174,29 @@ fn sample(rate: f32) -> bool {
 }
 
 fn persist(path: &Path, state: &BudgetState) -> Result<(), ()> {
+    use std::os::windows::ffi::OsStrExt;
+    use windows::{
+        core::PCWSTR,
+        Win32::Storage::FileSystem::{
+            MoveFileExW, MOVEFILE_REPLACE_EXISTING, MOVEFILE_WRITE_THROUGH,
+        },
+    };
+
     let parent = path.parent().ok_or(())?;
     fs::create_dir_all(parent).map_err(|_| ())?;
     let data = serde_json::to_vec(state).map_err(|_| ())?;
     let temporary = path.with_extension("tmp");
     fs::write(&temporary, data).map_err(|_| ())?;
-    if path.exists() {
-        fs::remove_file(path).map_err(|_| ())?;
+    let temporary_wide: Vec<_> = temporary.as_os_str().encode_wide().chain(Some(0)).collect();
+    let path_wide: Vec<_> = path.as_os_str().encode_wide().chain(Some(0)).collect();
+    unsafe {
+        MoveFileExW(
+            PCWSTR(temporary_wide.as_ptr()),
+            PCWSTR(path_wide.as_ptr()),
+            MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH,
+        )
+        .map_err(|_| ())
     }
-    fs::rename(temporary, path).map_err(|_| ())
 }
 
 fn issue_key(event: &Event<'_>) -> String {
@@ -297,7 +316,7 @@ fn sanitize_text(value: &str, strict: bool) -> String {
             r"(?i)https?://\S+",
             r"(?i)\b(device\s*)?serial(\s*number)?\s*[:=]\s*\S+",
             r"(?i)\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b",
-            r"\b(?:usr|auth|file|avtr|wrld|grp)_[a-zA-Z0-9-]+\b",
+            r"(?i)\b(?:usr|auth|file|avtr|wrld|grp)_[a-z0-9-]+\b",
             r"\b[0-9a-fA-F]{8}-[0-9a-fA-F-]{27,}\b",
             r"\b\d{8,}\b",
         ]
@@ -445,6 +464,21 @@ mod tests {
     }
 
     #[test]
+    fn failed_persistence_does_not_consume_budget() {
+        let parent = std::env::temp_dir().join(format!(
+            "oyasumivr-error-budget-blocked-{}",
+            std::process::id()
+        ));
+        fs::write(&parent, []).unwrap();
+        let budget = EventBudget::new(parent.join("budget.json"), 1, 0, 1, 1.0);
+        assert!(!budget.allow("a"));
+        let state = budget.state.lock().unwrap();
+        assert_eq!(state.first_events, 0);
+        assert!(state.issues.is_empty());
+        let _ = fs::remove_file(parent);
+    }
+
+    #[test]
     fn removes_sensitive_text_without_discarding_the_error() {
         let value = sanitize_text(
             "Failed to read C:\\Users\\John Doe\\config.json, Authorization: Bearer abc.def.ghi",
@@ -462,7 +496,27 @@ mod tests {
             sanitize_text("open C:/Users/John/secret.txt", false),
             "open [redacted]"
         );
+        assert_eq!(sanitize_text("user USR_ABC123", false), "user [redacted]");
         assert_eq!(sanitize_text("anything", true), "elevated error");
+    }
+
+    #[test]
+    fn removes_structured_sensitive_event_data() {
+        let mut event = Event::default();
+        event.user = Some(sentry::protocol::User {
+            username: Some("John".into()),
+            ..Default::default()
+        });
+        event.request = Some(Default::default());
+        event.server_name = Some("private-host".into());
+        event.extra.insert("token".into(), "secret".into());
+        event.tags.insert("private".into(), "secret".into());
+        sanitize_event(&mut event, "core", "1.0.0");
+        assert!(event.user.is_none());
+        assert!(event.request.is_none());
+        assert!(event.server_name.is_none());
+        assert!(event.extra.is_empty());
+        assert_eq!(event.tags.len(), 3);
     }
 
     #[test]
