@@ -122,6 +122,22 @@ pub fn init(
     options.dsn = DSN.parse().ok();
     options.auto_session_tracking = false;
     let guard = sentry::init(options);
+    let next_panic_hook = std::panic::take_hook();
+    std::panic::set_hook(Box::new(move |info| {
+        if let Some(location) = info.location() {
+            sentry::with_scope(
+                |scope| {
+                    scope.set_tag(
+                        "panic_location",
+                        format!("{}:{}", safe_filename(location.file()), location.line()),
+                    );
+                },
+                || next_panic_hook(info),
+            );
+        } else {
+            next_panic_hook(info);
+        }
+    }));
     sentry::configure_scope(|scope| {
         scope.set_tag("component", component);
         scope.set_tag("platform", "windows");
@@ -199,6 +215,11 @@ fn sanitize_event(event: &mut Event<'static>, component: &str, version: &str) {
         .cloned()
         .unwrap_or_else(|| component.to_owned());
     let strict = component == "elevated";
+    let panic_location = event.tags.get("panic_location").and_then(|value| {
+        let (filename, line) = value.rsplit_once(':')?;
+        line.parse::<u32>().ok()?;
+        Some(format!("{}:{line}", safe_filename(filename)))
+    });
     event.user = None;
     event.request = None;
     event.server_name = None;
@@ -220,6 +241,9 @@ fn sanitize_event(event: &mut Event<'static>, component: &str, version: &str) {
     event.tags.insert("component".into(), component);
     event.tags.insert("platform".into(), "windows".into());
     event.tags.insert("app_version".into(), version.into());
+    if let Some(panic_location) = panic_location {
+        event.tags.insert("panic_location".into(), panic_location);
+    }
     if let Some(message) = event.message.as_mut() {
         *message = sanitize_text(message, strict);
     }
@@ -266,8 +290,10 @@ fn sanitize_text(value: &str, strict: bool) -> String {
             r"(?i)\bbearer\s+\S+",
             r"(?i)(token|password|secret|api[_-]?key)\s*[:=]?\s*\S+",
             r"(?i)\b(user(name)?|display\s*name|account\s*id)\s*[:=]\s*\S+",
-            r#"(?i)"[a-z]:\\[^"\r\n]+""#,
-            r"(?i)\b[a-z]:\\[^\r\n]+",
+            r#"(?i)"(?:[a-z]:[\\/]|\\\\)[^"\r\n]+""#,
+            r"(?i)\b[a-z]:[\\/][^\r\n]+",
+            r"\\\\[^\s\r\n]+",
+            r"(?i)file:///\S+",
             r"(?i)https?://\S+",
             r"(?i)\b(device\s*)?serial(\s*number)?\s*[:=]\s*\S+",
             r"(?i)\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b",
@@ -428,6 +454,14 @@ mod tests {
         assert!(!value.contains("John Doe"));
         assert!(!value.contains("abc.def.ghi"));
         assert!(!sanitize_text("Authorization: Bearer abc.def.ghi", false).contains("abc.def.ghi"));
+        assert_eq!(
+            sanitize_text(r"open \\server\John\secret.txt", false),
+            "open [redacted]"
+        );
+        assert_eq!(
+            sanitize_text("open C:/Users/John/secret.txt", false),
+            "open [redacted]"
+        );
         assert_eq!(sanitize_text("anything", true), "elevated error");
     }
 

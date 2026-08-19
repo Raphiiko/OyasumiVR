@@ -105,7 +105,11 @@ function sanitize(event: Sentry.ErrorEvent, version: string) {
   event.logger = undefined;
   event.fingerprint = undefined;
   event.threads = undefined;
-  event.debug_meta = undefined;
+  if (event.debug_meta?.images) {
+    event.debug_meta.images = event.debug_meta.images
+      .filter((image) => image.type === 'sourcemap')
+      .map((image) => ({ ...image, code_file: safeFilename(image.code_file) }));
+  }
   event.contexts = {
     os: { name: 'Windows' },
     runtime: { name: 'WebView2' },
@@ -129,15 +133,14 @@ function sanitize(event: Sentry.ErrorEvent, version: string) {
 
 function sanitizeText(value: string): string {
   return value
-    .replace(
-      /\bauthorization\s*[:=]\s*\S+(?:\s+\S+)?/gi,
-      '[redacted]'
-    )
+    .replace(/\bauthorization\s*[:=]\s*\S+(?:\s+\S+)?/gi, '[redacted]')
     .replace(/\bbearer\s+\S+/gi, '[redacted]')
     .replace(/(token|password|secret|api[_-]?key)\s*[:=]?\s*\S+/gi, '[redacted]')
     .replace(/\b(user(name)?|display\s*name|account\s*id)\s*[:=]\s*\S+/gi, '[redacted]')
-    .replace(/"[a-z]:\\[^"\r\n]+"/gi, '[redacted]')
-    .replace(/\b[a-z]:\\[^\r\n]+/gi, '[redacted]')
+    .replace(/"(?:[a-z]:[\\/]|\\\\)[^"\r\n]+"/gi, '[redacted]')
+    .replace(/\b[a-z]:[\\/][^\r\n]+/gi, '[redacted]')
+    .replace(/\\\\[^\s\r\n]+/g, '[redacted]')
+    .replace(/file:\/\/\/\S+/gi, '[redacted]')
     .replace(/https?:\/\/\S+/gi, '[redacted]')
     .replace(/\b(device\s*)?serial(\s*number)?\s*[:=]\s*\S+/gi, '[redacted]')
     .replace(/\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b/gi, '[redacted]')

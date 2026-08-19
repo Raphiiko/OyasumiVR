@@ -69,7 +69,7 @@ pub async fn set_error_reporting_enabled(app: tauri::AppHandle, enabled: bool) {
 
 #[tauri::command]
 pub fn allow_ui_event(issue: String) -> bool {
-    if !ENABLED.load(Ordering::Relaxed) || issue.len() > 512 {
+    if !ENABLED.load(Ordering::Relaxed) || issue.len() > 2_048 {
         return false;
     }
     UI_BUDGET

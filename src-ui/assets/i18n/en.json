@@ -2157,7 +2157,7 @@
         "title": "System Tray"
       },
       "telemetry": {
-        "description": "When enabled, OyasumiVR sends anonymous usage statistics through Aptabase and privacy-filtered crash reports to the OyasumiVR error server. Crash reports contain sanitized error messages, error types, code locations, the app version, the source component, and rough platform information. They do not include usernames, account IDs, file paths, tokens, or device identifiers. This data is only used to track down bugs and understand general usage.<br>For details about usage analytics, see the <a target=\"_blank\" href=\"https://aptabase.com/legal/privacy\">Aptabase Privacy Policy</a>.",
+        "description": "When enabled, OyasumiVR sends anonymous usage statistics through Aptabase and privacy-filtered crash reports to the OyasumiVR error server. Crash reports contain sanitized error messages, error types, code locations, the app version, the source component, and rough platform information. OyasumiVR removes sensitive fields and filters common forms of usernames, account IDs, file paths, tokens, and device identifiers before sending reports. This data is only used to track down bugs and understand general usage.<br>For details about usage analytics, see the <a target='_blank' href='https://aptabase.com/legal/privacy'>Aptabase Privacy Policy</a>.",
         "label": "Send anonymous usage data",
         "title": "Telemetry"
       },
@@ -2202,18 +2202,6 @@
         },
         "title": "Discord"
       },
-      "vrcx": {
-        "sleepModeChanges": {
-          "title": "Sleep mode",
-          "description": "Log changes to sleep mode to the game log in VRCX"
-        },
-        "logs": {
-          "onSleepDisable": "Sleep mode disabled",
-          "onSleepEnable": "Sleep mode enabled",
-          "onSleepPreparation": "Preparing for sleep"
-        },
-        "title": "VRCX Logging"
-      },
       "homeAssistant": {
         "description": "Integrate OyasumiVR with the rest of your smart home by connecting it up to your Home Assistant instance, enabling you to build your own powerful automations and control various smart devices.",
         "title": "Home Assistant (over MQTT)"
@@ -2228,6 +2216,18 @@
       "vrchat": {
         "description": "Linking your account provides access to some of OyasumiVR's VRChat-related automations.",
         "title": "VRChat"
+      },
+      "vrcx": {
+        "logs": {
+          "onSleepDisable": "Sleep mode disabled",
+          "onSleepEnable": "Sleep mode enabled",
+          "onSleepPreparation": "Preparing for sleep"
+        },
+        "sleepModeChanges": {
+          "description": "Log changes to sleep mode to the game log in VRCX",
+          "title": "Sleep mode"
+        },
+        "title": "VRCX Logging"
       }
     },
     "notifications": {
