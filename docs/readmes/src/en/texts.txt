@@ -457,11 +457,11 @@ The OyasumiVR developer and any of this project's contributors are not responsib
 Telemetry
 
 {{TELEMETRY_BODY}}
-OyasumiVR uses a self-hosted [Aptabase](https://aptabase.com) instance for anonymous usage statistics. It sends privacy-filtered crash reports to a self-hosted error server.
+OyasumiVR sends usage statistics to a self-hosted [Aptabase](https://aptabase.com) instance and privacy-filtered error reports to a self-hosted error server. Usage statistics contain no names, account IDs, device IDs, or long-term user identifiers.
 
-Crash reports include sanitized error messages, error types, code locations, the app version, the source component, and rough platform information. OyasumiVR removes sensitive fields and filters common forms of usernames, account IDs, file paths, tokens, and device identifiers before sending reports. This data is only used to find and fix bugs and to understand general usage.
+Error reports contain sanitized error messages, error types, code locations, the app version, the reporting component, and rough platform information. OyasumiVR removes sensitive fields and filters common forms of usernames, account IDs, file paths, tokens, and device identifiers before sending an error report.
 
-You can opt out of usage analytics and crash reporting in OyasumiVR's general settings.
+Stored telemetry has no name or long-term identifier that would let us find which reports came from you. This protects your privacy, but it also means we cannot find or delete reports belonging to one person. We use this data only to find and fix bugs and understand general feature usage. You can stop future telemetry at any time in OyasumiVR's general settings.
 
 {{SUPPORT_HEADER}}
 Support
