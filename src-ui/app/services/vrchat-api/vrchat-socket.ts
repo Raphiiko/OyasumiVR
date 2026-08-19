@@ -94,7 +94,9 @@ export class VRChatSocket {
     info('[VRChat] Opening new socket connection');
     let socket: WebSocket;
     try {
-      socket = new WebSocket(`wss://pipeline.vrchat.cloud/?authToken=${authToken}`);
+      socket = new WebSocket(
+        `wss://pipeline.vrchat.cloud/?authToken=${encodeURIComponent(authToken)}`
+      );
     } catch (cause) {
       this.statusSubject.next('CLOSED');
       error(`[VRChat] Failed to open websocket connection: ${cause}`);

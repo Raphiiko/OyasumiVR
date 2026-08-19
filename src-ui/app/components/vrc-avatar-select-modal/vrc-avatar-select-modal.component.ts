@@ -67,8 +67,11 @@ export class VrcAvatarSelectModalComponent
     try {
       avatars = await this.vrchat.listAvatars(force);
     } catch (e) {
-      if (e !== VRCHAT_API_STALE_REQUEST) throw e;
-      this.close();
+      if (e === VRCHAT_API_STALE_REQUEST) this.close();
+      else {
+        this.activeCategory = 'NO_AVATARS';
+        this.cdr.markForCheck();
+      }
       return;
     }
     this.avatars = {};

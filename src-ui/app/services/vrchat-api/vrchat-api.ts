@@ -496,7 +496,6 @@ export class VRChatAPI {
 
   private async fetchFriends(cacheGeneration: number): Promise<LimitedUserFriend[]> {
     const friends: LimitedUserFriend[] = [];
-    let complete = false;
     try {
       for (const offline of ['false', 'true']) {
         const response = await this.fetchPaginatedData<LimitedUserFriend>(
@@ -512,16 +511,15 @@ export class VRChatAPI {
         );
         friends.push(...response);
       }
-      complete = true;
     } catch (cause) {
+      this.ensureCacheGeneration(cacheGeneration);
       error('[VRChat] Failed to list friends: ' + JSON.stringify(cause));
+      throw cause;
     }
 
     this.ensureCacheGeneration(cacheGeneration);
-    if (complete) {
-      await this.setCache(this.friendsCache, friends);
-      this.ensureCacheGeneration(cacheGeneration);
-    }
+    await this.setCache(this.friendsCache, friends);
+    this.ensureCacheGeneration(cacheGeneration);
     return friends;
   }
 
@@ -613,7 +611,6 @@ export class VRChatAPI {
 
   private async fetchAvatars(cacheGeneration: number): Promise<AvatarEx[]> {
     let avatars: AvatarEx[] = [];
-    let complete = false;
     try {
       const ownAvatars = await this.fetchPaginatedData<AvatarEx>(
         {
@@ -640,17 +637,16 @@ export class VRChatAPI {
         cacheGeneration
       );
       avatars.push(...favouriteAvatars);
-      complete = true;
     } catch (cause) {
+      this.ensureCacheGeneration(cacheGeneration);
       error('[VRChat] Failed to list avatars: ' + JSON.stringify(cause));
+      throw cause;
     }
 
     avatars = uniqBy(avatars, 'id');
     this.ensureCacheGeneration(cacheGeneration);
-    if (complete) {
-      await this.setCache(this.avatarCache, avatars);
-      this.ensureCacheGeneration(cacheGeneration);
-    }
+    await this.setCache(this.avatarCache, avatars);
+    this.ensureCacheGeneration(cacheGeneration);
     return avatars;
   }
 

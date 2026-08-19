@@ -64,18 +64,23 @@ export class VRChatLoginModalComponent
         take(1)
       )
       .subscribe(async (rememberCredentials) => {
-        this.rememberCredentials = rememberCredentials;
-        const credentials = await this.vrchat.loadCredentials();
-        if (credentials) {
-          this.username = credentials.username;
-          this.password = credentials.password;
-        }
-        if (this.twoFactorMethod) {
-          this.loggingIn = true;
-          await this.loginWithTwoFactor(this.twoFactorMethod);
+        try {
+          this.rememberCredentials = rememberCredentials;
+          const credentials = await this.vrchat.loadCredentials();
+          if (credentials) {
+            this.username = credentials.username;
+            this.password = credentials.password;
+          }
+          if (this.twoFactorMethod) {
+            this.loggingIn = true;
+            await this.loginWithTwoFactor(this.twoFactorMethod);
+          } else if (this.autoLogin && credentials) await this.login();
+        } catch (e) {
+          this.setLoginError(e);
+        } finally {
           this.loggingIn = false;
-        } else if (this.autoLogin && credentials) await this.login();
-        this.cdr.markForCheck();
+          this.cdr.markForCheck();
+        }
       });
   }
 
@@ -107,9 +112,10 @@ export class VRChatLoginModalComponent
       const method = twoFactorMethodFromError(e);
       if (method) await this.loginWithTwoFactor(method);
       else this.setLoginError(e);
+    } finally {
+      this.loggingIn = false;
+      this.cdr.markForCheck();
     }
-    this.loggingIn = false;
-    this.cdr.markForCheck();
   }
 
   private async loginWithTwoFactor(method: VRChatTwoFactorMethod) {
@@ -117,9 +123,9 @@ export class VRChatLoginModalComponent
     while (true) {
       this.error = '';
       this.cdr.markForCheck();
-      const code = await this.get2FACode(lastCodeInvalid);
-      if (!code) return;
       try {
+        const code = await this.get2FACode(lastCodeInvalid);
+        if (!code) return;
         await this.vrchat.verify2FA(code, method);
         await this.finishLogin();
         return;

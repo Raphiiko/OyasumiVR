@@ -28,9 +28,9 @@ export class VRChatService {
   private readonly modalService = inject(ModalService);
   private readonly logService = inject(VRChatLogService);
 
-  private readonly settingsSubject = new BehaviorSubject<VRChatApiSettings>(
-    VRCHAT_API_SETTINGS_DEFAULT
-  );
+  private readonly settingsSubject = new BehaviorSubject<VRChatApiSettings>({
+    ...VRCHAT_API_SETTINGS_DEFAULT,
+  });
   private readonly vrchatProcessActiveSubject = new BehaviorSubject(false);
   private readonly worldSubject = new BehaviorSubject<WorldContext>({
     loaded: false,
@@ -229,7 +229,7 @@ export class VRChatService {
   private async loadSettings(): Promise<void> {
     let settings: VRChatApiSettings | undefined =
       await SETTINGS_STORE.get<VRChatApiSettings>(SETTINGS_KEY_VRCHAT_API);
-    settings = settings ? migrateVRChatApiSettings(settings) : this.settingsSubject.value;
+    settings = settings ? migrateVRChatApiSettings(settings) : { ...this.settingsSubject.value };
     if (!settings.credentialCryptoKey) {
       const key = await generateStorageCryptoKey();
       settings.credentialCryptoKey = await serializeStorageCryptoKey(key);
