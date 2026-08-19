@@ -19,6 +19,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Added
 
+- Anonymous crash and error reporting, controlled by the existing telemetry setting
 - OSC Settings view
   - Custom target for OSC messages (e.g. for use with Resonite, OSC routers, or when OSCQuery is not available)
   - VRChat (OSCQuery) target (allows for disabling OSC messages being sent to VRChat)
