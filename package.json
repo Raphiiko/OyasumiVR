@@ -36,7 +36,6 @@
     "format:eslint": "eslint --no-error-on-unmatched-pattern --fix \"src-ui/**/*.ts\" \"src-overlay-ui/**/*.ts\" \"src-shared-ts/**/*.ts\" \"scripts/**/*.ts\"",
     "format:prettier": "prettier --write \"src-ui/**/*.{html,css,scss,js,ts}\" \"src-overlay-ui/**/*.{html,css,scss,js,ts}\" \"src-shared-ts/**/*.{html,css,scss,js,ts}\" \"scripts/**/*.{html,css,scss,js,ts}\"",
     "lint": "ng lint",
-    "test": "vitest run",
     "clean": "rimraf dist && rimraf src-overlay-sidecar/bin && rimraf src-overlay-sidecar/obj && rimraf src-overlay-ui/build && rimraf src-elevated-sidecar/target && rimraf src-core/target && rimraf src-shared-rust/target && rimraf src-core/resources/elevated-sidecar && rimraf src-core/resources/overlay-sidecar && rimraf src-core/resources/fonts",
     "tl": "node scripts/translation-utils.js",
     "tl:check-icu": "node scripts/check-icu.mjs",
@@ -156,8 +155,7 @@
     "recursive-copy": "^2.0.14",
     "rimraf": "^6.1.3",
     "sharp": "^0.35.3",
-    "typescript": "~6.0.3",
-    "vitest": "^4.1.11"
+    "typescript": "~6.0.3"
   },
   "overrides": {
     "axios": "^1.7.8"
