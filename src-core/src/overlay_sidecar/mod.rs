@@ -74,6 +74,10 @@ pub async fn set_error_reporting_enabled(enabled: bool) {
             tokio::time::sleep(Duration::from_millis(100)).await;
         }
     }
+    if enabled {
+        warn!("[Core] Failed to enable overlay sidecar error reporting");
+        return;
+    }
     warn!("[Core] Failed to update overlay sidecar error reporting consent; restarting it");
     if let Some(manager) = SIDECAR_MANAGER.lock().await.as_mut() {
         manager.start_or_restart().await;
