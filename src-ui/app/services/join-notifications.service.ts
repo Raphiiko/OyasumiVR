@@ -25,6 +25,7 @@ import { VRChatLogEvent } from '../models/vrchat-log-event';
 import type { LimitedUserFriend } from 'vrchat';
 import { TranslocoService } from '@jsverse/transloco';
 import { v4 as uuid } from 'uuid';
+import { VRCHAT_API_STALE_REQUEST } from './vrchat-api/vrchat-api';
 
 @Injectable({
   providedIn: 'root',
@@ -64,16 +65,17 @@ export class JoinNotificationsService {
     });
     this.vrchat.user
       .pipe(
-        // Keep track of own display name
         tap((user) => {
           this.ownVRChatDisplayName = user?.displayName ?? '';
+          if (!user) this.friends = [];
         }),
-        // Stop if not logged in
         filter(Boolean),
-        // Keep track of friends
         switchMap(async () => {
-          this.friends = await this.vrchat.listFriends();
-          // TODO: HANDLE FRIEND LIST CHANGES (ADD/REMOVE/DISPLAY NAME CHANGE)
+          try {
+            this.friends = await this.vrchat.listFriends();
+          } catch (e) {
+            if (e !== VRCHAT_API_STALE_REQUEST) throw e;
+          }
         })
       )
       .subscribe();

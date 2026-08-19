@@ -93,6 +93,7 @@ export class VRChatAuth {
         case 'INVALID_CREDENTIALS':
         case 'MISSING_CREDENTIALS':
           await this.api.clearCaches();
+          if (signal?.aborted) return { status: 'RETRY' };
           await this.updateSettings({
             authCookie: null,
             authCookieExpiry: null,

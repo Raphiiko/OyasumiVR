@@ -25,6 +25,7 @@ import { ModalService } from '../../services/modal.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { distinctUntilChanged } from 'rxjs';
 import { noop, vshrink } from '../../utils/animations';
+import { VRCHAT_API_STALE_REQUEST } from '../../services/vrchat-api/vrchat-api';
 
 @Component({
   selector: 'app-player-list',
@@ -71,7 +72,13 @@ export class PlayerListComponent implements OnInit {
     const input = [...playerIds].sort();
     const current = [...this.playerList.map((p) => p.id)].sort();
     if (input.join(',') === current.join(',')) return;
-    const friends = await this.vrchat.listFriends();
+    let friends: LimitedUserFriend[];
+    try {
+      friends = await this.vrchat.listFriends();
+    } catch (e) {
+      if (e !== VRCHAT_API_STALE_REQUEST) throw e;
+      return;
+    }
     this.playerList = friends.filter((f) => playerIds.includes(f.id));
     this.cdr.markForCheck();
     this.emitPlayerListChange();

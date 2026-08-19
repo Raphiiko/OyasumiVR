@@ -63,13 +63,14 @@ export class VRChatSocket {
         this.socket = undefined;
       }
       this._status.next('OPENING');
-      this.socket = new WebSocket(
+      const socket = new WebSocket(
         'wss://pipeline.vrchat.cloud/?authToken=' + (await firstValueFrom(this.settings)).authCookie
       );
-      this.socket.onopen = () => this.onSocketEvent('OPEN');
-      this.socket.onerror = () => this.onSocketEvent('ERROR');
-      this.socket.onclose = () => this.onSocketEvent('CLOSE');
-      this.socket.onmessage = (message) => this.onSocketEvent('MESSAGE', message);
+      this.socket = socket;
+      socket.onopen = () => this.onSocketEvent(socket, 'OPEN');
+      socket.onerror = () => this.onSocketEvent(socket, 'ERROR');
+      socket.onclose = () => this.onSocketEvent(socket, 'CLOSE');
+      socket.onmessage = (message) => this.onSocketEvent(socket, 'MESSAGE', message);
     };
     // Connect and disconnect based on login status
     this.vrchatAuth.status.pipe(distinctUntilChanged()).subscribe((status) => {
@@ -107,9 +108,11 @@ export class VRChatSocket {
   //
 
   private async onSocketEvent(
+    socket: WebSocket,
     event: 'OPEN' | 'CLOSE' | 'ERROR' | 'MESSAGE',
     message?: MessageEvent
   ) {
+    if (this.socket !== socket) return;
     switch (event) {
       case 'OPEN':
         this._status.next('OPEN');

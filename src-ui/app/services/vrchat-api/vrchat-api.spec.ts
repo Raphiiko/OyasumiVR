@@ -2,7 +2,7 @@ import { BehaviorSubject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { CurrentUser, LimitedUserFriend } from 'vrchat';
 import { VRChatApiSettings, VRCHAT_API_SETTINGS_DEFAULT } from '../../models/vrchat-api-settings';
-import { VRChatAPI } from './vrchat-api';
+import { twoFactorMethodFromError, VRChatAPI } from './vrchat-api';
 
 const httpFetch = vi.hoisted(() => vi.fn());
 
@@ -23,6 +23,14 @@ vi.mock('src-ui/app/globals', () => ({
 beforeEach(() => httpFetch.mockReset());
 
 describe('VRChatAPI authentication', () => {
+  it.each([
+    ['2FA_TOTP_REQUIRED', 'totp'],
+    ['2FA_EMAILOTP_REQUIRED', 'emailotp'],
+    ['UNSUPPORTED_2FA_METHOD', undefined],
+  ] as const)('maps the %s challenge', (error, method) => {
+    expect(twoFactorMethodFromError(error)).toBe(method);
+  });
+
   it('omits the stored auth cookie from credentialed login', async () => {
     const settings = new BehaviorSubject<VRChatApiSettings>({
       ...VRCHAT_API_SETTINGS_DEFAULT,
@@ -37,8 +45,8 @@ describe('VRChatAPI authentication', () => {
     );
 
     const headers = httpFetch.mock.calls[0][1].headers as Record<string, string>;
-    expect(headers.Cookie).toBe('twoFactorAuth=two-factor-cookie');
-    expect(headers.Authorization).toMatch(/^Basic /);
+    expect(headers['Cookie']).toBe('twoFactorAuth=two-factor-cookie');
+    expect(headers['Authorization']).toMatch(/^Basic /);
   });
 
   it('rejects unsupported non-string 2FA methods without throwing a type error', async () => {
@@ -49,6 +57,61 @@ describe('VRChatAPI authentication', () => {
     );
 
     await expect(api.getCurrentUser(undefined, true)).rejects.toBe('UNSUPPORTED_2FA_METHOD');
+  });
+
+  it('classifies unrecognized 401 responses by authentication mode', async () => {
+    const api = new VRChatAPI(
+      new BehaviorSubject<VRChatApiSettings>(VRCHAT_API_SETTINGS_DEFAULT),
+      async () => {}
+    );
+    httpFetch.mockResolvedValue(
+      new Response(JSON.stringify({ error: { message: 'Authentication failed' } }), { status: 401 })
+    );
+
+    await expect(api.getCurrentUser(undefined, true)).rejects.toBe('MISSING_CREDENTIALS');
+    await expect(api.getCurrentUser({ username: 'test', password: 'password' }, true)).rejects.toBe(
+      'INVALID_CREDENTIALS'
+    );
+  });
+
+  it('rejects an invalid 2FA code', async () => {
+    const api = new VRChatAPI(
+      new BehaviorSubject<VRChatApiSettings>(VRCHAT_API_SETTINGS_DEFAULT),
+      async () => {}
+    );
+    httpFetch.mockResolvedValue(new Response(JSON.stringify({ verified: false }), { status: 200 }));
+
+    await expect(api.verify2FA('123456', 'totp')).rejects.toBe('INVALID_CODE');
+  });
+
+  it('rejects a malformed 2FA response', async () => {
+    const api = new VRChatAPI(
+      new BehaviorSubject<VRChatApiSettings>(VRCHAT_API_SETTINGS_DEFAULT),
+      async () => {}
+    );
+    httpFetch.mockResolvedValue(new Response(JSON.stringify({ verified: 'yes' }), { status: 200 }));
+
+    await expect(api.verify2FA('123456', 'totp')).rejects.toBe('UNEXPECTED_RESPONSE');
+  });
+
+  it('persists the 2FA cookie after successful verification', async () => {
+    const settings = new BehaviorSubject<VRChatApiSettings>(VRCHAT_API_SETTINGS_DEFAULT);
+    const updateSettings = vi.fn(async (patch: Partial<VRChatApiSettings>) => {
+      settings.next({ ...settings.value, ...patch });
+    });
+    const api = new VRChatAPI(settings, updateSettings);
+    httpFetch.mockResolvedValue({
+      headers: {
+        getSetCookie: () => ['twoFactorAuth=verified-cookie; Path=/'],
+      },
+      json: async () => ({ verified: true }),
+      ok: true,
+      status: 200,
+    } as Response);
+
+    await api.verify2FA('123456', 'totp');
+
+    expect(settings.value.twoFactorCookie).toBe('verified-cookie');
   });
 
   it('does not fail login when current-user cache persistence fails', async () => {
@@ -238,7 +301,7 @@ describe('VRChatAPI authentication', () => {
       _friendsCache: typeof friendsCache;
       fetchPaginatedData: typeof fetchPaginatedData;
     };
-    internals.user = new BehaviorSubject({ id: 'usr_test' } as CurrentUser);
+    internals.user = new BehaviorSubject<CurrentUser | null>({ id: 'usr_test' } as CurrentUser);
     internals._friendsCache = friendsCache;
     internals.fetchPaginatedData = fetchPaginatedData;
 
@@ -266,7 +329,7 @@ describe('VRChatAPI authentication', () => {
     const internals = api as unknown as {
       user: BehaviorSubject<CurrentUser | null>;
     };
-    internals.user = new BehaviorSubject({ id: 'usr_old' } as CurrentUser);
+    internals.user = new BehaviorSubject<CurrentUser | null>({ id: 'usr_old' } as CurrentUser);
     const friend = { id: 'usr_friend' } as LimitedUserFriend;
     let finishResponse: () => void = () => {};
     httpFetch
@@ -293,10 +356,6 @@ describe('VRChatAPI authentication', () => {
       new BehaviorSubject<VRChatApiSettings>(VRCHAT_API_SETTINGS_DEFAULT),
       async () => {}
     );
-    let finishInitialWrite: () => void = () => {};
-    const initialWrite = new Promise<void>((resolve) => {
-      finishInitialWrite = resolve;
-    });
     let finishGroupWrite: () => void = () => {};
     const groupsCache = {
       get: vi.fn(() => [{ groupId: 'grp_test', isRepresenting: false }]),
@@ -315,7 +374,6 @@ describe('VRChatAPI authentication', () => {
       _avatarCache: typeof emptyCache;
       _groupsCache: typeof groupsCache;
       _inviteMessageCaches: Record<string, typeof emptyCache>;
-      trackWrite<T>(write: Promise<T>): Promise<T>;
     };
     internals._currentUserCache = emptyCache;
     internals._friendsCache = emptyCache;
@@ -323,18 +381,54 @@ describe('VRChatAPI authentication', () => {
     internals._groupsCache = groupsCache;
     internals._inviteMessageCaches = {};
 
-    const trackedInitialWrite = internals.trackWrite(initialWrite);
-    const clearing = api.clearCaches();
     api.updateCachedGroup('grp_test', { isRepresenting: true });
     await vi.waitFor(() => expect(groupsCache.set).toHaveBeenCalledOnce());
-    finishInitialWrite();
-    await trackedInitialWrite;
+    const clearing = api.clearCaches();
     await new Promise((resolve) => setTimeout(resolve, 0));
     expect(groupsCache.clear).not.toHaveBeenCalled();
 
     finishGroupWrite();
     await clearing;
     expect(groupsCache.clear).toHaveBeenCalledOnce();
+  });
+
+  it('ignores socket-driven group updates while clearing caches', async () => {
+    const api = new VRChatAPI(
+      new BehaviorSubject<VRChatApiSettings>(VRCHAT_API_SETTINGS_DEFAULT),
+      async () => {}
+    );
+    let finishGroupClear: () => void = () => {};
+    const groupsCache = {
+      get: vi.fn(() => [{ groupId: 'grp_test', isRepresenting: false }]),
+      set: vi.fn(async () => {}),
+      clear: vi.fn(
+        () =>
+          new Promise<void>((resolve) => {
+            finishGroupClear = resolve;
+          })
+      ),
+    };
+    const emptyCache = { clear: vi.fn(async () => {}) };
+    const internals = api as unknown as {
+      _currentUserCache: typeof emptyCache;
+      _friendsCache: typeof emptyCache;
+      _avatarCache: typeof emptyCache;
+      _groupsCache: typeof groupsCache;
+      _inviteMessageCaches: Record<string, typeof emptyCache>;
+    };
+    internals._currentUserCache = emptyCache;
+    internals._friendsCache = emptyCache;
+    internals._avatarCache = emptyCache;
+    internals._groupsCache = groupsCache;
+    internals._inviteMessageCaches = {};
+
+    const clearing = api.clearCaches();
+    await vi.waitFor(() => expect(groupsCache.clear).toHaveBeenCalledOnce());
+    api.updateCachedGroup('grp_test', { isRepresenting: true });
+
+    expect(groupsCache.set).not.toHaveBeenCalled();
+    finishGroupClear();
+    await clearing;
   });
 
   it('does not repopulate the friends cache after it is cleared', async () => {
@@ -366,7 +460,7 @@ describe('VRChatAPI authentication', () => {
       _inviteMessageCaches: Record<string, typeof emptyCache>;
       fetchPaginatedData: typeof fetchPaginatedData;
     };
-    internals.user = new BehaviorSubject({ id: 'usr_old' } as CurrentUser);
+    internals.user = new BehaviorSubject<CurrentUser | null>({ id: 'usr_old' } as CurrentUser);
     internals._currentUserCache = emptyCache;
     internals._friendsCache = friendsCache;
     internals._avatarCache = emptyCache;

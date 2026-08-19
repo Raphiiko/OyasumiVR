@@ -78,6 +78,28 @@ describe('VRChatAuth', () => {
     expect(getCurrentUser).toHaveBeenCalledOnce();
   });
 
+  it('retries a transient current-user failure after 2FA', async () => {
+    vi.useFakeTimers();
+    const user = { id: 'usr_test', displayName: 'Test User' } as CurrentUser;
+    const getCurrentUser = vi.fn().mockRejectedValueOnce('NETWORK_FAILURE').mockResolvedValue(user);
+    const auth = new VRChatAuth(
+      { getCurrentUser } as unknown as VRChatAPI,
+      {} as ModalService,
+      async () => {},
+      new BehaviorSubject<VRChatApiSettings>(VRCHAT_API_SETTINGS_DEFAULT)
+    );
+
+    const request = (
+      auth as unknown as {
+        getCurrentUserAfter2FA(): Promise<CurrentUser>;
+      }
+    ).getCurrentUserAfter2FA();
+    await vi.advanceTimersByTimeAsync(1_000);
+
+    await expect(request).resolves.toBe(user);
+    expect(getCurrentUser).toHaveBeenCalledTimes(2);
+  });
+
   it('lets VRChat validate a cookie after its local expiry date', async () => {
     const settings = new BehaviorSubject<VRChatApiSettings>({
       ...VRCHAT_API_SETTINGS_DEFAULT,
@@ -203,5 +225,43 @@ describe('VRChatAuth', () => {
     expect(getCurrentUser.mock.calls[0][2]).toBeInstanceOf(AbortSignal);
     expect(getCurrentUser.mock.calls[0][2].aborted).toBe(true);
     expect(closeModal).not.toHaveBeenCalled();
+  });
+
+  it('does not clear credentials after an in-flight restore is cancelled', async () => {
+    const settings = new BehaviorSubject<VRChatApiSettings>({
+      ...VRCHAT_API_SETTINGS_DEFAULT,
+      authCookie: 'auth-cookie',
+    });
+    let finishCacheClear: () => void = () => {};
+    const clearCaches = vi.fn(
+      () =>
+        new Promise<void>((resolve) => {
+          finishCacheClear = resolve;
+        })
+    );
+    const api = {
+      clearCaches,
+      getCurrentUser: vi.fn(async () => {
+        throw 'INVALID_CREDENTIALS';
+      }),
+    } as unknown as VRChatAPI;
+    const updateSettings = vi.fn(async (patch: Partial<VRChatApiSettings>) => {
+      settings.next({ ...settings.value, ...patch });
+    });
+    const auth = new VRChatAuth(api, {} as ModalService, updateSettings, settings);
+    const abortController = new AbortController();
+
+    const restoring = (
+      auth as unknown as {
+        loadSession(signal: AbortSignal): Promise<{ status: string }>;
+      }
+    ).loadSession(abortController.signal);
+    await vi.waitFor(() => expect(clearCaches).toHaveBeenCalledOnce());
+    abortController.abort();
+    finishCacheClear();
+
+    await expect(restoring).resolves.toEqual({ status: 'RETRY' });
+    expect(updateSettings).not.toHaveBeenCalled();
+    expect(settings.value.authCookie).toBe('auth-cookie');
   });
 });

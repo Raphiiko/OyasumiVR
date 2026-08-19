@@ -33,6 +33,8 @@ const MAX_VRCHAT_FRIENDS = 65536;
 const MAX_FAVOURITE_AVATARS = 500;
 const MAX_UPLOADED_AVATARS = 1000;
 
+export const VRCHAT_API_STALE_REQUEST = 'STALE_REQUEST';
+
 export type VRChatTwoFactorMethod = 'totp' | 'emailotp';
 
 export function twoFactorMethodFromError(error: unknown): VRChatTwoFactorMethod | undefined {
@@ -49,6 +51,7 @@ export function twoFactorMethodFromError(error: unknown): VRChatTwoFactorMethod 
 export class VRChatAPI {
   private userAgent!: string;
   private cacheGeneration = 0;
+  private cacheClearsInFlight = 0;
   private pendingWrites = new Set<Promise<unknown>>();
   private apiCallQueue: TaskQueue = new TaskQueue({
     rateLimiter: {
@@ -136,20 +139,25 @@ export class VRChatAPI {
 
   public async clearCaches() {
     this.cacheGeneration++;
+    this.cacheClearsInFlight++;
     this._friendFetcher.next(null);
     this._avatarFetcher.next(null);
-    while (this.pendingWrites.size) await Promise.allSettled([...this.pendingWrites]);
-    const results = await Promise.allSettled(
-      [
-        this._currentUserCache,
-        this._friendsCache,
-        this._avatarCache,
-        this._groupsCache,
-        ...Object.values(this._inviteMessageCaches),
-      ].map(async (cache) => await cache.clear())
-    );
-    for (const result of results) {
-      if (result.status === 'rejected') error(`[VRChat] Failed to clear cache: ${result.reason}`);
+    try {
+      while (this.pendingWrites.size) await Promise.allSettled([...this.pendingWrites]);
+      const results = await Promise.allSettled(
+        [
+          this._currentUserCache,
+          this._friendsCache,
+          this._avatarCache,
+          this._groupsCache,
+          ...Object.values(this._inviteMessageCaches),
+        ].map(async (cache) => await cache.clear())
+      );
+      for (const result of results) {
+        if (result.status === 'rejected') error(`[VRChat] Failed to clear cache: ${result.reason}`);
+      }
+    } finally {
+      this.cacheClearsInFlight--;
     }
   }
 
@@ -273,10 +281,8 @@ export class VRChatAPI {
         case '"Missing Credentials"':
           throw 'MISSING_CREDENTIALS';
         default:
-          error(
-            `[VRChat] Received unexpected response from /auth/user: ${JSON.stringify(response)}`
-          );
-          throw 'UNEXPECTED_RESPONSE';
+          error(`[VRChat] Authentication rejected: ${JSON.stringify(response)}`);
+          throw credentials ? 'INVALID_CREDENTIALS' : 'MISSING_CREDENTIALS';
       }
     }
     if (!response.ok) {
@@ -547,7 +553,7 @@ export class VRChatAPI {
     if (cacheGeneration !== this.cacheGeneration) {
       friendFetchCompletion.next('FAILED');
       if (this._friendFetcher.value === friendFetch) this._friendFetcher.next(null);
-      throw 'STALE_REQUEST';
+      throw VRCHAT_API_STALE_REQUEST;
     }
     if (fetchResult === 'SUCCESS' && cacheGeneration === this.cacheGeneration) {
       await this.setCache(this._friendsCache, friends);
@@ -555,7 +561,7 @@ export class VRChatAPI {
     if (cacheGeneration !== this.cacheGeneration) {
       friendFetchCompletion.next('FAILED');
       if (this._friendFetcher.value === friendFetch) this._friendFetcher.next(null);
-      throw 'STALE_REQUEST';
+      throw VRCHAT_API_STALE_REQUEST;
     }
     friendFetchCompletion.next(fetchResult);
     if (this._friendFetcher.value === friendFetch) this._friendFetcher.next(null);
@@ -705,7 +711,7 @@ export class VRChatAPI {
     if (cacheGeneration !== this.cacheGeneration) {
       avatarFetchCompletion.next('FAILED');
       if (this._avatarFetcher.value === avatarFetch) this._avatarFetcher.next(null);
-      throw 'STALE_REQUEST';
+      throw VRCHAT_API_STALE_REQUEST;
     }
     if (fetchResult === 'SUCCESS' && cacheGeneration === this.cacheGeneration) {
       await this.setCache(this._avatarCache, avatars);
@@ -713,7 +719,7 @@ export class VRChatAPI {
     if (cacheGeneration !== this.cacheGeneration) {
       avatarFetchCompletion.next('FAILED');
       if (this._avatarFetcher.value === avatarFetch) this._avatarFetcher.next(null);
-      throw 'STALE_REQUEST';
+      throw VRCHAT_API_STALE_REQUEST;
     }
     avatarFetchCompletion.next(fetchResult);
     if (this._avatarFetcher.value === avatarFetch) this._avatarFetcher.next(null);
@@ -728,6 +734,7 @@ export class VRChatAPI {
   }
 
   public updateCachedGroup(groupId: string, group: Partial<LimitedUserGroups>) {
+    if (this.cacheClearsInFlight) return;
     if (group.groupId && group.groupId !== groupId) {
       throw new Error("Called updateCachedGroup with a group that doesn't match the groupId");
     }
@@ -879,7 +886,7 @@ export class VRChatAPI {
   }
 
   private ensureCacheGeneration(generation: number) {
-    if (generation !== this.cacheGeneration) throw 'STALE_REQUEST';
+    if (generation !== this.cacheGeneration) throw VRCHAT_API_STALE_REQUEST;
   }
 
   private async parseResponseCookies(response: Response, cacheGeneration: number) {
