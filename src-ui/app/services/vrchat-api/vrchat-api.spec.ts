@@ -258,6 +258,85 @@ describe('VRChatAPI authentication', () => {
     expect(fetchPaginatedData).toHaveBeenCalledTimes(2);
   });
 
+  it('stops paginating friends after cache invalidation', async () => {
+    const api = new VRChatAPI(
+      new BehaviorSubject<VRChatApiSettings>(VRCHAT_API_SETTINGS_DEFAULT),
+      async () => {}
+    );
+    const internals = api as unknown as {
+      user: BehaviorSubject<CurrentUser | null>;
+    };
+    internals.user = new BehaviorSubject({ id: 'usr_old' } as CurrentUser);
+    const friend = { id: 'usr_friend' } as LimitedUserFriend;
+    let finishResponse: () => void = () => {};
+    httpFetch
+      .mockImplementationOnce(
+        () =>
+          new Promise<Response>((resolve) => {
+            finishResponse = () => resolve(new Response(JSON.stringify([friend]), { status: 200 }));
+          })
+      )
+      .mockResolvedValue(new Response('[]', { status: 200 }));
+
+    const listing = api.listFriends(true);
+    const rejectedListing = expect(listing).rejects.toBe('STALE_REQUEST');
+    await vi.waitFor(() => expect(httpFetch).toHaveBeenCalledOnce());
+    await api.clearCaches();
+    finishResponse();
+
+    await rejectedListing;
+    expect(httpFetch).toHaveBeenCalledOnce();
+  });
+
+  it('waits for socket-driven group writes before clearing caches', async () => {
+    const api = new VRChatAPI(
+      new BehaviorSubject<VRChatApiSettings>(VRCHAT_API_SETTINGS_DEFAULT),
+      async () => {}
+    );
+    let finishInitialWrite: () => void = () => {};
+    const initialWrite = new Promise<void>((resolve) => {
+      finishInitialWrite = resolve;
+    });
+    let finishGroupWrite: () => void = () => {};
+    const groupsCache = {
+      get: vi.fn(() => [{ groupId: 'grp_test', isRepresenting: false }]),
+      set: vi.fn(
+        () =>
+          new Promise<void>((resolve) => {
+            finishGroupWrite = resolve;
+          })
+      ),
+      clear: vi.fn(async () => {}),
+    };
+    const emptyCache = { clear: vi.fn(async () => {}) };
+    const internals = api as unknown as {
+      _currentUserCache: typeof emptyCache;
+      _friendsCache: typeof emptyCache;
+      _avatarCache: typeof emptyCache;
+      _groupsCache: typeof groupsCache;
+      _inviteMessageCaches: Record<string, typeof emptyCache>;
+      trackWrite<T>(write: Promise<T>): Promise<T>;
+    };
+    internals._currentUserCache = emptyCache;
+    internals._friendsCache = emptyCache;
+    internals._avatarCache = emptyCache;
+    internals._groupsCache = groupsCache;
+    internals._inviteMessageCaches = {};
+
+    const trackedInitialWrite = internals.trackWrite(initialWrite);
+    const clearing = api.clearCaches();
+    api.updateCachedGroup('grp_test', { isRepresenting: true });
+    await vi.waitFor(() => expect(groupsCache.set).toHaveBeenCalledOnce());
+    finishInitialWrite();
+    await trackedInitialWrite;
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(groupsCache.clear).not.toHaveBeenCalled();
+
+    finishGroupWrite();
+    await clearing;
+    expect(groupsCache.clear).toHaveBeenCalledOnce();
+  });
+
   it('does not repopulate the friends cache after it is cleared', async () => {
     const api = new VRChatAPI(
       new BehaviorSubject<VRChatApiSettings>(VRCHAT_API_SETTINGS_DEFAULT),

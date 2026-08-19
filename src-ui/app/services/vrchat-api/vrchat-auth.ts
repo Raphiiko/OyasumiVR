@@ -68,11 +68,13 @@ export class VRChatAuth {
       .pipe(
         distinctUntilChanged(),
         debounceTime(500),
-        distinctUntilChanged((prev, curr) => prev?.id !== curr?.id)
+        distinctUntilChanged((prev, curr) => prev?.id === curr?.id)
       )
       .subscribe((user) => {
         if (user) {
-          this.api.listFriends();
+          void this.api
+            .listFriends()
+            .catch((e) => error(`[VRChat] Failed to preload friends: ${JSON.stringify(e)}`));
         }
       });
   }

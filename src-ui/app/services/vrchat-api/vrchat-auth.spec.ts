@@ -132,6 +132,31 @@ describe('VRChatAuth', () => {
     expect(settings.value.twoFactorCookie).toBe('two-factor-cookie');
   });
 
+  it('preloads friends for each newly logged-in account', async () => {
+    vi.useFakeTimers();
+    const listFriends = vi.fn().mockResolvedValueOnce([]).mockRejectedValueOnce('STALE_REQUEST');
+    const api = { listFriends } as unknown as VRChatAPI;
+    const auth = new VRChatAuth(
+      api,
+      {} as ModalService,
+      async () => {},
+      new BehaviorSubject<VRChatApiSettings>(VRCHAT_API_SETTINGS_DEFAULT)
+    );
+    await auth.init();
+    const internals = auth as unknown as {
+      _user: BehaviorSubject<CurrentUser | null>;
+    };
+
+    internals._user.next({ id: 'usr_first' } as CurrentUser);
+    await vi.advanceTimersByTimeAsync(500);
+    internals._user.next(null);
+    await vi.advanceTimersByTimeAsync(500);
+    internals._user.next({ id: 'usr_second' } as CurrentUser);
+    await vi.advanceTimersByTimeAsync(500);
+
+    expect(listFriends).toHaveBeenCalledTimes(2);
+  });
+
   it('discards an in-flight restore before credential login', async () => {
     vi.useFakeTimers();
     const settings = new BehaviorSubject<VRChatApiSettings>({

@@ -13,10 +13,8 @@ export class CachedValue<T> {
 
   static async cleanCache(includeNonExpired = false) {
     if (includeNonExpired) {
-      // Clear entire cache
       await CACHE_STORE.clear();
     } else {
-      // Clear expired cache entries only
       const entries: [key: string, value: CachedValueEntry<unknown>][] =
         await CACHE_STORE.entries<CachedValueEntry<unknown>>();
       for (const entry of entries) {
@@ -32,8 +30,10 @@ export class CachedValue<T> {
     private persistenceKey?: string
   ) {
     const finishInitialization = () => this.initialized.next(true);
-    if (value !== undefined) this.set(value).then(finishInitialization, finishInitialization);
-    else if (persistenceKey) this.loadFromDisk().then(finishInitialization, finishInitialization);
+    if (value !== undefined) {
+      this.lastSet = Date.now();
+      this.saveToDisk().then(finishInitialization, finishInitialization);
+    } else if (persistenceKey) this.loadFromDisk().then(finishInitialization, finishInitialization);
     else finishInitialization();
   }
 
@@ -42,6 +42,7 @@ export class CachedValue<T> {
   }
 
   async set(value: T) {
+    if (!this.initialized.value) await this.waitForInitialisation();
     this.value = value;
     this.lastSet = Date.now();
     await this.saveToDisk();

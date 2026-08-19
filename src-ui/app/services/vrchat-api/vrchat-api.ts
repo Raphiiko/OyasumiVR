@@ -138,7 +138,7 @@ export class VRChatAPI {
     this.cacheGeneration++;
     this._friendFetcher.next(null);
     this._avatarFetcher.next(null);
-    await Promise.allSettled([...this.pendingWrites]);
+    while (this.pendingWrites.size) await Promise.allSettled([...this.pendingWrites]);
     const results = await Promise.allSettled(
       [
         this._currentUserCache,
@@ -526,14 +526,17 @@ export class VRChatAPI {
     let fetchResult: 'SUCCESS' | 'FAILED' = 'FAILED';
     try {
       for (const offline of ['false', 'true']) {
-        const response = await this.fetchPaginatedData<LimitedUserFriend>({
-          url: `${BASE_URL}/auth/user/friends`,
-          apiCallTypeId: 'LIST_FRIENDS',
-          query: {
-            offline,
+        const response = await this.fetchPaginatedData<LimitedUserFriend>(
+          {
+            url: `${BASE_URL}/auth/user/friends`,
+            apiCallTypeId: 'LIST_FRIENDS',
+            query: {
+              offline,
+            },
+            maxEntries: MAX_VRCHAT_FRIENDS,
           },
-          maxEntries: MAX_VRCHAT_FRIENDS,
-        });
+          cacheGeneration
+        );
         fetchResult = 'SUCCESS';
         friends.push(...response);
       }
@@ -658,17 +661,20 @@ export class VRChatAPI {
     let avatars: AvatarEx[] = [];
     let fetchResult: 'SUCCESS' | 'FAILED' = 'FAILED';
     try {
-      const ownAvatars = await this.fetchPaginatedData<AvatarEx>({
-        url: `${BASE_URL}/avatars`,
-        apiCallTypeId: 'LIST_AVATARS_UPLOADED',
-        query: {
-          user: 'me',
-          releaseStatus: 'all',
-          sort: 'updated',
-          order: 'descending',
+      const ownAvatars = await this.fetchPaginatedData<AvatarEx>(
+        {
+          url: `${BASE_URL}/avatars`,
+          apiCallTypeId: 'LIST_AVATARS_UPLOADED',
+          query: {
+            user: 'me',
+            releaseStatus: 'all',
+            sort: 'updated',
+            order: 'descending',
+          },
+          maxEntries: MAX_UPLOADED_AVATARS,
         },
-        maxEntries: MAX_UPLOADED_AVATARS,
-      });
+        cacheGeneration
+      );
       avatars.push(...ownAvatars);
       fetchResult = 'SUCCESS';
     } catch (e) {
@@ -677,14 +683,17 @@ export class VRChatAPI {
     }
     if (fetchResult != 'FAILED') {
       try {
-        const favAvatars = await this.fetchPaginatedData<AvatarEx>({
-          url: `${BASE_URL}/avatars/favorites`,
-          apiCallTypeId: 'LIST_AVATARS_FAVOURITE',
-          query: {
-            sort: 'updated',
+        const favAvatars = await this.fetchPaginatedData<AvatarEx>(
+          {
+            url: `${BASE_URL}/avatars/favorites`,
+            apiCallTypeId: 'LIST_AVATARS_FAVOURITE',
+            query: {
+              sort: 'updated',
+            },
+            maxEntries: MAX_FAVOURITE_AVATARS,
           },
-          maxEntries: MAX_FAVOURITE_AVATARS,
-        });
+          cacheGeneration
+        );
         avatars.push(...favAvatars);
         fetchResult = 'SUCCESS';
       } catch (e) {
@@ -725,10 +734,9 @@ export class VRChatAPI {
     const groups = this._groupsCache.get() ?? [];
     const index = groups.findIndex((g) => g.groupId === groupId);
     if (index !== -1) {
-      // Update the group
       groups[index] = { ...groups[index], ...group };
 
-      // If the group is representing, we need to "unrepresent" any other groups
+      // clear other representations
       if (group.isRepresenting) {
         for (const otherGroup of groups) {
           if (otherGroup.groupId !== groupId) {
@@ -737,21 +745,23 @@ export class VRChatAPI {
         }
       }
 
-      // Update the cache
-      this._groupsCache.set(groups);
+      void this.setCache(this._groupsCache, groups);
     }
   }
 
-  private async fetchPaginatedData<T>(_options: {
-    url: string;
-    apiCallTypeId: string;
-    query?: Record<string, string>;
-    maxEntries?: number;
-    rateLimit?: {
-      maxRetries?: number;
-      timeout?: number;
-    };
-  }): Promise<T[]> {
+  private async fetchPaginatedData<T>(
+    _options: {
+      url: string;
+      apiCallTypeId: string;
+      query?: Record<string, string>;
+      maxEntries?: number;
+      rateLimit?: {
+        maxRetries?: number;
+        timeout?: number;
+      };
+    },
+    cacheGeneration?: number
+  ): Promise<T[]> {
     const options: {
       url: string;
       apiCallTypeId: string;
@@ -780,10 +790,12 @@ export class VRChatAPI {
     let nextOffset = 0;
     let rateLimitRetries = 0;
     for (let offset = 0; offset < options.maxEntries!; offset += nextOffset) {
+      if (cacheGeneration !== undefined) this.ensureCacheGeneration(cacheGeneration);
       nextOffset = 100;
       const response = await this.apiCallQueue.queueTask<Response>({
         typeId: options.apiCallTypeId,
         runnable: async () => {
+          if (cacheGeneration !== undefined) this.ensureCacheGeneration(cacheGeneration);
           const queryParams = new URLSearchParams({
             offset: offset.toString(),
             n: '100',
@@ -794,10 +806,10 @@ export class VRChatAPI {
           });
         },
       });
-      // Handle rate limiting
+      if (cacheGeneration !== undefined) this.ensureCacheGeneration(cacheGeneration);
+      // handle rate limiting
       if (response.result?.status === 429) {
         if (rateLimitRetries < options.rateLimit.maxRetries) {
-          // Wait for a bit and retry
           nextOffset = 0;
           rateLimitRetries++;
           await new Promise((resolve) => setTimeout(resolve, options.rateLimit.timeout));
@@ -810,12 +822,10 @@ export class VRChatAPI {
           );
         }
       }
-      // Handle results
+      // handle results
       if (response.result?.ok) {
-        // Add entries to list
         const data: T[] = await response.result.json();
         entries.push(...data);
-        // If we got some entries, continue fetching
         if (data.length > 0) continue;
         break;
       } else {

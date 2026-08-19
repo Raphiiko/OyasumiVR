@@ -43,6 +43,36 @@ describe('CachedValue', () => {
     expect(cacheStore.delete).toHaveBeenCalledWith('CachedValue_TEST');
   });
 
+  it('waits for persisted state to load before replacing it', async () => {
+    let finishLoad: () => void = () => {};
+    cacheStore.get.mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          finishLoad = () =>
+            resolve({
+              value: 'old',
+              lastSet: Date.now(),
+              ttl: 60_000,
+            });
+        })
+    );
+    cacheStore.set.mockResolvedValue(undefined);
+    const cache = new CachedValue<string>(undefined, 60_000, 'TEST');
+
+    const setting = cache.set('new');
+    await Promise.resolve();
+    expect(cacheStore.set).not.toHaveBeenCalled();
+
+    finishLoad();
+    await setting;
+
+    expect(cache.get()).toBe('new');
+    expect(cacheStore.set).toHaveBeenCalledWith(
+      'CachedValue_TEST',
+      expect.objectContaining({ value: 'new' })
+    );
+  });
+
   it('deletes persisted state after its initial load fails', async () => {
     cacheStore.get.mockRejectedValue(new Error('LOAD_FAILED'));
     cacheStore.delete.mockResolvedValue(undefined);
