@@ -34,6 +34,10 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Updated the Russian translations
 - OyasumiVR's window now does less work while it is open
 - Updated OyasumiVR's internal components
+- Developer tools no longer open automatically in debug builds and are no longer included in
+  release builds
+- OyasumiVR no longer opens a console window by default in debug builds. Launch any build with
+  `--console` to open one
 - The Chinese Steam release is now the same build as the international Steam release. It switches to
   CN compliance mode at runtime.
 
