@@ -1,13 +1,15 @@
 // See https://aka.ms/new-console-template for more information
 
 using System.Diagnostics;
+using System.Reflection;
 using CefSharp;
 using CefSharp.OffScreen;
 using Serilog;
 
 namespace overlay_sidecar;
 
-public static class Program {
+public static class Program
+{
   public static bool GpuAccelerated = true;
   public static SidecarMode Mode = SidecarMode.Release;
 
@@ -38,6 +40,9 @@ public static class Program {
       }
     }
 
+    var errorReportingEnabled = args.Contains("--error-reporting-enabled");
+    ErrorReporting.Initialize(errorReportingEnabled, GetAppVersion(mainProcessId));
+
     if (args.Any(arg => arg == "--disable-gpu-acceleration"))
     {
       Log.Information("Launching with GPU acceleration disabled");
@@ -56,6 +61,22 @@ public static class Program {
     var prefix = name + "=";
     var arg = args.FirstOrDefault(a => a.StartsWith(prefix, StringComparison.Ordinal));
     return int.TryParse(arg?[prefix.Length..], out value);
+  }
+
+  private static string GetAppVersion(int mainProcessId)
+  {
+    if (InReleaseMode())
+    {
+      try
+      {
+        return Process.GetProcessById(mainProcessId).MainModule?.FileVersionInfo.ProductVersion ?? "unknown";
+      }
+      catch
+      {
+      }
+    }
+    return Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
+           ?? "unknown";
   }
 
   private static void InitCef()
@@ -218,7 +239,8 @@ public static class Program {
     return Mode == SidecarMode.Release;
   }
 
-  public enum SidecarMode {
+  public enum SidecarMode
+  {
     Release,
     Dev
   }

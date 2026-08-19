@@ -4,7 +4,8 @@ using Serilog;
 
 namespace overlay_sidecar;
 
-public class OyasumiOverlaySidecarService : OyasumiOverlaySidecar.OyasumiOverlaySidecarBase {
+public class OyasumiOverlaySidecarService : OyasumiOverlaySidecar.OyasumiOverlaySidecarBase
+{
   public override Task<AddNotificationResponse> AddNotification(AddNotificationRequest request,
     ServerCallContext context)
   {
@@ -82,6 +83,13 @@ public class OyasumiOverlaySidecarService : OyasumiOverlaySidecar.OyasumiOverlay
       OvrManager.Instance.SetMicrophoneActive(request.Active);
     }
 
+    return Task.FromResult(new Empty());
+  }
+
+  public override Task<Empty> SetErrorReportingEnabled(SetErrorReportingEnabledRequest request,
+    ServerCallContext context)
+  {
+    ErrorReporting.SetEnabled(request.Enabled);
     return Task.FromResult(new Empty());
   }
 }

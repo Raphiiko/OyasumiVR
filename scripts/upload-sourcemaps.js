@@ -24,23 +24,25 @@ const cli = path.join('node_modules', '@sentry', 'cli', 'bin', 'sentry-cli');
 const run = (args, env = process.env) =>
   execFileSync(process.execPath, [cli, ...args], { stdio: 'inherit', env });
 
-run(['sourcemaps', 'inject', output]);
+try {
+  run(['sourcemaps', 'inject', output]);
 
-if (hasCredentials) {
-  run(
-    [
-      '--url',
-      'https://sentry.raphii.co',
-      'sourcemaps',
-      '--org',
-      'bugsinkhasnoorgs',
-      '--project',
-      process.env.BUGSINK_PROJECT,
-      'upload',
-      output,
-    ],
-    { ...process.env, SENTRY_AUTH_TOKEN: process.env.BUGSINK_AUTH_TOKEN }
-  );
+  if (hasCredentials) {
+    run(
+      [
+        '--url',
+        'https://sentry.raphii.co',
+        'sourcemaps',
+        '--org',
+        'bugsinkhasnoorgs',
+        '--project',
+        process.env.BUGSINK_PROJECT,
+        'upload',
+        output,
+      ],
+      { ...process.env, SENTRY_AUTH_TOKEN: process.env.BUGSINK_AUTH_TOKEN }
+    );
+  }
+} finally {
+  removeSourcemaps();
 }
-
-removeSourcemaps();

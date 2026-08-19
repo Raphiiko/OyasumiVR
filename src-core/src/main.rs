@@ -283,6 +283,7 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     elevated_sidecar::set_error_reporting_enabled(error_reporting_enabled).await;
     // Initialize overlay sidecar module
     overlay_sidecar::init().await;
+    overlay_sidecar::set_error_reporting_enabled(error_reporting_enabled).await;
     // Initialize Discord module
     discord::init().await;
     // Initialize system tray

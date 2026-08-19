@@ -97,6 +97,7 @@ function issueKey(event: Sentry.ErrorEvent): string {
 function sanitize(event: Sentry.ErrorEvent, version: string) {
   event.user = undefined;
   event.request = undefined;
+  event.server_name = undefined;
   event.breadcrumbs = [];
   event.extra = undefined;
   event.modules = undefined;
@@ -106,9 +107,10 @@ function sanitize(event: Sentry.ErrorEvent, version: string) {
   event.fingerprint = undefined;
   event.threads = undefined;
   if (event.debug_meta?.images) {
-    event.debug_meta.images = event.debug_meta.images
-      .filter((image) => image.type === 'sourcemap')
-      .map((image) => ({ ...image, code_file: safeFilename(image.code_file) }));
+    event.debug_meta.images = event.debug_meta.images.flatMap((image) => {
+      const codeFile = image.type === 'sourcemap' ? safeCodePath(image.code_file) : undefined;
+      return codeFile ? [{ ...image, code_file: codeFile }] : [];
+    });
   }
   event.contexts = {
     os: { name: 'Windows' },
@@ -121,7 +123,7 @@ function sanitize(event: Sentry.ErrorEvent, version: string) {
     if (exception.mechanism) exception.mechanism.data = undefined;
     if (exception.value) exception.value = sanitizeText(exception.value);
     for (const frame of exception.stacktrace?.frames ?? []) {
-      frame.abs_path = undefined;
+      frame.abs_path = safeCodePath(frame.abs_path);
       frame.vars = undefined;
       frame.pre_context = undefined;
       frame.context_line = undefined;
@@ -152,4 +154,17 @@ function sanitizeText(value: string): string {
 
 function safeFilename(value: string): string {
   return value.replaceAll('\\', '/').split('/').at(-1)?.split('?')[0] ?? '';
+}
+
+function safeCodePath(value: string | undefined): string | undefined {
+  if (!value) return undefined;
+  try {
+    const url = new URL(value);
+    if (url.hostname !== 'tauri.localhost') return undefined;
+    url.search = '';
+    url.hash = '';
+    return url.toString();
+  } catch {
+    return undefined;
+  }
 }

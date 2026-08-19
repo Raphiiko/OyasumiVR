@@ -6,7 +6,7 @@ use std::{
     fs,
     path::{Path, PathBuf},
     sync::{
-        atomic::{AtomicBool, Ordering},
+        atomic::{AtomicBool, AtomicU64, Ordering},
         mpsc, Arc, Condvar, LazyLock, Mutex,
     },
     time::{Duration, Instant, SystemTime, UNIX_EPOCH},
@@ -65,7 +65,6 @@ impl EventBudget {
         let Ok(mut state) = self.state.lock() else {
             return false;
         };
-        let previous = state.clone();
         let day = current_day();
         if state.day != day {
             *state = BudgetState {
@@ -75,6 +74,7 @@ impl EventBudget {
                 issues: BTreeMap::new(),
             };
         }
+        let previous = state.clone();
         let occurrences = state.issues.get(issue).copied().unwrap_or_default();
         if occurrences == 0 {
             if state.first_events >= self.first_event_cap {
@@ -105,6 +105,7 @@ pub fn init(
     enabled: Arc<AtomicBool>,
 ) -> ClientInitGuard {
     let issue_budget = budget.clone();
+    let transport_enabled = enabled.clone();
     let mut options = ClientOptions::new()
         .release(version)
         .send_default_pii(false)
@@ -117,14 +118,12 @@ pub fn init(
             if !enabled.load(Ordering::Relaxed) {
                 return None;
             }
-            let budgeted = event
-                .tags
-                .get("budgeted")
-                .is_some_and(|value| value == "true");
             sanitize_event(&mut event, component, version);
-            (budgeted || issue_budget.allow(&issue_key(&event))).then_some(event)
+            issue_budget.allow(&issue_key(&event)).then_some(event)
         })
-        .transport(TinyTransportFactory);
+        .transport(TinyTransportFactory {
+            enabled: transport_enabled,
+        });
     options.dsn = DSN.parse().ok();
     options.auto_session_tracking = false;
     let guard = sentry::init(options);
@@ -161,17 +160,15 @@ fn current_day() -> u64 {
 }
 
 fn sample(rate: f32) -> bool {
+    static COUNTER: AtomicU64 = AtomicU64::new(0);
     if rate >= 1.0 {
         return true;
     }
-    let mut value = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap_or_default()
-        .as_nanos() as u64;
-    value ^= value >> 33;
-    value = value.wrapping_mul(0xff51afd7ed558ccd);
-    value ^= value >> 33;
-    value as f64 / (u64::MAX as f64) < rate as f64
+    if rate <= 0.0 {
+        return false;
+    }
+    let interval = (1.0 / rate as f64).round().max(1.0) as u64;
+    COUNTER.fetch_add(1, Ordering::Relaxed) % interval == 0
 }
 
 fn persist(path: &Path, state: &BudgetState) -> Result<(), ()> {
@@ -228,12 +225,6 @@ fn issue_key(event: &Event<'_>) -> String {
 }
 
 fn sanitize_event(event: &mut Event<'static>, component: &str, version: &str) {
-    let component = event
-        .tags
-        .get("component")
-        .filter(|value| value.as_str() == "overlay")
-        .cloned()
-        .unwrap_or_else(|| component.to_owned());
     let strict = component == "elevated";
     let panic_location = event.tags.get("panic_location").and_then(|value| {
         let (filename, line) = value.rsplit_once(':')?;
@@ -258,7 +249,7 @@ fn sanitize_event(event: &mut Event<'static>, component: &str, version: &str) {
         .contexts
         .retain(|name, _| name == "os" || name == "runtime");
     event.tags.clear();
-    event.tags.insert("component".into(), component);
+    event.tags.insert("component".into(), component.into());
     event.tags.insert("platform".into(), "windows".into());
     event.tags.insert("app_version".into(), version.into());
     if let Some(panic_location) = panic_location {
@@ -345,29 +336,37 @@ fn safe_filename(value: &str) -> String {
 }
 
 #[derive(Clone)]
-struct TinyTransportFactory;
+struct TinyTransportFactory {
+    enabled: Arc<AtomicBool>,
+}
 
 impl sentry::TransportFactory for TinyTransportFactory {
     fn create_transport(&self, options: &ClientOptions) -> Arc<dyn Transport> {
-        Arc::new(TinyTransport::new(options))
+        Arc::new(TinyTransport::new(options, self.enabled.clone()))
     }
 }
 
 struct TinyTransport {
     sender: mpsc::SyncSender<Envelope>,
     pending: Arc<(Mutex<usize>, Condvar)>,
+    enabled: Arc<AtomicBool>,
 }
 
 impl TinyTransport {
-    fn new(options: &ClientOptions) -> Self {
+    fn new(options: &ClientOptions, enabled: Arc<AtomicBool>) -> Self {
         let (sender, receiver) = mpsc::sync_channel::<Envelope>(2);
         let pending = Arc::new((Mutex::new(0), Condvar::new()));
         let Some(dsn) = options.dsn.as_ref() else {
-            return Self { sender, pending };
+            return Self {
+                sender,
+                pending,
+                enabled,
+            };
         };
         let url = dsn.envelope_api_url().to_string();
         let auth = dsn.to_auth(Some(&options.user_agent)).to_string();
         let worker_pending = pending.clone();
+        let worker_enabled = enabled.clone();
         let _ = std::thread::Builder::new().spawn(move || {
             let Ok(client) = reqwest::blocking::Client::builder()
                 .connect_timeout(Duration::from_secs(1))
@@ -377,8 +376,12 @@ impl TinyTransport {
                 return;
             };
             while let Ok(envelope) = receiver.recv() {
+                if !worker_enabled.load(Ordering::Relaxed) {
+                    finish_pending(&worker_pending);
+                    continue;
+                }
                 let mut body = Vec::new();
-                if envelope.to_writer(&mut body).is_ok() {
+                if envelope.to_writer(&mut body).is_ok() && worker_enabled.load(Ordering::Relaxed) {
                     let _ = client
                         .post(&url)
                         .header("X-Sentry-Auth", &auth)
@@ -389,12 +392,19 @@ impl TinyTransport {
                 finish_pending(&worker_pending);
             }
         });
-        Self { sender, pending }
+        Self {
+            sender,
+            pending,
+            enabled,
+        }
     }
 }
 
 impl Transport for TinyTransport {
     fn send_envelope(&self, envelope: Envelope) {
+        if !self.enabled.load(Ordering::Relaxed) {
+            return;
+        }
         let Ok(mut pending) = self.pending.0.lock() else {
             return;
         };
@@ -504,6 +514,45 @@ mod tests {
     }
 
     #[test]
+    fn resets_budget_on_a_new_day() {
+        let path = std::env::temp_dir().join(format!(
+            "oyasumivr-error-budget-rollover-{}-{}.json",
+            std::process::id(),
+            current_day()
+        ));
+        let budget = EventBudget::new(
+            path.clone(),
+            EventBudgetConfig {
+                first_event_cap: 1,
+                recurrence_cap: 0,
+                issue_cap: 1,
+                recurrence_sample_rate: 1.0,
+            },
+        );
+        {
+            let mut state = budget.state.lock().unwrap();
+            state.day = current_day().saturating_sub(1);
+            state.first_events = 1;
+            state.issues.insert("old".into(), 1);
+        }
+        assert!(budget.allow("new"));
+        let state = budget.state.lock().unwrap();
+        assert_eq!(state.day, current_day());
+        assert_eq!(state.first_events, 1);
+        assert_eq!(state.issues.get("new"), Some(&1));
+        assert!(!state.issues.contains_key("old"));
+        drop(state);
+        let _ = fs::remove_file(path);
+    }
+
+    #[test]
+    fn uses_message_as_issue_key_without_an_exception() {
+        let mut event = Event::default();
+        event.message = Some("render failed".into());
+        assert_eq!(issue_key(&event), "render failed");
+    }
+
+    #[test]
     fn removes_sensitive_text_without_discarding_the_error() {
         let value = sanitize_text(
             "Failed to read C:\\Users\\John Doe\\config.json, Authorization: Bearer abc.def.ghi",
@@ -553,7 +602,11 @@ mod tests {
             std::thread::sleep(Duration::from_millis(20));
             finish_pending(&worker_pending);
         });
-        let transport = TinyTransport { sender, pending };
+        let transport = TinyTransport {
+            sender,
+            pending,
+            enabled: Arc::new(AtomicBool::new(true)),
+        };
         assert!(transport.flush(Duration::from_secs(1)));
     }
 }

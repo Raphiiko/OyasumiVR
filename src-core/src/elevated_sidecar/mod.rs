@@ -52,8 +52,8 @@ pub async fn set_error_reporting_enabled(enabled: bool) {
         .set_arg("--error-reporting-enabled", enabled, true)
         .await;
     drop(manager_guard);
-    let mut client_guard = SIDECAR_GRPC_CLIENT.lock().await;
-    if let Some(client) = client_guard.as_mut() {
+    let client = SIDECAR_GRPC_CLIENT.lock().await.clone();
+    if let Some(mut client) = client {
         for attempt in 0..3 {
             let result = tokio::time::timeout(
                 Duration::from_millis(500),
@@ -69,8 +69,52 @@ pub async fn set_error_reporting_enabled(enabled: bool) {
                 tokio::time::sleep(Duration::from_millis(100)).await;
             }
         }
-        warn!("[Core] Failed to update elevated sidecar error reporting consent");
+        if enabled {
+            warn!("[Core] Failed to enable elevated sidecar error reporting");
+            return;
+        }
+        warn!("[Core] Failed to disable elevated sidecar error reporting; stopping it");
+        let stopped = matches!(
+            tokio::time::timeout(
+                Duration::from_millis(500),
+                client.request_stop(tonic::Request::new(
+                    crate::Models::elevated_sidecar::Empty {},
+                )),
+            )
+            .await,
+            Ok(Ok(_))
+        );
+        if !stopped {
+            retry_disabled_consent();
+        }
     }
+}
+
+fn retry_disabled_consent() {
+    tokio::spawn(async {
+        for _ in 0..30 {
+            if ERROR_REPORTING_ENABLED.load(Ordering::Relaxed) {
+                return;
+            }
+            let client = SIDECAR_GRPC_CLIENT.lock().await.clone();
+            if let Some(mut client) = client {
+                let result = tokio::time::timeout(
+                    Duration::from_millis(500),
+                    client.set_error_reporting_enabled(tonic::Request::new(
+                        crate::Models::elevated_sidecar::SetErrorReportingEnabledRequest {
+                            enabled: false,
+                        },
+                    )),
+                )
+                .await;
+                if matches!(result, Ok(Ok(_))) {
+                    return;
+                }
+            }
+            tokio::time::sleep(Duration::from_secs(2)).await;
+        }
+        warn!("[Core] Elevated sidecar did not acknowledge disabled error reporting consent");
+    });
 }
 
 #[allow(dead_code)]
@@ -106,13 +150,14 @@ pub async fn handle_elevated_sidecar_start(
         return Ok(());
     }
     drop(manager_guard);
+    let mut client_guard = SIDECAR_GRPC_CLIENT.lock().await;
     // Create new GRPC client
     let mut grpc_client = tokio::time::timeout(
         Duration::from_secs(2),
         OyasumiElevatedSidecarClient::connect(format!("http://127.0.0.1:{}", args.grpc_port)),
     )
     .await??;
-    let _ = tokio::time::timeout(
+    let consent_result = tokio::time::timeout(
         Duration::from_millis(500),
         grpc_client.set_error_reporting_enabled(tonic::Request::new(
             crate::Models::elevated_sidecar::SetErrorReportingEnabledRequest {
@@ -121,7 +166,11 @@ pub async fn handle_elevated_sidecar_start(
         )),
     )
     .await;
-    *SIDECAR_GRPC_CLIENT.lock().await = Some(grpc_client);
+    if !matches!(consent_result, Ok(Ok(_))) {
+        warn!("[Core] Elevated sidecar did not acknowledge startup error reporting consent");
+    }
+    *client_guard = Some(grpc_client);
+    drop(client_guard);
     send_event("ELEVATED_SIDECAR_STARTED", args.grpc_web_port).await;
     Ok(())
 }

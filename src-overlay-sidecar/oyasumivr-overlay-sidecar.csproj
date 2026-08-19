@@ -23,6 +23,7 @@
     <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1"/>
     <PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0"/>
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0"/>
+    <PackageReference Include="Sentry" Version="6.8.0"/>
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0"/>
     <PackageReference Include="Grpc.AspNetCore" Version="2.83.0"/>
     <PackageReference Include="Google.Protobuf" Version="3.35.1"/>
