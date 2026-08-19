@@ -2157,7 +2157,7 @@
         "title": "System Tray"
       },
       "telemetry": {
-        "description": "When telemetry is enabled, OyasumiVR sends usage statistics to a self-hosted Aptabase instance and privacy-filtered error reports to a self-hosted error server. Usage statistics contain no names, account IDs, device IDs, or long-term user identifiers. Error reports contain sanitized error messages, error types, code locations, the app version, the reporting component, and rough platform information. OyasumiVR removes sensitive fields and filters common forms of usernames, account IDs, file paths, tokens, and device identifiers before sending an error report. Stored telemetry has no name or long-term identifier that would let us find which reports came from you. This protects your privacy, but it also means we cannot find or delete reports belonging to one person. We use this data only to find and fix bugs and understand general feature usage. Turn this setting off to stop future telemetry.",
+        "description": "OyasumiVR collects anonymous telemetry to help find bugs and improve the application. This includes crash and error reports, version information, application starts, language preferences, and other basic usage statistics. Telemetry does not contain personally identifiable information and cannot be linked to a specific person. Because there is no way to determine which telemetry belongs to you, individual data deletion requests cannot be fulfilled. You can disable telemetry at any time in OyasumiVR's general settings.",
         "label": "Send anonymous usage data",
         "title": "Telemetry"
       },
