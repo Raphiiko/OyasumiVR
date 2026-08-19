@@ -28,6 +28,8 @@ jobs:
           cache: npm
       - name: Initialize the project
         run: npm run ci
+      - name: Run unit tests
+        run: npm test
       - name: Set flavour to STANDALONE
         run: npm run set-flavour STANDALONE
       - name: Set build id

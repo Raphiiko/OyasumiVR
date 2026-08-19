@@ -31,8 +31,10 @@ export class CachedValue<T> {
     private ttl: number,
     private persistenceKey?: string
   ) {
-    if (value !== undefined) this.set(value).then(() => this.initialized.next(true));
-    else if (persistenceKey) this.loadFromDisk().then(() => this.initialized.next(true));
+    const finishInitialization = () => this.initialized.next(true);
+    if (value !== undefined) this.set(value).then(finishInitialization, finishInitialization);
+    else if (persistenceKey) this.loadFromDisk().then(finishInitialization, finishInitialization);
+    else finishInitialization();
   }
 
   async waitForInitialisation() {
@@ -46,6 +48,7 @@ export class CachedValue<T> {
   }
 
   async clear() {
+    if (!this.initialized.value) await this.waitForInitialisation();
     if (this.value === undefined && this.lastSet === -1) return;
     this.value = undefined;
     this.lastSet = -1;
@@ -53,6 +56,7 @@ export class CachedValue<T> {
   }
 
   get(): T | undefined {
+    if (!this.initialized.value) return undefined;
     const ttlExpired = this.lastSet + this.ttl < Date.now();
     if (ttlExpired && this.persistenceKey) this.clear();
     return ttlExpired ? undefined : this.value;

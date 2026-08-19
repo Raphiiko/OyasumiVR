@@ -230,12 +230,10 @@ export class VRChatService {
     let settings: VRChatApiSettings | undefined =
       await SETTINGS_STORE.get<VRChatApiSettings>(SETTINGS_KEY_VRCHAT_API);
     settings = settings ? migrateVRChatApiSettings(settings) : this._settings.value;
-    // Generate storage crypto key if needed
     if (!settings.credentialCryptoKey) {
       const key = await generateStorageCryptoKey();
       settings.credentialCryptoKey = await serializeStorageCryptoKey(key);
     }
-    // Finish loading settings & write changes to disk
     this._settings.next(settings);
     await this.saveSettings();
   }

@@ -23,7 +23,8 @@ import {
 export type VRChatAuthStatus = 'PRE_INIT' | 'LOGGED_OUT' | 'LOGGED_IN';
 
 type SessionRestoreResult =
-  | { status: 'NONE' | 'RESTORED' | 'RETRY' }
+  | { status: 'NONE' | 'RETRY' }
+  | { status: 'RESTORED'; user: CurrentUser }
   | { status: 'LOGIN_REQUIRED'; error?: string }
   | { status: 'TWO_FACTOR_REQUIRED'; method: VRChatTwoFactorMethod };
 
@@ -41,6 +42,9 @@ export class VRChatAuth {
   );
   public user = this._user.asObservable();
   private sessionRestoreRetry?: ReturnType<typeof setTimeout>;
+  private sessionRestoreInFlight?: Promise<SessionRestoreResult>;
+  private sessionRestoreAbortController?: AbortController;
+  private sessionRestoreGeneration = 0;
   private _userUpdateEventLastReceived = new BehaviorSubject<number>(0);
   private _userStatusLastUpdated = new BehaviorSubject<number>(0);
 
@@ -51,18 +55,15 @@ export class VRChatAuth {
     private settings: Observable<VRChatApiSettings>
   ) {}
 
-  //
-  // Initialization
-  //
+  // initialization
 
   public async init() {
     const restoreResult = await this.loadSession();
-    // Depending on if we have a user, set the status
+    if (restoreResult.status === 'RESTORED') this.restoreUser(restoreResult.user);
     const newStatus = this._user.value ? 'LOGGED_IN' : 'LOGGED_OUT';
     if (newStatus !== this._status.value) this._status.next(newStatus);
     this.handleSessionRestoreResult(restoreResult);
     this.pollUserForStatus();
-    // Handle login side effects
     this._user
       .pipe(
         distinctUntilChanged(),
@@ -71,25 +72,25 @@ export class VRChatAuth {
       )
       .subscribe((user) => {
         if (user) {
-          // List friends on login to make sure they are cached
           this.api.listFriends();
         }
       });
   }
 
-  private async loadSession(): Promise<SessionRestoreResult> {
+  private async loadSession(signal?: AbortSignal): Promise<SessionRestoreResult> {
     if (!(await firstValueFrom(this.settings)).authCookie) return { status: 'NONE' };
     try {
-      this._user.next(await this.api.getCurrentUser());
-      this._userStatusLastUpdated.next(Date.now());
+      const user = await this.api.getCurrentUser(undefined, true, signal);
       info(`[VRChat] Restored existing session`);
-      return { status: 'RESTORED' };
+      return { status: 'RESTORED', user };
     } catch (e) {
+      if (signal?.aborted) return { status: 'RETRY' };
       const method = this.twoFactorMethodFromError(e);
       if (method) return { status: 'TWO_FACTOR_REQUIRED', method };
       switch (e) {
         case 'INVALID_CREDENTIALS':
         case 'MISSING_CREDENTIALS':
+          await this.api.clearCaches();
           await this.updateSettings({
             authCookie: null,
             authCookieExpiry: null,
@@ -123,12 +124,26 @@ export class VRChatAuth {
   }
 
   private scheduleSessionRestore() {
-    if (this.sessionRestoreRetry) return;
+    if (this.sessionRestoreRetry || this.sessionRestoreInFlight) return;
+    const generation = this.sessionRestoreGeneration;
     this.sessionRestoreRetry = setTimeout(async () => {
       this.sessionRestoreRetry = undefined;
       if (this._status.value !== 'LOGGED_OUT') return;
-      const result = await this.loadSession();
+      const abortController = new AbortController();
+      this.sessionRestoreAbortController = abortController;
+      const restore = this.loadSession(abortController.signal);
+      this.sessionRestoreInFlight = restore;
+      const result = await restore.catch((e) => {
+        error(`[VRChat] Error trying to restore session: ${e}`);
+        return { status: 'RETRY' } as SessionRestoreResult;
+      });
+      if (this.sessionRestoreInFlight === restore) this.sessionRestoreInFlight = undefined;
+      if (this.sessionRestoreAbortController === abortController) {
+        this.sessionRestoreAbortController = undefined;
+      }
+      if (generation !== this.sessionRestoreGeneration) return;
       if (result.status === 'RESTORED') {
+        this.restoreUser(result.user);
         this._status.next('LOGGED_IN');
         this.modalService.closeModal(LOGIN_MODAL_ID);
       }
@@ -137,13 +152,19 @@ export class VRChatAuth {
   }
 
   private cancelSessionRestore() {
+    this.sessionRestoreGeneration++;
     clearTimeout(this.sessionRestoreRetry);
     this.sessionRestoreRetry = undefined;
+    this.sessionRestoreAbortController?.abort();
+    this.sessionRestoreAbortController = undefined;
   }
 
-  //
-  // Authentication methods
-  //
+  private restoreUser(user: CurrentUser) {
+    this._user.next(user);
+    this._userStatusLastUpdated.next(Date.now());
+  }
+
+  // authentication
 
   public showLoginModal(
     autoLogin = false,
@@ -167,13 +188,9 @@ export class VRChatAuth {
     if (this._status.value !== 'LOGGED_OUT')
       throw new Error('Tried calling login() while already logged in');
     this.cancelSessionRestore();
-    await this.updateSettings({
-      authCookie: null,
-      authCookieExpiry: null,
-    });
+    await this.api.clearCaches();
     this._user.next(await this.api.getCurrentUser({ username, password }, true));
     this._userStatusLastUpdated.next(Date.now());
-    // If we got here, we have a user, so we are logged in (and have cookies)
     this._status.next('LOGGED_IN');
     info(`[VRChat] Logged in: ${this._user.value?.displayName}`);
   }
@@ -184,12 +201,12 @@ export class VRChatAuth {
       throw new Error('Tried calling verify2FA() while already logged in');
     }
     this.cancelSessionRestore();
+    await this.api.clearCaches();
     const { authCookie } = await firstValueFrom(this.settings);
     if (!authCookie) throw new Error('Called verify2FA() before successfully calling login()');
     await this.api.verify2FA(code, method);
     this._user.next(await this.getCurrentUserAfter2FA());
     this._userStatusLastUpdated.next(Date.now());
-    // If we got here, we are logged in (and have cookies)
     this._status.next('LOGGED_IN');
     info(`[VRChat] Logged in: ${this._user.value?.displayName}`);
   }
@@ -236,9 +253,7 @@ export class VRChatAuth {
     }
   }
 
-  //
-  // User state management
-  //
+  // user state
 
   public patchCurrentUser(user: Partial<CurrentUser>) {
     const currentUser = structuredClone(this._user.value);
@@ -277,9 +292,7 @@ export class VRChatAuth {
     });
   }
 
-  //
-  // Credential management
-  //
+  // credentials
 
   public async rememberCredentials(username: string, password: string) {
     const credentialCryptoKey = (await firstValueFrom(this.settings)).credentialCryptoKey;
