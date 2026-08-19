@@ -9,9 +9,17 @@ if (process.argv.includes('--check')) {
 }
 
 const build = readFileSync('src-ui/build.ts', 'utf8');
-if (build.includes("FLAVOUR: BuildFlavour = 'DEV'")) process.exit(0);
-
 const output = 'dist/oyasumivr';
+const removeSourcemaps = () => {
+  for (const file of readdirSync(output, { recursive: true })) {
+    if (file.endsWith('.map')) rmSync(path.join(output, file));
+  }
+};
+if (build.includes("FLAVOUR: BuildFlavour = 'DEV'")) {
+  removeSourcemaps();
+  process.exit(0);
+}
+
 const cli = path.join('node_modules', '@sentry', 'cli', 'bin', 'sentry-cli');
 const run = (args, env = process.env) =>
   execFileSync(process.execPath, [cli, ...args], { stdio: 'inherit', env });
@@ -35,6 +43,4 @@ if (hasCredentials) {
   );
 }
 
-for (const file of readdirSync(output, { recursive: true })) {
-  if (file.endsWith('.map')) rmSync(path.join(output, file));
-}
+removeSourcemaps();

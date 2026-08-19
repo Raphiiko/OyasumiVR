@@ -327,8 +327,8 @@ impl SidecarManager {
                         manager.sidecar_id, pid
                     );
                     // Send signal that the sidecar has stopped
-                    let expected = manager.expected_stop.swap(false, Ordering::Relaxed);
-                    let _ = manager.on_stop_tx.send(expected).await;
+                    let unexpected = !manager.expected_stop.swap(false, Ordering::Relaxed);
+                    let _ = manager.on_stop_tx.send(unexpected).await;
                 }
                 if !manager.auto_restart {
                     break;

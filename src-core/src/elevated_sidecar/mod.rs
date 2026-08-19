@@ -105,17 +105,22 @@ pub async fn handle_elevated_sidecar_start(
     {
         return Ok(());
     }
+    drop(manager_guard);
     // Create new GRPC client
-    let mut grpc_client =
-        OyasumiElevatedSidecarClient::connect(format!("http://127.0.0.1:{}", args.grpc_port))
-            .await?;
-    let _ = grpc_client
-        .set_error_reporting_enabled(tonic::Request::new(
+    let mut grpc_client = tokio::time::timeout(
+        Duration::from_secs(2),
+        OyasumiElevatedSidecarClient::connect(format!("http://127.0.0.1:{}", args.grpc_port)),
+    )
+    .await??;
+    let _ = tokio::time::timeout(
+        Duration::from_millis(500),
+        grpc_client.set_error_reporting_enabled(tonic::Request::new(
             crate::Models::elevated_sidecar::SetErrorReportingEnabledRequest {
                 enabled: ERROR_REPORTING_ENABLED.load(Ordering::Relaxed),
             },
-        ))
-        .await;
+        )),
+    )
+    .await;
     *SIDECAR_GRPC_CLIENT.lock().await = Some(grpc_client);
     send_event("ELEVATED_SIDECAR_STARTED", args.grpc_web_port).await;
     Ok(())
