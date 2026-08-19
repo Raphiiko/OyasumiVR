@@ -1,4 +1,5 @@
 import { error, info } from '@tauri-apps/plugin-log';
+import type { Notification } from 'vrchat';
 import {
   BehaviorSubject,
   distinctUntilChanged,
@@ -10,144 +11,158 @@ import {
   switchMap,
   take,
 } from 'rxjs';
-import { UserUpdateHandler } from './event-handlers/user-update-handler';
-import { NotificationHandler } from './event-handlers/notification-handler';
-import type { Notification } from 'vrchat';
-import { VRChatAuth } from './vrchat-auth';
 import { VRChatApiSettings } from 'src-ui/app/models/vrchat-api-settings';
 import { GroupMemberUpdatedHandler } from './event-handlers/group-member-updated-handler';
+import { NotificationHandler } from './event-handlers/notification-handler';
+import { UserUpdateHandler } from './event-handlers/user-update-handler';
 import { VRChatAPI } from './vrchat-api';
+import { VRChatAuth } from './vrchat-auth';
+
+const RECONNECT_INTERVAL = 10_000;
+
+export type VRChatSocketStatus = 'CLOSED' | 'OPEN' | 'OPENING';
 
 export interface VRChatEventHandler {
   type: string;
-  handle: (content: string) => void;
+  handle: (content: string) => void | Promise<void>;
+}
+
+interface VRChatPipelineMessage {
+  type: string;
+  content: string;
 }
 
 export class VRChatSocket {
-  private _status: BehaviorSubject<'CLOSED' | 'OPEN' | 'OPENING'> = new BehaviorSubject<
-    'CLOSED' | 'OPEN' | 'OPENING'
-  >('CLOSED');
-  public readonly status = this._status.asObservable();
-
+  private readonly statusSubject = new BehaviorSubject<VRChatSocketStatus>('CLOSED');
+  private readonly notificationSubject = new Subject<Notification>();
+  private readonly handlers: VRChatEventHandler[];
   private socket?: WebSocket;
-  private handlers: VRChatEventHandler[] = [];
-  private _notifications: Subject<Notification> = new Subject<Notification>();
-  public readonly notifications = this._notifications.asObservable();
+  /** Changes whenever pending socket work must be discarded. */
+  private connectionGeneration = 0;
+
+  public readonly status = this.statusSubject.asObservable();
+  public readonly notifications = this.notificationSubject.asObservable();
 
   constructor(
-    private vrchatAuth: VRChatAuth,
-    private vrchatApi: VRChatAPI,
-    private settings: Observable<VRChatApiSettings>
+    private readonly auth: VRChatAuth,
+    private readonly api: VRChatAPI,
+    private readonly settings: Observable<VRChatApiSettings>
   ) {
     this.handlers = [
-      new UserUpdateHandler(this.vrchatAuth),
-      new NotificationHandler(this.onVRChatNotification.bind(this)),
-      new GroupMemberUpdatedHandler(this.vrchatApi),
+      new UserUpdateHandler(this.auth),
+      new NotificationHandler(this.receiveNotification.bind(this)),
+      new GroupMemberUpdatedHandler(this.api),
     ];
   }
 
-  //
-  // Initialization
-  //
-
-  public async init() {
-    const buildSocket = async () => {
-      info(`[VRChat] Opening new socket connection`);
-      if (this.socket) {
-        info(`[VRChat] Closing existing socket connection`);
-        try {
-          this.socket.close();
-        } catch {
-          // Ignore any error, we just want to disconnect
-        }
-        this.socket = undefined;
-      }
-      this._status.next('OPENING');
-      const socket = new WebSocket(
-        'wss://pipeline.vrchat.cloud/?authToken=' + (await firstValueFrom(this.settings)).authCookie
-      );
-      this.socket = socket;
-      socket.onopen = () => this.onSocketEvent(socket, 'OPEN');
-      socket.onerror = () => this.onSocketEvent(socket, 'ERROR');
-      socket.onclose = () => this.onSocketEvent(socket, 'CLOSE');
-      socket.onmessage = (message) => this.onSocketEvent(socket, 'MESSAGE', message);
-    };
-    // Connect and disconnect based on login status
-    this.vrchatAuth.status.pipe(distinctUntilChanged()).subscribe((status) => {
-      switch (status) {
-        case 'LOGGED_OUT':
-          this._status.next('CLOSED');
-          if (this.socket) {
-            try {
-              this.socket.close();
-            } catch {
-              // Ignore any error, we just want to disconnect
-            }
-            this.socket = undefined;
-          }
-          break;
-        case 'LOGGED_IN':
-          buildSocket();
-          break;
+  public init(): void {
+    this.auth.status.pipe(distinctUntilChanged()).subscribe((status) => {
+      if (status === 'LOGGED_IN') {
+        void this.openSocket();
+      } else if (status === 'LOGGED_OUT') {
+        this.closeSocket();
       }
     });
-    // Check connection intermittently in case of dropouts, and rebuild the socket connection if needed
-    interval(10000)
+
+    interval(RECONNECT_INTERVAL)
       .pipe(
-        switchMap(() => this.vrchatAuth.status.pipe(take(1))),
-        filter(
-          (status) =>
-            status === 'LOGGED_IN' && !(this.socket && this.socket.readyState === WebSocket.OPEN)
-        )
+        switchMap(() => this.auth.status.pipe(take(1))),
+        filter((status) => status === 'LOGGED_IN' && !this.hasActiveSocket())
       )
-      .subscribe(() => buildSocket());
+      .subscribe(() => void this.openSocket());
   }
 
-  //
-  // Event Handling
-  //
+  private hasActiveSocket(): boolean {
+    return (
+      this.socket?.readyState === WebSocket.CONNECTING || this.socket?.readyState === WebSocket.OPEN
+    );
+  }
 
-  private async onSocketEvent(
-    socket: WebSocket,
-    event: 'OPEN' | 'CLOSE' | 'ERROR' | 'MESSAGE',
-    message?: MessageEvent
-  ) {
-    if (this.socket !== socket) return;
-    switch (event) {
-      case 'OPEN':
-        this._status.next('OPEN');
-        info(`[VRChat] Websocket connection opened`);
-        return;
-      case 'CLOSE':
-        this._status.next('CLOSED');
-        info(`[VRChat] Websocket connection closed`);
-        try {
-          this.socket?.close();
-        } finally {
-          this.socket = undefined;
-        }
-        return;
-      case 'ERROR':
-        this._status.next('CLOSED');
-        error(`[VRChat] Websocket connection error: ${JSON.stringify(message)}`);
-        try {
-          this.socket?.close();
-        } finally {
-          this.socket = undefined;
-        }
-        return;
-      case 'MESSAGE':
-        break;
+  private async openSocket(): Promise<void> {
+    if (this.hasActiveSocket() || this.statusSubject.value === 'OPENING') return;
+
+    this.closeSocket();
+    const connectionGeneration = this.connectionGeneration;
+    this.statusSubject.next('OPENING');
+    const authToken = (await firstValueFrom(this.settings)).authCookie;
+    if (connectionGeneration !== this.connectionGeneration) return;
+    if (!authToken) {
+      this.statusSubject.next('CLOSED');
+      return;
     }
-    if (event !== 'MESSAGE') return;
-    const data = JSON.parse(message?.data as string);
-    const handler = this.handlers.find((handler) => handler.type === data.type);
-    if (!handler) return;
-    handler.handle(data.content);
+
+    info('[VRChat] Opening new socket connection');
+    let socket: WebSocket;
+    try {
+      socket = new WebSocket(`wss://pipeline.vrchat.cloud/?authToken=${authToken}`);
+    } catch (cause) {
+      this.statusSubject.next('CLOSED');
+      error(`[VRChat] Failed to open websocket connection: ${cause}`);
+      return;
+    }
+    this.socket = socket;
+    socket.onopen = () => this.handleOpen(socket);
+    socket.onerror = () => this.handleError(socket);
+    socket.onclose = () => this.handleClose(socket);
+    socket.onmessage = (message) => this.handleMessage(socket, message);
   }
 
-  public async onVRChatNotification(notification: Notification) {
+  private closeSocket(): void {
+    this.connectionGeneration++;
+    const socket = this.socket;
+    this.socket = undefined;
+    this.statusSubject.next('CLOSED');
+    if (!socket) return;
+
+    info('[VRChat] Closing existing socket connection');
+    try {
+      socket.close();
+    } catch {}
+  }
+
+  private handleOpen(socket: WebSocket): void {
+    if (this.socket !== socket) return;
+    this.statusSubject.next('OPEN');
+    info('[VRChat] Websocket connection opened');
+  }
+
+  private handleClose(socket: WebSocket): void {
+    if (this.socket !== socket) return;
+    this.socket = undefined;
+    this.statusSubject.next('CLOSED');
+    info('[VRChat] Websocket connection closed');
+  }
+
+  private handleError(socket: WebSocket): void {
+    if (this.socket !== socket) return;
+    error('[VRChat] Websocket connection error');
+    this.closeSocket();
+  }
+
+  private handleMessage(socket: WebSocket, message: MessageEvent): void {
+    if (this.socket !== socket) return;
+
+    let data: VRChatPipelineMessage;
+    try {
+      data = JSON.parse(String(message.data)) as VRChatPipelineMessage;
+    } catch (cause) {
+      error(`[VRChat] Failed to parse websocket message: ${cause}`);
+      return;
+    }
+
+    const handler = this.handlers.find((candidate) => candidate.type === data.type);
+    if (!handler) return;
+    try {
+      void Promise.resolve(handler.handle(data.content)).catch((cause) =>
+        error(`[VRChat] Failed to handle websocket event '${data.type}': ${cause}`)
+      );
+    } catch (cause) {
+      error(`[VRChat] Failed to handle websocket event '${data.type}': ${cause}`);
+    }
+  }
+
+  private async receiveNotification(notification: Notification): Promise<void> {
     info(`[VRChat] Received notification: ${JSON.stringify(notification)}`);
-    this._notifications.next(notification);
+    this.notificationSubject.next(notification);
   }
 }

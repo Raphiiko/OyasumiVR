@@ -4,7 +4,7 @@ import { AutomationConfigService } from './automation-config.service';
 import { SleepService } from './sleep.service';
 import type { Notification } from 'vrchat';
 import { NotificationType, UserStatus } from '../models/vrchat';
-import { info, warn } from '@tauri-apps/plugin-log';
+import { error, info, warn } from '@tauri-apps/plugin-log';
 import { firstValueFrom } from 'rxjs';
 import { EventLogService } from './event-log.service';
 import {
@@ -37,17 +37,23 @@ export class InviteAutomationsService {
   ) {}
 
   async init() {
-    this.vrchat.notifications.subscribe(async (notification) => {
-      switch (notification.type) {
-        case NotificationType.RequestInvite:
-          await this.handleRequestInviteNotification(notification);
-          break;
-        case NotificationType.Invite:
-          await this.handleInviteNotification(notification);
-          break;
-      }
+    this.vrchat.notifications.subscribe((notification) => {
+      void this.handleNotification(notification).catch((cause) =>
+        error(`[VRChat] Failed to handle notification '${notification.id}': ${cause}`)
+      );
     });
     this.handlePlayerListPresetAutomations();
+  }
+
+  private async handleNotification(notification: Notification): Promise<void> {
+    switch (notification.type) {
+      case NotificationType.RequestInvite:
+        await this.handleRequestInviteNotification(notification);
+        break;
+      case NotificationType.Invite:
+        await this.handleInviteNotification(notification);
+        break;
+    }
   }
 
   private async handleInviteNotification(notification: Notification) {

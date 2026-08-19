@@ -31,42 +31,52 @@ type SessionRestoreResult =
 const LOGIN_MODAL_ID = 'VRCHAT_LOGIN';
 const SESSION_RESTORE_RETRY_DELAY = 60_000;
 const CURRENT_USER_RETRY_DELAY = 1_000;
+const STATUS_POLL_INTERVAL = 60_000;
+const SOCKET_UPDATE_HEALTH_WINDOW = 60 * 60_000;
+const STATUS_FRESHNESS_WINDOW = 10 * 60_000;
+
+function shouldRetryCurrentUserRequest(cause: unknown): boolean {
+  return ![
+    'INVALID_CREDENTIALS',
+    'MISSING_CREDENTIALS',
+    'CHECK_EMAIL',
+    'UNSUPPORTED_2FA_METHOD',
+    '2FA_TOTP_REQUIRED',
+    '2FA_EMAILOTP_REQUIRED',
+  ].includes(String(cause));
+}
 
 export class VRChatAuth {
-  private _status: BehaviorSubject<VRChatAuthStatus> = new BehaviorSubject<VRChatAuthStatus>(
-    'PRE_INIT'
-  );
-  public status = this._status.asObservable();
-  private _user: BehaviorSubject<CurrentUser | null> = new BehaviorSubject<CurrentUser | null>(
-    null
-  );
-  public user = this._user.asObservable();
+  private readonly statusSubject = new BehaviorSubject<VRChatAuthStatus>('PRE_INIT');
+  private readonly userSubject = new BehaviorSubject<CurrentUser | null>(null);
   private sessionRestoreRetry?: ReturnType<typeof setTimeout>;
   private sessionRestoreInFlight?: Promise<SessionRestoreResult>;
   private sessionRestoreAbortController?: AbortController;
+  /** Changes whenever pending session restoration must be discarded. */
   private sessionRestoreGeneration = 0;
-  private _userUpdateEventLastReceived = new BehaviorSubject<number>(0);
-  private _userStatusLastUpdated = new BehaviorSubject<number>(0);
+  private lastUserUpdateAt = 0;
+  private lastStatusUpdateAt = 0;
+
+  public readonly status = this.statusSubject.asObservable();
+  public readonly user = this.userSubject.asObservable();
 
   constructor(
-    private api: VRChatAPI,
-    private modalService: ModalService,
-    private updateSettings: (settings: Partial<VRChatApiSettings>) => Promise<void>,
-    private settings: Observable<VRChatApiSettings>
+    private readonly api: VRChatAPI,
+    private readonly modalService: ModalService,
+    private readonly updateSettings: (settings: Partial<VRChatApiSettings>) => Promise<void>,
+    private readonly settings: Observable<VRChatApiSettings>
   ) {}
 
-  // initialization
+  // session restoration
 
-  public async init() {
+  public async init(): Promise<void> {
     const restoreResult = await this.loadSession();
-    if (restoreResult.status === 'RESTORED') this.restoreUser(restoreResult.user);
-    const newStatus = this._user.value ? 'LOGGED_IN' : 'LOGGED_OUT';
-    if (newStatus !== this._status.value) this._status.next(newStatus);
+    if (restoreResult.status === 'RESTORED') this.setCurrentUser(restoreResult.user);
+    this.statusSubject.next(this.userSubject.value ? 'LOGGED_IN' : 'LOGGED_OUT');
     this.handleSessionRestoreResult(restoreResult);
-    this.pollUserForStatus();
-    this._user
+    this.startStatusPolling();
+    this.userSubject
       .pipe(
-        distinctUntilChanged(),
         debounceTime(500),
         distinctUntilChanged((prev, curr) => prev?.id === curr?.id)
       )
@@ -82,7 +92,7 @@ export class VRChatAuth {
   private async loadSession(signal?: AbortSignal): Promise<SessionRestoreResult> {
     if (!(await firstValueFrom(this.settings)).authCookie) return { status: 'NONE' };
     try {
-      const user = await this.api.getCurrentUser(undefined, true, signal);
+      const user = await this.api.getCurrentUser({ signal });
       info(`[VRChat] Restored existing session`);
       return { status: 'RESTORED', user };
     } catch (e) {
@@ -114,7 +124,7 @@ export class VRChatAuth {
     }
   }
 
-  private handleSessionRestoreResult(result: SessionRestoreResult) {
+  private handleSessionRestoreResult(result: SessionRestoreResult): void {
     switch (result.status) {
       case 'TWO_FACTOR_REQUIRED':
         this.showLoginModal(false, result.method);
@@ -129,12 +139,12 @@ export class VRChatAuth {
     }
   }
 
-  private scheduleSessionRestore() {
+  private scheduleSessionRestore(): void {
     if (this.sessionRestoreRetry || this.sessionRestoreInFlight) return;
     const generation = this.sessionRestoreGeneration;
     this.sessionRestoreRetry = setTimeout(async () => {
       this.sessionRestoreRetry = undefined;
-      if (this._status.value !== 'LOGGED_OUT') return;
+      if (this.statusSubject.value !== 'LOGGED_OUT') return;
       const abortController = new AbortController();
       this.sessionRestoreAbortController = abortController;
       const restore = this.loadSession(abortController.signal);
@@ -149,15 +159,15 @@ export class VRChatAuth {
       }
       if (generation !== this.sessionRestoreGeneration) return;
       if (result.status === 'RESTORED') {
-        this.restoreUser(result.user);
-        this._status.next('LOGGED_IN');
+        this.setCurrentUser(result.user);
+        this.statusSubject.next('LOGGED_IN');
         this.modalService.closeModal(LOGIN_MODAL_ID);
       }
       this.handleSessionRestoreResult(result);
     }, SESSION_RESTORE_RETRY_DELAY);
   }
 
-  private cancelSessionRestore() {
+  private cancelSessionRestore(): void {
     this.sessionRestoreGeneration++;
     clearTimeout(this.sessionRestoreRetry);
     this.sessionRestoreRetry = undefined;
@@ -165,9 +175,9 @@ export class VRChatAuth {
     this.sessionRestoreAbortController = undefined;
   }
 
-  private restoreUser(user: CurrentUser) {
-    this._user.next(user);
-    this._userStatusLastUpdated.next(Date.now());
+  private setCurrentUser(user: CurrentUser): void {
+    this.userSubject.next(user);
+    this.lastStatusUpdateAt = Date.now();
   }
 
   // authentication
@@ -176,7 +186,7 @@ export class VRChatAuth {
     autoLogin = false,
     twoFactorMethod?: VRChatTwoFactorMethod,
     initialError?: string
-  ) {
+  ): void {
     if (this.modalService.isModalOpen(LOGIN_MODAL_ID)) return;
     this.modalService
       .addModal(
@@ -191,23 +201,23 @@ export class VRChatAuth {
   }
 
   public async login(username: string, password: string): Promise<void> {
-    if (this._status.value !== 'LOGGED_OUT')
+    if (this.statusSubject.value !== 'LOGGED_OUT')
       throw new Error('Tried calling login() while already logged in');
     this.cancelSessionRestore();
     const rememberedCredentials = await this.loadCredentials();
+    // Reuse saved 2FA only for the credentials that created it.
     const reuseTwoFactorCookie =
       rememberedCredentials?.username === username && rememberedCredentials.password === password;
     await this.api.clearCaches();
-    this._user.next(
-      await this.api.getCurrentUser({ username, password }, true, undefined, reuseTwoFactorCookie)
-    );
-    this._userStatusLastUpdated.next(Date.now());
-    this._status.next('LOGGED_IN');
-    info(`[VRChat] Logged in: ${this._user.value?.displayName}`);
+    const user = await this.api.getCurrentUser({
+      credentials: { username, password },
+      includeTwoFactorCookie: reuseTwoFactorCookie,
+    });
+    this.completeLogin(user);
   }
 
-  public async verify2FA(code: string, method: VRChatTwoFactorMethod) {
-    if (this._status.value !== 'LOGGED_OUT') {
+  public async verify2FA(code: string, method: VRChatTwoFactorMethod): Promise<void> {
+    if (this.statusSubject.value !== 'LOGGED_OUT') {
       error(`[VRChat] Tried calling verify2FA() while already logged in`);
       throw new Error('Tried calling verify2FA() while already logged in');
     }
@@ -216,99 +226,85 @@ export class VRChatAuth {
     const { authCookie } = await firstValueFrom(this.settings);
     if (!authCookie) throw new Error('Called verify2FA() before successfully calling login()');
     await this.api.verify2FA(code, method);
-    this._user.next(await this.getCurrentUserAfter2FA());
-    this._userStatusLastUpdated.next(Date.now());
-    this._status.next('LOGGED_IN');
-    info(`[VRChat] Logged in: ${this._user.value?.displayName}`);
+    this.completeLogin(await this.getCurrentUserAfter2FA());
   }
 
-  public async logout() {
+  public async logout(): Promise<void> {
     this.cancelSessionRestore();
     await this.api.clearCaches();
     await this.updateSettings({
-      authCookie: undefined,
-      authCookieExpiry: undefined,
-      twoFactorCookie: undefined,
-      twoFactorCookieExpiry: undefined,
+      authCookie: null,
+      authCookieExpiry: null,
+      twoFactorCookie: null,
+      twoFactorCookieExpiry: null,
     });
-    this._user.next(null);
-    this._status.next('LOGGED_OUT');
+    this.userSubject.next(null);
+    this.statusSubject.next('LOGGED_OUT');
     info(`[VRChat] Logged out`);
+  }
+
+  private completeLogin(user: CurrentUser): void {
+    this.setCurrentUser(user);
+    this.statusSubject.next('LOGGED_IN');
+    info(`[VRChat] Logged in: ${user.displayName}`);
   }
 
   private async getCurrentUserAfter2FA(): Promise<CurrentUser> {
     try {
-      return await this.api.getCurrentUser(undefined, true);
-    } catch (e) {
-      if (
-        e === 'INVALID_CREDENTIALS' ||
-        e === 'MISSING_CREDENTIALS' ||
-        e === 'CHECK_EMAIL' ||
-        e === 'UNSUPPORTED_2FA_METHOD' ||
-        e === '2FA_TOTP_REQUIRED' ||
-        e === '2FA_EMAILOTP_REQUIRED'
-      ) {
-        throw e;
-      }
+      return await this.api.getCurrentUser();
+    } catch (cause) {
+      if (!shouldRetryCurrentUserRequest(cause)) throw cause;
       await new Promise((resolve) => setTimeout(resolve, CURRENT_USER_RETRY_DELAY));
-      return await this.api.getCurrentUser(undefined, true);
+      return await this.api.getCurrentUser();
     }
   }
 
   // user state
 
-  public patchCurrentUser(user: Partial<CurrentUser>) {
-    const currentUser = structuredClone(this._user.value);
+  public patchCurrentUser(user: Partial<CurrentUser>): void {
+    const currentUser = structuredClone(this.userSubject.value);
     if (!currentUser) return;
     Object.assign(currentUser, user);
-    this._user.next(currentUser);
-    if (user.status) this._userStatusLastUpdated.next(Date.now());
+    this.userSubject.next(currentUser);
+    if (user.status) this.lastStatusUpdateAt = Date.now();
   }
 
-  public receivedUserUpdate(user: Partial<CurrentUser>) {
+  /** Marks socket updates as healthy so status polling can stand down. */
+  public receivedUserUpdate(user: Partial<CurrentUser>): void {
     this.patchCurrentUser(user);
-    // We keep track of when the last `user-update` socket event was received
-    // because if we received these, we know we don't have to poll.
-    // There are some cases where users don't receive these events, in which case we need to poll.
-    // If we receive at least one, we know these events are working and we can disable polling.
-    this._userUpdateEventLastReceived.next(Date.now());
+    this.lastUserUpdateAt = Date.now();
   }
 
-  private pollUserForStatus() {
-    interval(60000).subscribe(async () => {
-      if (this._status.value !== 'LOGGED_IN') return;
-      // Poll for user updates if we don't receive any from socket
+  private startStatusPolling(): void {
+    interval(STATUS_POLL_INTERVAL).subscribe(async () => {
+      if (this.statusSubject.value !== 'LOGGED_IN') return;
       const needsPolling =
-        Date.now() - this._userUpdateEventLastReceived.value > 60 * 60 * 1000 && // 1 hour
-        Date.now() - this._userStatusLastUpdated.value > 10 * 60 * 1000; // 10 minutes
+        Date.now() - this.lastUserUpdateAt > SOCKET_UPDATE_HEALTH_WINDOW &&
+        Date.now() - this.lastStatusUpdateAt > STATUS_FRESHNESS_WINDOW;
       if (!needsPolling) return;
       try {
-        // Try poll user
         const result = await this.api.pollCurrentUser();
-        if (result.error === null && result.result) {
-          this.patchCurrentUser(result.result);
-        }
+        if (result.error) throw result.error;
+        if (result.result) this.patchCurrentUser(result.result);
       } catch (e) {
         error(`[VRChat] Error polling user: ${JSON.stringify(e)}`);
       }
     });
   }
 
-  // credentials
+  // remembered credentials
 
-  public async rememberCredentials(username: string, password: string) {
+  public async rememberCredentials(username: string, password: string): Promise<void> {
     const credentialCryptoKey = (await firstValueFrom(this.settings)).credentialCryptoKey;
     if (!credentialCryptoKey) return;
-    // Obtain the storage crypto key
     let key: CryptoKey;
     try {
       key = await deserializeStorageCryptoKey(credentialCryptoKey);
     } catch (e) {
       error('[VRChat] Failed to deserialize storage crypto key: ' + JSON.stringify(e));
-      this.cycleCredentialCryptoKey();
+      await this.cycleCredentialCryptoKey();
       return;
     }
-    // Store credentials
     const credentials = btoa(username) + ':' + btoa(password);
     const encryptedCredentials = await encryptStorageData(credentials, key);
     await this.updateSettings({
@@ -317,7 +313,7 @@ export class VRChatAuth {
     });
   }
 
-  public async forgetCredentials() {
+  public async forgetCredentials(): Promise<void> {
     await this.updateSettings({
       rememberedCredentials: null,
       rememberCredentials: false,
@@ -327,16 +323,14 @@ export class VRChatAuth {
   public async loadCredentials(): Promise<{ username: string; password: string } | null> {
     const { credentialCryptoKey, rememberedCredentials } = await firstValueFrom(this.settings);
     if (!credentialCryptoKey || !rememberedCredentials) return null;
-    // Obtain the storage crypto key
     let key: CryptoKey;
     try {
       key = await deserializeStorageCryptoKey(credentialCryptoKey);
     } catch (e) {
       error('[VRChat] Failed to deserialize storage crypto key: ' + JSON.stringify(e));
-      this.cycleCredentialCryptoKey();
+      await this.cycleCredentialCryptoKey();
       return null;
     }
-    // Decrypt credentials
     let credentials: string;
     try {
       credentials = await decryptStorageData(rememberedCredentials, key);
@@ -344,12 +338,12 @@ export class VRChatAuth {
       return { username, password };
     } catch (e) {
       error('[VRChat] Failed to decrypt remembered credentials: ' + JSON.stringify(e));
-      this.cycleCredentialCryptoKey();
+      await this.cycleCredentialCryptoKey();
       return null;
     }
   }
 
-  private async cycleCredentialCryptoKey() {
+  private async cycleCredentialCryptoKey(): Promise<void> {
     info('[VRChat] Cycling the storage crypto key');
     await this.updateSettings({
       rememberedCredentials: null,

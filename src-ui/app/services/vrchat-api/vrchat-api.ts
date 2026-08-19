@@ -8,11 +8,11 @@ import type { CurrentUser, InviteMessage, LimitedUserFriend, LimitedUserGroups }
 import { CachedValue } from 'src-ui/app/utils/cached-value';
 import { AvatarEx, InviteMessageEx, InviteMessageType, UserStatus } from 'src-ui/app/models/vrchat';
 import { uniqBy } from 'lodash';
-import { BehaviorSubject, firstValueFrom, map, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, firstValueFrom, Observable } from 'rxjs';
 import { VRChatApiSettings } from 'src-ui/app/models/vrchat-api-settings';
 import { CompletionResult } from 'src-ui/app/utils/completer';
 
-async function fetch(
+async function requestVRChat(
   input: URL | Request | string,
   init?: RequestInit & ClientOptions
 ): Promise<Response> {
@@ -32,10 +32,55 @@ const BASE_URL = 'https://api.vrchat.cloud/api/1';
 const MAX_VRCHAT_FRIENDS = 65536;
 const MAX_FAVOURITE_AVATARS = 500;
 const MAX_UPLOADED_AVATARS = 1000;
+const RESOURCE_CACHE_TTL = 60 * 60_000;
+const PAGE_SIZE = 100;
+const DEFAULT_PAGE_LIMIT = 500;
+const DEFAULT_RATE_LIMIT_RETRIES = 5;
+const DEFAULT_RATE_LIMIT_DELAY = 5_000;
 
 export const VRCHAT_API_STALE_REQUEST = 'STALE_REQUEST';
 
 export type VRChatTwoFactorMethod = 'totp' | 'emailotp';
+
+export interface VRChatCredentials {
+  username: string;
+  password: string;
+}
+
+interface CurrentUserRequestOptions {
+  credentials?: VRChatCredentials;
+  signal?: AbortSignal;
+  includeTwoFactorCookie?: boolean;
+}
+
+interface CurrentUserChallenge {
+  requiresTwoFactorAuth: string[];
+}
+
+interface CurrentUserErrorResponse {
+  error?: { message?: string };
+}
+
+interface VerifyTwoFactorResponse {
+  verified?: boolean;
+}
+
+interface RequestHeaderOptions {
+  contentType?: string;
+  includeAuthCookie?: boolean;
+  includeTwoFactorCookie?: boolean;
+}
+
+interface PaginatedRequestOptions {
+  url: string;
+  apiCallTypeId: string;
+  query?: Record<string, string>;
+  maxEntries?: number;
+  rateLimit?: {
+    maxRetries?: number;
+    delay?: number;
+  };
+}
 
 export function twoFactorMethodFromError(error: unknown): VRChatTwoFactorMethod | undefined {
   switch (error) {
@@ -50,10 +95,13 @@ export function twoFactorMethodFromError(error: unknown): VRChatTwoFactorMethod 
 
 export class VRChatAPI {
   private userAgent!: string;
+  /** Changes whenever session-bound results must be discarded. */
   private cacheGeneration = 0;
-  private cacheClearsInFlight = 0;
-  private pendingWrites = new Set<Promise<unknown>>();
-  private apiCallQueue: TaskQueue = new TaskQueue({
+  /** Blocks socket cache updates while persisted caches are being cleared. */
+  private activeCacheClears = 0;
+  /** Writes that must settle before a cache clear can finish. */
+  private readonly pendingPersistenceWrites = new Set<Promise<unknown>>();
+  private readonly apiCallQueue = new TaskQueue({
     rateLimiter: {
       totalPerMinute: 15,
       typePerMinute: {
@@ -73,111 +121,109 @@ export class VRChatAPI {
       },
     },
   });
-  private _friendFetcher = new BehaviorSubject<Observable<'SUCCESS' | 'FAILED'> | null>(null);
-  private _avatarFetcher = new BehaviorSubject<Observable<'SUCCESS' | 'FAILED'> | null>(null);
-  private _currentUserCache: CachedValue<CurrentUser> = new CachedValue<CurrentUser>(
+  private readonly fetchingFriendsSubject = new BehaviorSubject(false);
+  private friendFetch?: Promise<LimitedUserFriend[]>;
+  private avatarFetch?: Promise<AvatarEx[]>;
+  private readonly friendsCache = new CachedValue<LimitedUserFriend[]>(
     undefined,
-    5 * 60 * 1000, // Cache for 5 minutes
-    'VRCHAT_CURRENT_USER'
-  );
-  private _friendsCache: CachedValue<LimitedUserFriend[]> = new CachedValue<LimitedUserFriend[]>(
-    undefined,
-    60 * 60 * 1000, // Cache for 1 hour
+    RESOURCE_CACHE_TTL,
     'VRCHAT_FRIENDS'
   );
-  private _groupsCache: CachedValue<LimitedUserGroups[]> = new CachedValue<LimitedUserGroups[]>(
+  private readonly groupsCache = new CachedValue<LimitedUserGroups[]>(
     undefined,
-    60 * 60 * 1000, // Cache for 1 hour
+    RESOURCE_CACHE_TTL,
     'VRCHAT_GROUPS'
   );
-  private _avatarCache: CachedValue<AvatarEx[]> = new CachedValue<AvatarEx[]>(
+  private readonly avatarCache = new CachedValue<AvatarEx[]>(
     undefined,
-    60 * 60 * 1000, // Cache for 1 hour
+    RESOURCE_CACHE_TTL,
     'VRCHAT_AVATARS'
   );
-  private _inviteMessageCaches: Record<InviteMessageType, CachedValue<InviteMessageEx[]>> = {
-    [InviteMessageType.Message]: new CachedValue<InviteMessageEx[]>(
-      undefined,
-      60 * 60 * 1000, // Cache for 1 hour
-      'VRCHAT_INVITE_MESSAGE'
-    ),
-    [InviteMessageType.Response]: new CachedValue<InviteMessageEx[]>(
-      undefined,
-      60 * 60 * 1000, // Cache for 1 hour
-      'VRCHAT_INVITE_MESSAGE_RESPONSE'
-    ),
-    [InviteMessageType.Request]: new CachedValue<InviteMessageEx[]>(
-      undefined,
-      60 * 60 * 1000, // Cache for 1 hour
-      'VRCHAT_INVITE_MESSAGE_REQUEST'
-    ),
-    [InviteMessageType.RequestResponse]: new CachedValue<InviteMessageEx[]>(
-      undefined,
-      60 * 60 * 1000, // Cache for 1 hour
-      'VRCHAT_INVITE_MESSAGE_REQUEST_RESPONSE'
-    ),
-  };
+  private readonly inviteMessageCaches: Record<InviteMessageType, CachedValue<InviteMessageEx[]>> =
+    {
+      [InviteMessageType.Message]: new CachedValue<InviteMessageEx[]>(
+        undefined,
+        RESOURCE_CACHE_TTL,
+        'VRCHAT_INVITE_MESSAGE'
+      ),
+      [InviteMessageType.Response]: new CachedValue<InviteMessageEx[]>(
+        undefined,
+        RESOURCE_CACHE_TTL,
+        'VRCHAT_INVITE_MESSAGE_RESPONSE'
+      ),
+      [InviteMessageType.Request]: new CachedValue<InviteMessageEx[]>(
+        undefined,
+        RESOURCE_CACHE_TTL,
+        'VRCHAT_INVITE_MESSAGE_REQUEST'
+      ),
+      [InviteMessageType.RequestResponse]: new CachedValue<InviteMessageEx[]>(
+        undefined,
+        RESOURCE_CACHE_TTL,
+        'VRCHAT_INVITE_MESSAGE_REQUEST_RESPONSE'
+      ),
+    };
 
-  public isFetchingFriends = this._friendFetcher.asObservable().pipe(map(Boolean));
+  public readonly isFetchingFriends = this.fetchingFriendsSubject
+    .asObservable()
+    .pipe(distinctUntilChanged());
 
   private user!: Observable<CurrentUser | null>;
   private patchCurrentUser!: (user: Partial<CurrentUser>) => void;
 
   constructor(
-    private settings: Observable<VRChatApiSettings>,
-    private updateSettings: (settings: Partial<VRChatApiSettings>) => Promise<void>
+    private readonly settings: Observable<VRChatApiSettings>,
+    private readonly updateSettings: (settings: Partial<VRChatApiSettings>) => Promise<void>
   ) {}
 
   public async init(
     user: Observable<CurrentUser | null>,
     patchCurrentUser: (user: Partial<CurrentUser>) => void
-  ) {
+  ): Promise<void> {
     this.userAgent = `OyasumiVR/${await getVersion()} (https://github.com/Raphiiko/OyasumiVR)`;
     this.user = user;
     this.patchCurrentUser = patchCurrentUser;
   }
 
-  public async clearCaches() {
+  public async clearCaches(): Promise<void> {
     this.cacheGeneration++;
-    this.cacheClearsInFlight++;
-    this._friendFetcher.next(null);
-    this._avatarFetcher.next(null);
+    this.activeCacheClears++;
+    this.friendFetch = undefined;
+    this.avatarFetch = undefined;
+    this.fetchingFriendsSubject.next(false);
     try {
-      while (this.pendingWrites.size) await Promise.allSettled([...this.pendingWrites]);
+      while (this.pendingPersistenceWrites.size) {
+        await Promise.allSettled([...this.pendingPersistenceWrites]);
+      }
       const results = await Promise.allSettled(
         [
-          this._currentUserCache,
-          this._friendsCache,
-          this._avatarCache,
-          this._groupsCache,
-          ...Object.values(this._inviteMessageCaches),
-        ].map(async (cache) => await cache.clear())
+          this.friendsCache,
+          this.avatarCache,
+          this.groupsCache,
+          ...Object.values(this.inviteMessageCaches),
+        ].map((cache) => cache.clear())
       );
       for (const result of results) {
         if (result.status === 'rejected') error(`[VRChat] Failed to clear cache: ${result.reason}`);
       }
     } finally {
-      this.cacheClearsInFlight--;
+      this.activeCacheClears--;
     }
   }
 
-  async setStatus(status: UserStatus | null, statusMessage: string | null): Promise<boolean> {
-    // Throw if we don't have a current user
-    const userId = (await firstValueFrom(this.user))?.id;
-    if (!userId) {
-      error(`[VRChat] Tried setting status while not logged in`);
-      throw new Error('Tried setting status while not logged in');
-    }
-    // Sanitize status message if needed
+  // authentication and user state
+
+  public async setStatus(
+    status: UserStatus | null,
+    statusMessage: string | null
+  ): Promise<boolean> {
+    const currentUser = await this.requireCurrentUser('setting status');
     statusMessage =
       statusMessage === null ? null : statusMessage.replace(/\s+/g, ' ').trim().slice(0, 32);
-    const statusChange = status !== null && (await firstValueFrom(this.user))?.status !== status;
+    const statusChange = status !== null && currentUser.status !== status;
     const statusMessageChange =
-      statusMessage !== null &&
-      (await firstValueFrom(this.user))?.statusDescription !== statusMessage;
-    // Don't do anything if there would be no changes
+      statusMessage !== null && currentUser.statusDescription !== statusMessage;
     if (!statusChange && !statusMessageChange) return false;
-    // Log status change
+
     if (status !== null && statusMessage !== null) {
       info(`[VRChat] Changing status to '${statusMessage}' ('${status}')`);
     } else if (status !== null) {
@@ -185,7 +231,6 @@ export class VRChatAPI {
     } else if (statusMessage !== null) {
       info(`[VRChat] Changing status message to '${statusMessage}'`);
     }
-    // Send status change request
     try {
       const body: Record<string, string> = {};
       if (status !== null) body['status'] = status;
@@ -194,7 +239,7 @@ export class VRChatAPI {
         {
           typeId: 'STATUS_CHANGE',
           runnable: async () => {
-            return fetch(`${BASE_URL}/users/${userId}`, {
+            return requestVRChat(`${BASE_URL}/users/${currentUser.id}`, {
               method: 'PUT',
               body: JSON.stringify(body),
               headers: await this.getDefaultHeaders(),
@@ -203,9 +248,8 @@ export class VRChatAPI {
         },
         true
       );
-      if (result.result && result.result.ok) this.patchCurrentUser(body);
-      if (result.error) throw result.error;
-      if (!result.result?.ok) throw result.result;
+      this.requireSuccessfulResponse(result);
+      this.patchCurrentUser(body);
     } catch (e) {
       error(`[VRChat] Failed to update status: ${JSON.stringify(e)}`);
       return false;
@@ -213,15 +257,17 @@ export class VRChatAPI {
     return true;
   }
 
-  public async verify2FA(code: string, method: VRChatTwoFactorMethod) {
+  public async verify2FA(code: string, method: VRChatTwoFactorMethod): Promise<void> {
     const cacheGeneration = this.cacheGeneration;
     const headers = await this.getDefaultHeaders();
-    const response = await fetch(`${BASE_URL}/auth/twofactorauth/${method}/verify`, {
+    const response = await requestVRChat(`${BASE_URL}/auth/twofactorauth/${method}/verify`, {
       method: 'POST',
       body: JSON.stringify({ code }),
       headers,
     });
-    const responseData = await response.json().catch(() => {});
+    const responseData: VerifyTwoFactorResponse | undefined = await response
+      .json()
+      .catch(() => undefined);
     if (responseData?.verified === false) {
       warn(`[VRChat] 2FA Verification failed: Invalid code`);
       throw 'INVALID_CODE';
@@ -238,40 +284,28 @@ export class VRChatAPI {
     await this.parseResponseCookies(response, cacheGeneration);
   }
 
-  public async getCurrentUser(
-    credentials?: {
-      username: string;
-      password: string;
-    },
-    force = false,
-    signal?: AbortSignal,
-    includeTwoFactorCookie = !credentials
-  ): Promise<CurrentUser> {
+  public async getCurrentUser(options: CurrentUserRequestOptions = {}): Promise<CurrentUser> {
+    const { credentials, signal } = options;
+    const includeTwoFactorCookie = options.includeTwoFactorCookie ?? !credentials;
     const cacheGeneration = this.cacheGeneration;
-    const headers: Record<string, string> = {
-      ...(await this.getDefaultHeaders('application/json', !credentials, includeTwoFactorCookie)),
-    };
+    const headers = await this.getDefaultHeaders({
+      includeAuthCookie: !credentials,
+      includeTwoFactorCookie,
+    });
     if (credentials) {
-      force = true;
       headers['Authorization'] = `Basic ${btoa(
         encodeURIComponent(credentials.username) + ':' + encodeURIComponent(credentials.password)
       )}`;
     }
-    if (!force) {
-      const user = this._currentUserCache.get();
-      if (user) {
-        info(`[VRChat] Loaded user from cache`);
-        return user;
-      }
-    }
-    const response = await fetch(`${BASE_URL}/auth/user`, {
+    const response = await requestVRChat(`${BASE_URL}/auth/user`, {
       headers,
       signal,
     });
-    const responseData: CurrentUser | { requiresTwoFactorAuth: string[] } | undefined =
-      await response.json().catch(() => {});
+    const responseData: CurrentUser | CurrentUserChallenge | CurrentUserErrorResponse | undefined =
+      await response.json().catch(() => undefined);
     if (response.status === 401) {
-      const message: string = (responseData as any)?.error?.message ?? '';
+      const message =
+        responseData && 'error' in responseData ? (responseData.error?.message ?? '') : '';
       switch (message) {
         case '"It looks like you\'re logging in from somewhere new! Check your email for a message from VRChat."':
           error(`[VRChat] Login failed: Check email`);
@@ -297,51 +331,49 @@ export class VRChatAPI {
     this.ensureCacheGeneration(cacheGeneration);
     await this.parseResponseCookies(response, cacheGeneration);
     if ('requiresTwoFactorAuth' in responseData) {
-      const data = responseData as { requiresTwoFactorAuth: string[] };
-      if (!Array.isArray(data.requiresTwoFactorAuth)) {
+      if (!Array.isArray(responseData.requiresTwoFactorAuth)) {
         error(`[VRChat] Received invalid 2FA challenge from /auth/user`);
         throw 'UNEXPECTED_RESPONSE';
       }
-      const methods = data.requiresTwoFactorAuth.map((method) => String(method).toLowerCase());
+      const methods = responseData.requiresTwoFactorAuth.map((method) =>
+        String(method).toLowerCase()
+      );
       info(
-        `[VRChat] 2FA Required for login. (methods=${JSON.stringify(data.requiresTwoFactorAuth)})`
+        `[VRChat] 2FA Required for login. (methods=${JSON.stringify(responseData.requiresTwoFactorAuth)})`
       );
       if (methods.includes('totp')) throw '2FA_TOTP_REQUIRED';
       if (methods.includes('emailotp')) throw '2FA_EMAILOTP_REQUIRED';
       error(
         '[VRChat] 2FA Required for login, but no supported method found. Available methods: ' +
-          JSON.stringify(data.requiresTwoFactorAuth)
+          JSON.stringify(responseData.requiresTwoFactorAuth)
       );
       throw 'UNSUPPORTED_2FA_METHOD';
     }
+    if (!('id' in responseData) || typeof responseData.id !== 'string') {
+      error(`[VRChat] Received invalid user from /auth/user`);
+      throw 'UNEXPECTED_RESPONSE';
+    }
     const user = responseData as CurrentUser;
-    this.ensureCacheGeneration(cacheGeneration);
-    await this.setCache(this._currentUserCache, user);
     this.ensureCacheGeneration(cacheGeneration);
     return user;
   }
 
-  public async deleteNotification(notificationId: string) {
-    // Throw if we don't have a current user
-    const userId = (await firstValueFrom(this.user))?.id;
-    if (!userId) {
-      error('[VRChat] Tried deleting a notification while not logged in');
-      throw new Error('Tried deleting a notification while not logged in');
-    }
-    // Send
-    info(`[VRChat] Deleting notification 'notificationId'`);
+  // notifications and invites
+
+  public async deleteNotification(notificationId: string): Promise<void> {
+    await this.requireCurrentUser('deleting a notification');
+    info(`[VRChat] Deleting notification '${notificationId}'`);
     try {
       const result = await this.apiCallQueue.queueTask<Response>({
         typeId: 'DELETE_NOTIFICATION',
         runnable: async () => {
-          return fetch(`${BASE_URL}/auth/user/notifications/${notificationId}/hide`, {
+          return requestVRChat(`${BASE_URL}/auth/user/notifications/${notificationId}/hide`, {
             method: 'PUT',
             headers: await this.getDefaultHeaders(),
           });
         },
       });
-      if (result.error) throw result.error;
-      if (!result.result?.ok) throw result.result;
+      this.requireSuccessfulResponse(result);
     } catch (e) {
       error(`[VRChat] Failed to delete notification: ${JSON.stringify(e)}`);
     }
@@ -351,14 +383,8 @@ export class VRChatAPI {
     notificationId: string,
     notificationType: 'invite' | 'requestInvite',
     message: string
-  ) {
-    // Throw if we don't have a current user
-    const userId = (await firstValueFrom(this.user))?.id;
-    if (!userId) {
-      error('[VRChat] Tried declining an invite or invite request while not logged in');
-      throw new Error('Tried declining an invite or invite request while not logged in');
-    }
-    // Get the message slot if provided
+  ): Promise<void> {
+    await this.requireCurrentUser('declining an invite or invite request');
     let messageSlot: number | undefined;
     if (message) {
       const messageEx = await this.ensureInviteMessage(
@@ -371,33 +397,25 @@ export class VRChatAPI {
       if (messageEx) messageSlot = messageEx.slot;
       else error(`[VRChat] Sending invite without message, failed to allocate message slot.`);
     }
-    // Send the message
     try {
       const result = await this.apiCallQueue.queueTask<Response>({
         typeId: 'DECLINE_INVITE_OR_INVITE_REQUEST',
         runnable: async () => {
-          return await fetch(`${BASE_URL}/invite/${notificationId}/response`, {
+          return requestVRChat(`${BASE_URL}/invite/${notificationId}/response`, {
             method: 'POST',
             headers: await this.getDefaultHeaders(),
             body: JSON.stringify({ responseSlot: messageSlot }),
           });
         },
       });
-      if (result.error) throw result.error;
-      if (!result.result?.ok) throw result.result;
+      this.requireSuccessfulResponse(result);
     } catch (e) {
-      error(`[VRChat] Failed to delete notification: ${JSON.stringify(e)}`);
+      error(`[VRChat] Failed to decline invite or invite request: ${JSON.stringify(e)}`);
     }
   }
 
-  public async inviteUser(inviteeId: string, instanceId: string, message?: string) {
-    // Throw if we don't have a current user
-    const userId = (await firstValueFrom(this.user))?.id;
-    if (!userId) {
-      error('[VRChat] Tried inviting a user while not logged in');
-      throw new Error('Tried inviting a user while not logged in');
-    }
-    // Get the message slot if provided
+  public async inviteUser(inviteeId: string, instanceId: string, message?: string): Promise<void> {
+    await this.requireCurrentUser('inviting a user');
     let messageSlot: number | undefined;
     if (message) {
       const messageEx = await this.ensureInviteMessage('message', message).catch((e) => {
@@ -407,18 +425,18 @@ export class VRChatAPI {
       if (messageEx) messageSlot = messageEx.slot;
       else error(`[VRChat] Sending invite without message, failed to allocate message slot.`);
     }
-    // Send
     try {
-      await this.apiCallQueue.queueTask<Response>({
+      const result = await this.apiCallQueue.queueTask<Response>({
         typeId: 'INVITE',
         runnable: async () => {
-          return fetch(`${BASE_URL}/invite/${inviteeId}`, {
+          return requestVRChat(`${BASE_URL}/invite/${inviteeId}`, {
             body: JSON.stringify({ instanceId, messageSlot }),
             method: 'POST',
             headers: await this.getDefaultHeaders(),
           });
         },
       });
+      this.requireSuccessfulResponse(result);
     } catch (e) {
       error(`[VRChat] Failed to invite user: ${JSON.stringify(e)}`);
       throw e;
@@ -430,107 +448,55 @@ export class VRChatAPI {
     message: string
   ): Promise<InviteMessageEx | null> {
     const cacheGeneration = this.cacheGeneration;
-    const userId = (await firstValueFrom(this.user))?.id;
-    if (!userId) {
-      error('[VRChat] Tried ensuring an invite message while not logged in');
-      throw new Error('Tried ensuring an invite message while not logged in');
-    }
+    const userId = (await this.requireCurrentUser('ensuring an invite message')).id;
     this.ensureCacheGeneration(cacheGeneration);
     message = message.trim().replace(/\s+/g, ' ').slice(0, 64);
-    // load message slots
-    const cache = this._inviteMessageCaches[type];
-    let messages: InviteMessageEx[] | undefined = cache.get();
-    if (!messages) {
-      const result = await this.apiCallQueue.queueTask<Response>({
-        typeId: 'LIST_INVITE_MESSAGES',
-        runnable: async () => {
-          this.ensureCacheGeneration(cacheGeneration);
-          return await fetch(`${BASE_URL}/message/${userId}/${type}`, {
-            headers: await this.getDefaultHeaders(),
-          });
-        },
-      });
-      if (result.error) throw result.error;
-      if (!result.result?.ok) throw result.result;
-      const data = await result.result.json();
-      this.ensureCacheGeneration(cacheGeneration);
-      messages = data.map(
-        (message: InviteMessage) =>
-          ({
-            type: message.messageType,
-            slot: message.slot,
-            message: message.message,
-            canUpdateAtTimeStamp:
-              Date.now() + Math.max(0, message.remainingCooldownMinutes * 60 * 1000),
-          }) as InviteMessageEx
-      );
-      if (cacheGeneration === this.cacheGeneration) {
-        await this.setCache(cache, messages!);
-        this.ensureCacheGeneration(cacheGeneration);
-      }
-    }
-    let slot = messages!.find((m) => m.message === message);
-    if (slot) return slot;
-    // find a reusable slot
-    messages!.sort((a, b) => b.slot - a.slot);
-    slot = messages!.find((m) => Date.now() >= m.canUpdateAtTimeStamp);
-    if (!slot) return null;
-    // update the slot
-    const result = await this.apiCallQueue.queueTask<Response>({
-      typeId: 'UPDATE_INVITE_MESSAGE',
-      runnable: async () => {
-        this.ensureCacheGeneration(cacheGeneration);
-        return await fetch(`${BASE_URL}/message/${userId}/${type}/${slot.slot}`, {
-          method: 'PUT',
-          headers: await this.getDefaultHeaders(),
-          body: JSON.stringify({ message }),
-        });
-      },
-    });
-    if (result.error) throw result.error;
-    if (!result.result?.ok) throw result.result;
-    const data = await result.result.json();
-    this.ensureCacheGeneration(cacheGeneration);
-    messages = data.map(
-      (message: InviteMessage) =>
-        ({
-          type: message.messageType,
-          slot: message.slot,
-          message: message.message,
-          canUpdateAtTimeStamp:
-            Date.now() + Math.max(0, message.remainingCooldownMinutes * 60 * 1000),
-        }) as InviteMessageEx
-    );
-    if (cacheGeneration === this.cacheGeneration) {
-      await this.setCache(cache, messages!);
-      this.ensureCacheGeneration(cacheGeneration);
-    }
+    const cache = this.inviteMessageCaches[type];
+    let messages = cache.get() ?? (await this.loadInviteMessages(userId, type, cacheGeneration));
+    const existingMessage = messages.find((entry) => entry.message === message);
+    if (existingMessage) return existingMessage;
 
-    return messages?.find((m) => m.slot === slot.slot) ?? null;
+    const slot = [...messages]
+      .sort((a, b) => b.slot - a.slot)
+      .find((entry) => Date.now() >= entry.canUpdateAtTimeStamp);
+    if (!slot) return null;
+
+    messages = await this.updateInviteMessage(userId, type, slot.slot, message, cacheGeneration);
+    return messages.find((entry) => entry.slot === slot.slot) ?? null;
   }
+
+  // friends, groups, and avatars
 
   public async listFriends(force = false): Promise<LimitedUserFriend[]> {
     const cacheGeneration = this.cacheGeneration;
     if (!force) {
-      const cachedFriends = this._friendsCache.get();
+      const cachedFriends = this.friendsCache.get();
       if (cachedFriends) return cachedFriends;
     }
-    const userId = (await firstValueFrom(this.user))?.id;
-    if (!userId) {
-      error('[VRChat] Tried listing friends while not logged in');
-      throw new Error('Tried listing friends while not logged in');
-    }
+    await this.requireCurrentUser('listing friends');
     this.ensureCacheGeneration(cacheGeneration);
-    if (this._friendFetcher.value) {
-      await firstValueFrom(this._friendFetcher.value);
+    if (this.friendFetch) {
+      await this.friendFetch;
       this.ensureCacheGeneration(cacheGeneration);
-      return this._friendsCache.get() ?? [];
+      return this.friendsCache.get() ?? [];
     }
-    const friendFetchCompletion = new Subject<'SUCCESS' | 'FAILED'>();
-    const friendFetch = friendFetchCompletion.asObservable();
-    this._friendFetcher.next(friendFetch);
+
+    const friendFetch = this.fetchFriends(cacheGeneration);
+    this.friendFetch = friendFetch;
+    this.fetchingFriendsSubject.next(true);
+    try {
+      return await friendFetch;
+    } finally {
+      if (this.friendFetch === friendFetch) {
+        this.friendFetch = undefined;
+        this.fetchingFriendsSubject.next(false);
+      }
+    }
+  }
+
+  private async fetchFriends(cacheGeneration: number): Promise<LimitedUserFriend[]> {
     const friends: LimitedUserFriend[] = [];
-    let fetchResult: 'SUCCESS' | 'FAILED' = 'FAILED';
+    let complete = false;
     try {
       for (const offline of ['false', 'true']) {
         const response = await this.fetchPaginatedData<LimitedUserFriend>(
@@ -544,42 +510,28 @@ export class VRChatAPI {
           },
           cacheGeneration
         );
-        fetchResult = 'SUCCESS';
         friends.push(...response);
       }
-    } catch (e) {
-      error('[VRChat] Failed to list friends: ' + JSON.stringify(e));
-      fetchResult = 'FAILED';
+      complete = true;
+    } catch (cause) {
+      error('[VRChat] Failed to list friends: ' + JSON.stringify(cause));
     }
-    if (cacheGeneration !== this.cacheGeneration) {
-      friendFetchCompletion.next('FAILED');
-      if (this._friendFetcher.value === friendFetch) this._friendFetcher.next(null);
-      throw VRCHAT_API_STALE_REQUEST;
+
+    this.ensureCacheGeneration(cacheGeneration);
+    if (complete) {
+      await this.setCache(this.friendsCache, friends);
+      this.ensureCacheGeneration(cacheGeneration);
     }
-    if (fetchResult === 'SUCCESS' && cacheGeneration === this.cacheGeneration) {
-      await this.setCache(this._friendsCache, friends);
-    }
-    if (cacheGeneration !== this.cacheGeneration) {
-      friendFetchCompletion.next('FAILED');
-      if (this._friendFetcher.value === friendFetch) this._friendFetcher.next(null);
-      throw VRCHAT_API_STALE_REQUEST;
-    }
-    friendFetchCompletion.next(fetchResult);
-    if (this._friendFetcher.value === friendFetch) this._friendFetcher.next(null);
     return friends;
   }
 
-  public async representGroup(groupId: string, representing: boolean) {
-    const userId = (await firstValueFrom(this.user))?.id;
-    if (!userId) {
-      error('[VRChat] Tried representing a group while not logged in');
-      throw new Error('Tried representing a group while not logged in');
-    }
+  public async representGroup(groupId: string, representing: boolean): Promise<void> {
+    await this.requireCurrentUser('representing a group');
 
-    await this.apiCallQueue.queueTask({
+    const result = await this.apiCallQueue.queueTask<Response>({
       typeId: 'REPRESENT_GROUP',
       runnable: async () => {
-        return fetch(`${BASE_URL}/groups/${groupId}/representation`, {
+        return requestVRChat(`${BASE_URL}/groups/${groupId}/representation`, {
           method: 'PUT',
           headers: await this.getDefaultHeaders(),
           body: JSON.stringify({
@@ -588,35 +540,31 @@ export class VRChatAPI {
         });
       },
     });
+    this.requireSuccessfulResponse(result);
   }
 
   public async getUserGroups(force = false): Promise<LimitedUserGroups[]> {
     const cacheGeneration = this.cacheGeneration;
     if (!force) {
-      const cachedGroups = this._groupsCache.get();
+      const cachedGroups = this.groupsCache.get();
       if (cachedGroups) return cachedGroups;
     }
-    const userId = (await firstValueFrom(this.user))?.id;
-    if (!userId) {
-      error('[VRChat] Tried getting user groups while not logged in');
-      throw new Error('Tried getting user groups while not logged in');
-    }
+    const userId = (await this.requireCurrentUser('getting user groups')).id;
     this.ensureCacheGeneration(cacheGeneration);
     try {
       const result = await this.apiCallQueue.queueTask<Response>({
         typeId: 'LIST_GROUPS',
         runnable: async () => {
           this.ensureCacheGeneration(cacheGeneration);
-          return await fetch(`${BASE_URL}/users/${userId}/groups`, {
+          return requestVRChat(`${BASE_URL}/users/${userId}/groups`, {
             headers: await this.getDefaultHeaders(),
           });
         },
       });
-      if (result.error) throw result.error;
-      if (!result.result?.ok) throw result.result;
-      const data = await result.result.json();
+      const response = this.requireSuccessfulResponse(result);
+      const data: LimitedUserGroups[] = await response.json();
       this.ensureCacheGeneration(cacheGeneration);
-      if (cacheGeneration === this.cacheGeneration) await this.setCache(this._groupsCache, data);
+      await this.setCache(this.groupsCache, data);
       this.ensureCacheGeneration(cacheGeneration);
       return data;
     } catch (e) {
@@ -625,48 +573,47 @@ export class VRChatAPI {
     }
   }
 
-  public async selectAvatar(avatarId: string) {
-    // Throw if we don't have a current user
-    const userId = (await firstValueFrom(this.user))?.id;
-    if (!userId) {
-      error('[VRChat] Tried selecting an avatar while not logged in');
-      throw new Error('Tried selecting an avatar while not logged in');
-    }
-    // Send
-    await this.apiCallQueue.queueTask({
+  public async selectAvatar(avatarId: string): Promise<void> {
+    await this.requireCurrentUser('selecting an avatar');
+    const result = await this.apiCallQueue.queueTask<Response>({
       typeId: 'SELECT_AVATAR',
       runnable: async () => {
-        return fetch(`${BASE_URL}/avatars/${avatarId}/select`, {
+        return requestVRChat(`${BASE_URL}/avatars/${avatarId}/select`, {
           method: 'PUT',
           body: JSON.stringify({}),
           headers: await this.getDefaultHeaders(),
         });
       },
     });
+    this.requireSuccessfulResponse(result);
   }
 
   public async listAvatars(force = false): Promise<AvatarEx[]> {
     const cacheGeneration = this.cacheGeneration;
     if (!force) {
-      const cachedAvatars = this._avatarCache.get();
+      const cachedAvatars = this.avatarCache.get();
       if (cachedAvatars) return cachedAvatars;
     }
-    const userId = (await firstValueFrom(this.user))?.id;
-    if (!userId) {
-      error('[VRChat] Tried listing avatars while not logged in');
-      throw new Error('Tried listing avatars while not logged in');
-    }
+    await this.requireCurrentUser('listing avatars');
     this.ensureCacheGeneration(cacheGeneration);
-    if (this._avatarFetcher.value) {
-      await firstValueFrom(this._avatarFetcher.value);
+    if (this.avatarFetch) {
+      await this.avatarFetch;
       this.ensureCacheGeneration(cacheGeneration);
-      return this._avatarCache.get() ?? [];
+      return this.avatarCache.get() ?? [];
     }
-    const avatarFetchCompletion = new Subject<'SUCCESS' | 'FAILED'>();
-    const avatarFetch = avatarFetchCompletion.asObservable();
-    this._avatarFetcher.next(avatarFetch);
+
+    const avatarFetch = this.fetchAvatars(cacheGeneration);
+    this.avatarFetch = avatarFetch;
+    try {
+      return await avatarFetch;
+    } finally {
+      if (this.avatarFetch === avatarFetch) this.avatarFetch = undefined;
+    }
+  }
+
+  private async fetchAvatars(cacheGeneration: number): Promise<AvatarEx[]> {
     let avatars: AvatarEx[] = [];
-    let fetchResult: 'SUCCESS' | 'FAILED' = 'FAILED';
+    let complete = false;
     try {
       const ownAvatars = await this.fetchPaginatedData<AvatarEx>(
         {
@@ -683,160 +630,165 @@ export class VRChatAPI {
         cacheGeneration
       );
       avatars.push(...ownAvatars);
-      fetchResult = 'SUCCESS';
-    } catch (e) {
-      error('[VRChat] Failed to list uploaded avatars: ' + JSON.stringify(e));
-      fetchResult = 'FAILED';
+      const favouriteAvatars = await this.fetchPaginatedData<AvatarEx>(
+        {
+          url: `${BASE_URL}/avatars/favorites`,
+          apiCallTypeId: 'LIST_AVATARS_FAVOURITE',
+          query: { sort: 'updated' },
+          maxEntries: MAX_FAVOURITE_AVATARS,
+        },
+        cacheGeneration
+      );
+      avatars.push(...favouriteAvatars);
+      complete = true;
+    } catch (cause) {
+      error('[VRChat] Failed to list avatars: ' + JSON.stringify(cause));
     }
-    if (fetchResult != 'FAILED') {
-      try {
-        const favAvatars = await this.fetchPaginatedData<AvatarEx>(
-          {
-            url: `${BASE_URL}/avatars/favorites`,
-            apiCallTypeId: 'LIST_AVATARS_FAVOURITE',
-            query: {
-              sort: 'updated',
-            },
-            maxEntries: MAX_FAVOURITE_AVATARS,
-          },
-          cacheGeneration
-        );
-        avatars.push(...favAvatars);
-        fetchResult = 'SUCCESS';
-      } catch (e) {
-        error('[VRChat] Failed to list favourite avatars: ' + JSON.stringify(e));
-        fetchResult = 'FAILED';
-      }
-    }
+
     avatars = uniqBy(avatars, 'id');
-    if (cacheGeneration !== this.cacheGeneration) {
-      avatarFetchCompletion.next('FAILED');
-      if (this._avatarFetcher.value === avatarFetch) this._avatarFetcher.next(null);
-      throw VRCHAT_API_STALE_REQUEST;
+    this.ensureCacheGeneration(cacheGeneration);
+    if (complete) {
+      await this.setCache(this.avatarCache, avatars);
+      this.ensureCacheGeneration(cacheGeneration);
     }
-    if (fetchResult === 'SUCCESS' && cacheGeneration === this.cacheGeneration) {
-      await this.setCache(this._avatarCache, avatars);
-    }
-    if (cacheGeneration !== this.cacheGeneration) {
-      avatarFetchCompletion.next('FAILED');
-      if (this._avatarFetcher.value === avatarFetch) this._avatarFetcher.next(null);
-      throw VRCHAT_API_STALE_REQUEST;
-    }
-    avatarFetchCompletion.next(fetchResult);
-    if (this._avatarFetcher.value === avatarFetch) this._avatarFetcher.next(null);
     return avatars;
   }
+
+  // live cache updates
 
   public pollCurrentUser(): Promise<CompletionResult<CurrentUser>> {
     return this.apiCallQueue.queueTask<CurrentUser>({
       typeId: 'POLL_USER',
-      runnable: () => this.getCurrentUser(undefined, true),
+      runnable: () => this.getCurrentUser(),
     });
   }
 
-  public updateCachedGroup(groupId: string, group: Partial<LimitedUserGroups>) {
-    if (this.cacheClearsInFlight) return;
+  public updateCachedGroup(groupId: string, group: Partial<LimitedUserGroups>): void {
+    if (this.activeCacheClears) return;
     if (group.groupId && group.groupId !== groupId) {
       throw new Error("Called updateCachedGroup with a group that doesn't match the groupId");
     }
-    const groups = this._groupsCache.get() ?? [];
-    const index = groups.findIndex((g) => g.groupId === groupId);
-    if (index !== -1) {
-      groups[index] = { ...groups[index], ...group };
+    const groups = this.groupsCache.get() ?? [];
+    if (!groups.some((entry) => entry.groupId === groupId)) return;
 
-      // clear other representations
-      if (group.isRepresenting) {
-        for (const otherGroup of groups) {
-          if (otherGroup.groupId !== groupId) {
-            otherGroup.isRepresenting = false;
-          }
-        }
-      }
+    const updatedGroups = groups.map((entry) => {
+      if (entry.groupId === groupId) return { ...entry, ...group };
+      return group.isRepresenting ? { ...entry, isRepresenting: false } : entry;
+    });
+    void this.setCache(this.groupsCache, updatedGroups);
+  }
 
-      void this.setCache(this._groupsCache, groups);
-    }
+  // request and persistence helpers
+
+  private async requireCurrentUser(action: string): Promise<CurrentUser> {
+    const user = await firstValueFrom(this.user);
+    if (user) return user;
+
+    const message = `Tried ${action} while not logged in`;
+    error(`[VRChat] ${message}`);
+    throw new Error(message);
+  }
+
+  private requireSuccessfulResponse(result: CompletionResult<Response>): Response {
+    if (result.error) throw result.error;
+    if (!result.result?.ok) throw result.result;
+    return result.result;
+  }
+
+  private async loadInviteMessages(
+    userId: string,
+    type: InviteMessageType,
+    cacheGeneration: number
+  ): Promise<InviteMessageEx[]> {
+    const result = await this.apiCallQueue.queueTask<Response>({
+      typeId: 'LIST_INVITE_MESSAGES',
+      runnable: async () => {
+        this.ensureCacheGeneration(cacheGeneration);
+        return requestVRChat(`${BASE_URL}/message/${userId}/${type}`, {
+          headers: await this.getDefaultHeaders(),
+        });
+      },
+    });
+    const response = this.requireSuccessfulResponse(result);
+    return this.cacheInviteMessages(type, await response.json(), cacheGeneration);
+  }
+
+  private async updateInviteMessage(
+    userId: string,
+    type: InviteMessageType,
+    slot: number,
+    message: string,
+    cacheGeneration: number
+  ): Promise<InviteMessageEx[]> {
+    const result = await this.apiCallQueue.queueTask<Response>({
+      typeId: 'UPDATE_INVITE_MESSAGE',
+      runnable: async () => {
+        this.ensureCacheGeneration(cacheGeneration);
+        return requestVRChat(`${BASE_URL}/message/${userId}/${type}/${slot}`, {
+          method: 'PUT',
+          headers: await this.getDefaultHeaders(),
+          body: JSON.stringify({ message }),
+        });
+      },
+    });
+    const response = this.requireSuccessfulResponse(result);
+    return this.cacheInviteMessages(type, await response.json(), cacheGeneration);
+  }
+
+  private async cacheInviteMessages(
+    type: InviteMessageType,
+    messages: InviteMessage[],
+    cacheGeneration: number
+  ): Promise<InviteMessageEx[]> {
+    this.ensureCacheGeneration(cacheGeneration);
+    const entries = messages.map((message) => ({
+      type: message.messageType,
+      slot: message.slot,
+      message: message.message,
+      canUpdateAtTimeStamp: Date.now() + Math.max(0, message.remainingCooldownMinutes * 60_000),
+    }));
+    await this.setCache(this.inviteMessageCaches[type], entries);
+    this.ensureCacheGeneration(cacheGeneration);
+    return entries;
   }
 
   private async fetchPaginatedData<T>(
-    _options: {
-      url: string;
-      apiCallTypeId: string;
-      query?: Record<string, string>;
-      maxEntries?: number;
-      rateLimit?: {
-        maxRetries?: number;
-        timeout?: number;
-      };
-    },
+    options: PaginatedRequestOptions,
     cacheGeneration?: number
   ): Promise<T[]> {
-    const options: {
-      url: string;
-      apiCallTypeId: string;
-      query: Record<string, string>;
-      maxEntries: number;
-      rateLimit: {
-        maxRetries: number;
-        timeout: number;
-      };
-    } = Object.assign(
-      {
-        query: {},
-        maxEntries: 500,
-        rateLimit: Object.assign(
-          {
-            maxRetries: 5,
-            timeout: 5000,
-          },
-          _options.rateLimit
-        ),
-      },
-      _options
-    );
-
+    const { url, apiCallTypeId, query = {}, maxEntries = DEFAULT_PAGE_LIMIT } = options;
+    const maxRetries = options.rateLimit?.maxRetries ?? DEFAULT_RATE_LIMIT_RETRIES;
+    const retryDelay = options.rateLimit?.delay ?? DEFAULT_RATE_LIMIT_DELAY;
     const entries: T[] = [];
-    let nextOffset = 0;
     let rateLimitRetries = 0;
-    for (let offset = 0; offset < options.maxEntries!; offset += nextOffset) {
+    for (let offset = 0; offset < maxEntries;) {
       if (cacheGeneration !== undefined) this.ensureCacheGeneration(cacheGeneration);
-      nextOffset = 100;
       const response = await this.apiCallQueue.queueTask<Response>({
-        typeId: options.apiCallTypeId,
+        typeId: apiCallTypeId,
         runnable: async () => {
           if (cacheGeneration !== undefined) this.ensureCacheGeneration(cacheGeneration);
           const queryParams = new URLSearchParams({
             offset: offset.toString(),
-            n: '100',
-            ...options.query,
+            n: String(PAGE_SIZE),
+            ...query,
           }).toString();
-          return fetch(`${options.url}?${queryParams}`, {
+          return requestVRChat(`${url}?${queryParams}`, {
             headers: await this.getDefaultHeaders(),
           });
         },
       });
       if (cacheGeneration !== undefined) this.ensureCacheGeneration(cacheGeneration);
-      // handle rate limiting
+
       if (response.result?.status === 429) {
-        if (rateLimitRetries < options.rateLimit.maxRetries) {
-          nextOffset = 0;
-          rateLimitRetries++;
-          await new Promise((resolve) => setTimeout(resolve, options.rateLimit.timeout));
-          continue;
-        } else {
-          throw new Error(
-            'Paginated request was rate limited (429) too many times (' +
-              options.rateLimit.maxRetries +
-              ')'
-          );
+        if (rateLimitRetries >= maxRetries) {
+          throw new Error(`Paginated request was rate limited (429) more than ${maxRetries} times`);
         }
+        rateLimitRetries++;
+        await new Promise((resolve) => setTimeout(resolve, retryDelay));
+        continue;
       }
-      // handle results
-      if (response.result?.ok) {
-        const data: T[] = await response.result.json();
-        entries.push(...data);
-        if (data.length > 0) continue;
-        break;
-      } else {
+
+      if (!response.result?.ok) {
         throw new Error(
           'Received unexpected response: ' +
             (response.result
@@ -848,17 +800,26 @@ export class VRChatAPI {
               : 'No Response: ' + response.error)
         );
       }
+
+      const data: T[] = await response.result.json();
+      entries.push(...data);
+      if (!data.length) break;
+      offset += PAGE_SIZE;
     }
     return entries;
   }
 
+  /** Adds persisted auth cookies because the HTTP client has no cookie store. */
   private async getDefaultHeaders(
-    contentType: string = 'application/json',
-    includeAuthCookie = true,
-    includeTwoFactorCookie = true
+    options: RequestHeaderOptions = {}
   ): Promise<Record<string, string>> {
+    const {
+      contentType = 'application/json',
+      includeAuthCookie = true,
+      includeTwoFactorCookie = true,
+    } = options;
     const settings = await firstValueFrom(this.settings);
-    const cookies = [];
+    const cookies: string[] = [];
     if (includeAuthCookie && settings.authCookie)
       cookies.push(serializeCookie({ name: 'auth', value: settings.authCookie }));
     if (includeTwoFactorCookie && settings.twoFactorCookie)
@@ -870,7 +831,7 @@ export class VRChatAPI {
     };
   }
 
-  private async setCache<T>(cache: CachedValue<T>, value: T) {
+  private async setCache<T>(cache: CachedValue<T>, value: T): Promise<void> {
     try {
       await this.trackWrite(cache.set(value));
     } catch (e) {
@@ -879,19 +840,19 @@ export class VRChatAPI {
   }
 
   private async trackWrite<T>(write: Promise<T>): Promise<T> {
-    this.pendingWrites.add(write);
+    this.pendingPersistenceWrites.add(write);
     try {
       return await write;
     } finally {
-      this.pendingWrites.delete(write);
+      this.pendingPersistenceWrites.delete(write);
     }
   }
 
-  private ensureCacheGeneration(generation: number) {
+  private ensureCacheGeneration(generation: number): void {
     if (generation !== this.cacheGeneration) throw VRCHAT_API_STALE_REQUEST;
   }
 
-  private async parseResponseCookies(response: Response, cacheGeneration: number) {
+  private async parseResponseCookies(response: Response, cacheGeneration: number): Promise<void> {
     const settings: Partial<VRChatApiSettings> = {};
     const cookieHeaders = response.headers.getSetCookie();
     for (const cookieHeader of cookieHeaders) {
