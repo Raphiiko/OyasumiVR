@@ -104,6 +104,9 @@ export class VRChatAuth {
         case 'UNSUPPORTED_2FA_METHOD':
           info(`[VRChat] Failed to restore session: ${e}`);
           return { status: 'LOGIN_REQUIRED', error: String(e) };
+        case 'AUTHENTICATION_REJECTED':
+          info(`[VRChat] Failed to restore session: ${e}`);
+          return { status: 'LOGIN_REQUIRED', error: 'UNEXPECTED_RESPONSE' };
         default:
           error(`[VRChat] Error trying to restore session: ${e}`);
           return { status: 'RETRY' };
@@ -187,12 +190,18 @@ export class VRChatAuth {
       .subscribe(() => {});
   }
 
-  public async login(username: string, password: string): Promise<void> {
+  public async login(
+    username: string,
+    password: string,
+    reuseTwoFactorCookie = false
+  ): Promise<void> {
     if (this._status.value !== 'LOGGED_OUT')
       throw new Error('Tried calling login() while already logged in');
     this.cancelSessionRestore();
     await this.api.clearCaches();
-    this._user.next(await this.api.getCurrentUser({ username, password }, true));
+    this._user.next(
+      await this.api.getCurrentUser({ username, password }, true, undefined, reuseTwoFactorCookie)
+    );
     this._userStatusLastUpdated.next(Date.now());
     this._status.next('LOGGED_IN');
     info(`[VRChat] Logged in: ${this._user.value?.displayName}`);

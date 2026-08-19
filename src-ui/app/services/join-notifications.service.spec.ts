@@ -8,16 +8,15 @@ import { JoinNotificationsService } from './join-notifications.service';
 import { NotificationService } from './notification.service';
 import { SleepService } from './sleep.service';
 import { VRChatLogService } from './vrchat-log.service';
-import { VRCHAT_API_STALE_REQUEST } from './vrchat-api/vrchat-api';
 import { VRChatService } from './vrchat-api/vrchat.service';
 
 describe('JoinNotificationsService', () => {
-  it('continues loading friends after a stale request', async () => {
+  it('continues loading friends after a failed request', async () => {
     const user = new BehaviorSubject<CurrentUser | null>(null);
     const friend = { id: 'usr_friend', displayName: 'Friend' } as LimitedUserFriend;
     const listFriends = vi
       .fn()
-      .mockRejectedValueOnce(VRCHAT_API_STALE_REQUEST)
+      .mockRejectedValueOnce('NOT_LOGGED_IN')
       .mockResolvedValueOnce([friend]);
     const vrchat = {
       user,

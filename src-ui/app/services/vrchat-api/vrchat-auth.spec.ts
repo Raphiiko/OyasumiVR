@@ -1,4 +1,4 @@
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, of } from 'rxjs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { CurrentUser } from 'vrchat';
 import { VRChatApiSettings, VRCHAT_API_SETTINGS_DEFAULT } from '../../models/vrchat-api-settings';
@@ -14,6 +14,29 @@ vi.mock('@tauri-apps/plugin-log', () => ({
 afterEach(() => vi.useRealTimers());
 
 describe('VRChatAuth', () => {
+  it('restores a valid session during startup', async () => {
+    vi.useFakeTimers();
+    const user = { id: 'usr_test', displayName: 'Test User' } as CurrentUser;
+    const api = {
+      getCurrentUser: vi.fn(async () => user),
+      listFriends: vi.fn(async () => []),
+    } as unknown as VRChatAPI;
+    const auth = new VRChatAuth(
+      api,
+      {} as ModalService,
+      async () => {},
+      new BehaviorSubject<VRChatApiSettings>({
+        ...VRCHAT_API_SETTINGS_DEFAULT,
+        authCookie: 'auth-cookie',
+      })
+    );
+
+    await auth.init();
+
+    expect(await firstValueFrom(auth.user)).toBe(user);
+    expect(await firstValueFrom(auth.status)).toBe('LOGGED_IN');
+  });
+
   it('waits for 2FA verification before fetching the current user', async () => {
     const settings = new BehaviorSubject<VRChatApiSettings>({
       ...VRCHAT_API_SETTINGS_DEFAULT,
@@ -126,6 +149,62 @@ describe('VRChatAuth', () => {
     expect(settings.value.authCookie).toBe('auth-cookie');
   });
 
+  it('opens the matching 2FA prompt during session restore', async () => {
+    vi.useFakeTimers();
+    const settings = new BehaviorSubject<VRChatApiSettings>({
+      ...VRCHAT_API_SETTINGS_DEFAULT,
+      authCookie: 'auth-cookie',
+    });
+    const api = {
+      getCurrentUser: vi.fn(async () => {
+        throw '2FA_TOTP_REQUIRED';
+      }),
+    } as unknown as VRChatAPI;
+    const addModal = vi.fn(() => of(undefined));
+    const auth = new VRChatAuth(
+      api,
+      { isModalOpen: vi.fn(() => false), addModal } as unknown as ModalService,
+      async () => {},
+      settings
+    );
+
+    await auth.init();
+
+    expect(addModal.mock.calls[0][1]).toMatchObject({
+      autoLogin: false,
+      twoFactorMethod: 'totp',
+    });
+  });
+
+  it('keeps the stored session after an unrecognized authentication rejection', async () => {
+    const settings = new BehaviorSubject<VRChatApiSettings>({
+      ...VRCHAT_API_SETTINGS_DEFAULT,
+      authCookie: 'auth-cookie',
+    });
+    const clearCaches = vi.fn(async () => {});
+    const api = {
+      clearCaches,
+      getCurrentUser: vi.fn(async () => {
+        throw 'AUTHENTICATION_REJECTED';
+      }),
+    } as unknown as VRChatAPI;
+    const updateSettings = vi.fn(async (patch: Partial<VRChatApiSettings>) => {
+      settings.next({ ...settings.value, ...patch });
+    });
+    const auth = new VRChatAuth(api, {} as ModalService, updateSettings, settings);
+
+    const result = await (
+      auth as unknown as {
+        loadSession(): Promise<{ status: string; error?: string }>;
+      }
+    ).loadSession();
+
+    expect(result).toEqual({ status: 'LOGIN_REQUIRED', error: 'UNEXPECTED_RESPONSE' });
+    expect(clearCaches).not.toHaveBeenCalled();
+    expect(updateSettings).not.toHaveBeenCalled();
+    expect(settings.value.authCookie).toBe('auth-cookie');
+  });
+
   it('preserves the stored session when credential login fails', async () => {
     const settings = new BehaviorSubject<VRChatApiSettings>({
       ...VRCHAT_API_SETTINGS_DEFAULT,
@@ -225,6 +304,34 @@ describe('VRChatAuth', () => {
     expect(getCurrentUser.mock.calls[0][2]).toBeInstanceOf(AbortSignal);
     expect(getCurrentUser.mock.calls[0][2].aborted).toBe(true);
     expect(closeModal).not.toHaveBeenCalled();
+  });
+
+  it('completes a scheduled session restore', async () => {
+    vi.useFakeTimers();
+    const user = { id: 'usr_test', displayName: 'Test User' } as CurrentUser;
+    const getCurrentUser = vi.fn(async () => user);
+    const closeModal = vi.fn();
+    const auth = new VRChatAuth(
+      { getCurrentUser } as unknown as VRChatAPI,
+      { closeModal } as unknown as ModalService,
+      async () => {},
+      new BehaviorSubject<VRChatApiSettings>({
+        ...VRCHAT_API_SETTINGS_DEFAULT,
+        authCookie: 'auth-cookie',
+      })
+    );
+    const internals = auth as unknown as {
+      _status: BehaviorSubject<'PRE_INIT' | 'LOGGED_OUT' | 'LOGGED_IN'>;
+      scheduleSessionRestore(): void;
+    };
+    internals._status.next('LOGGED_OUT');
+
+    internals.scheduleSessionRestore();
+    await vi.advanceTimersByTimeAsync(60_000);
+
+    expect(await firstValueFrom(auth.user)).toBe(user);
+    expect(await firstValueFrom(auth.status)).toBe('LOGGED_IN');
+    expect(closeModal).toHaveBeenCalledOnce();
   });
 
   it('does not clear credentials after an in-flight restore is cancelled', async () => {

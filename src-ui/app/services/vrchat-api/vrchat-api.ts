@@ -244,11 +244,12 @@ export class VRChatAPI {
       password: string;
     },
     force = false,
-    signal?: AbortSignal
+    signal?: AbortSignal,
+    includeTwoFactorCookie = !credentials
   ): Promise<CurrentUser> {
     const cacheGeneration = this.cacheGeneration;
     const headers: Record<string, string> = {
-      ...(await this.getDefaultHeaders('application/json', !credentials)),
+      ...(await this.getDefaultHeaders('application/json', !credentials, includeTwoFactorCookie)),
     };
     if (credentials) {
       force = true;
@@ -282,7 +283,7 @@ export class VRChatAPI {
           throw 'MISSING_CREDENTIALS';
         default:
           error(`[VRChat] Authentication rejected: ${JSON.stringify(response)}`);
-          throw credentials ? 'INVALID_CREDENTIALS' : 'MISSING_CREDENTIALS';
+          throw 'AUTHENTICATION_REJECTED';
       }
     }
     if (!response.ok) {
@@ -853,13 +854,14 @@ export class VRChatAPI {
 
   private async getDefaultHeaders(
     contentType: string = 'application/json',
-    includeAuthCookie = true
+    includeAuthCookie = true,
+    includeTwoFactorCookie = true
   ): Promise<Record<string, string>> {
     const settings = await firstValueFrom(this.settings);
     const cookies = [];
     if (includeAuthCookie && settings.authCookie)
       cookies.push(serializeCookie({ name: 'auth', value: settings.authCookie }));
-    if (settings.twoFactorCookie)
+    if (includeTwoFactorCookie && settings.twoFactorCookie)
       cookies.push(serializeCookie({ name: 'twoFactorAuth', value: settings.twoFactorCookie }));
     return {
       Cookie: cookies.join('; '),

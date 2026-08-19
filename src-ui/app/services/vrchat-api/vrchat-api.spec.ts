@@ -2,6 +2,7 @@ import { BehaviorSubject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { CurrentUser, LimitedUserFriend } from 'vrchat';
 import { VRChatApiSettings, VRCHAT_API_SETTINGS_DEFAULT } from '../../models/vrchat-api-settings';
+import { AvatarEx } from '../../models/vrchat';
 import { twoFactorMethodFromError, VRChatAPI } from './vrchat-api';
 
 const httpFetch = vi.hoisted(() => vi.fn());
@@ -20,7 +21,9 @@ vi.mock('src-ui/app/globals', () => ({
   },
 }));
 
-beforeEach(() => httpFetch.mockReset());
+beforeEach(() => {
+  httpFetch.mockReset();
+});
 
 describe('VRChatAPI authentication', () => {
   it.each([
@@ -31,7 +34,7 @@ describe('VRChatAPI authentication', () => {
     expect(twoFactorMethodFromError(error)).toBe(method);
   });
 
-  it('omits the stored auth cookie from credentialed login', async () => {
+  it('omits stored cookies from a fresh credential login', async () => {
     const settings = new BehaviorSubject<VRChatApiSettings>({
       ...VRCHAT_API_SETTINGS_DEFAULT,
       authCookie: 'auth-cookie',
@@ -45,8 +48,25 @@ describe('VRChatAPI authentication', () => {
     );
 
     const headers = httpFetch.mock.calls[0][1].headers as Record<string, string>;
-    expect(headers['Cookie']).toBe('twoFactorAuth=two-factor-cookie');
+    expect(headers['Cookie']).toBe('');
     expect(headers['Authorization']).toMatch(/^Basic /);
+  });
+
+  it('includes the stored 2FA cookie for matching saved credentials', async () => {
+    const settings = new BehaviorSubject<VRChatApiSettings>({
+      ...VRCHAT_API_SETTINGS_DEFAULT,
+      authCookie: 'auth-cookie',
+      twoFactorCookie: 'two-factor-cookie',
+    });
+    const api = new VRChatAPI(settings, async () => {});
+    httpFetch.mockResolvedValue(new Response('{}', { status: 500 }));
+
+    await expect(
+      api.getCurrentUser({ username: 'test', password: 'password' }, true, undefined, true)
+    ).rejects.toBe('UNEXPECTED_RESPONSE');
+
+    const headers = httpFetch.mock.calls[0][1].headers as Record<string, string>;
+    expect(headers['Cookie']).toBe('twoFactorAuth=two-factor-cookie');
   });
 
   it('rejects unsupported non-string 2FA methods without throwing a type error', async () => {
@@ -59,7 +79,7 @@ describe('VRChatAPI authentication', () => {
     await expect(api.getCurrentUser(undefined, true)).rejects.toBe('UNSUPPORTED_2FA_METHOD');
   });
 
-  it('classifies unrecognized 401 responses by authentication mode', async () => {
+  it('distinguishes unrecognized 401 responses from invalid credentials', async () => {
     const api = new VRChatAPI(
       new BehaviorSubject<VRChatApiSettings>(VRCHAT_API_SETTINGS_DEFAULT),
       async () => {}
@@ -68,9 +88,9 @@ describe('VRChatAPI authentication', () => {
       new Response(JSON.stringify({ error: { message: 'Authentication failed' } }), { status: 401 })
     );
 
-    await expect(api.getCurrentUser(undefined, true)).rejects.toBe('MISSING_CREDENTIALS');
+    await expect(api.getCurrentUser(undefined, true)).rejects.toBe('AUTHENTICATION_REJECTED');
     await expect(api.getCurrentUser({ username: 'test', password: 'password' }, true)).rejects.toBe(
-      'INVALID_CREDENTIALS'
+      'AUTHENTICATION_REJECTED'
     );
   });
 
@@ -112,6 +132,37 @@ describe('VRChatAPI authentication', () => {
     await api.verify2FA('123456', 'totp');
 
     expect(settings.value.twoFactorCookie).toBe('verified-cookie');
+  });
+
+  it('does not persist a verified 2FA cookie after session invalidation', async () => {
+    const settings = new BehaviorSubject<VRChatApiSettings>(VRCHAT_API_SETTINGS_DEFAULT);
+    const updateSettings = vi.fn(async (patch: Partial<VRChatApiSettings>) => {
+      settings.next({ ...settings.value, ...patch });
+    });
+    const api = new VRChatAPI(settings, updateSettings);
+    let finishResponse: () => void = () => {};
+    httpFetch.mockImplementation(
+      () =>
+        new Promise<Response>((resolve) => {
+          finishResponse = () =>
+            resolve({
+              headers: {
+                getSetCookie: () => ['twoFactorAuth=stale-cookie; Path=/'],
+              },
+              json: async () => ({ verified: true }),
+              ok: true,
+              status: 200,
+            } as Response);
+        })
+    );
+
+    const verification = api.verify2FA('123456', 'totp');
+    await vi.waitFor(() => expect(httpFetch).toHaveBeenCalledOnce());
+    await api.clearCaches();
+    finishResponse();
+
+    await expect(verification).rejects.toBe('STALE_REQUEST');
+    expect(updateSettings).not.toHaveBeenCalled();
   });
 
   it('does not fail login when current-user cache persistence fails', async () => {
@@ -475,5 +526,48 @@ describe('VRChatAPI authentication', () => {
     await expect(listing).rejects.toBe('STALE_REQUEST');
 
     expect(friendsCache.set).not.toHaveBeenCalled();
+  });
+
+  it('does not repopulate the avatar cache after it is cleared', async () => {
+    const api = new VRChatAPI(
+      new BehaviorSubject<VRChatApiSettings>(VRCHAT_API_SETTINGS_DEFAULT),
+      async () => {}
+    );
+    const avatar = { id: 'avtr_test' } as AvatarEx;
+    let finishFetch: () => void = () => {};
+    const firstFetch = new Promise<AvatarEx[]>((resolve) => {
+      finishFetch = () => resolve([avatar]);
+    });
+    const avatarCache = {
+      get: vi.fn(() => undefined),
+      set: vi.fn(async () => {}),
+      clear: vi.fn(async () => {}),
+    };
+    const emptyCache = { clear: vi.fn(async () => {}) };
+    const fetchPaginatedData = vi.fn().mockImplementationOnce(() => firstFetch);
+    const internals = api as unknown as {
+      user: BehaviorSubject<CurrentUser | null>;
+      _currentUserCache: typeof emptyCache;
+      _friendsCache: typeof emptyCache;
+      _avatarCache: typeof avatarCache;
+      _groupsCache: typeof emptyCache;
+      _inviteMessageCaches: Record<string, typeof emptyCache>;
+      fetchPaginatedData: typeof fetchPaginatedData;
+    };
+    internals.user = new BehaviorSubject<CurrentUser | null>({ id: 'usr_old' } as CurrentUser);
+    internals._currentUserCache = emptyCache;
+    internals._friendsCache = emptyCache;
+    internals._avatarCache = avatarCache;
+    internals._groupsCache = emptyCache;
+    internals._inviteMessageCaches = {};
+    internals.fetchPaginatedData = fetchPaginatedData;
+
+    const listing = api.listAvatars(true);
+    await vi.waitFor(() => expect(fetchPaginatedData).toHaveBeenCalledOnce());
+    await api.clearCaches();
+    finishFetch();
+
+    await expect(listing).rejects.toBe('STALE_REQUEST');
+    expect(avatarCache.set).not.toHaveBeenCalled();
   });
 });

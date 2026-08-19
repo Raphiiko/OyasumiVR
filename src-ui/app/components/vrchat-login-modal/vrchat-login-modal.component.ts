@@ -45,6 +45,7 @@ export class VRChatLoginModalComponent
   autoLogin = false;
   twoFactorMethod?: VRChatTwoFactorMethod;
   initialError?: string;
+  private loadedCredentials?: { username: string; password: string };
 
   constructor(
     private vrchat: VRChatService,
@@ -67,6 +68,7 @@ export class VRChatLoginModalComponent
         this.rememberCredentials = rememberCredentials;
         const credentials = await this.vrchat.loadCredentials();
         if (credentials) {
+          this.loadedCredentials = credentials;
           this.username = credentials.username;
           this.password = credentials.password;
         }
@@ -101,7 +103,10 @@ export class VRChatLoginModalComponent
     this.loggingIn = true;
     this.error = '';
     try {
-      await this.vrchat.login(this.username, this.password);
+      const reuseTwoFactorCookie =
+        this.loadedCredentials?.username === this.username &&
+        this.loadedCredentials.password === this.password;
+      await this.vrchat.login(this.username, this.password, reuseTwoFactorCookie);
       await this.finishLogin();
     } catch (e) {
       const method = twoFactorMethodFromError(e);

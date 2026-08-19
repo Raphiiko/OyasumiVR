@@ -12,7 +12,6 @@ import type { LimitedUserFriend } from 'vrchat';
 import { VRChatLogService } from '../vrchat-log.service';
 import { VRChatLogEvent } from '../../models/vrchat-log-event';
 import { VRChatService } from '../vrchat-api/vrchat.service';
-import { VRCHAT_API_STALE_REQUEST } from '../vrchat-api/vrchat-api';
 
 @Injectable({
   providedIn: 'root',
@@ -50,9 +49,7 @@ export class SleepModeDisableOnPlayerJoinLeaveAutomationService {
         switchMap(async () => {
           try {
             this.friends = await this.vrchat.listFriends();
-          } catch (e) {
-            if (e !== VRCHAT_API_STALE_REQUEST) throw e;
-          }
+          } catch {}
         })
       )
       .subscribe();

@@ -31,6 +31,35 @@ function createContext(): LoginContext {
 }
 
 describe('VRChatLoginModalComponent 2FA', () => {
+  it('reuses the 2FA cookie only for unchanged saved credentials', async () => {
+    const login = vi.fn(async () => {});
+    const context = {
+      cdr: { markForCheck: vi.fn() },
+      error: '',
+      finishLogin: vi.fn(async () => {}),
+      loadedCredentials: { username: 'saved-user', password: 'saved-password' },
+      loggingIn: false,
+      password: 'saved-password',
+      setLoginError: vi.fn(),
+      username: 'saved-user',
+      vrchat: { login },
+    };
+    const loginMethod = (
+      VRChatLoginModalComponent.prototype as unknown as {
+        login(this: typeof context): Promise<void>;
+      }
+    ).login;
+
+    await loginMethod.call(context);
+    context.username = 'other-user';
+    await loginMethod.call(context);
+
+    expect(login.mock.calls).toEqual([
+      ['saved-user', 'saved-password', true],
+      ['other-user', 'saved-password', false],
+    ]);
+  });
+
   it('prompts again after an invalid code', async () => {
     const context = createContext();
     context.get2FACode.mockResolvedValueOnce('111111').mockResolvedValueOnce('222222');

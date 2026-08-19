@@ -25,7 +25,6 @@ import { VRChatLogEvent } from '../models/vrchat-log-event';
 import type { LimitedUserFriend } from 'vrchat';
 import { TranslocoService } from '@jsverse/transloco';
 import { v4 as uuid } from 'uuid';
-import { VRCHAT_API_STALE_REQUEST } from './vrchat-api/vrchat-api';
 
 @Injectable({
   providedIn: 'root',
@@ -73,9 +72,7 @@ export class JoinNotificationsService {
         switchMap(async () => {
           try {
             this.friends = await this.vrchat.listFriends();
-          } catch (e) {
-            if (e !== VRCHAT_API_STALE_REQUEST) throw e;
-          }
+          } catch {}
         })
       )
       .subscribe();

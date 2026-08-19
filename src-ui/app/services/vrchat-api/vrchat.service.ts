@@ -136,8 +136,8 @@ export class VRChatService {
     this.auth.showLoginModal(autoLogin);
   }
 
-  public async login(username: string, password: string) {
-    await this.auth.login(username, password);
+  public async login(username: string, password: string, reuseTwoFactorCookie = false) {
+    await this.auth.login(username, password, reuseTwoFactorCookie);
   }
 
   public async logout() {
