@@ -1,6 +1,8 @@
-import { readFileSync, readdirSync, rmSync } from 'fs';
+import { existsSync, readFileSync, readdirSync, rmSync } from 'fs';
 import { execFileSync } from 'child_process';
 import path from 'path';
+
+if (existsSync('.env.local')) process.loadEnvFile('.env.local');
 
 const hasCredentials = process.env.BUGSINK_AUTH_TOKEN && process.env.BUGSINK_PROJECT;
 if (process.argv.includes('--check')) {
