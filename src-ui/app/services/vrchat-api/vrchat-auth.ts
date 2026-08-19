@@ -190,14 +190,13 @@ export class VRChatAuth {
       .subscribe(() => {});
   }
 
-  public async login(
-    username: string,
-    password: string,
-    reuseTwoFactorCookie = false
-  ): Promise<void> {
+  public async login(username: string, password: string): Promise<void> {
     if (this._status.value !== 'LOGGED_OUT')
       throw new Error('Tried calling login() while already logged in');
     this.cancelSessionRestore();
+    const rememberedCredentials = await this.loadCredentials();
+    const reuseTwoFactorCookie =
+      rememberedCredentials?.username === username && rememberedCredentials.password === password;
     await this.api.clearCaches();
     this._user.next(
       await this.api.getCurrentUser({ username, password }, true, undefined, reuseTwoFactorCookie)
