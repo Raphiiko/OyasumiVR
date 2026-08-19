@@ -1,4 +1,4 @@
-#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+#![windows_subsystem = "windows"]
 
 mod cn_compliance;
 mod commands;
@@ -42,11 +42,12 @@ use crate::globals::APTABASE_HOST;
 
 #[tokio::main]
 async fn main() {
-    // Attach to parent console if we're running from a command line
     #[cfg(windows)]
-    {
-        use windows::Win32::System::Console::{AttachConsole, ATTACH_PARENT_PROCESS};
-        let _ = unsafe { AttachConsole(ATTACH_PARENT_PROCESS) };
+    if std::env::args_os().any(|arg| arg == "--console") {
+        use windows::Win32::System::Console::{AllocConsole, AttachConsole, ATTACH_PARENT_PROCESS};
+        if unsafe { AttachConsole(ATTACH_PARENT_PROCESS) }.is_err() {
+            let _ = unsafe { AllocConsole() };
+        }
     }
     // Construct OyasumiVR Tauri application
     tauri::Builder::default()

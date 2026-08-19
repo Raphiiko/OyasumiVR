@@ -73,6 +73,10 @@
       "description": "OyasumiVR - VR Sleep Utilities",
       "args": [
         {
+          "name": "console",
+          "description": "Opens a console window for log output"
+        },
+        {
           "name": "dont-need-security-where-im-going-uwu",
           "description": "Permanently enables the main process to run with administrative privileges",
           "longDescription": "WARNING: Enabling this has significant security risks!\n\nLaunching OyasumiVR with this flag will allow OyasumiVR to be ran as administrator from then on. Requires OyasumiVR.exe to be run with administrative privileges. This action can be undone by running the application again with the --reset-elevation-security flag.\n\nMore information can be found at https://raphii.co/oyasumivr/hidden/troubleshooting/launch-as-admin"
