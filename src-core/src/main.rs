@@ -1,4 +1,4 @@
-#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+#![windows_subsystem = "windows"]
 
 mod cn_compliance;
 mod commands;
@@ -42,12 +42,6 @@ use crate::globals::APTABASE_HOST;
 
 #[tokio::main]
 async fn main() {
-    // Attach to parent console if we're running from a command line
-    #[cfg(windows)]
-    {
-        use windows::Win32::System::Console::{AttachConsole, ATTACH_PARENT_PROCESS};
-        let _ = unsafe { AttachConsole(ATTACH_PARENT_PROCESS) };
-    }
     // Construct OyasumiVR Tauri application
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
@@ -68,6 +62,10 @@ async fn main() {
         .plugin(tauri_plugin_store::Builder::default().build())
         .plugin(configure_tauri_plugin_aptabase())
         .setup(|app| {
+            #[cfg(windows)]
+            if std::env::args_os().any(|arg| arg == "--console") {
+                open_console();
+            }
             let matches = match app.cli().matches() {
                 Ok(matches) => Some(matches),
                 Err(e) => {
@@ -96,8 +94,20 @@ async fn main() {
         .expect("An error occurred while running the application")
 }
 
+#[cfg(windows)]
+fn open_console() {
+    use windows::Win32::System::Console::{AllocConsole, AttachConsole, ATTACH_PARENT_PROCESS};
+    if unsafe { AttachConsole(ATTACH_PARENT_PROCESS) }.is_err() {
+        let _ = unsafe { AllocConsole() };
+    }
+}
+
 fn configure_tauri_plugin_single_instance() -> TauriPlugin<Wry> {
     tauri_plugin_single_instance::init(|app, _argv, _cwd| {
+        #[cfg(windows)]
+        if _argv.iter().any(|arg| arg == "--console") {
+            open_console();
+        }
         // Focus main window when user attempts to launch a second instance.
         let window = app.get_webview_window("main").unwrap();
         if let Ok(is_visible) = window.is_visible() {
@@ -211,11 +221,6 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     // Set up app reference
     *TAURI_APP_HANDLE.lock().await = Some(app_handle.clone());
     let window = app_handle.get_webview_window("main").unwrap();
-    // Open devtools if we're in debug mode
-    #[cfg(debug_assertions)]
-    {
-        window.open_devtools();
-    }
     // Disable swipe navigation in main window
     window
         .with_webview(|webview| unsafe {
@@ -385,6 +390,7 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         commands::nvml::nvml_status,
         commands::nvml::nvml_get_devices,
         commands::nvml::nvml_set_power_management_limit,
+        commands::debug::dev_tools_available,
         commands::debug::open_dev_tools,
         cn_compliance::cn_compliance_mode,
         commands::time::get_sunrise_sunset_time,

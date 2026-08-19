@@ -57,6 +57,7 @@ export class SettingsAdvancedViewComponent {
   ];
   checkedPersistentStorageItems: string[] = [];
   memoryWatcherActive = FLAVOUR === 'DEV';
+  devToolsAvailable = invoke<boolean>('dev_tools_available');
   overlayGpuAcceleration = true;
   openVrInitDelayFix = false;
   lighthousePowerOffDelay = false;
