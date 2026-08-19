@@ -12,7 +12,10 @@ import { VRChatLoginTFAModalComponent } from '../vrchat-login-tfa-modal/vrchat-l
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { ModalService } from '../../services/modal.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { VRChatTwoFactorMethod } from '../../services/vrchat-api/vrchat-api';
+import {
+  twoFactorMethodFromError,
+  VRChatTwoFactorMethod,
+} from '../../services/vrchat-api/vrchat-api';
 
 interface VRChatLoginModalInputModel {
   autoLogin?: boolean;
@@ -101,7 +104,7 @@ export class VRChatLoginModalComponent
       await this.vrchat.login(this.username, this.password);
       await this.finishLogin();
     } catch (e) {
-      const method = this.twoFactorMethodFromError(e);
+      const method = twoFactorMethodFromError(e);
       if (method) await this.loginWithTwoFactor(method);
       else this.setLoginError(e);
     }
@@ -125,7 +128,7 @@ export class VRChatLoginModalComponent
           lastCodeInvalid = true;
           continue;
         }
-        const nextMethod = this.twoFactorMethodFromError(e);
+        const nextMethod = twoFactorMethodFromError(e);
         if (nextMethod) {
           method = nextMethod;
           lastCodeInvalid = false;
@@ -142,17 +145,6 @@ export class VRChatLoginModalComponent
       await this.vrchat.rememberCredentials(this.username, this.password);
     }
     await this.close();
-  }
-
-  private twoFactorMethodFromError(error: unknown): VRChatTwoFactorMethod | undefined {
-    switch (error) {
-      case '2FA_TOTP_REQUIRED':
-        return 'totp';
-      case '2FA_EMAILOTP_REQUIRED':
-        return 'emailotp';
-      default:
-        return undefined;
-    }
   }
 
   private setLoginError(error: unknown) {

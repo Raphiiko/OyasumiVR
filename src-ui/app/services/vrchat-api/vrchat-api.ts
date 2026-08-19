@@ -35,6 +35,17 @@ const MAX_UPLOADED_AVATARS = 1000;
 
 export type VRChatTwoFactorMethod = 'totp' | 'emailotp';
 
+export function twoFactorMethodFromError(error: unknown): VRChatTwoFactorMethod | undefined {
+  switch (error) {
+    case '2FA_TOTP_REQUIRED':
+      return 'totp';
+    case '2FA_EMAILOTP_REQUIRED':
+      return 'emailotp';
+    default:
+      return undefined;
+  }
+}
+
 export class VRChatAPI {
   private userAgent!: string;
   private cacheGeneration = 0;
@@ -284,7 +295,7 @@ export class VRChatAPI {
         error(`[VRChat] Received invalid 2FA challenge from /auth/user`);
         throw 'UNEXPECTED_RESPONSE';
       }
-      const methods = data.requiresTwoFactorAuth.map((method) => method.toLowerCase());
+      const methods = data.requiresTwoFactorAuth.map((method) => String(method).toLowerCase());
       info(
         `[VRChat] 2FA Required for login. (methods=${JSON.stringify(data.requiresTwoFactorAuth)})`
       );
@@ -297,6 +308,7 @@ export class VRChatAPI {
       throw 'UNSUPPORTED_2FA_METHOD';
     }
     const user = responseData as CurrentUser;
+    this.ensureCacheGeneration(cacheGeneration);
     await this.setCache(this._currentUserCache, user);
     this.ensureCacheGeneration(cacheGeneration);
     return user;
@@ -503,7 +515,7 @@ export class VRChatAPI {
     }
     this.ensureCacheGeneration(cacheGeneration);
     if (this._friendFetcher.value) {
-      await firstValueFrom(this._friendFetcher);
+      await firstValueFrom(this._friendFetcher.value);
       this.ensureCacheGeneration(cacheGeneration);
       return this._friendsCache.get() ?? [];
     }
@@ -636,7 +648,7 @@ export class VRChatAPI {
     }
     this.ensureCacheGeneration(cacheGeneration);
     if (this._avatarFetcher.value) {
-      await firstValueFrom(this._avatarFetcher);
+      await firstValueFrom(this._avatarFetcher.value);
       this.ensureCacheGeneration(cacheGeneration);
       return this._avatarCache.get() ?? [];
     }

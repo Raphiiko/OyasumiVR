@@ -41,6 +41,16 @@ describe('VRChatAPI authentication', () => {
     expect(headers.Authorization).toMatch(/^Basic /);
   });
 
+  it('rejects unsupported non-string 2FA methods without throwing a type error', async () => {
+    const settings = new BehaviorSubject<VRChatApiSettings>(VRCHAT_API_SETTINGS_DEFAULT);
+    const api = new VRChatAPI(settings, async () => {});
+    httpFetch.mockResolvedValue(
+      new Response(JSON.stringify({ requiresTwoFactorAuth: [null] }), { status: 200 })
+    );
+
+    await expect(api.getCurrentUser(undefined, true)).rejects.toBe('UNSUPPORTED_2FA_METHOD');
+  });
+
   it('does not fail login when current-user cache persistence fails', async () => {
     const settings = new BehaviorSubject<VRChatApiSettings>(VRCHAT_API_SETTINGS_DEFAULT);
     const api = new VRChatAPI(settings, async () => {});
@@ -108,16 +118,56 @@ describe('VRChatAPI authentication', () => {
     const clearing = api.clearCaches();
     finishSettingsWrite();
     await clearing;
-    settings.next({
-      ...settings.value,
-      authCookie: null,
-      twoFactorCookie: null,
-    });
     await rejectedRequest;
 
     expect(currentUserCache.set).not.toHaveBeenCalled();
-    expect(settings.value.authCookie).toBeNull();
-    expect(settings.value.twoFactorCookie).toBeNull();
+    expect(updateSettings).toHaveBeenCalledOnce();
+  });
+
+  it('does not write the current-user cache after cookie parsing is invalidated', async () => {
+    const api = new VRChatAPI(
+      new BehaviorSubject<VRChatApiSettings>(VRCHAT_API_SETTINGS_DEFAULT),
+      async () => {}
+    );
+    let finishCookieParsing: () => void = () => {};
+    const parseResponseCookies = vi.fn(
+      () =>
+        new Promise<void>((resolve) => {
+          finishCookieParsing = resolve;
+        })
+    );
+    const currentUserCache = {
+      clear: vi.fn(async () => {}),
+      set: vi.fn(async () => {}),
+    };
+    const emptyCache = { clear: vi.fn(async () => {}) };
+    const internals = api as unknown as {
+      _currentUserCache: typeof currentUserCache;
+      _friendsCache: typeof emptyCache;
+      _avatarCache: typeof emptyCache;
+      _groupsCache: typeof emptyCache;
+      _inviteMessageCaches: Record<string, typeof emptyCache>;
+      parseResponseCookies: typeof parseResponseCookies;
+    };
+    internals._currentUserCache = currentUserCache;
+    internals._friendsCache = emptyCache;
+    internals._avatarCache = emptyCache;
+    internals._groupsCache = emptyCache;
+    internals._inviteMessageCaches = {};
+    internals.parseResponseCookies = parseResponseCookies;
+    httpFetch.mockResolvedValue(
+      new Response(JSON.stringify({ id: 'usr_old', displayName: 'Old User' }), { status: 200 })
+    );
+
+    const request = api.getCurrentUser(undefined, true);
+    const rejectedRequest = expect(request).rejects.toBe('STALE_REQUEST');
+    await vi.waitFor(() => expect(parseResponseCookies).toHaveBeenCalledOnce());
+    finishCookieParsing();
+    const clearing = api.clearCaches();
+
+    await rejectedRequest;
+    await clearing;
+    expect(currentUserCache.set).not.toHaveBeenCalled();
   });
 
   it('awaits every cache deletion without blocking on a failure', async () => {
@@ -152,14 +202,60 @@ describe('VRChatAPI authentication', () => {
     let completed = false;
 
     const clearing = api.clearCaches().then(() => (completed = true));
-    await Promise.resolve();
-
+    await vi.waitFor(() =>
+      expect(otherCaches.every((cache) => cache.clear.mock.calls.length === 1)).toBe(true)
+    );
     expect(completed).toBe(false);
-    expect(otherCaches.every((cache) => cache.clear.mock.calls.length === 1)).toBe(true);
 
     finishDelete();
     await clearing;
     expect(completed).toBe(true);
+  });
+
+  it('waits for an in-flight friends request before returning its cache', async () => {
+    const api = new VRChatAPI(
+      new BehaviorSubject<VRChatApiSettings>(VRCHAT_API_SETTINGS_DEFAULT),
+      async () => {}
+    );
+    const friend = { id: 'usr_friend' } as LimitedUserFriend;
+    let finishFetch: () => void = () => {};
+    const firstFetch = new Promise<LimitedUserFriend[]>((resolve) => {
+      finishFetch = () => resolve([friend]);
+    });
+    let cachedFriends: LimitedUserFriend[] | undefined;
+    const friendsCache = {
+      get: vi.fn(() => cachedFriends),
+      set: vi.fn(async (friends: LimitedUserFriend[]) => {
+        cachedFriends = friends;
+      }),
+    };
+    const fetchPaginatedData = vi
+      .fn()
+      .mockImplementationOnce(() => firstFetch)
+      .mockResolvedValueOnce([]);
+    const internals = api as unknown as {
+      user: BehaviorSubject<CurrentUser | null>;
+      _friendsCache: typeof friendsCache;
+      fetchPaginatedData: typeof fetchPaginatedData;
+    };
+    internals.user = new BehaviorSubject({ id: 'usr_test' } as CurrentUser);
+    internals._friendsCache = friendsCache;
+    internals.fetchPaginatedData = fetchPaginatedData;
+
+    const firstListing = api.listFriends(true);
+    await vi.waitFor(() => expect(fetchPaginatedData).toHaveBeenCalledOnce());
+    let secondCompleted = false;
+    const secondListing = api.listFriends(true).then((friends) => {
+      secondCompleted = true;
+      return friends;
+    });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(secondCompleted).toBe(false);
+
+    finishFetch();
+    await expect(firstListing).resolves.toEqual([friend]);
+    await expect(secondListing).resolves.toEqual([friend]);
+    expect(fetchPaginatedData).toHaveBeenCalledTimes(2);
   });
 
   it('does not repopulate the friends cache after it is cleared', async () => {

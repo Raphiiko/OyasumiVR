@@ -42,4 +42,29 @@ describe('CachedValue', () => {
     expect(cache.get()).toBeUndefined();
     expect(cacheStore.delete).toHaveBeenCalledWith('CachedValue_TEST');
   });
+
+  it('deletes persisted state after its initial load fails', async () => {
+    cacheStore.get.mockRejectedValue(new Error('LOAD_FAILED'));
+    cacheStore.delete.mockResolvedValue(undefined);
+    const cache = new CachedValue<string>(undefined, 60_000, 'TEST');
+    await cache.waitForInitialisation();
+
+    await cache.clear();
+
+    expect(cacheStore.delete).toHaveBeenCalledWith('CachedValue_TEST');
+  });
+
+  it('handles a failed expired-entry deletion', async () => {
+    cacheStore.get.mockResolvedValue({
+      value: 'cached',
+      lastSet: 0,
+      ttl: 1,
+    });
+    cacheStore.delete.mockRejectedValue(new Error('DELETE_FAILED'));
+    const cache = new CachedValue<string>(undefined, 60_000, 'TEST');
+    await cache.waitForInitialisation();
+
+    expect(cache.get()).toBeUndefined();
+    await vi.waitFor(() => expect(cacheStore.delete).toHaveBeenCalledWith('CachedValue_TEST'));
+  });
 });

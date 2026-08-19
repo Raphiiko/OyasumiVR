@@ -1,5 +1,5 @@
 import { error, info } from '@tauri-apps/plugin-log';
-import { VRChatAPI, VRChatTwoFactorMethod } from './vrchat-api';
+import { twoFactorMethodFromError, VRChatAPI, VRChatTwoFactorMethod } from './vrchat-api';
 import { ModalService } from '../modal.service';
 import { VRChatLoginModalComponent } from 'src-ui/app/components/vrchat-login-modal/vrchat-login-modal.component';
 import {
@@ -85,7 +85,7 @@ export class VRChatAuth {
       return { status: 'RESTORED', user };
     } catch (e) {
       if (signal?.aborted) return { status: 'RETRY' };
-      const method = this.twoFactorMethodFromError(e);
+      const method = twoFactorMethodFromError(e);
       if (method) return { status: 'TWO_FACTOR_REQUIRED', method };
       switch (e) {
         case 'INVALID_CREDENTIALS':
@@ -233,23 +233,14 @@ export class VRChatAuth {
         e === 'INVALID_CREDENTIALS' ||
         e === 'MISSING_CREDENTIALS' ||
         e === 'CHECK_EMAIL' ||
-        e === 'UNSUPPORTED_2FA_METHOD'
+        e === 'UNSUPPORTED_2FA_METHOD' ||
+        e === '2FA_TOTP_REQUIRED' ||
+        e === '2FA_EMAILOTP_REQUIRED'
       ) {
         throw e;
       }
       await new Promise((resolve) => setTimeout(resolve, CURRENT_USER_RETRY_DELAY));
       return await this.api.getCurrentUser(undefined, true);
-    }
-  }
-
-  private twoFactorMethodFromError(error: unknown): VRChatTwoFactorMethod | undefined {
-    switch (error) {
-      case '2FA_TOTP_REQUIRED':
-        return 'totp';
-      case '2FA_EMAILOTP_REQUIRED':
-        return 'emailotp';
-      default:
-        return undefined;
     }
   }
 

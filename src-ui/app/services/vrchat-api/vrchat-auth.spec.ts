@@ -56,6 +56,28 @@ describe('VRChatAuth', () => {
     expect(getCurrentUser).toHaveBeenCalledOnce();
   });
 
+  it('does not retry a new 2FA challenge after verification', async () => {
+    const getCurrentUser = vi.fn(async () => {
+      throw '2FA_EMAILOTP_REQUIRED';
+    });
+    const api = { getCurrentUser } as unknown as VRChatAPI;
+    const auth = new VRChatAuth(
+      api,
+      {} as ModalService,
+      async () => {},
+      new BehaviorSubject<VRChatApiSettings>(VRCHAT_API_SETTINGS_DEFAULT)
+    );
+
+    await expect(
+      (
+        auth as unknown as {
+          getCurrentUserAfter2FA(): Promise<CurrentUser>;
+        }
+      ).getCurrentUserAfter2FA()
+    ).rejects.toBe('2FA_EMAILOTP_REQUIRED');
+    expect(getCurrentUser).toHaveBeenCalledOnce();
+  });
+
   it('lets VRChat validate a cookie after its local expiry date', async () => {
     const settings = new BehaviorSubject<VRChatApiSettings>({
       ...VRCHAT_API_SETTINGS_DEFAULT,
@@ -142,14 +164,14 @@ describe('VRChatAuth', () => {
     };
     internals._status.next('LOGGED_OUT');
     internals.scheduleSessionRestore();
-    vi.advanceTimersByTime(60_000);
-    await Promise.resolve();
+    await vi.advanceTimersByTimeAsync(60_000);
+    expect(getCurrentUser).toHaveBeenCalledOnce();
 
     const login = auth.login('test', 'password');
     await login;
 
     finishRestore();
-    await Promise.resolve();
+    await vi.advanceTimersByTimeAsync(0);
 
     expect((await firstValueFrom(auth.user))?.id).toBe('usr_new');
     expect(clearCaches).toHaveBeenCalledOnce();
