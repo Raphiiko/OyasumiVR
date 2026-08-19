@@ -46,6 +46,14 @@ function shouldRetryCurrentUserRequest(cause: unknown): boolean {
   ].includes(String(cause));
 }
 
+async function hashLoginIdentifier(identifier: string): Promise<string> {
+  const digest = await crypto.subtle.digest(
+    'SHA-256',
+    new TextEncoder().encode(identifier.trim().toLowerCase())
+  );
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
 export class VRChatAuth {
   private readonly statusSubject = new BehaviorSubject<VRChatAuthStatus>('PRE_INIT');
   private readonly userSubject = new BehaviorSubject<CurrentUser | null>(null);
@@ -54,6 +62,7 @@ export class VRChatAuth {
   private sessionRestoreAbortController?: AbortController;
   /** Changes whenever pending session restoration must be discarded. */
   private sessionRestoreGeneration = 0;
+  private pendingTwoFactorLoginIdentifierHash?: string;
   private lastUserUpdateAt = 0;
   private lastStatusUpdateAt = 0;
 
@@ -204,15 +213,45 @@ export class VRChatAuth {
     if (this.statusSubject.value !== 'LOGGED_OUT')
       throw new Error('Tried calling login() while already logged in');
     this.cancelSessionRestore();
-    const rememberedCredentials = await this.loadCredentials();
-    // Reuse saved 2FA only for the credentials that created it.
+    this.pendingTwoFactorLoginIdentifierHash = undefined;
+    const loginIdentifierHash = await hashLoginIdentifier(username);
+    const savedSettings = await firstValueFrom(this.settings);
+    const rememberedCredentials = savedSettings.twoFactorCookieLoginIdentifierHash
+      ? null
+      : await this.loadCredentials();
+    const rememberedLoginIdentifierHash = rememberedCredentials
+      ? await hashLoginIdentifier(rememberedCredentials.username)
+      : null;
     const reuseTwoFactorCookie =
-      rememberedCredentials?.username === username && rememberedCredentials.password === password;
+      !!savedSettings.twoFactorCookie &&
+      (savedSettings.twoFactorCookieLoginIdentifierHash === loginIdentifierHash ||
+        (rememberedLoginIdentifierHash === loginIdentifierHash &&
+          rememberedCredentials?.password === password));
     await this.api.clearCaches();
-    const user = await this.api.getCurrentUser({
-      credentials: { username, password },
-      includeTwoFactorCookie: reuseTwoFactorCookie,
-    });
+    let user: CurrentUser;
+    try {
+      user = await this.api.getCurrentUser({
+        credentials: { username, password },
+        includeTwoFactorCookie: reuseTwoFactorCookie,
+      });
+    } catch (cause) {
+      if (twoFactorMethodFromError(cause)) {
+        this.pendingTwoFactorLoginIdentifierHash = loginIdentifierHash;
+        await this.clearTwoFactorCookie();
+      }
+      throw cause;
+    }
+    this.pendingTwoFactorLoginIdentifierHash = undefined;
+    const currentSettings = await firstValueFrom(this.settings);
+    if (
+      !reuseTwoFactorCookie &&
+      savedSettings.twoFactorCookie &&
+      currentSettings.twoFactorCookie === savedSettings.twoFactorCookie
+    ) {
+      await this.clearTwoFactorCookie();
+    } else if (currentSettings.twoFactorCookie) {
+      await this.updateSettings({ twoFactorCookieLoginIdentifierHash: loginIdentifierHash });
+    }
     this.completeLogin(user);
   }
 
@@ -225,7 +264,14 @@ export class VRChatAuth {
     await this.api.clearCaches();
     const { authCookie } = await firstValueFrom(this.settings);
     if (!authCookie) throw new Error('Called verify2FA() before successfully calling login()');
+    await this.clearTwoFactorCookie(this.pendingTwoFactorLoginIdentifierHash !== undefined);
     await this.api.verify2FA(code, method);
+    if (this.pendingTwoFactorLoginIdentifierHash) {
+      await this.updateSettings({
+        twoFactorCookieLoginIdentifierHash: this.pendingTwoFactorLoginIdentifierHash,
+      });
+      this.pendingTwoFactorLoginIdentifierHash = undefined;
+    }
     this.completeLogin(await this.getCurrentUserAfter2FA());
   }
 
@@ -237,6 +283,7 @@ export class VRChatAuth {
       authCookieExpiry: null,
       twoFactorCookie: null,
       twoFactorCookieExpiry: null,
+      twoFactorCookieLoginIdentifierHash: null,
     });
     this.userSubject.next(null);
     this.statusSubject.next('LOGGED_OUT');
@@ -257,6 +304,14 @@ export class VRChatAuth {
       await new Promise((resolve) => setTimeout(resolve, CURRENT_USER_RETRY_DELAY));
       return await this.api.getCurrentUser();
     }
+  }
+
+  private async clearTwoFactorCookie(clearLoginIdentifier = true): Promise<void> {
+    await this.updateSettings({
+      twoFactorCookie: null,
+      twoFactorCookieExpiry: null,
+      ...(clearLoginIdentifier ? { twoFactorCookieLoginIdentifierHash: null } : {}),
+    });
   }
 
   // user state
