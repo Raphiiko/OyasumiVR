@@ -69,7 +69,7 @@ export class CachedValue<T> {
 
   private async clearFromDisk() {
     if (!this.persistenceKey) return;
-    await CACHE_STORE.delete(this.persistenceKey);
+    await CACHE_STORE.delete('CachedValue_' + this.persistenceKey);
   }
 
   private async loadFromDisk() {

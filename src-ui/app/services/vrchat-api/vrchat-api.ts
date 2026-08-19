@@ -33,6 +33,8 @@ const MAX_VRCHAT_FRIENDS = 65536;
 const MAX_FAVOURITE_AVATARS = 500;
 const MAX_UPLOADED_AVATARS = 1000;
 
+export type VRChatTwoFactorMethod = 'totp' | 'emailotp';
+
 export class VRChatAPI {
   private userAgent!: string;
   private apiCallQueue: TaskQueue = new TaskQueue({
@@ -107,7 +109,7 @@ export class VRChatAPI {
 
   constructor(
     private settings: Observable<VRChatApiSettings>,
-    private updateSettings: (settings: Partial<VRChatApiSettings>) => void
+    private updateSettings: (settings: Partial<VRChatApiSettings>) => Promise<void>
   ) {}
 
   public async init(
@@ -178,21 +180,19 @@ export class VRChatAPI {
     return true;
   }
 
-  public async verify2FA(code: string, method: 'totp' | 'otp' | 'emailotp') {
+  public async verify2FA(code: string, method: VRChatTwoFactorMethod) {
     const headers = await this.getDefaultHeaders();
     const response = await fetch(`${BASE_URL}/auth/twofactorauth/${method}/verify`, {
       method: 'POST',
       body: JSON.stringify({ code }),
       headers,
     });
-    // If we received a 401, the code was likely incorrect
     const responseData = await response.json().catch(() => {});
-    if (response.status === 400 && responseData?.verified === false) {
+    if (responseData?.verified === false) {
       warn(`[VRChat] 2FA Verification failed: Invalid code`);
       throw 'INVALID_CODE';
     }
-    // If it's not ok, it's unexpected
-    if (!response.ok || responseData?.verified === false) {
+    if (!response.ok || responseData?.verified !== true) {
       error(
         `[VRChat] Received unexpected response from /auth/twofactorauth/${method}/verify: ${JSON.stringify(
           response
@@ -200,7 +200,6 @@ export class VRChatAPI {
       );
       throw 'UNEXPECTED_RESPONSE';
     }
-    // Process any auth cookie if we get any
     await this.parseResponseCookies(response);
   }
 
@@ -234,9 +233,8 @@ export class VRChatAPI {
     const response = await fetch(`${BASE_URL}/auth/user`, {
       headers,
     });
-    const responseData: CurrentUser | { requiresTwoFactorAuth: string[] } = await response
-      .json()
-      .catch(() => {});
+    const responseData: CurrentUser | { requiresTwoFactorAuth: string[] } | undefined =
+      await response.json().catch(() => {});
     // If we received a 401, there is probably an error included
     if (response.status === 401) {
       // Try parse the error message
@@ -263,23 +261,30 @@ export class VRChatAPI {
       error(`[VRChat] Received unexpected response from /auth/user: ${JSON.stringify(response)}`);
       throw 'UNEXPECTED_RESPONSE';
     }
+    if (!responseData || typeof responseData !== 'object') {
+      error(`[VRChat] Received invalid response body from /auth/user`);
+      throw 'UNEXPECTED_RESPONSE';
+    }
     // Process any auth cookie if we get any (even if we still need to verify 2FA)
     await this.parseResponseCookies(response);
     // Handle 2FA required response
-    if (responseData.hasOwnProperty('requiresTwoFactorAuth')) {
+    if ('requiresTwoFactorAuth' in responseData) {
       const data = responseData as { requiresTwoFactorAuth: string[] };
+      if (!Array.isArray(data.requiresTwoFactorAuth)) {
+        error(`[VRChat] Received invalid 2FA challenge from /auth/user`);
+        throw 'UNEXPECTED_RESPONSE';
+      }
       const methods = data.requiresTwoFactorAuth.map((method) => method.toLowerCase());
       info(
         `[VRChat] 2FA Required for login. (methods=${JSON.stringify(data.requiresTwoFactorAuth)})`
       );
       if (methods.includes('totp')) throw '2FA_TOTP_REQUIRED';
       if (methods.includes('emailotp')) throw '2FA_EMAILOTP_REQUIRED';
-      if (methods.includes('otp')) throw '2FA_OTP_REQUIRED';
       error(
         '[VRChat] 2FA Required for login, but no supported method found. Available methods: ' +
           JSON.stringify(data.requiresTwoFactorAuth)
       );
-      throw '2FA_TOTP_REQUIRED'; // Should never happen
+      throw 'UNSUPPORTED_2FA_METHOD';
     }
     // Cache the user
     const user = responseData as CurrentUser;
@@ -795,7 +800,7 @@ export class VRChatAPI {
     for (const cookieHeader of cookieHeaders) {
       const cookies = parseSetCookieHeader(cookieHeader);
       for (const cookie of cookies) {
-        const expiry = Math.floor((cookie.expires || new Date()).getTime() / 1000);
+        const expiry = cookie.expires ? Math.floor(cookie.expires.getTime() / 1000) : null;
         switch (cookie.name) {
           case 'auth':
             await this.updateSettings({

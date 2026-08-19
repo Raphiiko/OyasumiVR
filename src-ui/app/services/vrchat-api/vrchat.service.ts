@@ -10,7 +10,7 @@ import { VRChatLogService } from '../vrchat-log.service';
 import { generateStorageCryptoKey, serializeStorageCryptoKey } from '../../utils/crypto';
 import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
-import { VRChatAPI } from './vrchat-api';
+import { VRChatAPI, VRChatTwoFactorMethod } from './vrchat-api';
 import { VRChatAuth, VRChatAuthStatus } from './vrchat-auth';
 import { VRChatSocket } from './vrchat-socket';
 import { error } from '@tauri-apps/plugin-log';
@@ -144,7 +144,7 @@ export class VRChatService {
     await this.auth.logout();
   }
 
-  public async verify2FA(code: string, method: 'totp' | 'otp' | 'emailotp') {
+  public async verify2FA(code: string, method: VRChatTwoFactorMethod) {
     await this.auth.verify2FA(code, method);
   }
 
@@ -230,7 +230,6 @@ export class VRChatService {
     let settings: VRChatApiSettings | undefined =
       await SETTINGS_STORE.get<VRChatApiSettings>(SETTINGS_KEY_VRCHAT_API);
     settings = settings ? migrateVRChatApiSettings(settings) : this._settings.value;
-    this.auth.handleSettingsLoad(settings);
     // Generate storage crypto key if needed
     if (!settings.credentialCryptoKey) {
       const key = await generateStorageCryptoKey();

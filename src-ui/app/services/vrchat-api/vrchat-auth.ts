@@ -1,5 +1,5 @@
 import { error, info } from '@tauri-apps/plugin-log';
-import { VRChatAPI } from './vrchat-api';
+import { VRChatAPI, VRChatTwoFactorMethod } from './vrchat-api';
 import { ModalService } from '../modal.service';
 import { VRChatLoginModalComponent } from 'src-ui/app/components/vrchat-login-modal/vrchat-login-modal.component';
 import {
@@ -22,6 +22,15 @@ import {
 
 export type VRChatAuthStatus = 'PRE_INIT' | 'LOGGED_OUT' | 'LOGGED_IN';
 
+type SessionRestoreResult =
+  | { status: 'NONE' | 'RESTORED' | 'RETRY' }
+  | { status: 'LOGIN_REQUIRED'; error?: string }
+  | { status: 'TWO_FACTOR_REQUIRED'; method: VRChatTwoFactorMethod };
+
+const LOGIN_MODAL_ID = 'VRCHAT_LOGIN';
+const SESSION_RESTORE_RETRY_DELAY = 60_000;
+const CURRENT_USER_RETRY_DELAY = 1_000;
+
 export class VRChatAuth {
   private _status: BehaviorSubject<VRChatAuthStatus> = new BehaviorSubject<VRChatAuthStatus>(
     'PRE_INIT'
@@ -31,7 +40,7 @@ export class VRChatAuth {
     null
   );
   public user = this._user.asObservable();
-  private loginExpired = false;
+  private sessionRestoreRetry?: ReturnType<typeof setTimeout>;
   private _userUpdateEventLastReceived = new BehaviorSubject<number>(0);
   private _userStatusLastUpdated = new BehaviorSubject<number>(0);
 
@@ -47,16 +56,11 @@ export class VRChatAuth {
   //
 
   public async init() {
-    // Load existing session if possible
-    await this.loadSession();
+    const restoreResult = await this.loadSession();
     // Depending on if we have a user, set the status
     const newStatus = this._user.value ? 'LOGGED_IN' : 'LOGGED_OUT';
     if (newStatus !== this._status.value) this._status.next(newStatus);
-    // Show the login modal if we were just logged out due to token expiry
-    if (this.loginExpired) {
-      info(`[VRChat] Login expired.`);
-      this.showLoginModal(true);
-    }
+    this.handleSessionRestoreResult(restoreResult);
     this.pollUserForStatus();
     // Handle login side effects
     this._user
@@ -73,85 +77,100 @@ export class VRChatAuth {
       });
   }
 
-  public handleSettingsLoad(settings: VRChatApiSettings) {
-    this.loginExpired = false;
-    if (settings.authCookieExpiry && settings.authCookieExpiry < Date.now() / 1000) {
-      info('[VRChat] Auth cookie expired, throwing it away.');
-      settings.authCookie = null;
-      settings.authCookieExpiry = null;
-      this.loginExpired = true;
-    }
-    if (settings.twoFactorCookieExpiry && settings.twoFactorCookieExpiry < Date.now() / 1000) {
-      info('[VRChat] Two factor cookie expired, throwing it away.');
-      settings.twoFactorCookie = null;
-      settings.twoFactorCookieExpiry = null;
-      this.loginExpired = true;
+  private async loadSession(): Promise<SessionRestoreResult> {
+    if (!(await firstValueFrom(this.settings)).authCookie) return { status: 'NONE' };
+    try {
+      this._user.next(await this.api.getCurrentUser());
+      this._userStatusLastUpdated.next(Date.now());
+      info(`[VRChat] Restored existing session`);
+      return { status: 'RESTORED' };
+    } catch (e) {
+      const method = this.twoFactorMethodFromError(e);
+      if (method) return { status: 'TWO_FACTOR_REQUIRED', method };
+      switch (e) {
+        case 'INVALID_CREDENTIALS':
+        case 'MISSING_CREDENTIALS':
+          await this.updateSettings({
+            authCookie: null,
+            authCookieExpiry: null,
+          });
+          info(`[VRChat] Failed to restore session: ${e}`);
+          return { status: 'LOGIN_REQUIRED' };
+        case 'CHECK_EMAIL':
+        case 'UNSUPPORTED_2FA_METHOD':
+          info(`[VRChat] Failed to restore session: ${e}`);
+          return { status: 'LOGIN_REQUIRED', error: String(e) };
+        default:
+          error(`[VRChat] Error trying to restore session: ${e}`);
+          return { status: 'RETRY' };
+      }
     }
   }
 
-  private async loadSession() {
-    // If we already have an auth cookie, get the current user for it
-    if ((await firstValueFrom(this.settings)).authCookie) {
-      try {
-        this._user.next(await this.api.getCurrentUser());
-        this._userStatusLastUpdated.next(Date.now());
-        info(`[VRChat] Restored existing session`);
-      } catch (e) {
-        switch (e) {
-          case 'INVALID_CREDENTIALS':
-          case 'MISSING_CREDENTIALS':
-          case 'CHECK_EMAIL':
-          case '2FA_TOTP_REQUIRED':
-          case '2FA_EMAILOTP_REQUIRED':
-          case '2FA_OTP_REQUIRED':
-            await this.updateSettings({
-              authCookie: null,
-              authCookieExpiry: null,
-              twoFactorCookie: null,
-              twoFactorCookieExpiry: null,
-            });
-            info(`[VRChat] Failed to restore session: ${e}`);
-            break;
-          default:
-            error(`[VRChat] Error trying to restore session: ${e}`);
-            break;
-        }
-      }
+  private handleSessionRestoreResult(result: SessionRestoreResult) {
+    switch (result.status) {
+      case 'TWO_FACTOR_REQUIRED':
+        this.showLoginModal(false, result.method);
+        break;
+      case 'LOGIN_REQUIRED':
+        info(`[VRChat] Login expired.`);
+        this.showLoginModal(true, undefined, result.error);
+        break;
+      case 'RETRY':
+        this.scheduleSessionRestore();
+        break;
     }
+  }
+
+  private scheduleSessionRestore() {
+    if (this.sessionRestoreRetry) return;
+    this.sessionRestoreRetry = setTimeout(async () => {
+      this.sessionRestoreRetry = undefined;
+      if (this._status.value !== 'LOGGED_OUT') return;
+      const result = await this.loadSession();
+      if (result.status === 'RESTORED') {
+        this._status.next('LOGGED_IN');
+        this.modalService.closeModal(LOGIN_MODAL_ID);
+      }
+      this.handleSessionRestoreResult(result);
+    }, SESSION_RESTORE_RETRY_DELAY);
+  }
+
+  private cancelSessionRestore() {
+    clearTimeout(this.sessionRestoreRetry);
+    this.sessionRestoreRetry = undefined;
   }
 
   //
   // Authentication methods
   //
 
-  public showLoginModal(autoLogin = false) {
+  public showLoginModal(
+    autoLogin = false,
+    twoFactorMethod?: VRChatTwoFactorMethod,
+    initialError?: string
+  ) {
+    if (this.modalService.isModalOpen(LOGIN_MODAL_ID)) return;
     this.modalService
       .addModal(
         VRChatLoginModalComponent,
-        { autoLogin },
+        { autoLogin, twoFactorMethod, initialError },
         {
           closeOnEscape: false,
+          id: LOGIN_MODAL_ID,
         }
       )
       .subscribe(() => {});
   }
 
-  /**
-   * Attempts to log in to VRChat using the provided credentials
-   *
-   * @param {string} username - VRChat username or email
-   * @param {string} password - VRChat password
-   * @returns {Promise<void>} - Resolves when login is successful
-   * @throws {'2FA_TOTP_REQUIRED'} - When time-based OTP verification is needed
-   * @throws {'2FA_EMAILOTP_REQUIRED'} - When email-based OTP verification is needed
-   * @throws {'2FA_OTP_REQUIRED'} - When another form of OTP verification is needed
-   * @throws {'INVALID_CREDENTIALS'} - When provided credentials are incorrect
-   * @throws {'CHECK_EMAIL'} - When login attempt triggered VRChat to send verification email
-   * @throws {'UNEXPECTED_RESPONSE'} - When API returns an unexpected error
-   */
   public async login(username: string, password: string): Promise<void> {
     if (this._status.value !== 'LOGGED_OUT')
       throw new Error('Tried calling login() while already logged in');
+    this.cancelSessionRestore();
+    await this.updateSettings({
+      authCookie: null,
+      authCookieExpiry: null,
+    });
     this._user.next(await this.api.getCurrentUser({ username, password }, true));
     this._userStatusLastUpdated.next(Date.now());
     // If we got here, we have a user, so we are logged in (and have cookies)
@@ -159,27 +178,16 @@ export class VRChatAuth {
     info(`[VRChat] Logged in: ${this._user.value?.displayName}`);
   }
 
-  /**
-   * Verifies a two-factor authentication code after a successful initial login
-   *
-   * @param {string} code - The verification code provided by the user
-   * @param {'totp'|'otp'|'emailotp'} method - The 2FA method to use for verification
-   * @returns {Promise<void>} - Resolves when 2FA verification is successful
-   * @throws {'INVALID_CODE'} - When the provided verification code is incorrect
-   * @throws {'UNEXPECTED_RESPONSE'} - When API returns an unexpected error
-   * @throws {Error} - When called while already logged in or without auth cookie
-   */
-  public async verify2FA(code: string, method: 'totp' | 'otp' | 'emailotp') {
+  public async verify2FA(code: string, method: VRChatTwoFactorMethod) {
     if (this._status.value !== 'LOGGED_OUT') {
       error(`[VRChat] Tried calling verify2FA() while already logged in`);
       throw new Error('Tried calling verify2FA() while already logged in');
     }
-    const { authCookie, authCookieExpiry } = await firstValueFrom(this.settings);
-    if (!authCookie || (authCookieExpiry && authCookieExpiry < Date.now() / 1000))
-      throw new Error('Called verify2FA() before successfully calling login()');
-    this.api.verify2FA(code, method);
-    // Try getting the current user again
-    this._user.next(await this.api.getCurrentUser(undefined, true));
+    this.cancelSessionRestore();
+    const { authCookie } = await firstValueFrom(this.settings);
+    if (!authCookie) throw new Error('Called verify2FA() before successfully calling login()');
+    await this.api.verify2FA(code, method);
+    this._user.next(await this.getCurrentUserAfter2FA());
     this._userStatusLastUpdated.next(Date.now());
     // If we got here, we are logged in (and have cookies)
     this._status.next('LOGGED_IN');
@@ -187,7 +195,8 @@ export class VRChatAuth {
   }
 
   public async logout() {
-    this.api.clearCaches();
+    this.cancelSessionRestore();
+    await this.api.clearCaches();
     await this.updateSettings({
       authCookie: undefined,
       authCookieExpiry: undefined,
@@ -197,6 +206,34 @@ export class VRChatAuth {
     this._user.next(null);
     this._status.next('LOGGED_OUT');
     info(`[VRChat] Logged out`);
+  }
+
+  private async getCurrentUserAfter2FA(): Promise<CurrentUser> {
+    try {
+      return await this.api.getCurrentUser(undefined, true);
+    } catch (e) {
+      if (
+        e === 'INVALID_CREDENTIALS' ||
+        e === 'MISSING_CREDENTIALS' ||
+        e === 'CHECK_EMAIL' ||
+        e === 'UNSUPPORTED_2FA_METHOD'
+      ) {
+        throw e;
+      }
+      await new Promise((resolve) => setTimeout(resolve, CURRENT_USER_RETRY_DELAY));
+      return await this.api.getCurrentUser(undefined, true);
+    }
+  }
+
+  private twoFactorMethodFromError(error: unknown): VRChatTwoFactorMethod | undefined {
+    switch (error) {
+      case '2FA_TOTP_REQUIRED':
+        return 'totp';
+      case '2FA_EMAILOTP_REQUIRED':
+        return 'emailotp';
+      default:
+        return undefined;
+    }
   }
 
   //
