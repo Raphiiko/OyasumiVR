@@ -67,7 +67,7 @@ tauri-plugin-clipboard-manager = "2.3.2"
 tauri-plugin-deep-link = "2.4.9"
 tauri-plugin-dialog = "2.7.2"
 tauri-plugin-fs = "2.5.1"
-tauri-plugin-http = { version = "2.5.9", features = ["unsafe-headers"] }
+tauri-plugin-http = { version = "2.5.9", default-features = false, features = ["rustls-tls", "http2", "charset", "macos-system-configuration", "unsafe-headers"] }
 tauri-plugin-log = { version = "2.9.0" }
 tauri-plugin-notification = "2.3.3"
 tauri-plugin-opener = "2.5.4"
