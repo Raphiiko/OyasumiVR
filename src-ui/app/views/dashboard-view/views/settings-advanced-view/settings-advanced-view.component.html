@@ -203,17 +203,19 @@
               </button>
             </div>
           </div>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.advanced.troubleshooting.devTools.title"></span>
-              <span transloco="settings.advanced.troubleshooting.devTools.description"></span>
+          @if (devToolsAvailable | async) {
+            <div class="setting-row">
+              <div class="setting-row-label">
+                <span transloco="settings.advanced.troubleshooting.devTools.title"></span>
+                <span transloco="settings.advanced.troubleshooting.devTools.description"></span>
+              </div>
+              <div class="setting-row-action">
+                <button class="btn btn-primary" (click)="openDevTools()">
+                  <span transloco="settings.advanced.troubleshooting.devTools.action"></span>
+                </button>
+              </div>
             </div>
-            <div class="setting-row-action">
-              <button class="btn btn-primary" (click)="openDevTools()">
-                <span transloco="settings.advanced.troubleshooting.devTools.action"></span>
-              </button>
-            </div>
-          </div>
+          }
         </div>
       </div>
     </div>

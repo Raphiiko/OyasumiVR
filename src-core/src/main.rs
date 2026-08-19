@@ -211,11 +211,6 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     // Set up app reference
     *TAURI_APP_HANDLE.lock().await = Some(app_handle.clone());
     let window = app_handle.get_webview_window("main").unwrap();
-    // Open devtools if we're in debug mode
-    #[cfg(debug_assertions)]
-    {
-        window.open_devtools();
-    }
     // Disable swipe navigation in main window
     window
         .with_webview(|webview| unsafe {
@@ -385,6 +380,7 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         commands::nvml::nvml_status,
         commands::nvml::nvml_get_devices,
         commands::nvml::nvml_set_power_management_limit,
+        commands::debug::dev_tools_available,
         commands::debug::open_dev_tools,
         cn_compliance::cn_compliance_mode,
         commands::time::get_sunrise_sunset_time,

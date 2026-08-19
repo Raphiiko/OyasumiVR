@@ -126,7 +126,7 @@ rev = "47c00b5fab8d7a45ba3254873ca7886f84483560"
 
 [dependencies.tauri]
 version = "2.11.5"
-features = ["devtools", "tray-icon"]
+features = ["tray-icon"]
 
 [build-dependencies]
 reqwest = { version = "0.13.4", features = ["blocking"] }
