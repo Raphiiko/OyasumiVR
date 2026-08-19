@@ -42,13 +42,6 @@ use crate::globals::APTABASE_HOST;
 
 #[tokio::main]
 async fn main() {
-    #[cfg(windows)]
-    if std::env::args_os().any(|arg| arg == "--console") {
-        use windows::Win32::System::Console::{AllocConsole, AttachConsole, ATTACH_PARENT_PROCESS};
-        if unsafe { AttachConsole(ATTACH_PARENT_PROCESS) }.is_err() {
-            let _ = unsafe { AllocConsole() };
-        }
-    }
     // Construct OyasumiVR Tauri application
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
@@ -69,6 +62,10 @@ async fn main() {
         .plugin(tauri_plugin_store::Builder::default().build())
         .plugin(configure_tauri_plugin_aptabase())
         .setup(|app| {
+            #[cfg(windows)]
+            if std::env::args_os().any(|arg| arg == "--console") {
+                open_console();
+            }
             let matches = match app.cli().matches() {
                 Ok(matches) => Some(matches),
                 Err(e) => {
@@ -97,8 +94,20 @@ async fn main() {
         .expect("An error occurred while running the application")
 }
 
+#[cfg(windows)]
+fn open_console() {
+    use windows::Win32::System::Console::{AllocConsole, AttachConsole, ATTACH_PARENT_PROCESS};
+    if unsafe { AttachConsole(ATTACH_PARENT_PROCESS) }.is_err() {
+        let _ = unsafe { AllocConsole() };
+    }
+}
+
 fn configure_tauri_plugin_single_instance() -> TauriPlugin<Wry> {
     tauri_plugin_single_instance::init(|app, _argv, _cwd| {
+        #[cfg(windows)]
+        if _argv.iter().any(|arg| arg == "--console") {
+            open_console();
+        }
         // Focus main window when user attempts to launch a second instance.
         let window = app.get_webview_window("main").unwrap();
         if let Ok(is_visible) = window.is_visible() {
