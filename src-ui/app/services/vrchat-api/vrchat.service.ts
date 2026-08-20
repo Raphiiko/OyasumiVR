@@ -20,6 +20,7 @@ import type {
   VRChatOnPlayerLeftEvent,
 } from '../../models/vrchat-log-event';
 import type { VRChatSocketStatus } from './vrchat-socket';
+import { ErrorReportingService } from '../error-reporting.service';
 
 @Injectable({
   providedIn: 'root',
@@ -27,6 +28,7 @@ import type { VRChatSocketStatus } from './vrchat-socket';
 export class VRChatService {
   private readonly modalService = inject(ModalService);
   private readonly logService = inject(VRChatLogService);
+  private readonly errorReporting = inject(ErrorReportingService);
 
   private readonly settingsSubject = new BehaviorSubject<VRChatApiSettings>({
     ...VRCHAT_API_SETTINGS_DEFAULT,
@@ -54,14 +56,15 @@ export class VRChatService {
   public readonly websocketStatus: Observable<VRChatSocketStatus>;
 
   constructor() {
-    this.api = new VRChatAPI(this.settings, this.updateSettings.bind(this));
+    const reportError = (cause: Error) => this.errorReporting.captureException(cause);
+    this.api = new VRChatAPI(this.settings, this.updateSettings.bind(this), reportError);
     this.auth = new VRChatAuth(
       this.api,
       this.modalService,
       this.updateSettings.bind(this),
       this.settings
     );
-    this.socket = new VRChatSocket(this.auth, this.api, this.settings);
+    this.socket = new VRChatSocket(this.auth, this.api, this.settings, reportError);
     this.user = this.auth.user;
     this.status = this.auth.status;
     this.notifications = this.socket.notifications;

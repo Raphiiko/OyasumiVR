@@ -172,7 +172,8 @@ export class VRChatAPI {
 
   constructor(
     private readonly settings: Observable<VRChatApiSettings>,
-    private readonly updateSettings: (settings: Partial<VRChatApiSettings>) => Promise<void>
+    private readonly updateSettings: (settings: Partial<VRChatApiSettings>) => Promise<void>,
+    private readonly reportError: (cause: Error) => void
   ) {}
 
   public async init(
@@ -438,7 +439,9 @@ export class VRChatAPI {
       });
       this.requireSuccessfulResponse(result);
     } catch (e) {
-      error(`[VRChat] Failed to invite user: ${JSON.stringify(e)}`);
+      const failure = requestFailure('VRChat invite request failed', e);
+      error(`[VRChat] ${failure.message}`);
+      this.reportError(failure);
       throw e;
     }
   }
@@ -869,4 +872,10 @@ export class VRChatAPI {
     await this.trackWrite(this.updateSettings(settings));
     this.ensureCacheGeneration(cacheGeneration);
   }
+}
+
+function requestFailure(message: string, cause: unknown): Error {
+  if (cause instanceof Response) return new Error(`${message}: HTTP ${cause.status}`);
+  if (cause instanceof Error) return new Error(message);
+  return new Error(`${message}: unknown error`);
 }
