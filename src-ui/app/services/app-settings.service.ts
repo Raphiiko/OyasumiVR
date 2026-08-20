@@ -86,7 +86,7 @@ export class AppSettingsService {
     const settings = this._settings.value;
     await SETTINGS_STORE.set(SETTINGS_KEY_APP_SETTINGS, {
       ...settings,
-      mqttPassword: mqttProtectedPassword ? null : settings.mqttPassword,
+      mqttPassword: null,
       mqttProtectedPassword,
     });
   }

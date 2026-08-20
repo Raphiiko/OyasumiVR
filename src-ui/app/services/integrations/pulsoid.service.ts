@@ -277,7 +277,7 @@ export class PulsoidService {
     const settings = this.settings.value;
     await SETTINGS_STORE.set(SETTINGS_KEY_PULSOID_API, {
       ...settings,
-      accessToken: protectedAccessToken ? undefined : settings.accessToken,
+      accessToken: undefined,
       protectedAccessToken: protectedAccessToken ?? undefined,
     });
   }
