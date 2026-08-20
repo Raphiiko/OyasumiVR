@@ -854,15 +854,12 @@ export class VRChatAPI {
     for (const cookieHeader of cookieHeaders) {
       const cookies = parseSetCookieHeader(cookieHeader);
       for (const cookie of cookies) {
-        const expiry = cookie.expires ? Math.floor(cookie.expires.getTime() / 1000) : null;
         switch (cookie.name) {
           case 'auth':
             settings.authCookie = cookie.value;
-            settings.authCookieExpiry = expiry;
             break;
           case 'twoFactorAuth':
             settings.twoFactorCookie = cookie.value;
-            settings.twoFactorCookieExpiry = expiry;
             break;
         }
       }

@@ -133,7 +133,6 @@ export class VRChatAuth {
           if (signal?.aborted) return { status: 'RETRY' };
           await this.updateSettings({
             authCookie: null,
-            authCookieExpiry: null,
             encryptedPendingTwoFactorLoginIdentifier: null,
           });
           info(`[VRChat] Failed to restore session: ${e}`);
@@ -262,7 +261,6 @@ export class VRChatAuth {
         this.pendingTwoFactorLoginIdentifierHash = loginIdentifierHash;
         await this.updateSettings({
           twoFactorCookie: null,
-          twoFactorCookieExpiry: null,
           twoFactorCookieLoginIdentifierHash: loginIdentifierHash,
           encryptedPendingTwoFactorLoginIdentifier:
             await this.encryptPendingTwoFactorLoginIdentifier(username),
@@ -311,9 +309,7 @@ export class VRChatAuth {
     await this.api.clearCaches();
     await this.updateSettings({
       authCookie: null,
-      authCookieExpiry: null,
       twoFactorCookie: null,
-      twoFactorCookieExpiry: null,
       twoFactorCookieLoginIdentifierHash: null,
       encryptedPendingTwoFactorLoginIdentifier: null,
     });
@@ -341,7 +337,6 @@ export class VRChatAuth {
   private async clearTwoFactorCookie(clearLoginIdentifier = true): Promise<void> {
     await this.updateSettings({
       twoFactorCookie: null,
-      twoFactorCookieExpiry: null,
       ...(clearLoginIdentifier ? { twoFactorCookieLoginIdentifierHash: null } : {}),
     });
   }

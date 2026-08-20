@@ -81,6 +81,8 @@ function from2To3(data: any): any {
 }
 
 function from3To4(data: any): any {
+  delete data['authCookieExpiry'];
+  delete data['twoFactorCookieExpiry'];
   data.encryptedPendingTwoFactorLoginIdentifier = null;
   data.version = 4;
   return data;
