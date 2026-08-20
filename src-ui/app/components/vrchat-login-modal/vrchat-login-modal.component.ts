@@ -21,6 +21,7 @@ interface VRChatLoginModalInputModel {
   autoLogin?: boolean;
   twoFactorMethod?: VRChatTwoFactorMethod;
   initialError?: string;
+  username?: string;
 }
 
 interface VRChatLoginModalOutputModel {}
@@ -66,15 +67,17 @@ export class VRChatLoginModalComponent
       .subscribe(async (rememberCredentials) => {
         try {
           this.rememberCredentials = rememberCredentials;
-          const credentials = await this.vrchat.loadCredentials();
-          if (credentials) {
-            this.username = credentials.username;
-            this.password = credentials.password;
-          }
           if (this.twoFactorMethod) {
             this.loggingIn = true;
             await this.loginWithTwoFactor(this.twoFactorMethod);
-          } else if (this.autoLogin && credentials) await this.login();
+          } else {
+            const credentials = await this.vrchat.loadCredentials();
+            if (credentials) {
+              this.username = credentials.username;
+              this.password = credentials.password;
+            }
+            if (this.autoLogin && credentials) await this.login();
+          }
         } catch (e) {
           this.setLoginError(e);
         } finally {

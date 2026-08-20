@@ -26,7 +26,11 @@ type SessionRestoreResult =
   | { status: 'NONE' | 'RETRY' }
   | { status: 'RESTORED'; user: CurrentUser }
   | { status: 'LOGIN_REQUIRED'; error?: string }
-  | { status: 'TWO_FACTOR_REQUIRED'; method: VRChatTwoFactorMethod };
+  | {
+      status: 'TWO_FACTOR_REQUIRED';
+      method: VRChatTwoFactorMethod;
+      loginIdentifier?: string;
+    };
 
 const LOGIN_MODAL_ID = 'VRCHAT_LOGIN';
 const SESSION_RESTORE_RETRY_DELAY = 60_000;
@@ -99,15 +103,29 @@ export class VRChatAuth {
   }
 
   private async loadSession(signal?: AbortSignal): Promise<SessionRestoreResult> {
-    if (!(await firstValueFrom(this.settings)).authCookie) return { status: 'NONE' };
+    const savedSettings = await firstValueFrom(this.settings);
+    if (!savedSettings.authCookie) {
+      if (savedSettings.encryptedPendingTwoFactorLoginIdentifier) {
+        await this.updateSettings({ encryptedPendingTwoFactorLoginIdentifier: null });
+      }
+      return { status: 'NONE' };
+    }
     try {
       const user = await this.api.getCurrentUser({ signal });
+      if (savedSettings.encryptedPendingTwoFactorLoginIdentifier) {
+        await this.updateSettings({ encryptedPendingTwoFactorLoginIdentifier: null });
+      }
       info(`[VRChat] Restored existing session`);
       return { status: 'RESTORED', user };
     } catch (e) {
       if (signal?.aborted) return { status: 'RETRY' };
       const method = twoFactorMethodFromError(e);
-      if (method) return { status: 'TWO_FACTOR_REQUIRED', method };
+      if (method)
+        return {
+          status: 'TWO_FACTOR_REQUIRED',
+          method,
+          loginIdentifier: await this.loadPendingTwoFactorLoginIdentifier(),
+        };
       switch (e) {
         case 'INVALID_CREDENTIALS':
         case 'MISSING_CREDENTIALS':
@@ -116,14 +134,17 @@ export class VRChatAuth {
           await this.updateSettings({
             authCookie: null,
             authCookieExpiry: null,
+            encryptedPendingTwoFactorLoginIdentifier: null,
           });
           info(`[VRChat] Failed to restore session: ${e}`);
           return { status: 'LOGIN_REQUIRED' };
         case 'CHECK_EMAIL':
         case 'UNSUPPORTED_2FA_METHOD':
+          await this.updateSettings({ encryptedPendingTwoFactorLoginIdentifier: null });
           info(`[VRChat] Failed to restore session: ${e}`);
           return { status: 'LOGIN_REQUIRED', error: String(e) };
         case 'AUTHENTICATION_REJECTED':
+          await this.updateSettings({ encryptedPendingTwoFactorLoginIdentifier: null });
           info(`[VRChat] Failed to restore session: ${e}`);
           return { status: 'LOGIN_REQUIRED', error: 'UNEXPECTED_RESPONSE' };
         default:
@@ -136,7 +157,7 @@ export class VRChatAuth {
   private handleSessionRestoreResult(result: SessionRestoreResult): void {
     switch (result.status) {
       case 'TWO_FACTOR_REQUIRED':
-        this.showLoginModal(false, result.method);
+        this.showLoginModal(false, result.method, undefined, result.loginIdentifier);
         break;
       case 'LOGIN_REQUIRED':
         info(`[VRChat] Login expired.`);
@@ -194,13 +215,14 @@ export class VRChatAuth {
   public showLoginModal(
     autoLogin = false,
     twoFactorMethod?: VRChatTwoFactorMethod,
-    initialError?: string
+    initialError?: string,
+    username?: string
   ): void {
     if (this.modalService.isModalOpen(LOGIN_MODAL_ID)) return;
     this.modalService
       .addModal(
         VRChatLoginModalComponent,
-        { autoLogin, twoFactorMethod, initialError },
+        { autoLogin, twoFactorMethod, initialError, ...(username ? { username } : {}) },
         {
           closeOnEscape: false,
           id: LOGIN_MODAL_ID,
@@ -214,6 +236,7 @@ export class VRChatAuth {
       throw new Error('Tried calling login() while already logged in');
     this.cancelSessionRestore();
     this.pendingTwoFactorLoginIdentifierHash = undefined;
+    await this.updateSettings({ encryptedPendingTwoFactorLoginIdentifier: null });
     const loginIdentifierHash = await hashLoginIdentifier(username);
     const savedSettings = await firstValueFrom(this.settings);
     const rememberedCredentials = savedSettings.twoFactorCookieLoginIdentifierHash
@@ -237,7 +260,13 @@ export class VRChatAuth {
     } catch (cause) {
       if (twoFactorMethodFromError(cause)) {
         this.pendingTwoFactorLoginIdentifierHash = loginIdentifierHash;
-        await this.clearTwoFactorCookie();
+        await this.updateSettings({
+          twoFactorCookie: null,
+          twoFactorCookieExpiry: null,
+          twoFactorCookieLoginIdentifierHash: loginIdentifierHash,
+          encryptedPendingTwoFactorLoginIdentifier:
+            await this.encryptPendingTwoFactorLoginIdentifier(username),
+        });
       }
       throw cause;
     }
@@ -252,6 +281,7 @@ export class VRChatAuth {
     } else if (currentSettings.twoFactorCookie) {
       await this.updateSettings({ twoFactorCookieLoginIdentifierHash: loginIdentifierHash });
     }
+    await this.updateSettings({ encryptedPendingTwoFactorLoginIdentifier: null });
     this.completeLogin(user);
   }
 
@@ -266,12 +296,13 @@ export class VRChatAuth {
     if (!authCookie) throw new Error('Called verify2FA() before successfully calling login()');
     await this.clearTwoFactorCookie(this.pendingTwoFactorLoginIdentifierHash !== undefined);
     await this.api.verify2FA(code, method);
-    if (this.pendingTwoFactorLoginIdentifierHash) {
-      await this.updateSettings({
-        twoFactorCookieLoginIdentifierHash: this.pendingTwoFactorLoginIdentifierHash,
-      });
-      this.pendingTwoFactorLoginIdentifierHash = undefined;
-    }
+    await this.updateSettings({
+      encryptedPendingTwoFactorLoginIdentifier: null,
+      ...(this.pendingTwoFactorLoginIdentifierHash
+        ? { twoFactorCookieLoginIdentifierHash: this.pendingTwoFactorLoginIdentifierHash }
+        : {}),
+    });
+    this.pendingTwoFactorLoginIdentifierHash = undefined;
     this.completeLogin(await this.getCurrentUserAfter2FA());
   }
 
@@ -284,6 +315,7 @@ export class VRChatAuth {
       twoFactorCookie: null,
       twoFactorCookieExpiry: null,
       twoFactorCookieLoginIdentifierHash: null,
+      encryptedPendingTwoFactorLoginIdentifier: null,
     });
     this.userSubject.next(null);
     this.statusSubject.next('LOGGED_OUT');
@@ -312,6 +344,33 @@ export class VRChatAuth {
       twoFactorCookieExpiry: null,
       ...(clearLoginIdentifier ? { twoFactorCookieLoginIdentifierHash: null } : {}),
     });
+  }
+
+  private async encryptPendingTwoFactorLoginIdentifier(identifier: string): Promise<string | null> {
+    const { credentialCryptoKey } = await firstValueFrom(this.settings);
+    if (!credentialCryptoKey) return null;
+    try {
+      const key = await deserializeStorageCryptoKey(credentialCryptoKey);
+      return await encryptStorageData(identifier, key);
+    } catch (e) {
+      error('[VRChat] Failed to encrypt pending login identifier: ' + JSON.stringify(e));
+      return null;
+    }
+  }
+
+  private async loadPendingTwoFactorLoginIdentifier(): Promise<string | undefined> {
+    const { credentialCryptoKey, encryptedPendingTwoFactorLoginIdentifier } = await firstValueFrom(
+      this.settings
+    );
+    if (!credentialCryptoKey || !encryptedPendingTwoFactorLoginIdentifier) return undefined;
+    try {
+      const key = await deserializeStorageCryptoKey(credentialCryptoKey);
+      return await decryptStorageData(encryptedPendingTwoFactorLoginIdentifier, key);
+    } catch (e) {
+      error('[VRChat] Failed to decrypt pending login identifier: ' + JSON.stringify(e));
+      await this.updateSettings({ encryptedPendingTwoFactorLoginIdentifier: null });
+      return undefined;
+    }
   }
 
   // user state
@@ -403,6 +462,7 @@ export class VRChatAuth {
     await this.updateSettings({
       rememberedCredentials: null,
       rememberCredentials: false,
+      encryptedPendingTwoFactorLoginIdentifier: null,
       credentialCryptoKey: await serializeStorageCryptoKey(await generateStorageCryptoKey()),
     });
   }
