@@ -170,7 +170,18 @@ export class VRChatSocket {
 
     let data: VRChatPipelineMessage;
     try {
-      data = JSON.parse(String(message.data)) as VRChatPipelineMessage;
+      const parsed: unknown = JSON.parse(String(message.data));
+      if (
+        typeof parsed !== 'object' ||
+        parsed === null ||
+        !('type' in parsed) ||
+        typeof parsed.type !== 'string' ||
+        !('content' in parsed) ||
+        typeof parsed.content !== 'string'
+      ) {
+        throw new Error('Invalid VRChat pipeline message');
+      }
+      data = { type: parsed.type, content: parsed.content };
     } catch (cause) {
       error(`[VRChat] Failed to parse websocket message: ${cause}`);
       this.reportError(new Error('VRChat pipeline message parsing failed'));
