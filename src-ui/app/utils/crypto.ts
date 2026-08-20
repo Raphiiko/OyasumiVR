@@ -1,7 +1,4 @@
-//
-// Reads data that was stored before OyasumiVR protected its secrets with the Windows Data
-// Protection API. Only used to migrate that data, never to write new data.
-//
+// Read-only: nothing writes stored data with these helpers.
 
 import { STORAGE_MASTER_CRYPTO_KEY } from '../globals';
 

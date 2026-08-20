@@ -62,6 +62,8 @@ export type HeartbeatRecord = [number, number]; // [timestamp, heartRate]
 })
 export class PulsoidService {
   private csrfCache: string[] = [];
+  private protectedAccessToken: string | null = null;
+  private accessTokenLocked = false;
   private settings = new BehaviorSubject<PulsoidApiSettings>(PULSOID_API_SETTINGS_DEFAULT);
   private socket?: WebSocket;
   private _heartRate = new BehaviorSubject<number>(0);
@@ -249,14 +251,15 @@ export class PulsoidService {
   private async loadSettings() {
     let settings: PulsoidApiSettings | undefined =
       await SETTINGS_STORE.get<PulsoidApiSettings>(SETTINGS_KEY_PULSOID_API);
-    settings = settings ? migratePulsoidApiSettings(settings) : this.settings.value;
+    settings = settings ? await migratePulsoidApiSettings(settings) : this.settings.value;
+    this.protectedAccessToken = settings.protectedAccessToken ?? null;
     if (settings.protectedAccessToken) {
       try {
         settings.accessToken = await unprotectSecret(settings.protectedAccessToken);
       } catch (cause) {
         error(`[Pulsoid] Failed to unlock the access token: ${cause}`);
         settings.accessToken = undefined;
-        settings.expiresAt = undefined;
+        this.accessTokenLocked = true;
       }
     }
     // Handle token expiry
@@ -279,12 +282,20 @@ export class PulsoidService {
 
   private async saveSettings() {
     const settings = this.settings.value;
+    if (settings.accessToken) {
+      try {
+        this.protectedAccessToken = await protectSecret(settings.accessToken);
+        this.accessTokenLocked = false;
+      } catch (cause) {
+        error(`[Pulsoid] Failed to protect the access token: ${cause}`);
+      }
+    } else if (!this.accessTokenLocked) {
+      this.protectedAccessToken = null;
+    }
     await SETTINGS_STORE.set(SETTINGS_KEY_PULSOID_API, {
       ...settings,
       accessToken: undefined,
-      protectedAccessToken: settings.accessToken
-        ? await protectSecret(settings.accessToken)
-        : undefined,
+      protectedAccessToken: this.protectedAccessToken ?? undefined,
     });
   }
 

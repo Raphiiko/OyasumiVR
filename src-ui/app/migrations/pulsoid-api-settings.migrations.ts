@@ -3,12 +3,27 @@ import { error, info } from '@tauri-apps/plugin-log';
 import { PULSOID_API_SETTINGS_DEFAULT, PulsoidApiSettings } from '../models/pulsoid-api-settings';
 import { BaseDirectory, writeTextFile } from '@tauri-apps/plugin-fs';
 import { message } from '@tauri-apps/plugin-dialog';
+import { protectSecret } from '../utils/secrets';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: resetToLatest,
+  2: from1to2,
 };
 
-export function migratePulsoidApiSettings(data: any): PulsoidApiSettings {
+async function from1to2(data: any): Promise<any> {
+  data.version = 2;
+  if (data.accessToken) {
+    try {
+      data.protectedAccessToken = await protectSecret(data.accessToken);
+    } catch (e) {
+      error("[pulsoid-api-settings-migrations] Couldn't protect the access token: " + e);
+    }
+  }
+  delete data.accessToken;
+  return data;
+}
+
+export async function migratePulsoidApiSettings(data: any): Promise<PulsoidApiSettings> {
   let currentVersion = data.version || 0;
   // Reset to latest when the current version is higher than the latest
   if (currentVersion > PULSOID_API_SETTINGS_DEFAULT.version) {
@@ -21,7 +36,7 @@ export function migratePulsoidApiSettings(data: any): PulsoidApiSettings {
   }
   while (currentVersion < PULSOID_API_SETTINGS_DEFAULT.version) {
     try {
-      data = migrations[++currentVersion](data);
+      data = await migrations[++currentVersion](data);
     } catch (e) {
       error(
         "[pulsoid-api-settings-migrations] Couldn't migrate to version " +

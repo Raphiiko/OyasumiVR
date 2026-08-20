@@ -36,6 +36,8 @@ export class AppSettingsService {
   public get settingsSync(): AppSettings {
     return this._settings.value;
   }
+  private mqttProtectedPassword: string | null = null;
+  private mqttPasswordLocked = false;
   private _loadedDefaults: BehaviorSubject<boolean | undefined> = new BehaviorSubject<
     boolean | undefined
   >(undefined);
@@ -64,7 +66,7 @@ export class AppSettingsService {
     let loadedDefaults = false;
     if (settings) {
       const oldSettings = structuredClone(settings);
-      settings = migrateAppSettings(settings);
+      settings = await migrateAppSettings(settings);
       if (oldSettings.userLanguage !== settings.userLanguage) {
         this.translateService.setActiveLang(settings.userLanguage);
       }
@@ -73,12 +75,14 @@ export class AppSettingsService {
       loadedDefaults = true;
     }
     if (settings.userLanguage === 'DEBUG') settings.userLanguage = 'en';
+    this.mqttProtectedPassword = settings.mqttProtectedPassword ?? null;
     if (settings.mqttProtectedPassword) {
       try {
         settings.mqttPassword = await unprotectSecret(settings.mqttProtectedPassword);
       } catch (cause) {
         error(`[AppSettings] Failed to unlock the MQTT password: ${cause}`);
         settings.mqttPassword = null;
+        this.mqttPasswordLocked = true;
       }
     }
     this._settings.next(settings);
@@ -88,12 +92,20 @@ export class AppSettingsService {
 
   async saveSettings() {
     const settings = this._settings.value;
+    if (settings.mqttPassword) {
+      try {
+        this.mqttProtectedPassword = await protectSecret(settings.mqttPassword);
+        this.mqttPasswordLocked = false;
+      } catch (cause) {
+        error(`[AppSettings] Failed to protect the MQTT password: ${cause}`);
+      }
+    } else if (!this.mqttPasswordLocked) {
+      this.mqttProtectedPassword = null;
+    }
     await SETTINGS_STORE.set(SETTINGS_KEY_APP_SETTINGS, {
       ...settings,
       mqttPassword: null,
-      mqttProtectedPassword: settings.mqttPassword
-        ? await protectSecret(settings.mqttPassword)
-        : null,
+      mqttProtectedPassword: this.mqttProtectedPassword,
     });
   }
 

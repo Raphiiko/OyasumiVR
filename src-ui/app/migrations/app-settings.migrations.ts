@@ -4,6 +4,7 @@ import { error, info } from '@tauri-apps/plugin-log';
 import { BaseDirectory, writeTextFile } from '@tauri-apps/plugin-fs';
 import { message } from '@tauri-apps/plugin-dialog';
 import { migrateLighthouseDeviceId } from './lighthouse-device-id';
+import { protectSecret } from '../utils/secrets';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: resetToLatest,
@@ -17,9 +18,23 @@ const migrations: { [v: number]: (data: any) => any } = {
   9: from8to9,
   10: from9to10,
   11: from10to11,
+  12: from11to12,
 };
 
-export function migrateAppSettings(data: any): AppSettings {
+async function from11to12(data: any): Promise<any> {
+  data.version = 12;
+  if (data.mqttPassword) {
+    try {
+      data.mqttProtectedPassword = await protectSecret(data.mqttPassword);
+    } catch (e) {
+      error("[app-settings-migrations] Couldn't protect the MQTT password: " + e);
+    }
+  }
+  data.mqttPassword = null;
+  return data;
+}
+
+export async function migrateAppSettings(data: any): Promise<AppSettings> {
   let currentVersion = data.version || 0;
   // Reset to latest when the current version is higher than the latest
   if (currentVersion > APP_SETTINGS_DEFAULT.version) {
@@ -32,7 +47,7 @@ export function migrateAppSettings(data: any): AppSettings {
   }
   while (currentVersion < APP_SETTINGS_DEFAULT.version) {
     try {
-      data = migrations[++currentVersion](data);
+      data = await migrations[++currentVersion](data);
     } catch (e) {
       error(
         "[app-settings-migrations] Couldn't migrate to version " +

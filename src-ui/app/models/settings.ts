@@ -4,7 +4,7 @@ import { OneTimeFlag } from './one-time-flags';
 import { EventLogType } from './event-log-entry';
 
 export interface AppSettings {
-  version: 11;
+  version: 12;
   // General Settings
   userLanguage: string;
   userLanguagePicked: boolean;
@@ -95,7 +95,7 @@ export const NotificationTypes = [
 export type NotificationType = (typeof NotificationTypes)[number];
 
 export const APP_SETTINGS_DEFAULT: AppSettings = {
-  version: 11,
+  version: 12,
   // General Settings
   userLanguage: 'en',
   userLanguagePicked: false,

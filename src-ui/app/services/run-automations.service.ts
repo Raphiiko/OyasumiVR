@@ -2,10 +2,9 @@ import { Injectable } from '@angular/core';
 import { AutomationConfigService } from './automation-config.service';
 import { AUTOMATION_CONFIGS_DEFAULT, RunAutomationsConfig } from '../models/automations';
 import { debounceTime, distinctUntilChanged, skip, take } from 'rxjs';
-import { decryptStorageData, deserializeStorageCryptoKey } from '../utils/crypto';
 import { protectSecret, unprotectSecret } from '../utils/secrets';
 import { firstValueFrom } from 'rxjs';
-import { debug, error, info, warn } from '@tauri-apps/plugin-log';
+import { debug, warn } from '@tauri-apps/plugin-log';
 import { invoke } from '@tauri-apps/api/core';
 import { SleepService } from './sleep.service';
 import { SleepPreparationService } from './sleep-preparation.service';
@@ -30,7 +29,6 @@ export class RunAutomationsService {
     this.config = (
       await firstValueFrom(this.automationsConfigService.configs.pipe(take(1)))
     ).RUN_AUTOMATIONS;
-    await this.migrateLegacyCommands();
     this.automationsConfigService.configs.subscribe((configs) => {
       this.config = configs.RUN_AUTOMATIONS;
     });
@@ -121,35 +119,5 @@ export class RunAutomationsService {
         }
       }
     }
-  }
-
-  private async migrateLegacyCommands() {
-    const legacyKey = this.config.runAutomationsCryptoKey;
-    if (!legacyKey) return;
-    info('[RunAutomationsService] Migrating commands to protected storage');
-    const automations = ['onSleepModeEnable', 'onSleepModeDisable', 'onSleepPreparation'] as const;
-    const patch: Partial<RunAutomationsConfig> = { runAutomationsCryptoKey: undefined };
-    let key: CryptoKey | null = null;
-    try {
-      key = await deserializeStorageCryptoKey(legacyKey);
-    } catch (cause) {
-      error(`[RunAutomationsService] Failed to unlock legacy command key: ${cause}`);
-    }
-    for (const automation of automations) {
-      const encryptedCommands = this.config[`${automation}Commands`];
-      if (!key || !encryptedCommands) continue;
-      try {
-        patch[`${automation}Commands`] = await protectSecret(
-          await decryptStorageData(encryptedCommands, key)
-        );
-      } catch (cause) {
-        error(`[RunAutomationsService] Failed to migrate ${automation} commands: ${cause}`);
-      }
-    }
-    await this.automationsConfigService.updateAutomationConfig<RunAutomationsConfig>(
-      'RUN_AUTOMATIONS',
-      patch
-    );
-    this.config = { ...this.config, ...patch };
   }
 }
