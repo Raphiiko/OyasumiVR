@@ -252,7 +252,7 @@ export class PulsoidService {
       await SETTINGS_STORE.get<PulsoidApiSettings>(SETTINGS_KEY_PULSOID_API);
     settings = settings ? await migratePulsoidApiSettings(settings) : this.settings.value;
     settings.accessToken =
-      (await this.accessToken.load(settings.protectedAccessToken)) ?? undefined;
+      (await this.accessToken.load(settings.protectedAccessToken)) ?? settings.accessToken;
     settings.protectedAccessToken = undefined;
     // Handle token expiry
     if (settings.expiresAt && settings.expiresAt < Date.now() / 1000) {
