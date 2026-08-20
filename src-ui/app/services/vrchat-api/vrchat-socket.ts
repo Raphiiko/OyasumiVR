@@ -19,6 +19,8 @@ import { VRChatAPI } from './vrchat-api';
 import { VRChatAuth } from './vrchat-auth';
 
 const RECONNECT_INTERVAL = 10_000;
+const HEALTHY_CONNECTION_DURATION = 30_000;
+const FAILURE_REPORT_THRESHOLD = 3;
 
 export type VRChatSocketStatus = 'CLOSED' | 'OPEN' | 'OPENING';
 
@@ -37,6 +39,10 @@ export class VRChatSocket {
   private readonly notificationSubject = new Subject<Notification>();
   private readonly handlers: VRChatEventHandler[];
   private socket?: WebSocket;
+  private openedAt?: number;
+  private receivedMessage = false;
+  private socketError = false;
+  private consecutiveFailures = 0;
   /** Changes whenever pending socket work must be discarded. */
   private connectionGeneration = 0;
 
@@ -46,7 +52,8 @@ export class VRChatSocket {
   constructor(
     private readonly auth: VRChatAuth,
     private readonly api: VRChatAPI,
-    private readonly settings: Observable<VRChatApiSettings>
+    private readonly settings: Observable<VRChatApiSettings>,
+    private readonly reportError: (cause: Error) => void
   ) {
     this.handlers = [
       new UserUpdateHandler(this.auth),
@@ -60,6 +67,7 @@ export class VRChatSocket {
       if (status === 'LOGGED_IN') {
         void this.openSocket();
       } else if (status === 'LOGGED_OUT') {
+        this.consecutiveFailures = 0;
         this.closeSocket();
       }
     });
@@ -103,9 +111,12 @@ export class VRChatSocket {
       return;
     }
     this.socket = socket;
+    this.openedAt = undefined;
+    this.receivedMessage = false;
+    this.socketError = false;
     socket.onopen = () => this.handleOpen(socket);
     socket.onerror = () => this.handleError(socket);
-    socket.onclose = () => this.handleClose(socket);
+    socket.onclose = (event) => this.handleClose(socket, event);
     socket.onmessage = (message) => this.handleMessage(socket, message);
   }
 
@@ -124,31 +135,50 @@ export class VRChatSocket {
 
   private handleOpen(socket: WebSocket): void {
     if (this.socket !== socket) return;
+    this.openedAt = Date.now();
     this.statusSubject.next('OPEN');
     info('[VRChat] Websocket connection opened');
   }
 
-  private handleClose(socket: WebSocket): void {
+  private handleClose(socket: WebSocket, event: CloseEvent): void {
     if (this.socket !== socket) return;
+    const lifetime = this.openedAt === undefined ? undefined : Date.now() - this.openedAt;
+    const failedBeforeHealthy =
+      !this.receivedMessage && (lifetime === undefined || lifetime < HEALTHY_CONNECTION_DURATION);
+    this.consecutiveFailures = failedBeforeHealthy ? this.consecutiveFailures + 1 : 0;
     this.socket = undefined;
     this.statusSubject.next('CLOSED');
-    info('[VRChat] Websocket connection closed');
+    const reason = event.reason.trim().replace(/\s+/g, ' ').slice(0, 120) || 'none';
+    const lifetimeBucket = socketLifetimeBucket(lifetime);
+    info(
+      `[VRChat] Websocket connection closed: code=${event.code} clean=${event.wasClean} lifetime=${lifetimeBucket} error=${this.socketError} reason=${reason}`
+    );
+    if (this.consecutiveFailures === FAILURE_REPORT_THRESHOLD) {
+      this.reportError(
+        new Error(
+          `VRChat pipeline repeatedly closed: code=${event.code} clean=${event.wasClean} lifetime=${lifetimeBucket} error=${this.socketError} reason=${reason}`
+        )
+      );
+    }
   }
 
   private handleError(socket: WebSocket): void {
     if (this.socket !== socket) return;
+    this.socketError = true;
     error('[VRChat] Websocket connection error');
-    this.closeSocket();
   }
 
   private handleMessage(socket: WebSocket, message: MessageEvent): void {
     if (this.socket !== socket) return;
+    this.receivedMessage = true;
+    this.consecutiveFailures = 0;
 
     let data: VRChatPipelineMessage;
     try {
       data = JSON.parse(String(message.data)) as VRChatPipelineMessage;
     } catch (cause) {
       error(`[VRChat] Failed to parse websocket message: ${cause}`);
+      this.reportError(new Error('VRChat pipeline message parsing failed'));
       return;
     }
 
@@ -156,15 +186,28 @@ export class VRChatSocket {
     if (!handler) return;
     try {
       void Promise.resolve(handler.handle(data.content)).catch((cause) =>
-        error(`[VRChat] Failed to handle websocket event '${data.type}': ${cause}`)
+        this.reportHandlerError(data.type, cause)
       );
     } catch (cause) {
-      error(`[VRChat] Failed to handle websocket event '${data.type}': ${cause}`);
+      this.reportHandlerError(data.type, cause);
     }
+  }
+
+  private reportHandlerError(type: string, cause: unknown): void {
+    error(`[VRChat] Failed to handle websocket event '${type}': ${cause}`);
+    this.reportError(new Error(`VRChat pipeline event handling failed: ${type}`));
   }
 
   private async receiveNotification(notification: Notification): Promise<void> {
     info(`[VRChat] Received notification: ${JSON.stringify(notification)}`);
     this.notificationSubject.next(notification);
   }
+}
+
+function socketLifetimeBucket(lifetime: number | undefined): string {
+  if (lifetime === undefined) return 'not-opened';
+  if (lifetime < 1_000) return 'under-1s';
+  if (lifetime < 10_000) return 'under-10s';
+  if (lifetime < HEALTHY_CONNECTION_DURATION) return 'under-30s';
+  return 'healthy';
 }

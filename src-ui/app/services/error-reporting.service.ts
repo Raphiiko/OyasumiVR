@@ -28,6 +28,10 @@ export class ErrorReportingService {
     return this.update;
   }
 
+  captureException(error: Error): void {
+    if (this.active) Sentry.captureException(error);
+  }
+
   private async setEnabled(consented: boolean) {
     const enabled = consented && environment.production && FLAVOUR !== 'DEV';
     if (enabled === this.active) return;
