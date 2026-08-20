@@ -6,7 +6,6 @@ import { BaseDirectory, writeTextFile } from '@tauri-apps/plugin-fs';
 import { migrateOscScript } from './osc-script.migrations';
 import { migrateKnownLighthouseDeviceId } from './lighthouse-device-id';
 import { decryptStorageData, deserializeStorageCryptoKey } from '../utils/crypto';
-import { protectSecret } from '../utils/secrets';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: resetToLatest,
@@ -53,7 +52,7 @@ async function from19to20(data: any): Promise<any> {
     if (!commands) continue;
     try {
       if (!key) throw new Error('No command key available');
-      data.RUN_AUTOMATIONS[field] = await protectSecret(await decryptStorageData(commands, key));
+      data.RUN_AUTOMATIONS[field] = await decryptStorageData(commands, key);
     } catch (e) {
       error("[automation-configs-migrations] Couldn't migrate " + field + ': ' + e);
       data.RUN_AUTOMATIONS[field] = '';

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { AutomationConfigService } from './automation-config.service';
 import { AUTOMATION_CONFIGS_DEFAULT, RunAutomationsConfig } from '../models/automations';
 import { debounceTime, distinctUntilChanged, skip, take } from 'rxjs';
-import { protectSecret, unprotectSecret } from '../utils/secrets';
 import { firstValueFrom } from 'rxjs';
 import { debug, warn } from '@tauri-apps/plugin-log';
 import { invoke } from '@tauri-apps/api/core';
@@ -44,23 +43,14 @@ export class RunAutomationsService {
     commands: string
   ) {
     this.automationsConfigService.updateAutomationConfig<RunAutomationsConfig>('RUN_AUTOMATIONS', {
-      [automation + 'Commands']: await protectSecret(commands),
+      [automation + 'Commands']: commands,
     });
   }
 
   public async getCommands(
     automation: 'onSleepModeEnable' | 'onSleepModeDisable' | 'onSleepPreparation'
   ): Promise<string> {
-    const protectedCommands = this.config[
-      `${automation}Commands` as keyof RunAutomationsConfig
-    ] as string;
-    if (!protectedCommands) return '';
-    try {
-      return await unprotectSecret(protectedCommands);
-    } catch (cause) {
-      warn(`[RunAutomationsService] Failed to unlock ${automation} commands: ${cause}`);
-      return '';
-    }
+    return (this.config[`${automation}Commands` as keyof RunAutomationsConfig] as string) ?? '';
   }
 
   public async testCommands(commands: string): Promise<void> {
