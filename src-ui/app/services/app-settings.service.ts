@@ -14,8 +14,7 @@ import {
 import { SETTINGS_KEY_APP_SETTINGS, SETTINGS_STORE } from '../globals';
 import { isEqual, uniq } from 'lodash';
 import { migrateAppSettings } from '../migrations/app-settings.migrations';
-import { protectSecret, unprotectSecret } from '../utils/secrets';
-import { error } from '@tauri-apps/plugin-log';
+import { ProtectedSecret } from '../utils/secrets';
 import { TranslocoService } from '@jsverse/transloco';
 import { OneTimeFlag } from '../models/one-time-flags';
 import { ModalService } from './modal.service';
@@ -36,8 +35,7 @@ export class AppSettingsService {
   public get settingsSync(): AppSettings {
     return this._settings.value;
   }
-  private mqttProtectedPassword: string | null = null;
-  private mqttPasswordLocked = false;
+  private mqttPassword = new ProtectedSecret('[AppSettings] The MQTT password');
   private _loadedDefaults: BehaviorSubject<boolean | undefined> = new BehaviorSubject<
     boolean | undefined
   >(undefined);
@@ -75,16 +73,8 @@ export class AppSettingsService {
       loadedDefaults = true;
     }
     if (settings.userLanguage === 'DEBUG') settings.userLanguage = 'en';
-    this.mqttProtectedPassword = settings.mqttProtectedPassword ?? null;
-    if (settings.mqttProtectedPassword) {
-      try {
-        settings.mqttPassword = await unprotectSecret(settings.mqttProtectedPassword);
-      } catch (cause) {
-        error(`[AppSettings] Failed to unlock the MQTT password: ${cause}`);
-        settings.mqttPassword = null;
-        this.mqttPasswordLocked = true;
-      }
-    }
+    settings.mqttPassword = await this.mqttPassword.load(settings.mqttProtectedPassword);
+    settings.mqttProtectedPassword = null;
     this._settings.next(settings);
     await this.saveSettings();
     this._loadedDefaults.next(loadedDefaults);
@@ -92,20 +82,10 @@ export class AppSettingsService {
 
   async saveSettings() {
     const settings = this._settings.value;
-    if (settings.mqttPassword) {
-      try {
-        this.mqttProtectedPassword = await protectSecret(settings.mqttPassword);
-        this.mqttPasswordLocked = false;
-      } catch (cause) {
-        error(`[AppSettings] Failed to protect the MQTT password: ${cause}`);
-      }
-    } else if (!this.mqttPasswordLocked) {
-      this.mqttProtectedPassword = null;
-    }
     await SETTINGS_STORE.set(SETTINGS_KEY_APP_SETTINGS, {
       ...settings,
       mqttPassword: null,
-      mqttProtectedPassword: this.mqttProtectedPassword,
+      mqttProtectedPassword: await this.mqttPassword.store(settings.mqttPassword),
     });
   }
 

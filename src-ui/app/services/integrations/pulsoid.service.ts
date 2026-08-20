@@ -32,7 +32,7 @@ import {
 } from '../../models/pulsoid-api-settings';
 import { migratePulsoidApiSettings } from '../../migrations/pulsoid-api-settings.migrations';
 import * as shell from '@tauri-apps/plugin-shell';
-import { protectSecret, unprotectSecret } from '../../utils/secrets';
+import { ProtectedSecret } from '../../utils/secrets';
 
 const HISTORY_LENGTH = 1000 * 60 * 60 * 12; // 12 hours
 
@@ -62,8 +62,7 @@ export type HeartbeatRecord = [number, number]; // [timestamp, heartRate]
 })
 export class PulsoidService {
   private csrfCache: string[] = [];
-  private protectedAccessToken: string | null = null;
-  private accessTokenLocked = false;
+  private accessToken = new ProtectedSecret('[Pulsoid] The access token');
   private settings = new BehaviorSubject<PulsoidApiSettings>(PULSOID_API_SETTINGS_DEFAULT);
   private socket?: WebSocket;
   private _heartRate = new BehaviorSubject<number>(0);
@@ -252,16 +251,9 @@ export class PulsoidService {
     let settings: PulsoidApiSettings | undefined =
       await SETTINGS_STORE.get<PulsoidApiSettings>(SETTINGS_KEY_PULSOID_API);
     settings = settings ? await migratePulsoidApiSettings(settings) : this.settings.value;
-    this.protectedAccessToken = settings.protectedAccessToken ?? null;
-    if (settings.protectedAccessToken) {
-      try {
-        settings.accessToken = await unprotectSecret(settings.protectedAccessToken);
-      } catch (cause) {
-        error(`[Pulsoid] Failed to unlock the access token: ${cause}`);
-        settings.accessToken = undefined;
-        this.accessTokenLocked = true;
-      }
-    }
+    settings.accessToken =
+      (await this.accessToken.load(settings.protectedAccessToken)) ?? undefined;
+    settings.protectedAccessToken = undefined;
     // Handle token expiry
     if (settings.expiresAt && settings.expiresAt < Date.now() / 1000) {
       info('[Pulsoid] Token expired, throwing it away.');
@@ -282,20 +274,10 @@ export class PulsoidService {
 
   private async saveSettings() {
     const settings = this.settings.value;
-    if (settings.accessToken) {
-      try {
-        this.protectedAccessToken = await protectSecret(settings.accessToken);
-        this.accessTokenLocked = false;
-      } catch (cause) {
-        error(`[Pulsoid] Failed to protect the access token: ${cause}`);
-      }
-    } else if (!this.accessTokenLocked) {
-      this.protectedAccessToken = null;
-    }
     await SETTINGS_STORE.set(SETTINGS_KEY_PULSOID_API, {
       ...settings,
       accessToken: undefined,
-      protectedAccessToken: this.protectedAccessToken ?? undefined,
+      protectedAccessToken: (await this.accessToken.store(settings.accessToken)) ?? undefined,
     });
   }
 
