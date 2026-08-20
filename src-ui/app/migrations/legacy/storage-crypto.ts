@@ -1,11 +1,11 @@
 // Read-only: nothing writes stored data with these helpers.
 
-import { STORAGE_MASTER_CRYPTO_KEY } from '../globals';
+const MASTER_KEY = 'mY2BEtChq6dmPS4byAT2Xr1NT+tet5IONT+o7Eni3Vw=';
 
 export async function deserializeStorageCryptoKey(wrappedKey: string): Promise<CryptoKey> {
   const masterKey = await window.crypto.subtle.importKey(
     'raw',
-    base64ToArrayBuffer(STORAGE_MASTER_CRYPTO_KEY),
+    base64ToArrayBuffer(MASTER_KEY),
     { name: 'AES-GCM' },
     true,
     ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']

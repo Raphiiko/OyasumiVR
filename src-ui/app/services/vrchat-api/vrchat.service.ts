@@ -17,7 +17,10 @@ import { BehaviorSubject, combineLatest, filter, firstValueFrom, map, Observable
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { AvatarEx, UserStatus, WorldContext } from '../../models/vrchat';
 import { VRChatLogService } from '../vrchat-log.service';
-import { decryptStorageData, deserializeStorageCryptoKey } from '../../utils/crypto';
+import {
+  decryptStorageData,
+  deserializeStorageCryptoKey,
+} from '../../migrations/legacy/storage-crypto';
 import { protectSecret, unprotectSecret } from '../../utils/secrets';
 import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
