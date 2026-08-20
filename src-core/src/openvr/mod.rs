@@ -17,7 +17,7 @@ use crate::{
 };
 use chrono::{DateTime, Utc};
 use gesture_detector::GestureDetector;
-use log::{error, info};
+use log::{error, info, warn};
 use models::OpenVRStatus;
 use ovr::input::ActiveActionSet;
 use ovr_overlay as ovr;
@@ -311,14 +311,20 @@ async fn shutdown_ovr() {
     *context = None;
 }
 
-/// Constructing an overlay manager while this is false panics.
+/// Constructing an overlay manager while this is false panics. Callers must hold `OVR_CONTEXT`,
+/// or `VR_Shutdown` can invalidate the pointer between this check and the manager's construction.
 pub fn overlay_interface_available() -> bool {
     !unsafe { ovr::sys::VROverlay() }.is_null()
 }
 
-/// Constructing a settings manager while this is false panics.
+/// Constructing a settings manager while this is false panics. Callers must hold `OVR_CONTEXT`,
+/// or `VR_Shutdown` can invalidate the pointer between this check and the manager's construction.
 pub fn settings_interface_available() -> bool {
-    !unsafe { ovr::sys::VRSettings() }.is_null()
+    let available = !unsafe { ovr::sys::VRSettings() }.is_null();
+    if !available {
+        warn!("[Core] The OpenVR settings interface is unavailable");
+    }
+    available
 }
 
 async fn update_status(new_status: OpenVRStatus) {
