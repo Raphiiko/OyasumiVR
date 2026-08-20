@@ -30,9 +30,9 @@ export class CCTControlModalComponent extends BaseModalComponent<void, void> imp
     super();
     this.setCCT
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         throttleTime(1000 / 30, asyncScheduler, { leading: true, trailing: true }),
-        switchMap((cct) => this.cctControl.setCCT(cct))
+        switchMap((cct) => this.cctControl.setCCT(cct)),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
   }

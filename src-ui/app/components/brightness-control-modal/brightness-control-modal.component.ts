@@ -58,7 +58,6 @@ export class BrightnessControlModalComponent
       });
     hardwareBrightnessControl.driverIsAvailable
       .pipe(
-        takeUntilDestroyed(),
         tap((available) => {
           if (!available) this.driverChecked = true;
           this.driverAvailable = available;
@@ -69,7 +68,8 @@ export class BrightnessControlModalComponent
         tap(() => {
           this.driverChecked = true;
           this.cdr.markForCheck();
-        })
+        }),
+        takeUntilDestroyed()
       )
       .subscribe((bounds) => {
         this.hardwareBrightnessBounds = bounds;
@@ -77,23 +77,23 @@ export class BrightnessControlModalComponent
       });
     this.setHardwareBrightness
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         throttleTime(1000 / 30, asyncScheduler, { leading: true, trailing: true }),
-        switchMap((percentage) => this.hardwareBrightnessControl.setBrightness(percentage))
+        switchMap((percentage) => this.hardwareBrightnessControl.setBrightness(percentage)),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
     this.setSoftwareBrightness
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         throttleTime(1000 / 30, asyncScheduler, { leading: true, trailing: true }),
-        switchMap((percentage) => this.softwareBrightnessControl.setBrightness(percentage))
+        switchMap((percentage) => this.softwareBrightnessControl.setBrightness(percentage)),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
     this.setSimpleBrightness
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         throttleTime(1000 / 30, asyncScheduler, { leading: true, trailing: true }),
-        switchMap((percentage) => this.simpleBrightnessControl.setBrightness(percentage))
+        switchMap((percentage) => this.simpleBrightnessControl.setBrightness(percentage)),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
   }

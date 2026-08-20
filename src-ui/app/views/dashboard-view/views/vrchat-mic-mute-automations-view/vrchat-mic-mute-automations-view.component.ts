@@ -54,8 +54,8 @@ export class VRChatMicMuteAutomationsViewComponent implements OnInit {
   async ngOnInit() {
     this.automationConfigService.configs
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        map((configs) => configs.VRCHAT_MIC_MUTE_AUTOMATIONS)
+        map((configs) => configs.VRCHAT_MIC_MUTE_AUTOMATIONS),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((config) => {
         this.onSleepEnableMuteOption = this.muteActionOptions.find(

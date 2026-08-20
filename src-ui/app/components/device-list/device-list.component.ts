@@ -79,12 +79,12 @@ export class DeviceListComponent implements OnInit {
   ngOnInit(): void {
     combineLatest([
       this.openvr.devices.pipe(
-        takeUntilDestroyed(this.destroyRef),
-        tap((devices) => this.processOpenVRDevices(devices))
+        tap((devices) => this.processOpenVRDevices(devices)),
+        takeUntilDestroyed(this.destroyRef)
       ),
       this.lighthouse.devices.pipe(
-        takeUntilDestroyed(this.destroyRef),
-        tap((devices) => this.processLighthouseDevices(devices))
+        tap((devices) => this.processLighthouseDevices(devices)),
+        takeUntilDestroyed(this.destroyRef)
       ),
     ])
       .pipe(tap(() => this.sortDeviceCategories()))
@@ -94,7 +94,7 @@ export class DeviceListComponent implements OnInit {
       this.cdr.markForCheck();
     });
     this.appSettings.settings
-      .pipe(takeUntilDestroyed(this.destroyRef), debounceTime(100))
+      .pipe(debounceTime(100), takeUntilDestroyed(this.destroyRef))
       .subscribe((settings) => {
         this.lighthousePowerControl = settings.lighthousePowerControl;
         this.cdr.markForCheck();

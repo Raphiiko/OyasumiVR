@@ -57,9 +57,9 @@ export class HotkeySelectorModalComponent
     await this.hotkeyService.pause();
     merge(fromEvent(document, 'keyup'), fromEvent(document, 'keydown'))
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         takeUntil(this.stopListeningForKeys),
-        map((event) => event as KeyboardEvent)
+        map((event) => event as KeyboardEvent),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(async (event: KeyboardEvent) => {
         this.modifiers.Ctrl = event.ctrlKey;

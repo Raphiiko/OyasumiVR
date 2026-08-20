@@ -36,7 +36,7 @@ export class InviteAndInviteRequestViewComponent implements OnInit {
 
   ngOnInit(): void {
     this.vrchat.status
-      .pipe(takeUntilDestroyed(this.destroyRef), distinctUntilChanged())
+      .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe(async (status) => {
         this.loggedIn = status === 'LOGGED_IN';
       });

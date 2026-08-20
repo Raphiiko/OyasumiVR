@@ -18,6 +18,7 @@ import { isEqual } from 'lodash';
 import { OscService } from '../../services/osc.service';
 import { parseOscScriptFromCode } from '../../utils/osc-script-utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { flushOnDestroy } from '../../utils/rxjs-utils';
 
 @Component({
   selector: 'app-osc-script-code-editor',
@@ -81,14 +82,15 @@ export class OscScriptCodeEditorComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    flushOnDestroy(this._code, this.destroyRef);
     this._code
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         tap(() => {
           this.validated = false;
           this.cdr.markForCheck();
         }),
-        debounceTime(500)
+        debounceTime(500),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((code) => {
         this.tooltipErrors = [];

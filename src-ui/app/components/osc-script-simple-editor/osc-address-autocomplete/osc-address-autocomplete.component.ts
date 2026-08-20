@@ -69,7 +69,7 @@ export class OscAddressAutocompleteComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     // Setup address search
     this.addressQuery
-      .pipe(takeUntilDestroyed(this.destroyRef), debounceTime(100), distinctUntilChanged())
+      .pipe(debounceTime(100), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe((query) => {
         this.searchAddresses(query);
         this.cdr.markForCheck();

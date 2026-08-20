@@ -122,8 +122,8 @@ export class DeviceManagerConfigModalComponent
     this.lighthouseEvaluationSub?.unsubscribe();
     this.lighthouseEvaluationSub = this.lighthouseService.devices
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        map((devices) => devices.find((d) => d.id === lighthouseId))
+        map((devices) => devices.find((d) => d.id === lighthouseId)),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((device) => {
         if (!device || device.deviceType !== 'lighthouseV1') this.v1LighthouseMode = 'NONE';

@@ -29,6 +29,7 @@ import { OscAddressSelection } from './osc-address-autocomplete/osc-address-auto
 import { AvatarContext, VRChatAvatarParameter } from '../../models/avatar-context';
 import { VRChatService } from 'src-ui/app/services/vrchat-api/vrchat.service';
 import { AppSettingsService } from '../../services/app-settings.service';
+import { flushOnDestroy } from '../../utils/rxjs-utils';
 
 interface ValidationError {
   actionIndex: number;
@@ -117,15 +118,16 @@ export class OscScriptSimpleEditorComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    flushOnDestroy(this.validationTrigger, this.destroyRef);
     this.validationTrigger
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         startWith(void 0),
         tap(() => {
           this.validated = false;
           this.cdr.markForCheck();
         }),
-        debounceTime(500)
+        debounceTime(500),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(() => {
         this.validateScript();

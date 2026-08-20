@@ -18,6 +18,7 @@ import { ModalService } from 'src-ui/app/services/modal.service';
 
 import { LANGUAGES } from '../../../../globals';
 import { vshrink } from '../../../../utils/animations';
+import { flushOnDestroy } from '../../../../utils/rxjs-utils';
 import {
   TELEMETRY_SETTINGS_DEFAULT,
   TelemetrySettings,
@@ -105,8 +106,9 @@ export class SettingsGeneralViewComponent implements OnInit {
     this.lighthouse.consoleStatus
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((status) => this.processLighthouseConsoleStatus(status));
+    flushOnDestroy(this.lighthouseConsolePathInputChange, this.destroyRef);
     this.lighthouseConsolePathInputChange
-      .pipe(takeUntilDestroyed(this.destroyRef), distinctUntilChanged(), debounceTime(500))
+      .pipe(distinctUntilChanged(), debounceTime(500), takeUntilDestroyed(this.destroyRef))
       .subscribe(async (path) => {
         await this.lighthouse.setConsolePath(path);
       });

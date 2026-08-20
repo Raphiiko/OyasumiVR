@@ -104,7 +104,6 @@ export class SettingsOscViewComponent implements OnInit {
       ),
     ])
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         throttleTime(1000, asyncScheduler, { leading: true, trailing: true }),
         map(([vrcOscAddress, { oscCustomTargetHost, oscCustomTargetPort, oscTargets }]) => {
           if (!oscTargets.includes('VRCHAT_OSCQUERY') || !oscTargets.includes('CUSTOM'))
@@ -118,7 +117,8 @@ export class SettingsOscViewComponent implements OnInit {
           const vrcPort = parseInt(vrcOscAddress.split(':')[1]);
           return vrcPort === oscCustomTargetPort;
         }),
-        distinctUntilChanged()
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((showAlert) => (this.showVRCTargetWarning = showAlert));
   }

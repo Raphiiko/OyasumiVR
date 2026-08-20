@@ -104,14 +104,14 @@ export class LighthouseV1IdWizardModalComponent
   ngOnInit(): void {
     interval(1000)
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         filter(() => this.step === 'AUTOMATIC_DETECTION'),
         delay(1500),
-        filter(() => this.step === 'AUTOMATIC_DETECTION')
+        filter(() => this.step === 'AUTOMATIC_DETECTION'),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(() => this.attemptAutomaticDetection());
     combineLatest([this.openvr.status, this.openvr.devices])
-      .pipe(takeUntilDestroyed(this.destroyRef), debounceTime(1))
+      .pipe(debounceTime(1), takeUntilDestroyed(this.destroyRef))
       .subscribe(([status, devices]) => {
         const openVrInitialized = status === 'INITIALIZED';
         const trackedDeviceDetected = devices.some(

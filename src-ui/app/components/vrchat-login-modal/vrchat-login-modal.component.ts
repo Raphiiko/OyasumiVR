@@ -65,8 +65,8 @@ export class VRChatLoginModalComponent
     this.vrchat.activeProfile
       .pipe(
         map((profile) => profile?.rememberCredentials ?? false),
-        takeUntilDestroyed(this.destroyRef),
-        take(1)
+        take(1),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(async (rememberCredentials) => {
         try {
