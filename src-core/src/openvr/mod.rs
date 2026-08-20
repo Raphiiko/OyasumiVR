@@ -316,6 +316,11 @@ pub fn overlay_interface_available() -> bool {
     !unsafe { ovr::sys::VROverlay() }.is_null()
 }
 
+/// Constructing a settings manager while this is false panics.
+pub fn settings_interface_available() -> bool {
+    !unsafe { ovr::sys::VRSettings() }.is_null()
+}
+
 async fn update_status(new_status: OpenVRStatus) {
     let mut status = OVR_STATUS.lock().await;
     *status = new_status.clone();
