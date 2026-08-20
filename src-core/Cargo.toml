@@ -135,6 +135,11 @@ tauri-build = { version = "2.6.3", features = [] }
 toml = "1.1.4"
 tonic-prost-build = { version = "0.14.6", features = [] }
 
+[patch.crates-io]
+tauri-runtime = { git = "https://github.com/Raphiiko/tauri", rev = "e75f81ecb74752ee65d15c7ad7356f9e9b9738e0" }
+tauri-runtime-wry = { git = "https://github.com/Raphiiko/tauri", rev = "e75f81ecb74752ee65d15c7ad7356f9e9b9738e0" }
+tauri-utils = { git = "https://github.com/Raphiiko/tauri", rev = "e75f81ecb74752ee65d15c7ad7356f9e9b9738e0" }
+
 [profile.release]
 panic = "abort"   # Strip expensive panic clean-up logic
 codegen-units = 1 # Compile crates one after another so the compiler can optimize better
