@@ -3,6 +3,7 @@ import { VRCHAT_API_SETTINGS_DEFAULT, VRChatApiSettings } from '../models/vrchat
 import { error, info } from '@tauri-apps/plugin-log';
 import { BaseDirectory, writeTextFile } from '@tauri-apps/plugin-fs';
 import { message } from '@tauri-apps/plugin-dialog';
+import { decryptStorageData, deserializeStorageCryptoKey } from './legacy/storage-crypto';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: resetToLatest,
@@ -11,9 +12,10 @@ const migrations: { [v: number]: (data: any) => any } = {
   4: from3To4,
   5: from4To5,
   6: from5To6,
+  7: from6To7,
 };
 
-export function migrateVRChatApiSettings(data: any): VRChatApiSettings {
+export async function migrateVRChatApiSettings(data: any): Promise<VRChatApiSettings> {
   let currentVersion = data.version || 0;
   // Reset to latest when the current version is higher than the latest
   if (currentVersion > VRCHAT_API_SETTINGS_DEFAULT.version) {
@@ -26,7 +28,7 @@ export function migrateVRChatApiSettings(data: any): VRChatApiSettings {
   }
   while (currentVersion < VRCHAT_API_SETTINGS_DEFAULT.version) {
     try {
-      data = migrations[++currentVersion](data);
+      data = await migrations[++currentVersion](data);
     } catch (e) {
       error(
         "[vrchat-api-settings-migrations] Couldn't migrate to version " +
@@ -138,6 +140,83 @@ function from5To6(data: any): any {
   delete data.credentialCryptoKey;
   data.version = 6;
   return data;
+}
+
+async function from6To7(data: any): Promise<any> {
+  data.version = 7;
+  const legacyKey = data.legacyCredentialCryptoKey;
+  delete data.legacyCredentialCryptoKey;
+  let key: CryptoKey | null = null;
+  if (legacyKey) {
+    try {
+      key = await deserializeStorageCryptoKey(legacyKey);
+    } catch (e) {
+      error("[vrchat-api-settings-migrations] Couldn't read the credential key: " + e);
+    }
+  }
+  data.profiles = await Promise.all(
+    (data.profiles ?? []).map(async (profile: any) => {
+      const migrated = { ...profile };
+      if (migrated.encryptedPendingTwoFactorLoginIdentifier != null) {
+        migrated.pendingTwoFactorLoginIdentifier = key
+          ? await decryptLegacyValue(
+              migrated.encryptedPendingTwoFactorLoginIdentifier,
+              key,
+              profile.id
+            )
+          : null;
+        delete migrated.encryptedPendingTwoFactorLoginIdentifier;
+      }
+      if (typeof migrated.rememberedCredentials === 'string') {
+        migrated.rememberedCredentials = key
+          ? await decryptLegacyCredentials(migrated.rememberedCredentials, key, profile.id)
+          : null;
+        migrated.rememberCredentials =
+          !!migrated.rememberedCredentials && !!profile.rememberCredentials;
+      }
+      return migrated;
+    })
+  );
+  return data;
+}
+
+async function decryptLegacyValue(
+  value: string,
+  key: CryptoKey,
+  profileId: string
+): Promise<string | null> {
+  try {
+    return await decryptStorageData(value, key);
+  } catch (e) {
+    error(
+      "[vrchat-api-settings-migrations] Couldn't decrypt a value for profile " +
+        profileId +
+        ': ' +
+        e
+    );
+    return null;
+  }
+}
+
+async function decryptLegacyCredentials(
+  value: string,
+  key: CryptoKey,
+  profileId: string
+): Promise<{ username: string; password: string } | null> {
+  const encoded = await decryptLegacyValue(value, key, profileId);
+  const separator = encoded?.indexOf(':') ?? -1;
+  if (encoded == null || separator < 0) {
+    error(
+      '[vrchat-api-settings-migrations] Discarded the credentials of profile ' +
+        profileId +
+        ': invalid encoding'
+    );
+    return null;
+  }
+  return {
+    username: atob(encoded.slice(0, separator)),
+    password: atob(encoded.slice(separator + 1)),
+  };
 }
 
 function resetToLatest(data: any): any {

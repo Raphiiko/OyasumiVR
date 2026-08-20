@@ -9,7 +9,6 @@ import {
   VRCHAT_ACCOUNT_SECRET_EMPTY,
   VRCHAT_API_SETTINGS_DEFAULT,
   VRChatAccountProfile,
-  VRChatAccountSecret,
   VRChatApiSettings,
 } from '../../models/vrchat-api-settings';
 import { migrateVRChatApiSettings } from '../../migrations/vrchat-api-settings.migrations';
@@ -17,10 +16,6 @@ import { BehaviorSubject, combineLatest, filter, firstValueFrom, map, Observable
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { AvatarEx, UserStatus, WorldContext } from '../../models/vrchat';
 import { VRChatLogService } from '../vrchat-log.service';
-import {
-  decryptStorageData,
-  deserializeStorageCryptoKey,
-} from '../../migrations/legacy/storage-crypto';
 import { protectSecret, unprotectSecret } from '../../utils/secrets';
 import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
@@ -74,8 +69,6 @@ export class VRChatService {
   private readonly auth: VRChatAuth;
   private readonly socket: VRChatSocket;
   private settingsUpdate: Promise<void> = Promise.resolve();
-  private readonly failedLegacyProfiles = new Map<string, Record<string, unknown>>();
-  private failedLegacyCredentialCryptoKey: string | null = null;
   private lockedActiveProfileId: string | null = null;
 
   private readonly settings = this.settingsSubject.asObservable();
@@ -293,7 +286,7 @@ export class VRChatService {
   private async loadSettings(): Promise<void> {
     const stored = await SETTINGS_STORE.get<VRChatApiSettings>(SETTINGS_KEY_VRCHAT_API);
     let settings = stored
-      ? migrateVRChatApiSettings(stored)
+      ? await migrateVRChatApiSettings(stored)
       : structuredClone(VRCHAT_API_SETTINGS_DEFAULT);
     settings = normalizeVRChatProfiles(await this.loadProfileSecrets(settings));
     await this.saveSettings(settings).catch((cause) =>
@@ -303,69 +296,29 @@ export class VRChatService {
   }
 
   private async loadProfileSecrets(settings: VRChatApiSettings): Promise<VRChatApiSettings> {
-    this.failedLegacyProfiles.clear();
-    this.failedLegacyCredentialCryptoKey = settings.legacyCredentialCryptoKey;
     this.lockedActiveProfileId = null;
-    const needsLegacyKey = settings.profiles.some((profile) => {
-      const legacy = profile as VRChatAccountProfile & {
-        encryptedPendingTwoFactorLoginIdentifier?: string | null;
-      };
-      return (
-        legacy.encryptedPendingTwoFactorLoginIdentifier != null ||
-        typeof profile.rememberedCredentials === 'string'
-      );
-    });
-    let legacyKey: CryptoKey | null = null;
-    if (needsLegacyKey) {
-      if (settings.legacyCredentialCryptoKey) {
-        try {
-          legacyKey = await deserializeStorageCryptoKey(settings.legacyCredentialCryptoKey);
-        } catch (cause) {
-          error(`[VRChat] Failed to unlock legacy credential key: ${cause}`);
-        }
-      }
-    }
     const profiles = await Promise.all(
       settings.profiles.map(async (profile) => {
-        let secret: VRChatAccountSecret;
-        if (profile.protectedSecret != null) {
-          try {
-            const json = await unprotectSecret(profile.protectedSecret);
-            secret = parseVRChatAccountSecret(JSON.parse(json));
-          } catch (cause) {
-            error(`[VRChat] Failed to unlock profile ${profile.id}: ${cause}`);
-            return normalizeVRChatAccountProfile({
-              ...profile,
-              ...VRCHAT_ACCOUNT_SECRET_EMPTY,
-              secretLocked: true,
-            });
-          }
-        } else {
-          try {
-            secret = await this.loadLegacyProfileSecret(profile, legacyKey);
-          } catch (cause) {
-            error(`[VRChat] Failed to migrate credentials for profile ${profile.id}: ${cause}`);
-            this.failedLegacyProfiles.set(
-              profile.id,
-              structuredClone(profile as unknown as Record<string, unknown>)
-            );
-            return normalizeVRChatAccountProfile({
-              ...profile,
-              ...VRCHAT_ACCOUNT_SECRET_EMPTY,
-              authCookie: profile.authCookie ?? null,
-              twoFactorCookie: profile.twoFactorCookie ?? null,
-              twoFactorCookieLoginIdentifierHash:
-                profile.twoFactorCookieLoginIdentifierHash ?? null,
-              secretLocked: false,
-            });
-          }
+        if (profile.protectedSecret == null) {
+          return normalizeVRChatAccountProfile({ ...profile, secretLocked: false });
         }
-        return normalizeVRChatAccountProfile({
-          ...profile,
-          ...secret,
-          protectedSecret: null,
-          secretLocked: false,
-        });
+        try {
+          const json = await unprotectSecret(profile.protectedSecret);
+          const secret = parseVRChatAccountSecret(JSON.parse(json));
+          return normalizeVRChatAccountProfile({
+            ...profile,
+            ...secret,
+            protectedSecret: null,
+            secretLocked: false,
+          });
+        } catch (cause) {
+          error(`[VRChat] Failed to unlock profile ${profile.id}: ${cause}`);
+          return normalizeVRChatAccountProfile({
+            ...profile,
+            ...VRCHAT_ACCOUNT_SECRET_EMPTY,
+            secretLocked: true,
+          });
+        }
       })
     );
     const activeProfileId = profiles.some(
@@ -378,55 +331,7 @@ export class VRChatService {
     )
       ? settings.activeProfileId
       : null;
-    return { ...settings, profiles, activeProfileId, legacyCredentialCryptoKey: null };
-  }
-
-  private async loadLegacyProfileSecret(
-    profile: VRChatAccountProfile,
-    key: CryptoKey | null
-  ): Promise<VRChatAccountSecret> {
-    const legacy = profile as VRChatAccountProfile & {
-      encryptedPendingTwoFactorLoginIdentifier?: string | null;
-    };
-    const rawCredentials: unknown = profile.rememberedCredentials;
-    if (
-      !key &&
-      (legacy.encryptedPendingTwoFactorLoginIdentifier != null ||
-        typeof rawCredentials === 'string')
-    ) {
-      throw new Error('Cannot migrate encrypted credentials without their key');
-    }
-    let pendingTwoFactorLoginIdentifier = profile.pendingTwoFactorLoginIdentifier ?? null;
-    let rememberedCredentials =
-      rawCredentials &&
-      typeof rawCredentials === 'object' &&
-      typeof (rawCredentials as Record<string, unknown>)['username'] === 'string' &&
-      typeof (rawCredentials as Record<string, unknown>)['password'] === 'string'
-        ? (rawCredentials as { username: string; password: string })
-        : null;
-    if (key && legacy.encryptedPendingTwoFactorLoginIdentifier != null) {
-      pendingTwoFactorLoginIdentifier = await decryptStorageData(
-        legacy.encryptedPendingTwoFactorLoginIdentifier,
-        key
-      );
-    }
-    if (key && typeof rawCredentials === 'string') {
-      const encoded = await decryptStorageData(rawCredentials, key);
-      const separator = encoded.indexOf(':');
-      if (separator < 0) throw new Error('Invalid credential encoding');
-      rememberedCredentials = {
-        username: atob(encoded.slice(0, separator)),
-        password: atob(encoded.slice(separator + 1)),
-      };
-    }
-    return {
-      authCookie: profile.authCookie ?? null,
-      twoFactorCookie: profile.twoFactorCookie ?? null,
-      twoFactorCookieLoginIdentifierHash: profile.twoFactorCookieLoginIdentifierHash ?? null,
-      pendingTwoFactorLoginIdentifier,
-      rememberCredentials: !!rememberedCredentials && !!profile.rememberCredentials,
-      rememberedCredentials,
-    };
+    return { ...settings, profiles, activeProfileId };
   }
 
   private async mutateSettings(
@@ -450,9 +355,6 @@ export class VRChatService {
   private async saveSettings(settings: VRChatApiSettings): Promise<void> {
     const profiles = await Promise.all(
       settings.profiles.map(async (profile) => {
-        const failedLegacyProfile = this.failedLegacyProfiles.get(profile.id);
-        if (failedLegacyProfile && !profile.userId) return failedLegacyProfile;
-        if (failedLegacyProfile) this.failedLegacyProfiles.delete(profile.id);
         return {
           id: profile.id,
           sourceProfileId: profile.sourceProfileId,
@@ -467,9 +369,6 @@ export class VRChatService {
         };
       })
     );
-    const hasFailedLegacyProfile = settings.profiles.some((profile) =>
-      this.failedLegacyProfiles.has(profile.id)
-    );
     const lockedActiveProfileId = settings.profiles.some(
       (profile) => profile.id === this.lockedActiveProfileId && profile.secretLocked
     )
@@ -479,9 +378,6 @@ export class VRChatService {
       version: settings.version,
       profiles,
       activeProfileId: settings.activeProfileId ?? lockedActiveProfileId,
-      legacyCredentialCryptoKey: hasFailedLegacyProfile
-        ? this.failedLegacyCredentialCryptoKey
-        : null,
     } as unknown as VRChatApiSettings;
     await SETTINGS_STORE.set(SETTINGS_KEY_VRCHAT_API, persisted);
     this.lockedActiveProfileId = null;
