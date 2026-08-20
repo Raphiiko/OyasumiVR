@@ -17,12 +17,18 @@ use crate::{
 };
 use chrono::{DateTime, Utc};
 use gesture_detector::GestureDetector;
-use log::{error, info};
+use log::{error, info, warn};
 use models::OpenVRStatus;
 use ovr::input::ActiveActionSet;
 use ovr_overlay as ovr;
 use sleep_detector::SleepDetector;
-use std::{sync::LazyLock, time::Duration};
+use std::{
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        LazyLock,
+    },
+    time::Duration,
+};
 use substring::Substring;
 use tokio::sync::Mutex;
 
@@ -311,9 +317,21 @@ async fn shutdown_ovr() {
     *context = None;
 }
 
-/// Constructing an overlay manager while this is false panics.
+/// Constructing an overlay manager while this is false panics. Callers must hold `OVR_CONTEXT`.
 pub fn overlay_interface_available() -> bool {
     !unsafe { ovr::sys::VROverlay() }.is_null()
+}
+
+/// Constructing a settings manager while this is false panics. Callers must hold `OVR_CONTEXT`.
+pub fn settings_interface_available() -> bool {
+    static WARNED: AtomicBool = AtomicBool::new(false);
+    let available = !unsafe { ovr::sys::VRSettings() }.is_null();
+    if available {
+        WARNED.store(false, Ordering::Relaxed);
+    } else if !WARNED.swap(true, Ordering::Relaxed) {
+        warn!("[Core] The OpenVR settings interface is unavailable");
+    }
+    available
 }
 
 async fn update_status(new_status: OpenVRStatus) {

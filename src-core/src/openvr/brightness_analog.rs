@@ -2,7 +2,7 @@ use std::ffi::CStr;
 
 use super::devices::get_devices;
 use super::models::TrackedDeviceClass;
-use super::OVR_CONTEXT;
+use super::{settings_interface_available, OVR_CONTEXT};
 use ovr_overlay as ovr;
 
 pub async fn get_analog_gain() -> Result<f32, String> {
@@ -16,6 +16,9 @@ pub async fn get_analog_gain() -> Result<f32, String> {
             Some(context) => context,
             None => return Err("OPENVR_NOT_INITIALISED".to_string()),
         };
+        if !settings_interface_available() {
+            return Err("OPENVR_NOT_INITIALISED".to_string());
+        }
         let mut settings = context.settings_mngr();
         let analog_gain = settings.get_float(
             CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_Section).unwrap(),
@@ -41,6 +44,9 @@ pub async fn set_analog_gain(analog_gain: f32) -> Result<(), String> {
             Some(context) => context,
             None => return Err("OPENVR_NOT_INITIALISED".to_string()),
         };
+        if !settings_interface_available() {
+            return Err("OPENVR_NOT_INITIALISED".to_string());
+        }
         let settings = &mut context.settings_mngr();
         let _ = settings.set_float(
             CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_Section).unwrap(),
