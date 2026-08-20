@@ -136,9 +136,9 @@ toml = "1.1.4"
 tonic-prost-build = { version = "0.14.6", features = [] }
 
 [patch.crates-io]
-tauri-runtime = { git = "https://github.com/Raphiiko/tauri", rev = "e75f81ecb74752ee65d15c7ad7356f9e9b9738e0" }
-tauri-runtime-wry = { git = "https://github.com/Raphiiko/tauri", rev = "e75f81ecb74752ee65d15c7ad7356f9e9b9738e0" }
-tauri-utils = { git = "https://github.com/Raphiiko/tauri", rev = "e75f81ecb74752ee65d15c7ad7356f9e9b9738e0" }
+tauri-runtime = { git = "https://github.com/Raphiiko/tauri", rev = "03a8ec9776ee456cdc36fd9084a3835248cf85f2" }
+tauri-runtime-wry = { git = "https://github.com/Raphiiko/tauri", rev = "03a8ec9776ee456cdc36fd9084a3835248cf85f2" }
+tauri-utils = { git = "https://github.com/Raphiiko/tauri", rev = "03a8ec9776ee456cdc36fd9084a3835248cf85f2" }
 
 [profile.release]
 panic = "abort"   # Strip expensive panic clean-up logic

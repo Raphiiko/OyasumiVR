@@ -44,6 +44,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed the app crashing during a window transition that reported an invalid window size
 - Fixed base stations being turned off when OyasumiVR was started while SteamVR was already running
 - Fixed base station control leaking memory in the Windows Bluetooth service, which could use up all
   of the system's memory
