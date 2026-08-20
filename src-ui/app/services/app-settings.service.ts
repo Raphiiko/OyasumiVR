@@ -73,7 +73,8 @@ export class AppSettingsService {
       loadedDefaults = true;
     }
     if (settings.userLanguage === 'DEBUG') settings.userLanguage = 'en';
-    settings.mqttPassword = await this.mqttPassword.load(settings.mqttProtectedPassword);
+    settings.mqttPassword =
+      (await this.mqttPassword.load(settings.mqttProtectedPassword)) ?? settings.mqttPassword;
     settings.mqttProtectedPassword = null;
     this._settings.next(settings);
     await this.saveSettings();
@@ -81,11 +82,12 @@ export class AppSettingsService {
   }
 
   async saveSettings() {
+    const mqttProtectedPassword = await this.mqttPassword.store(this._settings.value.mqttPassword);
     const settings = this._settings.value;
     await SETTINGS_STORE.set(SETTINGS_KEY_APP_SETTINGS, {
       ...settings,
-      mqttPassword: null,
-      mqttProtectedPassword: await this.mqttPassword.store(settings.mqttPassword),
+      mqttPassword: mqttProtectedPassword ? null : settings.mqttPassword,
+      mqttProtectedPassword,
     });
   }
 

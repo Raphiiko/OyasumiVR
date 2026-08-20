@@ -38,14 +38,16 @@ const RUN_AUTOMATION_COMMAND_FIELDS = [
 
 async function from19to20(data: any): Promise<any> {
   data.version = 20;
-  const legacyKey = data.RUN_AUTOMATIONS?.runAutomationsCryptoKey;
-  if (!legacyKey) return data;
+  if (!data.RUN_AUTOMATIONS) return data;
+  const legacyKey = data.RUN_AUTOMATIONS.runAutomationsCryptoKey;
   delete data.RUN_AUTOMATIONS.runAutomationsCryptoKey;
   let key: CryptoKey | null = null;
-  try {
-    key = await deserializeStorageCryptoKey(legacyKey);
-  } catch (e) {
-    error("[automation-configs-migrations] Couldn't read the Run Automations command key: " + e);
+  if (legacyKey) {
+    try {
+      key = await deserializeStorageCryptoKey(legacyKey);
+    } catch (e) {
+      error("[automation-configs-migrations] Couldn't read the Run Automations command key: " + e);
+    }
   }
   for (const field of RUN_AUTOMATION_COMMAND_FIELDS) {
     const commands = data.RUN_AUTOMATIONS[field];

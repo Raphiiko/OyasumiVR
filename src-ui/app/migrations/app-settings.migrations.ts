@@ -23,14 +23,13 @@ const migrations: { [v: number]: (data: any) => any } = {
 
 async function from11to12(data: any): Promise<any> {
   data.version = 12;
-  if (data.mqttPassword) {
-    try {
-      data.mqttProtectedPassword = await protectSecret(data.mqttPassword);
-    } catch (e) {
-      error("[app-settings-migrations] Couldn't protect the MQTT password: " + e);
-    }
+  if (!data.mqttPassword) return data;
+  try {
+    data.mqttProtectedPassword = await protectSecret(data.mqttPassword);
+    data.mqttPassword = null;
+  } catch (e) {
+    error("[app-settings-migrations] Couldn't protect the MQTT password: " + e);
   }
-  data.mqttPassword = null;
   return data;
 }
 

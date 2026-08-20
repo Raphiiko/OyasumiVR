@@ -273,11 +273,12 @@ export class PulsoidService {
   }
 
   private async saveSettings() {
+    const protectedAccessToken = await this.accessToken.store(this.settings.value.accessToken);
     const settings = this.settings.value;
     await SETTINGS_STORE.set(SETTINGS_KEY_PULSOID_API, {
       ...settings,
-      accessToken: undefined,
-      protectedAccessToken: (await this.accessToken.store(settings.accessToken)) ?? undefined,
+      accessToken: protectedAccessToken ? undefined : settings.accessToken,
+      protectedAccessToken: protectedAccessToken ?? undefined,
     });
   }
 

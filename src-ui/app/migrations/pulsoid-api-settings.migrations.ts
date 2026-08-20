@@ -12,14 +12,13 @@ const migrations: { [v: number]: (data: any) => any } = {
 
 async function from1to2(data: any): Promise<any> {
   data.version = 2;
-  if (data.accessToken) {
-    try {
-      data.protectedAccessToken = await protectSecret(data.accessToken);
-    } catch (e) {
-      error("[pulsoid-api-settings-migrations] Couldn't protect the access token: " + e);
-    }
+  if (!data.accessToken) return data;
+  try {
+    data.protectedAccessToken = await protectSecret(data.accessToken);
+    delete data.accessToken;
+  } catch (e) {
+    error("[pulsoid-api-settings-migrations] Couldn't protect the access token: " + e);
   }
-  delete data.accessToken;
   return data;
 }
 
