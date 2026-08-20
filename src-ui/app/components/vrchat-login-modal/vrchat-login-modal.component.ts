@@ -167,7 +167,6 @@ export class VRChatLoginModalComponent
     switch (error) {
       case 'CHECK_EMAIL':
       case 'INVALID_CREDENTIALS':
-      case 'PROFILE_MISMATCH':
       case 'UNEXPECTED_RESPONSE':
       case 'UNSUPPORTED_2FA_METHOD':
         this.error = `comp.vrchat-login-modal.errors.${error}`;

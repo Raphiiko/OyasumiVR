@@ -639,6 +639,7 @@ export class VRChatAuth {
   private async completeLogin(user: CurrentUser): Promise<void> {
     const active = await this.requireActiveProfile();
     if (active.userId && active.userId !== user.id) {
+      warn(`[VRChat] Logged in as ${user.id} while profile ${active.userId} was expected`);
       await this.patchActiveProfile({ authCookie: null });
       throw 'PROFILE_MISMATCH';
     }

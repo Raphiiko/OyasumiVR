@@ -394,7 +394,10 @@ export class VRChatAPI {
       throw 'UNEXPECTED_RESPONSE';
     }
     const user = responseData as CurrentUser;
-    if (expectedUserId && user.id !== expectedUserId) throw 'PROFILE_MISMATCH';
+    if (expectedUserId && user.id !== expectedUserId) {
+      warn(`[VRChat] /auth/user returned ${user.id} while ${expectedUserId} was expected`);
+      throw 'PROFILE_MISMATCH';
+    }
     this.ensureCacheGeneration(cacheGeneration);
     await this.parseResponseCookies(response, cacheGeneration, profileId);
     return user;
