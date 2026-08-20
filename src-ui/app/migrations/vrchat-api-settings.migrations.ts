@@ -9,6 +9,8 @@ const migrations: { [v: number]: (data: any) => any } = {
   2: from1To2,
   3: from2To3,
   4: from3To4,
+  5: from4To5,
+  6: from5To6,
 };
 
 export function migrateVRChatApiSettings(data: any): VRChatApiSettings {
@@ -85,6 +87,56 @@ function from3To4(data: any): any {
   delete data['twoFactorCookieExpiry'];
   data.encryptedPendingTwoFactorLoginIdentifier = null;
   data.version = 4;
+  return data;
+}
+
+function from4To5(data: any): any {
+  const hasProfile = !!(
+    data.authCookie != null ||
+    data.twoFactorCookie != null ||
+    data.encryptedPendingTwoFactorLoginIdentifier != null ||
+    data.rememberedCredentials != null
+  );
+  const profileId = crypto.randomUUID();
+  data.profiles = hasProfile
+    ? [
+        {
+          id: profileId,
+          sourceProfileId: null,
+          restoreProfileId: null,
+          userId: null,
+          username: null,
+          displayName: null,
+          draft: false,
+          authCookie: data.authCookie ?? null,
+          twoFactorCookie: data.twoFactorCookie ?? null,
+          twoFactorCookieLoginIdentifierHash: data.twoFactorCookieLoginIdentifierHash ?? null,
+          encryptedPendingTwoFactorLoginIdentifier:
+            data.encryptedPendingTwoFactorLoginIdentifier ?? null,
+          rememberCredentials: !!data.rememberCredentials,
+          rememberedCredentials: data.rememberedCredentials ?? null,
+        },
+      ]
+    : [];
+  data.activeProfileId = hasProfile ? profileId : null;
+  delete data.authCookie;
+  delete data.twoFactorCookie;
+  delete data.twoFactorCookieLoginIdentifierHash;
+  delete data.encryptedPendingTwoFactorLoginIdentifier;
+  delete data.rememberCredentials;
+  delete data.rememberedCredentials;
+  data.version = 5;
+  return data;
+}
+
+function from5To6(data: any): any {
+  data.profiles = (data.profiles ?? []).map((profile: any) => ({
+    ...profile,
+    protectedSecret: null,
+  }));
+  data.legacyCredentialCryptoKey = data.credentialCryptoKey ?? null;
+  delete data.credentialCryptoKey;
+  data.version = 6;
   return data;
 }
 

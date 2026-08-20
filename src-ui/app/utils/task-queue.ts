@@ -6,6 +6,12 @@ export interface QueueTask<T> {
   typeId?: string;
 }
 
+interface PendingQueueTask<T> extends QueueTask<T> {
+  cancel: (error: unknown) => void;
+}
+
+const TASK_QUEUE_TASK_REPLACED = 'TASK_REPLACED';
+
 export interface TaskQueueRateLimiter {
   totalPerMinute?: number;
   typePerMinute?: { [typeId: string]: number };
@@ -14,7 +20,7 @@ export interface TaskQueueRateLimiter {
 export class TaskQueue {
   private readonly runUniqueTasksConcurrently: boolean;
   private readonly rateLimiter?: TaskQueueRateLimiter;
-  private queue: QueueTask<any>[] = [];
+  private queue: PendingQueueTask<any>[] = [];
   private running = false;
   private runHistory: Array<{ typeId?: string; timestamp: number }> = [];
 
@@ -32,24 +38,38 @@ export class TaskQueue {
     replaceSameType = false
   ): Promise<CompletionResult<T>> {
     if (task.typeId && replaceSameType) {
-      this.queue = this.queue.filter((t) => t.typeId !== task.typeId);
+      this.cancelPending(TASK_QUEUE_TASK_REPLACED, (queued) => queued.typeId === task.typeId);
     }
     const completer = new Completer<T>();
-    const oldRunnable = task.runnable;
-    task.runnable = async () => {
-      let returnValue: T;
-      try {
-        returnValue = await oldRunnable();
-        completer.complete(returnValue);
-        return returnValue;
-      } catch (e) {
-        completer.completeWithError(e);
-        throw e;
-      }
+    const queuedTask: PendingQueueTask<T> = {
+      ...task,
+      cancel: (error) => completer.completeWithError(error),
+      runnable: async () => {
+        try {
+          const returnValue = await task.runnable();
+          completer.complete(returnValue);
+          return returnValue;
+        } catch (e) {
+          completer.completeWithError(e);
+          throw e;
+        }
+      },
     };
-    this.queue.push(task);
+    this.queue.push(queuedTask);
     noop(this.run());
     return completer.completion;
+  }
+
+  cancelPending(
+    error: unknown,
+    predicate: (task: QueueTask<unknown>) => boolean = () => true
+  ): void {
+    const retained: PendingQueueTask<any>[] = [];
+    for (const task of this.queue) {
+      if (predicate(task)) task.cancel(error);
+      else retained.push(task);
+    }
+    this.queue = retained;
   }
 
   private async run() {
@@ -59,7 +79,7 @@ export class TaskQueue {
     this.running = true;
     while (this.queue.length) {
       // Get tasks to run
-      let tasksToRun: QueueTask<any>[] = [];
+      let tasksToRun: PendingQueueTask<any>[] = [];
       if (this.runUniqueTasksConcurrently) {
         this.queue.forEach((task) => {
           if (!tasksToRun.find((t) => t.typeId === task.typeId)) {

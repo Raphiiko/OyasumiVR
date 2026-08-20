@@ -54,6 +54,7 @@ import { firstValueFrom } from 'rxjs';
 import { VRChatService } from './services/vrchat-api/vrchat.service';
 import { VRChatLoginModalComponent } from './components/vrchat-login-modal/vrchat-login-modal.component';
 import { VRChatLoginTFAModalComponent } from './components/vrchat-login-tfa-modal/vrchat-login-tfa-modal.component';
+import { VRChatAccountsModalComponent } from './components/vrchat-accounts-modal/vrchat-accounts-modal.component';
 import { StatusAutomationsViewComponent } from './views/dashboard-view/views/status-automations-view/status-automations-view.component';
 import { SleepingAnimationPresetModalComponent } from './components/sleeping-animation-preset-modal/sleeping-animation-preset-modal.component';
 import { VRChatLogService } from './services/vrchat-log.service';
@@ -331,6 +332,7 @@ import { StoreSnapshotService } from './services/store-snapshot.service';
     SettingsAdvancedViewComponent,
     VRChatLoginModalComponent,
     VRChatLoginTFAModalComponent,
+    VRChatAccountsModalComponent,
     StatusAutomationsViewComponent,
     SleepingAnimationPresetModalComponent,
     MainStatusBarComponent,

@@ -410,6 +410,8 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         commands::debug::open_dev_tools,
         cn_compliance::cn_compliance_mode,
         commands::time::get_sunrise_sunset_time,
+        commands::vrchat_secrets::protect_vrchat_secret,
+        commands::vrchat_secrets::unprotect_vrchat_secret,
         grpc::commands::get_core_grpc_port,
         grpc::commands::get_core_grpc_web_port,
         telemetry::commands::set_telemetry_enabled,

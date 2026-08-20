@@ -19,6 +19,8 @@ import {
 
 interface VRChatLoginModalInputModel {
   autoLogin?: boolean;
+  newAccount?: boolean;
+  keepActiveProfile?: boolean;
   twoFactorMethod?: VRChatTwoFactorMethod;
   initialError?: string;
   username?: string;
@@ -44,6 +46,8 @@ export class VRChatLoginModalComponent
   error = '';
   rememberCredentials = false;
   autoLogin = false;
+  newAccount = false;
+  keepActiveProfile = false;
   twoFactorMethod?: VRChatTwoFactorMethod;
   initialError?: string;
 
@@ -58,24 +62,24 @@ export class VRChatLoginModalComponent
 
   async ngOnInit(): Promise<void> {
     if (this.initialError) this.setLoginError(this.initialError);
-    this.vrchat.settings
+    this.vrchat.activeProfile
       .pipe(
-        map((settings) => settings.rememberCredentials),
+        map((profile) => profile?.rememberCredentials ?? false),
         takeUntilDestroyed(this.destroyRef),
         take(1)
       )
       .subscribe(async (rememberCredentials) => {
         try {
-          this.rememberCredentials = rememberCredentials;
+          this.rememberCredentials = this.newAccount ? false : rememberCredentials;
+          const credentials = this.newAccount ? null : await this.vrchat.loadCredentials();
+          if (credentials) {
+            this.username = credentials.username;
+            this.password = credentials.password;
+          }
           if (this.twoFactorMethod) {
             this.loggingIn = true;
             await this.loginWithTwoFactor(this.twoFactorMethod);
           } else {
-            const credentials = await this.vrchat.loadCredentials();
-            if (credentials) {
-              this.username = credentials.username;
-              this.password = credentials.password;
-            }
             if (this.autoLogin && credentials) await this.login();
           }
         } catch (e) {
@@ -109,7 +113,8 @@ export class VRChatLoginModalComponent
     this.loggingIn = true;
     this.error = '';
     try {
-      await this.vrchat.login(this.username, this.password);
+      if (this.newAccount) await this.vrchat.loginNewAccount(this.username, this.password);
+      else await this.vrchat.login(this.username, this.password, this.keepActiveProfile);
       await this.finishLogin();
     } catch (e) {
       const method = twoFactorMethodFromError(e);
@@ -152,6 +157,8 @@ export class VRChatLoginModalComponent
   private async finishLogin() {
     if (this.rememberCredentials && this.username && this.password) {
       await this.vrchat.rememberCredentials(this.username, this.password);
+    } else {
+      await this.vrchat.forgetCredentials();
     }
     await this.close();
   }
@@ -172,8 +179,6 @@ export class VRChatLoginModalComponent
 
   async toggleRememberCredentials() {
     this.rememberCredentials = !this.rememberCredentials;
-    if (!this.rememberCredentials) {
-      await this.vrchat.forgetCredentials();
-    }
+    if (!this.rememberCredentials && !this.newAccount) await this.vrchat.forgetCredentials();
   }
 }

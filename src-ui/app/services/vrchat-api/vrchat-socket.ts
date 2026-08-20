@@ -11,7 +11,7 @@ import {
   switchMap,
   take,
 } from 'rxjs';
-import { VRChatApiSettings } from 'src-ui/app/models/vrchat-api-settings';
+import { getActiveVRChatProfile, VRChatApiSettings } from 'src-ui/app/models/vrchat-api-settings';
 import { GroupMemberUpdatedHandler } from './event-handlers/group-member-updated-handler';
 import { NotificationHandler } from './event-handlers/notification-handler';
 import { UserUpdateHandler } from './event-handlers/user-update-handler';
@@ -91,7 +91,7 @@ export class VRChatSocket {
     this.closeSocket();
     const connectionGeneration = this.connectionGeneration;
     this.statusSubject.next('OPENING');
-    const authToken = (await firstValueFrom(this.settings)).authCookie;
+    const authToken = getActiveVRChatProfile(await firstValueFrom(this.settings))?.authCookie;
     if (connectionGeneration !== this.connectionGeneration) return;
     if (!authToken) {
       this.statusSubject.next('CLOSED');
@@ -156,6 +156,12 @@ export class VRChatSocket {
           `VRChat pipeline repeatedly closed: code=${event.code} clean=${event.wasClean} lifetime=${lifetimeBucket} error=${this.socketError} reason=${reason}`
         )
       );
+    }
+    if (
+      this.consecutiveFailures >= FAILURE_REPORT_THRESHOLD &&
+      this.consecutiveFailures % FAILURE_REPORT_THRESHOLD === 0
+    ) {
+      void this.auth.revalidateSession();
     }
   }
 
