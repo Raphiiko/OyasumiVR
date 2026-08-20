@@ -53,6 +53,8 @@ interface CurrentUserRequestOptions {
   credentials?: VRChatCredentials;
   signal?: AbortSignal;
   includeTwoFactorCookie?: boolean;
+  expectedUserId?: string;
+  captureChallengeCookies?: boolean;
 }
 
 interface CurrentUserChallenge {
@@ -171,6 +173,7 @@ export class VRChatAPI {
 
   private user!: Observable<CurrentUser | null>;
   private patchCurrentUser!: (user: Partial<CurrentUser>) => void;
+  private authenticationFailureHandler: () => void = () => undefined;
 
   constructor(
     private readonly settings: Observable<VRChatApiSettings>,
@@ -188,6 +191,10 @@ export class VRChatAPI {
     this.userAgent = `OyasumiVR/${await getVersion()} (https://github.com/Raphiiko/OyasumiVR)`;
     this.user = user;
     this.patchCurrentUser = patchCurrentUser;
+  }
+
+  public setAuthenticationFailureHandler(handler: () => void): void {
+    this.authenticationFailureHandler = handler;
   }
 
   public async clearCaches(): Promise<void> {
@@ -270,7 +277,11 @@ export class VRChatAPI {
   public async verify2FA(code: string, method: VRChatTwoFactorMethod): Promise<void> {
     const cacheGeneration = this.cacheGeneration;
     const profileId = await this.requireActiveProfileId();
-    const headers = await this.getDefaultHeaders({}, cacheGeneration, profileId);
+    const headers = await this.getDefaultHeaders(
+      { includeTwoFactorCookie: false },
+      cacheGeneration,
+      profileId
+    );
     const response = await requestVRChat(`${BASE_URL}/auth/twofactorauth/${method}/verify`, {
       method: 'POST',
       body: JSON.stringify({ code }),
@@ -296,7 +307,7 @@ export class VRChatAPI {
   }
 
   public async getCurrentUser(options: CurrentUserRequestOptions = {}): Promise<CurrentUser> {
-    const { credentials, signal } = options;
+    const { captureChallengeCookies = true, credentials, expectedUserId, signal } = options;
     const includeTwoFactorCookie = options.includeTwoFactorCookie ?? !credentials;
     const cacheGeneration = this.cacheGeneration;
     const profileId = await this.requireActiveProfileId();
@@ -344,8 +355,6 @@ export class VRChatAPI {
       error(`[VRChat] Received invalid response body from /auth/user`);
       throw 'UNEXPECTED_RESPONSE';
     }
-    this.ensureCacheGeneration(cacheGeneration);
-    await this.parseResponseCookies(response, cacheGeneration, profileId);
     if ('requiresTwoFactorAuth' in responseData) {
       if (!Array.isArray(responseData.requiresTwoFactorAuth)) {
         error(`[VRChat] Received invalid 2FA challenge from /auth/user`);
@@ -357,6 +366,10 @@ export class VRChatAPI {
       info(
         `[VRChat] 2FA Required for login. (methods=${JSON.stringify(responseData.requiresTwoFactorAuth)})`
       );
+      if (captureChallengeCookies) {
+        this.ensureCacheGeneration(cacheGeneration);
+        await this.parseResponseCookies(response, cacheGeneration, profileId);
+      }
       if (methods.includes('totp')) throw '2FA_TOTP_REQUIRED';
       if (methods.includes('emailotp')) throw '2FA_EMAILOTP_REQUIRED';
       error(
@@ -365,12 +378,21 @@ export class VRChatAPI {
       );
       throw 'UNSUPPORTED_2FA_METHOD';
     }
-    if (!('id' in responseData) || typeof responseData.id !== 'string') {
+    if (
+      !('id' in responseData) ||
+      typeof responseData.id !== 'string' ||
+      !('username' in responseData) ||
+      typeof responseData.username !== 'string' ||
+      !('displayName' in responseData) ||
+      typeof responseData.displayName !== 'string'
+    ) {
       error(`[VRChat] Received invalid user from /auth/user`);
       throw 'UNEXPECTED_RESPONSE';
     }
     const user = responseData as CurrentUser;
+    if (expectedUserId && user.id !== expectedUserId) throw 'PROFILE_MISMATCH';
     this.ensureCacheGeneration(cacheGeneration);
+    await this.parseResponseCookies(response, cacheGeneration, profileId);
     return user;
   }
 
@@ -701,11 +723,14 @@ export class VRChatAPI {
 
   // live cache updates
 
-  public pollCurrentUser(): Promise<CompletionResult<CurrentUser>> {
-    return this.apiCallQueue.queueTask<CurrentUser>({
-      typeId: 'POLL_USER',
-      runnable: () => this.getCurrentUser(),
-    });
+  public pollCurrentUser(expectedUserId?: string): Promise<CompletionResult<CurrentUser>> {
+    return this.apiCallQueue.queueTask<CurrentUser>(
+      {
+        typeId: 'POLL_USER',
+        runnable: () => this.getCurrentUser({ captureChallengeCookies: false, expectedUserId }),
+      },
+      true
+    );
   }
 
   public updateCachedGroup(groupId: string, group: Partial<LimitedUserGroups>): void {
@@ -736,7 +761,10 @@ export class VRChatAPI {
 
   private requireSuccessfulResponse(result: CompletionResult<Response>): Response {
     if (result.error) throw result.error;
-    if (!result.result?.ok) throw result.result;
+    if (!result.result?.ok) {
+      if (result.result?.status === 401) this.authenticationFailureHandler();
+      throw result.result;
+    }
     return result.result;
   }
 

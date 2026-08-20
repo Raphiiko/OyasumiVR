@@ -157,6 +157,12 @@ export class VRChatSocket {
         )
       );
     }
+    if (
+      this.consecutiveFailures >= FAILURE_REPORT_THRESHOLD &&
+      this.consecutiveFailures % FAILURE_REPORT_THRESHOLD === 0
+    ) {
+      void this.auth.revalidateSession();
+    }
   }
 
   private handleError(socket: WebSocket): void {

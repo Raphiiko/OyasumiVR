@@ -14,6 +14,8 @@ export interface VRChatAccountSecret {
 
 export interface VRChatAccountProfile {
   id: string;
+  sourceProfileId: string | null;
+  restoreProfileId: string | null;
   userId: string | null;
   username: string | null;
   displayName: string | null;
@@ -60,6 +62,8 @@ export function normalizeVRChatAccountProfile(
 ): VRChatAccountProfile {
   return {
     id: profile.id ?? crypto.randomUUID(),
+    sourceProfileId: profile.sourceProfileId ?? null,
+    restoreProfileId: profile.restoreProfileId ?? null,
     userId: profile.userId ?? null,
     username: profile.username ?? null,
     displayName: profile.displayName ?? null,

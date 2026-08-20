@@ -92,16 +92,18 @@ function from3To4(data: any): any {
 
 function from4To5(data: any): any {
   const hasProfile = !!(
-    data.authCookie ||
-    data.twoFactorCookie ||
-    data.encryptedPendingTwoFactorLoginIdentifier ||
-    data.rememberedCredentials
+    data.authCookie != null ||
+    data.twoFactorCookie != null ||
+    data.encryptedPendingTwoFactorLoginIdentifier != null ||
+    data.rememberedCredentials != null
   );
   const profileId = crypto.randomUUID();
   data.profiles = hasProfile
     ? [
         {
           id: profileId,
+          sourceProfileId: null,
+          restoreProfileId: null,
           userId: null,
           username: null,
           displayName: null,

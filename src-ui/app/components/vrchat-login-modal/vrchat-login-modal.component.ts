@@ -155,10 +155,10 @@ export class VRChatLoginModalComponent
   }
 
   private async finishLogin() {
-    if (!this.rememberCredentials) {
-      await this.vrchat.forgetCredentials();
-    } else if (this.username && this.password) {
+    if (this.rememberCredentials && this.username && this.password) {
       await this.vrchat.rememberCredentials(this.username, this.password);
+    } else if (!this.newAccount) {
+      await this.vrchat.forgetCredentials();
     }
     await this.close();
   }

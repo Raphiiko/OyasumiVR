@@ -19,6 +19,8 @@ import {
 import {
   adoptVRChatProfileIdentity,
   createVRChatDraftProfile,
+  createVRChatProfileAttempt,
+  getVRChatProfileAttemptSource,
   patchVRChatProfile,
   pruneVRChatDraftProfiles,
   removeVRChatProfile,
@@ -32,6 +34,12 @@ type SessionRestoreResult =
   | { status: 'NONE' | 'RETRY' }
   | { status: 'RESTORED'; user: CurrentUser }
   | { status: 'LOGIN_REQUIRED'; error?: string }
+  | {
+      status: 'TEMPORARILY_REJECTED';
+      error: string;
+      loginIdentifier?: string;
+      sourceProfileId?: string;
+    }
   | {
       status: 'TWO_FACTOR_REQUIRED';
       method: VRChatTwoFactorMethod;
@@ -53,6 +61,21 @@ function shouldRetryCurrentUserRequest(cause: unknown): boolean {
     'UNSUPPORTED_2FA_METHOD',
     '2FA_TOTP_REQUIRED',
     '2FA_EMAILOTP_REQUIRED',
+    'PROFILE_MISMATCH',
+    'AUTHENTICATION_REJECTED',
+  ].includes(String(cause));
+}
+
+function requiresSessionReauthentication(cause: unknown): boolean {
+  return [
+    'INVALID_CREDENTIALS',
+    'MISSING_CREDENTIALS',
+    'CHECK_EMAIL',
+    'UNSUPPORTED_2FA_METHOD',
+    '2FA_TOTP_REQUIRED',
+    '2FA_EMAILOTP_REQUIRED',
+    'PROFILE_MISMATCH',
+    'AUTHENTICATION_REJECTED',
   ].includes(String(cause));
 }
 
@@ -76,6 +99,7 @@ export class VRChatAuth {
   private lastUserUpdateAt = 0;
   private lastStatusUpdateAt = 0;
   private transition: Promise<void> = Promise.resolve();
+  private readonly suspendedSessions = new Map<string, { profileId: string; user: CurrentUser }>();
 
   public readonly status = this.statusSubject.asObservable();
   public readonly user = this.userSubject.asObservable();
@@ -92,7 +116,23 @@ export class VRChatAuth {
   // session restoration
 
   public async init(): Promise<void> {
+    const active = await this.getActiveProfile();
+    const resumedAttempt = active?.draft ? active : null;
+    if (active && !active.draft) {
+      await this.mutateSettings((settings) => createVRChatProfileAttempt(settings, active.id));
+    }
     let restoreResult = await this.loadSession();
+    if (
+      (restoreResult.status === 'NONE' || restoreResult.status === 'RETRY') &&
+      resumedAttempt?.restoreProfileId
+    ) {
+      await this.restoreProfileAttempt(resumedAttempt);
+      const restored = await this.getActiveProfile();
+      if (restored?.authCookie && !restored.draft) {
+        await this.mutateSettings((settings) => createVRChatProfileAttempt(settings, restored.id));
+        restoreResult = await this.loadSession();
+      }
+    }
     if (restoreResult.status === 'RESTORED') {
       try {
         await this.completeLogin(restoreResult.user);
@@ -121,13 +161,13 @@ export class VRChatAuth {
   private async loadSession(signal?: AbortSignal): Promise<SessionRestoreResult> {
     const savedProfile = await this.getActiveProfile();
     if (!savedProfile?.authCookie) {
-      if (savedProfile?.pendingTwoFactorLoginIdentifier) {
-        await this.patchActiveProfile({ pendingTwoFactorLoginIdentifier: null });
-      }
       return { status: 'NONE' };
     }
     try {
-      const user = await this.api.getCurrentUser({ signal });
+      const user = await this.api.getCurrentUser({
+        signal,
+        expectedUserId: savedProfile.userId ?? undefined,
+      });
       if (savedProfile.userId && savedProfile.userId !== user.id) {
         await this.patchActiveProfile({ authCookie: null });
         return { status: 'LOGIN_REQUIRED', error: 'PROFILE_MISMATCH' };
@@ -151,21 +191,21 @@ export class VRChatAuth {
         case 'MISSING_CREDENTIALS':
           await this.api.clearCaches();
           if (signal?.aborted) return { status: 'RETRY' };
-          await this.patchActiveProfile({
-            authCookie: null,
-            pendingTwoFactorLoginIdentifier: null,
-          });
           info(`[VRChat] Failed to restore session: ${e}`);
           return { status: 'LOGIN_REQUIRED' };
-        case 'CHECK_EMAIL':
         case 'UNSUPPORTED_2FA_METHOD':
-          await this.patchActiveProfile({ pendingTwoFactorLoginIdentifier: null });
+        case 'PROFILE_MISMATCH':
           info(`[VRChat] Failed to restore session: ${e}`);
           return { status: 'LOGIN_REQUIRED', error: String(e) };
+        case 'CHECK_EMAIL':
         case 'AUTHENTICATION_REJECTED':
-          await this.patchActiveProfile({ pendingTwoFactorLoginIdentifier: null });
           info(`[VRChat] Failed to restore session: ${e}`);
-          return { status: 'LOGIN_REQUIRED', error: 'UNEXPECTED_RESPONSE' };
+          return {
+            status: 'TEMPORARILY_REJECTED',
+            error: String(e === 'CHECK_EMAIL' ? e : 'UNEXPECTED_RESPONSE'),
+            loginIdentifier: await this.loadPendingTwoFactorLoginIdentifier(),
+            sourceProfileId: savedProfile.sourceProfileId ?? undefined,
+          };
         default:
           error(`[VRChat] Error trying to restore session: ${e}`);
           return { status: 'RETRY' };
@@ -176,11 +216,32 @@ export class VRChatAuth {
   private handleSessionRestoreResult(result: SessionRestoreResult): void {
     switch (result.status) {
       case 'TWO_FACTOR_REQUIRED':
-        this.showLoginModal(false, result.method, undefined, result.loginIdentifier);
+        this.showLoginModal(
+          false,
+          result.method,
+          undefined,
+          result.loginIdentifier,
+          false,
+          undefined,
+          true
+        );
         break;
       case 'LOGIN_REQUIRED':
         info(`[VRChat] Login expired.`);
         this.showLoginModal(true, undefined, result.error, undefined, false, undefined, true);
+        this.scheduleSessionRestore();
+        break;
+      case 'TEMPORARILY_REJECTED':
+        this.showLoginModal(
+          false,
+          undefined,
+          result.error,
+          result.loginIdentifier,
+          false,
+          result.sourceProfileId,
+          true
+        );
+        this.scheduleSessionRestore();
         break;
       case 'RETRY':
         this.scheduleSessionRestore();
@@ -198,7 +259,7 @@ export class VRChatAuth {
       this.sessionRestoreAbortController = abortController;
       const restore = this.loadSession(abortController.signal);
       this.sessionRestoreInFlight = restore;
-      const result = await restore.catch((e) => {
+      let result = await restore.catch((e) => {
         error(`[VRChat] Error trying to restore session: ${e}`);
         return { status: 'RETRY' } as SessionRestoreResult;
       });
@@ -208,9 +269,19 @@ export class VRChatAuth {
       }
       if (generation !== this.sessionRestoreGeneration) return;
       if (result.status === 'RESTORED') {
-        await this.completeLogin(result.user);
-        this.modalService.closeModal(LOGIN_MODAL_ID);
+        const user = result.user;
+        try {
+          await this.queueTransition(async () => {
+            if (generation !== this.sessionRestoreGeneration) return;
+            await this.completeLogin(user);
+            this.modalService.closeModal(LOGIN_MODAL_ID);
+          });
+        } catch (cause) {
+          error(`[VRChat] Failed to complete restored login: ${cause}`);
+          result = { status: 'LOGIN_REQUIRED', error: 'UNEXPECTED_RESPONSE' };
+        }
       }
+      if (generation !== this.sessionRestoreGeneration) return;
       this.handleSessionRestoreResult(result);
     }, SESSION_RESTORE_RETRY_DELAY);
   }
@@ -219,6 +290,7 @@ export class VRChatAuth {
     this.sessionRestoreGeneration++;
     clearTimeout(this.sessionRestoreRetry);
     this.sessionRestoreRetry = undefined;
+    this.sessionRestoreInFlight = undefined;
     this.sessionRestoreAbortController?.abort();
     this.sessionRestoreAbortController = undefined;
   }
@@ -257,28 +329,28 @@ export class VRChatAuth {
         }
       )
       .subscribe(() => {
-        void this.finishLoginModal(newAccount, restoreProfileIdOnCancel);
+        void this.queueTransition(() => this.finishLoginModal(restoreProfileIdOnCancel));
       });
   }
 
-  private async finishLoginModal(
-    newAccount: boolean,
-    restoreProfileIdOnCancel?: string
-  ): Promise<void> {
+  private async finishLoginModal(restoreProfileIdOnCancel?: string): Promise<void> {
+    this.cancelSessionRestore();
     const incompleteProfile = !this.userSubject.value
       ? await this.getActiveProfile().then((profile) => (profile?.draft ? profile : null))
       : null;
     if (incompleteProfile) {
-      await this.api
-        .logoutProfile(incompleteProfile.id)
-        .catch((cause) => warn(`[VRChat] Failed to invalidate cancelled login: ${cause}`));
-    }
-    await this.mutateSettings(pruneVRChatDraftProfiles).catch((cause) =>
-      error(`[VRChat] Failed to clean up login profiles: ${cause}`)
-    );
-    if (newAccount && restoreProfileIdOnCancel && !this.userSubject.value) {
-      await this.activateProfile(restoreProfileIdOnCancel).catch((cause) =>
+      const settings = await firstValueFrom(this.settings);
+      if (!getVRChatProfileAttemptSource(settings, incompleteProfile)) {
+        await this.api
+          .logoutProfile(incompleteProfile.id)
+          .catch((cause) => warn(`[VRChat] Failed to invalidate cancelled login: ${cause}`));
+      }
+      await this.restoreProfileAttempt(incompleteProfile, restoreProfileIdOnCancel).catch((cause) =>
         error(`[VRChat] Failed to restore the previous profile: ${cause}`)
+      );
+    } else {
+      await this.mutateSettings(pruneVRChatDraftProfiles).catch((cause) =>
+        error(`[VRChat] Failed to clean up login profiles: ${cause}`)
       );
     }
   }
@@ -309,12 +381,12 @@ export class VRChatAuth {
       user = await this.api.getCurrentUser({
         credentials: { username, password },
         includeTwoFactorCookie: reuseTwoFactorCookie,
+        expectedUserId: savedProfile.userId ?? undefined,
       });
     } catch (cause) {
       if (twoFactorMethodFromError(cause)) {
         this.pendingTwoFactorLoginIdentifierHash = loginIdentifierHash;
         await this.patchActiveProfile({
-          twoFactorCookie: null,
           twoFactorCookieLoginIdentifierHash: loginIdentifierHash,
           pendingTwoFactorLoginIdentifier: username,
         });
@@ -338,10 +410,31 @@ export class VRChatAuth {
 
   public loginNewAccount(username: string, password: string): Promise<void> {
     return this.queueTransition(async () => {
+      const previousProfile = await this.getActiveProfile();
+      if (previousProfile?.draft && !previousProfile.sourceProfileId) {
+        await this.login(username, password, true);
+        return;
+      }
+      const previousUser = this.userSubject.value;
       await this.deactivate();
-      await this.mutateSettings((settings) =>
-        createVRChatDraftProfile(pruneVRChatDraftProfiles(setActiveVRChatProfile(settings, null)))
-      );
+      let settings: VRChatApiSettings;
+      try {
+        settings = await this.mutateSettings((settings) =>
+          createVRChatDraftProfile(pruneVRChatDraftProfiles(settings))
+        );
+      } catch (cause) {
+        if (previousUser) {
+          this.setCurrentUser(previousUser);
+          this.statusSubject.next('LOGGED_IN');
+        }
+        throw cause;
+      }
+      if (previousProfile && previousUser && settings.activeProfileId) {
+        this.suspendedSessions.set(settings.activeProfileId, {
+          profileId: previousProfile.id,
+          user: previousUser,
+        });
+      }
       await this.login(username, password, true);
     });
   }
@@ -355,7 +448,6 @@ export class VRChatAuth {
     await this.api.clearCaches();
     const { authCookie } = await this.requireActiveProfile();
     if (!authCookie) throw new Error('Called verify2FA() before successfully calling login()');
-    await this.clearTwoFactorCookie(this.pendingTwoFactorLoginIdentifierHash !== undefined);
     await this.api.verify2FA(code, method);
     await this.patchActiveProfile({
       pendingTwoFactorLoginIdentifier: null,
@@ -364,7 +456,14 @@ export class VRChatAuth {
         : {}),
     });
     this.pendingTwoFactorLoginIdentifierHash = undefined;
-    await this.completeLogin(await this.getCurrentUserAfter2FA());
+    let user: CurrentUser;
+    try {
+      user = await this.getCurrentUserAfter2FA();
+    } catch (cause) {
+      this.scheduleSessionRestore();
+      throw cause;
+    }
+    await this.completeLogin(user);
   }
 
   public logout(): Promise<void> {
@@ -383,25 +482,59 @@ export class VRChatAuth {
     return this.queueTransition(() => this.activateProfileNow(profileId));
   }
 
-  private async activateProfileNow(profileId: string): Promise<void> {
+  private async activateProfileNow(profileId: string, force = false): Promise<void> {
     const current = await this.getActiveProfile();
-    if (current?.id === profileId && this.statusSubject.value === 'LOGGED_IN') return;
+    if (!force && current?.id === profileId && this.statusSubject.value === 'LOGGED_IN') return;
+    const previousUser = this.userSubject.value;
     await this.deactivate();
-    await this.mutateSettings((settings) => setActiveVRChatProfile(settings, profileId));
+    let settings: VRChatApiSettings;
+    try {
+      settings = await this.mutateSettings((settings) =>
+        createVRChatProfileAttempt(pruneVRChatDraftProfiles(settings), profileId)
+      );
+    } catch (cause) {
+      if (previousUser) {
+        this.setCurrentUser(previousUser);
+        this.statusSubject.next('LOGGED_IN');
+      }
+      throw cause;
+    }
+    const attempt = getActiveVRChatProfile(settings);
+    if (!attempt) throw new Error('Failed to create VRChat profile attempt');
+    if (current && previousUser) {
+      this.suspendedSessions.set(attempt.id, { profileId: current.id, user: previousUser });
+    }
     const result = await this.loadSession();
     if (result.status === 'RESTORED') {
       await this.completeLogin(result.user);
       return;
     }
+    const restoreProfileIdOnCancel =
+      this.suspendedSessions.get(attempt.id)?.profileId ?? attempt.sourceProfileId ?? undefined;
     if (result.status === 'TWO_FACTOR_REQUIRED') {
-      this.showLoginModal(false, result.method, undefined, result.loginIdentifier);
+      this.showLoginModal(
+        false,
+        result.method,
+        undefined,
+        result.loginIdentifier,
+        false,
+        restoreProfileIdOnCancel,
+        true
+      );
       return;
     }
     if (result.status === 'RETRY') {
+      if (this.suspendedSessions.has(attempt.id)) {
+        await this.restoreProfileAttempt(attempt, restoreProfileIdOnCancel);
+        return;
+      }
       this.handleSessionRestoreResult(result);
       return;
     }
-
+    if (result.status === 'TEMPORARILY_REJECTED') {
+      this.handleSessionRestoreResult(result);
+      return;
+    }
     const credentials = await this.loadCredentials();
     if (credentials) {
       try {
@@ -409,15 +542,22 @@ export class VRChatAuth {
         return;
       } catch (cause) {
         const method = twoFactorMethodFromError(cause);
+        const temporaryFailure =
+          !method && !['INVALID_CREDENTIALS', 'PROFILE_MISMATCH'].includes(String(cause));
+        if (temporaryFailure && this.suspendedSessions.has(attempt.id)) {
+          await this.restoreProfileAttempt(attempt, restoreProfileIdOnCancel);
+          return;
+        }
         this.showLoginModal(
           false,
           method,
           method ? undefined : String(cause),
           credentials.username,
           false,
-          undefined,
+          restoreProfileIdOnCancel,
           true
         );
+        if (temporaryFailure) this.scheduleSessionRestore();
         return;
       }
     }
@@ -428,9 +568,10 @@ export class VRChatAuth {
       result.status === 'LOGIN_REQUIRED' ? result.error : undefined,
       profile.username ?? undefined,
       false,
-      undefined,
+      restoreProfileIdOnCancel,
       true
     );
+    this.scheduleSessionRestore();
   }
 
   public prepareNewLogin(): Promise<void> {
@@ -438,19 +579,35 @@ export class VRChatAuth {
   }
 
   private async prepareNewLoginNow(): Promise<void> {
-    const restoreProfileIdOnCancel = this.userSubject.value
-      ? (await this.getActiveProfile())?.id
-      : undefined;
+    const settings = await firstValueFrom(this.settings);
+    const active = getActiveVRChatProfile(settings);
+    const restoreProfileIdOnCancel = active?.draft
+      ? (getVRChatProfileAttemptSource(settings, active)?.id ?? undefined)
+      : active?.id;
     this.showLoginModal(false, undefined, undefined, undefined, true, restoreProfileIdOnCancel);
   }
 
   public removeProfile(profileId: string): Promise<void> {
     return this.queueTransition(async () => {
-      if ((await this.getActiveProfile())?.id === profileId) await this.deactivate();
+      const settings = await firstValueFrom(this.settings);
+      const attempts = settings.profiles.filter(
+        (profile) =>
+          profile.draft &&
+          (profile.sourceProfileId === profileId || profile.restoreProfileId === profileId)
+      );
+      const active = getActiveVRChatProfile(settings);
+      if (active?.id === profileId || attempts.some((attempt) => attempt.id === active?.id)) {
+        await this.deactivate();
+      }
       await this.api
         .logoutProfile(profileId)
         .catch((cause) => warn(`[VRChat] Failed to invalidate removed profile: ${cause}`));
-      await this.mutateSettings((settings) => removeVRChatProfile(settings, profileId));
+      await this.mutateSettings((currentSettings) => {
+        let updated = currentSettings;
+        for (const attempt of attempts) updated = removeVRChatProfile(updated, attempt.id);
+        return removeVRChatProfile(updated, profileId);
+      });
+      for (const attempt of attempts) this.suspendedSessions.delete(attempt.id);
     });
   }
 
@@ -477,6 +634,7 @@ export class VRChatAuth {
       throw 'PROFILE_MISMATCH';
     }
     await this.mutateSettings((settings) => adoptVRChatProfileIdentity(settings, user));
+    this.suspendedSessions.delete(active.id);
     this.setCurrentUser(user);
     this.statusSubject.next('LOGGED_IN');
     info(`[VRChat] Logged in: ${user.displayName}`);
@@ -517,12 +675,44 @@ export class VRChatAuth {
   private async selectLoginProfile(loginIdentifierHash: string): Promise<void> {
     await this.mutateSettings((settings) => {
       const matching = settings.profiles.find(
-        (profile) => profile.twoFactorCookieLoginIdentifierHash === loginIdentifierHash
+        (profile) =>
+          !profile.draft && profile.twoFactorCookieLoginIdentifierHash === loginIdentifierHash
       );
-      if (matching) return setActiveVRChatProfile(settings, matching.id);
+      if (matching) {
+        return createVRChatProfileAttempt(pruneVRChatDraftProfiles(settings), matching.id);
+      }
       const active = getActiveVRChatProfile(settings);
-      return active && !active.userId ? settings : createVRChatDraftProfile(settings);
+      return active && !active.userId
+        ? settings
+        : createVRChatDraftProfile(pruneVRChatDraftProfiles(settings));
     });
+  }
+
+  private async restoreProfileAttempt(
+    attempt: VRChatAccountProfile,
+    fallbackProfileId?: string
+  ): Promise<boolean> {
+    const suspended = this.suspendedSessions.get(attempt.id);
+    const settings = await firstValueFrom(this.settings);
+    const source = getVRChatProfileAttemptSource(settings, attempt);
+    const profileId =
+      suspended?.profileId ?? attempt.restoreProfileId ?? source?.id ?? fallbackProfileId;
+    await this.mutateSettings((currentSettings) => {
+      const pruned = pruneVRChatDraftProfiles(currentSettings);
+      return profileId && pruned.profiles.some((profile) => profile.id === profileId)
+        ? setActiveVRChatProfile(pruned, profileId)
+        : setActiveVRChatProfile(pruned, null);
+    });
+    this.suspendedSessions.delete(attempt.id);
+    if (!suspended) {
+      this.userSubject.next(null);
+      this.statusSubject.next('LOGGED_OUT');
+      return false;
+    }
+    this.setCurrentUser(suspended.user);
+    this.statusSubject.next('LOGGED_IN');
+    info(`[VRChat] Restored previous account after unsuccessful login attempt`);
+    return true;
   }
 
   private async loadPendingTwoFactorLoginIdentifier(): Promise<string | undefined> {
@@ -549,17 +739,34 @@ export class VRChatAuth {
     interval(STATUS_POLL_INTERVAL).subscribe(async () => {
       if (this.statusSubject.value !== 'LOGGED_IN') return;
       const needsPolling =
-        Date.now() - this.lastUserUpdateAt > SOCKET_UPDATE_HEALTH_WINDOW &&
+        Date.now() - this.lastUserUpdateAt > SOCKET_UPDATE_HEALTH_WINDOW ||
         Date.now() - this.lastStatusUpdateAt > STATUS_FRESHNESS_WINDOW;
       if (!needsPolling) return;
-      try {
-        const result = await this.api.pollCurrentUser();
-        if (result.error) throw result.error;
-        if (result.result) this.patchCurrentUser(result.result);
-      } catch (e) {
-        error(`[VRChat] Error polling user: ${JSON.stringify(e)}`);
-      }
+      await this.revalidateSession();
     });
+  }
+
+  public async revalidateSession(): Promise<void> {
+    if (this.statusSubject.value !== 'LOGGED_IN') return;
+    let polledProfileId: string | undefined;
+    try {
+      const active = await this.getActiveProfile();
+      polledProfileId = active?.id;
+      const result = await this.api.pollCurrentUser(active?.userId ?? undefined);
+      if (result.error) throw result.error;
+      if (result.result) this.patchCurrentUser(result.result);
+    } catch (cause) {
+      error(`[VRChat] Error polling user: ${JSON.stringify(cause)}`);
+      if (!requiresSessionReauthentication(cause)) return;
+      await this.queueTransition(async () => {
+        if (this.statusSubject.value !== 'LOGGED_IN') return;
+        const active = await this.getActiveProfile();
+        if (!active || active.draft || active.id !== polledProfileId) return;
+        await this.activateProfileNow(active.id, true);
+      }).catch((recoveryCause) =>
+        error(`[VRChat] Failed to recover expired session: ${recoveryCause}`)
+      );
+    }
   }
 
   // remembered credentials
@@ -572,10 +779,14 @@ export class VRChatAuth {
   }
 
   public async forgetCredentials(): Promise<void> {
-    await this.patchActiveProfile({
-      rememberedCredentials: null,
-      rememberCredentials: false,
-    });
+    const profile = await this.getActiveProfile();
+    if (!profile) return;
+    await this.mutateSettings((settings) =>
+      patchVRChatProfile(settings, profile.id, {
+        rememberedCredentials: null,
+        rememberCredentials: false,
+      })
+    );
   }
 
   public async loadCredentials(): Promise<{ username: string; password: string } | null> {
