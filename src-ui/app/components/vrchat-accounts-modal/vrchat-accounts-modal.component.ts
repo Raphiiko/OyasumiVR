@@ -89,7 +89,7 @@ export class VRChatAccountsModalComponent extends BaseModalComponent<void, void>
           title: 'comp.vrchat-accounts-modal.forget.title',
           message: {
             string: 'comp.vrchat-accounts-modal.forget.message',
-            values: { account: profile.displayName ?? profile.username ?? '' },
+            values: { account: this.accountName(profile) },
           },
           confirmButtonText: 'comp.vrchat-accounts-modal.forget.confirm',
         }

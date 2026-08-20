@@ -170,7 +170,7 @@ export class VRChatService {
   // authentication
 
   public showLoginModal(autoLogin = false): void {
-    this.auth.showLoginModal(autoLogin);
+    this.auth.showLoginModal({ autoLogin });
   }
 
   public login(username: string, password: string, keepActiveProfile = false): Promise<void> {

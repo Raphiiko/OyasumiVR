@@ -6,33 +6,25 @@
       @for (profile of sortedProfiles | async; track profile.id) {
         @let active = (vrchat.activeProfile | async)?.id === profile.id && !!(vrchat.user | async);
         @let selectable = !active && !profile.secretLocked && !busyProfileId;
-        <div
-          class="account"
-          [class.active]="active"
-          [class.selectable]="selectable"
-          [attr.role]="active ? null : 'button'"
-          [attr.tabindex]="selectable ? 0 : null"
-          [attr.aria-disabled]="!active && !selectable ? true : null"
-          (click)="activate(profile)"
-          (keydown.enter)="activate(profile)"
-          (keydown.space)="$event.preventDefault(); activate(profile)"
-        >
-          <i class="material-icons-round account-icon">account_circle</i>
-          <div class="account-label">
-            <span class="account-name">{{ accountName(profile) }}</span>
-            @if (!active && profile.secretLocked) {
-              <span class="account-status locked">
-                <i class="material-icons-round">lock</i>
-                <span transloco="comp.vrchat-accounts-modal.locked"></span>
-              </span>
-            }
-          </div>
-          <div
-            class="account-actions"
-            (click)="$event.stopPropagation()"
-            (keydown.enter)="$event.stopPropagation()"
-            (keydown.space)="$event.stopPropagation()"
+        <div class="account" [class.active]="active" [class.selectable]="selectable">
+          <button
+            type="button"
+            class="account-select"
+            [disabled]="!selectable"
+            (click)="activate(profile)"
           >
+            <i class="material-icons-round account-icon">account_circle</i>
+            <span class="account-label">
+              <span class="account-name">{{ accountName(profile) }}</span>
+              @if (!active && profile.secretLocked) {
+                <span class="account-status locked">
+                  <i class="material-icons-round">lock</i>
+                  <span transloco="comp.vrchat-accounts-modal.locked"></span>
+                </span>
+              }
+            </span>
+          </button>
+          <div class="account-actions">
             @if (active) {
               <button
                 class="btn btn-secondary account-action"

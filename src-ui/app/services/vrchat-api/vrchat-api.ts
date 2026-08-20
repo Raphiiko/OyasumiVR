@@ -409,7 +409,9 @@ export class VRChatAPI {
       signal: abortController.signal,
     }).finally(() => clearTimeout(timeout));
     this.ensureCacheGeneration(cacheGeneration);
-    if (!response.ok) throw response;
+    if (!response.ok) {
+      throw new Error(`VRChat profile logout failed: HTTP ${response.status}`);
+    }
   }
 
   // notifications and invites
@@ -501,6 +503,7 @@ export class VRChatAPI {
       this.ensureCacheGeneration(cacheGeneration);
       this.requireSuccessfulResponse(result);
     } catch (e) {
+      if (e === VRCHAT_API_STALE_REQUEST) throw e;
       const failure = requestFailure('VRChat invite request failed', e);
       error(`[VRChat] ${failure.message}`);
       this.reportError(failure);

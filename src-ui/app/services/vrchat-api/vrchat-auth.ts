@@ -53,30 +53,33 @@ const STATUS_POLL_INTERVAL = 60_000;
 const SOCKET_UPDATE_HEALTH_WINDOW = 60 * 60_000;
 const STATUS_FRESHNESS_WINDOW = 10 * 60_000;
 
-function shouldRetryCurrentUserRequest(cause: unknown): boolean {
-  return ![
-    'INVALID_CREDENTIALS',
-    'MISSING_CREDENTIALS',
-    'CHECK_EMAIL',
-    'UNSUPPORTED_2FA_METHOD',
-    '2FA_TOTP_REQUIRED',
-    '2FA_EMAILOTP_REQUIRED',
-    'PROFILE_MISMATCH',
-    'AUTHENTICATION_REJECTED',
-  ].includes(String(cause));
+interface VRChatLoginModalOptions {
+  autoLogin?: boolean;
+  twoFactorMethod?: VRChatTwoFactorMethod;
+  initialError?: string;
+  username?: string;
+  newAccount?: boolean;
+  restoreProfileIdOnCancel?: string;
+  keepActiveProfile?: boolean;
 }
 
+const REAUTHENTICATION_ERRORS: readonly string[] = [
+  'INVALID_CREDENTIALS',
+  'MISSING_CREDENTIALS',
+  'CHECK_EMAIL',
+  'UNSUPPORTED_2FA_METHOD',
+  '2FA_TOTP_REQUIRED',
+  '2FA_EMAILOTP_REQUIRED',
+  'PROFILE_MISMATCH',
+  'AUTHENTICATION_REJECTED',
+];
+
 function requiresSessionReauthentication(cause: unknown): boolean {
-  return [
-    'INVALID_CREDENTIALS',
-    'MISSING_CREDENTIALS',
-    'CHECK_EMAIL',
-    'UNSUPPORTED_2FA_METHOD',
-    '2FA_TOTP_REQUIRED',
-    '2FA_EMAILOTP_REQUIRED',
-    'PROFILE_MISMATCH',
-    'AUTHENTICATION_REJECTED',
-  ].includes(String(cause));
+  return REAUTHENTICATION_ERRORS.includes(String(cause));
+}
+
+function shouldRetryCurrentUserRequest(cause: unknown): boolean {
+  return !requiresSessionReauthentication(cause);
 }
 
 async function hashLoginIdentifier(identifier: string): Promise<string> {
@@ -168,17 +171,19 @@ export class VRChatAuth {
         signal,
         expectedUserId: savedProfile.userId ?? undefined,
       });
+      if ((await this.getActiveProfile())?.id !== savedProfile.id) return { status: 'RETRY' };
       if (savedProfile.userId && savedProfile.userId !== user.id) {
-        await this.patchActiveProfile({ authCookie: null });
+        await this.patchProfile(savedProfile.id, { authCookie: null });
         return { status: 'LOGIN_REQUIRED', error: 'PROFILE_MISMATCH' };
       }
       if (savedProfile.pendingTwoFactorLoginIdentifier) {
-        await this.patchActiveProfile({ pendingTwoFactorLoginIdentifier: null });
+        await this.patchProfile(savedProfile.id, { pendingTwoFactorLoginIdentifier: null });
       }
       info(`[VRChat] Restored existing session`);
       return { status: 'RESTORED', user };
     } catch (e) {
       if (signal?.aborted) return { status: 'RETRY' };
+      if ((await this.getActiveProfile())?.id !== savedProfile.id) return { status: 'RETRY' };
       const method = twoFactorMethodFromError(e);
       if (method)
         return {
@@ -216,31 +221,28 @@ export class VRChatAuth {
   private handleSessionRestoreResult(result: SessionRestoreResult): void {
     switch (result.status) {
       case 'TWO_FACTOR_REQUIRED':
-        this.showLoginModal(
-          false,
-          result.method,
-          undefined,
-          result.loginIdentifier,
-          false,
-          undefined,
-          true
-        );
+        this.showLoginModal({
+          twoFactorMethod: result.method,
+          username: result.loginIdentifier,
+          keepActiveProfile: true,
+        });
         break;
       case 'LOGIN_REQUIRED':
         info(`[VRChat] Login expired.`);
-        this.showLoginModal(true, undefined, result.error, undefined, false, undefined, true);
+        this.showLoginModal({
+          autoLogin: true,
+          initialError: result.error,
+          keepActiveProfile: true,
+        });
         this.scheduleSessionRestore();
         break;
       case 'TEMPORARILY_REJECTED':
-        this.showLoginModal(
-          false,
-          undefined,
-          result.error,
-          result.loginIdentifier,
-          false,
-          result.sourceProfileId,
-          true
-        );
+        this.showLoginModal({
+          initialError: result.error,
+          username: result.loginIdentifier,
+          restoreProfileIdOnCancel: result.sourceProfileId,
+          keepActiveProfile: true,
+        });
         this.scheduleSessionRestore();
         break;
       case 'RETRY':
@@ -302,16 +304,17 @@ export class VRChatAuth {
 
   // authentication
 
-  public showLoginModal(
-    autoLogin = false,
-    twoFactorMethod?: VRChatTwoFactorMethod,
-    initialError?: string,
-    username?: string,
-    newAccount = false,
-    restoreProfileIdOnCancel?: string,
-    keepActiveProfile = false
-  ): void {
+  public showLoginModal(options: VRChatLoginModalOptions = {}): void {
     if (this.modalService.isModalOpen(LOGIN_MODAL_ID)) return;
+    const {
+      autoLogin = false,
+      twoFactorMethod,
+      initialError,
+      username,
+      newAccount = false,
+      restoreProfileIdOnCancel,
+      keepActiveProfile = false,
+    } = options;
     this.modalService
       .addModal(
         VRChatLoginModalComponent,
@@ -355,7 +358,15 @@ export class VRChatAuth {
     }
   }
 
-  public async login(username: string, password: string, keepActiveProfile = false): Promise<void> {
+  public login(username: string, password: string, keepActiveProfile = false): Promise<void> {
+    return this.queueTransition(() => this.loginNow(username, password, keepActiveProfile));
+  }
+
+  private async loginNow(
+    username: string,
+    password: string,
+    keepActiveProfile = false
+  ): Promise<void> {
     if (this.statusSubject.value !== 'LOGGED_OUT')
       throw new Error('Tried calling login() while already logged in');
     this.cancelSessionRestore();
@@ -412,7 +423,7 @@ export class VRChatAuth {
     return this.queueTransition(async () => {
       const previousProfile = await this.getActiveProfile();
       if (previousProfile?.draft && !previousProfile.sourceProfileId) {
-        await this.login(username, password, true);
+        await this.loginNow(username, password, true);
         return;
       }
       const previousUser = this.userSubject.value;
@@ -435,7 +446,7 @@ export class VRChatAuth {
           user: previousUser,
         });
       }
-      await this.login(username, password, true);
+      await this.loginNow(username, password, true);
     });
   }
 
@@ -512,15 +523,12 @@ export class VRChatAuth {
     const restoreProfileIdOnCancel =
       this.suspendedSessions.get(attempt.id)?.profileId ?? attempt.sourceProfileId ?? undefined;
     if (result.status === 'TWO_FACTOR_REQUIRED') {
-      this.showLoginModal(
-        false,
-        result.method,
-        undefined,
-        result.loginIdentifier,
-        false,
+      this.showLoginModal({
+        twoFactorMethod: result.method,
+        username: result.loginIdentifier,
         restoreProfileIdOnCancel,
-        true
-      );
+        keepActiveProfile: true,
+      });
       return;
     }
     if (result.status === 'RETRY') {
@@ -538,7 +546,7 @@ export class VRChatAuth {
     const credentials = await this.loadCredentials();
     if (credentials) {
       try {
-        await this.login(credentials.username, credentials.password, true);
+        await this.loginNow(credentials.username, credentials.password, true);
         return;
       } catch (cause) {
         const method = twoFactorMethodFromError(cause);
@@ -548,29 +556,24 @@ export class VRChatAuth {
           await this.restoreProfileAttempt(attempt, restoreProfileIdOnCancel);
           return;
         }
-        this.showLoginModal(
-          false,
-          method,
-          method ? undefined : String(cause),
-          credentials.username,
-          false,
+        this.showLoginModal({
+          twoFactorMethod: method,
+          initialError: method ? undefined : String(cause),
+          username: credentials.username,
           restoreProfileIdOnCancel,
-          true
-        );
+          keepActiveProfile: true,
+        });
         if (temporaryFailure) this.scheduleSessionRestore();
         return;
       }
     }
     const profile = await this.requireActiveProfile();
-    this.showLoginModal(
-      false,
-      undefined,
-      result.status === 'LOGIN_REQUIRED' ? result.error : undefined,
-      profile.username ?? undefined,
-      false,
+    this.showLoginModal({
+      initialError: result.status === 'LOGIN_REQUIRED' ? result.error : undefined,
+      username: profile.username ?? undefined,
       restoreProfileIdOnCancel,
-      true
-    );
+      keepActiveProfile: true,
+    });
     this.scheduleSessionRestore();
   }
 
@@ -584,7 +587,7 @@ export class VRChatAuth {
     const restoreProfileIdOnCancel = active?.draft
       ? (getVRChatProfileAttemptSource(settings, active)?.id ?? undefined)
       : active?.id;
-    this.showLoginModal(false, undefined, undefined, undefined, true, restoreProfileIdOnCancel);
+    this.showLoginModal({ newAccount: true, restoreProfileIdOnCancel });
   }
 
   public removeProfile(profileId: string): Promise<void> {
@@ -669,7 +672,11 @@ export class VRChatAuth {
 
   private async patchActiveProfile(patch: VRChatProfileSessionPatch): Promise<void> {
     const profile = await this.requireActiveProfile();
-    await this.mutateSettings((settings) => patchVRChatProfile(settings, profile.id, patch));
+    await this.patchProfile(profile.id, patch);
+  }
+
+  private async patchProfile(profileId: string, patch: VRChatProfileSessionPatch): Promise<void> {
+    await this.mutateSettings((settings) => patchVRChatProfile(settings, profileId, patch));
   }
 
   private async selectLoginProfile(loginIdentifierHash: string): Promise<void> {
