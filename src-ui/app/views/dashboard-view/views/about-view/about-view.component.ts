@@ -155,6 +155,7 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async ngOnDestroy() {
+    this.supportersScrolling = false;
     this.background.setBackground(null);
   }
 

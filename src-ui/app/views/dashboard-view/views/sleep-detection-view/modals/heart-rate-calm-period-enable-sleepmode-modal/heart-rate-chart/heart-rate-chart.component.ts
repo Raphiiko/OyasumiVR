@@ -48,7 +48,6 @@ export class HeartRateChartComponent implements OnInit, AfterViewInit, OnDestroy
     this.pulsoid.heartbeatRecords
       .pipe(
         filter((records) => !!records.length),
-        // throttleTime(1000 * 60, asyncScheduler, { leading: true, trailing: true }),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((data) => {
