@@ -1,6 +1,7 @@
 export interface PulsoidApiSettings {
   version: 1;
   accessToken?: string;
+  protectedAccessToken?: string;
   expiresAt?: number;
   username?: string;
 }

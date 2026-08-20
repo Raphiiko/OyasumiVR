@@ -2,15 +2,10 @@ import { Injectable } from '@angular/core';
 import { AutomationConfigService } from './automation-config.service';
 import { AUTOMATION_CONFIGS_DEFAULT, RunAutomationsConfig } from '../models/automations';
 import { debounceTime, distinctUntilChanged, skip, take } from 'rxjs';
-import {
-  decryptStorageData,
-  deserializeStorageCryptoKey,
-  encryptStorageData,
-  generateStorageCryptoKey,
-  serializeStorageCryptoKey,
-} from '../utils/crypto';
-import { firstValueFrom, ReplaySubject } from 'rxjs';
-import { debug, info, warn } from '@tauri-apps/plugin-log';
+import { decryptStorageData, deserializeStorageCryptoKey } from '../utils/crypto';
+import { protectSecret, unprotectSecret } from '../utils/secrets';
+import { firstValueFrom } from 'rxjs';
+import { debug, error, info, warn } from '@tauri-apps/plugin-log';
 import { invoke } from '@tauri-apps/api/core';
 import { SleepService } from './sleep.service';
 import { SleepPreparationService } from './sleep-preparation.service';
@@ -23,7 +18,6 @@ export class RunAutomationsService {
   private config: RunAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.RUN_AUTOMATIONS
   );
-  private cryptoKey: ReplaySubject<CryptoKey> = new ReplaySubject<CryptoKey>(1);
 
   constructor(
     private automationsConfigService: AutomationConfigService,
@@ -36,8 +30,7 @@ export class RunAutomationsService {
     this.config = (
       await firstValueFrom(this.automationsConfigService.configs.pipe(take(1)))
     ).RUN_AUTOMATIONS;
-    const key = await this.getCryptoKey();
-    this.cryptoKey.next(key);
+    await this.migrateLegacyCommands();
     this.automationsConfigService.configs.subscribe((configs) => {
       this.config = configs.RUN_AUTOMATIONS;
     });
@@ -52,22 +45,24 @@ export class RunAutomationsService {
     automation: 'onSleepModeEnable' | 'onSleepModeDisable' | 'onSleepPreparation',
     commands: string
   ) {
-    const key = await firstValueFrom(this.cryptoKey);
-    const encryptedCommands = await encryptStorageData(commands, key);
     this.automationsConfigService.updateAutomationConfig<RunAutomationsConfig>('RUN_AUTOMATIONS', {
-      [automation + 'Commands']: encryptedCommands,
+      [automation + 'Commands']: await protectSecret(commands),
     });
   }
 
   public async getCommands(
     automation: 'onSleepModeEnable' | 'onSleepModeDisable' | 'onSleepPreparation'
   ): Promise<string> {
-    const key = await firstValueFrom(this.cryptoKey);
-    const encryptedCommands = this.config[
+    const protectedCommands = this.config[
       `${automation}Commands` as keyof RunAutomationsConfig
     ] as string;
-    if (!encryptedCommands) return '';
-    return await decryptStorageData(encryptedCommands, key);
+    if (!protectedCommands) return '';
+    try {
+      return await unprotectSecret(protectedCommands);
+    } catch (cause) {
+      warn(`[RunAutomationsService] Failed to unlock ${automation} commands: ${cause}`);
+      return '';
+    }
   }
 
   public async testCommands(commands: string): Promise<void> {
@@ -128,21 +123,33 @@ export class RunAutomationsService {
     }
   }
 
-  private async getCryptoKey(): Promise<CryptoKey> {
-    if (this.config.runAutomationsCryptoKey) {
-      info('[RunAutomationsService] Using existing crypto key');
-      return await deserializeStorageCryptoKey(this.config.runAutomationsCryptoKey);
-    } else {
-      info('[RunAutomationsService] Generating new crypto key');
-      const key = await generateStorageCryptoKey();
-      const wrappedKey = await serializeStorageCryptoKey(key);
-      await this.automationsConfigService.updateAutomationConfig<RunAutomationsConfig>(
-        'RUN_AUTOMATIONS',
-        {
-          runAutomationsCryptoKey: wrappedKey,
-        }
-      );
-      return key;
+  private async migrateLegacyCommands() {
+    const legacyKey = this.config.runAutomationsCryptoKey;
+    if (!legacyKey) return;
+    info('[RunAutomationsService] Migrating commands to protected storage');
+    const automations = ['onSleepModeEnable', 'onSleepModeDisable', 'onSleepPreparation'] as const;
+    const patch: Partial<RunAutomationsConfig> = { runAutomationsCryptoKey: undefined };
+    let key: CryptoKey | null = null;
+    try {
+      key = await deserializeStorageCryptoKey(legacyKey);
+    } catch (cause) {
+      error(`[RunAutomationsService] Failed to unlock legacy command key: ${cause}`);
     }
+    for (const automation of automations) {
+      const encryptedCommands = this.config[`${automation}Commands`];
+      if (!key || !encryptedCommands) continue;
+      try {
+        patch[`${automation}Commands`] = await protectSecret(
+          await decryptStorageData(encryptedCommands, key)
+        );
+      } catch (cause) {
+        error(`[RunAutomationsService] Failed to migrate ${automation} commands: ${cause}`);
+      }
+    }
+    await this.automationsConfigService.updateAutomationConfig<RunAutomationsConfig>(
+      'RUN_AUTOMATIONS',
+      patch
+    );
+    this.config = { ...this.config, ...patch };
   }
 }

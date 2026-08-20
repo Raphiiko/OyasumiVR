@@ -18,6 +18,7 @@ import { ModalService } from 'src-ui/app/services/modal.service';
 import { AvatarEx, UserStatus, WorldContext } from '../../models/vrchat';
 import { VRChatLogService } from '../vrchat-log.service';
 import { decryptStorageData, deserializeStorageCryptoKey } from '../../utils/crypto';
+import { protectSecret, unprotectSecret } from '../../utils/secrets';
 import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
 import { VRChatAPI, VRChatTwoFactorMethod } from './vrchat-api';
@@ -76,9 +77,7 @@ export class VRChatService {
 
   private readonly settings = this.settingsSubject.asObservable();
   public readonly profiles = this.settings.pipe(
-    map((settings) =>
-      settings.profiles.filter((profile) => !profile.draft).map(toPublicProfile)
-    )
+    map((settings) => settings.profiles.filter((profile) => !profile.draft).map(toPublicProfile))
   );
   public readonly activeProfile = this.settings.pipe(
     map((settings) => {
@@ -328,9 +327,7 @@ export class VRChatService {
         let secret: VRChatAccountSecret;
         if (profile.protectedSecret != null) {
           try {
-            const json = await invoke<string>('unprotect_vrchat_secret', {
-              secret: profile.protectedSecret,
-            });
+            const json = await unprotectSecret(profile.protectedSecret);
             secret = parseVRChatAccountSecret(JSON.parse(json));
           } catch (cause) {
             error(`[VRChat] Failed to unlock profile ${profile.id}: ${cause}`);
@@ -463,9 +460,7 @@ export class VRChatService {
           draft: profile.draft,
           protectedSecret: profile.secretLocked
             ? profile.protectedSecret
-            : await invoke<string>('protect_vrchat_secret', {
-                secret: JSON.stringify(getVRChatAccountSecret(profile)),
-              }),
+            : await protectSecret(JSON.stringify(getVRChatAccountSecret(profile))),
         };
       })
     );

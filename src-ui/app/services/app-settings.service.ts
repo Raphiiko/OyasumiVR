@@ -14,6 +14,8 @@ import {
 import { SETTINGS_KEY_APP_SETTINGS, SETTINGS_STORE } from '../globals';
 import { isEqual, uniq } from 'lodash';
 import { migrateAppSettings } from '../migrations/app-settings.migrations';
+import { protectSecret, unprotectSecret } from '../utils/secrets';
+import { error } from '@tauri-apps/plugin-log';
 import { TranslocoService } from '@jsverse/transloco';
 import { OneTimeFlag } from '../models/one-time-flags';
 import { ModalService } from './modal.service';
@@ -71,13 +73,28 @@ export class AppSettingsService {
       loadedDefaults = true;
     }
     if (settings.userLanguage === 'DEBUG') settings.userLanguage = 'en';
+    if (settings.mqttProtectedPassword) {
+      try {
+        settings.mqttPassword = await unprotectSecret(settings.mqttProtectedPassword);
+      } catch (cause) {
+        error(`[AppSettings] Failed to unlock the MQTT password: ${cause}`);
+        settings.mqttPassword = null;
+      }
+    }
     this._settings.next(settings);
     await this.saveSettings();
     this._loadedDefaults.next(loadedDefaults);
   }
 
   async saveSettings() {
-    await SETTINGS_STORE.set(SETTINGS_KEY_APP_SETTINGS, this._settings.value);
+    const settings = this._settings.value;
+    await SETTINGS_STORE.set(SETTINGS_KEY_APP_SETTINGS, {
+      ...settings,
+      mqttPassword: null,
+      mqttProtectedPassword: settings.mqttPassword
+        ? await protectSecret(settings.mqttPassword)
+        : null,
+    });
   }
 
   public updateSettings(settings: Partial<AppSettings>) {

@@ -51,6 +51,7 @@ export interface AppSettings {
   mqttPort: number | null;
   mqttUsername: string | null;
   mqttPassword: string | null;
+  mqttProtectedPassword: string | null;
   mqttSecureSocket: boolean;
   // Brightness & CCT
   cctControlEnabled: boolean;
@@ -140,6 +141,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   mqttPort: null,
   mqttUsername: null,
   mqttPassword: null,
+  mqttProtectedPassword: null,
   mqttSecureSocket: false,
   // Brightness & CCT
   cctControlEnabled: true,

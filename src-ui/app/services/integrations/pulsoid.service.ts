@@ -32,6 +32,7 @@ import {
 } from '../../models/pulsoid-api-settings';
 import { migratePulsoidApiSettings } from '../../migrations/pulsoid-api-settings.migrations';
 import * as shell from '@tauri-apps/plugin-shell';
+import { protectSecret, unprotectSecret } from '../../utils/secrets';
 
 const HISTORY_LENGTH = 1000 * 60 * 60 * 12; // 12 hours
 
@@ -249,6 +250,15 @@ export class PulsoidService {
     let settings: PulsoidApiSettings | undefined =
       await SETTINGS_STORE.get<PulsoidApiSettings>(SETTINGS_KEY_PULSOID_API);
     settings = settings ? migratePulsoidApiSettings(settings) : this.settings.value;
+    if (settings.protectedAccessToken) {
+      try {
+        settings.accessToken = await unprotectSecret(settings.protectedAccessToken);
+      } catch (cause) {
+        error(`[Pulsoid] Failed to unlock the access token: ${cause}`);
+        settings.accessToken = undefined;
+        settings.expiresAt = undefined;
+      }
+    }
     // Handle token expiry
     if (settings.expiresAt && settings.expiresAt < Date.now() / 1000) {
       info('[Pulsoid] Token expired, throwing it away.');
@@ -268,7 +278,14 @@ export class PulsoidService {
   }
 
   private async saveSettings() {
-    await SETTINGS_STORE.set(SETTINGS_KEY_PULSOID_API, this.settings.value);
+    const settings = this.settings.value;
+    await SETTINGS_STORE.set(SETTINGS_KEY_PULSOID_API, {
+      ...settings,
+      accessToken: undefined,
+      protectedAccessToken: settings.accessToken
+        ? await protectSecret(settings.accessToken)
+        : undefined,
+    });
   }
 
   private async manageSocketConnection() {
