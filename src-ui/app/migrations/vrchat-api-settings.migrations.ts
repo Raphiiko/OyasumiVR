@@ -205,18 +205,28 @@ async function decryptLegacyCredentials(
 ): Promise<{ username: string; password: string } | null> {
   const encoded = await decryptLegacyValue(value, key, profileId);
   const separator = encoded?.indexOf(':') ?? -1;
-  if (encoded == null || separator < 0) {
-    error(
-      '[vrchat-api-settings-migrations] Discarded the credentials of profile ' +
-        profileId +
-        ': invalid encoding'
-    );
-    return null;
+  if (encoded != null && separator >= 0) {
+    try {
+      return {
+        username: atob(encoded.slice(0, separator)),
+        password: atob(encoded.slice(separator + 1)),
+      };
+    } catch (e) {
+      error(
+        '[vrchat-api-settings-migrations] Discarded the credentials of profile ' +
+          profileId +
+          ': ' +
+          e
+      );
+      return null;
+    }
   }
-  return {
-    username: atob(encoded.slice(0, separator)),
-    password: atob(encoded.slice(separator + 1)),
-  };
+  error(
+    '[vrchat-api-settings-migrations] Discarded the credentials of profile ' +
+      profileId +
+      ': invalid encoding'
+  );
+  return null;
 }
 
 function resetToLatest(data: any): any {
