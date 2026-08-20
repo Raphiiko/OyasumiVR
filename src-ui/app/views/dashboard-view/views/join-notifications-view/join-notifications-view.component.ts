@@ -63,8 +63,8 @@ export class JoinNotificationsViewComponent implements OnInit {
   ngOnInit() {
     this.automationConfigService.configs
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        map((config) => config.JOIN_NOTIFICATIONS)
+        map((config) => config.JOIN_NOTIFICATIONS),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((config) => {
         this.config = config;

@@ -80,8 +80,8 @@ export class BrightnessAutomationsListComponent implements OnInit {
     // Get configuration updates and refresh indicators when config changes
     this.automationConfigService.configs
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        map((configs) => configs.BRIGHTNESS_AUTOMATIONS)
+        map((configs) => configs.BRIGHTNESS_AUTOMATIONS),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((config) => {
         this.config = config;
@@ -96,8 +96,8 @@ export class BrightnessAutomationsListComponent implements OnInit {
       interval(5000).pipe(startWith(0)), // Update every 5 seconds and initially
     ])
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        switchMap(() => this.updateHmdConnectIndicators())
+        switchMap(() => this.updateHmdConnectIndicators()),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
   }

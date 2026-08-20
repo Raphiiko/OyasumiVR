@@ -86,8 +86,8 @@ export class MainStatusBarComponent implements OnInit {
     // else here observes.
     this.router.events
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        filter((e) => e instanceof NavigationEnd)
+        filter((e) => e instanceof NavigationEnd),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(() => this.cdr.markForCheck());
     // cctCSSColor is a plain property on the service, read straight from the

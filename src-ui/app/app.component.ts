@@ -37,7 +37,6 @@ export class AppComponent implements OnInit {
   ) {
     this.settings.settings
       .pipe(
-        takeUntilDestroyed(),
         map((settings) => settings.userLanguage),
         distinctUntilChanged(),
         // The translation has to be in memory before anything calls translate()
@@ -54,16 +53,19 @@ export class AppComponent implements OnInit {
         }),
         tap((userLanguage) => translate.setActiveLang(userLanguage)),
         debounceTime(10000),
-        tap((userLanguage) => this.telemetry.trackEvent('use_language', { language: userLanguage }))
+        tap((userLanguage) =>
+          this.telemetry.trackEvent('use_language', { language: userLanguage })
+        ),
+        takeUntilDestroyed()
       )
       .subscribe();
     // Snowverlay
     this.settings.settings
       .pipe(
-        takeUntilDestroyed(),
         skip(1),
         map((settings) => settings.hideSnowverlay),
-        distinctUntilChanged()
+        distinctUntilChanged(),
+        takeUntilDestroyed()
       )
       .subscribe((hideSnowverlay) => {
         this.showSnowverlay = !hideSnowverlay && isHolidaysEventActive();

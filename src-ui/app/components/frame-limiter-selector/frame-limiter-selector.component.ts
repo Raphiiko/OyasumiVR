@@ -40,9 +40,9 @@ export class FrameLimiterSelectorComponent implements OnInit {
   ngOnInit(): void {
     this.openvr.devices
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         map((devices) => devices.find((d) => d.class === 'HMD')?.displayFrequency),
-        distinctUntilChanged()
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((displayFrequency) => {
         this.hmdDisplayFrequency = displayFrequency;

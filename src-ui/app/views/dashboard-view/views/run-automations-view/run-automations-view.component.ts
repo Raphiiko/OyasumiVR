@@ -39,11 +39,11 @@ export class RunAutomationsViewComponent implements OnInit {
 
   ngOnInit(): void {
     const config = this.automationConfigService.configs.pipe(
-      takeUntilDestroyed(this.destroyRef),
       map((configs) => configs.RUN_AUTOMATIONS),
       distinctUntilChanged((a, b) => isEqual(a, b)),
       tap((config) => (this.config = config)),
-      share()
+      share(),
+      takeUntilDestroyed(this.destroyRef)
     );
 
     const events: ('onSleepModeEnable' | 'onSleepModeDisable' | 'onSleepPreparation')[] = [
@@ -55,9 +55,9 @@ export class RunAutomationsViewComponent implements OnInit {
     config
       .pipe(
         debounceTime(500),
-        takeUntilDestroyed(this.destroyRef),
         filter((config) => !isEqual(AUTOMATION_CONFIGS_DEFAULT.RUN_AUTOMATIONS, config)),
-        take(1)
+        take(1),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(async (config) => {
         // Initialize expanded states based on automation enabled state only on first load

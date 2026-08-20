@@ -47,7 +47,7 @@ export class VRChatLoginTFAModalComponent
   ngOnInit(): void {
     if (this.lastCodeInvalid) this.error = 'comp.vrchat-login-tfa-modal.errors.LAST_CODE_INVALID';
     this.code
-      .pipe(takeUntilDestroyed(this.destroyRef), distinctUntilChanged(), skip(1), debounceTime(300))
+      .pipe(distinctUntilChanged(), skip(1), debounceTime(300), takeUntilDestroyed(this.destroyRef))
       .subscribe((code) => {
         if (/^[0-9]{6}$/.test(code)) {
           this.codeValid = true;

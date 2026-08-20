@@ -138,9 +138,9 @@ export class SystemMicMuteAutomationsViewComponent implements OnInit, OnDestroy 
   async ngOnInit() {
     // Obtain config changes
     const $config = this.automationConfigService.configs.pipe(
-      takeUntilDestroyed(this.destroyRef),
       map((configs) => configs.SYSTEM_MIC_MUTE_AUTOMATIONS),
-      distinctUntilChanged((a, b) => isEqual(a, b))
+      distinctUntilChanged((a, b) => isEqual(a, b)),
+      takeUntilDestroyed(this.destroyRef)
     );
     // Process config changes
     $config.subscribe((config) => {

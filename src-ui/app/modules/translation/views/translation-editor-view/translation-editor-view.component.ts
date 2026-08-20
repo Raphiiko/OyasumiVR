@@ -59,9 +59,9 @@ export class TranslationEditorViewComponent {
       this.locale = locale;
     });
     combineLatest([this.translationEditService.entries, this.translationEditService.suggestions])
-      .pipe(takeUntilDestroyed(), debounceTime(0))
+      .pipe(debounceTime(0), takeUntilDestroyed())
       .subscribe(([entries, suggestions]) => this.processEntryChanges(entries, suggestions));
-    this.changeMade.pipe(takeUntilDestroyed(), debounceTime(500)).subscribe(() => {
+    this.changeMade.pipe(debounceTime(500), takeUntilDestroyed()).subscribe(() => {
       this.calculateKeysTranslated();
     });
   }

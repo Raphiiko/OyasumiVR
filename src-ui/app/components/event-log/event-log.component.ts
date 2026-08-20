@@ -49,7 +49,6 @@ export class EventLogComponent implements OnInit, AfterViewInit {
     private appSettings: AppSettingsService
   ) {
     this.logsInView = combineLatest([this.eventLog.eventLog, this.showCount, this.filters]).pipe(
-      takeUntilDestroyed(),
       map(
         ([log, showCount, filters]) =>
           [log.logs.filter((log) => !filters.includes(log.type)), showCount, filters] as [
@@ -62,7 +61,8 @@ export class EventLogComponent implements OnInit, AfterViewInit {
         this.entries = logs.length;
         this.cdr.detectChanges();
       }),
-      map(([logs, showCount]) => logs.slice(0, showCount))
+      map(([logs, showCount]) => logs.slice(0, showCount)),
+      takeUntilDestroyed()
     );
     this.appSettings.settings.pipe(takeUntilDestroyed()).subscribe((settings) => {
       this.filters.next(settings.eventLogTypesHidden);

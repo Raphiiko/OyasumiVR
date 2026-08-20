@@ -122,8 +122,8 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
   async ngAfterViewInit() {
     interval(1000)
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        filter(() => !this.supportersScrolling)
+        filter(() => !this.supportersScrolling),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(() => {
         if (!this.supportersList) return;
@@ -155,6 +155,7 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async ngOnDestroy() {
+    this.supportersScrolling = false;
     this.background.setBackground(null);
   }
 

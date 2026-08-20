@@ -44,8 +44,8 @@ export class FrameLimiterViewComponent implements OnInit {
   ngOnInit(): void {
     this.automationConfig.configs
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        map((configs) => configs.FRAME_LIMIT_AUTOMATIONS)
+        map((configs) => configs.FRAME_LIMIT_AUTOMATIONS),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((config) => (this.config = config));
     this.frameLimiterService.activeFrameLimits

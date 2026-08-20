@@ -53,8 +53,8 @@ export class NightmareDetectionViewComponent implements OnInit {
   ngOnInit() {
     this.automationConfigService.configs
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        map((configs) => configs.NIGHTMARE_DETECTION)
+        map((configs) => configs.NIGHTMARE_DETECTION),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(async (config) => {
         this.config = config;

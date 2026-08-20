@@ -61,17 +61,17 @@ export class ControllerBindingComponent implements OnInit {
   ngOnInit() {
     this.openvr.status
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         pairwise(),
         filter(([prev, current]) => current !== 'INITIALIZED' && prev === 'INITIALIZED'),
-        tap(() => (this.dropdownOpen = false))
+        tap(() => (this.dropdownOpen = false)),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
     interval(1000)
       .pipe(
         startWith(void 0),
-        takeUntilDestroyed(this.destroyRef),
-        switchMap(() => this.refreshBindings())
+        switchMap(() => this.refreshBindings()),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
   }

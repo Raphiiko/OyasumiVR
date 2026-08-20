@@ -29,9 +29,8 @@ export class AudioVolumeAutomationsViewComponent implements OnInit {
   ngOnInit() {
     this.automationsConfigService.configs
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        map((configs) => configs.AUDIO_DEVICE_AUTOMATIONS)
-        // distinctUntilChanged((previous, current) => isEqual(previous, current))
+        map((configs) => configs.AUDIO_DEVICE_AUTOMATIONS),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((config) => {
         this.config = config;

@@ -26,6 +26,7 @@ import {
   ConfirmModalOutputModel,
 } from '../../../../../../components/confirm-modal/confirm-modal.component';
 import { hshrink, noop, vshrink } from '../../../../../../utils/animations';
+import { flushOnDestroy } from '../../../../../../utils/rxjs-utils';
 
 @Component({
   selector: 'app-status-automations-player-limit-tab',
@@ -107,9 +108,9 @@ export class StatusAutomationsPlayerLimitTabComponent implements OnInit {
       this.loggedIn = status === 'LOGGED_IN';
       this.cdr.markForCheck();
     });
+    flushOnDestroy(this.limit, this.destroyRef);
     this.limit
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         tap((limit) => {
           this.bedLimit = Math.min(limit, 10);
           this.cdr.markForCheck();
@@ -117,7 +118,8 @@ export class StatusAutomationsPlayerLimitTabComponent implements OnInit {
         distinctUntilChanged(),
         filter((limit) => limit !== this.config.limit),
         debounceTime(300),
-        switchMap((limit) => this.updateConfig({ limit }))
+        switchMap((limit) => this.updateConfig({ limit })),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
   }

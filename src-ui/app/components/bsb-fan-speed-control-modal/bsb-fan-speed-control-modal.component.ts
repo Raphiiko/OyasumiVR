@@ -40,19 +40,19 @@ export class BSBFanSpeedControlModalComponent
     super();
     this.automationConfigService.configs
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         map((c) => c.BIGSCREEN_BEYOND_FAN_CONTROL),
         tap((config) => {
           this.fanSpeedBounds = [config.allowUnsafeFanSpeed ? 0 : 40, 100];
           this.cdr.markForCheck();
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
     this.setFanSpeed
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         throttleTime(1000 / 30, asyncScheduler, { leading: true, trailing: true }),
-        switchMap((percentage) => this.fanControl.setFanSpeed(percentage))
+        switchMap((percentage) => this.fanControl.setFanSpeed(percentage)),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
   }

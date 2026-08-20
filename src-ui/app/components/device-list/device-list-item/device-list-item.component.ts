@@ -184,10 +184,10 @@ export class DeviceListItemComponent implements OnInit {
     });
     this.appSettings.settings
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         map((s) => s.v1LighthouseIdentifiers),
         distinctUntilChanged((a, b) => isEqual(a, b)),
-        skip(1)
+        skip(1),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(() => {
         if (this._lighthouseDevice) this.lighthouseDevice = this._lighthouseDevice;

@@ -91,10 +91,10 @@ export class FriendSelectionModalComponent
     await firstValueFrom(this.vrchat.user.pipe(filter(Boolean)));
     this.query
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         debounceTime(200),
         startWith(this.query.value),
-        distinctUntilChanged()
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((query) => this.search(query));
     this.loadFriends();
