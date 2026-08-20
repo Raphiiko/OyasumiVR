@@ -4546,6 +4546,7 @@ name = "oyasumivr"
 version = "26.8.0-beta.3"
 dependencies = [
  "async-recursion",
+ "base64 0.22.1",
  "btleplug",
  "byteorder",
  "bytes",

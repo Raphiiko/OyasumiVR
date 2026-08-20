@@ -982,6 +982,19 @@
       },
       "title": "Select Avatar"
     },
+    "vrchat-accounts-modal": {
+      "add": "Use another account",
+      "description": "Choose a saved VRChat account or add another one.",
+      "forget": {
+        "confirm": "Forget Account",
+        "message": "Forget ''{account}''? OyasumiVR will delete the saved login data for this account. You will need to log in again to add it back.",
+        "title": "Forget VRChat Account",
+        "tooltip": "Forget account"
+      },
+      "locked": "Saved login data could not be opened",
+      "title": "VRChat Accounts",
+      "unknownAccount": "Saved account"
+    },
     "vrchat-login-modal": {
       "disclaimers": {
         "brand": "OyasumiVR isn't endorsed by VRChat and doesn't reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat. VRChat is trademark of VRChat Inc. VRChat © VRChat Inc.",
@@ -991,6 +1004,7 @@
       "errors": {
         "CHECK_EMAIL": "Login failed: For details, check the mailbox of the e-mail address that is tied to your VRChat account.",
         "INVALID_CREDENTIALS": "The credentials you have provided are incorrect.",
+        "PROFILE_MISMATCH": "This saved session belongs to a different VRChat account. Please log in again.",
         "UNEXPECTED_RESPONSE": "Login failed: an unknown error occurred. Please verify your connection or try again later.",
         "UNSUPPORTED_2FA_METHOD": "Login failed: this account requires a VRChat recovery code. Please log in through VRChat instead."
       },
@@ -2215,6 +2229,8 @@
       "reveal": "Reveal",
       "title": "Integrations",
       "vrchat": {
+        "accounts": "Accounts",
+        "chooseAccount": "Choose Account",
         "description": "Linking your account provides access to some of OyasumiVR's VRChat-related automations.",
         "title": "VRChat"
       },

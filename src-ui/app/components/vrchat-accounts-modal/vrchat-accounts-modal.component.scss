@@ -1,0 +1,121 @@
+.pane {
+  width: min(42em, calc(100vw - 4em));
+}
+
+.pane-content > p {
+  margin-bottom: 1.25em;
+  color: var(--color-text-2);
+}
+
+.accounts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.account {
+  display: flex;
+  align-items: center;
+  gap: 0.875em;
+  padding: 0.75em 1em;
+  border: 1px solid var(--color-surface-3);
+  border-radius: var(--surface-border-radius);
+  background: var(--color-surface-1);
+  transition: all 0.15s ease;
+
+  &.active {
+    border-color: var(--color-primary);
+    background: var(--color-surface-3);
+
+    .account-icon {
+      color: var(--color-text-1);
+    }
+  }
+
+  &.selectable {
+    cursor: pointer;
+
+    &:hover {
+      border-color: var(--color-surface-4);
+      background: var(--color-surface-2);
+
+      .account-icon {
+        color: var(--color-text-1);
+      }
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+.account-icon {
+  flex-shrink: 0;
+  color: var(--color-text-2);
+  font-size: 2.25em;
+}
+
+.account-label {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.15em;
+}
+
+.account-name {
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-status {
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+  min-width: 0;
+  font-size: 0.85em;
+  color: var(--color-text-3);
+
+  i {
+    flex-shrink: 0;
+    font-size: 1.15em;
+  }
+
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &.locked {
+    color: var(--color-alert-warning);
+  }
+}
+
+.account-actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.account-actions .btn {
+  height: 2.3em;
+
+  &.btn-icon {
+    width: 2.3em;
+    padding: 0;
+  }
+}
+
+.account-action {
+  min-width: 8em;
+}

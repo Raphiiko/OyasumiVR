@@ -1,0 +1,78 @@
+<div class="pane modal" @fadeUp>
+  <div class="pane-title" transloco="comp.vrchat-accounts-modal.title"></div>
+  <div class="pane-content">
+    <p transloco="comp.vrchat-accounts-modal.description"></p>
+    <div class="accounts">
+      @for (profile of sortedProfiles | async; track profile.id) {
+        @let active = (vrchat.activeProfile | async)?.id === profile.id && !!(vrchat.user | async);
+        @let selectable = !active && !profile.secretLocked && !busyProfileId;
+        <div
+          class="account"
+          [class.active]="active"
+          [class.selectable]="selectable"
+          [attr.role]="active ? null : 'button'"
+          [attr.tabindex]="selectable ? 0 : null"
+          [attr.aria-disabled]="!active && !selectable ? true : null"
+          (click)="activate(profile)"
+          (keydown.enter)="activate(profile)"
+          (keydown.space)="$event.preventDefault(); activate(profile)"
+        >
+          <i class="material-icons-round account-icon">account_circle</i>
+          <div class="account-label">
+            <span class="account-name">{{ accountName(profile) }}</span>
+            @if (!active && profile.secretLocked) {
+              <span class="account-status locked">
+                <i class="material-icons-round">lock</i>
+                <span transloco="comp.vrchat-accounts-modal.locked"></span>
+              </span>
+            }
+          </div>
+          <div
+            class="account-actions"
+            (click)="$event.stopPropagation()"
+            (keydown.enter)="$event.stopPropagation()"
+            (keydown.space)="$event.stopPropagation()"
+          >
+            @if (active) {
+              <button
+                class="btn btn-secondary account-action"
+                [disabled]="!!busyProfileId"
+                (click)="disconnect(profile)"
+              >
+                @if (busyProfileId === profile.id) {
+                  <div class="small-spinner" @hshrink></div>
+                } @else {
+                  <span transloco="settings.integrations.disconnect"></span>
+                }
+              </button>
+            } @else if (busyProfileId === profile.id) {
+              <div class="small-spinner" @hshrink></div>
+            }
+            <button
+              class="btn btn-secondary btn-icon"
+              [disabled]="!!busyProfileId"
+              (click)="forget(profile)"
+              [attr.aria-label]="'comp.vrchat-accounts-modal.forget.tooltip' | transloco"
+              [tooltip]="'comp.vrchat-accounts-modal.forget.tooltip'"
+              tooltipMode="top"
+            >
+              <i class="material-icons">delete</i>
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+  <div class="pane-actions spread">
+    <button
+      class="btn btn-secondary"
+      [disabled]="!!busyProfileId"
+      (click)="close()"
+      transloco="shared.modals.close"
+    ></button>
+    <button class="btn btn-primary" [disabled]="!!busyProfileId" (click)="addAccount()">
+      <i class="material-icons">add</i>
+      <span transloco="comp.vrchat-accounts-modal.add"></span>
+    </button>
+  </div>
+</div>

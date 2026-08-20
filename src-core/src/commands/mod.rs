@@ -5,3 +5,4 @@ pub mod notifications;
 pub mod nvml;
 pub mod splash;
 pub mod time;
+pub mod vrchat_secrets;

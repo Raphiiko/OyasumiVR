@@ -22,7 +22,7 @@
             </div>
             <div class="setting-row-action">
               @if (vrchat.user | async) {
-                <div class="connected" @hshrink>
+                <div class="connected">
                   <div class="connected-info">
                     <i class="material-icons-round">check_circle</i>
                     <div class="connected-info-account">
@@ -31,18 +31,25 @@
                   </div>
                   <button
                     class="btn btn-secondary connected-disconnect"
-                    (click)="vrchat.logout()"
-                    transloco="settings.integrations.disconnect"
+                    (click)="showVRChatAccountsModal()"
+                    transloco="settings.integrations.vrchat.accounts"
                   ></button>
                 </div>
               }
               @if ((vrchat.user | async) === null) {
-                <button
-                  class="btn btn-primary"
-                  (click)="vrchat.showLoginModal()"
-                  transloco="settings.integrations.connect"
-                  @hshrink
-                ></button>
+                @if ((vrchat.profiles | async)?.length) {
+                  <button
+                    class="btn btn-primary"
+                    (click)="showVRChatAccountsModal()"
+                    transloco="settings.integrations.vrchat.chooseAccount"
+                  ></button>
+                } @else {
+                  <button
+                    class="btn btn-primary"
+                    (click)="vrchat.prepareNewLogin()"
+                    transloco="settings.integrations.connect"
+                  ></button>
+                }
               }
             </div>
           </div>
@@ -67,7 +74,7 @@
             </div>
             <div class="setting-row-action">
               @if (pulsoid.loggedInUser | async) {
-                <div class="connected" @hshrink>
+                <div class="connected">
                   <div
                     class="connected-info"
                     [tooltip]="'settings.integrations.reveal'"
@@ -91,7 +98,7 @@
                 </div>
               }
               @if ((pulsoid.loggedInUser | async) === null) {
-                <div @hshrink class="connect-row">
+                <div class="connect-row">
                   <button
                     class="btn btn-copy btn-secondary"
                     tooltip="settings.integrations.copy"
@@ -99,10 +106,10 @@
                     (click)="copyToClipboard('PULSOID')"
                   >
                     @if (!copiedToClipboard.includes('PULSOID')) {
-                      <i class="material-icons" @hshrink>copy_all</i>
+                      <i class="material-icons">copy_all</i>
                     }
                     @if (copiedToClipboard.includes('PULSOID')) {
-                      <i class="material-icons success" @hshrink>check</i>
+                      <i class="material-icons success">check</i>
                     }
                   </button>
                   <button
@@ -140,7 +147,7 @@
             ) {
               <div class="setting-row-action">
                 @if (data.mqttClient) {
-                  <div class="connected" @hshrink>
+                  <div class="connected">
                     <div class="connected-info">
                       <i class="material-icons-round">check_circle</i>
                       <div class="connected-info-account">
@@ -151,7 +158,6 @@
                       class="btn btn-secondary connected-disconnect"
                       (click)="showMqttConfigModal()"
                       transloco="settings.integrations.configure"
-                      @hshrink
                     ></button>
                   </div>
                 }
@@ -160,7 +166,6 @@
                     class="btn btn-primary"
                     (click)="showMqttConfigModal()"
                     transloco="settings.integrations.configure"
-                    @hshrink
                   ></button>
                 }
               </div>

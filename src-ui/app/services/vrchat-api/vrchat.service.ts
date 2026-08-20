@@ -1,13 +1,23 @@
 import { inject, Injectable } from '@angular/core';
 import type { CurrentUser, LimitedUserFriend, Notification, LimitedUserGroups } from 'vrchat';
 import { SETTINGS_KEY_VRCHAT_API, SETTINGS_STORE } from '../../globals';
-import { VRCHAT_API_SETTINGS_DEFAULT, VRChatApiSettings } from '../../models/vrchat-api-settings';
+import {
+  getVRChatAccountSecret,
+  getActiveVRChatProfile,
+  normalizeVRChatAccountProfile,
+  parseVRChatAccountSecret,
+  VRCHAT_ACCOUNT_SECRET_EMPTY,
+  VRCHAT_API_SETTINGS_DEFAULT,
+  VRChatAccountProfile,
+  VRChatAccountSecret,
+  VRChatApiSettings,
+} from '../../models/vrchat-api-settings';
 import { migrateVRChatApiSettings } from '../../migrations/vrchat-api-settings.migrations';
 import { BehaviorSubject, combineLatest, filter, firstValueFrom, map, Observable } from 'rxjs';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { AvatarEx, UserStatus, WorldContext } from '../../models/vrchat';
 import { VRChatLogService } from '../vrchat-log.service';
-import { generateStorageCryptoKey, serializeStorageCryptoKey } from '../../utils/crypto';
+import { decryptStorageData, deserializeStorageCryptoKey } from '../../utils/crypto';
 import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
 import { VRChatAPI, VRChatTwoFactorMethod } from './vrchat-api';
@@ -21,6 +31,11 @@ import type {
 } from '../../models/vrchat-log-event';
 import type { VRChatSocketStatus } from './vrchat-socket';
 import { ErrorReportingService } from '../error-reporting.service';
+import {
+  normalizeVRChatProfiles,
+  patchVRChatProfile,
+  VRChatProfileSessionPatch,
+} from './vrchat-profiles';
 
 @Injectable({
   providedIn: 'root',
@@ -42,8 +57,13 @@ export class VRChatService {
   private readonly api: VRChatAPI;
   private readonly auth: VRChatAuth;
   private readonly socket: VRChatSocket;
+  private settingsUpdate: Promise<void> = Promise.resolve();
 
   public readonly settings = this.settingsSubject.asObservable();
+  public readonly profiles = this.settings.pipe(
+    map((settings) => settings.profiles.filter((profile) => !profile.draft))
+  );
+  public readonly activeProfile = this.settings.pipe(map(getActiveVRChatProfile));
   public readonly user: Observable<CurrentUser | null>;
   public readonly status: Observable<VRChatAuthStatus>;
   public readonly notifications: Observable<Notification>;
@@ -57,11 +77,11 @@ export class VRChatService {
 
   constructor() {
     const reportError = (cause: Error) => this.errorReporting.captureException(cause);
-    this.api = new VRChatAPI(this.settings, this.updateSettings.bind(this), reportError);
+    this.api = new VRChatAPI(this.settings, this.updateProfile.bind(this), reportError);
     this.auth = new VRChatAuth(
       this.api,
       this.modalService,
-      this.updateSettings.bind(this),
+      this.mutateSettings.bind(this),
       this.settings
     );
     this.socket = new VRChatSocket(this.auth, this.api, this.settings, reportError);
@@ -149,12 +169,28 @@ export class VRChatService {
     this.auth.showLoginModal(autoLogin);
   }
 
-  public login(username: string, password: string): Promise<void> {
-    return this.auth.login(username, password);
+  public login(username: string, password: string, keepActiveProfile = false): Promise<void> {
+    return this.auth.login(username, password, keepActiveProfile);
+  }
+
+  public loginNewAccount(username: string, password: string): Promise<void> {
+    return this.auth.loginNewAccount(username, password);
   }
 
   public logout(): Promise<void> {
     return this.auth.logout();
+  }
+
+  public activateProfile(profileId: string): Promise<void> {
+    return this.auth.activateProfile(profileId);
+  }
+
+  public prepareNewLogin(): Promise<void> {
+    return this.auth.prepareNewLogin();
+  }
+
+  public removeProfile(profileId: string): Promise<void> {
+    return this.auth.removeProfile(profileId);
   }
 
   public verify2FA(code: string, method: VRChatTwoFactorMethod): Promise<void> {
@@ -230,23 +266,171 @@ export class VRChatService {
   // settings
 
   private async loadSettings(): Promise<void> {
-    let settings: VRChatApiSettings | undefined =
-      await SETTINGS_STORE.get<VRChatApiSettings>(SETTINGS_KEY_VRCHAT_API);
-    settings = settings ? migrateVRChatApiSettings(settings) : { ...this.settingsSubject.value };
-    if (!settings.credentialCryptoKey) {
-      const key = await generateStorageCryptoKey();
-      settings.credentialCryptoKey = await serializeStorageCryptoKey(key);
-    }
+    const stored = await SETTINGS_STORE.get<VRChatApiSettings>(SETTINGS_KEY_VRCHAT_API);
+    let settings = stored
+      ? migrateVRChatApiSettings(stored)
+      : structuredClone(VRCHAT_API_SETTINGS_DEFAULT);
+    settings = normalizeVRChatProfiles(await this.loadProfileSecrets(settings));
+    await this.saveSettings(settings).catch((cause) =>
+      error(`[VRChat] Failed to persist loaded settings: ${cause}`)
+    );
     this.settingsSubject.next(settings);
-    await this.saveSettings();
   }
 
-  private async updateSettings(settings: Partial<VRChatApiSettings>): Promise<void> {
-    this.settingsSubject.next({ ...this.settingsSubject.value, ...settings });
-    await this.saveSettings();
+  private async loadProfileSecrets(settings: VRChatApiSettings): Promise<VRChatApiSettings> {
+    const needsLegacyKey = settings.profiles.some((profile) => {
+      const legacy = profile as VRChatAccountProfile & {
+        encryptedPendingTwoFactorLoginIdentifier?: string | null;
+      };
+      return (
+        legacy.encryptedPendingTwoFactorLoginIdentifier != null ||
+        typeof profile.rememberedCredentials === 'string'
+      );
+    });
+    let legacyKey: CryptoKey | null = null;
+    if (needsLegacyKey) {
+      if (settings.legacyCredentialCryptoKey) {
+        try {
+          legacyKey = await deserializeStorageCryptoKey(settings.legacyCredentialCryptoKey);
+        } catch (cause) {
+          error(`[VRChat] Failed to unlock legacy credential key: ${cause}`);
+        }
+      }
+    }
+    const profiles = await Promise.all(
+      settings.profiles.map(async (profile) => {
+        let secret: VRChatAccountSecret;
+        if (profile.protectedSecret != null) {
+          try {
+            const json = await invoke<string>('unprotect_vrchat_secret', {
+              secret: profile.protectedSecret,
+            });
+            secret = parseVRChatAccountSecret(JSON.parse(json));
+          } catch (cause) {
+            error(`[VRChat] Failed to unlock profile ${profile.id}: ${cause}`);
+            return normalizeVRChatAccountProfile({
+              ...profile,
+              ...VRCHAT_ACCOUNT_SECRET_EMPTY,
+              secretLocked: true,
+            });
+          }
+        } else {
+          try {
+            secret = await this.loadLegacyProfileSecret(profile, legacyKey);
+          } catch (cause) {
+            error(`[VRChat] Failed to migrate credentials for profile ${profile.id}: ${cause}`);
+            secret = {
+              ...VRCHAT_ACCOUNT_SECRET_EMPTY,
+              authCookie: profile.authCookie ?? null,
+              twoFactorCookie: profile.twoFactorCookie ?? null,
+              twoFactorCookieLoginIdentifierHash:
+                profile.twoFactorCookieLoginIdentifierHash ?? null,
+            };
+          }
+        }
+        return normalizeVRChatAccountProfile({
+          ...profile,
+          ...secret,
+          protectedSecret: null,
+          secretLocked: false,
+        });
+      })
+    );
+    const activeProfileId = profiles.some(
+      (profile) => profile.id === settings.activeProfileId && !profile.secretLocked
+    )
+      ? settings.activeProfileId
+      : null;
+    return { ...settings, profiles, activeProfileId, legacyCredentialCryptoKey: null };
   }
 
-  private async saveSettings(): Promise<void> {
-    await SETTINGS_STORE.set(SETTINGS_KEY_VRCHAT_API, this.settingsSubject.value);
+  private async loadLegacyProfileSecret(
+    profile: VRChatAccountProfile,
+    key: CryptoKey | null
+  ): Promise<VRChatAccountSecret> {
+    const legacy = profile as VRChatAccountProfile & {
+      encryptedPendingTwoFactorLoginIdentifier?: string | null;
+    };
+    const rawCredentials: unknown = profile.rememberedCredentials;
+    if (
+      !key &&
+      (legacy.encryptedPendingTwoFactorLoginIdentifier != null ||
+        typeof rawCredentials === 'string')
+    ) {
+      throw new Error('Cannot migrate encrypted credentials without their key');
+    }
+    let pendingTwoFactorLoginIdentifier = profile.pendingTwoFactorLoginIdentifier ?? null;
+    let rememberedCredentials =
+      rawCredentials &&
+      typeof rawCredentials === 'object' &&
+      typeof (rawCredentials as Record<string, unknown>)['username'] === 'string' &&
+      typeof (rawCredentials as Record<string, unknown>)['password'] === 'string'
+        ? (rawCredentials as { username: string; password: string })
+        : null;
+    if (key && legacy.encryptedPendingTwoFactorLoginIdentifier != null) {
+      pendingTwoFactorLoginIdentifier = await decryptStorageData(
+        legacy.encryptedPendingTwoFactorLoginIdentifier,
+        key
+      );
+    }
+    if (key && typeof rawCredentials === 'string') {
+      const encoded = await decryptStorageData(rawCredentials, key);
+      const separator = encoded.indexOf(':');
+      if (separator < 0) throw new Error('Invalid credential encoding');
+      rememberedCredentials = {
+        username: atob(encoded.slice(0, separator)),
+        password: atob(encoded.slice(separator + 1)),
+      };
+    }
+    return {
+      authCookie: profile.authCookie ?? null,
+      twoFactorCookie: profile.twoFactorCookie ?? null,
+      twoFactorCookieLoginIdentifierHash: profile.twoFactorCookieLoginIdentifierHash ?? null,
+      pendingTwoFactorLoginIdentifier,
+      rememberCredentials: !!rememberedCredentials && !!profile.rememberCredentials,
+      rememberedCredentials,
+    };
+  }
+
+  private async mutateSettings(
+    mutator: (settings: VRChatApiSettings) => VRChatApiSettings
+  ): Promise<VRChatApiSettings> {
+    let updated = this.settingsSubject.value;
+    const mutation = this.settingsUpdate.then(async () => {
+      updated = mutator(this.settingsSubject.value);
+      await this.saveSettings(updated);
+      this.settingsSubject.next(updated);
+    });
+    this.settingsUpdate = mutation.catch(() => undefined);
+    await mutation;
+    return updated;
+  }
+
+  private async updateProfile(profileId: string, patch: VRChatProfileSessionPatch): Promise<void> {
+    await this.mutateSettings((settings) => patchVRChatProfile(settings, profileId, patch));
+  }
+
+  private async saveSettings(settings: VRChatApiSettings): Promise<void> {
+    const profiles = await Promise.all(
+      settings.profiles.map(async (profile) => ({
+        id: profile.id,
+        userId: profile.userId,
+        username: profile.username,
+        displayName: profile.displayName,
+        draft: profile.draft,
+        protectedSecret: profile.secretLocked
+          ? profile.protectedSecret
+          : await invoke<string>('protect_vrchat_secret', {
+              secret: JSON.stringify(getVRChatAccountSecret(profile)),
+            }),
+      }))
+    );
+    const persisted = {
+      version: settings.version,
+      profiles,
+      activeProfileId: settings.activeProfileId,
+      legacyCredentialCryptoKey: null,
+    } as unknown as VRChatApiSettings;
+    await SETTINGS_STORE.set(SETTINGS_KEY_VRCHAT_API, persisted);
   }
 }
