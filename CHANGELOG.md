@@ -41,9 +41,13 @@ with [SemVer](https://semver.org/) prerelease suffixes:
   `--console` to open one
 - The Chinese Steam release is now the same build as the international Steam release. It switches to
   CN compliance mode at runtime.
-- Your Pulsoid token, your MQTT password, and the commands of the "Run Automations" are now stored with
-  the Windows Data Protection API, so only your Windows account can read them. Copying OyasumiVR's
-  settings to another Windows account or PC no longer carries these over.
+- The commands of the "Run Automations" are now stored with the Windows Data Protection API, which makes
+  it harder for other applications to slip in a command for OyasumiVR to run. A command OyasumiVR cannot
+  read back is no longer run at all
+- Your Pulsoid token and your MQTT password are now stored with the Windows Data Protection API instead
+  of in plain text, so only your Windows account can read them
+- Copying OyasumiVR's settings to another Windows account or PC no longer carries the Run Automations
+  commands, your Pulsoid login, or your MQTT password over
 
 ### Fixed
 
