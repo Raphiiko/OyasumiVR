@@ -40,7 +40,6 @@ export class VRChatSocket {
   private readonly handlers: VRChatEventHandler[];
   private socket?: WebSocket;
   private openedAt?: number;
-  private receivedMessage = false;
   private socketError = false;
   private consecutiveFailures = 0;
   /** Changes whenever pending socket work must be discarded. */
@@ -112,7 +111,6 @@ export class VRChatSocket {
     }
     this.socket = socket;
     this.openedAt = undefined;
-    this.receivedMessage = false;
     this.socketError = false;
     socket.onopen = () => this.handleOpen(socket);
     socket.onerror = () => this.handleError(socket);
@@ -143,8 +141,7 @@ export class VRChatSocket {
   private handleClose(socket: WebSocket, event: CloseEvent): void {
     if (this.socket !== socket) return;
     const lifetime = this.openedAt === undefined ? undefined : Date.now() - this.openedAt;
-    const failedBeforeHealthy =
-      !this.receivedMessage && (lifetime === undefined || lifetime < HEALTHY_CONNECTION_DURATION);
+    const failedBeforeHealthy = lifetime === undefined || lifetime < HEALTHY_CONNECTION_DURATION;
     this.consecutiveFailures = failedBeforeHealthy ? this.consecutiveFailures + 1 : 0;
     this.socket = undefined;
     this.statusSubject.next('CLOSED');
@@ -170,8 +167,6 @@ export class VRChatSocket {
 
   private handleMessage(socket: WebSocket, message: MessageEvent): void {
     if (this.socket !== socket) return;
-    this.receivedMessage = true;
-    this.consecutiveFailures = 0;
 
     let data: VRChatPipelineMessage;
     try {
