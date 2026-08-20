@@ -13,6 +13,7 @@ import { fadeUp, vshrink } from '../../utils/animations';
 import { AvatarEx } from '../../models/vrchat';
 import { ModalService } from '../../services/modal.service';
 import { ConfirmModalComponent } from '../confirm-modal/confirm-modal.component';
+import { VRCHAT_API_STALE_REQUEST } from '../../services/vrchat-api/vrchat-api';
 
 export interface VrcAvatarSelectModalInput {}
 
@@ -62,7 +63,17 @@ export class VrcAvatarSelectModalComponent
       this.close();
       return;
     }
-    const avatars = await this.vrchat.listAvatars(force);
+    let avatars: AvatarEx[];
+    try {
+      avatars = await this.vrchat.listAvatars(force);
+    } catch (e) {
+      if (e === VRCHAT_API_STALE_REQUEST) this.close();
+      else {
+        this.activeCategory = 'NO_AVATARS';
+        this.cdr.markForCheck();
+      }
+      return;
+    }
     this.avatars = {};
     for (const avatar of avatars) {
       if (avatar.favoriteGroup) {

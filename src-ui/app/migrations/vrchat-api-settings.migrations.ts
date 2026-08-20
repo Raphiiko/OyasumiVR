@@ -7,6 +7,8 @@ import { message } from '@tauri-apps/plugin-dialog';
 const migrations: { [v: number]: (data: any) => any } = {
   1: resetToLatest,
   2: from1To2,
+  3: from2To3,
+  4: from3To4,
 };
 
 export function migrateVRChatApiSettings(data: any): VRChatApiSettings {
@@ -69,6 +71,20 @@ function from1To2(data: any): any {
   delete data['apiKey'];
   delete data['apiKeyExpiry'];
   data.version = 2;
+  return data;
+}
+
+function from2To3(data: any): any {
+  data.twoFactorCookieLoginIdentifierHash = null;
+  data.version = 3;
+  return data;
+}
+
+function from3To4(data: any): any {
+  delete data['authCookieExpiry'];
+  delete data['twoFactorCookieExpiry'];
+  data.encryptedPendingTwoFactorLoginIdentifier = null;
+  data.version = 4;
   return data;
 }
 

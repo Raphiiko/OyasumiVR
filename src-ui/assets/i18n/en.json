@@ -991,7 +991,8 @@
       "errors": {
         "CHECK_EMAIL": "Login failed: For details, check the mailbox of the e-mail address that is tied to your VRChat account.",
         "INVALID_CREDENTIALS": "The credentials you have provided are incorrect.",
-        "UNEXPECTED_RESPONSE": "Login failed: an unknown error occurred. Please verify your connection or try again later."
+        "UNEXPECTED_RESPONSE": "Login failed: an unknown error occurred. Please verify your connection or try again later.",
+        "UNSUPPORTED_2FA_METHOD": "Login failed: this account requires a VRChat recovery code. Please log in through VRChat instead."
       },
       "password": "Password",
       "rememberCredentials": "Remember Credentials",

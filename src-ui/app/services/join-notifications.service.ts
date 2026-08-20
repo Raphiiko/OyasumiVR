@@ -64,16 +64,15 @@ export class JoinNotificationsService {
     });
     this.vrchat.user
       .pipe(
-        // Keep track of own display name
         tap((user) => {
           this.ownVRChatDisplayName = user?.displayName ?? '';
+          if (!user) this.friends = [];
         }),
-        // Stop if not logged in
         filter(Boolean),
-        // Keep track of friends
         switchMap(async () => {
-          this.friends = await this.vrchat.listFriends();
-          // TODO: HANDLE FRIEND LIST CHANGES (ADD/REMOVE/DISPLAY NAME CHANGE)
+          try {
+            this.friends = await this.vrchat.listFriends();
+          } catch {}
         })
       )
       .subscribe();

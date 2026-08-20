@@ -7,6 +7,7 @@ import { VRChatAvatarAutomationsConfig } from '../models/automations';
 import { VRChatService } from './vrchat-api/vrchat.service';
 import { EventLogService } from './event-log.service';
 import { EventLogVRChatAvatarChanged } from '../models/event-log-entry';
+import { error } from '@tauri-apps/plugin-log';
 
 @Injectable({
   providedIn: 'root',
@@ -28,8 +29,16 @@ export class VRChatAvatarAutomationsService {
       .subscribe((c) => (this.config = c));
     this.sleepService.mode
       .pipe(distinctUntilChanged(), skip(1), debounceTime(3000))
-      .subscribe((sleepMode) => this.onSleepModeChange(sleepMode));
-    this.sleepPreparation.onSleepPreparation.subscribe(() => this.onSleepPreparation());
+      .subscribe((sleepMode) => {
+        void this.onSleepModeChange(sleepMode).catch((cause) =>
+          error(`[VRChat] Failed to apply sleep mode avatar: ${cause}`)
+        );
+      });
+    this.sleepPreparation.onSleepPreparation.subscribe(() => {
+      void this.onSleepPreparation().catch((cause) =>
+        error(`[VRChat] Failed to apply sleep preparation avatar: ${cause}`)
+      );
+    });
   }
 
   private async onSleepModeChange(sleepMode: boolean) {

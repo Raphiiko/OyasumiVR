@@ -12,9 +12,16 @@ import { VRChatLoginTFAModalComponent } from '../vrchat-login-tfa-modal/vrchat-l
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { ModalService } from '../../services/modal.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+  twoFactorMethodFromError,
+  VRChatTwoFactorMethod,
+} from '../../services/vrchat-api/vrchat-api';
 
 interface VRChatLoginModalInputModel {
   autoLogin?: boolean;
+  twoFactorMethod?: VRChatTwoFactorMethod;
+  initialError?: string;
+  username?: string;
 }
 
 interface VRChatLoginModalOutputModel {}
@@ -37,6 +44,8 @@ export class VRChatLoginModalComponent
   error = '';
   rememberCredentials = false;
   autoLogin = false;
+  twoFactorMethod?: VRChatTwoFactorMethod;
+  initialError?: string;
 
   constructor(
     private vrchat: VRChatService,
@@ -48,6 +57,7 @@ export class VRChatLoginModalComponent
   }
 
   async ngOnInit(): Promise<void> {
+    if (this.initialError) this.setLoginError(this.initialError);
     this.vrchat.settings
       .pipe(
         map((settings) => settings.rememberCredentials),
@@ -55,16 +65,25 @@ export class VRChatLoginModalComponent
         take(1)
       )
       .subscribe(async (rememberCredentials) => {
-        this.rememberCredentials = rememberCredentials;
-        const credentials = await this.vrchat.loadCredentials();
-        if (credentials) {
-          this.username = credentials.username;
-          this.password = credentials.password;
-          if (this.autoLogin) {
-            await this.login();
+        try {
+          this.rememberCredentials = rememberCredentials;
+          if (this.twoFactorMethod) {
+            this.loggingIn = true;
+            await this.loginWithTwoFactor(this.twoFactorMethod);
+          } else {
+            const credentials = await this.vrchat.loadCredentials();
+            if (credentials) {
+              this.username = credentials.username;
+              this.password = credentials.password;
+            }
+            if (this.autoLogin && credentials) await this.login();
           }
+        } catch (e) {
+          this.setLoginError(e);
+        } finally {
+          this.loggingIn = false;
+          this.cdr.markForCheck();
         }
-        this.cdr.markForCheck();
       });
   }
 
@@ -91,61 +110,64 @@ export class VRChatLoginModalComponent
     this.error = '';
     try {
       await this.vrchat.login(this.username, this.password);
-      this.loggingIn = false;
-      if (this.rememberCredentials)
-        await this.vrchat.rememberCredentials(this.username, this.password);
-      await this.close();
+      await this.finishLogin();
     } catch (e) {
-      switch (e) {
-        case '2FA_TOTP_REQUIRED':
-        case '2FA_EMAILOTP_REQUIRED':
-        case '2FA_OTP_REQUIRED': {
-          let lastCodeInvalid = false;
-          while (true) {
-            this.error = '';
-            this.cdr.markForCheck();
-            const code = await this.get2FACode(lastCodeInvalid);
-            if (!code) break;
-            const method: 'totp' | 'otp' | 'emailotp' = {
-              '2FA_TOTP_REQUIRED': 'totp',
-              '2FA_EMAILOTP_REQUIRED': 'emailotp',
-              '2FA_OTP_REQUIRED': 'otp',
-            }[e] as 'totp' | 'otp' | 'emailotp';
-            try {
-              await this.vrchat.verify2FA(code, method);
-              this.loggingIn = false;
-              if (this.rememberCredentials)
-                await this.vrchat.rememberCredentials(this.username, this.password);
-              await this.close();
-            } catch (e) {
-              switch (e) {
-                case 'INVALID_CODE':
-                  lastCodeInvalid = true;
-                  continue;
-                case 'UNEXPECTED_RESPONSE':
-                  this.error = `comp.vrchat-login-modal.errors.${e}`;
-                  break;
-                default:
-                  this.error = `comp.vrchat-login-modal.errors.UNEXPECTED_RESPONSE`;
-                  break;
-              }
-            }
-            break;
-          }
-          break;
+      const method = twoFactorMethodFromError(e);
+      if (method) await this.loginWithTwoFactor(method);
+      else this.setLoginError(e);
+    } finally {
+      this.loggingIn = false;
+      this.cdr.markForCheck();
+    }
+  }
+
+  private async loginWithTwoFactor(method: VRChatTwoFactorMethod) {
+    let lastCodeInvalid = false;
+    while (true) {
+      this.error = '';
+      this.cdr.markForCheck();
+      try {
+        const code = await this.get2FACode(lastCodeInvalid);
+        if (!code) return;
+        await this.vrchat.verify2FA(code, method);
+        await this.finishLogin();
+        return;
+      } catch (e) {
+        if (e === 'INVALID_CODE') {
+          lastCodeInvalid = true;
+          continue;
         }
-        case 'INVALID_CREDENTIALS':
-        case 'CHECK_EMAIL':
-        case 'UNEXPECTED_RESPONSE':
-          this.error = `comp.vrchat-login-modal.errors.${e}`;
-          break;
-        default:
-          this.error = `comp.vrchat-login-modal.errors.UNEXPECTED_RESPONSE`;
-          break;
+        const nextMethod = twoFactorMethodFromError(e);
+        if (nextMethod) {
+          method = nextMethod;
+          lastCodeInvalid = false;
+          continue;
+        }
+        this.setLoginError(e);
+        return;
       }
     }
-    this.loggingIn = false;
-    this.cdr.markForCheck();
+  }
+
+  private async finishLogin() {
+    if (this.rememberCredentials && this.username && this.password) {
+      await this.vrchat.rememberCredentials(this.username, this.password);
+    }
+    await this.close();
+  }
+
+  private setLoginError(error: unknown) {
+    switch (error) {
+      case 'CHECK_EMAIL':
+      case 'INVALID_CREDENTIALS':
+      case 'UNEXPECTED_RESPONSE':
+      case 'UNSUPPORTED_2FA_METHOD':
+        this.error = `comp.vrchat-login-modal.errors.${error}`;
+        break;
+      default:
+        this.error = `comp.vrchat-login-modal.errors.UNEXPECTED_RESPONSE`;
+        break;
+    }
   }
 
   async toggleRememberCredentials() {

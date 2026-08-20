@@ -71,7 +71,12 @@ export class PlayerListComponent implements OnInit {
     const input = [...playerIds].sort();
     const current = [...this.playerList.map((p) => p.id)].sort();
     if (input.join(',') === current.join(',')) return;
-    const friends = await this.vrchat.listFriends();
+    let friends: LimitedUserFriend[];
+    try {
+      friends = await this.vrchat.listFriends();
+    } catch {
+      return;
+    }
     this.playerList = friends.filter((f) => playerIds.includes(f.id));
     this.cdr.markForCheck();
     this.emitPlayerListChange();

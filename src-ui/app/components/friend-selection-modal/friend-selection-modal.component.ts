@@ -11,6 +11,7 @@ import { fade, fadeUp, hshrink, noop, vshrink } from '../../utils/animations';
 import type { LimitedUserFriend } from 'vrchat';
 import { UserStatus } from '../../models/vrchat';
 import { VRChatService } from '../../services/vrchat-api/vrchat.service';
+import { VRCHAT_API_STALE_REQUEST } from '../../services/vrchat-api/vrchat-api';
 import {
   BehaviorSubject,
   debounceTime,
@@ -108,6 +109,10 @@ export class FriendSelectionModalComponent
         'displayName',
       ]);
     } catch (e) {
+      if (e === VRCHAT_API_STALE_REQUEST) {
+        await this.close();
+        return;
+      }
       this.loadingState = 'ERROR';
       this.cdr.markForCheck();
       error('[FriendSelectionModal] Failed to load friends: ' + e);
