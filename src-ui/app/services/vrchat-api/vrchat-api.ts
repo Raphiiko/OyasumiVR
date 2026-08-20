@@ -876,6 +876,6 @@ export class VRChatAPI {
 
 function requestFailure(message: string, cause: unknown): Error {
   if (cause instanceof Response) return new Error(`${message}: HTTP ${cause.status}`);
-  if (cause instanceof Error) return new Error(`${message}: ${cause.name}: ${cause.message}`);
+  if (cause instanceof Error) return new Error(message);
   return new Error(`${message}: unknown error`);
 }
