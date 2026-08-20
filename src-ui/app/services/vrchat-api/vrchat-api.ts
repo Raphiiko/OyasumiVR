@@ -9,7 +9,11 @@ import { CachedValue } from 'src-ui/app/utils/cached-value';
 import { AvatarEx, InviteMessageEx, InviteMessageType, UserStatus } from 'src-ui/app/models/vrchat';
 import { uniqBy } from 'lodash';
 import { BehaviorSubject, distinctUntilChanged, firstValueFrom, Observable } from 'rxjs';
-import { getActiveVRChatProfile, VRChatApiSettings } from 'src-ui/app/models/vrchat-api-settings';
+import {
+  getActiveVRChatProfile,
+  VRChatAccountProfile,
+  VRChatApiSettings,
+} from 'src-ui/app/models/vrchat-api-settings';
 import { VRChatProfileSessionPatch } from './vrchat-profiles';
 import { CompletionResult } from 'src-ui/app/utils/completer';
 
@@ -396,19 +400,15 @@ export class VRChatAPI {
     return user;
   }
 
-  public async logoutProfile(profileId: string): Promise<void> {
-    const cacheGeneration = this.cacheGeneration;
-    const settings = await firstValueFrom(this.settings);
-    const profile = settings.profiles.find((candidate) => candidate.id === profileId);
+  public async logoutProfile(profile?: VRChatAccountProfile): Promise<void> {
     if (!profile?.authCookie) return;
     const abortController = new AbortController();
     const timeout = setTimeout(() => abortController.abort(), PROFILE_LOGOUT_TIMEOUT);
     const response = await requestVRChat(`${BASE_URL}/logout`, {
       method: 'PUT',
-      headers: await this.getDefaultHeaders({}, cacheGeneration, profileId),
+      headers: this.getProfileHeaders(profile),
       signal: abortController.signal,
     }).finally(() => clearTimeout(timeout));
-    this.ensureCacheGeneration(cacheGeneration);
     if (!response.ok) {
       throw new Error(`VRChat profile logout failed: HTTP ${response.status}`);
     }
@@ -892,17 +892,24 @@ export class VRChatAPI {
     cacheGeneration: number,
     profileId?: string
   ): Promise<Record<string, string>> {
-    const {
-      contentType = 'application/json',
-      includeAuthCookie = true,
-      includeTwoFactorCookie = true,
-    } = options;
     const settings = await firstValueFrom(this.settings);
     this.ensureCacheGeneration(cacheGeneration);
     const profile = profileId
       ? settings.profiles.find((candidate) => candidate.id === profileId)
       : getActiveVRChatProfile(settings);
     if (!profile) throw new Error('Cannot make a VRChat API request without an active profile');
+    return this.getProfileHeaders(profile, options);
+  }
+
+  private getProfileHeaders(
+    profile: VRChatAccountProfile,
+    options: RequestHeaderOptions = {}
+  ): Record<string, string> {
+    const {
+      contentType = 'application/json',
+      includeAuthCookie = true,
+      includeTwoFactorCookie = true,
+    } = options;
     const cookies: string[] = [];
     if (includeAuthCookie && profile.authCookie)
       cookies.push(serializeCookie({ name: 'auth', value: profile.authCookie }));

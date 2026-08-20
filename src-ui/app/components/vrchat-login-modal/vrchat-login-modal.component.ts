@@ -157,7 +157,7 @@ export class VRChatLoginModalComponent
   private async finishLogin() {
     if (this.rememberCredentials && this.username && this.password) {
       await this.vrchat.rememberCredentials(this.username, this.password);
-    } else if (!this.newAccount) {
+    } else {
       await this.vrchat.forgetCredentials();
     }
     await this.close();

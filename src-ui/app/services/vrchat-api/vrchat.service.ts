@@ -37,6 +37,18 @@ import {
   VRChatProfileSessionPatch,
 } from './vrchat-profiles';
 
+function toPublicProfile(profile: VRChatAccountProfile): VRChatAccountProfile {
+  return {
+    ...profile,
+    protectedSecret: null,
+    authCookie: null,
+    twoFactorCookie: null,
+    twoFactorCookieLoginIdentifierHash: null,
+    pendingTwoFactorLoginIdentifier: null,
+    rememberedCredentials: null,
+  };
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -62,11 +74,18 @@ export class VRChatService {
   private failedLegacyCredentialCryptoKey: string | null = null;
   private lockedActiveProfileId: string | null = null;
 
-  public readonly settings = this.settingsSubject.asObservable();
+  private readonly settings = this.settingsSubject.asObservable();
   public readonly profiles = this.settings.pipe(
-    map((settings) => settings.profiles.filter((profile) => !profile.draft))
+    map((settings) =>
+      settings.profiles.filter((profile) => !profile.draft).map(toPublicProfile)
+    )
   );
-  public readonly activeProfile = this.settings.pipe(map(getActiveVRChatProfile));
+  public readonly activeProfile = this.settings.pipe(
+    map((settings) => {
+      const profile = getActiveVRChatProfile(settings);
+      return profile ? toPublicProfile(profile) : null;
+    })
+  );
   public readonly user: Observable<CurrentUser | null>;
   public readonly status: Observable<VRChatAuthStatus>;
   public readonly notifications: Observable<Notification>;
@@ -333,7 +352,11 @@ export class VRChatService {
             return normalizeVRChatAccountProfile({
               ...profile,
               ...VRCHAT_ACCOUNT_SECRET_EMPTY,
-              secretLocked: true,
+              authCookie: profile.authCookie ?? null,
+              twoFactorCookie: profile.twoFactorCookie ?? null,
+              twoFactorCookieLoginIdentifierHash:
+                profile.twoFactorCookieLoginIdentifierHash ?? null,
+              secretLocked: false,
             });
           }
         }
@@ -428,7 +451,8 @@ export class VRChatService {
     const profiles = await Promise.all(
       settings.profiles.map(async (profile) => {
         const failedLegacyProfile = this.failedLegacyProfiles.get(profile.id);
-        if (profile.secretLocked && failedLegacyProfile) return failedLegacyProfile;
+        if (failedLegacyProfile && !profile.userId) return failedLegacyProfile;
+        if (failedLegacyProfile) this.failedLegacyProfiles.delete(profile.id);
         return {
           id: profile.id,
           sourceProfileId: profile.sourceProfileId,
@@ -445,8 +469,8 @@ export class VRChatService {
         };
       })
     );
-    const hasFailedLegacyProfile = settings.profiles.some(
-      (profile) => profile.secretLocked && this.failedLegacyProfiles.has(profile.id)
+    const hasFailedLegacyProfile = settings.profiles.some((profile) =>
+      this.failedLegacyProfiles.has(profile.id)
     );
     const lockedActiveProfileId = settings.profiles.some(
       (profile) => profile.id === this.lockedActiveProfileId && profile.secretLocked

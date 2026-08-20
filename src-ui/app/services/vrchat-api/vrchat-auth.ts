@@ -299,6 +299,7 @@ export class VRChatAuth {
 
   private setCurrentUser(user: CurrentUser): void {
     this.userSubject.next(user);
+    this.lastUserUpdateAt = Date.now();
     this.lastStatusUpdateAt = Date.now();
   }
 
@@ -344,8 +345,8 @@ export class VRChatAuth {
     if (incompleteProfile) {
       const settings = await firstValueFrom(this.settings);
       if (!getVRChatProfileAttemptSource(settings, incompleteProfile)) {
-        await this.api
-          .logoutProfile(incompleteProfile.id)
+        void this.api
+          .logoutProfile(incompleteProfile)
           .catch((cause) => warn(`[VRChat] Failed to invalidate cancelled login: ${cause}`));
       }
       await this.restoreProfileAttempt(incompleteProfile, restoreProfileIdOnCancel).catch((cause) =>
@@ -450,7 +451,11 @@ export class VRChatAuth {
     });
   }
 
-  public async verify2FA(code: string, method: VRChatTwoFactorMethod): Promise<void> {
+  public verify2FA(code: string, method: VRChatTwoFactorMethod): Promise<void> {
+    return this.queueTransition(() => this.verify2FANow(code, method));
+  }
+
+  private async verify2FANow(code: string, method: VRChatTwoFactorMethod): Promise<void> {
     if (this.statusSubject.value !== 'LOGGED_OUT') {
       error(`[VRChat] Tried calling verify2FA() while already logged in`);
       throw new Error('Tried calling verify2FA() while already logged in');
@@ -512,7 +517,7 @@ export class VRChatAuth {
     }
     const attempt = getActiveVRChatProfile(settings);
     if (!attempt) throw new Error('Failed to create VRChat profile attempt');
-    if (current && previousUser) {
+    if (!force && current && previousUser) {
       this.suspendedSessions.set(attempt.id, { profileId: current.id, user: previousUser });
     }
     const result = await this.loadSession();
@@ -602,8 +607,9 @@ export class VRChatAuth {
       if (active?.id === profileId || attempts.some((attempt) => attempt.id === active?.id)) {
         await this.deactivate();
       }
+      const profile = settings.profiles.find((candidate) => candidate.id === profileId);
       await this.api
-        .logoutProfile(profileId)
+        .logoutProfile(profile)
         .catch((cause) => warn(`[VRChat] Failed to invalidate removed profile: ${cause}`));
       await this.mutateSettings((currentSettings) => {
         let updated = currentSettings;
@@ -704,14 +710,14 @@ export class VRChatAuth {
     const source = getVRChatProfileAttemptSource(settings, attempt);
     const profileId =
       suspended?.profileId ?? attempt.restoreProfileId ?? source?.id ?? fallbackProfileId;
-    await this.mutateSettings((currentSettings) => {
+    const restoredSettings = await this.mutateSettings((currentSettings) => {
       const pruned = pruneVRChatDraftProfiles(currentSettings);
       return profileId && pruned.profiles.some((profile) => profile.id === profileId)
         ? setActiveVRChatProfile(pruned, profileId)
         : setActiveVRChatProfile(pruned, null);
     });
     this.suspendedSessions.delete(attempt.id);
-    if (!suspended) {
+    if (!suspended || restoredSettings.activeProfileId !== profileId) {
       this.userSubject.next(null);
       this.statusSubject.next('LOGGED_OUT');
       return false;
@@ -761,7 +767,7 @@ export class VRChatAuth {
       polledProfileId = active?.id;
       const result = await this.api.pollCurrentUser(active?.userId ?? undefined);
       if (result.error) throw result.error;
-      if (result.result) this.patchCurrentUser(result.result);
+      if (result.result) this.setCurrentUser(result.result);
     } catch (cause) {
       error(`[VRChat] Error polling user: ${JSON.stringify(cause)}`);
       if (!requiresSessionReauthentication(cause)) return;
