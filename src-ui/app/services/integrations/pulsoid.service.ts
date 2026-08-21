@@ -207,6 +207,7 @@ export class PulsoidService {
   }
 
   private async setActiveTokenSet(tokenSet: PulsoidTokenSet | null) {
+    if (!tokenSet) this.accessToken.clear();
     const newSettings = structuredClone(this.settings.value);
     newSettings.accessToken = tokenSet?.access_token ?? undefined;
     newSettings.expiresAt = tokenSet
@@ -257,6 +258,7 @@ export class PulsoidService {
     // Handle token expiry
     if (settings.expiresAt && settings.expiresAt < Date.now() / 1000) {
       info('[Pulsoid] Token expired, throwing it away.');
+      this.accessToken.clear();
       settings.accessToken = undefined;
       settings.expiresAt = undefined;
       // TODO: Let user in some way know that their existing login has expired, and they should reauthenticate

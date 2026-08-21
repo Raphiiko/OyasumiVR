@@ -142,10 +142,17 @@ function from5To6(data: any): any {
   return data;
 }
 
+const LEGACY_SECRET_TEXT_FIELDS = [
+  'authCookie',
+  'twoFactorCookie',
+  'twoFactorCookieLoginIdentifierHash',
+  'pendingTwoFactorLoginIdentifier',
+];
+
 async function from6To7(data: any): Promise<any> {
+  const original = structuredClone(data);
   data.version = 7;
   const legacyKey = data.legacyCredentialCryptoKey;
-  delete data.legacyCredentialCryptoKey;
   let key: CryptoKey | null = null;
   if (legacyKey) {
     try {
@@ -154,6 +161,7 @@ async function from6To7(data: any): Promise<any> {
       error("[vrchat-api-settings-migrations] Couldn't read the credential key: " + e);
     }
   }
+  let discarded = false;
   data.profiles = await Promise.all(
     (data.profiles ?? []).map(async (profile: any) => {
       const migrated = { ...profile };
@@ -165,19 +173,56 @@ async function from6To7(data: any): Promise<any> {
               profile.id
             )
           : null;
+        if (migrated.pendingTwoFactorLoginIdentifier == null) discarded = true;
         delete migrated.encryptedPendingTwoFactorLoginIdentifier;
       }
-      if (typeof migrated.rememberedCredentials === 'string') {
-        migrated.rememberedCredentials = key
-          ? await decryptLegacyCredentials(migrated.rememberedCredentials, key, profile.id)
-          : null;
+      if ('rememberedCredentials' in migrated) {
+        const stored = migrated.rememberedCredentials;
+        migrated.rememberedCredentials =
+          typeof stored === 'string'
+            ? key
+              ? await decryptLegacyCredentials(stored, key, profile.id)
+              : null
+            : readCredentials(stored, profile.id);
+        if (stored && migrated.rememberedCredentials == null) discarded = true;
         migrated.rememberCredentials =
           !!migrated.rememberedCredentials && !!profile.rememberCredentials;
+      }
+      for (const field of LEGACY_SECRET_TEXT_FIELDS) {
+        if (field in migrated && migrated[field] != null && typeof migrated[field] !== 'string') {
+          error(
+            '[vrchat-api-settings-migrations] Discarded the ' +
+              field +
+              ' of profile ' +
+              profile.id +
+              ': not a string'
+          );
+          migrated[field] = null;
+          discarded = true;
+        }
       }
       return migrated;
     })
   );
+  delete data.legacyCredentialCryptoKey;
+  if (discarded) saveBackup(original);
   return data;
+}
+
+function readCredentials(
+  value: any,
+  profileId: string
+): { username: string; password: string } | null {
+  if (value == null) return null;
+  if (typeof value?.username === 'string' && typeof value?.password === 'string') {
+    return { username: value.username, password: value.password };
+  }
+  error(
+    '[vrchat-api-settings-migrations] Discarded the credentials of profile ' +
+      profileId +
+      ': unexpected shape'
+  );
+  return null;
 }
 
 async function decryptLegacyValue(
@@ -204,29 +249,23 @@ async function decryptLegacyCredentials(
   profileId: string
 ): Promise<{ username: string; password: string } | null> {
   const encoded = await decryptLegacyValue(value, key, profileId);
-  const separator = encoded?.indexOf(':') ?? -1;
-  if (encoded != null && separator >= 0) {
-    try {
-      return {
-        username: atob(encoded.slice(0, separator)),
-        password: atob(encoded.slice(separator + 1)),
-      };
-    } catch (e) {
-      error(
-        '[vrchat-api-settings-migrations] Discarded the credentials of profile ' +
-          profileId +
-          ': ' +
-          e
-      );
-      return null;
-    }
+  if (encoded == null) return null;
+  const separator = encoded.indexOf(':');
+  try {
+    if (separator < 0) throw new Error('missing separator');
+    return {
+      username: atob(encoded.slice(0, separator)),
+      password: atob(encoded.slice(separator + 1)),
+    };
+  } catch (e) {
+    error(
+      '[vrchat-api-settings-migrations] Discarded the credentials of profile ' +
+        profileId +
+        ': ' +
+        e
+    );
+    return null;
   }
-  error(
-    '[vrchat-api-settings-migrations] Discarded the credentials of profile ' +
-      profileId +
-      ': invalid encoding'
-  );
-  return null;
 }
 
 function resetToLatest(data: any): any {

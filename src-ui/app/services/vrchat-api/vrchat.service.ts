@@ -352,6 +352,15 @@ export class VRChatService {
     await this.mutateSettings((settings) => patchVRChatProfile(settings, profileId, patch));
   }
 
+  private async protectProfileSecret(profile: VRChatAccountProfile): Promise<string | null> {
+    try {
+      return await protectSecret(JSON.stringify(getVRChatAccountSecret(profile)));
+    } catch (cause) {
+      error(`[VRChat] Failed to protect the secret of profile ${profile.id}: ${cause}`);
+      return null;
+    }
+  }
+
   private async saveSettings(settings: VRChatApiSettings): Promise<void> {
     const profiles = await Promise.all(
       settings.profiles.map(async (profile) => {
@@ -365,7 +374,7 @@ export class VRChatService {
           draft: profile.draft,
           protectedSecret: profile.secretLocked
             ? profile.protectedSecret
-            : await protectSecret(JSON.stringify(getVRChatAccountSecret(profile))),
+            : await this.protectProfileSecret(profile),
         };
       })
     );

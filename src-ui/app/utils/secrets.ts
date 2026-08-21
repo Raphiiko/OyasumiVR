@@ -36,6 +36,13 @@ export class ProtectedSecret {
     return this.plain;
   }
 
+  /** Forgets the secret, including one that could not be unlocked. */
+  clear() {
+    this.stored = null;
+    this.plain = null;
+    this.locked = false;
+  }
+
   /** Returns the value to write, which is unchanged while the plain value is unchanged. */
   async store(plain: string | null | undefined): Promise<string | null> {
     if (!plain) {
@@ -52,6 +59,8 @@ export class ProtectedSecret {
       this.locked = false;
     } catch (cause) {
       error(`${this.label} could not be protected: ${cause}`);
+      this.stored = null;
+      this.plain = null;
     }
     return this.stored;
   }
