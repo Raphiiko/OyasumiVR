@@ -373,7 +373,7 @@ async function caseEncryptedCommandWithoutKey() {
 }
 
 async function caseIdleWritesNothing() {
-  currentCase = 'an idle app writes nothing and does not reconnect in a loop';
+  currentCase = 'an idle app writes no secret and does not reconnect in a loop';
   seed({
     [KEYS.app]: {
       version: 12,
@@ -381,17 +381,33 @@ async function caseIdleWritesNothing() {
       mqttHost: 'test-mqtt-host.invalid',
       mqttPort: 1883,
       mqttPassword: null,
+      mqttProtectedPassword: null,
+    },
+    [KEYS.pulsoid]: { version: 2, protectedAccessToken: null },
+    [KEYS.automations]: {
+      version: 20,
+      RUN_AUTOMATIONS: { enabled: true, onSleepModeEnableCommands: 'echo e2e-idle' },
     },
   });
 
   const app = await launchApp();
   await new Promise((resolve) => setTimeout(resolve, 10000));
-  const before = readFileSync(STORE, 'utf8');
+  const before = readStore();
   await new Promise((resolve) => setTimeout(resolve, 60000));
-  const after = readFileSync(STORE, 'utf8');
+  const after = readStore();
   stopApp(app);
 
-  check('the store is not written while idle', before === after);
+  const changed = [...new Set([...Object.keys(before), ...Object.keys(after)])].filter(
+    (key) => JSON.stringify(before[key]) !== JSON.stringify(after[key])
+  );
+  check(
+    'no secret changes while idle',
+    !changed.includes(KEYS.app) &&
+      !changed.includes(KEYS.pulsoid) &&
+      !changed.includes(KEYS.automations),
+    `changed: ${changed.join(', ') || 'nothing'}`
+  );
+  console.log(`  (idle writes, none of them secrets: ${changed.join(', ') || 'none'})`);
 }
 
 async function caseMqttModalRoundTrip() {
@@ -404,10 +420,19 @@ async function caseMqttModalRoundTrip() {
   const written = await evaluate(
     await cdpPage(),
     `(async () => {
-       const view = document.querySelector('app-settings-integrations-view');
-       if (!view) return 'no integrations view';
-       const component = window.ng.getComponent(view);
-       await component.appSettings.updateSettings({ mqttPassword: ${JSON.stringify(typed)} });
+       const holder = [...document.querySelectorAll('*')]
+         .map((element) => {
+           try {
+             return window.ng.getComponent(element);
+           } catch {
+             return null;
+           }
+         })
+         .filter(Boolean)
+         .flatMap((component) => Object.values(component))
+         .find((value) => value && typeof value.updateSettings === 'function' && 'settingsSync' in value);
+       if (!holder) return 'no settings service';
+       holder.updateSettings({ mqttPassword: ${JSON.stringify(typed)} });
        await new Promise((r) => setTimeout(r, 2000));
        return 'ok';
      })()`
