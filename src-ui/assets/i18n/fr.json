@@ -426,12 +426,6 @@
       "disabled": "OyasumiVR peut automatiser votre carte graphique de nombreuses façons.\nCela permet d'économiser de l'énergie pendant votre sommeil.\n\nCette fonctionnalité est avancée, et donc désactivée par défaut.\nVous pouvez l'activer en cliquant sur le bouton ci-dessous",
       "noSidecar": "Pour permettre le changement des paramètres de votre GPU, OyasumiVR requiert les droits administrateurs. Vous pouvez donner les privilèges administrateur à OyasumiVR en cliquant sur le bouton ci-dessous."
     },
-    "elevationSidecarModal": {
-      "cancel": "Seulement cette fois",
-      "confirm": "Toujours",
-      "message": "Voulez-vous donner les privilèges administrateur à OyasumiVR de manière permanente ?\n\n Si vous activez ceci, OyasumiVR les demandera lors du démarrage. Vous pouvez désactiver ceci plus tard dans les paramètres.",
-      "title": "Donner les droits administrateur"
-    },
     "enable": "Activer les automatisations GPU",
     "enableWarning": "Un mauvais paramétrage du GPU peut entrainer une instabilité de votre système. Merci d'agir en connaissance de cause.",
     "msiAfterburner": {

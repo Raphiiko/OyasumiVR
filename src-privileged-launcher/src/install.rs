@@ -1,0 +1,77 @@
+use crate::{exit, log, paths};
+use oyasumivr_shared::windows::{current_user_sid, is_elevated};
+use oyasumivr_shared::{elevated_sidecar_key_id, task, PRIVILEGED_LAUNCHER_VERSION};
+use serde::Serialize;
+
+#[derive(Serialize)]
+struct Marker {
+    version: u32,
+    /// Lets the core spot a launcher built with a different signing key.
+    key: String,
+}
+
+pub fn run() -> u8 {
+    if !is_elevated() {
+        log("[install] refusing to install without elevation");
+        return exit::NOT_ELEVATED;
+    }
+
+    let (Ok(dir), Ok(staged), Ok(target), Ok(marker)) = (
+        paths::privileged_dir(),
+        paths::staged_root(),
+        paths::installed_launcher(),
+        paths::launcher_marker(),
+    ) else {
+        log("[install] could not resolve the Program Files layout");
+        return exit::INSTALL_FAILED;
+    };
+
+    // created, never ACL-copied, so both inherit the admin-only permissions of Program Files
+    for directory in [&dir, &staged] {
+        if let Err(e) = std::fs::create_dir_all(directory) {
+            log(&format!("[install] cannot create {}: {e}", directory.display()));
+            return exit::INSTALL_FAILED;
+        }
+    }
+
+    let Ok(current) = std::env::current_exe() else {
+        log("[install] cannot find my own path");
+        return exit::INSTALL_FAILED;
+    };
+    // skipped when already in place, so a reinstall does not trip over a locked file
+    if current != target {
+        if let Err(e) = std::fs::copy(&current, &target) {
+            log(&format!("[install] cannot copy myself to {}: {e}", target.display()));
+            return exit::INSTALL_FAILED;
+        }
+    }
+
+    let payload = serde_json::to_vec(&Marker {
+        version: PRIVILEGED_LAUNCHER_VERSION,
+        key: elevated_sidecar_key_id().to_string(),
+    })
+    .unwrap_or_default();
+    if let Err(e) = std::fs::write(&marker, payload) {
+        log(&format!("[install] cannot write {}: {e}", marker.display()));
+        return exit::INSTALL_FAILED;
+    }
+
+    let sid = match current_user_sid() {
+        Ok(sid) => sid,
+        Err(e) => {
+            log(&format!("[install] cannot read my own user sid: {e}"));
+            return exit::INSTALL_FAILED;
+        }
+    };
+
+    if let Err(e) = task::register(&target, &staged, &sid) {
+        log(&format!("[install] cannot register the task: {e}"));
+        return exit::TASK_REGISTRATION_FAILED;
+    }
+
+    log(&format!(
+        "[install] installed version {PRIVILEGED_LAUNCHER_VERSION} and registered \"{}\" for {sid}",
+        task::TASK_NAME
+    ));
+    exit::OK
+}

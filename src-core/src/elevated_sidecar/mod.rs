@@ -1,6 +1,8 @@
 pub mod commands;
+pub mod elevate;
+pub mod launcher;
 
-use crate::utils::sidecar_manager::SidecarManager;
+use crate::utils::sidecar_manager::{SidecarLaunch, SidecarManager};
 use crate::{
     utils::send_event,
     Models::elevated_sidecar::oyasumi_elevated_sidecar_client::OyasumiElevatedSidecarClient,
@@ -22,6 +24,9 @@ static ERROR_REPORTING_ENABLED: AtomicBool = AtomicBool::new(false);
 
 pub async fn init() {
     let (tx, mut rx) = tokio::sync::mpsc::channel(10);
+    // must be chosen here: the start command runs after init and would not see a later decision
+    let launch = choose_launch_strategy();
+    info!("[Core] Elevated sidecar launch strategy: {launch:?}");
     *SIDECAR_MANAGER.lock().await = Some(SidecarManager::new(
         "ELEVATED".to_string(),
         "resources/elevated-sidecar/".to_string(),
@@ -29,6 +34,7 @@ pub async fn init() {
         tx,
         false,
         vec![],
+        launch,
     ));
     // Wait for sidecar stop signals
     tokio::spawn(async move {
@@ -37,6 +43,20 @@ pub async fn init() {
             send_event("ELEVATED_SIDECAR_STOPPED", ()).await;
         }
     });
+}
+
+/// A debug build never installs a prompt-free privileged task, and an elevated core needs none.
+fn choose_launch_strategy() -> SidecarLaunch {
+    // the child inherits the elevated token
+    if oyasumivr_shared::windows::is_elevated() {
+        return SidecarLaunch::Spawn;
+    }
+    // the flavour decides, not debug_assertions: `build:steam:beta` builds with them enabled
+    if crate::BUILD_FLAVOUR == crate::flavour::BuildFlavour::Dev {
+        return SidecarLaunch::ElevatedSpawn;
+    }
+    // an account with no elevated token gets NotSupported from launcher::state instead
+    SidecarLaunch::ScheduledTask
 }
 
 pub async fn set_error_reporting_enabled(enabled: bool) {
@@ -48,6 +68,7 @@ pub async fn set_error_reporting_enabled(enabled: bool) {
     let Some(manager) = manager_guard.as_mut() else {
         return;
     };
+    // only reaches the paths that pass arguments; elsewhere the gRPC push below does it
     manager
         .set_arg("--error-reporting-enabled", enabled, true)
         .await;
@@ -132,22 +153,29 @@ pub async fn request_stop() {
         .await;
 }
 
+/// Returned when a sidecar reports in that the core never asked for. The gRPC layer turns it into
+/// an error status, which the sidecar treats as fatal.
+#[derive(Debug)]
+pub struct SidecarRejected;
+
+impl std::fmt::Display for SidecarRejected {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "this sidecar was not requested")
+    }
+}
+
+impl std::error::Error for SidecarRejected {}
+
 pub async fn handle_elevated_sidecar_start(
     args: &ElevatedSidecarStartArgs,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let manager_guard = SIDECAR_MANAGER.lock().await;
     let manager = manager_guard.as_ref().unwrap();
-    // Ignore this signal if it is invalid
     if !manager
-        .handle_start_signal(
-            Some(args.grpc_port),
-            Some(args.grpc_web_port),
-            args.pid,
-            args.old_pid,
-        )
+        .handle_start_signal(Some(args.grpc_port), Some(args.grpc_web_port), args.pid)
         .await
     {
-        return Ok(());
+        return Err(Box::new(SidecarRejected));
     }
     drop(manager_guard);
     let mut client_guard = SIDECAR_GRPC_CLIENT.lock().await;

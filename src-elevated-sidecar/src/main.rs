@@ -9,6 +9,7 @@ use directories::BaseDirs;
 use grpc::oyasumi_core::{oyasumi_core_client::OyasumiCoreClient, ElevatedSidecarStartArgs};
 pub use grpc::oyasumi_elevated_sidecar as Models;
 use log::{error, info};
+use oyasumivr_shared::handshake::Handshake;
 use oyasumivr_shared::windows::is_elevated;
 use simplelog::{
     ColorChoice, CombinedLogger, Config, LevelFilter, TermLogger, TerminalMode, WriteLogger,
@@ -22,12 +23,13 @@ use std::sync::{
 };
 use std::time::Duration;
 use sysinfo::{Pid, ProcessesToUpdate, System};
-use windows::relaunch_with_elevation;
+use windows_sys::Win32::System::LibraryLoader::{
+    SetDefaultDllDirectories, LOAD_LIBRARY_SEARCH_SYSTEM32,
+};
 
 mod afterburner;
 mod grpc;
 mod nvml;
-mod windows;
 
 static ERROR_REPORTING_ENABLED: LazyLock<Arc<AtomicBool>> =
     LazyLock::new(|| Arc::new(AtomicBool::new(false)));
@@ -36,6 +38,10 @@ static ERROR_REPORTING_GUARD: LazyLock<Mutex<Option<sentry::ClientInitGuard>>> =
 
 #[tokio::main]
 async fn main() {
+    // before any DLL this process loads later, prefer System32 over our own directory
+    unsafe {
+        let _ = SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_SYSTEM32);
+    }
     // Initialize logging
     let log_path = if let Some(base_dirs) = BaseDirs::new() {
         base_dirs
@@ -63,29 +69,26 @@ async fn main() {
         ),
     ])
     .unwrap();
-    // Parse the arguments
+    // started by the launcher with no arguments, or directly by the core with them
     let args: Vec<String> = env::args().collect();
-    let host_port = match switch_value(&args, "core-grpc-port") {
-        Some(n) => n,
-        None => {
-            error!("Missing or invalid arguments. Expected format:");
-            error!("oyasumivr-elevated-sidecar.exe --core-grpc-port=<port> --core-pid=<pid> [--old-pid=<pid>]");
-            std::process::exit(0);
-        }
+    let (host_port, main_pid) = match (
+        switch_value(&args, "core-grpc-port"),
+        switch_value(&args, "core-pid"),
+    ) {
+        (Some(port), Some(pid)) => (port, pid),
+        _ => match Handshake::read() {
+            Ok(handshake) => (handshake.core_grpc_port, handshake.core_pid),
+            Err(e) => {
+                error!("No arguments and no usable handshake: {e}");
+                std::process::exit(0);
+            }
+        },
     };
-    let main_pid = match switch_value(&args, "core-pid") {
-        Some(n) => n,
-        None => {
-            error!("Missing or invalid --core-pid argument");
-            std::process::exit(0);
-        }
-    };
-    let old_process_id = switch_value(&args, "old-pid");
+    // never read from the handshake, which the user can write; the core pushes it over gRPC
     let error_reporting_enabled = args.iter().any(|arg| arg == "--error-reporting-enabled");
-    // Relaunch as admin if not elevated
     if !is_elevated() {
-        relaunch_with_elevation(host_port, main_pid, error_reporting_enabled, true);
-        return;
+        error!("Started without elevation. The core owns elevation, so there is nothing to retry.");
+        std::process::exit(0);
     }
     set_error_reporting_enabled(error_reporting_enabled);
     // Setup the grpc server
@@ -104,11 +107,10 @@ async fn main() {
         pid: std::process::id(),
         grpc_port: grpc_port as u32,
         grpc_web_port: grpc_web_port as u32,
-        old_pid: old_process_id,
     });
-    let response = client.on_elevated_sidecar_start(request).await;
-    if response.is_err() {
-        error!("Could not inform main process of sidecar initialization");
+    // fatal on any error, including the core rejecting a sidecar it never asked for
+    if let Err(e) = client.on_elevated_sidecar_start(request).await {
+        error!("The core did not accept this sidecar: {e}");
         std::process::exit(0);
     }
     // Init NVML

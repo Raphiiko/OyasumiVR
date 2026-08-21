@@ -3,17 +3,9 @@ import { MessageMonitor } from './message-monitor';
 import { NvmlService } from '../../nvml.service';
 import { GpuAutomationsService } from '../../gpu-automations.service';
 import { ElevatedSidecarService } from '../../elevated-sidecar.service';
-import {
-  asyncScheduler,
-  combineLatest,
-  distinctUntilChanged,
-  firstValueFrom,
-  map,
-  throttleTime,
-} from 'rxjs';
+import { asyncScheduler, combineLatest, distinctUntilChanged, map, throttleTime } from 'rxjs';
 import { AppSettingsService } from '../../app-settings.service';
 import { ModalService } from '../../modal.service';
-import { ConfirmModalComponent } from 'src-ui/app/components/confirm-modal/confirm-modal.component';
 import { AutomationConfigService } from '../../automation-config.service';
 import {
   GPUPowerLimitsAutomationConfig,
@@ -66,23 +58,7 @@ export class GpuAutomationMessageMonitor extends MessageMonitor {
               {
                 label: 'message-center.messages.gpuAutomationsSidecarNotRunning.actions.elevate',
                 action: async () => {
-                  if (!(await firstValueFrom(this.settingsService.settings)).askForAdminOnStart) {
-                    this.modalService
-                      .addModal(ConfirmModalComponent, {
-                        title: 'gpu-automations.elevationSidecarModal.title',
-                        message: 'gpu-automations.elevationSidecarModal.message',
-                        confirmButtonText: 'gpu-automations.elevationSidecarModal.confirm',
-                        cancelButtonText: 'gpu-automations.elevationSidecarModal.cancel',
-                      })
-                      .subscribe((data) => {
-                        if (data?.confirmed) {
-                          this.settingsService.updateSettings({ askForAdminOnStart: true });
-                        }
-                        this.elevatedSidecar.start();
-                      });
-                  } else {
-                    this.elevatedSidecar.start();
-                  }
+                  await this.elevatedSidecar.enable();
                 },
               },
             ],

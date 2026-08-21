@@ -19,6 +19,7 @@ const migrations: { [v: number]: (data: any) => any } = {
   10: from9to10,
   11: from10to11,
   12: from11to12,
+  13: from12to13,
 };
 
 async function from11to12(data: any): Promise<any> {
@@ -179,6 +180,13 @@ function from3to4(data: any): any {
   if (data.userLanguage === 'jp') {
     data.userLanguage = 'ja';
   }
+  return data;
+}
+
+function from12to13(data: any): any {
+  data.version = 13;
+  data.elevatedFeaturesEnabled = !!data.askForAdminOnStart;
+  delete data.askForAdminOnStart;
   return data;
 }
 

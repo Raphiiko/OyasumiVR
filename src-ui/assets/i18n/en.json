@@ -1165,12 +1165,6 @@
       "disabled": "OyasumiVR has various ways to automatically tweak your GPU settings.\nThis allows you to save power while you are asleep.\n\nAs this is a feature for advanced users, it is disabled by default.\nYou can enable it by clicking the button below.",
       "noSidecar": "In order for OyasumiVR to be allowed to change your GPU settings, it requires administrator privileges. Please click the button below to give OyasumiVR administrator privileges."
     },
-    "elevationSidecarModal": {
-      "cancel": "Only this once",
-      "confirm": "Always",
-      "message": "Do you want to always give OyasumiVR administrator privileges?\n\nIf you enable this, OyasumiVR will immediately ask for them when starting. You can disable this later at any time in the settings.",
-      "title": "Give administrator privileges"
-    },
     "enable": "Enable GPU Automations",
     "enableWarning": "Incorrectly tweaking your GPU parameters could lead to your system becoming unstable. Please keep this in mind and only enable this feature if you know what you are doing.",
     "msiAfterburner": {
@@ -2061,8 +2055,14 @@
     },
     "general": {
       "adminPrivileges": {
-        "description": "OyasumiVR needs administrator privileges to be able to control your GPU's power limits. If you enable this, OyasumiVR will ask for administrator privileges when it starts up.",
-        "label": "Ask for administrator privileges on startup",
+        "description": "Some features, such as controlling your GPU's power limits, need administrator access. Turning this on asks for it once. After that OyasumiVR sets these features up without asking again.",
+        "errors": {
+          "promptDeclined": "Administrator access was not granted, so these features stay off.",
+          "installFailed": "OyasumiVR could not set up the component that needs administrator access.",
+          "taskFailed": "The administrator component is present but not trustworthy, so it was not used.",
+          "notSupported": "These features need a Windows administrator account. This account cannot be given administrator access, so they stay unavailable."
+        },
+        "label": "Allow features that need administrator access",
         "title": "Administrator Privileges"
       },
       "language": {

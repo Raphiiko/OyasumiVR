@@ -1,6 +1,6 @@
 pub mod commands;
 
-use crate::utils::sidecar_manager::SidecarManager;
+use crate::utils::sidecar_manager::{SidecarLaunch, SidecarManager};
 use crate::Models::overlay_sidecar::MicrophoneActivityMode;
 use crate::{
     utils::send_event,
@@ -31,6 +31,7 @@ pub async fn init() {
         tx,
         true,
         vec![],
+        SidecarLaunch::Spawn,
     ));
     // Listen for sidecar stop signals
     tokio::spawn(async move {
@@ -91,12 +92,7 @@ pub async fn handle_overlay_sidecar_start(
     let manager = manager_guard.as_ref().unwrap();
     // Ignore this signal if it is invalid
     if !manager
-        .handle_start_signal(
-            Some(args.grpc_port),
-            Some(args.grpc_web_port),
-            args.pid,
-            None,
-        )
+        .handle_start_signal(Some(args.grpc_port), Some(args.grpc_web_port), args.pid)
         .await
     {
         return Ok(());

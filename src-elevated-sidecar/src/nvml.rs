@@ -8,9 +8,18 @@ lazy_static! {
     static ref NVML_HANDLE: Mutex<Option<Nvml>> = Default::default();
 }
 
+/// An absolute path, because loading by name searches this executable's own directory first.
+fn nvml_path() -> std::path::PathBuf {
+    let system_root = std::env::var("SystemRoot").unwrap_or_else(|_| r"C:\Windows".to_string());
+    std::path::Path::new(&system_root)
+        .join("System32")
+        .join("nvml.dll")
+}
+
 pub fn init() -> bool {
-    info!("[NVML] Initializing NVML");
-    match Nvml::init() {
+    let path = nvml_path();
+    info!("[NVML] Initializing NVML from {}", path.display());
+    match Nvml::builder().lib_path(path.as_os_str()).init() {
         Ok(nvml) => {
             info!("[NVML] Successfully initialized NVML");
             *NVML_HANDLE.lock().unwrap() = Some(nvml);

@@ -418,12 +418,6 @@
       "disabled": "OyasumiVR memiliki berbagai cara untuk mengubah pengaturan GPU Anda secara otomatis.\nHal ini memungkinkan Anda menghemat daya sewaktu Anda tidur.\n\nKarena ini adalah fitur untuk pengguna tingkat lanjut, fitur ini dinonaktifkan secara default.\nAnda dapat mengaktifkannya dengan mengeklik tombol di bawah ini.",
       "noSidecar": "Agar OyasumiVR diizinkan untuk mengubah pengaturan GPU Anda, diperlukan hak administrator. Silakan klik tombol di bawah ini untuk memberikan hak administrator kepada OyasumiVR."
     },
-    "elevationSidecarModal": {
-      "cancel": "Hanya sekali ini saja",
-      "confirm": "Selalu",
-      "message": "Apakah Anda ingin selalu memberikan hak administrator OyasumiVR?",
-      "title": "Memberikan hak istimewa kepada administrator"
-    },
     "enable": "Nyalakan Otomatisasi GPU",
     "enableWarning": "Salah mengubah parameter GPU dapat menyebabkan sistem Anda menjadi tidak stabil. Harap ingatlah hal ini dan hanya aktifkan fitur ini jika Anda tahu apa yang Anda lakukan.",
     "msiAfterburner": {
