@@ -151,7 +151,6 @@ const LEGACY_SECRET_TEXT_FIELDS = [
 
 async function from6To7(data: any): Promise<any> {
   const original = structuredClone(data);
-  data.version = 7;
   const legacyKey = data.legacyCredentialCryptoKey;
   let key: CryptoKey | null = null;
   if (legacyKey) {
@@ -185,9 +184,9 @@ async function from6To7(data: any): Promise<any> {
               : null
             : readCredentials(stored, profile.id);
         if (stored && migrated.rememberedCredentials == null) discarded = true;
-        migrated.rememberCredentials =
-          !!migrated.rememberedCredentials && !!profile.rememberCredentials;
       }
+      migrated.rememberCredentials =
+        !!migrated.rememberedCredentials && !!profile.rememberCredentials;
       for (const field of LEGACY_SECRET_TEXT_FIELDS) {
         if (field in migrated && migrated[field] != null && typeof migrated[field] !== 'string') {
           error(
@@ -205,7 +204,12 @@ async function from6To7(data: any): Promise<any> {
     })
   );
   delete data.legacyCredentialCryptoKey;
-  if (discarded) saveBackup(original);
+  if (discarded) {
+    await saveBackup(original).catch((e) =>
+      error("[vrchat-api-settings-migrations] Couldn't write the backup: " + e)
+    );
+  }
+  data.version = 7;
   return data;
 }
 
