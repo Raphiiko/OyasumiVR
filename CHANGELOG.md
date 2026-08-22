@@ -46,6 +46,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Your Pulsoid token is now stored with the Windows Data Protection API instead of in plain text, so
   only your Windows account can read it. Copying OyasumiVR's settings to another Windows account or PC
   no longer carries your Pulsoid login over
+- Your MQTT password is now stored with the Windows Data Protection API instead of in plain text, so
+  only your Windows account can read it
 
 ### Fixed
 

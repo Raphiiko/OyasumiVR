@@ -14,6 +14,7 @@ import {
 import { SETTINGS_KEY_APP_SETTINGS, SETTINGS_STORE } from '../globals';
 import { isEqual, uniq } from 'lodash';
 import { migrateAppSettings } from '../migrations/app-settings.migrations';
+import { protectSecret, unprotectSecret } from '../utils/secrets';
 import { TranslocoService } from '@jsverse/transloco';
 import { OneTimeFlag } from '../models/one-time-flags';
 import { ModalService } from './modal.service';
@@ -62,7 +63,7 @@ export class AppSettingsService {
     let loadedDefaults = false;
     if (settings) {
       const oldSettings = structuredClone(settings);
-      settings = migrateAppSettings(settings);
+      settings = await migrateAppSettings(settings);
       if (oldSettings.userLanguage !== settings.userLanguage) {
         this.translateService.setActiveLang(settings.userLanguage);
       }
@@ -71,13 +72,21 @@ export class AppSettingsService {
       loadedDefaults = true;
     }
     if (settings.userLanguage === 'DEBUG') settings.userLanguage = 'en';
+    settings.mqttPassword = await unprotectSecret(settings.mqttProtectedPassword);
+    settings.mqttProtectedPassword = null;
     this._settings.next(settings);
     await this.saveSettings();
     this._loadedDefaults.next(loadedDefaults);
   }
 
   async saveSettings() {
-    await SETTINGS_STORE.set(SETTINGS_KEY_APP_SETTINGS, this._settings.value);
+    const mqttProtectedPassword = await protectSecret(this._settings.value.mqttPassword);
+    const settings = this._settings.value;
+    await SETTINGS_STORE.set(SETTINGS_KEY_APP_SETTINGS, {
+      ...settings,
+      mqttPassword: null,
+      mqttProtectedPassword,
+    });
   }
 
   public updateSettings(settings: Partial<AppSettings>) {
