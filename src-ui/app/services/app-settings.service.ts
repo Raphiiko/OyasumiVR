@@ -33,6 +33,7 @@ export class AppSettingsService {
     APP_SETTINGS_DEFAULT
   );
   settings: Observable<AppSettings> = this._settings.asObservable();
+  private storedMqttPassword: { plain: string; protected: string } | null = null;
   public get settingsSync(): AppSettings {
     return this._settings.value;
   }
@@ -75,6 +76,8 @@ export class AppSettingsService {
     if (settings.userLanguage === 'DEBUG') settings.userLanguage = 'en';
     const stored = settings.mqttProtectedPassword;
     settings.mqttPassword = await unprotectSecret(stored);
+    this.storedMqttPassword =
+      stored && settings.mqttPassword ? { plain: settings.mqttPassword, protected: stored } : null;
     // Hold on to a password that cannot be unlocked, so the save below rewrites it instead of nothing
     settings.mqttProtectedPassword = settings.mqttPassword ? null : stored;
     this._settings.next(settings);
@@ -84,17 +87,27 @@ export class AppSettingsService {
 
   async saveSettings() {
     const settings = this._settings.value;
-    let mqttProtectedPassword: string | null;
-    try {
-      mqttProtectedPassword = await protectSecret(settings.mqttPassword);
-    } catch (cause) {
-      error(`[AppSettings] Could not protect the MQTT password, keeping the stored one: ${cause}`);
-      return;
+    let mqttProtectedPassword = settings.mqttProtectedPassword;
+    if (settings.mqttPassword && this.storedMqttPassword?.plain === settings.mqttPassword) {
+      mqttProtectedPassword = this.storedMqttPassword.protected;
+    } else if (settings.mqttPassword) {
+      try {
+        mqttProtectedPassword = await protectSecret(settings.mqttPassword);
+        this.storedMqttPassword = mqttProtectedPassword
+          ? { plain: settings.mqttPassword, protected: mqttProtectedPassword }
+          : null;
+      } catch (cause) {
+        error(
+          `[AppSettings] Could not protect the MQTT password, so the stored one goes: ${cause}`
+        );
+        mqttProtectedPassword = null;
+        this.storedMqttPassword = null;
+      }
     }
     await SETTINGS_STORE.set(SETTINGS_KEY_APP_SETTINGS, {
       ...settings,
       mqttPassword: null,
-      mqttProtectedPassword: mqttProtectedPassword ?? settings.mqttProtectedPassword,
+      mqttProtectedPassword,
     });
   }
 

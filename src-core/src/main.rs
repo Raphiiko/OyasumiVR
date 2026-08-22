@@ -42,6 +42,19 @@ use webview2_com::Microsoft::Web::WebView2::Win32::ICoreWebView2Settings6;
 
 use crate::globals::APTABASE_HOST;
 
+fn serialize_store_sorted(
+    cache: &std::collections::HashMap<String, serde_json::Value>,
+) -> std::result::Result<Vec<u8>, Box<dyn std::error::Error + Send + Sync>> {
+    let sorted: std::collections::BTreeMap<&String, &serde_json::Value> = cache.iter().collect();
+    Ok(serde_json::to_vec_pretty(&sorted)?)
+}
+
+fn configure_tauri_plugin_store() -> TauriPlugin<Wry> {
+    tauri_plugin_store::Builder::new()
+        .default_serialize_fn(serialize_store_sorted)
+        .build()
+}
+
 #[tokio::main]
 async fn main() {
     // Construct OyasumiVR Tauri application
@@ -56,12 +69,11 @@ async fn main() {
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_dialog::init())
-        .plugin(tauri_plugin_store::Builder::new().build())
+        .plugin(configure_tauri_plugin_store())
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
-        .plugin(tauri_plugin_store::Builder::default().build())
         .plugin(configure_tauri_plugin_aptabase())
         .setup(|app| {
             #[cfg(windows)]
