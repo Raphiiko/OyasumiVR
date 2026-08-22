@@ -22,9 +22,13 @@ const migrations: { [v: number]: (data: any) => any } = {
 };
 
 async function from11to12(data: any): Promise<any> {
-  data.version = 12;
-  data.mqttProtectedPassword = await protectSecret(data.mqttPassword);
+  try {
+    data.mqttProtectedPassword = await protectSecret(data.mqttPassword);
+  } catch (e) {
+    error("[app-settings-migrations] Couldn't protect the MQTT password: " + e);
+  }
   data.mqttPassword = null;
+  data.version = 12;
   return data;
 }
 
@@ -75,7 +79,8 @@ export async function migrateAppSettings(data: any): Promise<AppSettings> {
 }
 
 async function saveBackup(oldData: any) {
-  await writeTextFile('app-settings.backup.json', JSON.stringify(oldData, null, 2), {
+  const redacted = { ...oldData, mqttPassword: undefined, mqttProtectedPassword: undefined };
+  await writeTextFile('app-settings.backup.json', JSON.stringify(redacted, null, 2), {
     baseDir: BaseDirectory.AppData,
   });
 }
