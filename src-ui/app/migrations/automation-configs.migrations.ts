@@ -5,6 +5,7 @@ import { message } from '@tauri-apps/plugin-dialog';
 import { BaseDirectory, writeTextFile } from '@tauri-apps/plugin-fs';
 import { migrateOscScript } from './osc-script.migrations';
 import { migrateKnownLighthouseDeviceId } from './lighthouse-device-id';
+import { decryptStorageData, deserializeStorageCryptoKey } from '../utils/crypto';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: resetToLatest,
@@ -26,7 +27,41 @@ const migrations: { [v: number]: (data: any) => any } = {
   17: from16to17,
   18: from17to18,
   19: from18to19,
+  20: from19to20,
 };
+
+const RUN_AUTOMATION_COMMAND_FIELDS = [
+  'onSleepModeEnableCommands',
+  'onSleepModeDisableCommands',
+  'onSleepPreparationCommands',
+];
+
+async function from19to20(data: any): Promise<any> {
+  data.version = 20;
+  if (!data.RUN_AUTOMATIONS) return data;
+  const legacyKey = data.RUN_AUTOMATIONS.runAutomationsCryptoKey;
+  delete data.RUN_AUTOMATIONS.runAutomationsCryptoKey;
+  let key: CryptoKey | null = null;
+  if (legacyKey) {
+    try {
+      key = await deserializeStorageCryptoKey(legacyKey);
+    } catch (e) {
+      error("[automation-configs-migrations] Couldn't read the Run Automations command key: " + e);
+    }
+  }
+  for (const field of RUN_AUTOMATION_COMMAND_FIELDS) {
+    const commands = data.RUN_AUTOMATIONS[field];
+    if (!commands) continue;
+    try {
+      if (!key) throw new Error('No command key available');
+      data.RUN_AUTOMATIONS[field] = await decryptStorageData(commands, key);
+    } catch (e) {
+      error("[automation-configs-migrations] Couldn't migrate " + field + ': ' + e);
+      data.RUN_AUTOMATIONS[field] = '';
+    }
+  }
+  return data;
+}
 
 function from18to19(data: any): any {
   data.version = 19;
@@ -51,7 +86,7 @@ function migrateSelectedDeviceIds(value: any) {
   Object.values(value).forEach(migrateSelectedDeviceIds);
 }
 
-export function migrateAutomationConfigs(data: any): AutomationConfigs {
+export async function migrateAutomationConfigs(data: any): Promise<AutomationConfigs> {
   let currentVersion = data.version || 0;
   // Reset to latest when the current version is higher than the latest
   if (currentVersion > AUTOMATION_CONFIGS_DEFAULT.version) {
@@ -65,7 +100,7 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
   while (currentVersion < AUTOMATION_CONFIGS_DEFAULT.version) {
     try {
       console.log('Migrating to version', currentVersion + 1);
-      data = migrations[++currentVersion](structuredClone(data));
+      data = await migrations[++currentVersion](structuredClone(data));
     } catch (e) {
       error(
         "[automation-configs-migrations] Couldn't migrate to version " +
