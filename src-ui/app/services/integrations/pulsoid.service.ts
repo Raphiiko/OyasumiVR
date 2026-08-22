@@ -63,7 +63,6 @@ export type HeartbeatRecord = [number, number]; // [timestamp, heartRate]
 })
 export class PulsoidService {
   private csrfCache: string[] = [];
-  // The plain token. The one in the settings is protected.
   private accessToken = new BehaviorSubject<string | null>(null);
   private settings = new BehaviorSubject<PulsoidApiSettings>(PULSOID_API_SETTINGS_DEFAULT);
   private socket?: WebSocket;
