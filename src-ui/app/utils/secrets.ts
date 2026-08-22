@@ -1,15 +1,13 @@
 import { invoke } from '@tauri-apps/api/core';
 import { error } from '@tauri-apps/plugin-log';
 
-/** Returns null when the secret cannot be protected, so nothing is ever stored in plain text. */
+/**
+ * Returns null only when there is nothing to protect, and throws when protecting fails, so no
+ * caller writes nothing over a secret it already stored.
+ */
 export async function protectSecret(plain: string | null | undefined): Promise<string | null> {
   if (!plain) return null;
-  try {
-    return await invoke<string>('protect_secret', { secret: plain });
-  } catch (cause) {
-    error(`[Secrets] Could not protect a secret: ${cause}`);
-    return null;
-  }
+  return await invoke<string>('protect_secret', { secret: plain });
 }
 
 /** Returns null when the stored secret cannot be read, which a different Windows account causes. */
