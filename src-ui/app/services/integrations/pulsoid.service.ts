@@ -64,6 +64,8 @@ export type HeartbeatRecord = [number, number]; // [timestamp, heartRate]
 export class PulsoidService {
   private csrfCache: string[] = [];
   private accessToken = new BehaviorSubject<string | null>(null);
+  private storedAccessToken: { plain: string; protected: string } | null = null;
+  private pendingSave: Promise<void> = Promise.resolve();
   private settings = new BehaviorSubject<PulsoidApiSettings>(PULSOID_API_SETTINGS_DEFAULT);
   private socket?: WebSocket;
   private _heartRate = new BehaviorSubject<number>(0);
@@ -253,7 +255,10 @@ export class PulsoidService {
     let settings: PulsoidApiSettings | undefined =
       await SETTINGS_STORE.get<PulsoidApiSettings>(SETTINGS_KEY_PULSOID_API);
     settings = settings ? await migratePulsoidApiSettings(settings) : this.settings.value;
-    this.accessToken.next(await unprotectSecret(settings.accessToken));
+    const plain = await unprotectSecret(settings.accessToken);
+    this.accessToken.next(plain);
+    this.storedAccessToken =
+      settings.accessToken && plain ? { plain, protected: settings.accessToken } : null;
     // Handle token expiry
     if (settings.expiresAt && settings.expiresAt < Date.now() / 1000) {
       info('[Pulsoid] Token expired, throwing it away.');
@@ -273,18 +278,31 @@ export class PulsoidService {
     await this.saveSettings();
   }
 
-  private async saveSettings() {
-    const settings = this.settings.value;
-    let accessToken = settings.accessToken;
-    if (this.accessToken.value) {
+  // Writes run one at a time, so a slow one cannot land after a newer one and bring a token back
+  private saveSettings(): Promise<void> {
+    this.pendingSave = this.pendingSave.catch(() => undefined).then(() => this.writeSettings());
+    return this.pendingSave;
+  }
+
+  private async writeSettings() {
+    const plain = this.accessToken.value;
+    let accessToken = this.settings.value.accessToken;
+    if (plain && this.storedAccessToken?.plain === plain) {
+      accessToken = this.storedAccessToken.protected;
+    } else if (plain) {
       try {
-        accessToken = (await protectSecret(this.accessToken.value)) ?? undefined;
+        accessToken = (await protectSecret(plain)) ?? undefined;
+        this.storedAccessToken = accessToken ? { plain, protected: accessToken } : null;
       } catch (cause) {
-        error(`[Pulsoid] Could not protect the access token, keeping the stored one: ${cause}`);
-        return;
+        error(`[Pulsoid] Could not protect the access token, so the stored one goes: ${cause}`);
+        accessToken = undefined;
+        this.storedAccessToken = null;
       }
     }
-    await SETTINGS_STORE.set(SETTINGS_KEY_PULSOID_API, { ...settings, accessToken });
+    await SETTINGS_STORE.set(SETTINGS_KEY_PULSOID_API, {
+      ...this.settings.value,
+      accessToken,
+    });
   }
 
   private async manageSocketConnection() {
