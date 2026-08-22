@@ -1,7 +1,7 @@
 export interface PulsoidApiSettings {
   version: 2;
+  /** Protected with the Windows Data Protection API. PulsoidService holds the plain token. */
   accessToken?: string;
-  protectedAccessToken?: string;
   expiresAt?: number;
   username?: string;
 }

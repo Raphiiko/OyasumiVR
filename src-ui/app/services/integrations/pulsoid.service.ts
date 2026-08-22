@@ -14,6 +14,7 @@ import {
 import { error, info, warn } from '@tauri-apps/plugin-log';
 import {
   BehaviorSubject,
+  combineLatest,
   distinctUntilChanged,
   filter,
   firstValueFrom,
@@ -62,6 +63,9 @@ export type HeartbeatRecord = [number, number]; // [timestamp, heartRate]
 })
 export class PulsoidService {
   private csrfCache: string[] = [];
+  // The plain token, and the signal every consumer follows. The one in the settings is
+  // protected, and only this service unlocks it.
+  private accessToken = new BehaviorSubject<string | null>(null);
   private settings = new BehaviorSubject<PulsoidApiSettings>(PULSOID_API_SETTINGS_DEFAULT);
   private socket?: WebSocket;
   private _heartRate = new BehaviorSubject<number>(0);
@@ -73,9 +77,9 @@ export class PulsoidService {
     switchMap(() => this._heartRate.pipe(timeout({ each: 10000, with: () => of(null) })))
   );
   public heartRateLastReported = this._lastReport.asObservable();
-  public loggedInUser = this.settings.pipe(
-    map((settings) => {
-      if (!settings.accessToken || !settings.expiresAt) return null;
+  public loggedInUser = combineLatest([this.accessToken, this.settings]).pipe(
+    map(([accessToken, settings]) => {
+      if (!accessToken || !settings.expiresAt) return null;
       return settings.username ?? null;
     })
   );
@@ -206,8 +210,9 @@ export class PulsoidService {
   }
 
   private async setActiveTokenSet(tokenSet: PulsoidTokenSet | null) {
+    this.accessToken.next(tokenSet?.access_token ?? null);
     const newSettings = structuredClone(this.settings.value);
-    newSettings.accessToken = tokenSet?.access_token ?? undefined;
+    newSettings.accessToken = undefined;
     newSettings.expiresAt = tokenSet
       ? Math.floor(Date.now() / 1000) + tokenSet!.expires_in
       : undefined;
@@ -223,12 +228,12 @@ export class PulsoidService {
   }
 
   private getProfile(): Observable<PulsoidProfile> {
-    if (!this.settings.value.accessToken) throw new Error('No token set available');
+    if (!this.accessToken.value) throw new Error('No token set available');
     return this.getApiUrl('profile').pipe(
       switchMap((url) =>
         fetch(url, {
           headers: {
-            Authorization: `Bearer ${this.settings.value?.accessToken}`,
+            Authorization: `Bearer ${this.accessToken.value}`,
           },
         })
       ),
@@ -250,13 +255,11 @@ export class PulsoidService {
     let settings: PulsoidApiSettings | undefined =
       await SETTINGS_STORE.get<PulsoidApiSettings>(SETTINGS_KEY_PULSOID_API);
     settings = settings ? await migratePulsoidApiSettings(settings) : this.settings.value;
-    const stored = settings.protectedAccessToken;
-    settings.accessToken = (await unprotectSecret(stored)) ?? undefined;
-    // Hold on to a token that cannot be unlocked, so the save below rewrites it instead of nothing
-    settings.protectedAccessToken = settings.accessToken ? undefined : stored;
+    this.accessToken.next(await unprotectSecret(settings.accessToken));
     // Handle token expiry
     if (settings.expiresAt && settings.expiresAt < Date.now() / 1000) {
       info('[Pulsoid] Token expired, throwing it away.');
+      this.accessToken.next(null);
       settings.accessToken = undefined;
       settings.expiresAt = undefined;
       // TODO: Let user in some way know that their existing login has expired, and they should reauthenticate
@@ -274,18 +277,16 @@ export class PulsoidService {
 
   private async saveSettings() {
     const settings = this.settings.value;
-    let protectedAccessToken: string | null;
-    try {
-      protectedAccessToken = await protectSecret(settings.accessToken);
-    } catch (cause) {
-      error(`[Pulsoid] Could not protect the access token, keeping the stored one: ${cause}`);
-      return;
+    let accessToken = settings.accessToken;
+    if (this.accessToken.value) {
+      try {
+        accessToken = (await protectSecret(this.accessToken.value)) ?? undefined;
+      } catch (cause) {
+        error(`[Pulsoid] Could not protect the access token, keeping the stored one: ${cause}`);
+        return;
+      }
     }
-    await SETTINGS_STORE.set(SETTINGS_KEY_PULSOID_API, {
-      ...settings,
-      accessToken: undefined,
-      protectedAccessToken: protectedAccessToken ?? settings.protectedAccessToken,
-    });
+    await SETTINGS_STORE.set(SETTINGS_KEY_PULSOID_API, { ...settings, accessToken });
   }
 
   private async manageSocketConnection() {
@@ -299,8 +300,7 @@ export class PulsoidService {
         this.socket = undefined;
       }
       this.socket = new WebSocket(
-        'wss://dev.pulsoid.net/api/v1/data/real_time?access_token=' +
-          this.settings.value.accessToken
+        'wss://dev.pulsoid.net/api/v1/data/real_time?access_token=' + this.accessToken.value
       );
       this.socket.onopen = () => this.onSocketEvent('OPEN');
       this.socket.onerror = () => this.onSocketEvent('ERROR');
@@ -308,28 +308,23 @@ export class PulsoidService {
       this.socket.onmessage = (message) => this.onSocketEvent('MESSAGE', message);
     };
     // Connect and disconnect based on login status
-    this.settings
-      .pipe(
-        map((settings) => settings.accessToken),
-        distinctUntilChanged()
-      )
-      .subscribe((accessToken) => {
-        if (accessToken) {
-          buildSocket();
-        } else {
-          if (this.socket) {
-            try {
-              this.socket.close();
-            } catch {
-              // Ignore any error, we just want to disconnect
-            }
-            this.socket = undefined;
+    this.accessToken.pipe(distinctUntilChanged()).subscribe((accessToken) => {
+      if (accessToken) {
+        buildSocket();
+      } else {
+        if (this.socket) {
+          try {
+            this.socket.close();
+          } catch {
+            // Ignore any error, we just want to disconnect
           }
+          this.socket = undefined;
         }
-      });
+      }
+    });
     // Check connection intermittently in case of dropouts
     interval(10000)
-      .pipe(filter(() => !!this.settings.value.accessToken))
+      .pipe(filter(() => !!this.accessToken.value))
       .subscribe(() => {
         // Stop if we have an active connection
         if (this.socket && this.socket.readyState === WebSocket.OPEN) return;
