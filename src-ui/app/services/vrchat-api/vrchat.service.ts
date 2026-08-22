@@ -70,6 +70,10 @@ export class VRChatService {
   private readonly socket: VRChatSocket;
   private settingsUpdate: Promise<void> = Promise.resolve();
   private lockedActiveProfileId: string | null = null;
+  private readonly protectedSecretsByProfileId = new Map<
+    string,
+    { plain: string; protected: string }
+  >();
 
   private readonly settings = this.settingsSubject.asObservable();
   public readonly profiles = this.settings.pipe(
@@ -306,6 +310,10 @@ export class VRChatService {
           const json = await unprotectSecret(profile.protectedSecret);
           if (json == null) throw new Error('the secret could not be unlocked');
           const secret = parseVRChatAccountSecret(JSON.parse(json));
+          this.protectedSecretsByProfileId.set(profile.id, {
+            plain: json,
+            protected: profile.protectedSecret,
+          });
           return normalizeVRChatAccountProfile({
             ...profile,
             ...secret,
@@ -353,6 +361,15 @@ export class VRChatService {
     await this.mutateSettings((settings) => patchVRChatProfile(settings, profileId, patch));
   }
 
+  private async protectProfileSecret(profile: VRChatAccountProfile): Promise<string | null> {
+    const plain = JSON.stringify(getVRChatAccountSecret(profile));
+    const cached = this.protectedSecretsByProfileId.get(profile.id);
+    if (cached?.plain === plain) return cached.protected;
+    const stored = await protectSecret(plain);
+    if (stored) this.protectedSecretsByProfileId.set(profile.id, { plain, protected: stored });
+    return stored;
+  }
+
   private async saveSettings(settings: VRChatApiSettings): Promise<void> {
     const profiles = await Promise.all(
       settings.profiles.map(async (profile) => {
@@ -366,7 +383,7 @@ export class VRChatService {
           draft: profile.draft,
           protectedSecret: profile.secretLocked
             ? profile.protectedSecret
-            : await protectSecret(JSON.stringify(getVRChatAccountSecret(profile))),
+            : await this.protectProfileSecret(profile),
         };
       })
     );
