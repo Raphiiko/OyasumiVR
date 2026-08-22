@@ -1342,7 +1342,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumivr-elevated-sidecar"
-version = "26.8.0-beta.3"
+version = "26.8.0-beta.4"
 dependencies = [
  "codesigned",
  "directories",
@@ -1366,7 +1366,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumivr-shared"
-version = "26.8.0-beta.3"
+version = "26.8.0-beta.4"
 dependencies = [
  "regex",
  "reqwest",
