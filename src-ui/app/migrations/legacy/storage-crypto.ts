@@ -1,5 +1,3 @@
-// Read-only: nothing writes stored data with these helpers.
-
 const MASTER_KEY = 'mY2BEtChq6dmPS4byAT2Xr1NT+tet5IONT+o7Eni3Vw=';
 
 export async function deserializeStorageCryptoKey(wrappedKey: string): Promise<CryptoKey> {
