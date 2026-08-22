@@ -250,8 +250,10 @@ export class PulsoidService {
     let settings: PulsoidApiSettings | undefined =
       await SETTINGS_STORE.get<PulsoidApiSettings>(SETTINGS_KEY_PULSOID_API);
     settings = settings ? await migratePulsoidApiSettings(settings) : this.settings.value;
-    settings.accessToken = (await unprotectSecret(settings.protectedAccessToken)) ?? undefined;
-    settings.protectedAccessToken = undefined;
+    const stored = settings.protectedAccessToken;
+    settings.accessToken = (await unprotectSecret(stored)) ?? undefined;
+    // Hold on to a token that cannot be unlocked, so the save below rewrites it instead of nothing
+    settings.protectedAccessToken = settings.accessToken ? undefined : stored;
     // Handle token expiry
     if (settings.expiresAt && settings.expiresAt < Date.now() / 1000) {
       info('[Pulsoid] Token expired, throwing it away.');
@@ -271,12 +273,18 @@ export class PulsoidService {
   }
 
   private async saveSettings() {
-    const protectedAccessToken = await protectSecret(this.settings.value.accessToken);
     const settings = this.settings.value;
+    let protectedAccessToken: string | null;
+    try {
+      protectedAccessToken = await protectSecret(settings.accessToken);
+    } catch (cause) {
+      error(`[Pulsoid] Could not protect the access token, keeping the stored one: ${cause}`);
+      return;
+    }
     await SETTINGS_STORE.set(SETTINGS_KEY_PULSOID_API, {
       ...settings,
       accessToken: undefined,
-      protectedAccessToken: protectedAccessToken ?? undefined,
+      protectedAccessToken: protectedAccessToken ?? settings.protectedAccessToken,
     });
   }
 

@@ -11,9 +11,13 @@ const migrations: { [v: number]: (data: any) => any } = {
 };
 
 async function from1to2(data: any): Promise<any> {
-  data.version = 2;
-  data.protectedAccessToken = (await protectSecret(data.accessToken)) ?? undefined;
+  try {
+    data.protectedAccessToken = (await protectSecret(data.accessToken)) ?? undefined;
+  } catch (e) {
+    error("[pulsoid-api-settings-migrations] Couldn't protect the access token: " + e);
+  }
   delete data.accessToken;
+  data.version = 2;
   return data;
 }
 
@@ -68,7 +72,8 @@ export async function migratePulsoidApiSettings(data: any): Promise<PulsoidApiSe
 }
 
 async function saveBackup(oldData: any) {
-  await writeTextFile('pulsoid-api-settings.backup.json', JSON.stringify(oldData, null, 2), {
+  const redacted = { ...oldData, accessToken: undefined, protectedAccessToken: undefined };
+  await writeTextFile('pulsoid-api-settings.backup.json', JSON.stringify(redacted, null, 2), {
     baseDir: BaseDirectory.AppData,
   });
 }
