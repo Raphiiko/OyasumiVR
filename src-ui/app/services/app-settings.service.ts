@@ -3,17 +3,19 @@ import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
 import {
   asyncScheduler,
   BehaviorSubject,
+  concatMap,
   distinctUntilChanged,
   firstValueFrom,
   map,
   Observable,
   skip,
-  switchMap,
   throttleTime,
 } from 'rxjs';
 import { SETTINGS_KEY_APP_SETTINGS, SETTINGS_STORE } from '../globals';
 import { isEqual, uniq } from 'lodash';
 import { migrateAppSettings } from '../migrations/app-settings.migrations';
+import { protectSecret, unprotectSecret } from '../utils/secrets';
+import { error } from '@tauri-apps/plugin-log';
 import { TranslocoService } from '@jsverse/transloco';
 import { OneTimeFlag } from '../models/one-time-flags';
 import { ModalService } from './modal.service';
@@ -51,7 +53,7 @@ export class AppSettingsService {
         skip(1),
         throttleTime(500, asyncScheduler, { leading: true, trailing: true }),
         distinctUntilChanged((a, b) => isEqual(a, b)),
-        switchMap(() => this.saveSettings())
+        concatMap(() => this.saveSettings())
       )
       .subscribe();
   }
@@ -62,7 +64,7 @@ export class AppSettingsService {
     let loadedDefaults = false;
     if (settings) {
       const oldSettings = structuredClone(settings);
-      settings = migrateAppSettings(settings);
+      settings = await migrateAppSettings(settings);
       if (oldSettings.userLanguage !== settings.userLanguage) {
         this.translateService.setActiveLang(settings.userLanguage);
       }
@@ -71,13 +73,29 @@ export class AppSettingsService {
       loadedDefaults = true;
     }
     if (settings.userLanguage === 'DEBUG') settings.userLanguage = 'en';
+    const stored = settings.mqttProtectedPassword;
+    settings.mqttPassword = await unprotectSecret(stored);
+    // Hold on to a password that cannot be unlocked, so the save below rewrites it instead of nothing
+    settings.mqttProtectedPassword = settings.mqttPassword ? null : stored;
     this._settings.next(settings);
     await this.saveSettings();
     this._loadedDefaults.next(loadedDefaults);
   }
 
   async saveSettings() {
-    await SETTINGS_STORE.set(SETTINGS_KEY_APP_SETTINGS, this._settings.value);
+    const settings = this._settings.value;
+    let mqttProtectedPassword: string | null;
+    try {
+      mqttProtectedPassword = await protectSecret(settings.mqttPassword);
+    } catch (cause) {
+      error(`[AppSettings] Could not protect the MQTT password, keeping the stored one: ${cause}`);
+      return;
+    }
+    await SETTINGS_STORE.set(SETTINGS_KEY_APP_SETTINGS, {
+      ...settings,
+      mqttPassword: null,
+      mqttProtectedPassword: mqttProtectedPassword ?? settings.mqttProtectedPassword,
+    });
   }
 
   public updateSettings(settings: Partial<AppSettings>) {
