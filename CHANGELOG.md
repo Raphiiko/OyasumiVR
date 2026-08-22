@@ -43,6 +43,9 @@ with [SemVer](https://semver.org/) prerelease suffixes:
   CN compliance mode at runtime.
 - The Run Automations commands are now stored as plain text, so you can read and edit them in
   OyasumiVR's settings file
+- Your Pulsoid token is now stored with the Windows Data Protection API instead of in plain text, so
+  only your Windows account can read it. Copying OyasumiVR's settings to another Windows account or PC
+  no longer carries your Pulsoid login over
 
 ### Fixed
 
