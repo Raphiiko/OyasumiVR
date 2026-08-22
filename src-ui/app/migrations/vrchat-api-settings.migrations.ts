@@ -3,6 +3,7 @@ import { VRCHAT_API_SETTINGS_DEFAULT, VRChatApiSettings } from '../models/vrchat
 import { error, info } from '@tauri-apps/plugin-log';
 import { BaseDirectory, writeTextFile } from '@tauri-apps/plugin-fs';
 import { message } from '@tauri-apps/plugin-dialog';
+import { decryptStorageData, deserializeStorageCryptoKey } from './legacy/storage-crypto';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: resetToLatest,
@@ -11,9 +12,10 @@ const migrations: { [v: number]: (data: any) => any } = {
   4: from3To4,
   5: from4To5,
   6: from5To6,
+  7: from6To7,
 };
 
-export function migrateVRChatApiSettings(data: any): VRChatApiSettings {
+export async function migrateVRChatApiSettings(data: any): Promise<VRChatApiSettings> {
   let currentVersion = data.version || 0;
   // Reset to latest when the current version is higher than the latest
   if (currentVersion > VRCHAT_API_SETTINGS_DEFAULT.version) {
@@ -26,7 +28,7 @@ export function migrateVRChatApiSettings(data: any): VRChatApiSettings {
   }
   while (currentVersion < VRCHAT_API_SETTINGS_DEFAULT.version) {
     try {
-      data = migrations[++currentVersion](data);
+      data = await migrations[++currentVersion](data);
     } catch (e) {
       error(
         "[vrchat-api-settings-migrations] Couldn't migrate to version " +
@@ -138,6 +140,132 @@ function from5To6(data: any): any {
   delete data.credentialCryptoKey;
   data.version = 6;
   return data;
+}
+
+const LEGACY_SECRET_TEXT_FIELDS = [
+  'authCookie',
+  'twoFactorCookie',
+  'twoFactorCookieLoginIdentifierHash',
+  'pendingTwoFactorLoginIdentifier',
+];
+
+async function from6To7(data: any): Promise<any> {
+  const original = structuredClone(data);
+  data.version = 7;
+  const legacyKey = data.legacyCredentialCryptoKey;
+  let key: CryptoKey | null = null;
+  if (legacyKey) {
+    try {
+      key = await deserializeStorageCryptoKey(legacyKey);
+    } catch (e) {
+      error("[vrchat-api-settings-migrations] Couldn't read the credential key: " + e);
+    }
+  }
+  let discarded = false;
+  data.profiles = await Promise.all(
+    (data.profiles ?? []).map(async (profile: any) => {
+      const migrated = { ...profile };
+      if (migrated.encryptedPendingTwoFactorLoginIdentifier != null) {
+        migrated.pendingTwoFactorLoginIdentifier = key
+          ? await decryptLegacyValue(
+              migrated.encryptedPendingTwoFactorLoginIdentifier,
+              key,
+              profile.id
+            )
+          : null;
+        if (migrated.pendingTwoFactorLoginIdentifier == null) discarded = true;
+        delete migrated.encryptedPendingTwoFactorLoginIdentifier;
+      }
+      if ('rememberedCredentials' in migrated) {
+        const stored = migrated.rememberedCredentials;
+        migrated.rememberedCredentials =
+          typeof stored === 'string'
+            ? key
+              ? await decryptLegacyCredentials(stored, key, profile.id)
+              : null
+            : readCredentials(stored, profile.id);
+        if (stored && migrated.rememberedCredentials == null) discarded = true;
+        migrated.rememberCredentials =
+          !!migrated.rememberedCredentials && !!profile.rememberCredentials;
+      }
+      for (const field of LEGACY_SECRET_TEXT_FIELDS) {
+        if (field in migrated && migrated[field] != null && typeof migrated[field] !== 'string') {
+          error(
+            '[vrchat-api-settings-migrations] Discarded the ' +
+              field +
+              ' of profile ' +
+              profile.id +
+              ': not a string'
+          );
+          migrated[field] = null;
+          discarded = true;
+        }
+      }
+      return migrated;
+    })
+  );
+  delete data.legacyCredentialCryptoKey;
+  if (discarded) saveBackup(original);
+  return data;
+}
+
+function readCredentials(
+  value: any,
+  profileId: string
+): { username: string; password: string } | null {
+  if (value == null) return null;
+  if (typeof value?.username === 'string' && typeof value?.password === 'string') {
+    return { username: value.username, password: value.password };
+  }
+  error(
+    '[vrchat-api-settings-migrations] Discarded the credentials of profile ' +
+      profileId +
+      ': unexpected shape'
+  );
+  return null;
+}
+
+async function decryptLegacyValue(
+  value: string,
+  key: CryptoKey,
+  profileId: string
+): Promise<string | null> {
+  try {
+    return await decryptStorageData(value, key);
+  } catch (e) {
+    error(
+      "[vrchat-api-settings-migrations] Couldn't decrypt a value for profile " +
+        profileId +
+        ': ' +
+        e
+    );
+    return null;
+  }
+}
+
+async function decryptLegacyCredentials(
+  value: string,
+  key: CryptoKey,
+  profileId: string
+): Promise<{ username: string; password: string } | null> {
+  const encoded = await decryptLegacyValue(value, key, profileId);
+  if (encoded == null) return null;
+  const separator = encoded.indexOf(':');
+  try {
+    if (separator < 0) throw new Error('missing separator');
+    return {
+      username: atob(encoded.slice(0, separator)),
+      password: atob(encoded.slice(separator + 1)),
+    };
+  } catch (e) {
+    error(
+      '[vrchat-api-settings-migrations] Discarded the credentials of profile ' +
+        profileId +
+        ': ' +
+        e
+    );
+    return null;
+  }
 }
 
 function resetToLatest(data: any): any {

@@ -31,17 +31,15 @@ export interface VRChatAccountProfile {
 }
 
 export interface VRChatApiSettings {
-  version: 6;
+  version: 7;
   profiles: VRChatAccountProfile[];
   activeProfileId: string | null;
-  legacyCredentialCryptoKey: string | null;
 }
 
 export const VRCHAT_API_SETTINGS_DEFAULT: VRChatApiSettings = {
-  version: 6,
+  version: 7,
   profiles: [],
   activeProfileId: null,
-  legacyCredentialCryptoKey: null,
 };
 
 export const VRCHAT_ACCOUNT_SECRET_EMPTY: VRChatAccountSecret = {
