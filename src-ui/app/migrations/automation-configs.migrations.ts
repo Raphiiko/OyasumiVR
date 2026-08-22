@@ -37,8 +37,11 @@ const RUN_AUTOMATION_COMMAND_FIELDS = [
 ];
 
 async function from19to20(data: any): Promise<any> {
-  data.version = 20;
-  if (!data.RUN_AUTOMATIONS) return data;
+  if (!data.RUN_AUTOMATIONS) {
+    data.version = 20;
+    return data;
+  }
+  const original = structuredClone(data);
   const legacyKey = data.RUN_AUTOMATIONS.runAutomationsCryptoKey;
   delete data.RUN_AUTOMATIONS.runAutomationsCryptoKey;
   let key: CryptoKey | null = null;
@@ -49,6 +52,7 @@ async function from19to20(data: any): Promise<any> {
       error("[automation-configs-migrations] Couldn't read the Run Automations command key: " + e);
     }
   }
+  let discarded = false;
   for (const field of RUN_AUTOMATION_COMMAND_FIELDS) {
     const commands = data.RUN_AUTOMATIONS[field];
     if (!commands) continue;
@@ -58,8 +62,15 @@ async function from19to20(data: any): Promise<any> {
     } catch (e) {
       error("[automation-configs-migrations] Couldn't migrate " + field + ': ' + e);
       data.RUN_AUTOMATIONS[field] = '';
+      discarded = true;
     }
   }
+  if (discarded) {
+    await saveBackup(original).catch((e) =>
+      error("[automation-configs-migrations] Couldn't write the backup: " + e)
+    );
+  }
+  data.version = 20;
   return data;
 }
 
