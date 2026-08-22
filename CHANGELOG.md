@@ -41,7 +41,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
   `--console` to open one
 - The Chinese Steam release is now the same build as the international Steam release. It switches to
   CN compliance mode at runtime.
-- The commands of the "Run Automations" are now stored as plain text, so you can read and edit them in
+- The Run Automations commands are now stored as plain text, so you can read and edit them in
   OyasumiVR's settings file
 
 ### Fixed
