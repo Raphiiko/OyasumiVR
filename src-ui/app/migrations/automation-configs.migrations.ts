@@ -5,7 +5,7 @@ import { message } from '@tauri-apps/plugin-dialog';
 import { BaseDirectory, writeTextFile } from '@tauri-apps/plugin-fs';
 import { migrateOscScript } from './osc-script.migrations';
 import { migrateKnownLighthouseDeviceId } from './lighthouse-device-id';
-import { decryptStorageData, deserializeStorageCryptoKey } from '../utils/crypto';
+import { decryptStorageData, deserializeStorageCryptoKey } from './legacy/storage-crypto';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: resetToLatest,
