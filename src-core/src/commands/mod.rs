@@ -3,6 +3,6 @@ pub mod debug;
 pub mod log_utils;
 pub mod notifications;
 pub mod nvml;
+pub mod secrets;
 pub mod splash;
 pub mod time;
-pub mod vrchat_secrets;
