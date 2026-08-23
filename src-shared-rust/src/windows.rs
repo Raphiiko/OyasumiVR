@@ -60,6 +60,26 @@ impl Drop for QueryAccessToken {
     }
 }
 
+/// The Program Files directory, from the shell rather than from `%ProgramFiles%`, which any
+/// process can hand to the one it launches.
+pub fn program_files() -> std::result::Result<std::path::PathBuf, Error> {
+    use windows::Win32::Foundation::S_OK;
+    use windows::Win32::System::Com::CoTaskMemFree;
+    use windows::Win32::UI::Shell::{FOLDERID_ProgramFiles, SHGetKnownFolderPath, KF_FLAG_DEFAULT};
+
+    unsafe {
+        let path = SHGetKnownFolderPath(&FOLDERID_ProgramFiles, KF_FLAG_DEFAULT, None)
+            .map_err(|e| Error::from_raw_os_error(e.code().0))?;
+        if path.is_null() {
+            return Err(Error::other("the shell returned no Program Files path"));
+        }
+        let text = path.to_string().map_err(Error::other);
+        CoTaskMemFree(Some(path.0 as *const _));
+        let _ = S_OK;
+        Ok(std::path::PathBuf::from(text?))
+    }
+}
+
 /// The SID of the user this process runs as, for the scheduled task's principal and DACL.
 pub fn current_user_sid() -> std::result::Result<String, Error> {
     use windows::Win32::Security::Authorization::ConvertSidToStringSidW;
@@ -97,6 +117,16 @@ pub fn current_user_sid() -> std::result::Result<String, Error> {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn program_files_ignores_the_environment() {
+        let real = super::program_files().expect("the shell always knows Program Files");
+        assert!(real.is_dir(), "{}", real.display());
+        std::env::set_var("ProgramFiles", r"C:ttacker");
+        let again = super::program_files().expect("still resolves");
+        std::env::remove_var("ProgramFiles");
+        assert_eq!(real, again);
+    }
+
     #[test]
     fn current_user_sid_looks_like_a_sid() {
         let sid = super::current_user_sid().expect("the current process always has a user");

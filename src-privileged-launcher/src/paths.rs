@@ -1,4 +1,4 @@
-use std::io::{Error, ErrorKind, Result};
+use std::io::Result;
 use std::path::PathBuf;
 
 pub const SIDECAR_EXE: &str = "oyasumivr-elevated-sidecar.exe";
@@ -7,9 +7,7 @@ pub const LAUNCHER_EXE: &str = "oyasumivr-privileged-launcher.exe";
 /// Everything below lives under Program Files. Only administrators may write here, which is what
 /// makes it safe to execute a staged sidecar: its own directory is a DLL search location.
 pub fn privileged_dir() -> Result<PathBuf> {
-    let program_files = std::env::var("ProgramFiles")
-        .map_err(|_| Error::new(ErrorKind::NotFound, "ProgramFiles is not set"))?;
-    Ok(PathBuf::from(program_files)
+    Ok(oyasumivr_shared::windows::program_files()?
         .join("OyasumiVR")
         .join("privileged"))
 }

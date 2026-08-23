@@ -18,6 +18,7 @@ features = [
   "Win32_System_TaskScheduler",
   "Win32_System_Threading",
   "Win32_System_Variant",
+  "Win32_UI_Shell",
 ]
 
 [dependencies]

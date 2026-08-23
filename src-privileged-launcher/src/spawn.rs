@@ -24,9 +24,11 @@ fn wide(value: &Path) -> Vec<u16> {
 
 /// Starts the sidecar from its staged, admin-only directory. A failure to set the mitigation
 /// policy is not fatal, since the directory permissions are what stop DLL planting.
-pub fn start(exe: &Path, working_dir: &Path) -> Result<u32> {
+pub fn start(exe: &Path, working_dir: &Path, arguments: &str) -> Result<u32> {
     let mut application = wide(exe);
     let mut directory = wide(working_dir);
+    // argv[0] first, the way a shell would pass it
+    let mut command_line = wide(Path::new(&format!("\"{}\" {arguments}", exe.display())));
 
     unsafe {
         let mut startup = STARTUPINFOEXW::default();
@@ -62,7 +64,7 @@ pub fn start(exe: &Path, working_dir: &Path) -> Result<u32> {
         let mut information = PROCESS_INFORMATION::default();
         let result = CreateProcessW(
             PWSTR(application.as_mut_ptr()),
-            None,
+            Some(PWSTR(command_line.as_mut_ptr())),
             None,
             None,
             false,

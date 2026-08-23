@@ -58,8 +58,15 @@ pub fn run() -> u8 {
     let staged_exe = staged_dir.join(paths::SIDECAR_EXE);
     collect_old_staged(&staged_dir);
 
+    // The sidecar takes these as arguments. The task cannot pass any, so they arrive here through
+    // the handshake and get forwarded.
+    let arguments = format!(
+        "--core-grpc-port={} --core-pid={}",
+        handshake.core_grpc_port, handshake.core_pid
+    );
+
     // verified while already inside a directory only administrators can write
-    match spawn::start(&staged_exe, &staged_dir) {
+    match spawn::start(&staged_exe, &staged_dir, &arguments) {
         Ok(pid) => {
             log(&format!("[run] started the sidecar as pid {pid}"));
             exit::OK
