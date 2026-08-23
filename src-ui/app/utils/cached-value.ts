@@ -58,7 +58,7 @@ export class CachedValue<T> {
 
   get(): T | undefined {
     if (!this.initialized.value) return undefined;
-    const ttlExpired = this.lastSet + this.ttl < Date.now();
+    const ttlExpired = this.lastSet !== -1 && this.lastSet + this.ttl < Date.now();
     if (ttlExpired && this.persistenceKey) void this.clear().catch(() => undefined);
     return ttlExpired ? undefined : this.value;
   }
