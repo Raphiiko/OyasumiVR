@@ -59,6 +59,15 @@ fn choose_launch_strategy() -> SidecarLaunch {
     SidecarLaunch::ScheduledTask
 }
 
+/// Whether the elevated sidecar goes through the privileged launcher's scheduled task.
+pub async fn uses_scheduled_task() -> bool {
+    let manager_guard = SIDECAR_MANAGER.lock().await;
+    manager_guard
+        .as_ref()
+        .map(|m| m.launch == SidecarLaunch::ScheduledTask)
+        .unwrap_or(false)
+}
+
 pub async fn set_error_reporting_enabled(enabled: bool) {
     let enabled = enabled
         && !cfg!(debug_assertions)

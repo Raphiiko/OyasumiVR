@@ -83,6 +83,9 @@ pub struct SidecarManager {
     pub restart_requested: Arc<tokio::sync::Notify>,
     pub launching: Arc<Mutex<()>>,
     pub launch: SidecarLaunch,
+    /// Incremented on every launch. A watcher only touches shared state while its own generation
+    /// is current, so a stop and a quick restart cannot have the old watcher clear the new state.
+    pub generation: Arc<std::sync::atomic::AtomicU64>,
 }
 
 impl SidecarManager {
@@ -113,6 +116,7 @@ impl SidecarManager {
             restart_requested: Arc::new(tokio::sync::Notify::new()),
             launching: Arc::new(Mutex::new(())),
             launch,
+            generation: Arc::new(std::sync::atomic::AtomicU64::new(0)),
         }
     }
 
@@ -180,6 +184,7 @@ impl SidecarManager {
             return false;
         }
         *self.active.lock().await = true;
+        self.generation.fetch_add(1, Ordering::Relaxed);
         info!(
             "[Core] {} {} sidecar...",
             match relaunch {
@@ -325,8 +330,12 @@ impl SidecarManager {
                 );
             }
         }
+        // Cleared so a restart is not rejected for carrying a different pid than this one.
+        *self.sidecar_pid.lock().await = None;
+        *self.sidecar_child.lock().await = None;
         *self.active.lock().await = false;
         *self.started.lock().await = false;
+        self.generation.fetch_add(1, Ordering::Relaxed);
     }
 
     // The sidecar process is running
@@ -395,6 +404,7 @@ impl SidecarManager {
 
     fn watch_process(&self) {
         let mut manager = self.clone();
+        let generation = manager.generation.load(Ordering::Relaxed);
 
         tokio::spawn(async move {
             let last_retry_interval = LAUNCH_RETRY_INTERVALS.len() - 1;
@@ -425,6 +435,10 @@ impl SidecarManager {
                         if alive_polls >= 20 {
                             retries = 0;
                         }
+                    }
+                    if manager.generation.load(Ordering::Relaxed) != generation {
+                        // A stop or a newer launch already took over this state.
+                        break;
                     }
                     *manager.sidecar_pid.lock().await = None;
                     *manager.sidecar_child.lock().await = None;
@@ -471,6 +485,32 @@ mod tests {
         let text = resolved.to_string_lossy();
         assert!(!text.contains('/'), "forward slashes left in {text}");
         assert!(text.ends_with(r"resources\elevated-sidecar\sidecar.exe"), "{text}");
+    }
+
+    #[tokio::test]
+    async fn stopping_clears_the_pid_and_moves_the_generation_on() {
+        let (tx, _rx) = tokio::sync::mpsc::channel(4);
+        let mut manager = super::SidecarManager::new(
+            "TEST".to_string(),
+            "resources/".to_string(),
+            "x.exe".to_string(),
+            tx,
+            false,
+            vec![],
+            super::SidecarLaunch::ScheduledTask,
+        );
+        *manager.sidecar_pid.lock().await = Some(4321);
+        *manager.active.lock().await = true;
+        *manager.started.lock().await = true;
+        let before = manager.generation.load(std::sync::atomic::Ordering::Relaxed);
+
+        manager.stop_and_stay_stopped().await;
+
+        // A stale pid would make handle_start_signal reject the next sidecar.
+        assert_eq!(*manager.sidecar_pid.lock().await, None);
+        assert!(!*manager.active.lock().await);
+        assert!(!*manager.started.lock().await);
+        assert!(manager.generation.load(std::sync::atomic::Ordering::Relaxed) > before);
     }
 
     #[test]

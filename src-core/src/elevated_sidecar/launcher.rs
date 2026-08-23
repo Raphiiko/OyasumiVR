@@ -285,6 +285,14 @@ pub enum EnableResult {
 
 /// Makes sure the launcher is installed and healthy, then starts the sidecar.
 pub async fn enable() -> EnableResult {
+    // A build that elevates the sidecar directly has no launcher to install or check.
+    if !super::uses_scheduled_task().await {
+        return if super::commands::start_elevated_sidecar().await {
+            EnableResult::Ok
+        } else {
+            EnableResult::InstallFailed
+        };
+    }
     match state() {
         LauncherState::NotSupported => {
             // nothing to fall back to without an elevated token
