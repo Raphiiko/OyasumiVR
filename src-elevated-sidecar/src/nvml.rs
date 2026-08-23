@@ -12,19 +12,30 @@ lazy_static! {
 ///
 /// Asks Windows for the system directory rather than reading `%SystemRoot%`, which this process
 /// inherits and therefore does not control.
-fn nvml_path() -> std::path::PathBuf {
+fn nvml_path() -> Option<std::path::PathBuf> {
     use windows_sys::Win32::System::SystemInformation::GetSystemDirectoryW;
 
-    let mut buffer = [0u16; 260];
-    let written = unsafe { GetSystemDirectoryW(buffer.as_mut_ptr(), buffer.len() as u32) } as usize;
-    if written == 0 || written > buffer.len() {
-        return std::path::PathBuf::from(r"C:\Windows\System32\nvml.dll");
+    // A short buffer is answered with the length needed, so this asks at most twice.
+    let mut buffer = vec![0u16; 260];
+    let mut written =
+        unsafe { GetSystemDirectoryW(buffer.as_mut_ptr(), buffer.len() as u32) } as usize;
+    if written > buffer.len() {
+        buffer = vec![0u16; written];
+        written = unsafe { GetSystemDirectoryW(buffer.as_mut_ptr(), buffer.len() as u32) } as usize;
     }
-    std::path::PathBuf::from(String::from_utf16_lossy(&buffer[..written])).join("nvml.dll")
+    if written == 0 || written > buffer.len() {
+        return None;
+    }
+    Some(std::path::PathBuf::from(String::from_utf16_lossy(&buffer[..written])).join("nvml.dll"))
 }
 
 pub fn init() -> bool {
-    let path = nvml_path();
+    let Some(path) = nvml_path() else {
+        error!("[NVML] Could not determine the system directory");
+        *NVML_HANDLE.lock().unwrap() = None;
+        *NVML_STATUS.lock().unwrap() = NvmlStatus::LibLoadingError;
+        return false;
+    };
     info!("[NVML] Initializing NVML from {}", path.display());
     match Nvml::builder().lib_path(path.as_os_str()).init() {
         Ok(nvml) => {
