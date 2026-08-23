@@ -4543,7 +4543,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumivr"
-version = "26.8.0-beta.4"
+version = "26.8.0-beta.5"
 dependencies = [
  "async-recursion",
  "base64 0.22.1",
@@ -4629,7 +4629,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumivr-shared"
-version = "26.8.0-beta.4"
+version = "26.8.0-beta.5"
 dependencies = [
  "regex",
  "reqwest 0.13.4",
