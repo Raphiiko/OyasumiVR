@@ -6,8 +6,9 @@ mod sounds_gen;
 
 use self::audio_devices::manager::AudioDeviceManager;
 use log::{error, info, warn};
-use rodio::{source::Source, Decoder};
-use rodio::{DeviceSinkBuilder, Player};
+use rodio::buffer::SamplesBuffer;
+use rodio::source::Source;
+use rodio::{Decoder, DeviceSinkBuilder, Player};
 use std::collections::HashMap;
 use std::env;
 use std::ffi::OsString;
@@ -73,6 +74,15 @@ async fn watch_processes() {
     }
 }
 
+fn decode_sound_file(path: &str) -> Result<SamplesBuffer, String> {
+    let file = File::open(path).map_err(|e| e.to_string())?;
+    let decoder = Decoder::new(BufReader::new(file)).map_err(|e| e.to_string())?;
+    let channels = decoder.channels();
+    let sample_rate = decoder.sample_rate();
+    let samples: Vec<f32> = decoder.collect();
+    Ok(SamplesBuffer::new(channels, sample_rate, samples))
+}
+
 pub async fn init_sound_playback() {
     // Create channels
     let (tokio_tx, mut tokio_rx) = tokio::sync::mpsc::channel::<(String, f32)>(32);
@@ -93,30 +103,16 @@ pub async fn init_sound_playback() {
 
     // Spawn standard thread to play sounds
     std::thread::spawn(move || {
-        // Load sound files
+        // Load and decode all sound files
         let mut sounds = HashMap::new();
         sounds_gen::SOUND_FILES.iter().for_each(|sound| {
             let path = format!("resources/sounds/{sound}.ogg");
-            let file = match File::open(path.clone()) {
-                Ok(f) => f,
-                Err(e) => {
-                    error!("[Core] Failed to open sound file: {e}");
-                    return;
+            match decode_sound_file(&path) {
+                Ok(buffer) => {
+                    sounds.insert(String::from(*sound), buffer);
                 }
-            };
-            let reader = BufReader::new(file);
-            let source = match Decoder::new(reader) {
-                Ok(s) => s.buffered(),
-                Err(e) => {
-                    error!(
-                        "[Core] Failed to decode sound file at path ({}): {}",
-                        path.clone(),
-                        e
-                    );
-                    return;
-                }
-            };
-            sounds.insert(String::from(*sound), source);
+                Err(e) => error!("[Core] Failed to load sound file ({path}): {e}"),
+            }
         });
 
         // Initialize output stream
@@ -130,12 +126,10 @@ pub async fn init_sound_playback() {
 
         // Play sounds when requested
         while let Ok((sound, volume)) = std_rx.recv() {
-            if let Some(source) = sounds.get(&sound) {
-                // Play sound
-                let source = source.clone();
+            if let Some(buffer) = sounds.get(&sound) {
                 let sink = Player::connect_new(_stream.mixer());
                 sink.set_volume(volume);
-                sink.append(source.clone());
+                sink.append(buffer.clone());
                 sink.detach();
             } else {
                 error!("[Core] Sound not found: {sound}");
@@ -302,5 +296,37 @@ fn get_friendly_name_for_windows_power_policy(scheme_guid: &GUID) -> Option<Stri
     match os_str.to_string_lossy().into_owned() {
         s if !s.is_empty() => Some(s.trim_end_matches('\0').to_string()),
         _ => None,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn bundled_sounds_decode_to_non_silent_samples() {
+        for entry in std::fs::read_dir("resources/sounds").unwrap() {
+            let path = entry.unwrap().path();
+            if path.extension().and_then(|e| e.to_str()) != Some("ogg") {
+                continue;
+            }
+            let buffer = decode_sound_file(path.to_str().unwrap()).unwrap();
+            let mut count = 0usize;
+            let mut peak = 0.0f32;
+            for sample in buffer.take(48_000) {
+                count += 1;
+                peak = peak.max(sample.abs());
+            }
+            assert!(
+                count > 1_000,
+                "{} yielded only {count} samples",
+                path.display()
+            );
+            assert!(
+                peak > 0.001,
+                "{} decoded as silent (peak {peak})",
+                path.display()
+            );
+        }
     }
 }
