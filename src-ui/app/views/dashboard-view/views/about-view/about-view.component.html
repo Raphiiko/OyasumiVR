@@ -1,153 +1,120 @@
 <div class="about-container">
   <div class="logo-row">
-    <div class="logo-side"></div>
     <div class="logo">
       <div class="logo-container">
         <div class="main">Oyasumi<b>VR</b></div>
         <div class="tag-line" transloco="shared.logo.tagline"></div>
       </div>
     </div>
-    <div class="logo-side"></div>
   </div>
 
-  <div class="row" style="margin-top: 1em; margin-bottom: 1em">
-    <div class="left">
-      <div class="author">
-        <div class="author-avatar">
-          <img
-            draggable="false"
-            appImgFallback="assets/img/raphiiko.png"
-            [imgSmoothLoader]="'https://avatars.githubusercontent.com/u/111654848'"
-          />
-        </div>
-        <div class="author-info">
-          <div class="role" transloco="about.author.role"></div>
-          <div class="name">Raphii</div>
-          <div class="twitter">
-            <i class="fa-brands fa-twitter"></i>
-            <a href="https://twitter.com/Raphiiko" target="_blank">&#64;Raphiiko</a>
-          </div>
-          <div class="discord">
-            <i class="fa-brands fa-discord"></i>
-            <span>&#64;raphiiko</span>
-          </div>
-          <div class="github">
-            <i class="fa-brands fa-github"></i>
-            <a href="https://github.com/Raphiiko" target="_blank">Raphiiko</a>
-          </div>
-        </div>
+  <div class="body">
+    <div class="identity">
+      <div class="identity-spacer-top"></div>
+      <div class="identity-avatar">
+        <img
+          alt=""
+          draggable="false"
+          appImgFallback="assets/img/raphiiko.png"
+          [imgSmoothLoader]="'https://avatars.githubusercontent.com/u/111654848'"
+        />
       </div>
-    </div>
-    <div class="right">
-      <div class="project-info-title" transloco="about.contributions"></div>
-      <div class="contributor-list">
-        <div class="contributor-list-entry">
-          <span
-            ><a href="https://github.com/neuroblack" target="_blank">neuroblack</a> |
-            <span transloco="about.contributionType.programming"></span
-          ></span>
-        </div>
-        <div class="contributor-list-entry">
-          <span
-            ><a href="https://github.com/TheMrGong" target="_blank">góngo</a> |
-            <span transloco="about.contributionType.programming"></span
-          ></span>
-        </div>
-        <div class="contributor-list-entry">
-          <span
-            ><a href="https://fanyat.su" target="_blank">Fanyatsu</a> |
-            <span transloco="about.contributionType.programming"></span
-          ></span>
-        </div>
-        <div class="contributor-list-entry">
-          <span
-            ><a href="https://github.com/BenjaminZehowlt" target="_blank">BenjaminZehowlt</a> |
-            <span transloco="about.contributionType.programming"></span
-          ></span>
-        </div>
-        <div class="contributor-list-entry">
-          <span
-            ><a href="https://github.com/sofoxe1" target="_blank">sofoxe1</a> |
-            <span transloco="about.contributionType.programming"></span
-          ></span>
-        </div>
-        <div class="contributor-list-entry">
-          <span
-            ><a href="https://github.com/coolGi69" target="_blank">coolGi</a> |
-            <span transloco="about.contributionType.programming"></span
-          ></span>
-        </div>
-        <div class="contributor-list-entry">
-          <span>spaecd | <span transloco="about.contributionType.soundFx"></span></span>
-        </div>
+      <div class="identity-name">
+        <div class="role" transloco="about.author.role"></div>
+        <div class="name">Raphii</div>
       </div>
-      <div class="project-info-title" transloco="about.projectLinks"></div>
+      <div class="identity-socials">
+        <a href="https://raphii.co" target="_blank">
+          <i class="fa-solid fa-globe"></i>
+          <span>raphii.co</span>
+        </a>
+        <a href="https://twitter.com/Raphiiko" target="_blank">
+          <i class="fa-brands fa-twitter"></i>
+          <span>&#64;Raphiiko</span>
+        </a>
+        <span>
+          <i class="fa-brands fa-discord"></i>
+          <span class="selectable">&#64;raphiiko</span>
+        </span>
+        <a href="https://github.com/Raphiiko" target="_blank">
+          <i class="fa-brands fa-github"></i>
+          <span>Raphiiko</span>
+        </a>
+      </div>
       <div class="project-links">
         <a
           href="https://github.com/Raphiiko/OyasumiVR"
           target="_blank"
           transloco="about.sourceLink"
         ></a>
-        <br />
         <a href="https://discord.gg/7MqdPJhYxC" target="_blank" transloco="about.discordInvite"></a>
       </div>
+      <div class="identity-spacer-bottom"></div>
+      <div class="build-info">
+        <div>Oyasumi<b>VR</b></div>
+        <div>v{{ version }}-{{ FLAVOUR }} ({{ BUILD_ID }})</div>
+      </div>
     </div>
-  </div>
 
-  @if (supporterCache.get()?.length) {
-    <div class="row" @vshrink>
-      <div class="supporters-row">
-        <div class="supporters-list" #supportersList>
-          @for (tier of supporterCache.get() ?? []; track tier) {
-            <div class="supporters-tier">
-              <div class="supporters-tier-label">
-                {{ tier.name }}
+    <div class="rail" #rail (scroll)="updateRailFade()">
+      <div class="rail-content" #railContent>
+        @if (supporterCache.get()?.length) {
+          <div class="supporters" @vshrink>
+            <div class="section-title" transloco="about.supporters"></div>
+            @for (tier of supporterCache.get() ?? []; track tier; let rank = $index) {
+              <div class="supporter-tier" [ngClass]="'tier-rank-' + (rank < 2 ? rank : 2)">
+                <div class="supporter-tier-label">{{ tier.name }}</div>
+                <div class="supporter-tier-members">
+                  @for (supporter of tier.supporters; track $index) {
+                    <span>{{ supporter }}</span>
+                  }
+                </div>
               </div>
-              <div class="supporters-tier-members">
-                @for (supporter of tier.supporters; track supporter) {
-                  <div class="supporters-tier-member">
-                    {{ supporter }}
-                  </div>
+            }
+          </div>
+        }
+
+        <div class="credits">
+          <div class="section-title" transloco="about.contributions"></div>
+          @for (group of contributionGroups; track group.type) {
+            <div class="credit-row">
+              <span class="credit-subject">{{
+                'about.contributionType.' + group.type | transloco
+              }}</span>
+              <span class="credit-leader"></span>
+              @for (contributor of group.contributors; track contributor) {
+                @if (contributor.url) {
+                  <a class="credit-name" [href]="contributor.url" target="_blank">{{
+                    contributor.name
+                  }}</a>
+                } @else {
+                  <span class="credit-name">{{ contributor.name }}</span>
                 }
-              </div>
+              }
+            </div>
+          }
+
+          <div class="section-title" transloco="about.translations"></div>
+          @for (language of translationLanguages; track language) {
+            <div class="credit-row">
+              <span class="credit-subject">
+                <span [ngClass]="['fi', 'fi-' + (language.flagCode ?? language.langCode)]"></span>
+                <span>{{ language.langNameNative }}</span>
+              </span>
+              <span class="credit-leader"></span>
+              @for (contributor of language.contributors; track contributor) {
+                @if (contributor.url) {
+                  <a class="credit-name" [href]="contributor.url" target="_blank">{{
+                    contributor.name
+                  }}</a>
+                } @else {
+                  <span class="credit-name">{{ contributor.name }}</span>
+                }
+              }
             </div>
           }
         </div>
-        <div class="supporters-label" transloco="about.supporters"></div>
       </div>
     </div>
-  }
-
-  <div class="row">
-    <div class="left"></div>
-    <div class="right">
-      <div class="project-info-title" transloco="about.translations"></div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="translation-author-list">
-      @for (contributor of translationContributors; track contributor) {
-        <div class="translation-author-list-entry">
-          <span [ngClass]="['fi', 'fi-' + (contributor.flagCode ?? contributor.langCode)]"></span>
-          <span>{{ contributor.langNameNative }}</span>
-          <span>&nbsp;|&nbsp;</span>
-          @if (contributor.url) {
-            <a [href]="contributor.url" target="_blank">{{ contributor.name }}</a>
-          }
-          @if (!contributor.url) {
-            <span>{{ contributor.name }}</span>
-          }
-        </div>
-      }
-    </div>
-  </div>
-
-  <div class="row" style="margin-top: 1em">
-    <div class="left">
-      <div class="build-info">
-        <div>Oyasumi<b>VR</b> v{{ version }}-{{ FLAVOUR }} ({{ BUILD_ID }})</div>
-      </div>
-    </div>
-    <div class="right"></div>
   </div>
 </div>

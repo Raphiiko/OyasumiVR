@@ -6,65 +6,18 @@
   align-items: center;
   height: 100%;
   width: 100%;
-  //noinspection CssInvalidPropertyValue
-  overflow: auto;
+  overflow: hidden;
   position: relative;
-
-  &::-webkit-scrollbar {
-    width: 4px;
-    height: 8px;
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: var(--color-surface-4);
-    border-radius: 2px;
-  }
-
-  &::-webkit-scrollbar-track-piece {
-    display: none;
-  }
 }
 
 .about-container {
   width: 100%;
-  max-width: 50em;
+  max-width: 80em;
+  max-height: 100%;
+  margin: 0 auto;
+  padding: 0 0.5em;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: stretch;
-  margin: 0 auto;
-}
-
-.row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-
-  & > div {
-    flex: 1;
-  }
-
-  .left,
-  .right {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  .left {
-    align-items: flex-start;
-    text-align: left;
-  }
-
-  .right {
-    align-items: flex-end;
-    text-align: right;
-  }
 }
 
 .logo-row {
@@ -72,17 +25,7 @@
   flex-direction: row;
   align-items: stretch;
   border-bottom: 1px solid var(--color-surface-4);
-
-  .logo-side {
-    width: 8em;
-    flex-shrink: 0;
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
-    flex-direction: column;
-    color: var(--color-text-4);
-    transform: translateY(-1.75em);
-  }
+  flex-shrink: 0;
 
   .logo {
     flex: 1;
@@ -106,6 +49,7 @@
         }
       }
 
+      // offsets are in this element's own em, so changing either size breaks the fit
       .tag-line {
         color: var(--color-text-4);
         font-size: 1.35em;
@@ -116,195 +60,225 @@
   }
 }
 
-.author {
+.body {
+  // basis auto, or this collapses when the container sizes to its content
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 16em 1fr;
+  gap: 2em;
+}
+
+.identity {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  flex: 1;
+  text-align: center;
+  padding: 1.2em 0 0.2em 0;
+
+  // flexible gaps, so the column fills whatever height the rail sets
+  &-spacer-top {
+    flex: 2;
+  }
+
+  &-spacer-bottom {
+    flex: 3;
+  }
 
   &-avatar {
     @include shadows.shadow(4, true);
-    overflow: hidden;
-    border-radius: 999999999px;
+    margin-bottom: 0.9em;
     width: 10em;
     height: 10em;
+    border-radius: 50%;
+    overflow: hidden;
     border: 0.25em solid var(--color-surface-6);
-    margin-right: 2em;
+    flex-shrink: 0;
 
     img {
       width: 100%;
       height: 100%;
+      display: block;
     }
   }
 
-  &-info {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-
-    .name {
-      font-size: 2em;
-      padding-bottom: 0.25em;
-    }
+  &-name {
+    margin-bottom: 1.15em;
 
     .role {
       color: var(--color-text-3);
+      font-size: 0.8em;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      line-height: 1.4;
     }
 
-    .discord span {
-      user-select: text;
+    .name {
+      font-size: 1.85em;
+      line-height: 1.15;
     }
+  }
 
-    .twitter,
-    .discord,
-    .github {
+  &-socials {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4em;
+
+    > * {
       display: flex;
       flex-direction: row;
       align-items: center;
-      justify-content: flex-start;
+      gap: 0.6em;
+    }
 
-      i {
-        width: 1.75em;
-        text-align: center;
-        font-size: 1.25em;
-        padding-right: 0.5em;
-      }
+    a {
+      text-decoration: none;
 
-      &:not(:last-child) {
-        padding-bottom: 0.5em;
+      span {
+        text-decoration: underline;
       }
     }
-  }
-}
 
-.project-info {
-  text-align: right;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-
-  &-title {
-    font-size: 1.5em;
-    padding-bottom: 0.25em;
-
-    &:not(:first-child) {
-      margin-top: 1em;
+    i {
+      width: 1.4em;
+      text-align: center;
+      font-size: 1.1em;
+      color: var(--color-text-4);
     }
-  }
-}
 
-.contributor-list {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  padding-bottom: 0.5em;
-
-  &-entry {
-    .fi {
-      margin-left: 0.5em;
-    }
-  }
-}
-
-.translation-author-list {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 0 1em;
-  padding-bottom: 0.5em;
-  font-size: 0.8em;
-
-  &-entry {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    .fi {
-      margin: 0 0.5em 0 0;
-    }
-    &:nth-child(4n) {
-      flex-direction: row-reverse;
-      .fi {
-        margin: 0 0 0 0.5em;
-      }
+    .selectable {
+      user-select: text;
     }
   }
 }
 
 .project-links {
-}
-
-.build-info {
-  color: var(--color-text-3);
-  flex-shrink: 0;
-  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
   width: 100%;
+  margin-top: 1.4em;
 }
 
-.supporters-row {
+// the only scrolling region in the view
+.rail {
+  min-height: 0;
+  min-width: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 0.9em;
+  --fade-top: 1.5em;
+  --fade-bottom: 1.5em;
+  mask: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 var(--fade-top),
+    #000 calc(100% - var(--fade-bottom)),
+    transparent 100%
+  );
+
+  &.at-start {
+    --fade-top: 0px;
+  }
+
+  &.at-end {
+    --fade-bottom: 0px;
+  }
+}
+
+.section-title {
+  font-size: 0.85em;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text-4);
+  padding-bottom: 0.6em;
+}
+
+.supporters {
+  padding-top: 1em;
+}
+
+.supporter-tier {
+  &:not(:last-child) {
+    padding-bottom: 0.4em;
+  }
+
+  &-label {
+    color: var(--color-text-4);
+    font-size: 0.85em;
+  }
+
+  &-members {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0 0.9em;
+
+    span {
+      line-height: 1.4;
+    }
+  }
+}
+
+// tiers arrive highest first, and each step down reads slightly smaller and dimmer
+.tier-rank-0 .supporter-tier-members span {
+  font-size: 1.35em;
+  color: var(--color-text-1);
+}
+
+.tier-rank-1 .supporter-tier-members span {
+  font-size: 1.25em;
+  color: var(--color-text-2);
+}
+
+.tier-rank-2 .supporter-tier-members span {
+  font-size: 1.15em;
+  color: var(--color-text-3);
+}
+
+.credits {
+  padding-top: 1.25em;
+
+  .section-title:not(:first-child) {
+    padding-top: 1.25em;
+  }
+}
+
+// names stay direct children, or the leader cannot absorb the first line's slack
+.credit-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: flex-end;
+  column-gap: 0.85em;
+  row-gap: 0;
+  padding: 0.18em 0;
+}
+
+.credit-subject {
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 1em 0;
-  overflow: hidden;
-  margin-left: -1em;
+  gap: 0.5em;
+  white-space: nowrap;
+  color: var(--color-text-2);
+}
 
-  * {
-    white-space: nowrap;
-  }
+.credit-leader {
+  flex: 1;
+  min-width: 2.5em;
+  border-bottom: 1px dotted color-mix(in srgb, var(--color-text-4) 35%, transparent);
+  transform: translateY(-0.25em);
+}
 
-  .supporters-label {
-    flex-shrink: 0;
-    font-size: 1.5em;
-    margin-left: 1em;
-  }
+.credit-name {
+  white-space: nowrap;
+}
 
-  .supporters-list {
-    flex: 1;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    overflow-x: hidden;
-    padding: 0 1em;
-    transition: opacity 0.5s ease;
-
-    mask: linear-gradient(
-        to right,
-        rgba(0, 0, 0, 0) 0,
-        rgba(0, 0, 0, 1) 1em,
-        rgba(0, 0, 0, 1) calc(100% - 1em),
-        rgba(0, 0, 0, 0) 100%
-      )
-      100% 50% / 100% 100% repeat-x;
-
-    .supporters-tier {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-
-      &:not(:last-child) {
-        margin-right: 2em;
-      }
-
-      &-label {
-        opacity: 0.6;
-      }
-
-      &-members {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-      }
-
-      &-member {
-        font-size: 1.25em;
-
-        &:not(:last-child) {
-          margin-right: 1em;
-        }
-      }
-    }
-  }
+.build-info {
+  color: var(--color-text-4);
+  font-size: 0.9em;
+  line-height: 1.35;
 }

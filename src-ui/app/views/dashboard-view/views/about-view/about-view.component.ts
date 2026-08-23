@@ -1,19 +1,16 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
-  DestroyRef,
   ElementRef,
   OnDestroy,
   OnInit,
   ViewChild,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import { getVersion } from '../../../../utils/app-utils';
 import { BackgroundService } from '../../../../services/background.service';
 import { BUILD_ID, FLAVOUR } from '../../../../../build';
 import { CachedValue } from '../../../../utils/cached-value';
-import { filter, interval } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { vshrink } from '../../../../utils/animations';
 import { shuffle } from 'lodash';
 import { warn } from '@tauri-apps/plugin-log';
@@ -25,6 +22,12 @@ interface SupporterTier {
   supporters: string[];
 }
 
+interface Contributor {
+  name: string;
+  url?: string;
+  type: 'programming' | 'soundFx';
+}
+
 interface TranslationContributor {
   name: string;
   url?: string;
@@ -32,6 +35,18 @@ interface TranslationContributor {
   flagCode?: string;
   langNameNative: string;
   langNameEnglish: string;
+}
+
+interface ContributionGroup {
+  type: Contributor['type'];
+  contributors: Contributor[];
+}
+
+interface TranslationLanguage {
+  langCode: string;
+  flagCode?: string;
+  langNameNative: string;
+  contributors: TranslationContributor[];
 }
 
 @Component({
@@ -44,12 +59,29 @@ interface TranslationContributor {
 })
 export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
   protected readonly FLAVOUR = FLAVOUR;
-  protected translationContributors: TranslationContributor[] = [];
-  private supportersScrolling = false;
+  protected readonly BUILD_ID = BUILD_ID;
+
+  protected readonly contributors: Contributor[] = [
+    { name: 'neuroblack', url: 'https://github.com/neuroblack', type: 'programming' },
+    { name: 'góngo', url: 'https://github.com/TheMrGong', type: 'programming' },
+    { name: 'Fanyatsu', url: 'https://fanyat.su', type: 'programming' },
+    { name: 'BenjaminZehowlt', url: 'https://github.com/BenjaminZehowlt', type: 'programming' },
+    { name: 'sofoxe1', url: 'https://github.com/sofoxe1', type: 'programming' },
+    { name: 'coolGi', url: 'https://github.com/coolGi69', type: 'programming' },
+    { name: 'spaecd', type: 'soundFx' },
+  ];
+
+  protected readonly contributionGroups: ContributionGroup[] = groupByType(this.contributors);
+
+  protected readonly translationLanguages: TranslationLanguage[] = groupByLanguage(
+    translationContributorData
+  );
 
   version?: string;
 
-  @ViewChild('supportersList') supportersList?: ElementRef;
+  @ViewChild('rail') private rail?: ElementRef<HTMLElement>;
+  @ViewChild('railContent') private railContent?: ElementRef<HTMLElement>;
+  private railObserver?: ResizeObserver;
 
   protected supporterCache: CachedValue<SupporterTier[]> = new CachedValue<SupporterTier[]>(
     undefined,
@@ -57,37 +89,7 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
     'OYASUMIVR_SUPPORTERS'
   );
 
-  constructor(
-    private background: BackgroundService,
-    private destroyRef: DestroyRef
-  ) {
-    this.buildTranslationContributors(translationContributorData, 4);
-  }
-
-  private buildTranslationContributors(
-    translationContributors: TranslationContributor[],
-    columns: 4
-  ) {
-    const matrix: TranslationContributor[][] = [];
-    const rows = Math.ceil(translationContributors.length / columns);
-    let i = 0;
-    for (let column = 0; column < columns; column++) {
-      for (let row = 0; row < rows; row++) {
-        if (i < translationContributors.length) {
-          if (!matrix[column]) matrix[column] = [];
-          matrix[column][row] = translationContributors[i];
-          i++;
-        }
-      }
-    }
-    for (let row = 0; row < rows; row++) {
-      for (let column = 0; column < columns; column++) {
-        if (matrix[column][row]) {
-          this.translationContributors.push(matrix[column][row]);
-        }
-      }
-    }
-  }
+  constructor(private background: BackgroundService) {}
 
   async ngOnInit() {
     this.version = await getVersion();
@@ -119,45 +121,57 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  async ngAfterViewInit() {
-    interval(1000)
-      .pipe(
-        filter(() => !this.supportersScrolling),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe(() => {
-        if (!this.supportersList) return;
-        const list = this.supportersList.nativeElement as HTMLDivElement;
-        if (list.scrollWidth <= list.clientWidth) return;
-        this.supportersScrolling = true;
-        const scrollToEnd = () => {
-          if (!this.supportersScrolling) {
-            list.scrollLeft = 0;
-            list.style.opacity = '100%';
-            return;
-          }
-          list.scrollLeft += 1;
-          if (list.scrollLeft < list.scrollWidth - list.clientWidth) {
-            setTimeout(() => scrollToEnd(), 16);
-          } else {
-            setTimeout(() => {
-              list.style.opacity = '0%';
-            }, 1500);
-            setTimeout(() => {
-              list.scrollLeft = 0;
-              list.style.opacity = '100%';
-              setTimeout(() => requestAnimationFrame(() => scrollToEnd()), 2000);
-            }, 2000);
-          }
-        };
-        setTimeout(() => requestAnimationFrame(() => scrollToEnd()), 2000);
-      });
+  ngAfterViewInit() {
+    const el = this.rail?.nativeElement;
+    if (!el) return;
+    // the rail's own box never changes when its content grows, so observe both
+    this.railObserver = new ResizeObserver(() => this.updateRailFade());
+    this.railObserver.observe(el);
+    if (this.railContent) this.railObserver.observe(this.railContent.nativeElement);
+    this.updateRailFade();
+  }
+
+  protected updateRailFade() {
+    const el = this.rail?.nativeElement;
+    if (!el) return;
+    const scrollable = el.scrollHeight - el.clientHeight;
+    el.classList.toggle('at-start', el.scrollTop <= 1);
+    el.classList.toggle('at-end', scrollable - el.scrollTop <= 1);
   }
 
   async ngOnDestroy() {
-    this.supportersScrolling = false;
+    this.railObserver?.disconnect();
     this.background.setBackground(null);
   }
+}
 
-  protected readonly BUILD_ID = BUILD_ID;
+function groupByType(contributors: Contributor[]): ContributionGroup[] {
+  const groups: ContributionGroup[] = [];
+  for (const contributor of contributors) {
+    let group = groups.find((g) => g.type === contributor.type);
+    if (!group) groups.push((group = { type: contributor.type, contributors: [] }));
+    group.contributors.push(contributor);
+  }
+  return groups;
+}
+
+function groupByLanguage(contributors: TranslationContributor[]): TranslationLanguage[] {
+  const languages: TranslationLanguage[] = [];
+  for (const contributor of contributors) {
+    let language = languages.find(
+      (l) => l.langCode === contributor.langCode && l.flagCode === contributor.flagCode
+    );
+    if (!language) {
+      languages.push(
+        (language = {
+          langCode: contributor.langCode,
+          flagCode: contributor.flagCode,
+          langNameNative: contributor.langNameNative,
+          contributors: [],
+        })
+      );
+    }
+    language.contributors.push(contributor);
+  }
+  return languages;
 }
