@@ -4,13 +4,12 @@
       "role": "Developer"
     },
     "contributionType": {
-      "programming": "Programming",
+      "programming": "Code",
       "soundFx": "Sound FX"
     },
     "contributions": "Contributions",
     "discordInvite": "Discord Server",
-    "projectLinks": "Project Links",
-    "sourceLink": "Source Code @ GitHub",
+    "sourceLink": "Source (GitHub)",
     "supporters": "Supporters",
     "translations": "Translations"
   },
