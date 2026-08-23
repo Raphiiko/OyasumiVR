@@ -20,9 +20,7 @@ fn repo_root() -> PathBuf {
         .unwrap_or_else(|| PathBuf::from("."))
 }
 
-/// Reads a variable from the environment, falling back to `.env.local`. Deliberately a hand-rolled
-/// parser: one `KEY=value` per line is all this needs, and an elevated build step is a poor place
-/// to add a dependency.
+/// Reads a variable from the environment, falling back to one `KEY=value` per line in `.env.local`.
 fn from_env_or_dotenv(variable: &str) -> Option<String> {
     if let Ok(value) = std::env::var(variable) {
         if !value.trim().is_empty() {
@@ -48,19 +46,23 @@ fn from_env_or_dotenv(variable: &str) -> Option<String> {
     None
 }
 
-/// Accepts a minisign key file, or the base64 of one. Tauri stores the base64 form, so a key copied
-/// straight from CI secrets works without reformatting.
+/// Accepts any of the three forms Tauri accepts: a minisign key file, the base64 of one, or a path
+/// to the file.
 fn parse_key(raw: &str) -> Result<minisign::SecretKeyBox, String> {
     let raw = raw.trim();
-    if let Ok(boxed) = minisign::SecretKeyBox::from_string(raw) {
-        if raw.starts_with("untrusted comment:") {
+    if raw.starts_with("untrusted comment:") {
+        return minisign::SecretKeyBox::from_string(raw)
+            .map_err(|e| format!("cannot parse the key: {e}"));
+    }
+    if let Some(text) = base64_decode(raw).and_then(|d| String::from_utf8(d).ok()) {
+        if let Ok(boxed) = minisign::SecretKeyBox::from_string(text.trim()) {
             return Ok(boxed);
         }
     }
-    let decoded = base64_decode(raw).ok_or_else(|| "the key is neither a minisign key file nor base64".to_string())?;
-    let text = String::from_utf8(decoded).map_err(|_| "the decoded key is not text".to_string())?;
-    minisign::SecretKeyBox::from_string(text.trim())
-        .map_err(|e| format!("cannot parse the decoded key: {e}"))
+    let contents = std::fs::read_to_string(raw)
+        .map_err(|_| "the key is not a minisign key file, base64, or a readable path".to_string())?;
+    minisign::SecretKeyBox::from_string(contents.trim())
+        .map_err(|e| format!("cannot parse the key file: {e}"))
 }
 
 fn base64_decode(input: &str) -> Option<Vec<u8>> {

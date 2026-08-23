@@ -9,11 +9,18 @@ lazy_static! {
 }
 
 /// An absolute path, because loading by name searches this executable's own directory first.
+///
+/// Asks Windows for the system directory rather than reading `%SystemRoot%`, which this process
+/// inherits and therefore does not control.
 fn nvml_path() -> std::path::PathBuf {
-    let system_root = std::env::var("SystemRoot").unwrap_or_else(|_| r"C:\Windows".to_string());
-    std::path::Path::new(&system_root)
-        .join("System32")
-        .join("nvml.dll")
+    use windows_sys::Win32::System::SystemInformation::GetSystemDirectoryW;
+
+    let mut buffer = [0u16; 260];
+    let written = unsafe { GetSystemDirectoryW(buffer.as_mut_ptr(), buffer.len() as u32) } as usize;
+    if written == 0 || written > buffer.len() {
+        return std::path::PathBuf::from(r"C:\Windows\System32\nvml.dll");
+    }
+    std::path::PathBuf::from(String::from_utf16_lossy(&buffer[..written])).join("nvml.dll")
 }
 
 pub fn init() -> bool {

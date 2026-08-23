@@ -40,9 +40,8 @@ static ERROR_REPORTING_GUARD: LazyLock<Mutex<Option<sentry::ClientInitGuard>>> =
 #[tokio::main]
 async fn main() {
     // before any DLL this process loads later, prefer System32 over our own directory
-    unsafe {
-        let _ = SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_SYSTEM32);
-    }
+    let dll_search_restricted =
+        unsafe { SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_SYSTEM32) } != 0;
     // Initialize logging
     let log_path = if let Some(base_dirs) = BaseDirs::new() {
         base_dirs
@@ -70,6 +69,9 @@ async fn main() {
         ),
     ])
     .unwrap();
+    if !dll_search_restricted {
+        error!("Could not restrict the DLL search path to System32");
+    }
     // Parse the arguments
     let args: Vec<String> = env::args().collect();
     let host_port = match switch_value(&args, "core-grpc-port") {
