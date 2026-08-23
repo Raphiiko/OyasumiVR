@@ -316,11 +316,11 @@ impl SidecarManager {
         if let Some(child) = self.sidecar_child.lock().await.as_mut() {
             let _ = child.kill();
         } else if let Some(pid) = *self.sidecar_pid.lock().await {
-            // Started by the launcher, so there is no handle. The sidecar exits on its own when
-            // asked over gRPC; this is only the backstop for when that did not land.
+            // An elevated sidecar has no handle here and cannot be terminated from this process,
+            // so a stop it did not honour over gRPC leaves it running.
             if pid != 0 && process_is_running(pid) {
-                info!(
-                    "[Core] {} sidecar (pid {}) was asked to stop",
+                warn!(
+                    "[Core] {} sidecar (pid {}) did not stop when asked",
                     self.sidecar_id, pid
                 );
             }

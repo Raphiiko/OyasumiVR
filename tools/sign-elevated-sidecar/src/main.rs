@@ -99,12 +99,12 @@ fn secret_key() -> Result<minisign::SecretKey, String> {
         .map_err(|e| format!("cannot unlock the signing key: {e}"))
 }
 
-/// Only a DEV build may go unsigned. A Steam or standalone build with an unsigned sidecar looks
-/// fine until the launcher refuses to start it, which is a broken feature rather than a warning.
+/// Only a Dev build may go unsigned. An unreadable flavour counts as shippable, so a missing file
+/// fails the build instead of quietly skipping the signature.
 fn build_is_shippable() -> bool {
     std::fs::read_to_string(repo_root().join("src-core/src/flavour.rs"))
         .map(|s| !s.contains("BuildFlavour::Dev"))
-        .unwrap_or(false)
+        .unwrap_or(true)
 }
 
 fn main() -> ExitCode {

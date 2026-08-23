@@ -174,19 +174,38 @@ fn paths_match(reported: &str, expected: &std::path::Path) -> bool {
 }
 
 /// Anything wider than read and execute for the user is a way to re-aim the task.
+///
+/// Every ACE has to be one we registered. An unrecognised trustee is rejected rather than ignored,
+/// so an added entry such as `(A;;FA;;;WD)` cannot pass alongside the expected three.
 fn sddl_is_ours(reported: &str, sid: &str) -> bool {
-    let expected_user_ace = format!(";;{sid})");
-    let reported = reported.replace(' ', "");
-    reported.contains("(A;;FA;;;SY)")
-        && reported.contains("(A;;FA;;;BA)")
-        && reported
-            .split("(A;")
-            .filter(|ace| ace.contains(sid))
-            .all(|ace| {
-                let rights = ace.split(';').nth(1).unwrap_or("");
-                rights == "0x1200a9" || rights == "FRFX"
-            })
-        && reported.contains(&expected_user_ace)
+    let Some(dacl) = reported.replace(' ', "").split("D:").nth(1).map(str::to_string) else {
+        return false;
+    };
+    let mut saw_system = false;
+    let mut saw_administrators = false;
+    let mut saw_user = false;
+
+    for ace in dacl.split('(').skip(1) {
+        let Some(ace) = ace.split(')').next() else {
+            return false;
+        };
+        if ace.is_empty() {
+            continue;
+        }
+        let fields: Vec<&str> = ace.split(';').collect();
+        // type;flags;rights;object;inherit;trustee
+        if fields.len() != 6 || fields[0] != "A" {
+            return false;
+        }
+        let (rights, trustee) = (fields[2], fields[5]);
+        match trustee {
+            "SY" if rights == "FA" => saw_system = true,
+            "BA" if rights == "FA" => saw_administrators = true,
+            t if t == sid && (rights == "FRFX" || rights == "0x1200a9") => saw_user = true,
+            _ => return false,
+        }
+    }
+    saw_system && saw_administrators && saw_user
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
@@ -276,15 +295,29 @@ pub async fn enable() -> EnableResult {
         LauncherState::NotInstalled
         | LauncherState::Outdated { .. }
         | LauncherState::KeyMismatch
-        | LauncherState::Untrusted { .. } => match install() {
-            InstallOutcome::Ok => {}
-            InstallOutcome::PromptDeclined => return EnableResult::PromptDeclined,
-            InstallOutcome::Failed => return EnableResult::InstallFailed,
-        },
+        | LauncherState::Untrusted { .. } => {
+            // install waits for the UAC prompt, which the user may leave on screen indefinitely
+            match tokio::task::spawn_blocking(install).await {
+                Ok(InstallOutcome::Ok) => {}
+                Ok(InstallOutcome::PromptDeclined) => return EnableResult::PromptDeclined,
+                Ok(InstallOutcome::Failed) => return EnableResult::InstallFailed,
+                Err(e) => {
+                    error!("[Core] The privileged launcher installer panicked: {e}");
+                    return EnableResult::InstallFailed;
+                }
+            }
+        }
     }
 
-    if let LauncherState::Untrusted { reason } = state() {
-        return EnableResult::TaskFailed { reason };
+    // Anything short of Ready means nothing will run elevated, whatever the installer reported.
+    match state() {
+        LauncherState::Ready => {}
+        LauncherState::Untrusted { reason } => return EnableResult::TaskFailed { reason },
+        other => {
+            return EnableResult::TaskFailed {
+                reason: format!("the launcher is {other:?} after installing"),
+            }
+        }
     }
     if !super::commands::start_elevated_sidecar().await {
         return EnableResult::TaskFailed {
@@ -298,6 +331,42 @@ pub async fn enable() -> EnableResult {
 mod tests {
     /// The answer depends on the account running the tests, so this only asserts the direction
     /// that must never be wrong: an elevated process must never be told it cannot elevate.
+    const SID: &str = "S-1-5-21-1-2-3-1001";
+
+    #[test]
+    fn accepts_the_descriptor_we_register() {
+        assert!(super::sddl_is_ours(
+            &format!("D:PAI(A;;FA;;;SY)(A;;FA;;;BA)(A;;0x1200a9;;;{SID})"),
+            SID
+        ));
+        assert!(super::sddl_is_ours(
+            &format!("D:P(A;;FA;;;SY)(A;;FA;;;BA)(A;;FRFX;;;{SID})"),
+            SID
+        ));
+    }
+
+    #[test]
+    fn rejects_an_extra_ace_for_another_trustee() {
+        assert!(!super::sddl_is_ours(
+            &format!("D:(A;;FA;;;SY)(A;;FA;;;BA)(A;;0x1200a9;;;{SID})(A;;FA;;;WD)"),
+            SID
+        ));
+    }
+
+    #[test]
+    fn rejects_write_access_for_the_user() {
+        assert!(!super::sddl_is_ours(
+            &format!("D:(A;;FA;;;SY)(A;;FA;;;BA)(A;;FA;;;{SID})"),
+            SID
+        ));
+    }
+
+    #[test]
+    fn rejects_a_descriptor_missing_an_expected_ace() {
+        assert!(!super::sddl_is_ours(&format!("D:(A;;FA;;;SY)(A;;0x1200a9;;;{SID})"), SID));
+        assert!(!super::sddl_is_ours("", SID));
+    }
+
     #[test]
     fn an_elevated_process_can_always_elevate() {
         if oyasumivr_shared::windows::is_elevated() {
