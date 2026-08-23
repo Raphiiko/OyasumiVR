@@ -70,8 +70,8 @@ pub fn run() -> u8 {
     }
 
     log(&format!(
-        "[install] installed version {PRIVILEGED_LAUNCHER_VERSION} and registered \"{}\" for {sid}",
-        task::TASK_NAME
+        "[install] installed version {PRIVILEGED_LAUNCHER_VERSION} and registered \"{}\"",
+        task::task_name(&sid)
     ));
     exit::OK
 }

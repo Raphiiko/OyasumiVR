@@ -1,8 +1,10 @@
+/// Returns whether the launch was initiated. On the scheduled task path that is not the same as
+/// the sidecar running, which arrives later as a start signal.
 #[tauri::command]
-pub async fn start_elevated_sidecar() {
+pub async fn start_elevated_sidecar() -> bool {
     let mut sidecar_manager_guard = super::SIDECAR_MANAGER.lock().await;
     let sidecar_manager = sidecar_manager_guard.as_mut().unwrap();
-    sidecar_manager.start().await;
+    sidecar_manager.start().await
 }
 
 #[tauri::command]

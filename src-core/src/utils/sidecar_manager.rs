@@ -163,20 +163,21 @@ impl SidecarManager {
         }
     }
 
-    pub async fn start(&mut self) -> u32 {
+    /// Whether the launch was initiated. On the scheduled task path the sidecar reports in later.
+    pub async fn start(&mut self) -> bool {
         self._start_internal(false).await
     }
 
-    async fn _start_internal(&mut self, relaunch: bool) -> u32 {
+    async fn _start_internal(&mut self, relaunch: bool) -> bool {
         // held until the new process is stored, so start_or_restart cannot miss it
         let _launching = self.launching.lock().await;
         let core_grpc_port_guard = crate::grpc::SERVER_PORT.lock().await;
         let core_grpc_port = match core_grpc_port_guard.as_ref() {
             Some(port) => *port,
-            None => return 0,
+            None => return false,
         };
         if !relaunch && *self.active.lock().await {
-            return 0;
+            return false;
         }
         *self.active.lock().await = true;
         info!(
@@ -236,7 +237,7 @@ impl SidecarManager {
                     *self.watching.lock().await = true;
                     self.watch_process();
                 }
-                return 0;
+                return false;
             }
         };
         *self.sidecar_pid.lock().await = Some(child_pid);
@@ -245,7 +246,7 @@ impl SidecarManager {
             *self.watching.lock().await = true;
             self.watch_process();
         }
-        child_pid
+        true
     }
 
     /// Writes the handshake, starts the task, and returns without waiting for the sidecar.
@@ -253,12 +254,12 @@ impl SidecarManager {
     /// Must not wait: callers hold the module level `SIDECAR_MANAGER` lock, which the gRPC handler
     /// delivering the start signal also needs. `handle_start_signal` records the pid and starts the
     /// watcher.
-    async fn start_through_task(&self, core_grpc_port: u32) -> u32 {
+    async fn start_through_task(&self, core_grpc_port: u32) -> bool {
         let Some(sidecar_path) = crate::elevated_sidecar::launcher::bundled_sidecar() else {
             error!("[Core] Cannot find the bundled elevated sidecar");
             *self.active.lock().await = false;
             let _ = self.on_stop_tx.send(false).await;
-            return 0;
+            return false;
         };
         let handshake = oyasumivr_shared::handshake::Handshake::new(
             core_grpc_port,
@@ -269,16 +270,16 @@ impl SidecarManager {
             error!("[Core] Could not write the elevated sidecar handshake: {e}");
             *self.active.lock().await = false;
             let _ = self.on_stop_tx.send(false).await;
-            return 0;
+            return false;
         }
         if let Err(e) = crate::elevated_sidecar::launcher::trigger() {
             error!("[Core] Could not start the privileged launcher task: {e}");
             *self.active.lock().await = false;
             let _ = self.on_stop_tx.send(false).await;
-            return 0;
+            return false;
         }
         self.give_up_if_the_sidecar_never_reports_in();
-        0
+        true
     }
 
     /// Clears `active` when no sidecar ever reports in, which nothing else does on the task path

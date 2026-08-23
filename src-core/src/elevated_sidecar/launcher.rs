@@ -122,16 +122,15 @@ pub fn state() -> LauncherState {
         None => return LauncherState::NotInstalled,
     };
 
+    let sid = current_user_sid().unwrap_or_default();
     // read the task back: one whose action was rewritten still exists
-    let registration = match task::registration() {
+    let registration = match task::registration(&sid) {
         Ok(registration) => registration,
         Err(e) => {
             info!("[Core] No usable privileged launcher task: {e}");
             return LauncherState::NotInstalled;
         }
     };
-
-    let sid = current_user_sid().unwrap_or_default();
     let mismatch = if !paths_match(&registration.action_path, &expected_exe) {
         Some(format!("action points at {}", registration.action_path))
     } else if !registration.action_arguments.trim().is_empty() {
@@ -230,12 +229,13 @@ pub fn install() -> InstallOutcome {
 
 /// Starts the task. Needs no elevation and raises no prompt.
 pub fn trigger() -> Result<(), String> {
-    task::run().map_err(|e| e.to_string())
+    let sid = current_user_sid().map_err(|e| e.to_string())?;
+    task::run(&sid).map_err(|e| e.to_string())
 }
 
 /// The launcher's exit code from its last run, its only channel back to the core.
 pub fn last_launcher_result() -> Option<i32> {
-    task::last_result().ok()
+    task::last_result(&current_user_sid().ok()?).ok()
 }
 
 pub fn describe_launcher_result(code: i32) -> &'static str {
@@ -286,7 +286,11 @@ pub async fn enable() -> EnableResult {
     if let LauncherState::Untrusted { reason } = state() {
         return EnableResult::TaskFailed { reason };
     }
-    super::commands::start_elevated_sidecar().await;
+    if !super::commands::start_elevated_sidecar().await {
+        return EnableResult::TaskFailed {
+            reason: "the elevated sidecar could not be started".to_string(),
+        };
+    }
     EnableResult::Ok
 }
 

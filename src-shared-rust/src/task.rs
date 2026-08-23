@@ -13,7 +13,10 @@ use windows::Win32::System::TaskScheduler::{
 };
 use windows::Win32::System::Variant::{VARIANT, VT_BSTR};
 
-pub const TASK_NAME: &str = "OyasumiVR Privileged Launcher";
+/// One registration per account, so a second administrator cannot replace the first one's.
+pub fn task_name(user_sid: &str) -> String {
+    format!("OyasumiVR Privileged Launcher ({user_sid})")
+}
 
 /// `TASK_CREATE_OR_UPDATE | TASK_DONT_ADD_PRINCIPAL_ACE`. Without the second flag the registering
 /// account keeps write access and can re-aim the task.
@@ -62,10 +65,10 @@ fn service() -> windows::core::Result<ITaskService> {
     }
 }
 
-fn registered_task() -> windows::core::Result<IRegisteredTask> {
+fn registered_task(user_sid: &str) -> windows::core::Result<IRegisteredTask> {
     unsafe {
         let root = service()?.GetFolder(&BSTR::from("\\"))?;
-        root.GetTask(&BSTR::from(TASK_NAME))
+        root.GetTask(&BSTR::from(task_name(user_sid)))
     }
 }
 
@@ -133,7 +136,7 @@ pub fn register(exe: &Path, working_dir: &Path, user_sid: &str) -> windows::core
         let descriptor = BstrVariant::new(&sddl(user_sid));
         let empty = VARIANT::default();
         root.RegisterTask(
-            &BSTR::from(TASK_NAME),
+            &BSTR::from(task_name(user_sid)),
             &BSTR::from(xml(exe, working_dir, user_sid)),
             CREATE_FLAGS,
             &user.0,
@@ -154,9 +157,9 @@ pub struct Registration {
     pub sddl: String,
 }
 
-pub fn registration() -> windows::core::Result<Registration> {
+pub fn registration(user_sid: &str) -> windows::core::Result<Registration> {
     unsafe {
-        let task = registered_task()?;
+        let task = registered_task(user_sid)?;
         let definition = task.Definition()?;
 
         let action: IExecAction = definition.Actions()?.get_Item(1)?.cast()?;
@@ -179,16 +182,16 @@ pub fn registration() -> windows::core::Result<Registration> {
 }
 
 /// Starts the task. Needs no elevation and raises no prompt.
-pub fn run() -> windows::core::Result<()> {
+pub fn run(user_sid: &str) -> windows::core::Result<()> {
     unsafe {
-        registered_task()?.Run(&VARIANT::default())?;
+        registered_task(user_sid)?.Run(&VARIANT::default())?;
         Ok(())
     }
 }
 
 /// The launcher's exit code from its last run, its only channel back to the core.
-pub fn last_result() -> windows::core::Result<i32> {
-    unsafe { registered_task()?.LastTaskResult() }
+pub fn last_result(user_sid: &str) -> windows::core::Result<i32> {
+    unsafe { registered_task(user_sid)?.LastTaskResult() }
 }
 
 #[cfg(test)]
@@ -211,6 +214,14 @@ mod tests {
         assert!(doc.contains("<StopOnIdleEnd>false<"));
         assert!(doc.contains("<AllowStartOnDemand>true<"));
         assert!(doc.contains("<ExecutionTimeLimit>PT1M<"));
+    }
+
+    #[test]
+    fn the_task_name_is_per_account() {
+        let a = task_name("S-1-5-21-1-2-3-1001");
+        let b = task_name("S-1-5-21-1-2-3-1002");
+        assert_ne!(a, b);
+        assert!(a.starts_with("OyasumiVR Privileged Launcher"));
     }
 
     #[test]

@@ -2181,6 +2181,18 @@
         },
         "title": "Discord"
       },
+      "vrcx": {
+        "sleepModeChanges": {
+          "title": "睡眠模式",
+          "description": "將切換至睡眠模式的變更記錄至 VRCX 的遊戲日誌"
+        },
+        "logs": {
+          "onSleepDisable": "睡眠模式已停用",
+          "onSleepEnable": "已啟用睡眠模式",
+          "onSleepPreparation": "睡前準備"
+        },
+        "title": "VRCX 記錄功能"
+      },
       "homeAssistant": {
         "description": "透過將 OyasumiVR 連接到居家助理房間，將 OyasumiVR 與其他智慧型居家助理整合，讓你能夠建立自己的強大自動化功能，並控制各種智慧型裝置。",
         "title": "居家助理 (透過 MQTT)"
@@ -2195,18 +2207,6 @@
       "vrchat": {
         "description": "連結你的帳戶可訪問 OyasumiVR 的一些與 VRChat 相關的自動化功能。",
         "title": "VRChat"
-      },
-      "vrcx": {
-        "logs": {
-          "onSleepDisable": "睡眠模式已停用",
-          "onSleepEnable": "已啟用睡眠模式",
-          "onSleepPreparation": "睡前準備"
-        },
-        "sleepModeChanges": {
-          "description": "將切換至睡眠模式的變更記錄至 VRCX 的遊戲日誌",
-          "title": "睡眠模式"
-        },
-        "title": "VRCX 記錄功能"
       }
     },
     "notifications": {
