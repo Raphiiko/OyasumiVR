@@ -59,6 +59,19 @@ adminCargoToml = adminCargoToml.replaceAll(
 );
 writeFileSync('src-elevated-sidecar/Cargo.toml', adminCargoToml);
 
+// Privileged launcher cargo toml
+let launcherCargoToml = readFileSync('src-privileged-launcher/Cargo.toml').toString();
+launcherCargoToml = launcherCargoToml.replaceAll(
+  /\[package\](\r?\n)name = "oyasumivr-privileged-launcher"\1version = "[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?"/g,
+  `[package]$1name = "oyasumivr-privileged-launcher"$1version = "${version}"`
+);
+if (!launcherCargoToml.includes(`version = "${version}"`)) {
+  throw new Error(
+    'Could not set the version in src-privileged-launcher/Cargo.toml. The [package] block may have been reordered.'
+  );
+}
+writeFileSync('src-privileged-launcher/Cargo.toml', launcherCargoToml);
+
 // Shared Cargo toml
 let sharedCargoToml = readFileSync('src-shared-rust/Cargo.toml').toString();
 sharedCargoToml = sharedCargoToml.replaceAll(
