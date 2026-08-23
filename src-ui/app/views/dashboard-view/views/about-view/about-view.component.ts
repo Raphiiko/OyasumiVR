@@ -131,7 +131,6 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.updateRailFade();
   }
 
-  // a class binding here would re-enter change detection, so toggle on the element
   protected updateRailFade() {
     const el = this.rail?.nativeElement;
     if (!el) return;
