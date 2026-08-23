@@ -37,7 +37,7 @@
     "format:prettier": "prettier --write \"src-ui/**/*.{html,css,scss,js,ts}\" \"src-overlay-ui/**/*.{html,css,scss,js,ts}\" \"src-shared-ts/**/*.{html,css,scss,js,ts}\" \"scripts/**/*.{html,css,scss,js,ts}\"",
     "lint": "ng lint",
     "test": "node --experimental-strip-types --test \"src-shared-ts/src/*.test.ts\" \"scripts/*.test.ts\" \"src-ui/app/utils/*.test.ts\"",
-    "clean": "rimraf dist && rimraf src-overlay-sidecar/bin && rimraf src-overlay-sidecar/obj && rimraf src-overlay-ui/build && rimraf src-elevated-sidecar/target && rimraf src-core/target && rimraf src-shared-rust/target && rimraf src-core/resources/elevated-sidecar && rimraf src-core/resources/overlay-sidecar && rimraf src-core/resources/fonts",
+    "clean": "rimraf dist && rimraf src-overlay-sidecar/bin && rimraf src-overlay-sidecar/obj && rimraf src-overlay-ui/build && rimraf src-elevated-sidecar/target && rimraf tools/sign-elevated-sidecar/target && rimraf src-core/target && rimraf src-shared-rust/target && rimraf src-core/resources/elevated-sidecar && rimraf src-core/resources/overlay-sidecar && rimraf src-core/resources/fonts",
     "tl": "node scripts/translation-utils.js",
     "tl:check-icu": "node scripts/check-icu.mjs",
     "generate:readmes": "node scripts/readme-generator.js",

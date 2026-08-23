@@ -1,0 +1,9 @@
+[package]
+name = "sign-elevated-sidecar"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+# Build-time only. Never shipped, and never a dependency of the launcher or the sidecar.
+[dependencies]
+minisign = "0.7.9"

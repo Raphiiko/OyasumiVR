@@ -23,6 +23,9 @@ use std::sync::{
 use std::time::Duration;
 use sysinfo::{Pid, ProcessesToUpdate, System};
 use windows::relaunch_with_elevation;
+use windows_sys::Win32::System::LibraryLoader::{
+    SetDefaultDllDirectories, LOAD_LIBRARY_SEARCH_SYSTEM32,
+};
 
 mod afterburner;
 mod grpc;
@@ -36,6 +39,10 @@ static ERROR_REPORTING_GUARD: LazyLock<Mutex<Option<sentry::ClientInitGuard>>> =
 
 #[tokio::main]
 async fn main() {
+    // before any DLL this process loads later, prefer System32 over our own directory
+    unsafe {
+        let _ = SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_SYSTEM32);
+    }
     // Initialize logging
     let log_path = if let Some(base_dirs) = BaseDirs::new() {
         base_dirs
