@@ -31,6 +31,10 @@ impl OyasumiCore for OyasumiCoreServerImpl {
         match crate::elevated_sidecar::handle_elevated_sidecar_start(request.get_ref()).await {
             Ok(_) => Ok(Response::new(Empty {})),
             Err(e) => {
+                // a rejection is how an unrequested sidecar gets told to exit
+                if e.is::<crate::elevated_sidecar::SidecarRejected>() {
+                    return Err(Status::failed_precondition(e.to_string()));
+                }
                 error!("[Core] Failed to handle elevated sidecar start: {e}");
                 Err(Status::internal("Failed to handle elevated sidecar start"))
             }

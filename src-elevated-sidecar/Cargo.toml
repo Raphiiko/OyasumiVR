@@ -28,8 +28,6 @@ tokio-stream = { version = "0.1.19", features = ["full"] }
 [dependencies.windows-sys]
 version = "0.61.2"
 features = [
-    "Win32_UI_Shell",
-    "Win32_UI_WindowsAndMessaging",
     "Win32_Foundation",
     "Win32_System_LibraryLoader",
     "Win32_System_SystemInformation",

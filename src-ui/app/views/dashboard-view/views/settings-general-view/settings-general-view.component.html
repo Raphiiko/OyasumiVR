@@ -282,11 +282,16 @@
               <label class="switch-toggle">
                 <input
                   type="checkbox"
-                  [checked]="appSettings.askForAdminOnStart"
-                  (change)="setAskForAdminOnStart(!appSettings.askForAdminOnStart)"
+                  [checked]="appSettings.elevatedFeaturesEnabled"
+                  (change)="setElevatedFeaturesEnabled(!appSettings.elevatedFeaturesEnabled)"
                 />
                 <span class="switch-toggle-slider"></span>
               </label>
+            </div>
+          </div>
+          <div class="setting-row" *ngIf="elevationMessage" @vshrink>
+            <div class="setting-row-label">
+              <span class="elevation-message" [transloco]="elevationMessage"></span>
             </div>
           </div>
         </div>

@@ -1150,12 +1150,6 @@
       "disabled": "OyasumiVR kan op verschillende manieren je GPU instellingen automatisch aanpassen.\nDit stelt je bijvoorbeeld in staat om stroom te besparen wanneer je slaapt.\n\nDeze functie is standaard uitgeschakeld, omdat dit functionaliteit is voor geavanceerde gebruikers.\nAls je deze functionaliteit wilt gebruiken kun je deze inschakelen met de knop hier onder.",
       "noSidecar": "OyasumiVR heeft beheerders rechten nodig om de GPU instellingen aan te kunnen passen. Klik a.u.b. op de knop hier onder om OyasumiVR beheerders rechten te geven."
     },
-    "elevationSidecarModal": {
-      "cancel": "Alleen deze keer",
-      "confirm": "Altijd",
-      "message": "Wil je OyasumiVR altijd beheerders rechten geven?\n\nAls je dit doet, zal OyasumiVR voortaan meteen bij het starten hier om deze rechten vragen. Je kunt dit later altijd weer uitzetten in de instellingen.",
-      "title": "Beheerders rechten geven"
-    },
     "enable": "Activeer GPU Automatiseringen",
     "enableWarning": "Het verkeerd aanpassen van je GPU instellingen kan resulteren in een onstabiel systeem. Gebruik deze functionaliteit alleen als je weet waar je mee bezig bent.",
     "msiAfterburner": {

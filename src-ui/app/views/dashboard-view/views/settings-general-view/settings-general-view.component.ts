@@ -14,6 +14,7 @@ import { StartWithSteamVRHowToModalComponent } from './start-with-steamvr-how-to
 import { TelemetryService } from 'src-ui/app/services/telemetry.service';
 import { LighthouseConsoleService } from 'src-ui/app/services/lighthouse-console.service';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
+import { ElevatedSidecarService } from 'src-ui/app/services/elevated-sidecar.service';
 import { ModalService } from 'src-ui/app/services/modal.service';
 
 import { LANGUAGES } from '../../../../globals';
@@ -35,6 +36,8 @@ import { OVRInputEventAction } from 'src-ui/app/models/ovr-input-event';
 })
 export class SettingsGeneralViewComponent implements OnInit {
   appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
+  // translation key for why enabling failed, or null
+  elevationMessage: string | null = null;
   languages = LANGUAGES;
   lighthouseConsoleStatus: ExecutableReferenceStatus = 'UNKNOWN';
   lighthouseConsolePathAlert?: {
@@ -96,7 +99,8 @@ export class SettingsGeneralViewComponent implements OnInit {
     private telemetry: TelemetryService,
     private modalService: ModalService,
     private destroyRef: DestroyRef,
-    private settingsService: AppSettingsService
+    private settingsService: AppSettingsService,
+    private elevatedSidecar: ElevatedSidecarService
   ) {}
 
   ngOnInit(): void {
@@ -174,8 +178,16 @@ export class SettingsGeneralViewComponent implements OnInit {
     if (path && typeof path === 'string') await this.lighthouse.setConsolePath(path);
   }
 
-  setAskForAdminOnStart(enabled: boolean) {
-    this.settingsService.updateSettings({ askForAdminOnStart: enabled });
+  async setElevatedFeaturesEnabled(enabled: boolean) {
+    this.elevationMessage = null;
+    if (!enabled) {
+      await this.elevatedSidecar.disable();
+      return;
+    }
+    const result = await this.elevatedSidecar.enable();
+    if (result.result !== 'ok') {
+      this.elevationMessage = `settings.general.adminPrivileges.errors.${result.result}`;
+    }
   }
 
   setTelemetryEnabled(enabled: boolean) {

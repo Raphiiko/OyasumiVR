@@ -23,6 +23,23 @@ fn process_is_running(pid: u32) -> bool {
     }
 }
 
+/// Resolves a configured sidecar path for the shell, which needs an absolute path and backslashes
+/// where `Command` accepts neither.
+fn absolute(path: &std::path::Path) -> std::path::PathBuf {
+    if path.is_absolute() {
+        return path.to_path_buf();
+    }
+    let base = std::env::current_exe()
+        .ok()
+        .and_then(|exe| exe.parent().map(std::path::Path::to_path_buf));
+    let joined = match base {
+        Some(base) => base.join(path),
+        None => path.to_path_buf(),
+    };
+    // the configured directories use forward slashes
+    std::path::PathBuf::from(joined.to_string_lossy().replace('/', "\\"))
+}
+
 const LAUNCH_RETRY_INTERVALS: [Duration; 9] = [
     Duration::from_millis(100),
     Duration::from_secs(1),
@@ -34,6 +51,17 @@ const LAUNCH_RETRY_INTERVALS: [Duration; 9] = [
     Duration::from_secs(120),
     Duration::from_secs(300),
 ];
+
+/// How a sidecar gets started.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum SidecarLaunch {
+    /// Plain child process.
+    Spawn,
+    /// Through the privileged launcher's scheduled task. Elevated, no prompt.
+    ScheduledTask,
+    /// Directly, with a UAC prompt on every launch.
+    ElevatedSpawn,
+}
 
 #[derive(Clone)]
 #[readonly::make]
@@ -54,6 +82,7 @@ pub struct SidecarManager {
     pub args: Arc<Mutex<Vec<String>>>,
     pub restart_requested: Arc<tokio::sync::Notify>,
     pub launching: Arc<Mutex<()>>,
+    pub launch: SidecarLaunch,
 }
 
 impl SidecarManager {
@@ -64,6 +93,7 @@ impl SidecarManager {
         on_stop_tx: mpsc::Sender<bool>,
         auto_restart: bool,
         args: Vec<String>,
+        launch: SidecarLaunch,
     ) -> Self {
         Self {
             sidecar_id,
@@ -82,8 +112,10 @@ impl SidecarManager {
             args: Arc::new(Mutex::new(args)),
             restart_requested: Arc::new(tokio::sync::Notify::new()),
             launching: Arc::new(Mutex::new(())),
+            launch,
         }
     }
+
 
     pub async fn set_arg(&mut self, arg: &str, value: bool, unique: bool) {
         let mut args_guard = self.args.lock().await;
@@ -131,20 +163,21 @@ impl SidecarManager {
         }
     }
 
-    pub async fn start(&mut self) -> u32 {
+    /// Whether the launch was initiated. On the scheduled task path the sidecar reports in later.
+    pub async fn start(&mut self) -> bool {
         self._start_internal(false).await
     }
 
-    async fn _start_internal(&mut self, relaunch: bool) -> u32 {
+    async fn _start_internal(&mut self, relaunch: bool) -> bool {
         // held until the new process is stored, so start_or_restart cannot miss it
         let _launching = self.launching.lock().await;
         let core_grpc_port_guard = crate::grpc::SERVER_PORT.lock().await;
         let core_grpc_port = match core_grpc_port_guard.as_ref() {
             Some(port) => *port,
-            None => return 0,
+            None => return false,
         };
         if !relaunch && *self.active.lock().await {
-            return 0;
+            return false;
         }
         *self.active.lock().await = true;
         info!(
@@ -168,12 +201,28 @@ impl SidecarManager {
                 args.push(arg.clone());
             }
         }
-        let child = match std::process::Command::new(&exe_path)
-            .current_dir(exe_dir)
-            .args(args)
-            .spawn()
-        {
-            Ok(child) => child,
+        // the task takes no arguments, so the sidecar reads these from the handshake instead
+        if self.launch == SidecarLaunch::ScheduledTask {
+            return self.start_through_task(core_grpc_port).await;
+        }
+
+        let launch_result = match self.launch {
+            SidecarLaunch::ElevatedSpawn => crate::elevated_sidecar::elevate::spawn(
+                &absolute(&exe_path),
+                &args.join(" "),
+            )
+            .map(|pid| (pid, None))
+            .map_err(|e| e.to_string()),
+            _ => std::process::Command::new(&exe_path)
+                .current_dir(exe_dir)
+                .args(args)
+                .spawn()
+                .map(|child| (child.id(), Some(child)))
+                .map_err(|e| e.to_string()),
+        };
+
+        let (child_pid, child) = match launch_result {
+            Ok(started) => started,
             Err(e) => {
                 error!(
                     "[Core] Could not start {} sidecar ({}): {}",
@@ -188,17 +237,96 @@ impl SidecarManager {
                     *self.watching.lock().await = true;
                     self.watch_process();
                 }
-                return 0;
+                return false;
             }
         };
-        let child_pid = child.id();
         *self.sidecar_pid.lock().await = Some(child_pid);
-        *self.sidecar_child.lock().await = Some(child);
+        *self.sidecar_child.lock().await = child;
         if !relaunch && !*self.watching.lock().await {
             *self.watching.lock().await = true;
             self.watch_process();
         }
-        child_pid
+        true
+    }
+
+    /// Writes the handshake, starts the task, and returns without waiting for the sidecar.
+    ///
+    /// Must not wait: callers hold the module level `SIDECAR_MANAGER` lock, which the gRPC handler
+    /// delivering the start signal also needs. `handle_start_signal` records the pid and starts the
+    /// watcher.
+    async fn start_through_task(&self, core_grpc_port: u32) -> bool {
+        let Some(sidecar_path) = crate::elevated_sidecar::launcher::bundled_sidecar() else {
+            error!("[Core] Cannot find the bundled elevated sidecar");
+            *self.active.lock().await = false;
+            let _ = self.on_stop_tx.send(false).await;
+            return false;
+        };
+        let handshake = oyasumivr_shared::handshake::Handshake::new(
+            core_grpc_port,
+            std::process::id(),
+            sidecar_path,
+        );
+        if let Err(e) = handshake.write() {
+            error!("[Core] Could not write the elevated sidecar handshake: {e}");
+            *self.active.lock().await = false;
+            let _ = self.on_stop_tx.send(false).await;
+            return false;
+        }
+        if let Err(e) = crate::elevated_sidecar::launcher::trigger() {
+            error!("[Core] Could not start the privileged launcher task: {e}");
+            *self.active.lock().await = false;
+            let _ = self.on_stop_tx.send(false).await;
+            return false;
+        }
+        self.give_up_if_the_sidecar_never_reports_in();
+        true
+    }
+
+    /// Clears `active` when no sidecar ever reports in, which nothing else does on the task path
+    /// because there is no child process to watch until then.
+    fn give_up_if_the_sidecar_never_reports_in(&self) {
+        let manager = self.clone();
+        tokio::spawn(async move {
+            tokio::time::sleep(Duration::from_secs(20)).await;
+            if *manager.started.lock().await {
+                return;
+            }
+            let mut active = manager.active.lock().await;
+            if !*active {
+                return;
+            }
+            *active = false;
+            drop(active);
+            let launcher_said = crate::elevated_sidecar::launcher::last_launcher_result()
+                .map(crate::elevated_sidecar::launcher::describe_launcher_result)
+                .unwrap_or("no result from the launcher");
+            error!(
+                "[Core] The {} sidecar never reported in: {}",
+                manager.sidecar_id, launcher_said
+            );
+            let _ = manager.on_stop_tx.send(true).await;
+        });
+    }
+
+    /// Stops the sidecar and leaves the manager idle, so the next start is accepted. Used by the
+    /// settings toggle: it stops the process but leaves the launcher and its task installed, so
+    /// turning it back on costs nothing.
+    pub async fn stop_and_stay_stopped(&mut self) {
+        self.expected_stop.store(true, Ordering::Relaxed);
+        if let Some(child) = self.sidecar_child.lock().await.as_mut() {
+            let _ = child.kill();
+        } else if let Some(pid) = *self.sidecar_pid.lock().await {
+            // An elevated sidecar has no handle here and cannot be terminated from this process,
+            // so a stop it did not honour over gRPC leaves it running.
+            if pid != 0 && process_is_running(pid) {
+                warn!(
+                    "[Core] {} sidecar (pid {}) did not stop when asked",
+                    self.sidecar_id, pid
+                );
+            }
+        }
+        *self.active.lock().await = false;
+        *self.started.lock().await = false;
     }
 
     // The sidecar process is running
@@ -217,27 +345,25 @@ impl SidecarManager {
         grpc_port: Option<u32>,
         grpc_web_port: Option<u32>,
         pid: u32,
-        old_pid: Option<u32>,
     ) -> bool {
         // pid == 0 means that we are assuming the sidecar is running in development mode.
         if pid != 0 {
-            // If the sidecar is not active, ignore this signal, unless it carries an old pid
-            // and therefore comes from a process that replaced one we started.
+            // A sidecar we did not ask for gets refused. Anyone able to trigger the launcher's
+            // task can start one, and it must not be left running with its privileged gRPC
+            // servers open.
             if !*self.active.lock().await {
-                if old_pid.is_none() {
-                    warn!(
-                        "[Core] Ignoring start signal for {} sidecar with pid {} because it is not active",
-                        self.sidecar_id, pid
-                    );
-                    return false;
-                }
-                *self.active.lock().await = true;
+                warn!(
+                    "[Core] Ignoring start signal for {} sidecar with pid {} because it is not active",
+                    self.sidecar_id, pid
+                );
+                return false;
             }
-            // If another sidecar is already running, only accept this signal when it comes
-            // from that same process, or from a process that replaced it.
+            // If another sidecar is already running, only accept this signal from that same
+            // process. On the task path we have no pid until this signal arrives, so None here
+            // means "we asked for one and this is it".
             let current_pid = *self.sidecar_pid.lock().await;
             if let Some(current_pid) = current_pid {
-                if current_pid != pid && old_pid != Some(current_pid) {
+                if current_pid != pid {
                     warn!("[Core] Ignoring start signal for {} sidecar with pid {} because another {} sidecar is already running with pid {}", self.sidecar_id, pid, self.sidecar_id, current_pid);
                     return false;
                 }
@@ -250,10 +376,9 @@ impl SidecarManager {
         *self.started.lock().await = true;
         // Update the known pid
         *self.sidecar_pid.lock().await = Some(pid);
-        // A sidecar that relaunched itself through UAC reports in after the watcher for the
-        // process we spawned has already given up, so adopt it with a fresh watcher.
-        // Without one, its death would go unnoticed and the manager would stay active
-        // forever, refusing every later start.
+        // On the task path the core never spawned anything, so this signal is the first time we
+        // learn the pid. Adopt it with a fresh watcher, or its death would go unnoticed and the
+        // manager would stay active forever, refusing every later start.
         if pid != 0 && !*self.watching.lock().await {
             *self.watching.lock().await = true;
             self.watch_process();
@@ -301,21 +426,6 @@ impl SidecarManager {
                             retries = 0;
                         }
                     }
-                    // A changed pid means the sidecar replaced itself with a process we did
-                    // not spawn (the elevated sidecar relaunches itself through UAC). Adopt
-                    // it and keep watching, by pid rather than by handle.
-                    let current_sidecar_pid = *manager.sidecar_pid.lock().await;
-                    match current_sidecar_pid {
-                        Some(current_sidecar_pid) if current_sidecar_pid != pid => {
-                            info!(
-                                "[Core] {} sidecar with pid {} was replaced by pid {}",
-                                manager.sidecar_id, pid, current_sidecar_pid
-                            );
-                            *manager.sidecar_child.lock().await = None;
-                            continue;
-                        }
-                        _ => {}
-                    }
                     *manager.sidecar_pid.lock().await = None;
                     *manager.sidecar_child.lock().await = None;
                     *manager.grpc_port.lock().await = None;
@@ -346,5 +456,26 @@ impl SidecarManager {
             }
             *manager.watching.lock().await = false;
         });
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::absolute;
+    use std::path::Path;
+
+    #[test]
+    fn relative_sidecar_paths_become_absolute_with_backslashes() {
+        let resolved = absolute(Path::new("resources/elevated-sidecar/sidecar.exe"));
+        assert!(resolved.is_absolute(), "{}", resolved.display());
+        let text = resolved.to_string_lossy();
+        assert!(!text.contains('/'), "forward slashes left in {text}");
+        assert!(text.ends_with(r"resources\elevated-sidecar\sidecar.exe"), "{text}");
+    }
+
+    #[test]
+    fn absolute_paths_are_left_alone() {
+        let given = Path::new(r"C:\Program Files\OyasumiVR\x.exe");
+        assert_eq!(absolute(given), given);
     }
 }

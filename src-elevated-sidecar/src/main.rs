@@ -22,7 +22,6 @@ use std::sync::{
 };
 use std::time::Duration;
 use sysinfo::{Pid, ProcessesToUpdate, System};
-use windows::relaunch_with_elevation;
 use windows_sys::Win32::System::LibraryLoader::{
     SetDefaultDllDirectories, LOAD_LIBRARY_SEARCH_SYSTEM32,
 };
@@ -30,7 +29,6 @@ use windows_sys::Win32::System::LibraryLoader::{
 mod afterburner;
 mod grpc;
 mod nvml;
-mod windows;
 
 static ERROR_REPORTING_ENABLED: LazyLock<Arc<AtomicBool>> =
     LazyLock::new(|| Arc::new(AtomicBool::new(false)));
@@ -85,7 +83,7 @@ async fn run(dll_search_restricted: bool) {
         Some(n) => n,
         None => {
             error!("Missing or invalid arguments. Expected format:");
-            error!("oyasumivr-elevated-sidecar.exe --core-grpc-port=<port> --core-pid=<pid> [--old-pid=<pid>]");
+            error!("oyasumivr-elevated-sidecar.exe --core-grpc-port=<port> --core-pid=<pid>");
             std::process::exit(0);
         }
     };
@@ -96,12 +94,10 @@ async fn run(dll_search_restricted: bool) {
             std::process::exit(0);
         }
     };
-    let old_process_id = switch_value(&args, "old-pid");
     let error_reporting_enabled = args.iter().any(|arg| arg == "--error-reporting-enabled");
-    // Relaunch as admin if not elevated
     if !is_elevated() {
-        relaunch_with_elevation(host_port, main_pid, error_reporting_enabled, true);
-        return;
+        error!("Started without elevation. The core owns elevation, so there is nothing to retry.");
+        std::process::exit(0);
     }
     set_error_reporting_enabled(error_reporting_enabled);
     // Setup the grpc server
@@ -120,11 +116,10 @@ async fn run(dll_search_restricted: bool) {
         pid: std::process::id(),
         grpc_port: grpc_port as u32,
         grpc_web_port: grpc_web_port as u32,
-        old_pid: old_process_id,
     });
-    let response = client.on_elevated_sidecar_start(request).await;
-    if response.is_err() {
-        error!("Could not inform main process of sidecar initialization");
+    // fatal on any error, including the core rejecting a sidecar it never asked for
+    if let Err(e) = client.on_elevated_sidecar_start(request).await {
+        error!("The core did not accept this sidecar: {e}");
         std::process::exit(0);
     }
     // Init NVML

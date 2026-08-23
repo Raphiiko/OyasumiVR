@@ -1151,12 +1151,6 @@
       "disabled": "OyasumiVR 允許你自動調整 GPU 的功耗限制\n這樣你就可以在睡覺時節省用電量\n\nGPU 自動化目前僅適用於 NVIDIA GPU\nAMD 和 Intel GPU 仍然不支持",
       "noSidecar": "為了讓 OyasumiVR 能夠控制 GPU 設定，它需要管理員權限。請點擊下方按鈕授予 OyasumiVR 管理員權限"
     },
-    "elevationSidecarModal": {
-      "cancel": "僅此一次",
-      "confirm": "總是",
-      "message": "你確定想要授予 OyasumiVR 管理員權限嗎？\n\n如果你開啟此權限，OyasumiVR 將在啟動時立即請求這些權限。 你可以稍後隨時在設定中關閉此功能",
-      "title": "授予管理員權限"
-    },
     "enable": "開啟 GPU 自動化",
     "enableWarning": "這是功能是給一些進階用戶的！\n設定錯誤的功耗限制可能會導致你的系統變得不穩定\n請牢記這一點，最好只在你知道自己在做什麼時才調整它",
     "msiAfterburner": {

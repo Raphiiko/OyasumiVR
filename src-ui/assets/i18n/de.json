@@ -957,12 +957,6 @@
       "disabled": "OyasumiVR verfügt über mehrere Methoden deine Grafikkarteneinstellungen automatisch anzupassen. Dies ist besonders nützlich um Energie zu sparen.\n\nDa diese Funktion für technikaffine Nutzer gedacht ist, ist diese Funktion standardmäßig ausgeschaltet.\nDu kannst sie mit den Knopf unten aktivieren.",
       "noSidecar": "Damit OyasumiVr deine Grafikkarteneinstellungen ändern kann, benötigt es Adminrechte. Bitte Klicke den Knopf hier unten um dies zu erlauben."
     },
-    "elevationSidecarModal": {
-      "cancel": "Nur dieses Mal",
-      "confirm": "Immer",
-      "message": "Möchtest du OyasumiVR Adminrechte geben.\n\nWenn du dies aktivierst wird OyasumiVR direkt danach bei jeden Start der App fragen. Du kannst dies zu jeder Zeit in den Einstellungen ändern.",
-      "title": "Adminrechte geben"
-    },
     "enable": "Grafikkarten Automationen aktivieren",
     "enableWarning": "Inkorrekte Einstellungen der Grafikkartenparameter können zur Instabilität des Systems führen. Bitte verwende dieses Feature ausschließlich, wenn du weißt was du tust.",
     "msiAfterburner": {
