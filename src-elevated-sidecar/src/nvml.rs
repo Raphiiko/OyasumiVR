@@ -8,10 +8,8 @@ lazy_static! {
     static ref NVML_HANDLE: Mutex<Option<Nvml>> = Default::default();
 }
 
-/// An absolute path, because loading by name searches this executable's own directory first.
-///
-/// Asks Windows for the system directory rather than reading `%SystemRoot%`, which this process
-/// inherits and therefore does not control.
+/// An absolute path from Windows, because loading by name searches this executable's own directory
+/// first and `%SystemRoot%` is inherited rather than ours.
 fn nvml_path() -> Option<std::path::PathBuf> {
     use windows_sys::Win32::System::SystemInformation::GetSystemDirectoryW;
 
