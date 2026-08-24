@@ -40,9 +40,9 @@ struct Marker {
 }
 
 pub fn privileged_dir() -> Option<PathBuf> {
-    std::env::var("ProgramFiles")
+    oyasumivr_shared::windows::program_files()
         .ok()
-        .map(|p| PathBuf::from(p).join("OyasumiVR").join("privileged"))
+        .map(|p| p.join("OyasumiVR").join("privileged"))
 }
 
 fn installed_launcher() -> Option<PathBuf> {
