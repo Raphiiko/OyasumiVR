@@ -321,8 +321,7 @@ impl SidecarManager {
         if let Some(child) = self.sidecar_child.lock().await.as_mut() {
             let _ = child.kill();
         } else if let Some(pid) = *self.sidecar_pid.lock().await {
-            // An elevated sidecar has no handle here and cannot be terminated from this process,
-            // so a stop it did not honour over gRPC leaves it running.
+            // cannot be terminated from here, so a stop it ignored leaves it running
             if pid != 0 && process_is_running(pid) {
                 warn!(
                     "[Core] {} sidecar (pid {}) did not stop when asked",
@@ -357,9 +356,7 @@ impl SidecarManager {
     ) -> bool {
         // pid == 0 means that we are assuming the sidecar is running in development mode.
         if pid != 0 {
-            // A sidecar we did not ask for gets refused. Anyone able to trigger the launcher's
-            // task can start one, and it must not be left running with its privileged gRPC
-            // servers open.
+            // anyone can trigger the task, so a sidecar we did not ask for is refused
             if !*self.active.lock().await {
                 warn!(
                     "[Core] Ignoring start signal for {} sidecar with pid {} because it is not active",
@@ -367,9 +364,7 @@ impl SidecarManager {
                 );
                 return false;
             }
-            // If another sidecar is already running, only accept this signal from that same
-            // process. On the task path we have no pid until this signal arrives, so None here
-            // means "we asked for one and this is it".
+            // no pid yet on the task path, so None here means this signal is the one we asked for
             let current_pid = *self.sidecar_pid.lock().await;
             if let Some(current_pid) = current_pid {
                 if current_pid != pid {
@@ -385,9 +380,7 @@ impl SidecarManager {
         *self.started.lock().await = true;
         // Update the known pid
         *self.sidecar_pid.lock().await = Some(pid);
-        // On the task path the core never spawned anything, so this signal is the first time we
-        // learn the pid. Adopt it with a fresh watcher, or its death would go unnoticed and the
-        // manager would stay active forever, refusing every later start.
+        // first sight of the pid on the task path, so it needs a watcher or its death goes unseen
         if pid != 0 && !*self.watching.lock().await {
             *self.watching.lock().await = true;
             self.watch_process();
