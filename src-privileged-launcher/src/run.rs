@@ -58,8 +58,7 @@ pub fn run() -> u8 {
     let staged_exe = staged_dir.join(paths::SIDECAR_EXE);
     collect_old_staged(&staged_dir);
 
-    // The sidecar takes these as arguments. The task cannot pass any, so they arrive here through
-    // the handshake and get forwarded.
+    // forwarded because the task cannot pass arguments, by design
     let arguments = format!(
         "--core-grpc-port={} --core-pid={}",
         handshake.core_grpc_port, handshake.core_pid

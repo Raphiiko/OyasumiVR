@@ -88,8 +88,7 @@ pub fn current_user_sid() -> std::result::Result<String, Error> {
     let token = QueryAccessToken::from_current_process()?;
     unsafe {
         let mut size = 0u32;
-        // Deliberately ignored. The first call always fails with ERROR_INSUFFICIENT_BUFFER and
-        // only reports the size we need.
+        // deliberately ignored: the first call only reports the size we need
         let _ = GetTokenInformation(token.0, TokenUser, None, 0, &mut size);
         if size == 0 {
             return Err(Error::other("could not size the token user information"));
