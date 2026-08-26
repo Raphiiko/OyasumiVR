@@ -56,6 +56,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
   of the system's memory
 - Fixed base stations not being controllable again after they briefly went out of Bluetooth range
 - Fixed the Windows notification provider not showing any notifications
+- Fixed the VR overlay failing to start when system-wide ad blockers or proxies intercepted
+  OyasumiVR's local connection
 - The VR overlay now writes the reason for an unexpected shutdown to its log file, instead of stopping without a trace
 - Changing the VR overlay's GPU acceleration setting now restarts it right away, instead of waiting out the retry delay
   of up to five minutes
