@@ -91,7 +91,10 @@ public class IpcManager {
       Environment.Exit(1);
     }
 
-    var channel = GrpcChannel.ForAddress($"http://127.0.0.1:{mainProcessPort}");
+    var channel = GrpcChannel.ForAddress($"http://127.0.0.1:{mainProcessPort}", new GrpcChannelOptions
+    {
+      HttpHandler = new SocketsHttpHandler { UseProxy = false }
+    });
     _coreClient = new OyasumiCore.OyasumiCoreClient(channel);
     // Get the core HTTP server port
     if (Program.InDevMode())
@@ -100,28 +103,34 @@ public class IpcManager {
     }
     else
     {
-      var attempts = 0;
+      var deadline = DateTime.UtcNow.AddSeconds(5);
       var interval = 50;
-      while (_coreHttpServerPort == 0)
+      RpcException? lastException = null;
+      while (_coreHttpServerPort == 0 && DateTime.UtcNow < deadline)
       {
         try
         {
-          var response = _coreClient.GetHTTPServerPort(new Empty());
+          var response = _coreClient.GetHTTPServerPort(new Empty(), deadline: deadline);
           _coreHttpServerPort = response.Port;
+          lastException = null;
         }
-        catch (RpcException)
+        catch (RpcException e)
         {
+          lastException = e;
         }
 
-        if (attempts > 5000 / interval)
-        {
-          Log.Error("Could not get HTTP server port from core. Quitting...");
-          Environment.Exit(1);
-          break;
-        }
+        if (_coreHttpServerPort == 0) Thread.Sleep(interval);
+      }
 
-        attempts++;
-        Thread.Sleep(interval);
+      if (_coreHttpServerPort == 0)
+      {
+        if (lastException == null)
+          Log.Error("Core returned no HTTP server port on gRPC port {Port}. Quitting...", mainProcessPort);
+        else
+          Log.Error(lastException, "Could not get HTTP server port from core on gRPC port {Port}. Quitting...",
+            mainProcessPort);
+        Environment.Exit(1);
+        return;
       }
     }
 
@@ -133,7 +142,7 @@ public class IpcManager {
         Pid = (uint)Environment.ProcessId,
         GrpcPort = (uint)grpcPort,
         GrpcWebPort = (uint)grpcWebPort
-      });
+      }, deadline: DateTime.UtcNow.AddSeconds(5));
     }
     catch (RpcException e)
     {
