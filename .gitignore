@@ -61,3 +61,6 @@ src-ui/assets/splashscreen/splash-blurhash.css
 .cursorignore
 /.cursor
 .claude/
+/.mcp.json
+/.codex/
+/opencode.json
