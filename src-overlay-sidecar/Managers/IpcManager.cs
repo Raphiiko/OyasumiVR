@@ -12,6 +12,8 @@ using Serilog;
 namespace overlay_sidecar;
 
 public class IpcManager {
+  private static readonly TimeSpan CoreStartupTimeout = TimeSpan.FromSeconds(5);
+  private static readonly TimeSpan CoreRetryInterval = TimeSpan.FromMilliseconds(50);
   public static IpcManager Instance { get; } = new();
   private bool _initialized;
   private string? _staticBaseUrl;
@@ -96,42 +98,13 @@ public class IpcManager {
       HttpHandler = new SocketsHttpHandler { UseProxy = false }
     });
     _coreClient = new OyasumiCore.OyasumiCoreClient(channel);
-    // Get the core HTTP server port
-    if (Program.InDevMode())
+    _coreHttpServerPort = Program.InDevMode()
+      ? Globals.CORE_HTTP_DEV_PORT
+      : WaitForCoreHttpServerPort(mainProcessPort);
+    if (_coreHttpServerPort == 0)
     {
-      _coreHttpServerPort = Globals.CORE_HTTP_DEV_PORT;
-    }
-    else
-    {
-      var deadline = DateTime.UtcNow.AddSeconds(5);
-      var interval = 50;
-      RpcException? lastException = null;
-      while (_coreHttpServerPort == 0 && DateTime.UtcNow < deadline)
-      {
-        try
-        {
-          var response = _coreClient.GetHTTPServerPort(new Empty(), deadline: deadline);
-          _coreHttpServerPort = response.Port;
-          lastException = null;
-        }
-        catch (RpcException e)
-        {
-          lastException = e;
-        }
-
-        if (_coreHttpServerPort == 0) Thread.Sleep(interval);
-      }
-
-      if (_coreHttpServerPort == 0)
-      {
-        if (lastException == null)
-          Log.Error("Core returned no HTTP server port on gRPC port {Port}. Quitting...", mainProcessPort);
-        else
-          Log.Error(lastException, "Could not get HTTP server port from core on gRPC port {Port}. Quitting...",
-            mainProcessPort);
-        Environment.Exit(1);
-        return;
-      }
+      Environment.Exit(1);
+      return;
     }
 
     // Inform the core of the overlay sidecar start
@@ -142,12 +115,43 @@ public class IpcManager {
         Pid = (uint)Environment.ProcessId,
         GrpcPort = (uint)grpcPort,
         GrpcWebPort = (uint)grpcWebPort
-      }, deadline: DateTime.UtcNow.AddSeconds(5));
+      }, deadline: DateTime.UtcNow.Add(CoreStartupTimeout));
+      Log.Information("Connected to core on gRPC port {GrpcPort} with HTTP port {HttpPort}.", mainProcessPort,
+        _coreHttpServerPort);
     }
     catch (RpcException e)
     {
-      Log.Error(e, "Cannot inform core of overlay sidecar start. Quitting...");
+      Log.Error(e, "Could not announce overlay sidecar startup to core on gRPC port {Port}.", mainProcessPort);
       if (Program.InReleaseMode()) Environment.Exit(1);
     }
+  }
+
+  private uint WaitForCoreHttpServerPort(int mainProcessPort)
+  {
+    var deadline = DateTime.UtcNow.Add(CoreStartupTimeout);
+    RpcException? lastException = null;
+    while (DateTime.UtcNow < deadline)
+    {
+      try
+      {
+        var port = _coreClient!.GetHTTPServerPort(new Empty(), deadline: deadline).Port;
+        if (port != 0) return port;
+        lastException = null;
+      }
+      catch (RpcException e)
+      {
+        lastException = e;
+      }
+
+      if (DateTime.UtcNow < deadline) Thread.Sleep(CoreRetryInterval);
+    }
+
+    if (lastException == null)
+      Log.Error("Core returned no HTTP server port within {Timeout} on gRPC port {Port}.", CoreStartupTimeout,
+        mainProcessPort);
+    else
+      Log.Error(lastException, "Could not get the HTTP server port from core within {Timeout} on gRPC port {Port}.",
+        CoreStartupTimeout, mainProcessPort);
+    return 0;
   }
 }
