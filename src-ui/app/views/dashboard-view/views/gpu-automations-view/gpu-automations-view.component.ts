@@ -3,8 +3,7 @@ import { NvmlService, NvmlStatus } from '../../../../services/nvml.service';
 import { asyncScheduler, combineLatest, firstValueFrom, map, Observable, throttleTime } from 'rxjs';
 import { GpuAutomationsService } from '../../../../services/gpu-automations.service';
 import { fade, hshrink, noop, vshrink } from 'src-ui/app/utils/animations';
-import { ModalService } from 'src-ui/app/services/modal.service';
-import { AppSettingsService } from '../../../../services/app-settings.service';
+
 import { ElevatedSidecarService } from '../../../../services/elevated-sidecar.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ExecutableReferenceStatus } from 'src-ui/app/models/settings';
@@ -31,8 +30,6 @@ export class GpuAutomationsViewComponent implements OnInit {
     private nvml: NvmlService,
     protected gpuAutomations: GpuAutomationsService,
     private sidecar: ElevatedSidecarService,
-    private modalService: ModalService,
-    private settingsService: AppSettingsService,
     private activatedRoute: ActivatedRoute
   ) {
     combineLatest([sidecar.sidecarStarted, this.gpuAutomations.isEnabled()])

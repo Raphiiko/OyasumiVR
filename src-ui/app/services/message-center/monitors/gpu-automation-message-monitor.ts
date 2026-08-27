@@ -4,8 +4,6 @@ import { NvmlService } from '../../nvml.service';
 import { GpuAutomationsService } from '../../gpu-automations.service';
 import { ElevatedSidecarService } from '../../elevated-sidecar.service';
 import { asyncScheduler, combineLatest, distinctUntilChanged, map, throttleTime } from 'rxjs';
-import { AppSettingsService } from '../../app-settings.service';
-import { ModalService } from '../../modal.service';
 import { AutomationConfigService } from '../../automation-config.service';
 import {
   GPUPowerLimitsAutomationConfig,
@@ -20,8 +18,6 @@ export class GpuAutomationMessageMonitor extends MessageMonitor {
   private nvml = inject(NvmlService);
   private gpuAutomations = inject(GpuAutomationsService);
   private elevatedSidecar = inject(ElevatedSidecarService);
-  private settingsService = inject(AppSettingsService);
-  private modalService = inject(ModalService);
   private automationConfig = inject(AutomationConfigService);
   private router = inject(Router);
 

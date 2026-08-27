@@ -12,14 +12,6 @@ export type EnableResult =
   | { result: 'taskFailed'; reason: string }
   | { result: 'notSupported' };
 
-export type LauncherState =
-  | { state: 'notSupported' }
-  | { state: 'notInstalled' }
-  | { state: 'outdated'; installed: number; expected: number }
-  | { state: 'keyMismatch' }
-  | { state: 'untrusted'; reason: string }
-  | { state: 'ready' };
-
 @Injectable({
   providedIn: 'root',
 })
@@ -45,17 +37,26 @@ export class ElevatedSidecarService {
       !this._sidecarStarted.value &&
       (await firstValueFrom(this.appSettings.settings)).elevatedFeaturesEnabled
     ) {
-      this.enable();
+      await this.enable();
     }
   }
 
   // installs the privileged launcher if needed, repairs it if broken, then starts the sidecar
   async enable(): Promise<EnableResult> {
     this.appSettings.updateSettings({ elevatedFeaturesEnabled: true });
-    const result = await invoke<EnableResult>('elevated_features_enable');
-    // anything but ok means nothing runs elevated, so the toggle must not stay on
+    let result: EnableResult;
+    try {
+      result = await invoke<EnableResult>('elevated_features_enable');
+    } catch (e) {
+      info(`[ElevatedSidecar] Could not enable elevated features: ${e}`);
+      return { result: 'installFailed' };
+    }
     if (result.result !== 'ok') {
       info(`[ElevatedSidecar] Could not enable elevated features: ${result.result}`);
+    }
+    // Only the user declining and an account that cannot elevate are decisions. Everything else
+    // is a failure worth retrying, and clearing the setting would turn the feature off for good.
+    if (result.result === 'promptDeclined' || result.result === 'notSupported') {
       this.appSettings.updateSettings({ elevatedFeaturesEnabled: false });
     }
     return result;
@@ -63,11 +64,11 @@ export class ElevatedSidecarService {
 
   async disable() {
     this.appSettings.updateSettings({ elevatedFeaturesEnabled: false });
-    await invoke('elevated_features_disable');
-  }
-
-  async launcherState(): Promise<LauncherState> {
-    return await invoke<LauncherState>('privileged_launcher_state');
+    try {
+      await invoke('elevated_features_disable');
+    } catch (e) {
+      info(`[ElevatedSidecar] Could not disable elevated features: ${e}`);
+    }
   }
 
   async start() {
