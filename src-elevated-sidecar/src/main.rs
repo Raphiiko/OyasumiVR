@@ -37,11 +37,19 @@ static ERROR_REPORTING_ENABLED: LazyLock<Arc<AtomicBool>> =
 static ERROR_REPORTING_GUARD: LazyLock<Mutex<Option<sentry::ClientInitGuard>>> =
     LazyLock::new(Default::default);
 
-#[tokio::main]
-async fn main() {
-    // before any DLL this process loads later, prefer System32 over our own directory
+fn main() {
+    // Before this process loads a DLL of its own, prefer System32 over its own directory. The
+    // runtime below is built by hand so that nothing runs ahead of this call.
     let dll_search_restricted =
         unsafe { SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_SYSTEM32) } != 0;
+    tokio::runtime::Builder::new_multi_thread()
+        .enable_all()
+        .build()
+        .unwrap()
+        .block_on(run(dll_search_restricted));
+}
+
+async fn run(dll_search_restricted: bool) {
     // Initialize logging
     let log_path = if let Some(base_dirs) = BaseDirs::new() {
         base_dirs
