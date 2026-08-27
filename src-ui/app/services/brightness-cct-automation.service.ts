@@ -59,6 +59,7 @@ export class BrightnessCctAutomationService {
   } | null>(null);
   private autoSunsetTime?: string;
   private autoSunriseTime?: string;
+  private sunriseSunsetLookup?: Promise<[string, string]>;
   private sleepMode: boolean = false;
 
   public readonly anyBrightnessTransitionActive = this.lastActivatedBrightnessTransition.pipe(
@@ -149,7 +150,6 @@ export class BrightnessCctAutomationService {
     await listen<void>('CRON_MINUTE_START', () => this.onMinuteTick());
 
     // Update sunrise/sunset times on startup and every 12 hours
-    this.updateSunriseSunsetTimes();
     interval(1000 * 60 * 60 * 12) // Every 12 hours
       .pipe(startWith(0))
       .subscribe(() => this.updateSunriseSunsetTimes());
@@ -169,9 +169,7 @@ export class BrightnessCctAutomationService {
         // Fetch the sunset/sunrise times if needed
         if (!this.autoSunsetTime || !this.autoSunriseTime) {
           try {
-            const [sunrise, sunset] = await invoke<[string, string]>('get_sunrise_sunset_time');
-            this.autoSunriseTime = sunrise;
-            this.autoSunsetTime = sunset;
+            await this.fetchSunriseSunsetTimes();
           } catch (e) {
             error('[BrightnessCctAutomationService] Failed to fetch sunrise/sunset times: ' + e);
             return;
@@ -605,12 +603,20 @@ export class BrightnessCctAutomationService {
     }
   }
 
+  // shared while a lookup is in flight, refetches once it settles
+  private fetchSunriseSunsetTimes(): Promise<[string, string]> {
+    return (this.sunriseSunsetLookup ??= invoke<[string, string]>('get_sunrise_sunset_time')
+      .then((times) => {
+        [this.autoSunriseTime, this.autoSunsetTime] = times;
+        return times;
+      })
+      .finally(() => (this.sunriseSunsetLookup = undefined)));
+  }
+
   private async updateSunriseSunsetTimes() {
     try {
       // Get the latest sunrise/sunset times
-      const [sunrise, sunset] = await invoke<[string, string]>('get_sunrise_sunset_time');
-      this.autoSunriseTime = sunrise;
-      this.autoSunsetTime = sunset;
+      const [sunrise, sunset] = await this.fetchSunriseSunsetTimes();
 
       // Update configurations with auto update enabled
       const configs = await firstValueFrom(this.automationConfigService.configs);
