@@ -40,6 +40,10 @@ fn absolute(path: &std::path::Path) -> std::path::PathBuf {
     std::path::PathBuf::from(joined.to_string_lossy().replace('/', "\\"))
 }
 
+/// How long the task path is given to produce a sidecar that reports in. The launcher exits
+/// within a second or two, so anything longer than this is a failure it could not report.
+pub const GIVE_UP_AFTER: Duration = Duration::from_secs(20);
+
 const LAUNCH_RETRY_INTERVALS: [Duration; 9] = [
     Duration::from_millis(100),
     Duration::from_secs(1),
@@ -120,7 +124,6 @@ impl SidecarManager {
         }
     }
 
-
     pub async fn set_arg(&mut self, arg: &str, value: bool, unique: bool) {
         let mut args_guard = self.args.lock().await;
         let arg = String::from(arg);
@@ -180,11 +183,15 @@ impl SidecarManager {
             Some(port) => *port,
             None => return false,
         };
+        drop(core_grpc_port_guard);
         if !relaunch && *self.active.lock().await {
             return false;
         }
         *self.active.lock().await = true;
-        self.generation.fetch_add(1, Ordering::Relaxed);
+        // Not on a relaunch: the watcher performing it keeps the generation it started with.
+        if !relaunch {
+            self.generation.fetch_add(1, Ordering::Relaxed);
+        }
         info!(
             "[Core] {} {} sidecar...",
             match relaunch {
@@ -208,16 +215,21 @@ impl SidecarManager {
         }
         // the task takes no arguments, so the sidecar reads these from the handshake instead
         if self.launch == SidecarLaunch::ScheduledTask {
-            return self.start_through_task(core_grpc_port).await;
+            return self.start_through_task(core_grpc_port, &args).await;
         }
 
         let launch_result = match self.launch {
-            SidecarLaunch::ElevatedSpawn => crate::elevated_sidecar::elevate::spawn(
-                &absolute(&exe_path),
-                &args.join(" "),
-            )
-            .map(|pid| (pid, None))
-            .map_err(|e| e.to_string()),
+            SidecarLaunch::ElevatedSpawn => {
+                let exe = absolute(&exe_path);
+                let arguments = args.join(" ");
+                tokio::task::spawn_blocking(move || {
+                    crate::elevated_sidecar::elevate::spawn(&exe, &arguments)
+                })
+                .await
+                .map_err(|e| e.to_string())
+                .and_then(|result| result.map_err(|e| e.to_string()))
+                .map(|pid| (pid, None))
+            }
             _ => std::process::Command::new(&exe_path)
                 .current_dir(exe_dir)
                 .args(args)
@@ -259,7 +271,7 @@ impl SidecarManager {
     /// Must not wait: callers hold the module level `SIDECAR_MANAGER` lock, which the gRPC handler
     /// delivering the start signal also needs. `handle_start_signal` records the pid and starts the
     /// watcher.
-    async fn start_through_task(&self, core_grpc_port: u32) -> bool {
+    async fn start_through_task(&self, core_grpc_port: u32, args: &[String]) -> bool {
         let Some(sidecar_path) = crate::elevated_sidecar::launcher::bundled_sidecar() else {
             error!("[Core] Cannot find the bundled elevated sidecar");
             *self.active.lock().await = false;
@@ -270,6 +282,7 @@ impl SidecarManager {
             core_grpc_port,
             std::process::id(),
             sidecar_path,
+            args.iter().any(|arg| arg == "--error-reporting-enabled"),
         );
         if let Err(e) = handshake.write() {
             error!("[Core] Could not write the elevated sidecar handshake: {e}");
@@ -291,8 +304,12 @@ impl SidecarManager {
     /// because there is no child process to watch until then.
     fn give_up_if_the_sidecar_never_reports_in(&self) {
         let manager = self.clone();
+        let generation = self.generation.load(Ordering::Relaxed);
         tokio::spawn(async move {
-            tokio::time::sleep(Duration::from_secs(20)).await;
+            tokio::time::sleep(GIVE_UP_AFTER).await;
+            if manager.generation.load(Ordering::Relaxed) != generation {
+                return;
+            }
             if *manager.started.lock().await {
                 return;
             }
@@ -317,6 +334,9 @@ impl SidecarManager {
     /// settings toggle: it stops the process but leaves the launcher and its task installed, so
     /// turning it back on costs nothing.
     pub async fn stop_and_stay_stopped(&mut self) {
+        // held so a launch in flight cannot store its process into a manager that believes it is
+        // idle, the way `start_or_restart` relies on
+        let _launching = self.launching.lock().await;
         self.expected_stop.store(true, Ordering::Relaxed);
         if let Some(child) = self.sidecar_child.lock().await.as_mut() {
             let _ = child.kill();
@@ -338,7 +358,6 @@ impl SidecarManager {
     }
 
     // The sidecar process is running
-    #[allow(dead_code)]
     pub async fn is_active(&self) -> bool {
         *self.active.lock().await
     }
@@ -413,7 +432,9 @@ impl SidecarManager {
                         let exited = {
                             let mut child_guard = manager.sidecar_child.lock().await;
                             match child_guard.as_mut() {
-                                Some(child) => child.try_wait().map(|s| s.is_some()).unwrap_or(true),
+                                Some(child) => {
+                                    child.try_wait().map(|s| s.is_some()).unwrap_or(true)
+                                }
                                 None => !process_is_running(pid),
                             }
                         };
@@ -429,21 +450,26 @@ impl SidecarManager {
                             retries = 0;
                         }
                     }
-                    if manager.generation.load(Ordering::Relaxed) != generation {
-                        // A stop or a newer launch already took over this state.
-                        break;
+                    {
+                        // Held across the clearing, so a launch cannot start between the check and
+                        // the last write and end up with its state wiped.
+                        let _launching = manager.launching.lock().await;
+                        if manager.generation.load(Ordering::Relaxed) != generation {
+                            // A stop or a newer launch already took over this state.
+                            break;
+                        }
+                        *manager.sidecar_pid.lock().await = None;
+                        *manager.sidecar_child.lock().await = None;
+                        *manager.grpc_port.lock().await = None;
+                        *manager.grpc_web_port.lock().await = None;
+                        *manager.active.lock().await = false;
+                        *manager.started.lock().await = false;
                     }
-                    *manager.sidecar_pid.lock().await = None;
-                    *manager.sidecar_child.lock().await = None;
-                    *manager.grpc_port.lock().await = None;
-                    *manager.grpc_web_port.lock().await = None;
-                    *manager.active.lock().await = false;
-                    *manager.started.lock().await = false;
                     info!(
                         "[Core] {} sidecar has stopped (pid={})",
                         manager.sidecar_id, pid
                     );
-                    // Send signal that the sidecar has stopped
+                    // sent outside the launch lock: a full channel would otherwise hold it
                     let unexpected = !manager.expected_stop.swap(false, Ordering::Relaxed);
                     let _ = manager.on_stop_tx.send(unexpected).await;
                 }
@@ -470,6 +496,7 @@ impl SidecarManager {
 mod tests {
     use super::absolute;
     use std::path::Path;
+    use std::sync::atomic::Ordering;
 
     #[test]
     fn relative_sidecar_paths_become_absolute_with_backslashes() {
@@ -477,7 +504,10 @@ mod tests {
         assert!(resolved.is_absolute(), "{}", resolved.display());
         let text = resolved.to_string_lossy();
         assert!(!text.contains('/'), "forward slashes left in {text}");
-        assert!(text.ends_with(r"resources\elevated-sidecar\sidecar.exe"), "{text}");
+        assert!(
+            text.ends_with(r"resources\elevated-sidecar\sidecar.exe"),
+            "{text}"
+        );
     }
 
     #[tokio::test]
@@ -495,7 +525,9 @@ mod tests {
         *manager.sidecar_pid.lock().await = Some(4321);
         *manager.active.lock().await = true;
         *manager.started.lock().await = true;
-        let before = manager.generation.load(std::sync::atomic::Ordering::Relaxed);
+        let before = manager
+            .generation
+            .load(std::sync::atomic::Ordering::Relaxed);
 
         manager.stop_and_stay_stopped().await;
 
@@ -503,7 +535,67 @@ mod tests {
         assert_eq!(*manager.sidecar_pid.lock().await, None);
         assert!(!*manager.active.lock().await);
         assert!(!*manager.started.lock().await);
-        assert!(manager.generation.load(std::sync::atomic::Ordering::Relaxed) > before);
+        assert!(
+            manager
+                .generation
+                .load(std::sync::atomic::Ordering::Relaxed)
+                > before
+        );
+    }
+
+    fn manager(launch: super::SidecarLaunch, auto_restart: bool) -> super::SidecarManager {
+        let (tx, _rx) = tokio::sync::mpsc::channel(4);
+        super::SidecarManager::new(
+            "TEST".to_string(),
+            "resources/".to_string(),
+            "does-not-exist.exe".to_string(),
+            tx,
+            auto_restart,
+            vec![],
+            launch,
+        )
+    }
+
+    #[tokio::test]
+    async fn a_sidecar_the_core_did_not_ask_for_is_refused() {
+        let manager = manager(super::SidecarLaunch::ScheduledTask, false);
+        // Anyone can start the task, so an inactive manager must refuse whatever reports in.
+        assert!(!manager.handle_start_signal(Some(1), Some(2), 4321).await);
+
+        // no watcher, so nothing polls the made-up pid while the rest of the test runs
+        *manager.watching.lock().await = true;
+        *manager.active.lock().await = true;
+        assert!(
+            manager.handle_start_signal(Some(1), Some(2), 4321).await,
+            "the sidecar this manager asked for must be accepted"
+        );
+        assert!(*manager.started.lock().await);
+
+        assert!(
+            !manager.handle_start_signal(Some(1), Some(2), 9999).await,
+            "a second sidecar must not take over from the one already running"
+        );
+        assert_eq!(*manager.sidecar_pid.lock().await, Some(4321));
+    }
+
+    #[tokio::test]
+    async fn a_relaunch_keeps_the_generation_its_own_watcher_started_with() {
+        // a launch is only attempted once the core knows its own gRPC port
+        *crate::grpc::SERVER_PORT.lock().await = Some(1234);
+        let mut manager = manager(super::SidecarLaunch::Spawn, false);
+        let before = manager.generation.load(Ordering::Relaxed);
+
+        // what watch_process does after the sidecar died
+        manager._start_internal(true).await;
+        assert_eq!(
+            manager.generation.load(Ordering::Relaxed),
+            before,
+            "a relaunch that moves the fence shuts down the watcher performing it"
+        );
+
+        // a launch from outside does move it, so a stale watcher stops touching the state
+        manager._start_internal(false).await;
+        assert!(manager.generation.load(Ordering::Relaxed) > before);
     }
 
     #[test]
