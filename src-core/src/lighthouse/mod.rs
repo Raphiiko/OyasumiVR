@@ -62,6 +62,8 @@ static CONNECT_BACKOFFS: LazyLock<std::sync::Mutex<HashMap<PeripheralId, (u32, I
     LazyLock::new(|| std::sync::Mutex::new(HashMap::new()));
 static CONNECT_FAILURE_STREAK: AtomicU32 = AtomicU32::new(0);
 static LAST_RADIO_RECOVERY: LazyLock<Mutex<Option<Instant>>> = LazyLock::new(|| Mutex::new(None));
+static PENDING_RADIO_RESTORES: LazyLock<Mutex<HashSet<String>>> =
+    LazyLock::new(|| Mutex::new(HashSet::new()));
 
 const CONNECT_TIMEOUT: Duration = Duration::from_secs(15);
 const CONNECT_RETRY_COOLDOWN: Duration = Duration::from_secs(10);
@@ -657,22 +659,32 @@ async fn cycle_bluetooth_radio() -> Result<(), String> {
 async fn cycle_radio(radio: &windows::Devices::Radios::Radio) -> Result<(), String> {
     use windows::Devices::Radios::{RadioAccessStatus, RadioKind, RadioState};
 
-    if radio
-        .Kind()
-        .map_err(|e| format!("failed to inspect a bluetooth radio: {e}"))?
-        != RadioKind::Bluetooth
-    {
+    let kind = match radio.Kind() {
+        Ok(kind) => kind,
+        Err(_) => return Ok(()),
+    };
+    if kind != RadioKind::Bluetooth {
         return Ok(());
     }
     let name = radio
         .Name()
         .map(|name| name.to_string())
         .unwrap_or_else(|_| String::from("bluetooth radio"));
+    if PENDING_RADIO_RESTORES.lock().await.remove(&name) {
+        warn!("[Core] Turning the '{name}' radio back on after a failed recovery");
+        if let Err(err) = restore_radio_on(radio).await {
+            PENDING_RADIO_RESTORES.lock().await.insert(name.clone());
+            return Err(format!("the '{name}' radio {err}"));
+        }
+        return Ok(());
+    }
     match radio.State() {
-        Ok(RadioState::Off) | Ok(RadioState::Disabled) => return Ok(()),
-        Ok(_) => {}
+        Ok(RadioState::On) => {}
+        Ok(_) => return Ok(()),
         Err(err) => {
-            warn!("[Core] Failed to read the bluetooth radio state before cycling it: {err}");
+            return Err(format!(
+                "failed to read the state of the '{name}' radio: {err}"
+            ))
         }
     }
     let probe = radio
@@ -696,9 +708,22 @@ async fn cycle_radio(radio: &windows::Devices::Radios::Radio) -> Result<(), Stri
         ));
     }
     sleep(Duration::from_secs(3)).await;
-    restore_radio_on(radio)
-        .await
-        .map_err(|err| format!("the '{name}' radio {err}"))
+    match radio.State() {
+        Ok(RadioState::Off) => {}
+        Ok(state) => {
+            return Err(format!(
+                "the '{name}' radio still reports {state:?} after being turned off"
+            ))
+        }
+        Err(err) => {
+            warn!("[Core] Failed to read the '{name}' radio state after turning it off: {err}")
+        }
+    }
+    if let Err(err) = restore_radio_on(radio).await {
+        PENDING_RADIO_RESTORES.lock().await.insert(name.clone());
+        return Err(format!("the '{name}' radio {err}"));
+    }
+    Ok(())
 }
 
 async fn restore_radio_on(radio: &windows::Devices::Radios::Radio) -> Result<(), String> {
