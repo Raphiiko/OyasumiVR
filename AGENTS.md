@@ -125,7 +125,8 @@ directory (`ui`, `core`), a subsystem (`overlay`, `i18n`), or a feature (`lighth
 `git log --format=%s | grep -oP '^\w+\(\K[^)]+' | sort -u` and reuse a scope the log already carries
 when one fits. Leave the scope out when the change spans several areas.
 
-We squash-merge, so a pull request title is a commit subject. Give it the same shape.
+We squash-merge, so a pull request title is a commit subject. `## Pull requests` covers the two
+rules that differ.
 
 Write a body unless the subject says everything. Cover these, in this order, one short paragraph
 each, and drop the ones that do not apply:
@@ -134,3 +135,20 @@ each, and drop the ones that do not apply:
 2. Why it happened, with the concrete cause.
 3. What the change does now.
 4. A fact the reader needs later: a manual step, a follow-up, something you left out.
+
+## Pull requests
+
+Run the `unslop` skill on the title and on the body, every time you open or edit a pull request.
+
+### Title
+
+Give the title a commit subject's shape, with the Plane work item as the scope:
+
+    fix(OYASUMIVR-39): pace audio meter retries after a read error
+
+Leave the scope out when no work item covers the pull request. The area scopes stay in commits.
+
+### Body
+
+Write `Closes #123` when the pull request closes a GitHub issue. A bot adds the Plane link after
+the pull request opens, so leave the Plane work item out of the body.
