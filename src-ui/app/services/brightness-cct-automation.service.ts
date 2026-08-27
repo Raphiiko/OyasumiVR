@@ -9,6 +9,7 @@ import {
   distinctUntilChanged,
   filter,
   firstValueFrom,
+  from,
   interval,
   map,
   merge,
@@ -20,6 +21,7 @@ import {
   switchMap,
   take,
   tap,
+  timeout,
 } from 'rxjs';
 import { CancellableTask } from '../utils/cancellable-task';
 import { EventLogService } from './event-log.service';
@@ -163,11 +165,15 @@ export class BrightnessCctAutomationService {
       )
       .subscribe(async (configs) => {
         // Check if the sunset/sunrise times are already configured
-        const config = configs.BRIGHTNESS_AUTOMATIONS;
-        if (config.AT_SUNRISE.activationTime !== null && config.AT_SUNSET.activationTime !== null)
+        if (
+          configs.BRIGHTNESS_AUTOMATIONS.AT_SUNRISE.activationTime !== null &&
+          configs.BRIGHTNESS_AUTOMATIONS.AT_SUNSET.activationTime !== null
+        )
           return;
         // Fetch the sunset/sunrise times if needed
         if (!this.autoSunsetTime || !this.autoSunriseTime) {
+          // leave a running lookup to the scheduled refresh, and try again on the next tick
+          if (this.sunriseSunsetLookup) return;
           try {
             await this.fetchSunriseSunsetTimes();
           } catch (e) {
@@ -175,7 +181,9 @@ export class BrightnessCctAutomationService {
             return;
           }
         }
-        // Update the config if needed
+        // Update the config if needed, reading it again since the lookup may have written to it
+        const config = (await firstValueFrom(this.automationConfigService.configs))
+          .BRIGHTNESS_AUTOMATIONS;
         const patch: Partial<BrightnessAutomationsConfig> = {};
         if (config.AT_SUNRISE.activationTime === null) {
           patch.AT_SUNRISE = {
@@ -189,6 +197,7 @@ export class BrightnessCctAutomationService {
             activationTime: this.autoSunsetTime ?? null,
           };
         }
+        if (!patch.AT_SUNRISE && !patch.AT_SUNSET) return;
         await this.automationConfigService.updateAutomationConfig<BrightnessAutomationsConfig>(
           'BRIGHTNESS_AUTOMATIONS',
           patch
@@ -603,9 +612,11 @@ export class BrightnessCctAutomationService {
     }
   }
 
-  // shared while a lookup is in flight, refetches once it settles
+  // callers share one in-flight request; the next call after it settles starts a new one
   private fetchSunriseSunsetTimes(): Promise<[string, string]> {
-    return (this.sunriseSunsetLookup ??= invoke<[string, string]>('get_sunrise_sunset_time')
+    return (this.sunriseSunsetLookup ??= firstValueFrom(
+      from(invoke<[string, string]>('get_sunrise_sunset_time')).pipe(timeout(30000))
+    )
       .then((times) => {
         [this.autoSunriseTime, this.autoSunsetTime] = times;
         return times;
