@@ -666,7 +666,15 @@ async fn cycle_radio(radio: &windows::Devices::Radios::Radio) -> Result<(), Stri
     }
     let name = radio
         .Name()
-        .map_err(|e| format!("failed to name a bluetooth radio: {e}"))?;
+        .map(|name| name.to_string())
+        .unwrap_or_else(|_| String::from("bluetooth radio"));
+    match radio.State() {
+        Ok(RadioState::Off) | Ok(RadioState::Disabled) => return Ok(()),
+        Ok(_) => {}
+        Err(err) => {
+            warn!("[Core] Failed to read the bluetooth radio state before cycling it: {err}");
+        }
+    }
     let probe = radio
         .SetStateAsync(RadioState::On)
         .map_err(|e| e.to_string())?
@@ -683,7 +691,9 @@ async fn cycle_radio(radio: &windows::Devices::Radios::Radio) -> Result<(), Stri
         .await
         .map_err(|e| e.to_string())?;
     if status != RadioAccessStatus::Allowed {
-        return Err(format!("turning the '{name}' radio off was refused ({status:?})"));
+        return Err(format!(
+            "turning the '{name}' radio off was refused ({status:?})"
+        ));
     }
     sleep(Duration::from_secs(3)).await;
     restore_radio_on(radio)
@@ -698,11 +708,20 @@ async fn restore_radio_on(radio: &windows::Devices::Radios::Radio) -> Result<(),
         if attempt > 1 {
             sleep(Duration::from_secs(3)).await;
         }
-        let status = radio
-            .SetStateAsync(RadioState::On)
-            .map_err(|e| e.to_string())?
-            .await
-            .map_err(|e| e.to_string())?;
+        let operation = match radio.SetStateAsync(RadioState::On) {
+            Ok(operation) => operation,
+            Err(err) => {
+                warn!("[Core] Failed to request turning the bluetooth radio back on (attempt {attempt}/{RADIO_ON_ATTEMPTS}): {err}");
+                continue;
+            }
+        };
+        let status = match operation.await {
+            Ok(status) => status,
+            Err(err) => {
+                warn!("[Core] Turning the bluetooth radio back on failed (attempt {attempt}/{RADIO_ON_ATTEMPTS}): {err}");
+                continue;
+            }
+        };
         if status != RadioAccessStatus::Allowed {
             warn!("[Core] Turning the bluetooth radio back on was refused (attempt {attempt}/{RADIO_ON_ATTEMPTS}): {status:?}");
             continue;
