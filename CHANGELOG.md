@@ -60,6 +60,12 @@ with [SemVer](https://semver.org/) prerelease suffixes:
   OyasumiVR's local connection
 - Fixed OyasumiVR using up an entire CPU core when Windows stopped reporting the microphone level
   for the capture device used by the system microphone automations
+- Fixed the event log recording the wrong brightness values for brightness automations, when
+  advanced mode was enabled
+- Fixed the event log recording a headset hardware brightness change on headsets that have no
+  hardware brightness control
+- Fixed the event log showing an internal label instead of the reason for headset brightness changes
+  at sunset and sunrise
 - The VR overlay now writes the reason for an unexpected shutdown to its log file, instead of stopping without a trace
 - Changing the VR overlay's GPU acceleration setting now restarts it right away, instead of waiting out the retry delay
   of up to five minutes
