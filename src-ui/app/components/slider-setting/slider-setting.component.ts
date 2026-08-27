@@ -66,8 +66,8 @@ export class SliderSettingComponent implements OnInit, OnChanges {
     this.input$
       .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
       .subscribe((strValue) => {
-        let value = parseInt(strValue, 10);
-        if (isNaN(value)) return;
+        let value = parseFloat(strValue);
+        if (!Number.isFinite(value)) return;
         value = Math.max(this.min, Math.min(this.max, value));
         if (value === this.value) return;
         this.value = value;
