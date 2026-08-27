@@ -69,11 +69,11 @@ export class SliderSettingComponent implements OnInit, OnChanges {
       .subscribe((strValue) => {
         let value = parseFloat(strValue);
         if (!Number.isFinite(value)) return;
-        const precision = floatPrecision(this.step);
-        const quotient = value / this.step;
+        const precision = Math.max(floatPrecision(this.min), floatPrecision(this.step));
+        const quotient = (value - this.min) / this.step;
         const epsilon = Number.EPSILON * 4 * Math.max(1, Math.abs(quotient));
         value = clamp(
-          ensurePrecision(Math.round(quotient + epsilon) * this.step, precision),
+          ensurePrecision(Math.round(quotient + epsilon) * this.step + this.min, precision),
           this.min,
           this.max
         );
