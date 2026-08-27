@@ -990,8 +990,9 @@ dependencies = [
 
 [[package]]
 name = "oyasumivr-shared"
-version = "26.8.0-beta.5"
+version = "26.8.0-beta.6"
 dependencies = [
+ "base64",
  "regex",
  "reqwest",
  "sentry",
