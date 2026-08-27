@@ -60,6 +60,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
   OyasumiVR's local connection
 - Fixed OyasumiVR using up an entire CPU core when Windows stopped reporting the microphone level
   for the capture device used by the system microphone automations
+- Fixed OyasumiVR looking up your sunrise and sunset times up to three times when it started
 - Fixed the event log recording the wrong brightness values for brightness automations, when
   advanced mode was enabled
 - Fixed the event log recording a headset hardware brightness change on headsets that have no

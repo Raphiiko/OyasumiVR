@@ -9,6 +9,7 @@ import {
   distinctUntilChanged,
   filter,
   firstValueFrom,
+  from,
   interval,
   map,
   merge,
@@ -20,6 +21,7 @@ import {
   switchMap,
   take,
   tap,
+  timeout,
 } from 'rxjs';
 import { CancellableTask } from '../utils/cancellable-task';
 import { EventLogService } from './event-log.service';
@@ -54,6 +56,7 @@ export class BrightnessCctAutomationService {
   } | null>(null);
   private autoSunsetTime?: string;
   private autoSunriseTime?: string;
+  private sunriseSunsetLookup?: Promise<[string, string]>;
   private sleepMode: boolean = false;
 
   public readonly anyBrightnessTransitionActive = this.lastActivatedBrightnessTransition.pipe(
@@ -144,7 +147,6 @@ export class BrightnessCctAutomationService {
     await listen<void>('CRON_MINUTE_START', () => this.onMinuteTick());
 
     // Update sunrise/sunset times on startup and every 12 hours
-    this.updateSunriseSunsetTimes();
     interval(1000 * 60 * 60 * 12) // Every 12 hours
       .pipe(startWith(0))
       .subscribe(() => this.updateSunriseSunsetTimes());
@@ -158,21 +160,25 @@ export class BrightnessCctAutomationService {
       )
       .subscribe(async (configs) => {
         // Check if the sunset/sunrise times are already configured
-        const config = configs.BRIGHTNESS_AUTOMATIONS;
-        if (config.AT_SUNRISE.activationTime !== null && config.AT_SUNSET.activationTime !== null)
+        if (
+          configs.BRIGHTNESS_AUTOMATIONS.AT_SUNRISE.activationTime !== null &&
+          configs.BRIGHTNESS_AUTOMATIONS.AT_SUNSET.activationTime !== null
+        )
           return;
         // Fetch the sunset/sunrise times if needed
         if (!this.autoSunsetTime || !this.autoSunriseTime) {
+          // leave a running lookup to the scheduled refresh, and try again on the next tick
+          if (this.sunriseSunsetLookup) return;
           try {
-            const [sunrise, sunset] = await invoke<[string, string]>('get_sunrise_sunset_time');
-            this.autoSunriseTime = sunrise;
-            this.autoSunsetTime = sunset;
+            await this.fetchSunriseSunsetTimes();
           } catch (e) {
             error('[BrightnessCctAutomationService] Failed to fetch sunrise/sunset times: ' + e);
             return;
           }
         }
-        // Update the config if needed
+        // Update the config if needed, reading it again since the lookup may have written to it
+        const config = (await firstValueFrom(this.automationConfigService.configs))
+          .BRIGHTNESS_AUTOMATIONS;
         const patch: Partial<BrightnessAutomationsConfig> = {};
         if (config.AT_SUNRISE.activationTime === null) {
           patch.AT_SUNRISE = {
@@ -186,6 +192,7 @@ export class BrightnessCctAutomationService {
             activationTime: this.autoSunsetTime ?? null,
           };
         }
+        if (!patch.AT_SUNRISE && !patch.AT_SUNSET) return;
         await this.automationConfigService.updateAutomationConfig<BrightnessAutomationsConfig>(
           'BRIGHTNESS_AUTOMATIONS',
           patch
@@ -605,12 +612,22 @@ export class BrightnessCctAutomationService {
     }
   }
 
+  // callers share one in-flight request; the next call after it settles starts a new one
+  private fetchSunriseSunsetTimes(): Promise<[string, string]> {
+    return (this.sunriseSunsetLookup ??= firstValueFrom(
+      from(invoke<[string, string]>('get_sunrise_sunset_time')).pipe(timeout(30000))
+    )
+      .then((times) => {
+        [this.autoSunriseTime, this.autoSunsetTime] = times;
+        return times;
+      })
+      .finally(() => (this.sunriseSunsetLookup = undefined)));
+  }
+
   private async updateSunriseSunsetTimes() {
     try {
       // Get the latest sunrise/sunset times
-      const [sunrise, sunset] = await invoke<[string, string]>('get_sunrise_sunset_time');
-      this.autoSunriseTime = sunrise;
-      this.autoSunsetTime = sunset;
+      const [sunrise, sunset] = await this.fetchSunriseSunsetTimes();
 
       // Update configurations with auto update enabled
       const configs = await firstValueFrom(this.automationConfigService.configs);
