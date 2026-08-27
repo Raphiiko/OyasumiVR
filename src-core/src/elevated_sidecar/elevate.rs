@@ -4,15 +4,13 @@
 use std::ffi::OsStr;
 use std::os::windows::ffi::OsStrExt;
 use std::path::Path;
+use windows::core::PCWSTR;
 use windows::Win32::Foundation::{CloseHandle, ERROR_CANCELLED, WAIT_OBJECT_0};
 use windows::Win32::System::Threading::{
     GetExitCodeProcess, GetProcessId, WaitForSingleObject, INFINITE,
 };
-use windows::Win32::UI::Shell::{
-    ShellExecuteExW, SEE_MASK_NOCLOSEPROCESS, SHELLEXECUTEINFOW,
-};
+use windows::Win32::UI::Shell::{ShellExecuteExW, SEE_MASK_NOCLOSEPROCESS, SHELLEXECUTEINFOW};
 use windows::Win32::UI::WindowsAndMessaging::SW_HIDE;
-use windows::core::PCWSTR;
 
 #[derive(Debug)]
 pub enum ElevateError {
@@ -38,7 +36,10 @@ fn wide(value: &OsStr) -> Vec<u16> {
 }
 
 /// Uses the Ex form, which is the one that hands back a process handle to wait on.
-fn shell_execute(exe: &Path, arguments: &str) -> Result<windows::Win32::Foundation::HANDLE, ElevateError> {
+fn shell_execute(
+    exe: &Path,
+    arguments: &str,
+) -> Result<windows::Win32::Foundation::HANDLE, ElevateError> {
     // checked first: for a missing file the shell returns ERROR_CANCELLED, same as a refusal
     if !exe.is_file() {
         return Err(ElevateError::Missing(exe.display().to_string()));

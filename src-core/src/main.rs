@@ -403,7 +403,6 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         osc::commands::set_osc_method_value,
         osc::commands::set_osc_receive_address_whitelist,
         elevated_sidecar::commands::elevated_sidecar_started,
-        elevated_sidecar::commands::privileged_launcher_state,
         elevated_sidecar::commands::elevated_features_enable,
         elevated_sidecar::commands::elevated_features_disable,
         elevated_sidecar::commands::start_elevated_sidecar,

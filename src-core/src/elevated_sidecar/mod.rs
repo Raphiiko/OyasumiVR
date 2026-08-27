@@ -59,6 +59,30 @@ fn choose_launch_strategy() -> SidecarLaunch {
     SidecarLaunch::ScheduledTask
 }
 
+/// Whether a sidecar is starting or already running.
+pub async fn is_active() -> bool {
+    let manager_guard = SIDECAR_MANAGER.lock().await;
+    match manager_guard.as_ref() {
+        Some(manager) => manager.is_active().await,
+        None => false,
+    }
+}
+
+/// Waits for the sidecar to report in, releasing the manager lock between polls so the start
+/// signal can be handled.
+pub async fn wait_until_started(timeout: Duration) -> bool {
+    let deadline = tokio::time::Instant::now() + timeout;
+    loop {
+        if commands::elevated_sidecar_started().await {
+            return true;
+        }
+        if tokio::time::Instant::now() >= deadline {
+            return false;
+        }
+        tokio::time::sleep(Duration::from_millis(200)).await;
+    }
+}
+
 /// Whether the elevated sidecar goes through the privileged launcher's scheduled task.
 pub async fn uses_scheduled_task() -> bool {
     let manager_guard = SIDECAR_MANAGER.lock().await;
@@ -147,19 +171,25 @@ fn retry_disabled_consent() {
     });
 }
 
-#[allow(dead_code)]
 pub async fn request_stop() {
-    let mut client_guard = SIDECAR_GRPC_CLIENT.lock().await;
-    let client = match client_guard.as_mut() {
-        Some(client) => client,
-        None => return,
+    let client = SIDECAR_GRPC_CLIENT.lock().await.clone();
+    let Some(mut client) = client else {
+        return;
     };
     info!("[Core] Stopping current sidecar...");
-    let _ = client
-        .request_stop(tonic::Request::new(
-            crate::Models::elevated_sidecar::Empty {},
-        ))
-        .await;
+    let stopped = matches!(
+        tokio::time::timeout(
+            Duration::from_secs(2),
+            client.request_stop(tonic::Request::new(
+                crate::Models::elevated_sidecar::Empty {},
+            )),
+        )
+        .await,
+        Ok(Ok(_))
+    );
+    if !stopped {
+        warn!("[Core] The elevated sidecar did not acknowledge the stop request");
+    }
 }
 
 /// Returned when a sidecar reports in that the core never asked for. The gRPC layer turns it into

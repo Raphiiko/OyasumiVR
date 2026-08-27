@@ -10,6 +10,7 @@ use oyasumivr_shared::windows::{current_user_sid, is_elevated};
 use oyasumivr_shared::{elevated_sidecar_key_id, task, PRIVILEGED_LAUNCHER_VERSION};
 use serde::Deserialize;
 use std::path::PathBuf;
+use std::time::Duration;
 
 pub const LAUNCHER_EXE: &str = "oyasumivr-privileged-launcher.exe";
 pub const SIDECAR_EXE: &str = "oyasumivr-elevated-sidecar.exe";
@@ -24,11 +25,16 @@ pub enum LauncherState {
     /// Not an administrator account, so no elevated token is available.
     NotSupported,
     NotInstalled,
-    Outdated { installed: u32, expected: u32 },
+    Outdated {
+        installed: u32,
+        expected: u32,
+    },
     /// Installed by a build with a different signing key, so it would refuse this sidecar.
     KeyMismatch,
     /// The task exists but does not match what we registered.
-    Untrusted { reason: String },
+    Untrusted {
+        reason: String,
+    },
     Ready,
 }
 
@@ -166,21 +172,41 @@ pub fn state() -> LauncherState {
 }
 
 fn paths_match(reported: &str, expected: &std::path::Path) -> bool {
-    reported.trim().trim_matches('"').eq_ignore_ascii_case(
-        expected
-            .to_str()
-            .unwrap_or_default(),
-    )
+    reported
+        .trim()
+        .trim_matches('"')
+        .eq_ignore_ascii_case(expected.to_str().unwrap_or_default())
 }
 
 /// Anything wider than read and execute for the user is a way to re-aim the task.
 ///
 /// Every ACE has to be one we registered. An unrecognised trustee is rejected rather than ignored,
-/// so an added entry such as `(A;;FA;;;WD)` cannot pass alongside the expected three.
+/// so an added entry such as `(A;;FA;;;WD)` cannot pass alongside the expected three. The DACL has
+/// to be protected, and the owner has to be an administrator, because an owner can rewrite a DACL
+/// whatever it says.
 fn sddl_is_ours(reported: &str, sid: &str) -> bool {
-    let Some(dacl) = reported.replace(' ', "").split("D:").nth(1).map(str::to_string) else {
+    let reported = reported.replace(' ', "");
+    let Some(dacl) = reported.split("D:").nth(1).map(str::to_string) else {
         return false;
     };
+    let owner = reported
+        .split("O:")
+        .nth(1)
+        .map(|rest| {
+            rest.split(['G', 'D', 'S', '('])
+                .next()
+                .unwrap_or_default()
+                .to_string()
+        })
+        .unwrap_or_default();
+    if owner != "BA" && owner != "SY" {
+        return false;
+    }
+    // the flags come before the first ACE, and Windows adds AI to what we registered
+    let flags = dacl.split('(').next().unwrap_or_default();
+    if !flags.contains('P') {
+        return false;
+    }
     let mut saw_system = false;
     let mut saw_administrators = false;
     let mut saw_user = false;
@@ -278,77 +304,106 @@ pub enum EnableResult {
     /// The user dismissed the UAC prompt.
     PromptDeclined,
     InstallFailed,
-    TaskFailed { reason: String },
+    TaskFailed {
+        reason: String,
+    },
     /// Not an administrator account, so these features stay unavailable.
     NotSupported,
 }
 
+/// How long enable waits for the sidecar to report in. Shorter than `GIVE_UP_AFTER`, so the
+/// launcher exit code is still the one from this attempt.
+const START_TIMEOUT: Duration = Duration::from_secs(15);
+
 /// Makes sure the launcher is installed and healthy, then starts the sidecar.
 pub async fn enable() -> EnableResult {
     // A build that elevates the sidecar directly has no launcher to install or check.
-    if !super::uses_scheduled_task().await {
-        return if super::commands::start_elevated_sidecar().await {
-            EnableResult::Ok
-        } else {
-            EnableResult::InstallFailed
-        };
-    }
-    match state() {
-        LauncherState::NotSupported => {
-            // nothing to fall back to without an elevated token
-            info!("[Core] Elevated features are unavailable on this account");
-            return EnableResult::NotSupported;
-        }
-        LauncherState::Ready => {}
-        LauncherState::NotInstalled
-        | LauncherState::Outdated { .. }
-        | LauncherState::KeyMismatch
-        | LauncherState::Untrusted { .. } => {
-            // install waits for the UAC prompt, which the user may leave on screen indefinitely
-            match tokio::task::spawn_blocking(install).await {
-                Ok(InstallOutcome::Ok) => {}
-                Ok(InstallOutcome::PromptDeclined) => return EnableResult::PromptDeclined,
-                Ok(InstallOutcome::Failed) => return EnableResult::InstallFailed,
-                Err(e) => {
-                    error!("[Core] The privileged launcher installer panicked: {e}");
-                    return EnableResult::InstallFailed;
-                }
-            }
+    let through_task = super::uses_scheduled_task().await;
+    if through_task {
+        if let Some(failure) = install_if_needed().await {
+            return failure;
         }
     }
 
-    // Anything short of Ready means nothing will run elevated, whatever the installer reported.
-    match state() {
-        LauncherState::Ready => {}
-        LauncherState::Untrusted { reason } => return EnableResult::TaskFailed { reason },
-        other => {
-            return EnableResult::TaskFailed {
-                reason: format!("the launcher is {other:?} after installing"),
-            }
-        }
-    }
-    if !super::commands::start_elevated_sidecar().await {
+    // Already active means a sidecar is starting or already running, which is not a failure.
+    if !super::is_active().await && !super::commands::start_elevated_sidecar().await {
         return EnableResult::TaskFailed {
             reason: "the elevated sidecar could not be started".to_string(),
         };
     }
+
+    // Nothing so far says a sidecar exists. The task reports only that it was asked to start, and
+    // a prompt being answered says nothing either, so wait for the sidecar itself.
+    if !super::wait_until_started(START_TIMEOUT).await {
+        let reason = match through_task {
+            true => last_launcher_result()
+                .map(describe_launcher_result)
+                .unwrap_or("the launcher reported no result")
+                .to_string(),
+            false => "the elevated sidecar did not report in".to_string(),
+        };
+        error!("[Core] The elevated sidecar did not start: {reason}");
+        return EnableResult::TaskFailed { reason };
+    }
     EnableResult::Ok
+}
+
+/// `None` when the launcher is ready to start a sidecar.
+async fn install_if_needed() -> Option<EnableResult> {
+    // state reads files and talks to the Task Scheduler over COM, so it does not belong on a
+    // runtime worker
+    match tokio::task::spawn_blocking(state).await {
+        Ok(LauncherState::NotSupported) => {
+            // nothing to fall back to without an elevated token
+            info!("[Core] Elevated features are unavailable on this account");
+            return Some(EnableResult::NotSupported);
+        }
+        Ok(LauncherState::Ready) => return None,
+        Ok(_) => {}
+        Err(e) => {
+            error!("[Core] Could not read the privileged launcher state: {e}");
+            return Some(EnableResult::InstallFailed);
+        }
+    }
+
+    // install waits for the UAC prompt, which the user may leave on screen indefinitely
+    match tokio::task::spawn_blocking(install).await {
+        Ok(InstallOutcome::Ok) => {}
+        Ok(InstallOutcome::PromptDeclined) => return Some(EnableResult::PromptDeclined),
+        Ok(InstallOutcome::Failed) => return Some(EnableResult::InstallFailed),
+        Err(e) => {
+            error!("[Core] The privileged launcher installer panicked: {e}");
+            return Some(EnableResult::InstallFailed);
+        }
+    }
+
+    // Anything short of Ready means nothing will run elevated, whatever the installer reported.
+    match tokio::task::spawn_blocking(state).await {
+        Ok(LauncherState::Ready) => None,
+        Ok(LauncherState::Untrusted { reason }) => Some(EnableResult::TaskFailed { reason }),
+        Ok(other) => Some(EnableResult::TaskFailed {
+            reason: format!("the launcher is {other:?} after installing"),
+        }),
+        Err(e) => {
+            error!("[Core] Could not read the privileged launcher state: {e}");
+            Some(EnableResult::InstallFailed)
+        }
+    }
 }
 
 #[cfg(test)]
 mod tests {
-    /// The answer depends on the account running the tests, so this only asserts the direction
-    /// that must never be wrong: an elevated process must never be told it cannot elevate.
     const SID: &str = "S-1-5-21-1-2-3-1001";
 
     #[test]
     fn accepts_the_descriptor_we_register() {
+        // exactly what Windows reported back on a real registration
         assert!(super::sddl_is_ours(
-            &format!("D:PAI(A;;FA;;;SY)(A;;FA;;;BA)(A;;0x1200a9;;;{SID})"),
+            &format!("O:BAD:PAI(A;;FA;;;SY)(A;;FA;;;BA)(A;;0x1200a9;;;{SID})"),
             SID
         ));
         assert!(super::sddl_is_ours(
-            &format!("D:P(A;;FA;;;SY)(A;;FA;;;BA)(A;;FRFX;;;{SID})"),
+            &format!("O:BAG:BAD:P(A;;FA;;;SY)(A;;FA;;;BA)(A;;FRFX;;;{SID})"),
             SID
         ));
     }
@@ -356,7 +411,7 @@ mod tests {
     #[test]
     fn rejects_an_extra_ace_for_another_trustee() {
         assert!(!super::sddl_is_ours(
-            &format!("D:(A;;FA;;;SY)(A;;FA;;;BA)(A;;0x1200a9;;;{SID})(A;;FA;;;WD)"),
+            &format!("O:BAD:P(A;;FA;;;SY)(A;;FA;;;BA)(A;;0x1200a9;;;{SID})(A;;FA;;;WD)"),
             SID
         ));
     }
@@ -364,17 +419,65 @@ mod tests {
     #[test]
     fn rejects_write_access_for_the_user() {
         assert!(!super::sddl_is_ours(
-            &format!("D:(A;;FA;;;SY)(A;;FA;;;BA)(A;;FA;;;{SID})"),
+            &format!("O:BAD:P(A;;FA;;;SY)(A;;FA;;;BA)(A;;FA;;;{SID})"),
             SID
         ));
     }
 
     #[test]
     fn rejects_a_descriptor_missing_an_expected_ace() {
-        assert!(!super::sddl_is_ours(&format!("D:(A;;FA;;;SY)(A;;0x1200a9;;;{SID})"), SID));
+        assert!(!super::sddl_is_ours(
+            &format!("O:BAD:P(A;;FA;;;SY)(A;;0x1200a9;;;{SID})"),
+            SID
+        ));
         assert!(!super::sddl_is_ours("", SID));
     }
 
+    #[test]
+    fn rejects_a_dacl_that_is_not_protected() {
+        // without P the task inherits entries from the task folder
+        assert!(!super::sddl_is_ours(
+            &format!("O:BAD:AI(A;;FA;;;SY)(A;;FA;;;BA)(A;;0x1200a9;;;{SID})"),
+            SID
+        ));
+    }
+
+    #[test]
+    fn rejects_an_owner_who_is_not_an_administrator() {
+        // an owner can grant itself full control whatever the DACL says
+        assert!(!super::sddl_is_ours(
+            &format!("O:{SID}D:PAI(A;;FA;;;SY)(A;;FA;;;BA)(A;;0x1200a9;;;{SID})"),
+            SID
+        ));
+        assert!(
+            !super::sddl_is_ours(
+                &format!("D:PAI(A;;FA;;;SY)(A;;FA;;;BA)(A;;0x1200a9;;;{SID})"),
+                SID
+            ),
+            "a descriptor with no owner says nothing about who can rewrite it"
+        );
+    }
+
+    #[test]
+    fn paths_match_ignores_quoting_and_case() {
+        let expected = std::path::Path::new(r"C:\Program Files\OyasumiVR\privileged\x.exe");
+        assert!(super::paths_match(
+            r"C:\Program Files\OyasumiVR\privileged\x.exe",
+            expected
+        ));
+        assert!(super::paths_match(
+            r#"  "C:\program files\oyasumivr\privileged\X.EXE"  "#,
+            expected
+        ));
+        assert!(!super::paths_match(
+            r"C:\Windows\System32\cmd.exe",
+            expected
+        ));
+        assert!(!super::paths_match("", expected));
+    }
+
+    /// The answer depends on the account running the tests, so this only asserts the direction
+    /// that must never be wrong: an elevated process must never be told it cannot elevate.
     #[test]
     fn an_elevated_process_can_always_elevate() {
         if oyasumivr_shared::windows::is_elevated() {

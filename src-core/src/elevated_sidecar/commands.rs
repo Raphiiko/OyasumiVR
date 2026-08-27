@@ -40,11 +40,6 @@ pub async fn elevated_sidecar_get_grpc_port() -> Option<u32> {
     }
 }
 
-#[tauri::command]
-pub async fn privileged_launcher_state() -> super::launcher::LauncherState {
-    super::launcher::state()
-}
-
 /// The one call that can raise a UAC prompt. The result distinguishes a declined prompt from a
 /// failure, which the UI reports differently.
 #[tauri::command]
