@@ -60,6 +60,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
   OyasumiVR's local connection
 - Fixed OyasumiVR using up an entire CPU core when Windows stopped reporting the microphone level
   for the capture device used by the system microphone automations
+- Fixed OyasumiVR looking up your sunrise and sunset times up to three times when it started
 - The VR overlay now writes the reason for an unexpected shutdown to its log file, instead of stopping without a trace
 - Changing the VR overlay's GPU acceleration setting now restarts it right away, instead of waiting out the retry delay
   of up to five minutes
