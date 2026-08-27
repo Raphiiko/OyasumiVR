@@ -323,23 +323,11 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     let mut cron = CronJob::new("CRON_MINUTE_START", on_cron_minute_start);
     cron.seconds("0");
     CronJob::start_job_threaded(cron);
-    // If we have admin privileges, prelaunch the elevation sidecar
-    if is_elevated() {
-        info!("[Core] Main process is running with elevation. Pre-launching elevated sidecar...");
-        // Wait for grpc server to start so we can pass the port
-        loop {
-            let core_grpc_port = grpc::SERVER_PORT.lock().await;
-            // Once we have the port, start the sidecar
-            if core_grpc_port.is_some() {
-                drop(core_grpc_port);
-                elevated_sidecar::commands::start_elevated_sidecar().await;
-                break;
-            }
-        }
-    } else {
-        info!(
-            "[Core] Main process is running without elevation. Elevated sidecar will be launched on demand."
-        );
+    // The elevated sidecar starts when the frontend asks for it, which is where the setting that
+    // allows it lives.
+    match is_elevated() {
+        true => info!("[Core] Main process is running with elevation."),
+        false => info!("[Core] Main process is running without elevation."),
     }
 }
 

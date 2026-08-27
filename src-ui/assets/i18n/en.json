@@ -2062,14 +2062,14 @@
     "general": {
       "adminPrivileges": {
         "description": "Some features, such as controlling your GPU's power limits, need administrator access. Turning this on asks for it once. After that OyasumiVR sets these features up without asking again.",
-        "label": "Allow features that need administrator access",
-        "title": "Administrator Privileges",
         "errors": {
-          "promptDeclined": "Administrator access was not granted, so these features stay off.",
           "installFailed": "OyasumiVR could not set up the component that needs administrator access.",
-          "taskFailed": "The administrator component is present but not trustworthy, so it was not used.",
-          "notSupported": "These features need a Windows administrator account. This account cannot be given administrator access, so they stay unavailable."
-        }
+          "notSupported": "These features need a Windows administrator account. This account cannot be given administrator access, so they stay unavailable.",
+          "promptDeclined": "Administrator access was not granted, so these features stay off.",
+          "taskFailed": "OyasumiVR could not start the component that needs administrator access. It will try again next time you start OyasumiVR."
+        },
+        "label": "Allow features that need administrator access",
+        "title": "Administrator Privileges"
       },
       "language": {
         "description": "You can select your desired language here. If there are any missing translations, or you would like like to add support for your language, please get in contact!",
