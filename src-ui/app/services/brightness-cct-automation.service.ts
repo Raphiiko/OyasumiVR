@@ -490,6 +490,8 @@ export class BrightnessCctAutomationService {
       const advancedMode = await firstValueFrom(this.automationConfigService.configs).then(
         (c) => c.BRIGHTNESS_AUTOMATIONS.advancedMode
       );
+      const hardwareBrightnessAvailable =
+        advancedMode && (await firstValueFrom(this.hardwareBrightnessControl.driverIsAvailable));
       if (!forceInstant && config.transition) {
         const tasks: CancellableTask[] = await (async () => {
           if (advancedMode) {
@@ -502,7 +504,7 @@ export class BrightnessCctAutomationService {
                 }
               ),
             ];
-            if (await firstValueFrom(this.hardwareBrightnessControl.driverIsAvailable)) {
+            if (hardwareBrightnessAvailable) {
               tasks.push(
                 this.hardwareBrightnessControl.transitionBrightness(
                   config.hardwareBrightness,
@@ -535,7 +537,7 @@ export class BrightnessCctAutomationService {
           await this.softwareBrightnessControl.setBrightness(config.softwareBrightness, {
             logReason,
           });
-          if (await firstValueFrom(this.hardwareBrightnessControl.driverIsAvailable)) {
+          if (hardwareBrightnessAvailable) {
             await this.hardwareBrightnessControl.setBrightness(config.hardwareBrightness, {
               logReason,
             });
@@ -556,13 +558,15 @@ export class BrightnessCctAutomationService {
             transition: config.transition,
             transitionTime: config.transitionTime,
           } as EventLogSoftwareBrightnessChanged);
-          this.eventLog.logEvent({
-            type: 'hardwareBrightnessChanged',
-            reason: eventLogReason,
-            value: config.hardwareBrightness,
-            transition: config.transition,
-            transitionTime: config.transitionTime,
-          } as EventLogHardwareBrightnessChanged);
+          if (hardwareBrightnessAvailable) {
+            this.eventLog.logEvent({
+              type: 'hardwareBrightnessChanged',
+              reason: eventLogReason,
+              value: config.hardwareBrightness,
+              transition: config.transition,
+              transitionTime: config.transitionTime,
+            } as EventLogHardwareBrightnessChanged);
+          }
         } else {
           this.eventLog.logEvent({
             type: 'simpleBrightnessChanged',
