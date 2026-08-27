@@ -2,6 +2,7 @@ use std::ffi::OsStr;
 use std::io::{Error, Result};
 use std::os::windows::ffi::OsStrExt;
 use std::path::Path;
+use windows::core::PWSTR;
 use windows::Win32::Foundation::CloseHandle;
 use windows::Win32::System::Threading::{
     CreateProcessW, DeleteProcThreadAttributeList, InitializeProcThreadAttributeList,
@@ -9,7 +10,6 @@ use windows::Win32::System::Threading::{
     LPPROC_THREAD_ATTRIBUTE_LIST, PROCESS_INFORMATION, PROC_THREAD_ATTRIBUTE_MITIGATION_POLICY,
     STARTUPINFOEXW, STARTUPINFOW,
 };
-use windows::core::PWSTR;
 
 /// `PROCESS_CREATION_MITIGATION_POLICY_IMAGE_LOAD_PREFER_SYSTEM32_ALWAYS_ON`. Bit 60, so the
 /// attribute value must be a u64; a u32 silently drops the flag.
@@ -82,7 +82,7 @@ pub fn start(exe: &Path, working_dir: &Path, arguments: &str) -> Result<u32> {
             DeleteProcThreadAttributeList(list);
         }
 
-        result.map_err(|e| Error::from_raw_os_error(e.code().0))?;
+        result.map_err(Error::from)?;
 
         // the sidecar outlives this process on purpose
         let _ = CloseHandle(information.hThread);

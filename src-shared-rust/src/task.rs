@@ -1,9 +1,8 @@
 //! The scheduled task that starts the privileged launcher, defined once for the launcher that
 //! registers it and the core that inspects and runs it.
 
-use std::mem::ManuallyDrop;
 use std::path::Path;
-use windows::core::{BSTR, Interface};
+use windows::core::{Interface, BSTR};
 use windows::Win32::System::Com::{
     CoCreateInstance, CoInitializeEx, CLSCTX_INPROC_SERVER, COINIT_APARTMENTTHREADED,
 };
@@ -11,7 +10,7 @@ use windows::Win32::System::TaskScheduler::{
     IExecAction, IRegisteredTask, ITaskService, TaskScheduler, TASK_LOGON_INTERACTIVE_TOKEN,
     TASK_RUNLEVEL_HIGHEST, TASK_RUNLEVEL_TYPE,
 };
-use windows::Win32::System::Variant::{VARIANT, VT_BSTR};
+use windows::Win32::System::Variant::VARIANT;
 
 /// One registration per account, so a second administrator cannot replace the first one's.
 pub fn task_name(user_sid: &str) -> String {
@@ -28,18 +27,7 @@ const OWNER_AND_DACL_INFO: i32 = 1 | 4;
 /// The user gets read and execute only. SYSTEM and Administrators keep full control, and own the
 /// task, so the registering account holds no implicit right to rewrite it.
 pub fn sddl(user_sid: &str) -> String {
-    format!("O:BAG:BAD:P(A;;FA;;;SY)(A;;FA;;;BA)(A;;FRFX;;;{user_sid})")
-}
-
-/// A VARIANT holding a BSTR. `VARIANT` clears itself on drop, which frees the string.
-fn bstr_variant(value: &str) -> VARIANT {
-    let mut variant = VARIANT::default();
-    unsafe {
-        let inner = &mut *variant.Anonymous.Anonymous;
-        inner.vt = VT_BSTR;
-        inner.Anonymous.bstrVal = ManuallyDrop::new(BSTR::from(value));
-    }
-    variant
+    format!("O:BAG:BAD:P(A;;FA;;;SY)(A;;FA;;;BA)(A;;0x1200a9;;;{user_sid})")
 }
 
 fn service() -> windows::core::Result<ITaskService> {
@@ -120,8 +108,8 @@ fn escape(value: &str) -> String {
 pub fn register(exe: &Path, working_dir: &Path, user_sid: &str) -> windows::core::Result<()> {
     unsafe {
         let root = service()?.GetFolder(&BSTR::from("\\"))?;
-        let user = bstr_variant(user_sid);
-        let descriptor = bstr_variant(&sddl(user_sid));
+        let user = VARIANT::from(user_sid);
+        let descriptor = VARIANT::from(sddl(user_sid).as_str());
         let empty = VARIANT::default();
         root.RegisterTask(
             &BSTR::from(task_name(user_sid)),
@@ -136,7 +124,8 @@ pub fn register(exe: &Path, working_dir: &Path, user_sid: &str) -> windows::core
     }
 }
 
-/// What the registered task actually says, for the core to compare against what it expects.
+/// What the registered task actually says. Windows rewrites parts of a security descriptor as it
+/// stores it, so `sddl` compares by parsing rather than by string equality.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Registration {
     pub action_path: String,
@@ -221,7 +210,7 @@ mod tests {
         let descriptor = sddl("S-1-5-21-1-2-3-1001");
         assert_eq!(
             descriptor,
-            "O:BAG:BAD:P(A;;FA;;;SY)(A;;FA;;;BA)(A;;FRFX;;;S-1-5-21-1-2-3-1001)"
+            "O:BAG:BAD:P(A;;FA;;;SY)(A;;FA;;;BA)(A;;0x1200a9;;;S-1-5-21-1-2-3-1001)"
         );
     }
 
@@ -235,7 +224,10 @@ mod tests {
         use windows::Win32::Security::PSECURITY_DESCRIPTOR;
 
         let descriptor = sddl("S-1-5-21-1-2-3-1001");
-        let wide: Vec<u16> = descriptor.encode_utf16().chain(std::iter::once(0)).collect();
+        let wide: Vec<u16> = descriptor
+            .encode_utf16()
+            .chain(std::iter::once(0))
+            .collect();
         unsafe {
             let mut parsed = PSECURITY_DESCRIPTOR::default();
             ConvertStringSecurityDescriptorToSecurityDescriptorW(
@@ -251,11 +243,10 @@ mod tests {
     }
 
     #[test]
-    fn a_bstr_variant_is_freed_exactly_once() {
+    fn a_string_variant_is_freed_exactly_once() {
         // A double free shows up as a heap corruption abort rather than a failed assertion.
         for _ in 0..1000 {
-            let variant = bstr_variant("S-1-5-21-1-2-3-1001");
-            drop(variant);
+            drop(VARIANT::from("S-1-5-21-1-2-3-1001"));
         }
     }
 

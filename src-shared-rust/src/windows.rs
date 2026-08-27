@@ -27,7 +27,7 @@ impl QueryAccessToken {
             let mut handle = HANDLE::default();
             match OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &mut handle) {
                 Ok(_) => Ok(Self(handle)),
-                Err(e) => Err(Error::from_raw_os_error(e.code().0)),
+                Err(e) => Err(Error::from(e)),
             }
         }
     }
@@ -39,7 +39,7 @@ impl QueryAccessToken {
             let mut elevation = TOKEN_ELEVATION::default();
             let size = std::mem::size_of::<TOKEN_ELEVATION>() as u32;
             let mut ret_size = 0u32;
-            
+
             match GetTokenInformation(
                 self.0,
                 TokenElevation,
@@ -48,7 +48,7 @@ impl QueryAccessToken {
                 &mut ret_size,
             ) {
                 Ok(_) => Ok(elevation.TokenIsElevated != 0),
-                Err(e) => Err(Error::from_raw_os_error(e.code().0)),
+                Err(e) => Err(Error::from(e)),
             }
         }
     }
@@ -56,7 +56,9 @@ impl QueryAccessToken {
 impl Drop for QueryAccessToken {
     fn drop(&mut self) {
         if !self.0.is_invalid() {
-            unsafe { let _ = CloseHandle(self.0); }
+            unsafe {
+                let _ = CloseHandle(self.0);
+            }
         }
     }
 }
@@ -69,7 +71,7 @@ pub fn program_files() -> std::result::Result<std::path::PathBuf, Error> {
 
     unsafe {
         let path = SHGetKnownFolderPath(&FOLDERID_ProgramFiles, KF_FLAG_DEFAULT, None)
-            .map_err(|e| Error::from_raw_os_error(e.code().0))?;
+            .map_err(Error::from)?;
         if path.is_null() {
             return Err(Error::other("the shell returned no Program Files path"));
         }
@@ -79,6 +81,11 @@ pub fn program_files() -> std::result::Result<std::path::PathBuf, Error> {
     }
 }
 
+/// Full control for SYSTEM and Administrators, read and execute for everyone else, owned by
+/// Administrators, and protected so nothing is inherited.
+pub(crate) const DIRECTORY_DESCRIPTOR: &str =
+    "O:BAG:BAD:P(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;OICI;0x1200a9;;;WD)";
+
 /// Replaces a directory's inherited permissions with an explicit, protected set: full control for
 /// SYSTEM and Administrators, read and execute for everyone else.
 ///
@@ -87,25 +94,29 @@ pub fn program_files() -> std::result::Result<std::path::PathBuf, Error> {
 /// Administrators, ends up as the owner. Everything under the privileged directory is executed
 /// elevated, so it has to be unwritable for the user regardless of who created it.
 pub fn protect_directory(path: &std::path::Path) -> std::result::Result<(), Error> {
+    const DESCRIPTOR: &str = DIRECTORY_DESCRIPTOR;
+
     use windows::core::PCWSTR;
+    use windows::Win32::Foundation::{LocalFree, HLOCAL};
     use windows::Win32::Security::Authorization::{
-        ConvertStringSecurityDescriptorToSecurityDescriptorW, SetNamedSecurityInfoW, SDDL_REVISION_1,
-        SE_FILE_OBJECT,
+        ConvertStringSecurityDescriptorToSecurityDescriptorW, SetNamedSecurityInfoW,
+        SDDL_REVISION_1, SE_FILE_OBJECT,
     };
     use windows::Win32::Security::{
         GetSecurityDescriptorDacl, GetSecurityDescriptorOwner, ACL, DACL_SECURITY_INFORMATION,
-        OWNER_SECURITY_INFORMATION, PROTECTED_DACL_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR, PSID,
+        OWNER_SECURITY_INFORMATION, PROTECTED_DACL_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR,
+        PSID,
     };
-    use windows::Win32::Foundation::{LocalFree, HLOCAL};
-
-    const DESCRIPTOR: &str = "O:BAG:BAD:P(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;OICI;0x1200a9;;;WD)";
 
     let mut wide: Vec<u16> = path
         .as_os_str()
         .encode_wide()
         .chain(std::iter::once(0))
         .collect();
-    let descriptor: Vec<u16> = DESCRIPTOR.encode_utf16().chain(std::iter::once(0)).collect();
+    let descriptor: Vec<u16> = DESCRIPTOR
+        .encode_utf16()
+        .chain(std::iter::once(0))
+        .collect();
 
     unsafe {
         let mut security = PSECURITY_DESCRIPTOR::default();
@@ -115,7 +126,7 @@ pub fn protect_directory(path: &std::path::Path) -> std::result::Result<(), Erro
             &mut security,
             None,
         )
-        .map_err(|e| Error::from_raw_os_error(e.code().0))?;
+        .map_err(Error::from)?;
 
         let mut dacl: *mut ACL = std::ptr::null_mut();
         let mut present = windows::core::BOOL::from(false);
@@ -131,7 +142,9 @@ pub fn protect_directory(path: &std::path::Path) -> std::result::Result<(), Erro
         let read_owner = GetSecurityDescriptorOwner(security, &mut owner, &mut defaulted);
         if read_owner.is_err() || owner.is_invalid() {
             let _ = LocalFree(Some(HLOCAL(security.0)));
-            return Err(Error::other("the built-in security descriptor has no owner"));
+            return Err(Error::other(
+                "the built-in security descriptor has no owner",
+            ));
         }
 
         let result = SetNamedSecurityInfoW(
@@ -166,7 +179,8 @@ pub fn current_user_sid() -> std::result::Result<String, Error> {
         if size == 0 {
             return Err(Error::other("could not size the token user information"));
         }
-        let mut buffer = vec![0u8; size as usize];
+        // u64 elements, because TOKEN_USER holds a pointer and a Vec<u8> only promises alignment 1
+        let mut buffer = vec![0u64; (size as usize).div_ceil(8)];
         GetTokenInformation(
             token.0,
             TokenUser,
@@ -174,11 +188,10 @@ pub fn current_user_sid() -> std::result::Result<String, Error> {
             size,
             &mut size,
         )
-        .map_err(|e| Error::from_raw_os_error(e.code().0))?;
+        .map_err(Error::from)?;
         let user = &*(buffer.as_ptr() as *const TOKEN_USER);
         let mut text = windows::core::PWSTR::null();
-        ConvertSidToStringSidW(user.User.Sid, &mut text)
-            .map_err(|e| Error::from_raw_os_error(e.code().0))?;
+        ConvertSidToStringSidW(user.User.Sid, &mut text).map_err(Error::from)?;
         let sid = text.to_string().map_err(Error::other)?;
         let _ = windows::Win32::Foundation::LocalFree(Some(windows::Win32::Foundation::HLOCAL(
             text.0 as *mut _,
@@ -194,6 +207,52 @@ mod tests {
         let real = super::program_files().expect("the shell always knows Program Files");
         assert!(real.is_absolute(), "{}", real.display());
         assert!(real.is_dir(), "{}", real.display());
+    }
+
+    #[test]
+    fn the_directory_descriptor_windows_parses_matches_what_we_wrote() {
+        use windows::core::PCWSTR;
+        use windows::Win32::Foundation::{LocalFree, HLOCAL};
+        use windows::Win32::Security::Authorization::{
+            ConvertSecurityDescriptorToStringSecurityDescriptorW,
+            ConvertStringSecurityDescriptorToSecurityDescriptorW, SDDL_REVISION_1,
+        };
+        use windows::Win32::Security::{
+            DACL_SECURITY_INFORMATION, OWNER_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR,
+        };
+
+        let wide: Vec<u16> = super::DIRECTORY_DESCRIPTOR
+            .encode_utf16()
+            .chain(std::iter::once(0))
+            .collect();
+        unsafe {
+            let mut parsed = PSECURITY_DESCRIPTOR::default();
+            ConvertStringSecurityDescriptorToSecurityDescriptorW(
+                PCWSTR(wide.as_ptr()),
+                SDDL_REVISION_1,
+                &mut parsed,
+                None,
+            )
+            .expect("Windows must accept the descriptor we apply to the privileged tree");
+
+            let mut back = windows::core::PWSTR::null();
+            ConvertSecurityDescriptorToStringSecurityDescriptorW(
+                parsed,
+                SDDL_REVISION_1,
+                OWNER_SECURITY_INFORMATION | DACL_SECURITY_INFORMATION,
+                &mut back,
+                None,
+            )
+            .expect("and must be able to write it back out");
+            let text = back.to_string().unwrap();
+            let _ = LocalFree(Some(HLOCAL(back.0 as *mut _)));
+            let _ = LocalFree(Some(HLOCAL(parsed.0)));
+
+            assert!(text.contains("O:BA"), "Administrators must own it: {text}");
+            assert!(text.contains("D:P"), "the DACL must be protected: {text}");
+            assert!(text.contains("FA;;;SY"), "{text}");
+            assert!(text.contains("FA;;;BA"), "{text}");
+        }
     }
 
     #[test]

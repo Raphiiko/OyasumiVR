@@ -12,7 +12,12 @@ const EXPECTED_TRUSTED_COMMENT_PREFIX: &str = "oyasumivr-elevated-sidecar";
 fn public_key() -> Result<PublicKey> {
     PublicKey::decode(PUBLIC_KEY.trim())
         .or_else(|_| PublicKey::from_base64(PUBLIC_KEY.trim()))
-        .map_err(|e| Error::new(ErrorKind::InvalidData, format!("bad built-in public key: {e}")))
+        .map_err(|e| {
+            Error::new(
+                ErrorKind::InvalidData,
+                format!("bad built-in public key: {e}"),
+            )
+        })
 }
 
 fn signature(sig_path: &Path) -> Result<Signature> {
@@ -34,11 +39,13 @@ pub fn signature_id(sig_path: &Path) -> Result<String> {
     let line = raw
         .lines()
         .find(|l| !l.starts_with("untrusted comment:") && !l.is_empty())
-        .ok_or_else(|| Error::new(ErrorKind::InvalidData, "signature file has no signature line"))?;
-    Ok(line
-        .chars()
-        .filter(|c| c.is_ascii_alphanumeric())
-        .collect())
+        .ok_or_else(|| {
+            Error::new(
+                ErrorKind::InvalidData,
+                "signature file has no signature line",
+            )
+        })?;
+    Ok(line.chars().filter(|c| c.is_ascii_alphanumeric()).collect())
 }
 
 /// Streams the file through verification so a multi-megabyte binary is never held in memory.
@@ -122,7 +129,11 @@ mod tests {
     }
 
     /// Signs a fixture with a throwaway key, exercising streaming, the key check and the pin.
-    fn fixture(dir: &str, content: &[u8], comment: &str) -> (PublicKey, std::path::PathBuf, std::path::PathBuf) {
+    fn fixture(
+        dir: &str,
+        content: &[u8],
+        comment: &str,
+    ) -> (PublicKey, std::path::PathBuf, std::path::PathBuf) {
         let dir = std::env::temp_dir().join(dir);
         let _ = std::fs::remove_dir_all(&dir);
         std::fs::create_dir_all(&dir).unwrap();
@@ -149,7 +160,13 @@ mod tests {
         std::fs::write(&sig_path, signature.into_string()).unwrap();
 
         let key = PublicKey::from_base64(
-            pair.pk.to_box().unwrap().into_string().lines().nth(1).unwrap(),
+            pair.pk
+                .to_box()
+                .unwrap()
+                .into_string()
+                .lines()
+                .nth(1)
+                .unwrap(),
         )
         .unwrap();
         (key, exe, sig_path)
@@ -157,23 +174,42 @@ mod tests {
 
     #[test]
     fn accepts_a_correctly_signed_binary() {
-        let (key, exe, sig) = fixture("oyasumi-verify-ok", b"pretend this is a sidecar", "oyasumivr-elevated-sidecar");
+        let (key, exe, sig) = fixture(
+            "oyasumi-verify-ok",
+            b"pretend this is a sidecar",
+            "oyasumivr-elevated-sidecar",
+        );
         verify_with(&key, &exe, &sig).expect("a good signature must verify");
     }
 
     #[test]
     fn rejects_a_tampered_binary() {
-        let (key, exe, sig) = fixture("oyasumi-verify-tamper", b"pretend this is a sidecar", "oyasumivr-elevated-sidecar");
+        let (key, exe, sig) = fixture(
+            "oyasumi-verify-tamper",
+            b"pretend this is a sidecar",
+            "oyasumivr-elevated-sidecar",
+        );
         std::fs::write(&exe, b"malware").unwrap();
         assert!(verify_with(&key, &exe, &sig).is_err());
     }
 
     #[test]
     fn rejects_a_signature_from_another_key() {
-        let (_, exe, sig) = fixture("oyasumi-verify-otherkey", b"pretend this is a sidecar", "oyasumivr-elevated-sidecar");
+        let (_, exe, sig) = fixture(
+            "oyasumi-verify-otherkey",
+            b"pretend this is a sidecar",
+            "oyasumivr-elevated-sidecar",
+        );
         let other = minisign::KeyPair::generate_encrypted_keypair(Some("pw".into())).unwrap();
         let stranger = PublicKey::from_base64(
-            other.pk.to_box().unwrap().into_string().lines().nth(1).unwrap(),
+            other
+                .pk
+                .to_box()
+                .unwrap()
+                .into_string()
+                .lines()
+                .nth(1)
+                .unwrap(),
         )
         .unwrap();
         assert!(verify_with(&stranger, &exe, &sig).is_err());
@@ -182,7 +218,11 @@ mod tests {
     #[test]
     fn rejects_a_valid_signature_for_another_role() {
         // our key, our signature, wrong artifact
-        let (key, exe, sig) = fixture("oyasumi-verify-role", b"some other tool we also signed", "oyasumivr-updater");
+        let (key, exe, sig) = fixture(
+            "oyasumi-verify-role",
+            b"some other tool we also signed",
+            "oyasumivr-updater",
+        );
         let error = verify_with(&key, &exe, &sig).expect_err("must refuse another role");
         assert!(error.to_string().contains("another role"), "{error}");
     }
