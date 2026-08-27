@@ -33,3 +33,28 @@ Follow `docs/COMMENT_POLICY.md`. Read it before you write or change a comment.
 Add and change English strings only, in `src-ui/assets/i18n/en.json`. Translators fill in the other
 locales. `npm run tl set` writes `en.json` only, which is what you want. To rename or remove a key,
 use `npm run tl mv` or `npm run tl unset`, so the change reaches every locale file.
+
+## Commit messages
+
+Subject: `type(scope): imperative summary`. Lower case after the colon, no trailing period, 72
+characters maximum.
+
+Use one of these types, and only these: `feat`, `fix`, `perf`, `refactor`, `docs`, `chore`.
+
+The scope is optional and the set is open. Name the area a reader would search for: a top-level
+directory (`ui`, `core`), a subsystem (`overlay`, `i18n`), or a feature (`lighthouse`, `mqtt`). Run
+`git log --format=%s | grep -oP '^\w+\(\K[^)]+' | sort -u` and reuse a scope the log already carries
+when one fits. Leave the scope out when the change spans several areas.
+
+The summary carries the verb, so the type never repeats it. Write
+`fix: pace audio meter retries after a read error`.
+
+We squash-merge, so a pull request title is a commit subject. Give it the same shape.
+
+Write a body unless the subject says everything. Cover these, in this order, one short paragraph
+each, and drop the ones that do not apply:
+
+1. What was wrong, and what the user saw.
+2. Why it happened, with the concrete cause.
+3. What the change does now.
+4. A fact the reader needs later: a manual step, a follow-up, something you left out.
