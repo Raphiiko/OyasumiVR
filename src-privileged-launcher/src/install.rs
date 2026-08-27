@@ -1,5 +1,5 @@
 use crate::{exit, log, paths};
-use oyasumivr_shared::windows::{current_user_sid, is_elevated};
+use oyasumivr_shared::windows::{current_user_sid, is_elevated, protect_directory};
 use oyasumivr_shared::{elevated_sidecar_key_id, task, PRIVILEGED_LAUNCHER_VERSION};
 use serde::Serialize;
 
@@ -26,10 +26,15 @@ pub fn run() -> u8 {
         return exit::INSTALL_FAILED;
     };
 
-    // created, never ACL-copied, so both inherit the admin-only permissions of Program Files
+    // Both hold binaries that run elevated, so neither may be writable for the user, whatever
+    // Program Files would have granted them by inheritance.
     for directory in [&dir, &staged] {
         if let Err(e) = std::fs::create_dir_all(directory) {
             log(&format!("[install] cannot create {}: {e}", directory.display()));
+            return exit::INSTALL_FAILED;
+        }
+        if let Err(e) = protect_directory(directory) {
+            log(&format!("[install] cannot secure {}: {e}", directory.display()));
             return exit::INSTALL_FAILED;
         }
     }
@@ -46,16 +51,6 @@ pub fn run() -> u8 {
         }
     }
 
-    let payload = serde_json::to_vec(&Marker {
-        version: PRIVILEGED_LAUNCHER_VERSION,
-        key: elevated_sidecar_key_id().to_string(),
-    })
-    .unwrap_or_default();
-    if let Err(e) = std::fs::write(&marker, payload) {
-        log(&format!("[install] cannot write {}: {e}", marker.display()));
-        return exit::INSTALL_FAILED;
-    }
-
     let sid = match current_user_sid() {
         Ok(sid) => sid,
         Err(e) => {
@@ -67,6 +62,18 @@ pub fn run() -> u8 {
     if let Err(e) = task::register(&target, &staged, &sid) {
         log(&format!("[install] cannot register the task: {e}"));
         return exit::TASK_REGISTRATION_FAILED;
+    }
+
+    // Written last: the core reads it as proof that a task is registered, and spends a UAC prompt
+    // when it is missing.
+    let payload = serde_json::to_vec(&Marker {
+        version: PRIVILEGED_LAUNCHER_VERSION,
+        key: elevated_sidecar_key_id().to_string(),
+    })
+    .unwrap_or_default();
+    if let Err(e) = std::fs::write(&marker, payload) {
+        log(&format!("[install] cannot write {}: {e}", marker.display()));
+        return exit::INSTALL_FAILED;
     }
 
     log(&format!(

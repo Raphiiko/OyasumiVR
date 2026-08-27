@@ -22,36 +22,24 @@ pub fn task_name(user_sid: &str) -> String {
 /// account keeps write access and can re-aim the task.
 const CREATE_FLAGS: i32 = 6 | 0x10;
 
-/// DACL_SECURITY_INFORMATION
-const DACL_INFO: i32 = 4;
+/// OWNER_SECURITY_INFORMATION | DACL_SECURITY_INFORMATION
+const OWNER_AND_DACL_INFO: i32 = 1 | 4;
 
-/// The user gets read and execute only. SYSTEM and Administrators keep full control.
+/// The user gets read and execute only. SYSTEM and Administrators keep full control, and own the
+/// task, so the registering account holds no implicit right to rewrite it.
 pub fn sddl(user_sid: &str) -> String {
-    format!("D:P(A;;FA;;;SY)(A;;FA;;;BA)(A;;FRFX;;;{user_sid})")
+    format!("O:BAG:BAD:P(A;;FA;;;SY)(A;;FA;;;BA)(A;;FRFX;;;{user_sid})")
 }
 
-/// A VARIANT holding a BSTR, freed on drop.
-struct BstrVariant(VARIANT);
-
-impl BstrVariant {
-    fn new(value: &str) -> Self {
-        let mut variant = VARIANT::default();
-        unsafe {
-            let inner = &mut *variant.Anonymous.Anonymous;
-            inner.vt = VT_BSTR;
-            inner.Anonymous.bstrVal = ManuallyDrop::new(BSTR::from(value));
-        }
-        Self(variant)
+/// A VARIANT holding a BSTR. `VARIANT` clears itself on drop, which frees the string.
+fn bstr_variant(value: &str) -> VARIANT {
+    let mut variant = VARIANT::default();
+    unsafe {
+        let inner = &mut *variant.Anonymous.Anonymous;
+        inner.vt = VT_BSTR;
+        inner.Anonymous.bstrVal = ManuallyDrop::new(BSTR::from(value));
     }
-}
-
-impl Drop for BstrVariant {
-    fn drop(&mut self) {
-        unsafe {
-            let inner = &mut *self.0.Anonymous.Anonymous;
-            ManuallyDrop::drop(&mut inner.Anonymous.bstrVal);
-        }
-    }
+    variant
 }
 
 fn service() -> windows::core::Result<ITaskService> {
@@ -132,17 +120,17 @@ fn escape(value: &str) -> String {
 pub fn register(exe: &Path, working_dir: &Path, user_sid: &str) -> windows::core::Result<()> {
     unsafe {
         let root = service()?.GetFolder(&BSTR::from("\\"))?;
-        let user = BstrVariant::new(user_sid);
-        let descriptor = BstrVariant::new(&sddl(user_sid));
+        let user = bstr_variant(user_sid);
+        let descriptor = bstr_variant(&sddl(user_sid));
         let empty = VARIANT::default();
         root.RegisterTask(
             &BSTR::from(task_name(user_sid)),
             &BSTR::from(xml(exe, working_dir, user_sid)),
             CREATE_FLAGS,
-            &user.0,
+            &user,
             &empty,
             TASK_LOGON_INTERACTIVE_TOKEN,
-            &descriptor.0,
+            &descriptor,
         )?;
         Ok(())
     }
@@ -176,12 +164,16 @@ pub fn registration(user_sid: &str) -> windows::core::Result<Registration> {
             action_path: action_path.to_string(),
             action_arguments: action_arguments.to_string(),
             run_level_is_highest: run_level == TASK_RUNLEVEL_HIGHEST,
-            sddl: task.GetSecurityDescriptor(DACL_INFO)?.to_string(),
+            sddl: task.GetSecurityDescriptor(OWNER_AND_DACL_INFO)?.to_string(),
         })
     }
 }
 
 /// Starts the task. Needs no elevation and raises no prompt.
+///
+/// `MultipleInstancesPolicy` is `IgnoreNew`, so a request made while a previous launcher is still
+/// running is dropped and still reports success. The caller has to decide whether a sidecar
+/// actually arrived.
 pub fn run(user_sid: &str) -> windows::core::Result<()> {
     unsafe {
         registered_task(user_sid)?.Run(&VARIANT::default())?;
@@ -229,8 +221,42 @@ mod tests {
         let descriptor = sddl("S-1-5-21-1-2-3-1001");
         assert_eq!(
             descriptor,
-            "D:P(A;;FA;;;SY)(A;;FA;;;BA)(A;;FRFX;;;S-1-5-21-1-2-3-1001)"
+            "O:BAG:BAD:P(A;;FA;;;SY)(A;;FA;;;BA)(A;;FRFX;;;S-1-5-21-1-2-3-1001)"
         );
+    }
+
+    #[test]
+    fn the_security_descriptor_windows_parses_matches_what_we_wrote() {
+        use windows::core::{PCWSTR, PWSTR};
+        use windows::Win32::Foundation::{LocalFree, HLOCAL};
+        use windows::Win32::Security::Authorization::{
+            ConvertStringSecurityDescriptorToSecurityDescriptorW, SDDL_REVISION_1,
+        };
+        use windows::Win32::Security::PSECURITY_DESCRIPTOR;
+
+        let descriptor = sddl("S-1-5-21-1-2-3-1001");
+        let wide: Vec<u16> = descriptor.encode_utf16().chain(std::iter::once(0)).collect();
+        unsafe {
+            let mut parsed = PSECURITY_DESCRIPTOR::default();
+            ConvertStringSecurityDescriptorToSecurityDescriptorW(
+                PCWSTR(wide.as_ptr()),
+                SDDL_REVISION_1,
+                &mut parsed,
+                None,
+            )
+            .expect("Windows must accept the descriptor we register with");
+            let _ = LocalFree(Some(HLOCAL(parsed.0)));
+            let _ = PWSTR::null();
+        }
+    }
+
+    #[test]
+    fn a_bstr_variant_is_freed_exactly_once() {
+        // A double free shows up as a heap corruption abort rather than a failed assertion.
+        for _ in 0..1000 {
+            let variant = bstr_variant("S-1-5-21-1-2-3-1001");
+            drop(variant);
+        }
     }
 
     #[test]

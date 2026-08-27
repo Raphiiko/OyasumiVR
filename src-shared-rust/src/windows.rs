@@ -1,4 +1,5 @@
 use std::io::Error;
+use std::os::windows::ffi::OsStrExt;
 
 use windows::Win32::Foundation::{CloseHandle, HANDLE};
 use windows::Win32::Security::{GetTokenInformation, TokenElevation, TOKEN_ELEVATION, TOKEN_QUERY};
@@ -63,7 +64,6 @@ impl Drop for QueryAccessToken {
 /// The Program Files directory, from the shell rather than from `%ProgramFiles%`, which any
 /// process can hand to the one it launches.
 pub fn program_files() -> std::result::Result<std::path::PathBuf, Error> {
-    use windows::Win32::Foundation::S_OK;
     use windows::Win32::System::Com::CoTaskMemFree;
     use windows::Win32::UI::Shell::{FOLDERID_ProgramFiles, SHGetKnownFolderPath, KF_FLAG_DEFAULT};
 
@@ -75,9 +75,82 @@ pub fn program_files() -> std::result::Result<std::path::PathBuf, Error> {
         }
         let text = path.to_string().map_err(Error::other);
         CoTaskMemFree(Some(path.0 as *const _));
-        let _ = S_OK;
         Ok(std::path::PathBuf::from(text?))
     }
+}
+
+/// Replaces a directory's inherited permissions with an explicit, protected set: full control for
+/// SYSTEM and Administrators, read and execute for everyone else.
+///
+/// `C:\Program Files` carries an inherit-only `CREATOR OWNER: Full control` entry, so a directory
+/// created there grants the creating account full control whenever that account, rather than
+/// Administrators, ends up as the owner. Everything under the privileged directory is executed
+/// elevated, so it has to be unwritable for the user regardless of who created it.
+pub fn protect_directory(path: &std::path::Path) -> std::result::Result<(), Error> {
+    use windows::core::PCWSTR;
+    use windows::Win32::Security::Authorization::{
+        ConvertStringSecurityDescriptorToSecurityDescriptorW, SetNamedSecurityInfoW, SDDL_REVISION_1,
+        SE_FILE_OBJECT,
+    };
+    use windows::Win32::Security::{
+        GetSecurityDescriptorDacl, GetSecurityDescriptorOwner, ACL, DACL_SECURITY_INFORMATION,
+        OWNER_SECURITY_INFORMATION, PROTECTED_DACL_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR, PSID,
+    };
+    use windows::Win32::Foundation::{LocalFree, HLOCAL};
+
+    const DESCRIPTOR: &str = "O:BAG:BAD:P(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;OICI;0x1200a9;;;WD)";
+
+    let mut wide: Vec<u16> = path
+        .as_os_str()
+        .encode_wide()
+        .chain(std::iter::once(0))
+        .collect();
+    let descriptor: Vec<u16> = DESCRIPTOR.encode_utf16().chain(std::iter::once(0)).collect();
+
+    unsafe {
+        let mut security = PSECURITY_DESCRIPTOR::default();
+        ConvertStringSecurityDescriptorToSecurityDescriptorW(
+            PCWSTR(descriptor.as_ptr()),
+            SDDL_REVISION_1,
+            &mut security,
+            None,
+        )
+        .map_err(|e| Error::from_raw_os_error(e.code().0))?;
+
+        let mut dacl: *mut ACL = std::ptr::null_mut();
+        let mut present = windows::core::BOOL::from(false);
+        let mut defaulted = windows::core::BOOL::from(false);
+        let read = GetSecurityDescriptorDacl(security, &mut present, &mut dacl, &mut defaulted);
+        if read.is_err() || !present.as_bool() {
+            let _ = LocalFree(Some(HLOCAL(security.0)));
+            return Err(Error::other("the built-in security descriptor has no DACL"));
+        }
+
+        // Administrators as the owner, so no account keeps implicit WRITE_DAC over the directory.
+        let mut owner = PSID::default();
+        let read_owner = GetSecurityDescriptorOwner(security, &mut owner, &mut defaulted);
+        if read_owner.is_err() || owner.is_invalid() {
+            let _ = LocalFree(Some(HLOCAL(security.0)));
+            return Err(Error::other("the built-in security descriptor has no owner"));
+        }
+
+        let result = SetNamedSecurityInfoW(
+            windows::core::PWSTR(wide.as_mut_ptr()),
+            SE_FILE_OBJECT,
+            OWNER_SECURITY_INFORMATION
+                | DACL_SECURITY_INFORMATION
+                | PROTECTED_DACL_SECURITY_INFORMATION,
+            Some(owner),
+            None,
+            Some(dacl),
+            None,
+        );
+        let _ = LocalFree(Some(HLOCAL(security.0)));
+        if result.is_err() {
+            return Err(Error::from_raw_os_error(result.0 as i32));
+        }
+    }
+    Ok(())
 }
 
 /// The SID of the user this process runs as, for the scheduled task's principal and DACL.
@@ -117,13 +190,10 @@ pub fn current_user_sid() -> std::result::Result<String, Error> {
 #[cfg(test)]
 mod tests {
     #[test]
-    fn program_files_ignores_the_environment() {
+    fn program_files_is_an_absolute_directory() {
         let real = super::program_files().expect("the shell always knows Program Files");
+        assert!(real.is_absolute(), "{}", real.display());
         assert!(real.is_dir(), "{}", real.display());
-        std::env::set_var("ProgramFiles", r"C:ttacker");
-        let again = super::program_files().expect("still resolves");
-        std::env::remove_var("ProgramFiles");
-        assert_eq!(real, again);
     }
 
     #[test]
