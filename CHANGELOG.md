@@ -94,10 +94,16 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 =======
 - Fixed canceling the hotkey selector clearing the hotkey from view while the old hotkey stayed active
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> c793f2ab (fix: keep the hotkey visible when the selector is canceled)
 =======
 - The hotkey selector no longer shows a hotkey that Windows refused to register
 >>>>>>> 9f7c826a (docs: note the hotkey registration-failure fix)
+=======
+- Fixed closing the hotkey selector with Escape discarding the hotkey you just pressed
+- Fixed a hotkey you set running its action twice, until you restarted OyasumiVR
+- Fixed OyasumiVR dropping an action's working hotkey when it could not register the replacement
+>>>>>>> cb0f52fd (docs: note the remaining hotkey fixes)
 - Various stability improvements
 
 ### Removed
