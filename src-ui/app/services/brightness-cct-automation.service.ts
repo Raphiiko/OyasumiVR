@@ -552,14 +552,14 @@ export class BrightnessCctAutomationService {
           this.eventLog.logEvent({
             type: 'softwareBrightnessChanged',
             reason: eventLogReason,
-            value: config.brightness,
+            value: config.softwareBrightness,
             transition: config.transition,
             transitionTime: config.transitionTime,
           } as EventLogSoftwareBrightnessChanged);
           this.eventLog.logEvent({
             type: 'hardwareBrightnessChanged',
             reason: eventLogReason,
-            value: config.brightness,
+            value: config.hardwareBrightness,
             transition: config.transition,
             transitionTime: config.transitionTime,
           } as EventLogHardwareBrightnessChanged);
