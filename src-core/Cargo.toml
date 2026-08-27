@@ -104,6 +104,7 @@ windows = { version = "0.62.2", features = [
   "Win32_UI_WindowsAndMessaging",
   "Win32_System_LibraryLoader",
   "Win32_Graphics_Gdi",
+  "Devices_Enumeration",
   "Devices_Radios",
 ], default-features = false }
 windows-sys = { version = "0.61.2", features = [

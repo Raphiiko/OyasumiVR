@@ -65,6 +65,7 @@ static CONNECT_FAILURE_STREAK: AtomicU32 = AtomicU32::new(0);
 static LAST_RADIO_RECOVERY: LazyLock<Mutex<Option<Instant>>> = LazyLock::new(|| Mutex::new(None));
 static PENDING_RESTORE_FILE_LOCK: LazyLock<std::sync::Mutex<()>> =
     LazyLock::new(|| std::sync::Mutex::new(()));
+static RADIO_RECOVERY_LOCK: LazyLock<Mutex<()>> = LazyLock::new(|| Mutex::new(()));
 
 const CONNECT_TIMEOUT: Duration = Duration::from_secs(15);
 const CONNECT_RETRY_COOLDOWN: Duration = Duration::from_secs(10);
@@ -75,17 +76,7 @@ const RADIO_RECOVERY_COOLDOWN: Duration = Duration::from_secs(300);
 const RADIO_ON_ATTEMPTS: u32 = 3;
 
 pub async fn init() {
-    // A crashed run may have left a radio turned off
-    tokio::task::spawn_blocking(|| {
-        let Ok(runtime) = tokio::runtime::Builder::new_current_thread()
-            .enable_all()
-            .build()
-        else {
-            warn!("[Core] Failed to start a runtime to restore pending bluetooth radios");
-            return;
-        };
-        runtime.block_on(restore_pending_radios());
-    });
+    restore_pending_radios().await;
     // Initialize adapter
     let manager = match Manager::new().await {
         Ok(manager) => manager,
@@ -639,41 +630,28 @@ async fn register_connect_failure(device_id: &PeripheralId) {
 }
 
 async fn cycle_bluetooth_radio() -> Result<(), String> {
-    use windows::Devices::Radios::{Radio, RadioAccessStatus};
-
-    let access = Radio::RequestAccessAsync()
-        .map_err(|e| e.to_string())?
-        .await
-        .map_err(|e| e.to_string())?;
-    if access != RadioAccessStatus::Allowed {
-        return Err(format!(
-            "radio access was refused before cycling ({access:?})"
-        ));
-    }
-
-    let radios = Radio::GetRadiosAsync()
-        .map_err(|e| e.to_string())?
-        .await
-        .map_err(|e| e.to_string())?;
-    let pending_names = read_persisted_pending_restores();
+    let _guard = RADIO_RECOVERY_LOCK.lock().await;
+    request_radio_access().await?;
+    let radios = list_bluetooth_radios().await?;
+    let pending_ids = read_persisted_pending_restores();
     let mut cycle_results = Vec::new();
-    for radio in radios {
-        cycle_results.push(cycle_radio(&radio, &pending_names).await);
+    for radio in &radios {
+        cycle_results.push(cycle_radio(radio, &pending_ids).await);
     }
     for result in &cycle_results {
-        let Some(name) = result.name.as_deref() else {
+        let Some(id) = result.id.as_deref() else {
             continue;
         };
         if !cycle_results
             .iter()
-            .any(|result| result.name.as_deref() == Some(name) && result.restored)
+            .any(|result| result.id.as_deref() == Some(id) && result.restored)
             || cycle_results
                 .iter()
-                .any(|result| result.name.as_deref() == Some(name) && result.error.is_some())
+                .any(|result| result.id.as_deref() == Some(id) && result.error.is_some())
         {
             continue;
         }
-        clear_persisted_pending_restore(name);
+        clear_persisted_pending_restore(id);
     }
     let failures = cycle_results
         .into_iter()
@@ -687,49 +665,78 @@ async fn cycle_bluetooth_radio() -> Result<(), String> {
 }
 
 struct RadioCycleResult {
-    name: Option<String>,
+    id: Option<String>,
     error: Option<String>,
     restored: bool,
 }
 
-async fn cycle_radio(
-    radio: &windows::Devices::Radios::Radio,
-    pending_names: &[String],
-) -> RadioCycleResult {
-    use windows::Devices::Radios::{RadioAccessStatus, RadioKind, RadioState};
+struct BluetoothRadio {
+    id: String,
+    name: String,
+    radio: windows::Devices::Radios::Radio,
+}
 
-    let kind = match radio.Kind() {
-        Ok(kind) => kind,
-        Err(err) => {
-            warn!("[Core] Failed to inspect a radio, skipping it: {err}");
-            return RadioCycleResult {
-                name: None,
-                error: None,
-                restored: false,
-            };
-        }
-    };
-    if kind != RadioKind::Bluetooth {
-        return RadioCycleResult {
-            name: None,
-            error: None,
-            restored: false,
-        };
+async fn request_radio_access() -> Result<(), String> {
+    use windows::Devices::Radios::{Radio, RadioAccessStatus};
+
+    let access = Radio::RequestAccessAsync()
+        .map_err(|e| e.to_string())?
+        .await
+        .map_err(|e| e.to_string())?;
+    if access == RadioAccessStatus::Allowed {
+        Ok(())
+    } else {
+        Err(format!("radio access was refused ({access:?})"))
     }
-    let name = radio_name(radio);
+}
+
+async fn list_bluetooth_radios() -> Result<Vec<BluetoothRadio>, String> {
+    use windows::Devices::Enumeration::DeviceInformation;
+    use windows::Devices::Radios::{Radio, RadioKind};
+
+    let selector = Radio::GetDeviceSelector().map_err(|e| e.to_string())?;
+    let devices = DeviceInformation::FindAllAsyncAqsFilter(&selector)
+        .map_err(|e| e.to_string())?
+        .await
+        .map_err(|e| e.to_string())?;
+    let count = devices.Size().map_err(|e| e.to_string())?;
+    let mut radios = Vec::new();
+    for index in 0..count {
+        let device = devices.GetAt(index).map_err(|e| e.to_string())?;
+        let id = device.Id().map_err(|e| e.to_string())?;
+        let radio = Radio::FromIdAsync(&id)
+            .map_err(|e| e.to_string())?
+            .await
+            .map_err(|e| e.to_string())?;
+        if radio.Kind().map_err(|e| e.to_string())? != RadioKind::Bluetooth {
+            continue;
+        }
+        radios.push(BluetoothRadio {
+            id: id.to_string(),
+            name: radio_name(&radio),
+            radio,
+        });
+    }
+    Ok(radios)
+}
+
+async fn cycle_radio(radio: &BluetoothRadio, pending_ids: &[String]) -> RadioCycleResult {
+    use windows::Devices::Radios::{RadioAccessStatus, RadioState};
+
+    let BluetoothRadio { id, name, radio } = radio;
     let cycle_error = |error: Option<String>| RadioCycleResult {
-        name: Some(name.clone()),
+        id: Some(id.clone()),
         error,
         restored: false,
     };
-    if pending_names.contains(&name) {
+    if pending_ids.contains(id) {
         warn!("[Core] Turning the '{name}' radio back on after a failed recovery");
         if let Err(err) = restore_radio_on(radio).await {
-            persist_pending_restore(&name);
+            persist_pending_restore(id);
             return cycle_error(Some(format!("the '{name}' radio {err}")));
         }
         return RadioCycleResult {
-            name: Some(name),
+            id: Some(id.clone()),
             error: None,
             restored: true,
         };
@@ -756,7 +763,7 @@ async fn cycle_radio(
             "turning the '{name}' radio back on was refused before cycling ({probe:?})"
         )));
     }
-    if !persist_pending_restore(&name) {
+    if !persist_pending_restore(id) {
         return cycle_error(Some(format!(
             "failed to record the pending restore of the '{name}' radio"
         )));
@@ -788,7 +795,7 @@ async fn cycle_radio(
         return cycle_error(Some(format!("the '{name}' radio {err}")));
     }
     RadioCycleResult {
-        name: Some(name),
+        id: Some(id.clone()),
         error: None,
         restored: true,
     }
@@ -886,68 +893,70 @@ fn clear_persisted_pending_restore(name: &str) {
     }
 }
 
-fn retain_persisted_pending_restores(snapshot: &[String], failed_names: &[String]) {
+fn retain_persisted_pending_restores_from(
+    path: &std::path::Path,
+    snapshot: &[String],
+    restored_ids: &[String],
+) -> bool {
+    let current_ids = read_persisted_pending_restores_from(path);
+    let ids = current_ids
+        .into_iter()
+        .filter(|id| {
+            !snapshot.iter().any(|pending| pending == id)
+                || !restored_ids.iter().any(|restored| restored == id)
+        })
+        .collect::<Vec<_>>();
+    write_persisted_pending_restores_to(path, &ids)
+}
+
+fn retain_persisted_pending_restores(snapshot: &[String], restored_ids: &[String]) {
     let Some(path) = pending_restore_path() else {
         return;
     };
     let _guard = PENDING_RESTORE_FILE_LOCK.lock().unwrap();
-    let current_names = read_persisted_pending_restores_from(&path);
-    let names = current_names
-        .into_iter()
-        .filter(|name| {
-            !snapshot.iter().any(|pending| pending == name)
-                || failed_names.iter().any(|pending| pending == name)
-        })
-        .collect::<Vec<_>>();
-    if !write_persisted_pending_restores_to(&path, &names) {
+    if !retain_persisted_pending_restores_from(&path, snapshot, restored_ids) {
         warn!("[Core] Failed to update pending bluetooth radio restores");
     }
 }
 
 async fn restore_pending_radios() {
-    use windows::Devices::Radios::{Radio, RadioKind};
-    let names = read_persisted_pending_restores();
-    if names.is_empty() {
+    let _guard = RADIO_RECOVERY_LOCK.lock().await;
+    let pending_ids = read_persisted_pending_restores();
+    if pending_ids.is_empty() {
         return;
     }
-    let radios = match Radio::GetRadiosAsync() {
-        Ok(operation) => {
-            match operation.await {
-                Ok(radios) => radios,
-                Err(err) => {
-                    warn!("[Core] Failed to list radios to restore pending bluetooth recoveries: {err}");
-                    return;
-                }
-            }
-        }
+    if let Err(err) = request_radio_access().await {
+        warn!("[Core] Failed to get radio access for pending bluetooth recoveries: {err}");
+        return;
+    }
+    let radios = match list_bluetooth_radios().await {
+        Ok(radios) => radios,
         Err(err) => {
-            warn!(
-                "[Core] Failed to request the radio list for pending bluetooth recoveries: {err}"
-            );
+            warn!("[Core] Failed to list radios for pending bluetooth recoveries: {err}");
             return;
         }
     };
-    let mut failed_names = Vec::new();
+    let mut seen_ids = Vec::new();
+    let mut failed_ids = Vec::new();
     for radio in radios {
-        let kind = match radio.Kind() {
-            Ok(kind) => kind,
-            Err(_) => continue,
-        };
-        if kind != RadioKind::Bluetooth {
+        if !pending_ids.contains(&radio.id) {
             continue;
         }
-        let name = radio_name(&radio);
-        if !names.contains(&name) {
-            continue;
-        }
+        let name = radio.name.clone();
         warn!("[Core] Turning the '{name}' radio back on after a restart");
-        if let Err(err) = restore_radio_on(&radio).await {
-            failed_names.push(name.clone());
-            persist_pending_restore(&name);
+        if let Err(err) = restore_radio_on(&radio.radio).await {
+            failed_ids.push(radio.id.clone());
+            persist_pending_restore(&radio.id);
             warn!("[Core] Failed to turn the '{name}' radio back on after a restart: {err}");
+        } else {
+            seen_ids.push(radio.id.clone());
         }
     }
-    retain_persisted_pending_restores(&names, &failed_names);
+    let restored_ids = seen_ids
+        .into_iter()
+        .filter(|id| !failed_ids.contains(id))
+        .collect::<Vec<_>>();
+    retain_persisted_pending_restores(&pending_ids, &restored_ids);
 }
 
 async fn restore_radio_on(radio: &windows::Devices::Radios::Radio) -> Result<(), String> {
@@ -1098,7 +1107,6 @@ async fn reset() {
 #[cfg(test)]
 mod tests {
     use super::*;
-
     #[test]
     fn pending_restore_persistence_round_trips_names() {
         let directory = tempfile::tempdir().unwrap();
@@ -1122,15 +1130,42 @@ mod tests {
 
         assert!(write_persisted_pending_restores_to(
             &path,
-            &[String::from("empty names are dropped")]
+            &[String::new(), String::from("kept")]
         ));
         assert_eq!(
             read_persisted_pending_restores_from(&path),
-            vec![String::from("empty names are dropped")]
+            vec![String::from("kept")]
         );
 
         assert!(write_persisted_pending_restores_to(&path, &[]));
         assert!(read_persisted_pending_restores_from(&path).is_empty());
+    }
+
+    #[test]
+    fn pending_restore_retention_preserves_unrestored_ids() {
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("pending-radio-restores");
+        write_persisted_pending_restores_to(
+            &path,
+            &[
+                String::from("restored"),
+                String::from("missing"),
+                String::from("added-after-snapshot"),
+            ],
+        );
+
+        assert!(retain_persisted_pending_restores_from(
+            &path,
+            &[String::from("restored"), String::from("missing"),],
+            &[String::from("restored")]
+        ));
+        assert_eq!(
+            read_persisted_pending_restores_from(&path),
+            vec![
+                String::from("missing"),
+                String::from("added-after-snapshot")
+            ]
+        );
     }
 
     #[test]
