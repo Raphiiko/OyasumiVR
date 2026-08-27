@@ -67,7 +67,7 @@ export class DeviceManagerConfigModalComponent
   }
 
   private loadTags() {
-    this.deviceManager.tags.subscribe((tags) => {
+    this.deviceManager.tags.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((tags) => {
       this.availableTags = tags;
       this.cdr.markForCheck();
     });

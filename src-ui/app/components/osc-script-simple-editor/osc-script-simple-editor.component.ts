@@ -137,13 +137,15 @@ export class OscScriptSimpleEditorComponent implements OnInit {
         this.cdr.markForCheck();
       });
 
-    combineLatest([this.avatarContextService.avatarContext]).subscribe(([avatarContext]) => {
-      this.currentAvatarContext = avatarContext;
-      this.knownOscAddresses = [...(avatarContext?.parameters ?? []).map((p) => p.address)].sort();
-      this.cdr.markForCheck();
-
-      // Check if we should show the VRChat autocomplete info dialog
-    });
+    combineLatest([this.avatarContextService.avatarContext])
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(([avatarContext]) => {
+        this.currentAvatarContext = avatarContext;
+        this.knownOscAddresses = [
+          ...(avatarContext?.parameters ?? []).map((p) => p.address),
+        ].sort();
+        this.cdr.markForCheck();
+      });
 
     setTimeout(() => {
       this.checkShowVRChatAutocompleteInfo();
