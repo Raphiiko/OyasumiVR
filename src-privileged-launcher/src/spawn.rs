@@ -1,12 +1,13 @@
+use std::ffi::OsStr;
 use std::io::{Error, Result};
 use std::os::windows::ffi::OsStrExt;
 use std::path::Path;
-use windows::Win32::Foundation::{CloseHandle, HANDLE};
+use windows::Win32::Foundation::CloseHandle;
 use windows::Win32::System::Threading::{
     CreateProcessW, DeleteProcThreadAttributeList, InitializeProcThreadAttributeList,
-    UpdateProcThreadAttribute, CREATE_NO_WINDOW, CREATE_UNICODE_ENVIRONMENT,
-    EXTENDED_STARTUPINFO_PRESENT, LPPROC_THREAD_ATTRIBUTE_LIST, PROCESS_INFORMATION,
-    PROC_THREAD_ATTRIBUTE_MITIGATION_POLICY, STARTUPINFOEXW,
+    UpdateProcThreadAttribute, CREATE_NO_WINDOW, EXTENDED_STARTUPINFO_PRESENT,
+    LPPROC_THREAD_ATTRIBUTE_LIST, PROCESS_INFORMATION, PROC_THREAD_ATTRIBUTE_MITIGATION_POLICY,
+    STARTUPINFOEXW, STARTUPINFOW,
 };
 use windows::core::PWSTR;
 
@@ -14,25 +15,20 @@ use windows::core::PWSTR;
 /// attribute value must be a u64; a u32 silently drops the flag.
 const PREFER_SYSTEM32: u64 = 1 << 60;
 
-fn wide(value: &Path) -> Vec<u16> {
-    value
-        .as_os_str()
-        .encode_wide()
-        .chain(std::iter::once(0))
-        .collect()
+fn wide(value: &OsStr) -> Vec<u16> {
+    value.encode_wide().chain(std::iter::once(0)).collect()
 }
 
 /// Starts the sidecar from its staged, admin-only directory. A failure to set the mitigation
 /// policy is not fatal, since the directory permissions are what stop DLL planting.
 pub fn start(exe: &Path, working_dir: &Path, arguments: &str) -> Result<u32> {
-    let mut application = wide(exe);
-    let mut directory = wide(working_dir);
+    let mut application = wide(exe.as_os_str());
+    let mut directory = wide(working_dir.as_os_str());
     // argv[0] first, the way a shell would pass it
-    let mut command_line = wide(Path::new(&format!("\"{}\" {arguments}", exe.display())));
+    let mut command_line = wide(OsStr::new(&format!("\"{}\" {arguments}", exe.display())));
 
     unsafe {
         let mut startup = STARTUPINFOEXW::default();
-        startup.StartupInfo.cb = std::mem::size_of::<STARTUPINFOEXW>() as u32;
 
         let mut size = 0usize;
         // The first call always fails. It only reports the buffer size.
@@ -41,7 +37,7 @@ pub fn start(exe: &Path, working_dir: &Path, arguments: &str) -> Result<u32> {
         let list = LPPROC_THREAD_ATTRIBUTE_LIST(buffer.as_mut_ptr() as *mut _);
 
         let mut policy = PREFER_SYSTEM32;
-        let mut flags = CREATE_NO_WINDOW | CREATE_UNICODE_ENVIRONMENT;
+        let mut flags = CREATE_NO_WINDOW;
         let mut attributes_ready = false;
 
         if InitializeProcThreadAttributeList(Some(list), 1, None, &mut size).is_ok()
@@ -60,6 +56,13 @@ pub fn start(exe: &Path, working_dir: &Path, arguments: &str) -> Result<u32> {
             flags |= EXTENDED_STARTUPINFO_PRESENT;
             attributes_ready = true;
         }
+
+        // cb describes what was actually filled in, so it shrinks when the attribute list is not.
+        startup.StartupInfo.cb = if attributes_ready {
+            std::mem::size_of::<STARTUPINFOEXW>() as u32
+        } else {
+            std::mem::size_of::<STARTUPINFOW>() as u32
+        };
 
         let mut information = PROCESS_INFORMATION::default();
         let result = CreateProcessW(
@@ -84,7 +87,6 @@ pub fn start(exe: &Path, working_dir: &Path, arguments: &str) -> Result<u32> {
         // the sidecar outlives this process on purpose
         let _ = CloseHandle(information.hThread);
         let _ = CloseHandle(information.hProcess);
-        let _ = HANDLE::default();
         Ok(information.dwProcessId)
     }
 }
