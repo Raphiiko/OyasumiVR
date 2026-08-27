@@ -65,8 +65,10 @@ pub fn run() -> u8 {
     // Checked again here, whether this launch staged the copy or found it. This is the last moment
     // before the bytes run elevated, and the directory name alone is no evidence about them.
     if let Err(e) = verify::verify(&staged_exe, &verify::signature_path(&staged_exe)) {
-        log(&format!("[run] refusing {}: {e}", staged_exe.display()));
-        return exit::SIGNATURE_REJECTED;
+        log(&format!("[run] discarding {}: {e}", staged_dir.display()));
+        // Removed, or the same damaged copy is picked again on every later launch.
+        let _ = std::fs::remove_dir_all(&staged_dir);
+        return exit::STAGING_FAILED;
     }
 
     collect_old_staged(&root, &staged_dir);
@@ -101,7 +103,15 @@ fn is_filled(dir: &Path) -> bool {
 /// Copies the sidecar into Program Files, verifies it there, and returns the directory it landed
 /// in. Returns `InvalidData` when the signature is rejected.
 fn stage(root: &Path, source: &Path, signature: &Path) -> std::io::Result<PathBuf> {
+    let missing = !root.is_dir();
     std::fs::create_dir_all(root)?;
+    if missing {
+        // The whole chain may have just been recreated, inheriting permissions we do not want.
+        if let Some(privileged) = root.parent() {
+            oyasumivr_shared::windows::protect_directory(privileged)?;
+        }
+        oyasumivr_shared::windows::protect_directory(root)?;
+    }
     // one pending directory per launcher process, so concurrent instances cannot collide
     let pending = root.join(format!(".pending-{}", std::process::id()));
     let _ = std::fs::remove_dir_all(&pending);
@@ -118,15 +128,25 @@ fn stage(root: &Path, source: &Path, signature: &Path) -> std::io::Result<PathBu
     // named after the signature that was verified, so a directory always matches its contents
     let id = verify::signature_id(&staged_signature)?;
     let target = root.join(id);
-    match std::fs::rename(&pending, &target) {
-        Ok(()) => Ok(target),
+    promote(&pending, &target)
+}
+
+/// Moves a verified pending directory into place.
+fn promote(pending: &Path, target: &Path) -> std::io::Result<PathBuf> {
+    // Windows will not rename over an existing directory, so a half-filled one has to go first.
+    // Something removed a file from it, or a previous launcher died between the two copies.
+    if target.exists() && !is_filled(target) {
+        let _ = std::fs::remove_dir_all(target);
+    }
+    match std::fs::rename(pending, target) {
+        Ok(()) => Ok(target.to_path_buf()),
         // another instance won the race, with bytes that passed the same check
-        Err(_) if is_filled(&target) => {
-            let _ = std::fs::remove_dir_all(&pending);
-            Ok(target)
+        Err(_) if is_filled(target) => {
+            let _ = std::fs::remove_dir_all(pending);
+            Ok(target.to_path_buf())
         }
         Err(e) => {
-            let _ = std::fs::remove_dir_all(&pending);
+            let _ = std::fs::remove_dir_all(pending);
             Err(e)
         }
     }
@@ -249,6 +269,65 @@ mod tests {
             &std::env::temp_dir().join("oyasumi-run-does-not-exist"),
             Path::new("x"),
         );
+    }
+
+    #[test]
+    fn promotion_moves_a_pending_directory_into_place() {
+        let root = scratch("oyasumi-run-promote-new");
+        let pending = root.join(".pending-1");
+        fill(&pending);
+        let target = root.join("abc");
+
+        let promoted = promote(&pending, &target).expect("must promote");
+
+        assert_eq!(promoted, target);
+        assert!(is_filled(&target));
+        assert!(!pending.exists(), "the pending directory must be gone");
+    }
+
+    #[test]
+    fn promotion_replaces_a_half_filled_target() {
+        let root = scratch("oyasumi-run-promote-damaged");
+        let pending = root.join(".pending-1");
+        fill(&pending);
+        // what an antivirus quarantine leaves behind: the signature without the exe
+        let target = root.join("abc");
+        std::fs::create_dir_all(&target).unwrap();
+        std::fs::write(
+            verify::signature_path(&target.join(paths::SIDECAR_EXE)),
+            b"orphaned",
+        )
+        .unwrap();
+
+        // Windows refuses to rename over an existing directory, so without the removal this fails
+        // and every later launch fails the same way, with nothing to clean it up.
+        promote(&pending, &target).expect("must replace a target that is not usable");
+
+        assert!(is_filled(&target));
+        assert_eq!(
+            std::fs::read(target.join(paths::SIDECAR_EXE)).unwrap(),
+            b"pretend this is a sidecar"
+        );
+    }
+
+    #[test]
+    fn promotion_keeps_a_target_another_launcher_already_filled() {
+        let root = scratch("oyasumi-run-promote-race");
+        let pending = root.join(".pending-1");
+        fill(&pending);
+        let target = root.join("abc");
+        fill(&target);
+        std::fs::write(target.join(paths::SIDECAR_EXE), b"the winner").unwrap();
+
+        let promoted = promote(&pending, &target).expect("must accept the winner");
+
+        assert_eq!(promoted, target);
+        assert_eq!(
+            std::fs::read(target.join(paths::SIDECAR_EXE)).unwrap(),
+            b"the winner",
+            "the copy that got there first passed the same check"
+        );
+        assert!(!pending.exists());
     }
 
     #[test]
