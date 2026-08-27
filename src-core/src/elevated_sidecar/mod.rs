@@ -59,15 +59,6 @@ fn choose_launch_strategy() -> SidecarLaunch {
     SidecarLaunch::ScheduledTask
 }
 
-/// Whether a sidecar is starting or already running.
-pub async fn is_active() -> bool {
-    let manager_guard = SIDECAR_MANAGER.lock().await;
-    match manager_guard.as_ref() {
-        Some(manager) => manager.is_active().await,
-        None => false,
-    }
-}
-
 /// Waits for the sidecar to report in, releasing the manager lock between polls so the start
 /// signal can be handled.
 pub async fn wait_until_started(timeout: Duration) -> bool {

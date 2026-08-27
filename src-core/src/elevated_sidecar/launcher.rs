@@ -5,6 +5,7 @@
 //! triggerless scheduled task with highest privileges. Registering that task needs admin once.
 //! Starting it needs nothing.
 
+use crate::utils::sidecar_manager::StartOutcome;
 use log::{error, info, warn};
 use oyasumivr_shared::windows::{current_user_sid, is_elevated};
 use oyasumivr_shared::{elevated_sidecar_key_id, task, PRIVILEGED_LAUNCHER_VERSION};
@@ -128,7 +129,14 @@ pub fn state() -> LauncherState {
         None => return LauncherState::NotInstalled,
     };
 
-    let sid = current_user_sid().unwrap_or_default();
+    let sid = match current_user_sid() {
+        Ok(sid) if !sid.is_empty() => sid,
+        _ => {
+            return LauncherState::Untrusted {
+                reason: "cannot read this account's sid, so the task cannot be checked".to_string(),
+            }
+        }
+    };
     // read the task back: one whose action was rewritten still exists
     let registration = match task::registration(&sid) {
         Ok(registration) => registration,
@@ -146,7 +154,7 @@ pub fn state() -> LauncherState {
         ))
     } else if !registration.run_level_is_highest {
         Some("run level is not highest".to_string())
-    } else if !sid.is_empty() && !sddl_is_ours(&registration.sddl, &sid) {
+    } else if !sddl_is_ours(&registration.sddl, &sid) {
         Some(format!("security descriptor is {}", registration.sddl))
     } else {
         None
@@ -284,8 +292,11 @@ pub fn last_launcher_result() -> Option<i32> {
 }
 
 pub fn describe_launcher_result(code: i32) -> &'static str {
+    // 0x00041301 and 0x00041303 come from the scheduler, not from the launcher.
     match code {
         0 => "ok",
+        0x0004_1301 => "the launcher is still running",
+        0x0004_1303 => "the launcher has never run",
         10 => "the launcher was started without elevation",
         11 => "the launcher could not install itself",
         12 => "the launcher could not register its task",
@@ -311,9 +322,11 @@ pub enum EnableResult {
     NotSupported,
 }
 
-/// How long enable waits for the sidecar to report in. Shorter than `GIVE_UP_AFTER`, so the
-/// launcher exit code is still the one from this attempt.
-const START_TIMEOUT: Duration = Duration::from_secs(15);
+/// How long enable waits for the sidecar to report in. One second past the give-up timer, so a
+/// sidecar the manager still accepts is not reported as a failure, and the launcher has exited and
+/// written the exit code by the time it is read.
+const START_TIMEOUT: Duration =
+    Duration::from_secs(crate::utils::sidecar_manager::GIVE_UP_AFTER.as_secs() + 1);
 
 /// Makes sure the launcher is installed and healthy, then starts the sidecar.
 pub async fn enable() -> EnableResult {
@@ -325,11 +338,15 @@ pub async fn enable() -> EnableResult {
         }
     }
 
-    // Already active means a sidecar is starting or already running, which is not a failure.
-    if !super::is_active().await && !super::commands::start_elevated_sidecar().await {
-        return EnableResult::TaskFailed {
-            reason: "the elevated sidecar could not be started".to_string(),
-        };
+    match super::commands::start_sidecar().await {
+        // AlreadyRunning included: a sidecar on its way is what the caller asked for.
+        outcome if outcome.is_on_its_way() => {}
+        StartOutcome::Declined => return EnableResult::PromptDeclined,
+        _ => {
+            return EnableResult::TaskFailed {
+                reason: "the elevated sidecar could not be started".to_string(),
+            }
+        }
     }
 
     // Nothing so far says a sidecar exists. The task reports only that it was asked to start, and
@@ -474,6 +491,46 @@ mod tests {
             expected
         ));
         assert!(!super::paths_match("", expected));
+    }
+
+    #[test]
+    fn rejects_a_deny_ace_and_a_conditional_ace() {
+        // The shapes an attacker reaches for. Both fall out on the field count or the ACE type
+        // today, and neither was pinned by a test.
+        assert!(!super::sddl_is_ours(
+            &format!("O:BAD:PAI(A;;FA;;;SY)(A;;FA;;;BA)(A;;0x1200a9;;;{SID})(D;;FA;;;WD)"),
+            SID
+        ));
+        assert!(!super::sddl_is_ours(
+            &format!(
+                "O:BAD:PAI(XA;;FA;;;WD;(Member_of{{SID(BA)}}))(A;;FA;;;SY)(A;;FA;;;BA)(A;;0x1200a9;;;{SID})"
+            ),
+            SID
+        ));
+    }
+
+    #[test]
+    fn the_scheduler_results_are_not_reported_as_a_launcher_failure() {
+        assert_eq!(super::describe_launcher_result(0), "ok");
+        assert_eq!(
+            super::describe_launcher_result(0x0004_1301),
+            "the launcher is still running"
+        );
+        assert_eq!(
+            super::describe_launcher_result(0x0004_1303),
+            "the launcher has never run"
+        );
+        assert_eq!(
+            super::describe_launcher_result(21),
+            "the launcher refused the sidecar\'s signature"
+        );
+    }
+
+    #[test]
+    fn the_wait_outlasts_the_give_up_timer() {
+        // A shorter wait reported a slow but successful start as a failure, while the manager went
+        // on to accept the sidecar.
+        assert!(super::START_TIMEOUT > crate::utils::sidecar_manager::GIVE_UP_AFTER);
     }
 
     /// The answer depends on the account running the tests, so this only asserts the direction

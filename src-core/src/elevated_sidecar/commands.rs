@@ -1,11 +1,20 @@
-/// Returns whether the launch was initiated. On the scheduled task path that is not the same as
-/// the sidecar running, which arrives later as a start signal.
-#[tauri::command]
-pub async fn start_elevated_sidecar() -> bool {
+/// Starts the sidecar and says what the attempt did. On the scheduled task path `Started` means
+/// the task was asked to run, which is not the same as the sidecar running.
+pub(super) async fn start_sidecar() -> StartOutcome {
     let mut sidecar_manager_guard = super::SIDECAR_MANAGER.lock().await;
-    let sidecar_manager = sidecar_manager_guard.as_mut().unwrap();
+    let Some(sidecar_manager) = sidecar_manager_guard.as_mut() else {
+        return StartOutcome::Failed;
+    };
     sidecar_manager.start().await
 }
+
+/// Returns whether a sidecar is on its way, which includes one that was already running.
+#[tauri::command]
+pub async fn start_elevated_sidecar() -> bool {
+    start_sidecar().await.is_on_its_way()
+}
+
+use crate::utils::sidecar_manager::StartOutcome;
 
 #[tauri::command]
 pub async fn elevated_sidecar_started() -> bool {

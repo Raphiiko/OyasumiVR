@@ -56,6 +56,24 @@ const LAUNCH_RETRY_INTERVALS: [Duration; 9] = [
     Duration::from_secs(300),
 ];
 
+/// What a start attempt did.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum StartOutcome {
+    Started,
+    /// A sidecar was already starting or running, so this call had nothing to do.
+    AlreadyRunning,
+    /// The user dismissed the UAC prompt on the direct elevation path.
+    Declined,
+    Failed,
+}
+
+impl StartOutcome {
+    /// Whether a sidecar is on its way, which is what a caller asking for one cares about.
+    pub fn is_on_its_way(self) -> bool {
+        matches!(self, StartOutcome::Started | StartOutcome::AlreadyRunning)
+    }
+}
+
 /// How a sidecar gets started.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum SidecarLaunch {
@@ -79,7 +97,8 @@ pub struct SidecarManager {
     pub started: Arc<Mutex<bool>>,
     pub sidecar_pid: Arc<Mutex<Option<u32>>>,
     pub sidecar_child: Arc<Mutex<Option<std::process::Child>>>,
-    pub watching: Arc<Mutex<bool>>,
+    /// The generation of the watcher that owns the slot, if any.
+    pub watching: Arc<Mutex<Option<u64>>>,
     pub on_stop_tx: mpsc::Sender<bool>,
     pub expected_stop: Arc<AtomicBool>,
     pub auto_restart: bool,
@@ -112,7 +131,7 @@ impl SidecarManager {
             started: Arc::new(Mutex::new(false)),
             sidecar_pid: Arc::new(Mutex::new(None)),
             sidecar_child: Arc::new(Mutex::new(None)),
-            watching: Arc::new(Mutex::new(false)),
+            watching: Arc::new(Mutex::new(None)),
             on_stop_tx,
             expected_stop: Arc::new(AtomicBool::new(false)),
             auto_restart,
@@ -144,7 +163,7 @@ impl SidecarManager {
     pub async fn start_or_restart(&mut self) {
         // Wait out a launch that is already in flight, so that its process cannot escape the
         // kill below and keep running with the arguments it was given.
-        let watching = {
+        let watcher_is_current = {
             let _launching = self.launching.lock().await;
             let mut sidecar_child = self.sidecar_child.lock().await;
             if let Some(sidecar_child) = sidecar_child.as_mut() {
@@ -159,33 +178,38 @@ impl SidecarManager {
                     }
                 }
             }
-            *self.watching.lock().await
+            let generation = self.generation.load(Ordering::Relaxed);
+            *self.watching.lock().await == Some(generation)
         };
-        // A running watcher picks the restart up by itself. Starting one here as well would
-        // leave two processes and two watchers running alongside each other.
-        if watching {
+        // A watcher on this generation picks the restart up by itself. Starting one here as well
+        // would leave two processes and two watchers running alongside each other. A watcher from
+        // an earlier launch does not count: it exits on the generation instead of restarting.
+        if watcher_is_current {
             self.restart_requested.notify_one();
         } else {
             self._start_internal(false).await;
         }
     }
 
-    /// Whether the launch was initiated. On the scheduled task path the sidecar reports in later.
-    pub async fn start(&mut self) -> bool {
+    /// On the scheduled task path a `Started` outcome means the task was asked to run. The
+    /// sidecar reports in later, and only that says it exists.
+    pub async fn start(&mut self) -> StartOutcome {
         self._start_internal(false).await
     }
 
-    async fn _start_internal(&mut self, relaunch: bool) -> bool {
+    async fn _start_internal(&mut self, relaunch: bool) -> StartOutcome {
         // held until the new process is stored, so start_or_restart cannot miss it
         let _launching = self.launching.lock().await;
         let core_grpc_port_guard = crate::grpc::SERVER_PORT.lock().await;
         let core_grpc_port = match core_grpc_port_guard.as_ref() {
             Some(port) => *port,
-            None => return false,
+            None => return StartOutcome::Failed,
         };
         drop(core_grpc_port_guard);
+        // Decided under the launch lock, so two callers cannot both read "not active" and have one
+        // of them told its launch failed.
         if !relaunch && *self.active.lock().await {
-            return false;
+            return StartOutcome::AlreadyRunning;
         }
         *self.active.lock().await = true;
         // Not on a relaunch: the watcher performing it keeps the generation it started with.
@@ -218,17 +242,25 @@ impl SidecarManager {
             return self.start_through_task(core_grpc_port, &args).await;
         }
 
+        let mut declined = false;
         let launch_result = match self.launch {
             SidecarLaunch::ElevatedSpawn => {
                 let exe = absolute(&exe_path);
                 let arguments = args.join(" ");
-                tokio::task::spawn_blocking(move || {
+                let joined = tokio::task::spawn_blocking(move || {
                     crate::elevated_sidecar::elevate::spawn(&exe, &arguments)
                 })
-                .await
-                .map_err(|e| e.to_string())
-                .and_then(|result| result.map_err(|e| e.to_string()))
-                .map(|pid| (pid, None))
+                .await;
+                match joined {
+                    Ok(Ok(pid)) => Ok((pid, None)),
+                    // kept apart from a failure: the user said no, so asking again is wrong
+                    Ok(Err(crate::elevated_sidecar::elevate::ElevateError::Declined)) => {
+                        declined = true;
+                        Err("the user dismissed the prompt".to_string())
+                    }
+                    Ok(Err(e)) => Err(e.to_string()),
+                    Err(e) => Err(e.to_string()),
+                }
             }
             _ => std::process::Command::new(&exe_path)
                 .current_dir(exe_dir)
@@ -250,20 +282,35 @@ impl SidecarManager {
                 *self.active.lock().await = false;
                 let _ = self.on_stop_tx.send(false).await;
                 // a launch that never happened still needs a watcher, or it is never retried
-                if !relaunch && !*self.watching.lock().await {
-                    *self.watching.lock().await = true;
-                    self.watch_process();
+                if !relaunch {
+                    self.ensure_watcher().await;
                 }
-                return false;
+                return match declined {
+                    true => StartOutcome::Declined,
+                    false => StartOutcome::Failed,
+                };
             }
         };
         *self.sidecar_pid.lock().await = Some(child_pid);
         *self.sidecar_child.lock().await = child;
-        if !relaunch && !*self.watching.lock().await {
-            *self.watching.lock().await = true;
-            self.watch_process();
+        if !relaunch {
+            self.ensure_watcher().await;
         }
-        true
+        StartOutcome::Started
+    }
+
+    /// Starts a watcher unless one already watches this launch. A watcher from an earlier launch
+    /// does not count: it may still be polling a process that outlived the launch it belongs to,
+    /// and it exits on the generation rather than adopting the new one.
+    async fn ensure_watcher(&self) {
+        let generation = self.generation.load(Ordering::Relaxed);
+        let mut watching = self.watching.lock().await;
+        if *watching == Some(generation) {
+            return;
+        }
+        *watching = Some(generation);
+        drop(watching);
+        self.watch_process(generation);
     }
 
     /// Writes the handshake, starts the task, and returns without waiting for the sidecar.
@@ -271,12 +318,12 @@ impl SidecarManager {
     /// Must not wait: callers hold the module level `SIDECAR_MANAGER` lock, which the gRPC handler
     /// delivering the start signal also needs. `handle_start_signal` records the pid and starts the
     /// watcher.
-    async fn start_through_task(&self, core_grpc_port: u32, args: &[String]) -> bool {
+    async fn start_through_task(&self, core_grpc_port: u32, args: &[String]) -> StartOutcome {
         let Some(sidecar_path) = crate::elevated_sidecar::launcher::bundled_sidecar() else {
             error!("[Core] Cannot find the bundled elevated sidecar");
             *self.active.lock().await = false;
             let _ = self.on_stop_tx.send(false).await;
-            return false;
+            return StartOutcome::Failed;
         };
         let handshake = oyasumivr_shared::handshake::Handshake::new(
             core_grpc_port,
@@ -288,16 +335,16 @@ impl SidecarManager {
             error!("[Core] Could not write the elevated sidecar handshake: {e}");
             *self.active.lock().await = false;
             let _ = self.on_stop_tx.send(false).await;
-            return false;
+            return StartOutcome::Failed;
         }
         if let Err(e) = crate::elevated_sidecar::launcher::trigger() {
             error!("[Core] Could not start the privileged launcher task: {e}");
             *self.active.lock().await = false;
             let _ = self.on_stop_tx.send(false).await;
-            return false;
+            return StartOutcome::Failed;
         }
         self.give_up_if_the_sidecar_never_reports_in();
-        true
+        StartOutcome::Started
     }
 
     /// Clears `active` when no sidecar ever reports in, which nothing else does on the task path
@@ -355,11 +402,12 @@ impl SidecarManager {
         *self.active.lock().await = false;
         *self.started.lock().await = false;
         self.generation.fetch_add(1, Ordering::Relaxed);
-    }
-
-    // The sidecar process is running
-    pub async fn is_active(&self) -> bool {
-        *self.active.lock().await
+        // Consumed here: the watcher this fenced off never reaches the swap below.
+        self.expected_stop.store(false, Ordering::Relaxed);
+        drop(_launching);
+        // Sent here for the same reason. Without it the gRPC client is never dropped and the UI is
+        // never told, so both keep treating a stopped sidecar as running.
+        let _ = self.on_stop_tx.send(false).await;
     }
 
     // The sidecar process is running, and the sidecar has signalled it has started
@@ -400,9 +448,8 @@ impl SidecarManager {
         // Update the known pid
         *self.sidecar_pid.lock().await = Some(pid);
         // first sight of the pid on the task path, so it needs a watcher or its death goes unseen
-        if pid != 0 && !*self.watching.lock().await {
-            *self.watching.lock().await = true;
-            self.watch_process();
+        if pid != 0 {
+            self.ensure_watcher().await;
         }
         // Store the GRPC ports
         *self.grpc_port.lock().await = grpc_port;
@@ -414,9 +461,8 @@ impl SidecarManager {
         true
     }
 
-    fn watch_process(&self) {
+    fn watch_process(&self, generation: u64) {
         let mut manager = self.clone();
-        let generation = manager.generation.load(Ordering::Relaxed);
 
         tokio::spawn(async move {
             let last_retry_interval = LAUNCH_RETRY_INTERVALS.len() - 1;
@@ -487,7 +533,11 @@ impl SidecarManager {
                 }
                 manager._start_internal(true).await;
             }
-            *manager.watching.lock().await = false;
+            // Only if this watcher still owns the slot. A later launch has its own watcher.
+            let mut watching = manager.watching.lock().await;
+            if *watching == Some(generation) {
+                *watching = None;
+            }
         });
     }
 }
@@ -563,7 +613,7 @@ mod tests {
         assert!(!manager.handle_start_signal(Some(1), Some(2), 4321).await);
 
         // no watcher, so nothing polls the made-up pid while the rest of the test runs
-        *manager.watching.lock().await = true;
+        *manager.watching.lock().await = Some(manager.generation.load(Ordering::Relaxed));
         *manager.active.lock().await = true;
         assert!(
             manager.handle_start_signal(Some(1), Some(2), 4321).await,
@@ -596,6 +646,82 @@ mod tests {
         // a launch from outside does move it, so a stale watcher stops touching the state
         manager._start_internal(false).await;
         assert!(manager.generation.load(Ordering::Relaxed) > before);
+    }
+
+    #[tokio::test]
+    async fn a_deliberate_stop_is_announced() {
+        let (tx, mut rx) = tokio::sync::mpsc::channel(4);
+        let mut manager = super::SidecarManager::new(
+            "TEST".to_string(),
+            "resources/".to_string(),
+            "does-not-exist.exe".to_string(),
+            tx,
+            false,
+            vec![],
+            super::SidecarLaunch::ScheduledTask,
+        );
+        *manager.sidecar_pid.lock().await = Some(4321);
+        *manager.active.lock().await = true;
+        *manager.started.lock().await = true;
+        manager.expected_stop.store(true, Ordering::Relaxed);
+
+        manager.stop_and_stay_stopped().await;
+
+        // The watcher is fenced off by the generation this bumped, so it never sends this itself.
+        // Without it the gRPC client is never dropped and the UI still shows a running sidecar.
+        assert_eq!(
+            rx.try_recv(),
+            Ok(false),
+            "a stop the user asked for must reach the stop channel, and as an expected one"
+        );
+        assert!(
+            !manager.expected_stop.load(Ordering::Relaxed),
+            "the flag must not stay latched for the next crash to read"
+        );
+    }
+
+    #[tokio::test]
+    async fn a_new_launch_gets_a_watcher_even_while_an_older_one_lingers() {
+        let manager = manager(super::SidecarLaunch::ScheduledTask, false);
+
+        // an earlier launch, whose watcher is still polling a process that outlived it
+        let stale = manager.generation.load(Ordering::Relaxed);
+        *manager.watching.lock().await = Some(stale);
+        manager.generation.fetch_add(1, Ordering::Relaxed);
+        let current = manager.generation.load(Ordering::Relaxed);
+
+        manager.ensure_watcher().await;
+
+        assert_eq!(
+            *manager.watching.lock().await,
+            Some(current),
+            "the new launch must take the slot from the watcher that no longer owns it"
+        );
+    }
+
+    #[tokio::test]
+    async fn a_watcher_that_already_owns_the_slot_is_not_started_twice() {
+        let manager = manager(super::SidecarLaunch::ScheduledTask, false);
+        let current = manager.generation.load(Ordering::Relaxed);
+        *manager.watching.lock().await = Some(current);
+
+        manager.ensure_watcher().await;
+
+        assert_eq!(*manager.watching.lock().await, Some(current));
+    }
+
+    #[tokio::test]
+    async fn a_second_start_says_a_sidecar_is_already_running() {
+        *crate::grpc::SERVER_PORT.lock().await = Some(1234);
+        let mut manager = manager(super::SidecarLaunch::ScheduledTask, false);
+        *manager.active.lock().await = true;
+
+        // Not Failed: the caller wanted a sidecar on its way, and one is. Reporting a failure here
+        // switched the user's setting off over a healthy sidecar.
+        assert_eq!(manager.start().await, super::StartOutcome::AlreadyRunning);
+        assert!(super::StartOutcome::AlreadyRunning.is_on_its_way());
+        assert!(!super::StartOutcome::Declined.is_on_its_way());
+        assert!(!super::StartOutcome::Failed.is_on_its_way());
     }
 
     #[test]
