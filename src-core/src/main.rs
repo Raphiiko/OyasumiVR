@@ -18,6 +18,7 @@ mod os;
 mod osc;
 mod overlay_sidecar;
 mod steam;
+mod store_safety;
 mod system_tray;
 mod telemetry;
 mod utils;
@@ -424,6 +425,13 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         commands::time::get_sunrise_sunset_time,
         commands::secrets::protect_secret,
         commands::secrets::unprotect_secret,
+        store_safety::commands::store_safety_save_snapshot,
+        store_safety::commands::store_safety_restore_snapshot,
+        store_safety::commands::store_safety_create_checkpoint,
+        store_safety::commands::store_safety_list_checkpoints,
+        store_safety::commands::store_safety_read_checkpoint,
+        store_safety::commands::store_safety_quarantine_store,
+        store_safety::commands::store_safety_replace_store,
         grpc::commands::get_core_grpc_port,
         grpc::commands::get_core_grpc_web_port,
         telemetry::commands::set_telemetry_enabled,
