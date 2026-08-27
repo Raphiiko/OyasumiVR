@@ -38,7 +38,6 @@ pub fn signature_id(sig_path: &Path) -> Result<String> {
     Ok(line
         .chars()
         .filter(|c| c.is_ascii_alphanumeric())
-        .take(48)
         .collect())
 }
 
@@ -95,6 +94,20 @@ mod tests {
         assert_eq!(first, second);
         assert!(first.chars().all(|c| c.is_ascii_alphanumeric()));
         assert!(!first.is_empty());
+        assert!(first.len() < 200, "a directory name has to fit: {first}");
+    }
+
+    #[test]
+    fn signature_id_keeps_the_whole_signature() {
+        let dir = std::env::temp_dir().join("oyasumi-sigid-test3");
+        std::fs::create_dir_all(&dir).unwrap();
+        let a = dir.join("a.minisig");
+        let b = dir.join("b.minisig");
+        // The two lines differ only past the first 48 characters.
+        let head = "RURVwFT5RoqL7xHjslmUCuY52A61ZUXDIy7TUTsgRijuPNcW";
+        std::fs::write(&a, format!("untrusted comment: x\n{head}aaaa==\n")).unwrap();
+        std::fs::write(&b, format!("untrusted comment: x\n{head}bbbb==\n")).unwrap();
+        assert_ne!(signature_id(&a).unwrap(), signature_id(&b).unwrap());
     }
 
     #[test]

@@ -24,12 +24,8 @@ pub fn log_file() -> Result<PathBuf> {
     Ok(privileged_dir()?.join("launcher.log"))
 }
 
+/// Holds one directory per distinct sidecar build, named after its signature. Nothing is
+/// overwritten, so a running sidecar cannot block a new one being staged.
 pub fn staged_root() -> Result<PathBuf> {
     Ok(privileged_dir()?.join("staged"))
-}
-
-/// One directory per distinct sidecar build, named after its signature. Nothing is overwritten, so
-/// a running sidecar cannot block a new one being staged.
-pub fn staged_dir(signature_id: &str) -> Result<PathBuf> {
-    Ok(staged_root()?.join(signature_id))
 }
