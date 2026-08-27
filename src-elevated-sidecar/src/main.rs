@@ -38,8 +38,7 @@ static ERROR_REPORTING_GUARD: LazyLock<Mutex<Option<sentry::ClientInitGuard>>> =
     LazyLock::new(Default::default);
 
 fn main() {
-    // Before this process loads a DLL of its own, prefer System32 over its own directory. The
-    // runtime below is built by hand so that nothing runs ahead of this call.
+    // The runtime below is built by hand, so nothing loads a DLL before this narrows the search.
     let dll_search_restricted =
         unsafe { SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_SYSTEM32) } != 0;
     tokio::runtime::Builder::new_multi_thread()

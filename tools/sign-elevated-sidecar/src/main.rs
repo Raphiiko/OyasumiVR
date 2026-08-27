@@ -6,7 +6,7 @@
 //! `TAURI_SIGNING_PRIVATE_KEY` and `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` come from the environment.
 //! The key is either a minisign key file, the base64 of one, or a path to one.
 
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
 const TRUSTED_COMMENT: &str = "oyasumivr-elevated-sidecar";
@@ -58,25 +58,28 @@ fn key_text(raw: &str) -> Result<String, String> {
     Ok(contents.trim().to_string())
 }
 
-/// Standard base64, strictly: padding only at the end, and no bits left over.
+/// Standard base64, strictly: whole four-character groups, padding only at the end, and no bits
+/// left over.
 fn base64_decode(input: &str) -> Option<Vec<u8>> {
     const TABLE: &[u8; 64] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     let mut bits = 0u32;
     let mut count = 0u32;
-    let mut padded = false;
+    let mut characters = 0usize;
+    let mut padding = 0usize;
     let mut out = Vec::new();
     for byte in input.bytes() {
         if byte.is_ascii_whitespace() {
             continue;
         }
         if byte == b'=' {
-            padded = true;
+            padding += 1;
             continue;
         }
-        if padded {
+        if padding > 0 {
             return None;
         }
         let value = TABLE.iter().position(|c| *c == byte)? as u32;
+        characters += 1;
         bits = (bits << 6) | value;
         count += 6;
         if count >= 8 {
@@ -84,8 +87,10 @@ fn base64_decode(input: &str) -> Option<Vec<u8>> {
             out.push((bits >> count) as u8);
         }
     }
-    // Whatever is left is a truncated group, so it cannot be a whole character and its bits
-    // cannot be set.
+    if (characters + padding) % 4 != 0 || padding > 2 {
+        return None;
+    }
+    // A group of one encodes nothing, and the bits a partial group leaves over cannot be set.
     if count >= 6 || bits & ((1u32 << count) - 1) != 0 {
         return None;
     }
@@ -100,12 +105,7 @@ fn environment(variable: &str) -> Option<String> {
 
 fn secret_key() -> Result<minisign::SecretKey, String> {
     // Always Some: given None, the minisign crate prompts on stdin, which would hang the build.
-    let password = Some(
-        environment("TAURI_SIGNING_PRIVATE_KEY_PASSWORD")
-            .unwrap_or_default()
-            .trim()
-            .to_string(),
-    );
+    let password = Some(environment("TAURI_SIGNING_PRIVATE_KEY_PASSWORD").unwrap_or_default());
     let raw = environment("TAURI_SIGNING_PRIVATE_KEY")
         .ok_or_else(|| "TAURI_SIGNING_PRIVATE_KEY is not set".to_string())?;
     minisign::SecretKeyBox::from_string(&key_text(&raw)?)
@@ -119,6 +119,26 @@ fn public_key(raw: &str) -> Result<minisign::PublicKey, String> {
         .map_err(|e| format!("cannot read the public key: {e}"))?
         .into_public_key()
         .map_err(|e| format!("cannot read the public key: {e}"))
+}
+
+/// Signs `target` and returns the signature file's contents. The public key is checked against
+/// the result, so a key that does not match fails here.
+fn sign(
+    target: &Path,
+    key: &minisign::SecretKey,
+    public_key: &minisign::PublicKey,
+) -> Result<String, String> {
+    let file = std::fs::File::open(target)
+        .map_err(|e| format!("cannot open {}: {e}", target.display()))?;
+    let signature = minisign::sign(
+        Some(public_key),
+        key,
+        file,
+        Some(TRUSTED_COMMENT),
+        Some("signed by the OyasumiVR build"),
+    )
+    .map_err(|e| format!("signing failed: {e}"))?;
+    Ok(signature.into_string())
 }
 
 fn main() -> ExitCode {
@@ -156,31 +176,17 @@ fn main() -> ExitCode {
         }
     };
 
-    let file = match std::fs::File::open(&arguments.target) {
-        Ok(file) => file,
-        Err(e) => {
-            eprintln!("[sign] cannot open {}: {e}", arguments.target.display());
-            return ExitCode::FAILURE;
-        }
-    };
-
-    let signature = match minisign::sign(
-        Some(&public_key),
-        &key,
-        file,
-        Some(TRUSTED_COMMENT),
-        Some("signed by the OyasumiVR build"),
-    ) {
+    let signature = match sign(&arguments.target, &key, &public_key) {
         Ok(signature) => signature,
-        Err(e) => {
-            eprintln!("[sign] signing failed: {e}");
+        Err(message) => {
+            eprintln!("[sign] {message}");
             return ExitCode::FAILURE;
         }
     };
 
     let mut out = arguments.target.clone().into_os_string();
     out.push(".minisig");
-    if let Err(e) = std::fs::write(&out, signature.into_string()) {
+    if let Err(e) = std::fs::write(&out, signature) {
         eprintln!("[sign] cannot write the signature: {e}");
         return ExitCode::FAILURE;
     }
@@ -192,7 +198,20 @@ fn main() -> ExitCode {
 mod tests {
     use super::*;
 
-    const UPDATER_PUBLIC_KEY: &str = "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEVGOEI4QTQ2Rjk1NEMwNTUKUldSVndGVDVSb3FMN3hIanNsbVVDdVk1MkE2MVpVWERJeTdUVVRzZ1JpanVQTmNXYWJGVHhUSVIK";
+    /// Read from the file the build reads, so a rotated key cannot leave this test passing
+    /// against the retired one.
+    fn updater_public_key() -> String {
+        let conf = include_str!("../../../src-core/tauri.conf.json");
+        let after = conf
+            .split_once(r#""pubkey": ""#)
+            .expect("tauri.conf.json must carry plugins.updater.pubkey")
+            .1;
+        after
+            .split_once('"')
+            .expect("the pubkey must be a quoted string")
+            .0
+            .to_string()
+    }
 
     fn arguments(raw: &[&str]) -> Result<Arguments, String> {
         parse_arguments(raw.iter().map(|s| s.to_string()))
@@ -214,21 +233,95 @@ mod tests {
         assert!(base64_decode("Zg=v").is_none(), "padding in the middle");
         assert!(base64_decode("Zh==").is_none(), "leftover bits are set");
         assert!(base64_decode("Z").is_none(), "a group of one");
+        assert!(
+            base64_decode("Zg=").is_none(),
+            "one padding character short"
+        );
+        assert!(
+            base64_decode("Zg===").is_none(),
+            "one padding character too many"
+        );
+        assert!(base64_decode("Zm8").is_none(), "an unpadded partial group");
+        assert!(
+            base64_decode("Zm9vZg==Zm8=").is_none(),
+            "data after padding"
+        );
     }
 
     #[test]
     fn base64_decodes_the_shipped_public_key() {
-        let text = String::from_utf8(base64_decode(UPDATER_PUBLIC_KEY).unwrap()).unwrap();
+        let encoded = updater_public_key();
+        let text = String::from_utf8(base64_decode(&encoded).unwrap()).unwrap();
         assert!(text.starts_with("untrusted comment: minisign public key:"));
-        assert!(public_key(UPDATER_PUBLIC_KEY).is_ok());
+        assert!(public_key(&encoded).is_ok());
+    }
+
+    /// The one test that would catch the two comment arguments being swapped. That compiles, and
+    /// the launcher would refuse every signature it produced.
+    #[test]
+    fn a_signature_carries_the_trusted_comment_the_launcher_requires() {
+        let pair = minisign::KeyPair::generate_encrypted_keypair(Some("pw".into())).unwrap();
+        let secret = pair
+            .sk
+            .to_box(None)
+            .unwrap()
+            .into_secret_key(Some("pw".into()))
+            .unwrap();
+        let public = pair.pk.clone();
+
+        let dir = std::env::temp_dir().join("oyasumi-sign-roundtrip");
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        let target = dir.join("sidecar.exe");
+        std::fs::write(&target, b"stand-in for the elevated sidecar").unwrap();
+
+        let signature = sign(&target, &secret, &public).expect("signing must succeed");
+        let decoded = minisign::SignatureBox::from_string(&signature).unwrap();
+        assert_eq!(
+            decoded.trusted_comment().unwrap(),
+            TRUSTED_COMMENT,
+            "the launcher matches on this exact string"
+        );
+        minisign::verify(
+            &public,
+            &decoded,
+            std::fs::File::open(&target).unwrap(),
+            true,
+            false,
+            false,
+        )
+        .expect("the signature we write must verify");
+    }
+
+    #[test]
+    fn signing_refuses_a_public_key_that_is_not_the_pair() {
+        let pair = minisign::KeyPair::generate_encrypted_keypair(Some("pw".into())).unwrap();
+        let secret = pair
+            .sk
+            .to_box(None)
+            .unwrap()
+            .into_secret_key(Some("pw".into()))
+            .unwrap();
+        let stranger = minisign::KeyPair::generate_encrypted_keypair(Some("pw".into()))
+            .unwrap()
+            .pk;
+
+        let dir = std::env::temp_dir().join("oyasumi-sign-wrongkey");
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        let target = dir.join("sidecar.exe");
+        std::fs::write(&target, b"stand-in for the elevated sidecar").unwrap();
+
+        assert!(sign(&target, &secret, &stranger).is_err());
     }
 
     #[test]
     fn key_text_accepts_a_key_file_and_its_base64() {
         let file = "untrusted comment: x\nRWRVwFT5RoqL7xHjslmUCuY52A61ZUXDIy7TUTsgRijuPNcWabFTxTIR";
         assert_eq!(key_text(file).unwrap(), file);
-        let decoded = String::from_utf8(base64_decode(UPDATER_PUBLIC_KEY).unwrap()).unwrap();
-        assert_eq!(key_text(UPDATER_PUBLIC_KEY).unwrap(), decoded.trim());
+        let encoded = updater_public_key();
+        let decoded = String::from_utf8(base64_decode(&encoded).unwrap()).unwrap();
+        assert_eq!(key_text(&encoded).unwrap(), decoded.trim());
     }
 
     #[test]
