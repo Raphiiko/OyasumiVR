@@ -210,7 +210,6 @@ export class HotkeyService {
 
   constructor(private appSettings: AppSettingsService) {}
 
-  // every change to this.hotkeys and to the registered accelerators runs here, one at a time
   private enqueue<T>(work: () => Promise<T>): Promise<T> {
     const result = this.queue.then(work, work);
     this.queue = result.catch(() => undefined);
@@ -292,7 +291,6 @@ export class HotkeyService {
       }
       const boundTo = Object.entries(this.hotkeys).find(([, ids]) => ids.includes(hotkeyId))?.[0];
       if (boundTo === hotkeyString) return true;
-      // claim the new accelerator before releasing the old one
       if (!this.hotkeys[hotkeyString] && !this.paused) {
         try {
           await this.registerAccelerator(hotkeyString);
