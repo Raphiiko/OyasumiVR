@@ -84,20 +84,20 @@ async fn run(dll_search_restricted: bool) {
         None => {
             error!("Missing or invalid arguments. Expected format:");
             error!("oyasumivr-elevated-sidecar.exe --core-grpc-port=<port> --core-pid=<pid>");
-            std::process::exit(0);
+            std::process::exit(1);
         }
     };
     let main_pid = match switch_value(&args, "core-pid") {
         Some(n) => n,
         None => {
             error!("Missing or invalid --core-pid argument");
-            std::process::exit(0);
+            std::process::exit(1);
         }
     };
     let error_reporting_enabled = args.iter().any(|arg| arg == "--error-reporting-enabled");
     if !is_elevated() {
         error!("Started without elevation. The core owns elevation, so there is nothing to retry.");
-        std::process::exit(0);
+        std::process::exit(1);
     }
     set_error_reporting_enabled(error_reporting_enabled);
     // Setup the grpc server
@@ -109,7 +109,7 @@ async fn run(dll_search_restricted: bool) {
             Ok(client) => client,
             Err(e) => {
                 error!("Could not connect to main process: {}", e);
-                std::process::exit(0);
+                std::process::exit(1);
             }
         };
     let request = tonic::Request::new(ElevatedSidecarStartArgs {
@@ -120,7 +120,7 @@ async fn run(dll_search_restricted: bool) {
     // fatal on any error, including the core rejecting a sidecar it never asked for
     if let Err(e) = client.on_elevated_sidecar_start(request).await {
         error!("The core did not accept this sidecar: {e}");
-        std::process::exit(0);
+        std::process::exit(1);
     }
     // Init NVML
     nvml::init();
