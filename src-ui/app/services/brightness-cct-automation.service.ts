@@ -30,12 +30,7 @@ import {
   BrightnessEvent,
   BrightnessEventAutomationConfig,
 } from '../models/automations';
-import {
-  EventLogCCTChanged,
-  EventLogHardwareBrightnessChanged,
-  EventLogSimpleBrightnessChanged,
-  EventLogSoftwareBrightnessChanged,
-} from '../models/event-log-entry';
+import { EventLogBrightnessOrCCTReason } from '../models/event-log-entry';
 import { SleepPreparationService } from './sleep-preparation.service';
 import { SimpleBrightnessControlService } from './brightness-control/simple-brightness-control.service';
 import { HardwareBrightnessControlService } from './brightness-control/hardware-brightness-control.service';
@@ -453,15 +448,18 @@ export class BrightnessCctAutomationService {
     // Stop if the automation is disabled
     if (!config.enabled || (!config.changeBrightness && !config.changeColorTemperature)) return;
     // Determine the log reason
-    const eventLogReasonMap: Record<BrightnessEvent, SetBrightnessOrCCTReason> = {
+    const eventLogReasonMap = {
       SLEEP_MODE_ENABLE: 'SLEEP_MODE_ENABLE',
       SLEEP_MODE_DISABLE: 'SLEEP_MODE_DISABLE',
       SLEEP_PREPARATION: 'SLEEP_PREPARATION',
       AT_SUNRISE: 'AT_SUNRISE',
       AT_SUNSET: 'AT_SUNSET',
       HMD_CONNECT: 'HMD_CONNECT',
-    };
+    } as const satisfies Record<BrightnessEvent, SetBrightnessOrCCTReason>;
     const logReason: SetBrightnessOrCCTReason = eventLogReasonMap[automationType];
+    // The event log has no string for an HMD connect, which never logs anyway.
+    const eventLogReason: EventLogBrightnessOrCCTReason | null =
+      automationType === 'HMD_CONNECT' ? null : eventLogReasonMap[automationType];
     // Handle CCT
     if (config.changeColorTemperature && runCCT) {
       this.cctControl.cancelActiveTransition();
@@ -477,7 +475,6 @@ export class BrightnessCctAutomationService {
       } else {
         await this.cctControl.setCCT(config.colorTemperature, { logReason });
       }
-      const eventLogReason = eventLogReasonMap[automationType];
       if (logging && eventLogReason) {
         this.eventLog.logEvent({
           type: 'cctChanged',
@@ -485,7 +482,7 @@ export class BrightnessCctAutomationService {
           value: config.colorTemperature,
           transition: config.transition,
           transitionTime: config.transitionTime,
-        } as EventLogCCTChanged);
+        });
       }
     }
     // Handle Brightness
@@ -497,6 +494,8 @@ export class BrightnessCctAutomationService {
       const advancedMode = await firstValueFrom(this.automationConfigService.configs).then(
         (c) => c.BRIGHTNESS_AUTOMATIONS.advancedMode
       );
+      const hardwareBrightnessAvailable =
+        advancedMode && (await firstValueFrom(this.hardwareBrightnessControl.driverIsAvailable));
       if (!forceInstant && config.transition) {
         const tasks: CancellableTask[] = await (async () => {
           if (advancedMode) {
@@ -509,7 +508,7 @@ export class BrightnessCctAutomationService {
                 }
               ),
             ];
-            if (await firstValueFrom(this.hardwareBrightnessControl.driverIsAvailable)) {
+            if (hardwareBrightnessAvailable) {
               tasks.push(
                 this.hardwareBrightnessControl.transitionBrightness(
                   config.hardwareBrightness,
@@ -542,7 +541,7 @@ export class BrightnessCctAutomationService {
           await this.softwareBrightnessControl.setBrightness(config.softwareBrightness, {
             logReason,
           });
-          if (await firstValueFrom(this.hardwareBrightnessControl.driverIsAvailable)) {
+          if (hardwareBrightnessAvailable) {
             await this.hardwareBrightnessControl.setBrightness(config.hardwareBrightness, {
               logReason,
             });
@@ -553,23 +552,24 @@ export class BrightnessCctAutomationService {
           });
         }
       }
-      const eventLogReason = eventLogReasonMap[automationType];
       if (logging && eventLogReason) {
         if (advancedMode) {
           this.eventLog.logEvent({
             type: 'softwareBrightnessChanged',
             reason: eventLogReason,
-            value: config.brightness,
+            value: config.softwareBrightness,
             transition: config.transition,
             transitionTime: config.transitionTime,
-          } as EventLogSoftwareBrightnessChanged);
-          this.eventLog.logEvent({
-            type: 'hardwareBrightnessChanged',
-            reason: eventLogReason,
-            value: config.brightness,
-            transition: config.transition,
-            transitionTime: config.transitionTime,
-          } as EventLogHardwareBrightnessChanged);
+          });
+          if (hardwareBrightnessAvailable) {
+            this.eventLog.logEvent({
+              type: 'hardwareBrightnessChanged',
+              reason: eventLogReason,
+              value: config.hardwareBrightness,
+              transition: config.transition,
+              transitionTime: config.transitionTime,
+            });
+          }
         } else {
           this.eventLog.logEvent({
             type: 'simpleBrightnessChanged',
@@ -577,7 +577,7 @@ export class BrightnessCctAutomationService {
             value: config.brightness,
             transition: config.transition,
             transitionTime: config.transitionTime,
-          } as EventLogSimpleBrightnessChanged);
+          });
         }
       }
     }
