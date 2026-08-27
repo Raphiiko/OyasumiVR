@@ -298,7 +298,8 @@ export class HotkeyService {
         }
       }
       await this.releaseHotkeyExcept(hotkeyId, hotkeyString);
-      const hotkeyIds = this.hotkeys[hotkeyString] ?? [];
+      this.hotkeys[hotkeyString] ??= [];
+      const hotkeyIds = this.hotkeys[hotkeyString];
       if (!hotkeyIds.includes(hotkeyId)) hotkeyIds.push(hotkeyId);
       if (!load) this.saveHotkeys();
       return true;
