@@ -269,30 +269,30 @@ export class HotkeyService {
     if (!(await this.isValidHotkey(hotkeyString))) {
       return false;
     }
-    try {
-      await this.unregisterHotkey(hotkeyId, true);
-    } catch (e) {
-      warn('[HotkeyService] Could not unregister hotkey: ' + e);
-    }
-    if (this.hotkeys[hotkeyString]) {
-      this.hotkeys[hotkeyString].push(hotkeyId);
-      if (!load) this.saveHotkeys();
-      return true;
-    } else {
+    const boundTo = Object.entries(this.hotkeys).find(([, ids]) => ids.includes(hotkeyId))?.[0];
+    if (boundTo === hotkeyString) return true;
+    // claim the new accelerator before releasing the old one
+    if (!this.hotkeys[hotkeyString] && !this.paused) {
       try {
-        if (!this.paused) {
-          await register(hotkeyString, () => {
+        await register(hotkeyString, (event) => {
+          if (event.state === 'Pressed') {
             this.onHotkeyPressed(hotkeyString);
-          });
-        }
-        this.hotkeys[hotkeyString] = [hotkeyId];
-        if (!load) this.saveHotkeys();
-        return true;
+          }
+        });
       } catch (e) {
         warn('[HotkeyService] Could not register hotkey: ' + e);
         return false;
       }
     }
+    const hotkeyIds = this.hotkeys[hotkeyString] ?? [];
+    try {
+      await this.unregisterHotkey(hotkeyId, true);
+    } catch (e) {
+      warn('[HotkeyService] Could not unregister hotkey: ' + e);
+    }
+    this.hotkeys[hotkeyString] = [...hotkeyIds, hotkeyId];
+    if (!load) this.saveHotkeys();
+    return true;
   }
 
   public async unregisterHotkey(hotkeyId: string, load = false) {
