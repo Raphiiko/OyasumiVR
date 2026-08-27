@@ -3,12 +3,15 @@ use serde::Serialize;
 use std::{
     ffi::OsStr,
     os::raw::c_char,
+    os::windows::process::CommandExt,
+    process::Command,
     sync::LazyLock,
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
-use sysinfo::{ProcessesToUpdate, Signal, System};
+use sysinfo::{Pid, ProcessesToUpdate, System};
 use tauri::Emitter;
 use tokio::sync::Mutex;
+use windows_sys::Win32::System::Threading::CREATE_NO_WINDOW;
 
 use crate::globals::{TAURI_APP_HANDLE, TAURI_CLI_MATCHES};
 
@@ -42,19 +45,29 @@ pub async fn is_process_active(process_name: &str, refresh_processes: bool) -> b
     processes.count() > 0
 }
 
+/// Without `kill`, this only requests a close: the target may ignore it, so the caller must escalate.
 pub async fn stop_process(process_name: &str, kill: bool) {
     let mut sysinfo_guard = SYSINFO.lock().await;
     let sysinfo = &mut *sysinfo_guard;
     sysinfo.refresh_processes(ProcessesToUpdate::All, true);
-    let processes = sysinfo.processes_by_exact_name(OsStr::new(process_name));
-    for process in processes {
-        if kill
-            || (process.kill_with(Signal::Term).is_none()
-                && process.kill_with(Signal::Quit).is_none())
+    for process in sysinfo.processes_by_exact_name(OsStr::new(process_name)) {
+        let pid = process.pid();
+        if let Err(e) = Command::new("taskkill.exe")
+            .args(taskkill_args(pid, kill))
+            .creation_flags(CREATE_NO_WINDOW)
+            .output()
         {
-            let _ = process.kill_with(Signal::Kill);
+            error!("[Core] Failed to stop process {process_name} ({pid}): {e}");
         }
     }
+}
+
+fn taskkill_args(pid: Pid, kill: bool) -> Vec<String> {
+    let mut args = vec![String::from("/PID"), pid.to_string()];
+    if kill {
+        args.push(String::from("/F"));
+    }
+    args
 }
 
 pub fn get_time() -> u128 {
@@ -123,4 +136,18 @@ pub fn convert_char_array_to_string(slice: &[c_char]) -> Option<String> {
         .collect();
 
     String::from_utf8(trimmed_array).ok()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn graceful_stop_never_forces() {
+        assert_eq!(taskkill_args(Pid::from_u32(1234), false), ["/PID", "1234"]);
+        assert_eq!(
+            taskkill_args(Pid::from_u32(1234), true),
+            ["/PID", "1234", "/F"]
+        );
+    }
 }
