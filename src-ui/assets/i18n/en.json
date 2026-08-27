@@ -525,6 +525,8 @@
         },
         "simpleBrightnessChanged": {
           "reason": {
+            "AT_SUNRISE": "As sunrise occurred",
+            "AT_SUNSET": "As sunset occurred",
             "SLEEP_MODE_DISABLE": "As sleep mode was disabled",
             "SLEEP_MODE_ENABLE": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
