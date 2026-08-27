@@ -51,8 +51,9 @@ export class HotkeySelectorComponent implements OnChanges, OnDestroy, OnInit {
 
   selectHotkey() {
     this.modalService.addModal(HotkeySelectorModalComponent, {}, {}).subscribe((result) => {
-      this.hotkey = result?.hotkey ?? undefined;
-      if (this.hotkey) this.hotkeyService.registerHotkey(this.action!, this.hotkey);
+      if (!result?.hotkey || !this.action) return;
+      this.hotkey = result.hotkey;
+      this.hotkeyService.registerHotkey(this.action, this.hotkey);
       this.cdr.markForCheck();
     });
   }
