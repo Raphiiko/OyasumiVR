@@ -205,9 +205,17 @@ export class HotkeyService {
   private hotkeys: { [hotkeyString: string]: string[] } = {};
   private _hotkeyPressed = new Subject<HotkeyId>();
   private paused = false;
+  private queue: Promise<unknown> = Promise.resolve();
   public hotkeyPressed = this._hotkeyPressed.asObservable();
 
   constructor(private appSettings: AppSettingsService) {}
+
+  // every change to this.hotkeys and to the registered accelerators runs here, one at a time
+  private enqueue<T>(work: () => Promise<T>): Promise<T> {
+    const result = this.queue.then(work, work);
+    this.queue = result.catch(() => undefined);
+    return result;
+  }
 
   public async init() {
     this.appSettings.settings.pipe(take(1)).subscribe(async (settings) => {
@@ -227,24 +235,40 @@ export class HotkeyService {
     return validKeys.includes(key.toUpperCase());
   }
 
-  public async pause() {
-    if (this.paused) return;
-    this.paused = true;
-    for (const hotkeyString of Object.keys(this.hotkeys)) {
-      await unregister(hotkeyString);
-    }
+  public pause() {
+    return this.enqueue(async () => {
+      if (this.paused) return;
+      this.paused = true;
+      for (const hotkeyString of Object.keys(this.hotkeys)) {
+        try {
+          await unregister(hotkeyString);
+        } catch (e) {
+          error('[HotkeyService] Could not unregister hotkey: ' + e);
+        }
+      }
+    });
   }
 
-  public async resume() {
-    if (!this.paused) return;
-    this.paused = false;
-    for (const hotkeyString of Object.keys(this.hotkeys)) {
-      await register(hotkeyString, (event) => {
-        if (event.state === 'Pressed') {
-          this.onHotkeyPressed(hotkeyString);
+  public resume() {
+    return this.enqueue(async () => {
+      if (!this.paused) return;
+      this.paused = false;
+      for (const hotkeyString of Object.keys(this.hotkeys)) {
+        try {
+          await this.registerAccelerator(hotkeyString);
+        } catch (e) {
+          warn('[HotkeyService] Could not register hotkey: ' + e);
         }
-      });
-    }
+      }
+    });
+  }
+
+  private registerAccelerator(hotkeyString: string) {
+    return register(hotkeyString, (event) => {
+      if (event.state === 'Pressed') {
+        this.onHotkeyPressed(hotkeyString);
+      }
+    });
   }
 
   public async isValidHotkey(hotkeyString: string) {
@@ -261,44 +285,42 @@ export class HotkeyService {
     }
   }
 
-  public async registerHotkey(
-    hotkeyId: string,
-    hotkeyString: string,
-    load = false
-  ): Promise<boolean> {
-    if (!(await this.isValidHotkey(hotkeyString))) {
-      return false;
-    }
-    const boundTo = Object.entries(this.hotkeys).find(([, ids]) => ids.includes(hotkeyId))?.[0];
-    if (boundTo === hotkeyString) return true;
-    // claim the new accelerator before releasing the old one
-    if (!this.hotkeys[hotkeyString] && !this.paused) {
-      try {
-        await register(hotkeyString, (event) => {
-          if (event.state === 'Pressed') {
-            this.onHotkeyPressed(hotkeyString);
-          }
-        });
-      } catch (e) {
-        warn('[HotkeyService] Could not register hotkey: ' + e);
+  public registerHotkey(hotkeyId: string, hotkeyString: string, load = false): Promise<boolean> {
+    return this.enqueue(async () => {
+      if (!(await this.isValidHotkey(hotkeyString))) {
         return false;
       }
-    }
-    const hotkeyIds = this.hotkeys[hotkeyString] ?? [];
-    try {
-      await this.unregisterHotkey(hotkeyId, true);
-    } catch (e) {
-      warn('[HotkeyService] Could not unregister hotkey: ' + e);
-    }
-    this.hotkeys[hotkeyString] = [...hotkeyIds, hotkeyId];
-    if (!load) this.saveHotkeys();
-    return true;
+      const boundTo = Object.entries(this.hotkeys).find(([, ids]) => ids.includes(hotkeyId))?.[0];
+      if (boundTo === hotkeyString) return true;
+      // claim the new accelerator before releasing the old one
+      if (!this.hotkeys[hotkeyString] && !this.paused) {
+        try {
+          await this.registerAccelerator(hotkeyString);
+        } catch (e) {
+          warn('[HotkeyService] Could not register hotkey: ' + e);
+          return false;
+        }
+      }
+      const hotkeyIds = this.hotkeys[hotkeyString] ?? [];
+      await this.releaseHotkey(hotkeyId);
+      this.hotkeys[hotkeyString] = [...hotkeyIds, hotkeyId];
+      if (!load) this.saveHotkeys();
+      return true;
+    });
   }
 
-  public async unregisterHotkey(hotkeyId: string, load = false) {
+  public unregisterHotkey(hotkeyId: string, load = false) {
+    return this.enqueue(async () => {
+      await this.releaseHotkey(hotkeyId);
+      if (!load) this.saveHotkeys();
+    });
+  }
+
+  private async releaseHotkey(hotkeyId: string) {
     for (const [hotkeyString, hotkeyIds] of Object.entries(this.hotkeys)) {
       const index = hotkeyIds.indexOf(hotkeyId);
-      if (index >= 0) hotkeyIds.splice(index, 1);
+      if (index < 0) continue;
+      hotkeyIds.splice(index, 1);
       if (hotkeyIds.length === 0) {
         delete this.hotkeys[hotkeyString];
         if (!this.paused) {
@@ -310,7 +332,6 @@ export class HotkeyService {
         }
       }
     }
-    if (!load) this.saveHotkeys();
   }
 
   public getHotkeyStringForId(hotkeyId: string): Observable<string | undefined> {
