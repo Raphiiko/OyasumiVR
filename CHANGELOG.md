@@ -58,6 +58,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Fixed the Windows notification provider not showing any notifications
 - Fixed the VR overlay failing to start when system-wide ad blockers or proxies intercepted
   OyasumiVR's local connection
+- Fixed OyasumiVR using up an entire CPU core when Windows stopped reporting the microphone level
+  for the capture device used by the system microphone automations
 - The VR overlay now writes the reason for an unexpected shutdown to its log file, instead of stopping without a trace
 - Changing the VR overlay's GPU acceleration setting now restarts it right away, instead of waiting out the retry delay
   of up to five minutes
