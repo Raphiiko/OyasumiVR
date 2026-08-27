@@ -289,8 +289,6 @@ export class HotkeyService {
       if (!(await this.isValidHotkey(hotkeyString))) {
         return false;
       }
-      const boundTo = Object.entries(this.hotkeys).find(([, ids]) => ids.includes(hotkeyId))?.[0];
-      if (boundTo === hotkeyString) return true;
       if (!this.hotkeys[hotkeyString] && !this.paused) {
         try {
           await this.registerAccelerator(hotkeyString);
@@ -299,9 +297,9 @@ export class HotkeyService {
           return false;
         }
       }
+      await this.releaseHotkeyExcept(hotkeyId, hotkeyString);
       const hotkeyIds = this.hotkeys[hotkeyString] ?? [];
-      await this.releaseHotkey(hotkeyId);
-      this.hotkeys[hotkeyString] = [...hotkeyIds, hotkeyId];
+      if (!hotkeyIds.includes(hotkeyId)) hotkeyIds.push(hotkeyId);
       if (!load) this.saveHotkeys();
       return true;
     });
@@ -315,7 +313,12 @@ export class HotkeyService {
   }
 
   private async releaseHotkey(hotkeyId: string) {
+    await this.releaseHotkeyExcept(hotkeyId);
+  }
+
+  private async releaseHotkeyExcept(hotkeyId: string, retainedHotkeyString?: string) {
     for (const [hotkeyString, hotkeyIds] of Object.entries(this.hotkeys)) {
+      if (hotkeyString === retainedHotkeyString) continue;
       const index = hotkeyIds.indexOf(hotkeyId);
       if (index < 0) continue;
       hotkeyIds.splice(index, 1);
