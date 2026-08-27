@@ -89,21 +89,16 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Fixed OyasumiVR getting stuck on "Initializing" for SteamVR, which only a restart cleared
 - Fixed the VR overlay crashing on startup, and when SteamVR was restarted
 - The VR overlay now stops with an explanation in its log when its browser engine cannot start, instead of crashing
-<<<<<<< HEAD
 - Fixed fractional values typed into slider settings, such as chaperone fade distances, being truncated
-=======
 - Fixed canceling the hotkey selector clearing the hotkey from view while the old hotkey stayed active
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> c793f2ab (fix: keep the hotkey visible when the selector is canceled)
-=======
 - The hotkey selector no longer shows a hotkey that Windows refused to register
->>>>>>> 9f7c826a (docs: note the hotkey registration-failure fix)
-=======
 - Fixed closing the hotkey selector with Escape discarding the hotkey you just pressed
 - Fixed a hotkey you set running its action twice, until you restarted OyasumiVR
 - Fixed OyasumiVR dropping an action's working hotkey when it could not register the replacement
->>>>>>> cb0f52fd (docs: note the remaining hotkey fixes)
+- Fixed changing a hotkey sometimes leaving the old key combination claimed system-wide, where it did
+  nothing and could not be freed until you restarted OyasumiVR
+- Fixed one hotkey being unavailable, because another application had taken it, stopping your
+  remaining hotkeys from working again after you closed the hotkey selector
 - Various stability improvements
 
 ### Removed
