@@ -1,11 +1,20 @@
 import { mergeWith } from 'lodash';
-import { AUTOMATION_CONFIGS_DEFAULT, AutomationConfigs } from '../models/automations';
+import { AUTOMATION_CONFIGS_DEFAULT } from '../models/automations';
+import type { AutomationConfigs } from '../models/automations';
 import { error, info } from '@tauri-apps/plugin-log';
 import { message } from '@tauri-apps/plugin-dialog';
 import { BaseDirectory, writeTextFile } from '@tauri-apps/plugin-fs';
 import { migrateOscScript } from './osc-script.migrations';
 import { migrateKnownLighthouseDeviceId } from './lighthouse-device-id';
 import { decryptStorageData, deserializeStorageCryptoKey } from './legacy/storage-crypto';
+import {
+  BRIGHTNESS_AUTOMATIONS_V17,
+  DEVICE_POWER_AUTOMATIONS_V18,
+  JOIN_NOTIFICATIONS_SOUNDS_V18,
+  MSI_AFTERBURNER_V6,
+  NIGHTMARE_DETECTION_SOUND_V18,
+  SET_BRIGHTNESS_AUTOMATIONS_V9,
+} from './automation-configs.historical-defaults';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: resetToLatest,
@@ -110,7 +119,6 @@ export async function migrateAutomationConfigs(data: any): Promise<AutomationCon
   }
   while (currentVersion < AUTOMATION_CONFIGS_DEFAULT.version) {
     try {
-      console.log('Migrating to version', currentVersion + 1);
       data = await migrations[++currentVersion](structuredClone(data));
     } catch (e) {
       error(
@@ -166,32 +174,38 @@ function from17to18(data: any): any {
   if (data.JOIN_NOTIFICATIONS) {
     if (data.JOIN_NOTIFICATIONS.joinSound) {
       data.JOIN_NOTIFICATIONS.joinSoundMode = data.JOIN_NOTIFICATIONS.joinSound;
-      data.JOIN_NOTIFICATIONS.joinSound = AUTOMATION_CONFIGS_DEFAULT.JOIN_NOTIFICATIONS.joinSound;
+      data.JOIN_NOTIFICATIONS.joinSound = structuredClone(JOIN_NOTIFICATIONS_SOUNDS_V18.joinSound);
     }
     if (data.JOIN_NOTIFICATIONS.leaveSound) {
       data.JOIN_NOTIFICATIONS.leaveSoundMode = data.JOIN_NOTIFICATIONS.leaveSound;
-      data.JOIN_NOTIFICATIONS.leaveSound = AUTOMATION_CONFIGS_DEFAULT.JOIN_NOTIFICATIONS.leaveSound;
+      data.JOIN_NOTIFICATIONS.leaveSound = structuredClone(
+        JOIN_NOTIFICATIONS_SOUNDS_V18.leaveSound
+      );
     }
   }
-  data.NIGHTMARE_DETECTION.sound = {
-    ...AUTOMATION_CONFIGS_DEFAULT.NIGHTMARE_DETECTION.sound,
-    volume: data.NIGHTMARE_DETECTION.soundVolume,
-    enabled: !!data.NIGHTMARE_DETECTION.playSound,
-  };
-  delete data.NIGHTMARE_DETECTION.playSound;
-  delete data.NIGHTMARE_DETECTION.soundVolume;
+  if (data.NIGHTMARE_DETECTION) {
+    data.NIGHTMARE_DETECTION.sound = {
+      ...structuredClone(NIGHTMARE_DETECTION_SOUND_V18),
+      volume: data.NIGHTMARE_DETECTION.soundVolume,
+      enabled: !!data.NIGHTMARE_DETECTION.playSound,
+    };
+    delete data.NIGHTMARE_DETECTION.playSound;
+    delete data.NIGHTMARE_DETECTION.soundVolume;
+  }
 
   // Migrate OSC scripts
-  if (data.OSC_GENERAL.onSleepModeEnable) {
-    data.OSC_GENERAL.onSleepModeEnable = migrateOscScript(data.OSC_GENERAL.onSleepModeEnable);
+  if (data.OSC_GENERAL) {
+    if (data.OSC_GENERAL.onSleepModeEnable) {
+      data.OSC_GENERAL.onSleepModeEnable = migrateOscScript(data.OSC_GENERAL.onSleepModeEnable);
+    }
+    if (data.OSC_GENERAL.onSleepModeDisable) {
+      data.OSC_GENERAL.onSleepModeDisable = migrateOscScript(data.OSC_GENERAL.onSleepModeDisable);
+    }
+    if (data.OSC_GENERAL.onSleepPreparation) {
+      data.OSC_GENERAL.onSleepPreparation = migrateOscScript(data.OSC_GENERAL.onSleepPreparation);
+    }
   }
-  if (data.OSC_GENERAL.onSleepModeDisable) {
-    data.OSC_GENERAL.onSleepModeDisable = migrateOscScript(data.OSC_GENERAL.onSleepModeDisable);
-  }
-  if (data.OSC_GENERAL.onSleepPreparation) {
-    data.OSC_GENERAL.onSleepPreparation = migrateOscScript(data.OSC_GENERAL.onSleepPreparation);
-  }
-  if (Object.keys(data.SLEEPING_ANIMATIONS.oscScripts).length) {
+  if (data.SLEEPING_ANIMATIONS && Object.keys(data.SLEEPING_ANIMATIONS.oscScripts ?? {}).length) {
     Object.keys(data.SLEEPING_ANIMATIONS.oscScripts).forEach((key) => {
       data.SLEEPING_ANIMATIONS.oscScripts[key] = migrateOscScript(
         data.SLEEPING_ANIMATIONS.oscScripts[key]
@@ -216,9 +230,7 @@ function from17to18(data: any): any {
   };
 
   // Migrate device power automations
-  data.DEVICE_POWER_AUTOMATIONS = structuredClone(
-    AUTOMATION_CONFIGS_DEFAULT.DEVICE_POWER_AUTOMATIONS
-  );
+  data.DEVICE_POWER_AUTOMATIONS = structuredClone(DEVICE_POWER_AUTOMATIONS_V18);
 
   // Migrate TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE
   if (
@@ -319,50 +331,48 @@ function from17to18(data: any): any {
 
 function from16to17(data: any): any {
   data.version = 17;
-  data.BRIGHTNESS_AUTOMATIONS = structuredClone(AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS);
-  data.BRIGHTNESS_AUTOMATIONS.advancedMode = data.BRIGHTNESS_CONTROL_ADVANCED_MODE.enabled;
+  data.BRIGHTNESS_AUTOMATIONS = structuredClone(BRIGHTNESS_AUTOMATIONS_V17);
+  data.BRIGHTNESS_AUTOMATIONS.advancedMode =
+    data.BRIGHTNESS_CONTROL_ADVANCED_MODE?.enabled ?? false;
   data.BRIGHTNESS_AUTOMATIONS.enabled = true;
   data.BRIGHTNESS_AUTOMATIONS.SLEEP_MODE_ENABLE = {
     enabled: data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.enabled,
     changeBrightness: true,
     changeColorTemperature: data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.enabled
       ? false
-      : AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS.SLEEP_MODE_ENABLE.changeColorTemperature,
+      : BRIGHTNESS_AUTOMATIONS_V17.SLEEP_MODE_ENABLE.changeColorTemperature,
     brightness: data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.brightness,
     softwareBrightness: data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.softwareBrightness,
     hardwareBrightness: data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.hardwareBrightness,
     transition: data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.transition,
     transitionTime: data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.transitionTime,
-    colorTemperature:
-      AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS.SLEEP_MODE_ENABLE.colorTemperature,
+    colorTemperature: BRIGHTNESS_AUTOMATIONS_V17.SLEEP_MODE_ENABLE.colorTemperature,
   };
   data.BRIGHTNESS_AUTOMATIONS.SLEEP_MODE_DISABLE = {
     enabled: data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.enabled,
     changeBrightness: true,
     changeColorTemperature: data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.enabled
       ? false
-      : AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS.SLEEP_MODE_DISABLE.changeColorTemperature,
+      : BRIGHTNESS_AUTOMATIONS_V17.SLEEP_MODE_DISABLE.changeColorTemperature,
     brightness: data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.brightness,
     softwareBrightness: data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.softwareBrightness,
     hardwareBrightness: data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.hardwareBrightness,
     transition: data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.transition,
     transitionTime: data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.transitionTime,
-    colorTemperature:
-      AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS.SLEEP_MODE_DISABLE.colorTemperature,
+    colorTemperature: BRIGHTNESS_AUTOMATIONS_V17.SLEEP_MODE_DISABLE.colorTemperature,
   };
   data.BRIGHTNESS_AUTOMATIONS.SLEEP_PREPARATION = {
     enabled: data.SET_BRIGHTNESS_ON_SLEEP_PREPARATION.enabled,
     changeBrightness: true,
     changeColorTemperature: data.SET_BRIGHTNESS_ON_SLEEP_PREPARATION.enabled
       ? false
-      : AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS.SLEEP_PREPARATION.changeColorTemperature,
+      : BRIGHTNESS_AUTOMATIONS_V17.SLEEP_PREPARATION.changeColorTemperature,
     brightness: data.SET_BRIGHTNESS_ON_SLEEP_PREPARATION.brightness,
     softwareBrightness: data.SET_BRIGHTNESS_ON_SLEEP_PREPARATION.softwareBrightness,
     hardwareBrightness: data.SET_BRIGHTNESS_ON_SLEEP_PREPARATION.hardwareBrightness,
     transition: data.SET_BRIGHTNESS_ON_SLEEP_PREPARATION.transition,
     transitionTime: data.SET_BRIGHTNESS_ON_SLEEP_PREPARATION.transitionTime,
-    colorTemperature:
-      AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS.SLEEP_PREPARATION.colorTemperature,
+    colorTemperature: BRIGHTNESS_AUTOMATIONS_V17.SLEEP_PREPARATION.colorTemperature,
   };
 
   delete data.BRIGHTNESS_CONTROL_ADVANCED_MODE;
@@ -376,6 +386,9 @@ function from15to16(data: any): any {
   data.version = 16;
 
   const oscAutomationsConfig = data.OSC_GENERAL;
+  if (!oscAutomationsConfig) {
+    return data;
+  }
 
   const oscAutomations = [
     oscAutomationsConfig.onSleepModeEnable,
@@ -395,6 +408,7 @@ function from15to16(data: any): any {
     }
 
     automation.version = 2;
+    automation.commands ??= [];
 
     for (const command of automation.commands) {
       if (command.type !== 'COMMAND') {
@@ -417,20 +431,26 @@ function from15to16(data: any): any {
 
 function from14to15(data: any): any {
   data.version = 15;
-  data.triggerOnSleepDuration = data.sleepDuration;
-  delete data.sleepDuration;
-  data.triggerOnSleepActivationWindow = data.activationWindow;
-  delete data.activationWindow;
-  data.triggerOnSleepActivationWindowStart = data.activationWindowStart;
-  delete data.activationWindowStart;
-  data.triggerOnSleepActivationWindowEnd = data.activationWindowEnd;
-  delete data.activationWindowEnd;
+  if (data.SHUTDOWN_AUTOMATIONS) {
+    const shutdownAutomations = data.SHUTDOWN_AUTOMATIONS;
+    shutdownAutomations.triggerOnSleepDuration = shutdownAutomations.sleepDuration;
+    delete shutdownAutomations.sleepDuration;
+    shutdownAutomations.triggerOnSleepActivationWindow = shutdownAutomations.activationWindow;
+    delete shutdownAutomations.activationWindow;
+    shutdownAutomations.triggerOnSleepActivationWindowStart =
+      shutdownAutomations.activationWindowStart;
+    delete shutdownAutomations.activationWindowStart;
+    shutdownAutomations.triggerOnSleepActivationWindowEnd = shutdownAutomations.activationWindowEnd;
+    delete shutdownAutomations.activationWindowEnd;
+  }
   return data;
 }
 
 function from13to14(data: any): any {
   data.version = 14;
-  delete data['VRCHAT_MIC_MUTE_AUTOMATIONS'].mode;
+  if (data.VRCHAT_MIC_MUTE_AUTOMATIONS) {
+    delete data.VRCHAT_MIC_MUTE_AUTOMATIONS.mode;
+  }
   return data;
 }
 
@@ -524,13 +544,13 @@ function from8to9(data: any): any {
   delete data.IMAGE_BRIGHTNESS_ON_SLEEP_MODE_DISABLE;
   // Insert new configuration defaults
   data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE = structuredClone(
-    (AUTOMATION_CONFIGS_DEFAULT as any)['SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE']
+    SET_BRIGHTNESS_AUTOMATIONS_V9.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE
   );
   data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE = structuredClone(
-    (AUTOMATION_CONFIGS_DEFAULT as any)['SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE']
+    SET_BRIGHTNESS_AUTOMATIONS_V9.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE
   );
   data.SET_BRIGHTNESS_ON_SLEEP_PREPARATION = structuredClone(
-    (AUTOMATION_CONFIGS_DEFAULT as any)['SET_BRIGHTNESS_ON_SLEEP_PREPARATION']
+    SET_BRIGHTNESS_AUTOMATIONS_V9.SET_BRIGHTNESS_ON_SLEEP_PREPARATION
   );
   // Attempt to migrate old on sleep enable automations
   if (displayBrightnessOnEnableConfig?.enabled) {
@@ -559,8 +579,8 @@ function from8to9(data: any): any {
     data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.enabled = true;
     data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.brightness =
       displayBrightnessOnDisableConfig.brightness;
-    data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.imageBrightness = 100;
-    data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.displayBrightness =
+    data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.imageBrightness = 100;
+    data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.displayBrightness =
       displayBrightnessOnDisableConfig.brightness;
     data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.transition =
       displayBrightnessOnDisableConfig.transition;
@@ -570,9 +590,9 @@ function from8to9(data: any): any {
     data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.enabled = true;
     data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.brightness =
       imageBrightnessOnDisableConfig.brightness;
-    data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.imageBrightness =
+    data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.imageBrightness =
       imageBrightnessOnDisableConfig.brightness;
-    data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.displayBrightness = 100;
+    data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.displayBrightness = 100;
     data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.transition =
       imageBrightnessOnDisableConfig.transition;
     data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.transitionTime =
@@ -595,8 +615,8 @@ function from6to7(data: any): any {
 
 function from5to6(data: any): any {
   data.version = 6;
-  data.MSI_AFTERBURNER = structuredClone(AUTOMATION_CONFIGS_DEFAULT.MSI_AFTERBURNER);
-  data.MSI_AFTERBURNER.enabled = data.GPU_POWER_LIMITS.enabled;
+  data.MSI_AFTERBURNER = structuredClone(MSI_AFTERBURNER_V6);
+  data.MSI_AFTERBURNER.enabled = data.GPU_POWER_LIMITS?.enabled ?? false;
   return data;
 }
 

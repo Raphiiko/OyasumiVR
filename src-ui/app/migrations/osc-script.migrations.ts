@@ -1,5 +1,6 @@
 import { error, info } from '@tauri-apps/plugin-log';
-import { OSC_SCRIPT_VERSION, OscScript } from '../models/osc-script';
+import { OSC_SCRIPT_VERSION } from '../models/osc-script';
+import type { OscScript } from '../models/osc-script';
 import { message } from '@tauri-apps/plugin-dialog';
 
 const migrations: { [v: number]: (data: any) => any } = {
@@ -17,12 +18,9 @@ export function migrateOscScript(data: any): OscScript {
       `[osc-script-migrations] Resetting OSC script as it's version is higher than the latest version`
     );
   }
-  console.log(0, currentVersion + 0, structuredClone(data));
   while (currentVersion < OSC_SCRIPT_VERSION) {
     try {
-      console.log(1, currentVersion + 0, structuredClone(data));
       data = migrations[++currentVersion](structuredClone(data));
-      console.log(2, currentVersion + 0, structuredClone(data));
     } catch {
       error(
         "[osc-script-migrations] Couldn't migrate osc script to version " +
