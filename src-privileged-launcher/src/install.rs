@@ -30,11 +30,17 @@ pub fn run() -> u8 {
     // Program Files would have granted them by inheritance.
     for directory in [&dir, &staged] {
         if let Err(e) = std::fs::create_dir_all(directory) {
-            log(&format!("[install] cannot create {}: {e}", directory.display()));
+            log(&format!(
+                "[install] cannot create {}: {e}",
+                directory.display()
+            ));
             return exit::INSTALL_FAILED;
         }
         if let Err(e) = protect_directory(directory) {
-            log(&format!("[install] cannot secure {}: {e}", directory.display()));
+            log(&format!(
+                "[install] cannot secure {}: {e}",
+                directory.display()
+            ));
             return exit::INSTALL_FAILED;
         }
     }
@@ -46,7 +52,10 @@ pub fn run() -> u8 {
     // skipped when already in place, so a reinstall does not trip over a locked file
     if current != target {
         if let Err(e) = std::fs::copy(&current, &target) {
-            log(&format!("[install] cannot copy myself to {}: {e}", target.display()));
+            log(&format!(
+                "[install] cannot copy myself to {}: {e}",
+                target.display()
+            ));
             return exit::INSTALL_FAILED;
         }
     }
@@ -66,11 +75,16 @@ pub fn run() -> u8 {
 
     // Written last: the core reads it as proof that a task is registered, and spends a UAC prompt
     // when it is missing.
-    let payload = serde_json::to_vec(&Marker {
+    let payload = match serde_json::to_vec(&Marker {
         version: PRIVILEGED_LAUNCHER_VERSION,
         key: elevated_sidecar_key_id().to_string(),
-    })
-    .unwrap_or_default();
+    }) {
+        Ok(payload) => payload,
+        Err(e) => {
+            log(&format!("[install] cannot build the marker: {e}"));
+            return exit::INSTALL_FAILED;
+        }
+    };
     if let Err(e) = std::fs::write(&marker, payload) {
         log(&format!("[install] cannot write {}: {e}", marker.display()));
         return exit::INSTALL_FAILED;
