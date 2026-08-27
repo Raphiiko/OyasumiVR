@@ -87,6 +87,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Fixed OyasumiVR getting stuck on "Initializing" for SteamVR, which only a restart cleared
 - Fixed the VR overlay crashing on startup, and when SteamVR was restarted
 - The VR overlay now stops with an explanation in its log when its browser engine cannot start, instead of crashing
+- Fixed fractional values typed into slider settings, such as chaperone fade distances, being truncated
 - Various stability improvements
 
 ### Removed
