@@ -49,7 +49,10 @@ export type EventLogEntry =
   | EventLogCCTChanged
   | EventLogRunAutomationExecuted;
 
-export type EventLogDraft = Omit<EventLogEntry, 'time' | 'id'>;
+// Omit distributes over the union here, so each entry keeps its own fields.
+type DistributiveOmit<T, K extends keyof never> = T extends unknown ? Omit<T, K> : never;
+
+export type EventLogDraft = DistributiveOmit<EventLogEntry, 'time' | 'id'>;
 
 export type EventLogType =
   | 'sleepModeEnabled'
@@ -152,10 +155,16 @@ export interface EventLogGpuPowerLimitChanged extends EventLogBase {
   resetToDefault: boolean;
 }
 
+export type EventLogBrightnessOrCCTReason =
+  | 'SLEEP_MODE_ENABLE'
+  | 'SLEEP_MODE_DISABLE'
+  | 'SLEEP_PREPARATION'
+  | 'AT_SUNSET'
+  | 'AT_SUNRISE';
+
 export interface EventLogHardwareBrightnessChanged extends EventLogBase {
   type: 'hardwareBrightnessChanged';
-  reason:
-    'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION' | 'AT_SUNSET' | 'AT_SUNRISE';
+  reason: EventLogBrightnessOrCCTReason;
   transition: boolean;
   value: number;
   transitionTime: number;
@@ -163,8 +172,7 @@ export interface EventLogHardwareBrightnessChanged extends EventLogBase {
 
 export interface EventLogSoftwareBrightnessChanged extends EventLogBase {
   type: 'softwareBrightnessChanged';
-  reason:
-    'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION' | 'AT_SUNSET' | 'AT_SUNRISE';
+  reason: EventLogBrightnessOrCCTReason;
   transition: boolean;
   value: number;
   transitionTime: number;
@@ -172,8 +180,7 @@ export interface EventLogSoftwareBrightnessChanged extends EventLogBase {
 
 export interface EventLogSimpleBrightnessChanged extends EventLogBase {
   type: 'simpleBrightnessChanged';
-  reason:
-    'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION' | 'AT_SUNSET' | 'AT_SUNRISE';
+  reason: EventLogBrightnessOrCCTReason;
   transition: boolean;
   value: number;
   transitionTime: number;
@@ -181,8 +188,7 @@ export interface EventLogSimpleBrightnessChanged extends EventLogBase {
 
 export interface EventLogCCTChanged extends EventLogBase {
   type: 'cctChanged';
-  reason:
-    'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION' | 'AT_SUNSET' | 'AT_SUNRISE';
+  reason: EventLogBrightnessOrCCTReason;
   transition: boolean;
   value: number;
   transitionTime: number;
