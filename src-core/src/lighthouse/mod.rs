@@ -69,6 +69,7 @@ const CONNECT_BACKOFF_MAX: Duration = Duration::from_secs(300);
 // Failing connects to every device at once is the signature of a wedged stack
 const RADIO_RECOVERY_THRESHOLD: u32 = 6;
 const RADIO_RECOVERY_COOLDOWN: Duration = Duration::from_secs(300);
+const RADIO_ON_ATTEMPTS: u32 = 3;
 
 pub async fn init() {
     // Initialize adapter
@@ -624,29 +625,96 @@ async fn register_connect_failure(device_id: &PeripheralId) {
 }
 
 async fn cycle_bluetooth_radio() -> Result<(), String> {
-    use windows::Devices::Radios::{Radio, RadioKind, RadioState};
+    use windows::Devices::Radios::{Radio, RadioAccessStatus};
+
+    let access = Radio::RequestAccessAsync()
+        .map_err(|e| e.to_string())?
+        .await
+        .map_err(|e| e.to_string())?;
+    if access != RadioAccessStatus::Allowed {
+        return Err(format!(
+            "radio access was refused before cycling ({access:?})"
+        ));
+    }
+
     let radios = Radio::GetRadiosAsync()
         .map_err(|e| e.to_string())?
         .await
         .map_err(|e| e.to_string())?;
+    let mut failures = Vec::new();
     for radio in radios {
-        if radio.Kind().map_err(|e| e.to_string())? != RadioKind::Bluetooth {
-            continue;
+        if let Err(err) = cycle_radio(&radio).await {
+            failures.push(err);
         }
-        radio
-            .SetStateAsync(RadioState::Off)
-            .map_err(|e| e.to_string())?
-            .await
-            .map_err(|e| e.to_string())?;
-        sleep(Duration::from_secs(3)).await;
-        radio
+    }
+    if failures.is_empty() {
+        Ok(())
+    } else {
+        Err(failures.join("; "))
+    }
+}
+
+async fn cycle_radio(radio: &windows::Devices::Radios::Radio) -> Result<(), String> {
+    use windows::Devices::Radios::{RadioAccessStatus, RadioKind, RadioState};
+
+    if radio
+        .Kind()
+        .map_err(|e| format!("failed to inspect a bluetooth radio: {e}"))?
+        != RadioKind::Bluetooth
+    {
+        return Ok(());
+    }
+    let name = radio
+        .Name()
+        .map_err(|e| format!("failed to name a bluetooth radio: {e}"))?;
+    let probe = radio
+        .SetStateAsync(RadioState::On)
+        .map_err(|e| e.to_string())?
+        .await
+        .map_err(|e| e.to_string())?;
+    if probe != RadioAccessStatus::Allowed {
+        return Err(format!(
+            "turning the '{name}' radio back on was refused before cycling ({probe:?})"
+        ));
+    }
+    let status = radio
+        .SetStateAsync(RadioState::Off)
+        .map_err(|e| e.to_string())?
+        .await
+        .map_err(|e| e.to_string())?;
+    if status != RadioAccessStatus::Allowed {
+        return Err(format!("turning the '{name}' radio off was refused ({status:?})"));
+    }
+    sleep(Duration::from_secs(3)).await;
+    restore_radio_on(radio)
+        .await
+        .map_err(|err| format!("the '{name}' radio {err}"))
+}
+
+async fn restore_radio_on(radio: &windows::Devices::Radios::Radio) -> Result<(), String> {
+    use windows::Devices::Radios::{RadioAccessStatus, RadioState};
+
+    for attempt in 1..=RADIO_ON_ATTEMPTS {
+        if attempt > 1 {
+            sleep(Duration::from_secs(3)).await;
+        }
+        let status = radio
             .SetStateAsync(RadioState::On)
             .map_err(|e| e.to_string())?
             .await
             .map_err(|e| e.to_string())?;
+        if status != RadioAccessStatus::Allowed {
+            warn!("[Core] Turning the bluetooth radio back on was refused (attempt {attempt}/{RADIO_ON_ATTEMPTS}): {status:?}");
+            continue;
+        }
         sleep(Duration::from_secs(5)).await;
+        match radio.State() {
+            Ok(RadioState::On) => return Ok(()),
+            Ok(state) => warn!("[Core] The bluetooth radio still reports {state:?} after being turned back on (attempt {attempt}/{RADIO_ON_ATTEMPTS})"),
+            Err(err) => warn!("[Core] Failed to read the bluetooth radio state after re-enabling it (attempt {attempt}/{RADIO_ON_ATTEMPTS}): {err}"),
+        }
     }
-    Ok(())
+    Err("could not be turned back on".to_string())
 }
 
 async fn get_power_characteristic(
