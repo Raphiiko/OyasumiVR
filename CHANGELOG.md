@@ -93,7 +93,11 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Fixed fractional values typed into slider settings, such as chaperone fade distances, being truncated
 =======
 - Fixed canceling the hotkey selector clearing the hotkey from view while the old hotkey stayed active
+<<<<<<< HEAD
 >>>>>>> c793f2ab (fix: keep the hotkey visible when the selector is canceled)
+=======
+- The hotkey selector no longer shows a hotkey that Windows refused to register
+>>>>>>> 9f7c826a (docs: note the hotkey registration-failure fix)
 - Various stability improvements
 
 ### Removed
