@@ -71,8 +71,6 @@ pub fn run() -> u8 {
         return exit::STAGING_FAILED;
     }
 
-    collect_old_staged(&root, &staged_dir);
-
     // forwarded because the task cannot pass arguments, by design
     let mut arguments = format!(
         "--core-grpc-port={} --core-pid={}",
@@ -82,7 +80,7 @@ pub fn run() -> u8 {
         arguments.push_str(" --error-reporting-enabled");
     }
 
-    match spawn::start(&staged_exe, &staged_dir, &arguments) {
+    let outcome = match spawn::start(&staged_exe, &staged_dir, &arguments) {
         Ok(pid) => {
             log(&format!("[run] started the sidecar as pid {pid}"));
             exit::OK
@@ -91,7 +89,12 @@ pub fn run() -> u8 {
             log(&format!("[run] cannot start {}: {e}", staged_exe.display()));
             exit::SPAWN_FAILED
         }
-    }
+    };
+
+    // After the spawn: another account's launcher shares this root, and collecting first let it
+    // delete a directory this launch had already verified and was about to run from.
+    collect_old_staged(&root, &staged_dir);
+    outcome
 }
 
 /// Both halves present. A directory holding only one of them lost a race or a disk.
