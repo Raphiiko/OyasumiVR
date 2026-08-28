@@ -77,7 +77,9 @@ const CONNECT_BACKOFF_MAX: Duration = Duration::from_secs(300);
 const RADIO_RECOVERY_THRESHOLD: u32 = 6;
 const RADIO_RECOVERY_COOLDOWN: Duration = Duration::from_secs(300);
 const RADIO_ON_ATTEMPTS: u32 = 3;
-const RADIO_RESTORE_TIMEOUT: Duration = Duration::from_secs(30);
+const RADIO_RESTORE_TIMEOUT: Duration = Duration::from_secs(60);
+const RADIO_RESTORE_RETRY_COOLDOWN: Duration = Duration::from_secs(30);
+const RADIO_ADAPTER_RETRY_COOLDOWN: Duration = Duration::from_secs(5);
 
 pub async fn init() {
     if timeout(RADIO_RESTORE_TIMEOUT, restore_pending_radios())
@@ -86,47 +88,92 @@ pub async fn init() {
     {
         warn!("[Core] Timed out restoring pending bluetooth radios");
     }
+    if pending_restores_remain() {
+        tokio::spawn(retry_pending_radio_restores());
+    }
     // Initialize adapter
-    let manager = match Manager::new().await {
-        Ok(manager) => manager,
-        Err(err) => {
-            error!("[Core] Failed to initialize the bluetooth manager: {err}");
-            set_lighthouse_status(LighthouseStatus::AdapterError).await;
-            return;
-        }
-    };
-    match manager.adapters().await {
-        Ok(adapters) => {
-            if adapters.is_empty() {
+    loop {
+        let manager = match Manager::new().await {
+            Ok(manager) => manager,
+            Err(err) => {
+                if pending_restores_remain() {
+                    warn!("[Core] Failed to initialize the bluetooth manager while restores remain: {err}");
+                    sleep(RADIO_ADAPTER_RETRY_COOLDOWN).await;
+                    continue;
+                }
+                error!("[Core] Failed to initialize the bluetooth manager: {err}");
+                set_lighthouse_status(LighthouseStatus::AdapterError).await;
+                return;
+            }
+        };
+        match manager.adapters().await {
+            Ok(adapters) if !adapters.is_empty() => {
+                *MANAGER.lock().await = Some(manager);
+                set_lighthouse_status(LighthouseStatus::Ready).await;
+                // Poll the status of connected lighthouses every few seconds in a separate task
+                tokio::spawn(async move {
+                    loop {
+                        sleep(Duration::from_secs(2)).await;
+                        let devices_guard = LIGHTHOUSE_DEVICES.lock().await;
+                        let devices = devices_guard.clone();
+                        drop(devices_guard);
+                        // Polled together, so an unreachable device cannot hold up the others
+                        join_all(
+                            devices
+                                .iter()
+                                .map(|d| get_device_power_state(d.id.to_string())),
+                        )
+                        .await;
+                    }
+                });
+                return;
+            }
+            Ok(_) => {
+                if pending_restores_remain() {
+                    warn!("[Core] No bluetooth adapter was found while restores remain");
+                    sleep(RADIO_ADAPTER_RETRY_COOLDOWN).await;
+                    continue;
+                }
                 set_lighthouse_status(LighthouseStatus::NoAdapter).await;
                 warn!("[Core] No bluetooth adapter was found. Disabling lighthouse module.");
                 return;
             }
+            Err(err) => {
+                if pending_restores_remain() {
+                    error!(
+                        "[Core] Failed to list the bluetooth adapters while restores remain: {err}"
+                    );
+                    sleep(RADIO_ADAPTER_RETRY_COOLDOWN).await;
+                    continue;
+                }
+                error!("[Core] Failed to list the bluetooth adapters: {err}");
+                set_lighthouse_status(LighthouseStatus::AdapterError).await;
+                return;
+            }
         }
-        Err(err) => {
-            error!("[Core] Failed to list the bluetooth adapters: {err}");
-            set_lighthouse_status(LighthouseStatus::AdapterError).await;
+    }
+}
+
+fn pending_restores_remain() -> bool {
+    !matches!(
+        read_persisted_pending_restores(),
+        Some(pending_ids) if pending_ids.is_empty()
+    )
+}
+
+async fn retry_pending_radio_restores() {
+    loop {
+        sleep(RADIO_RESTORE_RETRY_COOLDOWN).await;
+        if timeout(RADIO_RESTORE_TIMEOUT, restore_pending_radios())
+            .await
+            .is_err()
+        {
+            warn!("[Core] Timed out restoring pending bluetooth radios");
+        }
+        if !pending_restores_remain() {
             return;
         }
     }
-    *MANAGER.lock().await = Some(manager);
-    set_lighthouse_status(LighthouseStatus::Ready).await;
-    // Poll the status of connected lighthouses every few seconds in a separate task
-    tokio::spawn(async move {
-        loop {
-            sleep(Duration::from_secs(2)).await;
-            let devices_guard = LIGHTHOUSE_DEVICES.lock().await;
-            let devices = devices_guard.clone();
-            drop(devices_guard);
-            // Polled together, so an unreachable device cannot hold up the others
-            join_all(
-                devices
-                    .iter()
-                    .map(|d| get_device_power_state(d.id.to_string())),
-            )
-            .await;
-        }
-    });
 }
 
 /// Every scan needs its own adapter: btleplug registers an advertisement handler per `start_scan`
@@ -795,7 +842,13 @@ async fn cycle_radio(radio: &BluetoothRadio, pending_ids: &[String]) -> RadioCyc
     }
     match radio.State() {
         Ok(RadioState::On) => {}
-        Ok(_) => return cycle_error(None),
+        Ok(RadioState::Off | RadioState::Disabled) => return cycle_error(None),
+        Ok(RadioState::Unknown) => {
+            warn!("[Core] The '{name}' radio reports an unknown state, cycling it")
+        }
+        Ok(state) => {
+            warn!("[Core] The '{name}' radio reports an unrecognized state ({state:?}), cycling it")
+        }
         Err(err) => {
             return cycle_error(Some(format!(
                 "failed to read the state of the '{name}' radio: {err}"
@@ -1012,12 +1065,6 @@ async fn restore_pending_radios() {
             return;
         }
     };
-    let enumeration_complete = listing.complete;
-    let available_ids = listing
-        .radios
-        .iter()
-        .map(|radio| radio.id.clone())
-        .collect::<HashSet<_>>();
     let restore_results = join_all(
         listing
             .radios
@@ -1042,31 +1089,8 @@ async fn restore_pending_radios() {
             }
         }
     }
-    let restored_ids = pending_restore_clear_ids(
-        &pending_ids,
-        &seen_ids,
-        &available_ids,
-        enumeration_complete,
-    );
+    let restored_ids = seen_ids;
     retain_persisted_pending_restores(&pending_ids, &restored_ids);
-}
-
-fn pending_restore_clear_ids(
-    pending_ids: &[String],
-    restored_ids: &[String],
-    available_ids: &HashSet<String>,
-    enumeration_complete: bool,
-) -> Vec<String> {
-    let mut ids = restored_ids.to_vec();
-    if enumeration_complete && !available_ids.is_empty() {
-        ids.extend(
-            pending_ids
-                .iter()
-                .filter(|id| !available_ids.contains(*id))
-                .cloned(),
-        );
-    }
-    ids
 }
 
 async fn restore_radio_on(radio: &windows::Devices::Radios::Radio) -> Result<(), String> {
@@ -1319,26 +1343,6 @@ mod tests {
         assert!(read_persisted_pending_restores_from(&path)
             .unwrap()
             .is_empty());
-    }
-
-    #[test]
-    fn stale_pending_restores_clear_only_after_complete_enumeration() {
-        let pending_ids = vec![String::from("present"), String::from("stale")];
-        let restored_ids = vec![String::from("present")];
-        let available_ids = HashSet::from([String::from("present")]);
-
-        assert_eq!(
-            pending_restore_clear_ids(&pending_ids, &restored_ids, &available_ids, true),
-            vec![String::from("present"), String::from("stale")]
-        );
-        assert_eq!(
-            pending_restore_clear_ids(&pending_ids, &restored_ids, &available_ids, false),
-            vec![String::from("present")]
-        );
-        assert!(
-            pending_restore_clear_ids(&[String::from("present")], &[], &HashSet::new(), true)
-                .is_empty()
-        );
     }
 
     #[test]
