@@ -63,6 +63,9 @@
         }
       </div>
       <div class="description" [innerHTML]="disabledMessage | transloco"></div>
+      @if (elevationMessage) {
+        <div class="elevation-message" [innerHTML]="elevationMessage | transloco"></div>
+      }
       <div class="btn-row">
         @if (panel === 'NO_SIDECAR') {
           <button

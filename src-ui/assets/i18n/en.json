@@ -1470,6 +1470,9 @@
       "unhide": "Unhide"
     },
     "messages": {
+      "elevatedFeaturesUnavailable": {
+        "title": "Administrator Access Unavailable"
+      },
       "gpuAutomationsAfterburnerError": {
         "actions": {
           "disable": "Disable Automations"
