@@ -254,17 +254,15 @@ pub fn create_checkpoint(
     }
     let checksum = checksum(contents.as_bytes());
     let existing = list_checkpoints(base, store_name)?;
-    if let Some(metadata) = existing
-        .iter()
-        .find(|m| m.content_checksum == checksum && m.content_file_exists)
-    {
+    if let Some(metadata) = existing.iter().find(|metadata| {
+        metadata.content_checksum == checksum
+            && read_checkpoint(base, store_name, &metadata.id).as_deref() == Ok(contents)
+    }) {
         return Ok(metadata.clone());
     }
     let content_file = format!("{checksum}.dat");
     let content_path = checkpoint_content_dir(base, store_name).join(&content_file);
-    if !content_path.is_file() {
-        write_file_atomic(&content_path, contents.as_bytes())?;
-    }
+    write_file_atomic(&content_path, contents.as_bytes())?;
     let now = Utc::now();
     let sequence = existing.iter().map(|m| m.sequence).max().unwrap_or(0) + 1;
     let id = format!(
@@ -505,6 +503,40 @@ mod tests {
         .unwrap();
         fs::remove_file(checkpoint_content_dir(base.path(), "settings").join(first.content_file))
             .unwrap();
+        let replacement = create_checkpoint(
+            base.path(),
+            "settings",
+            contents,
+            "store-recovery",
+            "1.0.0",
+            BTreeMap::new(),
+        )
+        .unwrap();
+        assert_ne!(replacement.id, first.id);
+        assert_eq!(
+            read_checkpoint(base.path(), "settings", &replacement.id).unwrap(),
+            contents
+        );
+    }
+
+    #[test]
+    fn checkpoint_deduplication_replaces_corrupt_content() {
+        let (base, _) = setup();
+        let contents = r#"{"SLEEP_MODE":true}"#;
+        let first = create_checkpoint(
+            base.path(),
+            "settings",
+            contents,
+            "pre-migration",
+            "1.0.0",
+            BTreeMap::new(),
+        )
+        .unwrap();
+        fs::write(
+            checkpoint_content_dir(base.path(), "settings").join(first.content_file),
+            "corrupt",
+        )
+        .unwrap();
         let replacement = create_checkpoint(
             base.path(),
             "settings",

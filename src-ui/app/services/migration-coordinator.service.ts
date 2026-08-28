@@ -54,6 +54,11 @@ export class MigrationCoordinatorService {
       case 'keep-live':
         info(`[MigrationCoordinator] ${spec.storeName}: live store is current, nothing to do`);
         break;
+      case 'defer':
+        warn(
+          `[MigrationCoordinator] ${spec.storeName}: live store could not be read and no backup was viable, leaving it untouched`
+        );
+        break;
       case 'install':
         info(
           `[MigrationCoordinator] ${spec.storeName}: installing candidate '${decision.selectedId}' (checkpoint reason '${decision.checkpointReason}')`
@@ -62,7 +67,7 @@ export class MigrationCoordinatorService {
       case 'install-defaults':
         if (decision.hadCandidates) {
           error(
-            `[MigrationCoordinator] ${spec.storeName}: no viable candidate, quarantining the live store and installing defaults`
+            `[MigrationCoordinator] ${spec.storeName}: no viable candidate, quarantining the live store and recovering each key where possible`
           );
         } else {
           info(`[MigrationCoordinator] ${spec.storeName}: no store yet, installing defaults`);

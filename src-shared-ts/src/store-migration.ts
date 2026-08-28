@@ -26,6 +26,7 @@ export interface CandidateReport {
 
 export type StoreMigrationDecision =
   | { action: 'keep-live'; reports: CandidateReport[] }
+  | { action: 'defer'; reports: CandidateReport[] }
   | {
       action: 'install';
       contents: string;
@@ -66,6 +67,7 @@ interface CandidateEvaluation {
   report: CandidateReport;
   parsed: Record<string, unknown> | null;
   migrated: Record<string, unknown> | null;
+  resolved: Record<string, unknown>;
   migratedAnyKey: boolean;
 }
 
@@ -81,9 +83,16 @@ export async function decideStoreMigration(
   const selected = evaluations.find((evaluation) => evaluation.report.viable);
   if (!selected) {
     const live = evaluations.find((e) => e.report.kind === 'live');
+    if (
+      live &&
+      live.parsed === null &&
+      candidates.find((candidate) => candidate.kind === 'live')?.contents === null
+    ) {
+      return { action: 'defer', reports };
+    }
     return {
       action: 'install-defaults',
-      contents: defaultsContents(live?.parsed ?? null, spec),
+      contents: recoveredContents(evaluations, spec),
       hadCandidates: candidates.length > 0,
       reports,
     };
@@ -120,7 +129,7 @@ export async function applyStoreMigration(
   spec: StoreMigrationSpec,
   ports: StoreMigrationPorts
 ): Promise<void> {
-  if (decision.action === 'keep-live') return;
+  if (decision.action === 'keep-live' || decision.action === 'defer') return;
   if (decision.action === 'install') {
     if (decision.checkpointLive && live.contents !== null) {
       await ports.createCheckpoint(
@@ -182,6 +191,7 @@ async function evaluateCandidate(
     report: { ...report, reason },
     parsed,
     migrated: null,
+    resolved: {},
     migratedAnyKey: false,
   });
   if (candidate.contents === null) return unviable('candidate could not be read', null);
@@ -195,27 +205,44 @@ async function evaluateCandidate(
     return unviable('candidate is not a JSON object', null);
   }
   const migrated = structuredClone(parsed);
+  const resolved: Record<string, unknown> = {};
+  const failures: string[] = [];
   let migratedAnyKey = false;
   for (const [key, definition] of Object.entries(spec.migrations)) {
     if (!(key in migrated)) {
       migrated[key] = structuredClone(spec.defaults[key]);
+      resolved[key] = structuredClone(migrated[key]);
       continue;
     }
     const result = await runMigrations(migrated[key] as Versioned, definition);
-    if (result.status !== 'migrated' && result.status !== 'unchanged')
-      return unviable(describeFailure(key, result, definition.targetVersion), parsed);
-    if (result.value.version !== definition.targetVersion)
-      return unviable(
-        `key '${key}' finished at version ${result.value.version} instead of ${definition.targetVersion}`,
-        parsed
+    if (result.status !== 'migrated' && result.status !== 'unchanged') {
+      failures.push(describeFailure(key, result, definition.targetVersion));
+      continue;
+    }
+    if (result.value.version !== definition.targetVersion) {
+      failures.push(
+        `key '${key}' finished at version ${result.value.version} instead of ${definition.targetVersion}`
       );
+      continue;
+    }
     migrated[key] = result.value;
+    resolved[key] = result.value;
     if (result.status === 'migrated') migratedAnyKey = true;
+  }
+  if (failures.length > 0) {
+    return {
+      report: { ...report, reason: failures.join('; ') },
+      parsed,
+      migrated: null,
+      resolved,
+      migratedAnyKey,
+    };
   }
   return {
     report: { ...report, viable: true, atTarget: !migratedAnyKey },
     parsed,
     migrated,
+    resolved,
     migratedAnyKey,
   };
 }
@@ -237,18 +264,17 @@ function describeFailure(
   }
 }
 
-function defaultsContents(
-  liveParsed: Record<string, unknown> | null,
-  spec: StoreMigrationSpec
-): string {
+function recoveredContents(evaluations: CandidateEvaluation[], spec: StoreMigrationSpec): string {
   const contents: Record<string, unknown> = {};
+  const liveParsed = evaluations.find((evaluation) => evaluation.report.kind === 'live')?.parsed;
   if (liveParsed) {
     for (const [key, value] of Object.entries(liveParsed)) {
       if (!(key in spec.migrations)) contents[key] = value;
     }
   }
   for (const [key, value] of Object.entries(spec.defaults)) {
-    contents[key] = structuredClone(value);
+    const recovered = evaluations.find((evaluation) => key in evaluation.resolved)?.resolved[key];
+    contents[key] = structuredClone(recovered ?? value);
   }
   return JSON.stringify(contents);
 }

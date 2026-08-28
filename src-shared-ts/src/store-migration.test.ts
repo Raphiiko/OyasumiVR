@@ -226,6 +226,66 @@ test('falls back atomically and preserves unversioned live keys when all candida
   assert.deepEqual(calls, ['checkpoint', 'quarantine', 'replace', 'notify']);
 });
 
+test('recovers each key independently when no whole-store candidate is viable', async () => {
+  const migrationSpec = {
+    storeName: 'settings',
+    migrations: {
+      FIRST: migration(2, { 1: (data) => ({ ...data, version: 2 }) }),
+      SECOND: migration(2, { 1: (data) => ({ ...data, version: 2 }) }),
+    },
+    defaults: {
+      FIRST: { version: 2, value: 'first default' },
+      SECOND: { version: 2, value: 'second default' },
+    },
+  };
+  const decision = await decideStoreMigration(
+    [
+      candidate('live', 'live', {
+        FIRST: { version: 3, value: 'future' },
+        SECOND: { version: 2, value: 'live' },
+      }),
+      candidate('checkpoint', 'checkpoint', {
+        FIRST: { version: 2, value: 'checkpoint' },
+        SECOND: { version: 3, value: 'future' },
+      }),
+    ],
+    migrationSpec
+  );
+  assert.equal(decision.action, 'install-defaults');
+  if (decision.action !== 'install-defaults') return;
+  assert.deepEqual(JSON.parse(decision.contents), {
+    FIRST: { version: 2, value: 'checkpoint' },
+    SECOND: { version: 2, value: 'live' },
+  });
+});
+
+test('leaves an unreadable live store untouched when no backup is viable', async () => {
+  const decision = await decideStoreMigration(
+    [
+      { id: 'live', kind: 'live', contents: null },
+      { id: 'snapshot', kind: 'snapshot', contents: null },
+    ],
+    spec()
+  );
+  assert.equal(decision.action, 'defer');
+  let calls = 0;
+  const called = async () => {
+    calls++;
+  };
+  await applyStoreMigration(
+    decision,
+    { exists: true, parsesAsObject: false, contents: null, parsed: null },
+    spec(),
+    {
+      createCheckpoint: called,
+      quarantineStore: called,
+      replaceStore: called,
+      notifyFallback: called,
+    }
+  );
+  assert.equal(calls, 0);
+});
+
 test('blocks replacement when quarantine fails', async () => {
   const migrationSpec = spec();
   const decision = await decideStoreMigration(
