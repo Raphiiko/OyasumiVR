@@ -58,6 +58,8 @@ pub async fn elevated_features_enable() -> super::launcher::EnableResult {
 
 #[tauri::command]
 pub async fn elevated_features_disable() {
+    // taken before the manager lock, the same order enable uses
+    let _transition = super::TRANSITION.lock().await;
     super::request_stop().await;
     let mut manager_guard = super::SIDECAR_MANAGER.lock().await;
     if let Some(manager) = manager_guard.as_mut() {

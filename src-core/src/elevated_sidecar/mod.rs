@@ -21,6 +21,10 @@ pub static SIDECAR_GRPC_CLIENT: LazyLock<Mutex<Option<OyasumiElevatedSidecarClie
     LazyLock::new(Default::default);
 static SIDECAR_MANAGER: LazyLock<Mutex<Option<SidecarManager>>> = LazyLock::new(Default::default);
 static ERROR_REPORTING_ENABLED: AtomicBool = AtomicBool::new(false);
+/// Held across a whole enable or disable. Without it the automatic enable at startup and a user
+/// toggling the setting can both reach the installer, which costs a second UAC prompt, and a
+/// disable can land inside an enable and leave a sidecar running with the setting off.
+pub(super) static TRANSITION: LazyLock<Mutex<()>> = LazyLock::new(Default::default);
 
 pub async fn init() {
     let (tx, mut rx) = tokio::sync::mpsc::channel(10);

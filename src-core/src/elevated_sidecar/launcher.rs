@@ -330,6 +330,7 @@ const START_TIMEOUT: Duration =
 
 /// Makes sure the launcher is installed and healthy, then starts the sidecar.
 pub async fn enable() -> EnableResult {
+    let _transition = super::TRANSITION.lock().await;
     // A build that elevates the sidecar directly has no launcher to install or check.
     let through_task = super::uses_scheduled_task().await;
     if through_task {
