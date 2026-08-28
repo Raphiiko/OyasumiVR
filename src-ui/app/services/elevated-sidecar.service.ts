@@ -37,7 +37,11 @@ export class ElevatedSidecarService {
       !this._sidecarStarted.value &&
       (await firstValueFrom(this.appSettings.settings)).elevatedFeaturesEnabled
     ) {
-      await this.enable();
+      // Not awaited: enable can wait on a UAC prompt indefinitely, and app initialization quits
+      // OyasumiVR when a step takes longer than 30 seconds.
+      this.enable().catch((e) =>
+        info(`[ElevatedSidecar] Could not enable elevated features: ${e}`)
+      );
     }
   }
 
