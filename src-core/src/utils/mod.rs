@@ -52,12 +52,21 @@ pub async fn stop_process(process_name: &str, kill: bool) {
     sysinfo.refresh_processes(ProcessesToUpdate::All, true);
     for process in sysinfo.processes_by_exact_name(OsStr::new(process_name)) {
         let pid = process.pid();
-        if let Err(e) = Command::new("taskkill.exe")
+        match Command::new("taskkill.exe")
             .args(taskkill_args(pid, kill))
             .creation_flags(CREATE_NO_WINDOW)
             .output()
         {
-            error!("[Core] Failed to stop process {process_name} ({pid}): {e}");
+            Ok(output) if !output.status.success() => {
+                let stderr = String::from_utf8_lossy(&output.stderr);
+                error!(
+                    "[Core] Failed to stop process {process_name} ({pid}): {} {}",
+                    output.status,
+                    stderr.trim()
+                );
+            }
+            Err(e) => error!("[Core] Failed to stop process {process_name} ({pid}): {e}"),
+            Ok(_) => {}
         }
     }
 }
