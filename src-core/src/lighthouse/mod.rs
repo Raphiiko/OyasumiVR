@@ -642,7 +642,8 @@ async fn cycle_bluetooth_radio() -> Result<(), String> {
     let _guard = RADIO_RECOVERY_LOCK.lock().await;
     request_radio_access().await?;
     let radios = list_bluetooth_radios().await?;
-    let pending_ids = read_persisted_pending_restores();
+    let pending_ids = read_persisted_pending_restores()
+        .ok_or_else(|| String::from("failed to read pending bluetooth radio restores"))?;
     let mut cycle_results = Vec::new();
     for radio in &radios {
         cycle_results.push(cycle_radio(radio, &pending_ids).await);
@@ -783,11 +784,11 @@ async fn cycle_radio(radio: &BluetoothRadio, pending_ids: &[String]) -> RadioCyc
             persist_pending_restore(id);
             return cycle_error(Some(format!("the '{name}' radio {err}")));
         }
-        return RadioCycleResult {
-            id: Some(id.clone()),
-            error: None,
-            restored: true,
-        };
+        if !clear_persisted_pending_restore(id) {
+            return cycle_error(Some(format!(
+                "failed to clear the pending restore of the '{name}' radio"
+            )));
+        }
     }
     match radio.State() {
         Ok(RadioState::On) => {}
@@ -872,22 +873,38 @@ fn normalized_pending_restore_names(names: Vec<String>) -> Vec<String> {
         .collect()
 }
 
-fn read_persisted_pending_restores_from(path: &std::path::Path) -> Vec<String> {
+fn read_persisted_pending_restores_from(path: &std::path::Path) -> std::io::Result<Vec<String>> {
     let contents = match std::fs::read_to_string(path) {
         Ok(contents) => contents,
-        Err(err) if err.kind() == std::io::ErrorKind::NotFound => return Vec::new(),
-        Err(err) => {
-            warn!("[Core] Failed to read pending bluetooth radio restores: {err}");
-            return Vec::new();
-        }
+        Err(err) if err.kind() == std::io::ErrorKind::NotFound => return Ok(Vec::new()),
+        Err(err) => return Err(err),
     };
-    match serde_json::from_str::<Vec<String>>(&contents) {
-        Ok(ids) => normalized_pending_restore_names(ids),
-        Err(err) => {
-            warn!("[Core] Failed to parse pending bluetooth radio restores: {err}");
-            Vec::new()
-        }
+    let ids = serde_json::from_str::<Vec<String>>(&contents)
+        .map_err(|err| std::io::Error::new(std::io::ErrorKind::InvalidData, err))?;
+    Ok(normalized_pending_restore_names(ids))
+}
+
+fn persist_pending_restore_from(path: &std::path::Path, id: &str) -> bool {
+    let Ok(mut ids) = read_persisted_pending_restores_from(path) else {
+        return false;
+    };
+    if ids.iter().any(|pending| pending == id) {
+        return true;
     }
+    ids.push(id.to_string());
+    write_persisted_pending_restores_to(path, &ids)
+}
+
+fn clear_persisted_pending_restore_from(path: &std::path::Path, id: &str) -> bool {
+    let Ok(mut ids) = read_persisted_pending_restores_from(path) else {
+        return false;
+    };
+    let before = ids.len();
+    ids.retain(|pending| pending != id);
+    if ids.len() == before {
+        return true;
+    }
+    write_persisted_pending_restores_to(path, &ids)
 }
 
 fn write_persisted_pending_restores_to(path: &std::path::Path, names: &[String]) -> bool {
@@ -911,12 +928,16 @@ fn write_persisted_pending_restores_to(path: &std::path::Path, names: &[String])
     file.persist(path).is_ok()
 }
 
-fn read_persisted_pending_restores() -> Vec<String> {
-    let Some(path) = pending_restore_path() else {
-        return Vec::new();
-    };
+fn read_persisted_pending_restores() -> Option<Vec<String>> {
+    let path = pending_restore_path()?;
     let _guard = PENDING_RESTORE_FILE_LOCK.lock().unwrap();
-    read_persisted_pending_restores_from(&path)
+    match read_persisted_pending_restores_from(&path) {
+        Ok(ids) => Some(ids),
+        Err(err) => {
+            warn!("[Core] Failed to read pending bluetooth radio restores: {err}");
+            None
+        }
+    }
 }
 
 fn persist_pending_restore(name: &str) -> bool {
@@ -925,15 +946,7 @@ fn persist_pending_restore(name: &str) -> bool {
         return false;
     };
     let _guard = PENDING_RESTORE_FILE_LOCK.lock().unwrap();
-    let mut names = read_persisted_pending_restores_from(&path);
-    if !names.iter().any(|pending| pending == name) {
-        names.push(name.to_string());
-        if !write_persisted_pending_restores_to(&path, &names) {
-            warn!("[Core] Failed to record a pending bluetooth radio restore");
-            return false;
-        }
-    }
-    true
+    persist_pending_restore_from(&path, name)
 }
 
 fn clear_persisted_pending_restore(id: &str) -> bool {
@@ -942,18 +955,7 @@ fn clear_persisted_pending_restore(id: &str) -> bool {
         return false;
     };
     let _guard = PENDING_RESTORE_FILE_LOCK.lock().unwrap();
-    let mut ids = read_persisted_pending_restores_from(&path);
-    let before = ids.len();
-    ids.retain(|pending| pending != id);
-    if ids.len() == before {
-        return true;
-    }
-    if write_persisted_pending_restores_to(&path, &ids) {
-        true
-    } else {
-        warn!("[Core] Failed to clear a pending bluetooth radio restore");
-        false
-    }
+    clear_persisted_pending_restore_from(&path, id)
 }
 
 fn retain_persisted_pending_restores_from(
@@ -961,7 +963,9 @@ fn retain_persisted_pending_restores_from(
     snapshot: &[String],
     restored_ids: &[String],
 ) -> bool {
-    let current_ids = read_persisted_pending_restores_from(path);
+    let Ok(current_ids) = read_persisted_pending_restores_from(path) else {
+        return false;
+    };
     let ids = current_ids
         .into_iter()
         .filter(|id| {
@@ -984,7 +988,9 @@ fn retain_persisted_pending_restores(snapshot: &[String], restored_ids: &[String
 
 async fn restore_pending_radios() {
     let _guard = RADIO_RECOVERY_LOCK.lock().await;
-    let pending_ids = read_persisted_pending_restores();
+    let Some(pending_ids) = read_persisted_pending_restores() else {
+        return;
+    };
     if pending_ids.is_empty() {
         return;
     }
@@ -999,20 +1005,33 @@ async fn restore_pending_radios() {
             return;
         }
     };
+    let restore_results = join_all(
+        radios
+            .into_iter()
+            .filter(|radio| pending_ids.contains(&radio.id))
+            .map(|radio| async move {
+                let id = radio.id.clone();
+                let name = radio.name.clone();
+                warn!("[Core] Turning the '{name}' radio back on after a restart");
+                let restore =
+                    match timeout(RADIO_RESTORE_TIMEOUT, restore_radio_on(&radio.radio)).await {
+                        Ok(restore) => restore,
+                        Err(_) => Err(String::from("timed out")),
+                    };
+                (id, name, restore)
+            }),
+    )
+    .await;
     let mut seen_ids = Vec::new();
     let mut failed_ids = Vec::new();
-    for radio in radios {
-        if !pending_ids.contains(&radio.id) {
-            continue;
-        }
-        let name = radio.name.clone();
-        warn!("[Core] Turning the '{name}' radio back on after a restart");
-        if let Err(err) = restore_radio_on(&radio.radio).await {
-            failed_ids.push(radio.id.clone());
-            persist_pending_restore(&radio.id);
-            warn!("[Core] Failed to turn the '{name}' radio back on after a restart: {err}");
-        } else {
-            seen_ids.push(radio.id.clone());
+    for (id, name, restore) in restore_results {
+        match restore {
+            Ok(()) => seen_ids.push(id),
+            Err(err) => {
+                failed_ids.push(id.clone());
+                persist_pending_restore(&id);
+                warn!("[Core] Failed to turn the '{name}' radio back on after a restart: {err}");
+            }
         }
     }
     let restored_ids = seen_ids
@@ -1183,7 +1202,7 @@ mod tests {
 
         assert!(write_persisted_pending_restores_to(&path, &names));
         assert_eq!(
-            read_persisted_pending_restores_from(&path),
+            read_persisted_pending_restores_from(&path).unwrap(),
             vec![
                 String::from("radio"),
                 String::from("new\nline name"),
@@ -1196,12 +1215,39 @@ mod tests {
             &[String::new(), String::from("kept")]
         ));
         assert_eq!(
-            read_persisted_pending_restores_from(&path),
+            read_persisted_pending_restores_from(&path).unwrap(),
             vec![String::from("kept")]
         );
 
         assert!(write_persisted_pending_restores_to(&path, &[]));
-        assert!(read_persisted_pending_restores_from(&path).is_empty());
+        assert!(read_persisted_pending_restores_from(&path)
+            .unwrap()
+            .is_empty());
+    }
+
+    #[test]
+    fn pending_restore_helpers_change_only_existing_ids() {
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("pending-radio-restores");
+
+        assert!(persist_pending_restore_from(&path, "first"));
+        assert!(persist_pending_restore_from(&path, "first"));
+        assert!(persist_pending_restore_from(&path, "second"));
+        assert_eq!(
+            read_persisted_pending_restores_from(&path).unwrap(),
+            vec![String::from("first"), String::from("second")]
+        );
+
+        assert!(clear_persisted_pending_restore_from(&path, "missing"));
+        assert_eq!(
+            read_persisted_pending_restores_from(&path).unwrap(),
+            vec![String::from("first"), String::from("second")]
+        );
+        assert!(clear_persisted_pending_restore_from(&path, "first"));
+        assert_eq!(
+            read_persisted_pending_restores_from(&path).unwrap(),
+            vec![String::from("second")]
+        );
     }
 
     #[test]
@@ -1223,12 +1269,29 @@ mod tests {
             &[String::from("restored")]
         ));
         assert_eq!(
-            read_persisted_pending_restores_from(&path),
+            read_persisted_pending_restores_from(&path).unwrap(),
             vec![
                 String::from("missing"),
                 String::from("added-after-snapshot")
             ]
         );
+    }
+
+    #[test]
+    fn corrupt_pending_restore_file_is_never_replaced() {
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("pending-radio-restores");
+        std::fs::write(&path, "not json").unwrap();
+
+        assert!(read_persisted_pending_restores_from(&path).is_err());
+        assert!(!persist_pending_restore_from(&path, "radio"));
+        assert!(!clear_persisted_pending_restore_from(&path, "radio"));
+        assert!(!retain_persisted_pending_restores_from(
+            &path,
+            &[String::from("radio")],
+            &[String::from("radio")]
+        ));
+        assert_eq!(std::fs::read_to_string(&path).unwrap(), "not json");
     }
 
     #[test]
