@@ -58,6 +58,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Fixed the Windows notification provider not showing any notifications
 - Fixed the VR overlay failing to start when system-wide ad blockers or proxies intercepted
   OyasumiVR's local connection
+- Fixed settings being reset when upgrading from very old versions of OyasumiVR, or when switching
+  between release and beta builds
 - Fixed OyasumiVR using up an entire CPU core when Windows stopped reporting the microphone level
   for the capture device used by the system microphone automations
 - Fixed OyasumiVR looking up your sunrise and sunset times up to three times when it started
