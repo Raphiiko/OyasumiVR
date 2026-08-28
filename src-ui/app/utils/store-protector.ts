@@ -1,8 +1,3 @@
-//
-// Utility for storing store snapshots and restoring them in case of corruption
-//
-
-import { TranslocoService } from '@jsverse/transloco';
 import { invoke } from '@tauri-apps/api/core';
 import { appDataDir, join } from '@tauri-apps/api/path';
 import { exists, readTextFile } from '@tauri-apps/plugin-fs';
@@ -29,19 +24,17 @@ export class StoreProtector {
   constructor(
     private store: LazyStore,
     private storeName: string,
-    private storePath: string,
-    private translate: TranslocoService
+    private storePath: string
   ) {}
 
-  // Detect a zero-byte, malformed or torn store file and restore it from the snapshot
-  public async initializeRecovery() {
+  public async initializeRecovery(restoreCorruption = true) {
     if (this.recoveryInitialized || PROTECTOR_STORES[this.storeName]) {
       return;
     }
     this.recoveryInitialized = true;
     PROTECTOR_STORES[this.storeName] = this;
     this.snapshotPath = await join(await appDataDir(), 'StoreProtector', this.storeName + '.dat');
-    if (await this.isStoreCorrupted()) {
+    if (restoreCorruption && (await this.isStoreCorrupted())) {
       warn(
         "[StoreProtector] Detected possible corruption in store '" +
           this.storeName +
@@ -115,7 +108,6 @@ export class StoreProtector {
     if (!this.recoveryInitialized || !this.snapshotPath) return;
     const storeDataString = await serializeStoreContents(this.store);
     const storeDataHash = await this.generateHash(storeDataString);
-    // If we wrote the same data last time, no need to save again
     if ((await exists(this.snapshotPath)) && this.lastSavedHash === storeDataHash) return;
     await invoke('store_safety_save_snapshot', {
       storeName: this.storeName,

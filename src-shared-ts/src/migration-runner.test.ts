@@ -138,6 +138,8 @@ test('fails when the input has no integer version', async () => {
     steps: { 0: (data) => ({ ...data, version: 1 }) },
   };
   const badInputs: unknown[] = [
+    null,
+    3,
     {},
     { version: undefined },
     { version: null },

@@ -426,6 +426,7 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         commands::secrets::protect_secret,
         commands::secrets::unprotect_secret,
         store_safety::commands::store_safety_save_snapshot,
+        store_safety::commands::store_safety_read_snapshot,
         store_safety::commands::store_safety_restore_snapshot,
         store_safety::commands::store_safety_create_checkpoint,
         store_safety::commands::store_safety_list_checkpoints,

@@ -3,7 +3,7 @@ use std::{collections::BTreeMap, path::PathBuf};
 use log::info;
 use tauri::{AppHandle, Manager};
 
-use super::{base_dir, store_file_path, CheckpointMetadata};
+use super::{base_dir, store_file_path, CheckpointMetadata, SnapshotData};
 
 fn app_data_dir(app_handle: &AppHandle) -> Result<PathBuf, String> {
     app_handle
@@ -20,6 +20,15 @@ pub async fn store_safety_save_snapshot(
 ) -> Result<(), String> {
     let base = base_dir(&app_data_dir(&app_handle)?);
     super::save_snapshot(&base, &store_name, &contents)
+}
+
+#[tauri::command]
+pub async fn store_safety_read_snapshot(
+    app_handle: AppHandle,
+    store_name: String,
+) -> Result<Option<SnapshotData>, String> {
+    let base = base_dir(&app_data_dir(&app_handle)?);
+    super::read_snapshot(&base, &store_name)
 }
 
 #[tauri::command]

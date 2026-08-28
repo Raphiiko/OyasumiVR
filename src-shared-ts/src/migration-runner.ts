@@ -42,7 +42,7 @@ export async function runMigrations<T extends Versioned>(
     return failed(
       null,
       definition.targetVersion,
-      new Error(`data.version must be an integer, but was ${String(current.version)}`)
+      new Error(`data.version must be an integer, but was ${String(readRawVersion(current))}`)
     );
   if (
     definition.minimumSupportedVersion !== undefined &&
@@ -95,9 +95,14 @@ export async function runMigrations<T extends Versioned>(
 }
 
 function readVersion(data: unknown): number | null {
-  if (typeof data === 'object' && data !== null && Number.isInteger((data as Versioned).version))
-    return (data as Versioned).version;
+  const version = readRawVersion(data);
+  if (Number.isInteger(version)) return version as number;
   return null;
+}
+
+function readRawVersion(data: unknown): unknown {
+  if (typeof data !== 'object' || data === null) return undefined;
+  return (data as Record<string, unknown>)['version'];
 }
 
 function failed<T extends Versioned>(

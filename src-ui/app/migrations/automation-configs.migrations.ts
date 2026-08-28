@@ -1,9 +1,5 @@
-import { mergeWith } from 'lodash';
 import { AUTOMATION_CONFIGS_DEFAULT } from '../models/automations';
-import type { AutomationConfigs } from '../models/automations';
-import { error, info } from '@tauri-apps/plugin-log';
-import { message } from '@tauri-apps/plugin-dialog';
-import { BaseDirectory, writeTextFile } from '@tauri-apps/plugin-fs';
+import type { MigrationDefinition, Versioned } from 'src-shared-ts/src/migration-runner';
 import { migrateOscScript } from './osc-script.migrations';
 import { migrateKnownLighthouseDeviceId } from './lighthouse-device-id';
 import { decryptStorageData, deserializeStorageCryptoKey } from './legacy/storage-crypto';
@@ -15,29 +11,7 @@ import {
   NIGHTMARE_DETECTION_SOUND_V18,
   SET_BRIGHTNESS_AUTOMATIONS_V9,
 } from './automation-configs.historical-defaults';
-
-const migrations: { [v: number]: (data: any) => any } = {
-  1: resetToLatest,
-  2: resetToLatest,
-  3: from2to3,
-  4: from3to4,
-  5: from4to5,
-  6: from5to6,
-  7: from6to7,
-  8: from7to8,
-  9: from8to9,
-  10: from9to10,
-  11: from10to11,
-  12: from11to12,
-  13: from12to13,
-  14: from13to14,
-  15: from14to15,
-  16: from15to16,
-  17: from16to17,
-  18: from17to18,
-  19: from18to19,
-  20: from19to20,
-};
+import { normalizeWithDefaults } from './migration-defaults';
 
 const RUN_AUTOMATION_COMMAND_FIELDS = [
   'onSleepModeEnableCommands',
@@ -50,34 +24,17 @@ async function from19to20(data: any): Promise<any> {
     data.version = 20;
     return data;
   }
-  const original = structuredClone(data);
   const legacyKey = data.RUN_AUTOMATIONS.runAutomationsCryptoKey;
   delete data.RUN_AUTOMATIONS.runAutomationsCryptoKey;
   let key: CryptoKey | null = null;
   if (legacyKey) {
-    try {
-      key = await deserializeStorageCryptoKey(legacyKey);
-    } catch (e) {
-      error("[automation-configs-migrations] Couldn't read the Run Automations command key: " + e);
-    }
+    key = await deserializeStorageCryptoKey(legacyKey);
   }
-  let discarded = false;
   for (const field of RUN_AUTOMATION_COMMAND_FIELDS) {
     const commands = data.RUN_AUTOMATIONS[field];
     if (!commands) continue;
-    try {
-      if (!key) throw new Error('No command key available');
-      data.RUN_AUTOMATIONS[field] = await decryptStorageData(commands, key);
-    } catch (e) {
-      error("[automation-configs-migrations] Couldn't migrate " + field + ': ' + e);
-      data.RUN_AUTOMATIONS[field] = '';
-      discarded = true;
-    }
-  }
-  if (discarded) {
-    await saveBackup(original).catch((e) =>
-      error("[automation-configs-migrations] Couldn't write the backup: " + e)
-    );
+    if (!key) throw new Error('No command key available');
+    data.RUN_AUTOMATIONS[field] = await decryptStorageData(commands, key);
   }
   data.version = 20;
   return data;
@@ -89,7 +46,6 @@ function from18to19(data: any): any {
   return data;
 }
 
-// Rewrites the base station ids in every device selection, wherever it sits in the config tree
 function migrateSelectedDeviceIds(value: any) {
   if (Array.isArray(value)) {
     value.forEach(migrateSelectedDeviceIds);
@@ -106,71 +62,34 @@ function migrateSelectedDeviceIds(value: any) {
   Object.values(value).forEach(migrateSelectedDeviceIds);
 }
 
-export async function migrateAutomationConfigs(data: any): Promise<AutomationConfigs> {
-  let currentVersion = data.version || 0;
-  // Reset to latest when the current version is higher than the latest
-  if (currentVersion > AUTOMATION_CONFIGS_DEFAULT.version) {
-    data = resetToLatest(data);
-    info(
-      `[automation-configs-migrations] Reset future automation configs version back to version ${
-        currentVersion + ''
-      }`
-    );
-  }
-  while (currentVersion < AUTOMATION_CONFIGS_DEFAULT.version) {
-    try {
-      data = await migrations[++currentVersion](structuredClone(data));
-    } catch (e) {
-      error(
-        "[automation-configs-migrations] Couldn't migrate to version " +
-          currentVersion +
-          '. Backing up configuration and resetting to the latest version. : ' +
-          e
-      );
-      saveBackup(structuredClone(data));
-      data = resetToLatest(data);
-      currentVersion = data.version;
-      message(
-        'Your automation settings could not to be migrated to the new version of OyasumiVR, and have therefore been reset. Apologies for the inconvenience.\n\nPlease report this issue to the developer so this issue may be fixed in the future. Thank you!',
-        { title: 'Migration Error (Automation Config)' }
-      );
-      continue;
-    }
-    currentVersion = data.version;
-    info(
-      `[automation-configs-migrations] Migrated automation configs to version ${
-        currentVersion + ''
-      }`
-    );
-  }
-  data = mergeWith(structuredClone(AUTOMATION_CONFIGS_DEFAULT), data, (objValue, srcValue) => {
-    // Delete irrelevant keys
-    if (objValue === undefined) {
-      return undefined;
-    }
-    // Do not merge array values
-    if (Array.isArray(objValue)) {
-      return srcValue;
-    }
-  });
-  return data as AutomationConfigs;
-}
+export const AUTOMATION_CONFIGS_MIGRATION: MigrationDefinition<Versioned> = {
+  targetVersion: AUTOMATION_CONFIGS_DEFAULT.version,
+  minimumSupportedVersion: 2,
+  steps: {
+    2: from2to3,
+    3: from3to4,
+    4: from4to5,
+    5: from5to6,
+    6: from6to7,
+    7: from7to8,
+    8: from8to9,
+    9: from9to10,
+    10: from10to11,
+    11: from11to12,
+    12: from12to13,
+    13: from13to14,
+    14: from14to15,
+    15: from15to16,
+    16: from16to17,
+    17: from17to18,
+    18: from18to19,
+    19: from19to20,
+  },
+  normalizeCurrentVersion: (data) => normalizeWithDefaults(AUTOMATION_CONFIGS_DEFAULT, data),
+};
 
-async function saveBackup(oldData: any) {
-  await writeTextFile('automation-config.backup.json', JSON.stringify(oldData, null, 2), {
-    baseDir: BaseDirectory.AppData,
-  });
-}
-
-function resetToLatest(data: any): any {
-  // Reset to latest
-  data = structuredClone(AUTOMATION_CONFIGS_DEFAULT);
-  return data;
-}
-
-function from17to18(data: any): any {
+async function from17to18(data: any): Promise<any> {
   data.version = 18;
-  // Migrate notification sounds
   if (data.JOIN_NOTIFICATIONS) {
     if (data.JOIN_NOTIFICATIONS.joinSound) {
       data.JOIN_NOTIFICATIONS.joinSoundMode = data.JOIN_NOTIFICATIONS.joinSound;
@@ -193,27 +112,31 @@ function from17to18(data: any): any {
     delete data.NIGHTMARE_DETECTION.soundVolume;
   }
 
-  // Migrate OSC scripts
   if (data.OSC_GENERAL) {
     if (data.OSC_GENERAL.onSleepModeEnable) {
-      data.OSC_GENERAL.onSleepModeEnable = migrateOscScript(data.OSC_GENERAL.onSleepModeEnable);
+      data.OSC_GENERAL.onSleepModeEnable = await migrateOscScript(
+        data.OSC_GENERAL.onSleepModeEnable
+      );
     }
     if (data.OSC_GENERAL.onSleepModeDisable) {
-      data.OSC_GENERAL.onSleepModeDisable = migrateOscScript(data.OSC_GENERAL.onSleepModeDisable);
+      data.OSC_GENERAL.onSleepModeDisable = await migrateOscScript(
+        data.OSC_GENERAL.onSleepModeDisable
+      );
     }
     if (data.OSC_GENERAL.onSleepPreparation) {
-      data.OSC_GENERAL.onSleepPreparation = migrateOscScript(data.OSC_GENERAL.onSleepPreparation);
+      data.OSC_GENERAL.onSleepPreparation = await migrateOscScript(
+        data.OSC_GENERAL.onSleepPreparation
+      );
     }
   }
   if (data.SLEEPING_ANIMATIONS && Object.keys(data.SLEEPING_ANIMATIONS.oscScripts ?? {}).length) {
-    Object.keys(data.SLEEPING_ANIMATIONS.oscScripts).forEach((key) => {
-      data.SLEEPING_ANIMATIONS.oscScripts[key] = migrateOscScript(
+    for (const key of Object.keys(data.SLEEPING_ANIMATIONS.oscScripts)) {
+      data.SLEEPING_ANIMATIONS.oscScripts[key] = await migrateOscScript(
         data.SLEEPING_ANIMATIONS.oscScripts[key]
       );
-    });
+    }
   }
 
-  // Helper function to map OVRDeviceClass to DMDeviceType
   const mapOVRDeviceClassToDMDeviceType = (ovrClass: string): string | null => {
     switch (ovrClass) {
       case 'HMD':
@@ -229,10 +152,8 @@ function from17to18(data: any): any {
     }
   };
 
-  // Migrate device power automations
   data.DEVICE_POWER_AUTOMATIONS = structuredClone(DEVICE_POWER_AUTOMATIONS_V18);
 
-  // Migrate TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE
   if (
     data.TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE?.enabled &&
     data.TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE.deviceClasses?.length
@@ -245,7 +166,6 @@ function from17to18(data: any): any {
     }
   }
 
-  // Migrate TURN_OFF_DEVICES_WHEN_CHARGING
   if (
     data.TURN_OFF_DEVICES_WHEN_CHARGING?.enabled &&
     data.TURN_OFF_DEVICES_WHEN_CHARGING.deviceClasses?.length
@@ -258,7 +178,6 @@ function from17to18(data: any): any {
     }
   }
 
-  // Migrate TURN_OFF_DEVICES_ON_BATTERY_LEVEL
   if (data.TURN_OFF_DEVICES_ON_BATTERY_LEVEL?.enabled) {
     const batteryConfig = data.TURN_OFF_DEVICES_ON_BATTERY_LEVEL;
     const deviceTypes = [];
@@ -284,7 +203,6 @@ function from17to18(data: any): any {
     }
   }
 
-  // Migrate lighthouse automations
   if (data.TURN_ON_LIGHTHOUSES_ON_OYASUMI_START?.enabled) {
     data.DEVICE_POWER_AUTOMATIONS.turnOnDevicesOnOyasumiStart.types.push('LIGHTHOUSE');
   }
@@ -297,7 +215,6 @@ function from17to18(data: any): any {
     data.DEVICE_POWER_AUTOMATIONS.turnOffDevicesOnSteamVRStop.types.push('LIGHTHOUSE');
   }
 
-  // Delete old automation configs
   delete data.TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE;
   delete data.TURN_OFF_DEVICES_WHEN_CHARGING;
   delete data.TURN_OFF_DEVICES_ON_BATTERY_LEVEL;
@@ -305,7 +222,6 @@ function from17to18(data: any): any {
   delete data.TURN_ON_LIGHTHOUSES_ON_STEAMVR_START;
   delete data.TURN_OFF_LIGHTHOUSES_ON_STEAMVR_STOP;
 
-  // Migrate shutdown automations
   if (data.SHUTDOWN_AUTOMATIONS) {
     data.SHUTDOWN_AUTOMATIONS.turnOffDevices = {
       devices: [],
@@ -532,17 +448,14 @@ function from9to10(data: any): any {
 
 function from8to9(data: any): any {
   data.version = 9;
-  // Reference old configuration
   const displayBrightnessOnEnableConfig = data.DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE;
   const displayBrightnessOnDisableConfig = data.DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE;
   const imageBrightnessOnEnableConfig = data.IMAGE_BRIGHTNESS_ON_SLEEP_MODE_ENABLE;
   const imageBrightnessOnDisableConfig = data.IMAGE_BRIGHTNESS_ON_SLEEP_MODE_DISABLE;
-  // Delete old configuration
   delete data.DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE;
   delete data.DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE;
   delete data.IMAGE_BRIGHTNESS_ON_SLEEP_MODE_ENABLE;
   delete data.IMAGE_BRIGHTNESS_ON_SLEEP_MODE_DISABLE;
-  // Insert new configuration defaults
   data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE = structuredClone(
     SET_BRIGHTNESS_AUTOMATIONS_V9.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE
   );
@@ -552,7 +465,6 @@ function from8to9(data: any): any {
   data.SET_BRIGHTNESS_ON_SLEEP_PREPARATION = structuredClone(
     SET_BRIGHTNESS_AUTOMATIONS_V9.SET_BRIGHTNESS_ON_SLEEP_PREPARATION
   );
-  // Attempt to migrate old on sleep enable automations
   if (displayBrightnessOnEnableConfig?.enabled) {
     data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.enabled = true;
     data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.brightness =
@@ -574,7 +486,6 @@ function from8to9(data: any): any {
     data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.transitionTime =
       imageBrightnessOnEnableConfig.transitionTime;
   }
-  // Attempt to migrate old on sleep disable automations
   if (displayBrightnessOnDisableConfig?.enabled) {
     data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.enabled = true;
     data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.brightness =
@@ -603,13 +514,11 @@ function from8to9(data: any): any {
 
 function from7to8(data: any): any {
   data.version = 8;
-  // Missing keys are now always added by default
   return data;
 }
 
 function from6to7(data: any): any {
   data.version = 7;
-  // Missing keys are now always added by default
   return data;
 }
 
@@ -622,18 +531,15 @@ function from5to6(data: any): any {
 
 function from4to5(data: any): any {
   data.version = 5;
-  // Missing keys are now always added by default
   return data;
 }
 
 function from3to4(data: any): any {
   data.version = 4;
-  // Missing keys are now always added by default
   return data;
 }
 
 function from2to3(data: any): any {
   data.version = 3;
-  // Missing keys are now always added by default
   return data;
 }

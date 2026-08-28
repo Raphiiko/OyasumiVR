@@ -20,6 +20,9 @@ let importCounter = 0;
 
 registerHooks({
   resolve(specifier: string, context: any, nextResolve: any) {
+    if (specifier.startsWith('src-shared-ts/')) {
+      return { url: new URL(`../${specifier}.ts`, import.meta.url).href, shortCircuit: true };
+    }
     if (specifier.startsWith('@tauri-apps/')) {
       return { url: 'stub:' + specifier, shortCircuit: true };
     }
@@ -53,7 +56,21 @@ registerHooks({
   },
 });
 
-const loadMigrations = () => import('../src-ui/app/migrations/automation-configs.migrations');
+const loadMigrations = async () => {
+  const [{ AUTOMATION_CONFIGS_MIGRATION }, { runMigrations }] = await Promise.all([
+    import('../src-ui/app/migrations/automation-configs.migrations'),
+    import('../src-shared-ts/src/migration-runner'),
+  ]);
+  return {
+    migrateAutomationConfigs: async (data: any) => {
+      const result = await runMigrations(data, AUTOMATION_CONFIGS_MIGRATION);
+      if (result.status !== 'migrated' && result.status !== 'unchanged') {
+        throw new Error(`Migration failed with status ${result.status}`);
+      }
+      return result.value;
+    },
+  };
+};
 
 const RIPPLE_SOUND = {
   id: 'ripple',
@@ -69,6 +86,11 @@ const PULSE_SOUND = {
   name: 'Pulse',
   userConfigurable: true,
 };
+
+test('current automation data with an invalid shape is rejected', async () => {
+  const { migrateAutomationConfigs } = await loadMigrations();
+  await assert.rejects(() => migrateAutomationConfigs({ version: 20, BRIGHTNESS_AUTOMATIONS: [] }));
+});
 
 test('v8: brightness construction separates enable and disable, shutdown renames nest', async () => {
   const { migrateAutomationConfigs } = await loadMigrations();

@@ -13,10 +13,8 @@ import {
 } from 'rxjs';
 import { SETTINGS_KEY_APP_SETTINGS, SETTINGS_STORE } from '../globals';
 import { isEqual, uniq } from 'lodash';
-import { migrateAppSettings } from '../migrations/app-settings.migrations';
 import { protectSecret, unprotectSecret } from '../utils/secrets';
 import { error } from '@tauri-apps/plugin-log';
-import { TranslocoService } from '@jsverse/transloco';
 import { OneTimeFlag } from '../models/one-time-flags';
 import { ModalService } from './modal.service';
 import {
@@ -42,10 +40,7 @@ export class AppSettingsService {
   >(undefined);
   public loadedDefaults: Observable<boolean | undefined> = this._loadedDefaults.asObservable();
 
-  constructor(
-    private translateService: TranslocoService,
-    private modalService: ModalService
-  ) {}
+  constructor(private modalService: ModalService) {}
 
   async init() {
     await this.loadSettings();
@@ -63,13 +58,7 @@ export class AppSettingsService {
     let settings: AppSettings | undefined =
       await SETTINGS_STORE.get<AppSettings>(SETTINGS_KEY_APP_SETTINGS);
     let loadedDefaults = false;
-    if (settings) {
-      const oldSettings = structuredClone(settings);
-      settings = await migrateAppSettings(settings);
-      if (oldSettings.userLanguage !== settings.userLanguage) {
-        this.translateService.setActiveLang(settings.userLanguage);
-      }
-    } else {
+    if (!settings) {
       settings = this._settings.value;
       loadedDefaults = true;
     }
@@ -78,10 +67,9 @@ export class AppSettingsService {
     settings.mqttPassword = await unprotectSecret(stored);
     this.storedMqttPassword =
       stored && settings.mqttPassword ? { plain: settings.mqttPassword, protected: stored } : null;
-    // Hold on to a password that cannot be unlocked, so the save below rewrites it instead of nothing
+    // Hold on to a password that cannot be unlocked, so a later save rewrites it instead of nothing
     settings.mqttProtectedPassword = settings.mqttPassword ? null : stored;
     this._settings.next(settings);
-    await this.saveSettings();
     this._loadedDefaults.next(loadedDefaults);
   }
 

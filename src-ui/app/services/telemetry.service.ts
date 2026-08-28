@@ -12,7 +12,6 @@ import {
   throttleTime,
 } from 'rxjs';
 import { TELEMETRY_SETTINGS_DEFAULT, TelemetrySettings } from '../models/telemetry-settings';
-import { migrateTelemetrySettings } from '../migrations/telemetry-settings.migrations';
 
 import { invoke } from '@tauri-apps/api/core';
 import { trackEvent } from '@aptabase/tauri';
@@ -82,12 +81,10 @@ export class TelemetryService {
   }
 
   async loadSettings() {
-    let settings: TelemetrySettings | undefined = await SETTINGS_STORE.get<TelemetrySettings>(
+    const settings: TelemetrySettings | undefined = await SETTINGS_STORE.get<TelemetrySettings>(
       SETTINGS_KEY_TELEMETRY_SETTINGS
     );
-    settings = settings ? migrateTelemetrySettings(settings) : this._settings.value;
-    this._settings.next(settings);
-    await this.saveSettings();
+    this._settings.next(settings ?? this._settings.value);
   }
 
   async saveSettings() {

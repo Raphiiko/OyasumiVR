@@ -1,58 +1,6 @@
-import { error, info } from '@tauri-apps/plugin-log';
-
-import { EVENT_LOG_DEFAULT, EventLog } from '../models/event-log-entry';
-import { message } from '@tauri-apps/plugin-dialog';
-import { BaseDirectory, writeTextFile } from '@tauri-apps/plugin-fs';
-
-const migrations: { [v: number]: (data: any) => any } = {
-  1: resetToLatest,
-  2: from1to2,
-  3: from2to3,
-  4: from3to4,
-  5: from4to5,
-};
-
-export function migrateEventLog(log: EventLog): EventLog {
-  let currentVersion = log.version || 0;
-  // Reset to latest when the current version is higher than the latest
-  if (currentVersion > EVENT_LOG_DEFAULT.version) {
-    log = resetToLatest(log);
-    info(
-      `[event-log-migrations] Reset future app settings version back to version ${
-        currentVersion + ''
-      }`
-    );
-  }
-  while (currentVersion < EVENT_LOG_DEFAULT.version) {
-    try {
-      log = migrations[++currentVersion](log);
-    } catch (e) {
-      error(
-        "[event-log-migrations] Couldn't migrate to version " +
-          currentVersion +
-          '. Backing up configuration and resetting to the latest version. : ' +
-          e
-      );
-      saveBackup(structuredClone(log));
-      log = resetToLatest(log);
-      currentVersion = log.version;
-      message(
-        'Your event log data could not to be migrated to the new version of OyasumiVR, and has therefore been reset. Apologies for the inconvenience.\n\nPlease report this issue to the developer so this issue may be fixed in the future. Thank you!',
-        { title: 'Migration Error (Event Log)' }
-      );
-      continue;
-    }
-    currentVersion = log.version;
-    info(`[event-log-migrations] Migrated event log to version ${currentVersion + ''}`);
-  }
-  return log as EventLog;
-}
-
-async function saveBackup(oldData: any) {
-  await writeTextFile('event-log.backup.json', JSON.stringify(oldData, null, 2), {
-    baseDir: BaseDirectory.AppData,
-  });
-}
+import { EVENT_LOG_DEFAULT } from '../models/event-log-entry';
+import type { MigrationDefinition, Versioned } from 'src-shared-ts/src/migration-runner';
+import { normalizeWithDefaults } from './migration-defaults';
 
 function from4to5(data: any): any {
   data.version = 5;
@@ -116,8 +64,14 @@ function from1to2(data: any): any {
   return data;
 }
 
-function resetToLatest(data: any): any {
-  // Reset to latest
-  data = structuredClone(EVENT_LOG_DEFAULT);
-  return data;
-}
+export const EVENT_LOG_MIGRATION: MigrationDefinition<Versioned> = {
+  targetVersion: EVENT_LOG_DEFAULT.version,
+  minimumSupportedVersion: 1,
+  steps: {
+    1: from1to2,
+    2: from2to3,
+    3: from3to4,
+    4: from4to5,
+  },
+  normalizeCurrentVersion: (data) => normalizeWithDefaults(EVENT_LOG_DEFAULT, data),
+};

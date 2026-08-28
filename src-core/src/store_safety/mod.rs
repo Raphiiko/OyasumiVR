@@ -1,6 +1,6 @@
 pub mod commands;
 
-use std::{collections::BTreeMap, fs, path::Path, path::PathBuf};
+use std::{collections::BTreeMap, fs, path::Path, path::PathBuf, time::UNIX_EPOCH};
 
 use chrono::{SecondsFormat, Utc};
 use serde::{Deserialize, Serialize};
@@ -25,9 +25,15 @@ pub struct CheckpointMetadata {
     pub content_checksum: String,
     pub content_size_bytes: u64,
     pub content_file: String,
-    /// Derived from disk, never stored in the metadata file itself.
-    #[serde(skip)]
+    #[serde(default)]
     pub content_file_exists: bool,
+}
+
+#[derive(Serialize, Clone, Debug, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct SnapshotData {
+    pub contents: String,
+    pub modified_at_millis: u64,
 }
 
 pub fn base_dir(app_data_dir: &Path) -> PathBuf {
@@ -68,6 +74,26 @@ fn validate_name(name: &str, allow_dot: bool) -> Result<(), String> {
     } else {
         Err(format!("Invalid name '{name}'"))
     }
+}
+
+fn validate_checkpoint_metadata(
+    metadata: &CheckpointMetadata,
+    store_name: &str,
+    checkpoint_id: &str,
+) -> Result<(), String> {
+    if metadata.format_version != CHECKPOINT_FORMAT_VERSION {
+        return Err(format!(
+            "Checkpoint '{checkpoint_id}' uses unsupported metadata format {}",
+            metadata.format_version
+        ));
+    }
+    if metadata.store_name != store_name || metadata.id != checkpoint_id {
+        return Err(format!(
+            "Checkpoint '{checkpoint_id}' has mismatched metadata"
+        ));
+    }
+    validate_name(&metadata.content_file, true)
+        .map_err(|_| format!("Checkpoint '{checkpoint_id}' has an invalid content file"))
 }
 
 fn checksum(bytes: &[u8]) -> String {
@@ -163,6 +189,37 @@ pub fn save_snapshot(base: &Path, store_name: &str, contents: &str) -> Result<()
     write_file_atomic(&snapshot_path(base, store_name), contents.as_bytes())
 }
 
+/// Read the rolling snapshot without touching the live store. None means no
+/// viable snapshot exists.
+pub fn read_snapshot(base: &Path, store_name: &str) -> Result<Option<SnapshotData>, String> {
+    validate_name(store_name, false)?;
+    let snapshot = snapshot_path(base, store_name);
+    if !snapshot.is_file() {
+        return Ok(None);
+    }
+    let metadata = fs::metadata(&snapshot)
+        .map_err(|e| format!("Failed to read snapshot metadata for store '{store_name}': {e}"))?;
+    let bytes = fs::read(&snapshot)
+        .map_err(|e| format!("Failed to read snapshot of store '{store_name}': {e}"))?;
+    if !is_store_object(&bytes) {
+        return Err(format!(
+            "Snapshot of store '{store_name}' is not a JSON object"
+        ));
+    }
+    let contents = String::from_utf8(bytes)
+        .map_err(|e| format!("Snapshot of store '{store_name}' is not valid UTF-8: {e}"))?;
+    let modified_at_millis = metadata
+        .modified()
+        .ok()
+        .and_then(|time| time.duration_since(UNIX_EPOCH).ok())
+        .map(|duration| duration.as_millis() as u64)
+        .unwrap_or_default();
+    Ok(Some(SnapshotData {
+        contents,
+        modified_at_millis,
+    }))
+}
+
 /// Replace a corrupt live store file with the rolling snapshot. False means no
 /// viable snapshot; the live file is left untouched in that case.
 pub fn restore_snapshot(base: &Path, store_name: &str, live_path: &Path) -> Result<bool, String> {
@@ -197,7 +254,10 @@ pub fn create_checkpoint(
     }
     let checksum = checksum(contents.as_bytes());
     let existing = list_checkpoints(base, store_name)?;
-    if let Some(metadata) = existing.iter().find(|m| m.content_checksum == checksum) {
+    if let Some(metadata) = existing
+        .iter()
+        .find(|m| m.content_checksum == checksum && m.content_file_exists)
+    {
         return Ok(metadata.clone());
     }
     let content_file = format!("{checksum}.dat");
@@ -241,7 +301,12 @@ pub fn list_checkpoints(base: &Path, store_name: &str) -> Result<Vec<CheckpointM
     let mut checkpoints: Vec<CheckpointMetadata> = Vec::new();
     let entries = match fs::read_dir(checkpoint_dir(base, store_name)) {
         Ok(entries) => entries,
-        Err(_) => return Ok(checkpoints),
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(checkpoints),
+        Err(error) => {
+            return Err(format!(
+                "Failed to list checkpoints for store '{store_name}': {error}"
+            ));
+        }
     };
     for entry in entries.flatten() {
         let path = entry.path();
@@ -252,7 +317,10 @@ pub fn list_checkpoints(base: &Path, store_name: &str) -> Result<Vec<CheckpointM
         let Ok(mut metadata) = serde_json::from_slice::<CheckpointMetadata>(&bytes) else {
             continue;
         };
-        if metadata.store_name != store_name {
+        let Some(checkpoint_id) = path.file_stem().and_then(|value| value.to_str()) else {
+            continue;
+        };
+        if validate_checkpoint_metadata(&metadata, store_name, checkpoint_id).is_err() {
             continue;
         }
         metadata.content_file_exists = checkpoint_content_dir(base, store_name)
@@ -277,14 +345,15 @@ pub fn read_checkpoint(
         .map_err(|_| format!("Checkpoint '{checkpoint_id}' was not found"))?;
     let metadata: CheckpointMetadata = serde_json::from_slice(&bytes)
         .map_err(|e| format!("Checkpoint '{checkpoint_id}' has unreadable metadata: {e}"))?;
-    if metadata.store_name != store_name {
-        return Err(format!(
-            "Checkpoint '{checkpoint_id}' does not belong to store '{store_name}'"
-        ));
-    }
+    validate_checkpoint_metadata(&metadata, store_name, checkpoint_id)?;
     let content_path = checkpoint_content_dir(base, store_name).join(&metadata.content_file);
     let content = fs::read(&content_path)
         .map_err(|_| format!("Checkpoint '{checkpoint_id}' is missing its content"))?;
+    if content.len() as u64 != metadata.content_size_bytes {
+        return Err(format!(
+            "Checkpoint '{checkpoint_id}' failed size verification"
+        ));
+    }
     if checksum(&content) != metadata.content_checksum {
         return Err(format!(
             "Checkpoint '{checkpoint_id}' failed checksum verification"
@@ -385,6 +454,7 @@ mod tests {
         assert_eq!(stored.id, metadata.id);
         assert_eq!(stored.content_checksum, metadata.content_checksum);
         assert_eq!(stored.schema_versions, metadata.schema_versions);
+        assert!(stored.content_file_exists);
     }
 
     #[test]
@@ -417,6 +487,37 @@ mod tests {
         assert_eq!(
             dir_entries(&checkpoint_content_dir(base.path(), "settings")).len(),
             1
+        );
+    }
+
+    #[test]
+    fn checkpoint_deduplication_recreates_missing_content() {
+        let (base, _) = setup();
+        let contents = r#"{"SLEEP_MODE":true}"#;
+        let first = create_checkpoint(
+            base.path(),
+            "settings",
+            contents,
+            "pre-migration",
+            "1.0.0",
+            BTreeMap::new(),
+        )
+        .unwrap();
+        fs::remove_file(checkpoint_content_dir(base.path(), "settings").join(first.content_file))
+            .unwrap();
+        let replacement = create_checkpoint(
+            base.path(),
+            "settings",
+            contents,
+            "store-recovery",
+            "1.0.0",
+            BTreeMap::new(),
+        )
+        .unwrap();
+        assert_ne!(replacement.id, first.id);
+        assert_eq!(
+            read_checkpoint(base.path(), "settings", &replacement.id).unwrap(),
+            contents
         );
     }
 
@@ -457,6 +558,10 @@ mod tests {
         );
         assert!(newest.sequence > middle.sequence && middle.sequence > oldest.sequence);
         assert!(list.first().unwrap().content_file_exists);
+        assert_eq!(
+            serde_json::to_value(list.first().unwrap()).unwrap()["contentFileExists"],
+            true
+        );
     }
 
     #[test]
@@ -538,6 +643,33 @@ mod tests {
     }
 
     #[test]
+    fn read_snapshot_returns_contents_without_touching_live() {
+        let (base, live_dir) = setup();
+        let live = live_path(live_dir.path());
+        fs::write(&live, r#"{"original":true}"#).unwrap();
+        save_snapshot(base.path(), "settings", r#"{"good":true}"#).unwrap();
+        assert_eq!(
+            read_snapshot(base.path(), "settings")
+                .unwrap()
+                .unwrap()
+                .contents,
+            r#"{"good":true}"#
+        );
+        assert_eq!(fs::read_to_string(&live).unwrap(), r#"{"original":true}"#);
+    }
+
+    #[test]
+    fn read_snapshot_returns_none_for_missing_snapshot_and_rejects_invalid_snapshot() {
+        let (base, _) = setup();
+        assert_eq!(read_snapshot(base.path(), "settings").unwrap(), None);
+        for snapshot_bytes in ["", "not json", r#"["array"]"#, r#"42"#] {
+            fs::write(snapshot_path(base.path(), "settings"), snapshot_bytes).unwrap();
+            assert!(read_snapshot(base.path(), "settings").is_err());
+        }
+        assert!(read_snapshot(base.path(), "../evil").is_err());
+    }
+
+    #[test]
     fn read_checkpoint_detects_corruption() {
         let (base, _) = setup();
         let contents = r#"{"data":1}"#;
@@ -556,10 +688,14 @@ mod tests {
         );
         let content_path =
             checkpoint_content_dir(base.path(), "settings").join(&metadata.content_file);
-        fs::write(&content_path, r#"{"tampered":2}"#).unwrap();
+        fs::write(&content_path, r#"{"data":2}"#).unwrap();
         assert!(read_checkpoint(base.path(), "settings", &metadata.id)
             .unwrap_err()
             .contains("checksum"));
+        fs::write(&content_path, r#"{"data":"too long"}"#).unwrap();
+        assert!(read_checkpoint(base.path(), "settings", &metadata.id)
+            .unwrap_err()
+            .contains("size"));
         fs::remove_file(&content_path).unwrap();
         assert!(read_checkpoint(base.path(), "settings", &metadata.id)
             .unwrap_err()
@@ -567,6 +703,32 @@ mod tests {
         let list = list_checkpoints(base.path(), "settings").unwrap();
         assert_eq!(list.len(), 1);
         assert!(!list[0].content_file_exists);
+    }
+
+    #[test]
+    fn checkpoint_metadata_must_match_its_file_name() {
+        let (base, _) = setup();
+        let metadata = create_checkpoint(
+            base.path(),
+            "settings",
+            r#"{"data":1}"#,
+            "pre-migration",
+            "1.0.0",
+            BTreeMap::new(),
+        )
+        .unwrap();
+        let metadata_path =
+            checkpoint_dir(base.path(), "settings").join(format!("{}.json", metadata.id));
+        let mut stored: CheckpointMetadata =
+            serde_json::from_str(&fs::read_to_string(&metadata_path).unwrap()).unwrap();
+        stored.id = "different".to_string();
+        fs::write(&metadata_path, serde_json::to_vec(&stored).unwrap()).unwrap();
+        assert!(list_checkpoints(base.path(), "settings")
+            .unwrap()
+            .is_empty());
+        assert!(read_checkpoint(base.path(), "settings", &metadata.id)
+            .unwrap_err()
+            .contains("mismatched"));
     }
 
     #[test]

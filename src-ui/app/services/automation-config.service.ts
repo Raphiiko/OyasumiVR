@@ -9,7 +9,6 @@ import {
 import { asyncScheduler, BehaviorSubject, Observable, skip, switchMap, throttleTime } from 'rxjs';
 import { SETTINGS_KEY_AUTOMATION_CONFIGS, SETTINGS_STORE } from '../globals';
 
-import { migrateAutomationConfigs } from '../migrations/automation-configs.migrations';
 import { listen } from '@tauri-apps/api/event';
 
 @Injectable({
@@ -58,9 +57,7 @@ export class AutomationConfigService {
     let configs: AutomationConfigs | undefined = await SETTINGS_STORE.get<AutomationConfigs>(
       SETTINGS_KEY_AUTOMATION_CONFIGS
     );
-    configs = configs ? await migrateAutomationConfigs(configs) : this._configs.value;
-    this._configs.next(configs);
-    await this.saveConfigs();
+    this._configs.next(configs ?? this._configs.value);
   }
 
   async saveConfigs() {

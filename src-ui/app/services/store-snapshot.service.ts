@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { TranslocoService } from '@jsverse/transloco';
 import { invoke } from '@tauri-apps/api/core';
 import { LazyStore } from '@tauri-apps/plugin-store';
+import { appDataDir, join } from '@tauri-apps/api/path';
+import { exists, readTextFile } from '@tauri-apps/plugin-fs';
+import { error } from '@tauri-apps/plugin-log';
 import {
   EVENT_LOG_STORE,
   CACHE_FILE,
@@ -12,8 +14,6 @@ import {
 } from '../globals';
 import { getVersion } from '../utils/app-utils';
 import { serializeStoreContents, StoreProtector } from '../utils/store-protector';
-
-// Workaround for https://github.com/tauri-apps/plugins-workspace/issues/3085
 
 export interface StoreCheckpoint {
   formatVersion: number;
@@ -31,6 +31,16 @@ export interface StoreCheckpoint {
   contentFileExists: boolean;
 }
 
+export interface LiveStoreRead {
+  exists: boolean;
+  contents: string | null;
+}
+
+export interface StoreSnapshot {
+  contents: string;
+  modifiedAtMillis: number;
+}
+
 const PROTECTED_STORES: Record<string, { file: string; store: LazyStore }> = {
   settings: { file: SETTINGS_FILE, store: SETTINGS_STORE },
   cache: { file: CACHE_FILE, store: CACHE_STORE },
@@ -41,31 +51,44 @@ const PROTECTED_STORES: Record<string, { file: string; store: LazyStore }> = {
   providedIn: 'root',
 })
 export class StoreSnapshotService {
-  private protectors?: StoreProtector[];
+  private protectors?: Record<string, StoreProtector>;
 
-  constructor(private translate: TranslocoService) {}
-
-  public async init() {
-    await this.initializeRecovery();
-    this.enablePeriodicSnapshots();
-  }
-
-  // Restore any corrupted stores from their latest known good snapshots
   public async initializeRecovery() {
     if (!this.protectors) {
-      this.protectors = Object.entries(PROTECTED_STORES).map(
-        ([name, { file, store }]) => new StoreProtector(store, name, file, this.translate)
+      this.protectors = Object.fromEntries(
+        Object.entries(PROTECTED_STORES).map(([name, { file, store }]) => [
+          name,
+          new StoreProtector(store, name, file),
+        ])
       );
     }
-    await Promise.all(this.protectors.map((protector) => protector.initializeRecovery()));
+    await Promise.all(
+      Object.entries(this.protectors).map(([name, protector]) =>
+        protector.initializeRecovery(name === 'cache')
+      )
+    );
   }
 
-  // Only enable once startup recovery has finished, so snapshots never race recovery
+  // startup recovery must finish before snapshots can write
   public enablePeriodicSnapshots() {
-    this.protectors?.forEach((protector) => protector.startPeriodicSnapshots());
+    Object.values(this.protectors ?? {}).forEach((protector) => protector.startPeriodicSnapshots());
   }
 
-  // Write an immutable checkpoint, verified on disk before it is reported back
+  public async readLiveStore(storeName: string): Promise<LiveStoreRead> {
+    const path = await join(await appDataDir(), this.getStoreEntry(storeName).file);
+    if (!(await exists(path))) return { exists: false, contents: null };
+    try {
+      return { exists: true, contents: await readTextFile(path) };
+    } catch (e) {
+      error(`[StoreSnapshot] Failed to read the live store '${storeName}': ${e}`);
+      return { exists: true, contents: null };
+    }
+  }
+
+  public readSnapshot(storeName: string): Promise<StoreSnapshot | null> {
+    return invoke<StoreSnapshot | null>('store_safety_read_snapshot', { storeName });
+  }
+
   public async createCheckpoint(
     storeName: string,
     reason: string,
@@ -82,7 +105,6 @@ export class StoreSnapshotService {
     });
   }
 
-  // Newest first; candidates are viable when contentFileExists and readCheckpoint succeeds
   public listCheckpoints(storeName: string): Promise<StoreCheckpoint[]> {
     return invoke<StoreCheckpoint[]>('store_safety_list_checkpoints', { storeName });
   }
@@ -91,7 +113,6 @@ export class StoreSnapshotService {
     return invoke<string>('store_safety_read_checkpoint', { storeName, checkpointId });
   }
 
-  // Preserve unusable live store bytes for inspection instead of deleting them
   public quarantineStore(storeName: string): Promise<string | null> {
     return invoke<string | null>('store_safety_quarantine_store', {
       storeName,
@@ -99,7 +120,6 @@ export class StoreSnapshotService {
     });
   }
 
-  // Atomically replace the physical store file, then reload the in-memory store
   public async replaceStore(storeName: string, contents: string): Promise<void> {
     const entry = this.getStoreEntry(storeName);
     await invoke('store_safety_replace_store', {
