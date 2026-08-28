@@ -21,7 +21,10 @@ use btleplug::{
 use futures_util::{future::join_all, StreamExt};
 use log::{debug, error, info, trace, warn};
 use models::LighthouseDevice;
-use tokio::{sync::Mutex, time::sleep};
+use tokio::{
+    sync::Mutex,
+    time::{sleep, timeout},
+};
 use uuid::Uuid;
 
 use crate::utils::send_event;
@@ -74,9 +77,15 @@ const CONNECT_BACKOFF_MAX: Duration = Duration::from_secs(300);
 const RADIO_RECOVERY_THRESHOLD: u32 = 6;
 const RADIO_RECOVERY_COOLDOWN: Duration = Duration::from_secs(300);
 const RADIO_ON_ATTEMPTS: u32 = 3;
+const RADIO_RESTORE_TIMEOUT: Duration = Duration::from_secs(30);
 
 pub async fn init() {
-    restore_pending_radios().await;
+    if timeout(RADIO_RESTORE_TIMEOUT, restore_pending_radios())
+        .await
+        .is_err()
+    {
+        warn!("[Core] Timed out restoring pending bluetooth radios");
+    }
     // Initialize adapter
     let manager = match Manager::new().await {
         Ok(manager) => manager,
@@ -638,20 +647,30 @@ async fn cycle_bluetooth_radio() -> Result<(), String> {
     for radio in &radios {
         cycle_results.push(cycle_radio(radio, &pending_ids).await);
     }
-    for result in &cycle_results {
-        let Some(id) = result.id.as_deref() else {
-            continue;
-        };
-        if !cycle_results
-            .iter()
-            .any(|result| result.id.as_deref() == Some(id) && result.restored)
-            || cycle_results
-                .iter()
-                .any(|result| result.id.as_deref() == Some(id) && result.error.is_some())
-        {
+    let failed_ids = cycle_results
+        .iter()
+        .filter(|result| result.error.is_some())
+        .filter_map(|result| result.id.clone())
+        .collect::<HashSet<_>>();
+    let restored_ids = cycle_results
+        .iter()
+        .filter(|result| result.restored)
+        .filter_map(|result| result.id.clone())
+        .collect::<Vec<_>>();
+    for id in restored_ids {
+        if failed_ids.contains(&id) {
             continue;
         }
-        clear_persisted_pending_restore(id);
+        if !clear_persisted_pending_restore(&id) {
+            if let Some(result) = cycle_results
+                .iter_mut()
+                .find(|result| result.id.as_deref() == Some(id.as_str()))
+            {
+                result.error = Some(format!(
+                    "failed to clear the pending restore of the '{id}' radio"
+                ));
+            }
+        }
     }
     let failures = cycle_results
         .into_iter()
@@ -702,13 +721,42 @@ async fn list_bluetooth_radios() -> Result<Vec<BluetoothRadio>, String> {
     let count = devices.Size().map_err(|e| e.to_string())?;
     let mut radios = Vec::new();
     for index in 0..count {
-        let device = devices.GetAt(index).map_err(|e| e.to_string())?;
-        let id = device.Id().map_err(|e| e.to_string())?;
-        let radio = Radio::FromIdAsync(&id)
-            .map_err(|e| e.to_string())?
-            .await
-            .map_err(|e| e.to_string())?;
-        if radio.Kind().map_err(|e| e.to_string())? != RadioKind::Bluetooth {
+        let device = match devices.GetAt(index) {
+            Ok(device) => device,
+            Err(err) => {
+                warn!("[Core] Failed to inspect a radio while listing bluetooth radios: {err}");
+                continue;
+            }
+        };
+        let id = match device.Id() {
+            Ok(id) => id,
+            Err(err) => {
+                warn!("[Core] Failed to read a radio device id: {err}");
+                continue;
+            }
+        };
+        let operation = match Radio::FromIdAsync(&id) {
+            Ok(operation) => operation,
+            Err(err) => {
+                warn!("[Core] Failed to open a radio by device id: {err}");
+                continue;
+            }
+        };
+        let radio = match operation.await {
+            Ok(radio) => radio,
+            Err(err) => {
+                warn!("[Core] Failed to open a radio by device id: {err}");
+                continue;
+            }
+        };
+        let kind = match radio.Kind() {
+            Ok(kind) => kind,
+            Err(err) => {
+                warn!("[Core] Failed to inspect an opened radio: {err}");
+                continue;
+            }
+        };
+        if kind != RadioKind::Bluetooth {
             continue;
         }
         radios.push(BluetoothRadio {
@@ -825,11 +873,21 @@ fn normalized_pending_restore_names(names: Vec<String>) -> Vec<String> {
 }
 
 fn read_persisted_pending_restores_from(path: &std::path::Path) -> Vec<String> {
-    std::fs::read_to_string(path)
-        .ok()
-        .and_then(|contents| serde_json::from_str::<Vec<String>>(&contents).ok())
-        .map(normalized_pending_restore_names)
-        .unwrap_or_default()
+    let contents = match std::fs::read_to_string(path) {
+        Ok(contents) => contents,
+        Err(err) if err.kind() == std::io::ErrorKind::NotFound => return Vec::new(),
+        Err(err) => {
+            warn!("[Core] Failed to read pending bluetooth radio restores: {err}");
+            return Vec::new();
+        }
+    };
+    match serde_json::from_str::<Vec<String>>(&contents) {
+        Ok(ids) => normalized_pending_restore_names(ids),
+        Err(err) => {
+            warn!("[Core] Failed to parse pending bluetooth radio restores: {err}");
+            Vec::new()
+        }
+    }
 }
 
 fn write_persisted_pending_restores_to(path: &std::path::Path, names: &[String]) -> bool {
@@ -878,18 +936,23 @@ fn persist_pending_restore(name: &str) -> bool {
     true
 }
 
-fn clear_persisted_pending_restore(name: &str) {
+fn clear_persisted_pending_restore(id: &str) -> bool {
     let Some(path) = pending_restore_path() else {
-        return;
+        warn!("[Core] Failed to locate the pending bluetooth radio restore file");
+        return false;
     };
     let _guard = PENDING_RESTORE_FILE_LOCK.lock().unwrap();
-    let mut names = read_persisted_pending_restores_from(&path);
-    let before = names.len();
-    names.retain(|pending| pending != name);
-    if names.len() != before {
-        if !write_persisted_pending_restores_to(&path, &names) {
-            warn!("[Core] Failed to clear a pending bluetooth radio restore");
-        }
+    let mut ids = read_persisted_pending_restores_from(&path);
+    let before = ids.len();
+    ids.retain(|pending| pending != id);
+    if ids.len() == before {
+        return true;
+    }
+    if write_persisted_pending_restores_to(&path, &ids) {
+        true
+    } else {
+        warn!("[Core] Failed to clear a pending bluetooth radio restore");
+        false
     }
 }
 
