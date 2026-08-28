@@ -96,13 +96,13 @@ pub async fn init() {
         let manager = match Manager::new().await {
             Ok(manager) => manager,
             Err(err) => {
+                set_lighthouse_status(LighthouseStatus::AdapterError).await;
                 if pending_restores_remain() {
                     warn!("[Core] Failed to initialize the bluetooth manager while restores remain: {err}");
                     sleep(RADIO_ADAPTER_RETRY_COOLDOWN).await;
                     continue;
                 }
                 error!("[Core] Failed to initialize the bluetooth manager: {err}");
-                set_lighthouse_status(LighthouseStatus::AdapterError).await;
                 return;
             }
         };
@@ -129,16 +129,17 @@ pub async fn init() {
                 return;
             }
             Ok(_) => {
+                set_lighthouse_status(LighthouseStatus::NoAdapter).await;
                 if pending_restores_remain() {
                     warn!("[Core] No bluetooth adapter was found while restores remain");
                     sleep(RADIO_ADAPTER_RETRY_COOLDOWN).await;
                     continue;
                 }
-                set_lighthouse_status(LighthouseStatus::NoAdapter).await;
                 warn!("[Core] No bluetooth adapter was found. Disabling lighthouse module.");
                 return;
             }
             Err(err) => {
+                set_lighthouse_status(LighthouseStatus::AdapterError).await;
                 if pending_restores_remain() {
                     error!(
                         "[Core] Failed to list the bluetooth adapters while restores remain: {err}"
@@ -147,7 +148,6 @@ pub async fn init() {
                     continue;
                 }
                 error!("[Core] Failed to list the bluetooth adapters: {err}");
-                set_lighthouse_status(LighthouseStatus::AdapterError).await;
                 return;
             }
         }
