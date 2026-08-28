@@ -1,75 +1,8 @@
-import { mergeWith } from 'lodash';
-import { VRCHAT_API_SETTINGS_DEFAULT, VRChatApiSettings } from '../models/vrchat-api-settings';
-import { error, info } from '@tauri-apps/plugin-log';
-import { BaseDirectory, writeTextFile } from '@tauri-apps/plugin-fs';
-import { message } from '@tauri-apps/plugin-dialog';
+import { VRCHAT_API_SETTINGS_DEFAULT } from '../models/vrchat-api-settings';
+import type { MigrationDefinition, Versioned } from 'src-shared-ts/src/migration-runner';
 import { decryptStorageData, deserializeStorageCryptoKey } from './legacy/storage-crypto';
-
-const migrations: { [v: number]: (data: any) => any } = {
-  1: resetToLatest,
-  2: from1To2,
-  3: from2To3,
-  4: from3To4,
-  5: from4To5,
-  6: from5To6,
-  7: from6To7,
-};
-
-export async function migrateVRChatApiSettings(data: any): Promise<VRChatApiSettings> {
-  let currentVersion = data.version || 0;
-  // Reset to latest when the current version is higher than the latest
-  if (currentVersion > VRCHAT_API_SETTINGS_DEFAULT.version) {
-    data = resetToLatest(data);
-    info(
-      `[vrchat-api-settings-migrations] Reset future VRChat API settings version back to version ${
-        currentVersion + ''
-      }`
-    );
-  }
-  while (currentVersion < VRCHAT_API_SETTINGS_DEFAULT.version) {
-    try {
-      data = await migrations[++currentVersion](data);
-    } catch (e) {
-      error(
-        "[vrchat-api-settings-migrations] Couldn't migrate to version " +
-          currentVersion +
-          '. Backing up configuration and resetting to the latest version. : ' +
-          e
-      );
-      saveBackup(structuredClone(data));
-      data = resetToLatest(data);
-      currentVersion = data.version;
-      message(
-        'Your VRChat settings could not to be migrated to the new version of OyasumiVR, and have therefore been reset. Apologies for the inconvenience.\n\nPlease report this issue to the developer so this issue may be fixed in the future. Thank you!',
-        { title: 'Migration Error (VRChat Settings)' }
-      );
-      continue;
-    }
-    currentVersion = data.version;
-    info(
-      `[vrchat-api-settings-migrations] Migrated VRChat API settings to version ${
-        currentVersion + ''
-      }`
-    );
-  }
-  data = mergeWith(structuredClone(VRCHAT_API_SETTINGS_DEFAULT), data, (objValue, srcValue) => {
-    // Delete irrelevant keys
-    if (objValue === undefined) {
-      return undefined;
-    }
-    // Do not merge array values
-    if (Array.isArray(objValue)) {
-      return srcValue;
-    }
-  });
-  return data as VRChatApiSettings;
-}
-
-async function saveBackup(oldData: any) {
-  await writeTextFile('vrchat-api-settings.backup.json', JSON.stringify(oldData, null, 2), {
-    baseDir: BaseDirectory.AppData,
-  });
-}
+import { protectSecret } from '../utils/secrets';
+import { normalizeWithDefaults } from './migration-defaults';
 
 function from1To2(data: any): any {
   delete data['apiKey'];
@@ -150,65 +83,64 @@ const LEGACY_SECRET_TEXT_FIELDS = [
 ];
 
 async function from6To7(data: any): Promise<any> {
-  const original = structuredClone(data);
   const legacyKey = data.legacyCredentialCryptoKey;
   let key: CryptoKey | null = null;
   if (legacyKey) {
-    try {
-      key = await deserializeStorageCryptoKey(legacyKey);
-    } catch (e) {
-      error("[vrchat-api-settings-migrations] Couldn't read the credential key: " + e);
-    }
+    key = await deserializeStorageCryptoKey(legacyKey);
   }
-  let discarded = false;
   data.profiles = await Promise.all(
     (data.profiles ?? []).map(async (profile: any) => {
       const migrated = { ...profile };
       if (migrated.encryptedPendingTwoFactorLoginIdentifier != null) {
-        migrated.pendingTwoFactorLoginIdentifier = key
-          ? await decryptLegacyValue(
-              migrated.encryptedPendingTwoFactorLoginIdentifier,
-              key,
-              profile.id
-            )
-          : null;
-        if (migrated.pendingTwoFactorLoginIdentifier == null) discarded = true;
+        if (!key) throw new Error(`Profile ${profile.id} has encrypted data but no legacy key`);
+        migrated.pendingTwoFactorLoginIdentifier = await decryptLegacyValue(
+          migrated.encryptedPendingTwoFactorLoginIdentifier,
+          key,
+          profile.id
+        );
         delete migrated.encryptedPendingTwoFactorLoginIdentifier;
       }
       if ('rememberedCredentials' in migrated) {
         const stored = migrated.rememberedCredentials;
-        migrated.rememberedCredentials =
-          typeof stored === 'string'
-            ? key
-              ? await decryptLegacyCredentials(stored, key, profile.id)
-              : null
-            : readCredentials(stored, profile.id);
-        if (stored && migrated.rememberedCredentials == null) discarded = true;
+        if (typeof stored === 'string') {
+          if (!key)
+            throw new Error(`Profile ${profile.id} has encrypted credentials but no legacy key`);
+          migrated.rememberedCredentials = await decryptLegacyCredentials(stored, key, profile.id);
+        } else {
+          migrated.rememberedCredentials = readCredentials(stored, profile.id);
+        }
       }
       migrated.rememberCredentials =
         !!migrated.rememberedCredentials && !!profile.rememberCredentials;
       for (const field of LEGACY_SECRET_TEXT_FIELDS) {
         if (field in migrated && migrated[field] != null && typeof migrated[field] !== 'string') {
-          error(
-            '[vrchat-api-settings-migrations] Discarded the ' +
-              field +
-              ' of profile ' +
-              profile.id +
-              ': not a string'
-          );
-          migrated[field] = null;
-          discarded = true;
+          throw new Error(`The ${field} of profile ${profile.id} is not a string`);
         }
       }
-      return migrated;
+      const protectedSecret = await protectSecret(
+        JSON.stringify({
+          authCookie: migrated.authCookie ?? null,
+          twoFactorCookie: migrated.twoFactorCookie ?? null,
+          twoFactorCookieLoginIdentifierHash: migrated.twoFactorCookieLoginIdentifierHash ?? null,
+          pendingTwoFactorLoginIdentifier: migrated.pendingTwoFactorLoginIdentifier ?? null,
+          rememberCredentials: migrated.rememberCredentials,
+          rememberedCredentials: migrated.rememberedCredentials ?? null,
+        })
+      );
+      if (!protectedSecret) throw new Error(`Profile ${profile.id} could not be protected`);
+      return {
+        id: migrated.id,
+        sourceProfileId: migrated.sourceProfileId,
+        restoreProfileId: migrated.restoreProfileId,
+        userId: migrated.userId,
+        username: migrated.username,
+        displayName: migrated.displayName,
+        draft: migrated.draft,
+        protectedSecret,
+      };
     })
   );
   delete data.legacyCredentialCryptoKey;
-  if (discarded) {
-    await saveBackup(original).catch((e) =>
-      error("[vrchat-api-settings-migrations] Couldn't write the backup: " + e)
-    );
-  }
   data.version = 7;
   return data;
 }
@@ -221,12 +153,7 @@ function readCredentials(
   if (typeof value?.username === 'string' && typeof value?.password === 'string') {
     return { username: value.username, password: value.password };
   }
-  error(
-    '[vrchat-api-settings-migrations] Discarded the credentials of profile ' +
-      profileId +
-      ': unexpected shape'
-  );
-  return null;
+  throw new Error(`The credentials of profile ${profileId} have an unexpected shape`);
 }
 
 async function decryptLegacyValue(
@@ -236,14 +163,8 @@ async function decryptLegacyValue(
 ): Promise<string | null> {
   try {
     return await decryptStorageData(value, key);
-  } catch (e) {
-    error(
-      "[vrchat-api-settings-migrations] Couldn't decrypt a value for profile " +
-        profileId +
-        ': ' +
-        e
-    );
-    return null;
+  } catch (cause) {
+    throw new Error(`Could not decrypt a value for profile ${profileId}`, { cause });
   }
 }
 
@@ -255,25 +176,23 @@ async function decryptLegacyCredentials(
   const encoded = await decryptLegacyValue(value, key, profileId);
   if (encoded == null) return null;
   const separator = encoded.indexOf(':');
-  try {
-    if (separator < 0) throw new Error('missing separator');
-    return {
-      username: atob(encoded.slice(0, separator)),
-      password: atob(encoded.slice(separator + 1)),
-    };
-  } catch (e) {
-    error(
-      '[vrchat-api-settings-migrations] Discarded the credentials of profile ' +
-        profileId +
-        ': ' +
-        e
-    );
-    return null;
-  }
+  if (separator < 0) throw new Error(`The credentials of profile ${profileId} have no separator`);
+  return {
+    username: atob(encoded.slice(0, separator)),
+    password: atob(encoded.slice(separator + 1)),
+  };
 }
 
-function resetToLatest(data: any): any {
-  // Reset to latest
-  data = structuredClone(VRCHAT_API_SETTINGS_DEFAULT);
-  return data;
-}
+export const VRCHAT_API_MIGRATION: MigrationDefinition<Versioned> = {
+  targetVersion: VRCHAT_API_SETTINGS_DEFAULT.version,
+  minimumSupportedVersion: 1,
+  steps: {
+    1: from1To2,
+    2: from2To3,
+    3: from3To4,
+    4: from4To5,
+    5: from5To6,
+    6: from6To7,
+  },
+  normalizeCurrentVersion: (data) => normalizeWithDefaults(VRCHAT_API_SETTINGS_DEFAULT, data),
+};

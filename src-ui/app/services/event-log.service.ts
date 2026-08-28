@@ -8,7 +8,6 @@ import {
 import { async, BehaviorSubject, Observable, throttleTime } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 
-import { migrateEventLog } from '../migrations/event-log.migrations';
 import { EVENT_LOG_STORE } from '../globals';
 
 const MAX_LOG_AGE = 48 * 60 * 60 * 1000;
@@ -56,9 +55,7 @@ export class EventLogService {
 
   private async loadEventLog() {
     let log: EventLog | undefined = await EVENT_LOG_STORE.get<EventLog>('EVENT_LOG');
-    if (log) {
-      log = migrateEventLog(log);
-    } else {
+    if (!log) {
       log = this._eventLog.value;
     }
     // Remove events that are too old
