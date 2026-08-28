@@ -641,27 +641,20 @@ async fn register_connect_failure(device_id: &PeripheralId) {
 async fn cycle_bluetooth_radio() -> Result<(), String> {
     let _guard = RADIO_RECOVERY_LOCK.lock().await;
     request_radio_access().await?;
-    let radios = list_bluetooth_radios().await?;
+    let listing = list_bluetooth_radios().await?;
+    let radios = listing.radios;
     let pending_ids = read_persisted_pending_restores()
         .ok_or_else(|| String::from("failed to read pending bluetooth radio restores"))?;
     let mut cycle_results = Vec::new();
     for radio in &radios {
         cycle_results.push(cycle_radio(radio, &pending_ids).await);
     }
-    let failed_ids = cycle_results
-        .iter()
-        .filter(|result| result.error.is_some())
-        .filter_map(|result| result.id.clone())
-        .collect::<HashSet<_>>();
     let restored_ids = cycle_results
         .iter()
         .filter(|result| result.restored)
         .filter_map(|result| result.id.clone())
         .collect::<Vec<_>>();
     for id in restored_ids {
-        if failed_ids.contains(&id) {
-            continue;
-        }
         if !clear_persisted_pending_restore(&id) {
             if let Some(result) = cycle_results
                 .iter_mut()
@@ -690,6 +683,11 @@ struct RadioCycleResult {
     restored: bool,
 }
 
+struct BluetoothRadioListing {
+    radios: Vec<BluetoothRadio>,
+    complete: bool,
+}
+
 struct BluetoothRadio {
     id: String,
     name: String,
@@ -710,7 +708,7 @@ async fn request_radio_access() -> Result<(), String> {
     }
 }
 
-async fn list_bluetooth_radios() -> Result<Vec<BluetoothRadio>, String> {
+async fn list_bluetooth_radios() -> Result<BluetoothRadioListing, String> {
     use windows::Devices::Enumeration::DeviceInformation;
     use windows::Devices::Radios::{Radio, RadioKind};
 
@@ -721,11 +719,13 @@ async fn list_bluetooth_radios() -> Result<Vec<BluetoothRadio>, String> {
         .map_err(|e| e.to_string())?;
     let count = devices.Size().map_err(|e| e.to_string())?;
     let mut radios = Vec::new();
+    let mut complete = true;
     for index in 0..count {
         let device = match devices.GetAt(index) {
             Ok(device) => device,
             Err(err) => {
                 warn!("[Core] Failed to inspect a radio while listing bluetooth radios: {err}");
+                complete = false;
                 continue;
             }
         };
@@ -733,6 +733,7 @@ async fn list_bluetooth_radios() -> Result<Vec<BluetoothRadio>, String> {
             Ok(id) => id,
             Err(err) => {
                 warn!("[Core] Failed to read a radio device id: {err}");
+                complete = false;
                 continue;
             }
         };
@@ -740,6 +741,7 @@ async fn list_bluetooth_radios() -> Result<Vec<BluetoothRadio>, String> {
             Ok(operation) => operation,
             Err(err) => {
                 warn!("[Core] Failed to open a radio by device id: {err}");
+                complete = false;
                 continue;
             }
         };
@@ -747,6 +749,7 @@ async fn list_bluetooth_radios() -> Result<Vec<BluetoothRadio>, String> {
             Ok(radio) => radio,
             Err(err) => {
                 warn!("[Core] Failed to open a radio by device id: {err}");
+                complete = false;
                 continue;
             }
         };
@@ -754,6 +757,7 @@ async fn list_bluetooth_radios() -> Result<Vec<BluetoothRadio>, String> {
             Ok(kind) => kind,
             Err(err) => {
                 warn!("[Core] Failed to inspect an opened radio: {err}");
+                complete = false;
                 continue;
             }
         };
@@ -766,7 +770,7 @@ async fn list_bluetooth_radios() -> Result<Vec<BluetoothRadio>, String> {
             radio,
         });
     }
-    Ok(radios)
+    Ok(BluetoothRadioListing { radios, complete })
 }
 
 async fn cycle_radio(radio: &BluetoothRadio, pending_ids: &[String]) -> RadioCycleResult {
@@ -783,11 +787,6 @@ async fn cycle_radio(radio: &BluetoothRadio, pending_ids: &[String]) -> RadioCyc
         if let Err(err) = restore_radio_on(radio).await {
             persist_pending_restore(id);
             return cycle_error(Some(format!("the '{name}' radio {err}")));
-        }
-        if !clear_persisted_pending_restore(id) {
-            return cycle_error(Some(format!(
-                "failed to clear the pending restore of the '{name}' radio"
-            )));
         }
     }
     match radio.State() {
@@ -879,9 +878,13 @@ fn read_persisted_pending_restores_from(path: &std::path::Path) -> std::io::Resu
         Err(err) if err.kind() == std::io::ErrorKind::NotFound => return Ok(Vec::new()),
         Err(err) => return Err(err),
     };
-    let ids = serde_json::from_str::<Vec<String>>(&contents)
-        .map_err(|err| std::io::Error::new(std::io::ErrorKind::InvalidData, err))?;
-    Ok(normalized_pending_restore_names(ids))
+    match serde_json::from_str::<Vec<String>>(&contents) {
+        Ok(ids) => Ok(normalized_pending_restore_names(ids)),
+        Err(err) => {
+            warn!("[Core] Failed to parse pending bluetooth radio restores: {err}");
+            Ok(Vec::new())
+        }
+    }
 }
 
 fn persist_pending_restore_from(path: &std::path::Path, id: &str) -> bool {
@@ -998,47 +1001,68 @@ async fn restore_pending_radios() {
         warn!("[Core] Failed to get radio access for pending bluetooth recoveries: {err}");
         return;
     }
-    let radios = match list_bluetooth_radios().await {
-        Ok(radios) => radios,
+    let listing = match list_bluetooth_radios().await {
+        Ok(listing) => listing,
         Err(err) => {
             warn!("[Core] Failed to list radios for pending bluetooth recoveries: {err}");
             return;
         }
     };
+    let enumeration_complete = listing.complete;
+    let available_ids = listing
+        .radios
+        .iter()
+        .map(|radio| radio.id.clone())
+        .collect::<HashSet<_>>();
     let restore_results = join_all(
-        radios
+        listing
+            .radios
             .into_iter()
             .filter(|radio| pending_ids.contains(&radio.id))
             .map(|radio| async move {
                 let id = radio.id.clone();
                 let name = radio.name.clone();
                 warn!("[Core] Turning the '{name}' radio back on after a restart");
-                let restore =
-                    match timeout(RADIO_RESTORE_TIMEOUT, restore_radio_on(&radio.radio)).await {
-                        Ok(restore) => restore,
-                        Err(_) => Err(String::from("timed out")),
-                    };
+                let restore = restore_radio_on(&radio.radio).await;
                 (id, name, restore)
             }),
     )
     .await;
     let mut seen_ids = Vec::new();
-    let mut failed_ids = Vec::new();
     for (id, name, restore) in restore_results {
         match restore {
             Ok(()) => seen_ids.push(id),
             Err(err) => {
-                failed_ids.push(id.clone());
                 persist_pending_restore(&id);
                 warn!("[Core] Failed to turn the '{name}' radio back on after a restart: {err}");
             }
         }
     }
-    let restored_ids = seen_ids
-        .into_iter()
-        .filter(|id| !failed_ids.contains(id))
-        .collect::<Vec<_>>();
+    let restored_ids = pending_restore_clear_ids(
+        &pending_ids,
+        &seen_ids,
+        &available_ids,
+        enumeration_complete,
+    );
     retain_persisted_pending_restores(&pending_ids, &restored_ids);
+}
+
+fn pending_restore_clear_ids(
+    pending_ids: &[String],
+    restored_ids: &[String],
+    available_ids: &HashSet<String>,
+    enumeration_complete: bool,
+) -> Vec<String> {
+    let mut ids = restored_ids.to_vec();
+    if enumeration_complete {
+        ids.extend(
+            pending_ids
+                .iter()
+                .filter(|id| !available_ids.contains(*id))
+                .cloned(),
+        );
+    }
+    ids
 }
 
 async fn restore_radio_on(radio: &windows::Devices::Radios::Radio) -> Result<(), String> {
@@ -1278,20 +1302,35 @@ mod tests {
     }
 
     #[test]
-    fn corrupt_pending_restore_file_is_never_replaced() {
+    fn corrupt_pending_restore_file_repairs_on_write() {
         let directory = tempfile::tempdir().unwrap();
         let path = directory.path().join("pending-radio-restores");
         std::fs::write(&path, "not json").unwrap();
 
-        assert!(read_persisted_pending_restores_from(&path).is_err());
-        assert!(!persist_pending_restore_from(&path, "radio"));
-        assert!(!clear_persisted_pending_restore_from(&path, "radio"));
-        assert!(!retain_persisted_pending_restores_from(
-            &path,
-            &[String::from("radio")],
-            &[String::from("radio")]
-        ));
-        assert_eq!(std::fs::read_to_string(&path).unwrap(), "not json");
+        assert!(read_persisted_pending_restores_from(&path)
+            .unwrap()
+            .is_empty());
+        assert!(persist_pending_restore_from(&path, "radio"));
+        assert!(clear_persisted_pending_restore_from(&path, "radio"));
+        assert!(read_persisted_pending_restores_from(&path)
+            .unwrap()
+            .is_empty());
+    }
+
+    #[test]
+    fn stale_pending_restores_clear_only_after_complete_enumeration() {
+        let pending_ids = vec![String::from("present"), String::from("stale")];
+        let restored_ids = vec![String::from("present")];
+        let available_ids = HashSet::from([String::from("present")]);
+
+        assert_eq!(
+            pending_restore_clear_ids(&pending_ids, &restored_ids, &available_ids, true),
+            vec![String::from("present"), String::from("stale")]
+        );
+        assert_eq!(
+            pending_restore_clear_ids(&pending_ids, &restored_ids, &available_ids, false),
+            vec![String::from("present")]
+        );
     }
 
     #[test]
