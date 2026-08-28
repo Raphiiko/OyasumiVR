@@ -668,7 +668,6 @@ mod tests {
         manager.stop_and_stay_stopped().await;
 
         // The watcher is fenced off by the generation this bumped, so it never sends this itself.
-        // Without it the gRPC client is never dropped and the UI still shows a running sidecar.
         assert_eq!(
             rx.try_recv(),
             Ok(false),
@@ -716,8 +715,7 @@ mod tests {
         let mut manager = manager(super::SidecarLaunch::ScheduledTask, false);
         *manager.active.lock().await = true;
 
-        // Not Failed: the caller wanted a sidecar on its way, and one is. Reporting a failure here
-        // switched the user's setting off over a healthy sidecar.
+        // Not Failed: the caller wanted a sidecar on its way, and one is.
         assert_eq!(manager.start().await, super::StartOutcome::AlreadyRunning);
         assert!(super::StartOutcome::AlreadyRunning.is_on_its_way());
         assert!(!super::StartOutcome::Declined.is_on_its_way());

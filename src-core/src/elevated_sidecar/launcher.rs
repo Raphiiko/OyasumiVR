@@ -495,8 +495,7 @@ mod tests {
 
     #[test]
     fn rejects_a_deny_ace_and_a_conditional_ace() {
-        // The shapes an attacker reaches for. Both fall out on the field count or the ACE type
-        // today, and neither was pinned by a test.
+        // Neither is an allow ACE with six fields, which is all this accepts.
         assert!(!super::sddl_is_ours(
             &format!("O:BAD:PAI(A;;FA;;;SY)(A;;FA;;;BA)(A;;0x1200a9;;;{SID})(D;;FA;;;WD)"),
             SID
@@ -528,8 +527,7 @@ mod tests {
 
     #[test]
     fn the_wait_outlasts_the_give_up_timer() {
-        // A shorter wait reported a slow but successful start as a failure, while the manager went
-        // on to accept the sidecar.
+        // The manager accepts a sidecar until the give-up timer fires, so the wait has to outlast it.
         assert!(super::START_TIMEOUT > crate::utils::sidecar_manager::GIVE_UP_AFTER);
     }
 
