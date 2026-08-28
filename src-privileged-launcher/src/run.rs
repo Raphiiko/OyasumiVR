@@ -299,8 +299,6 @@ mod tests {
         )
         .unwrap();
 
-        // Windows refuses to rename over an existing directory, so without the removal this fails
-        // and every later launch fails the same way, with nothing to clean it up.
         promote(&pending, &target).expect("must replace a target that is not usable");
 
         assert!(is_filled(&target));

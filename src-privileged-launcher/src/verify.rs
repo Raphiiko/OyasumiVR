@@ -34,6 +34,9 @@ pub fn signature_path(exe: &Path) -> std::path::PathBuf {
 
 /// A stable identifier for the signed content, used as the staged directory name. Ed25519 is
 /// deterministic, so identical bytes always give an identical signature.
+///
+/// Two different signatures always give two different identifiers: the base64 alphabet is mapped
+/// one to one onto a filename-safe one rather than filtered.
 pub fn signature_id(sig_path: &Path) -> Result<String> {
     let raw = std::fs::read_to_string(sig_path)?;
     let line = raw
@@ -45,7 +48,16 @@ pub fn signature_id(sig_path: &Path) -> Result<String> {
                 "signature file has no signature line",
             )
         })?;
-    Ok(line.chars().filter(|c| c.is_ascii_alphanumeric()).collect())
+    Ok(line
+        .chars()
+        .filter_map(|c| match c {
+            '+' => Some('-'),
+            '/' => Some('_'),
+            c if c.is_ascii_alphanumeric() => Some(c),
+            // padding carries no information, and every signature line is the same length
+            _ => None,
+        })
+        .collect())
 }
 
 /// Streams the file through verification so a multi-megabyte binary is never held in memory.
@@ -99,9 +111,33 @@ mod tests {
         let first = signature_id(&path).unwrap();
         let second = signature_id(&path).unwrap();
         assert_eq!(first, second);
-        assert!(first.chars().all(|c| c.is_ascii_alphanumeric()));
+        assert!(first
+            .chars()
+            .all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_'));
         assert!(!first.is_empty());
         assert!(first.len() < 200, "a directory name has to fit: {first}");
+    }
+
+    #[test]
+    fn signature_id_separates_signatures_that_differ_only_in_punctuation() {
+        let dir = std::env::temp_dir().join("oyasumi-sigid-test4");
+        std::fs::create_dir_all(&dir).unwrap();
+        let a = dir.join("a.minisig");
+        let b = dir.join("b.minisig");
+        std::fs::write(&a, "untrusted comment: x\nRURVwFT5RoqL7AAA+AAA=\n").unwrap();
+        std::fs::write(&b, "untrusted comment: x\nRURVwFT5RoqL7AAA/AAA=\n").unwrap();
+
+        let (first, second) = (signature_id(&a).unwrap(), signature_id(&b).unwrap());
+        assert_ne!(
+            first, second,
+            "a collision runs whichever build was staged first"
+        );
+        assert!(first
+            .chars()
+            .all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_'));
+        assert!(second
+            .chars()
+            .all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_'));
     }
 
     #[test]
