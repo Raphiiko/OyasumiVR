@@ -642,6 +642,7 @@ async fn cycle_bluetooth_radio() -> Result<(), String> {
     let _guard = RADIO_RECOVERY_LOCK.lock().await;
     request_radio_access().await?;
     let listing = list_bluetooth_radios().await?;
+    let enumeration_complete = listing.complete;
     let radios = listing.radios;
     let pending_ids = read_persisted_pending_restores()
         .ok_or_else(|| String::from("failed to read pending bluetooth radio restores"))?;
@@ -666,10 +667,13 @@ async fn cycle_bluetooth_radio() -> Result<(), String> {
             }
         }
     }
-    let failures = cycle_results
+    let mut failures = cycle_results
         .into_iter()
         .filter_map(|result| result.error)
         .collect::<Vec<_>>();
+    if !enumeration_complete {
+        failures.push(String::from("bluetooth radio enumeration was incomplete"));
+    }
     if failures.is_empty() {
         Ok(())
     } else {
@@ -1054,7 +1058,7 @@ fn pending_restore_clear_ids(
     enumeration_complete: bool,
 ) -> Vec<String> {
     let mut ids = restored_ids.to_vec();
-    if enumeration_complete {
+    if enumeration_complete && !available_ids.is_empty() {
         ids.extend(
             pending_ids
                 .iter()
@@ -1330,6 +1334,10 @@ mod tests {
         assert_eq!(
             pending_restore_clear_ids(&pending_ids, &restored_ids, &available_ids, false),
             vec![String::from("present")]
+        );
+        assert!(
+            pending_restore_clear_ids(&[String::from("present")], &[], &HashSet::new(), true)
+                .is_empty()
         );
     }
 
