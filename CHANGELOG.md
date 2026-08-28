@@ -99,6 +99,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
   nothing and could not be freed until you restarted OyasumiVR
 - Fixed one hotkey being unavailable, because another application had taken it, stopping your
   remaining hotkeys from working again after you closed the hotkey selector
+- Fixed the shutdown sequence force-quitting SteamVR right away. It now asks SteamVR to close first,
+  and only forces it after five seconds
 - Various stability improvements
 
 ### Removed
