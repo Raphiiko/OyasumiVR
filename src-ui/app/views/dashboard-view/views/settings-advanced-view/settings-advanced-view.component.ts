@@ -182,74 +182,77 @@ export class SettingsAdvancedViewComponent {
         if (!data?.confirmed) return;
         info('[Settings] User triggered clearing of persistent storage');
         let askForRelaunch = false;
-        await Promise.all(
-          this.checkedPersistentStorageItems.map(async (item) => {
-            switch (item) {
-              case 'appSettings':
-                info('[Settings] Clearing app settings');
-                await SETTINGS_STORE.delete(SETTINGS_KEY_APP_SETTINGS);
-                askForRelaunch = true;
-                break;
-              case 'automationSettings':
-                info('[Settings] Clearing automation settings');
-                await SETTINGS_STORE.delete(SETTINGS_KEY_AUTOMATION_CONFIGS);
-                await SETTINGS_STORE.delete(SETTINGS_KEY_SLEEP_MODE);
-                askForRelaunch = true;
-                break;
-              case 'vrcData':
-                info('[Settings] Clearing VRChat data');
-                await SETTINGS_STORE.delete(SETTINGS_KEY_VRCHAT_API);
-                askForRelaunch = true;
-                break;
-              case 'integrations':
-                info('[Settings] Clearing integration data');
-                await SETTINGS_STORE.delete(SETTINGS_KEY_PULSOID_API);
-                askForRelaunch = true;
-                break;
-              case 'appCache':
-                info('[Settings] Clearing application cache');
-                await CACHE_STORE.clear();
-                askForRelaunch = true;
-                break;
-              case 'imageCache':
-                info('[Settings] Clearing image cache');
-                await invoke('clean_image_cache', { onlyExpired: false });
-                break;
-              case 'miscData':
-                info('[Settings] Clearing misc data');
-                await SETTINGS_STORE.delete(SETTINGS_KEY_THEMING_SETTINGS);
-                await SETTINGS_STORE.delete(SETTINGS_KEY_TELEMETRY_SETTINGS);
-                askForRelaunch = true;
-                break;
-              case 'logs':
-                info('[Settings] Clearing log files');
-                await invoke('clear_log_files');
-                break;
-              case 'eventLog':
-                info('[Settings] Clearing event log');
-                await this.eventLogService.clearLog();
-                break;
-            }
-          })
-        );
-        info('[Settings] Finished clearing of persistent storage');
-        this.checkedPersistentStorageItems = [];
-        if (askForRelaunch) {
-          this.modalService
-            .addModal(
-              ConfirmModalComponent,
-              {
-                title: 'settings.advanced.persistentData.relaunchModal.title',
-                message: 'settings.advanced.persistentData.relaunchModal.message',
-                confirmButtonText: 'settings.advanced.persistentData.relaunchModal.relaunch',
-                showCancel: false,
-              },
-              { closeOnEscape: false }
-            )
-            .subscribe(async (data) => {
-              if (!data?.confirmed) return;
-              await relaunch();
-            });
+        try {
+          await Promise.all(
+            this.checkedPersistentStorageItems.map(async (item) => {
+              switch (item) {
+                case 'appSettings':
+                  info('[Settings] Clearing app settings');
+                  await SETTINGS_STORE.delete(SETTINGS_KEY_APP_SETTINGS);
+                  askForRelaunch = true;
+                  break;
+                case 'automationSettings':
+                  info('[Settings] Clearing automation settings');
+                  await SETTINGS_STORE.delete(SETTINGS_KEY_AUTOMATION_CONFIGS);
+                  await SETTINGS_STORE.delete(SETTINGS_KEY_SLEEP_MODE);
+                  askForRelaunch = true;
+                  break;
+                case 'vrcData':
+                  info('[Settings] Clearing VRChat data');
+                  await SETTINGS_STORE.delete(SETTINGS_KEY_VRCHAT_API);
+                  askForRelaunch = true;
+                  break;
+                case 'integrations':
+                  info('[Settings] Clearing integration data');
+                  await SETTINGS_STORE.delete(SETTINGS_KEY_PULSOID_API);
+                  askForRelaunch = true;
+                  break;
+                case 'appCache':
+                  info('[Settings] Clearing application cache');
+                  await CACHE_STORE.clear();
+                  askForRelaunch = true;
+                  break;
+                case 'imageCache':
+                  info('[Settings] Clearing image cache');
+                  await invoke('clean_image_cache', { onlyExpired: false });
+                  break;
+                case 'miscData':
+                  info('[Settings] Clearing misc data');
+                  await SETTINGS_STORE.delete(SETTINGS_KEY_THEMING_SETTINGS);
+                  await SETTINGS_STORE.delete(SETTINGS_KEY_TELEMETRY_SETTINGS);
+                  askForRelaunch = true;
+                  break;
+                case 'logs':
+                  info('[Settings] Clearing log files');
+                  await invoke('clear_log_files');
+                  break;
+                case 'eventLog':
+                  info('[Settings] Clearing event log');
+                  await this.eventLogService.clearLog();
+                  break;
+              }
+            })
+          );
+        } finally {
+          info('[Settings] Finished clearing of persistent storage');
+          this.checkedPersistentStorageItems = [];
+          if (askForRelaunch) {
+            this.modalService
+              .addModal(
+                ConfirmModalComponent,
+                {
+                  title: 'settings.advanced.persistentData.relaunchModal.title',
+                  message: 'settings.advanced.persistentData.relaunchModal.message',
+                  confirmButtonText: 'settings.advanced.persistentData.relaunchModal.relaunch',
+                  showCancel: false,
+                },
+                { closeOnEscape: false }
+              )
+              .subscribe(async (data) => {
+                if (!data?.confirmed) return;
+                await relaunch();
+              });
+          }
         }
       });
   }
