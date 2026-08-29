@@ -103,6 +103,9 @@ with [SemVer](https://semver.org/) prerelease suffixes:
   remaining hotkeys from working again after you closed the hotkey selector
 - Fixed the shutdown sequence force-quitting SteamVR right away. It now asks SteamVR to close first,
   and only forces it after five seconds
+- Fixed cleared application settings being restored by the next settings change when you chose to
+  restart later instead of immediately. OyasumiVR now blocks all settings writes after clearing data,
+  and the restart prompt can no longer be dismissed
 - Various stability improvements
 
 ### Removed
