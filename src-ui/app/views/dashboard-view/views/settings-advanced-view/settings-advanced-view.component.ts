@@ -183,34 +183,34 @@ export class SettingsAdvancedViewComponent {
         info('[Settings] User triggered clearing of persistent storage');
         let askForRelaunch = false;
         try {
-          await Promise.all(
+          await Promise.allSettled(
             this.checkedPersistentStorageItems.map(async (item) => {
               switch (item) {
                 case 'appSettings':
                   info('[Settings] Clearing app settings');
-                  await SETTINGS_STORE.delete(SETTINGS_KEY_APP_SETTINGS);
                   askForRelaunch = true;
+                  await SETTINGS_STORE.delete(SETTINGS_KEY_APP_SETTINGS);
                   break;
                 case 'automationSettings':
                   info('[Settings] Clearing automation settings');
+                  askForRelaunch = true;
                   await SETTINGS_STORE.delete(SETTINGS_KEY_AUTOMATION_CONFIGS);
                   await SETTINGS_STORE.delete(SETTINGS_KEY_SLEEP_MODE);
-                  askForRelaunch = true;
                   break;
                 case 'vrcData':
                   info('[Settings] Clearing VRChat data');
-                  await SETTINGS_STORE.delete(SETTINGS_KEY_VRCHAT_API);
                   askForRelaunch = true;
+                  await SETTINGS_STORE.delete(SETTINGS_KEY_VRCHAT_API);
                   break;
                 case 'integrations':
                   info('[Settings] Clearing integration data');
-                  await SETTINGS_STORE.delete(SETTINGS_KEY_PULSOID_API);
                   askForRelaunch = true;
+                  await SETTINGS_STORE.delete(SETTINGS_KEY_PULSOID_API);
                   break;
                 case 'appCache':
                   info('[Settings] Clearing application cache');
-                  await CACHE_STORE.clear();
                   askForRelaunch = true;
+                  await CACHE_STORE.clear();
                   break;
                 case 'imageCache':
                   info('[Settings] Clearing image cache');
@@ -218,9 +218,9 @@ export class SettingsAdvancedViewComponent {
                   break;
                 case 'miscData':
                   info('[Settings] Clearing misc data');
+                  askForRelaunch = true;
                   await SETTINGS_STORE.delete(SETTINGS_KEY_THEMING_SETTINGS);
                   await SETTINGS_STORE.delete(SETTINGS_KEY_TELEMETRY_SETTINGS);
-                  askForRelaunch = true;
                   break;
                 case 'logs':
                   info('[Settings] Clearing log files');
@@ -233,6 +233,8 @@ export class SettingsAdvancedViewComponent {
               }
             })
           );
+        } catch (e) {
+          error('[Settings] Failed to clear persistent storage: ' + JSON.stringify(e));
         } finally {
           info('[Settings] Finished clearing of persistent storage');
           this.checkedPersistentStorageItems = [];
