@@ -854,12 +854,12 @@
     },
     "general": {
       "adminPrivileges": {
-        "description": "Beberapa fitur, seperti mengontrol batas daya GPU kamu, membutuhkan hak istimewa administrator. Mengaktifkan ini hanya memintanya sekali. Setelah itu OyasumiVR menyiapkan fitur-fitur ini tanpa bertanya lagi.",
+        "description": "Beberapa fitur, seperti mengontrol batas daya GPU Anda, membutuhkan hak istimewa administrator. Mengaktifkan ini hanya memintanya sekali. Setelah itu OyasumiVR menyiapkan fitur-fitur ini tanpa bertanya lagi.",
         "errors": {
           "installFailed": "OyasumiVR tidak dapat menyiapkan komponen yang membutuhkan hak istimewa administrator.",
           "notSupported": "Fitur-fitur ini membutuhkan akun administrator Windows. Akun ini tidak bisa diberi hak istimewa administrator, jadi fitur-fitur ini tetap tidak tersedia.",
           "promptDeclined": "Hak istimewa administrator tidak diberikan, jadi fitur-fitur ini tetap nonaktif.",
-          "taskFailed": "OyasumiVR tidak dapat memulai komponen yang membutuhkan hak istimewa administrator. OyasumiVR akan mencoba lagi saat kamu menjalankannya berikutnya."
+          "taskFailed": "OyasumiVR tidak dapat memulai komponen yang membutuhkan hak istimewa administrator. OyasumiVR akan mencoba lagi saat Anda menjalankannya berikutnya."
         },
         "label": "Izinkan fitur yang membutuhkan hak istimewa administrator",
         "title": "Hak Istimewa Administrator"

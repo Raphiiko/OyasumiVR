@@ -753,7 +753,7 @@
   "settings": {
     "general": {
       "adminPrivileges": {
-        "description": "Certaines fonctionnalités, comme la gestion des limites de puissance de ta carte graphique, nécessitent les droits administrateur. En activant ceci, ils ne sont demandés qu'une seule fois. Ensuite, OyasumiVR configure ces fonctionnalités sans redemander.",
+        "description": "Certaines fonctionnalités, comme la gestion des limites de puissance de votre carte graphique, nécessitent les droits administrateur. En activant ceci, ils ne sont demandés qu'une seule fois. Ensuite, OyasumiVR configure ces fonctionnalités sans redemander.",
         "errors": {
           "installFailed": "OyasumiVR n'a pas pu configurer le composant qui nécessite les droits administrateur.",
           "notSupported": "Ces fonctionnalités nécessitent un compte administrateur Windows. Ce compte ne peut pas obtenir les droits administrateur, elles restent donc indisponibles.",
