@@ -30,8 +30,9 @@ export class EventLogService {
       .subscribe(() => this.saveEventLog());
   }
 
-  public clearLog() {
+  public async clearLog() {
     this._eventLog.next(structuredClone(EVENT_LOG_DEFAULT));
+    await this.saveEventLog();
   }
 
   public logEvent(event: EventLogDraft) {
