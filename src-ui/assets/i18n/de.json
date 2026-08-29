@@ -1536,7 +1536,6 @@
         },
         "description": "Verwalte Daten, die OyasumiVR auf deiner Festplatte speichert",
         "relaunchModal": {
-          "message": "Die angefragten Daten wurden gelöscht. Es wird empfohlen OyasumiVR anschließend neuzustarten.\n\nMöchtest du dies nun Tuen? OyasumiVR nicht neuzustarten könnte ungewollte Folgen haben.",
           "relaunch": "OyasumiVR jetzt starten",
           "title": "OyasumiVR neustarten"
         },

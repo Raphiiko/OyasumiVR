@@ -1929,7 +1929,6 @@
         },
         "description": "Gestiona los datos que OyasumiVR almacena en tu disco",
         "relaunchModal": {
-          "message": "Los datos solicitados han sido borrados. Se recomienda reiniciar OyasumiVR después de hacer esto.\n\n¿Quieres hacerlo ahora? No reiniciar OyasumiVR podría tener efectos no deseados.",
           "relaunch": "Reinicia OyasumiVR ahora",
           "title": "Reiniciar OyasumiVR"
         },

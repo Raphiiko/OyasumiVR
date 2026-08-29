@@ -1929,7 +1929,6 @@
         },
         "description": "管理 OyasumiVR 儲存在你磁碟上的資料",
         "relaunchModal": {
-          "message": "已清除所請求的資料。建議在完成此操作後重新啟動 OyasumiVR。",
           "relaunch": "現在重新啟動 OyasumiVR",
           "title": "重新啟動 OyasumiVR"
         },

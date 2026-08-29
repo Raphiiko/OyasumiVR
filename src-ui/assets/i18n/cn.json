@@ -1928,7 +1928,6 @@
         },
         "description": "管理 OyasumiVR 存储在你磁盘上的数据",
         "relaunchModal": {
-          "message": "数据现在已经被清除了。建议在做完这些后，重新启动 OyasumiVR。不重新启动 OyasumiVR 可能会产生不必要的影响。",
           "relaunch": "现在就重启 OyasumiVR",
           "title": "重新启动 OyasumiVR"
         },

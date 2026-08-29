@@ -1960,6 +1960,7 @@
         "description": "Manage the data that OyasumiVR stores on your disk",
         "relaunchModal": {
           "message": "The requested data has been cleared. OyasumiVR needs to restart for this to take effect.",
+          "partialFailureMessage": "Some requested data could not be cleared. OyasumiVR still needs to restart.",
           "relaunch": "Restart OyasumiVR now",
           "title": "Restart OyasumiVR"
         },

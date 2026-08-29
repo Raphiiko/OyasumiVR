@@ -182,79 +182,80 @@ export class SettingsAdvancedViewComponent {
         if (!data?.confirmed) return;
         info('[Settings] User triggered clearing of persistent storage');
         let askForRelaunch = false;
-        try {
-          await Promise.allSettled(
-            this.checkedPersistentStorageItems.map(async (item) => {
-              switch (item) {
-                case 'appSettings':
-                  info('[Settings] Clearing app settings');
-                  askForRelaunch = true;
-                  await SETTINGS_STORE.delete(SETTINGS_KEY_APP_SETTINGS);
-                  break;
-                case 'automationSettings':
-                  info('[Settings] Clearing automation settings');
-                  askForRelaunch = true;
-                  await SETTINGS_STORE.delete(SETTINGS_KEY_AUTOMATION_CONFIGS);
-                  await SETTINGS_STORE.delete(SETTINGS_KEY_SLEEP_MODE);
-                  break;
-                case 'vrcData':
-                  info('[Settings] Clearing VRChat data');
-                  askForRelaunch = true;
-                  await SETTINGS_STORE.delete(SETTINGS_KEY_VRCHAT_API);
-                  break;
-                case 'integrations':
-                  info('[Settings] Clearing integration data');
-                  askForRelaunch = true;
-                  await SETTINGS_STORE.delete(SETTINGS_KEY_PULSOID_API);
-                  break;
-                case 'appCache':
-                  info('[Settings] Clearing application cache');
-                  askForRelaunch = true;
-                  await CACHE_STORE.clear();
-                  break;
-                case 'imageCache':
-                  info('[Settings] Clearing image cache');
-                  await invoke('clean_image_cache', { onlyExpired: false });
-                  break;
-                case 'miscData':
-                  info('[Settings] Clearing misc data');
-                  askForRelaunch = true;
-                  await SETTINGS_STORE.delete(SETTINGS_KEY_THEMING_SETTINGS);
-                  await SETTINGS_STORE.delete(SETTINGS_KEY_TELEMETRY_SETTINGS);
-                  break;
-                case 'logs':
-                  info('[Settings] Clearing log files');
-                  await invoke('clear_log_files');
-                  break;
-                case 'eventLog':
-                  info('[Settings] Clearing event log');
-                  await this.eventLogService.clearLog();
-                  break;
-              }
-            })
-          );
-        } catch (e) {
-          error('[Settings] Failed to clear persistent storage: ' + JSON.stringify(e));
-        } finally {
-          info('[Settings] Finished clearing of persistent storage');
-          this.checkedPersistentStorageItems = [];
-          if (askForRelaunch) {
-            this.modalService
-              .addModal(
-                ConfirmModalComponent,
-                {
-                  title: 'settings.advanced.persistentData.relaunchModal.title',
-                  message: 'settings.advanced.persistentData.relaunchModal.message',
-                  confirmButtonText: 'settings.advanced.persistentData.relaunchModal.relaunch',
-                  showCancel: false,
-                },
-                { closeOnEscape: false }
-              )
-              .subscribe(async (data) => {
-                if (!data?.confirmed) return;
-                await relaunch();
-              });
-          }
+        const results = await Promise.allSettled(
+          this.checkedPersistentStorageItems.map(async (item) => {
+            switch (item) {
+              case 'appSettings':
+                info('[Settings] Clearing app settings');
+                askForRelaunch = true;
+                await SETTINGS_STORE.delete(SETTINGS_KEY_APP_SETTINGS);
+                break;
+              case 'automationSettings':
+                info('[Settings] Clearing automation settings');
+                askForRelaunch = true;
+                await SETTINGS_STORE.delete(SETTINGS_KEY_AUTOMATION_CONFIGS);
+                await SETTINGS_STORE.delete(SETTINGS_KEY_SLEEP_MODE);
+                break;
+              case 'vrcData':
+                info('[Settings] Clearing VRChat data');
+                askForRelaunch = true;
+                await SETTINGS_STORE.delete(SETTINGS_KEY_VRCHAT_API);
+                break;
+              case 'integrations':
+                info('[Settings] Clearing integration data');
+                askForRelaunch = true;
+                await SETTINGS_STORE.delete(SETTINGS_KEY_PULSOID_API);
+                break;
+              case 'appCache':
+                info('[Settings] Clearing application cache');
+                askForRelaunch = true;
+                await CACHE_STORE.clear();
+                break;
+              case 'imageCache':
+                info('[Settings] Clearing image cache');
+                await invoke('clean_image_cache', { onlyExpired: false });
+                break;
+              case 'miscData':
+                info('[Settings] Clearing misc data');
+                askForRelaunch = true;
+                await SETTINGS_STORE.delete(SETTINGS_KEY_THEMING_SETTINGS);
+                await SETTINGS_STORE.delete(SETTINGS_KEY_TELEMETRY_SETTINGS);
+                break;
+              case 'logs':
+                info('[Settings] Clearing log files');
+                await invoke('clear_log_files');
+                break;
+              case 'eventLog':
+                info('[Settings] Clearing event log');
+                await this.eventLogService.clearLog();
+                break;
+            }
+          })
+        );
+        const failedClears = results.filter((result) => result.status === 'rejected');
+        for (const result of failedClears) {
+          error('[Settings] Failed to clear persistent storage: ' + JSON.stringify(result.reason));
+        }
+        info('[Settings] Finished clearing of persistent storage');
+        this.checkedPersistentStorageItems = [];
+        if (askForRelaunch) {
+          this.modalService
+            .addModal(
+              ConfirmModalComponent,
+              {
+                title: 'settings.advanced.persistentData.relaunchModal.title',
+                message: failedClears.length
+                  ? 'settings.advanced.persistentData.relaunchModal.partialFailureMessage'
+                  : 'settings.advanced.persistentData.relaunchModal.message',
+                confirmButtonText: 'settings.advanced.persistentData.relaunchModal.relaunch',
+                showCancel: false,
+              },
+              { closeOnEscape: false }
+            )
+            .subscribe(async (data) => {
+              if (!data?.confirmed) return;
+              await relaunch();
+            });
         }
       });
   }
