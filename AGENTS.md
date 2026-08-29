@@ -31,6 +31,11 @@ Add and change English strings only, in `src-ui/assets/i18n/en.json`. Translator
 locales. `npm run tl set` writes `en.json` alone, which is what you want. To rename or remove a key,
 use `npm run tl mv` or `npm run tl unset`, so the change reaches every locale file.
 
+## Desktop UI verification
+
+When a ticket changes user-visible desktop behavior, verify the real OyasumiVR window by following
+`docs/agents/desktop-ui-testing.md`.
+
 ## Comments
 
 A comment exists to make the code faster to read. That is the whole rule, and it holds in every
