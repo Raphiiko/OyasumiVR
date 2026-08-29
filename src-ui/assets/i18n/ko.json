@@ -1153,6 +1153,9 @@
   },
   "message-center": {
     "messages": {
+      "elevatedFeaturesUnavailable": {
+        "title": "관리자 권한을 사용할 수 없음"
+      },
       "manyLighthousesDetected": {
         "message": "베이스 스테이션이 많은 것 같아요!\n\n대부분의 블루투스 어댑터는 헤드폰 및 기타 주변기기와 같은 다른 블루투스 장치를 포함하여 최대 7개까지만 동시에 연결할 수 있다는 점에 유의해주세요.\n\n동시에 너무 많은 베이스 스테이션을 연결하거나 다른 블루투스 장치를 너무 많이 연결하면 OyasumiVR이 모든 베이스 스테이션을 제어하는 데 문제가 생길 수 있으니, 이 점도 기억해주세요!"
       }
@@ -1607,8 +1610,14 @@
     },
     "general": {
       "adminPrivileges": {
-        "description": "OyasumiVR은 GPU의 전력 제한을 제어할 수 있도록 하기 위해 관리자 권한이 필요해요. 이를 활성화함으로써 OyasumiVR은 부팅 시 관리자 권한을 요구하게 되어요.",
-        "label": "부팅 시 관리자 권한을 요구하기",
+        "description": "GPU의 전력 제한 제어처럼 일부 기능에는 관리자 권한이 필요해요. 이 옵션을 켜면 권한을 한 번만 요청해요. 그 뒤로는 OyasumiVR이 다시 묻지 않고 이 기능들을 설정해요.",
+        "errors": {
+          "installFailed": "OyasumiVR이 관리자 권한이 필요한 구성 요소를 설정하지 못했어요.",
+          "notSupported": "이 기능들에는 Windows 관리자 계정이 필요해요. 이 계정은 관리자 권한을 받을 수 없어서 계속 사용할 수 없어요.",
+          "promptDeclined": "관리자 권한이 부여되지 않아서 이 기능들은 꺼진 상태로 남아요.",
+          "taskFailed": "OyasumiVR이 관리자 권한이 필요한 구성 요소를 시작하지 못했어요. 다음에 OyasumiVR을 실행할 때 다시 시도해요."
+        },
+        "label": "관리자 권한이 필요한 기능 허용하기",
         "title": "관리자 권한"
       },
       "language": {

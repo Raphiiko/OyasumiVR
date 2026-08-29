@@ -1453,6 +1453,9 @@
       "unhide": "取消隐藏"
     },
     "messages": {
+      "elevatedFeaturesUnavailable": {
+        "title": "管理员权限不可用"
+      },
       "gpuAutomationsAfterburnerError": {
         "actions": {
           "disable": "禁用自动化"
@@ -2028,8 +2031,14 @@
     },
     "general": {
       "adminPrivileges": {
-        "description": "OyasumiVR 需要管理员权限才能设置 GPU 的功耗限制。 如果启用此功能，OyasumiVR 将在启动时请求管理员权限",
-        "label": "启动时请求管理员权限",
+        "description": "部分功能（例如控制 GPU 的功耗限制）需要管理员权限。启用后只会请求一次，之后 OyasumiVR 便会在不再询问的情况下设置这些功能。",
+        "errors": {
+          "installFailed": "OyasumiVR 无法设置需要管理员权限的组件。",
+          "notSupported": "这些功能需要 Windows 管理员账户。当前账户无法获得管理员权限，因此这些功能仍然不可用。",
+          "promptDeclined": "未授予管理员权限，因此这些功能保持关闭。",
+          "taskFailed": "OyasumiVR 无法启动需要管理员权限的组件，下次启动 OyasumiVR 时会再试一次。"
+        },
+        "label": "允许需要管理员权限的功能",
         "title": "管理员权限"
       },
       "language": {

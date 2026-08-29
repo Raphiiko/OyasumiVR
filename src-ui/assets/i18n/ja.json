@@ -1453,6 +1453,9 @@
       "unhide": "再表示"
     },
     "messages": {
+      "elevatedFeaturesUnavailable": {
+        "title": "管理者権限を利用できません"
+      },
       "gpuAutomationsAfterburnerError": {
         "actions": {
           "disable": "自動化を無効"
@@ -2028,8 +2031,14 @@
     },
     "general": {
       "adminPrivileges": {
-        "description": "OyasumiVRがGPUの電力制限を制御するためには管理者権限が必要です。有効にするとOyasumiVRは起動時に管理者権限を要求するようになります",
-        "label": "起動時に管理者権限を要求する",
+        "description": "GPU の電力制限の制御など、一部の機能には管理者権限が必要です。これを有効にすると、権限を一度だけ要求します。その後 OyasumiVR は再び尋ねることなくこれらの機能を設定します。",
+        "errors": {
+          "installFailed": "管理者権限が必要なコンポーネントを OyasumiVR がセットアップできませんでした。",
+          "notSupported": "これらの機能には Windows の管理者アカウントが必要です。このアカウントには管理者権限を付与できないため、利用できないままになります。",
+          "promptDeclined": "管理者権限が付与されなかったため、これらの機能はオフのままです。",
+          "taskFailed": "管理者権限が必要なコンポーネントを OyasumiVR が起動できませんでした。次に OyasumiVR を起動したときに再試行します。"
+        },
+        "label": "管理者権限が必要な機能を許可する",
         "title": "管理者権限"
       },
       "language": {

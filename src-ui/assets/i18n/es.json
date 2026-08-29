@@ -1454,6 +1454,9 @@
       "unhide": "Unhide"
     },
     "messages": {
+      "elevatedFeaturesUnavailable": {
+        "title": "Privilegios de administrador no disponibles"
+      },
       "gpuAutomationsAfterburnerError": {
         "actions": {
           "disable": "Disable Automations"
@@ -2029,8 +2032,14 @@
     },
     "general": {
       "adminPrivileges": {
-        "description": "OyasumiVR necesita privilegios de administrador para poder controlar los límites de potencia de tu GPU. Si habilitas esta opción, OyasumiVR te pedirá privilegios de administrador cuando se inicie.",
-        "label": "Solicitar privilegios de administrador al inicio",
+        "description": "Algunas funciones, como controlar los límites de potencia de tu GPU, necesitan privilegios de administrador. Al activarlo se piden una sola vez. Después OyasumiVR configura estas funciones sin volver a preguntar.",
+        "errors": {
+          "installFailed": "OyasumiVR no ha podido configurar el componente que necesita privilegios de administrador.",
+          "notSupported": "Estas funciones necesitan una cuenta de administrador de Windows. Esta cuenta no puede obtener privilegios de administrador, así que siguen sin estar disponibles.",
+          "promptDeclined": "No se han concedido privilegios de administrador, así que estas funciones siguen desactivadas.",
+          "taskFailed": "OyasumiVR no ha podido iniciar el componente que necesita privilegios de administrador. Lo intentará de nuevo la próxima vez que inicies OyasumiVR."
+        },
+        "label": "Permitir funciones que necesitan privilegios de administrador",
         "title": "Privilegios de administrador"
       },
       "language": {

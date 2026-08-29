@@ -1180,6 +1180,9 @@
   },
   "message-center": {
     "messages": {
+      "elevatedFeaturesUnavailable": {
+        "title": "Adminrechte nicht verfügbar"
+      },
       "manyLighthousesDetected": {
         "message": "Es scheint, als ob du viele Basisstationen hast\n\nBeachte, dass die meisten Bluetooth-Adapter nur 7 gleichzeitige Verbindungen verarbeiten können, einschließlich anderer Bluetooth-Geräte wie Kopfhörer und andere Peripheriegeräte.Denken Sie daran, dass OyasumiVR möglicherweise Probleme hat, alle Ihre Basisstationen zu steuern, wenn Sie zu viele von ihnen gleichzeitig angeschlossen haben oder zu viele andere Bluetooth-Geräte angeschlossen sind."
       }
@@ -1634,8 +1637,14 @@
     },
     "general": {
       "adminPrivileges": {
-        "description": "OyasumiVR benötigt Adminrechte um die Grafikkartenenergieeinstellungen zu kontrollieren. Wenn dies aktiviert ist wird OyasumiVR jedes mal beim Start nach der Berechtigung fragen.",
-        "label": "Frag nach Adminrechten beim Hochfahren",
+        "description": "Manche Funktionen, etwa die Steuerung der Energiegrenzen deiner GPU, brauchen Adminrechte. Wenn du das einschaltest, wird einmal danach gefragt. Danach richtet OyasumiVR diese Funktionen ein, ohne erneut zu fragen.",
+        "errors": {
+          "installFailed": "OyasumiVR konnte die Komponente, die Adminrechte braucht, nicht einrichten.",
+          "notSupported": "Diese Funktionen brauchen ein Windows-Administratorkonto. Dieses Konto kann keine Adminrechte bekommen, daher stehen sie nicht zur Verfügung.",
+          "promptDeclined": "Es wurden keine Adminrechte gewährt, daher bleiben diese Funktionen aus.",
+          "taskFailed": "OyasumiVR konnte die Komponente, die Adminrechte braucht, nicht starten. Beim nächsten Start von OyasumiVR wird es erneut versucht."
+        },
+        "label": "Funktionen erlauben, die Adminrechte brauchen",
         "title": "Adminrechte"
       },
       "language": {

@@ -555,6 +555,9 @@
       "moreInfo": "Plus d'informations"
     },
     "messages": {
+      "elevatedFeaturesUnavailable": {
+        "title": "Droits administrateur indisponibles"
+      },
       "gpuAutomationsSidecarNotRunning": {
         "actions": {
           "disable": "Désactiver les automatisations GPU",
@@ -750,8 +753,14 @@
   "settings": {
     "general": {
       "adminPrivileges": {
-        "description": "OyasumiVR a besoin des droits administrateurs pour gérer la consommation de votre GPU. Les privilèges seront demandés au démarrage du programme.",
-        "label": "Demander les droits administrateurs au démarrage",
+        "description": "Certaines fonctionnalités, comme la gestion des limites de puissance de ta carte graphique, nécessitent les droits administrateur. En activant ceci, ils ne sont demandés qu'une seule fois. Ensuite, OyasumiVR configure ces fonctionnalités sans redemander.",
+        "errors": {
+          "installFailed": "OyasumiVR n'a pas pu configurer le composant qui nécessite les droits administrateur.",
+          "notSupported": "Ces fonctionnalités nécessitent un compte administrateur Windows. Ce compte ne peut pas obtenir les droits administrateur, elles restent donc indisponibles.",
+          "promptDeclined": "Les droits administrateur n'ont pas été accordés, ces fonctionnalités restent donc désactivées.",
+          "taskFailed": "OyasumiVR n'a pas pu démarrer le composant qui nécessite les droits administrateur. Il réessaiera au prochain démarrage d'OyasumiVR."
+        },
+        "label": "Autoriser les fonctionnalités nécessitant les droits administrateur",
         "title": "Droits administrateur"
       },
       "language": {

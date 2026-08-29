@@ -1453,6 +1453,9 @@
       "unhide": "Tonen"
     },
     "messages": {
+      "elevatedFeaturesUnavailable": {
+        "title": "Beheerders rechten niet beschikbaar"
+      },
       "gpuAutomationsAfterburnerError": {
         "actions": {
           "disable": "Automatiseringen Uitschakelen"
@@ -2028,8 +2031,14 @@
     },
     "general": {
       "adminPrivileges": {
-        "description": "OyasumiVR heeft beheerders rechten nodig om de stroom limieten van je videokaart te kunnen beheren. Als je dit aanzet, zal OyasumiVR bij het opstarten altijd om beheerders rechten vragen.",
-        "label": "Vraag om beheerders rechten bij het opstarten",
+        "description": "Sommige functies, zoals het beheren van de stroom limieten van je GPU, hebben beheerders rechten nodig. Als je dit inschakelt, wordt er één keer om gevraagd. Daarna stelt OyasumiVR deze functies in zonder het opnieuw te vragen.",
+        "errors": {
+          "installFailed": "OyasumiVR kon het onderdeel dat beheerders rechten nodig heeft niet instellen.",
+          "notSupported": "Deze functies hebben een Windows beheerdersaccount nodig. Dit account kan geen beheerders rechten krijgen, dus ze blijven onbeschikbaar.",
+          "promptDeclined": "Er zijn geen beheerders rechten verleend, dus deze functies blijven uit.",
+          "taskFailed": "OyasumiVR kon het onderdeel dat beheerders rechten nodig heeft niet starten. Het probeert het opnieuw wanneer je OyasumiVR de volgende keer start."
+        },
+        "label": "Functies toestaan die beheerders rechten nodig hebben",
         "title": "Beheerders Rechten"
       },
       "language": {
