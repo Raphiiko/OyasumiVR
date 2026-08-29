@@ -72,12 +72,8 @@ export class HotkeySelectorModalComponent
           if (await this.hotkeyService.isValidHotkey(hotkey)) {
             this.stopListeningForKeys.next();
             this.success = true;
-            setTimeout(() => {
-              this.result = {
-                hotkey,
-              };
-              this.close();
-            }, 500);
+            this.result = { hotkey };
+            setTimeout(() => this.close(), 500);
           } else {
             this.key = undefined;
           }

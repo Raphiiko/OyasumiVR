@@ -1928,8 +1928,6 @@
         },
         "description": "Beheer de gegevens die OyasumiVR opslaat op je schijf",
         "relaunchModal": {
-          "later": "Doe ik later",
-          "message": "De geselecteerde gegevens zijn verwijderd. Het is aan te randen om OyasumiVR nu te herstarten.\n\nWil je dit nu doen? Als je OyasumiVR nu niet herstart kan dit ongewenste consequenties hebben.",
           "relaunch": "Herstart OyasumiVR nu",
           "title": "Herstart OyasumiVR"
         },

@@ -1,18 +1,6 @@
-//
-// Utility for storing store snapshots and restoring them in case of corruption
-//
-
-import { TranslocoService } from '@jsverse/transloco';
+import { invoke } from '@tauri-apps/api/core';
 import { appDataDir, join } from '@tauri-apps/api/path';
-import {
-  copyFile,
-  exists,
-  mkdir,
-  readTextFile,
-  remove,
-  rename,
-  writeTextFile,
-} from '@tauri-apps/plugin-fs';
+import { exists, readTextFile } from '@tauri-apps/plugin-fs';
 import { debug, error, info, warn } from '@tauri-apps/plugin-log';
 import { LazyStore } from '@tauri-apps/plugin-store';
 import { interval } from 'rxjs';
@@ -20,27 +8,33 @@ import { interval } from 'rxjs';
 const PROTECTOR_STORES: Record<string, StoreProtector> = {};
 const SNAPSHOT_INTERVAL = 30000;
 
+export async function serializeStoreContents(store: LazyStore): Promise<string> {
+  const entries = await store.entries();
+  return JSON.stringify(
+    entries.reduce((acc, e) => ((acc[e[0]] = e[1]), acc), {} as Record<string, unknown>)
+  );
+}
+
 export class StoreProtector {
   private lastSavedHash?: string;
-  private enabled = false;
-  private basePath?: string;
+  private snapshotPath?: string;
+  private recoveryInitialized = false;
+  private periodicSnapshotsStarted = false;
 
   constructor(
     private store: LazyStore,
     private storeName: string,
-    private storePath: string,
-    private translate: TranslocoService
+    private storePath: string
   ) {}
 
-  public async init() {
-    if (this.enabled || PROTECTOR_STORES[this.storeName]) {
+  public async initializeRecovery(restoreCorruption = true) {
+    if (this.recoveryInitialized || PROTECTOR_STORES[this.storeName]) {
       return;
     }
-    this.enabled = true;
+    this.recoveryInitialized = true;
     PROTECTOR_STORES[this.storeName] = this;
-    this.basePath = await join(await appDataDir(), 'StoreProtector');
-    await mkdir(this.basePath!, { recursive: true });
-    if (await this.isStoreCorrupted()) {
+    this.snapshotPath = await join(await appDataDir(), 'StoreProtector', this.storeName + '.dat');
+    if (restoreCorruption && (await this.isStoreCorrupted())) {
       warn(
         "[StoreProtector] Detected possible corruption in store '" +
           this.storeName +
@@ -48,24 +42,45 @@ export class StoreProtector {
       );
       if (!(await this.restoreSnapshot())) {
         error(
-          "[StoreProtector] No available snapshot found for store '" +
+          "[StoreProtector] No viable snapshot found for store '" +
             this.storeName +
             "'. Corruption cannot be restored."
         );
       }
     }
-    interval(SNAPSHOT_INTERVAL).subscribe(() => this.saveSnapshot());
+  }
+
+  // Requires initializeRecovery to have finished, so snapshots never race recovery
+  public startPeriodicSnapshots() {
+    if (this.periodicSnapshotsStarted || !this.recoveryInitialized) {
+      return;
+    }
+    this.periodicSnapshotsStarted = true;
+    interval(SNAPSHOT_INTERVAL).subscribe(() => {
+      this.saveSnapshot().catch((e) =>
+        error(
+          "[StoreProtector] Failed to save snapshot for store '" +
+            this.storeName +
+            "': " +
+            JSON.stringify(e)
+        )
+      );
+    });
   }
 
   public async hasAvailableSnapshot(): Promise<boolean> {
-    return exists(await join(this.basePath!, this.storeName + '.dat'));
+    if (!this.snapshotPath) return false;
+    return exists(this.snapshotPath);
   }
 
   public async restoreSnapshot(): Promise<boolean> {
-    const snapshotPath = await join(this.basePath!, this.storeName + '.dat');
-    if (!(await exists(snapshotPath))) return false;
+    if (!(await this.hasAvailableSnapshot())) return false;
     info("[StoreProtector] Restoring snapshot for store '" + this.storeName + "'");
-    await copyFile(snapshotPath, await join(await appDataDir(), this.storePath));
+    const restored = await invoke<boolean>('store_safety_restore_snapshot', {
+      storeName: this.storeName,
+      storeFileName: this.storePath,
+    });
+    if (!restored) return false;
     await this.store.reload({ ignoreDefaults: true });
     info("[StoreProtector] Successfully restored snapshot for store '" + this.storeName + "'");
     return true;
@@ -87,43 +102,18 @@ export class StoreProtector {
       );
       return true;
     }
-
-    return false;
   }
 
   private async saveSnapshot() {
-    if (!this.enabled) return;
-    // Obtain the store data
-    const storeData = await this.store
-      .entries()
-      .then((entries) =>
-        entries.reduce((acc, e) => ((acc[e[0]] = e[1]), acc), {} as Record<string, unknown>)
-      );
-    const storeDataString = JSON.stringify(storeData);
-    const finalPath = await join(this.basePath!, this.storeName + '.dat');
-    // Calculate a hash for the store data
+    if (!this.recoveryInitialized || !this.snapshotPath) return;
+    const storeDataString = await serializeStoreContents(this.store);
     const storeDataHash = await this.generateHash(storeDataString);
-    // If we wrote the same data last time, no need to save again
-    if ((await exists(finalPath)) && this.lastSavedHash === storeDataHash) return;
-    // Save the snapshot data to a temporary file
-    const preValidationPath = await join(this.basePath!, this.storeName + '.pre.dat');
-    await writeTextFile(preValidationPath, storeDataString);
-    // Read the pre-validation data and compare it to the current data
-    try {
-      const preValidationData = await readTextFile(preValidationPath);
-      if (preValidationData !== storeDataString) {
-        throw new Error('Pre-validation data does not match current data');
-      }
-    } catch (e) {
-      error("Failed to save snapshot for store '" + this.storeName + "': " + JSON.stringify(e));
-      await remove(preValidationPath);
-      return;
-    }
-    // Move the temporary file to the final file
-    await rename(preValidationPath, finalPath);
-    // Update the last saved hash
+    if ((await exists(this.snapshotPath)) && this.lastSavedHash === storeDataHash) return;
+    await invoke('store_safety_save_snapshot', {
+      storeName: this.storeName,
+      contents: storeDataString,
+    });
     this.lastSavedHash = storeDataHash;
-    // Log the success
     debug("[StoreProtector] Successfully saved snapshot for store '" + this.storeName + "'");
   }
 

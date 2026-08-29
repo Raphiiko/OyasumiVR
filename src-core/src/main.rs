@@ -18,6 +18,7 @@ mod os;
 mod osc;
 mod overlay_sidecar;
 mod steam;
+mod store_safety;
 mod system_tray;
 mod telemetry;
 mod utils;
@@ -149,7 +150,10 @@ fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
         .with_panic_hook(Box::new(|client, info, msg| {
             let location = info
                 .location()
-                .map(|loc| format!("{}:{}:{}", loc.file(), loc.line(), loc.column()))
+                .map(|loc| {
+                    let file = panic_location_file(loc.file());
+                    format!("{file}:{}:{}", loc.line(), loc.column())
+                })
                 .unwrap_or_default();
 
             // Upload crash report if telemetry is enabled
@@ -172,6 +176,16 @@ fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
             let _ = std::fs::write(panic_log_path, format!("{msg} ({location})\n"));
         }))
         .build()
+}
+
+fn panic_location_file(file: &str) -> String {
+    let file = file.replace('\\', "/");
+    match file.split_once("/Users/") {
+        Some((_, path)) => path
+            .split_once('/')
+            .map_or(path.to_owned(), |(_, path)| path.to_owned()),
+        None => file,
+    }
 }
 
 fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
@@ -289,8 +303,8 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     os::init_sound_playback().await;
     // Initialize audio device manager
     os::init_audio_device_manager().await;
-    // Initialize Lighthouse Bluetooth
-    lighthouse::init().await;
+    // Initialize Lighthouse Bluetooth without delaying startup
+    drop(tokio::spawn(lighthouse::init()));
     // Initialize Hardware modules
     hardware::init().await;
     // Initialize log commands
@@ -424,6 +438,14 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         commands::time::get_sunrise_sunset_time,
         commands::secrets::protect_secret,
         commands::secrets::unprotect_secret,
+        store_safety::commands::store_safety_save_snapshot,
+        store_safety::commands::store_safety_read_snapshot,
+        store_safety::commands::store_safety_restore_snapshot,
+        store_safety::commands::store_safety_create_checkpoint,
+        store_safety::commands::store_safety_list_checkpoints,
+        store_safety::commands::store_safety_read_checkpoint,
+        store_safety::commands::store_safety_quarantine_store,
+        store_safety::commands::store_safety_replace_store,
         grpc::commands::get_core_grpc_port,
         grpc::commands::get_core_grpc_web_port,
         telemetry::commands::set_telemetry_enabled,

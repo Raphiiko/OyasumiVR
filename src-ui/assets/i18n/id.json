@@ -834,8 +834,6 @@
         },
         "description": "Mengelola data yang disimpan OyasumiVR di disk Anda",
         "relaunchModal": {
-          "later": "Akan kulakukan nanti.",
-          "message": "Data yang diminta telah dihapus. Disarankan untuk memulai ulang OyasumiVR setelah melakukan ini.\n\nApakah Anda ingin melakukan ini sekarang? Tidak memulai ulang OyasumiVR dapat menimbulkan efek yang tidak diinginkan.",
           "relaunch": "Mulai ulang OyasumiVR Sekarang",
           "title": "Mulai ulang OyasumiVR"
         },

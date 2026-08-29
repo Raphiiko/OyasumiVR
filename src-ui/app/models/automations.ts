@@ -1,12 +1,13 @@
-import { OVRDeviceClass } from './ovr-device';
-import { OscScript } from './osc-script';
-import { SleepingPose } from './sleeping-pose';
+import type { OVRDeviceClass } from './ovr-device';
+import type { OscScript } from './osc-script';
+import type { SleepingPose } from './sleeping-pose';
 import { UserStatus } from './vrchat';
-import { AudioDeviceParsedName, AudioDeviceType } from './audio-device';
-import { PersistedAvatar } from './vrchat';
+import type { AudioDeviceParsedName, AudioDeviceType } from './audio-device';
+import type { PersistedAvatar } from './vrchat';
 import { FrameLimiterPresets } from '../services/frame-limiter.service';
-import { getBuiltInNotificationSound, NotificationSound } from './notification-sounds';
-import { DeviceSelection } from './device-manager';
+import { getBuiltInNotificationSound } from './notification-sounds';
+import type { NotificationSound } from './notification-sounds';
+import type { DeviceSelection } from './device-manager';
 
 export type AutomationType =
   | 'GPU_POWER_LIMITS'

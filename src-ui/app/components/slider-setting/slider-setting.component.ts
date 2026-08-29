@@ -16,6 +16,7 @@ import { fade } from '../../utils/animations';
 import { debounceTime, Subject } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SliderComponent, SliderStyle } from '../slider/slider.component';
+import { clamp, ensurePrecision, floatPrecision } from '../../utils/number-utils';
 
 @Component({
   selector: 'app-slider-setting',
@@ -66,9 +67,16 @@ export class SliderSettingComponent implements OnInit, OnChanges {
     this.input$
       .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
       .subscribe((strValue) => {
-        let value = parseInt(strValue, 10);
-        if (isNaN(value)) return;
-        value = Math.max(this.min, Math.min(this.max, value));
+        let value = parseFloat(strValue);
+        if (!Number.isFinite(value)) return;
+        const precision = Math.max(floatPrecision(this.min), floatPrecision(this.step));
+        const quotient = (value - this.min) / this.step;
+        const epsilon = Number.EPSILON * 4 * Math.max(1, Math.abs(quotient));
+        value = clamp(
+          ensurePrecision(Math.round(quotient + epsilon) * this.step + this.min, precision),
+          this.min,
+          this.max
+        );
         if (value === this.value) return;
         this.value = value;
         this.valueChange.emit(value);

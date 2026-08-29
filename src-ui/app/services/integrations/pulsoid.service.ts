@@ -31,7 +31,6 @@ import {
   PULSOID_API_SETTINGS_DEFAULT,
   PulsoidApiSettings,
 } from '../../models/pulsoid-api-settings';
-import { migratePulsoidApiSettings } from '../../migrations/pulsoid-api-settings.migrations';
 import * as shell from '@tauri-apps/plugin-shell';
 import { protectSecret, unprotectSecret } from '../../utils/secrets';
 
@@ -254,22 +253,22 @@ export class PulsoidService {
   private async loadSettings() {
     let settings: PulsoidApiSettings | undefined =
       await SETTINGS_STORE.get<PulsoidApiSettings>(SETTINGS_KEY_PULSOID_API);
-    settings = settings ? await migratePulsoidApiSettings(settings) : this.settings.value;
+    if (!settings) settings = this.settings.value;
     const plain = await unprotectSecret(settings.accessToken);
     this.accessToken.next(plain);
     this.storedAccessToken =
       settings.accessToken && plain ? { plain, protected: settings.accessToken } : null;
     // Handle token expiry
-    if (settings.expiresAt && settings.expiresAt < Date.now() / 1000) {
+    const expired = !!settings.expiresAt && settings.expiresAt < Date.now() / 1000;
+    if (expired) {
       info('[Pulsoid] Token expired, throwing it away.');
       this.accessToken.next(null);
       settings.accessToken = undefined;
       settings.expiresAt = undefined;
       // TODO: Let user in some way know that their existing login has expired, and they should reauthenticate
     }
-    // Finish loading settings & write changes to disk
     this.settings.next(settings);
-    await this.saveSettings();
+    if (expired) await this.saveSettings();
   }
 
   private async updateSettings(settings: Partial<PulsoidApiSettings>) {

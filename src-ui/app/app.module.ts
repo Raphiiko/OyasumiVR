@@ -271,6 +271,7 @@ import { SleepDevicePowerAutomationsService } from './services/power-automations
 import { TurnOffDevicesWhenChargingAutomationService } from './services/power-automations/turn-off-devices-when-charging-automation.service';
 import { VRCXService } from './services/vrcx.service';
 import { StoreSnapshotService } from './services/store-snapshot.service';
+import { MigrationCoordinatorService } from './services/migration-coordinator.service';
 
 [
   localeEN,
@@ -514,6 +515,7 @@ export class AppModule {
     private frameLimiterService: FrameLimiterService,
     private deviceManagerService: DeviceManagerService,
     private storeSnapshotService: StoreSnapshotService,
+    private migrationCoordinatorService: MigrationCoordinatorService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -603,8 +605,12 @@ export class AppModule {
           if (!(await this.elevationCheck())) return;
           const initStartTime = Date.now();
           await this.logInit('Initializing dev debug services', this.developerDebugService.init());
-          // Set up store snapshots (and restore them if needed)
-          await this.logInit('Initializing store snapshots', this.storeSnapshotService.init());
+          await this.logInit(
+            'Initializing store recovery',
+            this.storeSnapshotService.initializeRecovery()
+          );
+          await this.logInit('Migrating store schemas', this.migrationCoordinatorService.run());
+          this.storeSnapshotService.enablePeriodicSnapshots();
           // Clean cache
           await this.logInit('Cleaning cache', CachedValue.cleanCache()).catch(() => {}); // Allow initialization to continue if failed
           // Preload assets (Not blocking)

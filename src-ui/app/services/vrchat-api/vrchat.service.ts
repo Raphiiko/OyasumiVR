@@ -11,7 +11,6 @@ import {
   VRChatAccountProfile,
   VRChatApiSettings,
 } from '../../models/vrchat-api-settings';
-import { migrateVRChatApiSettings } from '../../migrations/vrchat-api-settings.migrations';
 import { BehaviorSubject, combineLatest, filter, firstValueFrom, map, Observable } from 'rxjs';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { AvatarEx, UserStatus, WorldContext } from '../../models/vrchat';
@@ -289,14 +288,8 @@ export class VRChatService {
 
   private async loadSettings(): Promise<void> {
     const stored = await SETTINGS_STORE.get<VRChatApiSettings>(SETTINGS_KEY_VRCHAT_API);
-    let settings = stored
-      ? await migrateVRChatApiSettings(stored)
-      : structuredClone(VRCHAT_API_SETTINGS_DEFAULT);
-    settings = normalizeVRChatProfiles(await this.loadProfileSecrets(settings));
-    await this.saveSettings(settings).catch((cause) =>
-      error(`[VRChat] Failed to persist loaded settings: ${cause}`)
-    );
-    this.settingsSubject.next(settings);
+    const settings = stored ?? structuredClone(VRCHAT_API_SETTINGS_DEFAULT);
+    this.settingsSubject.next(normalizeVRChatProfiles(await this.loadProfileSecrets(settings)));
   }
 
   private async loadProfileSecrets(settings: VRChatApiSettings): Promise<VRChatApiSettings> {

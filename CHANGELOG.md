@@ -58,8 +58,19 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Fixed the Windows notification provider not showing any notifications
 - Fixed the VR overlay failing to start when system-wide ad blockers or proxies intercepted
   OyasumiVR's local connection
+- Fixed settings being reset when upgrading from very old versions of OyasumiVR, or when switching
+  between release and beta builds
 - Fixed OyasumiVR using up an entire CPU core when Windows stopped reporting the microphone level
   for the capture device used by the system microphone automations
+- Fixed OyasumiVR looking up your sunrise and sunset times up to three times when it started
+- Fixed the main UI waiting 50 ms after the core's HTTP port was already available, so font
+  loading starts sooner
+- Fixed the event log recording the wrong brightness values for brightness automations, when
+  advanced mode was enabled
+- Fixed the event log recording a headset hardware brightness change on headsets that have no
+  hardware brightness control
+- Fixed the event log showing an internal label instead of the reason for headset brightness changes
+  at sunset and sunrise
 - The VR overlay now writes the reason for an unexpected shutdown to its log file, instead of stopping without a trace
 - Changing the VR overlay's GPU acceleration setting now restarts it right away, instead of waiting out the retry delay
   of up to five minutes
@@ -80,6 +91,18 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Fixed OyasumiVR getting stuck on "Initializing" for SteamVR, which only a restart cleared
 - Fixed the VR overlay crashing on startup, and when SteamVR was restarted
 - The VR overlay now stops with an explanation in its log when its browser engine cannot start, instead of crashing
+- Fixed fractional values typed into slider settings, such as chaperone fade distances, being truncated
+- Fixed canceling the hotkey selector clearing the hotkey from view while the old hotkey stayed active
+- The hotkey selector no longer shows a hotkey that Windows refused to register
+- Fixed closing the hotkey selector with Escape discarding the hotkey you just pressed
+- Fixed a hotkey you set running its action twice, until you restarted OyasumiVR
+- Fixed OyasumiVR dropping an action's working hotkey when it could not register the replacement
+- Fixed changing a hotkey sometimes leaving the old key combination claimed system-wide, where it did
+  nothing and could not be freed until you restarted OyasumiVR
+- Fixed one hotkey being unavailable, because another application had taken it, stopping your
+  remaining hotkeys from working again after you closed the hotkey selector
+- Fixed the shutdown sequence force-quitting SteamVR right away. It now asks SteamVR to close first,
+  and only forces it after five seconds
 - Various stability improvements
 
 ### Removed

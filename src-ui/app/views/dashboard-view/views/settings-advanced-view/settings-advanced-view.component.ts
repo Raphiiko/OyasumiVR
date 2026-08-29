@@ -182,34 +182,36 @@ export class SettingsAdvancedViewComponent {
         if (!data?.confirmed) return;
         info('[Settings] User triggered clearing of persistent storage');
         let askForRelaunch = false;
-        await Promise.all(
+        const results = await Promise.allSettled(
           this.checkedPersistentStorageItems.map(async (item) => {
             switch (item) {
               case 'appSettings':
                 info('[Settings] Clearing app settings');
-                await SETTINGS_STORE.delete(SETTINGS_KEY_APP_SETTINGS);
                 askForRelaunch = true;
+                await SETTINGS_STORE.delete(SETTINGS_KEY_APP_SETTINGS);
                 break;
               case 'automationSettings':
                 info('[Settings] Clearing automation settings');
-                await SETTINGS_STORE.delete(SETTINGS_KEY_AUTOMATION_CONFIGS);
-                await SETTINGS_STORE.delete(SETTINGS_KEY_SLEEP_MODE);
                 askForRelaunch = true;
+                await SETTINGS_STORE.deleteAll([
+                  SETTINGS_KEY_AUTOMATION_CONFIGS,
+                  SETTINGS_KEY_SLEEP_MODE,
+                ]);
                 break;
               case 'vrcData':
                 info('[Settings] Clearing VRChat data');
-                await SETTINGS_STORE.delete(SETTINGS_KEY_VRCHAT_API);
                 askForRelaunch = true;
+                await SETTINGS_STORE.delete(SETTINGS_KEY_VRCHAT_API);
                 break;
               case 'integrations':
                 info('[Settings] Clearing integration data');
-                await SETTINGS_STORE.delete(SETTINGS_KEY_PULSOID_API);
                 askForRelaunch = true;
+                await SETTINGS_STORE.delete(SETTINGS_KEY_PULSOID_API);
                 break;
               case 'appCache':
                 info('[Settings] Clearing application cache');
-                await CACHE_STORE.clear();
                 askForRelaunch = true;
+                await CACHE_STORE.clear();
                 break;
               case 'imageCache':
                 info('[Settings] Clearing image cache');
@@ -217,8 +219,11 @@ export class SettingsAdvancedViewComponent {
                 break;
               case 'miscData':
                 info('[Settings] Clearing misc data');
-                await SETTINGS_STORE.delete(SETTINGS_KEY_THEMING_SETTINGS);
-                await SETTINGS_STORE.delete(SETTINGS_KEY_TELEMETRY_SETTINGS);
+                askForRelaunch = true;
+                await SETTINGS_STORE.deleteAll([
+                  SETTINGS_KEY_THEMING_SETTINGS,
+                  SETTINGS_KEY_TELEMETRY_SETTINGS,
+                ]);
                 break;
               case 'logs':
                 info('[Settings] Clearing log files');
@@ -231,16 +236,26 @@ export class SettingsAdvancedViewComponent {
             }
           })
         );
+        const failedClears = results.filter((result) => result.status === 'rejected');
+        for (const result of failedClears) {
+          error('[Settings] Failed to clear persistent storage: ' + JSON.stringify(result.reason));
+        }
         info('[Settings] Finished clearing of persistent storage');
         this.checkedPersistentStorageItems = [];
         if (askForRelaunch) {
           this.modalService
-            .addModal(ConfirmModalComponent, {
-              title: 'settings.advanced.persistentData.relaunchModal.title',
-              message: 'settings.advanced.persistentData.relaunchModal.message',
-              confirmButtonText: 'settings.advanced.persistentData.relaunchModal.relaunch',
-              cancelButtonText: 'settings.advanced.persistentData.relaunchModal.later',
-            })
+            .addModal(
+              ConfirmModalComponent,
+              {
+                title: 'settings.advanced.persistentData.relaunchModal.title',
+                message: failedClears.length
+                  ? 'settings.advanced.persistentData.relaunchModal.partialFailureMessage'
+                  : 'settings.advanced.persistentData.relaunchModal.message',
+                confirmButtonText: 'settings.advanced.persistentData.relaunchModal.relaunch',
+                showCancel: false,
+              },
+              { closeOnEscape: false }
+            )
             .subscribe(async (data) => {
               if (!data?.confirmed) return;
               await relaunch();
