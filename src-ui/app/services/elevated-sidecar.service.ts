@@ -75,12 +75,6 @@ export class ElevatedSidecarService {
     }
   }
 
-  async start() {
-    if (await this.checkIfStarted()) return;
-    info('[ElevatedSidecar] Starting elevated sidecar...');
-    return await invoke('start_elevated_sidecar');
-  }
-
   async checkIfStarted(): Promise<boolean> {
     return await invoke('elevated_sidecar_started');
   }

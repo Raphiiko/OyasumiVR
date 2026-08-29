@@ -393,7 +393,6 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         elevated_sidecar::commands::elevated_sidecar_started,
         elevated_sidecar::commands::elevated_features_enable,
         elevated_sidecar::commands::elevated_features_disable,
-        elevated_sidecar::commands::start_elevated_sidecar,
         elevated_sidecar::commands::elevated_sidecar_get_grpc_web_port,
         elevated_sidecar::commands::elevated_sidecar_get_grpc_port,
         overlay_sidecar::commands::start_overlay_sidecar,
