@@ -1509,8 +1509,6 @@
         },
         "description": "OyasumiVR이 디스크에 저장하는 데이터를 관리합니다.",
         "relaunchModal": {
-          "later": "나중에 재시작",
-          "message": "요청된 데이터가 삭제되었어요. 이 작업을 수행한 후 OyasumiVR을 다시 시작하는 것을 추천해요.\n\n지금 다시 시작하시겠어요? OyasumiVR을 다시 시작하지 않으면 원치 않는 결과가 발생할 수 있어요.",
           "relaunch": "지금 재시작",
           "title": "OyasumiVR 재시작"
         },
