@@ -290,8 +290,8 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     os::init_sound_playback().await;
     // Initialize audio device manager
     os::init_audio_device_manager().await;
-    // Initialize Lighthouse Bluetooth
-    lighthouse::init().await;
+    // Initialize Lighthouse Bluetooth without delaying startup
+    drop(tokio::spawn(lighthouse::init()));
     // Initialize Hardware modules
     hardware::init().await;
     // Initialize log commands
