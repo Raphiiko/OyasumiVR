@@ -1928,7 +1928,6 @@
         },
         "description": "OyasumiVRがローカルディスクに保存するデータの管理ができます。",
         "relaunchModal": {
-          "later": "あとでやる",
           "message": "要求されたデータはクリアされました。OyasumiVRを再起動してください。再起動せず使用した場合、不具合の原因になる可能性があります。",
           "relaunch": "OyasumiVRを今すぐ再起動する",
           "title": "OyasumiVRを再起動する"

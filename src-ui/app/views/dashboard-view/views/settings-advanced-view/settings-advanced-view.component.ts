@@ -219,6 +219,7 @@ export class SettingsAdvancedViewComponent {
                 info('[Settings] Clearing misc data');
                 await SETTINGS_STORE.delete(SETTINGS_KEY_THEMING_SETTINGS);
                 await SETTINGS_STORE.delete(SETTINGS_KEY_TELEMETRY_SETTINGS);
+                askForRelaunch = true;
                 break;
               case 'logs':
                 info('[Settings] Clearing log files');
@@ -235,12 +236,16 @@ export class SettingsAdvancedViewComponent {
         this.checkedPersistentStorageItems = [];
         if (askForRelaunch) {
           this.modalService
-            .addModal(ConfirmModalComponent, {
-              title: 'settings.advanced.persistentData.relaunchModal.title',
-              message: 'settings.advanced.persistentData.relaunchModal.message',
-              confirmButtonText: 'settings.advanced.persistentData.relaunchModal.relaunch',
-              cancelButtonText: 'settings.advanced.persistentData.relaunchModal.later',
-            })
+            .addModal(
+              ConfirmModalComponent,
+              {
+                title: 'settings.advanced.persistentData.relaunchModal.title',
+                message: 'settings.advanced.persistentData.relaunchModal.message',
+                confirmButtonText: 'settings.advanced.persistentData.relaunchModal.relaunch',
+                showCancel: false,
+              },
+              { closeOnEscape: false }
+            )
             .subscribe(async (data) => {
               if (!data?.confirmed) return;
               await relaunch();
