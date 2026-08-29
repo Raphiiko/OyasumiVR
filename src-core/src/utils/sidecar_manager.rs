@@ -23,6 +23,24 @@ fn process_is_running(pid: u32) -> bool {
     }
 }
 
+/// How long a sidecar gets to exit after it acknowledges a stop. The elevated sidecar answers the
+/// request before it exits, so the answer arrives while the process is still alive.
+const STOP_GRACE: Duration = Duration::from_secs(2);
+
+/// Waits for a process to exit, up to `grace`. True when it is gone.
+async fn wait_for_exit(pid: u32, grace: Duration) -> bool {
+    let deadline = tokio::time::Instant::now() + grace;
+    loop {
+        if !process_is_running(pid) {
+            return true;
+        }
+        if tokio::time::Instant::now() >= deadline {
+            return false;
+        }
+        tokio::time::sleep(Duration::from_millis(50)).await;
+    }
+}
+
 /// Resolves a configured sidecar path for the shell, which needs an absolute path and backslashes
 /// where `Command` accepts neither.
 fn absolute(path: &std::path::Path) -> std::path::PathBuf {
@@ -388,11 +406,11 @@ impl SidecarManager {
         if let Some(child) = self.sidecar_child.lock().await.as_mut() {
             let _ = child.kill();
         } else if let Some(pid) = *self.sidecar_pid.lock().await {
-            // cannot be terminated from here, so a stop it ignored leaves it running
-            if pid != 0 && process_is_running(pid) {
+            // an elevated sidecar cannot be terminated from here, so all this can do is report
+            if pid != 0 && !wait_for_exit(pid, STOP_GRACE).await {
                 warn!(
-                    "[Core] {} sidecar (pid {}) did not stop when asked",
-                    self.sidecar_id, pid
+                    "[Core] {} sidecar (pid {}) did not exit within {:?} of being asked to stop",
+                    self.sidecar_id, pid, STOP_GRACE
                 );
             }
         }
@@ -547,6 +565,22 @@ mod tests {
     use super::absolute;
     use std::path::Path;
     use std::sync::atomic::Ordering;
+
+    #[tokio::test]
+    async fn waiting_on_a_process_that_is_gone_returns_at_once() {
+        // a pid this high is not a live process, so the wait must not burn its grace period
+        let started = std::time::Instant::now();
+        assert!(super::wait_for_exit(0xFFFF_FFF0, std::time::Duration::from_secs(5)).await);
+        assert!(started.elapsed() < std::time::Duration::from_secs(1));
+    }
+
+    #[tokio::test]
+    async fn waiting_on_a_process_that_stays_gives_up() {
+        // our own process outlives the grace, which is the sidecar that ignored the stop
+        assert!(
+            !super::wait_for_exit(std::process::id(), std::time::Duration::from_millis(150)).await
+        );
+    }
 
     #[test]
     fn relative_sidecar_paths_become_absolute_with_backslashes() {
