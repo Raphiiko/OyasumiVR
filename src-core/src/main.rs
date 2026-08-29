@@ -150,7 +150,10 @@ fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
         .with_panic_hook(Box::new(|client, info, msg| {
             let location = info
                 .location()
-                .map(|loc| format!("{}:{}:{}", loc.file(), loc.line(), loc.column()))
+                .map(|loc| {
+                    let file = panic_location_file(loc.file());
+                    format!("{file}:{}:{}", loc.line(), loc.column())
+                })
                 .unwrap_or_default();
 
             // Upload crash report if telemetry is enabled
@@ -173,6 +176,16 @@ fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
             let _ = std::fs::write(panic_log_path, format!("{msg} ({location})\n"));
         }))
         .build()
+}
+
+fn panic_location_file(file: &str) -> String {
+    let file = file.replace('\\', "/");
+    match file.split_once("/Users/") {
+        Some((_, path)) => path
+            .split_once('/')
+            .map_or(path.to_owned(), |(_, path)| path.to_owned()),
+        None => file,
+    }
 }
 
 fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
