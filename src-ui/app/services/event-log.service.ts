@@ -32,7 +32,8 @@ export class EventLogService {
 
   public async clearLog() {
     this._eventLog.next(structuredClone(EVENT_LOG_DEFAULT));
-    await this.saveEventLog();
+    await EVENT_LOG_STORE.set('EVENT_LOG', this._eventLog.value);
+    await EVENT_LOG_STORE.save();
   }
 
   public logEvent(event: EventLogDraft) {
