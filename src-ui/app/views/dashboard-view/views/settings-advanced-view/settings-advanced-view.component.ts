@@ -193,9 +193,9 @@ export class SettingsAdvancedViewComponent {
               case 'automationSettings':
                 info('[Settings] Clearing automation settings');
                 askForRelaunch = true;
-                await Promise.all([
-                  SETTINGS_STORE.delete(SETTINGS_KEY_AUTOMATION_CONFIGS),
-                  SETTINGS_STORE.delete(SETTINGS_KEY_SLEEP_MODE),
+                await SETTINGS_STORE.deleteAll([
+                  SETTINGS_KEY_AUTOMATION_CONFIGS,
+                  SETTINGS_KEY_SLEEP_MODE,
                 ]);
                 break;
               case 'vrcData':
@@ -220,9 +220,9 @@ export class SettingsAdvancedViewComponent {
               case 'miscData':
                 info('[Settings] Clearing misc data');
                 askForRelaunch = true;
-                await Promise.all([
-                  SETTINGS_STORE.delete(SETTINGS_KEY_THEMING_SETTINGS),
-                  SETTINGS_STORE.delete(SETTINGS_KEY_TELEMETRY_SETTINGS),
+                await SETTINGS_STORE.deleteAll([
+                  SETTINGS_KEY_THEMING_SETTINGS,
+                  SETTINGS_KEY_TELEMETRY_SETTINGS,
                 ]);
                 break;
               case 'logs':
