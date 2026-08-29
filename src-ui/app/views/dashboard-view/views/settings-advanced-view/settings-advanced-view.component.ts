@@ -193,8 +193,10 @@ export class SettingsAdvancedViewComponent {
               case 'automationSettings':
                 info('[Settings] Clearing automation settings');
                 askForRelaunch = true;
-                await SETTINGS_STORE.delete(SETTINGS_KEY_AUTOMATION_CONFIGS);
-                await SETTINGS_STORE.delete(SETTINGS_KEY_SLEEP_MODE);
+                await Promise.all([
+                  SETTINGS_STORE.delete(SETTINGS_KEY_AUTOMATION_CONFIGS),
+                  SETTINGS_STORE.delete(SETTINGS_KEY_SLEEP_MODE),
+                ]);
                 break;
               case 'vrcData':
                 info('[Settings] Clearing VRChat data');
@@ -218,8 +220,10 @@ export class SettingsAdvancedViewComponent {
               case 'miscData':
                 info('[Settings] Clearing misc data');
                 askForRelaunch = true;
-                await SETTINGS_STORE.delete(SETTINGS_KEY_THEMING_SETTINGS);
-                await SETTINGS_STORE.delete(SETTINGS_KEY_TELEMETRY_SETTINGS);
+                await Promise.all([
+                  SETTINGS_STORE.delete(SETTINGS_KEY_THEMING_SETTINGS),
+                  SETTINGS_STORE.delete(SETTINGS_KEY_TELEMETRY_SETTINGS),
+                ]);
                 break;
               case 'logs':
                 info('[Settings] Clearing log files');
