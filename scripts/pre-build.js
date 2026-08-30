@@ -4,6 +4,9 @@ import sharp from 'sharp';
 import { encode } from 'blurhash';
 import Css from 'json-to-css';
 import { parseFile } from 'music-metadata';
+import { requireSigningKeyForShippableBuild } from './build-flavour.js';
+
+requireSigningKeyForShippableBuild();
 
 //
 // COPY FONTS

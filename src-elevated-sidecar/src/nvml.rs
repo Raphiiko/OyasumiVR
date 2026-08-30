@@ -8,9 +8,33 @@ lazy_static! {
     static ref NVML_HANDLE: Mutex<Option<Nvml>> = Default::default();
 }
 
+/// An absolute path to `nvml.dll` in the Windows system directory, as Windows reports it.
+fn nvml_path() -> Option<std::path::PathBuf> {
+    use windows_sys::Win32::System::SystemInformation::GetSystemDirectoryW;
+
+    // A short buffer is answered with the length needed, so this asks at most twice.
+    let mut buffer = vec![0u16; 260];
+    let mut written =
+        unsafe { GetSystemDirectoryW(buffer.as_mut_ptr(), buffer.len() as u32) } as usize;
+    if written > buffer.len() {
+        buffer = vec![0u16; written];
+        written = unsafe { GetSystemDirectoryW(buffer.as_mut_ptr(), buffer.len() as u32) } as usize;
+    }
+    if written == 0 || written > buffer.len() {
+        return None;
+    }
+    Some(std::path::PathBuf::from(String::from_utf16_lossy(&buffer[..written])).join("nvml.dll"))
+}
+
 pub fn init() -> bool {
-    info!("[NVML] Initializing NVML");
-    match Nvml::init() {
+    let Some(path) = nvml_path() else {
+        error!("[NVML] Could not determine the system directory");
+        *NVML_HANDLE.lock().unwrap() = None;
+        *NVML_STATUS.lock().unwrap() = NvmlStatus::LibLoadingError;
+        return false;
+    };
+    info!("[NVML] Initializing NVML from {}", path.display());
+    match Nvml::builder().lib_path(path.as_os_str()).init() {
         Ok(nvml) => {
             info!("[NVML] Successfully initialized NVML");
             *NVML_HANDLE.lock().unwrap() = Some(nvml);

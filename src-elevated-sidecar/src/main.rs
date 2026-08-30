@@ -23,6 +23,9 @@ use std::sync::{
 use std::time::Duration;
 use sysinfo::{Pid, ProcessesToUpdate, System};
 use windows::relaunch_with_elevation;
+use windows_sys::Win32::System::LibraryLoader::{
+    SetDefaultDllDirectories, LOAD_LIBRARY_SEARCH_SYSTEM32,
+};
 
 mod afterburner;
 mod grpc;
@@ -34,8 +37,18 @@ static ERROR_REPORTING_ENABLED: LazyLock<Arc<AtomicBool>> =
 static ERROR_REPORTING_GUARD: LazyLock<Mutex<Option<sentry::ClientInitGuard>>> =
     LazyLock::new(Default::default);
 
-#[tokio::main]
-async fn main() {
+fn main() {
+    // The runtime below is built by hand, so nothing loads a DLL before this narrows the search.
+    let dll_search_restricted =
+        unsafe { SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_SYSTEM32) } != 0;
+    tokio::runtime::Builder::new_multi_thread()
+        .enable_all()
+        .build()
+        .unwrap()
+        .block_on(run(dll_search_restricted));
+}
+
+async fn run(dll_search_restricted: bool) {
     // Initialize logging
     let log_path = if let Some(base_dirs) = BaseDirs::new() {
         base_dirs
@@ -63,6 +76,9 @@ async fn main() {
         ),
     ])
     .unwrap();
+    if !dll_search_restricted {
+        error!("Could not restrict the DLL search path to System32");
+    }
     // Parse the arguments
     let args: Vec<String> = env::args().collect();
     let host_port = match switch_value(&args, "core-grpc-port") {

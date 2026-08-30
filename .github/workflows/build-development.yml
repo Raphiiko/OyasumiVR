@@ -40,6 +40,10 @@ jobs:
         run: cd src-elevated-sidecar; cargo clippy -- -D warnings
       - name: Run Clippy (core)
         run: cd src-core; cargo clippy -- -D warnings
+      - name: Run Clippy (sign-elevated-sidecar)
+        run: cd tools/sign-elevated-sidecar; cargo clippy --all-targets -- -D warnings
+      - name: Test the signing tool
+        run: cd tools/sign-elevated-sidecar; cargo test
       - name: Get Changelog Entry
         id: changelog_reader
         uses: mindsers/changelog-reader-action@v2

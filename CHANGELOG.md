@@ -31,6 +31,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 - Turning devices on when OyasumiVR starts now takes precedence over turning them off for a stopped
   SteamVR, so devices covered by both automations are left on
+- OyasumiVR now loads NVIDIA's NVML library from the Windows system directory only. A driver old
+  enough to have installed `nvml.dll` somewhere else loses GPU power limiting until you update it.
 - Improved the Traditional Chinese translations
 - Updated the Russian translations
 - OyasumiVR's window now does less work while it is open
