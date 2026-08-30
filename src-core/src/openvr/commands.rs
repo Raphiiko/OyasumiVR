@@ -8,7 +8,72 @@ use enumset::EnumSet;
 use log::error;
 use ovr::input::{InputString, InputValueHandle};
 use ovr_overlay as ovr;
+use std::fmt::Display;
 use substring::Substring;
+
+fn collect_localized_names<I, E>(results: I, label: &str) -> Vec<String>
+where
+    I: IntoIterator<Item = Result<String, E>>,
+    E: Display,
+{
+    results
+        .into_iter()
+        .map(|result| match result {
+            Ok(name) => name,
+            Err(e) => {
+                error!("[Core] Failed to get origin localized {label}: {e}");
+                String::new()
+            }
+        })
+        .collect()
+}
+
+fn assemble_binding_origins(
+    origin_count: usize,
+    localized_controller_types: &[String],
+    localized_hands: &[String],
+    localized_input_sources: &[String],
+    binding_infos: &[ovr::sys::InputBindingInfo_t],
+) -> Option<Vec<BindingOriginData>> {
+    (0..origin_count)
+        .map(|i| {
+            let binding_info = binding_infos.get(i)?;
+            let device_path_name = crate::utils::convert_char_array_to_string(
+                &binding_info.rchDevicePathName,
+            )?;
+            let input_path_name = crate::utils::convert_char_array_to_string(
+                &binding_info.rchInputPathName,
+            )?;
+            let localized_controller_type = localized_controller_types.get(i)?;
+            let localized_hand = localized_hands.get(i)?;
+            let localized_input_source = localized_input_sources.get(i)?;
+            Some(BindingOriginData {
+                localized_controller_type: if localized_controller_type.is_empty() {
+                    device_path_name.clone()
+                } else {
+                    localized_controller_type.clone()
+                },
+                localized_hand: if localized_hand.is_empty() {
+                    device_path_name.clone()
+                } else {
+                    localized_hand.clone()
+                },
+                localized_input_source: if localized_input_source.is_empty() {
+                    input_path_name.clone()
+                } else {
+                    localized_input_source.clone()
+                },
+                device_path_name,
+                input_path_name,
+                mode_name: crate::utils::convert_char_array_to_string(&binding_info.rchModeName)?,
+                slot_name: crate::utils::convert_char_array_to_string(&binding_info.rchSlotName)?,
+                input_source_type: crate::utils::convert_char_array_to_string(
+                    &binding_info.rchInputSourceType,
+                )?,
+            })
+        })
+        .collect()
+}
 
 #[tauri::command]
 pub async fn openvr_set_app_framelimit(
@@ -212,63 +277,34 @@ pub async fn openvr_get_binding_origins(
             return None;
         }
     };
-    // Get the localized controller types for each origin
-    let localized_controller_types: Vec<String> = origins
-        .iter()
-        .filter_map(|origin| {
-            match input.get_origin_localized_name(
+    // get localized labels for each origin
+    let localized_controller_types = collect_localized_names(
+        origins.iter().map(|origin| {
+            input.get_origin_localized_name(
                 InputValueHandle(*origin),
                 EnumSet::only(InputString::ControllerType),
-            ) {
-                Ok(name) => Some(name),
-                Err(e) => {
-                    error!(
-                        "[Core] Failed to get origin localized name controller types: {}",
-                        e.description()
-                    );
-                    None
-                }
-            }
-        })
-        .collect();
-    // Get the localized hands for each origin
-    let localized_hands: Vec<String> = origins
-        .iter()
-        .filter_map(|origin| {
-            match input.get_origin_localized_name(
+            )
+        }),
+        "controller type",
+    );
+    let localized_hands = collect_localized_names(
+        origins.iter().map(|origin| {
+            input.get_origin_localized_name(
                 InputValueHandle(*origin),
                 EnumSet::only(InputString::Hand),
-            ) {
-                Ok(name) => Some(name),
-                Err(e) => {
-                    error!(
-                        "[Core] Failed to get origin localized name controller types: {}",
-                        e.description()
-                    );
-                    None
-                }
-            }
-        })
-        .collect();
-    // Get the localized input sources for each origin
-    let localized_input_sources: Vec<String> = origins
-        .iter()
-        .filter_map(|origin| {
-            match input.get_origin_localized_name(
+            )
+        }),
+        "hand",
+    );
+    let localized_input_sources = collect_localized_names(
+        origins.iter().map(|origin| {
+            input.get_origin_localized_name(
                 InputValueHandle(*origin),
                 EnumSet::only(InputString::InputSource),
-            ) {
-                Ok(name) => Some(name),
-                Err(e) => {
-                    error!(
-                        "[Core] Failed to get origin localized name controller types: {}",
-                        e.description()
-                    );
-                    None
-                }
-            }
-        })
-        .collect();
+            )
+        }),
+        "input source",
+    );
 
     // Get extra information about each binding
     let result = {
@@ -286,34 +322,71 @@ pub async fn openvr_get_binding_origins(
         Some(infos) => infos,
         None => return None,
     };
+    match assemble_binding_origins(
+        origins.len(),
+        &localized_controller_types,
+        &localized_hands,
+        &localized_input_sources,
+        &binding_infos,
+    ) {
+        Some(data) => Some(data),
+        None => {
+            error!("[Core] OpenVR returned incomplete binding origin data");
+            Some(vec![])
+        }
+    }
+}
 
-    // Group the data for each origin
-    let mut datas = vec![];
-    for i in 0..origins.len() {
-        let binding_info = &binding_infos[i];
-        let data = BindingOriginData {
-            localized_controller_type: localized_controller_types[i].clone(),
-            localized_hand: localized_hands[i].clone(),
-            localized_input_source: localized_input_sources[i].clone(),
-            device_path_name: crate::utils::convert_char_array_to_string(
-                &binding_info.rchDevicePathName,
-            )
-            .expect("Failed to convert rchDevicePathName to string"),
-            input_path_name: crate::utils::convert_char_array_to_string(
-                &binding_info.rchInputPathName,
-            )
-            .expect("Failed to convert rchInputPathName to string"),
-            mode_name: crate::utils::convert_char_array_to_string(&binding_info.rchModeName)
-                .expect("Failed to convert rchModeName to string"),
-            slot_name: crate::utils::convert_char_array_to_string(&binding_info.rchSlotName)
-                .expect("Failed to convert rchSlotName to string"),
-            input_source_type: crate::utils::convert_char_array_to_string(
-                &binding_info.rchInputSourceType,
-            )
-            .expect("Failed to convert rchInputSourceType to string"),
-        };
-        datas.push(data);
+#[cfg(test)]
+mod tests {
+    use super::{assemble_binding_origins, collect_localized_names, ovr};
+    use std::ffi::c_char;
+
+    fn char_array<const N: usize>(value: &str) -> [c_char; N] {
+        let mut result = [0; N];
+        for (target, source) in result.iter_mut().zip(value.bytes()) {
+            *target = source as c_char;
+        }
+        result
     }
 
-    Some(datas)
+    fn binding_info(device_path_name: &str) -> ovr::sys::InputBindingInfo_t {
+        ovr::sys::InputBindingInfo_t {
+            rchDevicePathName: char_array(device_path_name),
+            rchInputPathName: char_array("/input/a"),
+            rchModeName: char_array("button"),
+            rchSlotName: char_array("click"),
+            rchInputSourceType: char_array("button"),
+        }
+    }
+
+    #[test]
+    fn localized_name_errors_keep_origin_alignment() {
+        let controller_types = collect_localized_names(
+            [Ok("controller one".to_string()), Err("lookup failed")],
+            "controller type",
+        );
+        let data = assemble_binding_origins(
+            2,
+            &controller_types,
+            &["left".to_string(), "right".to_string()],
+            &["a".to_string(), "b".to_string()],
+            &[
+                binding_info("/user/hand/left"),
+                binding_info("/user/hand/right"),
+            ],
+        )
+        .unwrap();
+
+        assert_eq!(data.len(), 2);
+        assert_eq!(data[0].localized_controller_type, "controller one");
+        assert_eq!(data[0].device_path_name, "/user/hand/left");
+        assert_eq!(
+            data[1].localized_controller_type,
+            "/user/hand/right"
+        );
+        assert_eq!(data[1].localized_hand, "right");
+        assert_eq!(data[1].localized_input_source, "b");
+        assert_eq!(data[1].device_path_name, "/user/hand/right");
+    }
 }
