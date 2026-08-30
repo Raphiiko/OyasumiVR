@@ -5,7 +5,7 @@ use hyper::{body::Incoming, Request, Response};
 use log::{error, info};
 use mime::Mime;
 use serde::{Deserialize, Serialize};
-use std::sync::LazyLock;
+use std::sync::{Arc, LazyLock, Mutex as SyncMutex};
 use std::{
     collections::HashMap,
     convert::Infallible,
@@ -28,6 +28,7 @@ pub async fn init(cache_dir: PathBuf) {
 #[derive(Debug, Clone)]
 pub struct ImageCache {
     cache_path_str: OsString,
+    write_lock: Arc<SyncMutex<()>>,
 }
 
 #[derive(Deserialize, Serialize)]
@@ -42,7 +43,10 @@ struct ImageCacheManifest {
 
 impl ImageCache {
     pub fn new(cache_path_str: OsString) -> ImageCache {
-        ImageCache { cache_path_str }
+        ImageCache {
+            cache_path_str,
+            write_lock: Default::default(),
+        }
     }
 
     fn get_image(&self, url: String) -> Option<(Vec<u8>, Mime)> {
@@ -96,6 +100,10 @@ impl ImageCache {
     }
 
     fn store_image(&self, url: &str, ttl: u64, mime: Mime, image_data: Vec<u8>) {
+        let _write_guard = self
+            .write_lock
+            .lock()
+            .unwrap_or_else(|error| error.into_inner());
         // Determine paths
         let url_hash = format!("{:x}", md5::compute(url));
         let storage_path = Path::new(&self.cache_path_str).join(&url_hash);
@@ -126,6 +134,10 @@ impl ImageCache {
     }
 
     pub fn clean(&self, only_expired: bool) {
+        let _write_guard = self
+            .write_lock
+            .lock()
+            .unwrap_or_else(|error| error.into_inner());
         // Create directory at cache_path if it doesn't exist
         let cache_path = Path::new(&self.cache_path_str);
         if !cache_path.exists() {
@@ -145,7 +157,7 @@ impl ImageCache {
             let manifest = match Self::read_manifest(&manifest_path) {
                 Some(manifest) => manifest,
                 None => {
-                    std::fs::remove_dir_all(&path).unwrap();
+                    Self::remove_entry(&path);
                     continue;
                 }
             };
@@ -162,8 +174,9 @@ impl ImageCache {
                 continue;
             }
             // Delete storage directory
-            std::fs::remove_dir_all(&path).unwrap();
-            deleted += 1;
+            if Self::remove_entry(&path) {
+                deleted += 1;
+            }
         }
         if deleted > 0 {
             info!("[Core] Deleted {deleted} image(s) from the cache.");
@@ -188,6 +201,17 @@ impl ImageCache {
             );
         }
         result
+    }
+
+    fn remove_entry(path: &Path) -> bool {
+        if let Err(error) = std::fs::remove_dir_all(path) {
+            error!(
+                "[Core] Could not delete image cache entry. {}: {error}",
+                path.display()
+            );
+            return false;
+        }
+        true
     }
 
     pub async fn handle_request(
@@ -367,6 +391,53 @@ mod tests {
         std::fs::write(manifest_path, serde_json::to_vec(&manifest).unwrap()).unwrap();
 
         assert!(cache.get_image(url.to_string()).is_none());
+        cache.clean(true);
+        assert!(!entry_path.exists());
+    }
+
+    #[test]
+    fn concurrent_writes_publish_a_readable_entry() {
+        let directory = tempfile::tempdir().unwrap();
+        let cache = ImageCache::new(directory.path().as_os_str().to_owned());
+        let url = "https://example.com/image.png";
+
+        std::thread::scope(|scope| {
+            for image in [vec![1, 2, 3], vec![4, 5, 6]] {
+                let cache = cache.clone();
+                scope.spawn(move || {
+                    for _ in 0..16 {
+                        cache.store_image(url, 60, mime::IMAGE_PNG, image.clone());
+                    }
+                });
+            }
+        });
+
+        let entry_path = directory.path().join(format!("{:x}", md5::compute(url)));
+        assert!(cache.get_image(url.to_string()).is_some());
+        assert_eq!(std::fs::read_dir(entry_path).unwrap().count(), 2);
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn cleanup_continues_when_a_corrupt_entry_is_locked() {
+        use std::os::windows::fs::OpenOptionsExt;
+
+        let directory = tempfile::tempdir().unwrap();
+        let cache = ImageCache::new(directory.path().as_os_str().to_owned());
+        let entry_path = directory.path().join("entry");
+        let manifest_path = entry_path.join("manifest.json");
+        std::fs::create_dir_all(&entry_path).unwrap();
+        std::fs::write(&manifest_path, b"{").unwrap();
+        let locked_manifest = std::fs::OpenOptions::new()
+            .read(true)
+            .share_mode(0)
+            .open(manifest_path)
+            .unwrap();
+
+        cache.clean(true);
+        assert!(entry_path.exists());
+
+        drop(locked_manifest);
         cache.clean(true);
         assert!(!entry_path.exists());
     }
