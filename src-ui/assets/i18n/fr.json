@@ -541,9 +541,6 @@
       "moreInfo": "Plus d'informations"
     },
     "messages": {
-      "elevatedFeaturesUnavailable": {
-        "title": "Droits administrateur indisponibles"
-      },
       "gpuAutomationsSidecarNotRunning": {
         "actions": {
           "disable": "Désactiver les automatisations GPU",

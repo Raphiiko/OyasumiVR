@@ -36,8 +36,6 @@ import { OVRInputEventAction } from 'src-ui/app/models/ovr-input-event';
 })
 export class SettingsGeneralViewComponent implements OnInit {
   appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
-  // translation key for why enabling failed, or null
-  elevationMessage: string | null = null;
   languages = LANGUAGES;
   lighthouseConsoleStatus: ExecutableReferenceStatus = 'UNKNOWN';
   lighthouseConsolePathAlert?: {
@@ -100,7 +98,7 @@ export class SettingsGeneralViewComponent implements OnInit {
     private modalService: ModalService,
     private destroyRef: DestroyRef,
     private settingsService: AppSettingsService,
-    private elevatedSidecar: ElevatedSidecarService
+    protected elevatedSidecar: ElevatedSidecarService
   ) {}
 
   ngOnInit(): void {
@@ -179,15 +177,11 @@ export class SettingsGeneralViewComponent implements OnInit {
   }
 
   async setElevatedFeaturesEnabled(enabled: boolean) {
-    this.elevationMessage = null;
     if (!enabled) {
       await this.elevatedSidecar.disable();
       return;
     }
-    const result = await this.elevatedSidecar.enable();
-    if (result.result !== 'ok') {
-      this.elevationMessage = `settings.general.adminPrivileges.errors.${result.result}`;
-    }
+    await this.elevatedSidecar.enable();
   }
 
   setTelemetryEnabled(enabled: boolean) {

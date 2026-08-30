@@ -38,9 +38,9 @@ it against `src-shared-rust/elevated-sidecar-signing.pub`. A build of any flavou
 `TAURI_SIGNING_PRIVATE_KEY`, and `scripts/pre-build.js` fails early without it.
 
 Two things are worth knowing before you change any of this. The install directory is writable by
-the user, which is why the launcher and the staged sidecar live in Program Files instead. And
-nothing removes the scheduled task or that directory, because Steam does not run the NSIS
-uninstaller and there is nowhere else to put the teardown.
+the user, which is why the launcher and the staged sidecar live in Program Files instead. Disabling
+elevated features asks the running sidecar to delete the task, then a hidden system process removes
+the Program Files directory after the sidecar exits. Steam does not run the NSIS uninstaller.
 
 ## Generated files
 

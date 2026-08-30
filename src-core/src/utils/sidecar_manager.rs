@@ -395,9 +395,7 @@ impl SidecarManager {
         });
     }
 
-    /// Stops the sidecar and leaves the manager idle, so the next start is accepted. Used by the
-    /// settings toggle: it stops the process but leaves the launcher and its task installed, so
-    /// turning it back on costs nothing.
+    /// Stops the sidecar and leaves the manager idle, so the next start is accepted.
     pub async fn stop_and_stay_stopped(&mut self) {
         // held so a launch in flight cannot store its process into a manager that believes it is
         // idle, the way `start_or_restart` relies on

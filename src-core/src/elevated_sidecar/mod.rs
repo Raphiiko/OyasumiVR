@@ -187,6 +187,50 @@ pub async fn request_stop() {
     }
 }
 
+async fn remove_privileged_launcher() -> Result<(), String> {
+    let Some(mut client) = SIDECAR_GRPC_CLIENT.lock().await.clone() else {
+        return Err("the elevated sidecar is not running".to_string());
+    };
+    match tokio::time::timeout(
+        Duration::from_secs(5),
+        client.remove_privileged_launcher(tonic::Request::new(
+            crate::Models::elevated_sidecar::Empty {},
+        )),
+    )
+    .await
+    {
+        Ok(Ok(_)) => Ok(()),
+        Ok(Err(e)) => Err(e.message().to_string()),
+        Err(_) => Err("cleanup timed out".to_string()),
+    }
+}
+
+fn remove_launcher_handshake() -> Result<(), String> {
+    let path = oyasumivr_shared::handshake::path()
+        .map_err(|e| format!("cannot resolve the launcher handshake: {e}"))?;
+    match std::fs::remove_file(&path) {
+        Ok(()) => Ok(()),
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(()),
+        Err(e) => Err(format!("cannot delete {}: {e}", path.display())),
+    }
+}
+
+async fn wait_until_privileged_launcher_removed(timeout: Duration) -> bool {
+    let Some(dir) = launcher::privileged_dir() else {
+        return false;
+    };
+    let deadline = tokio::time::Instant::now() + timeout;
+    loop {
+        if !dir.exists() {
+            return true;
+        }
+        if tokio::time::Instant::now() >= deadline {
+            return false;
+        }
+        tokio::time::sleep(Duration::from_millis(100)).await;
+    }
+}
+
 /// Returned when a sidecar reports in that the core never asked for. The gRPC layer turns it into
 /// an error status, which the sidecar treats as fatal.
 #[derive(Debug)]

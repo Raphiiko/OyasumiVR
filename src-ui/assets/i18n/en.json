@@ -1165,7 +1165,7 @@
     "disable": "Disable GPU Automations",
     "disabled": {
       "disabled": "OyasumiVR has various ways to automatically tweak your GPU settings.\nThis allows you to save power while you are asleep.\n\nAs this is a feature for advanced users, it is disabled by default.\nYou can enable it by clicking the button below.",
-      "noSidecar": "In order for OyasumiVR to be allowed to change your GPU settings, it requires administrator privileges. Please click the button below to give OyasumiVR administrator privileges."
+      "noSidecar": "OyasumiVR needs administrative permissions to change your GPU settings. Enable them with the button below."
     },
     "enable": "Enable GPU Automations",
     "enableWarning": "Incorrectly tweaking your GPU parameters could lead to your system becoming unstable. Please keep this in mind and only enable this feature if you know what you are doing.",
@@ -1209,8 +1209,8 @@
       "disabled": {
         "initializing": "Power limiting automations are being initialized...",
         "noNvidia": "Power limiting automations are unavailable as no running NVIDIA driver was detected. Power limiting automations are only available for NVIDIA GPUs.\n\nIf you have an NVIDIA GPU in your system, please ensure that the appropriate driver for it is installed.\n\n({code})",
-        "noPermission": "Although OyasumiVR has administrator privileges, it does not have permission to change your GPU settings.\n\nPlease check your system configuration as this should normally never occur.",
-        "noSidecar": "For an unknown reason, administrator privileges could not be obtained.\nThese are required for controlling your GPU's power limits.\n\nPlease try restarting OyasumiVR.",
+        "noPermission": "OyasumiVR has administrative permissions, but Windows did not allow it to change your GPU settings.\n\nPlease check your system configuration. This should not normally happen.",
+        "noSidecar": "OyasumiVR could not use administrative permissions. These are required to control your GPU's power limits.\n\nPlease try restarting OyasumiVR.",
         "unknown": "Power limiting automations are unavailable for an unknown reason.\n\nPlease try restarting OyasumiVR."
       },
       "enabledWarning": "Please be aware that setting your power limits too low could result in your system becoming unstable. Disable this feature if you do not know what you are doing.",
@@ -1221,7 +1221,7 @@
       "noGPUs": "No NVIDIA GPUs could be found in your system.",
       "selectGPU": "Select the GPU you wish to set the power limit for:"
     },
-    "requestAdministrator": "Give Administrator Privileges",
+    "requestAdministrator": "Enable Administrative Permissions",
     "tabs": {
       "msiAfterburner": "MSI Afterburner",
       "powerLimiting": "Power Limiting"
@@ -1466,16 +1466,26 @@
       "configure": "Configure",
       "hide": "Hide",
       "moreInfo": "More info",
+      "openLogFolder": "Open logs",
       "showHidden": "Show Hidden",
+      "supportDiscord": "Support Discord",
       "unhide": "Unhide"
     },
     "messages": {
-      "elevatedFeaturesUnavailable": {
-        "title": "Administrator Access Unavailable"
+      "elevatedFeaturesFailure": {
+        "actions": {
+          "retry": "Try again"
+        },
+        "disable": {
+          "title": "Administrative permissions could not be fully disabled"
+        },
+        "enable": {
+          "title": "Administrative permissions are unavailable"
+        }
       },
       "gpuAutomationsAfterburnerError": {
         "actions": {
-          "disable": "Disable Automations"
+          "disable": "Disable automations"
         },
         "message": {
           "INVALID_EXECUTABLE": "Your MSI Afterburner installation could not be verified as working. Please reconfigure the path to your MSI Afterburner installation to ensure your automations keep working.",
@@ -1487,16 +1497,16 @@
       },
       "gpuAutomationsNvmlError": {
         "actions": {
-          "disable": "Disable Automations"
+          "disable": "Disable automations"
         },
         "title": "GPU Power Limit Automations Unavailable"
       },
       "gpuAutomationsSidecarNotRunning": {
         "actions": {
-          "disable": "Disable GPU Automations",
-          "elevate": "Give Administrator Privileges"
+          "disable": "Disable automations",
+          "elevate": "Enable permissions"
         },
-        "message": "Although you have GPU automations enabled, OyasumiVR currently does not have the administrative privileges to be able to run these.\n\nPlease give OyasumiVR administrative privileges, or disable GPU automations.",
+        "message": "GPU automations are enabled, but OyasumiVR cannot run them without administrative permissions.\n\nEnable administrative permissions or disable GPU automations.",
         "title": "GPU Automations Unavailable"
       },
       "lighthouseConsoleError": {
@@ -1509,7 +1519,7 @@
       },
       "overlaySidecarKeepsFailing": {
         "actions": {
-          "disableGpuAcceleration": "Turn Off GPU Acceleration"
+          "disableGpuAcceleration": "Disable GPU acceleration"
         },
         "message": {
           "gpuAcceleration": "OyasumiVR's SteamVR overlays keep failing to start.\n\nOn some systems this is caused by GPU acceleration. Try turning it off.",
@@ -2064,15 +2074,24 @@
     },
     "general": {
       "adminPrivileges": {
-        "description": "Some features, such as controlling your GPU's power limits, need administrator access. Turning this on asks for it once. After that OyasumiVR sets these features up without asking again.",
-        "errors": {
-          "installFailed": "OyasumiVR could not set up the component that needs administrator access.",
-          "notSupported": "These features need a Windows administrator account. This account cannot be given administrator access, so they stay unavailable.",
-          "promptDeclined": "Administrator access was not granted, so these features stay off.",
-          "taskFailed": "OyasumiVR could not start the component that needs administrator access. It will try again next time you start OyasumiVR."
+        "description": "Some features, such as controlling your GPU's power limits, need administrative permissions. Turning this on asks for them once. After that, OyasumiVR can use these features without asking again.",
+        "dialogs": {
+          "disableFailed": {
+            "title": "Could not fully disable administrative permissions"
+          },
+          "enableFailed": {
+            "title": "Could not enable administrative permissions"
+          }
         },
-        "label": "Allow features that need administrator access",
-        "title": "Administrator Privileges"
+        "errors": {
+          "cleanupFailed": "OyasumiVR could not fully disable administrative permissions. Features that use them have been turned off for your safety.\n\nTry again. If this keeps happening, restart OyasumiVR and try once more. If that does not help, ask for support and include your log files.",
+          "installFailed": "OyasumiVR could not enable administrative permissions, so features that need them remain unavailable.\n\nTry again. If this keeps happening, restart OyasumiVR and try once more. If that does not help, ask for support and include your log files.",
+          "notSupported": "OyasumiVR cannot enable administrative permissions for this Windows account. Sign in with a Windows administrator account and try again.",
+          "promptDeclined": "Administrative permissions were not granted, so features that need them remain unavailable.",
+          "taskFailed": "OyasumiVR could not enable administrative permissions, so features that need them remain unavailable.\n\nTry again. If this keeps happening, restart OyasumiVR and try once more. If that does not help, ask for support and include your log files."
+        },
+        "label": "Allow features that need administrative permissions",
+        "title": "Administrative Permissions"
       },
       "language": {
         "description": "You can select your desired language here. If there are any missing translations, or you would like like to add support for your language, please get in contact!",
@@ -2368,6 +2387,7 @@
       "ok": "Ok",
       "open": "Open",
       "refresh": "Refresh",
+      "retry": "Retry",
       "save": "Save"
     },
     "time": {

@@ -32,6 +32,18 @@ impl OyasumiElevatedSidecar for OyasumiElevatedSidecarServerImpl {
         Ok(Response::new(Empty {}))
     }
 
+    async fn remove_privileged_launcher(
+        &self,
+        _: Request<Empty>,
+    ) -> Result<Response<Empty>, Status> {
+        tokio::task::spawn_blocking(crate::cleanup::remove_privileged_launcher)
+            .await
+            .map_err(|e| Status::internal(format!("cleanup task failed: {e}")))?
+            .map_err(Status::internal)?;
+        info!("Removed the privileged launcher and scheduled task");
+        Ok(Response::new(Empty {}))
+    }
+
     async fn set_error_reporting_enabled(
         &self,
         request: Request<SetErrorReportingEnabledRequest>,

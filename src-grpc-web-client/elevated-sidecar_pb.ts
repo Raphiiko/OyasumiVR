@@ -965,6 +965,7 @@ export const OyasumiElevatedSidecar = new ServiceType(
   [
     { name: 'Ping', options: {}, I: Empty, O: PingResponse },
     { name: 'RequestStop', options: {}, I: Empty, O: Empty },
+    { name: 'RemovePrivilegedLauncher', options: {}, I: Empty, O: Empty },
     { name: 'SetErrorReportingEnabled', options: {}, I: SetErrorReportingEnabledRequest, O: Empty },
     { name: 'GetNvmlStatus', options: {}, I: Empty, O: NvmlStatusResponse },
     { name: 'GetNvmlDevices', options: {}, I: Empty, O: NvmlDevicesResponse },

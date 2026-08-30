@@ -2,7 +2,7 @@
 //! registers it and the core that inspects and runs it.
 
 use std::path::Path;
-use windows::core::{Interface, BSTR};
+use windows::core::{Interface, BSTR, HRESULT};
 use windows::Win32::System::Com::{
     CoCreateInstance, CoInitializeEx, CLSCTX_INPROC_SERVER, COINIT_APARTMENTTHREADED,
 };
@@ -170,6 +170,26 @@ pub fn run(user_sid: &str) -> windows::core::Result<()> {
     }
 }
 
+/// Deletes this account's privileged launcher task if present. Needs an elevated caller.
+pub fn unregister(user_sid: &str) -> windows::core::Result<bool> {
+    let result = unsafe {
+        service()?
+            .GetFolder(&BSTR::from("\\"))?
+            .DeleteTask(&BSTR::from(task_name(user_sid)), 0)
+    };
+    match result {
+        Ok(()) => Ok(true),
+        Err(e) if task_is_missing(e.code()) => Ok(false),
+        Err(e) => Err(e),
+    }
+}
+
+fn task_is_missing(code: HRESULT) -> bool {
+    const FILE_NOT_FOUND: HRESULT = HRESULT(0x8007_0002u32 as i32);
+    const TASK_NOT_FOUND: HRESULT = HRESULT(0x8004_130fu32 as i32);
+    code == FILE_NOT_FOUND || code == TASK_NOT_FOUND
+}
+
 /// The launcher's exit code from its last run, its only channel back to the core.
 pub fn last_result(user_sid: &str) -> windows::core::Result<i32> {
     unsafe { registered_task(user_sid)?.LastTaskResult() }
@@ -259,5 +279,12 @@ mod tests {
         );
         assert!(doc.contains(r"C:\a&amp;b\launcher.exe"));
         assert!(!doc.contains(r"C:\a&b\launcher.exe"));
+    }
+
+    #[test]
+    fn missing_task_errors_make_unregistration_idempotent() {
+        assert!(task_is_missing(HRESULT(0x8007_0002u32 as i32)));
+        assert!(task_is_missing(HRESULT(0x8004_130fu32 as i32)));
+        assert!(!task_is_missing(HRESULT(0x8007_0005u32 as i32)));
     }
 }

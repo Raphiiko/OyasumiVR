@@ -1454,9 +1454,6 @@
       "unhide": "Показать"
     },
     "messages": {
-      "elevatedFeaturesUnavailable": {
-        "title": "Права администратора недоступны"
-      },
       "gpuAutomationsAfterburnerError": {
         "actions": {
           "disable": "Отключить автоматизации"

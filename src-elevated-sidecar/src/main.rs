@@ -27,6 +27,7 @@ use windows_sys::Win32::System::LibraryLoader::{
 };
 
 mod afterburner;
+mod cleanup;
 mod grpc;
 mod nvml;
 

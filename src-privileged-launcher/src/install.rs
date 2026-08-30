@@ -44,6 +44,7 @@ pub fn run() -> u8 {
             return exit::INSTALL_FAILED;
         }
     }
+    let _ = std::fs::remove_file(dir.join("launcher.log"));
 
     let Ok(current) = std::env::current_exe() else {
         log("[install] cannot find my own path");

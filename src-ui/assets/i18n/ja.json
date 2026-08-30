@@ -1442,9 +1442,6 @@
       "unhide": "再表示"
     },
     "messages": {
-      "elevatedFeaturesUnavailable": {
-        "title": "管理者権限を利用できません"
-      },
       "gpuAutomationsAfterburnerError": {
         "actions": {
           "disable": "自動化を無効"

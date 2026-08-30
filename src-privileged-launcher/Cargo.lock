@@ -1094,11 +1094,14 @@ name = "oyasumivr-privileged-launcher"
 version = "26.8.0-beta.5"
 dependencies = [
  "base64",
+ "log",
  "minisign",
  "minisign-verify",
  "oyasumivr-shared",
  "serde",
  "serde_json",
+ "simplelog",
+ "time",
  "windows",
 ]
 
@@ -1748,6 +1751,16 @@ name = "simdutf8"
 version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e3a9fe34e3e7a50316060351f37187a3f546bce95496156754b601a5fa71b76e"
+
+[[package]]
+name = "simplelog"
+version = "0.12.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "16257adbfaef1ee58b1363bdc0664c9b8e1e30aed86049635fb5f147d065a9c0"
+dependencies = [
+ "log",
+ "time",
+]
 
 [[package]]
 name = "slab"
