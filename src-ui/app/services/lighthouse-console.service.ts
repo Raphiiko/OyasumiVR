@@ -102,10 +102,13 @@ export class LighthouseConsoleService {
     const lighthouseConsolePath = settings.lighthouseConsolePath;
     if (this._consoleStatus.value !== 'SUCCESS') return;
     // resolve the devices as they are now, not as the caller saw them
-    const requestedIndices = requestedDevices.map((device) => device.index);
+    const requestedSerials = new Set(
+      requestedDevices.map((device) => device.serialNumber).filter(Boolean)
+    );
     const ovrDevices = (await firstValueFrom(this.openvr.devices)).filter(
       (device) =>
-        requestedIndices.includes(device.index) &&
+        device.serialNumber &&
+        requestedSerials.has(device.serialNumber) &&
         device.canPowerOff &&
         device.dongleId &&
         !device.isTurningOff
