@@ -9,7 +9,6 @@
     },
     "contributions": "共同開発",
     "discordInvite": "Discord",
-    "sourceLink": "Source Code @ GitHub",
     "supporters": "サポーター",
     "translations": "翻訳"
   },
@@ -206,13 +205,6 @@
         "UNKNOWN": {
           "message": "バインディングを設定"
         }
-      },
-      "slot": {
-        "click": "Click",
-        "double": "Double Press",
-        "held": "Held Down",
-        "long": "Long Press",
-        "touch": "Touch Button"
       }
     },
     "dashboard-navbar": {
@@ -282,8 +274,6 @@
         "KneeRight": "右ひざ",
         "ShoulderLeft": "左肩",
         "ShoulderRight": "右肩",
-        "Stylus": "Stylus",
-        "Treadmill": "Treadmill",
         "Waist": "腰",
         "WristLeft": "左手首",
         "WristRight": "右手首"
@@ -1002,7 +992,6 @@
         "INVALID_FORMAT": "有効な2要素認証コードは6桁の数字です。入力内容をご確認ください。",
         "LAST_CODE_INVALID": "入力された2要素認証コードが正しくありません。"
       },
-      "logginInAs": "You're logging into VRChat as:",
       "title": "二要素認証"
     }
   },
