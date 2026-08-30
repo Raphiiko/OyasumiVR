@@ -331,7 +331,11 @@ export class ShutdownAutomationsService {
             switchMap(() =>
               this.openvr.devices.pipe(
                 map((newDevices) =>
-                  newDevices.filter((d) => devices.some((d2) => d2.index === d.index))
+                  newDevices.filter(
+                    (device) =>
+                      device.serialNumber &&
+                      devices.some((requested) => requested.serialNumber === device.serialNumber)
+                  )
                 )
               )
             ),

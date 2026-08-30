@@ -36,16 +36,21 @@ export class LighthouseConsoleService {
         }
       });
     await listen<string>('turnOffOVRDevices', async (event) => {
-      let deviceSerialNumbers: Set<string>;
+      let deviceSerialNumbers: unknown;
       try {
-        deviceSerialNumbers = new Set(JSON.parse(event.payload));
+        deviceSerialNumbers = JSON.parse(event.payload);
       } catch {
         return;
       }
-      const devices = (await firstValueFrom(this.openvr.devices)).filter((d) =>
-        d.serialNumber ? deviceSerialNumbers.has(d.serialNumber) : false
-      );
-      await this.turnOffDevices(devices);
+      if (
+        !Array.isArray(deviceSerialNumbers) ||
+        !deviceSerialNumbers.every(
+          (serialNumber): serialNumber is string =>
+            typeof serialNumber === 'string' && serialNumber.length > 0
+        )
+      )
+        return;
+      await this.queuePowerOff(deviceSerialNumbers);
     });
   }
 
@@ -92,19 +97,25 @@ export class LighthouseConsoleService {
   }
 
   async turnOffDevices(ovrDevices: OVRDevice[]) {
-    const batch = this.powerOffQueue.then(() => this.runTurnOffDevices(ovrDevices));
+    return this.queuePowerOff(
+      ovrDevices
+        .map((device) => device.serialNumber)
+        .filter((serialNumber): serialNumber is string => !!serialNumber)
+    );
+  }
+
+  private queuePowerOff(deviceSerialNumbers: string[]) {
+    const batch = this.powerOffQueue.then(() => this.runTurnOffDevices(deviceSerialNumbers));
     this.powerOffQueue = batch.catch(() => {});
     return batch;
   }
 
-  private async runTurnOffDevices(requestedDevices: OVRDevice[]) {
+  private async runTurnOffDevices(deviceSerialNumbers: string[]) {
     const settings = await firstValueFrom(this.appSettings.settings);
     const lighthouseConsolePath = settings.lighthouseConsolePath;
     if (this._consoleStatus.value !== 'SUCCESS') return;
     // resolve the devices as they are now, not as the caller saw them
-    const requestedSerials = new Set(
-      requestedDevices.map((device) => device.serialNumber).filter(Boolean)
-    );
+    const requestedSerials = new Set(deviceSerialNumbers);
     const ovrDevices = (await firstValueFrom(this.openvr.devices)).filter(
       (device) =>
         device.serialNumber &&
