@@ -6,17 +6,41 @@ Edit this file. `CLAUDE.md` imports it.
 
 OyasumiVR is a Windows desktop app for VRChat users, built with Tauri.
 
-| Directory              | What it is                                        |
-| ---------------------- | ------------------------------------------------- |
-| `src-ui`               | Angular frontend (the main window)                |
-| `src-core`             | Rust Tauri backend                                |
-| `src-overlay-sidecar`  | C# sidecar, renders the SteamVR overlays          |
-| `src-overlay-ui`       | Angular frontend for the SteamVR overlays         |
-| `src-elevated-sidecar` | Rust sidecar for actions that need admin rights   |
-| `src-shared-ts`        | TypeScript shared between the frontends           |
-| `src-shared-rust`      | Rust shared between the core and elevated sidecar |
+| Directory                     | What it is                                         |
+| ----------------------------- | -------------------------------------------------- |
+| `src-ui`                      | Angular frontend (the main window)                 |
+| `src-core`                    | Rust Tauri backend                                 |
+| `src-overlay-sidecar`         | C# sidecar, renders the SteamVR overlays           |
+| `src-overlay-ui`              | Angular frontend for the SteamVR overlays          |
+| `src-elevated-sidecar`        | Rust sidecar for actions that need admin rights    |
+| `src-privileged-launcher`     | Rust launcher that starts the elevated sidecar     |
+| `src-shared-ts`               | TypeScript shared between the frontends            |
+| `src-shared-rust`             | Rust shared between the core and the Rust sidecars |
+| `tools/sign-elevated-sidecar` | Rust build tool that signs the elevated sidecar    |
 
 The core talks to the sidecars over gRPC. The `.proto` files live in `proto`.
+
+## Elevated features
+
+GPU power limiting and MSI Afterburner profiles need administrator rights, and OyasumiVR asks for
+them once rather than on every launch. `src-privileged-launcher` is what makes that work, and it
+holds no product logic, because updating it is the only thing that costs the user another prompt.
+
+It has two modes. Run with `--install` and elevation, it copies itself into
+`%ProgramFiles%\OyasumiVR\privileged\`, locks that directory down to administrators, and registers
+a triggerless scheduled task at run level Highest. Run with no arguments by that task, it verifies
+the elevated sidecar's signature, stages it into that admin-only directory, verifies the staged
+copy again, and starts it.
+
+The signature comes from `tools/sign-elevated-sidecar`, which runs during the build and writes a
+`.minisig` beside the sidecar using the same minisign key as the Tauri updater. The launcher checks
+it against `src-shared-rust/elevated-sidecar-signing.pub`. A build of any flavour but `Dev` needs
+`TAURI_SIGNING_PRIVATE_KEY`, and `scripts/pre-build.js` fails early without it.
+
+Two things are worth knowing before you change any of this. The install directory is writable by
+the user, which is why the launcher and the staged sidecar live in Program Files instead. And
+nothing removes the scheduled task or that directory, because Steam does not run the NSIS
+uninstaller and there is nowhere else to put the teardown.
 
 ## Generated files
 
