@@ -100,7 +100,6 @@ impl ImageCache {
         let url_hash = format!("{:x}", md5::compute(url));
         let storage_path = Path::new(&self.cache_path_str).join(&url_hash);
         let manifest_path = storage_path.join("manifest.json");
-        let temporary_manifest_path = storage_path.join("manifest.json.tmp");
         let file_ext = self.get_ext_for_mime(mime.clone());
         let file_name = format!("image.{file_ext}");
         let image_path = storage_path.join(&file_name);
@@ -121,12 +120,9 @@ impl ImageCache {
             created: chrono::Utc::now().timestamp() as u64,
             filename: file_name,
         };
-        std::fs::write(
-            &temporary_manifest_path,
-            serde_json::to_vec(&manifest).unwrap(),
-        )
-        .unwrap();
-        std::fs::rename(temporary_manifest_path, manifest_path).unwrap();
+        let mut temporary_manifest = tempfile::NamedTempFile::new_in(storage_path).unwrap();
+        serde_json::to_writer(&mut temporary_manifest, &manifest).unwrap();
+        temporary_manifest.persist(manifest_path).unwrap();
     }
 
     pub fn clean(&self, only_expired: bool) {
@@ -348,7 +344,7 @@ mod tests {
 
         let entry_path = directory.path().join(format!("{:x}", md5::compute(url)));
         assert!(entry_path.join("manifest.json").exists());
-        assert!(!entry_path.join("manifest.json.tmp").exists());
         assert_eq!(cache.get_image(url.to_string()).unwrap().0, image);
+        assert_eq!(std::fs::read_dir(entry_path).unwrap().count(), 2);
     }
 }
