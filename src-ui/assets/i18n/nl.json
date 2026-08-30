@@ -8,9 +8,7 @@
       "soundFx": "Geluid FX"
     },
     "contributions": "Contributies",
-    "discordInvite": "Discord Server",
     "sourceLink": "Broncode @ GitHub",
-    "supporters": "Supporters",
     "translations": "Vertalingen"
   },
   "audio-volume-automations": {
@@ -62,8 +60,7 @@
     "selectDevice": "Select Geluidsapparaat",
     "title": "Volume Automatiseringen",
     "volume": {
-      "description": "Het volume om in te stellen voor dit geluidsapparaat wanneer deze automatisering draait",
-      "title": "Volume"
+      "description": "Het volume om in te stellen voor dit geluidsapparaat wanneer deze automatisering draait"
     }
   },
   "brightness-automations": {
@@ -243,7 +240,6 @@
         "notifications": "Notificatie instellingen",
         "statusInfo": "Status Informatie",
         "subMenu": "Instellingen",
-        "updates": "Updates",
         "vrchat": "VRChat Instellingen"
       },
       "shutdownAutomations": "Afsluit Procedure",
@@ -258,22 +254,16 @@
     },
     "device-list": {
       "category": {
-        "Controller": "Controllers",
-        "GenericTracker": "Trackers",
-        "HMD": "Headset",
-        "Lighthouse": "Base Stations",
         "other": "Overige"
       },
       "deviceRole": {
         "AnkleLeft": "Linker Enkel",
         "AnkleRight": "Rechter Enkel",
-        "Camera": "Camera",
         "Chest": "Borst",
         "ElbowLeft": "Linker Elleboog",
         "ElbowRight": "Rechter Elleboog",
         "FootLeft": "Linker Voet",
         "FootRight": "Rechter Voet",
-        "Gamepad": "Gamepad",
         "HandPrimary": "Primaire Hand",
         "HandSecondary": "Secundaire Hand",
         "Head": "Hoofd",
@@ -282,7 +272,6 @@
         "KneeRight": "Rechter Knie",
         "ShoulderLeft": "Linker Schouder",
         "ShoulderRight": "Rechter Schouder",
-        "Stylus": "Stylus",
         "Treadmill": "Loopband",
         "Waist": "Middel",
         "WristLeft": "Linker Pols",
@@ -703,30 +692,25 @@
           "title": "SteamVR Instellingen"
         },
         "VRCHAT_AVATAR": {
-          "description": "Events gerelateerd aan het instellen van je VRChat avatar",
-          "title": "VRChat Avatar"
+          "description": "Events gerelateerd aan het instellen van je VRChat avatar"
         },
         "VRCHAT_GROUP": {
           "description": "Events gerelateerd aan het wijzigen van je VRChat groepsrepresentatie",
           "title": "VRChat Groep"
         },
         "VRCHAT_INVITES": {
-          "description": "Events gerelateerd aan VRChat invites en invite requests",
-          "title": "VRChat Invite Requests"
+          "description": "Events gerelateerd aan VRChat invites en invite requests"
         },
         "VRCHAT_STATUS": {
-          "description": "Events gerelateerd aan veranderingen in je VRChat status",
-          "title": "VRChat Status"
+          "description": "Events gerelateerd aan veranderingen in je VRChat status"
         },
         "WINDOWS_POWER_POLICY": {
-          "description": "Events gerelateerd aan veranderingen in de Windows power policy",
-          "title": "Windows Power Policy"
+          "description": "Events gerelateerd aan veranderingen in de Windows power policy"
         }
       },
       "selectAll": "Selecteer Alles",
       "selectDescription": "Selecteer de type logs die je wilt zien in het event log",
-      "selectNone": "Selecteer Niets",
-      "title": "Filter Event Logs"
+      "selectNone": "Selecteer Niets"
     },
     "event-log": {
       "clearLog": "Wissen",
@@ -735,7 +719,6 @@
         "title": "Bevestig wissen"
       },
       "no-logs": "Er zijn nog geen logboek items.\nLogs worden bewaard voor een maximum van 48 uur.",
-      "openFilters": "Filter Events",
       "show-more": "Toon meer",
       "title": "Logboek"
     },
@@ -767,7 +750,6 @@
           "detectBasestationDesc": "Zorg er voor dat een headset, controller, of tracker het base station kan zien",
           "deviceDetected": "Apparaat gedetecteerd",
           "running": "Draait",
-          "startSteamVR": "Start SteamVR",
           "waitingForSteamVR": "Aan het wachten tot SteamVR start..."
         }
       },
@@ -839,8 +821,7 @@
     },
     "mqtt-config-modal": {
       "brokerHost": {
-        "description": "De hostname of het IP address waarop je je MQTT broker kan bereiken.",
-        "title": "Host"
+        "description": "De hostname of het IP address waarop je je MQTT broker kan bereiken."
       },
       "brokerPort": {
         "description": "De poort van de websocket waarop je je MQTT broker kan bereiken.",
@@ -858,8 +839,7 @@
         "title": "Wachtwoord"
       },
       "ssl": {
-        "description": "Of de verbinding met je MQTT broker versleuteld moet worden met SSL.",
-        "title": "Secure SSL"
+        "description": "Of de verbinding met je MQTT broker versleuteld moet worden met SSL."
       },
       "testConnection": {
         "description": "Test of OyasumiVR kan verbinden met je MQTT broker met de onderstaande gegevens",
@@ -882,13 +862,10 @@
     "osc-script-code-editor": {
       "format": "Formatteren",
       "syntaxGuide": "Syntax Handleiding",
-      "test": "Test",
       "title": "OSC Script Bewerker"
     },
     "osc-script-modal": {
-      "script": "Script",
-      "simple": "Simpel",
-      "title": "OSC Script"
+      "simple": "Simpel"
     },
     "osc-script-simple-editor": {
       "action": {
@@ -910,7 +887,6 @@
         }
       },
       "errorCounter": "{count, plural, one {1 Validatie Error} other {# Validatie Errors}}",
-      "test": "Test",
       "vrchatAutofillInfo": "Start VRChat om automatische aanvulling voor je avatar parameters te krijgen."
     },
     "player-list-preset-modal": {
@@ -1056,11 +1032,7 @@
       "title": "Apparaten Selecteren"
     },
     "deviceType": {
-      "CONTROLLER": "Controllers",
-      "HMD": "Headsets",
-      "LIGHTHOUSE": "Lighthouses",
-      "PREVIOUSLY_SEEN": "Eerder Gezien",
-      "TRACKER": "Trackers"
+      "PREVIOUSLY_SEEN": "Eerder Gezien"
     },
     "empty": {
       "noDevices": "Er zijn nog geen apparaten gedetecteerd. Verbind een apparaat, zoals een controller of tracker, om te beginnen.",
@@ -1084,8 +1056,7 @@
       "turningOn": "Inschakelen..."
     },
     "tabs": {
-      "devices": "Apparaten",
-      "tags": "Tags"
+      "devices": "Apparaten"
     },
     "tags": {
       "cancel": "Annuleren",
@@ -1134,7 +1105,6 @@
     "onSleepPreparation": "Wanneer ik me voorbereid om te gaan slapen",
     "removeLimiter": "Verwijder",
     "selector": {
-      "auto": "Auto",
       "autoDescription": "In auto modus zal SteamVR zelf de optimale frame limit bepalen.",
       "disabled": "Niets veranderen",
       "noLimit": "Ongelimiteerd"
@@ -1206,8 +1176,7 @@
     },
     "requestAdministrator": "Geef Beheerders Rechten",
     "tabs": {
-      "msiAfterburner": "MSI Afterburner",
-      "powerLimiting": "Power Limiting"
+      "msiAfterburner": "MSI Afterburner"
     },
     "title": "GPU Automatiseringen"
   },
@@ -1298,7 +1267,6 @@
           "description": "Hoe de speler lijst moet worden gebruikt.",
           "options": {
             "BLACKLIST": {
-              "label": "Blacklist",
               "subLabel": "Accepteer van iedereen behalve vrienden op de lijst"
             },
             "DISABLED": {
@@ -1306,7 +1274,6 @@
               "subLabel": "Accepteer van iedereen"
             },
             "WHITELIST": {
-              "label": "Whitelist",
               "subLabel": "Accepteer van vrienden op de lijst"
             }
           },
@@ -1575,8 +1542,7 @@
     "title": "Nachtmerrie Detectie"
   },
   "notification-sound": {
-    "title": "Selecteer een geluid",
-    "volume": "Volume"
+    "title": "Selecteer een geluid"
   },
   "notifications": {
     "autoAcceptedInviteRequest": {
@@ -1689,9 +1655,7 @@
       "automations": {
         "autoAcceptInviteRequests": {
           "mode": {
-            "Blacklist": "Blacklist",
-            "Disabled": "Van iedereen",
-            "Whitelist": "Whitelist"
+            "Disabled": "Van iedereen"
           },
           "subtitle": "{mode}: {playerCount, plural, one {1 vriend} other {# vrienden}}",
           "title": "Automatisch Invite Requests Accepteren"
@@ -1830,8 +1794,6 @@
       "title": "Wanneer ik ga slapen"
     },
     "renderResolution": {
-      "auto": "Auto",
-      "custom": "Custom",
       "title": "Zet de render resolutie naar"
     },
     "title": "Resolutie Automatiseringen"
@@ -1851,7 +1813,6 @@
       "description": "Commando's uitvoeren",
       "title": "Wanneer ik me voorbereid om te gaan slapen"
     },
-    "testCommands": "Test",
     "title": "Uitvoer Automatiseringen"
   },
   "settings": {
@@ -1952,9 +1913,7 @@
       "troubleshooting": {
         "description": "Deze sectie bevat enkele opties gerelateerd aan probleemoplossing. Je hoeft deze over het algemeen niet te gebruiken, tenzij je wordt gevraagd om ze te gebruiken bij het krijgen van ondersteuning.",
         "devTools": {
-          "action": "Open DevTools",
-          "description": "Opent de Edge Developer Tools, om fouten mee op te sporen",
-          "title": "Open Developer Tools"
+          "description": "Opent de Edge Developer Tools, om fouten mee op te sporen"
         },
         "title": "Probleemoplossing",
         "vrManifestReregister": {
@@ -2055,8 +2014,7 @@
           "PERMISSION_DENIED": "OyasumiVR heeft niet de rechten om de <strong>lighthouse_console.exe</strong> op deze locatie aan te roepen. Probeer OyasumiVR als beheerder te starten.",
           "SUCCESS": "<strong>lighthouse_console.exe</strong> is gevonden en werkt naar behoren!",
           "UNKNOWN_ERROR": "Een onbekende fout is opgetreden bij het zoeken van <strong>lighthouse_console.exe</strong> op deze locatie."
-        },
-        "title": "Lighthouse Console"
+        }
       },
       "lighthousePowerControl": {
         "enable": {
@@ -2089,8 +2047,7 @@
         "overlayMenu": {
           "description": "Hiermee kan je OyasumiVR's overlay menu compleet uitschakelen.",
           "title": "Overlay menu inschakelen"
-        },
-        "title": "Overlay"
+        }
       },
       "sleepMode": {
         "startupBehaviour": {
@@ -2112,9 +2069,6 @@
           "title": "Instelling bij het opstarten"
         },
         "title": "Slaap Modus"
-      },
-      "startStop": {
-        "title": "Start & Stop"
       },
       "startWithSteamVR": {
         "description": "Start OyasumiVR wanneer SteamVR wordt gestart",
@@ -2191,7 +2145,6 @@
         "description": "Door OyasumiVR met Home Assistant te verbinden, kun je integreren met de rest van je smart home. Hiermee kan je verschillende slimme apparaten bedienen en je eigen krachtige automatiseringen bouwen.",
         "title": "Home Assistant (via MQTT)"
       },
-      "providerLink": "Provider Website",
       "pulsoid": {
         "description": "Stelt je hartslag data beschikbaar aan OyasumiVR, welke gebruikt kan worden voor verschillende automatiseringen.<br><i>Deze integratie vereist een eenmalige aankoop van Pulsoid's OyasumiVR integratie, of dat je een actief Pulsoid \"BRO\" abbonnement hebt. Check dat je een compatibel apparaat hebt voordat je het aanschaft.</i>",
         "title": "Pulsoid"
@@ -2233,7 +2186,6 @@
       "title": "Notificatie instellingen",
       "volume": {
         "description": "Bepaal het volume waarop sommige notificatie types een geluid afspelen",
-        "test": "Test",
         "title": "Algemene Notificatie Volume"
       }
     },
@@ -2255,12 +2207,10 @@
       "title": "Status Informatie"
     },
     "updates": {
-      "changelog": "Changelog",
       "checkForUpdates": "Updates checken",
       "install": "Installeer v{version}",
       "noUpdate": "Je draait nu OyasumiVR v{version}, en dat is de laatste versie!",
       "notChecked": "OyasumiVR heeft nog niet gecheckt of er een update beschikbaar is.",
-      "title": "Updates",
       "updateAvailable": "Er is een nieuwe update beschikbaar voor OyasumiVR! Je draait op dit moment v{currentVersion}.\nDe nieuwste versie is v{latestVersion}.",
       "updatesDisabled": {
         "DEV": "Omdat je een development build van OyasumiVR draait is de mogelijkheid om voor updates te checken uitgeschakeld. \nAls je een nieuwere versie van OyasumiVR wilt installeren, download en installeer deze dan met de hand.",
@@ -2281,9 +2231,7 @@
       "cancel": "Annuleren",
       "close": "Sluiten",
       "confirm": "Bevestig",
-      "login": "Log in",
       "ok": "Ok",
-      "open": "Open",
       "refresh": "Ververs",
       "save": "Opslaan"
     },
@@ -2350,8 +2298,7 @@
       }
     },
     "tabs": {
-      "settings": "Instellingen",
-      "triggers": "Triggers"
+      "settings": "Instellingen"
     },
     "title": "Afsluit Procedure",
     "triggers": {
@@ -2476,8 +2423,6 @@
         "whenTurningOn": "Bij het aanzetten van"
       },
       "enableAtBatteryPercentage": {
-        "Controller": "Controller",
-        "GenericTracker": "Tracker",
         "errors": {
           "thresholdNotInteger": "Het percentage moet een geheel getal zijn.",
           "thresholdOutOfRange": "Het percentage moet tussen de 0% en 100% vallen."
@@ -2705,21 +2650,17 @@
       "conflictWarning": "Als je deze feature gebruikt om de demping van je microfoon te schakelen in VRChat, dan is het aan te raden dat je in VRChat's instellingen, je je microphone mode op \"Always On\" instelt, of dat je je mute knop in VRChat ontbind, om eventuele overlap in functionaliteit te voorkomen.",
       "currentMode": {
         "PUSH_TO_TALK": "Push to Talk",
-        "TOGGLE": "Toggle",
         "description": "De huidige besturingsmethode van de controller binding",
         "title": "Actieve regelings methode"
       },
       "description": "Bind een controller knop om de demping van je microfoon te regelen.",
       "enabled": {
-        "description": "Schakel de besturing met een controller knop van de microfoondemping in of uit",
-        "title": "Controller binding"
+        "description": "Schakel de besturing met een controller knop van de microfoondemping in of uit"
       },
       "mode": {
         "description": "Hoe het indrukken van de controller knop de demping van je microfoon standaard zal regelen.",
         "options": {
-          "NONE": "Niets veranderen",
-          "PUSH_TO_TALK": "Push to talk",
-          "TOGGLE": "Toggle"
+          "NONE": "Niets veranderen"
         },
         "title": "Standaard knop modus"
       },
@@ -2754,8 +2695,7 @@
         "title": "Overlay dempings indicator"
       },
       "fade": {
-        "description": "Fade de indicator uit na een paar seconden. Je kunt de indicator weer tonen door op een controller knop te drukken. Deze optie is aan te raden als je een VR headset gebruikt met OLED schermen om het risico op inbranding te verminderen.",
-        "title": "Fade out"
+        "description": "Fade de indicator uit na een paar seconden. Je kunt de indicator weer tonen door op een controller knop te drukken. Deze optie is aan te raden als je een VR headset gebruikt met OLED schermen om het risico op inbranding te verminderen."
       },
       "hardwareVoiceActivityThreshold": {
         "description": "Stel de volumegrens in waarbij de mic indicator op moet lichten",
@@ -2765,7 +2705,6 @@
         "description": "De maximale dekking van de indicator",
         "title": "Dekking"
       },
-      "title": "Overlay Indicator",
       "voiceActivityMode": {
         "description": "Bepaald in welke modus stem activatie (de indicator die oplicht) zal functioneren.",
         "modes": {

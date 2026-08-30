@@ -894,8 +894,7 @@
     "osc-script-simple-editor": {
       "action": {
         "none": "目前尚未新增任何動作！",
-        "osc": "OSC",
-        "sleep": "Sleep"
+        "osc": "OSC"
       },
       "addCommand": "新增",
       "addParameter": "新增參數",
@@ -906,8 +905,7 @@
           "title": "OSC 指令"
         },
         "SLEEP": {
-          "description": "等待指定的時間",
-          "title": "Sleep"
+          "description": "等待指定的時間"
         }
       },
       "errorCounter": "{count, plural, one {1 個驗證錯誤} other {# 個驗證錯誤}}",

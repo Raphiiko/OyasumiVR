@@ -7,7 +7,6 @@
       "soundFx": "Sound Effekt"
     },
     "contributions": "Beiträge",
-    "discordInvite": "Discord Server",
     "sourceLink": "Quellcode @ GitHub",
     "supporters": "Unterstützer",
     "translations": "Übersetzungen"
@@ -112,8 +111,6 @@
     },
     "copyBrightness": "Kopiere den derzeitigen Helligkeitswert",
     "description": "OyasumiVR kann automatisch Helligkeit sowie Farbtemperaturen deines VR-Headsets zu bestimten Zeitpunkten anpassen (Schlafen und Aufwecken)",
-    "detailsTitle": "Event",
-    "events": "Events",
     "hardwareBrightness": {
       "description": "Bildschirmhelligkeit anpassen",
       "title": "Bildschirmhelligkeit ändern zu"
@@ -234,7 +231,6 @@
         "notifications": "Benachrichtigungen",
         "statusInfo": "Status-Information",
         "subMenu": "Einstellungen",
-        "updates": "Updates",
         "vrchat": "VRChat Einstellungen"
       },
       "shutdownAutomations": "Herunterfahrsequenz",
@@ -262,7 +258,6 @@
         "ElbowRight": "Rechter Ellenbogen",
         "FootLeft": "Linker Fuß",
         "FootRight": "Rechter Fuß",
-        "Gamepad": "Gamepad",
         "HandPrimary": "Dominante Hand",
         "HandSecondary": "Andere Hand",
         "Head": "Kopf",
@@ -271,7 +266,6 @@
         "KneeRight": "Rechtes Knie",
         "ShoulderLeft": "Linke Schulter",
         "ShoulderRight": "Rechte Schulter",
-        "Stylus": "Stylus",
         "Treadmill": "Laufband",
         "Waist": "Hüfte",
         "WristLeft": "Linkes Handgelenk",
@@ -639,8 +633,7 @@
           "title": "Vrchat Einladeanfragen"
         },
         "VRCHAT_STATUS": {
-          "description": "Events mit Bezug zu Änderungen vom VRChat Status",
-          "title": "VRChat Status"
+          "description": "Events mit Bezug zu Änderungen vom VRChat Status"
         },
         "WINDOWS_POWER_POLICY": {
           "description": "Events mit Bezug zu Änderungen im Windows Energieplan",
@@ -660,8 +653,7 @@
       },
       "no-logs": "Es wurden noch keine Events geloggt.\nLogs werden für maximal 48 Studen gespeichert.",
       "openFilters": "Events filtern",
-      "show-more": "Zeige mehr",
-      "title": "Events"
+      "show-more": "Zeige mehr"
     },
     "friend-selection-modal": {
       "loading": "Lade Freunde...",
@@ -763,12 +755,10 @@
     },
     "mqtt-config-modal": {
       "brokerHost": {
-        "description": "Der Hostname oder die IP-Adresse über die MQTT Broker erreicht werden kann",
-        "title": "Host"
+        "description": "Der Hostname oder die IP-Adresse über die MQTT Broker erreicht werden kann"
       },
       "brokerPort": {
-        "description": "Der Port der Websocket über den MQTT erreicht werden kann",
-        "title": "Port"
+        "description": "Der Port der Websocket über den MQTT erreicht werden kann"
       },
       "brokerSetupNote": "Beachte, dass der Home Assistant nicht mit MQTT aktiviert kommt. Wenn du MQTT Broker nicht bereits mit Home Assistant eingerichtet hast, dann folge bitte dieser Erklärung <a href=\"https://www.home-assistant.io/integrations/mqtt/\" target=\"_blank\">documentation</a>",
       "description": "OyasumiVR kann mit den Home Assistant über MQTT kommunizieren. Um dies einzurichten, trage bitte die nötigen Informationen unten ein.",
@@ -804,15 +794,11 @@
       "websocketNote": "MQTT über Websockets ist das einzig unterstützte Protokoll, bitte stelle sicher, dass der MQTT Broker Websocket Unterstützung aktiviert hat. Standardgemäß wird MQTT über TCP <i> und nicht </i> unterstützt."
     },
     "osc-script-code-editor": {
-      "format": "Format",
       "syntaxGuide": "Syntax Anleitung",
-      "test": "Test",
       "title": "OSC Script Bearbeiter"
     },
     "osc-script-modal": {
-      "script": "Script",
-      "simple": "Einfach",
-      "title": "OSC Script"
+      "simple": "Einfach"
     },
     "osc-script-simple-editor": {
       "action": {
@@ -822,7 +808,6 @@
       },
       "addCommand": "Hinzufügen",
       "addParameter": "Parameter hinzufügen",
-      "commandCounter": "{count, plural, one {1 Command} other {# Commands}}",
       "commands": {
         "COMMAND": {
           "description": "OSC Befehl ausführen",
@@ -832,9 +817,7 @@
           "description": "Für eine bestimmte Zeit warten",
           "title": "Schlaf"
         }
-      },
-      "errorCounter": "{count, plural, one {1 Validation Error} other {# Validation Errors}}",
-      "test": "Test"
+      }
     },
     "player-list-preset-modal": {
       "confirmDelete": {
@@ -916,8 +899,7 @@
       },
       "password": "Passwort",
       "rememberCredentials": "Angemeldet bleiben",
-      "title": "In VRChat einloggen",
-      "username": "VRChat Username/E-mail"
+      "title": "In VRChat einloggen"
     },
     "vrchat-login-tfa-modal": {
       "description": "Dein VRC account ist 2FA geschützt. Bitte gebe den Code hierfür ein:",
@@ -1079,7 +1061,6 @@
           "description": "Wie die Spielerliste funktioniert",
           "options": {
             "BLACKLIST": {
-              "label": "Blacklist",
               "subLabel": "Anfragen von Freunden die nicht auf der Liste stehen annehmen"
             },
             "DISABLED": {
@@ -1087,7 +1068,6 @@
               "subLabel": "Anfragen von allen annehmen"
             },
             "WHITELIST": {
-              "label": "Whitelist",
               "subLabel": "Anfragen von Freunden die auf der Liste stehen annehmen"
             }
           },
@@ -1353,11 +1333,8 @@
       "automations": {
         "autoAcceptInviteRequests": {
           "mode": {
-            "Blacklist": "Blacklist",
-            "Disabled": "Für jeden",
-            "Whitelist": "Whitelist"
+            "Disabled": "Für jeden"
           },
-          "subtitle": "{mode}: {playerCount, plural, one {1 friend} other {# friends}}",
           "title": "Automatisch Einladungsanfragen annehmen"
         },
         "changeStatusBasedOnPlayerCount": {
@@ -1467,7 +1444,6 @@
       "title": "Wenn ich einschlafe"
     },
     "renderResolution": {
-      "auto": "Auto",
       "custom": "Benutzerdefiniert",
       "title": "Ändere die Render Auflösung zu"
     },
@@ -1480,8 +1456,7 @@
           "action": "Öffne den Log Ordner",
           "description": "Öffne den Ort an denen OyasumiVRs Daten in deinen Datenexplorer lagern",
           "title": "Öffne den Log Ordner"
-        },
-        "title": "Log Files"
+        }
       },
       "persistentData": {
         "clearData": "Daten löschen",
@@ -1507,8 +1482,7 @@
             "title": "Automationseinstellungen"
           },
           "eventLog": {
-            "description": "Die Events, die gespeichert wurden, im Überblick",
-            "title": "Event Log"
+            "description": "Die Events, die gespeichert wurden, im Überblick"
           },
           "imageCache": {
             "description": "Alle Bilder sind temporär gespeichert (zum Beispiel VRChat Spielersymbole)",
@@ -1519,8 +1493,7 @@
             "title": "Integrations Daten"
           },
           "logs": {
-            "description": "Die Log Dateien, die OyasumiVR generiert",
-            "title": "Log Files"
+            "description": "Die Log Dateien, die OyasumiVR generiert"
           },
           "miscData": {
             "description": "Alle anderen Datenm die OyasumiVR speichert, die nicht bereits erwähnt wurden",
@@ -1839,7 +1812,6 @@
       "title": "Benachrichtigungseinstellungen",
       "volume": {
         "description": "Setze das Lautstärkelevel der Benachrichtigungssounds fest",
-        "test": "Test",
         "title": "Allgemeine Benachrichtigungslautstärke"
       }
     },
@@ -1858,7 +1830,6 @@
       "install": "v{version} installieren",
       "noUpdate": "Du verwendest gerade OyasumiVR v{version}, was die aktuellste Version ist!",
       "notChecked": "OyasumiVR hat noch nach Updates geprüft",
-      "title": "Updates",
       "updateAvailable": "Eine neue OyasumiVR Version ist verfügbar! Du verwendest derzeit v{currentVersion}. Die neuste Version ist v{latestVersion}!",
       "updatesDisabled": {
         "DEV": "Da du die Entwicklerversion von OyasumiVR verwendest sind Updates deaktiviert. Wenn du eine aktuellere Version von OyasumiVR installieren willst musst du dies manuel machen.",
@@ -1870,9 +1841,6 @@
     "common": {
       "none": "Keine",
       "vrcLoginRequired": "Diese Funktion benötigt Zugriff auf deinen VRChat Account"
-    },
-    "logo": {
-      "tagline": "VR Sleeping Utilities"
     },
     "modals": {
       "back": "Zurück",
@@ -2068,13 +2036,11 @@
       },
       "disableOnDevicePowerOn": {
         "Controller": "Kontroller",
-        "GenericTracker": "Tracker",
         "title": "Schlafmodus deaktivieren",
         "whenTurningOn": "Bei anschalten von"
       },
       "enableAtBatteryPercentage": {
         "Controller": "Kontroller",
-        "GenericTracker": "Tracker",
         "errors": {
           "thresholdNotInteger": "Die Prozentzahl muss eine ganze Nummer sein",
           "thresholdOutOfRange": "Die Prozentzahl muss zwischen 0% und 100% liegen"
