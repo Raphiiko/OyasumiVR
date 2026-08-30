@@ -9,6 +9,7 @@ use std::{
     fs::{read_dir, File},
     io::{BufRead, BufReader},
     os::windows::prelude::MetadataExt,
+    path::Path,
     sync::Arc,
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
@@ -25,12 +26,10 @@ struct VRCLogEvent {
 
 static MUTE_LOG_DIR_NO_EXIST_WARNINGS: AtomicBool = AtomicBool::new(false);
 
-fn get_latest_log_path() -> Option<String> {
-    // Get all files in the log directory
+fn get_latest_log_path(attached: Option<&str>) -> Option<String> {
     let home_dir = dirs::home_dir()?;
-    let dir = read_dir(home_dir.join("AppData\\LocalLow\\VRChat\\VRChat"));
-    // If log directory doesn't exist, return no path
-    if dir.is_err() {
+    let dir = home_dir.join("AppData\\LocalLow\\VRChat\\VRChat");
+    if read_dir(&dir).is_err() {
         if !MUTE_LOG_DIR_NO_EXIST_WARNINGS.load(Ordering::Relaxed) {
             warn!("[Core] VRChat log directory doesn't exist (yet)");
             MUTE_LOG_DIR_NO_EXIST_WARNINGS.store(true, Ordering::Relaxed);
@@ -38,31 +37,33 @@ fn get_latest_log_path() -> Option<String> {
         return None;
     }
     MUTE_LOG_DIR_NO_EXIST_WARNINGS.store(false, Ordering::Relaxed);
-    // Get the latest log file
-    dir.ok()?
+    pick_log_path(&dir, attached, SystemTime::now())
+}
+
+fn pick_log_path(dir: &Path, attached: Option<&str>, now: SystemTime) -> Option<String> {
+    read_dir(dir)
+        .ok()?
         .filter_map(|entry| entry.ok())
-        // Only get log files
         .filter(|entry| {
             let name = entry.file_name().to_string_lossy().to_string();
             name.starts_with("output_log_") && name.ends_with(".txt")
         })
-        // Only get files that are created in the last 24 hours
         .filter(|entry| {
-            entry
-                .path()
-                .metadata()
+            let path = entry.path();
+            if attached.is_some_and(|attached| path == Path::new(attached)) {
+                return true;
+            }
+            path.metadata()
                 .ok()
                 .and_then(|metadata| {
                     metadata.created().ok().and_then(|created_time| {
-                        SystemTime::now()
-                            .duration_since(created_time)
+                        now.duration_since(created_time)
                             .ok()
                             .map(|duration| duration <= Duration::from_secs(24 * 60 * 60))
                     })
                 })
                 .unwrap_or(false)
         })
-        // Ignore files that are 0 bytes
         .filter(|entry| {
             entry
                 .path()
@@ -71,9 +72,7 @@ fn get_latest_log_path() -> Option<String> {
                 .map(|metadata| metadata.len() > 0)
                 .unwrap_or(false)
         })
-        // Find most recent log file
         .max_by_key(|entry| entry.path().metadata().ok().map(|m| m.creation_time()))
-        // Get the path for it
         .and_then(|entry| entry.path().to_str().map(String::from))
 }
 
@@ -258,8 +257,7 @@ pub fn start_log_locator_task() -> CancellationToken {
         let ctx = &mut loop_context;
         while !cancellation_token_internal.is_cancelled() {
             tokio::time::sleep(Duration::from_millis(1000)).await;
-            // Check the current log file path
-            let log_path_option = get_latest_log_path();
+            let log_path_option = get_latest_log_path(ctx.current_log_path.as_deref());
             if log_path_option.is_none() {
                 // If we are currently reading a log file, stop the reader task
                 if ctx.current_log_path.is_some() {
@@ -304,4 +302,84 @@ pub fn start_log_locator_task() -> CancellationToken {
         info!("[Core] Terminated VRChat log watcher");
     });
     cancellation_token
+}
+
+#[cfg(test)]
+mod tests {
+    use super::pick_log_path;
+    use std::{
+        fs,
+        path::Path,
+        thread,
+        time::{Duration, SystemTime},
+    };
+    use tempfile::tempdir;
+
+    fn create_log(dir: &Path, name: &str, contents: &[u8]) -> (String, SystemTime) {
+        let path = dir.join(name);
+        fs::write(&path, contents).unwrap();
+        let created = path.metadata().unwrap().created().unwrap();
+        (path.to_str().unwrap().to_owned(), created)
+    }
+
+    #[test]
+    fn picks_logs_by_age_attachment_and_size() {
+        let dir = tempdir().unwrap();
+        let (attached, created) = create_log(dir.path(), "output_log_old.txt", b"log");
+
+        assert_eq!(
+            pick_log_path(
+                dir.path(),
+                None,
+                created + Duration::from_secs(23 * 60 * 60)
+            ),
+            Some(attached.clone())
+        );
+        assert_eq!(
+            pick_log_path(
+                dir.path(),
+                None,
+                created + Duration::from_secs(25 * 60 * 60)
+            ),
+            None
+        );
+        assert_eq!(
+            pick_log_path(
+                dir.path(),
+                Some(&attached),
+                created + Duration::from_secs(25 * 60 * 60),
+            ),
+            Some(attached.clone())
+        );
+        assert_eq!(
+            pick_log_path(
+                dir.path(),
+                Some(dir.path().join("missing.txt").to_str().unwrap()),
+                created + Duration::from_secs(25 * 60 * 60),
+            ),
+            None
+        );
+
+        thread::sleep(Duration::from_millis(20));
+        let (newer, newer_created) = create_log(dir.path(), "output_log_new.txt", b"log");
+        assert_eq!(
+            pick_log_path(
+                dir.path(),
+                Some(&attached),
+                newer_created + Duration::from_secs(1),
+            ),
+            Some(newer)
+        );
+
+        let empty_dir = tempdir().unwrap();
+        let (_, empty_created) = create_log(empty_dir.path(), "output_log_empty.txt", b"");
+        assert_eq!(
+            pick_log_path(
+                empty_dir.path(),
+                None,
+                empty_created + Duration::from_secs(1),
+            ),
+            None
+        );
+    }
 }
