@@ -1479,9 +1479,7 @@
         "actions": {
           "disable": "Desactivar automatizaciones de la GPU",
           "elevate": "Conceder privilegios de administrador"
-        },
-        "message": "Although you have GPU automations enabled, OyasumiVR currently does not have the administrative privileges to be able to run these.\n\nPlease give OyasumiVR administrative privileges, or disable GPU automations.",
-        "title": "GPU Automations Unavailable"
+        }
       },
       "lighthouseConsoleError": {
         "message": "The lighthouse console could not be found or is not working properly. Without access to the lighthouse console, OyasumiVR will likely not be able to turn off your controllers and trackers. Please check your configuration.",
