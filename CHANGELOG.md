@@ -19,6 +19,10 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Added
 
+- Multiple VRChat account profiles
+  - Switch between accounts without entering their credentials again
+  - Saved sessions and credentials are protected with the Windows Data Protection API
+  - Existing VRChat logins are migrated automatically
 - Anonymous crash and error reporting, controlled by the existing telemetry setting
 - OSC Settings view
   - Custom target for OSC messages (e.g. for use with Resonite, OSC routers, or when OSCQuery is not available)
@@ -29,6 +33,9 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Changed
 
+- Redesigned the About view so growing credits scroll inside the view instead of making the
+  window grow
+- OyasumiVR no longer rewrites a settings file when nothing in it changed
 - Turning devices on when OyasumiVR starts now takes precedence over turning them off for a stopped
   SteamVR, so devices covered by both automations are left on
 - OyasumiVR now loads NVIDIA's NVML library from the Windows system directory only. A driver old
@@ -58,10 +65,14 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed VRChat two-factor login and the restoration of saved sessions
+- Fixed player-count status automations not reacting when sleep mode changed
 - Fixed base stations being turned off when OyasumiVR was started while SteamVR was already running
 - Fixed base station control leaking memory in the Windows Bluetooth service, which could use up all
   of the system's memory
 - Fixed base stations not being controllable again after they briefly went out of Bluetooth range
+- Fixed Bluetooth recovery reporting success when Windows refused to turn a radio off or on.
+  Radios that cannot be restored are retried later
 - Fixed the Windows notification provider not showing any notifications
 - Fixed the VR overlay failing to start when system-wide ad blockers or proxies intercepted
   OyasumiVR's local connection
@@ -114,6 +125,11 @@ with [SemVer](https://semver.org/) prerelease suffixes:
   restart later instead of immediately. OyasumiVR now blocks all settings writes after clearing data,
   and the restart prompt can no longer be dismissed
 - Various stability improvements
+
+- Fixed controller and input origin labels breaking when a localized-name lookup failed
+- Fixed OpenVR aborting when its settings interface was unavailable
+- Fixed stale subscriptions after closing the OSC script editor and Device Manager modal
+- Panic reports no longer include your Windows account name from embedded source paths
 
 ### Removed
 
