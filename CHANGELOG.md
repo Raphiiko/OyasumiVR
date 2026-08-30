@@ -65,6 +65,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed corrupted image-cache metadata preventing OyasumiVR from starting
 - Fixed VRChat world and player updates, join and leave notifications, and related automations
   stopping after VRChat had been running for more than 24 hours
 - Fixed VRChat two-factor login and the restoration of saved sessions
