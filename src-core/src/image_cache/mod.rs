@@ -61,12 +61,12 @@ impl ImageCache {
         if !image_path.exists() {
             return None;
         }
-        // Check if image is expired
+        // check expiration
         let now = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
             .unwrap()
             .as_secs();
-        if now - manifest.created > manifest.ttl {
+        if now.checked_sub(manifest.created)? > manifest.ttl {
             return None;
         }
         // Get mime type from manifest
@@ -149,12 +149,16 @@ impl ImageCache {
                     continue;
                 }
             };
-            // Check if image is expired
+            // check expiration
             let now = std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
                 .unwrap()
                 .as_secs();
-            if only_expired && now - manifest.created < manifest.ttl {
+            if only_expired
+                && now
+                    .checked_sub(manifest.created)
+                    .is_some_and(|age| age < manifest.ttl)
+            {
                 continue;
             }
             // Delete storage directory
@@ -346,5 +350,24 @@ mod tests {
         assert!(entry_path.join("manifest.json").exists());
         assert_eq!(cache.get_image(url.to_string()).unwrap().0, image);
         assert_eq!(std::fs::read_dir(entry_path).unwrap().count(), 2);
+    }
+
+    #[test]
+    fn future_dated_manifests_miss_and_are_removed() {
+        let directory = tempfile::tempdir().unwrap();
+        let cache = ImageCache::new(directory.path().as_os_str().to_owned());
+        let url = "https://example.com/image.png";
+
+        cache.store_image(url, 60, mime::IMAGE_PNG, vec![1, 2, 3]);
+
+        let entry_path = directory.path().join(format!("{:x}", md5::compute(url)));
+        let manifest_path = entry_path.join("manifest.json");
+        let mut manifest = ImageCache::read_manifest(&manifest_path).unwrap();
+        manifest.created = u64::MAX;
+        std::fs::write(manifest_path, serde_json::to_vec(&manifest).unwrap()).unwrap();
+
+        assert!(cache.get_image(url.to_string()).is_none());
+        cache.clean(true);
+        assert!(!entry_path.exists());
     }
 }
