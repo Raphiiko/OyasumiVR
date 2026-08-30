@@ -97,8 +97,11 @@ export class IpcService {
     await window.OyasumiIPCOut.sendEventVoid('startShutdownSequence');
   }
 
-  async turnOffOVRDevices(deviceIds: number[]): Promise<void> {
-    await window.OyasumiIPCOut.sendEventJson('turnOffOVRDevices', JSON.stringify(deviceIds));
+  async turnOffOVRDevices(deviceSerialNumbers: string[]): Promise<void> {
+    await window.OyasumiIPCOut.sendEventJson(
+      'turnOffOVRDevices',
+      JSON.stringify(deviceSerialNumbers)
+    );
   }
 
   async setBrightness(type: BrightnessType, value: number): Promise<void> {

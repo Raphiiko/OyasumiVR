@@ -36,14 +36,14 @@ export class LighthouseConsoleService {
         }
       });
     await listen<string>('turnOffOVRDevices', async (event) => {
-      let deviceIndices: number[];
+      let deviceSerialNumbers: Set<string>;
       try {
-        deviceIndices = JSON.parse(event.payload);
+        deviceSerialNumbers = new Set(JSON.parse(event.payload));
       } catch {
         return;
       }
       const devices = (await firstValueFrom(this.openvr.devices)).filter((d) =>
-        deviceIndices.includes(d.index)
+        d.serialNumber ? deviceSerialNumbers.has(d.serialNumber) : false
       );
       await this.turnOffDevices(devices);
     });
