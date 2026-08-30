@@ -9,6 +9,7 @@ const DEPOTS = {
 };
 const LOCAL_ENV_FILE = '.env.local';
 const EXECUTABLE_NAME = 'OyasumiVR.exe';
+const LIVE_BRANCHES = { alpha: 'alpha', beta: 'beta', release: '' };
 
 function fail(message) {
   console.error(message);
@@ -43,8 +44,8 @@ function toVdfPath(path) {
 }
 
 const modeArg = (process.argv[2] || '').toLowerCase();
-if (!['beta', 'release'].includes(modeArg)) {
-  fail('Usage: node scripts/steam/upload-steam-build.js <beta|release>');
+if (!Object.hasOwn(LIVE_BRANCHES, modeArg)) {
+  fail('Usage: node scripts/steam/upload-steam-build.js <alpha|beta|release>');
 }
 
 loadLocalEnv(LOCAL_ENV_FILE);
@@ -86,15 +87,14 @@ const steamUsername = process.env.STEAM_USERNAME;
 if (!steamUsername) fail('Missing required environment variable: STEAM_USERNAME');
 const steamPassword = process.env.STEAM_PASSWORD;
 const steamGuardCode = process.env.STEAM_GUARD_CODE;
-const setLiveBranch = process.env.STEAM_SET_LIVE_BRANCH ?? (modeArg === 'beta' ? 'beta' : '');
+const setLiveBranch = process.env.STEAM_SET_LIVE_BRANCH || LIVE_BRANCHES[modeArg];
 const preview = process.env.STEAM_PREVIEW === '1' ? '1' : '0';
-const versionLabel = packageVersion;
+const timestamp = new Date().toISOString().replace('T', ' ').slice(0, 19);
 const buildDescription =
   process.env.STEAM_BUILD_DESC ||
-  `OyasumiVR v${versionLabel} build ${buildId} ${new Date()
-    .toISOString()
-    .replace('T', ' ')
-    .slice(0, 19)} UTC`;
+  (modeArg === 'alpha'
+    ? `OyasumiVR alpha build ${buildId} ${timestamp} UTC`
+    : `OyasumiVR v${packageVersion} build ${buildId} ${timestamp} UTC`);
 
 const generatedRoot = join('dist', 'steamcmd');
 const buildOutputDir = join(generatedRoot, 'output');
