@@ -69,6 +69,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
   stopping after VRChat had been running for more than 24 hours
 - Fixed VRChat two-factor login and the restoration of saved sessions
 - Fixed player-count status automations not reacting when sleep mode changed
+- Fixed the sleep detector turning sleep mode back on after its confirmation countdown was canceled by
+  disabling the automation or changing sleep mode manually
 - Fixed base stations being turned off when OyasumiVR was started while SteamVR was already running
 - Fixed base station control leaking memory in the Windows Bluetooth service, which could use up all
   of the system's memory
