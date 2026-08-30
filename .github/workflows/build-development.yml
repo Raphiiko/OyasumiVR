@@ -36,6 +36,12 @@ jobs:
         run: mkdir -p dist/oyasumivr
       - name: Run Clippy (shared)
         run: cd src-shared-rust; cargo clippy -- -D warnings
+      - name: Test the shared crate
+        run: cd src-shared-rust; cargo test
+      - name: Run Clippy (privileged-launcher)
+        run: cd src-privileged-launcher; cargo clippy --all-targets -- -D warnings
+      - name: Test the privileged launcher
+        run: cd src-privileged-launcher; cargo test
       - name: Run Clippy (elevated-sidecar)
         run: cd src-elevated-sidecar; cargo clippy -- -D warnings
       - name: Run Clippy (core)
