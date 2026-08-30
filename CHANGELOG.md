@@ -65,6 +65,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed VRChat world and player updates, join and leave notifications, and related automations
+  stopping after VRChat had been running for more than 24 hours
 - Fixed VRChat two-factor login and the restoration of saved sessions
 - Fixed player-count status automations not reacting when sleep mode changed
 - Fixed base stations being turned off when OyasumiVR was started while SteamVR was already running
