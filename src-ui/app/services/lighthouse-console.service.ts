@@ -36,16 +36,21 @@ export class LighthouseConsoleService {
         }
       });
     await listen<string>('turnOffOVRDevices', async (event) => {
-      let deviceIndices: number[];
+      let deviceSerialNumbers: unknown;
       try {
-        deviceIndices = JSON.parse(event.payload);
+        deviceSerialNumbers = JSON.parse(event.payload);
       } catch {
         return;
       }
-      const devices = (await firstValueFrom(this.openvr.devices)).filter((d) =>
-        deviceIndices.includes(d.index)
-      );
-      await this.turnOffDevices(devices);
+      if (
+        !Array.isArray(deviceSerialNumbers) ||
+        !deviceSerialNumbers.every(
+          (serialNumber): serialNumber is string =>
+            typeof serialNumber === 'string' && serialNumber.length > 0
+        )
+      )
+        return;
+      await this.queuePowerOff(deviceSerialNumbers);
     });
   }
 
@@ -92,20 +97,29 @@ export class LighthouseConsoleService {
   }
 
   async turnOffDevices(ovrDevices: OVRDevice[]) {
-    const batch = this.powerOffQueue.then(() => this.runTurnOffDevices(ovrDevices));
+    return this.queuePowerOff(
+      ovrDevices
+        .map((device) => device.serialNumber)
+        .filter((serialNumber): serialNumber is string => !!serialNumber)
+    );
+  }
+
+  private queuePowerOff(deviceSerialNumbers: string[]) {
+    const batch = this.powerOffQueue.then(() => this.runTurnOffDevices(deviceSerialNumbers));
     this.powerOffQueue = batch.catch(() => {});
     return batch;
   }
 
-  private async runTurnOffDevices(requestedDevices: OVRDevice[]) {
+  private async runTurnOffDevices(deviceSerialNumbers: string[]) {
     const settings = await firstValueFrom(this.appSettings.settings);
     const lighthouseConsolePath = settings.lighthouseConsolePath;
     if (this._consoleStatus.value !== 'SUCCESS') return;
     // resolve the devices as they are now, not as the caller saw them
-    const requestedIndices = requestedDevices.map((device) => device.index);
+    const requestedSerials = new Set(deviceSerialNumbers);
     const ovrDevices = (await firstValueFrom(this.openvr.devices)).filter(
       (device) =>
-        requestedIndices.includes(device.index) &&
+        device.serialNumber &&
+        requestedSerials.has(device.serialNumber) &&
         device.canPowerOff &&
         device.dongleId &&
         !device.isTurningOff

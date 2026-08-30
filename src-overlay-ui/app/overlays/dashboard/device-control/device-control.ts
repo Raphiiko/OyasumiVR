@@ -30,10 +30,14 @@ export class DeviceControl implements OnDestroy {
 
   private readonly state = this.ipc.state;
   private readonly activeControllers = computed(() =>
-    (this.state().deviceInfo?.controllers ?? []).filter((d) => d.canPowerOff && !d.isTurningOff)
+    (this.state().deviceInfo?.controllers ?? []).filter(
+      (d) => d.serialNumber && d.canPowerOff && !d.isTurningOff
+    )
   );
   private readonly activeTrackers = computed(() =>
-    (this.state().deviceInfo?.trackers ?? []).filter((d) => d.canPowerOff && !d.isTurningOff)
+    (this.state().deviceInfo?.trackers ?? []).filter(
+      (d) => d.serialNumber && d.canPowerOff && !d.isTurningOff
+    )
   );
 
   private readonly controllersReady = signal(true);
@@ -60,7 +64,7 @@ export class DeviceControl implements OnDestroy {
     if (!this.canTurnOffControllers()) return;
     this.startCooldown(this.controllersReady);
     this.notify('notifications.turningOffControllers.content');
-    this.turnOff(this.controllerIndices());
+    this.turnOff(this.controllerSerialNumbers());
     this.delay(500, () => this.closeDashboard.emit());
   }
 
@@ -68,27 +72,31 @@ export class DeviceControl implements OnDestroy {
     if (!this.canTurnOffTrackers()) return;
     this.startCooldown(this.trackersReady);
     this.notify('notifications.turningOffTrackers.content');
-    this.turnOff(this.trackerIndices());
+    this.turnOff(this.trackerSerialNumbers());
   }
 
   turnOffControllersAndTrackers(): void {
     if (!this.canTurnOffBoth()) return;
     this.startCooldown(this.bothReady);
     this.notify('notifications.turningOffControllersAndTrackers.content');
-    this.turnOff([...this.trackerIndices(), ...this.controllerIndices()]);
+    this.turnOff([...this.trackerSerialNumbers(), ...this.controllerSerialNumbers()]);
     this.delay(500, () => this.closeDashboard.emit());
   }
 
-  private controllerIndices(): number[] {
-    return (this.state().deviceInfo?.controllers ?? []).map((d) => d.index);
+  private controllerSerialNumbers(): string[] {
+    return (this.state().deviceInfo?.controllers ?? [])
+      .map((device) => device.serialNumber)
+      .filter((serialNumber): serialNumber is string => !!serialNumber);
   }
 
-  private trackerIndices(): number[] {
-    return (this.state().deviceInfo?.trackers ?? []).map((d) => d.index);
+  private trackerSerialNumbers(): string[] {
+    return (this.state().deviceInfo?.trackers ?? [])
+      .map((device) => device.serialNumber)
+      .filter((serialNumber): serialNumber is string => !!serialNumber);
   }
 
-  private turnOff(deviceIds: number[]): void {
-    void this.ipc.turnOffOVRDevices(deviceIds);
+  private turnOff(deviceSerialNumbers: string[]): void {
+    void this.ipc.turnOffOVRDevices(deviceSerialNumbers);
   }
 
   private notify(key: string): void {
