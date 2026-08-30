@@ -957,12 +957,6 @@
       "disabled": "OyasumiVR verfügt über mehrere Methoden deine Grafikkarteneinstellungen automatisch anzupassen. Dies ist besonders nützlich um Energie zu sparen.\n\nDa diese Funktion für technikaffine Nutzer gedacht ist, ist diese Funktion standardmäßig ausgeschaltet.\nDu kannst sie mit den Knopf unten aktivieren.",
       "noSidecar": "Damit OyasumiVr deine Grafikkarteneinstellungen ändern kann, benötigt es Adminrechte. Bitte Klicke den Knopf hier unten um dies zu erlauben."
     },
-    "elevationSidecarModal": {
-      "cancel": "Nur dieses Mal",
-      "confirm": "Immer",
-      "message": "Möchtest du OyasumiVR Adminrechte geben.\n\nWenn du dies aktivierst wird OyasumiVR direkt danach bei jeden Start der App fragen. Du kannst dies zu jeder Zeit in den Einstellungen ändern.",
-      "title": "Adminrechte geben"
-    },
     "enable": "Grafikkarten Automationen aktivieren",
     "enableWarning": "Inkorrekte Einstellungen der Grafikkartenparameter können zur Instabilität des Systems führen. Bitte verwende dieses Feature ausschließlich, wenn du weißt was du tust.",
     "msiAfterburner": {
@@ -1186,6 +1180,9 @@
   },
   "message-center": {
     "messages": {
+      "elevatedFeaturesUnavailable": {
+        "title": "Adminrechte nicht verfügbar"
+      },
       "manyLighthousesDetected": {
         "message": "Es scheint, als ob du viele Basisstationen hast\n\nBeachte, dass die meisten Bluetooth-Adapter nur 7 gleichzeitige Verbindungen verarbeiten können, einschließlich anderer Bluetooth-Geräte wie Kopfhörer und andere Peripheriegeräte.Denken Sie daran, dass OyasumiVR möglicherweise Probleme hat, alle Ihre Basisstationen zu steuern, wenn Sie zu viele von ihnen gleichzeitig angeschlossen haben oder zu viele andere Bluetooth-Geräte angeschlossen sind."
       }
@@ -1640,8 +1637,14 @@
     },
     "general": {
       "adminPrivileges": {
-        "description": "OyasumiVR benötigt Adminrechte um die Grafikkartenenergieeinstellungen zu kontrollieren. Wenn dies aktiviert ist wird OyasumiVR jedes mal beim Start nach der Berechtigung fragen.",
-        "label": "Frag nach Adminrechten beim Hochfahren",
+        "description": "Manche Funktionen, etwa die Steuerung der Energiegrenzen deiner GPU, brauchen Adminrechte. Wenn du das einschaltest, wird einmal danach gefragt. Danach richtet OyasumiVR diese Funktionen ein, ohne erneut zu fragen.",
+        "errors": {
+          "installFailed": "OyasumiVR konnte die Komponente, die Adminrechte braucht, nicht einrichten.",
+          "notSupported": "Diese Funktionen brauchen ein Windows-Administratorkonto. Dieses Konto kann keine Adminrechte bekommen, daher stehen sie nicht zur Verfügung.",
+          "promptDeclined": "Es wurden keine Adminrechte gewährt, daher bleiben diese Funktionen aus.",
+          "taskFailed": "OyasumiVR konnte die Komponente, die Adminrechte braucht, nicht starten. Beim nächsten Start von OyasumiVR wird es erneut versucht."
+        },
+        "label": "Funktionen erlauben, die Adminrechte brauchen",
         "title": "Adminrechte"
       },
       "language": {

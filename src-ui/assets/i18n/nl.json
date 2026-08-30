@@ -1150,12 +1150,6 @@
       "disabled": "OyasumiVR kan op verschillende manieren je GPU instellingen automatisch aanpassen.\nDit stelt je bijvoorbeeld in staat om stroom te besparen wanneer je slaapt.\n\nDeze functie is standaard uitgeschakeld, omdat dit functionaliteit is voor geavanceerde gebruikers.\nAls je deze functionaliteit wilt gebruiken kun je deze inschakelen met de knop hier onder.",
       "noSidecar": "OyasumiVR heeft beheerders rechten nodig om de GPU instellingen aan te kunnen passen. Klik a.u.b. op de knop hier onder om OyasumiVR beheerders rechten te geven."
     },
-    "elevationSidecarModal": {
-      "cancel": "Alleen deze keer",
-      "confirm": "Altijd",
-      "message": "Wil je OyasumiVR altijd beheerders rechten geven?\n\nAls je dit doet, zal OyasumiVR voortaan meteen bij het starten hier om deze rechten vragen. Je kunt dit later altijd weer uitzetten in de instellingen.",
-      "title": "Beheerders rechten geven"
-    },
     "enable": "Activeer GPU Automatiseringen",
     "enableWarning": "Het verkeerd aanpassen van je GPU instellingen kan resulteren in een onstabiel systeem. Gebruik deze functionaliteit alleen als je weet waar je mee bezig bent.",
     "msiAfterburner": {
@@ -1459,6 +1453,9 @@
       "unhide": "Tonen"
     },
     "messages": {
+      "elevatedFeaturesUnavailable": {
+        "title": "Beheerders rechten niet beschikbaar"
+      },
       "gpuAutomationsAfterburnerError": {
         "actions": {
           "disable": "Automatiseringen Uitschakelen"
@@ -2034,8 +2031,14 @@
     },
     "general": {
       "adminPrivileges": {
-        "description": "OyasumiVR heeft beheerders rechten nodig om de stroom limieten van je videokaart te kunnen beheren. Als je dit aanzet, zal OyasumiVR bij het opstarten altijd om beheerders rechten vragen.",
-        "label": "Vraag om beheerders rechten bij het opstarten",
+        "description": "Sommige functies, zoals het beheren van de stroom limieten van je GPU, hebben beheerders rechten nodig. Als je dit inschakelt, wordt er één keer om gevraagd. Daarna stelt OyasumiVR deze functies in zonder het opnieuw te vragen.",
+        "errors": {
+          "installFailed": "OyasumiVR kon het onderdeel dat beheerders rechten nodig heeft niet instellen.",
+          "notSupported": "Deze functies hebben een Windows beheerdersaccount nodig. Dit account kan geen beheerders rechten krijgen, dus ze blijven onbeschikbaar.",
+          "promptDeclined": "Er zijn geen beheerders rechten verleend, dus deze functies blijven uit.",
+          "taskFailed": "OyasumiVR kon het onderdeel dat beheerders rechten nodig heeft niet starten. Het probeert het opnieuw wanneer je OyasumiVR de volgende keer start."
+        },
+        "label": "Functies toestaan die beheerders rechten nodig hebben",
         "title": "Beheerders Rechten"
       },
       "language": {

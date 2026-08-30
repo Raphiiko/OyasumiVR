@@ -3,10 +3,8 @@ import { NvmlService, NvmlStatus } from '../../../../services/nvml.service';
 import { asyncScheduler, combineLatest, firstValueFrom, map, Observable, throttleTime } from 'rxjs';
 import { GpuAutomationsService } from '../../../../services/gpu-automations.service';
 import { fade, hshrink, noop, vshrink } from 'src-ui/app/utils/animations';
-import { ModalService } from 'src-ui/app/services/modal.service';
-import { AppSettingsService } from '../../../../services/app-settings.service';
+
 import { ElevatedSidecarService } from '../../../../services/elevated-sidecar.service';
-import { ConfirmModalComponent } from '../../../../components/confirm-modal/confirm-modal.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ExecutableReferenceStatus } from 'src-ui/app/models/settings';
 import { ActivatedRoute } from '@angular/router';
@@ -26,14 +24,13 @@ export class GpuAutomationsViewComponent implements OnInit {
   panel: 'DISABLED' | 'NO_SIDECAR' | 'ENABLED' = 'DISABLED';
   disabledMessage = '';
   nvmlErrors?: Observable<boolean>;
+  elevationMessage: string | null = null;
   msiAfterburnerErrors?: Observable<boolean>;
 
   constructor(
     private nvml: NvmlService,
     protected gpuAutomations: GpuAutomationsService,
     private sidecar: ElevatedSidecarService,
-    private modalService: ModalService,
-    private settingsService: AppSettingsService,
     private activatedRoute: ActivatedRoute
   ) {
     combineLatest([sidecar.sidecarStarted, this.gpuAutomations.isEnabled()])
@@ -110,22 +107,10 @@ export class GpuAutomationsViewComponent implements OnInit {
   }
 
   async startSidecar() {
-    if (!(await firstValueFrom(this.settingsService.settings)).askForAdminOnStart) {
-      this.modalService
-        .addModal(ConfirmModalComponent, {
-          title: 'gpu-automations.elevationSidecarModal.title',
-          message: 'gpu-automations.elevationSidecarModal.message',
-          confirmButtonText: 'gpu-automations.elevationSidecarModal.confirm',
-          cancelButtonText: 'gpu-automations.elevationSidecarModal.cancel',
-        })
-        .subscribe((data) => {
-          if (data?.confirmed) {
-            this.settingsService.updateSettings({ askForAdminOnStart: true });
-          }
-          this.sidecar.start();
-        });
-    } else {
-      this.sidecar.start();
+    this.elevationMessage = null;
+    const result = await this.sidecar.enable();
+    if (result.result !== 'ok') {
+      this.elevationMessage = `settings.general.adminPrivileges.errors.${result.result}`;
     }
   }
 }

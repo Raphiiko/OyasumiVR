@@ -1151,12 +1151,6 @@
       "disabled": "OyasumiVR 允許你自動調整 GPU 的功耗限制\n這樣你就可以在睡覺時節省用電量\n\nGPU 自動化目前僅適用於 NVIDIA GPU\nAMD 和 Intel GPU 仍然不支持",
       "noSidecar": "為了讓 OyasumiVR 能夠控制 GPU 設定，它需要管理員權限。請點擊下方按鈕授予 OyasumiVR 管理員權限"
     },
-    "elevationSidecarModal": {
-      "cancel": "僅此一次",
-      "confirm": "總是",
-      "message": "你確定想要授予 OyasumiVR 管理員權限嗎？\n\n如果你開啟此權限，OyasumiVR 將在啟動時立即請求這些權限。 你可以稍後隨時在設定中關閉此功能",
-      "title": "授予管理員權限"
-    },
     "enable": "開啟 GPU 自動化",
     "enableWarning": "這是功能是給一些進階用戶的！\n設定錯誤的功耗限制可能會導致你的系統變得不穩定\n請牢記這一點，最好只在你知道自己在做什麼時才調整它",
     "msiAfterburner": {
@@ -1460,6 +1454,9 @@
       "unhide": "取消隱藏"
     },
     "messages": {
+      "elevatedFeaturesUnavailable": {
+        "title": "管理員權限無法使用"
+      },
       "gpuAutomationsAfterburnerError": {
         "actions": {
           "disable": "停用自動化"
@@ -2035,8 +2032,14 @@
     },
     "general": {
       "adminPrivileges": {
-        "description": "OyasumiVR 需要管理員權限才能控制 GPU 的功耗限制。\n如果啟用此功能，OyasumiVR 將在啟動時請求管理員權限",
-        "label": "啟動時要求管理員權限",
+        "description": "部分功能（例如控制 GPU 的功耗限制）需要管理員權限。啟用後只會要求一次，之後 OyasumiVR 就會在不再詢問的情況下設定這些功能。",
+        "errors": {
+          "installFailed": "OyasumiVR 無法設定需要管理員權限的元件。",
+          "notSupported": "這些功能需要 Windows 管理員帳戶。目前的帳戶無法取得管理員權限，因此這些功能仍然無法使用。",
+          "promptDeclined": "未授予管理員權限，因此這些功能維持關閉。",
+          "taskFailed": "OyasumiVR 無法啟動需要管理員權限的元件，下次啟動 OyasumiVR 時會再試一次。"
+        },
+        "label": "允許需要管理員權限的功能",
         "title": "管理員權限"
       },
       "language": {

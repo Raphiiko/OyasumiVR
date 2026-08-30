@@ -1150,12 +1150,6 @@
       "disabled": "GPU設定を調整します。\nパーフォマンスを抑制し使用電力を制限できます。\n\n上級者向けの機能であるため、デフォルトでは無効です。\n下のボタンをクリックして有効にできます。",
       "noSidecar": "GPU設定の変更を許可するには、管理者権限が必要です。以下のボタンをクリックし、OyasumiVRに管理者権限を付与してください。"
     },
-    "elevationSidecarModal": {
-      "cancel": "一回のみ",
-      "confirm": "常に",
-      "message": "常に管理者権限を付与しますか？\n\n有効にすると起動時に管理者権限を要求します。この設定はいつでも無効にできます。",
-      "title": "管理者権限を付与する"
-    },
     "enable": "GPU自動化を有効にする",
     "enableWarning": "GPUパラメータを誤って調整すると、システムが不安定になる可能性があります。内容を理解できる場合に限り、この機能を有効にしてください。",
     "msiAfterburner": {
@@ -1459,6 +1453,9 @@
       "unhide": "再表示"
     },
     "messages": {
+      "elevatedFeaturesUnavailable": {
+        "title": "管理者権限を利用できません"
+      },
       "gpuAutomationsAfterburnerError": {
         "actions": {
           "disable": "自動化を無効"
@@ -2034,8 +2031,14 @@
     },
     "general": {
       "adminPrivileges": {
-        "description": "OyasumiVRがGPUの電力制限を制御するためには管理者権限が必要です。有効にするとOyasumiVRは起動時に管理者権限を要求するようになります",
-        "label": "起動時に管理者権限を要求する",
+        "description": "GPU の電力制限の制御など、一部の機能には管理者権限が必要です。これを有効にすると、権限を一度だけ要求します。その後 OyasumiVR は再び尋ねることなくこれらの機能を設定します。",
+        "errors": {
+          "installFailed": "管理者権限が必要なコンポーネントを OyasumiVR がセットアップできませんでした。",
+          "notSupported": "これらの機能には Windows の管理者アカウントが必要です。このアカウントには管理者権限を付与できないため、利用できないままになります。",
+          "promptDeclined": "管理者権限が付与されなかったため、これらの機能はオフのままです。",
+          "taskFailed": "管理者権限が必要なコンポーネントを OyasumiVR が起動できませんでした。次に OyasumiVR を起動したときに再試行します。"
+        },
+        "label": "管理者権限が必要な機能を許可する",
         "title": "管理者権限"
       },
       "language": {

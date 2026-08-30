@@ -4,6 +4,13 @@ import { migrateLighthouseDeviceId } from './lighthouse-device-id';
 import { protectSecret } from '../utils/secrets';
 import { normalizeWithDefaults } from './migration-defaults';
 
+function from12to13(data: any): any {
+  data.version = 13;
+  data.elevatedFeaturesEnabled = !!data.askForAdminOnStart;
+  delete data.askForAdminOnStart;
+  return data;
+}
+
 async function from11to12(data: any): Promise<any> {
   data.mqttProtectedPassword = await protectSecret(data.mqttPassword);
   data.mqttPassword = null;
@@ -125,6 +132,7 @@ export const APP_SETTINGS_MIGRATION: MigrationDefinition<Versioned> = {
     9: from9to10,
     10: from10to11,
     11: from11to12,
+    12: from12to13,
   },
   normalizeCurrentVersion: (data) => normalizeWithDefaults(APP_SETTINGS_DEFAULT, data),
 };

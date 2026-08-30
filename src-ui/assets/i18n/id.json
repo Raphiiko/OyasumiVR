@@ -418,12 +418,6 @@
       "disabled": "OyasumiVR memiliki berbagai cara untuk mengubah pengaturan GPU Anda secara otomatis.\nHal ini memungkinkan Anda menghemat daya sewaktu Anda tidur.\n\nKarena ini adalah fitur untuk pengguna tingkat lanjut, fitur ini dinonaktifkan secara default.\nAnda dapat mengaktifkannya dengan mengeklik tombol di bawah ini.",
       "noSidecar": "Agar OyasumiVR diizinkan untuk mengubah pengaturan GPU Anda, diperlukan hak administrator. Silakan klik tombol di bawah ini untuk memberikan hak administrator kepada OyasumiVR."
     },
-    "elevationSidecarModal": {
-      "cancel": "Hanya sekali ini saja",
-      "confirm": "Selalu",
-      "message": "Apakah Anda ingin selalu memberikan hak administrator OyasumiVR?",
-      "title": "Memberikan hak istimewa kepada administrator"
-    },
     "enable": "Nyalakan Otomatisasi GPU",
     "enableWarning": "Salah mengubah parameter GPU dapat menyebabkan sistem Anda menjadi tidak stabil. Harap ingatlah hal ini dan hanya aktifkan fitur ini jika Anda tahu apa yang Anda lakukan.",
     "msiAfterburner": {
@@ -860,8 +854,14 @@
     },
     "general": {
       "adminPrivileges": {
-        "description": "OyasumiVR membutuhkan hak administrator untuk dapat mengontrol batas daya GPU Anda. Jika Anda mengaktifkannya, OyasumiVR akan meminta hak istimewa administrator saat memulai.",
-        "label": "Meminta hak istimewa administrator saat memulai",
+        "description": "Beberapa fitur, seperti mengontrol batas daya GPU Anda, membutuhkan hak istimewa administrator. Mengaktifkan ini hanya memintanya sekali. Setelah itu OyasumiVR menyiapkan fitur-fitur ini tanpa bertanya lagi.",
+        "errors": {
+          "installFailed": "OyasumiVR tidak dapat menyiapkan komponen yang membutuhkan hak istimewa administrator.",
+          "notSupported": "Fitur-fitur ini membutuhkan akun administrator Windows. Akun ini tidak bisa diberi hak istimewa administrator, jadi fitur-fitur ini tetap tidak tersedia.",
+          "promptDeclined": "Hak istimewa administrator tidak diberikan, jadi fitur-fitur ini tetap nonaktif.",
+          "taskFailed": "OyasumiVR tidak dapat memulai komponen yang membutuhkan hak istimewa administrator. OyasumiVR akan mencoba lagi saat Anda menjalankannya berikutnya."
+        },
+        "label": "Izinkan fitur yang membutuhkan hak istimewa administrator",
         "title": "Hak Istimewa Administrator"
       },
       "language": {

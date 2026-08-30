@@ -50,6 +50,11 @@ with [SemVer](https://semver.org/) prerelease suffixes:
   no longer carries your Pulsoid login over
 - Your MQTT password is now stored with the Windows Data Protection API instead of in plain text, so
   only your Windows account can read it
+- Features that need administrator access, such as GPU power limiting, now ask for it once instead
+  of on every launch. The "ask for administrator privileges on startup" setting and the
+  once-or-always dialog are replaced by a single toggle. These features now need an account that
+  can elevate: on a standard user account, typing an administrator's password into the prompt no
+  longer works, and the features report as unavailable.
 
 ### Fixed
 
