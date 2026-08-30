@@ -4,7 +4,7 @@ use crate::http::ResBody;
 use hyper::{body::Incoming, Request, Response};
 use log::{error, info};
 use mime::Mime;
-use serde_json::json;
+use serde::{Deserialize, Serialize};
 use std::sync::LazyLock;
 use std::{
     collections::HashMap,
@@ -30,6 +30,16 @@ pub struct ImageCache {
     cache_path_str: OsString,
 }
 
+#[derive(Deserialize, Serialize)]
+struct ImageCacheManifest {
+    url: String,
+    hash: String,
+    ttl: u64,
+    mime: String,
+    created: u64,
+    filename: String,
+}
+
 impl ImageCache {
     pub fn new(cache_path_str: OsString) -> ImageCache {
         ImageCache { cache_path_str }
@@ -44,78 +54,27 @@ impl ImageCache {
         if !storage_path.exists() || !manifest_path.exists() {
             return None;
         }
-        // Read json from manifest
-        let manifest = match std::fs::read_to_string(&manifest_path) {
-            Ok(manifest) => manifest,
-            Err(_) => {
-                error!(
-                    "[Core] Could not read JSON from manifest file. {}",
-                    manifest_path.display()
-                );
-                return None;
-            }
-        };
-        let manifest: serde_json::Value = serde_json::from_str(&manifest).unwrap();
-        // Get filename from manifest
-        let file_name = match manifest["filename"].as_str() {
-            Some(file_name) => file_name,
-            None => {
-                error!(
-                    "[Core] Could not get filename from manifest file. {}",
-                    manifest_path.display()
-                );
-                return None;
-            }
-        };
+        let manifest = Self::read_manifest(&manifest_path)?;
         // Get image path
-        let image_path = storage_path.join(file_name);
+        let image_path = storage_path.join(&manifest.filename);
         // If image doesn't exist, return None
         if !image_path.exists() {
             return None;
         }
         // Check if image is expired
-        let ttl = match manifest["ttl"].as_u64() {
-            Some(ttl) => ttl,
-            None => {
-                error!(
-                    "[Core] Could not get TTL from manifest file. {}",
-                    manifest_path.display()
-                );
-                return None;
-            }
-        };
-        let created = match manifest["created"].as_u64() {
-            Some(created) => created,
-            None => {
-                error!(
-                    "[Core] Could not get created timestamp from manifest file. {}",
-                    manifest_path.display()
-                );
-                return None;
-            }
-        };
         let now = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
             .unwrap()
             .as_secs();
-        if now - created > ttl {
+        if now - manifest.created > manifest.ttl {
             return None;
         }
         // Get mime type from manifest
-        let mime = match manifest["mime"].as_str() {
-            Some(mime) => match Mime::from_str(mime) {
-                Ok(mime) => mime,
-                Err(_) => {
-                    error!(
-                        "[Core] Could not parse MIME type from manifest file. {}",
-                        manifest_path.display()
-                    );
-                    return None;
-                }
-            },
-            None => {
+        let mime = match Mime::from_str(&manifest.mime) {
+            Ok(mime) => mime,
+            Err(_) => {
                 error!(
-                    "[Core] Could not get MIME type from manifest file. {}",
+                    "[Core] Could not parse MIME type from manifest file. {}",
                     manifest_path.display()
                 );
                 return None;
@@ -141,6 +100,7 @@ impl ImageCache {
         let url_hash = format!("{:x}", md5::compute(url));
         let storage_path = Path::new(&self.cache_path_str).join(&url_hash);
         let manifest_path = storage_path.join("manifest.json");
+        let temporary_manifest_path = storage_path.join("manifest.json.tmp");
         let file_ext = self.get_ext_for_mime(mime.clone());
         let file_name = format!("image.{file_ext}");
         let image_path = storage_path.join(&file_name);
@@ -153,15 +113,20 @@ impl ImageCache {
         // Store image
         std::fs::write(image_path, image_data).unwrap();
         // Store manifest
-        let manifest = json!({
-            "url": url,
-            "hash": url_hash,
-            "ttl": ttl,
-            "mime": mime.to_string(),
-            "created": chrono::Utc::now().timestamp(),
-            "filename": file_name,
-        });
-        std::fs::write(manifest_path, manifest.to_string()).unwrap();
+        let manifest = ImageCacheManifest {
+            url: url.to_string(),
+            hash: url_hash,
+            ttl,
+            mime: mime.to_string(),
+            created: chrono::Utc::now().timestamp() as u64,
+            filename: file_name,
+        };
+        std::fs::write(
+            &temporary_manifest_path,
+            serde_json::to_vec(&manifest).unwrap(),
+        )
+        .unwrap();
+        std::fs::rename(temporary_manifest_path, manifest_path).unwrap();
     }
 
     pub fn clean(&self, only_expired: bool) {
@@ -180,47 +145,20 @@ impl ImageCache {
             if !path.is_dir() {
                 continue;
             }
-            // Read manifest
             let manifest_path = path.join("manifest.json");
-            let manifest = match std::fs::read_to_string(&manifest_path) {
-                Ok(manifest) => manifest,
-                Err(_) => {
-                    error!(
-                        "[Core] Could not read JSON from manifest file. {}",
-                        manifest_path.display()
-                    );
-                    // Delete path if manifest could not be read
+            let manifest = match Self::read_manifest(&manifest_path) {
+                Some(manifest) => manifest,
+                None => {
                     std::fs::remove_dir_all(&path).unwrap();
                     continue;
                 }
             };
-            let manifest: serde_json::Value = serde_json::from_str(&manifest).unwrap();
             // Check if image is expired
-            let ttl = match manifest["ttl"].as_u64() {
-                Some(ttl) => ttl,
-                None => {
-                    error!(
-                        "[Core] Could not get TTL from manifest file. {}",
-                        manifest_path.display()
-                    );
-                    continue;
-                }
-            };
-            let created = match manifest["created"].as_u64() {
-                Some(created) => created,
-                None => {
-                    error!(
-                        "[Core] Could not get created timestamp from manifest file. {}",
-                        manifest_path.display()
-                    );
-                    continue;
-                }
-            };
             let now = std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
                 .unwrap()
                 .as_secs();
-            if only_expired && now - created < ttl {
+            if only_expired && now - manifest.created < manifest.ttl {
                 continue;
             }
             // Delete storage directory
@@ -237,6 +175,19 @@ impl ImageCache {
             Some(exts) => exts[0].to_string(),
             None => "bin".to_string(),
         }
+    }
+
+    fn read_manifest(manifest_path: &Path) -> Option<ImageCacheManifest> {
+        let result = std::fs::read(manifest_path)
+            .ok()
+            .and_then(|manifest| serde_json::from_slice(&manifest).ok());
+        if result.is_none() {
+            error!(
+                "[Core] Could not read image cache manifest. {}",
+                manifest_path.display()
+            );
+        }
+        result
     }
 
     pub async fn handle_request(
@@ -361,5 +312,43 @@ impl ImageCache {
             .status(200)
             .body(image_data.into())
             .unwrap())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn corrupted_manifests_are_removed_and_miss_on_read() {
+        for contents in [b"{".as_slice(), &[0xff, 0xfe], b"{}"] {
+            let directory = tempfile::tempdir().unwrap();
+            let cache_path = directory.path().join("image_cache");
+            let url = "https://example.com/image.png";
+            let entry_path = cache_path.join(format!("{:x}", md5::compute(url)));
+            std::fs::create_dir_all(&entry_path).unwrap();
+            std::fs::write(entry_path.join("manifest.json"), contents).unwrap();
+
+            let cache = ImageCache::new(cache_path.clone().into_os_string());
+            assert!(cache.get_image(url.to_string()).is_none());
+
+            init(directory.path().to_path_buf()).await;
+            assert!(!entry_path.exists());
+        }
+    }
+
+    #[test]
+    fn stored_manifest_is_published_and_readable() {
+        let directory = tempfile::tempdir().unwrap();
+        let cache = ImageCache::new(directory.path().as_os_str().to_owned());
+        let url = "https://example.com/image.png";
+        let image = vec![1, 2, 3];
+
+        cache.store_image(url, 60, mime::IMAGE_PNG, image.clone());
+
+        let entry_path = directory.path().join(format!("{:x}", md5::compute(url)));
+        assert!(entry_path.join("manifest.json").exists());
+        assert!(!entry_path.join("manifest.json.tmp").exists());
+        assert_eq!(cache.get_image(url.to_string()).unwrap().0, image);
     }
 }
