@@ -45,7 +45,7 @@ fn init_logging_at(path: &Path) -> bool {
     if let Some(parent) = path.parent() {
         let _ = std::fs::create_dir_all(parent);
     }
-    let Ok(file) = OpenOptions::new().create(true).append(true).open(&path) else {
+    let Ok(file) = OpenOptions::new().create(true).append(true).open(path) else {
         return false;
     };
     WriteLogger::init(LevelFilter::Info, log_config(), file).is_ok()
