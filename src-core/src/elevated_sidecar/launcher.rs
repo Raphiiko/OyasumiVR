@@ -325,7 +325,7 @@ pub enum EnableResult {
 /// How long enable waits for the sidecar to report in. One second past the give-up timer, so a
 /// sidecar the manager still accepts is not reported as a failure, and the launcher has exited and
 /// written the exit code by the time it is read.
-const START_TIMEOUT: Duration =
+pub(super) const START_TIMEOUT: Duration =
     Duration::from_secs(crate::utils::sidecar_manager::GIVE_UP_AFTER.as_secs() + 1);
 
 /// Makes sure the launcher is installed and healthy, then starts the sidecar.

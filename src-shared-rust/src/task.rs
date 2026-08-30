@@ -17,6 +17,8 @@ pub fn task_name(user_sid: &str) -> String {
     format!("OyasumiVR Privileged Launcher ({user_sid})")
 }
 
+const TASK_NAME_PREFIX: &str = "OyasumiVR Privileged Launcher (";
+
 /// `TASK_CREATE_OR_UPDATE | TASK_DONT_ADD_PRINCIPAL_ACE`. Without the second flag the registering
 /// account keeps write access and can re-aim the task.
 const CREATE_FLAGS: i32 = 6 | 0x10;
@@ -184,6 +186,34 @@ pub fn unregister(user_sid: &str) -> windows::core::Result<bool> {
     }
 }
 
+pub fn exists(user_sid: &str) -> windows::core::Result<bool> {
+    match registered_task(user_sid) {
+        Ok(_) => Ok(true),
+        Err(e) if task_is_missing(e.code()) => Ok(false),
+        Err(e) => Err(e),
+    }
+}
+
+/// Whether another account still has an OyasumiVR privileged launcher task.
+pub fn has_other_registration(user_sid: &str) -> windows::core::Result<bool> {
+    unsafe {
+        let tasks = service()?.GetFolder(&BSTR::from("\\"))?.GetTasks(1)?;
+        let own_name = task_name(user_sid);
+        for index in 1..=tasks.Count()? {
+            let task = tasks.get_Item(&VARIANT::from(index))?;
+            let name = task.Name()?.to_string();
+            if name != own_name && is_launcher_task_name(&name) {
+                return Ok(true);
+            }
+        }
+        Ok(false)
+    }
+}
+
+fn is_launcher_task_name(name: &str) -> bool {
+    name.starts_with(TASK_NAME_PREFIX) && name.ends_with(')')
+}
+
 fn task_is_missing(code: HRESULT) -> bool {
     const FILE_NOT_FOUND: HRESULT = HRESULT(0x8007_0002u32 as i32);
     const TASK_NOT_FOUND: HRESULT = HRESULT(0x8004_130fu32 as i32);
@@ -223,6 +253,10 @@ mod tests {
         let b = task_name("S-1-5-21-1-2-3-1002");
         assert_ne!(a, b);
         assert!(a.starts_with("OyasumiVR Privileged Launcher"));
+        assert!(is_launcher_task_name(&a));
+        assert!(!is_launcher_task_name(
+            "OyasumiVR Privileged Launcher backup"
+        ));
     }
 
     #[test]

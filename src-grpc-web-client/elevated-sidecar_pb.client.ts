@@ -11,6 +11,7 @@ import type { NvmlPowerManagementLimitRequest } from './elevated-sidecar_pb';
 import type { NvmlDevicesResponse } from './elevated-sidecar_pb';
 import type { NvmlStatusResponse } from './elevated-sidecar_pb';
 import type { SetErrorReportingEnabledRequest } from './elevated-sidecar_pb';
+import type { RemovePrivilegedLauncherResponse } from './elevated-sidecar_pb';
 import { stackIntercept } from '@protobuf-ts/runtime-rpc';
 import type { PingResponse } from './elevated-sidecar_pb';
 import type { Empty } from './elevated-sidecar_pb';
@@ -33,7 +34,10 @@ export interface IOyasumiElevatedSidecarClient {
   /**
    * @generated from protobuf rpc: RemovePrivilegedLauncher
    */
-  removePrivilegedLauncher(input: Empty, options?: RpcOptions): UnaryCall<Empty, Empty>;
+  removePrivilegedLauncher(
+    input: Empty,
+    options?: RpcOptions
+  ): UnaryCall<Empty, RemovePrivilegedLauncherResponse>;
   /**
    * @generated from protobuf rpc: SetErrorReportingEnabled
    */
@@ -93,10 +97,19 @@ export class OyasumiElevatedSidecarClient implements IOyasumiElevatedSidecarClie
   /**
    * @generated from protobuf rpc: RemovePrivilegedLauncher
    */
-  removePrivilegedLauncher(input: Empty, options?: RpcOptions): UnaryCall<Empty, Empty> {
+  removePrivilegedLauncher(
+    input: Empty,
+    options?: RpcOptions
+  ): UnaryCall<Empty, RemovePrivilegedLauncherResponse> {
     const method = this.methods[2],
       opt = this._transport.mergeOptions(options);
-    return stackIntercept<Empty, Empty>('unary', this._transport, method, opt, input);
+    return stackIntercept<Empty, RemovePrivilegedLauncherResponse>(
+      'unary',
+      this._transport,
+      method,
+      opt,
+      input
+    );
   }
   /**
    * @generated from protobuf rpc: SetErrorReportingEnabled

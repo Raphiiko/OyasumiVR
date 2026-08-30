@@ -1,9 +1,46 @@
 use std::io::Error;
 use std::os::windows::ffi::OsStrExt;
 
-use windows::Win32::Foundation::{CloseHandle, HANDLE};
+use windows::Win32::Foundation::{CloseHandle, HANDLE, WAIT_ABANDONED, WAIT_OBJECT_0};
 use windows::Win32::Security::{GetTokenInformation, TokenElevation, TOKEN_ELEVATION, TOKEN_QUERY};
-use windows::Win32::System::Threading::{GetCurrentProcess, OpenProcessToken};
+use windows::Win32::System::Threading::{
+    CreateMutexW, GetCurrentProcess, OpenProcessToken, ReleaseMutex, WaitForSingleObject,
+};
+
+pub const PRIVILEGED_LAUNCHER_MUTEX: &str = "Global\\OyasumiVRPrivilegedLauncherInstall";
+pub const PRIVILEGED_LAUNCHER_CLEANUP_TOKEN: &str = "cleanup.token";
+
+pub struct PrivilegedLauncherLock(HANDLE);
+
+impl PrivilegedLauncherLock {
+    pub fn acquire() -> std::result::Result<Self, Error> {
+        let name: Vec<u16> = std::ffi::OsStr::new(PRIVILEGED_LAUNCHER_MUTEX)
+            .encode_wide()
+            .chain(std::iter::once(0))
+            .collect();
+        let handle = unsafe { CreateMutexW(None, false, windows::core::PCWSTR(name.as_ptr())) }
+            .map_err(Error::from)?;
+        let wait = unsafe { WaitForSingleObject(handle, 30_000) };
+        if wait != WAIT_OBJECT_0 && wait != WAIT_ABANDONED {
+            unsafe {
+                let _ = CloseHandle(handle);
+            }
+            return Err(Error::other(
+                "timed out waiting for the privileged launcher lock",
+            ));
+        }
+        Ok(Self(handle))
+    }
+}
+
+impl Drop for PrivilegedLauncherLock {
+    fn drop(&mut self) {
+        unsafe {
+            let _ = ReleaseMutex(self.0);
+            let _ = CloseHandle(self.0);
+        }
+    }
+}
 
 pub fn is_elevated() -> bool {
     _is_app_elevated().unwrap_or(false)

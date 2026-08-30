@@ -6,8 +6,8 @@ use std::time::Duration;
 use super::oyasumi_elevated_sidecar::{
     oyasumi_elevated_sidecar_server::OyasumiElevatedSidecar, Empty, NvmlDevicesResponse,
     NvmlPowerManagementLimitRequest, NvmlPowerManagementLimitResponse, NvmlStatusResponse,
-    SetErrorReportingEnabledRequest, SetMsiAfterburnerProfileRequest,
-    SetMsiAfterburnerProfileResponse,
+    RemovePrivilegedLauncherResponse, SetErrorReportingEnabledRequest,
+    SetMsiAfterburnerProfileRequest, SetMsiAfterburnerProfileResponse,
 };
 use tonic::{Request, Response, Status};
 
@@ -35,13 +35,23 @@ impl OyasumiElevatedSidecar for OyasumiElevatedSidecarServerImpl {
     async fn remove_privileged_launcher(
         &self,
         _: Request<Empty>,
-    ) -> Result<Response<Empty>, Status> {
-        tokio::task::spawn_blocking(crate::cleanup::remove_privileged_launcher)
+    ) -> Result<Response<RemovePrivilegedLauncherResponse>, Status> {
+        let disposition = tokio::task::spawn_blocking(crate::cleanup::remove_privileged_launcher)
             .await
             .map_err(|e| Status::internal(format!("cleanup task failed: {e}")))?
             .map_err(Status::internal)?;
-        info!("Removed the privileged launcher and scheduled task");
-        Ok(Response::new(Empty {}))
+        match disposition {
+            crate::cleanup::CleanupDisposition::RemoveInstallation => {
+                info!("Scheduled privileged launcher removal")
+            }
+            crate::cleanup::CleanupDisposition::RetainInstallation => {
+                info!("Removed the scheduled task and retained the shared launcher")
+            }
+        }
+        Ok(Response::new(RemovePrivilegedLauncherResponse {
+            installation_retained: disposition
+                == crate::cleanup::CleanupDisposition::RetainInstallation,
+        }))
     }
 
     async fn set_error_reporting_enabled(

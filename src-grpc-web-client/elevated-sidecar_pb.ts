@@ -32,6 +32,15 @@ export interface SetErrorReportingEnabledRequest {
   enabled: boolean;
 }
 /**
+ * @generated from protobuf message OyasumiElevatedSidecar.RemovePrivilegedLauncherResponse
+ */
+export interface RemovePrivilegedLauncherResponse {
+  /**
+   * @generated from protobuf field: bool installation_retained = 1
+   */
+  installationRetained: boolean;
+}
+/**
  * @generated from protobuf message OyasumiElevatedSidecar.NvmlStatusResponse
  */
 export interface NvmlStatusResponse {
@@ -364,6 +373,72 @@ class SetErrorReportingEnabledRequest$Type extends MessageType<SetErrorReporting
  * @generated MessageType for protobuf message OyasumiElevatedSidecar.SetErrorReportingEnabledRequest
  */
 export const SetErrorReportingEnabledRequest = new SetErrorReportingEnabledRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class RemovePrivilegedLauncherResponse$Type extends MessageType<RemovePrivilegedLauncherResponse> {
+  constructor() {
+    super('OyasumiElevatedSidecar.RemovePrivilegedLauncherResponse', [
+      { no: 1, name: 'installation_retained', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+    ]);
+  }
+  create(
+    value?: PartialMessage<RemovePrivilegedLauncherResponse>
+  ): RemovePrivilegedLauncherResponse {
+    const message = globalThis.Object.create(this.messagePrototype!);
+    message.installationRetained = false;
+    if (value !== undefined)
+      reflectionMergePartial<RemovePrivilegedLauncherResponse>(this, message, value);
+    return message;
+  }
+  internalBinaryRead(
+    reader: IBinaryReader,
+    length: number,
+    options: BinaryReadOptions,
+    target?: RemovePrivilegedLauncherResponse
+  ): RemovePrivilegedLauncherResponse {
+    let message = target ?? this.create(),
+      end = reader.pos + length;
+    while (reader.pos < end) {
+      let [fieldNo, wireType] = reader.tag();
+      switch (fieldNo) {
+        case /* bool installation_retained */ 1:
+          message.installationRetained = reader.bool();
+          break;
+        default:
+          let u = options.readUnknownField;
+          if (u === 'throw')
+            throw new globalThis.Error(
+              `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+            );
+          let d = reader.skip(wireType);
+          if (u !== false)
+            (u === true ? UnknownFieldHandler.onRead : u)(
+              this.typeName,
+              message,
+              fieldNo,
+              wireType,
+              d
+            );
+      }
+    }
+    return message;
+  }
+  internalBinaryWrite(
+    message: RemovePrivilegedLauncherResponse,
+    writer: IBinaryWriter,
+    options: BinaryWriteOptions
+  ): IBinaryWriter {
+    /* bool installation_retained = 1; */
+    if (message.installationRetained !== false)
+      writer.tag(1, WireType.Varint).bool(message.installationRetained);
+    let u = options.writeUnknownFields;
+    if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+    return writer;
+  }
+}
+/**
+ * @generated MessageType for protobuf message OyasumiElevatedSidecar.RemovePrivilegedLauncherResponse
+ */
+export const RemovePrivilegedLauncherResponse = new RemovePrivilegedLauncherResponse$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class NvmlStatusResponse$Type extends MessageType<NvmlStatusResponse> {
   constructor() {
@@ -965,7 +1040,12 @@ export const OyasumiElevatedSidecar = new ServiceType(
   [
     { name: 'Ping', options: {}, I: Empty, O: PingResponse },
     { name: 'RequestStop', options: {}, I: Empty, O: Empty },
-    { name: 'RemovePrivilegedLauncher', options: {}, I: Empty, O: Empty },
+    {
+      name: 'RemovePrivilegedLauncher',
+      options: {},
+      I: Empty,
+      O: RemovePrivilegedLauncherResponse,
+    },
     { name: 'SetErrorReportingEnabled', options: {}, I: SetErrorReportingEnabledRequest, O: Empty },
     { name: 'GetNvmlStatus', options: {}, I: Empty, O: NvmlStatusResponse },
     { name: 'GetNvmlDevices', options: {}, I: Empty, O: NvmlDevicesResponse },

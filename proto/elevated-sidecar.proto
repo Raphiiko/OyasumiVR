@@ -7,7 +7,7 @@ package OyasumiElevatedSidecar;
 service OyasumiElevatedSidecar {
     rpc Ping (Empty) returns (PingResponse) {}
     rpc RequestStop (Empty) returns (Empty) {}
-    rpc RemovePrivilegedLauncher (Empty) returns (Empty) {}
+    rpc RemovePrivilegedLauncher (Empty) returns (RemovePrivilegedLauncherResponse) {}
     rpc SetErrorReportingEnabled (SetErrorReportingEnabledRequest) returns (Empty) {}
     rpc GetNvmlStatus (Empty) returns (NvmlStatusResponse) {}
     rpc GetNvmlDevices (Empty) returns (NvmlDevicesResponse) {}
@@ -22,6 +22,10 @@ message PingResponse {
 
 message SetErrorReportingEnabledRequest {
     bool enabled = 1;
+}
+
+message RemovePrivilegedLauncherResponse {
+    bool installation_retained = 1;
 }
 
 message NvmlStatusResponse {

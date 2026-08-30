@@ -187,9 +187,36 @@ pub async fn request_stop() {
     }
 }
 
-async fn remove_privileged_launcher() -> Result<(), String> {
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum LauncherCleanup {
+    RemoveInstallation,
+    RetainInstallation,
+    AlreadyRemoved,
+}
+
+async fn remove_privileged_launcher() -> Result<LauncherCleanup, String> {
+    if SIDECAR_GRPC_CLIENT.lock().await.is_none() {
+        if cleanup_already_complete().await? {
+            return Ok(LauncherCleanup::AlreadyRemoved);
+        }
+        if uses_scheduled_task().await {
+            let state = tokio::task::spawn_blocking(launcher::state)
+                .await
+                .map_err(|e| format!("cannot inspect the privileged launcher: {e}"))?;
+            if state != launcher::LauncherState::Ready {
+                return Err(format!(
+                    "the elevated sidecar is not running and the launcher is {state:?}"
+                ));
+            }
+        }
+        if !commands::start_sidecar().await.is_on_its_way()
+            || !wait_until_started(launcher::START_TIMEOUT).await
+        {
+            return Err("the elevated sidecar could not be started for cleanup".to_string());
+        }
+    }
     let Some(mut client) = SIDECAR_GRPC_CLIENT.lock().await.clone() else {
-        return Err("the elevated sidecar is not running".to_string());
+        return Err("the elevated sidecar did not connect for cleanup".to_string());
     };
     match tokio::time::timeout(
         Duration::from_secs(5),
@@ -199,10 +226,27 @@ async fn remove_privileged_launcher() -> Result<(), String> {
     )
     .await
     {
-        Ok(Ok(_)) => Ok(()),
+        Ok(Ok(response)) => match response.into_inner().installation_retained {
+            true => Ok(LauncherCleanup::RetainInstallation),
+            false => Ok(LauncherCleanup::RemoveInstallation),
+        },
         Ok(Err(e)) => Err(e.message().to_string()),
         Err(_) => Err("cleanup timed out".to_string()),
     }
+}
+
+async fn cleanup_already_complete() -> Result<bool, String> {
+    if wait_until_privileged_launcher_removed(Duration::from_secs(1)).await {
+        let task_exists = tokio::task::spawn_blocking(|| {
+            let sid = oyasumivr_shared::windows::current_user_sid()?;
+            oyasumivr_shared::task::exists(&sid)
+        })
+        .await
+        .map_err(|e| format!("cannot inspect the scheduled task: {e}"))?
+        .map_err(|e| format!("cannot inspect the scheduled task: {e}"))?;
+        return Ok(!task_exists);
+    }
+    Ok(false)
 }
 
 fn remove_launcher_handshake() -> Result<(), String> {
