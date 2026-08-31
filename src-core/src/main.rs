@@ -197,16 +197,16 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
             )
             .unwrap();
             out.finish(format_args!(
-                "{}[{}] {}",
+                "{} [{}] {}",
                 time::OffsetDateTime::now_utc().format(&format).unwrap(),
                 record.level(),
                 message
             ))
         })
-        .rotation_strategy(RotationStrategy::KeepAll);
+        .max_file_size(1024 * 1024)
+        .rotation_strategy(RotationStrategy::KeepSome(13));
 
     builder = builder
-        //also set in Cargo.toml
         .level(LevelFilter::Info)
         .target(tauri_plugin_log::Target::new(
             tauri_plugin_log::TargetKind::Stdout,

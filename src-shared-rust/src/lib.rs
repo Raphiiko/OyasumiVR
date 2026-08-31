@@ -1,11 +1,12 @@
 pub mod error_reporting;
 pub mod handshake;
+pub mod logging;
 pub mod task;
 pub mod windows;
 
 /// Bumped by hand, only when the launcher's own behaviour changes. Every bump costs each user one
 /// UAC prompt.
-pub const PRIVILEGED_LAUNCHER_VERSION: u32 = 2;
+pub const PRIVILEGED_LAUNCHER_VERSION: u32 = 3;
 
 /// The public half of the key that signs the elevated sidecar.
 pub const ELEVATED_SIDECAR_PUBLIC_KEY: &str = include_str!("../elevated-sidecar-signing.pub");

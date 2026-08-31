@@ -16,9 +16,6 @@ mod spawn;
 mod verify;
 
 use std::process::ExitCode;
-use std::{fs::OpenOptions, path::Path};
-
-use simplelog::{format_description, ConfigBuilder, LevelFilter, WriteLogger};
 
 /// The core reads these back from the scheduled task's `LastTaskResult`.
 pub mod exit {
@@ -37,30 +34,10 @@ pub fn log(message: &str) {
 }
 
 fn init_logging() {
-    let Ok(path) = paths::log_file() else { return };
-    let _ = init_logging_at(&path);
-}
-
-fn init_logging_at(path: &Path) -> bool {
-    let Ok(file) = oyasumivr_shared::windows::with_unelevated_token(|| open_log_file(path)) else {
-        return false;
+    let Ok(dir) = paths::privileged_dir() else {
+        return;
     };
-    WriteLogger::init(LevelFilter::Info, log_config(), file).is_ok()
-}
-
-fn open_log_file(path: &Path) -> std::io::Result<std::fs::File> {
-    if let Some(parent) = path.parent() {
-        std::fs::create_dir_all(parent)?;
-    }
-    OpenOptions::new().create(true).append(true).open(path)
-}
-
-fn log_config() -> simplelog::Config {
-    ConfigBuilder::new()
-        .set_time_format_custom(format_description!(
-            "[[[year]-[month]-[day]][[[hour]:[minute]:[second]]"
-        ))
-        .build()
+    let _ = oyasumivr_shared::logging::init(&dir, "OyasumiVR_Privileged_Launcher", false);
 }
 
 fn main() -> ExitCode {
@@ -72,45 +49,4 @@ fn main() -> ExitCode {
         run::run()
     };
     ExitCode::from(code)
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use ::log::{Level, Log, Record};
-    use std::io::Write;
-    use std::sync::{Arc, Mutex};
-
-    #[derive(Clone)]
-    struct Buffer(Arc<Mutex<Vec<u8>>>);
-
-    impl Write for Buffer {
-        fn write(&mut self, bytes: &[u8]) -> std::io::Result<usize> {
-            self.0.lock().unwrap().extend_from_slice(bytes);
-            Ok(bytes.len())
-        }
-
-        fn flush(&mut self) -> std::io::Result<()> {
-            Ok(())
-        }
-    }
-
-    #[test]
-    fn log_lines_include_utc_date_time_and_level() {
-        let bytes = Arc::new(Mutex::new(Vec::new()));
-        let logger = WriteLogger::new(LevelFilter::Info, log_config(), Buffer(bytes.clone()));
-        logger.log(
-            &Record::builder()
-                .level(Level::Info)
-                .args(format_args!("[run] started the sidecar"))
-                .build(),
-        );
-        let line = String::from_utf8(bytes.lock().unwrap().clone()).unwrap();
-        let shape: String = line[..22]
-            .chars()
-            .map(|c| if c.is_ascii_digit() { '#' } else { c })
-            .collect();
-        assert_eq!(shape, "[####-##-##][##:##:##]");
-        assert_eq!(&line[22..], " [INFO] [run] started the sidecar\n");
-    }
 }

@@ -18,7 +18,6 @@ lazy_static = "1.5.0"
 sysinfo = "0.39.6"
 codesigned = { git = "https://github.com/rustysec/codesigned-rs" }
 log = "0.4.33"
-simplelog = "^0.12.2"
 directories = "6.0.0"
 tonic = "0.14.6"
 tonic-prost = "0.14.6"
