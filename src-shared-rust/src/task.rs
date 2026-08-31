@@ -132,6 +132,7 @@ pub fn register(exe: &Path, working_dir: &Path, user_sid: &str) -> windows::core
 pub struct Registration {
     pub action_path: String,
     pub action_arguments: String,
+    pub enabled: bool,
     pub run_level_is_highest: bool,
     pub sddl: String,
 }
@@ -154,6 +155,7 @@ pub fn registration(user_sid: &str) -> windows::core::Result<Registration> {
         Ok(Registration {
             action_path: action_path.to_string(),
             action_arguments: action_arguments.to_string(),
+            enabled: task.Enabled()?.0 != 0,
             run_level_is_highest: run_level == TASK_RUNLEVEL_HIGHEST,
             sddl: task.GetSecurityDescriptor(OWNER_AND_DACL_INFO)?.to_string(),
         })
@@ -244,6 +246,7 @@ mod tests {
         assert!(doc.contains("<StopIfGoingOnBatteries>false<"));
         assert!(doc.contains("<StopOnIdleEnd>false<"));
         assert!(doc.contains("<AllowStartOnDemand>true<"));
+        assert!(doc.contains("<Enabled>true<"));
         assert!(doc.contains("<ExecutionTimeLimit>PT1M<"));
     }
 

@@ -145,6 +145,10 @@ pub fn state() -> LauncherState {
             return LauncherState::NotInstalled;
         }
     };
+    if !registration.enabled {
+        info!("[Core] The privileged launcher task is disabled");
+        return LauncherState::NotInstalled;
+    }
     let mismatch = if !paths_match(&registration.action_path, &expected_exe) {
         Some(format!("action points at {}", registration.action_path))
     } else if !registration.action_arguments.trim().is_empty() {

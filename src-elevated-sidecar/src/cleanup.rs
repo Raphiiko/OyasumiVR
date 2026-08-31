@@ -116,7 +116,7 @@ fn removal_script(pid: u32, dir: &Path, token: &str, user_sid: &str) -> String {
     let mutex = PRIVILEGED_LAUNCHER_MUTEX.replace('\'', "''");
     let task_name = task::task_name(user_sid).replace('\'', "''");
     format!(
-        "$process = Get-Process -Id {pid} -ErrorAction SilentlyContinue; if ($process) {{ $process.WaitForExit() }}; $mutex = $null; $acquired = $false; $prepared = $false; $taskDisabled = $false; $task = $null; try {{ $mutex = [Threading.Mutex]::new($false, '{mutex}'); if (-not $mutex.WaitOne(30000)) {{ exit 1 }}; $acquired = $true; $tokenPath = Join-Path '{literal}' '{PRIVILEGED_LAUNCHER_CLEANUP_TOKEN}'; if ((Get-Content -LiteralPath $tokenPath -Raw -ErrorAction SilentlyContinue) -ne '{token}') {{ exit 0 }}; $launcherPath = Join-Path '{literal}' '{LAUNCHER_EXE}'; $markerPath = Join-Path '{literal}' '{LAUNCHER_MARKER}'; $directoryAcl = Get-Acl -LiteralPath '{literal}' -ErrorAction Stop; $launcherBytes = [IO.File]::ReadAllBytes($launcherPath); $markerBytes = [IO.File]::ReadAllBytes($markerPath); $prepared = $true; $task = Get-ScheduledTask -TaskName '{task_name}' -ErrorAction SilentlyContinue; if ($task) {{ $task | Disable-ScheduledTask -ErrorAction Stop | Out-Null; $taskDisabled = $true }}; Remove-Item -LiteralPath '{literal}' -Recurse -Force -ErrorAction Stop; if ($task) {{ $task | Unregister-ScheduledTask -Confirm:$false -ErrorAction Stop }}; exit 0 }} catch {{ try {{ if ($prepared) {{ if (-not (Test-Path -LiteralPath '{literal}')) {{ [IO.DirectoryInfo]::new('{literal}').Create($directoryAcl) }}; $stagedPath = Join-Path '{literal}' 'staged'; if (-not (Test-Path -LiteralPath $stagedPath)) {{ [IO.DirectoryInfo]::new($stagedPath).Create($directoryAcl) }}; if (-not (Test-Path -LiteralPath $launcherPath)) {{ [IO.File]::WriteAllBytes($launcherPath, $launcherBytes) }}; if (-not (Test-Path -LiteralPath $markerPath)) {{ [IO.File]::WriteAllBytes($markerPath, $markerBytes) }} }}; if ($taskDisabled) {{ $task | Enable-ScheduledTask -ErrorAction Stop | Out-Null }} }} catch {{}}; exit 1 }} finally {{ if ($acquired) {{ try {{ $mutex.ReleaseMutex() }} catch {{}} }}; if ($mutex) {{ $mutex.Dispose() }} }}"
+        "$process = Get-Process -Id {pid} -ErrorAction SilentlyContinue; if ($process) {{ $process.WaitForExit() }}; $mutex = $null; $acquired = $false; $prepared = $false; $taskDisabled = $false; $task = $null; try {{ $mutex = [Threading.Mutex]::new($false, '{mutex}'); if (-not $mutex.WaitOne(30000)) {{ exit 1 }}; $acquired = $true; $tokenPath = Join-Path '{literal}' '{PRIVILEGED_LAUNCHER_CLEANUP_TOKEN}'; if ((Get-Content -LiteralPath $tokenPath -Raw -ErrorAction SilentlyContinue) -ne '{token}') {{ exit 0 }}; $launcherPath = Join-Path '{literal}' '{LAUNCHER_EXE}'; $markerPath = Join-Path '{literal}' '{LAUNCHER_MARKER}'; $directoryAcl = Get-Acl -LiteralPath '{literal}' -ErrorAction Stop; $launcherBytes = if (Test-Path -LiteralPath $launcherPath) {{ [IO.File]::ReadAllBytes($launcherPath) }} else {{ $null }}; $markerBytes = if (Test-Path -LiteralPath $markerPath) {{ [IO.File]::ReadAllBytes($markerPath) }} else {{ $null }}; $prepared = $true; $task = Get-ScheduledTask -TaskName '{task_name}' -ErrorAction SilentlyContinue; if ($task) {{ $task | Disable-ScheduledTask -ErrorAction Stop | Out-Null; $taskDisabled = $true }}; Remove-Item -LiteralPath '{literal}' -Recurse -Force -ErrorAction Stop; if ($task) {{ $task | Unregister-ScheduledTask -Confirm:$false -ErrorAction Stop }}; exit 0 }} catch {{ try {{ if ($prepared) {{ if (-not (Test-Path -LiteralPath '{literal}')) {{ [IO.DirectoryInfo]::new('{literal}').Create($directoryAcl) }}; $stagedPath = Join-Path '{literal}' 'staged'; if (-not (Test-Path -LiteralPath $stagedPath)) {{ [IO.DirectoryInfo]::new($stagedPath).Create($directoryAcl) }}; if (($null -ne $launcherBytes) -and -not (Test-Path -LiteralPath $launcherPath)) {{ [IO.File]::WriteAllBytes($launcherPath, $launcherBytes) }}; if (($null -ne $markerBytes) -and -not (Test-Path -LiteralPath $markerPath)) {{ [IO.File]::WriteAllBytes($markerPath, $markerBytes) }} }} }} catch {{}}; try {{ if ($taskDisabled) {{ $task | Enable-ScheduledTask -ErrorAction Stop | Out-Null }} }} catch {{}}; exit 1 }} finally {{ if ($acquired) {{ try {{ $mutex.ReleaseMutex() }} catch {{}} }}; if ($mutex) {{ $mutex.Dispose() }} }}"
     )
 }
 
@@ -225,6 +225,29 @@ mod tests {
 
         assert!(retry.success());
         assert!(!dir.exists());
+    }
+
+    #[test]
+    fn cleanup_helper_removes_an_incomplete_launcher_installation() {
+        for missing in [LAUNCHER_EXE, LAUNCHER_MARKER] {
+            let dir = scratch(&format!("oyasumi-elevated-cleanup-missing-{missing}"));
+            write_launcher_state(&dir);
+            std::fs::remove_file(dir.join(missing)).unwrap();
+            std::fs::write(dir.join(PRIVILEGED_LAUNCHER_CLEANUP_TOKEN), b"remove-me").unwrap();
+
+            let status = spawn_directory_removal_after(
+                2_000_000_000,
+                &dir,
+                "remove-me",
+                "S-1-5-21-1-2-3-1001",
+            )
+            .unwrap()
+            .wait()
+            .unwrap();
+
+            assert!(status.success(), "cleanup failed with missing {missing}");
+            assert!(!dir.exists());
+        }
     }
 
     #[test]
