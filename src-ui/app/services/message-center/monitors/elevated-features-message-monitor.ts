@@ -30,7 +30,7 @@ export class ElevatedFeaturesMessageMonitor extends MessageMonitor {
           {
             label: 'message-center.actions.openLogFolder',
             action: async () => {
-              const path = (await appLogDir()) + '\\OyasumiVR_Core.log';
+              const path = (await appLogDir()) + '\\OyasumiVR.log';
               await invoke('show_in_folder', { path });
             },
           },

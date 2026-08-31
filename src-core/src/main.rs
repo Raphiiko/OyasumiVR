@@ -212,9 +212,7 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
             tauri_plugin_log::TargetKind::Stdout,
         ))
         .target(tauri_plugin_log::Target::new(
-            tauri_plugin_log::TargetKind::LogDir {
-                file_name: Some(String::from("OyasumiVR_Core")),
-            },
+            tauri_plugin_log::TargetKind::LogDir { file_name: None },
         ));
 
     #[cfg(debug_assertions)]

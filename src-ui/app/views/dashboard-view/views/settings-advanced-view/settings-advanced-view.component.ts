@@ -265,7 +265,7 @@ export class SettingsAdvancedViewComponent {
   }
 
   async openLogsFolder() {
-    const path = await appLogDir().then((dir) => dir + '\\OyasumiVR_Core.log');
+    const path = await appLogDir().then((dir) => dir + '\\OyasumiVR.log');
     await invoke('show_in_folder', { path });
   }
 
