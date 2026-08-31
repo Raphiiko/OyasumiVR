@@ -42,41 +42,17 @@ fn init_logging() {
 }
 
 fn init_logging_at(path: &Path) -> bool {
-    if let Some(parent) = path.parent() {
-        let _ = std::fs::create_dir_all(parent);
-    }
-    let Ok(file) = open_log_file(path) else {
+    let Ok(file) = oyasumivr_shared::windows::with_unelevated_token(|| open_log_file(path)) else {
         return false;
     };
     WriteLogger::init(LevelFilter::Info, log_config(), file).is_ok()
 }
 
 fn open_log_file(path: &Path) -> std::io::Result<std::fs::File> {
-    use std::os::windows::fs::{MetadataExt, OpenOptionsExt};
-    use windows::Win32::Storage::FileSystem::{
-        FILE_ATTRIBUTE_REPARSE_POINT, FILE_FLAG_OPEN_REPARSE_POINT,
-    };
-
-    let mut current = std::path::PathBuf::new();
-    for component in path.parent().into_iter().flat_map(Path::components) {
-        current.push(component);
-        if std::fs::symlink_metadata(&current)?.file_attributes() & FILE_ATTRIBUTE_REPARSE_POINT.0
-            != 0
-        {
-            return Err(std::io::Error::other(
-                "the log directory contains a reparse point",
-            ));
-        }
+    if let Some(parent) = path.parent() {
+        std::fs::create_dir_all(parent)?;
     }
-    let file = OpenOptions::new()
-        .create(true)
-        .append(true)
-        .custom_flags(FILE_FLAG_OPEN_REPARSE_POINT.0)
-        .open(path)?;
-    if file.metadata()?.file_attributes() & FILE_ATTRIBUTE_REPARSE_POINT.0 != 0 {
-        return Err(std::io::Error::other("the log file is a reparse point"));
-    }
-    Ok(file)
+    OpenOptions::new().create(true).append(true).open(path)
 }
 
 fn log_config() -> simplelog::Config {
@@ -136,20 +112,5 @@ mod tests {
             .collect();
         assert_eq!(shape, "[####-##-##][##:##:##]");
         assert_eq!(&line[22..], " [INFO] [run] started the sidecar\n");
-    }
-
-    #[test]
-    fn elevated_logging_rejects_a_reparse_directory() {
-        use std::os::windows::fs::symlink_dir;
-
-        let root = std::env::temp_dir().join("oyasumivr-launcher-log-reparse");
-        let _ = std::fs::remove_dir_all(&root);
-        let real = root.join("real");
-        let link = root.join("link");
-        std::fs::create_dir_all(&real).unwrap();
-        if symlink_dir(&real, &link).is_err() {
-            return;
-        }
-        assert!(open_log_file(&link.join("launcher.log")).is_err());
     }
 }

@@ -26,6 +26,7 @@ message SetErrorReportingEnabledRequest {
 
 message RemovePrivilegedLauncherResponse {
     bool installation_retained = 1;
+    uint32 cleanup_process_id = 2;
 }
 
 message NvmlStatusResponse {

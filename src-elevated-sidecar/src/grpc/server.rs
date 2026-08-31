@@ -41,7 +41,7 @@ impl OyasumiElevatedSidecar for OyasumiElevatedSidecarServerImpl {
             .map_err(|e| Status::internal(format!("cleanup task failed: {e}")))?
             .map_err(Status::internal)?;
         match disposition {
-            crate::cleanup::CleanupDisposition::RemoveInstallation => {
+            crate::cleanup::CleanupDisposition::RemoveInstallation { .. } => {
                 info!("Scheduled privileged launcher removal")
             }
             crate::cleanup::CleanupDisposition::RetainInstallation => {
@@ -51,6 +51,10 @@ impl OyasumiElevatedSidecar for OyasumiElevatedSidecarServerImpl {
         Ok(Response::new(RemovePrivilegedLauncherResponse {
             installation_retained: disposition
                 == crate::cleanup::CleanupDisposition::RetainInstallation,
+            cleanup_process_id: match disposition {
+                crate::cleanup::CleanupDisposition::RemoveInstallation { process_id } => process_id,
+                crate::cleanup::CleanupDisposition::RetainInstallation => 0,
+            },
         }))
     }
 

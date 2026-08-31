@@ -56,29 +56,38 @@ pub async fn elevated_features_disable() -> DisableResult {
     let _transition = super::TRANSITION.lock().await;
     let launcher_cleanup = super::remove_privileged_launcher().await;
     let handshake_cleanup = super::remove_launcher_handshake();
+    let cleanup_process = match &launcher_cleanup {
+        Ok(super::LauncherCleanup::RemoveInstallation(process_id)) => {
+            super::CleanupProcess::open(*process_id).map(Some)
+        }
+        _ => Ok(None),
+    };
     super::request_stop().await;
     let mut manager_guard = super::SIDECAR_MANAGER.lock().await;
     if let Some(manager) = manager_guard.as_mut() {
         manager.stop_and_stay_stopped().await;
     }
     drop(manager_guard);
-    let installation_must_be_removed = matches!(
-        &launcher_cleanup,
-        Ok(super::LauncherCleanup::RemoveInstallation)
-    );
-    let cleanup_errors: Vec<_> = [handshake_cleanup.err(), launcher_cleanup.err()]
-        .into_iter()
-        .flatten()
-        .collect();
+    let cleanup_result = match cleanup_process {
+        Ok(Some(process)) => {
+            tokio::task::spawn_blocking(move || process.wait(std::time::Duration::from_secs(5)))
+                .await
+                .map_err(|e| format!("cannot join the cleanup wait: {e}"))
+                .and_then(|result| result)
+        }
+        Ok(None) => Ok(()),
+        Err(e) => Err(e),
+    };
+    let cleanup_errors: Vec<_> = [
+        handshake_cleanup.err(),
+        launcher_cleanup.err(),
+        cleanup_result.err(),
+    ]
+    .into_iter()
+    .flatten()
+    .collect();
     if !cleanup_errors.is_empty() {
         let reason = cleanup_errors.join("; ");
-        log::error!("[Core] Could not remove the privileged launcher: {reason}");
-        return DisableResult::CleanupFailed { reason };
-    }
-    if installation_must_be_removed
-        && !super::wait_until_privileged_launcher_removed(std::time::Duration::from_secs(5)).await
-    {
-        let reason = "the cleanup process did not remove the installation directory".to_string();
         log::error!("[Core] Could not remove the privileged launcher: {reason}");
         return DisableResult::CleanupFailed { reason };
     }

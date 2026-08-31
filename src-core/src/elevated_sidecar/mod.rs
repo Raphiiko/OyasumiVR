@@ -189,7 +189,7 @@ pub async fn request_stop() {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum LauncherCleanup {
-    RemoveInstallation,
+    RemoveInstallation(u32),
     RetainInstallation,
     AlreadyRemoved,
 }
@@ -226,12 +226,83 @@ async fn remove_privileged_launcher() -> Result<LauncherCleanup, String> {
     )
     .await
     {
-        Ok(Ok(response)) => match response.into_inner().installation_retained {
-            true => Ok(LauncherCleanup::RetainInstallation),
-            false => Ok(LauncherCleanup::RemoveInstallation),
-        },
+        Ok(Ok(response)) => {
+            let response = response.into_inner();
+            if response.installation_retained {
+                Ok(LauncherCleanup::RetainInstallation)
+            } else if response.cleanup_process_id != 0 {
+                Ok(LauncherCleanup::RemoveInstallation(
+                    response.cleanup_process_id,
+                ))
+            } else {
+                Err("the cleanup process reported no process id".to_string())
+            }
+        }
         Ok(Err(e)) => Err(e.message().to_string()),
         Err(_) => Err("cleanup timed out".to_string()),
+    }
+}
+
+struct CleanupProcess(usize);
+
+impl CleanupProcess {
+    fn open(process_id: u32) -> Result<Self, String> {
+        use windows_sys::Win32::System::Threading::{
+            OpenProcess, PROCESS_QUERY_LIMITED_INFORMATION, PROCESS_SYNCHRONIZE,
+        };
+
+        let handle = unsafe {
+            OpenProcess(
+                PROCESS_QUERY_LIMITED_INFORMATION | PROCESS_SYNCHRONIZE,
+                0,
+                process_id,
+            )
+        };
+        if handle.is_null() {
+            return Err(format!(
+                "cannot open cleanup process {process_id}: {}",
+                std::io::Error::last_os_error()
+            ));
+        }
+        Ok(Self(handle as usize))
+    }
+
+    fn wait(self, timeout: Duration) -> Result<(), String> {
+        use windows_sys::Win32::Foundation::{WAIT_OBJECT_0, WAIT_TIMEOUT};
+        use windows_sys::Win32::System::Threading::{GetExitCodeProcess, WaitForSingleObject};
+
+        let handle = self.0 as windows_sys::Win32::Foundation::HANDLE;
+        let wait = unsafe { WaitForSingleObject(handle, timeout.as_millis() as u32) };
+        if wait == WAIT_TIMEOUT {
+            return Err("the cleanup process did not finish in time".to_string());
+        }
+        if wait != WAIT_OBJECT_0 {
+            return Err(format!(
+                "cannot wait for the cleanup process: {}",
+                std::io::Error::last_os_error()
+            ));
+        }
+        let mut exit_code = 0u32;
+        if unsafe { GetExitCodeProcess(handle, &mut exit_code) } == 0 {
+            return Err(format!(
+                "cannot read the cleanup process result: {}",
+                std::io::Error::last_os_error()
+            ));
+        }
+        match exit_code {
+            0 => Ok(()),
+            code => Err(format!("the cleanup process exited with code {code}")),
+        }
+    }
+}
+
+impl Drop for CleanupProcess {
+    fn drop(&mut self) {
+        unsafe {
+            windows_sys::Win32::Foundation::CloseHandle(
+                self.0 as windows_sys::Win32::Foundation::HANDLE,
+            );
+        }
     }
 }
 

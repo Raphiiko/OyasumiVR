@@ -39,6 +39,10 @@ export interface RemovePrivilegedLauncherResponse {
    * @generated from protobuf field: bool installation_retained = 1
    */
   installationRetained: boolean;
+  /**
+   * @generated from protobuf field: uint32 cleanup_process_id = 2
+   */
+  cleanupProcessId: number;
 }
 /**
  * @generated from protobuf message OyasumiElevatedSidecar.NvmlStatusResponse
@@ -378,6 +382,7 @@ class RemovePrivilegedLauncherResponse$Type extends MessageType<RemovePrivileged
   constructor() {
     super('OyasumiElevatedSidecar.RemovePrivilegedLauncherResponse', [
       { no: 1, name: 'installation_retained', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 2, name: 'cleanup_process_id', kind: 'scalar', T: 13 /*ScalarType.UINT32*/ },
     ]);
   }
   create(
@@ -385,6 +390,7 @@ class RemovePrivilegedLauncherResponse$Type extends MessageType<RemovePrivileged
   ): RemovePrivilegedLauncherResponse {
     const message = globalThis.Object.create(this.messagePrototype!);
     message.installationRetained = false;
+    message.cleanupProcessId = 0;
     if (value !== undefined)
       reflectionMergePartial<RemovePrivilegedLauncherResponse>(this, message, value);
     return message;
@@ -402,6 +408,9 @@ class RemovePrivilegedLauncherResponse$Type extends MessageType<RemovePrivileged
       switch (fieldNo) {
         case /* bool installation_retained */ 1:
           message.installationRetained = reader.bool();
+          break;
+        case /* uint32 cleanup_process_id */ 2:
+          message.cleanupProcessId = reader.uint32();
           break;
         default:
           let u = options.readUnknownField;
@@ -430,6 +439,9 @@ class RemovePrivilegedLauncherResponse$Type extends MessageType<RemovePrivileged
     /* bool installation_retained = 1; */
     if (message.installationRetained !== false)
       writer.tag(1, WireType.Varint).bool(message.installationRetained);
+    /* uint32 cleanup_process_id = 2; */
+    if (message.cleanupProcessId !== 0)
+      writer.tag(2, WireType.Varint).uint32(message.cleanupProcessId);
     let u = options.writeUnknownFields;
     if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
     return writer;

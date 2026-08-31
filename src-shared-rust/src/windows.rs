@@ -100,6 +100,65 @@ impl Drop for QueryAccessToken {
     }
 }
 
+/// Runs a filesystem operation with the current account's non-elevated token.
+pub fn with_unelevated_token<T>(
+    operation: impl FnOnce() -> std::result::Result<T, Error>,
+) -> std::result::Result<T, Error> {
+    use windows::Win32::Security::{
+        ImpersonateLoggedOnUser, RevertToSelf, TokenLinkedToken, TOKEN_LINKED_TOKEN,
+    };
+
+    if !_is_app_elevated()? {
+        return operation();
+    }
+
+    let token = QueryAccessToken::from_current_process()?;
+    let mut linked = TOKEN_LINKED_TOKEN::default();
+    let mut returned = 0u32;
+    unsafe {
+        GetTokenInformation(
+            token.0,
+            TokenLinkedToken,
+            Some(&mut linked as *mut _ as *mut _),
+            std::mem::size_of::<TOKEN_LINKED_TOKEN>() as u32,
+            &mut returned,
+        )
+        .map_err(Error::from)?;
+    }
+
+    struct Impersonation {
+        token: HANDLE,
+        active: bool,
+    }
+    impl Impersonation {
+        fn finish(&mut self) -> std::result::Result<(), Error> {
+            unsafe { RevertToSelf().map_err(Error::from)? };
+            self.active = false;
+            Ok(())
+        }
+    }
+    impl Drop for Impersonation {
+        fn drop(&mut self) {
+            unsafe {
+                if self.active {
+                    let _ = RevertToSelf();
+                }
+                let _ = CloseHandle(self.token);
+            }
+        }
+    }
+
+    let mut impersonation = Impersonation {
+        token: linked.LinkedToken,
+        active: false,
+    };
+    unsafe { ImpersonateLoggedOnUser(impersonation.token).map_err(Error::from)? };
+    impersonation.active = true;
+    let result = operation();
+    impersonation.finish()?;
+    result
+}
+
 /// The Program Files directory, from the shell rather than from `%ProgramFiles%`, which any
 /// process can hand to the one it launches.
 pub fn program_files() -> std::result::Result<std::path::PathBuf, Error> {
