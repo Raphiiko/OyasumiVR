@@ -69,11 +69,25 @@ pub async fn elevated_features_disable() -> DisableResult {
     }
     drop(manager_guard);
     let cleanup_result = match cleanup_process {
-        Ok(Some(process)) => {
-            tokio::task::spawn_blocking(move || process.wait(std::time::Duration::from_secs(5)))
-                .await
-                .map_err(|e| format!("cannot join the cleanup wait: {e}"))
-                .and_then(|result| result)
+        Ok(Some(process)) => tokio::task::spawn_blocking(move || {
+            let cleanup = process.wait(std::time::Duration::from_secs(5));
+            let helper = super::remove_cleanup_helper();
+            match (cleanup, helper) {
+                (Ok(()), Ok(())) => Ok(()),
+                (Err(e), Ok(())) | (Ok(()), Err(e)) => Err(e),
+                (Err(cleanup), Err(helper)) => Err(format!("{cleanup}; {helper}")),
+            }
+        })
+        .await
+        .map_err(|e| format!("cannot join the cleanup wait: {e}"))
+        .and_then(|result| result),
+        Ok(None)
+            if matches!(
+                &launcher_cleanup,
+                Ok(super::LauncherCleanup::AlreadyRemoved)
+            ) =>
+        {
+            super::remove_cleanup_helper()
         }
         Ok(None) => Ok(()),
         Err(e) => Err(e),

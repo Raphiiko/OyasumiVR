@@ -306,6 +306,22 @@ impl Drop for CleanupProcess {
     }
 }
 
+fn remove_cleanup_helper() -> Result<(), String> {
+    let dir = oyasumivr_shared::windows::privileged_cleanup_dir()
+        .map_err(|e| format!("cannot resolve the cleanup helper directory: {e}"))?;
+    let exe = dir.join(oyasumivr_shared::windows::PRIVILEGED_LAUNCHER_CLEANUP_EXE);
+    match std::fs::remove_file(&exe) {
+        Ok(()) => {}
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => {}
+        Err(e) => return Err(format!("cannot delete {}: {e}", exe.display())),
+    }
+    match std::fs::remove_dir(&dir) {
+        Ok(()) => Ok(()),
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(()),
+        Err(e) => Err(format!("cannot delete {}: {e}", dir.display())),
+    }
+}
+
 async fn cleanup_already_complete() -> Result<bool, String> {
     if wait_until_privileged_launcher_removed(Duration::from_secs(1)).await {
         let task_exists = tokio::task::spawn_blocking(|| {

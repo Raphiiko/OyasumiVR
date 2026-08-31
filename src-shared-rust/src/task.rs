@@ -174,6 +174,14 @@ pub fn run(user_sid: &str) -> windows::core::Result<()> {
     }
 }
 
+/// Enables or disables this account's privileged launcher task. Needs an elevated caller.
+pub fn set_enabled(user_sid: &str, enabled: bool) -> windows::core::Result<()> {
+    unsafe {
+        registered_task(user_sid)?.SetEnabled(enabled.into())?;
+        Ok(())
+    }
+}
+
 /// Deletes this account's privileged launcher task if present. Needs an elevated caller.
 pub fn unregister(user_sid: &str) -> windows::core::Result<bool> {
     let result = unsafe {

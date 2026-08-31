@@ -14,7 +14,7 @@ use simplelog::{
     ColorChoice, CombinedLogger, Config, LevelFilter, TermLogger, TerminalMode, WriteLogger,
 };
 use std::env;
-use std::fs::File;
+use std::fs::OpenOptions;
 use std::path::Path;
 use std::sync::{
     atomic::{AtomicBool, Ordering},
@@ -40,46 +40,31 @@ fn main() {
     // The runtime below is built by hand, so nothing loads a DLL before this narrows the search.
     let dll_search_restricted =
         unsafe { SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_SYSTEM32) } != 0;
+    init_logging();
+    if !dll_search_restricted {
+        error!("Could not restrict the DLL search path to System32");
+    }
+    let args: Vec<String> = env::args().collect();
+    if let Some(parent_pid) = switch_value(&args, "cleanup-parent-pid") {
+        let result = switch_string(&args, "cleanup-token")
+            .ok_or_else(|| "missing cleanup token".to_string())
+            .and_then(|token| cleanup::run_cleanup_helper(parent_pid, token));
+        if let Err(e) = result {
+            error!("Cleanup failed: {e}");
+            std::process::exit(1);
+        }
+        std::process::exit(0);
+    }
     tokio::runtime::Builder::new_multi_thread()
         .enable_all()
         .build()
         .unwrap()
-        .block_on(run(dll_search_restricted));
+        .block_on(run());
 }
 
-async fn run(dll_search_restricted: bool) {
-    // Initialize logging
-    let log_path = if let Some(base_dirs) = BaseDirs::new() {
-        base_dirs
-            .data_local_dir()
-            .join("co.raphii.oyasumi/logs/OyasumiVR_Elevated_Sidecar.log")
-    } else {
-        Path::new("co.raphii.oyasumi/logs/OyasumiVR_Elevated_Sidecar.log").to_path_buf()
-    };
-    CombinedLogger::init(vec![
-        TermLogger::new(
-            LevelFilter::Info,
-            Config::default(),
-            TerminalMode::Mixed,
-            ColorChoice::Auto,
-        ),
-        WriteLogger::new(
-            LevelFilter::Info,
-            Config::default(),
-            File::create(log_path).unwrap(),
-            // OpenOptions::new()
-            //     .create(true)
-            //     .append(true)
-            //     .open(log_path)
-            //     .unwrap(),
-        ),
-    ])
-    .unwrap();
-    if !dll_search_restricted {
-        error!("Could not restrict the DLL search path to System32");
-    }
-    // Parse the arguments
+async fn run() {
     let args: Vec<String> = env::args().collect();
+    // Parse the arguments
     let host_port = match switch_value(&args, "core-grpc-port") {
         Some(n) => n,
         None => {
@@ -129,6 +114,34 @@ async fn run(dll_search_restricted: bool) {
     watch_main_process(main_pid).await;
 }
 
+fn init_logging() {
+    let log_path = if let Some(base_dirs) = BaseDirs::new() {
+        base_dirs
+            .data_local_dir()
+            .join("co.raphii.oyasumi/logs/OyasumiVR_Elevated_Sidecar.log")
+    } else {
+        Path::new("co.raphii.oyasumi/logs/OyasumiVR_Elevated_Sidecar.log").to_path_buf()
+    };
+    if let Some(parent) = log_path.parent() {
+        let _ = std::fs::create_dir_all(parent);
+    }
+    let log_file = OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(log_path)
+        .unwrap();
+    CombinedLogger::init(vec![
+        TermLogger::new(
+            LevelFilter::Info,
+            Config::default(),
+            TerminalMode::Mixed,
+            ColorChoice::Auto,
+        ),
+        WriteLogger::new(LevelFilter::Info, Config::default(), log_file),
+    ])
+    .unwrap();
+}
+
 pub fn set_error_reporting_enabled(enabled: bool) {
     let enabled = enabled && !cfg!(debug_assertions);
     if !enabled {
@@ -167,6 +180,12 @@ fn switch_value(args: &[String], name: &str) -> Option<u32> {
     let prefix = format!("--{name}=");
     args.iter()
         .find_map(|arg| arg.strip_prefix(prefix.as_str())?.parse::<u32>().ok())
+}
+
+fn switch_string<'a>(args: &'a [String], name: &str) -> Option<&'a str> {
+    let prefix = format!("--{name}=");
+    args.iter()
+        .find_map(|arg| arg.strip_prefix(prefix.as_str()))
 }
 
 async fn watch_main_process(main_pid: u32) {

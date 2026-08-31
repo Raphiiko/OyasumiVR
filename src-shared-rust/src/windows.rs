@@ -9,6 +9,7 @@ use windows::Win32::System::Threading::{
 
 pub const PRIVILEGED_LAUNCHER_MUTEX: &str = "Global\\OyasumiVRPrivilegedLauncherInstall";
 pub const PRIVILEGED_LAUNCHER_CLEANUP_TOKEN: &str = "cleanup.token";
+pub const PRIVILEGED_LAUNCHER_CLEANUP_EXE: &str = "oyasumivr-elevated-cleanup.exe";
 
 pub struct PrivilegedLauncherLock(HANDLE);
 
@@ -177,6 +178,10 @@ pub fn program_files() -> std::result::Result<std::path::PathBuf, Error> {
     }
 }
 
+pub fn privileged_cleanup_dir() -> std::result::Result<std::path::PathBuf, Error> {
+    Ok(program_files()?.join("OyasumiVR").join("cleanup"))
+}
+
 /// Full control for SYSTEM and Administrators, read and execute for everyone else, owned by
 /// Administrators, and protected so nothing is inherited.
 pub(crate) const DIRECTORY_DESCRIPTOR: &str =
@@ -190,8 +195,30 @@ pub(crate) const DIRECTORY_DESCRIPTOR: &str =
 /// Administrators, ends up as the owner. Everything under the privileged directory is executed
 /// elevated, so it has to be unwritable for the user regardless of who created it.
 pub fn protect_directory(path: &std::path::Path) -> std::result::Result<(), Error> {
-    const DESCRIPTOR: &str = DIRECTORY_DESCRIPTOR;
+    set_path_security(path, DIRECTORY_DESCRIPTOR)
+}
 
+/// Lets the current user remove a finished cleanup helper without granting write access.
+pub fn allow_user_cleanup(
+    directory: &std::path::Path,
+    executable: &std::path::Path,
+    user_sid: &str,
+) -> std::result::Result<(), Error> {
+    const READ_EXECUTE: u32 = 0x0012_00a9;
+    const DELETE: u32 = 0x0001_0000;
+    const DELETE_CHILD: u32 = 0x0000_0040;
+    let directory_rights = READ_EXECUTE | DELETE | DELETE_CHILD;
+    let file_rights = READ_EXECUTE | DELETE;
+    let directory_descriptor = format!(
+        "O:BAG:BAD:P(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;OICI;{directory_rights:#x};;;{user_sid})"
+    );
+    let file_descriptor =
+        format!("O:BAG:BAD:P(A;;FA;;;SY)(A;;FA;;;BA)(A;;{file_rights:#x};;;{user_sid})");
+    set_path_security(executable, &file_descriptor)?;
+    set_path_security(directory, &directory_descriptor)
+}
+
+fn set_path_security(path: &std::path::Path, descriptor: &str) -> std::result::Result<(), Error> {
     use windows::core::PCWSTR;
     use windows::Win32::Foundation::{LocalFree, HLOCAL};
     use windows::Win32::Security::Authorization::{
@@ -209,7 +236,7 @@ pub fn protect_directory(path: &std::path::Path) -> std::result::Result<(), Erro
         .encode_wide()
         .chain(std::iter::once(0))
         .collect();
-    let descriptor: Vec<u16> = DESCRIPTOR
+    let descriptor: Vec<u16> = descriptor
         .encode_utf16()
         .chain(std::iter::once(0))
         .collect();
