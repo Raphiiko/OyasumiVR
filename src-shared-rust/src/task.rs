@@ -2,7 +2,7 @@
 //! registers it and the core that inspects and runs it.
 
 use std::path::Path;
-use windows::core::{Interface, BSTR};
+use windows::core::{Interface, BSTR, HRESULT};
 use windows::Win32::System::Com::{
     CoCreateInstance, CoInitializeEx, CLSCTX_INPROC_SERVER, COINIT_APARTMENTTHREADED,
 };
@@ -16,6 +16,8 @@ use windows::Win32::System::Variant::VARIANT;
 pub fn task_name(user_sid: &str) -> String {
     format!("OyasumiVR Privileged Launcher ({user_sid})")
 }
+
+const TASK_NAME_PREFIX: &str = "OyasumiVR Privileged Launcher (";
 
 /// `TASK_CREATE_OR_UPDATE | TASK_DONT_ADD_PRINCIPAL_ACE`. Without the second flag the registering
 /// account keeps write access and can re-aim the task.
@@ -130,6 +132,7 @@ pub fn register(exe: &Path, working_dir: &Path, user_sid: &str) -> windows::core
 pub struct Registration {
     pub action_path: String,
     pub action_arguments: String,
+    pub enabled: bool,
     pub run_level_is_highest: bool,
     pub sddl: String,
 }
@@ -152,6 +155,7 @@ pub fn registration(user_sid: &str) -> windows::core::Result<Registration> {
         Ok(Registration {
             action_path: action_path.to_string(),
             action_arguments: action_arguments.to_string(),
+            enabled: task.Enabled()?.0 != 0,
             run_level_is_highest: run_level == TASK_RUNLEVEL_HIGHEST,
             sddl: task.GetSecurityDescriptor(OWNER_AND_DACL_INFO)?.to_string(),
         })
@@ -168,6 +172,62 @@ pub fn run(user_sid: &str) -> windows::core::Result<()> {
         registered_task(user_sid)?.Run(&VARIANT::default())?;
         Ok(())
     }
+}
+
+/// Enables or disables this account's privileged launcher task. Needs an elevated caller.
+pub fn set_enabled(user_sid: &str, enabled: bool) -> windows::core::Result<()> {
+    unsafe {
+        registered_task(user_sid)?.SetEnabled(enabled.into())?;
+        Ok(())
+    }
+}
+
+/// Deletes this account's privileged launcher task if present. Needs an elevated caller.
+pub fn unregister(user_sid: &str) -> windows::core::Result<bool> {
+    let result = unsafe {
+        service()?
+            .GetFolder(&BSTR::from("\\"))?
+            .DeleteTask(&BSTR::from(task_name(user_sid)), 0)
+    };
+    match result {
+        Ok(()) => Ok(true),
+        Err(e) if task_is_missing(e.code()) => Ok(false),
+        Err(e) => Err(e),
+    }
+}
+
+pub fn exists(user_sid: &str) -> windows::core::Result<bool> {
+    match registered_task(user_sid) {
+        Ok(_) => Ok(true),
+        Err(e) if task_is_missing(e.code()) => Ok(false),
+        Err(e) => Err(e),
+    }
+}
+
+/// Whether another account still has an OyasumiVR privileged launcher task.
+pub fn has_other_registration(user_sid: &str) -> windows::core::Result<bool> {
+    unsafe {
+        let tasks = service()?.GetFolder(&BSTR::from("\\"))?.GetTasks(1)?;
+        let own_name = task_name(user_sid);
+        for index in 1..=tasks.Count()? {
+            let task = tasks.get_Item(&VARIANT::from(index))?;
+            let name = task.Name()?.to_string();
+            if name != own_name && is_launcher_task_name(&name) {
+                return Ok(true);
+            }
+        }
+        Ok(false)
+    }
+}
+
+fn is_launcher_task_name(name: &str) -> bool {
+    name.starts_with(TASK_NAME_PREFIX) && name.ends_with(')')
+}
+
+fn task_is_missing(code: HRESULT) -> bool {
+    const FILE_NOT_FOUND: HRESULT = HRESULT(0x8007_0002u32 as i32);
+    const TASK_NOT_FOUND: HRESULT = HRESULT(0x8004_130fu32 as i32);
+    code == FILE_NOT_FOUND || code == TASK_NOT_FOUND
 }
 
 /// The launcher's exit code from its last run, its only channel back to the core.
@@ -194,6 +254,7 @@ mod tests {
         assert!(doc.contains("<StopIfGoingOnBatteries>false<"));
         assert!(doc.contains("<StopOnIdleEnd>false<"));
         assert!(doc.contains("<AllowStartOnDemand>true<"));
+        assert!(doc.contains("<Enabled>true<"));
         assert!(doc.contains("<ExecutionTimeLimit>PT1M<"));
     }
 
@@ -203,6 +264,10 @@ mod tests {
         let b = task_name("S-1-5-21-1-2-3-1002");
         assert_ne!(a, b);
         assert!(a.starts_with("OyasumiVR Privileged Launcher"));
+        assert!(is_launcher_task_name(&a));
+        assert!(!is_launcher_task_name(
+            "OyasumiVR Privileged Launcher backup"
+        ));
     }
 
     #[test]
@@ -259,5 +324,12 @@ mod tests {
         );
         assert!(doc.contains(r"C:\a&amp;b\launcher.exe"));
         assert!(!doc.contains(r"C:\a&b\launcher.exe"));
+    }
+
+    #[test]
+    fn missing_task_errors_make_unregistration_idempotent() {
+        assert!(task_is_missing(HRESULT(0x8007_0002u32 as i32)));
+        assert!(task_is_missing(HRESULT(0x8004_130fu32 as i32)));
+        assert!(!task_is_missing(HRESULT(0x8007_0005u32 as i32)));
     }
 }

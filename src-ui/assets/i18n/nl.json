@@ -1420,9 +1420,6 @@
       "unhide": "Tonen"
     },
     "messages": {
-      "elevatedFeaturesUnavailable": {
-        "title": "Beheerders rechten niet beschikbaar"
-      },
       "gpuAutomationsAfterburnerError": {
         "actions": {
           "disable": "Automatiseringen Uitschakelen"

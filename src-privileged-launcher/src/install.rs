@@ -1,5 +1,8 @@
 use crate::{exit, log, paths};
-use oyasumivr_shared::windows::{current_user_sid, is_elevated, protect_directory};
+use oyasumivr_shared::windows::{
+    current_user_sid, is_elevated, protect_directory, PrivilegedLauncherLock,
+    PRIVILEGED_LAUNCHER_CLEANUP_TOKEN,
+};
 use oyasumivr_shared::{elevated_sidecar_key_id, task, PRIVILEGED_LAUNCHER_VERSION};
 use serde::Serialize;
 
@@ -15,6 +18,10 @@ pub fn run() -> u8 {
         log("[install] refusing to install without elevation");
         return exit::NOT_ELEVATED;
     }
+    let Ok(_lock) = PrivilegedLauncherLock::acquire() else {
+        log("[install] could not lock the privileged launcher installation");
+        return exit::INSTALL_FAILED;
+    };
 
     let (Ok(dir), Ok(staged), Ok(target), Ok(marker)) = (
         paths::privileged_dir(),
@@ -25,6 +32,15 @@ pub fn run() -> u8 {
         log("[install] could not resolve the Program Files layout");
         return exit::INSTALL_FAILED;
     };
+
+    match std::fs::remove_file(dir.join(PRIVILEGED_LAUNCHER_CLEANUP_TOKEN)) {
+        Ok(()) => {}
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => {}
+        Err(e) => {
+            log(&format!("[install] cannot cancel pending cleanup: {e}"));
+            return exit::INSTALL_FAILED;
+        }
+    }
 
     // Both hold binaries that run elevated, so neither may be writable for the user, whatever
     // Program Files would have granted them by inheritance.
@@ -44,6 +60,7 @@ pub fn run() -> u8 {
             return exit::INSTALL_FAILED;
         }
     }
+    let _ = std::fs::remove_file(dir.join("launcher.log"));
 
     let Ok(current) = std::env::current_exe() else {
         log("[install] cannot find my own path");

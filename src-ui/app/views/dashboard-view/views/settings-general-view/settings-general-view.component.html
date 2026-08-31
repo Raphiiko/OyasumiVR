@@ -279,19 +279,21 @@
               <span transloco="settings.general.adminPrivileges.description"></span>
             </div>
             <div class="setting-row-action">
+              @if ((elevatedSidecar.operation | async) !== 'idle') {
+                <div class="small-spinner"></div>
+              }
               <label class="switch-toggle">
                 <input
                   type="checkbox"
-                  [checked]="appSettings.elevatedFeaturesEnabled"
+                  [checked]="
+                    appSettings.elevatedFeaturesEnabled ||
+                    (elevatedSidecar.operation | async) === 'enabling'
+                  "
+                  [disabled]="(elevatedSidecar.operation | async) !== 'idle'"
                   (change)="setElevatedFeaturesEnabled(!appSettings.elevatedFeaturesEnabled)"
                 />
                 <span class="switch-toggle-slider"></span>
               </label>
-            </div>
-          </div>
-          <div class="setting-row" *ngIf="elevationMessage" @vshrink>
-            <div class="setting-row-label">
-              <span class="elevation-message" [transloco]="elevationMessage"></span>
             </div>
           </div>
         </div>

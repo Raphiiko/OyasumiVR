@@ -1160,9 +1160,6 @@
   },
   "message-center": {
     "messages": {
-      "elevatedFeaturesUnavailable": {
-        "title": "Adminrechte nicht verfügbar"
-      },
       "manyLighthousesDetected": {
         "message": "Es scheint, als ob du viele Basisstationen hast\n\nBeachte, dass die meisten Bluetooth-Adapter nur 7 gleichzeitige Verbindungen verarbeiten können, einschließlich anderer Bluetooth-Geräte wie Kopfhörer und andere Peripheriegeräte.Denken Sie daran, dass OyasumiVR möglicherweise Probleme hat, alle Ihre Basisstationen zu steuern, wenn Sie zu viele von ihnen gleichzeitig angeschlossen haben oder zu viele andere Bluetooth-Geräte angeschlossen sind."
       }

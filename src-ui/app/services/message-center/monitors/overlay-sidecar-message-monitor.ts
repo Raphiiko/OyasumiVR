@@ -11,6 +11,9 @@ import {
   skip,
 } from 'rxjs';
 import { isEqual } from 'lodash';
+import { appLogDir } from '@tauri-apps/api/path';
+import { invoke } from '@tauri-apps/api/core';
+import { openUrl } from '@tauri-apps/plugin-opener';
 
 // the sidecar reports its start before it builds any overlays, so a crash loop reads as start then stop
 const FAILED_STARTS_BEFORE_WARNING = 3;
@@ -71,7 +74,19 @@ export class OverlaySidecarMessageMonitor extends MessageMonitor {
                   },
                 },
               ]
-            : [],
+            : [
+                {
+                  label: 'message-center.actions.openLogFolder',
+                  action: async () => {
+                    const path = (await appLogDir()) + '\\OyasumiVR.log';
+                    await invoke('show_in_folder', { path });
+                  },
+                },
+                {
+                  label: 'message-center.actions.supportDiscord',
+                  action: () => openUrl('https://discord.gg/7MqdPJhYxC'),
+                },
+              ],
         });
       });
   }

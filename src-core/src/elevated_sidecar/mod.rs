@@ -187,6 +187,181 @@ pub async fn request_stop() {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum LauncherCleanup {
+    RemoveInstallation(u32),
+    RetainInstallation,
+    AlreadyRemoved,
+}
+
+async fn remove_privileged_launcher() -> Result<LauncherCleanup, String> {
+    if SIDECAR_GRPC_CLIENT.lock().await.is_none() {
+        if cleanup_already_complete().await? {
+            return Ok(LauncherCleanup::AlreadyRemoved);
+        }
+        if uses_scheduled_task().await {
+            let state = tokio::task::spawn_blocking(launcher::state)
+                .await
+                .map_err(|e| format!("cannot inspect the privileged launcher: {e}"))?;
+            if state != launcher::LauncherState::Ready {
+                return Err(format!(
+                    "the elevated sidecar is not running and the launcher is {state:?}"
+                ));
+            }
+        }
+        if !commands::start_sidecar().await.is_on_its_way()
+            || !wait_until_started(launcher::START_TIMEOUT).await
+        {
+            return Err("the elevated sidecar could not be started for cleanup".to_string());
+        }
+    }
+    let Some(mut client) = SIDECAR_GRPC_CLIENT.lock().await.clone() else {
+        return Err("the elevated sidecar did not connect for cleanup".to_string());
+    };
+    match tokio::time::timeout(
+        Duration::from_secs(5),
+        client.remove_privileged_launcher(tonic::Request::new(
+            crate::Models::elevated_sidecar::Empty {},
+        )),
+    )
+    .await
+    {
+        Ok(Ok(response)) => {
+            let response = response.into_inner();
+            if response.installation_retained {
+                Ok(LauncherCleanup::RetainInstallation)
+            } else if response.cleanup_process_id != 0 {
+                Ok(LauncherCleanup::RemoveInstallation(
+                    response.cleanup_process_id,
+                ))
+            } else {
+                Err("the cleanup process reported no process id".to_string())
+            }
+        }
+        Ok(Err(e)) => Err(e.message().to_string()),
+        Err(_) => Err("cleanup timed out".to_string()),
+    }
+}
+
+struct CleanupProcess(usize);
+
+impl CleanupProcess {
+    fn open(process_id: u32) -> Result<Self, String> {
+        use windows_sys::Win32::System::Threading::{
+            OpenProcess, PROCESS_QUERY_LIMITED_INFORMATION, PROCESS_SYNCHRONIZE,
+        };
+
+        let handle = unsafe {
+            OpenProcess(
+                PROCESS_QUERY_LIMITED_INFORMATION | PROCESS_SYNCHRONIZE,
+                0,
+                process_id,
+            )
+        };
+        if handle.is_null() {
+            return Err(format!(
+                "cannot open cleanup process {process_id}: {}",
+                std::io::Error::last_os_error()
+            ));
+        }
+        Ok(Self(handle as usize))
+    }
+
+    fn wait(self, timeout: Duration) -> Result<(), String> {
+        use windows_sys::Win32::Foundation::{WAIT_OBJECT_0, WAIT_TIMEOUT};
+        use windows_sys::Win32::System::Threading::{GetExitCodeProcess, WaitForSingleObject};
+
+        let handle = self.0 as windows_sys::Win32::Foundation::HANDLE;
+        let wait = unsafe { WaitForSingleObject(handle, timeout.as_millis() as u32) };
+        if wait == WAIT_TIMEOUT {
+            return Err("the cleanup process did not finish in time".to_string());
+        }
+        if wait != WAIT_OBJECT_0 {
+            return Err(format!(
+                "cannot wait for the cleanup process: {}",
+                std::io::Error::last_os_error()
+            ));
+        }
+        let mut exit_code = 0u32;
+        if unsafe { GetExitCodeProcess(handle, &mut exit_code) } == 0 {
+            return Err(format!(
+                "cannot read the cleanup process result: {}",
+                std::io::Error::last_os_error()
+            ));
+        }
+        match exit_code {
+            0 => Ok(()),
+            code => Err(format!("the cleanup process exited with code {code}")),
+        }
+    }
+}
+
+impl Drop for CleanupProcess {
+    fn drop(&mut self) {
+        unsafe {
+            windows_sys::Win32::Foundation::CloseHandle(
+                self.0 as windows_sys::Win32::Foundation::HANDLE,
+            );
+        }
+    }
+}
+
+fn remove_cleanup_helper() -> Result<(), String> {
+    let dir = oyasumivr_shared::windows::privileged_cleanup_dir()
+        .map_err(|e| format!("cannot resolve the cleanup helper directory: {e}"))?;
+    let exe = dir.join(oyasumivr_shared::windows::PRIVILEGED_LAUNCHER_CLEANUP_EXE);
+    match std::fs::remove_file(&exe) {
+        Ok(()) => {}
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => {}
+        Err(e) => return Err(format!("cannot delete {}: {e}", exe.display())),
+    }
+    match std::fs::remove_dir(&dir) {
+        Ok(()) => Ok(()),
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(()),
+        Err(e) => Err(format!("cannot delete {}: {e}", dir.display())),
+    }
+}
+
+async fn cleanup_already_complete() -> Result<bool, String> {
+    if wait_until_privileged_launcher_removed(Duration::from_secs(1)).await {
+        let task_exists = tokio::task::spawn_blocking(|| {
+            let sid = oyasumivr_shared::windows::current_user_sid()?;
+            oyasumivr_shared::task::exists(&sid)
+        })
+        .await
+        .map_err(|e| format!("cannot inspect the scheduled task: {e}"))?
+        .map_err(|e| format!("cannot inspect the scheduled task: {e}"))?;
+        return Ok(!task_exists);
+    }
+    Ok(false)
+}
+
+fn remove_launcher_handshake() -> Result<(), String> {
+    let path = oyasumivr_shared::handshake::path()
+        .map_err(|e| format!("cannot resolve the launcher handshake: {e}"))?;
+    match std::fs::remove_file(&path) {
+        Ok(()) => Ok(()),
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(()),
+        Err(e) => Err(format!("cannot delete {}: {e}", path.display())),
+    }
+}
+
+async fn wait_until_privileged_launcher_removed(timeout: Duration) -> bool {
+    let Some(dir) = launcher::privileged_dir() else {
+        return false;
+    };
+    let deadline = tokio::time::Instant::now() + timeout;
+    loop {
+        if !dir.exists() {
+            return true;
+        }
+        if tokio::time::Instant::now() >= deadline {
+            return false;
+        }
+        tokio::time::sleep(Duration::from_millis(100)).await;
+    }
+}
+
 /// Returned when a sidecar reports in that the core never asked for. The gRPC layer turns it into
 /// an error status, which the sidecar treats as fatal.
 #[derive(Debug)]

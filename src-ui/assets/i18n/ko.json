@@ -1153,9 +1153,6 @@
   },
   "message-center": {
     "messages": {
-      "elevatedFeaturesUnavailable": {
-        "title": "관리자 권한을 사용할 수 없음"
-      },
       "manyLighthousesDetected": {
         "message": "베이스 스테이션이 많은 것 같아요!\n\n대부분의 블루투스 어댑터는 헤드폰 및 기타 주변기기와 같은 다른 블루투스 장치를 포함하여 최대 7개까지만 동시에 연결할 수 있다는 점에 유의해주세요.\n\n동시에 너무 많은 베이스 스테이션을 연결하거나 다른 블루투스 장치를 너무 많이 연결하면 OyasumiVR이 모든 베이스 스테이션을 제어하는 데 문제가 생길 수 있으니, 이 점도 기억해주세요!"
       }

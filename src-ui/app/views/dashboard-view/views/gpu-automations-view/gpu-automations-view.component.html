@@ -63,16 +63,18 @@
         }
       </div>
       <div class="description" [innerHTML]="disabledMessage | transloco"></div>
-      @if (elevationMessage) {
-        <div class="elevation-message" [innerHTML]="elevationMessage | transloco"></div>
-      }
       <div class="btn-row">
         @if (panel === 'NO_SIDECAR') {
           <button
             class="btn btn-primary action"
             (click)="startSidecar()"
-            transloco="gpu-automations.requestAdministrator"
-          ></button>
+            [disabled]="(sidecar.operation | async) !== 'idle'"
+          >
+            <span transloco="gpu-automations.requestAdministrator"></span>
+            @if ((sidecar.operation | async) === 'enabling') {
+              <div class="small-spinner"></div>
+            }
+          </button>
         }
         @if (!['DISABLED'].includes(panel)) {
           <button

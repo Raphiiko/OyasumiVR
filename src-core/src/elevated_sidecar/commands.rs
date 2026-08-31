@@ -51,12 +51,80 @@ pub async fn elevated_features_enable() -> super::launcher::EnableResult {
 }
 
 #[tauri::command]
-pub async fn elevated_features_disable() {
+pub async fn elevated_features_disable() -> DisableResult {
     // taken before the manager lock, the same order enable uses
     let _transition = super::TRANSITION.lock().await;
+    let launcher_cleanup = super::remove_privileged_launcher().await;
+    let handshake_cleanup = super::remove_launcher_handshake();
+    let cleanup_process = match &launcher_cleanup {
+        Ok(super::LauncherCleanup::RemoveInstallation(process_id)) => {
+            super::CleanupProcess::open(*process_id).map(Some)
+        }
+        _ => Ok(None),
+    };
     super::request_stop().await;
     let mut manager_guard = super::SIDECAR_MANAGER.lock().await;
     if let Some(manager) = manager_guard.as_mut() {
         manager.stop_and_stay_stopped().await;
+    }
+    drop(manager_guard);
+    let cleanup_result = match cleanup_process {
+        Ok(Some(process)) => tokio::task::spawn_blocking(move || {
+            process.wait(std::time::Duration::from_secs(5))?;
+            super::remove_cleanup_helper()
+        })
+        .await
+        .map_err(|e| format!("cannot join the cleanup wait: {e}"))
+        .and_then(|result| result),
+        Ok(None)
+            if matches!(
+                &launcher_cleanup,
+                Ok(super::LauncherCleanup::AlreadyRemoved)
+            ) =>
+        {
+            super::remove_cleanup_helper()
+        }
+        Ok(None) => Ok(()),
+        Err(e) => Err(e),
+    };
+    let cleanup_errors: Vec<_> = [
+        handshake_cleanup.err(),
+        launcher_cleanup.err(),
+        cleanup_result.err(),
+    ]
+    .into_iter()
+    .flatten()
+    .collect();
+    if !cleanup_errors.is_empty() {
+        let reason = cleanup_errors.join("; ");
+        log::error!("[Core] Could not remove the privileged launcher: {reason}");
+        return DisableResult::CleanupFailed { reason };
+    }
+    DisableResult::Ok
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
+#[serde(tag = "result", rename_all = "camelCase")]
+pub enum DisableResult {
+    Ok,
+    CleanupFailed { reason: String },
+}
+
+#[cfg(test)]
+mod tests {
+    use super::DisableResult;
+
+    #[test]
+    fn cleanup_failure_matches_the_frontend_contract() {
+        assert_eq!(
+            serde_json::to_value(DisableResult::CleanupFailed {
+                reason: "Task Scheduler refused deletion".to_string(),
+            })
+            .unwrap(),
+            serde_json::json!({
+                "result": "cleanupFailed",
+                "reason": "Task Scheduler refused deletion",
+            })
+        );
     }
 }

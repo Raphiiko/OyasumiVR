@@ -1452,9 +1452,6 @@
       "unhide": "取消隱藏"
     },
     "messages": {
-      "elevatedFeaturesUnavailable": {
-        "title": "管理員權限無法使用"
-      },
       "gpuAutomationsAfterburnerError": {
         "actions": {
           "disable": "停用自動化"

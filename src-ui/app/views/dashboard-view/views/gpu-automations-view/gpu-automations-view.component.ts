@@ -24,13 +24,12 @@ export class GpuAutomationsViewComponent implements OnInit {
   panel: 'DISABLED' | 'NO_SIDECAR' | 'ENABLED' = 'DISABLED';
   disabledMessage = '';
   nvmlErrors?: Observable<boolean>;
-  elevationMessage: string | null = null;
   msiAfterburnerErrors?: Observable<boolean>;
 
   constructor(
     private nvml: NvmlService,
     protected gpuAutomations: GpuAutomationsService,
-    private sidecar: ElevatedSidecarService,
+    protected sidecar: ElevatedSidecarService,
     private activatedRoute: ActivatedRoute
   ) {
     combineLatest([sidecar.sidecarStarted, this.gpuAutomations.isEnabled()])
@@ -107,10 +106,6 @@ export class GpuAutomationsViewComponent implements OnInit {
   }
 
   async startSidecar() {
-    this.elevationMessage = null;
-    const result = await this.sidecar.enable();
-    if (result.result !== 'ok') {
-      this.elevationMessage = `settings.general.adminPrivileges.errors.${result.result}`;
-    }
+    await this.sidecar.enable();
   }
 }

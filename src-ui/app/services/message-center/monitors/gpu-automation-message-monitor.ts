@@ -54,16 +54,7 @@ export class GpuAutomationMessageMonitor extends MessageMonitor {
               {
                 label: 'message-center.messages.gpuAutomationsSidecarNotRunning.actions.elevate',
                 action: async () => {
-                  const result = await this.elevatedSidecar.enable();
-                  if (result.result === 'ok') return;
-                  this.messageCenter.addMessage({
-                    id: 'elevatedFeaturesUnavailable',
-                    title: 'message-center.messages.elevatedFeaturesUnavailable.title',
-                    message: `settings.general.adminPrivileges.errors.${result.result}`,
-                    hideable: true,
-                    type: 'warning',
-                    actions: [],
-                  });
+                  await this.elevatedSidecar.enable();
                 },
               },
             ],

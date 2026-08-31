@@ -11,6 +11,7 @@ import type { NvmlPowerManagementLimitRequest } from './elevated-sidecar_pb';
 import type { NvmlDevicesResponse } from './elevated-sidecar_pb';
 import type { NvmlStatusResponse } from './elevated-sidecar_pb';
 import type { SetErrorReportingEnabledRequest } from './elevated-sidecar_pb';
+import type { RemovePrivilegedLauncherResponse } from './elevated-sidecar_pb';
 import { stackIntercept } from '@protobuf-ts/runtime-rpc';
 import type { PingResponse } from './elevated-sidecar_pb';
 import type { Empty } from './elevated-sidecar_pb';
@@ -30,6 +31,13 @@ export interface IOyasumiElevatedSidecarClient {
    * @generated from protobuf rpc: RequestStop
    */
   requestStop(input: Empty, options?: RpcOptions): UnaryCall<Empty, Empty>;
+  /**
+   * @generated from protobuf rpc: RemovePrivilegedLauncher
+   */
+  removePrivilegedLauncher(
+    input: Empty,
+    options?: RpcOptions
+  ): UnaryCall<Empty, RemovePrivilegedLauncherResponse>;
   /**
    * @generated from protobuf rpc: SetErrorReportingEnabled
    */
@@ -87,13 +95,30 @@ export class OyasumiElevatedSidecarClient implements IOyasumiElevatedSidecarClie
     return stackIntercept<Empty, Empty>('unary', this._transport, method, opt, input);
   }
   /**
+   * @generated from protobuf rpc: RemovePrivilegedLauncher
+   */
+  removePrivilegedLauncher(
+    input: Empty,
+    options?: RpcOptions
+  ): UnaryCall<Empty, RemovePrivilegedLauncherResponse> {
+    const method = this.methods[2],
+      opt = this._transport.mergeOptions(options);
+    return stackIntercept<Empty, RemovePrivilegedLauncherResponse>(
+      'unary',
+      this._transport,
+      method,
+      opt,
+      input
+    );
+  }
+  /**
    * @generated from protobuf rpc: SetErrorReportingEnabled
    */
   setErrorReportingEnabled(
     input: SetErrorReportingEnabledRequest,
     options?: RpcOptions
   ): UnaryCall<SetErrorReportingEnabledRequest, Empty> {
-    const method = this.methods[2],
+    const method = this.methods[3],
       opt = this._transport.mergeOptions(options);
     return stackIntercept<SetErrorReportingEnabledRequest, Empty>(
       'unary',
@@ -107,7 +132,7 @@ export class OyasumiElevatedSidecarClient implements IOyasumiElevatedSidecarClie
    * @generated from protobuf rpc: GetNvmlStatus
    */
   getNvmlStatus(input: Empty, options?: RpcOptions): UnaryCall<Empty, NvmlStatusResponse> {
-    const method = this.methods[3],
+    const method = this.methods[4],
       opt = this._transport.mergeOptions(options);
     return stackIntercept<Empty, NvmlStatusResponse>('unary', this._transport, method, opt, input);
   }
@@ -115,7 +140,7 @@ export class OyasumiElevatedSidecarClient implements IOyasumiElevatedSidecarClie
    * @generated from protobuf rpc: GetNvmlDevices
    */
   getNvmlDevices(input: Empty, options?: RpcOptions): UnaryCall<Empty, NvmlDevicesResponse> {
-    const method = this.methods[4],
+    const method = this.methods[5],
       opt = this._transport.mergeOptions(options);
     return stackIntercept<Empty, NvmlDevicesResponse>('unary', this._transport, method, opt, input);
   }
@@ -126,7 +151,7 @@ export class OyasumiElevatedSidecarClient implements IOyasumiElevatedSidecarClie
     input: NvmlPowerManagementLimitRequest,
     options?: RpcOptions
   ): UnaryCall<NvmlPowerManagementLimitRequest, NvmlPowerManagementLimitResponse> {
-    const method = this.methods[5],
+    const method = this.methods[6],
       opt = this._transport.mergeOptions(options);
     return stackIntercept<NvmlPowerManagementLimitRequest, NvmlPowerManagementLimitResponse>(
       'unary',
@@ -143,7 +168,7 @@ export class OyasumiElevatedSidecarClient implements IOyasumiElevatedSidecarClie
     input: SetMsiAfterburnerProfileRequest,
     options?: RpcOptions
   ): UnaryCall<SetMsiAfterburnerProfileRequest, SetMsiAfterburnerProfileResponse> {
-    const method = this.methods[6],
+    const method = this.methods[7],
       opt = this._transport.mergeOptions(options);
     return stackIntercept<SetMsiAfterburnerProfileRequest, SetMsiAfterburnerProfileResponse>(
       'unary',
