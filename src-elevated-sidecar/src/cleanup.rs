@@ -116,7 +116,7 @@ fn removal_script(pid: u32, dir: &Path, token: &str, user_sid: &str) -> String {
     let mutex = PRIVILEGED_LAUNCHER_MUTEX.replace('\'', "''");
     let task_name = task::task_name(user_sid).replace('\'', "''");
     format!(
-        "$process = Get-Process -Id {pid} -ErrorAction SilentlyContinue; if ($process) {{ $process.WaitForExit() }}; $mutex = $null; $acquired = $false; try {{ $mutex = [Threading.Mutex]::new($false, '{mutex}'); if (-not $mutex.WaitOne(30000)) {{ exit 1 }}; $acquired = $true; $tokenPath = Join-Path '{literal}' '{PRIVILEGED_LAUNCHER_CLEANUP_TOKEN}'; if ((Get-Content -LiteralPath $tokenPath -Raw -ErrorAction SilentlyContinue) -ne '{token}') {{ exit 0 }}; $keep = @('{LAUNCHER_EXE}', '{LAUNCHER_MARKER}'); Get-ChildItem -LiteralPath '{literal}' -Force | Where-Object {{ $_.Name -notin $keep }} | Remove-Item -Recurse -Force -ErrorAction Stop; $task = Get-ScheduledTask -TaskName '{task_name}' -ErrorAction SilentlyContinue; if ($task) {{ $task | Unregister-ScheduledTask -Confirm:$false -ErrorAction Stop }}; foreach ($name in $keep) {{ $path = Join-Path '{literal}' $name; if (Test-Path -LiteralPath $path) {{ Remove-Item -LiteralPath $path -Force -ErrorAction Stop }} }}; Remove-Item -LiteralPath '{literal}' -Force -ErrorAction Stop; exit 0 }} catch {{ exit 1 }} finally {{ if ($acquired) {{ try {{ $mutex.ReleaseMutex() }} catch {{}} }}; if ($mutex) {{ $mutex.Dispose() }} }}"
+        "$process = Get-Process -Id {pid} -ErrorAction SilentlyContinue; if ($process) {{ $process.WaitForExit() }}; $mutex = $null; $acquired = $false; $prepared = $false; $taskDisabled = $false; $task = $null; try {{ $mutex = [Threading.Mutex]::new($false, '{mutex}'); if (-not $mutex.WaitOne(30000)) {{ exit 1 }}; $acquired = $true; $tokenPath = Join-Path '{literal}' '{PRIVILEGED_LAUNCHER_CLEANUP_TOKEN}'; if ((Get-Content -LiteralPath $tokenPath -Raw -ErrorAction SilentlyContinue) -ne '{token}') {{ exit 0 }}; $launcherPath = Join-Path '{literal}' '{LAUNCHER_EXE}'; $markerPath = Join-Path '{literal}' '{LAUNCHER_MARKER}'; $directoryAcl = Get-Acl -LiteralPath '{literal}' -ErrorAction Stop; $launcherBytes = [IO.File]::ReadAllBytes($launcherPath); $markerBytes = [IO.File]::ReadAllBytes($markerPath); $prepared = $true; $task = Get-ScheduledTask -TaskName '{task_name}' -ErrorAction SilentlyContinue; if ($task) {{ $task | Disable-ScheduledTask -ErrorAction Stop | Out-Null; $taskDisabled = $true }}; Remove-Item -LiteralPath '{literal}' -Recurse -Force -ErrorAction Stop; if ($task) {{ $task | Unregister-ScheduledTask -Confirm:$false -ErrorAction Stop }}; exit 0 }} catch {{ try {{ if ($prepared) {{ if (-not (Test-Path -LiteralPath '{literal}')) {{ [IO.DirectoryInfo]::new('{literal}').Create($directoryAcl) }}; $stagedPath = Join-Path '{literal}' 'staged'; if (-not (Test-Path -LiteralPath $stagedPath)) {{ [IO.DirectoryInfo]::new($stagedPath).Create($directoryAcl) }}; if (-not (Test-Path -LiteralPath $launcherPath)) {{ [IO.File]::WriteAllBytes($launcherPath, $launcherBytes) }}; if (-not (Test-Path -LiteralPath $markerPath)) {{ [IO.File]::WriteAllBytes($markerPath, $markerBytes) }} }}; if ($taskDisabled) {{ $task | Enable-ScheduledTask -ErrorAction Stop | Out-Null }} }} catch {{}}; exit 1 }} finally {{ if ($acquired) {{ try {{ $mutex.ReleaseMutex() }} catch {{}} }}; if ($mutex) {{ $mutex.Dispose() }} }}"
     )
 }
 
@@ -129,6 +129,11 @@ mod tests {
         let _ = std::fs::remove_dir_all(&dir);
         std::fs::create_dir_all(&dir).unwrap();
         dir
+    }
+
+    fn write_launcher_state(dir: &Path) {
+        std::fs::write(dir.join(LAUNCHER_EXE), b"launcher").unwrap();
+        std::fs::write(dir.join(LAUNCHER_MARKER), b"marker").unwrap();
     }
 
     #[test]
@@ -148,6 +153,7 @@ mod tests {
     #[test]
     fn system_cleanup_process_removes_a_directory() {
         let dir = scratch("oyasumi-elevated-cleanup-process");
+        write_launcher_state(&dir);
         std::fs::write(dir.join("artifact"), b"x").unwrap();
         std::fs::write(dir.join(PRIVILEGED_LAUNCHER_CLEANUP_TOKEN), b"remove-me").unwrap();
 
@@ -189,15 +195,13 @@ mod tests {
         use windows_sys::Win32::Storage::FileSystem::{FILE_SHARE_READ, FILE_SHARE_WRITE};
 
         let dir = scratch("oyasumi-elevated-cleanup-failure");
-        let artifact = dir.join("locked");
-        std::fs::write(&artifact, b"x").unwrap();
-        std::fs::write(dir.join(LAUNCHER_EXE), b"launcher").unwrap();
-        std::fs::write(dir.join(LAUNCHER_MARKER), b"marker").unwrap();
+        write_launcher_state(&dir);
+        let launcher = dir.join(LAUNCHER_EXE);
         std::fs::write(dir.join(PRIVILEGED_LAUNCHER_CLEANUP_TOKEN), b"remove-me").unwrap();
         let locked = std::fs::OpenOptions::new()
             .read(true)
             .share_mode(FILE_SHARE_READ | FILE_SHARE_WRITE)
-            .open(artifact)
+            .open(&launcher)
             .unwrap();
 
         let status =
@@ -208,7 +212,7 @@ mod tests {
 
         assert!(!status.success());
         assert!(dir.exists());
-        assert!(dir.join(LAUNCHER_EXE).is_file());
+        assert_eq!(std::fs::read(dir.join(LAUNCHER_EXE)).unwrap(), b"launcher");
         assert!(dir.join(LAUNCHER_MARKER).is_file());
 
         drop(locked);
@@ -240,6 +244,7 @@ mod tests {
 
         let dir = scratch("oyasumi-elevated-cleanup-working-directory");
         let staged = dir.join("staged");
+        write_launcher_state(&dir);
         std::fs::create_dir_all(&staged).unwrap();
         std::fs::write(staged.join("artifact"), b"x").unwrap();
         std::fs::write(dir.join(PRIVILEGED_LAUNCHER_CLEANUP_TOKEN), b"child").unwrap();
