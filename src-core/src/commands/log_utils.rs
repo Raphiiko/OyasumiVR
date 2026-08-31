@@ -116,11 +116,17 @@ pub async fn clean_log_files() {
     let guard = LOG_DIR.lock().await;
     let log_dir = guard.as_ref().unwrap();
     let mut logs_deleted = 0;
-    for entry in std::fs::read_dir(log_dir).unwrap() {
-        let entry = entry.unwrap();
+    let Ok(entries) = std::fs::read_dir(log_dir) else {
+        error!("Could not read log directory");
+        return;
+    };
+    for entry in entries {
+        let Ok(entry) = entry else { continue };
         let path = entry.path();
         if path.is_file() {
-            let metadata = std::fs::metadata(&path).unwrap();
+            let Ok(metadata) = std::fs::metadata(&path) else {
+                continue;
+            };
             let too_large = metadata.len() > CLEANUP_MAX_LOG_FILE_SIZE;
             let too_old = match metadata.modified() {
                 Ok(modified) => match modified.elapsed() {

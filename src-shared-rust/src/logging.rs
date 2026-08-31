@@ -31,7 +31,7 @@ pub fn init(
                 current_infix: Some(EMPTY_INFIX),
                 format: ROTATED_FILE_NAME_FORMAT,
             },
-            Cleanup::KeepLogFiles(MAX_RETAINED_LOG_FILES),
+            Cleanup::KeepLogFiles(MAX_RETAINED_LOG_FILES - 1),
         )
         .format_for_files(log_line)
         .append()

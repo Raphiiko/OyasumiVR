@@ -16,7 +16,6 @@ mod spawn;
 mod verify;
 
 use std::process::ExitCode;
-use std::{fs::OpenOptions, path::Path};
 
 /// The core reads these back from the scheduled task's `LastTaskResult`.
 pub mod exit {
@@ -35,24 +34,10 @@ pub fn log(message: &str) {
 }
 
 fn init_logging() {
-    let Ok(dir) = paths::log_dir() else { return };
-    let _ = init_logging_at(&dir);
-}
-
-fn init_logging_at(dir: &Path) -> bool {
-    let Ok(()) = oyasumivr_shared::windows::with_unelevated_token(|| prepare_log_file(dir)) else {
-        return false;
+    let Ok(dir) = paths::privileged_dir() else {
+        return;
     };
-    oyasumivr_shared::logging::init(dir, "OyasumiVR_Privileged_Launcher", false).is_ok()
-}
-
-fn prepare_log_file(dir: &Path) -> std::io::Result<()> {
-    std::fs::create_dir_all(dir)?;
-    OpenOptions::new()
-        .create(true)
-        .append(true)
-        .open(dir.join("OyasumiVR_Privileged_Launcher.log"))?;
-    Ok(())
+    let _ = oyasumivr_shared::logging::init(&dir, "OyasumiVR_Privileged_Launcher", false);
 }
 
 fn main() -> ExitCode {
@@ -64,21 +49,4 @@ fn main() -> ExitCode {
         run::run()
     };
     ExitCode::from(code)
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn init_logging_at_creates_the_log_file() {
-        let dir = std::env::temp_dir()
-            .join("oyasumivr-launcher-log-test")
-            .join(std::process::id().to_string());
-        let _ = std::fs::remove_dir_all(&dir);
-        assert!(init_logging_at(&dir));
-        log::info!("test line");
-        assert!(dir.join("OyasumiVR_Privileged_Launcher.log").is_file());
-        let _ = std::fs::remove_dir_all(&dir);
-    }
 }

@@ -78,7 +78,7 @@ export class OverlaySidecarMessageMonitor extends MessageMonitor {
                 {
                   label: 'message-center.actions.openLogFolder',
                   action: async () => {
-                    const path = (await appLogDir()) + '\\OyasumiVR.log';
+                    const path = (await appLogDir()) + '\\OyasumiVR_Core.log';
                     await invoke('show_in_folder', { path });
                   },
                 },

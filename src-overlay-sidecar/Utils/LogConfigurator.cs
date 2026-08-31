@@ -24,7 +24,8 @@ public static class LogConfigurator {
         fileSizeLimitBytes: 1_048_576,
         rollOnFileSizeLimit: true,
         retainedFileCountLimit: 14,
-        retainedFileTimeLimit: TimeSpan.FromDays(14)
+        retainedFileTimeLimit: TimeSpan.FromDays(14),
+        outputTemplate: "[{Timestamp:yyyy-MM-dd}][{Timestamp:HH:mm:ss}] [{Level:u}] {Message:lj}{NewLine}{Exception}"
       );
     if (Program.InDevMode())
     {
