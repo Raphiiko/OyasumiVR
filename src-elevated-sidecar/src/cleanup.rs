@@ -8,6 +8,7 @@ use std::process::Command;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 const LAUNCHER_EXE: &str = "oyasumivr-privileged-launcher.exe";
+const LAUNCHER_MARKER: &str = "launcher.json";
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CleanupDisposition {
     RemoveInstallation { process_id: u32 },
@@ -27,26 +28,19 @@ pub fn remove_privileged_launcher() -> Result<CleanupDisposition, String> {
         .join("privileged");
     let retain_installation = task::has_other_registration(&sid)
         .map_err(|e| format!("cannot inspect the scheduled tasks: {e}"))?;
-    task::unregister(&sid).map_err(|e| format!("cannot delete the scheduled task: {e}"))?;
     if retain_installation || !dir.exists() {
+        task::unregister(&sid).map_err(|e| format!("cannot delete the scheduled task: {e}"))?;
         return Ok(CleanupDisposition::RetainInstallation);
     }
     let token = cleanup_token();
     let token_path = dir.join(PRIVILEGED_LAUNCHER_CLEANUP_TOKEN);
     let cleanup = std::fs::write(&token_path, &token)
         .map_err(|e| format!("cannot prepare directory cleanup: {e}"))
-        .and_then(|_| spawn_directory_removal(&dir, &token));
+        .and_then(|_| spawn_directory_removal(&dir, &token, &sid));
     let process_id = match cleanup {
         Ok(process_id) => process_id,
         Err(e) => {
             let _ = std::fs::remove_file(&token_path);
-            let launcher = dir.join(LAUNCHER_EXE);
-            let staged = dir.join("staged");
-            if let Err(restore_error) = task::register(&launcher, &staged, &sid) {
-                return Err(format!(
-                    "{e}; cannot restore the scheduled task: {restore_error}"
-                ));
-            }
             return Err(e);
         }
     };
@@ -61,14 +55,15 @@ fn cleanup_token() -> String {
     format!("{}-{nanos}", std::process::id())
 }
 
-fn spawn_directory_removal(dir: &Path, token: &str) -> Result<u32, String> {
-    spawn_directory_removal_after(std::process::id(), dir, token).map(|child| child.id())
+fn spawn_directory_removal(dir: &Path, token: &str, user_sid: &str) -> Result<u32, String> {
+    spawn_directory_removal_after(std::process::id(), dir, token, user_sid).map(|child| child.id())
 }
 
 fn spawn_directory_removal_after(
     pid: u32,
     dir: &Path,
     token: &str,
+    user_sid: &str,
 ) -> Result<std::process::Child, String> {
     use std::os::windows::process::CommandExt;
     use windows_sys::Win32::System::Threading::CREATE_NO_WINDOW;
@@ -78,7 +73,7 @@ fn spawn_directory_removal_after(
     if !powershell.is_file() {
         return Err(format!("cannot find {}", powershell.display()));
     }
-    let script = removal_script(pid, dir, token);
+    let script = removal_script(pid, dir, token, user_sid);
     Command::new(&powershell)
         .current_dir(system)
         .args([
@@ -115,12 +110,13 @@ fn system_directory() -> Result<std::path::PathBuf, String> {
     )))
 }
 
-fn removal_script(pid: u32, dir: &Path, token: &str) -> String {
+fn removal_script(pid: u32, dir: &Path, token: &str, user_sid: &str) -> String {
     let literal = dir.display().to_string().replace('\'', "''");
     let token = token.replace('\'', "''");
     let mutex = PRIVILEGED_LAUNCHER_MUTEX.replace('\'', "''");
+    let task_name = task::task_name(user_sid).replace('\'', "''");
     format!(
-        "$process = Get-Process -Id {pid} -ErrorAction SilentlyContinue; if ($process) {{ $process.WaitForExit() }}; $mutex = $null; $acquired = $false; try {{ $mutex = [Threading.Mutex]::new($false, '{mutex}'); if (-not $mutex.WaitOne(30000)) {{ exit 1 }}; $acquired = $true; $tokenPath = Join-Path '{literal}' '{PRIVILEGED_LAUNCHER_CLEANUP_TOKEN}'; if ((Get-Content -LiteralPath $tokenPath -Raw -ErrorAction SilentlyContinue) -ne '{token}') {{ exit 0 }}; Remove-Item -LiteralPath '{literal}' -Recurse -Force -ErrorAction Stop; exit 0 }} catch {{ exit 1 }} finally {{ if ($acquired) {{ try {{ $mutex.ReleaseMutex() }} catch {{}} }}; if ($mutex) {{ $mutex.Dispose() }} }}"
+        "$process = Get-Process -Id {pid} -ErrorAction SilentlyContinue; if ($process) {{ $process.WaitForExit() }}; $mutex = $null; $acquired = $false; try {{ $mutex = [Threading.Mutex]::new($false, '{mutex}'); if (-not $mutex.WaitOne(30000)) {{ exit 1 }}; $acquired = $true; $tokenPath = Join-Path '{literal}' '{PRIVILEGED_LAUNCHER_CLEANUP_TOKEN}'; if ((Get-Content -LiteralPath $tokenPath -Raw -ErrorAction SilentlyContinue) -ne '{token}') {{ exit 0 }}; $keep = @('{LAUNCHER_EXE}', '{LAUNCHER_MARKER}'); Get-ChildItem -LiteralPath '{literal}' -Force | Where-Object {{ $_.Name -notin $keep }} | Remove-Item -Recurse -Force -ErrorAction Stop; $task = Get-ScheduledTask -TaskName '{task_name}' -ErrorAction SilentlyContinue; if ($task) {{ $task | Unregister-ScheduledTask -Confirm:$false -ErrorAction Stop }}; foreach ($name in $keep) {{ $path = Join-Path '{literal}' $name; if (Test-Path -LiteralPath $path) {{ Remove-Item -LiteralPath $path -Force -ErrorAction Stop }} }}; Remove-Item -LiteralPath '{literal}' -Force -ErrorAction Stop; exit 0 }} catch {{ exit 1 }} finally {{ if ($acquired) {{ try {{ $mutex.ReleaseMutex() }} catch {{}} }}; if ($mutex) {{ $mutex.Dispose() }} }}"
     )
 }
 
@@ -141,10 +137,12 @@ mod tests {
             42,
             Path::new(r"C:\Program Files\O'Brien\privileged"),
             "token",
+            "S-1-5-21-1-2-3-1001",
         );
         assert!(script.contains("Get-Process -Id 42"));
         assert!(script.contains("-LiteralPath 'C:\\Program Files\\O''Brien\\privileged'"));
         assert!(script.contains(PRIVILEGED_LAUNCHER_MUTEX));
+        assert!(script.contains("OyasumiVR Privileged Launcher (S-1-5-21-1-2-3-1001)"));
     }
 
     #[test]
@@ -153,10 +151,11 @@ mod tests {
         std::fs::write(dir.join("artifact"), b"x").unwrap();
         std::fs::write(dir.join(PRIVILEGED_LAUNCHER_CLEANUP_TOKEN), b"remove-me").unwrap();
 
-        let status = spawn_directory_removal_after(2_000_000_000, &dir, "remove-me")
-            .unwrap()
-            .wait()
-            .unwrap();
+        let status =
+            spawn_directory_removal_after(2_000_000_000, &dir, "remove-me", "S-1-5-21-1-2-3-1001")
+                .unwrap()
+                .wait()
+                .unwrap();
 
         assert!(status.success());
         assert!(
@@ -170,10 +169,15 @@ mod tests {
         let dir = scratch("oyasumi-elevated-cleanup-reinstalled");
         std::fs::write(dir.join(PRIVILEGED_LAUNCHER_CLEANUP_TOKEN), b"new-install").unwrap();
 
-        let status = spawn_directory_removal_after(2_000_000_000, &dir, "old-install")
-            .unwrap()
-            .wait()
-            .unwrap();
+        let status = spawn_directory_removal_after(
+            2_000_000_000,
+            &dir,
+            "old-install",
+            "S-1-5-21-1-2-3-1001",
+        )
+        .unwrap()
+        .wait()
+        .unwrap();
 
         assert!(status.success());
         assert!(dir.exists());
@@ -187,28 +191,49 @@ mod tests {
         let dir = scratch("oyasumi-elevated-cleanup-failure");
         let artifact = dir.join("locked");
         std::fs::write(&artifact, b"x").unwrap();
+        std::fs::write(dir.join(LAUNCHER_EXE), b"launcher").unwrap();
+        std::fs::write(dir.join(LAUNCHER_MARKER), b"marker").unwrap();
         std::fs::write(dir.join(PRIVILEGED_LAUNCHER_CLEANUP_TOKEN), b"remove-me").unwrap();
-        let _locked = std::fs::OpenOptions::new()
+        let locked = std::fs::OpenOptions::new()
             .read(true)
             .share_mode(FILE_SHARE_READ | FILE_SHARE_WRITE)
             .open(artifact)
             .unwrap();
 
-        let status = spawn_directory_removal_after(2_000_000_000, &dir, "remove-me")
-            .unwrap()
-            .wait()
-            .unwrap();
+        let status =
+            spawn_directory_removal_after(2_000_000_000, &dir, "remove-me", "S-1-5-21-1-2-3-1001")
+                .unwrap()
+                .wait()
+                .unwrap();
 
         assert!(!status.success());
         assert!(dir.exists());
+        assert!(dir.join(LAUNCHER_EXE).is_file());
+        assert!(dir.join(LAUNCHER_MARKER).is_file());
+
+        drop(locked);
+        std::fs::write(dir.join(PRIVILEGED_LAUNCHER_CLEANUP_TOKEN), b"retry").unwrap();
+        let retry =
+            spawn_directory_removal_after(2_000_000_000, &dir, "retry", "S-1-5-21-1-2-3-1001")
+                .unwrap()
+                .wait()
+                .unwrap();
+
+        assert!(retry.success());
+        assert!(!dir.exists());
     }
 
     #[test]
     fn system_cleanup_process_escapes_the_sidecar_directory() {
         const CHILD_DIR: &str = "OYASUMIVR_CLEANUP_TEST_CHILD_DIR";
         if let Some(dir) = std::env::var_os(CHILD_DIR) {
-            let child =
-                spawn_directory_removal_after(2_000_000_000, Path::new(&dir), "child").unwrap();
+            let child = spawn_directory_removal_after(
+                2_000_000_000,
+                Path::new(&dir),
+                "child",
+                "S-1-5-21-1-2-3-1001",
+            )
+            .unwrap();
             std::mem::forget(child);
             return;
         }
