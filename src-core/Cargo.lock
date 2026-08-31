@@ -2087,6 +2087,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "flexi_logger"
+version = "0.31.10"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a4945fa9cdfd7571192cf559c186d45ab36c8034482a2d217a19bdc566f190cc"
+dependencies = [
+ "chrono",
+ "log",
+ "thiserror 2.0.20",
+]
+
+[[package]]
 name = "fnv"
 version = "1.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4631,11 +4642,14 @@ dependencies = [
 name = "oyasumivr-shared"
 version = "26.8.0-beta.6"
 dependencies = [
+ "flexi_logger",
+ "log",
  "regex",
  "reqwest 0.13.4",
  "sentry",
  "serde",
  "serde_json",
+ "time",
  "windows 0.62.2",
 ]
 

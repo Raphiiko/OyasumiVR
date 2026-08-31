@@ -18,7 +18,14 @@ public static class LogConfigurator {
       .Filter.ByExcluding(Matching.FromSource("Microsoft"))
       .WriteTo.Console()
       .WriteTo.Debug()
-      .WriteTo.File(logPath, rollingInterval: RollingInterval.Day, retainedFileTimeLimit: TimeSpan.FromDays(7));
+      .WriteTo.File(
+        logPath,
+        rollingInterval: RollingInterval.Day,
+        fileSizeLimitBytes: 1_048_576,
+        rollOnFileSizeLimit: true,
+        retainedFileCountLimit: 14,
+        retainedFileTimeLimit: TimeSpan.FromDays(14)
+      );
     if (Program.InDevMode())
     {
       config = config.MinimumLevel.Debug();

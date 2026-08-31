@@ -203,16 +203,18 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
                 message
             ))
         })
-        .rotation_strategy(RotationStrategy::KeepAll);
+        .max_file_size(1024 * 1024)
+        .rotation_strategy(RotationStrategy::KeepSome(14));
 
     builder = builder
-        //also set in Cargo.toml
         .level(LevelFilter::Info)
         .target(tauri_plugin_log::Target::new(
             tauri_plugin_log::TargetKind::Stdout,
         ))
         .target(tauri_plugin_log::Target::new(
-            tauri_plugin_log::TargetKind::LogDir { file_name: None },
+            tauri_plugin_log::TargetKind::LogDir {
+                file_name: Some(String::from("OyasumiVR_Core")),
+            },
         ));
 
     #[cfg(debug_assertions)]

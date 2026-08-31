@@ -1,12 +1,29 @@
 use log::{error, info};
-use std::{path::PathBuf, sync::LazyLock, time::SystemTime};
+use std::{
+    path::PathBuf,
+    sync::LazyLock,
+    time::{Duration, SystemTime},
+};
 use tokio::sync::Mutex;
 
 pub static LOG_DIR: LazyLock<Mutex<Option<PathBuf>>> = LazyLock::new(Default::default);
 
+// Files rotate at 1 MiB, so anything larger is from a runaway or an older build.
+const CLEANUP_MAX_LOG_FILE_SIZE: u64 = 2 * 1024 * 1024;
+const CLEANUP_MAX_LOG_AGE: Duration = Duration::from_secs(60 * 60 * 24 * 14);
+const CLEANUP_INTERVAL: Duration = Duration::from_secs(60 * 60 * 24);
+
 pub async fn init(path: PathBuf) {
     *LOG_DIR.lock().await = Some(path);
     clean_log_files().await;
+    tokio::spawn(async move {
+        let mut interval = tokio::time::interval(CLEANUP_INTERVAL);
+        interval.tick().await;
+        loop {
+            interval.tick().await;
+            clean_log_files().await;
+        }
+    });
 }
 
 #[tauri::command]
@@ -104,10 +121,10 @@ pub async fn clean_log_files() {
         let path = entry.path();
         if path.is_file() {
             let metadata = std::fs::metadata(&path).unwrap();
-            let too_large = metadata.len() > 10 * 1024 * 1024; // 10 MB
+            let too_large = metadata.len() > CLEANUP_MAX_LOG_FILE_SIZE;
             let too_old = match metadata.modified() {
                 Ok(modified) => match modified.elapsed() {
-                    Ok(elapsed) => elapsed.as_secs() > 60 * 60 * 24 * 30, // 30 Days
+                    Ok(elapsed) => elapsed > CLEANUP_MAX_LOG_AGE,
                     Err(e) => {
                         error!("Error getting elapsed time for log file: {e}");
                         print_file_debug_data(path.clone()).await;

@@ -20,18 +20,17 @@ pub fn launcher_marker() -> Result<PathBuf> {
     Ok(privileged_dir()?.join("launcher.json"))
 }
 
-pub fn log_file() -> Result<PathBuf> {
+pub fn log_dir() -> Result<PathBuf> {
     let local_app_data = std::env::var_os("LOCALAPPDATA")
         .ok_or_else(|| Error::new(ErrorKind::NotFound, "LOCALAPPDATA is not set"))?;
-    Ok(log_file_in(local_app_data))
+    Ok(log_dir_in(local_app_data))
 }
 
-fn log_file_in(local_app_data: impl AsRef<Path>) -> PathBuf {
+fn log_dir_in(local_app_data: impl AsRef<Path>) -> PathBuf {
     local_app_data
         .as_ref()
         .join("co.raphii.oyasumi")
         .join("logs")
-        .join("OyasumiVR_Privileged_Launcher.log")
 }
 
 /// Holds one directory per distinct sidecar build, named after its signature. Nothing is
@@ -47,10 +46,8 @@ mod tests {
     #[test]
     fn launcher_log_uses_the_shared_log_directory() {
         assert_eq!(
-            log_file_in(PathBuf::from(r"C:\Users\test\AppData\Local")),
-            PathBuf::from(
-                r"C:\Users\test\AppData\Local\co.raphii.oyasumi\logs\OyasumiVR_Privileged_Launcher.log"
-            )
+            log_dir_in(PathBuf::from(r"C:\Users\test\AppData\Local")),
+            PathBuf::from(r"C:\Users\test\AppData\Local\co.raphii.oyasumi\logs")
         );
     }
 }

@@ -18,8 +18,6 @@ mod verify;
 use std::process::ExitCode;
 use std::{fs::OpenOptions, path::Path};
 
-use simplelog::{format_description, ConfigBuilder, LevelFilter, WriteLogger};
-
 /// The core reads these back from the scheduled task's `LastTaskResult`.
 pub mod exit {
     pub const OK: u8 = 0;
@@ -37,30 +35,24 @@ pub fn log(message: &str) {
 }
 
 fn init_logging() {
-    let Ok(path) = paths::log_file() else { return };
-    let _ = init_logging_at(&path);
+    let Ok(dir) = paths::log_dir() else { return };
+    let _ = init_logging_at(&dir);
 }
 
-fn init_logging_at(path: &Path) -> bool {
-    let Ok(file) = oyasumivr_shared::windows::with_unelevated_token(|| open_log_file(path)) else {
+fn init_logging_at(dir: &Path) -> bool {
+    let Ok(()) = oyasumivr_shared::windows::with_unelevated_token(|| prepare_log_file(dir)) else {
         return false;
     };
-    WriteLogger::init(LevelFilter::Info, log_config(), file).is_ok()
+    oyasumivr_shared::logging::init(dir, "OyasumiVR_Privileged_Launcher", false).is_ok()
 }
 
-fn open_log_file(path: &Path) -> std::io::Result<std::fs::File> {
-    if let Some(parent) = path.parent() {
-        std::fs::create_dir_all(parent)?;
-    }
-    OpenOptions::new().create(true).append(true).open(path)
-}
-
-fn log_config() -> simplelog::Config {
-    ConfigBuilder::new()
-        .set_time_format_custom(format_description!(
-            "[[[year]-[month]-[day]][[[hour]:[minute]:[second]]"
-        ))
-        .build()
+fn prepare_log_file(dir: &Path) -> std::io::Result<()> {
+    std::fs::create_dir_all(dir)?;
+    OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(dir.join("OyasumiVR_Privileged_Launcher.log"))?;
+    Ok(())
 }
 
 fn main() -> ExitCode {
@@ -77,40 +69,16 @@ fn main() -> ExitCode {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use ::log::{Level, Log, Record};
-    use std::io::Write;
-    use std::sync::{Arc, Mutex};
-
-    #[derive(Clone)]
-    struct Buffer(Arc<Mutex<Vec<u8>>>);
-
-    impl Write for Buffer {
-        fn write(&mut self, bytes: &[u8]) -> std::io::Result<usize> {
-            self.0.lock().unwrap().extend_from_slice(bytes);
-            Ok(bytes.len())
-        }
-
-        fn flush(&mut self) -> std::io::Result<()> {
-            Ok(())
-        }
-    }
 
     #[test]
-    fn log_lines_include_utc_date_time_and_level() {
-        let bytes = Arc::new(Mutex::new(Vec::new()));
-        let logger = WriteLogger::new(LevelFilter::Info, log_config(), Buffer(bytes.clone()));
-        logger.log(
-            &Record::builder()
-                .level(Level::Info)
-                .args(format_args!("[run] started the sidecar"))
-                .build(),
-        );
-        let line = String::from_utf8(bytes.lock().unwrap().clone()).unwrap();
-        let shape: String = line[..22]
-            .chars()
-            .map(|c| if c.is_ascii_digit() { '#' } else { c })
-            .collect();
-        assert_eq!(shape, "[####-##-##][##:##:##]");
-        assert_eq!(&line[22..], " [INFO] [run] started the sidecar\n");
+    fn init_logging_at_creates_the_log_file() {
+        let dir = std::env::temp_dir()
+            .join("oyasumivr-launcher-log-test")
+            .join(std::process::id().to_string());
+        let _ = std::fs::remove_dir_all(&dir);
+        assert!(init_logging_at(&dir));
+        log::info!("test line");
+        assert!(dir.join("OyasumiVR_Privileged_Launcher.log").is_file());
+        let _ = std::fs::remove_dir_all(&dir);
     }
 }

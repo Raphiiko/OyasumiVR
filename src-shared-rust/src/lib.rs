@@ -1,5 +1,6 @@
 pub mod error_reporting;
 pub mod handshake;
+pub mod logging;
 pub mod task;
 pub mod windows;
 

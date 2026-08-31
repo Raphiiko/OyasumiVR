@@ -10,11 +10,7 @@ use grpc::oyasumi_core::{oyasumi_core_client::OyasumiCoreClient, ElevatedSidecar
 pub use grpc::oyasumi_elevated_sidecar as Models;
 use log::{error, info};
 use oyasumivr_shared::windows::is_elevated;
-use simplelog::{
-    ColorChoice, CombinedLogger, Config, LevelFilter, TermLogger, TerminalMode, WriteLogger,
-};
 use std::env;
-use std::fs::OpenOptions;
 use std::path::Path;
 use std::sync::{
     atomic::{AtomicBool, Ordering},
@@ -115,31 +111,14 @@ async fn run() {
 }
 
 fn init_logging() {
-    let log_path = if let Some(base_dirs) = BaseDirs::new() {
-        base_dirs
-            .data_local_dir()
-            .join("co.raphii.oyasumi/logs/OyasumiVR_Elevated_Sidecar.log")
+    let log_dir = if let Some(base_dirs) = BaseDirs::new() {
+        base_dirs.data_local_dir().join("co.raphii.oyasumi/logs")
     } else {
-        Path::new("co.raphii.oyasumi/logs/OyasumiVR_Elevated_Sidecar.log").to_path_buf()
+        Path::new("co.raphii.oyasumi/logs").to_path_buf()
     };
-    if let Some(parent) = log_path.parent() {
-        let _ = std::fs::create_dir_all(parent);
+    if let Err(e) = oyasumivr_shared::logging::init(&log_dir, "OyasumiVR_Elevated_Sidecar", true) {
+        eprintln!("Could not initialize file logging: {e}");
     }
-    let log_file = OpenOptions::new()
-        .create(true)
-        .append(true)
-        .open(log_path)
-        .unwrap();
-    CombinedLogger::init(vec![
-        TermLogger::new(
-            LevelFilter::Info,
-            Config::default(),
-            TerminalMode::Mixed,
-            ColorChoice::Auto,
-        ),
-        WriteLogger::new(LevelFilter::Info, Config::default(), log_file),
-    ])
-    .unwrap();
 }
 
 pub fn set_error_reporting_enabled(enabled: bool) {
