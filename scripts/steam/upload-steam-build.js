@@ -119,7 +119,6 @@ for (const { id, contentDir } of Object.values(DEPOTS)) {
     "recursive" "1"
   }
 
-  "InstallScript" "runtime_dependencies.vdf"
   "FileExclusion" "*.pdb"
 }
 `;
