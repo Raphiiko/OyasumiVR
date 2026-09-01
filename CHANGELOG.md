@@ -62,6 +62,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
   once-or-always dialog are replaced by a single toggle. These features now need an account that
   can elevate: on a standard user account, typing an administrator's password into the prompt no
   longer works, and the features report as unavailable.
+- The Steam release no longer reinstalls Microsoft Edge WebView2 on every update. When the runtime
+  is missing, OyasumiVR now shows a Japanese or English dialog that links Microsoft's download page
 
 ### Fixed
 

@@ -7,7 +7,6 @@ import {
   rmSync,
   writeFileSync,
 } from 'fs';
-import { spawnSync } from 'child_process';
 import { join } from 'path';
 
 // Both depots get the same STEAM build. The Chinese depot carries a marker file, which switches
@@ -17,8 +16,6 @@ const DEPOTS = {
   STEAM_CN: { contentDir: 'Win64_CN', cnRelease: true },
 };
 
-const WEBVIEW2_INSTALLER_URL = 'https://go.microsoft.com/fwlink/p/?LinkId=2124703';
-const WEBVIEW2_INSTALLER_NAME = 'WebView2RuntimeInstaller.exe';
 const EXECUTABLE_NAME = 'OyasumiVR.exe';
 const CN_MARKER_NAME = 'cn_release';
 
@@ -78,34 +75,6 @@ const resourcesSrc = join(sourceDir, 'resources');
 if (existsSync(resourcesSrc)) {
   cpSync(resourcesSrc, join(outputDir, 'resources'), { recursive: true });
 }
-
-const cacheDir = join('dist', 'steam', '.cache');
-const cachedInstaller = join(cacheDir, WEBVIEW2_INSTALLER_NAME);
-if (!existsSync(cachedInstaller)) {
-  mkdirSync(cacheDir, { recursive: true });
-  console.log(`Downloading WebView2 runtime installer from ${WEBVIEW2_INSTALLER_URL} ...`);
-  const result = spawnSync('curl', ['-L', '-o', cachedInstaller, WEBVIEW2_INSTALLER_URL], {
-    stdio: 'inherit',
-    shell: process.platform === 'win32',
-  });
-  if (result.error) {
-    console.error(`Failed to launch curl: ${result.error.message}`);
-    process.exit(1);
-  }
-  if (typeof result.status === 'number' && result.status !== 0) {
-    console.error(`curl exited with status ${result.status}`);
-    process.exit(result.status);
-  }
-}
-
-const webView2Dir = join(outputDir, 'WebView2');
-mkdirSync(webView2Dir, { recursive: true });
-copyFileSync(cachedInstaller, join(webView2Dir, WEBVIEW2_INSTALLER_NAME));
-
-copyFileSync(
-  join('scripts', 'steam', 'install-scripts', 'runtime_dependencies.vdf'),
-  join(outputDir, 'runtime_dependencies.vdf')
-);
 
 if (cnRelease) {
   writeFileSync(join(outputDir, CN_MARKER_NAME), '');

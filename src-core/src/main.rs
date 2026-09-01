@@ -56,8 +56,118 @@ fn configure_tauri_plugin_store() -> TauriPlugin<Wry> {
         .build()
 }
 
+#[cfg(windows)]
+fn ensure_webview2_available() {
+    use windows::core::HSTRING;
+    use windows::Win32::Globalization::GetUserDefaultLocaleName;
+    use windows::Win32::System::SystemServices::LOCALE_NAME_MAX_LENGTH;
+    use windows::Win32::UI::Shell::ShellExecuteW;
+    use windows::Win32::UI::WindowsAndMessaging::{
+        MessageBoxW, IDYES, MB_ICONERROR, MB_SETFOREGROUND, MB_YESNO, SW_SHOW,
+    };
+    const WEBVIEW2_DOWNLOAD_URL: &str =
+        "https://developer.microsoft.com/en-us/microsoft-edge/webview2";
+    const FALLBACK_MESSAGE: &str = "OyasumiVR requires Microsoft Edge WebView2, which is not installed.\n\nInstall it and start OyasumiVR again. Open the download page?";
+
+    if tauri::webview_version().is_ok() {
+        return;
+    }
+
+    let mut locale_buffer = [0u16; LOCALE_NAME_MAX_LENGTH as usize];
+    let locale_length = unsafe { GetUserDefaultLocaleName(&mut locale_buffer) };
+    let locale = if locale_length > 0 {
+        String::from_utf16_lossy(&locale_buffer[..(locale_length - 1) as usize])
+    } else {
+        String::new()
+    };
+    let context = tauri::generate_context!();
+    let message =
+        webview2_dialog_message(&context, &locale).unwrap_or_else(|| FALLBACK_MESSAGE.to_string());
+
+    let result = unsafe {
+        MessageBoxW(
+            None,
+            &HSTRING::from(message),
+            &HSTRING::from("OyasumiVR"),
+            MB_YESNO | MB_ICONERROR | MB_SETFOREGROUND,
+        )
+    };
+    if result == IDYES {
+        unsafe {
+            ShellExecuteW(
+                None,
+                &HSTRING::from("open"),
+                &HSTRING::from(WEBVIEW2_DOWNLOAD_URL),
+                None,
+                None,
+                SW_SHOW,
+            );
+        }
+    }
+    std::process::exit(1);
+}
+
+#[cfg(windows)]
+fn webview2_translation_file(locale: &str) -> String {
+    let lowered = locale.to_lowercase();
+    let primary = lowered.split(['-', '_']).next().unwrap_or("en");
+    let primary = if primary.is_empty() { "en" } else { primary };
+    if primary == "zh" {
+        if lowered.contains("hant") || lowered.ends_with("tw") || lowered.ends_with("hk") {
+            "tw".to_string()
+        } else {
+            "cn".to_string()
+        }
+    } else {
+        primary.to_string()
+    }
+}
+
+#[cfg(windows)]
+fn webview2_dialog_message(context: &tauri::Context<Wry>, locale: &str) -> Option<String> {
+    use tauri::utils::assets::AssetKey;
+    let file = webview2_translation_file(locale);
+    let bytes = context
+        .assets()
+        .get(&AssetKey::from(format!("assets/i18n/{file}.json")))
+        .or_else(|| context.assets().get(&AssetKey::from("assets/i18n/en.json")))?;
+    let value: serde_json::Value = serde_json::from_slice(&bytes).ok()?;
+    value
+        .get("misc")?
+        .get("WEBVIEW2_MISSING")?
+        .as_str()
+        .map(str::to_string)
+}
+
+#[cfg(not(windows))]
+fn ensure_webview2_available() {}
+
+#[cfg(all(test, windows))]
+mod webview2_dialog_tests {
+    #[test]
+    fn resolves_dialog_copy_from_embedded_translations() {
+        let context = tauri::generate_context!();
+        let japanese = super::webview2_dialog_message(&context, "ja-JP").expect("Japanese copy");
+        assert!(japanese.contains("WebView2"));
+        assert!(japanese.contains('\n'));
+        let english = super::webview2_dialog_message(&context, "en-US").expect("English copy");
+        assert!(english.contains("Open the download page?"));
+        assert_ne!(japanese, english);
+    }
+
+    #[test]
+    fn resolves_chinese_variant_files() {
+        assert_eq!(super::webview2_translation_file("zh-TW"), "tw");
+        assert_eq!(super::webview2_translation_file("zh-Hant"), "tw");
+        assert_eq!(super::webview2_translation_file("zh-CN"), "cn");
+        assert_eq!(super::webview2_translation_file("zh-Hans"), "cn");
+    }
+}
+
 #[tokio::main]
 async fn main() {
+    ensure_webview2_available();
+
     // Construct OyasumiVR Tauri application
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
