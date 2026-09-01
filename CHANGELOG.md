@@ -30,6 +30,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Home Assistant switch for the VRChat microphone mute
 - Message Center warning for when the VR overlay repeatedly fails to start, offering to turn off GPU acceleration
 - Setting to wait a moment between turning off each controller and tracker, for systems where turning them off crashes SteamVR
+- Thai language support (Community contribution by [ShikiYuri (Sk.\_Yri)](https://github.com/ShikiYuriSan))
 
 ### Changed
 
