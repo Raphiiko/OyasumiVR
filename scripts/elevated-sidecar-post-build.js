@@ -1,13 +1,11 @@
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
-import { mkdirp } from 'mkdirp';
-import copy from 'recursive-copy';
-import { rimraf } from 'rimraf';
+import { copyFile, mkdir, rm } from 'node:fs/promises';
 import { readBuildFlavour } from './build-flavour.js';
 
 function updaterPublicKey() {
   const path = 'src-core/tauri.conf.json';
-  const key = JSON.parse(readFileSync(path).toString())?.plugins?.updater?.pubkey;
+  const key = JSON.parse(readFileSync(path, 'utf8'))?.plugins?.updater?.pubkey;
   if (!key) throw new Error(`Could not read plugins.updater.pubkey from ${path}`);
   return key;
 }
@@ -16,9 +14,9 @@ const SIDECAR_EXE = 'oyasumivr-elevated-sidecar.exe';
 const LAUNCHER_EXE = 'oyasumivr-privileged-launcher.exe';
 
 async function place(source, targetDirectory, file) {
-  await rimraf(targetDirectory);
-  await mkdirp(targetDirectory);
-  await copy(source, targetDirectory, { overwrite: true, filter: [file] });
+  await rm(targetDirectory, { recursive: true, force: true });
+  await mkdir(targetDirectory, { recursive: true });
+  await copyFile(source + file, targetDirectory + file);
 }
 
 function run(command, args) {

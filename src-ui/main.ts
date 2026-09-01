@@ -1,5 +1,5 @@
 import { enableProdMode, isDevMode, provideZoneChangeDetection } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { platformBrowser } from '@angular/platform-browser';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
@@ -26,7 +26,7 @@ disableDefaultContextMenu();
 initCnCompliance()
   .catch((err) => error(err))
   .then(() =>
-    platformBrowserDynamic()
+    platformBrowser()
       .bootstrapModule(AppModule, { applicationProviders: [provideZoneChangeDetection()] })
       .catch((err) => error(err))
   );
