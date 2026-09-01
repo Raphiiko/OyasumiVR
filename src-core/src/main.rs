@@ -76,7 +76,7 @@ fn ensure_webview2_available() {
     let mut locale_buffer = [0u16; LOCALE_NAME_MAX_LENGTH as usize];
     let locale_length = unsafe { GetUserDefaultLocaleName(&mut locale_buffer) };
     let locale = if locale_length > 0 {
-        String::from_utf16_lossy(&locale_buffer[..locale_length as usize])
+        String::from_utf16_lossy(&locale_buffer[..(locale_length - 1) as usize])
     } else {
         String::new()
     };
@@ -108,20 +108,25 @@ fn ensure_webview2_available() {
 }
 
 #[cfg(windows)]
-fn webview2_dialog_message(context: &tauri::Context<Wry>, locale: &str) -> Option<String> {
-    use tauri::utils::assets::AssetKey;
+fn webview2_translation_file(locale: &str) -> String {
     let lowered = locale.to_lowercase();
     let primary = lowered.split(['-', '_']).next().unwrap_or("en");
     let primary = if primary.is_empty() { "en" } else { primary };
-    let file = if primary == "zh" {
+    if primary == "zh" {
         if lowered.contains("hant") || lowered.ends_with("tw") || lowered.ends_with("hk") {
-            "tw"
+            "tw".to_string()
         } else {
-            "cn"
+            "cn".to_string()
         }
     } else {
-        primary
-    };
+        primary.to_string()
+    }
+}
+
+#[cfg(windows)]
+fn webview2_dialog_message(context: &tauri::Context<Wry>, locale: &str) -> Option<String> {
+    use tauri::utils::assets::AssetKey;
+    let file = webview2_translation_file(locale);
     let bytes = context
         .assets()
         .get(&AssetKey::from(format!("assets/i18n/{file}.json")))
@@ -148,6 +153,14 @@ mod webview2_dialog_tests {
         let english = super::webview2_dialog_message(&context, "en-US").expect("English copy");
         assert!(english.contains("Open the download page?"));
         assert_ne!(japanese, english);
+    }
+
+    #[test]
+    fn resolves_chinese_variant_files() {
+        assert_eq!(super::webview2_translation_file("zh-TW"), "tw");
+        assert_eq!(super::webview2_translation_file("zh-Hant"), "tw");
+        assert_eq!(super::webview2_translation_file("zh-CN"), "cn");
+        assert_eq!(super::webview2_translation_file("zh-Hans"), "cn");
     }
 }
 
