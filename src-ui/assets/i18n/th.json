@@ -1,0 +1,2942 @@
+{
+  "about": {
+    "author": {
+      "role": "นักพัฒนา"
+    },
+    "contributionType": {
+      "soundFx": "เอฟเฟกต์เสียง"
+    },
+    "contributions": "ผู้ร่วมพัฒนา",
+    "discordInvite": "เซิร์ฟเวอร์ Discord",
+    "projectLinks": "ลิงก์โปรเจกต์",
+    "sourceLink": "ซอร์สโค้ด @ GitHub",
+    "supporters": "ผู้สนับสนุน",
+    "translations": "ผู้แปลภาษา"
+  },
+  "audio-volume-automations": {
+    "actionOptions": {
+      "MUTE": "ปิดเสียง",
+      "SET_VOLUME": "เปลี่ยนระดับเสียง",
+      "UNMUTE": "เปิดเสียง"
+    },
+    "applyOnStart": {
+      "description": {
+        "onSleepDisable": "ทำงานเมื่อเริ่มต้นโดยที่โหมดนอนหลับ 'ปิด' อยู่",
+        "onSleepEnable": "ทำงานเมื่อเริ่มต้นโดยที่โหมดนอนหลับ 'เปิด' อยู่"
+      },
+      "title": "ใช้เมื่อเริ่มต้น OyasumiVR"
+    },
+    "automations": {
+      "label": "{count} การทำงานอัตโนมัติ"
+    },
+    "config": {
+      "title": "การตั้งค่า"
+    },
+    "description": "เปลี่ยนระดับเสียงของอุปกรณ์เสียงโดยอัตโนมัติเมื่อคุณหลับหรือตื่นนอน มีประโยชน์หากคุณไม่ต้องการให้คนอื่นมารบกวนการนอนของคุณ",
+    "devices": {
+      "description": "เลือกอุปกรณ์เสียงเพื่อตั้งระดับเสียงโดยอัตโนมัติ",
+      "title": {
+        "hasDevices": "เพิ่มอุปกรณ์เสียง",
+        "noDevices": "ไม่ได้เลือกอุปกรณ์เสียง"
+      }
+    },
+    "onSleepDisable": {
+      "description": "เปลี่ยนระดับเสียงเมื่อปิดโหมดนอนหลับ",
+      "title": "เมื่อฉันตื่นนอน"
+    },
+    "onSleepEnable": {
+      "description": "เปลี่ยนระดับเสียงเมื่อเปิดโหมดนอนหลับ",
+      "title": "เมื่อฉันนอนหลับ"
+    },
+    "onSleepPreparation": {
+      "description": "เปลี่ยนระดับเสียงเมื่อกดเตรียมตัวนอน",
+      "title": "เมื่อฉันเตรียมตัวนอน"
+    },
+    "picker": {
+      "defaultDevice": "อุปกรณ์เริ่มต้น",
+      "noCaptureDevices": "ไม่พบอุปกรณ์บันทึกเสียง",
+      "noPlaybackDevices": "ไม่พบอุปกรณ์เล่นเสียง",
+      "title": "เลือกอุปกรณ์"
+    },
+    "removeDevice": "ลบ",
+    "selectDevice": "เลือกอุปกรณ์เสียง",
+    "title": "ระดับเสียงอัตโนมัติ",
+    "volume": {
+      "description": "ระดับเสียงที่จะตั้งให้กับอุปกรณ์",
+      "title": "ระดับเสียง"
+    }
+  },
+  "brightness-automations": {
+    "AT_SUNRISE": {
+      "title": "พระอาทิตย์ขึ้น"
+    },
+    "AT_SUNSET": {
+      "title": "พระอาทิตย์ตก"
+    },
+    "HMD_CONNECT": {
+      "title": "เมื่อเชื่อมต่อ SteamVR"
+    },
+    "SLEEP_MODE_DISABLE": {
+      "title": "เมื่อฉันตื่นนอน"
+    },
+    "SLEEP_MODE_ENABLE": {
+      "title": "เมื่อฉันนอนหลับ"
+    },
+    "SLEEP_PREPARATION": {
+      "title": "เมื่อฉันเตรียมตัวนอน"
+    },
+    "activation": {
+      "category": "เปิดใช้งาน"
+    },
+    "activationTime": {
+      "SUNRISE": {
+        "description": "เวลาที่ดวงอาทิตย์ขึ้น",
+        "title": "เวลาพระอาทิตย์ขึ้น"
+      },
+      "SUNSET": {
+        "description": "เวลาที่ดวงอาทิตย์ตก",
+        "title": "เวลาพระอาทิตย์ตก"
+      }
+    },
+    "autoUpdateTimeTooltip": "อัปเดตตามตำแหน่งปัจจุบัน",
+    "brightness": {
+      "title": "เปลี่ยนความสว่าง"
+    },
+    "changeBrightness": {
+      "category": "ความสว่าง",
+      "description": "ปรับความสว่างของ VR headset",
+      "title": "เปลี่ยนความสว่าง"
+    },
+    "changeTemperature": {
+      "category": "อุณหภูมิสี",
+      "description": "ปรับอุณหภูมิสีของภาพที่แสดงใน VR headset",
+      "title": "เปลี่ยนอุณหภูมิสี"
+    },
+    "copyBrightness": "ใช้ค่าความสว่างปัจจุบัน",
+    "description": "ให้ OyasumiVR ปรับความสว่างและ/หรืออุณหภูมิสีของVR headsetโดยอัตโนมัติในช่วงเวลาต่างๆ เช่น ตอนเข้านอน หรือตอนตื่นนอน",
+    "detailsTitle": "เหตุการณ์",
+    "events": "เหตุการณ์",
+    "hardwareBrightness": {
+      "description": "ปรับความสว่างของจอแสดงผล",
+      "title": "ปรับความสว่างฮาร์ดแวร์"
+    },
+    "hmdConnectEventTooltip": "กำลังใช้งาน\nจะถูกนำไปใช้เมื่อ VR headset เชื่อมต่อกับ SteamVR",
+    "hmdConnectPotentialEventTooltip": "ยังไม่ใช้งาน\nจะถูกนำไปใช้เมื่อ VR headset เชื่อมต่อกับ SteamVR",
+    "miscConfig": "การตั้งค่าอื่นๆ",
+    "mode": {
+      "advanced": "ขั้นสูง",
+      "simple": "เรียบง่าย"
+    },
+    "modeInfoModal": {
+      "message": "มี 2 วิธีควบคุมคือ ซอฟต์แวร์และฮาร์ดแวร์\n\nการควบคุมซอฟต์แวร์จะปรับความสว่างของภาพที่แสดงบนหน้าจอ ซึ่งใช้ได้กับ VR headset ทุกรุ่น\n\nการควบคุมฮาร์ดแวร์จะปรับความสว่างของตัว VR headset โดยตรง ซึ่งใช้ได้เฉพาะกับรุ่นที่รองรับ (เช่น Valve Index, Bigscreen Beyond)\n\nโหมดเรียบง่ายจะเปลี่ยนสมดุลความสว่างของซอฟต์แวร์และฮาร์ดแวร์โดยอัตโนมัติ แต่ถ้าใช้ VR headset ที่ไม่รองรับ จะควบคุมเฉพาะฝั่งซอฟต์แวร์เท่านั้น\n\nโหมดขั้นสูงสามารถตั้งค่าแต่ละค่าได้ตามต้องการ",
+      "title": "โหมดปรับความสว่าง"
+    },
+    "onlyWhenSleepModeDisabled": {
+      "description": "ทำงานเมื่อโหมดนอนหลับปิดอยู่เท่านั้น",
+      "title": "เฉพาะเมื่อปิดโหมดนอนหลับ"
+    },
+    "softwareBrightness": {
+      "description": "ปรับความสว่างของภาพที่แสดงใน VR headset",
+      "title": "เปลี่ยนความสว่างซอฟต์แวร์"
+    },
+    "temperature": {
+      "title": "เปลี่ยนอุณหภูมิสี"
+    },
+    "title": "ความสว่างอัตโนมัติ",
+    "transition": {
+      "description": "เปลี่ยนความสว่างหรืออุณหภูมิสีอย่างนุ่มนวลตามเวลา",
+      "title": "การเปลี่ยนอย่างนุ่มนวล"
+    },
+    "transitionTime": {
+      "description": "เวลาที่ใช้ในการเปลี่ยนแปลงจนเสร็จสิ้น",
+      "title": "เวลาในการเปลี่ยนผ่าน"
+    }
+  },
+  "chaperone-automations": {
+    "description": "ปรับระยะเฟดของ chaperone's (Guardian) ใน SteamVR โดยอัตโนมัติ",
+    "fadeDistance": {
+      "title": "ระยะเฟดของ Chaperone's"
+    },
+    "onSleepDisable": {
+      "description": "ปรับระยะเฟดเมื่อปิดโหมดนอนหลับ",
+      "title": "เมื่อตื่นนอน"
+    },
+    "onSleepEnable": {
+      "description": "ปรับระยะเฟดเมื่อเปิดโหมดนอนหลับ",
+      "title": "เมื่อฉันนอนหลับ"
+    },
+    "title": "chaperone's อัตโนมัติ"
+  },
+  "comp": {
+    "brightness-control-modal": {
+      "brightness": "ความสว่าง",
+      "hardwareBrightness": "ความสว่างฮาร์ดแวร์",
+      "softwareBrightness": "ความสว่างซอฟต์แวร์"
+    },
+    "bsb-fan-speed-control-modal": {
+      "fanSpeed": "ความเร็วพัดลม"
+    },
+    "cct-control-modal": {
+      "colorTemperature": "อุณหภูมิสี"
+    },
+    "color-picker-modal": {
+      "title": "เลือกสี"
+    },
+    "confirm-modal": {
+      "defaultTitle": "ยืนยัน"
+    },
+    "controller-binding": {
+      "dropdown": {
+        "description": "เปิดการตั้งค่า Binding",
+        "desktop": "โหมดเดสก์ท็อป",
+        "vr": "โหมด SteamVR"
+      },
+      "errors": {
+        "DASHBOARD_OPEN": {
+          "message": "SteamVR\nแดชบอร์ดเปิดอยู่",
+          "tooltip": "กรุณาปิดแดชบอร์ด SteamVR เพื่อดู Binding"
+        },
+        "MISSING_CONTROLLER": {
+          "tooltip": "กรุณาตรวจสอบว่าคอนโทรลเลอร์ซ้ายและขวาเชื่อมต่ออยู่"
+        },
+        "STEAMVR_INACTIVE": {
+          "message": "SteamVR ออฟไลน์",
+          "tooltip": "SteamVR ต้องทำงานอยู่เพื่อดูหรือแก้ไข Controller Binding"
+        },
+        "UNKNOWN": {
+          "message": "ตั้งค่า Binding"
+        }
+      },
+      "slot": {
+        "click": "คลิก",
+        "double": "กดสองครั้ง",
+        "held": "กดค้าง",
+        "long": "กดค้างยาว",
+        "touch": "สัมผัสปุ่ม"
+      }
+    },
+    "dashboard-navbar": {
+      "about": "เกี่ยวกับ OyasumiVR",
+      "audioVolumeAutomations": "ระดับเสียง",
+      "autoInviteRequestAccept": "คำเชิญและคำขอเข้าร่วม",
+      "brightnessAutomations": "ความสว่าง",
+      "chaperoneAutomations": "Chaperone",
+      "deviceManager": "จัดการอุปกรณ์",
+      "frameLimiter": "จำกัดเฟรมอัตโนมัติ",
+      "gpuAutomations": "พลังงาน GPU",
+      "hardwareAutomations": "ฮาร์ดแวร์",
+      "hmdAutomations": "HMD อัตโนมัติ",
+      "joinNotifications": "แจ้งเตือน การเข้าร่วม",
+      "miscAutomations": "อื่นๆ",
+      "nightmareDetection": "ตรวจจับฝันร้าย",
+      "oscAutomations": "OSC",
+      "overview": "ภาพรวม",
+      "powerAutomations": "พลังงานอุปกรณ์",
+      "resolutionAutomations": "ความละเอียด",
+      "runAutomations": "Command Prompt",
+      "settings": {
+        "advanced": "ขั้นสูง",
+        "brightnessCct": "ตั้งค่าความสว่างและสี",
+        "general": "ทั่วไป",
+        "hotkeys": "คีย์ลัด",
+        "integrations": "การเชื่อมต่อภายนอก",
+        "notifications": "การแจ้งเตือน",
+        "osc": "การตั้งค่า OSC",
+        "statusInfo": "ข้อมูลสถานะ",
+        "subMenu": "ตั้งค่า",
+        "updates": "อัปเดต",
+        "vrchat": "ตั้งค่า VRChat"
+      },
+      "shutdownAutomations": "ปิดเครื่อง",
+      "sleepAnimations": "อนิเมชั่น",
+      "sleepDetection": "ตรวจจับการหลับ",
+      "statusAutomations": "สถานะ",
+      "systemMicMuteAutomations": "ปิดไมค์ระบบ",
+      "vrcAutomations": "VRChat",
+      "vrchatAvatarAutomations": "เปลี่ยน Avatar",
+      "vrchatGroupAutomations": "กลุ่ม",
+      "vrchatMicMuteAutomations": "ปิดไมค์"
+    },
+    "device-list": {
+      "category": {
+        "Controller": "คอนโทรลเลอร์",
+        "GenericTracker": "Tracker",
+        "HMD": "Headset",
+        "Lighthouse": "Base Station",
+        "other": "อื่นๆ"
+      },
+      "deviceRole": {
+        "AnkleLeft": "ข้อเท้าซ้าย",
+        "AnkleRight": "ข้อเท้าขวา",
+        "Camera": "กล้อง",
+        "Chest": "หน้าอก",
+        "ElbowLeft": "ศอกซ้าย",
+        "ElbowRight": "ศอกขวา",
+        "FootLeft": "เท้าซ้าย",
+        "FootRight": "เท้าขวา",
+        "Gamepad": "เกมแพด",
+        "HandPrimary": "มือหลัก",
+        "HandSecondary": "มือรอง",
+        "Head": "ศีรษะ",
+        "Keyboard": "คีย์บอร์ด",
+        "KneeLeft": "เข่าซ้าย",
+        "KneeRight": "เข่าขวา",
+        "ShoulderLeft": "ไหล่ซ้าย",
+        "ShoulderRight": "ไหล่ขวา",
+        "Stylus": "ปากกา Stylus",
+        "Treadmill": "ลู่วิ่ง",
+        "Waist": "เอว",
+        "WristLeft": "ข้อมือซ้าย",
+        "WristRight": "ข้อมือขวา"
+      },
+      "forceOnBootingWarning": {
+        "message": "Base Station นี้เปิดใช้งานอยู่แล้ว\n\nการบังคับให้ Base Station ที่กำลังทำงานอยู่เริ่มทำงานใหม่อาจทำให้ค้างในสถานะบูตได้ หากต้องการให้กลับมาทำงาน ให้เข้าโหมดสลีปหรือสแตนด์บายก่อนแล้วค่อยเปิดใหม่\n\nคุณต้องการบังคับเปิด Base Station หรือไม่?",
+        "title": "คำเตือน"
+      },
+      "lhForceState": {
+        "on": "บังคับเปิด",
+        "sleep": "บังคับสลีป",
+        "standby": "บังคับสแตนด์บาย"
+      },
+      "lighthouseStatus": {
+        "booting": "กำลังบูต",
+        "on": "ทำงาน",
+        "sleep": "สลีป",
+        "standby": "สแตนด์บาย",
+        "unknown": "ไม่ทราบสถานะ"
+      },
+      "noDevices": "ไม่มีอุปกรณ์",
+      "title": "อุปกรณ์",
+      "turnOffAll": "ทั้งหมด"
+    },
+    "device-selector": {
+      "noSelection": "เลือกอุปกรณ์",
+      "withDevices": "{count}"
+    },
+    "event-log-entry": {
+      "type": {
+        "acceptedInviteRequest": {
+          "subtitle": {
+            "blacklist": "ไม่ตรงกับ Blacklist",
+            "whitelist": "ตรงกับ Whitelist"
+          },
+          "title": "ตอบรับคำขอเข้าร่วม จาก ''{displayName}'' โดยอัตโนมัติ"
+        },
+        "bsbFanSpeedChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "ปิดโหมดนอนหลับแล้ว",
+            "SLEEP_MODE_ENABLED": "เปิดโหมดนอนหลับแล้ว",
+            "SLEEP_PREPARATION": "เตรียมตัวนอนแล้ว"
+          },
+          "title": {
+            "adjusted": "ตั้งค่าความเร็วพัดลม Bigscreen Beyond เป็น {setPercentage}% (แก้ไขจาก {requestedPercentage}% เพื่อความปลอดภัย)",
+            "exact": "ตั้งค่าความเร็วพัดลม Bigscreen Beyond เป็น {setPercentage}%"
+          }
+        },
+        "bsbLedChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "ปิดโหมดนอนหลับแล้ว",
+            "SLEEP_MODE_ENABLED": "เปิดโหมดนอนหลับแล้ว",
+            "SLEEP_PREPARATION": "เตรียมตัวนอนแล้ว"
+          },
+          "title": "ตั้งค่าไฟ RGB LED ของ Bigscreen Beyond เป็น {color}"
+        },
+        "cctChanged": {
+          "reason": {
+            "AT_SUNRISE": "พระอาทิตย์ขึ้นแล้ว",
+            "AT_SUNSET": "พระอาทิตย์ตกแล้ว",
+            "SLEEP_MODE_DISABLE": "ปิดโหมดนอนหลับแล้ว",
+            "SLEEP_MODE_ENABLE": "เปิดโหมดนอนหลับแล้ว",
+            "SLEEP_PREPARATION": "เตรียมตัวนอนแล้ว"
+          },
+          "title": {
+            "set": "ตั้งค่าอุณหภูมิสี Headset เป็น {icon}{temperature}K",
+            "transition": "กำลังเปลี่ยนอุณหภูมิสี Headset เป็น {icon}{temperature}K"
+          }
+        },
+        "changedAudioDeviceVolume": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "ปิดโหมดนอนหลับแล้ว",
+            "SLEEP_MODE_ENABLED": "เปิดโหมดนอนหลับแล้ว",
+            "SLEEP_PREPARATION": "เตรียมตัวนอนแล้ว"
+          },
+          "title": "ตั้งค่าระดับเสียงของ ''{deviceName}'' เป็น {percentage}"
+        },
+        "changedSystemMicControllerButtonBehavior": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "ปิดโหมดนอนหลับแล้ว",
+            "SLEEP_MODE_ENABLED": "เปิดโหมดนอนหลับแล้ว",
+            "SLEEP_PREPARATION": "เตรียมตัวนอนแล้ว"
+          },
+          "title": {
+            "PUSH_TO_TALK": "เปลี่ยนปุ่มควบคุมไมค์เป็น 'กดเพื่อพูด'",
+            "TOGGLE": "เปลี่ยนปุ่มควบคุมไมค์เป็น 'Toggle'"
+          }
+        },
+        "changedSystemMicMuteState": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "ปิดโหมดนอนหลับแล้ว",
+            "SLEEP_MODE_ENABLED": "เปิดโหมดนอนหลับแล้ว",
+            "SLEEP_PREPARATION": "เตรียมตัวนอนแล้ว"
+          },
+          "title": {
+            "MUTE": "ปิดเสียง: {deviceName}",
+            "UNMUTE": "เปิดเสียง: {deviceName}"
+          }
+        },
+        "changedVRChatMicMuteState": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "ปิดโหมดนอนหลับแล้ว",
+            "SLEEP_MODE_ENABLED": "เปิดโหมดนอนหลับแล้ว",
+            "SLEEP_PREPARATION": "เตรียมตัวนอนแล้ว"
+          },
+          "title": {
+            "MUTE": "ปิดไมค์ VRChat",
+            "UNMUTE": "เปิดไมค์ VRChat"
+          }
+        },
+        "chaperoneFadeDistanceChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "ปิดโหมดนอนหลับแล้ว",
+            "SLEEP_MODE_ENABLED": "เปิดโหมดนอนหลับแล้ว"
+          },
+          "title": "ตั้งค่าระยะเฟด Chaperone เป็น {value}"
+        },
+        "declinedInvite": {
+          "reason": {
+            "SLEEP_MODE_ENABLED": "เปิดโหมดนอนหลับแล้ว"
+          },
+          "title": "ปฏิเสธ คำเชิญ จาก ''{displayName}'' อัตโนมัติ"
+        },
+        "declinedInviteRequest": {
+          "reason": {
+            "NOT_ON_WHITELIST": "ไม่ตรงกับ Whitelist",
+            "ON_BLACKLIST": "ตรงกับ Blacklist",
+            "PLAYER_COUNT_CONDITION_FAILED": "จำนวนผู้เล่นใน Instance มากเกินไป",
+            "SLEEP_MODE_ENABLED_CONDITION_FAILED": "โหมดนอนหลับไม่ได้เปิดอยู่"
+          },
+          "title": "ปฏิเสธคำขอเข้าร่วม จาก ''{displayName}'' อัตโนมัติ"
+        },
+        "frameLimitChanged": {
+          "reason": {
+            "HMD_CONNECT": "VR headset เชื่อมต่อแล้ว",
+            "SLEEP_MODE_DISABLED": "ปิดโหมดนอนหลับแล้ว",
+            "SLEEP_MODE_ENABLED": "เปิดโหมดนอนหลับแล้ว",
+            "SLEEP_PREPARATION": "เตรียมตัวนอนแล้ว"
+          },
+          "title": "ตั้งค่าจำกัดเฟรมของ ''{appName}'' เป็น {limit}"
+        },
+        "gpuPowerLimitChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "ปิดโหมดนอนหลับแล้ว",
+            "SLEEP_MODE_ENABLED": "เปิดโหมดนอนหลับแล้ว"
+          },
+          "title": {
+            "reset": "รีเซ็ตการจำกัดพลังงานของ ''{device}'' เป็น {limit}",
+            "set": "ตั้งค่าการจำกัดพลังงานของ ''{device}'' เป็น {limit}"
+          }
+        },
+        "hardwareBrightnessChanged": {
+          "reason": {
+            "AT_SUNRISE": "พระอาทิตย์ขึ้นแล้ว",
+            "AT_SUNSET": "พระอาทิตย์ตกแล้ว",
+            "SLEEP_MODE_DISABLE": "ปิดโหมดนอนหลับแล้ว",
+            "SLEEP_MODE_ENABLE": "เปิดโหมดนอนหลับแล้ว",
+            "SLEEP_PREPARATION": "เตรียมตัวนอนแล้ว"
+          },
+          "title": {
+            "set": "ตั้งค่าความสว่างฮาร์ดแวร์เป็น {value}",
+            "transition": "กำลังเปลี่ยนความสว่างฮาร์ดแวร์เป็น {value}"
+          }
+        },
+        "lighthouseSetPowerState": {
+          "ALL": {
+            "on": "เปิด Base Station ทั้งหมด",
+            "sleep": "ตั้งค่า Base Station ทั้งหมดเป็นโหมดสลีป",
+            "standby": "ตั้งค่า Base Station ทั้งหมดเป็นโหมดสแตนด์บาย"
+          },
+          "SINGLE": {
+            "on": "เปิด Base Station",
+            "sleep": "ตั้งค่า Base Station เป็นโหมดสลีป",
+            "standby": "ตั้งค่า Base Station เป็นโหมดสแตนด์บาย"
+          },
+          "VARIOUS": {
+            "on": "เปิด Base Station หลายตัว",
+            "sleep": "ตั้งค่า Base Station หลายตัวเป็นโหมดสลีป",
+            "standby": "ตั้งค่า Base Station หลายตัวเป็นโหมดสแตนด์บาย"
+          },
+          "reasons": {
+            "HOTKEY": "กดคีย์ลัดแล้ว",
+            "MANUAL": "เปิดด้วยตนเอง",
+            "OYASUMI_START": "พร้อมกับการเริ่ม OyasumiVR",
+            "SLEEP_MODE_DISABLED": "ปิดโหมดนอนหลับแล้ว",
+            "STEAMVR_START": "พร้อมกับการเริ่ม SteamVR",
+            "STEAMVR_STOP": "SteamVR หยุดทำงานแล้ว"
+          }
+        },
+        "msiAfterburnerProfileSet": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "ปิดโหมดนอนหลับแล้ว",
+            "SLEEP_MODE_ENABLED": "เปิดโหมดนอนหลับแล้ว"
+          },
+          "title": "ตั้งค่าโปรไฟล์ MSI Afterburner เป็น {profile}"
+        },
+        "mutedAudioDevice": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "ปิดโหมดนอนหลับแล้ว",
+            "SLEEP_MODE_ENABLED": "เปิดโหมดนอนหลับแล้ว",
+            "SLEEP_PREPARATION": "เตรียมตัวนอนแล้ว"
+          },
+          "title": "ปิดเสียง ''{deviceName}''"
+        },
+        "renderResolutionChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "ปิดโหมดนอนหลับแล้ว",
+            "SLEEP_MODE_ENABLED": "เปิดโหมดนอนหลับแล้ว"
+          },
+          "title": {
+            "auto": "ตั้งค่าความละเอียดเรนเดอร์ SteamVR เป็น 'อัตโนมัติ'",
+            "custom": "ตั้งค่าความละเอียดเรนเดอร์ SteamVR เป็น {value}"
+          }
+        },
+        "runAutomationExecuted": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "ปิดโหมดนอนหลับแล้ว",
+            "SLEEP_MODE_ENABLED": "เปิดโหมดนอนหลับแล้ว",
+            "SLEEP_PREPARATION": "เตรียมตัวนอนแล้ว"
+          },
+          "title": "ดำเนินการคำสั่งผู้ใช้ใน Windows Command Prompt"
+        },
+        "shutdownSequenceCancelled": {
+          "reason": {
+            "MANUAL": "ยกเลิกด้วยตนเอง"
+          },
+          "title": "การปิดระบบถูกยกเลิก"
+        },
+        "shutdownSequenceStarted": {
+          "reason": {
+            "HOTKEY": "กดคีย์ลัด",
+            "MANUAL": "เริ่มด้วยตนเอง",
+            "MQTT": "ผ่าน MQTT",
+            "SLEEP_TRIGGER": "หลับตามเวลาที่กำหนด",
+            "VRC_ALONE_TRIGGER": "อยู่คนเดียวตามเวลาที่กำหนด"
+          },
+          "title": "เริ่มกระบวนการปิดระบบ"
+        },
+        "simpleBrightnessChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLE": "ปิดโหมดนอนหลับแล้ว",
+            "SLEEP_MODE_ENABLE": "เปิดโหมดนอนหลับแล้ว",
+            "SLEEP_PREPARATION": "เตรียมตัวนอนแล้ว"
+          },
+          "title": {
+            "set": "ตั้งค่าความสว่าง Headset เป็น {value}",
+            "transition": "กำลังเปลี่ยนความสว่าง Headset เป็น {value}"
+          }
+        },
+        "sleepDetectorEnableCancelled": {
+          "subtitle": "ผู้ใช้ยังตื่นอยู่",
+          "title": "ยกเลิกการเปิดโหมดนอนหลับ"
+        },
+        "sleepModeDisabled": {
+          "reason": {
+            "automation": {
+              "NIGHTMARE_DETECTION": "ตรวจพบฝันร้าย",
+              "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "เนื่องจาก SteamVR ปิดตัวลง",
+              "SLEEP_MODE_DISABLE_AFTER_TIME": "เนื่องจากเวลาผ่านไป",
+              "SLEEP_MODE_DISABLE_AT_TIME": "ตามเวลาที่กำหนด",
+              "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "อุปกรณ์เปิดใช้งาน",
+              "SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE": {
+                "join": "{name} เข้ามา",
+                "leave": "{name} ออกไป"
+              },
+              "SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE": "กำลังลุกขึ้นนั่ง",
+              "unknown": "ฟังก์ชันอัตโนมัติที่ไม่รู้จัก"
+            },
+            "hotkey": "ปิดใช้งานด้วยคีย์ลัด",
+            "manual": "ปิดใช้งานด้วยตนเอง",
+            "mqtt": "ปิดใช้งานโดย MQTT",
+            "osc-control": "ปิดใช้งานโดย OSC"
+          },
+          "title": "ปิดโหมดนอนหลับ"
+        },
+        "sleepModeEnabled": {
+          "reason": {
+            "automation": {
+              "SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE": "ตามระดับแบตเตอรี่",
+              "SLEEP_MODE_ENABLE_AT_TIME": "ตามเวลาที่กำหนด",
+              "SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR": "ตรวจพบการนอนหลับจากการเคลื่อนไหว",
+              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "อุปกรณ์ถูกปิด",
+              "SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD": "อัตราการเต้นของหัวใจคงที่",
+              "unknown": "ฟังก์ชันอัตโนมัติที่ไม่รู้จัก"
+            },
+            "hotkey": "เปิดใช้งานด้วยคีย์ลัด",
+            "manual": "เปิดใช้งานด้วยตนเอง",
+            "mqtt": "เปิดใช้งานโดย MQTT",
+            "osc-control": "เปิดใช้งานโดย OSC"
+          },
+          "title": "เปิดโหมดนอนหลับ"
+        },
+        "softwareBrightnessChanged": {
+          "reason": {
+            "AT_SUNRISE": "พระอาทิตย์ขึ้นแล้ว",
+            "AT_SUNSET": "พระอาทิตย์ตกแล้ว",
+            "SLEEP_MODE_DISABLE": "ปิดโหมดนอนหลับแล้ว",
+            "SLEEP_MODE_ENABLE": "เปิดโหมดนอนหลับแล้ว",
+            "SLEEP_PREPARATION": "เตรียมตัวนอนแล้ว"
+          },
+          "title": {
+            "set": "ตั้งค่าความสว่างซอฟต์แวร์เป็น {value}",
+            "transition": "กำลังเปลี่ยนความสว่างซอฟต์แวร์เป็น {value}"
+          }
+        },
+        "statusChangedOnGeneralEvent": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "ปิดโหมดนอนหลับแล้ว",
+            "SLEEP_MODE_ENABLED": "เปิดโหมดนอนหลับแล้ว",
+            "SLEEP_PREPARATION": "เตรียมตัวนอนแล้ว"
+          },
+          "title": "เปลี่ยนสถานะ VRChat จาก {oldStatus} เป็น {newStatus}"
+        },
+        "statusChangedOnPlayerCountChange": {
+          "reason": {
+            "AT_LIMIT_OR_ABOVE": "จำนวนคนในโลกถึง {threshold} คนแล้ว",
+            "BELOW_LIMIT": "จำนวนคนในโลกน้อยกว่า {threshold} คนแล้ว"
+          },
+          "title": "เปลี่ยนสถานะ VRChat จาก {oldStatus} เป็น {newStatus}"
+        },
+        "turnedOffOpenVRDevices": {
+          "reason": {
+            "BATTERY_LEVEL": "ระดับแบตเตอรี่ลดลงต่ำกว่า {threshold}%",
+            "CHARGING": "เชื่อมต่อที่ชาร์จแล้ว",
+            "HOTKEY": "กดคีย์ลัดแล้ว",
+            "MANUAL": "ปิดด้วยตนเอง",
+            "OSC_CONTROL": "ปิดโดย OSC",
+            "SLEEP_MODE_DISABLED": "ปิดโหมดนอนหลับแล้ว",
+            "SLEEP_MODE_ENABLED": "เปิดโหมดนอนหลับแล้ว",
+            "SLEEP_PREPARATION": "เตรียมตัวนอนแล้ว"
+          },
+          "title": {
+            "ALL": "ปิดอุปกรณ์ทั้งหมด",
+            "CONTROLLER": "ปิดคอนโทรลเลอร์",
+            "CONTROLLERS": "ปิดคอนโทรลเลอร์หลายตัว",
+            "TRACKER": "ปิด Tracker",
+            "TRACKERS": "ปิด Tracker หลายตัว",
+            "VARIOUS": "ปิดอุปกรณ์หลายตัว"
+          }
+        },
+        "unmutedAudioDevice": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "ปิดโหมดนอนหลับแล้ว",
+            "SLEEP_MODE_ENABLED": "เปิดโหมดนอนหลับแล้ว",
+            "SLEEP_PREPARATION": "เตรียมตัวนอนแล้ว"
+          },
+          "title": "เปิดเสียง ''{deviceName}''"
+        },
+        "vrchatAvatarChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "ปิดโหมดนอนหลับแล้ว",
+            "SLEEP_MODE_ENABLED": "เปิดโหมดนอนหลับแล้ว",
+            "SLEEP_PREPARATION": "เตรียมตัวนอนแล้ว"
+          },
+          "title": "เปลี่ยน Avatar เป็น ''{avatarName}''"
+        },
+        "vrchatGroupChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "ปิดโหมดนอนหลับแล้ว",
+            "SLEEP_MODE_ENABLED": "เปิดโหมดนอนหลับแล้ว",
+            "SLEEP_PREPARATION": "เตรียมตัวนอนแล้ว"
+          },
+          "title": {
+            "clear": "นำการแสดงแบนเนอร์ของกลุ่ม ''{groupName}'' ออก",
+            "set": "เปลี่ยนการแสดงแบนเนอร์เป็นกลุ่ม ''{groupName}''"
+          }
+        },
+        "windowsPowerPolicySet": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "ปิดโหมดนอนหลับแล้ว",
+            "SLEEP_MODE_ENABLED": "เปิดโหมดนอนหลับแล้ว"
+          },
+          "title": "ตั้งค่าแผนพลังงาน Windows เป็น {policy}"
+        }
+      }
+    },
+    "event-log-filter-dialog": {
+      "filters": {
+        "AUDIO_CONTROL": {
+          "description": "บันทึกที่เกี่ยวข้องกับการควบคุมไมค์และอุปกรณ์เสียงอื่นๆ",
+          "title": "ควบคุมเสียง"
+        },
+        "BRIGHTNESS_CCT": {
+          "description": "บันทึกที่เกี่ยวข้องกับการควบคุมความสว่างและอุณหภูมิสีของ Headset",
+          "title": "ความสว่างและอุณหภูมิสี"
+        },
+        "BSB_CONTROL": {
+          "description": "บันทึกที่เกี่ยวข้องกับการควบคุม Bigscreen Beyond",
+          "title": "Bigscreen Beyond"
+        },
+        "DEVICE_POWER": {
+          "description": "บันทึกที่เกี่ยวข้องกับการเปิดปิดอุปกรณ์",
+          "title": "พลังงานอุปกรณ์"
+        },
+        "FRAME_LIMITING": {
+          "description": "บันทึกที่เกี่ยวข้องกับการจำกัดเฟรม",
+          "title": "การจำกัดเฟรม"
+        },
+        "GPU_CONTROL": {
+          "description": "บันทึกที่เกี่ยวข้องกับการตั้งค่า GPU",
+          "title": "ควบคุม GPU"
+        },
+        "RUN_AUTOMATIONS": {
+          "description": "บันทึกที่เกี่ยวข้องกับ Windows Command Prompt",
+          "title": "Command Prompt"
+        },
+        "SHUTDOWN_SEQUENCE": {
+          "description": "บันทึกที่เกี่ยวข้องกับกระบวนการปิดระบบ",
+          "title": "กระบวนการปิดระบบ"
+        },
+        "SLEEP_MODE": {
+          "description": "บันทึกที่เกี่ยวข้องกับโหมดนอนหลับและการตรวจจับการนอนหลับ",
+          "title": "โหมดนอนหลับ"
+        },
+        "STEAMVR_SETTINGS": {
+          "description": "บันทึกที่เกี่ยวข้องกับการเปลี่ยนแปลงการตั้งค่า SteamVR (เช่น ความละเอียดเรนเดอร์, ระยะเฟด)",
+          "title": "การตั้งค่า SteamVR"
+        },
+        "VRCHAT_AVATAR": {
+          "description": "บันทึกที่เกี่ยวข้องกับการเปลี่ยน Avatar VRChat",
+          "title": "Avatar VRChat"
+        },
+        "VRCHAT_GROUP": {
+          "description": "บันทึกที่เกี่ยวข้องกับกลุ่ม VRChat",
+          "title": "กลุ่ม VRChat"
+        },
+        "VRCHAT_INVITES": {
+          "description": "บันทึกที่เกี่ยวข้องกับ คำขอเข้าร่วม และการอนุมัติใน VRChat",
+          "title": "การแจ้งเตือน VRChat"
+        },
+        "VRCHAT_STATUS": {
+          "description": "บันทึกที่เกี่ยวข้องกับการเปลี่ยนสถานะ VRChat",
+          "title": "สถานะ VRChat"
+        },
+        "WINDOWS_POWER_POLICY": {
+          "description": "บันทึกที่เกี่ยวข้องกับการเปลี่ยนแผนพลังงาน Windows",
+          "title": "แผนพลังงาน Windows"
+        }
+      },
+      "selectAll": "เลือกทั้งหมด",
+      "selectDescription": "เลือกประเภทรายการที่ต้องการแสดงในบันทึกเหตุการณ์",
+      "selectNone": "ไม่เลือกทั้งหมด",
+      "title": "ตัวกรองบันทึกเหตุการณ์"
+    },
+    "event-log": {
+      "clearLog": "ล้าง",
+      "clearLogModal": {
+        "message": "คุณต้องการล้างบันทึกเหตุการณ์หรือไม่? ไม่สามารถเรียกคืนได้",
+        "title": "ยืนยันการล้าง"
+      },
+      "no-logs": "บันทึกจะถูกเก็บไว้สูงสุด 48 ชั่วโมง",
+      "openFilters": "ตัวกรอง",
+      "show-more": "รายละเอียด",
+      "title": "เหตุการณ์"
+    },
+    "friend-selection-modal": {
+      "loading": "กำลังโหลดรายชื่อเพื่อน",
+      "loadingError": "ไม่สามารถโหลดรายชื่อเพื่อนได้ กรุณาลองใหม่อีกครั้งภายหลัง",
+      "moreResultsAvailable": "ผลลัพธ์เกินจำนวนที่แสดงได้ กรุณาค้นหาให้เฉพาะเจาะจงมากขึ้น",
+      "noFriends": "ไม่มีรายชื่อเพื่อน",
+      "noFriendsSelected": "ไม่มีเพื่อนที่ถูกเลือก",
+      "noResultsFor": "ไม่พบผลลัพธ์สำหรับ ''{query}''",
+      "searchPlaceholder": "ค้นหาเพื่อนจากชื่อ...",
+      "title": "เลือกเพื่อน"
+    },
+    "hotkey-selector-modal": {
+      "description": "เพื่อตั้งค่าคีย์ลัด ให้กดปุ่ม Modifier ใดๆ แล้วตามด้วยปุ่มที่ต้องการผสม",
+      "title": "การตั้งค่าคีย์ลัด"
+    },
+    "hotkey-selector": {
+      "select": "ตั้งค่าคีย์ลัด"
+    },
+    "lv1-id-wizard-modal": {
+      "automaticDetection": {
+        "detecting": "กำลังตรวจหา ID...",
+        "instructions": "หากไม่สามารถตรวจหา ID โดยอัตโนมัติได้ กรุณากรอกด้วยตนเอง",
+        "steps": {
+          "connectDevice": "เชื่อมต่ออุปกรณ์ติดตาม",
+          "connectDeviceDesc": "เชื่อมต่อ Headset, คอนโทรลเลอร์ หรือ Tracker ที่รองรับ Lighthouse...",
+          "detectBasestation": "ตรวจหา Base Station",
+          "detectBasestationDesc": "ตรวจสอบให้แน่ใจว่า Headset, คอนโทรลเลอร์ หรือ Tracker มองเห็น Base Station",
+          "deviceDetected": "ตรวจพบอุปกรณ์แล้ว",
+          "running": "กำลังทำงาน",
+          "startSteamVR": "เริ่ม SteamVR",
+          "waitingForSteamVR": "กำลังรอ SteamVR เริ่มทำงาน..."
+        }
+      },
+      "detectAutomatically": "ตรวจหาอัตโนมัติ",
+      "inputManually": "ป้อนด้วยตนเอง",
+      "intro": {
+        "message": "ในการควบคุม Base Station จำเป็นต้องทราบ ID ของมัน"
+      },
+      "manualInput": {
+        "formatDescription": "ID มีความยาว 8 ตัวอักษร ประกอบด้วยตัวเลข 0-9 และตัวอักษร A-F",
+        "message": "ID จะระบุอยู่ที่ด้านหลังของ Base Station"
+      },
+      "success": {
+        "subtitle": "สามารถควบคุม Base Station ได้แล้ว!",
+        "title": "ตั้งค่า ID เรียบร้อย"
+      },
+      "title": "จำเป็นต้องตั้งค่า ID",
+      "verifyId": {
+        "error": {
+          "detectionFailed": "ไม่สามารถตรวจหา Lighthouse ID โดยอัตโนมัติได้ กรุณาป้อนด้วยตนเอง",
+          "invalidId": "Lighthouse ID ที่ป้อนอาจไม่ถูกต้อง\nกรุณาตรวจสอบรหัสที่ด้านหลังอุปกรณ์อีกครั้ง",
+          "verificationFailed": "ไม่สามารถตรวจสอบ Lighthouse ID ได้ ตรวจสอบว่า Base Station เชื่อมต่อและ PC มองเห็นหรือไม่"
+        },
+        "idAutodetected": "ID ที่ตรวจพบ",
+        "verifying": "กำลังตรวจสอบ ID"
+      },
+      "verifyIdAction": "ตรวจสอบ ID"
+    },
+    "main-status-bar": {
+      "active": "ทำงาน",
+      "brightness": {
+        "simple": "ความสว่าง",
+        "tooltip": "ควบคุมความสว่าง"
+      },
+      "bsbFanSpeed": {
+        "label": "ความเร็วพัดลม",
+        "tooltip": "ความเร็วพัดลม Bigscreen Beyond"
+      },
+      "cctControl": {
+        "label": "อุณหภูมิสี",
+        "tooltip": "ควบคุมอุณหภูมิสี"
+      },
+      "heartrate": "อัตราการเต้นหัวใจ",
+      "inactive": "ไม่ทำงาน",
+      "loggedOut": "ออกจากระบบ",
+      "mqttStatus": {
+        "label": "MQTT",
+        "tooltip": "ตั้งค่า: การเชื่อมต่อ"
+      },
+      "sleepMode": {
+        "label": "โหมดนอนหลับ",
+        "tooltip": "โหมดนอนหลับแบบแมนนวล"
+      },
+      "steamvr": {
+        "INACTIVE": "ออฟไลน์",
+        "INITIALIZED": "ทำงาน",
+        "INITIALIZING": "กำลังเตรียมพร้อม"
+      },
+      "systemMicMuted": {
+        "label": "ปิดเสียง",
+        "tooltip": {
+          "NAVIGATE": "ไมค์ระบบ:\nอัตโนมัติ",
+          "TOGGLE_MUTE": "ไมค์ระบบ:\nเลิกปิดเสียง"
+        }
+      },
+      "vrchat": {
+        "tooltip": "ตั้งค่า: การเชื่อมต่อ"
+      }
+    },
+    "mqtt-config-modal": {
+      "brokerHost": {
+        "description": "ชื่อโฮสต์หรือที่อยู่ IP เพื่อเข้าถึง MQTT Broker",
+        "title": "โฮสต์"
+      },
+      "brokerPort": {
+        "description": "พอร์ต Websocket เพื่อเข้าถึง MQTT Broker",
+        "title": "พอร์ต"
+      },
+      "brokerSetupNote": "Home Assistant ไม่ได้เปิดใช้งาน MQTT Broker โดยค่าเริ่มต้น หากคุณยังไม่ได้ตั้งค่า MQTT Broker และไม่มี MQTT Broker ที่กำหนดค่าไว้กับ Home Assistant โปรดทำตาม <a href=\"https://www.home-assistant.io/integrations/mqtt/\" target=\"_blank\">เอกสารประกอบ</a> เพื่อตั้งค่าก่อน",
+      "description": "สามารถสื่อสารกับ Home Assistant ผ่าน MQTT ได้ หากต้องการตั้งค่า ให้ระบุรายละเอียดการเชื่อมต่อ MQTT Broker ด้านล่าง",
+      "mqttEnabled": {
+        "description": "เปิดหรือปิดการเชื่อมต่อ MQTT",
+        "test": "ทดสอบการเชื่อมต่อ",
+        "title": "เปิดใช้งานการเชื่อมต่อ"
+      },
+      "password": {
+        "description": "รหัสผ่านสำหรับยืนยันตัวตนกับ MQTT Broker (ไม่บังคับ)",
+        "title": "รหัสผ่าน"
+      },
+      "ssl": {
+        "description": "ต้องการปกป้องการเชื่อมต่อกับ MQTT Broker ด้วย SSL หรือไม่",
+        "title": "SSL ที่ปลอดภัย"
+      },
+      "testConnection": {
+        "description": "ทดสอบว่า OyasumiVR สามารถเชื่อมต่อกับ MQTT Broker ด้วยการตั้งค่าที่ระบุไว้ได้หรือไม่",
+        "test": "ทดสอบการเชื่อมต่อ",
+        "title": "ทดสอบการเชื่อมต่อ"
+      },
+      "testConnectionResult": {
+        "error": "การเชื่อมต่อล้มเหลว!",
+        "errorMessage": "รายงานข้อผิดพลาดดังนี้:\n{error}",
+        "success": "เชื่อมต่อสำเร็จ!",
+        "title": "ผลการทดสอบ"
+      },
+      "title": "ตั้งค่า MQTT",
+      "username": {
+        "description": "ชื่อผู้ใช้สำหรับยืนยันตัวตนกับ MQTT Broker (ไม่บังคับ)",
+        "title": "ชื่อผู้ใช้"
+      },
+      "websocketNote": "รองรับโปรโตคอล MQTT over Websockets เท่านั้น โปรดตรวจสอบว่า Broker ของคุณเปิดใช้งาน Websocket แล้ว ไม่รองรับ MQTT over TCP แบบมาตรฐาน!"
+    },
+    "osc-script-code-editor": {
+      "format": "จัดรูปแบบ",
+      "syntaxGuide": "คู่มือไวยากรณ์",
+      "test": "ทดสอบ",
+      "title": "ตัวแก้ไขสคริปต์ OSC"
+    },
+    "osc-script-modal": {
+      "script": "สคริปต์",
+      "simple": "แบบง่าย",
+      "title": "สคริปต์ OSC"
+    },
+    "osc-script-simple-editor": {
+      "action": {
+        "none": "ยังไม่ได้เพิ่มคำสั่ง!",
+        "osc": "OSC",
+        "sleep": "นอนหลับ"
+      },
+      "addCommand": "เพิ่ม",
+      "addParameter": "เพิ่มพารามิเตอร์",
+      "commandCounter": "{count} คำสั่ง",
+      "commands": {
+        "COMMAND": {
+          "description": "ดำเนินการคำสั่ง OSC",
+          "title": "คำสั่ง OSC"
+        },
+        "SLEEP": {
+          "description": "รอตามเวลาที่กำหนด",
+          "title": "นอนหลับ"
+        }
+      },
+      "errorCounter": "{count} ข้อผิดพลาด",
+      "test": "ทดสอบ",
+      "vrchatAutofillInfo": "เติมพารามิเตอร์ Avatar อัตโนมัติ"
+    },
+    "player-list-preset-modal": {
+      "confirmDelete": {
+        "message": "คุณแน่ใจหรือไม่ที่จะลบพรีเซ็ต ''{name}''? ซึ่งมีผู้เล่น {count} คน",
+        "title": "ยืนยันการลบ?"
+      },
+      "confirmOverwrite": {
+        "message": "คุณแน่ใจหรือไม่ที่จะเขียนทับพรีเซ็ต ''{name}''?",
+        "title": "ยืนยันการเขียนทับ?"
+      },
+      "currentPresets": "พรีเซ็ตปัจจุบัน",
+      "delete": "ลบ",
+      "load": "โหลด",
+      "namePlaceholder": "ป้อนชื่อ",
+      "noPresets": "ไม่มีพรีเซ็ต",
+      "overwrite": "เขียนทับ",
+      "preset": {
+        "subtitle": "ผู้เล่น {count} คนในรายการ"
+      },
+      "title": {
+        "load": "โหลด",
+        "save": "บันทึก"
+      }
+    },
+    "player-list": {
+      "addFriends": "เพิ่มเพื่อน",
+      "clearPlayers": "ล้างทั้งหมด",
+      "loadPreset": "โหลดพรีเซ็ต",
+      "loadingFriends": "กำลังโหลดเพื่อน...",
+      "noPlayersAdded": "ไม่มีผู้เล่นในรายการ",
+      "removeModal": {
+        "message": "ต้องการลบ ''{name}'' ออกจากรายการหรือไม่?",
+        "title": "ยืนยัน"
+      },
+      "removeModalBulk": {
+        "message": "ต้องการลบทุกคนออกจากรายการหรือไม่?",
+        "title": "ยืนยัน"
+      },
+      "savePreset": "บันทึกเป็นพรีเซ็ต",
+      "title": "รายการผู้เล่น"
+    },
+    "select-box": {
+      "defaultPlaceholder": "เลือก"
+    },
+    "start-with-steamvr-how-to-modal": {
+      "description": "คุณสามารถตั้งค่าให้ OyasumiVR เปิดพร้อมกับ SteamVR ได้จากการตั้งค่าของ SteamVR เอง โดยดูได้ที่:\n\nSteamVR -> การตั้งค่า -> เปิดระบบ / ปิดระบบ -> เลือกแอปโอเวอร์เลย์ตอนเปิดระบบ",
+      "title": "เริ่ม OyasumiVR พร้อมกับ SteamVR"
+    },
+    "update-modal": {
+      "message": "พบอัปเดตใหม่ของ OyasumiVR: v{newVersion}\n\nปัจจุบันคุณใช้ v{currentVersion}\n\nต้องการอัปเดตตอนนี้หรือภายหลัง?",
+      "steamAd": "<b>OyasumiVR มีให้บริการบน Steam แล้ว!</b><br><br>นี่เป็นวิธีใหม่ที่แนะนำในการติดตั้ง OyasumiVR<br>ไปที่หน้าร้านค้า <a href=\"https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/\" target=\"_blank\">Steam</a> เพื่อดูรายละเอียด!",
+      "title": "มีอัปเดต",
+      "updateLater": "ภายหลัง",
+      "updateNow": "ติดตั้ง v{version}"
+    },
+    "vrc-avatar-select-button": {
+      "select": "เลือก"
+    },
+    "vrc-avatar-select-modal": {
+      "noAvatars": "ไม่สามารถดึงข้อมูล Avatar ได้ กรุณาอัปโหลดไปยัง VRChat หรือเพิ่มในรายการโปรด",
+      "ownAvatars": "อัปโหลดแล้ว",
+      "refreshAvatars": "อัปเดตข้อมูล Avatar",
+      "refreshWarning": {
+        "message": "การอัปเดต Avatar อาจส่งคำขอจำนวนมากไปยัง VRChat โปรดทำเฉพาะเมื่อจำเป็น การอัปเดตบ่อยเกินไปอาจถูกจำกัดสิทธิ์\n\nต้องการอัปเดต Avatar หรือไม่?",
+        "title": "ต้องการดึงข้อมูล Avatar ใหม่หรือไม่?"
+      },
+      "title": "เลือก Avatar"
+    },
+    "vrchat-login-modal": {
+      "disclaimers": {
+        "brand": "OyasumiVR ไม่ได้รับการรับรองโดย VRChat และไม่ได้สะท้อนความคิดเห็นหรือความเห็นของผู้ที่เกี่ยวข้องกับการผลิตหรือจัดการ VRChat อย่างเป็นทางการ VRChat เป็นเครื่องหมายการค้าของ VRChat Inc. VRChat © VRChat Inc.",
+        "liability": "Raphiiko จะไม่รับผิดชอบต่อปัญหาใดๆ ที่เกี่ยวข้องกับ OyasumiVR โปรดใช้ด้วยความเสี่ยงของคุณเอง",
+        "use": "ข้อมูลการเข้าสู่ระบบจะไม่ถูกบันทึกไว้นอกเครื่อง PC ของคุณ และจะถูกส่งไปยังเซิร์ฟเวอร์ VRChat เพื่อการตรวจสอบสิทธิ์เท่านั้น"
+      },
+      "errors": {
+        "CHECK_EMAIL": "เข้าสู่ระบบล้มเหลว: โปรดตรวจสอบกล่องจดหมายอีเมลที่เชื่อมโยงกับบัญชี VRChat ของคุณสำหรับรายละเอียด",
+        "INVALID_CREDENTIALS": "ข้อมูลรับรองที่ป้อนไม่ถูกต้อง",
+        "UNEXPECTED_RESPONSE": "เข้าสู่ระบบล้มเหลว: เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ โปรดตรวจสอบการเชื่อมต่อหรือลองใหม่ภายหลัง"
+      },
+      "password": "รหัสผ่าน",
+      "rememberCredentials": "บันทึกข้อมูลการเข้าสู่ระบบ",
+      "title": "เข้าสู่ระบบ VRChat",
+      "username": "ชื่อผู้ใช้ VRChat/อีเมล"
+    },
+    "vrchat-login-tfa-modal": {
+      "description": "บัญชี VRChat ของคุณได้รับการปกป้องด้วยการยืนยันตัวตนสองชั้น\r\n\r\nกรุณาป้อนรหัส 2FA:",
+      "errors": {
+        "INVALID_FORMAT": "รหัส 2FA ที่ถูกต้องคือตัวเลข 6 หลัก โปรดตรวจสอบข้อมูลที่ป้อน",
+        "LAST_CODE_INVALID": "รหัส 2FA ที่ป้อนไม่ถูกต้อง"
+      },
+      "logginInAs": "คุณกำลังเข้าสู่ระบบ VRChat ในชื่อ:",
+      "title": "การยืนยันตัวตนสองชั้น"
+    }
+  },
+  "device-manager": {
+    "actions": {
+      "forget": "ลบอุปกรณ์",
+      "powerOff": "ปิดเครื่อง",
+      "powerOn": "เปิดเครื่อง"
+    },
+    "config": {
+      "disabled": {
+        "description": "อุปกรณ์ที่ถูกปิดใช้งานจะไม่ได้รับผลจากการทำงานอัตโนมัติหรือการจัดการแบบกลุ่ม และจะไม่แสดงในรายการอุปกรณ์",
+        "title": "ปิดใช้งานอุปกรณ์",
+        "tooltip": "อุปกรณ์ที่ถูกปิดใช้งาน"
+      },
+      "nickname": {
+        "description": "ตั้งชื่อที่กำหนดเองเพื่อระบุตัวตน",
+        "title": "ชื่ออุปกรณ์"
+      },
+      "tags": {
+        "description": "กำหนดแท็กเพื่อจัดระเบียบและกรอง",
+        "noTags": "ไม่มีแท็กที่ใช้ได้ กรุณาสร้างแท็ก",
+        "title": "แท็กอุปกรณ์"
+      },
+      "title": "ตั้งค่า",
+      "v1Identifier": {
+        "change": "เปลี่ยน ID",
+        "description": "ในการควบคุม Base Station V1 จำเป็นต้องทราบ ID ของมัน",
+        "set": "ตั้งค่า ID",
+        "title": "Lighthouse V1 ID"
+      }
+    },
+    "deleteTag": {
+      "confirm": "ลบ",
+      "message": "จะลบแท็กนี้ออกจากอุปกรณ์ทั้งหมด ยืนยันหรือไม่?",
+      "title": "ลบแท็ก"
+    },
+    "deviceSelector": {
+      "deselectAll": "ไม่เลือกทั้งหมด",
+      "deviceTags": "กรองตามแท็ก",
+      "deviceTypes": {
+        "CONTROLLER": "คอนโทรลเลอร์",
+        "HMD": "Headset",
+        "LIGHTHOUSE": "Base Station",
+        "TRACKER": "Tracker"
+      },
+      "individualDevices": "เลือกรายตัว",
+      "noApplicableDevicesKnown": "ไม่พบอุปกรณ์ที่เกี่ยวข้อง",
+      "noTagsConfigured": "ไม่ได้ตั้งค่าแท็ก",
+      "selectDevices": "เลือกอุปกรณ์",
+      "title": "เลือกอุปกรณ์"
+    },
+    "deviceType": {
+      "CONTROLLER": "คอนโทรลเลอร์",
+      "HMD": "Headset",
+      "LIGHTHOUSE": "Base Station",
+      "PREVIOUSLY_SEEN": "เคยพบเห็น",
+      "TRACKER": "Tracker"
+    },
+    "empty": {
+      "noDevices": "ไม่มีอุปกรณ์เชื่อมต่อ เชื่อมต่อคอนโทรลเลอร์หรือ Tracker เพื่อเริ่มต้น",
+      "noDevicesMatchingSearch": "ไม่พบอุปกรณ์ที่ตรงกับการค้นหา"
+    },
+    "filter": {
+      "allTags": "แท็กทั้งหมด"
+    },
+    "forget": {
+      "confirm": "ลบอุปกรณ์",
+      "message": "จะลบอุปกรณ์นี้ หากตรวจพบอีกครั้งจะถูกเพิ่มเข้ามาใหม่",
+      "title": "ลบอุปกรณ์"
+    },
+    "search": {
+      "placeholder": "ค้นหาอุปกรณ์..."
+    },
+    "status": {
+      "notObserved": "ไม่ได้เชื่อมต่อ",
+      "observed": "เชื่อมต่อแล้ว",
+      "turningOff": "กำลังปิดเครื่อง...",
+      "turningOn": "กำลังเปิดเครื่อง..."
+    },
+    "tabs": {
+      "devices": "อุปกรณ์",
+      "tags": "แท็ก"
+    },
+    "tags": {
+      "cancel": "ยกเลิก",
+      "create": {
+        "button": "สร้าง",
+        "namePlaceholder": "ชื่อแท็ก",
+        "title": "สร้างแท็กใหม่"
+      },
+      "delete": "ลบ",
+      "edit": "แก้ไข",
+      "empty": {
+        "noTags": "ยังไม่ได้สร้างแท็ก กรุณาสร้างแท็กจากด้านบน"
+      },
+      "existing": {
+        "title": "แท็กที่สร้างแล้ว"
+      },
+      "save": "บันทึก"
+    },
+    "title": "จัดการอุปกรณ์"
+  },
+  "discord": {
+    "details": "โปรแกรม VR Sleep",
+    "label": {
+      "awake": "ตื่นอยู่",
+      "sleeping": "นอนหลับ...Zzz"
+    },
+    "state": {
+      "awake": "ตื่นอยู่",
+      "sleeping": "หลับอยู่...Zzz"
+    }
+  },
+  "frame-limiter": {
+    "add-application-modal": {
+      "add": "เพิ่ม",
+      "instruction": "เลือกแอปที่ต้องการจำกัดเฟรม",
+      "notListedHelp": "แอปของคุณไม่อยู่ในรายการใช่ไหม? ขอเพิ่มได้ที่ <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a>",
+      "title": "เลือกแอป"
+    },
+    "addLimiter": "เพิ่มแอป",
+    "description": "เปลี่ยนการจำกัดเฟรมอัตโนมัติ ช่วยลดเฟรมเรตขณะนอนหลับเพื่อประหยัดพลังงาน",
+    "directControlRequiresSteamVR": "โปรดเริ่ม SteamVR เพื่อควบคุมการจำกัดเฟรม",
+    "frameLimits": "จำกัดเฟรม",
+    "noLimits": "ไม่มีแอปที่ตั้งค่าไว้",
+    "onSleepDisable": "เมื่อตื่นนอน",
+    "onSleepEnable": "เมื่อนอนหลับ",
+    "onSleepPreparation": "เมื่อเตรียมตัวนอน",
+    "removeLimiter": "ลบ",
+    "selector": {
+      "auto": "อัตโนมัติ",
+      "autoDescription": "SteamVR จะตัดสินใจเฟรมเรตที่เหมาะสม",
+      "disabled": "ไม่เปลี่ยนแปลง",
+      "noLimit": "ไม่จำกัด"
+    },
+    "steamvrRequired": "เมื่อ SteamVR ทำงาน จะสามารถแสดงขีดจำกัดเฟรมที่แม่นยำตาม Headset ได้ โปรดเริ่ม SteamVR",
+    "supportedHardwareWarning": "โปรดทราบว่า SteamVR รองรับการจำกัดเฟรมเฉพาะกับ Headset ที่ทำงานกับ SteamVR โดยตรง เช่น Valve Index, Vive (Pro) หรือ Bigscreen Beyond เท่านั้น Headset ที่ไม่ได้ทำงานกับ SteamVR โดยตรง เช่น อุปกรณ์ Quest จะไม่รองรับ",
+    "title": "ควบคุมเฟรมอัตโนมัติ"
+  },
+  "gpu-automations": {
+    "automations": "ตั้งค่าอัตโนมัติสำหรับการนอนหลับ",
+    "disable": "ปิด GPU อัตโนมัติ",
+    "disabled": {
+      "disabled": "ปรับการตั้งค่า GPU\nสามารถจำกัดประสิทธิภาพและการใช้พลังงานได้\n\nเป็นฟีเจอร์สำหรับผู้ใช้ขั้นสูง จึงถูกปิดใช้งานโดยค่าเริ่มต้น\nคลิกปุ่มด้านล่างเพื่อเปิดใช้งาน",
+      "noSidecar": "จำเป็นต้องใช้สิทธิ์ผู้ดูแลระบบเพื่ออนุญาตให้เปลี่ยนการตั้งค่า GPU คลิกปุ่มด้านล่างเพื่อมอบสิทธิ์ให้ OyasumiVR"
+    },
+    "elevationSidecarModal": {
+      "cancel": "ครั้งเดียว",
+      "confirm": "เสมอ",
+      "message": "ต้องการมอบสิทธิ์ผู้ดูแลระบบเสมอหรือไม่?\n\nหากเปิดใช้งาน จะขอสิทธิ์ผู้ดูแลระบบเมื่อเริ่มต้น สามารถปิดการตั้งค่านี้ได้ตลอดเวลา",
+      "title": "มอบสิทธิ์ผู้ดูแลระบบ"
+    },
+    "enable": "เปิด GPU อัตโนมัติ",
+    "enableWarning": "การปรับพารามิเตอร์ GPU ไม่ถูกต้องอาจทำให้ระบบไม่เสถียร โปรดเปิดใช้งานฟีเจอร์นี้เฉพาะเมื่อคุณเข้าใจเท่านั้น",
+    "msiAfterburner": {
+      "description": "ปรับการตั้งค่า GPU เมื่อนอนหลับหรือตื่นนอนโดยใช้โปรไฟล์ MSI Afterburner เพื่อประหยัดพลังงานขณะนอนและคืนค่าเมื่อตื่น<br><br>ต้องตั้งค่าโปรไฟล์ใน MSI Afterburner ไว้ล่วงหน้า<br>ดาวน์โหลด MSI Afterburner ได้ <a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\" target=\"_blank\">ที่นี่</a>",
+      "enabledWarning": "การกำหนดค่าผิดพลาดอาจทำให้ระบบไม่เสถียร หากไม่แน่ใจให้ปิดฟีเจอร์นี้",
+      "executable": {
+        "description": "จำเป็นต้องระบุโฟลเดอร์ที่มีไฟล์ <strong>MSIAfterburner.exe</strong> หากไม่อยู่ในโฟลเดอร์เริ่มต้น ให้ระบุด้วยตนเอง",
+        "status": {
+          "CHECKING": "กำลังตรวจสอบความถูกต้องของ <strong>MSIAfterburner.exe</strong>",
+          "INVALID_EXECUTABLE": "ไม่สามารถยืนยันได้ว่า <strong>MSIAfterburner.exe</strong> ที่ตำแหน่งนี้ใช้งานได้",
+          "INVALID_SIGNATURE": "ไม่สามารถยืนยันได้ว่า <strong>MSIAfterburner.exe</strong> ที่ตำแหน่งนี้มาจาก MSI เพื่อความปลอดภัยจึงไม่สามารถใช้งานได้ โปรดตรวจสอบว่า MSI Afterburner เป็นเวอร์ชันล่าสุด หากปัญหายังคงอยู่หรือคุณมั่นใจว่าเป็นไฟล์ที่ถูกต้อง โปรดติดต่อผู้พัฒนา OyasumiVR",
+          "NOT_FOUND": "ไม่พบ <strong>MSIAfterburner.exe</strong>",
+          "SUCCESS": "พบ <strong>MSIAfterburner.exe</strong> และใช้งานได้ปกติ!",
+          "UNKNOWN_ERROR": "เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุขณะค้นหา <strong>MSIAfterburner.exe</strong>"
+        },
+        "title": "การกำหนดค่า"
+      },
+      "none": "ไม่เปลี่ยนแปลง",
+      "profile": "โปรไฟล์ {index}",
+      "sleepModeDisable": {
+        "description": "ใช้โปรไฟล์ MSI Afterburner ต่อไปนี้เมื่อปิดโหมดนอนหลับ",
+        "title": "เมื่อตื่นนอน"
+      },
+      "sleepModeEnable": {
+        "description": "ใช้โปรไฟล์ MSI Afterburner ต่อไปนี้เมื่อเปิดโหมดนอนหลับ",
+        "title": "เมื่อนอนหลับ"
+      }
+    },
+    "powerLimiting": {
+      "activatingSleepMode": {
+        "description": "ระบุขีดจำกัดพลังงานที่จะตั้งเมื่อเปิดโหมดนอนหลับ",
+        "title": "เมื่อนอนหลับ"
+      },
+      "currentPowerLimit": "ขีดจำกัดพลังงานปัจจุบัน",
+      "deactivatingSleepMode": {
+        "description": "ระบุขีดจำกัดพลังงานที่จะตั้งเมื่อปิดโหมดนอนหลับ",
+        "title": "เมื่อตื่นนอน"
+      },
+      "description": "จำกัดพลังงาน GPU อัตโนมัติเพื่อประหยัดไฟขณะนอนหลับ",
+      "disabled": {
+        "initializing": "กำลังเริ่มต้นตัวจำกัดพลังงาน...",
+        "noNvidia": "ไม่สามารถใช้ตัวจำกัดพลังงานได้เนื่องจากไม่พบไดรเวอร์ NVIDIA ที่ทำงานอยู่ ตัวจำกัดพลังงานใช้ได้กับ NVIDIA GPU เท่านั้น\n\nหากระบบของคุณมี NVIDIA GPU โปรดตรวจสอบว่าได้ติดตั้งไดรเวอร์ที่เหมาะสมแล้ว\n\n({code})",
+        "noPermission": "ได้รับสิทธิ์ผู้ดูแลระบบแล้ว แต่ไม่มีสิทธิ์เปลี่ยนการตั้งค่า GPU\n\nปกติไม่ควรเกิดขึ้น โปรดตรวจสอบการตั้งค่าระบบ",
+        "noSidecar": "ไม่สามารถรับสิทธิ์ผู้ดูแลระบบด้วยเหตุผลบางประการ\n\nลองรีสตาร์ท OyasumiVR",
+        "unknown": "ไม่สามารถใช้ตัวจำกัดพลังงานได้ด้วยเหตุผลที่ไม่ทราบสาเหตุ\n\nลองรีสตาร์ท OyasumiVR"
+      },
+      "enabledWarning": "การตั้งค่าขีดจำกัดพลังงานต่ำเกินไปอาจทำให้ระบบไม่เสถียร หากไม่แน่ใจให้ปิดฟีเจอร์นี้",
+      "gpuPowerLimitsUnsupported": "GPU ที่เลือกไม่รองรับการตั้งค่าขีดจำกัดพลังงาน",
+      "gpuUnsupported": "GPU ที่เลือกไม่รองรับ",
+      "inputDefault": "รีเซ็ตเป็นค่าจำกัดเริ่มต้นของ GPU",
+      "noGPUSelected": "ไม่ได้เลือก GPU",
+      "noGPUs": "ไม่พบ NVIDIA GPU",
+      "selectGPU": "เลือก GPU ที่ต้องการตั้งค่าจำกัดพลังงาน"
+    },
+    "requestAdministrator": "ให้สิทธิ์ผู้ดูแลระบบ",
+    "tabs": {
+      "msiAfterburner": "MSI Afterburner",
+      "powerLimiting": "ตัวจำกัดพลังงาน"
+    },
+    "title": "GPU อัตโนมัติ"
+  },
+  "hmd-automations": {
+    "bigscreenBeyond": {
+      "description": "สามารถตั้งค่าอัตโนมัติสำหรับฟังก์ชันเฉพาะของ Bigscreen Beyond ได้",
+      "fanControl": {
+        "allowUnsafeFanSpeed": {
+          "description": "ป้องกันไม่ให้ตั้งค่าความเร็วพัดลมต่ำกว่า 40%",
+          "title": "จำกัดความเร็วพัดลมที่ปลอดภัย",
+          "warning": "ผู้ผลิตไม่รองรับการตั้งค่าต่ำกว่า 40% Headset อาจเสียหายจากความร้อนสูงเกินไป ใช้ด้วยความเสี่ยงของคุณเอง"
+        },
+        "onSleepDisable": {
+          "description": "เปลี่ยนความเร็วพัดลมเมื่อปิดโหมดนอนหลับ",
+          "title": "เมื่อตื่นนอน"
+        },
+        "onSleepEnable": {
+          "description": "เปลี่ยนความเร็วพัดลมเมื่อเปิดโหมดนอนหลับ",
+          "title": "เมื่อนอนหลับ"
+        },
+        "onSleepPreparation": {
+          "description": "เปลี่ยนความเร็วพัดลมเมื่อเตรียมตัวนอน",
+          "title": "เมื่อเตรียมตัวนอน"
+        },
+        "title": "ความเร็วพัดลม"
+      },
+      "rgb": {
+        "onSleepDisable": {
+          "description": "เปลี่ยนสีไฟ Headset LED เมื่อปิดโหมดนอนหลับ",
+          "title": "เมื่อตื่นนอน"
+        },
+        "onSleepEnable": {
+          "description": "เปลี่ยนสีไฟ Headset LED เมื่อเปิดโหมดนอนหลับ",
+          "title": "เมื่อนอนหลับ"
+        },
+        "onSleepPreparation": {
+          "description": "เปลี่ยนสีไฟ Headset LED เมื่อเตรียมตัวนอน",
+          "title": "เมื่อเตรียมตัวนอน"
+        },
+        "pickerTitle": {
+          "onSleepDisable": "ตั้งค่าสี LED Beyond",
+          "onSleepEnable": "ตั้งค่าสี LED Beyond เมื่อนอนหลับ",
+          "onSleepPreparation": "ตั้งค่าสี LED Beyond"
+        },
+        "title": "RGB LED"
+      }
+    },
+    "tabs": {
+      "bigscreenBeyond": "Bigscreen Beyond"
+    },
+    "title": "HMD อัตโนมัติ"
+  },
+  "invite-and-invite-requests": {
+    "inviteRequestsTab": {
+      "conditions": {
+        "description": "สามารถตั้งค่าให้อนุมัติ คำขอเข้าร่วม เฉพาะเมื่อตรงตามเงื่อนไขที่กำหนด",
+        "title": "เงื่อนไข"
+      },
+      "description": "อนุมัติ คำขอเข้าร่วม ที่คุณได้รับโดยอัตโนมัติ สามารถใช้ Whitelist หรือ Blacklist เพื่ออนุญาตเฉพาะเพื่อนบางคนได้",
+      "options": {
+        "acceptMessage": {
+          "customMessage": {
+            "placeholder": "OyasumiVR อนุมัติแล้ว",
+            "title": "ข้อความ คำเชิญ"
+          },
+          "description": "แนบข้อความเมื่ออนุมัติ คำขอเข้าร่วม",
+          "title": "อนุมัติพร้อมข้อความ"
+        },
+        "declineOnRequest": {
+          "customMessage": {
+            "description": "ป้อนข้อความที่จะส่งเมื่อปฏิเสธคำขอ",
+            "placeholder": "OyasumiVR ปฏิเสธแล้ว",
+            "title": "ข้อความที่กำหนดเอง"
+          },
+          "description": "ส่งข้อความปฏิเสธโดยอัตโนมัติหากไม่ได้รับการอนุมัติ คำขอเข้าร่วม",
+          "options": {
+            "ALWAYS": "ส่งเสมอ",
+            "DISABLED": "ไม่ส่ง",
+            "WHEN_SLEEPING": "เฉพาะเมื่อนอนหลับ"
+          },
+          "title": "ปฏิเสธ คำขอเข้าร่วม ที่ไม่อนุมัติ"
+        },
+        "enable": {
+          "description": "อนุมัติ คำขอเข้าร่วม จากเพื่อนอัตโนมัติ",
+          "title": "อนุมัติ คำขอเข้าร่วม อัตโนมัติ"
+        },
+        "listMode": {
+          "description": "การตั้งค่ารายการผู้เล่น",
+          "options": {
+            "BLACKLIST": {
+              "label": "Blacklist",
+              "subLabel": "ไม่อนุมัติเพื่อนในรายการ"
+            },
+            "DISABLED": {
+              "label": "ปิด",
+              "subLabel": "อนุมัติทั้งหมด"
+            },
+            "WHITELIST": {
+              "label": "Whitelist",
+              "subLabel": "อนุมัติเพื่อนในรายการ"
+            }
+          },
+          "title": "โหมดรายการ"
+        },
+        "onlyBelowPlayerCount": {
+          "description": "รวมถึงตัวคุณเองด้วย",
+          "title": "เฉพาะเมื่อผู้เล่นในโลกน้อยกว่า <strong>{count}</strong> คน"
+        },
+        "onlyIfSleepModeEnabled": {
+          "title": "เฉพาะเมื่อเปิดโหมดนอนหลับ"
+        },
+        "presetOptions": {
+          "options": {
+            "NONE": "ไม่เปลี่ยนแปลง"
+          }
+        }
+      },
+      "otherAutomations": {
+        "changeListPreset": {
+          "onSleepDisable": {
+            "description": "โหลดพรีเซ็ตเมื่อปิดโหมดนอนหลับ",
+            "title": "เมื่อตื่นนอน"
+          },
+          "onSleepEnable": {
+            "description": "โหลดพรีเซ็ตเมื่อเปิดโหมดนอนหลับ",
+            "title": "เมื่อนอนหลับ"
+          },
+          "onSleepPreparation": {
+            "description": "โหลดพรีเซ็ตเมื่อเตรียมตัวนอน",
+            "title": "เมื่อเตรียมตัวนอน"
+          }
+        },
+        "description": "พบการทำงานอัตโนมัติที่เปลี่ยนระบบของฟีเจอร์นี้โดยอัตโนมัติ",
+        "title": "การทำงานอัตโนมัติอื่นๆ"
+      },
+      "userOnBusyStatus": "หากสถานะเป็นสีแดง (Busy) ปกติจะไม่ได้รับ คำขอเข้าร่วม แต่ถ้าผ่านเครื่องมือภายนอก OyasumiVR สามารถควบคุมได้",
+      "userOnJoinMeStatus": "หากสถานะเป็นสีน้ำเงิน (Join Me) VRChat จะอนุมัติ คำขอเข้าร่วม ทั้งหมดโดยไม่สนการตั้งค่านี้"
+    },
+    "invitesTab": {
+      "options": {
+        "declineOnInviteWhileAsleep": {
+          "customMessage": {
+            "description": "ป้อนข้อความที่จะส่งเมื่อปฏิเสธ คำเชิญ",
+            "placeholder": "ตอนนี้กำลังหลับอยู่! (ปฏิเสธโดย OyasumiVR)",
+            "title": "ข้อความที่กำหนดเอง"
+          },
+          "description": "ปฏิเสธ คำเชิญ โดยอัตโนมัติเมื่อเปิดโหมดนอนหลับ",
+          "title": "ปฏิเสธ คำเชิญ เมื่อนอนหลับ"
+        }
+      }
+    },
+    "playerList": {
+      "blacklist": "Blacklist",
+      "whitelist": "Whitelist"
+    },
+    "soundsTab": {
+      "options": {
+        "playSoundOnInvite": {
+          "description": "เล่นเสียงเมื่อได้รับ คำเชิญ",
+          "onlyWhenAsleep": {
+            "description": "เล่นเฉพาะเมื่อเปิดโหมดนอนหลับ",
+            "title": "เมื่อนอนหลับ"
+          },
+          "title": "เล่นเมื่อได้รับ คำเชิญ"
+        },
+        "playSoundOnInviteRequest": {
+          "description": "เล่นเสียงเมื่อได้รับ คำขอเข้าร่วม",
+          "onlyWhenAsleep": {
+            "description": "เล่นเฉพาะเมื่อเปิดโหมดนอนหลับ",
+            "title": "เมื่อนอนหลับ"
+          },
+          "onlyWhenUnhandled": {
+            "description": "เล่นเสียงเฉพาะเมื่อ คำขอเข้าร่วม ไม่ได้รับการอนุมัติหรือปฏิเสธโดยอัตโนมัติ",
+            "title": "เฉพาะเมื่อไม่ได้รับอนุมัติ"
+          },
+          "title": "เล่นเมื่อได้รับ คำขอเข้าร่วม"
+        }
+      }
+    },
+    "tabs": {
+      "inviteRequests": "คำขอเข้าร่วม",
+      "invites": "คำเชิญ",
+      "sounds": "เสียง"
+    },
+    "title": "คำเชิญ และ คำขอเข้าร่วม"
+  },
+  "join-notifications": {
+    "description": "เล่นเสียงหรือแสดงข้อความแจ้งเตือนเมื่อผู้เล่น เข้าร่วม หรือออกจากห้อง ใช้เมื่อคุณต้องการพบคนที่เข้าร่วม เข้ามา",
+    "joinNotifications": {
+      "description": "แสดงแจ้งเตือนเมื่อผู้เล่น เข้าร่วมมา",
+      "title": "แจ้งเตือน การเข้าร่วม"
+    },
+    "joinSound": {
+      "description": "เสียงที่จะเล่น",
+      "title": "เสียง"
+    },
+    "joinSounds": {
+      "description": "เล่นเสียงเมื่อผู้เล่นเข้าร่วม",
+      "title": "เสียง เข้าร่วม"
+    },
+    "leaveNotifications": {
+      "description": "แสดงแจ้งเตือนเมื่อผู้เล่นออกจากห้อง",
+      "title": "แจ้งเตือนออก"
+    },
+    "leaveSound": {
+      "description": "เสียงที่จะเล่น",
+      "title": "เสียง"
+    },
+    "leaveSounds": {
+      "description": "เล่นเสียงเมื่อผู้เล่นออกจากห้อง",
+      "title": "เสียงออก"
+    },
+    "modeOptions": {
+      "BLACKLIST": "ผู้เล่นที่ไม่อยู่ในรายการ",
+      "DISABLED": "ไม่ใช้",
+      "EVERYONE": "ทุกคน",
+      "FRIEND": "เพื่อน",
+      "WHITELIST": "ผู้เล่นในรายการ"
+    },
+    "notification": {
+      "join": "{name} เข้ามา",
+      "leave": "{name} ออกไปแล้ว"
+    },
+    "onlyWhenLeftAlone": {
+      "description": "แจ้งเตือนเมื่อคุณเหลือตัวคนเดียวหลังจากผู้เล่นอื่นออกไป",
+      "title": "เมื่อเหลือตัวคนเดียว"
+    },
+    "onlyWhenPreviouslyAlone": {
+      "description": "แจ้งเตือนเมื่อผู้เล่นอื่น เข้ามา โดยที่คุณอยู่คนเดียวมาก่อน",
+      "title": "เมื่อเดิมทีอยู่คนเดียว"
+    },
+    "onlyWhenSleepModeActive": {
+      "title": "เฉพาะเมื่อเปิดโหมดนอนหลับ"
+    },
+    "title": "แจ้งเตือน เข้าร่วม"
+  },
+  "message-center": {
+    "actions": {
+      "configure": "ตั้งค่า",
+      "hide": "ซ่อน",
+      "moreInfo": "รายละเอียด",
+      "showHidden": "แสดงที่ซ่อน",
+      "unhide": "เลิกซ่อน"
+    },
+    "messages": {
+      "gpuAutomationsAfterburnerError": {
+        "actions": {
+          "disable": "ปิดอัตโนมัติ"
+        },
+        "message": {
+          "INVALID_EXECUTABLE": "MSI Afterburner ทำงานไม่ปกติ กรุณาตั้งค่าพาธใหม่",
+          "INVALID_SIGNATURE": "ไม่สามารถยืนยันได้ว่าการติดตั้ง MSI Afterburner มาจาก MSI เพื่อความปลอดภัยจึงไม่สามารถใช้งานได้ กรุณาตั้งค่าพาธ MSI Afterburner ใหม่",
+          "NOT_FOUND": "ไม่พบ MSI Afterburner กรุณาตั้งค่าพาธ MSI Afterburner ใหม่",
+          "UNKNOWN_ERROR": "เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุขณะใช้ MSI Afterburner กรุณาตั้งค่าพาธ MSI Afterburner ใหม่"
+        },
+        "title": "ไม่สามารถใช้ MSI Afterburner อัตโนมัติ"
+      },
+      "gpuAutomationsNvmlError": {
+        "actions": {
+          "disable": "ปิดอัตโนมัติ"
+        },
+        "title": "ไม่สามารถใช้ GPU อัตโนมัติ"
+      },
+      "gpuAutomationsSidecarNotRunning": {
+        "actions": {
+          "disable": "ปิด GPU อัตโนมัติ",
+          "elevate": "ให้สิทธิ์ผู้ดูแลระบบ"
+        },
+        "message": "GPU อัตโนมัติเปิดอยู่ แต่ไม่มีสิทธิ์ผู้ดูแลระบบจึงทำงานไม่ได้\n\nกรุณาให้สิทธิ์ผู้ดูแลระบบหรือปิดฟังก์ชันนี้",
+        "title": "ไม่สามารถใช้ GPU อัตโนมัติ"
+      },
+      "lighthouseConsoleError": {
+        "message": "Lighthouse Console ไม่พบหรือทำงานไม่ปกติ ตรวจสอบการตั้งค่าเพื่อปิดคอนโทรลเลอร์หรือ Tracker",
+        "title": "ไม่สามารถใช้ Lighthouse Console"
+      },
+      "manyLighthousesDetected": {
+        "message": "ดูเหมือนว่าจะมี Base Station จำนวนมาก!\n\nอะแดปเตอร์ Bluetooth ส่วนใหญ่รองรับการเชื่อมต่อพร้อมกันได้เพียง 7 อุปกรณ์ (รวมหูฟังและอุปกรณ์ Bluetooth อื่นๆ)\n\nหากเชื่อมต่ออุปกรณ์ Bluetooth จำนวนมาก OyasumiVR อาจไม่สามารถควบคุม Base Station ทั้งหมดได้อย่างถูกต้อง",
+        "title": "ตรวจพบ Base Station จำนวนมาก"
+      },
+      "sleepCalibrationRequired": {
+        "calibrate": "ปรับเทียบตอนนี้",
+        "message": "การตรวจจับการนอนหลับเปิดอยู่ แต่ยังไม่ได้ปรับเทียบ กรุณาปรับเทียบก่อนใช้งาน",
+        "title": "ยังไม่ได้ปรับเทียบการตรวจจับการนอนหลับ"
+      },
+      "vrcInviteRequestFailedWorldUnknown": {
+        "message": "ได้รับ คำขอเข้าร่วม จาก ''{senderUsername}'' แต่ไม่สามารถดำเนินการได้เพราะไม่ทราบชื่อ World บันทึก VRChat อาจอ่านไม่ได้",
+        "title": "ไม่สามารถตอบกลับ คำขอเข้าร่วม",
+        "unknownFriend": "เพื่อนที่ไม่รู้จัก"
+      },
+      "vrcLogMissing": {
+        "message": "VRChat ทำงานอยู่ แต่ไม่พบไฟล์บันทึก ฟังก์ชันเช่นการอนุมัติ คำเชิญ อัตโนมัติจะไม่ทำงานหากไม่มีบันทึก กรุณาเปิดใช้งานการบันทึกใน VRChat",
+        "title": "ไม่พบไฟล์บันทึก VRChat"
+      },
+      "vrcOscMissing": {
+        "message": "VRChat ทำงานอยู่ แต่ไม่พบบริการ OSC หรือ OSCQuery หากไม่มีบริการเหล่านี้ ฟีเจอร์บางอย่างของ OyasumiVR จะไม่ทำงาน\n\nกรุณาตรวจสอบว่าเปิดใช้งาน OSC ภายใน VRChat แล้ว เพื่อให้ OyasumiVR ทำงานได้อย่างถูกต้อง",
+        "title": "VRChat OSC(Query) ปิดอยู่"
+      },
+      "vrcWebsocketDisconnected": {
+        "message": "เข้าสู่ระบบ VRChat แล้ว แต่ไม่สามารถเชื่อมต่อ WebSocket ได้ ฟังก์ชันบางอย่าง (เช่น อนุมัติ คำเชิญ อัตโนมัติ) จะไม่สามารถใช้งานได้ในขณะนี้",
+        "title": "VRChat WebSocket ไม่ได้เชื่อมต่อ"
+      }
+    },
+    "title": "ศูนย์การแจ้งเตือน",
+    "tooltip": "ศูนย์การแจ้งเตือน"
+  },
+  "misc": {
+    "GOGO_LOCO_LEGACY_PRESET_WARNING": "พรีเซ็ตนี้มีปัญหาหลายอย่างเนื่องจากเป็นการแก้ไขชั่วคราว ใช้พรีเซ็ตนี้เฉพาะเมื่อคุณไม่สามารถใช้พรีเซ็ต GoGo Loco ใหม่ได้ นอกจากนี้ หากคุณยังใช้ GoGo Loco เวอร์ชันเก่า แนะนำให้อัปเดตและใช้ GoGo Loco เวอร์ชันล่าสุด",
+    "GORONE_LEGACY_PRESET_WARNING": "ในเวอร์ชัน v4.0 ขึ้นไปของพรีเซ็ตนี้มีฟังก์ชันการหมุนรวมอยู่แล้ว จึงไม่จำเป็นต้องใช้ฟังก์ชันนี้ โปรดใช้พรีเซ็ตนี้เฉพาะเมื่อคุณใช้เวอร์ชันเก่าเท่านั้น",
+    "oneTimeFlagDialogs": {
+      "CCT_CONTROL_WARNING_DIALOG": {
+        "message": "การควบคุมอุณหภูมิสีของจอแสดงผลใช้ได้กับ Headset บางรุ่นเท่านั้น (เช่น Valve Index, Bigscreen Beyond)\n\nหากไม่ได้ใช้ Headset เหล่านี้จะไม่มีผลใดๆ\n\nหากไม่ต้องการ สามารถปิดการควบคุมอุณหภูมิสีได้ในการตั้งค่า",
+        "title": "ประกาศ"
+      },
+      "OSC_SCRIPT_SIMPLE_EDITOR_VRCHAT_AUTOCOMPLETE_INFO": {
+        "message": "หากต้องการใช้ฟังก์ชันเติมพารามิเตอร์อัตโนมัติสำหรับ Avatar VRChat คุณต้องเปิด VRChat และใช้ Avatar นั้นอยู่\n\nแม้ไม่ได้เปิด ก็ยังสามารถใช้ตัวแก้ไขแบบง่ายได้ แต่ฟังก์ชันเติมคำอัตโนมัติจะถูกปิดใช้งาน",
+        "title": "ฟังก์ชันเติมคำอัตโนมัติ"
+      },
+      "acknowledge": "เข้าใจแล้ว"
+    },
+    "oscScriptEditorErrors": {
+      "addressNoSlash": "ที่อยู่ OSC ที่ถูกต้องต้องเริ่มต้นด้วยเครื่องหมาย '/' เสมอ",
+      "addressNotASCII": "ที่อยู่ OSC ที่ถูกต้องต้องประกอบด้วยอักขระ ASCII เท่านั้น",
+      "addressRequired": "จำเป็นต้องมีที่อยู่ OSC",
+      "durationRequired": "จำเป็นต้องระบุเวลานอนหลับ",
+      "durationTooLong": "เวลานอนหลับต้องไม่เกิน 5 วินาที",
+      "durationTooShort": "เวลานอนหลับต้องอย่างน้อย 1ms",
+      "floatOutOfBounds": "ค่าต้องเป็นเลขทศนิยมที่ถูกต้องระหว่าง -1.0 ถึง 1.0",
+      "floatTooPrecise": "ความละเอียดของค่าสูงสุดคือทศนิยม 3 ตำแหน่ง",
+      "intOutOfBounds": "ค่าต้องเป็นจำนวนเต็มที่ถูกต้องระหว่าง 0 ถึง 255",
+      "invalidSyntax": "ไวยากรณ์ไม่ถูกต้อง",
+      "maxParameterCountExceeded": "จำนวนพารามิเตอร์สูงสุดที่อนุญาตต่อคำสั่งคือ {value}",
+      "noFloatMilliseconds": "ค่ามิลลิวินาทีต้องเป็นจำนวนเต็ม",
+      "stringTooLong": "ค่าสตริงต้องไม่เกิน {value} ตัวอักษร",
+      "tooManyCommands": "สคริปต์ OSC ไม่สามารถมีคำสั่งเกิน {value} อย่าง",
+      "totalDurationTooLong": "เวลารวมของสคริปต์ต้องไม่เกิน 10 วินาที"
+    }
+  },
+  "nightmare-detection": {
+    "automations": {
+      "description": "การทำงานอัตโนมัติที่จะทำงานเมื่อตรวจพบฝันร้าย",
+      "title": "การทำงานอัตโนมัติ"
+    },
+    "bpmThreshold": {
+      "description": "อัตราการเต้นของหัวใจสำหรับตรวจจับฝันร้าย",
+      "title": "อัตราการเต้นของหัวใจ",
+      "unit": "BPM"
+    },
+    "description": "ตรวจสอบอัตราการเต้นของหัวใจที่สูงขณะนอนหลับเพื่อดูว่าฝันร้ายหรือไม่ สามารถตรวจจับฝันร้ายและช่วยปลุกคุณได้ ฟังก์ชันนี้จะทำงานเฉพาะเมื่อเปิดโหมดนอนหลับเท่านั้น\n\n<b>หมายเหตุ:</b> ต้องเปิดใช้งาน <a class=\"integrationsPageLink\">การเชื่อมต่อ Pulsoid</a> เพื่อใช้ฟังก์ชันนี้",
+    "disableSleepMode": {
+      "description": "ปิดโหมดนอนหลับเมื่อตรวจพบฝันร้าย",
+      "title": "ปิดโหมดนอนหลับ"
+    },
+    "duration": {
+      "description": "ระยะเวลาที่อัตราการเต้นของหัวใจต้องสูงกว่าค่าที่กำหนดไว้ ก่อนที่ OyasumiVR จะเริ่มการตรวจจับฝันร้าย",
+      "title": "ตัวจับเวลาการตรวจจับ"
+    },
+    "notification": "ตรวจพบฝันร้ายเนื่องจากอัตราการเต้นของหัวใจสูงอย่างต่อเนื่อง",
+    "playSound": {
+      "description": "ส่งเสียงเตือนเมื่อตรวจพบฝันร้าย",
+      "title": "เล่นเสียง"
+    },
+    "title": "ตรวจจับฝันร้าย"
+  },
+  "notification-sound": {
+    "title": "เลือกเสียง",
+    "volume": "ระดับเสียง"
+  },
+  "notifications": {
+    "autoAcceptedInviteRequest": {
+      "content": "อนุมัติ คำขอเข้าร่วม จาก {username} โดยอัตโนมัติ"
+    },
+    "sleepCheck": {
+      "content": "หลับแล้วหรือยัง? จะเปลี่ยนเป็นโหมดนอนหลับใน 20 วินาที\n\n(กดปุ่มคอนโทรลเลอร์หรือส่ายหัวเบาๆ เพื่อยกเลิก)"
+    },
+    "sleepCheckCancel": {
+      "content": "การเปิดโหมดนอนหลับอัตโนมัติถูกยกเลิก"
+    },
+    "sleepModeDisabled": {
+      "content": "โหมดนอนหลับถูกปิดแล้ว"
+    },
+    "sleepModeEnabled": {
+      "content": "โหมดนอนหลับถูกเปิดแล้ว"
+    },
+    "turningOffControllers": {
+      "content": "ปิดคอนโทรลเลอร์แล้ว"
+    },
+    "turningOffControllersAndTrackers": {
+      "content": "ปิดคอนโทรลเลอร์และ Tracker แล้ว"
+    },
+    "turningOffTrackers": {
+      "content": "ปิด Tracker แล้ว"
+    },
+    "vrcStatusChanged": {
+      "content": "สถานะ VRChat ถูกตั้งเป็น ''{newStatus}''"
+    }
+  },
+  "oscAutomations": {
+    "general": {
+      "description": "การตั้งค่าสำหรับส่งคำสั่ง OSC ไปยัง VRChat เช่น สามารถใช้เปลี่ยน Toggle ของ Avatar เมื่อนอนหลับหรือตื่นนอน",
+      "onSleepDisable": {
+        "description": "คำสั่งที่ส่ง",
+        "script": "เมื่อปิดโหมดนอนหลับ",
+        "title": "เมื่อตื่นนอน"
+      },
+      "onSleepEnable": {
+        "description": "คำสั่งที่ส่ง",
+        "script": "เมื่อเปิดโหมดนอนหลับ",
+        "title": "เมื่อนอนหลับ"
+      },
+      "onSleepPreparation": {
+        "description": "ส่งคำสั่ง OSC",
+        "script": "เมื่อเตรียมตัวนอน",
+        "title": "เตรียมตัวนอน"
+      }
+    },
+    "sleepingAnimations": {
+      "currentPose": "ตำแหน่งปัจจุบัน",
+      "customPreset": "อนิเมชั่นกำหนดเอง",
+      "description": "เปลี่ยนอนิเมชั่นของ Avatar ตามท่าทางการพลิกตัว ใช้เมื่อไม่ได้ Full Body Tracking หรือปิด Tracker ในตอนกลางคืน (หรือใช้ OyasumiVR) <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">ดูรายละเอียดได้ที่นี่</a>\n\nมีพรีเซ็ต Locomotion เตรียมไว้ให้ แต่ก็สามารถกำหนดอนิเมชั่นเองได้",
+      "enable": "เปิดใช้อนิเมชั่นการนอนหลับอัตโนมัติ",
+      "manualControl": "ควบคุมด้วยตนเอง",
+      "options": {
+        "footLock": {
+          "FOOT_LOCK": "เปิด Foot Lock",
+          "FOOT_UNLOCK": "ปิด Foot Lock",
+          "description": "ตั้งค่าเปิด/ปิด Foot Lock ด้วยคำสั่ง OSC",
+          "title": "Foot Lock"
+        },
+        "general": {
+          "advanced": {
+            "avatarReloadWorkaround": {
+              "description": "เปิดใช้งานหากต้องการใช้อนิเมชั่น Avatar หลังจากปิด Full Body Tracker แล้ว <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Workaround-for-using-avatar-animations-with-FBT\" target=\"_blank\">นี่คืออะไร? ทำไมถึงจำเป็น?</a>",
+              "title": "Workaround ปัญหาเพื่อใช้อนิเมชั่น Avatar กับ FBT"
+            },
+            "title": "ฟังก์ชันขั้นสูง"
+          },
+          "footLock": {
+            "description": "การเปิด Foot Lock จะช่วยป้องกันไม่ให้ Avatar หมุนโดยไม่ตั้งใจ",
+            "title": "Foot Lock"
+          },
+          "footLockReleaseWindow": "เวลาปลดล็อค Foot Lock",
+          "lockFeetOnSleepModeEnable": "ล็อคเท้าเมื่อเปิดโหมดนอนหลับ",
+          "onlyIfSleepModeEnabled": "เมื่อเปิดโหมดนอนหลับ",
+          "onlySwitchAnimations": "เปลี่ยนเฉพาะอนิเมชั่น",
+          "releaseFootLockOnPoseChange": "ปลดล็อคเท้าทันทีเมื่อพลิกตัว",
+          "title": "ตัวเลือกทั่วไป",
+          "unlockFeetOnAutomationDisable": "ปลดล็อคเท้าเมื่อปิดอนิเมชั่นการนอนหลับอัตโนมัติ",
+          "unlockFeetOnSleepModeDisable": "ปลดล็อคเท้าเมื่อปิดโหมดนอนหลับ"
+        },
+        "positions": {
+          "SIDE_BACK": "นอนหงาย",
+          "SIDE_FRONT": "นอนคว่ำ",
+          "SIDE_LEFT": "หันซ้าย",
+          "SIDE_RIGHT": "หันขวา",
+          "UNKNOWN": "ไม่ทราบ",
+          "description": "ตั้งค่าคำสั่ง OSC เพื่อเปิดใช้งานอนิเมชั่นในแต่ละการพลิกตัว",
+          "title": "การพลิกตัว"
+        }
+      },
+      "presetAuthor": "โดย {author}"
+    },
+    "tab": {
+      "general": "ทั่วไป",
+      "sleepingAnimations": "อนิเมชั่นการนอนหลับ"
+    },
+    "title": "OSC อัตโนมัติ"
+  },
+  "overlay": {
+    "brightness": {
+      "hardware": "ความสว่างฮาร์ดแวร์",
+      "simple": "ความสว่าง",
+      "software": "ความสว่างซอฟต์แวร์"
+    },
+    "colorTemp": "อุณหภูมิสี",
+    "dashboard": {
+      "automations": {
+        "autoAcceptInviteRequests": {
+          "mode": {
+            "Blacklist": "Blacklist",
+            "Disabled": "ปิด",
+            "Whitelist": "Whitelist"
+          },
+          "subtitle": "{mode}: {playerCount} คน",
+          "title": "อนุมัติ คำขอเข้าร่วม อัตโนมัติ"
+        },
+        "changeStatusBasedOnPlayerCount": {
+          "subtitle": "สูงสุด {threshold} คน",
+          "title": "สถานะอัตโนมัติ"
+        },
+        "shutdownAutomations": {
+          "subtitle": "ตั้งค่าอัตโนมัติไว้ {triggerCount} รายการ",
+          "title": "ปิดเครื่องอัตโนมัติ"
+        },
+        "sleepModeEnableForSleepDetector": {
+          "subtitle": {
+            "withActivationWindow": "ความไว {sensitivity}, {startTime} - {endTime}",
+            "withoutActivationWindow": "ความไว {sensitivity}"
+          },
+          "title": "ตรวจจับการนอนหลับ"
+        },
+        "sleepingAnimations": {
+          "title": "อนิเมชั่นอัตโนมัติ"
+        },
+        "title": "การตั้งค่าอัตโนมัติ"
+      },
+      "deviceControl": {
+        "title": "พลังงานอุปกรณ์",
+        "turnOff": {
+          "AllControllers": "ปิดคอนโทรลเลอร์ทั้งหมด",
+          "AllControllersAndTrackers": "ปิดคอนโทรลเลอร์และ Tracker ทั้งหมด",
+          "AllTrackers": "ปิด Tracker ทั้งหมด"
+        }
+      },
+      "overview": {
+        "active": "เปิด",
+        "inactive": "ปิด",
+        "sleepMode": "โหมดนอนหลับ",
+        "tooltip": {
+          "automations": "อัตโนมัติ",
+          "deviceControl": "ควบคุมอุปกรณ์",
+          "prepareForSleep": "เตรียมตัวนอน",
+          "shutdown": "กระบวนการปิดระบบ",
+          "sliderMode": {
+            "BRIGHTNESS": "ควบคุมความสว่าง",
+            "COLOR_TEMP": "ควบคุมอุณหภูมิสี"
+          }
+        }
+      },
+      "shutdownSequence": {
+        "dialog": {
+          "message": "จะเริ่มปิดระบบ\nแน่ใจหรือไม่?\n\nสามารถตั้งค่ารายละเอียดการทำงานได้ในหน้าต่างหลัก",
+          "start": "เริ่มปิดระบบ",
+          "title": "กระบวนการปิดระบบ"
+        }
+      }
+    }
+  },
+  "overview": {
+    "sleep-mode": {
+      "activate": "เปิดใช้งาน",
+      "active": "เปิด",
+      "deactivate": "ปิดใช้งาน",
+      "inactive": "ปิด",
+      "label": "โหมดนอนหลับ"
+    },
+    "sleep-preparation": {
+      "activate": "เตรียมตัวนอน",
+      "disabledTooltip": "จะใช้งานได้เมื่อกำหนดฟังก์ชันอัตโนมัติให้กับการเตรียมตัวนอน"
+    }
+  },
+  "power-automations": {
+    "devices": {
+      "turnOff": {
+        "description": "ปิดคอนโทรลเลอร์, Tracker หรือ Base Station อัตโนมัติ เช่น หากปิด Tracker เมื่อนอนหลับ จะช่วยรักษาแบตเตอรี่ไว้เมื่อตื่นนอน!",
+        "subtitle": "อุปกรณ์ที่จะปิด",
+        "title": "ปิดอุปกรณ์",
+        "triggers": {
+          "onBatteryLevel": "เมื่อแบตเตอรี่อุปกรณ์ต่ำ",
+          "onDeviceCharging": "เมื่อชาร์จอุปกรณ์",
+          "onSleepModeDisable": "เมื่อตื่นนอน",
+          "onSleepModeEnable": "เมื่อนอนหลับ",
+          "onSleepPreparation": "เมื่อเตรียมตัวนอน",
+          "onSteamVRStop": "เมื่อ SteamVR หยุดทำงาน",
+          "onlyWhileSleepModeEnabled": "เมื่อเปิดโหมดนอนหลับ"
+        }
+      },
+      "turnOn": {
+        "description": "สามารถเปิดอุปกรณ์เฉพาะได้ ปัจจุบันรองรับเฉพาะ Base Station",
+        "subtitle": "อุปกรณ์ที่จะเปิด",
+        "title": "เปิดอุปกรณ์",
+        "triggers": {
+          "onOyasumiStart": "เมื่อเริ่ม OyasumiVR",
+          "onSleepModeDisable": "เมื่อตื่นนอน",
+          "onSteamVRStart": "เมื่อเริ่ม SteamVR"
+        }
+      }
+    },
+    "error": {
+      "adapterError": "เกิดข้อผิดพลาดขณะพยายามสื่อสารกับอะแดปเตอร์ Bluetooth กรุณาตรวจสอบว่าอะแดปเตอร์ Bluetooth เปิดใช้งานอยู่และลองอีกครั้ง",
+      "noAdapter": "ไม่พบอะแดปเตอร์ Bluetooth ในระบบของคุณ กรุณาตรวจสอบว่าระบบมีอะแดปเตอร์ Bluetooth และเปิดใช้งานอยู่"
+    },
+    "powerManagementWarning": "เมื่อควบคุมพลังงาน Base Station ด้วย OyasumiVR ขอแนะนำให้ปิดการจัดการพลังงาน Base Station ในการตั้งค่า SteamVR",
+    "tabs": {
+      "devices": "อุปกรณ์",
+      "windowsPowerPolicy": "ตัวเลือกพลังงาน"
+    },
+    "title": "พลังงานอัตโนมัติ",
+    "windowsPowerPolicy": {
+      "automations": "แผนพลังงาน Windows อัตโนมัติ",
+      "description": "เปลี่ยนแผนพลังงาน Windows โดยอัตโนมัติ ใช้เพื่อลดการใช้พลังงานขณะนอนหลับและคืนค่าเดิมเมื่อตื่น",
+      "sleepModeDisable": {
+        "description": "ใช้แผนพลังงานต่อไปนี้",
+        "title": "เมื่อปิดโหมดนอนหลับ"
+      },
+      "sleepModeEnable": {
+        "description": "ใช้แผนพลังงานต่อไปนี้",
+        "title": "เมื่อเปิดโหมดนอนหลับ"
+      }
+    }
+  },
+  "pulsoid": {
+    "login": {
+      "error": {
+        "message": "การเข้าสู่ระบบด้วยบัญชี Pulsoid ล้มเหลว โปรดลองอีกครั้งในภายหลัง หากปัญหายังคงอยู่ โปรดติดต่อฝ่ายสนับสนุน\n\n{errorDetails}",
+        "title": "เข้าสู่ระบบ Pulsoid ล้มเหลว"
+      }
+    }
+  },
+  "resolution-automations": {
+    "description": "ปรับความละเอียดเรนเดอร์ของ SteamVR โดยอัตโนมัติ",
+    "onSleepDisable": {
+      "description": "ปรับความละเอียดเรนเดอร์",
+      "title": "เมื่อตื่นนอน"
+    },
+    "onSleepEnable": {
+      "description": "ปรับความละเอียดเรนเดอร์",
+      "title": "เมื่อนอนหลับ"
+    },
+    "renderResolution": {
+      "auto": "อัตโนมัติ",
+      "custom": "กำหนดเอง",
+      "title": "เปลี่ยนความละเอียดเรนเดอร์"
+    },
+    "title": "ความละเอียดอัตโนมัติ"
+  },
+  "runAutomations": {
+    "commandsToRun": "คำสั่ง",
+    "description": "สามารถเรียกใช้คำสั่งผ่าน Windows Command Prompt ได้อัตโนมัติ\n\nคำสั่งจะถูกรันผ่าน cmd.exe",
+    "onSleepDisable": {
+      "description": "เรียกใช้คำสั่ง",
+      "title": "เมื่อตื่นนอน"
+    },
+    "onSleepEnable": {
+      "description": "เรียกใช้คำสั่ง",
+      "title": "เมื่อนอนหลับ"
+    },
+    "onSleepPreparation": {
+      "description": "เรียกใช้คำสั่ง",
+      "title": "เมื่อเตรียมตัวนอน"
+    },
+    "testCommands": "ทดสอบ",
+    "title": "เรียกใช้คำสั่ง"
+  },
+  "settings": {
+    "advanced": {
+      "application": {
+        "openVrInitDelayFix": {
+          "description": "เมื่อเปิดใช้งาน OyasumiVR จะรอสักครู่ก่อนเริ่มทำงานร่วมกับ SteamVR หลังจากตรวจพบ SteamVR แล้ว เพื่อให้ SteamVR มีเวลาเริ่มต้นเพิ่มขึ้น หากคุณพบปัญหาในการเปิด SteamVR ขณะที่ OyasumiVR ทำงานอยู่แล้ว ตัวเลือกนี้อาจช่วยได้",
+          "title": "หน่วงเวลาเริ่มต้น OpenVR"
+        },
+        "overlayGpuAcceleration": {
+          "description": "หากโอเวอร์เลย์แสดงผลไม่ถูกต้อง การปิดการตั้งค่านี้อาจช่วยแก้ปัญหาในบางสภาพแวดล้อมได้ (เช่น Hybrid GPU)",
+          "title": "การเร่งความเร็ว GPU ของ VR Overlay"
+        },
+        "title": "แอปพลิเคชัน"
+      },
+      "logs": {
+        "openFolder": {
+          "action": "เปิดโฟลเดอร์",
+          "description": "เปิดตำแหน่งไฟล์บันทึกใน Explorer",
+          "title": "เปิดโฟลเดอร์บันทึก"
+        },
+        "title": "ไฟล์บันทึก"
+      },
+      "persistentData": {
+        "clearData": "ล้างข้อมูล",
+        "clearModal": {
+          "message": "ต้องการลบข้อมูลต่อไปนี้หรือไม่? ไม่สามารถเรียกคืนได้\n\n{items}",
+          "title": "ยืนยันการลบ"
+        },
+        "dataType": {
+          "all": {
+            "description": "ข้อมูลทั้งหมดที่ OyasumiVR บันทึกไว้",
+            "title": "ข้อมูลทั้งหมด"
+          },
+          "appCache": {
+            "description": "ข้อมูลชั่วคราวทั้งหมด เช่น การตอบสนอง VRChat API",
+            "title": "แคชข้อมูล"
+          },
+          "appSettings": {
+            "description": "ข้อมูลการตั้งค่าทั่วไปทั้งหมด",
+            "title": "การตั้งค่าแอปพลิเคชัน"
+          },
+          "automationSettings": {
+            "description": "ข้อมูลการตั้งค่าอัตโนมัติทั้งหมด",
+            "title": "การตั้งค่าอัตโนมัติ"
+          },
+          "eventLog": {
+            "description": "เหตุการณ์ที่บันทึกในหน้าภาพรวม",
+            "title": "บันทึกเหตุการณ์"
+          },
+          "imageCache": {
+            "description": "ข้อมูลรูปภาพชั่วคราวทั้งหมด เช่น ไอคอนผู้เล่น VRChat",
+            "title": "แคชรูปภาพ"
+          },
+          "integrations": {
+            "description": "ข้อมูลการเชื่อมต่อ (ยกเว้น VRChat) ข้อมูลการตรวจสอบสิทธิ์ ฯลฯ",
+            "title": "ข้อมูลการเชื่อมต่อ"
+          },
+          "logs": {
+            "description": "ข้อมูลบันทึก",
+            "title": "ไฟล์บันทึก"
+          },
+          "miscData": {
+            "description": "ข้อมูลทั้งหมดที่ไม่รวมอยู่ในหมวดหมู่อื่น",
+            "title": "ข้อมูลอื่นๆ"
+          },
+          "vrcData": {
+            "description": "ข้อมูลเฉพาะของ VRChat เช่น ข้อมูลการเข้าสู่ระบบ",
+            "title": "ข้อมูล VRChat"
+          }
+        },
+        "description": "สามารถจัดการข้อมูลที่ OyasumiVR บันทึกลงในดิสก์ได้",
+        "relaunchModal": {
+          "later": "ไว้ทีหลัง",
+          "message": "ข้อมูลที่ร้องขอถูกล้างแล้ว กรุณารีสตาร์ท OyasumiVR หากใช้งานต่อโดยไม่รีสตาร์ทอาจเกิดปัญหาได้",
+          "relaunch": "รีสตาร์ท OyasumiVR ตอนนี้",
+          "title": "รีสตาร์ท OyasumiVR"
+        },
+        "title": "ข้อมูลที่บันทึก"
+      },
+      "title": "ตั้งค่าขั้นสูง",
+      "translation": {
+        "contribute": {
+          "description": "ช่วยแปลส่วนที่ขาดหายไปหรือเพิ่มภาษาใหม่!",
+          "docs": "อ่านเพิ่มเติม",
+          "title": "คุณสามารถช่วยแปลได้!"
+        },
+        "editor": {
+          "action": "เปิดตัวแก้ไข",
+          "description": "เปิดตัวแก้ไขการแปล OyasumiVR เพื่อแก้ไขและสร้างคำแปล",
+          "title": "ตัวแก้ไขการแปล"
+        },
+        "loadFile": {
+          "action": "โหลดไฟล์",
+          "description": "โหลดไฟล์ภาษาที่กำหนดเอง ใช้สำหรับทดสอบการแปล",
+          "title": "โหลดไฟล์แปล"
+        },
+        "title": "ภาษาและการแปล"
+      },
+      "troubleshooting": {
+        "description": "รวมตัวเลือกสำหรับการแก้ปัญหา โดยปกติไม่จำเป็นต้องใช้",
+        "devTools": {
+          "action": "เปิดเครื่องมือนักพัฒนา",
+          "description": "เปิดเครื่องมือนักพัฒนา Edge เพื่อการดีบัก",
+          "title": "เปิดเครื่องมือนักพัฒนา"
+        },
+        "title": "การแก้ปัญหา",
+        "vrManifestReregister": {
+          "action": "ลงทะเบียน Manifest ใหม่",
+          "description": "ลงทะเบียน Application Manifest ของ OyasumiVR กับ SteamVR ใหม่",
+          "modal": {
+            "FLAVOUR_NOT_ELIGIBLE": {
+              "message": "เนื่องจากใช้ OyasumiVR เวอร์ชันที่ไม่รองรับ (เช่น เวอร์ชัน Steam) Application Manifest จึงถูกยกเลิกการลงทะเบียนแต่ไม่ได้ลงทะเบียนใหม่ นี่ไม่ใช่ข้อผิดพลาด กรุณารีสตาร์ท OyasumiVR",
+              "title": "ยกเลิกการลงทะเบียน Application Manifest"
+            },
+            "MANIFEST_ADD_FAILED": {
+              "message": "ลบ Manifest แล้ว แต่ไม่สามารถเพิ่มใหม่ได้ กรุณารีสตาร์ท OyasumiVR และตรวจสอบบันทึก",
+              "title": "ลงทะเบียน VR Application Manifest ใหม่ล้มเหลว"
+            },
+            "MANIFEST_CHECK_FAILED": {
+              "message": "ไม่สามารถตรวจสอบได้ว่าลงทะเบียน Manifest แล้วหรือยัง กรุณารีสตาร์ท OyasumiVR และตรวจสอบบันทึก",
+              "title": "ลงทะเบียน VR Application Manifest ใหม่ล้มเหลว"
+            },
+            "MANIFEST_NOT_REGISTERED": {
+              "message": "Manifest ไม่ได้ลงทะเบียน กรุณารีสตาร์ท OyasumiVR",
+              "title": "ลงทะเบียน VR Application Manifest ใหม่ล้มเหลว"
+            },
+            "MANIFEST_REMOVE_FAILED": {
+              "message": "ไม่สามารถลบ Manifest ได้ ตรวจสอบบันทึก",
+              "title": "ลงทะเบียน VR Application Manifest ใหม่ล้มเหลว"
+            },
+            "UNKNOWN": {
+              "message": "ไม่สามารถลงทะเบียน Manifest ใหม่ได้เนื่องจากข้อผิดพลาดที่ไม่ทราบสาเหตุ กรุณารีสตาร์ท OyasumiVR และตรวจสอบบันทึก",
+              "title": "ลงทะเบียน VR Application Manifest ใหม่ล้มเหลว"
+            },
+            "success": {
+              "message": "ลงทะเบียน Manifest ของ OyasumiVR กับ SteamVR สำเร็จแล้ว",
+              "title": "ลงทะเบียน VR Application Manifest ใหม่สำเร็จ"
+            }
+          },
+          "title": "ลงทะเบียน SteamVR Application Manifest ใหม่"
+        }
+      }
+    },
+    "brightnessCct": {
+      "bigscreenBeyond": {
+        "forceFanSafety": {
+          "description": "บังคับความเร็วพัดลมเป็น 100% หากความสว่างเกิน 100%",
+          "title": "ฟังก์ชันป้องกันความร้อนสูงเกิน",
+          "warning": "ฟังก์ชันนี้เลียนแบบพารามิเตอร์พัดลมที่ปลอดภัยของไดรเวอร์ Bigscreen Beyond อย่างเป็นทางการ การปิดขีดจำกัดนี้อาจทำให้ Headset เสียหายได้ ใช้ด้วยความเสี่ยงของคุณเอง"
+        },
+        "maxBrightness": {
+          "description": "จำกัดค่าความสว่างสูงสุดที่ OyasumiVR ตั้งค่า",
+          "title": "ความสว่างสูงสุด"
+        },
+        "permitRiskRange": {
+          "description": "จำกัดไม่ให้เกิน 150%",
+          "title": "จำกัดระดับความสว่างที่ปลอดภัย",
+          "warning": "ฟังก์ชันนี้ไม่ได้รับการสนับสนุนโดยผู้ผลิต\n\nการปิดขีดจำกัดนี้อาจทำให้ Headset เสียหายได้ ใช้ด้วยความเสี่ยงของคุณเอง"
+        },
+        "title": "Bigscreen Beyond"
+      },
+      "cctControl": {
+        "enabled": {
+          "description": "ปิดใช้งานหากใช้แอปพลิเคชันอื่น (เช่น LuxVR หรือ OVR Advanced Settings) ควบคุมอุณหภูมิสีของจอแสดงผล",
+          "title": "เปิดใช้งานการควบคุมอุณหภูมิสี"
+        },
+        "title": "อุณหภูมิสี"
+      },
+      "description": "ตั้งค่าเกี่ยวกับความสว่างและอุณหภูมิสี",
+      "title": "ความสว่างและอุณหภูมิสี",
+      "valveIndex": {
+        "maxBrightness": {
+          "description": "จำกัดค่าความสว่างสูงสุดที่ OyasumiVR ตั้งค่า",
+          "title": "ความสว่างสูงสุด"
+        },
+        "title": "Valve Index"
+      }
+    },
+    "general": {
+      "adminPrivileges": {
+        "description": "OyasumiVR ต้องการสิทธิ์ผู้ดูแลระบบเพื่อควบคุมขีดจำกัดพลังงาน GPU หากเปิดใช้งาน OyasumiVR จะขอสิทธิ์ผู้ดูแลระบบเมื่อเริ่มต้น",
+        "label": "ขอสิทธิ์ผู้ดูแลระบบเมื่อเริ่มต้น",
+        "title": "สิทธิ์ผู้ดูแลระบบ"
+      },
+      "language": {
+        "description": "เลือกภาษาที่ต้องการ หากมีส่วนที่ยังไม่ได้แปลหรือต้องการเพิ่มภาษาใหม่ โปรดติดต่อเรา",
+        "title": "ภาษา"
+      },
+      "lighthouseConsole": {
+        "description": "จำเป็นต้องระบุโฟลเดอร์ที่มีไฟล์ <strong>lighthouse_console.exe</strong> ของ SteamVR\nหากไม่อยู่ในโฟลเดอร์เริ่มต้น ให้ระบุด้วยตนเอง",
+        "status": {
+          "CHECKING": "กำลังตรวจสอบความถูกต้องของ <strong>lighthouse_console.exe</strong>",
+          "INVALID_EXECUTABLE": "ไม่สามารถยืนยันได้ว่า <strong>lighthouse_console.exe</strong> ที่ตำแหน่งนี้ใช้งานได้",
+          "INVALID_FILENAME": "ตำแหน่งที่ระบุไม่ใช่ไฟล์พาธที่ถูกต้อง",
+          "NOT_FOUND": "ไม่พบ <strong>lighthouse_console.exe</strong>",
+          "PERMISSION_DENIED": "ไม่มีสิทธิ์เรียกใช้ <strong>lighthouse_console.exe</strong> ที่ตำแหน่งนี้ กรุณารัน OyasumiVR ในฐานะผู้ดูแลระบบ",
+          "SUCCESS": "พบ <strong>lighthouse_console.exe</strong> และใช้งานได้ปกติ!",
+          "UNKNOWN_ERROR": "เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุขณะค้นหา <strong>lighthouse_console.exe</strong>"
+        },
+        "title": "Lighthouse Console"
+      },
+      "lighthousePowerControl": {
+        "enable": {
+          "description": "สามารถควบคุมพลังงานของ Base Station ได้ ต้องเปิดใช้งาน Bluetooth ของ PC",
+          "title": "เปิดใช้งานการควบคุมพลังงาน"
+        },
+        "powerOffMode": {
+          "description": "โหมดสลีปต่างจากโหมดสแตนด์บายตรงที่มอเตอร์จะดับด้วย ทำให้ใช้เวลาคืนค่านานกว่า",
+          "sleep": {
+            "description": "ปิดเครื่อง\nเลเซอร์และมอเตอร์",
+            "title": "สลีป"
+          },
+          "standby": {
+            "description": "ปิดเครื่อง\nเลเซอร์",
+            "title": "สแตนด์บาย"
+          },
+          "title": "สถานะปิดเครื่องที่ต้องการ"
+        },
+        "title": "ควบคุมพลังงาน Base Station SteamVR"
+      },
+      "overlay": {
+        "binding": {
+          "description": "ปุ่มสำหรับแสดงเมนูโอเวอร์เลย์สามารถตั้งค่าได้ในเมนู Binding ของ SteamVR",
+          "title": "Controller Binding"
+        },
+        "onlyOpenMenuWhenVRChatRunning": {
+          "description": "ป้องกันไม่ให้เมนูเปิดขึ้นเมื่อ VRChat ไม่ได้ทำงาน",
+          "title": "เปิดเมนูเฉพาะเมื่อ VRChat ทำงานอยู่"
+        },
+        "overlayMenu": {
+          "description": "ปิดตัวเลือกนี้หากต้องการปิดใช้งานเมนูโอเวอร์เลย์ของ OyasumiVR โดยสิ้นเชิง",
+          "title": "เปิดใช้งานเมนูโอเวอร์เลย์"
+        },
+        "title": "โอเวอร์เลย์"
+      },
+      "sleepMode": {
+        "startupBehaviour": {
+          "description": "การตั้งค่าโหมดนอนหลับเมื่อเริ่ม OyasumiVR",
+          "option": {
+            "disabled": {
+              "description": "เริ่มโดยปิดใช้งาน",
+              "title": "ปิด"
+            },
+            "enabled": {
+              "description": "เริ่มโดยเปิดใช้งาน",
+              "title": "เปิด"
+            },
+            "persist": {
+              "description": "เริ่มด้วยสถานะเดิม",
+              "title": "บันทึกสถานะ"
+            }
+          },
+          "title": "สถานะเมื่อเริ่มต้น"
+        },
+        "title": "โหมดนอนหลับ"
+      },
+      "startStop": {
+        "title": "เริ่มต้นและสิ้นสุด"
+      },
+      "startWithSteamVR": {
+        "description": "เริ่ม OyasumiVR เมื่อ SteamVR เริ่มทำงาน",
+        "howTo": "รายละเอียด",
+        "label": "เริ่มพร้อมกับ SteamVR"
+      },
+      "stopWithSteamVR": {
+        "description": "ปิด OyasumiVR เมื่อ SteamVR หยุดทำงานเป็นระยะเวลาหนึ่ง",
+        "label": "ปิดพร้อมกับ SteamVR",
+        "options": {
+          "AFTERDELAY": "หลังจาก 2 นาที",
+          "DISABLED": "ปิด",
+          "IMMEDIATELY": "ทันที"
+        }
+      },
+      "systemTray": {
+        "close": {
+          "description": "ย่อลง System Tray แทนการปิดโปรแกรม",
+          "label": "ย่อลง System Tray"
+        },
+        "start": {
+          "description": "เริ่มโดยย่อลง System Tray",
+          "label": "เริ่มใน System Tray"
+        },
+        "title": "System Tray"
+      },
+      "telemetry": {
+        "description": "เมื่อเปิดใช้งาน OyasumiVR จะเก็บรวบรวมข้อมูลการใช้งานแบบไม่ระบุตัวตน เช่น ข้อมูลเวอร์ชันและรายงานข้อขัดข้อง ข้อมูลนี้ไม่ระบุตัวตนอย่างสมบูรณ์และไม่มีข้อมูลส่วนบุคคล ใช้เพื่อติดตามข้อผิดพลาดและสถิติการใช้งานทั่วไปเท่านั้น<br>สำหรับรายละเอียด โปรดดู <a target=\"_blank\" href=\"https://aptabase.com/legal/privacy\">นโยบายความเป็นส่วนตัว Aptabase</a>",
+        "label": "ส่งข้อมูลการใช้งาน (ไม่ระบุตัวตน)",
+        "title": "การส่งข้อมูล"
+      },
+      "title": "การตั้งค่าทั่วไป"
+    },
+    "hotkeys": {
+      "action": {
+        "HOTKEY_DISABLE_SLEEP_MODE": "ปิดโหมดนอนหลับ",
+        "HOTKEY_ENABLE_SLEEP_MODE": "เปิดโหมดนอนหลับ",
+        "HOTKEY_RUN_SHUTDOWN_SEQUENCE": "ดำเนินการปิดระบบ",
+        "HOTKEY_RUN_SLEEP_PREPARATION": "เตรียมตัวนอน",
+        "HOTKEY_TOGGLE_LIGHTHOUSE_DEVICES": "สลับ Base Station",
+        "HOTKEY_TOGGLE_SLEEP_MODE": "สลับโหมดนอนหลับ",
+        "HOTKEY_TURN_OFF_CONTROLLER_DEVICES": "ปิดคอนโทรลเลอร์",
+        "HOTKEY_TURN_OFF_LIGHTHOUSE_DEVICES": "ปิด Base Station",
+        "HOTKEY_TURN_OFF_TRACKER_DEVICES": "ปิด Tracker",
+        "HOTKEY_TURN_ON_LIGHTHOUSE_DEVICES": "เปิด Base Station"
+      },
+      "actionDescription": "ตั้งค่าคีย์ลัด",
+      "actions": "คำสั่งของคีย์ลัด",
+      "description": "สามารถกำหนดคีย์ลัดระบบสำหรับเฉพาะใน OyasumiVR",
+      "title": "ตั้งค่าคีย์ลัด"
+    },
+    "integrations": {
+      "configure": "ตั้งค่า",
+      "connect": "เชื่อมต่อ",
+      "copy": "คัดลอกลิงก์ไปยังคลิปบอร์ด",
+      "description": "บางฟีเจอร์ของ OyasumiVR สามารถใช้บริการภายนอกได้ เชื่อมต่อกับ OyasumiVR ได้ที่นี่!",
+      "disconnect": "ตัดการเชื่อมต่อ",
+      "discord": {
+        "activityMode": {
+          "description": "แสดง OyasumiVR เป็นกิจกรรมปัจจุบัน",
+          "options": {
+            "DISABLED": "ปิด",
+            "ENABLED": "เปิด",
+            "ONLY_ASLEEP": "เฉพาะเมื่อนอนหลับ"
+          },
+          "title": "Discord Rich Presence"
+        },
+        "activityModeVRCCondition": {
+          "title": "แสดงเฉพาะเมื่อ VRChat ทำงานอยู่"
+        },
+        "title": "Discord"
+      },
+      "homeAssistant": {
+        "description": "เชื่อมต่อกับ Home Assistant เพื่อทำงานร่วมกับอุปกรณ์ Smart Home สร้างสภาพแวดล้อมอัตโนมัติเพิ่มเติม หรือควบคุมอุปกรณ์อัจฉริยะต่างๆ",
+        "title": "Home Assistant (ผ่าน MQTT)"
+      },
+      "providerLink": "เว็บไซต์ทางการ",
+      "pulsoid": {
+        "description": "แชร์ข้อมูลอัตราการเต้นของหัวใจและเปิดใช้งานระบบอัตโนมัติเฉพาะ<br><i>ในการเชื่อมต่อ คุณต้องซื้อการเชื่อมต่อ OyasumiVR ของ Pulsoid หรือสมัครสมาชิก \"BRO\" ของ Pulsoid โปรดตรวจสอบล่วงหน้าว่าอุปกรณ์ของคุณรองรับหรือไม่",
+        "title": "Pulsoid"
+      },
+      "reveal": "แสดง",
+      "title": "การเชื่อมต่อ",
+      "vrchat": {
+        "description": "เชื่อมโยงบัญชีเพื่อใช้ระบบอัตโนมัติที่เกี่ยวข้องกับ VRChat",
+        "title": "VRChat"
+      },
+      "vrcx": {
+        "logs": {
+          "onSleepDisable": "ปิดโหมดนอนหลับ",
+          "onSleepEnable": "เปิดโหมดนอนหลับ",
+          "onSleepPreparation": "เตรียมตัวเข้านอน"
+        },
+        "sleepModeChanges": {
+          "description": "Log การเปลี่ยนแปลงเข้าโหมด sleep ลงในบันทึกของเกมใน VRCX",
+          "title": "โหมด sleep"
+        }
+      }
+    },
+    "notifications": {
+      "notifications": {
+        "category": {
+          "AUTO_ACCEPTED_INVITE_REQUEST": {
+            "description": "เมื่ออนุมัติ คำขอเข้าร่วม อัตโนมัติ",
+            "title": "เมื่ออนุมัติ คำขอเข้าร่วม"
+          },
+          "AUTO_UPDATED_VRC_STATUS": {
+            "description": "รับการแจ้งเตือนเมื่อ OyasumiVR อัปเดตสถานะ VRChat ของคุณโดยอัตโนมัติ",
+            "title": "สถานะ VRChat ถูกอัปเดต"
+          },
+          "SLEEP_MODE_DISABLED": {
+            "description": "เมื่อโหมดนอนหลับถูกปิด",
+            "title": "เมื่อตื่นนอน"
+          },
+          "SLEEP_MODE_ENABLED": {
+            "description": "เมื่อโหมดนอนหลับถูกเปิด",
+            "title": "เมื่อนอนหลับ"
+          }
+        },
+        "description": "ระบุการแจ้งเตือนที่ต้องการ",
+        "title": "รายการแจ้งเตือน"
+      },
+      "provider": {
+        "description": "เลือกช่องทางการแจ้งเตือนที่ต้องการใช้",
+        "title": "ปลายทางการแจ้งเตือน"
+      },
+      "title": "ตั้งค่าการแจ้งเตือน",
+      "volume": {
+        "description": "ตั้งค่าระดับเสียงสำหรับการแจ้งเตือนที่มีเสียง",
+        "test": "ทดสอบ",
+        "title": "ระดับเสียงการแจ้งเตือนทั่วไป"
+      }
+    },
+    "osc": {
+      "advanced": {
+        "oscServerEnabled": {
+          "description": "หากปิด เซิร์ฟเวอร์ OSC และ OSCQuery ภายในของ OyasumiVR จะถูกปิดใช้งาน ฟีเจอร์จำนวนมากจะใช้ไม่ได้โดยไม่มีการเตือน ปกติไม่ควรปิด ใช้สำหรับการดีบักเท่านั้น",
+          "title": "เซิร์ฟเวอร์ OSC และ OSCQuery"
+        },
+        "title": "ฟังก์ชันขั้นสูง"
+      },
+      "description": "ฟีเจอร์ต่างๆ ของ OyasumiVR มีการแลกเปลี่ยนข้อความผ่านระบบ OSC (Open Sound Control) กับแอปพลิเคชันต่างๆ เช่น VRChat\n\nการตั้งค่าเริ่มต้นนี้ควรใช้งานได้ทันทีสำหรับการรับส่งข้อความกับ VRChat แต่หากคุณต้องการเปลี่ยนแปลง ก็สามารถดูตัวเลือกได้ที่ด้านล่างนี้",
+      "targets": {
+        "custom": {
+          "description": "ตั้งค่าที่อยู่ IP และพอร์ตของอุปกรณ์เป้าหมายด้วยตนเอง",
+          "host": {
+            "description": "ที่อยู่ IP หรือชื่อโฮสต์ของเป้าหมายของคุณ",
+            "title": "ที่อยู่โฮสต์ OSC",
+            "validation": {
+              "invalid": "โปรดป้อนชื่อโฮสต์หรือที่อยู่ IP ที่ถูกต้อง",
+              "validating": "กำลังตรวจสอบชื่อโฮสต์..."
+            }
+          },
+          "port": {
+            "description": "หมายเลขพอร์ตของเป้าหมายของคุณ",
+            "title": "พอร์ต OSC",
+            "validation": {
+              "invalid": "โปรดป้อนหมายเลขพอร์ตที่ถูกต้อง (1-65535)",
+              "validating": "กำลังตรวจสอบหมายเลขพอร์ต..."
+            }
+          },
+          "title": "เป้าหมายที่กำหนดเอง"
+        },
+        "description": "คุณสามารถตั้งค่าจุดหมายปลายทางสำหรับการส่งข้อความ OSC ได้ที่นี่ โดยสามารถเปิดใช้งานหลายเป้าหมายพร้อมกันได้",
+        "title": "เป้าหมาย OSC",
+        "vrchat": {
+          "description": "VRChat จะถูกค้นพบโดยอัตโนมัติผ่าน OSCQuery",
+          "title": "VRChat"
+        },
+        "vrchatTargetWarning": "ดูเหมือนว่าจะมีเป้าหมายหลายรายการที่ถูกกำหนดไปยัง VRChat ซึ่งอาจทำให้เกิดการทำงานที่ผิดปกติ เนื่องจากข้อความเดียวกันอาจถูกส่งไปยัง VRChat มากกว่าหนึ่งครั้ง โปรดตรวจสอบการตั้งค่าเป้าหมายของคุณที่ด้านล่าง"
+      },
+      "title": "การตั้งค่า OSC"
+    },
+    "statusInfo": {
+      "copy": {
+        "action": "คัดลอก",
+        "description": "คัดลอกข้อมูลทั้งหมดด้านล่างไปยังคลิปบอร์ด",
+        "title": "คัดลอกไปยังคลิปบอร์ด"
+      },
+      "description": "แสดงข้อมูลทางเทคนิคของ OyasumiVR และภายใน ใช้สำหรับการดีบักและอาจเป็นประโยชน์เมื่อแก้ปัญหาหรือติดต่อสนับสนุน",
+      "title": "ข้อมูลสถานะ"
+    },
+    "updates": {
+      "changelog": "บันทึกการเปลี่ยนแปลง",
+      "checkForUpdates": "ตรวจสอบอัปเดต",
+      "install": "ติดตั้ง v{version}",
+      "noUpdate": "คุณกำลังใช้ OyasumiVR เวอร์ชันล่าสุด (v{version})!",
+      "notChecked": "ยังไม่ได้ตรวจสอบอัปเดต",
+      "title": "อัปเดต",
+      "updateAvailable": "มี OyasumiVR เวอร์ชันใหม่! ปัจจุบันคุณใช้ v{currentVersion}\nเวอร์ชันล่าสุดคือ v{latestVersion}",
+      "updatesDisabled": {
+        "DEV": "หากต้องการติดตั้ง OyasumiVR เวอร์ชันใหม่ กรุณาดาวน์โหลดตัวติดตั้งและเรียกใช้ด้วยตนเอง",
+        "STEAM": "เนื่องจากติดตั้งเวอร์ชัน Steam อัปเดตใหม่จะได้รับผ่าน Steam!"
+      }
+    }
+  },
+  "shared": {
+    "common": {
+      "none": "ไม่เปลี่ยนแปลง",
+      "vrcLoginRequired": "จำเป็นต้องเข้าสู่ระบบบัญชี VRChat"
+    },
+    "logo": {
+      "tagline": "ผู้ช่วยพักผ่อนในโลกเสมือน"
+    },
+    "modals": {
+      "back": "กลับ",
+      "cancel": "ยกเลิก",
+      "close": "ปิด",
+      "confirm": "ยืนยัน",
+      "login": "เข้าสู่ระบบ",
+      "ok": "ตกลง",
+      "open": "เปิด",
+      "refresh": "อัปเดต",
+      "save": "บันทึก"
+    },
+    "time": {
+      "minutes": "นาที",
+      "seconds": "วินาที"
+    }
+  },
+  "shutdown-automations": {
+    "confirm-modal": {
+      "message": "ต้องการดำเนินการปิดระบบทันทีหรือไม่?",
+      "title": "ยืนยัน"
+    },
+    "description": "ปิดเกม อุปกรณ์ต่อพ่วง หรือ PC เพื่อช่วยให้การนอนหลับนอก VR สบายขึ้น สามารถเรียกใช้ด้วยตนเอง หรือใช้การทำงานอัตโนมัติอย่างใดอย่างหนึ่งเพื่อเรียกใช้โดยอัตโนมัติก็ได้ เช่น เมื่อคุณเผลอหลับไปแล้ว",
+    "noOptionsSelected": "ไม่ได้เลือกคำสั่งใดๆ ระหว่างปิดระบบ การเรียกใช้ฟังก์ชันนี้จึงไม่มีผล หากต้องการใช้งาน กรุณาเลือกตัวเลือกอย่างน้อยหนึ่งรายการด้านล่าง",
+    "overlay": {
+      "cancel": "ยกเลิก",
+      "stage": {
+        "POWERING_DOWN": "กำลังปิด Windows...",
+        "QUITTING_STEAMVR": "กำลังออกจาก SteamVR...",
+        "TURNING_OFF_DEVICES": "กำลังปิดอุปกรณ์..."
+      },
+      "title": "ปิดระบบ"
+    },
+    "sequence": {
+      "powerDownWindows": {
+        "description": "ปิดคอมพิวเตอร์",
+        "options": {
+          "HIBERNATE": "ไฮเบอร์เนต",
+          "LOGOUT": "ออกจากระบบ",
+          "REBOOT": "รีสตาร์ท",
+          "SHUTDOWN": "ปิดเครื่อง",
+          "SLEEP": "สลีป"
+        },
+        "rebootMessage": "OyasumiVR กำลังรีสตาร์ท PC",
+        "shutdownMessage": "OyasumiVR กำลังปิด PC",
+        "title": "ปิด Windows"
+      },
+      "quitSteamVR": {
+        "conflict": {
+          "description": "ตั้งค่าให้ OyasumiVR ปิดตัวทันทีเมื่อ SteamVR หยุดทำงาน ดังนั้นการทำงานอัตโนมัติหลังจากนั้นอาจไม่ทำงาน เพื่อแก้ไขปัญหานี้ ให้ปิดใช้งานงานนี้หรือตั้งค่าในเมนูทั่วไปไม่ให้ OyasumiVR ปิดตัวทันทีเมื่อ SteamVR หยุดทำงาน",
+          "goToSettings": "ไปที่ตั้งค่าทั่วไป",
+          "title": "คำเตือน: การทำงานนี้จะทำให้ OyasumiVR ปิดตัวลงทันที"
+        },
+        "description": "ปิดเกมและโอเวอร์เลย์ที่ทำงานอยู่ด้วย",
+        "title": "ออกจาก SteamVR"
+      },
+      "run": "ดำเนินการปิดระบบ",
+      "title": "คำสั่งเมื่อปิดระบบ",
+      "turnOffBaseStations": {
+        "description": "ปิด Base Station ที่ทำงานอยู่",
+        "title": "ปิด Base Station"
+      },
+      "turnOffControllers": {
+        "description": "ปิดคอนโทรลเลอร์",
+        "title": "ปิดคอนโทรลเลอร์"
+      },
+      "turnOffDevices": {
+        "title": "ปิดอุปกรณ์"
+      },
+      "turnOffTrackers": {
+        "description": "ปิด Tracker",
+        "title": "ปิด Tracker"
+      }
+    },
+    "tabs": {
+      "settings": "ตั้งค่า",
+      "triggers": "อัตโนมัติ"
+    },
+    "title": "กระบวนการปิดระบบ",
+    "triggers": {
+      "enabled": {
+        "description": "หากเปิดใช้งาน จะดำเนินการปิดระบบโดยอัตโนมัติตามเงื่อนไขที่กำหนด",
+        "title": "ปิดระบบอัตโนมัติ"
+      },
+      "triggers": "เงื่อนไข",
+      "whenAlone": {
+        "description": "เริ่มเมื่ออยู่คนเดียวใน World VRChat เป็นเวลาหนึ่ง จะทำงานเฉพาะเมื่อมีคนอื่นออกไป ไม่ทำงานหากอยู่คนเดียวตั้งแต่ต้น",
+        "title": "เริ่มเมื่ออยู่คนเดียว"
+      },
+      "whenAloneDuration": {
+        "description": "ระยะเวลาที่ต้องอยู่คนเดียว",
+        "title": "ตัวจับเวลาการตรวจจับ"
+      },
+      "whenAloneOnlyWhenSleepModeEnabled": {
+        "description": "ดำเนินการปิดระบบด้วยวิธีนี้เฉพาะเมื่อเปิดโหมดนอนหลับ",
+        "title": "เฉพาะเมื่อนอนหลับ"
+      },
+      "whenAloneTimeWindow": {
+        "description": "เปิดใช้งานเฉพาะในช่วงเวลาที่กำหนด",
+        "title": "ช่วงเวลาที่เปิดใช้งาน"
+      },
+      "whenAsleep": {
+        "description": "เริ่มเมื่อโหมดนอนหลับดำเนินต่อเนื่องเป็นระยะเวลาหนึ่ง",
+        "title": "เริ่มเมื่อนอนหลับ"
+      },
+      "whenAsleepDuration": {
+        "description": "ระยะเวลาของโหมดนอนหลับที่ต้องผ่านไป",
+        "title": "ตัวจับเวลาการตรวจจับ"
+      },
+      "whenAsleepTimeWindow": {
+        "description": "เปิดใช้งานเฉพาะในช่วงเวลาที่กำหนด",
+        "title": "ช่วงเวลาที่เปิดใช้งาน"
+      }
+    }
+  },
+  "sleep-detection": {
+    "disableAutomations": {
+      "afterTime": {
+        "description": {
+          "hours": "{hours} ชั่วโมง",
+          "hoursAndMinutes": "{hours} ชั่วโมง {minutes} นาที",
+          "minutes": "{minutes} นาที"
+        },
+        "title": "เวลาผ่านไป"
+      },
+      "atTime": "กำหนดเวลา",
+      "description": "ปิดโหมดนอนหลับตามการตั้งค่าที่กำหนด",
+      "onDevicePowerOn": "เมื่ออุปกรณ์เปิด",
+      "onPlayerJoinOrLeave": "เมื่อผู้เล่นอื่น เข้าร่วม หรือออก",
+      "onSteamVRStop": "เมื่อออกจาก SteamVR",
+      "onUprightPose": "เมื่อลุกขึ้นนั่งหลังจากนอนหลับ"
+    },
+    "enableAutomations": {
+      "atBatteryPercentage": "เมื่อแบตเตอรี่อุปกรณ์ต่ำกว่า <strong>{value}%</strong>",
+      "atTime": "กำหนดเวลา",
+      "description": "เปิดโหมดนอนหลับตามการตั้งค่าที่กำหนด",
+      "onControllersPoweredOff": {
+        "batteryLevelAutomationConflict": {
+          "action": "พลังงานอุปกรณ์:\nคอนโทรลเลอร์และ Tracker",
+          "description": "มีการตั้งค่าให้ปิดอุปกรณ์ตามระดับแบตเตอรี่ ซึ่งอาจทำให้เปิดโหมดนอนหลับในเวลาที่ไม่ตั้งใจ เพื่อป้องกันปัญหานี้ สามารถปิดการตั้งค่าได้จาก \"พลังงานอุปกรณ์\" -> \"คอนโทรลเลอร์ & Tracker\"",
+          "title": "คำเตือน: อาจถูกกระตุ้นโดยฟังก์ชันอัตโนมัติอื่น!"
+        },
+        "title": "เมื่อคอนโทรลเลอร์ทั้งหมดถูกปิด"
+      },
+      "onHeartRateCalmPeriod": {
+        "description": "ต้องมี <a class=\"integrationsPageLink\">การเชื่อมต่อ Pulsoid</a>",
+        "title": "เมื่อตรวจพบการนอนหลับจากอัตราการเต้นของหัวใจ"
+      }
+    },
+    "experimentalAutomation": "ฟังก์ชันทดลอง การทำงานอาจไม่เสถียร",
+    "modals": {
+      "disableAfterTime": {
+        "description": "ปิดโหมดนอนหลับหลังจากเวลาผ่านไป",
+        "time": "ระยะเวลา",
+        "title": "ปิดโหมดนอนหลับ"
+      },
+      "disableAtTime": {
+        "description": "ปิดโหมดนอนหลับตามเวลาที่กำหนด",
+        "time": "เวลา",
+        "title": "ปิดโหมดนอนหลับ"
+      },
+      "disableForPlayerJoinLeave": {
+        "description": "ปิดโหมดนอนหลับเมื่อผู้เล่นอื่น เข้าร่วมหรือออก ใช้เมื่อต้องการต้อนรับเพื่อนหรือปิดโหมดนอนหลับเมื่ออยู่คนเดียว",
+        "onJoin": {
+          "title": "เมื่อผู้เล่นอื่น เข้าร่วม"
+        },
+        "onLeave": {
+          "title": "เมื่อผู้เล่นอื่นออก"
+        },
+        "onlyWhenLeftAlone": {
+          "description": "ปิดใช้งานเมื่อคุณเหลือตัวคนเดียวหลังจากผู้เล่นอื่นออกไป",
+          "title": "เมื่อเหลือตัวคนเดียว"
+        },
+        "onlyWhenPreviouslyAlone": {
+          "description": "ปิดใช้งานเมื่อผู้เล่นอื่น เข้ามา โดยที่คุณอยู่คนเดียวมาก่อน",
+          "title": "เมื่อเดิมทีอยู่คนเดียว"
+        },
+        "title": "ปิดโหมดนอนหลับ",
+        "triggerOptions": {
+          "BLACKLIST": "ผู้เล่นที่ไม่อยู่ในรายการ",
+          "DISABLED": "ไม่ใช้",
+          "EVERYONE": "ทุกคน",
+          "FRIEND": "เพื่อน",
+          "WHITELIST": "ผู้เล่นในรายการ"
+        }
+      },
+      "disableForUprightPose": {
+        "description": "ปิดโหมดนอนหลับหากลุกขึ้นนั่งเป็นระยะเวลาหนึ่งหลังจากนอนหลับ",
+        "duration": {
+          "description": "เวลานับจากลุกขึ้นนั่งจนถึงปิดโหมดนอนหลับ",
+          "title": "ตัวจับเวลาการตรวจจับ"
+        },
+        "title": "ปิดโหมดนอนหลับ"
+      },
+      "disableOnDevicePowerOn": {
+        "Controller": "คอนโทรลเลอร์",
+        "GenericTracker": "Tracker",
+        "title": "ปิดโหมดนอนหลับ",
+        "whenTurningOn": "เป้าหมาย"
+      },
+      "enableAtBatteryPercentage": {
+        "Controller": "คอนโทรลเลอร์",
+        "GenericTracker": "Tracker",
+        "errors": {
+          "thresholdNotInteger": "กรุณาระบุเป็นตัวเลข",
+          "thresholdOutOfRange": "กรุณาระบุค่าระหว่าง 0 ถึง 100"
+        },
+        "fallsBelow": "ระดับแบตเตอรี่",
+        "title": "เปิดโหมดนอนหลับ",
+        "whenA": "เป้าหมาย"
+      },
+      "enableAtTime": {
+        "description": "เปิดโหมดนอนหลับตามเวลาที่กำหนด",
+        "time": "เวลา",
+        "title": "เปิดโหมดนอนหลับ"
+      },
+      "enableForSleepDetector": {
+        "calibration": {
+          "action": "หน้าจอตั้งค่า",
+          "description": "จำเป็นต้องทำการปรับเทียบอย่างน้อยหนึ่งครั้ง",
+          "title": "การปรับเทียบ"
+        },
+        "considerControllerPresence": {
+          "description": "รีเซ็ตตัวจับเวลาหากมีการป้อนข้อมูลคอนโทรลเลอร์",
+          "title": "พิจารณาการกดปุ่ม"
+        },
+        "considerSleepingPose": {
+          "description": "พิจารณาทิศทางของ Headset",
+          "title": "พิจารณาท่านอน"
+        },
+        "description": "ตรวจจับการนอนหลับและเข้าสู่โหมดนอนหลับ\nหาก Headset มีการเคลื่อนไหว ตัวจับเวลาจะรีเซ็ตและเริ่มวัดใหม่",
+        "detectionWindow": {
+          "description": "หากไม่มีการเคลื่อนไหวตามเวลาที่กำหนด จะถือว่านอนหลับ",
+          "title": "ตัวจับเวลาการตรวจจับ",
+          "unit": "นาที"
+        },
+        "sensitivity": {
+          "description": "ความไวสูงจะทำให้ตรวจจับการนอนหลับได้ง่ายขึ้น (ทำให้การตรวจจับการเคลื่อนไหว Headset ช้าลง)",
+          "presets": {
+            "HIGH": "4",
+            "HIGHEST": "5 (สูงสุด)",
+            "LOW": "2",
+            "LOWEST": "1 (ต่ำสุด)",
+            "MEDIUM": "3 (มาตรฐาน)"
+          },
+          "title": "ความไวการตรวจจับ"
+        },
+        "sleepCheck": {
+          "description": "ยืนยันด้วยการแจ้งเตือนว่าคุณหลับจริงหรือไม่ ก่อนเข้าสู่โหมดนอนหลับ",
+          "title": "ยืนยันก่อนเปิดใช้งาน"
+        },
+        "timeWindow": {
+          "description": "เปิดใช้งานเฉพาะในช่วงเวลาที่กำหนด",
+          "title": "ช่วงเวลาที่เปิดใช้งาน"
+        },
+        "title": "เปิดโหมดนอนหลับ"
+      },
+      "enableOnHeartRateCalmPeriod": {
+        "bpm": {
+          "description": "อัตราการเต้นของหัวใจต้องต่ำกว่าเกณฑ์นี้เพื่อเปิดโหมดนอนหลับ",
+          "title": "BPM",
+          "unit": "BPM"
+        },
+        "description": "เปิดโหมดนอนหลับหากอัตราการเต้นของหัวใจต่ำกว่าเกณฑ์ที่กำหนดเป็นระยะเวลาหนึ่ง กำหนดเกณฑ์อัตราการเต้นของหัวใจและระยะเวลาที่ต้องการ\n\nต้องเปิดใช้งาน <a class=\"integrationsPageLink\">การเชื่อมต่อ Pulsoid</a>",
+        "duration": {
+          "description": "ระยะเวลาที่ใช้ตัดสินใจเปิดใช้งาน",
+          "title": "ระยะเวลา",
+          "unit": "นาที"
+        },
+        "notEnoughData": "ข้อมูลไม่เพียงพอที่จะแสดงประวัติอัตราการเต้นของหัวใจ",
+        "title": "เปิดโหมดนอนหลับ",
+        "viewHistory": {
+          "actionHide": "ซ่อนประวัติ",
+          "actionShow": "แสดงประวัติ",
+          "description": "แสดงประวัติอัตราการเต้นของหัวใจใน 12 ชั่วโมงที่ผ่านมา",
+          "title": "ประวัติอัตราการเต้นของหัวใจ"
+        }
+      },
+      "sleepDetectorCalibration": {
+        "calibrating": {
+          "countdown": "เหลืออีก {counter} วินาที...",
+          "instruction": "กำลังปรับเทียบ",
+          "note": "กรุณาอยู่นิ่งๆ"
+        },
+        "countdown": {
+          "instruction": "จะเริ่มในอีก {counter} วินาที",
+          "note": "ห้ามขยับระหว่างการปรับเทียบ มิฉะนั้นจะทำงานไม่ถูกต้อง"
+        },
+        "currentCalibration": "ค่าการปรับเทียบปัจจุบัน",
+        "done": {
+          "instruction": "ปรับเทียบเสร็จสิ้น",
+          "note": "สามารถใช้ฟังก์ชันนี้ได้แล้ว"
+        },
+        "failed": {
+          "instruction": "การปรับเทียบล้มเหลว",
+          "note": "อาจไม่ได้ข้อมูล Headset ตรวจสอบว่า Headset ถูกติดตามอยู่และลองใหม่อีกครั้ง"
+        },
+        "info": {
+          "intro": "ตรวจจับการนอนหลับจากการเคลื่อนไหวของ Headset และเปลี่ยนเป็นโหมดนอนหลับ ทั้งนี้ต้องปรับเทียบให้เข้ากับชุดอุปกรณ์ VR ของคุณก่อน จำเป็นต้องทำการปรับเทียบอย่างน้อยหนึ่งครั้งก่อนเริ่มใช้งานฟีเจอร์นี้",
+          "step": {
+            "one": "สวม Headset และอยู่ในท่านอน",
+            "three": "อยู่นิ่งๆ ประมาณ 10 วินาที",
+            "two": "เริ่มการปรับเทียบจากโอเวอร์เลย์"
+          },
+          "stepPrefix": "ขั้นตอนการปรับเทียบมีดังนี้",
+          "stepSuffix": "เมื่อเสร็จสิ้นจะสามารถใช้ฟังก์ชันตรวจจับการนอนหลับได้"
+        },
+        "noSteamVR": "จำเป็นต้องเริ่ม SteamVR ขณะสวม Headset",
+        "prepare": {
+          "instruction": "สวม Headset และอยู่ในท่านอน",
+          "note": "เมื่อพร้อมแล้ว กดปุ่มเริ่มจากโอเวอร์เลย์"
+        },
+        "restartCalibration": "เริ่มปรับเทียบใหม่",
+        "startCalibration": "เริ่มปรับเทียบ",
+        "title": "การปรับเทียบการตรวจจับการนอนหลับ"
+      }
+    },
+    "sleepDetection": {
+      "advanced": {
+        "description": "ที่นี่คุณสามารถปรับแต่งการทำงานเชิงลึกของการตรวจจับการนอนหลับได้ โดยทั่วไปหากไม่มีความต้องการพิเศษ แนะนำให้ใช้ค่าเริ่มต้น",
+        "title": "ตั้งค่าขั้นสูง"
+      },
+      "automation": {
+        "calibrationPending": {
+          "calibrate": "ปรับเทียบตอนนี้",
+          "title": "<strong>รอการปรับเทียบ:</strong> แนะนำให้ทำการปรับเทียบก่อนใช้การตรวจจับการนอนหลับเพื่อเพิ่มความแม่นยำ"
+        },
+        "description": "เปิดโหมดนอนหลับโดยอัตโนมัติหากตัดสินว่ากำลังหลับ",
+        "title": "ตรวจจับการนอนหลับ"
+      },
+      "configuration": {
+        "title": "ตั้งค่า"
+      },
+      "description": "เลือกวิธีเปิดโหมดนอนหลับ โดยอิงจากสถานะ Headset หรืออินพุตคอนโทรลเลอร์ หรือการตั้งค่าอื่นๆ"
+    },
+    "tab": {
+      "detection": "ตรวจจับการนอนหลับ",
+      "disabling": "ตั้งค่าปิดการทำงาน",
+      "enabling": "ตั้งค่าเปิดการทำงาน"
+    },
+    "title": "ตรวจจับการหลับ"
+  },
+  "sleepAnimations": {
+    "title": "อนิเมชั่น"
+  },
+  "status-automations": {
+    "behaviourWarning": "การเปลี่ยนสถานะโดย OyasumiVR อาจไม่แสดงผลทันที เนื่องจากแคชของ VRChat จะอัปเดตหลังจากผ่านไปสักครู่",
+    "behaviourWarningFAQ": {
+      "message": "ดูคำถามที่พบบ่อยเกี่ยวกับระบบการเปลี่ยนสถานะด้านล่าง\n\nQ: คำขอเข้าร่วม จะถูกอนุมัติอัตโนมัติไหมถ้า VRChat ไม่แสดงสีน้ำเงิน (Join Me)?\nA: หาก OyasumiVR เปลี่ยนสถานะเป็นสีน้ำเงิน (Join Me) จะอนุมัติ คำขอเข้าร่วม อัตโนมัติ\n\nQ: สถานะไม่อัปเดต คนอื่นเลย Join ไม่ได้\nA: การอัปเดตสถานะอาจใช้เวลาสักครู่กว่าจะแสดงให้คนอื่นเห็น หาก เข้าร่วม ไม่ได้ ให้เปิดโปรไฟล์ตัวเองในเมนูหลักเพื่อบังคับอัปเดตสถานะ",
+      "title": "FAQ สถานะอัตโนมัติ"
+    },
+    "general": {
+      "description": "อัปเดตสถานะ VRChat ในสถานการณ์เฉพาะ เช่น เมื่อนอนหลับหรือตื่นนอน",
+      "onSleepDisable": {
+        "description": {
+          "status": "ตั้งค่าสถานะ",
+          "statusMessage": "ตั้งค่าข้อความสถานะ"
+        },
+        "script": "ปิดโหมดนอนหลับ",
+        "title": "เมื่อตื่นนอน"
+      },
+      "onSleepEnable": {
+        "description": {
+          "status": "ตั้งค่าสถานะ",
+          "statusMessage": "ตั้งค่าข้อความสถานะ"
+        },
+        "script": "เปิดโหมดนอนหลับ",
+        "title": "เมื่อนอนหลับ"
+      },
+      "onSleepPreparation": {
+        "description": {
+          "status": "ตั้งค่าสถานะ",
+          "statusMessage": "ตั้งค่าข้อความสถานะ"
+        },
+        "script": "เตรียมตัวนอน",
+        "title": "เมื่อเตรียมตัวนอน"
+      }
+    },
+    "moreInfo": "รายละเอียด",
+    "playerLimit": {
+      "atLimitOrAbove": {
+        "description": {
+          "status": "ตั้งค่าสถานะ",
+          "statusMessage": "ตั้งค่าข้อความสถานะ"
+        },
+        "title": "เมื่อถึงขีดจำกัดหรือสูงกว่า"
+      },
+      "belowLimit": {
+        "description": {
+          "status": "ตั้งค่าสถานะ",
+          "statusMessage": "ตั้งค่าข้อความสถานะ"
+        },
+        "title": "เมื่อต่ำกว่าขีดจำกัด"
+      },
+      "description": "ตั้งค่าสถานะอัตโนมัติตามจำนวนคนใน World เพื่อจำกัดคน เข้าร่วม",
+      "disableToEdit": "กรุณาปิดใช้งานก่อนแก้ไข",
+      "enable": {
+        "description": "เปลี่ยนสถานะตามจำนวนคนใน World",
+        "title": "จำกัดจำนวนคนอัตโนมัติ"
+      },
+      "onlyIfSleepModeEnabled": "เฉพาะเมื่อเปิดโหมดนอนหลับ",
+      "playerLimit": "จำกัดจำนวนคน",
+      "playerLimitLabel": "{count} คน (รวมตัวเอง)"
+    },
+    "tabs": {
+      "general": "ทั่วไป",
+      "playerLimit": "จำกัดจำนวนคน"
+    },
+    "title": "สถานะอัตโนมัติ"
+  },
+  "systemMicMuteAutomations": {
+    "audioDevice": {
+      "description": "โปรดตรวจสอบว่าเป็นไมโครโฟนที่ใช้ใน VRChat",
+      "options": {
+        "DEFAULT": "อุปกรณ์เริ่มต้น:\n{deviceName}"
+      },
+      "title": "อุปกรณ์เสียงไมโครโฟน"
+    },
+    "config": {
+      "title": "การกำหนดค่า"
+    },
+    "controllerBinding": {
+      "automations": "Controller Binding อัตโนมัติ",
+      "binding": {
+        "description": "ตั้งค่าปุ่มคอนโทรลเลอร์ที่ใช้ควบคุมสถานะการปิดเสียงไมค์",
+        "title": "ผูกปุ่ม"
+      },
+      "conflictWarning": "หากใช้ฟังก์ชันนี้เพื่อสลับปุ่มปิดเสียงไมค์ใน VRChat แนะนำให้ยกเลิกการผูกปุ่มปิดเสียงใน VRChat หรือตั้งโหมดไมค์เป็น \"เปิดตลอด\" เพื่อป้องกันการขัดแย้งกันเอง",
+      "currentMode": {
+        "PUSH_TO_TALK": "กดเพื่อพูด",
+        "TOGGLE": "Toggle",
+        "description": "สะท้อนโหมดปัจจุบันของปุ่มคอนโทรลเลอร์",
+        "title": "ระบบปุ่ม"
+      },
+      "description": "ผูกปุ่มเพื่อควบคุมสถานะการปิดเสียงไมค์",
+      "enabled": {
+        "description": "เปิดใช้งาน Controller Binding หรือไม่",
+        "title": "Controller Binding"
+      },
+      "mode": {
+        "description": "วิธีกดปุ่มที่จะเปลี่ยนสถานะไมค์โดยค่าเริ่มต้น",
+        "options": {
+          "NONE": "ไม่เปลี่ยนแปลง",
+          "PUSH_TO_TALK": "กดเพื่อพูด",
+          "TOGGLE": "Toggle"
+        },
+        "title": "ระบบปุ่มเริ่มต้น"
+      },
+      "onSleepModeDisable": {
+        "description": "เปลี่ยนระบบปุ่มคอนโทรลเลอร์เมื่อปิดโหมดนอนหลับ",
+        "title": "เมื่อตื่นนอน"
+      },
+      "onSleepModeEnable": {
+        "description": "เปลี่ยนระบบปุ่มคอนโทรลเลอร์เมื่อเปิดโหมดนอนหลับ",
+        "title": "เมื่อนอนหลับ"
+      },
+      "onSleepPreparation": {
+        "description": "เปลี่ยนระบบปุ่มคอนโทรลเลอร์เมื่อเตรียมตัวนอน",
+        "title": "เมื่อเตรียมตัวนอน"
+      },
+      "title": "Controller Binding",
+      "volume": {
+        "description": "ระดับเสียงเอฟเฟกต์เมื่อปิดหรือเลิกปิดเสียงไมค์",
+        "title": "ระดับเสียงเอฟเฟกต์ปิดเสียง"
+      }
+    },
+    "description": "ปิดหรือเลิกปิดเสียงไมค์ที่ระดับอุปกรณ์ ใช้เมื่อไม่ต้องการให้คนอื่นได้ยินเสียงกรน",
+    "muteOptions": {
+      "MUTE": "ปิดเสียง",
+      "NONE": "ไม่เปลี่ยนแปลง",
+      "UNMUTE": "เปิดเสียง"
+    },
+    "overlayIndicator": {
+      "description": "แสดงอินดิเคเตอร์ใน VR เมื่อไมค์ถูกปิดเสียง",
+      "enabled": {
+        "description": "แสดงอินดิเคเตอร์ปิดเสียงใน VR หรือไม่",
+        "title": "อินดิเคเตอร์ปิดเสียงบนโอเวอร์เลย์"
+      },
+      "fade": {
+        "description": "เฟดอินดิเคเตอร์ออกหลังจากไม่กี่วินาที กดปุ่มคอนโทรลเลอร์เพื่อแสดงอีกครั้ง แนะนำสำหรับ Headset จอ OLED เพื่อลดความเสี่ยงจอเบิร์น",
+        "title": "เฟดออก"
+      },
+      "hardwareVoiceActivityThreshold": {
+        "description": "ตั้งค่าเกณฑ์ระดับเสียงเพื่อให้ไฟอินดิเคเตอร์ไมค์สว่างขึ้น",
+        "title": "เกณฑ์การเปิดใช้งานด้วยเสียง"
+      },
+      "opacity": {
+        "description": "ความทึบแสงสูงสุดของไอคอนอินดิเคเตอร์",
+        "title": "ความทึบแสง"
+      },
+      "title": "อินดิเคเตอร์บนโอเวอร์เลย์",
+      "voiceActivityMode": {
+        "description": "ตัดสินโหมดการเปิดใช้งานด้วยเสียง (ไฟอินดิเคเตอร์สว่าง)",
+        "modes": {
+          "HARDWARE": "ระดับเสียงไมค์",
+          "VRCHAT": "VRChat"
+        },
+        "title": "โหมดการเปิดใช้งานด้วยเสียง"
+      }
+    },
+    "stateAutomations": {
+      "onSleepModeDisable": {
+        "description": "เปลี่ยนสถานะไมค์เมื่อเปิดโหมดนอนหลับ",
+        "title": "เมื่อตื่นนอน"
+      },
+      "onSleepModeEnable": {
+        "description": "เปลี่ยนสถานะไมค์เมื่อปิดโหมดนอนหลับ",
+        "title": "เมื่อนอนหลับ"
+      },
+      "onSleepPreparation": {
+        "description": "เปลี่ยนสถานะไมค์เมื่อเตรียมตัวนอน",
+        "title": "เมื่อเตรียมตัวนอน"
+      },
+      "title": "ปิดเสียงอัตโนมัติ"
+    },
+    "title": "ปิดไมค์อัตโนมัติ",
+    "vrchat": {
+      "title": "ตัวเลือก VRChat",
+      "worldJoinBehaviour": {
+        "description": "การทำงานของไมค์เมื่อเปลี่ยน World ใน VRChat",
+        "options": {
+          "KEEP": "คงสถานะเดิม",
+          "MUTE": "ปิดเป็นค่าเริ่มต้น",
+          "UNMUTE": "เปิดเป็นค่าเริ่มต้น"
+        },
+        "title": "การทำงานเมื่อเปลี่ยน World"
+      }
+    }
+  },
+  "systemTray": {
+    "prepareForSleep": "เตรียมตัวนอน",
+    "quit": "ออกจาก OyasumiVR",
+    "sleepMode": "โหมดนอนหลับ"
+  },
+  "updater": {
+    "modals": {
+      "error": {
+        "message": "ติดตั้งอัปเดตล้มเหลว กรุณาลองใหม่อีกครั้งภายหลัง",
+        "title": "อัปเดตล้มเหลว"
+      }
+    }
+  },
+  "vrchatAvatarAutomations": {
+    "description": "เปลี่ยน Avatar VRChat โดยอัตโนมัติ",
+    "onSleepDisable": {
+      "description": "เปลี่ยน Avatar",
+      "script": "ปิดโหมดนอนหลับ",
+      "title": "เมื่อตื่นนอน"
+    },
+    "onSleepEnable": {
+      "description": "เปลี่ยน Avatar",
+      "script": "เปิดโหมดนอนหลับ",
+      "title": "เมื่อนอนหลับ"
+    },
+    "onSleepPreparation": {
+      "description": "เปลี่ยน Avatar",
+      "script": "เตรียมตัวนอน",
+      "title": "เมื่อเตรียมตัวนอน"
+    },
+    "title": "เปลี่ยน Avatar"
+  },
+  "vrchatGroupAutomations": {
+    "description": "เปลี่ยนกลุ่มที่แสดงแบนเนอร์ VRChat โดยอัตโนมัติ",
+    "onSleepDisable": {
+      "description": "เปลี่ยนกลุ่มที่แสดง",
+      "title": "เมื่อตื่นนอน"
+    },
+    "onSleepEnable": {
+      "description": "เปลี่ยนกลุ่มที่แสดง",
+      "title": "เมื่อนอนหลับ"
+    },
+    "onSleepPreparation": {
+      "description": "เปลี่ยนกลุ่มที่แสดง",
+      "title": "เมื่อเตรียมตัวนอน"
+    },
+    "options": {
+      "clearGroup": "เลิกแสดงกลุ่ม",
+      "dontChange": "ไม่เปลี่ยนแปลง"
+    },
+    "title": "กลุ่มอัตโนมัติ"
+  },
+  "vrchatMicMuteAutomations": {
+    "automations": {
+      "title": "อัตโนมัติ"
+    },
+    "config": {
+      "title": "ตั้งค่า"
+    },
+    "control": {
+      "description": "ทดสอบได้ว่าฟังก์ชันทำงานถูกต้องหรือไม่",
+      "mute": "ปิดเสียง",
+      "title": "ควบคุมการปิดเสียงไมค์",
+      "unmute": "เปิดเสียง"
+    },
+    "description": "ปิดหรือเลิกปิดเสียงไมค์ VRChat เมื่อนอนหลับหรือตื่นนอน ใช้เมื่อไม่ต้องการให้คนอื่นได้ยินเสียงกรน\nต้องเปิดใช้งาน OSC ใน VRChat และตั้งค่าระบบไมค์เป็น \"Toggle\"",
+    "muteOptions": {
+      "MUTE": "ปิดเสียง",
+      "NONE": "ไม่เปลี่ยนแปลง",
+      "UNMUTE": "เปิดเสียง"
+    },
+    "onSleepModeDisable": {
+      "description": "เปลี่ยนสถานะไมค์เมื่อปิดโหมดนอนหลับ",
+      "title": "เมื่อตื่นนอน"
+    },
+    "onSleepModeEnable": {
+      "description": "เปลี่ยนสถานะไมค์เมื่อเปิดโหมดนอนหลับ",
+      "title": "เมื่อนอนหลับ"
+    },
+    "onSleepPreparation": {
+      "description": "เปลี่ยนสถานะไมค์เมื่อเตรียมตัวนอน",
+      "title": "เมื่อเตรียมตัวนอน"
+    },
+    "status": {
+      "description": "สะท้อนสถานะไมค์ในเกมปัจจุบัน",
+      "muted": "ปิดเสียง",
+      "title": "สถานะไมค์ VRChat ปัจจุบัน",
+      "unknown": "ไม่ทราบ",
+      "unmuted": "เปิดเสียง"
+    },
+    "title": "ปิดไมค์ VRChat อัตโนมัติ"
+  }
+}
