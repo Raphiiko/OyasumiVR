@@ -553,6 +553,7 @@ OyasumiVR 可以透過 MQTT，將許多自身功能以及 SteamVR 的功能整�
 - Deutsch (German): Community contributions by [Nicer Dicer](https://github.com/XNicerDicerX) and [Aron](https://github.com/imaron85).
 - Nederlands (Dutch): by [Raphiiko](https://linktr.ee/raphii).
 - English: by [Raphiiko](https://linktr.ee/raphii).
+- ไทย (Thai): Community contribution by [ShikiYuri (Sk._Yri)](https://github.com/ShikiYuriSan).
 
 ### 協助翻譯
 
@@ -622,8 +623,6 @@ OyasumiVR 的開發者及所有專案貢獻者，均不對 OyasumiVR 所造成�
 
 ## Aptabase
 
-<img align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/dfdab6c8-c952-4e0d-be12-017d14262a49" width="180">
-
 OyasumiVR 的遙測功能由 [Aptabase](https://aptabase.com) 提供。Aptabase 是一套開源、重視隱私且簡潔易用的行動與桌面應用程式分析服務。 之所以選擇 Aptabase，是因為它能透過提供當機回報與匿名使用統計來協助 OyasumiVR 的開發，同時也盡可能保障你的隱私。
 
 所有遙測資料皆為匿名收集，不會傳送任何可識別個人身分的資訊。 其唯一用途是提供上述的當機回報，以及應用程式啟動次數、語言偏好等基本的匿名使用統計。 這些資料僅用於找出並修正錯誤，以及改善 OyasumiVR 的整體使用體驗。
@@ -639,4 +638,3 @@ OyasumiVR 的遙測功能由 [Aptabase](https://aptabase.com) 提供。Aptabase 
 ## 授權條款
 
 OyasumiVR 採用 [MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md) 授權條款。
-

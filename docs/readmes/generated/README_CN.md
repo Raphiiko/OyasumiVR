@@ -542,6 +542,7 @@ OyasumiVR目前支持以下语言：OyasumiVR 目前支持以下语言：
 - Deutsch (German): Community contributions by [Nicer Dicer](https://github.com/XNicerDicerX) and [Aron](https://github.com/imaron85).
 - Nederlands (Dutch): by [Raphiiko](https://linktr.ee/raphii).
 - English: by [Raphiiko](https://linktr.ee/raphii).
+- ไทย (Thai): Community contribution by [ShikiYuri (Sk._Yri)](https://github.com/ShikiYuriSan).
 
 ### 帮助翻译协助翻译
 
@@ -618,8 +619,6 @@ OyasumiVR 的开发者及所有贡献者对使用 OyasumiVR 导致的任何问�
 
 ## Aptabase 遥测
 
-<img align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/dfdab6c8-c952-4e0d-be12-017d14262a49" width="180">
-
 OyasumiVR 的遥测由 [Aptabase](https://aptabase.com) 提供。它是一种开源、隐私优先且简洁的移动与桌面应用分析工具。
 我们选择 Aptabase，是因为它可以提供崩溃报告和匿名使用数据，从而帮助改进 OyasumiVR，同时最大程度尊重你的隐私。
 
@@ -641,4 +640,3 @@ OyasumiVR 的遥测由 [Aptabase](https://aptabase.com) 提供。它是一种开
 ## 许可证许可协议
 
 OyasumiVR在[MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md)许可证下发布。你可以在许可证许可范围内自由使用、修改和分发它。OyasumiVR 遵循 [MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md) 协议开放源代码。
-
