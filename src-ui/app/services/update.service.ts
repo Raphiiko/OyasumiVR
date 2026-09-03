@@ -5,7 +5,7 @@ import { ConfirmModalComponent } from '../components/confirm-modal/confirm-modal
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { UpdateModalComponent } from '../components/update-modal/update-modal.component';
 import { FLAVOUR } from '../../build';
-import { info } from '@tauri-apps/plugin-log';
+import { error, info } from '@tauri-apps/plugin-log';
 import { check, Update } from '@tauri-apps/plugin-updater';
 
 @Injectable({
@@ -21,8 +21,6 @@ export class UpdateService {
 
   async init() {
     if (FLAVOUR === 'STANDALONE') {
-      // Check for updates on start
-      await this.checkForUpdate(true);
       // Check for updates every 7 days in case Oyasumi is left running for a long time.
       interval(1000 * 3600 * 24 * 7).subscribe(() => this.checkForUpdate());
       // Check for updates every 10 minutes until at least one update check has been done successfully.
@@ -32,6 +30,8 @@ export class UpdateService {
           filter((info) => !info.checked)
         )
         .subscribe(() => this.checkForUpdate());
+      // Check for updates on start
+      await this.checkForUpdate(true);
     }
   }
 
@@ -45,7 +45,14 @@ export class UpdateService {
     }
     // Check for updates
     info(`[Update] Checking for updates...`);
-    const update = (await check()) ?? undefined;
+    let update: Update | undefined;
+    try {
+      update = (await check()) ?? undefined;
+    } catch (e) {
+      // Leaving `checked` false keeps the 10 minute retry schedule active
+      error(`[Update] Could not check for updates: ${e}`);
+      return;
+    }
     if (update) {
       info(
         `[Update] Update available! New version: ${update.version}, Current version: ${update.currentVersion}`
