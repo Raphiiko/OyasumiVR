@@ -68,9 +68,12 @@ pub async fn process_ids(process_name: &str) -> Vec<u32> {
 pub fn processes_holding_file(path: &Path) -> Vec<u32> {
     let mut session_key = [0u16; CCH_RM_SESSION_KEY as usize + 1];
     let mut session = 0u32;
-    if unsafe { RmStartSession(&mut session, None, PWSTR(session_key.as_mut_ptr())) }
-        != ERROR_SUCCESS
-    {
+    let start = unsafe { RmStartSession(&mut session, None, PWSTR(session_key.as_mut_ptr())) };
+    if start != ERROR_SUCCESS {
+        error!(
+            "[Core] Failed to start a Restart Manager session: {}",
+            start.0
+        );
         return vec![];
     }
     let holders = collect_file_holders(session, path);
