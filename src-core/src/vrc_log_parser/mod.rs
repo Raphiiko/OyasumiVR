@@ -72,7 +72,11 @@ fn pick_log_path(dir: &Path, attached: Option<&str>, now: SystemTime) -> Option<
                 .map(|metadata| metadata.len() > 0)
                 .unwrap_or(false)
         })
-        .max_by_key(|entry| entry.path().metadata().ok().map(|m| m.creation_time()))
+        // Find the log file currently being written to. Preferring last-write-time over
+        // creation-time ensures we follow the running VRChat instance even after a previously
+        // launched client has been closed — VRChat does not delete its log file on exit, so
+        // the newest by creation-time would otherwise be a stale log of a closed instance.
+        .max_by_key(|entry| entry.path().metadata().ok().map(|m| m.last_write_time()))
         .and_then(|entry| entry.path().to_str().map(String::from))
 }
 
@@ -380,6 +384,42 @@ mod tests {
                 empty_created + Duration::from_secs(1),
             ),
             None
+        );
+    }
+
+    #[test]
+    fn prefers_actively_written_log_over_newer_but_stale_log() {
+        // Regression test for issue #275: when more than one VRChat instance has been run on
+        // the same machine, VRChat leaves the closed instance's log file on disk. Selecting
+        // by creation-time caused OyasumiVR to latch onto the newest-by-creation log, which
+        // could be the closed instance's log instead of the running one. We must select by
+        // last-write-time instead, so the actively-written log of the running instance wins.
+        let dir = tempdir().unwrap();
+        let (active, active_created) = create_log(dir.path(), "output_log_active.txt", b"hi");
+
+        thread::sleep(Duration::from_millis(20));
+        let (_newer, newer_created) = create_log(dir.path(), "output_log_newer.txt", b"hi");
+
+        // Touch the older file so its last-write-time is now strictly newer than the newer
+        // file's creation- and last-write-time, mimicking the running instance appending to
+        // its log after a previous instance's log has been left on disk.
+        thread::sleep(Duration::from_millis(20));
+        let active_path = dir.path().join("output_log_active.txt");
+        fs::write(&active_path, b"hi\nmore").unwrap();
+        let active_modified = active_path.metadata().unwrap().modified().unwrap();
+
+        // Sanity check: the older file's creation-time is earlier than the newer file's,
+        // and the older file's last-write-time is later than the newer file's last-write-time.
+        assert!(active_created < newer_created);
+        assert!(active_modified > newer_created);
+
+        assert_eq!(
+            pick_log_path(
+                dir.path(),
+                None,
+                active_modified + Duration::from_secs(60),
+            ),
+            Some(active)
         );
     }
 }
