@@ -29,6 +29,7 @@ static MUTE_LOG_DIR_NO_EXIST_WARNINGS: AtomicBool = AtomicBool::new(false);
 
 const HOLDER_CHECK_INTERVAL: Duration = Duration::from_secs(30);
 const RECENT_WRITE: Duration = Duration::from_secs(60);
+const LOG_AGE_LIMIT: Duration = Duration::from_secs(24 * 60 * 60);
 
 fn get_latest_log_path(
     attached: Option<&str>,
@@ -45,6 +46,17 @@ fn get_latest_log_path(
     }
     MUTE_LOG_DIR_NO_EXIST_WARNINGS.store(false, Ordering::Relaxed);
     pick_log_path(&dir, attached, SystemTime::now(), held_by_vrchat)
+}
+
+/// A log qualifies on its creation time, or on a write recent enough to mean a session is running.
+fn is_current_enough(
+    created: Option<SystemTime>,
+    modified: Option<SystemTime>,
+    now: SystemTime,
+) -> bool {
+    let elapsed = |time: Option<SystemTime>| time.and_then(|time| now.duration_since(time).ok());
+    elapsed(modified).is_some_and(|duration| duration <= RECENT_WRITE)
+        || elapsed(created).is_some_and(|duration| duration <= LOG_AGE_LIMIT)
 }
 
 fn pick_log_path(
@@ -65,19 +77,9 @@ fn pick_log_path(
             if attached.is_some_and(|attached| path == Path::new(attached)) {
                 return true;
             }
-            let Ok(metadata) = path.metadata() else {
-                return false;
-            };
-            // a session running longer than a day still writes to its log
-            let written_just_now = metadata.modified().is_ok_and(|modified_time| {
-                now.duration_since(modified_time)
-                    .is_ok_and(|duration| duration <= RECENT_WRITE)
-            });
-            written_just_now
-                || metadata.created().is_ok_and(|created_time| {
-                    now.duration_since(created_time)
-                        .is_ok_and(|duration| duration <= Duration::from_secs(24 * 60 * 60))
-                })
+            path.metadata().is_ok_and(|metadata| {
+                is_current_enough(metadata.created().ok(), metadata.modified().ok(), now)
+            })
         })
         .filter(|entry| {
             entry
@@ -367,7 +369,7 @@ pub fn start_log_locator_task() -> CancellationToken {
 
 #[cfg(test)]
 mod tests {
-    use super::pick_log_path;
+    use super::{is_current_enough, pick_log_path};
     use std::{
         fs,
         path::Path,
@@ -499,19 +501,24 @@ mod tests {
 
     #[test]
     fn keeps_a_log_that_is_still_being_written_past_the_age_limit() {
-        let dir = tempdir().unwrap();
-        let (running, created) = create_log(dir.path(), "output_log_running.txt", b"log");
-        let running_path = Path::new(&running);
-        let now = created + Duration::from_secs(25 * 60 * 60);
+        let now = SystemTime::now();
+        let day_ago = now - Duration::from_secs(25 * 60 * 60);
 
-        assert_eq!(
-            pick_log_path(dir.path(), None, now, &mut |_: &Path| false),
-            None
-        );
-        assert_eq!(
-            pick_log_path(dir.path(), None, SystemTime::now(), &mut |path| path
-                == running_path),
-            Some(running)
-        );
+        assert!(is_current_enough(
+            Some(day_ago),
+            Some(now - Duration::from_secs(10)),
+            now
+        ));
+        assert!(!is_current_enough(
+            Some(day_ago),
+            Some(now - Duration::from_secs(120)),
+            now
+        ));
+        assert!(is_current_enough(
+            Some(now - Duration::from_secs(60 * 60)),
+            Some(day_ago),
+            now
+        ));
+        assert!(!is_current_enough(None, None, now));
     }
 }
