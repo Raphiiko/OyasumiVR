@@ -13,22 +13,30 @@ use std::{env, path::PathBuf};
 use tauri_plugin_shell::{process::CommandEvent, Error, ShellExt};
 use tokio::fs::File;
 use tokio::io::AsyncWriteExt;
+use tokio::sync::oneshot;
 use uuid::Uuid;
 
 #[tauri::command]
-pub async fn play_sound(name: String, volume: f32) {
+pub async fn play_sound(name: String, volume: f32) -> Result<(), String> {
     if volume == 0.0 {
-        return;
+        return Ok(());
     }
-    let guard = super::PLAY_SOUND_TX.lock().await;
-    let tx = match guard.as_ref() {
+    let tx = match super::PLAY_SOUND_TX.lock().await.clone() {
         Some(tx) => tx,
         None => {
             error!("[Core] Could not play sound, as sound player was not initialized");
-            return;
+            return Err(String::from("sound playback is not initialized"));
         }
     };
-    let _ = tx.send((name, volume)).await;
+    let (respond_tx, respond_rx) = oneshot::channel();
+    let worker_gone = || {
+        error!("[Core] Could not play sound, as the sound playback worker stopped");
+        String::from("the sound playback worker is not running")
+    };
+    tx.send((name, volume, respond_tx))
+        .await
+        .map_err(|_| worker_gone())?;
+    respond_rx.await.map_err(|_| worker_gone())?
 }
 
 #[tauri::command]
