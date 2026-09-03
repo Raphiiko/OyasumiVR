@@ -40,6 +40,14 @@ fn get_latest_log_path(attached: Option<&str>) -> Option<String> {
     pick_log_path(&dir, attached, SystemTime::now())
 }
 
+/// Pick the VRChat log file OyasumiVR should follow right now.
+///
+/// Eligible files are non-empty `output_log_*.txt` entries in `dir` whose
+/// last-write time is within the last 24 hours, OR the file currently
+/// passed as `attached` (which bypasses the age check so a live watcher
+/// does not drop its file once it crosses the 24h mark mid-session).
+/// Among the eligible set, the file with the newest last-write time wins.
+/// `now` is injected so tests can drive the age filter deterministically.
 fn pick_log_path(dir: &Path, attached: Option<&str>, now: SystemTime) -> Option<String> {
     read_dir(dir)
         .ok()?
@@ -56,8 +64,8 @@ fn pick_log_path(dir: &Path, attached: Option<&str>, now: SystemTime) -> Option<
             path.metadata()
                 .ok()
                 .and_then(|metadata| {
-                    metadata.created().ok().and_then(|created_time| {
-                        now.duration_since(created_time)
+                    metadata.modified().ok().and_then(|modified_time| {
+                        now.duration_since(modified_time)
                             .ok()
                             .map(|duration| duration <= Duration::from_secs(24 * 60 * 60))
                     })
@@ -326,6 +334,9 @@ mod tests {
         (path.to_str().unwrap().to_owned(), created)
     }
 
+    /// `pick_log_path` should respect the 24-hour age window, allow the
+    /// currently-attached file to bypass it, ignore zero-byte files, and
+    /// prefer a newer file over the attached one when both exist.
     #[test]
     fn picks_logs_by_age_attachment_and_size() {
         let dir = tempdir().unwrap();
@@ -387,6 +398,11 @@ mod tests {
         );
     }
 
+    /// Regression for issue #275: when more than one VRChat instance has been run on
+    /// the same machine, VRChat leaves the closed instance's log file on disk. Selecting
+    /// by creation-time caused OyasumiVR to latch onto the newest-by-creation log, which
+    /// could be the closed instance's log instead of the running one. We must select by
+    /// last-write-time instead, so the actively-written log of the running instance wins.
     #[test]
     fn prefers_actively_written_log_over_newer_but_stale_log() {
         // Regression test for issue #275: when more than one VRChat instance has been run on
@@ -421,5 +437,39 @@ mod tests {
             ),
             Some(active)
         );
+    }
+
+    /// Regression for the 24-hour age filter: a VRChat session that has been
+    /// running for more than 24 hours creates a log whose `created()` timestamp
+    /// is well outside the 24-hour window, but it is still being appended to and
+    /// must remain a candidate. The age filter is keyed on `modified()` so this
+    /// file is selected even when its creation time is older than the cutoff.
+    #[test]
+    fn keeps_log_eligible_while_actively_written_past_24_hours() {
+        let dir = tempdir().unwrap();
+        let (path, created) = create_log(dir.path(), "output_log_long_running.txt", b"hi");
+        let created_path = dir.path().join("output_log_long_running.txt");
+
+        // Backdate the file's last-write time to 23h after creation. The file's
+        // creation time is "now" (just created in this test), but we want to
+        // simulate "this log file is from an instance that has been running for
+        // 23h" so the 24h age filter is exercised on modified-time, not
+        // creation-time. `File::set_modified` is stable cross-platform since 1.75.
+        let modified_at = created + Duration::from_secs(23 * 3600);
+        let file = fs::OpenOptions::new().write(true).open(&created_path).unwrap();
+        file.set_modified(modified_at).unwrap();
+        drop(file);
+
+        // Sanity: modified-time is backdated by 23h, so it is within the 24h
+        // window from `now`, but creation-time is `now`, which is >24h old.
+        let observed_modified = created_path.metadata().unwrap().modified().unwrap();
+        assert_eq!(observed_modified, modified_at);
+
+        // `now` is set 24h + 30s after the file was actually created — past
+        // the 24h window for creation-time but well within the 24h window for
+        // the backdated modified-time.
+        let now = created + Duration::from_secs(24 * 3600 + 30);
+
+        assert_eq!(pick_log_path(dir.path(), None, now), Some(path));
     }
 }
