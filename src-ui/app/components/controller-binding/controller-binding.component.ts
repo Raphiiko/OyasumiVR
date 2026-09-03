@@ -1,11 +1,12 @@
 import { Component, DestroyRef, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { OVRInputEventAction, OVRInputEventActionSet } from '../../models/ovr-input-event';
-import { OpenVRInputService } from 'src-ui/app/services/openvr-input.service';
+import { OpenVRInputService } from '../../services/openvr-input.service';
 import { filter, firstValueFrom, interval, pairwise, startWith, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { OVRActionBinding } from '../../models/ovr-action-binding';
 import { OpenVRService, OpenVRStatus } from '../../services/openvr.service';
 import { fadeDown } from '../../utils/animations';
+import { warn } from '@tauri-apps/plugin-log';
 
 @Component({
   selector: 'app-controller-binding',
@@ -111,7 +112,10 @@ export class ControllerBindingComponent implements OnInit {
         }
         error = 'UNKNOWN';
       }
-    })();
+    })().catch((e) => {
+      error = 'UNKNOWN';
+      warn(`[ControllerBinding] Failed to refresh bindings, retrying next tick: ${e}`);
+    });
     this.error = error;
     this.bindings.splice(0, this.bindings.length);
     this.bindings.push(...bindings);
