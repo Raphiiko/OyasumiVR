@@ -88,33 +88,32 @@ fn collect_file_holders(session: u32, path: &Path) -> Vec<u32> {
     {
         return vec![];
     }
-    // size the buffer, then fetch the holders
-    let (mut needed, mut count, mut reboot_reasons) = (0u32, 0u32, 0u32);
-    if unsafe { RmGetList(session, &mut needed, &mut count, None, &mut reboot_reasons) }
-        != ERROR_MORE_DATA
-        || needed == 0
-    {
-        return vec![];
+    // size the buffer, then fetch the holders; the holder set can grow in between
+    for _ in 0..3 {
+        let (mut needed, mut count, mut reboot_reasons) = (0u32, 0u32, 0u32);
+        if unsafe { RmGetList(session, &mut needed, &mut count, None, &mut reboot_reasons) }
+            != ERROR_MORE_DATA
+            || needed == 0
+        {
+            return vec![];
+        }
+        let mut infos = vec![RM_PROCESS_INFO::default(); needed as usize];
+        count = needed;
+        if unsafe {
+            RmGetList(
+                session,
+                &mut needed,
+                &mut count,
+                Some(infos.as_mut_ptr()),
+                &mut reboot_reasons,
+            )
+        } == ERROR_SUCCESS
+        {
+            infos.truncate(count as usize);
+            return infos.iter().map(|info| info.Process.dwProcessId).collect();
+        }
     }
-    let mut infos = vec![RM_PROCESS_INFO::default(); needed as usize];
-    count = needed;
-    if unsafe {
-        RmGetList(
-            session,
-            &mut needed,
-            &mut count,
-            Some(infos.as_mut_ptr()),
-            &mut reboot_reasons,
-        )
-    } != ERROR_SUCCESS
-    {
-        return vec![];
-    }
-    infos
-        .iter()
-        .take(count as usize)
-        .map(|info| info.Process.dwProcessId)
-        .collect()
+    vec![]
 }
 
 /// Without `kill`, this only requests a close: the target may ignore it, so the caller must escalate.

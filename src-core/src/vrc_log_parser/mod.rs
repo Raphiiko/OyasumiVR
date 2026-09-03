@@ -6,6 +6,7 @@ use log::{debug, info, trace, warn};
 use serde::{Deserialize, Serialize};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::{
+    collections::HashMap,
     fs::{read_dir, File},
     io::{BufRead, BufReader},
     os::windows::prelude::MetadataExt,
@@ -288,7 +289,7 @@ pub fn start_log_locator_task() -> CancellationToken {
             reader_task_cancellation_token: None,
         };
         let ctx = &mut loop_context;
-        let mut holder_cache: Option<(PathBuf, Vec<u32>, Instant)> = None;
+        let mut holder_cache: HashMap<PathBuf, (Vec<u32>, Instant)> = HashMap::new();
         while !cancellation_token_internal.is_cancelled() {
             tokio::time::sleep(Duration::from_millis(1000)).await;
             let vrchat_pids = crate::utils::process_ids("VRChat.exe").await;
@@ -296,20 +297,17 @@ pub fn start_log_locator_task() -> CancellationToken {
             // the holder check blocks for a few hundred milliseconds
             let (log_path_option, cache) = tokio::task::spawn_blocking(move || {
                 let mut cache = holder_cache;
+                cache.retain(|_, (_, checked_at)| checked_at.elapsed() < HOLDER_CHECK_INTERVAL);
                 let mut held_by_vrchat = |path: &Path| {
                     if vrchat_pids.is_empty() {
                         return false;
                     }
                     // cache the holders themselves, so a holder exiting takes effect at once
-                    let holders = match &cache {
-                        Some((cached, holders, checked_at))
-                            if cached == path && checked_at.elapsed() < HOLDER_CHECK_INTERVAL =>
-                        {
-                            holders.clone()
-                        }
-                        _ => {
+                    let holders = match cache.get(path) {
+                        Some((holders, _)) => holders.clone(),
+                        None => {
                             let holders = crate::utils::processes_holding_file(path);
-                            cache = Some((path.to_path_buf(), holders.clone(), Instant::now()));
+                            cache.insert(path.to_path_buf(), (holders.clone(), Instant::now()));
                             holders
                         }
                     };
@@ -319,7 +317,7 @@ pub fn start_log_locator_task() -> CancellationToken {
                 (picked, cache)
             })
             .await
-            .unwrap_or((None, None));
+            .unwrap_or_default();
             holder_cache = cache;
             if log_path_option.is_none() {
                 // If we are currently reading a log file, stop the reader task
