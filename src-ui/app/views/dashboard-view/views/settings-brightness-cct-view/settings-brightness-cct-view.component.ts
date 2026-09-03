@@ -1,11 +1,9 @@
 import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../../../models/settings';
 import { AppSettingsService } from '../../../../services/app-settings.service';
-import { HardwareBrightnessControlService } from '../../../../services/brightness-control/hardware-brightness-control.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { VALVE_INDEX_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS } from '../../../../services/brightness-control/hardware-brightness-drivers/valve-index-hardware-brightness-control-driver';
 import { BIGSCREEN_BEYOND_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS } from '../../../../services/brightness-control/hardware-brightness-drivers/bigscreen-beyond-hardware-brightness-control-driver';
-import { SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS } from '../../../../services/brightness-control/brightness-control-models';
 import { clamp } from '../../../../utils/number-utils';
 
 @Component({
@@ -20,8 +18,7 @@ export class SettingsBrightnessCctViewComponent implements OnInit {
 
   constructor(
     private appSettingsService: AppSettingsService,
-    private destroyRef: DestroyRef,
-    private hardwareBrightness: HardwareBrightnessControlService
+    private destroyRef: DestroyRef
   ) {}
 
   ngOnInit() {
@@ -56,12 +53,6 @@ export class SettingsBrightnessCctViewComponent implements OnInit {
     this.appSettingsService.updateSettings({
       bigscreenBeyondBrightnessFanSafety: !this.appSettings.bigscreenBeyondBrightnessFanSafety,
     });
-    // Set brightness to same value to reset fan safety if needed
-    this.hardwareBrightness.setBrightness(
-      this.hardwareBrightness.brightness,
-      SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS,
-      true
-    );
   }
 
   toggleBigscreenBeyondUnsafeBrightness() {
