@@ -65,9 +65,14 @@ fn pick_log_path(dir: &Path, attached: Option<&str>, now: SystemTime) -> Option<
                 .ok()
                 .and_then(|metadata| {
                     metadata.modified().ok().and_then(|modified_time| {
+                        // A negative duration means `modified_time > now`: the file was
+                        // written in the tiny window between `now` being sampled and its
+                        // metadata being read. Treat that as "fresh, include" rather than
+                        // dropping the actively-written log due to the scan race.
                         now.duration_since(modified_time)
                             .ok()
                             .map(|duration| duration <= Duration::from_secs(24 * 60 * 60))
+                            .or(Some(true))
                     })
                 })
                 .unwrap_or(false)
@@ -469,6 +474,27 @@ mod tests {
         // the 24h window for creation-time but well within the 24h window for
         // the backdated modified-time.
         let now = created + Duration::from_secs(24 * 3600 + 30);
+
+        assert_eq!(pick_log_path(dir.path(), None, now), Some(path));
+    }
+
+    /// Regression for the scan race: `pick_log_path` samples `now` once at the top
+    /// of the call and reads file metadata per candidate afterwards. A file written
+    /// in the gap between those two reads has `mtime > now`, which makes
+    /// `now.duration_since(mtime)` return Err. The age filter must treat that as
+    /// "freshly written, include" rather than dropping the actively-written log.
+    #[test]
+    fn includes_log_modified_in_tiny_window_after_now_sampling() {
+        let dir = tempdir().unwrap();
+        let (path, _) = create_log(dir.path(), "output_log_live.txt", b"hi");
+        let live_path = dir.path().join("output_log_live.txt");
+
+        // Pretend `now` is the moment the caller started scanning, and the file's
+        // last write happened 1 ms *after* `now` — the file is fresh.
+        let now = SystemTime::now();
+        let file = fs::OpenOptions::new().write(true).open(&live_path).unwrap();
+        file.set_modified(now + Duration::from_millis(1)).unwrap();
+        drop(file);
 
         assert_eq!(pick_log_path(dir.path(), None, now), Some(path));
     }
