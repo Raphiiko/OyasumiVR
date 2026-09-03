@@ -14,6 +14,7 @@ import {
   throttleTime,
 } from 'rxjs';
 import { OscService } from 'src-ui/app/services/osc.service';
+import { flushOnDestroy } from 'src-ui/app/utils/rxjs-utils';
 import { isEqual, pick } from 'lodash';
 
 @Component({
@@ -58,6 +59,7 @@ export class SettingsOscViewComponent implements OnInit {
       });
 
     // Setup debounced validation for custom target host
+    flushOnDestroy(this.customTargetHostChangeSubject, this.destroyRef);
     this.customTargetHostChangeSubject
       .pipe(
         tap(() => (this.customTargetHostValidationState = 'pending')),
@@ -77,6 +79,7 @@ export class SettingsOscViewComponent implements OnInit {
       });
 
     // Setup debounced validation for custom target port
+    flushOnDestroy(this.customTargetPortChangeSubject, this.destroyRef);
     this.customTargetPortChangeSubject
       .pipe(
         tap(() => (this.customTargetPortValidationState = 'pending')),
