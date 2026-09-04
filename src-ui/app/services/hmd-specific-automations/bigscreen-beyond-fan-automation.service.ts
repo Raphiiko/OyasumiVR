@@ -159,7 +159,7 @@ export class BigscreenBeyondFanAutomationService {
         this.setFanSpeed(100, false);
         this._fanSafetyActive.next(true);
       }
-      // Restore fan speed when the setting is disabled, or brightness is back to safe range
+      // restore the saved fan speed
       if (this._fanSafetyActive.value && (!fanSafety || brightness <= 100)) {
         this._fanSafetyActive.next(false);
         this.setFanSpeed(
