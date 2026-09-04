@@ -2,6 +2,10 @@ import { BehaviorSubject } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AppSettingsService } from './app-settings.service';
 import type { LighthouseDevice } from '../models/lighthouse-device';
+import {
+  DevicePowerButtonComponent,
+  type DevicePowerState,
+} from '../components/device-power-button/device-power-button.component';
 
 const invoke = vi.fn();
 
@@ -19,6 +23,20 @@ function device(): LighthouseDevice {
     v1Timeout: null,
     transitioningToPowerState: undefined,
   };
+}
+
+// mirrors the mapping in DeviceListItemComponent
+function powerButtonFor(d: LighthouseDevice): DevicePowerButtonComponent {
+  const state: DevicePowerState = d.transitioningToPowerState
+    ? d.transitioningToPowerState === 'on'
+      ? 'turning-on'
+      : 'turning-off'
+    : d.powerState === 'on'
+      ? 'on'
+      : 'off';
+  const button = new DevicePowerButtonComponent();
+  button.powerState = state;
+  return button;
 }
 
 function makeService(d: LighthouseDevice) {
@@ -49,12 +67,15 @@ describe('LighthouseService.setPowerState', () => {
       () => 'resolved',
       (e: Error) => e.message
     );
-    await vi.advanceTimersByTimeAsync(5000);
+    await vi.advanceTimersByTimeAsync(500);
+    expect(powerButtonFor(d).canClick).toBe(false);
+    await vi.advanceTimersByTimeAsync(4500);
 
     expect(await settled).toBe('WRITE_FAILED');
     expect(invoke).toHaveBeenCalledTimes(4);
     expect(d.transitioningToPowerState).toBeUndefined();
     expect(emissions).toEqual([undefined, 'sleep', undefined]);
+    expect(powerButtonFor(d).canClick).toBe(true);
   });
 
   it('clears the transition marker once the device confirms the new state', async () => {
