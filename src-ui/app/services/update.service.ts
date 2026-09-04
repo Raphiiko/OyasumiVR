@@ -30,7 +30,6 @@ export class UpdateService {
           filter((info) => !info.checked)
         )
         .subscribe(() => this.checkForUpdate());
-      // Check for updates on start
       await this.checkForUpdate(true);
     }
   }
@@ -93,8 +92,8 @@ export class UpdateService {
             return;
         }
       });
-    } catch (error) {
-      info(`[Update] Update error occurred: ${error}`);
+    } catch (e) {
+      info(`[Update] Update error occurred: ${e}`);
       this.modalService
         .addModal(ConfirmModalComponent, {
           title: 'updater.modals.error.title',
