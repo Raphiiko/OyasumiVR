@@ -92,6 +92,7 @@ export class LighthouseConsoleService {
       !stdoutLines[0].trim().startsWith('Version:  lighthouse_console.exe')
     ) {
       this._consoleStatus.next('INVALID_EXECUTABLE');
+      return;
     }
     this._consoleStatus.next('SUCCESS');
   }
