@@ -330,7 +330,6 @@ export class BrightnessCctAutomationService {
         activeAutomation = sunsetEnabled && options.currentTime >= sunsetTime ? 'AT_SUNSET' : null;
       }
 
-      // the sleep-mode guard makes a solar event ineligible, as it does on the scheduled trigger
       if (activeAutomation && options.sleepMode && config[activeAutomation].onlyWhenSleepDisabled)
         activeAutomation = null;
 
