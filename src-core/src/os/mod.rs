@@ -109,7 +109,6 @@ fn load_bundled_sounds() -> HashMap<String, SamplesBuffer> {
     sounds
 }
 
-/// An output sink the playback worker can send decoded audio to.
 trait SoundSink {
     fn play(&self, buffer: SamplesBuffer, volume: f32);
 }
