@@ -103,6 +103,8 @@ describe('BigscreenBeyondFanAutomationService fan safety', () => {
 
     context.brightness.next(120);
     await settleSafety();
+    context.brightness.next(130);
+    await settleSafety();
 
     expect(fanCommands).toEqual([60]);
   });
