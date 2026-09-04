@@ -6,12 +6,13 @@ use log::{debug, info, trace, warn};
 use serde::{Deserialize, Serialize};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::{
+    collections::HashMap,
     fs::{read_dir, File},
     io::{BufRead, BufReader},
     os::windows::prelude::MetadataExt,
-    path::Path,
+    path::{Path, PathBuf},
     sync::Arc,
-    time::{Duration, SystemTime, UNIX_EPOCH},
+    time::{Duration, Instant, SystemTime, UNIX_EPOCH},
 };
 use tokio_util::sync::CancellationToken;
 
@@ -26,7 +27,14 @@ struct VRCLogEvent {
 
 static MUTE_LOG_DIR_NO_EXIST_WARNINGS: AtomicBool = AtomicBool::new(false);
 
-fn get_latest_log_path(attached: Option<&str>) -> Option<String> {
+const HOLDER_CHECK_INTERVAL: Duration = Duration::from_secs(30);
+const RECENT_WRITE: Duration = Duration::from_secs(60);
+const LOG_AGE_LIMIT: Duration = Duration::from_secs(24 * 60 * 60);
+
+fn get_latest_log_path(
+    attached: Option<&str>,
+    held_by_vrchat: &mut dyn FnMut(&Path) -> bool,
+) -> Option<String> {
     let home_dir = dirs::home_dir()?;
     let dir = home_dir.join("AppData\\LocalLow\\VRChat\\VRChat");
     if read_dir(&dir).is_err() {
@@ -37,11 +45,27 @@ fn get_latest_log_path(attached: Option<&str>) -> Option<String> {
         return None;
     }
     MUTE_LOG_DIR_NO_EXIST_WARNINGS.store(false, Ordering::Relaxed);
-    pick_log_path(&dir, attached, SystemTime::now())
+    pick_log_path(&dir, attached, SystemTime::now(), held_by_vrchat)
 }
 
-fn pick_log_path(dir: &Path, attached: Option<&str>, now: SystemTime) -> Option<String> {
-    read_dir(dir)
+/// A log qualifies on its creation time, or on a write recent enough to mean a session is running.
+fn is_current_enough(
+    created: Option<SystemTime>,
+    modified: Option<SystemTime>,
+    now: SystemTime,
+) -> bool {
+    let elapsed = |time: Option<SystemTime>| time.and_then(|time| now.duration_since(time).ok());
+    elapsed(modified).is_some_and(|duration| duration <= RECENT_WRITE)
+        || elapsed(created).is_some_and(|duration| duration <= LOG_AGE_LIMIT)
+}
+
+fn pick_log_path(
+    dir: &Path,
+    attached: Option<&str>,
+    now: SystemTime,
+    held_by_vrchat: &mut dyn FnMut(&Path) -> bool,
+) -> Option<String> {
+    let mut candidates: Vec<PathBuf> = read_dir(dir)
         .ok()?
         .filter_map(|entry| entry.ok())
         .filter(|entry| {
@@ -53,16 +77,9 @@ fn pick_log_path(dir: &Path, attached: Option<&str>, now: SystemTime) -> Option<
             if attached.is_some_and(|attached| path == Path::new(attached)) {
                 return true;
             }
-            path.metadata()
-                .ok()
-                .and_then(|metadata| {
-                    metadata.created().ok().and_then(|created_time| {
-                        now.duration_since(created_time)
-                            .ok()
-                            .map(|duration| duration <= Duration::from_secs(24 * 60 * 60))
-                    })
-                })
-                .unwrap_or(false)
+            path.metadata().is_ok_and(|metadata| {
+                is_current_enough(metadata.created().ok(), metadata.modified().ok(), now)
+            })
         })
         .filter(|entry| {
             entry
@@ -72,8 +89,27 @@ fn pick_log_path(dir: &Path, attached: Option<&str>, now: SystemTime) -> Option<
                 .map(|metadata| metadata.len() > 0)
                 .unwrap_or(false)
         })
-        .max_by_key(|entry| entry.path().metadata().ok().map(|m| m.creation_time()))
-        .and_then(|entry| entry.path().to_str().map(String::from))
+        .map(|entry| entry.path())
+        .collect();
+    candidates.sort_by_key(|path| path.metadata().ok().map(|m| m.creation_time()));
+    let newest = candidates.last()?;
+    let attached = attached
+        .map(Path::new)
+        .filter(|attached| candidates.iter().any(|candidate| candidate == attached));
+    // keep the attached log while VRChat still holds it open
+    if let Some(attached) = attached {
+        if held_by_vrchat(attached) {
+            return attached.to_str().map(String::from);
+        }
+    }
+    // otherwise prefer a log VRChat still holds open
+    candidates
+        .iter()
+        .rev()
+        .find(|candidate| held_by_vrchat(candidate))
+        .unwrap_or(newest)
+        .to_str()
+        .map(String::from)
 }
 
 fn parse_datetime_from_line(line: String) -> Option<u64> {
@@ -255,9 +291,36 @@ pub fn start_log_locator_task() -> CancellationToken {
             reader_task_cancellation_token: None,
         };
         let ctx = &mut loop_context;
+        let mut holder_cache: HashMap<PathBuf, (Vec<u32>, Instant)> = HashMap::new();
         while !cancellation_token_internal.is_cancelled() {
             tokio::time::sleep(Duration::from_millis(1000)).await;
-            let log_path_option = get_latest_log_path(ctx.current_log_path.as_deref());
+            let vrchat_pids = crate::utils::process_ids("VRChat.exe").await;
+            let attached = ctx.current_log_path.clone();
+            // the holder check blocks for a few hundred milliseconds
+            let (log_path_option, cache) = tokio::task::spawn_blocking(move || {
+                let mut cache = holder_cache;
+                cache.retain(|_, (_, checked_at)| checked_at.elapsed() < HOLDER_CHECK_INTERVAL);
+                let mut held_by_vrchat = |path: &Path| {
+                    if vrchat_pids.is_empty() {
+                        return false;
+                    }
+                    // cache the holders themselves, so a holder exiting takes effect at once
+                    let holders = match cache.get(path) {
+                        Some((holders, _)) => holders.clone(),
+                        None => {
+                            let holders = crate::utils::processes_holding_file(path);
+                            cache.insert(path.to_path_buf(), (holders.clone(), Instant::now()));
+                            holders
+                        }
+                    };
+                    holders.iter().any(|pid| vrchat_pids.contains(pid))
+                };
+                let picked = get_latest_log_path(attached.as_deref(), &mut held_by_vrchat);
+                (picked, cache)
+            })
+            .await
+            .unwrap_or_default();
+            holder_cache = cache;
             if log_path_option.is_none() {
                 // If we are currently reading a log file, stop the reader task
                 if ctx.current_log_path.is_some() {
@@ -306,7 +369,7 @@ pub fn start_log_locator_task() -> CancellationToken {
 
 #[cfg(test)]
 mod tests {
-    use super::pick_log_path;
+    use super::{is_current_enough, pick_log_path};
     use std::{
         fs,
         path::Path,
@@ -331,7 +394,8 @@ mod tests {
             pick_log_path(
                 dir.path(),
                 None,
-                created + Duration::from_secs(23 * 60 * 60)
+                created + Duration::from_secs(23 * 60 * 60),
+                &mut |_: &Path| false,
             ),
             Some(attached.clone())
         );
@@ -339,7 +403,8 @@ mod tests {
             pick_log_path(
                 dir.path(),
                 None,
-                created + Duration::from_secs(25 * 60 * 60)
+                created + Duration::from_secs(25 * 60 * 60),
+                &mut |_: &Path| false,
             ),
             None
         );
@@ -348,6 +413,7 @@ mod tests {
                 dir.path(),
                 Some(&attached),
                 created + Duration::from_secs(25 * 60 * 60),
+                &mut |_: &Path| false,
             ),
             Some(attached.clone())
         );
@@ -356,6 +422,7 @@ mod tests {
                 dir.path(),
                 Some(dir.path().join("missing.txt").to_str().unwrap()),
                 created + Duration::from_secs(25 * 60 * 60),
+                &mut |_: &Path| false,
             ),
             None
         );
@@ -367,6 +434,7 @@ mod tests {
                 dir.path(),
                 Some(&attached),
                 newer_created + Duration::from_secs(1),
+                &mut |_: &Path| false,
             ),
             Some(newer)
         );
@@ -378,8 +446,79 @@ mod tests {
                 empty_dir.path(),
                 None,
                 empty_created + Duration::from_secs(1),
+                &mut |_: &Path| false,
             ),
             None
         );
+    }
+
+    #[test]
+    fn keeps_the_log_a_vrchat_process_still_holds_open() {
+        let dir = tempdir().unwrap();
+        let (running, _) = create_log(dir.path(), "output_log_running.txt", b"log");
+        thread::sleep(Duration::from_millis(20));
+        let (closed, closed_created) = create_log(dir.path(), "output_log_closed.txt", b"log");
+        let now = closed_created + Duration::from_secs(1);
+        let running_path = Path::new(&running);
+
+        assert_eq!(
+            pick_log_path(dir.path(), Some(&running), now, &mut |path| path
+                == running_path),
+            Some(running.clone())
+        );
+        assert_eq!(
+            pick_log_path(dir.path(), Some(&running), now, &mut |_: &Path| false),
+            Some(closed.clone())
+        );
+        assert_eq!(
+            pick_log_path(dir.path(), None, now, &mut |path| path == running_path),
+            Some(running)
+        );
+        assert_eq!(
+            pick_log_path(dir.path(), None, now, &mut |_: &Path| false),
+            Some(closed)
+        );
+    }
+
+    #[test]
+    fn drops_a_dead_attachment_even_when_it_is_the_newest_log() {
+        let dir = tempdir().unwrap();
+        let (running, _) = create_log(dir.path(), "output_log_running.txt", b"log");
+        thread::sleep(Duration::from_millis(20));
+        let (closed, closed_created) = create_log(dir.path(), "output_log_closed.txt", b"log");
+        let running_path = Path::new(&running);
+
+        assert_eq!(
+            pick_log_path(
+                dir.path(),
+                Some(&closed),
+                closed_created + Duration::from_secs(1),
+                &mut |path| path == running_path,
+            ),
+            Some(running)
+        );
+    }
+
+    #[test]
+    fn keeps_a_log_that_is_still_being_written_past_the_age_limit() {
+        let now = SystemTime::now();
+        let day_ago = now - Duration::from_secs(25 * 60 * 60);
+
+        assert!(is_current_enough(
+            Some(day_ago),
+            Some(now - Duration::from_secs(10)),
+            now
+        ));
+        assert!(!is_current_enough(
+            Some(day_ago),
+            Some(now - Duration::from_secs(120)),
+            now
+        ));
+        assert!(is_current_enough(
+            Some(now - Duration::from_secs(60 * 60)),
+            Some(day_ago),
+            now
+        ));
+        assert!(!is_current_enough(None, None, now));
     }
 }

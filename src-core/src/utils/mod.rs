@@ -2,8 +2,11 @@ use log::error;
 use serde::Serialize;
 use std::{
     ffi::OsStr,
+    iter::once,
     os::raw::c_char,
+    os::windows::ffi::OsStrExt,
     os::windows::process::CommandExt,
+    path::Path,
     process::Command,
     sync::LazyLock,
     time::{Duration, SystemTime, UNIX_EPOCH},
@@ -11,6 +14,14 @@ use std::{
 use sysinfo::{Pid, ProcessesToUpdate, System};
 use tauri::Emitter;
 use tokio::sync::Mutex;
+use windows::Win32::{
+    Foundation::{ERROR_MORE_DATA, ERROR_SUCCESS},
+    System::RestartManager::{
+        RmEndSession, RmGetList, RmRegisterResources, RmStartSession, CCH_RM_SESSION_KEY,
+        RM_PROCESS_INFO,
+    },
+};
+use windows_core::{PCWSTR, PWSTR};
 use windows_sys::Win32::System::Threading::CREATE_NO_WINDOW;
 
 use crate::globals::{TAURI_APP_HANDLE, TAURI_CLI_MATCHES};
@@ -43,6 +54,66 @@ pub async fn is_process_active(process_name: &str, refresh_processes: bool) -> b
     }
     let processes = sysinfo.processes_by_exact_name(OsStr::new(process_name));
     processes.count() > 0
+}
+
+pub async fn process_ids(process_name: &str) -> Vec<u32> {
+    let sysinfo_guard = SYSINFO.lock().await;
+    sysinfo_guard
+        .processes_by_exact_name(OsStr::new(process_name))
+        .map(|process| process.pid().as_u32())
+        .collect()
+}
+
+/// Ids of the processes that currently hold `path` open. Empty when nothing holds it, or on failure.
+pub fn processes_holding_file(path: &Path) -> Vec<u32> {
+    let mut session_key = [0u16; CCH_RM_SESSION_KEY as usize + 1];
+    let mut session = 0u32;
+    let start = unsafe { RmStartSession(&mut session, None, PWSTR(session_key.as_mut_ptr())) };
+    if start != ERROR_SUCCESS {
+        error!(
+            "[Core] Failed to start a Restart Manager session: {}",
+            start.0
+        );
+        return vec![];
+    }
+    let holders = collect_file_holders(session, path);
+    let _ = unsafe { RmEndSession(session) };
+    holders
+}
+
+fn collect_file_holders(session: u32, path: &Path) -> Vec<u32> {
+    let file: Vec<u16> = path.as_os_str().encode_wide().chain(once(0)).collect();
+    if unsafe { RmRegisterResources(session, Some(&[PCWSTR(file.as_ptr())]), None, None) }
+        != ERROR_SUCCESS
+    {
+        return vec![];
+    }
+    // size the buffer, then fetch the holders; the holder set can grow in between
+    for _ in 0..3 {
+        let (mut needed, mut count, mut reboot_reasons) = (0u32, 0u32, 0u32);
+        if unsafe { RmGetList(session, &mut needed, &mut count, None, &mut reboot_reasons) }
+            != ERROR_MORE_DATA
+            || needed == 0
+        {
+            return vec![];
+        }
+        let mut infos = vec![RM_PROCESS_INFO::default(); needed as usize];
+        count = needed;
+        if unsafe {
+            RmGetList(
+                session,
+                &mut needed,
+                &mut count,
+                Some(infos.as_mut_ptr()),
+                &mut reboot_reasons,
+            )
+        } == ERROR_SUCCESS
+        {
+            infos.truncate(count as usize);
+            return infos.iter().map(|info| info.Process.dwProcessId).collect();
+        }
+    }
+    vec![]
 }
 
 /// Without `kill`, this only requests a close: the target may ignore it, so the caller must escalate.
