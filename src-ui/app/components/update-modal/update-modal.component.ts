@@ -26,7 +26,9 @@ export class UpdateModalComponent
 {
   update?: Update;
   currentVersion = '';
-  installing = false;
+  get installing() {
+    return this.updateService.installing();
+  }
 
   constructor(
     private updateService: UpdateService,
@@ -48,11 +50,9 @@ export class UpdateModalComponent
 
   async install() {
     if (this.installing) return;
-    this.installing = true;
     try {
       await this.updateService.installUpdate();
     } finally {
-      this.installing = false;
       this.cdr.markForCheck();
     }
   }
