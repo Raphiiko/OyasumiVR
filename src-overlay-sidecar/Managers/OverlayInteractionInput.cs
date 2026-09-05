@@ -4,10 +4,19 @@ using Valve.VR;
 
 namespace overlay_sidecar;
 
+/// <summary>
+/// Reads each hand's overlay trigger during OvrManager's SteamVR input polling.
+/// OverlayPointer consumes these states to manage browser mouse ownership and events.
+/// </summary>
 internal static class OverlayInteractionInput
 {
   public const string Action = "/actions/hidden/in/OverlayInteract";
 
+  /// <summary>
+  /// Call after UpdateActionState. Updates devices and returns whether the list changed.
+  /// Entries represent held or unavailable hands; released, available hands are absent.
+  /// Unavailable entries signal cancellation; new press times preserve ordering within one input snapshot.
+  /// </summary>
   public static bool Update(CVRInput input, CVRSystem system, ulong actionHandle,
     List<OvrManager.OvrInputDevice> devices)
   {
