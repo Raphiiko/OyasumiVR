@@ -30,7 +30,9 @@ async function createService(stdout: string) {
   });
   const appSettings = {
     settings: settings.asObservable(),
-    updateSettings: vi.fn(),
+    updateSettings: vi.fn((patch: Partial<AppSettings>) =>
+      settings.next({ ...settings.value, ...patch })
+    ),
   } as unknown as AppSettingsService;
   const openvr = {
     devices: new BehaviorSubject<OVRDevice[]>([device]).asObservable(),
@@ -96,7 +98,7 @@ describe('LighthouseConsoleService.setConsolePath', () => {
 
   it('runs the executable for power-off once the path is accepted', async () => {
     const service = await createService('Version:  lighthouse_console.exe 1.0');
-    await service.setConsolePath(PATH, false);
+    await service.setConsolePath(PATH);
     invoke.mockClear();
     await service.turnOffDevices([device]);
     expect(invoke).toHaveBeenCalledOnce();
