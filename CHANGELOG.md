@@ -152,6 +152,9 @@ with [SemVer](https://semver.org/) prerelease suffixes:
   modals when you pressed Save immediately after typing
 - Fixed the Bigscreen Beyond fan staying locked at 100% after turning off the fan safety, while the
   headset brightness was still above 100%
+- Fixed standalone releases never checking for updates again after the check at startup failed, for
+  example when your network was not up yet. OyasumiVR now retries every ten minutes until a check
+  succeeds
 
 ### Removed
 
