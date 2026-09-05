@@ -1,5 +1,5 @@
 import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, Subject } from 'rxjs';
 import {
   APP_SETTINGS_DEFAULT,
   AppSettings,
@@ -15,6 +15,7 @@ import {
 import { vshrink } from '../../../../../utils/animations';
 import { SelectBoxItem } from '../../../../../components/select-box/select-box.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { flushOnDestroy } from '../../../../../utils/rxjs-utils';
 
 @Component({
   selector: 'app-msi-afterburner-pane',
@@ -31,7 +32,7 @@ export class MsiAfterburnerPaneComponent implements OnInit {
     type: 'INFO' | 'SUCCESS' | 'ERROR';
     loadingIndicator?: boolean;
   };
-  msiAfterburnerPathInputChange: Subject<string> = new Subject();
+  msiAfterburnerPathInputChange: Subject<string | null> = new Subject();
   appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
   config: MSIAfterburnerAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.MSI_AFTERBURNER
@@ -68,6 +69,15 @@ export class MsiAfterburnerPaneComponent implements OnInit {
     this.gpuAutomations.msiAfterburnerStatus
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((status) => this.processMSIAfterburnerStatus(status));
+    flushOnDestroy(this.msiAfterburnerPathInputChange, this.destroyRef);
+    this.msiAfterburnerPathInputChange
+      .pipe(
+        distinctUntilChanged(),
+        debounceTime(500),
+        filter((path): path is string => path !== null),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((path) => this.gpuAutomations.setMSIAfterburnerPath(path));
   }
 
   processMSIAfterburnerStatus(status: ExecutableReferenceStatus) {
@@ -105,7 +115,10 @@ export class MsiAfterburnerPaneComponent implements OnInit {
         },
       ],
     });
-    if (path && typeof path === 'string') await this.gpuAutomations.setMSIAfterburnerPath(path);
+    if (path && typeof path === 'string' && !this.destroyRef.destroyed) {
+      this.msiAfterburnerPathInputChange.next(null);
+      await this.gpuAutomations.setMSIAfterburnerPath(path);
+    }
   }
 
   changeProfile(event: 'ON_DISABLE' | 'ON_ENABLE', item: SelectBoxItem) {
