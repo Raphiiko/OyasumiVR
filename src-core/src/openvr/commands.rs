@@ -239,7 +239,7 @@ pub async fn openvr_reregister_manifest() -> Result<(), String> {
 pub async fn openvr_get_binding_origins(
     action_set_key: String,
     action_key: String,
-) -> Vec<BindingOriginData> {
+) -> Result<Vec<BindingOriginData>, String> {
     let mut input_ctx = super::OVR_INPUT_CONTEXT.lock().await;
     // Get action set by name
     let action_set = match input_ctx
@@ -248,22 +248,22 @@ pub async fn openvr_get_binding_origins(
         .find(|a| a.name == action_set_key)
     {
         Some(action_set) => action_set.handle,
-        None => return vec![],
+        None => return Err(String::from("ACTION_SET_NOT_FOUND")),
     };
     // Get action by name
     let action = match input_ctx.actions.iter().find(|a| a.name == action_key) {
         Some(action) => action.handle,
-        None => return vec![],
+        None => return Err(String::from("ACTION_NOT_FOUND")),
     };
     // Get the input service
     let context = OVR_CONTEXT.lock().await;
     let mut input = match context.as_ref() {
         Some(context) => context.input_mngr(),
-        None => return vec![],
+        None => return Err(String::from("OPENVR_NOT_INITIALIZED")),
     };
     if let Err(e) = input.update_actions(input_ctx.active_sets.as_mut_slice()) {
         error!("[Core] Failed to update actions: {e}");
-        return vec![];
+        return Err(String::from("UPDATE_ACTIONS_FAILED"));
     }
     // Get all of the origins for this action
     let origins: Vec<u64> = match input.get_action_origins(action_set, action) {
@@ -274,7 +274,7 @@ pub async fn openvr_get_binding_origins(
             .collect(),
         Err(e) => {
             error!("[Core] Failed to get action origins: {e}");
-            return vec![];
+            return Err(String::from("GET_ACTION_ORIGINS_FAILED"));
         }
     };
     // get localized labels for each origin
@@ -312,7 +312,7 @@ pub async fn openvr_get_binding_origins(
             Ok(result) => result,
             Err(e) => {
                 error!("[Core] Failed to get action binding info: {e}");
-                return vec![];
+                return Err(String::from("GET_ACTION_BINDING_INFO_FAILED"));
             }
         };
     match assemble_binding_origins(
@@ -322,10 +322,10 @@ pub async fn openvr_get_binding_origins(
         &localized_input_sources,
         &binding_infos,
     ) {
-        Some(data) => data,
+        Some(data) => Ok(data),
         None => {
             error!("[Core] OpenVR returned incomplete binding origin data");
-            vec![]
+            Err(String::from("INCOMPLETE_BINDING_DATA"))
         }
     }
 }

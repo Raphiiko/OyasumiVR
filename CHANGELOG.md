@@ -143,6 +143,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Fixed notification sounds staying silent for the rest of the session when no audio output device
   was available while OyasumiVR started. Sounds now play again as soon as a device is available,
   without restarting OyasumiVR
+- Fixed the controller binding indicator in General Settings showing blank or outdated information
+  after a failed binding lookup, until you navigated away from the settings and back
 - Panic reports no longer include your Windows account name from embedded source paths
 - Fixed OyasumiVR's splash screen being hidden instead of closed while closing to the system tray
   was enabled, which left OyasumiVR running without a window after you turned the option off and
