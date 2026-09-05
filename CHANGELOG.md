@@ -68,6 +68,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed device selections not refreshing immediately after tag or disabled-state changes
+
 - Fixed charging power-off automation using an outdated device selection
 
 - Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
