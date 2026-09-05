@@ -31,23 +31,28 @@ export class TurnOffDevicesWhenChargingAutomationService {
   ) {}
 
   async init() {
+    // keep power automation settings current as edits arrive
     this.automationConfig.configs
       .pipe(map((configs) => configs.DEVICE_POWER_AUTOMATIONS))
       .subscribe((config) => (this.config = config));
 
+    // check each openvr device update for newly charging devices
     this.openvr.devices.subscribe((devices) => {
-      // forget charging sessions that ended
+      // forget devices that disconnected or stopped charging
       this.chargingDevices = this.chargingDevices.filter((charging) =>
         devices.some((device) => device.serialNumber === charging.serialNumber && device.isCharging)
       );
+      // handle unprocessed charging devices that support power-off
       devices.forEach(async (device) => {
         if (
           device.isCharging &&
           device.canPowerOff &&
           !this.chargingDevices.some((charging) => charging.serialNumber === device.serialNumber)
         ) {
-          // resolve selection once per charging session
+          // mark this session before awaiting the selection lookup
           this.chargingDevices.push(device);
+
+          // resolve the current settings into selected devices
           const selection = this.config.turnOffDevicesWhenCharging;
           let selected;
           try {
@@ -58,7 +63,7 @@ export class TurnOffDevicesWhenChargingAutomationService {
             );
             return;
           }
-          // discard stale or unselected charging events
+          // recheck settings, charging session, and membership after awaiting
           if (
             !isEqual(selection, this.config.turnOffDevicesWhenCharging) ||
             !this.chargingDevices.includes(device) ||
