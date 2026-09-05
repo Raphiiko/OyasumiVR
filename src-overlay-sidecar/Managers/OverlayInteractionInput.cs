@@ -25,18 +25,18 @@ internal static class OverlayInteractionInput
         error = input.GetDigitalActionData(actionHandle, ref data,
           (uint)Marshal.SizeOf<InputDigitalActionData_t>(), source);
       if (error != EVRInputError.None)
-      {
         Log.Error("Could not read overlay interaction for {Hand}: {Error}", role, error);
-        continue;
-      }
 
       var index = system.GetTrackedDeviceIndexForControllerRole(role);
-      var held = data.bActive && data.bState && index > 0 && index < OpenVR.k_unMaxTrackedDeviceCount;
+      var available = error == EVRInputError.None && data.bActive &&
+                      index > 0 && index < OpenVR.k_unMaxTrackedDeviceCount;
+      var present = !available || data.bState;
       var previous = devices.Find(device => device.Role == role);
-      if ((held && previous?.Id == index) || (!held && previous == null)) continue;
+      if ((present && previous?.Id == index && previous.InputAvailable == available) ||
+          (!present && previous == null)) continue;
 
       devices.RemoveAll(device => device.Role == role);
-      if (held) devices.Add(new OvrManager.OvrInputDevice(index, role));
+      if (present) devices.Add(new OvrManager.OvrInputDevice(index, role, available, data.fUpdateTime));
       changed = true;
     }
     return changed;

@@ -179,14 +179,24 @@ public class OverlayPointer {
     lock (_overlays)
     {
       if (_disposed || !inputActions.TryGetValue(OverlayInteractionInput.Action, out var devices)) return;
-      var leftHeld = devices.Any(device => device.Role == ETrackedControllerRole.LeftHand);
-      var rightHeld = devices.Any(device => device.Role == ETrackedControllerRole.RightHand);
+      var pointers = new[]
+      {
+        (Pointer: _leftPointer, Device: devices.Find(device => device.Role == ETrackedControllerRole.LeftHand)),
+        (Pointer: _rightPointer, Device: devices.Find(device => device.Role == ETrackedControllerRole.RightHand))
+      };
 
-      // release before accepting a handoff in the same input update
-      if (!leftHeld) Release(_leftPointer);
-      if (!rightHeld) Release(_rightPointer);
-      if (leftHeld) Press(_leftPointer);
-      if (rightHeld) Press(_rightPointer);
+      // release or cancel before accepting a handoff
+      foreach (var (pointer, device) in pointers)
+      {
+        if (device is { InputAvailable: false })
+        {
+          pointer.TriggerHeld = true;
+          LeaveOverlay(pointer);
+        }
+        else if (device == null) Release(pointer);
+      }
+      foreach (var (pointer, device) in pointers.OrderBy(entry => entry.Device?.InputUpdateTime))
+        if (device is { InputAvailable: true }) Press(pointer);
     }
   }
 

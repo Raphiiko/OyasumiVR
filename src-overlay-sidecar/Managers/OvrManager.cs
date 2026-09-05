@@ -400,11 +400,15 @@ public class OvrManager
   {
     public readonly uint Id;
     public readonly ETrackedControllerRole Role;
+    public readonly bool InputAvailable;
+    public readonly float InputUpdateTime;
 
-    public OvrInputDevice(uint id, ETrackedControllerRole role)
+    public OvrInputDevice(uint id, ETrackedControllerRole role, bool inputAvailable = true, float inputUpdateTime = 0)
     {
       Id = id;
       Role = role;
+      InputAvailable = inputAvailable;
+      InputUpdateTime = inputUpdateTime;
     }
   }
 }
