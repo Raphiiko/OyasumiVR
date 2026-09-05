@@ -26,14 +26,16 @@ jobs:
         run: npm run ci
       - name: Lint Angular project
         run: npm run lint
+      - name: Test TypeScript
+        run: npm test
       - name: Set app version to DEV version
         run: npm run set-version DEV
       - name: Set flavour to DEV
         run: npm run set-flavour DEV
       - name: Set build id
         run: npm run set-build-id
-      - name: Ensure dist directory exists
-        run: mkdir -p dist/oyasumivr
+      - name: Build frontend test assets
+        run: npm run ng -- build oyasumivr --configuration development
       - name: Run Clippy (shared)
         run: cd src-shared-rust; cargo clippy -- -D warnings
       - name: Test the shared crate
@@ -44,8 +46,12 @@ jobs:
         run: cd src-privileged-launcher; cargo test
       - name: Run Clippy (elevated-sidecar)
         run: cd src-elevated-sidecar; cargo clippy -- -D warnings
+      - name: Test the elevated sidecar
+        run: cd src-elevated-sidecar; cargo test
       - name: Run Clippy (core)
         run: cd src-core; cargo clippy -- -D warnings
+      - name: Test the core
+        run: cd src-core; cargo test
       - name: Run Clippy (sign-elevated-sidecar)
         run: cd tools/sign-elevated-sidecar; cargo clippy --all-targets -- -D warnings
       - name: Test the signing tool

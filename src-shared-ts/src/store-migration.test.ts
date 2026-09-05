@@ -1,26 +1,7 @@
 import assert from 'node:assert/strict';
-import { registerHooks } from 'node:module';
-import test from 'node:test';
+import { test } from 'vitest';
 import type { MigrationDefinition, Versioned } from './migration-runner.ts';
-
-registerHooks({
-  resolve(
-    specifier: string,
-    context: unknown,
-    nextResolve: (specifier: string, context: unknown) => unknown
-  ) {
-    try {
-      return nextResolve(specifier, context);
-    } catch (cause) {
-      if (specifier.startsWith('.') && !specifier.endsWith('.ts')) {
-        return nextResolve(specifier + '.ts', context);
-      }
-      throw cause;
-    }
-  },
-});
-
-const { applyStoreMigration, decideStoreMigration } = await import('./store-migration.ts');
+import { applyStoreMigration, decideStoreMigration } from './store-migration.ts';
 
 const migration = (
   targetVersion: number,

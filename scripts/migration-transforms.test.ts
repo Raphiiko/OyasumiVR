@@ -1,60 +1,15 @@
-// run from the repo root: node --test scripts/migration-transforms.test.ts
-import { registerHooks } from 'node:module';
-import test from 'node:test';
 import assert from 'node:assert/strict';
+import { test, vi } from 'vitest';
 
-// Node's type stripping cannot tell type-only named imports from value imports,
-// so named imports in app sources become namespace imports plus destructuring.
-// The Tauri plugins and the one Angular service in the import chain load from stubs.
-const STUB_SOURCES: Record<string, string> = {
-  'stub:@tauri-apps/plugin-log':
-    'export const info = async () => {};\nexport const error = async () => {};\n',
-  'stub:@tauri-apps/plugin-dialog': 'export const message = async () => {};\n',
-  'stub:@tauri-apps/plugin-fs':
-    'export const BaseDirectory = { AppData: 18 };\nexport const writeTextFile = async () => {};\n',
-  'stub:app/frame-limiter.service':
-    "export const FrameLimiterPresets = [{ appId: 438100, appLabel: 'VRChat', appIcon: 'assets/img/vrc_icon.png' }];\n",
-};
-
-let importCounter = 0;
-
-registerHooks({
-  resolve(specifier: string, context: any, nextResolve: any) {
-    if (specifier.startsWith('src-shared-ts/')) {
-      return { url: new URL(`../${specifier}.ts`, import.meta.url).href, shortCircuit: true };
-    }
-    if (specifier.startsWith('@tauri-apps/')) {
-      return { url: 'stub:' + specifier, shortCircuit: true };
-    }
-    if (specifier.endsWith('frame-limiter.service')) {
-      return { url: 'stub:app/frame-limiter.service', shortCircuit: true };
-    }
-    try {
-      return nextResolve(specifier, context);
-    } catch (err) {
-      if (specifier.startsWith('.') && !/\.[cm]?[jt]s$/.test(specifier)) {
-        return nextResolve(specifier + '.ts', context);
-      }
-      throw err;
-    }
-  },
-  load(url: string, context: any, nextLoad: any) {
-    const stubSource = STUB_SOURCES[url];
-    if (stubSource !== undefined)
-      return { format: 'module', source: stubSource, shortCircuit: true };
-    const result = nextLoad(url, context);
-    if (!url.includes('/src-ui/') || !url.endsWith('.ts')) return result;
-    const source = String(result.source).replace(
-      /import\s*\{([^}]*)\}\s*from\s*(["'][^"']+["']);?/g,
-      (_m: string, bindings: string, quoted: string) => {
-        const ns = `__imp${importCounter}`;
-        importCounter++;
-        return `import * as ${ns} from ${quoted}; const { ${bindings.trim()} } = ${ns}.default ?? ${ns};`;
-      }
-    );
-    return { ...result, source };
-  },
-});
+vi.mock('@tauri-apps/plugin-log', () => ({ info: vi.fn(), error: vi.fn() }));
+vi.mock('@tauri-apps/plugin-dialog', () => ({ message: vi.fn() }));
+vi.mock('@tauri-apps/plugin-fs', () => ({
+  BaseDirectory: { AppData: 18 },
+  writeTextFile: vi.fn(),
+}));
+vi.mock('../src-ui/app/services/frame-limiter.service', () => ({
+  FrameLimiterPresets: [{ appId: 438100, appLabel: 'VRChat', appIcon: 'assets/img/vrc_icon.png' }],
+}));
 
 const loadMigrations = async () => {
   const [{ AUTOMATION_CONFIGS_MIGRATION }, { runMigrations }] = await Promise.all([

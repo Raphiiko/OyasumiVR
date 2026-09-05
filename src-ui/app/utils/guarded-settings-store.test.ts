@@ -1,4 +1,4 @@
-import { describe, it, beforeEach, after } from 'node:test';
+import { afterAll, beforeEach, describe, it } from 'vitest';
 import assert from 'node:assert/strict';
 import { LazyStore } from '@tauri-apps/plugin-store';
 import { GuardedSettingsStore } from './guarded-settings-store.ts';
@@ -39,7 +39,7 @@ LazyStore.prototype.save = async function () {
   saveEnd = performance.now();
 };
 
-after(() => {
+afterAll(() => {
   LazyStore.prototype.set = origSet;
   LazyStore.prototype.delete = origDelete;
   LazyStore.prototype.clear = origClear;

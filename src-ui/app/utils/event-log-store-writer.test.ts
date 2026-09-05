@@ -1,4 +1,4 @@
-import { describe, it } from 'node:test';
+import { describe, it } from 'vitest';
 import assert from 'node:assert/strict';
 import type { EventLog } from '../models/event-log-entry.ts';
 import { EventLogStoreWriter } from './event-log-store-writer.ts';
