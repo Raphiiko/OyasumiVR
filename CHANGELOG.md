@@ -68,6 +68,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed the leave sound never playing when the leave notification was turned off
 - Fixed the sunset and sunrise brightness automations running when your headset reconnected while
   sleep mode was on, even with "Only while sleep mode is disabled" enabled
 - Fixed clicks and slider drags failing when both controllers pointed at the VR overlay
