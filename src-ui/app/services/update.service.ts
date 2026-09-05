@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { BehaviorSubject, filter, interval, switchMap, take } from 'rxjs';
 import { relaunch } from '@tauri-apps/plugin-process';
 import { ConfirmModalComponent } from '../components/confirm-modal/confirm-modal.component';
@@ -16,6 +16,8 @@ export class UpdateService {
     checked: false,
   });
   public updateAvailable = this._updateAvailable.asObservable();
+  readonly installing = signal(false);
+  private pendingInstallation?: Promise<void>;
 
   constructor(private modalService: ModalService) {}
 
@@ -76,22 +78,24 @@ export class UpdateService {
     }
   }
 
-  async installUpdate() {
+  installUpdate(): Promise<void> {
+    if (this.pendingInstallation) return this.pendingInstallation;
     const update = this._updateAvailable.value?.update;
-    if (!update) return;
+    if (!update) return Promise.resolve();
+    this.installing.set(true);
+    this.pendingInstallation = this.performInstallation(update).finally(() => {
+      this.pendingInstallation = undefined;
+      this.installing.set(false);
+    });
+    return this.pendingInstallation;
+  }
+
+  private async performInstallation(update: Update) {
     info(`[Update] Installing update...`);
     try {
-      update.downloadAndInstall((event) => {
-        switch (event.event) {
-          case 'Started':
-          case 'Progress':
-            break;
-          case 'Finished':
-            info(`[Update] Update complete. Relaunching...`);
-            relaunch();
-            return;
-        }
-      });
+      await update.downloadAndInstall();
+      info(`[Update] Update complete. Relaunching...`);
+      await relaunch();
     } catch (e) {
       info(`[Update] Update error occurred: ${e}`);
       this.modalService
