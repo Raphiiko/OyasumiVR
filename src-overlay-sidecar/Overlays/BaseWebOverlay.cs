@@ -69,6 +69,7 @@ public class BaseWebOverlay : RenderableOverlay
   {
     if (Disposed) return;
     Disposed = true;
+    OvrManager.Instance.OverlayPointer?.StopForOverlay(this);
     OvrManager.Instance.UnregisterOverlay(this);
     StateManager.Instance.StateChanged -= OnStateChanged;
     if (_overlayHandle.HasValue) OpenVR.Overlay.DestroyOverlay(_overlayHandle!.Value);

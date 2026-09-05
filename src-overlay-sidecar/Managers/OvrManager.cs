@@ -345,6 +345,12 @@ public class OvrManager
     bool update = false;
     foreach (var action in actionHandles)
     {
+      if (action.Key == OverlayInteractionInput.Action)
+      {
+        update |= OverlayInteractionInput.Update(_input, _system!, action.Value, inputActions[action.Key]);
+        continue;
+      }
+
       // Get digital action data
       var actionKey = action.Key;
       var actionHandle = action.Value;
@@ -394,11 +400,15 @@ public class OvrManager
   {
     public readonly uint Id;
     public readonly ETrackedControllerRole Role;
+    public readonly bool InputAvailable;
+    public readonly float InputUpdateTime;
 
-    public OvrInputDevice(uint id, ETrackedControllerRole role)
+    public OvrInputDevice(uint id, ETrackedControllerRole role, bool inputAvailable = true, float inputUpdateTime = 0)
     {
       Id = id;
       Role = role;
+      InputAvailable = inputAvailable;
+      InputUpdateTime = inputUpdateTime;
     }
   }
 }
