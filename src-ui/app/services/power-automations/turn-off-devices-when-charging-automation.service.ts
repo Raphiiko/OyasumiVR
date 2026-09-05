@@ -19,6 +19,7 @@ export class TurnOffDevicesWhenChargingAutomationService {
   config: DevicePowerAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.DEVICE_POWER_AUTOMATIONS
   );
+  // retained object identity distinguishes separate charging sessions
   private chargingDevices: OVRDevice[] = [];
 
   constructor(
@@ -35,6 +36,7 @@ export class TurnOffDevicesWhenChargingAutomationService {
       .subscribe((config) => (this.config = config));
 
     this.openvr.devices.subscribe((devices) => {
+      // forget charging sessions that ended
       this.chargingDevices = this.chargingDevices.filter((charging) =>
         devices.some((device) => device.serialNumber === charging.serialNumber && device.isCharging)
       );
@@ -44,6 +46,7 @@ export class TurnOffDevicesWhenChargingAutomationService {
           device.canPowerOff &&
           !this.chargingDevices.some((charging) => charging.serialNumber === device.serialNumber)
         ) {
+          // resolve selection once per charging session
           this.chargingDevices.push(device);
           const selection = this.config.turnOffDevicesWhenCharging;
           let selected;
@@ -55,6 +58,7 @@ export class TurnOffDevicesWhenChargingAutomationService {
             );
             return;
           }
+          // discard stale or unselected charging events
           if (
             !isEqual(selection, this.config.turnOffDevicesWhenCharging) ||
             !this.chargingDevices.includes(device) ||
@@ -63,6 +67,7 @@ export class TurnOffDevicesWhenChargingAutomationService {
             )
           )
             return;
+          // record and request the power-off
           info(
             `[TurnOffDevicesWhenChargingAutomationService] Detected device being put on charger. Turning off device (${device.class}:${device.serialNumber})`
           );
