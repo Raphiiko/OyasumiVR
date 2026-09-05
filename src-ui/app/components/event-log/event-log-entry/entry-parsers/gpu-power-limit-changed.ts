@@ -13,10 +13,17 @@ export class EventLogGpuPowerLimitChangedEntryParser extends EventLogEntryParser
     );
   }
 
+  /** Formats signed AMD offsets; entries without a unit are interpreted as watts. */
   override headerInfoTitleParams(entry: EventLogGpuPowerLimitChanged): { [p: string]: string } {
+    const limitUnit = entry.limitUnit ?? 'W';
+    const formattedLimit =
+      limitUnit === '%'
+        ? `${entry.limit > 0 ? '+' : ''}${entry.limit}${limitUnit}`
+        : `${entry.limit}${limitUnit}`;
+
     return {
       device: entry.device,
-      limit: entry.limit.toString() + 'W',
+      limit: formattedLimit,
     };
   }
 
