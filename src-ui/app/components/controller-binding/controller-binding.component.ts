@@ -1,11 +1,12 @@
 import { Component, DestroyRef, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { OVRInputEventAction, OVRInputEventActionSet } from '../../models/ovr-input-event';
-import { OpenVRInputService } from 'src-ui/app/services/openvr-input.service';
+import { OpenVRInputService } from '../../services/openvr-input.service';
 import { filter, firstValueFrom, interval, pairwise, startWith, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { OVRActionBinding } from '../../models/ovr-action-binding';
 import { OpenVRService, OpenVRStatus } from '../../services/openvr.service';
 import { fadeDown } from '../../utils/animations';
+import { warn } from '@tauri-apps/plugin-log';
 
 @Component({
   selector: 'app-controller-binding',
@@ -30,6 +31,8 @@ export class ControllerBindingComponent implements OnInit {
   protected hasRightHand = false;
   protected hasLeftHand = false;
   protected dropdownOpen = false;
+  private refreshGeneration = 0;
+  private appliedGeneration = 0;
 
   get activeBinding(): OVRActionBinding | undefined {
     return this.bindings.length ? this.bindings[0] : undefined;
@@ -77,6 +80,7 @@ export class ControllerBindingComponent implements OnInit {
   }
 
   private async refreshBindings() {
+    const generation = ++this.refreshGeneration;
     let error = undefined;
     let bindings: OVRActionBinding[] = [];
     let status: OpenVRStatus | undefined = undefined;
@@ -111,7 +115,13 @@ export class ControllerBindingComponent implements OnInit {
         }
         error = 'UNKNOWN';
       }
-    })();
+    })().catch((e) => {
+      error = 'UNKNOWN';
+      warn(`[ControllerBinding] Failed to refresh bindings, retrying next tick: ${e}`);
+    });
+    // a slower refresh must not overwrite what a newer one already displayed
+    if (generation < this.appliedGeneration) return;
+    this.appliedGeneration = generation;
     this.error = error;
     this.bindings.splice(0, this.bindings.length);
     this.bindings.push(...bindings);

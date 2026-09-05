@@ -38,7 +38,7 @@
       </div>
     </div>
   }
-  @if (!error) {
+  @if (!error && activeBinding) {
     <div class="text-wrapper">
       <div class="line0">{{ activeBinding?.localizedControllerType }}</div>
       <div class="line1"
