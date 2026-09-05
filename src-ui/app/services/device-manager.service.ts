@@ -182,19 +182,25 @@ export class DeviceManagerService {
     return this._observedDevices.value.includes(deviceId);
   }
 
+  /** Emits selection matches when device availability or membership changes. */
   public getDevicesForSelectionStream(selection: DeviceSelection): Observable<{
     lighthouseDevices: LighthouseDevice[];
     ovrDevices: OVRDevice[];
     knownDevices: DMKnownDevice[];
   }> {
+    // watch live devices alongside saved tags and disabled flags
     return combineLatest([this.openvr.devices, this.lighthouse.devices, this._data]).pipe(
+      // ignore telemetry, nicknames, and tag appearance changes
       distinctUntilChanged(isEqual, ([ovrDevices, lighthouseDevices, data]) => [
+        // compare openvr identities, including devices replacing reused indices
         ovrDevices.map(({ index, serialNumber, class: deviceClass }) => [
           index,
           serialNumber,
           deviceClass,
         ]),
+        // compare available base station identities
         lighthouseDevices.map((device) => device.id),
+        // compare saved fields that determine selection membership
         data.knownDevices.map(({ id, deviceType, tagIds, disabled }) => ({
           id,
           deviceType,
@@ -202,12 +208,14 @@ export class DeviceManagerService {
           disabled,
         })),
       ]),
+      // emit matching devices from these same input snapshots
       map(([ovrDevices, lighthouseDevices, data]) =>
         this.resolveSelection(selection, ovrDevices, lighthouseDevices, data.knownDevices)
       )
     );
   }
 
+  /** Returns one selection snapshot without retaining a subscription. */
   public async getDevicesForSelection(selection: DeviceSelection): Promise<{
     lighthouseDevices: LighthouseDevice[];
     ovrDevices: OVRDevice[];
@@ -232,7 +240,7 @@ export class DeviceManagerService {
       knownDevices: [],
     };
 
-    // resolve device types
+    // include enabled devices matching any selected type
     for (const type of selection.types) {
       result.knownDevices.push(...knownDevices.filter((d) => d.deviceType === type && !d.disabled));
       switch (type) {
@@ -297,13 +305,14 @@ export class DeviceManagerService {
       }
     }
 
-    // resolve device tags
+    // add enabled tagged devices without duplicating earlier matches
     for (const tagId of selection.tagIds) {
       const devices = knownDevices.filter((d) => d.tagIds.includes(tagId) && !d.disabled);
       for (const device of devices) {
         if (!result.knownDevices.find((d) => d.id === device.id)) {
           result.knownDevices.push(device);
         }
+        // match the saved device to its live counterpart
         const ovrDeviceId = this.getOpenVRIdForKnownDevice(device);
         const ovrDevice = openvrDevices.find((d) => d.serialNumber === ovrDeviceId);
         if (ovrDevice && !result.ovrDevices.find((d) => d.serialNumber === ovrDeviceId))
@@ -320,13 +329,14 @@ export class DeviceManagerService {
       }
     }
 
-    // resolve individual devices
+    // add explicitly selected devices, excluding disabled or unknown entries
     for (const deviceId of selection.devices) {
       const device = knownDevices.find((known) => known.id === deviceId);
       if (!device || device.disabled) continue;
       if (!result.knownDevices.find((d) => d.id === device.id)) {
         result.knownDevices.push(device);
       }
+      // match the saved device to its live counterpart
       const ovrDeviceId = this.getOpenVRIdForKnownDevice(device);
       const ovrDevice = openvrDevices.find((d) => d.serialNumber === ovrDeviceId);
       if (ovrDevice && !result.ovrDevices.find((d) => d.serialNumber === ovrDeviceId))
