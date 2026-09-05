@@ -28,7 +28,7 @@ import { listen } from '@tauri-apps/api/event';
 })
 export class SimpleBrightnessControlService {
   private _advancedMode = new BehaviorSubject(false);
-  private modeGeneration = 0;
+  private _modeGeneration = 0;
   private _brightness: BehaviorSubject<number> = new BehaviorSubject<number>(100);
   private _activeTransition = new BehaviorSubject<BrightnessTransitionTask | undefined>(undefined);
   public readonly activeTransition = this._activeTransition.asObservable();
@@ -60,7 +60,7 @@ export class SimpleBrightnessControlService {
         skip(1)
       )
       .subscribe(async (advancedMode) => {
-        this.modeGeneration++;
+        this._modeGeneration++;
         this.cancelActiveTransition();
         this.hardwareBrightnessControl.cancelActiveTransition();
         this.softwareBrightnessControl.cancelActiveTransition();
@@ -137,7 +137,7 @@ export class SimpleBrightnessControlService {
   ) {
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
     percentage = clamp(percentage, 0, 100);
-    const modeGeneration = this.modeGeneration;
+    const modeGeneration = this._modeGeneration;
     if (opt.cancelActiveTransition) this.cancelActiveTransition();
     this._brightness.next(percentage);
     if (opt.logReason) {
@@ -168,12 +168,12 @@ export class SimpleBrightnessControlService {
       }
     }
     // Set brightnesses
-    if (modeGeneration !== this.modeGeneration) return;
+    if (modeGeneration !== this._modeGeneration) return;
     await this.softwareBrightnessControl.setBrightness(softwareBrightness, {
       cancelActiveTransition: true,
       logReason: null,
     });
-    if (modeGeneration !== this.modeGeneration) return;
+    if (modeGeneration !== this._modeGeneration) return;
     if (this.hardwareBrightnessDriverAvailable) {
       await this.hardwareBrightnessControl.setBrightness(hardwareBrightness, {
         cancelActiveTransition: true,
