@@ -134,7 +134,6 @@ export class JoinNotificationsService {
           }
           // Send sound
           if (val.sound) {
-            // TODO: Play the sound
             switch (val.type) {
               case 'join':
                 await this.notification.playSoundConfig(this.config.joinSound);
@@ -214,7 +213,7 @@ export class JoinNotificationsService {
     const sound = this.appliesForPlayer(this.config.leaveSoundMode, displayName);
 
     // Stop here if no notification or sound
-    if (!notification) return;
+    if (!notification && !sound) return;
 
     // World player count check
     if (this.config.onlyWhenLeftAlone) {
