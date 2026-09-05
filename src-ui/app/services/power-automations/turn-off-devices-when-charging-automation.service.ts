@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { AutomationConfigService } from '../automation-config.service';
 import { OpenVRService } from '../openvr.service';
-import { combineLatest, distinctUntilChanged, map } from 'rxjs';
+import { map } from 'rxjs';
 import { AUTOMATION_CONFIGS_DEFAULT, DevicePowerAutomationsConfig } from '../../models/automations';
 import { LighthouseConsoleService } from '../lighthouse-console.service';
 import { error, info } from '@tauri-apps/plugin-log';
@@ -10,6 +10,7 @@ import { EventLogTurnedOffOpenVRDevices } from '../../models/event-log-entry';
 import { EventLogService } from '../event-log.service';
 import { DeviceManagerService } from '../device-manager.service';
 import { isEqual } from 'lodash';
+import { OVRDevice } from '../../models/ovr-device';
 
 @Injectable({
   providedIn: 'root',
@@ -18,8 +19,7 @@ export class TurnOffDevicesWhenChargingAutomationService {
   config: DevicePowerAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.DEVICE_POWER_AUTOMATIONS
   );
-  chargingDevices: number[] = [];
-  applicableDevices: number[] = [];
+  private chargingDevices: OVRDevice[] = [];
 
   constructor(
     private automationConfig: AutomationConfigService,
@@ -34,28 +34,38 @@ export class TurnOffDevicesWhenChargingAutomationService {
       .pipe(map((configs) => configs.DEVICE_POWER_AUTOMATIONS))
       .subscribe((config) => (this.config = config));
 
-    combineLatest([
-      this.openvr.devices.pipe(
-        map((devices) => devices.map((d) => d.index)),
-        distinctUntilChanged((a, b) => isEqual(a, b))
-      ),
-      this.deviceManager.knownDevices,
-    ]).subscribe(async () => {
-      const devices = await this.deviceManager.getDevicesForSelection(
-        this.config.turnOffDevicesWhenCharging
+    this.openvr.devices.subscribe((devices) => {
+      this.chargingDevices = this.chargingDevices.filter((charging) =>
+        devices.some(
+          (device) =>
+            device.serialNumber === charging.serialNumber && device.isCharging && device.canPowerOff
+        )
       );
-      this.applicableDevices = devices.ovrDevices.map((d) => d.index);
-    });
-
-    this.openvr.devices.subscribe(async (devices) => {
       devices.forEach(async (device) => {
         if (
           device.isCharging &&
           device.canPowerOff &&
-          !this.chargingDevices.includes(device.index)
+          !this.chargingDevices.some((charging) => charging.serialNumber === device.serialNumber)
         ) {
-          this.chargingDevices.push(device.index);
-          if (!this.applicableDevices.includes(device.index)) return;
+          this.chargingDevices.push(device);
+          const selection = this.config.turnOffDevicesWhenCharging;
+          let selected;
+          try {
+            selected = await this.deviceManager.getDevicesForSelection(selection);
+          } catch (cause) {
+            error(
+              `[TurnOffDevicesWhenChargingAutomationService] Could not resolve selection: ${cause}`
+            );
+            return;
+          }
+          if (
+            !isEqual(selection, this.config.turnOffDevicesWhenCharging) ||
+            !this.chargingDevices.includes(device) ||
+            !selected.ovrDevices.some(
+              (selectedDevice) => selectedDevice.serialNumber === device.serialNumber
+            )
+          )
+            return;
           info(
             `[TurnOffDevicesWhenChargingAutomationService] Detected device being put on charger. Turning off device (${device.class}:${device.serialNumber})`
           );
@@ -78,8 +88,6 @@ export class TurnOffDevicesWhenChargingAutomationService {
             })(),
           } as EventLogTurnedOffOpenVRDevices);
           this.lighthouse.turnOffDevices([device]);
-        } else if (!device.isCharging && this.chargingDevices.includes(device.index)) {
-          this.chargingDevices = this.chargingDevices.filter((d) => d !== device.index);
         }
       });
     });
