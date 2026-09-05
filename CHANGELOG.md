@@ -144,6 +144,9 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Fixed OyasumiVR's splash screen being hidden instead of closed while closing to the system tray
   was enabled, which left OyasumiVR running without a window after you turned the option off and
   closed the window
+- Fixed a value you typed into a settings field being discarded when you left the page straight
+  away. This also affected the OSC host and port, and the battery percentage and upright pose
+  modals when you pressed Save immediately after typing
 
 ### Removed
 

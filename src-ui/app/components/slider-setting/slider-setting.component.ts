@@ -17,6 +17,7 @@ import { debounceTime, Subject } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SliderComponent, SliderStyle } from '../slider/slider.component';
 import { clamp, ensurePrecision, floatPrecision } from '../../utils/number-utils';
+import { flushOnDestroy } from '../../utils/rxjs-utils';
 
 @Component({
   selector: 'app-slider-setting',
@@ -64,24 +65,27 @@ export class SliderSettingComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit(): void {
+    flushOnDestroy(this.input$, this.destroyRef);
     this.input$
       .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
-      .subscribe((strValue) => {
-        let value = parseFloat(strValue);
-        if (!Number.isFinite(value)) return;
-        const precision = Math.max(floatPrecision(this.min), floatPrecision(this.step));
-        const quotient = (value - this.min) / this.step;
-        const epsilon = Number.EPSILON * 4 * Math.max(1, Math.abs(quotient));
-        value = clamp(
-          ensurePrecision(Math.round(quotient + epsilon) * this.step + this.min, precision),
-          this.min,
-          this.max
-        );
-        if (value === this.value) return;
-        this.value = value;
-        this.valueChange.emit(value);
-        this.cdr.markForCheck();
-      });
+      .subscribe((strValue) => this.commitInput(strValue));
+  }
+
+  private commitInput(strValue: string) {
+    let value = parseFloat(strValue);
+    if (!Number.isFinite(value)) return;
+    const precision = Math.max(floatPrecision(this.min), floatPrecision(this.step));
+    const quotient = (value - this.min) / this.step;
+    const epsilon = Number.EPSILON * 4 * Math.max(1, Math.abs(quotient));
+    value = clamp(
+      ensurePrecision(Math.round(quotient + epsilon) * this.step + this.min, precision),
+      this.min,
+      this.max
+    );
+    if (value === this.value) return;
+    this.value = value;
+    this.valueChange.emit(value);
+    this.cdr.markForCheck();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -90,6 +94,7 @@ export class SliderSettingComponent implements OnInit, OnChanges {
   }
 
   onInputBlur() {
+    this.commitInput(this.inputEl!.nativeElement.value);
     this.inputEl!.nativeElement.value = this.value.toString();
   }
 

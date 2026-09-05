@@ -14,6 +14,7 @@ import {
   throttleTime,
 } from 'rxjs';
 import { OscService } from 'src-ui/app/services/osc.service';
+import { flushOnDestroy } from 'src-ui/app/utils/rxjs-utils';
 import { isEqual, pick } from 'lodash';
 
 @Component({
@@ -41,6 +42,8 @@ export class SettingsOscViewComponent implements OnInit {
   // Alerts
   protected showVRCTargetWarning = false;
 
+  private destroyed = false;
+
   constructor(
     private destroyRef: DestroyRef,
     private settingsService: AppSettingsService,
@@ -57,6 +60,11 @@ export class SettingsOscViewComponent implements OnInit {
         this.oscServerEnabled = settings.oscServerEnabled;
       });
 
+    // must precede the flush hooks below, which run in registration order
+    this.destroyRef.onDestroy(() => (this.destroyed = true));
+    flushOnDestroy(this.customTargetHostChangeSubject, this.destroyRef);
+    flushOnDestroy(this.customTargetPortChangeSubject, this.destroyRef);
+
     // Setup debounced validation for custom target host
     this.customTargetHostChangeSubject
       .pipe(
@@ -70,7 +78,7 @@ export class SettingsOscViewComponent implements OnInit {
           this.settingsService.updateSettings({
             oscCustomTargetHost: host,
           });
-        } else {
+        } else if (!this.destroyed) {
           this.setTargetEnabled('CUSTOM', false);
           this.customTargetHostValidationState = 'invalid';
         }
@@ -89,7 +97,7 @@ export class SettingsOscViewComponent implements OnInit {
           this.settingsService.updateSettings({
             oscCustomTargetPort: port,
           });
-        } else {
+        } else if (!this.destroyed) {
           this.setTargetEnabled('CUSTOM', false);
           this.customTargetPortValidationState = 'invalid';
         }
