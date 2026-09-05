@@ -108,8 +108,9 @@ describe('LighthouseConsoleService.setConsolePath', () => {
     expect(await firstValueFrom(service.consoleStatus)).toBe('NOT_FOUND');
   });
 
-  it('leaves the power-off path unused while the status is UNKNOWN', async () => {
+  it('leaves the power-off path unused before any path is accepted', async () => {
     const service = await createService('unexpected');
+    expect(await firstValueFrom(service.consoleStatus)).toBe('NOT_FOUND');
     invoke.mockClear();
     await service.turnOffDevices([device]);
     expect(invoke).not.toHaveBeenCalled();

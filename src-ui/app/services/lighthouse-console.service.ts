@@ -61,7 +61,6 @@ export class LighthouseConsoleService {
       this._consoleStatus.next('NOT_FOUND');
       return;
     }
-    // Get output
     let stdout;
     try {
       stdout = (
@@ -85,7 +84,6 @@ export class LighthouseConsoleService {
       this._consoleStatus.next('UNKNOWN_ERROR');
       return;
     }
-    // Check output
     const stdoutLines = stdout.split('\n');
     if (
       !stdoutLines.length ||
