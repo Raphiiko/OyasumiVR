@@ -99,6 +99,18 @@ describe('charging device selection', () => {
     expect(h.logEvent).toHaveBeenCalledTimes(2);
   });
 
+  it('keeps one action when power-off capability changes while charging', async () => {
+    const h = await setup();
+    h.devices.next([{ ...a, isCharging: true }, b]);
+    await Promise.resolve();
+    h.devices.next([{ ...a, isCharging: true, canPowerOff: false }, b]);
+    await Promise.resolve();
+    h.devices.next([{ ...a, isCharging: true }, b]);
+    await Promise.resolve();
+    expect(h.powerOff).toHaveBeenCalledTimes(1);
+    expect(h.logEvent).toHaveBeenCalledTimes(1);
+  });
+
   it('discards a delayed transition after unplugging and replugging', async () => {
     const h = await setup();
     let finish!: (result: Awaited<ReturnType<typeof h.resolve>>) => void;
