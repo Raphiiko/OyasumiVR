@@ -16,8 +16,6 @@ import {
 
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../../../../../models/settings';
 import { hshrink } from '../../../../../../utils/animations';
-import { SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS } from '../../../../../../services/brightness-control/brightness-control-models';
-import { HardwareBrightnessControlService } from '../../../../../../services/brightness-control/hardware-brightness-control.service';
 
 const MIN_SAFE_FAN_SPEED = 40;
 const AUTOMATION_ENABLE_KEYS = ['onSleepEnable', 'onSleepDisable', 'onSleepPreparation'];
@@ -49,7 +47,6 @@ export class HmdAutomationsBigscreenBeyondTabComponent implements OnInit {
     private automationConfigService: AutomationConfigService,
     private appSettingsService: AppSettingsService,
     private destroyRef: DestroyRef,
-    private hardwareBrightness: HardwareBrightnessControlService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -134,12 +131,6 @@ export class HmdAutomationsBigscreenBeyondTabComponent implements OnInit {
     this.appSettingsService.updateSettings({
       bigscreenBeyondBrightnessFanSafety: !this.appSettings.bigscreenBeyondBrightnessFanSafety,
     });
-    // Set brightness to same value to reset fan safety if needed
-    this.hardwareBrightness.setBrightness(
-      this.hardwareBrightness.brightness,
-      SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS,
-      true
-    );
   }
 
   protected readonly MIN_SAFE_FAN_SPEED = MIN_SAFE_FAN_SPEED;
