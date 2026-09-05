@@ -23,7 +23,10 @@ export class SettingsUpdatesViewComponent implements OnInit {
   protected updateAvailable: { checked: boolean; update?: Update } = { checked: false };
   protected version = '';
   protected changelog: SafeHtml = '';
-  protected updateOrCheckInProgress = false;
+  private requestInProgress = false;
+  protected get updateOrCheckInProgress() {
+    return this.requestInProgress || this.update.installing();
+  }
   protected FLAVOUR = FLAVOUR;
 
   constructor(
@@ -66,11 +69,11 @@ export class SettingsUpdatesViewComponent implements OnInit {
 
   async updateOrCheck() {
     if (this.updateOrCheckInProgress) return;
-    this.updateOrCheckInProgress = true;
+    this.requestInProgress = true;
     await Promise.allSettled([
       this.updateAvailable.update ? this.update.installUpdate() : this.update.checkForUpdate(false),
       new Promise((resolve) => setTimeout(resolve, 1000)),
     ]);
-    this.updateOrCheckInProgress = false;
+    this.requestInProgress = false;
   }
 }

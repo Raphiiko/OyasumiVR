@@ -52,6 +52,49 @@ afterEach(() => {
 });
 
 describe('update installation lifecycle', () => {
+  it('shares a pending installation and handles its failure once', async () => {
+    const h = await setup();
+    const first = h.service.installUpdate();
+    const second = h.service.installUpdate();
+    expect(second).toBe(first);
+    expect(h.service.installing()).toBe(true);
+    expect(h.downloadAndInstall).toHaveBeenCalledTimes(1);
+    h.download.reject(new Error('download failed'));
+    await Promise.all([first, second]);
+    expect(h.service.installing()).toBe(false);
+    expect(h.addModal).toHaveBeenCalledTimes(1);
+    h.downloadAndInstall.mockResolvedValueOnce();
+    await h.service.installUpdate();
+    expect(h.downloadAndInstall).toHaveBeenCalledTimes(2);
+  });
+
+  it('keeps recreated settings and another modal busy during installation', async () => {
+    const h = await setup();
+    const first = h.service.installUpdate();
+    type Dependencies = ConstructorParameters<typeof SettingsUpdatesViewComponent>;
+    const recreated = new SettingsUpdatesViewComponent(
+      h.service,
+      {} as Dependencies[1],
+      {} as Dependencies[2],
+      {} as Dependencies[3],
+      {} as Dependencies[4]
+    );
+    recreated['updateAvailable'] = { checked: true, update: h.update };
+    const modal = new UpdateModalComponent(h.service, {
+      markForCheck: vi.fn(),
+    } as unknown as ConstructorParameters<typeof UpdateModalComponent>[1]);
+    expect(recreated['updateOrCheckInProgress']).toBe(true);
+    expect(modal.installing).toBe(true);
+    await recreated.updateOrCheck();
+    await modal.install();
+    expect(h.downloadAndInstall).toHaveBeenCalledTimes(1);
+    h.download.reject(new Error('download failed'));
+    await first;
+    expect(recreated['updateOrCheckInProgress']).toBe(false);
+    expect(modal.installing).toBe(false);
+    expect(h.addModal).toHaveBeenCalledTimes(1);
+  });
+
   it('waits for installation and relaunch before settling', async () => {
     const h = await setup();
     const restart = deferred();
