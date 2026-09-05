@@ -107,6 +107,18 @@ describe('ControllerBindingComponent', () => {
 
     expect(component.activeBinding).toEqual(binding);
   });
+
+  it('still shows a response when every query outlasts the interval', async () => {
+    invoke.mockImplementation(
+      () => new Promise((resolve) => setTimeout(() => resolve([binding]), 1500))
+    );
+    const component = createComponent();
+
+    component.ngOnInit();
+    await vi.advanceTimersByTimeAsync(5500);
+
+    expect(component.activeBinding).toEqual(binding);
+  });
 });
 
 describe('OpenVRInputService', () => {
