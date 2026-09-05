@@ -1,9 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Update } from '@tauri-apps/plugin-updater';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { UpdateService } from '../../services/update.service';
@@ -52,8 +47,14 @@ export class UpdateModalComponent
   }
 
   async install() {
+    if (this.installing) return;
     this.installing = true;
-    await this.updateService.installUpdate();
+    try {
+      await this.updateService.installUpdate();
+    } finally {
+      this.installing = false;
+      this.cdr.markForCheck();
+    }
   }
 
   protected readonly FLAVOUR = FLAVOUR;
