@@ -56,6 +56,8 @@ export class LighthouseService {
   >([]);
   public readonly devices: Observable<LighthouseDevice[]> = this._devices.asObservable();
   private v1Identifiers: { [id: string]: string } = {};
+  private transitions: { [deviceId: string]: number } = {};
+  private lastTransitionId = 0;
 
   constructor(private appSettings: AppSettingsService) {}
 
@@ -129,38 +131,48 @@ export class LighthouseService {
       }
       v1Identifier = parseInt(this.v1Identifiers[device.id], 16);
     }
-    // Handle force flag
+    // handle force flag
+    let transition: number | undefined;
     if (!force) {
+      transition = ++this.lastTransitionId;
+      this.transitions[device.id] = transition;
       device.transitioningToPowerState = ['on', 'sleep', 'standby'].includes(powerState)
         ? powerState
         : undefined;
       this._devices.next(this._devices.value);
     }
-    // Set the power state
-    await pRetry(
-      () =>
-        invoke('lighthouse_set_device_power_state', {
-          deviceId: device.id,
-          powerState,
-          v1Identifier,
-        }),
-      3,
-      500
-    );
-    // Wait for state to change (timeout after 10 seconds)
-    await firstValueFrom(
-      merge(
-        interval(100).pipe(
-          delay(500), // Wait 500ms before checking, to make sure the feedback in the UI lasts long enough
-          filter(() =>
-            this._devices.value.some((d) => d.id === device.id && d.powerState === powerState)
-          )
-        ),
-        of(null).pipe(delay(10000))
-      ).pipe(take(1))
-    );
-    device.transitioningToPowerState = undefined;
-    this._devices.next(this._devices.value);
+    try {
+      // set the power state
+      await pRetry(
+        () =>
+          invoke('lighthouse_set_device_power_state', {
+            deviceId: device.id,
+            powerState,
+            v1Identifier,
+          }),
+        3,
+        500
+      );
+      // wait for state to change (timeout after 10 seconds)
+      await firstValueFrom(
+        merge(
+          interval(100).pipe(
+            delay(500), // Wait 500ms before checking, to make sure the feedback in the UI lasts long enough
+            filter(() =>
+              this._devices.value.some((d) => d.id === device.id && d.powerState === powerState)
+            )
+          ),
+          of(null).pipe(delay(10000))
+        ).pipe(take(1))
+      );
+    } finally {
+      // only the owning operation may clear the marker
+      if (transition !== undefined && this.transitions[device.id] === transition) {
+        delete this.transitions[device.id];
+        device.transitioningToPowerState = undefined;
+        this._devices.next(this._devices.value);
+      }
+    }
   }
 
   private async handleStatusChange(event: LighthouseStatusChangedEvent) {
