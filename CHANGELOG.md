@@ -68,6 +68,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - Fixed the leave sound never playing when the leave notification was turned off
 - Fixed the sunset and sunrise brightness automations running when your headset reconnected while
   sleep mode was on, even with "Only while sleep mode is disabled" enabled
@@ -177,11 +179,15 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - Fixed settings sometimes resetting during a system crash or power loss, while OyasumiVR was running.
 
 ## [25.6.10]
 
 ### Fixed
+
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
 
 - Fixed overlay sidecar not running on some systems (.net 8 downgrade)
 - Fixed Pulsoid account linking for new installs (restored schema registration)
@@ -190,17 +196,23 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - Fixed parameter values in simple OSC script editor
 
 ## [25.6.8]
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - Fixed type usage in simple OSC script editor
 
 ## [25.6.7]
 
 ### Fixed
+
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
 
 - Fixed translation references for invite (request) reply placeholders
 
@@ -214,12 +226,16 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - Moved sidecar process logs to the correct log directory
 - Parsing of some cli parameters
 
 ## [25.6.4]
 
 ### Fixed
+
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
 
 - Fixed the foot lock being toggled at an interval, even when the sleeping pose did not change.
 - Missing Japanese and Dutch translations
@@ -238,6 +254,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - Broken achievement trigger
 
 ## [25.6.1]
@@ -249,6 +267,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Missing Simplified Chinese Translations
 
 ### Fixed
+
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
 
 - Some strings not being translateable
 - Closing the event log filter dialog with the esc key resetting all the filters to their defaults
@@ -295,6 +315,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - "Activate when you've been left alone" trigger for the shutdown sequence not triggering correctly
 - Battery and charging levels exposed over MQTT becoming unavailable randomly
 - Notification sounds queueing up instead of being played immediately
@@ -305,6 +327,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - Deep link parsing being broken, once again
 - Possible crash when encountering time issues on log cleanup
 
@@ -312,17 +336,23 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - Fixed parsing of new VRChat join/leave log format
 
 ## [1.14.5]
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - Linking your Pulsoid account through the Pulsoid integration no longer functioning.
 
 ## [1.14.4]
 
 ### Fixed
+
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
 
 - OyasumiVR crashing when parsing VRChat logs produced during the two hours of DST ending.
 
@@ -340,6 +370,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Updated Korean translations
 
 ### Fixed
+
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
 
 - A dependency crashing OyasumiVR when attempting to calculate the sunrise/sunset times.
 
@@ -372,6 +404,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - Duration inputs for shutdown sequence triggers being broken on systems using a 12-hour clock.
 - Shutdown sequence being triggered over and over by the sleep mode trigger, when not using it to shut down or reboot the PC.
 - Issue where leave notifications would trigger for every other player when leaving a world.
@@ -379,6 +413,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 ## [1.13.3]
 
 ### Fixed
+
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
 
 - Battery level based power automations turning off devices above the threshold
 - Certain types of selection in input fields (e.g. Ctrl+A) being blocked
@@ -391,12 +427,16 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - The status message not updating when the visibility remained the same
 - The status message not setting to an empty value
 
 ## [1.13.1]
 
 ### Fixed
+
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
 
 - Some modals automatically closing right after opening them
 - Some modals being rendered incorrectly
@@ -436,6 +476,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - CJK fonts not properly being loaded in some parts of the overlay UI
 - Brightness overlay not covering full view of some high FOV headsets (e.g. Pimax)
 - Bigscreen Beyond fan speed often being reset
@@ -446,6 +488,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 ## [1.12.8]
 
 ### Fixed
+
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
 
 - Pluralization issues causing Japanese- and Korean language translations to break
 - Improved initialization performance
@@ -459,6 +503,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Improved telemetry
 
 ### Fixed
+
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
 
 - Disabled swipe navigation in main window
 
@@ -478,6 +524,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - VRChat microphone mute automations blocking keyboard- and controller bindings from toggling the microphone mute state.
 
 ## [1.12.3]
@@ -490,6 +538,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - Fixed sleep preparation not being available even when some of its automations are enabled.
 
 ## [1.12.2]
@@ -499,6 +549,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Reverted back to Tauri v1.6
 
 ### Fixed
+
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
 
 - Fixed Discord Rich Presence integration preventing OyasumiVR from starting without Discord running
 
@@ -531,6 +583,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - OyasumiVR crashing when trying to read SteamVR's display brightness upon SteamVR quitting.
 - Battery level automations not working for trackers.
 - MDNS advertisements for OSC & OSCQuery not working for some network configurations.
@@ -543,6 +597,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 ## [1.11.5]
 
 ### Fixed
+
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
 
 - Added performance improvements to OSC message handling, SteamVR device updates, and sleeping pose detection.
 - Reduced IPC communication to avoid crashes due to overloading the IPC channels.
@@ -557,6 +613,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - Some stability issues with Tauri v1.5, by downgrading back down to Tauri v1.4.
 
 ### Changed
@@ -566,6 +624,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 ## [1.11.3]
 
 ### Fixed
+
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
 
 - Crash for some users without bluetooth adapters when disabling lighthouse control.
 - Error for windows power policies sometimes not being set correctly, even when they are.
@@ -623,6 +683,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - Updated missing and improved existing Simplified Chinese translations (by [雾雨花精灵](https://github.com/flower-elf)
   and [i0nTempest](https://x.com/i0ntempest)).
 - Default bindings sometimes triggering haptics for some users.
@@ -636,6 +698,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 ## [1.10.4]
 
 ### Fixed
+
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
 
 - Fixed failing resource preloads sometimes causing OyasumiVR to fail to start.
 - Fixed telemetry settings not always being saved properly.
@@ -651,6 +715,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Option for sleep animations to only trigger while all trackers are turned off
 
 ### Fixed
+
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
 
 - Migration bug for automation configurations.
 - Do not register the application manifest in Steam builds.
@@ -668,6 +734,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - Deadlock in logic for reading possible input bindings.
 - Updated missing Spanish translations (by [aacal666](https://x.com/aacalde666))
 - Updated missing Indonesian translations (by [a9ito](https://x.com/a9ito))
@@ -683,6 +751,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Switched to the default Tauri script for the NSIS installer.
 
 ### Fixed
+
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
 
 - Missing Japanese translations (by [なき](https://x.com/NoYu_idea)).
 - Missing Dutch translations.
@@ -724,6 +794,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - Improvements to the Simplified Chinese translations (by [雾雨花精灵](https://github.com/flower-elf)).
 - Disabling OSC features leading to a crash
 - A configuration saving loop in status automations view
@@ -757,6 +829,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Gamma corrected image brightness control (You might have to readjust your brightness settings)
 
 ### Fixed
+
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
 
 - Fixed issues with detection and installation of missing .NET runtimes
 - Fixed Japanese date formatting
@@ -793,6 +867,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - Fixed menus for Hardware Automations and VRChat Automations not being correctly highlighted when one of their submenus
   is active
 - Fixed short loss of tracking in SteamVR when launching or reloading OyasumiVR
@@ -809,11 +885,15 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - Fixed Oyasumi not being able to start on some systems due to locked Bluetooth adapters.
 
 ## [1.7.2]
 
 ### Fixed
+
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
 
 - Updated Japanese Translations
 - Updated references to the new GitHub repository, following the rebrand to OyasumiVR
@@ -821,6 +901,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 ## [1.7.1]
 
 ### Fixed
+
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
 
 - Fixed enabling GPU automations crashing Oyasumi
 
@@ -862,6 +944,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - Stopped brightness automations from triggering when there is no headset available.
 - Prevent the update service from being initialised until after language selection.
 
@@ -887,6 +971,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - Added missing translations for Traditional and Simplified Chinese. (By [狐 Kon](https://github.com/XoF-eLtTiL))
 
 ## [1.5.0]
@@ -908,6 +994,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - Various improvements to the Japanese translations (by [なき](https://x.com/NoYu_idea))
 - Various small bugs
 
@@ -918,6 +1006,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Added support for logins where VRChat sends an OTP via email for accounts without 2FA enabled.
 
 ### Fixed
+
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
 
 - Error handling when VRChat wants users to confirm their new location via email.
 
@@ -939,6 +1029,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 ## [1.3.1]
 
 ### Fixed
+
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
 
 - A bug where VRChat accounts without 2FA enabled could not log in properly.
 - A bug where the status bar would still show a VRChat user name after logging out.
@@ -966,12 +1058,16 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - Fixed issue where the main window would load before the app was ready, due to a bug in a new version of the `tao`
   crate.
 
 ## [1.2.1]
 
 ### Fixed
+
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
 
 - Updated Tauri dependencies to new 1.2 release.
 - Properly send user agent to VRChat API when connecting the websocket.
@@ -995,6 +1091,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
+
 - Setting migrators properly resetting to defaults when detecting configs from future versions.
 
 ## [1.1.0]
@@ -1013,6 +1111,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Changed presets to support multiple info links (to show both んみんみーん's EX and non-EX version)
 
 ### Fixed
+
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
 
 - Fixed side sleeping poses being detected too early in some positions.
 
@@ -1040,6 +1140,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Added own updater UI to replace the default Tauri update dialog.
 
 ### Fixed
+
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
 
 - The main window can now be interacted with through the SteamVR overlay or other overlays like XSOverlay, when given
   administrator privileges.
@@ -1077,6 +1179,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 ## [0.1.1]
 
 ### Fixed
+
+- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
 
 - Release workflow
 
