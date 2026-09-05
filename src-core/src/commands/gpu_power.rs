@@ -5,6 +5,7 @@ use crate::Models::elevated_sidecar::{
 };
 use log::error;
 
+/// Reports combined NVML/ADLX readiness, or `SidecarUnavailable` if the RPC cannot complete.
 pub async fn status() -> NvmlStatus {
     let mut client_guard = SIDECAR_GRPC_CLIENT.lock().await;
     let client = match client_guard.as_mut() {
@@ -21,6 +22,7 @@ pub async fn status() -> NvmlStatus {
     NvmlStatus::try_from(response.status).unwrap_or(NvmlStatus::UnknownError)
 }
 
+/// Returns NVIDIA and AMD devices; a missing sidecar or failed RPC yields an empty list.
 pub async fn get_devices() -> Vec<NvmlDevice> {
     let mut client_guard = SIDECAR_GRPC_CLIENT.lock().await;
     let client = match client_guard.as_mut() {
@@ -33,6 +35,8 @@ pub async fn get_devices() -> Vec<NvmlDevice> {
     }
 }
 
+/// Sends NVIDIA milliwatts or AMD `(percent_offset + 100) * 1000` to the sidecar.
+/// Returns `true` only when the sidecar reports success; connection and driver failures are errors.
 pub async fn set_power_management_limit(
     uuid: String,
     power_limit: u32,

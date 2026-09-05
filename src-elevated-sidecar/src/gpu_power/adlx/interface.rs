@@ -299,6 +299,7 @@ impl Deref for ManualPowerTuning1 {
 }
 
 impl GpuTuningServices {
+    /// Acquires GPU tuning services; the caller must keep the owning ADLX helper alive.
     pub(super) fn from_system(system: &System) -> adlx::result::Result<Self> {
         let mut tuning_services = MaybeUninit::uninit();
         let system_raw = unsafe { system_as_raw(system) };
@@ -313,6 +314,7 @@ impl GpuTuningServices {
             .map(|services| unsafe { Self::from_raw(services) })
     }
 
+    /// Distinguishes an unsupported GPU (`Ok(false)`) from a failed driver capability query.
     pub(super) fn is_supported_manual_power_tuning(&self, gpu: &Gpu) -> adlx::result::Result<bool> {
         let mut supported = MaybeUninit::uninit();
         let result = unsafe {
@@ -327,6 +329,7 @@ impl GpuTuningServices {
             .map(|value| value != 0)
     }
 
+    /// Takes ownership of the driver's returned interface reference and releases it on drop.
     pub(super) fn manual_power_tuning(&self, gpu: &Gpu) -> adlx::result::Result<ManualPowerTuning> {
         let mut manual_power_tuning = MaybeUninit::<*mut ffi::IADLXInterface>::uninit();
         let result = unsafe {
@@ -345,6 +348,7 @@ impl GpuTuningServices {
 }
 
 impl ManualPowerTuning {
+    /// Queries driver bounds and step size in signed percentage offsets from nominal power.
     pub(super) fn power_limit_range(&self) -> adlx::result::Result<ffi::ADLX_IntRange> {
         let mut tuning_range = MaybeUninit::uninit();
         let result = unsafe {
@@ -354,6 +358,7 @@ impl ManualPowerTuning {
         AdlxError::from_result_with_assume_init_on_success(result, tuning_range)
     }
 
+    /// Reads the live driver limit as a signed percentage offset from nominal power.
     pub(super) fn power_limit(&self) -> adlx::result::Result<i32> {
         let mut current_value = MaybeUninit::uninit();
         let result = unsafe {
@@ -363,17 +368,20 @@ impl ManualPowerTuning {
         AdlxError::from_result_with_assume_init_on_success(result, current_value)
     }
 
+    /// Writes a signed percentage offset directly to ADLX without clamping or unit conversion.
     pub(super) fn set_power_limit(&self, value: i32) -> adlx::result::Result<()> {
         let result = unsafe { (self.vtable().set_power_limit.unwrap())(self.as_raw(), value) };
         AdlxError::from_result(result)
     }
 
+    /// Queries the default percentage offset; fails if the extended tuning interface is unavailable.
     pub(super) fn power_limit_default(&self) -> adlx::result::Result<i32> {
         self.cast::<ManualPowerTuning1>()?.power_limit_default()
     }
 }
 
 impl ManualPowerTuning1 {
+    /// Reads the driver's default signed percentage offset through the extended interface.
     fn power_limit_default(&self) -> adlx::result::Result<i32> {
         let mut default_value = MaybeUninit::uninit();
         let result = unsafe {
@@ -387,6 +395,9 @@ impl ManualPowerTuning1 {
     }
 }
 
+/// Borrows the system pointer without transferring ownership or acquiring a reference.
+/// # Safety
+/// Requires `System` to store this pointer at offset zero; keep its ADLX helper alive during use.
 unsafe fn system_as_raw(system: &System) -> *mut ffi::IADLXSystem {
     *(system as *const _ as *const *mut ffi::IADLXSystem)
 }

@@ -16,6 +16,8 @@ pub(super) struct Device {
 }
 
 impl Device {
+    /// Caches tunable AMD GPUs and driver-reported ranges, skipping unsupported or unreadable GPUs.
+    /// Uses the current limit when the driver cannot report a default; keep the helper alive.
     pub(super) fn discover(helper: &AdlxHelper, tuning_services: &GpuTuningServices) -> Vec<Self> {
         info!("[ADLX] Enumerating ADLX power-limit devices");
         let gpus = match helper.system().gpus() {
@@ -101,14 +103,18 @@ impl Device {
         devices
     }
 
+    /// Borrows cached readings encoded as `(percent_offset + 100) * 1000`, without querying ADLX.
     pub(super) fn info(&self) -> &NvmlDevice {
         &self.info
     }
 
+    /// Returns the `adlx:` routing ID assigned during discovery.
     pub(super) fn uuid(&self) -> &str {
         &self.info.uuid
     }
 
+    /// Decodes `(percent_offset + 100) * 1000` and clamps to the cached driver-reported bounds.
+    /// Updates the cache only after ADLX accepts the value; driver failures return an error.
     pub(super) fn set_power_limit(
         &mut self,
         encoded_limit: u32,
@@ -141,12 +147,14 @@ impl Device {
     }
 }
 
+/// Treats unreadable vendor IDs as non-AMD devices.
 fn is_amd_gpu(gpu: &Gpu) -> bool {
     gpu.vendor_id()
         .map(|vendor_id| normalize_vendor_id(vendor_id) == AMD_VENDOR_ID_HEX)
         .unwrap_or(false)
 }
 
+/// Removes surrounding whitespace and an optional `0x` prefix before case-insensitive comparison.
 fn normalize_vendor_id(vendor_id: &str) -> String {
     vendor_id
         .trim()

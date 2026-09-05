@@ -13,6 +13,7 @@ const DEVICE_ID_PREFIX: &str = "adlx:";
 
 static WORKER: OnceLock<Result<Worker, String>> = OnceLock::new();
 
+/// Initializes once; both the worker and any startup failure are cached for this process.
 fn worker() -> Result<&'static Worker, String> {
     match WORKER.get_or_init(Worker::spawn) {
         Ok(worker) => Ok(worker),
@@ -20,6 +21,7 @@ fn worker() -> Result<&'static Worker, String> {
     }
 }
 
+/// Starts the ADLX worker and checks that it responds, even if no GPUs support power tuning.
 pub(super) fn init() -> bool {
     info!("[ADLX] Probing ADLX backend");
 
@@ -35,10 +37,12 @@ pub(super) fn init() -> bool {
     }
 }
 
+/// Checks the routing prefix only; the ID need not identify a discovered device.
 pub(super) fn owns_device(uuid: &str) -> bool {
     uuid.starts_with(DEVICE_ID_PREFIX)
 }
 
+/// Returns cached device readings, or an empty list if worker startup or communication fails.
 pub(super) fn get_devices() -> Vec<NvmlDevice> {
     match worker().and_then(Worker::get_devices) {
         Ok(devices) => devices,
@@ -49,6 +53,7 @@ pub(super) fn get_devices() -> Vec<NvmlDevice> {
     }
 }
 
+/// Blocks on applying `(percent_offset + 100) * 1000`; worker failure returns `DeviceAccessError`.
 pub(super) fn set_power_management_limit(
     uuid: String,
     encoded_limit: u32,
@@ -61,6 +66,7 @@ pub(super) fn set_power_management_limit(
     worker.set_power_limit(uuid, encoded_limit)
 }
 
+/// Namespaces an ADLX unique ID (or enumeration-index fallback) for backend routing.
 fn device_id(unique_id: i32) -> String {
     format!("{DEVICE_ID_PREFIX}{unique_id}")
 }

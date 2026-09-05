@@ -80,6 +80,7 @@ export class GpuAutomationsService {
     );
   }
 
+  /** Subscribes once at startup to device discovery, default GPU selection, and sleep automations. */
   async init() {
     // Process detected GPUs from elevated sidecar backends (NVML/ADLX).
     this.nvml.devices
@@ -202,6 +203,7 @@ export class GpuAutomationsService {
     );
   }
 
+  /** Applies enabled rules on sleep transitions, skipping initial state and logging only success. */
   private setupPowerLimitOnSleepAutomations() {
     const setupOnSleepAutomation = (on: 'ENABLE' | 'DISABLE') => {
       const getAutomationConfig = () => {
@@ -273,6 +275,7 @@ export class GpuAutomationsService {
     setupOnSleepAutomation('DISABLE');
   }
 
+  /** Decodes wire limits to AMD percentage offsets or NVIDIA watts and derives tuning support. */
   private mapNvmlDeviceToGPUDevice(nvmlDevice: NvmlDevice): GPUDevice {
     const isAdlxDevice = nvmlDevice.uuid.startsWith('adlx:');
     const powerLimitUnit: GPUPowerLimitUnit = isAdlxDevice ? '%' : 'W';
@@ -299,6 +302,7 @@ export class GpuAutomationsService {
     };
   }
 
+  /** Divides wire values by 1000 and removes AMD's +100 offset; missing readings stay undefined. */
   private mapPowerLimitValue(value: number | undefined, isAdlxDevice: boolean): number | undefined {
     if (value === undefined) return undefined;
 
@@ -306,6 +310,10 @@ export class GpuAutomationsService {
     return isAdlxDevice ? scaledValue - ADLX_POWER_LIMIT_SHIFT_PERCENT : scaledValue;
   }
 
+  /**
+   * Keeps in-range AMD offsets; otherwise subtracts 100 and clamps to known driver bounds.
+   * Missing values and NVIDIA watt limits pass through unchanged.
+   */
   public normalizeConfiguredPowerLimit(
     device: GPUDevice,
     configuredLimit: number | undefined
@@ -332,6 +340,7 @@ export class GpuAutomationsService {
     return normalizedLimit;
   }
 
+  /** Encodes watts as milliwatts or AMD offsets as `(offset + 100) * 1000`, rounding down. */
   private encodePowerLimitForCommand(device: GPUDevice, powerLimit: number): number {
     if (device.type === 'AMD') {
       return Math.floor((powerLimit + ADLX_POWER_LIMIT_SHIFT_PERCENT) * GPU_POWER_LIMIT_SCALE);

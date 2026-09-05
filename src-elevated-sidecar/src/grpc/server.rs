@@ -66,6 +66,7 @@ impl OyasumiElevatedSidecar for OyasumiElevatedSidecarServerImpl {
         Ok(Response::new(Empty {}))
     }
 
+    /// Reports combined NVML/ADLX readiness through the shared NVML RPC schema.
     async fn get_nvml_status(
         &self,
         _: Request<Empty>,
@@ -76,6 +77,7 @@ impl OyasumiElevatedSidecar for OyasumiElevatedSidecarServerImpl {
         }))
     }
 
+    /// Queries both backends outside the async executor; worker-task failure becomes an RPC error.
     async fn get_nvml_devices(
         &self,
         _: Request<Empty>,
@@ -86,6 +88,8 @@ impl OyasumiElevatedSidecar for OyasumiElevatedSidecarServerImpl {
         Ok(Response::new(NvmlDevicesResponse { devices }))
     }
 
+    /// Applies NVIDIA milliwatts or encoded AMD offsets outside the async executor.
+    /// Driver failures populate the response error; worker-task failure becomes an RPC error.
     async fn set_nvml_power_management_limit(
         &self,
         request: Request<NvmlPowerManagementLimitRequest>,

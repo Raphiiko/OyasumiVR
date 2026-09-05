@@ -25,6 +25,7 @@ fn nvml_path() -> Option<std::path::PathBuf> {
     Some(std::path::PathBuf::from(String::from_utf16_lossy(&buffer[..written])).join("nvml.dll"))
 }
 
+/// Loads NVML from the Windows system directory, clearing the shared handle on failure.
 pub fn init() -> Result<(), NvmlStatus> {
     let Some(path) = nvml_path() else {
         error!("[NVML] Could not determine the system directory");
@@ -51,6 +52,8 @@ pub fn init() -> Result<(), NvmlStatus> {
     }
 }
 
+/// Reads limits in milliwatts, using zero for unavailable values and `nvml:<index>` if UUIDs fail.
+/// Returns an empty list when NVML is unavailable or enumeration fails.
 pub fn get_devices() -> Vec<NvmlDevice> {
     let mut gpus: Vec<NvmlDevice> = Vec::new();
 
@@ -82,6 +85,7 @@ pub fn get_devices() -> Vec<NvmlDevice> {
     gpus
 }
 
+/// Applies milliwatts by GPU UUID or synthetic `nvml:<index>` ID; driver errors propagate.
 pub fn set_power_management_limit(
     uuid: String,
     limit: u32,

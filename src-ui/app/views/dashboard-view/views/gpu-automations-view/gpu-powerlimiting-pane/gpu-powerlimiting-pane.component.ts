@@ -30,6 +30,7 @@ export class GpuPowerlimitingPaneComponent implements OnInit {
     limit: GPUPowerLimit;
   }> = new Subject();
 
+  /** Keeps displayed rules in the selected GPU's units and persists edits after a 100 ms debounce. */
   constructor(
     private nvml: NvmlService,
     protected gpuAutomations: GpuAutomationsService,
@@ -119,6 +120,7 @@ export class GpuPowerlimitingPaneComponent implements OnInit {
 
   async ngOnInit() {}
 
+  /** Rounds down to watts or signed percentage offsets; missing device readings display a dash. */
   protected formatPowerLimit(value: number | undefined, device = this.selectedGpu): string {
     if (value === undefined || !device) return '-';
 
@@ -130,11 +132,13 @@ export class GpuPowerlimitingPaneComponent implements OnInit {
     return `${roundedValue}W`;
   }
 
+  /** Expresses watt limits relative to the device maximum; AMD offsets have no relative label. */
   protected getRelativePowerLimitPercentage(device = this.selectedGpu): string | null {
     if (!device || device.powerLimitUnit !== 'W' || !device.maxPowerLimit) return null;
     return `${Math.floor(((device.powerLimit || 0) / device.maxPowerLimit) * 100)}%`;
   }
 
+  /** Maps AMD limits across their min/max range and watt limits against max; absent data yields 0%. */
   protected getCurrentPowerLimitFillPercent(device = this.selectedGpu): string {
     if (
       !device ||
@@ -161,6 +165,7 @@ export class GpuPowerlimitingPaneComponent implements OnInit {
     return ((device.powerLimit / device.maxPowerLimit) * 100).toString() + '%';
   }
 
+  /** Defaults to watts while no GPU is selected. */
   protected getInputUnit(device = this.selectedGpu): GPUPowerLimitUnit {
     return device?.powerLimitUnit ?? 'W';
   }

@@ -58,6 +58,8 @@ fn main() {
         .block_on(run());
 }
 
+/// Requires elevation and core connection arguments; initializes GPU backends after core acceptance.
+/// Watches the core for exit, terminating the sidecar on startup failure or core shutdown.
 async fn run() {
     let args: Vec<String> = env::args().collect();
     // Parse the arguments

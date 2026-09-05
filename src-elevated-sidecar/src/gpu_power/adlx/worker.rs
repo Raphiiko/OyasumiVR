@@ -25,6 +25,8 @@ struct Runtime {
 }
 
 impl Worker {
+    /// Starts the thread that owns every ADLX interface and waits for initialization to finish.
+    /// Thread creation, SDK initialization, or startup-channel failure returns an error.
     pub(super) fn spawn() -> Result<Self, String> {
         let (command_tx, command_rx) = mpsc::channel();
         let (init_tx, init_rx) = mpsc::channel();
@@ -49,6 +51,7 @@ impl Worker {
         Ok(Self { tx: command_tx })
     }
 
+    /// Blocks for a copy of the worker's cached readings; a closed channel returns an error.
     pub(super) fn get_devices(&self) -> Result<Vec<NvmlDevice>, String> {
         let (tx, rx) = mpsc::channel();
         self.tx
@@ -57,6 +60,8 @@ impl Worker {
         rx.recv().map_err(|err| err.to_string())
     }
 
+    /// Blocks for a driver write using `(percent_offset + 100) * 1000` on the ADLX thread.
+    /// Channel failures map to `DeviceAccessError`; device errors are returned unchanged.
     pub(super) fn set_power_limit(
         &self,
         uuid: String,
@@ -77,6 +82,7 @@ impl Worker {
 }
 
 impl Runtime {
+    /// Creates the SDK helper and discovers devices on the thread that will run this runtime.
     fn new() -> Result<Self, String> {
         let helper = AdlxHelper::new().map_err(|err| err.to_string())?;
         let tuning_services =
@@ -90,6 +96,7 @@ impl Runtime {
         })
     }
 
+    /// Serializes cache reads and driver writes until all command senders are dropped.
     fn run(mut self, command_rx: mpsc::Receiver<Command>) {
         while let Ok(command) = command_rx.recv() {
             match command {

@@ -4,6 +4,8 @@ use crate::Models::elevated_sidecar::{
 };
 use log::error;
 
+/// Launches verified MSI Afterburner through the sidecar; profile 0 omits profile selection.
+/// Missing sidecar connections and unrecognized failures return `UnknownError`.
 #[tauri::command]
 pub async fn msi_afterburner_set_profile(
     executable_path: String,

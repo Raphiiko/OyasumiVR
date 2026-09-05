@@ -44,6 +44,7 @@ export class PowerLimitInputComponent implements OnInit {
     this.powerLimitChange.emit(this.powerLimit);
   }
 
+  /** Rounds down and prefixes positive AMD percentage offsets with a plus sign. */
   formatPowerLimit(value: number): string {
     const roundedValue = Math.floor(value);
     if (this.unit === '%') {
@@ -53,10 +54,12 @@ export class PowerLimitInputComponent implements OnInit {
     return `${roundedValue}W`;
   }
 
+  /** Formats a watt value against a positive maximum; callers must ensure that maximum is valid. */
   formatRelativePercentage(value: number): string {
     return `${Math.floor((value / this.maxPowerLimit) * 100)}%`;
   }
 
+  /** Includes a fraction of maximum only for watt-based defaults. */
   get defaultLimitSummary(): string {
     if (this.unit === '%') {
       return `(${this.formatPowerLimit(this.defaultPowerLimit)})`;
@@ -65,10 +68,12 @@ export class PowerLimitInputComponent implements OnInit {
     return `(${this.formatPowerLimit(this.defaultPowerLimit)} / ${this.formatRelativePercentage(this.defaultPowerLimit)})`;
   }
 
+  /** Shows the secondary percentage only for watt limits with a positive maximum. */
   get showRelativePercentage(): boolean {
     return this.unit === 'W' && this.maxPowerLimit > 0;
   }
 
+  /** Requires finite bounds containing the default; negative percentage offsets remain valid. */
   get isEnabled() {
     return (
       this.powerLimit &&

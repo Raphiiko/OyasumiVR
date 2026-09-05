@@ -26,6 +26,7 @@ export class NvmlService {
 
   constructor(private sidecar: ElevatedSidecarService) {}
 
+  /** Starts five-second polling while the sidecar runs and clears GPU state when it stops. */
   async init() {
     this.sidecar.sidecarStarted
       .pipe(
@@ -43,6 +44,7 @@ export class NvmlService {
       .subscribe(() => this.handleNvmlStatusUpdate());
   }
 
+  /** Refreshes devices on every ready poll and clears them when transitioning to a non-ready state. */
   private async handleNvmlStatusUpdate() {
     const status = await this.getNvmlStatus();
     if (status === 'InitComplete') {
@@ -62,6 +64,10 @@ export class NvmlService {
     return invoke<NvmlDevice[]>('nvml_get_devices');
   }
 
+  /**
+   * Sends NVIDIA milliwatts or AMD `(offset + 100) * 1000`, then refreshes devices on success.
+   * Returns false if the write is rejected or the write/refresh invocation throws.
+   */
   public async setPowerLimit(uuid: string, powerLimit: number): Promise<boolean> {
     powerLimit = Math.floor(powerLimit);
     try {
