@@ -81,17 +81,9 @@ export class UpdateService {
     if (!update) return;
     info(`[Update] Installing update...`);
     try {
-      update.downloadAndInstall((event) => {
-        switch (event.event) {
-          case 'Started':
-          case 'Progress':
-            break;
-          case 'Finished':
-            info(`[Update] Update complete. Relaunching...`);
-            relaunch();
-            return;
-        }
-      });
+      await update.downloadAndInstall();
+      info(`[Update] Update complete. Relaunching...`);
+      await relaunch();
     } catch (e) {
       info(`[Update] Update error occurred: ${e}`);
       this.modalService
