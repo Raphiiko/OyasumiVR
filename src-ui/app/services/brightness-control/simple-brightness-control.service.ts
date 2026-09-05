@@ -50,11 +50,12 @@ export class SimpleBrightnessControlService {
     await listen<number>('setSimpleBrightness', async (event) => {
       await this.setBrightness(event.payload, { cancelActiveTransition: true });
     });
-    // Set brightness when switching to simple mode
+    // apply brightness on mode changes
     this.automationConfigService.configs
       .pipe(
-        map((configs) => configs.BRIGHTNESS_AUTOMATIONS),
-        tap((config) => this._advancedMode.next(config.advancedMode)),
+        map((configs) => configs.BRIGHTNESS_AUTOMATIONS.advancedMode),
+        distinctUntilChanged(),
+        tap((advancedMode) => this._advancedMode.next(advancedMode)),
         skip(1)
       )
       .subscribe(async (advancedMode) => {
