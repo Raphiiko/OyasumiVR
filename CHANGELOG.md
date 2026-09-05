@@ -68,6 +68,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed clicks and slider drags failing when both controllers pointed at the VR overlay
 - Fixed queued controller and tracker power-off requests targeting the wrong device when SteamVR
   reused its device index
 - Fixed corrupted image-cache metadata preventing OyasumiVR from starting
