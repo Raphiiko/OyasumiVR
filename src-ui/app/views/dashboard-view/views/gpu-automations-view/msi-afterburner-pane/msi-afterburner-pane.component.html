@@ -11,7 +11,7 @@
         <input
           type="text"
           [value]="config.msiAfterburnerPath"
-          (keyup)="msiAfterburnerPathInputChange.next(msiAfterburnerPathInput.value)"
+          (input)="msiAfterburnerPathInputChange.next(msiAfterburnerPathInput.value)"
           #msiAfterburnerPathInput
         />
       </div>
