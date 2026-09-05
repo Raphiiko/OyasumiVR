@@ -16,6 +16,8 @@ export class LighthouseConsoleService {
     new BehaviorSubject<ExecutableReferenceStatus>('UNKNOWN');
   public consoleStatus: Observable<ExecutableReferenceStatus> = this._consoleStatus.asObservable();
   private powerOffQueue: Promise<void> = Promise.resolve();
+  private validationGeneration = 0;
+  private validatedPath: string | undefined;
 
   constructor(
     private appSettings: AppSettingsService,
@@ -56,6 +58,8 @@ export class LighthouseConsoleService {
 
   async setConsolePath(path: string, save = true) {
     if (save) this.appSettings.updateSettings({ lighthouseConsolePath: path });
+    const generation = ++this.validationGeneration;
+    this.validatedPath = undefined;
     this._consoleStatus.next('CHECKING');
     if (!path.endsWith('lighthouse_console.exe')) {
       this._consoleStatus.next('NOT_FOUND');
@@ -74,6 +78,7 @@ export class LighthouseConsoleService {
         })
       ).stdout;
     } catch (e) {
+      if (generation !== this.validationGeneration) return;
       if (
         typeof e === 'string' &&
         ['NOT_FOUND', 'PERMISSION_DENIED', 'INVALID_FILENAME'].includes(e)
@@ -84,6 +89,7 @@ export class LighthouseConsoleService {
       this._consoleStatus.next('UNKNOWN_ERROR');
       return;
     }
+    if (generation !== this.validationGeneration) return;
     const stdoutLines = stdout.split('\n');
     if (
       !stdoutLines.length ||
@@ -92,6 +98,7 @@ export class LighthouseConsoleService {
       this._consoleStatus.next('INVALID_EXECUTABLE');
       return;
     }
+    this.validatedPath = path;
     this._consoleStatus.next('SUCCESS');
   }
 
@@ -112,7 +119,9 @@ export class LighthouseConsoleService {
   private async runTurnOffDevices(deviceSerialNumbers: string[]) {
     const settings = await firstValueFrom(this.appSettings.settings);
     const lighthouseConsolePath = settings.lighthouseConsolePath;
-    if (this._consoleStatus.value !== 'SUCCESS') return;
+    const generation = this.validationGeneration;
+    if (this._consoleStatus.value !== 'SUCCESS' || this.validatedPath !== lighthouseConsolePath)
+      return;
     // resolve the devices as they are now, not as the caller saw them
     const requestedSerials = new Set(deviceSerialNumbers);
     const ovrDevices = (await firstValueFrom(this.openvr.devices)).filter(
@@ -125,6 +134,7 @@ export class LighthouseConsoleService {
     );
     // sequential on purpose: parallel poweroffs can crash SteamVR
     for (const [index, device] of ovrDevices.entries()) {
+      if (generation !== this.validationGeneration) return;
       this.openvr.onDeviceUpdate(Object.assign({}, device, { isTurningOff: true }));
       info(`[Lighthouse] Turning off device ${device.class}:${device.serialNumber}`);
       try {

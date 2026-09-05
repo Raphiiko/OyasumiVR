@@ -57,6 +57,8 @@ export class GpuAutomationsService {
     new BehaviorSubject<ExecutableReferenceStatus>('UNKNOWN');
   public msiAfterburnerStatus: Observable<ExecutableReferenceStatus> =
     this._msiAfterburnerStatus.asObservable();
+  private msiValidationGeneration = 0;
+  private validatedMSIPath: string | undefined;
 
   constructor(
     private automationConfig: AutomationConfigService,
@@ -357,7 +359,9 @@ export class GpuAutomationsService {
       await error(`[GpuAutomations] Attempted to set invalid MSI Afterburner profile (${index})`);
       return;
     }
-    if (this._msiAfterburnerStatus.value !== 'SUCCESS') {
+    const path = this.currentMSIAfterburnerConfig.msiAfterburnerPath;
+    const generation = this.msiValidationGeneration;
+    if (this._msiAfterburnerStatus.value !== 'SUCCESS' || this.validatedMSIPath !== path) {
       await warn(
         `[GpuAutomations] Could not set MSI Afterburner profile as no valid installation is currently configured`
       );
@@ -365,7 +369,7 @@ export class GpuAutomationsService {
     }
     try {
       await invoke<boolean>('msi_afterburner_set_profile', {
-        executablePath: this.currentMSIAfterburnerConfig.msiAfterburnerPath,
+        executablePath: path,
         profile: index,
       });
       this.eventLog.logEvent({
@@ -374,6 +378,11 @@ export class GpuAutomationsService {
         reason,
       } as EventLogMsiAfterburnerProfileSet);
     } catch (e) {
+      if (
+        generation !== this.msiValidationGeneration ||
+        path !== this.currentMSIAfterburnerConfig.msiAfterburnerPath
+      )
+        return;
       if (typeof e === 'string') {
         this.handleMSIAfterburnerError(e);
       } else {
@@ -385,23 +394,26 @@ export class GpuAutomationsService {
   }
 
   async setMSIAfterburnerPath(path: string, save = true) {
+    const generation = ++this.msiValidationGeneration;
+    this.validatedMSIPath = undefined;
+    this._msiAfterburnerStatus.next('CHECKING');
     if (save)
       await this.automationConfig.updateAutomationConfig<MSIAfterburnerAutomationConfig>(
         'MSI_AFTERBURNER',
         { msiAfterburnerPath: path }
       );
-    this._msiAfterburnerStatus.next('CHECKING');
+    if (generation !== this.msiValidationGeneration) return;
     if (!path.endsWith('MSIAfterburner.exe')) {
       this._msiAfterburnerStatus.next('NOT_FOUND');
       return;
     }
-    // Try running it
     try {
       await invoke<boolean>('msi_afterburner_set_profile', {
         executablePath: path,
         profile: 0, // Profile 0 for testing without actually setting a profile
       });
     } catch (e) {
+      if (generation !== this.msiValidationGeneration) return;
       if (typeof e === 'string') {
         this.handleMSIAfterburnerError(e);
       } else {
@@ -410,6 +422,8 @@ export class GpuAutomationsService {
       }
       return;
     }
+    if (generation !== this.msiValidationGeneration) return;
+    this.validatedMSIPath = path;
     this._msiAfterburnerStatus.next('SUCCESS');
   }
 
