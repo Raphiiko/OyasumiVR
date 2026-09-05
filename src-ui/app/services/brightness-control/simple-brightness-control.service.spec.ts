@@ -1,4 +1,4 @@
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 import { AUTOMATION_CONFIGS_DEFAULT } from '../../models/automations';
 import { SimpleBrightnessControlService } from './simple-brightness-control.service';
@@ -15,7 +15,7 @@ async function setup(advancedMode = false) {
   const hardware = {
     driverIsAvailable: new BehaviorSubject(false),
     brightnessBounds: new BehaviorSubject([20, 100]),
-    setBrightness: vi.fn(async () => {}),
+    setBrightness: vi.fn<Dependencies[1]['setBrightness']>().mockResolvedValue(undefined),
     cancelActiveTransition: vi.fn(),
   };
   const software = {
@@ -94,6 +94,50 @@ describe('simple brightness mode changes', () => {
     h.software.setBrightness.mockClear();
     h.hardware.driverIsAvailable.next(false);
     await Promise.resolve();
+    expect(h.software.setBrightness).not.toHaveBeenCalled();
+    expect(h.hardware.setBrightness).not.toHaveBeenCalled();
+  });
+
+  it.each([false, true])(
+    'discards a pending restore after mode changes, including return to simple: %s',
+    async (returnToSimple) => {
+      const h = await setup();
+      h.hardware.driverIsAvailable.next(true);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      await h.service.setBrightness(40);
+      h.mode(true);
+      let finish!: () => void;
+      h.software.setBrightness.mockImplementationOnce(
+        () => new Promise<void>((resolve) => (finish = resolve))
+      );
+      h.mode(false);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      h.mode(true);
+      await h.hardware.setBrightness(80);
+      if (returnToSimple) {
+        h.mode(false);
+        await new Promise((resolve) => setTimeout(resolve, 0));
+      }
+      h.hardware.setBrightness.mockClear();
+      finish();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      expect(h.hardware.setBrightness).not.toHaveBeenCalled();
+    }
+  );
+
+  it('discards a restore that was waiting for hardware bounds', async () => {
+    const h = await setup();
+    h.hardware.driverIsAvailable.next(true);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    h.mode(true);
+    const bounds = new Subject<number[]>();
+    h.hardware.brightnessBounds = bounds as BehaviorSubject<number[]>;
+    h.software.setBrightness.mockClear();
+    h.hardware.setBrightness.mockClear();
+    h.mode(false);
+    h.mode(true);
+    bounds.next([20, 100]);
+    await new Promise((resolve) => setTimeout(resolve, 0));
     expect(h.software.setBrightness).not.toHaveBeenCalled();
     expect(h.hardware.setBrightness).not.toHaveBeenCalled();
   });
