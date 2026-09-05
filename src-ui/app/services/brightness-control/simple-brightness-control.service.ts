@@ -28,6 +28,7 @@ import { listen } from '@tauri-apps/api/event';
 })
 export class SimpleBrightnessControlService {
   private _advancedMode = new BehaviorSubject(false);
+  private _modeGeneration = 0;
   private _brightness: BehaviorSubject<number> = new BehaviorSubject<number>(100);
   private _activeTransition = new BehaviorSubject<BrightnessTransitionTask | undefined>(undefined);
   public readonly activeTransition = this._activeTransition.asObservable();
@@ -50,14 +51,16 @@ export class SimpleBrightnessControlService {
     await listen<number>('setSimpleBrightness', async (event) => {
       await this.setBrightness(event.payload, { cancelActiveTransition: true });
     });
-    // Set brightness when switching to simple mode
+    // apply brightness on mode changes
     this.automationConfigService.configs
       .pipe(
-        map((configs) => configs.BRIGHTNESS_AUTOMATIONS),
-        tap((config) => this._advancedMode.next(config.advancedMode)),
+        map((configs) => configs.BRIGHTNESS_AUTOMATIONS.advancedMode),
+        distinctUntilChanged(),
+        tap((advancedMode) => this._advancedMode.next(advancedMode)),
         skip(1)
       )
       .subscribe(async (advancedMode) => {
+        this._modeGeneration++;
         this.cancelActiveTransition();
         this.hardwareBrightnessControl.cancelActiveTransition();
         this.softwareBrightnessControl.cancelActiveTransition();
@@ -134,6 +137,7 @@ export class SimpleBrightnessControlService {
   ) {
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
     percentage = clamp(percentage, 0, 100);
+    const modeGeneration = this._modeGeneration;
     if (opt.cancelActiveTransition) this.cancelActiveTransition();
     this._brightness.next(percentage);
     if (opt.logReason) {
@@ -164,10 +168,12 @@ export class SimpleBrightnessControlService {
       }
     }
     // Set brightnesses
+    if (modeGeneration !== this._modeGeneration) return;
     await this.softwareBrightnessControl.setBrightness(softwareBrightness, {
       cancelActiveTransition: true,
       logReason: null,
     });
+    if (modeGeneration !== this._modeGeneration) return;
     if (this.hardwareBrightnessDriverAvailable) {
       await this.hardwareBrightnessControl.setBrightness(hardwareBrightness, {
         cancelActiveTransition: true,

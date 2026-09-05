@@ -68,6 +68,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed switching from advanced to simple brightness mode not restoring the saved brightness
+
 - Fixed device selections not refreshing immediately after tag or disabled-state changes
 
 - Fixed charging power-off automation using an outdated device selection
