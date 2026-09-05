@@ -141,6 +141,9 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Fixed OpenVR aborting when its settings interface was unavailable
 - Fixed stale subscriptions after closing the OSC script editor and Device Manager modal
 - Panic reports no longer include your Windows account name from embedded source paths
+- Fixed OyasumiVR's splash screen being hidden instead of closed while closing to the system tray
+  was enabled, which left OyasumiVR running without a window after you turned the option off and
+  closed the window
 
 ### Removed
 
