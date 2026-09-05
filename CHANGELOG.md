@@ -68,6 +68,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed charging power-off automation using an outdated device selection
+
 - Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
 
 - Fixed the leave sound never playing when the leave notification was turned off
