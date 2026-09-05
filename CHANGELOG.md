@@ -68,6 +68,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed manually entered MSI Afterburner paths not being saved
+
 - Fixed duplicate update installations and allowed retries after installation or restart failures
 
 - Fixed switching from advanced to simple brightness mode not restoring the saved brightness
