@@ -68,6 +68,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed the sunset and sunrise brightness automations running when your headset reconnected while
+  sleep mode was on, even with "Only while sleep mode is disabled" enabled
 - Fixed clicks and slider drags failing when both controllers pointed at the VR overlay
 - Fixed queued controller and tracker power-off requests targeting the wrong device when SteamVR
   reused its device index

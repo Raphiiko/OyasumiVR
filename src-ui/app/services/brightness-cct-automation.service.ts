@@ -296,7 +296,7 @@ export class BrightnessCctAutomationService {
     if (sunriseEnabled || sunsetEnabled) {
       // Determine if the sunrise and sunset times are inverted (sunset time is earlier than sunrise time)
       // and which automation to use based on the current time
-      let activeAutomation: BrightnessEvent | null = null;
+      let activeAutomation: 'AT_SUNRISE' | 'AT_SUNSET' | null = null;
 
       if (sunriseTime !== null && sunsetTime !== null) {
         // Both times available - similar to original logic
@@ -329,6 +329,9 @@ export class BrightnessCctAutomationService {
         // Use sunset automation after sunset time (until midnight)
         activeAutomation = sunsetEnabled && options.currentTime >= sunsetTime ? 'AT_SUNSET' : null;
       }
+
+      if (activeAutomation && options.sleepMode && config[activeAutomation].onlyWhenSleepDisabled)
+        activeAutomation = null;
 
       // Apply the active automation if any
       if (activeAutomation) {
