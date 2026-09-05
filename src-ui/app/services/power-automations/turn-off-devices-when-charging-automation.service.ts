@@ -36,10 +36,7 @@ export class TurnOffDevicesWhenChargingAutomationService {
 
     this.openvr.devices.subscribe((devices) => {
       this.chargingDevices = this.chargingDevices.filter((charging) =>
-        devices.some(
-          (device) =>
-            device.serialNumber === charging.serialNumber && device.isCharging && device.canPowerOff
-        )
+        devices.some((device) => device.serialNumber === charging.serialNumber && device.isCharging)
       );
       devices.forEach(async (device) => {
         if (
