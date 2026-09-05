@@ -90,6 +90,23 @@ describe('ControllerBindingComponent', () => {
     expect(invoke).toHaveBeenCalledTimes(2);
     expect(component.activeBinding).toEqual(binding);
   });
+
+  it('ignores a slow query that settles after a newer one', async () => {
+    let failSlowQuery: (reason: unknown) => void = () => {};
+    invoke
+      .mockImplementationOnce(() => new Promise((_resolve, reject) => (failSlowQuery = reject)))
+      .mockResolvedValue([binding]);
+    const component = createComponent();
+
+    component.ngOnInit();
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(component.activeBinding).toEqual(binding);
+
+    failSlowQuery('SLOW_FAILURE');
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(component.activeBinding).toEqual(binding);
+  });
 });
 
 describe('OpenVRInputService', () => {
