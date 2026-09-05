@@ -1,0 +1,35 @@
+[package]
+name = "oyasumivr-privileged-launcher"
+version = "26.8.0-beta.5"
+authors = ["Raphiiko"]
+license = "MIT"
+edition = "2021"
+
+# Every dependency here runs elevated, so the bar for adding one is high.
+[dependencies]
+log = { version = "0.4.33", features = ["std"] }
+minisign-verify = "0.2.5"
+oyasumivr-shared = { path = "../src-shared-rust" }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.151"
+
+# Test-only, so it never reaches the shipped binary.
+[dev-dependencies]
+base64 = "0.22"
+minisign = "0.7.9"
+
+[dependencies.windows]
+version = "0.62.2"
+features = [
+  "Win32_Foundation",
+  "Win32_Security",
+  "Win32_Storage_FileSystem",
+  "Win32_System_Threading",
+]
+
+[profile.release]
+panic = "abort"
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true

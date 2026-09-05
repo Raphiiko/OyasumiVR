@@ -551,6 +551,7 @@ OyasumiVRは現在、以下の言語に対応しています。
 - Deutsch (German): Community contributions by [Nicer Dicer](https://github.com/XNicerDicerX) and [Aron](https://github.com/imaron85).
 - Nederlands (Dutch): by [Raphiiko](https://linktr.ee/raphii).
 - English: by [Raphiiko](https://linktr.ee/raphii).
+- ไทย (Thai): Community contribution by [ShikiYuri (Sk._Yri)](https://github.com/ShikiYuriSan).
 
 ### 翻訳への協力
 
@@ -599,9 +600,8 @@ HMDの色温度制御は現在、Valve Index, Bigscreen Beyond, HTC Vive(Pro)な
 
 OyasumiVRは以下により構築されています。
 
-- [Angular](https://angular.io/) (TypeScript, Main UI)
+- [Angular](https://angular.io/) (TypeScript, Main UI & Overlay UI)
 - [Tauri](https://tauri.app/) (Rust, Desktop Framework)
-- [SvelteKit](https://kit.svelte.dev/) (TypeScript, Overlay UI)
 - [.NET](https://dotnet.microsoft.com/en-us/) (C#, Overlay)
 
 ## 開発
@@ -621,8 +621,6 @@ OyasumiVRの開発者及びこのプロジェクトの貢献者は、OyasumiVR�
 
 ## Aptabase
 
-<img align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/dfdab6c8-c952-4e0d-be12-017d14262a49" width="180">
-
 利用データの送信は[Aptabase](https://aptabase.com)によって提供されています。オープンソースであるAptabaseはモバイルおよびデスクトップアプリ向けに、プライバシーを第一としたシンプルな分析を提供してくれます。クラッシュレポートや匿名の使用統計を収集することでOyasumiVRの開発をサポートするにあたり、個人のプライバシーを最大限尊重するためにAptabaseが選ばれました。
 
 利用データは完全に匿名であり、個人を特定するデータは含まれません。主にバグの追跡と、アプリの起動回数や使用言語などの一般的な使用統計の提供のみに使用されます。
@@ -638,4 +636,3 @@ OyasumiVRでお困りのことがありましたら [Discord Server](https://dis
 ## ライセンス
 
 OyasumiVR is available under the [MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md) license.
-

@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { VRChatService } from './vrchat-api/vrchat.service';
 import { AutomationConfigService } from './automation-config.service';
 import { SleepService } from './sleep.service';
-import { Notification, NotificationType, UserStatus } from 'vrchat';
-import { info, warn } from '@tauri-apps/plugin-log';
+import type { Notification } from 'vrchat';
+import { NotificationType, UserStatus } from '../models/vrchat';
+import { error, info, warn } from '@tauri-apps/plugin-log';
 import { firstValueFrom } from 'rxjs';
 import { EventLogService } from './event-log.service';
 import {
@@ -12,7 +13,7 @@ import {
   EventLogDeclinedInviteRequest,
 } from '../models/event-log-entry';
 import { NotificationService } from './notification.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { AppSettingsService } from './app-settings.service';
 import { AutoAcceptInviteRequestsAutomationConfig } from '../models/automations';
 import { SleepPreparationService } from './sleep-preparation.service';
@@ -30,23 +31,29 @@ export class InviteAutomationsService {
     private sleep: SleepService,
     private eventLog: EventLogService,
     private notifications: NotificationService,
-    private translate: TranslateService,
+    private translate: TranslocoService,
     private sleepPreparation: SleepPreparationService,
     private messageCenter: MessageCenterService
   ) {}
 
   async init() {
-    this.vrchat.notifications.subscribe(async (notification) => {
-      switch (notification.type) {
-        case NotificationType.RequestInvite:
-          await this.handleRequestInviteNotification(notification);
-          break;
-        case NotificationType.Invite:
-          await this.handleInviteNotification(notification);
-          break;
-      }
+    this.vrchat.notifications.subscribe((notification) => {
+      void this.handleNotification(notification).catch((cause) =>
+        error(`[VRChat] Failed to handle notification '${notification.id}': ${cause}`)
+      );
     });
     this.handlePlayerListPresetAutomations();
+  }
+
+  private async handleNotification(notification: Notification): Promise<void> {
+    switch (notification.type) {
+      case NotificationType.RequestInvite:
+        await this.handleRequestInviteNotification(notification);
+        break;
+      case NotificationType.Invite:
+        await this.handleInviteNotification(notification);
+        break;
+    }
   }
 
   private async handleInviteNotification(notification: Notification) {
@@ -92,7 +99,10 @@ export class InviteAutomationsService {
     info(`[VRChat] Received invite request from ${notification.senderUsername}`);
     // Get the current user
     const user = await firstValueFrom(this.vrchat.user);
-    if (!user) return;
+    if (!user) {
+      warn('[VRChat] Ignoring invite request because the current user is not available');
+      return;
+    }
     // Get the sleep mode
     const sleepMode = await firstValueFrom(this.sleep.mode);
     // Get the automation config
@@ -130,7 +140,7 @@ export class InviteAutomationsService {
           values: {
             senderUsername:
               notification.senderUsername ??
-              this.translate.instant(
+              this.translate.translate(
                 'message-center.messages.vrcInviteRequestFailedWorldUnknown.unknownFriend'
               ),
           },
@@ -255,7 +265,7 @@ export class InviteAutomationsService {
     this.playInviteRequestSound(config, true, sleepMode);
     if (await this.notifications.notificationTypeEnabled('AUTO_ACCEPTED_INVITE_REQUEST')) {
       await this.notifications.send(
-        this.translate.instant('notifications.autoAcceptedInviteRequest.content', {
+        this.translate.translate('notifications.autoAcceptedInviteRequest.content', {
           username: notification.senderUsername,
         })
       );
@@ -274,7 +284,7 @@ export class InviteAutomationsService {
     let message = config.acceptInviteRequestMessage;
     message = message.replace(/\s+/g, ' ').trim();
     if (message.length === 0) {
-      message = this.translate.instant(
+      message = this.translate.translate(
         'invite-and-invite-requests.inviteRequestsTab.options.acceptMessage.customMessage.placeholder'
       );
       message = message.replace(/\s+/g, ' ').trim();
@@ -291,7 +301,7 @@ export class InviteAutomationsService {
     let message = config.declineInviteRequestMessage;
     message = message.replace(/\s+/g, ' ').trim();
     if (message.length === 0) {
-      message = this.translate.instant(
+      message = this.translate.translate(
         'invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.customMessage.placeholder'
       );
       message = message.replace(/\s+/g, ' ').trim();
@@ -307,7 +317,7 @@ export class InviteAutomationsService {
     let message = config.declineInviteMessage;
     message = message.replace(/\s+/g, ' ').trim();
     if (message.length === 0) {
-      message = this.translate.instant(
+      message = this.translate.translate(
         'invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.customMessage.placeholder'
       );
       message = message.replace(/\s+/g, ' ').trim();

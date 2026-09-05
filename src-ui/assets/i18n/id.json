@@ -1,14 +1,9 @@
 {
   "about": {
-    "author": {
-      "role": "Developer"
-    },
     "contributionType": {
       "soundFx": "Efek Suara"
     },
     "contributions": "Kontribusi",
-    "discordInvite": "Discord Server",
-    "projectLinks": "Tautan Proyek",
     "sourceLink": "Kode Sumber @ GitHub",
     "translations": "Terjemahan"
   },
@@ -104,11 +99,9 @@
       "category": {
         "Controller": "Kontroler",
         "GenericTracker": "Tracker",
-        "Lighthouse": "Base Stations",
         "other": "Lainnya"
       },
       "lighthouseStatus": {
-        "booting": "Booting",
         "on": "Aktif",
         "sleep": "Tertidur",
         "standby": "SIaga",
@@ -202,8 +195,7 @@
         "shutdownSequenceCancelled": {
           "reason": {
             "MANUAL": "Dibatalkan manual"
-          },
-          "title": "The shutdown sequence was cancelled"
+          }
         },
         "shutdownSequenceStarted": {
           "reason": {
@@ -332,7 +324,6 @@
       }
     },
     "osc-script-code-editor": {
-      "format": "Format",
       "syntaxGuide": "Panduan Syntax",
       "test": "Tes",
       "title": "Editor Skrip OSC"
@@ -386,8 +377,7 @@
       "message": "Pembaruan baru untuk OyasumiVR telah ditemukan: v{newVersion}.\n\nAnda saat ini masih menjalankan v{currentVersion}.\n\nApakah Anda ingin memperbarui sekarang atau nanti?",
       "steamAd": "<b>OyasumiVR juga tersedia di Steam!</b><br><br>Ini adalah cara baru yang direkomendasikan untuk menginstal OyasumiVR.<br>Kunjungi halaman toko di <a href=\"https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/\" target=\"_blank\">Steam</a> untuk mengetahui lebih lanjut!",
       "title": "Update Tersedia",
-      "updateLater": "Tidak Sekarang",
-      "updateNow": "Install v{version}"
+      "updateLater": "Tidak Sekarang"
     },
     "vrchat-login-modal": {
       "disclaimers": {
@@ -399,9 +389,7 @@
         "INVALID_CREDENTIALS": "Kredensial yang Anda berikan salah.",
         "UNEXPECTED_RESPONSE": "Login gagal: terjadi kesalahan yang tidak diketahui. Harap verifikasi koneksi Anda atau coba lagi nanti."
       },
-      "password": "Password",
-      "title": "Masuk ke VRChat",
-      "username": "VRChat Username/E-mail"
+      "title": "Masuk ke VRChat"
     },
     "vrchat-login-tfa-modal": {
       "description": "Akun VRChat Anda dilindungi dengan autentikasi dua faktor.\n\nMasukkan kode 2FA:",
@@ -418,12 +406,6 @@
     "disabled": {
       "disabled": "OyasumiVR memiliki berbagai cara untuk mengubah pengaturan GPU Anda secara otomatis.\nHal ini memungkinkan Anda menghemat daya sewaktu Anda tidur.\n\nKarena ini adalah fitur untuk pengguna tingkat lanjut, fitur ini dinonaktifkan secara default.\nAnda dapat mengaktifkannya dengan mengeklik tombol di bawah ini.",
       "noSidecar": "Agar OyasumiVR diizinkan untuk mengubah pengaturan GPU Anda, diperlukan hak administrator. Silakan klik tombol di bawah ini untuk memberikan hak administrator kepada OyasumiVR."
-    },
-    "elevationSidecarModal": {
-      "cancel": "Hanya sekali ini saja",
-      "confirm": "Selalu",
-      "message": "Apakah Anda ingin selalu memberikan hak administrator OyasumiVR?",
-      "title": "Memberikan hak istimewa kepada administrator"
     },
     "enable": "Nyalakan Otomatisasi GPU",
     "enableWarning": "Salah mengubah parameter GPU dapat menyebabkan sistem Anda menjadi tidak stabil. Harap ingatlah hal ini dan hanya aktifkan fitur ini jika Anda tahu apa yang Anda lakukan.",
@@ -494,7 +476,6 @@
           "description": "Bagaimana daftar pemain beroperasi",
           "options": {
             "BLACKLIST": {
-              "label": "Blacklist",
               "subLabel": "Menerima dari teman yang tidak ada dalam daftar"
             },
             "DISABLED": {
@@ -502,7 +483,6 @@
               "subLabel": "Terima dari semua orang"
             },
             "WHITELIST": {
-              "label": "Whitelist",
               "subLabel": "Menerima dari teman dalam daftar"
             }
           },
@@ -660,9 +640,7 @@
       "automations": {
         "autoAcceptInviteRequests": {
           "mode": {
-            "Blacklist": "Blacklist",
-            "Disabled": "Untuk semuanya",
-            "Whitelist": "Whitelist"
+            "Disabled": "Untuk semuanya"
           },
           "subtitle": "{mode}: {playerCount} teman",
           "title": "Terima Otomatis Permintaan Undangan"
@@ -769,8 +747,6 @@
       "title": "Ketika saya pergi tidur"
     },
     "renderResolution": {
-      "auto": "Auto",
-      "custom": "Custom",
       "title": "Ubah resolusi render saya ke"
     },
     "title": "Otomatisasi Resolusi"
@@ -835,8 +811,6 @@
         },
         "description": "Mengelola data yang disimpan OyasumiVR di disk Anda",
         "relaunchModal": {
-          "later": "Akan kulakukan nanti.",
-          "message": "Data yang diminta telah dihapus. Disarankan untuk memulai ulang OyasumiVR setelah melakukan ini.\n\nApakah Anda ingin melakukan ini sekarang? Tidak memulai ulang OyasumiVR dapat menimbulkan efek yang tidak diinginkan.",
           "relaunch": "Mulai ulang OyasumiVR Sekarang",
           "title": "Mulai ulang OyasumiVR"
         },
@@ -863,8 +837,14 @@
     },
     "general": {
       "adminPrivileges": {
-        "description": "OyasumiVR membutuhkan hak administrator untuk dapat mengontrol batas daya GPU Anda. Jika Anda mengaktifkannya, OyasumiVR akan meminta hak istimewa administrator saat memulai.",
-        "label": "Meminta hak istimewa administrator saat memulai",
+        "description": "Beberapa fitur, seperti mengontrol batas daya GPU Anda, membutuhkan hak istimewa administrator. Mengaktifkan ini hanya memintanya sekali. Setelah itu OyasumiVR menyiapkan fitur-fitur ini tanpa bertanya lagi.",
+        "errors": {
+          "installFailed": "OyasumiVR tidak dapat menyiapkan komponen yang membutuhkan hak istimewa administrator.",
+          "notSupported": "Fitur-fitur ini membutuhkan akun administrator Windows. Akun ini tidak bisa diberi hak istimewa administrator, jadi fitur-fitur ini tetap tidak tersedia.",
+          "promptDeclined": "Hak istimewa administrator tidak diberikan, jadi fitur-fitur ini tetap nonaktif.",
+          "taskFailed": "OyasumiVR tidak dapat memulai komponen yang membutuhkan hak istimewa administrator. OyasumiVR akan mencoba lagi saat Anda menjalankannya berikutnya."
+        },
+        "label": "Izinkan fitur yang membutuhkan hak istimewa administrator",
         "title": "Hak Istimewa Administrator"
       },
       "language": {
@@ -910,8 +890,7 @@
         "overlayMenu": {
           "description": "Ini dapat dimatikan jika Anda ingin menonaktifkan menu overlay OyasumiVR sepenuhnya.",
           "title": "Aktifkan menu overlay"
-        },
-        "title": "Overlay"
+        }
       },
       "sleepMode": {
         "startupBehaviour": {
@@ -959,8 +938,7 @@
         "start": {
           "description": "Memulai OyasumiVR diminimalkan ke system tray.",
           "label": "Mulai di system tray"
-        },
-        "title": "System Tray"
+        }
       },
       "telemetry": {
         "label": "Mengirim data penggunaan anonim",
@@ -1002,8 +980,7 @@
         "title": "Nyalakan Notifikasi"
       },
       "provider": {
-        "description": "Pilih penyedia mana yang akan digunakan untuk mengirimkan notifikasi kepada Anda",
-        "title": "Notification Provider"
+        "description": "Pilih penyedia mana yang akan digunakan untuk mengirimkan notifikasi kepada Anda"
       },
       "title": "Pengaturan Notifikasi",
       "volume": {
@@ -1015,7 +992,6 @@
     "updates": {
       "changelog": "Daftar Perubahan",
       "checkForUpdates": "Periksa pembaruan",
-      "install": "Install v{version}",
       "noUpdate": "Anda saat ini sedang menjalankan OyasumiVR v{version} yang merupakan versi terbaru!",
       "notChecked": "OyasumiVR belum memeriksa pembaruan.",
       "updateAvailable": "Versi baru OyasumiVR telah tersedia! Anda sedang menjalankan v{currentVersion}.\nVersi terbaru adalah v{latestVersion}.",
@@ -1149,13 +1125,11 @@
       },
       "disableOnDevicePowerOn": {
         "Controller": "Kontroler",
-        "GenericTracker": "Tracker",
         "title": "Matikan mode tidur",
         "whenTurningOn": "Ketika menyalakan"
       },
       "enableAtBatteryPercentage": {
         "Controller": "Kontroler",
-        "GenericTracker": "Tracker",
         "errors": {
           "thresholdNotInteger": "Nilai persentase harus berupa angka bulat.",
           "thresholdOutOfRange": "Persentasenya harus antara 0% dan 100%."
@@ -1310,8 +1284,6 @@
       },
       "conflictWarning": "Jika Anda menggunakan fitur ini untuk mengaktifkan mode senyap mikrofon dengan VRChat, disarankan agar dalam pengaturan VRChat Anda melepas ikatan tombol senyap atau menyetel mode mikrofon ke \"Selalu Aktif\" untuk mencegah perilaku yang bertentangan.",
       "currentMode": {
-        "PUSH_TO_TALK": "Push to talk",
-        "TOGGLE": "Toggle",
         "description": "Mencerminkan mode tombol kontroler saat ini",
         "title": "Perilaku tombol aktif"
       },
@@ -1323,9 +1295,7 @@
       "mode": {
         "description": "Bagaimana menekan tombol akan mengubah status mikrofon Anda secara default",
         "options": {
-          "NONE": "Jangan ganti",
-          "PUSH_TO_TALK": "Push to talk",
-          "TOGGLE": "Toggle"
+          "NONE": "Jangan ganti"
         },
         "title": "Perilaku tombol bawaan"
       },
@@ -1349,7 +1319,6 @@
     },
     "description": "Secara otomatis mute atau mengaktifkan mikrofon Anda pada level perangkat saat Anda tertidur, atau bangun! Ini bisa berguna ketika Anda ingin mencegah orang lain mendengar Anda mendengkur ;)",
     "muteOptions": {
-      "MUTE": "Mute",
       "NONE": "Jangan ganti",
       "UNMUTE": "Aktifkan"
     },
@@ -1408,7 +1377,6 @@
       "unmute": "Bunyikan\nmikropon"
     },
     "muteOptions": {
-      "MUTE": "Mute",
       "NONE": "kosong",
       "UNMUTE": "Aktifkan"
     },

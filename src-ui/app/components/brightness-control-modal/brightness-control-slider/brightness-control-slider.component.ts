@@ -9,6 +9,7 @@ import {
   Output,
   SimpleChanges,
   ViewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { clamp } from 'lodash';
 import { getCSSColorForCCT } from 'src-shared-ts/src/cct-utils';
@@ -17,6 +18,7 @@ import { getCSSColorForCCT } from 'src-shared-ts/src/cct-utils';
   selector: 'app-brightness-control-slider',
   templateUrl: './brightness-control-slider.component.html',
   styleUrls: ['./brightness-control-slider.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class BrightnessControlSliderComponent implements OnInit, OnChanges {

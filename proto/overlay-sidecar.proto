@@ -13,6 +13,7 @@ service OyasumiOverlaySidecar {
   rpc CloseOverlayMenu(Empty) returns (Empty) {}
   rpc ToggleOverlayMenu(OverlayMenuOpenRequest) returns (Empty) {}
   rpc SetMicrophoneActive(SetMicrophoneActiveRequest) returns (Empty) {}
+  rpc SetErrorReportingEnabled(SetErrorReportingEnabledRequest) returns (Empty) {}
 }
 
 // Requests & Responses
@@ -40,6 +41,10 @@ message OverlayMenuOpenRequest {
 message SetMicrophoneActiveRequest {
   bool active = 1;
   MicrophoneActivityMode mode = 2;
+}
+
+message SetErrorReportingEnabledRequest {
+  bool enabled = 1;
 }
 
 message Empty {
@@ -189,4 +194,3 @@ enum MicrophoneActivityMode {
   MICROPHONE_ACTIVITY_MODE_Hardware = 0;
   MICROPHONE_ACTIVITY_MODE_VRChat = 1;
 }
-

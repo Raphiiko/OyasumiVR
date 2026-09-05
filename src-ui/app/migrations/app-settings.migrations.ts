@@ -1,77 +1,33 @@
-import { mergeWith } from 'lodash';
-import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
-import { error, info } from '@tauri-apps/plugin-log';
-import { BaseDirectory, writeTextFile } from '@tauri-apps/plugin-fs';
-import { message } from '@tauri-apps/plugin-dialog';
+import { APP_SETTINGS_DEFAULT } from '../models/settings';
+import type { MigrationDefinition, Versioned } from 'src-shared-ts/src/migration-runner';
+import { migrateLighthouseDeviceId } from './lighthouse-device-id';
+import { protectSecret } from '../utils/secrets';
+import { normalizeWithDefaults } from './migration-defaults';
 
-const migrations: { [v: number]: (data: any) => any } = {
-  1: resetToLatest,
-  2: from1to2,
-  3: from2to3,
-  4: from3to4,
-  5: from4to5,
-  6: from5to6,
-  7: from6to7,
-  8: from7to8,
-  9: from8to9,
-  10: from9to10,
-};
+function from12to13(data: any): any {
+  data.version = 13;
+  data.elevatedFeaturesEnabled = !!data.askForAdminOnStart;
+  delete data.askForAdminOnStart;
+  return data;
+}
 
-export function migrateAppSettings(data: any): AppSettings {
-  let currentVersion = data.version || 0;
-  // Reset to latest when the current version is higher than the latest
-  if (currentVersion > APP_SETTINGS_DEFAULT.version) {
-    data = resetToLatest(data);
-    info(
-      `[app-settings-migrations] Reset future app settings version back to version ${
-        currentVersion + ''
-      }`
+async function from11to12(data: any): Promise<any> {
+  data.mqttProtectedPassword = await protectSecret(data.mqttPassword);
+  data.mqttPassword = null;
+  data.version = 12;
+  return data;
+}
+
+function from10to11(data: any): any {
+  data.version = 11;
+  if (data.v1LighthouseIdentifiers) {
+    data.v1LighthouseIdentifiers = Object.fromEntries(
+      Object.entries(data.v1LighthouseIdentifiers).map(([id, identifier]) => [
+        migrateLighthouseDeviceId(id) ?? id,
+        identifier,
+      ])
     );
   }
-  while (currentVersion < APP_SETTINGS_DEFAULT.version) {
-    try {
-      data = migrations[++currentVersion](data);
-    } catch (e) {
-      error(
-        "[app-settings-migrations] Couldn't migrate to version " +
-          currentVersion +
-          '. Backing up configuration and resetting to the latest version. : ' +
-          e
-      );
-      saveBackup(structuredClone(data));
-      data = resetToLatest(data);
-      currentVersion = data.version;
-      message(
-        'Your application settings could not to be migrated to the new version of OyasumiVR, and have therefore been reset. Apologies for the inconvenience.\n\nPlease report this issue to the developer so this issue may be fixed in the future. Thank you!',
-        { title: 'Migration Error (App Settings)' }
-      );
-      continue;
-    }
-    currentVersion = data.version;
-    info(`[app-settings-migrations] Migrated app settings to version ${currentVersion + ''}`);
-  }
-  data = mergeWith(structuredClone(APP_SETTINGS_DEFAULT), data, (objValue, srcValue) => {
-    // Delete irrelevant keys
-    if (objValue === undefined) {
-      return undefined;
-    }
-    // Do not merge array values
-    if (Array.isArray(objValue)) {
-      return srcValue;
-    }
-  });
-  return data as AppSettings;
-}
-
-async function saveBackup(oldData: any) {
-  await writeTextFile('app-settings.backup.json', JSON.stringify(oldData, null, 2), {
-    baseDir: BaseDirectory.AppData,
-  });
-}
-
-function resetToLatest(data: any): any {
-  // Reset to latest
-  data = structuredClone(APP_SETTINGS_DEFAULT);
   return data;
 }
 
@@ -80,7 +36,6 @@ function from9to10(data: any): any {
   data.overlayGpuAcceleration = !(data.overlayGpuFix ?? false);
   delete data.overlayGpuFix;
 
-  // Remove unused one-time flags
   if (data.oneTimeFlags) {
     data.oneTimeFlags = data.oneTimeFlags.filter(
       (flag: string) =>
@@ -89,10 +44,8 @@ function from9to10(data: any): any {
     );
   }
 
-  // Remove device nicknames
   delete data.deviceNicknames;
 
-  // Remove ignored lighthouses
   delete data.ignoredLighthouses;
 
   return data;
@@ -155,7 +108,6 @@ function from3to4(data: any): any {
 
 function from2to3(data: any): any {
   data.version = 3;
-  // Missing keys are now always added by default
   return data;
 }
 
@@ -164,3 +116,23 @@ function from1to2(data: any): any {
   data.askForAdminOnStart = false;
   return data;
 }
+
+export const APP_SETTINGS_MIGRATION: MigrationDefinition<Versioned> = {
+  targetVersion: APP_SETTINGS_DEFAULT.version,
+  minimumSupportedVersion: 1,
+  steps: {
+    1: from1to2,
+    2: from2to3,
+    3: from3to4,
+    4: from4to5,
+    5: from5to6,
+    6: from6to7,
+    7: from7to8,
+    8: from8to9,
+    9: from9to10,
+    10: from10to11,
+    11: from11to12,
+    12: from12to13,
+  },
+  normalizeCurrentVersion: (data) => normalizeWithDefaults(APP_SETTINGS_DEFAULT, data),
+};

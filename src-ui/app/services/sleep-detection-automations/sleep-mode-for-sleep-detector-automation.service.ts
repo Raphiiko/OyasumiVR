@@ -18,13 +18,13 @@ import {
 import { SleepService } from '../sleep.service';
 import { SleepDetectorStateReport } from '../../models/events';
 import { NotificationService } from '../notification.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { EventLogService } from '../event-log.service';
 import { OpenVRInputService } from '../openvr-input.service';
 import { OVRInputEventAction } from '../../models/ovr-input-event';
 import { SleepingPose } from '../../models/sleeping-pose';
 import { TelemetryService } from '../telemetry.service';
-import { getBuiltInNotificationSound } from 'src-ui/app/models/notification-sounds';
+import { getBuiltInNotificationSound } from '../../models/notification-sounds';
 
 export type SleepDetectorStateReportHandlingResult =
   | 'AUTOMATION_DISABLED'
@@ -47,6 +47,7 @@ export type SleepDetectorStateReportHandlingResult =
 })
 export class SleepModeForSleepDetectorAutomationService {
   private sleepEnableTimeoutId: number | null = null;
+  private sleepCheckGeneration = 0;
   private lastEnableAttempt = 0;
   private lastSleepModeDisable = 0;
   private lastControllerButtonPresenceIndication = 0;
@@ -78,18 +79,21 @@ export class SleepModeForSleepDetectorAutomationService {
     private automationConfig: AutomationConfigService,
     private sleep: SleepService,
     private notifications: NotificationService,
-    private translate: TranslateService,
+    private translate: TranslocoService,
     private eventLog: EventLogService,
     private openvrInputService: OpenVRInputService,
     private telemetry: TelemetryService
   ) {}
 
   async init() {
-    this.automationConfig.configs.subscribe(
-      (configs) => (this.enableConfig = configs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR)
-    );
-    this.sleep.mode.pipe(distinctUntilChanged(), skip(1)).subscribe((mode) => {
+    this.automationConfig.configs.subscribe(async (configs) => {
+      const wasEnabled = this.enableConfig.enabled;
+      this.enableConfig = configs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR;
+      if (wasEnabled && !this.enableConfig.enabled) await this.invalidateSleepCheck();
+    });
+    this.sleep.mode.pipe(distinctUntilChanged(), skip(1)).subscribe(async (mode) => {
       if (!mode) this.lastSleepModeDisable = Date.now();
+      await this.invalidateSleepCheck();
     });
     this.sleep.pose.pipe(pairwise()).subscribe(([previous, current]) => {
       this.lastPose = current;
@@ -128,9 +132,7 @@ export class SleepModeForSleepDetectorAutomationService {
   }
 
   async dismissSleepCheck() {
-    if (this.sleepEnableTimeoutId) {
-      clearTimeout(this.sleepEnableTimeoutId);
-      this.sleepEnableTimeoutId = null;
+    if (this.cancelSleepCheck()) {
       this.eventLog.logEvent({
         type: 'sleepDetectorEnableCancelled',
       });
@@ -138,13 +140,31 @@ export class SleepModeForSleepDetectorAutomationService {
       const sound = getBuiltInNotificationSound('pebbles');
       await this.notifications.playSound(sound);
       await this.notifications.send(
-        this.translate.instant('notifications.sleepCheckCancel.content')
+        this.translate.translate('notifications.sleepCheckCancel.content')
       );
-      if (this.sleepCheckNotificationId) {
-        await this.notifications.clearNotification(this.sleepCheckNotificationId);
-        this.sleepCheckNotificationId = null;
-      }
+      await this.clearSleepCheckNotification();
     }
+  }
+
+  private async invalidateSleepCheck() {
+    this.cancelSleepCheck();
+    await this.clearSleepCheckNotification();
+  }
+
+  private cancelSleepCheck(): boolean {
+    this.sleepCheckGeneration++;
+    if (this.sleepEnableTimeoutId === null) return false;
+
+    clearTimeout(this.sleepEnableTimeoutId);
+    this.sleepEnableTimeoutId = null;
+    return true;
+  }
+
+  private async clearSleepCheckNotification() {
+    if (!this.sleepCheckNotificationId) return;
+    const notificationId = this.sleepCheckNotificationId;
+    this.sleepCheckNotificationId = null;
+    await this.notifications.clearNotification(notificationId);
   }
 
   async handleStateReportForEnable(
@@ -197,13 +217,23 @@ export class SleepModeForSleepDetectorAutomationService {
     this.lastEnableAttempt = Date.now();
     // If necessary, first check if the user is asleep, allowing them to cancel.
     if (this.enableConfig.sleepCheck) {
-      this.sleepCheckNotificationId = await this.notifications.send(
-        this.translate.instant('notifications.sleepCheck.content'),
+      const sleepCheckGeneration = this.sleepCheckGeneration;
+      const notificationId = await this.notifications.send(
+        this.translate.translate('notifications.sleepCheck.content'),
         8000
       );
-      if (this.sleepEnableTimeoutId) return 'SLEEP_CHECK_ALREADY_IN_PROGRESS';
+      if (this.sleepEnableTimeoutId !== null) {
+        if (notificationId) await this.notifications.clearNotification(notificationId);
+        return 'SLEEP_CHECK_ALREADY_IN_PROGRESS';
+      }
+      if (sleepCheckGeneration !== this.sleepCheckGeneration) {
+        if (notificationId) await this.notifications.clearNotification(notificationId);
+        return 'SLEEP_CHECK';
+      }
+      this.sleepCheckNotificationId = notificationId;
       this.sleepEnableTimeoutId = setTimeout(async () => {
         this.sleepEnableTimeoutId = null;
+        if (sleepCheckGeneration !== this.sleepCheckGeneration) return;
         this._lastStateReportHandlingResult.next('SLEEP_CHECK_USER_ASLEEP');
         await this.sleep.enableSleepMode({
           type: 'AUTOMATION',

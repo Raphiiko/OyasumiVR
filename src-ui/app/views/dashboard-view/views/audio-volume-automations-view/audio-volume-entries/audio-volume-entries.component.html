@@ -2,12 +2,12 @@
   <div class="setting-row">
     <div class="setting-row-label">
       @if (!automations.length) {
-        <span translate>audio-volume-automations.devices.title.noDevices</span>
+        <span transloco="audio-volume-automations.devices.title.noDevices"></span>
       }
       @if (automations.length) {
-        <span translate>audio-volume-automations.devices.title.hasDevices</span>
+        <span transloco="audio-volume-automations.devices.title.hasDevices"></span>
       }
-      <span translate>audio-volume-automations.devices.description</span>
+      <span transloco="audio-volume-automations.devices.description"></span>
     </div>
     <div class="setting-row-action">
       <button
@@ -25,8 +25,8 @@
   <div class="collapse-row" @vshrink [class.collapsed]="collapsed" (click)="collapsed = !collapsed">
     <div class="left">
       <span
-        translate="audio-volume-automations.automations.label"
-        [translateParams]="{ count: automations.length }"
+        transloco="audio-volume-automations.automations.label"
+        [translocoParams]="{ count: automations.length }"
       ></span>
     </div>
     <div class="right">
@@ -50,7 +50,7 @@
           <div class="setting-row-label">
             @if (automation.audioDeviceRef.persistentId.startsWith('DEFAULT_')) {
               <div>
-                <b translate>audio-volume-automations.picker.defaultDevice</b>
+                <b transloco="audio-volume-automations.picker.defaultDevice"></b>
               </div>
             }
             <span>{{ automation.audioDeviceRef.name.display }}</span>
@@ -64,7 +64,7 @@
               [items]="actionOptions"
               [type]="'SMALL'"
               [selected]="getActionOptionForType(automation.type)"
-              (selectedChange)="setAutomationType(automation, $event?.id)"
+              (selectedChange)="setAutomationType(automation, $safeNavigationMigration($event?.id))"
             ></app-select-box>
             <button
               class="btn btn-secondary btn-remove-device"
@@ -85,8 +85,8 @@
             @if (automation.type === 'SET_VOLUME') {
               <div class="setting-row" @vshrink>
                 <div class="setting-row-label">
-                  <span translate>audio-volume-automations.volume.title</span>
-                  <span translate>audio-volume-automations.volume.description</span>
+                  <span transloco="audio-volume-automations.volume.title"></span>
+                  <span transloco="audio-volume-automations.volume.description"></span>
                 </div>
                 <div class="setting-row-action">
                   <app-slider-setting
@@ -99,12 +99,14 @@
             }
             @if (automationType === 'onSleepEnable' || automationType === 'onSleepDisable') {
               <div class="setting-row">
-                <div class="setting-row-label" translate>
-                  <span translate>audio-volume-automations.applyOnStart.title</span>
-                  <span translate>{{
-                    'audio-volume-automations.applyOnStart.description.' + automationType
-                      | translate
-                  }}</span>
+                <div class="setting-row-label">
+                  <span transloco="audio-volume-automations.applyOnStart.title"></span>
+                  <span
+                    [transloco]="
+                      'audio-volume-automations.applyOnStart.description.' + automationType
+                        | transloco
+                    "
+                  ></span>
                 </div>
                 <div class="setting-row-action">
                   <label class="switch-toggle">

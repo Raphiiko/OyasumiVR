@@ -1,4 +1,13 @@
-import { Component, Input, OnInit, Output, EventEmitter, DestroyRef } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  Output,
+  EventEmitter,
+  DestroyRef,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { distinctUntilChanged, map } from 'rxjs';
 import { FrameLimitConfigOption, FrameLimitConfigOptions } from 'src-ui/app/models/automations';
@@ -11,6 +20,7 @@ import { vshrink } from 'src-ui/app/utils/animations';
   templateUrl: './frame-limiter-selector.component.html',
   styleUrls: ['./frame-limiter-selector.component.scss'],
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [vshrink()],
 })
 export class FrameLimiterSelectorComponent implements OnInit {
@@ -23,18 +33,20 @@ export class FrameLimiterSelectorComponent implements OnInit {
 
   constructor(
     private readonly openvr: OpenVRService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.openvr.devices
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         map((devices) => devices.find((d) => d.class === 'HMD')?.displayFrequency),
-        distinctUntilChanged()
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((displayFrequency) => {
         this.hmdDisplayFrequency = displayFrequency;
+        this.cdr.markForCheck();
       });
   }
 

@@ -1,9 +1,15 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { SleepService } from '../../services/sleep.service';
 import { VRChatService } from '../../services/vrchat-api/vrchat.service';
-import { UserStatus } from 'vrchat/dist';
+import { UserStatus } from '../../models/vrchat';
 import { hshrink, noop } from '../../utils/animations';
-import { firstValueFrom } from 'rxjs';
+import { filter, firstValueFrom } from 'rxjs';
 import { OpenVRService } from '../../services/openvr.service';
 import { BackgroundService } from '../../services/background.service';
 import { OscService } from '../../services/osc.service';
@@ -14,7 +20,7 @@ import { ModalService } from '../../services/modal.service';
 import { BrightnessControlModalComponent } from '../brightness-control-modal/brightness-control-modal.component';
 import { BrightnessCctAutomationService } from '../../services/brightness-cct-automation.service';
 import { PulsoidService } from '../../services/integrations/pulsoid.service';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { SystemMicMuteAutomationService } from 'src-ui/app/services/system-mic-mute-automation.service';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -30,6 +36,7 @@ import { isHolidaysEventActive } from 'src-ui/app/utils/event-utils';
   templateUrl: './main-status-bar.component.html',
   styleUrls: ['./main-status-bar.component.scss'],
   animations: [hshrink(), noop()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class MainStatusBarComponent implements OnInit {
@@ -61,17 +68,33 @@ export class MainStatusBarComponent implements OnInit {
     protected brightnessCctAutomations: BrightnessCctAutomationService,
     protected pulsoid: PulsoidService,
     protected bigscreenBeyondFanAutomation: BigscreenBeyondFanAutomationService,
-    protected cctControl: CCTControlService
+    protected cctControl: CCTControlService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.settings.settings.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((settings) => {
       this.snowverlayActive = !settings.hideSnowverlay && this.snowverlayAvailable;
       this.cctControlEnabled = settings.cctControlEnabled;
+      this.cdr.markForCheck();
     });
     this.mqttService.clientStatus.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((status) => {
       this.mqttStatus = status;
+      this.cdr.markForCheck();
     });
+    // systemMicrophoneMuteAction() branches on the current route, which nothing
+    // else here observes.
+    this.router.events
+      .pipe(
+        filter((e) => e instanceof NavigationEnd),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => this.cdr.markForCheck());
+    // cctCSSColor is a plain property on the service, read straight from the
+    // template, so the view has to be rechecked whenever the CCT changes.
+    this.cctControl.cctStream
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.cdr.markForCheck());
   }
 
   getStatusColor(status: UserStatus) {

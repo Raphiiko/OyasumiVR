@@ -9,7 +9,7 @@ import {
   throttleTime,
 } from 'rxjs';
 import { invoke } from '@tauri-apps/api/core';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { VRChatService } from './vrchat-api/vrchat.service';
 import { AppSettingsService } from './app-settings.service';
 
@@ -21,7 +21,7 @@ export class DiscordService {
 
   constructor(
     private sleepService: SleepService,
-    private translate: TranslateService,
+    private translate: TranslocoService,
     private vrchat: VRChatService,
     private appSettingsService: AppSettingsService
   ) {}
@@ -59,9 +59,9 @@ export class DiscordService {
 
   private async updateActivity(sleepMode: boolean) {
     await invoke<boolean>('discord_update_activity', {
-      details: this.translate.instant('discord.details'),
-      state: this.translate.instant(sleepMode ? 'discord.state.sleeping' : 'discord.state.awake'),
-      assetLabel: this.translate.instant(
+      details: this.translate.translate('discord.details'),
+      state: this.translate.translate(sleepMode ? 'discord.state.sleeping' : 'discord.state.awake'),
+      assetLabel: this.translate.translate(
         sleepMode ? 'discord.label.sleeping' : 'discord.label.awake'
       ),
       asset: sleepMode ? 'asleep2' : 'awake2',

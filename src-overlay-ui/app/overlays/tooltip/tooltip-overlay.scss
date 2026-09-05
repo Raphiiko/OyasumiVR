@@ -1,0 +1,35 @@
+:host {
+  display: block;
+}
+
+.tooltip-overlay {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  width: 512px;
+  height: 256px;
+  padding: 0 2rem;
+}
+
+// Deliberately not animated, so it keeps up with a pointer moving between buttons.
+.tooltip-card {
+  visibility: hidden;
+
+  &.shown {
+    visibility: visible;
+  }
+}
+
+.tooltip {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 1rem;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 500;
+  text-align: center;
+  white-space: pre-line;
+}

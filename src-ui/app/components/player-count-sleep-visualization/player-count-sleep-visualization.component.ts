@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { hshrink } from '../../utils/animations';
 
 @Component({
@@ -6,6 +6,7 @@ import { hshrink } from '../../utils/animations';
   templateUrl: './player-count-sleep-visualization.component.html',
   styleUrls: ['./player-count-sleep-visualization.component.scss'],
   animations: [hshrink()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class PlayerCountSleepVisualizationComponent {

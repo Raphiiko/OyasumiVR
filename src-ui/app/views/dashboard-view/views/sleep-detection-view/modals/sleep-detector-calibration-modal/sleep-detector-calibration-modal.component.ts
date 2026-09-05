@@ -1,4 +1,11 @@
-import { Component, HostBinding, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  HostBinding,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../../utils/animations';
 import { OpenVRService } from '../../../../../../services/openvr.service';
@@ -17,6 +24,7 @@ export interface SleepDetectorCalibrationModalOutputModel {
   templateUrl: './sleep-detector-calibration-modal.component.html',
   styleUrls: ['./sleep-detector-calibration-modal.component.scss'],
   animations: [fadeUp(), fade(), triggerChildren(), vshrink()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class SleepDetectorCalibrationModalComponent
@@ -33,6 +41,8 @@ export class SleepDetectorCalibrationModalComponent
   @HostBinding('[@fadeUp]') get fadeUp() {
     return;
   }
+
+  private cdr = inject(ChangeDetectorRef);
 
   constructor(
     protected openvr: OpenVRService,
@@ -56,12 +66,14 @@ export class SleepDetectorCalibrationModalComponent
       for (let i = 1; i <= 5; i++) {
         setTimeout(() => {
           this.countdownValue--;
+          this.cdr.markForCheck();
           if (i === 5) {
             this.mode = 'CALIBRATING';
             this.countdownValue = 10;
             for (let i = 1; i <= 10; i++) {
               setTimeout(async () => {
                 this.countdownValue--;
+                this.cdr.markForCheck();
                 if (i === 10) {
                   const newValue = await this.automation.calibrate();
                   if (newValue > 0) {
@@ -70,6 +82,7 @@ export class SleepDetectorCalibrationModalComponent
                   } else {
                     this.mode = 'FAILED';
                   }
+                  this.cdr.markForCheck();
                 }
               }, 1000 * i);
             }

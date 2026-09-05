@@ -1,8 +1,8 @@
+use crate::elevated_sidecar::SIDECAR_GRPC_CLIENT;
 use crate::Models::elevated_sidecar::{
     Empty, NvmlDevice, NvmlPowerManagementLimitRequest, NvmlSetPowerManagementLimitError,
     NvmlStatus,
 };
-use crate::elevated_sidecar::SIDECAR_GRPC_CLIENT;
 use log::error;
 
 pub async fn status() -> NvmlStatus {
@@ -64,10 +64,8 @@ pub async fn set_power_management_limit(
         );
         match response.error {
             None => Err(NvmlSetPowerManagementLimitError::UnknownError),
-            Some(e) => Err(
-                NvmlSetPowerManagementLimitError::try_from(e)
-                    .unwrap_or(NvmlSetPowerManagementLimitError::UnknownError),
-            ),
+            Some(e) => Err(NvmlSetPowerManagementLimitError::try_from(e)
+                .unwrap_or(NvmlSetPowerManagementLimitError::UnknownError)),
         }
     }
 }

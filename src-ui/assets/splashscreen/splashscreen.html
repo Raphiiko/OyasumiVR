@@ -55,7 +55,7 @@
     </div>
     <script>
       try {
-        const buildId = '1234567';
+        const buildId = 'd4ab5c80';
         [].forEach.call(document.querySelectorAll('img[data-src]'), function (img) {
           img.setAttribute('src', img.getAttribute('data-src'));
           img.onload = function () {
@@ -75,10 +75,9 @@
             if (event.payload.action) {
               document.getElementById('info3').innerHTML = event.payload.action;
             }
-            window.__TAURI__.window.getCurrentWindow().setFocus();
           });
         }
-        if (window.__TAURI__) window.__TAURI__.window.getCurrentWindow((win) => win.setFocus());
+        if (window.__TAURI__) window.__TAURI__.window.getCurrentWindow().setFocus();
         const version = window.__TAURI__
           ? window.__TAURI__.app.getVersion().then(function (version) {
               return version;

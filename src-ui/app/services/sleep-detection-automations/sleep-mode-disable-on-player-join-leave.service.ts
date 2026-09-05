@@ -8,7 +8,7 @@ import {
 
 import { SleepService } from '../sleep.service';
 import { filter, firstValueFrom, map, switchMap, tap } from 'rxjs';
-import { LimitedUser } from 'vrchat';
+import type { LimitedUserFriend } from 'vrchat';
 import { VRChatLogService } from '../vrchat-log.service';
 import { VRChatLogEvent } from '../../models/vrchat-log-event';
 import { VRChatService } from '../vrchat-api/vrchat.service';
@@ -23,7 +23,7 @@ export class SleepModeDisableOnPlayerJoinLeaveAutomationService {
   private ownVRChatDisplayName = '';
   private alone = false;
   private notAloneSince = 0;
-  private friends: LimitedUser[] = [];
+  private friends: LimitedUserFriend[] = [];
   private worldLoaded = false;
   private sleepMode = false;
 
@@ -41,16 +41,15 @@ export class SleepModeDisableOnPlayerJoinLeaveAutomationService {
     this.sleep.mode.subscribe((mode) => (this.sleepMode = mode));
     this.vrchat.user
       .pipe(
-        // Keep track of own display name
         tap((user) => {
           this.ownVRChatDisplayName = user?.displayName ?? '';
+          if (!user) this.friends = [];
         }),
-        // Stop if not logged in
         filter(Boolean),
-        // Keep track of friends
         switchMap(async () => {
-          this.friends = await this.vrchat.listFriends();
-          // TODO: HANDLE FRIEND LIST CHANGES (ADD/REMOVE/DISPLAY NAME CHANGE)
+          try {
+            this.friends = await this.vrchat.listFriends();
+          } catch {}
         })
       )
       .subscribe();

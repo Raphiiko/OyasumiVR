@@ -1,8 +1,10 @@
-#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+#![windows_subsystem = "windows"]
 
+mod cn_compliance;
 mod commands;
 mod discord;
 mod elevated_sidecar;
+mod error_reporting;
 mod flavour;
 mod globals;
 mod grpc;
@@ -16,6 +18,7 @@ mod os;
 mod osc;
 mod overlay_sidecar;
 mod steam;
+mod store_safety;
 mod system_tray;
 mod telemetry;
 mod utils;
@@ -24,30 +27,147 @@ mod vrcx;
 
 use std::{mem, sync::atomic::Ordering};
 
-use config::Config;
 pub use flavour::BUILD_FLAVOUR;
 pub use grpc::models as Models;
 
 use cronjob::CronJob;
-use globals::{APTABASE_APP_KEY, FLAGS, TAURI_APP_HANDLE};
-use log::{error, info, warn, LevelFilter};
+use globals::{APTABASE_APP_KEY, TAURI_APP_HANDLE};
+use log::{error, info, LevelFilter};
 use oyasumivr_shared::windows::is_elevated;
 use serde_json::json;
 use tauri::{plugin::TauriPlugin, Manager, Wry};
 use tauri_plugin_cli::CliExt;
 use tauri_plugin_log::RotationStrategy;
+use tauri_plugin_store::StoreExt;
 use webview2_com::Microsoft::Web::WebView2::Win32::ICoreWebView2Settings6;
 
 use crate::globals::APTABASE_HOST;
 
+fn serialize_store_sorted(
+    cache: &std::collections::HashMap<String, serde_json::Value>,
+) -> std::result::Result<Vec<u8>, Box<dyn std::error::Error + Send + Sync>> {
+    let sorted: std::collections::BTreeMap<&String, &serde_json::Value> = cache.iter().collect();
+    Ok(serde_json::to_vec_pretty(&sorted)?)
+}
+
+fn configure_tauri_plugin_store() -> TauriPlugin<Wry> {
+    tauri_plugin_store::Builder::new()
+        .default_serialize_fn(serialize_store_sorted)
+        .build()
+}
+
+#[cfg(windows)]
+fn ensure_webview2_available() {
+    use windows::core::HSTRING;
+    use windows::Win32::Globalization::GetUserDefaultLocaleName;
+    use windows::Win32::System::SystemServices::LOCALE_NAME_MAX_LENGTH;
+    use windows::Win32::UI::Shell::ShellExecuteW;
+    use windows::Win32::UI::WindowsAndMessaging::{
+        MessageBoxW, IDYES, MB_ICONERROR, MB_SETFOREGROUND, MB_YESNO, SW_SHOW,
+    };
+    const WEBVIEW2_DOWNLOAD_URL: &str =
+        "https://developer.microsoft.com/en-us/microsoft-edge/webview2";
+    const FALLBACK_MESSAGE: &str = "OyasumiVR requires Microsoft Edge WebView2, which is not installed.\n\nInstall it and start OyasumiVR again. Open the download page?";
+
+    if tauri::webview_version().is_ok() {
+        return;
+    }
+
+    let mut locale_buffer = [0u16; LOCALE_NAME_MAX_LENGTH as usize];
+    let locale_length = unsafe { GetUserDefaultLocaleName(&mut locale_buffer) };
+    let locale = if locale_length > 0 {
+        String::from_utf16_lossy(&locale_buffer[..(locale_length - 1) as usize])
+    } else {
+        String::new()
+    };
+    let context = tauri::generate_context!();
+    let message =
+        webview2_dialog_message(&context, &locale).unwrap_or_else(|| FALLBACK_MESSAGE.to_string());
+
+    let result = unsafe {
+        MessageBoxW(
+            None,
+            &HSTRING::from(message),
+            &HSTRING::from("OyasumiVR"),
+            MB_YESNO | MB_ICONERROR | MB_SETFOREGROUND,
+        )
+    };
+    if result == IDYES {
+        unsafe {
+            ShellExecuteW(
+                None,
+                &HSTRING::from("open"),
+                &HSTRING::from(WEBVIEW2_DOWNLOAD_URL),
+                None,
+                None,
+                SW_SHOW,
+            );
+        }
+    }
+    std::process::exit(1);
+}
+
+#[cfg(windows)]
+fn webview2_translation_file(locale: &str) -> String {
+    let lowered = locale.to_lowercase();
+    let primary = lowered.split(['-', '_']).next().unwrap_or("en");
+    let primary = if primary.is_empty() { "en" } else { primary };
+    if primary == "zh" {
+        if lowered.contains("hant") || lowered.ends_with("tw") || lowered.ends_with("hk") {
+            "tw".to_string()
+        } else {
+            "cn".to_string()
+        }
+    } else {
+        primary.to_string()
+    }
+}
+
+#[cfg(windows)]
+fn webview2_dialog_message(context: &tauri::Context<Wry>, locale: &str) -> Option<String> {
+    use tauri::utils::assets::AssetKey;
+    let file = webview2_translation_file(locale);
+    let bytes = context
+        .assets()
+        .get(&AssetKey::from(format!("assets/i18n/{file}.json")))
+        .or_else(|| context.assets().get(&AssetKey::from("assets/i18n/en.json")))?;
+    let value: serde_json::Value = serde_json::from_slice(&bytes).ok()?;
+    value
+        .get("misc")?
+        .get("WEBVIEW2_MISSING")?
+        .as_str()
+        .map(str::to_string)
+}
+
+#[cfg(not(windows))]
+fn ensure_webview2_available() {}
+
+#[cfg(all(test, windows))]
+mod webview2_dialog_tests {
+    #[test]
+    fn resolves_dialog_copy_from_embedded_translations() {
+        let context = tauri::generate_context!();
+        let japanese = super::webview2_dialog_message(&context, "ja-JP").expect("Japanese copy");
+        assert!(japanese.contains("WebView2"));
+        assert!(japanese.contains('\n'));
+        let english = super::webview2_dialog_message(&context, "en-US").expect("English copy");
+        assert!(english.contains("Open the download page?"));
+        assert_ne!(japanese, english);
+    }
+
+    #[test]
+    fn resolves_chinese_variant_files() {
+        assert_eq!(super::webview2_translation_file("zh-TW"), "tw");
+        assert_eq!(super::webview2_translation_file("zh-Hant"), "tw");
+        assert_eq!(super::webview2_translation_file("zh-CN"), "cn");
+        assert_eq!(super::webview2_translation_file("zh-Hans"), "cn");
+    }
+}
+
 #[tokio::main]
 async fn main() {
-    // Attach to parent console if we're running from a command line
-    #[cfg(windows)]
-    {
-        use windows::Win32::System::Console::{AttachConsole, ATTACH_PARENT_PROCESS};
-        let _ = unsafe { AttachConsole(ATTACH_PARENT_PROCESS) };
-    }
+    ensure_webview2_available();
+
     // Construct OyasumiVR Tauri application
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
@@ -60,14 +180,17 @@ async fn main() {
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_dialog::init())
-        .plugin(tauri_plugin_store::Builder::new().build())
+        .plugin(configure_tauri_plugin_store())
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
-        .plugin(tauri_plugin_store::Builder::default().build())
         .plugin(configure_tauri_plugin_aptabase())
         .setup(|app| {
+            #[cfg(windows)]
+            if std::env::args_os().any(|arg| arg == "--console") {
+                open_console();
+            }
             let matches = match app.cli().matches() {
                 Ok(matches) => Some(matches),
                 Err(e) => {
@@ -96,8 +219,20 @@ async fn main() {
         .expect("An error occurred while running the application")
 }
 
+#[cfg(windows)]
+fn open_console() {
+    use windows::Win32::System::Console::{AllocConsole, AttachConsole, ATTACH_PARENT_PROCESS};
+    if unsafe { AttachConsole(ATTACH_PARENT_PROCESS) }.is_err() {
+        let _ = unsafe { AllocConsole() };
+    }
+}
+
 fn configure_tauri_plugin_single_instance() -> TauriPlugin<Wry> {
     tauri_plugin_single_instance::init(|app, _argv, _cwd| {
+        #[cfg(windows)]
+        if _argv.iter().any(|arg| arg == "--console") {
+            open_console();
+        }
         // Focus main window when user attempts to launch a second instance.
         let window = app.get_webview_window("main").unwrap();
         if let Ok(is_visible) = window.is_visible() {
@@ -125,7 +260,10 @@ fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
         .with_panic_hook(Box::new(|client, info, msg| {
             let location = info
                 .location()
-                .map(|loc| format!("{}:{}:{}", loc.file(), loc.line(), loc.column()))
+                .map(|loc| {
+                    let file = panic_location_file(loc.file());
+                    format!("{file}:{}:{}", loc.line(), loc.column())
+                })
                 .unwrap_or_default();
 
             // Upload crash report if telemetry is enabled
@@ -150,25 +288,35 @@ fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
         .build()
 }
 
+fn panic_location_file(file: &str) -> String {
+    let file = file.replace('\\', "/");
+    match file.split_once("/Users/") {
+        Some((_, path)) => path
+            .split_once('/')
+            .map_or(path.to_owned(), |(_, path)| path.to_owned()),
+        None => file,
+    }
+}
+
 fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
     let mut builder = tauri_plugin_log::Builder::new()
         .clear_targets()
         .format(move |out, message, record| {
-            let format = time::format_description::parse(
+            let format = time::format_description::parse_borrowed::<1>(
                 "[[[year]-[month]-[day]][[[hour]:[minute]:[second]]",
             )
             .unwrap();
             out.finish(format_args!(
-                "{}[{}] {}",
+                "{} [{}] {}",
                 time::OffsetDateTime::now_utc().format(&format).unwrap(),
                 record.level(),
                 message
             ))
         })
-        .rotation_strategy(RotationStrategy::KeepAll);
+        .max_file_size(1024 * 1024)
+        .rotation_strategy(RotationStrategy::KeepSome(13));
 
     builder = builder
-        //also set in Cargo.toml
         .level(LevelFilter::Info)
         .target(tauri_plugin_log::Target::new(
             tauri_plugin_log::TargetKind::Stdout,
@@ -190,6 +338,18 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
 }
 
 async fn app_setup(app_handle: tauri::AppHandle) {
+    let error_reporting_enabled = match app_handle.store("settings.dat") {
+        Ok(store) => store
+            .get("TELEMETRY_SETTINGS")
+            .and_then(|settings| {
+                settings
+                    .get("enabled")
+                    .and_then(|enabled| enabled.as_bool())
+            })
+            .unwrap_or(true),
+        Err(_) => false,
+    };
+    error_reporting::set_enabled(&app_handle, error_reporting_enabled);
     // Process elevation security args
     os::elevation::process_elevation_cli_args().await;
 
@@ -208,16 +368,9 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     os::cleanup_batch_files().await;
     // Run any migrations first
     migrations::run_migrations().await;
-    // Load configs
-    load_configs().await;
     // Set up app reference
     *TAURI_APP_HANDLE.lock().await = Some(app_handle.clone());
     let window = app_handle.get_webview_window("main").unwrap();
-    // Open devtools if we're in debug mode
-    #[cfg(debug_assertions)]
-    {
-        window.open_devtools();
-    }
     // Disable swipe navigation in main window
     window
         .with_webview(|webview| unsafe {
@@ -240,6 +393,7 @@ async fn app_setup(app_handle: tauri::AppHandle) {
             error!("[Core] Failed to register deep link schemas: {e}");
         }
     }
+    os::register_notification_app_id(&app_handle);
     // Initialize utility module
     utils::init();
     // Initialize Steam module
@@ -259,16 +413,18 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     os::init_sound_playback().await;
     // Initialize audio device manager
     os::init_audio_device_manager().await;
-    // Initialize Lighthouse Bluetooth
-    lighthouse::init().await;
+    // Initialize Lighthouse Bluetooth without delaying startup
+    drop(tokio::spawn(lighthouse::init()));
     // Initialize Hardware modules
     hardware::init().await;
     // Initialize log commands
     commands::log_utils::init(app_handle.path().app_log_dir().unwrap()).await;
     // Initialize elevated sidecar module
     elevated_sidecar::init().await;
+    elevated_sidecar::set_error_reporting_enabled(error_reporting_enabled).await;
     // Initialize overlay sidecar module
     overlay_sidecar::init().await;
+    overlay_sidecar::set_error_reporting_enabled(error_reporting_enabled).await;
     // Initialize Discord module
     discord::init().await;
     // Initialize system tray
@@ -277,54 +433,12 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     let mut cron = CronJob::new("CRON_MINUTE_START", on_cron_minute_start);
     cron.seconds("0");
     CronJob::start_job_threaded(cron);
-    // If we have admin privileges, prelaunch the elevation sidecar
-    if is_elevated() {
-        info!("[Core] Main process is running with elevation. Pre-launching elevated sidecar...");
-        // Wait for grpc server to start so we can pass the port
-        loop {
-            let core_grpc_port = grpc::SERVER_PORT.lock().await;
-            // Once we have the port, start the sidecar
-            if core_grpc_port.is_some() {
-                drop(core_grpc_port);
-                elevated_sidecar::commands::start_elevated_sidecar().await;
-                break;
-            }
-        }
-    } else {
-        info!(
-            "[Core] Main process is running without elevation. Elevated sidecar will be launched on demand."
-        );
+    // The elevated sidecar starts when the frontend asks for it, which is where the setting that
+    // allows it lives.
+    match is_elevated() {
+        true => info!("[Core] Main process is running with elevation."),
+        false => info!("[Core] Main process is running without elevation."),
     }
-
-    // Start profiling if we're in debug mode
-    #[cfg(debug_assertions)]
-    {
-        utils::profiling::enable_profiling();
-    }
-    // Start profiling if the flag for it is set
-    #[cfg(not(debug_assertions))]
-    if globals::is_flag_set("ENABLE_PROFILING").await {
-        utils::profiling::enable_profiling();
-    }
-}
-
-async fn load_configs() {
-    match Config::builder()
-        .add_source(config::File::with_name("flags"))
-        .build()
-    {
-        Ok(flags) => {
-            *FLAGS.lock().await = Some(flags);
-        }
-        Err(e) => match e {
-            config::ConfigError::NotFound(_) => {
-                warn!("[Core] Could not find flags config. Using default values.");
-            }
-            _ => {
-                warn!("[Core] Could not load flags config: {e:#?}");
-            }
-        },
-    };
 }
 
 fn on_cron_minute_start(_: &str) {
@@ -387,7 +501,8 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         osc::commands::set_osc_method_value,
         osc::commands::set_osc_receive_address_whitelist,
         elevated_sidecar::commands::elevated_sidecar_started,
-        elevated_sidecar::commands::start_elevated_sidecar,
+        elevated_sidecar::commands::elevated_features_enable,
+        elevated_sidecar::commands::elevated_features_disable,
         elevated_sidecar::commands::elevated_sidecar_get_grpc_web_port,
         elevated_sidecar::commands::elevated_sidecar_get_grpc_port,
         overlay_sidecar::commands::start_overlay_sidecar,
@@ -416,12 +531,25 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         commands::nvml::nvml_status,
         commands::nvml::nvml_get_devices,
         commands::nvml::nvml_set_power_management_limit,
+        commands::debug::dev_tools_available,
         commands::debug::open_dev_tools,
-        commands::debug::is_flag_set,
+        cn_compliance::cn_compliance_mode,
         commands::time::get_sunrise_sunset_time,
+        commands::secrets::protect_secret,
+        commands::secrets::unprotect_secret,
+        store_safety::commands::store_safety_save_snapshot,
+        store_safety::commands::store_safety_read_snapshot,
+        store_safety::commands::store_safety_restore_snapshot,
+        store_safety::commands::store_safety_create_checkpoint,
+        store_safety::commands::store_safety_list_checkpoints,
+        store_safety::commands::store_safety_read_checkpoint,
+        store_safety::commands::store_safety_quarantine_store,
+        store_safety::commands::store_safety_replace_store,
         grpc::commands::get_core_grpc_port,
         grpc::commands::get_core_grpc_web_port,
         telemetry::commands::set_telemetry_enabled,
+        error_reporting::set_error_reporting_enabled,
+        error_reporting::allow_ui_event,
         vrcx::commands::vrcx_log,
     ]
 }

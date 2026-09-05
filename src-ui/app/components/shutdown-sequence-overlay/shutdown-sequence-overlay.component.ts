@@ -1,4 +1,8 @@
-import { Component } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   ShutdownAutomationsService,
   ShutdownSequenceStage,
@@ -10,6 +14,7 @@ import { fade, vshrink } from 'src-ui/app/utils/animations';
   templateUrl: './shutdown-sequence-overlay.component.html',
   styleUrls: ['./shutdown-sequence-overlay.component.scss'],
   animations: [fade(), vshrink('vshrinkSlow', '.6s ease')],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class ShutdownSequenceOverlayComponent {
@@ -17,11 +22,15 @@ export class ShutdownSequenceOverlayComponent {
   currentStage: ShutdownSequenceStage = 'IDLE';
   canCancel = true;
 
-  constructor(private shutdownAutomationsService: ShutdownAutomationsService) {
+  constructor(
+    private shutdownAutomationsService: ShutdownAutomationsService,
+    private cdr: ChangeDetectorRef
+  ) {
     shutdownAutomationsService.stage.subscribe((stage) => {
       this.stages = this.shutdownAutomationsService.getApplicableStages();
       this.currentStage = stage;
       if (this.currentStage === 'IDLE') this.canCancel = true;
+      this.cdr.markForCheck();
     });
   }
 

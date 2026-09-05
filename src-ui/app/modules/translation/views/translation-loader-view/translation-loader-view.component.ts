@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TranslationEditService } from '../../services/translation-edit.service';
 import { DownloadableTranslation } from '../../models/downloadable-translation';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
   selector: 'app-translation-loader-view',
   templateUrl: './translation-loader-view.component.html',
   styleUrls: ['./translation-loader-view.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class TranslationLoaderViewComponent {

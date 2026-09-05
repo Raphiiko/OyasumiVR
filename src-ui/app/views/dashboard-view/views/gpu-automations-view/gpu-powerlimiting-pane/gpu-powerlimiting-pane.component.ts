@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { GPUDevice, GPUPowerLimit, GPUPowerLimitUnit } from '../../../../../models/gpu-device';
 import { NvmlService } from '../../../../../services/nvml.service';
 import { GpuAutomationsService } from '../../../../../services/gpu-automations.service';
@@ -6,12 +6,14 @@ import { debounceTime, firstValueFrom, Subject } from 'rxjs';
 import { noop, vshrink } from '../../../../../utils/animations';
 import { TString } from 'src-ui/app/models/translatable-string';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { flushOnDestroy } from '../../../../../utils/rxjs-utils';
 
 @Component({
   selector: 'app-gpu-powerlimiting-pane',
   templateUrl: './gpu-powerlimiting-pane.component.html',
   styleUrls: ['./gpu-powerlimiting-pane.component.scss'],
   animations: [vshrink(), noop()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class GpuPowerlimitingPaneComponent implements OnInit {
@@ -30,7 +32,8 @@ export class GpuPowerlimitingPaneComponent implements OnInit {
 
   constructor(
     private nvml: NvmlService,
-    protected gpuAutomations: GpuAutomationsService
+    protected gpuAutomations: GpuAutomationsService,
+    destroyRef: DestroyRef
   ) {
     this.gpuAutomations.nvmlDevices.pipe(takeUntilDestroyed()).subscribe(async (devices) => {
       this.gpuDevices = devices;
@@ -99,8 +102,9 @@ export class GpuPowerlimitingPaneComponent implements OnInit {
           break;
       }
     });
+    flushOnDestroy(this.powerLimitChange, destroyRef);
     this.powerLimitChange
-      .pipe(takeUntilDestroyed(), debounceTime(100))
+      .pipe(debounceTime(100), takeUntilDestroyed())
       .subscribe(async ({ automation, limit }) => {
         switch (automation) {
           case 'SLEEP_ENABLE':

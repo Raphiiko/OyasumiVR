@@ -4,13 +4,12 @@
       "role": "Developer"
     },
     "contributionType": {
-      "programming": "Programming",
+      "programming": "Code",
       "soundFx": "Sound FX"
     },
     "contributions": "Contributions",
     "discordInvite": "Discord Server",
-    "projectLinks": "Project Links",
-    "sourceLink": "Source Code @ GitHub",
+    "sourceLink": "Source (GitHub)",
     "supporters": "Supporters",
     "translations": "Translations"
   },
@@ -526,6 +525,8 @@
         },
         "simpleBrightnessChanged": {
           "reason": {
+            "AT_SUNRISE": "As sunrise occurred",
+            "AT_SUNSET": "As sunset occurred",
             "SLEEP_MODE_DISABLE": "As sleep mode was disabled",
             "SLEEP_MODE_ENABLE": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
@@ -982,6 +983,19 @@
       },
       "title": "Select Avatar"
     },
+    "vrchat-accounts-modal": {
+      "add": "Use another account",
+      "description": "Choose a saved VRChat account or add another one.",
+      "forget": {
+        "confirm": "Forget Account",
+        "message": "Forget ''{account}''? OyasumiVR will delete the saved login data for this account. You will need to log in again to add it back.",
+        "title": "Forget VRChat Account",
+        "tooltip": "Forget account"
+      },
+      "locked": "Saved login data could not be opened",
+      "title": "VRChat Accounts",
+      "unknownAccount": "Saved account"
+    },
     "vrchat-login-modal": {
       "disclaimers": {
         "brand": "OyasumiVR isn't endorsed by VRChat and doesn't reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat. VRChat is trademark of VRChat Inc. VRChat © VRChat Inc.",
@@ -991,7 +1005,8 @@
       "errors": {
         "CHECK_EMAIL": "Login failed: For details, check the mailbox of the e-mail address that is tied to your VRChat account.",
         "INVALID_CREDENTIALS": "The credentials you have provided are incorrect.",
-        "UNEXPECTED_RESPONSE": "Login failed: an unknown error occurred. Please verify your connection or try again later."
+        "UNEXPECTED_RESPONSE": "Login failed: an unknown error occurred. Please verify your connection or try again later.",
+        "UNSUPPORTED_2FA_METHOD": "Login failed: this account requires a VRChat recovery code. Please log in through VRChat instead."
       },
       "password": "Password",
       "rememberCredentials": "Remember Credentials",
@@ -1150,13 +1165,7 @@
     "disable": "Disable GPU Automations",
     "disabled": {
       "disabled": "OyasumiVR has various ways to automatically tweak your GPU settings.\nThis allows you to save power while you are asleep.\n\nAs this is a feature for advanced users, it is disabled by default.\nYou can enable it by clicking the button below.",
-      "noSidecar": "In order for OyasumiVR to be allowed to change your GPU settings, it requires administrator privileges. Please click the button below to give OyasumiVR administrator privileges."
-    },
-    "elevationSidecarModal": {
-      "cancel": "Only this once",
-      "confirm": "Always",
-      "message": "Do you want to always give OyasumiVR administrator privileges?\n\nIf you enable this, OyasumiVR will immediately ask for them when starting. You can disable this later at any time in the settings.",
-      "title": "Give administrator privileges"
+      "noSidecar": "OyasumiVR needs administrative permissions to change your GPU settings. Enable them with the button below."
     },
     "enable": "Enable GPU Automations",
     "enableWarning": "Incorrectly tweaking your GPU parameters could lead to your system becoming unstable. Please keep this in mind and only enable this feature if you know what you are doing.",
@@ -1200,8 +1209,8 @@
       "disabled": {
         "initializing": "Power limiting automations are being initialized...",
         "noNvidia": "Power limiting automations are unavailable because no supported GPU power-tuning backend is available.\n\nIf you have a supported NVIDIA or AMD GPU in your system, please ensure that its driver software is installed and running.\n\n({code})",
-        "noPermission": "Although OyasumiVR has administrator privileges, it does not have permission to change your GPU settings.\n\nPlease check your system configuration as this should normally never occur.",
-        "noSidecar": "For an unknown reason, administrator privileges could not be obtained.\nThese are required for controlling your GPU's power limits.\n\nPlease try restarting OyasumiVR.",
+        "noPermission": "OyasumiVR has administrative permissions, but Windows did not allow it to change your GPU settings.\n\nPlease check your system configuration. This should not normally happen.",
+        "noSidecar": "OyasumiVR could not use administrative permissions. These are required to control your GPU's power limits.\n\nPlease try restarting OyasumiVR.",
         "unknown": "Power limiting automations are unavailable for an unknown reason.\n\nPlease try restarting OyasumiVR."
       },
       "enabledWarning": "Please be aware that setting your power limits too low could result in your system becoming unstable. Disable this feature if you do not know what you are doing.",
@@ -1212,7 +1221,7 @@
       "noGPUs": "No supported NVIDIA or AMD GPUs could be found in your system.",
       "selectGPU": "Select the GPU you wish to set the power limit for:"
     },
-    "requestAdministrator": "Give Administrator Privileges",
+    "requestAdministrator": "Enable Administrative Permissions",
     "tabs": {
       "msiAfterburner": "MSI Afterburner",
       "powerLimiting": "Power Limiting"
@@ -1457,13 +1466,26 @@
       "configure": "Configure",
       "hide": "Hide",
       "moreInfo": "More info",
+      "openLogFolder": "Open logs",
       "showHidden": "Show Hidden",
+      "supportDiscord": "Support Discord",
       "unhide": "Unhide"
     },
     "messages": {
+      "elevatedFeaturesFailure": {
+        "actions": {
+          "retry": "Try again"
+        },
+        "disable": {
+          "title": "Administrative permissions could not be fully disabled"
+        },
+        "enable": {
+          "title": "Administrative permissions are unavailable"
+        }
+      },
       "gpuAutomationsAfterburnerError": {
         "actions": {
-          "disable": "Disable Automations"
+          "disable": "Disable automations"
         },
         "message": {
           "INVALID_EXECUTABLE": "Your MSI Afterburner installation could not be verified as working. Please reconfigure the path to your MSI Afterburner installation to ensure your automations keep working.",
@@ -1475,16 +1497,16 @@
       },
       "gpuAutomationsNvmlError": {
         "actions": {
-          "disable": "Disable Automations"
+          "disable": "Disable automations"
         },
         "title": "GPU Power Limit Automations Unavailable"
       },
       "gpuAutomationsSidecarNotRunning": {
         "actions": {
-          "disable": "Disable GPU Automations",
-          "elevate": "Give Administrator Privileges"
+          "disable": "Disable automations",
+          "elevate": "Enable permissions"
         },
-        "message": "Although you have GPU automations enabled, OyasumiVR currently does not have the administrative privileges to be able to run these.\n\nPlease give OyasumiVR administrative privileges, or disable GPU automations.",
+        "message": "GPU automations are enabled, but OyasumiVR cannot run them without administrative permissions.\n\nEnable administrative permissions or disable GPU automations.",
         "title": "GPU Automations Unavailable"
       },
       "lighthouseConsoleError": {
@@ -1494,6 +1516,16 @@
       "manyLighthousesDetected": {
         "message": "It looks like you have a lot of base stations!\n\nBe warned that most Bluetooth adapters can only handle 7 simultaneous connections, including other Bluetooth devices like headphones and other peripherals.\n\nKeep in mind that OyasumiVR might have trouble controlling all of your base stations if you have too many of them plugged in at the same time, or have too many other Bluetooth devices connected.",
         "title": "Many base stations detected"
+      },
+      "overlaySidecarKeepsFailing": {
+        "actions": {
+          "disableGpuAcceleration": "Disable GPU acceleration"
+        },
+        "message": {
+          "gpuAcceleration": "OyasumiVR's SteamVR overlays keep failing to start.\n\nOn some systems this is caused by GPU acceleration. Try turning it off.",
+          "unknown": "OyasumiVR's SteamVR overlays keep failing to start.\n\nGPU acceleration is already off, so something else is causing this. Please report it, and include your log files."
+        },
+        "title": "Overlays Unavailable"
       },
       "sleepCalibrationRequired": {
         "calibrate": "Calibrate Now",
@@ -1521,9 +1553,14 @@
     "title": "Message Center",
     "tooltip": "Message Center"
   },
+  "migration-recovery": {
+    "message": "OyasumiVR could not recover your {store}, so it reset that data to defaults.\n\nThe previous data remains on disk for manual recovery. Please contact support and report this problem.",
+    "title": "Could not recover {store}"
+  },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "This preset uses a workaround that has some issues. Please only use this preset if you can't use the newer GoGo Loco preset. If your avatar still uses an older version of GoGo Loco, it is recommended that you update your avatar to use the latest GoGo Loco version.",
     "GORONE_LEGACY_PRESET_WARNING": "Versions v4.0 and up of this prefab already contain turning functionality, and are not compatible with this preset. This preset is still available if your avatar uses older versions of this prefab.",
+    "WEBVIEW2_MISSING": "OyasumiVR requires Microsoft Edge WebView2, which is not installed.\n\nInstall it and start OyasumiVR again. Open the download page?",
     "oneTimeFlagDialogs": {
       "CCT_CONTROL_WARNING_DIALOG": {
         "message": "Please note that display color temperature control is only available with certain native SteamVR headsets, e.g. the Valve Index, Bigscreen Beyond, or HTC Vive (Pro).\n\nIf you do not use one of these headsets, this feature likely will have no effect for you.\n\nYou can disable display color temperature control in the settings if you want to.",
@@ -1930,8 +1967,8 @@
         },
         "description": "Manage the data that OyasumiVR stores on your disk",
         "relaunchModal": {
-          "later": "I'll do it later",
-          "message": "The requested data has been cleared. It is recommended to restart OyasumiVR after doing this.\n\nDo you want to do this now? Not restarting OyasumiVR could have unwanted effects.",
+          "message": "The requested data has been cleared. OyasumiVR needs to restart for this to take effect.",
+          "partialFailureMessage": "Some requested data could not be cleared. OyasumiVR still needs to restart.",
           "relaunch": "Restart OyasumiVR now",
           "title": "Restart OyasumiVR"
         },
@@ -2038,9 +2075,24 @@
     },
     "general": {
       "adminPrivileges": {
-        "description": "OyasumiVR needs administrator privileges to be able to control your GPU's power limits. If you enable this, OyasumiVR will ask for administrator privileges when it starts up.",
-        "label": "Ask for administrator privileges on startup",
-        "title": "Administrator Privileges"
+        "description": "Some features, such as controlling your GPU's power limits, need administrative permissions. Turning this on asks for them once. After that, OyasumiVR can use these features without asking again.",
+        "dialogs": {
+          "disableFailed": {
+            "title": "Could not fully disable administrative permissions"
+          },
+          "enableFailed": {
+            "title": "Could not enable administrative permissions"
+          }
+        },
+        "errors": {
+          "cleanupFailed": "OyasumiVR could not fully disable administrative permissions. Features that use them have been turned off for your safety.\n\nTry again. If this keeps happening, restart OyasumiVR and try once more. If that does not help, ask for support and include your log files.",
+          "installFailed": "OyasumiVR could not enable administrative permissions, so features that need them remain unavailable.\n\nTry again. If this keeps happening, restart OyasumiVR and try once more. If that does not help, ask for support and include your log files.",
+          "notSupported": "OyasumiVR cannot enable administrative permissions for this Windows account. Sign in with a Windows administrator account and try again.",
+          "promptDeclined": "Administrative permissions were not granted, so features that need them remain unavailable.",
+          "taskFailed": "OyasumiVR could not enable administrative permissions, so features that need them remain unavailable.\n\nTry again. If this keeps happening, restart OyasumiVR and try once more. If that does not help, ask for support and include your log files."
+        },
+        "label": "Allow features that need administrative permissions",
+        "title": "Administrative Permissions"
       },
       "language": {
         "description": "You can select your desired language here. If there are any missing translations, or you would like like to add support for your language, please get in contact!",
@@ -2048,6 +2100,10 @@
       },
       "lighthouseConsole": {
         "description": "OyasumiVR needs to know about the location of your SteamVR installation's <strong>lighthouse_console.exe</strong>.\nIf OyasumiVR cannot find it in the default location, you need to set where it can be found.",
+        "powerOffDelay": {
+          "description": "Enabling this makes OyasumiVR wait a moment between turning off each controller and tracker. If turning off your devices crashes SteamVR or leaves some devices on, this can help.",
+          "title": "Delay Between Device Power-Offs"
+        },
         "status": {
           "CHECKING": "Checking for valid <strong>lighthouse_console.exe</strong>",
           "INVALID_EXECUTABLE": "The <strong>lighthouse_console.exe</strong> at this location could not be verified as working.",
@@ -2143,7 +2199,7 @@
         "title": "System Tray"
       },
       "telemetry": {
-        "description": "When enabled, OyasumiVR will collect anonymous usage data such as version information and crash reports. This data is completely anonymous, and does not contain any personal data. It is only used for tracking down bugs and providing some general usage statistics.<br>For more information, you can check out the <a target=\"_blank\" href=\"https://aptabase.com/legal/privacy\">Aptabase Privacy Policy</a>.",
+        "description": "OyasumiVR collects anonymous telemetry to help find bugs and improve the application. This includes crash and error reports, version information, application starts, language preferences, and other basic usage statistics. Telemetry does not contain personally identifiable information and cannot be linked to a specific person. Because there is no way to determine which telemetry belongs to you, individual data deletion requests cannot be fulfilled. You can disable telemetry at any time in OyasumiVR's general settings.",
         "label": "Send anonymous usage data",
         "title": "Telemetry"
       },
@@ -2188,18 +2244,6 @@
         },
         "title": "Discord"
       },
-      "vrcx": {
-        "sleepModeChanges": {
-          "title": "Sleep mode",
-          "description": "Log changes to sleep mode to the game log in VRCX"
-        },
-        "logs": {
-          "onSleepDisable": "Sleep mode disabled",
-          "onSleepEnable": "Sleep mode enabled",
-          "onSleepPreparation": "Preparing for sleep"
-        },
-        "title": "VRCX Logging"
-      },
       "homeAssistant": {
         "description": "Integrate OyasumiVR with the rest of your smart home by connecting it up to your Home Assistant instance, enabling you to build your own powerful automations and control various smart devices.",
         "title": "Home Assistant (over MQTT)"
@@ -2212,8 +2256,22 @@
       "reveal": "Reveal",
       "title": "Integrations",
       "vrchat": {
+        "accounts": "Accounts",
+        "chooseAccount": "Choose Account",
         "description": "Linking your account provides access to some of OyasumiVR's VRChat-related automations.",
         "title": "VRChat"
+      },
+      "vrcx": {
+        "logs": {
+          "onSleepDisable": "Sleep mode disabled",
+          "onSleepEnable": "Sleep mode enabled",
+          "onSleepPreparation": "Preparing for sleep"
+        },
+        "sleepModeChanges": {
+          "description": "Log changes to sleep mode to the game log in VRCX",
+          "title": "Sleep mode"
+        },
+        "title": "VRCX Logging"
       }
     },
     "notifications": {
@@ -2330,6 +2388,7 @@
       "ok": "Ok",
       "open": "Open",
       "refresh": "Refresh",
+      "retry": "Retry",
       "save": "Save"
     },
     "time": {

@@ -1,5 +1,5 @@
 import { LazyStore } from '@tauri-apps/plugin-store';
-import { FLAVOUR } from '../build';
+import { GuardedSettingsStore } from './utils/guarded-settings-store';
 
 export const SPLASH_MIN_DURATION = 3000;
 export const SETTINGS_KEY_AUTOMATION_CONFIGS = 'AUTOMATION_CONFIGS';
@@ -13,13 +13,12 @@ export const SETTINGS_KEY_PULSOID_API = 'PULSOID_API';
 export const SETTINGS_FILE = 'settings.dat';
 export const CACHE_FILE = 'cache.dat';
 export const EVENT_LOG_FILE = 'event_log.dat';
-export const SETTINGS_STORE = new LazyStore(SETTINGS_FILE);
+export const SETTINGS_STORE = new GuardedSettingsStore(SETTINGS_FILE);
 export const CACHE_STORE = new LazyStore(CACHE_FILE);
 export const EVENT_LOG_STORE = new LazyStore(EVENT_LOG_FILE);
 export const PULSOID_CLIENT_ID = '1fd0889e-be0c-4be5-ab68-9f750e3975b4';
 export const PULSOID_REDIRECT_URI = 'oyasumivr://integration/pulsoid/v1/redirect';
 export const PULSOID_REFERRAL_ID = '86680152-707d-4771-8a12-740bad1b4545';
-export const STORAGE_MASTER_CRYPTO_KEY = 'mY2BEtChq6dmPS4byAT2Xr1NT+tet5IONT+o7Eni3Vw=';
 export const DEV_VRCHAT_USER_ID = 'usr_fef4e2f3-b49d-4731-b92b-36476f7503d5';
 export const NG_LOCALE_MAP: { [s: string]: string } = {
   en: 'en',
@@ -58,7 +57,7 @@ export const LANGUAGES: Array<{ code: string; label: string; flag?: string }> = 
   {
     code: 'tw',
     label: '繁體中文',
-    flag: FLAVOUR === 'STEAM_CN' ? 'hk' : 'tw',
+    flag: 'tw',
   },
   {
     code: 'cn',

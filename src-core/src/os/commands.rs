@@ -13,40 +13,44 @@ use std::{env, path::PathBuf};
 use tauri_plugin_shell::{process::CommandEvent, Error, ShellExt};
 use tokio::fs::File;
 use tokio::io::AsyncWriteExt;
+use tokio::sync::oneshot;
 use uuid::Uuid;
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
-pub async fn play_sound(name: String, volume: f32) {
+pub async fn play_sound(name: String, volume: f32) -> Result<(), String> {
     if volume == 0.0 {
-        return;
+        return Ok(());
     }
-    let guard = super::PLAY_SOUND_TX.lock().await;
-    let tx = match guard.as_ref() {
+    let tx = match super::PLAY_SOUND_TX.lock().await.clone() {
         Some(tx) => tx,
         None => {
             error!("[Core] Could not play sound, as sound player was not initialized");
-            return;
+            return Err(String::from("sound playback is not initialized"));
         }
     };
-    let _ = tx.send((name, volume)).await;
+    let (respond_tx, respond_rx) = oneshot::channel();
+    let worker_gone = || {
+        error!("[Core] Could not play sound, as the sound playback worker stopped");
+        String::from("the sound playback worker is not running")
+    };
+    tx.send((name, volume, respond_tx))
+        .await
+        .map_err(|_| worker_gone())?;
+    respond_rx.await.map_err(|_| worker_gone())?
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn quit_steamvr(kill: bool) {
     crate::utils::stop_process("vrmonitor.exe", kill).await;
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn is_vrchat_active() -> bool {
     let vrc_active_guard = VRCHAT_ACTIVE.lock().await;
     *vrc_active_guard
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn run_command(command: String, args: Vec<String>) -> Result<Output, String> {
     let command = {
         let handle = TAURI_APP_HANDLE.lock().await;
@@ -103,7 +107,6 @@ pub async fn run_command(command: String, args: Vec<String>) -> Result<Output, S
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn run_cmd_commands(commands: String) {
     info!("[Core] Running commands:\n{commands}");
 
@@ -197,7 +200,6 @@ pub async fn run_cmd_commands(commands: String) {
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn show_in_folder(path: String) {
     let handle = TAURI_APP_HANDLE.lock().await;
     handle
@@ -211,7 +213,6 @@ pub async fn show_in_folder(path: String) {
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn set_windows_power_policy(guid: String) {
     let guid = guid.to_uppercase();
     let parsed_guid = match crate::utils::serialization::string_to_guid(&guid) {
@@ -226,7 +227,6 @@ pub async fn set_windows_power_policy(guid: String) {
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn active_windows_power_policy() -> Option<WindowsPowerPolicy> {
     let guid = super::active_windows_power_policy();
     guid?;
@@ -239,7 +239,6 @@ pub async fn active_windows_power_policy() -> Option<WindowsPowerPolicy> {
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn get_windows_power_policies() -> Vec<WindowsPowerPolicy> {
     let mut policies = Vec::new();
     let schemes = super::get_windows_power_policies();
@@ -254,43 +253,36 @@ pub async fn get_windows_power_policies() -> Vec<WindowsPowerPolicy> {
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn windows_is_elevated() -> bool {
     is_elevated()
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn windows_shutdown(message: String, timeout: u32, force_close_apps: bool) {
     let _ = system_shutdown::shutdown_with_message(&message, timeout, force_close_apps);
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn windows_reboot(message: String, timeout: u32, force_close_apps: bool) {
     let _ = system_shutdown::reboot_with_message(&message, timeout, force_close_apps);
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn windows_sleep() {
     let _ = system_shutdown::sleep();
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn windows_hibernate() {
     let _ = system_shutdown::hibernate();
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn windows_logout() {
     let _ = system_shutdown::logout();
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn get_audio_devices(refresh: bool) -> Vec<AudioDeviceDto> {
     let manager_guard = super::AUDIO_DEVICE_MANAGER.lock().await;
     let manager = match manager_guard.as_ref() {
@@ -311,7 +303,6 @@ pub async fn get_audio_devices(refresh: bool) -> Vec<AudioDeviceDto> {
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn set_audio_device_volume(device_id: String, volume: f32) {
     let manager_guard = super::AUDIO_DEVICE_MANAGER.lock().await;
     let manager = match manager_guard.as_ref() {
@@ -327,7 +318,6 @@ pub async fn set_audio_device_volume(device_id: String, volume: f32) {
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn set_audio_device_mute(device_id: String, mute: bool) {
     let manager_guard = super::AUDIO_DEVICE_MANAGER.lock().await;
     let manager = match manager_guard.as_ref() {
@@ -343,7 +333,6 @@ pub async fn set_audio_device_mute(device_id: String, mute: bool) {
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn set_hardware_mic_activity_enabled(enabled: bool) {
     let manager_guard = super::AUDIO_DEVICE_MANAGER.lock().await;
     let manager = match manager_guard.as_ref() {
@@ -359,7 +348,6 @@ pub async fn set_hardware_mic_activity_enabled(enabled: bool) {
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn set_hardware_mic_activivation_threshold(threshold: f32) {
     let manager_guard = super::AUDIO_DEVICE_MANAGER.lock().await;
     let manager = match manager_guard.as_ref() {
@@ -375,7 +363,6 @@ pub async fn set_hardware_mic_activivation_threshold(threshold: f32) {
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn set_mic_activity_device_id(device_id: Option<String>) {
     let manager_guard = super::AUDIO_DEVICE_MANAGER.lock().await;
     let manager = match manager_guard.as_ref() {
@@ -391,7 +378,6 @@ pub async fn set_mic_activity_device_id(device_id: Option<String>) {
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn is_elevation_security_disabled() -> bool {
     crate::os::elevation::is_elevation_security_disabled()
 }

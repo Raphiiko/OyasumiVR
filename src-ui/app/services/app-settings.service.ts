@@ -3,18 +3,18 @@ import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
 import {
   asyncScheduler,
   BehaviorSubject,
+  concatMap,
   distinctUntilChanged,
   firstValueFrom,
   map,
   Observable,
   skip,
-  switchMap,
   throttleTime,
 } from 'rxjs';
 import { SETTINGS_KEY_APP_SETTINGS, SETTINGS_STORE } from '../globals';
 import { isEqual, uniq } from 'lodash';
-import { migrateAppSettings } from '../migrations/app-settings.migrations';
-import { TranslateService } from '@ngx-translate/core';
+import { protectSecret, unprotectSecret } from '../utils/secrets';
+import { error } from '@tauri-apps/plugin-log';
 import { OneTimeFlag } from '../models/one-time-flags';
 import { ModalService } from './modal.service';
 import {
@@ -31,6 +31,7 @@ export class AppSettingsService {
     APP_SETTINGS_DEFAULT
   );
   settings: Observable<AppSettings> = this._settings.asObservable();
+  private storedMqttPassword: { plain: string; protected: string } | null = null;
   public get settingsSync(): AppSettings {
     return this._settings.value;
   }
@@ -39,10 +40,7 @@ export class AppSettingsService {
   >(undefined);
   public loadedDefaults: Observable<boolean | undefined> = this._loadedDefaults.asObservable();
 
-  constructor(
-    private translateService: TranslateService,
-    private modalService: ModalService
-  ) {}
+  constructor(private modalService: ModalService) {}
 
   async init() {
     await this.loadSettings();
@@ -51,7 +49,7 @@ export class AppSettingsService {
         skip(1),
         throttleTime(500, asyncScheduler, { leading: true, trailing: true }),
         distinctUntilChanged((a, b) => isEqual(a, b)),
-        switchMap(() => this.saveSettings())
+        concatMap(() => this.saveSettings())
       )
       .subscribe();
   }
@@ -60,24 +58,45 @@ export class AppSettingsService {
     let settings: AppSettings | undefined =
       await SETTINGS_STORE.get<AppSettings>(SETTINGS_KEY_APP_SETTINGS);
     let loadedDefaults = false;
-    if (settings) {
-      const oldSettings = structuredClone(settings);
-      settings = migrateAppSettings(settings);
-      if (oldSettings.userLanguage !== settings.userLanguage) {
-        this.translateService.use(settings.userLanguage);
-      }
-    } else {
+    if (!settings) {
       settings = this._settings.value;
       loadedDefaults = true;
     }
     if (settings.userLanguage === 'DEBUG') settings.userLanguage = 'en';
+    const stored = settings.mqttProtectedPassword;
+    settings.mqttPassword = await unprotectSecret(stored);
+    this.storedMqttPassword =
+      stored && settings.mqttPassword ? { plain: settings.mqttPassword, protected: stored } : null;
+    // Hold on to a password that cannot be unlocked, so a later save rewrites it instead of nothing
+    settings.mqttProtectedPassword = settings.mqttPassword ? null : stored;
     this._settings.next(settings);
-    await this.saveSettings();
     this._loadedDefaults.next(loadedDefaults);
   }
 
   async saveSettings() {
-    await SETTINGS_STORE.set(SETTINGS_KEY_APP_SETTINGS, this._settings.value);
+    const settings = this._settings.value;
+    let mqttProtectedPassword = settings.mqttProtectedPassword;
+    if (settings.mqttPassword && this.storedMqttPassword?.plain === settings.mqttPassword) {
+      mqttProtectedPassword = this.storedMqttPassword.protected;
+    } else if (settings.mqttPassword) {
+      try {
+        mqttProtectedPassword = await protectSecret(settings.mqttPassword);
+        this.storedMqttPassword = mqttProtectedPassword
+          ? { plain: settings.mqttPassword, protected: mqttProtectedPassword }
+          : null;
+      } catch (cause) {
+        error(
+          `[AppSettings] Could not protect the MQTT password, so the stored one goes: ${cause}`
+        );
+        mqttProtectedPassword = null;
+        this.storedMqttPassword = null;
+      }
+    }
+    await SETTINGS_STORE.set(SETTINGS_KEY_APP_SETTINGS, {
+      ...settings,
+      mqttPassword: null,
+      mqttProtectedPassword,
+    });
   }
 
   public updateSettings(settings: Partial<AppSettings>) {

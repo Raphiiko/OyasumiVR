@@ -1,0 +1,62 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.dialog {
+  width: 400px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+
+  span {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    font-weight: 500;
+  }
+}
+
+.divider {
+  width: 50px;
+  height: 2px;
+  border-radius: 9999px;
+  background-color: white;
+}
+
+.message {
+  padding: 1rem;
+  text-align: center;
+  white-space: pre-line;
+
+  p {
+    margin: 0;
+  }
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  font-weight: 500;
+}

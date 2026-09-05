@@ -1,18 +1,8 @@
 export type OVRDeviceClass =
-  | 'Invalid'
-  | 'HMD'
-  | 'Controller'
-  | 'GenericTracker'
-  | 'TrackingReference'
-  | 'DisplayRedirect';
+  'Invalid' | 'HMD' | 'Controller' | 'GenericTracker' | 'TrackingReference' | 'DisplayRedirect';
 
 export type OVRDeviceRole =
-  | 'Invalid'
-  | 'LeftHand'
-  | 'RightHand'
-  | 'OptOut'
-  | 'Treadmill'
-  | 'Stylus';
+  'Invalid' | 'LeftHand' | 'RightHand' | 'OptOut' | 'Treadmill' | 'Stylus';
 
 export type OVRHandleType =
   | 'HandPrimary'

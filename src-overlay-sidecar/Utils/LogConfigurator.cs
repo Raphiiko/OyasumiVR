@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Serilog;
 using Serilog.Core;
+using Serilog.Events;
 using Serilog.Filters;
 
 namespace overlay_sidecar;
@@ -16,9 +17,18 @@ public static class LogConfigurator {
       "co.raphii.oyasumi\\logs\\OyasumiVR_Overlay_Sidecar_.log");
     var config = new LoggerConfiguration()
       .Filter.ByExcluding(Matching.FromSource("Microsoft"))
+      .Enrich.With<UtcTimestampEnricher>()
       .WriteTo.Console()
       .WriteTo.Debug()
-      .WriteTo.File(logPath, rollingInterval: RollingInterval.Day, retainedFileTimeLimit: TimeSpan.FromDays(7));
+      .WriteTo.File(
+        logPath,
+        rollingInterval: RollingInterval.Day,
+        fileSizeLimitBytes: 1_048_576,
+        rollOnFileSizeLimit: true,
+        retainedFileCountLimit: 14,
+        retainedFileTimeLimit: TimeSpan.FromDays(14),
+        outputTemplate: "[{UtcTimestamp:yyyy-MM-dd}][{UtcTimestamp:HH:mm:ss}] [{Level:u}] {Message:lj}{NewLine}{Exception}"
+      );
     if (Program.InDevMode())
     {
       config = config.MinimumLevel.Debug();
@@ -31,5 +41,13 @@ public static class LogConfigurator {
     _logger = config.CreateLogger();
 
     Log.Logger = _logger;
+  }
+
+  private sealed class UtcTimestampEnricher : ILogEventEnricher
+  {
+    public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
+    {
+      logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("UtcTimestamp", logEvent.Timestamp.UtcDateTime));
+    }
   }
 }

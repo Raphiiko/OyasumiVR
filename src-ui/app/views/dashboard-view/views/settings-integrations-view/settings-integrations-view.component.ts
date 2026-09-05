@@ -1,7 +1,6 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { warn } from '@tauri-apps/plugin-log';
 import { writeText } from '@tauri-apps/plugin-clipboard-manager';
-import { hshrink } from 'src-ui/app/utils/animations';
 import { PulsoidService } from '../../../../services/integrations/pulsoid.service';
 import { VRChatService } from '../../../../services/vrchat-api/vrchat.service';
 import { PULSOID_REFERRAL_ID } from 'src-ui/app/globals';
@@ -12,12 +11,13 @@ import { SelectBoxItem } from 'src-ui/app/components/select-box/select-box.compo
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { APP_SETTINGS_DEFAULT, AppSettings, DiscordActivityMode } from 'src-ui/app/models/settings';
+import { VRChatAccountsModalComponent } from '../../../../components/vrchat-accounts-modal/vrchat-accounts-modal.component';
 
 @Component({
   selector: 'app-settings-integrations-view',
   templateUrl: './settings-integrations-view.component.html',
   styleUrls: ['./settings-integrations-view.component.scss'],
-  animations: [hshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SettingsIntegrationsViewComponent implements OnInit {
@@ -94,6 +94,10 @@ export class SettingsIntegrationsViewComponent implements OnInit {
 
   protected showMqttConfigModal() {
     this.modalService.addModal(MqttConfigModalComponent).subscribe();
+  }
+
+  protected showVRChatAccountsModal() {
+    this.modalService.addModal(VRChatAccountsModalComponent).subscribe();
   }
 
   protected setDiscordActivityOnlyWhenVRChatIsRunning(enabled: boolean) {

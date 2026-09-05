@@ -13,6 +13,8 @@ import { LighthouseConsoleMonitor } from './monitors/lighthouse-console-monitor'
 import { TString } from 'src-ui/app/models/translatable-string';
 import { VRChatOSCMessageMonitor } from './monitors/vrchat-osc-message-monitor';
 import { VRChatWebsocketConnectionMonitor } from './monitors/vrchat-websocket-connection-monitor';
+import { OverlaySidecarMessageMonitor } from './monitors/overlay-sidecar-message-monitor';
+import { ElevatedFeaturesMessageMonitor } from './monitors/elevated-features-message-monitor';
 
 export interface MessageAction {
   label: string;
@@ -56,9 +58,11 @@ export class MessageCenterService {
       new SleepCalibrationMessageMonitor(this),
       new ManyLighthousesDetectedMessageMonitor(this),
       new GpuAutomationMessageMonitor(this),
+      new ElevatedFeaturesMessageMonitor(this),
       new LighthouseConsoleMonitor(this),
       new VRChatOSCMessageMonitor(this),
       new VRChatWebsocketConnectionMonitor(this),
+      new OverlaySidecarMessageMonitor(this),
     ];
   }
 

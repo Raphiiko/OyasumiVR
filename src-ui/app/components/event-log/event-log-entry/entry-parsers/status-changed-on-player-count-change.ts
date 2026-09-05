@@ -3,7 +3,7 @@ import {
   EventLogStatusChangedOnPlayerCountChange,
   EventLogType,
 } from '../../../../models/event-log-entry';
-import { UserStatus } from 'vrchat';
+import { UserStatus } from '../../../../models/vrchat';
 import { vrcStatusToString } from '../../../../utils/status-utils';
 
 export class EventLogStatusChangedOnPlayerCountChangeEntryParser extends EventLogEntryParser<EventLogStatusChangedOnPlayerCountChange> {

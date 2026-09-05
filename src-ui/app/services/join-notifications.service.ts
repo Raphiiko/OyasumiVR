@@ -22,8 +22,8 @@ import {
 } from 'rxjs';
 import { VRChatLogService } from './vrchat-log.service';
 import { VRChatLogEvent } from '../models/vrchat-log-event';
-import type { LimitedUser } from 'vrchat/dist';
-import { TranslateService } from '@ngx-translate/core';
+import type { LimitedUserFriend } from 'vrchat';
+import { TranslocoService } from '@jsverse/transloco';
 import { v4 as uuid } from 'uuid';
 
 @Injectable({
@@ -36,7 +36,7 @@ export class JoinNotificationsService {
   private ownVRChatDisplayName = '';
   private alone = false;
   private notAloneSince = 0;
-  private friends: LimitedUser[] = [];
+  private friends: LimitedUserFriend[] = [];
   private worldLoaded = false;
   private playNotification = new Subject<{
     id?: string;
@@ -54,7 +54,7 @@ export class JoinNotificationsService {
     private vrchat: VRChatService,
     private notification: NotificationService,
     private vrchatLog: VRChatLogService,
-    private translate: TranslateService
+    private translate: TranslocoService
   ) {}
 
   public async init() {
@@ -64,16 +64,15 @@ export class JoinNotificationsService {
     });
     this.vrchat.user
       .pipe(
-        // Keep track of own display name
         tap((user) => {
           this.ownVRChatDisplayName = user?.displayName ?? '';
+          if (!user) this.friends = [];
         }),
-        // Stop if not logged in
         filter(Boolean),
-        // Keep track of friends
         switchMap(async () => {
-          this.friends = await this.vrchat.listFriends();
-          // TODO: HANDLE FRIEND LIST CHANGES (ADD/REMOVE/DISPLAY NAME CHANGE)
+          try {
+            this.friends = await this.vrchat.listFriends();
+          } catch {}
         })
       )
       .subscribe();
@@ -125,14 +124,16 @@ export class JoinNotificationsService {
           this.queuedNotifications = this.queuedNotifications.filter((id) => id !== val.id);
           // Send notification
           if (val.notification) {
-            const message = this.translate.instant(`join-notifications.notification.${val.type}`, {
-              name: val.notification.displayName,
-            });
+            const message = this.translate.translate(
+              `join-notifications.notification.${val.type}`,
+              {
+                name: val.notification.displayName,
+              }
+            );
             await this.notification.send(message, 5000);
           }
           // Send sound
           if (val.sound) {
-            // TODO: Play the sound
             switch (val.type) {
               case 'join':
                 await this.notification.playSoundConfig(this.config.joinSound);
@@ -212,7 +213,7 @@ export class JoinNotificationsService {
     const sound = this.appliesForPlayer(this.config.leaveSoundMode, displayName);
 
     // Stop here if no notification or sound
-    if (!notification) return;
+    if (!notification && !sound) return;
 
     // World player count check
     if (this.config.onlyWhenLeftAlone) {

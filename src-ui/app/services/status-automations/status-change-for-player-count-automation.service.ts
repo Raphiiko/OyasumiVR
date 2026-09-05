@@ -17,11 +17,12 @@ import {
   ChangeStatusBasedOnPlayerCountAutomationConfig,
 } from '../../models/automations';
 import { SleepService } from '../sleep.service';
-import { CurrentUser, UserStatus } from 'vrchat/dist';
+import type { CurrentUser } from 'vrchat';
+import { UserStatus } from '../../models/vrchat';
 import { EventLogService } from '../event-log.service';
 import { EventLogStatusChangedOnPlayerCountChange } from '../../models/event-log-entry';
 import { NotificationService } from '../notification.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 
 @Injectable({
   providedIn: 'root',
@@ -30,7 +31,6 @@ export class StatusChangeForPlayerCountAutomationService {
   private config: ChangeStatusBasedOnPlayerCountAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.CHANGE_STATUS_BASED_ON_PLAYER_COUNT
   );
-  private sleepMode = false;
 
   constructor(
     private vrchat: VRChatService,
@@ -38,7 +38,7 @@ export class StatusChangeForPlayerCountAutomationService {
     private sleep: SleepService,
     private eventLog: EventLogService,
     private notifications: NotificationService,
-    private translate: TranslateService
+    private translate: TranslocoService
   ) {}
 
   async init() {
@@ -46,7 +46,6 @@ export class StatusChangeForPlayerCountAutomationService {
     this.automationConfig.configs.subscribe((configs) => {
       this.config = structuredClone(configs.CHANGE_STATUS_BASED_ON_PLAYER_COUNT);
     });
-    this.sleep.mode.subscribe((mode) => (this.sleepMode = mode));
 
     combineLatest([
       // React to player count changes
@@ -64,12 +63,13 @@ export class StatusChangeForPlayerCountAutomationService {
         distinctUntilChanged((a, b) => isEqual(a, b)),
         delay(100)
       ),
+      this.sleep.mode.pipe(distinctUntilChanged()),
     ])
       .pipe(
         // Automation must be enabled
         filter(() => this.config.enabled),
         // Sleep mode condition must be met or disabled
-        filter(() => this.sleepMode || !this.config.onlyIfSleepModeEnabled),
+        filter(([, , , sleepMode]) => sleepMode || !this.config.onlyIfSleepModeEnabled),
         // User must be currently online
         filter(([, user]) => !!user && user.status !== UserStatus.Offline),
         // Determine the new status
@@ -87,7 +87,7 @@ export class StatusChangeForPlayerCountAutomationService {
         if (success) {
           if (await this.notifications.notificationTypeEnabled('AUTO_UPDATED_VRC_STATUS')) {
             await this.notifications.send(
-              this.translate.instant('notifications.vrcStatusChanged.content', {
+              this.translate.translate('notifications.vrcStatusChanged.content', {
                 newStatus: (
                   (newStatus.statusMessage ?? newStatus.oldStatusMessage) +
                   ' (' +

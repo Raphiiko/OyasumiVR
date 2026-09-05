@@ -1,6 +1,6 @@
 <button
   class="binding-btn"
-  [tooltip]="(tooltipText() ?? '' | translate) ?? undefined"
+  [tooltip]="(tooltipText() ?? '' | transloco) ?? undefined"
   [tooltipMode]="'left'"
   (click)="toggleDropdown()"
 >
@@ -10,16 +10,19 @@
   @if (error && error !== 'MISSING_CONTROLLER' && error !== 'NO_CONTROLLERS') {
     <div class="text-wrapper">
       @if (error === 'MISSING_KEY') {
-        <div class="line1" translate> No Action Set</div>
+        <div class="line1">No Action Set</div>
       }
       @if (error === 'STEAMVR_INACTIVE') {
-        <div class="line1" translate> comp.controller-binding.errors.STEAMVR_INACTIVE.message</div>
+        <div
+          class="line1"
+          transloco="comp.controller-binding.errors.STEAMVR_INACTIVE.message"
+        ></div>
       }
       @if (error === 'DASHBOARD_OPEN') {
-        <div class="line1" translate> comp.controller-binding.errors.DASHBOARD_OPEN.message</div>
+        <div class="line1" transloco="comp.controller-binding.errors.DASHBOARD_OPEN.message"></div>
       }
       @if (error === 'UNKNOWN') {
-        <div class="line1" translate> comp.controller-binding.errors.UNKNOWN.message</div>
+        <div class="line1" transloco="comp.controller-binding.errors.UNKNOWN.message"></div>
       }
     </div>
   }
@@ -35,14 +38,17 @@
       </div>
     </div>
   }
-  @if (!error) {
+  @if (!error && activeBinding) {
     <div class="text-wrapper">
       <div class="line0">{{ activeBinding?.localizedControllerType }}</div>
       <div class="line1"
         >{{ activeBinding?.localizedHand }} {{ activeBinding?.localizedInputSource }}
       </div>
       <div class="line2"
-        >{{ 'comp.controller-binding.slot.' + activeBinding?.slotName | translate }}
+        >{{
+          'comp.controller-binding.slot.' + $safeNavigationMigration(activeBinding?.slotName)
+            | transloco
+        }}
       </div>
     </div>
   }
@@ -50,13 +56,20 @@
 <div class="dropdown-container">
   @if (dropdownOpen) {
     <div class="dropdown" @fadeDown (clickOutside)="clickOutsideDropdown()">
-      <div class="dropdown-description" translate>comp.controller-binding.dropdown.description</div>
-      <button class="config-button" (click)="launchBindingConfiguration(true)" translate>
-        comp.controller-binding.dropdown.desktop
-      </button>
-      <button class="config-button" (click)="launchBindingConfiguration(false)" translate>
-        comp.controller-binding.dropdown.vr
-      </button>
+      <div
+        class="dropdown-description"
+        transloco="comp.controller-binding.dropdown.description"
+      ></div>
+      <button
+        class="config-button"
+        (click)="launchBindingConfiguration(true)"
+        transloco="comp.controller-binding.dropdown.desktop"
+      ></button>
+      <button
+        class="config-button"
+        (click)="launchBindingConfiguration(false)"
+        transloco="comp.controller-binding.dropdown.vr"
+      ></button>
     </div>
   }
 </div>

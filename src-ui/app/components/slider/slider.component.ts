@@ -11,6 +11,7 @@ import {
   OnInit,
   Output,
   ViewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { orderBy } from 'lodash';
 import { clamp, ensurePrecision, floatPrecision } from '../../utils/number-utils';
@@ -21,6 +22,7 @@ export type SliderStyle = 'DEFAULT' | 'AUDIO_LEVEL';
   selector: 'app-slider',
   templateUrl: './slider.component.html',
   styleUrls: ['./slider.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class SliderComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {

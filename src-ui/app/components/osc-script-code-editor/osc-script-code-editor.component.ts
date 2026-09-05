@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   DestroyRef,
   ElementRef,
@@ -8,6 +9,7 @@ import {
   OnInit,
   Output,
   ViewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { BehaviorSubject, debounceTime, map, Observable, tap } from 'rxjs';
 import { OscParameterType, OscScript, OscScriptCodeValidationError } from '../../models/osc-script';
@@ -16,12 +18,14 @@ import { isEqual } from 'lodash';
 import { OscService } from '../../services/osc.service';
 import { parseOscScriptFromCode } from '../../utils/osc-script-utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { flushOnDestroy } from '../../utils/rxjs-utils';
 
 @Component({
   selector: 'app-osc-script-code-editor',
   templateUrl: './osc-script-code-editor.component.html',
   styleUrls: ['./osc-script-code-editor.component.scss'],
   animations: [fade(), hshrink(), noop()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class OscScriptCodeEditorComponent implements OnInit, AfterViewInit {
@@ -65,7 +69,8 @@ export class OscScriptCodeEditorComponent implements OnInit, AfterViewInit {
 
   constructor(
     private osc: OscService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private cdr: ChangeDetectorRef
   ) {}
 
   protected setScript(script: OscScript, force = false) {
@@ -77,11 +82,15 @@ export class OscScriptCodeEditorComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    flushOnDestroy(this._code, this.destroyRef);
     this._code
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        tap(() => (this.validated = false)),
-        debounceTime(500)
+        tap(() => {
+          this.validated = false;
+          this.cdr.markForCheck();
+        }),
+        debounceTime(500),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((code) => {
         this.tooltipErrors = [];
@@ -90,6 +99,7 @@ export class OscScriptCodeEditorComponent implements OnInit, AfterViewInit {
         this.errors = errors;
         this.errorCount.emit(errors.length);
         this.scriptChange.emit(script);
+        this.cdr.markForCheck();
       });
   }
 
@@ -162,10 +172,12 @@ export class OscScriptCodeEditorComponent implements OnInit, AfterViewInit {
     const { script, errors } = parseOscScriptFromCode(this._code.value);
     if (errors.length) return;
     this.testing = true;
+    this.cdr.markForCheck();
     await Promise.all([
       this.osc.runScript(script),
       new Promise((resolve) => setTimeout(resolve, 1000)),
     ]);
     this.testing = false;
+    this.cdr.markForCheck();
   }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { message, open as openFile } from '@tauri-apps/plugin-dialog';
 import { readTextFile } from '@tauri-apps/plugin-fs';
 import {
@@ -13,7 +13,7 @@ import {
   SETTINGS_STORE,
 } from '../../../../globals';
 import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { error, info } from '@tauri-apps/plugin-log';
 import {
   ConfirmModalComponent,
@@ -38,6 +38,7 @@ import { firstValueFrom } from 'rxjs';
   templateUrl: './settings-advanced-view.component.html',
   styleUrls: ['./settings-advanced-view.component.scss'],
   animations: [],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SettingsAdvancedViewComponent {
@@ -56,12 +57,14 @@ export class SettingsAdvancedViewComponent {
   ];
   checkedPersistentStorageItems: string[] = [];
   memoryWatcherActive = FLAVOUR === 'DEV';
+  devToolsAvailable = invoke<boolean>('dev_tools_available');
   overlayGpuAcceleration = true;
   openVrInitDelayFix = false;
+  lighthousePowerOffDelay = false;
 
   constructor(
     private router: Router,
-    private translate: TranslateService,
+    private translate: TranslocoService,
     private modalService: ModalService,
     private eventLogService: EventLogService,
     private ipcService: IPCService,
@@ -71,6 +74,7 @@ export class SettingsAdvancedViewComponent {
     this.settingsService.settings.pipe(takeUntilDestroyed()).subscribe((settings) => {
       this.overlayGpuAcceleration = settings.overlayGpuAcceleration;
       this.openVrInitDelayFix = settings.openVrInitDelayFix;
+      this.lighthousePowerOffDelay = settings.lighthousePowerOffDelay;
     });
   }
 
@@ -149,7 +153,7 @@ export class SettingsAdvancedViewComponent {
       } as SetDebugTranslationsRequest);
     }
     // Set translations in main application
-    this.translate.setTranslation('DEBUG', translations);
+    this.translate.setTranslation(translations, 'DEBUG');
     // Switch language to DEBUG
     this.setUserLanguage('DEBUG');
     await message('Translations have been loaded from ' + path, 'Translations loaded');
@@ -166,7 +170,9 @@ export class SettingsAdvancedViewComponent {
               .map(
                 (item) =>
                   ' • ' +
-                  this.translate.instant(`settings.advanced.persistentData.dataType.${item}.title`)
+                  this.translate.translate(
+                    `settings.advanced.persistentData.dataType.${item}.title`
+                  )
               )
               .join('\n'),
           },
@@ -176,34 +182,36 @@ export class SettingsAdvancedViewComponent {
         if (!data?.confirmed) return;
         info('[Settings] User triggered clearing of persistent storage');
         let askForRelaunch = false;
-        await Promise.all(
+        const results = await Promise.allSettled(
           this.checkedPersistentStorageItems.map(async (item) => {
             switch (item) {
               case 'appSettings':
                 info('[Settings] Clearing app settings');
-                await SETTINGS_STORE.delete(SETTINGS_KEY_APP_SETTINGS);
                 askForRelaunch = true;
+                await SETTINGS_STORE.delete(SETTINGS_KEY_APP_SETTINGS);
                 break;
               case 'automationSettings':
                 info('[Settings] Clearing automation settings');
-                await SETTINGS_STORE.delete(SETTINGS_KEY_AUTOMATION_CONFIGS);
-                await SETTINGS_STORE.delete(SETTINGS_KEY_SLEEP_MODE);
                 askForRelaunch = true;
+                await SETTINGS_STORE.deleteAll([
+                  SETTINGS_KEY_AUTOMATION_CONFIGS,
+                  SETTINGS_KEY_SLEEP_MODE,
+                ]);
                 break;
               case 'vrcData':
                 info('[Settings] Clearing VRChat data');
-                await SETTINGS_STORE.delete(SETTINGS_KEY_VRCHAT_API);
                 askForRelaunch = true;
+                await SETTINGS_STORE.delete(SETTINGS_KEY_VRCHAT_API);
                 break;
               case 'integrations':
                 info('[Settings] Clearing integration data');
-                await SETTINGS_STORE.delete(SETTINGS_KEY_PULSOID_API);
                 askForRelaunch = true;
+                await SETTINGS_STORE.delete(SETTINGS_KEY_PULSOID_API);
                 break;
               case 'appCache':
                 info('[Settings] Clearing application cache');
-                await CACHE_STORE.clear();
                 askForRelaunch = true;
+                await CACHE_STORE.clear();
                 break;
               case 'imageCache':
                 info('[Settings] Clearing image cache');
@@ -211,8 +219,11 @@ export class SettingsAdvancedViewComponent {
                 break;
               case 'miscData':
                 info('[Settings] Clearing misc data');
-                await SETTINGS_STORE.delete(SETTINGS_KEY_THEMING_SETTINGS);
-                await SETTINGS_STORE.delete(SETTINGS_KEY_TELEMETRY_SETTINGS);
+                askForRelaunch = true;
+                await SETTINGS_STORE.deleteAll([
+                  SETTINGS_KEY_THEMING_SETTINGS,
+                  SETTINGS_KEY_TELEMETRY_SETTINGS,
+                ]);
                 break;
               case 'logs':
                 info('[Settings] Clearing log files');
@@ -225,16 +236,26 @@ export class SettingsAdvancedViewComponent {
             }
           })
         );
+        const failedClears = results.filter((result) => result.status === 'rejected');
+        for (const result of failedClears) {
+          error('[Settings] Failed to clear persistent storage: ' + JSON.stringify(result.reason));
+        }
         info('[Settings] Finished clearing of persistent storage');
         this.checkedPersistentStorageItems = [];
         if (askForRelaunch) {
           this.modalService
-            .addModal(ConfirmModalComponent, {
-              title: 'settings.advanced.persistentData.relaunchModal.title',
-              message: 'settings.advanced.persistentData.relaunchModal.message',
-              confirmButtonText: 'settings.advanced.persistentData.relaunchModal.relaunch',
-              cancelButtonText: 'settings.advanced.persistentData.relaunchModal.later',
-            })
+            .addModal(
+              ConfirmModalComponent,
+              {
+                title: 'settings.advanced.persistentData.relaunchModal.title',
+                message: failedClears.length
+                  ? 'settings.advanced.persistentData.relaunchModal.partialFailureMessage'
+                  : 'settings.advanced.persistentData.relaunchModal.message',
+                confirmButtonText: 'settings.advanced.persistentData.relaunchModal.relaunch',
+                showCancel: false,
+              },
+              { closeOnEscape: false }
+            )
             .subscribe(async (data) => {
               if (!data?.confirmed) return;
               await relaunch();
@@ -299,5 +320,9 @@ export class SettingsAdvancedViewComponent {
 
   setOpenVrInitDelayFix(enabled: boolean) {
     this.settingsService.updateSettings({ openVrInitDelayFix: enabled });
+  }
+
+  setLighthousePowerOffDelay(enabled: boolean) {
+    this.settingsService.updateSettings({ lighthousePowerOffDelay: enabled });
   }
 }

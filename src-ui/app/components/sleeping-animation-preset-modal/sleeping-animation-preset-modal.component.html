@@ -6,15 +6,17 @@
     @for (link of preset?.infoLinks || []; track link) {
       <div class="link">
         <span>{{ link.label }}</span>
-        <button class="btn btn-secondary" translate (click)="openUrl(link.url)"
-          >shared.modals.open
-        </button>
+        <button
+          class="btn btn-secondary"
+          transloco="shared.modals.open"
+          (click)="openUrl(link.url)"
+        ></button>
       </div>
     }
   </div>
   <div class="pane-actions spread">
     <button class="btn btn-secondary" (click)="close()">
-      {{ 'shared.modals.close' | translate }}
+      {{ 'shared.modals.close' | transloco }}
     </button>
   </div>
 </div>

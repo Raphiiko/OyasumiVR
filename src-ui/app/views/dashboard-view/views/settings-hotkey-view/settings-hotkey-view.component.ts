@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { HotkeyId } from '../../../../models/settings';
 
 interface HotkeyAction {
@@ -9,6 +9,7 @@ interface HotkeyAction {
   selector: 'app-settings-hotkey-view',
   templateUrl: './settings-hotkey-view.component.html',
   styleUrls: ['./settings-hotkey-view.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class SettingsHotkeyViewComponent {

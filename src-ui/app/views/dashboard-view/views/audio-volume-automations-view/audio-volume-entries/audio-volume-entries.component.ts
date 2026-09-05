@@ -1,4 +1,13 @@
-import { Component, DestroyRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { SelectBoxItem } from '../../../../../components/select-box/select-box.component';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ModalService } from '../../../../../services/modal.service';
@@ -21,6 +30,7 @@ import {
   templateUrl: './audio-volume-entries.component.html',
   styleUrls: ['./audio-volume-entries.component.scss'],
   animations: [vshrink()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class AudioVolumeEntriesComponent implements OnInit {
@@ -57,7 +67,8 @@ export class AudioVolumeEntriesComponent implements OnInit {
     private domSanitizer: DomSanitizer,
     private modalService: ModalService,
     private audioDeviceService: AudioDeviceService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {}
@@ -115,6 +126,7 @@ export class AudioVolumeEntriesComponent implements OnInit {
         });
         this.collapsed = false;
         this.automationsChange.emit(this.automations);
+        this.cdr.markForCheck();
       });
   }
 

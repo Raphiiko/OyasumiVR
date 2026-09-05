@@ -1,4 +1,10 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { MqttService } from '../../services/mqtt/mqtt.service';
 import { AppSettingsService } from '../../services/app-settings.service';
@@ -14,6 +20,7 @@ import { error } from '@tauri-apps/plugin-log';
   templateUrl: './mqtt-config-modal.component.html',
   styleUrls: ['./mqtt-config-modal.component.scss'],
   animations: [fadeUp(), hshrink(), vshrink()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class MqttConfigModalComponent extends BaseModalComponent<void, void> implements OnInit {
@@ -32,7 +39,8 @@ export class MqttConfigModalComponent extends BaseModalComponent<void, void> imp
   constructor(
     private appSettings: AppSettingsService,
     private mqtt: MqttService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private cdr: ChangeDetectorRef
   ) {
     super();
   }
@@ -40,6 +48,7 @@ export class MqttConfigModalComponent extends BaseModalComponent<void, void> imp
   ngOnInit() {
     this.appSettings.settings.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((config) => {
       this.config = MqttService.mapAppSettingsToMqttConfig(config);
+      this.cdr.markForCheck();
     });
   }
 
@@ -67,9 +76,11 @@ export class MqttConfigModalComponent extends BaseModalComponent<void, void> imp
       const couldConnect = await pMinDelay(this.mqtt.testMqttConfig(this.config), 500);
       this.testResult = couldConnect ? 'success' : 'error';
       this.testError = '';
+      this.cdr.markForCheck();
     } catch (e) {
       this.testError = `${e}`;
       this.testResult = 'error';
+      this.cdr.markForCheck();
     }
   }
 

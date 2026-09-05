@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { VRChatService } from '../../../../services/vrchat-api/vrchat.service';
 import { vshrink } from '../../../../utils/animations';
@@ -8,7 +8,7 @@ import {
   VRChatGroupAutomationsConfig,
 } from '../../../../models/automations';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
-import type { LimitedUserGroups } from 'vrchat/dist';
+import type { LimitedUserGroups } from 'vrchat';
 import { combineLatest } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 import { error } from '@tauri-apps/plugin-log';
@@ -21,6 +21,7 @@ type GroupSelectType = string | 'DONT_CHANGE' | 'CLEAR_GROUP';
   templateUrl: './vrchat-group-automations-view.component.html',
   styleUrls: ['./vrchat-group-automations-view.component.scss'],
   animations: [vshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class VRChatGroupAutomationsViewComponent implements OnInit {

@@ -54,7 +54,7 @@ export class SteamService {
 
   public async init() {
     // Only run in Steam flavoured builds
-    if (FLAVOUR !== 'STEAM' && FLAVOUR !== 'STEAM_CN' && FLAVOUR !== 'DEV') return;
+    if (FLAVOUR !== 'STEAM' && FLAVOUR !== 'DEV') return;
     // Keep track of Steamworks status
     await this.getSteamActive();
     await listen<boolean>('STEAMWORKS_READY', (data) => this._active.next(data.payload));

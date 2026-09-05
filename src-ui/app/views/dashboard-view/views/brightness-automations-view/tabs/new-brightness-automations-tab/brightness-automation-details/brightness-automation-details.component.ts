@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   computed,
   DestroyRef,
@@ -7,6 +8,7 @@ import {
   OnInit,
   output,
   Signal,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { fade, fadeRight, vshrink } from '../../../../../../../utils/animations';
 import {
@@ -36,6 +38,7 @@ type BrightnessType = 'SIMPLE' | 'SOFTWARE' | 'HARDWARE';
   templateUrl: './brightness-automation-details.component.html',
   styleUrls: ['./brightness-automation-details.component.scss'],
   animations: [fade(), fadeRight(), vshrink()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class BrightnessAutomationDetailsComponent implements OnInit {
@@ -69,7 +72,8 @@ export class BrightnessAutomationDetailsComponent implements OnInit {
     private softwareBrightnessControl: SoftwareBrightnessControlService,
     private hardwareBrightnessControl: HardwareBrightnessControlService,
     protected appSettingsService: AppSettingsService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private cdr: ChangeDetectorRef
   ) {
     this.cctControlEnabled = toSignal(
       this.appSettingsService.settings.pipe(map((s) => s.cctControlEnabled)),
@@ -83,11 +87,17 @@ export class BrightnessAutomationDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
+    // The template calls appSettingsService.oneTimeFlagSet(), which no signal
+    // covers, so any settings change has to recheck the view.
+    this.appSettingsService.settings
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.cdr.markForCheck());
     this.hardwareBrightnessControl.brightnessBounds
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(async (bounds) => {
         this.brightnessBounds.HARDWARE.min = bounds[0];
         this.brightnessBounds.HARDWARE.max = bounds[1];
+        this.cdr.markForCheck();
       });
   }
 
@@ -123,9 +133,11 @@ export class BrightnessAutomationDetailsComponent implements OnInit {
     await this.updateConfig(pConfig);
     if (copyCurrent) {
       this.vshakeElements.push('BRIGHTNESS_' + type);
+      this.cdr.markForCheck();
       setTimeout(() => {
         const index = this.vshakeElements.indexOf('BRIGHTNESS_' + type);
         if (index >= 0) this.vshakeElements.splice(index, 1);
+        this.cdr.markForCheck();
       }, 300);
     }
   }
@@ -209,9 +221,11 @@ export class BrightnessAutomationDetailsComponent implements OnInit {
         }
       }
       this.vshakeElements.push('ACTIVATION_TIME');
+      this.cdr.markForCheck();
       setTimeout(() => {
         const index = this.vshakeElements.indexOf('ACTIVATION_TIME');
         if (index >= 0) this.vshakeElements.splice(index, 1);
+        this.cdr.markForCheck();
       }, 300);
     } catch (e) {
       error('[BrightnessAutomationDetails] Failed to get sunrise/sunset time: ' + e);

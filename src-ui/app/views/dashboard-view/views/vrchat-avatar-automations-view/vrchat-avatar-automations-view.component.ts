@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { VRChatService } from '../../../../services/vrchat-api/vrchat.service';
 import { vshrink } from '../../../../utils/animations';
@@ -15,6 +15,7 @@ import { PersistedAvatar } from '../../../../models/vrchat';
   templateUrl: './vrchat-avatar-automations-view.component.html',
   styleUrls: ['./vrchat-avatar-automations-view.component.scss'],
   animations: [vshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class VRChatAvatarAutomationsViewComponent implements OnInit {

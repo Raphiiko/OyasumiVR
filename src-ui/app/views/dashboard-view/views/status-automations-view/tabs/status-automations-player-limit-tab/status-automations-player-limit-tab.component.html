@@ -1,4 +1,4 @@
-<p translate>status-automations.playerLimit.description</p>
+<p transloco="status-automations.playerLimit.description"></p>
 @if (!loggedIn) {
   <div class="alert warning" @vshrink>
     <div class="alert-bg"></div>
@@ -6,16 +6,16 @@
       <i class="material-icons"> warning </i>
     </div>
     <div class="alert-content">
-      <span>{{ 'shared.common.vrcLoginRequired' | translate }}</span>
-      <button class="btn btn-secondary" (click)="login()" translate>shared.modals.login</button>
+      <span>{{ 'shared.common.vrcLoginRequired' | transloco }}</span>
+      <button class="btn btn-secondary" (click)="login()" transloco="shared.modals.login"></button>
     </div>
   </div>
 }
 <div class="settings">
   <div class="setting-row">
-    <div class="setting-row-label" translate>
-      <span translate>status-automations.playerLimit.enable.title</span>
-      <span translate>status-automations.playerLimit.enable.description</span>
+    <div class="setting-row-label">
+      <span transloco="status-automations.playerLimit.enable.title"></span>
+      <span transloco="status-automations.playerLimit.enable.description"></span>
     </div>
     <div class="setting-row-action">
       <label class="switch-toggle">
@@ -37,12 +37,12 @@
         <i class="material-icons"> info </i>
       </div>
       <div class="alert-content"
-        >{{ 'status-automations.playerLimit.disableToEdit' | translate }}
+        >{{ 'status-automations.playerLimit.disableToEdit' | transloco }}
       </div>
     </div>
   }
   <div class="limit-setting">
-    <h3 translate>status-automations.playerLimit.playerLimit</h3>
+    <h3 transloco="status-automations.playerLimit.playerLimit"></h3>
     <app-player-count-sleep-visualization
       [count]="limit.value"
     ></app-player-count-sleep-visualization>
@@ -72,14 +72,14 @@
     </div>
     <div
       class="limit-setting-description"
-      [translate]="'status-automations.playerLimit.playerLimitLabel'"
-      [translateParams]="{ count: limit.value }"
+      [transloco]="'status-automations.playerLimit.playerLimitLabel'"
+      [translocoParams]="{ count: limit.value }"
     ></div>
   </div>
   <div class="setting-row">
-    <div class="setting-row-label" translate>
-      <span translate>status-automations.playerLimit.belowLimit.title</span>
-      <span translate>status-automations.playerLimit.belowLimit.description.status</span>
+    <div class="setting-row-label">
+      <span transloco="status-automations.playerLimit.belowLimit.title"></span>
+      <span transloco="status-automations.playerLimit.belowLimit.description.status"></span>
     </div>
     <div class="setting-row-action">
       <label class="switch-toggle">
@@ -101,9 +101,9 @@
     </div>
   </div>
   <div class="setting-row">
-    <div class="setting-row-label" translate>
+    <div class="setting-row-label">
       <span></span>
-      <span translate>status-automations.playerLimit.belowLimit.description.statusMessage</span>
+      <span transloco="status-automations.playerLimit.belowLimit.description.statusMessage"></span>
     </div>
     <div class="setting-row-action">
       <label class="switch-toggle">
@@ -129,9 +129,9 @@
     </div>
   </div>
   <div class="setting-row">
-    <div class="setting-row-label" translate>
-      <span translate>status-automations.playerLimit.atLimitOrAbove.title</span>
-      <span translate>status-automations.playerLimit.atLimitOrAbove.description.status</span>
+    <div class="setting-row-label">
+      <span transloco="status-automations.playerLimit.atLimitOrAbove.title"></span>
+      <span transloco="status-automations.playerLimit.atLimitOrAbove.description.status"></span>
     </div>
     <div class="setting-row-action">
       <label class="switch-toggle">
@@ -155,9 +155,11 @@
     </div>
   </div>
   <div class="setting-row">
-    <div class="setting-row-label" translate>
+    <div class="setting-row-label">
       <span></span>
-      <span translate>status-automations.playerLimit.atLimitOrAbove.description.statusMessage</span>
+      <span
+        transloco="status-automations.playerLimit.atLimitOrAbove.description.statusMessage"
+      ></span>
     </div>
     <div class="setting-row-action">
       <label class="switch-toggle">
@@ -188,9 +190,9 @@
     </div>
   </div>
   <div class="setting-row">
-    <div class="setting-row-label" translate>
-      <span translate>status-automations.playerLimit.onlyIfSleepModeEnabled</span>
-      <span translate></span>
+    <div class="setting-row-label">
+      <span transloco="status-automations.playerLimit.onlyIfSleepModeEnabled"></span>
+      <span></span>
     </div>
     <div class="setting-row-action">
       <label class="switch-toggle">
@@ -210,9 +212,12 @@
     <i class="material-icons"> warning </i>
   </div>
   <div class="alert-content">
-    <span>{{ 'status-automations.behaviourWarning' | translate }}</span>
-    <button class="btn btn-secondary" (click)="showFAQ()" translate style="margin-left: 1em">
-      status-automations.moreInfo
-    </button>
+    <span>{{ 'status-automations.behaviourWarning' | transloco }}</span>
+    <button
+      class="btn btn-secondary"
+      (click)="showFAQ()"
+      transloco="status-automations.moreInfo"
+      style="margin-left: 1em"
+    ></button>
   </div>
 </div>

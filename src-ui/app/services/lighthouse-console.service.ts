@@ -4,7 +4,7 @@ import { OpenVRService } from './openvr.service';
 import { AppSettingsService } from './app-settings.service';
 import { invoke } from '@tauri-apps/api/core';
 import { OVRDevice } from '../models/ovr-device';
-import { info } from '@tauri-apps/plugin-log';
+import { error, info } from '@tauri-apps/plugin-log';
 import { ExecutableReferenceStatus } from '../models/settings';
 import { listen } from '@tauri-apps/api/event';
 
@@ -15,6 +15,7 @@ export class LighthouseConsoleService {
   private _consoleStatus: BehaviorSubject<ExecutableReferenceStatus> =
     new BehaviorSubject<ExecutableReferenceStatus>('UNKNOWN');
   public consoleStatus: Observable<ExecutableReferenceStatus> = this._consoleStatus.asObservable();
+  private powerOffQueue: Promise<void> = Promise.resolve();
 
   constructor(
     private appSettings: AppSettingsService,
@@ -35,16 +36,21 @@ export class LighthouseConsoleService {
         }
       });
     await listen<string>('turnOffOVRDevices', async (event) => {
-      let deviceIndices: number[];
+      let deviceSerialNumbers: unknown;
       try {
-        deviceIndices = JSON.parse(event.payload);
+        deviceSerialNumbers = JSON.parse(event.payload);
       } catch {
         return;
       }
-      const devices = (await firstValueFrom(this.openvr.devices)).filter((d) =>
-        deviceIndices.includes(d.index)
-      );
-      await this.turnOffDevices(devices);
+      if (
+        !Array.isArray(deviceSerialNumbers) ||
+        !deviceSerialNumbers.every(
+          (serialNumber): serialNumber is string =>
+            typeof serialNumber === 'string' && serialNumber.length > 0
+        )
+      )
+        return;
+      await this.queuePowerOff(deviceSerialNumbers);
     });
   }
 
@@ -55,7 +61,6 @@ export class LighthouseConsoleService {
       this._consoleStatus.next('NOT_FOUND');
       return;
     }
-    // Get output
     let stdout;
     try {
       stdout = (
@@ -79,34 +84,63 @@ export class LighthouseConsoleService {
       this._consoleStatus.next('UNKNOWN_ERROR');
       return;
     }
-    // Check output
     const stdoutLines = stdout.split('\n');
     if (
       !stdoutLines.length ||
       !stdoutLines[0].trim().startsWith('Version:  lighthouse_console.exe')
     ) {
       this._consoleStatus.next('INVALID_EXECUTABLE');
+      return;
     }
     this._consoleStatus.next('SUCCESS');
   }
 
   async turnOffDevices(ovrDevices: OVRDevice[]) {
-    const lighthouseConsolePath = await firstValueFrom(this.appSettings.settings).then(
-      (settings) => settings.lighthouseConsolePath
+    return this.queuePowerOff(
+      ovrDevices
+        .map((device) => device.serialNumber)
+        .filter((serialNumber): serialNumber is string => !!serialNumber)
     );
+  }
+
+  private queuePowerOff(deviceSerialNumbers: string[]) {
+    const batch = this.powerOffQueue.then(() => this.runTurnOffDevices(deviceSerialNumbers));
+    this.powerOffQueue = batch.catch(() => {});
+    return batch;
+  }
+
+  private async runTurnOffDevices(deviceSerialNumbers: string[]) {
+    const settings = await firstValueFrom(this.appSettings.settings);
+    const lighthouseConsolePath = settings.lighthouseConsolePath;
     if (this._consoleStatus.value !== 'SUCCESS') return;
-    ovrDevices = ovrDevices.filter(
-      (device) => device.canPowerOff && device.dongleId && !device.isTurningOff
+    // resolve the devices as they are now, not as the caller saw them
+    const requestedSerials = new Set(deviceSerialNumbers);
+    const ovrDevices = (await firstValueFrom(this.openvr.devices)).filter(
+      (device) =>
+        device.serialNumber &&
+        requestedSerials.has(device.serialNumber) &&
+        device.canPowerOff &&
+        device.dongleId &&
+        !device.isTurningOff
     );
-    await Promise.all(
-      ovrDevices.map(async (device) => {
-        this.openvr.onDeviceUpdate(Object.assign({}, device, { isTurningOff: true }));
-        info(`[Lighthouse] Turning off device ${device.class}:${device.serialNumber}`);
+    // sequential on purpose: parallel poweroffs can crash SteamVR
+    for (const [index, device] of ovrDevices.entries()) {
+      this.openvr.onDeviceUpdate(Object.assign({}, device, { isTurningOff: true }));
+      info(`[Lighthouse] Turning off device ${device.class}:${device.serialNumber}`);
+      try {
         await invoke('run_command', {
           command: lighthouseConsolePath,
           args: ['/serial', device.dongleId, 'poweroff'],
         });
-      })
-    );
+      } catch (e) {
+        // One unreachable dongle must not stop the devices queued behind it.
+        error(
+          `[Lighthouse] Could not turn off device ${device.class}:${device.serialNumber}: ${e}`
+        );
+      }
+      if (settings.lighthousePowerOffDelay && index < ovrDevices.length - 1) {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+      }
+    }
   }
 }

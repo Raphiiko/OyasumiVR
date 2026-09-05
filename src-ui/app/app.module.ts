@@ -1,4 +1,5 @@
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
+import * as Sentry from '@sentry/angular';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule, registerLocaleData } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
@@ -8,9 +9,15 @@ import { DashboardViewComponent } from './views/dashboard-view/dashboard-view.co
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { VarDirective } from './directives/var.directive';
 import { AboutViewComponent } from './views/dashboard-view/views/about-view/about-view.component';
-import { TranslateCompiler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideTransloco, TRANSLOCO_TRANSPILER, TranslocoModule } from '@jsverse/transloco';
+import { TranslocoHttpLoader } from './transloco-loader';
+import { SafeMessageFormatTranspiler } from './transloco-transpiler';
+import {
+  HttpClient,
+  provideHttpClient,
+  withInterceptorsFromDi,
+  withXhr,
+} from '@angular/common/http';
 import { OverviewViewComponent } from './views/dashboard-view/views/overview-view/overview-view.component';
 import { SleepModeEnableOnControllersPoweredOffAutomationService } from './services/sleep-detection-automations/sleep-mode-enable-on-controllers-powered-off-automation.service';
 import { SleepModeEnableAtBatteryPercentageAutomationService } from './services/sleep-detection-automations/sleep-mode-enable-at-battery-percentage-automation.service';
@@ -40,12 +47,14 @@ import { SleepingAnimationsAutomationService } from './services/osc-automations/
 import { ElevatedSidecarService } from './services/elevated-sidecar.service';
 import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
 import { TelemetryService } from './services/telemetry.service';
+import { ErrorReportingService } from './services/error-reporting.service';
 import { LanguageSelectModalComponent } from './components/language-select-modal/language-select-modal.component';
 import { AppSettingsService } from './services/app-settings.service';
 import { firstValueFrom } from 'rxjs';
 import { VRChatService } from './services/vrchat-api/vrchat.service';
 import { VRChatLoginModalComponent } from './components/vrchat-login-modal/vrchat-login-modal.component';
 import { VRChatLoginTFAModalComponent } from './components/vrchat-login-tfa-modal/vrchat-login-tfa-modal.component';
+import { VRChatAccountsModalComponent } from './components/vrchat-accounts-modal/vrchat-accounts-modal.component';
 import { StatusAutomationsViewComponent } from './views/dashboard-view/views/status-automations-view/status-automations-view.component';
 import { SleepingAnimationPresetModalComponent } from './components/sleeping-animation-preset-modal/sleeping-animation-preset-modal.component';
 import { VRChatLogService } from './services/vrchat-log.service';
@@ -92,7 +101,8 @@ import { ChaperoneFadeDistanceAutomationService } from './services/fade-distance
 import { OscGeneralAutomationsService } from './services/osc-automations/osc-general-automations.service';
 import { SystemTrayService } from './services/system-tray.service';
 import pMinDelay from 'p-min-delay';
-import { SPLASH_MIN_DURATION } from './globals';
+import { LANGUAGES, SPLASH_MIN_DURATION } from './globals';
+import { environment } from '../environments/environment';
 import { ModalService } from './services/modal.service';
 import { BaseModalComponent } from './components/base-modal/base-modal.component';
 import { SleepAnimationsViewComponent } from './views/dashboard-view/views/sleep-animations-view/sleep-animations-view.component';
@@ -122,7 +132,6 @@ import { SimpleBrightnessControlService } from './services/brightness-control/si
 import { DebugSleepDetectionDebuggerComponent } from './components/developer-debug-modal/debug-sleep-detection-debugger/debug-sleep-detection-debugger.component';
 import { BrightnessControlModalComponent } from './components/brightness-control-modal/brightness-control-modal.component';
 import { BrightnessControlSliderComponent } from './components/brightness-control-modal/brightness-control-slider/brightness-control-slider.component';
-import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
 import { DeepLinkService } from './services/deep-link.service';
 import { SleepPreparationService } from './services/sleep-preparation.service';
@@ -262,6 +271,7 @@ import { SleepDevicePowerAutomationsService } from './services/power-automations
 import { TurnOffDevicesWhenChargingAutomationService } from './services/power-automations/turn-off-devices-when-charging-automation.service';
 import { VRCXService } from './services/vrcx.service';
 import { StoreSnapshotService } from './services/store-snapshot.service';
+import { MigrationCoordinatorService } from './services/migration-coordinator.service';
 
 [
   localeEN,
@@ -276,10 +286,6 @@ import { StoreSnapshotService } from './services/store-snapshot.service';
   localeUK,
   localeDE,
 ].forEach((locale) => registerLocaleData(locale));
-
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
 
 @NgModule({
   bootstrap: [AppComponent],
@@ -327,6 +333,7 @@ export function createTranslateLoader(http: HttpClient) {
     SettingsAdvancedViewComponent,
     VRChatLoginModalComponent,
     VRChatLoginTFAModalComponent,
+    VRChatAccountsModalComponent,
     StatusAutomationsViewComponent,
     SleepingAnimationPresetModalComponent,
     MainStatusBarComponent,
@@ -435,22 +442,28 @@ export function createTranslateLoader(http: HttpClient) {
     BrowserAnimationsModule,
     AppRoutingModule,
     MomentModule,
-    TranslateModule.forRoot({
-      defaultLanguage: 'en',
-      loader: {
-        provide: TranslateLoader,
-        useFactory: createTranslateLoader,
-        deps: [HttpClient],
-      },
-      compiler: {
-        provide: TranslateCompiler,
-        useClass: TranslateMessageFormatCompiler,
-      },
-    }),
+    TranslocoModule,
     NgPipesModule,
     FormsModule,
   ],
-  providers: [ThemeService, TStringTranslatePipe, provideHttpClient(withInterceptorsFromDi())],
+  providers: [
+    ThemeService,
+    TStringTranslatePipe,
+    provideHttpClient(withXhr(), withInterceptorsFromDi()),
+    provideTransloco({
+      config: {
+        availableLangs: LANGUAGES.map((l) => l.code),
+        defaultLang: 'en',
+        fallbackLang: 'en',
+        missingHandler: { useFallbackTranslation: true },
+        reRenderOnLangChange: true,
+        prodMode: environment.production,
+      },
+      loader: TranslocoHttpLoader,
+    }),
+    { provide: TRANSLOCO_TRANSPILER, useClass: SafeMessageFormatTranspiler },
+    { provide: ErrorHandler, useValue: Sentry.createErrorHandler({ showDialog: false }) },
+  ],
 })
 export class AppModule {
   constructor(
@@ -462,6 +475,7 @@ export class AppModule {
     private oscControlService: OscControlService,
     private elevatedSidecarService: ElevatedSidecarService,
     private telemetryService: TelemetryService,
+    private errorReportingService: ErrorReportingService,
     private appSettingsService: AppSettingsService,
     private modalService: ModalService,
     private vrchatService: VRChatService,
@@ -501,6 +515,7 @@ export class AppModule {
     private frameLimiterService: FrameLimiterService,
     private deviceManagerService: DeviceManagerService,
     private storeSnapshotService: StoreSnapshotService,
+    private migrationCoordinatorService: MigrationCoordinatorService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -590,8 +605,12 @@ export class AppModule {
           if (!(await this.elevationCheck())) return;
           const initStartTime = Date.now();
           await this.logInit('Initializing dev debug services', this.developerDebugService.init());
-          // Set up store snapshots (and restore them if needed)
-          await this.logInit('Initializing store snapshots', this.storeSnapshotService.init());
+          await this.logInit(
+            'Initializing store recovery',
+            this.storeSnapshotService.initializeRecovery()
+          );
+          await this.logInit('Migrating store schemas', this.migrationCoordinatorService.run());
+          this.storeSnapshotService.enablePeriodicSnapshots();
           // Clean cache
           await this.logInit('Cleaning cache', CachedValue.cleanCache()).catch(() => {}); // Allow initialization to continue if failed
           // Preload assets (Not blocking)
@@ -605,7 +624,11 @@ export class AppModule {
           ]);
           await this.logInit('Initializing system tray', this.systemTrayService.init());
           // Initialize telemetry
-          await Promise.all([this.logInit('Initializing telemetry', this.telemetryService.init())]);
+          await this.logInit('Initializing telemetry', this.telemetryService.init());
+          await this.logInit(
+            'Initializing error reporting',
+            Promise.resolve(this.errorReportingService.init())
+          );
           // Initialize "base" services
           await Promise.all([
             this.logInit('Initializing OpenVR', this.openvrService.init()),

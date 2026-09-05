@@ -1,4 +1,10 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { EventLogService } from '../../services/event-log.service';
 import { BehaviorSubject, combineLatest, map, Observable, tap } from 'rxjs';
 import { EventLogEntry, EventLogType } from '../../models/event-log-entry';
@@ -22,6 +28,7 @@ import { AppSettingsService } from '../../services/app-settings.service';
   templateUrl: './event-log.component.html',
   styleUrls: ['./event-log.component.scss'],
   animations: [vshrink(), noop(), fade(), hshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class EventLogComponent implements OnInit, AfterViewInit {
@@ -42,7 +49,6 @@ export class EventLogComponent implements OnInit, AfterViewInit {
     private appSettings: AppSettingsService
   ) {
     this.logsInView = combineLatest([this.eventLog.eventLog, this.showCount, this.filters]).pipe(
-      takeUntilDestroyed(),
       map(
         ([log, showCount, filters]) =>
           [log.logs.filter((log) => !filters.includes(log.type)), showCount, filters] as [
@@ -55,7 +61,8 @@ export class EventLogComponent implements OnInit, AfterViewInit {
         this.entries = logs.length;
         this.cdr.detectChanges();
       }),
-      map(([logs, showCount]) => logs.slice(0, showCount))
+      map(([logs, showCount]) => logs.slice(0, showCount)),
+      takeUntilDestroyed()
     );
     this.appSettings.settings.pipe(takeUntilDestroyed()).subscribe((settings) => {
       this.filters.next(settings.eventLogTypesHidden);

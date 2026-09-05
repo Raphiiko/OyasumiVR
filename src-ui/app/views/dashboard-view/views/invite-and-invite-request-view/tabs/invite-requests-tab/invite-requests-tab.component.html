@@ -1,5 +1,5 @@
 <div class="setting-view-container">
-  <p translate>invite-and-invite-requests.inviteRequestsTab.description</p>
+  <p transloco="invite-and-invite-requests.inviteRequestsTab.description"></p>
   @if (!loggedIn) {
     <div class="alert warning" @vshrink>
       <div class="alert-bg"></div>
@@ -7,8 +7,12 @@
         <i class="material-icons"> warning </i>
       </div>
       <div class="alert-content">
-        <span>{{ 'shared.common.vrcLoginRequired' | translate }}</span>
-        <button class="btn btn-secondary" (click)="login()" translate>shared.modals.login</button>
+        <span>{{ 'shared.common.vrcLoginRequired' | transloco }}</span>
+        <button
+          class="btn btn-secondary"
+          (click)="login()"
+          transloco="shared.modals.login"
+        ></button>
       </div>
     </div>
   }
@@ -20,7 +24,7 @@
       </div>
       <div class="alert-content">
         <span>{{
-          'invite-and-invite-requests.inviteRequestsTab.userOnBusyStatus' | translate
+          'invite-and-invite-requests.inviteRequestsTab.userOnBusyStatus' | transloco
         }}</span></div
       >
     </div>
@@ -33,7 +37,7 @@
       </div>
       <div class="alert-content">
         <span>{{
-          'invite-and-invite-requests.inviteRequestsTab.userOnJoinMeStatus' | translate
+          'invite-and-invite-requests.inviteRequestsTab.userOnJoinMeStatus' | transloco
         }}</span></div
       >
     </div>
@@ -41,10 +45,10 @@
   <div class="settings">
     <div class="setting-row">
       <div class="setting-row-label">
-        <span translate>invite-and-invite-requests.inviteRequestsTab.options.enable.title</span>
-        <span translate
-          >invite-and-invite-requests.inviteRequestsTab.options.enable.description</span
-        >
+        <span transloco="invite-and-invite-requests.inviteRequestsTab.options.enable.title"></span>
+        <span
+          transloco="invite-and-invite-requests.inviteRequestsTab.options.enable.description"
+        ></span>
       </div>
       <div class="setting-row-action">
         <label class="switch-toggle">
@@ -60,28 +64,30 @@
   </div>
   <div class="settings">
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate>invite-and-invite-requests.inviteRequestsTab.options.listMode.title</span>
-        <span translate
-          >invite-and-invite-requests.inviteRequestsTab.options.listMode.description</span
-        >
+      <div class="setting-row-label">
+        <span
+          transloco="invite-and-invite-requests.inviteRequestsTab.options.listMode.title"
+        ></span>
+        <span
+          transloco="invite-and-invite-requests.inviteRequestsTab.options.listMode.description"
+        ></span>
       </div>
       <div class="setting-row-action">
         <app-select-box
           [items]="listModeOptions"
           [selected]="listModeOption"
-          (selectedChange)="setListMode($event?.id)"
+          (selectedChange)="setListMode($safeNavigationMigration($event?.id))"
         ></app-select-box>
       </div>
     </div>
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate
-          >invite-and-invite-requests.inviteRequestsTab.options.acceptMessage.title</span
-        >
-        <span translate
-          >invite-and-invite-requests.inviteRequestsTab.options.acceptMessage.description</span
-        >
+      <div class="setting-row-label">
+        <span
+          transloco="invite-and-invite-requests.inviteRequestsTab.options.acceptMessage.title"
+        ></span>
+        <span
+          transloco="invite-and-invite-requests.inviteRequestsTab.options.acceptMessage.description"
+        ></span>
       </div>
       <div class="setting-row-action">
         <label class="switch-toggle">
@@ -97,10 +103,10 @@
     @if (config.acceptMessageEnabled) {
       <div class="setting-row-group" @vshrink>
         <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate
-              >invite-and-invite-requests.inviteRequestsTab.options.acceptMessage.customMessage.title</span
-            >
+          <div class="setting-row-label">
+            <span
+              transloco="invite-and-invite-requests.inviteRequestsTab.options.acceptMessage.customMessage.title"
+            ></span>
             <span></span>
           </div>
           <div class="setting-row-action">
@@ -115,7 +121,7 @@
               (blur)="acceptOnRequestCustomMessageInput.value = config.acceptInviteRequestMessage"
               [placeholder]="
                 'invite-and-invite-requests.inviteRequestsTab.options.acceptMessage.customMessage.placeholder'
-                  | translate
+                  | transloco
               "
               #acceptOnRequestCustomMessageInput
             />
@@ -124,13 +130,13 @@
       </div>
     }
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate
-          >invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.title</span
-        >
-        <span translate
-          >invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.description</span
-        >
+      <div class="setting-row-label">
+        <span
+          transloco="invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.title"
+        ></span>
+        <span
+          transloco="invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.description"
+        ></span>
       </div>
       <div class="setting-row-action">
         <app-select-box
@@ -138,20 +144,20 @@
           [type]="'SMALL'"
           [items]="declineOnRequestOptions"
           [selected]="declineOnRequestOption"
-          (selectedChange)="setDeclineOnRequestOption($event?.id)"
+          (selectedChange)="setDeclineOnRequestOption($safeNavigationMigration($event?.id))"
         ></app-select-box>
       </div>
     </div>
     @if (['ALWAYS', 'WHEN_SLEEPING'].includes(declineOnRequestOption?.id ?? '')) {
       <div class="setting-row-group" @vshrink>
         <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate
-              >invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.customMessage.title</span
-            >
-            <span translate
-              >invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.customMessage.description</span
-            >
+          <div class="setting-row-label">
+            <span
+              transloco="invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.customMessage.title"
+            ></span>
+            <span
+              transloco="invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.customMessage.description"
+            ></span>
           </div>
           <div class="setting-row-action">
             <input
@@ -167,7 +173,7 @@
               (blur)="declineOnRequestCustomMessageInput.value = config.declineInviteRequestMessage"
               [placeholder]="
                 'invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.customMessage.placeholder'
-                  | translate
+                  | transloco
               "
               #declineOnRequestCustomMessageInput
             />
@@ -176,15 +182,15 @@
       </div>
     }
   </div>
-  <h2 translate>invite-and-invite-requests.inviteRequestsTab.conditions.title</h2>
-  <p translate>invite-and-invite-requests.inviteRequestsTab.conditions.description</p>
+  <h2 transloco="invite-and-invite-requests.inviteRequestsTab.conditions.title"></h2>
+  <p transloco="invite-and-invite-requests.inviteRequestsTab.conditions.description"></p>
   <div class="settings">
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate
-          >invite-and-invite-requests.inviteRequestsTab.options.onlyIfSleepModeEnabled.title</span
-        >
-        <span translate></span>
+      <div class="setting-row-label">
+        <span
+          transloco="invite-and-invite-requests.inviteRequestsTab.options.onlyIfSleepModeEnabled.title"
+        ></span>
+        <span></span>
       </div>
       <div class="setting-row-action">
         <label class="switch-toggle">
@@ -199,20 +205,20 @@
     </div>
 
     <div class="setting-row">
-      <div class="setting-row-label" translate>
+      <div class="setting-row-label">
         <span
           style="display: initial"
           [innerHtml]="
             'invite-and-invite-requests.inviteRequestsTab.options.onlyBelowPlayerCount.title'
-              | translate
+              | transloco
                 : {
                     count: config.onlyBelowPlayerCount,
                   }
           "
         ></span>
-        <span translate
-          >invite-and-invite-requests.inviteRequestsTab.options.onlyBelowPlayerCount.description</span
-        >
+        <span
+          transloco="invite-and-invite-requests.inviteRequestsTab.options.onlyBelowPlayerCount.description"
+        ></span>
       </div>
       <div class="setting-row-action">
         <app-slider-setting
@@ -239,17 +245,17 @@
       </div>
     </div>
   </div>
-  <h2 translate>invite-and-invite-requests.inviteRequestsTab.otherAutomations.title</h2>
-  <p translate>invite-and-invite-requests.inviteRequestsTab.otherAutomations.description</p>
+  <h2 transloco="invite-and-invite-requests.inviteRequestsTab.otherAutomations.title"></h2>
+  <p transloco="invite-and-invite-requests.inviteRequestsTab.otherAutomations.description"></p>
   <div class="settings">
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate
-          >invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepEnable.title</span
-        >
-        <span translate
-          >invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepEnable.description</span
-        >
+      <div class="setting-row-label">
+        <span
+          transloco="invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepEnable.title"
+        ></span>
+        <span
+          transloco="invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepEnable.description"
+        ></span>
       </div>
       <div class="setting-row-action">
         <app-select-box
@@ -262,13 +268,13 @@
       </div>
     </div>
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate
-          >invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepDisable.title</span
-        >
-        <span translate
-          >invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepDisable.description</span
-        >
+      <div class="setting-row-label">
+        <span
+          transloco="invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepDisable.title"
+        ></span>
+        <span
+          transloco="invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepDisable.description"
+        ></span>
       </div>
       <div class="setting-row-action">
         <app-select-box
@@ -281,13 +287,13 @@
       </div>
     </div>
     <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate
-          >invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepPreparation.title</span
-        >
-        <span translate
-          >invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepPreparation.description</span
-        >
+      <div class="setting-row-label">
+        <span
+          transloco="invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepPreparation.title"
+        ></span>
+        <span
+          transloco="invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepPreparation.description"
+        ></span>
       </div>
       <div class="setting-row-action">
         <app-select-box

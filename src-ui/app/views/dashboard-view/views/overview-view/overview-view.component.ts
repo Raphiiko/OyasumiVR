@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { fade, hshrink, noop } from '../../../../utils/animations';
 import { SleepService } from '../../../../services/sleep.service';
 import { OpenVRService } from '../../../../services/openvr.service';
@@ -14,6 +14,7 @@ type IllustrationVariant = 'sleep' | 'peek' | 'awake' | 'awake-hover';
   templateUrl: './overview-view.component.html',
   styleUrls: ['./overview-view.component.scss'],
   animations: [noop(), fade(), hshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class OverviewViewComponent implements OnInit {

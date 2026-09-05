@@ -1,11 +1,11 @@
 <div class="pane-content">
   <div class="setting-view-container">
     <div class="description-row">
-      <p [innerHtml]="'gpu-automations.msiAfterburner.description' | translate"></p>
+      <p [innerHtml]="'gpu-automations.msiAfterburner.description' | transloco"></p>
       <img draggable="false" src="/assets/img/afterburner_icon.png" />
     </div>
-    <h3 translate>gpu-automations.msiAfterburner.executable.title</h3>
-    <p [innerHtml]="'gpu-automations.msiAfterburner.executable.description' | translate"></p>
+    <h3 transloco="gpu-automations.msiAfterburner.executable.title"></h3>
+    <p [innerHtml]="'gpu-automations.msiAfterburner.executable.description' | transloco"></p>
     <div class="file-path-bar">
       <div class="file-path-bar-path">
         <input
@@ -35,15 +35,15 @@
             <div class="small-spinner"></div>
           }
         </div>
-        <div class="alert-content" [innerHTML]="msiAfterburnerPathAlert.text | translate"></div>
+        <div class="alert-content" [innerHTML]="msiAfterburnerPathAlert.text | transloco"></div>
       </div>
     }
     <h3>Automations</h3>
     <div class="settings">
       <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>gpu-automations.msiAfterburner.sleepModeEnable.title</span>
-          <span translate>gpu-automations.msiAfterburner.sleepModeEnable.description</span>
+        <div class="setting-row-label">
+          <span transloco="gpu-automations.msiAfterburner.sleepModeEnable.title"></span>
+          <span transloco="gpu-automations.msiAfterburner.sleepModeEnable.description"></span>
         </div>
         <div class="setting-row-action">
           <app-select-box
@@ -55,9 +55,9 @@
         </div>
       </div>
       <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>gpu-automations.msiAfterburner.sleepModeDisable.title</span>
-          <span translate>gpu-automations.msiAfterburner.sleepModeDisable.description</span>
+        <div class="setting-row-label">
+          <span transloco="gpu-automations.msiAfterburner.sleepModeDisable.title"></span>
+          <span transloco="gpu-automations.msiAfterburner.sleepModeDisable.description"></span>
         </div>
         <div class="setting-row-action">
           <app-select-box
@@ -75,10 +75,12 @@
         <i class="material-icons">warning</i>
       </div>
       <div class="alert-content flex-row">
-        <div translate>gpu-automations.msiAfterburner.enabledWarning</div>
-        <button class="btn btn-secondary" (click)="gpuAutomations.disable()" translate>
-          gpu-automations.disable
-        </button>
+        <div transloco="gpu-automations.msiAfterburner.enabledWarning"></div>
+        <button
+          class="btn btn-secondary"
+          (click)="gpuAutomations.disable()"
+          transloco="gpu-automations.disable"
+        ></button>
       </div>
     </div>
   </div>

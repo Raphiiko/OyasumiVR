@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TranslationEditService } from '../../services/translation-edit.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslationEntry } from '../../models/translation-entry';
@@ -29,6 +29,7 @@ interface TranslationRowEntry {
   templateUrl: './translation-editor-view.component.html',
   styleUrls: ['./translation-editor-view.component.scss'],
   animations: [vshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class TranslationEditorViewComponent {
@@ -58,9 +59,9 @@ export class TranslationEditorViewComponent {
       this.locale = locale;
     });
     combineLatest([this.translationEditService.entries, this.translationEditService.suggestions])
-      .pipe(takeUntilDestroyed(), debounceTime(0))
+      .pipe(debounceTime(0), takeUntilDestroyed())
       .subscribe(([entries, suggestions]) => this.processEntryChanges(entries, suggestions));
-    this.changeMade.pipe(takeUntilDestroyed(), debounceTime(500)).subscribe(() => {
+    this.changeMade.pipe(debounceTime(500), takeUntilDestroyed()).subscribe(() => {
       this.calculateKeysTranslated();
     });
   }

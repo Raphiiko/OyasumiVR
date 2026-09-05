@@ -13,7 +13,7 @@ import {
   throttleTime,
 } from 'rxjs';
 import { isEqual } from 'lodash';
-import { UserStatus } from 'vrchat';
+import { UserStatus } from '../../models/vrchat';
 import { IPCService } from '../ipc.service';
 import { AutomationConfigService } from '../automation-config.service';
 import {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { BaseModalComponent } from '../../../../../components/base-modal/base-modal.component';
 import { fadeRight } from '../../../../../utils/animations';
 import { AudioDeviceService } from '../../../../../services/audio-device.service';
@@ -18,6 +18,7 @@ export interface AudioDevicePickerOutput {
   templateUrl: './audio-device-picker.component.html',
   styleUrls: ['./audio-device-picker.component.scss'],
   animations: [fadeRight('fadeRight', '0.3s ease')],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class AudioDevicePickerComponent extends BaseModalComponent<

@@ -1,8 +1,16 @@
 import fs from 'fs';
 
-async function handleMove(args) {
+function writeLocaleFile(path, content) {
+  fs.writeFileSync(path, JSON.stringify(content, null, 2) + '\n');
+}
+
+function handleMove(args) {
   const keyPrev = args[1];
   let keyNew = args[2];
+  if (!keyPrev || !keyNew) {
+    console.error('Both a source key and a target key are required. Usage: npm run tl mv <from> <to>');
+    process.exit(1);
+  }
   getLangFilePaths().forEach((langFile) => {
     let langFileContent = JSON.parse(fs.readFileSync(langFile, 'utf8'));
     const langFileContentFlattened = flattenObj(langFileContent);
@@ -24,35 +32,43 @@ async function handleMove(args) {
       }
     }
     langFileContent = unflattenObj(langFileContentFlattened);
-    fs.writeFileSync(langFile, JSON.stringify(langFileContent, null, 2));
+    writeLocaleFile(langFile, langFileContent);
   });
 }
 
-async function handleSet(args) {
+function handleSet(args) {
   const key = args[1];
   const value = args[2];
+  if (!key || value === undefined) {
+    console.error('Both a key and a value are required. Usage: npm run tl set <key> <value>');
+    process.exit(1);
+  }
   const enFile = getLangFilePath('en');
   let enFileContent = JSON.parse(fs.readFileSync(enFile, 'utf8'));
   const enFileContentFlattened = flattenObj(enFileContent);
   enFileContentFlattened[key] = value;
   enFileContent = unflattenObj(enFileContentFlattened);
-  fs.writeFileSync(enFile, JSON.stringify(enFileContent, null, 2));
+  writeLocaleFile(enFile, enFileContent);
   console.log('Set key ' + key + ' to value ' + value + ' in ' + enFile);
 }
 
-async function handleUnset(args) {
+function handleUnset(args) {
   const key = args[1];
+  if (!key) {
+    console.error('A key is required. Usage: npm run tl unset <key>');
+    process.exit(1);
+  }
   getLangFilePaths().forEach((langFile) => {
     let langFileContent = JSON.parse(fs.readFileSync(langFile, 'utf8'));
     const langFileContentFlattened = flattenObj(langFileContent);
     delete langFileContentFlattened[key];
     langFileContent = unflattenObj(langFileContentFlattened);
-    fs.writeFileSync(langFile, JSON.stringify(langFileContent, null, 2));
+    writeLocaleFile(langFile, langFileContent);
     console.log('Unset key ' + key + ' in ' + langFile);
   });
 }
 
-async function handleClean() {
+function handleClean() {
   const enFile = getLangFilePath('en');
   let enFileContent = JSON.parse(fs.readFileSync(enFile, 'utf8'));
   const enFileContentFlattened = Object.fromEntries(
@@ -75,14 +91,14 @@ async function handleClean() {
         Object.keys(flattenObj(langFileContent)).length -
         Object.keys(langFileContentFlattened).length;
       langFileContent = unflattenObj(langFileContentFlattened);
-      fs.writeFileSync(langFile, JSON.stringify(langFileContent, null, 2) + '\n');
+      writeLocaleFile(langFile, langFileContent);
       console.log('Cleaned ' + keysCleaned + ' key(s) in ' + langFile);
     });
   // Clean en.json last
-  fs.writeFileSync(enFile, JSON.stringify(unflattenObj(enFileContentFlattened), null, 2) + '\n');
+  writeLocaleFile(enFile, unflattenObj(enFileContentFlattened));
 }
 
-async function printTranslationCoverage() {
+function printTranslationCoverage() {
   const paths = getLangFilePaths();
   const enFile = paths.find((f) => f.includes('en'));
   const enFileContent = JSON.parse(fs.readFileSync(enFile, 'utf8'));
@@ -109,7 +125,7 @@ async function printTranslationCoverage() {
   console.table(coverage);
 }
 
-async function printMissingKeys(args) {
+function printMissingKeys(args) {
   const lang = args[1];
   if (!lang) {
     console.error('Language code is required. Usage: npm run tl missing <lang>');
@@ -190,36 +206,36 @@ const getLangFilePath = (lang) =>
   `./src-ui/assets/i18n/${lang.endsWith('.json') ? lang.split('.')[0] : lang}.json`;
 
 const getLangFilePaths = () => {
-  const langFiles = fs.readdirSync('./src-ui/assets/i18n');
+  const langFiles = fs.readdirSync('./src-ui/assets/i18n').filter((f) => f.endsWith('.json'));
   return langFiles.map((langFile) => getLangFilePath(langFile));
 };
 
-async function main() {
+function main() {
   const args = process.argv.slice(2);
   switch (args[0]) {
     case 'set':
-      await handleSet(args);
+      handleSet(args);
       break;
     case 'unset':
-      await handleUnset(args);
+      handleUnset(args);
       break;
     case 'reset':
-      await handleUnset(args);
-      await handleSet(args);
+      handleUnset(args);
+      handleSet(args);
       break;
     case 'clean':
-      await handleClean(args);
+      handleClean();
       break;
     case 'mv': {
-      await handleMove(args);
+      handleMove(args);
       break;
     }
     case 'coverage': {
-      await printTranslationCoverage();
+      printTranslationCoverage();
       break;
     }
     case 'missing': {
-      await printMissingKeys(args);
+      printMissingKeys(args);
       break;
     }
     default:

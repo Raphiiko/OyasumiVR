@@ -1,4 +1,13 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { hshrink, noop } from '../../utils/animations';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { HotkeySelectorModalComponent } from '../hotkey-selector-modal/hotkey-selector-modal.component';
@@ -10,6 +19,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './hotkey-selector.component.html',
   styleUrls: ['./hotkey-selector.component.scss'],
   animations: [hshrink(), noop()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class HotkeySelectorComponent implements OnChanges, OnDestroy, OnInit {
@@ -27,7 +37,8 @@ export class HotkeySelectorComponent implements OnChanges, OnDestroy, OnInit {
 
   constructor(
     private modalService: ModalService,
-    private hotkeyService: HotkeyService
+    private hotkeyService: HotkeyService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   async ngOnInit() {
@@ -39,9 +50,11 @@ export class HotkeySelectorComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   selectHotkey() {
-    this.modalService.addModal(HotkeySelectorModalComponent, {}, {}).subscribe((result) => {
-      this.hotkey = result?.hotkey ?? undefined;
-      if (this.hotkey) this.hotkeyService.registerHotkey(this.action!, this.hotkey);
+    this.modalService.addModal(HotkeySelectorModalComponent, {}, {}).subscribe(async (result) => {
+      if (!result?.hotkey || !this.action) return;
+      if (!(await this.hotkeyService.registerHotkey(this.action, result.hotkey))) return;
+      this.hotkey = result.hotkey;
+      this.cdr.markForCheck();
     });
   }
 
@@ -61,6 +74,7 @@ export class HotkeySelectorComponent implements OnChanges, OnDestroy, OnInit {
     if (this.action) {
       this.hotkeySub = this.hotkeyService.getHotkeyStringForId(this.action).subscribe((hotkey) => {
         this.hotkey = hotkey;
+        this.cdr.markForCheck();
       });
     } else {
       this.hotkey = undefined;

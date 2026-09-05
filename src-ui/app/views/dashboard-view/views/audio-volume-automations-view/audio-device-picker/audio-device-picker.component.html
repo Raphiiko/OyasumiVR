@@ -1,5 +1,5 @@
 <div class="pane" (clickOutside)="close()" @fadeRight>
-  <div class="pane-title" translate>audio-volume-automations.picker.title</div>
+  <div class="pane-title" transloco="audio-volume-automations.picker.title"></div>
   <div class="pane-content no-padding">
     <div class="tab-bar">
       <div class="tab" [class.active]="deviceType === 'Render'" (click)="deviceType = 'Render'">
@@ -19,14 +19,16 @@
           <i class="material-icons-round">volume_off</i>
         </div>
         @if (deviceType === 'Capture') {
-          <div class="no-audio-devices-label" translate>
-            audio-volume-automations.picker.noCaptureDevices
-          </div>
+          <div
+            class="no-audio-devices-label"
+            transloco="audio-volume-automations.picker.noCaptureDevices"
+          ></div>
         }
         @if (deviceType === 'Render') {
-          <div class="no-audio-devices-label" translate>
-            audio-volume-automations.picker.noPlaybackDevices
-          </div>
+          <div
+            class="no-audio-devices-label"
+            transloco="audio-volume-automations.picker.noPlaybackDevices"
+          ></div>
         }
       </div>
     }
@@ -48,7 +50,7 @@
             <div class="audio-device-name">
               @if (device.persistentId?.startsWith('DEFAULT_')) {
                 <div class="audio-device-name-label"
-                  ><b translate>audio-volume-automations.picker.defaultDevice</b>
+                  ><b transloco="audio-volume-automations.picker.defaultDevice"></b>
                 </div>
               }
               <div class="audio-device-name-label">{{ device.parsedName!.display }}</div>

@@ -60,13 +60,10 @@ public class AcceleratedOffscreenBrowser : OffscreenBrowser, IRenderHandler
   {
     if (renderTarget == null)
     {
-      _device?.Dispose();
-      _device = null;
-      _device1?.Dispose();
-      _device1 = null;
-      _deviceMultithread?.Dispose();
-      _deviceMultithread = null;
       _renderTarget = null;
+      _device = null;
+      _device1 = null;
+      _deviceMultithread = null;
       return;
     }
 
@@ -90,6 +87,20 @@ public class AcceleratedOffscreenBrowser : OffscreenBrowser, IRenderHandler
   public override void Render()
   {
     // No need to render anything here, as the texture is shared
+  }
+
+  private string GetAdapterName()
+  {
+    try
+    {
+      using var dxgiDevice = _device!.QueryInterface<SharpDX.DXGI.Device>();
+      using var adapter = dxgiDevice.Adapter;
+      return adapter.Description.Description.Trim();
+    }
+    catch (Exception)
+    {
+      return "unknown";
+    }
   }
 
   ScreenInfo? IRenderHandler.GetScreenInfo()
@@ -117,7 +128,7 @@ public class AcceleratedOffscreenBrowser : OffscreenBrowser, IRenderHandler
     if (type != PaintElementType.View)
       return;
 
-    if (_device == null || _device1 == null)
+    if (_device == null || _device1 == null || _renderTarget == null)
       return;
 
     try
@@ -129,7 +140,13 @@ public class AcceleratedOffscreenBrowser : OffscreenBrowser, IRenderHandler
     }
     catch (Exception e)
     {
-      Log.Warning("Could not copy texture: " + e);
+      // A shared texture can only be opened on the GPU that produced it. Reaching this means
+      // Chromium picked a different GPU than the one SteamVR renders on, and no overlay can
+      // use the accelerated path until that changes.
+      Log.Error(e,
+        "Could not open Chromium's shared texture on the SteamVR GPU ({adapter}). Chromium is " +
+        "rendering on a different GPU. Disable GPU acceleration under advanced settings to fall " +
+        "back to the software renderer.", GetAdapterName());
       _device = null;
       return;
     }

@@ -1,7 +1,7 @@
 <div class="pane modal-md" [@fadeUp]>
-  <div class="pane-title" translate>frame-limiter.add-application-modal.title</div>
+  <div class="pane-title" transloco="frame-limiter.add-application-modal.title"></div>
   <div class="pane-content">
-    <p translate>frame-limiter.add-application-modal.instruction</p>
+    <p transloco="frame-limiter.add-application-modal.instruction"></p>
     <div class="settings">
       @for (app of appPresets; track app) {
         <div class="setting-row">
@@ -15,16 +15,18 @@
             <span></span>
           </div>
           <div class="setting-row-action">
-            <button class="btn btn-secondary" (click)="selectApp(app.appId)" translate
-              >frame-limiter.add-application-modal.add</button
-            >
+            <button
+              class="btn btn-secondary"
+              (click)="selectApp(app.appId)"
+              transloco="frame-limiter.add-application-modal.add"
+            ></button>
           </div>
         </div>
       }
     </div>
-    <span [innerHTML]="'frame-limiter.add-application-modal.notListedHelp' | translate"></span>
+    <span [innerHTML]="'frame-limiter.add-application-modal.notListedHelp' | transloco"></span>
   </div>
   <div class="pane-actions spread">
-    <button class="btn btn-secondary" (click)="close()" translate>shared.modals.cancel</button>
+    <button class="btn btn-secondary" (click)="close()" transloco="shared.modals.cancel"></button>
   </div>
 </div>

@@ -1,0 +1,11 @@
+// Loaded by the development build only, standing in for what the sidecar provides. Poppins is the
+// only family needed, since without a sidecar the locale never leaves the `en` fallback.
+@use '@fontsource/poppins/latin-200.css';
+@use '@fontsource/poppins/latin-400.css';
+@use '@fontsource/poppins/latin-500.css';
+@use '@fontsource/poppins/latin-600.css';
+
+.non-overlay {
+  background-image: url('dev-background.jpg');
+  background-size: cover;
+}

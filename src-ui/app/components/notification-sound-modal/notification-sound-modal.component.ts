@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { BUILT_IN_NOTIFICATION_SOUNDS, NotificationSound } from '../../models/notification-sounds';
 import { SoundEffectConfig } from '../../models/automations';
@@ -19,6 +19,7 @@ export interface NotificationSoundModalOutputModel {
   templateUrl: './notification-sound-modal.component.html',
   styleUrls: ['./notification-sound-modal.component.scss'],
   animations: [fadeUp()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class NotificationSoundModalComponent

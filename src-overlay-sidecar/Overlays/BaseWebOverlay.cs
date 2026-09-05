@@ -22,6 +22,8 @@ public class BaseWebOverlay : RenderableOverlay
   private readonly bool _requiresState;
   private Texture2D? _texture;
   private readonly ulong? _overlayHandle;
+  private readonly string _overlayKey;
+  private EVROverlayError _lastTextureError = EVROverlayError.None;
 
   public ulong OverlayHandle => _overlayHandle!.Value;
 
@@ -31,6 +33,7 @@ public class BaseWebOverlay : RenderableOverlay
     var uiUrl = (Program.InDevMode()
       ? "http://localhost:5173"
       : IpcManager.Instance.StaticBaseUrl) + path + "?corePort=" + IpcManager.Instance.CoreHttpPort;
+    _overlayKey = overlayKey;
     // Set up state management
     _requiresState = requiresState;
     StateManager.Instance.StateChanged += OnStateChanged;
@@ -66,11 +69,15 @@ public class BaseWebOverlay : RenderableOverlay
   {
     if (Disposed) return;
     Disposed = true;
+    OvrManager.Instance.OverlayPointer?.StopForOverlay(this);
     OvrManager.Instance.UnregisterOverlay(this);
     StateManager.Instance.StateChanged -= OnStateChanged;
     if (_overlayHandle.HasValue) OpenVR.Overlay.DestroyOverlay(_overlayHandle!.Value);
     if (Browser != null)
     {
+      // The browser is pooled and keeps painting into whatever target it holds, so it has to
+      // let go of this texture before we dispose it.
+      Browser.SetTextureTarget(null);
       BrowserManager.Instance.FreeBrowser(Browser);
     }
 
@@ -185,8 +192,11 @@ public class BaseWebOverlay : RenderableOverlay
       handle = _texture.NativePointer
     };
     // Render the texture to the overlay
-    if (!Disposed && !_texture.IsDisposed)
-      OpenVR.Overlay.SetOverlayTexture(_overlayHandle!.Value, ref texture);
+    if (Disposed || _texture.IsDisposed) return;
+    var err = OpenVR.Overlay.SetOverlayTexture(_overlayHandle!.Value, ref texture);
+    if (err != EVROverlayError.None && err != _lastTextureError)
+      Log.Error("Could not submit the texture for overlay {key}: {err}", _overlayKey, err);
+    _lastTextureError = err;
   }
 
   protected virtual void ShowToolTipInternal(string? text)

@@ -1,24 +1,27 @@
 <div class="pane modal modal-lg" [@fadeUp]>
   <div class="pane-title">
-    {{ 'comp.update-modal.title' | translate }}
+    {{ 'comp.update-modal.title' | transloco }}
   </div>
   <div class="pane-content">
     <p
-      translate="comp.update-modal.message"
-      [translateParams]="{ newVersion: update?.version, currentVersion: update?.currentVersion }"
+      transloco="comp.update-modal.message"
+      [translocoParams]="{
+        newVersion: $safeNavigationMigration(update?.version),
+        currentVersion: $safeNavigationMigration(update?.currentVersion),
+      }"
     ></p>
     @if (FLAVOUR === 'STANDALONE') {
       <div class="steam-ad">
         <div class="steam-ad-logo">
           <img src="/assets/img/steam_icon.png" />
         </div>
-        <div class="steam-ad-text" [innerHtml]="'comp.update-modal.steamAd' | translate"></div>
+        <div class="steam-ad-text" [innerHtml]="'comp.update-modal.steamAd' | transloco"></div>
       </div>
     }
   </div>
   <div class="pane-actions spread">
     <button class="btn btn-secondary" (click)="updateLater()" [disabled]="installing">
-      {{ 'comp.update-modal.updateLater' | translate }}
+      {{ 'comp.update-modal.updateLater' | transloco }}
     </button>
     <button
       class="btn btn-primary"
@@ -30,9 +33,11 @@
         <div class="small-spinner" @hshrink></div>
       }
       @if (!installing) {
-        <span @hshrink translate [translateParams]="{ version: update?.version }">
-          comp.update-modal.updateNow
-        </span>
+        <span
+          @hshrink
+          transloco="comp.update-modal.updateNow"
+          [translocoParams]="{ version: $safeNavigationMigration(update?.version) }"
+        ></span>
       }
     </button>
   </div>

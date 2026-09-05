@@ -6,13 +6,21 @@ import {
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AutomationConfigService } from '../../../../../services/automation-config.service';
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ModalService } from '../../../../../services/modal.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { OVRDeviceClass } from '../../../../../models/ovr-device';
 
 @Component({
   template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export abstract class SleepDetectionTabComponent implements OnInit {
@@ -20,12 +28,21 @@ export abstract class SleepDetectionTabComponent implements OnInit {
   protected automationConfigService = inject(AutomationConfigService);
   protected destroyRef = inject(DestroyRef);
   protected modalService = inject(ModalService);
-  protected translate = inject(TranslateService);
+  protected translate = inject(TranslocoService);
+  protected cdr = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
     this.automationConfigService.configs
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((configs) => (this.automationConfigs = configs));
+      .subscribe((configs) => {
+        this.automationConfigs = configs;
+        this.cdr.markForCheck();
+      });
+    // getStringForDuration and deviceClassesToString translate on read, so the
+    // view has to be rechecked when the active language changes.
+    this.translate.langChanges$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.cdr.markForCheck());
   }
 
   async toggleAutomation(automation: AutomationType, field = 'enabled') {
@@ -39,14 +56,14 @@ export abstract class SleepDetectionTabComponent implements OnInit {
   }
 
   protected deviceClassesToString(classes: OVRDeviceClass[], tlkey_prefix: string): string {
-    return classes.map((c) => this.translate.instant(tlkey_prefix + c)).join(', ');
+    return classes.map((c) => this.translate.translate(tlkey_prefix + c)).join(', ');
   }
 }
 
-export function getStringForDuration(translate: TranslateService, duration: string): string {
+export function getStringForDuration(translate: TranslocoService, duration: string): string {
   const [hours, minutes] = duration.split(':').map((v) => parseInt(v));
   if (hours && minutes) {
-    return translate.instant(
+    return translate.translate(
       'sleep-detection.disableAutomations.afterTime.description.hoursAndMinutes',
       {
         hours,
@@ -54,11 +71,11 @@ export function getStringForDuration(translate: TranslateService, duration: stri
       }
     );
   } else if (hours) {
-    return translate.instant('sleep-detection.disableAutomations.afterTime.description.hours', {
+    return translate.translate('sleep-detection.disableAutomations.afterTime.description.hours', {
       hours,
     });
   } else if (minutes) {
-    return translate.instant('sleep-detection.disableAutomations.afterTime.description.minutes', {
+    return translate.translate('sleep-detection.disableAutomations.afterTime.description.minutes', {
       minutes,
     });
   } else {

@@ -1,24 +1,28 @@
 <div class="overview">
   <div class="sleep-mode" [class.active]="sleepModeActive">
     <div class="top">
-      <div class="label" translate>overview.sleep-mode.label</div>
+      <div class="label" transloco="overview.sleep-mode.label"></div>
       <div
         class="status"
-        [translate]="
+        [transloco]="
           sleepModeActive ? 'overview.sleep-mode.active' : 'overview.sleep-mode.inactive'
         "
       ></div>
     </div>
     <div class="bottom">
       @if (!sleepModeActive) {
-        <button class="btn btn-primary" (click)="setSleepMode(true)" translate>
-          overview.sleep-mode.activate
-        </button>
+        <button
+          class="btn btn-primary"
+          (click)="setSleepMode(true)"
+          transloco="overview.sleep-mode.activate"
+        ></button>
       }
       @if (sleepModeActive) {
-        <button class="btn btn-secondary" (click)="setSleepMode(false)" translate>
-          overview.sleep-mode.deactivate
-        </button>
+        <button
+          class="btn btn-secondary"
+          (click)="setSleepMode(false)"
+          transloco="overview.sleep-mode.deactivate"
+        ></button>
       }
       @if (!sleepModeActive) {
         <div
@@ -42,7 +46,7 @@
             @if (sleepPreparation.sleepPreparationTimedOut | async) {
               <div class="small-spinner" @hshrink></div>
             }
-            <span translate>overview.sleep-preparation.activate</span>
+            <span transloco="overview.sleep-preparation.activate"></span>
           </button>
         </div>
       }

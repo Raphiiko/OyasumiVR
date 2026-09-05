@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   DestroyRef,
   ElementRef,
@@ -9,6 +10,7 @@ import {
   Output,
   SimpleChanges,
   ViewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { BehaviorSubject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -33,6 +35,7 @@ export interface OscAddressSelection {
   templateUrl: './osc-address-autocomplete.component.html',
   styleUrls: ['./osc-address-autocomplete.component.scss'],
   animations: [vshrink(), fade()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class OscAddressAutocompleteComponent implements OnInit, OnChanges {
@@ -58,13 +61,19 @@ export class OscAddressAutocompleteComponent implements OnInit, OnChanges {
   addressQuery: BehaviorSubject<string> = new BehaviorSubject<string>('');
   fuseSuggestions?: Fuse<string>;
 
-  constructor(private destroyRef: DestroyRef) {}
+  constructor(
+    private destroyRef: DestroyRef,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     // Setup address search
     this.addressQuery
-      .pipe(takeUntilDestroyed(this.destroyRef), debounceTime(100), distinctUntilChanged())
-      .subscribe((query) => this.searchAddresses(query));
+      .pipe(debounceTime(100), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+      .subscribe((query) => {
+        this.searchAddresses(query);
+        this.cdr.markForCheck();
+      });
 
     this.initializeFuse();
   }
@@ -165,6 +174,7 @@ export class OscAddressAutocompleteComponent implements OnInit, OnChanges {
       this.autocompleteState.showResults = false;
       this.autocompleteState.previewValue = null;
       this.autocompleteState.focusedIndex = -1;
+      this.cdr.markForCheck();
     }, 200);
   }
 
@@ -178,6 +188,7 @@ export class OscAddressAutocompleteComponent implements OnInit, OnChanges {
       // Reset the flag after a short delay to allow future focus events to work
       setTimeout(() => {
         this.autocompleteState.justSelected = false;
+        this.cdr.markForCheck();
       }, 300);
     }
   }

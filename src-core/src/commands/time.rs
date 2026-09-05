@@ -3,7 +3,6 @@ use ipgeolocate::{Locator, Service};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn get_sunrise_sunset_time() -> Result<(String, String), String> {
     let ip = match public_ip::addr().await {
         Some(ip) => ip,

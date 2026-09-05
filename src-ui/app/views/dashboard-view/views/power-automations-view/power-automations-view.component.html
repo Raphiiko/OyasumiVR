@@ -1,15 +1,15 @@
 <div class="pane">
-  <div class="pane-title" translate>power-automations.title</div>
+  <div class="pane-title" transloco="power-automations.title"></div>
   <div class="tab-bar">
     <div class="tab" [class.active]="activeTab === 'DEVICES'" (click)="activeTab = 'DEVICES'">
-      <div class="tab-label" translate>power-automations.tabs.devices</div>
+      <div class="tab-label" transloco="power-automations.tabs.devices"></div>
     </div>
     <div
       class="tab"
       [class.active]="activeTab === 'WINDOWS_POWER_POLICY'"
       (click)="activeTab = 'WINDOWS_POWER_POLICY'"
     >
-      <div class="tab-label" translate>power-automations.tabs.windowsPowerPolicy</div>
+      <div class="tab-label" transloco="power-automations.tabs.windowsPowerPolicy"></div>
     </div>
   </div>
   <div class="pane-content">

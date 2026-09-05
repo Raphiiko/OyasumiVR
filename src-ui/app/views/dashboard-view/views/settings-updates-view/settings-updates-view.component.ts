@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Update } from '@tauri-apps/plugin-updater';
 import { firstValueFrom } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -16,6 +16,7 @@ import { marked } from 'marked';
   templateUrl: './settings-updates-view.component.html',
   styleUrls: ['./settings-updates-view.component.scss'],
   animations: [hshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SettingsUpdatesViewComponent implements OnInit {

@@ -2,16 +2,80 @@ use crate::globals::STEAM_APP_KEY;
 
 use super::{
     models::{BindingOriginData, OVRDevice, OVRFrameLimits},
-    OVR_CONTEXT,
+    overlay_interface_available, OVR_CONTEXT,
 };
 use enumset::EnumSet;
 use log::error;
 use ovr::input::{InputString, InputValueHandle};
 use ovr_overlay as ovr;
+use std::fmt::Display;
 use substring::Substring;
 
+fn collect_localized_names<I, E>(results: I, label: &str) -> Vec<String>
+where
+    I: IntoIterator<Item = Result<String, E>>,
+    E: Display,
+{
+    results
+        .into_iter()
+        .map(|result| match result {
+            Ok(name) => name,
+            Err(e) => {
+                error!("[Core] Failed to get origin localized {label}: {e}");
+                String::new()
+            }
+        })
+        .collect()
+}
+
+fn assemble_binding_origins(
+    origin_count: usize,
+    localized_controller_types: &[String],
+    localized_hands: &[String],
+    localized_input_sources: &[String],
+    binding_infos: &[ovr::sys::InputBindingInfo_t],
+) -> Option<Vec<BindingOriginData>> {
+    (0..origin_count)
+        .map(|i| {
+            let binding_info = binding_infos.get(i)?;
+            let device_path_name = crate::utils::convert_char_array_to_string(
+                &binding_info.rchDevicePathName,
+            )?;
+            let input_path_name = crate::utils::convert_char_array_to_string(
+                &binding_info.rchInputPathName,
+            )?;
+            let localized_controller_type = localized_controller_types.get(i)?;
+            let localized_hand = localized_hands.get(i)?;
+            let localized_input_source = localized_input_sources.get(i)?;
+            Some(BindingOriginData {
+                localized_controller_type: if localized_controller_type.is_empty() {
+                    device_path_name.clone()
+                } else {
+                    localized_controller_type.clone()
+                },
+                localized_hand: if localized_hand.is_empty() {
+                    device_path_name.clone()
+                } else {
+                    localized_hand.clone()
+                },
+                localized_input_source: if localized_input_source.is_empty() {
+                    input_path_name.clone()
+                } else {
+                    localized_input_source.clone()
+                },
+                device_path_name,
+                input_path_name,
+                mode_name: crate::utils::convert_char_array_to_string(&binding_info.rchModeName)?,
+                slot_name: crate::utils::convert_char_array_to_string(&binding_info.rchSlotName)?,
+                input_source_type: crate::utils::convert_char_array_to_string(
+                    &binding_info.rchInputSourceType,
+                )?,
+            })
+        })
+        .collect()
+}
+
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn openvr_set_app_framelimit(
     app_id: u32,
     limits: Option<OVRFrameLimits>,
@@ -20,25 +84,21 @@ pub async fn openvr_set_app_framelimit(
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn openvr_get_app_framelimit(app_id: u32) -> Result<Option<OVRFrameLimits>, String> {
     super::framelimiter::get_app_framelimits(app_id).await
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn openvr_set_init_delay_fix(enabled: bool) {
     *super::OVR_INIT_DELAY_FIX.lock().await = enabled;
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn openvr_get_devices() -> Vec<OVRDevice> {
     super::devices::get_devices().await
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn openvr_status() -> String {
     let status = super::OVR_STATUS.lock().await;
     let status_str = serde_json::to_string(&*status).unwrap();
@@ -46,43 +106,36 @@ pub async fn openvr_status() -> String {
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn openvr_set_analog_gain(analog_gain: f32) -> Result<(), String> {
     super::brightness_analog::set_analog_gain(analog_gain).await
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn openvr_get_analog_gain() -> Result<f32, String> {
     super::brightness_analog::get_analog_gain().await
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn openvr_set_supersample_scale(supersample_scale: Option<f32>) -> Result<(), String> {
     super::supersampling::set_supersample_scale(supersample_scale).await
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn openvr_get_supersample_scale() -> Result<Option<f32>, String> {
     super::supersampling::get_supersample_scale().await
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn openvr_set_fade_distance(fade_distance: f32) -> Result<(), String> {
     super::chaperone::set_fade_distance(fade_distance).await
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn openvr_get_fade_distance() -> Result<f32, String> {
     super::chaperone::get_fade_distance().await
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn openvr_set_analog_color_temp(
     temperature: Option<u32>,
 ) -> Result<(f64, f64, f64), String> {
@@ -90,7 +143,6 @@ pub async fn openvr_set_analog_color_temp(
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn openvr_set_image_brightness(
     brightness: f64,
     perceived_brightness_adjustment_gamma: Option<f64>,
@@ -100,7 +152,6 @@ pub async fn openvr_set_image_brightness(
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn openvr_launch_binding_configuration(show_on_desktop: bool) {
     let context = OVR_CONTEXT.lock().await;
     let mut input = match context.as_ref() {
@@ -120,9 +171,11 @@ pub async fn openvr_launch_binding_configuration(show_on_desktop: bool) {
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn openvr_is_dashboard_visible() -> bool {
     let context = OVR_CONTEXT.lock().await;
+    if !overlay_interface_available() {
+        return false;
+    }
     let mut manager = match context.as_ref() {
         Some(context) => context.overlay_mngr(),
         None => return false,
@@ -131,16 +184,17 @@ pub async fn openvr_is_dashboard_visible() -> bool {
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn openvr_reregister_manifest() -> Result<(), String> {
     let ctx = OVR_CONTEXT.lock().await;
-    let mut applications = ctx.as_ref().unwrap().applications_mngr();
-    let manifest_path_buf = std::fs::canonicalize("resources/manifest.vrmanifest").unwrap();
+    let ctx = ctx.as_ref().ok_or("OPENVR_NOT_INITIALIZED")?;
+    let mut applications = ctx.applications_mngr();
+    let manifest_path_buf = std::fs::canonicalize("resources/manifest.vrmanifest")
+        .map_err(|e| format!("MANIFEST_NOT_FOUND: {e}"))?;
     let manifest_path: &std::path::Path = manifest_path_buf.as_ref();
     match applications.is_application_installed(STEAM_APP_KEY) {
         Ok(value) => {
             if !value {
-                return Err(String::from("MANIFEST_NOT_REGISTERED"));
+                Err(String::from("MANIFEST_NOT_REGISTERED"))
             } else {
                 match applications.remove_application_manifest(manifest_path) {
                     Ok(_) => {
@@ -153,20 +207,20 @@ pub async fn openvr_reregister_manifest() -> Result<(), String> {
                         if should_install_for_flavour {
                             match applications.add_application_manifest(manifest_path, false) {
                                 Ok(_) => {
-                                    return Ok(());
+                                    Ok(())
                                 }
                                 Err(e) => {
                                     error!("[Core] Failed to add VR manifest: {e}");
-                                    return Err(String::from("MANIFEST_ADD_FAILED"));
+                                    Err(String::from("MANIFEST_ADD_FAILED"))
                                 }
-                            };
+                            }
                         } else {
-                            return Err(String::from("FLAVOUR_NOT_ELIGIBLE"));
+                            Err(String::from("FLAVOUR_NOT_ELIGIBLE"))
                         }
                     }
                     Err(e) => {
                         error!("[Core] Failed to remove VR manifest: {e}");
-                        return Err(String::from("MANIFEST_REMOVE_FAILED"));
+                        Err(String::from("MANIFEST_REMOVE_FAILED"))
                     }
                 }
             }
@@ -176,17 +230,16 @@ pub async fn openvr_reregister_manifest() -> Result<(), String> {
                 "[Core] Failed to check if VR manifest is registered: {:#?}",
                 e.description()
             );
-            return Err(String::from("MANIFEST_CHECK_FAILED"));
+            Err(String::from("MANIFEST_CHECK_FAILED"))
         }
     }
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn openvr_get_binding_origins(
     action_set_key: String,
     action_key: String,
-) -> Option<Vec<BindingOriginData>> {
+) -> Result<Vec<BindingOriginData>, String> {
     let mut input_ctx = super::OVR_INPUT_CONTEXT.lock().await;
     // Get action set by name
     let action_set = match input_ctx
@@ -195,22 +248,22 @@ pub async fn openvr_get_binding_origins(
         .find(|a| a.name == action_set_key)
     {
         Some(action_set) => action_set.handle,
-        None => return None,
+        None => return Err(String::from("ACTION_SET_NOT_FOUND")),
     };
     // Get action by name
     let action = match input_ctx.actions.iter().find(|a| a.name == action_key) {
         Some(action) => action.handle,
-        None => return None,
+        None => return Err(String::from("ACTION_NOT_FOUND")),
     };
     // Get the input service
     let context = OVR_CONTEXT.lock().await;
     let mut input = match context.as_ref() {
         Some(context) => context.input_mngr(),
-        None => return None,
+        None => return Err(String::from("OPENVR_NOT_INITIALIZED")),
     };
     if let Err(e) = input.update_actions(input_ctx.active_sets.as_mut_slice()) {
         error!("[Core] Failed to update actions: {e}");
-        return None;
+        return Err(String::from("UPDATE_ACTIONS_FAILED"));
     }
     // Get all of the origins for this action
     let origins: Vec<u64> = match input.get_action_origins(action_set, action) {
@@ -221,111 +274,112 @@ pub async fn openvr_get_binding_origins(
             .collect(),
         Err(e) => {
             error!("[Core] Failed to get action origins: {e}");
-            return None;
+            return Err(String::from("GET_ACTION_ORIGINS_FAILED"));
         }
     };
-    // Get the localized controller types for each origin
-    let localized_controller_types: Vec<String> = origins
-        .iter()
-        .filter_map(|origin| {
-            match input.get_origin_localized_name(
+    // get localized labels for each origin
+    let localized_controller_types = collect_localized_names(
+        origins.iter().map(|origin| {
+            input.get_origin_localized_name(
                 InputValueHandle(*origin),
                 EnumSet::only(InputString::ControllerType),
-            ) {
-                Ok(name) => Some(name),
-                Err(e) => {
-                    error!(
-                        "[Core] Failed to get origin localized name controller types: {}",
-                        e.description()
-                    );
-                    None
-                }
-            }
-        })
-        .collect();
-    // Get the localized hands for each origin
-    let localized_hands: Vec<String> = origins
-        .iter()
-        .filter_map(|origin| {
-            match input.get_origin_localized_name(
+            )
+        }),
+        "controller type",
+    );
+    let localized_hands = collect_localized_names(
+        origins.iter().map(|origin| {
+            input.get_origin_localized_name(
                 InputValueHandle(*origin),
                 EnumSet::only(InputString::Hand),
-            ) {
-                Ok(name) => Some(name),
-                Err(e) => {
-                    error!(
-                        "[Core] Failed to get origin localized name controller types: {}",
-                        e.description()
-                    );
-                    None
-                }
-            }
-        })
-        .collect();
-    // Get the localized input sources for each origin
-    let localized_input_sources: Vec<String> = origins
-        .iter()
-        .filter_map(|origin| {
-            match input.get_origin_localized_name(
+            )
+        }),
+        "hand",
+    );
+    let localized_input_sources = collect_localized_names(
+        origins.iter().map(|origin| {
+            input.get_origin_localized_name(
                 InputValueHandle(*origin),
                 EnumSet::only(InputString::InputSource),
-            ) {
-                Ok(name) => Some(name),
-                Err(e) => {
-                    error!(
-                        "[Core] Failed to get origin localized name controller types: {}",
-                        e.description()
-                    );
-                    None
-                }
-            }
-        })
-        .collect();
+            )
+        }),
+        "input source",
+    );
 
     // Get extra information about each binding
-    let result = {
-        let result: Vec<ovr::sys::InputBindingInfo_t> = match input.get_action_binding_info(action)
-        {
+    let binding_infos: Vec<ovr::sys::InputBindingInfo_t> =
+        match input.get_action_binding_info(action) {
             Ok(result) => result,
             Err(e) => {
                 error!("[Core] Failed to get action binding info: {e}");
-                return None;
+                return Err(String::from("GET_ACTION_BINDING_INFO_FAILED"));
             }
         };
-        Some(result)
-    };
-    let binding_infos = match result {
-        Some(infos) => infos,
-        None => return None,
-    };
+    match assemble_binding_origins(
+        origins.len(),
+        &localized_controller_types,
+        &localized_hands,
+        &localized_input_sources,
+        &binding_infos,
+    ) {
+        Some(data) => Ok(data),
+        None => {
+            error!("[Core] OpenVR returned incomplete binding origin data");
+            Err(String::from("INCOMPLETE_BINDING_DATA"))
+        }
+    }
+}
 
-    // Group the data for each origin
-    let mut datas = vec![];
-    for i in 0..origins.len() {
-        let binding_info = &binding_infos[i];
-        let data = BindingOriginData {
-            localized_controller_type: localized_controller_types[i].clone(),
-            localized_hand: localized_hands[i].clone(),
-            localized_input_source: localized_input_sources[i].clone(),
-            device_path_name: crate::utils::convert_char_array_to_string(
-                &binding_info.rchDevicePathName,
-            )
-            .expect("Failed to convert rchDevicePathName to string"),
-            input_path_name: crate::utils::convert_char_array_to_string(
-                &binding_info.rchInputPathName,
-            )
-            .expect("Failed to convert rchInputPathName to string"),
-            mode_name: crate::utils::convert_char_array_to_string(&binding_info.rchModeName)
-                .expect("Failed to convert rchModeName to string"),
-            slot_name: crate::utils::convert_char_array_to_string(&binding_info.rchSlotName)
-                .expect("Failed to convert rchSlotName to string"),
-            input_source_type: crate::utils::convert_char_array_to_string(
-                &binding_info.rchInputSourceType,
-            )
-            .expect("Failed to convert rchInputSourceType to string"),
-        };
-        datas.push(data);
+#[cfg(test)]
+mod tests {
+    use super::{assemble_binding_origins, collect_localized_names, ovr};
+    use std::ffi::c_char;
+
+    fn char_array<const N: usize>(value: &str) -> [c_char; N] {
+        let mut result = [0; N];
+        for (target, source) in result.iter_mut().zip(value.bytes()) {
+            *target = source as c_char;
+        }
+        result
     }
 
-    Some(datas)
+    fn binding_info(device_path_name: &str) -> ovr::sys::InputBindingInfo_t {
+        ovr::sys::InputBindingInfo_t {
+            rchDevicePathName: char_array(device_path_name),
+            rchInputPathName: char_array("/input/a"),
+            rchModeName: char_array("button"),
+            rchSlotName: char_array("click"),
+            rchInputSourceType: char_array("button"),
+        }
+    }
+
+    #[test]
+    fn localized_name_errors_keep_origin_alignment() {
+        let controller_types = collect_localized_names(
+            [Ok("controller one".to_string()), Err("lookup failed")],
+            "controller type",
+        );
+        let data = assemble_binding_origins(
+            2,
+            &controller_types,
+            &["left".to_string(), "right".to_string()],
+            &["a".to_string(), "b".to_string()],
+            &[
+                binding_info("/user/hand/left"),
+                binding_info("/user/hand/right"),
+            ],
+        )
+        .unwrap();
+
+        assert_eq!(data.len(), 2);
+        assert_eq!(data[0].localized_controller_type, "controller one");
+        assert_eq!(data[0].device_path_name, "/user/hand/left");
+        assert_eq!(
+            data[1].localized_controller_type,
+            "/user/hand/right"
+        );
+        assert_eq!(data[1].localized_hand, "right");
+        assert_eq!(data[1].localized_input_source, "b");
+        assert_eq!(data[1].device_path_name, "/user/hand/right");
+    }
 }

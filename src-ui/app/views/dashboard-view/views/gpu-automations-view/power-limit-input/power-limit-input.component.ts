@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { GPUPowerLimit, GPUPowerLimitUnit } from '../../../../../models/gpu-device';
 import { vshrink } from '../../../../../utils/animations';
 
@@ -7,6 +14,7 @@ import { vshrink } from '../../../../../utils/animations';
   templateUrl: './power-limit-input.component.html',
   styleUrls: ['./power-limit-input.component.scss'],
   animations: [vshrink()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class PowerLimitInputComponent implements OnInit {

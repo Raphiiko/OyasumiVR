@@ -1,7 +1,16 @@
-import { Component, DestroyRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { TString } from '../../models/translatable-string';
 import { VRChatService } from '../../services/vrchat-api/vrchat.service';
-import { LimitedUser } from 'vrchat';
+import type { LimitedUserFriend } from 'vrchat';
 import {
   FriendSelectionModalComponent,
   SelectedFriendPlayer,
@@ -22,6 +31,7 @@ import { noop, vshrink } from '../../utils/animations';
   templateUrl: './player-list.component.html',
   styleUrls: ['./player-list.component.scss'],
   animations: [vshrink(), noop()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class PlayerListComponent implements OnInit {
@@ -32,20 +42,22 @@ export class PlayerListComponent implements OnInit {
     this.refreshPlayerList(value);
   }
 
-  playerList: LimitedUser[] = [];
+  playerList: LimitedUserFriend[] = [];
   loggedIn = false;
 
   constructor(
     protected vrchat: VRChatService,
     private modalService: ModalService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     this.vrchat.status
-      .pipe(takeUntilDestroyed(this.destroyRef), distinctUntilChanged())
+      .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe(async (status) => {
         this.loggedIn = status === 'LOGGED_IN';
+        this.cdr.markForCheck();
         if (this.loggedIn && this.playerList.length)
           await this.refreshPlayerList(this.playerList.map((p) => p.id));
       });
@@ -59,8 +71,14 @@ export class PlayerListComponent implements OnInit {
     const input = [...playerIds].sort();
     const current = [...this.playerList.map((p) => p.id)].sort();
     if (input.join(',') === current.join(',')) return;
-    const friends = await this.vrchat.listFriends();
+    let friends: LimitedUserFriend[];
+    try {
+      friends = await this.vrchat.listFriends();
+    } catch {
+      return;
+    }
     this.playerList = friends.filter((f) => playerIds.includes(f.id));
+    this.cdr.markForCheck();
     this.emitPlayerListChange();
   }
 
@@ -85,7 +103,7 @@ export class PlayerListComponent implements OnInit {
       });
   }
 
-  async removePlayer(player: LimitedUser) {
+  async removePlayer(player: LimitedUserFriend) {
     this.modalService
       .addModal(ConfirmModalComponent, {
         title: 'comp.player-list.removeModal.title',

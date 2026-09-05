@@ -25,13 +25,25 @@ public class NonAcceleratedOffscreenBrowser : OffscreenBrowser, IRenderHandler
   public NonAcceleratedOffscreenBrowser(string address, uint width, uint height)
     : base(
       address,
-      new BrowserSettings()
-      {
-        DefaultEncoding = "UTF-8"
-      }
+      automaticallyCreateBrowser: false
     )
   {
     _paintBufferLock = new ReaderWriterLockSlim();
+
+    var windowInfo = new WindowInfo();
+    windowInfo.SetAsWindowless(IntPtr.Zero);
+    windowInfo.WindowlessRenderingEnabled = true;
+    windowInfo.SharedTextureEnabled = false;
+    windowInfo.Width = (int)width;
+    windowInfo.Height = (int)height;
+
+    var browserSettings = new BrowserSettings()
+    {
+      WindowlessFrameRate = 60,
+      DefaultEncoding = "UTF-8"
+    };
+
+    CreateBrowser(windowInfo, browserSettings);
 
     Size = new System.Drawing.Size((int)width, (int)height);
     RenderHandler = this;
@@ -117,7 +129,6 @@ public class NonAcceleratedOffscreenBrowser : OffscreenBrowser, IRenderHandler
     finally
     {
       _paintBufferLock.ExitReadLock();
-      _lastPaint = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
     }
   }
 
@@ -178,6 +189,9 @@ public class NonAcceleratedOffscreenBrowser : OffscreenBrowser, IRenderHandler
           buffer,
           (uint)(width * height * 4)
         );
+        // LastPaint marks when the browser produced a new frame, which is what tells the
+        // render loop there is something new to copy into the overlay texture.
+        _lastPaint = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
       }
       finally
       {

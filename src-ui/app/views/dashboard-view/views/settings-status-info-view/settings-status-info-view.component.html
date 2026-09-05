@@ -1,20 +1,20 @@
 <div class="pane">
-  <div class="pane-title" translate>settings.statusInfo.title</div>
+  <div class="pane-title" transloco="settings.statusInfo.title"></div>
   <div class="pane-content">
     <div class="setting-view-container">
-      <p translate>settings.statusInfo.description</p>
+      <p transloco="settings.statusInfo.description"></p>
       <div class="settings">
         <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate>settings.statusInfo.copy.title</span>
-            <span translate>settings.statusInfo.copy.description</span>
+          <div class="setting-row-label">
+            <span transloco="settings.statusInfo.copy.title"></span>
+            <span transloco="settings.statusInfo.copy.description"></span>
           </div>
           <div class="setting-row-action">
-            <button class="btn btn-primary btn-copy" translate (click)="copyToClipboard()">
+            <button class="btn btn-primary btn-copy" (click)="copyToClipboard()">
               @if (!copiedToClipboard.includes('ALL_DATA')) {
                 <span @hshrink>
                   <i class="material-icons">copy_all</i>
-                  <span translate>settings.statusInfo.copy.action</span>
+                  <span transloco="settings.statusInfo.copy.action"></span>
                 </span>
               }
               @if (copiedToClipboard.includes('ALL_DATA')) {
@@ -25,7 +25,7 @@
         </div>
         @for (category of categories; track category) {
           <div class="setting-row">
-            <div class="setting-row-label" translate>
+            <div class="setting-row-label">
               <span>{{ category.name | tsTranslate }}</span>
               <span></span>
             </div>
@@ -34,7 +34,7 @@
           <div class="setting-row-group">
             @for (entry of category.entries; track entry) {
               <div class="setting-row" [class.compact]="compact">
-                <div class="setting-row-label" translate>
+                <div class="setting-row-label">
                   <span>{{ entry.key | tsTranslate }}</span>
                   <span></span>
                 </div>

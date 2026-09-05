@@ -59,14 +59,14 @@ export class SleepingPoseViewerComponent implements AfterViewInit {
     });
     combineLatest([this.openvr.devices, this.openvr.devicePoses])
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         map(([devices, poses]) => {
           const hmdDevice = devices.find((d) => d.class === 'HMD');
           if (!hmdDevice) return null;
           return poses[hmdDevice.index] || null;
         }),
         filter((hmdPose) => hmdPose !== null),
-        map((hmdPose) => hmdPose as OVRDevicePose)
+        map((hmdPose) => hmdPose as OVRDevicePose),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((hmdPose) => {
         const hmdOrientation = new THREE.Quaternion(...hmdPose.quaternion);

@@ -1,7 +1,7 @@
-import { Component, HostBinding, OnInit } from '@angular/core';
+import { Component, HostBinding, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../../utils/animations';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { getStringForDuration } from '../../tabs/sleep-detection-tab.component';
 
 export interface DurationDisableSleepModeModalInputModel {
@@ -17,6 +17,7 @@ export interface DurationDisableSleepModeModalOutputModel {
   templateUrl: './duration-disable-sleep-mode-modal.component.html',
   styleUrls: ['./duration-disable-mode-modal.component.scss'],
   animations: [fadeUp(), fade(), triggerChildren(), vshrink()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DurationDisableSleepModeModalComponent
@@ -32,7 +33,7 @@ export class DurationDisableSleepModeModalComponent
     return;
   }
 
-  constructor(private translate: TranslateService) {
+  constructor(private translate: TranslocoService) {
     super();
   }
 

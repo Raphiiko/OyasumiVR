@@ -26,6 +26,9 @@
   <input
     type="number"
     class="small"
+    [min]="min"
+    [max]="max"
+    [step]="step"
     [value]="value"
     (input)="input$.next(inputValue.value)"
     (blur)="onInputBlur()"

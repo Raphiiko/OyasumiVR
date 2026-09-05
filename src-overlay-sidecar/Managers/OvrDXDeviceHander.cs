@@ -19,6 +19,15 @@ public abstract class OvrDXDeviceHander
   public abstract void Initialize();
 
   public abstract void Uninitialize();
+
+  // SteamVR renders on this adapter. A texture created on any other one is rejected with
+  // EVROverlayError.InvalidTexture.
+  protected static int GetVrAdapterIndex()
+  {
+    var adapterIndex = -1;
+    OpenVR.System.GetDXGIOutputInfo(ref adapterIndex);
+    return adapterIndex >= 0 ? adapterIndex : 0;
+  }
 }
 
 public class NonAcceleratedOvrDXDeviceHander : OvrDXDeviceHander
@@ -32,8 +41,10 @@ public class NonAcceleratedOvrDXDeviceHander : OvrDXDeviceHander
     try
     {
       Factory f = new Factory1();
-      Device = new Device(f.GetAdapter(OpenVR.System.GetD3D9AdapterIndex()),
-        DeviceCreationFlags.SingleThreaded | DeviceCreationFlags.BgraSupport);
+      // Overlay textures are created on a task continuation while the render loop maps them
+      // on its own thread, so the device cannot skip its internal synchronisation.
+      Device = new Device(f.GetAdapter(GetVrAdapterIndex()),
+        DeviceCreationFlags.BgraSupport);
     }
     catch (SharpDXException err)
     {
@@ -57,7 +68,7 @@ public class AcceleratedOvrDXDeviceHander : OvrDXDeviceHander
     {
       var factory = new Factory1();
       Device?.Dispose();
-      Device = new Device(factory.GetAdapter(OpenVR.System.GetD3D9AdapterIndex()),
+      Device = new Device(factory.GetAdapter(GetVrAdapterIndex()),
         DeviceCreationFlags.BgraSupport);
       UpgradeDevice();
     }

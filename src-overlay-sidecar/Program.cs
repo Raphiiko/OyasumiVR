@@ -1,19 +1,23 @@
 // See https://aka.ms/new-console-template for more information
 
 using System.Diagnostics;
+using System.Reflection;
 using CefSharp;
 using CefSharp.OffScreen;
 using Serilog;
 
 namespace overlay_sidecar;
 
-public static class Program {
+public static class Program
+{
   public static bool GpuAccelerated = true;
   public static SidecarMode Mode = SidecarMode.Release;
 
   public static void Main(string[] args)
   {
     LogConfigurator.Init();
+    AppDomain.CurrentDomain.UnhandledException += (_, e) =>
+      Log.Fatal(e.ExceptionObject as Exception, "The overlay sidecar is stopping on an unhandled exception.");
     var coreGrpcPort = (int)Globals.CORE_GRPC_DEV_PORT;
     var mainProcessId = 0;
 
@@ -28,18 +32,16 @@ public static class Program {
 
     if (Mode == SidecarMode.Release)
     {
-      if (args.Length < 1 || !int.TryParse(args[0], out coreGrpcPort))
+      if (!TryParseSwitch(args, "--core-grpc-port", out coreGrpcPort) ||
+          !TryParseSwitch(args, "--core-pid", out mainProcessId))
       {
-        Log.Error("Usage: oyasumivr-overlay-sidecar.exe <core grpc port> <core process id>");
-        return;
-      }
-
-      if (args.Length < 2 || !int.TryParse(args[1], out mainProcessId))
-      {
-        Log.Error("Usage: oyasumivr-overlay-sidecar.exe <core grpc port> <core process id>");
+        Log.Error("Usage: oyasumivr-overlay-sidecar.exe --core-grpc-port=<port> --core-pid=<pid>");
         return;
       }
     }
+
+    var errorReportingEnabled = args.Contains("--error-reporting-enabled");
+    ErrorReporting.Initialize(errorReportingEnabled, GetAppVersion(mainProcessId));
 
     if (args.Any(arg => arg == "--disable-gpu-acceleration"))
     {
@@ -54,18 +56,66 @@ public static class Program {
     OvrManager.Instance.Init();
   }
 
+  private static bool TryParseSwitch(string[] args, string name, out int value)
+  {
+    var prefix = name + "=";
+    var arg = args.FirstOrDefault(a => a.StartsWith(prefix, StringComparison.Ordinal));
+    return int.TryParse(arg?[prefix.Length..], out value);
+  }
+
+  private static string GetAppVersion(int mainProcessId)
+  {
+    if (InReleaseMode())
+    {
+      try
+      {
+        return Process.GetProcessById(mainProcessId).MainModule?.FileVersionInfo.ProductVersion ?? "unknown";
+      }
+      catch
+      {
+      }
+    }
+    return Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
+           ?? "unknown";
+  }
+
   private static void InitCef()
   {
     var settings = new CefSettings();
-    
-    // In-memory cache - no disk persistence
+
+    // CEF 122+ uses the Chrome bootstrap, which requires a unique RootCachePath per running
+    // process. When left empty, CEF falls back to the shared default user data directory
+    // (%LOCALAPPDATA%\CEF\User Data). That directory is guarded by Chromium's process
+    // singleton: if any process still holds it (a lingering previous sidecar instance, or any
+    // other CEF-based app using the default path), a newly started sidecar forwards its
+    // command line to that process and exits. The receiving process then opens our positional
+    // arguments as browser tabs (a bare port number like 24872 gets fixed up to the URL
+    // http://0.0.97.40/), and the core sees the exit as a crash and restarts us, repeating the
+    // cycle. Each such browser process launch also leaves a ~4MB .pma file in BrowserMetrics,
+    // which is never cleaned up because metrics reporting is disabled.
+    // See https://github.com/Raphiiko/OyasumiVR/issues/168 (and #166, #165), as well as
+    // https://github.com/cefsharp/CefSharp/discussions/4978
+    var cacheRoot = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+      "co.raphii.oyasumi", "cef-cache");
+    CleanUpCefCacheDirectories(cacheRoot);
+    settings.RootCachePath = Path.Combine(cacheRoot, Environment.ProcessId.ToString());
+
+    // In-memory cache - no disk persistence of browsing data
     settings.CachePath = "";
-    settings.RootCachePath = "";
     settings.PersistSessionCookies = false;
     settings.CefCommandLineArgs.Add("disable-features", "MetricsService,PersistentHistograms");
     settings.CefCommandLineArgs.Add("disable-crash-reporter", "true");
     settings.CefCommandLineArgs.Add("disable-spell-checking", "true");
-    
+
+    if (GpuAccelerated)
+    {
+      // A shared texture can only be opened on the GPU that produced it, so Chromium has to
+      // render on the same adapter SteamVR does, which is the high performance one. Chromium
+      // offers no way to name an exact adapter, and this has to be decided here because CEF
+      // starts long before SteamVR is known to be running.
+      settings.CefCommandLineArgs.Add("force_high_performance_gpu", "");
+    }
+
     if (InReleaseMode())
     {
       settings.LogSeverity = LogSeverity.Disable;
@@ -73,7 +123,79 @@ public static class Program {
       if (File.Exists(cefDebugLogPath)) File.Delete(cefDebugLogPath);
     }
 
-    Cef.Initialize(settings);
+    if (!Cef.Initialize(settings))
+    {
+      Log.Fatal("CEF failed to initialize. The overlays cannot run without it.");
+      Environment.Exit(1);
+    }
+  }
+
+  private static void CleanUpCefCacheDirectories(string cacheRoot)
+  {
+    // Remove cache directories left behind by previous sidecar instances. Deleting the cache
+    // directory of the running instance at shutdown is unreliable with the Chrome bootstrap
+    // (https://github.com/cefsharp/CefSharp/issues/4852), so each launch cleans up after
+    // instances that are no longer running instead.
+    try
+    {
+      if (Directory.Exists(cacheRoot))
+      {
+        foreach (var dir in Directory.GetDirectories(cacheRoot))
+        {
+          if (int.TryParse(Path.GetFileName(dir), out var pid))
+          {
+            try
+            {
+              Process.GetProcessById(pid);
+              continue; // Process still exists: leave its cache directory alone
+            }
+            catch (ArgumentException)
+            {
+              // Process no longer exists: safe to remove
+            }
+          }
+
+          try
+          {
+            Directory.Delete(dir, true);
+          }
+          catch (Exception e)
+          {
+            Log.Warning(e, "Could not clean up stale CEF cache directory: {dir}", dir);
+          }
+        }
+      }
+    }
+    catch (Exception e)
+    {
+      Log.Warning(e, "Could not clean up stale CEF cache directories");
+    }
+
+    // Best-effort cleanup of metrics files that older builds accumulated in CEF's shared
+    // default user data directory. Files held open by another process are skipped.
+    try
+    {
+      var legacyMetricsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "CEF", "User Data", "BrowserMetrics");
+      if (Directory.Exists(legacyMetricsDir))
+      {
+        foreach (var file in Directory.GetFiles(legacyMetricsDir, "*.pma"))
+        {
+          try
+          {
+            File.Delete(file);
+          }
+          catch (Exception)
+          {
+            // File is likely in use by another process
+          }
+        }
+      }
+    }
+    catch (Exception e)
+    {
+      Log.Warning(e, "Could not clean up legacy CEF browser metrics files");
+    }
   }
 
   private static void WatchMainProcess(int mainPid)
@@ -117,7 +239,8 @@ public static class Program {
     return Mode == SidecarMode.Release;
   }
 
-  public enum SidecarMode {
+  public enum SidecarMode
+  {
     Release,
     Dev
   }

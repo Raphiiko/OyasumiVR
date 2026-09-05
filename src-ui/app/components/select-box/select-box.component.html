@@ -32,7 +32,7 @@
     @if (!selected) {
       <div class="select-item placeholder" [class.small]="type === 'SMALL'">
         <div class="select-item-title">
-          {{ placeholder || 'comp.select-box.defaultPlaceholder' | translate }}
+          {{ placeholder || 'comp.select-box.defaultPlaceholder' | transloco }}
         </div>
       </div>
     }
@@ -45,7 +45,7 @@
       @if (showPlaceholderInDropdown) {
         <div class="select-item placeholder">
           <div class="select-item-title">
-            {{ placeholder || 'comp.select-box.defaultPlaceholder' | translate }}
+            {{ placeholder || 'comp.select-box.defaultPlaceholder' | transloco }}
           </div>
         </div>
       }

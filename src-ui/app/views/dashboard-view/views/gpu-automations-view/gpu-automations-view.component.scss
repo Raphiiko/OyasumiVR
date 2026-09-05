@@ -67,5 +67,10 @@
   .action {
     margin-top: 2em;
     padding: 1em 1.5em;
+
+    .small-spinner {
+      margin-left: 0.75em;
+      vertical-align: middle;
+    }
   }
 }

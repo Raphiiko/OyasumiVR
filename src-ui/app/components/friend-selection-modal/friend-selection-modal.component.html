@@ -1,12 +1,12 @@
 <div class="pane modal modal-md" @fadeUp>
   <div class="pane-title">
-    {{ 'comp.friend-selection-modal.title' | translate }}
+    {{ 'comp.friend-selection-modal.title' | transloco }}
   </div>
   @if (loadingState === 'LOADING') {
     <div class="pane-content">
       <div class="info-container">
         <span class="large-spinner"></span>
-        <span translate>comp.friend-selection-modal.loading</span>
+        <span transloco="comp.friend-selection-modal.loading"></span>
       </div>
     </div>
   }
@@ -14,7 +14,7 @@
     <div class="pane-content">
       <div class="info-container">
         <span class="large-spinner"></span>
-        <span translate>comp.friend-selection-modal.loadingError</span>
+        <span transloco="comp.friend-selection-modal.loadingError"></span>
       </div>
     </div>
   }
@@ -24,16 +24,18 @@
         <input
           type="text"
           class="input"
-          placeholder="{{ 'comp.friend-selection-modal.searchPlaceholder' | translate }}"
+          placeholder="{{ 'comp.friend-selection-modal.searchPlaceholder' | transloco }}"
           (input)="query.next(searchEl.value)"
           #searchEl
         />
       </div>
       <div class="pills">
         @if (!selection.length) {
-          <span class="none-selected" @fade translate
-            >comp.friend-selection-modal.noFriendsSelected</span
-          >
+          <span
+            class="none-selected"
+            @fade
+            transloco="comp.friend-selection-modal.noFriendsSelected"
+          ></span>
         }
         @for (item of selection; track item) {
           <div class="pill" (click)="removeItem(item)" @hshrink>
@@ -69,7 +71,7 @@
           }
           @if (moreResults) {
             <div class="more-results-available">
-              <span translate>comp.friend-selection-modal.moreResultsAvailable</span>
+              <span transloco="comp.friend-selection-modal.moreResultsAvailable"></span>
             </div>
           }
         </div>
@@ -78,12 +80,12 @@
         <div class="no-results" @vshrink>
           @if (activeQuery) {
             <span
-              translate="comp.friend-selection-modal.noResultsFor"
-              [translateParams]="{ query: activeQuery }"
+              transloco="comp.friend-selection-modal.noResultsFor"
+              [translocoParams]="{ query: activeQuery }"
             ></span>
           }
           @if (!activeQuery) {
-            <span translate>comp.friend-selection-modal.noFriends</span>
+            <span transloco="comp.friend-selection-modal.noFriends"></span>
           }
         </div>
       }
@@ -91,11 +93,11 @@
   }
   <div class="pane-actions spread">
     <button class="btn btn-secondary" (click)="cancel()">
-      {{ 'shared.modals.cancel' | translate }}
+      {{ 'shared.modals.cancel' | transloco }}
     </button>
     @if (loadingState === 'LOADED') {
       <button class="btn btn-primary" (click)="confirm()" @hshrink>
-        {{ 'shared.modals.confirm' | translate }}
+        {{ 'shared.modals.confirm' | transloco }}
       </button>
     }
   </div>

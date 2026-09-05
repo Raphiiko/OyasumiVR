@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { vshrink } from 'src-ui/app/utils/animations';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
@@ -14,6 +14,7 @@ import {
   throttleTime,
 } from 'rxjs';
 import { OscService } from 'src-ui/app/services/osc.service';
+import { flushOnDestroy } from 'src-ui/app/utils/rxjs-utils';
 import { isEqual, pick } from 'lodash';
 
 @Component({
@@ -21,6 +22,7 @@ import { isEqual, pick } from 'lodash';
   templateUrl: './settings-osc-view.component.html',
   styleUrls: ['./settings-osc-view.component.scss'],
   animations: [vshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SettingsOscViewComponent implements OnInit {
@@ -40,6 +42,8 @@ export class SettingsOscViewComponent implements OnInit {
   // Alerts
   protected showVRCTargetWarning = false;
 
+  private destroyed = false;
+
   constructor(
     private destroyRef: DestroyRef,
     private settingsService: AppSettingsService,
@@ -56,6 +60,11 @@ export class SettingsOscViewComponent implements OnInit {
         this.oscServerEnabled = settings.oscServerEnabled;
       });
 
+    // must precede the flush hooks below, which run in registration order
+    this.destroyRef.onDestroy(() => (this.destroyed = true));
+    flushOnDestroy(this.customTargetHostChangeSubject, this.destroyRef);
+    flushOnDestroy(this.customTargetPortChangeSubject, this.destroyRef);
+
     // Setup debounced validation for custom target host
     this.customTargetHostChangeSubject
       .pipe(
@@ -69,7 +78,7 @@ export class SettingsOscViewComponent implements OnInit {
           this.settingsService.updateSettings({
             oscCustomTargetHost: host,
           });
-        } else {
+        } else if (!this.destroyed) {
           this.setTargetEnabled('CUSTOM', false);
           this.customTargetHostValidationState = 'invalid';
         }
@@ -88,7 +97,7 @@ export class SettingsOscViewComponent implements OnInit {
           this.settingsService.updateSettings({
             oscCustomTargetPort: port,
           });
-        } else {
+        } else if (!this.destroyed) {
           this.setTargetEnabled('CUSTOM', false);
           this.customTargetPortValidationState = 'invalid';
         }
@@ -103,7 +112,6 @@ export class SettingsOscViewComponent implements OnInit {
       ),
     ])
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         throttleTime(1000, asyncScheduler, { leading: true, trailing: true }),
         map(([vrcOscAddress, { oscCustomTargetHost, oscCustomTargetPort, oscTargets }]) => {
           if (!oscTargets.includes('VRCHAT_OSCQUERY') || !oscTargets.includes('CUSTOM'))
@@ -117,7 +125,8 @@ export class SettingsOscViewComponent implements OnInit {
           const vrcPort = parseInt(vrcOscAddress.split(':')[1]);
           return vrcPort === oscCustomTargetPort;
         }),
-        distinctUntilChanged()
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((showAlert) => (this.showVRCTargetWarning = showAlert));
   }

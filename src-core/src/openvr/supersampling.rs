@@ -1,6 +1,6 @@
 use std::ffi::CStr;
 
-use super::OVR_CONTEXT;
+use super::{settings_interface_available, OVR_CONTEXT};
 use ovr_overlay as ovr;
 
 pub async fn get_supersample_scale() -> Result<Option<f32>, String> {
@@ -9,6 +9,9 @@ pub async fn get_supersample_scale() -> Result<Option<f32>, String> {
         Some(context) => context,
         None => return Err("OPENVR_NOT_INITIALISED".to_string()),
     };
+    if !settings_interface_available() {
+        return Err("OPENVR_NOT_INITIALISED".to_string());
+    }
     let settings = &mut context.settings_mngr();
     let supersample_manual_override = settings.get_bool(
         CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_Section).unwrap(),
@@ -39,6 +42,9 @@ pub async fn set_supersample_scale(supersample_scale: Option<f32>) -> Result<(),
         Some(context) => context,
         None => return Err("OPENVR_NOT_INITIALISED".to_string()),
     };
+    if !settings_interface_available() {
+        return Err("OPENVR_NOT_INITIALISED".to_string());
+    }
     let settings = &mut context.settings_mngr();
     let _ = settings.set_bool(
         CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_Section).unwrap(),

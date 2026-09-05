@@ -1,7 +1,9 @@
 use ovr_overlay as ovr;
 use std::ffi::CStr;
 
-use crate::openvr::{devices::get_devices, models::TrackedDeviceClass, OVR_CONTEXT};
+use crate::openvr::{
+    devices::get_devices, models::TrackedDeviceClass, settings_interface_available, OVR_CONTEXT,
+};
 
 pub async fn set_color_temp(mut temperature: Option<u32>) -> Result<(f64, f64, f64), String> {
     let devices = get_devices().await;
@@ -16,6 +18,9 @@ pub async fn set_color_temp(mut temperature: Option<u32>) -> Result<(f64, f64, f
         Some(context) => context,
         None => return Err("OPENVR_NOT_INITIALISED".to_string()),
     };
+    if !settings_interface_available() {
+        return Err("OPENVR_NOT_INITIALISED".to_string());
+    }
     if temperature.is_none() {
         temperature = Some(6600);
     }

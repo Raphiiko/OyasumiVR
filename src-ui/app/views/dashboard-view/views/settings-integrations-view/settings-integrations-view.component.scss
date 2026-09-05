@@ -101,6 +101,10 @@
   &-disconnect {
     background-color: var(--color-surface-1);
 
+    & + & {
+      margin-top: 0.5em;
+    }
+
     &:hover {
       background-color: var(--color-surface-2);
     }

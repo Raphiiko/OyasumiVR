@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fadeUp } from 'src-ui/app/utils/animations';
 
@@ -7,6 +7,7 @@ import { fadeUp } from 'src-ui/app/utils/animations';
   templateUrl: './start-with-steamvr-how-to-modal.component.html',
   styleUrls: ['./start-with-steamvr-how-to-modal.component.scss'],
   animations: [fadeUp()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class StartWithSteamVRHowToModalComponent

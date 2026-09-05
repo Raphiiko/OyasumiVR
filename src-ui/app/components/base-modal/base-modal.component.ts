@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { ModalOptions } from '../../services/modal.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -6,6 +6,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-base-modal',
   template: ``,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class BaseModalComponent<_ModalInput extends { [k: string]: any } | void, ModalOutput> {

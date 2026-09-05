@@ -1,4 +1,10 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { fadeUp, vshrink } from '../../utils/animations';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { PlayerListPreset } from '../../models/player-list-preset';
@@ -21,6 +27,7 @@ export interface PlayerListPresetModalOutputModel {
   templateUrl: './player-list-preset-modal.component.html',
   styleUrls: ['./player-list-preset-modal.component.scss'],
   animations: [fadeUp(), vshrink()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class PlayerListPresetModalComponent
@@ -45,7 +52,8 @@ export class PlayerListPresetModalComponent
   constructor(
     private appSettings: AppSettingsService,
     private destroyRef: DestroyRef,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private cdr: ChangeDetectorRef
   ) {
     super();
   }
@@ -53,6 +61,7 @@ export class PlayerListPresetModalComponent
   public ngOnInit() {
     this.appSettings.settings.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((settings) => {
       this.lists = [...settings.playerListPresets];
+      this.cdr.markForCheck();
     });
     if (this.mode === 'save' && !this.playerIds?.length) this.close();
   }
@@ -90,6 +99,7 @@ export class PlayerListPresetModalComponent
       .subscribe((data) => {
         if (data?.confirmed) {
           this.saved = true;
+          this.cdr.markForCheck();
           this.appSettings.updateSettings({
             playerListPresets: this.lists.map((list) => {
               if (list.id === preset.id) {

@@ -1,8 +1,8 @@
 <div class="pane">
-  <div class="pane-title" translate>settings.integrations.title</div>
+  <div class="pane-title" transloco="settings.integrations.title"></div>
   <div class="pane-content">
     <div class="setting-view-container">
-      <p translate>settings.integrations.description</p>
+      <p transloco="settings.integrations.description"></p>
       <div class="setting-category">
         <div class="settings">
           <div class="setting-row">
@@ -12,15 +12,17 @@
               </a>
             </div>
             <div class="setting-row-label">
-              <span [innerHtml]="'settings.integrations.vrchat.title' | translate"></span>
-              <span [innerHtml]="'settings.integrations.vrchat.description' | translate"></span>
-              <a target="_blank" href="https://vrchat.com" translate
-                >settings.integrations.providerLink</a
-              >
+              <span [innerHtml]="'settings.integrations.vrchat.title' | transloco"></span>
+              <span [innerHtml]="'settings.integrations.vrchat.description' | transloco"></span>
+              <a
+                target="_blank"
+                href="https://vrchat.com"
+                transloco="settings.integrations.providerLink"
+              ></a>
             </div>
             <div class="setting-row-action">
               @if (vrchat.user | async) {
-                <div class="connected" @hshrink>
+                <div class="connected">
                   <div class="connected-info">
                     <i class="material-icons-round">check_circle</i>
                     <div class="connected-info-account">
@@ -29,17 +31,25 @@
                   </div>
                   <button
                     class="btn btn-secondary connected-disconnect"
-                    (click)="vrchat.logout()"
-                    translate
-                  >
-                    settings.integrations.disconnect
-                  </button>
+                    (click)="showVRChatAccountsModal()"
+                    transloco="settings.integrations.vrchat.accounts"
+                  ></button>
                 </div>
               }
               @if ((vrchat.user | async) === null) {
-                <button class="btn btn-primary" (click)="vrchat.showLoginModal()" translate @hshrink
-                  >settings.integrations.connect
-                </button>
+                @if ((vrchat.profiles | async)?.length) {
+                  <button
+                    class="btn btn-primary"
+                    (click)="showVRChatAccountsModal()"
+                    transloco="settings.integrations.vrchat.chooseAccount"
+                  ></button>
+                } @else {
+                  <button
+                    class="btn btn-primary"
+                    (click)="vrchat.prepareNewLogin()"
+                    transloco="settings.integrations.connect"
+                  ></button>
+                }
               }
             </div>
           </div>
@@ -54,18 +64,17 @@
               </a>
             </div>
             <div class="setting-row-label">
-              <span [innerHtml]="'settings.integrations.pulsoid.title' | translate"></span>
-              <span [innerHtml]="'settings.integrations.pulsoid.description' | translate"></span>
+              <span [innerHtml]="'settings.integrations.pulsoid.title' | transloco"></span>
+              <span [innerHtml]="'settings.integrations.pulsoid.description' | transloco"></span>
               <a
                 target="_blank"
                 [href]="'https://pulsoid.net/pricing?promo_campaign_id=' + PULSOID_REFERRAL_ID"
-                translate
-                >settings.integrations.providerLink</a
-              >
+                transloco="settings.integrations.providerLink"
+              ></a>
             </div>
             <div class="setting-row-action">
               @if (pulsoid.loggedInUser | async) {
-                <div class="connected" @hshrink>
+                <div class="connected">
                   <div
                     class="connected-info"
                     [tooltip]="'settings.integrations.reveal'"
@@ -84,14 +93,12 @@
                   <button
                     class="btn btn-secondary connected-disconnect"
                     (click)="pulsoid.logout()"
-                    translate
-                  >
-                    settings.integrations.disconnect
-                  </button>
+                    transloco="settings.integrations.disconnect"
+                  ></button>
                 </div>
               }
               @if ((pulsoid.loggedInUser | async) === null) {
-                <div @hshrink class="connect-row">
+                <div class="connect-row">
                   <button
                     class="btn btn-copy btn-secondary"
                     tooltip="settings.integrations.copy"
@@ -99,15 +106,17 @@
                     (click)="copyToClipboard('PULSOID')"
                   >
                     @if (!copiedToClipboard.includes('PULSOID')) {
-                      <i class="material-icons" @hshrink>copy_all</i>
+                      <i class="material-icons">copy_all</i>
                     }
                     @if (copiedToClipboard.includes('PULSOID')) {
-                      <i class="material-icons success" @hshrink>check</i>
+                      <i class="material-icons success">check</i>
                     }
                   </button>
-                  <button class="btn btn-primary" (click)="pulsoid.login()" translate>
-                    settings.integrations.connect
-                  </button>
+                  <button
+                    class="btn btn-primary"
+                    (click)="pulsoid.login()"
+                    transloco="settings.integrations.connect"
+                  ></button>
                 </div>
               }
             </div>
@@ -120,13 +129,15 @@
               </a>
             </div>
             <div class="setting-row-label">
-              <span [innerHtml]="'settings.integrations.homeAssistant.title' | translate"></span>
+              <span [innerHtml]="'settings.integrations.homeAssistant.title' | transloco"></span>
               <span
-                [innerHtml]="'settings.integrations.homeAssistant.description' | translate"
+                [innerHtml]="'settings.integrations.homeAssistant.description' | transloco"
               ></span>
-              <a target="_blank" href="https://www.home-assistant.io/" translate
-                >settings.integrations.providerLink</a
-              >
+              <a
+                target="_blank"
+                href="https://www.home-assistant.io/"
+                transloco="settings.integrations.providerLink"
+              ></a>
             </div>
             @if (
               {
@@ -136,7 +147,7 @@
             ) {
               <div class="setting-row-action">
                 @if (data.mqttClient) {
-                  <div class="connected" @hshrink>
+                  <div class="connected">
                     <div class="connected-info">
                       <i class="material-icons-round">check_circle</i>
                       <div class="connected-info-account">
@@ -146,16 +157,16 @@
                     <button
                       class="btn btn-secondary connected-disconnect"
                       (click)="showMqttConfigModal()"
-                      translate
-                      @hshrink
-                      >settings.integrations.configure
-                    </button>
+                      transloco="settings.integrations.configure"
+                    ></button>
                   </div>
                 }
                 @if (!data.mqttClient) {
-                  <button class="btn btn-primary" (click)="showMqttConfigModal()" translate @hshrink
-                    >settings.integrations.configure
-                  </button>
+                  <button
+                    class="btn btn-primary"
+                    (click)="showMqttConfigModal()"
+                    transloco="settings.integrations.configure"
+                  ></button>
                 }
               </div>
             }
@@ -164,12 +175,12 @@
       </div>
 
       <div class="setting-category">
-        <h2 translate>settings.integrations.discord.title</h2>
+        <h2 transloco="settings.integrations.discord.title"></h2>
         <div class="settings">
           <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate>settings.integrations.discord.activityMode.title</span>
-              <span translate>settings.integrations.discord.activityMode.description</span>
+            <div class="setting-row-label">
+              <span transloco="settings.integrations.discord.activityMode.title"></span>
+              <span transloco="settings.integrations.discord.activityMode.description"></span>
             </div>
             <div class="setting-row-action">
               <app-select-box
@@ -183,8 +194,10 @@
           </div>
           <div class="setting-row-group">
             <div class="setting-row">
-              <div class="setting-row-label" translate>
-                <span translate>settings.integrations.discord.activityModeVRCCondition.title</span>
+              <div class="setting-row-label">
+                <span
+                  transloco="settings.integrations.discord.activityModeVRCCondition.title"
+                ></span>
                 <span></span>
               </div>
               <div class="setting-row-action">
@@ -207,12 +220,12 @@
       </div>
 
       <div class="setting-category">
-        <h2 translate>settings.integrations.vrcx.title</h2>
+        <h2 transloco="settings.integrations.vrcx.title"></h2>
         <div class="settings">
           <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate>settings.integrations.vrcx.sleepModeChanges.title</span>
-              <span translate>settings.integrations.vrcx.sleepModeChanges.description</span>
+            <div class="setting-row-label">
+              <span transloco="settings.integrations.vrcx.sleepModeChanges.title"></span>
+              <span transloco="settings.integrations.vrcx.sleepModeChanges.description"></span>
             </div>
             <div class="setting-row-action">
               <label class="switch-toggle">

@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   DestroyRef,
   ElementRef,
@@ -9,17 +10,21 @@ import {
   Output,
   SimpleChanges,
   ViewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { fade } from '../../utils/animations';
 import { debounceTime, Subject } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SliderComponent, SliderStyle } from '../slider/slider.component';
+import { clamp, ensurePrecision, floatPrecision } from '../../utils/number-utils';
+import { flushOnDestroy } from '../../utils/rxjs-utils';
 
 @Component({
   selector: 'app-slider-setting',
   templateUrl: './slider-setting.component.html',
   styleUrls: ['./slider-setting.component.scss'],
   animations: [fade()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class SliderSettingComponent implements OnInit, OnChanges {
@@ -54,19 +59,33 @@ export class SliderSettingComponent implements OnInit, OnChanges {
   @ViewChild('inputValue') inputEl?: ElementRef;
   @ViewChild('slider') sliderEl?: SliderComponent;
 
-  constructor(private destroyRef: DestroyRef) {}
+  constructor(
+    private destroyRef: DestroyRef,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
+    flushOnDestroy(this.input$, this.destroyRef);
     this.input$
       .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
-      .subscribe((strValue) => {
-        let value = parseInt(strValue, 10);
-        if (isNaN(value)) return;
-        value = Math.max(this.min, Math.min(this.max, value));
-        if (value === this.value) return;
-        this.value = value;
-        this.valueChange.emit(value);
-      });
+      .subscribe((strValue) => this.commitInput(strValue));
+  }
+
+  private commitInput(strValue: string) {
+    let value = parseFloat(strValue);
+    if (!Number.isFinite(value)) return;
+    const precision = Math.max(floatPrecision(this.min), floatPrecision(this.step));
+    const quotient = (value - this.min) / this.step;
+    const epsilon = Number.EPSILON * 4 * Math.max(1, Math.abs(quotient));
+    value = clamp(
+      ensurePrecision(Math.round(quotient + epsilon) * this.step + this.min, precision),
+      this.min,
+      this.max
+    );
+    if (value === this.value) return;
+    this.value = value;
+    this.valueChange.emit(value);
+    this.cdr.markForCheck();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -75,6 +94,7 @@ export class SliderSettingComponent implements OnInit, OnChanges {
   }
 
   onInputBlur() {
+    this.commitInput(this.inputEl!.nativeElement.value);
     this.inputEl!.nativeElement.value = this.value.toString();
   }
 

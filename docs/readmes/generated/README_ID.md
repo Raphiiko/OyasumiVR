@@ -553,6 +553,7 @@ OyasumiVR saat ini mendukung bahasa-bahasa berikut:
 - Deutsch (German): Community contributions by [Nicer Dicer](https://github.com/XNicerDicerX) and [Aron](https://github.com/imaron85).
 - Nederlands (Dutch): by [Raphiiko](https://linktr.ee/raphii).
 - English: by [Raphiiko](https://linktr.ee/raphii).
+- ไทย (Thai): Community contribution by [ShikiYuri (Sk._Yri)](https://github.com/ShikiYuriSan).
 
 ### Membantu penerjemahan
 
@@ -601,9 +602,8 @@ It might work on other headsets, but your mileage may vary.
 
 OyasumiVR telah dibuat dengan:
 
-- [Angular](https://angular.io/) (TypeScript, Main UI)
+- [Angular](https://angular.io/) (TypeScript, Main UI & Overlay UI)
 - [Tauri](https://tauri.app/) (Rust, Desktop Framework)
-- [SvelteKit](https://kit.svelte.dev/) (TypeScript, Overlay UI)
 - [.NET](https://dotnet.microsoft.com/en-us/) (C#, Overlay)
 
 ## Pengembangan
@@ -621,15 +621,13 @@ OyasumiVR tidak didukung oleh VRChat dan tidak mencerminkan pandangan atau penda
 
 Pengembang OyasumiVR dan kontributor proyek ini tidak bertanggung jawab atas masalah apa pun yang disebabkan oleh OyasumiVR (pada akun VRChat anda atau sebaliknya). Gunakan dengan risiko Anda sendiri.
 
-## Aptabase
+## Telemetry
 
-<img align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/dfdab6c8-c952-4e0d-be12-017d14262a49" width="180">
+OyasumiVR collects anonymous telemetry to help find bugs and improve the application. This includes crash and error reports, version information, application starts, language preferences, and other basic usage statistics.
 
-OyasumiVR's telemetry is provided by [Aptabase](https://aptabase.com), which provides open source, privacy first and simple analytics for mobile and desktop apps. Aptabase was picked because it aids OyasumiVR's development by providing crash reports and anonymous usage statistics, while still respecting your privacy as best as possible.
+Telemetry does not contain personally identifiable information and cannot be linked to a specific person. Because there is no way to determine which telemetry belongs to you, individual data deletion requests cannot be fulfilled.
 
-The telemetry is completely anonymous and sends no personally identifiable information. Its only purpose is to provide the aformentioned crash reporting, and basic anonymous usage statistics such as application starts and language preferences. This data is only used for finding and fixing bugs, and other general improvements to OyasumiVR.
-
-You are able to opt out of telemetry within OyasumiVR's general settings. For more (technical) information, please check out the (very short!) [Aptabase Privacy Policy](https://aptabase.com/legal/privacy).
+You can disable telemetry at any time in OyasumiVR's general settings.
 
 ## Support
 
@@ -640,4 +638,3 @@ Atau, Anda dapat menghubungi saya secara langsung di [Twitter @Raphiiko](https:/
 ## License
 
 OyasumiVR tersedia di bawah bagian lisensi [MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md).
-

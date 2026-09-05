@@ -119,11 +119,11 @@ impl PnPDetector {
         unsafe {
             let mut msg: MSG = std::mem::MaybeUninit::zeroed().assume_init();
             loop {
-                let val = GetMessageW(&mut msg, self.hwnd, 0, 0);
+                let val = GetMessageW(&mut msg, Some(self.hwnd), 0, 0);
                 if val.0 == 0 {
                     break;
                 } else {
-                    TranslateMessage(&msg);
+                    let _ = TranslateMessage(&msg);
                     DispatchMessageW(&msg);
                 }
             }
@@ -199,10 +199,11 @@ impl PnPDetector {
                 0,
                 None,
                 None,
-                hinstance,
+                Some(hinstance.into()),
                 Some(self as *mut _ as *mut _),
             )
-        };
+        }
+        .unwrap_or_default();
 
         if hwnd == HWND::default() {
             panic!("Something went wrong while creating a window");

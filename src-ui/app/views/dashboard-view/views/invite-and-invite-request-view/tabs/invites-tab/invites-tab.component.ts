@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, map, Subject } from 'rxjs';
 import {
@@ -7,12 +7,14 @@ import {
 } from 'src-ui/app/models/automations';
 import { AutomationConfigService } from 'src-ui/app/services/automation-config.service';
 import { vshrink } from 'src-ui/app/utils/animations';
+import { flushOnDestroy } from 'src-ui/app/utils/rxjs-utils';
 
 @Component({
   selector: 'app-invites-tab',
   templateUrl: './invites-tab.component.html',
   styleUrls: ['./invites-tab.component.scss'],
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
   animations: [vshrink()],
 })
 export class InvitesTabComponent implements OnInit {
@@ -32,12 +34,13 @@ export class InvitesTabComponent implements OnInit {
       .subscribe(async (configs) => {
         this.config = structuredClone(configs.AUTO_ACCEPT_INVITE_REQUESTS);
       });
+    flushOnDestroy(this.updateDeclineInviteWhileAsleepCustomMessage, this.destroyRef);
     this.updateDeclineInviteWhileAsleepCustomMessage
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         debounceTime(500),
         map((message) => message.trim().replace(/\s+/g, ' ').slice(0, 64)),
-        distinctUntilChanged()
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((message) => {
         this.updateConfig({ declineInviteMessage: message });

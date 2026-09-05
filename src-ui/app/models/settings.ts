@@ -4,11 +4,11 @@ import { OneTimeFlag } from './one-time-flags';
 import { EventLogType } from './event-log-entry';
 
 export interface AppSettings {
-  version: 10;
+  version: 13;
   // General Settings
   userLanguage: string;
   userLanguagePicked: boolean;
-  askForAdminOnStart: boolean;
+  elevatedFeaturesEnabled: boolean;
   exitInSystemTray: boolean;
   startInSystemTray: boolean;
   sleepModeStartupBehaviour: 'PERSIST' | 'ACTIVE' | 'INACTIVE';
@@ -38,6 +38,7 @@ export interface AppSettings {
   lighthouseConsolePath: string;
   lighthousePowerControl: boolean;
   lighthousePowerOffState: LighthouseDevicePowerState;
+  lighthousePowerOffDelay: boolean;
   v1LighthouseIdentifiers: {
     [deviceId: string]: string;
   };
@@ -50,6 +51,7 @@ export interface AppSettings {
   mqttPort: number | null;
   mqttUsername: string | null;
   mqttPassword: string | null;
+  mqttProtectedPassword: string | null;
   mqttSecureSocket: boolean;
   // Brightness & CCT
   cctControlEnabled: boolean;
@@ -93,11 +95,11 @@ export const NotificationTypes = [
 export type NotificationType = (typeof NotificationTypes)[number];
 
 export const APP_SETTINGS_DEFAULT: AppSettings = {
-  version: 10,
+  version: 13,
   // General Settings
   userLanguage: 'en',
   userLanguagePicked: false,
-  askForAdminOnStart: false,
+  elevatedFeaturesEnabled: false,
   exitInSystemTray: false,
   startInSystemTray: false,
   sleepModeStartupBehaviour: 'PERSIST',
@@ -128,6 +130,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
     'C:\\Program Files (x86)\\Steam\\steamapps\\common\\SteamVR\\tools\\lighthouse\\bin\\win64\\lighthouse_console.exe',
   lighthousePowerControl: true,
   lighthousePowerOffState: 'sleep',
+  lighthousePowerOffDelay: false,
   v1LighthouseIdentifiers: {},
   // Discord Rich Presence
   discordActivityMode: 'ENABLED',
@@ -138,6 +141,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   mqttPort: null,
   mqttUsername: null,
   mqttPassword: null,
+  mqttProtectedPassword: null,
   mqttSecureSocket: false,
   // Brightness & CCT
   cctControlEnabled: true,

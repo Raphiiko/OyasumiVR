@@ -42,8 +42,16 @@ pub fn handle_window_events(window: &tauri::Window, event: &tauri::WindowEvent) 
     if let tauri::WindowEvent::CloseRequested { api, .. } = event {
         let manager_guard = futures::executor::block_on(SYSTEMTRAY_MANAGER.lock());
         let manager = manager_guard.as_ref().unwrap();
-        handle_window_close_request(window, Some(api), manager.close_to_tray);
+        handle_window_close_request(
+            window,
+            Some(api),
+            close_to_tray_applies(window.label(), manager.close_to_tray),
+        );
     }
+}
+
+fn close_to_tray_applies(label: &str, close_to_tray: bool) -> bool {
+    close_to_tray && label == "main"
 }
 
 async fn on_tray_icon_event(_icon: &tauri::tray::TrayIcon, event: tauri::tray::TrayIconEvent) {
@@ -92,5 +100,18 @@ fn handle_window_close_request<R: Runtime>(
         }
     } else if api.is_none() {
         window.close().unwrap();
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn close_to_tray_applies_to_the_main_window_only() {
+        assert!(close_to_tray_applies("main", true));
+        assert!(!close_to_tray_applies("splashscreen", true));
+        assert!(!close_to_tray_applies("main", false));
+        assert!(!close_to_tray_applies("overlay", true));
     }
 }

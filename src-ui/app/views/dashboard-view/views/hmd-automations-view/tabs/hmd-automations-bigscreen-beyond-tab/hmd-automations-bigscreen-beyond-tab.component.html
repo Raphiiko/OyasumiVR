@@ -1,14 +1,18 @@
-<p translate>hmd-automations.bigscreenBeyond.description</p>
+<p transloco="hmd-automations.bigscreenBeyond.description"></p>
 <div class="setting-category">
-  <h2 translate>hmd-automations.bigscreenBeyond.fanControl.title</h2>
+  <h2 transloco="hmd-automations.bigscreenBeyond.fanControl.title"></h2>
   <div class="settings">
     @for (automation of fanAutomationEnableKeys; track automation) {
       <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>hmd-automations.bigscreenBeyond.fanControl.{{ automation }}.title</span>
-          <span translate
-            >hmd-automations.bigscreenBeyond.fanControl.{{ automation }}.description</span
-          >
+        <div class="setting-row-label">
+          <span
+            [transloco]="'hmd-automations.bigscreenBeyond.fanControl.' + automation + '.title'"
+          ></span>
+          <span
+            [transloco]="
+              'hmd-automations.bigscreenBeyond.fanControl.' + automation + '.description'
+            "
+          ></span>
         </div>
         <div class="setting-row-action">
           <app-slider-setting
@@ -34,11 +38,11 @@
   </div>
   <div class="settings">
     <div class="setting-row">
-      <div class="setting-row-label" translate>
+      <div class="setting-row-label">
         <span class="row-title">
-          <span translate
-            >hmd-automations.bigscreenBeyond.fanControl.allowUnsafeFanSpeed.title</span
-          >
+          <span
+            transloco="hmd-automations.bigscreenBeyond.fanControl.allowUnsafeFanSpeed.title"
+          ></span>
           <span
             class="experimental-flag"
             [tooltip]="'hmd-automations.bigscreenBeyond.fanControl.allowUnsafeFanSpeed.warning'"
@@ -47,9 +51,9 @@
             <i class="material-icons">warning</i>
           </span>
         </span>
-        <span translate
-          >hmd-automations.bigscreenBeyond.fanControl.allowUnsafeFanSpeed.description</span
-        >
+        <span
+          transloco="hmd-automations.bigscreenBeyond.fanControl.allowUnsafeFanSpeed.description"
+        ></span>
       </div>
       <div class="setting-row-action">
         <label class="switch-toggle">
@@ -63,9 +67,9 @@
       </div>
     </div>
     <div class="setting-row">
-      <div class="setting-row-label" translate>
+      <div class="setting-row-label">
         <span class="row-title">
-          <span translate>settings.brightnessCct.bigscreenBeyond.forceFanSafety.title</span>
+          <span transloco="settings.brightnessCct.bigscreenBeyond.forceFanSafety.title"></span>
           <span
             class="experimental-flag"
             [tooltip]="'settings.brightnessCct.bigscreenBeyond.forceFanSafety.warning'"
@@ -74,7 +78,7 @@
             <i class="material-icons">warning</i>
           </span>
         </span>
-        <span translate>settings.brightnessCct.bigscreenBeyond.forceFanSafety.description</span>
+        <span transloco="settings.brightnessCct.bigscreenBeyond.forceFanSafety.description"></span>
       </div>
       <div class="setting-row-action">
         <label class="switch-toggle">
@@ -90,13 +94,15 @@
   </div>
 </div>
 <div class="setting-category">
-  <h2 translate>hmd-automations.bigscreenBeyond.rgb.title</h2>
+  <h2 transloco="hmd-automations.bigscreenBeyond.rgb.title"></h2>
   <div class="settings">
     @for (automation of rgbAutomationEnableKeys; track automation) {
       <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>hmd-automations.bigscreenBeyond.rgb.{{ automation }}.title</span>
-          <span translate>hmd-automations.bigscreenBeyond.rgb.{{ automation }}.description</span>
+        <div class="setting-row-label">
+          <span [transloco]="'hmd-automations.bigscreenBeyond.rgb.' + automation + '.title'"></span>
+          <span
+            [transloco]="'hmd-automations.bigscreenBeyond.rgb.' + automation + '.description'"
+          ></span>
         </div>
         <div class="setting-row-action">
           <app-color-picker

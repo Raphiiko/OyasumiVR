@@ -9,7 +9,6 @@
     },
     "contributions": "贡献者们",
     "discordInvite": "Discord 服务器",
-    "projectLinks": "项目链接",
     "sourceLink": "源代码 @ GitHub",
     "supporters": "支持者们",
     "translations": "翻译人员"
@@ -1151,12 +1150,6 @@
       "disabled": "OyasumiVR 可以自动调整 GPU 设置，让你在睡觉时节省电力。\n\n这是面向进阶用户的功能，因此默认关闭。\n你可以点击下方按钮启用它。",
       "noSidecar": "为了让 OyasumiVR 能够控制 GPU 的功耗，它需要管理员权限。请点击下方按钮授予 OyasumiVR 管理员权限"
     },
-    "elevationSidecarModal": {
-      "cancel": "只是这次",
-      "confirm": "总是",
-      "message": "你确定想要授予 OyasumiVR 管理员权限吗？\n\n 如果你开启此设置，OyasumiVR 将在启动时立即请求这些权限。 你可以稍后随时在设置中关闭此功能",
-      "title": "授予管理员权限"
-    },
     "enable": "开启 GPU 自动化",
     "enableWarning": "这些功能是给一些进阶用户的！\n 设置错误的功耗限制可能会导致你的系统变得不稳定 \n 请牢记这一点，最好不要随意调整它，除非你知道自己在做什么",
     "msiAfterburner": {
@@ -1929,8 +1922,6 @@
         },
         "description": "管理 OyasumiVR 存储在你磁盘上的数据",
         "relaunchModal": {
-          "later": "以后再说",
-          "message": "数据现在已经被清除了。建议在做完这些后，重新启动 OyasumiVR。不重新启动 OyasumiVR 可能会产生不必要的影响。",
           "relaunch": "现在就重启 OyasumiVR",
           "title": "重新启动 OyasumiVR"
         },
@@ -2037,8 +2028,14 @@
     },
     "general": {
       "adminPrivileges": {
-        "description": "OyasumiVR 需要管理员权限才能设置 GPU 的功耗限制。 如果启用此功能，OyasumiVR 将在启动时请求管理员权限",
-        "label": "启动时请求管理员权限",
+        "description": "部分功能（例如控制 GPU 的功耗限制）需要管理员权限。启用后只会请求一次，之后 OyasumiVR 便会在不再询问的情况下设置这些功能。",
+        "errors": {
+          "installFailed": "OyasumiVR 无法设置需要管理员权限的组件。",
+          "notSupported": "这些功能需要 Windows 管理员账户。当前账户无法获得管理员权限，因此这些功能仍然不可用。",
+          "promptDeclined": "未授予管理员权限，因此这些功能保持关闭。",
+          "taskFailed": "OyasumiVR 无法启动需要管理员权限的组件，下次启动 OyasumiVR 时会再试一次。"
+        },
+        "label": "允许需要管理员权限的功能",
         "title": "管理员权限"
       },
       "language": {

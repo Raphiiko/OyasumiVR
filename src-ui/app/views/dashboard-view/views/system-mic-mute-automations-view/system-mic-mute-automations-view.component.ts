@@ -1,4 +1,11 @@
-import { Component, DestroyRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -24,6 +31,7 @@ import { listen, UnlistenFn } from '@tauri-apps/api/event';
   templateUrl: './system-mic-mute-automations-view.component.html',
   styleUrls: ['./system-mic-mute-automations-view.component.scss'],
   animations: [vshrink(), fade()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SystemMicMuteAutomationsViewComponent implements OnInit, OnDestroy {
@@ -130,9 +138,9 @@ export class SystemMicMuteAutomationsViewComponent implements OnInit, OnDestroy 
   async ngOnInit() {
     // Obtain config changes
     const $config = this.automationConfigService.configs.pipe(
-      takeUntilDestroyed(this.destroyRef),
       map((configs) => configs.SYSTEM_MIC_MUTE_AUTOMATIONS),
-      distinctUntilChanged((a, b) => isEqual(a, b))
+      distinctUntilChanged((a, b) => isEqual(a, b)),
+      takeUntilDestroyed(this.destroyRef)
     );
     // Process config changes
     $config.subscribe((config) => {

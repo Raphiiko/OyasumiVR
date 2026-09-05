@@ -1,18 +1,14 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 
 export type DevicePowerState =
-  | 'off'
-  | 'on'
-  | 'turning-off'
-  | 'turning-on'
-  | 'unknown'
-  | 'attention';
+  'off' | 'on' | 'turning-off' | 'turning-on' | 'unknown' | 'attention';
 export type DevicePowerAction = 'power-on' | 'power-off';
 
 @Component({
   selector: 'app-device-power-button',
   templateUrl: './device-power-button.component.html',
   styleUrls: ['./device-power-button.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DevicePowerButtonComponent {

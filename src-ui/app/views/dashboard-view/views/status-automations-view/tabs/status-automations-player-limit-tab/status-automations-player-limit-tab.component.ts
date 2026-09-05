@@ -1,4 +1,10 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { BehaviorSubject, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
@@ -12,7 +18,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { AutomationConfigService } from '../../../../../../services/automation-config.service';
 import { ModalService } from '../../../../../../services/modal.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { UserStatus } from 'vrchat';
+import { UserStatus } from '../../../../../../models/vrchat';
 import { clamp } from '../../../../../../utils/number-utils';
 import {
   ConfirmModalComponent,
@@ -20,12 +26,14 @@ import {
   ConfirmModalOutputModel,
 } from '../../../../../../components/confirm-modal/confirm-modal.component';
 import { hshrink, noop, vshrink } from '../../../../../../utils/animations';
+import { flushOnDestroy } from '../../../../../../utils/rxjs-utils';
 
 @Component({
   selector: 'app-status-automations-player-limit-tab',
   templateUrl: './status-automations-player-limit-tab.component.html',
   styleUrls: ['./status-automations-player-limit-tab.component.scss'],
   animations: [vshrink(), noop(), hshrink()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class StatusAutomationsPlayerLimitTabComponent implements OnInit {
@@ -78,7 +86,8 @@ export class StatusAutomationsPlayerLimitTabComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private automationConfig: AutomationConfigService,
     private modalService: ModalService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -93,18 +102,24 @@ export class StatusAutomationsPlayerLimitTabComponent implements OnInit {
         this.optionSetStatusBelowLimit = this.statusOptions.find(
           (o) => o.id === this.config.statusBelowLimit
         )!;
+        this.cdr.markForCheck();
       });
     this.vrchat.status.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((status) => {
       this.loggedIn = status === 'LOGGED_IN';
+      this.cdr.markForCheck();
     });
+    flushOnDestroy(this.limit, this.destroyRef);
     this.limit
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        tap((limit) => (this.bedLimit = Math.min(limit, 10))),
+        tap((limit) => {
+          this.bedLimit = Math.min(limit, 10);
+          this.cdr.markForCheck();
+        }),
         distinctUntilChanged(),
         filter((limit) => limit !== this.config.limit),
         debounceTime(300),
-        switchMap((limit) => this.updateConfig({ limit }))
+        switchMap((limit) => this.updateConfig({ limit })),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
   }

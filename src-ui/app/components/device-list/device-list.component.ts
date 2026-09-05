@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, DestroyRef, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { flatten, groupBy, uniq } from 'lodash';
 import { fade, hshrink, triggerChildren, vshrink } from 'src-ui/app/utils/animations';
 import { OVRDevice, OVRDeviceClass } from 'src-ui/app/models/ovr-device';
@@ -49,6 +55,7 @@ interface LighthouseDisplayCategory extends BaseDisplayCategory {
   templateUrl: './device-list.component.html',
   styleUrls: ['./device-list.component.scss'],
   animations: [vshrink(), triggerChildren(), fade(), hshrink()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DeviceListComponent implements OnInit {
@@ -72,22 +79,26 @@ export class DeviceListComponent implements OnInit {
   ngOnInit(): void {
     combineLatest([
       this.openvr.devices.pipe(
-        takeUntilDestroyed(this.destroyRef),
-        tap((devices) => this.processOpenVRDevices(devices))
+        tap((devices) => this.processOpenVRDevices(devices)),
+        takeUntilDestroyed(this.destroyRef)
       ),
       this.lighthouse.devices.pipe(
-        takeUntilDestroyed(this.destroyRef),
-        tap((devices) => this.processLighthouseDevices(devices))
+        tap((devices) => this.processLighthouseDevices(devices)),
+        takeUntilDestroyed(this.destroyRef)
       ),
     ])
       .pipe(tap(() => this.sortDeviceCategories()))
       .subscribe();
     this.lighthouse.scanning.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((scanning) => {
       this.scanningForLighthouses = scanning;
+      this.cdr.markForCheck();
     });
     this.appSettings.settings
-      .pipe(takeUntilDestroyed(this.destroyRef), debounceTime(100))
-      .subscribe((settings) => (this.lighthousePowerControl = settings.lighthousePowerControl));
+      .pipe(debounceTime(100), takeUntilDestroyed(this.destroyRef))
+      .subscribe((settings) => {
+        this.lighthousePowerControl = settings.lighthousePowerControl;
+        this.cdr.markForCheck();
+      });
   }
 
   processOpenVRDevices(devices: OVRDevice[]) {

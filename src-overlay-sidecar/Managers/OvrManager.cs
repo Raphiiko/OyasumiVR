@@ -80,6 +80,7 @@ public class OvrManager
   private void MainLoop()
   {
     var nextInit = DateTime.MinValue;
+    var loggedMissingInterfaces = false;
     var e = new VREvent_t();
     var actionHandles = new Dictionary<string, ulong>();
     var actionSetHandles = new Dictionary<string, ulong>();
@@ -108,11 +109,27 @@ public class OvrManager
           _system = OpenVR.System;
 
           _input = OpenVR.Input;
-          if (_input == null) continue;
+          // the overlays below and DetectInput dereference these interfaces immediately
+          if (_input == null || OpenVR.Overlay == null)
+          {
+            // the retry runs every 5 seconds, so only the first attempt reports it
+            if (!loggedMissingInterfaces)
+            {
+              Log.Warning("OpenVR interfaces are not available yet. Retrying initialization later...");
+              loggedMissingInterfaces = true;
+            }
+
+            OpenVR.Shutdown();
+            continue;
+          }
+
+          loggedMissingInterfaces = false;
+
           var inputError = _input.SetActionManifestPath(GetActionManifestPath());
           if (inputError != 0)
           {
             Log.Error($"Could not set action manifest path: {Enum.GetName(typeof(EVRInputError), inputError)}");
+            OpenVR.Shutdown();
             continue;
           }
 
@@ -328,6 +345,12 @@ public class OvrManager
     bool update = false;
     foreach (var action in actionHandles)
     {
+      if (action.Key == OverlayInteractionInput.Action)
+      {
+        update |= OverlayInteractionInput.Update(_input, _system!, action.Value, inputActions[action.Key]);
+        continue;
+      }
+
       // Get digital action data
       var actionKey = action.Key;
       var actionHandle = action.Value;
@@ -377,11 +400,15 @@ public class OvrManager
   {
     public readonly uint Id;
     public readonly ETrackedControllerRole Role;
+    public readonly bool InputAvailable;
+    public readonly float InputUpdateTime;
 
-    public OvrInputDevice(uint id, ETrackedControllerRole role)
+    public OvrInputDevice(uint id, ETrackedControllerRole role, bool inputAvailable = true, float inputUpdateTime = 0)
     {
       Id = id;
       Role = role;
+      InputAvailable = inputAvailable;
+      InputUpdateTime = inputUpdateTime;
     }
   }
 }

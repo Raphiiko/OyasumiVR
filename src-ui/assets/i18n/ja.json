@@ -9,8 +9,6 @@
     },
     "contributions": "共同開発",
     "discordInvite": "Discord",
-    "projectLinks": "プロジェクトリンク",
-    "sourceLink": "Source Code @ GitHub",
     "supporters": "サポーター",
     "translations": "翻訳"
   },
@@ -207,13 +205,6 @@
         "UNKNOWN": {
           "message": "バインディングを設定"
         }
-      },
-      "slot": {
-        "click": "Click",
-        "double": "Double Press",
-        "held": "Held Down",
-        "long": "Long Press",
-        "touch": "Touch Button"
       }
     },
     "dashboard-navbar": {
@@ -283,8 +274,6 @@
         "KneeRight": "右ひざ",
         "ShoulderLeft": "左肩",
         "ShoulderRight": "右肩",
-        "Stylus": "Stylus",
-        "Treadmill": "Treadmill",
         "Waist": "腰",
         "WristLeft": "左手首",
         "WristRight": "右手首"
@@ -1003,7 +992,6 @@
         "INVALID_FORMAT": "有効な2要素認証コードは6桁の数字です。入力内容をご確認ください。",
         "LAST_CODE_INVALID": "入力された2要素認証コードが正しくありません。"
       },
-      "logginInAs": "You're logging into VRChat as:",
       "title": "二要素認証"
     }
   },
@@ -1150,12 +1138,6 @@
     "disabled": {
       "disabled": "GPU設定を調整します。\nパーフォマンスを抑制し使用電力を制限できます。\n\n上級者向けの機能であるため、デフォルトでは無効です。\n下のボタンをクリックして有効にできます。",
       "noSidecar": "GPU設定の変更を許可するには、管理者権限が必要です。以下のボタンをクリックし、OyasumiVRに管理者権限を付与してください。"
-    },
-    "elevationSidecarModal": {
-      "cancel": "一回のみ",
-      "confirm": "常に",
-      "message": "常に管理者権限を付与しますか？\n\n有効にすると起動時に管理者権限を要求します。この設定はいつでも無効にできます。",
-      "title": "管理者権限を付与する"
     },
     "enable": "GPU自動化を有効にする",
     "enableWarning": "GPUパラメータを誤って調整すると、システムが不安定になる可能性があります。内容を理解できる場合に限り、この機能を有効にしてください。",
@@ -1523,6 +1505,7 @@
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "このプリセットは応急対応のため、複数の問題を抱えています。新しいGoGo Locoプリセットを使用できない場合にのみ、このプリセットを使用してください。また、まだ古いバージョンのGoGo Locoを使用している場合は、最新のGoGo Locoを使用し、更新することをお勧めします。",
     "GORONE_LEGACY_PRESET_WARNING": "このプリセットのv4.0以降ではすでに回転機能が含まれており、この機能は不要になりました。古いバージョンを使用している場合に限りこのプリセットを使用してください。",
+    "WEBVIEW2_MISSING": "OyasumiVR の起動には Microsoft Edge WebView2 が必要ですが、インストールされていません。\n\nインストール後、OyasumiVR を再度起動してください。ダウンロードページを開きますか？",
     "oneTimeFlagDialogs": {
       "CCT_CONTROL_WARNING_DIALOG": {
         "message": "ディスプレイの色温度制御は、一部のHMD（例: Valve Index, Bigscreen Beyondなど）でのみ利用可能です。\n\nこれらのHMDを使用していない場合は効果がありません。\n\n必要ない場合は、設定からディスプレイの色温度制御を無効にできます。",
@@ -1929,8 +1912,6 @@
         },
         "description": "OyasumiVRがローカルディスクに保存するデータの管理ができます。",
         "relaunchModal": {
-          "later": "あとでやる",
-          "message": "要求されたデータはクリアされました。OyasumiVRを再起動してください。再起動せず使用した場合、不具合の原因になる可能性があります。",
           "relaunch": "OyasumiVRを今すぐ再起動する",
           "title": "OyasumiVRを再起動する"
         },
@@ -2037,8 +2018,14 @@
     },
     "general": {
       "adminPrivileges": {
-        "description": "OyasumiVRがGPUの電力制限を制御するためには管理者権限が必要です。有効にするとOyasumiVRは起動時に管理者権限を要求するようになります",
-        "label": "起動時に管理者権限を要求する",
+        "description": "GPU の電力制限の制御など、一部の機能には管理者権限が必要です。これを有効にすると、権限を一度だけ要求します。その後 OyasumiVR は再び尋ねることなくこれらの機能を設定します。",
+        "errors": {
+          "installFailed": "管理者権限が必要なコンポーネントを OyasumiVR がセットアップできませんでした。",
+          "notSupported": "これらの機能には Windows の管理者アカウントが必要です。このアカウントには管理者権限を付与できないため、利用できないままになります。",
+          "promptDeclined": "管理者権限が付与されなかったため、これらの機能はオフのままです。",
+          "taskFailed": "管理者権限が必要なコンポーネントを OyasumiVR が起動できませんでした。次に OyasumiVR を起動したときに再試行します。"
+        },
+        "label": "管理者権限が必要な機能を許可する",
         "title": "管理者権限"
       },
       "language": {

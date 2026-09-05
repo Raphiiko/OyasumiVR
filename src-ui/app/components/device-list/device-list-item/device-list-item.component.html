@@ -5,9 +5,9 @@
         <img [src]="'/assets/img/icon_' + icon + '.png'" class="category-icon" />
       </div>
       <div class="header-bar-info">
-        <div class="device-name" translate>{{ deviceTypeName }}</div>
+        <div class="device-name" [transloco]="deviceTypeName"></div>
         <div class="device-subtitle">
-          {{ deviceName | translate }}
+          {{ deviceName | transloco }}
         </div>
       </div>
       <div class="header-bar-spacer"></div>
@@ -27,7 +27,7 @@
             <app-lighthouse-force-state-popover
               (action)="onForceLHState($event)"
               [style.position-anchor]="powerButtonAnchorId"
-              [type]="_lighthouseDevice?.deviceType"
+              [type]="$safeNavigationMigration(_lighthouseDevice?.deviceType)"
             >
             </app-lighthouse-force-state-popover>
           </div>
@@ -37,7 +37,7 @@
     @if (status) {
       <div class="status-info" @vshrink>
         @for (s of status ? [status] : []; track s) {
-          <span [@vshrink]>{{ s | translate }}</span>
+          <span [@vshrink]>{{ s | transloco }}</span>
         }
       </div>
     }

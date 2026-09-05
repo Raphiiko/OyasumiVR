@@ -7,6 +7,8 @@ import { VRChatGroupAutomationsConfig } from '../models/automations';
 import { VRChatService } from './vrchat-api/vrchat.service';
 import { EventLogService } from './event-log.service';
 import { EventLogVRChatGroupChanged } from '../models/event-log-entry';
+import { error } from '@tauri-apps/plugin-log';
+import { VRCHAT_API_STALE_REQUEST } from './vrchat-api/vrchat-api';
 
 @Injectable({
   providedIn: 'root',
@@ -28,8 +30,16 @@ export class VRChatGroupAutomationsService {
       .subscribe((c) => (this.config = c));
     this.sleepService.mode
       .pipe(distinctUntilChanged(), skip(1), debounceTime(3000))
-      .subscribe((sleepMode) => this.onSleepModeChange(sleepMode));
-    this.sleepPreparation.onSleepPreparation.subscribe(() => this.onSleepPreparation());
+      .subscribe((sleepMode) => this.runAutomation(this.onSleepModeChange(sleepMode)));
+    this.sleepPreparation.onSleepPreparation.subscribe(() =>
+      this.runAutomation(this.onSleepPreparation())
+    );
+  }
+
+  private runAutomation(automation: Promise<void>) {
+    void automation.catch((e) => {
+      if (e !== VRCHAT_API_STALE_REQUEST) error(`[VRChat] Group automation failed: ${e}`);
+    });
   }
 
   private async onSleepModeChange(sleepMode: boolean) {

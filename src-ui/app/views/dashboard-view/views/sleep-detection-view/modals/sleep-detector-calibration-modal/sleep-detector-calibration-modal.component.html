@@ -1,18 +1,18 @@
 <div class="pane modal-lg" [@fadeUp]>
-  <div class="pane-title" translate>sleep-detection.modals.sleepDetectorCalibration.title</div>
+  <div class="pane-title" transloco="sleep-detection.modals.sleepDetectorCalibration.title"></div>
 
   @if (mode === 'INFO') {
     <div class="pane-content">
-      <p translate>sleep-detection.modals.sleepDetectorCalibration.info.intro</p>
-      <p translate>sleep-detection.modals.sleepDetectorCalibration.info.stepPrefix</p>
+      <p transloco="sleep-detection.modals.sleepDetectorCalibration.info.intro"></p>
+      <p transloco="sleep-detection.modals.sleepDetectorCalibration.info.stepPrefix"></p>
       <ol>
-        <li translate>sleep-detection.modals.sleepDetectorCalibration.info.step.one</li>
-        <li translate>sleep-detection.modals.sleepDetectorCalibration.info.step.two</li>
-        <li translate>sleep-detection.modals.sleepDetectorCalibration.info.step.three</li>
+        <li transloco="sleep-detection.modals.sleepDetectorCalibration.info.step.one"></li>
+        <li transloco="sleep-detection.modals.sleepDetectorCalibration.info.step.two"></li>
+        <li transloco="sleep-detection.modals.sleepDetectorCalibration.info.step.three"></li>
       </ol>
-      <p translate>sleep-detection.modals.sleepDetectorCalibration.info.stepSuffix</p>
+      <p transloco="sleep-detection.modals.sleepDetectorCalibration.info.stepSuffix"></p>
       <div class="current-calibration">
-        <span translate>sleep-detection.modals.sleepDetectorCalibration.currentCalibration</span>
+        <span transloco="sleep-detection.modals.sleepDetectorCalibration.currentCalibration"></span>
         <span>{{ calibrationValue }}</span>
       </div>
       @if ((openvr.status | async) !== 'INITIALIZED') {
@@ -21,9 +21,10 @@
           <div class="alert-icon">
             <i class="material-icons"> error </i>
           </div>
-          <div class="alert-content" translate
-            >sleep-detection.modals.sleepDetectorCalibration.noSteamVR
-          </div>
+          <div
+            class="alert-content"
+            transloco="sleep-detection.modals.sleepDetectorCalibration.noSteamVR"
+          ></div>
         </div>
       }
     </div>
@@ -31,22 +32,25 @@
 
   @if (mode === 'PREPARE') {
     <div class="pane-content center-pane">
-      <h1 translate style="text-align: center"
-        >sleep-detection.modals.sleepDetectorCalibration.prepare.instruction</h1
-      >
+      <h1
+        transloco="sleep-detection.modals.sleepDetectorCalibration.prepare.instruction"
+        style="text-align: center"
+      ></h1>
       <br />
-      <p translate style="text-align: center"
-        >sleep-detection.modals.sleepDetectorCalibration.prepare.note</p
-      >
+      <p
+        transloco="sleep-detection.modals.sleepDetectorCalibration.prepare.note"
+        style="text-align: center"
+      ></p>
       @if ((openvr.status | async) !== 'INITIALIZED') {
         <div class="alert error" @vshrink>
           <div class="alert-bg"></div>
           <div class="alert-icon">
             <i class="material-icons"> error </i>
           </div>
-          <div class="alert-content" translate
-            >sleep-detection.modals.sleepDetectorCalibration.noSteamVR
-          </div>
+          <div
+            class="alert-content"
+            transloco="sleep-detection.modals.sleepDetectorCalibration.noSteamVR"
+          ></div>
         </div>
       }
     </div>
@@ -57,28 +61,31 @@
       <div class="large-spinner"></div>
       <h1
         style="text-align: center"
-        [translate]="'sleep-detection.modals.sleepDetectorCalibration.countdown.instruction'"
-        [translateParams]="{ counter: countdownValue }"
+        [transloco]="'sleep-detection.modals.sleepDetectorCalibration.countdown.instruction'"
+        [translocoParams]="{ counter: countdownValue }"
       ></h1>
-      <p translate style="text-align: center; margin-top: 1em; white-space: pre-line">
-        sleep-detection.modals.sleepDetectorCalibration.countdown.note</p
-      >
+      <p
+        transloco="sleep-detection.modals.sleepDetectorCalibration.countdown.note"
+        style="text-align: center; margin-top: 1em; white-space: pre-line"
+      ></p>
     </div>
   }
 
   @if (mode === 'CALIBRATING') {
     <div class="pane-content center-pane">
       <div class="large-spinner"></div>
-      <h1 translate style="text-align: center"
-        >sleep-detection.modals.sleepDetectorCalibration.calibrating.instruction</h1
-      >
-      <p translate style="text-align: center; margin-top: 1em">
-        sleep-detection.modals.sleepDetectorCalibration.calibrating.note</p
-      >
+      <h1
+        transloco="sleep-detection.modals.sleepDetectorCalibration.calibrating.instruction"
+        style="text-align: center"
+      ></h1>
+      <p
+        transloco="sleep-detection.modals.sleepDetectorCalibration.calibrating.note"
+        style="text-align: center; margin-top: 1em"
+      ></p>
       <p
         style="text-align: center; margin-top: 1em"
-        [translate]="'sleep-detection.modals.sleepDetectorCalibration.calibrating.countdown'"
-        [translateParams]="{ counter: countdownValue }"
+        [transloco]="'sleep-detection.modals.sleepDetectorCalibration.calibrating.countdown'"
+        [translocoParams]="{ counter: countdownValue }"
       >
       </p>
     </div>
@@ -86,14 +93,16 @@
 
   @if (mode === 'DONE') {
     <div class="pane-content center-pane">
-      <h1 translate style="text-align: center"
-        >sleep-detection.modals.sleepDetectorCalibration.done.instruction</h1
-      >
-      <p translate style="text-align: center; margin-top: 1em"
-        >sleep-detection.modals.sleepDetectorCalibration.done.note</p
-      >
+      <h1
+        transloco="sleep-detection.modals.sleepDetectorCalibration.done.instruction"
+        style="text-align: center"
+      ></h1>
+      <p
+        transloco="sleep-detection.modals.sleepDetectorCalibration.done.note"
+        style="text-align: center; margin-top: 1em"
+      ></p>
       <div class="current-calibration">
-        <span translate>sleep-detection.modals.sleepDetectorCalibration.currentCalibration</span>
+        <span transloco="sleep-detection.modals.sleepDetectorCalibration.currentCalibration"></span>
         <span>{{ calibrationValue }}</span>
       </div>
     </div>
@@ -101,42 +110,46 @@
 
   @if (mode === 'FAILED') {
     <div class="pane-content center-pane">
-      <h1 translate style="text-align: center"
-        >sleep-detection.modals.sleepDetectorCalibration.failed.instruction</h1
-      >
-      <p translate style="text-align: center; margin-top: 1em"
-        >sleep-detection.modals.sleepDetectorCalibration.failed.note</p
-      >
+      <h1
+        transloco="sleep-detection.modals.sleepDetectorCalibration.failed.instruction"
+        style="text-align: center"
+      ></h1>
+      <p
+        transloco="sleep-detection.modals.sleepDetectorCalibration.failed.note"
+        style="text-align: center; margin-top: 1em"
+      ></p>
     </div>
   }
 
   @if (mode === 'INFO' || mode === 'PREPARE') {
     <div class="pane-actions spread" @vshrink>
-      <button class="btn btn-secondary" (click)="close()" translate>shared.modals.cancel</button>
+      <button class="btn btn-secondary" (click)="close()" transloco="shared.modals.cancel"></button>
       <button
         class="btn btn-primary"
         (click)="startCalibration()"
-        translate
+        transloco="sleep-detection.modals.sleepDetectorCalibration.startCalibration"
         [disabled]="(openvr.status | async) !== 'INITIALIZED'"
-      >
-        sleep-detection.modals.sleepDetectorCalibration.startCalibration
-      </button>
+      ></button>
     </div>
   }
   @if (mode === 'DONE') {
     <div class="pane-actions spread" @vshrink>
-      <button class="btn btn-secondary" (click)="startCalibration()" translate>
-        sleep-detection.modals.sleepDetectorCalibration.restartCalibration
-      </button>
-      <button class="btn btn-primary" (click)="close()" translate>shared.modals.close</button>
+      <button
+        class="btn btn-secondary"
+        (click)="startCalibration()"
+        transloco="sleep-detection.modals.sleepDetectorCalibration.restartCalibration"
+      ></button>
+      <button class="btn btn-primary" (click)="close()" transloco="shared.modals.close"></button>
     </div>
   }
   @if (mode === 'FAILED') {
     <div class="pane-actions spread" @vshrink>
-      <button class="btn btn-secondary" (click)="close()" translate>shared.modals.close</button>
-      <button class="btn btn-primary" (click)="startCalibration()" translate>
-        sleep-detection.modals.sleepDetectorCalibration.restartCalibration
-      </button>
+      <button class="btn btn-secondary" (click)="close()" transloco="shared.modals.close"></button>
+      <button
+        class="btn btn-primary"
+        (click)="startCalibration()"
+        transloco="sleep-detection.modals.sleepDetectorCalibration.restartCalibration"
+      ></button>
     </div>
   }
 </div>

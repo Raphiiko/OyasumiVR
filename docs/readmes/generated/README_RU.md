@@ -553,6 +553,7 @@ OyasumiVR может предоставлять Home Assistant многие св
 - Deutsch (German): Community contributions by [Nicer Dicer](https://github.com/XNicerDicerX) and [Aron](https://github.com/imaron85).
 - Nederlands (Dutch): by [Raphiiko](https://linktr.ee/raphii).
 - English: by [Raphiiko](https://linktr.ee/raphii).
+- ไทย (Thai): Community contribution by [ShikiYuri (Sk._Yri)](https://github.com/ShikiYuriSan).
 
 ### Помогайте с переводом
 
@@ -601,9 +602,8 @@ _(\*) Tundra трекеры имеют большую задержу отчет�
 
 OyasumiVR's был сделан при помощи:
 
-- [Angular](https://angular.io/) (TypeScript, Основной интерфейс)
+- [Angular](https://angular.io/) (TypeScript, Основной интерфейс и интерфейс оверлея)
 - [Tauri](https://tauri.app/) (Rust, Desktop Framework)
-- [SvelteKit](https://kit.svelte.dev/) (TypeScript, Интерфейс оверлея)
 - [.NET](https://dotnet.microsoft.com/en-us/) (C#, Оверлей)
 
 ## Разработка
@@ -623,8 +623,6 @@ OyasumiVR isn't endorsed by VRChat and doesn't reflect the views or opinions of 
 
 ## Aptabase
 
-<img align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/dfdab6c8-c952-4e0d-be12-017d14262a49" width="180">
-
 Телеметрия OyasumiVR работает на базе [Aptabase](https://aptabase.com), который предоставляет открытый, конфиденциальный и простой инструмент аналитики для ПО. Aptabase был выбран потому, что он помогает развитию OyasumiVR, предоставляя отчеты об сбоях и анонимную статистику, при этом максимально сохраняя вашу конфиденциальность.
 
 Телеметрия полностью анонимка и не отправляет персональной информации. Ее единственное назначение - предоставить вышеупомянутые отчеты о сбоях, а также базовую анонимную статистику использования, такую как запуск приложений и языковые предпочтения. Эти данные используются только для поиска и исправления ошибок, а также для других общих улучшений OyasumiVR.
@@ -640,4 +638,3 @@ OyasumiVR isn't endorsed by VRChat and doesn't reflect the views or opinions of 
 ## Лицензия
 
 OyasumiVR доступен по лицензии [MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md).
-

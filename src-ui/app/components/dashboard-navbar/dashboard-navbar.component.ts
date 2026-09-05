@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { fade } from '../../utils/animations';
 import { Router } from '@angular/router';
@@ -122,6 +122,7 @@ type SubMenu = 'GENERAL' | 'VRCHAT' | 'HARDWARE' | 'MISCELLANEOUS' | 'SETTINGS';
     blurMenu('rootMenu', '.2s ease'),
     slideMenu('subMenu', '.2s ease', false),
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DashboardNavbarComponent implements OnInit {

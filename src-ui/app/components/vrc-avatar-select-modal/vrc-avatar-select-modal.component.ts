@@ -1,4 +1,11 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { VRChatService } from '../../services/vrchat-api/vrchat.service';
 import { firstValueFrom } from 'rxjs';
@@ -6,6 +13,7 @@ import { fadeUp, vshrink } from '../../utils/animations';
 import { AvatarEx } from '../../models/vrchat';
 import { ModalService } from '../../services/modal.service';
 import { ConfirmModalComponent } from '../confirm-modal/confirm-modal.component';
+import { VRCHAT_API_STALE_REQUEST } from '../../services/vrchat-api/vrchat-api';
 
 export interface VrcAvatarSelectModalInput {}
 
@@ -18,6 +26,7 @@ export interface VrcAvatarSelectModalOutput {
   templateUrl: './vrc-avatar-select-modal.component.html',
   styleUrls: ['./vrc-avatar-select-modal.component.scss'],
   animations: [fadeUp(), vshrink()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class VrcAvatarSelectModalComponent
@@ -30,6 +39,8 @@ export class VrcAvatarSelectModalComponent
   } = {};
   activeCategory = '';
   results: AvatarEx[] = [];
+
+  private cdr = inject(ChangeDetectorRef);
 
   constructor(
     private vrchat: VRChatService,
@@ -46,12 +57,23 @@ export class VrcAvatarSelectModalComponent
 
   async fetchAvatars(force = false) {
     this.activeCategory = 'LOADING';
+    this.cdr.markForCheck();
     const currentUser = await firstValueFrom(this.vrchat.user);
     if (!currentUser) {
       this.close();
       return;
     }
-    const avatars = await this.vrchat.listAvatars(force);
+    let avatars: AvatarEx[];
+    try {
+      avatars = await this.vrchat.listAvatars(force);
+    } catch (e) {
+      if (e === VRCHAT_API_STALE_REQUEST) this.close();
+      else {
+        this.activeCategory = 'NO_AVATARS';
+        this.cdr.markForCheck();
+      }
+      return;
+    }
     this.avatars = {};
     for (const avatar of avatars) {
       if (avatar.favoriteGroup) {
@@ -76,6 +98,7 @@ export class VrcAvatarSelectModalComponent
       this.activeCategory = 'NO_AVATARS';
     }
     this.results = this.avatars[this.activeCategory] ?? [];
+    this.cdr.markForCheck();
   }
 
   setActiveCategory(category: string) {

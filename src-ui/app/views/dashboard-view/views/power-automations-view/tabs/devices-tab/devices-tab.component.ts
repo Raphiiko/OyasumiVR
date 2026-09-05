@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
@@ -15,6 +15,7 @@ import { vshrink } from 'src-ui/app/utils/animations';
   templateUrl: './devices-tab.component.html',
   styleUrls: ['./devices-tab.component.scss'],
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
   animations: [vshrink()],
 })
 export class DevicesTabComponent implements OnInit {

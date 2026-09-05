@@ -2,11 +2,11 @@
   "name": "src-shared-ts",
   "description": "Shared typescript code for Oyasumi modules",
   "scripts": {},
-  "version": "25.6.12",
+  "version": "26.8.0-beta.6",
   "author": "Raphiiko",
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "lodash": "^4.17.21"
+    "lodash": "^4.18.1"
   }
 }

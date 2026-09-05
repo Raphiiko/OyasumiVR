@@ -1,4 +1,4 @@
-import { TString } from './translatable-string';
+import type { TString } from './translatable-string';
 
 export const OSC_SCRIPT_VERSION = 3;
 

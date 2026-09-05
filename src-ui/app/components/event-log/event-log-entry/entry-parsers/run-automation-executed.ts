@@ -12,7 +12,7 @@ export class EventLogRunAutomationExecutedEntryParser extends EventLogEntryParse
 
   override headerInfoTitleParams(entry: EventLogRunAutomationExecuted): { [p: string]: string } {
     return {
-      automationName: this.translate.instant(
+      automationName: this.translate.translate(
         'comp.event-log-entry.type.runAutomationExecuted.automationName.' + entry.automationName
       ),
     };

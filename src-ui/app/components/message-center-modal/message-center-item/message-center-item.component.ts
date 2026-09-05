@@ -1,4 +1,4 @@
-import { Component, computed, input, Signal } from '@angular/core';
+import { Component, computed, input, Signal, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   MessageCenterService,
@@ -9,6 +9,7 @@ import {
   selector: 'app-message-center-item',
   standalone: false,
   templateUrl: './message-center-item.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './message-center-item.component.scss',
 })
 export class MessageCenterItemComponent {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TString } from '../../../../models/translatable-string';
 import { firstValueFrom, from, interval, map, Observable, of, startWith, switchMap } from 'rxjs';
 import { VRChatService } from '../../../../services/vrchat-api/vrchat.service';
@@ -20,6 +20,7 @@ import { writeText } from '@tauri-apps/plugin-clipboard-manager';
   templateUrl: './settings-status-info-view.component.html',
   styleUrls: ['./settings-status-info-view.component.scss'],
   animations: [hshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SettingsStatusInfoViewComponent {

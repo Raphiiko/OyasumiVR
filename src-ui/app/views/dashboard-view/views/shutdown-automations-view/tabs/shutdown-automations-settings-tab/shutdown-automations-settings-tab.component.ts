@@ -1,4 +1,10 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   ConfirmModalComponent,
   ConfirmModalInputModel,
@@ -27,6 +33,7 @@ import { DeviceSelection } from 'src-ui/app/models/device-manager';
   templateUrl: './shutdown-automations-settings-tab.component.html',
   styleUrls: ['./shutdown-automations-settings-tab.component.scss'],
   animations: [fade(), vshrink()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class ShutdownAutomationsSettingsTabComponent implements OnInit {
@@ -65,7 +72,8 @@ export class ShutdownAutomationsSettingsTabComponent implements OnInit {
     private destroyRef: DestroyRef,
     private automationConfigs: AutomationConfigService,
     private settingsService: AppSettingsService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -76,12 +84,14 @@ export class ShutdownAutomationsSettingsTabComponent implements OnInit {
         this.powerDownOption = this.powerDownOptions.find(
           (o) => o.id === configs.SHUTDOWN_AUTOMATIONS.powerDownWindowsMode
         );
+        this.cdr.markForCheck();
       });
     this.settingsService.settings
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((settings) => {
         this.lighthouseControlDisabled = !settings.lighthousePowerControl;
         this.quitWithSteamVRMode = settings.quitWithSteamVR;
+        this.cdr.markForCheck();
       });
   }
 

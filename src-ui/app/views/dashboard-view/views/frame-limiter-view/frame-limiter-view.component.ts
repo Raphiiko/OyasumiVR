@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import {
@@ -25,6 +25,7 @@ import {
   templateUrl: './frame-limiter-view.component.html',
   styleUrls: ['./frame-limiter-view.component.scss'],
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
   animations: [vshrink(), fade()],
 })
 export class FrameLimiterViewComponent implements OnInit {
@@ -43,8 +44,8 @@ export class FrameLimiterViewComponent implements OnInit {
   ngOnInit(): void {
     this.automationConfig.configs
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        map((configs) => configs.FRAME_LIMIT_AUTOMATIONS)
+        map((configs) => configs.FRAME_LIMIT_AUTOMATIONS),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((config) => (this.config = config));
     this.frameLimiterService.activeFrameLimits
@@ -63,10 +64,9 @@ export class FrameLimiterViewComponent implements OnInit {
 
   addLimiter() {
     this.modalService
-      .addModal<
-        Record<string, never>,
-        FrameLimiterAddApplicationModalOutputModel
-      >(FrameLimiterAddApplicationModalComponent)
+      .addModal<Record<string, never>, FrameLimiterAddApplicationModalOutputModel>(
+        FrameLimiterAddApplicationModalComponent
+      )
       .subscribe((result) => {
         if (result?.appId) {
           this.addLimiterForAppId(result.appId);

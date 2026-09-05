@@ -1,4 +1,10 @@
-import { Component, DestroyRef, HostListener, OnInit } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  HostListener,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
 import {
@@ -18,6 +24,7 @@ import { hshrink } from '../../../../utils/animations';
   templateUrl: './nightmare-detection-view.component.html',
   styleUrls: ['./nightmare-detection-view.component.scss'],
   animations: [hshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class NightmareDetectionViewComponent implements OnInit {
@@ -46,8 +53,8 @@ export class NightmareDetectionViewComponent implements OnInit {
   ngOnInit() {
     this.automationConfigService.configs
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        map((configs) => configs.NIGHTMARE_DETECTION)
+        map((configs) => configs.NIGHTMARE_DETECTION),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(async (config) => {
         this.config = config;

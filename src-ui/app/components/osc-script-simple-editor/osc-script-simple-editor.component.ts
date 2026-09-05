@@ -1,4 +1,13 @@
-import { Component, DestroyRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { DropdownItem } from '../dropdown-button/dropdown-button.component';
 import {
   OscParameterType,
@@ -20,6 +29,7 @@ import { OscAddressSelection } from './osc-address-autocomplete/osc-address-auto
 import { AvatarContext, VRChatAvatarParameter } from '../../models/avatar-context';
 import { VRChatService } from 'src-ui/app/services/vrchat-api/vrchat.service';
 import { AppSettingsService } from '../../services/app-settings.service';
+import { flushOnDestroy } from '../../utils/rxjs-utils';
 
 interface ValidationError {
   actionIndex: number;
@@ -31,6 +41,7 @@ interface ValidationError {
   templateUrl: './osc-script-simple-editor.component.html',
   styleUrls: ['./osc-script-simple-editor.component.scss'],
   animations: [vshrink(), noop(), hshrink(), fade()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class OscScriptSimpleEditorComponent implements OnInit {
@@ -102,30 +113,39 @@ export class OscScriptSimpleEditorComponent implements OnInit {
     private destroyRef: DestroyRef,
     private avatarContextService: AvatarContextService,
     protected vrchat: VRChatService,
-    private appSettings: AppSettingsService
+    private appSettings: AppSettingsService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
+    flushOnDestroy(this.validationTrigger, this.destroyRef);
     this.validationTrigger
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         startWith(void 0),
-        tap(() => (this.validated = false)),
-        debounceTime(500)
+        tap(() => {
+          this.validated = false;
+          this.cdr.markForCheck();
+        }),
+        debounceTime(500),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(() => {
         this.validateScript();
         this.validated = true;
         this.errorCount.emit(this.errors.length);
         this.scriptChange.emit(this._script);
+        this.cdr.markForCheck();
       });
 
-    combineLatest([this.avatarContextService.avatarContext]).subscribe(([avatarContext]) => {
-      this.currentAvatarContext = avatarContext;
-      this.knownOscAddresses = [...(avatarContext?.parameters ?? []).map((p) => p.address)].sort();
-
-      // Check if we should show the VRChat autocomplete info dialog
-    });
+    combineLatest([this.avatarContextService.avatarContext])
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(([avatarContext]) => {
+        this.currentAvatarContext = avatarContext;
+        this.knownOscAddresses = [
+          ...(avatarContext?.parameters ?? []).map((p) => p.address),
+        ].sort();
+        this.cdr.markForCheck();
+      });
 
     setTimeout(() => {
       this.checkShowVRChatAutocompleteInfo();
@@ -434,11 +454,13 @@ export class OscScriptSimpleEditorComponent implements OnInit {
     this.validateScript();
     if (this.errors.length) return;
     this.testing = true;
+    this.cdr.markForCheck();
     await Promise.all([
       this.osc.runScript(this._script),
       new Promise((resolve) => setTimeout(resolve, 1000)),
     ]);
     this.testing = false;
+    this.cdr.markForCheck();
   }
 
   getErrorsForAction(actionIndex: number): ValidationError[] {

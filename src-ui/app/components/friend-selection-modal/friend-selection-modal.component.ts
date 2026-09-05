@@ -1,8 +1,17 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, hshrink, noop, vshrink } from '../../utils/animations';
-import { LimitedUser, UserStatus } from 'vrchat/dist';
+import type { LimitedUserFriend } from 'vrchat';
+import { UserStatus } from '../../models/vrchat';
 import { VRChatService } from '../../services/vrchat-api/vrchat.service';
+import { VRCHAT_API_STALE_REQUEST } from '../../services/vrchat-api/vrchat-api';
 import {
   BehaviorSubject,
   debounceTime,
@@ -50,6 +59,7 @@ const STATUS_SORT_ORDER: Record<UserStatus, number> = {
   templateUrl: './friend-selection-modal.component.html',
   styleUrls: ['./friend-selection-modal.component.scss'],
   animations: [fadeUp(), vshrink(), hshrink(), fade(), noop()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class FriendSelectionModalComponent
@@ -58,13 +68,15 @@ export class FriendSelectionModalComponent
 {
   selection: SelectedFriend[] = [];
   initialSelection: SelectedFriend[] = [];
-  friends: LimitedUser[] = [];
-  results: LimitedUser[] = [];
+  friends: LimitedUserFriend[] = [];
+  results: LimitedUserFriend[] = [];
   query: BehaviorSubject<string> = new BehaviorSubject<string>('');
   activeQuery: string = this.query.value;
-  fuse?: Fuse<LimitedUser>;
+  fuse?: Fuse<LimitedUserFriend>;
   loadingState: 'LOADING' | 'LOADED' | 'ERROR' = 'LOADING';
   moreResults = false;
+
+  private cdr = inject(ChangeDetectorRef);
 
   constructor(
     protected vrchat: VRChatService,
@@ -79,10 +91,10 @@ export class FriendSelectionModalComponent
     await firstValueFrom(this.vrchat.user.pipe(filter(Boolean)));
     this.query
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         debounceTime(200),
         startWith(this.query.value),
-        distinctUntilChanged()
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((query) => this.search(query));
     this.loadFriends();
@@ -97,7 +109,12 @@ export class FriendSelectionModalComponent
         'displayName',
       ]);
     } catch (e) {
+      if (e === VRCHAT_API_STALE_REQUEST) {
+        await this.close();
+        return;
+      }
       this.loadingState = 'ERROR';
+      this.cdr.markForCheck();
       error('[FriendSelectionModal] Failed to load friends: ' + e);
       return;
     }
@@ -113,6 +130,7 @@ export class FriendSelectionModalComponent
       this.results = this.friends.slice(0, MAX_RESULTS);
     }
     this.loadingState = 'LOADED';
+    this.cdr.markForCheck();
   }
 
   async cancel() {
@@ -130,18 +148,20 @@ export class FriendSelectionModalComponent
     if (!this.activeQuery) {
       this.moreResults = this.friends.length > MAX_RESULTS;
       this.results = this.friends.slice(0, MAX_RESULTS);
+      this.cdr.markForCheck();
       return;
     }
     const results = this.fuse!.search(this.activeQuery);
     this.moreResults = results.length > MAX_RESULTS;
     this.results = results.slice(0, MAX_RESULTS).map((r) => r.item);
+    this.cdr.markForCheck();
   }
 
   removeItem(item: SelectedFriendGroup | SelectedFriendPlayer) {
     this.selection = this.selection.filter((i) => i !== item);
   }
 
-  addFriend(friend: LimitedUser) {
+  addFriend(friend: LimitedUserFriend) {
     if (this.selection.find((i) => i.type === 'player' && i.playerId === friend.id)) return;
     this.selection = [
       {
@@ -153,7 +173,7 @@ export class FriendSelectionModalComponent
     ];
   }
 
-  isSelected(user: LimitedUser): boolean {
+  isSelected(user: LimitedUserFriend): boolean {
     return !!this.selection.find((s) => s.type === 'player' && s.playerId === user.id);
   }
 }

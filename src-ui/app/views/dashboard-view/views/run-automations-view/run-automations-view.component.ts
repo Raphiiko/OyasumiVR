@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { vshrink } from '../../../../utils/animations';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
@@ -13,6 +13,7 @@ import { isEqual } from 'lodash';
   templateUrl: './run-automations-view.component.html',
   styleUrls: ['./run-automations-view.component.scss'],
   animations: [vshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class RunAutomationsViewComponent implements OnInit {
@@ -38,11 +39,11 @@ export class RunAutomationsViewComponent implements OnInit {
 
   ngOnInit(): void {
     const config = this.automationConfigService.configs.pipe(
-      takeUntilDestroyed(this.destroyRef),
       map((configs) => configs.RUN_AUTOMATIONS),
       distinctUntilChanged((a, b) => isEqual(a, b)),
       tap((config) => (this.config = config)),
-      share()
+      share(),
+      takeUntilDestroyed(this.destroyRef)
     );
 
     const events: ('onSleepModeEnable' | 'onSleepModeDisable' | 'onSleepPreparation')[] = [
@@ -54,9 +55,9 @@ export class RunAutomationsViewComponent implements OnInit {
     config
       .pipe(
         debounceTime(500),
-        takeUntilDestroyed(this.destroyRef),
         filter((config) => !isEqual(AUTOMATION_CONFIGS_DEFAULT.RUN_AUTOMATIONS, config)),
-        take(1)
+        take(1),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(async (config) => {
         // Initialize expanded states based on automation enabled state only on first load

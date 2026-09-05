@@ -8,8 +8,8 @@ import {
 import { async, BehaviorSubject, Observable, throttleTime } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 
-import { migrateEventLog } from '../migrations/event-log.migrations';
 import { EVENT_LOG_STORE } from '../globals';
+import { EventLogStoreWriter } from '../utils/event-log-store-writer';
 
 const MAX_LOG_AGE = 48 * 60 * 60 * 1000;
 
@@ -21,6 +21,7 @@ export class EventLogService {
     structuredClone(EVENT_LOG_DEFAULT)
   );
   public eventLog: Observable<EventLog> = this._eventLog.asObservable();
+  private storeWriter = new EventLogStoreWriter(EVENT_LOG_STORE);
 
   constructor() {}
 
@@ -31,8 +32,10 @@ export class EventLogService {
       .subscribe(() => this.saveEventLog());
   }
 
-  public clearLog() {
-    this._eventLog.next(structuredClone(EVENT_LOG_DEFAULT));
+  public async clearLog() {
+    const eventLog = structuredClone(EVENT_LOG_DEFAULT);
+    this._eventLog.next(eventLog);
+    await this.storeWriter.clear(eventLog);
   }
 
   public logEvent(event: EventLogDraft) {
@@ -56,9 +59,7 @@ export class EventLogService {
 
   private async loadEventLog() {
     let log: EventLog | undefined = await EVENT_LOG_STORE.get<EventLog>('EVENT_LOG');
-    if (log) {
-      log = migrateEventLog(log);
-    } else {
+    if (!log) {
       log = this._eventLog.value;
     }
     // Remove events that are too old
@@ -77,6 +78,7 @@ export class EventLogService {
   }
 
   private async saveEventLog() {
-    await EVENT_LOG_STORE.set('EVENT_LOG', this._eventLog.value);
+    const eventLog = this._eventLog.value;
+    await this.storeWriter.save(eventLog);
   }
 }

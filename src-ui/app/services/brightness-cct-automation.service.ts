@@ -9,6 +9,7 @@ import {
   distinctUntilChanged,
   filter,
   firstValueFrom,
+  from,
   interval,
   map,
   merge,
@@ -20,6 +21,7 @@ import {
   switchMap,
   take,
   tap,
+  timeout,
 } from 'rxjs';
 import { CancellableTask } from '../utils/cancellable-task';
 import { EventLogService } from './event-log.service';
@@ -28,12 +30,7 @@ import {
   BrightnessEvent,
   BrightnessEventAutomationConfig,
 } from '../models/automations';
-import {
-  EventLogCCTChanged,
-  EventLogHardwareBrightnessChanged,
-  EventLogSimpleBrightnessChanged,
-  EventLogSoftwareBrightnessChanged,
-} from '../models/event-log-entry';
+import { EventLogBrightnessOrCCTReason } from '../models/event-log-entry';
 import { SleepPreparationService } from './sleep-preparation.service';
 import { SimpleBrightnessControlService } from './brightness-control/simple-brightness-control.service';
 import { HardwareBrightnessControlService } from './brightness-control/hardware-brightness-control.service';
@@ -59,6 +56,7 @@ export class BrightnessCctAutomationService {
   } | null>(null);
   private autoSunsetTime?: string;
   private autoSunriseTime?: string;
+  private sunriseSunsetLookup?: Promise<[string, string]>;
   private sleepMode: boolean = false;
 
   public readonly anyBrightnessTransitionActive = this.lastActivatedBrightnessTransition.pipe(
@@ -149,7 +147,6 @@ export class BrightnessCctAutomationService {
     await listen<void>('CRON_MINUTE_START', () => this.onMinuteTick());
 
     // Update sunrise/sunset times on startup and every 12 hours
-    this.updateSunriseSunsetTimes();
     interval(1000 * 60 * 60 * 12) // Every 12 hours
       .pipe(startWith(0))
       .subscribe(() => this.updateSunriseSunsetTimes());
@@ -163,21 +160,25 @@ export class BrightnessCctAutomationService {
       )
       .subscribe(async (configs) => {
         // Check if the sunset/sunrise times are already configured
-        const config = configs.BRIGHTNESS_AUTOMATIONS;
-        if (config.AT_SUNRISE.activationTime !== null && config.AT_SUNSET.activationTime !== null)
+        if (
+          configs.BRIGHTNESS_AUTOMATIONS.AT_SUNRISE.activationTime !== null &&
+          configs.BRIGHTNESS_AUTOMATIONS.AT_SUNSET.activationTime !== null
+        )
           return;
         // Fetch the sunset/sunrise times if needed
         if (!this.autoSunsetTime || !this.autoSunriseTime) {
+          // leave a running lookup to the scheduled refresh, and try again on the next tick
+          if (this.sunriseSunsetLookup) return;
           try {
-            const [sunrise, sunset] = await invoke<[string, string]>('get_sunrise_sunset_time');
-            this.autoSunriseTime = sunrise;
-            this.autoSunsetTime = sunset;
+            await this.fetchSunriseSunsetTimes();
           } catch (e) {
             error('[BrightnessCctAutomationService] Failed to fetch sunrise/sunset times: ' + e);
             return;
           }
         }
-        // Update the config if needed
+        // Update the config if needed, reading it again since the lookup may have written to it
+        const config = (await firstValueFrom(this.automationConfigService.configs))
+          .BRIGHTNESS_AUTOMATIONS;
         const patch: Partial<BrightnessAutomationsConfig> = {};
         if (config.AT_SUNRISE.activationTime === null) {
           patch.AT_SUNRISE = {
@@ -191,6 +192,7 @@ export class BrightnessCctAutomationService {
             activationTime: this.autoSunsetTime ?? null,
           };
         }
+        if (!patch.AT_SUNRISE && !patch.AT_SUNSET) return;
         await this.automationConfigService.updateAutomationConfig<BrightnessAutomationsConfig>(
           'BRIGHTNESS_AUTOMATIONS',
           patch
@@ -294,7 +296,7 @@ export class BrightnessCctAutomationService {
     if (sunriseEnabled || sunsetEnabled) {
       // Determine if the sunrise and sunset times are inverted (sunset time is earlier than sunrise time)
       // and which automation to use based on the current time
-      let activeAutomation: BrightnessEvent | null = null;
+      let activeAutomation: 'AT_SUNRISE' | 'AT_SUNSET' | null = null;
 
       if (sunriseTime !== null && sunsetTime !== null) {
         // Both times available - similar to original logic
@@ -327,6 +329,9 @@ export class BrightnessCctAutomationService {
         // Use sunset automation after sunset time (until midnight)
         activeAutomation = sunsetEnabled && options.currentTime >= sunsetTime ? 'AT_SUNSET' : null;
       }
+
+      if (activeAutomation && options.sleepMode && config[activeAutomation].onlyWhenSleepDisabled)
+        activeAutomation = null;
 
       // Apply the active automation if any
       if (activeAutomation) {
@@ -446,15 +451,18 @@ export class BrightnessCctAutomationService {
     // Stop if the automation is disabled
     if (!config.enabled || (!config.changeBrightness && !config.changeColorTemperature)) return;
     // Determine the log reason
-    const eventLogReasonMap: Record<BrightnessEvent, SetBrightnessOrCCTReason> = {
+    const eventLogReasonMap = {
       SLEEP_MODE_ENABLE: 'SLEEP_MODE_ENABLE',
       SLEEP_MODE_DISABLE: 'SLEEP_MODE_DISABLE',
       SLEEP_PREPARATION: 'SLEEP_PREPARATION',
       AT_SUNRISE: 'AT_SUNRISE',
       AT_SUNSET: 'AT_SUNSET',
       HMD_CONNECT: 'HMD_CONNECT',
-    };
+    } as const satisfies Record<BrightnessEvent, SetBrightnessOrCCTReason>;
     const logReason: SetBrightnessOrCCTReason = eventLogReasonMap[automationType];
+    // The event log has no string for an HMD connect, which never logs anyway.
+    const eventLogReason: EventLogBrightnessOrCCTReason | null =
+      automationType === 'HMD_CONNECT' ? null : eventLogReasonMap[automationType];
     // Handle CCT
     if (config.changeColorTemperature && runCCT) {
       this.cctControl.cancelActiveTransition();
@@ -470,7 +478,6 @@ export class BrightnessCctAutomationService {
       } else {
         await this.cctControl.setCCT(config.colorTemperature, { logReason });
       }
-      const eventLogReason = eventLogReasonMap[automationType];
       if (logging && eventLogReason) {
         this.eventLog.logEvent({
           type: 'cctChanged',
@@ -478,7 +485,7 @@ export class BrightnessCctAutomationService {
           value: config.colorTemperature,
           transition: config.transition,
           transitionTime: config.transitionTime,
-        } as EventLogCCTChanged);
+        });
       }
     }
     // Handle Brightness
@@ -490,6 +497,8 @@ export class BrightnessCctAutomationService {
       const advancedMode = await firstValueFrom(this.automationConfigService.configs).then(
         (c) => c.BRIGHTNESS_AUTOMATIONS.advancedMode
       );
+      const hardwareBrightnessAvailable =
+        advancedMode && (await firstValueFrom(this.hardwareBrightnessControl.driverIsAvailable));
       if (!forceInstant && config.transition) {
         const tasks: CancellableTask[] = await (async () => {
           if (advancedMode) {
@@ -502,7 +511,7 @@ export class BrightnessCctAutomationService {
                 }
               ),
             ];
-            if (await firstValueFrom(this.hardwareBrightnessControl.driverIsAvailable)) {
+            if (hardwareBrightnessAvailable) {
               tasks.push(
                 this.hardwareBrightnessControl.transitionBrightness(
                   config.hardwareBrightness,
@@ -535,7 +544,7 @@ export class BrightnessCctAutomationService {
           await this.softwareBrightnessControl.setBrightness(config.softwareBrightness, {
             logReason,
           });
-          if (await firstValueFrom(this.hardwareBrightnessControl.driverIsAvailable)) {
+          if (hardwareBrightnessAvailable) {
             await this.hardwareBrightnessControl.setBrightness(config.hardwareBrightness, {
               logReason,
             });
@@ -546,23 +555,24 @@ export class BrightnessCctAutomationService {
           });
         }
       }
-      const eventLogReason = eventLogReasonMap[automationType];
       if (logging && eventLogReason) {
         if (advancedMode) {
           this.eventLog.logEvent({
             type: 'softwareBrightnessChanged',
             reason: eventLogReason,
-            value: config.brightness,
+            value: config.softwareBrightness,
             transition: config.transition,
             transitionTime: config.transitionTime,
-          } as EventLogSoftwareBrightnessChanged);
-          this.eventLog.logEvent({
-            type: 'hardwareBrightnessChanged',
-            reason: eventLogReason,
-            value: config.brightness,
-            transition: config.transition,
-            transitionTime: config.transitionTime,
-          } as EventLogHardwareBrightnessChanged);
+          });
+          if (hardwareBrightnessAvailable) {
+            this.eventLog.logEvent({
+              type: 'hardwareBrightnessChanged',
+              reason: eventLogReason,
+              value: config.hardwareBrightness,
+              transition: config.transition,
+              transitionTime: config.transitionTime,
+            });
+          }
         } else {
           this.eventLog.logEvent({
             type: 'simpleBrightnessChanged',
@@ -570,7 +580,7 @@ export class BrightnessCctAutomationService {
             value: config.brightness,
             transition: config.transition,
             transitionTime: config.transitionTime,
-          } as EventLogSimpleBrightnessChanged);
+          });
         }
       }
     }
@@ -605,12 +615,22 @@ export class BrightnessCctAutomationService {
     }
   }
 
+  // callers share one in-flight request; the next call after it settles starts a new one
+  private fetchSunriseSunsetTimes(): Promise<[string, string]> {
+    return (this.sunriseSunsetLookup ??= firstValueFrom(
+      from(invoke<[string, string]>('get_sunrise_sunset_time')).pipe(timeout(30000))
+    )
+      .then((times) => {
+        [this.autoSunriseTime, this.autoSunsetTime] = times;
+        return times;
+      })
+      .finally(() => (this.sunriseSunsetLookup = undefined)));
+  }
+
   private async updateSunriseSunsetTimes() {
     try {
       // Get the latest sunrise/sunset times
-      const [sunrise, sunset] = await invoke<[string, string]>('get_sunrise_sunset_time');
-      this.autoSunriseTime = sunrise;
-      this.autoSunsetTime = sunset;
+      const [sunrise, sunset] = await this.fetchSunriseSunsetTimes();
 
       // Update configurations with auto update enabled
       const configs = await firstValueFrom(this.automationConfigService.configs);

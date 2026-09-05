@@ -1,10 +1,15 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
+    "paths": {
+      "src-ui/*": ["./src-ui/*"],
+      "src-shared-ts/*": ["./src-shared-ts/*"],
+      "src-grpc-web-client/*": ["./src-grpc-web-client/*"]
+    },
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "skipLibCheck": true,
     "noImplicitOverride": false,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
@@ -16,10 +21,6 @@
     "importHelpers": true,
     "target": "es2022",
     "module": "es2020",
-    "lib": [
-      "es2022",
-      "dom"
-    ],
     "useDefineForClassFields": false,
     "resolveJsonModule": true,
     "esModuleInterop": true

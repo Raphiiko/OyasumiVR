@@ -34,7 +34,7 @@ import {
 } from '../models/event-log-entry';
 import { EventLogService } from './event-log.service';
 import { listen } from '@tauri-apps/api/event';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { VRChatService } from './vrchat-api/vrchat.service';
 import { DeviceManagerService } from './device-manager.service';
 import { DMKnownDevice } from '../models/device-manager';
@@ -78,7 +78,7 @@ export class ShutdownAutomationsService {
     private lighthouseConsole: LighthouseConsoleService,
     private lighthouse: LighthouseService,
     private eventLog: EventLogService,
-    private translate: TranslateService,
+    private translate: TranslocoService,
     private vrchat: VRChatService,
     private deviceManager: DeviceManagerService
   ) {}
@@ -331,7 +331,11 @@ export class ShutdownAutomationsService {
             switchMap(() =>
               this.openvr.devices.pipe(
                 map((newDevices) =>
-                  newDevices.filter((d) => devices.some((d2) => d2.index === d.index))
+                  newDevices.filter(
+                    (device) =>
+                      device.serialNumber &&
+                      devices.some((requested) => requested.serialNumber === device.serialNumber)
+                  )
                 )
               )
             ),
@@ -385,7 +389,7 @@ export class ShutdownAutomationsService {
     switch (this.config.powerDownWindowsMode) {
       case 'SHUTDOWN':
         await invoke('windows_shutdown', {
-          message: this.translate.instant(
+          message: this.translate.translate(
             'shutdown-automations.sequence.powerDownWindows.shutdownMessage'
           ),
           timeout: 20,
@@ -395,7 +399,7 @@ export class ShutdownAutomationsService {
         break;
       case 'REBOOT':
         await invoke('windows_reboot', {
-          message: this.translate.instant(
+          message: this.translate.translate(
             'shutdown-automations.sequence.powerDownWindows.rebootMessage'
           ),
           timeout: 20,

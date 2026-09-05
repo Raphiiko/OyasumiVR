@@ -1,13 +1,13 @@
 <div class="pane">
-  <div class="pane-title" translate>settings.notifications.title</div>
+  <div class="pane-title" transloco="settings.notifications.title"></div>
   <div class="pane-content">
     <div class="setting-view-container">
       <div class="setting-category">
         <div class="settings">
           <div class="setting-row">
             <div class="setting-row-label">
-              <span translate>settings.notifications.provider.title</span>
-              <span translate>settings.notifications.provider.description</span>
+              <span transloco="settings.notifications.provider.title"></span>
+              <span transloco="settings.notifications.provider.description"></span>
             </div>
             <div class="setting-row-action">
               <app-select-box
@@ -21,13 +21,13 @@
           </div>
           <div class="setting-row">
             <div class="setting-row-label">
-              <span translate>settings.notifications.volume.title</span>
-              <span translate>settings.notifications.volume.description</span>
+              <span transloco="settings.notifications.volume.title"></span>
+              <span transloco="settings.notifications.volume.description"></span>
             </div>
             <div class="setting-row-action">
               <button class="btn btn-secondary" (click)="testSound()">
                 @if (!playingTestSound) {
-                  <span translate @hshrink>settings.notifications.volume.test</span>
+                  <span transloco="settings.notifications.volume.test" @hshrink></span>
                 }
                 @if (playingTestSound) {
                   <i class="material-icons" @hshrink>volume_up</i>
@@ -44,23 +44,23 @@
           </div>
           <div class="setting-row">
             <div class="setting-row-label">
-              <span translate>settings.notifications.notifications.title</span>
-              <span translate>settings.notifications.notifications.description</span>
+              <span transloco="settings.notifications.notifications.title"></span>
+              <span transloco="settings.notifications.notifications.description"></span>
             </div>
             <div class="setting-row-action"></div>
           </div>
           <div class="setting-row-group">
             @for (notificationType of notificationTypes; track notificationType) {
               <div class="setting-row compact">
-                <div class="setting-row-label" translate>
+                <div class="setting-row-label">
                   <span>{{
                     'settings.notifications.notifications.category.' + notificationType + '.title'
-                      | translate
+                      | transloco
                   }}</span>
                   <span>{{
                     'settings.notifications.notifications.category.' +
                       notificationType +
-                      '.description' | translate
+                      '.description' | transloco
                   }}</span>
                 </div>
                 <div class="setting-row-action">

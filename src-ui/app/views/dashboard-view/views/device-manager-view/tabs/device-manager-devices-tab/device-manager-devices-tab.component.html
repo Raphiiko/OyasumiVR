@@ -7,7 +7,7 @@
         <input
           type="text"
           [(ngModel)]="searchQuery"
-          placeholder="{{ 'device-manager.search.placeholder' | translate }}"
+          placeholder="{{ 'device-manager.search.placeholder' | transloco }}"
         />
       </div>
     </div>
@@ -42,7 +42,7 @@
             history
           </i>
         }
-        <span class="group-label" translate>{{ group.label }}</span>
+        <span class="group-label" [transloco]="group.label"></span>
         <span class="group-count">({{ group.devices.length }})</span>
       </div>
       @for (device of group.devices; track trackDeviceBy($index, device)) {
@@ -74,7 +74,7 @@
                   @if (device.disabled) {
                     <i
                       class="material-icons hidden-icon"
-                      [tooltip]="'device-manager.config.disabled.tooltip' | translate"
+                      [tooltip]="'device-manager.config.disabled.tooltip' | transloco"
                       [tooltipMode]="'right'"
                     >
                       visibility_off
@@ -91,9 +91,7 @@
                   </span>
                   <!-- Show role if available -->
                   @if (getDeviceRole(device)) {
-                    <span class="device-role" translate>
-                      {{ getDeviceRole(device) }}
-                    </span>
+                    <span class="device-role" [transloco]="getDeviceRole(device) ?? ''"></span>
                   }
                 </div>
               </div>
@@ -129,7 +127,7 @@
                     <app-lighthouse-force-state-popover
                       (action)="onForceLHState(device, $event)"
                       [style.position-anchor]="getPowerButtonAnchorId(device)"
-                      [type]="getDeviceLighthouse(device)?.deviceType"
+                      [type]="$safeNavigationMigration(getDeviceLighthouse(device)?.deviceType)"
                     >
                     </app-lighthouse-force-state-popover>
                   </div>
@@ -139,7 +137,7 @@
                   <button
                     class="btn-forget"
                     (click)="forgetDevice(device)"
-                    [tooltip]="'device-manager.actions.forget' | translate"
+                    [tooltip]="'device-manager.actions.forget' | transloco"
                     [tooltipMode]="'left'"
                   >
                     <i class="material-icons">delete</i>
@@ -170,7 +168,7 @@
   @if (deviceGroups.length === 0) {
     <div class="empty-state" @vshrink>
       <i class="material-icons">info</i>
-      <span translate>{{ emptyStateMessage }}</span>
+      <span [transloco]="emptyStateMessage"></span>
     </div>
   }
 </div>

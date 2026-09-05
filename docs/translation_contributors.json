@@ -150,5 +150,13 @@
     "flagCode": "gb",
     "langNameNative": "English",
     "langNameEnglish": "English"
+  },
+  {
+    "name": "ShikiYuri (Sk._Yri)",
+    "url": "https://github.com/ShikiYuriSan",
+    "langCode": "th",
+    "flagCode": "th",
+    "langNameNative": "ไทย",
+    "langNameEnglish": "Thai"
   }
 ]

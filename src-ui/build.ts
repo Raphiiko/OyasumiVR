@@ -3,6 +3,6 @@
 // Do not modify this file manually.
 //
 
-export type BuildFlavour = 'DEV' | 'STANDALONE' | 'STEAM' | 'STEAM_CN';
+export type BuildFlavour = 'DEV' | 'STANDALONE' | 'STEAM';
 export const FLAVOUR: BuildFlavour = 'DEV';
-export const BUILD_ID = '7f104c3';
+export const BUILD_ID = 'd4ab5c80';

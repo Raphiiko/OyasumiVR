@@ -232,9 +232,8 @@ OyasumiVR로 그래픽 카드의 전력 제한을 직접 제어하는 것은 NVI
 {{BUILT_WITH_BODY}}
 OyasumiVR은 다음을 기반으로 만들어졌어요:
 
-- [Angular](https://angular.io/) (TypeScript, Main UI)
+- [Angular](https://angular.io/) (TypeScript, Main UI & Overlay UI)
 - [Tauri](https://tauri.app/) (Rust, Desktop Framework)
-- [SvelteKit](https://kit.svelte.dev/) (TypeScript, Overlay UI)
 - [.NET](https://dotnet.microsoft.com/en-us/) (C#, Overlay)
 
 {{DEVELOPMENT_HEADER}}

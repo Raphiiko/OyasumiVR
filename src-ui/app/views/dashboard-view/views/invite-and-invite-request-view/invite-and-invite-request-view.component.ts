@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { distinctUntilChanged } from 'rxjs';
 import { VRChatService } from '../../../../services/vrchat-api/vrchat.service';
 import { hshrink, fade, vshrink } from '../../../../utils/animations';
@@ -15,6 +15,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './invite-and-invite-request-view.component.html',
   styleUrls: ['./invite-and-invite-request-view.component.scss'],
   animations: [fade(), vshrink(), hshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class InviteAndInviteRequestViewComponent implements OnInit {
@@ -35,7 +36,7 @@ export class InviteAndInviteRequestViewComponent implements OnInit {
 
   ngOnInit(): void {
     this.vrchat.status
-      .pipe(takeUntilDestroyed(this.destroyRef), distinctUntilChanged())
+      .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe(async (status) => {
         this.loggedIn = status === 'LOGGED_IN';
       });

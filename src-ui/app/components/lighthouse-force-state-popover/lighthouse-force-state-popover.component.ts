@@ -1,4 +1,13 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { hshrink } from '../../utils/animations';
 import { LighthouseDevicePowerState, LighthouseDeviceType } from '../../models/lighthouse-device';
 import { DevicePowerAction } from '../device-power-button/device-power-button.component';
@@ -8,6 +17,7 @@ import { DevicePowerAction } from '../device-power-button/device-power-button.co
   templateUrl: './lighthouse-force-state-popover.component.html',
   styleUrls: ['./lighthouse-force-state-popover.component.scss'],
   animations: [hshrink()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class LighthouseForceStatePopoverComponent implements OnInit {
@@ -15,9 +25,13 @@ export class LighthouseForceStatePopoverComponent implements OnInit {
   active = false;
   @Output() action = new EventEmitter<LighthouseDevicePowerState>();
   @Input() type?: LighthouseDeviceType;
+  private cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
-    setTimeout(() => (this.active = true), 150);
+    setTimeout(() => {
+      this.active = true;
+      this.cdr.markForCheck();
+    }, 150);
   }
 
   setHoverAction(action: string) {

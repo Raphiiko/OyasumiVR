@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { SelectBoxItem } from 'src-ui/app/components/select-box/select-box.component';
 import {
   APP_SETTINGS_DEFAULT,
@@ -18,6 +18,7 @@ import { getBuiltInNotificationSound } from 'src-ui/app/models/notification-soun
   templateUrl: './settings-notifications-view.component.html',
   styleUrls: ['./settings-notifications-view.component.scss'],
   animations: [vshrink(), hshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SettingsNotificationsViewComponent implements OnInit {

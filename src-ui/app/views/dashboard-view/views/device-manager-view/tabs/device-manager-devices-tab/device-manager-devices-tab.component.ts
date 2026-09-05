@@ -1,4 +1,11 @@
-import { Component, OnInit, AfterViewInit, DestroyRef } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  AfterViewInit,
+  DestroyRef,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { DeviceManagerService } from '../../../../../../services/device-manager.service';
 import { OpenVRService } from '../../../../../../services/openvr.service';
 import { LighthouseService } from '../../../../../../services/lighthouse.service';
@@ -50,6 +57,7 @@ interface DeviceGroup {
   templateUrl: './device-manager-devices-tab.component.html',
   styleUrls: ['./device-manager-devices-tab.component.scss'],
   animations: [fade(), vshrink()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
@@ -78,7 +86,8 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     private lighthouseConsole: LighthouseConsoleService,
     private modalService: ModalService,
     private destroyRef: DestroyRef,
-    private domSanitizer: DomSanitizer
+    private domSanitizer: DomSanitizer,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -100,6 +109,7 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
 
         // Initialize Fuse.js with updated devices
         this.initializeFuse();
+        this.cdr.markForCheck();
       });
 
     // Initialize tag filter to "All tags"
@@ -111,6 +121,7 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     // Watch for tag changes to update filter options
     this.deviceManager.tags.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.updateTagFilterOptions();
+      this.cdr.markForCheck();
     });
   }
 
@@ -451,10 +462,11 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     if (lighthouseDevice) {
       if (this.lighthouse.deviceNeedsIdentifier(lighthouseDevice)) {
         this.modalService
-          .addModal<
-            LighthouseV1IdWizardModalInputModel,
-            LighthouseV1IdWizardModalOutputModel
-          >(LighthouseV1IdWizardModalComponent, { device: lighthouseDevice }, { closeOnEscape: false })
+          .addModal<LighthouseV1IdWizardModalInputModel, LighthouseV1IdWizardModalOutputModel>(
+            LighthouseV1IdWizardModalComponent,
+            { device: lighthouseDevice },
+            { closeOnEscape: false }
+          )
           .subscribe();
         return;
       }
@@ -475,10 +487,10 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
 
   async configureDevice(device: DMKnownDevice) {
     this.modalService
-      .addModal<
-        DeviceManagerConfigModalInputModel,
-        DeviceManagerConfigModalOutputModel
-      >(DeviceManagerConfigModalComponent, { device })
+      .addModal<DeviceManagerConfigModalInputModel, DeviceManagerConfigModalOutputModel>(
+        DeviceManagerConfigModalComponent,
+        { device }
+      )
       .subscribe();
   }
 

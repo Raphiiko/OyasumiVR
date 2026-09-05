@@ -124,7 +124,7 @@ impl AudioDevice {
             let id = AudioDevice::get_id_from_mmdevice(&mmdevice)?;
             let properties = mmdevice.OpenPropertyStore(STGM_READ)?;
             let name = properties.GetValue(&PKEY_Device_FriendlyName)?;
-            let name = U16Str::from_slice(PropVariantToBSTR(&name)?.as_wide()).to_string_lossy();
+            let name = U16Str::from_slice(&PropVariantToBSTR(&name)?).to_string_lossy();
             // Reference endpoint volume and listen for volume notifications
             let endpoint_volume = mmdevice.Activate::<IAudioEndpointVolume>(CLSCTX_ALL, None)?;
             let (on_notify_tx, on_notify_rx) = channel::<()>(10);
@@ -293,8 +293,10 @@ impl AudioDevice {
         drop(metering_enabled);
         tokio::spawn(async move {
             const ACTIVATION_TIMEOUT: i64 = 1000;
+            const SAMPLE_INTERVAL: tokio::time::Duration = tokio::time::Duration::from_millis(20);
             let mut last_activation = DateTime::from_timestamp_millis(0).unwrap();
             let mut previously_active = false;
+            let mut meter_error_logged = false;
             loop {
                 // Stop if metering has been disabled
                 let metering_enabled = state.metering_enabled.lock().await;
@@ -304,13 +306,25 @@ impl AudioDevice {
                 drop(metering_enabled);
                 // Get the meter value
                 let meter = state.meter_information.lock().await;
-                let value = match unsafe { meter.0.GetPeakValue() } {
-                    Ok(value) => value,
+                let peak_value = unsafe { meter.0.GetPeakValue() };
+                drop(meter);
+                let value = match peak_value {
+                    Ok(value) => {
+                        meter_error_logged = false;
+                        value
+                    }
                     Err(e) => {
+                        if !meter_error_logged {
+                            meter_error_logged = true;
+                            error!(
+                                "[Core] Could not read the peak level of audio device '{}': {e:?}",
+                                state.name
+                            );
+                        }
+                        tokio::time::sleep(SAMPLE_INTERVAL).await;
                         continue;
                     }
                 };
-                drop(meter);
                 // Get the threshold
                 let threshold = super::super::AUDIO_DEVICE_MANAGER
                     .lock()
@@ -347,7 +361,7 @@ impl AudioDevice {
                     },
                 )
                 .await;
-                tokio::time::sleep(tokio::time::Duration::from_millis(20)).await;
+                tokio::time::sleep(SAMPLE_INTERVAL).await;
             }
         });
     }
@@ -419,7 +433,7 @@ impl AudioDeviceVolumeNotificationClient {
     }
 }
 
-impl IAudioEndpointVolumeCallback_Impl for AudioDeviceVolumeNotificationClient {
+impl IAudioEndpointVolumeCallback_Impl for AudioDeviceVolumeNotificationClient_Impl {
     #[allow(non_snake_case)]
     fn OnNotify(&self, _notify: *mut AUDIO_VOLUME_NOTIFICATION_DATA) -> windows::core::Result<()> {
         let tx = self.channel.clone();

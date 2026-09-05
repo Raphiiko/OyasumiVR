@@ -1,4 +1,4 @@
-import { Component, HostBinding, OnInit } from '@angular/core';
+import { Component, HostBinding, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, triggerChildren } from 'src-ui/app/utils/animations';
 import {
@@ -19,6 +19,7 @@ export interface FrameLimiterAddApplicationModalOutputModel {
   templateUrl: './frame-limiter-add-application-modal.component.html',
   styleUrls: ['./frame-limiter-add-application-modal.component.scss'],
   animations: [fadeUp(), fade(), triggerChildren()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class FrameLimiterAddApplicationModalComponent

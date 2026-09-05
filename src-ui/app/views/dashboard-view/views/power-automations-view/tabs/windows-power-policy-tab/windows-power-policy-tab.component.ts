@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { AutomationConfigService } from '../../../../../../services/automation-config.service';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
@@ -14,6 +14,7 @@ import { combineLatest, tap } from 'rxjs';
   selector: 'app-windows-power-policy-tab',
   templateUrl: './windows-power-policy-tab.component.html',
   styleUrls: ['./windows-power-policy-tab.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class WindowsPowerPolicyTabComponent implements OnInit {

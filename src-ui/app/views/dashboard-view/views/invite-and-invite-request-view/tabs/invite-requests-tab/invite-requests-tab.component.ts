@@ -1,8 +1,9 @@
-import { Component, DestroyRef, Input, OnInit } from '@angular/core';
+import { Component, DestroyRef, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { SelectBoxItem } from '../../../../../../components/select-box/select-box.component';
 import { debounceTime, distinctUntilChanged, map, skip, Subject, tap } from 'rxjs';
 import { VRChatService } from '../../../../../../services/vrchat-api/vrchat.service';
 import { noop, vshrink } from '../../../../../../utils/animations';
+import { flushOnDestroy } from '../../../../../../utils/rxjs-utils';
 import {
   AutoAcceptInviteRequestsAutomationConfig,
   AUTOMATION_CONFIGS_DEFAULT,
@@ -22,6 +23,7 @@ interface PresetOptions {
   templateUrl: './invite-requests-tab.component.html',
   styleUrls: ['./invite-requests-tab.component.scss'],
   animations: [vshrink(), noop()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class InviteRequestsTabComponent implements OnInit {
@@ -99,7 +101,6 @@ export class InviteRequestsTabComponent implements OnInit {
   ngOnInit(): void {
     this.appSettings.settings
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         map((settings) => settings.playerListPresets),
         distinctUntilChanged(),
         tap((presets) => {
@@ -122,7 +123,8 @@ export class InviteRequestsTabComponent implements OnInit {
               this.presetOption[keyT] = this.presetOptions[0];
             }
           });
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
     this.automationConfig.configs
@@ -143,22 +145,24 @@ export class InviteRequestsTabComponent implements OnInit {
           (o) => o.id === this.config.declineOnRequest
         );
       });
+    flushOnDestroy(this.updateAcceptInviteRequestCustomMessage, this.destroyRef);
     this.updateAcceptInviteRequestCustomMessage
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         debounceTime(500),
         map((message) => message.trim().replace(/\s+/g, ' ').slice(0, 64)),
-        distinctUntilChanged()
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((message) => {
         this.updateConfig({ acceptInviteRequestMessage: message });
       });
+    flushOnDestroy(this.updateDeclineInviteRequestCustomMessage, this.destroyRef);
     this.updateDeclineInviteRequestCustomMessage
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         debounceTime(500),
         map((message) => message.trim().replace(/\s+/g, ' ').slice(0, 64)),
-        distinctUntilChanged()
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((message) => {
         this.updateConfig({ declineInviteRequestMessage: message });

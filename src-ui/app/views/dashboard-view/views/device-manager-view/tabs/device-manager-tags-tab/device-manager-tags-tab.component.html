@@ -1,12 +1,12 @@
 <!-- Create New Tag -->
 <div class="create-tag-section">
-  <h3 translate>device-manager.tags.create.title</h3>
+  <h3 transloco="device-manager.tags.create.title"></h3>
   <div class="new-tag-creator">
     <div class="input-wrapper">
       <input
         type="text"
         [(ngModel)]="newTagName"
-        placeholder="{{ 'device-manager.tags.create.namePlaceholder' | translate }}"
+        placeholder="{{ 'device-manager.tags.create.namePlaceholder' | transloco }}"
         [maxlength]="32"
       />
     </div>
@@ -21,16 +21,19 @@
         ></div>
       }
     </div>
-    <button class="btn btn-primary" (click)="createTag()" [disabled]="!newTagName.trim()" translate>
-      device-manager.tags.create.button
-    </button>
+    <button
+      class="btn btn-primary"
+      (click)="createTag()"
+      [disabled]="!newTagName.trim()"
+      transloco="device-manager.tags.create.button"
+    ></button>
   </div>
 </div>
 
 <!-- Existing Tags -->
 @if (tags.length > 0) {
   <div class="tags-list">
-    <h3 translate>device-manager.tags.existing.title</h3>
+    <h3 transloco="device-manager.tags.existing.title"></h3>
     @for (tag of tags; track trackTagBy($index, tag)) {
       <div class="tag-list-item" @vshrink>
         <div class="tag-color" [style.background-color]="tag.color"></div>
@@ -42,7 +45,7 @@
               <button
                 class="btn-icon"
                 (click)="editTag(tag)"
-                [tooltip]="'device-manager.tags.edit' | translate"
+                [tooltip]="'device-manager.tags.edit' | transloco"
                 [tooltipMode]="'left'"
               >
                 <i class="material-icons">edit</i>
@@ -50,7 +53,7 @@
               <button
                 class="btn-icon"
                 (click)="deleteTag(tag)"
-                [tooltip]="'device-manager.tags.delete' | translate"
+                [tooltip]="'device-manager.tags.delete' | transloco"
                 [tooltipMode]="'left'"
               >
                 <i class="material-icons">delete</i>
@@ -78,7 +81,7 @@
               <button
                 class="btn-icon success"
                 (click)="saveTag()"
-                [tooltip]="'device-manager.tags.save' | translate"
+                [tooltip]="'device-manager.tags.save' | transloco"
                 [tooltipMode]="'left'"
               >
                 <i class="material-icons">check</i>
@@ -86,7 +89,7 @@
               <button
                 class="btn-icon"
                 (click)="cancelEditTag()"
-                [tooltip]="'device-manager.tags.cancel' | translate"
+                [tooltip]="'device-manager.tags.cancel' | transloco"
                 [tooltipMode]="'left'"
               >
                 <i class="material-icons">close</i>
@@ -103,6 +106,6 @@
 @if (tags.length === 0) {
   <div class="empty-state" @vshrink>
     <i class="material-icons">label_outline</i>
-    <span translate>device-manager.tags.empty.noTags</span>
+    <span transloco="device-manager.tags.empty.noTags"></span>
   </div>
 }

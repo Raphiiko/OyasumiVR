@@ -1,10 +1,19 @@
-import { Component, DestroyRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { DeviceSelection, DMDeviceType } from 'src-ui/app/models/device-manager';
 import { DeviceSelectorModalComponent } from '../device-selector-modal/device-selector-modal.component';
 import { hshrink, noop } from '../../utils/animations';
 import { DeviceManagerService } from 'src-ui/app/services/device-manager.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { isEqual } from 'lodash';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -13,6 +22,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './device-selector.component.html',
   styleUrls: ['./device-selector.component.scss'],
   animations: [hshrink(), noop()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DeviceSelectorComponent implements OnInit {
@@ -36,8 +46,9 @@ export class DeviceSelectorComponent implements OnInit {
   constructor(
     private modalService: ModalService,
     private deviceManagerService: DeviceManagerService,
-    private translateService: TranslateService,
-    private destroyRef: DestroyRef
+    private translateService: TranslocoService,
+    private destroyRef: DestroyRef,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -46,6 +57,11 @@ export class DeviceSelectorComponent implements OnInit {
       .subscribe(() => {
         this.updateDeviceCount();
       });
+    // buttonText is translated on read, so the view has to be rechecked when the
+    // active language changes.
+    this.translateService.langChanges$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.cdr.markForCheck());
   }
 
   get hasSelection(): boolean {
@@ -59,9 +75,9 @@ export class DeviceSelectorComponent implements OnInit {
 
   get buttonText(): string {
     if (!this.hasSelection) {
-      return this.translateService.instant('comp.device-selector.noSelection');
+      return this.translateService.translate('comp.device-selector.noSelection');
     }
-    return this.translateService.instant('comp.device-selector.withDevices', {
+    return this.translateService.translate('comp.device-selector.withDevices', {
       count: this.deviceCount,
     });
   }
@@ -103,6 +119,7 @@ export class DeviceSelectorComponent implements OnInit {
   private async updateDeviceCount() {
     if (!this.selection) {
       this.deviceCount = 0;
+      this.cdr.markForCheck();
       return;
     }
 
@@ -113,5 +130,6 @@ export class DeviceSelectorComponent implements OnInit {
       console.error('Failed to get devices for selection:', error);
       this.deviceCount = 0;
     }
+    this.cdr.markForCheck();
   }
 }

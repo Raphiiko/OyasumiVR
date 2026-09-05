@@ -1,4 +1,12 @@
-import { Component, DestroyRef, Input, OnChanges, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  Input,
+  OnChanges,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { EventLogEntryParser } from './event-log-entry-parser';
 import { EventLogSleepModeEnabledEntryParser } from './entry-parsers/sleep-mode-enabled';
 import { EventLogSleepModeDisabledEntryParser } from './entry-parsers/sleep-mode-disabled';
@@ -9,7 +17,7 @@ import { EventLogDeclinedInviteRequestEntryParser } from './entry-parsers/declin
 import { EventLogDeclinedInviteEntryParser } from './entry-parsers/declined-invite';
 import { EventLogStatusChangedOnPlayerCountChangeEntryParser } from './entry-parsers/status-changed-on-player-count-change';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { EventLogSleepDetectorEnableCancelledEntryParser } from './entry-parsers/sleep-detector-enable-cancelled';
 import { EventLogRenderResolutionChangedEntryParser } from './entry-parsers/render-resolution-changed';
 import { EventLogFadeDistanceChangedEntryParser } from './entry-parsers/fade-distance-changed';
@@ -42,6 +50,7 @@ import { EventLogEntry } from '../../../models/event-log-entry';
   selector: 'app-event-log-entry',
   templateUrl: './event-log-entry.component.html',
   styleUrls: ['./event-log-entry.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class EventLogEntryComponent implements OnInit, OnChanges {
@@ -87,8 +96,9 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
 
   constructor(
     private sanitizer: DomSanitizer,
-    private translate: TranslateService,
-    private destroyRef: DestroyRef
+    private translate: TranslocoService,
+    private destroyRef: DestroyRef,
+    private cdr: ChangeDetectorRef
   ) {}
 
   _entry?: EventLogEntry;
@@ -103,9 +113,12 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.ngOnChanges();
-    this.translate.onLangChange
+    this.translate.langChanges$
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.rebuild());
+      .subscribe(() => {
+        this.rebuild();
+        this.cdr.markForCheck();
+      });
   }
 
   ngOnChanges() {
@@ -118,13 +131,13 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
     let key = this.parser.headerInfoTitle(this._entry);
     if (key) {
       this.headerInfoTitle = this.sanitizer.bypassSecurityTrustHtml(
-        this.translate.instant(key, this.parser?.headerInfoTitleParams(this._entry) ?? {})
+        this.translate.translate(key, this.parser?.headerInfoTitleParams(this._entry) ?? {})
       );
     }
     key = this.parser.headerInfoSubTitle(this._entry);
     if (key) {
       this.headerInfoSubTitle = this.sanitizer.bypassSecurityTrustHtml(
-        this.translate.instant(key, this.parser?.headerInfoSubTitleParams(this._entry) ?? {})
+        this.translate.translate(key, this.parser?.headerInfoSubTitleParams(this._entry) ?? {})
       );
     }
   }

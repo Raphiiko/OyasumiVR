@@ -4,14 +4,10 @@
       "role": "Développeur"
     },
     "discordInvite": "Serveur discord",
-    "projectLinks": "Liens",
     "sourceLink": "Code source @ GitHub",
     "translations": "Traductions"
   },
   "audio-volume-automations": {
-    "config": {
-      "title": "Configuration"
-    },
     "onSleepDisable": {
       "title": "Quand je me réveille"
     },
@@ -58,7 +54,6 @@
     "device-list": {
       "category": {
         "Controller": "Contrôleurs",
-        "GenericTracker": "Trackers",
         "other": "Autres"
       },
       "lighthouseStatus": {
@@ -322,14 +317,10 @@
       }
     },
     "osc-script-code-editor": {
-      "format": "Format",
       "syntaxGuide": "Guide de syntaxe",
-      "test": "Test",
       "title": "Editeur de script OSC"
     },
     "osc-script-modal": {
-      "script": "Script",
-      "simple": "Simple",
       "title": "Script OSC"
     },
     "osc-script-simple-editor": {
@@ -350,8 +341,7 @@
           "title": "Sommeil"
         }
       },
-      "errorCounter": "{value, plural, one {1 Erreur de validation} other {# Erreurs de validation}}",
-      "test": "Test"
+      "errorCounter": "{value, plural, one {1 Erreur de validation} other {# Erreurs de validation}}"
     },
     "player-list": {
       "addFriends": "Ajouter des amis",
@@ -399,8 +389,7 @@
   },
   "device-manager": {
     "deviceType": {
-      "CONTROLLER": "Contrôleurs",
-      "TRACKER": "Trackers"
+      "CONTROLLER": "Contrôleurs"
     },
     "tabs": {
       "devices": "Appareils"
@@ -415,10 +404,7 @@
       "add": "Ajouter"
     },
     "onSleepDisable": "Quand je me réveille",
-    "onSleepEnable": "Quand je vais dormir",
-    "selector": {
-      "auto": "Auto"
-    }
+    "onSleepEnable": "Quand je vais dormir"
   },
   "gpu-automations": {
     "automations": "Automatisations de sommeil",
@@ -426,12 +412,6 @@
     "disabled": {
       "disabled": "OyasumiVR peut automatiser votre carte graphique de nombreuses façons.\nCela permet d'économiser de l'énergie pendant votre sommeil.\n\nCette fonctionnalité est avancée, et donc désactivée par défaut.\nVous pouvez l'activer en cliquant sur le bouton ci-dessous",
       "noSidecar": "Pour permettre le changement des paramètres de votre GPU, OyasumiVR requiert les droits administrateurs. Vous pouvez donner les privilèges administrateur à OyasumiVR en cliquant sur le bouton ci-dessous."
-    },
-    "elevationSidecarModal": {
-      "cancel": "Seulement cette fois",
-      "confirm": "Toujours",
-      "message": "Voulez-vous donner les privilèges administrateur à OyasumiVR de manière permanente ?\n\n Si vous activez ceci, OyasumiVR les demandera lors du démarrage. Vous pouvez désactiver ceci plus tard dans les paramètres.",
-      "title": "Donner les droits administrateur"
     },
     "enable": "Activer les automatisations GPU",
     "enableWarning": "Un mauvais paramétrage du GPU peut entrainer une instabilité de votre système. Merci d'agir en connaissance de cause.",
@@ -447,8 +427,7 @@
           "NOT_FOUND": "<strong>MSIAfterburner.exe</strong> n'a pas pu être trouvé à cet emplacement.",
           "SUCCESS": "<strong>MSIAfterburner.exe</strong> a été trouvé et fonctionne correctement !",
           "UNKNOWN_ERROR": "Une erreur inconnue est survenue lors de la recherche de <strong>MSIAfterburner.exe</strong> à cet emplacement."
-        },
-        "title": "Configuration"
+        }
       },
       "none": "Aucun",
       "profile": "Profil {index}",
@@ -739,7 +718,6 @@
       "title": "Quand je dors"
     },
     "renderResolution": {
-      "auto": "Auto",
       "custom": "Customisée",
       "title": "Changer la résolution d'affichage pour"
     },
@@ -751,14 +729,19 @@
     },
     "onSleepEnable": {
       "title": "Quand je vais dormir"
-    },
-    "testCommands": "Test"
+    }
   },
   "settings": {
     "general": {
       "adminPrivileges": {
-        "description": "OyasumiVR a besoin des droits administrateurs pour gérer la consommation de votre GPU. Les privilèges seront demandés au démarrage du programme.",
-        "label": "Demander les droits administrateurs au démarrage",
+        "description": "Certaines fonctionnalités, comme la gestion des limites de puissance de votre carte graphique, nécessitent les droits administrateur. En activant ceci, ils ne sont demandés qu'une seule fois. Ensuite, OyasumiVR configure ces fonctionnalités sans redemander.",
+        "errors": {
+          "installFailed": "OyasumiVR n'a pas pu configurer le composant qui nécessite les droits administrateur.",
+          "notSupported": "Ces fonctionnalités nécessitent un compte administrateur Windows. Ce compte ne peut pas obtenir les droits administrateur, elles restent donc indisponibles.",
+          "promptDeclined": "Les droits administrateur n'ont pas été accordés, ces fonctionnalités restent donc désactivées.",
+          "taskFailed": "OyasumiVR n'a pas pu démarrer le composant qui nécessite les droits administrateur. Il réessaiera au prochain démarrage d'OyasumiVR."
+        },
+        "label": "Autoriser les fonctionnalités nécessitant les droits administrateur",
         "title": "Droits administrateur"
       },
       "language": {
@@ -775,8 +758,7 @@
           "PERMISSION_DENIED": "OyasumiVR n'a pas la permission d'exécuter le fichier <strong>lighthouse_console.exe</strong> à cet emplacement. Merci d'exécuter OyasumiVR en mode administrateur.",
           "SUCCESS": "Un fichier <strong>lighthouse_console.exe</strong> valide a été trouvé!",
           "UNKNOWN_ERROR": "Une erreur inconnue est survenue lors de la recherche de <strong>lighthouse_console.exe</strong> à cet emplacement"
-        },
-        "title": "Lighthouse Console"
+        }
       },
       "lighthousePowerControl": {
         "powerOffMode": {
@@ -841,13 +823,9 @@
             "title": "Mode sommeil activé"
           }
         }
-      },
-      "volume": {
-        "test": "Test"
       }
     },
     "updates": {
-      "changelog": "Changelog",
       "checkForUpdates": "Rechercher des mises à jour",
       "install": "Installer v{version}",
       "noUpdate": "Vous utilisez actuellement la dernière version d'OyasumiVR (v{version}) !",
@@ -912,13 +890,11 @@
       },
       "disableOnDevicePowerOn": {
         "Controller": "Contrôleur",
-        "GenericTracker": "Tracker",
         "title": "Désactiver le mode sommeil",
         "whenTurningOn": "Lorsque j'allume un"
       },
       "enableAtBatteryPercentage": {
         "Controller": "Contrôleur",
-        "GenericTracker": "Tracker",
         "errors": {
           "thresholdNotInteger": "Le pourcentage doit être un nombre entier.",
           "thresholdOutOfRange": "Le pourcentage doit être entre 0% et 100%."
@@ -935,8 +911,7 @@
       "enableForSleepDetector": {
         "calibration": {
           "action": "Calibrer",
-          "description": "OyasumiVR doit être calibré avant de pouvoir utiliser cette fonctionnalité.",
-          "title": "Calibration"
+          "description": "OyasumiVR doit être calibré avant de pouvoir utiliser cette fonctionnalité."
         },
         "sensitivity": {
           "presets": {
@@ -998,9 +973,6 @@
     "sleepDetection": {
       "automation": {
         "title": "Détection de sommeil"
-      },
-      "configuration": {
-        "title": "Configuration"
       }
     },
     "title": "Détection de sommeil"
@@ -1045,9 +1017,6 @@
     "title": "Automatisations de statut"
   },
   "systemMicMuteAutomations": {
-    "config": {
-      "title": "Configuration"
-    },
     "controllerBinding": {
       "onSleepModeDisable": {
         "title": "Lorsque de la désactivation du mode sommeil"
@@ -1095,9 +1064,6 @@
     }
   },
   "vrchatMicMuteAutomations": {
-    "config": {
-      "title": "Configuration"
-    },
     "muteOptions": {
       "NONE": "Aucun"
     },

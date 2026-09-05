@@ -16,7 +16,6 @@ export default [
       'proto/**',
       'node_modules/**',
       'dist/**',
-      'src-overlay-ui/.svelte-kit/**',
       'src-overlay-ui/build/**',
     ],
   },
@@ -43,6 +42,7 @@ export default [
         {
           type: 'attribute',
           style: 'camelCase',
+          prefix: [],
         },
       ],
       '@angular-eslint/component-selector': [
@@ -96,7 +96,9 @@ export default [
       '@angular-eslint/template': angularEslintTemplate,
     },
     rules: {
-      ...angularEslintTemplate.configs.recommended.rules,
+      '@angular-eslint/template/banana-in-box': 'error',
+      '@angular-eslint/template/eqeqeq': 'error',
+      '@angular-eslint/template/no-negated-async': 'error',
     },
   },
 ]; 

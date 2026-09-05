@@ -1,12 +1,13 @@
-import { OVRDeviceClass } from './ovr-device';
-import { OscScript } from './osc-script';
-import { SleepingPose } from './sleeping-pose';
-import { UserStatus } from 'vrchat/dist';
-import { AudioDeviceParsedName, AudioDeviceType } from './audio-device';
-import { PersistedAvatar } from './vrchat';
+import type { OVRDeviceClass } from './ovr-device';
+import type { OscScript } from './osc-script';
+import type { SleepingPose } from './sleeping-pose';
+import { UserStatus } from './vrchat';
+import type { AudioDeviceParsedName, AudioDeviceType } from './audio-device';
+import type { PersistedAvatar } from './vrchat';
 import { FrameLimiterPresets } from '../services/frame-limiter.service';
-import { getBuiltInNotificationSound, NotificationSound } from './notification-sounds';
-import { DeviceSelection } from './device-manager';
+import { getBuiltInNotificationSound } from './notification-sounds';
+import type { NotificationSound } from './notification-sounds';
+import type { DeviceSelection } from './device-manager';
 
 export type AutomationType =
   | 'GPU_POWER_LIMITS'
@@ -49,7 +50,7 @@ export type AutomationType =
   | 'RUN_AUTOMATIONS';
 
 export interface AutomationConfigs {
-  version: 18;
+  version: 20;
   // CORE SLEEP FUNCTIONALITY
   SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR: SleepModeEnableForSleepDetectorAutomationConfig;
   SLEEP_MODE_ENABLE_AT_TIME: SleepModeEnableAtTimeAutomationConfig;
@@ -133,8 +134,7 @@ export type BrightnessAutomationsConfig = AutomationConfig & {
 };
 
 export type BrightnessEventAutomationConfig =
-  | GenericBrightnessEventAutomationConfig
-  | SunBrightnessEventAutomationConfig;
+  GenericBrightnessEventAutomationConfig | SunBrightnessEventAutomationConfig;
 
 export interface GenericBrightnessEventAutomationConfig extends AutomationConfig {
   type?: undefined;
@@ -360,9 +360,7 @@ export interface JoinNotificationsAutomationsConfig extends AutomationConfig {
 
 export type AudioVolumeAutomationType = 'SET_VOLUME' | 'MUTE' | 'UNMUTE';
 export type AudioVolumeAutomation =
-  | MuteAudioVolumeAutomation
-  | UnmuteAudioVolumeAutomation
-  | SetAudioVolumeAutomation;
+  MuteAudioVolumeAutomation | UnmuteAudioVolumeAutomation | SetAudioVolumeAutomation;
 
 export interface BaseAudioVolumeAutomation {
   type: AudioVolumeAutomationType;
@@ -512,7 +510,6 @@ export interface RunAutomationsConfig extends AutomationConfig {
   onSleepModeDisableCommands: string;
   onSleepPreparation: boolean;
   onSleepPreparationCommands: string;
-  runAutomationsCryptoKey?: string;
 }
 
 //
@@ -520,7 +517,7 @@ export interface RunAutomationsConfig extends AutomationConfig {
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 18,
+  version: 20,
   // CORE SLEEP FUNCTIONALITY
   SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR: {
     enabled: false,

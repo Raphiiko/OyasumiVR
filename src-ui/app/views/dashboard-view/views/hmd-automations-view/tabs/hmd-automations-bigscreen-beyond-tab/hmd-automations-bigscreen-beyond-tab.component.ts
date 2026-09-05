@@ -1,4 +1,10 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { AutomationConfigService } from '../../../../../../services/automation-config.service';
 import { AppSettingsService } from '../../../../../../services/app-settings.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -10,8 +16,6 @@ import {
 
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../../../../../models/settings';
 import { hshrink } from '../../../../../../utils/animations';
-import { SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS } from '../../../../../../services/brightness-control/brightness-control-models';
-import { HardwareBrightnessControlService } from '../../../../../../services/brightness-control/hardware-brightness-control.service';
 
 const MIN_SAFE_FAN_SPEED = 40;
 const AUTOMATION_ENABLE_KEYS = ['onSleepEnable', 'onSleepDisable', 'onSleepPreparation'];
@@ -21,6 +25,7 @@ const AUTOMATION_ENABLE_KEYS = ['onSleepEnable', 'onSleepDisable', 'onSleepPrepa
   templateUrl: './hmd-automations-bigscreen-beyond-tab.component.html',
   styleUrls: ['./hmd-automations-bigscreen-beyond-tab.component.scss'],
   animations: [hshrink()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class HmdAutomationsBigscreenBeyondTabComponent implements OnInit {
@@ -42,7 +47,7 @@ export class HmdAutomationsBigscreenBeyondTabComponent implements OnInit {
     private automationConfigService: AutomationConfigService,
     private appSettingsService: AppSettingsService,
     private destroyRef: DestroyRef,
-    private hardwareBrightness: HardwareBrightnessControlService
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -51,11 +56,13 @@ export class HmdAutomationsBigscreenBeyondTabComponent implements OnInit {
       .subscribe((configs) => {
         this.rgbControlConfig = configs.BIGSCREEN_BEYOND_RGB_CONTROL;
         this.fanControlConfig = configs.BIGSCREEN_BEYOND_FAN_CONTROL;
+        this.cdr.markForCheck();
       });
     this.appSettingsService.settings
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((settings) => {
         this.appSettings = settings;
+        this.cdr.markForCheck();
       });
   }
 
@@ -124,12 +131,6 @@ export class HmdAutomationsBigscreenBeyondTabComponent implements OnInit {
     this.appSettingsService.updateSettings({
       bigscreenBeyondBrightnessFanSafety: !this.appSettings.bigscreenBeyondBrightnessFanSafety,
     });
-    // Set brightness to same value to reset fan safety if needed
-    this.hardwareBrightness.setBrightness(
-      this.hardwareBrightness.brightness,
-      SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS,
-      true
-    );
   }
 
   protected readonly MIN_SAFE_FAN_SPEED = MIN_SAFE_FAN_SPEED;

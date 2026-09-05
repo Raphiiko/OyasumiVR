@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { open as openFile } from '@tauri-apps/plugin-dialog';
 import {
@@ -14,10 +14,12 @@ import { StartWithSteamVRHowToModalComponent } from './start-with-steamvr-how-to
 import { TelemetryService } from 'src-ui/app/services/telemetry.service';
 import { LighthouseConsoleService } from 'src-ui/app/services/lighthouse-console.service';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
+import { ElevatedSidecarService } from 'src-ui/app/services/elevated-sidecar.service';
 import { ModalService } from 'src-ui/app/services/modal.service';
 
 import { LANGUAGES } from '../../../../globals';
 import { vshrink } from '../../../../utils/animations';
+import { flushOnDestroy } from '../../../../utils/rxjs-utils';
 import {
   TELEMETRY_SETTINGS_DEFAULT,
   TelemetrySettings,
@@ -29,6 +31,7 @@ import { OVRInputEventAction } from 'src-ui/app/models/ovr-input-event';
   templateUrl: './settings-general-view.component.html',
   styleUrls: ['./settings-general-view.component.scss'],
   animations: [vshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SettingsGeneralViewComponent implements OnInit {
@@ -94,7 +97,8 @@ export class SettingsGeneralViewComponent implements OnInit {
     private telemetry: TelemetryService,
     private modalService: ModalService,
     private destroyRef: DestroyRef,
-    private settingsService: AppSettingsService
+    private settingsService: AppSettingsService,
+    protected elevatedSidecar: ElevatedSidecarService
   ) {}
 
   ngOnInit(): void {
@@ -104,8 +108,9 @@ export class SettingsGeneralViewComponent implements OnInit {
     this.lighthouse.consoleStatus
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((status) => this.processLighthouseConsoleStatus(status));
+    flushOnDestroy(this.lighthouseConsolePathInputChange, this.destroyRef);
     this.lighthouseConsolePathInputChange
-      .pipe(takeUntilDestroyed(this.destroyRef), distinctUntilChanged(), debounceTime(500))
+      .pipe(distinctUntilChanged(), debounceTime(500), takeUntilDestroyed(this.destroyRef))
       .subscribe(async (path) => {
         await this.lighthouse.setConsolePath(path);
       });
@@ -171,8 +176,12 @@ export class SettingsGeneralViewComponent implements OnInit {
     if (path && typeof path === 'string') await this.lighthouse.setConsolePath(path);
   }
 
-  setAskForAdminOnStart(enabled: boolean) {
-    this.settingsService.updateSettings({ askForAdminOnStart: enabled });
+  async setElevatedFeaturesEnabled(enabled: boolean) {
+    if (!enabled) {
+      await this.elevatedSidecar.disable();
+      return;
+    }
+    await this.elevatedSidecar.enable();
   }
 
   setTelemetryEnabled(enabled: boolean) {
@@ -189,6 +198,10 @@ export class SettingsGeneralViewComponent implements OnInit {
 
   setLighthousePowerControl(enabled: boolean) {
     this.settingsService.updateSettings({ lighthousePowerControl: enabled });
+  }
+
+  setLighthousePowerOffDelay(enabled: boolean) {
+    this.settingsService.updateSettings({ lighthousePowerOffDelay: enabled });
   }
 
   onChangeLighthousePowerOffMode(option: SelectBoxItem | undefined) {

@@ -1,4 +1,13 @@
-import { AfterViewInit, Component, DestroyRef, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  AfterViewInit,
+  Component,
+  DestroyRef,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { combineLatest, firstValueFrom, interval, map } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import * as uPlot from 'uplot';
@@ -11,6 +20,7 @@ import { AutomationConfigService } from '../../../services/automation-config.ser
   selector: 'app-debug-sleep-detection-debugger',
   templateUrl: './debug-sleep-detection-debugger.component.html',
   styleUrls: ['./debug-sleep-detection-debugger.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DebugSleepDetectionDebuggerComponent implements OnInit, AfterViewInit {
@@ -34,7 +44,8 @@ export class DebugSleepDetectionDebuggerComponent implements OnInit, AfterViewIn
   constructor(
     public debug: DeveloperDebugService,
     private destroyRef: DestroyRef,
-    private automationConfigService: AutomationConfigService
+    private automationConfigService: AutomationConfigService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -42,8 +53,12 @@ export class DebugSleepDetectionDebuggerComponent implements OnInit, AfterViewIn
     combineLatest([this.debug.sleepDetectionDebugger.update, interval(2000)])
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(async () => {
+        // The template reads timeData and reportHandlingData straight off the
+        // service, so the view has to be rechecked on every update.
+        this.cdr.markForCheck();
         if (!this.sleepDetectionTimeSeriesPlot) return;
         this.sleepDetectionTimeSeriesPlot.setData(await this.buildSleepData());
+        this.cdr.markForCheck();
       });
   }
 

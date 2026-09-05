@@ -62,10 +62,14 @@ export class NotificationService {
     if (volume > 0) {
       switch (sound.type) {
         case 'BUILT_IN':
-          await invoke('play_sound', {
-            name: sound.id,
-            volume,
-          });
+          try {
+            await invoke('play_sound', {
+              name: sound.id,
+              volume,
+            });
+          } catch (e) {
+            error(`[Notification] Could not play sound "${sound.id}": ${e}`);
+          }
           break;
         default:
           error(`[Notification] Unknown sound type: ${sound.type}`);

@@ -1,4 +1,4 @@
-import { Component, HostBinding, OnInit } from '@angular/core';
+import { Component, HostBinding, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, triggerChildren } from '../../../../../../utils/animations';
 import { OVRDeviceClass } from '../../../../../../models/ovr-device';
@@ -16,6 +16,7 @@ export interface DevicePowerOnDisableSleepModeModalOutputModel {
   templateUrl: './device-power-on-disable-sleep-mode-modal.component.html',
   styleUrls: ['./device-power-on-disable-sleep-mode-modal.component.scss'],
   animations: [fadeUp(), fade(), triggerChildren()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DevicePowerOnDisableSleepModeModalComponent

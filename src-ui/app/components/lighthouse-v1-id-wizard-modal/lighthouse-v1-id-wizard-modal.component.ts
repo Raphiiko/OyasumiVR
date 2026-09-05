@@ -1,4 +1,12 @@
-import { Component, DestroyRef, OnInit, TrackByFunction } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  TrackByFunction,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, vshrink } from 'src-ui/app/utils/animations';
 import { LighthouseDevice } from '../../models/lighthouse-device';
@@ -55,6 +63,7 @@ export interface LighthouseV1IdWizardModalOutputModel {}
       ]),
     ]),
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class LighthouseV1IdWizardModalComponent
@@ -79,6 +88,8 @@ export class LighthouseV1IdWizardModalComponent
   }> = [];
   verifying = false;
 
+  private cdr = inject(ChangeDetectorRef);
+
   constructor(
     private lighthouseService: LighthouseService,
     private openvr: OpenVRService,
@@ -93,14 +104,14 @@ export class LighthouseV1IdWizardModalComponent
   ngOnInit(): void {
     interval(1000)
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         filter(() => this.step === 'AUTOMATIC_DETECTION'),
         delay(1500),
-        filter(() => this.step === 'AUTOMATIC_DETECTION')
+        filter(() => this.step === 'AUTOMATIC_DETECTION'),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(() => this.attemptAutomaticDetection());
     combineLatest([this.openvr.status, this.openvr.devices])
-      .pipe(takeUntilDestroyed(this.destroyRef), debounceTime(1))
+      .pipe(debounceTime(1), takeUntilDestroyed(this.destroyRef))
       .subscribe(([status, devices]) => {
         const openVrInitialized = status === 'INITIALIZED';
         const trackedDeviceDetected = devices.some(
@@ -145,6 +156,7 @@ export class LighthouseV1IdWizardModalComponent
           loader: true,
         };
         this.automaticDetectionSteps.push(detectBaseStationStep);
+        this.cdr.markForCheck();
       });
   }
 
@@ -176,12 +188,16 @@ export class LighthouseV1IdWizardModalComponent
       next: async (progress) => {
         if (typeof progress === 'number') {
           this.verifyPercentage = Math.round(progress * 100);
+          this.cdr.markForCheck();
         } else {
           this.verifyPercentage = 100;
           switch (progress) {
             case 'SUCCESS':
               await this.saveId(id);
-              setTimeout(() => (this.step = 'SUCCESS'), 1000);
+              setTimeout(() => {
+                this.step = 'SUCCESS';
+                this.cdr.markForCheck();
+              }, 1000);
               setTimeout(() => this.close(), 3500);
               break;
             case 'ERROR':
@@ -202,10 +218,17 @@ export class LighthouseV1IdWizardModalComponent
               }
               break;
           }
+          this.cdr.markForCheck();
         }
       },
-      error: () => (this.verifying = false),
-      complete: () => (this.verifying = false),
+      error: () => {
+        this.verifying = false;
+        this.cdr.markForCheck();
+      },
+      complete: () => {
+        this.verifying = false;
+        this.cdr.markForCheck();
+      },
     });
   }
 

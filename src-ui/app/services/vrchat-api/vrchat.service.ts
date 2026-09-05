@@ -1,186 +1,250 @@
-import { Injectable } from '@angular/core';
-import type {
-  CurrentUser,
-  LimitedUser,
-  Notification,
-  LimitedUserGroups,
-  UserStatus,
-} from 'vrchat/dist';
+import { inject, Injectable } from '@angular/core';
+import type { CurrentUser, LimitedUserFriend, Notification, LimitedUserGroups } from 'vrchat';
 import { SETTINGS_KEY_VRCHAT_API, SETTINGS_STORE } from '../../globals';
-import { VRCHAT_API_SETTINGS_DEFAULT, VRChatApiSettings } from '../../models/vrchat-api-settings';
-import { migrateVRChatApiSettings } from '../../migrations/vrchat-api-settings.migrations';
+import {
+  getVRChatAccountSecret,
+  getActiveVRChatProfile,
+  normalizeVRChatAccountProfile,
+  parseVRChatAccountSecret,
+  VRCHAT_ACCOUNT_SECRET_EMPTY,
+  VRCHAT_API_SETTINGS_DEFAULT,
+  VRChatAccountProfile,
+  VRChatApiSettings,
+} from '../../models/vrchat-api-settings';
 import { BehaviorSubject, combineLatest, filter, firstValueFrom, map, Observable } from 'rxjs';
 import { ModalService } from 'src-ui/app/services/modal.service';
-import { AvatarEx, WorldContext } from '../../models/vrchat';
+import { AvatarEx, UserStatus, WorldContext } from '../../models/vrchat';
 import { VRChatLogService } from '../vrchat-log.service';
-import { generateStorageCryptoKey, serializeStorageCryptoKey } from '../../utils/crypto';
+import { protectSecret, unprotectSecret } from '../../utils/secrets';
 import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
-import { VRChatAPI } from './vrchat-api';
+import { VRChatAPI, VRChatTwoFactorMethod } from './vrchat-api';
 import { VRChatAuth, VRChatAuthStatus } from './vrchat-auth';
 import { VRChatSocket } from './vrchat-socket';
 import { error } from '@tauri-apps/plugin-log';
+import type {
+  VRChatOnLocationChangeEvent,
+  VRChatOnPlayerJoinedEvent,
+  VRChatOnPlayerLeftEvent,
+} from '../../models/vrchat-log-event';
+import type { VRChatSocketStatus } from './vrchat-socket';
+import { ErrorReportingService } from '../error-reporting.service';
+import {
+  normalizeVRChatProfiles,
+  patchVRChatProfile,
+  VRChatProfileSessionPatch,
+} from './vrchat-profiles';
+
+function toPublicProfile(profile: VRChatAccountProfile): VRChatAccountProfile {
+  return {
+    ...profile,
+    protectedSecret: null,
+    authCookie: null,
+    twoFactorCookie: null,
+    twoFactorCookieLoginIdentifierHash: null,
+    pendingTwoFactorLoginIdentifier: null,
+    rememberedCredentials: null,
+  };
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class VRChatService {
-  private _settings = new BehaviorSubject<VRChatApiSettings>(VRCHAT_API_SETTINGS_DEFAULT);
-  private _vrchatProcessActive = new BehaviorSubject(false);
-  private _world: BehaviorSubject<WorldContext> = new BehaviorSubject<WorldContext>({
+  private readonly modalService = inject(ModalService);
+  private readonly logService = inject(VRChatLogService);
+  private readonly errorReporting = inject(ErrorReportingService);
+
+  private readonly settingsSubject = new BehaviorSubject<VRChatApiSettings>({
+    ...VRCHAT_API_SETTINGS_DEFAULT,
+  });
+  private readonly vrchatProcessActiveSubject = new BehaviorSubject(false);
+  private readonly worldSubject = new BehaviorSubject<WorldContext>({
     loaded: false,
     players: [],
   });
 
-  private api: VRChatAPI;
-  private auth: VRChatAuth;
-  private socket: VRChatSocket;
+  private readonly api: VRChatAPI;
+  private readonly auth: VRChatAuth;
+  private readonly socket: VRChatSocket;
+  private settingsUpdate: Promise<void> = Promise.resolve();
+  private lockedActiveProfileId: string | null = null;
+  private readonly protectedSecretsByProfileId = new Map<
+    string,
+    { plain: string; protected: string }
+  >();
 
-  public settings = this._settings.asObservable();
-  public user: Observable<CurrentUser | null>;
-  public status: Observable<VRChatAuthStatus>;
-  public notifications: Observable<Notification>;
-  public isFetchingFriends: Observable<boolean>;
-  public vrchatProcessActive = this._vrchatProcessActive.asObservable();
-  public world: Observable<WorldContext> = combineLatest([
-    this._world,
+  private readonly settings = this.settingsSubject.asObservable();
+  public readonly profiles = this.settings.pipe(
+    map((settings) => settings.profiles.filter((profile) => !profile.draft).map(toPublicProfile))
+  );
+  public readonly activeProfile = this.settings.pipe(
+    map((settings) => {
+      const profile = getActiveVRChatProfile(settings);
+      return profile ? toPublicProfile(profile) : null;
+    })
+  );
+  public readonly user: Observable<CurrentUser | null>;
+  public readonly status: Observable<VRChatAuthStatus>;
+  public readonly notifications: Observable<Notification>;
+  public readonly isFetchingFriends: Observable<boolean>;
+  public readonly vrchatProcessActive = this.vrchatProcessActiveSubject.asObservable();
+  public readonly world: Observable<WorldContext> = combineLatest([
+    this.worldSubject,
     this.logService.initialLoadComplete.pipe(filter((complete) => complete)),
   ]).pipe(map(([world]) => world));
+  public readonly websocketStatus: Observable<VRChatSocketStatus>;
 
-  constructor(
-    modalService: ModalService,
-    private logService: VRChatLogService
-  ) {
-    this.api = new VRChatAPI(this.settings, this.updateSettings.bind(this));
+  constructor() {
+    const reportError = (cause: Error) => this.errorReporting.captureException(cause);
+    this.api = new VRChatAPI(this.settings, this.updateProfile.bind(this), reportError);
     this.auth = new VRChatAuth(
       this.api,
-      modalService,
-      this.updateSettings.bind(this),
+      this.modalService,
+      this.mutateSettings.bind(this),
       this.settings
     );
-    this.socket = new VRChatSocket(this.auth, this.api, this.settings);
-    // Expose public state
+    this.api.setAuthenticationFailureHandler(() => void this.auth.revalidateSession());
+    this.socket = new VRChatSocket(this.auth, this.api, this.settings, reportError);
     this.user = this.auth.user;
     this.status = this.auth.status;
     this.notifications = this.socket.notifications;
     this.isFetchingFriends = this.api.isFetchingFriends;
+    this.websocketStatus = this.socket.status;
   }
 
-  async init() {
+  public async init(): Promise<void> {
     await this.loadSettings();
     await this.api.init(this.auth.user, this.auth.patchCurrentUser.bind(this.auth));
     await this.auth.init();
-    await this.socket.init();
-    await this.subscribeToLogEvents();
+    this.socket.init();
+    this.subscribeToLogEvents();
     await this.watchVRChatProcess();
   }
 
-  private async watchVRChatProcess() {
+  private async watchVRChatProcess(): Promise<void> {
     await listen<boolean>('VRCHAT_PROCESS_ACTIVE', (event) =>
-      this._vrchatProcessActive.next(event.payload)
+      this.vrchatProcessActiveSubject.next(event.payload)
     );
-    this._vrchatProcessActive.next(await invoke<boolean>('is_vrchat_active'));
+    this.vrchatProcessActiveSubject.next(await invoke<boolean>('is_vrchat_active'));
   }
 
-  private async subscribeToLogEvents() {
-    this.logService.logEvents.subscribe(async (event) => {
+  private subscribeToLogEvents(): void {
+    this.logService.logEvents.subscribe((event) => {
       switch (event.type) {
-        case 'OnPlayerJoined': {
-          const currentPlayers = [...this._world.value.players];
-          const existingPlayer = currentPlayers.find((player) => player.userId === event.userId);
-          if (existingPlayer) {
-            existingPlayer.displayName = event.displayName;
-          } else {
-            currentPlayers.push({ displayName: event.displayName, userId: event.userId });
-          }
-          const context = {
-            ...structuredClone(this._world.value),
-            players: currentPlayers,
-          };
-          if (event.userId === (await firstValueFrom(this.auth.user))?.id) {
-            context.loaded = true;
-            context.joinedAt = event.timestamp.getTime();
-          }
-          this._world.next(context);
+        case 'OnPlayerJoined':
+          void this.handlePlayerJoined(event);
           break;
-        }
-        case 'OnPlayerLeft': {
-          const currentPlayers = [...this._world.value.players];
-          const existingPlayer = currentPlayers.find((player) => player.userId === event.userId);
-          if (existingPlayer) {
-            currentPlayers.splice(currentPlayers.indexOf(existingPlayer), 1);
-          }
-          const context = {
-            ...structuredClone(this._world.value),
-            players: currentPlayers,
-          };
-          if (event.userId === (await firstValueFrom(this.auth.user))?.id) {
-            context.loaded = false;
-            context.joinedAt = undefined;
-          }
-          this._world.next(context);
+        case 'OnPlayerLeft':
+          void this.handlePlayerLeft(event);
           break;
-        }
         case 'OnLocationChange':
-          this._world.next({
-            ...structuredClone(this._world.value),
-            instanceId: event.instanceId,
-            loaded: false,
-            players: [],
-            joinedAt: undefined,
-          });
+          this.handleLocationChange(event);
           break;
       }
     });
   }
 
-  //
-  // Authentication methods
-  //
-
-  public showLoginModal(autoLogin = false) {
-    this.auth.showLoginModal(autoLogin);
+  private async handlePlayerJoined(event: VRChatOnPlayerJoinedEvent): Promise<void> {
+    const isCurrentUser = event.userId === (await firstValueFrom(this.auth.user))?.id;
+    const currentWorld = this.worldSubject.value;
+    const existingPlayer = currentWorld.players.some((player) => player.userId === event.userId);
+    const players = existingPlayer
+      ? currentWorld.players.map((player) =>
+          player.userId === event.userId ? { ...player, displayName: event.displayName } : player
+        )
+      : [...currentWorld.players, { displayName: event.displayName, userId: event.userId }];
+    this.worldSubject.next({
+      ...currentWorld,
+      players,
+      loaded: isCurrentUser ? true : currentWorld.loaded,
+      joinedAt: isCurrentUser ? event.timestamp.getTime() : currentWorld.joinedAt,
+    });
   }
 
-  public async login(username: string, password: string) {
-    await this.auth.login(username, password);
+  private async handlePlayerLeft(event: VRChatOnPlayerLeftEvent): Promise<void> {
+    const isCurrentUser = event.userId === (await firstValueFrom(this.auth.user))?.id;
+    const currentWorld = this.worldSubject.value;
+
+    this.worldSubject.next({
+      ...currentWorld,
+      players: currentWorld.players.filter((player) => player.userId !== event.userId),
+      loaded: isCurrentUser ? false : currentWorld.loaded,
+      joinedAt: isCurrentUser ? undefined : currentWorld.joinedAt,
+    });
   }
 
-  public async logout() {
-    await this.auth.logout();
+  private handleLocationChange(event: VRChatOnLocationChangeEvent): void {
+    this.worldSubject.next({
+      ...this.worldSubject.value,
+      instanceId: event.instanceId,
+      loaded: false,
+      players: [],
+      joinedAt: undefined,
+    });
   }
 
-  public async verify2FA(code: string, method: 'totp' | 'otp' | 'emailotp') {
-    await this.auth.verify2FA(code, method);
+  // authentication
+
+  public showLoginModal(autoLogin = false): void {
+    this.auth.showLoginModal({ autoLogin });
   }
 
-  public async rememberCredentials(username: string, password: string) {
-    await this.auth.rememberCredentials(username, password);
+  public login(username: string, password: string, keepActiveProfile = false): Promise<void> {
+    return this.auth.login(username, password, keepActiveProfile);
   }
 
-  public async forgetCredentials() {
-    await this.auth.forgetCredentials();
+  public loginNewAccount(username: string, password: string): Promise<void> {
+    return this.auth.loginNewAccount(username, password);
   }
 
-  public async loadCredentials(): Promise<{ username: string; password: string } | null> {
-    return await this.auth.loadCredentials();
+  public logout(): Promise<void> {
+    return this.auth.logout();
   }
 
-  //
-  // API methods
-  //
+  public activateProfile(profileId: string): Promise<void> {
+    return this.auth.activateProfile(profileId);
+  }
+
+  public prepareNewLogin(): Promise<void> {
+    return this.auth.prepareNewLogin();
+  }
+
+  public removeProfile(profileId: string): Promise<void> {
+    return this.auth.removeProfile(profileId);
+  }
+
+  public verify2FA(code: string, method: VRChatTwoFactorMethod): Promise<void> {
+    return this.auth.verify2FA(code, method);
+  }
+
+  public rememberCredentials(username: string, password: string): Promise<void> {
+    return this.auth.rememberCredentials(username, password);
+  }
+
+  public forgetCredentials(): Promise<void> {
+    return this.auth.forgetCredentials();
+  }
+
+  public loadCredentials(): Promise<{ username: string; password: string } | null> {
+    return this.auth.loadCredentials();
+  }
+
+  // API operations
 
   public setStatus(status: UserStatus | null, statusMessage: string | null): Promise<boolean> {
     return this.api.setStatus(status, statusMessage);
   }
 
-  public async selectAvatar(avatarId: string) {
-    await this.api.selectAvatar(avatarId);
+  public selectAvatar(avatarId: string): Promise<void> {
+    return this.api.selectAvatar(avatarId);
   }
 
-  public async inviteUser(inviteeId: string, options?: { instanceId?: string; message?: string }) {
-    // Throw if instance id was not provided and we don't know the current world id.
-    const instanceId = options?.instanceId ?? this._world.value?.instanceId;
+  public async inviteUser(
+    inviteeId: string,
+    options?: { instanceId?: string; message?: string }
+  ): Promise<void> {
+    const instanceId = options?.instanceId ?? this.worldSubject.value.instanceId;
     if (!instanceId) {
       error('[VRChat] Tried inviting a user when the current world instance is unknown');
       throw new Error('Cannot invite a user when the current world instance is unknown');
@@ -192,68 +256,141 @@ export class VRChatService {
     notificationId: string,
     notificationType: 'invite' | 'requestInvite',
     message: string
-  ) {
+  ): Promise<void> {
     await this.api.declineInviteOrInviteRequest(notificationId, notificationType, message);
   }
 
-  public async listFriends(): Promise<LimitedUser[]> {
-    return await this.api.listFriends();
+  public listFriends(): Promise<LimitedUserFriend[]> {
+    return this.api.listFriends();
   }
 
-  public async deleteNotification(notificationId: string) {
-    await this.api.deleteNotification(notificationId);
+  public deleteNotification(notificationId: string): Promise<void> {
+    return this.api.deleteNotification(notificationId);
   }
 
-  public async listAvatars(force = false): Promise<AvatarEx[]> {
-    return await this.api.listAvatars(force);
+  public listAvatars(force = false): Promise<AvatarEx[]> {
+    return this.api.listAvatars(force);
   }
 
-  public async representGroup(groupId: string, representing: boolean) {
-    await this.api.representGroup(groupId, representing);
+  public representGroup(groupId: string, representing: boolean): Promise<void> {
+    return this.api.representGroup(groupId, representing);
   }
 
-  public async getUserGroups(force = false): Promise<LimitedUserGroups[]> {
-    return await this.api.getUserGroups(force);
+  public getUserGroups(force = false): Promise<LimitedUserGroups[]> {
+    return this.api.getUserGroups(force);
   }
 
-  //
-  // Utility methods
-  //
-
-  public get websocketStatus(): Observable<'CLOSED' | 'OPEN' | 'OPENING'> {
-    return this.socket.status;
-  }
-
-  public imageUrlForPlayer(player: LimitedUser) {
+  public imageUrlForPlayer(player: LimitedUserFriend): string | undefined {
     return player.userIcon || player.profilePicOverride || player.currentAvatarThumbnailImageUrl;
   }
 
-  //
-  // Settings management
-  //
+  // settings
 
-  private async loadSettings() {
-    let settings: VRChatApiSettings | undefined =
-      await SETTINGS_STORE.get<VRChatApiSettings>(SETTINGS_KEY_VRCHAT_API);
-    settings = settings ? migrateVRChatApiSettings(settings) : this._settings.value;
-    this.auth.handleSettingsLoad(settings);
-    // Generate storage crypto key if needed
-    if (!settings.credentialCryptoKey) {
-      const key = await generateStorageCryptoKey();
-      settings.credentialCryptoKey = await serializeStorageCryptoKey(key);
-    }
-    // Finish loading settings & write changes to disk
-    this._settings.next(settings);
-    await this.saveSettings();
+  private async loadSettings(): Promise<void> {
+    const stored = await SETTINGS_STORE.get<VRChatApiSettings>(SETTINGS_KEY_VRCHAT_API);
+    const settings = stored ?? structuredClone(VRCHAT_API_SETTINGS_DEFAULT);
+    this.settingsSubject.next(normalizeVRChatProfiles(await this.loadProfileSecrets(settings)));
   }
 
-  private async updateSettings(settings: Partial<VRChatApiSettings>) {
-    const newSettings = Object.assign(structuredClone(this._settings.value), settings);
-    this._settings.next(newSettings);
-    await this.saveSettings();
+  private async loadProfileSecrets(settings: VRChatApiSettings): Promise<VRChatApiSettings> {
+    this.lockedActiveProfileId = null;
+    const profiles = await Promise.all(
+      settings.profiles.map(async (profile) => {
+        if (profile.protectedSecret == null) {
+          return normalizeVRChatAccountProfile({ ...profile, secretLocked: false });
+        }
+        try {
+          const json = await unprotectSecret(profile.protectedSecret);
+          if (json == null) throw new Error('the secret could not be unlocked');
+          const secret = parseVRChatAccountSecret(JSON.parse(json));
+          this.protectedSecretsByProfileId.set(profile.id, {
+            plain: json,
+            protected: profile.protectedSecret,
+          });
+          return normalizeVRChatAccountProfile({
+            ...profile,
+            ...secret,
+            protectedSecret: null,
+            secretLocked: false,
+          });
+        } catch (cause) {
+          error(`[VRChat] Failed to unlock profile ${profile.id}: ${cause}`);
+          return normalizeVRChatAccountProfile({
+            ...profile,
+            ...VRCHAT_ACCOUNT_SECRET_EMPTY,
+            secretLocked: true,
+          });
+        }
+      })
+    );
+    const activeProfileId = profiles.some(
+      (profile) => profile.id === settings.activeProfileId && !profile.secretLocked
+    )
+      ? settings.activeProfileId
+      : null;
+    this.lockedActiveProfileId = profiles.some(
+      (profile) => profile.id === settings.activeProfileId && profile.secretLocked
+    )
+      ? settings.activeProfileId
+      : null;
+    return { ...settings, profiles, activeProfileId };
   }
 
-  private async saveSettings() {
-    await SETTINGS_STORE.set(SETTINGS_KEY_VRCHAT_API, this._settings.value);
+  private async mutateSettings(
+    mutator: (settings: VRChatApiSettings) => VRChatApiSettings
+  ): Promise<VRChatApiSettings> {
+    let updated = this.settingsSubject.value;
+    const mutation = this.settingsUpdate.then(async () => {
+      updated = mutator(this.settingsSubject.value);
+      await this.saveSettings(updated);
+      this.settingsSubject.next(updated);
+    });
+    this.settingsUpdate = mutation.catch(() => undefined);
+    await mutation;
+    return updated;
+  }
+
+  private async updateProfile(profileId: string, patch: VRChatProfileSessionPatch): Promise<void> {
+    await this.mutateSettings((settings) => patchVRChatProfile(settings, profileId, patch));
+  }
+
+  private async protectProfileSecret(profile: VRChatAccountProfile): Promise<string | null> {
+    const plain = JSON.stringify(getVRChatAccountSecret(profile));
+    const cached = this.protectedSecretsByProfileId.get(profile.id);
+    if (cached?.plain === plain) return cached.protected;
+    const stored = await protectSecret(plain);
+    if (stored) this.protectedSecretsByProfileId.set(profile.id, { plain, protected: stored });
+    return stored;
+  }
+
+  private async saveSettings(settings: VRChatApiSettings): Promise<void> {
+    const profiles = await Promise.all(
+      settings.profiles.map(async (profile) => {
+        return {
+          id: profile.id,
+          sourceProfileId: profile.sourceProfileId,
+          restoreProfileId: profile.restoreProfileId,
+          userId: profile.userId,
+          username: profile.username,
+          displayName: profile.displayName,
+          draft: profile.draft,
+          protectedSecret: profile.secretLocked
+            ? profile.protectedSecret
+            : await this.protectProfileSecret(profile),
+        };
+      })
+    );
+    const lockedActiveProfileId = settings.profiles.some(
+      (profile) => profile.id === this.lockedActiveProfileId && profile.secretLocked
+    )
+      ? this.lockedActiveProfileId
+      : null;
+    const persisted = {
+      version: settings.version,
+      profiles,
+      activeProfileId: settings.activeProfileId ?? lockedActiveProfileId,
+    } as unknown as VRChatApiSettings;
+    await SETTINGS_STORE.set(SETTINGS_KEY_VRCHAT_API, persisted);
+    this.lockedActiveProfileId = null;
   }
 }

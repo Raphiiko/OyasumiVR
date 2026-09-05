@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { hshrink, noop, vshrink } from '../../../../utils/animations';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
 import {
@@ -27,6 +27,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './sleep-animations-view.component.html',
   styleUrls: ['./sleep-animations-view.component.scss'],
   animations: [noop(), vshrink(), hshrink()],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SleepAnimationsViewComponent implements OnInit {

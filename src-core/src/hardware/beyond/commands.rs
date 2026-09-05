@@ -4,13 +4,11 @@ use log::{error, warn};
 use steamlocate::SteamDir;
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn bigscreen_beyond_is_connected() -> bool {
     super::BSB_CONNECTED.load(Ordering::Relaxed)
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn bigscreen_beyond_get_saved_preferences() -> Result<Option<String>, String> {
     let steamdir = match SteamDir::locate() {
         Ok(dir) => dir,
@@ -49,7 +47,6 @@ pub async fn bigscreen_beyond_get_saved_preferences() -> Result<Option<String>, 
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn bigscreen_beyond_set_led_color(r: u8, g: u8, b: u8) -> Result<(), String> {
     let device = super::BSB_DEVICE.lock().await;
     match device.as_ref() {
@@ -59,7 +56,6 @@ pub async fn bigscreen_beyond_set_led_color(r: u8, g: u8, b: u8) -> Result<(), S
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn bigscreen_beyond_set_fan_speed(speed: u8) -> Result<(), String> {
     let device = super::BSB_DEVICE.lock().await;
     match device.as_ref() {
@@ -69,7 +65,6 @@ pub async fn bigscreen_beyond_set_fan_speed(speed: u8) -> Result<(), String> {
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling]
 pub async fn bigscreen_beyond_set_brightness(brightness: u16) -> Result<(), String> {
     let device = super::BSB_DEVICE.lock().await;
     match device.as_ref() {

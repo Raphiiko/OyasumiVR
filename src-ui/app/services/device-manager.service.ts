@@ -7,6 +7,7 @@ import {
   firstValueFrom,
   map,
   Observable,
+  skip,
   switchMap,
   tap,
   throttleTime,
@@ -20,7 +21,6 @@ import {
   DMDeviceType,
   DMKnownDevice,
 } from '../models/device-manager';
-import { migrateDeviceManagerData } from '../migrations/device-manager.migrations';
 import { SETTINGS_KEY_DEVICE_MANAGER, SETTINGS_STORE } from '../globals';
 import { OpenVRService } from './openvr.service';
 import { LighthouseService } from './lighthouse.service';
@@ -47,14 +47,15 @@ export class DeviceManagerService {
 
   async init() {
     await this.loadData();
-    this.listenForOpenVRDevices();
-    this.listenForLighthouseDevices();
     this._data
       .pipe(
+        skip(1),
         throttleTime(2000, asyncScheduler, { leading: true, trailing: true }),
         switchMap(() => this.saveData())
       )
       .subscribe();
+    this.listenForOpenVRDevices();
+    this.listenForLighthouseDevices();
   }
 
   public getKnownDeviceById(id: string): DMKnownDevice | undefined {
@@ -480,12 +481,10 @@ export class DeviceManagerService {
   }
 
   private async loadData() {
-    let data: DeviceManagerData | undefined = await SETTINGS_STORE.get<DeviceManagerData>(
+    const data: DeviceManagerData | undefined = await SETTINGS_STORE.get<DeviceManagerData>(
       SETTINGS_KEY_DEVICE_MANAGER
     );
-    data = data ? migrateDeviceManagerData(data) : this._data.value;
-    this._data.next(data);
-    await this.saveData();
+    if (data) this._data.next(data);
   }
 
   private async saveData() {

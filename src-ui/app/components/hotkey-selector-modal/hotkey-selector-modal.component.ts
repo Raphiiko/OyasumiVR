@@ -1,4 +1,11 @@
-import { ChangeDetectorRef, Component, DestroyRef, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnDestroy,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { fadeUp } from '../../utils/animations';
 import { fromEvent, map, merge, Subject, takeUntil } from 'rxjs';
@@ -16,6 +23,7 @@ export interface HotkeySelectorOutputModel {
   templateUrl: './hotkey-selector-modal.component.html',
   styleUrls: ['./hotkey-selector-modal.component.scss'],
   animations: [fadeUp()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class HotkeySelectorModalComponent
@@ -49,9 +57,9 @@ export class HotkeySelectorModalComponent
     await this.hotkeyService.pause();
     merge(fromEvent(document, 'keyup'), fromEvent(document, 'keydown'))
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
         takeUntil(this.stopListeningForKeys),
-        map((event) => event as KeyboardEvent)
+        map((event) => event as KeyboardEvent),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(async (event: KeyboardEvent) => {
         this.modifiers.Ctrl = event.ctrlKey;
@@ -64,12 +72,8 @@ export class HotkeySelectorModalComponent
           if (await this.hotkeyService.isValidHotkey(hotkey)) {
             this.stopListeningForKeys.next();
             this.success = true;
-            setTimeout(() => {
-              this.result = {
-                hotkey,
-              };
-              this.close();
-            }, 500);
+            this.result = { hotkey };
+            setTimeout(() => this.close(), 500);
           } else {
             this.key = undefined;
           }
