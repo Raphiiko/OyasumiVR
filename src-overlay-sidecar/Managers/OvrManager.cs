@@ -345,6 +345,12 @@ public class OvrManager
     bool update = false;
     foreach (var action in actionHandles)
     {
+      if (action.Key == OverlayInteractionInput.Action)
+      {
+        update |= OverlayInteractionInput.Update(_input, _system!, action.Value, inputActions[action.Key]);
+        continue;
+      }
+
       // Get digital action data
       var actionKey = action.Key;
       var actionHandle = action.Value;

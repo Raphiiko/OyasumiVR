@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="CefSharp.OffScreen.NETCore" Version="150.0.110" />
+    <Compile Include="../../src-overlay-sidecar/Overlays/Helpers/OverlayPointer.cs" Link="OverlayPointer.cs" />
+    <Compile Include="../../src-overlay-sidecar/Managers/OverlayInteractionInput.cs" Link="OverlayInteractionInput.cs" />
+    <Content Include="../../src-overlay-ui/app/components/brightness-slider/brightness-slider.ts" Link="brightness-slider.ts" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../../src-overlay-ui/app/components/color-temp-slider/color-temp-slider.ts" Link="color-temp-slider.ts" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>
