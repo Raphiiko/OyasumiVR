@@ -131,7 +131,7 @@ export class LighthouseService {
       }
       v1Identifier = parseInt(this.v1Identifiers[device.id], 16);
     }
-    // Handle force flag
+    // handle force flag
     let transition: number | undefined;
     if (!force) {
       transition = ++this.lastTransitionId;
@@ -142,7 +142,7 @@ export class LighthouseService {
       this._devices.next(this._devices.value);
     }
     try {
-      // Set the power state
+      // set the power state
       await pRetry(
         () =>
           invoke('lighthouse_set_device_power_state', {
@@ -153,7 +153,7 @@ export class LighthouseService {
         3,
         500
       );
-      // Wait for state to change (timeout after 10 seconds)
+      // wait for state to change (timeout after 10 seconds)
       await firstValueFrom(
         merge(
           interval(100).pipe(
@@ -166,7 +166,7 @@ export class LighthouseService {
         ).pipe(take(1))
       );
     } finally {
-      // Only the transition that still owns the marker may clear it
+      // only the owning operation may clear the marker
       if (transition !== undefined && this.transitions[device.id] === transition) {
         delete this.transitions[device.id];
         device.transitioningToPowerState = undefined;
