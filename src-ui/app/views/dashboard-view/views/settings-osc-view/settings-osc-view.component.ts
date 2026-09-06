@@ -1,8 +1,8 @@
 import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { vshrink } from 'src-ui/app/utils/animations';
-import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
-import { APP_SETTINGS_DEFAULT, OSCTarget } from 'src-ui/app/models/settings';
+import { vshrink } from '../../../../utils/animations';
+import { AppSettingsService } from '../../../../services/app-settings.service';
+import { APP_SETTINGS_DEFAULT, OSCTarget } from '../../../../models/settings';
 import {
   asyncScheduler,
   combineLatest,
@@ -13,9 +13,10 @@ import {
   tap,
   throttleTime,
 } from 'rxjs';
-import { OscService } from 'src-ui/app/services/osc.service';
-import { flushOnDestroy } from 'src-ui/app/utils/rxjs-utils';
+import { OscService } from '../../../../services/osc.service';
+import { flushOnDestroy } from '../../../../utils/rxjs-utils';
 import { isEqual, pick } from 'lodash';
+import { invoke } from '@tauri-apps/api/core';
 
 @Component({
   selector: 'app-settings-osc-view',
@@ -43,6 +44,7 @@ export class SettingsOscViewComponent implements OnInit {
   protected showVRCTargetWarning = false;
 
   private destroyed = false;
+  private hostValidationGeneration = 0;
 
   constructor(
     private destroyRef: DestroyRef,
@@ -65,15 +67,27 @@ export class SettingsOscViewComponent implements OnInit {
     flushOnDestroy(this.customTargetHostChangeSubject, this.destroyRef);
     flushOnDestroy(this.customTargetPortChangeSubject, this.destroyRef);
 
-    // Setup debounced validation for custom target host
+    // each host edit supersedes pending DNS validation
     this.customTargetHostChangeSubject
       .pipe(
-        tap(() => (this.customTargetHostValidationState = 'pending')),
+        tap(() => {
+          this.hostValidationGeneration++;
+          this.customTargetHostValidationState = 'pending';
+        }),
         debounceTime(500),
         takeUntilDestroyed(this.destroyRef)
       )
-      .subscribe((host) => {
-        if (this.isValidHostname(host)) {
+      .subscribe(async (host) => {
+        const generation = this.hostValidationGeneration;
+        host = host.trim();
+        // resolve the host independently of the port field
+        const valid =
+          this.isValidHostname(host) &&
+          (await invoke<boolean>('osc_valid_addr', { addr: `${host}:1` }).catch(() => false));
+        if (generation !== this.hostValidationGeneration) return;
+
+        // save only the latest accepted host, including navigation flushes
+        if (valid) {
           this.customTargetHostValidationState = 'valid';
           this.settingsService.updateSettings({
             oscCustomTargetHost: host,
