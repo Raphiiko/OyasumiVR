@@ -21,7 +21,9 @@ public class OyasumiOverlaySidecarService : OyasumiOverlaySidecar.OyasumiOverlay
       request.Message,
       TimeSpan.FromMilliseconds(request.Duration)
     );
-    if (id == null) return Task.FromResult(new AddNotificationResponse());
+    if (id == null)
+      throw new RpcException(new Status(StatusCode.FailedPrecondition,
+        "Notification overlay is not ready or could not accept the notification"));
 
     return Task.FromResult(new AddNotificationResponse
     {
