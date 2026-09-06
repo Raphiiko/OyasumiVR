@@ -68,6 +68,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed missing image content types on the first request to the image cache.
+
 - Fixed overlay notification readiness and notification IDs used for dismissal.
 
 - Fixed custom OSC targets rejecting hostnames such as localhost

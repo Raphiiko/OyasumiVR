@@ -330,10 +330,11 @@ impl ImageCache {
             }
         };
         // Cache image
-        self.store_image(url.as_ref(), ttl, image_mime, image_data.clone());
+        self.store_image(url.as_ref(), ttl, image_mime.clone(), image_data.clone());
         // Return image
         Ok(Response::builder()
             .status(200)
+            .header(hyper::header::CONTENT_TYPE, image_mime.to_string())
             .body(image_data.into())
             .unwrap())
     }
@@ -342,6 +343,68 @@ impl ImageCache {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[tokio::test]
+    async fn first_and_repeat_requests_return_the_same_content_type() {
+        use hyper::server::conn::http1;
+        use hyper::service::service_fn;
+        use hyper_util::rt::TokioIo;
+        use tokio::io::{AsyncReadExt, AsyncWriteExt};
+        use tokio::net::TcpListener;
+
+        // serve one upstream image, then require cache hits
+        let upstream = TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let image_url = format!("http://{}/image.png", upstream.local_addr().unwrap());
+        let upstream_task = tokio::spawn(async move {
+            let (mut socket, _) = upstream.accept().await.unwrap();
+            let mut request = [0; 2048];
+            socket.read(&mut request).await.unwrap();
+            socket
+                .write_all(b"HTTP/1.1 200 OK\r\nContent-Type: image/png\r\nContent-Length: 3\r\nConnection: close\r\n\r\nPNG")
+                .await
+                .unwrap();
+        });
+
+        // route both HTTP requests through the real handler
+        let directory = tempfile::tempdir().unwrap();
+        let cache = ImageCache::new(directory.path().as_os_str().to_owned());
+        let server = TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let url = format!(
+            "http://{}/?ttl=60&url={}",
+            server.local_addr().unwrap(),
+            urlencoding::encode(&image_url)
+        );
+        let server_task = tokio::spawn(async move {
+            for _ in 0..2 {
+                let (socket, _) = server.accept().await.unwrap();
+                http1::Builder::new()
+                    .keep_alive(false)
+                    .serve_connection(
+                        TokioIo::new(socket),
+                        service_fn(|req| cache.handle_request(req)),
+                    )
+                    .await
+                    .unwrap();
+            }
+        });
+
+        // compare the miss and hit after upstream shutdown
+        let first = reqwest::get(&url).await.unwrap();
+        tokio::time::timeout(std::time::Duration::from_secs(5), upstream_task)
+            .await
+            .unwrap()
+            .unwrap();
+        let repeat = reqwest::get(&url).await.unwrap();
+        assert_eq!(first.status(), 200);
+        assert_eq!(repeat.status(), 200);
+        assert_eq!(first.headers()[hyper::header::CONTENT_TYPE], "image/png");
+        assert_eq!(
+            first.headers()[hyper::header::CONTENT_TYPE],
+            repeat.headers()[hyper::header::CONTENT_TYPE]
+        );
+        assert_eq!(first.bytes().await.unwrap(), repeat.bytes().await.unwrap());
+        server_task.await.unwrap();
+    }
 
     #[tokio::test]
     async fn corrupted_manifests_are_removed_and_miss_on_read() {
