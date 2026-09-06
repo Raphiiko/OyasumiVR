@@ -110,3 +110,40 @@ it('finishes validation for a valid edit flushed on navigation', async () => {
   await vi.advanceTimersByTimeAsync(0);
   expect(h.updateSettings).toHaveBeenCalledExactlyOnceWith({ oscCustomTargetHost: 'localhost' });
 });
+
+it('ignores a successful old lookup after navigation and a newer edit', async () => {
+  let resolveOld!: (value: boolean) => void;
+  vi.mocked(invoke).mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        resolveOld = resolve;
+      })
+  );
+  vi.mocked(invoke).mockResolvedValueOnce(true);
+  const old = setup();
+  old.component.editHost('old.local');
+  await vi.advanceTimersByTimeAsync(500);
+  old.destroy.run();
+  const current = setup();
+  current.component.editHost('localhost');
+  await vi.advanceTimersByTimeAsync(500);
+  resolveOld(true);
+  await vi.advanceTimersByTimeAsync(0);
+  expect(old.updateSettings).not.toHaveBeenCalled();
+  expect(current.updateSettings).toHaveBeenCalledExactlyOnceWith({
+    oscCustomTargetHost: 'localhost',
+  });
+  current.destroy.run();
+});
+
+it.each(['localhost.', 'vrchat_pc', '10.0.0.5.example.test'])(
+  'uses backend acceptance for %s',
+  async (host) => {
+    vi.mocked(invoke).mockResolvedValue(true);
+    const h = setup();
+    h.component.editHost(host);
+    await vi.advanceTimersByTimeAsync(500);
+    expect(h.updateSettings).toHaveBeenCalledExactlyOnceWith({ oscCustomTargetHost: host });
+    h.destroy.run();
+  }
+);
