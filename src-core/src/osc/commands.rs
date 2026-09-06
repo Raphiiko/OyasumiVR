@@ -4,9 +4,10 @@ use oyasumivr_oscquery::OSCMethod;
 use rosc::{encoder, OscMessage, OscPacket, OscType};
 use serde::{Deserialize, Serialize};
 use std::{
-    net::{SocketAddrV4, UdpSocket},
+    net::{SocketAddr, SocketAddrV4, UdpSocket},
     str::FromStr,
     sync::LazyLock,
+    time::Duration,
 };
 use tokio::sync::Mutex;
 use tokio_util::sync::CancellationToken;
@@ -169,28 +170,34 @@ pub async fn osc_send_command(
 
 #[tauri::command]
 pub async fn osc_valid_addr(addr: String) -> bool {
-    SocketAddrV4::from_str(addr.as_str()).is_ok()
+    resolve_osc_address(&addr).await.is_ok()
+}
+
+async fn resolve_osc_address(addr: &str) -> Result<SocketAddr, String> {
+    tokio::time::timeout(Duration::from_secs(5), tokio::net::lookup_host(addr))
+        .await
+        .ok()
+        .and_then(Result::ok)
+        .and_then(|mut addresses| addresses.find(SocketAddr::is_ipv4))
+        .ok_or_else(|| "INVALID_ADDRESS".to_string())
 }
 
 async fn osc_send(addr: String, osc_addr: String, data: Vec<OscType>) -> Result<bool, String> {
-    // Get socket
+    // resolve an IPv4 destination before locking the sender
+    let to_addr = resolve_osc_address(&addr).await?;
+
     let socket_guard = OSC_SEND_SOCKET.lock().await;
     let socket = match socket_guard.as_ref() {
         Some(socket) => socket,
         None => return Err(String::from("NO_SOCKET")),
     };
-    // Parse address
-    let to_addr = match SocketAddrV4::from_str(addr.as_str()) {
-        Ok(addr) => addr,
-        Err(_) => return Err(String::from("INVALID_ADDRESS")),
-    };
-    // Construct message
+    // encode the address and typed arguments into one packet
     let msg_buf = encoder::encode(&OscPacket::Message(OscMessage {
         addr: osc_addr.clone(),
         args: data.clone(),
     }))
     .unwrap();
-    // Send message
+    // send the packet through the shared IPv4 socket
     if socket.send_to(&msg_buf, to_addr).is_err() {
         error!(
             "[Core] Failed to send OSC message (addr={addr}, osc_addr={osc_addr}, data={data:?})"
@@ -198,6 +205,57 @@ async fn osc_send(addr: String, osc_addr: String, data: Vec<OscType>) -> Result<
         return Err(String::from("SENDING_ERROR"));
     }
     Ok(true)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn resolves_ipv4_hosts_and_sends_a_loopback_packet() {
+        for host in ["127.0.0.1", "localhost"] {
+            assert!(osc_valid_addr(format!("{host}:9000")).await);
+            assert!(resolve_osc_address(&format!("{host}:9000"))
+                .await
+                .unwrap()
+                .is_ipv4());
+        }
+        #[cfg(windows)]
+        assert!(osc_valid_addr(format!("{}:9000", std::env::var("COMPUTERNAME").unwrap())).await);
+        for addr in [
+            "no-port",
+            "invalid host:9000",
+            "[::1]:9000",
+            "localhost:65536",
+            "oyasumivr-no-such-host.invalid:9000",
+        ] {
+            assert!(!osc_valid_addr(addr.into()).await);
+        }
+
+        let receiver = UdpSocket::bind("127.0.0.1:0").unwrap();
+        receiver
+            .set_read_timeout(Some(Duration::from_secs(2)))
+            .unwrap();
+        *OSC_SEND_SOCKET.lock().await = Some(UdpSocket::bind("127.0.0.1:0").unwrap());
+        let result = osc_send(
+            format!("localhost:{}", receiver.local_addr().unwrap().port()),
+            "/oyasumi/test".into(),
+            vec![OscType::Int(7)],
+        )
+        .await;
+        *OSC_SEND_SOCKET.lock().await = None;
+        assert_eq!(result, Ok(true));
+        let mut buffer = [0; 128];
+        let (size, _) = receiver.recv_from(&mut buffer).unwrap();
+        let (_, packet) = rosc::decoder::decode_udp(&buffer[..size]).unwrap();
+        assert_eq!(
+            packet,
+            OscPacket::Message(OscMessage {
+                addr: "/oyasumi/test".into(),
+                args: vec![OscType::Int(7)]
+            })
+        );
+    }
 }
 
 #[tauri::command]
