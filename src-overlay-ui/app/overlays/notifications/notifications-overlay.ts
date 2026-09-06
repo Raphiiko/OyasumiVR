@@ -4,6 +4,7 @@ import {
   computed,
   DestroyRef,
   inject,
+  OnInit,
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -18,7 +19,7 @@ import { AddNotificationParams } from '../../ipc/oyasumi-ipc';
   styleUrl: './notifications-overlay.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NotificationsOverlay {
+export class NotificationsOverlay implements OnInit {
   private readonly ipc = inject(IpcService);
 
   private readonly notifications = signal<AddNotificationParams[]>([]);
@@ -39,6 +40,11 @@ export class NotificationsOverlay {
       this.updateActiveNotification();
     });
     inject(DestroyRef).onDestroy(() => clearTimeout(this.dismissTimer));
+  }
+
+  ngOnInit(): void {
+    // accept delivery after both notification subscriptions exist
+    void window.OyasumiIPCOut.onUiReady();
   }
 
   protected isActive(notification: AddNotificationParams): boolean {
