@@ -30,6 +30,14 @@ static DEVICE_CLASS_CACHE: LazyLock<Mutex<HashMap<u32, TrackedDeviceClass>>> =
 static DEVICE_HANDLE_TYPE_CACHE: LazyLock<Mutex<HashMap<u32, OVRHandleType>>> =
     LazyLock::new(|| Mutex::new(HashMap::new()));
 
+/// Call from the OpenVR task after releasing the context lock.
+pub async fn on_ovr_quit() {
+    OVR_DEVICES.lock().await.clear();
+    DEVICE_CLASS_CACHE.lock().await.clear();
+    DEVICE_HANDLE_TYPE_CACHE.lock().await.clear();
+    *NEXT_DEVICE_REFRESH.lock().await = DateTime::from_timestamp_millis(0).unwrap();
+}
+
 pub async fn on_ovr_tick() {
     // Refresh all devices when needed
     let mut next_device_refresh = NEXT_DEVICE_REFRESH.lock().await;
@@ -77,6 +85,35 @@ pub async fn on_ovr_event(event: ovr::system::VREvent) {
 pub async fn get_devices() -> Vec<OVRDevice> {
     let devices = OVR_DEVICES.lock().await;
     devices.clone()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn shutdown_clears_device_caches_and_allows_immediate_refresh() {
+        OVR_DEVICES.lock().await.push(serde_json::from_value(serde_json::json!({
+            "index": 7, "class": "Controller", "role": "LeftHand", "serialNumber": "previous-session"
+        })).unwrap());
+        DEVICE_CLASS_CACHE
+            .lock()
+            .await
+            .insert(7, TrackedDeviceClass::Controller);
+        DEVICE_HANDLE_TYPE_CACHE
+            .lock()
+            .await
+            .insert(7, OVRHandleType::HandPrimary);
+        *NEXT_DEVICE_REFRESH.lock().await = Utc::now() + Duration::seconds(5);
+
+        for _ in 0..2 {
+            on_ovr_quit().await;
+            assert!(get_devices().await.is_empty());
+            assert!(DEVICE_CLASS_CACHE.lock().await.is_empty());
+            assert!(DEVICE_HANDLE_TYPE_CACHE.lock().await.is_empty());
+            assert!(*NEXT_DEVICE_REFRESH.lock().await < Utc::now());
+        }
+    }
 }
 
 async fn update_handle_types() {

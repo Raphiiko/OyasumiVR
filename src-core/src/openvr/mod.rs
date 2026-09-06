@@ -315,6 +315,8 @@ async fn shutdown_ovr() {
         ovr::sys::VR_Shutdown();
     }
     *context = None;
+    drop(context);
+    devices::on_ovr_quit().await;
 }
 
 /// Constructing an overlay manager while this is false panics. Callers must hold `OVR_CONTEXT`.
