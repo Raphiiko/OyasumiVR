@@ -1,6 +1,8 @@
 using System.Numerics;
+using System.Globalization;
 using System.Web;
 using CefSharp;
+using Serilog;
 using Valve.VR;
 
 namespace overlay_sidecar;
@@ -29,20 +31,28 @@ public class NotificationOverlay : BaseWebOverlay {
 
   public string? AddNotification(string message, TimeSpan? duration = null)
   {
+    if (!UiReady || Disposed) return null;
+
+    var id = Guid.NewGuid().ToString();
     var script = $@"window.OyasumiIPCIn.addNotification({{
+            id: ""{id}"",
             message: ""{HttpUtility.JavaScriptStringEncode(message)}"",
-            duration: {duration?.TotalMilliseconds ?? 3000}
+            duration: {(duration?.TotalMilliseconds ?? 3000).ToString(CultureInfo.InvariantCulture)}
         }});";
     var task = Browser.EvaluateScriptAsync(script, TimeSpan.FromMilliseconds(5000));
     task.Wait();
-    return task.Result.Result as string;
+    return task.Result.Success ? id : null;
   }
 
   public void ClearNotification(string notificationId)
   {
+    if (!UiReady || Disposed) return;
+
     var script = $@"window.OyasumiIPCIn.clearNotification(""{HttpUtility.JavaScriptStringEncode(notificationId)}"");";
     var task = Browser.EvaluateScriptAsync(script, TimeSpan.FromMilliseconds(5000));
     task.Wait();
+    if (!task.Result.Success)
+      Log.Warning("Could not clear notification {Id}: {Error}", notificationId, task.Result.Message);
   }
 
   private void UpdatePosition()
