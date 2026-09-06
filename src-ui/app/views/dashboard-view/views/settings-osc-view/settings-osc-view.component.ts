@@ -44,7 +44,8 @@ export class SettingsOscViewComponent implements OnInit {
   protected showVRCTargetWarning = false;
 
   private destroyed = false;
-  private hostValidationGeneration = 0;
+  // host edits share a generation across navigation-created views
+  private static hostValidationGeneration = 0;
 
   constructor(
     private destroyRef: DestroyRef,
@@ -71,20 +72,20 @@ export class SettingsOscViewComponent implements OnInit {
     this.customTargetHostChangeSubject
       .pipe(
         tap(() => {
-          this.hostValidationGeneration++;
+          SettingsOscViewComponent.hostValidationGeneration++;
           this.customTargetHostValidationState = 'pending';
         }),
         debounceTime(500),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(async (host) => {
-        const generation = this.hostValidationGeneration;
+        const generation = SettingsOscViewComponent.hostValidationGeneration;
         host = host.trim();
         // resolve the host independently of the port field
         const valid =
-          this.isValidHostname(host) &&
+          !!host &&
           (await invoke<boolean>('osc_valid_addr', { addr: `${host}:1` }).catch(() => false));
-        if (generation !== this.hostValidationGeneration) return;
+        if (generation !== SettingsOscViewComponent.hostValidationGeneration) return;
 
         // save only the latest accepted host, including navigation flushes
         if (valid) {
@@ -158,36 +159,6 @@ export class SettingsOscViewComponent implements OnInit {
     this.settingsService.updateSettings({
       oscTargets: [...this.oscTargets],
     });
-  }
-
-  private isValidHostname(host: string): boolean {
-    if (!host || !host.trim()) {
-      return false;
-    }
-
-    const trimmedHost = host.trim();
-
-    // Check if it's a valid IPv4 address
-    const ipv4Regex =
-      /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-    if (ipv4Regex.test(trimmedHost)) {
-      return true;
-    }
-
-    // If it looks like an IP address but failed the IPv4 test, reject it (probably false)
-    const looksLikeIp = /^\d+\.\d+\.\d+\.\d+/.test(trimmedHost);
-    if (looksLikeIp) {
-      return false;
-    }
-
-    // Check if it's a valid hostname/domain name
-    const hostnameRegex =
-      /^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-    if (hostnameRegex.test(trimmedHost) && trimmedHost.length <= 253) {
-      return true;
-    }
-
-    return false;
   }
 
   private isValidPort(port: number): boolean {
