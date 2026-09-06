@@ -1,5 +1,5 @@
 import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { GPUDevice, GPUPowerLimit } from '../../../../../models/gpu-device';
+import { GPUDevice, GPUPowerLimit, GPUPowerLimitUnit } from '../../../../../models/gpu-device';
 import { NvmlService } from '../../../../../services/nvml.service';
 import { GpuAutomationsService } from '../../../../../services/gpu-automations.service';
 import { debounceTime, firstValueFrom, Subject } from 'rxjs';
@@ -30,6 +30,7 @@ export class GpuPowerlimitingPaneComponent implements OnInit {
     limit: GPUPowerLimit;
   }> = new Subject();
 
+  /** Keeps displayed rules in the selected GPU's units and persists edits after a 100 ms debounce. */
   constructor(
     private nvml: NvmlService,
     protected gpuAutomations: GpuAutomationsService,
@@ -43,12 +44,24 @@ export class GpuPowerlimitingPaneComponent implements OnInit {
         this.onSleepEnableAutomationEnabled = config.onSleepEnable.enabled;
         this.powerLimitOnSleepEnable = {
           default: config.onSleepEnable.resetToDefault,
-          limit: config.onSleepEnable.powerLimit || this.selectedGpu.defaultPowerLimit || 0,
+          limit:
+            this.gpuAutomations.normalizeConfiguredPowerLimit(
+              this.selectedGpu,
+              config.onSleepEnable.powerLimit
+            ) ??
+            this.selectedGpu.defaultPowerLimit ??
+            0,
         };
         this.onSleepDisableAutomationEnabled = config.onSleepDisable.enabled;
         this.powerLimitOnSleepDisable = {
           default: config.onSleepDisable.resetToDefault,
-          limit: config.onSleepDisable.powerLimit || this.selectedGpu.defaultPowerLimit || 0,
+          limit:
+            this.gpuAutomations.normalizeConfiguredPowerLimit(
+              this.selectedGpu,
+              config.onSleepDisable.powerLimit
+            ) ??
+            this.selectedGpu.defaultPowerLimit ??
+            0,
         };
       }
     });
@@ -106,4 +119,54 @@ export class GpuPowerlimitingPaneComponent implements OnInit {
   }
 
   async ngOnInit() {}
+
+  /** Rounds down to watts or signed percentage offsets; missing device readings display a dash. */
+  protected formatPowerLimit(value: number | undefined, device = this.selectedGpu): string {
+    if (value === undefined || !device) return '-';
+
+    const roundedValue = Math.floor(value);
+    if (device.powerLimitUnit === '%') {
+      return `${roundedValue > 0 ? '+' : ''}${roundedValue}%`;
+    }
+
+    return `${roundedValue}W`;
+  }
+
+  /** Expresses watt limits relative to the device maximum; AMD offsets have no relative label. */
+  protected getRelativePowerLimitPercentage(device = this.selectedGpu): string | null {
+    if (!device || device.powerLimitUnit !== 'W' || !device.maxPowerLimit) return null;
+    return `${Math.floor(((device.powerLimit || 0) / device.maxPowerLimit) * 100)}%`;
+  }
+
+  /** Maps AMD limits across their min/max range and watt limits against max; absent data yields 0%. */
+  protected getCurrentPowerLimitFillPercent(device = this.selectedGpu): string {
+    if (
+      !device ||
+      !device.supportsPowerLimiting ||
+      typeof device.powerLimit !== 'number' ||
+      typeof device.maxPowerLimit !== 'number'
+    ) {
+      return '0%';
+    }
+
+    if (
+      device.powerLimitUnit === '%' &&
+      typeof device.minPowerLimit === 'number' &&
+      device.maxPowerLimit > device.minPowerLimit
+    ) {
+      return (
+        ((device.powerLimit - device.minPowerLimit) /
+          (device.maxPowerLimit - device.minPowerLimit)) *
+          100 +
+        '%'
+      );
+    }
+
+    return ((device.powerLimit / device.maxPowerLimit) * 100).toString() + '%';
+  }
+
+  /** Defaults to watts while no GPU is selected. */
+  protected getInputUnit(device = this.selectedGpu): GPUPowerLimitUnit {
+    return device?.powerLimitUnit ?? 'W';
+  }
 }
