@@ -95,7 +95,7 @@ export class OpenVRService {
     this._devices.next(
       orderBy(
         [device, ...this._devices.value.filter((d) => d.index !== device.index)],
-        ['deviceIndex'],
+        ['index'],
         ['asc']
       )
     );
