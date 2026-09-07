@@ -74,10 +74,12 @@ describe('ControllerBindingComponent', () => {
     await vi.advanceTimersByTimeAsync(0);
     expect(invoke).toHaveBeenCalledTimes(1);
     expect(component.activeBinding).toBeUndefined();
+    expect(component['error']).toBe('LOOKUP_FAILED');
 
     await vi.advanceTimersByTimeAsync(1000);
     expect(invoke).toHaveBeenCalledTimes(2);
     expect(component.activeBinding).toEqual(binding);
+    expect(component['error']).toBeUndefined();
   });
 
   it('keeps polling after a rejected query', async () => {
@@ -85,10 +87,24 @@ describe('ControllerBindingComponent', () => {
     const component = createComponent();
 
     component.ngOnInit();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(component['error']).toBe('LOOKUP_FAILED');
     await vi.advanceTimersByTimeAsync(1000);
 
     expect(invoke).toHaveBeenCalledTimes(2);
     expect(component.activeBinding).toEqual(binding);
+    expect(component['error']).toBeUndefined();
+  });
+
+  it('asks to configure a successfully loaded empty binding', async () => {
+    invoke.mockResolvedValue([]);
+    const component = createComponent();
+
+    component.ngOnInit();
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(component['error']).toBe('UNKNOWN');
+    expect(component.activeBinding).toBeUndefined();
   });
 
   it('ignores a slow query that settles after a newer one', async () => {
@@ -106,6 +122,7 @@ describe('ControllerBindingComponent', () => {
     await vi.advanceTimersByTimeAsync(0);
 
     expect(component.activeBinding).toEqual(binding);
+    expect(component['error']).toBeUndefined();
   });
 
   it('still shows a response when every query outlasts the interval', async () => {
