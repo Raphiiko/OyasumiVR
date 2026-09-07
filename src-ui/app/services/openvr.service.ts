@@ -148,19 +148,6 @@ export class OpenVRService {
     }
   }
 
-  private async getDevices(): Promise<Array<OVRDevice>> {
-    // Get devices
-    let devices = await invoke<OVRDevice[]>('openvr_get_devices');
-    // Carry over current local state
-    devices = devices.map((device) => {
-      device.isTurningOff =
-        this._devices.value.find((d) => d.index === device.index)?.isTurningOff ?? false;
-      return device;
-    });
-    // Return newly fetched devices
-    return devices;
-  }
-
   private async applyOpenVrInitDelayFix(enabled: boolean) {
     await invoke('openvr_set_init_delay_fix', { enabled });
   }

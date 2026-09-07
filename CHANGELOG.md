@@ -34,6 +34,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Changed
 
+- Removed an unused frontend OpenVR device-fetch method; device updates still arrive through events.
+
 - Redesigned the About view so growing credits scroll inside the view instead of making the
   window grow
 - OyasumiVR no longer rewrites a settings file when nothing in it changed
