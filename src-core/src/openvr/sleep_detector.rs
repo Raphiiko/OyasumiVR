@@ -42,7 +42,6 @@ pub struct SleepDetector {
     rotation_in_last_5_minutes: f64,
     rotation_in_last_1_minute: f64,
     rotation_in_last_10_seconds: f64,
-    // reqwest_client: reqwest::Client,
     start_time: u128,
     last_log: u128,
     next_state_report: u128,
@@ -62,7 +61,6 @@ impl SleepDetector {
             rotation_in_last_5_minutes: 0.0,
             rotation_in_last_10_minutes: 0.0,
             rotation_in_last_15_minutes: 0.0,
-            // reqwest_client: reqwest::Client::new(),
             start_time: 0,
             last_log: 0,
             next_state_report: 0,
@@ -70,7 +68,7 @@ impl SleepDetector {
     }
 
     pub async fn log_pose(&mut self, position: [f32; 3], quaternion: [f64; 4]) {
-        // Add the event
+        // retain the latest fifteen minutes of poses
         let event = PoseEvent {
             x: position[0],
             y: position[1],
@@ -79,7 +77,6 @@ impl SleepDetector {
             timestamp: get_time(),
         };
         self.events.push(event);
-        // Remove old events
         let oldest_time = event.timestamp - MAX_EVENT_AGE_MS;
         let old_event_count = self
             .events
@@ -87,7 +84,28 @@ impl SleepDetector {
             .take_while(|e| e.timestamp < oldest_time)
             .count();
         self.events.drain(..old_event_count);
-        // Calculate new distances
+        // restart the observation window after a minute without poses
+        if get_time().saturating_sub(self.last_log) > 60000 {
+            self.start_time = get_time();
+        }
+        self.last_log = event.timestamp;
+
+        // recompute movement only for the next published report
+        if self.take_report_slot(get_time()) {
+            self.recompute_windows();
+            self.send_state_report().await;
+        }
+    }
+
+    fn take_report_slot(&mut self, now: u128) -> bool {
+        if now <= self.next_state_report {
+            return false;
+        }
+        self.next_state_report = now + 1000;
+        true
+    }
+
+    fn recompute_windows(&mut self) {
         self.distance_in_last_15_minutes = self.distance_in_window(900000);
         self.distance_in_last_10_minutes = self.distance_in_window(600000);
         self.distance_in_last_5_minutes = self.distance_in_window(300000);
@@ -98,20 +116,9 @@ impl SleepDetector {
         self.rotation_in_last_5_minutes = self.rotation_in_window(300000);
         self.rotation_in_last_1_minute = self.rotation_in_window(60000);
         self.rotation_in_last_10_seconds = self.rotation_in_window(10000);
-        // Set new start time if there hasn't been any data in over a minute
-        if get_time().saturating_sub(self.last_log) > 60000 {
-            self.start_time = get_time();
-        }
-        // Update the last log time
-        self.last_log = event.timestamp;
-        // Send a state report if it's been over a second since the last one
-        if get_time() > self.next_state_report {
-            self.next_state_report = get_time() + 1000;
-            self.send_state_report().await;
-        }
     }
 
-    fn distance_in_window(&mut self, window_ms: u128) -> f64 {
+    fn distance_in_window(&self, window_ms: u128) -> f64 {
         let start_time = get_time() - window_ms;
         let start_index = self
             .events
@@ -131,7 +138,7 @@ impl SleepDetector {
         total_distance
     }
 
-    fn rotation_in_window(&mut self, window_ms: u128) -> f64 {
+    fn rotation_in_window(&self, window_ms: u128) -> f64 {
         let start_time = get_time() - window_ms;
         let start_index = self
             .events
@@ -170,32 +177,112 @@ impl SleepDetector {
             },
         )
         .await;
-        // self.send_influxdb_report();
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn saturated_history_preserves_all_ten_movement_totals() {
+        let mut detector = SleepDetector::new();
+        let now = get_time();
+        for (count, age) in [
+            (9375, 700000),
+            (9375, 450000),
+            (7500, 180000),
+            (1562, 30000),
+            (313, 5000),
+        ] {
+            for _ in 0..count {
+                let index = detector.events.len();
+                detector.events.push(PoseEvent {
+                    x: index as f32,
+                    y: 0.0,
+                    z: 0.0,
+                    quaternion: if index % 2 == 0 {
+                        [1.0, 0.0, 0.0, 0.0]
+                    } else {
+                        [
+                            std::f64::consts::FRAC_1_SQRT_2,
+                            0.0,
+                            0.0,
+                            std::f64::consts::FRAC_1_SQRT_2,
+                        ]
+                    },
+                    timestamp: now - age,
+                });
+            }
+        }
+        assert_eq!(detector.events.len(), 28125);
+        detector.recompute_windows();
+        let distances = [
+            detector.distance_in_last_15_minutes,
+            detector.distance_in_last_10_minutes,
+            detector.distance_in_last_5_minutes,
+            detector.distance_in_last_1_minute,
+            detector.distance_in_last_10_seconds,
+        ];
+        let rotations = [
+            detector.rotation_in_last_15_minutes,
+            detector.rotation_in_last_10_minutes,
+            detector.rotation_in_last_5_minutes,
+            detector.rotation_in_last_1_minute,
+            detector.rotation_in_last_10_seconds,
+        ];
+        assert_eq!(distances, [28124.0, 18749.0, 9374.0, 1874.0, 312.0]);
+        for (actual, expected) in rotations
+            .into_iter()
+            .zip([2531160.0, 1687410.0, 843660.0, 168660.0, 28080.0])
+        {
+            assert!((actual - expected).abs() < 0.000001);
+        }
     }
 
-    // #[tokio::main]
-    // async fn send_influxdb_report(&self) {
-    //     let f = self.reqwest_client
-    //     .post("http://localhost:8086/api/v2/write?org=org&bucket=bucket&precision=ms")
-    //     .header("Authorization", "Token yXuwflYgacQn8GQp7VmXV23jdC5mG3k5XVBHiA7_Ojv7xCLZyB-FttolJcCRop4knUvN-vi_uMxbZjaBa5SfbQ==") // Yes this is a token I checked in. It's for a local test database, for debugging. Don't worry about it.
-    //     .header("Content-Type", "text/plain; charset=utf-8")
-    //     .header("Accept", "application/json")
-    //     .body(format!(
-    //         "sleep_detector distance_in_last_15_minutes={},distance_in_last_10_minutes={},distance_in_last_5_minutes={},distance_in_last_1_minute={},distance_in_last_10_seconds={},rotation_in_last_15_minutes={},rotation_in_last_10_minutes={},rotation_in_last_5_minutes={},rotation_in_last_1_minute={},rotation_in_last_10_seconds={} {}",
-    //         self.distance_in_last_15_minutes,
-    //         self.distance_in_last_10_minutes,
-    //         self.distance_in_last_5_minutes,
-    //         self.distance_in_last_1_minute,
-    //         self.distance_in_last_10_seconds,
-    //         self.rotation_in_last_15_minutes,
-    //         self.rotation_in_last_10_minutes,
-    //         self.rotation_in_last_5_minutes,
-    //         self.rotation_in_last_1_minute,
-    //         self.rotation_in_last_10_seconds,
-    //         self.last_log
-    //     ))
-    //     .send();
-    //     // Block until the request is sent
-    //     let _ = futures::executor::block_on(f);
-    // }
+    #[test]
+    fn report_gate_keeps_the_strict_one_second_boundary_without_catching_up() {
+        let mut detector = SleepDetector::new();
+        assert!(detector.take_report_slot(10000));
+        for now in 10000..=11000 {
+            assert!(!detector.take_report_slot(now));
+        }
+        assert!(detector.take_report_slot(11001));
+        assert!(detector.take_report_slot(80000));
+        assert!(!detector.take_report_slot(80000));
+        assert!(!detector.take_report_slot(81000));
+        assert!(detector.take_report_slot(81001));
+    }
+
+    #[tokio::test]
+    async fn poses_between_reports_retain_history_and_timestamps_without_recomputing() {
+        let mut detector = SleepDetector::new();
+        let before = get_time();
+        detector.next_state_report = u128::MAX;
+        detector.distance_in_last_15_minutes = 123.0;
+        detector.last_log = before - 60001;
+        detector.events.push(PoseEvent {
+            x: 99.0,
+            y: 0.0,
+            z: 0.0,
+            quaternion: [1.0, 0.0, 0.0, 0.0],
+            timestamp: before - MAX_EVENT_AGE_MS - 1,
+        });
+
+        detector
+            .log_pose([1.0, 2.0, 3.0], [1.0, 0.0, 0.0, 0.0])
+            .await;
+        assert_eq!(detector.events.len(), 1);
+        assert_eq!(detector.last_log, detector.events[0].timestamp);
+        assert!(detector.start_time >= before && detector.start_time <= get_time());
+        let start_time = detector.start_time;
+
+        detector
+            .log_pose([4.0, 5.0, 6.0], [1.0, 0.0, 0.0, 0.0])
+            .await;
+        assert_eq!(detector.events.len(), 2);
+        assert_eq!(detector.last_log, detector.events[1].timestamp);
+        assert_eq!(detector.start_time, start_time);
+        assert_eq!(detector.distance_in_last_15_minutes, 123.0);
+    }
 }
