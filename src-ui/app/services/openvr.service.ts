@@ -42,6 +42,7 @@ export class OpenVRService {
 
   async init() {
     let statusReceived = false;
+    let deviceSession = 0;
     this._status.next(await invoke<OpenVRStatus>('openvr_status'));
     this.appSettings.settings
       .pipe(
@@ -61,6 +62,7 @@ export class OpenVRService {
       ),
       listen<OpenVRStatus>('OVR_STATUS_UPDATE', (event) => {
         statusReceived = true;
+        deviceSession++;
         this.onStatusUpdate(event.payload);
       }),
       listen<any>('OVR_POSE_UPDATE', (event) => {
@@ -82,6 +84,17 @@ export class OpenVRService {
     // A status update sent while the listener above was still being registered is never delivered
     const status = await invoke<OpenVRStatus>('openvr_status');
     if (!statusReceived) this.onStatusUpdate(status);
+
+    // restore cached devices missed before listener registration
+    const snapshotSession = deviceSession;
+    const devices = await invoke<OVRDevice[]>('openvr_get_devices');
+    if (snapshotSession === deviceSession && this._status.value === 'INITIALIZED') {
+      for (const device of devices) {
+        if (!this._devices.value.some((current) => current.index === device.index)) {
+          this.onDeviceUpdate(device);
+        }
+      }
+    }
 
     this.handleTelemetry();
   }
