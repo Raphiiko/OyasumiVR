@@ -369,7 +369,8 @@ pub fn start_log_locator_task() -> CancellationToken {
 
 #[cfg(test)]
 mod tests {
-    use super::{is_current_enough, pick_log_path};
+    use super::{is_current_enough, parse_datetime_from_line, pick_log_path, VRCLogEvent};
+    use chrono::{Local, TimeZone, Utc};
     use std::{
         fs,
         path::Path,
@@ -377,6 +378,24 @@ mod tests {
         time::{Duration, SystemTime},
     };
     use tempfile::tempdir;
+
+    #[test]
+    fn event_time_is_serialized_in_epoch_milliseconds() {
+        let instant = Utc.with_ymd_and_hms(2026, 8, 23, 20, 42, 35).unwrap();
+        let line = instant
+            .with_timezone(&Local)
+            .format("%Y.%m.%d %H:%M:%S")
+            .to_string();
+        let event = VRCLogEvent {
+            time: parse_datetime_from_line(line).unwrap(),
+            event: "OnPlayerJoined".to_string(),
+            data: "Me (usr_me)".to_string(),
+            initial_load: false,
+        };
+        let payload = serde_json::to_value(event).unwrap();
+        assert_eq!(payload["time"], 1_787_517_755_000_u64);
+        assert_eq!(payload["initialLoad"], false);
+    }
 
     fn create_log(dir: &Path, name: &str, contents: &[u8]) -> (String, SystemTime) {
         let path = dir.join(name);

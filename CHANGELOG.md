@@ -68,6 +68,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed VRChat log timestamps allowing the Quick Eeper achievement after its 20-minute window.
+
 - Fixed OpenVR device updates changing the tracked-index order of the device list.
 
 - Fixed missing image content types on the first request to the image cache.
