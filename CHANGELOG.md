@@ -34,6 +34,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Changed
 
+- Unchanged SteamVR device properties no longer trigger redundant window updates.
 - Sleep detection computes movement totals once per report instead of on every pose update.
 - Removed an unused frontend OpenVR device-fetch method; device updates still arrive through events.
 
