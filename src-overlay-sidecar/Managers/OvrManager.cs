@@ -47,10 +47,8 @@ public class OvrManager
   {
     if (_initialized) return;
     _initialized = true;
-    // Start main loop
     _mainThread = new Thread(MainLoop);
     _mainThread.Start();
-    // Start frame updates for web overlays
     _renderThread = new Thread(OverlayRenderLoop);
     _renderThread.Start();
   }
