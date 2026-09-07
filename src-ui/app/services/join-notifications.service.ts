@@ -3,6 +3,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   JoinNotificationsAutomationsConfig,
   JoinNotificationsMode,
+  joinModeNeedsFriends,
 } from '../models/automations';
 
 import { AutomationConfigService } from './automation-config.service';
@@ -10,11 +11,16 @@ import { SleepService } from './sleep.service';
 import { VRChatService } from './vrchat-api/vrchat.service';
 import { NotificationService } from './notification.service';
 import {
+  catchError,
+  combineLatest,
   concatMap,
   delay,
   distinctUntilChanged,
+  EMPTY,
   filter,
   firstValueFrom,
+  from,
+  map,
   skip,
   Subject,
   switchMap,
@@ -62,20 +68,30 @@ export class JoinNotificationsService {
     this.automationConfigService.configs.subscribe((configs) => {
       this.config = configs.JOIN_NOTIFICATIONS;
     });
-    this.vrchat.user
+    const needsFriends = this.automationConfigService.configs.pipe(
+      map(({ JOIN_NOTIFICATIONS: config }) =>
+        [
+          config.joinNotification,
+          config.leaveNotification,
+          config.joinSoundMode,
+          config.leaveSoundMode,
+        ].some((mode) => joinModeNeedsFriends(mode, config.playerIds))
+      ),
+      distinctUntilChanged()
+    );
+    // user updates refresh active mappings; enabling requests them immediately
+    combineLatest([this.vrchat.user, needsFriends])
       .pipe(
-        tap((user) => {
+        tap(([user]) => {
           this.ownVRChatDisplayName = user?.displayName ?? '';
           if (!user) this.friends = [];
         }),
-        filter(Boolean),
-        switchMap(async () => {
-          try {
-            this.friends = await this.vrchat.listFriends();
-          } catch {}
+        switchMap(([user, needed]) => {
+          if (!user || !needed) return EMPTY;
+          return from(this.vrchat.listFriends()).pipe(catchError(() => EMPTY));
         })
       )
-      .subscribe();
+      .subscribe((friends) => (this.friends = friends));
     // Process log events
     this.vrchatLog.logEvents.subscribe((event) => {
       this.onLogEvent(event);
