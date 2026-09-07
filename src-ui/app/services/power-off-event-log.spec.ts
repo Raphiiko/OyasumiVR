@@ -190,6 +190,41 @@ describe('power-off command results and actual event log', () => {
 
 describe('power-off event producers', () => {
   it.each([
+    ['handleSleepModeEnable', 'SLEEP_MODE_ENABLED'],
+    ['handleSleepModeDisable', 'SLEEP_MODE_DISABLED'],
+    ['handleSleepPreparation', 'SLEEP_PREPARATION'],
+  ] as const)('%s records OpenVR success after a base-station failure', async (method, reason) => {
+    let finish!: (devices: OVRDevice[]) => void;
+    const log = new EventLogService();
+    const service = caller(SleepDevicePowerAutomationsService.prototype, {
+      config: AUTOMATION_CONFIGS_DEFAULT.DEVICE_POWER_AUTOMATIONS,
+      appSettings: { settingsSync: APP_SETTINGS_DEFAULT },
+      deviceManager: {
+        getDevicesForSelection: async () => ({
+          ovrDevices: [controller],
+          lighthouseDevices: [{ id: 'BASE', powerState: 'on' }],
+        }),
+      },
+      lighthouseConsole: {
+        turnOffDevices: () => new Promise<OVRDevice[]>((resolve) => (finish = resolve)),
+      },
+      lighthouse: {
+        setPowerState: async () => {
+          throw new Error('base station unreachable');
+        },
+      },
+      eventLog: log,
+    });
+    await expect(service[method]()).rejects.toThrow('base station unreachable');
+    expect((await firstValueFrom(log.eventLog)).logs).toEqual([]);
+    finish([controller]);
+    await vi.advanceTimersByTimeAsync(0);
+    expect((await firstValueFrom(log.eventLog)).logs).toMatchObject([
+      { type: 'turnedOffOpenVRDevices', devices: 'CONTROLLER', reason },
+    ]);
+  });
+
+  it.each([
     ['single', 'MANUAL'],
     ['category', 'MANUAL'],
     ['all', 'MANUAL'],
