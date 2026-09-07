@@ -1,8 +1,8 @@
 import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { vshrink } from 'src-ui/app/utils/animations';
-import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
-import { APP_SETTINGS_DEFAULT, OSCTarget } from 'src-ui/app/models/settings';
+import { vshrink } from '../../../../utils/animations';
+import { AppSettingsService } from '../../../../services/app-settings.service';
+import { APP_SETTINGS_DEFAULT, OSCTarget } from '../../../../models/settings';
 import {
   asyncScheduler,
   combineLatest,
@@ -13,9 +13,10 @@ import {
   tap,
   throttleTime,
 } from 'rxjs';
-import { OscService } from 'src-ui/app/services/osc.service';
-import { flushOnDestroy } from 'src-ui/app/utils/rxjs-utils';
+import { OscService } from '../../../../services/osc.service';
+import { flushOnDestroy } from '../../../../utils/rxjs-utils';
 import { isEqual, pick } from 'lodash';
+import { invoke } from '@tauri-apps/api/core';
 
 @Component({
   selector: 'app-settings-osc-view',
@@ -43,6 +44,8 @@ export class SettingsOscViewComponent implements OnInit {
   protected showVRCTargetWarning = false;
 
   private destroyed = false;
+  // host edits share a generation across navigation-created views
+  private static hostValidationGeneration = 0;
 
   constructor(
     private destroyRef: DestroyRef,
@@ -65,15 +68,27 @@ export class SettingsOscViewComponent implements OnInit {
     flushOnDestroy(this.customTargetHostChangeSubject, this.destroyRef);
     flushOnDestroy(this.customTargetPortChangeSubject, this.destroyRef);
 
-    // Setup debounced validation for custom target host
+    // each host edit supersedes pending DNS validation
     this.customTargetHostChangeSubject
       .pipe(
-        tap(() => (this.customTargetHostValidationState = 'pending')),
+        tap(() => {
+          SettingsOscViewComponent.hostValidationGeneration++;
+          this.customTargetHostValidationState = 'pending';
+        }),
         debounceTime(500),
         takeUntilDestroyed(this.destroyRef)
       )
-      .subscribe((host) => {
-        if (this.isValidHostname(host)) {
+      .subscribe(async (host) => {
+        const generation = SettingsOscViewComponent.hostValidationGeneration;
+        host = host.trim();
+        // resolve the host independently of the port field
+        const valid =
+          !!host &&
+          (await invoke<boolean>('osc_valid_addr', { addr: `${host}:1` }).catch(() => false));
+        if (generation !== SettingsOscViewComponent.hostValidationGeneration) return;
+
+        // save only the latest accepted host, including navigation flushes
+        if (valid) {
           this.customTargetHostValidationState = 'valid';
           this.settingsService.updateSettings({
             oscCustomTargetHost: host,
@@ -144,36 +159,6 @@ export class SettingsOscViewComponent implements OnInit {
     this.settingsService.updateSettings({
       oscTargets: [...this.oscTargets],
     });
-  }
-
-  private isValidHostname(host: string): boolean {
-    if (!host || !host.trim()) {
-      return false;
-    }
-
-    const trimmedHost = host.trim();
-
-    // Check if it's a valid IPv4 address
-    const ipv4Regex =
-      /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-    if (ipv4Regex.test(trimmedHost)) {
-      return true;
-    }
-
-    // If it looks like an IP address but failed the IPv4 test, reject it (probably false)
-    const looksLikeIp = /^\d+\.\d+\.\d+\.\d+/.test(trimmedHost);
-    if (looksLikeIp) {
-      return false;
-    }
-
-    // Check if it's a valid hostname/domain name
-    const hostnameRegex =
-      /^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-    if (hostnameRegex.test(trimmedHost) && trimmedHost.length <= 253) {
-      return true;
-    }
-
-    return false;
   }
 
   private isValidPort(port: number): boolean {

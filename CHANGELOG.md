@@ -68,6 +68,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed custom OSC targets rejecting hostnames such as localhost
+
 - Fixed OpenVR device caches retaining records after a session ends
 
 - Automatic sunrise and sunset lookup no longer saves a false clock time during polar day or night
