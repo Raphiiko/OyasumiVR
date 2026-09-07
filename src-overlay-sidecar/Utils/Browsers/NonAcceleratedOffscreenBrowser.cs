@@ -1,6 +1,3 @@
-// Based on:
-// https://github.com/vrcx-team/VRCX/blob/master/Dotnet/Overlay/OffScreenBrowserLegacy.cs
-
 using System.Runtime.InteropServices;
 using overlay_sidecar.Browsers;
 
@@ -16,7 +13,9 @@ using System.Threading;
 
 public class NonAcceleratedOffscreenBrowser : OffscreenBrowser, IRenderHandler
 {
-  private readonly ReaderWriterLockSlim _paintBufferLock;
+  private readonly object _paintBufferLock = new();
+  private Device? _device;
+  private bool _stopped;
   private GCHandle _paintBuffer;
   private int _width;
   private int _height;
@@ -28,16 +27,15 @@ public class NonAcceleratedOffscreenBrowser : OffscreenBrowser, IRenderHandler
       automaticallyCreateBrowser: false
     )
   {
-    _paintBufferLock = new ReaderWriterLockSlim();
 
-    var windowInfo = new WindowInfo();
+    using var windowInfo = new WindowInfo();
     windowInfo.SetAsWindowless(IntPtr.Zero);
     windowInfo.WindowlessRenderingEnabled = true;
     windowInfo.SharedTextureEnabled = false;
     windowInfo.Width = (int)width;
     windowInfo.Height = (int)height;
 
-    var browserSettings = new BrowserSettings()
+    using var browserSettings = new BrowserSettings()
     {
       WindowlessFrameRate = 60,
       DefaultEncoding = "UTF-8"
@@ -49,45 +47,44 @@ public class NonAcceleratedOffscreenBrowser : OffscreenBrowser, IRenderHandler
     RenderHandler = this;
   }
 
-  public new void Dispose()
+  protected override void Dispose(bool disposing)
   {
-    RenderHandler = null;
-    base.Dispose();
-
-    _paintBufferLock.EnterWriteLock();
-    try
+    if (disposing)
     {
-      if (_paintBuffer.IsAllocated)
+      RenderHandler = null;
+      lock (_paintBufferLock)
       {
-        _paintBuffer.Free();
+        _stopped = true;
+        SetTextureTarget(null);
+        if (_paintBuffer.IsAllocated) _paintBuffer.Free();
       }
     }
-    finally
-    {
-      _paintBufferLock.ExitWriteLock();
-    }
-
-    _paintBufferLock.Dispose();
+    base.Dispose(disposing);
   }
 
   public override void SetTextureTarget(Texture2D? renderTarget)
   {
-    _renderTarget = renderTarget;
+    lock (_paintBufferLock)
+    {
+      _renderTarget = null;
+      _lastPaint = 0;
+      _device?.Dispose();
+      _device = null;
+      if (renderTarget == null || _stopped) return;
+      _device = renderTarget.Device.QueryInterface<Device>();
+      _renderTarget = renderTarget;
+    }
   }
 
   public override void Render()
   {
-    // Safeguard against uninitialized texture
-    if (_renderTarget == null)
-      return;
-
-    _paintBufferLock.EnterReadLock();
-    try
+    lock (_paintBufferLock)
     {
+      if (_renderTarget == null || _stopped || _lastPaint == 0) return;
       if (_width > 0 &&
           _height > 0)
       {
-        var context = _renderTarget.Device.ImmediateContext;
+        var context = _device!.ImmediateContext;
         var dataBox = context.MapSubresource(
           _renderTarget,
           0,
@@ -126,10 +123,6 @@ public class NonAcceleratedOffscreenBrowser : OffscreenBrowser, IRenderHandler
         context.UnmapSubresource(_renderTarget, 0);
       }
     }
-    finally
-    {
-      _paintBufferLock.ExitReadLock();
-    }
   }
 
   ScreenInfo? IRenderHandler.GetScreenInfo()
@@ -165,9 +158,9 @@ public class NonAcceleratedOffscreenBrowser : OffscreenBrowser, IRenderHandler
   {
     if (type == PaintElementType.View)
     {
-      _paintBufferLock.EnterWriteLock();
-      try
+      lock (_paintBufferLock)
       {
+        if (_stopped) return;
         if (_width != width ||
             _height != height)
         {
@@ -189,13 +182,7 @@ public class NonAcceleratedOffscreenBrowser : OffscreenBrowser, IRenderHandler
           buffer,
           (uint)(width * height * 4)
         );
-        // LastPaint marks when the browser produced a new frame, which is what tells the
-        // render loop there is something new to copy into the overlay texture.
         _lastPaint = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-      }
-      finally
-      {
-        _paintBufferLock.ExitWriteLock();
       }
     }
   }
