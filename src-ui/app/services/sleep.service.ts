@@ -9,6 +9,7 @@ import {
   map,
   merge,
   Observable,
+  shareReplay,
   startWith,
   Subject,
 } from 'rxjs';
@@ -63,7 +64,12 @@ export class SleepService {
       map((buffer) => buffer[0] as SleepingPose)
     ),
     this.forcePose$
-  ).pipe(startWith('UNKNOWN' as SleepingPose), distinctUntilChanged()) as Observable<SleepingPose>;
+  ).pipe(
+    startWith('UNKNOWN' as SleepingPose),
+    distinctUntilChanged(),
+    // the shared window stays active between view subscriptions
+    shareReplay({ bufferSize: 1, refCount: false })
+  ) as Observable<SleepingPose>;
 
   constructor(
     private openvr: OpenVRService,
