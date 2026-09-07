@@ -8,12 +8,6 @@ using SharpDX.DXGI;
 namespace overlay_sidecar;
 
 public static class Utils {
-  public static async Task DelayedAction(Action action, TimeSpan delay)
-  {
-    await Task.Delay(delay);
-    action();
-  }
-
   public static byte[] LoadEmbeddedFile(string embeddedFileName)
   {
     var assembly = Assembly.GetExecutingAssembly();
@@ -46,7 +40,7 @@ public static class Utils {
     }
   }
 
-  public static async Task<Texture2D?> InitTexture2D(uint resolution, bool cpuWritable)
+  public static Texture2D InitTexture2D(uint resolution, bool cpuWritable)
   {
     var timings = new[] { 16, 100, 200, 500, 1000 };
     Texture2D? texture = null;
@@ -80,11 +74,10 @@ public static class Utils {
         {
           Log.Error("Could not create overlay: " + err);
           texture?.Dispose();
-          GC.Collect();
           throw new Exception("Could not create texture");
         }
 
-        await Task.Delay(timings[attempt]);
+        Thread.Sleep(timings[attempt]);
         continue;
       }
 

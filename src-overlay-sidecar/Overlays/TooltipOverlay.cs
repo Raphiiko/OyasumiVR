@@ -9,7 +9,7 @@ public class TooltipOverlay : BaseWebOverlay {
   private static readonly TrackedDevicePose_t[] _poseBuffer = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
 
   private bool _shown;
-  private bool _closing;
+  private DateTime? _hideAt;
   private Vector3? _targetPosition;
   private string? _text = "";
 
@@ -18,16 +18,6 @@ public class TooltipOverlay : BaseWebOverlay {
   {
     OpenVR.Overlay.SetOverlayWidthInMeters(OverlayHandle, 0.35f);
     OpenVR.Overlay.SetOverlaySortOrder(OverlayHandle, 150);
-    new Thread(() =>
-    {
-      var timer = new RefreshRateTimer();
-      while (!Disposed)
-      {
-        timer.TickStart();
-        UpdatePosition();
-        timer.SleepUntilNextTick();
-      }
-    }).Start();
   }
 
   public void SetPosition(Vector3 position)
@@ -35,35 +25,45 @@ public class TooltipOverlay : BaseWebOverlay {
     _targetPosition = Vector3.Add(position, new Vector3(0, 0.025f, 0));
   }
 
-  public async void SetText(string? text)
+  public void SetText(string? text)
   {
-    _text = text;
-    if (!UiReady) return;
-    var content = text != null ? $@"""{HttpUtility.JavaScriptStringEncode(text)}""" : "null";
-    Browser.ExecuteScriptAsync($"window.OyasumiIPCIn.showToolTip({content})");
-    if (text != null)
+    lock (OvrManager.LifecycleLock)
     {
-      _shown = true;
-      _closing = false;
-      OpenVR.Overlay.ShowOverlay(OverlayHandle);
-    }
-    else
-    {
-      _closing = true;
-      await Utils.DelayedAction(() =>
+      if (Disposed) return;
+      _text = text;
+      if (!UiReady) return;
+      var content = text != null ? $@"""{HttpUtility.JavaScriptStringEncode(text)}""" : "null";
+      Browser.ExecuteScriptAsync($"window.OyasumiIPCIn.showToolTip({content})");
+      if (text != null)
       {
-        if (!_closing) return;
-        _closing = false;
-        _shown = false;
-        OpenVR.Overlay.HideOverlay(OverlayHandle);
-      }, TimeSpan.FromSeconds(1));
+        _shown = true;
+        _hideAt = null;
+        OpenVR.Overlay.ShowOverlay(OverlayHandle);
+      }
+      else _hideAt = DateTime.UtcNow.AddSeconds(1);
     }
   }
 
-  public new void OnUiReady()
+  public override void OnUiReady()
   {
-    base.OnUiReady();
-    SetText(_text);
+    lock (OvrManager.LifecycleLock)
+    {
+      base.OnUiReady();
+      SetText(_text);
+    }
+  }
+
+  public override void UpdateFrame()
+  {
+    base.UpdateFrame();
+    if (Disposed) return;
+    if (_hideAt.HasValue && DateTime.UtcNow >= _hideAt.Value)
+    {
+      _hideAt = null;
+      _shown = false;
+      OpenVR.Overlay.HideOverlay(OverlayHandle);
+    }
+    UpdatePosition();
   }
 
   private void UpdatePosition()

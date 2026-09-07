@@ -34,62 +34,65 @@ public class BaseWebOverlay : RenderableOverlay
       ? "http://localhost:5173"
       : IpcManager.Instance.StaticBaseUrl) + path + "?corePort=" + IpcManager.Instance.CoreHttpPort;
     _overlayKey = overlayKey;
-    // Set up state management
     _requiresState = requiresState;
-    StateManager.Instance.StateChanged += OnStateChanged;
-    // Set up browser
-    if (Program.InDevMode()) Log.Information("Using UI URL: {url}", uiUrl);
-    Browser = BrowserManager.Instance.GetBrowser(uiUrl, resolution, resolution);
-    Browser!.JavascriptObjectRepository.Register("OyasumiIPCOut", this);
-    // Set up overlay
-    ulong overlayHandle = 0;
+    try
     {
-      var err = OvrUtils.getOrCreateOverlay(overlayKey, overlayName, ref overlayHandle);
-      if (err != EVROverlayError.None)
+      if (Program.InDevMode()) Log.Information("Using UI URL: {url}", uiUrl);
+      Browser = BrowserManager.Instance.GetBrowser(uiUrl, resolution, resolution);
+      Browser.JavascriptObjectRepository.Register("OyasumiIPCOut", this);
+      ulong overlayHandle = 0;
+      var error = OvrUtils.getOrCreateOverlay(overlayKey, overlayName, ref overlayHandle);
+      if (error != EVROverlayError.None)
+        throw new InvalidOperationException($"Could not create overlay: {error}");
+      _overlayHandle = overlayHandle;
+      _texture = Utils.InitTexture2D(resolution, !Program.GpuAccelerated);
+      Browser.SetTextureTarget(_texture);
+      StateManager.Instance.StateChanged += OnStateChanged;
+      OvrManager.Instance.RegisterOverlay(this);
+    }
+    catch
+    {
+      Dispose();
+      throw;
+    }
+  }
+
+  public virtual void Dispose()
+  {
+    lock (OvrManager.LifecycleLock)
+    {
+      if (Disposed) return;
+      Disposed = true;
+      try { OvrManager.Instance.OverlayPointer?.StopForOverlay(this); }
+      catch (Exception error) { Log.Warning(error, "Could not stop the pointer for a disposed overlay."); }
+      OvrManager.Instance.UnregisterOverlay(this);
+      StateManager.Instance.StateChanged -= OnStateChanged;
+      if (_overlayHandle.HasValue) OpenVR.Overlay?.DestroyOverlay(_overlayHandle.Value);
+      try
       {
-        Log.Error("Could not create overlay: " + err);
-        Dispose();
-        return;
+        if (Browser != null)
+        {
+          Browser.SetTextureTarget(null);
+          BrowserManager.Instance.FreeBrowser(Browser);
+        }
+      }
+      finally
+      {
+        Browser = null;
+        _texture?.Dispose();
+        _texture = null;
       }
     }
-    _overlayHandle = overlayHandle;
-    // Initialize remaining asynchronous actions
-    Init(resolution);
-    // Start frame updates
-    OvrManager.Instance.RegisterOverlay(this);
   }
 
-  private async void Init(uint resolution)
+  public virtual void OnUiReady()
   {
-    _texture = await Utils.InitTexture2D(resolution, !Program.GpuAccelerated);
-    Browser!.SetTextureTarget(_texture);
-  }
-
-  public void Dispose()
-  {
-    if (Disposed) return;
-    Disposed = true;
-    OvrManager.Instance.OverlayPointer?.StopForOverlay(this);
-    OvrManager.Instance.UnregisterOverlay(this);
-    StateManager.Instance.StateChanged -= OnStateChanged;
-    if (_overlayHandle.HasValue) OpenVR.Overlay.DestroyOverlay(_overlayHandle!.Value);
-    if (Browser != null)
+    lock (OvrManager.LifecycleLock)
     {
-      // The browser is pooled and keeps painting into whatever target it holds, so it has to
-      // let go of this texture before we dispose it.
-      Browser.SetTextureTarget(null);
-      BrowserManager.Instance.FreeBrowser(Browser);
+      if (Disposed) return;
+      UiReady = true;
+      SyncState();
     }
-
-    _texture?.Dispose();
-    _texture = null;
-    GC.Collect();
-  }
-
-  public void OnUiReady()
-  {
-    UiReady = true;
-    SyncState();
   }
 
   public string GetDebugTranslations()
@@ -99,11 +102,13 @@ public class BaseWebOverlay : RenderableOverlay
 
   public void SyncState(OyasumiSidecarState? state = null)
   {
-    if (!UiReady || !_requiresState)
-      return;
-    state ??= StateManager.Instance.GetAppState();
-    Browser.ExecuteScriptAsync(
-      @$"window.OyasumiIPCIn.setState(""{HttpUtility.JavaScriptStringEncode(state.ToByteString().ToBase64())}"");");
+    lock (OvrManager.LifecycleLock)
+    {
+      if (Disposed || !UiReady || !_requiresState) return;
+      state ??= StateManager.Instance.GetAppState();
+      Browser.ExecuteScriptAsync(
+        @$"window.OyasumiIPCIn.setState(""{HttpUtility.JavaScriptStringEncode(state.ToByteString().ToBase64())}"");");
+    }
   }
 
   public void SendEventVoid(string eventName)
@@ -180,9 +185,8 @@ public class BaseWebOverlay : RenderableOverlay
     ShowToolTipInternal(text);
   }
 
-  public void UpdateFrame()
+  public virtual void UpdateFrame()
   {
-    // Stop here if we are not ready, already disposed, or if the browser hasn't painted anything new for the past second or so.
     if (_texture == null || Disposed || Browser == null ||
         DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - Browser.LastPaint >= 1000) return;
 
@@ -191,7 +195,6 @@ public class BaseWebOverlay : RenderableOverlay
     {
       handle = _texture.NativePointer
     };
-    // Render the texture to the overlay
     if (Disposed || _texture.IsDisposed) return;
     var err = OpenVR.Overlay.SetOverlayTexture(_overlayHandle!.Value, ref texture);
     if (err != EVROverlayError.None && err != _lastTextureError)
@@ -201,7 +204,6 @@ public class BaseWebOverlay : RenderableOverlay
 
   protected virtual void ShowToolTipInternal(string? text)
   {
-    // Method to be overridden by overlays in case they support tool tips
   }
 
   private void OnStateChanged(object? sender, OyasumiSidecarState e)

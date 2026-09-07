@@ -33,23 +33,22 @@ public class MicMuteIndicatorOverlay : RenderableOverlay {
     _unmuteImage =
       Utils.ConvertPngToBgra(Utils.LoadEmbeddedFile("oyasumivr-overlay-sidecar.Resources.mic_unmute.png"));
     _textureWriter = new TextureWriter(512);
-    // Create the overlay
-    OvrUtils.getOrCreateOverlay("co.raphii.oyasumivr:MicMuteIndicatorOverlay", "OyasumiVR Mic Mute Indicator Overlay",
-      ref _overlayHandle);
-    Init();
-  }
-
-  private async void Init()
-  {
     try
     {
-      await _textureWriter.init();
+      OvrUtils.getOrCreateOverlay("co.raphii.oyasumivr:MicMuteIndicatorOverlay", "OyasumiVR Mic Mute Indicator Overlay",
+        ref _overlayHandle);
+      Init();
     }
-    catch (Exception e)
+    catch
     {
-      Log.Error("[MicMuteIndicatorOverlay] Failed to init texture writer: " + e);
-      return;
+      Dispose();
+      throw;
     }
+  }
+
+  private void Init()
+  {
+    _textureWriter.Init();
 
     // Configure the overlay
     OpenVR.Overlay.SetOverlayAlpha(_overlayHandle, 0f);
@@ -68,22 +67,29 @@ public class MicMuteIndicatorOverlay : RenderableOverlay {
 
   private void OnStateChanged(object? sender, OyasumiSidecarState state)
   {
-    if (state.SystemMicMuted != _muteState) setMuteState(state.SystemMicMuted);
-    _maxOpacity = state.Settings.SystemMicIndicatorOpacity;
-    _fadeOut = state.Settings.SystemMicIndicatorFadeout;
-    setEnabled(state.Settings.SystemMicIndicatorEnabled);
+    lock (OvrManager.LifecycleLock)
+    {
+      if (_disposed) return;
+      if (state.SystemMicMuted != _muteState) setMuteState(state.SystemMicMuted);
+      _maxOpacity = state.Settings.SystemMicIndicatorOpacity;
+      _fadeOut = state.Settings.SystemMicIndicatorFadeout;
+      setEnabled(state.Settings.SystemMicIndicatorEnabled);
+    }
   }
 
   public void Dispose()
   {
-    _disposed = true;
-    OvrManager.Instance.UnregisterOverlay(this);
-    OpenVR.Overlay.DestroyOverlay(_overlayHandle);
-    _textureWriter.Dispose();
-    _textureWriter = null;
-    GC.Collect();
-    StateManager.Instance.StateChanged -= OnStateChanged;
-    OvrManager.Instance.OnInputActionsChanged -= OnInputActionsChanged;
+    lock (OvrManager.LifecycleLock)
+    {
+      if (_disposed) return;
+      _disposed = true;
+      OvrManager.Instance.UnregisterOverlay(this);
+      OpenVR.Overlay?.DestroyOverlay(_overlayHandle);
+      _textureWriter.Dispose();
+      _textureWriter = null;
+      StateManager.Instance.StateChanged -= OnStateChanged;
+      OvrManager.Instance.OnInputActionsChanged -= OnInputActionsChanged;
+    }
   }
 
   public void SetMicrophoneActive(bool active)
@@ -100,14 +106,18 @@ public class MicMuteIndicatorOverlay : RenderableOverlay {
 
   private void OnInputActionsChanged(object? sender, Dictionary<string, List<OvrManager.OvrInputDevice>> e)
   {
-    var deviceIds = e["/actions/hidden/in/IndicatePresence"].Select(d => d.Id).ToList();
-    if (deviceIds.Any(d => !_lastPresenceIndicationDevices.Contains(d)))
+    lock (OvrManager.LifecycleLock)
     {
-      _lastPresenceIndication = DateTime.UtcNow;
-    }
+      if (_disposed) return;
+      var deviceIds = e["/actions/hidden/in/IndicatePresence"].Select(d => d.Id).ToList();
+      if (deviceIds.Any(d => !_lastPresenceIndicationDevices.Contains(d)))
+      {
+        _lastPresenceIndication = DateTime.UtcNow;
+      }
 
-    _lastPresenceIndicationDevices.Clear();
-    _lastPresenceIndicationDevices.AddRange(deviceIds);
+      _lastPresenceIndicationDevices.Clear();
+      _lastPresenceIndicationDevices.AddRange(deviceIds);
+    }
   }
 
   private void setMuteState(bool state)
@@ -132,7 +142,7 @@ public class MicMuteIndicatorOverlay : RenderableOverlay {
 
   public void UpdateFrame()
   {
-    if (!_enabled) return;
+    if (_disposed || !_enabled) return;
 
     var timeSinceLastStateChange = (DateTime.UtcNow - _lastStateChange).TotalMilliseconds;
     var timeSinceLastPresenceIndication = (DateTime.UtcNow - _lastPresenceIndication).TotalMilliseconds;
