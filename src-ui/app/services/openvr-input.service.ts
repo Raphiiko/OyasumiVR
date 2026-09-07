@@ -28,19 +28,32 @@ export class OpenVRInputService {
   constructor(private openvr: OpenVRService) {}
 
   async init() {
+    // release held actions when the OpenVR session ends
+    let initialized = false;
+    this.openvr.status.subscribe((status) => {
+      initialized = status === 'INITIALIZED';
+      if (initialized || !Object.values(this._state.value).some((devices) => devices.length))
+        return;
+      this._state.next({
+        [OVRInputEventAction.OpenOverlay]: [],
+        [OVRInputEventAction.MuteMicrophone]: [],
+        [OVRInputEventAction.IndicatePresence]: [],
+        [OVRInputEventAction.OverlayInteract]: [],
+      });
+    });
+
     await listen<OVRInputEvent>('OVR_INPUT_EVENT_DIGITAL', (event) => {
+      const { action, pressed, device } = event.payload;
+      if (!initialized || !device) return;
       const state = structuredClone(this._state.value);
-      const devices = state[event.payload.action];
-      if (event.payload.pressed && !devices.some((d) => d.index === event.payload.device.index)) {
-        devices.push(event.payload.device);
-      } else if (
-        !event.payload.pressed &&
-        devices.some((d) => d.index === event.payload.device.index)
-      ) {
-        const index = devices.findIndex((d) => d.index === event.payload.device.index);
+      const devices = state[action];
+      if (pressed && !devices.some((d) => d.index === device.index)) {
+        devices.push(device);
+      } else if (!pressed && devices.some((d) => d.index === device.index)) {
+        const index = devices.findIndex((d) => d.index === device.index);
         if (index !== -1) devices.splice(index, 1);
       }
-      state[event.payload.action] = devices;
+      state[action] = devices;
       if (!isEqual(state, this._state.value)) this._state.next(state);
     });
   }
