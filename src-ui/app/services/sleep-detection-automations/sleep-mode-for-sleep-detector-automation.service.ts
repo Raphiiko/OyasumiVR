@@ -15,6 +15,7 @@ import {
   Observable,
   pairwise,
   skip,
+  startWith,
 } from 'rxjs';
 import { SleepService } from '../sleep.service';
 import { SleepDetectorStateReport } from '../../models/events';
@@ -96,10 +97,14 @@ export class SleepModeForSleepDetectorAutomationService {
       if (!mode) this.lastSleepModeDisable = Date.now();
       await this.invalidateSleepCheck();
     });
-    this.sleep.pose.pipe(pairwise()).subscribe(([previous, current]) => {
-      this.lastPose = current;
-      if (current !== 'SIDE_FRONT' && previous === 'SIDE_FRONT') this.lastUprightPose = Date.now();
-    });
+    // seed pose history for a replayed startup value
+    this.sleep.pose
+      .pipe(startWith('UNKNOWN' as SleepingPose), pairwise())
+      .subscribe(([previous, current]) => {
+        this.lastPose = current;
+        if (current !== 'SIDE_FRONT' && previous === 'SIDE_FRONT')
+          this.lastUprightPose = Date.now();
+      });
     new Promise((resolve) => setTimeout(resolve, 15000)).then(async () => {
       await listen<SleepDetectorStateReport>('SLEEP_DETECTOR_STATE_REPORT', async (event) => {
         this._lastStateReport.next(event.payload);
