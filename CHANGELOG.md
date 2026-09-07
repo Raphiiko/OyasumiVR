@@ -71,6 +71,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Device power-off events now exclude skipped devices and failed commands.
 - Controller actions no longer stay pressed after SteamVR disconnects.
 - Run Automations now saves pending command edits when you leave the page.
 

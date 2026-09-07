@@ -13,10 +13,7 @@ import { map, skip } from 'rxjs';
 import { DeviceSelection } from 'src-ui/app/models/device-manager';
 import { LighthouseDevice } from 'src-ui/app/models/lighthouse-device';
 import { OVRDevice } from 'src-ui/app/models/ovr-device';
-import {
-  EventLogLighthouseSetPowerState,
-  EventLogTurnedOffOpenVRDevices,
-} from 'src-ui/app/models/event-log-entry';
+import { EventLogLighthouseSetPowerState } from 'src-ui/app/models/event-log-entry';
 
 @Injectable({
   providedIn: 'root',
@@ -56,26 +53,15 @@ export class SleepDevicePowerAutomationsService {
   }
 
   private async handleSleepPreparation() {
-    this.eventLog.logEvent({
-      type: 'turnedOffOpenVRDevices',
-      reason: 'SLEEP_PREPARATION',
-      devices: 'VARIOUS',
-    } as EventLogTurnedOffOpenVRDevices);
-    await this.turnOffSelectedDevices(this.config.turnOffDevicesOnSleepPreparation);
+    const result = await this.turnOffSelectedDevices(this.config.turnOffDevicesOnSleepPreparation);
+    this.eventLog.logTurnedOffOpenVRDevices(result.ovrDevices, 'SLEEP_PREPARATION');
   }
 
   private async handleSleepModeDisable() {
     const offResult = await this.turnOffSelectedDevices(
       this.config.turnOffDevicesOnSleepModeDisable
     );
-    const offDevices = offResult.ovrDevices.length + offResult.lighthouseDevices.length;
-    if (offDevices > 0) {
-      this.eventLog.logEvent({
-        type: 'turnedOffOpenVRDevices',
-        reason: 'SLEEP_MODE_DISABLED',
-        devices: offDevices === 1 ? 'SINGLE' : 'VARIOUS',
-      } as EventLogTurnedOffOpenVRDevices);
-    }
+    this.eventLog.logTurnedOffOpenVRDevices(offResult.ovrDevices, 'SLEEP_MODE_DISABLED');
     const onResult = await this.turnOnSelectedDevices(this.config.turnOnDevicesOnSleepModeDisable);
     const onDevices = onResult.lighthouseDevices.length;
     if (onDevices > 0) {
@@ -89,34 +75,28 @@ export class SleepDevicePowerAutomationsService {
   }
 
   private async handleSleepModeEnable() {
-    this.eventLog.logEvent({
-      type: 'turnedOffOpenVRDevices',
-      reason: 'SLEEP_MODE_ENABLED',
-      devices: 'VARIOUS',
-    } as EventLogTurnedOffOpenVRDevices);
-    await this.turnOffSelectedDevices(this.config.turnOffDevicesOnSleepModeEnable);
+    const result = await this.turnOffSelectedDevices(this.config.turnOffDevicesOnSleepModeEnable);
+    this.eventLog.logTurnedOffOpenVRDevices(result.ovrDevices, 'SLEEP_MODE_ENABLED');
   }
 
   private async turnOffSelectedDevices(deviceSelection: DeviceSelection): Promise<{
     lighthouseDevices: LighthouseDevice[];
     ovrDevices: OVRDevice[];
   }> {
-    // Get devices to turn off
+    // resolve selected devices that can receive power commands
     const devices = await this.deviceManager.getDevicesForSelection(deviceSelection);
     const ovrDevices = (devices.ovrDevices = devices.ovrDevices.filter((d) => d.canPowerOff));
     const lighthouseDevices = (devices.lighthouseDevices = devices.lighthouseDevices.filter(
       (d) => d.powerState === 'on' || d.powerState === 'booting'
     ));
-    // Turn off devices
-    await Promise.all([
-      // Turn off available OVR devices
+    // collect device results while base stations receive commands
+    const [dispatched] = await Promise.all([
       this.lighthouseConsole.turnOffDevices(ovrDevices),
-      // Turn off available Lighthouse devices
       ...lighthouseDevices.map((device) =>
         this.lighthouse.setPowerState(device, this.appSettings.settingsSync.lighthousePowerOffState)
       ),
     ]);
-    return { ovrDevices, lighthouseDevices };
+    return { ovrDevices: dispatched, lighthouseDevices };
   }
 
   private async turnOnSelectedDevices(turnOnDevicesOnSleepModeDisable: DeviceSelection): Promise<{
