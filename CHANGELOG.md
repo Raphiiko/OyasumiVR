@@ -19,6 +19,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Added
 
+- Regression coverage for removing Windows registry paths from error-report filenames
 - Multiple VRChat account profiles
   - Switch between accounts without entering their credentials again
   - Saved sessions and credentials are protected with the Windows Data Protection API
