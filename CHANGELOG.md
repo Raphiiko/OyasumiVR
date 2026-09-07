@@ -70,6 +70,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Run Automations now saves pending command edits when you leave the page.
+
 - Fixed VRChat log timestamps allowing the Quick Eeper achievement after its 20-minute window.
 
 - Fixed OpenVR device updates changing the tracked-index order of the device list.
