@@ -89,6 +89,7 @@ public class OvrManager
         Log.Error(error, "Overlay update failed. Disposing the overlay.");
         try { overlay.Dispose(); }
         catch (Exception cleanupError) { Log.Error(cleanupError, "Could not dispose the failed overlay."); }
+        throw;
       }
     }
   }
