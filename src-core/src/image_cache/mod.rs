@@ -17,6 +17,7 @@ use tokio::sync::Mutex;
 use urlencoding::decode;
 
 pub static INSTANCE: LazyLock<Mutex<Option<ImageCache>>> = LazyLock::new(Default::default);
+static HTTP_CLIENT: LazyLock<reqwest::Client> = LazyLock::new(reqwest::Client::new);
 
 pub async fn init(cache_dir: PathBuf) {
     let image_cache_dir = cache_dir.join("image_cache");
@@ -99,27 +100,24 @@ impl ImageCache {
         Some((image_data, mime))
     }
 
-    fn store_image(&self, url: &str, ttl: u64, mime: Mime, image_data: Vec<u8>) {
+    fn store_image(&self, url: &str, ttl: u64, mime: Mime, image_data: &[u8]) {
         let _write_guard = self
             .write_lock
             .lock()
             .unwrap_or_else(|error| error.into_inner());
-        // Determine paths
+        // resolve the image and manifest paths
         let url_hash = format!("{:x}", md5::compute(url));
         let storage_path = Path::new(&self.cache_path_str).join(&url_hash);
         let manifest_path = storage_path.join("manifest.json");
         let file_ext = self.get_ext_for_mime(mime.clone());
         let file_name = format!("image.{file_ext}");
         let image_path = storage_path.join(&file_name);
-        // Delete current storage directory if it exists
         if storage_path.exists() {
             std::fs::remove_dir_all(&storage_path).unwrap();
         }
-        // Create storage directory
         std::fs::create_dir_all(&storage_path).unwrap();
-        // Store image
         std::fs::write(image_path, image_data).unwrap();
-        // Store manifest
+        // publish the manifest after writing the image
         let manifest = ImageCacheManifest {
             url: url.to_string(),
             hash: url_hash,
@@ -218,7 +216,7 @@ impl ImageCache {
         &self,
         req: Request<Incoming>,
     ) -> Result<Response<ResBody>, Infallible> {
-        // Parse query parameters
+        // read the requested image and cache lifetime
         let params: HashMap<String, String> = req
             .uri()
             .query()
@@ -229,7 +227,6 @@ impl ImageCache {
             })
             .unwrap_or_default();
 
-        // Get URL parameter
         let url = match params.get("url") {
             Some(url) => decode(url).expect("UTF-8"),
             None => {
@@ -239,7 +236,6 @@ impl ImageCache {
                     .unwrap());
             }
         };
-        // Get ttl parameter
         let ttl = match params.get("ttl") {
             Some(ttl) => match ttl.parse::<u64>() {
                 Ok(ttl) => ttl,
@@ -257,7 +253,7 @@ impl ImageCache {
                     .unwrap());
             }
         };
-        // Return cached data if present
+        // serve unexpired images from the local cache
         if let Some((image_data, image_mime)) = self.get_image(String::from(url.as_ref())) {
             return Ok(Response::builder()
                 .status(200)
@@ -265,9 +261,8 @@ impl ImageCache {
                 .body(image_data.into())
                 .unwrap());
         }
-        // Get image from URL
-        let client = reqwest::Client::new();
-        let (image_data, image_mime) = match client
+        // download missing image bytes through the shared connection pool
+        let (image_data, image_mime) = match HTTP_CLIENT
             .get(url.as_ref())
             .header(
                 reqwest::header::USER_AGENT,
@@ -312,7 +307,7 @@ impl ImageCache {
                                 }
                             }
                         };
-                        (bytes.to_vec(), content_type)
+                        (bytes, content_type)
                     }
                     Err(_) => {
                         return Ok(Response::builder()
@@ -329,9 +324,7 @@ impl ImageCache {
                     .unwrap());
             }
         };
-        // Cache image
-        self.store_image(url.as_ref(), ttl, image_mime.clone(), image_data.clone());
-        // Return image
+        self.store_image(url.as_ref(), ttl, image_mime.clone(), &image_data);
         Ok(Response::builder()
             .status(200)
             .header(hyper::header::CONTENT_TYPE, image_mime.to_string())
@@ -431,7 +424,7 @@ mod tests {
         let url = "https://example.com/image.png";
         let image = vec![1, 2, 3];
 
-        cache.store_image(url, 60, mime::IMAGE_PNG, image.clone());
+        cache.store_image(url, 60, mime::IMAGE_PNG, &image);
 
         let entry_path = directory.path().join(format!("{:x}", md5::compute(url)));
         assert!(entry_path.join("manifest.json").exists());
@@ -445,7 +438,7 @@ mod tests {
         let cache = ImageCache::new(directory.path().as_os_str().to_owned());
         let url = "https://example.com/image.png";
 
-        cache.store_image(url, 60, mime::IMAGE_PNG, vec![1, 2, 3]);
+        cache.store_image(url, 60, mime::IMAGE_PNG, &[1, 2, 3]);
 
         let entry_path = directory.path().join(format!("{:x}", md5::compute(url)));
         let manifest_path = entry_path.join("manifest.json");
@@ -469,7 +462,7 @@ mod tests {
                 let cache = cache.clone();
                 scope.spawn(move || {
                     for _ in 0..16 {
-                        cache.store_image(url, 60, mime::IMAGE_PNG, image.clone());
+                        cache.store_image(url, 60, mime::IMAGE_PNG, &image);
                     }
                 });
             }
