@@ -24,6 +24,9 @@
       @if (error === 'UNKNOWN') {
         <div class="line1" transloco="comp.controller-binding.errors.UNKNOWN.message"></div>
       }
+      @if (error === 'LOOKUP_FAILED') {
+        <div class="line1" transloco="comp.controller-binding.errors.LOOKUP_FAILED.message"></div>
+      }
     </div>
   }
   @if (error === 'MISSING_CONTROLLER' || error === 'NO_CONTROLLERS') {
