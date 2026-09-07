@@ -73,6 +73,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Installing dependencies no longer changes the shared package version in the lockfile, and version bumps keep it synchronized.
 - Controller bindings now show a retry message when loading fails instead of asking you to configure a binding.
 - Device power-off events now exclude skipped devices and failed commands.
 - Controller actions no longer stay pressed after SteamVR disconnects.
