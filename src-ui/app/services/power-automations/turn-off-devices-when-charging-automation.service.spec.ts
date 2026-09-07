@@ -37,13 +37,13 @@ async function setup() {
     lighthouseDevices: [],
     knownDevices: [],
   }));
-  const powerOff = vi.fn();
+  const powerOff = vi.fn(async (devices: OVRDevice[]) => devices);
   const logEvent = vi.fn();
   const service = new TurnOffDevicesWhenChargingAutomationService(
     { configs } as unknown as Dependencies[0],
     { devices } as unknown as Dependencies[1],
     { turnOffDevices: powerOff } as unknown as Dependencies[2],
-    { logEvent } as unknown as Dependencies[3],
+    { logTurnedOffOpenVRDevices: logEvent } as unknown as Dependencies[3],
     {
       getDevicesForSelection: resolve,
       knownDevices: new BehaviorSubject([]),
@@ -96,6 +96,7 @@ describe('charging device selection', () => {
     h.devices.next([{ ...a, isCharging: true }, b]);
     await Promise.resolve();
     expect(h.powerOff).toHaveBeenCalledTimes(2);
+    await Promise.resolve();
     expect(h.logEvent).toHaveBeenCalledTimes(2);
   });
 
