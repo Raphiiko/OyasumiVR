@@ -3,11 +3,22 @@ import { AutomationConfigService } from '../automation-config.service';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   JoinNotificationsMode,
+  joinModeNeedsFriends,
   SleepModeDisableOnPlayerJoinOrLeaveAutomationConfig,
 } from '../../models/automations';
 
 import { SleepService } from '../sleep.service';
-import { filter, firstValueFrom, map, switchMap, tap } from 'rxjs';
+import {
+  catchError,
+  combineLatest,
+  distinctUntilChanged,
+  EMPTY,
+  firstValueFrom,
+  from,
+  map,
+  switchMap,
+  tap,
+} from 'rxjs';
 import type { LimitedUserFriend } from 'vrchat';
 import { VRChatLogService } from '../vrchat-log.service';
 import { VRChatLogEvent } from '../../models/vrchat-log-event';
@@ -39,20 +50,28 @@ export class SleepModeDisableOnPlayerJoinLeaveAutomationService {
       .pipe(map((configs) => configs.SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE))
       .subscribe((config) => (this.config = config));
     this.sleep.mode.subscribe((mode) => (this.sleepMode = mode));
-    this.vrchat.user
+    const needsFriends = this.automationConfig.configs.pipe(
+      map(
+        ({ SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE: config }) =>
+          config.enabled &&
+          (joinModeNeedsFriends(config.joinMode, config.playerIds) ||
+            joinModeNeedsFriends(config.leaveMode, config.playerIds))
+      ),
+      distinctUntilChanged()
+    );
+    // user updates refresh active mappings; enabling requests them immediately
+    combineLatest([this.vrchat.user, needsFriends])
       .pipe(
-        tap((user) => {
+        tap(([user]) => {
           this.ownVRChatDisplayName = user?.displayName ?? '';
           if (!user) this.friends = [];
         }),
-        filter(Boolean),
-        switchMap(async () => {
-          try {
-            this.friends = await this.vrchat.listFriends();
-          } catch {}
+        switchMap(([user, needed]) => {
+          if (!user || !needed) return EMPTY;
+          return from(this.vrchat.listFriends()).pipe(catchError(() => EMPTY));
         })
       )
-      .subscribe();
+      .subscribe((friends) => (this.friends = friends));
     // Process log events
     this.vrchatLog.logEvents.subscribe((event) => {
       this.onLogEvent(event);
