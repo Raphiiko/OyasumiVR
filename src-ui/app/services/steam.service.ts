@@ -162,6 +162,7 @@ export class SteamService {
   private async handleAchievement_QUICK_EEPER() {
     this.sleep.onSleepModeChange
       .pipe(
+        // wait for automatic sleep detection
         filter((change) => {
           return (
             change.mode === true &&
@@ -169,6 +170,7 @@ export class SteamService {
             change.reason.automation === 'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR'
           );
         }),
+        // read the active VRChat session's join time
         switchMap(() => this.vrchat.vrchatProcessActive.pipe(take(1))),
         filter(Boolean),
         switchMap(() =>
@@ -178,7 +180,12 @@ export class SteamService {
           )
         ),
         filter(Boolean),
-        filter((timestamp) => Date.now() - timestamp < 1000 * 60 * 20),
+        // restrict eligibility to the first twenty minutes
+        filter((timestamp) => {
+          const elapsed = Date.now() - timestamp;
+          return elapsed >= 0 && elapsed < 1000 * 60 * 20;
+        }),
+        // unlock only if the achievement is still locked
         tap(() => debug('[Steam] QUICK_EEPER achievement triggered')),
         switchMap(() => this.getAchievement(SteamAchievements.QUICK_EEPER)),
         filter((unlocked) => !unlocked),

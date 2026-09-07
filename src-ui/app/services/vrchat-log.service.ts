@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { VRChatLogEvent } from '../models/vrchat-log-event';
-import * as moment from 'moment';
 import { listen } from '@tauri-apps/api/event';
 import { invoke } from '@tauri-apps/api/core';
 
 interface RawLogEvent {
+  /** Epoch milliseconds from the native log parser. */
   time: number;
   event: string;
   data: string;
@@ -45,7 +45,7 @@ export class VRChatLogService {
         const { displayName, userId } = this.parseNameAndId(event.data);
         this._logEvents.next({
           type: 'OnPlayerJoined',
-          timestamp: moment.unix(event.time).toDate(),
+          timestamp: new Date(event.time),
           initialLoad: event.initialLoad,
           displayName,
           userId,
@@ -56,7 +56,7 @@ export class VRChatLogService {
         const { displayName, userId } = this.parseNameAndId(event.data);
         this._logEvents.next({
           type: 'OnPlayerLeft',
-          timestamp: moment.unix(event.time).toDate(),
+          timestamp: new Date(event.time),
           initialLoad: event.initialLoad,
           displayName,
           userId,
@@ -66,7 +66,7 @@ export class VRChatLogService {
       case 'OnLocationChange':
         this._logEvents.next({
           type: 'OnLocationChange',
-          timestamp: moment.unix(event.time).toDate(),
+          timestamp: new Date(event.time),
           instanceId: event.data,
           initialLoad: event.initialLoad,
         });
