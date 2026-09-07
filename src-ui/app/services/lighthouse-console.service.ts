@@ -112,17 +112,20 @@ export class LighthouseConsoleService {
 
   private queuePowerOff(deviceSerialNumbers: string[]) {
     const batch = this.powerOffQueue.then(() => this.runTurnOffDevices(deviceSerialNumbers));
-    this.powerOffQueue = batch.catch(() => {});
+    this.powerOffQueue = batch.then(
+      () => {},
+      () => {}
+    );
     return batch;
   }
 
-  private async runTurnOffDevices(deviceSerialNumbers: string[]) {
+  private async runTurnOffDevices(deviceSerialNumbers: string[]): Promise<OVRDevice[]> {
     const settings = await firstValueFrom(this.appSettings.settings);
     const lighthouseConsolePath = settings.lighthouseConsolePath;
     const generation = this.validationGeneration;
     if (this._consoleStatus.value !== 'SUCCESS' || this.validatedPath !== lighthouseConsolePath)
-      return;
-    // resolve the devices as they are now, not as the caller saw them
+      return [];
+    // resolve requested serials against the current device snapshot
     const requestedSerials = new Set(deviceSerialNumbers);
     const ovrDevices = (await firstValueFrom(this.openvr.devices)).filter(
       (device) =>
@@ -132,18 +135,23 @@ export class LighthouseConsoleService {
         device.dongleId &&
         !device.isTurningOff
     );
-    // sequential on purpose: parallel poweroffs can crash SteamVR
+    // dispatch devices sequentially and collect successful process exits
+    const dispatched: OVRDevice[] = [];
     for (const [index, device] of ovrDevices.entries()) {
-      if (generation !== this.validationGeneration) return;
+      if (generation !== this.validationGeneration) break;
       this.openvr.onDeviceUpdate(Object.assign({}, device, { isTurningOff: true }));
       info(`[Lighthouse] Turning off device ${device.class}:${device.serialNumber}`);
       try {
-        await invoke('run_command', {
+        const output = await invoke<{ status: number }>('run_command', {
           command: lighthouseConsolePath,
           args: ['/serial', device.dongleId, 'poweroff'],
         });
+        if (output.status === 0) dispatched.push(device);
+        else
+          error(
+            `[Lighthouse] Power-off command failed for ${device.serialNumber}: exit ${output.status}`
+          );
       } catch (e) {
-        // One unreachable dongle must not stop the devices queued behind it.
         error(
           `[Lighthouse] Could not turn off device ${device.class}:${device.serialNumber}: ${e}`
         );
@@ -152,5 +160,6 @@ export class LighthouseConsoleService {
         await new Promise((resolve) => setTimeout(resolve, 100));
       }
     }
+    return dispatched;
   }
 }

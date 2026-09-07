@@ -612,19 +612,19 @@
             "BATTERY_LEVEL": "As the battery level dropped below {threshold}%",
             "CHARGING": "As the device is recharging",
             "HOTKEY": "As a hotkey was pressed",
-            "MANUAL": "Turned off manually",
-            "OSC_CONTROL": "Turned off over OSC",
+            "MANUAL": "Requested manually",
+            "OSC_CONTROL": "Requested over OSC",
             "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
           "title": {
-            "ALL": "Turned off all devices",
-            "CONTROLLER": "Turned off a controller",
-            "CONTROLLERS": "Turned off multiple controllers",
-            "TRACKER": "Turned off a tracker",
-            "TRACKERS": "Turned off multiple trackers",
-            "VARIOUS": "Turned off various devices"
+            "ALL": "Sent power-off commands to all devices",
+            "CONTROLLER": "Sent a power-off command to a controller",
+            "CONTROLLERS": "Sent power-off commands to multiple controllers",
+            "TRACKER": "Sent a power-off command to a tracker",
+            "TRACKERS": "Sent power-off commands to multiple trackers",
+            "VARIOUS": "Sent power-off commands to various devices"
           }
         },
         "unmutedAudioDevice": {
