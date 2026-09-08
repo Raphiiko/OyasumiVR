@@ -1,10 +1,32 @@
-use ovr_overlay::input::{ActionHandle, ActionSetHandle};
+use raphii_openvr_rs::input::{ActionHandle, ActionSetHandle};
 use serde::{Deserialize, Serialize};
 use strum_macros::{EnumIter, IntoStaticStr};
 
 pub struct OpenVRAction {
     pub name: String,
     pub handle: ActionHandle,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{TrackedControllerRole, TrackedDeviceClass};
+    use raphii_openvr_rs::raw;
+
+    #[test]
+    fn unknown_runtime_device_values_keep_application_fallbacks() {
+        assert!(matches!(
+            TrackedDeviceClass::from(raw::ETrackedDeviceClass(9999)),
+            TrackedDeviceClass::Invalid
+        ));
+        assert!(matches!(
+            TrackedControllerRole::from(raw::ETrackedControllerRole(9999)),
+            TrackedControllerRole::Invalid
+        ));
+        assert!(matches!(
+            TrackedControllerRole::from(raw::ETrackedControllerRole::TrackedControllerRole_Stylus),
+            TrackedControllerRole::Stylus
+        ));
+    }
 }
 
 pub struct OpenVRActionSet {
@@ -52,27 +74,28 @@ pub enum TrackedControllerRole {
     Stylus,
 }
 
-impl From<ovr_overlay::sys::ETrackedControllerRole> for TrackedControllerRole {
-    fn from(item: ovr_overlay::sys::ETrackedControllerRole) -> Self {
+impl From<raphii_openvr_rs::raw::ETrackedControllerRole> for TrackedControllerRole {
+    fn from(item: raphii_openvr_rs::raw::ETrackedControllerRole) -> Self {
         match item {
-            ovr_overlay::sys::ETrackedControllerRole::TrackedControllerRole_Invalid => {
+            raphii_openvr_rs::raw::ETrackedControllerRole::TrackedControllerRole_Invalid => {
                 TrackedControllerRole::Invalid
             }
-            ovr_overlay::sys::ETrackedControllerRole::TrackedControllerRole_LeftHand => {
+            raphii_openvr_rs::raw::ETrackedControllerRole::TrackedControllerRole_LeftHand => {
                 TrackedControllerRole::LeftHand
             }
-            ovr_overlay::sys::ETrackedControllerRole::TrackedControllerRole_RightHand => {
+            raphii_openvr_rs::raw::ETrackedControllerRole::TrackedControllerRole_RightHand => {
                 TrackedControllerRole::RightHand
             }
-            ovr_overlay::sys::ETrackedControllerRole::TrackedControllerRole_OptOut => {
+            raphii_openvr_rs::raw::ETrackedControllerRole::TrackedControllerRole_OptOut => {
                 TrackedControllerRole::OptOut
             }
-            ovr_overlay::sys::ETrackedControllerRole::TrackedControllerRole_Treadmill => {
+            raphii_openvr_rs::raw::ETrackedControllerRole::TrackedControllerRole_Treadmill => {
                 TrackedControllerRole::Treadmill
             }
-            ovr_overlay::sys::ETrackedControllerRole::TrackedControllerRole_Stylus => {
+            raphii_openvr_rs::raw::ETrackedControllerRole::TrackedControllerRole_Stylus => {
                 TrackedControllerRole::Stylus
             }
+            _ => TrackedControllerRole::Invalid,
         }
     }
 }
@@ -88,25 +111,25 @@ pub enum TrackedDeviceClass {
     DisplayRedirect,
 }
 
-impl From<ovr_overlay::sys::ETrackedDeviceClass> for TrackedDeviceClass {
-    fn from(item: ovr_overlay::sys::ETrackedDeviceClass) -> Self {
+impl From<raphii_openvr_rs::raw::ETrackedDeviceClass> for TrackedDeviceClass {
+    fn from(item: raphii_openvr_rs::raw::ETrackedDeviceClass) -> Self {
         match item {
-            ovr_overlay::sys::ETrackedDeviceClass::TrackedDeviceClass_Invalid => {
+            raphii_openvr_rs::raw::ETrackedDeviceClass::TrackedDeviceClass_Invalid => {
                 TrackedDeviceClass::Invalid
             }
-            ovr_overlay::sys::ETrackedDeviceClass::TrackedDeviceClass_HMD => {
+            raphii_openvr_rs::raw::ETrackedDeviceClass::TrackedDeviceClass_HMD => {
                 TrackedDeviceClass::HMD
             }
-            ovr_overlay::sys::ETrackedDeviceClass::TrackedDeviceClass_Controller => {
+            raphii_openvr_rs::raw::ETrackedDeviceClass::TrackedDeviceClass_Controller => {
                 TrackedDeviceClass::Controller
             }
-            ovr_overlay::sys::ETrackedDeviceClass::TrackedDeviceClass_GenericTracker => {
+            raphii_openvr_rs::raw::ETrackedDeviceClass::TrackedDeviceClass_GenericTracker => {
                 TrackedDeviceClass::GenericTracker
             }
-            ovr_overlay::sys::ETrackedDeviceClass::TrackedDeviceClass_TrackingReference => {
+            raphii_openvr_rs::raw::ETrackedDeviceClass::TrackedDeviceClass_TrackingReference => {
                 TrackedDeviceClass::TrackingReference
             }
-            ovr_overlay::sys::ETrackedDeviceClass::TrackedDeviceClass_DisplayRedirect => {
+            raphii_openvr_rs::raw::ETrackedDeviceClass::TrackedDeviceClass_DisplayRedirect => {
                 TrackedDeviceClass::DisplayRedirect
             }
             _ => TrackedDeviceClass::Invalid,

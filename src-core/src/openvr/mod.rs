@@ -20,7 +20,7 @@ use gesture_detector::GestureDetector;
 use log::{error, info, warn};
 use models::OpenVRStatus;
 use ovr::input::ActiveActionSet;
-use ovr_overlay as ovr;
+use raphii_openvr_rs as ovr;
 use sleep_detector::SleepDetector;
 use std::{
     sync::{
@@ -73,7 +73,7 @@ pub async fn task() {
                     update_status(OpenVRStatus::Inactive).await;
                     continue;
                 }
-                // Update the status
+
                 update_status(OpenVRStatus::Initializing).await;
                 // If we need to delay the initialization, do so
                 if *OVR_INIT_DELAY_FIX.lock().await {
@@ -81,24 +81,19 @@ pub async fn task() {
                 } else {
                     tokio::time::sleep(Duration::from_secs(1)).await;
                 }
-                // Try to initialize OpenVR
+
                 let ctx = match ovr::Context::init(
-                    ovr::sys::EVRApplicationType::VRApplication_Background,
+                    ovr::raw::EVRApplicationType::VRApplication_Background,
                 ) {
                     Ok(ctx) => ctx,
                     Err(e) => {
-                        let reason = match e {
-                            ovr::InitError::AlreadyInitialized => {
-                                "OpenVR is already initialized".to_string()
-                            }
-                            ovr::InitError::Sys(e) => e.to_string(),
-                        };
+                        let reason = e.to_string();
                         error!("[Core] Could not initialize OpenVR: {reason}");
                         shutdown_ovr().await;
                         continue;
                     }
                 };
-                // Set the context on the module state
+
                 *OVR_CONTEXT.lock().await = Some(ctx.clone());
                 // Initialize submodules
                 if let Err(e) = brightness_overlay::on_ovr_init(&ctx).await {
@@ -113,7 +108,7 @@ pub async fn task() {
                 // (Un)register manifest if needed
                 'manifest: {
                     let ctx = OVR_CONTEXT.lock().await;
-                    let mut applications = ctx.as_ref().unwrap().applications_mngr();
+                    let applications = ctx.as_ref().unwrap().applications();
 
                     let manifest_path_buf =
                         match std::fs::canonicalize("resources/manifest.vrmanifest") {
@@ -130,7 +125,7 @@ pub async fn task() {
                         Err(e) => {
                             error!(
                                 "[Core] Failed to check if VR manifest is registered: {:#?}",
-                                e.description()
+                                e.to_string()
                             );
                             None
                         }
@@ -155,7 +150,7 @@ pub async fn task() {
                             Err(e) => {
                                 error!(
                                     "[Core] Failed to unregister VR manifest: {:#?}",
-                                    e.description()
+                                    e.to_string()
                                 );
                             }
                         };
@@ -167,7 +162,7 @@ pub async fn task() {
                         {
                             error!(
                                 "[Core] Failed to register VR manifest: {:#?}",
-                                e.description()
+                                e.to_string()
                             );
                         } else {
                             info!("[Core] Steam app manifest registered ({STEAM_APP_KEY})")
@@ -180,7 +175,7 @@ pub async fn task() {
                 let mut active_sets = vec![];
                 'input: {
                     let ctx = OVR_CONTEXT.lock().await;
-                    let mut input = ctx.as_ref().unwrap().input_mngr();
+                    let input = ctx.as_ref().unwrap().input();
                     // Register action manifest
                     info!("[Core] Registering Action Manifest");
                     let manifest_path_buf =
@@ -195,7 +190,7 @@ pub async fn task() {
                     if let Err(e) = input.set_action_manifest(manifest_path) {
                         error!(
                             "[Core] Failed to register action manifest: {:#?}",
-                            e.description()
+                            e.to_string()
                         );
                     } else {
                         // Get action handles
@@ -212,7 +207,7 @@ pub async fn task() {
                                 Err(error) => {
                                     error!(
                                         "[Core] Failed get action handle: {:?}",
-                                        error.description()
+                                        error.to_string()
                                     );
                                     continue;
                                 }
@@ -229,18 +224,12 @@ pub async fn task() {
                                 Err(error) => {
                                     error!(
                                         "[Core] Failed get action set handle: {:?}",
-                                        error.description()
+                                        error.to_string()
                                     );
                                     continue;
                                 }
                             };
-                            active_sets.push(ActiveActionSet(ovr::sys::VRActiveActionSet_t {
-                                ulActionSet: handle.0,
-                                ulRestrictedToDevice: ovr::sys::k_ulInvalidInputValueHandle,
-                                ulSecondaryActionSet: 0,
-                                unPadding: 0,
-                                nPriority: 0,
-                            }));
+                            active_sets.push(ActiveActionSet::new(handle));
                             action_sets.push(OpenVRActionSet {
                                 name: action_set.to_string(),
                                 handle,
@@ -273,15 +262,18 @@ pub async fn task() {
                     let Some(ctx) = ctx.as_ref() else {
                         continue 'ovr_loop;
                     };
-                    let mut system = ctx.system_mngr();
-                    let event = system.poll_next_event();
-                    if event.is_none() {
-                        break;
+                    let system = ctx.system();
+                    match system.poll_next_event() {
+                        Ok(Some(event)) => event,
+                        Ok(None) => break,
+                        Err(e) => {
+                            error!("[Core] Failed to poll OpenVR events: {e}");
+                            break;
+                        }
                     }
-                    event.unwrap()
                 };
                 // Handle Quit event
-                if event.is(ovr::sys::EVREventType::VREvent_Quit) {
+                if event.is(ovr::raw::EVREventType::VREvent_Quit) {
                     info!("[Core] OpenVR is Quitting. Shutting down OpenVR module");
                     ovr_active = false;
                     update_status(OpenVRStatus::Inactive).await;
@@ -305,29 +297,21 @@ pub async fn task() {
     }
 }
 
-/// Every path that clears `OVR_CONTEXT` has to use this, or OpenVR stays initialized without a
-/// context and every later initialization attempt fails.
+/// Clears runtime, overlay and device state before reconnecting.
 async fn shutdown_ovr() {
-    // the lock stays held across the shutdown: VR_Shutdown invalidates every interface pointer
     let mut context = OVR_CONTEXT.lock().await;
     brightness_overlay::on_ovr_quit().await;
-    unsafe {
-        ovr::sys::VR_Shutdown();
+    if let Some(context) = context.as_ref() {
+        context.shutdown();
     }
     *context = None;
     drop(context);
     devices::on_ovr_quit().await;
 }
 
-/// Constructing an overlay manager while this is false panics. Callers must hold `OVR_CONTEXT`.
-pub fn overlay_interface_available() -> bool {
-    !unsafe { ovr::sys::VROverlay() }.is_null()
-}
-
-/// Constructing a settings manager while this is false panics. Callers must hold `OVR_CONTEXT`.
-pub fn settings_interface_available() -> bool {
+pub fn settings_interface_available(context: &ovr::Context) -> bool {
     static WARNED: AtomicBool = AtomicBool::new(false);
-    let available = !unsafe { ovr::sys::VRSettings() }.is_null();
+    let available = context.settings_interface_available();
     if available {
         WARNED.store(false, Ordering::Relaxed);
     } else if !WARNED.swap(true, Ordering::Relaxed) {

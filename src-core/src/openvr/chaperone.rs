@@ -1,7 +1,7 @@
 use std::ffi::CStr;
 
 use super::{settings_interface_available, OVR_CONTEXT};
-use ovr_overlay as ovr;
+use raphii_openvr_rs as ovr;
 
 pub async fn get_fade_distance() -> Result<f32, String> {
     let context_guard = OVR_CONTEXT.lock().await;
@@ -9,12 +9,12 @@ pub async fn get_fade_distance() -> Result<f32, String> {
         Some(context) => context,
         None => return Err("OPENVR_NOT_INITIALISED".to_string()),
     };
-    if !settings_interface_available() {
+    if !settings_interface_available(context) {
         return Err("OPENVR_NOT_INITIALISED".to_string());
     }
-    let settings = &mut context.settings_mngr();
+    let settings = &context.settings();
     let fade_distance = settings.get_float(
-        CStr::from_bytes_with_nul(ovr::sys::k_pch_CollisionBounds_Section).unwrap(),
+        CStr::from_bytes_with_nul(ovr::raw::k_pch_CollisionBounds_Section).unwrap(),
         c"CollisionBoundsFadeDistance",
     );
     match fade_distance {
@@ -29,12 +29,12 @@ pub async fn set_fade_distance(fade_distance: f32) -> Result<(), String> {
         Some(context) => context,
         None => return Err("OPENVR_NOT_INITIALISED".to_string()),
     };
-    if !settings_interface_available() {
+    if !settings_interface_available(context) {
         return Err("OPENVR_NOT_INITIALISED".to_string());
     }
-    let settings = &mut context.settings_mngr();
+    let settings = &context.settings();
     let _ = settings.set_float(
-        CStr::from_bytes_with_nul(ovr::sys::k_pch_CollisionBounds_Section).unwrap(),
+        CStr::from_bytes_with_nul(ovr::raw::k_pch_CollisionBounds_Section).unwrap(),
         c"CollisionBoundsFadeDistance",
         fade_distance,
     );

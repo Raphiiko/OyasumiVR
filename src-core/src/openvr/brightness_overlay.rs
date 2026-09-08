@@ -1,22 +1,21 @@
-use super::{overlay_interface_available, OVR_CONTEXT};
+use super::OVR_CONTEXT;
 use log::error;
-use ovr_overlay as ovr;
+use raphii_openvr_rs as ovr;
 use std::sync::LazyLock;
 use tokio::sync::Mutex;
 
-static OVERLAY_HANDLE: LazyLock<Mutex<Option<ovr_overlay::overlay::OverlayHandle>>> =
+static OVERLAY_HANDLE: LazyLock<Mutex<Option<raphii_openvr_rs::overlay::OverlayHandle>>> =
     LazyLock::new(Default::default);
 static BRIGHTNESS: LazyLock<Mutex<f64>> = LazyLock::new(|| Mutex::new(1.0));
 
 pub async fn on_ovr_init(context: &ovr::Context) -> Result<(), String> {
-    // Dispose of any existing overlay
     *OVERLAY_HANDLE.lock().await = None;
     // Create the overlay
     let overlay_handle = match create_overlay(context).await {
         Ok(handle) => handle,
         Err(_) => return Err("Failed to create overlay".to_string()),
     };
-    // Save the handle
+
     *OVERLAY_HANDLE.lock().await = Some(overlay_handle);
     Ok(())
 }
@@ -36,17 +35,17 @@ pub async fn set_brightness(brightness: f64, perceived_brightness_adjustment_gam
     let alpha = 1.0 - brightness;
     // Store the brightness
     *BRIGHTNESS.lock().await = brightness;
-    // Get the context
+
     let mut context_guard = OVR_CONTEXT.lock().await;
     let context = match context_guard.as_mut() {
         Some(manager) => manager,
         None => return,
     };
-    if !overlay_interface_available() {
+    if !context.overlay_interface_available() {
         return;
     }
-    // Get the manager
-    let mut manager = context.overlay_mngr();
+
+    let manager = context.overlays();
     // Get the overlay handle
     let overlay_handle_guard = OVERLAY_HANDLE.lock().await;
     let overlay_handle = match overlay_handle_guard.as_ref() {
@@ -60,20 +59,20 @@ pub async fn set_brightness(brightness: f64, perceived_brightness_adjustment_gam
 }
 
 async fn create_overlay(
-    context: &ovr_overlay::Context,
-) -> Result<ovr_overlay::overlay::OverlayHandle, ()> {
-    if !overlay_interface_available() {
+    context: &raphii_openvr_rs::Context,
+) -> Result<raphii_openvr_rs::overlay::OverlayHandle, ()> {
+    if !context.overlay_interface_available() {
         error!("[Core] The OpenVR overlay interface is unavailable");
         return Err(());
     }
-    // Get the manager
-    let mut manager = context.overlay_mngr();
+
+    let manager = context.overlays();
     // Create the overlay
     let result = manager.create_overlay(
         "co.raphii.oyasumi:BrightnessOverlay",
         "OyasumiVR Brightness Overlay",
     );
-    let overlay: ovr_overlay::overlay::OverlayHandle = match result {
+    let overlay: raphii_openvr_rs::overlay::OverlayHandle = match result {
         Ok(handle) => handle,
         Err(_) => return Err(()),
     };
@@ -83,11 +82,14 @@ async fn create_overlay(
         return Err(());
     }
     // Transform the overlay
-    let transformation_matrix =
-        ovr_overlay::pose::Matrix3x4([[1., 0., 0., 0.], [0., 1., 0., 0.], [0., 0., 1., -0.15]]);
+    let transformation_matrix = raphii_openvr_rs::pose::Matrix3x4([
+        [1., 0., 0., 0.],
+        [0., 1., 0., 0.],
+        [0., 0., 1., -0.15],
+    ]);
     if let Err(e) = manager.set_transform_tracked_device_relative(
         overlay,
-        ovr_overlay::TrackedDeviceIndex::new(0).unwrap(), // HMD is always at 0
+        raphii_openvr_rs::TrackedDeviceIndex::HMD,
         &transformation_matrix,
     ) {
         error!("[Core] Failed to set overlay transform: {e}");
@@ -113,7 +115,7 @@ async fn create_overlay(
         error!("[Core] Failed to set overlay visibility: {e}");
         return Err(());
     }
-    // Return overlay
+
     Ok(overlay)
 }
 
