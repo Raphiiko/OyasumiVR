@@ -12,6 +12,8 @@ import { Notification } from '../../components/notification/notification';
 import { IpcService } from '../../ipc/ipc.service';
 import { AddNotificationParams } from '../../ipc/oyasumi-ipc';
 
+const MAX_NOTIFICATIONS = 32;
+
 @Component({
   selector: 'app-notifications-overlay',
   imports: [Notification],
@@ -32,7 +34,11 @@ export class NotificationsOverlay implements OnInit {
 
   constructor() {
     this.ipc.notificationAdded.pipe(takeUntilDestroyed()).subscribe((notification) => {
-      this.notifications.update((notifications) => [...notifications, notification]);
+      this.notifications.update((notifications) =>
+        notifications.length < MAX_NOTIFICATIONS
+          ? [...notifications, notification]
+          : [notifications[0], ...notifications.slice(-(MAX_NOTIFICATIONS - 2)), notification]
+      );
       this.updateActiveNotification();
     });
     this.ipc.notificationCleared.pipe(takeUntilDestroyed()).subscribe((id) => {
