@@ -274,7 +274,7 @@ public class OvrManager
     lock (LifecycleLock)
     {
       if (!_active) return;
-      _dashboardOverlay?.Dispose();
+      _dashboardOverlay?.Close();
       var overlay = new DashboardOverlay();
       _dashboardOverlay = overlay;
       overlay.OnClose += () =>
