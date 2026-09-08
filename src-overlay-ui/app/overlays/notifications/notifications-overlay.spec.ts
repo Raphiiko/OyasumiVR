@@ -48,5 +48,16 @@ it('subscribes before readiness and dismisses accepted notifications by ID', () 
   notificationAdded.next({ id: 'timed', message: 'timed', duration: 3000 });
   vi.advanceTimersByTime(3000);
   expect(overlay.shown).toEqual([]);
+
+  for (let i = 0; i < 100; i++) {
+    notificationAdded.next({ id: `burst-${i}`, message: 'burst', duration: 3000 });
+  }
+  expect(overlay.shown.map((n) => n.id)).toEqual(['burst-70', 'burst-69', 'burst-0']);
+  vi.advanceTimersByTime(3000);
+  expect(overlay.shown.map((n) => n.id)).toEqual(['burst-71', 'burst-70', 'burst-69']);
+  notificationCleared.next('burst-70');
+  expect(overlay.shown.map((n) => n.id)).toEqual(['burst-72', 'burst-71', 'burst-69']);
+  vi.advanceTimersByTime(30 * 3000);
+  expect(overlay.shown).toEqual([]);
   cleanup.forEach((fn) => fn());
 });
