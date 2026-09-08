@@ -13,16 +13,12 @@ public class SplashOverlay : BaseWebOverlay {
     OpenVR.Overlay.SetOverlayWidthInMeters(OverlayHandle, 0.35f);
     OpenVR.Overlay.SetOverlaySortOrder(OverlayHandle, 150);
     OpenVR.Overlay.ShowOverlay(OverlayHandle);
-    new Thread(() =>
-    {
-      var timer = new RefreshRateTimer();
-      while (!Disposed)
-      {
-        timer.TickStart();
-        UpdatePosition();
-        timer.SleepUntilNextTick();
-      }
-    }).Start();
+  }
+
+  public override void UpdateFrame()
+  {
+    base.UpdateFrame();
+    if (!Disposed) UpdatePosition();
   }
 
   private void UpdatePosition()
