@@ -40,10 +40,10 @@ public class NonAcceleratedOvrDXDeviceHander : OvrDXDeviceHander
   {
     try
     {
-      Factory f = new Factory1();
-      // Overlay textures are created on a task continuation while the render loop maps them
-      // on its own thread, so the device cannot skip its internal synchronisation.
-      Device = new Device(f.GetAdapter(GetVrAdapterIndex()),
+      using var factory = new Factory1();
+      using var adapter = factory.GetAdapter(GetVrAdapterIndex());
+      Device?.Dispose();
+      Device = new Device(adapter,
         DeviceCreationFlags.BgraSupport);
     }
     catch (SharpDXException err)
@@ -66,9 +66,10 @@ public class AcceleratedOvrDXDeviceHander : OvrDXDeviceHander
   {
     try
     {
-      var factory = new Factory1();
+      using var factory = new Factory1();
+      using var adapter = factory.GetAdapter(GetVrAdapterIndex());
       Device?.Dispose();
-      Device = new Device(factory.GetAdapter(GetVrAdapterIndex()),
+      Device = new Device(adapter,
         DeviceCreationFlags.BgraSupport);
       UpgradeDevice();
     }
