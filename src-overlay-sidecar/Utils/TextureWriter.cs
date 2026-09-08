@@ -11,6 +11,8 @@ public class TextureWriter
   private GCHandle _paintBuffer;
 
   private Texture2D? _texture;
+  private Device? _device;
+  private bool _disposed;
   private uint _resolution;
   private bool _initialized;
 
@@ -37,7 +39,7 @@ public class TextureWriter
     _paintBufferLock.EnterReadLock();
     try
     {
-      var context = _texture.Device.ImmediateContext;
+      var context = _device!.ImmediateContext;
       var dataBox = context.MapSubresource(
         _texture,
         0,
@@ -106,11 +108,12 @@ public class TextureWriter
     }
   }
 
-  public async Task init()
+  public void Init()
   {
     try
     {
-      _texture = await Utils.InitTexture2D(_resolution, true);
+      _texture = Utils.InitTexture2D(_resolution, true);
+      _device = _texture.Device.QueryInterface<Device>();
     }
     catch
     {
@@ -123,6 +126,9 @@ public class TextureWriter
 
   public void Dispose()
   {
+    if (_disposed) return;
+    _disposed = true;
+    _initialized = false;
     _paintBufferLock.EnterWriteLock();
     try
     {
@@ -138,6 +144,8 @@ public class TextureWriter
 
     _paintBufferLock.Dispose();
 
+    _device?.Dispose();
+    _device = null;
     if (_texture != null && !_texture.IsDisposed)
     {
       _texture.Dispose();

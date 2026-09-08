@@ -17,42 +17,49 @@ public class NotificationOverlay : BaseWebOverlay {
     OpenVR.Overlay.SetOverlayWidthInMeters(OverlayHandle, 0.35f);
     OpenVR.Overlay.SetOverlaySortOrder(OverlayHandle, 150);
     OpenVR.Overlay.ShowOverlay(OverlayHandle);
-    new Thread(() =>
-    {
-      var timer = new RefreshRateTimer();
-      while (!Disposed)
-      {
-        timer.TickStart();
-        UpdatePosition();
-        timer.SleepUntilNextTick();
-      }
-    }).Start();
+  }
+
+  public override void UpdateFrame()
+  {
+    base.UpdateFrame();
+    if (!Disposed) UpdatePosition();
   }
 
   public string? AddNotification(string message, TimeSpan? duration = null)
   {
-    if (!UiReady || Disposed) return null;
-
     var id = Guid.NewGuid().ToString();
     var script = $@"window.OyasumiIPCIn.addNotification({{
             id: ""{id}"",
             message: ""{HttpUtility.JavaScriptStringEncode(message)}"",
             duration: {(duration?.TotalMilliseconds ?? 3000).ToString(CultureInfo.InvariantCulture)}
         }});";
-    var task = Browser.EvaluateScriptAsync(script, TimeSpan.FromMilliseconds(5000));
-    task.Wait();
-    return task.Result.Success ? id : null;
+    Task<JavascriptResponse> task;
+    lock (OvrManager.LifecycleLock)
+    {
+      if (!UiReady || Disposed) return null;
+      task = Browser.EvaluateScriptAsync(script, TimeSpan.FromMilliseconds(5000));
+    }
+    return WaitForResponse(task) is { Success: true } ? id : null;
   }
 
   public void ClearNotification(string notificationId)
   {
-    if (!UiReady || Disposed) return;
-
     var script = $@"window.OyasumiIPCIn.clearNotification(""{HttpUtility.JavaScriptStringEncode(notificationId)}"");";
-    var task = Browser.EvaluateScriptAsync(script, TimeSpan.FromMilliseconds(5000));
-    task.Wait();
-    if (!task.Result.Success)
-      Log.Warning("Could not clear notification {Id}: {Error}", notificationId, task.Result.Message);
+    Task<JavascriptResponse> task;
+    lock (OvrManager.LifecycleLock)
+    {
+      if (!UiReady || Disposed) return;
+      task = Browser.EvaluateScriptAsync(script, TimeSpan.FromMilliseconds(5000));
+    }
+    var response = WaitForResponse(task);
+    if (response is not { Success: true })
+      Log.Warning("Could not clear notification {Id}: {Error}", notificationId, response?.Message ?? "Evaluation canceled");
+  }
+
+  private static JavascriptResponse? WaitForResponse(Task<JavascriptResponse> task)
+  {
+    try { return task.GetAwaiter().GetResult(); }
+    catch (OperationCanceledException) { return null; }
   }
 
   private void UpdatePosition()

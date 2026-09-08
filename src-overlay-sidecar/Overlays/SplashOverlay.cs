@@ -6,6 +6,7 @@ namespace overlay_sidecar;
 public class SplashOverlay : BaseWebOverlay {
   private static readonly TrackedDevicePose_t[] _poseBuffer = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
   private bool _updatedPositionOnce;
+  private DateTime _expiresAt = DateTime.UtcNow.AddSeconds(10);
 
   public SplashOverlay() :
     base("/splash", 1024, "co.raphii.oyasumivr:SplashOverlay", "OyasumiVR Splash Overlay")
@@ -13,16 +14,27 @@ public class SplashOverlay : BaseWebOverlay {
     OpenVR.Overlay.SetOverlayWidthInMeters(OverlayHandle, 0.35f);
     OpenVR.Overlay.SetOverlaySortOrder(OverlayHandle, 150);
     OpenVR.Overlay.ShowOverlay(OverlayHandle);
-    new Thread(() =>
+  }
+
+  public override void OnUiReady()
+  {
+    lock (OvrManager.LifecycleLock)
     {
-      var timer = new RefreshRateTimer();
-      while (!Disposed)
-      {
-        timer.TickStart();
-        UpdatePosition();
-        timer.SleepUntilNextTick();
-      }
-    }).Start();
+      if (Disposed || UiReady) return;
+      _expiresAt = DateTime.UtcNow.AddSeconds(10);
+      base.OnUiReady();
+    }
+  }
+
+  public override void UpdateFrame()
+  {
+    if (DateTime.UtcNow >= _expiresAt)
+    {
+      Dispose();
+      return;
+    }
+    base.UpdateFrame();
+    if (!Disposed) UpdatePosition();
   }
 
   private void UpdatePosition()

@@ -36,12 +36,15 @@ public class OverlayPointer {
     // load the pointer texture
     var pointerImage = Utils.ConvertPngToBgra(Utils.LoadEmbeddedFile("oyasumivr-overlay-sidecar.Resources.pointer.png"));
     var intPtr = Marshal.AllocHGlobal(pointerImage.Item1.Length);
-    Marshal.Copy(pointerImage.Item1, 0, intPtr, pointerImage.Item1.Length);
-    OpenVR.Overlay.SetOverlayRaw(_rightPointer.OverlayHandle, intPtr, (uint)pointerImage.Item2,
-      (uint)pointerImage.Item3, 4);
-    OpenVR.Overlay.SetOverlayRaw(_leftPointer.OverlayHandle, intPtr, (uint)pointerImage.Item2,
-      (uint)pointerImage.Item3, 4);
-    Marshal.FreeHGlobal(intPtr);
+    try
+    {
+      Marshal.Copy(pointerImage.Item1, 0, intPtr, pointerImage.Item1.Length);
+      OpenVR.Overlay.SetOverlayRaw(_rightPointer.OverlayHandle, intPtr, (uint)pointerImage.Item2,
+        (uint)pointerImage.Item3, 4);
+      OpenVR.Overlay.SetOverlayRaw(_leftPointer.OverlayHandle, intPtr, (uint)pointerImage.Item2,
+        (uint)pointerImage.Item3, 4);
+    }
+    finally { Marshal.FreeHGlobal(intPtr); }
     // start input and pose updates
     OvrManager.Instance.OnInputActionsChanged += OnInputAction;
     new Thread(Start).Start();
@@ -55,11 +58,18 @@ public class OverlayPointer {
       if (_disposed) return;
       _disposed = true;
       OvrManager.Instance.OnInputActionsChanged -= OnInputAction;
-      LeaveOverlay(_leftPointer);
-      LeaveOverlay(_rightPointer);
-      _overlays.Clear();
-      OpenVR.Overlay.DestroyOverlay(_leftPointer.OverlayHandle);
-      OpenVR.Overlay.DestroyOverlay(_rightPointer.OverlayHandle);
+      try
+      {
+        LeaveOverlay(_leftPointer);
+        LeaveOverlay(_rightPointer);
+      }
+      finally
+      {
+        _overlays.Clear();
+        _mouseOwners.Clear();
+        OpenVR.Overlay?.DestroyOverlay(_leftPointer.OverlayHandle);
+        OpenVR.Overlay?.DestroyOverlay(_rightPointer.OverlayHandle);
+      }
     }
   }
 
@@ -106,6 +116,7 @@ public class OverlayPointer {
     while (!_disposed)
     {
       timer.TickStart();
+      lock (OvrManager.LifecycleLock)
       lock (_overlays)
       {
         if (_disposed) break;
@@ -245,7 +256,7 @@ public class OverlayPointer {
       _mouseOwners.Remove(overlay);
     }
 
-    OpenVR.Overlay.HideOverlay(pointer.OverlayHandle);
+    OpenVR.Overlay?.HideOverlay(pointer.OverlayHandle);
     pointer.Pressed = false;
     pointer.LastPosition = null;
     pointer.LastUvPosition = null;

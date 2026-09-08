@@ -1,6 +1,6 @@
 namespace overlay_sidecar;
 
-public interface RenderableOverlay {
+public interface RenderableOverlay : IDisposable {
 
   public void UpdateFrame();
 }
