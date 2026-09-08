@@ -7,6 +7,7 @@ import { RunAutomationsService } from 'src-ui/app/services/run-automations.servi
 import { distinctUntilChanged, map, debounceTime, share, tap, switchMap, filter, take } from 'rxjs';
 import { Subject } from 'rxjs';
 import { isEqual } from 'lodash';
+import { flushOnDestroy } from '../../../../utils/rxjs-utils';
 
 @Component({
   selector: 'app-run-automations-view',
@@ -22,7 +23,6 @@ export class RunAutomationsViewComponent implements OnInit {
   onSleepModeDisableCommands: string = '';
   onSleepPreparationCommands: string = '';
 
-  // Collapse/expand state for each automation
   onSleepModeEnableExpanded: boolean = false;
   onSleepModeDisableExpanded: boolean = false;
   onSleepPreparationExpanded: boolean = false;
@@ -60,7 +60,7 @@ export class RunAutomationsViewComponent implements OnInit {
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(async (config) => {
-        // Initialize expanded states based on automation enabled state only on first load
+        // expand enabled automations after the first configuration loads
         this.onSleepModeEnableExpanded = config.onSleepModeEnable;
         this.onSleepModeDisableExpanded = config.onSleepModeDisable;
         this.onSleepPreparationExpanded = config.onSleepPreparation;
@@ -78,6 +78,7 @@ export class RunAutomationsViewComponent implements OnInit {
         }
       });
 
+    // load each command field when its configuration changes
     for (const event of events) {
       config
         .pipe(
@@ -97,7 +98,12 @@ export class RunAutomationsViewComponent implements OnInit {
         });
     }
 
-    // Set up debounced command updates
+    // save pending command text before navigation tears down subscriptions
+    flushOnDestroy(this.onSleepModeEnableSubject, this.destroyRef);
+    flushOnDestroy(this.onSleepModeDisableSubject, this.destroyRef);
+    flushOnDestroy(this.onSleepPreparationSubject, this.destroyRef);
+
+    // save each edited command after one second without typing
     this.onSleepModeEnableSubject
       .pipe(debounceTime(1000), takeUntilDestroyed(this.destroyRef))
       .subscribe(async (value) => {
@@ -123,7 +129,6 @@ export class RunAutomationsViewComponent implements OnInit {
       onSleepModeEnable: newValue,
     });
 
-    // Auto expand when enabled, auto collapse when disabled
     if (newValue && !this.onSleepModeEnableExpanded) {
       this.onSleepModeEnableExpanded = true;
     } else if (!newValue && this.onSleepModeEnableExpanded) {
@@ -143,7 +148,6 @@ export class RunAutomationsViewComponent implements OnInit {
       onSleepModeDisable: newValue,
     });
 
-    // Auto expand when enabled, auto collapse when disabled
     if (newValue && !this.onSleepModeDisableExpanded) {
       this.onSleepModeDisableExpanded = true;
     } else if (!newValue && this.onSleepModeDisableExpanded) {
@@ -163,7 +167,6 @@ export class RunAutomationsViewComponent implements OnInit {
       onSleepPreparation: newValue,
     });
 
-    // Auto expand when enabled, auto collapse when disabled
     if (newValue && !this.onSleepPreparationExpanded) {
       this.onSleepPreparationExpanded = true;
     } else if (!newValue && this.onSleepPreparationExpanded) {
