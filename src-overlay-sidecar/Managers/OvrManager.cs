@@ -7,6 +7,7 @@ namespace overlay_sidecar;
 
 public class OvrManager
 {
+  public static readonly object LifecycleLock = new();
   public static OvrManager Instance { get; } = new();
 
   private bool _initialized;
@@ -20,7 +21,8 @@ public class OvrManager
   private NotificationOverlay? _notificationOverlay;
   private DashboardOverlay? _dashboardOverlay;
 
-  private bool _active;
+  private volatile bool _active;
+  private DateTime? _splashAt;
   private CVRSystem? _system;
   private CVRInput? _input;
   private Dictionary<string, List<OvrInputDevice>> inputActions = new();
@@ -41,14 +43,12 @@ public class OvrManager
       : new NonAcceleratedOvrDXDeviceHander();
   }
 
-  public async void Init()
+  public void Init()
   {
     if (_initialized) return;
     _initialized = true;
-    // Start main loop
     _mainThread = new Thread(MainLoop);
     _mainThread.Start();
-    // Start frame updates for web overlays
     _renderThread = new Thread(OverlayRenderLoop);
     _renderThread.Start();
   }
@@ -61,10 +61,9 @@ public class OvrManager
       if (Active)
       {
         timer.TickStart();
-        lock (_overlays)
+        lock (LifecycleLock)
         {
-          foreach (var overlay in _overlays)
-            overlay.UpdateFrame();
+          UpdateOverlays();
         }
 
         timer.SleepUntilNextTick();
@@ -75,6 +74,22 @@ public class OvrManager
       }
     }
     // ReSharper disable once FunctionNeverReturns
+  }
+
+  private void UpdateOverlays()
+  {
+    if (!_active) return;
+    foreach (var overlay in _overlays.ToArray())
+    {
+      try { overlay.UpdateFrame(); }
+      catch (Exception error)
+      {
+        Log.Error(error, "Overlay update failed. Disposing the overlay.");
+        try { overlay.Dispose(); }
+        catch (Exception cleanupError) { Log.Error(cleanupError, "Could not dispose the failed overlay."); }
+        throw;
+      }
+    }
   }
 
   private void MainLoop()
@@ -95,118 +110,136 @@ public class OvrManager
       {
       }
 
-      if (Enabled)
+      lock (LifecycleLock)
       {
-        _system = OpenVR.System;
-        if (_system == null)
+        try
         {
-          if (DateTime.UtcNow.CompareTo(nextInit) <= 0) continue;
-
-          var err = EVRInitError.None;
-          _system = OpenVR.Init(ref err, EVRApplicationType.VRApplication_Background);
-          nextInit = DateTime.UtcNow.AddSeconds(5);
-          if (_system == null) continue;
-          _system = OpenVR.System;
-
-          _input = OpenVR.Input;
-          // the overlays below and DetectInput dereference these interfaces immediately
-          if (_input == null || OpenVR.Overlay == null)
+          if (Enabled)
           {
-            // the retry runs every 5 seconds, so only the first attempt reports it
-            if (!loggedMissingInterfaces)
+            _system = OpenVR.System;
+            if (_system == null)
             {
-              Log.Warning("OpenVR interfaces are not available yet. Retrying initialization later...");
-              loggedMissingInterfaces = true;
+              if (_active) Shutdown();
+              if (DateTime.UtcNow.CompareTo(nextInit) <= 0) continue;
+
+              var err = EVRInitError.None;
+              _system = OpenVR.Init(ref err, EVRApplicationType.VRApplication_Background);
+              nextInit = DateTime.UtcNow.AddSeconds(5);
+              if (_system == null) continue;
+              _system = OpenVR.System;
+
+              _input = OpenVR.Input;
+              // the overlays below and DetectInput dereference these interfaces immediately
+              if (_input == null || OpenVR.Overlay == null)
+              {
+                // the retry runs every 5 seconds, so only the first attempt reports it
+                if (!loggedMissingInterfaces)
+                {
+                  Log.Warning("OpenVR interfaces are not available yet. Retrying initialization later...");
+                  loggedMissingInterfaces = true;
+                }
+
+                OpenVR.Shutdown();
+                continue;
+              }
+
+              loggedMissingInterfaces = false;
+
+              var inputError = _input.SetActionManifestPath(GetActionManifestPath());
+              if (inputError != 0)
+              {
+                Log.Error($"Could not set action manifest path: {Enum.GetName(typeof(EVRInputError), inputError)}");
+                OpenVR.Shutdown();
+                continue;
+              }
+
+              actionSetHandles.Clear();
+              foreach (var actionSetKey in new[]
+                       {
+                         "/actions/main", "/actions/hidden"
+                       })
+              {
+                ulong handle = 0;
+                var result = _input.GetActionSetHandle(actionSetKey, ref handle);
+                if (result != 0)
+                {
+                  Log.Error(
+                    $"Could not get action set handle for {actionSetKey}: {Enum.GetName(typeof(EVRInputError), result)}");
+                  continue;
+                }
+
+                actionSetHandles.Add(actionSetKey, handle);
+              }
+
+              actionHandles.Clear();
+              inputActions.Clear();
+              foreach (var actionKey in new[]
+                       {
+                         "/actions/hidden/in/OverlayInteract",
+                         "/actions/hidden/in/IndicatePresence",
+                       })
+              {
+                ulong handle = 0;
+                var result = _input.GetActionHandle(actionKey, ref handle);
+                if (result != 0)
+                {
+                  Log.Error($"Could not get action handle for {actionKey}: {Enum.GetName(typeof(EVRInputError), result)}");
+                  continue;
+                }
+
+                inputActions.Add(actionKey, new List<OvrInputDevice>());
+                actionHandles.Add(actionKey, handle);
+              }
+
+              _active = true;
+              Log.Information("OpenVR Manager Started");
+              _dxDeviceHander.Initialize();
+              _overlayPointer = new OverlayPointer();
+              _micMuteIndicatorOverlay = new MicMuteIndicatorOverlay();
+              _notificationOverlay = new NotificationOverlay();
+              BrowserManager.Instance.PreInitializeBrowser(1024, 1024);
+              _splashAt = DateTime.UtcNow.AddSeconds(1);
             }
 
-            OpenVR.Shutdown();
-            continue;
-          }
-
-          loggedMissingInterfaces = false;
-
-          var inputError = _input.SetActionManifestPath(GetActionManifestPath());
-          if (inputError != 0)
-          {
-            Log.Error($"Could not set action manifest path: {Enum.GetName(typeof(EVRInputError), inputError)}");
-            OpenVR.Shutdown();
-            continue;
-          }
-
-          actionSetHandles.Clear();
-          foreach (var actionSetKey in new[]
-                   {
-                     "/actions/main", "/actions/hidden"
-                   })
-          {
-            ulong handle = 0;
-            var result = _input.GetActionSetHandle(actionSetKey, ref handle);
-            if (result != 0)
+            if (_splashAt.HasValue && DateTime.UtcNow >= _splashAt.Value)
             {
-              Log.Error(
-                $"Could not get action set handle for {actionSetKey}: {Enum.GetName(typeof(EVRInputError), result)}");
-              continue;
+              _splashAt = null;
+              new SplashOverlay();
             }
+            DetectInput(actionSetHandles, actionHandles);
 
-            actionSetHandles.Add(actionSetKey, handle);
-          }
-
-          actionHandles.Clear();
-          inputActions.Clear();
-          foreach (var actionKey in new[]
-                   {
-                     "/actions/hidden/in/OverlayInteract",
-                     "/actions/hidden/in/IndicatePresence",
-                   })
-          {
-            ulong handle = 0;
-            var result = _input.GetActionHandle(actionKey, ref handle);
-            if (result != 0)
+            while (_system.PollNextEvent(ref e, (uint)Marshal.SizeOf(e)))
             {
-              Log.Error($"Could not get action handle for {actionKey}: {Enum.GetName(typeof(EVRInputError), result)}");
-              continue;
+              var type = (EVREventType)e.eventType;
+              if (type == EVREventType.VREvent_Quit)
+              {
+                Log.Information("Received quit event from SteamVR. Stopping OpenVR Manager...");
+                _active = false;
+                nextInit = DateTime.UtcNow.AddSeconds(5);
+                actionHandles.Clear();
+                actionSetHandles.Clear();
+                inputActions.Clear();
+                Shutdown();
+                break;
+              }
             }
-
-            inputActions.Add(actionKey, new List<OvrInputDevice>());
-            actionHandles.Add(actionKey, handle);
           }
-
-          _active = true;
-          Log.Information("OpenVR Manager Started");
-          _dxDeviceHander.Initialize();
-          _overlayPointer = new OverlayPointer();
-          _micMuteIndicatorOverlay = new MicMuteIndicatorOverlay();
-          _notificationOverlay = new NotificationOverlay();
-          BrowserManager.Instance.PreInitializeBrowser(1024, 1024);
-          StartSplash();
-        }
-
-        DetectInput(actionSetHandles, actionHandles);
-
-        while (_system.PollNextEvent(ref e, (uint)Marshal.SizeOf(e)))
-        {
-          var type = (EVREventType)e.eventType;
-          if (type == EVREventType.VREvent_Quit)
+          else if (_active)
           {
-            Log.Information("Received quit event from SteamVR. Stopping OpenVR Manager...");
             _active = false;
             nextInit = DateTime.UtcNow.AddSeconds(5);
             actionHandles.Clear();
             actionSetHandles.Clear();
             inputActions.Clear();
             Shutdown();
-            break;
           }
         }
-      }
-      else if (_active)
-      {
-        _active = false;
-        nextInit = DateTime.UtcNow.AddSeconds(5);
-        actionHandles.Clear();
-        actionSetHandles.Clear();
-        inputActions.Clear();
-        Shutdown();
+        catch (Exception error)
+        {
+          Log.Error(error, "OpenVR update failed. Releasing overlays before retrying.");
+          nextInit = DateTime.UtcNow.AddSeconds(5);
+          Shutdown();
+        }
       }
     }
   }
@@ -214,14 +247,21 @@ public class OvrManager
 
   private void Shutdown()
   {
-    _overlayPointer?.Dispose();
+    _active = false;
+    _splashAt = null;
+    try { _overlayPointer?.Dispose(); }
+    catch (Exception error) { Log.Error(error, "Could not dispose overlay pointers during shutdown."); }
     _overlayPointer = null;
-    _micMuteIndicatorOverlay?.Dispose();
+    foreach (var overlay in _overlays.ToArray())
+    {
+      try { overlay.Dispose(); }
+      catch (Exception error) { Log.Error(error, "Could not dispose an overlay during shutdown."); }
+    }
+    _overlays.Clear();
     _micMuteIndicatorOverlay = null;
-    _notificationOverlay?.Dispose();
     _notificationOverlay = null;
-    _dashboardOverlay?.Dispose();
     _dashboardOverlay = null;
+    BrowserManager.Instance.DisposeAll();
     _input = null;
     _system = null;
     OpenVR.Shutdown();
@@ -231,52 +271,50 @@ public class OvrManager
 
   public void OpenDashboard(ETrackedControllerRole role)
   {
-    if (_dashboardOverlay != null)
+    lock (LifecycleLock)
     {
-      CloseDashboard();
+      if (!_active) return;
+      _dashboardOverlay?.Dispose();
+      var overlay = new DashboardOverlay();
+      _dashboardOverlay = overlay;
+      overlay.OnClose += () =>
+      {
+        if (_dashboardOverlay == overlay) _dashboardOverlay = null;
+      };
+      overlay.Open(role);
     }
-
-    var o = new DashboardOverlay();
-    _dashboardOverlay = o;
-    _dashboardOverlay.Open(role);
-
-    void OnCloseHandler()
-    {
-      o.OnClose -= OnCloseHandler;
-      o.Dispose();
-    }
-
-    _dashboardOverlay.OnClose += OnCloseHandler;
   }
 
   public void CloseDashboard()
   {
-    if (_dashboardOverlay == null) return;
-    _dashboardOverlay.Close();
-    _dashboardOverlay = null;
+    lock (LifecycleLock) _dashboardOverlay?.Close();
   }
 
   public void ToggleDashboard(ETrackedControllerRole role)
   {
-    var index = OpenVR.System.GetTrackedDeviceIndexForControllerRole(role);
-    if (index is >= 1 and < OpenVR.k_unMaxTrackedDeviceCount)
+    lock (LifecycleLock)
     {
-      OpenVR.System.TriggerHapticPulse(index, 0, 65535);
-    }
+      if (!_active) return;
+      var index = OpenVR.System.GetTrackedDeviceIndexForControllerRole(role);
+      if (index is >= 1 and < OpenVR.k_unMaxTrackedDeviceCount)
+      {
+        OpenVR.System.TriggerHapticPulse(index, 0, 65535);
+      }
 
-    if (_dashboardOverlay == null)
-    {
-      OpenDashboard(role);
-    }
-    else
-    {
-      CloseDashboard();
+      if (_dashboardOverlay == null || _dashboardOverlay.IsClosing)
+      {
+        OpenDashboard(role);
+      }
+      else
+      {
+        CloseDashboard();
+      }
     }
   }
 
   public void RegisterOverlay(RenderableOverlay overlay)
   {
-    lock (_overlays)
+    lock (LifecycleLock)
     {
       if (!_overlays.Contains(overlay)) _overlays.Add(overlay);
     }
@@ -284,19 +322,10 @@ public class OvrManager
 
   public void UnregisterOverlay(RenderableOverlay overlay)
   {
-    lock (_overlays)
+    lock (LifecycleLock)
     {
       if (_overlays.Contains(overlay)) _overlays.Remove(overlay);
     }
-  }
-
-  private async void StartSplash()
-  {
-    await Utils.DelayedAction(() =>
-    {
-      if (!_active) return;
-      new SplashOverlay();
-    }, TimeSpan.FromSeconds(1));
   }
 
   private string GetActionManifestPath()
@@ -312,7 +341,10 @@ public class OvrManager
 
   public void SetMicrophoneActive(bool active)
   {
-    _micMuteIndicatorOverlay?.SetMicrophoneActive(active);
+    lock (LifecycleLock)
+    {
+      _micMuteIndicatorOverlay?.SetMicrophoneActive(active);
+    }
   }
 
   private void DetectInput(Dictionary<string, ulong> actionSetHandles, Dictionary<string, ulong> actionHandles)
@@ -392,7 +424,7 @@ public class OvrManager
 
     if (update)
     {
-      OnInputActionsChanged.Invoke(this, inputActions);
+      OnInputActionsChanged?.Invoke(this, inputActions);
     }
   }
 

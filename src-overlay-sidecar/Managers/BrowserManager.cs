@@ -26,7 +26,13 @@ public class BrowserManager {
         if (cachedBrowser.IsFree && cachedBrowser.Width == width && cachedBrowser.Height == height)
         {
           cachedBrowser.IsFree = false;
-          cachedBrowser.Browser.LoadUrl(url);
+          try { cachedBrowser.Browser.LoadUrl(url); }
+          catch
+          {
+            _browsers.Remove(cachedBrowser);
+            cachedBrowser.Browser.Dispose();
+            throw;
+          }
           return cachedBrowser.Browser;
         }
       }
@@ -43,16 +49,40 @@ public class BrowserManager {
   {
     lock (_browsers)
     {
-      foreach (var cachedBrowser in _browsers)
+      var cached = _browsers.Find(entry => entry.Browser == browser);
+      if (cached == null || cached.IsFree) return;
+      browser.SetTextureTarget(null);
+      browser.JavascriptObjectRepository.UnRegisterAll();
+      if (_browsers.Any(entry => entry.IsFree && entry.Width == cached.Width && entry.Height == cached.Height))
       {
-        if (cachedBrowser.Browser == browser)
-        {
-          cachedBrowser.Browser.JavascriptObjectRepository.UnRegisterAll();
-          cachedBrowser.Browser.LoadHtml("");
-          cachedBrowser.IsFree = true;
-          return;
-        }
+        _browsers.Remove(cached);
+        browser.Dispose();
+        return;
       }
+      try
+      {
+        browser.LoadHtml("");
+        cached.IsFree = true;
+      }
+      catch
+      {
+        _browsers.Remove(cached);
+        browser.Dispose();
+        throw;
+      }
+    }
+  }
+
+  public void DisposeAll()
+  {
+    lock (_browsers)
+    {
+      foreach (var cached in _browsers)
+      {
+        try { cached.Browser.Dispose(); }
+        catch (Exception error) { Log.Error(error, "Could not dispose a browser during shutdown."); }
+      }
+      _browsers.Clear();
     }
   }
 

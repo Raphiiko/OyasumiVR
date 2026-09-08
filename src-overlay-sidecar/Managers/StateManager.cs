@@ -5,7 +5,6 @@ namespace overlay_sidecar;
 public class StateManager {
   public static StateManager Instance { get; } = new();
   private OyasumiSidecarState _state = NewDefaultState();
-  private readonly object _lock = new();
 
   public event EventHandler<OyasumiSidecarState>? StateChanged;
 
@@ -15,7 +14,7 @@ public class StateManager {
 
   public OyasumiSidecarState GetAppState()
   {
-    lock (_lock)
+    lock (OvrManager.LifecycleLock)
     {
       return _state.Clone();
     }
@@ -24,12 +23,11 @@ public class StateManager {
   public void SyncState(OyasumiSidecarState? newState)
   {
     if (newState == null) return;
-    lock (_lock)
+    lock (OvrManager.LifecycleLock)
     {
-      // Update the state
       newState.Settings ??= new OyasumiSidecarOverlaySettings();
       _state = newState;
-      StateChanged?.Invoke(this, _state);
+      StateChanged?.Invoke(this, newState);
     }
   }
 

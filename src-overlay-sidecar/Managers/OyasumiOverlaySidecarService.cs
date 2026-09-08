@@ -13,11 +13,12 @@ public class OyasumiOverlaySidecarService : OyasumiOverlaySidecar.OyasumiOverlay
       throw new RpcException(new Status(StatusCode.FailedPrecondition,
         "OpenVR Manager is not active"));
 
-    if (OvrManager.Instance.NotificationOverlay == null)
+    var overlay = OvrManager.Instance.NotificationOverlay;
+    if (overlay == null)
       throw new RpcException(new Status(StatusCode.FailedPrecondition,
         "Notification overlay is currently unavailable"));
 
-    var id = OvrManager.Instance.NotificationOverlay.AddNotification(
+    var id = overlay.AddNotification(
       request.Message,
       TimeSpan.FromMilliseconds(request.Duration)
     );
@@ -38,11 +39,12 @@ public class OyasumiOverlaySidecarService : OyasumiOverlaySidecar.OyasumiOverlay
       throw new RpcException(new Status(StatusCode.FailedPrecondition,
         "OpenVR Manager is not active"));
 
-    if (OvrManager.Instance.NotificationOverlay == null)
+    var overlay = OvrManager.Instance.NotificationOverlay;
+    if (overlay == null)
       throw new RpcException(new Status(StatusCode.FailedPrecondition,
         "Notification overlay is currently unavailable"));
 
-    OvrManager.Instance.NotificationOverlay.ClearNotification(request.NotificationId);
+    overlay.ClearNotification(request.NotificationId);
     return Task.FromResult(new Empty());
   }
 
