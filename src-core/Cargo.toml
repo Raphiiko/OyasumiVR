@@ -30,7 +30,6 @@ chrono = "0.4.45"
 cronjob = "0.4.17"
 dirs = "6.0.0"
 discord-sdk = "0.4.0"
-enumset = "1.1.14"
 futures = "0.3.33"
 futures-util = "0.3.33"
 hidapi = "2.6.6"
@@ -124,11 +123,9 @@ winreg = "0.56.0"
 git = "https://github.com/Raphiiko/ipgeolocate_oyasumi.git"
 rev = "5f24925"
 
-[dependencies.ovr_overlay]
-git = "https://github.com/Raphiiko/ovr_overlay_oyasumi"
-rev = "f7b58630b53df4ae671f8c52e7b457a0213e95b7"
-# path = "../../ovr_overlay_oyasumi"
-features = ["ovr_system", "ovr_settings"]
+[dependencies.raphii-openvr-rs]
+git = "https://github.com/Raphiiko/raphii-openvr-rs"
+rev = "a722cf7a6aa5832eaca55bd640bc5b5f87ed0661"
 
 [dependencies.oyasumivr_oscquery]
 git = "https://github.com/Raphiiko/oyasumivr_oscquery.git"

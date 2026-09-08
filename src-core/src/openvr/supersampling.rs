@@ -1,7 +1,7 @@
 use std::ffi::CStr;
 
 use super::{settings_interface_available, OVR_CONTEXT};
-use ovr_overlay as ovr;
+use raphii_openvr_rs as ovr;
 
 pub async fn get_supersample_scale() -> Result<Option<f32>, String> {
     let context_guard = OVR_CONTEXT.lock().await;
@@ -9,12 +9,12 @@ pub async fn get_supersample_scale() -> Result<Option<f32>, String> {
         Some(context) => context,
         None => return Err("OPENVR_NOT_INITIALISED".to_string()),
     };
-    if !settings_interface_available() {
+    if !settings_interface_available(context) {
         return Err("OPENVR_NOT_INITIALISED".to_string());
     }
-    let settings = &mut context.settings_mngr();
+    let settings = &context.settings();
     let supersample_manual_override = settings.get_bool(
-        CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_Section).unwrap(),
+        CStr::from_bytes_with_nul(ovr::raw::k_pch_SteamVR_Section).unwrap(),
         c"supersampleManualOverride",
     );
     let supersample_manual_override = match supersample_manual_override {
@@ -27,7 +27,7 @@ pub async fn get_supersample_scale() -> Result<Option<f32>, String> {
     }
     // Supersampling is set to custom
     let supersample_scale = settings.get_float(
-        CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_Section).unwrap(),
+        CStr::from_bytes_with_nul(ovr::raw::k_pch_SteamVR_Section).unwrap(),
         c"supersampleScale",
     );
     match supersample_scale {
@@ -42,18 +42,18 @@ pub async fn set_supersample_scale(supersample_scale: Option<f32>) -> Result<(),
         Some(context) => context,
         None => return Err("OPENVR_NOT_INITIALISED".to_string()),
     };
-    if !settings_interface_available() {
+    if !settings_interface_available(context) {
         return Err("OPENVR_NOT_INITIALISED".to_string());
     }
-    let settings = &mut context.settings_mngr();
+    let settings = &context.settings();
     let _ = settings.set_bool(
-        CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_Section).unwrap(),
+        CStr::from_bytes_with_nul(ovr::raw::k_pch_SteamVR_Section).unwrap(),
         c"supersampleManualOverride",
         supersample_scale.is_some(),
     );
     if let Some(scale) = supersample_scale {
         let _ = settings.set_float(
-            CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_Section).unwrap(),
+            CStr::from_bytes_with_nul(ovr::raw::k_pch_SteamVR_Section).unwrap(),
             c"supersampleScale",
             scale,
         );

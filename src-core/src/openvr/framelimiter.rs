@@ -11,10 +11,10 @@ pub async fn set_app_framelimits(
         Some(context) => context,
         None => return Err("OPENVR_NOT_INITIALISED".to_string()),
     };
-    if !settings_interface_available() {
+    if !settings_interface_available(context) {
         return Err("OPENVR_NOT_INITIALISED".to_string());
     }
-    let settings = &mut context.settings_mngr();
+    let settings = &context.settings();
 
     let section_string = format!("steam.app.{app_id}\0");
     let pch_section = CStr::from_bytes_with_nul(section_string.as_bytes()).unwrap();
@@ -47,10 +47,10 @@ pub async fn get_app_framelimits(app_id: u32) -> Result<Option<OVRFrameLimits>, 
         Some(context) => context,
         None => return Err("OPENVR_NOT_INITIALISED".to_string()),
     };
-    if !settings_interface_available() {
+    if !settings_interface_available(context) {
         return Err("OPENVR_NOT_INITIALISED".to_string());
     }
-    let settings = &mut context.settings_mngr();
+    let settings = &context.settings();
 
     let section_string = format!("steam.app.{app_id}\0");
     let pch_section = CStr::from_bytes_with_nul(section_string.as_bytes()).unwrap();

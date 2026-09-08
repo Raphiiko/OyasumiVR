@@ -2,12 +2,11 @@ use crate::globals::STEAM_APP_KEY;
 
 use super::{
     models::{BindingOriginData, OVRDevice, OVRFrameLimits},
-    overlay_interface_available, OVR_CONTEXT,
+    OVR_CONTEXT,
 };
-use enumset::EnumSet;
 use log::error;
 use ovr::input::{InputString, InputValueHandle};
-use ovr_overlay as ovr;
+use raphii_openvr_rs as ovr;
 use std::fmt::Display;
 use substring::Substring;
 
@@ -33,17 +32,15 @@ fn assemble_binding_origins(
     localized_controller_types: &[String],
     localized_hands: &[String],
     localized_input_sources: &[String],
-    binding_infos: &[ovr::sys::InputBindingInfo_t],
+    binding_infos: &[ovr::raw::InputBindingInfo_t],
 ) -> Option<Vec<BindingOriginData>> {
     (0..origin_count)
         .map(|i| {
             let binding_info = binding_infos.get(i)?;
-            let device_path_name = crate::utils::convert_char_array_to_string(
-                &binding_info.rchDevicePathName,
-            )?;
-            let input_path_name = crate::utils::convert_char_array_to_string(
-                &binding_info.rchInputPathName,
-            )?;
+            let device_path_name =
+                crate::utils::convert_char_array_to_string(&binding_info.rchDevicePathName)?;
+            let input_path_name =
+                crate::utils::convert_char_array_to_string(&binding_info.rchInputPathName)?;
             let localized_controller_type = localized_controller_types.get(i)?;
             let localized_hand = localized_hands.get(i)?;
             let localized_input_source = localized_input_sources.get(i)?;
@@ -154,8 +151,8 @@ pub async fn openvr_set_image_brightness(
 #[tauri::command]
 pub async fn openvr_launch_binding_configuration(show_on_desktop: bool) {
     let context = OVR_CONTEXT.lock().await;
-    let mut input = match context.as_ref() {
-        Some(context) => context.input_mngr(),
+    let input = match context.as_ref() {
+        Some(context) => context.input(),
         None => return,
     };
     let input_handle = match input.get_input_source_handle("/user/hand/right") {
@@ -173,21 +170,18 @@ pub async fn openvr_launch_binding_configuration(show_on_desktop: bool) {
 #[tauri::command]
 pub async fn openvr_is_dashboard_visible() -> bool {
     let context = OVR_CONTEXT.lock().await;
-    if !overlay_interface_available() {
-        return false;
-    }
-    let mut manager = match context.as_ref() {
-        Some(context) => context.overlay_mngr(),
+    let manager = match context.as_ref() {
+        Some(context) => context.overlays(),
         None => return false,
     };
-    manager.is_dashboard_visible()
+    manager.is_dashboard_visible().unwrap_or(false)
 }
 
 #[tauri::command]
 pub async fn openvr_reregister_manifest() -> Result<(), String> {
     let ctx = OVR_CONTEXT.lock().await;
     let ctx = ctx.as_ref().ok_or("OPENVR_NOT_INITIALIZED")?;
-    let mut applications = ctx.applications_mngr();
+    let applications = ctx.applications();
     let manifest_path_buf = std::fs::canonicalize("resources/manifest.vrmanifest")
         .map_err(|e| format!("MANIFEST_NOT_FOUND: {e}"))?;
     let manifest_path: &std::path::Path = manifest_path_buf.as_ref();
@@ -206,9 +200,7 @@ pub async fn openvr_reregister_manifest() -> Result<(), String> {
                             install_for_flavours.contains(&crate::flavour::BUILD_FLAVOUR);
                         if should_install_for_flavour {
                             match applications.add_application_manifest(manifest_path, false) {
-                                Ok(_) => {
-                                    Ok(())
-                                }
+                                Ok(_) => Ok(()),
                                 Err(e) => {
                                     error!("[Core] Failed to add VR manifest: {e}");
                                     Err(String::from("MANIFEST_ADD_FAILED"))
@@ -228,7 +220,7 @@ pub async fn openvr_reregister_manifest() -> Result<(), String> {
         Err(e) => {
             error!(
                 "[Core] Failed to check if VR manifest is registered: {:#?}",
-                e.description()
+                e.to_string()
             );
             Err(String::from("MANIFEST_CHECK_FAILED"))
         }
@@ -257,8 +249,8 @@ pub async fn openvr_get_binding_origins(
     };
     // Get the input service
     let context = OVR_CONTEXT.lock().await;
-    let mut input = match context.as_ref() {
-        Some(context) => context.input_mngr(),
+    let input = match context.as_ref() {
+        Some(context) => context.input(),
         None => return Err(String::from("OPENVR_NOT_INITIALIZED")),
     };
     if let Err(e) = input.update_actions(input_ctx.active_sets.as_mut_slice()) {
@@ -282,32 +274,26 @@ pub async fn openvr_get_binding_origins(
         origins.iter().map(|origin| {
             input.get_origin_localized_name(
                 InputValueHandle(*origin),
-                EnumSet::only(InputString::ControllerType),
+                &[InputString::ControllerType],
             )
         }),
         "controller type",
     );
     let localized_hands = collect_localized_names(
         origins.iter().map(|origin| {
-            input.get_origin_localized_name(
-                InputValueHandle(*origin),
-                EnumSet::only(InputString::Hand),
-            )
+            input.get_origin_localized_name(InputValueHandle(*origin), &[InputString::Hand])
         }),
         "hand",
     );
     let localized_input_sources = collect_localized_names(
         origins.iter().map(|origin| {
-            input.get_origin_localized_name(
-                InputValueHandle(*origin),
-                EnumSet::only(InputString::InputSource),
-            )
+            input.get_origin_localized_name(InputValueHandle(*origin), &[InputString::InputSource])
         }),
         "input source",
     );
 
     // Get extra information about each binding
-    let binding_infos: Vec<ovr::sys::InputBindingInfo_t> =
+    let binding_infos: Vec<ovr::raw::InputBindingInfo_t> =
         match input.get_action_binding_info(action) {
             Ok(result) => result,
             Err(e) => {
@@ -343,8 +329,8 @@ mod tests {
         result
     }
 
-    fn binding_info(device_path_name: &str) -> ovr::sys::InputBindingInfo_t {
-        ovr::sys::InputBindingInfo_t {
+    fn binding_info(device_path_name: &str) -> ovr::raw::InputBindingInfo_t {
+        ovr::raw::InputBindingInfo_t {
             rchDevicePathName: char_array(device_path_name),
             rchInputPathName: char_array("/input/a"),
             rchModeName: char_array("button"),
@@ -374,10 +360,7 @@ mod tests {
         assert_eq!(data.len(), 2);
         assert_eq!(data[0].localized_controller_type, "controller one");
         assert_eq!(data[0].device_path_name, "/user/hand/left");
-        assert_eq!(
-            data[1].localized_controller_type,
-            "/user/hand/right"
-        );
+        assert_eq!(data[1].localized_controller_type, "/user/hand/right");
         assert_eq!(data[1].localized_hand, "right");
         assert_eq!(data[1].localized_input_source, "b");
         assert_eq!(data[1].device_path_name, "/user/hand/right");

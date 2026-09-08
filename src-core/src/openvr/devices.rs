@@ -6,12 +6,11 @@ use super::models::{
 };
 use super::{GestureDetector, SleepDetector, OVR_CONTEXT};
 use crate::utils::send_event;
-use byteorder::{ByteOrder, LE};
 use chrono::{DateTime, Duration, Utc};
 use log::error;
 use ovr::input::InputValueHandle;
-use ovr::sys::EVRInputError;
-use ovr_overlay as ovr;
+use ovr::raw::EVRInputError;
+use raphii_openvr_rs as ovr;
 use std::sync::LazyLock;
 use strum::IntoEnumIterator;
 use tokio::sync::Mutex;
@@ -53,29 +52,28 @@ pub async fn on_ovr_tick() {
 }
 
 pub async fn on_ovr_event(event: ovr::system::VREvent) {
-    let ovr::system::EventType::Known(event_type) = &event.event_type else {
-        return;
-    };
-    match event_type {
-        ovr::sys::EVREventType::VREvent_TrackedDeviceActivated
-        | ovr::sys::EVREventType::VREvent_TrackedDeviceDeactivated => {
-            update_device(event.tracked_device_index, true).await;
+    match event.event_type() {
+        ovr::raw::EVREventType::VREvent_TrackedDeviceActivated
+        | ovr::raw::EVREventType::VREvent_TrackedDeviceDeactivated => {
+            update_device(event.tracked_device_index(), true).await;
         }
-        ovr::sys::EVREventType::VREvent_PropertyChanged => {
-            let tracked_device_property: u32 = LE::read_u32(&event.data[12..16]);
+        ovr::raw::EVREventType::VREvent_PropertyChanged => {
+            let Some(tracked_device_property) = event.changed_property() else {
+                return;
+            };
             let matching_properties = [
-                ovr::sys::ETrackedDeviceProperty::Prop_DeviceBatteryPercentage_Float as u32,
-                ovr::sys::ETrackedDeviceProperty::Prop_DeviceProvidesBatteryStatus_Bool as u32,
-                ovr::sys::ETrackedDeviceProperty::Prop_DeviceCanPowerOff_Bool as u32,
-                ovr::sys::ETrackedDeviceProperty::Prop_DeviceIsCharging_Bool as u32,
-                ovr::sys::ETrackedDeviceProperty::Prop_ConnectedWirelessDongle_String as u32,
-                ovr::sys::ETrackedDeviceProperty::Prop_SerialNumber_String as u32,
-                ovr::sys::ETrackedDeviceProperty::Prop_HardwareRevision_String as u32,
-                ovr::sys::ETrackedDeviceProperty::Prop_ManufacturerName_String as u32,
-                ovr::sys::ETrackedDeviceProperty::Prop_ModelNumber_String as u32,
+                ovr::raw::ETrackedDeviceProperty::Prop_DeviceBatteryPercentage_Float,
+                ovr::raw::ETrackedDeviceProperty::Prop_DeviceProvidesBatteryStatus_Bool,
+                ovr::raw::ETrackedDeviceProperty::Prop_DeviceCanPowerOff_Bool,
+                ovr::raw::ETrackedDeviceProperty::Prop_DeviceIsCharging_Bool,
+                ovr::raw::ETrackedDeviceProperty::Prop_ConnectedWirelessDongle_String,
+                ovr::raw::ETrackedDeviceProperty::Prop_SerialNumber_String,
+                ovr::raw::ETrackedDeviceProperty::Prop_HardwareRevision_String,
+                ovr::raw::ETrackedDeviceProperty::Prop_ManufacturerName_String,
+                ovr::raw::ETrackedDeviceProperty::Prop_ModelNumber_String,
             ];
             if matching_properties.contains(&tracked_device_property) {
-                update_device(event.tracked_device_index, true).await;
+                update_device(event.tracked_device_index(), true).await;
             }
         }
         _ => {}
@@ -129,8 +127,8 @@ async fn update_handle_types() {
 async fn update_handle_type(handle_type: OVRHandleType) {
     let context = OVR_CONTEXT.lock().await;
     let mut device_handle_cache = DEVICE_HANDLE_TYPE_CACHE.lock().await;
-    let mut input = match context.as_ref() {
-        Some(context) => context.input_mngr(),
+    let input = match context.as_ref() {
+        Some(context) => context.input(),
         None => return,
     };
 
@@ -165,18 +163,21 @@ async fn update_handle_type(handle_type: OVRHandleType) {
 }
 
 async fn update_all_devices(emit: bool) {
-    for n in 0..(ovr::sys::k_unMaxTrackedDeviceCount as usize) {
+    for n in 0..(ovr::raw::k_unMaxTrackedDeviceCount as usize) {
         update_device(ovr::TrackedDeviceIndex(n.try_into().unwrap()), emit).await;
     }
 }
 
 async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
     let context = OVR_CONTEXT.lock().await;
-    let mut system = match context.as_ref() {
-        Some(context) => context.system_mngr(),
+    let system = match context.as_ref() {
+        Some(context) => context.system(),
         None => return,
     };
-    let class: TrackedDeviceClass = system.get_tracked_device_class(device_index).into();
+    let class: TrackedDeviceClass = system
+        .get_tracked_device_class(device_index)
+        .unwrap_or(ovr::raw::ETrackedDeviceClass::TrackedDeviceClass_Invalid)
+        .into();
     let mut device_class_cache = DEVICE_CLASS_CACHE.lock().await;
     let device_handle_cache = DEVICE_HANDLE_TYPE_CACHE.lock().await;
     // Stop here if the class is invalid and we don't have it cached
@@ -197,85 +198,87 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
     let battery: Option<f32> = system
         .get_tracked_device_property(
             device_index,
-            ovr::sys::ETrackedDeviceProperty::Prop_DeviceBatteryPercentage_Float,
+            ovr::raw::ETrackedDeviceProperty::Prop_DeviceBatteryPercentage_Float,
         )
         .ok();
     let provides_battery_status: Option<bool> = system
         .get_tracked_device_property(
             device_index,
-            ovr::sys::ETrackedDeviceProperty::Prop_DeviceProvidesBatteryStatus_Bool,
+            ovr::raw::ETrackedDeviceProperty::Prop_DeviceProvidesBatteryStatus_Bool,
         )
         .ok();
     let can_power_off: Option<bool> = system
         .get_tracked_device_property(
             device_index,
-            ovr::sys::ETrackedDeviceProperty::Prop_DeviceCanPowerOff_Bool,
+            ovr::raw::ETrackedDeviceProperty::Prop_DeviceCanPowerOff_Bool,
         )
         .ok();
     let is_charging: Option<bool> = system
         .get_tracked_device_property(
             device_index,
-            ovr::sys::ETrackedDeviceProperty::Prop_DeviceIsCharging_Bool,
+            ovr::raw::ETrackedDeviceProperty::Prop_DeviceIsCharging_Bool,
         )
         .ok();
     let dongle_id: Option<String> = system
         .get_tracked_device_property(
             device_index,
-            ovr::sys::ETrackedDeviceProperty::Prop_ConnectedWirelessDongle_String,
+            ovr::raw::ETrackedDeviceProperty::Prop_ConnectedWirelessDongle_String,
         )
         .ok();
     let serial_number: Option<String> = system
         .get_tracked_device_property(
             device_index,
-            ovr::sys::ETrackedDeviceProperty::Prop_SerialNumber_String,
+            ovr::raw::ETrackedDeviceProperty::Prop_SerialNumber_String,
         )
         .ok();
     let hardware_revision: Option<String> = system
         .get_tracked_device_property(
             device_index,
-            ovr::sys::ETrackedDeviceProperty::Prop_HardwareRevision_String,
+            ovr::raw::ETrackedDeviceProperty::Prop_HardwareRevision_String,
         )
         .ok();
     let manufacturer_name: Option<String> = system
         .get_tracked_device_property(
             device_index,
-            ovr::sys::ETrackedDeviceProperty::Prop_ManufacturerName_String,
+            ovr::raw::ETrackedDeviceProperty::Prop_ManufacturerName_String,
         )
         .ok();
     let model_number: Option<String> = system
         .get_tracked_device_property(
             device_index,
-            ovr::sys::ETrackedDeviceProperty::Prop_ModelNumber_String,
+            ovr::raw::ETrackedDeviceProperty::Prop_ModelNumber_String,
         )
         .ok();
     let mut hmd_on_head = None;
     let mut hmd_activity = None;
     let mut display_frequency = None;
     if class == TrackedDeviceClass::HMD {
-        let activity_level = system.get_tracked_device_activity_level(device_index);
-        hmd_on_head = Some(activity_level == ovr::sys::EDeviceActivityLevel::k_EDeviceActivityLevel_UserInteraction || activity_level == ovr::sys::EDeviceActivityLevel::k_EDeviceActivityLevel_UserInteraction_Timeout);
-        // Serialize activity level
+        let activity_level = system
+            .get_tracked_device_activity_level(device_index)
+            .unwrap_or(ovr::raw::EDeviceActivityLevel::k_EDeviceActivityLevel_Unknown);
+        hmd_on_head = Some(activity_level == ovr::raw::EDeviceActivityLevel::k_EDeviceActivityLevel_UserInteraction || activity_level == ovr::raw::EDeviceActivityLevel::k_EDeviceActivityLevel_UserInteraction_Timeout);
+
         hmd_activity = Some(
             match activity_level {
-                ovr::sys::EDeviceActivityLevel::k_EDeviceActivityLevel_Unknown => "Unknown",
-                ovr::sys::EDeviceActivityLevel::k_EDeviceActivityLevel_Idle => "Idle",
-                ovr::sys::EDeviceActivityLevel::k_EDeviceActivityLevel_UserInteraction => {
+                ovr::raw::EDeviceActivityLevel::k_EDeviceActivityLevel_Idle => "Idle",
+                ovr::raw::EDeviceActivityLevel::k_EDeviceActivityLevel_UserInteraction => {
                     "UserInteraction"
                 }
-                ovr::sys::EDeviceActivityLevel::k_EDeviceActivityLevel_UserInteraction_Timeout => {
+                ovr::raw::EDeviceActivityLevel::k_EDeviceActivityLevel_UserInteraction_Timeout => {
                     "UserInteractionTimeout"
                 }
-                ovr::sys::EDeviceActivityLevel::k_EDeviceActivityLevel_Standby => "Standby",
-                ovr::sys::EDeviceActivityLevel::k_EDeviceActivityLevel_Idle_Timeout => {
+                ovr::raw::EDeviceActivityLevel::k_EDeviceActivityLevel_Standby => "Standby",
+                ovr::raw::EDeviceActivityLevel::k_EDeviceActivityLevel_Idle_Timeout => {
                     "IdleTimeout"
                 }
+                _ => "Unknown",
             }
             .to_string(),
         );
         display_frequency = system
             .get_tracked_device_property(
                 device_index,
-                ovr::sys::ETrackedDeviceProperty::Prop_DisplayFrequency_Float,
+                ovr::raw::ETrackedDeviceProperty::Prop_DisplayFrequency_Float,
             )
             .ok();
     }
@@ -285,6 +288,7 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
         class,
         role: system
             .get_controller_role_for_tracked_device_index(device_index)
+            .unwrap_or(ovr::raw::ETrackedControllerRole::TrackedControllerRole_Invalid)
             .into(),
         battery,
         provides_battery_status,
@@ -324,20 +328,27 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
 async fn refresh_device_poses() {
     let poses = {
         let context = OVR_CONTEXT.lock().await;
-        let mut system = match context.as_ref() {
-            Some(context) => context.system_mngr(),
+        let system = match context.as_ref() {
+            Some(context) => context.system(),
             None => return,
         };
         system.get_device_to_absolute_tracking_pose(
-            ovr::sys::ETrackingUniverseOrigin::TrackingUniverseStanding,
+            ovr::raw::ETrackingUniverseOrigin::TrackingUniverseStanding,
             0.0,
         )
+    };
+    let poses = match poses {
+        Ok(poses) => poses,
+        Err(e) => {
+            error!("[Core] Failed to read OpenVR poses: {e}");
+            return;
+        }
     };
     for (n, pose) in poses.iter().enumerate() {
         if pose.bDeviceIsConnected && pose.bPoseIsValid {
             let matrix = pose.mDeviceToAbsoluteTracking.m;
             // Extract quaternion
-            let q = ovr::sys::HmdQuaternion_t {
+            let q = ovr::raw::HmdQuaternion_t {
                 w: 0.0f64
                     .max((1.0 + matrix[0][0] + matrix[1][1] + matrix[2][2]).into())
                     .sqrt()
@@ -359,7 +370,7 @@ async fn refresh_device_poses() {
                     .copysign((matrix[1][0] - matrix[0][1]).into()),
             };
             // Extract position
-            let pos = ovr::sys::HmdVector3_t {
+            let pos = ovr::raw::HmdVector3_t {
                 v: [matrix[0][3], matrix[1][3], matrix[2][3]],
             };
             // Update sleep and gesture detectors (0 == HMD)
@@ -398,24 +409,23 @@ async fn refresh_device_poses() {
 }
 
 async fn detect_inputs() {
-    // Get known devices, and input
     let devices = OVR_DEVICES.lock().await;
     let mut input_ctx = super::OVR_INPUT_CONTEXT.lock().await;
-    // Get input context
+
     let context = OVR_CONTEXT.lock().await;
-    let mut input = match context.as_ref() {
-        Some(context) => context.input_mngr(),
+    let input = match context.as_ref() {
+        Some(context) => context.input(),
         None => return,
     };
     // Update actions for all sets
     if let Err(e) = input.update_actions(input_ctx.active_sets.as_mut_slice()) {
-        error!("[Core] Failed to update actions: {:?}", e.description());
+        error!("[Core] Failed to update actions: {:?}", e.to_string());
         return;
     }
     for action in input_ctx.actions.iter() {
         match input.get_digital_action_data(
             action.handle,
-            InputValueHandle(ovr::sys::k_ulInvalidInputValueHandle),
+            InputValueHandle(ovr::raw::k_ulInvalidInputValueHandle),
         ) {
             Ok(data) => {
                 if data.0.bChanged {
@@ -428,7 +438,7 @@ async fn detect_inputs() {
                         Err(e) => {
                             error!(
                                 "[Core] Failed to get origin tracked device info: {:?}",
-                                e.description()
+                                e.to_string()
                             );
                             return;
                         }
@@ -445,7 +455,7 @@ async fn detect_inputs() {
                 }
             }
             Err(e) => {
-                error!("[Core] Failed to get action data: {:?}", e.description());
+                error!("[Core] Failed to get action data: {:?}", e.to_string());
                 return;
             }
         };
