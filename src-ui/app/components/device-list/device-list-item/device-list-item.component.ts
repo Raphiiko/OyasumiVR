@@ -9,11 +9,7 @@ import {
 import { OVRDevice } from 'src-ui/app/models/ovr-device';
 import { fade, hshrink, vshrink } from 'src-ui/app/utils/animations';
 import { LighthouseConsoleService } from '../../../services/lighthouse-console.service';
-import { error } from '@tauri-apps/plugin-log';
-import {
-  EventLogLighthouseSetPowerState,
-  EventLogTurnedOffOpenVRDevices,
-} from '../../../models/event-log-entry';
+import { EventLogLighthouseSetPowerState } from '../../../models/event-log-entry';
 import { EventLogService } from '../../../services/event-log.service';
 import { LighthouseDevice, LighthouseDevicePowerState } from 'src-ui/app/models/lighthouse-device';
 import { LighthouseService } from 'src-ui/app/services/lighthouse.service';
@@ -232,26 +228,8 @@ export class DeviceListItemComponent implements OnInit {
 
   async clickDevicePowerButton() {
     if (this.mode === 'openvr') {
-      await this.lighthouseConsole.turnOffDevices([this._ovrDevice!]);
-      this.eventLog.logEvent({
-        type: 'turnedOffOpenVRDevices',
-        reason: 'MANUAL',
-        devices: (() => {
-          switch (this._ovrDevice!.class) {
-            case 'Controller':
-              return 'CONTROLLER';
-            case 'GenericTracker':
-              return 'TRACKER';
-            default:
-              error(
-                `[DeviceListItem] Couldn't determine device class for event log entry (${
-                  this._ovrDevice!.class
-                })`
-              );
-              return 'VARIOUS';
-          }
-        })(),
-      } as EventLogTurnedOffOpenVRDevices);
+      const dispatched = await this.lighthouseConsole.turnOffDevices([this._ovrDevice!]);
+      this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'MANUAL');
     }
     if (this.mode === 'lighthouse') {
       if (this.lighthouse.deviceNeedsIdentifier(this._lighthouseDevice!)) {
