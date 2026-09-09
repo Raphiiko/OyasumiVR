@@ -26,6 +26,7 @@ export class ControllerBindingComponent implements OnInit {
     | 'NO_CONTROLLERS'
     | 'MISSING_CONTROLLER'
     | 'DASHBOARD_OPEN'
+    | 'LOOKUP_FAILED'
     | 'UNKNOWN';
   protected steamVRActive = false;
   protected hasRightHand = false;
@@ -70,6 +71,7 @@ export class ControllerBindingComponent implements OnInit {
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
+    // refresh the displayed binding immediately and every second
     interval(1000)
       .pipe(
         startWith(void 0),
@@ -94,6 +96,7 @@ export class ControllerBindingComponent implements OnInit {
         error = 'STEAMVR_INACTIVE';
         return;
       }
+      // resolve this action's binding in the active session
       bindings = await this.openvrInputService.getActionBindings(this.actionSetKey, this.actionKey);
       if (bindings.length === 0) {
         const controllers = await firstValueFrom(this.openvr.devices).then((devices) =>
@@ -116,7 +119,7 @@ export class ControllerBindingComponent implements OnInit {
         error = 'UNKNOWN';
       }
     })().catch((e) => {
-      error = 'UNKNOWN';
+      error = 'LOOKUP_FAILED';
       warn(`[ControllerBinding] Failed to refresh bindings, retrying next tick: ${e}`);
     });
     // a slower refresh must not overwrite what a newer one already displayed
