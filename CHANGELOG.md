@@ -70,6 +70,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Controller actions no longer stay pressed after SteamVR disconnects.
 - Run Automations now saves pending command edits when you leave the page.
 
 - Fixed VRChat log timestamps allowing the Quick Eeper achievement after its 20-minute window.

@@ -12,6 +12,7 @@ import type { SleepDetectorStateReport } from '../../models/events';
 import { OVRInputEventAction } from '../../models/ovr-input-event';
 import type { SleepModeStatusChangeReason } from '../../models/sleep-mode';
 import type { SleepingPose } from '../../models/sleeping-pose';
+import type { OVRDevice } from '../../models/ovr-device';
 import {
   type SleepDetectorStateReportHandlingResult,
   SleepModeForSleepDetectorAutomationService,
@@ -52,7 +53,7 @@ function createService() {
   const configs = new BehaviorSubject(enabledConfigs());
   const sleepMode = new BehaviorSubject(false);
   const pose = new BehaviorSubject<SleepingPose>('UNKNOWN');
-  const inputState = new BehaviorSubject({
+  const inputState = new BehaviorSubject<Record<OVRInputEventAction, OVRDevice[]>>({
     [OVRInputEventAction.OpenOverlay]: [],
     [OVRInputEventAction.MuteMicrophone]: [],
     [OVRInputEventAction.IndicatePresence]: [],
@@ -89,7 +90,7 @@ function createService() {
     if (result) results.push(result);
   });
 
-  return { configs, eventLog, notifications, results, service, sleep };
+  return { configs, eventLog, inputState, notifications, results, service, sleep };
 }
 
 async function armSleepCheck(service: SleepModeForSleepDetectorAutomationService) {
@@ -164,6 +165,29 @@ describe('SleepModeForSleepDetectorAutomationService sleep check', () => {
     });
     expect(notifications.playSound).toHaveBeenCalledOnce();
     expect(notifications.clearNotification).toHaveBeenCalledWith('sleep-check-notification');
+  });
+
+  it('ignores a released or reset controller and cancels on a new press', async () => {
+    const { inputState, results, service } = createService();
+    const controller: OVRDevice = {
+      index: 1,
+      class: 'Controller',
+      role: 'LeftHand',
+      battery: 80,
+      pose: null,
+      isTurningOff: false,
+    };
+    inputState.next({ ...inputState.value, [OVRInputEventAction.IndicatePresence]: [controller] });
+    await service.init();
+    await vi.advanceTimersByTimeAsync(15000);
+    await armSleepCheck(service);
+
+    inputState.next({ ...inputState.value, [OVRInputEventAction.IndicatePresence]: [] });
+    await Promise.resolve();
+    expect(results).toEqual([]);
+    inputState.next({ ...inputState.value, [OVRInputEventAction.IndicatePresence]: [controller] });
+    await Promise.resolve();
+    expect(results).toEqual(['SLEEP_CHECK_USER_AWAKE']);
   });
 
   it('does not publish success after duplicate manual enable', async () => {

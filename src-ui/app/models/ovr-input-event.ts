@@ -18,5 +18,5 @@ export interface OVRInputEvent {
   action: OVRInputEventActionValue;
   pressed: boolean;
   timeAgo: number;
-  device: OVRDevice;
+  device: OVRDevice | null;
 }

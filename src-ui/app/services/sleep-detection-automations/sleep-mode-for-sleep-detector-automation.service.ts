@@ -9,6 +9,7 @@ import {
 import {
   BehaviorSubject,
   distinctUntilChanged,
+  filter,
   firstValueFrom,
   map,
   Observable,
@@ -105,12 +106,11 @@ export class SleepModeForSleepDetectorAutomationService {
         const result = await this.handleStateReportForEnable(event.payload);
         this._lastStateReportHandlingResult.next(result);
       });
-      // Dismiss sleep check for head shake
       await listen<{ gesture: string }>('GESTURE_DETECTED', (event) => {
         if (event.payload.gesture !== 'head_shake') return;
         this.dismissSleepCheck();
       });
-      // Detect controller button presence indication
+      // dismiss sleep checks only for newly pressed controllers
       this.openvrInputService.state
         .pipe(
           map((s) => s[OVRInputEventAction.IndicatePresence]),
@@ -120,12 +120,11 @@ export class SleepModeForSleepDetectorAutomationService {
               (currentDevice) =>
                 !previous.some((previousDevice) => previousDevice.index === currentDevice.index)
             )
-          )
+          ),
+          filter(Boolean)
         )
         .subscribe(() => {
-          // Dismiss sleep check for controller button presence indication
           this.dismissSleepCheck();
-          // Register last controller button presence indication time
           this.lastControllerButtonPresenceIndication = Date.now();
         });
     });

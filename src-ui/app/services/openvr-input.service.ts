@@ -6,7 +6,7 @@ import {
   OVRInputEventActionSet,
 } from '../models/ovr-input-event';
 import { listen } from '@tauri-apps/api/event';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Subject, withLatestFrom } from 'rxjs';
 import { isEqual } from 'lodash';
 import { OVRDevice } from '../models/ovr-device';
 import { OVRActionBinding } from '../models/ovr-action-binding';
@@ -28,21 +28,36 @@ export class OpenVRInputService {
   constructor(private openvr: OpenVRService) {}
 
   async init() {
-    await listen<OVRInputEvent>('OVR_INPUT_EVENT_DIGITAL', (event) => {
+    this.openvr.status.subscribe((status) => {
+      if (
+        status === 'INITIALIZED' ||
+        !Object.values(this._state.value).some((devices) => devices.length)
+      )
+        return;
+      this._state.next({
+        [OVRInputEventAction.OpenOverlay]: [],
+        [OVRInputEventAction.MuteMicrophone]: [],
+        [OVRInputEventAction.IndicatePresence]: [],
+        [OVRInputEventAction.OverlayInteract]: [],
+      });
+    });
+
+    const events = new Subject<OVRInputEvent>();
+    events.pipe(withLatestFrom(this.openvr.status)).subscribe(([event, status]) => {
+      const { action, pressed, device } = event;
+      if (status !== 'INITIALIZED' || !device) return;
       const state = structuredClone(this._state.value);
-      const devices = state[event.payload.action];
-      if (event.payload.pressed && !devices.some((d) => d.index === event.payload.device.index)) {
-        devices.push(event.payload.device);
-      } else if (
-        !event.payload.pressed &&
-        devices.some((d) => d.index === event.payload.device.index)
-      ) {
-        const index = devices.findIndex((d) => d.index === event.payload.device.index);
+      const devices = state[action];
+      if (pressed && !devices.some((d) => d.index === device.index)) {
+        devices.push(device);
+      } else if (!pressed && devices.some((d) => d.index === device.index)) {
+        const index = devices.findIndex((d) => d.index === device.index);
         if (index !== -1) devices.splice(index, 1);
       }
-      state[event.payload.action] = devices;
+      state[action] = devices;
       if (!isEqual(state, this._state.value)) this._state.next(state);
     });
+    await listen<OVRInputEvent>('OVR_INPUT_EVENT_DIGITAL', (event) => events.next(event.payload));
   }
 
   async launchBindingConfiguration(showOnDesktop: boolean) {
