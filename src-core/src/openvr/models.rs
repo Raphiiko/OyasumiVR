@@ -137,7 +137,7 @@ impl From<raphii_openvr_rs::raw::ETrackedDeviceClass> for TrackedDeviceClass {
     }
 }
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct OVRDevice {
     pub index: u32,
@@ -166,7 +166,7 @@ pub struct OVRDevicePose {
     pub position: [f32; 3],
 }
 
-#[derive(Clone, Serialize, Deserialize, IntoStaticStr, EnumIter)]
+#[derive(Clone, Serialize, Deserialize, IntoStaticStr, EnumIter, PartialEq)]
 pub enum OVRHandleType {
     HandPrimary,
     HandSecondary,
