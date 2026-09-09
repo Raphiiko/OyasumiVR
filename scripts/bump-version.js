@@ -50,6 +50,7 @@ if (result.error || result.status !== 0) process.exit(result.status ?? 1);
 const lock = JSON.parse(readFileSync('package-lock.json', 'utf8'));
 lock.version = version;
 if (lock.packages?.['']) lock.packages[''].version = version;
+if (lock.packages?.['src-shared-ts']) lock.packages['src-shared-ts'].version = version;
 writeFileSync('package-lock.json', JSON.stringify(lock, null, 2) + '\n');
 
 if (mode === 'release') {
