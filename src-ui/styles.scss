@@ -85,3 +85,20 @@ img {
   -o-user-select: none;
   user-select: none;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .small-spinner:after,
+  .large-spinner:after {
+    animation-duration: 0.75s !important;
+    animation-iteration-count: infinite !important;
+  }
+}
