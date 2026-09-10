@@ -41,16 +41,12 @@ p::ng-deep strong {
 .alert {
   text-align: left;
 
-  .alert-content {
-    align-items: center;
+  div {
+    flex: 1;
+  }
 
-    div {
-      flex: 1;
-    }
-
-    button {
-      margin-left: 2em;
-    }
+  button {
+    margin-left: 2em;
   }
 
   &.error {

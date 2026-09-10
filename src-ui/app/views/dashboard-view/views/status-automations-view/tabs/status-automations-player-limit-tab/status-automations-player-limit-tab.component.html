@@ -1,15 +1,9 @@
 <p transloco="status-automations.playerLimit.description"></p>
 @if (!loggedIn) {
-  <div class="alert warning" @vshrink>
-    <div class="alert-bg"></div>
-    <div class="alert-icon">
-      <i class="material-icons"> warning </i>
-    </div>
-    <div class="alert-content">
-      <span>{{ 'shared.common.vrcLoginRequired' | transloco }}</span>
-      <button class="btn btn-secondary" (click)="login()" transloco="shared.modals.login"></button>
-    </div>
-  </div>
+  <app-alert severity="warning" @vshrink contentClass="with-action">
+    <span>{{ 'shared.common.vrcLoginRequired' | transloco }}</span>
+    <button class="btn btn-secondary" (click)="login()" transloco="shared.modals.login"></button>
+  </app-alert>
 }
 <div class="settings">
   <app-setting-row
@@ -28,15 +22,9 @@
 </div>
 <div class="settings" [class.disabled]="config.enabled">
   @if (config.enabled) {
-    <div class="alert" @vshrink>
-      <div class="alert-bg"></div>
-      <div class="alert-icon">
-        <i class="material-icons"> info </i>
-      </div>
-      <div class="alert-content"
-        >{{ 'status-automations.playerLimit.disableToEdit' | transloco }}
-      </div>
-    </div>
+    <app-alert severity="info" @vshrink contentClass="with-action"
+      >{{ 'status-automations.playerLimit.disableToEdit' | transloco }}
+    </app-alert>
   }
   <div class="limit-setting">
     <h3 transloco="status-automations.playerLimit.playerLimit"></h3>
@@ -191,18 +179,12 @@
     </label>
   </app-setting-row>
 </div>
-<div class="alert warning">
-  <div class="alert-bg"></div>
-  <div class="alert-icon">
-    <i class="material-icons"> warning </i>
-  </div>
-  <div class="alert-content">
-    <span>{{ 'status-automations.behaviourWarning' | transloco }}</span>
-    <button
-      class="btn btn-secondary"
-      (click)="showFAQ()"
-      transloco="status-automations.moreInfo"
-      style="margin-left: 1em"
-    ></button>
-  </div>
-</div>
+<app-alert severity="warning" contentClass="with-action">
+  <span>{{ 'status-automations.behaviourWarning' | transloco }}</span>
+  <button
+    class="btn btn-secondary"
+    (click)="showFAQ()"
+    transloco="status-automations.moreInfo"
+    style="margin-left: 1em"
+  ></button>
+</app-alert>

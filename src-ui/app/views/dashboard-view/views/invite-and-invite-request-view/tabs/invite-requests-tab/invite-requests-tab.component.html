@@ -1,46 +1,24 @@
 <div class="setting-view-container">
   <p transloco="invite-and-invite-requests.inviteRequestsTab.description"></p>
   @if (!loggedIn) {
-    <div class="alert warning" @vshrink>
-      <div class="alert-bg"></div>
-      <div class="alert-icon">
-        <i class="material-icons"> warning </i>
-      </div>
-      <div class="alert-content">
-        <span>{{ 'shared.common.vrcLoginRequired' | transloco }}</span>
-        <button
-          class="btn btn-secondary"
-          (click)="login()"
-          transloco="shared.modals.login"
-        ></button>
-      </div>
-    </div>
+    <app-alert severity="warning" @vshrink contentClass="with-action">
+      <span>{{ 'shared.common.vrcLoginRequired' | transloco }}</span>
+      <button class="btn btn-secondary" (click)="login()" transloco="shared.modals.login"></button>
+    </app-alert>
   }
   @if (isOnBusyStatus) {
-    <div class="alert warning" @vshrink>
-      <div class="alert-bg"></div>
-      <div class="alert-icon">
-        <i class="material-icons"> warning </i>
-      </div>
-      <div class="alert-content">
-        <span>{{
-          'invite-and-invite-requests.inviteRequestsTab.userOnBusyStatus' | transloco
-        }}</span></div
-      >
-    </div>
+    <app-alert severity="warning" @vshrink contentClass="with-action">
+      <span>{{
+        'invite-and-invite-requests.inviteRequestsTab.userOnBusyStatus' | transloco
+      }}</span></app-alert
+    >
   }
   @if (isOnJoinMeStatus) {
-    <div class="alert warning" @vshrink>
-      <div class="alert-bg"></div>
-      <div class="alert-icon">
-        <i class="material-icons"> warning </i>
-      </div>
-      <div class="alert-content">
-        <span>{{
-          'invite-and-invite-requests.inviteRequestsTab.userOnJoinMeStatus' | transloco
-        }}</span></div
-      >
-    </div>
+    <app-alert severity="warning" @vshrink contentClass="with-action">
+      <span>{{
+        'invite-and-invite-requests.inviteRequestsTab.userOnJoinMeStatus' | transloco
+      }}</span></app-alert
+    >
   }
   <div class="settings">
     <app-setting-row

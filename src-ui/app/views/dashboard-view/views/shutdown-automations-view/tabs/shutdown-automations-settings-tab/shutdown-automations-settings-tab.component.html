@@ -1,13 +1,7 @@
 <p transloco="shutdown-automations.description"></p>
-<div class="alert info" @vshrink>
-  <div class="alert-bg"></div>
-  <div class="alert-icon">
-    <i class="material-icons"> info </i>
-  </div>
-  <div class="alert-content">
-    <span>{{ 'power-automations.powerManagementWarning' | transloco }}</span>
-  </div>
-</div>
+<app-alert severity="info" @vshrink contentClass="with-action">
+  <span>{{ 'power-automations.powerManagementWarning' | transloco }}</span>
+</app-alert>
 <div class="setting-category">
   <h2>
     <span transloco="shutdown-automations.sequence.title"></span>
@@ -19,15 +13,9 @@
     ></button>
   </h2>
   @if (noOptionsSelected) {
-    <div class="alert warning" @vshrink>
-      <div class="alert-bg"></div>
-      <div class="alert-icon">
-        <i class="material-icons"> warning </i>
-      </div>
-      <div class="alert-content">
-        <span>{{ 'shutdown-automations.noOptionsSelected' | transloco }}</span>
-      </div>
-    </div>
+    <app-alert severity="warning" @vshrink contentClass="with-action">
+      <span>{{ 'shutdown-automations.noOptionsSelected' | transloco }}</span>
+    </app-alert>
   }
   <div class="settings">
     <app-setting-row label="shutdown-automations.sequence.turnOffDevices.title">
