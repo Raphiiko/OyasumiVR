@@ -86,7 +86,7 @@ app-event-log {
 
     &.active {
       opacity: 1;
-      animation: pulse 0.15s ease-in-out;
+      animation: overview-avatar-pulse 0.15s ease-in-out;
       animation-fill-mode: forwards;
       animation-iteration-count: 1;
     }
@@ -111,7 +111,7 @@ app-event-log {
   }
 }
 
-@keyframes pulse {
+@keyframes overview-avatar-pulse {
   0% {
     transform: scale(1);
   }

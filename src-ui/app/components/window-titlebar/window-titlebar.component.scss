@@ -153,9 +153,9 @@
   height: 0.5em;
   border-radius: 50%;
   background-color: #{materialColors.$md-orange-800};
-  animation: pulse 2s infinite;
+  animation: titlebar-badge-pulse 2s infinite;
 
-  @keyframes pulse {
+  @keyframes titlebar-badge-pulse {
     0% {
       transform: scale(0.95);
       box-shadow: 0 0 0 0 rgba(239, 108, 0, 0.7);
