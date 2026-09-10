@@ -4,6 +4,11 @@
   overflow: hidden;
 }
 
+// the label ends with a provider link, so the description span is not :last-child
+.setting-row-label span:nth-child(2) {
+  color: var(--color-text-3);
+}
+
 .clickable-logo {
   transition: all 0.15s;
   cursor: pointer;

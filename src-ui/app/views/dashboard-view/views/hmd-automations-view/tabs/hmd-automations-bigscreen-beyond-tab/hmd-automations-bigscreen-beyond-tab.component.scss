@@ -1,4 +1,7 @@
-app-slider-setting.with-margin,
-app-color-picker.with-margin {
-  margin-right: 1em;
+// .setting-row is the row host, and it keeps this above the 0.5em gap settings.scss sets
+.setting-row {
+  app-slider-setting.with-margin,
+  app-color-picker.with-margin {
+    margin-right: 1em;
+  }
 }
