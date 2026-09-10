@@ -56,6 +56,10 @@ body {
   }
 }
 
+.pane-content {
+  scrollbar-gutter: stable;
+}
+
 a,
 a:visited,
 a:hover,
