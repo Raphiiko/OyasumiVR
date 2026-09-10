@@ -1,0 +1,35 @@
+.setting-view-container {
+  width: 100%;
+  margin: 0 auto;
+  max-width: 80em;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+///
+/// The sentence-fragment row used by the sleep detection automation modals: a label followed by a
+/// column of controls. Visually distinct from `.setting-row`, which sits on a `.settings` surface.
+///
+.automation-settings {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  &-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    &:not(:last-child) {
+      padding-bottom: 1em;
+    }
+
+    &-label {
+      flex: 1;
+    }
+  }
+}
