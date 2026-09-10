@@ -1,11 +1,3 @@
-:host > .pane {
-  height: 100%;
-
-  > .pane-content {
-    overflow-y: overlay;
-  }
-}
-
 .action-dropdown {
   min-width: 13.5em;
 }

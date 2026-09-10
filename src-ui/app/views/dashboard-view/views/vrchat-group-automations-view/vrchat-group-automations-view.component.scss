@@ -1,11 +1,3 @@
-:host > .pane {
-  height: 100%;
-
-  > .pane-content {
-    overflow-y: overlay;
-  }
-}
-
 .alert {
   &:not(:last-child) {
     margin-bottom: 1em;
