@@ -239,8 +239,7 @@
         "integrations": "Integraties",
         "notifications": "Notificatie instellingen",
         "statusInfo": "Status Informatie",
-        "subMenu": "Instellingen",
-        "vrchat": "VRChat Instellingen"
+        "subMenu": "Instellingen"
       },
       "shutdownAutomations": "Afsluit Procedure",
       "sleepAnimations": "Slaap Animaties",

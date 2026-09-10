@@ -234,8 +234,7 @@
         "notifications": "알림 설정",
         "statusInfo": "상태 정보",
         "subMenu": "설정",
-        "updates": "업데이트",
-        "vrchat": "VRChat 설정"
+        "updates": "업데이트"
       },
       "shutdownAutomations": "종료 시퀀스",
       "sleepAnimations": "수면 애니메이션",
