@@ -7,6 +7,24 @@
   transform: translate3d(0, 0, 0);
 }
 
+@keyframes slider-glow {
+  0% {
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.5));
+  }
+
+  40% {
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 1));
+  }
+
+  80% {
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.5));
+  }
+
+  100% {
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.5));
+  }
+}
+
 @keyframes vshake {
   10%,
   90% {

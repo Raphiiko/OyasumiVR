@@ -3,7 +3,6 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  outline: none;
   background: var(--color-surface-0);
   border-radius: $radius;
   color: var(--color-text-2);
@@ -15,7 +14,7 @@
   &:hover {
     background: var(--color-surface-1);
     .icon {
-      color: var(--color-text-0);
+      color: var(--color-text-1);
     }
   }
 

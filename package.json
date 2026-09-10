@@ -80,7 +80,6 @@
     "@fontsource/noto-sans-sc": "^5.3.0",
     "@fontsource/noto-sans-tc": "^5.3.0",
     "@fontsource/poppins": "^5.3.0",
-    "@fortawesome/fontawesome-free": "^7.3.1",
     "@jsverse/transloco": "^8.4.0",
     "@jsverse/transloco-messageformat": "^8.4.0",
     "@protobuf-ts/grpc-transport": "^2.11.1",

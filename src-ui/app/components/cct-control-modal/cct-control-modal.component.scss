@@ -106,24 +106,6 @@
   }
 }
 
-@keyframes slider-glow {
-  0% {
-    filter: drop-shadow(0 0 6px rgba(white, 0.5));
-  }
-
-  40% {
-    filter: drop-shadow(0 0 6px rgba(white, 1));
-  }
-
-  80% {
-    filter: drop-shadow(0 0 6px rgba(white, 0.5));
-  }
-
-  100% {
-    filter: drop-shadow(0 0 6px rgba(white, 0.5));
-  }
-}
-
 app-brightness-control-slider {
   transition: all 0.15s;
   //filter: drop-shadow(0 0 0 transparent);

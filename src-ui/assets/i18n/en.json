@@ -244,8 +244,7 @@
         "osc": "OSC Settings",
         "statusInfo": "Status Information",
         "subMenu": "Settings",
-        "updates": "Updates",
-        "vrchat": "VRChat Settings"
+        "updates": "Updates"
       },
       "shutdownAutomations": "Shutdown Sequence",
       "sleepAnimations": "Sleep Animations",

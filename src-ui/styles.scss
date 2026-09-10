@@ -1,5 +1,4 @@
 @use 'material-icons/iconfont/material-icons.css';
-@use '@fortawesome/fontawesome-free/css/all.css';
 @use 'flag-icons/css/flag-icons.min.css';
 @use 'material-symbols/index.css';
 @use 'themes.scss';
@@ -20,7 +19,7 @@ html,
 body {
   margin: 0;
   background: transparent;
-  color: var(--color-text-0);
+  color: var(--color-text-1);
   font-size: 12px;
   min-height: 100vh;
   max-width: 100vw;
@@ -56,10 +55,18 @@ body {
   }
 }
 
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.pane-content {
+  scrollbar-gutter: stable;
+}
+
 a,
 a:visited,
 a:hover,
-a:focus,
 a:active {
   color: var(--color-primary);
   cursor: pointer;
@@ -76,4 +83,21 @@ img {
   -moz-user-select: none;
   -o-user-select: none;
   user-select: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .small-spinner:after,
+  .large-spinner:after {
+    animation-duration: 0.75s !important;
+    animation-iteration-count: infinite !important;
+  }
 }

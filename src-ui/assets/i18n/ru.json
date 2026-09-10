@@ -244,8 +244,7 @@
         "osc": "Настройки OSC",
         "statusInfo": "Информация о статусе",
         "subMenu": "Настройки",
-        "updates": "Обновления",
-        "vrchat": "Настройки VRChat"
+        "updates": "Обновления"
       },
       "shutdownAutomations": "Последовательность выключения",
       "sleepAnimations": "Анимации сна",

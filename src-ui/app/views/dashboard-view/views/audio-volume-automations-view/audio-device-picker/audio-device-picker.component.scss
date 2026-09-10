@@ -20,6 +20,7 @@
 .pane-content {
   display: flex;
   overflow: hidden;
+  scrollbar-gutter: auto;
   flex-direction: column;
 }
 

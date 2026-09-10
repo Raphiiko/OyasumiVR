@@ -17,7 +17,6 @@ import { fade, vshrink } from '../../../../../../utils/animations';
 @Component({
   selector: 'app-shutdown-automations-triggers-tab',
   templateUrl: './shutdown-automations-triggers-tab.component.html',
-  styleUrls: ['./shutdown-automations-triggers-tab.component.scss'],
   animations: [fade(), vshrink()],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,

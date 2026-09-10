@@ -10,7 +10,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-sounds-tab',
   templateUrl: './sounds-tab.component.html',
-  styleUrls: ['./sounds-tab.component.scss'],
   animations: [vshrink()],
   changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
