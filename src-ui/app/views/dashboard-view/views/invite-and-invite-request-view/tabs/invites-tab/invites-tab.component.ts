@@ -12,7 +12,6 @@ import { flushOnDestroy } from 'src-ui/app/utils/rxjs-utils';
 @Component({
   selector: 'app-invites-tab',
   templateUrl: './invites-tab.component.html',
-  styleUrls: ['./invites-tab.component.scss'],
   standalone: false,
   changeDetection: ChangeDetectionStrategy.Eager,
   animations: [vshrink()],

@@ -17,7 +17,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-sleep-detection-sleep-enable-tab',
   templateUrl: './sleep-detection-sleep-enable-tab.component.html',
-  styleUrls: ['./sleep-detection-sleep-enable-tab.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })

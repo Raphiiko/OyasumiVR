@@ -72,30 +72,9 @@ button.btn {
       --scoped-bg-color: var(--color-secondary-hover);
     }
 
-    // body.dark & {
-    // }
-
     &:disabled {
       opacity: 0.5;
     }
-  }
-
-  &.btn-caution {
-    --scoped-bg-color: var(--color-caution);
-    --scoped-color: var(--color-on-caution);
-
-    &:not(:disabled):hover {
-      --scoped-bg-color: var(--color-caution-hover);
-    }
-
-    &:disabled {
-      opacity: 0.5;
-    }
-  }
-
-  &.btn-unavailable {
-    --scoped-bg-color: var(--color-button-unavailable);
-    --scoped-color: var(--color-on-button-unavailable);
   }
 }
 

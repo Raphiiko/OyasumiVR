@@ -101,10 +101,6 @@
 .modal {
   @extend .pane;
 
-  &-sm {
-    width: 25em;
-  }
-
   &-md {
     width: 30em;
   }
