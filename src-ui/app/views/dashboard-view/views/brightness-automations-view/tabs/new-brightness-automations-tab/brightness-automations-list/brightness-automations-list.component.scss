@@ -1,6 +1,7 @@
 :host {
   display: block;
   overflow-y: overlay;
+  scrollbar-gutter: stable;
   padding: 2em;
   height: 100%;
 }
