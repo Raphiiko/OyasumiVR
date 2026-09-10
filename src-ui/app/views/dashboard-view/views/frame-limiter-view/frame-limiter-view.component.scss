@@ -4,16 +4,6 @@
   overflow: hidden;
 }
 
-.pane {
-  width: 100%;
-}
-
-.pane-content {
-  padding: 2em;
-  overflow-y: overlay;
-  width: 100%;
-}
-
 .alert {
   &:not(:last-child) {
     margin-bottom: 1em;

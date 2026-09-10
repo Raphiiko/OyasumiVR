@@ -1,4 +1,4 @@
-<div class="pane">
+<div class="pane fill">
   <div class="pane-title" transloco="shutdown-automations.title"></div>
   <div class="tab-bar">
     <div class="tab" [class.active]="activeTab === 'SETTINGS'" (click)="activeTab = 'SETTINGS'">
@@ -8,7 +8,7 @@
       <div class="tab-label" transloco="shutdown-automations.tabs.triggers"></div>
     </div>
   </div>
-  <div class="pane-content">
+  <div class="pane-content scroll">
     <div class="setting-view-container">
       @if (activeTab === 'SETTINGS') {
         <app-shutdown-automations-settings-tab></app-shutdown-automations-settings-tab>

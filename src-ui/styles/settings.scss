@@ -1,46 +1,3 @@
-///
-/// AUTOMATIONS
-///
-.automation-settings {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-
-  &-row {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    &:not(:last-child) {
-      padding-bottom: 1em;
-    }
-
-    &-label {
-      flex: 1;
-    }
-  }
-
-  &-controls {
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-
-    input {
-      text-align: right;
-    }
-  }
-}
-
-///
-/// Settings Layout
-///
-.setting-view-container {
-  width: 100%;
-  margin: 0 auto;
-  max-width: 80em;
-}
-
 .setting-category {
   &:not(:first-child) {
     margin-top: 1em;
@@ -118,8 +75,7 @@
     }
   }
 
-  .setting-row,
-  .setting-alert-row {
+  .setting-row {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -130,16 +86,6 @@
     &.disabled {
       pointer-events: none;
       opacity: 0.5;
-    }
-
-    &.setting-alert-row {
-      padding: 0 1em 1em 1em;
-      flex-direction: column;
-
-      .alert {
-        width: 100%;
-        margin: 0;
-      }
     }
 
     &.compact {
@@ -175,7 +121,8 @@
       flex: 1;
       white-space: pre-line;
 
-      > span:first-child {
+      > span:first-child,
+      > .setting-row-title {
         color: var(--color-text-1);
         margin-bottom: 0.25em;
         display: flex;
@@ -183,7 +130,8 @@
         align-items: center;
       }
 
-      > span:last-child {
+      > span:last-child,
+      > .setting-row-description {
         color: var(--color-text-3);
       }
 
@@ -232,16 +180,4 @@
       }
     }
   }
-}
-
-@function pow($base, $exponent) {
-  $result: 1;
-  @for $_ from 1 through $exponent {
-    $result: $result * $base;
-  }
-  @return $result;
-}
-
-.icon-filled {
-  font-variation-settings: 'FILL' 1;
 }

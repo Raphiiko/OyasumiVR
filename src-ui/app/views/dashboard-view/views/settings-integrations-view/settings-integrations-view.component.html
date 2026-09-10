@@ -1,6 +1,6 @@
-<div class="pane">
+<div class="pane fill">
   <div class="pane-title" transloco="settings.integrations.title"></div>
-  <div class="pane-content">
+  <div class="pane-content scroll">
     <div class="setting-view-container">
       <p transloco="settings.integrations.description"></p>
       <div class="setting-category">
@@ -177,44 +177,33 @@
       <div class="setting-category">
         <h2 transloco="settings.integrations.discord.title"></h2>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.integrations.discord.activityMode.title"></span>
-              <span transloco="settings.integrations.discord.activityMode.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <app-select-box
-                [type]="'SMALL'"
-                class="discord-activity-mode-dropdown"
-                [items]="discordActivityModeOptions"
-                [selected]="discordActivityModeOption"
-                (selectedChange)="onChangeDiscordActivityMode($event)"
-              ></app-select-box>
-            </div>
-          </div>
+          <app-setting-row
+            label="settings.integrations.discord.activityMode.title"
+            description="settings.integrations.discord.activityMode.description"
+          >
+            <app-select-box
+              [type]="'SMALL'"
+              class="discord-activity-mode-dropdown"
+              [items]="discordActivityModeOptions"
+              [selected]="discordActivityModeOption"
+              (selectedChange)="onChangeDiscordActivityMode($event)"
+            ></app-select-box>
+          </app-setting-row>
           <div class="setting-row-group">
-            <div class="setting-row">
-              <div class="setting-row-label">
-                <span
-                  transloco="settings.integrations.discord.activityModeVRCCondition.title"
-                ></span>
-                <span></span>
-              </div>
-              <div class="setting-row-action">
-                <label class="switch-toggle">
-                  <input
-                    type="checkbox"
-                    [checked]="appSettings.discordActivityOnlyWhileVRChatIsRunning"
-                    (change)="
-                      setDiscordActivityOnlyWhenVRChatIsRunning(
-                        !appSettings.discordActivityOnlyWhileVRChatIsRunning
-                      )
-                    "
-                  />
-                  <span class="switch-toggle-slider"></span>
-                </label>
-              </div>
-            </div>
+            <app-setting-row label="settings.integrations.discord.activityModeVRCCondition.title">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="appSettings.discordActivityOnlyWhileVRChatIsRunning"
+                  (change)="
+                    setDiscordActivityOnlyWhenVRChatIsRunning(
+                      !appSettings.discordActivityOnlyWhileVRChatIsRunning
+                    )
+                  "
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </app-setting-row>
           </div>
         </div>
       </div>
@@ -222,22 +211,19 @@
       <div class="setting-category">
         <h2 transloco="settings.integrations.vrcx.title"></h2>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.integrations.vrcx.sleepModeChanges.title"></span>
-              <span transloco="settings.integrations.vrcx.sleepModeChanges.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="appSettings.vrcxLogsEnabled.includes('SleepMode')"
-                  (change)="toggleVrcxLogSleepMode()"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
+          <app-setting-row
+            label="settings.integrations.vrcx.sleepModeChanges.title"
+            description="settings.integrations.vrcx.sleepModeChanges.description"
+          >
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="appSettings.vrcxLogsEnabled.includes('SleepMode')"
+                (change)="toggleVrcxLogSleepMode()"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
         </div>
       </div>
     </div>

@@ -40,48 +40,36 @@
     }
     <h3>Automations</h3>
     <div class="settings">
-      <div class="setting-row">
-        <div class="setting-row-label">
-          <span transloco="gpu-automations.msiAfterburner.sleepModeEnable.title"></span>
-          <span transloco="gpu-automations.msiAfterburner.sleepModeEnable.description"></span>
-        </div>
-        <div class="setting-row-action">
-          <app-select-box
-            type="SMALL"
-            [items]="profileOptions"
-            [selected]="onEnableProfile"
-            (selectedChange)="changeProfile('ON_ENABLE', $event!)"
-          ></app-select-box>
-        </div>
-      </div>
-      <div class="setting-row">
-        <div class="setting-row-label">
-          <span transloco="gpu-automations.msiAfterburner.sleepModeDisable.title"></span>
-          <span transloco="gpu-automations.msiAfterburner.sleepModeDisable.description"></span>
-        </div>
-        <div class="setting-row-action">
-          <app-select-box
-            type="SMALL"
-            [items]="profileOptions"
-            [selected]="onDisableProfile"
-            (selectedChange)="changeProfile('ON_DISABLE', $event!)"
-          ></app-select-box>
-        </div>
-      </div>
+      <app-setting-row
+        label="gpu-automations.msiAfterburner.sleepModeEnable.title"
+        description="gpu-automations.msiAfterburner.sleepModeEnable.description"
+      >
+        <app-select-box
+          type="SMALL"
+          [items]="profileOptions"
+          [selected]="onEnableProfile"
+          (selectedChange)="changeProfile('ON_ENABLE', $event!)"
+        ></app-select-box>
+      </app-setting-row>
+      <app-setting-row
+        label="gpu-automations.msiAfterburner.sleepModeDisable.title"
+        description="gpu-automations.msiAfterburner.sleepModeDisable.description"
+      >
+        <app-select-box
+          type="SMALL"
+          [items]="profileOptions"
+          [selected]="onDisableProfile"
+          (selectedChange)="changeProfile('ON_DISABLE', $event!)"
+        ></app-select-box>
+      </app-setting-row>
     </div>
-    <div class="alert">
-      <div class="alert-bg"></div>
-      <div class="alert-icon">
-        <i class="material-icons">warning</i>
-      </div>
-      <div class="alert-content flex-row">
-        <div transloco="gpu-automations.msiAfterburner.enabledWarning"></div>
-        <button
-          class="btn btn-secondary"
-          (click)="gpuAutomations.disable()"
-          transloco="gpu-automations.disable"
-        ></button>
-      </div>
-    </div>
+    <app-alert severity="info" icon="warning" contentClass="flex-row">
+      <div transloco="gpu-automations.msiAfterburner.enabledWarning"></div>
+      <button
+        class="btn btn-secondary"
+        (click)="gpuAutomations.disable()"
+        transloco="gpu-automations.disable"
+      ></button>
+    </app-alert>
   </div>
 </div>

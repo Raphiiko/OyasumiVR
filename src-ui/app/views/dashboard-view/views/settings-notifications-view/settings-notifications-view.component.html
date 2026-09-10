@@ -1,54 +1,45 @@
-<div class="pane">
+<div class="pane fill">
   <div class="pane-title" transloco="settings.notifications.title"></div>
-  <div class="pane-content">
+  <div class="pane-content scroll">
     <div class="setting-view-container">
       <div class="setting-category">
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.notifications.provider.title"></span>
-              <span transloco="settings.notifications.provider.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <app-select-box
-                class="provider-dropdown"
-                [type]="'SMALL'"
-                [items]="providerOptions"
-                [selected]="providerOption"
-                (selectedChange)="onChangeProviderOption($event)"
-              ></app-select-box>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.notifications.volume.title"></span>
-              <span transloco="settings.notifications.volume.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <button class="btn btn-secondary" (click)="testSound()">
-                @if (!playingTestSound) {
-                  <span transloco="settings.notifications.volume.test" @hshrink></span>
-                }
-                @if (playingTestSound) {
-                  <i class="material-icons" @hshrink>volume_up</i>
-                }
-              </button>
-              <app-slider-setting
-                [value]="generalNotificationVolume"
-                [max]="200"
-                [snapValues]="[50, 100, 150]"
-                (valueChange)="setGeneralNotificationVolume($event)"
-                [unit]="'%'"
-              ></app-slider-setting>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.notifications.notifications.title"></span>
-              <span transloco="settings.notifications.notifications.description"></span>
-            </div>
-            <div class="setting-row-action"></div>
-          </div>
+          <app-setting-row
+            label="settings.notifications.provider.title"
+            description="settings.notifications.provider.description"
+          >
+            <app-select-box
+              class="provider-dropdown"
+              [type]="'SMALL'"
+              [items]="providerOptions"
+              [selected]="providerOption"
+              (selectedChange)="onChangeProviderOption($event)"
+            ></app-select-box>
+          </app-setting-row>
+          <app-setting-row
+            label="settings.notifications.volume.title"
+            description="settings.notifications.volume.description"
+          >
+            <button class="btn btn-secondary" (click)="testSound()">
+              @if (!playingTestSound) {
+                <span transloco="settings.notifications.volume.test" @hshrink></span>
+              }
+              @if (playingTestSound) {
+                <i class="material-icons" @hshrink>volume_up</i>
+              }
+            </button>
+            <app-slider-setting
+              [value]="generalNotificationVolume"
+              [max]="200"
+              [snapValues]="[50, 100, 150]"
+              (valueChange)="setGeneralNotificationVolume($event)"
+              [unit]="'%'"
+            ></app-slider-setting>
+          </app-setting-row>
+          <app-setting-row
+            label="settings.notifications.notifications.title"
+            description="settings.notifications.notifications.description"
+          ></app-setting-row>
           <div class="setting-row-group">
             @for (notificationType of notificationTypes; track notificationType) {
               <div class="setting-row compact">

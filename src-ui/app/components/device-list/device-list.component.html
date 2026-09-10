@@ -2,7 +2,7 @@
   <div class="pane-title">
     <span transloco="comp.device-list.title"></span>
     @if (devicesCanPowerOff) {
-      <div class="btn-turn-off-all-wrapper" [@fade]>
+      <div class="btn-turn-off-all-wrapper" @fade>
         <button
           class="btn-turn-off-all btn-power power-off"
           [title]="'Turn off all devices'"
@@ -85,7 +85,7 @@
     }
   </div>
 
-  <div class="device-list-footer" [@fade]>
+  <div class="device-list-footer" @fade>
     <button
       class="device-manager-button"
       [routerLink]="'/dashboard/deviceManager'"

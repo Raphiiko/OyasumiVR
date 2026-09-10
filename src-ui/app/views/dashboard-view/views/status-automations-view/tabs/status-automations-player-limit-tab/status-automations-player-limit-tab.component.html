@@ -1,45 +1,30 @@
 <p transloco="status-automations.playerLimit.description"></p>
 @if (!loggedIn) {
-  <div class="alert warning" @vshrink>
-    <div class="alert-bg"></div>
-    <div class="alert-icon">
-      <i class="material-icons"> warning </i>
-    </div>
-    <div class="alert-content">
-      <span>{{ 'shared.common.vrcLoginRequired' | transloco }}</span>
-      <button class="btn btn-secondary" (click)="login()" transloco="shared.modals.login"></button>
-    </div>
-  </div>
+  <app-alert severity="warning" @vshrink contentClass="with-action">
+    <span>{{ 'shared.common.vrcLoginRequired' | transloco }}</span>
+    <button class="btn btn-secondary" (click)="login()" transloco="shared.modals.login"></button>
+  </app-alert>
 }
 <div class="settings">
-  <div class="setting-row">
-    <div class="setting-row-label">
-      <span transloco="status-automations.playerLimit.enable.title"></span>
-      <span transloco="status-automations.playerLimit.enable.description"></span>
-    </div>
-    <div class="setting-row-action">
-      <label class="switch-toggle">
-        <input
-          type="checkbox"
-          [checked]="config.enabled"
-          (change)="updateConfig({ enabled: !config.enabled })"
-        />
-        <span class="switch-toggle-slider"></span>
-      </label>
-    </div>
-  </div>
+  <app-setting-row
+    label="status-automations.playerLimit.enable.title"
+    description="status-automations.playerLimit.enable.description"
+  >
+    <label class="switch-toggle">
+      <input
+        type="checkbox"
+        [checked]="config.enabled"
+        (change)="updateConfig({ enabled: !config.enabled })"
+      />
+      <span class="switch-toggle-slider"></span>
+    </label>
+  </app-setting-row>
 </div>
 <div class="settings" [class.disabled]="config.enabled">
   @if (config.enabled) {
-    <div class="alert" @vshrink>
-      <div class="alert-bg"></div>
-      <div class="alert-icon">
-        <i class="material-icons"> info </i>
-      </div>
-      <div class="alert-content"
-        >{{ 'status-automations.playerLimit.disableToEdit' | transloco }}
-      </div>
-    </div>
+    <app-alert severity="info" @vshrink contentClass="with-action"
+      >{{ 'status-automations.playerLimit.disableToEdit' | transloco }}
+    </app-alert>
   }
   <div class="limit-setting">
     <h3 transloco="status-automations.playerLimit.playerLimit"></h3>
@@ -76,30 +61,27 @@
       [translocoParams]="{ count: limit.value }"
     ></div>
   </div>
-  <div class="setting-row">
-    <div class="setting-row-label">
-      <span transloco="status-automations.playerLimit.belowLimit.title"></span>
-      <span transloco="status-automations.playerLimit.belowLimit.description.status"></span>
-    </div>
-    <div class="setting-row-action">
-      <label class="switch-toggle">
-        <input
-          type="checkbox"
-          [checked]="config.statusBelowLimitEnabled"
-          (change)="updateConfig({ statusBelowLimitEnabled: !config.statusBelowLimitEnabled })"
-        />
-        <span class="switch-toggle-slider"></span>
-      </label>
-      <app-select-box
-        class="status-dropdown"
-        [type]="'SMALL'"
-        [items]="statusOptions"
-        [selected]="optionSetStatusBelowLimit"
-        (selectedChange)="setStatusSetOption('belowLimit', $event)"
-        [disabled]="!config.statusBelowLimitEnabled"
-      ></app-select-box>
-    </div>
-  </div>
+  <app-setting-row
+    label="status-automations.playerLimit.belowLimit.title"
+    description="status-automations.playerLimit.belowLimit.description.status"
+  >
+    <label class="switch-toggle">
+      <input
+        type="checkbox"
+        [checked]="config.statusBelowLimitEnabled"
+        (change)="updateConfig({ statusBelowLimitEnabled: !config.statusBelowLimitEnabled })"
+      />
+      <span class="switch-toggle-slider"></span>
+    </label>
+    <app-select-box
+      class="status-dropdown"
+      [type]="'SMALL'"
+      [items]="statusOptions"
+      [selected]="optionSetStatusBelowLimit"
+      (selectedChange)="setStatusSetOption('belowLimit', $event)"
+      [disabled]="!config.statusBelowLimitEnabled"
+    ></app-select-box>
+  </app-setting-row>
   <div class="setting-row">
     <div class="setting-row-label">
       <span></span>
@@ -128,32 +110,29 @@
       />
     </div>
   </div>
-  <div class="setting-row">
-    <div class="setting-row-label">
-      <span transloco="status-automations.playerLimit.atLimitOrAbove.title"></span>
-      <span transloco="status-automations.playerLimit.atLimitOrAbove.description.status"></span>
-    </div>
-    <div class="setting-row-action">
-      <label class="switch-toggle">
-        <input
-          type="checkbox"
-          [checked]="config.statusAtLimitOrAboveEnabled"
-          (change)="
-            updateConfig({ statusAtLimitOrAboveEnabled: !config.statusAtLimitOrAboveEnabled })
-          "
-        />
-        <span class="switch-toggle-slider"></span>
-      </label>
-      <app-select-box
-        class="status-dropdown"
-        [type]="'SMALL'"
-        [items]="statusOptions"
-        [selected]="optionSetStatusAtLimitOrAbove"
-        (selectedChange)="setStatusSetOption('atLimitOrAbove', $event)"
-        [disabled]="!config.statusAtLimitOrAboveEnabled"
-      ></app-select-box>
-    </div>
-  </div>
+  <app-setting-row
+    label="status-automations.playerLimit.atLimitOrAbove.title"
+    description="status-automations.playerLimit.atLimitOrAbove.description.status"
+  >
+    <label class="switch-toggle">
+      <input
+        type="checkbox"
+        [checked]="config.statusAtLimitOrAboveEnabled"
+        (change)="
+          updateConfig({ statusAtLimitOrAboveEnabled: !config.statusAtLimitOrAboveEnabled })
+        "
+      />
+      <span class="switch-toggle-slider"></span>
+    </label>
+    <app-select-box
+      class="status-dropdown"
+      [type]="'SMALL'"
+      [items]="statusOptions"
+      [selected]="optionSetStatusAtLimitOrAbove"
+      (selectedChange)="setStatusSetOption('atLimitOrAbove', $event)"
+      [disabled]="!config.statusAtLimitOrAboveEnabled"
+    ></app-select-box>
+  </app-setting-row>
   <div class="setting-row">
     <div class="setting-row-label">
       <span></span>
@@ -189,35 +168,23 @@
       />
     </div>
   </div>
-  <div class="setting-row">
-    <div class="setting-row-label">
-      <span transloco="status-automations.playerLimit.onlyIfSleepModeEnabled"></span>
-      <span></span>
-    </div>
-    <div class="setting-row-action">
-      <label class="switch-toggle">
-        <input
-          type="checkbox"
-          [checked]="config.onlyIfSleepModeEnabled"
-          (change)="updateConfig({ onlyIfSleepModeEnabled: !config.onlyIfSleepModeEnabled })"
-        />
-        <span class="switch-toggle-slider"></span>
-      </label>
-    </div>
-  </div>
+  <app-setting-row label="status-automations.playerLimit.onlyIfSleepModeEnabled">
+    <label class="switch-toggle">
+      <input
+        type="checkbox"
+        [checked]="config.onlyIfSleepModeEnabled"
+        (change)="updateConfig({ onlyIfSleepModeEnabled: !config.onlyIfSleepModeEnabled })"
+      />
+      <span class="switch-toggle-slider"></span>
+    </label>
+  </app-setting-row>
 </div>
-<div class="alert warning">
-  <div class="alert-bg"></div>
-  <div class="alert-icon">
-    <i class="material-icons"> warning </i>
-  </div>
-  <div class="alert-content">
-    <span>{{ 'status-automations.behaviourWarning' | transloco }}</span>
-    <button
-      class="btn btn-secondary"
-      (click)="showFAQ()"
-      transloco="status-automations.moreInfo"
-      style="margin-left: 1em"
-    ></button>
-  </div>
-</div>
+<app-alert severity="warning" contentClass="with-action">
+  <span>{{ 'status-automations.behaviourWarning' | transloco }}</span>
+  <button
+    class="btn btn-secondary"
+    (click)="showFAQ()"
+    transloco="status-automations.moreInfo"
+    style="margin-left: 1em"
+  ></button>
+</app-alert>

@@ -79,7 +79,7 @@
   border-left: 1px solid var(--color-surface-4);
   @include shadows.shadow(2, true);
   border-radius: 0;
-  overflow-y: overlay;
+  overflow-y: auto;
 }
 
 .header-row {

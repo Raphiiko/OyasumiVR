@@ -4,184 +4,144 @@
     <div class="setting-view-container">
       <p transloco="join-notifications.description"></p>
       @if ((vrchat.user | async) === null) {
-        <div class="alert warning" @vshrink>
-          <div class="alert-bg"></div>
-          <div class="alert-icon">
-            <i class="material-icons"> warning </i>
-          </div>
-          <div class="alert-content">
-            <span>{{ 'shared.common.vrcLoginRequired' | transloco }}</span>
-            <button
-              class="btn btn-secondary"
-              (click)="vrchat.showLoginModal()"
-              transloco="shared.modals.login"
-            ></button>
-          </div>
-        </div>
+        <app-alert severity="warning" @vshrink contentClass="with-action">
+          <span>{{ 'shared.common.vrcLoginRequired' | transloco }}</span>
+          <button
+            class="btn btn-secondary"
+            (click)="vrchat.showLoginModal()"
+            transloco="shared.modals.login"
+          ></button>
+        </app-alert>
       }
       <div class="settings">
-        <div class="setting-row">
-          <div class="setting-row-label">
-            <span transloco="join-notifications.joinNotifications.title"></span>
-            <span transloco="join-notifications.joinNotifications.description"></span>
-          </div>
-          <div class="setting-row-action">
-            <app-select-box
-              class="preset-select-box"
-              [type]="'SMALL'"
-              [items]="notificationOptions"
-              [selected]="joinNotificationOption"
-              (selectedChange)="
-                setJoinNotificationModeOption(
-                  asJoinNotificationsMode($safeNavigationMigration($event?.id))
-                )
-              "
-            ></app-select-box>
-          </div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-row-label">
-            <span transloco="join-notifications.joinSounds.title"></span>
-            <span transloco="join-notifications.joinSounds.description"></span>
-          </div>
-          <div class="setting-row-action">
-            <app-select-box
-              class="preset-select-box"
-              [type]="'SMALL'"
-              [items]="notificationOptions"
-              [selected]="joinSoundOption"
-              (selectedChange)="
-                setJoinSoundModeOption(
-                  asJoinNotificationsMode($safeNavigationMigration($event?.id))
-                )
-              "
-            ></app-select-box>
-          </div>
-        </div>
+        <app-setting-row
+          label="join-notifications.joinNotifications.title"
+          description="join-notifications.joinNotifications.description"
+        >
+          <app-select-box
+            class="preset-select-box"
+            [type]="'SMALL'"
+            [items]="notificationOptions"
+            [selected]="joinNotificationOption"
+            (selectedChange)="
+              setJoinNotificationModeOption(
+                asJoinNotificationsMode($safeNavigationMigration($event?.id))
+              )
+            "
+          ></app-select-box>
+        </app-setting-row>
+        <app-setting-row
+          label="join-notifications.joinSounds.title"
+          description="join-notifications.joinSounds.description"
+        >
+          <app-select-box
+            class="preset-select-box"
+            [type]="'SMALL'"
+            [items]="notificationOptions"
+            [selected]="joinSoundOption"
+            (selectedChange)="
+              setJoinSoundModeOption(asJoinNotificationsMode($safeNavigationMigration($event?.id)))
+            "
+          ></app-select-box>
+        </app-setting-row>
         @if (joinSoundOption?.id !== 'DISABLED') {
           <div class="setting-row-group" @vshrink>
-            <div class="setting-row">
-              <div class="setting-row-label">
-                <span transloco="join-notifications.joinSound.title"></span>
-                <span transloco="join-notifications.joinSound.description"></span>
-              </div>
-              <div class="setting-row-action">
-                <app-notification-sound-button
-                  [toggleable]="false"
-                  [soundConfig]="config.joinSound"
-                  (soundConfigChange)="updateJoinSound($event)"
-                ></app-notification-sound-button>
-              </div>
-            </div>
+            <app-setting-row
+              label="join-notifications.joinSound.title"
+              description="join-notifications.joinSound.description"
+            >
+              <app-notification-sound-button
+                [toggleable]="false"
+                [soundConfig]="config.joinSound"
+                (soundConfigChange)="updateJoinSound($event)"
+              ></app-notification-sound-button>
+            </app-setting-row>
           </div>
         }
-        <div class="setting-row">
-          <div class="setting-row-label">
-            <span transloco="join-notifications.onlyWhenPreviouslyAlone.title"></span>
-            <span transloco="join-notifications.onlyWhenPreviouslyAlone.description"></span>
-          </div>
-          <div class="setting-row-action">
-            <label class="switch-toggle">
-              <input
-                type="checkbox"
-                [checked]="config.onlyWhenPreviouslyAlone"
-                (change)="toggleOnlyWhenPreviouslyAlone()"
-              />
-              <span class="switch-toggle-slider"></span>
-            </label>
-          </div>
-        </div>
+        <app-setting-row
+          label="join-notifications.onlyWhenPreviouslyAlone.title"
+          description="join-notifications.onlyWhenPreviouslyAlone.description"
+        >
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="config.onlyWhenPreviouslyAlone"
+              (change)="toggleOnlyWhenPreviouslyAlone()"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </app-setting-row>
       </div>
       <div class="settings">
-        <div class="setting-row">
-          <div class="setting-row-label">
-            <span transloco="join-notifications.leaveNotifications.title"></span>
-            <span transloco="join-notifications.leaveNotifications.description"></span>
-          </div>
-          <div class="setting-row-action">
-            <app-select-box
-              class="preset-select-box"
-              [type]="'SMALL'"
-              [items]="notificationOptions"
-              [selected]="leaveNotificationOption"
-              (selectedChange)="
-                setLeaveNotificationModeOption(
-                  asJoinNotificationsMode($safeNavigationMigration($event?.id))
-                )
-              "
-            ></app-select-box>
-          </div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-row-label">
-            <span transloco="join-notifications.leaveSounds.title"></span>
-            <span transloco="join-notifications.leaveSounds.description"></span>
-          </div>
-          <div class="setting-row-action">
-            <app-select-box
-              class="preset-select-box"
-              [type]="'SMALL'"
-              [items]="notificationOptions"
-              [selected]="leaveSoundOption"
-              (selectedChange)="
-                setLeaveSoundModeOption(
-                  asJoinNotificationsMode($safeNavigationMigration($event?.id))
-                )
-              "
-            ></app-select-box>
-          </div>
-        </div>
+        <app-setting-row
+          label="join-notifications.leaveNotifications.title"
+          description="join-notifications.leaveNotifications.description"
+        >
+          <app-select-box
+            class="preset-select-box"
+            [type]="'SMALL'"
+            [items]="notificationOptions"
+            [selected]="leaveNotificationOption"
+            (selectedChange)="
+              setLeaveNotificationModeOption(
+                asJoinNotificationsMode($safeNavigationMigration($event?.id))
+              )
+            "
+          ></app-select-box>
+        </app-setting-row>
+        <app-setting-row
+          label="join-notifications.leaveSounds.title"
+          description="join-notifications.leaveSounds.description"
+        >
+          <app-select-box
+            class="preset-select-box"
+            [type]="'SMALL'"
+            [items]="notificationOptions"
+            [selected]="leaveSoundOption"
+            (selectedChange)="
+              setLeaveSoundModeOption(asJoinNotificationsMode($safeNavigationMigration($event?.id)))
+            "
+          ></app-select-box>
+        </app-setting-row>
         @if (leaveSoundOption?.id !== 'DISABLED') {
           <div class="setting-row-group" @vshrink>
-            <div class="setting-row">
-              <div class="setting-row-label">
-                <span transloco="join-notifications.leaveSound.title"></span>
-                <span transloco="join-notifications.leaveSound.description"></span>
-              </div>
-              <div class="setting-row-action">
-                <app-notification-sound-button
-                  [toggleable]="false"
-                  [soundConfig]="config.leaveSound"
-                  (soundConfigChange)="updateLeaveSound($event)"
-                ></app-notification-sound-button>
-              </div>
-            </div>
+            <app-setting-row
+              label="join-notifications.leaveSound.title"
+              description="join-notifications.leaveSound.description"
+            >
+              <app-notification-sound-button
+                [toggleable]="false"
+                [soundConfig]="config.leaveSound"
+                (soundConfigChange)="updateLeaveSound($event)"
+              ></app-notification-sound-button>
+            </app-setting-row>
           </div>
         }
-        <div class="setting-row">
-          <div class="setting-row-label">
-            <span transloco="join-notifications.onlyWhenLeftAlone.title"></span>
-            <span transloco="join-notifications.onlyWhenLeftAlone.description"></span>
-          </div>
-          <div class="setting-row-action">
-            <label class="switch-toggle">
-              <input
-                type="checkbox"
-                [checked]="config.onlyWhenLeftAlone"
-                (change)="toggleOnlyWhenLeftAlone()"
-              />
-              <span class="switch-toggle-slider"></span>
-            </label>
-          </div>
-        </div>
+        <app-setting-row
+          label="join-notifications.onlyWhenLeftAlone.title"
+          description="join-notifications.onlyWhenLeftAlone.description"
+        >
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="config.onlyWhenLeftAlone"
+              (change)="toggleOnlyWhenLeftAlone()"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </app-setting-row>
       </div>
       <div class="settings">
-        <div class="setting-row">
-          <div class="setting-row-label">
-            <span transloco="join-notifications.onlyWhenSleepModeActive.title"></span>
-            <span></span>
-          </div>
-          <div class="setting-row-action">
-            <label class="switch-toggle">
-              <input
-                type="checkbox"
-                [checked]="config.onlyDuringSleepMode"
-                (change)="toggleOnlyDuringSleepMode()"
-              />
-              <span class="switch-toggle-slider"></span>
-            </label>
-          </div>
-        </div>
+        <app-setting-row label="join-notifications.onlyWhenSleepModeActive.title">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="config.onlyDuringSleepMode"
+              (change)="toggleOnlyDuringSleepMode()"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </app-setting-row>
       </div>
     </div>
   </div>

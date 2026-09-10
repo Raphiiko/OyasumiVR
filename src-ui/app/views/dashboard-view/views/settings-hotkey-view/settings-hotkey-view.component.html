@@ -1,20 +1,17 @@
-<div class="pane">
+<div class="pane fill">
   <div class="pane-title" transloco="settings.hotkeys.title"></div>
-  <div class="pane-content">
+  <div class="pane-content scroll">
     <div class="setting-view-container">
       <p transloco="settings.hotkeys.description"></p>
       <h2 transloco="settings.hotkeys.actions"></h2>
       <div class="settings">
         @for (action of actions; track action) {
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span [transloco]="'settings.hotkeys.action.' + action.id"></span>
-              <span transloco="settings.hotkeys.actionDescription"></span>
-            </div>
-            <div class="setting-row-action">
-              <app-hotkey-selector [action]="action.id"></app-hotkey-selector>
-            </div>
-          </div>
+          <app-setting-row
+            [label]="'settings.hotkeys.action.' + action.id"
+            description="settings.hotkeys.actionDescription"
+          >
+            <app-hotkey-selector [action]="action.id"></app-hotkey-selector>
+          </app-setting-row>
         }
       </div>
     </div>

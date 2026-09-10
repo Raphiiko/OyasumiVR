@@ -1,18 +1,12 @@
-<div class="pane">
+<div class="pane fill">
   <div class="pane-title" transloco="frame-limiter.title"></div>
-  <div class="pane-content">
+  <div class="pane-content scroll">
     <div class="setting-view-container">
       <p transloco="frame-limiter.description"></p>
       @if ((openvr.status | async) !== 'INITIALIZED') {
-        <div class="alert warning" @vshrink>
-          <div class="alert-bg"></div>
-          <div class="alert-icon">
-            <i class="material-icons">warning</i>
-          </div>
-          <div class="alert-content">
-            <span transloco="frame-limiter.steamvrRequired"></span>
-          </div>
-        </div>
+        <app-alert severity="warning" @vshrink>
+          <span transloco="frame-limiter.steamvrRequired"></span>
+        </app-alert>
       }
       <div class="list-header">
         <h3 transloco="frame-limiter.frameLimits"></h3>
@@ -130,15 +124,9 @@
         </div>
       }
 
-      <div class="alert">
-        <div class="alert-bg"></div>
-        <div class="alert-icon">
-          <i class="material-symbols-outlined">info</i>
-        </div>
-        <div class="alert-content">
-          <span transloco="frame-limiter.supportedHardwareWarning"></span>
-        </div>
-      </div>
+      <app-alert severity="info" iconClass="material-symbols-outlined">
+        <span transloco="frame-limiter.supportedHardwareWarning"></span>
+      </app-alert>
     </div>
   </div>
 </div>

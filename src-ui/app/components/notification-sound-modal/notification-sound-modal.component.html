@@ -1,5 +1,5 @@
 <div class="modal-inner-wrapper">
-  <div class="pane modal modal-lg" [@fadeUp]>
+  <div class="pane modal modal-lg" @fadeUp>
     <div class="pane-title" transloco="notification-sound.title"></div>
     <div class="pane-content no-padding">
       <div class="sound-list">
@@ -33,22 +33,16 @@
       </div>
       <div class="settings-wrapper">
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="notification-sound.volume"></span>
-              <span></span>
-            </div>
-            <div class="setting-row-action">
-              <app-slider-setting
-                [min]="0"
-                [max]="200"
-                [unit]="'%'"
-                [snapValues]="[50, 100, 150]"
-                [value]="soundConfig.volume"
-                (valueChange)="setVolume($event)"
-              ></app-slider-setting>
-            </div>
-          </div>
+          <app-setting-row label="notification-sound.volume">
+            <app-slider-setting
+              [min]="0"
+              [max]="200"
+              [unit]="'%'"
+              [snapValues]="[50, 100, 150]"
+              [value]="soundConfig.volume"
+              (valueChange)="setVolume($event)"
+            ></app-slider-setting>
+          </app-setting-row>
         </div>
       </div>
     </div>

@@ -32,6 +32,8 @@ import { PowerLimitInputComponent } from './views/dashboard-view/views/gpu-autom
 import { NgPipesModule } from 'ngx-pipes';
 import { OscService } from './services/osc.service';
 import { OscAutomationsViewComponent } from './views/dashboard-view/views/osc-automations-view/osc-automations-view.component';
+import { AlertComponent } from './components/alert/alert.component';
+import { SettingRowComponent } from './components/setting-row/setting-row.component';
 import { SelectBoxComponent } from './components/select-box/select-box.component';
 import { TStringTranslatePipe } from './pipes/tstring-translate.pipe';
 import { OscScriptButtonComponent } from './components/osc-script-button/osc-script-button.component';
@@ -315,6 +317,8 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
     PowerLimitInputComponent,
     OscAutomationsViewComponent,
     SelectBoxComponent,
+    SettingRowComponent,
+    AlertComponent,
     TStringTranslatePipe,
     LocalizedDatePipe,
     ImageCachePipe,

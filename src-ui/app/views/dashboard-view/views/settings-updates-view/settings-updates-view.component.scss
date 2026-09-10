@@ -6,16 +6,6 @@
   overflow: hidden;
 }
 
-.pane {
-  width: 100%;
-}
-
-.pane-content {
-  padding: 2em;
-  overflow-y: overlay;
-  width: 100%;
-}
-
 .updates-disabled {
   @extend .pane;
   background: var(--color-surface-1);
@@ -63,5 +53,5 @@
   @extend .pane;
   background: var(--color-surface-1);
   padding: 1em;
-  overflow-y: overlay;
+  overflow-y: auto;
 }

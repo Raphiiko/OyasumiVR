@@ -1,74 +1,63 @@
-<div class="pane">
+<div class="pane fill">
   <div class="pane-title">
     <span transloco="settings.brightnessCct.title"></span>
     <app-brightness-advanced-mode-toggle></app-brightness-advanced-mode-toggle>
   </div>
-  <div class="pane-content">
+  <div class="pane-content scroll">
     <div class="setting-view-container">
       <p transloco="settings.brightnessCct.description"></p>
       <div class="setting-category">
         <h2 transloco="settings.brightnessCct.cctControl.title"></h2>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.brightnessCct.cctControl.enabled.title"></span>
-              <span transloco="settings.brightnessCct.cctControl.enabled.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="appSettings.cctControlEnabled"
-                  (change)="toggleCCTControl()"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
+          <app-setting-row
+            label="settings.brightnessCct.cctControl.enabled.title"
+            description="settings.brightnessCct.cctControl.enabled.description"
+          >
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="appSettings.cctControlEnabled"
+                (change)="toggleCCTControl()"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
         </div>
       </div>
 
       <div class="setting-category">
         <h2 transloco="settings.brightnessCct.valveIndex.title"></h2>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.brightnessCct.valveIndex.maxBrightness.title"></span>
-              <span transloco="settings.brightnessCct.valveIndex.maxBrightness.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <app-slider-setting
-                [min]="valveIndexMin"
-                [max]="valveIndexMax"
-                [value]="appSettings.valveIndexMaxBrightness"
-                (valueChange)="changeValveIndexMaxBrightness($event)"
-                unit="%"
-              ></app-slider-setting>
-            </div>
-          </div>
+          <app-setting-row
+            label="settings.brightnessCct.valveIndex.maxBrightness.title"
+            description="settings.brightnessCct.valveIndex.maxBrightness.description"
+          >
+            <app-slider-setting
+              [min]="valveIndexMin"
+              [max]="valveIndexMax"
+              [value]="appSettings.valveIndexMaxBrightness"
+              (valueChange)="changeValveIndexMaxBrightness($event)"
+              unit="%"
+            ></app-slider-setting>
+          </app-setting-row>
         </div>
       </div>
 
       <div class="setting-category">
         <h2 transloco="settings.brightnessCct.bigscreenBeyond.title"></h2>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.brightnessCct.bigscreenBeyond.maxBrightness.title"></span>
-              <span
-                transloco="settings.brightnessCct.bigscreenBeyond.maxBrightness.description"
-              ></span>
-            </div>
-            <div class="setting-row-action">
-              <app-slider-setting
-                [min]="bigscreenBeyondMin"
-                [max]="bigscreenBeyondMax"
-                [value]="appSettings.bigscreenBeyondMaxBrightness"
-                (valueChange)="changeBigscreenBeyondMaxBrightness($event)"
-                unit="%"
-              ></app-slider-setting>
-            </div>
-          </div>
+          <app-setting-row
+            label="settings.brightnessCct.bigscreenBeyond.maxBrightness.title"
+            description="settings.brightnessCct.bigscreenBeyond.maxBrightness.description"
+          >
+            <app-slider-setting
+              [min]="bigscreenBeyondMin"
+              [max]="bigscreenBeyondMax"
+              [value]="appSettings.bigscreenBeyondMaxBrightness"
+              (valueChange)="changeBigscreenBeyondMaxBrightness($event)"
+              unit="%"
+            ></app-slider-setting>
+          </app-setting-row>
           <div class="setting-row">
             <div class="setting-row-label">
               <span class="row-title">

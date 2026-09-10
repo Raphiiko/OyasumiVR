@@ -1,56 +1,41 @@
 <div class="setting-view-container">
   <div class="settings">
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span
-          transloco="invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.title"
-        ></span>
-        <span
-          transloco="invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.description"
-        ></span>
-      </div>
-      <div class="setting-row-action">
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="config.declineInvitesWhileAsleep"
-            (change)="
-              updateConfig({ declineInvitesWhileAsleep: !config.declineInvitesWhileAsleep })
-            "
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
-      </div>
-    </div>
+    <app-setting-row
+      label="invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.title"
+      description="invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.description"
+    >
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="config.declineInvitesWhileAsleep"
+          (change)="updateConfig({ declineInvitesWhileAsleep: !config.declineInvitesWhileAsleep })"
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </app-setting-row>
     @if (config.declineInvitesWhileAsleep) {
       <div class="setting-row-group" @vshrink>
-        <div class="setting-row">
-          <div class="setting-row-label">
-            <span
-              transloco="invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.customMessage.title"
-            ></span>
-            <span></span>
-          </div>
-          <div class="setting-row-action">
-            <input
-              maxlength="64"
-              type="text"
-              class="input"
-              [value]="config.declineInviteMessage"
-              (change)="
-                updateDeclineInviteWhileAsleepCustomMessage.next(
-                  declineOnInviteCustomMessageInput.value
-                )
-              "
-              (blur)="declineOnInviteCustomMessageInput.value = config.declineInviteMessage"
-              [placeholder]="
-                'invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.customMessage.placeholder'
-                  | transloco
-              "
-              #declineOnInviteCustomMessageInput
-            />
-          </div>
-        </div>
+        <app-setting-row
+          label="invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.customMessage.title"
+        >
+          <input
+            maxlength="64"
+            type="text"
+            class="input"
+            [value]="config.declineInviteMessage"
+            (change)="
+              updateDeclineInviteWhileAsleepCustomMessage.next(
+                declineOnInviteCustomMessageInput.value
+              )
+            "
+            (blur)="declineOnInviteCustomMessageInput.value = config.declineInviteMessage"
+            [placeholder]="
+              'invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.customMessage.placeholder'
+                | transloco
+            "
+            #declineOnInviteCustomMessageInput
+          />
+        </app-setting-row>
       </div>
     }
   </div>

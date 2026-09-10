@@ -1,19 +1,13 @@
-<div class="pane modal-md" [@fadeUp]>
+<div class="pane modal-md" @fadeUp>
   <div class="pane-title" transloco="sleep-detection.modals.disableAtTime.title"></div>
   <div class="pane-content">
     <p transloco="sleep-detection.modals.disableAtTime.description"></p>
     <div class="settings">
-      <div class="setting-row">
-        <div class="setting-row-label">
-          <span transloco="sleep-detection.modals.disableAtTime.time"></span>
-          <span></span>
+      <app-setting-row label="sleep-detection.modals.disableAtTime.time">
+        <div class="input-wrapper">
+          <input type="time" (change)="time = timeInput.value" [value]="time" #timeInput />
         </div>
-        <div class="setting-row-action">
-          <div class="input-wrapper">
-            <input type="time" (change)="time = timeInput.value" [value]="time" #timeInput />
-          </div>
-        </div>
-      </div>
+      </app-setting-row>
     </div>
   </div>
   <div class="pane-actions spread">

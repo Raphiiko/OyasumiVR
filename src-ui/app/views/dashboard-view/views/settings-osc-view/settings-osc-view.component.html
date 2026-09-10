@@ -1,6 +1,6 @@
-<div class="pane">
+<div class="pane fill">
   <div class="pane-title" transloco="settings.osc.title"></div>
-  <div class="pane-content">
+  <div class="pane-content scroll">
     <div class="setting-view-container">
       <p transloco="settings.osc.description"></p>
 
@@ -8,171 +8,144 @@
         <h2 transloco="settings.osc.targets.title"></h2>
         <p transloco="settings.osc.targets.description"></p>
         @if (showVRCTargetWarning) {
-          <div class="alert warning" @vshrink>
-            <div class="alert-bg"></div>
-            <div class="alert-icon">
-              <i class="material-icons">warning</i>
-            </div>
-            <div class="alert-content">
-              <span transloco="settings.osc.targets.vrchatTargetWarning"></span>
-            </div>
-          </div>
+          <app-alert severity="warning" @vshrink>
+            <span transloco="settings.osc.targets.vrchatTargetWarning"></span>
+          </app-alert>
         }
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.osc.targets.vrchat.title"></span>
-              <span transloco="settings.osc.targets.vrchat.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="isTargetEnabled('VRCHAT_OSCQUERY')"
-                  (change)="
-                    setTargetEnabled('VRCHAT_OSCQUERY', !isTargetEnabled('VRCHAT_OSCQUERY'))
-                  "
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
+          <app-setting-row
+            label="settings.osc.targets.vrchat.title"
+            description="settings.osc.targets.vrchat.description"
+          >
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="isTargetEnabled('VRCHAT_OSCQUERY')"
+                (change)="setTargetEnabled('VRCHAT_OSCQUERY', !isTargetEnabled('VRCHAT_OSCQUERY'))"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
         </div>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.osc.targets.custom.title"></span>
-              <span transloco="settings.osc.targets.custom.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="isTargetEnabled('CUSTOM')"
-                  (change)="setTargetEnabled('CUSTOM', !isTargetEnabled('CUSTOM'))"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
+          <app-setting-row
+            label="settings.osc.targets.custom.title"
+            description="settings.osc.targets.custom.description"
+          >
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="isTargetEnabled('CUSTOM')"
+                (change)="setTargetEnabled('CUSTOM', !isTargetEnabled('CUSTOM'))"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
           <div class="setting-row-group">
-            <div class="setting-row">
-              <div class="setting-row-label">
-                <span transloco="settings.osc.targets.custom.host.title"></span>
-                <span transloco="settings.osc.targets.custom.host.description"></span>
-              </div>
-              <div class="setting-row-action">
-                <div class="input-with-validation">
-                  @if (customTargetHostValidationState !== 'valid') {
-                    <div class="validation-icon">
-                      @if (customTargetHostValidationState === 'invalid') {
-                        <div
-                          class="validation-tooltip-wrapper"
-                          [tooltip]="
-                            'settings.osc.targets.custom.host.validation.invalid' | transloco
-                          "
-                          [tooltipMode]="'left'"
+            <app-setting-row
+              label="settings.osc.targets.custom.host.title"
+              description="settings.osc.targets.custom.host.description"
+            >
+              <div class="input-with-validation">
+                @if (customTargetHostValidationState !== 'valid') {
+                  <div class="validation-icon">
+                    @if (customTargetHostValidationState === 'invalid') {
+                      <div
+                        class="validation-tooltip-wrapper"
+                        [tooltip]="
+                          'settings.osc.targets.custom.host.validation.invalid' | transloco
+                        "
+                        [tooltipMode]="'left'"
+                      >
+                        <i class="material-symbols-outlined icon-filled validation-error">error</i>
+                      </div>
+                    }
+                    @if (customTargetHostValidationState === 'pending') {
+                      <div
+                        class="validation-tooltip-wrapper"
+                        [tooltip]="
+                          'settings.osc.targets.custom.host.validation.validating' | transloco
+                        "
+                        [tooltipMode]="'left'"
+                      >
+                        <i class="material-symbols-outlined icon-filled validation-pending"
+                          >hourglass_empty</i
                         >
-                          <i class="material-symbols-outlined icon-filled validation-error"
-                            >error</i
-                          >
-                        </div>
-                      }
-                      @if (customTargetHostValidationState === 'pending') {
-                        <div
-                          class="validation-tooltip-wrapper"
-                          [tooltip]="
-                            'settings.osc.targets.custom.host.validation.validating' | transloco
-                          "
-                          [tooltipMode]="'left'"
-                        >
-                          <i class="material-symbols-outlined icon-filled validation-pending"
-                            >hourglass_empty</i
-                          >
-                        </div>
-                      }
-                    </div>
-                  }
-                  <input
-                    type="text"
-                    placeholder="127.0.0.1"
-                    [(ngModel)]="oscCustomTargetHost"
-                    (ngModelChange)="customTargetHostChangeSubject.next($event)"
-                  />
-                </div>
+                      </div>
+                    }
+                  </div>
+                }
+                <input
+                  type="text"
+                  placeholder="127.0.0.1"
+                  [(ngModel)]="oscCustomTargetHost"
+                  (ngModelChange)="customTargetHostChangeSubject.next($event)"
+                />
               </div>
-            </div>
-            <div class="setting-row">
-              <div class="setting-row-label">
-                <span transloco="settings.osc.targets.custom.port.title"></span>
-                <span transloco="settings.osc.targets.custom.port.description"></span>
-              </div>
-              <div class="setting-row-action">
-                <div class="input-with-validation">
-                  @if (customTargetPortValidationState !== 'valid') {
-                    <div class="validation-icon">
-                      @if (customTargetPortValidationState === 'invalid') {
-                        <div
-                          class="validation-tooltip-wrapper"
-                          [tooltip]="
-                            'settings.osc.targets.custom.port.validation.invalid' | transloco
-                          "
-                          [tooltipMode]="'left'"
+            </app-setting-row>
+            <app-setting-row
+              label="settings.osc.targets.custom.port.title"
+              description="settings.osc.targets.custom.port.description"
+            >
+              <div class="input-with-validation">
+                @if (customTargetPortValidationState !== 'valid') {
+                  <div class="validation-icon">
+                    @if (customTargetPortValidationState === 'invalid') {
+                      <div
+                        class="validation-tooltip-wrapper"
+                        [tooltip]="
+                          'settings.osc.targets.custom.port.validation.invalid' | transloco
+                        "
+                        [tooltipMode]="'left'"
+                      >
+                        <i class="material-symbols-outlined icon-filled validation-error">error</i>
+                      </div>
+                    }
+                    @if (customTargetPortValidationState === 'pending') {
+                      <div
+                        class="validation-tooltip-wrapper"
+                        [tooltip]="
+                          'settings.osc.targets.custom.port.validation.validating' | transloco
+                        "
+                        [tooltipMode]="'left'"
+                      >
+                        <i class="material-symbols-outlined icon-filled validation-pending"
+                          >hourglass_empty</i
                         >
-                          <i class="material-symbols-outlined icon-filled validation-error"
-                            >error</i
-                          >
-                        </div>
-                      }
-                      @if (customTargetPortValidationState === 'pending') {
-                        <div
-                          class="validation-tooltip-wrapper"
-                          [tooltip]="
-                            'settings.osc.targets.custom.port.validation.validating' | transloco
-                          "
-                          [tooltipMode]="'left'"
-                        >
-                          <i class="material-symbols-outlined icon-filled validation-pending"
-                            >hourglass_empty</i
-                          >
-                        </div>
-                      }
-                    </div>
-                  }
-                  <input
-                    type="number"
-                    placeholder="9000"
-                    min="1"
-                    max="65535"
-                    [maxlength]="5"
-                    [(ngModel)]="oscCustomTargetPort"
-                    (ngModelChange)="customTargetPortChangeSubject.next($event)"
-                  />
-                </div>
+                      </div>
+                    }
+                  </div>
+                }
+                <input
+                  type="number"
+                  placeholder="9000"
+                  min="1"
+                  max="65535"
+                  [maxlength]="5"
+                  [(ngModel)]="oscCustomTargetPort"
+                  (ngModelChange)="customTargetPortChangeSubject.next($event)"
+                />
               </div>
-            </div>
+            </app-setting-row>
           </div>
         </div>
       </div>
       <div class="setting-category">
         <h2 transloco="settings.osc.advanced.title"></h2>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.osc.advanced.oscServerEnabled.title"></span>
-              <span transloco="settings.osc.advanced.oscServerEnabled.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="oscServerEnabled"
-                  (change)="setOscServerEnabled(!oscServerEnabled)"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
+          <app-setting-row
+            label="settings.osc.advanced.oscServerEnabled.title"
+            description="settings.osc.advanced.oscServerEnabled.description"
+          >
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="oscServerEnabled"
+                (change)="setOscServerEnabled(!oscServerEnabled)"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
         </div>
       </div>
     </div>
