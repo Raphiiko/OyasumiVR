@@ -72,6 +72,16 @@ input:focus + .switch-toggle-slider {
   box-shadow: 0 0 0 1px $form-control-off-border;
 }
 
+// the real input is transparent and zero-sized, so its ring has to land on the visible part
+input:focus-visible {
+  & + .switch-toggle-slider,
+  & ~ .check-toggle-checkmark,
+  & ~ .radio-button-dot {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
 input:checked + .switch-toggle-slider:before {
   -webkit-transform: translateX(1em);
   -ms-transform: translateX(1em);
@@ -272,12 +282,6 @@ input:checked + .switch-toggle-slider:before {
 // GENERIC INPUTS
 //
 
-input {
-  &:focus {
-    outline: none;
-  }
-}
-
 input[type='time'] {
   text-align: center;
 }
@@ -306,7 +310,6 @@ input[type='time'] {
   }
 
   &:focus {
-    outline: none;
     background: $form-control-hover-bg;
   }
 
@@ -398,10 +401,6 @@ input[type='time']::-webkit-calendar-picker-indicator {
       border: none;
       background: none;
       color: var(--color-text-1);
-
-      &:focus {
-        outline: none;
-      }
     }
 
     &:hover {

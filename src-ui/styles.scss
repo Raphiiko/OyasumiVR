@@ -56,6 +56,11 @@ body {
   }
 }
 
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
 .pane-content {
   scrollbar-gutter: stable;
 }
@@ -63,7 +68,6 @@ body {
 a,
 a:visited,
 a:hover,
-a:focus,
 a:active {
   color: var(--color-primary);
   cursor: pointer;
