@@ -1146,7 +1146,7 @@
     "automations": "睡眠自動化",
     "disable": "關閉 GPU 自動化",
     "disabled": {
-      "disabled": "OyasumiVR 允許你自動調整 GPU 的功耗限制\n這樣你就可以在睡覺時節省用電量\n\nGPU 自動化目前僅適用於 NVIDIA GPU\nAMD 和 Intel GPU 仍然不支持",
+      "disabled": "OyasumiVR 可以自動調整 GPU 設定，讓你在睡覺時節省電力。\n\n這是面向進階使用者的功能，因此預設為關閉。\n你可以點擊下方按鈕啟用它。",
       "noSidecar": "為了讓 OyasumiVR 能夠控制 GPU 設定，它需要管理員權限。請點擊下方按鈕授予 OyasumiVR 管理員權限"
     },
     "enable": "開啟 GPU 自動化",
@@ -1187,10 +1187,10 @@
         "description": "指定在關閉睡眠模式時要設定的功耗限制",
         "title": "當我醒來時"
       },
-      "description": "在此你可以自動設定 GPU 的功耗限制，以便在睡眠時節省電費。功耗限制功能僅適用於 NVIDIA GPU。",
+      "description": "你可以在這裡自動調整 GPU 的功耗限制，讓它在你睡覺時節省電力。根據廠商不同，支援的 GPU 可能會用瓦數或百分比偏移來表示這個限制。",
       "disabled": {
         "initializing": "正在初始化功率限制自動化…",
-        "noNvidia": "未偵測到執行中的 NVIDIA 驅動程式，因此無法使用功率限制自動化功能。此功能僅支援 NVIDIA GPU。\n\n如果你的系統中有 NVIDIA GPU，請確認已安裝對應的驅動程式。\n\n（{code}）",
+        "noNvidia": "功耗限制自動化目前不可用，因為沒有可用的 GPU 功耗調整後端。\n\n如果你的系統中有受支援的 NVIDIA 或 AMD GPU，請確認其驅動程式已安裝並正在運行。\n\n({code})",
         "noPermission": "雖然 OyasumiVR 具有系統管理員權限，但仍無法取得變更 GPU 設定的權限。\n\n請檢查你的系統設定，這種情況通常不應該發生。",
         "noSidecar": "由於未知原因，無法獲得管理員權限\n這些是控制 GPU 功耗限制所必需的\n\n請嘗試重新啟動 OyasumiVR",
         "unknown": "由於未知原因，功耗限制自動化不可用。\n\n請嘗試重新啟動 OyasumiVR"
@@ -1200,7 +1200,7 @@
       "gpuUnsupported": "GPU 不支援",
       "inputDefault": "重設為 GPU 的預設限制。",
       "noGPUSelected": "未選取任何 GPU",
-      "noGPUs": "在你的系統中找不到任何 Nivida 顯示卡",
+      "noGPUs": "在你的系統中找不到任何受支援的 NVIDIA 或 AMD 顯示卡",
       "selectGPU": "請選擇你要為其設定功率限制的 GPU："
     },
     "requestAdministrator": "授予管理員權限",

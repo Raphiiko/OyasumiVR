@@ -1,5 +1,5 @@
 use crate::Models::PingResponse;
-use crate::{afterburner, nvml, Models::NvmlStatus};
+use crate::{afterburner, gpu_power, Models::NvmlStatus};
 use log::info;
 use std::time::Duration;
 
@@ -66,30 +66,40 @@ impl OyasumiElevatedSidecar for OyasumiElevatedSidecarServerImpl {
         Ok(Response::new(Empty {}))
     }
 
+    /// Reports combined NVML/ADLX readiness through the shared NVML RPC schema.
     async fn get_nvml_status(
         &self,
         _: Request<Empty>,
     ) -> Result<Response<NvmlStatusResponse>, Status> {
-        let status: NvmlStatus = nvml::nvml_status().await;
+        let status: NvmlStatus = gpu_power::status();
         Ok(Response::new(NvmlStatusResponse {
             status: status.into(),
         }))
     }
 
+    /// Queries both backends outside the async executor; worker-task failure becomes an RPC error.
     async fn get_nvml_devices(
         &self,
         _: Request<Empty>,
     ) -> Result<Response<NvmlDevicesResponse>, Status> {
-        let devices = nvml::nvml_get_devices();
+        let devices = tokio::task::spawn_blocking(gpu_power::get_devices)
+            .await
+            .map_err(|e| Status::internal(format!("GPU device query failed: {e}")))?;
         Ok(Response::new(NvmlDevicesResponse { devices }))
     }
 
+    /// Applies NVIDIA milliwatts or encoded AMD offsets outside the async executor.
+    /// Driver failures populate the response error; worker-task failure becomes an RPC error.
     async fn set_nvml_power_management_limit(
         &self,
         request: Request<NvmlPowerManagementLimitRequest>,
     ) -> Result<Response<NvmlPowerManagementLimitResponse>, Status> {
         let request = request.into_inner();
-        let result = nvml::nvml_set_power_management_limit(request.uuid, request.power_limit).await;
+        let result = tokio::task::spawn_blocking(move || {
+            gpu_power::set_power_management_limit(request.uuid, request.power_limit)
+        })
+        .await
+        .map_err(|e| Status::internal(format!("GPU power limit task failed: {e}")))?;
         let success = result.is_ok();
         let error = result.err();
         Ok(Response::new(NvmlPowerManagementLimitResponse {

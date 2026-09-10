@@ -1205,10 +1205,10 @@
         "description": "Specify the power limit to set when sleep mode deactivates",
         "title": "When I wake up"
       },
-      "description": "Here you can automate the power limits of your GPU, to save on electricity while you are asleep. Power limiting is only available for NVIDIA GPUs.",
+      "description": "Here you can automate your GPU's power limit to save electricity while you are asleep. Supported GPUs may expose this either as watts or as a percentage offset, depending on the vendor.",
       "disabled": {
         "initializing": "Power limiting automations are being initialized...",
-        "noNvidia": "Power limiting automations are unavailable as no running NVIDIA driver was detected. Power limiting automations are only available for NVIDIA GPUs.\n\nIf you have an NVIDIA GPU in your system, please ensure that the appropriate driver for it is installed.\n\n({code})",
+        "noNvidia": "Power limiting automations are unavailable because no supported GPU power-tuning backend is available.\n\nIf you have a supported NVIDIA or AMD GPU in your system, please ensure that its driver software is installed and running.\n\n({code})",
         "noPermission": "OyasumiVR has administrative permissions, but Windows did not allow it to change your GPU settings.\n\nPlease check your system configuration. This should not normally happen.",
         "noSidecar": "OyasumiVR could not use administrative permissions. These are required to control your GPU's power limits.\n\nPlease try restarting OyasumiVR.",
         "unknown": "Power limiting automations are unavailable for an unknown reason.\n\nPlease try restarting OyasumiVR."
@@ -1218,7 +1218,7 @@
       "gpuUnsupported": "GPU Unsupported",
       "inputDefault": "Reset to the GPU's default limit.",
       "noGPUSelected": "No GPU Selected",
-      "noGPUs": "No NVIDIA GPUs could be found in your system.",
+      "noGPUs": "No supported NVIDIA or AMD GPUs could be found in your system.",
       "selectGPU": "Select the GPU you wish to set the power limit for:"
     },
     "requestAdministrator": "Enable Administrative Permissions",
