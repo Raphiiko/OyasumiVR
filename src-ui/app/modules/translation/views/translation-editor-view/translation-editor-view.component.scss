@@ -113,7 +113,7 @@
   grid-template-rows: auto;
   position: relative;
   overflow-x: hidden;
-  overflow-y: overlay;
+  overflow-y: auto;
   flex: 1;
 
   &-header-cell {

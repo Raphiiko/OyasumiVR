@@ -46,7 +46,7 @@
 }
 
 .presets-list {
-  overflow-y: overlay;
+  overflow-y: auto;
   min-height: 0;
   flex: 1;
   background: var(--color-surface-1);

@@ -162,7 +162,7 @@ $header-height: 10em;
 .mc-items {
   width: 100%;
   height: 100%;
-  overflow-y: overlay;
+  overflow-y: auto;
   padding: calc(#{$header-height}) 2em 10em 2em;
   display: flex;
   flex-direction: column;

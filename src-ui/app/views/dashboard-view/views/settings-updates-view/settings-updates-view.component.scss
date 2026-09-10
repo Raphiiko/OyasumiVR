@@ -53,5 +53,5 @@
   @extend .pane;
   background: var(--color-surface-1);
   padding: 1em;
-  overflow-y: overlay;
+  overflow-y: auto;
 }

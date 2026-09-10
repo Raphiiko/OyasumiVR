@@ -22,7 +22,7 @@
 }
 
 .event-logs {
-  overflow-y: overlay;
+  overflow-y: auto;
   flex: 1;
   background: var(--color-surface-1);
 }
