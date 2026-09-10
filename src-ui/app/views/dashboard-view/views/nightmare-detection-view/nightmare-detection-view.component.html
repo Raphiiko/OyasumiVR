@@ -5,82 +5,70 @@
       <div class="setting-category">
         <p [innerHTML]="'nightmare-detection.description' | transloco"></p>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="nightmare-detection.bpmThreshold.title"></span>
-              <span transloco="nightmare-detection.bpmThreshold.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <app-slider-setting
-                [unit]="'nightmare-detection.bpmThreshold.unit' | transloco"
-                [min]="60"
-                [max]="200"
-                [step]="1"
-                [value]="config.heartRateThreshold"
-                (valueChange)="updateThreshold($event)"
-              ></app-slider-setting>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="nightmare-detection.duration.title"></span>
-              <span transloco="nightmare-detection.duration.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <app-slider-setting
-                [min]="1"
-                [snapValues]="[15, 30, 45]"
-                [snapDistance]="5"
-                [max]="59"
-                [step]="1"
-                [value]="durationValue"
-                (valueChange)="onChangeDuration($event, durationUnitOption)"
-              ></app-slider-setting>
-              <app-select-box
-                class="status-dropdown"
-                [type]="'SMALL'"
-                [items]="durationUnitOptions"
-                [selected]="durationUnitOption"
-                [showPlaceholderInDropdown]="false"
-                (selectedChange)="onChangeDuration(durationValue, $event)"
-                #transitionUnitOnEnable
-              ></app-select-box>
-            </div>
-          </div>
+          <app-setting-row
+            label="nightmare-detection.bpmThreshold.title"
+            description="nightmare-detection.bpmThreshold.description"
+          >
+            <app-slider-setting
+              [unit]="'nightmare-detection.bpmThreshold.unit' | transloco"
+              [min]="60"
+              [max]="200"
+              [step]="1"
+              [value]="config.heartRateThreshold"
+              (valueChange)="updateThreshold($event)"
+            ></app-slider-setting>
+          </app-setting-row>
+          <app-setting-row
+            label="nightmare-detection.duration.title"
+            description="nightmare-detection.duration.description"
+          >
+            <app-slider-setting
+              [min]="1"
+              [snapValues]="[15, 30, 45]"
+              [snapDistance]="5"
+              [max]="59"
+              [step]="1"
+              [value]="durationValue"
+              (valueChange)="onChangeDuration($event, durationUnitOption)"
+            ></app-slider-setting>
+            <app-select-box
+              class="status-dropdown"
+              [type]="'SMALL'"
+              [items]="durationUnitOptions"
+              [selected]="durationUnitOption"
+              [showPlaceholderInDropdown]="false"
+              (selectedChange)="onChangeDuration(durationValue, $event)"
+              #transitionUnitOnEnable
+            ></app-select-box>
+          </app-setting-row>
         </div>
       </div>
       <div class="setting-category">
         <h3 transloco="nightmare-detection.automations.title"></h3>
         <p transloco="nightmare-detection.automations.description"></p>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="nightmare-detection.disableSleepMode.title"></span>
-              <span transloco="nightmare-detection.disableSleepMode.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="config.disableSleepMode"
-                  (change)="toggleDisableSleepMode()"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="nightmare-detection.playSound.title"></span>
-              <span transloco="nightmare-detection.playSound.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <app-notification-sound-button
-                [soundConfig]="config.sound"
-                (soundConfigChange)="updateSound($event)"
-              ></app-notification-sound-button>
-            </div>
-          </div>
+          <app-setting-row
+            label="nightmare-detection.disableSleepMode.title"
+            description="nightmare-detection.disableSleepMode.description"
+          >
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="config.disableSleepMode"
+                (change)="toggleDisableSleepMode()"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
+          <app-setting-row
+            label="nightmare-detection.playSound.title"
+            description="nightmare-detection.playSound.description"
+          >
+            <app-notification-sound-button
+              [soundConfig]="config.sound"
+              (soundConfigChange)="updateSound($event)"
+            ></app-notification-sound-button>
+          </app-setting-row>
         </div>
       </div>
     </div>

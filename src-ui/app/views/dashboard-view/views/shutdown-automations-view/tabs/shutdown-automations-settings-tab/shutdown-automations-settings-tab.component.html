@@ -30,32 +30,23 @@
     </div>
   }
   <div class="settings">
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span transloco="shutdown-automations.sequence.turnOffDevices.title"></span>
-        <span></span>
-      </div>
-      <div class="setting-row-action">
-        <app-device-selector
-          [allowedDeviceTypes]="['CONTROLLER', 'TRACKER', 'LIGHTHOUSE']"
-          [selection]="config.turnOffDevices"
-          (selectionChange)="onChangeDeviceSelection($event)"
-        ></app-device-selector>
-      </div>
-    </div>
+    <app-setting-row label="shutdown-automations.sequence.turnOffDevices.title">
+      <app-device-selector
+        [allowedDeviceTypes]="['CONTROLLER', 'TRACKER', 'LIGHTHOUSE']"
+        [selection]="config.turnOffDevices"
+        (selectionChange)="onChangeDeviceSelection($event)"
+      ></app-device-selector>
+    </app-setting-row>
 
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span transloco="shutdown-automations.sequence.quitSteamVR.title"></span>
-        <span transloco="shutdown-automations.sequence.quitSteamVR.description"></span>
-      </div>
-      <div class="setting-row-action">
-        <label class="switch-toggle">
-          <input type="checkbox" [checked]="config.quitSteamVR" (change)="toggleQuitSteamVR()" />
-          <span class="switch-toggle-slider"></span>
-        </label>
-      </div>
-    </div>
+    <app-setting-row
+      label="shutdown-automations.sequence.quitSteamVR.title"
+      description="shutdown-automations.sequence.quitSteamVR.description"
+    >
+      <label class="switch-toggle">
+        <input type="checkbox" [checked]="config.quitSteamVR" (change)="toggleQuitSteamVR()" />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </app-setting-row>
 
     @if (config.quitSteamVR && quitWithSteamVRMode === 'IMMEDIATELY') {
       <div class="setting-row-group" @vshrink>
@@ -78,33 +69,30 @@
       </div>
     }
 
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span transloco="shutdown-automations.sequence.powerDownWindows.title"></span>
-        <span transloco="shutdown-automations.sequence.powerDownWindows.description"></span>
-      </div>
-      <div class="setting-row-action">
-        @if (config.powerDownWindows) {
-          <div class="power-down-select-box-wrapper" @fade>
-            <app-select-box
-              type="SMALL"
-              class="power-down-options-select-box"
-              [expandUp]="true"
-              [items]="powerDownOptions"
-              [selected]="powerDownOption"
-              (selectedChange)="onChangePowerDownOption($event)"
-            ></app-select-box>
-          </div>
-        }
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="config.powerDownWindows"
-            (change)="togglePowerDownWindows()"
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
-      </div>
-    </div>
+    <app-setting-row
+      label="shutdown-automations.sequence.powerDownWindows.title"
+      description="shutdown-automations.sequence.powerDownWindows.description"
+    >
+      @if (config.powerDownWindows) {
+        <div class="power-down-select-box-wrapper" @fade>
+          <app-select-box
+            type="SMALL"
+            class="power-down-options-select-box"
+            [expandUp]="true"
+            [items]="powerDownOptions"
+            [selected]="powerDownOption"
+            (selectedChange)="onChangePowerDownOption($event)"
+          ></app-select-box>
+        </div>
+      }
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="config.powerDownWindows"
+          (change)="togglePowerDownWindows()"
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </app-setting-row>
   </div>
 </div>

@@ -176,141 +176,103 @@
       <div class="setting-category">
         <h3 transloco="oscAutomations.sleepingAnimations.options.general.title"></h3>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span
-                transloco="oscAutomations.sleepingAnimations.options.general.onlySwitchAnimations"
-              ></span>
-              <span
-                transloco="oscAutomations.sleepingAnimations.options.general.onlyIfSleepModeEnabled"
-              ></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="config.onlyIfSleepModeEnabled"
-                  (change)="
-                    updateConfig({ onlyIfSleepModeEnabled: !config.onlyIfSleepModeEnabled })
-                  "
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
+          <app-setting-row
+            label="oscAutomations.sleepingAnimations.options.general.onlySwitchAnimations"
+            description="oscAutomations.sleepingAnimations.options.general.onlyIfSleepModeEnabled"
+          >
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="config.onlyIfSleepModeEnabled"
+                (change)="updateConfig({ onlyIfSleepModeEnabled: !config.onlyIfSleepModeEnabled })"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
         </div>
       </div>
       <div class="setting-category">
         <h3 transloco="oscAutomations.sleepingAnimations.options.general.footLock.title"></h3>
         <p transloco="oscAutomations.sleepingAnimations.options.general.footLock.description"></p>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span
-                transloco="oscAutomations.sleepingAnimations.options.general.lockFeetOnSleepModeEnable"
-              ></span>
-              <span></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="config.lockFeetOnSleepModeEnable"
-                  (change)="
-                    updateConfig({ lockFeetOnSleepModeEnable: !config.lockFeetOnSleepModeEnable })
-                  "
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span
-                transloco="oscAutomations.sleepingAnimations.options.general.unlockFeetOnSleepModeDisable"
-              ></span>
-              <span></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="config.unlockFeetOnSleepModeDisable"
-                  (change)="
-                    updateConfig({
-                      unlockFeetOnSleepModeDisable: !config.unlockFeetOnSleepModeDisable,
-                    })
-                  "
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span
-                transloco="oscAutomations.sleepingAnimations.options.general.unlockFeetOnAutomationDisable"
-              ></span>
-              <span></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="config.unlockFeetOnAutomationDisable"
-                  (change)="
-                    updateConfig({
-                      unlockFeetOnAutomationDisable: !config.unlockFeetOnAutomationDisable,
-                    })
-                  "
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span
-                transloco="oscAutomations.sleepingAnimations.options.general.releaseFootLockOnPoseChange"
-              ></span>
-              <span></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="config.releaseFootLockOnPoseChange"
-                  (change)="
-                    updateConfig({
-                      releaseFootLockOnPoseChange: !config.releaseFootLockOnPoseChange,
-                    })
-                  "
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
+          <app-setting-row
+            label="oscAutomations.sleepingAnimations.options.general.lockFeetOnSleepModeEnable"
+          >
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="config.lockFeetOnSleepModeEnable"
+                (change)="
+                  updateConfig({ lockFeetOnSleepModeEnable: !config.lockFeetOnSleepModeEnable })
+                "
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
+          <app-setting-row
+            label="oscAutomations.sleepingAnimations.options.general.unlockFeetOnSleepModeDisable"
+          >
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="config.unlockFeetOnSleepModeDisable"
+                (change)="
+                  updateConfig({
+                    unlockFeetOnSleepModeDisable: !config.unlockFeetOnSleepModeDisable,
+                  })
+                "
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
+          <app-setting-row
+            label="oscAutomations.sleepingAnimations.options.general.unlockFeetOnAutomationDisable"
+          >
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="config.unlockFeetOnAutomationDisable"
+                (change)="
+                  updateConfig({
+                    unlockFeetOnAutomationDisable: !config.unlockFeetOnAutomationDisable,
+                  })
+                "
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
+          <app-setting-row
+            label="oscAutomations.sleepingAnimations.options.general.releaseFootLockOnPoseChange"
+          >
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="config.releaseFootLockOnPoseChange"
+                (change)="
+                  updateConfig({
+                    releaseFootLockOnPoseChange: !config.releaseFootLockOnPoseChange,
+                  })
+                "
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
           <div class="setting-row-group">
-            <div class="setting-row" [class.disabled]="!config.releaseFootLockOnPoseChange">
-              <div class="setting-row-label">
-                <span
-                  transloco="oscAutomations.sleepingAnimations.options.general.footLockReleaseWindow"
-                ></span>
-                <span></span>
-              </div>
-              <div class="setting-row-action">
-                <app-slider-setting
-                  [step]="1"
-                  [min]="100"
-                  [max]="5000"
-                  unit="ms"
-                  [value]="config.footLockReleaseWindow"
-                  (valueChange)="updateFootLockReleaseWindow($event)"
-                  [snapValues]="[600]"
-                  [snapDistance]="400"
-                ></app-slider-setting>
-              </div>
-            </div>
+            <app-setting-row
+              label="oscAutomations.sleepingAnimations.options.general.footLockReleaseWindow"
+              [class.disabled]="!config.releaseFootLockOnPoseChange"
+            >
+              <app-slider-setting
+                [step]="1"
+                [min]="100"
+                [max]="5000"
+                unit="ms"
+                [value]="config.footLockReleaseWindow"
+                (valueChange)="updateFootLockReleaseWindow($event)"
+                [snapValues]="[600]"
+                [snapDistance]="400"
+              ></app-slider-setting>
+            </app-setting-row>
           </div>
         </div>
       </div>

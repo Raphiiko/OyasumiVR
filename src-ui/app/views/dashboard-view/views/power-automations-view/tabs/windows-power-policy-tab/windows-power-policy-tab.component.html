@@ -7,33 +7,27 @@
   </div>
   <h3 transloco="power-automations.windowsPowerPolicy.automations"></h3>
   <div class="settings">
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span transloco="power-automations.windowsPowerPolicy.sleepModeEnable.title"></span>
-        <span transloco="power-automations.windowsPowerPolicy.sleepModeEnable.description"></span>
-      </div>
-      <div class="setting-row-action">
-        <app-select-box
-          type="SMALL"
-          [items]="policyOptions"
-          [selected]="onSleepModeEnablePolicy"
-          (selectedChange)="setPolicy('ON_ENABLE', $event!)"
-        ></app-select-box>
-      </div>
-    </div>
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span transloco="power-automations.windowsPowerPolicy.sleepModeDisable.title"></span>
-        <span transloco="power-automations.windowsPowerPolicy.sleepModeDisable.description"></span>
-      </div>
-      <div class="setting-row-action">
-        <app-select-box
-          type="SMALL"
-          [items]="policyOptions"
-          [selected]="onSleepModeDisablePolicy"
-          (selectedChange)="setPolicy('ON_DISABLE', $event!)"
-        ></app-select-box>
-      </div>
-    </div>
+    <app-setting-row
+      label="power-automations.windowsPowerPolicy.sleepModeEnable.title"
+      description="power-automations.windowsPowerPolicy.sleepModeEnable.description"
+    >
+      <app-select-box
+        type="SMALL"
+        [items]="policyOptions"
+        [selected]="onSleepModeEnablePolicy"
+        (selectedChange)="setPolicy('ON_ENABLE', $event!)"
+      ></app-select-box>
+    </app-setting-row>
+    <app-setting-row
+      label="power-automations.windowsPowerPolicy.sleepModeDisable.title"
+      description="power-automations.windowsPowerPolicy.sleepModeDisable.description"
+    >
+      <app-select-box
+        type="SMALL"
+        [items]="policyOptions"
+        [selected]="onSleepModeDisablePolicy"
+        (selectedChange)="setPolicy('ON_DISABLE', $event!)"
+      ></app-select-box>
+    </app-setting-row>
   </div>
 </div>

@@ -12,22 +12,19 @@
   </div>
 }
 <div class="settings">
-  <div class="setting-row">
-    <div class="setting-row-label">
-      <span transloco="status-automations.playerLimit.enable.title"></span>
-      <span transloco="status-automations.playerLimit.enable.description"></span>
-    </div>
-    <div class="setting-row-action">
-      <label class="switch-toggle">
-        <input
-          type="checkbox"
-          [checked]="config.enabled"
-          (change)="updateConfig({ enabled: !config.enabled })"
-        />
-        <span class="switch-toggle-slider"></span>
-      </label>
-    </div>
-  </div>
+  <app-setting-row
+    label="status-automations.playerLimit.enable.title"
+    description="status-automations.playerLimit.enable.description"
+  >
+    <label class="switch-toggle">
+      <input
+        type="checkbox"
+        [checked]="config.enabled"
+        (change)="updateConfig({ enabled: !config.enabled })"
+      />
+      <span class="switch-toggle-slider"></span>
+    </label>
+  </app-setting-row>
 </div>
 <div class="settings" [class.disabled]="config.enabled">
   @if (config.enabled) {
@@ -76,30 +73,27 @@
       [translocoParams]="{ count: limit.value }"
     ></div>
   </div>
-  <div class="setting-row">
-    <div class="setting-row-label">
-      <span transloco="status-automations.playerLimit.belowLimit.title"></span>
-      <span transloco="status-automations.playerLimit.belowLimit.description.status"></span>
-    </div>
-    <div class="setting-row-action">
-      <label class="switch-toggle">
-        <input
-          type="checkbox"
-          [checked]="config.statusBelowLimitEnabled"
-          (change)="updateConfig({ statusBelowLimitEnabled: !config.statusBelowLimitEnabled })"
-        />
-        <span class="switch-toggle-slider"></span>
-      </label>
-      <app-select-box
-        class="status-dropdown"
-        [type]="'SMALL'"
-        [items]="statusOptions"
-        [selected]="optionSetStatusBelowLimit"
-        (selectedChange)="setStatusSetOption('belowLimit', $event)"
-        [disabled]="!config.statusBelowLimitEnabled"
-      ></app-select-box>
-    </div>
-  </div>
+  <app-setting-row
+    label="status-automations.playerLimit.belowLimit.title"
+    description="status-automations.playerLimit.belowLimit.description.status"
+  >
+    <label class="switch-toggle">
+      <input
+        type="checkbox"
+        [checked]="config.statusBelowLimitEnabled"
+        (change)="updateConfig({ statusBelowLimitEnabled: !config.statusBelowLimitEnabled })"
+      />
+      <span class="switch-toggle-slider"></span>
+    </label>
+    <app-select-box
+      class="status-dropdown"
+      [type]="'SMALL'"
+      [items]="statusOptions"
+      [selected]="optionSetStatusBelowLimit"
+      (selectedChange)="setStatusSetOption('belowLimit', $event)"
+      [disabled]="!config.statusBelowLimitEnabled"
+    ></app-select-box>
+  </app-setting-row>
   <div class="setting-row">
     <div class="setting-row-label">
       <span></span>
@@ -128,32 +122,29 @@
       />
     </div>
   </div>
-  <div class="setting-row">
-    <div class="setting-row-label">
-      <span transloco="status-automations.playerLimit.atLimitOrAbove.title"></span>
-      <span transloco="status-automations.playerLimit.atLimitOrAbove.description.status"></span>
-    </div>
-    <div class="setting-row-action">
-      <label class="switch-toggle">
-        <input
-          type="checkbox"
-          [checked]="config.statusAtLimitOrAboveEnabled"
-          (change)="
-            updateConfig({ statusAtLimitOrAboveEnabled: !config.statusAtLimitOrAboveEnabled })
-          "
-        />
-        <span class="switch-toggle-slider"></span>
-      </label>
-      <app-select-box
-        class="status-dropdown"
-        [type]="'SMALL'"
-        [items]="statusOptions"
-        [selected]="optionSetStatusAtLimitOrAbove"
-        (selectedChange)="setStatusSetOption('atLimitOrAbove', $event)"
-        [disabled]="!config.statusAtLimitOrAboveEnabled"
-      ></app-select-box>
-    </div>
-  </div>
+  <app-setting-row
+    label="status-automations.playerLimit.atLimitOrAbove.title"
+    description="status-automations.playerLimit.atLimitOrAbove.description.status"
+  >
+    <label class="switch-toggle">
+      <input
+        type="checkbox"
+        [checked]="config.statusAtLimitOrAboveEnabled"
+        (change)="
+          updateConfig({ statusAtLimitOrAboveEnabled: !config.statusAtLimitOrAboveEnabled })
+        "
+      />
+      <span class="switch-toggle-slider"></span>
+    </label>
+    <app-select-box
+      class="status-dropdown"
+      [type]="'SMALL'"
+      [items]="statusOptions"
+      [selected]="optionSetStatusAtLimitOrAbove"
+      (selectedChange)="setStatusSetOption('atLimitOrAbove', $event)"
+      [disabled]="!config.statusAtLimitOrAboveEnabled"
+    ></app-select-box>
+  </app-setting-row>
   <div class="setting-row">
     <div class="setting-row-label">
       <span></span>
@@ -189,22 +180,16 @@
       />
     </div>
   </div>
-  <div class="setting-row">
-    <div class="setting-row-label">
-      <span transloco="status-automations.playerLimit.onlyIfSleepModeEnabled"></span>
-      <span></span>
-    </div>
-    <div class="setting-row-action">
-      <label class="switch-toggle">
-        <input
-          type="checkbox"
-          [checked]="config.onlyIfSleepModeEnabled"
-          (change)="updateConfig({ onlyIfSleepModeEnabled: !config.onlyIfSleepModeEnabled })"
-        />
-        <span class="switch-toggle-slider"></span>
-      </label>
-    </div>
-  </div>
+  <app-setting-row label="status-automations.playerLimit.onlyIfSleepModeEnabled">
+    <label class="switch-toggle">
+      <input
+        type="checkbox"
+        [checked]="config.onlyIfSleepModeEnabled"
+        (change)="updateConfig({ onlyIfSleepModeEnabled: !config.onlyIfSleepModeEnabled })"
+      />
+      <span class="switch-toggle-slider"></span>
+    </label>
+  </app-setting-row>
 </div>
 <div class="alert warning">
   <div class="alert-bg"></div>

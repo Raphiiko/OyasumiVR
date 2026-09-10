@@ -5,92 +5,80 @@
       <div class="setting-category">
         <p transloco="chaperone-automations.description"></p>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="chaperone-automations.onSleepEnable.title"></span>
-              <span transloco="chaperone-automations.onSleepEnable.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="onSleepModeEnableConfig.enabled"
-                  (change)="
-                    setAutomationEnabled(
-                      'CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE',
-                      !onSleepModeEnableConfig.enabled
-                    )
-                  "
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
+          <app-setting-row
+            label="chaperone-automations.onSleepEnable.title"
+            description="chaperone-automations.onSleepEnable.description"
+          >
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="onSleepModeEnableConfig.enabled"
+                (change)="
+                  setAutomationEnabled(
+                    'CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE',
+                    !onSleepModeEnableConfig.enabled
+                  )
+                "
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
           <div class="setting-row-group">
-            <div class="setting-row" [class.disabled]="!onSleepModeEnableConfig.enabled">
-              <div class="setting-row-label">
-                <span transloco="chaperone-automations.fadeDistance.title"></span>
-                <span></span>
-              </div>
-              <div class="setting-row-action">
-                <app-slider-setting
-                  unit="m"
-                  [value]="onSleepModeEnableConfig.fadeDistance"
-                  (valueChange)="
-                    setFadeDistance('CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE', $event)
-                  "
-                  [min]="0"
-                  [max]="1.4"
-                  [step]="0.01"
-                  [snapValues]="[0.2, 0.7]"
-                  [snapDistance]="0.05"
-                  #onSleepEnableSlider
-                ></app-slider-setting>
-              </div>
-            </div>
+            <app-setting-row
+              label="chaperone-automations.fadeDistance.title"
+              [class.disabled]="!onSleepModeEnableConfig.enabled"
+            >
+              <app-slider-setting
+                unit="m"
+                [value]="onSleepModeEnableConfig.fadeDistance"
+                (valueChange)="
+                  setFadeDistance('CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE', $event)
+                "
+                [min]="0"
+                [max]="1.4"
+                [step]="0.01"
+                [snapValues]="[0.2, 0.7]"
+                [snapDistance]="0.05"
+                #onSleepEnableSlider
+              ></app-slider-setting>
+            </app-setting-row>
           </div>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="chaperone-automations.onSleepDisable.title"></span>
-              <span transloco="chaperone-automations.onSleepDisable.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="onSleepModeDisableConfig.enabled"
-                  (change)="
-                    setAutomationEnabled(
-                      'CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE',
-                      !onSleepModeDisableConfig.enabled
-                    )
-                  "
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
+          <app-setting-row
+            label="chaperone-automations.onSleepDisable.title"
+            description="chaperone-automations.onSleepDisable.description"
+          >
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="onSleepModeDisableConfig.enabled"
+                (change)="
+                  setAutomationEnabled(
+                    'CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE',
+                    !onSleepModeDisableConfig.enabled
+                  )
+                "
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
           <div class="setting-row-group">
-            <div class="setting-row" [class.disabled]="!onSleepModeDisableConfig.enabled">
-              <div class="setting-row-label">
-                <span transloco="chaperone-automations.fadeDistance.title"></span>
-                <span></span>
-              </div>
-              <div class="setting-row-action">
-                <app-slider-setting
-                  unit="m"
-                  [value]="onSleepModeDisableConfig.fadeDistance"
-                  (valueChange)="
-                    setFadeDistance('CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE', $event)
-                  "
-                  [min]="0"
-                  [max]="1.4"
-                  [step]="0.01"
-                  [snapValues]="[0.2, 0.7]"
-                  [snapDistance]="0.05"
-                ></app-slider-setting>
-              </div>
-            </div>
+            <app-setting-row
+              label="chaperone-automations.fadeDistance.title"
+              [class.disabled]="!onSleepModeDisableConfig.enabled"
+            >
+              <app-slider-setting
+                unit="m"
+                [value]="onSleepModeDisableConfig.fadeDistance"
+                (valueChange)="
+                  setFadeDistance('CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE', $event)
+                "
+                [min]="0"
+                [max]="1.4"
+                [step]="0.01"
+                [snapValues]="[0.2, 0.7]"
+                [snapDistance]="0.05"
+              ></app-slider-setting>
+            </app-setting-row>
           </div>
         </div>
       </div>

@@ -21,42 +21,33 @@
           </div>
         }
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="vrchatAvatarAutomations.onSleepEnable.title"></span>
-              <span transloco="vrchatAvatarAutomations.onSleepEnable.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <app-vrc-avatar-select-button
-                [avatar]="this.config.onSleepEnable"
-                (avatarChange)="updateOnSleepEnable($event)"
-              ></app-vrc-avatar-select-button>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="vrchatAvatarAutomations.onSleepDisable.title"></span>
-              <span transloco="vrchatAvatarAutomations.onSleepDisable.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <app-vrc-avatar-select-button
-                [avatar]="this.config.onSleepDisable"
-                (avatarChange)="updateOnSleepDisable($event)"
-              ></app-vrc-avatar-select-button>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="vrchatAvatarAutomations.onSleepPreparation.title"></span>
-              <span transloco="vrchatAvatarAutomations.onSleepPreparation.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <app-vrc-avatar-select-button
-                [avatar]="this.config.onSleepPreparation"
-                (avatarChange)="updateOnSleepPreparation($event)"
-              ></app-vrc-avatar-select-button>
-            </div>
-          </div>
+          <app-setting-row
+            label="vrchatAvatarAutomations.onSleepEnable.title"
+            description="vrchatAvatarAutomations.onSleepEnable.description"
+          >
+            <app-vrc-avatar-select-button
+              [avatar]="this.config.onSleepEnable"
+              (avatarChange)="updateOnSleepEnable($event)"
+            ></app-vrc-avatar-select-button>
+          </app-setting-row>
+          <app-setting-row
+            label="vrchatAvatarAutomations.onSleepDisable.title"
+            description="vrchatAvatarAutomations.onSleepDisable.description"
+          >
+            <app-vrc-avatar-select-button
+              [avatar]="this.config.onSleepDisable"
+              (avatarChange)="updateOnSleepDisable($event)"
+            ></app-vrc-avatar-select-button>
+          </app-setting-row>
+          <app-setting-row
+            label="vrchatAvatarAutomations.onSleepPreparation.title"
+            description="vrchatAvatarAutomations.onSleepPreparation.description"
+          >
+            <app-vrc-avatar-select-button
+              [avatar]="this.config.onSleepPreparation"
+              (avatarChange)="updateOnSleepPreparation($event)"
+            ></app-vrc-avatar-select-button>
+          </app-setting-row>
         </div>
       </div>
     </div>

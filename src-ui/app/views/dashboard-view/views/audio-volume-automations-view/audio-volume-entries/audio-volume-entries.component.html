@@ -83,19 +83,17 @@
         ) {
           <div class="setting-row-group" @vshrink>
             @if (automation.type === 'SET_VOLUME') {
-              <div class="setting-row" @vshrink>
-                <div class="setting-row-label">
-                  <span transloco="audio-volume-automations.volume.title"></span>
-                  <span transloco="audio-volume-automations.volume.description"></span>
-                </div>
-                <div class="setting-row-action">
-                  <app-slider-setting
-                    [unit]="'%'"
-                    [value]="automation.volume"
-                    (valueChange)="setVolume(automation, $event)"
-                  ></app-slider-setting>
-                </div>
-              </div>
+              <app-setting-row
+                label="audio-volume-automations.volume.title"
+                description="audio-volume-automations.volume.description"
+                @vshrink
+              >
+                <app-slider-setting
+                  [unit]="'%'"
+                  [value]="automation.volume"
+                  (valueChange)="setVolume(automation, $event)"
+                ></app-slider-setting>
+              </app-setting-row>
             }
             @if (automationType === 'onSleepEnable' || automationType === 'onSleepDisable') {
               <div class="setting-row">

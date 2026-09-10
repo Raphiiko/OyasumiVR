@@ -43,166 +43,119 @@
     </div>
   }
   <div class="settings">
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span transloco="invite-and-invite-requests.inviteRequestsTab.options.enable.title"></span>
-        <span
-          transloco="invite-and-invite-requests.inviteRequestsTab.options.enable.description"
-        ></span>
-      </div>
-      <div class="setting-row-action">
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="config.enabled"
-            (change)="updateConfig({ enabled: !config.enabled })"
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
-      </div>
-    </div>
+    <app-setting-row
+      label="invite-and-invite-requests.inviteRequestsTab.options.enable.title"
+      description="invite-and-invite-requests.inviteRequestsTab.options.enable.description"
+    >
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="config.enabled"
+          (change)="updateConfig({ enabled: !config.enabled })"
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </app-setting-row>
   </div>
   <div class="settings">
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span
-          transloco="invite-and-invite-requests.inviteRequestsTab.options.listMode.title"
-        ></span>
-        <span
-          transloco="invite-and-invite-requests.inviteRequestsTab.options.listMode.description"
-        ></span>
-      </div>
-      <div class="setting-row-action">
-        <app-select-box
-          [items]="listModeOptions"
-          [selected]="listModeOption"
-          (selectedChange)="setListMode($safeNavigationMigration($event?.id))"
-        ></app-select-box>
-      </div>
-    </div>
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span
-          transloco="invite-and-invite-requests.inviteRequestsTab.options.acceptMessage.title"
-        ></span>
-        <span
-          transloco="invite-and-invite-requests.inviteRequestsTab.options.acceptMessage.description"
-        ></span>
-      </div>
-      <div class="setting-row-action">
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="config.acceptMessageEnabled"
-            (change)="updateConfig({ acceptMessageEnabled: !config.acceptMessageEnabled })"
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
-      </div>
-    </div>
+    <app-setting-row
+      label="invite-and-invite-requests.inviteRequestsTab.options.listMode.title"
+      description="invite-and-invite-requests.inviteRequestsTab.options.listMode.description"
+    >
+      <app-select-box
+        [items]="listModeOptions"
+        [selected]="listModeOption"
+        (selectedChange)="setListMode($safeNavigationMigration($event?.id))"
+      ></app-select-box>
+    </app-setting-row>
+    <app-setting-row
+      label="invite-and-invite-requests.inviteRequestsTab.options.acceptMessage.title"
+      description="invite-and-invite-requests.inviteRequestsTab.options.acceptMessage.description"
+    >
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="config.acceptMessageEnabled"
+          (change)="updateConfig({ acceptMessageEnabled: !config.acceptMessageEnabled })"
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </app-setting-row>
     @if (config.acceptMessageEnabled) {
       <div class="setting-row-group" @vshrink>
-        <div class="setting-row">
-          <div class="setting-row-label">
-            <span
-              transloco="invite-and-invite-requests.inviteRequestsTab.options.acceptMessage.customMessage.title"
-            ></span>
-            <span></span>
-          </div>
-          <div class="setting-row-action">
-            <input
-              maxlength="64"
-              type="text"
-              class="input"
-              [value]="config.acceptInviteRequestMessage"
-              (change)="
-                updateAcceptInviteRequestCustomMessage.next(acceptOnRequestCustomMessageInput.value)
-              "
-              (blur)="acceptOnRequestCustomMessageInput.value = config.acceptInviteRequestMessage"
-              [placeholder]="
-                'invite-and-invite-requests.inviteRequestsTab.options.acceptMessage.customMessage.placeholder'
-                  | transloco
-              "
-              #acceptOnRequestCustomMessageInput
-            />
-          </div>
-        </div>
+        <app-setting-row
+          label="invite-and-invite-requests.inviteRequestsTab.options.acceptMessage.customMessage.title"
+        >
+          <input
+            maxlength="64"
+            type="text"
+            class="input"
+            [value]="config.acceptInviteRequestMessage"
+            (change)="
+              updateAcceptInviteRequestCustomMessage.next(acceptOnRequestCustomMessageInput.value)
+            "
+            (blur)="acceptOnRequestCustomMessageInput.value = config.acceptInviteRequestMessage"
+            [placeholder]="
+              'invite-and-invite-requests.inviteRequestsTab.options.acceptMessage.customMessage.placeholder'
+                | transloco
+            "
+            #acceptOnRequestCustomMessageInput
+          />
+        </app-setting-row>
       </div>
     }
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span
-          transloco="invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.title"
-        ></span>
-        <span
-          transloco="invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.description"
-        ></span>
-      </div>
-      <div class="setting-row-action">
-        <app-select-box
-          [class]="'small-select-box'"
-          [type]="'SMALL'"
-          [items]="declineOnRequestOptions"
-          [selected]="declineOnRequestOption"
-          (selectedChange)="setDeclineOnRequestOption($safeNavigationMigration($event?.id))"
-        ></app-select-box>
-      </div>
-    </div>
+    <app-setting-row
+      label="invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.title"
+      description="invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.description"
+    >
+      <app-select-box
+        [class]="'small-select-box'"
+        [type]="'SMALL'"
+        [items]="declineOnRequestOptions"
+        [selected]="declineOnRequestOption"
+        (selectedChange)="setDeclineOnRequestOption($safeNavigationMigration($event?.id))"
+      ></app-select-box>
+    </app-setting-row>
     @if (['ALWAYS', 'WHEN_SLEEPING'].includes(declineOnRequestOption?.id ?? '')) {
       <div class="setting-row-group" @vshrink>
-        <div class="setting-row">
-          <div class="setting-row-label">
-            <span
-              transloco="invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.customMessage.title"
-            ></span>
-            <span
-              transloco="invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.customMessage.description"
-            ></span>
-          </div>
-          <div class="setting-row-action">
-            <input
-              maxlength="64"
-              type="text"
-              class="input"
-              [value]="config.declineInviteRequestMessage"
-              (change)="
-                updateDeclineInviteRequestCustomMessage.next(
-                  declineOnRequestCustomMessageInput.value
-                )
-              "
-              (blur)="declineOnRequestCustomMessageInput.value = config.declineInviteRequestMessage"
-              [placeholder]="
-                'invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.customMessage.placeholder'
-                  | transloco
-              "
-              #declineOnRequestCustomMessageInput
-            />
-          </div>
-        </div>
+        <app-setting-row
+          label="invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.customMessage.title"
+          description="invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.customMessage.description"
+        >
+          <input
+            maxlength="64"
+            type="text"
+            class="input"
+            [value]="config.declineInviteRequestMessage"
+            (change)="
+              updateDeclineInviteRequestCustomMessage.next(declineOnRequestCustomMessageInput.value)
+            "
+            (blur)="declineOnRequestCustomMessageInput.value = config.declineInviteRequestMessage"
+            [placeholder]="
+              'invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.customMessage.placeholder'
+                | transloco
+            "
+            #declineOnRequestCustomMessageInput
+          />
+        </app-setting-row>
       </div>
     }
   </div>
   <h2 transloco="invite-and-invite-requests.inviteRequestsTab.conditions.title"></h2>
   <p transloco="invite-and-invite-requests.inviteRequestsTab.conditions.description"></p>
   <div class="settings">
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span
-          transloco="invite-and-invite-requests.inviteRequestsTab.options.onlyIfSleepModeEnabled.title"
-        ></span>
-        <span></span>
-      </div>
-      <div class="setting-row-action">
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="config.onlyIfSleepModeEnabled"
-            (change)="updateConfig({ onlyIfSleepModeEnabled: !config.onlyIfSleepModeEnabled })"
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
-      </div>
-    </div>
+    <app-setting-row
+      label="invite-and-invite-requests.inviteRequestsTab.options.onlyIfSleepModeEnabled.title"
+    >
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="config.onlyIfSleepModeEnabled"
+          (change)="updateConfig({ onlyIfSleepModeEnabled: !config.onlyIfSleepModeEnabled })"
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </app-setting-row>
 
     <div class="setting-row">
       <div class="setting-row-label">
@@ -248,62 +201,41 @@
   <h2 transloco="invite-and-invite-requests.inviteRequestsTab.otherAutomations.title"></h2>
   <p transloco="invite-and-invite-requests.inviteRequestsTab.otherAutomations.description"></p>
   <div class="settings">
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span
-          transloco="invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepEnable.title"
-        ></span>
-        <span
-          transloco="invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepEnable.description"
-        ></span>
-      </div>
-      <div class="setting-row-action">
-        <app-select-box
-          class="preset-select-box"
-          [type]="'SMALL'"
-          [items]="presetOptions"
-          [selected]="presetOption['onSleepEnable']"
-          (selectedChange)="setPresetOption('onSleepEnable', $event?.id ?? 'NONE')"
-        ></app-select-box>
-      </div>
-    </div>
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span
-          transloco="invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepDisable.title"
-        ></span>
-        <span
-          transloco="invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepDisable.description"
-        ></span>
-      </div>
-      <div class="setting-row-action">
-        <app-select-box
-          class="preset-select-box"
-          [type]="'SMALL'"
-          [items]="presetOptions"
-          [selected]="presetOption['onSleepDisable']"
-          (selectedChange)="setPresetOption('onSleepDisable', $event?.id ?? 'NONE')"
-        ></app-select-box>
-      </div>
-    </div>
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span
-          transloco="invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepPreparation.title"
-        ></span>
-        <span
-          transloco="invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepPreparation.description"
-        ></span>
-      </div>
-      <div class="setting-row-action">
-        <app-select-box
-          class="preset-select-box"
-          [type]="'SMALL'"
-          [items]="presetOptions"
-          [selected]="presetOption['onSleepPreparation']"
-          (selectedChange)="setPresetOption('onSleepPreparation', $event?.id ?? 'NONE')"
-        ></app-select-box>
-      </div>
-    </div>
+    <app-setting-row
+      label="invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepEnable.title"
+      description="invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepEnable.description"
+    >
+      <app-select-box
+        class="preset-select-box"
+        [type]="'SMALL'"
+        [items]="presetOptions"
+        [selected]="presetOption['onSleepEnable']"
+        (selectedChange)="setPresetOption('onSleepEnable', $event?.id ?? 'NONE')"
+      ></app-select-box>
+    </app-setting-row>
+    <app-setting-row
+      label="invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepDisable.title"
+      description="invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepDisable.description"
+    >
+      <app-select-box
+        class="preset-select-box"
+        [type]="'SMALL'"
+        [items]="presetOptions"
+        [selected]="presetOption['onSleepDisable']"
+        (selectedChange)="setPresetOption('onSleepDisable', $event?.id ?? 'NONE')"
+      ></app-select-box>
+    </app-setting-row>
+    <app-setting-row
+      label="invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepPreparation.title"
+      description="invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepPreparation.description"
+    >
+      <app-select-box
+        class="preset-select-box"
+        [type]="'SMALL'"
+        [items]="presetOptions"
+        [selected]="presetOption['onSleepPreparation']"
+        (selectedChange)="setPresetOption('onSleepPreparation', $event?.id ?? 'NONE')"
+      ></app-select-box>
+    </app-setting-row>
   </div>
 </div>

@@ -61,22 +61,16 @@
       </div>
     </div>
 
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span transloco="sleep-detection.enableAutomations.onControllersPoweredOff.title"></span>
-        <span></span>
-      </div>
-      <div class="setting-row-action">
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="automationConfigs.SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF.enabled"
-            (change)="toggleAutomation('SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF')"
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
-      </div>
-    </div>
+    <app-setting-row label="sleep-detection.enableAutomations.onControllersPoweredOff.title">
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="automationConfigs.SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF.enabled"
+          (change)="toggleAutomation('SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF')"
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </app-setting-row>
     @if (
       automationConfigs.SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF.enabled &&
       batteryLevelAutomationEnabledForController

@@ -1,0 +1,12 @@
+<ng-content select=".setting-row-icon"></ng-content>
+<div class="setting-row-label" [class.conflict]="conflict">
+  <span class="setting-row-title"
+    >{{ labelText ?? (label ? (label | transloco) : '')
+    }}<ng-content select="[rowLabel]"></ng-content
+  ></span>
+  <span class="setting-row-description"
+    >{{ descriptionText ?? (description ? (description | transloco) : '')
+    }}<ng-content select="[rowDescription]"></ng-content
+  ></span>
+</div>
+<div class="setting-row-action" [ngClass]="actionClass"><ng-content></ng-content></div>

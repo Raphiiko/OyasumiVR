@@ -21,51 +21,42 @@
           </div>
         }
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="vrchatGroupAutomations.onSleepEnable.title"></span>
-              <span transloco="vrchatGroupAutomations.onSleepEnable.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <app-select-box
-                [disabled]="!loggedIn"
-                [items]="groupOptions"
-                [selected]="selectedOnSleepEnable"
-                [type]="'SMALL'"
-                (selectedChange)="updateGroupOnSleepEnable($event!.id)"
-              ></app-select-box>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="vrchatGroupAutomations.onSleepDisable.title"></span>
-              <span transloco="vrchatGroupAutomations.onSleepDisable.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <app-select-box
-                [disabled]="!loggedIn"
-                [items]="groupOptions"
-                [selected]="selectedOnSleepDisable"
-                [type]="'SMALL'"
-                (selectedChange)="updateGroupOnSleepDisable($event!.id)"
-              ></app-select-box>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="vrchatGroupAutomations.onSleepPreparation.title"></span>
-              <span transloco="vrchatGroupAutomations.onSleepPreparation.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <app-select-box
-                [disabled]="!loggedIn"
-                [items]="groupOptions"
-                [selected]="selectedOnSleepPreparation"
-                [type]="'SMALL'"
-                (selectedChange)="updateGroupOnSleepPreparation($event!.id)"
-              ></app-select-box>
-            </div>
-          </div>
+          <app-setting-row
+            label="vrchatGroupAutomations.onSleepEnable.title"
+            description="vrchatGroupAutomations.onSleepEnable.description"
+          >
+            <app-select-box
+              [disabled]="!loggedIn"
+              [items]="groupOptions"
+              [selected]="selectedOnSleepEnable"
+              [type]="'SMALL'"
+              (selectedChange)="updateGroupOnSleepEnable($event!.id)"
+            ></app-select-box>
+          </app-setting-row>
+          <app-setting-row
+            label="vrchatGroupAutomations.onSleepDisable.title"
+            description="vrchatGroupAutomations.onSleepDisable.description"
+          >
+            <app-select-box
+              [disabled]="!loggedIn"
+              [items]="groupOptions"
+              [selected]="selectedOnSleepDisable"
+              [type]="'SMALL'"
+              (selectedChange)="updateGroupOnSleepDisable($event!.id)"
+            ></app-select-box>
+          </app-setting-row>
+          <app-setting-row
+            label="vrchatGroupAutomations.onSleepPreparation.title"
+            description="vrchatGroupAutomations.onSleepPreparation.description"
+          >
+            <app-select-box
+              [disabled]="!loggedIn"
+              [items]="groupOptions"
+              [selected]="selectedOnSleepPreparation"
+              [type]="'SMALL'"
+              (selectedChange)="updateGroupOnSleepPreparation($event!.id)"
+            ></app-select-box>
+          </app-setting-row>
         </div>
       </div>
     </div>

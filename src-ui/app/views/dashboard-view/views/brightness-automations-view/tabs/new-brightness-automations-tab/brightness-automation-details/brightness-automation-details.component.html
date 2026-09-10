@@ -63,22 +63,19 @@
               />
             </div>
           </div>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="brightness-automations.onlyWhenSleepModeDisabled.title"></span>
-              <span transloco="brightness-automations.onlyWhenSleepModeDisabled.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle" [class.disabled]="!config().changeColorTemperature">
-                <input
-                  type="checkbox"
-                  [checked]="asSunConfig(config()).onlyWhenSleepDisabled"
-                  (change)="toggleOnlyWhenSleepDisabled()"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
+          <app-setting-row
+            label="brightness-automations.onlyWhenSleepModeDisabled.title"
+            description="brightness-automations.onlyWhenSleepModeDisabled.description"
+          >
+            <label class="switch-toggle" [class.disabled]="!config().changeColorTemperature">
+              <input
+                type="checkbox"
+                [checked]="asSunConfig(config()).onlyWhenSleepDisabled"
+                (change)="toggleOnlyWhenSleepDisabled()"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
         </div>
       </div>
     </div>
@@ -86,111 +83,90 @@
   <div class="setting-category">
     <h3 transloco="brightness-automations.changeBrightness.category"></h3>
     <div class="settings">
-      <div class="setting-row">
-        <div class="setting-row-label">
-          <span transloco="brightness-automations.changeBrightness.title"></span>
-          <span transloco="brightness-automations.changeBrightness.description"></span>
-        </div>
-        <div class="setting-row-action">
-          <label class="switch-toggle" [class.disabled]="!config().changeColorTemperature">
-            <input
-              type="checkbox"
-              [checked]="config().changeBrightness"
-              (change)="toggleChangeBrightness()"
-              [disabled]="!config().changeColorTemperature"
-            />
-            <span class="switch-toggle-slider"></span>
-          </label>
-        </div>
-      </div>
+      <app-setting-row
+        label="brightness-automations.changeBrightness.title"
+        description="brightness-automations.changeBrightness.description"
+      >
+        <label class="switch-toggle" [class.disabled]="!config().changeColorTemperature">
+          <input
+            type="checkbox"
+            [checked]="config().changeBrightness"
+            (change)="toggleChangeBrightness()"
+            [disabled]="!config().changeColorTemperature"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </app-setting-row>
       @if (config().changeBrightness) {
         <div class="setting-row-group" @vshrink>
           @if (!advancedMode() && config().changeBrightness) {
-            <div class="setting-row" @vshrink>
-              <div class="setting-row-label">
-                <span transloco="brightness-automations.brightness.title"></span>
-                <span></span>
-              </div>
-              <div class="setting-row-action">
-                <button
-                  class="btn btn-copy btn-secondary"
-                  tooltip="brightness-automations.copyBrightness"
-                  tooltipMode="left"
-                  (click)="updateBrightness('SIMPLE', 'CURRENT')"
-                >
-                  <i class="material-icons">copy_all</i>
-                </button>
-                <app-slider-setting
-                  unit="%"
-                  [min]="brightnessBounds.SIMPLE.min"
-                  [max]="brightnessBounds.SIMPLE.max"
-                  [value]="config().brightness"
-                  (valueChange)="updateBrightness('SIMPLE', $event)"
-                  [step]="1"
-                  [snapValues]="brightnessSnapValues.SIMPLE"
-                  [snapDistance]="brightnessSnapDistance.SIMPLE"
-                  [class.anim-vshake]="vshakeElements.includes('BRIGHTNESS_SIMPLE')"
-                ></app-slider-setting>
-              </div>
-            </div>
+            <app-setting-row label="brightness-automations.brightness.title" @vshrink>
+              <button
+                class="btn btn-copy btn-secondary"
+                tooltip="brightness-automations.copyBrightness"
+                tooltipMode="left"
+                (click)="updateBrightness('SIMPLE', 'CURRENT')"
+              >
+                <i class="material-icons">copy_all</i>
+              </button>
+              <app-slider-setting
+                unit="%"
+                [min]="brightnessBounds.SIMPLE.min"
+                [max]="brightnessBounds.SIMPLE.max"
+                [value]="config().brightness"
+                (valueChange)="updateBrightness('SIMPLE', $event)"
+                [step]="1"
+                [snapValues]="brightnessSnapValues.SIMPLE"
+                [snapDistance]="brightnessSnapDistance.SIMPLE"
+                [class.anim-vshake]="vshakeElements.includes('BRIGHTNESS_SIMPLE')"
+              ></app-slider-setting>
+            </app-setting-row>
           }
           @if (advancedMode() && config().changeBrightness) {
-            <div class="setting-row" @vshrink>
-              <div class="setting-row-label">
-                <span transloco="brightness-automations.softwareBrightness.title"></span>
-                <span></span>
-              </div>
-              <div class="setting-row-action">
-                <button
-                  class="btn btn-copy btn-secondary"
-                  tooltip="brightness-automations.copyBrightness"
-                  tooltipMode="left"
-                  (click)="updateBrightness('SOFTWARE', 'CURRENT')"
-                >
-                  <i class="material-icons">copy_all</i>
-                </button>
-                <app-slider-setting
-                  unit="%"
-                  [min]="brightnessBounds.SOFTWARE.min"
-                  [max]="brightnessBounds.SOFTWARE.max"
-                  [value]="config().softwareBrightness"
-                  (valueChange)="updateBrightness('SOFTWARE', $event)"
-                  [step]="1"
-                  [snapValues]="brightnessSnapValues.SOFTWARE"
-                  [snapDistance]="brightnessSnapDistance.SOFTWARE"
-                  [class.anim-vshake]="vshakeElements.includes('BRIGHTNESS_SOFTWARE')"
-                ></app-slider-setting>
-              </div>
-            </div>
+            <app-setting-row label="brightness-automations.softwareBrightness.title" @vshrink>
+              <button
+                class="btn btn-copy btn-secondary"
+                tooltip="brightness-automations.copyBrightness"
+                tooltipMode="left"
+                (click)="updateBrightness('SOFTWARE', 'CURRENT')"
+              >
+                <i class="material-icons">copy_all</i>
+              </button>
+              <app-slider-setting
+                unit="%"
+                [min]="brightnessBounds.SOFTWARE.min"
+                [max]="brightnessBounds.SOFTWARE.max"
+                [value]="config().softwareBrightness"
+                (valueChange)="updateBrightness('SOFTWARE', $event)"
+                [step]="1"
+                [snapValues]="brightnessSnapValues.SOFTWARE"
+                [snapDistance]="brightnessSnapDistance.SOFTWARE"
+                [class.anim-vshake]="vshakeElements.includes('BRIGHTNESS_SOFTWARE')"
+              ></app-slider-setting>
+            </app-setting-row>
           }
           @if (advancedMode() && config().changeBrightness) {
-            <div class="setting-row" @vshrink>
-              <div class="setting-row-label">
-                <span transloco="brightness-automations.hardwareBrightness.title"></span>
-                <span></span>
-              </div>
-              <div class="setting-row-action">
-                <button
-                  class="btn btn-copy btn-secondary"
-                  tooltip="brightness-automations.copyBrightness"
-                  tooltipMode="left"
-                  (click)="updateBrightness('HARDWARE', 'CURRENT')"
-                >
-                  <i class="material-icons">copy_all</i>
-                </button>
-                <app-slider-setting
-                  unit="%"
-                  [min]="brightnessBounds.HARDWARE.min"
-                  [max]="brightnessBounds.HARDWARE.max"
-                  [value]="config().hardwareBrightness"
-                  (valueChange)="updateBrightness('HARDWARE', $event)"
-                  [step]="1"
-                  [snapValues]="brightnessSnapValues.HARDWARE"
-                  [snapDistance]="brightnessSnapDistance.HARDWARE"
-                  [class.anim-vshake]="vshakeElements.includes('BRIGHTNESS_HARDWARE')"
-                ></app-slider-setting>
-              </div>
-            </div>
+            <app-setting-row label="brightness-automations.hardwareBrightness.title" @vshrink>
+              <button
+                class="btn btn-copy btn-secondary"
+                tooltip="brightness-automations.copyBrightness"
+                tooltipMode="left"
+                (click)="updateBrightness('HARDWARE', 'CURRENT')"
+              >
+                <i class="material-icons">copy_all</i>
+              </button>
+              <app-slider-setting
+                unit="%"
+                [min]="brightnessBounds.HARDWARE.min"
+                [max]="brightnessBounds.HARDWARE.max"
+                [value]="config().hardwareBrightness"
+                (valueChange)="updateBrightness('HARDWARE', $event)"
+                [step]="1"
+                [snapValues]="brightnessSnapValues.HARDWARE"
+                [snapDistance]="brightnessSnapDistance.HARDWARE"
+                [class.anim-vshake]="vshakeElements.includes('BRIGHTNESS_HARDWARE')"
+              ></app-slider-setting>
+            </app-setting-row>
           }
         </div>
       }
@@ -211,37 +187,28 @@
         }
       </div>
       <div class="settings">
-        <div class="setting-row">
-          <div class="setting-row-label">
-            <span transloco="brightness-automations.changeTemperature.title"></span>
-            <span transloco="brightness-automations.changeTemperature.description"></span>
-          </div>
-          <div class="setting-row-action">
-            <label class="switch-toggle" [class.disabled]="!config().changeBrightness">
-              <input
-                type="checkbox"
-                [checked]="config().changeColorTemperature"
-                (change)="toggleChangeColorTemperature()"
-                [disabled]="!config().changeBrightness"
-              />
-              <span class="switch-toggle-slider"></span>
-            </label>
-          </div>
-        </div>
+        <app-setting-row
+          label="brightness-automations.changeTemperature.title"
+          description="brightness-automations.changeTemperature.description"
+        >
+          <label class="switch-toggle" [class.disabled]="!config().changeBrightness">
+            <input
+              type="checkbox"
+              [checked]="config().changeColorTemperature"
+              (change)="toggleChangeColorTemperature()"
+              [disabled]="!config().changeBrightness"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </app-setting-row>
         @if (config().changeColorTemperature) {
           <div class="setting-row-group" @vshrink>
-            <div class="setting-row">
-              <div class="setting-row-label">
-                <span transloco="brightness-automations.temperature.title"></span>
-                <span></span>
-              </div>
-              <div class="setting-row-action">
-                <app-cct-input-setting
-                  [value]="config().colorTemperature"
-                  (valueChange)="updateColorTemperature($event)"
-                ></app-cct-input-setting>
-              </div>
-            </div>
+            <app-setting-row label="brightness-automations.temperature.title">
+              <app-cct-input-setting
+                [value]="config().colorTemperature"
+                (valueChange)="updateColorTemperature($event)"
+              ></app-cct-input-setting>
+            </app-setting-row>
           </div>
         }
       </div>
@@ -250,32 +217,26 @@
   <div class="setting-category">
     <h3 transloco="brightness-automations.miscConfig"></h3>
     <div class="settings">
-      <div class="setting-row">
-        <div class="setting-row-label">
-          <span transloco="brightness-automations.transition.title"></span>
-          <span transloco="brightness-automations.transition.description"></span>
-        </div>
-        <div class="setting-row-action">
-          <label class="switch-toggle">
-            <input type="checkbox" [checked]="config().transition" (change)="toggleTransition()" />
-            <span class="switch-toggle-slider"></span>
-          </label>
-        </div>
-      </div>
+      <app-setting-row
+        label="brightness-automations.transition.title"
+        description="brightness-automations.transition.description"
+      >
+        <label class="switch-toggle">
+          <input type="checkbox" [checked]="config().transition" (change)="toggleTransition()" />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </app-setting-row>
       @if (config().transition) {
         <div class="setting-row-group" @vshrink>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="brightness-automations.transitionTime.title"></span>
-              <span transloco="brightness-automations.transitionTime.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <app-duration-input-setting
-                [value]="config().transitionTime"
-                (valueChange)="updateTransitionTime($event)"
-              ></app-duration-input-setting>
-            </div>
-          </div>
+          <app-setting-row
+            label="brightness-automations.transitionTime.title"
+            description="brightness-automations.transitionTime.description"
+          >
+            <app-duration-input-setting
+              [value]="config().transitionTime"
+              (valueChange)="updateTransitionTime($event)"
+            ></app-duration-input-setting>
+          </app-setting-row>
         </div>
       }
     </div>

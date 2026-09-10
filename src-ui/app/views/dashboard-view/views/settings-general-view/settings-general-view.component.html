@@ -28,185 +28,151 @@
       <div class="setting-category">
         <h2 transloco="settings.general.sleepMode.title"></h2>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.general.sleepMode.startupBehaviour.title"></span>
-              <span transloco="settings.general.sleepMode.startupBehaviour.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <app-select-box
-                class="sleep-mode-startup-behaviour-dropdown"
-                [items]="sleepModeStartupBehaviourOptions"
-                [selected]="sleepModeStartupBehaviourOption"
-                (selectedChange)="onChangeSleepModeStartupBehaviour($event)"
-              ></app-select-box>
-            </div>
-          </div>
+          <app-setting-row
+            label="settings.general.sleepMode.startupBehaviour.title"
+            description="settings.general.sleepMode.startupBehaviour.description"
+          >
+            <app-select-box
+              class="sleep-mode-startup-behaviour-dropdown"
+              [items]="sleepModeStartupBehaviourOptions"
+              [selected]="sleepModeStartupBehaviourOption"
+              (selectedChange)="onChangeSleepModeStartupBehaviour($event)"
+            ></app-select-box>
+          </app-setting-row>
         </div>
       </div>
 
       <div class="setting-category">
         <h2 transloco="settings.general.systemTray.title"></h2>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.general.systemTray.close.label"></span>
-              <span transloco="settings.general.systemTray.close.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="appSettings.exitInSystemTray"
-                  (change)="setExitInSystemTray(!appSettings.exitInSystemTray)"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.general.systemTray.start.label"></span>
-              <span transloco="settings.general.systemTray.start.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="appSettings.startInSystemTray"
-                  (change)="setStartInSystemTray(!appSettings.startInSystemTray)"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
+          <app-setting-row
+            label="settings.general.systemTray.close.label"
+            description="settings.general.systemTray.close.description"
+          >
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="appSettings.exitInSystemTray"
+                (change)="setExitInSystemTray(!appSettings.exitInSystemTray)"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
+          <app-setting-row
+            label="settings.general.systemTray.start.label"
+            description="settings.general.systemTray.start.description"
+          >
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="appSettings.startInSystemTray"
+                (change)="setStartInSystemTray(!appSettings.startInSystemTray)"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
         </div>
       </div>
 
       <div class="setting-category">
         <h2 transloco="settings.general.overlay.title"></h2>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.general.overlay.overlayMenu.title"></span>
-              <span transloco="settings.general.overlay.overlayMenu.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="appSettings.overlayMenuEnabled"
-                  (change)="setOverlayMenuEnabled(!appSettings.overlayMenuEnabled)"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.general.overlay.binding.title"></span>
-              <span transloco="settings.general.overlay.binding.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <app-controller-binding
-                [actionKey]="OVRInputEventAction.OpenOverlay"
-              ></app-controller-binding>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.general.overlay.onlyOpenMenuWhenVRChatRunning.title"></span>
-              <span
-                transloco="settings.general.overlay.onlyOpenMenuWhenVRChatRunning.description"
-              ></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="appSettings.overlayMenuOnlyOpenWhenVRChatIsRunning"
-                  (change)="
-                    setOverlayMenuOnlyOpenWhenVRChatIsRunning(
-                      !appSettings.overlayMenuOnlyOpenWhenVRChatIsRunning
-                    )
-                  "
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
+          <app-setting-row
+            label="settings.general.overlay.overlayMenu.title"
+            description="settings.general.overlay.overlayMenu.description"
+          >
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="appSettings.overlayMenuEnabled"
+                (change)="setOverlayMenuEnabled(!appSettings.overlayMenuEnabled)"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
+          <app-setting-row
+            label="settings.general.overlay.binding.title"
+            description="settings.general.overlay.binding.description"
+          >
+            <app-controller-binding
+              [actionKey]="OVRInputEventAction.OpenOverlay"
+            ></app-controller-binding>
+          </app-setting-row>
+          <app-setting-row
+            label="settings.general.overlay.onlyOpenMenuWhenVRChatRunning.title"
+            description="settings.general.overlay.onlyOpenMenuWhenVRChatRunning.description"
+          >
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="appSettings.overlayMenuOnlyOpenWhenVRChatIsRunning"
+                (change)="
+                  setOverlayMenuOnlyOpenWhenVRChatIsRunning(
+                    !appSettings.overlayMenuOnlyOpenWhenVRChatIsRunning
+                  )
+                "
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
         </div>
       </div>
 
       <div class="setting-category">
         <h2 transloco="settings.general.lighthousePowerControl.title"></h2>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.general.lighthousePowerControl.enable.title"></span>
-              <span transloco="settings.general.lighthousePowerControl.enable.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="appSettings.lighthousePowerControl"
-                  (change)="setLighthousePowerControl(!appSettings.lighthousePowerControl)"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.general.lighthousePowerControl.powerOffMode.title"></span>
-              <span
-                transloco="settings.general.lighthousePowerControl.powerOffMode.description"
-              ></span>
-            </div>
-            <div class="setting-row-action">
-              <app-select-box
-                class="lighthouse-power-off-mode-dropdown"
-                [items]="lighthousePowerOffModeOptions"
-                [selected]="lighthousePowerOffModeOption"
-                (selectedChange)="onChangeLighthousePowerOffMode($event)"
-              ></app-select-box>
-            </div>
-          </div>
+          <app-setting-row
+            label="settings.general.lighthousePowerControl.enable.title"
+            description="settings.general.lighthousePowerControl.enable.description"
+          >
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="appSettings.lighthousePowerControl"
+                (change)="setLighthousePowerControl(!appSettings.lighthousePowerControl)"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
+          <app-setting-row
+            label="settings.general.lighthousePowerControl.powerOffMode.title"
+            description="settings.general.lighthousePowerControl.powerOffMode.description"
+          >
+            <app-select-box
+              class="lighthouse-power-off-mode-dropdown"
+              [items]="lighthousePowerOffModeOptions"
+              [selected]="lighthousePowerOffModeOption"
+              (selectedChange)="onChangeLighthousePowerOffMode($event)"
+            ></app-select-box>
+          </app-setting-row>
         </div>
       </div>
 
       <div class="setting-category">
         <h2 transloco="settings.general.startStop.title"></h2>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.general.startWithSteamVR.label"></span>
-              <span transloco="settings.general.startWithSteamVR.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <button
-                class="btn btn-secondary"
-                (click)="showStartWithSteamVRHowToModal()"
-                transloco="settings.general.startWithSteamVR.howTo"
-              ></button>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.general.stopWithSteamVR.label"></span>
-              <span transloco="settings.general.stopWithSteamVR.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <app-select-box
-                type="SMALL"
-                class="stop-with-steamvr-dropdown"
-                [items]="stopWithSteamVROptions"
-                [selected]="stopWithSteamVROption"
-                (selectedChange)="onChangeStopWithSteamVROption($event)"
-              ></app-select-box>
-            </div>
-          </div>
+          <app-setting-row
+            label="settings.general.startWithSteamVR.label"
+            description="settings.general.startWithSteamVR.description"
+          >
+            <button
+              class="btn btn-secondary"
+              (click)="showStartWithSteamVRHowToModal()"
+              transloco="settings.general.startWithSteamVR.howTo"
+            ></button>
+          </app-setting-row>
+          <app-setting-row
+            label="settings.general.stopWithSteamVR.label"
+            description="settings.general.stopWithSteamVR.description"
+          >
+            <app-select-box
+              type="SMALL"
+              class="stop-with-steamvr-dropdown"
+              [items]="stopWithSteamVROptions"
+              [selected]="stopWithSteamVROption"
+              (selectedChange)="onChangeStopWithSteamVROption($event)"
+            ></app-select-box>
+          </app-setting-row>
         </div>
       </div>
 
@@ -251,51 +217,45 @@
           }
         </div>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.general.lighthouseConsole.powerOffDelay.title"></span>
-              <span transloco="settings.general.lighthouseConsole.powerOffDelay.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="appSettings.lighthousePowerOffDelay"
-                  (change)="setLighthousePowerOffDelay(!appSettings.lighthousePowerOffDelay)"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
+          <app-setting-row
+            label="settings.general.lighthouseConsole.powerOffDelay.title"
+            description="settings.general.lighthouseConsole.powerOffDelay.description"
+          >
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="appSettings.lighthousePowerOffDelay"
+                (change)="setLighthousePowerOffDelay(!appSettings.lighthousePowerOffDelay)"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
         </div>
       </div>
 
       <div class="setting-category">
         <h2 transloco="settings.general.adminPrivileges.title"></h2>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.general.adminPrivileges.label"></span>
-              <span transloco="settings.general.adminPrivileges.description"></span>
-            </div>
-            <div class="setting-row-action">
-              @if ((elevatedSidecar.operation | async) !== 'idle') {
-                <div class="small-spinner"></div>
-              }
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="
-                    appSettings.elevatedFeaturesEnabled ||
-                    (elevatedSidecar.operation | async) === 'enabling'
-                  "
-                  [disabled]="(elevatedSidecar.operation | async) !== 'idle'"
-                  (change)="setElevatedFeaturesEnabled(!appSettings.elevatedFeaturesEnabled)"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
+          <app-setting-row
+            label="settings.general.adminPrivileges.label"
+            description="settings.general.adminPrivileges.description"
+          >
+            @if ((elevatedSidecar.operation | async) !== 'idle') {
+              <div class="small-spinner"></div>
+            }
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="
+                  appSettings.elevatedFeaturesEnabled ||
+                  (elevatedSidecar.operation | async) === 'enabling'
+                "
+                [disabled]="(elevatedSidecar.operation | async) !== 'idle'"
+                (change)="setElevatedFeaturesEnabled(!appSettings.elevatedFeaturesEnabled)"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
         </div>
       </div>
 

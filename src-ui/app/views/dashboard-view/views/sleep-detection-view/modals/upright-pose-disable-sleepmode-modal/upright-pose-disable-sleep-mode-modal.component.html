@@ -3,24 +3,19 @@
   <div class="pane-content">
     <p transloco="sleep-detection.modals.disableForUprightPose.description"></p>
     <div class="settings">
-      <div class="setting-row">
-        <div class="setting-row-label">
-          <span transloco="sleep-detection.modals.disableForUprightPose.duration.title"></span>
-          <span
-            transloco="sleep-detection.modals.disableForUprightPose.duration.description"
-          ></span>
-        </div>
-        <div class="setting-row-action">
-          <app-slider-setting
-            [(value)]="durationInternal"
-            unit="s"
-            [min]="1"
-            [snapValues]="[5]"
-            [snapDistance]="2"
-            [max]="59"
-          ></app-slider-setting>
-        </div>
-      </div>
+      <app-setting-row
+        label="sleep-detection.modals.disableForUprightPose.duration.title"
+        description="sleep-detection.modals.disableForUprightPose.duration.description"
+      >
+        <app-slider-setting
+          [(value)]="durationInternal"
+          unit="s"
+          [min]="1"
+          [snapValues]="[5]"
+          [snapDistance]="2"
+          [max]="59"
+        ></app-slider-setting>
+      </app-setting-row>
     </div>
   </div>
   <div class="pane-actions spread">

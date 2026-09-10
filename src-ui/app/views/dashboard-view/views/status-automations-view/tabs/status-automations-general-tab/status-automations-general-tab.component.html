@@ -17,32 +17,29 @@
     </div>
   }
   <div class="settings">
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span transloco="status-automations.general.onSleepEnable.title"></span>
-        <span transloco="status-automations.general.onSleepEnable.description.status"></span>
-      </div>
-      <div class="setting-row-action">
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="config.changeStatusOnSleepModeEnable"
-            (change)="
-              updateConfig({ changeStatusOnSleepModeEnable: !config.changeStatusOnSleepModeEnable })
-            "
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
-        <app-select-box
-          class="status-dropdown"
-          [type]="'SMALL'"
-          [items]="statusOptions"
-          [selected]="onSleepEnableStatusOption"
-          (selectedChange)="setStatusOption('ON_SLEEP_ENABLE', $event)"
-          [disabled]="!config.changeStatusOnSleepModeEnable"
-        ></app-select-box>
-      </div>
-    </div>
+    <app-setting-row
+      label="status-automations.general.onSleepEnable.title"
+      description="status-automations.general.onSleepEnable.description.status"
+    >
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="config.changeStatusOnSleepModeEnable"
+          (change)="
+            updateConfig({ changeStatusOnSleepModeEnable: !config.changeStatusOnSleepModeEnable })
+          "
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+      <app-select-box
+        class="status-dropdown"
+        [type]="'SMALL'"
+        [items]="statusOptions"
+        [selected]="onSleepEnableStatusOption"
+        (selectedChange)="setStatusOption('ON_SLEEP_ENABLE', $event)"
+        [disabled]="!config.changeStatusOnSleepModeEnable"
+      ></app-select-box>
+    </app-setting-row>
     <div class="setting-row">
       <div class="setting-row-label">
         <span></span>
@@ -71,34 +68,31 @@
         />
       </div>
     </div>
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span transloco="status-automations.general.onSleepDisable.title"></span>
-        <span transloco="status-automations.general.onSleepDisable.description.status"></span>
-      </div>
-      <div class="setting-row-action">
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="config.changeStatusOnSleepModeDisable"
-            (change)="
-              updateConfig({
-                changeStatusOnSleepModeDisable: !config.changeStatusOnSleepModeDisable,
-              })
-            "
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
-        <app-select-box
-          class="status-dropdown"
-          [type]="'SMALL'"
-          [items]="statusOptions"
-          [selected]="onSleepDisableStatusOption"
-          (selectedChange)="setStatusOption('ON_SLEEP_DISABLE', $event)"
-          [disabled]="!config.changeStatusOnSleepModeDisable"
-        ></app-select-box>
-      </div>
-    </div>
+    <app-setting-row
+      label="status-automations.general.onSleepDisable.title"
+      description="status-automations.general.onSleepDisable.description.status"
+    >
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="config.changeStatusOnSleepModeDisable"
+          (change)="
+            updateConfig({
+              changeStatusOnSleepModeDisable: !config.changeStatusOnSleepModeDisable,
+            })
+          "
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+      <app-select-box
+        class="status-dropdown"
+        [type]="'SMALL'"
+        [items]="statusOptions"
+        [selected]="onSleepDisableStatusOption"
+        (selectedChange)="setStatusOption('ON_SLEEP_DISABLE', $event)"
+        [disabled]="!config.changeStatusOnSleepModeDisable"
+      ></app-select-box>
+    </app-setting-row>
     <div class="setting-row">
       <div class="setting-row-label">
         <span></span>
@@ -130,34 +124,31 @@
         />
       </div>
     </div>
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span transloco="status-automations.general.onSleepPreparation.title"></span>
-        <span transloco="status-automations.general.onSleepPreparation.description.status"></span>
-      </div>
-      <div class="setting-row-action">
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="config.changeStatusOnSleepPreparation"
-            (change)="
-              updateConfig({
-                changeStatusOnSleepPreparation: !config.changeStatusOnSleepPreparation,
-              })
-            "
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
-        <app-select-box
-          class="status-dropdown"
-          [type]="'SMALL'"
-          [items]="statusOptions"
-          [selected]="onSleepPreparationStatusOption"
-          (selectedChange)="setStatusOption('ON_SLEEP_PREPARATION', $event)"
-          [disabled]="!config.changeStatusOnSleepPreparation"
-        ></app-select-box>
-      </div>
-    </div>
+    <app-setting-row
+      label="status-automations.general.onSleepPreparation.title"
+      description="status-automations.general.onSleepPreparation.description.status"
+    >
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="config.changeStatusOnSleepPreparation"
+          (change)="
+            updateConfig({
+              changeStatusOnSleepPreparation: !config.changeStatusOnSleepPreparation,
+            })
+          "
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+      <app-select-box
+        class="status-dropdown"
+        [type]="'SMALL'"
+        [items]="statusOptions"
+        [selected]="onSleepPreparationStatusOption"
+        (selectedChange)="setStatusOption('ON_SLEEP_PREPARATION', $event)"
+        [disabled]="!config.changeStatusOnSleepPreparation"
+      ></app-select-box>
+    </app-setting-row>
     <div class="setting-row">
       <div class="setting-row-label">
         <span></span>
