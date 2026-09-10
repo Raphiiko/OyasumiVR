@@ -1,13 +1,12 @@
 @use 'shadows.scss' as shadows;
 @use 'node_modules/material-colors/dist/colors.scss' as materialColors;
 
-@mixin baseTheme() {
+body {
   --color-primary: #ff5370;
   --color-primary-hover: #ff7a93;
   --color-primary-active: #e63e5c;
   --color-secondary: var(--color-surface-0);
   --color-secondary-hover: var(--color-surface-1);
-  --color-secondary-active: var(--color-surface-0);
   --color-surface-0: #0d0d0d;
   --color-surface-1: #151515;
   --color-surface-2: #1d1d1d;
@@ -15,11 +14,27 @@
   --color-surface-4: #2d2d2d;
   --color-surface-5: #8a8a8a;
   --color-surface-6: #ffffff;
-  --color-text-0: #f8f8f2;
-  --color-text-1: #e6e6e6;
-  --color-text-2: #b4b4b4;
-  --color-text-3: #8f8f8f;
-  --color-text-4: #010e16;
+  --color-text-1: #f8f8f2;
+  --color-text-2: #e6e6e6;
+  --color-text-3: #b4b4b4;
+  --color-text-4: #8f8f8f;
+
+  @for $i from 1 through 5 {
+    --shadow-#{$i}: #{shadows.build-shadow($i)};
+  }
+
+  --color-info: #{materialColors.$md-blue-900};
+  --color-on-info: white;
+
+  --color-caution: #{materialColors.$md-red-900};
+  --color-caution-hover: #{materialColors.$md-red-800};
+  --color-on-caution: white;
+
+  --color-warning: #{materialColors.$md-amber-900};
+  --color-on-warning: white;
+
+  --color-success: #{materialColors.$md-light-green-900};
+  --color-on-success: white;
 
   --color-alert-info: var(--color-info);
   --color-on-alert-info: var(--color-on-info);
@@ -37,83 +52,4 @@
   --color-vrchat-status-green: #67c23a;
   --color-vrchat-status-orange: #fd9200;
   --color-vrchat-status-red: #f56c6c;
-}
-
-@mixin lightTheme() {
-  --theme-name: 'light';
-
-  @for $i from 1 through 5 {
-    --shadow-#{$i}: #{shadows.build-shadow($i, true, false)};
-    --shadow-inset-#{$i}: #{shadows.build-shadow($i, true, true)};
-  }
-
-  --color-info: #{materialColors.$md-blue-500};
-  --color-info-hover: #{materialColors.$md-blue-400};
-  --color-on-info: white;
-
-  --color-caution: #{materialColors.$md-red-600};
-  --color-caution-hover: #{materialColors.$md-red-500};
-  --color-on-caution: white;
-
-  --color-warning: #{materialColors.$md-amber-600};
-  --color-warning-hover: #{materialColors.$md-amber-500};
-  --color-on-warning: #{materialColors.$md-grey-900};
-
-  --color-success: #{materialColors.$md-light-green-500};
-  --color-success-hover: #{materialColors.$md-light-green-400};
-  --color-on-success: white;
-}
-
-@mixin darkTheme() {
-  --theme-name: 'dark';
-
-  --color-primary: #ff5370;
-  --color-primary-hover: #ff7a93;
-  --color-primary-active: #e63e5c;
-  --color-surface-0: #0d0d0d;
-  --color-surface-1: #151515;
-  --color-surface-2: #1d1d1d;
-  --color-surface-3: #252525;
-  --color-surface-4: #2d2d2d;
-  --color-surface-5: #8a8a8a;
-  --color-surface-6: #ffffff;
-  --color-text-1: #f8f8f2;
-  --color-text-2: #e6e6e6;
-  --color-text-3: #b4b4b4;
-  --color-text-4: #8f8f8f;
-  --color-text-5: #010e16;
-
-  @for $i from 1 through 5 {
-    --shadow-#{$i}: #{shadows.build-shadow($i, true, false)};
-    --shadow-inset-#{$i}: #{shadows.build-shadow($i, true, true)};
-  }
-
-  --color-info: #{materialColors.$md-blue-900};
-  --color-info-hover: #{materialColors.$md-blue-800};
-  --color-on-info: white;
-
-  --color-caution: #{materialColors.$md-red-900};
-  --color-caution-hover: #{materialColors.$md-red-800};
-  --color-on-caution: white;
-
-  --color-warning: #{materialColors.$md-amber-900};
-  --color-warning-hover: #{materialColors.$md-amber-800};
-  --color-on-warning: white;
-
-  --color-success: #{materialColors.$md-light-green-900};
-  --color-success-hover: #{materialColors.$md-light-green-800};
-  --color-on-success: white;
-}
-
-// Selectors
-body {
-  @include baseTheme();
-}
-
-body.dark {
-  @include darkTheme();
-}
-
-body:not(.dark) {
-  @include lightTheme();
 }

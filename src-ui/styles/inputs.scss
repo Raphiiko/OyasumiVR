@@ -134,7 +134,7 @@ input:checked + .switch-toggle-slider:before {
       top: 0.2em;
       width: 0.25em;
       height: 0.5em;
-      border: solid var(--color-text-0);
+      border: solid var(--color-text-1);
       border-width: 0 0.2em 0.2em 0;
       -webkit-transform: rotate(45deg);
       -ms-transform: rotate(45deg);
@@ -230,7 +230,7 @@ input:checked + .switch-toggle-slider:before {
       opacity: 0;
       left: 50%;
       top: 50%;
-      background: var(--color-text-0);
+      background: var(--color-text-1);
       width: 0.5em;
       height: 0.5em;
       transition: all 0.1s ease;

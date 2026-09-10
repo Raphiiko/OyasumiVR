@@ -4,7 +4,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule, registerLocaleData } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ThemeService } from './services/theme.service';
 import { DashboardViewComponent } from './views/dashboard-view/dashboard-view.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { VarDirective } from './directives/var.directive';
@@ -447,7 +446,6 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
     FormsModule,
   ],
   providers: [
-    ThemeService,
     TStringTranslatePipe,
     provideHttpClient(withXhr(), withInterceptorsFromDi()),
     provideTransloco({

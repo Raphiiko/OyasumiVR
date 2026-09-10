@@ -19,6 +19,7 @@ body {
   padding: 0;
   overflow: hidden;
   font-size: 12px;
+  /* this palette duplicates styles/themes.scss, which the splash screen cannot reach */
   --color-surface-0: #0d0d0d;
   --color-surface-1: #151515;
   --color-surface-2: #1d1d1d;
