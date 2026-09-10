@@ -1,6 +1,9 @@
 @use 'panes';
 
-.modal-wrapper {
+.modal-wrapper,
+.modal-wrapper-message-center,
+.modal-wrapper-audio-device-picker,
+.modal-wrapper-brightness-control {
   background-color: #00000088;
   bottom: 0;
   height: 100%;
@@ -26,76 +29,22 @@
 }
 
 .modal-wrapper-message-center {
-  // background: #0008;
-  bottom: 0;
-  height: 100%;
-  left: 0;
-  overflow: auto;
-  position: fixed;
-  right: 0;
-  top: 0;
-  z-index: 100;
-  opacity: 0;
-  transition: opacity 0.15s ease-in-out;
-  will-change: opacity;
-  display: flex !important;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(5px);
-  border-radius: var(--window-border-radius);
-
-  &.in {
-    opacity: 1;
-  }
+  background-color: transparent;
 }
 
 .modal-wrapper-audio-device-picker {
-  background-color: #00000088;
-  bottom: 0;
-  height: 100%;
-  left: 0;
-  overflow: auto;
-  position: fixed;
-  right: 0;
-  top: 0;
-  z-index: 100;
-  opacity: 0;
-  transition: opacity 0.15s ease-in-out;
-  will-change: opacity;
-  display: flex !important;
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  backdrop-filter: blur(5px);
-  border-radius: var(--window-border-radius);
-
-  &.in {
-    opacity: 1;
-  }
 }
 
 .modal-wrapper-brightness-control {
-  bottom: 0;
-  height: 100%;
-  left: 0;
-  overflow: auto;
-  position: fixed;
-  right: 0;
-  top: 0;
-  z-index: 100;
-  opacity: 0;
-  transition: opacity 0.15s ease-in-out;
-  display: flex !important;
-  flex-direction: column;
+  background-color: transparent;
+  backdrop-filter: none;
   align-items: flex-end;
   justify-content: flex-end;
   pointer-events: none;
-  border-radius: var(--window-border-radius);
-
-  &.in {
-    opacity: 1;
-  }
+  will-change: auto;
 }
 
 .modal {
