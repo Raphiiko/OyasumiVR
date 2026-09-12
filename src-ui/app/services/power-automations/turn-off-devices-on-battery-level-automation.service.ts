@@ -67,6 +67,8 @@ export class TurnOffDevicesOnBatteryLevelAutomationService {
     const threshold = this.config.turnOffDevicesBelowBatteryLevel_threshold;
     // record the result against the triggering battery threshold
     const dispatched = await this.lighthouse.turnOffDevices([device]);
-    this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'BATTERY_LEVEL', threshold);
+    this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'BATTERY_LEVEL', {
+      batteryThreshold: threshold,
+    });
   }
 }

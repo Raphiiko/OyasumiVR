@@ -81,10 +81,11 @@ export class CommandOscMethod extends OscMethod<number> {
 
   private async handleTurnOffAllDevices() {
     setTimeout(async () => {
-      const dispatched = await this.lighthouseConsole.turnOffDevices(
-        await firstValueFrom(this.openvr.devices)
+      const devices = (await firstValueFrom(this.openvr.devices)).filter(
+        (device) => device.canPowerOff
       );
-      this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'OSC_CONTROL');
+      const dispatched = await this.lighthouseConsole.turnOffDevices(devices);
+      this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'OSC_CONTROL', { allDevices: devices });
     }, 2000);
   }
 

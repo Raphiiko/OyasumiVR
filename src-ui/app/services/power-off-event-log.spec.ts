@@ -12,6 +12,8 @@ import { TurnOffDevicesOnBatteryLevelAutomationService } from './power-automatio
 import { APP_SETTINGS_DEFAULT } from '../models/settings';
 import { AUTOMATION_CONFIGS_DEFAULT } from '../models/automations';
 import type { OVRDevice } from '../models/ovr-device';
+import type { OSCIntValue } from '../models/osc-message';
+import en from '../../assets/i18n/en.json';
 
 const invoke = vi.hoisted(() => vi.fn());
 vi.mock('@tauri-apps/api/core', () => ({ invoke }));
@@ -180,7 +182,7 @@ describe('power-off command results and actual event log', () => {
     'derives the event category from successful devices: %s',
     async (devices, category) => {
       const log = new EventLogService();
-      log.logTurnedOffOpenVRDevices([...devices], 'BATTERY_LEVEL', 20);
+      log.logTurnedOffOpenVRDevices([...devices], 'BATTERY_LEVEL', { batteryThreshold: 20 });
       expect((await firstValueFrom(log.eventLog)).logs).toMatchObject([
         { devices: category, reason: 'BATTERY_LEVEL', batteryThreshold: 20 },
       ]);
@@ -189,6 +191,124 @@ describe('power-off command results and actual event log', () => {
 });
 
 describe('power-off event producers', () => {
+  describe.each(['manual', 'osc'] as const)('%s all-devices action', (source) => {
+    it.each(['full', 'single', 'partial', 'skipped', 'failed'] as const)(
+      'preserves action context for %s results',
+      async (outcome) => {
+        const devices: OVRDevice[] =
+          outcome === 'single'
+            ? [controller]
+            : [controller, outcome === 'skipped' ? { ...tracker, dongleId: undefined } : tracker];
+        devices.push({
+          ...controller,
+          index: 10,
+          serialNumber: 'HMD',
+          class: 'HMD',
+          canPowerOff: false,
+        });
+        const { service } = await createConsole(devices);
+        if (outcome === 'partial')
+          invoke.mockResolvedValueOnce({ status: 0 }).mockResolvedValueOnce({ status: 1 });
+        if (outcome === 'failed') invoke.mockResolvedValue({ status: 1 });
+        const log = new EventLogService();
+        if (source === 'manual') {
+          await caller(DeviceListComponent.prototype, {
+            lighthouseConsole: service,
+            eventLog: log,
+            deviceManager: { getIdForOpenVRDevice: () => '', getKnownDeviceById: () => undefined },
+            deviceCategories: [{ type: 'OpenVR', devices }],
+          }).turnOffAllOVRDevices();
+        } else {
+          await caller(CommandOscMethod.prototype, {
+            lighthouseConsole: service,
+            eventLog: log,
+            openvr: { devices: new BehaviorSubject(devices) },
+          }).handleOSCMessage({
+            address: '/OyasumiVR/Command',
+            values: [{ kind: 'int', value: 4 } as OSCIntValue],
+          });
+          await vi.advanceTimersByTimeAsync(1999);
+          expect(invoke).not.toHaveBeenCalled();
+          await vi.advanceTimersByTimeAsync(1);
+        }
+        const logs = (await firstValueFrom(log.eventLog)).logs;
+        if (outcome === 'failed') {
+          expect(logs).toEqual([]);
+          return;
+        }
+        const category = outcome === 'full' || outcome === 'single' ? 'ALL' : 'CONTROLLER';
+        expect(logs).toMatchObject([
+          { devices: category, reason: source === 'manual' ? 'MANUAL' : 'OSC_CONTROL' },
+        ]);
+        expect(en.comp['event-log-entry'].type.turnedOffOpenVRDevices.title[category]).toBe(
+          category === 'ALL' ? 'Turned off all devices' : 'Turned off a controller'
+        );
+      }
+    );
+  });
+
+  it.each(['failed', 'skipped', 'partial'] as const)(
+    'sleep handles %s base-station results',
+    async (outcome) => {
+      const log = new EventLogService();
+      const powerOff = vi.fn(async (device: { id: string }) => {
+        if (device.id === 'FAILED') throw new Error('unreachable');
+      });
+      const service = caller(SleepDevicePowerAutomationsService.prototype, {
+        config: AUTOMATION_CONFIGS_DEFAULT.DEVICE_POWER_AUTOMATIONS,
+        appSettings: { settingsSync: APP_SETTINGS_DEFAULT },
+        deviceManager: {
+          getDevicesForSelection: async () => ({
+            ovrDevices: [],
+            lighthouseDevices:
+              outcome === 'skipped'
+                ? [{ id: 'V1', powerState: 'on' }]
+                : [
+                    { id: 'FAILED', powerState: 'on' },
+                    ...(outcome === 'partial' ? [{ id: 'OK', powerState: 'on' }] : []),
+                  ],
+          }),
+        },
+        lighthouseConsole: { turnOffDevices: async () => [] },
+        lighthouse: { deviceNeedsIdentifier: () => outcome === 'skipped', setPowerState: powerOff },
+        eventLog: log,
+      });
+      if (outcome === 'skipped') {
+        await service['handleSleepModeEnable']();
+        expect(powerOff).not.toHaveBeenCalled();
+      } else await expect(service['handleSleepModeEnable']()).rejects.toThrow('unreachable');
+      const logs = (await firstValueFrom(log.eventLog)).logs;
+      if (outcome === 'partial')
+        expect(logs).toMatchObject([{ devices: 'VARIOUS', reason: 'SLEEP_MODE_ENABLED' }]);
+      else expect(logs).toEqual([]);
+    }
+  );
+
+  it.each(['handleSleepModeEnable', 'handleSleepModeDisable', 'handleSleepPreparation'] as const)(
+    '%s keeps a successful base-station-only event',
+    async (method) => {
+      const log = new EventLogService();
+      const service = caller(SleepDevicePowerAutomationsService.prototype, {
+        config: AUTOMATION_CONFIGS_DEFAULT.DEVICE_POWER_AUTOMATIONS,
+        appSettings: { settingsSync: APP_SETTINGS_DEFAULT },
+        deviceManager: {
+          getDevicesForSelection: vi
+            .fn()
+            .mockResolvedValueOnce({
+              ovrDevices: [],
+              lighthouseDevices: [{ id: 'BASE', powerState: 'on' }],
+            })
+            .mockResolvedValue({ ovrDevices: [], lighthouseDevices: [], knownDevices: [] }),
+        },
+        lighthouseConsole: { turnOffDevices: async () => [] },
+        lighthouse: { deviceNeedsIdentifier: () => false, setPowerState: vi.fn(async () => {}) },
+        eventLog: log,
+      });
+      await service[method]();
+      expect((await firstValueFrom(log.eventLog)).logs).toMatchObject([{ devices: 'VARIOUS' }]);
+    }
+  );
+
   it.each([
     ['handleSleepModeEnable', 'SLEEP_MODE_ENABLED'],
     ['handleSleepModeDisable', 'SLEEP_MODE_DISABLED'],
@@ -209,18 +329,20 @@ describe('power-off event producers', () => {
         turnOffDevices: () => new Promise<OVRDevice[]>((resolve) => (finish = resolve)),
       },
       lighthouse: {
+        deviceNeedsIdentifier: () => false,
         setPowerState: async () => {
           throw new Error('base station unreachable');
         },
       },
       eventLog: log,
     });
-    await expect(service[method]()).rejects.toThrow('base station unreachable');
+    const pending = expect(service[method]()).rejects.toThrow('base station unreachable');
+    await vi.advanceTimersByTimeAsync(0);
     expect((await firstValueFrom(log.eventLog)).logs).toEqual([]);
     finish([controller]);
-    await vi.advanceTimersByTimeAsync(0);
+    await pending;
     expect((await firstValueFrom(log.eventLog)).logs).toMatchObject([
-      { type: 'turnedOffOpenVRDevices', devices: 'CONTROLLER', reason },
+      { type: 'turnedOffOpenVRDevices', devices: 'VARIOUS', reason },
     ]);
   });
 
@@ -333,13 +455,28 @@ describe('power-off event producers', () => {
     await vi.advanceTimersByTimeAsync(2000);
     expect(powerOff).toHaveBeenCalledOnce();
     expect(record).not.toHaveBeenCalled();
-    const dispatched = [controller];
+    const dispatched =
+      source === 'hotkeyTrackers' || source === 'oscTrackers'
+        ? [tracker]
+        : source === 'oscAll'
+          ? [controller, tracker]
+          : [controller];
     finish(dispatched);
     await pending;
     await vi.advanceTimersByTimeAsync(0);
-    expect(record.mock.calls[0].slice(0, 2)).toEqual([dispatched, reason]);
+    if (!source.startsWith('sleep'))
+      expect(record.mock.calls[0].slice(0, 2)).toEqual([dispatched, reason]);
     expect((await firstValueFrom(log.eventLog)).logs).toMatchObject([
-      { devices: 'CONTROLLER', reason },
+      {
+        devices: source.startsWith('sleep')
+          ? 'VARIOUS'
+          : source === 'all' || source === 'oscAll'
+            ? 'ALL'
+            : source === 'hotkeyTrackers' || source === 'oscTrackers'
+              ? 'TRACKER'
+              : 'CONTROLLER',
+        reason,
+      },
     ]);
   });
 });

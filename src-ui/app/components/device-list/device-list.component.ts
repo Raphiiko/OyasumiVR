@@ -310,7 +310,7 @@ export class DeviceListComponent implements OnInit {
     ).filter((d) => d.canPowerOff && !this.isOpenVRDeviceHidden(d));
     if (!devices.length) return;
     const dispatched = await this.lighthouseConsole.turnOffDevices(devices);
-    this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'MANUAL');
+    this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'MANUAL', { allDevices: devices });
   }
 
   onClickOutsideLHStatePopover($event: MouseEvent) {

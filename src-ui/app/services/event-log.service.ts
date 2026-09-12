@@ -63,7 +63,7 @@ export class EventLogService {
   public logTurnedOffOpenVRDevices(
     devices: OVRDevice[],
     reason: EventLogTurnedOffOpenVRDevices['reason'],
-    batteryThreshold?: number
+    options: { batteryThreshold?: number; allDevices?: OVRDevice[] } = {}
   ) {
     if (!devices.length) return;
     let category: EventLogTurnedOffOpenVRDevices['devices'] = 'VARIOUS';
@@ -72,11 +72,20 @@ export class EventLogService {
     } else if (devices.every((device) => device.class === 'GenericTracker')) {
       category = devices.length === 1 ? 'TRACKER' : 'TRACKERS';
     }
+    if (
+      options.allDevices?.length &&
+      options.allDevices.every(
+        (requested) =>
+          requested.serialNumber &&
+          devices.some((device) => device.serialNumber === requested.serialNumber)
+      )
+    )
+      category = 'ALL';
     this.logEvent({
       type: 'turnedOffOpenVRDevices',
       reason,
       devices: category,
-      batteryThreshold,
+      batteryThreshold: options.batteryThreshold,
     });
   }
 

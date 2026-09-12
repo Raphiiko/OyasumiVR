@@ -92,16 +92,23 @@ export class SleepDevicePowerAutomationsService {
     const devices = await this.deviceManager.getDevicesForSelection(deviceSelection);
     const ovrDevices = devices.ovrDevices.filter((d) => d.canPowerOff);
     const lighthouseDevices = devices.lighthouseDevices.filter(
-      (d) => d.powerState === 'on' || d.powerState === 'booting'
+      (d) =>
+        (d.powerState === 'on' || d.powerState === 'booting') &&
+        !this.lighthouse.deviceNeedsIdentifier(d)
     );
-    await Promise.all([
-      this.lighthouseConsole
-        .turnOffDevices(ovrDevices)
-        .then((dispatched) => this.eventLog.logTurnedOffOpenVRDevices(dispatched, reason)),
+    const results = await Promise.allSettled([
+      this.lighthouseConsole.turnOffDevices(ovrDevices).then((dispatched) => dispatched.length),
       ...lighthouseDevices.map((device) =>
-        this.lighthouse.setPowerState(device, this.appSettings.settingsSync.lighthousePowerOffState)
+        this.lighthouse
+          .setPowerState(device, this.appSettings.settingsSync.lighthousePowerOffState)
+          .then(() => 1)
       ),
     ]);
+    if (results.some((result) => result.status === 'fulfilled' && result.value > 0)) {
+      this.eventLog.logEvent({ type: 'turnedOffOpenVRDevices', reason, devices: 'VARIOUS' });
+    }
+    const failure = results.find((result) => result.status === 'rejected');
+    if (failure) throw failure.reason;
   }
 
   private async turnOnSelectedDevices(turnOnDevicesOnSleepModeDisable: DeviceSelection): Promise<{
