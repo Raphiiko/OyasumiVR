@@ -89,13 +89,11 @@ export class SleepDevicePowerAutomationsService {
     deviceSelection: DeviceSelection,
     reason: EventLogTurnedOffOpenVRDevices['reason']
   ) {
-    // resolve selected devices that can receive power commands
     const devices = await this.deviceManager.getDevicesForSelection(deviceSelection);
-    const ovrDevices = (devices.ovrDevices = devices.ovrDevices.filter((d) => d.canPowerOff));
-    const lighthouseDevices = (devices.lighthouseDevices = devices.lighthouseDevices.filter(
+    const ovrDevices = devices.ovrDevices.filter((d) => d.canPowerOff);
+    const lighthouseDevices = devices.lighthouseDevices.filter(
       (d) => d.powerState === 'on' || d.powerState === 'booting'
-    ));
-    // record OpenVR results independently of base-station commands
+    );
     await Promise.all([
       this.lighthouseConsole
         .turnOffDevices(ovrDevices)

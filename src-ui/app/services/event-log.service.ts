@@ -59,7 +59,7 @@ export class EventLogService {
     this._eventLog.next(this._eventLog.value);
   }
 
-  /** Records successful command dispatches, without physical shutdown confirmation. */
+  /** Empty device lists produce no event. */
   public logTurnedOffOpenVRDevices(
     devices: OVRDevice[],
     reason: EventLogTurnedOffOpenVRDevices['reason'],
@@ -76,7 +76,7 @@ export class EventLogService {
       type: 'turnedOffOpenVRDevices',
       reason,
       devices: category,
-      ...(batteryThreshold === undefined ? {} : { batteryThreshold }),
+      batteryThreshold,
     });
   }
 
