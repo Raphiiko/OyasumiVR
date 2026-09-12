@@ -105,7 +105,7 @@ export class BrightnessCctAutomationService {
     // apply settings for cached and newly connected headsets
     this.openvr.devices
       .pipe(
-        map((devices) => devices.find((d) => d.class === 'HMD')?.serialNumber ?? null),
+        map((devices) => devices.find((d) => d.class === 'HMD')?.index ?? null),
         startWith(null),
         distinctUntilChanged(),
         pairwise(),

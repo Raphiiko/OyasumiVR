@@ -70,36 +70,44 @@ describe.each(['frameLimit', 'resolution', 'fadeDistance', 'brightness'] as cons
       vi.restoreAllMocks();
     });
 
-    it('applies the initial cached HMD once and ignores property-only updates', async () => {
-      const devices = new BehaviorSubject([hmd]);
-      const service = createServices(devices)[name];
-      const connected = vi
-        .spyOn(service as unknown as { onHmdConnect(): Promise<void> }, 'onHmdConnect')
-        .mockResolvedValue();
-      await service.init();
-      await vi.advanceTimersByTimeAsync(3000);
-      expect(connected).toHaveBeenCalledTimes(1);
-      devices.next([{ ...hmd, battery: 99 }]);
-      await vi.advanceTimersByTimeAsync(3000);
-      expect(connected).toHaveBeenCalledTimes(1);
-      devices.next([]);
-      devices.next([hmd]);
-      await vi.advanceTimersByTimeAsync(3000);
-      expect(connected).toHaveBeenCalledTimes(2);
-    });
+    it.each(['cached-hmd', undefined])(
+      'applies the cached HMD with serial %s once and ignores property-only updates',
+      async (serialNumber) => {
+        const cachedHmd = { ...hmd, serialNumber };
+        const devices = new BehaviorSubject([cachedHmd]);
+        const service = createServices(devices)[name];
+        const connected = vi
+          .spyOn(service as unknown as { onHmdConnect(): Promise<void> }, 'onHmdConnect')
+          .mockResolvedValue();
+        await service.init();
+        await vi.advanceTimersByTimeAsync(3000);
+        expect(connected).toHaveBeenCalledTimes(1);
+        devices.next([{ ...cachedHmd, battery: 99 }]);
+        await vi.advanceTimersByTimeAsync(3000);
+        expect(connected).toHaveBeenCalledTimes(1);
+        devices.next([]);
+        devices.next([cachedHmd]);
+        await vi.advanceTimersByTimeAsync(3000);
+        expect(connected).toHaveBeenCalledTimes(2);
+      }
+    );
 
-    it('waits for a headset when the initial cache is empty', async () => {
-      const devices = new BehaviorSubject<OVRDevice[]>([]);
-      const service = createServices(devices)[name];
-      const connected = vi
-        .spyOn(service as unknown as { onHmdConnect(): Promise<void> }, 'onHmdConnect')
-        .mockResolvedValue();
-      await service.init();
-      await vi.advanceTimersByTimeAsync(3000);
-      expect(connected).not.toHaveBeenCalled();
-      devices.next([hmd]);
-      await vi.advanceTimersByTimeAsync(3000);
-      expect(connected).toHaveBeenCalledTimes(1);
-    });
+    it.each(['cached-hmd', undefined])(
+      'waits for a headset with serial %s when the initial cache is empty',
+      async (serialNumber) => {
+        const cachedHmd = { ...hmd, serialNumber };
+        const devices = new BehaviorSubject<OVRDevice[]>([]);
+        const service = createServices(devices)[name];
+        const connected = vi
+          .spyOn(service as unknown as { onHmdConnect(): Promise<void> }, 'onHmdConnect')
+          .mockResolvedValue();
+        await service.init();
+        await vi.advanceTimersByTimeAsync(3000);
+        expect(connected).not.toHaveBeenCalled();
+        devices.next([cachedHmd]);
+        await vi.advanceTimersByTimeAsync(3000);
+        expect(connected).toHaveBeenCalledTimes(1);
+      }
+    );
   }
 );
