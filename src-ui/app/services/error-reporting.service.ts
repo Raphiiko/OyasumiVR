@@ -6,6 +6,7 @@ import { FLAVOUR } from '../../build';
 import { environment } from '../../environments/environment';
 import { getVersion } from '../utils/app-utils';
 import { TelemetryService } from './telemetry.service';
+import { StoreSnapshotService } from './store-snapshot.service';
 
 const DSN = 'https://a08e4e04b7a24cafb5eb6c4ff701e52e@sentry.raphii.co/1';
 
@@ -14,7 +15,10 @@ export class ErrorReportingService {
   private active?: boolean;
   private update = Promise.resolve();
 
-  constructor(private telemetry: TelemetryService) {}
+  constructor(
+    private telemetry: TelemetryService,
+    private storeSnapshots: StoreSnapshotService
+  ) {}
 
   init() {
     this.telemetry.settings
@@ -30,6 +34,20 @@ export class ErrorReportingService {
 
   captureException(error: Error): void {
     if (this.active) Sentry.captureException(error);
+  }
+
+  async captureInitializationException(error: Error): Promise<void> {
+    try {
+      if (this.active === undefined) {
+        const { contents } = await this.storeSnapshots.readLiveStore('settings');
+        const consented =
+          contents !== null && JSON.parse(contents)?.TELEMETRY_SETTINGS?.enabled === true;
+        await this.setEnabled(consented);
+      }
+      this.captureException(error);
+    } catch {
+      // reporting failures must not replace the initialization error
+    }
   }
 
   private async setEnabled(consented: boolean) {

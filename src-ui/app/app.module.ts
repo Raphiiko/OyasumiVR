@@ -587,7 +587,7 @@ export class AppModule {
       return result;
     } catch (e) {
       await error(`[Init] Running '${action}' failed: ` + e);
-      this.errorReportingService.captureException(
+      await this.errorReportingService.captureInitializationException(
         e instanceof Error ? e : new Error(`Initialization function ${action} failed: ${e}`)
       );
       throw e;
