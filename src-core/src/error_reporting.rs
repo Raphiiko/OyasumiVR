@@ -57,7 +57,7 @@ pub fn set_enabled(app: &tauri::AppHandle, enabled: bool) -> bool {
     true
 }
 
-fn should_enable(enabled: bool, flavour: &crate::flavour::BuildFlavour) -> bool {
+pub(crate) fn should_enable(enabled: bool, flavour: &crate::flavour::BuildFlavour) -> bool {
     enabled && *flavour != crate::flavour::BuildFlavour::Dev
 }
 
