@@ -71,7 +71,6 @@ export class ControllerBindingComponent implements OnInit {
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
-    // refresh the displayed binding immediately and every second
     interval(1000)
       .pipe(
         startWith(void 0),
@@ -96,7 +95,6 @@ export class ControllerBindingComponent implements OnInit {
         error = 'STEAMVR_INACTIVE';
         return;
       }
-      // resolve this action's binding in the active session
       bindings = await this.openvrInputService.getActionBindings(this.actionSetKey, this.actionKey);
       if (bindings.length === 0) {
         const controllers = await firstValueFrom(this.openvr.devices).then((devices) =>
