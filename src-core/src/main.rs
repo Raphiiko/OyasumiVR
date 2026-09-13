@@ -334,7 +334,7 @@ async fn app_setup(app_handle: tauri::AppHandle) {
                     .get("enabled")
                     .and_then(|enabled| enabled.as_bool())
             })
-            .unwrap_or(true),
+            .unwrap_or(false),
         Err(_) => false,
     };
     error_reporting::set_enabled(&app_handle, error_reporting_enabled);
