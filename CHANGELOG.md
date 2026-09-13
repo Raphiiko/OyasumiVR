@@ -34,6 +34,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Changed
 
+- Image downloads reuse HTTP connections and avoid extra copies of each downloaded image.
 - Sleeping-pose consumers share detection work and receive the latest pose when opened.
 - Unchanged SteamVR device properties no longer trigger redundant window updates.
 - Sleep detection computes movement totals once per report instead of on every pose update.
