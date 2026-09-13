@@ -600,17 +600,17 @@ export class AppModule {
         (async () => {
           if (!(await this.elevationCheck())) return;
           const initStartTime = Date.now();
-          await this.logInit('Initializing telemetry', this.telemetryService.init());
-          await this.logInit(
-            'Initializing error reporting',
-            Promise.resolve(this.errorReportingService.init())
-          );
           await this.logInit('Initializing dev debug services', this.developerDebugService.init());
           await this.logInit(
             'Initializing store recovery',
             this.storeSnapshotService.initializeRecovery()
           );
           await this.logInit('Migrating store schemas', this.migrationCoordinatorService.run());
+          await this.logInit('Initializing telemetry', this.telemetryService.init());
+          await this.logInit(
+            'Initializing error reporting',
+            Promise.resolve(this.errorReportingService.init())
+          );
           this.storeSnapshotService.enablePeriodicSnapshots();
           // Clean cache
           await this.logInit('Cleaning cache', CachedValue.cleanCache()).catch(() => {}); // Allow initialization to continue if failed
