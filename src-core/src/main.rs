@@ -25,7 +25,7 @@ mod utils;
 mod vrc_log_parser;
 mod vrcx;
 
-use std::{mem, sync::atomic::Ordering};
+use std::mem;
 
 pub use flavour::BUILD_FLAVOUR;
 pub use grpc::models as Models;
@@ -34,7 +34,6 @@ use cronjob::CronJob;
 use globals::{APTABASE_APP_KEY, TAURI_APP_HANDLE};
 use log::{error, info, LevelFilter};
 use oyasumivr_shared::windows::is_elevated;
-use serde_json::json;
 use tauri::{plugin::TauriPlugin, Manager, Wry};
 use tauri_plugin_cli::CliExt;
 use tauri_plugin_log::RotationStrategy;
@@ -257,7 +256,7 @@ fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
             },
             flush_interval: tauri_plugin_aptabase::InitOptions::default().flush_interval,
         })
-        .with_panic_hook(Box::new(|client, info, msg| {
+        .with_panic_hook(Box::new(|_client, info, msg| {
             let location = info
                 .location()
                 .map(|loc| {
@@ -265,17 +264,6 @@ fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
                     format!("{file}:{}:{}", loc.line(), loc.column())
                 })
                 .unwrap_or_default();
-
-            // Upload crash report if telemetry is enabled
-            if telemetry::TELEMETRY_ENABLED.load(Ordering::Relaxed) {
-                println!("Uploading panic data to Aptabase: {msg} ({location})");
-                let _ = client.track_event(
-                    "rust_panic",
-                    Some(json!({
-                      "info": format!("{} ({})", msg, location),
-                    })),
-                );
-            }
 
             // Write msg and location to file
             let panic_log_path = {
