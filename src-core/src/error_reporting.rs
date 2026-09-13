@@ -12,9 +12,7 @@ static UI_BUDGET: LazyLock<Mutex<Option<Arc<EventBudget>>>> = LazyLock::new(Defa
 static UPDATE_LOCK: LazyLock<tokio::sync::Mutex<()>> = LazyLock::new(Default::default);
 
 pub fn set_enabled(app: &tauri::AppHandle, enabled: bool) -> bool {
-    let enabled = enabled
-        && !cfg!(debug_assertions)
-        && crate::BUILD_FLAVOUR != crate::flavour::BuildFlavour::Dev;
+    let enabled = should_enable(enabled, &crate::BUILD_FLAVOUR);
     if !enabled {
         ENABLED.store(false, Ordering::Relaxed);
         return false;
@@ -59,6 +57,10 @@ pub fn set_enabled(app: &tauri::AppHandle, enabled: bool) -> bool {
     true
 }
 
+fn should_enable(enabled: bool, flavour: &crate::flavour::BuildFlavour) -> bool {
+    enabled && *flavour != crate::flavour::BuildFlavour::Dev
+}
+
 #[tauri::command]
 pub async fn set_error_reporting_enabled(app: tauri::AppHandle, enabled: bool) {
     let _update = UPDATE_LOCK.lock().await;
@@ -77,4 +79,17 @@ pub fn allow_ui_event(issue: String) -> bool {
         .ok()
         .and_then(|budget| budget.as_ref().map(|budget| budget.allow(&issue)))
         .unwrap_or(false)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::flavour::BuildFlavour;
+
+    #[test]
+    fn allows_reporting_in_steam_debug_builds() {
+        assert!(should_enable(true, &BuildFlavour::Steam));
+        assert!(!should_enable(true, &BuildFlavour::Dev));
+        assert!(!should_enable(false, &BuildFlavour::Steam));
+    }
 }
