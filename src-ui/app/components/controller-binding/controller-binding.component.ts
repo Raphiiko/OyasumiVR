@@ -26,6 +26,7 @@ export class ControllerBindingComponent implements OnInit {
     | 'NO_CONTROLLERS'
     | 'MISSING_CONTROLLER'
     | 'DASHBOARD_OPEN'
+    | 'LOOKUP_FAILED'
     | 'UNKNOWN';
   protected steamVRActive = false;
   protected hasRightHand = false;
@@ -116,7 +117,7 @@ export class ControllerBindingComponent implements OnInit {
         error = 'UNKNOWN';
       }
     })().catch((e) => {
-      error = 'UNKNOWN';
+      error = 'LOOKUP_FAILED';
       warn(`[ControllerBinding] Failed to refresh bindings, retrying next tick: ${e}`);
     });
     // a slower refresh must not overwrite what a newer one already displayed
