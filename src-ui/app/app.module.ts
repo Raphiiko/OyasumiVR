@@ -187,7 +187,6 @@ import { BigscreenBeyondLedAutomationService } from './services/hmd-specific-aut
 import { BigscreenBeyondFanAutomationService } from './services/hmd-specific-automations/bigscreen-beyond-fan-automation.service';
 import { BSBFanSpeedControlModalComponent } from './components/bsb-fan-speed-control-modal/bsb-fan-speed-control-modal.component';
 import { DiscordService } from './services/discord.service';
-import { trackEvent } from '@aptabase/tauri';
 import { pTimeout, sleep } from './utils/promise-utils';
 import { PlayerListPresetModalComponent } from './components/player-list-preset-modal/player-list-preset-modal.component';
 import { PlayerCountSleepVisualizationComponent } from './components/player-count-sleep-visualization/player-count-sleep-visualization.component';
@@ -588,12 +587,9 @@ export class AppModule {
       return result;
     } catch (e) {
       await error(`[Init] Running '${action}' failed: ` + e);
-      await trackEvent('app_init_error', {
-        action,
-        error: `${e}`,
-        timeout: TIMEOUT,
-        metadata: `action=${action}, timeout=${TIMEOUT}, error=${e}`,
-      });
+      this.errorReportingService.captureException(
+        e instanceof Error ? e : new Error(`Initialization function ${action} failed: ${e}`)
+      );
       throw e;
     }
   }
@@ -604,6 +600,11 @@ export class AppModule {
         (async () => {
           if (!(await this.elevationCheck())) return;
           const initStartTime = Date.now();
+          await this.logInit('Initializing telemetry', this.telemetryService.init());
+          await this.logInit(
+            'Initializing error reporting',
+            Promise.resolve(this.errorReportingService.init())
+          );
           await this.logInit('Initializing dev debug services', this.developerDebugService.init());
           await this.logInit(
             'Initializing store recovery',
@@ -623,12 +624,6 @@ export class AppModule {
             this.logInit('Initializing deep linking', this.deepLinkService.init()),
           ]);
           await this.logInit('Initializing system tray', this.systemTrayService.init());
-          // Initialize telemetry
-          await this.logInit('Initializing telemetry', this.telemetryService.init());
-          await this.logInit(
-            'Initializing error reporting',
-            Promise.resolve(this.errorReportingService.init())
-          );
           // Initialize "base" services
           await Promise.all([
             this.logInit('Initializing OpenVR', this.openvrService.init()),
