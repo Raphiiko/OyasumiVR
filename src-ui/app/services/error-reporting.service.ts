@@ -11,7 +11,7 @@ const DSN = 'https://a08e4e04b7a24cafb5eb6c4ff701e52e@sentry.raphii.co/1';
 
 @Injectable({ providedIn: 'root' })
 export class ErrorReportingService {
-  private active = false;
+  private active?: boolean;
   private update = Promise.resolve();
 
   constructor(private telemetry: TelemetryService) {}
