@@ -23,7 +23,7 @@
     .players-list {
       flex: 1;
       overflow-x: hidden;
-      overflow-y: overlay;
+      overflow-y: auto;
       display: flex;
       flex-direction: column;
       align-items: stretch;

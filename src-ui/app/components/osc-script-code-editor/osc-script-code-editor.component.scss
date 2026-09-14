@@ -50,7 +50,7 @@
 .code-editor {
   display: flex;
   flex-direction: row;
-  overflow: overlay;
+  overflow: auto;
   align-items: stretch;
   background: var(--color-surface-0);
   border-radius: 0.5em;
@@ -159,7 +159,7 @@
     background: var(--color-surface-2);
     padding: 0.5em;
     max-height: 8em;
-    overflow: overlay;
+    overflow: auto;
 
     &::-webkit-scrollbar-thumb,
     *::-webkit-scrollbar-thumb {
