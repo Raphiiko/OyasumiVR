@@ -4,12 +4,14 @@ import {
   EventLog,
   EventLogDraft,
   EventLogEntry,
+  EventLogTurnedOffOpenVRDevices,
 } from '../models/event-log-entry';
 import { async, BehaviorSubject, Observable, throttleTime } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 
 import { EVENT_LOG_STORE } from '../globals';
 import { EventLogStoreWriter } from '../utils/event-log-store-writer';
+import { OVRDevice } from '../models/ovr-device';
 
 const MAX_LOG_AGE = 48 * 60 * 60 * 1000;
 
@@ -55,6 +57,36 @@ export class EventLogService {
     }
     // Update the event log
     this._eventLog.next(this._eventLog.value);
+  }
+
+  /** Empty device lists produce no event. */
+  public logTurnedOffOpenVRDevices(
+    devices: OVRDevice[],
+    reason: EventLogTurnedOffOpenVRDevices['reason'],
+    options: { batteryThreshold?: number; allDevices?: OVRDevice[] } = {}
+  ) {
+    if (!devices.length) return;
+    let category: EventLogTurnedOffOpenVRDevices['devices'] = 'VARIOUS';
+    if (devices.every((device) => device.class === 'Controller')) {
+      category = devices.length === 1 ? 'CONTROLLER' : 'CONTROLLERS';
+    } else if (devices.every((device) => device.class === 'GenericTracker')) {
+      category = devices.length === 1 ? 'TRACKER' : 'TRACKERS';
+    }
+    if (
+      options.allDevices?.length &&
+      options.allDevices.every(
+        (requested) =>
+          requested.serialNumber &&
+          devices.some((device) => device.serialNumber === requested.serialNumber)
+      )
+    )
+      category = 'ALL';
+    this.logEvent({
+      type: 'turnedOffOpenVRDevices',
+      reason,
+      devices: category,
+      batteryThreshold: options.batteryThreshold,
+    });
   }
 
   private async loadEventLog() {

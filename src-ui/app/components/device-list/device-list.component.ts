@@ -10,12 +10,8 @@ import { fade, hshrink, triggerChildren, vshrink } from 'src-ui/app/utils/animat
 import { OVRDevice, OVRDeviceClass } from 'src-ui/app/models/ovr-device';
 import { LighthouseConsoleService } from '../../services/lighthouse-console.service';
 import { OpenVRService } from '../../services/openvr.service';
-import {
-  EventLogLighthouseSetPowerState,
-  EventLogTurnedOffOpenVRDevices,
-} from '../../models/event-log-entry';
+import { EventLogLighthouseSetPowerState } from '../../models/event-log-entry';
 import { EventLogService } from '../../services/event-log.service';
-import { error } from '@tauri-apps/plugin-log';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LighthouseDevice, LighthouseDevicePowerState } from 'src-ui/app/models/lighthouse-device';
 import { LighthouseService } from 'src-ui/app/services/lighthouse.service';
@@ -258,24 +254,8 @@ export class DeviceListComponent implements OnInit {
   async turnOffOVRDevices(category: OpenVRDisplayCategory) {
     const devices = category.devices.filter((d) => d.canPowerOff && !this.isOpenVRDeviceHidden(d));
     if (!devices.length) return;
-    await this.lighthouseConsole.turnOffDevices(devices);
-    this.eventLog.logEvent({
-      type: 'turnedOffOpenVRDevices',
-      reason: 'MANUAL',
-      devices: (() => {
-        switch (category.class) {
-          case 'Controller':
-            return devices.length > 1 ? 'CONTROLLERS' : 'CONTROLLER';
-          case 'GenericTracker':
-            return devices.length > 1 ? 'TRACKERS' : 'TRACKER';
-          default:
-            error(
-              `[DeviceList] Couldn't determine device class for event log entry (${category.class})`
-            );
-            return 'VARIOUS';
-        }
-      })(),
-    } as EventLogTurnedOffOpenVRDevices);
+    const dispatched = await this.lighthouseConsole.turnOffDevices(devices);
+    this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'MANUAL');
   }
 
   async clickBulkPowerLighthouseDevices(category: LighthouseDisplayCategory) {
@@ -329,12 +309,8 @@ export class DeviceListComponent implements OnInit {
         .map((c) => (c as OpenVRDisplayCategory).devices)
     ).filter((d) => d.canPowerOff && !this.isOpenVRDeviceHidden(d));
     if (!devices.length) return;
-    await this.lighthouseConsole.turnOffDevices(devices);
-    this.eventLog.logEvent({
-      type: 'turnedOffOpenVRDevices',
-      reason: 'MANUAL',
-      devices: 'ALL',
-    } as EventLogTurnedOffOpenVRDevices);
+    const dispatched = await this.lighthouseConsole.turnOffDevices(devices);
+    this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'MANUAL', { allDevices: devices });
   }
 
   onClickOutsideLHStatePopover($event: MouseEvent) {

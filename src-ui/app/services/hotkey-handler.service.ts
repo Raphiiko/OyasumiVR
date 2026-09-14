@@ -9,10 +9,7 @@ import { LighthouseConsoleService } from './lighthouse-console.service';
 import { LighthouseService } from './lighthouse.service';
 import { OpenVRService } from './openvr.service';
 import { AppSettingsService } from './app-settings.service';
-import {
-  EventLogLighthouseSetPowerState,
-  EventLogTurnedOffOpenVRDevices,
-} from '../models/event-log-entry';
+import { EventLogLighthouseSetPowerState } from '../models/event-log-entry';
 import { EventLogService } from './event-log.service';
 
 @Injectable({
@@ -76,37 +73,21 @@ export class HotkeyHandlerService {
   }
 
   private async turnOffControllerDevices() {
-    this.openvr.devices
-      .pipe(
-        take(1),
-        map((devices) => devices.filter((d) => d.class === 'Controller')),
-        filter((controllers) => controllers.length > 0)
-      )
-      .subscribe((controllers) => {
-        this.lighthouseConsoleService.turnOffDevices(controllers);
-        this.eventLog.logEvent({
-          type: 'turnedOffOpenVRDevices',
-          reason: 'HOTKEY',
-          devices: controllers.length > 1 ? 'CONTROLLERS' : 'CONTROLLER',
-        } as EventLogTurnedOffOpenVRDevices);
-      });
+    const controllers = (await firstValueFrom(this.openvr.devices)).filter(
+      (device) => device.class === 'Controller'
+    );
+    if (!controllers.length) return;
+    const dispatched = await this.lighthouseConsoleService.turnOffDevices(controllers);
+    this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'HOTKEY');
   }
 
   private async turnOffTrackerDevices() {
-    this.openvr.devices
-      .pipe(
-        take(1),
-        map((devices) => devices.filter((d) => d.class === 'GenericTracker')),
-        filter((trackers) => trackers.length > 0)
-      )
-      .subscribe((trackers) => {
-        this.lighthouseConsoleService.turnOffDevices(trackers);
-        this.eventLog.logEvent({
-          type: 'turnedOffOpenVRDevices',
-          reason: 'HOTKEY',
-          devices: trackers.length > 1 ? 'TRACKERS' : 'TRACKER',
-        } as EventLogTurnedOffOpenVRDevices);
-      });
+    const trackers = (await firstValueFrom(this.openvr.devices)).filter(
+      (device) => device.class === 'GenericTracker'
+    );
+    if (!trackers.length) return;
+    const dispatched = await this.lighthouseConsoleService.turnOffDevices(trackers);
+    this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'HOTKEY');
   }
 
   private async toggleLighthouseDevices() {

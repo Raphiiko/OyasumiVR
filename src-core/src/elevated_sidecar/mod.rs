@@ -88,9 +88,7 @@ pub async fn uses_scheduled_task() -> bool {
 }
 
 pub async fn set_error_reporting_enabled(enabled: bool) {
-    let enabled = enabled
-        && !cfg!(debug_assertions)
-        && crate::BUILD_FLAVOUR != crate::flavour::BuildFlavour::Dev;
+    let enabled = crate::error_reporting::should_enable(enabled, &crate::BUILD_FLAVOUR);
     ERROR_REPORTING_ENABLED.store(enabled, Ordering::Relaxed);
     let mut manager_guard = SIDECAR_MANAGER.lock().await;
     let Some(manager) = manager_guard.as_mut() else {
