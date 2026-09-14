@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Renderer2 } from '@angular/core';
 import { OpenVRService } from './services/openvr.service';
 import { routeAnimations } from './app-routing.module';
 import { TranslocoService } from '@jsverse/transloco';
@@ -7,10 +7,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   debounceTime,
   distinctUntilChanged,
+  fromEvent,
   map,
   Observable,
   of,
   skip,
+  startWith,
   switchMap,
   tap,
 } from 'rxjs';
@@ -33,16 +35,24 @@ export class AppComponent implements OnInit {
     public openvr: OpenVRService,
     translate: TranslocoService,
     private settings: AppSettingsService,
-    private telemetry: TelemetryService
+    private telemetry: TelemetryService,
+    renderer: Renderer2
   ) {
+    const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+    fromEvent(motionPreference, 'change')
+      .pipe(
+        startWith(null),
+        map(() => motionPreference.matches),
+        distinctUntilChanged(),
+        takeUntilDestroyed()
+      )
+      .subscribe((reduceMotion) => renderer.setProperty(document.body, '@.disabled', reduceMotion));
+
     this.settings.settings
       .pipe(
         map((settings) => settings.userLanguage),
         distinctUntilChanged(),
-        // The translation has to be in memory before anything calls translate()
-        // synchronously. A translation supplied at runtime, as the translation
-        // editor's preview does, is already in memory but has no file to fetch,
-        // so loading it would 404 and fall back to the fallback language.
+        // runtime translations may have no backing file
         switchMap((userLanguage) => {
           const alreadyInMemory =
             Object.keys(translate.getTranslation(userLanguage) ?? {}).length > 0;

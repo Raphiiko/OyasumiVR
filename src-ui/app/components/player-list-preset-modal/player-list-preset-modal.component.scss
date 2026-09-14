@@ -47,6 +47,7 @@
 
 .presets-list {
   overflow-y: overlay;
+  scrollbar-gutter: stable;
   min-height: 0;
   flex: 1;
   background: var(--color-surface-1);
