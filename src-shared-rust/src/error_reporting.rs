@@ -456,6 +456,16 @@ mod tests {
     use super::*;
 
     #[test]
+    fn extracts_filename_from_windows_registry_path() {
+        assert_eq!(
+            safe_filename(
+                r"C:\Users\build-user\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tao-0.34.5\src\platform_impl\windows\event_loop\runner.rs"
+            ),
+            "runner.rs"
+        );
+    }
+
+    #[test]
     fn enforces_daily_and_issue_caps() {
         let path = std::env::temp_dir().join(format!(
             "oyasumivr-error-budget-{}-{}.json",
