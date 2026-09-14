@@ -4,14 +4,9 @@
   overflow: hidden;
 }
 
-.pane {
-  width: 100%;
-}
-
-.pane-content {
-  padding: 2em;
-  overflow-y: overlay;
-  width: 100%;
+// the label ends with a provider link, so the description span is not :last-child
+.setting-row-label span:nth-child(2) {
+  color: var(--color-text-3);
 }
 
 .clickable-logo {
@@ -21,12 +16,6 @@
   &:hover {
     transform: scale(1.2);
     filter: drop-shadow(0 0 0.5em var(--color-surface-5));
-  }
-}
-
-.setting-row-label {
-  span:nth-child(2) {
-    color: var(--color-text-3);
   }
 }
 

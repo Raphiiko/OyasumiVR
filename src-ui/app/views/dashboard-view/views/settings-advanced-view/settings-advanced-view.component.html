@@ -1,92 +1,75 @@
-<div class="pane">
+<div class="pane fill">
   <div class="pane-title" transloco="settings.advanced.title"></div>
-  <div class="pane-content">
+  <div class="pane-content scroll">
     <div class="setting-view-container">
       <div class="setting-category">
         <h2 transloco="settings.advanced.application.title"></h2>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.advanced.application.overlayGpuAcceleration.title"></span>
-              <span
-                transloco="settings.advanced.application.overlayGpuAcceleration.description"
-              ></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="overlayGpuAcceleration"
-                  (change)="setOverlayGpuAcceleration(!overlayGpuAcceleration)"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.advanced.application.openVrInitDelayFix.title"></span>
-              <span transloco="settings.advanced.application.openVrInitDelayFix.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="openVrInitDelayFix"
-                  (change)="setOpenVrInitDelayFix(!openVrInitDelayFix)"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.general.lighthouseConsole.powerOffDelay.title"></span>
-              <span transloco="settings.general.lighthouseConsole.powerOffDelay.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="lighthousePowerOffDelay"
-                  (change)="setLighthousePowerOffDelay(!lighthousePowerOffDelay)"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
+          <app-setting-row
+            label="settings.advanced.application.overlayGpuAcceleration.title"
+            description="settings.advanced.application.overlayGpuAcceleration.description"
+          >
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="overlayGpuAcceleration"
+                (change)="setOverlayGpuAcceleration(!overlayGpuAcceleration)"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
+          <app-setting-row
+            label="settings.advanced.application.openVrInitDelayFix.title"
+            description="settings.advanced.application.openVrInitDelayFix.description"
+          >
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="openVrInitDelayFix"
+                (change)="setOpenVrInitDelayFix(!openVrInitDelayFix)"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
+          <app-setting-row
+            label="settings.general.lighthouseConsole.powerOffDelay.title"
+            description="settings.general.lighthouseConsole.powerOffDelay.description"
+          >
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="lighthousePowerOffDelay"
+                (change)="setLighthousePowerOffDelay(!lighthousePowerOffDelay)"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
         </div>
       </div>
       <div class="setting-category">
         <h2 transloco="settings.advanced.translation.title"></h2>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.advanced.translation.loadFile.title"></span>
-              <span transloco="settings.advanced.translation.loadFile.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <button class="btn btn-primary" (click)="loadLanguageFile()">
-                <i class="material-icons-round">file_open</i>
-                <span transloco="settings.advanced.translation.loadFile.action"></span>
-              </button>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.advanced.translation.contribute.title"></span>
-              <span transloco="settings.advanced.translation.contribute.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <a
-                class="btn btn-primary"
-                target="_blank"
-                href="https://github.com/Raphiiko/OyasumiVR/wiki/Adding-Translations"
-              >
-                <span transloco="settings.advanced.translation.contribute.docs"></span>
-              </a>
-            </div>
-          </div>
+          <app-setting-row
+            label="settings.advanced.translation.loadFile.title"
+            description="settings.advanced.translation.loadFile.description"
+          >
+            <button class="btn btn-primary" (click)="loadLanguageFile()">
+              <i class="material-icons-round">file_open</i>
+              <span transloco="settings.advanced.translation.loadFile.action"></span>
+            </button>
+          </app-setting-row>
+          <app-setting-row
+            label="settings.advanced.translation.contribute.title"
+            description="settings.advanced.translation.contribute.description"
+          >
+            <a
+              class="btn btn-primary"
+              target="_blank"
+              href="https://github.com/Raphiiko/OyasumiVR/wiki/Adding-Translations"
+            >
+              <span transloco="settings.advanced.translation.contribute.docs"></span>
+            </a>
+          </app-setting-row>
           <div class="setting-row">
             <div class="setting-row-label">
               <span>
@@ -105,18 +88,15 @@
       <div class="setting-category">
         <h2 transloco="settings.advanced.logs.title"></h2>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.advanced.logs.openFolder.title"></span>
-              <span transloco="settings.advanced.logs.openFolder.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <button class="btn btn-primary" (click)="openLogsFolder()">
-                <i class="material-icons-round">folder</i>
-                <span transloco="settings.advanced.logs.openFolder.action"></span>
-              </button>
-            </div>
-          </div>
+          <app-setting-row
+            label="settings.advanced.logs.openFolder.title"
+            description="settings.advanced.logs.openFolder.description"
+          >
+            <button class="btn btn-primary" (click)="openLogsFolder()">
+              <i class="material-icons-round">folder</i>
+              <span transloco="settings.advanced.logs.openFolder.action"></span>
+            </button>
+          </app-setting-row>
         </div>
       </div>
       <div class="setting-category">
@@ -133,22 +113,19 @@
           </button>
         </div>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.advanced.persistentData.dataType.all.title"></span>
-              <span transloco="settings.advanced.persistentData.dataType.all.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="check-toggle">
-                <input
-                  [checked]="isPersistentStorageItemChecked('ALL')"
-                  (change)="togglePersistentStorageItem('ALL')"
-                  type="checkbox"
-                />
-                <span class="check-toggle-checkmark"></span>
-              </label>
-            </div>
-          </div>
+          <app-setting-row
+            label="settings.advanced.persistentData.dataType.all.title"
+            description="settings.advanced.persistentData.dataType.all.description"
+          >
+            <label class="check-toggle">
+              <input
+                [checked]="isPersistentStorageItemChecked('ALL')"
+                (change)="togglePersistentStorageItem('ALL')"
+                type="checkbox"
+              />
+              <span class="check-toggle-checkmark"></span>
+            </label>
+          </app-setting-row>
           <div class="setting-row-group">
             @for (item of persistentStorageItems; track item) {
               <div class="setting-row compact">
@@ -184,37 +161,29 @@
         <h2 transloco="settings.advanced.troubleshooting.title"></h2>
         <p transloco="settings.advanced.troubleshooting.description"></p>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.advanced.troubleshooting.vrManifestReregister.title"></span>
+          <app-setting-row
+            label="settings.advanced.troubleshooting.vrManifestReregister.title"
+            description="settings.advanced.troubleshooting.vrManifestReregister.description"
+          >
+            <button
+              class="btn btn-primary"
+              (click)="reregisterVRManifest()"
+              [disabled]="(openvr.status | async) !== 'INITIALIZED'"
+            >
               <span
-                transloco="settings.advanced.troubleshooting.vrManifestReregister.description"
+                transloco="settings.advanced.troubleshooting.vrManifestReregister.action"
               ></span>
-            </div>
-            <div class="setting-row-action">
-              <button
-                class="btn btn-primary"
-                (click)="reregisterVRManifest()"
-                [disabled]="(openvr.status | async) !== 'INITIALIZED'"
-              >
-                <span
-                  transloco="settings.advanced.troubleshooting.vrManifestReregister.action"
-                ></span>
-              </button>
-            </div>
-          </div>
+            </button>
+          </app-setting-row>
           @if (devToolsAvailable | async) {
-            <div class="setting-row">
-              <div class="setting-row-label">
-                <span transloco="settings.advanced.troubleshooting.devTools.title"></span>
-                <span transloco="settings.advanced.troubleshooting.devTools.description"></span>
-              </div>
-              <div class="setting-row-action">
-                <button class="btn btn-primary" (click)="openDevTools()">
-                  <span transloco="settings.advanced.troubleshooting.devTools.action"></span>
-                </button>
-              </div>
-            </div>
+            <app-setting-row
+              label="settings.advanced.troubleshooting.devTools.title"
+              description="settings.advanced.troubleshooting.devTools.description"
+            >
+              <button class="btn btn-primary" (click)="openDevTools()">
+                <span transloco="settings.advanced.troubleshooting.devTools.action"></span>
+              </button>
+            </app-setting-row>
           }
         </div>
       </div>

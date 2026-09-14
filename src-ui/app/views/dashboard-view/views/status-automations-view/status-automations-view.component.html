@@ -1,4 +1,4 @@
-<div class="pane" [@noop]>
+<div class="pane fill" [@noop]>
   <div class="pane-title" transloco="status-automations.title"></div>
   <div class="tab-bar">
     <div class="tab" [class.active]="activeTab === 'GENERAL'" (click)="activeTab = 'GENERAL'">
@@ -12,7 +12,7 @@
       <div class="tab-label" transloco="status-automations.tabs.playerLimit"></div>
     </div>
   </div>
-  <div class="pane-content">
+  <div class="pane-content scroll">
     <div class="setting-view-container">
       @if (activeTab === 'GENERAL') {
         <app-status-automations-general-tab></app-status-automations-general-tab>
