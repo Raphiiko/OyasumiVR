@@ -26,7 +26,7 @@
 
 .audio-devices {
   flex: 1;
-  overflow-y: overlay;
+  overflow-y: auto;
   scrollbar-gutter: stable;
   display: flex;
   flex-direction: column;
