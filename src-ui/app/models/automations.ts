@@ -345,12 +345,6 @@ export type FrameLimitConfigOption = (typeof FrameLimitConfigOptions)[number];
 
 export type JoinNotificationsMode = 'EVERYONE' | 'FRIEND' | 'WHITELIST' | 'BLACKLIST' | 'DISABLED';
 
-export function joinModeNeedsFriends(mode: JoinNotificationsMode, playerIds: string[]): boolean {
-  return (
-    mode === 'FRIEND' || ((mode === 'WHITELIST' || mode === 'BLACKLIST') && playerIds.length > 0)
-  );
-}
-
 export interface JoinNotificationsAutomationsConfig extends AutomationConfig {
   playerIds: string[];
   onlyDuringSleepMode: boolean;

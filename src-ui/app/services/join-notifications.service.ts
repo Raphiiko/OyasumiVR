@@ -3,8 +3,8 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   JoinNotificationsAutomationsConfig,
   JoinNotificationsMode,
-  joinModeNeedsFriends,
 } from '../models/automations';
+import { joinModeNeedsFriends } from '../utils/automation-utils';
 
 import { AutomationConfigService } from './automation-config.service';
 import { SleepService } from './sleep.service';

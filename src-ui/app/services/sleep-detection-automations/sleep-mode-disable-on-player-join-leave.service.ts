@@ -3,9 +3,9 @@ import { AutomationConfigService } from '../automation-config.service';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   JoinNotificationsMode,
-  joinModeNeedsFriends,
   SleepModeDisableOnPlayerJoinOrLeaveAutomationConfig,
 } from '../../models/automations';
+import { joinModeNeedsFriends } from '../../utils/automation-utils';
 
 import { SleepService } from '../sleep.service';
 import {
