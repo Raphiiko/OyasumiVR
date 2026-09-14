@@ -7,8 +7,6 @@ import { AUTOMATION_CONFIGS_DEFAULT, DevicePowerAutomationsConfig } from '../../
 import { EventLogService } from '../event-log.service';
 import { OVRDevice, OVRDeviceClass } from '../../models/ovr-device';
 import { LighthouseConsoleService } from '../lighthouse-console.service';
-import { error } from '@tauri-apps/plugin-log';
-import { EventLogTurnedOffOpenVRDevices } from '../../models/event-log-entry';
 import { SleepService } from '../sleep.service';
 import { DeviceManagerService } from '../device-manager.service';
 
@@ -57,39 +55,20 @@ export class TurnOffDevicesOnBatteryLevelAutomationService {
     currentLevel: number,
     sleepMode: boolean
   ) {
+    // require a falling battery and an eligible sleep state
     if (previousLevel === null || previousLevel <= currentLevel) return;
-    let threshold = 0;
-    // Check if this automation is currently applicable based on the slepe mode
     if (this.config.turnOffDevicesBelowBatteryLevel_onlyWhileAsleep && !sleepMode) return;
-    // Check if this automation applies to this device
+    // resolve whether this device is selected
     const devices = await this.deviceManager.getDevicesForSelection(
       this.config.turnOffDevicesBelowBatteryLevel
     );
     if (!devices.ovrDevices.find((d) => d.index === device.index)) return;
-    // Check if the battery level is below the threshold
     if (currentLevel * 100 > this.config.turnOffDevicesBelowBatteryLevel_threshold) return;
-    threshold = this.config.turnOffDevicesBelowBatteryLevel_threshold;
-    // Log the event
-    this.eventLog.logEvent({
-      type: 'turnedOffOpenVRDevices',
-      reason: 'BATTERY_LEVEL',
+    const threshold = this.config.turnOffDevicesBelowBatteryLevel_threshold;
+    // record the result against the triggering battery threshold
+    const dispatched = await this.lighthouse.turnOffDevices([device]);
+    this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'BATTERY_LEVEL', {
       batteryThreshold: threshold,
-      devices: (() => {
-        switch (device.class) {
-          case 'Controller':
-            return 'CONTROLLER';
-          case 'GenericTracker':
-            return 'TRACKER';
-          default: {
-            error(
-              `[TurnOffDevicesWhenChargingAutomationService] Couldn't determine device class for event log entry (${device.class})`
-            );
-            return 'VARIOUS';
-          }
-        }
-      })(),
-    } as EventLogTurnedOffOpenVRDevices);
-    // Turn off the device
-    await this.lighthouse.turnOffDevices([device]);
+    });
   }
 }

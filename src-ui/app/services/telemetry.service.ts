@@ -26,8 +26,6 @@ export class TelemetryService {
   );
   public settings: Observable<TelemetrySettings> = this._settings.asObservable();
 
-  private trackedJSErrors: string[] = [];
-
   constructor() {}
 
   async init() {
@@ -47,20 +45,6 @@ export class TelemetryService {
     addEventListener('unhandledrejection', (e) => {
       this.trackEvent('ui_promise_rejected', {
         message: (e.reason?.message || e.reason || e).toString(),
-      });
-    });
-
-    window.addEventListener('error', (e) => {
-      const errorData = JSON.stringify({
-        filename: e.filename,
-        lineno: e.lineno,
-        colno: e.colno,
-        message: e.message,
-      });
-      if (this.trackedJSErrors.includes(errorData)) return;
-      this.trackedJSErrors.push(errorData);
-      this.trackEvent('ui_js_error', {
-        errorData,
       });
     });
 

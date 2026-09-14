@@ -85,35 +85,6 @@ pub async fn get_devices() -> Vec<OVRDevice> {
     devices.clone()
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[tokio::test]
-    async fn shutdown_clears_device_caches_and_allows_immediate_refresh() {
-        OVR_DEVICES.lock().await.push(serde_json::from_value(serde_json::json!({
-            "index": 7, "class": "Controller", "role": "LeftHand", "serialNumber": "previous-session"
-        })).unwrap());
-        DEVICE_CLASS_CACHE
-            .lock()
-            .await
-            .insert(7, TrackedDeviceClass::Controller);
-        DEVICE_HANDLE_TYPE_CACHE
-            .lock()
-            .await
-            .insert(7, OVRHandleType::HandPrimary);
-        *NEXT_DEVICE_REFRESH.lock().await = Utc::now() + Duration::seconds(5);
-
-        for _ in 0..2 {
-            on_ovr_quit().await;
-            assert!(get_devices().await.is_empty());
-            assert!(DEVICE_CLASS_CACHE.lock().await.is_empty());
-            assert!(DEVICE_HANDLE_TYPE_CACHE.lock().await.is_empty());
-            assert!(*NEXT_DEVICE_REFRESH.lock().await < Utc::now());
-        }
-    }
-}
-
 async fn update_handle_types() {
     {
         DEVICE_HANDLE_TYPE_CACHE.lock().await.clear();
@@ -305,24 +276,30 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
         display_frequency,
     };
 
-    // Add or update device in list
-    let mut devices = OVR_DEVICES.lock().await;
-    let mut found = false;
-    for i in 0..devices.len() {
-        if devices[i].index == device_index.0 {
-            devices[i] = device.clone();
-            found = true;
-            break;
-        }
-    }
-    if !found {
-        devices.push(device.clone());
-    }
-    // Send out device update as an event
-    if emit {
+    // publish changed snapshots after releasing the device cache
+    let changed = {
+        let mut devices = OVR_DEVICES.lock().await;
+        store_device(&mut devices, &device)
+    };
+    if emit && changed {
         let event = DeviceUpdateEvent { device };
         send_event("OVR_DEVICE_UPDATE", event).await;
     }
+}
+
+fn store_device(devices: &mut Vec<OVRDevice>, device: &OVRDevice) -> bool {
+    if let Some(previous) = devices
+        .iter_mut()
+        .find(|previous| previous.index == device.index)
+    {
+        if *previous == *device {
+            return false;
+        }
+        *previous = device.clone();
+    } else {
+        devices.push(device.clone());
+    }
+    true
 }
 
 async fn refresh_device_poses() {
@@ -459,5 +436,118 @@ async fn detect_inputs() {
                 return;
             }
         };
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn snapshot() -> OVRDevice {
+        serde_json::from_value(serde_json::json!({
+            "index": 7, "class": "Controller", "role": "LeftHand",
+            "battery": 0.5, "providesBatteryStatus": true, "canPowerOff": true,
+            "isCharging": false, "dongleId": "dongle", "serialNumber": "serial",
+            "hardwareRevision": "1", "manufacturerName": "manufacturer",
+            "modelNumber": "model", "handleType": "HandPrimary",
+            "hmdOnHead": false, "hmdActivity": "Idle", "displayFrequency": 90.0
+        }))
+        .unwrap()
+    }
+
+    #[test]
+    fn identical_snapshots_request_only_the_first_event() {
+        let mut devices = Vec::new();
+        let device = snapshot();
+        assert!(store_device(&mut devices, &device));
+        assert!(!store_device(&mut devices, &device));
+        assert_eq!(devices.len(), 1);
+    }
+
+    #[test]
+    fn every_serialized_field_can_trigger_a_new_event() {
+        let original = snapshot();
+        let baseline = serde_json::to_value(&original).unwrap();
+        let changes = [
+            ("index", serde_json::json!(8)),
+            ("class", serde_json::json!("GenericTracker")),
+            ("role", serde_json::json!("RightHand")),
+            ("battery", serde_json::json!(0.6)),
+            ("providesBatteryStatus", serde_json::json!(false)),
+            ("canPowerOff", serde_json::json!(false)),
+            ("isCharging", serde_json::json!(true)),
+            ("dongleId", serde_json::json!("other dongle")),
+            ("serialNumber", serde_json::json!("other serial")),
+            ("hardwareRevision", serde_json::json!("2")),
+            ("manufacturerName", serde_json::json!("other manufacturer")),
+            ("modelNumber", serde_json::json!("other model")),
+            ("handleType", serde_json::json!("HandSecondary")),
+            ("hmdOnHead", serde_json::json!(true)),
+            ("hmdActivity", serde_json::json!("UserInteraction")),
+            ("displayFrequency", serde_json::json!(120.0)),
+        ];
+        assert_eq!(baseline.as_object().unwrap().len(), changes.len());
+        for (field, value) in changes {
+            let mut devices = vec![original.clone()];
+            let mut changed = baseline.clone();
+            changed[field] = value;
+            let changed: OVRDevice = serde_json::from_value(changed).unwrap();
+            assert!(store_device(&mut devices, &changed), "{field}");
+            assert!(!store_device(&mut devices, &changed), "{field}");
+            assert!(devices.iter().any(|stored| stored == &changed), "{field}");
+        }
+    }
+
+    #[test]
+    fn invalidation_and_index_reuse_each_request_one_event() {
+        let mut device = snapshot();
+        let mut devices = vec![device.clone()];
+        device.class = TrackedDeviceClass::Invalid;
+        assert!(store_device(&mut devices, &device));
+        assert!(!store_device(&mut devices, &device));
+
+        device.class = TrackedDeviceClass::Controller;
+        device.serial_number = Some("new session device".into());
+        assert!(store_device(&mut devices, &device));
+        assert!(!store_device(&mut devices, &device));
+        assert_eq!(devices.len(), 1);
+        assert!(devices[0] == device);
+    }
+
+    #[test]
+    fn missing_optional_properties_replace_the_previous_values() {
+        let device = snapshot();
+        let mut devices = vec![device];
+        let missing: OVRDevice = serde_json::from_value(serde_json::json!({
+            "index": 7, "class": "Controller", "role": "LeftHand"
+        }))
+        .unwrap();
+        assert!(store_device(&mut devices, &missing));
+        assert!(!store_device(&mut devices, &missing));
+        assert!(devices[0] == missing);
+    }
+
+    #[tokio::test]
+    async fn shutdown_clears_device_caches_and_allows_immediate_refresh() {
+        OVR_DEVICES.lock().await.push(serde_json::from_value(serde_json::json!({
+            "index": 7, "class": "Controller", "role": "LeftHand", "serialNumber": "previous-session"
+        })).unwrap());
+        DEVICE_CLASS_CACHE
+            .lock()
+            .await
+            .insert(7, TrackedDeviceClass::Controller);
+        DEVICE_HANDLE_TYPE_CACHE
+            .lock()
+            .await
+            .insert(7, OVRHandleType::HandPrimary);
+        *NEXT_DEVICE_REFRESH.lock().await = Utc::now() + Duration::seconds(5);
+
+        for _ in 0..2 {
+            on_ovr_quit().await;
+            assert!(get_devices().await.is_empty());
+            assert!(DEVICE_CLASS_CACHE.lock().await.is_empty());
+            assert!(DEVICE_HANDLE_TYPE_CACHE.lock().await.is_empty());
+            assert!(*NEXT_DEVICE_REFRESH.lock().await < Utc::now());
+        }
     }
 }

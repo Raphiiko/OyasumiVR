@@ -3,7 +3,6 @@ import { OSCIntValue, OSCMessage } from '../../../models/osc-message';
 import { OscService } from '../../osc.service';
 import { OscControlService } from '../osc-control.service';
 import { firstValueFrom } from 'rxjs';
-import { EventLogTurnedOffOpenVRDevices } from '../../../models/event-log-entry';
 import { OpenVRService } from '../../openvr.service';
 import { LighthouseConsoleService } from '../../lighthouse-console.service';
 import { LighthouseService } from '../../lighthouse.service';
@@ -66,12 +65,8 @@ export class CommandOscMethod extends OscMethod<number> {
     const devices = (await firstValueFrom(this.openvr.devices)).filter(
       (d) => d.class === 'GenericTracker'
     );
-    await this.lighthouseConsole.turnOffDevices(devices);
-    this.eventLog.logEvent({
-      type: 'turnedOffOpenVRDevices',
-      reason: 'OSC_CONTROL',
-      devices: devices.length > 1 ? 'TRACKERS' : 'TRACKER',
-    } as EventLogTurnedOffOpenVRDevices);
+    const dispatched = await this.lighthouseConsole.turnOffDevices(devices);
+    this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'OSC_CONTROL');
   }
 
   private async handleTurnOffAllControllers() {
@@ -79,23 +74,18 @@ export class CommandOscMethod extends OscMethod<number> {
       const devices = (await firstValueFrom(this.openvr.devices)).filter(
         (d) => d.class === 'Controller'
       );
-      await this.lighthouseConsole.turnOffDevices(devices);
-      this.eventLog.logEvent({
-        type: 'turnedOffOpenVRDevices',
-        reason: 'OSC_CONTROL',
-        devices: devices.length > 1 ? 'CONTROLLERS' : 'CONTROLLER',
-      } as EventLogTurnedOffOpenVRDevices);
+      const dispatched = await this.lighthouseConsole.turnOffDevices(devices);
+      this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'OSC_CONTROL');
     }, 2000);
   }
 
   private async handleTurnOffAllDevices() {
     setTimeout(async () => {
-      await this.lighthouseConsole.turnOffDevices(await firstValueFrom(this.openvr.devices));
-      this.eventLog.logEvent({
-        type: 'turnedOffOpenVRDevices',
-        reason: 'OSC_CONTROL',
-        devices: 'ALL',
-      } as EventLogTurnedOffOpenVRDevices);
+      const devices = (await firstValueFrom(this.openvr.devices)).filter(
+        (device) => device.canPowerOff
+      );
+      const dispatched = await this.lighthouseConsole.turnOffDevices(devices);
+      this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'OSC_CONTROL', { allDevices: devices });
     }, 2000);
   }
 

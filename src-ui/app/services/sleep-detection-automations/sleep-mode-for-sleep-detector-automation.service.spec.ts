@@ -49,10 +49,10 @@ function enabledConfigs(): AutomationConfigs {
   return configs;
 }
 
-function createService() {
+function createService(initialPose: SleepingPose = 'UNKNOWN') {
   const configs = new BehaviorSubject(enabledConfigs());
   const sleepMode = new BehaviorSubject(false);
-  const pose = new BehaviorSubject<SleepingPose>('UNKNOWN');
+  const pose = new BehaviorSubject<SleepingPose>(initialPose);
   const inputState = new BehaviorSubject<Record<OVRInputEventAction, OVRDevice[]>>({
     [OVRInputEventAction.OpenOverlay]: [],
     [OVRInputEventAction.MuteMicrophone]: [],
@@ -90,7 +90,7 @@ function createService() {
     if (result) results.push(result);
   });
 
-  return { configs, eventLog, inputState, notifications, results, service, sleep };
+  return { configs, eventLog, inputState, notifications, pose, results, service, sleep };
 }
 
 async function armSleepCheck(service: SleepModeForSleepDetectorAutomationService) {
@@ -109,6 +109,29 @@ describe('SleepModeForSleepDetectorAutomationService sleep check', () => {
 
   afterEach(() => {
     vi.useRealTimers();
+  });
+
+  it('uses a replayed upright pose without waiting for a pose change', async () => {
+    const { configs, notifications, service, sleep } = createService('SIDE_FRONT');
+    configs.value.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.considerSleepingPose = true;
+    configs.value.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.detectionWindowMinutes = 15;
+    await service.init();
+    expect(await service.handleStateReportForEnable(report)).toBe('POSE_UPRIGHT_TOO_RECENTLY');
+    await vi.advanceTimersByTimeAsync(16 * 60 * 1000);
+    expect(await service.handleStateReportForEnable(report)).toBe('POSE_UPRIGHT_TOO_RECENTLY');
+    expect(notifications.send).not.toHaveBeenCalled();
+    expect(automationEnableCalls(sleep)).toHaveLength(0);
+  });
+
+  it('retains upright recency after leaving the replayed pose', async () => {
+    const { configs, pose, service } = createService('SIDE_FRONT');
+    configs.value.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.considerSleepingPose = true;
+    configs.value.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.detectionWindowMinutes = 15;
+    await service.init();
+    pose.next('SIDE_LEFT');
+    expect(await service.handleStateReportForEnable(report)).toBe('POSE_UPRIGHT_TOO_RECENTLY');
+    await vi.advanceTimersByTimeAsync(15 * 60 * 1000 + 1);
+    expect(await service.handleStateReportForEnable(report)).toBe('SLEEP_CHECK');
   });
 
   it('cancels when the automation is disabled during the countdown', async () => {

@@ -11,6 +11,7 @@ import {
   map,
   pairwise,
   skip,
+  startWith,
 } from 'rxjs';
 import { OpenVRService } from './openvr.service';
 import { FrameLimitConfigOption } from '../models/automations';
@@ -35,10 +36,11 @@ export class FrameLimitAutomationsService {
       .pipe(skip(1), distinctUntilChanged())
       .subscribe((sleepMode) => this.onSleepModeChange(sleepMode));
 
-    // Run automations when the HMD gets connected
+    // apply settings for cached and newly connected headsets
     this.openvr.devices
       .pipe(
-        map((devices) => devices.find((d) => d.class === 'HMD')?.serialNumber ?? null),
+        map((devices) => devices.find((d) => d.class === 'HMD')?.index ?? null),
+        startWith(null),
         distinctUntilChanged(),
         pairwise(),
         filter(([prev, current]) => prev === null && current !== null),

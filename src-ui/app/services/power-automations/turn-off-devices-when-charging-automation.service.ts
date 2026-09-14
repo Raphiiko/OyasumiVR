@@ -6,7 +6,6 @@ import { map } from 'rxjs';
 import { AUTOMATION_CONFIGS_DEFAULT, DevicePowerAutomationsConfig } from '../../models/automations';
 import { LighthouseConsoleService } from '../lighthouse-console.service';
 import { error, info } from '@tauri-apps/plugin-log';
-import { EventLogTurnedOffOpenVRDevices } from '../../models/event-log-entry';
 import { EventLogService } from '../event-log.service';
 import { DeviceManagerService } from '../device-manager.service';
 import { isEqual } from 'lodash';
@@ -72,29 +71,12 @@ export class TurnOffDevicesWhenChargingAutomationService {
             )
           )
             return;
-          // record and request the power-off
+          // request power-off and record only successful commands
           info(
             `[TurnOffDevicesWhenChargingAutomationService] Detected device being put on charger. Turning off device (${device.class}:${device.serialNumber})`
           );
-          this.eventLog.logEvent({
-            type: 'turnedOffOpenVRDevices',
-            reason: 'CHARGING',
-            devices: (() => {
-              switch (device.class) {
-                case 'Controller':
-                  return 'CONTROLLER';
-                case 'GenericTracker':
-                  return 'TRACKER';
-                default: {
-                  error(
-                    `[TurnOffDevicesWhenChargingAutomationService] Couldn't determine device class for event log entry (${device.class})`
-                  );
-                  return 'VARIOUS';
-                }
-              }
-            })(),
-          } as EventLogTurnedOffOpenVRDevices);
-          this.lighthouse.turnOffDevices([device]);
+          const dispatched = await this.lighthouse.turnOffDevices([device]);
+          this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'CHARGING');
         }
       });
     });

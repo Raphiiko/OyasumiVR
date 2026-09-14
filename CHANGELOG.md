@@ -19,6 +19,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Added
 
+- Regression coverage for removing Windows registry paths from error-report filenames
 - Multiple VRChat account profiles
   - Switch between accounts without entering their credentials again
   - Saved sessions and credentials are protected with the Windows Data Protection API
@@ -34,6 +35,10 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Changed
 
+- Disabled and friend-independent automations no longer request friend-list refreshes.
+- Image downloads reuse HTTP connections and avoid extra copies of each downloaded image.
+- Sleeping-pose consumers share detection work and receive the latest pose when opened.
+- Unchanged SteamVR device properties no longer trigger redundant window updates.
 - Sleep detection computes movement totals once per report instead of on every pose update.
 - Removed an unused frontend OpenVR device-fetch method; device updates still arrive through events.
 
@@ -71,6 +76,9 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Installing dependencies no longer changes the shared package version in the lockfile, and version bumps keep it synchronized.
+- Controller bindings now show a retry message when loading fails instead of asking you to configure a binding.
+- Device power-off events now exclude skipped devices and failed commands.
 - Controller actions no longer stay pressed after SteamVR disconnects.
 - Run Automations now saves pending command edits when you leave the page.
 

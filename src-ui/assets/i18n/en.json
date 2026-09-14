@@ -205,6 +205,9 @@
         },
         "UNKNOWN": {
           "message": "Configure Binding"
+        },
+        "LOOKUP_FAILED": {
+          "message": "Could not load binding.\nRetrying."
         }
       },
       "slot": {

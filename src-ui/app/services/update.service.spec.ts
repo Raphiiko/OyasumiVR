@@ -20,7 +20,7 @@ vi.mock('src-ui/app/components/base-modal/base-modal.component', () => ({
     close() {}
   },
 }));
-vi.mock('src-ui/app/utils/animations', () => ({ hshrink: () => [] }));
+vi.mock('src-ui/app/utils/animations', () => ({ hshrink: () => [], fadeUp: () => [] }));
 
 function deferred() {
   let resolve!: () => void;
