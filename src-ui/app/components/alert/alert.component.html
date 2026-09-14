@@ -1,0 +1,10 @@
+<div class="alert-bg"></div>
+<div class="alert-icon">
+  @if (glyph) {
+    <i [class]="iconClass">{{ glyph }}</i>
+  }
+  <ng-content select="[alertIcon]"></ng-content>
+</div>
+<div class="alert-content" [ngClass]="contentClass"
+  >{{ message ? (message | transloco) : '' }}<ng-content></ng-content
+></div>
