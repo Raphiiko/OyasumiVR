@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Renderer2 } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { OpenVRService } from './services/openvr.service';
 import { routeAnimations } from './app-routing.module';
 import { TranslocoService } from '@jsverse/transloco';
@@ -7,12 +7,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   debounceTime,
   distinctUntilChanged,
-  fromEvent,
   map,
   Observable,
   of,
   skip,
-  startWith,
   switchMap,
   tap,
 } from 'rxjs';
@@ -35,19 +33,8 @@ export class AppComponent implements OnInit {
     public openvr: OpenVRService,
     translate: TranslocoService,
     private settings: AppSettingsService,
-    private telemetry: TelemetryService,
-    renderer: Renderer2
+    private telemetry: TelemetryService
   ) {
-    const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
-    fromEvent(motionPreference, 'change')
-      .pipe(
-        startWith(null),
-        map(() => motionPreference.matches),
-        distinctUntilChanged(),
-        takeUntilDestroyed()
-      )
-      .subscribe((reduceMotion) => renderer.setProperty(document.body, '@.disabled', reduceMotion));
-
     this.settings.settings
       .pipe(
         map((settings) => settings.userLanguage),
