@@ -39,10 +39,7 @@ export class AppComponent implements OnInit {
       .pipe(
         map((settings) => settings.userLanguage),
         distinctUntilChanged(),
-        // The translation has to be in memory before anything calls translate()
-        // synchronously. A translation supplied at runtime, as the translation
-        // editor's preview does, is already in memory but has no file to fetch,
-        // so loading it would 404 and fall back to the fallback language.
+        // runtime translations may have no backing file
         switchMap((userLanguage) => {
           const alreadyInMemory =
             Object.keys(translate.getTranslation(userLanguage) ?? {}).length > 0;

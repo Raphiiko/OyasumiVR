@@ -13,7 +13,6 @@ export interface TimeEnableSleepModeModalOutputModel {
 @Component({
   selector: 'app-time-enable-sleepmode-modal',
   templateUrl: './time-enable-sleep-mode-modal.component.html',
-  styleUrls: ['./time-enable-sleep-mode-modal.component.scss'],
   animations: [fadeUp(), fade(), triggerChildren()],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,

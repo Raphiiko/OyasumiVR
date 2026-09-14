@@ -64,7 +64,7 @@
     margin-right: 1em;
 
     &:not(.connected) {
-      animation: breathing 1s ease-out infinite normal;
+      animation: controller-binding-breathing 1s ease-out infinite normal;
     }
 
     > *:first-child {
@@ -92,7 +92,7 @@
   }
 }
 
-@keyframes breathing {
+@keyframes controller-binding-breathing {
   0% {
     opacity: 0.25;
   }
@@ -139,7 +139,6 @@
     }
 
     .config-button {
-      outline: none;
       border: none;
       font-size: 0.8em;
       white-space: pre-line;

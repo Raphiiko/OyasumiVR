@@ -38,7 +38,7 @@
 
         &.validation-pending {
           color: var(--color-warning);
-          animation: pulse 1.5s ease-in-out infinite;
+          animation: osc-validation-pulse 1.5s ease-in-out infinite;
         }
       }
     }
@@ -49,7 +49,7 @@
   }
 }
 
-@keyframes pulse {
+@keyframes osc-validation-pulse {
   0%,
   100% {
     opacity: 1;

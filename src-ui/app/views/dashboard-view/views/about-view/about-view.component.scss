@@ -140,11 +140,11 @@
       }
     }
 
-    i {
+    .social-icon {
       width: 1.4em;
-      text-align: center;
-      font-size: 1.1em;
-      color: var(--color-text-4);
+      height: 1.1em;
+      flex-shrink: 0;
+      fill: var(--color-text-4);
     }
 
     .selectable {

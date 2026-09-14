@@ -230,8 +230,7 @@
         "integrations": "Integrationen",
         "notifications": "Benachrichtigungen",
         "statusInfo": "Status-Information",
-        "subMenu": "Einstellungen",
-        "vrchat": "VRChat Einstellungen"
+        "subMenu": "Einstellungen"
       },
       "shutdownAutomations": "Herunterfahrsequenz",
       "sleepAnimations": "Schlafanimationen",

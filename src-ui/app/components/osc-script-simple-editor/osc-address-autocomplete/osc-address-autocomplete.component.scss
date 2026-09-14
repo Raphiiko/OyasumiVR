@@ -35,7 +35,7 @@
     align-items: center;
 
     .typed-part {
-      color: var(--color-text-0);
+      color: var(--color-text-1);
     }
 
     .suggested-part {
@@ -71,7 +71,7 @@
 
       &.focused {
         background: var(--color-surface-3);
-        // color: var(--color-text-0);
+        // color: var(--color-text-1);
       }
 
       .source-label {
@@ -83,7 +83,7 @@
 
         &.vrchat {
           background: var(--color-vrchat-status-blue);
-          color: var(--color-text-0);
+          color: var(--color-text-1);
 
           &.in-focus {
             color: white;

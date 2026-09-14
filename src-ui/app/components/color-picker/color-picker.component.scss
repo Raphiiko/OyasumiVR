@@ -13,7 +13,6 @@ input {
   }
 
   &:focus {
-    outline: none !important;
     border: 0;
     box-shadow: none;
   }
@@ -25,7 +24,6 @@ input {
   background-color: var(--picked-color);
   height: 2em;
   width: 3em;
-  outline: none;
   border: var(--color-surface-3) 0.2em solid;
   border-radius: 0.5em;
   transition: all 0.15s ease;

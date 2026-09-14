@@ -127,12 +127,3 @@
     color: var(--color-text-1);
   }
 }
-
-@keyframes small-spinner {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}

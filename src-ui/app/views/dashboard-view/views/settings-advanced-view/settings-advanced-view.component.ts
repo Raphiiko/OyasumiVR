@@ -283,8 +283,8 @@ export class SettingsAdvancedViewComponent {
         case 'FLAVOUR_NOT_ELIGIBLE':
           this.modalService
             .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
-              title: `settings.advanced.fixes.vrManifestReregister.modal.${e}.title`,
-              message: `settings.advanced.fixes.vrManifestReregister.modal.${e}.message`,
+              title: `settings.advanced.troubleshooting.vrManifestReregister.modal.${e}.title`,
+              message: `settings.advanced.troubleshooting.vrManifestReregister.modal.${e}.message`,
               showCancel: false,
             })
             .subscribe();
@@ -292,8 +292,8 @@ export class SettingsAdvancedViewComponent {
         default:
           this.modalService
             .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
-              title: `settings.advanced.fixes.vrManifestReregister.modal.UNKNOWN.title`,
-              message: `settings.advanced.fixes.vrManifestReregister.modal.UNKNOWN.message`,
+              title: `settings.advanced.troubleshooting.vrManifestReregister.modal.UNKNOWN.title`,
+              message: `settings.advanced.troubleshooting.vrManifestReregister.modal.UNKNOWN.message`,
               showCancel: false,
             })
             .subscribe();
@@ -303,8 +303,8 @@ export class SettingsAdvancedViewComponent {
     }
     this.modalService
       .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
-        title: 'settings.advanced.fixes.vrManifestReregister.modal.success.title',
-        message: 'settings.advanced.fixes.vrManifestReregister.modal.success.message',
+        title: 'settings.advanced.troubleshooting.vrManifestReregister.modal.success.title',
+        message: 'settings.advanced.troubleshooting.vrManifestReregister.modal.success.message',
         showCancel: false,
       })
       .subscribe();
