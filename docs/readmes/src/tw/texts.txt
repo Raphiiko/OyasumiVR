@@ -30,7 +30,7 @@ OyasumiVR 能夠 **偵測你何時入睡**，並透過以下各種方式協助�
 - 🎤 當你睡着時自動關閉麥克風
 - 🛠 自動化各種 SteamVR 設定
 
-……還有更多！請查看即將推出的「功能」部分，深入了解 OyasumiVR 所提供的功能。
+……還有更多！ ...還有更多！請查看即將推出的「功能」部分，深入了解 OyasumiVR 所提供的功能。
 
 {{SUPPORT_OYASUMIVR_HEADER}}
 支持 OyasumiVR
@@ -110,7 +110,7 @@ OyasumiVR 可讓你輕鬆控制多種 SteamVR 裝置，從控制器、定位器�
 <br>
 在你入睡時自動限制 GPU 功耗以節省電力，並在你醒來後恢復完整效能！ 只要設定好所需的功耗上限（瓦數），OyasumiVR 就會在需要時自動套用。
 <br><br>
-<i>功耗限制功能僅支援 NVIDIA 顯示卡。AMD 顯示卡用戶則可改用 MSI Afterburner 自動化功能。</i>
+<i>功耗限制功能僅支援 NVIDIA 顯示卡。</i> AMD 顯示卡用戶則可改用 MSI Afterburner 自動化功能。</i>
 
 {{GPU_AUTOMATIONS_BODY_MSI_AFTERBURNER}}
 <b>MSI Afterburner</b>
@@ -163,7 +163,9 @@ OyasumiVR 可以在有人加入或離開你的 VRChat 世界時通知你。 如�
 <ul>
   <li>僅限你的好友</li>
   <li>僅限特定用戶</li>
+
   <li>當你變成獨自一人時</li>
+
   <li>當你不再是獨自一人時</li>
 </ul>
 
@@ -198,6 +200,7 @@ OyasumiVR 可以在有人加入或離開你的 VRChat 世界時通知你。 如�
 <ul>
   <li>關閉你的控制器和／或定位器</li>
   <li>關閉你的基地台</li>
+
   <li>關閉 SteamVR <i>（以及一併關閉任何正在執行的遊戲或嵌入介面）</i></li>
   <li>關閉 Windows</li>
 </ul>
@@ -212,7 +215,7 @@ OyasumiVR 可以在有人加入或離開你的 VRChat 世界時通知你。 如�
 <br>
 在你入睡或醒來時，自動調整亮度。 OyasumiVR 可以平順地調整 VR 頭戴式裝置的亮度，讓亮度隨著你入睡逐漸降低，而不會把你吵醒。
 <br><br>
-此功能讓你既能控制軟體亮度，若你的頭戴式顯示器支援硬體亮度控制（例如 Valve Index 或 Bigscreen Beyond），也能同時控制硬體亮度。 除了提供多種自動化功能外，你也可以直接透過 SteamVR 嵌入介面，輕鬆調整亮度！
+此功能讓你既能控制軟體亮度，若你的頭戴式顯示器支援硬體亮度控制（例如 Valve Index 或 Bigscreen Beyond），也能同時控制硬體亮度。 除了提供多種自動化功能外，你也可以直接透過 SteamVR 疊加介面，輕鬆調整亮度！
 <br><br>
 🌡️<b>色溫</b>
 <br>
@@ -241,7 +244,7 @@ OyasumiVR 也能做到同樣的效果，但是在系統層面上，改為將你�
 🔉 音量自動化
 
 {{AUDIO_VOLUME_AUTOMATIONS_BODY}}
-在你入睡或醒來時，自動調整音訊裝置的音量！ 若你希望防止其他用戶或其他應用程式打擾你的睡眠，這項功能會很有幫助。
+在你入睡或醒來時，自動調整音訊裝置的音量！ 若你希望防止其他玩家或其他應用程式打擾你的睡眠，這項功能會很有幫助。
 
 {{HEART_RATE_AUTOMATIONS_HEADER}}
 ♥️ 心率自動化（Pulsoid 整合功能）
@@ -317,7 +320,7 @@ OyasumiVR 可以透過 MQTT，將許多自身功能以及 SteamVR 的功能整�
           <li>進階模式（開關）</li>
           <li>簡易亮度（數值）</li>
           <li>軟體亮度（數值）</li>
-          <li>硬體亮度（數值）</li>
+          <li>硬體亮度（數字）</li>
         </ul>
       </li>
     </ul>
@@ -327,7 +330,7 @@ OyasumiVR 可以透過 MQTT，將許多自身功能以及 SteamVR 的功能整�
     <ul>
       <li>VRChat 執行中（感測器）</li>
       <li>用戶名稱（感測器）</li>
-      <li># 位用戶在世界（感測器）</li>
+      <li># 全球用戶人數（感測器）</li>
       <li>狀態可見性（感測器）</li>
       <li>世界房間 ID（感測器）</li>
     </ul>
@@ -338,7 +341,7 @@ OyasumiVR 可以透過 MQTT，將許多自身功能以及 SteamVR 的功能整�
     <b>SteamVR 功能</b>
     <ul>
       <li>VR 頭戴式裝置型號（感測器）</li>
-      <li>SteamVR 執行中（感測器）</li>
+      執行安裝程式，你就可以開始使用了！
       <li>
         控制器與定位器
         <ul>
@@ -397,7 +400,7 @@ OyasumiVR 可以透過 MQTT，將許多自身功能以及 SteamVR 的功能整�
 
 這表示 Oculus 控制器通常不支援此功能，而 SlimeVR 定位器也不受支援，除非它們在其 [OpenVR 驅動程式](https://github.com/SlimeVR/SlimeVR-OpenVR-Driver) 中實作了這項功能。
 
-_（\*）Tundra 定位器回報電池電量與充電狀態的速度較慢，可能會有明顯延遲。這表示電池自動化功能仍然可以正常運作，但觸發時間會有相當大的延遲（可能長達十幾分鐘），除非 Tundra 在其定位器韌體中修正這個問題。_
+_（*）Tundra 定位器回報電池電量與充電狀態的速度較慢，可能會有明顯延遲。_ 這表示電池自動化功能仍然可以正常運作，但觸發時間會有相當大的延遲（可能長達十幾分鐘），除非 Tundra 在其定位器韌體中修正這個問題。_
 
 {{SUPPORTED_HARDWARE_GPU_AUTOMATIONS_HEADER}}
 GPU 自動化
@@ -430,7 +433,7 @@ GPU 自動化
 {{BUILT_WITH_BODY}}
 OyasumiVR 採用了以下技術：
 
-- [Angular](https://angular.io/)（TypeScript、主要 UI 與嵌入介面 UI）
+- [Angular](https://angular.io/)（TypeScript、主要介面和嵌入式介面）
 - [Tauri](https://tauri.app/)（Rust、桌面應用程式框架）
 - [.NET](https://dotnet.microsoft.com/en-us/)（C#、嵌入介面）
 
@@ -444,7 +447,7 @@ OyasumiVR 採用了以下技術：
 VRChat
 
 {{VRCHAT_BODY}}
-OyasumiVR 的部分功能需要登入你的 VRChat 帳號才能使用。（例如：狀態自動化）
+OyasumiVR 的部分功能需要登入你的 VRChat 帳號才能使用。 （例如： 狀態自動化)
 
 只有需要使用這些功能時，才需要登入。 即使不提供登入資訊，你仍然可以使用不需要登入的功能。
 你的登入資訊只會儲存在你的裝置上，絕不會儲存到其他地方，且僅會在驗證身分時傳送至 VRChat 的伺服器。
@@ -454,14 +457,14 @@ OyasumiVR 並非由 VRChat 認可，其內容亦不代表 VRChat 或任何參與
 OyasumiVR 的開發者及所有專案貢獻者，均不對 OyasumiVR 所造成的任何問題（無論是你的 VRChat 帳號或其他情況）負責。 使用前請自行評估風險。
 
 {{TELEMETRY_HEADER}}
-Aptabase
+匿名數據
 
 {{TELEMETRY_BODY}}
-OyasumiVR 的遙測功能由 [Aptabase](https://aptabase.com) 提供。Aptabase 是一套開源、重視隱私且簡潔易用的行動與桌面應用程式分析服務。 之所以選擇 Aptabase，是因為它能透過提供當機回報與匿名使用統計來協助 OyasumiVR 的開發，同時也盡可能保障你的隱私。
+OyasumiVR 會蒐集匿名遠端監測資料，以協助找出錯誤並改善應用程式。 這包括當機與錯誤報告、版本資訊、應用程式啟動次數、語言偏好設定，以及其他基本的使用統計資料。
 
-所有遙測資料皆為匿名收集，不會傳送任何可識別個人身分的資訊。 其唯一用途是提供上述的當機回報，以及應用程式啟動次數、語言偏好等基本的匿名使用統計。 這些資料僅用於找出並修正錯誤，以及改善 OyasumiVR 的整體使用體驗。
+遠程監測資料不包含任何可識別個人身分的資訊，且無法與特定個人建立關聯。 由於無法確定哪些遙測資料屬於你，因此無法處理個別的資料刪除請求。
 
-你可以在 OyasumiVR 的一般設定中選擇停用遙測功能。 如需了解更多（技術性）資訊，請參閱（篇幅非常短！）[Aptabase 隱私權政策](https://aptabase.com/legal/privacy)。
+你隨時可以在 OyasumiVR 的「一般設定」中停用匿名數據功能。
 
 {{SUPPORT_HEADER}}
 支援
