@@ -22,7 +22,9 @@ static HTTP_CLIENT: LazyLock<reqwest::Client> = LazyLock::new(reqwest::Client::n
 pub async fn init(cache_dir: PathBuf) {
     let image_cache_dir = cache_dir.join("image_cache");
     let image_cache = ImageCache::new(image_cache_dir.into_os_string());
-    image_cache.clean(true);
+    if let Err(error) = image_cache.clean(true) {
+        error!("[Core] Image cache startup cleanup was incomplete: {error}");
+    }
     *INSTANCE.lock().await = Some(image_cache);
 }
 
@@ -131,54 +133,55 @@ impl ImageCache {
         temporary_manifest.persist(manifest_path).unwrap();
     }
 
-    pub fn clean(&self, only_expired: bool) {
+    pub fn clean(&self, only_expired: bool) -> std::io::Result<()> {
         let _write_guard = self
             .write_lock
             .lock()
             .unwrap_or_else(|error| error.into_inner());
-        // Create directory at cache_path if it doesn't exist
+        // prepare the cache directory
         let cache_path = Path::new(&self.cache_path_str);
         if !cache_path.exists() {
-            std::fs::create_dir_all(cache_path).unwrap();
-            return;
+            return std::fs::create_dir_all(cache_path);
         }
         let mut deleted = 0;
-        // Iterate over all directories in cache_path
-        for entry in std::fs::read_dir(cache_path).unwrap() {
-            let entry = entry.unwrap();
+        let mut first_error = None;
+        // remove eligible entries while retaining deletion failures
+        for entry in std::fs::read_dir(cache_path)? {
+            let entry = entry?;
             let path = entry.path();
-            // Skip if path is not a directory
             if !path.is_dir() {
                 continue;
             }
-            let manifest_path = path.join("manifest.json");
-            let manifest = match Self::read_manifest(&manifest_path) {
-                Some(manifest) => manifest,
-                None => {
-                    Self::remove_entry(&path);
-                    continue;
+            if only_expired {
+                if let Some(manifest) = Self::read_manifest(&path.join("manifest.json")) {
+                    let now = std::time::SystemTime::now()
+                        .duration_since(std::time::UNIX_EPOCH)
+                        .unwrap()
+                        .as_secs();
+                    if now
+                        .checked_sub(manifest.created)
+                        .is_some_and(|age| age < manifest.ttl)
+                    {
+                        continue;
+                    }
                 }
-            };
-            // check expiration
-            let now = std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)
-                .unwrap()
-                .as_secs();
-            if only_expired
-                && now
-                    .checked_sub(manifest.created)
-                    .is_some_and(|age| age < manifest.ttl)
-            {
-                continue;
             }
-            // Delete storage directory
-            if Self::remove_entry(&path) {
-                deleted += 1;
+            match std::fs::remove_dir_all(&path) {
+                Ok(()) => deleted += 1,
+                Err(error) => {
+                    error!(
+                        "[Core] Could not delete image cache entry. {}: {error}",
+                        path.display()
+                    );
+                    first_error.get_or_insert(error);
+                }
             }
         }
+        // report the completed deletions and any failure
         if deleted > 0 {
             info!("[Core] Deleted {deleted} image(s) from the cache.");
         }
+        first_error.map_or(Ok(()), Err)
     }
 
     fn get_ext_for_mime(&self, mime: Mime) -> String {
@@ -199,17 +202,6 @@ impl ImageCache {
             );
         }
         result
-    }
-
-    fn remove_entry(path: &Path) -> bool {
-        if let Err(error) = std::fs::remove_dir_all(path) {
-            error!(
-                "[Core] Could not delete image cache entry. {}: {error}",
-                path.display()
-            );
-            return false;
-        }
-        true
     }
 
     pub async fn handle_request(
@@ -415,6 +407,101 @@ mod tests {
             init(directory.path().to_path_buf()).await;
             assert!(!entry_path.exists());
         }
+
+        #[cfg(windows)]
+        {
+            use std::os::windows::fs::OpenOptionsExt;
+
+            let directory = tempfile::tempdir().unwrap();
+            let entry = directory.path().join("image_cache/locked");
+            std::fs::create_dir_all(&entry).unwrap();
+            let manifest = entry.join("manifest.json");
+            std::fs::write(&manifest, b"{}").unwrap();
+            let lock = std::fs::OpenOptions::new()
+                .read(true)
+                .share_mode(0)
+                .open(manifest)
+                .unwrap();
+
+            init(directory.path().to_path_buf()).await;
+            assert_eq!(
+                INSTANCE.lock().await.as_ref().unwrap().cache_path_str,
+                directory.path().join("image_cache").into_os_string()
+            );
+            assert!(commands::clean_image_cache(false).await.is_err());
+            assert!(entry.exists());
+
+            drop(lock);
+            commands::clean_image_cache(false).await.unwrap();
+            assert!(!entry.exists());
+            *INSTANCE.lock().await = None;
+        }
+    }
+
+    #[test]
+    fn full_clear_removes_entries_without_valid_expiration_metadata() {
+        let directory = tempfile::tempdir().unwrap();
+        let cache = ImageCache::new(directory.path().as_os_str().to_owned());
+        for (name, contents) in [
+            ("missing-fields", b"{}".as_slice()),
+            ("invalid-types", br#"{"ttl":"60","created":false}"#),
+            ("invalid-json", b"{"),
+        ] {
+            let entry = directory.path().join(name);
+            std::fs::create_dir(&entry).unwrap();
+            std::fs::write(entry.join("manifest.json"), contents).unwrap();
+        }
+        std::fs::create_dir_all(directory.path().join("unreadable/manifest.json")).unwrap();
+        cache.store_image("fresh", u64::MAX, mime::IMAGE_PNG, &[1]);
+        cache.store_image("expired", 0, mime::IMAGE_PNG, &[2]);
+
+        cache.clean(false).unwrap();
+
+        assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
+    }
+
+    #[test]
+    fn expiration_cleanup_preserves_fresh_entries() {
+        let directory = tempfile::tempdir().unwrap();
+        let cache = ImageCache::new(directory.path().as_os_str().to_owned());
+        cache.store_image("fresh", u64::MAX, mime::IMAGE_PNG, &[1]);
+        cache.store_image("expired", 0, mime::IMAGE_PNG, &[2]);
+
+        cache.clean(true).unwrap();
+
+        assert!(cache.get_image("fresh".into()).is_some());
+        assert!(!directory
+            .path()
+            .join(format!("{:x}", md5::compute("expired")))
+            .exists());
+        assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 1);
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn full_clear_reports_locked_entries_and_retries() {
+        use std::os::windows::fs::OpenOptionsExt;
+
+        let directory = tempfile::tempdir().unwrap();
+        let cache = ImageCache::new(directory.path().as_os_str().to_owned());
+        let entry = directory.path().join("locked");
+        std::fs::create_dir(&entry).unwrap();
+        let image = entry.join("image.png");
+        std::fs::write(&image, [1]).unwrap();
+        let lock = std::fs::OpenOptions::new()
+            .read(true)
+            .share_mode(0)
+            .open(image)
+            .unwrap();
+        cache.store_image("other", u64::MAX, mime::IMAGE_PNG, &[2]);
+
+        assert!(cache.clean(false).is_err());
+        assert!(entry.exists());
+        assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 1);
+
+        drop(lock);
+        cache.clean(false).unwrap();
+        assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
     }
 
     #[test]
@@ -447,7 +534,7 @@ mod tests {
         std::fs::write(manifest_path, serde_json::to_vec(&manifest).unwrap()).unwrap();
 
         assert!(cache.get_image(url.to_string()).is_none());
-        cache.clean(true);
+        cache.clean(true).unwrap();
         assert!(!entry_path.exists());
     }
 
@@ -490,11 +577,11 @@ mod tests {
             .open(manifest_path)
             .unwrap();
 
-        cache.clean(true);
+        assert!(cache.clean(true).is_err());
         assert!(entry_path.exists());
 
         drop(locked_manifest);
-        cache.clean(true);
+        cache.clean(true).unwrap();
         assert!(!entry_path.exists());
     }
 }

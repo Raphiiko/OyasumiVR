@@ -76,6 +76,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Image-cache clearing now reports deletion failures and skips unnecessary manifest validation
 - Installing dependencies no longer changes the shared package version in the lockfile, and version bumps keep it synchronized.
 - Controller bindings now show a retry message when loading fails instead of asking you to configure a binding.
 - Device power-off events now exclude skipped devices and failed commands.
