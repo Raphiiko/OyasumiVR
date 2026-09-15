@@ -1,4 +1,17 @@
 {
+  "memoryWatch": {
+    "title": "OyasumiVR memory diagnostics",
+    "starting": "Capture starting. If no completed dump appears, follow instructions.txt.",
+    "failed": "Automatic capture failed: {error}. Follow instructions.txt.",
+    "saved": "Memory dump saved. Share this folder privately with the developer.",
+    "unexpectedExit": "The dump helper exited unexpectedly. Follow instructions.txt.",
+    "missingReport": "The diagnostic report could not be read. If memory usage is still high, open Task Manager, expand OyasumiVR and create a memory dump of the process using the most memory.",
+    "manualFallback": "While {name}, PID {pid}, is still running:\n1. Open Task Manager and select Details.\n2. Find that exact process and PID.\n3. Right-click it and choose Create memory dump file.\n4. Share the resulting dump privately with the developer.\n\nAn elevated process may require Task Manager to run as administrator. Do not use an old PID after restarting the app.",
+    "consent": "Enable temporary OyasumiVR beta memory diagnostics?\n\nIf an OyasumiVR process uses unusually high memory, a separate monitor will save one full memory dump and a diagnostic report on this computer. Dumps may contain login tokens, messages and other private data, and may take several gigabytes of disk space. Nothing is uploaded automatically.\n\nThis stays enabled across restarts. To disable it, run this program with --disable.\n\nEnable diagnostics?",
+    "enabled": "Memory diagnostics are enabled. Restart OyasumiVR beta to start monitoring.\n\nIf a capture already exists, move the incident folder out of %LOCALAPPDATA%\\OyasumiVR\\memory-watch before starting another capture.",
+    "notification": "OyasumiVR detected unusually high memory usage.\n\n{status}\n\nDiagnostics folder:\n{path}\n\nPlease share the diagnostic files privately with the developer. They may contain login tokens and other private data. Do not attach dumps to a public issue.\n\nOpen the folder?",
+    "instructions": "OyasumiVR detected unusually high memory usage in {name}, PID {pid}.\n\nRead status.txt first. If process.dmp exists, share this folder privately with the developer. Memory dumps can contain login tokens and other private data. Do not post them on a public issue.\n\nIf automatic capture failed and this process is still running:\n1. Open Task Manager and select Details.\n2. Find {name} with PID {pid}. Do not select a different process with the same name.\n3. Right-click it and choose Create memory dump file. An elevated process may require Task Manager to run as administrator.\n4. Save the path Task Manager shows and share that dump privately with the developer, together with this report.\n\nIf OyasumiVR has restarted, this PID may refer to a different process. Do not use these steps for an old PID.\n\nThe monitor saves one incident until you move or remove its incident folder. Disable monitoring by running resources\\memory-watch\\oyasumivr-memory-watch.exe --disable from the OyasumiVR installation folder."
+  },
   "about": {
     "author": {
       "role": "Developer"
