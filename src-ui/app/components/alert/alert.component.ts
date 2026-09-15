@@ -9,12 +9,6 @@ const SEVERITY_GLYPHS: Record<AlertSeverity, string> = {
   error: 'error',
 };
 
-/**
- * A bordered notice with a severity colour, a glyph and a body.
- *
- * The severity picks the glyph. Set `icon` to override it, or to an empty string to project a
- * custom one into the icon slot instead.
- */
 @Component({
   selector: 'app-alert',
   templateUrl: './alert.component.html',
@@ -26,10 +20,9 @@ export class AlertComponent {
   @Input() severity: AlertSeverity = 'info';
   /** Translation key for the body. Project content instead when the body is markup. */
   @Input() message?: string;
+  /** Defaults to the severity glyph; an empty string leaves only projected [alertIcon] content. */
   @Input() icon?: string;
-  /** The Material icon font to render the glyph with. */
   @Input() iconClass = 'material-icons';
-  /** Extra classes for the content container, for example `flex-row`. */
   @Input() contentClass?: string;
 
   get glyph(): string {

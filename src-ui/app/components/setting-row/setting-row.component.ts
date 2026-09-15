@@ -1,11 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 /**
- * A single row inside a `.settings` group: a title, an optional description, and an action.
- *
- * Pass `label` and `description` as translation keys, or `labelText` and `descriptionText` for
- * values that are already rendered. For markup that neither covers, project into the `rowLabel`
- * and `rowDescription` slots. Everything left over is projected into the action.
+ * `label` and `description` accept translation keys; their Text variants accept rendered text.
+ * Project markup into [rowLabel] and [rowDescription]; other content becomes the action.
  */
 @Component({
   selector: 'app-setting-row',
@@ -21,6 +18,5 @@ export class SettingRowComponent {
   @Input() descriptionText?: string;
   /** Renders the warning glyph and bold title used for conflicting settings. */
   @Input() conflict = false;
-  /** Extra classes for the action container, for example `command-input`. */
   @Input() actionClass?: string;
 }
