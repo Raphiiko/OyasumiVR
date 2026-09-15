@@ -23,7 +23,7 @@ button.btn {
   border: 1px solid var(--color-surface-1);
   @include shadows.shadow(2, true);
   max-height: 20em;
-  overflow-y: overlay;
+  overflow-y: auto;
 
   &::-webkit-scrollbar {
     width: 4px;

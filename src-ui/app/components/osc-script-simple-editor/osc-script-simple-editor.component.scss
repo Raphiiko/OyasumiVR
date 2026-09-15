@@ -49,7 +49,7 @@
   border-radius: 0.5em;
   height: 100%;
   width: 100%;
-  overflow: overlay;
+  overflow: auto;
   position: relative;
 
   .no-commands {
@@ -216,7 +216,7 @@
     background: var(--color-surface-2);
     padding: 0.5em;
     max-height: 8em;
-    overflow: overlay;
+    overflow: auto;
 
     &::-webkit-scrollbar-thumb,
     *::-webkit-scrollbar-thumb {
