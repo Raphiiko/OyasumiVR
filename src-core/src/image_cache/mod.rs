@@ -407,6 +407,35 @@ mod tests {
             init(directory.path().to_path_buf()).await;
             assert!(!entry_path.exists());
         }
+
+        #[cfg(windows)]
+        {
+            use std::os::windows::fs::OpenOptionsExt;
+
+            let directory = tempfile::tempdir().unwrap();
+            let entry = directory.path().join("image_cache/locked");
+            std::fs::create_dir_all(&entry).unwrap();
+            let manifest = entry.join("manifest.json");
+            std::fs::write(&manifest, b"{}").unwrap();
+            let lock = std::fs::OpenOptions::new()
+                .read(true)
+                .share_mode(0)
+                .open(manifest)
+                .unwrap();
+
+            init(directory.path().to_path_buf()).await;
+            assert_eq!(
+                INSTANCE.lock().await.as_ref().unwrap().cache_path_str,
+                directory.path().join("image_cache").into_os_string()
+            );
+            assert!(commands::clean_image_cache(false).await.is_err());
+            assert!(entry.exists());
+
+            drop(lock);
+            commands::clean_image_cache(false).await.unwrap();
+            assert!(!entry.exists());
+            *INSTANCE.lock().await = None;
+        }
     }
 
     #[test]
