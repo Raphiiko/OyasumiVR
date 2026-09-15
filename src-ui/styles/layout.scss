@@ -10,10 +10,6 @@
   align-items: center;
 }
 
-///
-/// The sentence-fragment row used by the sleep detection automation modals: a label followed by a
-/// column of controls. Visually distinct from `.setting-row`, which sits on a `.settings` surface.
-///
 .automation-settings {
   display: flex;
   flex-direction: column;
