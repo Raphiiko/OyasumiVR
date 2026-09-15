@@ -175,7 +175,8 @@
       flex: 1;
       white-space: pre-line;
 
-      > span:first-child {
+      > span:first-child,
+      > .setting-row-title {
         color: var(--color-text-1);
         margin-bottom: 0.25em;
         display: flex;
@@ -183,7 +184,8 @@
         align-items: center;
       }
 
-      > span:last-child {
+      > span:last-child,
+      > .setting-row-description {
         color: var(--color-text-3);
       }
 

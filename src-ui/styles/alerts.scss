@@ -38,11 +38,34 @@
     flex: 1;
     white-space: pre-wrap;
 
+    &.with-action {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      span {
+        flex: 1;
+      }
+
+      button {
+        flex-shrink: 0;
+      }
+    }
+
     strong {
       background: var(--color-surface-2);
       border-radius: 0.25em;
       padding: 0.125em 0.25em;
       font-weight: 500;
+    }
+  }
+
+  &.info {
+    border-color: var(--color-alert-info);
+
+    .alert-bg {
+      background: var(--color-alert-info);
+      color: var(--color-on-alert-info);
     }
   }
 
