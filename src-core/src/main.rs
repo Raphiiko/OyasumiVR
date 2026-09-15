@@ -12,6 +12,8 @@ mod hardware;
 mod http;
 mod image_cache;
 mod lighthouse;
+#[path = "../../src-memory-watch/integration.rs"]
+mod memory_watch;
 mod migrations;
 mod openvr;
 mod os;
@@ -358,6 +360,9 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     migrations::run_migrations().await;
     // Set up app reference
     *TAURI_APP_HANDLE.lock().await = Some(app_handle.clone());
+    if let Ok(logs) = app_handle.path().app_log_dir() {
+        memory_watch::start(env!("CARGO_PKG_VERSION"), &logs);
+    }
     let window = app_handle.get_webview_window("main").unwrap();
     // Disable swipe navigation in main window
     window

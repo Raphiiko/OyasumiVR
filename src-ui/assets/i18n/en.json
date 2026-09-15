@@ -196,6 +196,9 @@
           "message": "SteamVR\nDashboard Open",
           "tooltip": "Close the SteamVR dashboard to view bindings"
         },
+        "LOOKUP_FAILED": {
+          "message": "Could not load binding.\nRetrying."
+        },
         "MISSING_CONTROLLER": {
           "tooltip": "Make sure both left and right controllers are connected"
         },
@@ -205,9 +208,6 @@
         },
         "UNKNOWN": {
           "message": "Configure Binding"
-        },
-        "LOOKUP_FAILED": {
-          "message": "Could not load binding.\nRetrying."
         }
       },
       "slot": {
@@ -1462,6 +1462,17 @@
       "title": "Only when sleep mode is enabled"
     },
     "title": "Join Notifications"
+  },
+  "memoryWatch": {
+    "failed": "Automatic capture failed: {error}. Follow instructions.txt.",
+    "instructions": "OyasumiVR detected unusually high memory usage in {name}, PID {pid}.\n\nRead status.txt first. If process.dmp exists, share this folder privately with the developer. Do not post these files publicly.\n\nIf automatic capture failed and this process is still running:\n1. Open Task Manager and select Details.\n2. Find {name} with PID {pid}. Do not select a different process with the same name.\n3. Right-click it and choose Create memory dump file. An elevated process may require Task Manager to run as administrator.\n4. Save the path Task Manager shows and share that dump privately with the developer, together with this report.\n\nIf OyasumiVR has restarted, this PID may refer to a different process. Do not use these steps for an old PID.\n\nThe monitor saves one incident until you move or remove its incident folder.",
+    "manualFallback": "While {name}, PID {pid}, is still running:\n1. Open Task Manager and select Details.\n2. Find that exact process and PID.\n3. Right-click it and choose Create memory dump file.\n4. Share the resulting dump privately with the developer.\n\nAn elevated process may require Task Manager to run as administrator. Do not use an old PID after restarting the app.",
+    "missingReport": "The diagnostic report could not be read. If memory usage is still high, open Task Manager, expand OyasumiVR and create a memory dump of the process using the most memory.",
+    "notification": "OyasumiVR detected unusually high memory usage.\n\n{status}\n\nDiagnostics folder:\n{path}\n\nPlease share the diagnostic files only with the developer, in private. Do not post them publicly.\n\nOpen the folder?",
+    "saved": "Memory dump saved. Share this folder privately with the developer.",
+    "starting": "Capture starting. If no completed dump appears, follow instructions.txt.",
+    "title": "OyasumiVR memory diagnostics",
+    "unexpectedExit": "The dump helper exited unexpectedly. Follow instructions.txt."
   },
   "message-center": {
     "actions": {
