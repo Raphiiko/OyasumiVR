@@ -10,72 +10,53 @@
     <div class="automation-settings">
       <div class="automation-settings-row">
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="sleep-detection.modals.enableOnHeartRateCalmPeriod.bpm.title"></span>
-              <span
-                transloco="sleep-detection.modals.enableOnHeartRateCalmPeriod.bpm.description"
-              ></span>
-            </div>
-            <div class="setting-row-action">
-              <app-slider-setting
-                [unit]="'sleep-detection.modals.enableOnHeartRateCalmPeriod.bpm.unit' | transloco"
-                [min]="20"
-                [max]="100"
-                [value]="threshold"
-                (valueChange)="threshold = $event"
-                [step]="1"
-              ></app-slider-setting>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span
-                transloco="sleep-detection.modals.enableOnHeartRateCalmPeriod.duration.title"
-              ></span>
-              <span
-                transloco="sleep-detection.modals.enableOnHeartRateCalmPeriod.duration.description"
-              ></span>
-            </div>
-            <div class="setting-row-action">
-              <app-slider-setting
-                [unit]="
-                  'sleep-detection.modals.enableOnHeartRateCalmPeriod.duration.unit' | transloco
-                "
-                [min]="1"
-                [max]="60"
-                [value]="duration / 1000 / 60"
-                (valueChange)="onDurationChange($event)"
-                [step]="1"
-              ></app-slider-setting>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span
-                transloco="sleep-detection.modals.enableOnHeartRateCalmPeriod.viewHistory.title"
-              ></span>
-              <span
-                transloco="sleep-detection.modals.enableOnHeartRateCalmPeriod.viewHistory.description"
-              ></span>
-            </div>
-            <div class="setting-row-action">
-              @if (mode === 'SETTINGS') {
-                <button
-                  class="btn btn-primary"
-                  transloco="sleep-detection.modals.enableOnHeartRateCalmPeriod.viewHistory.actionShow"
-                  (click)="mode = 'HISTORY'"
-                ></button>
-              }
-              @if (mode === 'HISTORY') {
-                <button
-                  class="btn btn-primary"
-                  transloco="sleep-detection.modals.enableOnHeartRateCalmPeriod.viewHistory.actionHide"
-                  (click)="mode = 'SETTINGS'"
-                ></button>
-              }
-            </div>
-          </div>
+          <app-setting-row
+            label="sleep-detection.modals.enableOnHeartRateCalmPeriod.bpm.title"
+            description="sleep-detection.modals.enableOnHeartRateCalmPeriod.bpm.description"
+          >
+            <app-slider-setting
+              [unit]="'sleep-detection.modals.enableOnHeartRateCalmPeriod.bpm.unit' | transloco"
+              [min]="20"
+              [max]="100"
+              [value]="threshold"
+              (valueChange)="threshold = $event"
+              [step]="1"
+            ></app-slider-setting>
+          </app-setting-row>
+          <app-setting-row
+            label="sleep-detection.modals.enableOnHeartRateCalmPeriod.duration.title"
+            description="sleep-detection.modals.enableOnHeartRateCalmPeriod.duration.description"
+          >
+            <app-slider-setting
+              [unit]="
+                'sleep-detection.modals.enableOnHeartRateCalmPeriod.duration.unit' | transloco
+              "
+              [min]="1"
+              [max]="60"
+              [value]="duration / 1000 / 60"
+              (valueChange)="onDurationChange($event)"
+              [step]="1"
+            ></app-slider-setting>
+          </app-setting-row>
+          <app-setting-row
+            label="sleep-detection.modals.enableOnHeartRateCalmPeriod.viewHistory.title"
+            description="sleep-detection.modals.enableOnHeartRateCalmPeriod.viewHistory.description"
+          >
+            @if (mode === 'SETTINGS') {
+              <button
+                class="btn btn-primary"
+                transloco="sleep-detection.modals.enableOnHeartRateCalmPeriod.viewHistory.actionShow"
+                (click)="mode = 'HISTORY'"
+              ></button>
+            }
+            @if (mode === 'HISTORY') {
+              <button
+                class="btn btn-primary"
+                transloco="sleep-detection.modals.enableOnHeartRateCalmPeriod.viewHistory.actionHide"
+                (click)="mode = 'SETTINGS'"
+              ></button>
+            }
+          </app-setting-row>
           @if (mode === 'HISTORY') {
             <div class="setting-row" @vshrink>
               <app-heart-rate-chart></app-heart-rate-chart>

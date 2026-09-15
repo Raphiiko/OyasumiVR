@@ -7,82 +7,56 @@
     <div class="pane-content">
       <p transloco="sleep-detection.modals.disableForPlayerJoinLeave.description"></p>
       <div class="settings">
-        <div class="setting-row">
-          <div class="setting-row-label">
-            <span transloco="sleep-detection.modals.disableForPlayerJoinLeave.onJoin.title"></span>
-            <span></span>
-          </div>
-          <div class="setting-row-action">
-            <app-select-box
-              class="preset-select-box"
-              [type]="'SMALL'"
-              [items]="triggerOptions"
-              [selected]="joinTriggerOption"
-              (selectedChange)="
-                setJoinTriggerOption(asJoinNotificationsMode($safeNavigationMigration($event?.id)))
-              "
-            ></app-select-box>
-          </div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-row-label">
-            <span
-              transloco="sleep-detection.modals.disableForPlayerJoinLeave.onlyWhenPreviouslyAlone.title"
-            ></span>
-            <span
-              transloco="sleep-detection.modals.disableForPlayerJoinLeave.onlyWhenPreviouslyAlone.description"
-            ></span>
-          </div>
-          <div class="setting-row-action">
-            <label class="switch-toggle">
-              <input
-                type="checkbox"
-                [checked]="config.onlyWhenPreviouslyAlone"
-                (change)="config.onlyWhenPreviouslyAlone = !config.onlyWhenPreviouslyAlone"
-              />
-              <span class="switch-toggle-slider"></span>
-            </label>
-          </div>
-        </div>
+        <app-setting-row label="sleep-detection.modals.disableForPlayerJoinLeave.onJoin.title">
+          <app-select-box
+            class="preset-select-box"
+            [type]="'SMALL'"
+            [items]="triggerOptions"
+            [selected]="joinTriggerOption"
+            (selectedChange)="
+              setJoinTriggerOption(asJoinNotificationsMode($safeNavigationMigration($event?.id)))
+            "
+          ></app-select-box>
+        </app-setting-row>
+        <app-setting-row
+          label="sleep-detection.modals.disableForPlayerJoinLeave.onlyWhenPreviouslyAlone.title"
+          description="sleep-detection.modals.disableForPlayerJoinLeave.onlyWhenPreviouslyAlone.description"
+        >
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="config.onlyWhenPreviouslyAlone"
+              (change)="config.onlyWhenPreviouslyAlone = !config.onlyWhenPreviouslyAlone"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </app-setting-row>
       </div>
       <div class="settings">
-        <div class="setting-row">
-          <div class="setting-row-label">
-            <span transloco="sleep-detection.modals.disableForPlayerJoinLeave.onLeave.title"></span>
-            <span></span>
-          </div>
-          <div class="setting-row-action">
-            <app-select-box
-              class="preset-select-box"
-              [type]="'SMALL'"
-              [items]="triggerOptions"
-              [selected]="leaveTriggerOption"
-              (selectedChange)="
-                setLeaveTriggerOption(asJoinNotificationsMode($safeNavigationMigration($event?.id)))
-              "
-            ></app-select-box>
-          </div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-row-label">
-            <span
-              transloco="sleep-detection.modals.disableForPlayerJoinLeave.onlyWhenLeftAlone.title"
-            ></span>
-            <span
-              transloco="sleep-detection.modals.disableForPlayerJoinLeave.onlyWhenLeftAlone.description"
-            ></span>
-          </div>
-          <div class="setting-row-action">
-            <label class="switch-toggle">
-              <input
-                type="checkbox"
-                [checked]="config.onlyWhenLeftAlone"
-                (change)="config.onlyWhenLeftAlone = !config.onlyWhenLeftAlone"
-              />
-              <span class="switch-toggle-slider"></span>
-            </label>
-          </div>
-        </div>
+        <app-setting-row label="sleep-detection.modals.disableForPlayerJoinLeave.onLeave.title">
+          <app-select-box
+            class="preset-select-box"
+            [type]="'SMALL'"
+            [items]="triggerOptions"
+            [selected]="leaveTriggerOption"
+            (selectedChange)="
+              setLeaveTriggerOption(asJoinNotificationsMode($safeNavigationMigration($event?.id)))
+            "
+          ></app-select-box>
+        </app-setting-row>
+        <app-setting-row
+          label="sleep-detection.modals.disableForPlayerJoinLeave.onlyWhenLeftAlone.title"
+          description="sleep-detection.modals.disableForPlayerJoinLeave.onlyWhenLeftAlone.description"
+        >
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="config.onlyWhenLeftAlone"
+              (change)="config.onlyWhenLeftAlone = !config.onlyWhenLeftAlone"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </app-setting-row>
       </div>
       <div class="pane-actions spread">
         <button

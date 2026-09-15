@@ -1,11 +1,3 @@
-:host > .pane {
-  height: 100%;
-
-  > .pane-content {
-    overflow-y: overlay;
-  }
-}
-
 .setting-row-action {
   .btn.btn-icon {
     margin-right: 0.75em;
