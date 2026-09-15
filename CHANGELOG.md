@@ -35,6 +35,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Changed
 
+- Repeated language activation reuses CJK fonts already loading or loaded.
 - Disabled and friend-independent automations no longer request friend-list refreshes.
 - Image downloads reuse HTTP connections and avoid extra copies of each downloaded image.
 - Sleeping-pose consumers share detection work and receive the latest pose when opened.
