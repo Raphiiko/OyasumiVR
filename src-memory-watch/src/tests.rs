@@ -105,33 +105,29 @@ fn records_memory_from_windows_and_rejects_wrong_creation_time() {
 }
 
 #[test]
-fn history_rotates_instead_of_growing_indefinitely() {
-    let dir = std::env::temp_dir().join(format!(
-        "oyasumivr-memory-watch-rotation-{}",
-        std::process::id()
-    ));
-    fs::create_dir_all(&dir).unwrap();
-    fs::write(
-        dir.join("history.jsonl"),
-        vec![b' '; HISTORY_LIMIT as usize],
-    )
-    .unwrap();
-    record(&dir, &[], None).unwrap();
+fn history_stays_bounded_after_thousands_of_samples() {
+    let mut history = History::default();
+    for _ in 0..1000 {
+        history.record(&[], None);
+    }
+    assert_eq!(history.samples.len(), 120);
+    let error = "x".repeat(4096);
+    for _ in 0..1000 {
+        history.record(&[], Some(&error));
+    }
+    assert!(history.samples.len() < 120);
+    assert!(history.bytes <= HISTORY_BYTES);
     assert_eq!(
-        fs::metadata(dir.join("history.previous.jsonl"))
-            .unwrap()
-            .len(),
-        HISTORY_LIMIT
+        history.bytes,
+        history.samples.iter().map(String::len).sum::<usize>()
     );
-    assert!(fs::metadata(dir.join("history.jsonl")).unwrap().len() < 256);
-    fs::remove_file(dir.join("history.previous.jsonl")).unwrap();
-    fs::remove_file(dir.join("history.jsonl")).unwrap();
-    fs::remove_dir(dir).unwrap();
+    history.record(&[], Some(&"x".repeat(HISTORY_BYTES + 1)));
+    assert!(history.bytes <= HISTORY_BYTES);
 }
 
 #[test]
 fn all_diagnostic_copy_is_available() {
-    for key in ["consent", "enabled", "notification", "instructions"] {
+    for key in ["notification", "instructions", "failed", "manualFallback"] {
         assert!(!text(key).is_empty());
     }
 }
@@ -144,7 +140,15 @@ fn oversized_targets_leave_a_report_without_starting_a_dump() {
     ));
     fs::create_dir_all(&dir).unwrap();
     let process = process(42, 10, 1, 9 * GIB);
-    let error = capture(&dir, process.id, &[process], "test-beta", &dir).unwrap_err();
+    let error = capture(
+        &dir,
+        process.id,
+        &[process],
+        "test-beta",
+        &dir,
+        &History::default(),
+    )
+    .unwrap_err();
     assert!(error.to_string().contains("budget"));
     let incident = dir.join("incident");
     let report: serde_json::Value =
@@ -154,7 +158,12 @@ fn oversized_targets_leave_a_report_without_starting_a_dump() {
         .unwrap()
         .contains("PID 42"));
     assert!(!incident.join("process.dmp").exists());
-    for name in ["report.json", "instructions.txt", "status.txt"] {
+    for name in [
+        "report.json",
+        "instructions.txt",
+        "status.txt",
+        "history.jsonl",
+    ] {
         fs::remove_file(incident.join(name)).unwrap();
     }
     fs::remove_dir(incident).unwrap();

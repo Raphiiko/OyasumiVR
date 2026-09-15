@@ -8,9 +8,13 @@ pub fn start(version: &str, logs: &std::path::Path) {
     if !version.contains("-beta") {
         return;
     }
-    let Some(directory) = directory().filter(|dir| dir.join("enabled").is_file()) else {
+    let Some(directory) = directory() else {
         return;
     };
+    if let Err(error) = fs::create_dir_all(&directory) {
+        log::warn!("[Memory watch] Could not create diagnostic directory: {error}");
+        return;
+    }
     let Ok(exe) = std::env::current_exe() else {
         return;
     };
@@ -41,7 +45,10 @@ pub fn start(version: &str, logs: &std::path::Path) {
 }
 
 pub fn register_elevated_process(pid: u32) {
-    let Some(directory) = directory().filter(|dir| dir.join("enabled").is_file()) else {
+    if !env!("CARGO_PKG_VERSION").contains("-beta") {
+        return;
+    }
+    let Some(directory) = directory() else {
         return;
     };
     if let Some(created) = creation_time(pid) {

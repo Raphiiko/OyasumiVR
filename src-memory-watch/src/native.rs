@@ -1,5 +1,6 @@
 use crate::{Identity, Process, GIB};
 use std::{
+    collections::HashSet,
     fs::File,
     io,
     mem::size_of,
@@ -72,7 +73,7 @@ pub fn alive(handle: &Handle) -> bool {
     unsafe { WaitForSingleObject(handle.0, 0) == WAIT_TIMEOUT }
 }
 
-pub fn snapshot() -> io::Result<Vec<Process>> {
+pub fn snapshot(seeds: &HashSet<Identity>) -> io::Result<Vec<Process>> {
     let raw = unsafe { CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0) };
     if raw == INVALID_HANDLE_VALUE {
         return Err(io::Error::last_os_error());
@@ -90,7 +91,7 @@ pub fn snapshot() -> io::Result<Vec<Process>> {
             .iter()
             .position(|c| *c == 0)
             .unwrap_or(entry.szExeFile.len());
-        let mut process = Process {
+        processes.push(Process {
             id: Identity {
                 pid: entry.th32ProcessID,
                 created: 0,
@@ -100,15 +101,29 @@ pub fn snapshot() -> io::Result<Vec<Process>> {
             private: None,
             resident: None,
             error: None,
-        };
+        });
+        success = unsafe { Process32NextW(snapshot.0, &mut entry) };
+    }
+    let mut candidates: HashSet<_> = seeds.iter().map(|id| id.pid).collect();
+    loop {
+        let before = candidates.len();
+        for process in &processes {
+            if candidates.contains(&process.parent) {
+                candidates.insert(process.id.pid);
+            }
+        }
+        if candidates.len() == before {
+            break;
+        }
+    }
+    processes.retain(|process| candidates.contains(&process.id.pid));
+    for process in &mut processes {
         match open(process.id.pid, PROCESS_QUERY_LIMITED_INFORMATION)
             .and_then(|handle| created(&handle))
         {
             Ok(created) => process.id.created = created,
             Err(error) => process.error = Some(error.to_string()),
         }
-        processes.push(process);
-        success = unsafe { Process32NextW(snapshot.0, &mut entry) };
     }
     Ok(processes)
 }
@@ -233,13 +248,13 @@ pub fn dump(id: Identity, destination: &Path) -> io::Result<()> {
     }
 }
 
-pub fn message(text: &str, question: bool) -> bool {
+pub fn message(text: &str) -> bool {
     unsafe {
         MessageBoxW(
             null_mut(),
             wide(text).as_ptr(),
             wide(crate::text("title")).as_ptr(),
-            MB_SETFOREGROUND | MB_ICONINFORMATION | if question { MB_YESNO } else { MB_OK },
+            MB_SETFOREGROUND | MB_ICONINFORMATION | MB_YESNO,
         ) == IDYES
     }
 }

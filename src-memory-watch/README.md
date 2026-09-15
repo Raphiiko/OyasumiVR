@@ -5,25 +5,24 @@ Tauri, WebView2, .NET, network or async-runtime dependency. Monitoring continues
 when the root process is suspended. Dump writing and native notifications run
 in separate instances of this helper, so neither blocks the sampling loop.
 
-## Enable for a tester
+## Automatic beta diagnostics
 
-1. Install a beta containing this helper.
-2. In the OyasumiVR installation directory, open
-   `resources/memory-watch/oyasumivr-memory-watch.exe`.
-3. Accept the explanation of local full-memory capture, then restart OyasumiVR.
+Every beta launch starts the monitor silently. There is no setup, prompt or
+separate executable for the user to run. It can capture the first qualifying
+incident from a fresh installation.
 
-Nothing uploads automatically. The consent marker and diagnostics live in
+Nothing uploads automatically. Diagnostics live in
 `%LOCALAPPDATA%/OyasumiVR/memory-watch`. Only versions containing `-beta` launch
-the watcher automatically, and only when its `enabled` marker exists.
+the watcher. Normal releases do not start it.
 
 After a capture, a native dialog offers to open the `incident` folder. It also
 appears on the next monitored launch, so the tester can find a capture made
 overnight. Share the folder privately. A full dump can contain credentials,
 messages and other private data. Do not attach it to a public GitHub issue.
 
-Run the helper with `--disable` to stop monitoring. Move the `incident` folder
-elsewhere before restarting OyasumiVR to arm another capture. Disabling does
-not delete existing evidence or forcibly terminate an active dump writer.
+The monitor exits with OyasumiVR. An active dump writer can finish independently.
+Move the `incident` folder elsewhere before restarting OyasumiVR to arm another
+capture. No action is needed before the first capture.
 
 ## Collection
 
@@ -45,7 +44,8 @@ not delete existing evidence or forcibly terminate an active dump writer.
 - Save the build/version, process report, recent history and up to three 1 MiB
   application log excerpts. Full-memory dumps include thread and module data.
 
-The live history rotates between two files of approximately 1 MiB each. One
+Recent history stays in memory, capped at 120 samples and 256 KiB of serialized
+data. Normal sampling does not write history or application logs to disk. One
 incident persists across launches; it prevents further automatic dumps until
 the tester moves or removes it. Capture requires disk headroom of private plus
 resident bytes plus 1 GiB. Targets whose private plus resident bytes exceed
@@ -79,11 +79,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File src-memory-watch/test.ps1
 ```
 
 The PowerShell check uses its own temporary profile and fixture processes. It
-verifies descendants, sampling while the root is suspended, registration of an
-unrelated fixture, a real full-memory dump, rejection of a stale process
-identity, and shutdown after the root exits. It leaves its results and fixture
-dump in the printed temporary directory. It does not launch OyasumiVR or show
-diagnostic dialogs.
+verifies quiet startup without setup files or history writes, descendants,
+sampling and capture while the root is suspended, registration of an unrelated
+fixture, a real full-memory dump, rejection of a stale process identity, and
+shutdown after the root exits. It leaves its results and fixture dump in the
+printed temporary directory. It does not launch OyasumiVR or show dialogs.
 
 The test also commits 2 GiB of inaccessible virtual memory in its fixture to
 exercise the real automatic threshold without touching those pages. Allow at

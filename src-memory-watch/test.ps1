@@ -34,7 +34,6 @@ $testDirectory = Join-Path ([IO.Path]::GetTempPath()) "oyasumivr-memory-watch-$(
 $data = Join-Path $testDirectory 'OyasumiVR\memory-watch'
 $fixtures = Join-Path $testDirectory 'fixtures'
 New-Item -ItemType Directory -Path $data, $fixtures | Out-Null
-[IO.File]::WriteAllText((Join-Path $data 'enabled'), 'Isolated test fixtures only.')
 
 Add-Type @'
 using System;
@@ -65,16 +64,6 @@ function Wait-For([scriptblock]$Check, [string]$Description, [int]$Seconds = 20)
     throw "Timed out: $Description"
 }
 
-function Read-LatestSample {
-    $history = Join-Path $data 'history.jsonl'
-    if (-not (Test-Path $history)) { return $null }
-    $lines = @(Get-Content $history)
-    for ($index = $lines.Count - 1; $index -ge 0; $index--) {
-        try { return ($lines[$index] | ConvertFrom-Json) } catch { }
-    }
-    return $null
-}
-
 $root = $null
 $watcher = $null
 $suspended = $false
@@ -88,27 +77,33 @@ try {
     $fixtureIds = @(0..2 | ForEach-Object { [int](Get-Content (Join-Path $fixtures "$_.pid")) })
     $created = $root.StartTime.ToFileTimeUtc()
     $watcher = Start-WatchHelper "--watch $($root.Id) $created test-beta `"$fixtures`""
-    Wait-For {
-        $sample = Read-LatestSample
-        @($sample.processes | Where-Object { $_.id.pid -in $fixtureIds }).Count -eq 3
-    } 'all three process generations'
-    if ((Read-LatestSample).processes.id.pid -contains $watcher.Id) { throw 'Watcher included itself.' }
-
-    if ([WatchTestNative]::NtSuspendProcess($root.Handle) -ne 0) { throw 'Cannot suspend fixture.' }
-    $suspended = $true
-    $before = (Read-LatestSample).unixSeconds
-    Wait-For { (Read-LatestSample).unixSeconds -gt ($before + 2) } 'sampling while root is suspended'
+    Wait-For { Test-Path (Join-Path $data 'watch.lock') } 'automatic watcher startup without setup'
+    $watcher.Refresh()
+    $cpuBefore = $watcher.TotalProcessorTime.TotalSeconds
+    Start-Sleep -Seconds 6
+    $watcher.Refresh()
+    $idleCpuSeconds = $watcher.TotalProcessorTime.TotalSeconds - $cpuBefore
+    if ($watcher.HasExited) { throw 'Watcher exited during normal sampling.' }
+    if (@(Get-ChildItem $data -File | Where-Object Length -gt 0).Count -ne 0) { throw 'Normal sampling wrote data to disk.' }
+    if (Test-Path (Join-Path $data 'incident')) { throw 'Normal startup created an incident.' }
 
     $extra = Get-Process -Id $PID
     [IO.File]::WriteAllText((Join-Path $data "extra-$($root.Id).txt"), "$PID $($extra.StartTime.ToFileTimeUtc())")
-    Wait-For { (Read-LatestSample).processes.id.pid -contains $PID } 'registered process outside the root tree'
-    Remove-Item -LiteralPath (Join-Path $data "extra-$($root.Id).txt")
-
-    $incident = Join-Path $data 'test-capture'
-    New-Item -ItemType Directory -Path $incident | Out-Null
-    $writer = Start-WatchHelper "--dump $($root.Id) $created `"$incident`""
-    if (-not $writer.WaitForExit(30000)) { throw 'Fixture dump did not finish within 30 seconds.' }
-    if ($writer.ExitCode -ne 0) { throw (Get-Content (Join-Path $incident 'status.txt')) }
+    $notificationLock = [IO.File]::Open((Join-Path $data 'notification.lock'), [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::Write, [IO.FileShare]::None)
+    [IO.File]::WriteAllText((Join-Path $fixtures 'allocate'), '')
+    Wait-For { $root.Refresh(); $root.PrivateMemorySize64 -ge 2147483648 } 'fixture private commit threshold'
+    if ([WatchTestNative]::NtSuspendProcess($root.Handle) -ne 0) { throw 'Cannot suspend fixture.' }
+    $suspended = $true
+    $suspendedAt = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
+    $incident = Join-Path $data 'incident'
+    Wait-For { Test-Path (Join-Path $incident 'process.dmp') } 'automatic capture while root is suspended' 60
+    $automatic = Get-Content (Join-Path $incident 'report.json') -Raw | ConvertFrom-Json
+    if ($automatic.target.pid -ne $root.Id) { throw 'Automatic capture selected the wrong process.' }
+    if (@($automatic.processes | Where-Object { $_.id.pid -in $fixtureIds }).Count -ne 3) { throw 'Missing process generation.' }
+    if ($automatic.processes.id.pid -notcontains $PID) { throw 'Registered process missing.' }
+    if ($automatic.processes.id.pid -contains $watcher.Id) { throw 'Watcher included itself.' }
+    $history = @(Get-Content (Join-Path $incident 'history.jsonl') | ForEach-Object { $_ | ConvertFrom-Json })
+    if (@($history | Where-Object { $_.unixSeconds -gt ($suspendedAt + 4) }).Count -lt 2) { throw 'No continued sampling while root was suspended.' }
     $dump = Join-Path $incident 'process.dmp'
     $stream = [IO.File]::OpenRead($dump)
     try {
@@ -131,21 +126,10 @@ try {
     if (-not $writer.WaitForExit(10000) -or $writer.ExitCode -eq 0) { throw 'Reused PID was not rejected.' }
     if (Test-Path (Join-Path $failed 'process.dmp')) { throw 'Wrong-identity dump was created.' }
 
-    $notificationLock = [IO.File]::Open((Join-Path $data 'notification.lock'), [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::Write, [IO.FileShare]::None)
-    [WatchTestNative]::NtResumeProcess($root.Handle) | Out-Null
-    $suspended = $false
-    [IO.File]::WriteAllText((Join-Path $fixtures 'allocate'), '')
-    Wait-For {
-        @((Read-LatestSample).processes | Where-Object { $_.id.pid -eq $root.Id -and $_.private -ge 2147483648 }).Count -eq 1
-    } 'Windows private commit threshold'
-    Wait-For { Test-Path (Join-Path $data 'incident\process.dmp') } 'automatic threshold capture' 60
-    $automatic = Get-Content (Join-Path $data 'incident\report.json') -Raw | ConvertFrom-Json
-    if ($automatic.target.pid -ne $root.Id) { throw 'Automatic capture selected the wrong process.' }
-    $before = (Read-LatestSample).unixSeconds
-    Wait-For { (Read-LatestSample).unixSeconds -gt ($before + 2) } 'monitoring after automatic capture'
-
     $watcher.Refresh()
     $summary = [ordered]@{
+        quietStartup = 'no setup marker, no prompt and no history writes'
+        idleCpuSecondsOverSixSeconds = $idleCpuSeconds
         tree = 'root, child and grandchild found'
         suspendedRoot = 'monitor kept sampling'
         extraProcess = 'registered non-descendant found'
@@ -156,6 +140,8 @@ try {
         watcherPrivateBytes = $watcher.PrivateMemorySize64
         watcherWorkingSet = $watcher.WorkingSet64
     }
+    [WatchTestNative]::NtResumeProcess($root.Handle) | Out-Null
+    $suspended = $false
     [IO.File]::WriteAllText((Join-Path $fixtures 'stop'), '')
     if (-not $root.WaitForExit(10000)) { throw 'Fixture did not exit.' }
     if (-not $watcher.WaitForExit(10000)) { throw 'Monitor did not exit with its root.' }

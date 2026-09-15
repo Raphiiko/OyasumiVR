@@ -4,7 +4,7 @@ mod native;
 
 use serde::Serialize;
 use std::{
-    collections::{HashMap, HashSet},
+    collections::{HashMap, HashSet, VecDeque},
     fs::{self, File, OpenOptions},
     io::{self, Read, Write},
     os::windows::{fs::OpenOptionsExt, process::CommandExt},
@@ -14,7 +14,8 @@ use std::{
 };
 
 const GIB: u64 = 1024 * 1024 * 1024;
-const HISTORY_LIMIT: u64 = 1024 * 1024;
+const FILE_LIMIT: u64 = 1024 * 1024;
+const HISTORY_BYTES: usize = 256 * 1024;
 const POLL: Duration = Duration::from_secs(2);
 
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, Serialize)]
@@ -62,7 +63,7 @@ fn helper() -> io::Result<Command> {
 fn read_small(path: &Path) -> io::Result<String> {
     let mut result = String::new();
     File::open(path)?
-        .take(HISTORY_LIMIT)
+        .take(FILE_LIMIT)
         .read_to_string(&mut result)?;
     Ok(result)
 }
@@ -134,19 +135,32 @@ impl Trigger {
     }
 }
 
-fn record(directory: &Path, processes: &[Process], error: Option<&str>) -> io::Result<()> {
-    let path = directory.join("history.jsonl");
-    if fs::metadata(&path).is_ok_and(|m| m.len() >= HISTORY_LIMIT) {
-        let previous = directory.join("history.previous.jsonl");
-        let _ = fs::remove_file(&previous);
-        fs::rename(&path, previous)?;
+#[derive(Default)]
+struct History {
+    samples: VecDeque<String>,
+    bytes: usize,
+}
+
+impl History {
+    fn record(&mut self, processes: &[Process], error: Option<&str>) {
+        let sample = serde_json::json!({"unixSeconds": SystemTime::now().duration_since(UNIX_EPOCH).unwrap_or_default().as_secs(), "processes": processes, "error": error}).to_string();
+        if sample.len() > HISTORY_BYTES {
+            return;
+        }
+        while self.samples.len() >= 120 || self.bytes + sample.len() > HISTORY_BYTES {
+            self.bytes -= self.samples.pop_front().unwrap().len();
+        }
+        self.bytes += sample.len();
+        self.samples.push_back(sample);
     }
-    let mut file = OpenOptions::new().create(true).append(true).open(path)?;
-    serde_json::to_writer(
-        &mut file,
-        &serde_json::json!({"unixSeconds": SystemTime::now().duration_since(UNIX_EPOCH).unwrap_or_default().as_secs(), "processes": processes, "error": error}),
-    )?;
-    writeln!(file)
+
+    fn save(&self, path: &Path) -> io::Result<()> {
+        let mut file = File::create(path)?;
+        for sample in &self.samples {
+            writeln!(file, "{sample}")?;
+        }
+        Ok(())
+    }
 }
 
 fn notify(incident: &Path, fallback: Option<&str>) -> io::Result<Child> {
@@ -164,6 +178,7 @@ fn capture(
     processes: &[Process],
     version: &str,
     logs: &Path,
+    history: &History,
 ) -> io::Result<Child> {
     let incident = directory.join("incident");
     fs::create_dir(&incident)?;
@@ -182,9 +197,7 @@ fn capture(
             .replace("{pid}", &id.pid.to_string())
             .replace("{name}", &process.name),
     )?;
-    for name in ["history.jsonl", "history.previous.jsonl"] {
-        let _ = fs::copy(directory.join(name), incident.join(name));
-    }
+    history.save(&incident.join("history.jsonl"))?;
     copy_logs(logs, &incident);
     fs::write(incident.join("status.txt"), text("starting"))?;
     let bytes = process
@@ -224,7 +237,7 @@ fn copy_logs(source: &Path, incident: &Path) {
             File::open(path),
             File::create(incident.join(format!("app-{index}.log"))),
         ) {
-            let _ = io::copy(&mut input.take(HISTORY_LIMIT), &mut output);
+            let _ = io::copy(&mut input.take(FILE_LIMIT), &mut output);
         }
     }
 }
@@ -243,6 +256,7 @@ fn watch(root: Identity, version: &str, logs: &Path, directory: &Path) -> io::Re
     let incident = directory.join("incident");
     let mut tracked = HashSet::from([root]);
     let mut trigger = Trigger::default();
+    let mut history = History::default();
     let mut captured = incident.exists();
     let mut notification = if captured {
         notify(&incident, None).ok()
@@ -251,14 +265,14 @@ fn watch(root: Identity, version: &str, logs: &Path, directory: &Path) -> io::Re
     };
     let mut writer: Option<Child> = None;
     let mut capture_started = None;
-    while native::alive(&root_handle) && directory.join("enabled").is_file() {
+    while native::alive(&root_handle) {
         // sample the tracked processes
-        match native::snapshot() {
+        if let Some(extra) = extra_identity(&extra_path) {
+            tracked.insert(extra);
+        }
+        tracked.insert(root);
+        match native::snapshot(&tracked) {
             Ok(all) => {
-                if let Some(extra) = extra_identity(&extra_path) {
-                    tracked.insert(extra);
-                }
-                tracked.insert(root);
                 tracked = descendants(&all, &tracked);
                 let excluded = descendants(&all, &HashSet::from([own]));
                 tracked.retain(|id| !excluded.contains(id));
@@ -273,12 +287,12 @@ fn watch(root: Identity, version: &str, logs: &Path, directory: &Path) -> io::Re
                 for process in &mut processes {
                     native::measure(process);
                 }
-                let _ = record(directory, &processes, None);
+                history.record(&processes, None);
                 // capture the first sustained threshold breach
                 if !captured {
                     if let Some(id) = trigger.check(&processes, Instant::now()) {
                         captured = true;
-                        match capture(directory, id, &processes, version, logs) {
+                        match capture(directory, id, &processes, version, logs, &history) {
                             Ok(child) => {
                                 writer = Some(child);
                                 capture_started = Some(Instant::now());
@@ -303,7 +317,7 @@ fn watch(root: Identity, version: &str, logs: &Path, directory: &Path) -> io::Re
                 }
             }
             Err(error) => {
-                let _ = record(directory, &[], Some(&error.to_string()));
+                history.record(&[], Some(&error.to_string()));
                 trigger = Trigger::default();
             }
         }
@@ -337,21 +351,6 @@ fn run() -> io::Result<()> {
     let args: Vec<_> = std::env::args_os().collect();
     let directory = directory()?;
     match args.get(1).and_then(|arg| arg.to_str()) {
-        None | Some("--enable") => {
-            if native::message(&text("consent"), true) {
-                fs::create_dir_all(&directory)?;
-                fs::write(
-                    directory.join("enabled"),
-                    "Full local memory capture enabled by the user.",
-                )?;
-                native::message(&text("enabled"), false);
-            }
-        }
-        Some("--disable") => {
-            if directory.join("enabled").exists() {
-                fs::remove_file(directory.join("enabled"))?;
-            }
-        }
         Some("--watch") if args.len() == 6 => {
             let pid = args[2]
                 .to_string_lossy()
@@ -417,7 +416,7 @@ fn run() -> io::Result<()> {
             let message = text("notification")
                 .replace("{status}", &status)
                 .replace("{path}", &incident.display().to_string());
-            if native::message(&message, true) {
+            if native::message(&message) {
                 Command::new("explorer.exe").arg(incident).spawn()?;
             }
         }
