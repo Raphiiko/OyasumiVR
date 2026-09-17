@@ -88,6 +88,22 @@ describe('friend refresh demand', () => {
     vi.useRealTimers();
   });
 
+  it('fetches current friend pictures instead of restoring legacy cached friends', async () => {
+    vi.mocked(CACHE_STORE.get).mockImplementation(async (key) =>
+      key === 'CachedValue_VRCHAT_FRIENDS'
+        ? { value: [friend], lastSet: Date.now(), ttl: 3600000 }
+        : undefined
+    );
+    const h = await setup();
+    const currentFriend = { ...friend, iconUrl: 'https://example.com/friend.png' };
+    h.pages.mockResolvedValueOnce([currentFriend]).mockResolvedValueOnce([]);
+
+    expect(await h.calls[0]()).toEqual([currentFriend]);
+    expect(h.pages).toHaveBeenCalledTimes(2);
+    expect(await h.calls[0]()).toEqual([currentFriend]);
+    expect(h.pages).toHaveBeenCalledTimes(2);
+  });
+
   it.each(['DISABLED', 'EVERYONE', 'WHITELIST', 'BLACKLIST'] as const)(
     'makes no demand for defaults or friend-independent %s modes',
     async (mode) => {
