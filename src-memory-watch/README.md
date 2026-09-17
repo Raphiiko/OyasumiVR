@@ -97,8 +97,7 @@ lock during this check to avoid opening a dialog on the desktop.
 The existing pre-build script builds and stages the helper under
 `src-core/resources/memory-watch`. Tauri's resource glob and Steam's resource
 copy package it without another packaging rule. The build embeds the current
-`src-ui/build.ts` build ID. English diagnostic copy comes from
-`src-ui/assets/i18n/en.json`.
+`src-ui/build.ts` build ID. English diagnostic copy is hardcoded in this helper.
 
 ## Removal
 
@@ -107,5 +106,5 @@ Delete this folder, the `memory_watch` module declaration and launch call in
 `src-core/src/elevated_sidecar/mod.rs`, the import in `scripts/pre-build.js`, and
 the resource ignore entry in `src-core/.gitignore`. Remove the generated
 `resources/memory-watch` folder from build outputs before packaging another
-release. Remove `memoryWatch` with `npm run tl unset` when retiring its copy.
+release.
 Users can delete their local diagnostic folder after saving any evidence.
