@@ -385,6 +385,7 @@ pub async fn handle_elevated_sidecar_start(
         return Err(Box::new(SidecarRejected));
     }
     drop(manager_guard);
+    crate::memory_watch::register_elevated_process(args.pid);
     let mut client_guard = SIDECAR_GRPC_CLIENT.lock().await;
     // Create new GRPC client
     let mut grpc_client = tokio::time::timeout(
