@@ -1,17 +1,19 @@
 use crate::{Identity, Process, GIB};
 use std::{
     collections::HashSet,
-    fs::File,
+    fs::{File, OpenOptions},
     io,
     mem::size_of,
-    os::windows::{ffi::OsStrExt, io::AsRawHandle},
+    os::windows::{ffi::OsStrExt, fs::OpenOptionsExt, io::AsRawHandle},
     path::Path,
     ptr::null_mut,
     time::{Duration, Instant},
 };
 use windows_sys::Win32::{
     Foundation::*,
-    Storage::FileSystem::GetDiskFreeSpaceExW,
+    Storage::FileSystem::{
+        GetDiskFreeSpaceExW, FILE_FLAG_BACKUP_SEMANTICS, FILE_SHARE_READ, FILE_SHARE_WRITE,
+    },
     System::{
         Diagnostics::{Debug::*, ToolHelp::*},
         ProcessStatus::*,
@@ -174,6 +176,14 @@ pub fn free_space(directory: &Path) -> io::Result<u64> {
     }
 }
 
+pub fn hold_directory(directory: &Path) -> io::Result<File> {
+    OpenOptions::new()
+        .read(true)
+        .share_mode(FILE_SHARE_READ | FILE_SHARE_WRITE)
+        .custom_flags(FILE_FLAG_BACKUP_SEMANTICS)
+        .open(directory)
+}
+
 struct Budget<'a> {
     file: &'a File,
     directory: &'a Path,
@@ -262,6 +272,30 @@ pub fn message(text: &str) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn inherited_directory_handle_prevents_incident_reuse_until_child_exits() {
+        use std::{os::windows::process::CommandExt, process::Command};
+        let directory = std::env::temp_dir().join(format!(
+            "oyasumivr-incident-ownership-{}",
+            std::process::id()
+        ));
+        let moved = directory.with_extension("moved");
+        std::fs::create_dir(&directory).unwrap();
+        let guard = hold_directory(&directory).unwrap();
+        let mut child = Command::new("powershell.exe")
+            .args(["-NoProfile", "-Command", "Start-Sleep -Milliseconds 500"])
+            .creation_flags(0x08000000)
+            .stdin(guard)
+            .spawn()
+            .unwrap();
+        let blocked = std::fs::rename(&directory, &moved);
+        let status = child.wait().unwrap();
+        assert!(status.success());
+        assert_eq!(blocked.unwrap_err().raw_os_error(), Some(32));
+        std::fs::rename(&directory, &moved).unwrap();
+        std::fs::remove_dir(moved).unwrap();
+    }
 
     #[test]
     fn expired_dump_requests_cooperative_cancellation() {

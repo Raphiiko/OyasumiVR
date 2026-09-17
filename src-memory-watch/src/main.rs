@@ -182,6 +182,7 @@ fn capture(
 ) -> io::Result<Child> {
     let incident = directory.join("incident");
     fs::create_dir(&incident)?;
+    let incident_guard = native::hold_directory(&incident)?;
     let process = processes.iter().find(|p| p.id == id).unwrap();
     fs::write(
         incident.join("report.json"),
@@ -210,6 +211,8 @@ fn capture(
         ));
     }
     helper()?
+        // the inherited handle prevents moving the folder until the writer exits
+        .stdin(incident_guard)
         .args(["--dump", &id.pid.to_string(), &id.created.to_string()])
         .arg(&incident)
         .spawn()
@@ -244,13 +247,23 @@ fn copy_logs(source: &Path, incident: &Path) {
 
 fn watch(root: Identity, version: &str, logs: &Path, directory: &Path) -> io::Result<()> {
     fs::create_dir_all(directory)?;
-    let _lock = OpenOptions::new()
-        .create(true)
-        .write(true)
-        .truncate(false)
-        .share_mode(0)
-        .open(directory.join("watch.lock"))?;
     let root_handle = native::root_handle(root)?;
+    let mut lock = Some(loop {
+        if !native::alive(&root_handle) {
+            return Ok(());
+        }
+        match OpenOptions::new()
+            .create(true)
+            .write(true)
+            .truncate(false)
+            .share_mode(0)
+            .open(directory.join("watch.lock"))
+        {
+            Ok(lock) => break lock,
+            Err(error) if error.raw_os_error() == Some(32) => std::thread::sleep(POLL),
+            Err(error) => return Err(error),
+        }
+    });
     let own = native::identity(std::process::id())?;
     let extra_path = directory.join(format!("extra-{}.txt", root.pid));
     let incident = directory.join("incident");
@@ -265,60 +278,70 @@ fn watch(root: Identity, version: &str, logs: &Path, directory: &Path) -> io::Re
     };
     let mut writer: Option<Child> = None;
     let mut capture_started = None;
-    while native::alive(&root_handle) {
-        // sample the tracked processes
-        if let Some(extra) = extra_identity(&extra_path) {
-            tracked.insert(extra);
+    loop {
+        let root_alive = native::alive(&root_handle);
+        if !root_alive {
+            lock.take();
+            if writer.is_none() || notification.is_some() {
+                break;
+            }
         }
-        tracked.insert(root);
-        match native::snapshot(&tracked) {
-            Ok(all) => {
-                tracked = descendants(&all, &tracked);
-                let excluded = descendants(&all, &HashSet::from([own]));
-                tracked.retain(|id| !excluded.contains(id));
-                let parents: HashSet<_> = tracked.iter().map(|id| id.pid).collect();
-                let mut processes: Vec<_> = all
-                    .into_iter()
-                    .filter(|p| {
-                        tracked.contains(&p.id)
-                            || (p.id.created == 0 && parents.contains(&p.parent))
-                    })
-                    .collect();
-                for process in &mut processes {
-                    native::measure(process);
-                }
-                history.record(&processes, None);
-                // capture the first sustained threshold breach
-                if !captured {
-                    if let Some(id) = trigger.check(&processes, Instant::now()) {
-                        captured = true;
-                        match capture(directory, id, &processes, version, logs, &history) {
-                            Ok(child) => {
-                                writer = Some(child);
-                                capture_started = Some(Instant::now());
-                            }
-                            Err(error) => {
-                                let status = text("failed").replace("{error}", &error.to_string());
-                                let _ = fs::write(incident.join("status.txt"), &status);
-                                let name = processes
-                                    .iter()
-                                    .find(|p| p.id == id)
-                                    .map_or("OyasumiVR", |p| p.name.as_str());
-                                let fallback = format!(
-                                    "{status}\n\n{}",
-                                    text("manualFallback")
-                                        .replace("{pid}", &id.pid.to_string())
-                                        .replace("{name}", name)
-                                );
-                                notification = notify(&incident, Some(&fallback)).ok();
+        if root_alive {
+            // sample the tracked processes
+            if let Some(extra) = extra_identity(&extra_path) {
+                tracked.insert(extra);
+            }
+            tracked.insert(root);
+            match native::snapshot(&tracked) {
+                Ok(all) => {
+                    tracked = descendants(&all, &tracked);
+                    let excluded = descendants(&all, &HashSet::from([own]));
+                    tracked.retain(|id| !excluded.contains(id));
+                    let parents: HashSet<_> = tracked.iter().map(|id| id.pid).collect();
+                    let mut processes: Vec<_> = all
+                        .into_iter()
+                        .filter(|p| {
+                            tracked.contains(&p.id)
+                                || (p.id.created == 0 && parents.contains(&p.parent))
+                        })
+                        .collect();
+                    for process in &mut processes {
+                        native::measure(process);
+                    }
+                    history.record(&processes, None);
+                    // capture the first sustained threshold breach
+                    if !captured {
+                        if let Some(id) = trigger.check(&processes, Instant::now()) {
+                            captured = true;
+                            match capture(directory, id, &processes, version, logs, &history) {
+                                Ok(child) => {
+                                    writer = Some(child);
+                                    capture_started = Some(Instant::now());
+                                }
+                                Err(error) => {
+                                    let status =
+                                        text("failed").replace("{error}", &error.to_string());
+                                    let _ = fs::write(incident.join("status.txt"), &status);
+                                    let name = processes
+                                        .iter()
+                                        .find(|p| p.id == id)
+                                        .map_or("OyasumiVR", |p| p.name.as_str());
+                                    let fallback = format!(
+                                        "{status}\n\n{}",
+                                        text("manualFallback")
+                                            .replace("{pid}", &id.pid.to_string())
+                                            .replace("{name}", name)
+                                    );
+                                    notification = notify(&incident, Some(&fallback)).ok();
+                                }
                             }
                         }
                     }
                 }
-            }
-            Err(error) => {
-                history.record(&[], Some(&error.to_string()));
-                trigger = Trigger::default();
+                Err(error) => {
+                    history.record(&[], Some(&error.to_string()));
+                    trigger = Trigger::default();
+                }
             }
         }
         // check the independent dump writer

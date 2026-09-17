@@ -7,7 +7,9 @@ import { parseFile } from 'music-metadata';
 import { requireSigningKeyForShippableBuild } from './build-flavour.js';
 
 requireSigningKeyForShippableBuild();
-await import('../src-memory-watch/build.mjs');
+if (process.platform === 'win32') {
+  await import('../src-memory-watch/build.mjs');
+}
 
 //
 // COPY FONTS

@@ -13,14 +13,18 @@ incident from a fresh installation.
 
 Nothing uploads automatically. Diagnostics live in
 `%LOCALAPPDATA%/OyasumiVR/memory-watch`. Only versions containing `-beta` launch
-the watcher. Normal releases do not start it.
+the watcher. Normal releases do not start it. The watcher does not start when
+the main app runs as administrator, which OyasumiVR does not support.
 
 After a capture, a native dialog offers to open the `incident` folder. It also
 appears on the next monitored launch, so the tester can find a capture made
 overnight. Share the folder privately. A full dump can contain credentials,
 messages and other private data. Do not attach it to a public GitHub issue.
 
-The monitor exits with OyasumiVR. An active dump writer can finish independently.
+When OyasumiVR exits, the monitor stops sampling and releases its startup lock.
+If a dump is active, it stays until completion or the timeout notice. The dump
+writer can finish independently and holds the incident folder against moves
+or deletion until it exits.
 Move the `incident` folder elsewhere before restarting OyasumiVR to arm another
 capture. No action is needed before the first capture.
 

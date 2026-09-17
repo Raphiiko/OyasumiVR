@@ -5,7 +5,7 @@ fn directory() -> Option<PathBuf> {
 }
 
 pub fn start(version: &str, logs: &std::path::Path) {
-    if !version.contains("-beta") {
+    if !version.contains("-beta") || oyasumivr_shared::windows::is_elevated() {
         return;
     }
     let Some(directory) = directory() else {

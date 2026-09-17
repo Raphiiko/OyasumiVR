@@ -68,6 +68,7 @@ $root = $null
 $watcher = $null
 $suspended = $false
 $notificationLock = $null
+$startupLock = $null
 try {
     $root = Start-Process powershell.exe -WindowStyle Hidden -PassThru -ArgumentList @(
         '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', "`"$PSCommandPath`"",
@@ -76,7 +77,12 @@ try {
     Wait-For { Test-Path (Join-Path $fixtures '2.pid') } 'fixture grandchildren'
     $fixtureIds = @(0..2 | ForEach-Object { [int](Get-Content (Join-Path $fixtures "$_.pid")) })
     $created = $root.StartTime.ToFileTimeUtc()
+    $startupLock = [IO.File]::Open((Join-Path $data 'watch.lock'), [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::Write, [IO.FileShare]::None)
     $watcher = Start-WatchHelper "--watch $($root.Id) $created test-beta `"$fixtures`""
+    Start-Sleep -Milliseconds 250
+    if ($watcher.HasExited) { throw 'Watcher did not wait for the previous watcher lock.' }
+    $startupLock.Dispose()
+    $startupLock = $null
     Wait-For { Test-Path (Join-Path $data 'watch.lock') } 'automatic watcher startup without setup'
     $watcher.Refresh()
     $cpuBefore = $watcher.TotalProcessorTime.TotalSeconds
@@ -129,6 +135,7 @@ try {
     $watcher.Refresh()
     $summary = [ordered]@{
         quietStartup = 'no setup marker, no prompt and no history writes'
+        startupContention = 'waited for the previous watcher lock'
         idleCpuSecondsOverSixSeconds = $idleCpuSeconds
         tree = 'root, child and grandchild found'
         suspendedRoot = 'monitor kept sampling'
@@ -155,4 +162,5 @@ try {
         if ($owned -and -not $owned.HasExited) { $owned.Kill(); $owned.WaitForExit() }
     }
     if ($notificationLock) { $notificationLock.Dispose() }
+    if ($startupLock) { $startupLock.Dispose() }
 }
