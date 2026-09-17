@@ -135,7 +135,7 @@ export class VRChatAPI {
   private readonly friendsCache = new CachedValue<LimitedUserFriend[]>(
     undefined,
     RESOURCE_CACHE_TTL,
-    'VRCHAT_FRIENDS'
+    'VRCHAT_FRIENDS_V2'
   );
   private readonly groupsCache = new CachedValue<LimitedUserGroups[]>(
     undefined,

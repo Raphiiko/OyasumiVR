@@ -124,7 +124,7 @@
     "typescript-debounce-decorator": "^0.0.18",
     "uplot": "^1.6.32",
     "uuid": "^14.0.1",
-    "vrchat": "^2.22.8",
+    "vrchat": "^2.23.0",
     "zone.js": "^0.15.1"
   },
   "devDependencies": {

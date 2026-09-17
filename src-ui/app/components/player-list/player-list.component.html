@@ -62,7 +62,7 @@
                       draggable="false"
                       onerror="this.style.display = 'none'"
                       loading="lazy"
-                      [imgSmoothLoader]="vrchat.imageUrlForPlayer(player) | imageCache: 3600 * 6"
+                      [imgSmoothLoader]="player.iconUrl | imageCache: 3600 * 6"
                     />
                   </div>
                   <div class="player-name">{{ player.displayName }}</div>
