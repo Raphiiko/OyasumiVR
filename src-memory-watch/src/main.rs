@@ -417,7 +417,8 @@ fn run() -> io::Result<()> {
                 .replace("{status}", &status)
                 .replace("{path}", &incident.display().to_string());
             if native::message(&message) {
-                Command::new("explorer.exe").arg(incident).spawn()?;
+                let folder: PathBuf = incident.components().collect();
+                Command::new("explorer.exe").arg(folder).spawn()?;
             }
         }
         _ => return Err(io::Error::other("invalid memory-watch arguments")),
