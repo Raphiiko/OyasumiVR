@@ -77,6 +77,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Restore friend pictures after the VRChat API profile changes.
 - Image-cache clearing now reports deletion failures and skips unnecessary manifest validation
 - Installing dependencies no longer changes the shared package version in the lockfile, and version bumps keep it synchronized.
 - Controller bindings now show a retry message when loading fails instead of asking you to configure a binding.

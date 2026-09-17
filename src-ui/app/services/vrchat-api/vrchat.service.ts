@@ -281,7 +281,7 @@ export class VRChatService {
   }
 
   public imageUrlForPlayer(player: LimitedUserFriend): string | undefined {
-    return player.userIcon || player.profilePicOverride || player.currentAvatarThumbnailImageUrl;
+    return player.iconUrl;
   }
 
   // settings
