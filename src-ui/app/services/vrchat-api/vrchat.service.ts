@@ -280,10 +280,6 @@ export class VRChatService {
     return this.api.getUserGroups(force);
   }
 
-  public imageUrlForPlayer(player: LimitedUserFriend): string | undefined {
-    return player.iconUrl;
-  }
-
   // settings
 
   private async loadSettings(): Promise<void> {
