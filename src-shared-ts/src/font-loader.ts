@@ -12,6 +12,7 @@ interface FontDefinition {
 class FontLoader {
   private activeLocale?: string;
   private coreHttpPort = 0;
+  private fontLoads = new Map<string, Promise<FontFace>>();
 
   public async init(coreHttpPort: number, locale: string = 'en') {
     if (!this.activeLocale || locale !== 'en') {
@@ -50,12 +51,20 @@ class FontLoader {
                 .toLowerCase()
                 .replace(/\s+/g, '-')}-${set}-${weight}-${variant}.woff2`;
               const fontUrl = `http://localhost:${this.coreHttpPort}/font/${fileName}`;
+              const existing = this.fontLoads.get(fontUrl);
+              if (existing) return existing;
               const font = new FontFace(fontDef.family, `url(${fontUrl})`, {
                 style: variant === 'italic' ? 'italic' : 'normal',
                 weight: weight.toString(),
               });
               (document.fonts as any).add(font);
-              return font.load();
+              const loading = font.load().catch((error) => {
+                document.fonts.delete(font);
+                this.fontLoads.delete(fontUrl);
+                throw error;
+              });
+              this.fontLoads.set(fontUrl, loading);
+              return loading;
             });
           });
         });
