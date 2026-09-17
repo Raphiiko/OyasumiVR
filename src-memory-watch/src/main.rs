@@ -271,11 +271,8 @@ fn watch(root: Identity, version: &str, logs: &Path, directory: &Path) -> io::Re
     let mut trigger = Trigger::default();
     let mut history = History::default();
     let mut captured = incident.exists();
-    let mut notification = if captured {
-        notify(&incident, None).ok()
-    } else {
-        None
-    };
+    let retained = captured.then(Instant::now);
+    let mut notification = None;
     let mut writer: Option<Child> = None;
     let mut capture_started = None;
     loop {
@@ -285,6 +282,15 @@ fn watch(root: Identity, version: &str, logs: &Path, directory: &Path) -> io::Re
             if writer.is_none() || notification.is_some() {
                 break;
             }
+        }
+        if notification.is_none()
+            && retained.is_some_and(|started| {
+                started.elapsed() > Duration::from_secs(150)
+                    || !read_small(&incident.join("status.txt"))
+                        .is_ok_and(|status| status == text("starting"))
+            })
+        {
+            notification = notify(&incident, None).ok();
         }
         if root_alive {
             // sample the tracked processes
