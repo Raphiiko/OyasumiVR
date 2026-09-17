@@ -117,16 +117,16 @@ impl Trigger {
         self.high_since.retain(|id, _| {
             processes
                 .iter()
-                .any(|p| p.id == *id && p.private.is_some_and(|bytes| bytes >= 2 * GIB))
+                .any(|p| p.id == *id && p.private.is_some_and(|bytes| bytes >= 3 * GIB))
         });
         for process in processes
             .iter()
-            .filter(|p| p.private.is_some_and(|bytes| bytes >= 2 * GIB))
+            .filter(|p| p.private.is_some_and(|bytes| bytes >= 3 * GIB))
         {
             self.high_since.entry(process.id).or_insert(now);
         }
         let total: u64 = processes.iter().filter_map(|p| p.private).sum();
-        if total >= 4 * GIB {
+        if total >= 6 * GIB {
             self.total_since.get_or_insert(now);
         } else {
             self.total_since = None;
@@ -195,7 +195,7 @@ fn capture(
         serde_json::to_vec_pretty(&serde_json::json!({
             "version": version, "build": option_env!("OYASUMIVR_BUILD_ID").unwrap_or("unknown"),
             "target": id, "processes": processes,
-            "trigger": "2 GiB per process or 4 GiB combined for 15 seconds",
+            "trigger": "3 GiB per process or 6 GiB combined for 15 seconds",
         }))?,
     )?;
     fs::write(

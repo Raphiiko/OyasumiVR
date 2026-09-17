@@ -40,8 +40,8 @@ capture. No action is needed before the first capture.
 - Exclude the watchdog and its dump/notification children from the thresholds.
 - Record private committed bytes, resident bytes, process names, parent PIDs,
   creation times and measurement errors. Do not collect command lines.
-- Trigger after one process has at least 2 GiB of private committed memory for
-  15 seconds, or the measured processes together have at least 4 GiB for 15
+- Trigger after one process has at least 3 GiB of private committed memory for
+  15 seconds, or the measured processes together have at least 6 GiB for 15
   seconds. A trigger is a diagnostic threshold, not proof of a leak.
 - Capture the largest qualifying process once. For the aggregate trigger,
   capture the largest process and retain measurements for all the others.
@@ -89,9 +89,9 @@ fixture, a real full-memory dump, rejection of a stale process identity, and
 shutdown after the root exits. It leaves its results and fixture dump in the
 printed temporary directory. It does not launch OyasumiVR or show dialogs.
 
-The test also commits 2 GiB of inaccessible virtual memory in its fixture to
+The test also commits 3 GiB of inaccessible virtual memory in its fixture to
 exercise the real automatic threshold without touching those pages. Allow at
-least 3 GiB of spare system commit and disk space. It holds the notification
+least 4 GiB of spare system commit and disk space. It holds the notification
 lock during this check to avoid opening a dialog on the desktop.
 
 The existing pre-build script builds and stages the helper under

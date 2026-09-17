@@ -20,7 +20,7 @@ public static class WatchFixtureMemory {
     public static extern IntPtr VirtualAlloc(IntPtr address, UIntPtr size, uint type, uint protection);
 }
 '@
-            $allocation = [WatchFixtureMemory]::VirtualAlloc([IntPtr]::Zero, [UIntPtr]::new(2164260864), 0x3000, 0x01)
+            $allocation = [WatchFixtureMemory]::VirtualAlloc([IntPtr]::Zero, [UIntPtr]::new(3238002688), 0x3000, 0x01)
             if ($allocation -eq [IntPtr]::Zero) { throw 'Fixture allocation failed.' }
         }
         Start-Sleep -Milliseconds 100
@@ -97,7 +97,7 @@ try {
     [IO.File]::WriteAllText((Join-Path $data "extra-$($root.Id).txt"), "$PID $($extra.StartTime.ToFileTimeUtc())")
     $notificationLock = [IO.File]::Open((Join-Path $data 'notification.lock'), [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::Write, [IO.FileShare]::None)
     [IO.File]::WriteAllText((Join-Path $fixtures 'allocate'), '')
-    Wait-For { $root.Refresh(); $root.PrivateMemorySize64 -ge 2147483648 } 'fixture private commit threshold'
+    Wait-For { $root.Refresh(); $root.PrivateMemorySize64 -ge 3221225472 } 'fixture private commit threshold'
     if ([WatchTestNative]::NtSuspendProcess($root.Handle) -ne 0) { throw 'Cannot suspend fixture.' }
     $suspended = $true
     $suspendedAt = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
@@ -143,7 +143,7 @@ try {
         dump = 'valid full-memory dump of suspended fixture'
         dumpBytes = (Get-Item $dump).Length
         reusedPid = 'rejected'
-        automaticCapture = 'real 2 GiB private-commit threshold produced report and dump'
+        automaticCapture = 'real 3 GiB private-commit threshold produced report and dump'
         watcherPrivateBytes = $watcher.PrivateMemorySize64
         watcherWorkingSet = $watcher.WorkingSet64
     }

@@ -35,7 +35,11 @@ fn discovers_grandchildren_and_retains_orphans_without_following_reused_pids() {
 fn triggers_only_after_sustained_per_process_or_aggregate_growth() {
     let start = Instant::now();
     let mut trigger = Trigger::default();
-    let large = process(1, 10, 0, 2 * GIB);
+    let below = [process(1, 10, 0, 2 * GIB), process(2, 20, 1, 2 * GIB)];
+    assert_eq!(trigger.check(&below, start), None);
+    assert_eq!(trigger.check(&below, start + Duration::from_secs(15)), None);
+    let mut trigger = Trigger::default();
+    let large = process(1, 10, 0, 3 * GIB);
     assert_eq!(trigger.check(&[large.clone()], start), None);
     assert_eq!(
         trigger.check(&[large.clone()], start + Duration::from_secs(14)),
@@ -57,10 +61,10 @@ fn triggers_only_after_sustained_per_process_or_aggregate_growth() {
 
     let mut trigger = Trigger::default();
     let spread = [
-        process(1, 10, 0, GIB),
-        process(2, 20, 1, GIB),
-        process(3, 30, 2, GIB + 1),
-        process(4, 40, 1, GIB),
+        process(1, 10, 0, GIB * 3 / 2),
+        process(2, 20, 1, GIB * 3 / 2),
+        process(3, 30, 2, GIB * 3 / 2 + 1),
+        process(4, 40, 1, GIB * 3 / 2 - 1),
     ];
     assert_eq!(trigger.check(&spread, start), None);
     assert_eq!(
@@ -73,14 +77,14 @@ fn triggers_only_after_sustained_per_process_or_aggregate_growth() {
 fn inaccessible_samples_and_process_restarts_reset_the_trigger() {
     let start = Instant::now();
     let mut trigger = Trigger::default();
-    let mut p = process(1, 10, 0, 2 * GIB);
+    let mut p = process(1, 10, 0, 3 * GIB);
     trigger.check(&[p.clone()], start);
     p.private = None;
     assert_eq!(
         trigger.check(&[p.clone()], start + Duration::from_secs(16)),
         None
     );
-    p.private = Some(2 * GIB);
+    p.private = Some(3 * GIB);
     assert_eq!(
         trigger.check(&[p.clone()], start + Duration::from_secs(17)),
         None
