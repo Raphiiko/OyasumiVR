@@ -196,6 +196,9 @@
           "message": "SteamVR\nDashboard Open",
           "tooltip": "Close the SteamVR dashboard to view bindings"
         },
+        "LOOKUP_FAILED": {
+          "message": "Could not load binding.\nRetrying."
+        },
         "MISSING_CONTROLLER": {
           "tooltip": "Make sure both left and right controllers are connected"
         },
@@ -205,9 +208,6 @@
         },
         "UNKNOWN": {
           "message": "Configure Binding"
-        },
-        "LOOKUP_FAILED": {
-          "message": "Could not load binding.\nRetrying."
         }
       },
       "slot": {

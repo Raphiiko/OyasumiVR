@@ -330,7 +330,7 @@
         "sleep": "Sommeil"
       },
       "addCommand": "Ajouter",
-      "commandCounter": "{value, plural, one {1 Commande} other {# Commandes}}",
+      "commandCounter": "{count, plural, one {1 Commande} other {# Commandes}}",
       "commands": {
         "COMMAND": {
           "description": "Exécuter une commande OSC",
@@ -341,7 +341,7 @@
           "title": "Sommeil"
         }
       },
-      "errorCounter": "{value, plural, one {1 Erreur de validation} other {# Erreurs de validation}}"
+      "errorCounter": "{count, plural, one {1 Erreur de validation} other {# Erreurs de validation}}"
     },
     "player-list": {
       "addFriends": "Ajouter des amis",

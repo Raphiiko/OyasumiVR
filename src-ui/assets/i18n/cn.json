@@ -309,7 +309,7 @@
     },
     "device-selector": {
       "noSelection": "选择设备",
-      "withDevices": "{count, plural, one {1 个设备} other {# 个设备}}"
+      "withDevices": "{count} 个设备"
     },
     "event-log-entry": {
       "type": {
@@ -378,8 +378,8 @@
             "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
           },
           "title": {
-            "MUTE": "已关闭麦克风:{devicename}",
-            "UNMUTE": "已打开麦克风:{devicename}"
+            "MUTE": "已关闭麦克风:{deviceName}",
+            "UNMUTE": "已打开麦克风:{deviceName}"
           }
         },
         "changedVRChatMicMuteState": {
@@ -845,7 +845,7 @@
         "description": "你的 MQTT broker 的监听端口",
         "title": "端口"
       },
-      "brokerSetupNote": "注意，Home Assistant 默认不启用 MQTT broker。如果你还没有设置和配置 MQTT broker 和 Home Assistant，请先按照他们的 <a href=\"https://www.home-assistant.io/integrations/mqtt/\"target=\"_blank\"> 文档 </a > 来操作。",
+      "brokerSetupNote": "注意，Home Assistant 默认不启用 MQTT broker。如果你还没有设置和配置 MQTT broker 和 Home Assistant，请先按照他们的 <a href=\"https://www.home-assistant.io/integrations/mqtt/\" target=\"_blank\"> 文档 </a > 来操作。",
       "description": "OyasumiVR 可以通过 MQTT 与 Home Assistant 通信。为了设置这个，请在下面提供你的 MQTT broker 的连接细节。",
       "mqttEnabled": {
         "description": "启用或禁用 MQTT 集成",
@@ -876,7 +876,7 @@
         "description": "你的 MQTT broker 用户名（可选）",
         "title": "用户名"
       },
-      "websocketNote": "只支持 MQTT over Websockets 协议：请确保你的 broker 启用了 websocket 支持。标准的 MQTT over TCP 是<b>不</b>支持的！"
+      "websocketNote": "只支持 MQTT over Websockets 协议：请确保你的 broker 启用了 websocket 支持。标准的 MQTT over TCP 是<i>不</i>支持的！"
     },
     "osc-script-code-editor": {
       "format": "格式",
@@ -961,7 +961,7 @@
     },
     "update-modal": {
       "message": "我们找到了 OyasumiVR 的新版本：版本号 v{newVersion}\n\n 你当前仍在使用版本 v{currentVersion}\n\n 现在要立刻更新吗？",
-      "steamAd": "<b>OyasumiVR 还可以在 Steam 上下载！</b><br><br> 这是安装 OyasumiVR 的推荐方法。<br> 访问我们的 Steam 商店页面 <a href=\"https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/\"target=\"_blank\"></a> 以了解更多！",
+      "steamAd": "<b>OyasumiVR 还可以在 Steam 上下载！</b><br><br> 这是安装 OyasumiVR 的推荐方法。<br> 访问我们的 Steam 商店页面 <a href=\"https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/\" target=\"_blank\">Steam</a> 以了解更多！",
       "title": "有新的更新",
       "updateLater": "稍后",
       "updateNow": "安装版本 v{version}"
@@ -1152,7 +1152,7 @@
     "enable": "开启 GPU 自动化",
     "enableWarning": "这些功能是给一些进阶用户的！\n 设置错误的功耗限制可能会导致你的系统变得不稳定 \n 请牢记这一点，最好不要随意调整它，除非你知道自己在做什么",
     "msiAfterburner": {
-      "description": "OyasumiVR 可以在你入睡或醒来时自动调整你的 GPU 设置，其会使用你在 MSI Afterburner 中所建立的预设。 此功能的其中一个用途是在你入睡时节省电力，并在你醒来时重新调整 GPU 功耗。<br><br > 你必须在 MSI Afterburner 进行配置。<br > 你可以在这里 <a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\"target=\"_blank\"> 下载 </a> MSI Afterburner",
+      "description": "OyasumiVR 可以在你入睡或醒来时自动调整你的 GPU 设置，其会使用你在 MSI Afterburner 中所建立的预设。 此功能的其中一个用途是在你入睡时节省电力，并在你醒来时重新调整 GPU 功耗。<br><br > 你必须在 MSI Afterburner 进行配置。<br > 你可以在这里 <a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\" target=\"_blank\"> 下载 </a> MSI Afterburner",
       "enabledWarning": "请注意，在 MSI Afterburner 中错误的设置 GPU 可能会导致系统变得不稳定。如果你不知道自己在做什么，请关闭此功能",
       "executable": {
         "description": "OyasumiVR 需要知道你的 <strong>MSIAfterburner.exe</strong> 可执行文件的位置 \n 如果 OyasumiVR 在默认位置找不到它，那么需要你手动设置它的位置",
@@ -1625,7 +1625,7 @@
     "sleepingAnimations": {
       "currentPose": "目前姿势",
       "customPreset": "自定义动画",
-      "description": "OyasumiVR 可以在你改变睡姿时自动改变你的模型动画。 如果你没有全身追踪，或者如果你在睡觉时会关闭你的追踪器（又或者你有 OyasumiVR），这将会很有用。\n 请查看 <a href=\"https://youtu.be/3T54bTAzT7o\"target=\"_blank\"> 示例视频 </a>来了解这个功能的运作方式 \n\n 此功能默认包含多个模型动作的预制配置，但你也可以指定自己的动画。",
+      "description": "OyasumiVR 可以在你改变睡姿时自动改变你的模型动画。 如果你没有全身追踪，或者如果你在睡觉时会关闭你的追踪器（又或者你有 OyasumiVR），这将会很有用。\n 请查看 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\"> 示例视频 </a>来了解这个功能的运作方式 \n\n 此功能默认包含多个模型动作的预制配置，但你也可以指定自己的动画。",
       "enable": "开启睡眠动画",
       "manualControl": "手动控制",
       "options": {
@@ -2257,7 +2257,7 @@
       "noUpdate": "你当前运行的是最新版本 {version}！",
       "notChecked": "OyasumiVR 尚未检查更新",
       "title": "更新",
-      "updateAvailable": "新版本的 OyasumiVR 现已推出！ 你当前正在使用版本 {currentVersion}。\n最新版本是 {{latest Version}}。",
+      "updateAvailable": "新版本的 OyasumiVR 现已推出！ 你当前正在使用版本 {currentVersion}。\n最新版本是 {latestVersion}。",
       "updatesDisabled": {
         "DEV": "你目前正在使用开发版本的 OyasumiVR ，因此自动更新已被关闭。\n如果你想安装新版本，请手动下载并运行安装程序。",
         "STEAM": "你已经安装了 Steam 版本的 OyasumiVR。因此，OyasumiVR 更新将通过 Steam 提供！"
@@ -2416,7 +2416,7 @@
         "title": "关闭所有控制器时"
       },
       "onHeartRateCalmPeriod": {
-        "description": "需要 <a class=\"integrationsPageLink\">Pulsoid 集成",
+        "description": "需要 <a class=\"integrationsPageLink\">Pulsoid 集成</a>",
         "title": "当我的心率在一段时间内保持平稳时"
       }
     },
@@ -2519,7 +2519,7 @@
           "title": "灵敏度"
         },
         "sleepCheck": {
-          "description": "需要启用<a class=\"notificationSettingsLink\">通知</a>设置",
+          "description": "在启用睡眠模式之前，发送一条可交互的通知，询问你是否仍然醒着。",
           "title": "在开启睡眠模式之前，询问我是否还醒着"
         },
         "timeWindow": {

@@ -587,8 +587,8 @@
         },
         "statusChangedOnPlayerCountChange": {
           "reason": {
-            "AT_LIMIT_OR_ABOVE": "Omdat het aantal spelers op of boven het limiet is gekomen",
-            "BELOW_LIMIT": "Omdat het aantal spelers onder het limiet is gezakt"
+            "AT_LIMIT_OR_ABOVE": "Omdat het aantal spelers in je wereld de limiet van {threshold} heeft bereikt",
+            "BELOW_LIMIT": "Omdat het aantal spelers in je wereld onder {threshold} is gezakt"
           },
           "title": "Status gewijzigd van ''{oldStatus}'' naar ''{newStatus}''"
         },
@@ -874,7 +874,7 @@
       },
       "addCommand": "Voeg Toe",
       "addParameter": "Parameter toevoegen",
-      "commandCounter": "{value, plural, one {1 Commando} other {# Commandos}}",
+      "commandCounter": "{count, plural, one {1 Commando} other {# Commandos}}",
       "commands": {
         "COMMAND": {
           "description": "Voer een OSC commando uit",
@@ -2092,7 +2092,7 @@
         "title": "Systeemvak"
       },
       "telemetry": {
-        "description": "Wanneer ingeschakeld zal OyasumiVR anonieme gebruiksinformatie verzamelen, zoals de gebruikte applicatie versie, en crash rapportage. Deze data bevat absoluut geen persoonlijke informatie, het wordt alleen gebruikt voor het opsporen van software fouten en het opbouwen van algemene gebruiksstatistieken.<br>Voor meer informatie kun je de <a target=\"_blank\" href=\"https://aptabase.com/legal/privacy\">Aptabase Privacy Policy</a> lezen.",
+        "description": "OyasumiVR verzamelt anonieme telemetrie om bugs te vinden en de applicatie te verbeteren. Dit omvat crash- en foutrapporten, versiegegevens, het starten van de applicatie, taalvoorkeuren en andere basisstatistieken over het gebruik. Telemetrie bevat geen persoonlijk identificeerbare informatie en kan niet aan een specifieke persoon worden gekoppeld. Omdat niet kan worden vastgesteld welke telemetrie van jou is, kunnen verzoeken om individuele gegevens te verwijderen niet worden uitgevoerd. Je kunt telemetrie op elk moment uitschakelen in de algemene instellingen van OyasumiVR.",
         "label": "Verstuur anonieme telemetrie data",
         "title": "Telemetrie"
       },
@@ -2541,7 +2541,7 @@
       "automation": {
         "calibrationPending": {
           "calibrate": "Calibreer Nu",
-          "title": "<Strong>In afwachting van calibratie:</strong> Voordat je de slaap detectie gebruikt, moet je een keer calibreren om de nauwkeurigheid te verbeteren."
+          "title": "<strong>In afwachting van calibratie:</strong> Voordat je de slaap detectie gebruikt, moet je een keer calibreren om de nauwkeurigheid te verbeteren."
         },
         "description": "Schakel de slaap modus automatisch in als OyasumiVR denkt dat je slaapt",
         "title": "Slaap Detectie"

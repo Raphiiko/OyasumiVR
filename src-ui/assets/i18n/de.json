@@ -1717,7 +1717,7 @@
         "title": "Taskleiste"
       },
       "telemetry": {
-        "description": "Wenn aktiviert wird OyasumiVR anonyme Verwendungsdaten, wie zum Beispiel über Versionsinformationen oder Abstürzen sammeln. Es werden keine personenbezogenen Daten gesammtelt. Sie werden lediglich zur Problembehebung und zur statistischen Zwecken verwendet. <br>For more information, you can check out the <a target=\"_blank\" href=\"https://aptabase.com/legal/privacy\">Aptabase Privacy Policy</a>.",
+        "description": "OyasumiVR sammelt anonyme Telemetriedaten, um Fehler zu finden und die Anwendung zu verbessern. Dazu gehören Absturz- und Fehlerberichte, Versionsinformationen, Anwendungsstarts, Spracheinstellungen und weitere grundlegende Nutzungsstatistiken. Die Telemetriedaten enthalten keine personenbezogenen Informationen und lassen sich keiner bestimmten Person zuordnen. Da nicht ermittelt werden kann, welche Telemetriedaten zu dir gehören, können Anfragen zur Löschung einzelner Daten nicht erfüllt werden. Du kannst die Telemetrie jederzeit in den allgemeinen Einstellungen von OyasumiVR deaktivieren.",
         "label": "Sende anonymisierte Nutzerdaten",
         "title": "Telemetrie"
       },

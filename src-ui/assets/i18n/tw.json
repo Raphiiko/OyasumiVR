@@ -27,7 +27,7 @@
       "title": "啟動時套用"
     },
     "automations": {
-      "label": "{count, plural, one {1 個自動化} other {# 個自動化}}"
+      "label": "{count} 個自動化"
     },
     "config": {
       "title": "設定"
@@ -310,7 +310,7 @@
     },
     "device-selector": {
       "noSelection": "選擇裝置",
-      "withDevices": "{count, plural, one {1 個裝置} other {# 個裝置}}"
+      "withDevices": "{count} 個裝置"
     },
     "event-log-entry": {
       "type": {
@@ -897,7 +897,7 @@
       },
       "addCommand": "新增",
       "addParameter": "新增參數",
-      "commandCounter": "{count, plural, one {1 個指令} other {# 個指令}}",
+      "commandCounter": "{count} 個指令",
       "commands": {
         "COMMAND": {
           "description": "執行一個 OSC 指令",
@@ -907,13 +907,13 @@
           "description": "等待指定的時間"
         }
       },
-      "errorCounter": "{count, plural, one {1 個驗證錯誤} other {# 個驗證錯誤}}",
+      "errorCounter": "{count} 個驗證錯誤",
       "test": "測試",
       "vrchatAutofillInfo": "請啟動 VRChat，以取得你的角色參數的自動完成建議。"
     },
     "player-list-preset-modal": {
       "confirmDelete": {
-        "message": "確定要刪除名為「{name}」的預設嗎？其中包含 {count, plural, one {1 位玩家} other {# 位玩家}}。",
+        "message": "確定要刪除名為「{name}」的預設嗎？其中包含 {count} 位玩家。",
         "title": "你確定嗎？"
       },
       "confirmOverwrite": {
@@ -927,7 +927,7 @@
       "noPresets": "你尚未儲存設定檔",
       "overwrite": "覆寫設定檔",
       "preset": {
-        "subtitle": "{count, plural, one {1 位玩家} other {# 位玩家}}清單"
+        "subtitle": "{count} 位玩家清單"
       },
       "title": {
         "load": "載入用戶清單",
@@ -1312,7 +1312,7 @@
         },
         "onlyBelowPlayerCount": {
           "description": "這也包括你自己",
-          "title": "僅在你的世界中人數少於<strong>{count, plural, one {#</strong> 位用戶} other {#</strong> 位用戶}}時"
+          "title": "僅在你的世界中人數少於<strong>{count}</strong> 位用戶時"
         },
         "onlyIfSleepModeEnabled": {
           "title": "僅在睡眠模式啟用時"
@@ -1688,15 +1688,15 @@
             "Disabled": "對所有人",
             "Whitelist": "白名單"
           },
-          "subtitle": "{mode}: {playerCount, plural, one {1 位好友} other {# 位好友}}",
+          "subtitle": "{mode}: {playerCount} 位好友",
           "title": "自動接受加入請求"
         },
         "changeStatusBasedOnPlayerCount": {
-          "subtitle": "最多 {threshold, plural, one {1 名用戶} other {# 名用戶}}",
+          "subtitle": "最多 {threshold} 名用戶",
           "title": "狀態自動化"
         },
         "shutdownAutomations": {
-          "subtitle": "{triggerCount, plural, one {1 個自動觸發器} other {# 個自動觸發器}} 已設定",
+          "subtitle": "{triggerCount} 個自動觸發器 已設定",
           "title": "自動關機"
         },
         "sleepModeEnableForSleepDetector": {
@@ -2137,7 +2137,7 @@
         "title": "系統工作列"
       },
       "telemetry": {
-        "description": "啟用後，OyasumiVR 將收集匿名使用數據，如版本資訊和崩潰報告。這些數據完全匿名，不包含任何個人數據。它僅用於跟蹤錯誤和提供一些一般使用統計資訊。<br>如需了解更多資訊，你可以查看<a target=\"_blank\" href=\"https://aptabase.com/legal/privacy\">Aptabase隱私政策</a>。",
+        "description": "OyasumiVR 會收集匿名遙測資料，以協助找出錯誤並改善應用程式。這些資料包括當機和錯誤報告、版本資訊、應用程式啟動、語言偏好設定，以及其他基本使用統計資料。遙測資料不包含可識別個人身分的資訊，也無法與特定個人建立關聯。由於無法判斷哪些遙測資料屬於你，因此無法處理個別資料刪除請求。你可以隨時在 OyasumiVR 的一般設定中停用遙測。",
         "label": "發送匿名的使用數據",
         "title": "匿名數據"
       },
@@ -2300,7 +2300,7 @@
       "noUpdate": "你當前運行的是最新版本的 OyasumiVR 版本 {version}！",
       "notChecked": "OyasumiVR 尚未檢查更新",
       "title": "更新",
-      "updateAvailable": "新版本的 OyasumiVR 現已推出！ 你當前正在運行版本 「{currentVersion}」。\n最新版本是 {{latest Version}}",
+      "updateAvailable": "新版本的 OyasumiVR 現已推出！ 你當前正在運行版本 「{currentVersion}」。\n最新版本是 {latestVersion}",
       "updatesDisabled": {
         "DEV": "由於你正在執行 OyasumiVR 的開發版本，更新功能已被停用。\n如果你想安裝較新版本的 OyasumiVR，請手動下載並執行安裝程式。",
         "STEAM": "你已經安裝了 Steam 版本的《OyasumiVR》\n因此，《OyasumiVR》更新將會透過 Steam 提供！"
@@ -2433,9 +2433,9 @@
     "disableAutomations": {
       "afterTime": {
         "description": {
-          "hours": "經過 {hours, plural, one {1 小時} other {# 小時}}",
-          "hoursAndMinutes": "經過 {hours, plural, one {1 小時} other {# 小時}} 以及 {minutes, plural, one {1 分鐘} other {# 分鐘}}",
-          "minutes": "經過 {minutes, plural, one {1 分鐘} other {# 分鐘}}"
+          "hours": "經過 {hours} 小時",
+          "hoursAndMinutes": "經過 {hours} 小時 以及 {minutes} 分鐘",
+          "minutes": "經過 {minutes} 分鐘"
         },
         "title": "在特定時間後"
       },
@@ -2562,7 +2562,7 @@
           "title": "靈敏度"
         },
         "sleepCheck": {
-          "description": "需要啟用<a class=\"notificationSettingsLink\">通知</a>",
+          "description": "在啟用睡眠模式之前，傳送一則可互動的通知，詢問你是否仍然醒著。",
           "title": "在啟用睡眠模式之前，詢問我是否還醒著"
         },
         "timeWindow": {
@@ -2716,7 +2716,7 @@
       },
       "onlyIfSleepModeEnabled": "僅在睡眠模式啟用時",
       "playerLimit": "用戶人數限制",
-      "playerLimitLabel": "{count, plural, one {1 名用戶} other {# 名用戶}} （包括你在內）"
+      "playerLimitLabel": "{count} 名用戶 （包括你在內）"
     },
     "tabs": {
       "general": "一般設定",
