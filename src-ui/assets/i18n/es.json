@@ -356,7 +356,7 @@
             "SLEEP_MODE_ENABLED": "Ya que el modo sueño estaba habilitado",
             "SLEEP_PREPARATION": "Mientras te preparabas para ir a dormir"
           },
-          "title": "Volumen para dispositivo de audio ''{deviceName}'' establecido en {percentaje}"
+          "title": "Volumen para dispositivo de audio ''{deviceName}'' establecido en {percentage}"
         },
         "changedSystemMicControllerButtonBehavior": {
           "reason": {
@@ -840,7 +840,7 @@
         "description": "El puerto del websocket en el que se puede acceder a su broker MQTT",
         "title": "Puerto"
       },
-      "brokerSetupNote": "Tenga en cuenta que Home Assistant no viene con un broker MQTT activado por defecto. Si aún no tienes un broker MQTT instalado y configurado con Home Assistant, por favor sigue su <a href=\"https://www.home-assistant.io/integrations/MQTT/\" target=\"_blank\">documentación</a> para hacerlo primero.",
+      "brokerSetupNote": "Tenga en cuenta que Home Assistant no viene con un broker MQTT activado por defecto. Si aún no tienes un broker MQTT instalado y configurado con Home Assistant, por favor sigue su <a href=\"https://www.home-assistant.io/integrations/mqtt/\" target=\"_blank\">documentación</a> para hacerlo primero.",
       "description": "OyasumiVR puede comunicarse con Home Assistant a través de MQTT. Para configurarlo, facilite a continuación los datos de conexión de su agente MQTT.",
       "mqttEnabled": {
         "description": "Habilitar o deshabilitar la integración MQTT",
@@ -886,7 +886,7 @@
       },
       "addCommand": "Añadir",
       "addParameter": "Añadir parametro",
-      "commandCounter": "{value, plural, one {1 Comando} other {# Comandos}}",
+      "commandCounter": "{count, plural, one {1 Comando} other {# Comandos}}",
       "commands": {
         "COMMAND": {
           "description": "Ejecutar un comando OSC",
@@ -897,7 +897,7 @@
           "title": "Durmiendo"
         }
       },
-      "errorCounter": "{value, plural, one {1 Error de validación} other {# Errores de validación}}",
+      "errorCounter": "{count, plural, one {1 Error de validación} other {# Errores de validación}}",
       "test": "Prueba",
       "vrchatAutofillInfo": "Inicia VRChat para obtener autocompletado para los parámetros de tu avatar."
     },
@@ -1409,7 +1409,7 @@
       "title": "Frecuencia cardíaca mínima",
       "unit": "bpm"
     },
-    "description": "Cuando cualquiera de sus automatizaciones está habilitada, esta característica intenta detectar cuándo tiene una pesadilla al verificar una frecuencia cardíaca elevada prolongada mientras está dormido.Cuando se detecta una posible pesadilla, tienes la opción de que OyasumiVR intente despertarte.La detección de pesadilla solo se ejecuta mientras el modo sueño está activo.\n\n<b>Nota:</b> Esta característica requiere que habilite la <a class=\"ingrationspagelink\"> integración Pulsoid </a>.",
+    "description": "Cuando cualquiera de sus automatizaciones está habilitada, esta característica intenta detectar cuándo tiene una pesadilla al verificar una frecuencia cardíaca elevada prolongada mientras está dormido.Cuando se detecta una posible pesadilla, tienes la opción de que OyasumiVR intente despertarte.La detección de pesadilla solo se ejecuta mientras el modo sueño está activo.\n\n<b>Nota:</b> Esta característica requiere que habilite la <a class=\"integrationsPageLink\"> integración Pulsoid </a>.",
     "disableSleepMode": {
       "description": "Deshabilita el modo sueño cuando posiblemente tengas una pesadilla",
       "title": "Desactivar el modo sueño"
@@ -1972,7 +1972,7 @@
         "title": "Bandeja de sistema"
       },
       "telemetry": {
-        "description": "Cuando está activada, OyasumiVR recopilará datos de uso anónimos, como información sobre la versión e informes de fallos. Estos datos son totalmente anónimos y no contienen ningún dato personal. Solo se utilizan para localizar errores y proporcionar algunas estadísticas generales de uso. <br>Para más información, puede consultar la <a target=\"_blank\" href=\"https://aptabase.com/legal/privacy\">Política de privacidad de Aptabase</a>.",
+        "description": "OyasumiVR recopila telemetría anónima para ayudar a encontrar errores y mejorar la aplicación. Esto incluye informes de fallos y errores, información de versión, inicios de la aplicación, preferencias de idioma y otras estadísticas básicas de uso. La telemetría no contiene información que permita identificarte ni puede vincularse a una persona concreta. Como no es posible determinar qué datos de telemetría te pertenecen, no se pueden atender solicitudes de eliminación de datos individuales. Puedes desactivar la telemetría en cualquier momento en los ajustes generales de OyasumiVR.",
         "label": "Enviar datos de uso anónimos",
         "title": "Telemetría"
       },
@@ -2388,7 +2388,7 @@
           "title": "Umbral de BPM",
           "unit": "BPM"
         },
-        "description": "Habilite el modo sueño cuando su frecuencia cardíaca esté por debajo de un cierto umbral por un período de tiempo: defina los ritmos por minuto umbral de que su frecuencia cardíaca debe permanecer bajo, así como por la cantidad de tiempo, para que el modo sueño esté habilitado.\n\nEsta requiere que habilite la <a class=\"ingrationspagelink\">integración pulsoid</a>",
+        "description": "Habilite el modo sueño cuando su frecuencia cardíaca esté por debajo de un cierto umbral por un período de tiempo: defina los ritmos por minuto umbral de que su frecuencia cardíaca debe permanecer bajo, así como por la cantidad de tiempo, para que el modo sueño esté habilitado.\n\nEsta requiere que habilite la <a class=\"integrationsPageLink\">integración pulsoid</a>",
         "duration": {
           "description": "Cuánto tiempo debe permanecer tu frecuencia cardiaca por debajo del umbral para que se active el modo de reposo.",
           "title": "DURACION",

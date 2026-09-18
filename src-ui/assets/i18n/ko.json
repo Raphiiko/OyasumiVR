@@ -794,7 +794,7 @@
       },
       "addCommand": "추가",
       "addParameter": "매개변수 추가",
-      "commandCounter": "{value} 커멘드",
+      "commandCounter": "{count} 커멘드",
       "commands": {
         "COMMAND": {
           "description": "OSC 커멘드를 실행해요.",
@@ -805,7 +805,7 @@
           "title": "대기"
         }
       },
-      "errorCounter": "{value} 검증 오류",
+      "errorCounter": "{count} 검증 오류",
       "test": "테스트"
     },
     "player-list-preset-modal": {
@@ -857,7 +857,7 @@
     },
     "update-modal": {
       "message": "OyasumiVR의 새로운 업데이트를 찾았어요: v{newVersion}\n\n현재 v{currentVersion}을 이용하고 있어요.\n\n지금 바로 업데이트 할까요?",
-      "steamAd": "OyasumiVR을 Steam에서도 만나볼 수 있어요! </b><br><br>OyasumiVR을 설치하는 새로운 권장 방법이에요. <br><a href=\"https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/\" target=\"_blank\">Steam</a>의 상점 페이지에서 자세한 내용을 확인하실 수 있습니다!",
+      "steamAd": "<b>OyasumiVR을 Steam에서도 만나볼 수 있어요! </b><br><br>OyasumiVR을 설치하는 새로운 권장 방법이에요. <br><a href=\"https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/\" target=\"_blank\">Steam</a>의 상점 페이지에서 자세한 내용을 확인하실 수 있습니다!",
       "title": "업데이트 가능",
       "updateLater": "나중에",
       "updateNow": "v{version} 설치"
@@ -1195,7 +1195,7 @@
       "title": "최저 심박수",
       "unit": "BPM"
     },
-    "description": "자동화가 활성화되면, 이 기능은 당신이 잠든 동안 심박수가 계속 상승하는지 확인함으로써 당신이 악몽을 꾸고 있을 때를 감지하려고 시도해요. 악몽이 감지되면, OyasumiVR이 당신을 깨우려고 시도하도록 하는 옵션이 있어요. 악몽 감지는 수면 모드가 활성화된 동안에만 실행됩니다.\n\n<b>참고:</b> 이 기능을 사용하려면 <a class=\"integrations PageLink\"> Pulsoid 통합을 활성화해야 해요.",
+    "description": "자동화가 활성화되면, 이 기능은 당신이 잠든 동안 심박수가 계속 상승하는지 확인함으로써 당신이 악몽을 꾸고 있을 때를 감지하려고 시도해요. 악몽이 감지되면, OyasumiVR이 당신을 깨우려고 시도하도록 하는 옵션이 있어요. 악몽 감지는 수면 모드가 활성화된 동안에만 실행됩니다.\n\n<b>참고:</b> 이 기능을 사용하려면 <a class=\"integrationsPageLink\"> Pulsoid 통합</a>을 활성화해야 해요.",
     "disableSleepMode": {
       "description": "악몽을 꾸고 있을 때 수면 모드를 비활성화",
       "title": "수면 모드 비활성화"
@@ -1717,7 +1717,7 @@
         "title": "시스템 트레이"
       },
       "telemetry": {
-        "description": "활성화하면 OyasumiVR이 버전 정보 및 충돌 보고서와 같은 익명의 사용 데이터를 수집하게 됩니다. 이 정보는 완전히 익명으로 수집되며 버그를 파악하고 일반적인 사용 통계를 확인하는 데만 사용됩니다.<br> 자세한 내용은 <a target=\"_blank\" href=\"https://aptabase.com/legal/privacy\">Aptabase 개인정보 처리방침</a>에서 확인하실 수 있습니다.",
+        "description": "OyasumiVR은 버그를 찾고 애플리케이션을 개선하기 위해 익명 원격 측정 데이터를 수집합니다. 여기에는 충돌 및 오류 보고서, 버전 정보, 애플리케이션 실행, 언어 설정 및 기타 기본 사용 통계가 포함됩니다. 원격 측정 데이터에는 개인을 식별할 수 있는 정보가 없으며 특정 개인과 연결할 수 없습니다. 어떤 원격 측정 데이터가 사용자의 것인지 확인할 수 없으므로 개별 데이터 삭제 요청을 처리할 수 없습니다. OyasumiVR의 일반 설정에서 언제든지 원격 측정을 비활성화할 수 있습니다.",
         "label": "익명의 사용 데이터 전송하기",
         "title": "텔레메트리"
       },
@@ -2104,7 +2104,7 @@
           "title": "심박수(BPM) 기준치",
           "unit": "BPM"
         },
-        "description": "일정 시간 동안 심박수가 특정 임계값 미만일 때 수면 모드 활성화: 심박수가 일정 시간 동안 유지되어야 하는 분당 박동 임계값과 수면 모드가 활성화될 시간을 정의해요.\n\n이를 위해서는 <a class=\"integrations PageLink\">Pulsoid 통합을 활성화해야 합니다.",
+        "description": "일정 시간 동안 심박수가 특정 임계값 미만일 때 수면 모드 활성화: 심박수가 일정 시간 동안 유지되어야 하는 분당 박동 임계값과 수면 모드가 활성화될 시간을 정의해요.\n\n이를 위해서는 <a class=\"integrationsPageLink\">Pulsoid 통합</a>을 활성화해야 합니다.",
         "duration": {
           "description": "수면 모드가 활성화되기 위해 심박수가 기준치 미만으로 유지되어야 하는 시간이에요.",
           "title": "지속 기간",

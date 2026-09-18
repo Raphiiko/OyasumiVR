@@ -340,7 +340,7 @@
         "sleep": "Tidur"
       },
       "addCommand": "Tambah",
-      "commandCounter": "{value} Perintah",
+      "commandCounter": "{count} Perintah",
       "commands": {
         "COMMAND": {
           "description": "Menjalankan perintah OSC",
@@ -351,7 +351,7 @@
           "title": "Tidur"
         }
       },
-      "errorCounter": "{value} Validasi Error",
+      "errorCounter": "{count} Validasi Error",
       "test": "Tes"
     },
     "player-list": {
@@ -419,7 +419,7 @@
           "INVALID_EXECUTABLE": "<strong>MSIAfterburner.exe</strong> di lokasi ini tidak dapat diverifikasi.",
           "INVALID_SIGNATURE": "<strong>MSIAfterburner.exe</strong> di lokasi ini tidak dapat diverifikasi berasal dari MSI. Karena alasan keamanan, file tersebut tidak dapat digunakan. Pastikan Anda menggunakan MSI Afterburner versi terbaru. Jika masalah terus berlanjut atau Anda yakin bahwa ini benar, silakan hubungi developer OyasumiVR atau kirimkan laporan bug.",
           "NOT_FOUND": "<strong>MSIAfterburner.exe</strong> Tidak dapat ditemukan di lokasi ini.",
-          "SUCCESS": "telah ditemukan dan berfungsi dengan benar!",
+          "SUCCESS": "<strong>MSIAfterburner.exe</strong> telah ditemukan dan berfungsi dengan benar!",
           "UNKNOWN_ERROR": "Terjadi kesalahan yang tidak diketahui saat mencoba mencari <strong>MSIAfterburner.exe</strong> di lokasi ini."
         },
         "title": "Konfigurasi"
