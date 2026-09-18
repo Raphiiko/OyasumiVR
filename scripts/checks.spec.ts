@@ -2,13 +2,18 @@ import { describe, expect, it } from 'vitest';
 import { checks, expandCheck } from './checks.mjs';
 import { selectChecks } from './select-checks.mjs';
 import { flattenCatalog, compareMessage, checkCatalogs } from './check-translations.mjs';
-import { createHash } from 'node:crypto';
-import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 
 describe('check selection', () => {
+  it('builds consumers when a locale is deleted or contributor data changes', () => {
+    expect(selectChecks(['src-ui/assets/i18n/ja.json'], () => false)).toContain('build:overlay-ui');
+    expect(selectChecks(['docs/translation_contributors.json'])).toEqual(
+      expect.arrayContaining(['format:web', 'test:web', 'build:ui', 'generated:readmes'])
+    );
+  });
   it('keeps locale-only edits out of builds, and validates all locales after English changes', () => {
     for (const language of ['en', 'ja'])
       expect(selectChecks([`src-ui/assets/i18n/${language}.json`])).toEqual([
@@ -62,6 +67,48 @@ describe('check selection', () => {
 });
 
 describe('translation contracts', () => {
+  it('keeps arguments and links in their semantic branches', () => {
+    expect(
+      compareMessage(
+        '{state, select, on {{name}} other {{name}}}',
+        '{state, select, on {{name}} other {Off}}',
+        'en'
+      )
+    ).toContain('arguments');
+    for (const [source, target] of [
+      [
+        '{state, select, on {<a href="https://example.org">Help</a>} other {Off}}',
+        '{state, select, on {On} other {<a href="https://example.org">Help</a>}}',
+      ],
+      [
+        '{count, plural, =0 {<a href="https://example.org">Help</a>} other {#}}',
+        '{count, plural, =0 {None} other {<a href="https://example.org">#</a>}}',
+      ],
+    ])
+      expect(compareMessage(source, target, 'en')).toContain('markup');
+    expect(
+      compareMessage(
+        '{count, plural, one {# device} other {# devices}}',
+        '{count, plural, one {device} other {devices}}',
+        'en'
+      )
+    ).toContain('arguments');
+    expect(
+      compareMessage('{count, plural, one {1 device} other {# devices}}', '{count} devices', 'ja')
+    ).toEqual([]);
+  });
+  it('preserves HTML nesting, link labels, and attribute arguments', () => {
+    for (const [source, target] of [
+      ['<a href="https://example.org">{name}</a>', '{name}<a href="https://example.org"></a>'],
+      ['<a href="https://example.org">Help</a>', 'Help<a href="https://example.org"></a>'],
+      [
+        '<a href="https://example.org"><img src="x"></a>',
+        '<img src="x"><a href="https://example.org">Help</a>',
+      ],
+      ['<a title="{name}">Help</a>', '<a title="Help">{name}</a>'],
+    ])
+      expect(compareMessage(source, target, 'ja')).toContain('markup');
+  });
   it('accepts reordered and repeated variables and locale-specific plural structure', () => {
     expect(
       compareMessage(
@@ -123,7 +170,7 @@ describe('translation contracts', () => {
     for (const value of ['', ' ', '{PLACEHOLDER}', null, [], {}, 5])
       expect(() => flattenCatalog({ a: value })).toThrow();
   });
-  it('allows missing translations, rejects extra keys, and binds exceptions to both messages', () => {
+  it('allows missing translations and rejects extra keys and missing arguments', () => {
     const directory = mkdtempSync(join(tmpdir(), 'oyasumi-catalog-test-'));
     const save = (locale, value) =>
       writeFileSync(join(directory, `${locale}.json`), JSON.stringify(value));
@@ -136,20 +183,7 @@ describe('translation contracts', () => {
       save('ja', { a: '設定', z: 'Unknown' });
       expect(checkCatalogs(directory).problems).toHaveLength(2);
       save('ja', { a: '設定' });
-      const exception = {
-        locale: 'ja',
-        key: 'a',
-        rule: 'arguments',
-        reason: 'Existing omission',
-        fingerprint: createHash('sha256')
-          .update(JSON.stringify(['{name}', '設定']))
-          .digest('hex'),
-      };
-      expect(checkCatalogs(directory, [exception]).problems).toEqual([]);
-      save('en', { a: '{deviceName}', b: 'Optional' });
-      expect(checkCatalogs(directory, [exception]).problems).toHaveLength(1);
-      save('ja', { a: '{deviceName}' });
-      expect(checkCatalogs(directory, [exception]).problems).toEqual([]);
+      expect(checkCatalogs(directory).problems).toHaveLength(1);
     } finally {
       rmSync(directory, { recursive: true, force: true });
     }
@@ -171,6 +205,14 @@ it('detects generated-only README edits without modifying the checkout', () => {
         encoding: 'utf8',
       });
     expect(run().status).toBe(0);
+    if (process.platform !== 'win32') {
+      rmSync(join(directory, 'README.md'));
+      symlinkSync('docs\\readmes\\generated\\README_EN.md', join(directory, 'README.md'));
+      expect(run().status).toBe(1);
+      rmSync(join(directory, 'README.md'));
+      symlinkSync('docs/readmes/generated/README_EN.md', join(directory, 'README.md'));
+      expect(run().status).toBe(0);
+    }
     const file = join(directory, 'docs/readmes/generated/README_EN.md');
     writeFileSync(file, 'Direct edit');
     expect(run().status).toBe(1);

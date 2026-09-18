@@ -17,6 +17,7 @@ const webPaths = [
   'src-overlay-ui/**/*.{ts,js,mjs,html,css,scss,json}',
   'src-shared-ts/**/*.{ts,js,json}',
   'scripts/**/*.{ts,js,mjs,json}',
+  'docs/translation_contributors.json',
   '*.{json,js,mjs,ts}',
   '.github/workflows/*.{yml,yaml}',
 ];

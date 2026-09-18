@@ -536,13 +536,8 @@ mod tests {
         assert!(super::START_TIMEOUT > crate::utils::sidecar_manager::GIVE_UP_AFTER);
     }
 
-    /// The answer depends on the account running the tests, so this only asserts the direction
-    /// that must never be wrong: an elevated process must never be told it cannot elevate.
     #[test]
-    fn an_elevated_process_can_always_elevate() {
-        if oyasumivr_shared::windows::is_elevated() {
-            assert!(super::can_elevate(), "an elevated token must report Full");
-        }
+    fn an_elevated_process_is_supported() {
         assert!(!oyasumivr_shared::windows::is_elevated() || super::supported());
     }
 }

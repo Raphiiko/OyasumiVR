@@ -44,9 +44,10 @@ try {
       !readFileSync(join(expected, file)).equals(readFileSync(join(actual, file)))
   );
   const readmeTarget = 'docs/readmes/generated/README_EN.md';
-  const rootReadme = lstatSync('README.md').isSymbolicLink()
-    ? readlinkSync('README.md').replaceAll('\\', '/')
+  let rootReadme = lstatSync('README.md').isSymbolicLink()
+    ? readlinkSync('README.md')
     : readFileSync('README.md', 'utf8').trim();
+  if (process.platform === 'win32') rootReadme = rootReadme.replaceAll('\\', '/');
   if (
     rootReadme !== readmeTarget &&
     !readFileSync('README.md').equals(readFileSync(join(expected, 'README_EN.md')))

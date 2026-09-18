@@ -153,12 +153,12 @@ mod webview2_dialog_tests {
     impl tauri::Assets<tauri::Wry> for TranslationAssets {
         fn get(&self, key: &AssetKey) -> Option<Cow<'_, [u8]>> {
             match key.as_ref() {
-                "/assets/i18n/ja.json" => Some(Cow::Borrowed(include_bytes!(
-                    "../../src-ui/assets/i18n/ja.json"
-                ))),
-                "/assets/i18n/en.json" => Some(Cow::Borrowed(include_bytes!(
-                    "../../src-ui/assets/i18n/en.json"
-                ))),
+                "/assets/i18n/ja.json" => Some(Cow::Borrowed(
+                    br#"{"misc":{"WEBVIEW2_MISSING":"WebView2\nJapanese fixture"}}"#,
+                )),
+                "/assets/i18n/en.json" => Some(Cow::Borrowed(
+                    br#"{"misc":{"WEBVIEW2_MISSING":"Open the download page?"}}"#,
+                )),
                 _ => None,
             }
         }

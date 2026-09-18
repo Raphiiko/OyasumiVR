@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { appendFileSync, readFileSync } from 'node:fs';
+import { appendFileSync, existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { checks, crates } from './checks.mjs';
 
@@ -9,7 +9,7 @@ const frontend = ['build:ui', 'build:overlay-ui'];
 const rust = (components) =>
   components.flatMap((c) => ['format', 'lint', 'test', 'build'].map((op) => `${op}:${c}`));
 
-export function selectChecks(files) {
+export function selectChecks(files, fileExists = existsSync) {
   const selected = new Set();
   const add = (...ids) => ids.flat().forEach((id) => selected.add(id));
   for (const path of files) {
@@ -23,11 +23,10 @@ export function selectChecks(files) {
       return all;
     if (path.startsWith('src-ui/assets/i18n/')) {
       add('format:web', 'translations');
-    } else if (
-      path.startsWith('docs/readmes/') ||
-      path === 'docs/translation_contributors.json' ||
-      path === 'README.md'
-    ) {
+      if (!fileExists(path)) add('build:overlay-ui');
+    } else if (path === 'docs/translation_contributors.json') {
+      add(web, 'build:ui', 'generated:readmes');
+    } else if (path.startsWith('docs/readmes/') || path === 'README.md') {
       add('generated:readmes');
     } else if (path.startsWith('src-shared-ts/') || path.startsWith('src-grpc-web-client/')) {
       add(web, frontend);
