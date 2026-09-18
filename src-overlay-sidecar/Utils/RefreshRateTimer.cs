@@ -1,6 +1,7 @@
 namespace overlay_sidecar;
 
-public class RefreshRateTimer {
+public class RefreshRateTimer
+{
   private long _lastTick;
 
   public void TickStart()

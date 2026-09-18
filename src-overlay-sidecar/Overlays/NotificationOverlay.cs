@@ -7,7 +7,8 @@ using Valve.VR;
 
 namespace overlay_sidecar;
 
-public class NotificationOverlay : BaseWebOverlay {
+public class NotificationOverlay : BaseWebOverlay
+{
   private static TrackedDevicePose_t[] _poseBuffer = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
   private bool _updatedPositionOnce;
 

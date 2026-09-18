@@ -4,7 +4,8 @@ using Serilog;
 
 namespace overlay_sidecar;
 
-public class BrowserManager {
+public class BrowserManager
+{
   public static BrowserManager Instance { get; } = new();
   private List<CachedBrowser> _browsers = new();
 
@@ -98,7 +99,8 @@ public class BrowserManager {
       Log.Information("[Browser {address}] Loading={loading}", browser.Address, e.IsLoading);
   }
 
-  class CachedBrowser {
+  class CachedBrowser
+  {
     public OffscreenBrowser Browser;
     public bool IsFree;
     public uint Width;

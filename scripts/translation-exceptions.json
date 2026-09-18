@@ -1,0 +1,457 @@
+[
+  {
+    "locale": "cn",
+    "key": "comp.device-selector.withDevices",
+    "rule": "syntax",
+    "fingerprint": "89e762264a75a78768921ceabe151287be63fb900be378144d8aa64751800e58",
+    "reason": "Existing message fails parsing: The plural case one is not valid in this locale at line 1 col 17:"
+  },
+  {
+    "locale": "cn",
+    "key": "comp.event-log-entry.type.changedSystemMicMuteState.title.MUTE",
+    "rule": "arguments",
+    "fingerprint": "42bea85b268b61ea66103e30223a0d63a1b929ac98026f5cee922ebc3707d262",
+    "reason": "Existing translation omits or renames an English argument."
+  },
+  {
+    "locale": "cn",
+    "key": "comp.event-log-entry.type.changedSystemMicMuteState.title.UNMUTE",
+    "rule": "arguments",
+    "fingerprint": "d170742136486de239e689505d9572a1d6dab6ad0467fbb314a56293e58b690f",
+    "reason": "Existing translation omits or renames an English argument."
+  },
+  {
+    "locale": "cn",
+    "key": "comp.mqtt-config-modal.brokerSetupNote",
+    "rule": "syntax",
+    "fingerprint": "04e36290e940b578be4b87bb55f2633b097e7f2cf0e1b14ae899a003a6689215",
+    "reason": "Existing message fails parsing: invalid HTML: missing-whitespace-between-attributes"
+  },
+  {
+    "locale": "cn",
+    "key": "comp.mqtt-config-modal.websocketNote",
+    "rule": "markup",
+    "fingerprint": "9bf5ff33afd3509528cf044c43dd1b9a647b12b3590b72efc1a6add41fffd1c4",
+    "reason": "Existing translation has different HTML elements or link attributes."
+  },
+  {
+    "locale": "cn",
+    "key": "comp.update-modal.steamAd",
+    "rule": "syntax",
+    "fingerprint": "d07e386a24c0f2d77900e93c2da0c94a5b3cffd372c02507c55ab7d5517632ab",
+    "reason": "Existing message fails parsing: invalid HTML: missing-whitespace-between-attributes"
+  },
+  {
+    "locale": "cn",
+    "key": "gpu-automations.msiAfterburner.description",
+    "rule": "syntax",
+    "fingerprint": "984df096e677edf8d96014cd434485b0ade7dcc7cf6f3cbd16b6ce11a9163c69",
+    "reason": "Existing message fails parsing: invalid HTML: missing-whitespace-between-attributes"
+  },
+  {
+    "locale": "cn",
+    "key": "oscAutomations.sleepingAnimations.description",
+    "rule": "syntax",
+    "fingerprint": "32ca9f16742b5522d4af49588ea9bacf6bf99a0c625e08eabb426e422ae9abbd",
+    "reason": "Existing message fails parsing: invalid HTML: missing-whitespace-between-attributes"
+  },
+  {
+    "locale": "cn",
+    "key": "settings.updates.updateAvailable",
+    "rule": "syntax",
+    "fingerprint": "ed4371c7377caf0539d08bdb2c1c79f625db1db474ae74f509d7c2923126dcda",
+    "reason": "Existing message fails parsing: invalid syntax at line 2 col 16:"
+  },
+  {
+    "locale": "cn",
+    "key": "sleep-detection.enableAutomations.onHeartRateCalmPeriod.description",
+    "rule": "syntax",
+    "fingerprint": "13fbcfd20f7f0f702e20425f03f723341b5c5f16f763d61d8c2862eebbb33f29",
+    "reason": "Existing message fails parsing: invalid HTML: unclosed a"
+  },
+  {
+    "locale": "cn",
+    "key": "sleep-detection.modals.enableForSleepDetector.sleepCheck.description",
+    "rule": "markup",
+    "fingerprint": "b8671c8fcb5552de170ee7ba2e7bb843c134c11a8751f09bbb0143853336be82",
+    "reason": "Existing translation has different HTML elements or link attributes."
+  },
+  {
+    "locale": "de",
+    "key": "settings.general.telemetry.description",
+    "rule": "markup",
+    "fingerprint": "443ae4aa22cb9208a4bb8603ba4673fde18b83bb083638fcb9ba2d9644aa0d44",
+    "reason": "Existing translation has different HTML elements or link attributes."
+  },
+  {
+    "locale": "es",
+    "key": "comp.event-log-entry.type.changedAudioDeviceVolume.title",
+    "rule": "arguments",
+    "fingerprint": "cde095939d6af4278e3663455f2364cdbab0f246fb1bc8b5768a503f9b57f213",
+    "reason": "Existing translation omits or renames an English argument."
+  },
+  {
+    "locale": "es",
+    "key": "comp.mqtt-config-modal.brokerSetupNote",
+    "rule": "markup",
+    "fingerprint": "5bc4d6cf963b72314c9bf7f659c4540952e8cc905a351abaa4bbc30150d2d6c9",
+    "reason": "Existing translation has different HTML elements or link attributes."
+  },
+  {
+    "locale": "es",
+    "key": "comp.osc-script-simple-editor.commandCounter",
+    "rule": "arguments",
+    "fingerprint": "916c5de029bf5c96fe53044c279da6577d266638de2296e2a24df1d50a2fff8e",
+    "reason": "Existing translation omits or renames an English argument."
+  },
+  {
+    "locale": "es",
+    "key": "comp.osc-script-simple-editor.errorCounter",
+    "rule": "arguments",
+    "fingerprint": "b81ebc5021ce949dee3ac9b19eaf67d2cb407340db34ac70e2fa151f20aaa07b",
+    "reason": "Existing translation omits or renames an English argument."
+  },
+  {
+    "locale": "es",
+    "key": "nightmare-detection.description",
+    "rule": "markup",
+    "fingerprint": "ac31ce2149b152659f0b565b4e1d89fe3e720be434b6481a7f5d67ab990861d7",
+    "reason": "Existing translation has different HTML elements or link attributes."
+  },
+  {
+    "locale": "es",
+    "key": "settings.general.telemetry.description",
+    "rule": "markup",
+    "fingerprint": "6fbf92a4d80323e44acd0755b6c9b69b37bb58a8a2f154ddef7e480e1a7d86eb",
+    "reason": "Existing translation has different HTML elements or link attributes."
+  },
+  {
+    "locale": "es",
+    "key": "sleep-detection.modals.enableOnHeartRateCalmPeriod.description",
+    "rule": "markup",
+    "fingerprint": "0a27a8bd5302c164957c00aace5e68325e4f9d91ebf886a91a9851f5f24b3b4e",
+    "reason": "Existing translation has different HTML elements or link attributes."
+  },
+  {
+    "locale": "fr",
+    "key": "comp.osc-script-simple-editor.commandCounter",
+    "rule": "arguments",
+    "fingerprint": "33fb367faff5720b24744de3acdd02870f0a1ade0e7d018ae7d812a9f0663985",
+    "reason": "Existing translation omits or renames an English argument."
+  },
+  {
+    "locale": "fr",
+    "key": "comp.osc-script-simple-editor.errorCounter",
+    "rule": "arguments",
+    "fingerprint": "2da493bf1609070785777879ca989317ab989de14f8aea998729c19e4a53a0a4",
+    "reason": "Existing translation omits or renames an English argument."
+  },
+  {
+    "locale": "id",
+    "key": "comp.osc-script-simple-editor.commandCounter",
+    "rule": "arguments",
+    "fingerprint": "68db788f0636606c9adf6c42c77329c0b070291f9d52399c856db5be1f589c92",
+    "reason": "Existing translation omits or renames an English argument."
+  },
+  {
+    "locale": "id",
+    "key": "comp.osc-script-simple-editor.errorCounter",
+    "rule": "arguments",
+    "fingerprint": "00dce3c9cf9ebc3a71a25033a874ad6ef03e7edf4241e0cbca9e0da5f70d8579",
+    "reason": "Existing translation omits or renames an English argument."
+  },
+  {
+    "locale": "id",
+    "key": "gpu-automations.msiAfterburner.executable.status.SUCCESS",
+    "rule": "markup",
+    "fingerprint": "83206ad84f22da6b709ce5c1f21b8596d1390c2b7209ef843e5286a9e5212bc7",
+    "reason": "Existing translation has different HTML elements or link attributes."
+  },
+  {
+    "locale": "ja",
+    "key": "device-manager.config.title",
+    "rule": "arguments",
+    "fingerprint": "3480e7389b690c90e41055120af986ec053ddd7a6a0e2b0ae246db4e51bd9f7a",
+    "reason": "Existing translation omits or renames an English argument."
+  },
+  {
+    "locale": "ja",
+    "key": "settings.general.telemetry.description",
+    "rule": "markup",
+    "fingerprint": "91b78ed51efc4735f407c267a111cadb63d36ff6d6386689c9c21b08cf4ce906",
+    "reason": "Existing translation has different HTML elements or link attributes."
+  },
+  {
+    "locale": "ja",
+    "key": "settings.integrations.pulsoid.description",
+    "rule": "syntax",
+    "fingerprint": "50bb6c527a14f375142b8afbabef2bed6fdb38846957ef88c089953e08ccd602",
+    "reason": "Existing message fails parsing: invalid HTML: unclosed i"
+  },
+  {
+    "locale": "ko",
+    "key": "comp.osc-script-simple-editor.commandCounter",
+    "rule": "arguments",
+    "fingerprint": "e8825c8b9a3c1e8d3e60e0816ca1f43ee647e3bf44d8ab2ad4e37bca05377e8e",
+    "reason": "Existing translation omits or renames an English argument."
+  },
+  {
+    "locale": "ko",
+    "key": "comp.osc-script-simple-editor.errorCounter",
+    "rule": "arguments",
+    "fingerprint": "ea8b56ca52d0958e9cab5a38480b7510ef1c0673ac3de3cc95af86aea26ebf6a",
+    "reason": "Existing translation omits or renames an English argument."
+  },
+  {
+    "locale": "ko",
+    "key": "comp.update-modal.steamAd",
+    "rule": "syntax",
+    "fingerprint": "e0164181e0ad442ecb552a2a8a8b44ed4f4589df7983a5840fdd6f65b3b30bf0",
+    "reason": "Existing message fails parsing: invalid HTML: Unexpected closing tag \"b\". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags"
+  },
+  {
+    "locale": "ko",
+    "key": "nightmare-detection.description",
+    "rule": "syntax",
+    "fingerprint": "fc19bde534b16936c1799338986ee46008a5d0b53860ebf865f79acd1e0f1815",
+    "reason": "Existing message fails parsing: invalid HTML: unclosed a"
+  },
+  {
+    "locale": "ko",
+    "key": "settings.general.telemetry.description",
+    "rule": "markup",
+    "fingerprint": "539dfc76669ef97f332362cab80df5f4bc647458b5a4b1b9e9be72fddff4c784",
+    "reason": "Existing translation has different HTML elements or link attributes."
+  },
+  {
+    "locale": "ko",
+    "key": "sleep-detection.modals.enableOnHeartRateCalmPeriod.description",
+    "rule": "syntax",
+    "fingerprint": "a15ad0bcb64ec5aa7a9aac33b7f4bab2b0be7128c51791081a8803f24e151072",
+    "reason": "Existing message fails parsing: invalid HTML: unclosed a"
+  },
+  {
+    "locale": "nl",
+    "key": "comp.event-log-entry.type.statusChangedOnPlayerCountChange.reason.AT_LIMIT_OR_ABOVE",
+    "rule": "arguments",
+    "fingerprint": "82a1e96c2835177726817d5017f30ee3646eaa1b60d13101ac56e01db9a2b481",
+    "reason": "Existing translation omits or renames an English argument."
+  },
+  {
+    "locale": "nl",
+    "key": "comp.event-log-entry.type.statusChangedOnPlayerCountChange.reason.BELOW_LIMIT",
+    "rule": "arguments",
+    "fingerprint": "555797b42586fac12154f5eee5a512473e3ea4b5b912d93e9fb674ddfe64a5b5",
+    "reason": "Existing translation omits or renames an English argument."
+  },
+  {
+    "locale": "nl",
+    "key": "comp.osc-script-simple-editor.commandCounter",
+    "rule": "arguments",
+    "fingerprint": "0fc46327d9ef06862a5b0e046611e5ddbc1143e8478f0d655e88a09a12493b9c",
+    "reason": "Existing translation omits or renames an English argument."
+  },
+  {
+    "locale": "nl",
+    "key": "settings.general.telemetry.description",
+    "rule": "markup",
+    "fingerprint": "501375ecd57addc558f290e73e2a7d3a0255c347d8a1ac4f85dd1fc4936a71b8",
+    "reason": "Existing translation has different HTML elements or link attributes."
+  },
+  {
+    "locale": "nl",
+    "key": "sleep-detection.sleepDetection.automation.calibrationPending.title",
+    "rule": "syntax",
+    "fingerprint": "0a434820ca9bfb83e1e1f464fd00f316a4bade86a3e44712f21a6539b91c1e7a",
+    "reason": "Existing message fails parsing: invalid HTML: Unexpected closing tag \"strong\". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags"
+  },
+  {
+    "locale": "ru",
+    "key": "comp.event-log-entry.type.msiAfterburnerProfileSet.title",
+    "rule": "markup",
+    "fingerprint": "421b661ec8108fdfb0c13cabbc4ab93f881ec795f7113f89bcd7957e9f629459",
+    "reason": "Existing translation has different HTML elements or link attributes."
+  },
+  {
+    "locale": "ru",
+    "key": "notifications.vrcStatusChanged.content",
+    "rule": "arguments",
+    "fingerprint": "6ad6c7fe574d758a4382ec84ef1ad39eab6317b00fb5b6e03736044e92d8afe0",
+    "reason": "Existing translation omits or renames an English argument."
+  },
+  {
+    "locale": "ru",
+    "key": "settings.general.telemetry.description",
+    "rule": "markup",
+    "fingerprint": "32c0f940a5b0d149def211f3aafccf40e482b43fbb6ae982da7394a08cf347c3",
+    "reason": "Existing translation has different HTML elements or link attributes."
+  },
+  {
+    "locale": "th",
+    "key": "comp.mqtt-config-modal.websocketNote",
+    "rule": "markup",
+    "fingerprint": "6819c19dc4eb73e986ab01886ab8946b553ad4aad713fde07ee4c092dfe91ef6",
+    "reason": "Existing translation has different HTML elements or link attributes."
+  },
+  {
+    "locale": "th",
+    "key": "device-manager.config.title",
+    "rule": "arguments",
+    "fingerprint": "8d24b3f0de2aaf3c8038426fbc6d5a1e2f5cfea496729d2800a81bc28a932f49",
+    "reason": "Existing translation omits or renames an English argument."
+  },
+  {
+    "locale": "th",
+    "key": "settings.general.telemetry.description",
+    "rule": "markup",
+    "fingerprint": "230e9bb1f8c9abe57548953a025d017148d706ec516560e9effb470b3350d820",
+    "reason": "Existing translation has different HTML elements or link attributes."
+  },
+  {
+    "locale": "th",
+    "key": "settings.integrations.pulsoid.description",
+    "rule": "syntax",
+    "fingerprint": "f74b3b6c8ca69602119895495ee7c4565316c0875fd887f59e2882f3090d36ca",
+    "reason": "Existing message fails parsing: invalid HTML: unclosed i"
+  },
+  {
+    "locale": "tw",
+    "key": "audio-volume-automations.automations.label",
+    "rule": "syntax",
+    "fingerprint": "686af4b84f77671d321e2cc4fe3b99eb34b9bb17292d06119691afc52757c9a7",
+    "reason": "Existing message fails parsing: The plural case one is not valid in this locale at line 1 col 17:"
+  },
+  {
+    "locale": "tw",
+    "key": "comp.device-selector.withDevices",
+    "rule": "syntax",
+    "fingerprint": "465357afd0e37bf3b14a3bf61b126694c443e6b81016781f66c6104da4d5cb58",
+    "reason": "Existing message fails parsing: The plural case one is not valid in this locale at line 1 col 17:"
+  },
+  {
+    "locale": "tw",
+    "key": "comp.osc-script-simple-editor.commandCounter",
+    "rule": "syntax",
+    "fingerprint": "2eb17f7328e19c825ce3b70a38b22daa25516ff5fc4e681243eb78d020880ff5",
+    "reason": "Existing message fails parsing: The plural case one is not valid in this locale at line 1 col 17:"
+  },
+  {
+    "locale": "tw",
+    "key": "comp.osc-script-simple-editor.errorCounter",
+    "rule": "syntax",
+    "fingerprint": "c418ba313ec7212fca7c7d959d4728be96306c2731b14084b4962260a4a45c1c",
+    "reason": "Existing message fails parsing: The plural case one is not valid in this locale at line 1 col 17:"
+  },
+  {
+    "locale": "tw",
+    "key": "comp.player-list-preset-modal.confirmDelete.message",
+    "rule": "syntax",
+    "fingerprint": "d3547c4944740d32bd9763d412298a21afac96a4612e9e604600d20dea1b390a",
+    "reason": "Existing message fails parsing: The plural case one is not valid in this locale at line 1 col 42:"
+  },
+  {
+    "locale": "tw",
+    "key": "comp.player-list-preset-modal.preset.subtitle",
+    "rule": "syntax",
+    "fingerprint": "d38c82c685797d2b9ec18836743fa71d5e158c80532b96a0544cec8cf001b817",
+    "reason": "Existing message fails parsing: The plural case one is not valid in this locale at line 1 col 17:"
+  },
+  {
+    "locale": "tw",
+    "key": "invite-and-invite-requests.inviteRequestsTab.options.onlyBelowPlayerCount.title",
+    "rule": "syntax",
+    "fingerprint": "24395fb3b6d3d8ea2c6daadb1d191807e13a6f5084eba0900f4a4d42d89976d1",
+    "reason": "Existing message fails parsing: The plural case one is not valid in this locale at line 1 col 36:"
+  },
+  {
+    "locale": "tw",
+    "key": "overlay.dashboard.automations.autoAcceptInviteRequests.subtitle",
+    "rule": "syntax",
+    "fingerprint": "eba72d98170b270d8cd7d9ababbb0413c6aa53e1bacaf7c3db14cb43835caf9e",
+    "reason": "Existing message fails parsing: The plural case one is not valid in this locale at line 1 col 31:"
+  },
+  {
+    "locale": "tw",
+    "key": "overlay.dashboard.automations.changeStatusBasedOnPlayerCount.subtitle",
+    "rule": "syntax",
+    "fingerprint": "2f670b60339954c8afdf785580e61ec0a35f38c09234c96f15f6ded3e425f3a9",
+    "reason": "Existing message fails parsing: The plural case one is not valid in this locale at line 1 col 24:"
+  },
+  {
+    "locale": "tw",
+    "key": "overlay.dashboard.automations.shutdownAutomations.subtitle",
+    "rule": "syntax",
+    "fingerprint": "6b65be97a51e5213b60627d21073e7821d25b48d28306a06fe239ac13d48b1dc",
+    "reason": "Existing message fails parsing: The plural case one is not valid in this locale at line 1 col 24:"
+  },
+  {
+    "locale": "tw",
+    "key": "settings.general.telemetry.description",
+    "rule": "markup",
+    "fingerprint": "4d1db53fc827b954fcd326960ed114a333e226167ed41cebe71fd935a073ad14",
+    "reason": "Existing translation has different HTML elements or link attributes."
+  },
+  {
+    "locale": "tw",
+    "key": "settings.updates.updateAvailable",
+    "rule": "syntax",
+    "fingerprint": "c71e8734449899b18080631e03b384ef672e9693dbaa5e137f36ecbadd2a42be",
+    "reason": "Existing message fails parsing: invalid syntax at line 2 col 16:"
+  },
+  {
+    "locale": "tw",
+    "key": "sleep-detection.disableAutomations.afterTime.description.hours",
+    "rule": "syntax",
+    "fingerprint": "e36dd43089fc405ecc0d7bcdaf0b1afe179d2dbd973199289897abffae5283dd",
+    "reason": "Existing message fails parsing: The plural case one is not valid in this locale at line 1 col 20:"
+  },
+  {
+    "locale": "tw",
+    "key": "sleep-detection.disableAutomations.afterTime.description.hoursAndMinutes",
+    "rule": "syntax",
+    "fingerprint": "9bbefcc3eae5a292fd2bcff4c53cb41d0b90130695e8d12528f9cfbe4e1a05dd",
+    "reason": "Existing message fails parsing: The plural case one is not valid in this locale at line 1 col 20:"
+  },
+  {
+    "locale": "tw",
+    "key": "sleep-detection.disableAutomations.afterTime.description.minutes",
+    "rule": "syntax",
+    "fingerprint": "e14eee9bb8edb85162d35dff1c386da5feee52f56d5148b86beef2605a0854c3",
+    "reason": "Existing message fails parsing: The plural case one is not valid in this locale at line 1 col 22:"
+  },
+  {
+    "locale": "tw",
+    "key": "sleep-detection.modals.enableForSleepDetector.sleepCheck.description",
+    "rule": "markup",
+    "fingerprint": "cc3b74e454ae4cfac0a67fd835dca50f44a1502d78052979ea5ccd1c00811dde",
+    "reason": "Existing translation has different HTML elements or link attributes."
+  },
+  {
+    "locale": "tw",
+    "key": "status-automations.playerLimit.playerLimitLabel",
+    "rule": "syntax",
+    "fingerprint": "a984236d41b1dd804921155a97fa4cee59680be137fd4112f42087beb967cf5d",
+    "reason": "Existing message fails parsing: The plural case one is not valid in this locale at line 1 col 17:"
+  },
+  {
+    "locale": "uk",
+    "key": "comp.event-log-entry.type.msiAfterburnerProfileSet.title",
+    "rule": "markup",
+    "fingerprint": "1cf884c52544dd5fd5022a2bc5e8f6ff4d8fe4bf2f289dfc1eb1c933c0a7fbc2",
+    "reason": "Existing translation has different HTML elements or link attributes."
+  },
+  {
+    "locale": "uk",
+    "key": "gpu-automations.msiAfterburner.description",
+    "rule": "markup",
+    "fingerprint": "c9b94d91bdfd0b65707a4a754cac115185f4817c430c353ae2795d868012a245",
+    "reason": "Existing translation has different HTML elements or link attributes."
+  },
+  {
+    "locale": "uk",
+    "key": "settings.general.telemetry.description",
+    "rule": "markup",
+    "fingerprint": "dfe39298c7e8d3aee8b410e266a43ab5b29200afad5a393e22c4fa2ae5411e07",
+    "reason": "Existing translation has different HTML elements or link attributes."
+  }
+]

@@ -20,7 +20,10 @@ function walk(node, lang, path) {
     const keyPath = path ? `${path}.${key}` : key;
     if (typeof value === 'object' && value !== null) {
       walk(value, lang, keyPath);
-    } else if (typeof value === 'string' && /\{[^}]*,\s*(plural|select|selectordinal)/.test(value)) {
+    } else if (
+      typeof value === 'string' &&
+      /\{[^}]*,\s*(plural|select|selectordinal)/.test(value)
+    ) {
       checked++;
       try {
         const result = transpiler.transpile({

@@ -3,7 +3,8 @@ using Valve.VR;
 
 namespace overlay_sidecar;
 
-public class SplashOverlay : BaseWebOverlay {
+public class SplashOverlay : BaseWebOverlay
+{
   private static readonly TrackedDevicePose_t[] _poseBuffer = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
   private bool _updatedPositionOnce;
   private DateTime _expiresAt = DateTime.UtcNow.AddSeconds(10);

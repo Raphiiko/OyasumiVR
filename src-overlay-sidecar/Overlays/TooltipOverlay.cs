@@ -5,7 +5,8 @@ using Valve.VR;
 
 namespace overlay_sidecar;
 
-public class TooltipOverlay : BaseWebOverlay {
+public class TooltipOverlay : BaseWebOverlay
+{
   private static readonly TrackedDevicePose_t[] _poseBuffer = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
 
   private bool _shown;

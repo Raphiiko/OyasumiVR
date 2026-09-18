@@ -168,7 +168,9 @@ fn sample(rate: f32) -> bool {
         return false;
     }
     let interval = (1.0 / rate as f64).round().max(1.0) as u64;
-    COUNTER.fetch_add(1, Ordering::Relaxed) % interval == 0
+    COUNTER
+        .fetch_add(1, Ordering::Relaxed)
+        .is_multiple_of(interval)
 }
 
 fn persist(path: &Path, state: &BudgetState) -> Result<(), ()> {
@@ -557,8 +559,10 @@ mod tests {
 
     #[test]
     fn uses_message_as_issue_key_without_an_exception() {
-        let mut event = Event::default();
-        event.message = Some("render failed".into());
+        let event = Event {
+            message: Some("render failed".into()),
+            ..Default::default()
+        };
         assert_eq!(issue_key(&event), "render failed");
     }
 
@@ -586,13 +590,15 @@ mod tests {
 
     #[test]
     fn removes_structured_sensitive_event_data() {
-        let mut event = Event::default();
-        event.user = Some(sentry::protocol::User {
-            username: Some("John".into()),
+        let mut event = Event {
+            user: Some(sentry::protocol::User {
+                username: Some("John".into()),
+                ..Default::default()
+            }),
+            request: Some(Default::default()),
+            server_name: Some("private-host".into()),
             ..Default::default()
-        });
-        event.request = Some(Default::default());
-        event.server_name = Some("private-host".into());
+        };
         event.extra.insert("token".into(), "secret".into());
         event.tags.insert("private".into(), "secret".into());
         sanitize_event(&mut event, "core", "1.0.0");

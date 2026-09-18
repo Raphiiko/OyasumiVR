@@ -113,12 +113,10 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.ngOnChanges();
-    this.translate.langChanges$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.rebuild();
-        this.cdr.markForCheck();
-      });
+    this.translate.langChanges$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.rebuild();
+      this.cdr.markForCheck();
+    });
   }
 
   ngOnChanges() {

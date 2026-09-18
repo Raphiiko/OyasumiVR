@@ -2,7 +2,8 @@ using GrcpOverlaySidecar;
 
 namespace overlay_sidecar;
 
-public class StateManager {
+public class StateManager
+{
   public static StateManager Instance { get; } = new();
   private OyasumiSidecarState _state = NewDefaultState();
 

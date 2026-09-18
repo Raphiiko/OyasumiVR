@@ -11,7 +11,8 @@ using Serilog;
 
 namespace overlay_sidecar;
 
-public class IpcManager {
+public class IpcManager
+{
   private static readonly TimeSpan CoreStartupTimeout = TimeSpan.FromSeconds(5);
   private static readonly TimeSpan CoreRetryInterval = TimeSpan.FromMilliseconds(50);
   public static IpcManager Instance { get; } = new();

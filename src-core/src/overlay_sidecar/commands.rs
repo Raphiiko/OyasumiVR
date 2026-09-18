@@ -32,10 +32,12 @@ pub async fn start_overlay_sidecar(gpu_acceleration: bool) {
                 );
                 loop {
                     // only announce the sidecar once its GRPC port accepts connections
-                    let reachable =
-                        tokio::net::TcpStream::connect(("127.0.0.1", OVERLAY_SIDECAR_GRPC_DEV_PORT))
-                            .await
-                            .is_ok();
+                    let reachable = tokio::net::TcpStream::connect((
+                        "127.0.0.1",
+                        OVERLAY_SIDECAR_GRPC_DEV_PORT,
+                    ))
+                    .await
+                    .is_ok();
                     if reachable
                         && super::handle_overlay_sidecar_start(&OverlaySidecarStartArgs {
                             pid: 0,

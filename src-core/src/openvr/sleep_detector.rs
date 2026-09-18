@@ -201,7 +201,7 @@ mod tests {
                     x: index as f32,
                     y: 0.0,
                     z: 0.0,
-                    quaternion: if index % 2 == 0 {
+                    quaternion: if index.is_multiple_of(2) {
                         [1.0, 0.0, 0.0, 0.0]
                     } else {
                         [

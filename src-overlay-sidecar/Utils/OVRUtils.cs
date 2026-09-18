@@ -3,7 +3,8 @@ using Valve.VR;
 
 namespace overlay_sidecar;
 
-public class OvrUtils {
+public class OvrUtils
+{
   private static float _refreshRate = 90;
   private static long _refreshRateLastSet;
 

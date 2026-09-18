@@ -1,9 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { getVersion } from '../../utils/app-utils';
 import { BUILD_ID, FLAVOUR } from '../../../build';

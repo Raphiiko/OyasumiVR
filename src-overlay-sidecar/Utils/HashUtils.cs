@@ -3,7 +3,8 @@ namespace overlay_sidecar;
 using System;
 using System.Security.Cryptography;
 
-public class HashUtils {
+public class HashUtils
+{
   /// <summary>
   /// Generates a short, human-readable hash of a byte array using SHA-1 and Base64 encoding.
   /// </summary>
