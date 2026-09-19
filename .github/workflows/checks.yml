@@ -16,15 +16,15 @@ concurrency:
 
 jobs:
   select:
+    name: Check selection
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
       contents: read
       actions: read
     outputs:
-      quality: ${{ steps.select.outputs.quality }}
-      frontend: ${{ steps.select.outputs.frontend }}
-      translations-and-readmes: ${{ steps.select.outputs.translations-and-readmes }}
+      selected: ${{ steps.select.outputs.selected }}
+      portable: ${{ steps.select.outputs.portable }}
       native: ${{ steps.select.outputs.native }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -40,32 +40,39 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
 
   portable:
-    name: ${{ matrix.group }}
+    name: ${{ matrix.name }}
     needs: select
+    if: needs.select.outputs.portable != '[]'
     strategy:
       fail-fast: false
       matrix:
-        group: [quality, frontend, translations-and-readmes]
+        include: ${{ fromJSON(needs.select.outputs.portable) }}
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        if: needs.select.outputs[matrix.group] != '[]'
         with:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
-        if: needs.select.outputs[matrix.group] != '[]'
         with:
           node-version: '24.15.0'
           cache: npm
       - run: npm ci --no-audit --no-fund
-        if: needs.select.outputs[matrix.group] != '[]'
       - run: node scripts/run-selected-checks.mjs
-        if: needs.select.outputs[matrix.group] != '[]'
         env:
-          SELECTED_CHECKS: ${{ needs.select.outputs[matrix.group] }}
+          SELECTED_CHECKS: ${{ format('["{0}"]', matrix.id) }}
+          CHECK_RESULTS_PATH: .check-results/results.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: check-results-${{ matrix.key }}
+          path: .check-results/results.json
+          include-hidden-files: true
+          retention-days: 1
+          overwrite: true
 
-  native:
+  native-execution:
+    name: Windows check execution
     needs: select
     if: needs.select.outputs.native != '[]'
     runs-on: windows-2025
@@ -96,18 +103,59 @@ jobs:
       - name: Check native components
         run: node scripts/run-selected-checks.mjs
         env:
-          SELECTED_CHECKS: ${{ needs.select.outputs.native }}
+          SELECTED_CHECKS: ${{ toJSON(fromJSON(needs.select.outputs.native).*.id) }}
+          CHECK_RESULTS_PATH: .check-results/results.json
           CARGO_TARGET_DIR: ${{ runner.temp }}/oyasumi-ci-native-target
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: check-results-windows
+          path: .check-results/results.json
+          include-hidden-files: true
+          retention-days: 1
+          overwrite: true
+
+  native-results:
+    name: ${{ matrix.name }}
+    needs: [select, native-execution]
+    if: ${{ always() && !cancelled() && needs.select.result == 'success' && needs.select.outputs.native != '[]' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.select.outputs.native) }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: check-results-windows
+          path: .check-results
+      - run: node scripts/report-checks.mjs
+        env:
+          CHECK_ID: ${{ matrix.id }}
 
   result:
     name: Checks passed
     if: always()
-    needs: [select, portable, native]
+    needs: [select, portable, native-execution, native-results]
     runs-on: ubuntu-24.04
-    timeout-minutes: 2
+    timeout-minutes: 5
     steps:
-      - name: Require selected checks to pass
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        continue-on-error: true
+        with:
+          pattern: check-results-*
+          path: .check-results
+      - name: Report all checks and require selected checks to pass
+        if: always()
+        run: node scripts/report-checks.mjs
         env:
-          RESULTS: ${{ toJSON(needs) }}
-        run: |
-          node -e 'const results = JSON.parse(process.env.RESULTS); if (results.select.result !== "success" || results.portable.result !== "success" || results.native.result !== (JSON.parse(results.select.outputs.native).length ? "success" : "skipped")) process.exit(1);'
+          SELECTED_CHECKS: ${{ needs.select.outputs.selected }}
+          JOB_RESULTS: ${{ toJSON(needs) }}

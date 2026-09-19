@@ -1,7 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { appendFileSync, existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { checks, crates } from './checks.mjs';
+import { checks, checkName, crates } from './checks.mjs';
 
 const all = Object.keys(checks);
 const web = ['format:web', 'lint:web', 'test:web'];
@@ -122,11 +122,17 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   } catch (error) {
     console.log(`${error.message}; checking everything.`);
   }
-  const groups = {};
-  for (const group of ['quality', 'frontend', 'translations-and-readmes', 'native']) {
-    groups[group] = selected.filter((id) => checks[id].group === group);
-    if (process.env.GITHUB_OUTPUT)
-      appendFileSync(process.env.GITHUB_OUTPUT, `${group}=${JSON.stringify(groups[group])}\n`);
+  const outputs = { selected, portable: [], native: [] };
+  for (const id of selected) {
+    outputs[checks[id].group === 'native' ? 'native' : 'portable'].push({
+      id,
+      name: checkName(id),
+      key: id.replaceAll(':', '-'),
+    });
   }
-  console.log(JSON.stringify(groups, null, 2));
+  for (const [key, value] of Object.entries(outputs)) {
+    if (process.env.GITHUB_OUTPUT)
+      appendFileSync(process.env.GITHUB_OUTPUT, `${key}=${JSON.stringify(value)}\n`);
+  }
+  console.log(JSON.stringify(outputs, null, 2));
 }
