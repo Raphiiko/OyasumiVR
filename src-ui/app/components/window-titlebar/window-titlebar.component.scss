@@ -38,6 +38,16 @@
 
   .version {
     cursor: pointer;
+
+    &:active {
+      opacity: 0.7;
+      transition-duration: 0s;
+    }
+
+    .version-copied {
+      font-size: 0.8em;
+      vertical-align: middle;
+    }
   }
 
   .version-extra {

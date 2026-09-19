@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  signal,
+} from '@angular/core';
 import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { getVersion } from '../../utils/app-utils';
 import { writeText } from '@tauri-apps/plugin-clipboard-manager';
@@ -19,6 +25,7 @@ const appWindow = getCurrentWebviewWindow();
 export class WindowTitlebarComponent implements OnInit {
   version = '0.0.0';
   showVersionExtras = false;
+  protected versionCopied = signal(false);
 
   constructor(
     protected messageCenter: MessageCenterService,
@@ -44,6 +51,10 @@ export class WindowTitlebarComponent implements OnInit {
 
   protected async copyVersion() {
     await writeText(`v${this.version}-${FLAVOUR} (${BUILD_ID})`);
+    this.versionCopied.set(true);
+    setTimeout(() => {
+      this.versionCopied.set(false);
+    }, 1000);
   }
 
   protected readonly FLAVOUR = FLAVOUR;

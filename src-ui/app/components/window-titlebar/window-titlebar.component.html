@@ -6,8 +6,11 @@
     (mouseenter)="showVersionExtras = true"
     (mouseleave)="showVersionExtras = false"
     (click)="copyVersion()"
-    >&nbsp;v{{ version }}</span
-  >
+    >&nbsp;v{{ version }}
+    @if (versionCopied()) {
+      <i class="material-symbols-outlined version-copied">check</i>
+    }
+  </span>
   <span
     class="version-extra"
     data-tauri-drag-region
