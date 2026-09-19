@@ -36,14 +36,11 @@
     }
   }
 
-  .version {
+  .version-area {
     cursor: pointer;
+  }
 
-    &:active {
-      opacity: 0.7;
-      transition-duration: 0s;
-    }
-
+  .version {
     .version-copied {
       font-size: 0.8em;
       vertical-align: middle;
@@ -52,6 +49,20 @@
 
   .version-extra {
     color: var(--color-surface-5);
+
+    opacity: 0;
+
+    &.visible {
+      opacity: 1;
+    }
+  }
+
+  .version-area:active {
+    .version,
+    .version-extra {
+      opacity: 0.7;
+      transition-duration: 0s;
+    }
   }
 }
 

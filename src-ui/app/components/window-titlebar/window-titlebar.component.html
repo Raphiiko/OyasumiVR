@@ -1,22 +1,21 @@
 <div class="title-area" data-tauri-drag-region>
   <span class="title" data-tauri-drag-region>Oyasumi<b data-tauri-drag-region>VR</b></span>
   <span
-    class="version"
+    class="version-area"
     data-tauri-drag-region
     (mouseenter)="showVersionExtras = true"
     (mouseleave)="showVersionExtras = false"
     (click)="copyVersion()"
-    >&nbsp;v{{ version }}
-    @if (versionCopied()) {
-      <i class="material-symbols-outlined version-copied">check</i>
-    }
-  </span>
-  <span
-    class="version-extra"
-    data-tauri-drag-region
-    [style.opacity]="showVersionExtras ? '100%' : '0%'"
   >
-    -{{ FLAVOUR }} ({{ BUILD_ID }})
+    <span class="version" data-tauri-drag-region
+      >&nbsp;v{{ version }}
+      @if (versionCopied()) {
+        <i class="material-symbols-outlined version-copied">check</i>
+      }
+    </span>
+    <span class="version-extra" data-tauri-drag-region [class.visible]="showVersionExtras">
+      -{{ FLAVOUR }} ({{ BUILD_ID }})
+    </span>
   </span>
 </div>
 <div class="action-area">
