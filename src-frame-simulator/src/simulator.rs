@@ -16,7 +16,7 @@ use std::{
 };
 use tokio::{
     net::TcpListener,
-    sync::{oneshot, watch, Semaphore},
+    sync::{oneshot, watch, Notify, Semaphore},
     task::{JoinHandle, JoinSet},
     time::timeout,
 };
@@ -279,9 +279,21 @@ impl Simulator {
                         let Ok((stream, _)) = accepted else { break };
                         let sim = sim.clone();
                         clients.spawn(async move {
+                            let activity = Arc::new(Notify::new());
+                            let request_activity = activity.clone();
                             let connection = hyper::server::conn::http1::Builder::new()
-                                .serve_connection(TokioIo::new(stream), service_fn(move |req| http_request(sim.clone(), req)));
-                            let _ = timeout(Duration::from_secs(35), connection).await;
+                                .serve_connection(TokioIo::new(stream), service_fn(move |req| {
+                                    request_activity.notify_one();
+                                    http_request(sim.clone(), req)
+                                }));
+                            tokio::pin!(connection);
+                            loop {
+                                tokio::select! {
+                                    _ = &mut connection => break,
+                                    _ = activity.notified() => {},
+                                    _ = tokio::time::sleep(Duration::from_secs(35)) => break,
+                                }
+                            }
                         });
                     }
                     _ = clients.join_next(), if !clients.is_empty() => {}

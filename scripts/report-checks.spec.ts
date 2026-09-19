@@ -156,17 +156,17 @@ it('emits complete job matrices when all checks are selected', () => {
       })
   );
   expect(outputs.selected).toEqual(Object.keys(checks));
-  expect(outputs.matrix).toHaveLength(33);
+  expect(outputs.matrix).toHaveLength(37);
   expect(
     outputs.matrix.filter((job: { runner: string }) => job.runner === 'windows-2025')
-  ).toHaveLength(20);
+  ).toHaveLength(23);
   expect(outputs.matrix.filter((job: { npm: boolean }) => job.npm)).toHaveLength(7);
-  expect(outputs.matrix.filter((job: { saveCache: boolean }) => job.saveCache)).toHaveLength(6);
+  expect(outputs.matrix.filter((job: { saveCache: boolean }) => job.saveCache)).toHaveLength(7);
   expect(
-    outputs.matrix.slice(0, 8).every((job: { id: string }) => job.id.startsWith('format:'))
+    outputs.matrix.slice(0, 9).every((job: { id: string }) => job.id.startsWith('format:'))
   ).toBe(true);
   expect(
-    outputs.matrix.slice(8, 15).every((job: { id: string }) => job.id.startsWith('lint:'))
+    outputs.matrix.slice(9, 17).every((job: { id: string }) => job.id.startsWith('lint:'))
   ).toBe(true);
   for (const check of outputs.matrix) {
     expect(check.name).toBe(checkName(check.id));

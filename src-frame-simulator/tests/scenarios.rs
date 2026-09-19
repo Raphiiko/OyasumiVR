@@ -631,3 +631,33 @@ async fn reset_releases_controller_when_ping_responses_are_not_read() {
     }
     run.stop().await;
 }
+
+#[tokio::test]
+async fn reused_http_connection_keeps_the_full_approval_window() {
+    let sim = Simulator::default();
+    let run = sim.start(0, 0).await.unwrap();
+    let client = reqwest::Client::builder()
+        .no_proxy()
+        .timeout(Duration::from_secs(40))
+        .build()
+        .unwrap();
+    for _ in 0..10 {
+        client
+            .get(format!("http://{}/properties.json", run.http))
+            .send()
+            .await
+            .unwrap()
+            .bytes()
+            .await
+            .unwrap();
+        tokio::time::sleep(Duration::from_secs(1)).await;
+    }
+    control(&run, Control::Arm { timeout_ms: 30000 }).await;
+    let url = format!("http://{}/register", run.http);
+    let registration = tokio::spawn(async move { client.post(url).body(KEY).send().await });
+    pending(&run).await;
+    tokio::time::sleep(Duration::from_secs(26)).await;
+    control(&run, Control::Deny).await;
+    assert_eq!(registration.await.unwrap().unwrap().status(), 403);
+    run.stop().await;
+}
