@@ -11,7 +11,7 @@ path = "src/main.rs"
 
 [dependencies]
 futures-util = { version = "0.3", features = ["sink"] }
-oyasumivr-frame-protocol = { path = "../src-frame-protocol" }
+oyasumivr-shared = { path = "../src-shared-rust", default-features = false }
 raphii-openvr-rs = { git = "https://github.com/Raphiiko/raphii-openvr-rs", rev = "a722cf7a6aa5832eaca55bd640bc5b5f87ed0661" }
 ring = "0.17"
 rustls-pemfile = "2"
@@ -25,4 +25,3 @@ tokio-tungstenite = { version = "0.28", features = ["rustls-tls-webpki-roots"] }
 [dev-dependencies]
 rcgen = { version = "=0.13.2", default-features = false, features = ["pem", "ring"] }
 tempfile = "3"
-time = "=0.3.36"

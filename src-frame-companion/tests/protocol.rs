@@ -3,7 +3,7 @@ use oyasumivr_frame_companion::{
     config::CompanionConfig,
     server::{self, ServerState},
 };
-use oyasumivr_frame_protocol::{
+use oyasumivr_shared::frame::{
     Command, Protocol, ProtocolError, Reply, ReplyResult, Request, SteamVrState, MAX_MESSAGE_BYTES,
     PROTOCOL,
 };

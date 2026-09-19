@@ -2,7 +2,7 @@
 set -euo pipefail
 root=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
 [[ $root == "$HOME"/* && -f $root/owner.json && ! -L $root ]]
-exec 9>"$root/maintenance.lock"
+exec 9<"$(dirname -- "$root")"
 flock -n 9
 unit=$(python3 -B -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["unit_name"])' "$root/owner.json")
 [[ $unit == oyasumivr-frame-companion*.service && $unit != *[!A-Za-z0-9_.@-]* ]]

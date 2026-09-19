@@ -55,7 +55,13 @@ export function selectChecks(files, fileExists = existsSync) {
         add(
           rust(
             component === 'shared-rust'
-              ? ['shared-rust', 'core', 'elevated-sidecar', 'privileged-launcher']
+              ? [
+                  'shared-rust',
+                  'core',
+                  'elevated-sidecar',
+                  'privileged-launcher',
+                  'frame-companion',
+                ]
               : [component]
           )
         );

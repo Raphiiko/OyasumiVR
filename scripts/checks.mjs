@@ -9,6 +9,7 @@ export const crates = {
   'elevated-sidecar': 'src-elevated-sidecar',
   'privileged-launcher': 'src-privileged-launcher',
   'memory-watch': 'src-memory-watch',
+  'frame-companion': 'src-frame-companion',
   'signing-tool': 'tools/sign-elevated-sidecar',
 };
 
@@ -139,6 +140,7 @@ export function checkName(id) {
     'elevated-sidecar': 'Rust elevated sidecar',
     'privileged-launcher': 'Rust privileged launcher',
     'memory-watch': 'Rust memory watch',
+    'frame-companion': 'Steam Frame companion',
     'signing-tool': 'Rust signing tool',
   };
   return `${{ format: 'Formatting', lint: 'Lint', test: 'Tests', build: 'Build' }[operation]}: ${names[component]}`;

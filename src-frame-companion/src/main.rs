@@ -144,8 +144,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let config_path = arguments();
     let config = CompanionConfig::read(&config_path)?;
     let release = release_metadata(&config_path)?;
-    if release.protocol_major != oyasumivr_frame_protocol::PROTOCOL.major
-        || release.protocol_minor != oyasumivr_frame_protocol::PROTOCOL.minor
+    if release.protocol_major != oyasumivr_shared::frame::PROTOCOL.major
+        || release.protocol_minor != oyasumivr_shared::frame::PROTOCOL.minor
         || release.build_version != BUILD_VERSION
     {
         return Err("release metadata does not match companion".into());

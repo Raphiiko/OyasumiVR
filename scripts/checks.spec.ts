@@ -42,10 +42,24 @@ describe('check selection', () => {
   });
   it('checks dependent Rust crates without unrelated components', () => {
     const selected = selectChecks(['src-shared-rust/src/lib.rs']);
-    for (const name of ['core', 'shared-rust', 'elevated-sidecar', 'privileged-launcher'])
+    for (const name of [
+      'core',
+      'shared-rust',
+      'elevated-sidecar',
+      'privileged-launcher',
+      'frame-companion',
+    ])
       expect(selected).toContain(`test:${name}`);
     expect(selected).not.toContain('build:memory-watch');
     expect(selected).not.toContain('build:ui');
+  });
+  it('checks the companion', () => {
+    expect(selectChecks(['src-frame-companion/src/server.rs'])).toEqual([
+      'format:frame-companion',
+      'lint:frame-companion',
+      'test:frame-companion',
+      'build:frame-companion',
+    ]);
   });
   it('checks protobuf consumers and generated README edits', () => {
     expect(selectChecks(['proto/oyasumi-core.proto'])).toEqual(
@@ -73,7 +87,7 @@ describe('check selection', () => {
     expect(expandCheck('format')).toEqual(
       expect.arrayContaining(['format:web', 'format:csharp', 'format:core', 'format:memory-watch'])
     );
-    expect(expandCheck('build:rust')).toHaveLength(6);
+    expect(expandCheck('build:rust')).toHaveLength(7);
     expect(expandCheck('all')).toEqual(Object.keys(checks));
     expect(() => expandCheck('imaginary')).toThrow('Unknown check');
   });

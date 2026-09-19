@@ -291,7 +291,7 @@ name = "oyasumivr-frame-companion"
 version = "0.2.0"
 dependencies = [
  "futures-util",
- "oyasumivr-frame-protocol",
+ "oyasumivr-shared",
  "raphii-openvr-rs",
  "rcgen",
  "ring",
@@ -300,17 +300,17 @@ dependencies = [
  "serde_json",
  "subtle",
  "tempfile",
- "time",
  "tokio",
  "tokio-rustls",
  "tokio-tungstenite",
 ]
 
 [[package]]
-name = "oyasumivr-frame-protocol"
-version = "0.1.0"
+name = "oyasumivr-shared"
+version = "26.9.0-beta.11"
 dependencies = [
  "serde",
+ "serde_json",
 ]
 
 [[package]]

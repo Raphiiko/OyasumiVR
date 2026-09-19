@@ -1,6 +1,6 @@
 use crate::config::CompanionConfig;
 use futures_util::{SinkExt, StreamExt};
-use oyasumivr_frame_protocol::{
+use oyasumivr_shared::frame::{
     Command, Protocol, ProtocolError, Reply, ReplyResult, Request, SteamVrState, MAX_MESSAGE_BYTES,
     PROTOCOL,
 };
@@ -86,7 +86,13 @@ pub async fn start(state: ServerState) -> io::Result<RunningServer> {
         loop {
             tokio::select! {
                 accepted = listener.accept() => {
-                    let Ok((stream, _)) = accepted else { break };
+                    let (stream, _) = match accepted {
+                        Ok(connection) => connection,
+                        Err(_) => {
+                            tokio::time::sleep(Duration::from_millis(100)).await;
+                            continue;
+                        }
+                    };
                     let state = state.clone();
                     let tls = tls.clone();
                     let stop = stopping.clone();
@@ -140,6 +146,7 @@ async fn serve_connection(
     };
     let mut permit = None;
     let auth = format!("Bearer {}", state.config.client_token);
+    #[allow(clippy::result_large_err)]
     let check = |request: &UpgradeRequest, response: UpgradeResponse| {
         let supplied = request
             .headers()

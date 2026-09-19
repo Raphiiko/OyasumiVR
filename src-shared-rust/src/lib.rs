@@ -1,7 +1,12 @@
+#[cfg(feature = "desktop")]
 pub mod error_reporting;
+pub mod frame;
 pub mod handshake;
+#[cfg(feature = "desktop")]
 pub mod logging;
+#[cfg(feature = "desktop")]
 pub mod task;
+#[cfg(feature = "desktop")]
 pub mod windows;
 
 /// Bumped by hand, only when the launcher's own behaviour changes. Every bump costs each user one

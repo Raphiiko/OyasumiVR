@@ -24,6 +24,24 @@ json_field() {
     python3 -B -c 'import json,sys; value=json.load(open(sys.argv[1], encoding="utf-8")); print(value[sys.argv[2]])' "$1" "$2"
 }
 
+compare_versions() {
+    python3 -B - "$1" "$2" <<'PY'
+import re, sys
+def version(value):
+    match = re.fullmatch(r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?", value)
+    if not match:
+        raise SystemExit("invalid release version")
+    prerelease = match[4]
+    identifiers = prerelease.split(".") if prerelease else []
+    if any(part.isdigit() and len(part) > 1 and part.startswith("0") for part in identifiers):
+        raise SystemExit("invalid prerelease version")
+    return (tuple(map(int, match.group(1, 2, 3))), prerelease is None,
+            tuple((0, int(part)) if part.isdigit() else (1, part) for part in identifiers))
+candidate, installed = map(version, sys.argv[1:])
+print((candidate > installed) - (candidate < installed))
+PY
+}
+
 validate_provisioning() {
     python3 -B - "$provision" "$root" "$unit" "$pairing" "$device" "$port" <<'PY'
 import ipaddress, json, os, sys, uuid
@@ -51,11 +69,13 @@ PY
 
 verify_companion() {
     python3 -B - "$root/state/config.json" "$1" <<'PY'
-import base64, hashlib, json, os, socket, ssl, struct, sys
+import base64, hashlib, ipaddress, json, os, socket, ssl, struct, sys
 config = json.load(open(sys.argv[1], encoding="utf-8"))
 expected_build = sys.argv[2]
 context = ssl.create_default_context(cadata=open(config["certificate_path"], encoding="utf-8").read())
-raw = socket.create_connection(("127.0.0.1", config["port"]), timeout=3)
+address = ipaddress.ip_address(config["bind_address"])
+host = ("::1" if address.version == 6 else "127.0.0.1") if address.is_unspecified else str(address)
+raw = socket.create_connection((host, config["port"]), timeout=3)
 connection = context.wrap_socket(raw, server_hostname="oyasumivr-frame-companion")
 key = base64.b64encode(os.urandom(16)).decode()
 request = (
@@ -67,7 +87,10 @@ request = (
 connection.sendall(request.encode())
 response = b""
 while b"\r\n\r\n" not in response and len(response) <= 8192:
-    response += connection.recv(1024)
+    chunk = connection.recv(1024)
+    if not chunk:
+        raise SystemExit("connection closed during websocket upgrade")
+    response += chunk
 head = response.split(b"\r\n\r\n", 1)[0].decode("ascii")
 if not head.startswith("HTTP/1.1 101 "):
     raise SystemExit("websocket upgrade failed")
@@ -104,8 +127,8 @@ PY
 
 write_transaction() {
     local phase=$1 temporary="$root/.transaction-$transaction_id"
-    printf '{"schema":1,"id":"%s","phase":"%s","candidate_version":"%s","candidate_created":%s,"candidate_replaced":%s,"previous_version":"%s","previous_unit_existed":%s,"previous_active":%s,"previous_enabled":%s,"fresh_installation":%s,"pairing_id":"%s","device_id":"%s"}\n' \
-        "$transaction_id" "$phase" "$version" "$candidate_created" "$candidate_replaced" "$previous_version" "$previous_unit_existed" "$previous_active" "$previous_enabled" "$fresh_installation" "$pairing" "$device" > "$temporary"
+    printf '{"schema":1,"id":"%s","phase":"%s","candidate_version":"%s","candidate_created":%s,"candidate_replaced":%s,"previous_version":"%s","previous_unit_existed":%s,"previous_active":%s,"previous_enabled":%s,"fresh_installation":%s,"pairing_id":"%s","device_id":"%s","unit_name":"%s"}\n' \
+        "$transaction_id" "$phase" "$version" "$candidate_created" "$candidate_replaced" "$previous_version" "$previous_unit_existed" "$previous_active" "$previous_enabled" "$fresh_installation" "$pairing" "$device" "$unit" > "$temporary"
     chmod 600 "$temporary"
     mv -fT "$temporary" "$root/transaction.json"
 }
@@ -119,6 +142,7 @@ has_orphaned_state() {
 }
 
 clean_orphaned_state() {
+    [[ -d $root ]] || return 0
     [[ ! -f $root/transaction.json ]] || return 0
     rm -rf -- "$root/staging"
     find "$root" -maxdepth 1 \( -name '.transaction-*' -o -name '.current-*' \) -delete
@@ -181,8 +205,11 @@ rollback_locked() {
     $restored || return 1
     local fresh=false
     bool_field fresh_installation && fresh=true
-    rm -rf -- "$root/staging/$id"
+    if $fresh; then
+        rm -rf -- "$root/state" "$root/owner.json" "$root/releases" "$root/uninstall"
+    fi
     rm -f -- "$root/transaction.json"
+    rm -rf -- "$root/staging/$id"
     clean_orphaned_state
     if $fresh; then
         rm -rf -- "$root"
@@ -190,17 +217,20 @@ rollback_locked() {
 }
 
 lock_installation() {
+    mkdir -p "$(dirname -- "$root")"
+    exec {maintenance_fd}<"$(dirname -- "$root")"
+    flock -n "$maintenance_fd" || fail 'maintenance already in progress'
     mkdir -p "$root"
     chmod 700 "$root"
-    exec {maintenance_fd}>"$root/maintenance.lock"
-    flock -n "$maintenance_fd" || fail 'maintenance already in progress'
+    local identity_file="$root/owner.json"
+    [[ -f $identity_file ]] || identity_file="$root/transaction.json"
+    if [[ -f $identity_file ]]; then
+        [[ $(json_field "$identity_file" unit_name) == "$unit" ]] || fail 'unit does not match maintenance ownership'
+    fi
     if [[ -n ${OYASUMIVR_EXPECTED_PAIRING:-} ]]; then
-        local identity_file="$root/owner.json"
-        [[ -f $identity_file ]] || identity_file="$root/transaction.json"
         [[ -f $identity_file ]] || fail 'cannot verify maintenance ownership'
         [[ $(json_field "$identity_file" pairing_id) == "$OYASUMIVR_EXPECTED_PAIRING" && $(json_field "$identity_file" device_id) == "${OYASUMIVR_EXPECTED_DEVICE:-}" ]] || fail 'maintenance belongs to another pairing or identity'
     fi
-    trap cleanup EXIT
 }
 
 cleanup() {
@@ -219,33 +249,40 @@ apply_release() {
     local port=$1 required_space=$2 allow_downgrade=$3
     [[ $expected_digest =~ ^[0-9a-f]{64}$ && $uninstaller_digest =~ ^[0-9a-f]{64}$ ]] || fail 'invalid artifact digest'
     [[ $version_arg =~ ^[0-9A-Za-z.+-]+$ && $pairing =~ ^[0-9A-Za-z._:-]+$ && $device =~ ^[0-9A-Za-z._:-]+$ ]] || fail 'invalid metadata'
-    [[ $port =~ ^[0-9]+$ && $port -ge 1024 && $port -le 65535 ]] || fail 'invalid port'
+    [[ $port =~ ^[1-9][0-9]{3,4}$ && $port -ge 1024 && $port -le 65535 ]] || fail 'invalid port'
+    [[ $required_space =~ ^(0|[1-9][0-9]{0,17})$ ]] || fail 'invalid required space'
     [[ -f $artifact && ! -L $artifact && -f $uninstaller && ! -L $uninstaller ]] || fail 'missing artifact'
     [[ $(uname -m) == "$expected_arch" ]] || fail 'architecture mismatch'
     command -v systemctl >/dev/null && command -v sha256sum >/dev/null && command -v python3 >/dev/null && command -v flock >/dev/null || fail 'missing prerequisite'
     [[ $(sha256sum "$artifact" | awk '{print $1}') == "$expected_digest" ]] || fail 'artifact digest mismatch'
     [[ $(sha256sum "$uninstaller" | awk '{print $1}') == "$uninstaller_digest" ]] || fail 'uninstaller digest mismatch'
 
-    local root_present=false owner_present=false
-    [[ -d $root ]] && root_present=true
+    lock_installation
+    local owner_present=false
     [[ -f $root/owner.json ]] && owner_present=true
-    if $root_present && ! $owner_present && [[ ! -f $root/transaction.json ]] && find "$root" -mindepth 1 ! -name maintenance.lock -print -quit | grep -q .; then
+    if ! $owner_present && [[ ! -f $root/transaction.json ]] && find "$root" -mindepth 1 ! -name maintenance.lock -print -quit | grep -q .; then
         fail 'installation root exists without an ownership record'
     fi
-    lock_installation
+    local identity_file
+    for identity_file in "$root/owner.json" "$root/transaction.json"; do
+        if [[ -f $identity_file ]]; then
+            [[ $(json_field "$identity_file" pairing_id) == "$pairing" && $(json_field "$identity_file" device_id) == "$device" && $(json_field "$identity_file" unit_name) == "$unit" ]] || fail 'installation belongs to another pairing or identity'
+        fi
+    done
     rollback_locked
+    mkdir -p "$root"
+    chmod 700 "$root"
     clean_orphaned_state
     owner_present=false
     [[ -f $root/owner.json ]] && owner_present=true
-    if $owner_present; then
-        [[ $(json_field "$root/owner.json" pairing_id) == "$pairing" && $(json_field "$root/owner.json" device_id) == "$device" && $(json_field "$root/owner.json" unit_name) == "$unit" ]] || fail 'installation belongs to another pairing or identity'
-    fi
 
     previous_version=''
     if [[ -L $root/current ]]; then
         previous_version=$(basename -- "$(readlink "$root/current")")
     fi
-    if [[ -n $previous_version && $allow_downgrade != true && $(printf '%s\n%s\n' "$previous_version" "$version_arg" | sort -V | tail -n1) == "$previous_version" && $previous_version != "$version_arg" ]]; then
+    local ordering
+    ordering=$(compare_versions "$version_arg" "${previous_version:-$version_arg}")
+    if [[ $allow_downgrade != true && $ordering == -1 ]]; then
         fail 'a newer compatible release is already installed'
     fi
     local available artifact_size
@@ -265,6 +302,9 @@ apply_release() {
     local unit_path="$HOME/.config/systemd/user/$unit" candidate="$root/releases/$version" stage="$root/staging/$transaction_id"
     $owner_present && fresh_installation=false
     [[ -f $unit_path ]] && previous_unit_existed=true
+    if $previous_unit_existed && ! $owner_present; then
+        fail 'unit already belongs to another installation'
+    fi
     if $previous_unit_existed && grep -Fqx "ExecStart=$root/current/oyasumivr-frame-companion serve --config $root/state/config.json" "$unit_path"; then
         previous_unit_valid=true
     fi
@@ -276,10 +316,12 @@ apply_release() {
         candidate_replaced=true
     fi
 
-    mkdir -p "$stage/release" "$root/releases" "$HOME/.config/systemd/user"
+    trap cleanup EXIT
+    mkdir -p "$stage/release" "$HOME/.config/systemd/user"
     $previous_unit_existed && cp "$unit_path" "$stage/unit.backup"
     [[ -f $root/uninstall ]] && cp "$root/uninstall" "$stage/uninstall.backup"
     write_transaction staging
+    mkdir -p "$root/releases"
     install -m 755 "$artifact" "$stage/release/oyasumivr-frame-companion"
     printf '{"schema":1,"build_version":"%s","protocol_major":1,"protocol_minor":1,"daemon_sha256":"%s"}\n' "$version" "$expected_digest" > "$stage/release/release.json"
     [[ $(sha256sum "$stage/release/oyasumivr-frame-companion" | awk '{print $1}') == "$expected_digest" ]] || fail 'staged artifact digest mismatch'
