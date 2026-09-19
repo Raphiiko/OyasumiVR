@@ -19,7 +19,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Added
 
-- Main application UI in the SteamVR dashboard, with controller input, smooth scrolling and per-key typing
+- Access the main OyasumiVR interface from the SteamVR dashboard
 - Regression coverage for removing Windows registry paths from error-report filenames
 - Multiple VRChat account profiles
   - Switch between accounts without entering their credentials again
