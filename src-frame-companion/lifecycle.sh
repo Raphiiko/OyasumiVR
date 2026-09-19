@@ -216,7 +216,8 @@ cleanup() {
 apply_release() {
     local artifact=$1 expected_digest=$2 version_arg=$3 expected_arch=$4 pairing=$5 device=$6 provision=$7 uninstaller=$8 uninstaller_digest=$9
     shift 9
-    local port=$1 required_space=$2 allow_downgrade=$3
+    local port=$1 required_space=$2 allow_downgrade=$3 protocol_minor=${4:-1}
+    [[ $protocol_minor =~ ^[0-9]+$ && $protocol_minor -le 2 ]] || fail 'invalid protocol'
     [[ $expected_digest =~ ^[0-9a-f]{64}$ && $uninstaller_digest =~ ^[0-9a-f]{64}$ ]] || fail 'invalid artifact digest'
     [[ $version_arg =~ ^[0-9A-Za-z.+-]+$ && $pairing =~ ^[0-9A-Za-z._:-]+$ && $device =~ ^[0-9A-Za-z._:-]+$ ]] || fail 'invalid metadata'
     [[ $port =~ ^[0-9]+$ && $port -ge 1024 && $port -le 65535 ]] || fail 'invalid port'
@@ -281,7 +282,7 @@ apply_release() {
     [[ -f $root/uninstall ]] && cp "$root/uninstall" "$stage/uninstall.backup"
     write_transaction staging
     install -m 755 "$artifact" "$stage/release/oyasumivr-frame-companion"
-    printf '{"schema":1,"build_version":"%s","protocol_major":1,"protocol_minor":1,"daemon_sha256":"%s"}\n' "$version" "$expected_digest" > "$stage/release/release.json"
+    printf '{"schema":1,"build_version":"%s","protocol_major":1,"protocol_minor":%s,"daemon_sha256":"%s"}\n' "$version" "$protocol_minor" "$expected_digest" > "$stage/release/release.json"
     [[ $(sha256sum "$stage/release/oyasumivr-frame-companion" | awk '{print $1}') == "$expected_digest" ]] || fail 'staged artifact digest mismatch'
     if ! $owner_present; then
         [[ -f $provision/owner.json && ! -L $provision/owner.json && -f $provision/config.json && ! -L $provision/config.json && -f $provision/server.pem && ! -L $provision/server.pem && -f $provision/server-key.pem && ! -L $provision/server-key.pem ]] || fail 'incomplete provisioning files'
@@ -344,7 +345,7 @@ commit_release() {
     rm -f -- "$root/transaction.json"
     rm -rf -- "$root/staging"
     find "$root/releases" -mindepth 1 -maxdepth 1 -type d ! -name "$current" ! -name "$previous_version" -exec rm -rf -- {} +
-    printf '{"action":"%s","installed_version":"%s","protocol":{"major":1,"minor":1}}\n' "$action" "$current"
+    printf '{"action":"%s","installed_version":"%s","protocol":{"major":1,"minor":%s}}\n' "$action" "$current" "$(json_field "$root/current/release.json" protocol_minor)"
 }
 
 inspect_installation() {

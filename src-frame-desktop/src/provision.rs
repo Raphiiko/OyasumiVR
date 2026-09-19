@@ -237,12 +237,13 @@ pub async fn apply(
             &target.port.to_string(),
             "16777216",
             "false",
+            &manifest.protocol_minor.to_string(),
         ],
     )
     .await?;
     if result["installed_version"] != manifest.build_version
         || result["protocol"]["major"] != 1
-        || result["protocol"]["minor"] != 1
+        || result["protocol"]["minor"] != manifest.protocol_minor
         || !matches!(
             result["action"].as_str(),
             Some("installed" | "updated" | "reused" | "repaired")

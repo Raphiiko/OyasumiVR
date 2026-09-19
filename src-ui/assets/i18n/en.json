@@ -170,6 +170,22 @@
   "comp": {
     "brightness-control-modal": {
       "brightness": "Brightness",
+      "frameDeferred": "Waiting for the headset display. The latest target will apply when it returns.",
+      "frameErrors": {
+        "busy": "Another controller is using headset brightness.",
+        "invalid_bounds": "The headset did not report a usable brightness range.",
+        "invalid_duration": "This transition duration is not supported.",
+        "invalid_target": "This brightness is outside the headset range.",
+        "not_ready": "Headset brightness is not ready.",
+        "offline": "Helper disconnected before the brightness was confirmed.",
+        "read_failed": "The headset brightness could not be read.",
+        "stale_operation": "Another brightness command replaced this one.",
+        "unsupported": "Update OyasumiVR Helper to control brightness.",
+        "write_failed": "The headset could not apply the brightness. Try again."
+      },
+      "frameOffline": "Helper disconnected. Brightness will refresh when it reconnects.",
+      "framePending": "Headset target {{target}}%. Applied {{applied}}%.",
+      "frameRequested": "Requesting headset brightness {{target}}%.",
       "hardwareBrightness": "Hardware Brightness",
       "softwareBrightness": "Software Brightness"
     },

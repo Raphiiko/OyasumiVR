@@ -9,7 +9,7 @@ use std::{
     io,
     sync::{
         atomic::{AtomicBool, Ordering},
-        Arc,
+        Arc, Mutex,
     },
     time::Duration,
 };
@@ -41,6 +41,8 @@ pub struct ServerState {
     pub protocol: Protocol,
     pub steamvr_ready: Arc<AtomicBool>,
     controller: Arc<Semaphore>,
+    pub brightness: Arc<Mutex<crate::brightness::BrightnessController>>,
+    pub clock: std::time::Instant,
 }
 
 impl ServerState {
@@ -51,6 +53,8 @@ impl ServerState {
             protocol: PROTOCOL,
             steamvr_ready: Arc::new(AtomicBool::new(false)),
             controller: Arc::new(Semaphore::new(1)),
+            brightness: Arc::default(),
+            clock: std::time::Instant::now(),
         }
     }
 
@@ -140,6 +144,7 @@ async fn serve_connection(
     };
     let mut permit = None;
     let auth = format!("Bearer {}", state.config.client_token);
+    #[allow(clippy::result_large_err)]
     let check = |request: &UpgradeRequest, response: UpgradeResponse| {
         let supplied = request
             .headers()
@@ -180,7 +185,9 @@ async fn serve_connection(
     };
     let _permit = permit;
     let mut initialized = false;
+    let mut negotiated_minor = 0;
     let mut ids = HashSet::new();
+    let mut last_id = None;
     let hello_deadline = tokio::time::Instant::now() + Duration::from_secs(3);
     loop {
         let deadline = if initialized {
@@ -211,9 +218,14 @@ async fn serve_connection(
         let Ok(request) = serde_json::from_str::<Request>(&text) else {
             break;
         };
-        if !ids.insert(request.id) {
+        if negotiated_minor >= 2 {
+            if last_id.is_some_and(|previous| request.id <= previous) {
+                break;
+            }
+        } else if !ids.insert(request.id) {
             break;
         }
+        last_id = Some(request.id);
         let result = match request.command {
             Command::Hello { .. } if initialized => ReplyResult::Error {
                 code: ProtocolError::AlreadyInitialized,
@@ -235,6 +247,7 @@ async fn serve_connection(
                     }
                 } else {
                     initialized = true;
+                    negotiated_minor = protocol.minor.min(state.protocol.minor);
                     ReplyResult::Hello {
                         protocol: Protocol {
                             major: state.protocol.major,
@@ -243,7 +256,15 @@ async fn serve_connection(
                         build_version: state.build_version.clone(),
                         device_id: state.config.device_id.clone(),
                         daemon_id: state.config.daemon_id.clone(),
-                        capabilities: vec!["status".into()],
+                        capabilities: if negotiated_minor >= 2 {
+                            vec![
+                                "status".into(),
+                                "brightness".into(),
+                                "brightness_transition".into(),
+                            ]
+                        } else {
+                            vec!["status".into()]
+                        },
                         steamvr: state.steamvr(),
                     }
                 }
@@ -251,7 +272,15 @@ async fn serve_connection(
             Command::GetStatus if initialized => ReplyResult::Status {
                 steamvr: state.steamvr(),
             },
-            Command::GetStatus => ReplyResult::Error {
+            command if initialized && negotiated_minor >= 2 => state
+                .brightness
+                .lock()
+                .unwrap()
+                .command(command, state.clock.elapsed().as_millis() as u64),
+            _ if initialized => ReplyResult::BrightnessError {
+                code: oyasumivr_frame_protocol::BrightnessError::Unsupported,
+            },
+            _ => ReplyResult::Error {
                 code: ProtocolError::HelloRequired,
             },
         };

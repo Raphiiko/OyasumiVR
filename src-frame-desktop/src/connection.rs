@@ -24,6 +24,8 @@ pub struct Connection {
     pub build: String,
     pub protocol: Protocol,
     pub steamvr: SteamVrState,
+    pub brightness: Option<oyasumivr_frame_protocol::BrightnessState>,
+    pub brightness_supported: bool,
 }
 
 impl Connection {
@@ -120,6 +122,8 @@ impl Connection {
                 build: String::new(),
                 protocol: PROTOCOL,
                 steamvr: SteamVrState::Unavailable,
+                brightness: None,
+                brightness_supported: false,
             };
             match connection
                 .exchange(Command::Hello {
@@ -142,10 +146,13 @@ impl Connection {
                     }
                     if protocol.major != PROTOCOL.major
                         || protocol.minor > PROTOCOL.minor
-                        || capabilities != ["status"]
+                        || !capabilities.iter().any(|capability| capability == "status")
                     {
                         return Err(Error::ProtocolMismatch);
                     }
+                    connection.brightness_supported = protocol.minor >= 2
+                        && capabilities.iter().any(|c| c == "brightness")
+                        && capabilities.iter().any(|c| c == "brightness_transition");
                     connection.build = build_version;
                     connection.protocol = protocol;
                     connection.steamvr = steamvr;
@@ -156,6 +163,12 @@ impl Connection {
                 _ => return Err(Error::ProtocolMismatch),
             }
             connection.status().await?;
+            if connection.brightness_supported {
+                connection
+                    .brightness_command(Command::GetBrightness)
+                    .await
+                    .map_err(|_| Error::ProtocolMismatch)?;
+            }
             Ok(connection)
         })
         .await
@@ -205,6 +218,31 @@ impl Connection {
             Ok(steamvr)
         } else {
             Err(Error::ProtocolMismatch)
+        }
+    }
+
+    pub async fn brightness_command(
+        &mut self,
+        command: Command,
+    ) -> std::result::Result<
+        oyasumivr_frame_protocol::BrightnessState,
+        oyasumivr_frame_protocol::BrightnessError,
+    > {
+        use oyasumivr_frame_protocol::BrightnessError;
+        if !self.brightness_supported {
+            return Err(BrightnessError::Unsupported);
+        }
+        match self
+            .exchange(command)
+            .await
+            .map_err(|_| BrightnessError::Offline)?
+        {
+            ReplyResult::Brightness { state } => {
+                self.brightness = Some(state.clone());
+                Ok(state)
+            }
+            ReplyResult::BrightnessError { code } => Err(code),
+            _ => Err(BrightnessError::Unsupported),
         }
     }
 

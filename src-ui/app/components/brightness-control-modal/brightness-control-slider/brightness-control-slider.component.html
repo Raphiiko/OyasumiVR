@@ -8,7 +8,19 @@
   @if (mode === 'FAN_SPEED') {
     <i class="material-symbols-outlined brightness-level-icon icon-filled">mode_fan_off</i>
   }
-  <div class="brightness-slider-bar" (mousedown)="onDragStart($event)" [class.cct]="mode === 'CCT'">
+  <div
+    class="brightness-slider-bar"
+    role="slider"
+    [attr.tabindex]="disabled ? -1 : 0"
+    [attr.aria-disabled]="disabled"
+    [attr.aria-label]="mode"
+    [attr.aria-valuemin]="min"
+    [attr.aria-valuemax]="max"
+    [attr.aria-valuenow]="value"
+    (keydown)="onKey($event)"
+    (mousedown)="onDragStart($event)"
+    [class.cct]="mode === 'CCT'"
+  >
     <div
       class="brightness-slider-bar-inner"
       [class.dragging]="dragging"

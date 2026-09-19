@@ -78,7 +78,9 @@ export class BrightnessControlModalComponent
     this.setHardwareBrightness
       .pipe(
         throttleTime(1000 / 30, asyncScheduler, { leading: true, trailing: true }),
-        switchMap((percentage) => this.hardwareBrightnessControl.setBrightness(percentage)),
+        switchMap((percentage) =>
+          this.hardwareBrightnessControl.setBrightness(percentage).catch(() => {})
+        ),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
@@ -92,7 +94,9 @@ export class BrightnessControlModalComponent
     this.setSimpleBrightness
       .pipe(
         throttleTime(1000 / 30, asyncScheduler, { leading: true, trailing: true }),
-        switchMap((percentage) => this.simpleBrightnessControl.setBrightness(percentage)),
+        switchMap((percentage) =>
+          this.simpleBrightnessControl.setBrightness(percentage).catch(() => {})
+        ),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();

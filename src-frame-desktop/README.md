@@ -1,7 +1,7 @@
 # Frame desktop pairing backend
 
 This Windows Rust crate owns Frame pairing credentials, SSH
-onboarding, installation, and the persistent status-only companion connection.
+onboarding, installation, and the persistent authenticated companion connection.
 The core exposes it through Tauri to the Angular pairing flow.
 
 ## Stage 4 command contract
@@ -75,7 +75,7 @@ redirects and bounds time and response size. Registration errors are typed.
 
 Companion TLS uses the provisioned certificate as its only trust root and checks
 the exact peer certificate before sending the bearer header. Hello verifies
-device ID, daemon ID, protocol, and status-only capabilities. First installation
+device ID, daemon ID, protocol, and negotiated capabilities. First installation
 also requires the expected build. No commands are queued for reconnect.
 
 ## Persistence and maintenance
@@ -138,3 +138,16 @@ cargo +1.97.1 clippy --locked --manifest-path src-frame-desktop/Cargo.toml --all
 
 Unit tests cover protected storage, identity matching and controller state.
 Hardware identity, approval, startup and wake behavior require separate headset verification.
+
+## Brightness
+
+`frame_brightness` accepts set, transition and cancellation intent after Rust verifies the active
+PC HMD still matches the paired identity. The existing authenticated connection owns delivery.
+Protocol 1.2 snapshots include brightness readiness independently of pairing, installation,
+connection and SteamVR readiness. Older peers remain connected without a brightness driver.
+
+Each connection reads actual brightness before admitting new work. One pending request replaces
+older unsent intent. Disconnect discards that pending request. Accepted transitions remain owned
+by the companion and are reconciled on reconnect without replay. `brightness_session` distinguishes
+new connections; the enclosing pairing revision orders events and snapshots. Angular presents
+requested intent separately from accepted, applied and completed state.

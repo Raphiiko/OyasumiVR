@@ -5,6 +5,7 @@
         @if (driverChecked) {
           <app-brightness-control-slider
             [value]="(hardwareBrightnessControl.brightnessStream | async) ?? 0"
+            [disabled]="!driverAvailable"
             [min]="hardwareBrightnessBounds[0]"
             [max]="hardwareBrightnessBounds[1]"
             (valueChange)="setHardwareBrightness.next($event)"
@@ -38,6 +39,7 @@
       <div class="brightness-slider" @vshrink>
         <app-brightness-control-slider
           [value]="(simpleBrightnessControl.brightnessStream | async) ?? 0"
+          [disabled]="hardwareBrightnessControl.hasFrameCompanion && !driverAvailable"
           [min]="5"
           [max]="100"
           (valueChange)="setSimpleBrightness.next($event)"
@@ -47,6 +49,41 @@
         <div class="brightness-slider-title">
           <span transloco="comp.brightness-control-modal.brightness"></span>
         </div>
+      </div>
+    }
+
+    @if (hardwareBrightnessControl.driverSteamFrame.snapshot | async; as frame) {
+      <div class="frame-brightness-feedback" role="status" aria-live="polite">
+        @if (hardwareBrightnessControl.driverSteamFrame.error | async; as error) {
+          <span [transloco]="'comp.brightness-control-modal.frameErrors.' + error"></span>
+        } @else if (hardwareBrightnessControl.driverSteamFrame.requested | async; as requested) {
+          <span
+            transloco="comp.brightness-control-modal.frameRequested"
+            [translocoParams]="{ target: requested.percentage | number: '1.0-0' }"
+          ></span>
+        } @else if (frame.error === 'busy') {
+          <span transloco="comp.brightness-control-modal.frameErrors.busy"></span>
+        } @else if (!frame.connected) {
+          <span transloco="comp.brightness-control-modal.frameOffline"></span>
+        } @else if (frame.brightness; as brightness) {
+          @if (brightness.error) {
+            <span
+              [transloco]="'comp.brightness-control-modal.frameErrors.' + brightness.error"
+            ></span>
+          } @else if (brightness.phase === 'deferred') {
+            <span transloco="comp.brightness-control-modal.frameDeferred"></span>
+          } @else if (!brightness.ready) {
+            <span transloco="comp.brightness-control-modal.frameErrors.not_ready"></span>
+          } @else if (brightness.phase === 'accepted' || brightness.phase === 'running') {
+            <span
+              transloco="comp.brightness-control-modal.framePending"
+              [translocoParams]="{
+                target: brightness.accepted | number: '1.0-0',
+                applied: brightness.applied | number: '1.0-0',
+              }"
+            ></span>
+          }
+        }
       </div>
     }
   </div>

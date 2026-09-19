@@ -22,6 +22,7 @@ import { getCSSColorForCCT } from 'src-shared-ts/src/cct-utils';
   standalone: false,
 })
 export class BrightnessControlSliderComponent implements OnInit, OnChanges {
+  @Input() disabled = false;
   @Input() min = 0;
   @Input() max = 100;
   @Input() value = 50;
@@ -52,7 +53,7 @@ export class BrightnessControlSliderComponent implements OnInit, OnChanges {
 
   onDragStart = (event: MouseEvent) => {
     event.stopImmediatePropagation();
-    if (this.dragging) return;
+    if (this.dragging || this.disabled) return;
     this.dragging = true;
     this.onDrag(event);
   };
@@ -74,16 +75,32 @@ export class BrightnessControlSliderComponent implements OnInit, OnChanges {
       0.0,
       1.0
     );
-    this.value = Math.round(progress * (this.max - this.min) + this.min);
+    let target = Math.round(progress * (this.max - this.min) + this.min);
     if (this.snapValues.length) {
-      const snapValue = this.snapValues.find((v) => Math.abs(v - this.value) <= this.snapDistance);
-      if (snapValue) this.value = snapValue;
+      const snapValue = this.snapValues.find((v) => Math.abs(v - target) <= this.snapDistance);
+      if (snapValue !== undefined) target = snapValue;
     }
-    if (this.step) this.value = Math.round(this.value / this.step) * this.step;
-    this.dragValue = this.value;
-    this.valueChange.emit(this.value);
+    if (this.step) target = Math.round(target / this.step) * this.step;
+    this.dragValue = clamp(target, this.min, this.max);
+    this.valueChange.emit(this.dragValue);
     this.recalculateStyles();
   };
+
+  onKey(event: KeyboardEvent) {
+    if (this.disabled) return;
+    const step = this.step || 1;
+    const values: Record<string, number> = {
+      ArrowLeft: this.value - step,
+      ArrowDown: this.value - step,
+      ArrowRight: this.value + step,
+      ArrowUp: this.value + step,
+      Home: this.min,
+      End: this.max,
+    };
+    if (!(event.key in values)) return;
+    event.preventDefault();
+    this.valueChange.emit(clamp(values[event.key], this.min, this.max));
+  }
 
   recalculateStyles() {
     let progress;

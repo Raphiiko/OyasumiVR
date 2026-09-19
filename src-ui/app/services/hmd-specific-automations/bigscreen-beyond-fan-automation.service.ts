@@ -153,8 +153,9 @@ export class BigscreenBeyondFanAutomationService {
         throttleTime(100, asyncScheduler, { leading: true, trailing: true })
       ),
       this.hardwareBrightness.brightnessStream.pipe(distinctUntilChanged()),
+      this.hardwareBrightness.onDriverChange.pipe(startWith(undefined)),
     ]).subscribe(([fanSafety, brightness]) => {
-      // Force to 100% fan speed above 100% brightness
+      if (this.hardwareBrightness.hasFrameCompanion) brightness = 0;
       if (fanSafety && brightness > 100 && !this._fanSafetyActive.value) {
         this.setFanSpeed(100, false);
         this._fanSafetyActive.next(true);
@@ -183,6 +184,7 @@ export class BigscreenBeyondFanAutomationService {
     // Force to 100% fan speed above 100% brightness
     if (
       this.appSettings.bigscreenBeyondBrightnessFanSafety &&
+      !this.hardwareBrightness.hasFrameCompanion &&
       this.hardwareBrightness.brightness > 100 &&
       speed < 100
     )

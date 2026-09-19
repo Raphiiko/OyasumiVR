@@ -43,6 +43,8 @@ function createService() {
   });
   const brightness = new BehaviorSubject(50);
   const hardwareBrightness = {
+    hasFrameCompanion: false,
+    onDriverChange: new Subject<void>(),
     brightnessStream: brightness.asObservable(),
     get brightness() {
       return brightness.value;
@@ -64,7 +66,7 @@ function createService() {
   const setFanSafety = (enabled: boolean) =>
     settings.next({ ...settings.value, bigscreenBeyondBrightnessFanSafety: enabled });
 
-  return { brightness, safetyActive, service, setFanSafety };
+  return { brightness, safetyActive, service, setFanSafety, hardwareBrightness };
 }
 
 // past the 100 ms throttle on the fan safety setting
@@ -89,6 +91,20 @@ describe('BigscreenBeyondFanAutomationService fan safety', () => {
 
   afterEach(() => {
     vi.useRealTimers();
+  });
+
+  it('does not apply Frame brightness to Beyond fan safety', async () => {
+    const context = createService();
+    await activateSafetyAt120(context);
+    context.hardwareBrightness.hasFrameCompanion = true;
+    context.hardwareBrightness.onDriverChange.next();
+    await settleSafety();
+    expect(context.safetyActive.at(-1)).toBe(false);
+    expect(fanCommands).toEqual([60]);
+    fanCommands.length = 0;
+    context.brightness.next(125);
+    await context.service.setFanSpeed(70);
+    expect(fanCommands).toEqual([70]);
   });
 
   it('restores the saved speed once when the setting is disabled above 100% brightness', async () => {

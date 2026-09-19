@@ -1,4 +1,5 @@
-import { Observable } from 'rxjs';
+import { CancellableTask } from '../../../utils/cancellable-task';
+import { Observable, Subscription } from 'rxjs';
 import { clamp, lerp } from '../../../utils/number-utils';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../../models/settings';
 
@@ -10,11 +11,26 @@ export interface HardwareBrightnessControlDriverBounds {
 }
 
 export abstract class HardwareBrightnessControlDriver {
+  private settingsSubscription: Subscription;
   protected appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
 
   constructor(protected appSettings$: Observable<AppSettings>) {
-    this.appSettings$.subscribe((settings) => (this.appSettings = settings));
+    this.settingsSubscription = this.appSettings$.subscribe(
+      (settings) => (this.appSettings = settings)
+    );
   }
+
+  dispose() {
+    this.settingsSubscription.unsubscribe();
+  }
+
+  readonly appliedBrightness?: Observable<number>;
+  transitionBrightness?: (
+    percentage: number,
+    duration: number,
+    simple?: { from: number; to: number },
+    progress?: (fraction: number) => Promise<void>
+  ) => CancellableTask;
 
   abstract getBrightnessPercentage(): Promise<number>;
 

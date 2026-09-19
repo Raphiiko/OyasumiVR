@@ -35,7 +35,6 @@ export class BrightnessTransitionTask extends CancellableTask {
 
   private async task(task: CancellableTask): Promise<void> {
     const label = this.type.toLowerCase();
-    // Get the current brightness
     const currentBrightness = await this.getBrightness();
     if (currentBrightness === undefined) {
       warn(
@@ -45,29 +44,24 @@ export class BrightnessTransitionTask extends CancellableTask {
       );
       throw 'BRIGHTNESS_UNAVAILABLE';
     }
-    // Start transitioning
     const startTime = Date.now();
     while (Date.now() <= startTime + this.duration) {
-      // Sleep to match the frequency
       await new Promise((resolve) => setTimeout(resolve, 1000 / this.options.frequency!));
-      // Stop if the transition was cancelled
-      if (task.isCancelled() && this.options.logReason) {
+      if (task.isCancelled()) {
         info(
           `[BrightnessControl] Cancelled running ${label} brightness transition (${currentBrightness}%=>${this.targetBrightness}%, ${this.duration}ms, Reason: ${this.options.logReason})`
         );
         return;
       }
-      // Calculate the required brightness
       const timeExpired = Date.now() - startTime;
       const progress = clamp(timeExpired / this.duration, 0, 1);
       const brightness = smoothLerp(currentBrightness, this.targetBrightness, progress);
-      // Set the intermediary brightness
       await this.setBrightness(brightness, {
         cancelActiveTransition: false,
         logReason: undefined,
       });
     }
-    // Set the final target brightness
+    if (task.isCancelled()) return;
     await this.setBrightness(this.targetBrightness, {
       cancelActiveTransition: false,
       logReason: undefined,

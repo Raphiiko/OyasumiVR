@@ -32,21 +32,23 @@ export class CancellableTask<T = unknown, E = unknown> {
   ) {}
 
   public async start(): Promise<T> {
+    if (this.isCancelled()) return undefined as T;
+    this.status.next('running');
     try {
       this.result = await this.work(this, this.status.value);
-      this.status.next('completed');
+      if (!this.isCancelled()) this.status.next('completed');
       this.status.complete();
       return this.result;
     } catch (e) {
       this.error = e as E;
-      this.status.next('error');
+      if (!this.isCancelled()) this.status.next('error');
       this.status.complete();
       throw e;
     }
   }
 
   cancel() {
-    this.status.next('cancelled');
+    if (!this.isComplete() && !this.isError()) this.status.next('cancelled');
   }
 
   isComplete() {

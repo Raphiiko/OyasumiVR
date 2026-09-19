@@ -9,6 +9,7 @@
 .b-modal-container {
   pointer-events: all;
   width: 40em;
+  max-width: calc(100vw - 3em);
   backdrop-filter: blur(4px);
   border-radius: var(--surface-border-radius);
   @include shadows.shadow(5, true);
@@ -33,6 +34,7 @@
 }
 
 .sliders-container {
+  min-width: 0;
   padding: 2em 1.5em;
   flex: 1;
 }
@@ -113,4 +115,9 @@ app-brightness-control-slider {
       color: var(--color-text-3);
     }
   }
+}
+
+.frame-brightness-feedback {
+  padding: 0 1em 1em;
+  overflow-wrap: anywhere;
 }

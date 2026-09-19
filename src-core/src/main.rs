@@ -490,6 +490,7 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         frame_pairing::frame_run,
         frame_pairing::frame_cancel,
         frame_pairing::frame_state,
+        frame_pairing::frame_brightness,
         frame_pairing::frame_reconnect_at,
         openvr::commands::openvr_get_devices,
         openvr::commands::openvr_status,

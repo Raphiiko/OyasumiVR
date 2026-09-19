@@ -127,3 +127,28 @@ pub async fn frame_reconnect_at(
 ) -> Result<Uuid, Error> {
     controller.inner().reconnect_at(pairing_id, candidate).await
 }
+
+#[tauri::command]
+pub async fn frame_brightness(
+    controller: tauri::State<'_, Arc<Controller>>,
+    pairing_id: Uuid,
+    command: oyasumivr_frame_desktop::protocol::Command,
+) -> Result<
+    oyasumivr_frame_desktop::protocol::BrightnessState,
+    oyasumivr_frame_desktop::protocol::BrightnessError,
+> {
+    use oyasumivr_frame_desktop::protocol::BrightnessError;
+    let record = controller
+        .onboarding
+        .store
+        .load(pairing_id)
+        .map_err(|_| BrightnessError::NotReady)?;
+    let current = crate::openvr::pairing_identity(&record.device_manager_id)
+        .await
+        .ok_or(BrightnessError::NotReady)?;
+    let selected = record.selected_identity.ok_or(BrightnessError::NotReady)?;
+    if current != (selected.serial, selected.model, selected.manufacturer) {
+        return Err(BrightnessError::NotReady);
+    }
+    controller.brightness_command(pairing_id, command).await
+}

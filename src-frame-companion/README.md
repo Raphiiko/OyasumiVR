@@ -2,8 +2,8 @@
 
 `oyasumivr-frame-companion` is the ARM64 Linux service installed on a paired headset. It reads a
 provisioned configuration file, connects to the installed OpenVR runtime when available, and serves
-the stage 1 authenticated WSS status protocol. It has no updater, SSH client, telemetry, crash
-reporter, brightness command, or hardware write.
+the authenticated WSS status and brightness protocol. It has no updater, SSH client, telemetry, or crash
+reporter. Brightness reads and writes use the same resident OpenVR connection.
 
 ```text
 oyasumivr-frame-companion serve --config /absolute/path/to/state/config.json
@@ -32,7 +32,7 @@ future desktop core can embed the text and write it to the SSH channel's standar
 ssh HOST bash -s -- inspect ROOT UNIT < lifecycle.sh
 ssh HOST bash -s -- recover ROOT UNIT < lifecycle.sh
 ssh HOST bash -s -- uninstall ROOT UNIT < lifecycle.sh
-ssh HOST bash -s -- apply ROOT UNIT ARTIFACT TRUSTED_SHA256 VERSION ARCH PAIRING_ID DEVICE_ID PROVISION_DIR UNINSTALLER TRUSTED_UNINSTALLER_SHA256 PORT REQUIRED_FREE_BYTES ALLOW_DOWNGRADE < lifecycle.sh
+ssh HOST bash -s -- apply ROOT UNIT ARTIFACT TRUSTED_SHA256 VERSION ARCH PAIRING_ID DEVICE_ID PROVISION_DIR UNINSTALLER TRUSTED_UNINSTALLER_SHA256 PORT REQUIRED_FREE_BYTES ALLOW_DOWNGRADE PROTOCOL_MINOR < lifecycle.sh
 ```
 
 The artifact, provision directory, and standalone uninstaller are uploaded separately into a
@@ -77,3 +77,22 @@ For guarded desktop recovery and uninstall, the streamed script accepts
 `OYASUMIVR_EXPECTED_PAIRING` and `OYASUMIVR_EXPECTED_DEVICE`. It checks these against
 the owner or pending transaction under the maintenance lock. Inspection includes
 transaction ownership even before first-install provisioning has finished.
+
+## Brightness
+
+Protocol 1.2 advertises `brightness` and `brightness_transition`. Earlier negotiated versions
+remain status-only. `GetBrightness` returns readiness, reported gain bounds, applied percentage,
+accepted target, operation ID, phase, linear progress, elapsed time and a monotonically increasing
+revision. Set, transition and cancellation replies return the same snapshot or a typed error.
+Acceptance does not confirm a hardware write. Completion requires successful readback.
+
+The authenticated controller sends a transition ID, target and duration once. The companion applies
+cubic smoothstep easing in percentage space, then gamma 2.2 below 100% and linear gain above 100%.
+Writes enforce reported bounds and a 125% policy ceiling. Prototype bounds are test fixtures.
+Simple-mode transitions carry their original simple start and target so the hardware floor follows
+the desktop software-dimming curve over the same duration.
+
+New work replaces the active transition. Cancellation only affects the matching operation ID.
+The existing authenticated connection admits one controller. Accepted work can finish after a
+connection loss. Standby retains the latest target until the display returns. Restart reads actual
+hardware state without restoring a saved target. No brightness intent is persisted.

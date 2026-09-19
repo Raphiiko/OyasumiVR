@@ -46,7 +46,7 @@ impl Bundle {
             .map_err(|_| Error::ArtifactUnavailable)?;
         if manifest.schema != 1
             || manifest.protocol_major != 1
-            || manifest.protocol_minor != 1
+            || manifest.protocol_minor > oyasumivr_frame_protocol::PROTOCOL.minor
             || !matches!(manifest.architecture.as_str(), "x86_64" | "aarch64")
             || semver::Version::parse(&manifest.build_version).is_err()
             || manifest.artifact_sha256 != digest(&artifact)

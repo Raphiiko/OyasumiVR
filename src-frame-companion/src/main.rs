@@ -55,11 +55,12 @@ fn release_metadata(config_path: &Path) -> io::Result<ReleaseMetadata> {
 }
 
 fn monitor_openvr(
-    ready: Arc<AtomicBool>,
+    state: ServerState,
     stopping: Arc<AtomicBool>,
     library_path: Option<PathBuf>,
 ) -> thread::JoinHandle<()> {
     thread::spawn(move || {
+        let ready = &state.steamvr_ready;
         while !stopping.load(Ordering::Acquire) {
             let context = match &library_path {
                 Some(path) => unsafe {
@@ -82,11 +83,25 @@ fn monitor_openvr(
                             {
                                 break;
                             }
-                            Ok(_) => thread::sleep(Duration::from_millis(100)),
+                            Ok(_) => {
+                                let mut brightness = state.brightness.lock().unwrap();
+                                brightness.tick(
+                                    &mut OpenVrBrightness(&context),
+                                    state.clock.elapsed().as_millis() as u64,
+                                );
+                                if brightness.state.error
+                                    == Some(oyasumivr_frame_protocol::BrightnessError::ReadFailed)
+                                {
+                                    break;
+                                }
+                                drop(brightness);
+                                thread::sleep(Duration::from_millis(16));
+                            }
                             Err(_) => break,
                         }
                     }
                     ready.store(false, Ordering::Release);
+                    state.brightness.lock().unwrap().unavailable();
                     context.shutdown();
                 }
                 Err(_) => thread::sleep(Duration::from_secs(3)),
@@ -94,6 +109,52 @@ fn monitor_openvr(
         }
         ready.store(false, Ordering::Release);
     })
+}
+
+struct OpenVrBrightness<'a>(&'a openvr::Context);
+
+impl oyasumivr_frame_companion::brightness::BrightnessHardware for OpenVrBrightness<'_> {
+    fn read(
+        &mut self,
+    ) -> Result<
+        (oyasumivr_frame_protocol::GainBounds, f64, bool),
+        oyasumivr_frame_protocol::BrightnessError,
+    > {
+        use openvr::raw::{EDeviceActivityLevel as Activity, ETrackedDeviceProperty as Property};
+        use oyasumivr_frame_protocol::{BrightnessError, GainBounds};
+        let system = self.0.system();
+        let hmd = openvr::TrackedDeviceIndex(0);
+        let min: f32 = system
+            .get_tracked_device_property(hmd, Property::Prop_DisplayMinAnalogGain_Float)
+            .map_err(|_| BrightnessError::ReadFailed)?;
+        let max: f32 = system
+            .get_tracked_device_property(hmd, Property::Prop_DisplayMaxAnalogGain_Float)
+            .map_err(|_| BrightnessError::ReadFailed)?;
+        let activity = system
+            .get_tracked_device_activity_level(hmd)
+            .map_err(|_| BrightnessError::ReadFailed)?;
+        let gain = self
+            .0
+            .settings()
+            .get_float(c"steamvr", c"analogGain")
+            .map_err(|_| BrightnessError::ReadFailed)?;
+        let display_ready = activity != Activity::k_EDeviceActivityLevel_Standby
+            && activity != Activity::k_EDeviceActivityLevel_Unknown;
+        Ok((
+            GainBounds {
+                min: min as f64,
+                max: max as f64,
+            },
+            gain as f64,
+            display_ready,
+        ))
+    }
+    fn write(&mut self, gain: f64) -> Result<(), oyasumivr_frame_protocol::BrightnessError> {
+        self.0
+            .settings()
+            .set_float(c"steamvr", c"analogGain", gain as f32)
+            .map_err(|_| oyasumivr_frame_protocol::BrightnessError::WriteFailed)
+    }
 }
 
 async fn shutdown_signal() {
@@ -153,11 +214,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let openvr_library_path = config.openvr_library_path.as_deref().map(PathBuf::from);
     let state = ServerState::new(config, BUILD_VERSION.into());
     let stopping = Arc::new(AtomicBool::new(false));
-    let monitor = monitor_openvr(
-        state.steamvr_ready.clone(),
-        stopping.clone(),
-        openvr_library_path,
-    );
+    let monitor = monitor_openvr(state.clone(), stopping.clone(), openvr_library_path);
     let running = server::start(state).await?;
     shutdown_signal().await;
     stopping.store(true, Ordering::Release);

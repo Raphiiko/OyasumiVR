@@ -62,6 +62,8 @@ export interface FrameState {
   connected: boolean;
   companion_installed: boolean | null;
   steamvr_ready: boolean;
+  brightness?: FrameBrightnessState | null;
+  brightness_session?: number;
   error: FrameError | null;
   maintenance_error: FrameError | null;
   remote_removal_performed: boolean;
@@ -123,3 +125,17 @@ export function frameStatus(state?: FrameState): string {
 }
 
 export const FRAME_MANUAL_UNINSTALL_COMMAND = 'bash "$HOME/.local/share/oyasumivr/frame/uninstall"';
+
+export interface FrameBrightnessState {
+  revision: number;
+  ready: boolean;
+  bounds: { min: number; max: number } | null;
+  applied: number | null;
+  requested: number | null;
+  accepted: number | null;
+  operation_id: string | null;
+  phase: 'idle' | 'accepted' | 'running' | 'deferred' | 'completed' | 'cancelled' | 'failed';
+  progress: number;
+  elapsed_ms: number;
+  error: string | null;
+}

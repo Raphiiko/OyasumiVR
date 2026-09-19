@@ -1,3 +1,5 @@
+import { CancellableTask } from '../../utils/cancellable-task';
+import { smoothLerp } from '../../utils/number-utils';
 import { BehaviorSubject, firstValueFrom, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 import { AUTOMATION_CONFIGS_DEFAULT } from '../../models/automations';
@@ -13,12 +15,16 @@ async function setup(advancedMode = false) {
     BRIGHTNESS_AUTOMATIONS: { ...AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS, advancedMode },
   });
   const hardware = {
+    hasFrameCompanion: false,
+    brightnessStream: new BehaviorSubject(100),
     driverIsAvailable: new BehaviorSubject(false),
     brightnessBounds: new BehaviorSubject([20, 100]),
     setBrightness: vi.fn<Dependencies[1]['setBrightness']>().mockResolvedValue(undefined),
     cancelActiveTransition: vi.fn(),
   };
   const software = {
+    brightness: 100,
+    brightnessStream: new BehaviorSubject(100),
     setBrightness: vi.fn<Dependencies[2]['setBrightness']>().mockResolvedValue(undefined),
     cancelActiveTransition: vi.fn(),
   };
@@ -141,4 +147,102 @@ describe('simple brightness mode changes', () => {
     expect(h.software.setBrightness).not.toHaveBeenCalled();
     expect(h.hardware.setBrightness).not.toHaveBeenCalled();
   });
+});
+
+describe('delegated simple transitions', () => {
+  it.each([
+    [80, 0],
+    [0, 80],
+  ])('shares one duration and floor curve from %s to %s', async (from, to) => {
+    const h = await setup();
+    const progressValues = [0, 0.25, 0.5, 0.75, 1];
+    const hardware = Object.assign(h.hardware, {
+      hasFrameCompanion: true,
+      delegatesTransitions: true,
+      delegateTransition: vi.fn(
+        (
+          _target: number,
+          duration: number,
+          curve: { from: number; to: number },
+          progress: (value: number) => Promise<void>
+        ) => {
+          expect(duration).toBe(2400);
+          expect(curve).toEqual({ from, to });
+          const task = new CancellableTask(async () => {
+            for (const value of progressValues) await progress(value);
+          });
+          void task.start();
+          return task;
+        }
+      ),
+    });
+    hardware.brightnessBounds.next([9, 125]);
+    hardware.driverIsAvailable.next(true);
+    await h.service.setBrightness(from);
+    hardware.setBrightness.mockClear();
+    h.software.setBrightness.mockClear();
+    const task = h.service.transitionBrightness(to, 2400);
+    await firstValueFrom(task.onComplete);
+    expect(hardware.delegateTransition).toHaveBeenCalledTimes(1);
+    expect(hardware.setBrightness).not.toHaveBeenCalled();
+    expect(h.software.setBrightness.mock.calls.map((call) => call[0])).toEqual(
+      progressValues.map((progress) => {
+        const value = smoothLerp(from, to, progress);
+        return value < 9 ? (value / 9) * 100 : 100;
+      })
+    );
+    expect(h.service.brightness).toBe(to);
+  });
+  it('preserves confirmed simple brightness after a hardware write failure', async () => {
+    const h = await setup();
+    h.hardware.driverIsAvailable.next(true);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    await h.service.setBrightness(60);
+    h.hardware.setBrightness.mockRejectedValueOnce('write_failed');
+    await expect(h.service.setBrightness(40)).rejects.toBe('write_failed');
+    expect(h.service.brightness).toBe(60);
+  });
+});
+
+describe('simple brightness request ordering', () => {
+  it('discards an older request waiting for software brightness', async () => {
+    const h = await setup();
+    h.hardware.driverIsAvailable.next(true);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    let finish!: () => void;
+    h.software.setBrightness.mockImplementationOnce(
+      () => new Promise<void>((resolve) => (finish = resolve))
+    );
+    const old = h.service.setBrightness(30);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    await h.service.setBrightness(70);
+    h.hardware.setBrightness.mockClear();
+    finish();
+    await old;
+    expect(h.hardware.setBrightness).not.toHaveBeenCalled();
+    expect(h.service.brightness).toBe(70);
+    h.service.ngOnDestroy();
+  });
+});
+
+it('reconciles simple brightness when Frame bounds arrive after its value', async () => {
+  const h = await setup();
+  h.hardware.hasFrameCompanion = true;
+  h.hardware.brightnessStream.next(100);
+  h.hardware.brightnessBounds.next([9, 125]);
+  expect(h.service.brightness).toBeCloseTo(9 + (91 / 116) * 91);
+  expect(h.hardware.setBrightness).not.toHaveBeenCalled();
+  h.service.ngOnDestroy();
+  h.hardware.brightnessStream.next(50);
+  expect(h.service.brightness).toBeCloseTo(9 + (91 / 116) * 91);
+});
+
+it('reconciles software dimming at the Frame hardware floor', async () => {
+  const h = await setup();
+  h.hardware.hasFrameCompanion = true;
+  h.hardware.brightnessBounds.next([9, 125]);
+  h.hardware.brightnessStream.next(9);
+  h.software.brightnessStream.next(50);
+  expect(h.service.brightness).toBe(4.5);
+  h.service.ngOnDestroy();
 });

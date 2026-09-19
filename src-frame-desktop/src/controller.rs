@@ -7,6 +7,7 @@ use crate::{
     storage::{Companion, Record, Store},
     Error, Result,
 };
+use oyasumivr_frame_protocol::{BrightnessError, BrightnessState, Command};
 use serde::{Deserialize, Serialize};
 use std::{
     collections::HashMap,
@@ -43,6 +44,8 @@ pub struct State {
     pub connected: bool,
     pub companion_installed: Option<bool>,
     pub steamvr_ready: bool,
+    pub brightness: Option<BrightnessState>,
+    pub brightness_session: u64,
     pub error: Option<Error>,
     pub maintenance_error: Option<Error>,
     pub remote_removal_performed: bool,
@@ -80,9 +83,15 @@ struct Active {
     cancel: CancellationToken,
     action: Action,
 }
+struct BrightnessRequest {
+    command: Command,
+    response: tokio::sync::oneshot::Sender<std::result::Result<BrightnessState, BrightnessError>>,
+}
 struct Watcher {
     cancel: CancellationToken,
     task: tokio::task::JoinHandle<()>,
+    pending: Arc<Mutex<Option<BrightnessRequest>>>,
+    notify: Arc<tokio::sync::Notify>,
 }
 
 pub struct Controller {
@@ -441,6 +450,12 @@ impl Controller {
                 None
             },
             steamvr_ready: ready,
+            brightness: states
+                .get(&record.id)
+                .and_then(|state| state.brightness.clone()),
+            brightness_session: states
+                .get(&record.id)
+                .map_or(0, |state| state.brightness_session),
             error,
             maintenance_error: record.maintenance_error,
             remote_removal_performed: record.remote_cleanup_confirmed,
@@ -816,6 +831,68 @@ impl Controller {
         Ok(())
     }
 
+    pub async fn brightness_command(
+        &self,
+        id: Uuid,
+        command: Command,
+    ) -> std::result::Result<BrightnessState, BrightnessError> {
+        if !matches!(
+            command,
+            Command::SetBrightness { .. }
+                | Command::TransitionBrightness { .. }
+                | Command::CancelBrightness { .. }
+        ) {
+            return Err(BrightnessError::Unsupported);
+        }
+        let receiver = {
+            let watchers = self.watchers.lock().unwrap();
+            let watcher = watchers.get(&id).ok_or(BrightnessError::Offline)?;
+            let states = self.states.lock().unwrap();
+            let state = states.get(&id).ok_or(BrightnessError::Offline)?;
+            if !state.connected || !state.paired || state.in_progress {
+                return Err(BrightnessError::NotReady);
+            }
+            if state.brightness.is_none() {
+                return Err(BrightnessError::Unsupported);
+            }
+            let (response, receiver) = tokio::sync::oneshot::channel();
+            let mut pending = watcher.pending.lock().unwrap();
+            if let Command::CancelBrightness { operation_id } = &command {
+                if let Some(queued) = pending.as_ref() {
+                    let queued_id = match &queued.command {
+                        Command::SetBrightness { operation_id, .. }
+                        | Command::TransitionBrightness { operation_id, .. }
+                        | Command::CancelBrightness { operation_id } => operation_id,
+                        _ => return Err(BrightnessError::Unsupported),
+                    };
+                    if operation_id != queued_id {
+                        return Err(BrightnessError::StaleOperation);
+                    }
+                    let queued = pending.take().unwrap();
+                    let _ = queued.response.send(Err(BrightnessError::StaleOperation));
+                    return Ok(state.brightness.clone().unwrap());
+                }
+            }
+            if let Some(previous) = pending.replace(BrightnessRequest { command, response }) {
+                let _ = previous.response.send(Err(BrightnessError::StaleOperation));
+            }
+            watcher.notify.notify_one();
+            receiver
+        };
+        receiver.await.unwrap_or(Err(BrightnessError::Offline))
+    }
+
+    fn brightness_update(&self, id: Uuid, operation: Uuid, brightness: Option<BrightnessState>) {
+        let mut states = self.states.lock().unwrap();
+        if let Some(state) = states.get_mut(&id) {
+            if state.operation_id == operation && state.brightness != brightness {
+                state.brightness = brightness;
+                state.revision += 1;
+                let _ = self.events.send(state.clone());
+            }
+        }
+    }
+
     async fn stop_connection(&self, id: Uuid) {
         let watcher = self.watchers.lock().unwrap().remove(&id);
         if let Some(watcher) = watcher {
@@ -836,6 +913,10 @@ impl Controller {
         let stopping = cancel.clone();
         let this = self.clone();
         let id = record.id;
+        let pending: Arc<Mutex<Option<BrightnessRequest>>> = Arc::default();
+        let notify = Arc::new(tokio::sync::Notify::new());
+        let requests = pending.clone();
+        let wake = notify.clone();
         let task = tokio::spawn(async move {
             let Some(companion) = record.companion.clone() else {
                 this.update(
@@ -934,6 +1015,10 @@ impl Controller {
                                 _ => return,
                             }
                         }
+                        if let Some(state) = this.states.lock().unwrap().get_mut(&id) {
+                            state.brightness_session += 1;
+                        }
+                        this.brightness_update(id, operation, connection.brightness.clone());
                         loop {
                             this.update(
                                 &record,
@@ -942,7 +1027,49 @@ impl Controller {
                                 None,
                                 connection.steamvr == oyasumivr_frame_protocol::SteamVrState::Ready,
                             );
-                            tokio::select! { _ = stopping.cancelled() => { connection.close().await; return; }, _ = tokio::time::sleep(Duration::from_secs(5)) => {} }
+                            tokio::select! { _ = stopping.cancelled() => { connection.close().await; return; }, _ = wake.notified() => {}, _ = tokio::time::sleep(Duration::from_millis(if connection.brightness_supported { 50 } else { 5000 })) => {} }
+                            let request = requests.lock().unwrap().take();
+                            if let Some(request) = request {
+                                let result = connection.brightness_command(request.command).await;
+                                this.brightness_update(
+                                    id,
+                                    operation,
+                                    connection.brightness.clone(),
+                                );
+                                let offline = matches!(result, Err(BrightnessError::Offline));
+                                let _ = request.response.send(result);
+                                if offline {
+                                    this.update(
+                                        &record,
+                                        operation,
+                                        Step::Offline,
+                                        Some(Error::Offline),
+                                        false,
+                                    );
+                                    break;
+                                }
+                            }
+                            if connection.brightness_supported {
+                                if connection
+                                    .brightness_command(Command::GetBrightness)
+                                    .await
+                                    .is_err()
+                                {
+                                    this.update(
+                                        &record,
+                                        operation,
+                                        Step::Offline,
+                                        Some(Error::Offline),
+                                        false,
+                                    );
+                                    break;
+                                }
+                                this.brightness_update(
+                                    id,
+                                    operation,
+                                    connection.brightness.clone(),
+                                );
+                            }
                             if let Err(error) = connection.status().await {
                                 let _ = this.onboarding.store.save(&record);
                                 this.update(&record, operation, Step::Offline, Some(error), false);
@@ -956,11 +1083,22 @@ impl Controller {
                         this.update(&record, operation, Step::Offline, Some(error), false)
                     }
                 }
+                if let Some(request) = requests.lock().unwrap().take() {
+                    let _ = request.response.send(Err(BrightnessError::Offline));
+                }
                 tokio::select! { _ = stopping.cancelled() => return, _ = tokio::time::sleep(Duration::from_secs(delay)) => {} }
                 delay = (delay * 2).min(60);
             }
         });
-        watchers.insert(id, Watcher { cancel, task });
+        watchers.insert(
+            id,
+            Watcher {
+                cancel,
+                task,
+                pending,
+                notify,
+            },
+        );
     }
 }
 
@@ -974,6 +1112,132 @@ fn now() -> u64 {
 #[cfg(all(test, windows))]
 mod tests {
     use super::*;
+
+    #[tokio::test]
+    async fn brightness_queue_coalesces_and_rejects_stale_cancel() {
+        let directory = tempfile::tempdir().unwrap();
+        let controller = Controller::new(
+            Store::open(directory.path().into()).unwrap(),
+            directory.path().join("absent"),
+        );
+        let mut record = controller
+            .onboarding
+            .create(
+                "synthetic".into(),
+                "127.0.0.1".into(),
+                32000,
+                22,
+                "Synthetic".into(),
+            )
+            .await
+            .unwrap();
+        record.completed = true;
+        controller.update(&record, Uuid::nil(), Step::Connected, None, true);
+        controller.brightness_update(record.id, Uuid::nil(), Some(BrightnessState::default()));
+        let pending = Arc::new(Mutex::new(None));
+        controller.watchers.lock().unwrap().insert(
+            record.id,
+            Watcher {
+                cancel: CancellationToken::new(),
+                task: tokio::spawn(async {}),
+                pending: pending.clone(),
+                notify: Arc::default(),
+            },
+        );
+        let mut jobs = Vec::new();
+        for index in 0..100 {
+            let controller = controller.clone();
+            let id = record.id;
+            jobs.push(tokio::spawn(async move {
+                controller
+                    .brightness_command(
+                        id,
+                        Command::SetBrightness {
+                            operation_id: index.to_string(),
+                            percentage: 20.0 + index as f64,
+                        },
+                    )
+                    .await
+            }));
+            tokio::task::yield_now().await;
+        }
+        assert_eq!(
+            controller
+                .brightness_command(
+                    record.id,
+                    Command::CancelBrightness {
+                        operation_id: "0".into()
+                    }
+                )
+                .await,
+            Err(BrightnessError::StaleOperation)
+        );
+        let latest = pending.lock().unwrap().take().unwrap();
+        assert!(matches!(
+            latest.command,
+            Command::SetBrightness {
+                percentage: 119.0,
+                ..
+            }
+        ));
+        latest
+            .response
+            .send(Ok(BrightnessState::default()))
+            .unwrap();
+        for (index, job) in jobs.into_iter().enumerate() {
+            let result = job.await.unwrap();
+            if index == 99 {
+                assert!(result.is_ok());
+            } else {
+                assert_eq!(result, Err(BrightnessError::StaleOperation));
+            }
+        }
+        let queued_controller = controller.clone();
+        let id = record.id;
+        let queued = tokio::spawn(async move {
+            queued_controller
+                .brightness_command(
+                    id,
+                    Command::SetBrightness {
+                        operation_id: "cancel-pending".into(),
+                        percentage: 50.0,
+                    },
+                )
+                .await
+        });
+        tokio::task::yield_now().await;
+        assert!(controller
+            .brightness_command(
+                record.id,
+                Command::CancelBrightness {
+                    operation_id: "cancel-pending".into(),
+                }
+            )
+            .await
+            .is_ok());
+        assert!(pending.lock().unwrap().is_none());
+        assert_eq!(queued.await.unwrap(), Err(BrightnessError::StaleOperation));
+        controller.update(
+            &record,
+            Uuid::nil(),
+            Step::Offline,
+            Some(Error::Offline),
+            false,
+        );
+        assert_eq!(
+            controller
+                .brightness_command(
+                    record.id,
+                    Command::SetBrightness {
+                        operation_id: "offline".into(),
+                        percentage: 50.0
+                    }
+                )
+                .await,
+            Err(BrightnessError::NotReady)
+        );
+        assert!(pending.lock().unwrap().is_none());
+    }
 
     #[tokio::test]
     async fn snapshots_preserve_last_known_details_and_publish_cancellation() {

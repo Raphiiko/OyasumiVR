@@ -153,7 +153,7 @@ async fn reports_real_runtime_state_without_losing_connectivity() {
             steamvr: SteamVrState::Unavailable,
             capabilities,
             ..
-        } if build_version == "0.2.0-test" && capabilities == ["status"]
+        } if build_version == "0.2.0-test" && capabilities == ["status", "brightness", "brightness_transition"]
     ));
     server.state.steamvr_ready.store(true, Ordering::Release);
     assert!(matches!(
@@ -261,5 +261,91 @@ async fn rejects_uninitialized_duplicate_malformed_and_oversized_messages() {
         socket.send(Message::Text(text.into())).await.unwrap();
         closed(&mut socket).await;
     }
+    server.running.stop().await;
+}
+
+#[tokio::test]
+async fn brightness_negotiation_and_disconnect_reconciliation() {
+    use oyasumivr_frame_companion::brightness::BrightnessHardware;
+    use oyasumivr_frame_protocol::{BrightnessError, BrightnessPhase, GainBounds};
+    struct Hardware(f64);
+    impl BrightnessHardware for Hardware {
+        fn read(&mut self) -> Result<(GainBounds, f64, bool), BrightnessError> {
+            Ok((
+                GainBounds {
+                    min: 0.005,
+                    max: 1.25,
+                },
+                self.0,
+                true,
+            ))
+        }
+        fn write(&mut self, gain: f64) -> Result<(), BrightnessError> {
+            self.0 = gain;
+            Ok(())
+        }
+    }
+    let server = TestServer::start().await;
+    let mut hardware = Hardware(1.0);
+    server
+        .state
+        .brightness
+        .lock()
+        .unwrap()
+        .tick(&mut hardware, 0);
+    let mut old = server
+        .connect(&server.state.config.client_token)
+        .await
+        .unwrap();
+    assert!(
+        matches!(exchange(&mut old, 1, hello(Protocol { major: 1, minor: 1 }, "synthetic-device", "synthetic-daemon")).await,
+        ReplyResult::Hello { capabilities, protocol: Protocol { minor: 1, .. }, .. } if capabilities == ["status"])
+    );
+    assert!(matches!(
+        exchange(&mut old, 2, Command::GetBrightness).await,
+        ReplyResult::BrightnessError {
+            code: BrightnessError::Unsupported
+        }
+    ));
+    old.close(None).await.unwrap();
+    drop(old);
+    tokio::time::sleep(Duration::from_millis(10)).await;
+    let mut socket = server
+        .connect(&server.state.config.client_token)
+        .await
+        .unwrap();
+    exchange(
+        &mut socket,
+        1,
+        hello(PROTOCOL, "synthetic-device", "synthetic-daemon"),
+    )
+    .await;
+    assert!(
+        matches!(exchange(&mut socket, 2, Command::TransitionBrightness { operation_id: "fade".into(), percentage: 20.0, duration_ms: 1000, simple: None }).await,
+        ReplyResult::Brightness { state } if state.phase == BrightnessPhase::Accepted && state.applied == Some(100.0))
+    );
+    socket.close(None).await.unwrap();
+    drop(socket);
+    server
+        .state
+        .brightness
+        .lock()
+        .unwrap()
+        .tick(&mut hardware, 2000);
+    tokio::time::sleep(Duration::from_millis(10)).await;
+    let mut resumed = server
+        .connect(&server.state.config.client_token)
+        .await
+        .unwrap();
+    exchange(
+        &mut resumed,
+        1,
+        hello(PROTOCOL, "synthetic-device", "synthetic-daemon"),
+    )
+    .await;
+    assert!(
+        matches!(exchange(&mut resumed, 2, Command::GetBrightness).await,
+        ReplyResult::Brightness { state } if state.phase == BrightnessPhase::Completed && (state.applied.unwrap() - 20.0).abs() < 0.000001)
+    );
     server.running.stop().await;
 }
