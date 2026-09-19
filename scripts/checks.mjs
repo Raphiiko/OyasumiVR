@@ -125,8 +125,8 @@ export function expandCheck(name = 'all') {
 }
 
 export function checkName(id) {
-  if (id === 'translations') return 'Valid translation files';
-  if (id === 'generated:readmes') return 'Up-to-date generated READMEs';
+  if (id === 'translations') return 'Validity: Translation files';
+  if (id === 'generated:readmes') return 'Up-to-date: Generated READMEs';
   const [operation, component] = id.split(':');
   const names = {
     web: 'Web',
@@ -141,7 +141,7 @@ export function checkName(id) {
     'memory-watch': 'Rust memory watch',
     'signing-tool': 'Rust signing tool',
   };
-  return `${names[component]} ${{ format: 'formatting', lint: 'lint', test: 'tests', build: 'build' }[operation]}`;
+  return `${{ format: 'Formatting', lint: 'Lint', test: 'Tests', build: 'Build' }[operation]}: ${names[component]}`;
 }
 
 export function runChecks(ids) {

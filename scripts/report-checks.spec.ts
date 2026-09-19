@@ -20,10 +20,16 @@ afterEach(() => {
 it('names every command with a distinct status', () => {
   const names = Object.keys(checks).map(checkName);
   expect(new Set(names).size).toBe(names.length);
+  expect(
+    names.every((name) => /^(Formatting|Lint|Tests|Build|Validity|Up-to-date): /.test(name))
+  ).toBe(true);
+  const report = summary([], []);
+  expect(report.indexOf('Build: Main UI')).toBeLessThan(report.indexOf('Formatting: Rust core'));
+  expect(report.indexOf('Formatting: Rust core')).toBeLessThan(report.indexOf('Lint: Web'));
   expect(names.some((name) => name.includes('undefined'))).toBe(false);
-  expect(checkName('translations')).toBe('Valid translation files');
-  expect(checkName('generated:readmes')).toBe('Up-to-date generated READMEs');
-  expect(checkName('build:overlay-ui')).toBe('Overlay UI build');
+  expect(checkName('translations')).toBe('Validity: Translation files');
+  expect(checkName('generated:readmes')).toBe('Up-to-date: Generated READMEs');
+  expect(checkName('build:overlay-ui')).toBe('Build: Overlay UI');
 });
 
 it('requires every selected execution and result job to succeed', () => {
@@ -78,10 +84,12 @@ it('merges artifacts and distinguishes missing work from unnecessary work', () =
   }
   const results = readResults(path);
   const report = summary(['test:web', 'test:core', 'translations'], results);
-  expect(report).toContain('| Web tests | `npm run check:test:web` | passed | 1.2s |');
-  expect(report).toContain('| Rust core tests | `npm run check:test:core` | failed | 1.2s |');
-  expect(report).toContain('| Valid translation files | `npm run check:translations` | not run |');
-  expect(report).toContain('| Main UI build | `npm run check:build:ui` | not needed |');
+  expect(report).toContain('| Tests: Web | `npm run check:test:web` | passed | 1.2s |');
+  expect(report).toContain('| Tests: Rust core | `npm run check:test:core` | failed | 1.2s |');
+  expect(report).toContain(
+    '| Validity: Translation files | `npm run check:translations` | not run |'
+  );
+  expect(report).toContain('| Build: Main UI | `npm run check:build:ui` | not needed |');
   expect(summary(null, [])).toContain('selection unavailable');
 });
 
@@ -133,7 +141,7 @@ it('fails the report command for missing results even when all jobs claim succes
   });
   expect(result.status).toBe(1);
   expect(readFileSync(reportPath, 'utf8')).toContain(
-    '| Web tests | `npm run check:test:web` | not run |'
+    '| Tests: Web | `npm run check:test:web` | not run |'
   );
 });
 
@@ -150,7 +158,7 @@ it.each(['passed', 'failed', 'missing'])('publishes the actual native result: %s
     encoding: 'utf8',
   });
   expect(result.status).toBe(status === 'passed' ? 0 : 1);
-  expect(result.stdout).toContain(`Rust core tests: ${status === 'missing' ? 'not run' : status}`);
+  expect(result.stdout).toContain(`Tests: Rust core: ${status === 'missing' ? 'not run' : status}`);
 });
 
 it('emits complete job matrices when all checks are selected', () => {

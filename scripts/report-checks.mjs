@@ -54,7 +54,9 @@ export function summary(selected, results) {
     '| Check | Command | Result | Duration |',
     '| --- | --- | --- | --- |',
   ];
-  for (const id of Object.keys(checks)) {
+  for (const id of Object.keys(checks).sort((left, right) =>
+    checkName(left).localeCompare(checkName(right))
+  )) {
     const result =
       selected === null
         ? { status: 'selection unavailable' }
