@@ -50,7 +50,7 @@ struct Queue {
     pending: VecDeque<(&'static str, Value)>,
     in_flight: bool,
     sent_buttons: u32,
-    sent_key: Option<Value>,
+    sent_keys: Vec<Value>,
     keyboard: Option<KeyboardRequests>,
     keyboard_generation: u64,
 }
@@ -69,7 +69,7 @@ impl DashboardInput {
                     pending: VecDeque::new(),
                     in_flight: false,
                     sent_buttons: 0,
-                    sent_key: None,
+                    sent_keys: Vec::new(),
                     keyboard: None,
                     keyboard_generation: 0,
                 }));
@@ -186,7 +186,7 @@ impl DashboardInput {
                     "Dashboard.keyboard" | "Input.insertText" | "Input.dispatchKeyEvent"
                 ) && params["objectGroup"] != "oyasumi-dashboard-keyboard"
             });
-            if let Some(release) = queue.sent_key.clone() {
+            for release in queue.sent_keys.clone().into_iter().rev() {
                 queue
                     .pending
                     .push_front(("Input.dispatchKeyEvent", release));
@@ -280,7 +280,7 @@ impl DashboardInput {
 
 fn dispatch(queue: Rc<RefCell<Queue>>) {
     loop {
-        let (webview, method, params) = {
+        let (webview, method, params, released_button, released_key) = {
             let mut state = queue.borrow_mut();
             if state.in_flight {
                 return;
@@ -289,18 +289,42 @@ fn dispatch(queue: Rc<RefCell<Queue>>) {
                 return;
             };
             state.in_flight = true;
-            if let Some(buttons) = params["buttons"].as_u64() {
-                state.sent_buttons = buttons as u32;
+            let button = match params["button"].as_str() {
+                Some("left") => 1,
+                Some("right") => 2,
+                Some("middle") => 4,
+                _ => 0,
+            };
+            if method == "Input.dispatchMouseEvent" && params["type"] == "mousePressed" {
+                state.sent_buttons |= button;
             }
-            if method == "Input.dispatchKeyEvent" {
-                state.sent_key = (params["type"] == "keyDown").then(|| {
-                    json!({
-                        "type": "keyUp", "key": params["key"], "code": params["code"],
-                        "windowsVirtualKeyCode": params["windowsVirtualKeyCode"]
-                    })
-                });
+            if method == "Input.dispatchKeyEvent"
+                && params["type"] == "keyDown"
+                && !state
+                    .sent_keys
+                    .iter()
+                    .any(|key| key["code"] == params["code"])
+            {
+                state.sent_keys.push(json!({
+                    "type": "keyUp", "key": params["key"], "code": params["code"],
+                    "windowsVirtualKeyCode": params["windowsVirtualKeyCode"]
+                }));
             }
-            (state.webview.clone(), method, params)
+            let released_button =
+                if method == "Input.dispatchMouseEvent" && params["type"] == "mouseReleased" {
+                    button
+                } else {
+                    0
+                };
+            let released_key = (method == "Input.dispatchKeyEvent" && params["type"] == "keyUp")
+                .then(|| params["code"].clone());
+            (
+                state.webview.clone(),
+                method,
+                params,
+                released_button,
+                released_key,
+            )
         };
         let keyboard_key =
             (method == "Dashboard.keyboard").then(|| params["text"].as_str().unwrap().to_owned());
@@ -346,6 +370,12 @@ fn dispatch(queue: Rc<RefCell<Queue>>) {
                         }
                         {
                             let mut state = callback_queue.borrow_mut();
+                            if result.is_ok() {
+                                state.sent_buttons &= !released_button;
+                                if let Some(code) = &released_key {
+                                    state.sent_keys.retain(|key| key["code"] != *code);
+                                }
+                            }
                             if result.is_ok() && state.keyboard_generation == keyboard_generation {
                                 if let Some(text) = &keyboard_key {
                                     if serde_json::from_str::<Value>(&response)
