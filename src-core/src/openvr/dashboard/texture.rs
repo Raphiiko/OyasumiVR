@@ -2,7 +2,7 @@ use std::time::{Duration, Instant};
 use windows::{
     core::{BOOL, HRESULT},
     Win32::{
-        Foundation::HMODULE,
+        Foundation::{ERROR_INVALID_PARAMETER, ERROR_TIMEOUT, HMODULE},
         Graphics::{
             Direct3D::D3D_DRIVER_TYPE_UNKNOWN,
             Direct3D11::*,
@@ -11,6 +11,9 @@ use windows::{
     },
 };
 
+const UPLOAD_TIMEOUT: Duration = Duration::from_millis(250);
+
+/// A shared BGRA texture on SteamVR's adapter that the overlay samples from.
 pub struct DashboardTexture {
     device: ID3D11Device,
     context: ID3D11DeviceContext,
@@ -99,11 +102,11 @@ impl DashboardTexture {
         let mut actual = D3D11_TEXTURE2D_DESC::default();
         self.texture.GetDesc(&mut expected);
         source.GetDesc(&mut actual);
-        if actual.Width != expected.Width
-            || actual.Height != expected.Height
-            || actual.Format != expected.Format
-        {
-            return Err(HRESULT::from_win32(87).into());
+        let same_layout = actual.Width == expected.Width
+            && actual.Height == expected.Height
+            && actual.Format == expected.Format;
+        if !same_layout {
+            return Err(HRESULT::from_win32(ERROR_INVALID_PARAMETER.0).into());
         }
         self.context.CopyResource(&self.texture, source);
         self.finish()
@@ -125,8 +128,8 @@ impl DashboardTexture {
                 break;
             }
             self.device.GetDeviceRemovedReason()?;
-            if started.elapsed() > Duration::from_millis(250) {
-                return Err(HRESULT::from_win32(1460).into());
+            if started.elapsed() > UPLOAD_TIMEOUT {
+                return Err(HRESULT::from_win32(ERROR_TIMEOUT.0).into());
             }
             std::thread::sleep(Duration::from_millis(1));
         }
