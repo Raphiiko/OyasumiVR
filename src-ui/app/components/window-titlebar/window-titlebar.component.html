@@ -5,6 +5,7 @@
     data-tauri-drag-region
     (mouseenter)="showVersionExtras = true"
     (mouseleave)="showVersionExtras = false"
+    (click)="copyVersion()"
     >&nbsp;v{{ version }}</span
   >
   <span

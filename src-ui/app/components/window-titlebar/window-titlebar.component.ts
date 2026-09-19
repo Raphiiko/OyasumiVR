@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { getVersion } from '../../utils/app-utils';
+import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { BUILD_ID, FLAVOUR } from '../../../build';
 import { MessageCenterService } from 'src-ui/app/services/message-center/message-center.service';
 import { fade } from 'src-ui/app/utils/animations';
@@ -39,6 +40,10 @@ export class WindowTitlebarComponent implements OnInit {
 
   async close() {
     await appWindow.close();
+  }
+
+  protected async copyVersion() {
+    await writeText(`v${this.version}-${FLAVOUR} (${BUILD_ID})`);
   }
 
   protected readonly FLAVOUR = FLAVOUR;
