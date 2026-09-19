@@ -1,0 +1,28 @@
+[package]
+name = "oyasumivr-frame-companion"
+version = "0.2.0"
+edition = "2021"
+publish = false
+default-run = "oyasumivr-frame-companion"
+
+[[bin]]
+name = "oyasumivr-frame-companion"
+path = "src/main.rs"
+
+[dependencies]
+futures-util = { version = "0.3", features = ["sink"] }
+oyasumivr-frame-protocol = { path = "../src-frame-protocol" }
+raphii-openvr-rs = { git = "https://github.com/Raphiiko/raphii-openvr-rs", rev = "a722cf7a6aa5832eaca55bd640bc5b5f87ed0661" }
+ring = "0.17"
+rustls-pemfile = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+subtle = "2"
+tokio = { version = "1", features = ["full"] }
+tokio-rustls = { version = "0.26", default-features = false, features = ["ring", "tls12"] }
+tokio-tungstenite = { version = "0.28", features = ["rustls-tls-webpki-roots"] }
+
+[dev-dependencies]
+rcgen = { version = "=0.13.2", default-features = false, features = ["pem", "ring"] }
+tempfile = "3"
+time = "=0.3.36"
