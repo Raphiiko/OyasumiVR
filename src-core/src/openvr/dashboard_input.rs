@@ -50,6 +50,7 @@ struct Queue {
     pending: VecDeque<(&'static str, Value)>,
     in_flight: bool,
     sent_buttons: u32,
+    sent_key: Option<Value>,
     keyboard: Option<KeyboardRequests>,
     keyboard_generation: u64,
 }
@@ -68,6 +69,7 @@ impl DashboardInput {
                     pending: VecDeque::new(),
                     in_flight: false,
                     sent_buttons: 0,
+                    sent_key: None,
                     keyboard: None,
                     keyboard_generation: 0,
                 }));
@@ -175,13 +177,21 @@ impl DashboardInput {
     }
 
     pub fn finish(&mut self) {
-        self.queue.borrow_mut().keyboard_generation += 1;
-        self.queue.borrow_mut().pending.retain(|(method, _)| {
-            !matches!(
-                *method,
-                "Dashboard.keyboard" | "Input.insertText" | "Input.dispatchKeyEvent"
-            )
-        });
+        {
+            let mut queue = self.queue.borrow_mut();
+            queue.keyboard_generation += 1;
+            queue.pending.retain(|(method, _)| {
+                !matches!(
+                    *method,
+                    "Dashboard.keyboard" | "Input.insertText" | "Input.dispatchKeyEvent"
+                )
+            });
+            if let Some(release) = queue.sent_key.clone() {
+                queue
+                    .pending
+                    .push_front(("Input.dispatchKeyEvent", release));
+            }
+        }
         self.release();
         self.enqueue(
             "Runtime.evaluate",
@@ -269,92 +279,101 @@ impl DashboardInput {
 }
 
 fn dispatch(queue: Rc<RefCell<Queue>>) {
-    let (webview, method, params) = {
-        let mut state = queue.borrow_mut();
-        if state.in_flight {
-            return;
-        }
-        let Some((method, params)) = state.pending.pop_front() else {
-            return;
+    loop {
+        let (webview, method, params) = {
+            let mut state = queue.borrow_mut();
+            if state.in_flight {
+                return;
+            }
+            let Some((method, params)) = state.pending.pop_front() else {
+                return;
+            };
+            state.in_flight = true;
+            if let Some(buttons) = params["buttons"].as_u64() {
+                state.sent_buttons = buttons as u32;
+            }
+            if method == "Input.dispatchKeyEvent" {
+                state.sent_key = (params["type"] == "keyDown").then(|| {
+                    json!({
+                        "type": "keyUp", "key": params["key"], "code": params["code"],
+                        "windowsVirtualKeyCode": params["windowsVirtualKeyCode"]
+                    })
+                });
+            }
+            (state.webview.clone(), method, params)
         };
-        state.in_flight = true;
-        if let Some(buttons) = params["buttons"].as_u64() {
-            state.sent_buttons = buttons as u32;
-        }
-        (state.webview.clone(), method, params)
-    };
-    let keyboard_key =
-        (method == "Dashboard.keyboard").then(|| params["text"].as_str().unwrap().to_owned());
-    let (method, params) = if method == "Dashboard.keyboard" {
-        (
-            "Runtime.evaluate",
-            json!({"expression": format!("window.__oyasumiDashboardKeyboard?.accepts({}) === true", params["id"]), "returnByValue": true}),
-        )
-    } else if params["type"] == "mouseWheel" {
-        (
-            "Runtime.evaluate",
-            json!({"expression": format!(
-                "window.__oyasumiDashboardScroll?.scroll({},{},{},{})",
-                params["x"], params["y"], params["deltaX"], params["deltaY"]
-            )}),
-        )
-    } else {
-        (method, params)
-    };
-    let keyboard_query = params["objectGroup"] == "oyasumi-dashboard-keyboard";
-    let keyboard_mailbox = queue.borrow().keyboard.clone();
-    let keyboard_generation = queue.borrow().keyboard_generation;
-    let callback_queue = queue.clone();
-    let result = unsafe {
-        webview.CallDevToolsProtocolMethod(
-            &HSTRING::from(method),
-            &HSTRING::from(params.to_string()),
-            &CallDevToolsProtocolMethodCompletedHandler::create(Box::new(
-                move |result, response| {
-                    if result.is_ok() && keyboard_query {
-                        if let Ok(value) = serde_json::from_str::<Value>(&response) {
-                            if let Ok(request) = serde_json::from_value::<KeyboardRequest>(
-                                value["result"]["value"].clone(),
-                            ) {
-                                if let Some(mailbox) = &keyboard_mailbox {
-                                    *mailbox.lock().unwrap() = Some(request);
-                                }
-                            }
-                        }
-                    }
-                    {
-                        let mut state = callback_queue.borrow_mut();
-                        if result.is_ok() && state.keyboard_generation == keyboard_generation {
-                            if let Some(text) = &keyboard_key {
-                                if serde_json::from_str::<Value>(&response)
-                                    .ok()
-                                    .is_some_and(|value| value["result"]["value"] == true)
-                                {
-                                    let commands = keyboard_commands(text);
-                                    for command in commands.into_iter().rev() {
-                                        state.pending.push_front(command);
+        let keyboard_key =
+            (method == "Dashboard.keyboard").then(|| params["text"].as_str().unwrap().to_owned());
+        let (method, params) = if method == "Dashboard.keyboard" {
+            (
+                "Runtime.evaluate",
+                json!({"expression": format!("window.__oyasumiDashboardKeyboard?.accepts({}) === true", params["id"]), "returnByValue": true}),
+            )
+        } else if params["type"] == "mouseWheel" {
+            (
+                "Runtime.evaluate",
+                json!({"expression": format!(
+                    "window.__oyasumiDashboardScroll?.scroll({},{},{},{})",
+                    params["x"], params["y"], params["deltaX"], params["deltaY"]
+                )}),
+            )
+        } else {
+            (method, params)
+        };
+        let keyboard_query = params["objectGroup"] == "oyasumi-dashboard-keyboard";
+        let keyboard_mailbox = queue.borrow().keyboard.clone();
+        let keyboard_generation = queue.borrow().keyboard_generation;
+        let callback_queue = queue.clone();
+        let result = unsafe {
+            webview.CallDevToolsProtocolMethod(
+                &HSTRING::from(method),
+                &HSTRING::from(params.to_string()),
+                &CallDevToolsProtocolMethodCompletedHandler::create(Box::new(
+                    move |result, response| {
+                        if result.is_ok() && keyboard_query {
+                            if let Ok(value) = serde_json::from_str::<Value>(&response) {
+                                if let Ok(request) = serde_json::from_value::<KeyboardRequest>(
+                                    value["result"]["value"].clone(),
+                                ) {
+                                    if let Some(mailbox) = &keyboard_mailbox {
+                                        *mailbox.lock().unwrap() = Some(request);
                                     }
                                 }
                             }
                         }
-                        state.in_flight = false;
-                    }
-                    if let Err(error) = result {
-                        log::warn!("[Dashboard] Browser input failed: {error}");
-                        callback_queue.borrow_mut().pending.clear();
-                    } else {
+                        {
+                            let mut state = callback_queue.borrow_mut();
+                            if result.is_ok() && state.keyboard_generation == keyboard_generation {
+                                if let Some(text) = &keyboard_key {
+                                    if serde_json::from_str::<Value>(&response)
+                                        .ok()
+                                        .is_some_and(|value| value["result"]["value"] == true)
+                                    {
+                                        let commands = keyboard_commands(text);
+                                        for command in commands.into_iter().rev() {
+                                            state.pending.push_front(command);
+                                        }
+                                    }
+                                }
+                            }
+                            state.in_flight = false;
+                        }
+                        if let Err(error) = result {
+                            log::warn!("[Dashboard] Browser input failed: {error}");
+                        }
                         dispatch(callback_queue.clone());
-                    }
-                    Ok(())
-                },
-            )),
-        )
-    };
-    if let Err(error) = result {
-        let mut state = queue.borrow_mut();
-        state.in_flight = false;
-        state.pending.clear();
-        log::warn!("[Dashboard] Could not dispatch browser input: {error}");
+                        Ok(())
+                    },
+                )),
+            )
+        };
+        if let Err(error) = result {
+            let mut state = queue.borrow_mut();
+            state.in_flight = false;
+            log::warn!("[Dashboard] Could not dispatch browser input: {error}");
+        } else {
+            return;
+        }
     }
 }
 

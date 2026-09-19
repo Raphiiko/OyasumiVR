@@ -531,8 +531,10 @@ impl DashboardOverlay {
             return;
         };
         let result = (|| -> Result<(), String> {
-            if self.keyboard_id.is_some() {
-                return Ok(());
+            if self.keyboard_id.take().is_some() {
+                unsafe {
+                    required(self.table.HideKeyboard)?();
+                }
             }
             unsafe {
                 check(required(self.table.ShowKeyboardForOverlay)?(

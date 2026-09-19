@@ -67,8 +67,11 @@ impl DashboardCapture {
     pub fn next_frame(&self) -> Result<Option<GpuFrame>> {
         let mut latest: Option<Direct3D11CaptureFrame> = None;
         for _ in 0..2 {
-            let Ok(frame) = self.pool.TryGetNextFrame() else {
-                break;
+            let frame = match self.pool.TryGetNextFrame() {
+                Ok(frame) => frame,
+                // The WinRT bindings represent a null frame with a successful HRESULT.
+                Err(error) if error.code().is_ok() => break,
+                Err(error) => return Err(error),
             };
             if let Some(previous) = latest.replace(frame) {
                 previous.Close()?;
