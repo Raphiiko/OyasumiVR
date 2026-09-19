@@ -240,7 +240,7 @@ fn copy_logs(source: &Path, incident: &Path) {
             .then(|| (metadata.modified().ok(), entry.path()))
         })
         .collect();
-    logs.sort_by(|a, b| b.0.cmp(&a.0));
+    logs.sort_by_key(|entry| std::cmp::Reverse(entry.0));
     for (index, (_, path)) in logs.into_iter().take(3).enumerate() {
         if let (Ok(input), Ok(mut output)) = (
             File::open(path),

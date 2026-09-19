@@ -7,7 +7,8 @@ using SharpDX.DXGI;
 
 namespace overlay_sidecar;
 
-public static class Utils {
+public static class Utils
+{
   public static byte[] LoadEmbeddedFile(string embeddedFileName)
   {
     var assembly = Assembly.GetExecutingAssembly();
@@ -27,14 +28,14 @@ public static class Utils {
       var index = 0;
 
       for (var y = 0; y < bitmap.Height; y++)
-      for (var x = 0; x < bitmap.Width; x++)
-      {
-        var color = bitmap.GetPixel(x, y);
-        rgbaData[index++] = color.B;
-        rgbaData[index++] = color.G;
-        rgbaData[index++] = color.R;
-        rgbaData[index++] = color.A;
-      }
+        for (var x = 0; x < bitmap.Width; x++)
+        {
+          var color = bitmap.GetPixel(x, y);
+          rgbaData[index++] = color.B;
+          rgbaData[index++] = color.G;
+          rgbaData[index++] = color.R;
+          rgbaData[index++] = color.A;
+        }
 
       return (rgbaData, (uint)bitmap.Width, (uint)bitmap.Height);
     }
@@ -44,7 +45,7 @@ public static class Utils {
   {
     var timings = new[] { 16, 100, 200, 500, 1000 };
     Texture2D? texture = null;
-    for (var attempt = 0;; attempt++)
+    for (var attempt = 0; ; attempt++)
     {
       try
       {

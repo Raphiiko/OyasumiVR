@@ -8,7 +8,9 @@ function handleMove(args) {
   const keyPrev = args[1];
   let keyNew = args[2];
   if (!keyPrev || !keyNew) {
-    console.error('Both a source key and a target key are required. Usage: npm run tl mv <from> <to>');
+    console.error(
+      'Both a source key and a target key are required. Usage: npm run tl mv <from> <to>'
+    );
     process.exit(1);
   }
   getLangFilePaths().forEach((langFile) => {

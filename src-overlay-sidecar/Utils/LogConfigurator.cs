@@ -6,7 +6,8 @@ using Serilog.Filters;
 
 namespace overlay_sidecar;
 
-public static class LogConfigurator {
+public static class LogConfigurator
+{
   private static Logger? _logger;
 
   public static Logger Logger => _logger!;

@@ -156,11 +156,7 @@ export interface EventLogGpuPowerLimitChanged extends EventLogBase {
 }
 
 export type EventLogBrightnessOrCCTReason =
-  | 'SLEEP_MODE_ENABLE'
-  | 'SLEEP_MODE_DISABLE'
-  | 'SLEEP_PREPARATION'
-  | 'AT_SUNSET'
-  | 'AT_SUNRISE';
+  'SLEEP_MODE_ENABLE' | 'SLEEP_MODE_DISABLE' | 'SLEEP_PREPARATION' | 'AT_SUNSET' | 'AT_SUNRISE';
 
 export interface EventLogHardwareBrightnessChanged extends EventLogBase {
   type: 'hardwareBrightnessChanged';

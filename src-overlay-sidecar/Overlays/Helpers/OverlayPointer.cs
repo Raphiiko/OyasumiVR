@@ -7,7 +7,8 @@ using MouseButtonType = CefSharp.MouseButtonType;
 
 namespace overlay_sidecar;
 
-public class OverlayPointer {
+public class OverlayPointer
+{
   private readonly List<BaseWebOverlay> _overlays = new();
   private volatile bool _disposed;
   private readonly Dictionary<BaseWebOverlay, PointerData> _mouseOwners = new();
@@ -117,69 +118,69 @@ public class OverlayPointer {
     {
       timer.TickStart();
       lock (OvrManager.LifecycleLock)
-      lock (_overlays)
-      {
-        if (_disposed) break;
-
-        // find controller intersections
-        intersections.Clear();
-        foreach (var controllerRole in controllerRoles)
+        lock (_overlays)
         {
-          var controllerPose = OvrUtils.GetControllerPose(controllerRole, poseBuffer);
-          if (controllerPose is not { bPoseIsValid: true } || !controllerPose.Value.bDeviceIsConnected) continue;
-          foreach (var overlay in _overlays)
+          if (_disposed) break;
+
+          // find controller intersections
+          intersections.Clear();
+          foreach (var controllerRole in controllerRoles)
           {
-            var controllerTransform = Matrix4x4.CreateRotationX(345f) *
-                                      controllerPose.Value.mDeviceToAbsoluteTracking.ToMatrix4X4();
-            intersectionParams.eOrigin = ETrackingUniverseOrigin.TrackingUniverseStanding;
-            intersectionParams.vSource = controllerTransform.Translation.ToHmdVector3_t();
-            intersectionParams.vDirection = controllerTransform.GetDirectionNormal().ToHmdVector3_t();
-            if (!OpenVR.Overlay.ComputeOverlayIntersection(overlay.OverlayHandle, ref intersectionParams,
-                  ref intersectionResults)) continue;
-            if (intersectionResults.vUVs.v0 < 0 || intersectionResults.vUVs.v0 > 1 ||
-                intersectionResults.vUVs.v1 < 0 || intersectionResults.vUVs.v1 > 1) continue;
-            intersections.Add((intersectionResults, controllerRole, overlay));
+            var controllerPose = OvrUtils.GetControllerPose(controllerRole, poseBuffer);
+            if (controllerPose is not { bPoseIsValid: true } || !controllerPose.Value.bDeviceIsConnected) continue;
+            foreach (var overlay in _overlays)
+            {
+              var controllerTransform = Matrix4x4.CreateRotationX(345f) *
+                                        controllerPose.Value.mDeviceToAbsoluteTracking.ToMatrix4X4();
+              intersectionParams.eOrigin = ETrackingUniverseOrigin.TrackingUniverseStanding;
+              intersectionParams.vSource = controllerTransform.Translation.ToHmdVector3_t();
+              intersectionParams.vDirection = controllerTransform.GetDirectionNormal().ToHmdVector3_t();
+              if (!OpenVR.Overlay.ComputeOverlayIntersection(overlay.OverlayHandle, ref intersectionParams,
+                    ref intersectionResults)) continue;
+              if (intersectionResults.vUVs.v0 < 0 || intersectionResults.vUVs.v0 > 1 ||
+                  intersectionResults.vUVs.v1 < 0 || intersectionResults.vUVs.v1 > 1) continue;
+              intersections.Add((intersectionResults, controllerRole, overlay));
+            }
+          }
+
+          // select the nearest overlay per hand
+          closestIntersections[0] = null;
+          closestIntersections[1] = null;
+          foreach (var intersection in intersections)
+          {
+            var index = intersection!.Value.Item2 == ETrackedControllerRole.LeftHand ? 0 : 1;
+            if (!closestIntersections[index].HasValue ||
+                closestIntersections[index]!.Value.Item1.fDistance > intersection.Value.Item1.fDistance)
+              closestIntersections[index] = (intersection.Value.Item1, intersection.Value.Item3);
+          }
+
+          var headTransform = OvrUtils.GetHeadPose(poseBuffer).mDeviceToAbsoluteTracking.ToMatrix4X4();
+
+          // update both hits before choosing browser owners
+          foreach (var (intersection, pointer) in new[]
+                   { (closestIntersections[0], _leftPointer), (closestIntersections[1], _rightPointer) })
+          {
+            if (pointer.LastActiveOverlay != intersection?.Item2) LeaveOverlay(pointer);
+            if (!intersection.HasValue) continue;
+
+            var position = intersection.Value.Item1.vPoint.ToVector3();
+            var transform = (Matrix4x4.CreateFromQuaternion(Quaternion.CreateFromRotationMatrix(headTransform)) *
+                             Matrix4x4.CreateTranslation(position)).ToHmdMatrix34_t();
+            OpenVR.Overlay.SetOverlayTransformAbsolute(pointer.OverlayHandle,
+              ETrackingUniverseOrigin.TrackingUniverseStanding, ref transform);
+            OpenVR.Overlay.ShowOverlay(pointer.OverlayHandle);
+            pointer.LastUvPosition = intersection.Value.Item1.vUVs.ToVector2();
+            pointer.LastActiveOverlay = intersection.Value.Item2;
+            pointer.LastPosition = position;
+          }
+
+          foreach (var pointer in new[] { _leftPointer, _rightPointer })
+          {
+            if (pointer.LastActiveOverlay is not { } overlay) continue;
+            _mouseOwners.TryAdd(overlay, pointer);
+            if (_mouseOwners[overlay] == pointer) MoveMouse(pointer);
           }
         }
-
-        // select the nearest overlay per hand
-        closestIntersections[0] = null;
-        closestIntersections[1] = null;
-        foreach (var intersection in intersections)
-        {
-          var index = intersection!.Value.Item2 == ETrackedControllerRole.LeftHand ? 0 : 1;
-          if (!closestIntersections[index].HasValue ||
-              closestIntersections[index]!.Value.Item1.fDistance > intersection.Value.Item1.fDistance)
-            closestIntersections[index] = (intersection.Value.Item1, intersection.Value.Item3);
-        }
-
-        var headTransform = OvrUtils.GetHeadPose(poseBuffer).mDeviceToAbsoluteTracking.ToMatrix4X4();
-
-        // update both hits before choosing browser owners
-        foreach (var (intersection, pointer) in new[]
-                 { (closestIntersections[0], _leftPointer), (closestIntersections[1], _rightPointer) })
-        {
-          if (pointer.LastActiveOverlay != intersection?.Item2) LeaveOverlay(pointer);
-          if (!intersection.HasValue) continue;
-
-          var position = intersection.Value.Item1.vPoint.ToVector3();
-          var transform = (Matrix4x4.CreateFromQuaternion(Quaternion.CreateFromRotationMatrix(headTransform)) *
-                           Matrix4x4.CreateTranslation(position)).ToHmdMatrix34_t();
-          OpenVR.Overlay.SetOverlayTransformAbsolute(pointer.OverlayHandle,
-            ETrackingUniverseOrigin.TrackingUniverseStanding, ref transform);
-          OpenVR.Overlay.ShowOverlay(pointer.OverlayHandle);
-          pointer.LastUvPosition = intersection.Value.Item1.vUVs.ToVector2();
-          pointer.LastActiveOverlay = intersection.Value.Item2;
-          pointer.LastPosition = position;
-        }
-
-        foreach (var pointer in new[] { _leftPointer, _rightPointer })
-        {
-          if (pointer.LastActiveOverlay is not { } overlay) continue;
-          _mouseOwners.TryAdd(overlay, pointer);
-          if (_mouseOwners[overlay] == pointer) MoveMouse(pointer);
-        }
-      }
 
       timer.SleepUntilNextTick();
     }
@@ -278,7 +279,8 @@ public class OverlayPointer {
     return ((int)(uv.X * browser.Size.Width), (int)((1.0f - uv.Y) * browser.Size.Height));
   }
 
-  protected class PointerData {
+  protected class PointerData
+  {
     public ulong OverlayHandle;
     public Vector2? LastUvPosition;
     public bool TriggerHeld;

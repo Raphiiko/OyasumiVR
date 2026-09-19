@@ -87,7 +87,7 @@ fn base64_decode(input: &str) -> Option<Vec<u8>> {
             out.push((bits >> count) as u8);
         }
     }
-    if (characters + padding) % 4 != 0 || padding > 2 {
+    if !(characters + padding).is_multiple_of(4) || padding > 2 {
         return None;
     }
     // A group of one encodes nothing, and the bits a partial group leaves over cannot be set.

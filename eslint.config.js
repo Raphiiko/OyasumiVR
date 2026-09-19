@@ -20,6 +20,15 @@ export default [
     ],
   },
 
+  {
+    files: ['**/*.{js,mjs}'],
+    rules: {
+      'no-dupe-keys': 'error',
+      'no-unreachable': 'error',
+      'no-constant-binary-expression': 'error',
+    },
+  },
+
   // TypeScript files configuration
   {
     files: ['**/*.ts'],
@@ -101,4 +110,4 @@ export default [
       '@angular-eslint/template/no-negated-async': 'error',
     },
   },
-]; 
+];

@@ -40,13 +40,19 @@ fn triggers_only_after_sustained_per_process_or_aggregate_growth() {
     assert_eq!(trigger.check(&below, start + Duration::from_secs(15)), None);
     let mut trigger = Trigger::default();
     let large = process(1, 10, 0, 3 * GIB);
-    assert_eq!(trigger.check(&[large.clone()], start), None);
+    assert_eq!(trigger.check(std::slice::from_ref(&large), start), None);
     assert_eq!(
-        trigger.check(&[large.clone()], start + Duration::from_secs(14)),
+        trigger.check(
+            std::slice::from_ref(&large),
+            start + Duration::from_secs(14)
+        ),
         None
     );
     assert_eq!(
-        trigger.check(&[large.clone()], start + Duration::from_secs(15)),
+        trigger.check(
+            std::slice::from_ref(&large),
+            start + Duration::from_secs(15)
+        ),
         Some(large.id)
     );
     let small = process(1, 10, 0, GIB);

@@ -1,0 +1,113 @@
+name: Checks
+
+on:
+  pull_request:
+    branches: [develop, main]
+  push:
+    branches: [develop, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checks-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  select:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      quality: ${{ steps.select.outputs.quality }}
+      frontend: ${{ steps.select.outputs.frontend }}
+      translations-and-readmes: ${{ steps.select.outputs.translations-and-readmes }}
+      native: ${{ steps.select.outputs.native }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24.15.0'
+      - id: select
+        run: node scripts/select-checks.mjs
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+  portable:
+    name: ${{ matrix.group }}
+    needs: select
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [quality, frontend, translations-and-readmes]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        if: needs.select.outputs[matrix.group] != '[]'
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        if: needs.select.outputs[matrix.group] != '[]'
+        with:
+          node-version: '24.15.0'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+        if: needs.select.outputs[matrix.group] != '[]'
+      - run: node scripts/run-selected-checks.mjs
+        if: needs.select.outputs[matrix.group] != '[]'
+        env:
+          SELECTED_CHECKS: ${{ needs.select.outputs[matrix.group] }}
+
+  native:
+    needs: select
+    if: needs.select.outputs.native != '[]'
+    runs-on: windows-2025
+    timeout-minutes: 90
+    env:
+      CARGO_PROFILE_DEV_DEBUG: '0'
+      CARGO_PROFILE_TEST_DEBUG: '0'
+      CARGO_INCREMENTAL: '0'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24.15.0'
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68
+        with:
+          dotnet-version: '10.0.x'
+      - name: Install Rust tools
+        run: rustup show
+      - name: Install protobuf compiler
+        run: |
+          $archive = Join-Path $env:RUNNER_TEMP 'protoc.zip'
+          Invoke-WebRequest https://github.com/protocolbuffers/protobuf/releases/download/v35.1/protoc-35.1-win64.zip -OutFile $archive
+          $destination = Join-Path $env:RUNNER_TEMP 'protoc'
+          Expand-Archive -LiteralPath $archive -DestinationPath $destination
+          Join-Path $destination 'bin' | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      - name: Check native components
+        run: node scripts/run-selected-checks.mjs
+        env:
+          SELECTED_CHECKS: ${{ needs.select.outputs.native }}
+          CARGO_TARGET_DIR: ${{ runner.temp }}/oyasumi-ci-native-target
+
+  result:
+    name: Checks passed
+    if: always()
+    needs: [select, portable, native]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    steps:
+      - name: Require selected checks to pass
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: |
+          node -e 'const results = JSON.parse(process.env.RESULTS); if (results.select.result !== "success" || results.portable.result !== "success" || results.native.result !== (JSON.parse(results.select.outputs.native).length ? "success" : "skipped")) process.exit(1);'

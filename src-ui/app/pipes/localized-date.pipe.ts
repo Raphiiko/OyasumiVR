@@ -18,9 +18,7 @@ export class LocalizedDatePipe implements PipeTransform, OnDestroy {
   ) {
     // markForCheck is what keeps an OnPush view in sync: the pipe is impure,
     // so it only re-runs while its view is being checked.
-    this.subscription = this.translateService.langChanges$.subscribe(() =>
-      this.cdr.markForCheck()
-    );
+    this.subscription = this.translateService.langChanges$.subscribe(() => this.cdr.markForCheck());
   }
 
   ngOnDestroy() {

@@ -145,9 +145,37 @@ fn ensure_webview2_available() {}
 
 #[cfg(all(test, windows))]
 mod webview2_dialog_tests {
+    use std::borrow::Cow;
+    use tauri::utils::assets::{AssetKey, AssetsIter, CspHash};
+
+    struct TranslationAssets;
+
+    impl tauri::Assets<tauri::Wry> for TranslationAssets {
+        fn get(&self, key: &AssetKey) -> Option<Cow<'_, [u8]>> {
+            match key.as_ref() {
+                "/assets/i18n/ja.json" => Some(Cow::Borrowed(
+                    br#"{"misc":{"WEBVIEW2_MISSING":"WebView2\nJapanese fixture"}}"#,
+                )),
+                "/assets/i18n/en.json" => Some(Cow::Borrowed(
+                    br#"{"misc":{"WEBVIEW2_MISSING":"Open the download page?"}}"#,
+                )),
+                _ => None,
+            }
+        }
+
+        fn iter(&self) -> Box<AssetsIter<'_>> {
+            Box::new(std::iter::empty())
+        }
+
+        fn csp_hashes(&self, _: &AssetKey) -> Box<dyn Iterator<Item = CspHash<'_>> + '_> {
+            Box::new(std::iter::empty())
+        }
+    }
+
     #[test]
     fn resolves_dialog_copy_from_embedded_translations() {
-        let context = tauri::generate_context!();
+        let mut context = tauri::generate_context!();
+        context.set_assets(Box::new(TranslationAssets));
         let japanese = super::webview2_dialog_message(&context, "ja-JP").expect("Japanese copy");
         assert!(japanese.contains("WebView2"));
         assert!(japanese.contains('\n'));

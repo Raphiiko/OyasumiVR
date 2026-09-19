@@ -9,7 +9,8 @@ namespace overlay_sidecar;
 // A few equations, very simplified:	https://gist.github.com/gre/1650294
 // Easings.net equations, simplified:	https://github.com/ai/easings.net/blob/master/src/easings/easingsFunctions.ts
 
-public static class EasingFunctions {
+public static class EasingFunctions
+{
   public static float Linear(float t) => t;
 
   public static float InQuad(float t) => t * t;

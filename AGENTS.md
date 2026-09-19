@@ -52,9 +52,20 @@ Change the source, then run the generator.
 
 ## Translations
 
-Add and change English strings only, in `src-ui/assets/i18n/en.json`. Translators fill in the other
-locales. `npm run tl set` writes `en.json` alone, which is what you want. To rename or remove a key,
-use `npm run tl mv` or `npm run tl unset`, so the change reaches every locale file.
+For feature work, add or change UI copy in `src-ui/assets/i18n/en.json` only. Leave other locales
+for separate translation work. Translation additions and corrections may edit the relevant locale
+files directly, including fixes to placeholders or formatting. This depends on the change's purpose,
+not the contributor's identity. Review locale edits for correctness; a non-English file change alone
+is not a defect.
+
+`npm run tl set` writes `en.json` alone. To rename or remove a key, use `npm run tl mv` or
+`npm run tl unset`, so the change reaches every locale file.
+
+## Checks
+
+Run the relevant `check:<operation>:<component>` npm scripts for changed code. `npm run check`
+runs all checks on Windows; `npm run check:quick` runs portable checks. Translation and generated
+README checks are read-only; fix their source files and rerun the relevant generator when needed.
 
 ## Desktop UI verification
 
