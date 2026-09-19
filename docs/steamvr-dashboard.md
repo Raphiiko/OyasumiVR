@@ -4,7 +4,7 @@ The Rust core registers an OyasumiVR dashboard tab when SteamVR connects. It dis
 
 ## Window and rendering
 
-Selecting the tab hides the desktop window and gives its WebView a 1600 by 900 viewport at scale 1. The panel is about 2.67 by 1.5 meters before SteamVR applies the user's dashboard scale.
+Selecting the tab hides the desktop window and renders its WebView at 1600 by 900 pixels with 125% browser zoom. The layout viewport is 1280 by 720 CSS pixels. The panel is about 2.67 by 1.5 meters before SteamVR applies the user's dashboard scale.
 
 Leaving the tab restores the WebView's bounds, zoom, scale and visibility. The desktop window's native size, position and maximized state remain intact. Opening the desktop window while the tab is active returns control to the desktop until the tab is reselected.
 
@@ -19,7 +19,7 @@ Capture requests run only while this tab is selected, with one request in flight
 
 ## Input
 
-OpenVR pointer coordinates use the texture dimensions and are converted to browser coordinates. WebView2's local DevTools API delivers mouse and keyboard input without moving the desktop cursor or injecting OS input.
+OpenVR pointer coordinates use the layout viewport dimensions in CSS pixels, matching the browser zoom. WebView2's local DevTools API delivers mouse and keyboard input without moving the desktop cursor or injecting OS input.
 
 Pending pointer and scroll events combine in place. Button events preserve ordering, and neither movement nor scrolling can push the other to the back indefinitely. Scroll updates accumulate per-element targets. One browser animation loop advances them with a 40 ms time constant, preserving continuous motion.
 

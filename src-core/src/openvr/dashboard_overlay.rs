@@ -31,6 +31,9 @@ use windows::{
 
 const WIDTH: u32 = 1600;
 const HEIGHT: u32 = 900;
+const UI_ZOOM: f64 = 1.25;
+const INPUT_WIDTH: u32 = (WIDTH as f64 / UI_ZOOM) as u32;
+const INPUT_HEIGHT: u32 = (HEIGHT as f64 / UI_ZOOM) as u32;
 const PANEL_HEIGHT_METERS: f32 = 1.5;
 const FRAME_INTERVAL: Duration = Duration::from_millis(100);
 enum CapturedFrame {
@@ -106,7 +109,7 @@ impl Desktop {
                 .controller
                 .SetRasterizationScale(1.0)
                 .map_err(message)?;
-            desktop.controller.SetZoomFactor(1.0).map_err(message)?;
+            desktop.controller.SetZoomFactor(UI_ZOOM).map_err(message)?;
             desktop
                 .controller
                 .SetBounds(RECT {
@@ -128,8 +131,8 @@ impl Desktop {
             }
             desktop.input = Some(DashboardInput::new(
                 desktop.controller.CoreWebView2().map_err(message)?,
-                WIDTH,
-                HEIGHT,
+                INPUT_WIDTH,
+                INPUT_HEIGHT,
             ));
             desktop
                 .input
@@ -253,7 +256,7 @@ impl DashboardOverlay {
             check(required(table.SetOverlayMouseScale)?(
                 overlay.main,
                 &mut raw::HmdVector2_t {
-                    v: [WIDTH as f32, HEIGHT as f32],
+                    v: [INPUT_WIDTH as f32, INPUT_HEIGHT as f32],
                 },
             ))?;
             check(required(table.SetOverlayInputMethod)?(
