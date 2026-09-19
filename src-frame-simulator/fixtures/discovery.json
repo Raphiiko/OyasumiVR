@@ -1,0 +1,106 @@
+[
+  {
+    "name": "one",
+    "discovery_available": true,
+    "selected_device_id": "synthetic-hmd-a",
+    "candidates": [
+      {
+        "candidate_id": "candidate-a",
+        "address": "127.0.0.1",
+        "devkit_port": 32000,
+        "hostname_hint": "synthetic-frame-a",
+        "model_hint": "Steam Frame",
+        "source": "injected_mdns"
+      }
+    ],
+    "companion_device_id": "synthetic-hmd-a"
+  },
+  {
+    "name": "two",
+    "discovery_available": true,
+    "selected_device_id": "synthetic-hmd-a",
+    "candidates": [
+      {
+        "candidate_id": "candidate-a",
+        "address": "127.0.0.1",
+        "devkit_port": 32000,
+        "hostname_hint": "synthetic-frame-a",
+        "model_hint": "Steam Frame",
+        "source": "injected_mdns"
+      },
+      {
+        "candidate_id": "candidate-b",
+        "address": "127.0.0.1",
+        "devkit_port": 32002,
+        "hostname_hint": "synthetic-frame-b",
+        "model_hint": "Steam Frame",
+        "source": "injected_mdns"
+      }
+    ],
+    "companion_device_id": "synthetic-hmd-a"
+  },
+  {
+    "name": "non-frame",
+    "discovery_available": true,
+    "selected_device_id": "synthetic-hmd-a",
+    "candidates": [
+      {
+        "candidate_id": "candidate-a",
+        "address": "127.0.0.1",
+        "devkit_port": 32000,
+        "hostname_hint": "synthetic-deck",
+        "model_hint": "Other SteamOS devkit",
+        "source": "injected_mdns"
+      }
+    ],
+    "companion_device_id": "synthetic-non-frame"
+  },
+  {
+    "name": "changed-address",
+    "discovery_available": true,
+    "selected_device_id": "synthetic-hmd-a",
+    "candidates": [
+      {
+        "candidate_id": "candidate-a",
+        "address": "127.0.0.2",
+        "devkit_port": 32000,
+        "hostname_hint": "synthetic-frame-a",
+        "model_hint": "Steam Frame",
+        "source": "injected_mdns"
+      }
+    ],
+    "companion_device_id": "synthetic-hmd-a"
+  },
+  {
+    "name": "wrong-device",
+    "discovery_available": true,
+    "selected_device_id": "synthetic-hmd-a",
+    "candidates": [
+      {
+        "candidate_id": "candidate-b",
+        "address": "127.0.0.1",
+        "devkit_port": 32002,
+        "hostname_hint": "synthetic-frame-b",
+        "model_hint": "Steam Frame",
+        "source": "injected_mdns"
+      }
+    ],
+    "companion_device_id": "synthetic-hmd-b"
+  },
+  {
+    "name": "discovery-unavailable",
+    "discovery_available": false,
+    "selected_device_id": "synthetic-hmd-a",
+    "candidates": [
+      {
+        "candidate_id": "candidate-a",
+        "address": "127.0.0.1",
+        "devkit_port": 32000,
+        "hostname_hint": "",
+        "model_hint": "",
+        "source": "explicit_address"
+      }
+    ],
+    "companion_device_id": "synthetic-hmd-a"
+  }
+]

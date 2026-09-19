@@ -1,0 +1,5 @@
+*
+!Dockerfile
+!seed.py
+!prepare-arch-guest.sh
+!check-guest.sh
