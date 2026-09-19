@@ -166,6 +166,7 @@ export function runChecks(ids) {
     results.push({
       id,
       status: result.status === 0 ? 'passed' : 'failed',
+      attempt: process.env.GITHUB_RUN_ATTEMPT ? Number(process.env.GITHUB_RUN_ATTEMPT) : undefined,
       durationMs: Math.round(performance.now() - start),
     });
     saveResults();

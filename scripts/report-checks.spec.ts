@@ -177,3 +177,27 @@ it('emits complete job matrices when all checks are selected', () => {
     expect(check.key).toBe(check.id.replaceAll(':', '-'));
   }
 });
+
+it('labels retained results from an earlier attempt', () => {
+  vi.stubEnv('GITHUB_RUN_ATTEMPT', '2');
+  const results = [{ id: 'test:web', status: 'passed', durationMs: 10, attempt: 1 }];
+  expect(summary(['test:web'], results)).toContain('| passed (attempt 1) |');
+  expect(summary(['test:web'], [{ ...results[0], attempt: 2 }])).toContain('| passed |');
+  expect(() => checkResult('test:web', [{ ...results[0], attempt: -1 }])).toThrow('Invalid');
+});
+
+it('uploads an empty replacement after setup fails without erasing completed results', () => {
+  const workflow = readFileSync('.github/workflows/checks.yml', 'utf8');
+  const commands = [...workflow.matchAll(/node -e "([^"]+)"/g)].map((match) => match[1]);
+  expect(commands).toHaveLength(2);
+  for (const command of commands) {
+    const path = temp();
+    const report = join(path, '.check-results/results.json');
+    expect(spawnSync(process.execPath, ['-e', command], { cwd: path }).status).toBe(0);
+    expect(JSON.parse(readFileSync(report, 'utf8'))).toEqual([]);
+    const results = [{ id: 'test:web', status: 'passed', durationMs: 10, attempt: 2 }];
+    writeFileSync(report, JSON.stringify(results));
+    expect(spawnSync(process.execPath, ['-e', command], { cwd: path }).status).toBe(0);
+    expect(JSON.parse(readFileSync(report, 'utf8'))).toEqual(results);
+  }
+});

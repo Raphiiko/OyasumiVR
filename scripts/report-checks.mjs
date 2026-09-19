@@ -23,7 +23,8 @@ export function checkResult(id, results) {
   if (
     !['passed', 'failed'].includes(result.status) ||
     !Number.isFinite(result.durationMs) ||
-    result.durationMs < 0
+    result.durationMs < 0 ||
+    (result.attempt !== undefined && (!Number.isInteger(result.attempt) || result.attempt < 1))
   )
     throw new Error(`Invalid result: ${id}`);
   return result;
@@ -38,6 +39,12 @@ export function jobsPassed(jobs, selected) {
     jobs['native-execution']?.result === (native ? 'success' : 'skipped') &&
     jobs['native-results']?.result === (native ? 'success' : 'skipped')
   );
+}
+
+function resultLabel(result) {
+  return result.attempt && result.attempt !== Number(process.env.GITHUB_RUN_ATTEMPT)
+    ? `${result.status} (attempt ${result.attempt})`
+    : result.status;
 }
 
 export function summary(selected, results) {
@@ -56,8 +63,15 @@ export function summary(selected, results) {
           : { status: 'not needed' };
     const duration =
       result.durationMs === undefined ? '-' : `${(result.durationMs / 1000).toFixed(1)}s`;
-    lines.push(`| ${checkName(id)} | \`npm run check:${id}\` | ${result.status} | ${duration} |`);
+    lines.push(
+      `| ${checkName(id)} | \`npm run check:${id}\` | ${resultLabel(result)} | ${duration} |`
+    );
   }
+  if (Number(process.env.GITHUB_RUN_ATTEMPT) > 1)
+    lines.push(
+      '',
+      'Earlier results show their attempt number. Rerun jobs without a new result do not establish a fresh pass.'
+    );
   return lines.join('\n') + '\n';
 }
 
@@ -69,7 +83,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
       if (!Object.hasOwn(checks, id)) throw new Error('Unknown check');
       const result = checkResult(id, results);
       console.log(
-        `${checkName(id)}: ${result.status}. Command output is in the Windows check execution job.`
+        `${checkName(id)}: ${resultLabel(result)}. Command output is in the Windows check execution job.`
       );
       if (result.status !== 'passed') process.exitCode = 1;
     } else {

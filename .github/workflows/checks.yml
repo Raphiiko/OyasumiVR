@@ -62,7 +62,11 @@ jobs:
         env:
           SELECTED_CHECKS: ${{ format('["{0}"]', matrix.id) }}
           CHECK_RESULTS_PATH: .check-results/results.json
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - name: Record missing execution results
+        if: always()
+        run: |
+          node -e "const fs = require('node:fs'); fs.mkdirSync('.check-results', { recursive: true }); if (!fs.existsSync('.check-results/results.json')) fs.writeFileSync('.check-results/results.json', '[]');"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
         with:
           name: check-results-${{ matrix.key }}
@@ -107,7 +111,11 @@ jobs:
           CHECK_RESULTS_PATH: .check-results/results.json
           CARGO_TARGET_DIR: ${{ runner.temp }}/oyasumi-ci-native-target
 
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - name: Record missing execution results
+        if: always()
+        run: |
+          node -e "const fs = require('node:fs'); fs.mkdirSync('.check-results', { recursive: true }); if (!fs.existsSync('.check-results/results.json')) fs.writeFileSync('.check-results/results.json', '[]');"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
         with:
           name: check-results-windows
@@ -130,7 +138,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         with:
           name: check-results-windows
           path: .check-results
@@ -148,7 +156,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         continue-on-error: true
         with:
           pattern: check-results-*
