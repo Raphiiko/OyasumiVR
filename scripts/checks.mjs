@@ -37,8 +37,14 @@ export const checks = {
     ),
   },
   'test:web': { group: 'quality', command: node('node_modules/vitest/vitest.mjs', 'run') },
-  translations: { group: 'catalogs', command: node('scripts/check-translations.mjs') },
-  'generated:readmes': { group: 'catalogs', command: node('scripts/check-readmes.mjs') },
+  translations: {
+    group: 'translations-and-readmes',
+    command: node('scripts/check-translations.mjs'),
+  },
+  'generated:readmes': {
+    group: 'translations-and-readmes',
+    command: node('scripts/check-readmes.mjs'),
+  },
   'build:ui': {
     group: 'frontend',
     command: node(
@@ -108,7 +114,7 @@ export function expandCheck(name = 'all') {
   const [operation, component] = name.split(':');
   const found = Object.keys(checks).filter((id) => {
     if (name === 'all') return true;
-    if (name === 'quick') return ['quality', 'catalogs'].includes(checks[id].group);
+    if (name === 'quick') return ['quality', 'translations-and-readmes'].includes(checks[id].group);
     if (component === 'rust') return id.startsWith(`${operation}:`) && id.split(':')[1] in crates;
     return !component && id.startsWith(`${operation}:`);
   });

@@ -5,25 +5,25 @@ import MessageFormat from '@messageformat/core';
 import { parseFragment } from 'parse5';
 import { HtmlParser } from '@angular/compiler';
 
-export function flattenCatalog(value, prefix = '', result = Object.create(null)) {
+export function flattenTranslations(value, prefix = '', result = Object.create(null)) {
   if (!value || typeof value !== 'object' || Array.isArray(value))
-    throw new Error(`${prefix || 'catalog'} must be an object`);
+    throw new Error(`${prefix || 'translation file'} must be an object`);
   const keys = Object.keys(value);
   if (prefix && !keys.length) throw new Error(`${prefix} is empty; run npm run tl clean`);
   for (const key of keys) {
     if (!key || key.includes('.') || key.includes('!'))
-      throw new Error(`Invalid catalog key: ${key}`);
+      throw new Error(`Invalid translation key: ${key}`);
     const path = prefix ? `${prefix}.${key}` : key;
     if (typeof value[key] === 'string') {
       if (!value[key].trim() || value[key] === '{PLACEHOLDER}')
         throw new Error(`${path} is empty or a placeholder; run npm run tl clean`);
       result[path] = value[key];
     } else {
-      flattenCatalog(value[key], path, result);
+      flattenTranslations(value[key], path, result);
     }
   }
   if (!prefix && Object.keys(result).join('\0') !== Object.keys(result).sort().join('\0'))
-    throw new Error('catalog keys are not sorted; run npm run tl clean');
+    throw new Error('translation keys are not sorted; run npm run tl clean');
   return result;
 }
 
@@ -228,7 +228,7 @@ export function compareMessage(english, translated, locale) {
   return sorted(problems);
 }
 
-function readCatalog(file) {
+function readTranslationFile(file) {
   const text = readFileSync(file, 'utf8');
   const parsed = JSON.parse(text);
   const tokens = text.match(/"(?:\\.|[^"\\])*"|[{}:]/g) ?? [];
@@ -239,27 +239,27 @@ function readCatalog(file) {
     else if (tokens[i].startsWith('"') && tokens[i + 1] === ':') {
       const key = JSON.parse(tokens[i]);
       const keys = objects.at(-1);
-      if (keys.has(key)) throw new Error(`duplicate catalog key: ${key}; run npm run tl clean`);
+      if (keys.has(key)) throw new Error(`duplicate translation key: ${key}; run npm run tl clean`);
       keys.add(key);
     }
   }
-  return flattenCatalog(parsed);
+  return flattenTranslations(parsed);
 }
 
-export function checkCatalogs(directory) {
-  const english = readCatalog(`${directory}/en.json`);
+export function checkTranslationFiles(directory) {
+  const english = readTranslationFile(`${directory}/en.json`);
   const problems = [];
   let count = 0;
   for (const file of readdirSync(directory).filter((f) => f.endsWith('.json'))) {
     const locale = file.slice(0, -5);
-    let catalog;
+    let translations;
     try {
-      catalog = readCatalog(`${directory}/${file}`);
+      translations = readTranslationFile(`${directory}/${file}`);
     } catch (error) {
       problems.push(`${file}: ${error.message}`);
       continue;
     }
-    for (const [key, value] of Object.entries(catalog)) {
+    for (const [key, value] of Object.entries(translations)) {
       count++;
       if (!Object.hasOwn(english, key)) {
         problems.push(`${locale}/${key}: absent from English; run npm run tl clean`);
@@ -279,7 +279,7 @@ export function checkCatalogs(directory) {
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  const { count, problems } = checkCatalogs('src-ui/assets/i18n');
+  const { count, problems } = checkTranslationFiles('src-ui/assets/i18n');
   console.log(`Checked ${count} translations. Missing translations use English fallback.`);
   if (problems.length) {
     console.error(problems.join('\n'));

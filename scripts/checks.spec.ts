@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { checks, expandCheck } from './checks.mjs';
 import { selectChecks } from './select-checks.mjs';
-import { flattenCatalog, compareMessage, checkCatalogs } from './check-translations.mjs';
+import {
+  flattenTranslations,
+  compareMessage,
+  checkTranslationFiles,
+} from './check-translations.mjs';
 import { cpSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
@@ -227,34 +231,34 @@ describe('translation contracts', () => {
     expect(() => compareMessage('<b>{name}</b>', '<b>{name}', 'ja')).toThrow();
   });
   it('uses the same flattened key ordering as tl clean', () => {
-    expect(flattenCatalog({ 'a-b': { title: 'First' }, a: { title: 'Second' } })).toEqual({
+    expect(flattenTranslations({ 'a-b': { title: 'First' }, a: { title: 'Second' } })).toEqual({
       'a-b.title': 'First',
       'a.title': 'Second',
     });
-    expect(() => flattenCatalog({ b: 'Second', a: 'First' })).toThrow('sorted');
+    expect(() => flattenTranslations({ b: 'Second', a: 'First' })).toThrow('sorted');
     for (const value of ['', ' ', '{PLACEHOLDER}', null, [], {}, 5])
-      expect(() => flattenCatalog({ a: value })).toThrow();
+      expect(() => flattenTranslations({ a: value })).toThrow();
   });
   it('allows missing translations and rejects extra keys and missing arguments', () => {
-    const directory = mkdtempSync(join(tmpdir(), 'oyasumi-catalog-test-'));
+    const directory = mkdtempSync(join(tmpdir(), 'oyasumi-translation-file-test-'));
     const save = (locale, value) =>
       writeFileSync(join(directory, `${locale}.json`), JSON.stringify(value));
     try {
       save('en', { a: '{name}', b: 'Optional' });
       save('ja', { a: '{name}' });
-      expect(checkCatalogs(directory).problems).toEqual([]);
+      expect(checkTranslationFiles(directory).problems).toEqual([]);
       writeFileSync(join(directory, 'ja.json'), '{"a":"first","a":"{name}"}');
-      expect(checkCatalogs(directory).problems[0]).toContain('duplicate catalog key');
+      expect(checkTranslationFiles(directory).problems[0]).toContain('duplicate translation key');
       writeFileSync(join(directory, 'ja.json'), '{"a":"first","\\u0061":"{name}"}');
-      expect(checkCatalogs(directory).problems[0]).toContain('duplicate catalog key');
+      expect(checkTranslationFiles(directory).problems[0]).toContain('duplicate translation key');
       save('ja', { a: "{name} says \"a\": '{' '}'" });
-      expect(checkCatalogs(directory).problems).toEqual([]);
+      expect(checkTranslationFiles(directory).problems).toEqual([]);
       save('ja', JSON.parse('{"__proto__":"Unknown"}'));
-      expect(checkCatalogs(directory).problems).toHaveLength(1);
+      expect(checkTranslationFiles(directory).problems).toHaveLength(1);
       save('ja', { a: '設定', z: 'Unknown' });
-      expect(checkCatalogs(directory).problems).toHaveLength(2);
+      expect(checkTranslationFiles(directory).problems).toHaveLength(2);
       save('ja', { a: '設定' });
-      expect(checkCatalogs(directory).problems).toHaveLength(1);
+      expect(checkTranslationFiles(directory).problems).toHaveLength(1);
     } finally {
       rmSync(directory, { recursive: true, force: true });
     }

@@ -123,7 +123,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     console.log(`${error.message}; checking everything.`);
   }
   const groups = {};
-  for (const group of ['quality', 'frontend', 'catalogs', 'native']) {
+  for (const group of ['quality', 'frontend', 'translations-and-readmes', 'native']) {
     groups[group] = selected.filter((id) => checks[id].group === group);
     if (process.env.GITHUB_OUTPUT)
       appendFileSync(process.env.GITHUB_OUTPUT, `${group}=${JSON.stringify(groups[group])}\n`);

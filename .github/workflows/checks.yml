@@ -24,7 +24,7 @@ jobs:
     outputs:
       quality: ${{ steps.select.outputs.quality }}
       frontend: ${{ steps.select.outputs.frontend }}
-      catalogs: ${{ steps.select.outputs.catalogs }}
+      translations-and-readmes: ${{ steps.select.outputs.translations-and-readmes }}
       native: ${{ steps.select.outputs.native }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -45,7 +45,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        group: [quality, frontend, catalogs]
+        group: [quality, frontend, translations-and-readmes]
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
