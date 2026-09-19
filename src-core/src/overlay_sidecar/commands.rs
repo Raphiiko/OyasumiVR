@@ -11,6 +11,7 @@ static DEV_SIDECAR_WATCHER_RUNNING: AtomicBool = AtomicBool::new(false);
 
 #[tauri::command]
 pub async fn start_overlay_sidecar(gpu_acceleration: bool) {
+    crate::openvr::DASHBOARD_GPU_ACCELERATION.store(gpu_acceleration, Ordering::Release);
     match crate::utils::cli_sidecar_overlay_mode().await {
         // In release mode, start the sidecar like normal
         OverlaySidecarMode::Release => {

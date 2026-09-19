@@ -3,6 +3,7 @@ mod brightness_overlay;
 mod chaperone;
 mod colortemp_analog;
 pub mod commands;
+mod dashboard;
 mod devices;
 mod framelimiter;
 mod gesture_detector;
@@ -27,7 +28,7 @@ use std::{
         atomic::{AtomicBool, Ordering},
         LazyLock,
     },
-    time::Duration,
+    time::{Duration, Instant},
 };
 use substring::Substring;
 use tokio::sync::Mutex;
@@ -40,6 +41,7 @@ pub struct OpenVRInputContext {
 }
 
 pub static OVR_CONTEXT: LazyLock<Mutex<Option<ovr::Context>>> = LazyLock::new(Default::default);
+pub static DASHBOARD_GPU_ACCELERATION: AtomicBool = AtomicBool::new(false);
 static OVR_STATUS: LazyLock<Mutex<OpenVRStatus>> =
     LazyLock::new(|| Mutex::new(OpenVRStatus::Inactive));
 static OVR_ACTIVE: LazyLock<Mutex<bool>> = LazyLock::new(|| Mutex::new(false));
@@ -55,10 +57,20 @@ pub async fn task() {
     // Task state
     let mut ovr_active = false;
     let mut ovr_next_init = DateTime::from_timestamp_millis(0).unwrap();
+    let mut dashboard: Option<dashboard::DashboardOverlay> = None;
+    let mut next_device_tick = Instant::now();
 
     // Main Loop
     'ovr_loop: loop {
-        tokio::time::sleep(Duration::from_millis(32)).await;
+        let interval = if dashboard
+            .as_ref()
+            .is_some_and(|overlay| overlay.is_active())
+        {
+            Duration::from_millis(8)
+        } else {
+            Duration::from_millis(32)
+        };
+        tokio::time::sleep(interval).await;
         if *OVR_ACTIVE.lock().await {
             // If we're not active, try to initialize OpenVR
             if OVR_CONTEXT.lock().await.is_none() {
@@ -100,6 +112,12 @@ pub async fn task() {
                     error!("[Core] Could not initialize the brightness overlay: {e}");
                     shutdown_ovr().await;
                     continue;
+                }
+                match dashboard::DashboardOverlay::create(&ctx).await {
+                    Ok(overlay) => dashboard = Some(overlay),
+                    Err(error) => {
+                        error!("[Dashboard] Could not initialize dashboard overlay: {error}")
+                    }
                 }
                 // We've successfully initialized OpenVR
                 info!("[Core] OpenVR Initialized");
@@ -253,7 +271,16 @@ pub async fn task() {
                     }
                 }
             }
-            // Process tick
+            if let Some(overlay) = dashboard.as_mut() {
+                if let Err(error) = overlay.tick() {
+                    error!("[Dashboard] Dashboard overlay stopped: {error}");
+                    drop(dashboard.take());
+                }
+            }
+            if Instant::now() < next_device_tick {
+                continue;
+            }
+            next_device_tick = Instant::now() + Duration::from_millis(32);
             devices::on_ovr_tick().await;
             // Poll for events
             loop {
@@ -277,6 +304,7 @@ pub async fn task() {
                     info!("[Core] OpenVR is Quitting. Shutting down OpenVR module");
                     ovr_active = false;
                     update_status(OpenVRStatus::Inactive).await;
+                    drop(dashboard.take());
                     shutdown_ovr().await;
                     // Schedule next initialization attempt
                     ovr_next_init = Utc::now() + chrono::Duration::seconds(5);
@@ -291,6 +319,7 @@ pub async fn task() {
             update_status(OpenVRStatus::Inactive).await;
             let has_context = OVR_CONTEXT.lock().await.is_some();
             if has_context {
+                drop(dashboard.take());
                 shutdown_ovr().await;
             }
         }
