@@ -76,6 +76,21 @@ describe('check selection', () => {
 });
 
 describe('translation contracts', () => {
+  it('preserves formatter identity and literal styles within semantic branches', () => {
+    const usd = '{value, number, ::currency/USD}';
+    for (const target of ['{value, date, short}', '{value, number, ::currency/EUR}', '{value}'])
+      expect(compareMessage(usd, target, 'en')).toContain('formatters');
+    expect(compareMessage('{value, date}', '{value, time}', 'en')).toContain('formatters');
+    expect(compareMessage(usd, usd, 'de')).toEqual([]);
+    expect(compareMessage('{value, date, short}', '{value, date,  short }', 'de')).toEqual([]);
+    expect(
+      compareMessage(
+        '{state, select, on {{value, date, short}} other {{value, time, short}}}',
+        '{state, select, on {{value, time, short}} other {{value, date, short}}}',
+        'en'
+      )
+    ).toContain('formatters');
+  });
   it('allows plural grammar inside markup while preserving number placement', () => {
     const en = '<b>{count, plural, one {1 device} other {# devices}}</b>';
     expect(compareMessage(en, '<b>{count} devices</b>', 'ja')).toEqual([]);

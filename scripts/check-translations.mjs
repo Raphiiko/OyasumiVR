@@ -145,7 +145,7 @@ export function messageContract(message, locale = 'en') {
     scenarios = scenarios.flatMap((scenario) => keys.map((key) => ({ ...scenario, [id]: key })));
     if (scenarios.length > 256) throw new Error('more than 256 semantic choices');
   }
-  function walk(tokens, scenario, plural) {
+  function walk(tokens, scenario, plural, formatters) {
     let variants = [''];
     for (const token of tokens) {
       let parts;
@@ -159,16 +159,18 @@ export function messageContract(message, locale = 'en') {
               ? [exact]
               : token.cases.filter((c) => !c.key.startsWith('='));
         parts = branches.flatMap((c) =>
-          walk(c.tokens, scenario, token.type === 'select' ? plural : token.arg)
+          walk(c.tokens, scenario, token.type === 'select' ? plural : token.arg, formatters)
         );
       } else if (token.type === 'content') {
         parts = [token.value];
+      } else if (token.type === 'function') {
+        const params = token.param ? walk(token.param, scenario, plural, formatters) : [''];
+        parts = params.map((param) => {
+          formatters.add(JSON.stringify([token.arg, token.key, param.trim()]));
+          return marker(token.arg) + variables(param).map(marker).join('');
+        });
       } else {
-        parts = token.param
-          ? walk(token.param, scenario, plural).map(
-              (param) => marker(token.arg) + variables(param).map(marker).join('')
-            )
-          : [marker(token.arg ?? plural)];
+        parts = [marker(token.arg ?? plural)];
       }
       variants = variants.flatMap((a) => parts.map((b) => a + b));
       if (variants.length > 256) throw new Error('more than 256 message branches');
@@ -178,7 +180,11 @@ export function messageContract(message, locale = 'en') {
   return {
     arguments: [...argumentsUsed].sort(),
     selections,
-    branches: scenarios.map((scenario) => walk(tokens, scenario)),
+    branches: scenarios.map((scenario) => {
+      const formatters = new Set();
+      const variants = walk(tokens, scenario, undefined, formatters);
+      return { variants, formatters: sorted(formatters) };
+    }),
     plurals: [...plurals],
     pluralTypes,
   };
@@ -210,8 +216,10 @@ export function compareMessage(english, translated, locale) {
     };
   }
   for (let i = 0; i < source.branches.length; i++) {
-    const a = summarize(source.branches[i]),
-      b = summarize(target.branches[i]);
+    const a = summarize(source.branches[i].variants),
+      b = summarize(target.branches[i].variants);
+    if (differs(source.branches[i].formatters, target.branches[i].formatters))
+      problems.push('formatters');
     if (differs(a.rendered, b.rendered) || differs(a.required, b.required))
       problems.push('arguments');
     if (differs(a.markup, b.markup) || differs(a.pluralMarkup, b.pluralMarkup))
