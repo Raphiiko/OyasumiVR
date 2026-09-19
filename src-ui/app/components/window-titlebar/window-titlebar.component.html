@@ -7,15 +7,13 @@
     (click)="copyVersion()"
     type="button"
   >
-    <span class="version"
-      >&nbsp;v{{ version }}
-      @if (versionCopied()) {
-        <i class="material-symbols-outlined version-copied">check</i>
-      }
-    </span>
+    <span class="version">&nbsp;v{{ version }} </span>
     <span class="version-extra" [class.visible]="showVersionExtras">
       -{{ FLAVOUR }} ({{ BUILD_ID }})
     </span>
+    @if (versionCopied()) {
+      <i class="material-symbols-outlined version-copied">check</i>
+    }
   </button>
 </div>
 <div class="action-area">
