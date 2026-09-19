@@ -180,11 +180,11 @@ impl DashboardInput {
         {
             let mut queue = self.queue.borrow_mut();
             queue.keyboard_generation += 1;
-            queue.pending.retain(|(method, _)| {
+            queue.pending.retain(|(method, params)| {
                 !matches!(
                     *method,
                     "Dashboard.keyboard" | "Input.insertText" | "Input.dispatchKeyEvent"
-                )
+                ) && params["objectGroup"] != "oyasumi-dashboard-keyboard"
             });
             if let Some(release) = queue.sent_key.clone() {
                 queue
@@ -330,7 +330,10 @@ fn dispatch(queue: Rc<RefCell<Queue>>) {
                 &HSTRING::from(params.to_string()),
                 &CallDevToolsProtocolMethodCompletedHandler::create(Box::new(
                     move |result, response| {
-                        if result.is_ok() && keyboard_query {
+                        if result.is_ok()
+                            && keyboard_query
+                            && callback_queue.borrow().keyboard_generation == keyboard_generation
+                        {
                             if let Ok(value) = serde_json::from_str::<Value>(&response) {
                                 if let Ok(request) = serde_json::from_value::<KeyboardRequest>(
                                     value["result"]["value"].clone(),

@@ -292,6 +292,7 @@ impl DashboardOverlay {
     }
 
     pub fn tick(&mut self) -> Result<(), String> {
+        // track dashboard selection
         let selected = unsafe { required(self.table.IsActiveDashboardOverlay)?(self.main) };
         if selected != self.selected {
             self.selected = selected;
@@ -301,12 +302,14 @@ impl DashboardOverlay {
                 self.restore();
             }
         }
+        // apply capture settings
         let gpu = DASHBOARD_GPU_ACCELERATION.load(Ordering::Acquire);
         if gpu != self.gpu {
             self.restore();
             self.gpu = gpu;
             self.failed = false;
         }
+        // process controller input
         self.poll_input(selected && !self.failed && self.has_frame)?;
         if selected && !self.failed && self.has_frame {
             self.show_keyboard();
@@ -314,6 +317,7 @@ impl DashboardOverlay {
         if !selected || self.failed {
             return Ok(());
         }
+        // enforce activation and desktop ownership
         if !self.has_frame
             && self
                 .activation_started
@@ -328,6 +332,7 @@ impl DashboardOverlay {
             self.restore();
             return Ok(());
         }
+        // submit the latest frame
         let frame = self.frame.lock().unwrap().take();
         if let Some(frame) = frame {
             unsafe {
@@ -362,6 +367,7 @@ impl DashboardOverlay {
             }
             self.has_frame = true;
         }
+        // request the next frame
         if self.busy.load(Ordering::Acquire) {
             if self.capture_started.elapsed() > Duration::from_secs(5) {
                 return Err("WebView capture timed out".into());
