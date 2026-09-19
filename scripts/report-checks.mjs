@@ -32,13 +32,7 @@ export function checkResult(id, results) {
 
 export function jobsPassed(jobs, selected) {
   if (jobs.select?.result !== 'success') return false;
-  const native = selected.some((id) => checks[id].group === 'native');
-  const portable = selected.some((id) => checks[id].group !== 'native');
-  return (
-    jobs.portable?.result === (portable ? 'success' : 'skipped') &&
-    jobs['native-execution']?.result === (native ? 'success' : 'skipped') &&
-    jobs['native-results']?.result === (native ? 'success' : 'skipped')
-  );
+  return jobs.check?.result === (selected.length ? 'success' : 'skipped');
 }
 
 function resultLabel(result) {
@@ -80,31 +74,21 @@ export function summary(selected, results) {
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   try {
     const results = readResults('.check-results');
-    if (process.env.CHECK_ID) {
-      const id = process.env.CHECK_ID;
-      if (!Object.hasOwn(checks, id)) throw new Error('Unknown check');
-      const result = checkResult(id, results);
-      console.log(
-        `${checkName(id)}: ${resultLabel(result)}. Command output is in the Windows check execution job.`
-      );
-      if (result.status !== 'passed') process.exitCode = 1;
-    } else {
-      const selected = process.env.SELECTED_CHECKS ? JSON.parse(process.env.SELECTED_CHECKS) : null;
-      if (
-        selected !== null &&
-        (!Array.isArray(selected) || selected.some((id) => !Object.hasOwn(checks, id)))
-      )
-        throw new Error('Invalid check selection');
-      const report = summary(selected, results);
-      console.log(report);
-      if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, report);
-      if (
-        selected === null ||
-        !jobsPassed(JSON.parse(process.env.JOB_RESULTS), selected) ||
-        selected.some((id) => checkResult(id, results).status !== 'passed')
-      )
-        process.exitCode = 1;
-    }
+    const selected = process.env.SELECTED_CHECKS ? JSON.parse(process.env.SELECTED_CHECKS) : null;
+    if (
+      selected !== null &&
+      (!Array.isArray(selected) || selected.some((id) => !Object.hasOwn(checks, id)))
+    )
+      throw new Error('Invalid check selection');
+    const report = summary(selected, results);
+    console.log(report);
+    if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, report);
+    if (
+      selected === null ||
+      !jobsPassed(JSON.parse(process.env.JOB_RESULTS), selected) ||
+      selected.some((id) => checkResult(id, results).status !== 'passed')
+    )
+      process.exitCode = 1;
   } catch (error) {
     console.error(error.message);
     if (process.env.GITHUB_STEP_SUMMARY)

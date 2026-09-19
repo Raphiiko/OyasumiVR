@@ -24,8 +24,7 @@ jobs:
       actions: read
     outputs:
       selected: ${{ steps.select.outputs.selected }}
-      portable: ${{ steps.select.outputs.portable }}
-      native: ${{ steps.select.outputs.native }}
+      matrix: ${{ steps.select.outputs.matrix }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -39,16 +38,21 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
-  portable:
+  check:
     name: ${{ matrix.name }}
     needs: select
-    if: needs.select.outputs.portable != '[]'
+    if: needs.select.outputs.matrix != '[]'
     strategy:
       fail-fast: false
       matrix:
-        include: ${{ fromJSON(needs.select.outputs.portable) }}
-    runs-on: ubuntu-24.04
-    timeout-minutes: 20
+        include: ${{ fromJSON(needs.select.outputs.matrix) }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    env:
+      CARGO_PROFILE_DEV_DEBUG: '0'
+      CARGO_PROFILE_TEST_DEBUG: '0'
+      CARGO_INCREMENTAL: '0'
+      CHECK_RESULTS_PATH: .check-results/results.json
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -56,12 +60,39 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: '24.15.0'
-          cache: npm
+          cache: ${{ matrix.npm && 'npm' || '' }}
       - run: npm ci --no-audit --no-fund
-      - run: node scripts/run-selected-checks.mjs
+        if: matrix.npm
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68
+        if: matrix.dotnet
+        with:
+          dotnet-version: '10.0.x'
+      - name: Install Rust tools
+        if: matrix.rust
+        run: rustup show
+      - name: Install protobuf compiler
+        if: matrix.compile
+        run: |
+          $archive = Join-Path $env:RUNNER_TEMP 'protoc.zip'
+          Invoke-WebRequest https://github.com/protocolbuffers/protobuf/releases/download/v35.1/protoc-35.1-win64.zip -OutFile $archive
+          $destination = Join-Path $env:RUNNER_TEMP 'protoc'
+          Expand-Archive -LiteralPath $archive -DestinationPath $destination
+          Join-Path $destination 'bin' | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        if: matrix.compile
+        id: rust-cache
+        continue-on-error: true
+        with:
+          key: native-v1-${{ runner.os }}-${{ matrix.component }}-${{ hashFiles('rust-toolchain.toml', format('{0}/Cargo.lock', matrix.directory)) }}
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ${{ runner.temp }}/oyasumi-ci-native-target
+      - name: Run check
+        run: node scripts/run-selected-checks.mjs
         env:
           SELECTED_CHECKS: ${{ format('["{0}"]', matrix.id) }}
-          CHECK_RESULTS_PATH: .check-results/results.json
+          CARGO_TARGET_DIR: ${{ runner.temp }}/oyasumi-ci-native-target
       - name: Record missing execution results
         if: always()
         run: |
@@ -74,82 +105,20 @@ jobs:
           include-hidden-files: true
           retention-days: 1
           overwrite: true
-
-  native-execution:
-    name: Windows check execution
-    needs: select
-    if: needs.select.outputs.native != '[]'
-    runs-on: windows-2025
-    timeout-minutes: 90
-    env:
-      CARGO_PROFILE_DEV_DEBUG: '0'
-      CARGO_PROFILE_TEST_DEBUG: '0'
-      CARGO_INCREMENTAL: '0'
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        if: matrix.saveCache && steps.rust-cache.outputs.cache-primary-key != '' && steps.rust-cache.outputs.cache-hit != 'true'
+        continue-on-error: true
         with:
-          persist-credentials: false
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
-        with:
-          node-version: '24.15.0'
-      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68
-        with:
-          dotnet-version: '10.0.x'
-      - name: Install Rust tools
-        run: rustup show
-      - name: Install protobuf compiler
-        run: |
-          $archive = Join-Path $env:RUNNER_TEMP 'protoc.zip'
-          Invoke-WebRequest https://github.com/protocolbuffers/protobuf/releases/download/v35.1/protoc-35.1-win64.zip -OutFile $archive
-          $destination = Join-Path $env:RUNNER_TEMP 'protoc'
-          Expand-Archive -LiteralPath $archive -DestinationPath $destination
-          Join-Path $destination 'bin' | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-      - name: Check native components
-        run: node scripts/run-selected-checks.mjs
-        env:
-          SELECTED_CHECKS: ${{ toJSON(fromJSON(needs.select.outputs.native).*.id) }}
-          CHECK_RESULTS_PATH: .check-results/results.json
-          CARGO_TARGET_DIR: ${{ runner.temp }}/oyasumi-ci-native-target
-
-      - name: Record missing execution results
-        if: always()
-        run: |
-          node -e "const fs = require('node:fs'); fs.mkdirSync('.check-results', { recursive: true }); if (!fs.existsSync('.check-results/results.json')) fs.writeFileSync('.check-results/results.json', '[]');"
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        if: always()
-        with:
-          name: check-results-windows
-          path: .check-results/results.json
-          include-hidden-files: true
-          retention-days: 1
-          overwrite: true
-
-  native-results:
-    name: ${{ matrix.name }}
-    needs: [select, native-execution]
-    if: ${{ always() && !cancelled() && needs.select.result == 'success' && needs.select.outputs.native != '[]' }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include: ${{ fromJSON(needs.select.outputs.native) }}
-    runs-on: ubuntu-24.04
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          persist-credentials: false
-      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
-        with:
-          name: check-results-windows
-          path: .check-results
-      - run: node scripts/report-checks.mjs
-        env:
-          CHECK_ID: ${{ matrix.id }}
+          key: ${{ steps.rust-cache.outputs.cache-primary-key }}
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ${{ runner.temp }}/oyasumi-ci-native-target
 
   result:
     name: Checks passed
     if: always()
-    needs: [select, portable, native-execution, native-results]
+    needs: [select, check]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:

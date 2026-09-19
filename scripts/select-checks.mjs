@@ -122,14 +122,27 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   } catch (error) {
     console.log(`${error.message}; checking everything.`);
   }
-  const outputs = { selected, portable: [], native: [] };
-  for (const id of selected) {
-    outputs[checks[id].group === 'native' ? 'native' : 'portable'].push({
-      id,
-      name: checkName(id),
-      key: id.replaceAll(':', '-'),
+  const priority = (id) => (id.startsWith('format:') ? 0 : id.startsWith('lint:') ? 1 : 2);
+  const matrix = [...selected]
+    .sort((left, right) => priority(left) - priority(right))
+    .map((id) => {
+      const [operation, component = ''] = id.split(':');
+      const rust = Object.hasOwn(crates, component);
+      return {
+        id,
+        name: checkName(id),
+        key: id.replaceAll(':', '-'),
+        runner: checks[id].windows ? 'windows-2025' : 'ubuntu-24.04',
+        npm: checks[id].group !== 'native',
+        dotnet: component === 'csharp' || component === 'overlay-sidecar',
+        rust,
+        compile: rust && operation !== 'format',
+        saveCache: rust && operation === 'build',
+        component,
+        directory: crates[component] ?? '',
+      };
     });
-  }
+  const outputs = { selected, matrix };
   for (const [key, value] of Object.entries(outputs)) {
     if (process.env.GITHUB_OUTPUT)
       appendFileSync(process.env.GITHUB_OUTPUT, `${key}=${JSON.stringify(value)}\n`);

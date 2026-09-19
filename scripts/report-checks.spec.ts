@@ -32,42 +32,16 @@ it('names every command with a distinct status', () => {
   expect(checkName('build:overlay-ui')).toBe('Build: Overlay UI');
 });
 
-it('requires every selected execution and result job to succeed', () => {
-  const selected = ['test:web', 'test:core'];
-  const jobs = Object.fromEntries(
-    ['select', 'portable', 'native-execution', 'native-results'].map((id) => [
-      id,
-      { result: 'success' },
-    ])
-  );
-  expect(jobsPassed(jobs, selected)).toBe(true);
+it('requires selected checks to finish successfully and permits an empty selection', () => {
+  const jobs = { select: { result: 'success' }, check: { result: 'success' } };
+  expect(jobsPassed(jobs, ['test:web', 'test:core'])).toBe(true);
   for (const id of Object.keys(jobs)) {
     for (const result of ['failure', 'cancelled', 'skipped']) {
-      expect(jobsPassed({ ...jobs, [id]: { result } }, selected)).toBe(false);
+      expect(jobsPassed({ ...jobs, [id]: { result } }, ['test:core'])).toBe(false);
     }
   }
-  expect(jobsPassed({ ...jobs, portable: { result: 'skipped' } }, ['test:core'])).toBe(true);
-  expect(
-    jobsPassed(
-      {
-        ...jobs,
-        'native-execution': { result: 'skipped' },
-        'native-results': { result: 'skipped' },
-      },
-      ['test:web']
-    )
-  ).toBe(true);
-  expect(
-    jobsPassed(
-      {
-        select: { result: 'success' },
-        portable: { result: 'skipped' },
-        'native-execution': { result: 'skipped' },
-        'native-results': { result: 'skipped' },
-      },
-      []
-    )
-  ).toBe(true);
+  expect(jobsPassed({ ...jobs, check: { result: 'skipped' } }, [])).toBe(true);
+  expect(jobsPassed(jobs, [])).toBe(false);
 });
 
 it('merges artifacts and distinguishes missing work from unnecessary work', () => {
@@ -127,13 +101,10 @@ it('fails the report command for missing results even when all jobs claim succes
     cwd: path,
     env: {
       ...process.env,
-      CHECK_ID: '',
       SELECTED_CHECKS: '["test:web"]',
       JOB_RESULTS: JSON.stringify({
         select: { result: 'success' },
-        portable: { result: 'success' },
-        'native-execution': { result: 'skipped' },
-        'native-results': { result: 'skipped' },
+        check: { result: 'success' },
       }),
       GITHUB_STEP_SUMMARY: reportPath,
     },
@@ -154,11 +125,18 @@ it.each(['passed', 'failed', 'missing'])('publishes the actual native result: %s
   );
   const result = spawnSync(process.execPath, [resolve('scripts/report-checks.mjs')], {
     cwd: path,
-    env: { ...process.env, CHECK_ID: 'test:core', GITHUB_STEP_SUMMARY: '' },
+    env: {
+      ...process.env,
+      SELECTED_CHECKS: '["test:core"]',
+      JOB_RESULTS: JSON.stringify({ select: { result: 'success' }, check: { result: 'success' } }),
+      GITHUB_STEP_SUMMARY: '',
+    },
     encoding: 'utf8',
   });
   expect(result.status).toBe(status === 'passed' ? 0 : 1);
-  expect(result.stdout).toContain(`Tests: Rust core: ${status === 'missing' ? 'not run' : status}`);
+  expect(result.stdout).toContain(
+    `| Tests: Rust core | \`npm run check:test:core\` | ${status === 'missing' ? 'not run' : status} |`
+  );
 });
 
 it('emits complete job matrices when all checks are selected', () => {
@@ -178,11 +156,26 @@ it('emits complete job matrices when all checks are selected', () => {
       })
   );
   expect(outputs.selected).toEqual(Object.keys(checks));
-  expect(outputs.portable).toHaveLength(7);
-  expect(outputs.native).toHaveLength(26);
-  for (const check of [...outputs.portable, ...outputs.native]) {
+  expect(outputs.matrix).toHaveLength(33);
+  expect(
+    outputs.matrix.filter((job: { runner: string }) => job.runner === 'windows-2025')
+  ).toHaveLength(20);
+  expect(outputs.matrix.filter((job: { npm: boolean }) => job.npm)).toHaveLength(7);
+  expect(outputs.matrix.filter((job: { saveCache: boolean }) => job.saveCache)).toHaveLength(6);
+  expect(
+    outputs.matrix.slice(0, 8).every((job: { id: string }) => job.id.startsWith('format:'))
+  ).toBe(true);
+  expect(
+    outputs.matrix.slice(8, 15).every((job: { id: string }) => job.id.startsWith('lint:'))
+  ).toBe(true);
+  for (const check of outputs.matrix) {
     expect(check.name).toBe(checkName(check.id));
     expect(check.key).toBe(check.id.replaceAll(':', '-'));
+    if (check.rust && check.id.startsWith('format:')) {
+      expect(check.runner).toBe('ubuntu-24.04');
+      expect(check.compile).toBe(false);
+      expect(check.npm).toBe(false);
+    }
   }
 });
 
@@ -197,7 +190,7 @@ it('labels retained results from an earlier attempt', () => {
 it('uploads an empty replacement after setup fails without erasing completed results', () => {
   const workflow = readFileSync('.github/workflows/checks.yml', 'utf8');
   const commands = [...workflow.matchAll(/node -e "([^"]+)"/g)].map((match) => match[1]);
-  expect(commands).toHaveLength(2);
+  expect(commands).toHaveLength(1);
   for (const command of commands) {
     const path = temp();
     const report = join(path, '.check-results/results.json');
