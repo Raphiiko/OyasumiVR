@@ -1,7 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { appendFileSync, existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { checks, crates } from './checks.mjs';
+import { checks, checkName, crates } from './checks.mjs';
 
 const all = Object.keys(checks);
 const web = ['format:web', 'lint:web', 'test:web'];
@@ -122,11 +122,30 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   } catch (error) {
     console.log(`${error.message}; checking everything.`);
   }
-  const groups = {};
-  for (const group of ['quality', 'frontend', 'translations-and-readmes', 'native']) {
-    groups[group] = selected.filter((id) => checks[id].group === group);
+  const priority = (id) => (id.startsWith('format:') ? 0 : id.startsWith('lint:') ? 1 : 2);
+  const matrix = [...selected]
+    .sort((left, right) => priority(left) - priority(right))
+    .map((id) => {
+      const [operation, component = ''] = id.split(':');
+      const rust = Object.hasOwn(crates, component);
+      return {
+        id,
+        name: checkName(id),
+        key: id.replaceAll(':', '-'),
+        runner: checks[id].windows ? 'windows-2025' : 'ubuntu-24.04',
+        npm: checks[id].group !== 'native',
+        dotnet: component === 'csharp' || component === 'overlay-sidecar',
+        rust,
+        compile: rust && operation !== 'format',
+        saveCache: rust && operation === 'build',
+        component,
+        directory: crates[component] ?? '',
+      };
+    });
+  const outputs = { selected, matrix };
+  for (const [key, value] of Object.entries(outputs)) {
     if (process.env.GITHUB_OUTPUT)
-      appendFileSync(process.env.GITHUB_OUTPUT, `${group}=${JSON.stringify(groups[group])}\n`);
+      appendFileSync(process.env.GITHUB_OUTPUT, `${key}=${JSON.stringify(value)}\n`);
   }
-  console.log(JSON.stringify(groups, null, 2));
+  console.log(JSON.stringify(outputs, null, 2));
 }

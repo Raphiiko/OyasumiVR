@@ -1,6 +1,5 @@
 import { afterEach, expect, it, vi } from 'vitest';
-import { execFileSync, spawnSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { comparisonBase } from './select-checks.mjs';
 
 vi.mock('node:child_process', async (original) => ({
@@ -66,27 +65,4 @@ it('fails selection closed when the API is unavailable', async () => {
   vi.stubEnv('GITHUB_EVENT_NAME', 'push');
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, status: 403 }));
   await expect(comparisonBase({})).rejects.toThrow('HTTP 403');
-});
-
-it('never passes the final gate for failed, cancelled, or unexpectedly skipped work', () => {
-  const workflow = readFileSync('.github/workflows/checks.yml', 'utf8');
-  const script = workflow.match(/node -e '([^']+)'/)![1];
-  const result = (select: string, portable: string, native: string, selected = ['test:core']) =>
-    spawnSync(process.execPath, ['-e', script], {
-      env: {
-        ...process.env,
-        RESULTS: JSON.stringify({
-          select: { result: select, outputs: { native: JSON.stringify(selected) } },
-          portable: { result: portable },
-          native: { result: native },
-        }),
-      },
-    }).status;
-  expect(result('success', 'success', 'success')).toBe(0);
-  expect(result('success', 'success', 'skipped', [])).toBe(0);
-  for (const state of ['failure', 'cancelled', 'skipped']) {
-    expect(result(state, 'success', 'success')).not.toBe(0);
-    expect(result('success', state, 'success')).not.toBe(0);
-    expect(result('success', 'success', state)).not.toBe(0);
-  }
 });

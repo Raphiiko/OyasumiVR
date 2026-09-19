@@ -1,4 +1,6 @@
 import { spawnSync } from 'node:child_process';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const crates = {
@@ -122,6 +124,26 @@ export function expandCheck(name = 'all') {
   return found;
 }
 
+export function checkName(id) {
+  if (id === 'translations') return 'Validity: Translation files';
+  if (id === 'generated:readmes') return 'Up-to-date: Generated READMEs';
+  const [operation, component] = id.split(':');
+  const names = {
+    web: 'Web',
+    ui: 'Main UI',
+    'overlay-ui': 'Overlay UI',
+    csharp: 'C#',
+    'overlay-sidecar': 'C# overlay sidecar',
+    core: 'Rust core',
+    'shared-rust': 'Shared Rust',
+    'elevated-sidecar': 'Rust elevated sidecar',
+    'privileged-launcher': 'Rust privileged launcher',
+    'memory-watch': 'Rust memory watch',
+    'signing-tool': 'Rust signing tool',
+  };
+  return `${{ format: 'Formatting', lint: 'Lint', test: 'Tests', build: 'Build' }[operation]}: ${names[component]}`;
+}
+
 export function runChecks(ids) {
   if (process.platform !== 'win32' && ids.some((id) => checks[id].windows)) {
     throw new Error(
@@ -129,11 +151,27 @@ export function runChecks(ids) {
     );
   }
   const failed = [];
+  const results = [];
+  const saveResults = () => {
+    if (!process.env.CHECK_RESULTS_PATH) return;
+    mkdirSync(dirname(process.env.CHECK_RESULTS_PATH), { recursive: true });
+    writeFileSync(process.env.CHECK_RESULTS_PATH, JSON.stringify(results));
+  };
+  saveResults();
   for (const id of ids) {
     const { command, cwd } = checks[id];
-    console.log(`\nChecking ${id}`);
+    console.log(process.env.GITHUB_ACTIONS ? `::group::${checkName(id)}` : `\nChecking ${id}`);
+    const start = performance.now();
     const result = spawnSync(command[0], command.slice(1), { cwd, stdio: 'inherit' });
+    results.push({
+      id,
+      status: result.status === 0 ? 'passed' : 'failed',
+      attempt: process.env.GITHUB_RUN_ATTEMPT ? Number(process.env.GITHUB_RUN_ATTEMPT) : undefined,
+      durationMs: Math.round(performance.now() - start),
+    });
+    saveResults();
     if (result.error) console.error(result.error.message);
+    if (process.env.GITHUB_ACTIONS) console.log('::endgroup::');
     if (result.status !== 0) failed.push(id);
   }
   if (failed.length) throw new Error(`Failed checks: ${failed.join(', ')}`);

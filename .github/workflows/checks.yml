@@ -16,16 +16,15 @@ concurrency:
 
 jobs:
   select:
+    name: Check selection
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
       contents: read
       actions: read
     outputs:
-      quality: ${{ steps.select.outputs.quality }}
-      frontend: ${{ steps.select.outputs.frontend }}
-      translations-and-readmes: ${{ steps.select.outputs.translations-and-readmes }}
-      native: ${{ steps.select.outputs.native }}
+      selected: ${{ steps.select.outputs.selected }}
+      matrix: ${{ steps.select.outputs.matrix }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -39,41 +38,21 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
-  portable:
-    name: ${{ matrix.group }}
+  check:
+    name: ${{ matrix.name }}
     needs: select
+    if: needs.select.outputs.matrix != '[]'
     strategy:
       fail-fast: false
       matrix:
-        group: [quality, frontend, translations-and-readmes]
-    runs-on: ubuntu-24.04
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        if: needs.select.outputs[matrix.group] != '[]'
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
-        if: needs.select.outputs[matrix.group] != '[]'
-        with:
-          node-version: '24.15.0'
-          cache: npm
-      - run: npm ci --no-audit --no-fund
-        if: needs.select.outputs[matrix.group] != '[]'
-      - run: node scripts/run-selected-checks.mjs
-        if: needs.select.outputs[matrix.group] != '[]'
-        env:
-          SELECTED_CHECKS: ${{ needs.select.outputs[matrix.group] }}
-
-  native:
-    needs: select
-    if: needs.select.outputs.native != '[]'
-    runs-on: windows-2025
-    timeout-minutes: 90
+        include: ${{ fromJSON(needs.select.outputs.matrix) }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
     env:
       CARGO_PROFILE_DEV_DEBUG: '0'
       CARGO_PROFILE_TEST_DEBUG: '0'
       CARGO_INCREMENTAL: '0'
+      CHECK_RESULTS_PATH: .check-results/results.json
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -81,33 +60,79 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: '24.15.0'
+          cache: ${{ matrix.npm && 'npm' || '' }}
+      - run: npm ci --no-audit --no-fund
+        if: matrix.npm
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68
+        if: matrix.dotnet
         with:
           dotnet-version: '10.0.x'
       - name: Install Rust tools
+        if: matrix.rust
         run: rustup show
       - name: Install protobuf compiler
+        if: matrix.compile
         run: |
           $archive = Join-Path $env:RUNNER_TEMP 'protoc.zip'
           Invoke-WebRequest https://github.com/protocolbuffers/protobuf/releases/download/v35.1/protoc-35.1-win64.zip -OutFile $archive
           $destination = Join-Path $env:RUNNER_TEMP 'protoc'
           Expand-Archive -LiteralPath $archive -DestinationPath $destination
           Join-Path $destination 'bin' | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-      - name: Check native components
+      - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        if: matrix.compile
+        id: rust-cache
+        continue-on-error: true
+        with:
+          key: native-v1-${{ runner.os }}-${{ matrix.component }}-${{ hashFiles('rust-toolchain.toml', format('{0}/Cargo.lock', matrix.directory)) }}
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ${{ runner.temp }}/oyasumi-ci-native-target
+      - name: Run check
         run: node scripts/run-selected-checks.mjs
         env:
-          SELECTED_CHECKS: ${{ needs.select.outputs.native }}
+          SELECTED_CHECKS: ${{ format('["{0}"]', matrix.id) }}
           CARGO_TARGET_DIR: ${{ runner.temp }}/oyasumi-ci-native-target
+      - name: Record missing execution results
+        if: always()
+        run: |
+          node -e "const fs = require('node:fs'); fs.mkdirSync('.check-results', { recursive: true }); if (!fs.existsSync('.check-results/results.json')) fs.writeFileSync('.check-results/results.json', '[]');"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: check-results-${{ matrix.key }}
+          path: .check-results/results.json
+          include-hidden-files: true
+          retention-days: 1
+          overwrite: true
+      - uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        if: matrix.saveCache && steps.rust-cache.outputs.cache-primary-key != '' && steps.rust-cache.outputs.cache-hit != 'true'
+        continue-on-error: true
+        with:
+          key: ${{ steps.rust-cache.outputs.cache-primary-key }}
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ${{ runner.temp }}/oyasumi-ci-native-target
 
   result:
     name: Checks passed
     if: always()
-    needs: [select, portable, native]
+    needs: [select, check]
     runs-on: ubuntu-24.04
-    timeout-minutes: 2
+    timeout-minutes: 5
     steps:
-      - name: Require selected checks to pass
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        continue-on-error: true
+        with:
+          pattern: check-results-*
+          path: .check-results
+      - name: Report all checks and require selected checks to pass
+        if: always()
+        run: node scripts/report-checks.mjs
         env:
-          RESULTS: ${{ toJSON(needs) }}
-        run: |
-          node -e 'const results = JSON.parse(process.env.RESULTS); if (results.select.result !== "success" || results.portable.result !== "success" || results.native.result !== (JSON.parse(results.select.outputs.native).length ? "success" : "skipped")) process.exit(1);'
+          SELECTED_CHECKS: ${{ needs.select.outputs.selected }}
+          JOB_RESULTS: ${{ toJSON(needs) }}
