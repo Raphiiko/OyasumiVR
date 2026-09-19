@@ -22,6 +22,8 @@ export class TooltipDirective implements AfterViewInit, OnChanges, OnDestroy {
   private initialized = false;
   private tooltipElement?: HTMLElement;
   private resizeObserver?: ResizeObserver;
+  private anchorFrame?: number;
+  private anchorRect?: DOMRect;
 
   constructor(
     private elementRef: ElementRef,
@@ -58,6 +60,7 @@ export class TooltipDirective implements AfterViewInit, OnChanges, OnDestroy {
     document.body.appendChild(tooltipElement);
     this.tooltipElement = tooltipElement;
     this.positionTooltip();
+    this.anchorFrame = requestAnimationFrame(this.trackAnchor);
     window.addEventListener('resize', this.positionTooltip);
     document.addEventListener('scroll', this.positionTooltip, true);
     this.resizeObserver = new ResizeObserver(this.positionTooltip);
@@ -93,11 +96,33 @@ export class TooltipDirective implements AfterViewInit, OnChanges, OnDestroy {
     this.tooltipElement.style.top = `${Math.max(inset, Math.min(y, viewport.clientHeight - height - inset))}px`;
   };
 
+  private trackAnchor = () => {
+    if (!this.tooltipElement) return;
+    const rect = this.elementRef.nativeElement.getBoundingClientRect();
+    const previous = this.anchorRect;
+    this.anchorRect = rect;
+    if (
+      !previous ||
+      previous.left !== rect.left ||
+      previous.top !== rect.top ||
+      previous.width !== rect.width ||
+      previous.height !== rect.height
+    ) {
+      this.positionTooltip();
+    }
+    this.anchorFrame = requestAnimationFrame(this.trackAnchor);
+  };
+
   @HostListener('mouseleave')
   onMouseLeave() {
     if (!this.initialized || !this.tooltipElement) return;
     const tooltipElement = this.tooltipElement;
     this.tooltipElement = undefined;
+    if (this.anchorFrame !== undefined) {
+      cancelAnimationFrame(this.anchorFrame);
+      this.anchorFrame = undefined;
+    }
+    this.anchorRect = undefined;
     window.removeEventListener('resize', this.positionTooltip);
     document.removeEventListener('scroll', this.positionTooltip, true);
     this.resizeObserver?.disconnect();
