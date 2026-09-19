@@ -6,7 +6,6 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  SimpleChanges,
 } from '@angular/core';
 import { TString } from '../models/translatable-string';
 import { TStringTranslatePipe } from '../pipes/tstring-translate.pipe';
@@ -22,6 +21,7 @@ export class TooltipDirective implements AfterViewInit, OnChanges, OnDestroy {
   @Input('tooltipMargin') margin?: number = 4;
   private initialized = false;
   private tooltipElement?: HTMLElement;
+  private resizeObserver?: ResizeObserver;
 
   constructor(
     private elementRef: ElementRef,
@@ -36,13 +36,10 @@ export class TooltipDirective implements AfterViewInit, OnChanges, OnDestroy {
     this.onMouseLeave();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['text'].currentValue !== changes['text'].previousValue) {
-      const open = !!this.tooltipElement;
+  ngOnChanges() {
+    if (this.tooltipElement) {
       this.onMouseLeave();
-      if (open) {
-        this.onMouseEnter();
-      }
+      this.onMouseEnter();
     }
   }
 
@@ -52,27 +49,59 @@ export class TooltipDirective implements AfterViewInit, OnChanges, OnDestroy {
     if (!this.text) return;
     const tooltipElement = document.createElement('div');
     tooltipElement.classList.add('ovr-tooltip');
-    tooltipElement.classList.add('ovr-tooltip-' + this.mode);
     tooltipElement.classList.add('ovr-tooltip-text-align-' + this.textAlign);
-    tooltipElement.style.setProperty('--offset', this.margin + 'px');
+    tooltipElement.style.fontSize = getComputedStyle(this.elementRef.nativeElement).fontSize;
     const container = document.createElement('div');
     container.classList.add('ovr-tooltip-container');
     tooltipElement.appendChild(container);
     container.innerText = this.tsTranslate.transform(this.text) as string;
-    this.elementRef.nativeElement.style.position = 'relative';
-    (this.elementRef.nativeElement as HTMLElement).insertAdjacentElement(
-      'afterbegin',
-      tooltipElement
-    );
+    document.body.appendChild(tooltipElement);
     this.tooltipElement = tooltipElement;
-    setTimeout(() => tooltipElement.classList.add('shown'), 10);
+    this.positionTooltip();
+    window.addEventListener('resize', this.positionTooltip);
+    document.addEventListener('scroll', this.positionTooltip, true);
+    this.resizeObserver = new ResizeObserver(this.positionTooltip);
+    this.resizeObserver.observe(tooltipElement);
+    setTimeout(() => {
+      if (this.tooltipElement === tooltipElement) tooltipElement.classList.add('shown');
+    }, 10);
   }
+
+  private positionTooltip = () => {
+    if (!this.tooltipElement) return;
+    const anchor = this.elementRef.nativeElement.getBoundingClientRect();
+    const { width, height } = this.tooltipElement.getBoundingClientRect();
+    const viewport = document.documentElement;
+    const inset = 8;
+    const margin = this.margin ?? 4;
+    const positions = {
+      top: { x: anchor.left + (anchor.width - width) / 2, y: anchor.top - height - margin },
+      bottom: { x: anchor.left + (anchor.width - width) / 2, y: anchor.bottom + margin },
+      left: { x: anchor.left - width - margin, y: anchor.top + (anchor.height - height) / 2 },
+      right: { x: anchor.right + margin, y: anchor.top + (anchor.height - height) / 2 },
+    };
+    const fits = {
+      top: positions.top.y >= inset,
+      bottom: positions.bottom.y + height <= viewport.clientHeight - inset,
+      left: positions.left.x >= inset,
+      right: positions.right.x + width <= viewport.clientWidth - inset,
+    };
+    const opposite = { top: 'bottom', bottom: 'top', left: 'right', right: 'left' } as const;
+    const mode = !fits[this.mode] && fits[opposite[this.mode]] ? opposite[this.mode] : this.mode;
+    const { x, y } = positions[mode];
+    this.tooltipElement.style.left = `${Math.max(inset, Math.min(x, viewport.clientWidth - width - inset))}px`;
+    this.tooltipElement.style.top = `${Math.max(inset, Math.min(y, viewport.clientHeight - height - inset))}px`;
+  };
 
   @HostListener('mouseleave')
   onMouseLeave() {
     if (!this.initialized || !this.tooltipElement) return;
     const tooltipElement = this.tooltipElement;
     this.tooltipElement = undefined;
+    window.removeEventListener('resize', this.positionTooltip);
+    document.removeEventListener('scroll', this.positionTooltip, true);
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = undefined;
     tooltipElement.classList.remove('shown');
     setTimeout(() => {
       tooltipElement.remove();
