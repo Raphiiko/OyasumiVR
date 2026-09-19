@@ -1,22 +1,22 @@
 <div class="title-area" data-tauri-drag-region>
   <span class="title" data-tauri-drag-region>Oyasumi<b data-tauri-drag-region>VR</b></span>
-  <span
+  <button
     class="version-area"
-    data-tauri-drag-region
     (mouseenter)="showVersionExtras = true"
     (mouseleave)="showVersionExtras = false"
     (click)="copyVersion()"
+    type="button"
   >
-    <span class="version" data-tauri-drag-region
+    <span class="version"
       >&nbsp;v{{ version }}
       @if (versionCopied()) {
         <i class="material-symbols-outlined version-copied">check</i>
       }
     </span>
-    <span class="version-extra" data-tauri-drag-region [class.visible]="showVersionExtras">
+    <span class="version-extra" [class.visible]="showVersionExtras">
       -{{ FLAVOUR }} ({{ BUILD_ID }})
     </span>
-  </span>
+  </button>
 </div>
 <div class="action-area">
   <button
