@@ -156,6 +156,13 @@ export class MqttDiscoveryService {
     const client = this.mqtt.client.value;
     if (!client) return;
     client.on('message', async (topic, payload) => {
+      if (topic === 'homeassistant/status') {
+        if (payload.toString() === 'online') {
+          await this.reportState();
+          await this.reportAvailability();
+        }
+        return;
+      }
       const parts = topic.split('/');
       if (parts[0] === 'OyasumiVR') {
         const action = parts[parts.length - 1];
@@ -245,6 +252,7 @@ export class MqttDiscoveryService {
       'OyasumiVR/+/rgbSet',
       'OyasumiVR/device/+/set',
       'OyasumiVR/device/+/rgbSet',
+      'homeassistant/status',
     ]);
   }
 
@@ -363,7 +371,9 @@ export class MqttDiscoveryService {
     const client = this.mqtt.client.value;
     if (!client || !client.connected) return;
     if (!id) {
-      this.properties.value.forEach((property) => this.reportState(property.id));
+      for (const property of this.properties.value) {
+        await this.reportState(property.id);
+      }
       return;
     }
     const property = this.properties.value.find((p) => p.id === id);
@@ -409,7 +419,9 @@ export class MqttDiscoveryService {
     const client = this.mqtt.client.value;
     if (!client || !client.connected) return;
     if (!id) {
-      this.properties.value.forEach((property) => this.reportAvailability(property.id, override));
+      for (const property of this.properties.value) {
+        await this.reportAvailability(property.id, override);
+      }
       return;
     }
     const property = this.properties.value.find((p) => p.id === id);
