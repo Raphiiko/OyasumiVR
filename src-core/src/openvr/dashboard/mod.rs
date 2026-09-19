@@ -11,7 +11,7 @@ use super::DASHBOARD_GPU_ACCELERATION;
 use crate::globals::TAURI_APP_HANDLE;
 use raphii_openvr_rs::{raw, Context};
 use std::{
-    cell::RefCell,
+    cell::{Cell, RefCell},
     sync::{
         atomic::{AtomicBool, Ordering},
         Arc, Mutex,
@@ -48,6 +48,7 @@ type Frame = Result<CapturedFrame, String>;
 
 thread_local! {
     static DESKTOP: RefCell<Option<Desktop>> = const { RefCell::new(None) };
+    static DESKTOP_GENERATION: Cell<u64> = const { Cell::new(0) };
 }
 
 struct Desktop {
@@ -410,6 +411,7 @@ impl DashboardOverlay {
                     let controller: ICoreWebView2Controller =
                         std::mem::transmute(webview.controller());
                     DESKTOP.with(|saved| -> Result<(), String> {
+                        DESKTOP_GENERATION.with(|generation| generation.set(generation.get() + 1));
                         if saved.borrow().is_none() {
                             *saved.borrow_mut() = Some(Desktop::enter(
                                 window,
@@ -616,7 +618,11 @@ impl DashboardOverlay {
         self.active = Arc::new(AtomicBool::new(false));
         self.busy = Arc::new(AtomicBool::new(false));
         self.frame = Arc::new(Mutex::new(None));
-        if let Err(error) = self.window.run_on_main_thread(|| {
+        let generation = DESKTOP_GENERATION.with(Cell::get);
+        if let Err(error) = self.window.run_on_main_thread(move || {
+            if DESKTOP_GENERATION.with(Cell::get) != generation {
+                return;
+            }
             DESKTOP.with(|saved| {
                 if let Some(desktop) = saved.borrow_mut().take() {
                     desktop.restore();
