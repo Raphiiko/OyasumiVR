@@ -19,12 +19,12 @@ def run(*args, **kwargs):
 if args.build:
     run("build", "--tag", image, str(Path(__file__).resolve().parent))
 run("image", "inspect", image, "--format", "{{.Id}}")
-run("run", "-d", "--name", name, "--label", "oyasumivr.stage1.lab=true",
-    "--network", "none", "--cgroupns", "private", "--tmpfs", "/run", "--tmpfs", "/tmp",
-    "--cap-add", "SYS_ADMIN", "--security-opt", "seccomp=unconfined",
-    "--entrypoint", "/bin/bash", image, "-c",
-    "mount -o remount,rw /sys/fs/cgroup && exec /usr/lib/systemd/systemd")
 try:
+    run("run", "-d", "--name", name, "--label", "oyasumivr.stage1.lab=true",
+        "--network", "none", "--cgroupns", "private", "--tmpfs", "/run", "--tmpfs", "/tmp",
+        "--cap-add", "SYS_ADMIN", "--security-opt", "seccomp=unconfined",
+        "--entrypoint", "/bin/bash", image, "-c",
+        "mount -o remount,rw /sys/fs/cgroup && exec /usr/lib/systemd/systemd")
     deadline = time.monotonic() + 20
     while True:
         state = subprocess.run(["docker", "exec", name, "systemctl", "is-system-running"], capture_output=True, text=True)
@@ -39,6 +39,8 @@ try:
     run("exec", name, "pacman", "-Q", "systemd", "openssh", "python")
     run("inspect", name, "--format", "network={{.HostConfig.NetworkMode}} cgroupns={{.HostConfig.CgroupnsMode}} mounts={{json .Mounts}} ports={{json .HostConfig.PortBindings}} privileged={{.HostConfig.Privileged}}")
 finally:
-    subprocess.run(["docker", "stop", "--timeout", "10", name], check=False)
-    run("rm", "-f", name)
+    exists = subprocess.run(["docker", "container", "inspect", name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
+    if exists.returncode == 0:
+        subprocess.run(["docker", "stop", "--timeout", "10", name], check=False)
+        run("rm", "-f", name)
 print("SSH/systemd container checks passed. VM and reboot acceptance remain separate.")

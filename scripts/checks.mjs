@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 export const crates = {
   core: 'src-core',
+  'frame-simulator': 'src-frame-simulator',
   'shared-rust': 'src-shared-rust',
   'elevated-sidecar': 'src-elevated-sidecar',
   'privileged-launcher': 'src-privileged-launcher',
@@ -135,6 +136,7 @@ export function checkName(id) {
     csharp: 'C#',
     'overlay-sidecar': 'C# overlay sidecar',
     core: 'Rust core',
+    'frame-simulator': 'Frame simulator',
     'shared-rust': 'Shared Rust',
     'elevated-sidecar': 'Rust elevated sidecar',
     'privileged-launcher': 'Rust privileged launcher',

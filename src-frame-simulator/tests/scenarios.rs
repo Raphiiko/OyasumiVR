@@ -600,3 +600,34 @@ fn pairing_record_roundtrip_does_not_persist_live_connection_state() {
     let offline = serde_json::to_string(&ConnectionState::Offline).unwrap();
     assert_eq!(offline, r#"{"state":"offline"}"#);
 }
+
+#[tokio::test]
+async fn reset_releases_controller_when_ping_responses_are_not_read() {
+    let sim = Simulator::default();
+    let run = sim.start(0, 0).await.unwrap();
+    let mut ws = connect(&run, CLIENT_TOKEN, SERVER_CERT).await.unwrap();
+    exchange(&mut ws, 1, hello()).await;
+    let _ = timeout(Duration::from_secs(2), async {
+        loop {
+            ws.send(Message::Ping(vec![0; 125].into())).await.unwrap();
+        }
+    })
+    .await;
+    control(&run, Control::Reset).await;
+    let deadline = Instant::now() + Duration::from_secs(1);
+    loop {
+        if let Ok(mut replacement) = connect(&run, CLIENT_TOKEN, SERVER_CERT).await {
+            assert!(matches!(
+                exchange(&mut replacement, 1, hello()).await,
+                ReplyResult::Hello { .. }
+            ));
+            break;
+        }
+        assert!(
+            Instant::now() < deadline,
+            "reset retained the old controller"
+        );
+        tokio::task::yield_now().await;
+    }
+    run.stop().await;
+}

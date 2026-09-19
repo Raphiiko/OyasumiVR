@@ -47,6 +47,14 @@ describe('check selection', () => {
     expect(selected).not.toContain('build:memory-watch');
     expect(selected).not.toContain('build:ui');
   });
+  it('checks the standalone Frame simulator', () => {
+    expect(selectChecks(['src-frame-simulator/src/simulator.rs'])).toEqual([
+      'format:frame-simulator',
+      'lint:frame-simulator',
+      'test:frame-simulator',
+      'build:frame-simulator',
+    ]);
+  });
   it('checks protobuf consumers and generated README edits', () => {
     expect(selectChecks(['proto/oyasumi-core.proto'])).toEqual(
       expect.arrayContaining([
@@ -73,7 +81,7 @@ describe('check selection', () => {
     expect(expandCheck('format')).toEqual(
       expect.arrayContaining(['format:web', 'format:csharp', 'format:core', 'format:memory-watch'])
     );
-    expect(expandCheck('build:rust')).toHaveLength(6);
+    expect(expandCheck('build:rust')).toHaveLength(7);
     expect(expandCheck('all')).toEqual(Object.keys(checks));
     expect(() => expandCheck('imaginary')).toThrow('Unknown check');
   });

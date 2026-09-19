@@ -528,6 +528,7 @@ pub fn valid_rsa_key(key: &str) -> bool {
 async fn companion(sim: Simulator, tls: tokio_rustls::server::TlsStream<tokio::net::TcpStream>) {
     let mut disconnected = sim.disconnect.subscribe();
     let mut permit = None;
+    #[allow(clippy::result_large_err)]
     let check = |req: &UpgradeRequest, response: UpgradeResponse| {
         let status = if req.uri().path() != "/companion" {
             Some(StatusCode::NOT_FOUND)
@@ -587,7 +588,11 @@ async fn companion(sim: Simulator, tls: tokio_rustls::server::TlsStream<tokio::n
         let text = match message {
             Message::Text(text) => text,
             Message::Ping(_) | Message::Pong(_) => {
-                if ws.flush().await.is_err() {
+                let flushed = tokio::select! {
+                    _ = disconnected.changed() => break,
+                    result = timeout(Duration::from_secs(3), ws.flush()) => result,
+                };
+                if !matches!(flushed, Ok(Ok(()))) {
                     break;
                 };
                 continue;
