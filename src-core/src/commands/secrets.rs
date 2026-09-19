@@ -1,67 +1,12 @@
 use base64::{engine::general_purpose::STANDARD, Engine};
-use windows::Win32::{
-    Foundation::HLOCAL,
-    Security::Cryptography::{
-        CryptProtectData, CryptUnprotectData, CRYPTPROTECT_UI_FORBIDDEN, CRYPT_INTEGER_BLOB,
-    },
-};
-use windows_core::{Owned, PCWSTR};
-
-fn blob(bytes: &[u8]) -> Result<CRYPT_INTEGER_BLOB, String> {
-    Ok(CRYPT_INTEGER_BLOB {
-        cbData: u32::try_from(bytes.len()).map_err(|_| "Secret is too large")?,
-        pbData: bytes.as_ptr().cast_mut(),
-    })
-}
-
-fn copy_output(output: CRYPT_INTEGER_BLOB) -> Vec<u8> {
-    let allocation = unsafe { Owned::new(HLOCAL(output.pbData.cast())) };
-    if output.cbData == 0 {
-        drop(allocation);
-        return Vec::new();
-    }
-    let bytes = unsafe { std::slice::from_raw_parts(output.pbData, output.cbData as usize) };
-    let result = bytes.to_vec();
-    drop(allocation);
-    result
-}
 
 fn protect(secret: &[u8]) -> Result<Vec<u8>, String> {
-    let input = blob(secret)?;
-    let mut output = CRYPT_INTEGER_BLOB::default();
-    unsafe {
-        CryptProtectData(
-            &input,
-            PCWSTR::null(),
-            None,
-            None,
-            None,
-            CRYPTPROTECT_UI_FORBIDDEN,
-            &mut output,
-        )
-    }
-    .map_err(|error| error.to_string())?;
-    Ok(copy_output(output))
+    oyasumivr_frame_desktop::storage::protect(secret).map_err(|_| "Secret protection failed".into())
 }
 
 fn unprotect(secret: &[u8]) -> Result<Vec<u8>, String> {
-    let input = blob(secret)?;
-    let mut output = CRYPT_INTEGER_BLOB::default();
-    unsafe {
-        CryptUnprotectData(
-            &input,
-            None,
-            None,
-            None,
-            None,
-            CRYPTPROTECT_UI_FORBIDDEN,
-            &mut output,
-        )
-    }
-    .map_err(|error| error.to_string())?;
-    Ok(copy_output(output))
+    oyasumivr_frame_desktop::storage::unprotect(secret).map_err(|_| "Secret recovery failed".into())
 }
-
 #[tauri::command]
 pub fn protect_secret(secret: String) -> Result<String, String> {
     Ok(STANDARD.encode(protect(secret.as_bytes())?))

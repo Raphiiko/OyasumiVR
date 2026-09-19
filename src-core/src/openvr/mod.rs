@@ -359,3 +359,15 @@ async fn update_status(new_status: OpenVRStatus) {
     )
     .await;
 }
+
+pub(crate) async fn pairing_identity(serial: &str) -> Option<(String, String, String)> {
+    let device = devices::get_devices().await.into_iter().find(|device| {
+        device.class == models::TrackedDeviceClass::HMD
+            && device.serial_number.as_deref() == Some(serial)
+    })?;
+    Some((
+        device.serial_number?,
+        device.model_number?,
+        device.manufacturer_name?,
+    ))
+}

@@ -6,6 +6,7 @@ mod discord;
 mod elevated_sidecar;
 mod error_reporting;
 mod flavour;
+mod frame_pairing;
 mod globals;
 mod grpc;
 mod hardware;
@@ -244,8 +245,16 @@ async fn main() {
         })
         .invoke_handler(configure_command_handlers())
         .on_window_event(system_tray::handle_window_events)
-        .run(tauri::generate_context!())
+        .build(tauri::generate_context!())
         .expect("An error occurred while running the application")
+        .run(|app, event| {
+            if let tauri::RunEvent::ExitRequested { api, .. } = event {
+                if frame_pairing::begin_shutdown(app) {
+                    api.prevent_exit();
+                    frame_pairing::shutdown(app.clone());
+                }
+            }
+        })
 }
 
 #[cfg(windows)]
@@ -319,6 +328,11 @@ fn panic_location_file(file: &str) -> String {
 fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
     let mut builder = tauri_plugin_log::Builder::new()
         .clear_targets()
+        .filter(|metadata| {
+            !["tungstenite", "tokio_tungstenite", "russh"]
+                .iter()
+                .any(|module| metadata.target().starts_with(module))
+        })
         .format(move |out, message, record| {
             let format = time::format_description::parse_borrowed::<1>(
                 "[[[year]-[month]-[day]][[[hour]:[minute]:[second]]",
@@ -368,6 +382,9 @@ async fn app_setup(app_handle: tauri::AppHandle) {
         Err(_) => false,
     };
     error_reporting::set_enabled(&app_handle, error_reporting_enabled);
+    if frame_pairing::init(&app_handle).is_err() {
+        log::error!("Frame pairing state could not be loaded");
+    }
     // Process elevation security args
     os::elevation::process_elevation_cli_args().await;
 
@@ -468,6 +485,12 @@ fn on_cron_minute_start(_: &str) {
 
 fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
     tauri::generate_handler![
+        frame_pairing::frame_discover,
+        frame_pairing::frame_select,
+        frame_pairing::frame_run,
+        frame_pairing::frame_cancel,
+        frame_pairing::frame_state,
+        frame_pairing::frame_reconnect_at,
         openvr::commands::openvr_get_devices,
         openvr::commands::openvr_status,
         openvr::commands::openvr_get_analog_gain,

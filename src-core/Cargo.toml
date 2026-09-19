@@ -1,5 +1,6 @@
 [package]
 name = "oyasumivr"
+publish = false
 version = "26.9.0-beta.11"
 description = ""
 authors = ["Raphiiko"]
@@ -21,6 +22,7 @@ tauri-plugin-global-shortcut = "2.3.2"
 tauri-plugin-updater = "2.10.1"
 
 [dependencies]
+oyasumivr-frame-desktop = { path = "../src-frame-desktop" }
 async-recursion = "1.1.1"
 base64 = "0.22.1"
 btleplug = "0.12.0"
