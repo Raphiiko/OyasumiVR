@@ -176,8 +176,6 @@ async fn retry_pending_radio_restores() {
     }
 }
 
-/// Every scan needs its own adapter: btleplug registers an advertisement handler per `start_scan`
-/// call and never removes it.
 async fn scan_adapter() -> Option<Adapter> {
     let manager_guard = MANAGER.lock().await;
     let manager = manager_guard.as_ref()?;
