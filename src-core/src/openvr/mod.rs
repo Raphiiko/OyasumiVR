@@ -360,14 +360,48 @@ async fn update_status(new_status: OpenVRStatus) {
     .await;
 }
 
-pub(crate) async fn pairing_identity(serial: &str) -> Option<(String, String, String)> {
-    let device = devices::get_devices().await.into_iter().find(|device| {
+pub(crate) async fn pairing_identity(device_manager_id: &str) -> Option<(String, String, String)> {
+    identity_for_manager_id(devices::get_devices().await, device_manager_id)
+}
+
+fn identity_for_manager_id(
+    devices: Vec<models::OVRDevice>,
+    device_manager_id: &str,
+) -> Option<(String, String, String)> {
+    let device = devices.into_iter().find(|device| {
         device.class == models::TrackedDeviceClass::HMD
-            && device.serial_number.as_deref() == Some(serial)
+            && device
+                .serial_number
+                .as_ref()
+                .is_some_and(|serial| format!("OVR_HMD_{serial}") == device_manager_id)
     })?;
     Some((
         device.serial_number?,
         device.model_number?,
         device.manufacturer_name?,
     ))
+}
+
+#[cfg(test)]
+mod pairing_identity_tests {
+    #[test]
+    fn manager_id_preserves_the_exact_raw_serial() {
+        let device = serde_json::from_value(serde_json::json!({
+            "index": 0, "class": "HMD", "role": "Invalid", "serialNumber": "SYNTHETIC_001",
+            "modelNumber": "Deckard DV2", "manufacturerName": "Valve"
+        }))
+        .unwrap();
+        assert!(super::identity_for_manager_id(vec![device], "SYNTHETIC_001").is_none());
+        let device = serde_json::from_value(serde_json::json!({
+            "index": 0, "class": "HMD", "role": "Invalid", "serialNumber": "SYNTHETIC_001",
+            "modelNumber": "Deckard DV2", "manufacturerName": "Valve"
+        }))
+        .unwrap();
+        assert_eq!(
+            super::identity_for_manager_id(vec![device], "OVR_HMD_SYNTHETIC_001")
+                .unwrap()
+                .0,
+            "SYNTHETIC_001"
+        );
+    }
 }

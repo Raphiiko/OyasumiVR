@@ -23,6 +23,7 @@ pub enum Error {
     Offline,
     HostKeyChanged,
     AuthenticationFailed,
+    CompanionAuthenticationFailed,
     NotArmed,
     Denied,
     Timeout,

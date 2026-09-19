@@ -1,0 +1,213 @@
+<div class="pane" *transloco="let t; prefix: 'frame'">
+  <div class="pane-title"
+    ><a
+      class="back"
+      routerLink="/dashboard/deviceManager"
+      [attr.aria-label]="t('actions.backToDevices')"
+      ><i class="material-icons" aria-hidden="true">arrow_back</i></a
+    ><h1 #heading tabindex="-1">{{ t('headset') }}</h1
+    ><button class="btn btn-secondary" (click)="configure()">{{
+      t('actions.configure')
+    }}</button></div
+  >
+  <div class="pane-content">
+    @if (state(); as state) {
+      @if (status() !== 'connected') {
+        <div
+          class="status-note"
+          role="status"
+          [class.warning]="
+            [
+              'repairNeeded',
+              'identityChanged',
+              'incompatible',
+              'updateFailed',
+              'helperAccessLost',
+            ].includes(status())
+          "
+        >
+          <span>{{ t('details.messages.' + status()) }}</span>
+          @if (status() === 'repairNeeded' || status() === 'helperAccessLost') {
+            <button class="btn btn-primary" [disabled]="busy()" (click)="run('repair', true)">{{
+              t('actions.repair')
+            }}</button>
+          } @else if (
+            status() === 'incomplete' || status() === 'settingUp' || status() === 'cleaningUp'
+          ) {
+            <button class="btn btn-secondary" (click)="openPairing()">{{
+              t('actions.viewSetup')
+            }}</button>
+          } @else if (
+            status() === 'accessLost' || state.maintenance_error === 'authentication_failed'
+          ) {
+            <button class="btn btn-secondary" [disabled]="busy()" (click)="openPairing()">{{
+              t('actions.viewSetup')
+            }}</button>
+          } @else if (!state.in_progress && status() !== 'identityChanged') {
+            <button class="btn btn-secondary" [disabled]="busy()" (click)="run('retry')">{{
+              t('actions.tryAgain')
+            }}</button>
+          }
+        </div>
+      }
+      @if (failure() && failure() !== 'offline') {
+        <p class="error" role="alert">{{ t('errors.' + failure()) }}</p>
+      }
+      <div class="details-block">
+        <div class="detail-row"
+          ><span>{{ t('details.pairing') }}</span
+          ><span
+            >{{ t(state.paired ? 'details.paired' : 'status.incomplete') }}
+            @if (state.paired_at) {
+              · {{ state.paired_at * 1000 | date: 'mediumDate' }}
+            }
+          </span></div
+        >
+        <div class="detail-row"
+          ><span>{{ t('helper') }}</span
+          ><span class="connection"
+            ><span class="dot" [class.online]="state.connected"></span
+            >{{ t('status.' + status()) }}</span
+          ></div
+        >
+        <div class="detail-row"
+          ><span>SteamVR</span
+          ><span>{{
+            t(
+              !state.connected
+                ? 'details.unknown'
+                : state.steamvr_ready
+                  ? 'details.ready'
+                  : 'details.notRunning'
+            )
+          }}</span></div
+        >
+      </div>
+      <div class="details-block">
+        <button
+          class="disclosure"
+          [attr.aria-expanded]="expanded()"
+          aria-controls="frame-helper-details"
+          (click)="expanded.set(!expanded())"
+          ><span>{{ t('details.title') }}</span
+          ><i class="material-icons" aria-hidden="true">{{
+            expanded() ? 'expand_less' : 'expand_more'
+          }}</i></button
+        >
+        @if (expanded()) {
+          <dl id="frame-helper-details">
+            <dt>{{ t('details.version') }}</dt
+            ><dd
+              ><code>{{ state.installed_version || t('details.unknown') }}</code>
+              @if (!state.connected && state.installed_version) {
+                {{ t('details.lastKnown') }}
+              }
+            </dd>
+            <dt>{{ t('details.installation') }}</dt
+            ><dd>{{
+              t(
+                state.companion_installed === null
+                  ? 'details.unknown'
+                  : state.companion_installed
+                    ? state.connected
+                      ? 'details.installed'
+                      : 'details.installedLastKnown'
+                    : 'details.repairRequired'
+              )
+            }}</dd>
+            <dt>{{ t('details.address') }}</dt
+            ><dd
+              ><code>{{ state.address }}</code></dd
+            >
+            <dt>{{ t('details.pairedWith') }}</dt
+            ><dd>{{ t('details.thisPc') }}</dd> <dt>{{ t('details.lastSeen') }}</dt
+            ><dd>{{
+              state.last_contact
+                ? (state.last_contact * 1000 | date: 'medium')
+                : t('details.unknown')
+            }}</dd>
+          </dl>
+          @if (!state.connected) {
+            <div class="address-action"
+              ><button
+                class="btn btn-secondary"
+                [disabled]="busy()"
+                (click)="changingAddress.set(!changingAddress())"
+                >{{ t('actions.changeAddress') }}</button
+              ></div
+            >
+            @if (changingAddress()) {
+              <form (ngSubmit)="reconnect()"
+                ><label for="new-frame-address">{{ t('details.address') }}</label
+                ><input
+                  id="new-frame-address"
+                  name="address"
+                  [ngModel]="address()"
+                  (ngModelChange)="address.set($event)"
+                  maxlength="253"
+                  autocomplete="off"
+                  spellcheck="false"
+                /><button
+                  class="btn btn-primary"
+                  type="submit"
+                  [disabled]="busy() || !address().trim()"
+                  >{{ t('actions.connect') }}</button
+                ></form
+              >
+            }
+          }
+        }
+      </div>
+      <div class="spacer"></div>
+      <div class="actions">
+        @if (state.in_progress && state.action !== 'unpair' && state.action !== 'forget_local') {
+          <button class="btn btn-secondary" (click)="openPairing()">{{
+            t('actions.viewSetup')
+          }}</button>
+        }
+        <button class="btn btn-secondary" [disabled]="busy()" (click)="confirm('forget_local')">{{
+          t('actions.forgetOnPc')
+        }}</button>
+        <button class="btn btn-caution" [disabled]="busy()" (click)="confirm('unpair')">{{
+          t('actions.unpair')
+        }}</button>
+      </div>
+    } @else {
+      <p role="status">{{
+        t(pairing.unavailable() ? 'errors.persistence' : 'details.noPairing')
+      }}</p>
+    }
+  </div>
+  <dialog
+    #confirmation
+    appDialogFocus
+    (cancel)="$event.preventDefault(); closeConfirmation()"
+    aria-labelledby="frame-removal-title"
+  >
+    <h2 id="frame-removal-title">{{
+      t('removal.' + (removal() === 'forget_local' ? 'forget' : 'unpair') + '.title')
+    }}</h2>
+    <p>{{ t('removal.' + (removal() === 'forget_local' ? 'forget' : 'unpair') + '.body') }}</p>
+    <p>{{ t('removal.' + (removal() === 'forget_local' ? 'forget' : 'unpair') + '.note') }}</p>
+    @if (removal() === 'forget_local') {
+      <h3>{{ t('removal.manual.title') }}</h3>
+      <p>{{ t('removal.manual.body') }}</p>
+      <code class="removal-command" tabindex="0">{{ manualUninstallCommand }}</code>
+      <p>{{ t('removal.manual.note') }}</p>
+    }
+    @if (busy()) {
+      <p role="status">{{ t('status.removing') }}</p>
+    }
+    @if (error() || (state()?.action === removal() && state()?.error && !state()?.in_progress)) {
+      <p class="error" role="alert">{{ t('errors.' + (error() || state()?.error)) }}</p>
+    }
+    <div class="actions"
+      ><button class="btn btn-secondary" autofocus (click)="closeConfirmation()">{{
+        t(busy() ? 'actions.closeForNow' : 'actions.cancel')
+      }}</button
+      ><button class="btn btn-caution" [disabled]="busy()" (click)="run(removal() || 'unpair')">{{
+        t(removal() === 'forget_local' ? 'actions.forget' : 'actions.unpair')
+      }}</button></div
+    >
+  </dialog>
+</div>

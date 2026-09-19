@@ -347,3 +347,45 @@
     font-size: 1.1em;
   }
 }
+
+.frame-status {
+  font-size: 0.9em;
+  color: var(--color-text-2);
+  margin-top: 0.3em;
+}
+.frame-notice {
+  display: flex;
+  gap: 1em;
+  align-items: center;
+  padding: 1em;
+  margin-bottom: 1em;
+  background: var(--color-surface-1);
+  border-radius: 0.5em;
+}
+.frame-notice span {
+  flex: 1;
+}
+.device-actions button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+.manual-removal {
+  margin-top: 0.75em;
+  summary {
+    cursor: pointer;
+  }
+  code {
+    display: block;
+    overflow-wrap: anywhere;
+    user-select: text;
+  }
+  p {
+    line-height: 1.5;
+  }
+  summary:focus-visible,
+  code:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+  }
+}

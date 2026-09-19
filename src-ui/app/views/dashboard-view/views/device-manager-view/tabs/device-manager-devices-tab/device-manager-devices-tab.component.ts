@@ -36,6 +36,12 @@ import {
 import { fade, vshrink } from '../../../../../../utils/animations';
 import { SelectBoxItem } from '../../../../../../components/select-box/select-box.component';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Router } from '@angular/router';
+import { FramePairingService } from '../../../../../../services/frame-pairing.service';
+import {
+  FRAME_MANUAL_UNINSTALL_COMMAND,
+  frameStatus,
+} from '../../../../../../models/frame-pairing';
 import Fuse, { IFuseOptions } from 'fuse.js';
 import {
   LighthouseV1IdWizardModalComponent,
@@ -61,6 +67,8 @@ interface DeviceGroup {
   standalone: false,
 })
 export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
+  readonly manualUninstallCommand = FRAME_MANUAL_UNINSTALL_COMMAND;
+  readonly frameStatus = frameStatus;
   knownDevices: DMKnownDevice[] = [];
   observedDeviceIds: string[] = [];
   tags: DMDeviceTag[] = [];
@@ -87,10 +95,13 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     private modalService: ModalService,
     private destroyRef: DestroyRef,
     private domSanitizer: DomSanitizer,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    readonly pairing: FramePairingService,
+    private router: Router
   ) {}
 
   ngOnInit() {
+    void this.pairing.init();
     // Subscribe to device manager data
     combineLatest([
       this.deviceManager.knownDevices,
@@ -123,6 +134,11 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
       this.updateTagFilterOptions();
       this.cdr.markForCheck();
     });
+  }
+
+  openFrameDetails(device: DMKnownDevice) {
+    const state = this.pairing.forDevice(device.id);
+    if (state) void this.router.navigate(['/dashboard/frame', state.pairing_id]);
   }
 
   private updateTagFilterOptions() {

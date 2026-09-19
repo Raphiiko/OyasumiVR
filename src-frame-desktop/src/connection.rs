@@ -63,7 +63,19 @@ impl Connection {
                     tcp,
                 )
                 .await
-                .map_err(|_| Error::CertificateChanged)?;
+                .map_err(|error| {
+                    match error
+                        .get_ref()
+                        .and_then(|error| error.downcast_ref::<rustls::Error>())
+                    {
+                        Some(
+                            rustls::Error::InvalidCertificate(_)
+                            | rustls::Error::NoCertificatesPresented,
+                        ) => Error::CertificateChanged,
+                        Some(_) => Error::ProtocolMismatch,
+                        None => Error::Offline,
+                    }
+                })?;
             if tls
                 .get_ref()
                 .1
@@ -93,7 +105,7 @@ impl Connection {
                         tokio_tungstenite::tungstenite::Error::Http(response)
                             if response.status() == 401 =>
                         {
-                            Error::AuthenticationFailed
+                            Error::CompanionAuthenticationFailed
                         }
                         tokio_tungstenite::tungstenite::Error::Http(response)
                             if response.status() == 409 =>

@@ -42,6 +42,64 @@ pub struct Installation<'a> {
     pub openvr_library: Option<&'a str>,
 }
 
+pub async fn restore_access(
+    session: &Session,
+    root: &str,
+    pairing: &str,
+    device: &str,
+    provision: &Provision,
+) -> Result<()> {
+    let payload = zeroize::Zeroizing::new(
+        serde_json::to_vec(&serde_json::json!({
+            "pairing": pairing,
+            "device": device,
+            "daemon": provision.daemon_id,
+            "token": provision.token,
+        }))
+        .map_err(|_| Error::Persistence)?,
+    );
+    let script = r#"import fcntl, json, os, pathlib, sys, tempfile
+root = pathlib.Path(sys.argv[1])
+path = root / 'state/config.json'
+if path.is_symlink() or path.resolve() != path or not path.is_file():
+    raise SystemExit(1)
+lock = os.open(root / 'maintenance.lock', os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW, 0o600)
+fcntl.flock(lock, fcntl.LOCK_EX)
+expected = json.load(sys.stdin)
+owner_path = root / 'owner.json'
+if owner_path.is_symlink():
+    raise SystemExit(1)
+owner = json.loads(owner_path.read_text())
+if owner.get('pairing_id') != expected['pairing'] or owner.get('device_id') != expected['device']:
+    raise SystemExit(1)
+config = json.loads(path.read_text())
+if config.get('device_id') != expected['device'] or config.get('daemon_id') != expected['daemon']:
+    raise SystemExit(1)
+if config.get('client_token') == expected['token']:
+    raise SystemExit(0)
+config['client_token'] = expected['token']
+fd, temporary = tempfile.mkstemp(prefix='.access-', dir=path.parent)
+try:
+    with os.fdopen(fd, 'w') as output:
+        json.dump(config, output)
+        output.flush()
+        os.fsync(output.fileno())
+    os.replace(temporary, path)
+    directory = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        os.fsync(directory)
+    finally:
+        os.close(directory)
+finally:
+    if os.path.exists(temporary):
+        os.unlink(temporary)
+"#;
+    session
+        .execute(&["python3", "-B", "-c", script, root], &payload)
+        .await?;
+    Ok(())
+}
+
 pub async fn create_session(session: &Session, home: &str, id: Uuid) -> Result<String> {
     validate_home(home)?;
     let path = format!("{home}/.oyasumivr-frame-session-{id}");

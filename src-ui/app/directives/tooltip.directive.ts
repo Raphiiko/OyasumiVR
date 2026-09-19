@@ -12,7 +12,7 @@ import { TStringTranslatePipe } from '../pipes/tstring-translate.pipe';
 
 @Directive({
   selector: '[tooltip]',
-  standalone: false,
+  standalone: true,
 })
 export class TooltipDirective implements AfterViewInit, OnChanges, OnDestroy {
   @Input('tooltip') text?: TString;

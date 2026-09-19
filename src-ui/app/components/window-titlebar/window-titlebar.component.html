@@ -18,6 +18,8 @@
 <div class="action-area">
   <button
     class="titlebar-button btn-message-center"
+    [disabled]="!messageCenterEnabled"
+    [attr.aria-label]="'message-center.tooltip' | transloco"
     [tooltip]="'message-center.tooltip'"
     [tooltipMode]="'bottom'"
     (click)="messageCenter.toggle()"
@@ -36,13 +38,25 @@
   <div class="action-spacer">
     <span class="separator">|</span>
   </div>
-  <button class="titlebar-button btn-minimize" (click)="minimize()">
+  <button
+    class="titlebar-button btn-minimize"
+    (click)="minimize()"
+    [attr.aria-label]="'comp.window-titlebar.minimize' | transloco"
+  >
     <i class="material-symbols-outlined">remove</i>
   </button>
-  <button class="titlebar-button btn-maximize" (click)="maximize()">
+  <button
+    class="titlebar-button btn-maximize"
+    (click)="maximize()"
+    [attr.aria-label]="'comp.window-titlebar.maximize' | transloco"
+  >
     <i class="material-symbols-outlined">check_box_outline_blank</i>
   </button>
-  <button class="titlebar-button btn-close" (click)="close()">
+  <button
+    class="titlebar-button btn-close"
+    (click)="close()"
+    [attr.aria-label]="'comp.window-titlebar.close' | transloco"
+  >
     <i class="material-icons">close</i>
   </button>
 </div>

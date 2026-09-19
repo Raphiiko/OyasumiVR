@@ -77,6 +77,9 @@ impl Onboarding {
             maintenance_error: None,
             repair_needed: false,
             remote_cleanup_confirmed: false,
+            installed_version: None,
+            paired_at: None,
+            setup_stage: 0,
         };
         self.store.put_secret(
             id,
@@ -196,6 +199,7 @@ impl Onboarding {
             registration,
             Err(Error::NotArmed
                 | Error::Denied
+                | Error::Timeout
                 | Error::Busy
                 | Error::Cancelled
                 | Error::InvalidInput)

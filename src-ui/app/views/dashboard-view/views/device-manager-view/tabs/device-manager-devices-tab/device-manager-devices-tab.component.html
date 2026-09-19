@@ -1,4 +1,23 @@
-<!-- Search and Filter Controls -->
+@if (pairing.notice()) {
+  <div class="frame-notice" role="status"
+    ><div>
+      <span>{{ 'frame.notices.' + pairing.notice() | transloco }}</span>
+      @if (pairing.notice() === 'forgotten') {
+        <details class="manual-removal" open>
+          <summary>{{ 'frame.removal.manual.title' | transloco }}</summary>
+          <p>{{ 'frame.removal.manual.body' | transloco }}</p>
+          <code tabindex="0">{{ manualUninstallCommand }}</code>
+          <p>{{ 'frame.removal.manual.note' | transloco }}</p>
+        </details>
+      }</div
+    ><button
+      class="btn btn-secondary"
+      (click)="pairing.notice.set('')"
+      [attr.aria-label]="'frame.actions.close' | transloco"
+      ><i class="material-icons" aria-hidden="true">close</i></button
+    ></div
+  >
+}
 <div class="filter-controls-container">
   <div class="filter-controls">
     <div class="search-wrapper">
@@ -70,7 +89,9 @@
               />
               <div class="device-info">
                 <div class="device-name-line">
-                  <span class="device-name">{{ device.typeName }}</span>
+                  <span class="device-name">{{
+                    pairing.supported(device) ? ('frame.headset' | transloco) : device.typeName
+                  }}</span>
                   @if (device.disabled) {
                     <i
                       class="material-icons hidden-icon"
@@ -94,6 +115,11 @@
                     <span class="device-role" [transloco]="getDeviceRole(device) ?? ''"></span>
                   }
                 </div>
+                @if (pairing.supported(device)) {
+                  <div class="frame-status">{{
+                    'frame.status.' + frameStatus(pairing.forDevice(device.id)) | transloco
+                  }}</div>
+                }
               </div>
               <!-- Battery Info -->
               @if (getDeviceBatteryInfo(device); as battery) {
@@ -106,6 +132,30 @@
               }
               <!-- Action Buttons -->
               <div class="device-actions" (click)="$event.stopPropagation()">
+                @if (pairing.supported(device)) {
+                  @if (!pairing.forDevice(device.id)?.paired) {
+                    <button
+                      class="btn btn-primary"
+                      [attr.data-frame-entry]="device.id"
+                      (click)="pairing.open(device)"
+                      >{{
+                        (pairing.forDevice(device.id)
+                          ? 'frame.actions.viewSetup'
+                          : 'frame.actions.pair'
+                        ) | transloco
+                      }}</button
+                    >
+                  }
+                  @if (pairing.forDevice(device.id)) {
+                    <button
+                      class="btn btn-secondary"
+                      [attr.data-frame-entry]="device.id"
+                      (click)="openFrameDetails(device)"
+                      [attr.aria-label]="'frame.actions.details' | transloco"
+                      ><i class="material-icons" aria-hidden="true">chevron_right</i></button
+                    >
+                  }
+                }
                 <!-- Power Button -->
                 @if (canShowPowerButton(device)) {
                   <app-device-power-button
@@ -133,7 +183,7 @@
                   </div>
                 }
                 <!-- Forget Button -->
-                @if (!isDeviceObserved(device.id)) {
+                @if (!isDeviceObserved(device.id) && !pairing.forDevice(device.id)) {
                   <button
                     class="btn-forget"
                     (click)="forgetDevice(device)"

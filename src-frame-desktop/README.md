@@ -2,7 +2,7 @@
 
 This Windows Rust crate owns Frame pairing credentials, SSH
 onboarding, installation, and the persistent status-only companion connection.
-The core exposes it through Tauri. There is no pairing UI in this stage.
+The core exposes it through Tauri to the Angular pairing flow.
 
 ## Stage 4 command contract
 
@@ -15,9 +15,11 @@ The core exposes it through Tauri. There is no pairing UI in this stage.
 | `frame_state` | none | current typed states |
 | `frame_reconnect_at` | pairing UUID, candidate | verify pinned SSH identity, save address, start retry |
 
-Actions are `pair`, `retry`, `repair`, `unpair`, and `forget_local`.
+Actions are `pair`, `retry`, `repair`, `unpair`, `forget_local`, and `cleanup`.
 Only `pair` permits registration. `retry` uses saved credentials. `repair` is an
 explicit installation request. `forget_local` performs no remote removal.
+`cleanup` removes a pending owned upload and recovers an owned transaction without reinstalling.
+Explicit retry bypasses the automatic maintenance delay; background maintenance retains its backoff.
 
 Subscribe to `frame-pairing-state` before issuing commands. Every event contains
 pairing and operation UUIDs, `in_progress`, a typed step/error, and separate paired,
@@ -25,6 +27,26 @@ connected, last-known installation, and SteamVR readiness fields. A cancellation
 request is not completion: wait for `in_progress=false`. Installation cleanup can
 continue after cancellation. Read `frame_state` after subscribing or recovering
 from a missed event. No command returns credentials or raw SSH output.
+
+Each pairing has a monotonically increasing `revision` for this controller lifetime. Merge events
+and snapshots only when their revision is newer. `action` describes an active operation;
+`cancelling` preserves its cancellation outcome until another operation starts. Cancelling the
+latest completed operation is idempotent; a different operation UUID is rejected.
+
+Safe diagnostics include `address`, authenticated `installed_version`, `paired_at`, `last_contact`,
+`access_verified`, `setup_stage` (verification, installation, connection), `repair_needed`, and
+`cleanup_pending`. Offline version and installation data are last known. Saved companion credentials
+alone do not prove installation. `paired` is true only after authenticated completion, independently
+of SteamVR readiness. `remote_removal_performed` requires a persisted remote cleanup receipt.
+If local deletion then fails, the record remains recoverable and another cleanup can finish it.
+
+`authentication_failed` describes headset SSH access. `companion_authentication_failed` describes
+the authenticated helper rejecting the saved client credential. The latter permits an explicit
+repair with existing SSH approval, not another headset approval prompt. TLS transport loss is
+`offline`; certificate validation failures remain `certificate_changed` and never bypass trust.
+
+Selection may change an address before any trust is saved. Once a pin or companion exists, address
+changes require `frame_reconnect_at` and the existing SSH pin. A candidate cannot replace trust.
 
 Discovery scans only `_steamos-devkit._tcp.local.` for four seconds, with at most
 64 candidates. Discovery and HTTP data do not establish headset identity. Tests
@@ -79,6 +101,10 @@ directory with an ownership marker. Its UUID is durable before creation. Cleanup
 removes only known files and refuses unexpected contents. `inspect` precedes
 maintenance; ownership is checked again under the remote maintenance lock.
 Existing configuration and credentials survive updates and recovery.
+Explicit repair also restores a rejected helper token from the existing local credential over
+verified SSH. It checks pairing and device ownership under the maintenance lock and atomically
+replaces only that configuration field. SSH pins, certificates, daemon identity, and stored
+credentials remain unchanged. Repair completes only after authenticated helper verification.
 
 Online unpair verifies remote removal and removes only the exact owned RSA key.
 It saves a cleanup receipt before deleting local secrets. Failed remote cleanup

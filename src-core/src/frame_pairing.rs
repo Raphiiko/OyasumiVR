@@ -29,13 +29,18 @@ pub fn init(app: &tauri::AppHandle) -> Result<(), Error> {
     let controller = Controller::new(Store::open(data)?, bundle);
     let mut events = controller.subscribe();
     let handle = app.clone();
+    let event_controller = controller.clone();
     tauri::async_runtime::spawn(async move {
         loop {
             match events.recv().await {
                 Ok(state) => {
                     let _ = handle.emit("frame-pairing-state", state);
                 }
-                Err(tokio::sync::broadcast::error::RecvError::Lagged(_)) => continue,
+                Err(tokio::sync::broadcast::error::RecvError::Lagged(_)) => {
+                    for state in event_controller.states() {
+                        let _ = handle.emit("frame-pairing-state", state);
+                    }
+                }
                 Err(_) => return,
             }
         }

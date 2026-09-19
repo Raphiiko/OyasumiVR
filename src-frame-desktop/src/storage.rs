@@ -40,6 +40,12 @@ pub struct Record {
     pub repair_needed: bool,
     #[serde(default)]
     pub remote_cleanup_confirmed: bool,
+    #[serde(default)]
+    pub installed_version: Option<String>,
+    #[serde(default)]
+    pub paired_at: Option<u64>,
+    #[serde(default)]
+    pub setup_stage: u8,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]

@@ -1,0 +1,350 @@
+<dialog
+  #dialog
+  appDialogFocus
+  (cancel)="$event.preventDefault(); close()"
+  aria-labelledby="frame-title"
+>
+  <app-window-titlebar [messageCenterEnabled]="false" />
+  <div class="guide" *transloco="let t; prefix: 'frame'">
+    <nav class="trail" [attr.aria-label]="t('steps.label')">
+      <div class="trail-edge"
+        ><button class="plain" [hidden]="!canBack()" (click)="back()"
+          ><i class="material-icons" aria-hidden="true">arrow_back</i
+          >{{ t('actions.back') }}</button
+        ></div
+      >
+      <div class="previous"
+        ><button class="plain" [hidden]="step() === 0" [disabled]="!canBack()" (click)="back()"
+          ><i class="material-icons" aria-hidden="true">check</i
+          >{{ t('steps.' + stepLabels[Math.max(0, step() - 1)]) }}</button
+        ></div
+      >
+      <span class="current" aria-current="step"
+        ><span class="dot"></span>{{ t('steps.' + stepLabels[step()]) }}</span
+      >
+      <span class="next">
+        @if (step() < 6) {
+          {{ t('steps.' + stepLabels[step() + 1])
+          }}<i class="material-icons" aria-hidden="true">arrow_forward</i>
+        }
+      </span>
+      <div class="trail-edge end"
+        ><button
+          class="plain"
+          [hidden]="['cancelling', 'success', 'cancelled'].includes(page())"
+          [disabled]="pending()"
+          (click)="cancelPairing()"
+          >{{ t('actions.cancelPairing') }}</button
+        ></div
+      >
+    </nav>
+    <main class="guide-scroll">
+      <div class="instruction-group" [class.illustrated]="!!illustration()">
+        <div class="instruction-row">
+          <div class="instructions">
+            <h1 #heading id="frame-title" tabindex="-1" aria-live="polite">{{
+              t('pages.' + page() + '.title')
+            }}</h1>
+            <div class="copy">
+              @switch (page()) {
+                @case ('intro') {
+                  <p>{{ t('pages.intro.install') }}</p
+                  ><p>{{ t('pages.intro.approval') }}</p
+                  ><p>{{ t('pages.intro.nearby') }}</p>
+                }
+                @case ('devmode') {
+                  <p [innerHTML]="t('pages.devmode.path')"></p
+                  ><p [innerHTML]="t('pages.devmode.enable')"></p>
+                }
+                @case ('pairhost') {
+                  <p [innerHTML]="t('pages.pairhost.path')"></p
+                  ><p>{{ t('pages.pairhost.return') }}</p>
+                }
+                @case ('search') {
+                  <p [innerHTML]="t('pages.search.body')"></p>
+                }
+                @case ('found') {
+                  <p
+                    [innerHTML]="
+                      t(candidates().length > 1 ? 'pages.found.multiple' : 'pages.found.body')
+                    "
+                  ></p>
+                }
+                @case ('notfound') {
+                  <p [innerHTML]="t('pages.notfound.body')"></p>
+                }
+                @case ('manual') {
+                  <p [innerHTML]="t('pages.manual.body')"></p>
+                }
+                @case ('notready') {
+                  <p [innerHTML]="t('pages.notready.body')"></p>
+                }
+                @case ('request') {
+                  <p>{{ t('pages.request.body') }}</p>
+                }
+                @case ('awaiting') {
+                  <p [innerHTML]="t('pages.awaiting.body')"></p
+                  ><p>{{ t('pages.awaiting.return') }}</p>
+                }
+                @case ('declined') {
+                  <p>{{ t('pages.declined.body') }}</p>
+                }
+                @case ('timeout') {
+                  <p>{{ t('pages.timeout.body') }}</p>
+                }
+                @case ('setup') {
+                  <p>{{ t(repair() ? 'pages.setup.repair' : 'pages.setup.body') }}</p>
+                }
+                @case ('setupFailed') {
+                  <p>{{ t('pages.setupFailed.body') }}</p>
+                }
+                @case ('cancelling') {
+                  <p>{{ t('pages.cancelling.body') }}</p
+                  ><p>{{ t('pages.cancelling.access') }}</p>
+                }
+                @case ('cleanupFailed') {
+                  <p>{{ t('pages.cleanupFailed.body') }}</p>
+                }
+                @case ('cancelled') {
+                  <p>{{ t('pages.cancelled.body') }}</p>
+                }
+                @case ('accessLost') {
+                  <p>{{ t('pages.accessLost.body') }}</p>
+                }
+                @case ('success') {
+                  <p>{{
+                    t(state()?.connected ? 'pages.success.body' : 'pages.success.offline')
+                  }}</p>
+                }
+                @case ('error') {
+                  <p>{{ t(state()?.repair_needed ? 'details.repairBody' : 'pages.error.body') }}</p>
+                }
+              }
+            </div>
+            @if (
+              error() &&
+              !(page() === 'success' && error() === 'offline') &&
+              !['notready', 'declined', 'timeout', 'cancelled', 'accessLost'].includes(page())
+            ) {
+              <p class="error" role="alert">{{ t('errors.' + error()) }}</p>
+            }
+            @if (pairing.unavailable()) {
+              <p class="error" role="alert">{{ t('errors.persistence') }}</p>
+            }
+            @if (page() === 'found') {
+              <div class="candidates" [attr.aria-label]="t('pages.found.title')">
+                @for (candidate of candidates(); track candidate.id; let i = $index) {
+                  <button
+                    class="candidate"
+                    [class.selected]="selected() === i"
+                    [attr.aria-pressed]="selected() === i"
+                    (click)="selected.set(i)"
+                    [disabled]="busy()"
+                  >
+                    @if (candidates().length > 1) {
+                      <span class="radio" aria-hidden="true"></span>
+                    }
+                    <img src="/assets/img/icon_hmd.png" alt="" /><span
+                      ><span>{{ t('headset') }}</span
+                      ><code>{{ candidate.address }}</code></span
+                    >
+                  </button>
+                }
+              </div>
+            }
+            @if (page() === 'manual') {
+              <form (ngSubmit)="discover(true)" class="address-form">
+                <label for="frame-address">{{ t('details.address') }}</label>
+                <input
+                  id="frame-address"
+                  name="address"
+                  [ngModel]="address()"
+                  (ngModelChange)="address.set($event)"
+                  maxlength="253"
+                  autocomplete="off"
+                  spellcheck="false"
+                  [attr.aria-invalid]="!!address() && !validAddress()"
+                  aria-describedby="address-hint"
+                />
+                <span id="address-hint">{{ t('pages.manual.hint') }}</span>
+                <button type="submit" hidden></button>
+              </form>
+            }
+            @if (page() === 'setup' || page() === 'setupFailed') {
+              @if (page() === 'setup') {
+                <p class="visually-hidden" role="status">{{
+                  t('stages.' + stageLabels[Math.min(state()?.setup_stage ?? 0, 2)])
+                }}</p>
+              }
+              <ol class="setup-stages" [attr.aria-label]="t('steps.install')">
+                @for (stage of stageLabels; track stage; let i = $index) {
+                  <li
+                    [class.future]="i > (state()?.setup_stage ?? 0)"
+                    [attr.aria-current]="i === (state()?.setup_stage ?? 0) ? 'step' : null"
+                  >
+                    @if (i < (state()?.setup_stage ?? 0)) {
+                      <i class="material-icons complete" aria-hidden="true">check_circle</i>
+                    } @else if (i === (state()?.setup_stage ?? 0)) {
+                      @if (page() === 'setupFailed') {
+                        <i class="material-icons error" aria-hidden="true">error</i>
+                      } @else {
+                        <span class="spinner" aria-hidden="true"></span>
+                      }
+                    } @else {
+                      <span class="pending-dot" aria-hidden="true"></span>
+                    }
+                    {{ t('stages.' + stage) }}
+                  </li>
+                }
+              </ol>
+            }
+            @if (page() === 'success' && state()?.connected && !state()?.steamvr_ready) {
+              <p class="status-note">{{ t('pages.success.steamvr') }}</p>
+            }
+          </div>
+          @if (illustration()) {
+            <picture class="pairing-illustration">
+              @if (['searching', 'approval-pending', 'setup-running'].includes(illustration())) {
+                <source
+                  media="(prefers-reduced-motion: reduce)"
+                  [srcset]="'assets/images/frame-pairing/' + illustration() + '-static.svg'"
+                />
+              }
+              <img
+                [src]="'assets/images/frame-pairing/' + illustration() + '.svg'"
+                width="180"
+                height="120"
+                alt=""
+                aria-hidden="true"
+              />
+            </picture>
+          }
+        </div>
+        <div class="actions">
+          @if (['search', 'request', 'awaiting', 'cancelling'].includes(page()) || pending()) {
+            <span class="spinner" aria-hidden="true"></span
+            ><span class="busy-text" role="status">{{
+              t('waiting.' + (pending() ? 'request' : page()))
+            }}</span>
+          }
+          <div class="spacer"></div>
+          @if (busy() || page() === 'cancelling') {
+            <button class="plain" (click)="close()">{{ t('actions.closeForNow') }}</button>
+          }
+          @switch (page()) {
+            @case ('intro') {
+              <button
+                class="btn btn-primary"
+                [disabled]="pairing.unavailable() || busy()"
+                (click)="go('devmode')"
+                >{{ t('actions.continue') }}</button
+              >
+            }
+            @case ('devmode') {
+              <button class="btn btn-primary" (click)="go('pairhost')">{{
+                t('actions.continue')
+              }}</button>
+            }
+            @case ('pairhost') {
+              <button class="btn btn-primary" (click)="discover()">{{
+                t('actions.continue')
+              }}</button>
+            }
+            @case ('search') {
+              <button class="plain" (click)="manual()">{{ t('actions.enterAddress') }}</button>
+            }
+            @case ('found') {
+              <button class="plain" [disabled]="busy()" (click)="manual()">{{
+                t('actions.enterAddress')
+              }}</button
+              ><button class="btn btn-secondary" [disabled]="busy()" (click)="discover()">{{
+                t('actions.searchAgain')
+              }}</button
+              ><button class="btn btn-primary" [disabled]="busy()" (click)="pair()">{{
+                t(candidates().length > 1 ? 'actions.pairThis' : 'actions.yesPair')
+              }}</button>
+            }
+            @case ('notfound') {
+              <button class="btn btn-secondary" (click)="manual()">{{
+                t('actions.enterAddress')
+              }}</button
+              ><button class="btn btn-primary" (click)="discover()">{{
+                t('actions.searchAgain')
+              }}</button>
+            }
+            @case ('manual') {
+              <button
+                class="btn btn-primary"
+                [disabled]="!validAddress() || busy()"
+                (click)="discover(true)"
+                >{{ t('actions.connect') }}</button
+              >
+            }
+            @case ('notready') {
+              <button class="btn btn-primary" [disabled]="busy()" (click)="run('pair')">{{
+                t('actions.tryAgain')
+              }}</button>
+            }
+            @case ('accessLost') {
+              <button class="btn btn-primary" [disabled]="busy()" (click)="go('pairhost')">{{
+                t('actions.continue')
+              }}</button>
+            }
+            @case ('declined') {
+              <button class="btn btn-primary" [disabled]="busy()" (click)="run('pair')">{{
+                t('actions.sendAgain')
+              }}</button>
+            }
+            @case ('timeout') {
+              <button class="btn btn-primary" [disabled]="busy()" (click)="run('pair')">{{
+                t('actions.sendAgain')
+              }}</button>
+            }
+            @case ('setupFailed') {
+              <button class="btn btn-primary" [disabled]="busy()" (click)="run('retry')">{{
+                t('actions.tryAgain')
+              }}</button>
+            }
+            @case ('cleanupFailed') {
+              <button class="btn btn-secondary" (click)="close()">{{ t('actions.leave') }}</button
+              ><button class="btn btn-primary" [disabled]="busy()" (click)="run('cleanup')">{{
+                t('actions.tryAgain')
+              }}</button>
+            }
+            @case ('cancelled') {
+              <button class="btn btn-secondary" (click)="close()">{{ t('actions.done') }}</button>
+              @if (state()) {
+                <button
+                  class="btn btn-primary"
+                  (click)="cancelling.set(false); run(state()?.access_verified ? 'retry' : 'pair')"
+                  >{{
+                    t(state()?.access_verified ? 'actions.resume' : 'actions.sendAgain')
+                  }}</button
+                >
+              }
+            }
+            @case ('success') {
+              <button class="btn btn-primary" (click)="close()">{{ t('actions.done') }}</button>
+            }
+            @case ('error') {
+              <button class="btn btn-secondary" (click)="close()">{{ t('actions.close') }}</button>
+              @if (state()?.repair_needed || error() === 'companion_authentication_failed') {
+                <button class="btn btn-primary" [disabled]="busy()" (click)="run('repair')">{{
+                  t('actions.repair')
+                }}</button>
+              } @else if (state()) {
+                <button class="btn btn-primary" [disabled]="busy()" (click)="run('retry')">{{
+                  t('actions.tryAgain')
+                }}</button>
+              } @else {
+                <button class="btn btn-primary" [disabled]="busy()" (click)="go('pairhost')">{{
+                  t('actions.back')
+                }}</button>
+              }
+            }
+          }
+        </div>
+      </div>
+    </main>
+  </div>
+</dialog>

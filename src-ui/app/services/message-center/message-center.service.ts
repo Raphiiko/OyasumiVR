@@ -1,3 +1,4 @@
+import { FramePairingMessageMonitor } from './monitors/frame-pairing-message-monitor';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, distinctUntilChanged, map } from 'rxjs';
 import { AppSettingsService } from '../app-settings.service';
@@ -59,6 +60,7 @@ export class MessageCenterService {
       new ManyLighthousesDetectedMessageMonitor(this),
       new GpuAutomationMessageMonitor(this),
       new ElevatedFeaturesMessageMonitor(this),
+      new FramePairingMessageMonitor(this),
       new LighthouseConsoleMonitor(this),
       new VRChatOSCMessageMonitor(this),
       new VRChatWebsocketConnectionMonitor(this),
@@ -118,52 +120,3 @@ export class MessageCenterService {
     }
   }
 }
-
-/*
-VRChat logs unavailable
-
-Although VRChat seems to be running, its log files could not be detected. 
-Without these logs certain OyasumiVR features like automatically accepting invite requests will not work.
-Please make sure you've got logging enabled within VRChat.
-
-Actions:
-- More Info -> Web link
-- Hide
-
----
-
-Sleep Detection Calibration Pending
-
-Before using sleep detection, you should calibrate at least once to improve its accuracy.
-
-Actions:
-- Calibrate Now -> Open calibration modal
-- Open Settings -> Sleep Detection Settings
-- Hide
-
----
-
-Administrator Privileges Required
-
-You have automations configured that require administrative privileges to work, which are not currently granted.
-
-Actions:
-- Request Privileges
-- Hide
-
----
-
-Auto Accepting Invite Requests Unavailable
-
-As in VRChat you are currently on "Busy" status, you won't be able to receive invite requests for OyasumiVR to accept.
-
-Actions:
-- Hide
-
----
-
-Many base stations detected
-
-
-
-*/
