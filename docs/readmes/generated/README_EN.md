@@ -138,9 +138,7 @@ If automatic detection is not what you're looking for, there's various alternati
 <table>
   <tr>
     <td>
-Open the OyasumiVR tab in the SteamVR dashboard to use the full main window UI, including controller input, smooth scrolling and keyboard entry.
-<br><br>
-OyasumiVR also has a hand menu for quick access to some features.
+OyasumiVR comes with its own SteamVR overlay, which allows you control some of its features from within VR!
 <br><br>
 By default, double press the A button on your right controller, and it should pop up in front of you. 
     </td>
