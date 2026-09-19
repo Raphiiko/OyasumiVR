@@ -11,9 +11,9 @@ use super::DASHBOARD_GPU_ACCELERATION;
 use crate::globals::TAURI_APP_HANDLE;
 use raphii_openvr_rs::{raw, Context};
 use std::{
-    cell::{Cell, RefCell},
+    cell::RefCell,
     sync::{
-        atomic::{AtomicBool, Ordering},
+        atomic::{AtomicBool, AtomicU64, Ordering},
         Arc, Mutex,
     },
     time::{Duration, Instant},
@@ -69,8 +69,9 @@ struct CaptureState {
 
 thread_local! {
     static DESKTOP: RefCell<Option<Desktop>> = const { RefCell::new(None) };
-    static DESKTOP_GENERATION: Cell<u64> = const { Cell::new(0) };
 }
+/// Counts desktop takeovers so a deferred restore skips a desktop a newer activation reuses.
+static DESKTOP_GENERATION: AtomicU64 = AtomicU64::new(0);
 
 /// The desktop WebView state to put back when the dashboard is left.
 struct Desktop {
@@ -602,9 +603,9 @@ impl DashboardOverlay {
         // callbacks of the previous capture must not reach the next activation
         self.capture.active.store(false, Ordering::Release);
         self.capture = Arc::default();
-        let generation = DESKTOP_GENERATION.with(Cell::get);
+        let generation = DESKTOP_GENERATION.load(Ordering::Acquire);
         let scheduled = self.window.run_on_main_thread(move || {
-            if DESKTOP_GENERATION.with(Cell::get) != generation {
+            if DESKTOP_GENERATION.load(Ordering::Acquire) != generation {
                 return;
             }
             DESKTOP.with(|saved| {
@@ -643,7 +644,7 @@ unsafe fn capture_frame(
     capture: &Arc<CaptureState>,
 ) -> Result<(), String> {
     DESKTOP.with(|saved| {
-        DESKTOP_GENERATION.with(|generation| generation.set(generation.get() + 1));
+        DESKTOP_GENERATION.fetch_add(1, Ordering::AcqRel);
         if saved.borrow().is_none() {
             *saved.borrow_mut() = Some(Desktop::enter(
                 window,
