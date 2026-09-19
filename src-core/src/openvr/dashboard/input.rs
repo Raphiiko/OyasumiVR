@@ -87,7 +87,7 @@ impl DashboardInput {
         input.queue.borrow_mut().keyboard_generation += 1;
         input.enqueue(
             "Runtime.evaluate",
-            json!({"expression": include_str!("dashboard_scroll.js")}),
+            json!({"expression": include_str!("scroll.js")}),
         );
         input
     }
@@ -141,7 +141,7 @@ impl DashboardInput {
                 );
                 if button == 1 && !down {
                     self.enqueue("Runtime.evaluate", json!({
-                        "expression": format!("document.elementFromPoint({},{})?.closest('input,textarea') === document.activeElement ? (() => {{ return {} }})() : null", self.x, self.y, include_str!("dashboard_keyboard.js")),
+                        "expression": format!("document.elementFromPoint({},{})?.closest('input,textarea') === document.activeElement ? (() => {{ return {} }})() : null", self.x, self.y, include_str!("keyboard.js")),
                         "returnByValue": true, "objectGroup": "oyasumi-dashboard-keyboard"
                     }));
                 }

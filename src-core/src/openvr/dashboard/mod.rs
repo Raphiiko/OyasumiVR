@@ -1,9 +1,13 @@
-use super::{
-    dashboard_capture::{DashboardCapture, GpuFrame},
-    dashboard_input::{DashboardInput, KeyboardRequests, PointerEvent},
-    dashboard_texture::DashboardTexture,
-    DASHBOARD_GPU_ACCELERATION,
+mod capture;
+mod input;
+mod texture;
+
+use self::{
+    capture::{DashboardCapture, GpuFrame},
+    input::{DashboardInput, KeyboardRequests, PointerEvent},
+    texture::DashboardTexture,
 };
+use super::DASHBOARD_GPU_ACCELERATION;
 use crate::globals::TAURI_APP_HANDLE;
 use raphii_openvr_rs::{raw, Context};
 use std::{
@@ -268,8 +272,9 @@ impl DashboardOverlay {
                 raw::VROverlayFlags::SendVRSmoothScrollEvents,
                 true,
             ))?;
-            let icon = tauri::image::Image::from_bytes(include_bytes!("../../icons/128x128.png"))
-                .map_err(message)?;
+            let icon =
+                tauri::image::Image::from_bytes(include_bytes!("../../../icons/128x128.png"))
+                    .map_err(message)?;
             overlay.submit(overlay.thumbnail, &icon)?;
             let blank = tauri::image::Image::new_owned(
                 [24, 24, 28, 255].repeat((WIDTH * HEIGHT) as usize),

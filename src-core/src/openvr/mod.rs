@@ -3,10 +3,7 @@ mod brightness_overlay;
 mod chaperone;
 mod colortemp_analog;
 pub mod commands;
-mod dashboard_capture;
-mod dashboard_input;
-mod dashboard_overlay;
-mod dashboard_texture;
+mod dashboard;
 mod devices;
 mod framelimiter;
 mod gesture_detector;
@@ -60,7 +57,7 @@ pub async fn task() {
     // Task state
     let mut ovr_active = false;
     let mut ovr_next_init = DateTime::from_timestamp_millis(0).unwrap();
-    let mut dashboard: Option<dashboard_overlay::DashboardOverlay> = None;
+    let mut dashboard: Option<dashboard::DashboardOverlay> = None;
     let mut next_device_tick = Instant::now();
 
     // Main Loop
@@ -116,7 +113,7 @@ pub async fn task() {
                     shutdown_ovr().await;
                     continue;
                 }
-                match dashboard_overlay::DashboardOverlay::create(&ctx).await {
+                match dashboard::DashboardOverlay::create(&ctx).await {
                     Ok(overlay) => dashboard = Some(overlay),
                     Err(error) => {
                         error!("[Dashboard] Could not initialize dashboard overlay: {error}")
