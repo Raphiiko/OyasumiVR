@@ -29,19 +29,6 @@ Clicking an editable input or textarea opens SteamVR's per-key keyboard. Charact
 
 Native file dialogs, native popup menus, contenteditable editors and drag-to-scroll are not implemented for VR.
 
-## Checks
-
-The Windows checks in `tools/dashboard-capture-probe` compile the production capture and input modules. Run from that directory with a Rust toolchain compatible with the main app:
-
-```powershell
-cargo run --locked --bin dashboard-capture-probe
-cargo run --locked --bin gpu -- 0
-cargo run --locked --bin input
-$env:WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS = '--disable-gpu'
-cargo run --locked --bin input
-Remove-Item Env:WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS
-```
-
-The default check verifies hidden CPU capture and trusted clicks, and writes ignored frame PNGs. The GPU check takes a DXGI adapter index and verifies changing pixels and repeated capture restoration. The input check covers clicks, dragging, scroll cadence, cancellation, Unicode caret editing, field metadata and re-entry.
+## Verification
 
 Headset testing confirmed panel geometry, desktop restoration including maximized windows, pointer interaction, smooth scrolling and per-key typing. Follow `docs/agents/desktop-ui-testing.md` for future application checks. Also check disconnects and acceleration changes when modifying capture ownership.
