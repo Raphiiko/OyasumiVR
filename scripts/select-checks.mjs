@@ -6,6 +6,14 @@ import { checks, crates } from './checks.mjs';
 const all = Object.keys(checks);
 const web = ['format:web', 'lint:web', 'test:web'];
 const frontend = ['build:ui', 'build:overlay-ui'];
+const webTestInputs = new Set([
+  'src-ui/assets/i18n/en.json',
+  'src-core/tauri.conf.json',
+  'src-core/Cargo.toml',
+  'src-elevated-sidecar/Cargo.toml',
+  'src-privileged-launcher/Cargo.toml',
+  'src-shared-rust/Cargo.toml',
+]);
 const rust = (components) =>
   components.flatMap((c) => ['format', 'lint', 'test', 'build'].map((op) => `${op}:${c}`));
 
@@ -13,6 +21,7 @@ export function selectChecks(files, fileExists = existsSync) {
   const selected = new Set();
   const add = (...ids) => ids.flat().forEach((id) => selected.add(id));
   for (const path of files) {
+    if (webTestInputs.has(path)) add('test:web');
     if (
       /^(package(-lock)?\.json|angular\.json|tsconfig.*\.json|eslint\.config\.js|vitest\.config\.ts|rust-toolchain\.toml|global\.json|\.prettier.*|\.editorconfig|\.gitattributes|\.npmrc)$/.test(
         path

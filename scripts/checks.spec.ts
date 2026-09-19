@@ -14,12 +14,21 @@ describe('check selection', () => {
       expect.arrayContaining(['format:web', 'test:web', 'build:ui', 'generated:readmes'])
     );
   });
-  it('keeps locale-only edits out of builds, and validates all locales after English changes', () => {
-    for (const language of ['en', 'ja'])
-      expect(selectChecks([`src-ui/assets/i18n/${language}.json`])).toEqual([
-        'format:web',
-        'translations',
-      ]);
+  it('keeps locale-only edits out of builds and checks English test fixtures', () => {
+    expect(selectChecks(['src-ui/assets/i18n/ja.json'])).toEqual(['format:web', 'translations']);
+    expect(selectChecks(['src-ui/assets/i18n/en.json'])).toEqual([
+      'format:web',
+      'test:web',
+      'translations',
+    ]);
+    for (const path of [
+      'src-core/tauri.conf.json',
+      'src-core/Cargo.toml',
+      'src-elevated-sidecar/Cargo.toml',
+      'src-privileged-launcher/Cargo.toml',
+      'src-shared-rust/Cargo.toml',
+    ])
+      expect(selectChecks([path])).toContain('test:web');
   });
   it('checks both consumers of shared TypeScript', () => {
     expect(selectChecks(['src-shared-ts/src/util.ts'])).toEqual(
@@ -67,6 +76,47 @@ describe('check selection', () => {
 });
 
 describe('translation contracts', () => {
+  it('allows plural grammar inside markup while preserving number placement', () => {
+    const en = '<b>{count, plural, one {1 device} other {# devices}}</b>';
+    expect(compareMessage(en, '<b>{count} devices</b>', 'ja')).toEqual([]);
+    expect(compareMessage(en, '{count}<b>devices</b>', 'ja')).toContain('markup');
+  });
+  it('rejects hidden arguments and empty nested links while allowing image links', () => {
+    expect(compareMessage('Hello {name}', 'Hello <!-- {name} -->', 'en')).toContain('arguments');
+    expect(
+      compareMessage('<a href="/help"><b>Help</b></a>', '<a href="/help"><b></b></a>', 'en')
+    ).toContain('markup');
+    expect(
+      compareMessage(
+        '<a href="/help"><img src="help.png" alt="Help"></a>',
+        '<a href="/help"><img src="help.png" alt="Aide"></a>',
+        'fr'
+      )
+    ).toEqual([]);
+  });
+  it('checks formatter parameters, duplicate cases and cardinal versus ordinal selectors', () => {
+    expect(compareMessage('{amount, number, {style}}', '{amount, number}', 'en')).toContain(
+      'arguments'
+    );
+    expect(compareMessage('{amount, number, {style}}', '{amount, number, {style}}', 'en')).toEqual(
+      []
+    );
+    expect(() =>
+      compareMessage(
+        '{state, select, on {<a href="/on">On</a>} other {Off}}',
+        '{state, select, on {<a href="/on">On</a>} on {<a href="/wrong">Wrong</a>} other {Off}}',
+        'en'
+      )
+    ).toThrow('duplicate ICU');
+    expect(
+      compareMessage(
+        '{n, plural, one {# thing} other {# things}}',
+        '{n, selectordinal, other {#}}',
+        'en'
+      )
+    ).toContain('selections');
+    expect(compareMessage('{n, selectordinal, one {#st} other {#th}}', '{n}', 'ja')).toEqual([]);
+  });
   it('keeps arguments and links in their semantic branches', () => {
     expect(
       compareMessage(
@@ -177,6 +227,12 @@ describe('translation contracts', () => {
     try {
       save('en', { a: '{name}', b: 'Optional' });
       save('ja', { a: '{name}' });
+      expect(checkCatalogs(directory).problems).toEqual([]);
+      writeFileSync(join(directory, 'ja.json'), '{"a":"first","a":"{name}"}');
+      expect(checkCatalogs(directory).problems[0]).toContain('duplicate catalog key');
+      writeFileSync(join(directory, 'ja.json'), '{"a":"first","\\u0061":"{name}"}');
+      expect(checkCatalogs(directory).problems[0]).toContain('duplicate catalog key');
+      save('ja', { a: "{name} says \"a\": '{' '}'" });
       expect(checkCatalogs(directory).problems).toEqual([]);
       save('ja', JSON.parse('{"__proto__":"Unknown"}'));
       expect(checkCatalogs(directory).problems).toHaveLength(1);

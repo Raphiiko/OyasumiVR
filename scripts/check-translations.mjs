@@ -32,7 +32,7 @@ const marker = (name) => `\uE000${name}\uE001`;
 const variables = (text) =>
   sorted([...text.matchAll(/\uE000([^\uE001]+)\uE001/g)].map((m) => m[1]));
 
-function markup(text) {
+function markup(text, pluralArgs) {
   const errors = [];
   for (const error of new HtmlParser().parse(text, 'translation', {
     tokenizeExpansionForms: false,
@@ -60,7 +60,18 @@ function markup(text) {
     'track',
     'wbr',
   ]);
+  const rendered = [];
+  const pluralMarkup = [];
+  const fixedVariables = (text) => variables(text).filter((arg) => !pluralArgs.has(arg));
+  const content = (node) =>
+    node.nodeName === '#text' ? node.value : (node.childNodes ?? []).map(content).join('');
+  const visible = (node) =>
+    node.nodeName === '#text'
+      ? Boolean(node.value.trim())
+      : node.tagName === 'img' || (node.childNodes ?? []).some(visible);
   function visit(node) {
+    if (node.nodeName === '#text') rendered.push(...variables(node.value));
+    for (const attr of node.attrs ?? []) rendered.push(...variables(attr.value));
     const children = (node.childNodes ?? []).flatMap(visit);
     if (node.tagName) {
       if (!voidTags.has(node.tagName) && !node.sourceCodeLocation?.endTag)
@@ -68,27 +79,31 @@ function markup(text) {
       const attributes = node.attrs
         .map(({ name, value }) => [
           name,
-          ['title', 'alt', 'aria-label'].includes(name) ? variables(value) : value,
+          ['title', 'alt', 'aria-label'].includes(name) ? fixedVariables(value) : value,
         ])
         .sort((a, b) => a[0].localeCompare(b[0]));
-      const content = (n) =>
-        n.nodeName === '#text' ? n.value : (n.childNodes ?? []).map(content).join('');
       const label = content(node);
-      return [
-        JSON.stringify([
-          node.tagName,
-          attributes,
-          children.sort(),
-          variables(label),
-          node.tagName === 'a' ? Boolean(label.trim() || children.length) : null,
-        ]),
-      ];
+      const structure = JSON.stringify([
+        node.tagName,
+        attributes,
+        children.sort(),
+        fixedVariables(label),
+        node.tagName === 'a' ? visible(node) : null,
+      ]);
+      for (const [location, value] of [
+        ['text', label],
+        ...node.attrs.map((attr) => [`@${attr.name}`, attr.value]),
+      ]) {
+        for (const arg of variables(value).filter((arg) => pluralArgs.has(arg)))
+          pluralMarkup.push(JSON.stringify([structure, location, arg]));
+      }
+      return [structure];
     }
     return children;
   }
   const elements = visit(fragment);
   if (errors.length) throw new Error(`invalid HTML: ${errors.join(', ')}`);
-  return elements.sort().join('|');
+  return { structure: elements.sort().join('|'), rendered: sorted(rendered), pluralMarkup };
 }
 
 export function messageContract(message, locale = 'en') {
@@ -98,13 +113,21 @@ export function messageContract(message, locale = 'en') {
   const argumentsUsed = new Set();
   const selections = [];
   const plurals = new Set();
+  const pluralTypes = new Map();
   const domains = new Map();
   const choiceId = (token) => JSON.stringify([token.type, token.arg, token.pluralOffset ?? 0]);
   function inspect(tokens) {
     for (const token of tokens) {
       if (token.arg) argumentsUsed.add(token.arg);
+      if (token.param) inspect(token.param);
       if (!token.cases) continue;
-      if (token.type !== 'select') plurals.add(token.arg);
+      const caseKeys = token.cases.map((c) => c.key);
+      if (new Set(caseKeys).size !== caseKeys.length)
+        throw new Error(`duplicate ICU case for ${token.arg}`);
+      if (token.type !== 'select') {
+        plurals.add(token.arg);
+        pluralTypes.set(token.arg, sorted([...(pluralTypes.get(token.arg) ?? []), token.type]));
+      }
       const keys = token.cases
         .filter((c) => token.type === 'select' || c.key.startsWith('='))
         .map((c) => c.key);
@@ -141,29 +164,23 @@ export function messageContract(message, locale = 'en') {
       } else if (token.type === 'content') {
         parts = [token.value];
       } else {
-        parts = [marker(token.arg ?? plural)];
+        parts = token.param
+          ? walk(token.param, scenario, plural).map(
+              (param) => marker(token.arg) + variables(param).map(marker).join('')
+            )
+          : [marker(token.arg ?? plural)];
       }
       variants = variants.flatMap((a) => parts.map((b) => a + b));
       if (variants.length > 256) throw new Error('more than 256 message branches');
     }
     return variants;
   }
-  const branches = scenarios.map((scenario) => {
-    const variants = walk(tokens, scenario);
-    const used = variants.map(variables);
-    return {
-      rendered: sorted(used.flat()),
-      required: used[0].filter(
-        (arg) => !plurals.has(arg) && used.every((args) => args.includes(arg))
-      ),
-      markup: sorted(variants.map(markup)),
-    };
-  });
   return {
     arguments: [...argumentsUsed].sort(),
     selections,
-    branches,
+    branches: scenarios.map((scenario) => walk(tokens, scenario)),
     plurals: [...plurals],
+    pluralTypes,
   };
 }
 
@@ -174,33 +191,62 @@ export function compareMessage(english, translated, locale) {
   const problems = ['arguments', 'selections'].filter((part) =>
     differs(source[part], target[part])
   );
+  for (const [arg, types] of source.pluralTypes) {
+    if (target.pluralTypes.has(arg) && differs(types, target.pluralTypes.get(arg)))
+      problems.push('selections');
+  }
   if (problems.includes('selections')) return problems;
   const pluralArgs = new Set([...source.plurals, ...target.plurals]);
+  function summarize(variants) {
+    const parsed = variants.map((text) => markup(text, pluralArgs));
+    const used = parsed.map((variant) => variant.rendered);
+    return {
+      rendered: sorted(used.flat()),
+      required: used[0].filter(
+        (arg) => !pluralArgs.has(arg) && used.every((args) => args.includes(arg))
+      ),
+      markup: sorted(parsed.map((variant) => variant.structure)),
+      pluralMarkup: sorted(parsed.flatMap((variant) => variant.pluralMarkup)),
+    };
+  }
   for (let i = 0; i < source.branches.length; i++) {
-    const a = source.branches[i],
-      b = target.branches[i];
-    if (
-      differs(a.rendered, b.rendered) ||
-      differs(
-        a.required.filter((arg) => !pluralArgs.has(arg)),
-        b.required.filter((arg) => !pluralArgs.has(arg))
-      )
-    )
+    const a = summarize(source.branches[i]),
+      b = summarize(target.branches[i]);
+    if (differs(a.rendered, b.rendered) || differs(a.required, b.required))
       problems.push('arguments');
-    if (differs(a.markup, b.markup)) problems.push('markup');
+    if (differs(a.markup, b.markup) || differs(a.pluralMarkup, b.pluralMarkup))
+      problems.push('markup');
   }
   return sorted(problems);
 }
 
+function readCatalog(file) {
+  const text = readFileSync(file, 'utf8');
+  const parsed = JSON.parse(text);
+  const tokens = text.match(/"(?:\\.|[^"\\])*"|[{}:]/g) ?? [];
+  const objects = [];
+  for (let i = 0; i < tokens.length; i++) {
+    if (tokens[i] === '{') objects.push(new Set());
+    else if (tokens[i] === '}') objects.pop();
+    else if (tokens[i].startsWith('"') && tokens[i + 1] === ':') {
+      const key = JSON.parse(tokens[i]);
+      const keys = objects.at(-1);
+      if (keys.has(key)) throw new Error(`duplicate catalog key: ${key}; run npm run tl clean`);
+      keys.add(key);
+    }
+  }
+  return flattenCatalog(parsed);
+}
+
 export function checkCatalogs(directory) {
-  const english = flattenCatalog(JSON.parse(readFileSync(`${directory}/en.json`, 'utf8')));
+  const english = readCatalog(`${directory}/en.json`);
   const problems = [];
   let count = 0;
   for (const file of readdirSync(directory).filter((f) => f.endsWith('.json'))) {
     const locale = file.slice(0, -5);
     let catalog;
     try {
-      catalog = flattenCatalog(JSON.parse(readFileSync(`${directory}/${file}`, 'utf8')));
+      catalog = readCatalog(`${directory}/${file}`);
     } catch (error) {
       problems.push(`${file}: ${error.message}`);
       continue;
