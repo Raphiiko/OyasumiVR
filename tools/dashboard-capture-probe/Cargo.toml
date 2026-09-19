@@ -1,0 +1,15 @@
+[package]
+name = "dashboard-capture-probe"
+version = "0.1.0"
+edition = "2021"
+default-run = "dashboard-capture-probe"
+
+[dependencies]
+webview2-com = "=0.39.1"
+windows = { version = "=0.62.2", features = ["Win32_Foundation", "Win32_System_Com", "Win32_UI_WindowsAndMessaging", "Win32_UI_Shell", "Win32_Graphics_Gdi", "Graphics_Capture", "Graphics_DirectX_Direct3D11", "Win32_System_WinRT_Graphics_Capture", "Win32_System_WinRT_Direct3D11", "Win32_Graphics_Direct3D11", "Win32_Graphics_Direct3D", "Win32_Graphics_Dxgi_Common"] }
+
+log = "0.4"
+
+serde_json = "1"
+
+serde = { version = "1", features = ["derive"] }

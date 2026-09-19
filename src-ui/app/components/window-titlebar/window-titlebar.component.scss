@@ -2,7 +2,6 @@
 
 :host {
   background-color: var(--color-surface-0);
-  //background: red;
   height: 32px;
   display: flex;
   flex-direction: row;
@@ -168,5 +167,18 @@
       transform: scale(0.95);
       box-shadow: 0 0 0 0 rgba(239, 108, 0, 0);
     }
+  }
+}
+
+:host-context(html[data-vr-dashboard]) {
+  .title-area {
+    pointer-events: none;
+  }
+
+  .btn-minimize,
+  .btn-maximize,
+  .btn-close,
+  .action-spacer {
+    display: none;
   }
 }
