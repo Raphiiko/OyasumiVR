@@ -57,6 +57,7 @@ static LIGHTHOUSE_DEVICE_V1_TIMEOUTS: LazyLock<Mutex<HashMap<String, u16>>> =
     LazyLock::new(|| Mutex::new(HashMap::new()));
 static SCANNING: LazyLock<Mutex<bool>> = LazyLock::new(|| Mutex::new(false));
 static MANAGER: LazyLock<Mutex<Option<Manager>>> = LazyLock::new(Mutex::default);
+static ADAPTER: LazyLock<Mutex<Option<Adapter>>> = LazyLock::new(Mutex::default);
 static STATUS: LazyLock<Mutex<LighthouseStatus>> =
     LazyLock::new(|| Mutex::new(LighthouseStatus::Uninitialized));
 static PROCESSING_DEVICES: LazyLock<Mutex<HashSet<PeripheralId>>> =
@@ -108,6 +109,7 @@ pub async fn init() {
         };
         match manager.adapters().await {
             Ok(adapters) if !adapters.is_empty() => {
+                *ADAPTER.lock().await = adapters.into_iter().next();
                 *MANAGER.lock().await = Some(manager);
                 set_lighthouse_status(LighthouseStatus::Ready).await;
                 // Poll the status of connected lighthouses every few seconds in a separate task
@@ -177,10 +179,17 @@ async fn retry_pending_radio_restores() {
 }
 
 async fn scan_adapter() -> Option<Adapter> {
+    let mut adapter = ADAPTER.lock().await;
+    if adapter.is_some() {
+        return adapter.clone();
+    }
     let manager_guard = MANAGER.lock().await;
     let manager = manager_guard.as_ref()?;
     match manager.adapters().await {
-        Ok(adapters) => adapters.into_iter().next(),
+        Ok(adapters) => {
+            *adapter = adapters.into_iter().next();
+            adapter.clone()
+        }
         Err(err) => {
             warn!("[Core] Failed to list the bluetooth adapters: {err}");
             None
@@ -217,11 +226,14 @@ async fn scan_for_devices(duration: Duration) {
         Ok(events) => events,
         Err(err) => {
             warn!("[Core] Failed to listen for bluetooth adapter events: {err}");
+            *ADAPTER.lock().await = None;
             return;
         }
     };
     if let Err(err) = adapter.start_scan(ScanFilter::default()).await {
         warn!("[Core] Failed to scan for lighthouse devices: {err}");
+        let _ = adapter.stop_scan().await;
+        *ADAPTER.lock().await = None;
         return;
     }
     // Listen for scan results
@@ -235,7 +247,10 @@ async fn scan_for_devices(duration: Duration) {
                 let device_id = match event {
                     Some(CentralEvent::DeviceDiscovered(id)) | Some(CentralEvent::DeviceUpdated(id)) => id,
                     Some(_) => continue,
-                    None => break,
+                    None => {
+                        *ADAPTER.lock().await = None;
+                        break;
+                    }
                 };
                 if let Ok(peripheral) = adapter.peripheral(&device_id).await {
                     tokio::spawn(handle_discovered_device(peripheral));
@@ -245,6 +260,11 @@ async fn scan_for_devices(duration: Duration) {
     }
     if let Err(err) = adapter.stop_scan().await {
         warn!("[Core] Failed to stop scanning for lighthouse devices: {err}");
+        *ADAPTER.lock().await = None;
+    }
+    // Known lighthouses retain their own peripheral handles.
+    if let Err(err) = adapter.clear_peripherals().await {
+        warn!("[Core] Failed to clear bluetooth scan results: {err}");
     }
 }
 
@@ -1239,6 +1259,32 @@ async fn reset() {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[tokio::test]
+    #[ignore = "requires an enabled Bluetooth adapter"]
+    async fn scan_windows_reuse_adapter_and_clear_results() {
+        *MANAGER.lock().await = Some(Manager::new().await.unwrap());
+        let adapter = scan_adapter().await.expect("Bluetooth adapter required");
+        let marker = PeripheralId::from(btleplug::api::BDAddr::from([2, 0, 0, 0, 0, 1]));
+
+        for _ in 0..3 {
+            let peripheral = adapter.add_peripheral(&marker).await.unwrap();
+            let reused = scan_adapter().await.unwrap();
+            assert!(reused.peripheral(&marker).await.is_ok());
+            scan_for_devices(Duration::from_millis(250)).await;
+            assert!(ADAPTER.lock().await.is_some());
+            assert!(adapter.peripheral(&marker).await.is_err());
+            assert_eq!(peripheral.id(), marker);
+        }
+
+        *ADAPTER.lock().await = None;
+        let replacement = scan_adapter().await.unwrap();
+        adapter.add_peripheral(&marker).await.unwrap();
+        assert!(replacement.peripheral(&marker).await.is_err());
+        *ADAPTER.lock().await = None;
+        *MANAGER.lock().await = None;
+    }
+
     #[test]
     fn pending_restore_persistence_round_trips_names() {
         let directory = tempfile::tempdir().unwrap();
