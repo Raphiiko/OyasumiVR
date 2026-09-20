@@ -142,6 +142,7 @@ import { SleepModeEnableOnHeartRateCalmPeriodAutomationService } from './service
 import { QuitWithSteamVRService } from './services/quit-with-steamvr.service';
 import { VRChatMicMuteAutomationService } from './services/osc-automations/vrchat-mic-mute-automation.service';
 import { MiscTestingComponent } from './components/developer-debug-modal/misc-testing/misc-testing.component';
+import { ToastTestingComponent } from './components/developer-debug-modal/toast-testing/toast-testing.component';
 import { VRChatMicMuteAutomationsViewComponent } from './views/dashboard-view/views/vrchat-mic-mute-automations-view/vrchat-mic-mute-automations-view.component';
 import { TurnOffDevicesOnBatteryLevelAutomationService } from './services/power-automations/turn-off-devices-on-battery-level-automation.service';
 import { AudioDeviceService } from './services/audio-device.service';
@@ -375,6 +376,7 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
     HeartRateChartComponent,
     StartWithSteamVRHowToModalComponent,
     MiscTestingComponent,
+    ToastTestingComponent,
     VRChatMicMuteAutomationsViewComponent,
     SystemMicMuteAutomationsViewComponent,
     ControllerBindingComponent,

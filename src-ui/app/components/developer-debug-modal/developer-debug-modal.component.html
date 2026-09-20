@@ -15,6 +15,13 @@
     >
       <div class="tab-label">Miscellaneous Testing</div>
     </div>
+    <div
+      class="tab"
+      [class.active]="activeTab === 'TOAST_TESTING'"
+      (click)="activeTab = 'TOAST_TESTING'"
+    >
+      <div class="tab-label">Toasts</div>
+    </div>
   </div>
   <div class="pane-content">
     @if (activeTab === 'SLEEP_DETECTION_DEBUGGER') {
@@ -22,6 +29,9 @@
     }
     @if (activeTab === 'MISC_TESTING') {
       <app-misc-testing [modal]="this"></app-misc-testing>
+    }
+    @if (activeTab === 'TOAST_TESTING') {
+      <app-toast-testing></app-toast-testing>
     }
   </div>
 </div>

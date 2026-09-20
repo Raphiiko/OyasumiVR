@@ -1,0 +1,16 @@
+<div class="row">
+  @for (type of types; track type) {
+    <button (click)="showType(type)">{{ type }}</button>
+  }
+</div>
+<div class="row">
+  <button (click)="showTitleOnly()">Title only</button>
+  <button (click)="showWithActions()">With actions</button>
+  <button (click)="showUndismissable()">Undismissable</button>
+  <button (click)="showSeveral()">Several at once</button>
+</div>
+<div class="row">
+  <button (click)="showCountdown()">Quit countdown</button>
+  <button (click)="cancelCountdown()">Cancel countdown</button>
+  <button (click)="dismissAll()">Dismiss all</button>
+</div>
