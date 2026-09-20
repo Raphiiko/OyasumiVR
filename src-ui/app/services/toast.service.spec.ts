@@ -33,8 +33,9 @@ describe('ToastService', () => {
     const service = new ToastService();
     const ref = service.show({ title: 'first', type: 'warning', duration: 10000 });
     ref.update({ title: 'second' });
+    ref.update({ title: undefined, type: 'error' });
     const [toast] = await current(service);
-    expect(toast).toMatchObject({ title: 'second', type: 'warning', duration: 10000 });
+    expect(toast).toMatchObject({ title: 'second', type: 'error', duration: 10000 });
   });
 
   it('updates a toast in place and bumps its revision', async () => {

@@ -25,14 +25,13 @@ export class ToastSlotDirective implements AfterViewInit, OnDestroy {
       const previousHeight = this.height;
       this.height = height;
       if (previousHeight === undefined || previousHeight === height) return;
+      // an interrupted resize continues from what the slot shows, not from where it was headed
+      const from = this.animation?.playState === 'running' ? slot.offsetHeight : previousHeight;
       this.animation?.cancel();
-      this.animation = slot.animate(
-        [{ height: `${previousHeight}px` }, { height: `${height}px` }],
-        {
-          duration: RESIZE_DURATION,
-          easing: EASE_OUT,
-        }
-      );
+      this.animation = slot.animate([{ height: `${from}px` }, { height: `${height}px` }], {
+        duration: RESIZE_DURATION,
+        easing: EASE_OUT,
+      });
     });
     this.observer.observe(toast);
   }

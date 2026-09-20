@@ -76,6 +76,7 @@ export class ToastService {
         return {
           ...toast,
           ...options,
+          title: options.title ?? toast.title,
           type: options.type ?? toast.type,
           duration: options.duration ?? toast.duration,
           dismissable: options.dismissable ?? toast.dismissable,
