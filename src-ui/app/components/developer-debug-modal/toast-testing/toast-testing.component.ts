@@ -52,7 +52,6 @@ export class ToastTestingComponent {
     });
   }
 
-  // shows the countdown, then rewrites it in place, as the SteamVR quit grace period would
   protected showCountdown() {
     this.countdown = this.toastService.show({
       type: 'warning',

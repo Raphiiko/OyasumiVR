@@ -1,5 +1,5 @@
 @for (toast of toasts | async; track toast.id) {
-  <div class="toast-slot" @toastSlot>
+  <div class="toast-slot" appToastSlot @toastSlot>
     <div class="toast" [class]="'type-' + toast.type">
       <div class="toast-head">
         @if (toast.type === 'pending') {
@@ -19,7 +19,7 @@
       }
       @if (toast.actions.length) {
         <div class="toast-actions">
-          @for (action of toast.actions; track action.label) {
+          @for (action of toast.actions; track $index) {
             <button (click)="runAction(toast, action)">{{ action.label | tsTranslate }}</button>
           }
         </div>

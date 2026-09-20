@@ -22,6 +22,21 @@ describe('ToastService', () => {
     expect(toasts[1]).toMatchObject({ type: 'warning', duration: 10000, dismissable: false });
   });
 
+  it('keeps the defaults when a caller passes an undefined option', async () => {
+    const service = new ToastService();
+    service.show({ title: 'first', duration: undefined, dismissable: undefined });
+    const [toast] = await current(service);
+    expect(toast).toMatchObject({ duration: 4000, dismissable: true });
+  });
+
+  it('keeps unchanged fields on update', async () => {
+    const service = new ToastService();
+    const ref = service.show({ title: 'first', type: 'warning', duration: 10000 });
+    ref.update({ title: 'second' });
+    const [toast] = await current(service);
+    expect(toast).toMatchObject({ title: 'second', type: 'warning', duration: 10000 });
+  });
+
   it('updates a toast in place and bumps its revision', async () => {
     const service = new ToastService();
     const ref = service.show({ title: 'quitting', type: 'warning', duration: 10000 });

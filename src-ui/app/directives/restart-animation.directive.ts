@@ -13,9 +13,9 @@ export class RestartAnimationDirective implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['restartAnimationOn'].firstChange) return;
     const element = this.elementRef.nativeElement;
-    element.style.animation = 'none';
+    element.style.animationName = 'none';
     // reading the layout forces a reflow, without which the animation never restarts
     void element.offsetHeight;
-    element.style.animation = '';
+    element.style.animationName = '';
   }
 }

@@ -57,11 +57,11 @@ export class ToastService {
 
   show(options: ToastOptions): ToastRef {
     const toast: Toast = {
-      type: 'info',
-      duration: 4000,
-      dismissable: true,
-      actions: [],
       ...options,
+      type: options.type ?? 'info',
+      duration: options.duration ?? 4000,
+      dismissable: options.dismissable ?? true,
+      actions: options.actions ?? [],
       id: `toast-${this.nextId++}`,
       revision: 0,
     };
@@ -71,9 +71,18 @@ export class ToastService {
 
   update(id: string, options: Partial<ToastOptions>) {
     this._toasts.next(
-      this._toasts.value.map((toast) =>
-        toast.id === id ? { ...toast, ...options, revision: toast.revision + 1 } : toast
-      )
+      this._toasts.value.map((toast) => {
+        if (toast.id !== id) return toast;
+        return {
+          ...toast,
+          ...options,
+          type: options.type ?? toast.type,
+          duration: options.duration ?? toast.duration,
+          dismissable: options.dismissable ?? toast.dismissable,
+          actions: options.actions ?? toast.actions,
+          revision: toast.revision + 1,
+        };
+      })
     );
   }
 
