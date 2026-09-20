@@ -100,8 +100,8 @@ public class DashboardOverlay : BaseWebOverlay
       OpenVR.Overlay.ShowOverlay(OverlayHandle);
       _shown = true;
     }
-    var position = OvrManager.Instance.OverlayPointer?.GetPointerLocationForOverlay(this);
-    if (position.HasValue) _tooltipOverlay.SetPosition(position.Value);
+    var pointerTransform = OvrManager.Instance.OverlayPointer?.GetPointerTransformForOverlay(this);
+    if (pointerTransform.HasValue) _tooltipOverlay.SetTransform(pointerTransform.Value);
   }
 
   protected override void ShowToolTipInternal(string? text)

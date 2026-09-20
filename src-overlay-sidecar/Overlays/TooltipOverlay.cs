@@ -11,7 +11,7 @@ public class TooltipOverlay : BaseWebOverlay
 
   private bool _shown;
   private DateTime? _hideAt;
-  private Vector3? _targetPosition;
+  private Matrix4x4? _targetTransform;
   private string? _text = "";
 
   public TooltipOverlay() :
@@ -21,9 +21,9 @@ public class TooltipOverlay : BaseWebOverlay
     OpenVR.Overlay.SetOverlaySortOrder(OverlayHandle, 150);
   }
 
-  public void SetPosition(Vector3 position)
+  public void SetTransform(Matrix4x4 hitTransform)
   {
-    _targetPosition = Vector3.Add(position, new Vector3(0, 0.025f, 0));
+    _targetTransform = Matrix4x4.CreateTranslation(0, 0.025f, 0.004f) * hitTransform;
   }
 
   public void SetText(string? text)
@@ -69,25 +69,13 @@ public class TooltipOverlay : BaseWebOverlay
 
   private void UpdatePosition()
   {
-    if (!_shown || _targetPosition == null) return;
-    // Get current transform
-    var origin = ETrackingUniverseOrigin.TrackingUniverseStanding;
-    HmdMatrix34_t currentTransform34T = default;
-    OpenVR.Overlay.GetOverlayTransformAbsolute(OverlayHandle, ref origin, ref currentTransform34T);
-    var currentTransform = currentTransform34T.ToMatrix4X4();
-    // Calculate target transform
+    if (!_shown || _targetTransform == null) return;
     var headPose = OvrUtils.GetHeadPose(_poseBuffer).mDeviceToAbsoluteTracking;
     var headMatrix = headPose.ToMatrix4X4();
-    var targetTransform =
-      Matrix4x4.CreateFromQuaternion(Quaternion.CreateFromRotationMatrix(headMatrix)) *
-      Matrix4x4.CreateTranslation(_targetPosition.Value);
-    // Lerp the position
-    targetTransform = Matrix4x4.Lerp(currentTransform, targetTransform, 0.2f);
-    // Set the overlay size based on the distance
+    var targetTransform = _targetTransform.Value;
     OpenVR.Overlay.SetOverlayWidthInMeters(OverlayHandle,
       0.35f * Vector3.Distance(headMatrix.Translation, targetTransform.Translation)
     );
-    // Apply the transformation
     var transform = targetTransform.ToHmdMatrix34_t();
     OpenVR.Overlay.SetOverlayTransformAbsolute(OverlayHandle, ETrackingUniverseOrigin.TrackingUniverseStanding,
       ref transform);
