@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { ToastRef, ToastService, ToastType } from 'src-ui/app/services/toast.service';
 
 @Component({
@@ -8,10 +8,11 @@ import { ToastRef, ToastService, ToastType } from 'src-ui/app/services/toast.ser
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
-export class ToastTestingComponent {
+export class ToastTestingComponent implements OnDestroy {
   protected readonly types: ToastType[] = ['info', 'success', 'warning', 'error', 'pending'];
 
   private countdown?: ToastRef;
+  private timers: ReturnType<typeof setTimeout>[] = [];
 
   constructor(private toastService: ToastService) {}
 
@@ -75,10 +76,22 @@ export class ToastTestingComponent {
   }
 
   protected showSeveral() {
-    this.types.forEach((type, index) => setTimeout(() => this.showType(type), index * 250));
+    this.types.forEach((type, index) =>
+      this.timers.push(setTimeout(() => this.showType(type), index * 250))
+    );
   }
 
   protected dismissAll() {
+    this.clearTimers();
     this.toastService.dismissAll();
+  }
+
+  ngOnDestroy() {
+    this.clearTimers();
+  }
+
+  private clearTimers() {
+    this.timers.forEach((timer) => clearTimeout(timer));
+    this.timers = [];
   }
 }

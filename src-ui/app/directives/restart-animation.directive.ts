@@ -1,6 +1,5 @@
 import { Directive, ElementRef, Input, OnChanges, SimpleChanges } from '@angular/core';
 
-/** Restarts the element's CSS animation whenever the bound value changes. */
 @Directive({
   selector: '[restartAnimationOn]',
   standalone: false,
