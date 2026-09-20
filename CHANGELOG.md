@@ -36,6 +36,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Changed
 
+- The Message Center now uses a focused amber glow and a steady notification dot to draw attention to messages.
 - Repeated language activation reuses CJK fonts already loading or loaded.
 - Disabled and friend-independent automations no longer request friend-list refreshes.
 - Image downloads reuse HTTP connections and avoid extra copies of each downloaded image.

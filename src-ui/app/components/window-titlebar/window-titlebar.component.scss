@@ -1,5 +1,3 @@
-@use 'node_modules/material-colors/dist/colors.scss' as materialColors;
-
 :host {
   background-color: var(--color-surface-0);
   height: 32px;
@@ -134,40 +132,37 @@
   color: var(--color-text-4);
 }
 
-@keyframes wiggle {
-  0% {
-    transform: rotate(0deg);
-    color: var(--color-text-1);
-  }
-  10% {
-    transform: rotate(0deg);
-    color: var(--color-text-3);
-  }
-  70% {
-    transform: rotate(0deg);
-    color: var(--color-text-3);
-  }
-  80% {
-    transform: rotate(0deg);
-    color: var(--color-text-1);
-  }
-  85% {
-    transform: rotate(10deg);
-    color: var(--color-text-1);
-  }
-  95% {
-    transform: rotate(-10deg);
-    color: var(--color-text-1);
-  }
-  100% {
-    transform: rotate(0deg);
-    color: var(--color-text-1);
+.btn-message-center {
+  --message-center-attention: #f1ad75;
+  isolation: isolate;
+
+  &.has-messages {
+    color: var(--message-center-attention);
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 5px 0;
+      z-index: -1;
+      border-radius: 5px;
+      background: var(--message-center-attention);
+      filter: blur(6px);
+      opacity: 0.06;
+      pointer-events: none;
+      animation: message-center-glow 6s ease-in-out infinite;
+    }
   }
 }
 
-.btn-message-center {
-  i.wiggle {
-    animation: wiggle 2.5s infinite;
+@keyframes message-center-glow {
+  0%,
+  70%,
+  100% {
+    opacity: 0.06;
+  }
+  25%,
+  38% {
+    opacity: 0.4;
   }
 }
 
@@ -188,23 +183,7 @@
   width: 0.5em;
   height: 0.5em;
   border-radius: 50%;
-  background-color: #{materialColors.$md-orange-800};
-  animation: titlebar-badge-pulse 2s infinite;
-
-  @keyframes titlebar-badge-pulse {
-    0% {
-      transform: scale(0.95);
-      box-shadow: 0 0 0 0 rgba(239, 108, 0, 0.7);
-    }
-    70% {
-      transform: scale(1);
-      box-shadow: 0 0 0 6px rgba(239, 108, 0, 0);
-    }
-    100% {
-      transform: scale(0.95);
-      box-shadow: 0 0 0 0 rgba(239, 108, 0, 0);
-    }
-  }
+  background-color: var(--message-center-attention);
 }
 
 :host-context(html[data-vr-dashboard]) {

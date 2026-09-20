@@ -20,15 +20,12 @@
 <div class="action-area">
   <button
     class="titlebar-button btn-message-center"
+    [class.has-messages]="(messageCenter.messages | async)?.length"
     [tooltip]="'message-center.tooltip'"
     [tooltipMode]="'bottom'"
     (click)="messageCenter.toggle()"
   >
-    <i
-      class="material-symbols-outlined icon-filled"
-      [class.wiggle]="(messageCenter.messages | async)?.length"
-      >mode_comment</i
-    >
+    <i class="material-symbols-outlined icon-filled">mode_comment</i>
     @if ((messageCenter.messages | async)?.length) {
       <div class="message-center-badge-bg" @fade>
         <div class="message-center-badge"></div>
