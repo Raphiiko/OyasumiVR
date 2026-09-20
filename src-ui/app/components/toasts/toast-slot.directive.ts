@@ -10,28 +10,35 @@ const EASE_OUT = 'cubic-bezier(0.2, 0.8, 0.25, 1)';
 })
 export class ToastSlotDirective implements AfterViewInit, OnDestroy {
   private observer?: ResizeObserver;
+  private animation?: Animation;
   private height?: number;
 
   constructor(private elementRef: ElementRef<HTMLElement>) {}
 
   ngAfterViewInit() {
     const slot = this.elementRef.nativeElement;
-    const toast = slot.firstElementChild;
+    const toast = slot.firstElementChild as HTMLElement | null;
     if (!toast) return;
     this.observer = new ResizeObserver(() => {
-      const height = slot.offsetHeight;
+      // the enter and leave animations own the slot's height, so measure the toast itself
+      const height = toast.offsetHeight + parseFloat(getComputedStyle(toast).marginTop);
       const previousHeight = this.height;
       this.height = height;
       if (previousHeight === undefined || previousHeight === height) return;
-      slot.animate([{ height: `${previousHeight}px` }, { height: `${height}px` }], {
-        duration: RESIZE_DURATION,
-        easing: EASE_OUT,
-      });
+      this.animation?.cancel();
+      this.animation = slot.animate(
+        [{ height: `${previousHeight}px` }, { height: `${height}px` }],
+        {
+          duration: RESIZE_DURATION,
+          easing: EASE_OUT,
+        }
+      );
     });
     this.observer.observe(toast);
   }
 
   ngOnDestroy() {
     this.observer?.disconnect();
+    this.animation?.cancel();
   }
 }
