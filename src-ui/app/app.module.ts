@@ -142,6 +142,7 @@ import { SleepModeEnableOnHeartRateCalmPeriodAutomationService } from './service
 import { QuitWithSteamVRService } from './services/quit-with-steamvr.service';
 import { VRChatMicMuteAutomationService } from './services/osc-automations/vrchat-mic-mute-automation.service';
 import { MiscTestingComponent } from './components/developer-debug-modal/misc-testing/misc-testing.component';
+import { ToastTestingComponent } from './components/developer-debug-modal/toast-testing/toast-testing.component';
 import { VRChatMicMuteAutomationsViewComponent } from './views/dashboard-view/views/vrchat-mic-mute-automations-view/vrchat-mic-mute-automations-view.component';
 import { TurnOffDevicesOnBatteryLevelAutomationService } from './services/power-automations/turn-off-devices-on-battery-level-automation.service';
 import { AudioDeviceService } from './services/audio-device.service';
@@ -215,6 +216,9 @@ import { SleepDetectionSleepEnableTabComponent } from './views/dashboard-view/vi
 import { SleepDetectionSleepDisableTabComponent } from './views/dashboard-view/views/sleep-detection-view/tabs/sleep-detection-sleep-disable-tab/sleep-detection-sleep-disable-tab.component';
 import { SleepDetectionViewComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detection-view.component';
 import { WindowTitlebarComponent } from './components/window-titlebar/window-titlebar.component';
+import { ToastsComponent } from './components/toasts/toasts.component';
+import { ToastSlotDirective } from './components/toasts/toast-slot.directive';
+import { RestartAnimationDirective } from './directives/restart-animation.directive';
 import { ShutdownAutomationsTriggersTabComponent } from './views/dashboard-view/views/shutdown-automations-view/tabs/shutdown-automations-triggers-tab/shutdown-automations-triggers-tab.component';
 import { ShutdownAutomationsSettingsTabComponent } from './views/dashboard-view/views/shutdown-automations-view/tabs/shutdown-automations-settings-tab/shutdown-automations-settings-tab.component';
 import { StatusAutomationsPlayerLimitTabComponent } from './views/dashboard-view/views/status-automations-view/tabs/status-automations-player-limit-tab/status-automations-player-limit-tab.component';
@@ -359,6 +363,9 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
     DevicesTabComponent,
     ShutdownAutomationsViewComponent,
     ShutdownSequenceOverlayComponent,
+    ToastsComponent,
+    ToastSlotDirective,
+    RestartAnimationDirective,
     DeveloperDebugModalComponent,
     WindowsPowerPolicyTabComponent,
     DebugSleepDetectionDebuggerComponent,
@@ -371,6 +378,7 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
     HeartRateChartComponent,
     StartWithSteamVRHowToModalComponent,
     MiscTestingComponent,
+    ToastTestingComponent,
     VRChatMicMuteAutomationsViewComponent,
     SystemMicMuteAutomationsViewComponent,
     ControllerBindingComponent,

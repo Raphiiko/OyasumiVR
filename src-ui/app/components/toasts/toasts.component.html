@@ -1,0 +1,37 @@
+@for (toast of toasts | async; track toast.id) {
+  <div class="toast-slot" appToastSlot @toastSlot>
+    <div class="toast" [class]="'type-' + toast.type">
+      <div class="toast-head">
+        @if (toast.type === 'pending') {
+          <div class="toast-icon spinner"></div>
+        } @else {
+          <i class="material-symbols-outlined toast-icon">{{ iconFor(toast.type) }}</i>
+        }
+        <span class="toast-title">{{ toast.title | tsTranslate }}</span>
+        @if (toast.dismissable) {
+          <button class="toast-close" (click)="dismiss(toast)">
+            <i class="material-symbols-outlined">close</i>
+          </button>
+        }
+      </div>
+      @if (toast.message) {
+        <div class="toast-message">{{ toast.message | tsTranslate }}</div>
+      }
+      @if (toast.actions.length) {
+        <div class="toast-actions">
+          @for (action of toast.actions; track $index) {
+            <button (click)="runAction(toast, action)">{{ action.label | tsTranslate }}</button>
+          }
+        </div>
+      }
+      @if (toast.duration > 0) {
+        <div
+          class="toast-duration"
+          [style.animation-duration.ms]="toast.duration"
+          [restartAnimationOn]="toast.revision"
+          (animationend)="dismiss(toast)"
+        ></div>
+      }
+    </div>
+  </div>
+}

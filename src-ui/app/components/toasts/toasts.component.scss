@@ -1,0 +1,160 @@
+@use 'shadows';
+@use 'effects';
+
+$margin: 1em;
+$status-bar-height: 2.8em;
+
+:host {
+  position: fixed;
+  left: $margin;
+  bottom: $status-bar-height + $margin;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-start;
+  pointer-events: none;
+}
+
+.toast-slot {
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  position: relative;
+  overflow: hidden;
+  width: 23em;
+  margin-top: 0.6em;
+  border-radius: var(--surface-border-radius);
+  border: 0.15em solid var(--color-surface-3);
+  background-color: color-mix(in srgb, var(--color-surface-1) 80%, transparent);
+  backdrop-filter: blur(4px);
+  @include effects.pane-radial-gradient(#fff);
+  @include shadows.shadow(5, true);
+  padding: 0.9em 1em 0.8em;
+}
+
+.toast-head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.7em;
+}
+
+.toast-icon {
+  width: 1.3em;
+  height: 1.3em;
+  flex-shrink: 0;
+  font-size: 1.3em;
+  color: var(--color-text-3);
+
+  .type-success & {
+    color: var(--color-vrchat-status-green);
+  }
+
+  .type-warning & {
+    color: var(--color-vrchat-status-orange);
+  }
+
+  .type-error & {
+    color: var(--color-vrchat-status-red);
+  }
+
+  .type-info & {
+    color: var(--color-vrchat-status-blue);
+  }
+}
+
+.spinner {
+  border: 0.15em solid rgba(255, 255, 255, 0.15);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: toast-spinner 0.9s linear infinite;
+}
+
+@keyframes toast-spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.toast-title {
+  flex: 1;
+  min-width: 0;
+  font-weight: 600;
+}
+
+.toast-close {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--color-text-4);
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: var(--color-text-1);
+  }
+
+  i {
+    font-size: 1.3em;
+    display: block;
+  }
+}
+
+.toast-message {
+  margin: 0.35em 0 0 2em;
+  color: var(--color-text-3);
+  font-size: 0.9em;
+  line-height: 1.45;
+}
+
+.toast-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5em;
+  margin: 0.7em 0 0 2.2em;
+
+  button {
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    border-radius: 0.35em;
+    padding: 0.4em 0.8em;
+    color: var(--color-text-1);
+    font-size: 0.9em;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.16);
+    }
+  }
+}
+
+.toast-duration {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 0.15em;
+  background: rgba(255, 255, 255, 0.4);
+  transform-origin: left center;
+  animation: toast-duration linear forwards;
+
+  .toast:hover &,
+  .toast:focus-within & {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes toast-duration {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
