@@ -215,6 +215,8 @@ import { SleepDetectionSleepEnableTabComponent } from './views/dashboard-view/vi
 import { SleepDetectionSleepDisableTabComponent } from './views/dashboard-view/views/sleep-detection-view/tabs/sleep-detection-sleep-disable-tab/sleep-detection-sleep-disable-tab.component';
 import { SleepDetectionViewComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detection-view.component';
 import { WindowTitlebarComponent } from './components/window-titlebar/window-titlebar.component';
+import { ToastsComponent } from './components/toasts/toasts.component';
+import { RestartAnimationDirective } from './directives/restart-animation.directive';
 import { ShutdownAutomationsTriggersTabComponent } from './views/dashboard-view/views/shutdown-automations-view/tabs/shutdown-automations-triggers-tab/shutdown-automations-triggers-tab.component';
 import { ShutdownAutomationsSettingsTabComponent } from './views/dashboard-view/views/shutdown-automations-view/tabs/shutdown-automations-settings-tab/shutdown-automations-settings-tab.component';
 import { StatusAutomationsPlayerLimitTabComponent } from './views/dashboard-view/views/status-automations-view/tabs/status-automations-player-limit-tab/status-automations-player-limit-tab.component';
@@ -359,6 +361,8 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
     DevicesTabComponent,
     ShutdownAutomationsViewComponent,
     ShutdownSequenceOverlayComponent,
+    ToastsComponent,
+    RestartAnimationDirective,
     DeveloperDebugModalComponent,
     WindowsPowerPolicyTabComponent,
     DebugSleepDetectionDebuggerComponent,
