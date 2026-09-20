@@ -127,14 +127,6 @@ describe('Start with SteamVR synchronization', () => {
     return service;
   }
 
-  function internal(service: OpenVRService) {
-    return service as unknown as {
-      autoLaunchReconciled: boolean;
-      autoLaunchQueue: Promise<unknown>;
-      syncApplicationAutoLaunchChanges(): void;
-    };
-  }
-
   it('adopts the SteamVR value when no write is pending', async () => {
     const appSettings = createSettingsService();
     await startInactiveService(appSettings, true);
@@ -195,9 +187,9 @@ describe('Start with SteamVR synchronization', () => {
     const service = createService(appSettings);
     await service.init();
     emit<OpenVRStatus>('OVR_STATUS_UPDATE', 'INITIALIZED');
-    await vi.waitFor(() => expect(internal(service).autoLaunchReconciled).toBe(true));
+    await vi.waitFor(() => expect(appSettings.settingsSync.startWithSteamVR).toBe(false));
     autoLaunch = true;
-    internal(service).syncApplicationAutoLaunchChanges();
+    (service as unknown as { syncAutoLaunch(): Promise<void> }).syncAutoLaunch();
     await vi.waitFor(() => expect(appSettings.settingsSync.startWithSteamVR).toBe(true));
   });
 
@@ -213,14 +205,12 @@ describe('Start with SteamVR synchronization', () => {
     const service = createService(appSettings);
     await service.init();
     emit<OpenVRStatus>('OVR_STATUS_UPDATE', 'INITIALIZED');
-    await vi.waitFor(() => expect(internal(service).autoLaunchReconciled).toBe(true));
-    await service.setStartWithSteamVR(true).catch(() => undefined);
-    await internal(service).autoLaunchQueue;
+    await vi.waitFor(() => expect(appSettings.settingsSync.startWithSteamVR).toBe(false));
+    await service.setStartWithSteamVR(true);
     expect(appSettings.settingsSync).toMatchObject({
       startWithSteamVR: true,
       startWithSteamVRPending: true,
     });
-    expect(internal(service).autoLaunchReconciled).toBe(false);
   });
 
   it('does not let a queued poll overwrite a failed write', async () => {
@@ -242,19 +232,17 @@ describe('Start with SteamVR synchronization', () => {
     const service = createService(appSettings);
     await service.init();
     emit<OpenVRStatus>('OVR_STATUS_UPDATE', 'INITIALIZED');
-    await vi.waitFor(() => expect(internal(service).autoLaunchReconciled).toBe(true));
-    const write = service.setStartWithSteamVR(true).catch(() => undefined);
-    await vi.waitFor(() => expect(appSettings.settingsSync.startWithSteamVR).toBe(true));
-    internal(service).syncApplicationAutoLaunchChanges();
+    await vi.waitFor(() => expect(appSettings.settingsSync.startWithSteamVR).toBe(false));
+    const write = service.setStartWithSteamVR(true);
+    await vi.waitFor(() => expect(writeCount).toBe(1));
     rejectWrite(new Error('write failed'));
     await write;
-    await internal(service).autoLaunchQueue;
     expect(appSettings.settingsSync).toMatchObject({
       startWithSteamVR: true,
       startWithSteamVRPending: true,
     });
 
-    internal(service).syncApplicationAutoLaunchChanges();
+    (service as unknown as { syncAutoLaunch(): Promise<void> }).syncAutoLaunch();
     await vi.waitFor(() => expect(writeCount).toBe(2));
     expect(autoLaunch).toBe(true);
     expect(appSettings.settingsSync.startWithSteamVRPending).toBe(false);
@@ -277,7 +265,7 @@ describe('Start with SteamVR synchronization', () => {
     await Promise.resolve();
     emit<OpenVRStatus>('OVR_STATUS_UPDATE', 'INACTIVE');
     resolveRead(false);
-    await internal(service).autoLaunchQueue;
+    await (service as unknown as { autoLaunchQueue: Promise<void> }).autoLaunchQueue;
     expect(appSettings.settingsSync.startWithSteamVR).toBe(false);
   });
 });

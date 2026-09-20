@@ -35,9 +35,8 @@ export class OpenVRService {
   public devicePoses: Observable<{ [trackingIndex: number]: OVRDevicePose }> =
     this._devicePoses.asObservable();
 
-  private autoLaunchQueue: Promise<unknown> = Promise.resolve();
+  private autoLaunchQueue: Promise<void> = Promise.resolve();
   private autoLaunchSession = 0;
-  private autoLaunchReconciled = false;
 
   constructor(
     private appRef: ApplicationRef,
@@ -89,7 +88,7 @@ export class OpenVRService {
     // A status update sent while the listener above was still being registered is never delivered
     const status = await invoke<OpenVRStatus>('openvr_status');
     if (!statusReceived) this.onStatusUpdate(status);
-    interval(2000).subscribe(() => this.syncApplicationAutoLaunchChanges());
+    interval(2000).subscribe(() => this.syncAutoLaunch());
 
     // restore cached devices missed before listener registration
     const snapshotSession = deviceSession;
@@ -151,22 +150,11 @@ export class OpenVRService {
   }
 
   public setStartWithSteamVR(enabled: boolean): Promise<void> {
-    this.storeStartWithSteamVR(enabled);
-    if (this._status.value !== 'INITIALIZED') {
-      return Promise.resolve();
-    }
-    return this.enqueueAutoLaunchOperation(async (session) => {
-      if (this.isStaleAutoLaunchSession(session)) return;
-      try {
-        await this.writeApplicationAutoLaunch(enabled);
-      } catch (cause) {
-        if (!this.isStaleAutoLaunchSession(session)) this.autoLaunchReconciled = false;
-        throw cause;
-      }
-      if (this.isStaleAutoLaunchSession(session)) return;
-      this.clearStartWithSteamVRPending(enabled);
-      this.autoLaunchReconciled = true;
+    this.appSettings.updateSettings({
+      startWithSteamVR: enabled,
+      startWithSteamVRPending: true,
     });
+    return this.syncAutoLaunch();
   }
 
   public async isDashboardVisible(): Promise<boolean> {
@@ -175,7 +163,6 @@ export class OpenVRService {
 
   private onStatusUpdate(status: OpenVRStatus) {
     this.autoLaunchSession++;
-    this.autoLaunchReconciled = false;
     this._status.next(status);
     switch (status) {
       case 'INACTIVE':
@@ -184,21 +171,17 @@ export class OpenVRService {
         this._devicePoses.next({});
         break;
       case 'INITIALIZED':
-        this.reconcileApplicationAutoLaunch();
+        this.syncAutoLaunch();
         break;
     }
   }
 
-  private reconcileApplicationAutoLaunch() {
+  private syncAutoLaunch(): Promise<void> {
+    if (this._status.value !== 'INITIALIZED') return Promise.resolve();
     const session = this.autoLaunchSession;
-    this.enqueueAutoLaunchOperation(async () => {
-      if (this.isStaleAutoLaunchSession(session)) return;
-      if (this.appSettings.settingsSync.startWithSteamVRPending) {
-        const enabled = this.appSettings.settingsSync.startWithSteamVR;
-        await this.writeApplicationAutoLaunch(enabled);
-        if (this.isStaleAutoLaunchSession(session)) return;
-        this.clearStartWithSteamVRPending(enabled);
-      } else {
+    const run = async () => {
+      if (session !== this.autoLaunchSession || this._status.value !== 'INITIALIZED') return;
+      if (!this.appSettings.settingsSync.startWithSteamVRPending) {
         let enabled: boolean;
         try {
           enabled = await invoke<boolean>('openvr_get_application_auto_launch');
@@ -206,79 +189,31 @@ export class OpenVRService {
           error(`[OpenVR] Could not read application auto-launch: ${cause}`);
           return;
         }
-        if (this.isStaleAutoLaunchSession(session)) return;
-        if (!this.appSettings.settingsSync.startWithSteamVRPending) {
+        if (session !== this.autoLaunchSession || this._status.value !== 'INITIALIZED') return;
+        if (
+          !this.appSettings.settingsSync.startWithSteamVRPending &&
+          enabled !== this.appSettings.settingsSync.startWithSteamVR
+        ) {
           this.appSettings.updateSettings({ startWithSteamVR: enabled });
         }
-      }
-      this.autoLaunchReconciled = true;
-    }).catch(() => undefined);
-  }
-
-  private syncApplicationAutoLaunchChanges() {
-    if (this._status.value !== 'INITIALIZED') return;
-    if (!this.autoLaunchReconciled) {
-      this.reconcileApplicationAutoLaunch();
-      return;
-    }
-    const session = this.autoLaunchSession;
-    this.enqueueAutoLaunchOperation(async () => {
-      if (this.isStaleAutoLaunchSession(session)) return;
-      if (!this.autoLaunchReconciled) return;
-      if (this.appSettings.settingsSync.startWithSteamVRPending) {
-        this.reconcileApplicationAutoLaunch();
         return;
       }
-      let enabled: boolean;
+      const enabled = this.appSettings.settingsSync.startWithSteamVR;
       try {
-        enabled = await invoke<boolean>('openvr_get_application_auto_launch');
+        await invoke('openvr_set_application_auto_launch', { enabled });
+        const confirmed = await invoke<boolean>('openvr_get_application_auto_launch');
+        if (confirmed !== enabled) throw new Error('AUTO_LAUNCH_WRITE_NOT_CONFIRMED');
       } catch (cause) {
-        error(`[OpenVR] Could not read application auto-launch: ${cause}`);
+        error(`[OpenVR] Could not set application auto-launch: ${cause}`);
         return;
       }
-      if (this.isStaleAutoLaunchSession(session)) return;
-      if (this.appSettings.settingsSync.startWithSteamVRPending) return;
-      if (enabled !== this.appSettings.settingsSync.startWithSteamVR) {
-        this.appSettings.updateSettings({ startWithSteamVR: enabled });
+      if (session !== this.autoLaunchSession || this._status.value !== 'INITIALIZED') return;
+      if (this.appSettings.settingsSync.startWithSteamVR === enabled) {
+        this.appSettings.updateSettings({ startWithSteamVRPending: false });
       }
-    }).catch(() => undefined);
-  }
-
-  private storeStartWithSteamVR(enabled: boolean) {
-    this.appSettings.updateSettings({
-      startWithSteamVR: enabled,
-      startWithSteamVRPending: true,
-    });
-  }
-
-  private clearStartWithSteamVRPending(enabled: boolean) {
-    if (this.appSettings.settingsSync.startWithSteamVR !== enabled) return;
-    this.appSettings.updateSettings({ startWithSteamVRPending: false });
-  }
-
-  private async writeApplicationAutoLaunch(enabled: boolean) {
-    try {
-      await invoke('openvr_set_application_auto_launch', { enabled });
-      const confirmed = await invoke<boolean>('openvr_get_application_auto_launch');
-      if (confirmed !== enabled) throw new Error('AUTO_LAUNCH_WRITE_NOT_CONFIRMED');
-    } catch (cause) {
-      error(`[OpenVR] Could not set application auto-launch: ${cause}`);
-      throw cause;
-    }
-  }
-
-  private enqueueAutoLaunchOperation<T>(work: (session: number) => Promise<T>): Promise<T> {
-    const session = this.autoLaunchSession;
-    const result = this.autoLaunchQueue.then(
-      () => work(session),
-      () => work(session)
-    );
-    this.autoLaunchQueue = result.catch(() => undefined);
-    return result;
-  }
-
-  private isStaleAutoLaunchSession(session: number) {
-    return session !== this.autoLaunchSession || this._status.value !== 'INITIALIZED';
+    };
+    this.autoLaunchQueue = this.autoLaunchQueue.then(run, run);
+    return this.autoLaunchQueue;
   }
 
   private async applyOpenVrInitDelayFix(enabled: boolean) {
