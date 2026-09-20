@@ -2173,11 +2173,7 @@
       },
       "startWithSteamVR": {
         "description": "Start OyasumiVR when SteamVR starts",
-        "label": "Start with SteamVR",
-        "status": {
-          "pending": "SteamVR isn't running. OyasumiVR will apply this choice when SteamVR starts.",
-          "syncFailed": "Could not update the SteamVR startup setting. OyasumiVR will retry while SteamVR runs."
-        }
+        "label": "Start with SteamVR"
       },
       "stopWithSteamVR": {
         "description": "Quit OyasumiVR when SteamVR is stopped for a certain amount of time",

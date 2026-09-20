@@ -14,7 +14,7 @@ export interface AppSettings {
   sleepModeStartupBehaviour: 'PERSIST' | 'ACTIVE' | 'INACTIVE';
   quitWithSteamVR: QuitWithSteamVRMode;
   startWithSteamVR: boolean;
-  startWithSteamVRPreferenceSet: boolean;
+  startWithSteamVRPending: boolean;
   hotkeys: { [hotkeyId: string]: string[] };
   playerListPresets: PlayerListPreset[];
   hideSnowverlay: boolean;
@@ -107,7 +107,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   sleepModeStartupBehaviour: 'PERSIST',
   quitWithSteamVR: 'DISABLED',
   startWithSteamVR: false,
-  startWithSteamVRPreferenceSet: false,
+  startWithSteamVRPending: false,
   hotkeys: {},
   playerListPresets: [],
   hideSnowverlay: false,

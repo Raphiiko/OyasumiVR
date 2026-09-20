@@ -10,11 +10,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SelectBoxItem } from 'src-ui/app/components/select-box/select-box.component';
 import { LighthouseDevicePowerState } from 'src-ui/app/models/lighthouse-device';
-import {
-  AutoLaunchSyncState,
-  OpenVRService,
-  OpenVRStatus,
-} from 'src-ui/app/services/openvr.service';
+import { OpenVRService } from 'src-ui/app/services/openvr.service';
 import { TelemetryService } from 'src-ui/app/services/telemetry.service';
 import { LighthouseConsoleService } from 'src-ui/app/services/lighthouse-console.service';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
@@ -94,9 +90,6 @@ export class SettingsGeneralViewComponent implements OnInit {
     },
   ];
   stopWithSteamVROption: SelectBoxItem | undefined;
-  openVRStatus: OpenVRStatus = 'INACTIVE';
-  startWithSteamVRSyncState: AutoLaunchSyncState = 'IDLE';
-  startWithSteamVRWriting = false;
 
   constructor(
     private lighthouse: LighthouseConsoleService,
@@ -138,12 +131,6 @@ export class SettingsGeneralViewComponent implements OnInit {
           (o) => o.id === settings.quitWithSteamVR
         );
       });
-    this.openvr.status
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((status) => (this.openVRStatus = status));
-    this.openvr.autoLaunchSyncState
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((state) => (this.startWithSteamVRSyncState = state));
   }
 
   setUserLanguage(languageCode: string) {
@@ -245,13 +232,8 @@ export class SettingsGeneralViewComponent implements OnInit {
     });
   }
 
-  async setStartWithSteamVR(event: Event, enabled: boolean) {
-    const checkbox = event.currentTarget as HTMLInputElement;
-    checkbox.checked = !enabled;
-    if (this.startWithSteamVRWriting) return;
-    this.startWithSteamVRWriting = true;
-    await this.openvr.setStartWithSteamVR(enabled).catch(() => undefined);
-    this.startWithSteamVRWriting = false;
+  setStartWithSteamVR(enabled: boolean) {
+    void this.openvr.setStartWithSteamVR(enabled).catch(() => undefined);
   }
 
   protected readonly OVRInputEventAction = OVRInputEventAction;

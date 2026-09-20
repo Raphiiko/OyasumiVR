@@ -14,7 +14,7 @@ function from12to13(data: any): any {
 function from13to14(data: any): any {
   data.version = 14;
   data.startWithSteamVR = false;
-  data.startWithSteamVRPreferenceSet = false;
+  data.startWithSteamVRPending = false;
   return data;
 }
 
