@@ -2,6 +2,13 @@
 
 Edit this file. `CLAUDE.md` imports it.
 
+## Personal workflow
+
+Before planning or ticket work, read [project configuration](docs/agents/issue-tracker.md).
+Before planning or changing a domain, read [domain documentation](docs/agents/domain.md).
+Installed entry skills: `wayfinder`, `grill-with-docs`, `ingest`, `research-ticket`,
+`implement-ticket`, and `ship-gate`.
+
 ## The project
 
 OyasumiVR is a Windows desktop app for VRChat users, built with Tauri.
