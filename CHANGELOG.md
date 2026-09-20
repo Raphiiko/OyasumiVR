@@ -19,7 +19,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Added
 
-- Start with SteamVR can now be toggled directly in General Settings
+- Start with SteamVR can now be toggled directly in General Settings, including while SteamVR is
+  stopped, and changes made in SteamVR are reflected while both applications run
 - Access the main OyasumiVR interface from the SteamVR dashboard
 - Regression coverage for removing Windows registry paths from error-report filenames
 - Multiple VRChat account profiles

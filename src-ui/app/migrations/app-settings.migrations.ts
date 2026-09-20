@@ -11,6 +11,13 @@ function from12to13(data: any): any {
   return data;
 }
 
+function from13to14(data: any): any {
+  data.version = 14;
+  data.startWithSteamVR = false;
+  data.startWithSteamVRPreferenceSet = false;
+  return data;
+}
+
 async function from11to12(data: any): Promise<any> {
   data.mqttProtectedPassword = await protectSecret(data.mqttPassword);
   data.mqttPassword = null;
@@ -133,6 +140,7 @@ export const APP_SETTINGS_MIGRATION: MigrationDefinition<Versioned> = {
     10: from10to11,
     11: from11to12,
     12: from12to13,
+    13: from13to14,
   },
   normalizeCurrentVersion: (data) => normalizeWithDefaults(APP_SETTINGS_DEFAULT, data),
 };

@@ -155,38 +155,20 @@
             label="settings.general.startWithSteamVR.label"
             description="settings.general.startWithSteamVR.description"
           >
-            @if (startWithSteamVRLoading || startWithSteamVRWriting) {
+            @if (startWithSteamVRWriting || startWithSteamVRSyncState === 'SYNCING') {
               <div class="small-spinner"></div>
             }
             <label class="switch-toggle">
               <input
                 type="checkbox"
-                [checked]="startWithSteamVRValue === true"
-                [disabled]="
-                  startWithSteamVRLoading || !startWithSteamVRAvailable || startWithSteamVRWriting
-                "
-                (change)="setStartWithSteamVR($event, !startWithSteamVRValue)"
+                [checked]="appSettings.startWithSteamVR"
+                [disabled]="startWithSteamVRWriting"
+                (change)="setStartWithSteamVR($event, !appSettings.startWithSteamVR)"
               />
               <span class="switch-toggle-slider"></span>
             </label>
           </app-setting-row>
-          @if (
-            !startWithSteamVRAvailable && !startWithSteamVRLoading && startWithSteamVRReadError
-          ) {
-            <div class="alert error" [@vshrink]>
-              <div class="alert-bg"></div>
-              <div class="alert-icon">
-                <i class="material-icons">error_outline</i>
-              </div>
-              <div
-                class="alert-content"
-                transloco="settings.general.startWithSteamVR.status.readFailed"
-              ></div>
-            </div>
-          }
-          @if (
-            !startWithSteamVRAvailable && !startWithSteamVRLoading && !startWithSteamVRReadError
-          ) {
+          @if (openVRStatus !== 'INITIALIZED') {
             <div class="alert" [@vshrink]>
               <div class="alert-bg"></div>
               <div class="alert-icon">
@@ -194,11 +176,11 @@
               </div>
               <div
                 class="alert-content"
-                transloco="settings.general.startWithSteamVR.status.unavailable"
+                transloco="settings.general.startWithSteamVR.status.pending"
               ></div>
             </div>
           }
-          @if (startWithSteamVRError) {
+          @if (openVRStatus === 'INITIALIZED' && startWithSteamVRSyncState === 'ERROR') {
             <div class="alert error" [@vshrink]>
               <div class="alert-bg"></div>
               <div class="alert-icon">
@@ -206,7 +188,7 @@
               </div>
               <div
                 class="alert-content"
-                transloco="settings.general.startWithSteamVR.status.writeFailed"
+                transloco="settings.general.startWithSteamVR.status.syncFailed"
               ></div>
             </div>
           }
