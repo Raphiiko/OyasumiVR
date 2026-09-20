@@ -168,7 +168,6 @@ import { SettingsNotificationsViewComponent } from './views/dashboard-view/views
 import { SettingsOscViewComponent } from './views/dashboard-view/views/settings-osc-view/settings-osc-view.component';
 import { SettingsGeneralViewComponent } from './views/dashboard-view/views/settings-general-view/settings-general-view.component';
 import { SettingsUpdatesViewComponent } from './views/dashboard-view/views/settings-updates-view/settings-updates-view.component';
-import { StartWithSteamVRHowToModalComponent } from './views/dashboard-view/views/settings-general-view/start-with-steamvr-how-to-modal/start-with-steamvr-how-to-modal.component';
 import { SettingsIntegrationsViewComponent } from './views/dashboard-view/views/settings-integrations-view/settings-integrations-view.component';
 import { SettingsHotkeyViewComponent } from './views/dashboard-view/views/settings-hotkey-view/settings-hotkey-view.component';
 import { HotkeySelectorComponent } from './components/hotkey-selector/hotkey-selector.component';
@@ -376,7 +375,6 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
     ObfuscatedValueDirective,
     HeartRateCalmPeriodEnableSleepModeModalComponent,
     HeartRateChartComponent,
-    StartWithSteamVRHowToModalComponent,
     MiscTestingComponent,
     ToastTestingComponent,
     VRChatMicMuteAutomationsViewComponent,

@@ -945,10 +945,6 @@
     "select-box": {
       "defaultPlaceholder": "選択する"
     },
-    "start-with-steamvr-how-to-modal": {
-      "description": "SteamVR -> 設定 -> スタートアップ/シャットダウン -> スタートアップオーバーレイアプリを選択",
-      "title": "SteamVRと一緒にOyasumiVRを起動"
-    },
     "update-modal": {
       "message": "OyasumiVRの新しいアップデートが見つかりました: v{newVersion}\n\n現在、v{currentVersion}を利用しています。\n\n今すぐアップデートしますか、それとも後ほどアップデートしますか？",
       "steamAd": "<b>OyasumiVRはSteamでも利用可能です！</b><br><br>これはOyasumiVRをインストールする新しいおすすめ方法です。<br><a href=\"https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/\" target=\"_blank\">Steam</a>のストアページをご覧いただき、詳細を確認してください！",
@@ -2104,7 +2100,6 @@
       },
       "startWithSteamVR": {
         "description": "SteamVRが起動したときにOyasumiVRを起動します",
-        "howTo": "詳細",
         "label": "SteamVRと起動"
       },
       "stopWithSteamVR": {

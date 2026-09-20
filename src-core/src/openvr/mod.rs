@@ -121,8 +121,6 @@ pub async fn task() {
                 }
                 // We've successfully initialized OpenVR
                 info!("[Core] OpenVR Initialized");
-                ovr_active = true;
-                update_status(OpenVRStatus::Initialized).await;
                 // (Un)register manifest if needed
                 'manifest: {
                     let ctx = OVR_CONTEXT.lock().await;
@@ -187,6 +185,8 @@ pub async fn task() {
                         }
                     }
                 }
+                ovr_active = true;
+                update_status(OpenVRStatus::Initialized).await;
                 // Set up SteamVR Input
                 let mut actions = vec![];
                 let mut action_sets = vec![];

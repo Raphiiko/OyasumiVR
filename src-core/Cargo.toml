@@ -132,7 +132,7 @@ rev = "5f24925"
 
 [dependencies.raphii-openvr-rs]
 git = "https://github.com/Raphiiko/raphii-openvr-rs"
-rev = "a722cf7a6aa5832eaca55bd640bc5b5f87ed0661"
+rev = "5dca9da201b15cf9641382a2f28e18c053adb488"
 
 [dependencies.oyasumivr_oscquery]
 git = "https://github.com/Raphiiko/oyasumivr_oscquery.git"

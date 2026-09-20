@@ -1,5 +1,5 @@
 import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, interval, Subject } from 'rxjs';
 import { open as openFile } from '@tauri-apps/plugin-dialog';
 import {
   APP_SETTINGS_DEFAULT,
@@ -10,12 +10,11 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SelectBoxItem } from 'src-ui/app/components/select-box/select-box.component';
 import { LighthouseDevicePowerState } from 'src-ui/app/models/lighthouse-device';
-import { StartWithSteamVRHowToModalComponent } from './start-with-steamvr-how-to-modal/start-with-steamvr-how-to-modal.component';
+import { OpenVRService, OpenVRStatus } from 'src-ui/app/services/openvr.service';
 import { TelemetryService } from 'src-ui/app/services/telemetry.service';
 import { LighthouseConsoleService } from 'src-ui/app/services/lighthouse-console.service';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 import { ElevatedSidecarService } from 'src-ui/app/services/elevated-sidecar.service';
-import { ModalService } from 'src-ui/app/services/modal.service';
 
 import { LANGUAGES } from '../../../../globals';
 import { vshrink } from '../../../../utils/animations';
@@ -91,13 +90,19 @@ export class SettingsGeneralViewComponent implements OnInit {
     },
   ];
   stopWithSteamVROption: SelectBoxItem | undefined;
+  startWithSteamVRValue: boolean | null = null;
+  startWithSteamVRLoading = true;
+  startWithSteamVRAvailable = false;
+  startWithSteamVRWriting = false;
+  startWithSteamVRError = false;
+  private openvrStatus: OpenVRStatus = 'INACTIVE';
 
   constructor(
     private lighthouse: LighthouseConsoleService,
     private telemetry: TelemetryService,
-    private modalService: ModalService,
     private destroyRef: DestroyRef,
     private settingsService: AppSettingsService,
+    private openvr: OpenVRService,
     protected elevatedSidecar: ElevatedSidecarService
   ) {}
 
@@ -131,6 +136,16 @@ export class SettingsGeneralViewComponent implements OnInit {
         this.stopWithSteamVROption = this.stopWithSteamVROptions.find(
           (o) => o.id === settings.quitWithSteamVR
         );
+      });
+    this.openvr.status
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((status) => this.processOpenVRStatus(status));
+    interval(2000)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        if (this.openvrStatus === 'INITIALIZED' && !this.startWithSteamVRWriting) {
+          this.refreshStartWithSteamVR();
+        }
       });
   }
 
@@ -233,8 +248,43 @@ export class SettingsGeneralViewComponent implements OnInit {
     });
   }
 
-  showStartWithSteamVRHowToModal() {
-    this.modalService.addModal(StartWithSteamVRHowToModalComponent).subscribe();
+  private processOpenVRStatus(status: OpenVRStatus) {
+    this.openvrStatus = status;
+    if (status === 'INITIALIZED') {
+      this.refreshStartWithSteamVR();
+      return;
+    }
+    this.startWithSteamVRLoading = false;
+    this.startWithSteamVRAvailable = false;
+    this.startWithSteamVRValue = null;
+  }
+
+  private async refreshStartWithSteamVR() {
+    if (this.startWithSteamVRValue === null) this.startWithSteamVRLoading = true;
+    try {
+      const enabled = await this.openvr.getApplicationAutoLaunch();
+      this.startWithSteamVRValue = enabled;
+      this.startWithSteamVRAvailable = true;
+    } catch {
+      this.startWithSteamVRAvailable = false;
+      this.startWithSteamVRValue = null;
+    } finally {
+      this.startWithSteamVRLoading = false;
+    }
+  }
+
+  async setStartWithSteamVR(enabled: boolean) {
+    if (this.startWithSteamVRWriting || !this.startWithSteamVRAvailable) return;
+    this.startWithSteamVRWriting = true;
+    try {
+      await this.openvr.setApplicationAutoLaunch(enabled);
+      this.startWithSteamVRError = false;
+    } catch {
+      this.startWithSteamVRError = true;
+    } finally {
+      this.startWithSteamVRWriting = false;
+      await this.refreshStartWithSteamVR();
+    }
   }
 
   protected readonly OVRInputEventAction = OVRInputEventAction;

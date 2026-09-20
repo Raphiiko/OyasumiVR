@@ -861,10 +861,6 @@
     "select-box": {
       "defaultPlaceholder": "Auswählen..."
     },
-    "start-with-steamvr-how-to-modal": {
-      "description": "Du kannst OyasumiVR so einstellen, dass es zusammen mit SteamVR startet innerhalb der SteamVR inernen Einstellungen. Du kannst diese hier finden:\n\nEnglish\nSteamVR -> Settings -> Startup / Shutdown -> Choose startup overlay apps\n\nDeutsch\nSteamVR-> Einstellungen -> Start / Beenden ->\nStartanwendung für Overlay auswählen",
-      "title": "OyasumiVR mit SteamVR starten"
-    },
     "update-modal": {
       "message": "Ein neues Update für OyasumiVR wurde gefunden:\nv{newVersion}.\n\nDu hast immernoch Version v{currentVersion}.\n\nMöchstest du jetzt oder später updaten?",
       "steamAd": "<b>OyasumiVR ist auch verfügbar auf Steam!</b><br><br>Das ist der neue empfohlene Weg OyasumiVR zu verwenden<br>Besuch den Steam Store unter <a href=\"https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/\" target=\"_blank\">Steam</a> um mehr herauszufinden!",
@@ -1693,7 +1689,6 @@
       },
       "startWithSteamVR": {
         "description": "Starte OyasumiVR, wenn SteamVR startet",
-        "howTo": "Wie macht man",
         "label": "Starte mit SteamVR"
       },
       "stopWithSteamVR": {

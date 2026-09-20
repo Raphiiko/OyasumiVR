@@ -144,6 +144,14 @@ export class OpenVRService {
     return invoke<number>('openvr_get_fade_distance');
   }
 
+  public getApplicationAutoLaunch(): Promise<boolean> {
+    return invoke<boolean>('openvr_get_application_auto_launch');
+  }
+
+  public setApplicationAutoLaunch(enabled: boolean): Promise<void> {
+    return invoke<void>('openvr_set_application_auto_launch', { enabled });
+  }
+
   public async isDashboardVisible(): Promise<boolean> {
     return invoke<boolean>('openvr_is_dashboard_visible');
   }
