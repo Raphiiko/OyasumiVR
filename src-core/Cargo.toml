@@ -23,7 +23,7 @@ tauri-plugin-updater = "2.11.0"
 [dependencies]
 async-recursion = "1.1.1"
 base64 = "0.22.1"
-btleplug = "=0.13.1"
+btleplug = { git = "https://github.com/Raphiiko/btleplug", rev = "be495282b8b671a4a832cafbe2dbd76db6c1c8d8" }
 byteorder = "1.5.0"
 bytes = "1.12.1"
 chrono = "0.4.45"
