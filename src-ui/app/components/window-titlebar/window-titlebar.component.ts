@@ -24,6 +24,7 @@ const appWindow = getCurrentWebviewWindow();
 })
 export class WindowTitlebarComponent implements OnInit {
   version = '0.0.0';
+  protected versionReady = false;
   showVersionExtras = false;
   protected versionCopied = signal(false);
   private versionCopiedTimer?: ReturnType<typeof setTimeout>;
@@ -35,6 +36,7 @@ export class WindowTitlebarComponent implements OnInit {
 
   async ngOnInit() {
     this.version = await getVersion();
+    this.versionReady = true;
     this.cdr.markForCheck();
   }
 

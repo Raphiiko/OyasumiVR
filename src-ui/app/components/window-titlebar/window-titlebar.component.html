@@ -2,6 +2,7 @@
   <span class="title" data-tauri-drag-region>Oyasumi<b data-tauri-drag-region>VR</b></span>
   <button
     class="version-area"
+    [disabled]="!versionReady"
     (mouseenter)="showVersionExtras = true"
     (mouseleave)="showVersionExtras = false"
     (click)="copyVersion()"
