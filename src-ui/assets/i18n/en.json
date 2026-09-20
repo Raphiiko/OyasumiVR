@@ -2175,6 +2175,7 @@
         "description": "Start OyasumiVR when SteamVR starts",
         "label": "Start with SteamVR",
         "status": {
+          "readFailed": "Could not read the SteamVR startup setting. Try again in a moment.",
           "unavailable": "Start SteamVR to change this setting.",
           "writeFailed": "Could not change the SteamVR startup setting. Try again while SteamVR is running."
         }

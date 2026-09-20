@@ -165,12 +165,28 @@
                 [disabled]="
                   startWithSteamVRLoading || !startWithSteamVRAvailable || startWithSteamVRWriting
                 "
-                (change)="setStartWithSteamVR(!startWithSteamVRValue)"
+                (change)="setStartWithSteamVR($event, !startWithSteamVRValue)"
               />
               <span class="switch-toggle-slider"></span>
             </label>
           </app-setting-row>
-          @if (!startWithSteamVRAvailable) {
+          @if (
+            !startWithSteamVRAvailable && !startWithSteamVRLoading && startWithSteamVRReadError
+          ) {
+            <div class="alert error" [@vshrink]>
+              <div class="alert-bg"></div>
+              <div class="alert-icon">
+                <i class="material-icons">error_outline</i>
+              </div>
+              <div
+                class="alert-content"
+                transloco="settings.general.startWithSteamVR.status.readFailed"
+              ></div>
+            </div>
+          }
+          @if (
+            !startWithSteamVRAvailable && !startWithSteamVRLoading && !startWithSteamVRReadError
+          ) {
             <div class="alert" [@vshrink]>
               <div class="alert-bg"></div>
               <div class="alert-icon">

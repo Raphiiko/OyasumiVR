@@ -95,7 +95,9 @@ export class SettingsGeneralViewComponent implements OnInit {
   startWithSteamVRAvailable = false;
   startWithSteamVRWriting = false;
   startWithSteamVRError = false;
+  startWithSteamVRReadError = false;
   private openvrStatus: OpenVRStatus = 'INACTIVE';
+  private startWithSteamVRRefreshGeneration = 0;
 
   constructor(
     private lighthouse: LighthouseConsoleService,
@@ -251,29 +253,51 @@ export class SettingsGeneralViewComponent implements OnInit {
   private processOpenVRStatus(status: OpenVRStatus) {
     this.openvrStatus = status;
     if (status === 'INITIALIZED') {
+      this.startWithSteamVRError = false;
+      this.startWithSteamVRReadError = false;
       this.refreshStartWithSteamVR();
       return;
     }
-    this.startWithSteamVRLoading = false;
+    this.startWithSteamVRRefreshGeneration++;
+    this.startWithSteamVRLoading = status === 'INITIALIZING';
     this.startWithSteamVRAvailable = false;
     this.startWithSteamVRValue = null;
+    this.startWithSteamVRError = false;
+    this.startWithSteamVRReadError = false;
   }
 
   private async refreshStartWithSteamVR() {
+    if (this.openvrStatus !== 'INITIALIZED') return;
+    const refreshGeneration = ++this.startWithSteamVRRefreshGeneration;
     if (this.startWithSteamVRValue === null) this.startWithSteamVRLoading = true;
     try {
       const enabled = await this.openvr.getApplicationAutoLaunch();
+      if (
+        refreshGeneration !== this.startWithSteamVRRefreshGeneration ||
+        this.openvrStatus !== 'INITIALIZED'
+      )
+        return;
       this.startWithSteamVRValue = enabled;
       this.startWithSteamVRAvailable = true;
+      this.startWithSteamVRReadError = false;
     } catch {
+      if (
+        refreshGeneration !== this.startWithSteamVRRefreshGeneration ||
+        this.openvrStatus !== 'INITIALIZED'
+      )
+        return;
       this.startWithSteamVRAvailable = false;
       this.startWithSteamVRValue = null;
+      this.startWithSteamVRReadError = true;
     } finally {
-      this.startWithSteamVRLoading = false;
+      if (refreshGeneration === this.startWithSteamVRRefreshGeneration)
+        this.startWithSteamVRLoading = false;
     }
   }
 
-  async setStartWithSteamVR(enabled: boolean) {
+  async setStartWithSteamVR(event: Event, enabled: boolean) {
+    const checkbox = event.currentTarget as HTMLInputElement;
+    checkbox.checked = !enabled;
     if (this.startWithSteamVRWriting || !this.startWithSteamVRAvailable) return;
     this.startWithSteamVRWriting = true;
     try {
