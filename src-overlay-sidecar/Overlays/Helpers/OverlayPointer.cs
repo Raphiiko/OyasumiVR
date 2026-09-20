@@ -93,11 +93,11 @@ public class OverlayPointer
     }
   }
 
-  public Vector3? GetPointerLocationForOverlay(BaseWebOverlay overlay)
+  public Matrix4x4? GetPointerTransformForOverlay(BaseWebOverlay overlay)
   {
     lock (_overlays)
     {
-      return _mouseOwners.TryGetValue(overlay, out var owner) ? owner.LastPosition : null;
+      return _mouseOwners.TryGetValue(overlay, out var owner) ? owner.LastTransform : null;
     }
   }
 
@@ -154,8 +154,6 @@ public class OverlayPointer
               closestIntersections[index] = (intersection.Value.Item1, intersection.Value.Item3);
           }
 
-          var headTransform = OvrUtils.GetHeadPose(poseBuffer).mDeviceToAbsoluteTracking.ToMatrix4X4();
-
           // update both hits before choosing browser owners
           foreach (var (intersection, pointer) in new[]
                    { (closestIntersections[0], _leftPointer), (closestIntersections[1], _rightPointer) })
@@ -163,15 +161,23 @@ public class OverlayPointer
             if (pointer.LastActiveOverlay != intersection?.Item2) LeaveOverlay(pointer);
             if (!intersection.HasValue) continue;
 
-            var position = intersection.Value.Item1.vPoint.ToVector3();
-            var transform = (Matrix4x4.CreateFromQuaternion(Quaternion.CreateFromRotationMatrix(headTransform)) *
-                             Matrix4x4.CreateTranslation(position)).ToHmdMatrix34_t();
+            var origin = ETrackingUniverseOrigin.TrackingUniverseStanding;
+            HmdMatrix34_t overlayTransform = default;
+            if (OpenVR.Overlay.GetOverlayTransformAbsolute(intersection.Value.Item2.OverlayHandle,
+                  ref origin, ref overlayTransform) != EVROverlayError.None)
+            {
+              LeaveOverlay(pointer);
+              continue;
+            }
+            var hitTransform = overlayTransform.ToMatrix4X4();
+            hitTransform.Translation = intersection.Value.Item1.vPoint.ToVector3();
+            var transform = (Matrix4x4.CreateTranslation(0, 0, 0.002f) * hitTransform).ToHmdMatrix34_t();
             OpenVR.Overlay.SetOverlayTransformAbsolute(pointer.OverlayHandle,
               ETrackingUniverseOrigin.TrackingUniverseStanding, ref transform);
             OpenVR.Overlay.ShowOverlay(pointer.OverlayHandle);
             pointer.LastUvPosition = intersection.Value.Item1.vUVs.ToVector2();
             pointer.LastActiveOverlay = intersection.Value.Item2;
-            pointer.LastPosition = position;
+            pointer.LastTransform = hitTransform;
           }
 
           foreach (var pointer in new[] { _leftPointer, _rightPointer })
@@ -259,7 +265,7 @@ public class OverlayPointer
 
     OpenVR.Overlay?.HideOverlay(pointer.OverlayHandle);
     pointer.Pressed = false;
-    pointer.LastPosition = null;
+    pointer.LastTransform = null;
     pointer.LastUvPosition = null;
     pointer.LastActiveOverlay = null;
   }
@@ -286,6 +292,6 @@ public class OverlayPointer
     public bool TriggerHeld;
     public bool Pressed;
     public BaseWebOverlay? LastActiveOverlay;
-    public Vector3? LastPosition;
+    public Matrix4x4? LastTransform;
   }
 }
