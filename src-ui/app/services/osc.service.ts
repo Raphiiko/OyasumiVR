@@ -219,7 +219,7 @@ export class OscService {
 
   queueScript(script: OscScript, replaceId?: string) {
     script = structuredClone(script);
-    this.scriptQueue.queueTask(
+    return this.scriptQueue.queueTask(
       {
         runnable: () => this.runScript(script),
         typeId: replaceId,

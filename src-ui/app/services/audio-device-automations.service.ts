@@ -9,7 +9,7 @@ import {
 import { isEqual } from 'lodash';
 import { SleepService } from './sleep.service';
 import { SleepPreparationService } from './sleep-preparation.service';
-import { delay, distinctUntilChanged, firstValueFrom, map, of, skip, switchMap, take } from 'rxjs';
+import { delay, distinctUntilChanged, firstValueFrom, map, of, switchMap, take } from 'rxjs';
 import { AudioDeviceParsedName } from '../models/audio-device';
 import { info } from '@tauri-apps/plugin-log';
 import { EventLogService } from './event-log.service';
@@ -68,7 +68,7 @@ export class AudioDeviceAutomationsService {
         }
       });
     // Run automations on sleep mode change
-    this.sleepService.mode.pipe(skip(1), distinctUntilChanged()).subscribe(async (sleepMode) => {
+    this.sleepService.onSleepModeChangeActions.subscribe(async ({ mode: sleepMode }) => {
       const automations = sleepMode
         ? this.config.onSleepEnableAutomations
         : this.config.onSleepDisableAutomations;

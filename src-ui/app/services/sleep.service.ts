@@ -21,13 +21,14 @@ import { OpenVRService } from './openvr.service';
 import { OVRDevicePose } from '../models/ovr-device';
 import { SleepingPoseDetector } from '../utils/sleeping-pose-detector';
 import * as THREE from 'three';
-import { info } from '@tauri-apps/plugin-log';
+import { error, info } from '@tauri-apps/plugin-log';
 import { NotificationService } from './notification.service';
 import { TranslocoService } from '@jsverse/transloco';
 import { EventLogService } from './event-log.service';
 import { EventLogSleepModeDisabled, EventLogSleepModeEnabled } from '../models/event-log-entry';
 import { AppSettingsService } from './app-settings.service';
 import { listen } from '@tauri-apps/api/event';
+import { AwaitableEvent, AwaitableEventSource } from '../utils/awaitable-event';
 
 @Injectable({
   providedIn: 'root',
@@ -49,6 +50,14 @@ export class SleepService {
     mode: boolean;
     reason: SleepModeStatusChangeReason;
   }> = this._onSleepModeChange.asObservable();
+  private readonly sleepModeChangeActions = new AwaitableEventSource<{
+    mode: boolean;
+    reason: SleepModeStatusChangeReason;
+  }>();
+  public readonly onSleepModeChangeActions: AwaitableEvent<{
+    mode: boolean;
+    reason: SleepModeStatusChangeReason;
+  }> = this.sleepModeChangeActions.event;
 
   public pose: Observable<SleepingPose> = merge(
     combineLatest([this.openvr.devices, this.openvr.devicePoses]).pipe(
@@ -123,11 +132,16 @@ export class SleepService {
     } as EventLogSleepModeEnabled);
     this._mode.next(true);
     this._onSleepModeChange.next({ mode: true, reason });
-    await SETTINGS_STORE.set(SETTINGS_KEY_SLEEP_MODE, true);
-    if (await this.notifications.notificationTypeEnabled('SLEEP_MODE_ENABLED')) {
-      await this.notifications.send(
-        this.translate.translate('notifications.sleepModeEnabled.content')
-      );
+    const actions = this.sleepModeChangeActions.emit({ mode: true, reason });
+    try {
+      await SETTINGS_STORE.set(SETTINGS_KEY_SLEEP_MODE, true);
+      if (await this.notifications.notificationTypeEnabled('SLEEP_MODE_ENABLED')) {
+        await this.notifications.send(
+          this.translate.translate('notifications.sleepModeEnabled.content')
+        );
+      }
+    } finally {
+      this.logActionErrors(await actions);
     }
   }
 
@@ -141,11 +155,22 @@ export class SleepService {
     } as EventLogSleepModeDisabled);
     this._mode.next(false);
     this._onSleepModeChange.next({ mode: false, reason });
-    await SETTINGS_STORE.set(SETTINGS_KEY_SLEEP_MODE, false);
-    if (await this.notifications.notificationTypeEnabled('SLEEP_MODE_DISABLED')) {
-      await this.notifications.send(
-        this.translate.translate('notifications.sleepModeDisabled.content')
-      );
+    const actions = this.sleepModeChangeActions.emit({ mode: false, reason });
+    try {
+      await SETTINGS_STORE.set(SETTINGS_KEY_SLEEP_MODE, false);
+      if (await this.notifications.notificationTypeEnabled('SLEEP_MODE_DISABLED')) {
+        await this.notifications.send(
+          this.translate.translate('notifications.sleepModeDisabled.content')
+        );
+      }
+    } finally {
+      this.logActionErrors(await actions);
+    }
+  }
+
+  private logActionErrors(results: PromiseSettledResult<void>[]) {
+    for (const result of results) {
+      if (result.status === 'rejected') error(`[Sleep] Sleep mode action failed: ${result.reason}`);
     }
   }
 

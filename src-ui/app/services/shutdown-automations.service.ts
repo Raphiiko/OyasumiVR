@@ -66,6 +66,8 @@ export class ShutdownAutomationsService {
   public stage = this._stage.asObservable();
   private cancelFlag = false;
   private cancelEvent = new Subject<void>();
+  private currentSequence: Promise<void> | null = null;
+  private cancellation: Promise<void> | null = null;
   private turnOffOvrDevices: OVRDevice[] = [];
   private turnOffLighthouseDevices: LighthouseDevice[] = [];
   private turnOffKnownDevices: DMKnownDevice[] = [];
@@ -178,33 +180,59 @@ export class ShutdownAutomationsService {
   }
 
   async cancelSequence(reason: 'MANUAL') {
-    if (this._stage.value === 'IDLE' || this.cancelFlag) return;
+    if (!this.currentSequence || this.cancelFlag) return;
     this.cancelFlag = true;
     this.cancelEvent.next();
     this.eventLog.logEvent({
       type: 'shutdownSequenceCancelled',
       reason,
     } as EventLogShutdownSequenceCancelled);
-    // Cancel any pending shutdown
-    await invoke('run_command', {
-      command: 'shutdown',
-      args: ['/a'],
-    });
+    this.cancellation = Promise.resolve()
+      .then(() =>
+        invoke('run_command', {
+          command: 'shutdown',
+          args: ['/a'],
+        })
+      )
+      .then(() => undefined);
+    await this.cancellation;
   }
 
-  async runSequence(reason: EventLogShutdownSequenceStartedReason) {
+  runSequence(reason: EventLogShutdownSequenceStartedReason): Promise<void> {
+    if (this.currentSequence) return this.currentSequence;
     const stages = this.getApplicableStages();
-    if (this._stage.value !== 'IDLE' || !stages.length) return;
-    this.eventLog.logEvent({
-      type: 'shutdownSequenceStarted',
-      reason,
-      stages,
-    } as EventLogShutdownSequenceStarted);
-    if (!(await this.turnOffDevices())) return;
-    if (!(await this.quitSteamVR())) return;
-    if (!(await this.powerDownWindows())) return;
-    this._stage.next('IDLE');
-    this.cancelFlag = false;
+    if (!stages.length) return Promise.resolve();
+    this.currentSequence = Promise.resolve().then(() => this.executeSequence(reason, stages));
+    return this.currentSequence;
+  }
+
+  waitForCurrentSequence(): Promise<void> {
+    return this.currentSequence ?? Promise.resolve();
+  }
+
+  private async executeSequence(
+    reason: EventLogShutdownSequenceStartedReason,
+    stages: ShutdownSequenceStage[]
+  ): Promise<void> {
+    try {
+      this.eventLog.logEvent({
+        type: 'shutdownSequenceStarted',
+        reason,
+        stages,
+      } as EventLogShutdownSequenceStarted);
+      if (!(await this.turnOffDevices())) return;
+      if (!(await this.quitSteamVR())) return;
+      await this.powerDownWindows();
+    } finally {
+      try {
+        if (this.cancellation) await this.cancellation;
+      } finally {
+        this._stage.next('IDLE');
+        this.cancelFlag = false;
+        this.cancellation = null;
+        this.currentSequence = null;
+      }
+    }
   }
 
   private async handleTriggerOnSleep() {
@@ -277,15 +305,11 @@ export class ShutdownAutomationsService {
   }
 
   private async quitSteamVR() {
-    if (this.cancelFlag) {
-      this.cancelFlag = false;
-      this._stage.next('IDLE');
-      return false;
-    }
+    if (this.cancelFlag) return false;
     if (!this.config.quitSteamVR) return true;
     this._stage.next('QUITTING_STEAMVR');
-    // Quit steam
     await invoke('quit_steamvr', { kill: false });
+    if (this.cancelFlag) return false;
     // Wait for steam to quit with a timeout of 10 seconds
     await firstValueFrom(
       merge(
@@ -301,16 +325,13 @@ export class ShutdownAutomationsService {
         this.cancelEvent
       )
     );
+    if (this.cancelFlag) return false;
     await firstValueFrom(merge(of(null).pipe(delay(1000)), this.cancelEvent));
-    return true;
+    return !this.cancelFlag;
   }
 
   private async turnOffDevices(): Promise<boolean> {
-    if (this.cancelFlag) {
-      this.cancelFlag = false;
-      this._stage.next('IDLE');
-      return false;
-    }
+    if (this.cancelFlag) return false;
 
     if (
       !this.turnOffOvrDevices.length &&
@@ -321,9 +342,9 @@ export class ShutdownAutomationsService {
     this._stage.next('TURNING_OFF_DEVICES');
 
     if (this.turnOffOvrDevices.length) {
-      // Turn off controllers and trackers
       const devices = structuredClone(this.turnOffOvrDevices).filter((d) => d.canPowerOff);
-      this.lighthouseConsole.turnOffDevices(devices);
+      await this.lighthouseConsole.turnOffDevices(devices);
+      if (this.cancelFlag) return false;
       // Wait for controllers and trackers to turn off with a timeout of 10 seconds
       await firstValueFrom(
         merge(
@@ -345,6 +366,7 @@ export class ShutdownAutomationsService {
           this.cancelEvent
         )
       );
+      if (this.cancelFlag) return false;
     }
 
     if (
@@ -353,39 +375,26 @@ export class ShutdownAutomationsService {
     ) {
       const offPowerState = this.appSettings.settingsSync.lighthousePowerOffState;
       const devices = structuredClone(this.turnOffLighthouseDevices);
-      devices
-        .filter((d) => d.powerState === 'on' || d.powerState === 'booting')
-        .forEach((device) => this.lighthouse.setPowerState(device, offPowerState));
-      // Wait for all base stations to turn off with a timeout of 10 seconds
-      await firstValueFrom(
-        merge(
-          interval(250).pipe(
-            switchMap(() =>
-              this.lighthouse.devices.pipe(
-                map((newDevices) => newDevices.filter((d) => devices.some((d2) => d2.id === d.id)))
-              )
-            ),
-            filter((devices) => devices.every((d) => d.powerState === offPowerState))
-          ),
-          of(null).pipe(delay(10000)),
-          this.cancelEvent
-        )
+      const results = await Promise.allSettled(
+        devices
+          .filter((d) => d.powerState === 'on' || d.powerState === 'booting')
+          .map((device) => this.lighthouse.setPowerState(device, offPowerState))
       );
+      const rejected = results.find(
+        (result): result is PromiseRejectedResult => result.status === 'rejected'
+      );
+      if (rejected) throw rejected.reason;
+      if (this.cancelFlag) return false;
     }
 
     await firstValueFrom(merge(of(null).pipe(delay(1000)), this.cancelEvent));
-    return true;
+    return !this.cancelFlag;
   }
 
   private async powerDownWindows(): Promise<boolean> {
-    if (this.cancelFlag) {
-      this.cancelFlag = false;
-      this._stage.next('IDLE');
-      return false;
-    }
+    if (this.cancelFlag) return false;
     if (!this.config.powerDownWindows) return true;
     this._stage.next('POWERING_DOWN');
-    // Power down windows
     switch (this.config.powerDownWindowsMode) {
       case 'SHUTDOWN':
         await invoke('windows_shutdown', {
@@ -395,6 +404,7 @@ export class ShutdownAutomationsService {
           timeout: 20,
           forceCloseApps: true,
         });
+        if (this.cancelFlag) return false;
         await firstValueFrom(merge(of(null).pipe(delay(30000)), this.cancelEvent));
         break;
       case 'REBOOT':
@@ -405,18 +415,22 @@ export class ShutdownAutomationsService {
           timeout: 20,
           forceCloseApps: true,
         });
+        if (this.cancelFlag) return false;
         await firstValueFrom(merge(of(null).pipe(delay(30000)), this.cancelEvent));
         break;
       case 'SLEEP':
-        setTimeout(() => invoke('windows_sleep'), 500);
+        await firstValueFrom(merge(of(null).pipe(delay(500)), this.cancelEvent));
+        if (!this.cancelFlag) await invoke('windows_sleep');
         break;
       case 'HIBERNATE':
-        setTimeout(() => invoke('windows_hibernate'), 500);
+        await firstValueFrom(merge(of(null).pipe(delay(500)), this.cancelEvent));
+        if (!this.cancelFlag) await invoke('windows_hibernate');
         break;
       case 'LOGOUT':
-        setTimeout(() => invoke('windows_logout'), 500);
+        await firstValueFrom(merge(of(null).pipe(delay(500)), this.cancelEvent));
+        if (!this.cancelFlag) await invoke('windows_logout');
         break;
     }
-    return true;
+    return !this.cancelFlag;
   }
 }
