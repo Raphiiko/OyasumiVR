@@ -34,18 +34,33 @@ async function beginInitialization() {
   vi.mocked(invoke).mockImplementation(async (command) => {
     if (command === 'openvr_status') return 'INITIALIZED';
     if (command === 'openvr_get_devices') return snapshot;
+    if (command === 'openvr_get_application_auto_launch') return false;
     return undefined;
   });
   const service = new OpenVRService(
     { tick: vi.fn() } as unknown as ConstructorParameters<typeof OpenVRService>[0],
-    { settings: new BehaviorSubject(APP_SETTINGS_DEFAULT) } as unknown as ConstructorParameters<
-      typeof OpenVRService
-    >[1],
+    createSettingsService(),
     { trackThrottledEvent: vi.fn() } as unknown as ConstructorParameters<typeof OpenVRService>[2]
   );
   const initialized = service.init();
   await vi.waitFor(() => expect(invoke).toHaveBeenCalledWith('openvr_get_devices'));
   return { service, initialized, resolveSnapshot };
+}
+
+function createSettingsService(initial: Partial<typeof APP_SETTINGS_DEFAULT> = {}) {
+  const subject = new BehaviorSubject({
+    ...structuredClone(APP_SETTINGS_DEFAULT),
+    ...initial,
+  });
+  return {
+    settings: subject,
+    get settingsSync() {
+      return subject.value;
+    },
+    updateSettings(update: Partial<typeof APP_SETTINGS_DEFAULT>) {
+      subject.next({ ...subject.value, ...update });
+    },
+  } as unknown as AppSettingsService;
 }
 
 describe('OpenVR initial device snapshot', () => {
@@ -88,6 +103,170 @@ describe('OpenVR initial device snapshot', () => {
     resolveSnapshot([controller, { ...controller, index: 2 }]);
     await initialized;
     expect(await firstValueFrom(service.devices)).toEqual([replacement]);
+  });
+});
+
+describe('Start with SteamVR synchronization', () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  function createService(appSettings = createSettingsService()) {
+    return new OpenVRService({ tick: vi.fn() } as unknown as ApplicationRef, appSettings, {
+      trackThrottledEvent: vi.fn(),
+    } as unknown as TelemetryService);
+  }
+
+  async function startInactiveService(appSettings = createSettingsService(), autoLaunch = false) {
+    vi.mocked(invoke).mockImplementation(async (command) => {
+      if (command === 'openvr_status') return 'INACTIVE';
+      if (command === 'openvr_get_devices') return [];
+      if (command === 'openvr_get_application_auto_launch') return autoLaunch;
+      return undefined;
+    });
+    const service = createService(appSettings);
+    await service.init();
+    return service;
+  }
+
+  it('adopts the SteamVR value when no write is pending', async () => {
+    const appSettings = createSettingsService();
+    await startInactiveService(appSettings, true);
+    emit<OpenVRStatus>('OVR_STATUS_UPDATE', 'INITIALIZED');
+    await vi.waitFor(() => {
+      expect(appSettings.settingsSync).toMatchObject({
+        startWithSteamVR: true,
+        startWithSteamVRPending: false,
+      });
+    });
+    expect(invoke).not.toHaveBeenCalledWith('openvr_set_application_auto_launch', {
+      enabled: true,
+    });
+  });
+
+  it('applies a pending value when SteamVR initializes', async () => {
+    const appSettings = createSettingsService({
+      startWithSteamVR: true,
+      startWithSteamVRPending: true,
+    });
+    let autoLaunch = false;
+    vi.mocked(invoke).mockImplementation(async (command, args) => {
+      if (command === 'openvr_status') return 'INACTIVE';
+      if (command === 'openvr_get_devices') return [];
+      if (command === 'openvr_get_application_auto_launch') return autoLaunch;
+      if (command === 'openvr_set_application_auto_launch') autoLaunch = args!.enabled;
+      return undefined;
+    });
+    const service = createService(appSettings);
+    await service.init();
+    emit<OpenVRStatus>('OVR_STATUS_UPDATE', 'INITIALIZED');
+    await vi.waitFor(() => {
+      expect(appSettings.settingsSync.startWithSteamVRPending).toBe(false);
+      expect(autoLaunch).toBe(true);
+    });
+  });
+
+  it('stores an offline toggle without OpenVR work', async () => {
+    const appSettings = createSettingsService();
+    const service = createService(appSettings);
+    await service.setStartWithSteamVR(true);
+    expect(invoke).not.toHaveBeenCalled();
+    expect(appSettings.settingsSync).toMatchObject({
+      startWithSteamVR: true,
+      startWithSteamVRPending: true,
+    });
+  });
+
+  it('mirrors a SteamVR-side change when no write is pending', async () => {
+    const appSettings = createSettingsService();
+    let autoLaunch = false;
+    vi.mocked(invoke).mockImplementation(async (command) => {
+      if (command === 'openvr_status') return 'INACTIVE';
+      if (command === 'openvr_get_devices') return [];
+      if (command === 'openvr_get_application_auto_launch') return autoLaunch;
+      return undefined;
+    });
+    const service = createService(appSettings);
+    await service.init();
+    emit<OpenVRStatus>('OVR_STATUS_UPDATE', 'INITIALIZED');
+    await vi.waitFor(() => expect(appSettings.settingsSync.startWithSteamVR).toBe(false));
+    autoLaunch = true;
+    (service as unknown as { syncAutoLaunch(): Promise<void> }).syncAutoLaunch();
+    await vi.waitFor(() => expect(appSettings.settingsSync.startWithSteamVR).toBe(true));
+  });
+
+  it('keeps the desired value and pending flag after a failed write', async () => {
+    const appSettings = createSettingsService();
+    vi.mocked(invoke).mockImplementation(async (command) => {
+      if (command === 'openvr_status') return 'INACTIVE';
+      if (command === 'openvr_get_devices') return [];
+      if (command === 'openvr_get_application_auto_launch') return false;
+      if (command === 'openvr_set_application_auto_launch') throw new Error('write failed');
+      return undefined;
+    });
+    const service = createService(appSettings);
+    await service.init();
+    emit<OpenVRStatus>('OVR_STATUS_UPDATE', 'INITIALIZED');
+    await vi.waitFor(() => expect(appSettings.settingsSync.startWithSteamVR).toBe(false));
+    await service.setStartWithSteamVR(true);
+    expect(appSettings.settingsSync).toMatchObject({
+      startWithSteamVR: true,
+      startWithSteamVRPending: true,
+    });
+  });
+
+  it('does not let a queued poll overwrite a failed write', async () => {
+    const appSettings = createSettingsService();
+    let autoLaunch = false;
+    let rejectWrite!: (cause: unknown) => void;
+    let writeCount = 0;
+    vi.mocked(invoke).mockImplementation(async (command) => {
+      if (command === 'openvr_status') return 'INACTIVE';
+      if (command === 'openvr_get_devices') return [];
+      if (command === 'openvr_get_application_auto_launch') return autoLaunch;
+      if (command === 'openvr_set_application_auto_launch') {
+        writeCount++;
+        if (writeCount === 1) return new Promise((_, reject) => (rejectWrite = reject));
+        autoLaunch = true;
+      }
+      return undefined;
+    });
+    const service = createService(appSettings);
+    await service.init();
+    emit<OpenVRStatus>('OVR_STATUS_UPDATE', 'INITIALIZED');
+    await vi.waitFor(() => expect(appSettings.settingsSync.startWithSteamVR).toBe(false));
+    const write = service.setStartWithSteamVR(true);
+    await vi.waitFor(() => expect(writeCount).toBe(1));
+    rejectWrite(new Error('write failed'));
+    await write;
+    expect(appSettings.settingsSync).toMatchObject({
+      startWithSteamVR: true,
+      startWithSteamVRPending: true,
+    });
+
+    (service as unknown as { syncAutoLaunch(): Promise<void> }).syncAutoLaunch();
+    await vi.waitFor(() => expect(writeCount).toBe(2));
+    expect(autoLaunch).toBe(true);
+    expect(appSettings.settingsSync.startWithSteamVRPending).toBe(false);
+  });
+
+  it('discards stale work after SteamVR stops', async () => {
+    const appSettings = createSettingsService();
+    let resolveRead!: (enabled: boolean) => void;
+    vi.mocked(invoke).mockImplementation(async (command) => {
+      if (command === 'openvr_status') return 'INACTIVE';
+      if (command === 'openvr_get_devices') return [];
+      if (command === 'openvr_get_application_auto_launch')
+        return new Promise<boolean>((resolve) => (resolveRead = resolve));
+      if (command === 'openvr_set_application_auto_launch') return true;
+      return undefined;
+    });
+    const service = createService(appSettings);
+    await service.init();
+    emit<OpenVRStatus>('OVR_STATUS_UPDATE', 'INITIALIZED');
+    await Promise.resolve();
+    emit<OpenVRStatus>('OVR_STATUS_UPDATE', 'INACTIVE');
+    resolveRead(false);
+    await (service as unknown as { autoLaunchQueue: Promise<void> }).autoLaunchQueue;
+    expect(appSettings.settingsSync.startWithSteamVR).toBe(false);
   });
 });
 

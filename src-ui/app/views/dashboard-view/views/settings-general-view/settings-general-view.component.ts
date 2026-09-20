@@ -10,12 +10,11 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SelectBoxItem } from 'src-ui/app/components/select-box/select-box.component';
 import { LighthouseDevicePowerState } from 'src-ui/app/models/lighthouse-device';
-import { StartWithSteamVRHowToModalComponent } from './start-with-steamvr-how-to-modal/start-with-steamvr-how-to-modal.component';
+import { OpenVRService } from 'src-ui/app/services/openvr.service';
 import { TelemetryService } from 'src-ui/app/services/telemetry.service';
 import { LighthouseConsoleService } from 'src-ui/app/services/lighthouse-console.service';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 import { ElevatedSidecarService } from 'src-ui/app/services/elevated-sidecar.service';
-import { ModalService } from 'src-ui/app/services/modal.service';
 
 import { LANGUAGES } from '../../../../globals';
 import { vshrink } from '../../../../utils/animations';
@@ -95,9 +94,9 @@ export class SettingsGeneralViewComponent implements OnInit {
   constructor(
     private lighthouse: LighthouseConsoleService,
     private telemetry: TelemetryService,
-    private modalService: ModalService,
     private destroyRef: DestroyRef,
     private settingsService: AppSettingsService,
+    private openvr: OpenVRService,
     protected elevatedSidecar: ElevatedSidecarService
   ) {}
 
@@ -233,8 +232,8 @@ export class SettingsGeneralViewComponent implements OnInit {
     });
   }
 
-  showStartWithSteamVRHowToModal() {
-    this.modalService.addModal(StartWithSteamVRHowToModalComponent).subscribe();
+  setStartWithSteamVR(enabled: boolean) {
+    void this.openvr.setStartWithSteamVR(enabled).catch(() => undefined);
   }
 
   protected readonly OVRInputEventAction = OVRInputEventAction;

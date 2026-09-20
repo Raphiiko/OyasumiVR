@@ -4932,7 +4932,7 @@ dependencies = [
 [[package]]
 name = "raphii-openvr-rs"
 version = "0.1.0"
-source = "git+https://github.com/Raphiiko/raphii-openvr-rs?rev=a722cf7a6aa5832eaca55bd640bc5b5f87ed0661#a722cf7a6aa5832eaca55bd640bc5b5f87ed0661"
+source = "git+https://github.com/Raphiiko/raphii-openvr-rs?rev=5dca9da201b15cf9641382a2f28e18c053adb488#5dca9da201b15cf9641382a2f28e18c053adb488"
 dependencies = [
  "libloading 0.8.9",
 ]

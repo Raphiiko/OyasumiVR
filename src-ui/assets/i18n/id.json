@@ -369,10 +369,6 @@
     "select-box": {
       "defaultPlaceholder": "Pilih..."
     },
-    "start-with-steamvr-how-to-modal": {
-      "description": "Anda dapat mengonfigurasi OyasumiVR untuk diluncurkan bersama SteamVR dari dalam pengaturan SteamVR sendiri. Anda dapat menemukannya di:\n\nSteamVR -> Pengaturan -> Startup / Shutdown -> Pilih aplikasi overlay startup",
-      "title": "Mulai OyasumiVR dengan SteamVR"
-    },
     "update-modal": {
       "message": "Pembaruan baru untuk OyasumiVR telah ditemukan: v{newVersion}.\n\nAnda saat ini masih menjalankan v{currentVersion}.\n\nApakah Anda ingin memperbarui sekarang atau nanti?",
       "steamAd": "<b>OyasumiVR juga tersedia di Steam!</b><br><br>Ini adalah cara baru yang direkomendasikan untuk menginstal OyasumiVR.<br>Kunjungi halaman toko di <a href=\"https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/\" target=\"_blank\">Steam</a> untuk mengetahui lebih lanjut!",
@@ -918,7 +914,6 @@
       },
       "startWithSteamVR": {
         "description": "Mulai OyasumiVR saat SteamVR dimulai",
-        "howTo": "Bagaimana caranya",
         "label": "Mulai dengan SteamVR"
       },
       "stopWithSteamVR": {

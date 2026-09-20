@@ -480,6 +480,8 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         openvr::commands::openvr_launch_binding_configuration,
         openvr::commands::openvr_get_binding_origins,
         openvr::commands::openvr_is_dashboard_visible,
+        openvr::commands::openvr_get_application_auto_launch,
+        openvr::commands::openvr_set_application_auto_launch,
         openvr::commands::openvr_reregister_manifest,
         openvr::commands::openvr_set_init_delay_fix,
         openvr::commands::openvr_set_analog_color_temp,

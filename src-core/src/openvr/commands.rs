@@ -178,6 +178,36 @@ pub async fn openvr_is_dashboard_visible() -> bool {
 }
 
 #[tauri::command]
+pub async fn openvr_get_application_auto_launch() -> Result<bool, String> {
+    let context = OVR_CONTEXT.lock().await;
+    let Some(context) = context.as_ref() else {
+        return Err(String::from("OPENVR_NOT_INITIALIZED"));
+    };
+    context
+        .applications()
+        .get_application_auto_launch(STEAM_APP_KEY)
+        .map_err(|e| {
+            error!("[Core] Failed to read application auto-launch: {e}");
+            String::from("AUTO_LAUNCH_READ_FAILED")
+        })
+}
+
+#[tauri::command]
+pub async fn openvr_set_application_auto_launch(enabled: bool) -> Result<(), String> {
+    let context = OVR_CONTEXT.lock().await;
+    let Some(context) = context.as_ref() else {
+        return Err(String::from("OPENVR_NOT_INITIALIZED"));
+    };
+    context
+        .applications()
+        .set_application_auto_launch(STEAM_APP_KEY, enabled)
+        .map_err(|e| {
+            error!("[Core] Failed to set application auto-launch: {e}");
+            String::from("AUTO_LAUNCH_WRITE_FAILED")
+        })
+}
+
+#[tauri::command]
 pub async fn openvr_reregister_manifest() -> Result<(), String> {
     let ctx = OVR_CONTEXT.lock().await;
     let ctx = ctx.as_ref().ok_or("OPENVR_NOT_INITIALIZED")?;

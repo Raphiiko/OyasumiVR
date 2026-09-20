@@ -155,11 +155,14 @@
             label="settings.general.startWithSteamVR.label"
             description="settings.general.startWithSteamVR.description"
           >
-            <button
-              class="btn btn-secondary"
-              (click)="showStartWithSteamVRHowToModal()"
-              transloco="settings.general.startWithSteamVR.howTo"
-            ></button>
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="appSettings.startWithSteamVR"
+                (change)="setStartWithSteamVR(!appSettings.startWithSteamVR)"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
           </app-setting-row>
           <app-setting-row
             label="settings.general.stopWithSteamVR.label"

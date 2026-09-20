@@ -4,7 +4,7 @@ import { OneTimeFlag } from './one-time-flags';
 import { EventLogType } from './event-log-entry';
 
 export interface AppSettings {
-  version: 13;
+  version: 14;
   // General Settings
   userLanguage: string;
   userLanguagePicked: boolean;
@@ -13,6 +13,8 @@ export interface AppSettings {
   startInSystemTray: boolean;
   sleepModeStartupBehaviour: 'PERSIST' | 'ACTIVE' | 'INACTIVE';
   quitWithSteamVR: QuitWithSteamVRMode;
+  startWithSteamVR: boolean;
+  startWithSteamVRPending: boolean;
   hotkeys: { [hotkeyId: string]: string[] };
   playerListPresets: PlayerListPreset[];
   hideSnowverlay: boolean;
@@ -95,7 +97,7 @@ export const NotificationTypes = [
 export type NotificationType = (typeof NotificationTypes)[number];
 
 export const APP_SETTINGS_DEFAULT: AppSettings = {
-  version: 13,
+  version: 14,
   // General Settings
   userLanguage: 'en',
   userLanguagePicked: false,
@@ -104,6 +106,8 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   startInSystemTray: false,
   sleepModeStartupBehaviour: 'PERSIST',
   quitWithSteamVR: 'DISABLED',
+  startWithSteamVR: false,
+  startWithSteamVRPending: false,
   hotkeys: {},
   playerListPresets: [],
   hideSnowverlay: false,
