@@ -7,7 +7,7 @@ edition = "2021"
 
 # Every dependency here runs elevated, so the bar for adding one is high.
 [dependencies]
-log = { version = "0.4.33", features = ["std"] }
+log = { version = "0.4.34", features = ["std"] }
 minisign-verify = "0.2.5"
 oyasumivr-shared = { path = "../src-shared-rust" }
 serde = { version = "1.0.229", features = ["derive"] }

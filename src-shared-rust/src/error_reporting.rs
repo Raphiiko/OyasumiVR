@@ -110,8 +110,6 @@ pub fn init(
         .release(version)
         .send_default_pii(false)
         .max_breadcrumbs(0)
-        .enable_logs(false)
-        .enable_metrics(false)
         .shutdown_timeout(Duration::from_secs(2))
         .before_breadcrumb(|_| None)
         .before_send(move |mut event| {
