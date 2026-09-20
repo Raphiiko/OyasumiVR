@@ -26,6 +26,7 @@ export class WindowTitlebarComponent implements OnInit {
   version = '0.0.0';
   showVersionExtras = false;
   protected versionCopied = signal(false);
+  private versionCopiedTimer?: ReturnType<typeof setTimeout>;
 
   constructor(
     protected messageCenter: MessageCenterService,
@@ -52,7 +53,8 @@ export class WindowTitlebarComponent implements OnInit {
   protected async copyVersion() {
     await writeText(`v${this.version}-${FLAVOUR} (${BUILD_ID})`);
     this.versionCopied.set(true);
-    setTimeout(() => {
+    if (this.versionCopiedTimer) clearTimeout(this.versionCopiedTimer);
+    this.versionCopiedTimer = setTimeout(() => {
       this.versionCopied.set(false);
     }, 1000);
   }
