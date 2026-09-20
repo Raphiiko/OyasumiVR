@@ -78,6 +78,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed overlay pointers and tooltips clipping into the dashboard with SteamVR 2.17.
 - Restore friend pictures after the VRChat API profile changes.
 - Image-cache clearing now reports deletion failures and skips unnecessary manifest validation
 - Installing dependencies no longer changes the shared package version in the lockfile, and version bumps keep it synchronized.
