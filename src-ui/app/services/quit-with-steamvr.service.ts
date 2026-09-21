@@ -38,7 +38,8 @@ export class QuitWithSteamVRService {
       this.shutdownStage = stage;
     });
     this.shutdownAutomations.sequenceCancelled.subscribe(() => {
-      const suppressStop = this.enabled && this.shutdownStage === 'QUITTING_STEAMVR';
+      const suppressStop =
+        this.enabled && this.shutdownStage === 'QUITTING_STEAMVR' && !this.pending;
       if (suppressStop) this.ignoreNextSteamVRStop = true;
       this.cancelPendingQuit('toasts.quitWithSteamVR.cancelled.shutdownSequence', suppressStop);
     });
@@ -89,6 +90,7 @@ export class QuitWithSteamVRService {
     );
     if (!this.isCurrent(generation)) return;
 
+    this.toast.dismiss();
     this.pending = false;
     info('[QuitWithSteamVR] SteamVR has stopped: quitting OyasumiVR.');
     await exit(0);

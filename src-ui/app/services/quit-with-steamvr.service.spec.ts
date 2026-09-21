@@ -186,4 +186,25 @@ describe('QuitWithSteamVRService', () => {
 
     expect(exit).toHaveBeenCalledWith(0);
   });
+
+  it('does not suppress a later stop when cancellation follows the first stop', async () => {
+    const h = await setup('QUITTING_STEAMVR');
+    h.status.next('INACTIVE');
+    h.sequenceCancelled.next();
+    h.stage.next('IDLE');
+    h.status.next('INITIALIZED');
+    h.status.next('INACTIVE');
+    await vi.advanceTimersByTimeAsync(10_000);
+
+    expect(exit).toHaveBeenCalledWith(0);
+  });
+
+  it('dismisses the waiting toast when process exit fails', async () => {
+    exit.mockRejectedValueOnce(new Error('exit failed'));
+    const h = await setup();
+    h.status.next('INACTIVE');
+    await vi.advanceTimersByTimeAsync(10_000);
+
+    expect(await currentToasts(h.toasts)).toEqual([]);
+  });
 });
