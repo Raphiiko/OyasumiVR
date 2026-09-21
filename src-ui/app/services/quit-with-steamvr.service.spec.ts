@@ -153,4 +153,16 @@ describe('QuitWithSteamVRService', () => {
       }),
     ]);
   });
+
+  it('clears shutdown cancellation suppression when SteamVR restarts', async () => {
+    const h = await setup('QUITTING_STEAMVR');
+    h.sequenceCancelled.next();
+    h.stage.next('IDLE');
+    h.status.next('INITIALIZING');
+    h.status.next('INITIALIZED');
+    h.status.next('INACTIVE');
+    await vi.advanceTimersByTimeAsync(10_000);
+
+    expect(exit).toHaveBeenCalledWith(0);
+  });
 });
