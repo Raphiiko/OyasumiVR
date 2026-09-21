@@ -141,6 +141,7 @@ describe('QuitWithSteamVRService', () => {
     const h = await setup('QUITTING_STEAMVR');
     h.sequenceCancelled.next();
     h.stage.next('IDLE');
+    await vi.advanceTimersByTimeAsync(60_000);
     h.status.next('INACTIVE');
     await vi.advanceTimersByTimeAsync(10_000);
 
@@ -164,5 +165,13 @@ describe('QuitWithSteamVRService', () => {
     await vi.advanceTimersByTimeAsync(10_000);
 
     expect(exit).toHaveBeenCalledWith(0);
+  });
+
+  it('does not show shutdown cancellation when quit with SteamVR is disabled', async () => {
+    const h = await setup('QUITTING_STEAMVR');
+    h.settings.next({ ...h.settings.value, quitWithSteamVR: false });
+    h.sequenceCancelled.next();
+
+    expect(await currentToasts(h.toasts)).toEqual([]);
   });
 });

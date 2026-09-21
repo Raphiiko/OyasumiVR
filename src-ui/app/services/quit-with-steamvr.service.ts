@@ -9,7 +9,6 @@ import { ToastOptions, ToastRef, ToastService } from './toast.service';
 
 const QUIT_GRACE_PERIOD = 10_000;
 const CANCELLED_TOAST_DURATION = 3_000;
-const SHUTDOWN_CANCELLATION_WINDOW = 10_000;
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +18,7 @@ export class QuitWithSteamVRService {
   private pending = false;
   private generation = 0;
   private shutdownStage: ShutdownSequenceStage = 'IDLE';
-  private ignoreSteamVRStopUntil = 0;
+  private ignoreNextSteamVRStop = false;
   private toast?: ToastRef;
 
   constructor(
@@ -36,24 +35,21 @@ export class QuitWithSteamVRService {
     });
     this.shutdownAutomations.stage.subscribe((stage) => (this.shutdownStage = stage));
     this.shutdownAutomations.sequenceCancelled.subscribe(() => {
-      const quittingSteamVR = this.shutdownStage === 'QUITTING_STEAMVR';
-      if (quittingSteamVR) {
-        this.ignoreSteamVRStopUntil = Date.now() + SHUTDOWN_CANCELLATION_WINDOW;
-      }
-      this.cancelPendingQuit('toasts.quitWithSteamVR.cancelled.shutdownSequence', quittingSteamVR);
+      const suppressStop = this.enabled && this.shutdownStage === 'QUITTING_STEAMVR';
+      if (suppressStop) this.ignoreNextSteamVRStop = true;
+      this.cancelPendingQuit('toasts.quitWithSteamVR.cancelled.shutdownSequence', suppressStop);
     });
     this.openvr.status.pipe(pairwise()).subscribe(([previous, current]) => {
       if (previous === 'INITIALIZED' && current === 'INACTIVE') {
-        if (Date.now() <= this.ignoreSteamVRStopUntil) {
-          this.ignoreSteamVRStopUntil = 0;
+        if (this.ignoreNextSteamVRStop) {
+          this.ignoreNextSteamVRStop = false;
           return;
         }
-        this.ignoreSteamVRStopUntil = 0;
         void this.scheduleQuit().catch((cause) =>
           error(`[QuitWithSteamVR] Could not quit OyasumiVR: ${cause}`)
         );
       } else if (current !== 'INACTIVE') {
-        this.ignoreSteamVRStopUntil = 0;
+        this.ignoreNextSteamVRStop = false;
         this.cancelPendingQuit('toasts.quitWithSteamVR.cancelled.steamVRRestarted');
       }
     });
