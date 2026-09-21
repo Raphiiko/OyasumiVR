@@ -17,7 +17,7 @@ export interface ToastOptions {
   duration?: number;
   /** When false, the toast has no close button. It still dismisses on its duration. */
   dismissable?: boolean;
-  /** When false, hovering does not pause the duration. */
+  /** Defaults to true. */
   pauseOnHover?: boolean;
   actions?: ToastAction[];
 }

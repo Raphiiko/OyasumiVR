@@ -155,7 +155,7 @@ describe('QuitWithSteamVRService', () => {
     ]);
   });
 
-  it('clears shutdown cancellation suppression when SteamVR restarts', async () => {
+  it('preserves shutdown cancellation suppression through initialization', async () => {
     const h = await setup('QUITTING_STEAMVR');
     h.sequenceCancelled.next();
     h.stage.next('IDLE');
@@ -164,7 +164,7 @@ describe('QuitWithSteamVRService', () => {
     h.status.next('INACTIVE');
     await vi.advanceTimersByTimeAsync(10_000);
 
-    expect(exit).toHaveBeenCalledWith(0);
+    expect(exit).not.toHaveBeenCalled();
   });
 
   it('does not show shutdown cancellation when quit with SteamVR is disabled', async () => {

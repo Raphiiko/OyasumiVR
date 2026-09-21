@@ -52,7 +52,6 @@ export class QuitWithSteamVRService {
           error(`[QuitWithSteamVR] Could not quit OyasumiVR: ${cause}`)
         );
       } else if (current !== 'INACTIVE') {
-        this.ignoreNextSteamVRStop = false;
         this.cancelPendingQuit('toasts.quitWithSteamVR.cancelled.steamVRRestarted');
       }
     });
