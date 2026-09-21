@@ -918,12 +918,7 @@
       },
       "stopWithSteamVR": {
         "description": "Keluar dari OyasumiVR ketika SteamVR dihentikan selama jangka waktu tertentu",
-        "label": "Keluar dengan SteamVR",
-        "options": {
-          "AFTERDELAY": "Setelah 2 menit",
-          "DISABLED": "Matikan",
-          "IMMEDIATELY": "Seketika"
-        }
+        "label": "Keluar dengan SteamVR"
       },
       "systemTray": {
         "close": {
@@ -1047,11 +1042,6 @@
         "title": "Matikan Windows"
       },
       "quitSteamVR": {
-        "conflict": {
-          "description": "Anda telah mengonfigurasi OyasumiVR untuk segera berhenti ketika SteamVR dihentikan. Oleh karena itu, otomatisasi berikutnya mungkin tidak berjalan. Untuk memperbaikinya, nonaktifkan tugas ini, atau konfigurasikan OyasumiVR agar tidak langsung berhenti saat SteamVR dihentikan, di pengaturan umum.",
-          "goToSettings": "Pengaturan Umum",
-          "title": "Peringatan: Menjalankan tugas ini akan menyebabkan OyasumiVR segera berhenti"
-        },
         "description": "Ini juga akan menghentikan permainan atau overlay yang sedang Anda jalankan",
         "title": "Keluar SteamVR"
       },

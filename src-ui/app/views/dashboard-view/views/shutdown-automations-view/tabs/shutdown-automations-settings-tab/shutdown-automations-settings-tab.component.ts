@@ -22,9 +22,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AutomationConfigService } from '../../../../../../services/automation-config.service';
 import { AppSettingsService } from '../../../../../../services/app-settings.service';
-import { QuitWithSteamVRMode } from '../../../../../../models/settings';
 import { SelectBoxItem } from '../../../../../../components/select-box/select-box.component';
-import { Router } from '@angular/router';
 import { fade, vshrink } from '../../../../../../utils/animations';
 import { DeviceSelection } from 'src-ui/app/models/device-manager';
 
@@ -40,7 +38,6 @@ export class ShutdownAutomationsSettingsTabComponent implements OnInit {
   protected config: ShutdownAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS
   );
-  protected quitWithSteamVRMode: QuitWithSteamVRMode = 'DISABLED';
   protected lighthouseControlDisabled = false;
   protected powerDownOptions: SelectBoxItem[] = [
     {
@@ -72,7 +69,6 @@ export class ShutdownAutomationsSettingsTabComponent implements OnInit {
     private destroyRef: DestroyRef,
     private automationConfigs: AutomationConfigService,
     private settingsService: AppSettingsService,
-    private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -90,7 +86,6 @@ export class ShutdownAutomationsSettingsTabComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((settings) => {
         this.lighthouseControlDisabled = !settings.lighthousePowerControl;
-        this.quitWithSteamVRMode = settings.quitWithSteamVR;
         this.cdr.markForCheck();
       });
   }
@@ -150,9 +145,5 @@ export class ShutdownAutomationsSettingsTabComponent implements OnInit {
         powerDownWindowsMode: option!.id as PowerDownWindowsMode,
       }
     );
-  }
-
-  goToGeneralSettings() {
-    this.router.navigate(['dashboard', 'settings', 'general']);
   }
 }

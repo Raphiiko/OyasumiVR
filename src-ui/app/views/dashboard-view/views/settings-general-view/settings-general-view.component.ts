@@ -5,7 +5,6 @@ import {
   APP_SETTINGS_DEFAULT,
   AppSettings,
   ExecutableReferenceStatus,
-  QuitWithSteamVRMode,
 } from 'src-ui/app/models/settings';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SelectBoxItem } from 'src-ui/app/components/select-box/select-box.component';
@@ -75,22 +74,6 @@ export class SettingsGeneralViewComponent implements OnInit {
     },
   ];
   sleepModeStartupBehaviourOption: SelectBoxItem | undefined;
-  stopWithSteamVROptions: SelectBoxItem[] = [
-    {
-      id: 'DISABLED',
-      label: 'settings.general.stopWithSteamVR.options.DISABLED',
-    },
-    {
-      id: 'IMMEDIATELY',
-      label: 'settings.general.stopWithSteamVR.options.IMMEDIATELY',
-    },
-    {
-      id: 'AFTERDELAY',
-      label: 'settings.general.stopWithSteamVR.options.AFTERDELAY',
-    },
-  ];
-  stopWithSteamVROption: SelectBoxItem | undefined;
-
   constructor(
     private lighthouse: LighthouseConsoleService,
     private telemetry: TelemetryService,
@@ -126,9 +109,6 @@ export class SettingsGeneralViewComponent implements OnInit {
         );
         this.sleepModeStartupBehaviourOption = this.sleepModeStartupBehaviourOptions.find(
           (o) => o.id === settings.sleepModeStartupBehaviour
-        );
-        this.stopWithSteamVROption = this.stopWithSteamVROptions.find(
-          (o) => o.id === settings.quitWithSteamVR
         );
       });
   }
@@ -225,11 +205,8 @@ export class SettingsGeneralViewComponent implements OnInit {
     this.settingsService.updateSettings({ overlayMenuOnlyOpenWhenVRChatIsRunning: enabled });
   }
 
-  onChangeStopWithSteamVROption(option: SelectBoxItem | undefined) {
-    if (!option) return;
-    this.settingsService.updateSettings({
-      quitWithSteamVR: option!.id as QuitWithSteamVRMode,
-    });
+  setQuitWithSteamVR(enabled: boolean) {
+    this.settingsService.updateSettings({ quitWithSteamVR: enabled });
   }
 
   setStartWithSteamVR(enabled: boolean) {

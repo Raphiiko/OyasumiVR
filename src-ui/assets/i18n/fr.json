@@ -780,11 +780,6 @@
         },
         "title": "Mode sommeil"
       },
-      "stopWithSteamVR": {
-        "options": {
-          "DISABLED": "Désactivé"
-        }
-      },
       "systemTray": {
         "close": {
           "description": "Réduit l'application dans la barre d'état système lorsque vous cliquez sur le bouton 'Fermer'",

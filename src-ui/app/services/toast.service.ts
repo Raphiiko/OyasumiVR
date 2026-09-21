@@ -17,6 +17,8 @@ export interface ToastOptions {
   duration?: number;
   /** When false, the toast has no close button. It still dismisses on its duration. */
   dismissable?: boolean;
+  /** When false, hovering does not pause the duration. */
+  pauseOnHover?: boolean;
   actions?: ToastAction[];
 }
 
@@ -25,6 +27,7 @@ export interface Toast extends ToastOptions {
   type: ToastType;
   duration: number;
   dismissable: boolean;
+  pauseOnHover: boolean;
   actions: ToastAction[];
   /** Bumped on every update, so the view restarts the duration animation. */
   revision: number;
@@ -61,6 +64,7 @@ export class ToastService {
       type: options.type ?? 'info',
       duration: options.duration ?? 4000,
       dismissable: options.dismissable ?? true,
+      pauseOnHover: options.pauseOnHover ?? true,
       actions: options.actions ?? [],
       id: `toast-${this.nextId++}`,
       revision: 0,
@@ -80,6 +84,7 @@ export class ToastService {
           type: options.type ?? toast.type,
           duration: options.duration ?? toast.duration,
           dismissable: options.dismissable ?? toast.dismissable,
+          pauseOnHover: options.pauseOnHover ?? toast.pauseOnHover,
           actions: options.actions ?? toast.actions,
           revision: toast.revision + 1,
         };

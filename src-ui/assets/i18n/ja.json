@@ -2104,12 +2104,7 @@
       },
       "stopWithSteamVR": {
         "description": "SteamVRが一定の時間停止したときにOyasumiVRを終了します",
-        "label": "SteamVRと終了",
-        "options": {
-          "AFTERDELAY": "2分後",
-          "DISABLED": "無効",
-          "IMMEDIATELY": "直ちに"
-        }
+        "label": "SteamVRと終了"
       },
       "systemTray": {
         "close": {
@@ -2304,11 +2299,6 @@
         "title": "Windowsをシャットダウンする"
       },
       "quitSteamVR": {
-        "conflict": {
-          "description": "SteamVRが停止されたときにOyasumiVRがすぐに終了するように設定されています。そのため、その後の自動化が実行されない可能性があります。これを修正するには、このタスクを無効にするか、一般設定でSteamVRが停止されたときにOyasumiVRをすぐに終了しないように設定してください。",
-          "goToSettings": "一般設定へ",
-          "title": "警告：このタスクを実行するとOyasumiVRがすぐに終了します"
-        },
         "description": "実行中のゲームやオーバーレイも終了します",
         "title": "SteamVRを終了する"
       },

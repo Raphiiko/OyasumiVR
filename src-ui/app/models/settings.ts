@@ -4,7 +4,7 @@ import { OneTimeFlag } from './one-time-flags';
 import { EventLogType } from './event-log-entry';
 
 export interface AppSettings {
-  version: 14;
+  version: 15;
   // General Settings
   userLanguage: string;
   userLanguagePicked: boolean;
@@ -12,7 +12,7 @@ export interface AppSettings {
   exitInSystemTray: boolean;
   startInSystemTray: boolean;
   sleepModeStartupBehaviour: 'PERSIST' | 'ACTIVE' | 'INACTIVE';
-  quitWithSteamVR: QuitWithSteamVRMode;
+  quitWithSteamVR: boolean;
   startWithSteamVR: boolean;
   startWithSteamVRPending: boolean;
   hotkeys: { [hotkeyId: string]: string[] };
@@ -71,8 +71,6 @@ export type VRCXEventLogType = 'SleepMode';
 
 export type DiscordActivityMode = 'ENABLED' | 'ONLY_ASLEEP' | 'DISABLED';
 
-export type QuitWithSteamVRMode = 'DISABLED' | 'IMMEDIATELY' | 'AFTERDELAY';
-
 export type OSCTarget = 'VRCHAT_OSCQUERY' | 'CUSTOM';
 
 export type HotkeyId =
@@ -97,7 +95,7 @@ export const NotificationTypes = [
 export type NotificationType = (typeof NotificationTypes)[number];
 
 export const APP_SETTINGS_DEFAULT: AppSettings = {
-  version: 14,
+  version: 15,
   // General Settings
   userLanguage: 'en',
   userLanguagePicked: false,
@@ -105,7 +103,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   exitInSystemTray: false,
   startInSystemTray: false,
   sleepModeStartupBehaviour: 'PERSIST',
-  quitWithSteamVR: 'DISABLED',
+  quitWithSteamVR: false,
   startWithSteamVR: false,
   startWithSteamVRPending: false,
   hotkeys: {},

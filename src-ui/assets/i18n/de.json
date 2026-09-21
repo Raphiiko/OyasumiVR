@@ -1693,12 +1693,7 @@
       },
       "stopWithSteamVR": {
         "description": "OyasumiVR mit SteamVR schließen",
-        "label": "Mit SteamVR schließen",
-        "options": {
-          "AFTERDELAY": "Nach 2 Minuten",
-          "DISABLED": "Deaktiviert",
-          "IMMEDIATELY": "Direkt"
-        }
+        "label": "Mit SteamVR schließen"
       },
       "systemTray": {
         "close": {
@@ -1879,11 +1874,6 @@
         "title": "Windows herunterfahren"
       },
       "quitSteamVR": {
-        "conflict": {
-          "description": "Du hast OyasumiVR so eingestellt, dass es sich gemeinsam mit SteamVR schließt. Deswegen können legliche folgenden Automationen nicht ausgeführt werden. Um dies zu behebn musst du entweder diese Funktion deaktivieren oder das gemeinsame Schließen deaktivieren.",
-          "goToSettings": "Generelle Einstellungen",
-          "title": "Warnung: Wenn du diese Aktion startest wird OyasumiVR sofort beendet"
-        },
         "description": "Dies sollte jedes aktive Overlay oder Spiel schließen",
         "title": "SteamVR schließen"
       },

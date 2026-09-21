@@ -2109,12 +2109,7 @@
       },
       "stopWithSteamVR": {
         "description": "ปิด OyasumiVR เมื่อ SteamVR หยุดทำงานเป็นระยะเวลาหนึ่ง",
-        "label": "ปิดพร้อมกับ SteamVR",
-        "options": {
-          "AFTERDELAY": "หลังจาก 2 นาที",
-          "DISABLED": "ปิด",
-          "IMMEDIATELY": "ทันที"
-        }
+        "label": "ปิดพร้อมกับ SteamVR"
       },
       "systemTray": {
         "close": {
@@ -2352,11 +2347,6 @@
         "title": "ปิด Windows"
       },
       "quitSteamVR": {
-        "conflict": {
-          "description": "ตั้งค่าให้ OyasumiVR ปิดตัวทันทีเมื่อ SteamVR หยุดทำงาน ดังนั้นการทำงานอัตโนมัติหลังจากนั้นอาจไม่ทำงาน เพื่อแก้ไขปัญหานี้ ให้ปิดใช้งานงานนี้หรือตั้งค่าในเมนูทั่วไปไม่ให้ OyasumiVR ปิดตัวทันทีเมื่อ SteamVR หยุดทำงาน",
-          "goToSettings": "ไปที่ตั้งค่าทั่วไป",
-          "title": "คำเตือน: การทำงานนี้จะทำให้ OyasumiVR ปิดตัวลงทันที"
-        },
         "description": "ปิดเกมและโอเวอร์เลย์ที่ทำงานอยู่ด้วย",
         "title": "ออกจาก SteamVR"
       },

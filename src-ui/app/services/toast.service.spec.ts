@@ -17,6 +17,7 @@ describe('ToastService', () => {
       type: 'info',
       duration: 4000,
       dismissable: true,
+      pauseOnHover: true,
       actions: [],
     });
     expect(toasts[1]).toMatchObject({ type: 'warning', duration: 10000, dismissable: false });
@@ -24,9 +25,14 @@ describe('ToastService', () => {
 
   it('keeps the defaults when a caller passes an undefined option', async () => {
     const service = new ToastService();
-    service.show({ title: 'first', duration: undefined, dismissable: undefined });
+    service.show({
+      title: 'first',
+      duration: undefined,
+      dismissable: undefined,
+      pauseOnHover: undefined,
+    });
     const [toast] = await current(service);
-    expect(toast).toMatchObject({ duration: 4000, dismissable: true });
+    expect(toast).toMatchObject({ duration: 4000, dismissable: true, pauseOnHover: true });
   });
 
   it('keeps unchanged fields on update', async () => {

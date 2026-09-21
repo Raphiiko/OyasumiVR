@@ -2176,13 +2176,8 @@
         "label": "Start with SteamVR"
       },
       "stopWithSteamVR": {
-        "description": "Quit OyasumiVR when SteamVR is stopped for a certain amount of time",
-        "label": "Quit with SteamVR",
-        "options": {
-          "AFTERDELAY": "After 2 minutes",
-          "DISABLED": "Disabled",
-          "IMMEDIATELY": "Immediately"
-        }
+        "description": "Quit OyasumiVR shortly after SteamVR stops",
+        "label": "Quit with SteamVR"
       },
       "systemTray": {
         "close": {
@@ -2424,11 +2419,6 @@
         "title": "Power down Windows"
       },
       "quitSteamVR": {
-        "conflict": {
-          "description": "You have configured OyasumiVR to quit immediately when SteamVR is stopped. Because of this, any subsequent automations might not run. To fix this, either disable this task, or configure OyasumiVR to not quit immediately when SteamVR is stopped, in the general settings.",
-          "goToSettings": "General Settings",
-          "title": "Warning: Running this task will cause OyasumiVR to quit immediately"
-        },
         "description": "This should also quit any game or overlay you have running",
         "title": "Quit SteamVR"
       },
@@ -2909,6 +2899,23 @@
     "prepareForSleep": "Prepare for sleep",
     "quit": "Quit OyasumiVR",
     "sleepMode": "Sleep Mode"
+  },
+  "toasts": {
+    "quitWithSteamVR": {
+      "cancelled": {
+        "shutdownSequence": "The shutdown sequence was cancelled, so OyasumiVR will stay open.",
+        "steamVRRestarted": "SteamVR started again, so OyasumiVR will stay open.",
+        "title": "Quit with SteamVR cancelled"
+      },
+      "pending": {
+        "message": "SteamVR stopped. OyasumiVR will quit after automations have had time to run.",
+        "title": "OyasumiVR will quit in 10 seconds"
+      },
+      "waiting": {
+        "message": "OyasumiVR will quit when the shutdown sequence finishes.",
+        "title": "Waiting for shutdown sequence"
+      }
+    }
   },
   "updater": {
     "modals": {

@@ -66,6 +66,7 @@ export class ShutdownAutomationsService {
   public stage = this._stage.asObservable();
   private cancelFlag = false;
   private cancelEvent = new Subject<void>();
+  public readonly sequenceCancelled = this.cancelEvent.asObservable();
   private turnOffOvrDevices: OVRDevice[] = [];
   private turnOffLighthouseDevices: LighthouseDevice[] = [];
   private turnOffKnownDevices: DMKnownDevice[] = [];

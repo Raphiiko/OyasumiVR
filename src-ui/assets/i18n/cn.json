@@ -2114,12 +2114,7 @@
       },
       "stopWithSteamVR": {
         "description": "在 SteamVR 关闭一段时间后退出 OyasumiVR",
-        "label": "与 SteamVR 一起关闭",
-        "options": {
-          "AFTERDELAY": "等待两分钟后",
-          "DISABLED": "禁用",
-          "IMMEDIATELY": "立即退出"
-        }
+        "label": "与 SteamVR 一起关闭"
       },
       "systemTray": {
         "close": {
@@ -2314,11 +2309,6 @@
         "title": "关闭计算机"
       },
       "quitSteamVR": {
-        "conflict": {
-          "description": "你已将 OyasumiVR 配置为在 SteamVR 停止时立即退出。因此，任何后续自动操作都可能无法运行。要解决这个问题，请禁用此任务，或者在设置中将 OyasumiVR 配置为在 SteamVR 停止时不立即退出。",
-          "goToSettings": "设置",
-          "title": "警告： 运行此任务将导致 OyasumiVR 立即退出"
-        },
         "description": "这也将会退出你正在运行的任何游戏或叠加层界面。",
         "title": "退出 SteamVR"
       },

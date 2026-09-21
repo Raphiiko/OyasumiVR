@@ -144,8 +144,8 @@ $status-bar-height: 2.8em;
   transform-origin: left center;
   animation: toast-duration linear forwards;
 
-  .toast:hover &,
-  .toast:focus-within & {
+  .toast.pause-duration-on-hover:hover &,
+  .toast.pause-duration-on-hover:focus-within & {
     animation-play-state: paused;
   }
 }
