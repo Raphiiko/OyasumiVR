@@ -33,7 +33,10 @@ export class QuitWithSteamVRService {
       if (this.enabled && !settings.quitWithSteamVR) this.cancelPendingQuit();
       this.enabled = settings.quitWithSteamVR;
     });
-    this.shutdownAutomations.stage.subscribe((stage) => (this.shutdownStage = stage));
+    this.shutdownAutomations.stage.subscribe((stage) => {
+      if (this.shutdownStage === 'IDLE' && stage !== 'IDLE') this.ignoreNextSteamVRStop = false;
+      this.shutdownStage = stage;
+    });
     this.shutdownAutomations.sequenceCancelled.subscribe(() => {
       const suppressStop = this.enabled && this.shutdownStage === 'QUITTING_STEAMVR';
       if (suppressStop) this.ignoreNextSteamVRStop = true;

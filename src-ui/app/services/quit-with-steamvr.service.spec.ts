@@ -174,4 +174,16 @@ describe('QuitWithSteamVRService', () => {
 
     expect(await currentToasts(h.toasts)).toEqual([]);
   });
+
+  it('clears shutdown cancellation suppression when a new sequence starts', async () => {
+    const h = await setup('QUITTING_STEAMVR');
+    h.sequenceCancelled.next();
+    h.stage.next('IDLE');
+    h.stage.next('QUITTING_STEAMVR');
+    h.status.next('INACTIVE');
+    h.stage.next('IDLE');
+    await vi.advanceTimersByTimeAsync(10_000);
+
+    expect(exit).toHaveBeenCalledWith(0);
+  });
 });
