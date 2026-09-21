@@ -136,4 +136,21 @@ describe('QuitWithSteamVRService', () => {
       }),
     ]);
   });
+
+  it('honors a shutdown sequence cancellation before SteamVR stops', async () => {
+    const h = await setup('QUITTING_STEAMVR');
+    h.sequenceCancelled.next();
+    h.stage.next('IDLE');
+    h.status.next('INACTIVE');
+    await vi.advanceTimersByTimeAsync(10_000);
+
+    expect(exit).not.toHaveBeenCalled();
+    expect(await currentToasts(h.toasts)).toEqual([
+      expect.objectContaining({
+        type: 'success',
+        message: 'toasts.quitWithSteamVR.cancelled.shutdownSequence',
+        duration: 3_000,
+      }),
+    ]);
+  });
 });
