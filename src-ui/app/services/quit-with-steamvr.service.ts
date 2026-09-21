@@ -34,20 +34,15 @@ export class QuitWithSteamVRService {
     this.shutdownAutomations.sequenceCancelled.subscribe(() =>
       this.cancelPendingQuit('toasts.quitWithSteamVR.cancelled.shutdownSequence')
     );
-    this.openvr.status
-      .pipe(
-        filter((status) => ['INACTIVE', 'INITIALIZED'].includes(status)),
-        pairwise()
-      )
-      .subscribe(([previous, current]) => {
-        if (previous === 'INITIALIZED' && current === 'INACTIVE') {
-          void this.scheduleQuit().catch((cause) =>
-            error(`[QuitWithSteamVR] Could not quit OyasumiVR: ${cause}`)
-          );
-        } else if (previous === 'INACTIVE' && current === 'INITIALIZED') {
-          this.cancelPendingQuit('toasts.quitWithSteamVR.cancelled.steamVRRestarted');
-        }
-      });
+    this.openvr.status.pipe(pairwise()).subscribe(([previous, current]) => {
+      if (previous === 'INITIALIZED' && current === 'INACTIVE') {
+        void this.scheduleQuit().catch((cause) =>
+          error(`[QuitWithSteamVR] Could not quit OyasumiVR: ${cause}`)
+        );
+      } else if (current !== 'INACTIVE') {
+        this.cancelPendingQuit('toasts.quitWithSteamVR.cancelled.steamVRRestarted');
+      }
+    });
   }
 
   private async scheduleQuit() {

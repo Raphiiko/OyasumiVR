@@ -201,11 +201,14 @@ export class ShutdownAutomationsService {
       reason,
       stages,
     } as EventLogShutdownSequenceStarted);
-    if (!(await this.turnOffDevices())) return;
-    if (!(await this.quitSteamVR())) return;
-    if (!(await this.powerDownWindows())) return;
-    this._stage.next('IDLE');
-    this.cancelFlag = false;
+    try {
+      if (!(await this.turnOffDevices())) return;
+      if (!(await this.quitSteamVR())) return;
+      if (!(await this.powerDownWindows())) return;
+    } finally {
+      this._stage.next('IDLE');
+      this.cancelFlag = false;
+    }
   }
 
   private async handleTriggerOnSleep() {
@@ -409,15 +412,19 @@ export class ShutdownAutomationsService {
         await firstValueFrom(merge(of(null).pipe(delay(30000)), this.cancelEvent));
         break;
       case 'SLEEP':
-        setTimeout(() => invoke('windows_sleep'), 500);
-        break;
+        return this.dispatchDelayedPowerCommand('windows_sleep');
       case 'HIBERNATE':
-        setTimeout(() => invoke('windows_hibernate'), 500);
-        break;
+        return this.dispatchDelayedPowerCommand('windows_hibernate');
       case 'LOGOUT':
-        setTimeout(() => invoke('windows_logout'), 500);
-        break;
+        return this.dispatchDelayedPowerCommand('windows_logout');
     }
+    return true;
+  }
+
+  private async dispatchDelayedPowerCommand(command: string): Promise<boolean> {
+    await firstValueFrom(merge(of(null).pipe(delay(500)), this.cancelEvent));
+    if (this.cancelFlag) return false;
+    void invoke(command);
     return true;
   }
 }

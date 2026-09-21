@@ -85,6 +85,22 @@ describe('QuitWithSteamVRService', () => {
     expect(exit).not.toHaveBeenCalled();
   });
 
+  it('cancels the quit as soon as SteamVR starts initializing', async () => {
+    const h = await setup();
+    h.status.next('INACTIVE');
+    await vi.advanceTimersByTimeAsync(9_999);
+    h.status.next('INITIALIZING');
+    await vi.advanceTimersByTimeAsync(1);
+
+    expect(exit).not.toHaveBeenCalled();
+    expect(await currentToasts(h.toasts)).toEqual([
+      expect.objectContaining({
+        type: 'success',
+        message: 'toasts.quitWithSteamVR.cancelled.steamVRRestarted',
+      }),
+    ]);
+  });
+
   it('waits for an active shutdown sequence after the grace period', async () => {
     const h = await setup('POWERING_DOWN');
     h.status.next('INACTIVE');
