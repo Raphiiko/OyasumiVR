@@ -46,6 +46,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Unchanged SteamVR device properties no longer trigger redundant window updates.
 - Sleep detection computes movement totals once per report instead of on every pose update.
 - Removed an unused frontend OpenVR device-fetch method; device updates still arrive through events.
+- VRChat OSCQuery discovery runs inside OyasumiVR and no longer starts a separate mDNS sidecar process.
 
 - Redesigned the About view so growing credits scroll inside the view instead of making the
   window grow

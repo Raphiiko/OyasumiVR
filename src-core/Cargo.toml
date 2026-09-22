@@ -136,7 +136,7 @@ rev = "5dca9da201b15cf9641382a2f28e18c053adb488"
 
 [dependencies.oyasumivr_oscquery]
 git = "https://github.com/Raphiiko/oyasumivr_oscquery.git"
-rev = "47c00b5fab8d7a45ba3254873ca7886f84483560"
+rev = "13c3baa5e85db4022169be8ab197e371ce7ee830"
 # path = "../../oyasumivr_oscquery"
 
 [dependencies.tauri]
@@ -144,9 +144,7 @@ version = "2.11.6"
 features = ["tray-icon", "image-png"]
 
 [build-dependencies]
-reqwest = { version = "0.13.5", features = ["blocking"] }
 tauri-build = { version = "2.6.3", features = [] }
-toml = "1.1.6"
 tonic-prost-build = { version = "0.14.6", features = [] }
 
 [profile.release]
