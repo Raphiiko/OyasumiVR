@@ -90,6 +90,16 @@ reader skip a block instead of parsing it, even when it says nothing the code do
 Inside a function body, one line. A body comment that runs to a second line has turned into
 rationale, and rationale goes in the PR description.
 
+### Structure first
+
+Before you add a comment, make the code say it:
+
+- Separate the phases of a function with a blank line.
+- Move a callback body longer than a few lines, such as a `subscribe`, `pipe`, or event handler,
+  into a named private method.
+- Return early instead of nesting conditions.
+- Name a variable for what it holds, and a boolean for the question it answers.
+
 ### Signposts
 
 Above a block whose purpose isn't clear from its first line, put a short phrase naming what the
@@ -121,12 +131,17 @@ Many members need none, because the name and the types already say it.
   units, what an empty or zero return means, arguments that are mutually exclusive. One line each,
   and only the ones that apply.
 - Ten obvious parameters need no prose. One parameter with a non-obvious contract does.
+- A flag, counter, or cached field whose name cannot say when it is set and cleared gets one line
+  that does.
 
 ### Keep
 
 - A one-line invariant a future edit could break: "this lock is shared with X, release it before
   sleeping".
 - A one-line contract invisible from the signature: "empty result means empty, not pending".
+- A one-line outside fact: how another process, the OS, a library, or a device behaves, when that
+  behavior makes the obvious code wrong: "the core reports INITIALIZING while vrmonitor.exe is
+  still closing".
 
 ### Delete on sight
 
@@ -141,6 +156,8 @@ Many members need none, because the name and the types already say it.
 
 - **Design rationale.** Why this approach, why not the alternative, what would go wrong done
   differently. This reads as helpful, which is why it survives review. Put it in the PR description.
+  An outside fact is different: it states how something outside this code behaves today, not why
+  this design won.
 - **Restating a single line.** A signpost labels a block. A comment on one statement that already
   says the same thing is noise.
 - **Naming what an operator or API already means.** "switchMap drops the previous request", "`?`
@@ -153,12 +170,27 @@ Fix comments in code you are already changing. Leave unrelated files for their o
 Run these on a body comment, and stop at the first one that answers. A doc comment gets one test:
 could a caller answer this from the signature alone? If yes, cut it.
 
-1. Is it a one-line invariant or an invisible contract? Keep it, and skip the rest.
+1. Is it a one-line invariant, an invisible contract, or an outside fact? Keep it, and skip the
+   rest.
 2. Does it explain why, or what changed? Commit message or PR description.
 3. Does it only repeat the statement under it? Delete it.
 4. Does it let a reader skip a block? Keep it.
 
-Nothing else earns a comment.
+Nothing else earns a comment. Before you commit, run these tests on every comment you added or
+edited.
+
+### Reviewing comments
+
+Review the comments a diff adds or edits, with the four tests above. A missing comment is a
+finding only when all three hold:
+
+1. The diff adds or changes code whose correct behavior rests on an invariant, a contract, or an
+   outside fact.
+2. Someone editing that code as written would plausibly break the behavior.
+3. No name, type, nearby test, or existing comment shows it.
+
+Missing signposts, blank lines, and other structure are never findings. Raise a missing comment
+once per pull request. When the author declines it, it stays declined on every later review.
 
 ## Commit messages
 
