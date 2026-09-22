@@ -55,6 +55,10 @@ export class ToastsComponent {
     this.toastService.dismiss(toast.id);
   }
 
+  protected expire(toast: Toast) {
+    if (toast.autoDismiss) this.dismiss(toast);
+  }
+
   protected runAction(toast: Toast, action: ToastAction) {
     action.action(new ToastRef(toast.id, this.toastService));
   }

@@ -66,6 +66,7 @@ export class ShutdownAutomationsService {
   public stage = this._stage.asObservable();
   private cancelFlag = false;
   private cancelEvent = new Subject<void>();
+  public readonly sequenceCancelled = this.cancelEvent.asObservable();
   private turnOffOvrDevices: OVRDevice[] = [];
   private turnOffLighthouseDevices: LighthouseDevice[] = [];
   private turnOffKnownDevices: DMKnownDevice[] = [];
@@ -200,11 +201,14 @@ export class ShutdownAutomationsService {
       reason,
       stages,
     } as EventLogShutdownSequenceStarted);
-    if (!(await this.turnOffDevices())) return;
-    if (!(await this.quitSteamVR())) return;
-    if (!(await this.powerDownWindows())) return;
-    this._stage.next('IDLE');
-    this.cancelFlag = false;
+    try {
+      if (!(await this.turnOffDevices())) return;
+      if (!(await this.quitSteamVR())) return;
+      if (!(await this.powerDownWindows())) return;
+    } finally {
+      this._stage.next('IDLE');
+      this.cancelFlag = false;
+    }
   }
 
   private async handleTriggerOnSleep() {
@@ -286,7 +290,7 @@ export class ShutdownAutomationsService {
     this._stage.next('QUITTING_STEAMVR');
     // Quit steam
     await invoke('quit_steamvr', { kill: false });
-    // Wait for steam to quit with a timeout of 10 seconds
+    // Wait up to 10 seconds for SteamVR to quit, even after a cancel
     await firstValueFrom(
       merge(
         this.openvr.status.pipe(
@@ -297,8 +301,7 @@ export class ShutdownAutomationsService {
           delay(5000),
           switchMap(() => invoke('quit_steamvr', { kill: true }))
         ),
-        of(null).pipe(delay(10000)),
-        this.cancelEvent
+        of(null).pipe(delay(10000))
       )
     );
     await firstValueFrom(merge(of(null).pipe(delay(1000)), this.cancelEvent));
@@ -408,15 +411,19 @@ export class ShutdownAutomationsService {
         await firstValueFrom(merge(of(null).pipe(delay(30000)), this.cancelEvent));
         break;
       case 'SLEEP':
-        setTimeout(() => invoke('windows_sleep'), 500);
-        break;
+        return this.dispatchDelayedPowerCommand('windows_sleep');
       case 'HIBERNATE':
-        setTimeout(() => invoke('windows_hibernate'), 500);
-        break;
+        return this.dispatchDelayedPowerCommand('windows_hibernate');
       case 'LOGOUT':
-        setTimeout(() => invoke('windows_logout'), 500);
-        break;
+        return this.dispatchDelayedPowerCommand('windows_logout');
     }
+    return true;
+  }
+
+  private async dispatchDelayedPowerCommand(command: string): Promise<boolean> {
+    await firstValueFrom(merge(of(null).pipe(delay(500)), this.cancelEvent));
+    if (this.cancelFlag) return false;
+    void invoke(command);
     return true;
   }
 }

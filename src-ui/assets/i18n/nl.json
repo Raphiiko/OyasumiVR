@@ -2068,12 +2068,7 @@
       },
       "stopWithSteamVR": {
         "description": "Stop OyasumiVR wanneer SteamVR is gestopt voor een bepaalde tijd",
-        "label": "Stop samen met SteamVR",
-        "options": {
-          "AFTERDELAY": "Na 2 minuten",
-          "DISABLED": "Uitgeschakeld",
-          "IMMEDIATELY": "Direct"
-        }
+        "label": "Stop samen met SteamVR"
       },
       "systemTray": {
         "close": {
@@ -2262,11 +2257,6 @@
         "title": "Windows Uitzetten"
       },
       "quitSteamVR": {
-        "conflict": {
-          "description": "Je hebt OyasumiVR zo geconfigureerd om direct af te sluiten wanneer SteamVR stopt. Hierdoor kunnen sommige taken misschien niet draaien. Om dit op te lossen, kun je deze taak uitschakelen, of in de algemene instellingen OyasumiVR te configureren om niet meteen te stoppen wanneer SteamVR stopt.",
-          "goToSettings": "Algemene Instellingen",
-          "title": "Waarschuwing: Door deze taak uit te voeren stop je OyasumiVR direct."
-        },
         "description": "Dit stopt ook alle SteamVR games en overlays die je hebt draaien",
         "title": "Stop SteamVR"
       },

@@ -1948,12 +1948,7 @@
       },
       "stopWithSteamVR": {
         "description": "Salir de OyasumiVR cuando SteamVR se detiene durante un cierto tiempo",
-        "label": "Salir con SteamVR",
-        "options": {
-          "AFTERDELAY": "Después de 2 minutos",
-          "DISABLED": "Desactivado",
-          "IMMEDIATELY": "Inmediatamente"
-        }
+        "label": "Salir con SteamVR"
       },
       "systemTray": {
         "close": {
@@ -2171,11 +2166,6 @@
         "title": "Apagar Windows"
       },
       "quitSteamVR": {
-        "conflict": {
-          "description": "Has configurado OyasumiVR para que se cierre inmediatamente cuando SteamVR se detenga. Debido a esto, cualquier automatización posterior podría no ejecutarse. Para solucionarlo, desactiva esta tarea o configura OyasumiVR para que no se cierre inmediatamente cuando SteamVR se detenga, en la configuración general.",
-          "goToSettings": "Ajustes generales",
-          "title": "Advertencia: La ejecución de esta tarea hará que OyasumiVR se cierre inmediatamente"
-        },
         "description": "Esto también debería salir de cualquier juego o superposición que se está ejecutando",
         "title": "Cerrar SteamVR"
       },

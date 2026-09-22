@@ -168,13 +168,14 @@
             label="settings.general.stopWithSteamVR.label"
             description="settings.general.stopWithSteamVR.description"
           >
-            <app-select-box
-              type="SMALL"
-              class="stop-with-steamvr-dropdown"
-              [items]="stopWithSteamVROptions"
-              [selected]="stopWithSteamVROption"
-              (selectedChange)="onChangeStopWithSteamVROption($event)"
-            ></app-select-box>
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="appSettings.quitWithSteamVR"
+                (change)="setQuitWithSteamVR(!appSettings.quitWithSteamVR)"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
           </app-setting-row>
         </div>
       </div>

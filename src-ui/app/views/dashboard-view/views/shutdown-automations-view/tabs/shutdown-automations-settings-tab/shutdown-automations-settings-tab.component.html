@@ -36,27 +36,6 @@
       </label>
     </app-setting-row>
 
-    @if (config.quitSteamVR && quitWithSteamVRMode === 'IMMEDIATELY') {
-      <div class="setting-row-group" @vshrink>
-        <div class="setting-row">
-          <div class="setting-row-label conflict">
-            <span>
-              <span><i class="material-icons">warning</i></span>
-              <span transloco="shutdown-automations.sequence.quitSteamVR.conflict.title"></span>
-            </span>
-            <span transloco="shutdown-automations.sequence.quitSteamVR.conflict.description"></span>
-          </div>
-          <div class="setting-row-action">
-            <button
-              class="btn btn-secondary"
-              (click)="goToGeneralSettings()"
-              transloco="shutdown-automations.sequence.quitSteamVR.conflict.goToSettings"
-            ></button>
-          </div>
-        </div>
-      </div>
-    }
-
     <app-setting-row
       label="shutdown-automations.sequence.powerDownWindows.title"
       description="shutdown-automations.sequence.powerDownWindows.description"

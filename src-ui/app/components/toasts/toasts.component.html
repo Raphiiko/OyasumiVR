@@ -1,6 +1,10 @@
 @for (toast of toasts | async; track toast.id) {
   <div class="toast-slot" appToastSlot @toastSlot>
-    <div class="toast" [class]="'type-' + toast.type">
+    <div
+      class="toast"
+      [class]="'type-' + toast.type"
+      [class.pause-duration-on-hover]="toast.pauseOnHover"
+    >
       <div class="toast-head">
         @if (toast.type === 'pending') {
           <div class="toast-icon spinner"></div>
@@ -29,7 +33,7 @@
           class="toast-duration"
           [style.animation-duration.ms]="toast.duration"
           [restartAnimationOn]="toast.revision"
-          (animationend)="dismiss(toast)"
+          (animationend)="expire(toast)"
         ></div>
       }
     </div>

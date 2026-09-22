@@ -1693,12 +1693,7 @@
       },
       "stopWithSteamVR": {
         "description": "SteamVR이 일정 시간 동안 종료되어 있을 때 OyasumiVR을 같이 종료해요.",
-        "label": "SteamVR과 함께 종료",
-        "options": {
-          "AFTERDELAY": "2분 뒤",
-          "DISABLED": "비활성화",
-          "IMMEDIATELY": "즉시"
-        }
+        "label": "SteamVR과 함께 종료"
       },
       "systemTray": {
         "close": {
@@ -1884,11 +1879,6 @@
         "title": "Windows 종료"
       },
       "quitSteamVR": {
-        "conflict": {
-          "description": "SteamVR이 중지되면 OyasumiVR이 즉시 종료되도록 설정되어 있어서 후속 자동화 기능이 실행되지 않을 수 있어요. 이 문제를 해결하려면 이 작업을 비활성화하거나 일반 설정에서 SteamVR이 중지될 때 즉시 종료되지 않도록 OyasumiVR을 설정해야 합니다.",
-          "goToSettings": "일반 설정",
-          "title": "경고: 이 작업을 실행하면 OyasumiVR이 즉시 종료되어요."
-        },
         "description": "실행 중인 게임이나 오버레이도 종료되어요.",
         "title": "SteamVR 종료"
       },
