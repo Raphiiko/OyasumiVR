@@ -38,6 +38,9 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Changed
 
+- Quit with SteamVR is now an on/off toggle. When SteamVR stops, OyasumiVR counts down ten seconds
+  before it quits, and stays open if SteamVR starts again. It also waits for a running shutdown
+  sequence to finish, and cancelling the sequence cancels the quit
 - The Message Center now uses a focused amber glow and a steady notification dot to draw attention to messages.
 - Repeated language activation reuses CJK fonts already loading or loaded.
 - Disabled and friend-independent automations no longer request friend-list refreshes.
