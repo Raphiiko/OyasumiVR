@@ -83,6 +83,7 @@ describe('QuitWithSteamVRService', () => {
         title: 'toasts.quitWithSteamVR.cancelled.title',
         message: 'toasts.quitWithSteamVR.cancelled.steamVRRestarted',
         duration: 3_000,
+        autoDismiss: true,
       }),
     ]);
     await vi.advanceTimersByTimeAsync(10_000);
@@ -164,6 +165,7 @@ describe('QuitWithSteamVRService', () => {
         type: 'success',
         message: 'toasts.quitWithSteamVR.cancelled.shutdownSequence',
         duration: 3_000,
+        autoDismiss: true,
       }),
     ]);
   });
@@ -182,6 +184,7 @@ describe('QuitWithSteamVRService', () => {
         type: 'success',
         message: 'toasts.quitWithSteamVR.cancelled.shutdownSequence',
         duration: 3_000,
+        autoDismiss: true,
       }),
     ]);
   });

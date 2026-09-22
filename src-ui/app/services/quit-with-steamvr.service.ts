@@ -126,6 +126,7 @@ export class QuitWithSteamVRService {
       duration: CANCELLED_TOAST_DURATION,
       dismissable: true,
       pauseOnHover: true,
+      autoDismiss: true,
       actions: [],
     };
     if (updateExisting) {
