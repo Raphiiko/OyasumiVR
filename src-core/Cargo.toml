@@ -136,7 +136,7 @@ rev = "5dca9da201b15cf9641382a2f28e18c053adb488"
 
 [dependencies.oyasumivr_oscquery]
 git = "https://github.com/Raphiiko/oyasumivr_oscquery.git"
-rev = "13c3baa5e85db4022169be8ab197e371ce7ee830"
+rev = "1bfd8ea4943822ebda2538c7c0d46a484cc5e96d"
 # path = "../../oyasumivr_oscquery"
 
 [dependencies.tauri]
