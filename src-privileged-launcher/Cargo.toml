@@ -1,6 +1,6 @@
 [package]
 name = "oyasumivr-privileged-launcher"
-version = "26.9.0-beta.13"
+version = "26.9.0-beta.14"
 authors = ["Raphiiko"]
 license = "MIT"
 edition = "2021"
