@@ -62,6 +62,7 @@ describe('QuitWithSteamVRService', () => {
         duration: 10_000,
         dismissable: false,
         pauseOnHover: false,
+        autoDismiss: false,
       }),
     ]);
     await vi.advanceTimersByTimeAsync(9_999);
@@ -88,12 +89,39 @@ describe('QuitWithSteamVRService', () => {
     expect(exit).not.toHaveBeenCalled();
   });
 
-  it('cancels the quit as soon as SteamVR starts initializing', async () => {
+  it('keeps the quit pending through an initialization probe after the stop', async () => {
+    const h = await setup();
+    h.status.next('INACTIVE');
+    await vi.advanceTimersByTimeAsync(5_000);
+    h.status.next('INITIALIZING');
+    await vi.advanceTimersByTimeAsync(1_000);
+    h.status.next('INACTIVE');
+    await vi.advanceTimersByTimeAsync(4_000);
+
+    expect(exit).toHaveBeenCalledWith(0);
+  });
+
+  it('holds the quit while SteamVR initializes at the deadline, then quits', async () => {
     const h = await setup();
     h.status.next('INACTIVE');
     await vi.advanceTimersByTimeAsync(9_999);
     h.status.next('INITIALIZING');
-    await vi.advanceTimersByTimeAsync(1);
+    await vi.advanceTimersByTimeAsync(5_000);
+    expect(exit).not.toHaveBeenCalled();
+
+    h.status.next('INACTIVE');
+    await Promise.resolve();
+    expect(exit).toHaveBeenCalledWith(0);
+  });
+
+  it('cancels a held quit when SteamVR finishes initializing', async () => {
+    const h = await setup();
+    h.status.next('INACTIVE');
+    await vi.advanceTimersByTimeAsync(9_999);
+    h.status.next('INITIALIZING');
+    await vi.advanceTimersByTimeAsync(5_000);
+    h.status.next('INITIALIZED');
+    await vi.advanceTimersByTimeAsync(10_000);
 
     expect(exit).not.toHaveBeenCalled();
     expect(await currentToasts(h.toasts)).toEqual([
@@ -199,6 +227,25 @@ describe('QuitWithSteamVRService', () => {
     h.status.next('INACTIVE');
     await vi.advanceTimersByTimeAsync(10_000);
 
+    expect(exit).toHaveBeenCalledWith(0);
+  });
+
+  it('honors a shutdown sequence cancellation while SteamVR is initializing', async () => {
+    const h = await setup('QUITTING_STEAMVR', 'INITIALIZING');
+    h.sequenceCancelled.next();
+    expect(await currentToasts(h.toasts)).toEqual([
+      expect.objectContaining({ message: 'toasts.quitWithSteamVR.cancelled.shutdownSequence' }),
+    ]);
+    h.status.next('INITIALIZED');
+    h.status.next('INACTIVE');
+    h.stage.next('IDLE');
+    await vi.advanceTimersByTimeAsync(10_000);
+    expect(exit).not.toHaveBeenCalled();
+
+    h.status.next('INITIALIZING');
+    h.status.next('INITIALIZED');
+    h.status.next('INACTIVE');
+    await vi.advanceTimersByTimeAsync(10_000);
     expect(exit).toHaveBeenCalledWith(0);
   });
 

@@ -10,7 +10,10 @@ vi.mock('@tauri-apps/api/core', () => ({ invoke }));
 
 type Dependencies = ConstructorParameters<typeof ShutdownAutomationsService>;
 
-function setup(powerDownWindowsMode: 'SLEEP' | 'HIBERNATE' | 'LOGOUT' = 'SLEEP') {
+function setup(
+  powerDownWindowsMode: 'SLEEP' | 'HIBERNATE' | 'LOGOUT' = 'SLEEP',
+  status = 'INACTIVE'
+) {
   const service = new ShutdownAutomationsService(
     {} as Dependencies[0],
     {} as Dependencies[1],
@@ -18,7 +21,7 @@ function setup(powerDownWindowsMode: 'SLEEP' | 'HIBERNATE' | 'LOGOUT' = 'SLEEP')
       settingsSync: { ...APP_SETTINGS_DEFAULT, lighthousePowerControl: false },
     } as Dependencies[2],
     {
-      status: new BehaviorSubject('INACTIVE'),
+      status: new BehaviorSubject(status),
       devices: new BehaviorSubject([]),
     } as unknown as Dependencies[3],
     {} as Dependencies[4],
@@ -79,6 +82,30 @@ describe('ShutdownAutomationsService sequence completion', () => {
     });
 
     await expect(service.runSequence('MANUAL')).rejects.toThrow('device failure');
+    await expect(firstValueFrom(service.stage.pipe(take(1)))).resolves.toBe('IDLE');
+  });
+
+  it('still force-quits SteamVR when the sequence is cancelled while quitting it', async () => {
+    const service = setup('SLEEP', 'INITIALIZED');
+    service['config'].quitSteamVR = true;
+    const quitting = firstValueFrom(
+      service.stage.pipe(
+        filter((stage) => stage === 'QUITTING_STEAMVR'),
+        take(1)
+      )
+    );
+    const sequence = service.runSequence('MANUAL');
+    await quitting;
+    await vi.advanceTimersByTimeAsync(0);
+    await service.cancelSequence('MANUAL');
+    await vi.advanceTimersByTimeAsync(4_999);
+    expect(invoke).not.toHaveBeenCalledWith('quit_steamvr', { kill: true });
+    await vi.advanceTimersByTimeAsync(1);
+    expect(invoke).toHaveBeenCalledWith('quit_steamvr', { kill: true });
+    await vi.advanceTimersByTimeAsync(1_000);
+    await sequence;
+
+    expect(invoke).not.toHaveBeenCalledWith('windows_sleep');
     await expect(firstValueFrom(service.stage.pipe(take(1)))).resolves.toBe('IDLE');
   });
 

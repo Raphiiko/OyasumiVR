@@ -301,8 +301,7 @@ export class ShutdownAutomationsService {
           delay(5000),
           switchMap(() => invoke('quit_steamvr', { kill: true }))
         ),
-        of(null).pipe(delay(10000)),
-        this.cancelEvent
+        of(null).pipe(delay(10000))
       )
     );
     await firstValueFrom(merge(of(null).pipe(delay(1000)), this.cancelEvent));

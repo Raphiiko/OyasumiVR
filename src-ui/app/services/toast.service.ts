@@ -19,6 +19,8 @@ export interface ToastOptions {
   dismissable?: boolean;
   /** Defaults to true. */
   pauseOnHover?: boolean;
+  /** Defaults to true. When false, the duration only drives the progress bar. */
+  autoDismiss?: boolean;
   actions?: ToastAction[];
 }
 
@@ -28,6 +30,7 @@ export interface Toast extends ToastOptions {
   duration: number;
   dismissable: boolean;
   pauseOnHover: boolean;
+  autoDismiss: boolean;
   actions: ToastAction[];
   /** Bumped on every update, so the view restarts the duration animation. */
   revision: number;
@@ -65,6 +68,7 @@ export class ToastService {
       duration: options.duration ?? 4000,
       dismissable: options.dismissable ?? true,
       pauseOnHover: options.pauseOnHover ?? true,
+      autoDismiss: options.autoDismiss ?? true,
       actions: options.actions ?? [],
       id: `toast-${this.nextId++}`,
       revision: 0,
@@ -85,6 +89,7 @@ export class ToastService {
           duration: options.duration ?? toast.duration,
           dismissable: options.dismissable ?? toast.dismissable,
           pauseOnHover: options.pauseOnHover ?? toast.pauseOnHover,
+          autoDismiss: options.autoDismiss ?? toast.autoDismiss,
           actions: options.actions ?? toast.actions,
           revision: toast.revision + 1,
         };

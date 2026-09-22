@@ -33,7 +33,7 @@
           class="toast-duration"
           [style.animation-duration.ms]="toast.duration"
           [restartAnimationOn]="toast.revision"
-          (animationend)="dismiss(toast)"
+          (animationend)="expire(toast)"
         ></div>
       }
     </div>
