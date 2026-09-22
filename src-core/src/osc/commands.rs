@@ -12,8 +12,6 @@ use std::{
 use tokio::sync::Mutex;
 use tokio_util::sync::CancellationToken;
 
-const MDNS_SIDECAR_PATH: &str = "resources/oyasumivr-mdns-sidecar.exe";
-
 #[derive(Serialize, Deserialize, Debug)]
 pub enum SupportedOscType {
     Int,
@@ -89,8 +87,7 @@ pub async fn start_osc_server() -> Option<(String, String)> {
     *CANCELLATION_TOKEN.lock().await = Some(cancellation_token);
     // Start the OSCQuery server
     let osc_query_addr_string =
-        match oyasumivr_oscquery::server::init("OyasumiVR", osc_addr_port, MDNS_SIDECAR_PATH).await
-        {
+        match oyasumivr_oscquery::server::init("OyasumiVR", osc_addr_port).await {
             Ok((addr, port)) => {
                 info!("[Core] OSCQuery server listening on {addr}:{port}");
                 format!("{addr}:{port}")
@@ -109,7 +106,7 @@ pub async fn start_osc_server() -> Option<(String, String)> {
         return None;
     }
     // Setup the OSCQuery client
-    match oyasumivr_oscquery::client::init(MDNS_SIDECAR_PATH).await {
+    match oyasumivr_oscquery::client::init().await {
         Ok(_) => {
             info!("[Core] OSCQuery client initialized");
         }

@@ -6,7 +6,6 @@ fn main() {
     println!("cargo:rerun-if-changed=../proto/elevated-sidecar.proto");
 
     configure_tonic_build();
-    update_mdns_sidecar_binary();
 
     // Build tauri app
     tauri_build::build()
@@ -48,34 +47,4 @@ fn configure_tonic_build() {
             &["../proto/"],
         )
         .unwrap();
-}
-
-fn update_mdns_sidecar_binary() {
-    // Check the necessary revision
-    let cargo_toml =
-        toml::from_str::<toml::Value>(&std::fs::read_to_string("Cargo.toml").unwrap()).unwrap();
-    let revision = match cargo_toml
-        .get("dependencies")
-        .and_then(|dependencies| dependencies.get("oyasumivr_oscquery"))
-        .and_then(|oyasumivr_oscquery| oyasumivr_oscquery.get("rev"))
-        .and_then(|rev| rev.as_str())
-    {
-        Some(rev) => rev,
-        None => return, // No revision found, do nothing
-    };
-    let current_rev = std::fs::read_to_string("./.mdns-sidecar-rev").ok();
-    // Pull the needed revision if not already downloaded
-    if current_rev.is_none() || (current_rev.is_some() && current_rev.unwrap().trim() != revision) {
-        let mdns_sidecar_exe_url = format!(
-            "https://github.com/Raphiiko/oyasumivr_oscquery/raw/{revision}/lib/mdns-sidecar.exe"
-        );
-        // Delete resources/mdns-sidecar.exe if it exists
-        let _ = std::fs::remove_file("resources/oyasumivr-mdns-sidecar.exe");
-        // Download mdns-sidecar.exe
-        let mut response = reqwest::blocking::get(&mdns_sidecar_exe_url).unwrap();
-        let mut file = std::fs::File::create("resources/oyasumivr-mdns-sidecar.exe").unwrap();
-        std::io::copy(&mut response, &mut file).unwrap();
-        // Write revision
-        std::fs::write("./.mdns-sidecar-rev", revision).unwrap();
-    }
 }
