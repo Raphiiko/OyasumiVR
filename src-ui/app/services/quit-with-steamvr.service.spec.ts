@@ -16,12 +16,15 @@ async function currentToasts(service: ToastService): Promise<Toast[]> {
   return firstValueFrom(service.toasts);
 }
 
-async function setup(stageValue: ShutdownSequenceStage = 'IDLE') {
+async function setup(
+  stageValue: ShutdownSequenceStage = 'IDLE',
+  statusValue: OpenVRStatus = 'INITIALIZED'
+) {
   const settings = new BehaviorSubject({
     ...structuredClone(APP_SETTINGS_DEFAULT),
     quitWithSteamVR: true,
   });
-  const status = new BehaviorSubject<OpenVRStatus>('INITIALIZED');
+  const status = new BehaviorSubject<OpenVRStatus>(statusValue);
   const stage = new BehaviorSubject<ShutdownSequenceStage>(stageValue);
   const sequenceCancelled = new Subject<void>();
   const toasts = new ToastService();
@@ -192,6 +195,20 @@ describe('QuitWithSteamVRService', () => {
     h.status.next('INACTIVE');
     h.sequenceCancelled.next();
     h.stage.next('IDLE');
+    h.status.next('INITIALIZED');
+    h.status.next('INACTIVE');
+    await vi.advanceTimersByTimeAsync(10_000);
+
+    expect(exit).toHaveBeenCalledWith(0);
+  });
+
+  it('ignores shutdown cancellation while SteamVR is not running', async () => {
+    const h = await setup('QUITTING_STEAMVR', 'INACTIVE');
+    h.sequenceCancelled.next();
+    h.stage.next('IDLE');
+
+    expect(await currentToasts(h.toasts)).toEqual([]);
+    h.status.next('INITIALIZING');
     h.status.next('INITIALIZED');
     h.status.next('INACTIVE');
     await vi.advanceTimersByTimeAsync(10_000);

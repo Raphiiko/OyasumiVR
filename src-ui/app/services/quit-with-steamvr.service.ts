@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { exit } from '@tauri-apps/plugin-process';
 import { error, info } from '@tauri-apps/plugin-log';
-import { filter, firstValueFrom, pairwise, take, timer } from 'rxjs';
+import { filter, firstValueFrom, pairwise, take, tap, timer } from 'rxjs';
 import { AppSettingsService } from './app-settings.service';
-import { OpenVRService } from './openvr.service';
+import { OpenVRService, OpenVRStatus } from './openvr.service';
 import { ShutdownAutomationsService, ShutdownSequenceStage } from './shutdown-automations.service';
 import { ToastOptions, ToastRef, ToastService } from './toast.service';
 
@@ -18,6 +18,7 @@ export class QuitWithSteamVRService {
   private pending = false;
   private generation = 0;
   private shutdownStage: ShutdownSequenceStage = 'IDLE';
+  private steamVRStatus: OpenVRStatus = 'INACTIVE';
   private ignoreNextSteamVRStop = false;
   private toast?: ToastRef;
 
@@ -39,23 +40,30 @@ export class QuitWithSteamVRService {
     });
     this.shutdownAutomations.sequenceCancelled.subscribe(() => {
       const suppressStop =
-        this.enabled && this.shutdownStage === 'QUITTING_STEAMVR' && !this.pending;
+        this.enabled &&
+        this.shutdownStage === 'QUITTING_STEAMVR' &&
+        this.steamVRStatus === 'INITIALIZED';
       if (suppressStop) this.ignoreNextSteamVRStop = true;
       this.cancelPendingQuit('toasts.quitWithSteamVR.cancelled.shutdownSequence', suppressStop);
     });
-    this.openvr.status.pipe(pairwise()).subscribe(([previous, current]) => {
-      if (previous === 'INITIALIZED' && current === 'INACTIVE') {
-        if (this.ignoreNextSteamVRStop) {
-          this.ignoreNextSteamVRStop = false;
-          return;
+    this.openvr.status
+      .pipe(
+        tap((status) => (this.steamVRStatus = status)),
+        pairwise()
+      )
+      .subscribe(([previous, current]) => {
+        if (previous === 'INITIALIZED' && current === 'INACTIVE') {
+          if (this.ignoreNextSteamVRStop) {
+            this.ignoreNextSteamVRStop = false;
+            return;
+          }
+          void this.scheduleQuit().catch((cause) =>
+            error(`[QuitWithSteamVR] Could not quit OyasumiVR: ${cause}`)
+          );
+        } else if (current !== 'INACTIVE') {
+          this.cancelPendingQuit('toasts.quitWithSteamVR.cancelled.steamVRRestarted');
         }
-        void this.scheduleQuit().catch((cause) =>
-          error(`[QuitWithSteamVR] Could not quit OyasumiVR: ${cause}`)
-        );
-      } else if (current !== 'INACTIVE') {
-        this.cancelPendingQuit('toasts.quitWithSteamVR.cancelled.steamVRRestarted');
-      }
-    });
+      });
   }
 
   private async scheduleQuit() {
