@@ -290,7 +290,7 @@ export class ShutdownAutomationsService {
     this._stage.next('QUITTING_STEAMVR');
     // Quit steam
     await invoke('quit_steamvr', { kill: false });
-    // Wait for steam to quit with a timeout of 10 seconds
+    // Wait up to 10 seconds for SteamVR to quit, even after a cancel
     await firstValueFrom(
       merge(
         this.openvr.status.pipe(
