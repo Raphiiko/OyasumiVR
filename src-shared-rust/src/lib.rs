@@ -21,8 +21,20 @@ pub fn elevated_sidecar_key_id() -> &'static str {
         .trim()
 }
 
+/// Makes ring the process-wide TLS provider, unless one is already set. reqwest panics when it
+/// builds a client before any provider is installed.
+pub fn install_tls_provider() {
+    let _ = rustls::crypto::ring::default_provider().install_default();
+}
+
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn reqwest_builds_a_client_once_the_tls_provider_is_installed() {
+        super::install_tls_provider();
+        reqwest::blocking::Client::builder().build().unwrap();
+    }
+
     /// The launcher verifies with the key committed here, the build signs with the key in
     /// `tauri.conf.json`. If they drift apart, the launcher refuses a correctly signed sidecar.
     #[test]
