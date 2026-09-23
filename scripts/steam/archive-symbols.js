@@ -7,6 +7,7 @@ import {
   readdirSync,
   readFileSync,
   readSync,
+  renameSync,
 } from 'fs';
 import { basename, dirname, join } from 'path';
 
@@ -78,8 +79,8 @@ function readImage(file) {
   return null;
 }
 
-/** Returns the GUID of a native PDB, 'portable' for a .NET portable PDB, or null otherwise. */
-function readPdbGuid(pdbPath) {
+/** Returns the GUID of a native or .NET portable PDB, or null for any other file. */
+function readPdbIdentity(pdbPath) {
   const file = openSync(pdbPath, 'r');
   const read = (position, length) => {
     const buffer = Buffer.alloc(length);
@@ -88,7 +89,19 @@ function readPdbGuid(pdbPath) {
   };
   try {
     const superBlock = read(0, 56);
-    if (superBlock.toString('latin1', 0, 4) === 'BSJB') return 'portable';
+    if (superBlock.toString('latin1', 0, 4) === 'BSJB') {
+      // the #Pdb stream starts with the GUID that the image's CodeView record carries
+      const metadata = read(0, 512);
+      let header = 20 + metadata.readUInt32LE(12);
+      for (let i = metadata.readUInt16LE(header - 2); i > 0; i--) {
+        const nameEnd = metadata.indexOf(0, header + 8);
+        if (metadata.toString('latin1', header + 8, nameEnd) === '#Pdb') {
+          return { portable: true, guid: formatGuid(read(metadata.readUInt32LE(header), 16), 0) };
+        }
+        header += 8 + Math.ceil((nameEnd - header - 7) / 4) * 4;
+      }
+      return null;
+    }
     if (!superBlock.toString('latin1', 0, 24).startsWith('Microsoft C/C++ MSF 7.00')) return null;
     const blockSize = superBlock.readUInt32LE(32);
     const directoryBlockCount = Math.ceil(superBlock.readUInt32LE(44) / blockSize);
@@ -104,7 +117,7 @@ function readPdbGuid(pdbPath) {
     const firstStreamBlocks =
       firstStreamSize === 0xffffffff ? 0 : Math.ceil(firstStreamSize / blockSize);
     const infoBlock = directory.readUInt32LE(4 + streamCount * 4 + firstStreamBlocks * 4);
-    return formatGuid(read(infoBlock * blockSize, 28), 12);
+    return { portable: false, guid: formatGuid(read(infoBlock * blockSize, 28), 12) };
   } finally {
     closeSync(file);
   }
@@ -114,23 +127,46 @@ function findPdb(binary, image) {
   for (const directory of [dirname(binary), ...PDB_DIRS]) {
     const pdbPath = join(directory, image.pdbName);
     if (!existsSync(pdbPath)) continue;
-    const guid = readPdbGuid(pdbPath);
-    if (guid === 'portable') return { pdbPath, pdbKey: image.guid + 'FFFFFFFF' };
-    if (guid === image.guid) return { pdbPath, pdbKey: image.guid + image.age };
+    const identity = readPdbIdentity(pdbPath);
+    if (identity?.guid !== image.guid) continue;
+    return { pdbPath, pdbKey: image.guid + (identity.portable ? 'FFFFFFFF' : image.age) };
   }
   return null;
 }
 
 function store(source, name, key) {
-  const directory = join(STORE, name, key);
-  if (existsSync(join(directory, name))) return;
-  mkdirSync(directory, { recursive: true });
-  copyFileSync(source, join(directory, name));
+  const target = join(STORE, name, key, name);
+  if (existsSync(target)) return;
+  mkdirSync(dirname(target), { recursive: true });
+  copyFileSync(source, `${target}.partial`);
+  renameSync(`${target}.partial`, target);
 }
 
 if (!existsSync(STORE)) {
   console.error(`Symbol store not found at ${STORE}. Connect the NAS drive and rerun.`);
   process.exit(1);
+}
+
+if (process.argv.includes('--check')) {
+  const executable = join(SOURCE_DIR, EXECUTABLE_NAME);
+  const image = existsSync(executable) && readImage(executable);
+  const entries = image
+    ? [
+        [EXECUTABLE_NAME, image.imageKey],
+        [image.pdbName, image.guid + image.age],
+      ]
+    : [];
+  if (
+    !entries.length ||
+    !entries.every(([name, key]) => existsSync(join(STORE, name, key, name)))
+  ) {
+    console.error(
+      `The symbol store has no symbols for ${executable}. ` +
+        'Run `node scripts/steam/archive-symbols.js` with the NAS drive connected, or rebuild.'
+    );
+    process.exit(1);
+  }
+  process.exit(0);
 }
 
 const archived = [];
