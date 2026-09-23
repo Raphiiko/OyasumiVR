@@ -25,9 +25,15 @@ pub async fn get_sunrise_sunset_time() -> Result<(String, String), String> {
     Ok((sunrise, sunset))
 }
 
-/// Without an address in the path, ip-api.com locates the address the request comes from.
+/// Without an address in the path, ip-api.com locates the address the request comes from, so the
+/// request bypasses any system proxy.
 async fn locate_public_address() -> Result<IpLocation, String> {
-    let body = reqwest::get("http://ip-api.com/json/?fields=lat,lon")
+    let body = reqwest::Client::builder()
+        .no_proxy()
+        .build()
+        .map_err(|_| "LOCATION_LOOKUP_FAILED".to_string())?
+        .get("http://ip-api.com/json/?fields=lat,lon")
+        .send()
         .await
         .map_err(|_| "LOCATION_LOOKUP_FAILED".to_string())?
         .text()
