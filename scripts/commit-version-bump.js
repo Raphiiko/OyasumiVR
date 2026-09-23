@@ -18,6 +18,8 @@ const files = [
   'src-core/Cargo.lock',
   'src-elevated-sidecar/Cargo.toml',
   'src-elevated-sidecar/Cargo.lock',
+  'src-privileged-launcher/Cargo.toml',
+  'src-privileged-launcher/Cargo.lock',
   'src-shared-rust/Cargo.toml',
   'src-shared-rust/Cargo.lock',
 ].filter((file) => existsSync(file));
