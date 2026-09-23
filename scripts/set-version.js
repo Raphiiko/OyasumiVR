@@ -80,4 +80,22 @@ sharedCargoToml = sharedCargoToml.replaceAll(
 );
 writeFileSync('src-shared-rust/Cargo.toml', sharedCargoToml);
 
+// Cargo lockfiles
+for (const crate of [
+  'src-core',
+  'src-elevated-sidecar',
+  'src-privileged-launcher',
+  'src-shared-rust',
+]) {
+  const lockPath = `${crate}/Cargo.lock`;
+  const lock = readFileSync(lockPath).toString();
+  writeFileSync(
+    lockPath,
+    lock.replaceAll(
+      /(name = "oyasumivr(?:-shared|-elevated-sidecar|-privileged-launcher)?"\r?\nversion = ")[^"]+"/g,
+      `$1${version}"`
+    )
+  );
+}
+
 console.log(`Set all versions to v${version}.`);
