@@ -8,6 +8,7 @@
 
 <p align="center">
     <a><img alt="Versi Terbaru" src="https://img.shields.io/github/v/tag/Raphiiko/Oyasumi?color=informational&label=version&sort=semver"></a>
+    <a><img alt="Status Pengembangan Build" src="https://github.com/Raphiiko/Oyasumi/actions/workflows/checks.yml/badge.svg?branch=develop"/></a>
     <a href="https://github.com/Raphiiko/Oyasumi/blob/develop/LICENSE"><img alt="Lisensi" src="https://img.shields.io/github/license/Raphiiko/Oyasumi"></a>
     <br>
     <a href="https://discord.gg/7MqdPJhYxC"><img alt="Lencana Discord" src="https://img.shields.io/discord/1023672078672609382?color=5865f2&label=Discord&logo=discord&logoColor=https%3A%2F%2Fshields.io%2Fcategory%2Fother"/></a>
