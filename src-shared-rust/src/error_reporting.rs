@@ -368,6 +368,7 @@ impl TinyTransport {
         let worker_pending = pending.clone();
         let worker_enabled = enabled.clone();
         let _ = std::thread::Builder::new().spawn(move || {
+            crate::install_tls_provider();
             let Ok(client) = reqwest::blocking::Client::builder()
                 .connect_timeout(Duration::from_secs(1))
                 .timeout(Duration::from_millis(1500))

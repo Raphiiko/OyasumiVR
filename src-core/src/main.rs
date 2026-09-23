@@ -195,6 +195,7 @@ mod webview2_dialog_tests {
 
 #[tokio::main]
 async fn main() {
+    oyasumivr_shared::install_tls_provider();
     ensure_webview2_available();
 
     // Construct OyasumiVR Tauri application
