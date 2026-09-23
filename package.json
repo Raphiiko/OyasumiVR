@@ -61,7 +61,7 @@
     "_build:sidecar:overlay:core": "cd src-overlay-sidecar && dotnet publish -r win-x64 -c Release && cd ..",
     "_build:sidecar:overlay:post": "node scripts/overlay-sidecar-post-build.js",
     "_prepare:steam": "npm run set-build-id && npm run set-flavour STEAM",
-    "_package:steam": "node scripts/steam/package-steam-build.js STEAM && node scripts/steam/package-steam-build.js STEAM_CN",
+    "_package:steam": "node scripts/steam/package-steam-build.js STEAM && node scripts/steam/package-steam-build.js STEAM_CN && node scripts/steam/archive-symbols.js",
     "_commit:version-bump": "node scripts/commit-version-bump.js",
     "check": "node scripts/checks.mjs all",
     "check:quick": "node scripts/checks.mjs quick",
