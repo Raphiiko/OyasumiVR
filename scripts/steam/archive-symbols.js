@@ -8,6 +8,8 @@ import {
   readFileSync,
   readSync,
   renameSync,
+  rmSync,
+  writeFileSync,
 } from 'fs';
 import { basename, dirname, join } from 'path';
 
@@ -16,6 +18,8 @@ import { basename, dirname, join } from 'path';
 const STORE = 'X:\\Projects\\OyasumiVR\\symstore';
 const SOURCE_DIR = join('dist', 'steam', 'Win64');
 const EXECUTABLE_NAME = 'OyasumiVR.exe';
+// written only after a complete run, and outside the depot folders so it never ships
+const MANIFEST = join('dist', 'steam', 'archived-symbols.json');
 const PDB_DIRS = [
   'src-core/target/release',
   'src-core/target/debug',
@@ -134,12 +138,15 @@ function findPdb(binary, image) {
   return null;
 }
 
+/** Copies a file into the store and returns its path relative to the store. */
 function store(source, name, key) {
-  const target = join(STORE, name, key, name);
-  if (existsSync(target)) return;
+  const entry = join(name, key, name);
+  const target = join(STORE, entry);
+  if (existsSync(target)) return entry;
   mkdirSync(dirname(target), { recursive: true });
   copyFileSync(source, `${target}.partial`);
   renameSync(`${target}.partial`, target);
+  return entry;
 }
 
 if (!existsSync(STORE)) {
@@ -150,15 +157,11 @@ if (!existsSync(STORE)) {
 if (process.argv.includes('--check')) {
   const executable = join(SOURCE_DIR, EXECUTABLE_NAME);
   const image = existsSync(executable) && readImage(executable);
-  const entries = image
-    ? [
-        [EXECUTABLE_NAME, image.imageKey],
-        [image.pdbName, image.guid + image.age],
-      ]
-    : [];
+  const entries = existsSync(MANIFEST) ? JSON.parse(readFileSync(MANIFEST, 'utf8')) : [];
   if (
-    !entries.length ||
-    !entries.every(([name, key]) => existsSync(join(STORE, name, key, name)))
+    !image ||
+    !entries.includes(join(EXECUTABLE_NAME, image.imageKey, EXECUTABLE_NAME)) ||
+    !entries.every((entry) => existsSync(join(STORE, entry)))
   ) {
     console.error(
       `The symbol store has no symbols for ${executable}. ` +
@@ -169,15 +172,17 @@ if (process.argv.includes('--check')) {
   process.exit(0);
 }
 
+rmSync(MANIFEST, { force: true });
 const archived = [];
+const entries = [];
 for (const file of readdirSync(SOURCE_DIR, { recursive: true })) {
   if (!/\.(exe|dll)$/i.test(file)) continue;
   const binary = join(SOURCE_DIR, file);
   const image = readImage(binary);
   const pdb = image && findPdb(binary, image);
   if (!pdb) continue;
-  store(binary, basename(binary), image.imageKey);
-  store(pdb.pdbPath, image.pdbName, pdb.pdbKey);
+  entries.push(store(binary, basename(binary), image.imageKey));
+  entries.push(store(pdb.pdbPath, image.pdbName, pdb.pdbKey));
   archived.push(file);
 }
 
@@ -187,5 +192,6 @@ if (!archived.includes(EXECUTABLE_NAME)) {
   );
   process.exit(1);
 }
+writeFileSync(MANIFEST, JSON.stringify(entries, null, 2) + '\n');
 console.log(`Archived symbols for ${archived.length} files in ${STORE}:`);
 for (const file of archived) console.log(`  ${file}`);
