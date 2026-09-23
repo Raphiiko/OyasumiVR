@@ -4,6 +4,13 @@ import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { expect, it } from 'vitest';
 
+const cargoLocks = [
+  'src-core/Cargo.lock',
+  'src-elevated-sidecar/Cargo.lock',
+  'src-privileged-launcher/Cargo.lock',
+  'src-shared-rust/Cargo.lock',
+];
+
 it.each(['beta', 'release'])(
   'keeps local package versions synchronized for %s bumps',
   (mode) => {
@@ -19,6 +26,7 @@ it.each(['beta', 'release'])(
         'src-elevated-sidecar/Cargo.toml',
         'src-privileged-launcher/Cargo.toml',
         'src-shared-rust/Cargo.toml',
+        ...cargoLocks,
       ]) {
         cpSync(path, join(directory, path));
       }
@@ -41,6 +49,15 @@ it.each(['beta', 'release'])(
       expect(lock.packages[''].version).toBe(version);
       expect(lock.packages['src-shared-ts'].version).toBe(version);
       expect(readJson('src-shared-ts/package.json').version).toBe(version);
+      for (const path of cargoLocks) {
+        const versions = [
+          ...readFileSync(join(directory, path), 'utf8').matchAll(
+            /name = "oyasumivr(?:-shared|-elevated-sidecar|-privileged-launcher)?"\r?\nversion = "([^"]+)"/g
+          ),
+        ].map(([, lockedVersion]) => lockedVersion);
+        expect(versions.length, path).toBeGreaterThan(0);
+        expect(versions, path).toEqual(versions.map(() => version));
+      }
     } finally {
       rmSync(directory, { recursive: true, force: true });
     }
