@@ -34,6 +34,7 @@
     "set-flavour": "node scripts/set-flavour.js",
     "set-build-id": "node scripts/set-build-id.js",
     "prepare:dev": "npm run set-build-id && npm run set-flavour DEV",
+    "setup:worktree": "node scripts/setup-worktree.mjs",
     "//5": "=== Tools ===",
     "format": "run-s format:eslint format:prettier",
     "format:eslint": "eslint --no-error-on-unmatched-pattern --fix \"src-ui/**/*.ts\" \"src-overlay-ui/**/*.ts\" \"src-shared-ts/**/*.ts\" \"scripts/**/*.ts\"",

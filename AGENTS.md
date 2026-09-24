@@ -68,6 +68,13 @@ is not a defect.
 `npm run tl set` writes `en.json` alone. To rename or remove a key, use `npm run tl mv` or
 `npm run tl unset`, so the change reaches every locale file.
 
+## Worktrees
+
+In a new git worktree, run `npm run setup:worktree` before the first build. It links
+`node_modules` to the main checkout and clones each Rust crate's `target` folder from it, so Cargo
+rebuilds only what differs. When it reports a different `package-lock.json`, run `npm ci`. Keep
+Cargo settings such as the linker the same as the main checkout's, or Cargo rebuilds every crate.
+
 ## Checks
 
 Run the relevant `check:<operation>:<component>` npm scripts for changed code. `npm run check`
