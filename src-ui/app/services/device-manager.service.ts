@@ -359,17 +359,21 @@ export class DeviceManagerService {
           devices,
           deviceIds: devices.map((d) => this.getIdForOpenVRDevice(d)),
         })),
-        // Update any already known devices that have received a different default name
+        // Update any already known devices that have received a different default name or manufacturer
         tap(({ devices, deviceIds }) => {
           devices.forEach((device, deviceIndex) => {
             const deviceId = deviceIds[deviceIndex];
             const knownDevice = this.getKnownDeviceById(deviceId);
             const defaultName = this.determineDefaultNameForOVRDevice(device);
-            if (knownDevice?.defaultName !== defaultName) {
+            const manufacturer = device.manufacturerName ?? knownDevice?.manufacturer;
+            if (
+              knownDevice &&
+              (knownDevice.defaultName !== defaultName || knownDevice.manufacturer !== manufacturer)
+            ) {
               this._data.next({
                 ...this._data.value,
                 knownDevices: this._data.value.knownDevices.map((d) =>
-                  d.id === deviceId ? { ...d, defaultName } : d
+                  d.id === deviceId ? { ...d, defaultName, manufacturer } : d
                 ),
               });
             }
@@ -411,6 +415,7 @@ export class DeviceManagerService {
             return {
               id,
               typeName: device.modelNumber,
+              manufacturer: device.manufacturerName,
               defaultName,
               deviceType,
               lastSeen: Date.now(),
