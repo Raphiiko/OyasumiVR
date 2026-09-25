@@ -1,0 +1,325 @@
+<div class="guide" *transloco="let t; prefix: 'frame'" role="dialog" aria-labelledby="frame-title">
+  <nav class="trail" [attr.aria-label]="t('steps.label')">
+    <div class="trail-edge">
+      @if (back(); as target) {
+        <button class="plain" (click)="frame.go(target)">
+          <i class="material-icons" aria-hidden="true">arrow_back</i>{{ t('actions.back') }}
+        </button>
+      }
+    </div>
+    <div class="previous">
+      @if (step() > 0) {
+        <span
+          ><i class="material-icons" aria-hidden="true">check</i
+          >{{ t('steps.' + stepLabels[step() - 1]) }}</span
+        >
+      }
+    </div>
+    <span class="current" aria-current="step"
+      ><span class="dot"></span>{{ t('steps.' + stepLabels[step()]) }}</span
+    >
+    <span class="next">
+      @if (step() < 6) {
+        {{ t('steps.' + stepLabels[step() + 1])
+        }}<i class="material-icons" aria-hidden="true">arrow_forward</i>
+      }
+    </span>
+    <div class="trail-edge end">
+      @if (!['success', 'cancelling', 'cleanupFailed', 'setupFailed'].includes(page())) {
+        <button class="plain" (click)="frame.cancel()">{{ t('actions.cancelPairing') }}</button>
+      }
+    </div>
+  </nav>
+  <main class="guide-scroll">
+    <div class="instruction-group" [class.illustrated]="!!illustration()">
+      <div class="instruction-row">
+        <div class="instructions">
+          <h1 id="frame-title" aria-live="polite">
+            @switch (page()) {
+              @case ('search') {
+                {{
+                  flow()?.manualAddress
+                    ? t('pages.search.manualTitle', { address: flow()?.manualAddress })
+                    : t('pages.search.title')
+                }}
+              }
+              @case ('found') {
+                {{
+                  t(
+                    (flow()?.candidates?.length ?? 0) > 1
+                      ? 'pages.found.multipleTitle'
+                      : 'pages.found.title'
+                  )
+                }}
+              }
+              @default {
+                {{ t('pages.' + page() + '.title') }}
+              }
+            }
+          </h1>
+          <div class="copy" (click)="openLink($event)">
+            @switch (page()) {
+              @case ('intro') {
+                <p>{{ t('pages.intro.install') }}</p>
+                <p [innerHTML]="t('pages.intro.uninstall')"></p>
+                <p>{{ t('pages.intro.nearby') }}</p>
+              }
+              @case ('devmode') {
+                <p [innerHTML]="t('pages.devmode.path')"></p>
+                <p [innerHTML]="t('pages.devmode.enable')"></p>
+              }
+              @case ('pairhost') {
+                <p [innerHTML]="t('pages.pairhost.path')"></p>
+                <p>{{ t('pages.pairhost.return') }}</p>
+              }
+              @case ('found') {
+                <p
+                  [innerHTML]="
+                    t(
+                      (flow()?.candidates?.length ?? 0) > 1
+                        ? 'pages.found.multiple'
+                        : 'pages.found.body'
+                    )
+                  "
+                ></p>
+              }
+              @case ('awaiting') {
+                <p [innerHTML]="t('pages.awaiting.body')"></p>
+                <p>{{ t('pages.awaiting.return') }}</p>
+              }
+              @case ('declined') {
+                <p>{{ t('pages.declined.body') }}</p>
+                <p>{{ t('pages.declined.nothing') }}</p>
+              }
+              @case ('cancelling') {
+                <p>{{ t('pages.cancelling.body') }}</p>
+                <p>{{ t('pages.cancelling.access') }}</p>
+              }
+              @case ('success') {
+                <p>{{ t('pages.success.body') }}</p>
+              }
+              @default {
+                <p [innerHTML]="t('pages.' + page() + '.body')"></p>
+              }
+            }
+          </div>
+          @if (flow()?.error; as error) {
+            <p class="error" role="alert">{{ t('errors.' + error) }}</p>
+          }
+          @if (page() === 'found') {
+            <div class="candidates">
+              @for (
+                candidate of flow()?.candidates ?? [];
+                track candidate.address;
+                let i = $index
+              ) {
+                <button
+                  class="candidate"
+                  [class.selected]="flow()?.selected === i"
+                  [attr.aria-pressed]="flow()?.selected === i"
+                  (click)="frame.select(i)"
+                >
+                  @if ((flow()?.candidates?.length ?? 0) > 1) {
+                    <span class="radio" aria-hidden="true"></span>
+                  }
+                  <img src="/assets/img/icon_hmd.png" alt="" />
+                  <span>
+                    <span>{{ t('headset') }}</span>
+                    <code>{{ candidate.address }}</code>
+                  </span>
+                </button>
+              }
+            </div>
+          }
+          @if (page() === 'manual') {
+            <form (ngSubmit)="connectManual()" class="address-form">
+              <label for="frame-address">{{ t('pages.manual.label') }}</label>
+              <input
+                id="frame-address"
+                name="address"
+                [ngModel]="address()"
+                (ngModelChange)="address.set($event)"
+                maxlength="253"
+                autocomplete="off"
+                spellcheck="false"
+                [attr.aria-invalid]="!!address() && !validAddress()"
+                aria-describedby="frame-address-hint"
+              />
+              <span id="frame-address-hint">{{ t('pages.manual.hint') }}</span>
+            </form>
+          }
+          @if (page() === 'setup' || page() === 'setupFailed') {
+            <ol class="setup-stages" [attr.aria-label]="t('steps.install')">
+              @for (stage of stages; track stage; let i = $index) {
+                <li
+                  [class.future]="i > stageIndex()"
+                  [attr.aria-current]="i === stageIndex() ? 'step' : null"
+                >
+                  @if (i < stageIndex()) {
+                    <i class="material-icons complete" aria-hidden="true">check_circle</i>
+                  } @else if (i === stageIndex()) {
+                    @if (page() === 'setupFailed') {
+                      <i class="material-icons failed" aria-hidden="true">error</i>
+                    } @else {
+                      <span class="spinner" aria-hidden="true"></span>
+                    }
+                  } @else {
+                    <span class="pending-dot" aria-hidden="true"></span>
+                  }
+                  {{ t('stages.' + stage) }}
+                </li>
+              }
+            </ol>
+          }
+          @if (page() === 'cleanupFailed') {
+            <pre class="command">{{ uninstallCommand }}</pre>
+            <p class="note">{{ t('pages.cleanupFailed.note') }}</p>
+          }
+        </div>
+        @if (illustration(); as image) {
+          <picture class="pairing-illustration">
+            @if (animated()) {
+              <source
+                media="(prefers-reduced-motion: reduce)"
+                [srcset]="'assets/images/frame-pairing/' + image + '-static.svg'"
+              />
+            }
+            <img
+              [src]="'assets/images/frame-pairing/' + image + '.svg'"
+              width="180"
+              height="120"
+              alt=""
+              aria-hidden="true"
+            />
+          </picture>
+        }
+      </div>
+      <div class="actions">
+        @if (busy()) {
+          <span class="spinner" aria-hidden="true"></span>
+          <span class="busy-text" role="status">{{ t('waiting.' + page()) }}</span>
+        }
+        <div class="spacer"></div>
+        @if (busy()) {
+          <button class="btn btn-secondary" (click)="frame.closeWizard()">{{
+            t('actions.closeForNow')
+          }}</button>
+        }
+        @switch (page()) {
+          @case ('intro') {
+            <button class="btn btn-primary" (click)="frame.go('devmode')">{{
+              t('actions.continue')
+            }}</button>
+          }
+          @case ('devmode') {
+            <button class="btn btn-primary" (click)="frame.go('pairhost')">{{
+              t('actions.continue')
+            }}</button>
+          }
+          @case ('pairhost') {
+            <button class="btn btn-primary" (click)="frame.discover()">{{
+              t('actions.continue')
+            }}</button>
+          }
+          @case ('search') {
+            @if (!flow()?.manualAddress) {
+              <button class="btn btn-secondary" (click)="frame.go('manual')">{{
+                t('actions.enterAddress')
+              }}</button>
+            }
+          }
+          @case ('found') {
+            <button class="btn btn-secondary" (click)="frame.go('manual')">{{
+              t('actions.enterAddress')
+            }}</button>
+            <button class="btn btn-secondary" (click)="frame.discover()">{{
+              t('actions.searchAgain')
+            }}</button>
+            <button class="btn btn-primary" (click)="frame.pair()">
+              {{
+                t((flow()?.candidates?.length ?? 0) > 1 ? 'actions.pairThis' : 'actions.yesPair')
+              }}
+            </button>
+          }
+          @case ('notfound') {
+            <button class="btn btn-secondary" (click)="frame.go('manual')">{{
+              t('actions.enterAddress')
+            }}</button>
+            <button class="btn btn-primary" (click)="frame.discover()">{{
+              t('actions.searchAgain')
+            }}</button>
+          }
+          @case ('manual') {
+            <button class="btn btn-primary" [disabled]="!validAddress()" (click)="connectManual()">
+              {{ t('actions.connect') }}
+            </button>
+          }
+          @case ('notready') {
+            <button class="btn btn-primary" (click)="frame.register()">{{
+              t('actions.tryAgain')
+            }}</button>
+          }
+          @case ('declined') {
+            <button class="btn btn-primary" (click)="frame.register()">{{
+              t('actions.sendAgain')
+            }}</button>
+          }
+          @case ('timeout') {
+            <button class="btn btn-primary" (click)="frame.register()">{{
+              t('actions.sendAgain')
+            }}</button>
+          }
+          @case ('uncertain') {
+            <button class="btn btn-primary" (click)="frame.register()">{{
+              t('actions.sendAgain')
+            }}</button>
+          }
+          @case ('accessLost') {
+            <button class="btn btn-primary" (click)="frame.go('pairhost')">{{
+              t('actions.continue')
+            }}</button>
+          }
+          @case ('wrongDevice') {
+            <button class="btn btn-primary" [disabled]="busy()" (click)="frame.discover()">{{
+              t('actions.findHeadset')
+            }}</button>
+          }
+          @case ('setupFailed') {
+            <button class="btn btn-secondary" (click)="frame.closeWizard()">{{
+              t('actions.closeForNow')
+            }}</button>
+            <button class="btn btn-secondary" (click)="frame.cancel()">
+              {{ t('actions.cancelPairing') }}
+            </button>
+            <button class="btn btn-primary" (click)="frame.runSetup()">{{
+              t('actions.retry')
+            }}</button>
+          }
+          @case ('needsUpdate') {
+            <button class="btn btn-primary" (click)="frame.closeWizard()">{{
+              t('actions.close')
+            }}</button>
+          }
+          @case ('hostKeyChanged') {
+            <button class="btn btn-primary" (click)="frame.closeWizard()">{{
+              t('actions.close')
+            }}</button>
+          }
+          @case ('cleanupFailed') {
+            <button class="btn btn-secondary" (click)="copyUninstallCommand()">{{
+              t(copied() ? 'actions.copied' : 'actions.copyCommand')
+            }}</button>
+            <button class="btn btn-primary" (click)="frame.leaveCleanup()">{{
+              t('actions.done')
+            }}</button>
+          }
+          @case ('success') {
+            <button class="btn btn-primary" (click)="frame.closeWizard()">{{
+              t('actions.done')
+            }}</button>
+          }
+        }
+      </div>
+    </div>
+  </main>
+</div>
