@@ -159,6 +159,31 @@
           gap: 1em;
           width: 100%;
 
+          .device-icon-wrap {
+            position: relative;
+            flex-shrink: 0;
+            display: flex;
+          }
+
+          .frame-badge {
+            position: absolute;
+            right: -4px;
+            bottom: -4px;
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            border: 3px solid var(--color-surface-2);
+          }
+
+          .frame-badge-connected {
+            background: #67c23a;
+          }
+
+          .frame-badge-connecting {
+            background: var(--color-text-4);
+            animation: frame-badge-pulse 1.2s ease-in-out infinite;
+          }
+
           .device-icon {
             width: 2em;
             height: 2em;
@@ -242,6 +267,53 @@
             display: flex;
             gap: 0.5em;
             flex-shrink: 0;
+
+            .frame-pill {
+              display: flex;
+              align-items: center;
+              gap: 0.45em;
+              padding: 0.3em 0.8em;
+              border-radius: 999px;
+              font-size: 0.85em;
+              white-space: nowrap;
+              align-self: center;
+
+              i {
+                font-size: 1.1em;
+              }
+            }
+
+            .frame-pill-button {
+              border: 0;
+              font: inherit;
+              font-size: 0.85em;
+              cursor: pointer;
+              transition: filter 0.15s ease;
+
+              &:hover {
+                filter: brightness(1.25);
+              }
+            }
+
+            .frame-pill-neutral {
+              background: var(--color-surface-3);
+              color: var(--color-text-3);
+            }
+
+            .frame-pill-warn {
+              background: #fd920022;
+              color: #ffb454;
+            }
+
+            .frame-pill-bad {
+              background: #f56c6c22;
+              color: #ff8a8a;
+            }
+
+            .btn-frame {
+              height: 2.5em;
+              padding: 0 1em;
+            }
 
             .btn-forget {
               background: var(--color-surface-3);
@@ -345,5 +417,17 @@
 
   span {
     font-size: 1.1em;
+  }
+}
+
+@keyframes frame-badge-pulse {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .frame-badge-connecting {
+    animation: none;
   }
 }
