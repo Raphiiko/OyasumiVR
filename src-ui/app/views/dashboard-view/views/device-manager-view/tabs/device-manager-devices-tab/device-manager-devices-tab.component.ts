@@ -42,6 +42,37 @@ import {
   LighthouseV1IdWizardModalOutputModel,
 } from 'src-ui/app/components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
 import { LighthouseV1IdWizardModalInputModel } from 'src-ui/app/components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
+import { FramePairingService } from 'src-ui/app/services/frame-pairing.service';
+import { TranslocoService } from '@jsverse/transloco';
+import { FLAVOUR } from 'src-ui/build';
+
+interface FramePill {
+  key: string;
+  icon: string;
+  tone: 'neutral' | 'warn' | 'bad';
+  time?: string;
+  /** A key under `frame.statusDetail` whose title and body explain the pill when clicked. */
+  detail?: string;
+}
+
+/** A healthy Frame gets only a badge on its icon; any other state gets only a pill. */
+interface FrameRow {
+  badge?: 'connected' | 'connecting';
+  pill?: FramePill;
+  action?: 'pair' | 'pairAgain';
+}
+
+const FRAME_PILLS: Record<string, FramePill> = {
+  identityChanged: { key: 'notRecognized', icon: 'error', tone: 'bad', detail: 'notRecognized' },
+  hostKeyChanged: { key: 'notRecognized', icon: 'error', tone: 'bad', detail: 'notRecognized' },
+  needsAppUpdate: {
+    key: 'updateApp',
+    icon: 'update',
+    tone: 'warn',
+    detail: FLAVOUR === 'STEAM' ? 'needsAppUpdateSteam' : 'needsAppUpdate',
+  },
+  helperOutdated: { key: 'updateHelper', icon: 'update', tone: 'warn', detail: 'helperOutdated' },
+};
 
 type DeviceGroupType = DMDeviceType | 'PREVIOUSLY_SEEN';
 
@@ -87,7 +118,9 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     private modalService: ModalService,
     private destroyRef: DestroyRef,
     private domSanitizer: DomSanitizer,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    protected framePairing: FramePairingService,
+    private transloco: TranslocoService
   ) {}
 
   ngOnInit() {
@@ -483,6 +516,52 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     } else if (action === 'power-on') {
       await this.powerOnDevice(device);
     }
+  }
+
+  /** Pairing status and action for a supported Steam Frame, or null for any other device. */
+  frameRow(device: DMKnownDevice): FrameRow | null {
+    if (!this.framePairing.identityOf(device)) return null;
+    const active = this.isDeviceObserved(device.id);
+    const pairing = this.framePairing.pairingFor(device.id);
+    if (!pairing?.complete) return active ? { action: 'pair' } : null;
+    const status = this.framePairing.connections()[pairing.id]?.status ?? 'connecting';
+    if (status === 'connected' || status === 'connecting') return { badge: status };
+    if (status === 'offline') {
+      return pairing.lastSeen
+        ? {
+            pill: {
+              key: 'offlineSince',
+              icon: 'cloud_off',
+              tone: 'neutral',
+              time: this.timeAgo(pairing.lastSeen),
+            },
+          }
+        : { pill: { key: 'offline', icon: 'cloud_off', tone: 'neutral' } };
+    }
+    return {
+      pill: FRAME_PILLS[status],
+      action: FRAME_PILLS[status].key === 'notRecognized' && active ? 'pairAgain' : undefined,
+    };
+  }
+
+  explainFramePill(pill: FramePill) {
+    this.modalService
+      .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
+        title: `frame.statusDetail.${pill.detail}.title`,
+        message: `frame.statusDetail.${pill.detail}.body`,
+        confirmButtonText: 'shared.modals.ok',
+        showCancel: false,
+      })
+      .subscribe();
+  }
+
+  private timeAgo(time: number): string {
+    const minutes = Math.round((time - Date.now()) / 60000);
+    if (minutes === 0) return this.transloco.translate('frame.status.justNow');
+    const format = new Intl.RelativeTimeFormat(this.transloco.getActiveLang(), { numeric: 'auto' });
+    if (minutes > -60) return format.format(minutes, 'minute');
+    if (minutes > -60 * 24) return format.format(Math.round(minutes / 60), 'hour');
+    return format.format(Math.round(minutes / (60 * 24)), 'day');
   }
 
   async configureDevice(device: DMKnownDevice) {

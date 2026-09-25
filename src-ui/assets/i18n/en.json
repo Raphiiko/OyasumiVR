@@ -2807,6 +2807,10 @@
       "wrongDeviceAccessLeft": "OyasumiVR couldn't confirm that it removed this PC's approval from that headset. The approval can't be used anymore, because this PC deleted its key, and you can remove it in the headset's developer settings."
     },
     "headset": "Steam Frame",
+    "invitation": {
+      "body": "Pairing your headset gives you access to hardware-specific features and automations, like brightness control and more.",
+      "title": "Pair your Steam Frame"
+    },
     "pages": {
       "accessLost": {
         "body": "The headset no longer accepts this PC's saved access. Open <kbd>Pair new host</kbd> in the headset to approve this PC again. OyasumiVR still checks that it is the same headset.",
@@ -2914,6 +2918,34 @@
       "connection": "Checking the connection",
       "install": "Installing OyasumiVR Helper",
       "verify": "Verifying the headset"
+    },
+    "status": {
+      "connected": "Connected",
+      "connecting": "Connecting",
+      "justNow": "just now",
+      "notRecognized": "Not recognized",
+      "offline": "Offline",
+      "offlineSince": "Offline · {time}",
+      "updateApp": "Update OyasumiVR",
+      "updateHelper": "Update helper"
+    },
+    "statusDetail": {
+      "helperOutdated": {
+        "body": "The helper on this headset is older than this version of OyasumiVR can use. Pair the headset again to install the current helper.",
+        "title": "OyasumiVR Helper needs an update"
+      },
+      "needsAppUpdate": {
+        "body": "The helper on this headset is newer than this version of OyasumiVR. Update OyasumiVR on this PC with the updater in Settings › Updates, or by installing the latest release, to connect to it again.",
+        "title": "OyasumiVR needs an update"
+      },
+      "needsAppUpdateSteam": {
+        "body": "The helper on this headset is newer than this version of OyasumiVR. Steam updates OyasumiVR for you: let Steam finish the update, then restart OyasumiVR to connect to it again.",
+        "title": "OyasumiVR needs an update"
+      },
+      "notRecognized": {
+        "body": "OyasumiVR can't confirm this is the headset you paired, for example after the headset was reset. Pair it again to reconnect.",
+        "title": "Headset not recognized"
+      }
     },
     "steps": {
       "approve": "Approve",
