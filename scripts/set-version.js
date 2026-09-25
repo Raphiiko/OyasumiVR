@@ -80,10 +80,19 @@ sharedCargoToml = sharedCargoToml.replaceAll(
 );
 writeFileSync('src-shared-rust/Cargo.toml', sharedCargoToml);
 
+// Frame helper cargo toml
+let helperCargoToml = readFileSync('src-frame-helper/Cargo.toml').toString();
+helperCargoToml = helperCargoToml.replaceAll(
+  /\[package\](\r?\n)name = "oyasumivr-frame-helper"\1version = "[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?"/g,
+  `[package]$1name = "oyasumivr-frame-helper"$1version = "${version}"`
+);
+writeFileSync('src-frame-helper/Cargo.toml', helperCargoToml);
+
 // Cargo lockfiles
 for (const crate of [
   'src-core',
   'src-elevated-sidecar',
+  'src-frame-helper',
   'src-privileged-launcher',
   'src-shared-rust',
 ]) {
@@ -92,7 +101,7 @@ for (const crate of [
   writeFileSync(
     lockPath,
     lock.replaceAll(
-      /(name = "oyasumivr(?:-shared|-elevated-sidecar|-privileged-launcher)?"\r?\nversion = ")[^"]+"/g,
+      /(name = "oyasumivr(?:-shared|-elevated-sidecar|-frame-helper|-privileged-launcher)?"\r?\nversion = ")[^"]+"/g,
       `$1${version}"`
     )
   );

@@ -8,6 +8,7 @@ export const crates = {
   'shared-rust': 'src-shared-rust',
   'elevated-sidecar': 'src-elevated-sidecar',
   'privileged-launcher': 'src-privileged-launcher',
+  'frame-helper': 'src-frame-helper',
   'memory-watch': 'src-memory-watch',
   'signing-tool': 'tools/sign-elevated-sidecar',
 };
@@ -138,6 +139,7 @@ export function checkName(id) {
     'shared-rust': 'Shared Rust',
     'elevated-sidecar': 'Rust elevated sidecar',
     'privileged-launcher': 'Rust privileged launcher',
+    'frame-helper': 'Rust Steam Frame helper',
     'memory-watch': 'Rust memory watch',
     'signing-tool': 'Rust signing tool',
   };
