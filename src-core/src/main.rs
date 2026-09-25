@@ -6,6 +6,7 @@ mod discord;
 mod elevated_sidecar;
 mod error_reporting;
 mod flavour;
+mod frame;
 mod globals;
 mod grpc;
 mod hardware;
@@ -575,5 +576,15 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         error_reporting::set_error_reporting_enabled,
         error_reporting::allow_ui_event,
         vrcx::commands::vrcx_log,
+        frame::commands::frame_supported_models,
+        frame::commands::frame_discover,
+        frame::commands::frame_login_name,
+        frame::commands::frame_create_credentials,
+        frame::commands::frame_register,
+        frame::commands::frame_probe,
+        frame::commands::frame_setup,
+        frame::commands::frame_cleanup,
+        frame::commands::frame_set_pairings,
+        frame::commands::frame_connection_states,
     ]
 }
