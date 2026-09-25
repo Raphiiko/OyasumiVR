@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="frame-search-horizontal" width="180" height="120" viewBox="0 0 180 120" aria-hidden="true" focusable="false"><style>.line{fill:none;stroke:#b4b4b4;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}.accent{stroke:#ec9b8d}</style><g class="line"><g opacity=".4" transform="translate(132 78) scale(.88)" stroke-linecap="round" stroke-linejoin="round">
+    <g data-headset-body="symmetric">
+      <path d="M0 -32C-15 -32 -26 -31 -30 -27C-32 -24 -34 -19 -35 -15C-32 -15 -29 -15 -28 -15C-26 -23 -23 -27 0 -27C23 -27 26 -23 28 -15C29 -15 32 -15 35 -15C34 -19 32 -24 30 -27C26 -31 15 -32 0 -32Z" fill="#252525" stroke="#b4b4b4" stroke-width="1.4"/>
+      <rect x="-44" y="-13" width="7" height="20" rx="2" fill="#67615f" stroke="#b4b4b4" stroke-width="1.4"/>
+      <rect x="37" y="-13" width="7" height="20" rx="2" fill="#67615f" stroke="#b4b4b4" stroke-width="1.4"/>
+      <path d="M0 -24C-24 -24 -36 -22 -40 -13C-43 -6 -43 8 -37 16C-32 23 -24 24 -17 22C-8 20 -7 4 0 4C7 4 8 20 17 22C24 24 32 23 37 16C43 8 43 -6 40 -13C36 -22 24 -24 0 -24Z" fill="#252525" stroke="#b4b4b4" stroke-width="1.4"/>
+      <path d="M0 -21C-23 -21 -33 -19 -37 -11C-40 -4 -40 7 -34 14C-30 20 -24 21 -18 19C-11 17 -9 1 0 1C9 1 11 17 18 19C24 21 30 20 34 14C40 7 40 -4 37 -11C33 -19 23 -21 0 -21Z" fill="#0d0d0d" stroke="#8f8f8f" stroke-width="1"/>
+      <circle cx="-27" cy="11" r="1.5" fill="#151515" stroke="#8f8f8f" stroke-width="1"/>
+      <circle cx="27" cy="11" r="1.5" fill="#151515" stroke="#8f8f8f" stroke-width="1"/>
+    </g>
+    <path data-headset-wire="left" d="M-36-20C-42-39-34-41-22-30" fill="none" stroke="#8f8f8f" stroke-width="2"/>
+  </g>
+<g transform="translate(132 75)"><g class="lens accent" stroke-width="2"><circle r="18" fill="#252525" fill-opacity=".4"/><path d="M-12.7 12.7L-24.5 24.5" stroke-width="4"/><path d="M-13 -2A13 13 0 0 1 -2 -13" opacity=".3"/></g></g><g data-pc="tower">
+      <rect x="22" y="43" width="28" height="55" rx="3" fill="#252525"/>
+      <path d="M26 98V100H30V98M42 98V100H46V98"/>
+      <circle cx="36" cy="51" r="2" fill="#0d0d0d"/>
+      <path d="M29 62H43M29 66H43M29 82H43M29 86H43M29 90H43" stroke="#8f8f8f" stroke-width="1"/>
+    </g></g><style>.lens{animation:inspect 3.6s ease-in-out infinite;transform-origin:0 0}@keyframes inspect{0%,100%{transform:translateX(-7px)}50%{transform:translateX(7px)}}@media(prefers-reduced-motion:reduce){.lens{animation:none;transform:none;opacity:1}}[data-reduced-motion="true"] .lens{animation:none;transform:none;opacity:1}</style></svg>
