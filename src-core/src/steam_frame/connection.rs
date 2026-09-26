@@ -424,6 +424,13 @@ async fn receive(text: &str, relay: &mut Relay, state: &mut State) {
             percentage,
             error,
         }) => {
+            // the helper sends this PC no snapshot for its own write, so record the value here
+            if let (Some(applied), Some(brightness)) = (percentage, state.brightness.as_mut()) {
+                if brightness.percentage != Some(applied) {
+                    brightness.percentage = Some(applied);
+                    publish(state).await;
+                }
+            }
             if let Some(reply) = relay.pending.remove(&id) {
                 let error = error.unwrap_or(SetBrightnessError::WriteFailed);
                 let _ = reply.send(percentage.ok_or(error));

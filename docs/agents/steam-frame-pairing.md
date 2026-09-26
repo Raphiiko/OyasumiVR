@@ -277,8 +277,8 @@ sequenceDiagram
 - The percentage uses the Index curve: gain = (p/100)^2.2 below 100%, p/100 from there.
 - A reply has `percentage` or `error`: `unsupported`, `runtimeUnavailable`, or `writeFailed`. The
   core adds `offline` when no connection is open or it closes before the reply.
-- The core keeps the last snapshot in the connection state as `brightness`, and clears it while not
-  connected.
+- The core keeps the last snapshot in the connection state as `brightness`, updates its percentage
+  from each reply, and clears it while not connected.
 
 ## Updates
 
