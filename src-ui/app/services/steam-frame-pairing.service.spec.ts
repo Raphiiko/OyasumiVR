@@ -5,7 +5,7 @@ import { DMKnownDevice } from '../models/device-manager';
 
 const { invoke, store } = vi.hoisted(() => ({
   invoke: vi.fn(),
-  store: { get: vi.fn(), set: vi.fn() },
+  store: { get: vi.fn(), set: vi.fn(), save: vi.fn() },
 }));
 vi.mock('@tauri-apps/api/core', () => ({ invoke }));
 vi.mock('@tauri-apps/api/event', () => ({ listen: vi.fn(async () => () => {}) }));
@@ -71,6 +71,7 @@ beforeEach(() => {
   invoke.mockImplementation(async (command: string, args: any) => handlers[command](args));
   store.get.mockResolvedValue(undefined);
   store.set.mockResolvedValue(undefined);
+  store.save.mockResolvedValue(undefined);
 });
 
 afterEach(() => vi.resetAllMocks());
@@ -145,6 +146,48 @@ describe('Steam Frame pairing flow', () => {
     expect(calls('steam_frame_request_approval')).toHaveLength(1);
     expect(service.flow()?.page).toBe('success');
   }, 15000);
+
+  it('marks the attempt as possibly approved before the request leaves', async () => {
+    let answer!: (outcome: string) => void;
+    handlers['steam_frame_request_approval'] = () => new Promise((resolve) => (answer = resolve));
+    const service = await start();
+    const pairing = service.pair();
+    await vi.waitFor(() => expect(service.flow()?.page).toBe('awaiting'));
+    expect(service.pairingFor(device.id)?.mayBeApproved).toBe(true);
+    expect(store.save).toHaveBeenCalled();
+    answer('declined');
+    await pairing;
+    expect(service.pairingFor(device.id)?.mayBeApproved).toBe(false);
+  });
+
+  it('ignores a discovery that finishes after a manual address', async () => {
+    let finish!: (candidates: unknown[]) => void;
+    handlers['steam_frame_discover_headsets'] = () => new Promise((resolve) => (finish = resolve));
+    const service = await start();
+    const discovery = service.discover();
+    await service.connectManual('192.168.1.50');
+    finish([]);
+    await discovery;
+    expect(service.flow()).toMatchObject({
+      page: 'found',
+      candidates: [{ address: '192.168.1.50' }],
+    });
+  });
+
+  it('offers a working retry when the pairing key cannot be created', async () => {
+    handlers['steam_frame_create_pairing_keys'] = () => Promise.reject(new Error('no entropy'));
+    handlers['steam_frame_request_approval'] = () => 'declined';
+    const service = await start();
+    await service.pair();
+    expect(service.flow()).toMatchObject({ page: 'found', busy: false, error: 'keys' });
+    handlers['steam_frame_create_pairing_keys'] = () => ({
+      privateKey: 'KEY',
+      publicKey: 'ssh-rsa AAA pc',
+      token: 'T',
+    });
+    await service.pair();
+    expect(calls('steam_frame_request_approval')).toHaveLength(1);
+  });
 
   it('removes this PC from a different headset and forgets the key', async () => {
     handlers['steam_frame_check_ssh_access'] = () => ({ status: 'ok', hostKeyPin: 'PIN' });
