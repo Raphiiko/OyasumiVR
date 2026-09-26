@@ -47,6 +47,17 @@ const ILLUSTRATIONS: Partial<Record<SteamFramePage, string>> = {
   success: 'paired',
 };
 
+/** Codes the user can quote in a report. `docs/agents/steam-frame-pairing.md` lists them. */
+const ERROR_CODES: Record<string, string> = {
+  persistence: 'SF-101',
+  keys: 'SF-102',
+  offline: 'SF-201',
+  identityMissing: 'SF-202',
+  helperBusy: 'SF-203',
+  setupFailed: 'SF-204',
+  wrongDeviceAccessLeft: 'SF-301',
+};
+
 const BACK: Partial<Record<SteamFramePage, SteamFramePage>> = {
   devmode: 'intro',
   pairhost: 'devmode',
@@ -85,6 +96,7 @@ export class SteamFramePairingModalComponent extends BaseModalComponent<void, vo
   readonly animated = computed(() =>
     ['searching', 'approval-pending', 'setup-running'].includes(this.illustration() ?? '')
   );
+  readonly errorCode = computed(() => ERROR_CODES[this.flow()?.error ?? '']);
   readonly back = computed(() => (this.busy() ? undefined : BACK[this.page()]));
   readonly stageIndex = computed(() => this.stages.indexOf(this.flow()?.stage ?? 'verify'));
   readonly validAddress = computed(() => {
