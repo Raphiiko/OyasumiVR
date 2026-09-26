@@ -129,15 +129,25 @@ export class SteamFramePairingService {
     this.modalService.closeModal('steam-frame-pairing');
   }
 
+  /** Moves to another page, abandoning a running search. */
   go(page: SteamFramePage) {
-    this.patchFlow({ page, error: undefined });
+    this.search++;
+    this.patchFlow({ page, error: undefined, busy: false });
   }
 
   select(index: number) {
     this.patchFlow({ selected: index });
   }
 
-  async discover() {
+  discover() {
+    return this.guarded(() => this.discoverSteps(), { page: 'notfound' });
+  }
+
+  connectManual(address: string) {
+    return this.guarded(() => this.connectManualSteps(address), { page: 'notfound' });
+  }
+
+  private async discoverSteps() {
     const search = ++this.search;
     this.patchFlow({ page: 'search', manualAddress: undefined, error: undefined, busy: true });
     const candidates = await invoke<SteamFrameCandidate[]>('steam_frame_discover_headsets');
@@ -150,7 +160,7 @@ export class SteamFramePairingService {
     });
   }
 
-  async connectManual(address: string) {
+  private async connectManualSteps(address: string) {
     address = address.trim();
     const search = ++this.search;
     this.patchFlow({ page: 'search', manualAddress: address, error: undefined, busy: true });
@@ -179,13 +189,16 @@ export class SteamFramePairingService {
   }
 
   /** Ends a step that failed unexpectedly, such as a settings write, on its page with Cancel available. */
-  private async guarded(step: () => Promise<void>) {
+  private async guarded(
+    step: () => Promise<void>,
+    failure: Partial<SteamFrameFlow> = { error: 'persistence' }
+  ) {
     try {
       await step();
     } catch (e) {
       error(`[SteamFramePairing] A pairing step failed: ${e}`);
       if (this.stopForCancel()) return;
-      this.patchFlow({ busy: false, error: 'persistence' });
+      this.patchFlow({ ...failure, busy: false });
     }
   }
 
@@ -493,12 +506,19 @@ export class SteamFramePairingService {
     return pairing;
   }
 
+  /** Applies the change only if it reaches the disk; a failed save restores the previous pairings. */
   private async updatePairing(deviceId: string, patch: Partial<SteamFramePairing>) {
+    const previous = this._pairings();
     let updated: SteamFramePairing | undefined;
     this.setPairings(
-      this._pairings().map((p) => (p.deviceId === deviceId ? (updated = { ...p, ...patch }) : p))
+      previous.map((p) => (p.deviceId === deviceId ? (updated = { ...p, ...patch }) : p))
     );
-    await this.save();
+    try {
+      await this.save();
+    } catch (e) {
+      this.setPairings(previous);
+      throw e;
+    }
     return updated;
   }
 
