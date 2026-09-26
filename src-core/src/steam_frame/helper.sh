@@ -55,11 +55,12 @@ run_current() {
   fi
 }
 
-# install VERSION SHA256 PORT SEEN FRESH, with the helper executable on stdin; SEEN is the
-# SHA-256 of the inspect output the PC decided on, FRESH 1 allows creating a missing helper folder;
-# prints "created" for a first install
+# install VERSION SHA256 PORT SEEN FRESH KEEP, with the helper executable on stdin; SEEN is the
+# SHA-256 of the inspect output the PC decided on, FRESH 1 allows creating a missing helper folder,
+# KEEP 1 keeps a working previous release because current does not start; prints "created" for a
+# first install
 install() {
-  local version=$1 digest=$2 port=$3 seen=$4 fresh=${5:-0}
+  local version=$1 digest=$2 port=$3 seen=$4 fresh=${5:-0} keep=${6:-0}
   [ "$fresh" != 1 ] || mkdir -p "$root"
   lock
   [ "$(printf %s "$(inspect)" | sha256sum | cut -c1-64)" = "$seen" ] || exit 73
@@ -78,12 +79,11 @@ install() {
   chmod 755 "$root/staging/$binary"
 
   # put the release in place, keeping a rollback target
-  local old
+  local old previous
   old=$(readlink "$root/current" 2>/dev/null || true)
+  previous=$(readlink "$root/previous" 2>/dev/null || true)
   if [ "$old" = "releases/$version" ] && [ -d "$root/releases/$version" ]; then
     # same-version repair; without another rollback target, keep a copy of the replaced one
-    local previous
-    previous=$(readlink "$root/previous" 2>/dev/null || true)
     if [ -z "$previous" ] || [ "$previous" = "$old" ] || [ ! -d "$root/$previous" ]; then
       rm -rf "$root/releases/$version.replaced.new"
       cp -a "$root/releases/$version" "$root/releases/$version.replaced.new"
@@ -97,8 +97,14 @@ install() {
     rm -rf "$root/releases/$version"
     mkdir "$root/releases/$version"
     mv "$root/staging/$binary" "$root/releases/$version/$binary"
-    if [ -n "$old" ] && [ -x "$root/$old/$binary" ]; then
-      ln -sfn "$old" "$root/previous.new"
+    # a repair keeps a working previous release rather than the current one that does not start
+    local target=$old
+    if [ "$keep" = 1 ] && [ -n "$previous" ] && [ "$previous" != "$old" ] &&
+      [ "$previous" != "releases/$version" ] && [ -x "$root/$previous/$binary" ]; then
+      target=$previous
+    fi
+    if [ -n "$target" ] && [ -x "$root/$target/$binary" ]; then
+      ln -sfn "$target" "$root/previous.new"
       mv -T "$root/previous.new" "$root/previous"
     fi
   fi

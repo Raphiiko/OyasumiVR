@@ -240,8 +240,8 @@ pub struct Inspected {
 }
 
 /// Installs the bundled helper when the installed one needs it, deciding again when another PC
-/// changed the helper meanwhile. `repair` also replaces a helper of the bundled version, and
-/// `fresh` allows creating a missing helper folder.
+/// changed the helper meanwhile. `repair` also replaces a helper of the bundled version and keeps
+/// a working previous release, and `fresh` allows creating a missing helper folder.
 pub async fn install_bundled(
     session: &Session,
     repair: bool,
@@ -287,9 +287,18 @@ pub async fn install_bundled(
         let port = HELPER_PORT.to_string();
         let seen = hex(&Sha256::digest(inspect.trim().as_bytes()));
         let fresh = if fresh { "1" } else { "0" };
+        let keep = if repair { "1" } else { "0" };
         let output = run(
             session,
-            &["install", BUNDLED_VERSION, &digest, &port, &seen, fresh],
+            &[
+                "install",
+                BUNDLED_VERSION,
+                &digest,
+                &port,
+                &seen,
+                fresh,
+                keep,
+            ],
             &helper,
         )
         .await?;
