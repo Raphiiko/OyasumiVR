@@ -17,7 +17,7 @@ import { OverlaySidecarMessageMonitor } from './monitors/overlay-sidecar-message
 import { ElevatedFeaturesMessageMonitor } from './monitors/elevated-features-message-monitor';
 import { LighthouseConnectsFailingMessageMonitor } from './monitors/lighthouse-connects-failing-message-monitor';
 import { PSVR2ToolkitMessageMonitor } from './monitors/psvr2-toolkit-message-monitor';
-import { FramePairingMessageMonitor } from './monitors/frame-pairing-message-monitor';
+import { SteamFramePairingMessageMonitor } from './monitors/steam-frame-pairing-message-monitor';
 
 export interface MessageAction {
   label: string;
@@ -68,7 +68,7 @@ export class MessageCenterService {
       new VRChatWebsocketConnectionMonitor(this),
       new OverlaySidecarMessageMonitor(this),
       new PSVR2ToolkitMessageMonitor(this),
-      new FramePairingMessageMonitor(this),
+      new SteamFramePairingMessageMonitor(this),
     ];
   }
 
