@@ -65,13 +65,14 @@ interface FramePill {
   code?: string;
 }
 
-type FrameAction = 'pair' | 'pairAgain' | 'retryUpdate' | 'reinstall' | 'retryReinstall';
+type FrameAction = 'pair' | 'pairAgain' | 'retryUpdate' | 'reinstall' | 'retryReinstall' | 'forget';
 
 /** A healthy Frame gets only a badge on its icon; any other state gets only a pill. */
 interface FrameRow {
   badge?: 'connected' | 'connecting';
   pill?: FramePill;
   action?: FrameAction;
+  secondaryAction?: FrameAction;
 }
 
 /** Codes for an update failure, by the reason the core reports. */
@@ -114,6 +115,7 @@ const FRAME_STATUS_ROWS: Partial<Record<SteamFrameConnectionStatus, FrameRow>> =
       code: 'SF-405',
     },
     action: 'pairAgain',
+    secondaryAction: 'forget',
   },
   helperMissing: {
     pill: {
@@ -617,7 +619,9 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     // a problem: its pill, and Pair again only while SteamVR uses it
     const statusRow = FRAME_STATUS_ROWS[status];
     if (statusRow) {
-      return statusRow.action === 'pairAgain' && !active ? { pill: statusRow.pill } : statusRow;
+      return statusRow.action === 'pairAgain' && !active
+        ? { ...statusRow, action: undefined }
+        : statusRow;
     }
 
     // a helper update in progress or just finished
@@ -723,7 +727,17 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
       case 'reinstall':
       case 'retryReinstall':
         return pairing && this.framePairing.reinstallHelper(pairing);
+      case 'forget':
+        return this.forgetFrame(device);
     }
+  }
+
+  private async forgetFrame(device: DMKnownDevice) {
+    const { SteamFrameUnpairModalComponent } =
+      await import('src-ui/app/components/steam-frame-unpair-modal/steam-frame-unpair-modal.component');
+    this.modalService
+      .addModal(SteamFrameUnpairModalComponent, { deviceId: device.id, removedOnHeadset: true })
+      .subscribe();
   }
 
   /** Formats a past time as "just now" or a relative time in the active language. */

@@ -19,7 +19,7 @@ use super::{
     setup::{
         self, bundled_digest, install_decision, InstallDecision, ProvisionError, BUNDLED_VERSION,
     },
-    ssh::{self, SshError},
+    ssh::SshError,
     valid_pc_id,
     wss::{self, Hello, Socket, WssError},
     PROTOCOL_VERSION,
@@ -401,7 +401,7 @@ fn ssh_failure(error: SshError) -> Attempt {
 
 /// The helper no longer knows this PC's token, so write it again over SSH.
 async fn restore_token(pairing: &Pairing) -> Attempt {
-    let session = match ssh::connect(&pairing.access).await {
+    let session = match setup::open(&pairing.access, &pairing.id, &pairing.public_key).await {
         Ok(session) => session,
         Err(error) => return ssh_failure(error),
     };
@@ -424,7 +424,7 @@ async fn restore_token(pairing: &Pairing) -> Attempt {
 /// Trusts a new helper certificate only when the pinned SSH host shows that same certificate.
 async fn repin(pairing: &Pairing, shared: &Mutex<Pairing>, observed: &str) -> Attempt {
     // read the helper certificate over the pinned SSH host
-    let session = match ssh::connect(&pairing.access).await {
+    let session = match setup::open(&pairing.access, &pairing.id, &pairing.public_key).await {
         Ok(session) => session,
         Err(error) => return ssh_failure(error),
     };

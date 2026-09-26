@@ -174,7 +174,19 @@ pub struct CleanupRequest {
     pub access: Access,
     pub pc_id: String,
     pub public_key: String,
-    pub remove_helper: bool,
+    pub mode: CleanupMode,
+}
+
+/// Every mode removes this PC's token file and key lines.
+#[derive(Deserialize, Clone, Copy, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub enum CleanupMode {
+    /// The helper keeps running for other PCs.
+    Keep,
+    /// Also removes the helper when no PC holds a token any more, as a cancelled pairing does.
+    Unused,
+    /// Also removes the helper, which disconnects every other PC.
+    Uninstall,
 }
 
 #[derive(Serialize, Debug, PartialEq)]
@@ -243,4 +255,19 @@ mod tests {
             assert!(!identity(manufacturer, model).is_supported(), "{model}");
         }
     }
+}
+
+#[derive(Serialize, Debug, PartialEq)]
+#[serde(tag = "status", rename_all = "camelCase")]
+pub enum OtherPcsOutcome {
+    Ok {
+        count: u32,
+    },
+    /// The headset rejects this PC's key, so nothing is left to remove.
+    Rejected,
+    Unreachable,
+    HostKeyChanged,
+    Failed {
+        message: String,
+    },
 }

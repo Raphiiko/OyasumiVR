@@ -7,6 +7,7 @@ root="$HOME/.local/share/oyasumivr_helper"
 binary=oyasumivr-frame-helper
 unit=oyasumivr-frame-helper.service
 units="$HOME/.config/systemd/user"
+public_key='^(ssh|ecdsa|sk)-[a-z0-9@.-]+ [A-Za-z0-9+/]+=*( .*)?$'
 
 # lock [SECONDS], 60 by default; must stay under the SSH inactivity timeout in ssh.rs.
 # The first step under the lock removes an upload that an earlier operation left behind.
@@ -141,7 +142,7 @@ provision() {
   [ -x "$root/current/$binary" ] || exit 69
   IFS= read -r token
   IFS= read -r key || true
-  [[ -n $token && $key =~ ^(ssh|ecdsa|sk)-[a-z0-9@.-]+\ [A-Za-z0-9+/]+=*(\ .*)?$ ]] || exit 64
+  [[ -n $token && $key =~ $public_key ]] || exit 64
   lock
   mkdir -p "$root/clients"
   (umask 077 && printf '%s' "$token" >"$root/clients/$pc.tmp")
@@ -219,19 +220,46 @@ uninstall_helper() {
   remove_helper
 }
 
-# cleanup PC_ID REMOVE_HELPER, with this PC's public key on stdin
+# record PC_ID, with this PC's public key on stdin; keeps clients/PC_ID.pub current while the
+# helper is installed, so the uninstall script can find the key
+record() {
+  local pc=$1 key
+  IFS= read -r key || true
+  [[ $key =~ $public_key ]] || exit 64
+  [ -d "$root/clients" ] || return 0
+  [ "$(cat "$root/clients/$pc.pub" 2>/dev/null)" != "$key" ] || return 0
+  printf '%s\n' "$key" >"$root/clients/$pc.pub.tmp"
+  mv "$root/clients/$pc.pub.tmp" "$root/clients/$pc.pub"
+}
+
+# clients PC_ID: prints how many other PCs hold a token
+clients() {
+  local pc=$1 count=0 file
+  for file in "$root"/clients/*; do
+    [ -f "$file" ] || continue
+    case "${file##*/}" in
+      *.* | "$pc") ;;
+      *) count=$((count + 1)) ;;
+    esac
+  done
+  echo "$count"
+}
+
+# cleanup PC_ID MODE, with this PC's public key on stdin. Every mode removes this PC's token and
+# key lines; unused also removes the helper when no PC holds a token, uninstall always does.
 cleanup() {
-  local pc=$1 remove_helper=$2 key type data
+  local pc=$1 mode=$2 key type data
+  [[ $mode =~ ^(keep|unused|uninstall)$ ]] || exit 64
   key=$(cat)
   type=$(cut -d' ' -f1 <<<"$key")
   data=$(cut -d' ' -f2 <<<"$key")
-  local locked=0
+  # a busy helper changes nothing, so a retry can still log in
   if [ -d "$root" ]; then
-    exec 9>"$root/maintenance.lock"
-    flock -w 45 9 && locked=1
-  fi
-  if [ "$locked" = 1 ]; then
+    lock
     rm -f "$root/clients/$pc" "$root/clients/$pc.pub"
+    if [ "$mode" = uninstall ] || { [ "$mode" = unused ] && [ -z "$(ls -A "$root/clients" 2>/dev/null)" ]; }; then
+      remove_helper
+    fi
   fi
   local keys="$HOME/.ssh/authorized_keys"
   # every authorized_keys writer holds this lock, including uninstall
@@ -247,15 +275,9 @@ cleanup() {
     chmod --reference="$keys" "$temp"
     mv "$temp" "$keys"
   fi
-  [ "$locked" = 1 ] || [ ! -d "$root" ] || exit 75
-  if [ "$remove_helper" = 1 ] && [ -d "$root" ]; then
-    if [ -z "$(ls -A "$root/clients" 2>/dev/null)" ]; then
-      remove_helper
-    fi
-  fi
 }
 
 case "${1:-}" in
-  identity | inspect | present | current | install | uninstaller | provision | start | rollback | prune | uninstall_helper | cleanup) "$@" ;;
+  identity | inspect | present | current | install | uninstaller | provision | record | clients | start | rollback | prune | uninstall_helper | cleanup) "$@" ;;
   *) exit 64 ;;
 esac
