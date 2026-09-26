@@ -24,6 +24,14 @@ function from14to15(data: any): any {
   return data;
 }
 
+function from15to16(data: any): any {
+  data.version = 16;
+  data.vrcxLogsEnabled = [
+    ...new Set([...(data.vrcxLogsEnabled ?? []), 'Invites', 'StatusChanges', 'GroupChanges']),
+  ];
+  return data;
+}
+
 async function from11to12(data: any): Promise<any> {
   data.mqttProtectedPassword = await protectSecret(data.mqttPassword);
   data.mqttPassword = null;
@@ -148,6 +156,7 @@ export const APP_SETTINGS_MIGRATION: MigrationDefinition<Versioned> = {
     12: from12to13,
     13: from13to14,
     14: from14to15,
+    15: from15to16,
   },
   normalizeCurrentVersion: (data) => normalizeWithDefaults(APP_SETTINGS_DEFAULT, data),
 };

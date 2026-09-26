@@ -211,19 +211,18 @@
       <div class="setting-category">
         <h2 transloco="settings.integrations.vrcx.title"></h2>
         <div class="settings">
-          <app-setting-row
-            label="settings.integrations.vrcx.sleepModeChanges.title"
-            description="settings.integrations.vrcx.sleepModeChanges.description"
-          >
-            <label class="switch-toggle">
-              <input
-                type="checkbox"
-                [checked]="appSettings.vrcxLogsEnabled.includes('SleepMode')"
-                (change)="toggleVrcxLogSleepMode()"
-              />
-              <span class="switch-toggle-slider"></span>
-            </label>
-          </app-setting-row>
+          @for (log of vrcxLogOptions; track log.type) {
+            <app-setting-row [label]="log.key + '.title'" [description]="log.key + '.description'">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="appSettings.vrcxLogsEnabled.includes(log.type)"
+                  (change)="toggleVrcxLog(log.type)"
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </app-setting-row>
+          }
         </div>
       </div>
     </div>

@@ -10,7 +10,12 @@ import { MqttService } from '../../../../services/mqtt/mqtt.service';
 import { SelectBoxItem } from 'src-ui/app/components/select-box/select-box.component';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { APP_SETTINGS_DEFAULT, AppSettings, DiscordActivityMode } from 'src-ui/app/models/settings';
+import {
+  APP_SETTINGS_DEFAULT,
+  AppSettings,
+  DiscordActivityMode,
+  VRCXEventLogType,
+} from 'src-ui/app/models/settings';
 import { VRChatAccountsModalComponent } from '../../../../components/vrchat-accounts-modal/vrchat-accounts-modal.component';
 
 @Component({
@@ -40,6 +45,12 @@ export class SettingsIntegrationsViewComponent implements OnInit {
     },
   ];
   discordActivityModeOption: SelectBoxItem | undefined;
+  vrcxLogOptions: { type: VRCXEventLogType; key: string }[] = [
+    { type: 'SleepMode', key: 'settings.integrations.vrcx.sleepModeChanges' },
+    { type: 'Invites', key: 'settings.integrations.vrcx.invites' },
+    { type: 'StatusChanges', key: 'settings.integrations.vrcx.statusChanges' },
+    { type: 'GroupChanges', key: 'settings.integrations.vrcx.groupChanges' },
+  ];
   appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
 
   constructor(
@@ -111,15 +122,12 @@ export class SettingsIntegrationsViewComponent implements OnInit {
     });
   }
 
-  protected toggleVrcxLogSleepMode() {
-    if (this.appSettings.vrcxLogsEnabled.includes('SleepMode')) {
-      this.settingsService.updateSettings({
-        vrcxLogsEnabled: this.appSettings.vrcxLogsEnabled.filter((e) => e !== 'SleepMode'),
-      });
-    } else {
-      this.settingsService.updateSettings({
-        vrcxLogsEnabled: [...this.appSettings.vrcxLogsEnabled, 'SleepMode'],
-      });
-    }
+  protected toggleVrcxLog(type: VRCXEventLogType) {
+    const enabled = this.appSettings.vrcxLogsEnabled;
+    this.settingsService.updateSettings({
+      vrcxLogsEnabled: enabled.includes(type)
+        ? enabled.filter((e) => e !== type)
+        : [...enabled, type],
+    });
   }
 }

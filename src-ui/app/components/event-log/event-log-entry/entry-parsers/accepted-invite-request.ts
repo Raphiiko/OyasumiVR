@@ -20,6 +20,8 @@ export class EventLogAcceptedInviteRequestEntryParser extends EventLogEntryParse
         return 'comp.event-log-entry.type.acceptedInviteRequest.subtitle.whitelist';
       case 'BLACKLIST':
         return 'comp.event-log-entry.type.acceptedInviteRequest.subtitle.blacklist';
+      case 'JOIN_ME':
+        return 'comp.event-log-entry.type.acceptedInviteRequest.subtitle.joinMe';
     }
   }
 }
