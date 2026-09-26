@@ -30,13 +30,16 @@ struct Connection {
     task: JoinHandle<()>,
 }
 
+/// The running task per pairing id, with the pairing it started from.
 static CONNECTIONS: LazyLock<Mutex<HashMap<String, Connection>>> = LazyLock::new(Default::default);
+/// The last published state per pairing id, removed when its pairing goes.
 static STATES: LazyLock<Mutex<HashMap<String, State>>> = LazyLock::new(Default::default);
 
 /// Keeps one connection per pairing. A pairing whose settings are unchanged keeps its connection.
 pub async fn set_pairings(pairings: Vec<Pairing>) {
     let mut connections = CONNECTIONS.lock().await;
     let mut kept = HashMap::new();
+
     // keep unchanged pairings, restart changed or new ones
     for pairing in pairings {
         if !valid_pc_id(&pairing.id) {
@@ -64,6 +67,7 @@ pub async fn set_pairings(pairings: Vec<Pairing>) {
             replaced.task.abort();
         }
     }
+
     // stop connections whose pairing is gone
     for (id, connection) in connections.drain() {
         connection.task.abort();
@@ -145,11 +149,13 @@ async fn run(shared: Arc<Mutex<Pairing>>) {
                     continue;
                 }
             }
+
             // something this PC trusts changed, so try again now
             Attempt::Retry => {
                 retries += 1;
                 continue;
             }
+
             // failed: report it, stop on a changed host key
             Attempt::Failed(status) => {
                 let pairing = shared.lock().await.clone();
@@ -165,6 +171,7 @@ async fn run(shared: Arc<Mutex<Pairing>>) {
                 }
             }
         }
+
         // wait before the next attempt, doubling up to a minute
         tokio::time::sleep(backoff).await;
         backoff = (backoff * 2).min(MAX_BACKOFF);
@@ -222,12 +229,15 @@ fn ssh_failure(error: SshError) -> Attempt {
 
 /// The helper no longer knows this PC's token, so write it again over SSH.
 async fn restore_token(pairing: &Pairing) -> Attempt {
+    // write the token file again over SSH
     let session = match ssh::connect(&pairing.access).await {
         Ok(session) => session,
         Err(error) => return ssh_failure(error),
     };
     let result = setup::provision(&session, &pairing.id, &pairing.token, &pairing.public_key).await;
     session.close().await;
+
+    // retry at once when it worked
     match result {
         Ok(_) => {
             info!("[SteamFrame] Restored this PC's helper token");
@@ -250,6 +260,7 @@ async fn repin(pairing: &Pairing, shared: &Mutex<Pairing>, observed: &str) -> At
     };
     let result = setup::provision(&session, &pairing.id, &pairing.token, &pairing.public_key).await;
     session.close().await;
+
     // trust it only if WSS saw the same one
     match result {
         Ok(provisioned) if provisioned.cert_pin == observed => {
@@ -284,6 +295,7 @@ async fn find_moved_helper(pairing: &Pairing, shared: &Mutex<Pairing>) -> Attemp
             &pairing.token,
         )
         .await;
+
         // a wrong token still proves the pinned certificate
         let verified = match result {
             Ok((socket, _)) => {
@@ -292,6 +304,7 @@ async fn find_moved_helper(pairing: &Pairing, shared: &Mutex<Pairing>) -> Attemp
             }
             Err(error) => error == WssError::Unauthorized,
         };
+
         // store the new address and retry there
         if verified {
             info!(

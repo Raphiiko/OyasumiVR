@@ -49,11 +49,13 @@ fn instance_names(response: &[u8]) -> Vec<String> {
 /// Binds the mDNS port when it can, so answers sent to the multicast group arrive too. Other
 /// mDNS listeners share the port through address reuse.
 fn socket(interfaces: &[Ipv4Addr]) -> std::io::Result<UdpSocket> {
+    // open a UDP socket that shares the mDNS port
     let socket = socket2::Socket::new(
         socket2::Domain::IPV4,
         socket2::Type::DGRAM,
         Some(socket2::Protocol::UDP),
     )?;
+
     // prefer port 5353, else any port
     socket.set_reuse_address(true)?;
     if socket
@@ -62,6 +64,7 @@ fn socket(interfaces: &[Ipv4Addr]) -> std::io::Result<UdpSocket> {
     {
         socket.bind(&SocketAddrV4::new(Ipv4Addr::UNSPECIFIED, 0).into())?;
     }
+
     // listen on the mDNS group on every interface
     for interface in interfaces {
         if let Err(error) = socket.join_multicast_v4(&MDNS_GROUP, interface) {
@@ -77,6 +80,7 @@ pub async fn discover(duration: Duration) -> Vec<Candidate> {
     let Some(query) = query() else {
         return Vec::new();
     };
+
     // list this PC's IPv4 interfaces
     let interfaces: Vec<Ipv4Addr> = if_addrs::get_if_addrs()
         .unwrap_or_default()
@@ -94,6 +98,7 @@ pub async fn discover(duration: Duration) -> Vec<Candidate> {
             return Vec::new();
         }
     };
+
     // ask on each interface
     for interface in &interfaces {
         if socket2::SockRef::from(&socket)
@@ -103,6 +108,7 @@ pub async fn discover(duration: Duration) -> Vec<Candidate> {
             let _ = socket.send_to(&query, (MDNS_GROUP, 5353)).await;
         }
     }
+
     // collect answers until the deadline, one per address
     let deadline = Instant::now() + duration;
     let mut found = BTreeMap::new();

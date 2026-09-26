@@ -19,6 +19,7 @@ async fn main() -> ExitCode {
             println!("{}", serde_json::to_string(&INFO).unwrap());
             ExitCode::SUCCESS
         }
+
         // run the websocket server until it fails
         Some("serve") => {
             let Some(root) = data_dir(args.next()) else {

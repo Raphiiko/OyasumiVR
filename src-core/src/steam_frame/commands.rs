@@ -37,6 +37,7 @@ pub async fn steam_frame_create_pairing_keys() -> Result<PairingKeys, String> {
     })
     .await
     .map_err(|e| e.to_string())??;
+
     // add a random token for the helper
     Ok(PairingKeys {
         private_key: credentials.private_key,
