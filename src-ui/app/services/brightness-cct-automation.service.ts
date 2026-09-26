@@ -429,14 +429,17 @@ export class BrightnessCctAutomationService {
     );
 
     if (brightnessAutomation)
-      this.onAutomationTrigger(
-        brightnessAutomation,
-        config[brightnessAutomation],
-        true,
-        false,
-        true,
-        false
-      );
+      void this.hardwareBrightnessControl.driverSteamFrame.whenHmdReady().then((ready) => {
+        if (!ready) return;
+        this.onAutomationTrigger(
+          brightnessAutomation,
+          config[brightnessAutomation],
+          true,
+          false,
+          true,
+          false
+        );
+      });
     if (cctAutomation)
       this.onAutomationTrigger(cctAutomation, config[cctAutomation], true, false, false, true);
   }

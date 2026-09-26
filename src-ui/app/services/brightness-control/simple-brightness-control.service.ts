@@ -77,7 +77,9 @@ export class SimpleBrightnessControlService {
         tap((available) => (this.hardwareBrightnessDriverAvailable = available)),
         filter(() => !this._advancedMode.value),
         skip(1),
-        distinctUntilChanged()
+        distinctUntilChanged(),
+        // a device that reports its own brightness keeps it across availability changes
+        filter(() => !this.hardwareBrightnessControl.lastActiveDriver?.reportsBrightness)
       )
       .subscribe(() => {
         this.setBrightness(this.brightness, {
@@ -85,6 +87,27 @@ export class SimpleBrightnessControlService {
           logReason: undefined,
         });
       });
+    this.hardwareBrightnessControl.adoptedBrightness.subscribe((hardware) =>
+      this.adoptHardwareBrightness(hardware)
+    );
+  }
+
+  /** Derives the simple value from a hardware value the device reported. */
+  private async adoptHardwareBrightness(hardware: number) {
+    if (this._advancedMode.value || this._activeTransition.value) return;
+    const [min, max] = await firstValueFrom(this.hardwareBrightnessControl.brightnessBounds);
+    if (hardware <= min + 0.01) {
+      this._brightness.next(clamp((min * this.softwareBrightnessControl.brightness) / 100, 0, 100));
+      return;
+    }
+    // the headset's choice wins over leftover software dimming
+    this._brightness.next(clamp(min + ((hardware - min) / (max - min)) * (100 - min), 0, 100));
+    if (this.softwareBrightnessControl.brightness < 100) {
+      await this.softwareBrightnessControl.setBrightness(100, {
+        cancelActiveTransition: true,
+        logReason: null,
+      });
+    }
   }
 
   transitionBrightness(
@@ -95,6 +118,18 @@ export class SimpleBrightnessControlService {
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
     if (this._brightness.value === percentage) {
       const task = new CancellableTask();
+      task.start();
+      return task;
+    }
+    // no PC loop writes a device that reports its own brightness
+    if (
+      this.hardwareBrightnessDriverAvailable &&
+      this.hardwareBrightnessControl.lastActiveDriver?.reportsBrightness
+    ) {
+      this.cancelActiveTransition();
+      const task = new CancellableTask(() =>
+        this.setBrightness(percentage, { cancelActiveTransition: false, logReason: opt.logReason })
+      );
       task.start();
       return task;
     }

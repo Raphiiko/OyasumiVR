@@ -1,0 +1,146 @@
+import { invoke } from '@tauri-apps/api/core';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { APP_SETTINGS_DEFAULT } from '../../../models/settings';
+import type { OVRDevice } from '../../../models/ovr-device';
+import type {
+  SteamFrameBrightness,
+  SteamFrameConnectionState,
+  SteamFramePairing,
+} from '../../../models/steam-frame';
+import type { OpenVRStatus } from '../../openvr.service';
+import { SteamFrameHardwareBrightnessControlDriver } from './steam-frame-hardware-brightness-control-driver';
+
+vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn() }));
+vi.mock('@tauri-apps/plugin-log', () => ({ warn: vi.fn() }));
+
+const SERIAL = 'FPTEST000001';
+
+function brightness(percentage: number, overrides: Partial<SteamFrameBrightness> = {}) {
+  return { runtime: true, supported: true, min: 9, max: 125, percentage, ...overrides };
+}
+
+function setup() {
+  const status = new BehaviorSubject<OpenVRStatus>('INITIALIZED');
+  const devices = new BehaviorSubject<OVRDevice[]>([
+    { class: 'HMD', serialNumber: SERIAL } as OVRDevice,
+  ]);
+  const pairings = new BehaviorSubject<SteamFramePairing[]>([
+    { id: 'pairing-1', complete: true, identity: { serial: SERIAL } } as SteamFramePairing,
+  ]);
+  const connections = new BehaviorSubject<Record<string, SteamFrameConnectionState>>({});
+  const driver = new SteamFrameHardwareBrightnessControlDriver(
+    new BehaviorSubject(structuredClone(APP_SETTINGS_DEFAULT)),
+    { status, devices },
+    pairings,
+    connections
+  );
+  const updates: number[] = [];
+  driver.brightnessUpdates.subscribe((value) => updates.push(value));
+  const report = (value: SteamFrameBrightness | null, status = 'connected') =>
+    connections.next({
+      'pairing-1': {
+        pairingId: 'pairing-1',
+        status,
+        brightness: value,
+      } as SteamFrameConnectionState,
+    });
+  const available = () => firstValueFrom(driver.isAvailable());
+  return { status, devices, pairings, driver, updates, report, available };
+}
+
+describe('SteamFrameHardwareBrightnessControlDriver', () => {
+  beforeEach(() => {
+    vi.mocked(invoke).mockReset();
+  });
+
+  it('is available only for a connected, supported, paired Frame that is the active HMD', async () => {
+    const h = setup();
+    expect(await h.available()).toBe(false);
+    h.report(brightness(40));
+    expect(await h.available()).toBe(true);
+
+    const cases: [string, () => void][] = [
+      ['offline', () => h.report(brightness(40), 'offline')],
+      ['incompatible helper', () => h.report(brightness(40), 'needsAppUpdate')],
+      ['no report yet', () => h.report(null)],
+      ['no SteamVR session', () => h.report(brightness(40, { runtime: false, supported: false }))],
+      ['unsupported', () => h.report(brightness(40, { supported: false }))],
+      ['another HMD', () => h.devices.next([{ class: 'HMD', serialNumber: 'OTHER' } as OVRDevice])],
+      ['SteamVR stopped', () => h.status.next('INACTIVE')],
+      ['unfinished pairing', () => h.pairings.next([{ ...h.pairings.value[0], complete: false }])],
+    ];
+    for (const [name, change] of cases) {
+      change();
+      expect(await h.available(), name).toBe(false);
+      h.status.next('INITIALIZED');
+      h.devices.next([{ class: 'HMD', serialNumber: SERIAL } as OVRDevice]);
+      h.pairings.next([{ ...h.pairings.value[0], complete: true }]);
+      h.report(brightness(40));
+      expect(await h.available(), `${name} restored`).toBe(true);
+    }
+    expect(vi.mocked(invoke)).not.toHaveBeenCalled();
+  });
+
+  it('adopts each report with its bounds, clamped, and never writes it', async () => {
+    const h = setup();
+    h.report(brightness(40, { min: 20, max: 110 }));
+    expect(h.driver.getBrightnessBounds()).toEqual([20, 110]);
+    h.report(brightness(140, { min: 20, max: 110 }));
+    h.report(brightness(5, { min: 20, max: 110 }));
+    expect(h.updates).toEqual([40, 110, 20]);
+    expect(await h.driver.getBrightnessPercentage()).toBe(20);
+    expect(vi.mocked(invoke)).not.toHaveBeenCalled();
+  });
+
+  it('keeps one command in flight and sends only the newest waiting value', async () => {
+    const h = setup();
+    h.report(brightness(40));
+    const replies: ((value: number) => void)[] = [];
+    vi.mocked(invoke).mockImplementation(
+      () => new Promise((resolve) => replies.push(resolve as (value: number) => void))
+    );
+    const first = h.driver.setBrightnessPercentage(50);
+    void h.driver.setBrightnessPercentage(60);
+    void h.driver.setBrightnessPercentage(70);
+    // a report during the command leaves the requested value on screen
+    h.report(brightness(45));
+    expect(vi.mocked(invoke)).toHaveBeenCalledOnce();
+    replies[0](50);
+    await vi.waitFor(() => expect(vi.mocked(invoke)).toHaveBeenCalledTimes(2));
+    expect(vi.mocked(invoke)).toHaveBeenLastCalledWith('steam_frame_set_brightness', {
+      pairingId: 'pairing-1',
+      percentage: 70,
+    });
+    replies[1](69.99);
+    await first;
+    expect(h.updates).toEqual([40, 69.99]);
+  });
+
+  it('shows the reported value after a failed command', async () => {
+    const h = setup();
+    h.report(brightness(40));
+    vi.mocked(invoke).mockRejectedValue('offline');
+    await h.driver.setBrightnessPercentage(80);
+    expect(h.updates).toEqual([40, 40]);
+  });
+
+  it('is ready for HMD connect automations after the first report of a paired Frame', async () => {
+    const h = setup();
+    let ready: boolean | undefined;
+    void h.driver.whenHmdReady().then((value) => (ready = value));
+    await Promise.resolve();
+    expect(ready).toBeUndefined();
+    h.report(brightness(40));
+    await vi.waitFor(() => expect(ready).toBe(true));
+
+    // another headset is ready at once, and a lost HMD never is
+    h.devices.next([{ class: 'HMD', serialNumber: 'OTHER' } as OVRDevice]);
+    expect(await h.driver.whenHmdReady()).toBe(true);
+    h.devices.next([{ class: 'HMD', serialNumber: SERIAL } as OVRDevice]);
+    h.report(null);
+    const waiting = h.driver.whenHmdReady();
+    h.devices.next([]);
+    expect(await waiting).toBe(false);
+  });
+});

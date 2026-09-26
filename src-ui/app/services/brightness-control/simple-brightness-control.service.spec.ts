@@ -7,7 +7,7 @@ vi.mock('@tauri-apps/api/event', () => ({ listen: vi.fn(async () => () => {}) })
 vi.mock('@tauri-apps/plugin-log', () => ({ info: vi.fn(), warn: vi.fn() }));
 type Dependencies = ConstructorParameters<typeof SimpleBrightnessControlService>;
 
-async function setup(advancedMode = false) {
+async function setup(advancedMode = false, reportsBrightness = false) {
   const configs = new BehaviorSubject({
     ...structuredClone(AUTOMATION_CONFIGS_DEFAULT),
     BRIGHTNESS_AUTOMATIONS: { ...AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS, advancedMode },
@@ -15,11 +15,16 @@ async function setup(advancedMode = false) {
   const hardware = {
     driverIsAvailable: new BehaviorSubject(false),
     brightnessBounds: new BehaviorSubject([20, 100]),
+    adoptedBrightness: new Subject<number>(),
+    lastActiveDriver: reportsBrightness ? { reportsBrightness: true } : null,
     setBrightness: vi.fn<Dependencies[1]['setBrightness']>().mockResolvedValue(undefined),
     cancelActiveTransition: vi.fn(),
   };
   const software = {
-    setBrightness: vi.fn<Dependencies[2]['setBrightness']>().mockResolvedValue(undefined),
+    brightness: 100,
+    setBrightness: vi.fn<Dependencies[2]['setBrightness']>(async (percentage: number) => {
+      software.brightness = percentage;
+    }),
     cancelActiveTransition: vi.fn(),
   };
   const service = new SimpleBrightnessControlService(
@@ -140,5 +145,71 @@ describe('simple brightness mode changes', () => {
     await new Promise((resolve) => setTimeout(resolve, 0));
     expect(h.software.setBrightness).not.toHaveBeenCalled();
     expect(h.hardware.setBrightness).not.toHaveBeenCalled();
+  });
+});
+
+describe('simple brightness with a device that reports its brightness', () => {
+  const settle = () => new Promise((resolve) => setTimeout(resolve, 0));
+
+  async function reporting() {
+    const h = await setup(false, true);
+    h.hardware.brightnessBounds.next([9, 125]);
+    h.hardware.driverIsAvailable.next(true);
+    await settle();
+    h.software.setBrightness.mockClear();
+    return h;
+  }
+
+  it('derives the value from hardware at the minimum and keeps software dimming', async () => {
+    const h = await reporting();
+    h.software.brightness = 50;
+    h.hardware.adoptedBrightness.next(9);
+    await settle();
+    expect(h.service.brightness).toBe(4.5);
+    expect(h.software.setBrightness).not.toHaveBeenCalled();
+  });
+
+  it('derives the value from hardware above the minimum and clears software dimming', async () => {
+    const h = await reporting();
+    h.software.brightness = 50;
+    h.hardware.adoptedBrightness.next(67);
+    await settle();
+    expect(h.service.brightness).toBeCloseTo(9 + (58 / 116) * 91);
+    expect(h.software.setBrightness).toHaveBeenCalledExactlyOnceWith(100, expect.anything());
+    h.hardware.adoptedBrightness.next(125);
+    await settle();
+    expect(h.service.brightness).toBe(100);
+    expect(h.software.setBrightness).toHaveBeenCalledOnce();
+  });
+
+  it('ignores reports in advanced mode', async () => {
+    const h = await reporting();
+    h.mode(true);
+    h.hardware.adoptedBrightness.next(67);
+    await settle();
+    expect(h.service.brightness).toBe(100);
+  });
+
+  it('writes nothing when the driver becomes available or unavailable', async () => {
+    const h = await setup(false, true);
+    await h.service.setBrightness(40);
+    h.software.setBrightness.mockClear();
+    h.hardware.driverIsAvailable.next(true);
+    await settle();
+    h.hardware.driverIsAvailable.next(false);
+    await settle();
+    expect(h.software.setBrightness).not.toHaveBeenCalled();
+    expect(h.hardware.setBrightness).not.toHaveBeenCalled();
+    expect(h.service.brightness).toBe(40);
+    expect(h.software.brightness).toBe(40);
+  });
+
+  it('sets a transition target in one command', async () => {
+    const h = await reporting();
+    const task = h.service.transitionBrightness(50, 10000);
+    await settle();
+    expect(task.isComplete()).toBe(true);
+    expect(h.hardware.setBrightness).toHaveBeenCalledOnce();
+    expect(h.service.brightness).toBe(50);
   });
 });
