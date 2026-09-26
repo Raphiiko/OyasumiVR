@@ -284,9 +284,10 @@ pub async fn install_bundled(
         let digest = hex(&Sha256::digest(&helper));
         let port = HELPER_PORT.to_string();
         let seen = hex(&Sha256::digest(inspect.trim().as_bytes()));
+        let fresh = if fresh { "1" } else { "0" };
         let output = run(
             session,
-            &["install", BUNDLED_VERSION, &digest, &port, &seen],
+            &["install", BUNDLED_VERSION, &digest, &port, &seen, fresh],
             &helper,
         )
         .await?;
@@ -300,6 +301,7 @@ pub async fn install_bundled(
                 });
             }
             EXIT_CHANGED => continue,
+            EXIT_MISSING => return Err(InstallError::Missing),
             EXIT_BUSY => return Err(InstallError::Busy),
             EXIT_DIGEST => return Err(InstallError::Corrupted),
             status => {
