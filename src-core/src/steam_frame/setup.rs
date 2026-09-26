@@ -233,6 +233,8 @@ pub struct Inspected {
     pub decision: InstallDecision,
     /// Whether this call installed the bundled helper.
     pub replaced: bool,
+    /// Whether that install was the first one in an empty helper folder.
+    pub created: bool,
 }
 
 /// Installs the bundled helper when the installed one needs it, deciding again when another PC
@@ -272,6 +274,7 @@ pub async fn install_bundled(
                 installed,
                 decision,
                 replaced: false,
+                created: false,
             });
         }
 
@@ -293,6 +296,7 @@ pub async fn install_bundled(
                     installed,
                     decision,
                     replaced: true,
+                    created: output.stdout().lines().any(|line| line == "created"),
                 });
             }
             EXIT_CHANGED => continue,
@@ -335,19 +339,31 @@ impl From<SshError> for SetupOutcome {
 /// Verifies the headset, installs or reuses the helper, and completes only after an
 /// authenticated WSS handshake. Every step is safe to repeat, which is what Resume relies on.
 pub async fn setup(request: SetupRequest, on_stage: impl Fn(Stage)) -> SetupResult {
-    let mut installed = false;
+    let mut installed = Installed::default();
     let outcome = match run_setup(&request, &on_stage, &mut installed).await {
         Ok(outcome) | Err(outcome) => outcome,
     };
     info!("[SteamFrame] Setup finished: {outcome:?}");
-    SetupResult { outcome, installed }
+    SetupResult {
+        outcome,
+        installed: installed.any,
+    }
+}
+
+/// What this setup call installed, so a failure knows what to remove.
+#[derive(Default)]
+struct Installed {
+    /// This call installed the bundled helper.
+    any: bool,
+    /// That install created the helper folder.
+    created: bool,
 }
 
 /// Checks the request, then runs the setup steps in one SSH session.
 async fn run_setup(
     request: &SetupRequest,
     on_stage: &impl Fn(Stage),
-    installed: &mut bool,
+    installed: &mut Installed,
 ) -> Result<SetupOutcome, SetupOutcome> {
     // refuse requests that setup cannot run safely
     if !valid_pc_id(&request.pc_id) {
@@ -368,10 +384,10 @@ async fn run_setup(
     // run every step in one session
     let session = ssh::connect(&request.access).await?;
     let result = setup_session(request, &session, on_stage, installed).await;
-    // a failed reinstall removes the helper it installed
-    if result.is_err() && *installed && request.remove_on_failure {
+    // a failed reinstall removes a helper folder it created
+    if result.is_err() && installed.created && request.remove_on_failure {
         match run(&session, &["uninstall_helper"], b"").await {
-            Ok(output) if output.status == 0 => *installed = false,
+            Ok(output) if output.status == 0 => *installed = Installed::default(),
             Ok(output) => warn!(
                 "[SteamFrame] Removing the helper after a failed install exited with {}",
                 output.status
@@ -390,7 +406,7 @@ async fn setup_session(
     request: &SetupRequest,
     session: &Session,
     on_stage: &impl Fn(Stage),
-    installed: &mut bool,
+    installed: &mut Installed,
 ) -> Result<SetupOutcome, SetupOutcome> {
     let failed = |message: String| SetupOutcome::Failed { message };
 
@@ -429,7 +445,10 @@ async fn setup_session(
             })
         }
         _ if inspected.replaced => {
-            *installed = true;
+            *installed = Installed {
+                any: true,
+                created: inspected.created,
+            };
             on_stage(Stage::Installed);
         }
         _ => {}
@@ -463,7 +482,7 @@ async fn setup_session(
             helper_version: hello.info.version,
         });
     }
-    if *installed && hello.info.version != BUNDLED_VERSION {
+    if installed.any && hello.info.version != BUNDLED_VERSION {
         return Err(failed(format!(
             "the helper reports version {} after installing {BUNDLED_VERSION}",
             hello.info.version
