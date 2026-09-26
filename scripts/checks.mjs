@@ -105,7 +105,7 @@ for (const [component, directory] of Object.entries(crates)) {
     if (component === 'core' && operation !== 'format') args.splice(1, 0, '--no-default-features');
     checks[`${operation}:${component}`] = {
       group: 'native',
-      windows: operation !== 'format',
+      windows: operation !== 'format' && component !== 'frame-helper',
       cwd: directory,
       command: ['cargo', ...args],
     };

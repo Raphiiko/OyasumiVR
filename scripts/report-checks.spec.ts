@@ -159,7 +159,7 @@ it('emits complete job matrices when all checks are selected', () => {
   expect(outputs.matrix).toHaveLength(37);
   expect(
     outputs.matrix.filter((job: { runner: string }) => job.runner === 'windows-2025')
-  ).toHaveLength(23);
+  ).toHaveLength(20);
   expect(outputs.matrix.filter((job: { npm: boolean }) => job.npm)).toHaveLength(7);
   expect(outputs.matrix.filter((job: { saveCache: boolean }) => job.saveCache)).toHaveLength(7);
   expect(

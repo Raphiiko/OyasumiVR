@@ -70,7 +70,7 @@ jobs:
         if: matrix.rust
         run: rustup show
       - name: Install protobuf compiler
-        if: matrix.compile
+        if: matrix.compile && runner.os == 'Windows'
         run: |
           $archive = Join-Path $env:RUNNER_TEMP 'protoc.zip'
           Invoke-WebRequest https://github.com/protocolbuffers/protobuf/releases/download/v35.1/protoc-35.1-win64.zip -OutFile $archive
