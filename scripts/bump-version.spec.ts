@@ -7,6 +7,7 @@ import { expect, it } from 'vitest';
 const cargoLocks = [
   'src-core/Cargo.lock',
   'src-elevated-sidecar/Cargo.lock',
+  'src-frame-helper/Cargo.lock',
   'src-privileged-launcher/Cargo.lock',
   'src-shared-rust/Cargo.lock',
 ];
@@ -24,6 +25,7 @@ it.each(['beta', 'release'])(
         'src-core/tauri.conf.json',
         'src-core/Cargo.toml',
         'src-elevated-sidecar/Cargo.toml',
+        'src-frame-helper/Cargo.toml',
         'src-privileged-launcher/Cargo.toml',
         'src-shared-rust/Cargo.toml',
         ...cargoLocks,
@@ -52,7 +54,7 @@ it.each(['beta', 'release'])(
       for (const path of cargoLocks) {
         const versions = [
           ...readFileSync(join(directory, path), 'utf8').matchAll(
-            /name = "oyasumivr(?:-shared|-elevated-sidecar|-privileged-launcher)?"\r?\nversion = "([^"]+)"/g
+            /name = "oyasumivr(?:-shared|-elevated-sidecar|-frame-helper|-privileged-launcher)?"\r?\nversion = "([^"]+)"/g
           ),
         ].map(([, lockedVersion]) => lockedVersion);
         expect(versions.length, path).toBeGreaterThan(0);

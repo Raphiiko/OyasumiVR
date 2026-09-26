@@ -11,6 +11,7 @@ const webTestInputs = new Set([
   'src-core/tauri.conf.json',
   'src-core/Cargo.toml',
   'src-elevated-sidecar/Cargo.toml',
+  'src-frame-helper/Cargo.toml',
   'src-privileged-launcher/Cargo.toml',
   'src-shared-rust/Cargo.toml',
 ]);

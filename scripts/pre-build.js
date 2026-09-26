@@ -10,6 +10,7 @@ requireSigningKeyForShippableBuild();
 if (process.platform === 'win32') {
   await import('../src-memory-watch/build.mjs');
 }
+await import('../src-frame-helper/build.mjs');
 
 //
 // COPY FONTS
