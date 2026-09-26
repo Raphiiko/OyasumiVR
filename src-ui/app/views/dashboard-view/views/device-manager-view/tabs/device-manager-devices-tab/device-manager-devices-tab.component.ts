@@ -528,9 +528,15 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     if (!this.framePairing.identityOf(device)) return null;
     const active = this.isDeviceObserved(device.id);
     const pairing = this.framePairing.pairingFor(device.id);
+
+    // unpaired: offer pairing while SteamVR uses it
     if (!pairing?.complete) return active ? { action: 'pair' } : null;
+
+    // healthy: a badge only
     const status = this.framePairing.connections()[pairing.id]?.status ?? 'connecting';
     if (status === 'connected' || status === 'connecting') return { badge: status };
+
+    // offline: show when it was last seen
     if (status === 'offline') {
       return pairing.lastSeen
         ? {
@@ -543,12 +549,15 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
           }
         : { pill: { key: 'offline', icon: 'cloud_off', tone: 'neutral' } };
     }
+
+    // a problem: its pill, and Pair again when unrecognized
     return {
       pill: FRAME_PILLS[status],
       action: FRAME_PILLS[status].key === 'notRecognized' && active ? 'pairAgain' : undefined,
     };
   }
 
+  /** Opens the explanation for a clicked pill. */
   explainFramePill(pill: FramePill) {
     this.modalService
       .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
@@ -560,6 +569,7 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
       .subscribe();
   }
 
+  /** Formats a past time as "just now" or a relative time in the active language. */
   private timeAgo(time: number): string {
     const minutes = Math.trunc((time - Date.now()) / 60000);
     if (minutes === 0) return this.transloco.translate('steamFrame.status.justNow');
