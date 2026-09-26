@@ -397,11 +397,12 @@ export class SteamFramePairingService {
         return this.patchFlow({
           page: 'setupFailed',
           busy: false,
-          error: {
-            identityMissing: 'identityMissing',
-            helperBusy: 'helperBusy',
-            unreachable: 'offline',
-          }[result.status as string],
+          error:
+            {
+              identityMissing: 'identityMissing',
+              helperBusy: 'helperBusy',
+              unreachable: 'offline',
+            }[result.status as string] ?? 'setupFailed',
         });
     }
   }

@@ -2798,18 +2798,20 @@
       "tryAgain": "Try again",
       "yesPair": "Yes, pair it"
     },
+    "errorCode": "Error code: {code}",
     "errors": {
       "helperBusy": "Another PC is updating OyasumiVR Helper on this headset. Wait a minute, then try again.",
       "identityMissing": "OyasumiVR couldn't confirm which headset this is. Make sure the headset is awake, then try again.",
-      "keys": "OyasumiVR couldn't create a pairing key on this PC. Try again.",
+      "keys": "Something went wrong while starting the pairing. Try again.",
       "offline": "The headset couldn't be reached. Check that it is awake and on the same network, then try again.",
-      "persistence": "OyasumiVR couldn't save the pairing on this PC. Check that local storage is available and try again.",
-      "wrongDeviceAccessLeft": "OyasumiVR couldn't confirm that it removed this PC's approval from that headset. The approval can't be used anymore, because this PC deleted its key, and you can remove it in the headset's developer settings."
+      "persistence": "Something went wrong on this PC. Try again.",
+      "setupFailed": "Something went wrong during setup. Try again.",
+      "wrongDeviceAccessLeft": "OyasumiVR couldn't finish cleaning up that headset. Anything left there is harmless."
     },
     "headset": "Steam Frame",
     "pages": {
       "accessLost": {
-        "body": "The headset no longer accepts this PC's saved access. Open <kbd>Pair new host</kbd> in the headset to approve this PC again. OyasumiVR still checks that it is the same headset.",
+        "body": "The headset no longer recognizes this PC. Open <kbd>Pair new host</kbd> in the headset to approve it again.",
         "title": "Approve this PC again"
       },
       "awaiting": {
@@ -2818,13 +2820,13 @@
         "title": "Approve the request on your headset"
       },
       "cancelling": {
-        "access": "OyasumiVR removes this PC's approval from the headset, and OyasumiVR Helper if this pairing installed it and no other PC uses it.",
+        "access": "OyasumiVR removes what this pairing set up on the headset.",
         "body": "Waiting for the current step to finish, then cleaning up.",
         "title": "Cancelling pairing"
       },
       "cleanupFailed": {
         "body": "OyasumiVR couldn't remove what this pairing left on the headset. To remove it yourself, run this command in a terminal on the headset.",
-        "note": "Run it as the user who approved this PC. If the file doesn't exist, OyasumiVR Helper was never installed on this headset.",
+        "note": "If the command says the file doesn't exist, OyasumiVR Helper isn't installed on this headset.",
         "title": "Couldn't finish cleaning up"
       },
       "declined": {
@@ -2902,7 +2904,7 @@
         "title": "No answer from the headset"
       },
       "uncertain": {
-        "body": "The headset didn't confirm the request, and this PC has no access yet. Check the headset, then send the request again.",
+        "body": "The headset didn't confirm the request. Check the headset, then send the request again.",
         "title": "Approval couldn't be confirmed"
       },
       "wrongDevice": {
@@ -2931,7 +2933,7 @@
       "request": "Contacting the headset…",
       "search": "Searching the network…",
       "setup": "Setting up…",
-      "wrongDevice": "Removing this PC's access…"
+      "wrongDevice": "Cleaning up…"
     }
   },
   "systemMicMuteAutomations": {
