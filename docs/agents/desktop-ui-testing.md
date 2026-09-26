@@ -29,9 +29,10 @@ $head, $treeStatus | Set-Content (Join-Path $session 'head.txt')
 Check that this worktree has no instance running yet:
 
 ```powershell
-Get-CimInstance Win32_Process -Filter "Name='oyasumivr.exe'" |
-    Where-Object ExecutablePath -eq $executable |
-    Select-Object ProcessId, ExecutablePath, CommandLine
+Get-CimInstance Win32_Process | Where-Object {
+    $_.ExecutablePath -eq $executable -or
+    ($_.Name -in 'node.exe', 'cargo.exe' -and $_.CommandLine -like "*$workspace\*")
+} | Select-Object ProcessId, Name, ExecutablePath, CommandLine
 ```
 
 Instances from other worktrees are expected; leave them alone. If a process from this worktree runs
