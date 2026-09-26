@@ -144,8 +144,13 @@ export class DeviceManagerConfigModalComponent
   async unpairFrame() {
     const { SteamFrameUnpairModalComponent } =
       await import('../steam-frame-unpair-modal/steam-frame-unpair-modal.component');
+    // an unpair keeps running after the dialog closes, so Escape must not look like a cancel
     this.modalService
-      .addModal(SteamFrameUnpairModalComponent, { deviceId: this.device.id })
+      .addModal(
+        SteamFrameUnpairModalComponent,
+        { deviceId: this.device.id },
+        { closeOnEscape: false }
+      )
       .subscribe();
   }
 
