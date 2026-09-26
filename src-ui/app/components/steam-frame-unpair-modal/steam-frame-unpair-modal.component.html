@@ -1,0 +1,84 @@
+<div class="pane modal modal-lg" @fadeUp *transloco="let t; prefix: 'steamFrame'">
+  @switch (page()) {
+    @case ('checking') {
+      <div class="pane-title">{{ t('unpair.choose.title') }}</div>
+      <div class="pane-content">
+        <p>{{ t('unpair.checking') }}</p>
+      </div>
+      <div class="pane-actions spread">
+        <button class="btn btn-secondary" (click)="close()">{{ t('actions.cancel') }}</button>
+      </div>
+    }
+    @case ('choose') {
+      <div class="pane-title">{{ t('unpair.choose.title') }}</div>
+      <div class="pane-content">
+        <p>{{ t('unpair.choose.body') }}</p>
+        @if (otherPcs() === 1) {
+          <p class="warning">{{ t('unpair.choose.otherPcsOne') }}</p>
+        } @else if (otherPcs() > 1) {
+          <p class="warning">{{ t('unpair.choose.otherPcsMany', { count: otherPcs() }) }}</p>
+        }
+        <p>{{ t('unpair.choose.command') }}</p>
+        <div class="command-row">
+          <pre class="command">{{ uninstallCommand }}</pre>
+          <button class="btn btn-secondary" (click)="copyCommand()">
+            {{ t(copied() ? 'actions.copied' : 'actions.copyCommand') }}
+          </button>
+        </div>
+      </div>
+      <div class="pane-actions spread">
+        <button class="btn btn-secondary" (click)="close()">{{ t('actions.cancel') }}</button>
+        <button class="btn btn-secondary" (click)="unpair(false)">
+          {{ t('actions.keepHelper') }}
+        </button>
+        <button class="btn btn-primary" (click)="unpair(true)">
+          {{ t('actions.uninstallHelper') }}
+        </button>
+      </div>
+    }
+    @case ('working') {
+      <div class="pane-title">{{ t('unpair.working.title') }}</div>
+      <div class="pane-content">
+        <p>{{ t(uninstalling() ? 'unpair.working.uninstall' : 'unpair.working.keep') }}</p>
+      </div>
+      <div class="pane-actions spread">
+        <button class="btn btn-primary" disabled>{{ t('unpair.working.button') }}</button>
+      </div>
+    }
+    @case ('failed') {
+      <div class="pane-title">{{ t('unpair.failed.title') }}</div>
+      <div class="pane-content">
+        <p>{{ t('unpair.failed.body') }}</p>
+        <p>{{ t('unpair.failed.forget') }}</p>
+      </div>
+      <div class="pane-actions spread">
+        <button class="btn btn-secondary" (click)="close()">{{ t('actions.cancel') }}</button>
+        <button class="btn btn-secondary" (click)="page.set('forget')">
+          {{ t('actions.forgetOnThisPc') }}
+        </button>
+        <button class="btn btn-primary" (click)="tryAgain()">{{ t('actions.tryAgain') }}</button>
+      </div>
+    }
+    @case ('forget') {
+      <div class="pane-title">{{ t('unpair.forget.title') }}</div>
+      <div class="pane-content">
+        @if (removedOnHeadset) {
+          <p>{{ t('unpair.forget.removed') }}</p>
+        } @else {
+          <p>{{ t('unpair.forget.body') }}</p>
+          <p>{{ t('unpair.forget.command') }}</p>
+          <div class="command-row">
+            <pre class="command">{{ uninstallCommand }}</pre>
+            <button class="btn btn-secondary" (click)="copyCommand()">
+              {{ t(copied() ? 'actions.copied' : 'actions.copyCommand') }}
+            </button>
+          </div>
+        }
+      </div>
+      <div class="pane-actions spread">
+        <button class="btn btn-secondary" (click)="close()">{{ t('actions.cancel') }}</button>
+        <button class="btn btn-primary" (click)="forget()">{{ t('actions.forget') }}</button>
+      </div>
+    }
+  }
+</div>

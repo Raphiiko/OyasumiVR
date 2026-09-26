@@ -94,6 +94,14 @@
             <span class="frame-up-to-date">{{ 'steamFrame.details.upToDate' | transloco }}</span>
           }
         </app-setting-row>
+        <app-setting-row
+          label="steamFrame.details.pairing"
+          description="steamFrame.details.pairingDescription"
+        >
+          <button class="btn btn-secondary" (click)="unpairFrame()">
+            {{ 'steamFrame.actions.unpair' | transloco }}
+          </button>
+        </app-setting-row>
       }
 
       <!-- Lighthouse V1 Identifier Section -->
