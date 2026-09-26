@@ -199,7 +199,6 @@ pub async fn connect(
     }
 }
 
-/// Closes the socket, ignoring a failure.
 pub async fn close(mut socket: Socket) {
     let _ = socket.close(None).await;
 }
