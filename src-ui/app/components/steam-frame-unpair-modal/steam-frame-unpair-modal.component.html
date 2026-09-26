@@ -50,6 +50,9 @@
       <div class="pane-content">
         <p>{{ t('unpair.failed.body') }}</p>
         <p>{{ t('unpair.failed.forget') }}</p>
+        <p
+          ><small>{{ t('unpair.failed.code', { code: failureCode() }) }}</small></p
+        >
       </div>
       <div class="pane-actions spread">
         <button class="btn btn-secondary" (click)="close()">{{ t('actions.cancel') }}</button>

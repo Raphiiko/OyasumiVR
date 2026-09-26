@@ -3018,6 +3018,7 @@
       },
       "failed": {
         "body": "The headset didn't respond. Turn it on and try again.",
+        "code": "Error code: {code}",
         "forget": "You can also forget the pairing on this PC only. OyasumiVR Helper and this PC's access would stay on the headset until you remove them there.",
         "title": "Couldn't unpair"
       },

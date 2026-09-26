@@ -145,22 +145,27 @@ file. `ERROR_CODES` in `steam-frame-pairing-modal.component.ts` maps them from `
 | SF-301 | `wrongDeviceAccessLeft` | cleanup on a wrong headset did not report done                               |
 
 Device Manager shows these in the explanation of a problem pill, from `FRAME_STATUS_ROWS`, the
-maintenance pills, and `UPDATE_FAILURE_CODES`:
+maintenance pills, and `UPDATE_FAILURE_CODES`. The unpair dialog shows `UNPAIR_FAILURE_CODES` on
+its Couldn't unpair page:
 
-| Code   | Connection status    | What happened                                                       |
-| ------ | -------------------- | ------------------------------------------------------------------- |
-| SF-401 | `identityChanged`    | the helper reports another headset's serial, model, or manufacturer |
-| SF-402 | `hostKeyChanged`     | the SSH host key at the address differs from the pinned one         |
-| SF-403 | `needsAppUpdate`     | the helper's lowest protocol is above this build's                  |
-| SF-405 | `pairingRemoved`     | the headset rejects this PC's SSH key under the pinned host key     |
-| SF-406 | `helperMissing`      | SSH works, but the helper folder is gone                            |
-| SF-407 | maintenance `busy`   | another PC held the maintenance lock for 60 s                       |
-| SF-408 | a failed Reinstall   | setup did not complete; the core logs the outcome                   |
-| SF-411 | update `unreachable` | the SSH session to the headset dropped during the update            |
-| SF-412 | update `corrupted`   | the uploaded helper did not match the bundled digest                |
-| SF-413 | update `notStarted`  | the new helper did not answer, so the previous release runs again   |
-| SF-414 | update `notBundled`  | this build carries no helper                                        |
-| SF-415 | update `other`       | any other update failure; the core logs the message                 |
+| Code   | Connection status       | What happened                                                       |
+| ------ | ----------------------- | ------------------------------------------------------------------- |
+| SF-401 | `identityChanged`       | the helper reports another headset's serial, model, or manufacturer |
+| SF-402 | `hostKeyChanged`        | the SSH host key at the address differs from the pinned one         |
+| SF-403 | `needsAppUpdate`        | the helper's lowest protocol is above this build's                  |
+| SF-405 | `pairingRemoved`        | the headset rejects this PC's SSH key under the pinned host key     |
+| SF-406 | `helperMissing`         | SSH works, but the helper folder is gone                            |
+| SF-407 | maintenance `busy`      | another PC held the maintenance lock for 60 s                       |
+| SF-408 | a failed Reinstall      | setup did not complete; the core logs the outcome                   |
+| SF-411 | update `unreachable`    | the SSH session to the headset dropped during the update            |
+| SF-412 | update `corrupted`      | the uploaded helper did not match the bundled digest                |
+| SF-413 | update `notStarted`     | the new helper did not answer, so the previous release runs again   |
+| SF-414 | update `notBundled`     | this build carries no helper                                        |
+| SF-415 | update `other`          | any other update failure; the core logs the message                 |
+| SF-421 | unpair `unreachable`    | the headset did not answer over SSH                                 |
+| SF-422 | unpair `hostKeyChanged` | the SSH host key at the address differs from the pinned one         |
+| SF-423 | unpair `helperBusy`     | another PC held the maintenance or authorized_keys lock             |
+| SF-424 | unpair `failed`         | any other cleanup failure; the core logs the message                |
 
 SF-404 (`helperOutdated`) has no explanation: its Update helper pill starts the update.
 
