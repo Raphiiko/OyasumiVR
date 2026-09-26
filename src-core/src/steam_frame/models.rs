@@ -268,7 +268,7 @@ pub enum OtherPcsOutcome {
     Ok {
         count: u32,
     },
-    /// The headset rejects this PC's key, so nothing is left to remove.
+    /// The headset rejects this PC's key, so the count is unknown and cleanup cannot run.
     Rejected,
     Unreachable,
     HostKeyChanged,
