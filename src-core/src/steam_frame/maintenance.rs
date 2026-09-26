@@ -125,7 +125,7 @@ async fn update_session(session: &Session, pairing: &Pairing, digest: &str) -> U
     }
 
     // else roll back, unless another PC replaced the helper meanwhile
-    match setup::run(session, &["rollback", BUNDLED_VERSION], b"").await {
+    match setup::run(session, &["rollback", BUNDLED_VERSION, digest], b"").await {
         Ok(output) if output.status == EXIT_CHANGED => {
             info!("[SteamFrame] Another PC replaced the helper during this update");
             return UpdateOutcome::Unchanged;
@@ -251,6 +251,7 @@ async fn recover_session(session: &Session, pairing: &Pairing) -> Recovery {
         _ => return Recovery::Down,
     };
     warn!("[SteamFrame] The helper does not start, so the current release is repaired");
+    let mut repaired_digest = None;
     match setup::install_bundled(session, true, false).await {
         Ok(inspected) if inspected.replaced => {
             keep_uninstaller(session).await;
@@ -258,6 +259,7 @@ async fn recover_session(session: &Session, pairing: &Pairing) -> Recovery {
                 return Recovery::Running;
             }
             current = BUNDLED_VERSION.to_owned();
+            repaired_digest = bundled_digest();
         }
         Ok(_) => {}
         Err(InstallError::Missing) => return Recovery::Missing,
@@ -270,8 +272,10 @@ async fn recover_session(session: &Session, pairing: &Pairing) -> Recovery {
         return Recovery::Down;
     }
     warn!("[SteamFrame] The repaired helper does not start, so the previous release runs again");
+    let mut rollback = vec!["rollback", current.as_str()];
+    rollback.extend(repaired_digest);
     let rolled_back = matches!(
-        setup::run(session, &["rollback", &current], b"").await,
+        setup::run(session, &rollback, b"").await,
         Ok(output) if output.status == 0
     );
     if rolled_back && verify(pairing, None).await {
