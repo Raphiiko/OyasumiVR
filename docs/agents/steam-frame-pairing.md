@@ -206,8 +206,8 @@ A failed WSS attempt takes one of three recovery paths before it counts as offli
   answer, it repairs the current release and then rolls back to the previous one, once per app start
   and separately from the automatic update.
   A missing helper folder shows `helperMissing`, and only Reinstall creates it again. When SSH cannot
-  reach the headset either, the core browses mDNS for it at a new address, and accepts it only when
-  that helper presents the pinned certificate.
+  reach the headset, or another host answers at its old address, the core browses mDNS for it at a
+  new address, and accepts it only when that helper presents the pinned certificate.
 
 ## Updates
 
@@ -231,9 +231,9 @@ flowchart TD
   not change since `inspect`, uploads into `staging/`, checks the digest, moves the release into
   place, points `previous` at the old release, switches `current`, and restarts the service. A second
   PC that waited for the lock finds the new helper and changes nothing.
-- A same-version repair moves the replaced release to `releases/<version>.replaced` and points
-  `previous` at it, so rollback always has a working target. A failed first installation removes the
-  helper folder again.
+- A same-version repair replaces the executable in place. When no other `previous` release exists,
+  it first keeps a copy as `releases/<version>.replaced` and points `previous` at it, so rollback
+  always has a working target. A failed first installation removes the helper folder again.
 - `rollback <version>` changes nothing and exits 73 when `current` no longer points at that release,
   so a PC never rolls back a helper another PC just installed.
 - An interrupted update needs no record. The next contact finds the old helper still running, the new

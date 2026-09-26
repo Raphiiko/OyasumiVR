@@ -11,7 +11,6 @@ units="$HOME/.config/systemd/user"
 # lock [SECONDS], 60 by default; must stay under the SSH inactivity timeout in ssh.rs.
 # The first step under the lock removes an upload that an earlier operation left behind.
 lock() {
-  mkdir -p "$root"
   exec 9>"$root/maintenance.lock"
   flock -w "${1:-60}" 9 || exit 75
   rm -rf "$root/staging"
@@ -29,6 +28,13 @@ present() {
   [ -d "$root" ] || exit 69
 }
 
+# current: prints the release current points at, such as 26.10.0
+current() {
+  local release
+  release=$(readlink "$root/current" 2>/dev/null || true)
+  echo "${release#releases/}"
+}
+
 # starts the service, or restarts it when it still runs a release other than current
 run_current() {
   local pid
@@ -44,6 +50,7 @@ run_current() {
 # SEEN is the SHA-256 of the inspect output the PC decided on
 install() {
   local version=$1 digest=$2 port=$3 seen=$4
+  mkdir -p "$root"
   lock
   [ "$(printf %s "$(inspect)" | sha256sum | cut -c1-64)" = "$seen" ] || exit 73
   # a first installation that fails removes everything it created
@@ -54,14 +61,19 @@ install() {
   chmod 755 "$root/staging/$binary"
   local old
   old=$(readlink "$root/current" 2>/dev/null || true)
-  if [ "$old" = "releases/$version" ]; then
-    # same-version repair: keep the replaced executable as the rollback target
-    rm -rf "$root/releases/$version.replaced"
-    mv "$root/releases/$version" "$root/releases/$version.replaced"
-    mkdir "$root/releases/$version"
+  if [ "$old" = "releases/$version" ] && [ -d "$root/releases/$version" ]; then
+    # same-version repair; without another rollback target, keep a copy of the replaced one
+    local previous
+    previous=$(readlink "$root/previous" 2>/dev/null || true)
+    if [ -z "$previous" ] || [ "$previous" = "$old" ] || [ ! -d "$root/$previous" ]; then
+      rm -rf "$root/releases/$version.replaced.new"
+      cp -a "$root/releases/$version" "$root/releases/$version.replaced.new"
+      rm -rf "$root/releases/$version.replaced"
+      mv "$root/releases/$version.replaced.new" "$root/releases/$version.replaced"
+      ln -sfn "releases/$version.replaced" "$root/previous.new"
+      mv -T "$root/previous.new" "$root/previous"
+    fi
     mv "$root/staging/$binary" "$root/releases/$version/$binary"
-    ln -sfn "releases/$version.replaced" "$root/previous.new"
-    mv -T "$root/previous.new" "$root/previous"
   else
     rm -rf "$root/releases/$version"
     mkdir "$root/releases/$version"
@@ -150,6 +162,7 @@ rollback() {
 
 # prune: removes every release except current and previous
 prune() {
+  [ -d "$root" ] || exit 69
   lock
   local current previous release
   current=$(readlink "$root/current" 2>/dev/null || true)
@@ -211,6 +224,6 @@ cleanup() {
 }
 
 case "${1:-}" in
-  identity | inspect | present | install | uninstaller | provision | start | rollback | prune | uninstall_helper | cleanup) "$@" ;;
+  identity | inspect | present | current | install | uninstaller | provision | start | rollback | prune | uninstall_helper | cleanup) "$@" ;;
   *) exit 64 ;;
 esac
