@@ -28,11 +28,13 @@ present() {
   [ -d "$root" ] || exit 69
 }
 
-# current: prints the release current points at, such as 26.10.0
+# current: prints the release current points at and its executable's SHA-256, such as
+# "26.10.0 3f2a..."; the digest is empty when the executable is missing
 current() {
-  local release
+  local release digest
   release=$(readlink "$root/current" 2>/dev/null || true)
-  echo "${release#releases/}"
+  digest=$(sha256sum "$root/current/$binary" 2>/dev/null | cut -c1-64 || true)
+  echo "${release#releases/} $digest"
 }
 
 # starts the service, or restarts it when it still runs a release other than current
@@ -192,10 +194,20 @@ remove_helper() {
   rm -rf "$root"
 }
 
-# uninstall_helper: removes the helper with every token file, and leaves authorized_keys alone
+# uninstall_helper PC_ID: removes this PC's token files, then the helper when no other PC holds a
+# token; leaves authorized_keys alone
 uninstall_helper() {
+  local pc=$1 file
   [ -d "$root" ] || return 0
   lock
+  rm -f "$root/clients/$pc" "$root/clients/$pc.pub"
+  for file in "$root"/clients/*; do
+    [ -f "$file" ] || continue
+    case "${file##*/}" in
+      *.*) ;;
+      *) return 0 ;;
+    esac
+  done
   remove_helper
 }
 

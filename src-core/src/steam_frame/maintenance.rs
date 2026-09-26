@@ -245,13 +245,15 @@ async fn recover_session(session: &Session, pairing: &Pairing) -> Recovery {
     if !AUTOMATIC_REPAIRS.lock().await.insert(pairing.id.clone()) {
         return Recovery::Down;
     }
-    // rollback below applies only to the release that is current now
-    let mut current = match setup::run(session, &["current"], b"").await {
-        Ok(output) if output.status == 0 => output.stdout().trim().to_owned(),
+    // rollback below applies only to the release and executable that are current now
+    let output = match setup::run(session, &["current"], b"").await {
+        Ok(output) if output.status == 0 => output.stdout(),
         _ => return Recovery::Down,
     };
+    let mut fields = output.split_whitespace();
+    let mut current = fields.next().unwrap_or_default().to_owned();
+    let mut current_digest = fields.next().map(str::to_owned);
     warn!("[SteamFrame] The helper does not start, so the current release is repaired");
-    let mut repaired_digest = None;
     match setup::install_bundled(session, true, false).await {
         Ok(inspected) if inspected.replaced => {
             keep_uninstaller(session).await;
@@ -259,7 +261,7 @@ async fn recover_session(session: &Session, pairing: &Pairing) -> Recovery {
                 return Recovery::Running;
             }
             current = BUNDLED_VERSION.to_owned();
-            repaired_digest = bundled_digest();
+            current_digest = bundled_digest().map(str::to_owned);
         }
         Ok(_) => {}
         Err(InstallError::Missing) => return Recovery::Missing,
@@ -273,7 +275,7 @@ async fn recover_session(session: &Session, pairing: &Pairing) -> Recovery {
     }
     warn!("[SteamFrame] The repaired helper does not start, so the previous release runs again");
     let mut rollback = vec!["rollback", current.as_str()];
-    rollback.extend(repaired_digest);
+    rollback.extend(current_digest.as_deref());
     let rolled_back = matches!(
         setup::run(session, &rollback, b"").await,
         Ok(output) if output.status == 0
