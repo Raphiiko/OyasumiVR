@@ -27,7 +27,7 @@ import {
   LighthouseDevice,
   LighthouseDevicePowerState,
 } from '../../../../../../models/lighthouse-device';
-import { combineLatest, firstValueFrom } from 'rxjs';
+import { combineLatest, firstValueFrom, interval } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   DevicePowerState,
@@ -144,6 +144,11 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
         this.initializeFuse();
         this.cdr.markForCheck();
       });
+
+    // keep the relative last-seen times current
+    interval(30000)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.cdr.markForCheck());
 
     // Initialize tag filter to "All tags"
     this.updateTagFilterOptions();
@@ -556,7 +561,7 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
   }
 
   private timeAgo(time: number): string {
-    const minutes = Math.round((time - Date.now()) / 60000);
+    const minutes = Math.trunc((time - Date.now()) / 60000);
     if (minutes === 0) return this.transloco.translate('steamFrame.status.justNow');
     const format = new Intl.RelativeTimeFormat(this.transloco.getActiveLang(), { numeric: 'auto' });
     if (minutes > -60) return format.format(minutes, 'minute');
