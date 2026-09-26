@@ -128,14 +128,16 @@ pub async fn set_brightness(pairing_id: &str, percentage: f64) -> Result<f64, Se
         .and_then(|connection| connection.brightness.lock().unwrap().clone())
         .ok_or(SetBrightnessError::Offline)?;
     let (reply, result) = oneshot::channel();
-    sender
-        .send((percentage, reply))
+    let exchange = async {
+        sender
+            .send((percentage, reply))
+            .await
+            .map_err(|_| SetBrightnessError::Offline)?;
+        result.await.map_err(|_| SetBrightnessError::Offline)?
+    };
+    tokio::time::timeout(BRIGHTNESS_TIMEOUT, exchange)
         .await
-        .map_err(|_| SetBrightnessError::Offline)?;
-    match tokio::time::timeout(BRIGHTNESS_TIMEOUT, result).await {
-        Ok(Ok(result)) => result,
-        _ => Err(SetBrightnessError::Offline),
-    }
+        .unwrap_or(Err(SetBrightnessError::Offline))
 }
 
 /// The last state of every running connection.

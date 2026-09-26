@@ -160,11 +160,9 @@ impl<B: Backend> Brightness<B> {
 
         // read capability and gain, or drop the session
         let read = self.backend.capability().and_then(|capability| {
-            let gain = match capability.supported {
-                true => Some(self.backend.gain()?),
-                false => None,
-            };
-            Ok((capability, gain))
+            // property reads can outlive the runtime, but the settings read fails without it
+            let gain = self.backend.gain()?;
+            Ok((capability, capability.supported.then_some(gain)))
         });
         let Ok((capability, gain)) = read else {
             self.backend.disconnect();
@@ -210,7 +208,10 @@ impl<B: Backend> Brightness<B> {
             return Err(SetError::Unsupported);
         }
         let (min, max) = self.capability.bounds();
-        let gain = percentage_to_gain(percentage.clamp(min, max)) as f32;
+        // the bounds are rounded, so the gain limits apply once more
+        let gain = (percentage_to_gain(percentage.clamp(min, max)) as f32)
+            .max(self.capability.min_gain)
+            .min(self.capability.max_gain);
         self.backend
             .set_gain(gain)
             .map_err(|RuntimeLost| SetError::WriteFailed)?;
@@ -295,6 +296,8 @@ impl Backend for OpenVr {
         if let Some(context) = self.context.take() {
             context.shutdown();
         }
+        // a SteamVR that is shutting down would accept a new session and then drop it
+        self.last_attempt = Some(Instant::now());
     }
 
     fn capability(&mut self) -> Result<Capability, RuntimeLost> {
@@ -443,6 +446,8 @@ mod tests {
     #[derive(Default)]
     struct Headset {
         running: bool,
+        /// Property reads keep answering "unsupported" after the runtime is gone.
+        stale_properties: bool,
         capability: Option<Capability>,
         gain: f32,
         writes: Vec<f32>,
@@ -477,10 +482,13 @@ mod tests {
         fn disconnect(&mut self) {}
 
         fn capability(&mut self) -> Result<Capability, RuntimeLost> {
-            self.edit(|headset| match headset.running {
-                true => Ok(headset.capability.unwrap_or(Capability::UNSUPPORTED)),
-                false => Err(RuntimeLost),
-            })
+            self.edit(
+                |headset| match (headset.running, headset.stale_properties) {
+                    (true, _) => Ok(headset.capability.unwrap_or(Capability::UNSUPPORTED)),
+                    (false, true) => Ok(Capability::UNSUPPORTED),
+                    (false, false) => Err(RuntimeLost),
+                },
+            )
         }
 
         fn gain(&mut self) -> Result<f32, RuntimeLost> {
@@ -548,6 +556,36 @@ mod tests {
         assert_eq!(brightness.set(1.0).result, Ok(9.0));
         let writes = fake.edit(|headset| headset.writes.clone());
         assert_eq!(writes, [1.25, percentage_to_gain(9.0) as f32]);
+    }
+
+    #[test]
+    fn keeps_writes_within_the_gain_limits_despite_rounded_bounds() {
+        let fake = Fake::running(0.5);
+        fake.edit(|headset| {
+            headset.capability = Some(Capability {
+                supported: true,
+                min_gain: 0.04,
+                max_gain: 0.9,
+            })
+        });
+        let mut brightness = Brightness::new(fake.clone());
+        brightness.set(9.0);
+        brightness.set(200.0);
+        let writes = fake.edit(|headset| headset.writes.clone());
+        assert_eq!(writes[0], 0.04);
+        assert!((0.8999..=0.9).contains(&writes[1]), "{writes:?}");
+    }
+
+    #[test]
+    fn notices_runtime_loss_while_properties_still_answer() {
+        let fake = Fake::running(1.0);
+        fake.edit(|headset| headset.stale_properties = true);
+        let mut brightness = Brightness::new(fake.clone());
+        brightness.poll();
+        fake.edit(|headset| headset.running = false);
+        assert_eq!(brightness.poll(), Some(Snapshot::UNAVAILABLE));
+        fake.edit(|headset| headset.running = true);
+        assert_eq!(brightness.poll(), Some(snapshot(100.0)));
     }
 
     #[test]
