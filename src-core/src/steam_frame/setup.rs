@@ -750,6 +750,7 @@ mod tests {
     /// Runs one helper.sh command with HOME in `home`, and flock and systemctl stubbed out.
     fn run_script(home: &std::path::Path, arguments: &[&str], stdin: &str) -> Option<i32> {
         use std::io::Write;
+        use std::os::windows::process::CommandExt;
         let bash = bash()?;
         let stubs = home.join("stubs");
         std::fs::create_dir_all(&stubs).unwrap();
@@ -770,6 +771,7 @@ mod tests {
             .arg(script)
             .args(arguments)
             .env("HOME", home)
+            .creation_flags(windows_sys::Win32::System::Threading::CREATE_NO_WINDOW)
             .stdin(std::process::Stdio::piped())
             .spawn()
             .unwrap();
