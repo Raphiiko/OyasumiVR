@@ -35,6 +35,7 @@ export class SteamFramePairingService {
   private readonly _pairings = signal<SteamFramePairing[]>([]);
   private readonly _connections = signal<Record<string, SteamFrameConnectionState>>({});
   private readonly _flow = signal<SteamFrameFlow | null>(null);
+  private readonly _reinstalls = signal<Record<string, 'running' | 'failed'>>({});
   /** Set when Cancel arrives during a step; that step finishes the cancel when it returns. */
   private cancelRequested = false;
   /** Bumped by every search and page change, so a result from an older search is dropped. */
@@ -45,6 +46,8 @@ export class SteamFramePairingService {
   readonly pairings$ = new BehaviorSubject<SteamFramePairing[]>([]);
   readonly connections = this._connections.asReadonly();
   readonly flow = this._flow.asReadonly();
+  /** Reinstalls started from Device Manager, by pairing id; `failed` stays until one succeeds. */
+  readonly reinstalls = this._reinstalls.asReadonly();
   readonly flowPairing = computed(() => {
     const flow = this._flow();
     return flow ? this.pairingFor(flow.deviceId) : undefined;
@@ -404,6 +407,47 @@ export class SteamFramePairingService {
           }[result.status as string],
         });
     }
+  }
+
+  /** Starts a helper update. Progress and the result arrive as connection states. */
+  async updateHelper(pairing: SteamFramePairing) {
+    await invoke('steam_frame_update_helper', { pairingId: pairing.id });
+  }
+
+  /** Installs the helper again after it went missing, and pins its new certificate. */
+  async reinstallHelper(pairing: SteamFramePairing) {
+    if (this._reinstalls()[pairing.id] === 'running') return;
+
+    // run setup as a fresh install that removes itself when it fails
+    this.setReinstall(pairing.id, 'running');
+    const result = await invoke<SteamFrameSetupResult>('steam_frame_set_up_helper', {
+      request: {
+        attemptId: uuidv4(),
+        access: this.accessOf(pairing),
+        pcId: pairing.id,
+        token: pairing.token,
+        publicKey: pairing.publicKey,
+        identity: pairing.identity,
+        removeOnFailure: true,
+      },
+    });
+    info(`[SteamFramePairing] Reinstall: ${result.status}`);
+    if (result.status !== 'complete') return this.setReinstall(pairing.id, 'failed');
+
+    // pin the new certificate and reconnect with it
+    await this.updatePairing(pairing.deviceId, {
+      certPin: result.certPin,
+      port: result.port,
+      helperVersion: result.helperVersion,
+      lastSeen: Date.now(),
+    });
+    await this.pushPairings();
+    this.setReinstall(pairing.id, undefined);
+  }
+
+  private setReinstall(pairingId: string, state?: 'running' | 'failed') {
+    const { [pairingId]: _, ...others } = this._reinstalls();
+    this._reinstalls.set(state ? { ...others, [pairingId]: state } : others);
   }
 
   /** Stops pairing. A running step finishes first, then this PC's approval is removed. */
