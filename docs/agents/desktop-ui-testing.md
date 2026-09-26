@@ -29,9 +29,9 @@ $head, $treeStatus | Set-Content (Join-Path $session 'head.txt')
 Check that this worktree has no instance running yet:
 
 ```powershell
-Get-CimInstance Win32_Process | Where-Object {
-    $_.ExecutablePath -eq $executable -or $_.CommandLine -like "*$workspace*"
-} | Select-Object ProcessId, Name, ExecutablePath, CommandLine
+Get-CimInstance Win32_Process -Filter "Name='oyasumivr.exe'" |
+    Where-Object ExecutablePath -eq $executable |
+    Select-Object ProcessId, ExecutablePath, CommandLine
 ```
 
 Instances from other worktrees are expected; leave them alone. If a process from this worktree runs
@@ -76,7 +76,7 @@ do {
 } while ([DateTime]::UtcNow -lt $deadline)
 
 $frontend = Get-CimInstance Win32_Process -Filter "ProcessId=$frontendPid"
-if ($frontend.CommandLine -notlike "*$workspace*") {
+if ($frontend.CommandLine -notlike "*$workspace\*") {
     throw "No frontend from $workspace owns port $uiPort."
 }
 if (@($process).Count -ne 1) {
