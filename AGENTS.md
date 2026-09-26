@@ -88,44 +88,52 @@ When a ticket changes user-visible desktop behavior, verify the real OyasumiVR w
 
 ## Comments
 
-A comment exists to make the code faster to read. That is the whole rule, and it holds in every
-language here: TypeScript, Rust, C#, and Angular templates.
+A comment exists to make the code faster to read. That holds in every language here: TypeScript,
+Rust, C#, and Angular templates. Inside a function body, a comment is one line.
 
-Most comments fail that test, so the default is no comment. A comment earns its line when it lets a
-reader skip a block instead of parsing it, even when it says nothing the code doesn't already say.
+### Signposts
 
-Inside a function body, one line. A body comment that runs to a second line has turned into
-rationale, and rationale goes in the PR description.
+Signpost any function a reader would otherwise have to parse to find its steps. Separate the steps
+with a blank line, and above each put a short phrase naming what it does: under ten words,
+lowercase, no full stop. Down the left edge they read as a table of contents:
 
-### Structure first
+```ts
+async applyPowerState(state: PowerState) {
+  // resolve which devices the command applies to
+  const devices = this.devices.filter((d) => d.canPowerOff && !d.isBusy);
 
-Before you add a comment, make the code say it:
+  // send the power state per device
+  const results = await Promise.all(devices.map((d) => this.send(d, state)));
 
-- Separate the phases of a function with a blank line.
+  // fall back to the last known state
+  for (const [i, ok] of results.entries()) {
+    if (!ok) this.restore(devices[i]);
+  }
+}
+```
+
+- Name the step, not the syntax.
+- Two steps are enough, and so is one long block whose purpose is not clear from its first line.
+- A block that stands alone and shares no local state often reads better as a named private method.
+  Signpost the blocks that share state, or where the order is the point.
+- A signpost describes the block as it is now. Change the block, fix the signpost.
+
+### Structure
+
 - Move a callback body longer than a few lines, such as a `subscribe`, `pipe`, or event handler,
   into a named private method.
 - Return early instead of nesting conditions.
 - Name a variable for what it holds, and a boolean for the question it answers.
 
-### Signposts
+### Other body comments
 
-Above a block whose purpose isn't clear from its first line, put a short phrase naming what the
-block does. Under ten words, lowercase, no full stop. Down the left edge they read as a table of
-contents:
+Write a one-line comment for each of these:
 
-```ts
-// resolve which devices the command applies to
-// send the power state per device
-// fall back to the last known state
-```
-
-- One per block. Name the step, not the syntax.
-- Three or more distinct phases is the trigger. A function doing one thing needs none, however long
-  it is.
-- Ask first whether the block wants to be a named private function. A function name beats a comment:
-  it survives refactoring, it can be searched for, and it shows up in a stack trace. Signpost when
-  the blocks share local state, or when the order between them is the point.
-- A signpost describes the block as it is now. Change the block, fix the signpost.
+- An invariant a future edit could break: "this lock is shared with X, release it before sleeping".
+- A contract invisible from the signature: "empty result means empty, not pending".
+- An outside fact: how another process, the OS, a library, or a device behaves, when that behavior
+  makes the obvious code wrong: "the core reports INITIALIZING while vrmonitor.exe is still
+  closing".
 
 ### Doc comments
 
@@ -141,55 +149,23 @@ Many members need none, because the name and the types already say it.
 - A flag, counter, or cached field whose name cannot say when it is set and cleared gets one line
   that does.
 
-### Keep
+### What goes elsewhere
 
-- A one-line invariant a future edit could break: "this lock is shared with X, release it before
-  sleeping".
-- A one-line contract invisible from the signature: "empty result means empty, not pending".
-- A one-line outside fact: how another process, the OS, a library, or a device behaves, when that
-  behavior makes the obvious code wrong: "the core reports INITIALIZING while vrmonitor.exe is
-  still closing".
-
-### Delete on sight
-
-- **Migration history.** Why a change was made, what an API used to be, what version something
-  changed in, an issue number. Put it in the commit message. The code reads as though it was always
-  written this way, and `git log` and `git blame` carry the rest.
-
-  ```ts
-  // X was removed in 0.13, so we now call Y instead
-  // Renamed from foo() in v21
-  ```
-
-- **Design rationale.** Why this approach, why not the alternative, what would go wrong done
-  differently. This reads as helpful, which is why it survives review. Put it in the PR description.
-  An outside fact is different: it states how something outside this code behaves today, not why
-  this design won.
-- **Restating a single line.** A signpost labels a block. A comment on one statement that already
-  says the same thing is noise.
-- **Naming what an operator or API already means.** "switchMap drops the previous request", "`?`
-  propagates the error".
+- **History.** Why a change was made, what an API used to be, what version something changed in,
+  an issue number. Put it in the commit message. The code reads as though it was always written
+  this way.
+- **Design rationale.** Why this approach, why not the alternative. Put it in the PR description.
+  An outside fact is different: it states how something outside this code behaves today.
+- **A restated line.** A comment on one statement that says what the statement already says, or
+  what its operator or API already means ("`?` propagates the error").
 
 Fix comments in code you are already changing. Leave unrelated files for their own pull request.
-
-### Four tests, in order
-
-Run these on a body comment, and stop at the first one that answers. A doc comment gets one test:
-could a caller answer this from the signature alone? If yes, cut it.
-
-1. Is it a one-line invariant, an invisible contract, or an outside fact? Keep it, and skip the
-   rest.
-2. Does it explain why, or what changed? Commit message or PR description.
-3. Does it only repeat the statement under it? Delete it.
-4. Does it let a reader skip a block? Keep it.
-
-Nothing else earns a comment. Before you commit, run these tests on every comment you added or
-edited.
+Before you commit, check every comment you added or edited against this section.
 
 ### Reviewing comments
 
-Review the comments a diff adds or edits, with the four tests above. A missing comment is a
-finding only when all three hold:
+Review the comments a diff adds or edits against this section. A missing comment is a finding only
+when all three hold:
 
 1. The diff adds or changes code whose correct behavior rests on an invariant, a contract, or an
    outside fact.
