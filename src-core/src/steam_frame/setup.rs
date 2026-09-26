@@ -1,4 +1,4 @@
-use std::time::Duration;
+use std::{sync::LazyLock, time::Duration};
 
 use base64::{engine::general_purpose::STANDARD, Engine};
 use log::{info, warn};
@@ -19,8 +19,19 @@ use super::{
 
 const SCRIPT: &str = include_str!("helper.sh");
 const UNINSTALL: &str = include_str!("uninstall.sh");
-const EXIT_BUSY: u32 = 75;
-const EXIT_MISSING: u32 = 69;
+pub(super) const EXIT_BUSY: u32 = 75;
+pub(super) const EXIT_MISSING: u32 = 69;
+const EXIT_DIGEST: u32 = 65;
+pub(super) const EXIT_CHANGED: u32 = 73;
+
+pub const BUNDLED_VERSION: &str = env!("CARGO_PKG_VERSION");
+static BUNDLED_DIGEST: LazyLock<Option<String>> =
+    LazyLock::new(|| Some(hex(&Sha256::digest(std::fs::read(HELPER_PATH).ok()?))));
+
+/// SHA-256 of the helper this build carries. `None` when the build skipped the helper.
+pub fn bundled_digest() -> Option<&'static str> {
+    BUNDLED_DIGEST.as_deref()
+}
 
 /// Builds the remote command for one script step. The script travels base64 encoded, so the
 /// login shell never has to parse its quoting.
@@ -45,7 +56,11 @@ fn plain_word(argument: &str) -> bool {
 }
 
 /// Runs one `helper.sh` step over SSH, refusing any argument that needs quoting.
-async fn run(session: &Session, arguments: &[&str], stdin: &[u8]) -> Result<ssh::Output, SshError> {
+pub(super) async fn run(
+    session: &Session,
+    arguments: &[&str],
+    stdin: &[u8],
+) -> Result<ssh::Output, SshError> {
     if !arguments.iter().all(|argument| plain_word(argument)) {
         return Err(SshError::Failed(format!(
             "unsafe script arguments: {arguments:?}"
@@ -60,6 +75,8 @@ pub struct HelperInfo {
     pub version: String,
     pub protocol_min: u32,
     pub protocol_max: u32,
+    #[serde(default)]
+    pub digest: Option<String>,
 }
 
 impl HelperInfo {
@@ -68,18 +85,21 @@ impl HelperInfo {
     }
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub enum InstallDecision {
     Install,
+    /// Same version as the bundled helper, but a different executable.
+    Repair,
     Reuse,
     NeedsAppUpdate,
 }
 
-/// Decides what setup does with the helper already on the headset. A newer helper is never
-/// replaced, and an unreadable version counts as older.
+/// Decides what to do with the helper already on the headset. A newer helper is never replaced,
+/// and an unreadable version counts as older.
 pub fn install_decision(
     installed: Option<&HelperInfo>,
     bundled: &str,
+    bundled_digest: Option<&str>,
     protocol: u32,
 ) -> InstallDecision {
     // nothing installed yet
@@ -93,10 +113,16 @@ pub fn install_decision(
     ) else {
         return InstallDecision::Install;
     };
-    // older gets replaced, same or compatible newer is kept
+    // older is replaced, same version kept or repaired, compatible newer kept
     if installed_version < bundled_version {
         InstallDecision::Install
-    } else if installed_version == bundled_version || installed.accepts(protocol) {
+    } else if installed_version == bundled_version {
+        if bundled_digest.is_some_and(|digest| installed.digest.as_deref() != Some(digest)) {
+            InstallDecision::Repair
+        } else {
+            InstallDecision::Reuse
+        }
+    } else if installed.accepts(protocol) {
         InstallDecision::Reuse
     } else {
         InstallDecision::NeedsAppUpdate
@@ -185,6 +211,122 @@ pub async fn provision(
     })
 }
 
+#[derive(Debug, PartialEq)]
+pub enum InstallError {
+    /// The helper folder is absent, and this call may not create it.
+    Missing,
+    Busy,
+    /// The uploaded executable did not match the bundled digest.
+    Corrupted,
+    Ssh(SshError),
+    Failed(String),
+}
+
+impl From<SshError> for InstallError {
+    fn from(error: SshError) -> Self {
+        InstallError::Ssh(error)
+    }
+}
+
+pub struct Inspected {
+    pub installed: Option<HelperInfo>,
+    pub decision: InstallDecision,
+    /// Whether this call installed the bundled helper.
+    pub replaced: bool,
+    /// Whether that install was the first one in an empty helper folder.
+    pub created: bool,
+}
+
+/// Installs the bundled helper when the installed one needs it, deciding again when another PC
+/// changed the helper meanwhile. `repair` also replaces a helper of the bundled version, and
+/// `fresh` allows creating a missing helper folder.
+pub async fn install_bundled(
+    session: &Session,
+    repair: bool,
+    fresh: bool,
+) -> Result<Inspected, InstallError> {
+    for _ in 0..3 {
+        // decide from what is installed; only a first install may create the folder
+        let inspect = run(session, &["inspect"], b"").await?.stdout();
+        let installed: Option<HelperInfo> = serde_json::from_str(inspect.trim()).unwrap_or(None);
+        if installed.is_none()
+            && !fresh
+            && run(session, &["present"], b"").await?.status == EXIT_MISSING
+        {
+            return Err(InstallError::Missing);
+        }
+        let mut decision = install_decision(
+            installed.as_ref(),
+            BUNDLED_VERSION,
+            bundled_digest(),
+            PROTOCOL_VERSION,
+        );
+        if repair
+            && decision == InstallDecision::Reuse
+            && installed
+                .as_ref()
+                .is_some_and(|info| info.version == BUNDLED_VERSION)
+        {
+            decision = InstallDecision::Repair;
+        }
+        if !matches!(decision, InstallDecision::Install | InstallDecision::Repair) {
+            return Ok(Inspected {
+                installed,
+                decision,
+                replaced: false,
+                created: false,
+            });
+        }
+
+        // upload and install, deciding again when another PC changed the helper meanwhile
+        let helper = std::fs::read(HELPER_PATH)
+            .map_err(|e| InstallError::Failed(format!("the bundled helper is missing: {e}")))?;
+        let digest = hex(&Sha256::digest(&helper));
+        let port = HELPER_PORT.to_string();
+        let seen = hex(&Sha256::digest(inspect.trim().as_bytes()));
+        let fresh = if fresh { "1" } else { "0" };
+        let output = run(
+            session,
+            &["install", BUNDLED_VERSION, &digest, &port, &seen, fresh],
+            &helper,
+        )
+        .await?;
+        match output.status {
+            0 => {
+                return Ok(Inspected {
+                    installed,
+                    decision,
+                    replaced: true,
+                    created: output.stdout().lines().any(|line| line == "created"),
+                });
+            }
+            EXIT_CHANGED => continue,
+            EXIT_MISSING => return Err(InstallError::Missing),
+            EXIT_BUSY => return Err(InstallError::Busy),
+            EXIT_DIGEST => return Err(InstallError::Corrupted),
+            status => {
+                return Err(InstallError::Failed(format!(
+                    "installation exited with {status}: {}",
+                    String::from_utf8_lossy(&output.stderr).trim()
+                )))
+            }
+        }
+    }
+    Err(InstallError::Busy)
+}
+
+/// Writes the uninstall script that matches the bundled helper.
+pub(super) async fn write_uninstaller(session: &Session) -> Result<(), InstallError> {
+    let output = run(session, &["uninstaller"], UNINSTALL.as_bytes()).await?;
+    if output.status == 0 {
+        Ok(())
+    } else {
+        Err(InstallError::Failed(
+            "could not write the uninstall script".into(),
+        ))
+    }
+}
+
 impl From<SshError> for SetupOutcome {
     fn from(error: SshError) -> Self {
         match error {
@@ -199,19 +341,31 @@ impl From<SshError> for SetupOutcome {
 /// Verifies the headset, installs or reuses the helper, and completes only after an
 /// authenticated WSS handshake. Every step is safe to repeat, which is what Resume relies on.
 pub async fn setup(request: SetupRequest, on_stage: impl Fn(Stage)) -> SetupResult {
-    let mut installed = false;
+    let mut installed = Installed::default();
     let outcome = match run_setup(&request, &on_stage, &mut installed).await {
         Ok(outcome) | Err(outcome) => outcome,
     };
     info!("[SteamFrame] Setup finished: {outcome:?}");
-    SetupResult { outcome, installed }
+    SetupResult {
+        outcome,
+        installed: installed.any,
+    }
+}
+
+/// What this setup call installed, so a failure knows what to remove.
+#[derive(Default)]
+struct Installed {
+    /// This call installed the bundled helper.
+    any: bool,
+    /// That install created the helper folder.
+    created: bool,
 }
 
 /// Checks the request, then runs the setup steps in one SSH session.
 async fn run_setup(
     request: &SetupRequest,
     on_stage: &impl Fn(Stage),
-    installed: &mut bool,
+    installed: &mut Installed,
 ) -> Result<SetupOutcome, SetupOutcome> {
     // refuse requests that setup cannot run safely
     if !valid_pc_id(&request.pc_id) {
@@ -232,6 +386,19 @@ async fn run_setup(
     // run every step in one session
     let session = ssh::connect(&request.access).await?;
     let result = setup_session(request, &session, on_stage, installed).await;
+    // a failed reinstall removes a helper folder it created
+    if result.is_err() && installed.created && request.remove_on_failure {
+        match run(&session, &["uninstall_helper", &request.pc_id], b"").await {
+            Ok(output) if output.status == 0 => *installed = Installed::default(),
+            Ok(output) => warn!(
+                "[SteamFrame] Removing the helper after a failed install exited with {}",
+                output.status
+            ),
+            Err(error) => {
+                warn!("[SteamFrame] Could not remove the helper after a failed install: {error:?}")
+            }
+        }
+    }
     session.close().await;
     result
 }
@@ -241,7 +408,7 @@ async fn setup_session(
     request: &SetupRequest,
     session: &Session,
     on_stage: &impl Fn(Stage),
-    installed: &mut bool,
+    installed: &mut Installed,
 ) -> Result<SetupOutcome, SetupOutcome> {
     let failed = |message: String| SetupOutcome::Failed { message };
 
@@ -262,56 +429,41 @@ async fn setup_session(
 
     // install: compare the installed helper with the bundled one
     on_stage(Stage::Install);
-    let bundled_version = env!("CARGO_PKG_VERSION");
-    let inspect = run(session, &["inspect"], b"").await?.stdout();
-    let current: Option<HelperInfo> = serde_json::from_str(inspect.trim()).unwrap_or(None);
-    let decision = install_decision(current.as_ref(), bundled_version, PROTOCOL_VERSION);
-    let bundled_is_current = decision == InstallDecision::Install
-        || current
-            .as_ref()
-            .is_some_and(|info| info.version == bundled_version);
-    // stop, keep, or upload and install the bundled helper
-    match decision {
+    let inspected = install_bundled(session, false, true)
+        .await
+        .map_err(|error| match error {
+            InstallError::Busy => SetupOutcome::HelperBusy,
+            InstallError::Ssh(error) => error.into(),
+            error => failed(format!("{error:?}")),
+        })?;
+    // stop on an incompatible helper, else keep its uninstall script current
+    match inspected.decision {
         InstallDecision::NeedsAppUpdate => {
             return Err(SetupOutcome::NeedsAppUpdate {
-                helper_version: current.map(|info| info.version).unwrap_or_default(),
+                helper_version: inspected
+                    .installed
+                    .map(|info| info.version)
+                    .unwrap_or_default(),
             })
         }
-        InstallDecision::Reuse => {}
-        InstallDecision::Install => {
-            let helper = std::fs::read(HELPER_PATH)
-                .map_err(|e| failed(format!("the bundled helper is missing: {e}")))?;
-            let digest = hex(&Sha256::digest(&helper));
-            let port = HELPER_PORT.to_string();
-            let seen = hex(&Sha256::digest(inspect.trim().as_bytes()));
-            let output = run(
-                session,
-                &["install", bundled_version, &digest, &port, &seen],
-                &helper,
-            )
-            .await?;
-            match output.status {
-                0 => {
-                    *installed = true;
-                    on_stage(Stage::Installed);
-                }
-                EXIT_BUSY => return Err(SetupOutcome::HelperBusy),
-                status => {
-                    return Err(failed(format!(
-                        "installation exited with {status}: {}",
-                        String::from_utf8_lossy(&output.stderr).trim()
-                    )))
-                }
-            }
+        _ if inspected.replaced => {
+            *installed = Installed {
+                any: true,
+                created: inspected.created,
+            };
+            on_stage(Stage::Installed);
         }
+        _ => {}
     }
-
-    // leave an uninstall script that matches this helper
+    let bundled_is_current = inspected.replaced
+        || inspected
+            .installed
+            .as_ref()
+            .is_some_and(|info| info.version == BUNDLED_VERSION);
     if bundled_is_current {
-        let output = run(session, &["uninstaller"], UNINSTALL.as_bytes()).await?;
-        if output.status != 0 {
-            return Err(failed("could not write the uninstall script".into()));
-        }
+        write_uninstaller(session)
+            .await
+            .map_err(|_| failed("could not write the uninstall script".into()))?;
     }
 
     // connection: give this PC a token, start the helper
@@ -332,9 +484,9 @@ async fn setup_session(
             helper_version: hello.info.version,
         });
     }
-    if *installed && hello.info.version != bundled_version {
+    if installed.any && hello.info.version != BUNDLED_VERSION {
         return Err(failed(format!(
-            "the helper reports version {} after installing {bundled_version}",
+            "the helper reports version {} after installing {BUNDLED_VERSION}",
             hello.info.version
         )));
     }
@@ -345,8 +497,25 @@ async fn setup_session(
     })
 }
 
-/// Retries while a freshly started helper is still binding its port.
+/// Retries while a freshly started helper binds its port, for at most 30 seconds, which must stay
+/// under the SSH inactivity timeout in ssh.rs so cleanup can still use the session.
 async fn handshake(
+    request: &SetupRequest,
+    provisioned: &Provisioned,
+) -> Result<Hello, SetupOutcome> {
+    tokio::time::timeout(
+        Duration::from_secs(30),
+        retry_handshake(request, provisioned),
+    )
+    .await
+    .unwrap_or_else(|_| {
+        Err(SetupOutcome::Failed {
+            message: "the helper handshake timed out".into(),
+        })
+    })
+}
+
+async fn retry_handshake(
     request: &SetupRequest,
     provisioned: &Provisioned,
 ) -> Result<Hello, SetupOutcome> {
@@ -426,38 +595,48 @@ mod tests {
             version: version.into(),
             protocol_min: min,
             protocol_max: max,
+            digest: Some("aaaa".into()),
         }
     }
 
     #[test]
     fn install_decision_follows_compatibility_rows() {
         use InstallDecision::*;
-        let bundled = "26.10.0";
-        assert_eq!(install_decision(None, bundled, 1), Install);
+        let decide = |installed: Option<&HelperInfo>| {
+            install_decision(installed, "26.10.0", Some("aaaa"), 1)
+        };
+        assert_eq!(decide(None), Install);
+        assert_eq!(decide(Some(&info("26.9.0", 1, 1))), Install);
+        assert_eq!(decide(Some(&info("26.10.0-beta.3", 1, 1))), Install);
+        assert_eq!(decide(Some(&info("garbage", 1, 1))), Install);
+        assert_eq!(decide(Some(&info("26.10.0", 1, 1))), Reuse);
+        assert_eq!(decide(Some(&info("26.11.0", 1, 2))), Reuse);
+        assert_eq!(decide(Some(&info("26.11.0", 2, 3))), NeedsAppUpdate);
+    }
+
+    #[test]
+    fn same_version_with_other_files_is_repaired() {
+        use InstallDecision::*;
+        let mut changed = info("26.10.0", 1, 1);
+        changed.digest = Some("bbbb".into());
         assert_eq!(
-            install_decision(Some(&info("26.9.0", 1, 1)), bundled, 1),
-            Install
+            install_decision(Some(&changed), "26.10.0", Some("aaaa"), 1),
+            Repair
         );
+        changed.digest = None;
         assert_eq!(
-            install_decision(Some(&info("26.10.0-beta.3", 1, 1)), bundled, 1),
-            Install
+            install_decision(Some(&changed), "26.10.0", Some("aaaa"), 1),
+            Repair
         );
+        // a newer helper keeps its own files
+        let mut newer = info("26.11.0", 1, 1);
+        newer.digest = Some("bbbb".into());
         assert_eq!(
-            install_decision(Some(&info("garbage", 1, 1)), bundled, 1),
-            Install
-        );
-        assert_eq!(
-            install_decision(Some(&info("26.10.0", 1, 1)), bundled, 1),
+            install_decision(Some(&newer), "26.10.0", Some("aaaa"), 1),
             Reuse
         );
-        assert_eq!(
-            install_decision(Some(&info("26.11.0", 1, 2)), bundled, 1),
-            Reuse
-        );
-        assert_eq!(
-            install_decision(Some(&info("26.11.0", 2, 3)), bundled, 1),
-            NeedsAppUpdate
-        );
+        // a build without the helper has nothing to repair with
+        assert_eq!(install_decision(Some(&changed), "26.10.0", None, 1), Reuse);
     }
 
     #[test]

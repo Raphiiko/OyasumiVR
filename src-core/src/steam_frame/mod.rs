@@ -2,6 +2,7 @@ pub mod commands;
 mod connection;
 mod devkit;
 mod discovery;
+mod maintenance;
 mod models;
 mod setup;
 mod ssh;
