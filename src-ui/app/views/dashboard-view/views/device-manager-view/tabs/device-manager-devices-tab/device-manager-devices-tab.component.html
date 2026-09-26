@@ -120,12 +120,12 @@
                       (click)="explainFramePill(pill)"
                     >
                       <i class="material-icons">{{ pill.icon }}</i>
-                      {{ 'frame.status.' + pill.key | transloco }}
+                      {{ 'steamFrame.status.' + pill.key | transloco }}
                     </button>
                   } @else {
                     <span [class]="'frame-pill frame-pill-' + pill.tone">
                       <i class="material-icons">{{ pill.icon }}</i>
-                      {{ 'frame.status.' + pill.key | transloco: { time: pill.time } }}
+                      {{ 'steamFrame.status.' + pill.key | transloco: { time: pill.time } }}
                     </span>
                   }
                 }
@@ -134,7 +134,7 @@
                     class="btn btn-primary btn-frame"
                     (click)="framePairing.openWizard(device)"
                   >
-                    {{ 'frame.actions.' + action | transloco }}
+                    {{ 'steamFrame.actions.' + action | transloco }}
                   </button>
                 }
                 <!-- Power Button -->
