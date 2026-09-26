@@ -174,6 +174,31 @@ describe('Steam Frame pairing flow', () => {
     });
   });
 
+  it('abandons a running discovery when the user switches to manual entry', async () => {
+    let finish!: (candidates: unknown[]) => void;
+    handlers['steam_frame_discover_headsets'] = () => new Promise((resolve) => (finish = resolve));
+    const service = await start();
+    const discovery = service.discover();
+    service.go('manual');
+    finish([]);
+    await discovery;
+    expect(service.flow()).toMatchObject({ page: 'manual', busy: false });
+  });
+
+  it('keeps an unsaved completion out of memory so Cancel still cleans up', async () => {
+    handlers['steam_frame_check_ssh_access'] = () => ({ status: 'ok', hostKeyPin: 'PIN' });
+    store.save
+      .mockResolvedValueOnce(undefined)
+      .mockResolvedValueOnce(undefined)
+      .mockResolvedValueOnce(undefined)
+      .mockRejectedValueOnce(new Error('disk full'));
+    const service = await start();
+    await service.pair();
+    expect(service.pairingFor(device.id)?.complete).toBe(false);
+    await service.cancel();
+    expect(calls('steam_frame_remove_access')).toHaveLength(1);
+  });
+
   it('offers a working retry when the pairing key cannot be created', async () => {
     handlers['steam_frame_create_pairing_keys'] = () => Promise.reject(new Error('no entropy'));
     handlers['steam_frame_request_approval'] = () => 'declined';

@@ -679,7 +679,10 @@ export class AppModule {
               'DeviceManagerService initialization',
               this.deviceManagerService.init()
             ).then(() =>
-              this.logInit('Initializing Steam Frame pairing', this.framePairingService.init())
+              this.logInit(
+                'Initializing Steam Frame pairing',
+                this.framePairingService.init()
+              ).catch(() => {})
             ),
             // Initialize Steam support
             await this.logInit('Initializing Steam', this.steamService.init()),
