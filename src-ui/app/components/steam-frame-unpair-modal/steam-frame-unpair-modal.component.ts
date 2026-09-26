@@ -13,11 +13,13 @@ export interface SteamFrameUnpairModalInputModel {
 
 type UnpairPage = 'checking' | 'choose' | 'working' | 'failed' | 'forget';
 
-const UNPAIR_FAILURE_CODES: Record<SteamFrameUnpairFailure, string> = {
-  unreachable: 'SF-421',
-  hostKeyChanged: 'SF-422',
-  helperBusy: 'SF-423',
-  failed: 'SF-424',
+/** The error code and the `unpair.failed` body key for each failure. */
+const UNPAIR_FAILURES: Record<SteamFrameUnpairFailure, { code: string; body: string }> = {
+  unreachable: { code: 'SF-421', body: 'body' },
+  rejected: { code: 'SF-425', body: 'rejected' },
+  hostKeyChanged: { code: 'SF-422', body: 'hostKeyChanged' },
+  helperBusy: { code: 'SF-423', body: 'helperBusy' },
+  failed: { code: 'SF-424', body: 'other' },
 };
 
 @Component({
@@ -41,7 +43,7 @@ export class SteamFrameUnpairModalComponent
   readonly otherPcs = signal(0);
   readonly uninstalling = signal(false);
   readonly copied = signal(false);
-  readonly failureCode = signal('');
+  readonly failure = signal(UNPAIR_FAILURES.failed);
   readonly uninstallCommand = STEAM_FRAME_UNINSTALL_COMMAND;
   /** Whether the last attempt uninstalled the helper, so Try again repeats it; unset before one. */
   private choice?: boolean;
@@ -73,7 +75,7 @@ export class SteamFrameUnpairModalComponent
   }
 
   private fail(failure: SteamFrameUnpairFailure) {
-    this.failureCode.set(UNPAIR_FAILURE_CODES[failure]);
+    this.failure.set(UNPAIR_FAILURES[failure]);
     this.page.set('failed');
   }
 
