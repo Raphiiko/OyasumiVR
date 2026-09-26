@@ -108,7 +108,7 @@ pub async fn connect(access: &Access) -> Result<Session, SshError> {
         expected: access.host_key_pin.clone(),
         observed: observed.clone(),
     };
-    // must stay longer than the 45 s lock wait in helper.sh
+    // must stay longer than the 60 s lock wait in helper.sh
     let config = Arc::new(client::Config {
         inactivity_timeout: Some(Duration::from_secs(90)),
         ..Default::default()

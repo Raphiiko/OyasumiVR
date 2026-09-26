@@ -86,10 +86,13 @@ pub async fn set_pairings(pairings: Vec<Pairing>) {
     *connections = kept;
 }
 
-/// Starts a helper update for this pairing. Returns false for an unknown pairing.
+/// Starts a helper update for this pairing. Returns false for an unknown or stopped pairing.
 pub async fn request_update(pairing_id: &str) -> bool {
     let connections = CONNECTIONS.lock().await;
-    let Some(connection) = connections.get(pairing_id) else {
+    let Some(connection) = connections
+        .get(pairing_id)
+        .filter(|connection| !connection.task.is_finished())
+    else {
         return false;
     };
     connection.update.notify_one();

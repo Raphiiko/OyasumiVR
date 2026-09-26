@@ -139,7 +139,7 @@ file. `ERROR_CODES` in `steam-frame-pairing-modal.component.ts` maps them from `
 | SF-102 | `keys`                  | creating the SSH key pair (`steam_frame_create_pairing_keys`)                |
 | SF-201 | `offline`               | setup could not reach the headset over SSH                                   |
 | SF-202 | `identityMissing`       | `steamvr.vrsettings` on the headset lacks the serial, model, or manufacturer |
-| SF-203 | `helperBusy`            | another PC held the helper lock for 45 s                                     |
+| SF-203 | `helperBusy`            | another PC held the helper lock for 60 s                                     |
 | SF-204 | `setupFailed`           | any other setup failure; the core logs the message                           |
 | SF-301 | `wrongDeviceAccessLeft` | cleanup on a wrong headset did not report done                               |
 
