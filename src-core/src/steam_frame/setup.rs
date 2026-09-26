@@ -244,6 +244,7 @@ pub async fn install_bundled(
     fresh: bool,
 ) -> Result<Inspected, InstallError> {
     for _ in 0..3 {
+        // decide from what is installed; only a first install may create the folder
         let inspect = run(session, &["inspect"], b"").await?.stdout();
         let installed: Option<HelperInfo> = serde_json::from_str(inspect.trim()).unwrap_or(None);
         if installed.is_none()
@@ -273,6 +274,8 @@ pub async fn install_bundled(
                 replaced: false,
             });
         }
+
+        // upload and install, deciding again when another PC changed the helper meanwhile
         let helper = std::fs::read(HELPER_PATH)
             .map_err(|e| InstallError::Failed(format!("the bundled helper is missing: {e}")))?;
         let digest = hex(&Sha256::digest(&helper));
@@ -473,8 +476,8 @@ async fn setup_session(
     })
 }
 
-/// Retries while a freshly started helper is still binding its port, for at most 30 seconds so
-/// the SSH session is still open for cleanup afterwards.
+/// Retries while a freshly started helper binds its port, for at most 30 seconds, which must stay
+/// under the SSH inactivity timeout in ssh.rs so cleanup can still use the session.
 async fn handshake(
     request: &SetupRequest,
     provisioned: &Provisioned,
