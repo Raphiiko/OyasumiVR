@@ -89,6 +89,12 @@ pub async fn steam_frame_sync_connections(pairings: Vec<Pairing>) {
     connection::set_pairings(pairings).await
 }
 
+/// Starts a helper update. The result arrives as connection state events.
+#[tauri::command]
+pub async fn steam_frame_update_helper(pairing_id: String) -> bool {
+    connection::request_update(&pairing_id).await
+}
+
 #[tauri::command]
 pub async fn steam_frame_get_connection_states() -> Vec<State> {
     connection::states().await

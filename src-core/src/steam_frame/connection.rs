@@ -6,13 +6,19 @@ use std::{
 
 use futures_util::{SinkExt, StreamExt};
 use log::{info, warn};
-use tokio::{sync::Mutex, task::JoinHandle};
+use tokio::{
+    sync::{Mutex, Notify},
+    task::JoinHandle,
+};
 use tokio_tungstenite::tungstenite::Message;
 
 use super::{
     discovery,
-    models::{Identity, Pairing, State, Status},
-    setup::{self, ProvisionError},
+    maintenance::{self, Recovery, UpdateOutcome},
+    models::{Identity, Maintenance, Pairing, State, Status},
+    setup::{
+        self, bundled_digest, install_decision, InstallDecision, ProvisionError, BUNDLED_VERSION,
+    },
     ssh::{self, SshError},
     valid_pc_id,
     wss::{self, Hello, Socket, WssError},
@@ -24,10 +30,12 @@ const EVENT: &str = "STEAM_FRAME_CONNECTION_STATE";
 const PING_INTERVAL: Duration = Duration::from_secs(15);
 const SILENCE_LIMIT: Duration = Duration::from_secs(40);
 const MAX_BACKOFF: Duration = Duration::from_secs(60);
+const UPDATED_NOTICE: Duration = Duration::from_secs(60);
 
 struct Connection {
     pairing: Arc<Mutex<Pairing>>,
     task: JoinHandle<()>,
+    update: Arc<Notify>,
 }
 
 static CONNECTIONS: LazyLock<Mutex<HashMap<String, Connection>>> = LazyLock::new(Default::default);
@@ -52,12 +60,14 @@ pub async fn set_pairings(pairings: Vec<Pairing>) {
         }
         let id = pairing.id.clone();
         let shared = Arc::new(Mutex::new(pairing));
-        let task = tokio::spawn(run(shared.clone()));
+        let update = Arc::new(Notify::new());
+        let task = tokio::spawn(run(shared.clone(), update.clone()));
         let replaced = kept.insert(
             id,
             Connection {
                 pairing: shared,
                 task,
+                update,
             },
         );
         if let Some(replaced) = replaced {
@@ -70,6 +80,16 @@ pub async fn set_pairings(pairings: Vec<Pairing>) {
         STATES.lock().await.remove(&id);
     }
     *connections = kept;
+}
+
+/// Starts a helper update for this pairing. Returns false for an unknown pairing.
+pub async fn request_update(pairing_id: &str) -> bool {
+    let connections = CONNECTIONS.lock().await;
+    let Some(connection) = connections.get(pairing_id) else {
+        return false;
+    };
+    connection.update.notify_one();
+    true
 }
 
 /// The last state of every running connection.
@@ -94,7 +114,7 @@ enum Attempt {
 }
 
 /// Keeps one pairing connected for the life of the task, retrying with backoff.
-async fn run(shared: Arc<Mutex<Pairing>>) {
+async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>) {
     // announce that this pairing is connecting
     let initial = shared.lock().await.clone();
     let mut state = State {
@@ -102,12 +122,16 @@ async fn run(shared: Arc<Mutex<Pairing>>) {
         status: Status::Connecting,
         last_seen: None,
         helper_version: None,
+        update_available: false,
+        maintenance: None,
         address: initial.access.address.clone(),
         cert_pin: initial.cert_pin.clone(),
     };
     publish(&state).await;
     let mut backoff = Duration::from_secs(2);
     let mut retries = 0;
+    // when the "updated" notice clears
+    let mut notice: Option<Instant> = None;
     loop {
         // try once; a repair gets at most two immediate retries
         let pairing = shared.lock().await.clone();
@@ -116,12 +140,37 @@ async fn run(shared: Arc<Mutex<Pairing>>) {
             result => result,
         };
         match result {
-            // connected: refuse an unusable helper, else hold the socket
-            Attempt::Connected(socket, hello) => {
+            // connected: update an older helper, refuse an unusable one, or hold
+            Attempt::Connected(mut socket, hello) => {
                 let pairing = shared.lock().await.clone();
-                state.address = pairing.access.address;
-                state.cert_pin = pairing.cert_pin;
-                if let Some(status) = incompatibility(&hello, &pairing.identity) {
+                state.address = pairing.access.address.clone();
+                state.cert_pin = pairing.cert_pin.clone();
+                state.helper_version = Some(hello.info.version.clone());
+                state.update_available = update_available(&hello);
+                let settled = match &state.maintenance {
+                    Some(Maintenance::Failed { .. } | Maintenance::Busy) => !state.update_available,
+                    Some(Maintenance::Updated { version }) => {
+                        *version != hello.info.version
+                            || notice.is_none_or(|deadline| deadline <= Instant::now())
+                    }
+                    _ => false,
+                };
+                if settled {
+                    state.maintenance = None;
+                    notice = None;
+                }
+                let incompatible = incompatibility(&hello, &pairing.identity);
+                if state.update_available
+                    && incompatible != Some(Status::IdentityChanged)
+                    && maintenance::take_automatic_attempt(&pairing.id).await
+                {
+                    wss::close(*socket).await;
+                    if maintain(&mut state, &pairing, &mut notice).await {
+                        return;
+                    }
+                    continue;
+                }
+                if let Some(status) = incompatible {
                     wss::close(*socket).await;
                     if state.status != status {
                         warn!(
@@ -133,15 +182,22 @@ async fn run(shared: Arc<Mutex<Pairing>>) {
                     publish(&state).await;
                 } else {
                     state.status = Status::Connected;
-                    state.helper_version = Some(hello.info.version.clone());
                     state.last_seen = Some(get_time() as u64);
                     publish(&state).await;
                     backoff = Duration::from_secs(2);
                     retries = 0;
-                    hold(*socket).await;
+                    let requested =
+                        hold_connected(&mut socket, &update, &mut state, &mut notice).await;
+                    wss::close(*socket).await;
                     state.last_seen = Some(get_time() as u64);
-                    state.status = Status::Offline;
-                    publish(&state).await;
+                    if requested {
+                        if maintain(&mut state, &pairing, &mut notice).await {
+                            return;
+                        }
+                    } else {
+                        state.status = Status::Offline;
+                        publish(&state).await;
+                    }
                     continue;
                 }
             }
@@ -150,7 +206,7 @@ async fn run(shared: Arc<Mutex<Pairing>>) {
                 retries += 1;
                 continue;
             }
-            // failed: report it, stop on a changed host key
+            // failed: report it, stop on a changed host key or removed pairing
             Attempt::Failed(status) => {
                 let pairing = shared.lock().await.clone();
                 state.address = pairing.access.address;
@@ -159,16 +215,105 @@ async fn run(shared: Arc<Mutex<Pairing>>) {
                     state.status = status;
                     publish(&state).await;
                 }
-                if status == Status::HostKeyChanged {
-                    warn!("[SteamFrame] The headset's SSH host key differs from the pinned one, so the connection stops until it is paired again");
-                    return;
+                match status {
+                    Status::HostKeyChanged => {
+                        warn!("[SteamFrame] The headset's SSH host key differs from the pinned one, so the connection stops until it is paired again");
+                        return;
+                    }
+                    Status::PairingRemoved => {
+                        warn!("[SteamFrame] The headset rejects this PC's key, so the connection stops until it is paired again");
+                        return;
+                    }
+                    _ => {}
                 }
             }
         }
         // wait before the next attempt, doubling up to a minute
-        tokio::time::sleep(backoff).await;
+        tokio::select! {
+            _ = tokio::time::sleep(backoff) => {}
+            _ = update.notified() => {
+                let pairing = shared.lock().await.clone();
+                if maintain(&mut state, &pairing, &mut notice).await {
+                    return;
+                }
+                backoff = Duration::from_secs(2);
+                retries = 0;
+                continue;
+            }
+        }
         backoff = (backoff * 2).min(MAX_BACKOFF);
         retries = 0;
+    }
+}
+
+fn update_available(hello: &Hello) -> bool {
+    matches!(
+        install_decision(
+            Some(&hello.info),
+            BUNDLED_VERSION,
+            bundled_digest(),
+            PROTOCOL_VERSION
+        ),
+        InstallDecision::Install | InstallDecision::Repair
+    )
+}
+
+/// Runs one helper update and publishes its progress and result. Returns true when the
+/// connection must stop until the headset is paired again.
+async fn maintain(state: &mut State, pairing: &Pairing, notice: &mut Option<Instant>) -> bool {
+    state.maintenance = Some(Maintenance::Updating);
+    publish(state).await;
+    state.maintenance = match maintenance::update(pairing).await {
+        UpdateOutcome::Updated { version } => {
+            state.update_available = false;
+            *notice = Some(Instant::now() + UPDATED_NOTICE);
+            Some(Maintenance::Updated { version })
+        }
+        UpdateOutcome::Unchanged => None,
+        UpdateOutcome::NeedsAppUpdate => {
+            state.status = Status::NeedsAppUpdate;
+            None
+        }
+        UpdateOutcome::Missing => {
+            state.status = Status::HelperMissing;
+            None
+        }
+        UpdateOutcome::Busy => Some(Maintenance::Busy),
+        UpdateOutcome::Failed(reason) => Some(Maintenance::Failed { reason }),
+        UpdateOutcome::HostKeyChanged => {
+            state.status = Status::HostKeyChanged;
+            None
+        }
+        UpdateOutcome::Rejected => {
+            state.status = Status::PairingRemoved;
+            None
+        }
+    };
+    publish(state).await;
+    matches!(
+        state.status,
+        Status::HostKeyChanged | Status::PairingRemoved
+    )
+}
+
+/// Holds a connected socket until it closes, or returns true when an update is requested.
+/// Clears the "updated" notice when its minute is up.
+async fn hold_connected(
+    socket: &mut Socket,
+    update: &Notify,
+    state: &mut State,
+    notice: &mut Option<Instant>,
+) -> bool {
+    loop {
+        match hold(socket, update, *notice).await {
+            Wake::Closed => return false,
+            Wake::Update => return true,
+            Wake::NoticeExpired => {
+                *notice = None;
+                state.maintenance = None;
+                publish(state).await;
+            }
+        }
     }
 }
 
@@ -204,7 +349,14 @@ async fn attempt(pairing: &Pairing, shared: &Mutex<Pairing>) -> Attempt {
         Ok((socket, hello)) => Attempt::Connected(Box::new(socket), hello),
         Err(WssError::Unauthorized) => restore_token(pairing).await,
         Err(WssError::CertificateChanged(observed)) => repin(pairing, shared, &observed).await,
-        Err(WssError::Unreachable) => find_moved_helper(pairing, shared).await,
+        Err(WssError::Unreachable) => match maintenance::recover(pairing).await {
+            Recovery::Running => Attempt::Retry,
+            Recovery::Missing => Attempt::Failed(Status::HelperMissing),
+            Recovery::Down => Attempt::Failed(Status::Offline),
+            Recovery::Unreachable => find_moved_helper(pairing, shared).await,
+            Recovery::HostKeyChanged => Attempt::Failed(Status::HostKeyChanged),
+            Recovery::Rejected => Attempt::Failed(Status::PairingRemoved),
+        },
         Err(WssError::Failed(message)) => {
             warn!("[SteamFrame] Helper connection failed: {message}");
             Attempt::Failed(Status::Offline)
@@ -212,10 +364,11 @@ async fn attempt(pairing: &Pairing, shared: &Mutex<Pairing>) -> Attempt {
     }
 }
 
-/// Only a changed host key needs its own status; any other SSH error means offline.
+/// A changed host key and a rejected key get their own status; anything else means offline.
 fn ssh_failure(error: SshError) -> Attempt {
     match error {
         SshError::HostKeyChanged => Attempt::Failed(Status::HostKeyChanged),
+        SshError::Rejected => Attempt::Failed(Status::PairingRemoved),
         _ => Attempt::Failed(Status::Offline),
     }
 }
@@ -234,6 +387,7 @@ async fn restore_token(pairing: &Pairing) -> Attempt {
             Attempt::Retry
         }
         Err(ProvisionError::Ssh(error)) => ssh_failure(error),
+        Err(ProvisionError::HelperMissing) => Attempt::Failed(Status::HelperMissing),
         Err(error) => {
             warn!("[SteamFrame] Could not restore this PC's helper token: {error:?}");
             Attempt::Failed(Status::Offline)
@@ -305,24 +459,40 @@ async fn find_moved_helper(pairing: &Pairing, shared: &Mutex<Pairing>) -> Attemp
     Attempt::Failed(Status::Offline)
 }
 
-/// Keeps the connection open until the helper stops answering.
-async fn hold(mut socket: Socket) {
+enum Wake {
+    Closed,
+    Update,
+    NoticeExpired,
+}
+
+/// Keeps the connection open until the helper stops answering, an update is requested, or the
+/// notice deadline passes.
+async fn hold(socket: &mut Socket, update: &Notify, notice: Option<Instant>) -> Wake {
     // ping on a timer, give up after long silence
     let mut ticker = tokio::time::interval(PING_INTERVAL);
     let mut last_heard = Instant::now();
+    let notice_expired = async {
+        match notice {
+            Some(deadline) => tokio::time::sleep_until(deadline.into()).await,
+            None => std::future::pending().await,
+        }
+    };
+    tokio::pin!(notice_expired);
     loop {
         tokio::select! {
             message = socket.next() => match message {
-                Some(Ok(Message::Close(_))) | Some(Err(_)) | None => return,
+                Some(Ok(Message::Close(_))) | Some(Err(_)) | None => return Wake::Closed,
                 Some(Ok(_)) => last_heard = Instant::now(),
             },
             _ = ticker.tick() => {
                 if last_heard.elapsed() > SILENCE_LIMIT
                     || socket.send(Message::Ping(Vec::new().into())).await.is_err()
                 {
-                    return;
+                    return Wake::Closed;
                 }
             }
+            _ = update.notified() => return Wake::Update,
+            _ = &mut notice_expired => return Wake::NoticeExpired,
         }
     }
 }
@@ -338,6 +508,7 @@ mod tests {
                 version: "26.10.0".into(),
                 protocol_min: min,
                 protocol_max: max,
+                digest: None,
             },
             identity,
         }

@@ -11,6 +11,7 @@ use rustls::{
     ServerConfig,
 };
 use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
 use tokio::net::{TcpListener, TcpStream};
 use tokio_rustls::TlsAcceptor;
 use tokio_tungstenite::tungstenite::{
@@ -32,19 +33,34 @@ struct Config {
     port: u16,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Info {
     pub version: &'static str,
     pub protocol_min: u32,
     pub protocol_max: u32,
+    /// SHA-256 of this process's executable, as lowercase hex. Empty when it cannot be read.
+    pub digest: String,
 }
 
-pub const INFO: Info = Info {
-    version: VERSION,
-    protocol_min: PROTOCOL_MIN,
-    protocol_max: PROTOCOL_MAX,
-};
+/// Hashes `/proc/self/exe`, which still holds the running code after an update replaces the file.
+pub fn info() -> Info {
+    let executable = std::fs::read("/proc/self/exe")
+        .or_else(|_| std::env::current_exe().and_then(std::fs::read));
+    Info {
+        version: VERSION,
+        protocol_min: PROTOCOL_MIN,
+        protocol_max: PROTOCOL_MAX,
+        digest: executable
+            .map(|bytes| {
+                Sha256::digest(bytes)
+                    .iter()
+                    .map(|byte| format!("{byte:02x}"))
+                    .collect()
+            })
+            .unwrap_or_default(),
+    }
+}
 
 #[derive(Serialize, Debug, PartialEq)]
 pub struct Identity {
@@ -201,7 +217,7 @@ fn unauthorized() -> ErrorResponse {
 
 /// Serves one PC: TLS, token check, hello message, then holds the socket until it closes.
 #[allow(clippy::result_large_err)] // the callback signature belongs to tungstenite
-async fn handle(stream: TcpStream, acceptor: TlsAcceptor, root: Arc<PathBuf>) {
+async fn handle(stream: TcpStream, acceptor: TlsAcceptor, root: Arc<PathBuf>, info: Arc<Info>) {
     // finish the TLS handshake
     let Ok(Ok(tls)) = tokio::time::timeout(HANDSHAKE_TIMEOUT, acceptor.accept(stream)).await else {
         return;
@@ -224,7 +240,7 @@ async fn handle(stream: TcpStream, acceptor: TlsAcceptor, root: Arc<PathBuf>) {
     // send the version and headset identity
     let hello = Hello {
         r#type: "hello",
-        info: INFO,
+        info: (*info).clone(),
         identity: read_identity(),
     };
     let Ok(hello) = serde_json::to_string(&hello) else {
@@ -254,10 +270,11 @@ pub async fn bind(root: &Path) -> io::Result<(TcpListener, TlsAcceptor)> {
 /// Accepts connections forever, one task per connection.
 pub async fn serve(root: PathBuf, listener: TcpListener, acceptor: TlsAcceptor) -> io::Result<()> {
     let root = Arc::new(root);
+    let info = Arc::new(info());
     loop {
         match listener.accept().await {
             Ok((stream, _)) => {
-                tokio::spawn(handle(stream, acceptor.clone(), root.clone()));
+                tokio::spawn(handle(stream, acceptor.clone(), root.clone(), info.clone()));
             }
             Err(error) => {
                 eprintln!("accept failed: {error}");
