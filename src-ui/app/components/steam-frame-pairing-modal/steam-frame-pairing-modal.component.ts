@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { openUrl } from '@tauri-apps/plugin-opener';
 import { TranslocoModule } from '@jsverse/transloco';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
+import { isValidHostname, isValidIPv4, isValidIPv6 } from '../../utils/regex-utils';
 import { SteamFramePairingService } from '../../services/steam-frame-pairing.service';
 import { SteamFramePage, SteamFrameSetupStage } from '../../models/steam-frame';
 
@@ -88,9 +89,7 @@ export class SteamFramePairingModalComponent extends BaseModalComponent<void, vo
   readonly stageIndex = computed(() => this.stages.indexOf(this.flow()?.stage ?? 'verify'));
   readonly validAddress = computed(() => {
     const address = this.address().trim();
-    const ipv4 = address.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/);
-    if (ipv4) return ipv4.slice(1).every((part) => +part <= 255);
-    return /^[a-z0-9-]+(\.[a-z0-9-]+)*$/i.test(address);
+    return isValidIPv4(address) || isValidIPv6(address) || isValidHostname(address);
   });
 
   readonly uninstallCommand = 'bash ~/.local/share/oyasumivr_helper/uninstall';
