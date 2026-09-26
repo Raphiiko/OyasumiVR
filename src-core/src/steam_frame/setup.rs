@@ -386,7 +386,7 @@ async fn run_setup(
     let result = setup_session(request, &session, on_stage, installed).await;
     // a failed reinstall removes a helper folder it created
     if result.is_err() && installed.created && request.remove_on_failure {
-        match run(&session, &["uninstall_helper"], b"").await {
+        match run(&session, &["uninstall_helper", &request.pc_id], b"").await {
             Ok(output) if output.status == 0 => *installed = Installed::default(),
             Ok(output) => warn!(
                 "[SteamFrame] Removing the helper after a failed install exited with {}",
