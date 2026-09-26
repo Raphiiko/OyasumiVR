@@ -193,10 +193,14 @@ pub enum CleanupMode {
 #[serde(tag = "status", rename_all = "camelCase")]
 pub enum CleanupOutcome {
     Done,
+    /// The headset rejects this PC's key, so the cleanup changed nothing on it.
+    Rejected,
     Unreachable,
     HostKeyChanged,
     HelperBusy,
-    Failed { message: String },
+    Failed {
+        message: String,
+    },
 }
 
 #[derive(Serialize)]

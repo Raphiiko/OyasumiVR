@@ -48,10 +48,10 @@
     @case ('failed') {
       <div class="pane-title">{{ t('unpair.failed.title') }}</div>
       <div class="pane-content">
-        <p>{{ t('unpair.failed.body') }}</p>
+        <p>{{ t('unpair.failed.' + failure().body) }}</p>
         <p>{{ t('unpair.failed.forget') }}</p>
         <p
-          ><small>{{ t('unpair.failed.code', { code: failureCode() }) }}</small></p
+          ><small>{{ t('unpair.failed.code', { code: failure().code }) }}</small></p
         >
       </div>
       <div class="pane-actions spread">

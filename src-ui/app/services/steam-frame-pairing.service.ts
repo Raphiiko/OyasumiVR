@@ -393,7 +393,9 @@ export class SteamFramePairingService {
         return this.patchFlow({
           page: 'wrongDevice',
           busy: false,
-          error: outcome.status === 'done' ? undefined : 'wrongDeviceAccessLeft',
+          error: ['done', 'rejected'].includes(outcome.status)
+            ? undefined
+            : 'wrongDeviceAccessLeft',
         });
       }
       case 'needsAppUpdate':
@@ -469,8 +471,7 @@ export class SteamFramePairingService {
       pcId: pairing.id,
       publicKey: pairing.publicKey,
     });
-    if (outcome.status === 'ok') return outcome.count;
-    return outcome.status === 'rejected' ? 0 : outcome.status;
+    return outcome.status === 'ok' ? outcome.count : outcome.status;
   }
 
   /**
@@ -542,7 +543,7 @@ export class SteamFramePairingService {
         pairing,
         pairing.helperInstalledByPairing ? 'unused' : 'keep'
       );
-      if (outcome.status !== 'done') return false;
+      if (!['done', 'rejected'].includes(outcome.status)) return false;
     }
 
     // headset is clean; a failed local delete is harmless

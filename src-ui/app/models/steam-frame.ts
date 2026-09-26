@@ -110,11 +110,12 @@ export type SteamFrameOtherPcsOutcome =
   | { status: 'failed'; message: string };
 
 export type SteamFrameCleanupOutcome =
-  | { status: 'done' | 'unreachable' | 'hostKeyChanged' | 'helperBusy' }
+  | { status: 'done' | 'rejected' | 'unreachable' | 'hostKeyChanged' | 'helperBusy' }
   | { status: 'failed'; message: string };
 
 /** Why the headset could not be asked or cleaned up while unpairing. */
-export type SteamFrameUnpairFailure = 'unreachable' | 'hostKeyChanged' | 'helperBusy' | 'failed';
+export type SteamFrameUnpairFailure =
+  'rejected' | 'unreachable' | 'hostKeyChanged' | 'helperBusy' | 'failed';
 
 export type SteamFramePage =
   | 'intro'

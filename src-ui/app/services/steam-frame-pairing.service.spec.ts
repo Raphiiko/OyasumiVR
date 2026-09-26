@@ -560,12 +560,12 @@ describe('Steam Frame unpairing', () => {
     expect(service.pairingFor(device.id)).toBeUndefined();
   });
 
-  it('counts other PCs, and treats a removed pairing as none', async () => {
+  it('counts other PCs, and reports why the headset cannot be asked', async () => {
     const { service, pairing } = await paired();
     handlers['steam_frame_count_other_pcs'] = () => ({ status: 'ok', count: 2 });
     expect(await service.otherPcCount(pairing)).toBe(2);
     handlers['steam_frame_count_other_pcs'] = () => ({ status: 'rejected' });
-    expect(await service.otherPcCount(pairing)).toBe(0);
+    expect(await service.otherPcCount(pairing)).toBe('rejected');
     handlers['steam_frame_count_other_pcs'] = () => ({ status: 'unreachable' });
     expect(await service.otherPcCount(pairing)).toBe('unreachable');
   });

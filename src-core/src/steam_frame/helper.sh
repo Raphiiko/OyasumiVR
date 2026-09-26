@@ -228,6 +228,10 @@ record() {
   [[ $key =~ $public_key ]] || exit 64
   [ -d "$root/clients" ] || return 0
   [ "$(cat "$root/clients/$pc.pub" 2>/dev/null)" != "$key" ] || return 0
+  # the uninstall script reads clients/*.pub under this lock
+  exec 8>"$HOME/.ssh/.oyasumivr-keys.lock"
+  flock -w 10 8 || exit 75
+  [ -d "$root/clients" ] || return 0
   printf '%s\n' "$key" >"$root/clients/$pc.pub.tmp"
   mv "$root/clients/$pc.pub.tmp" "$root/clients/$pc.pub"
 }
@@ -254,17 +258,13 @@ cleanup() {
   type=$(cut -d' ' -f1 <<<"$key")
   data=$(cut -d' ' -f2 <<<"$key")
   # a busy helper changes nothing, so a retry can still log in
-  if [ -d "$root" ]; then
-    lock
-    rm -f "$root/clients/$pc" "$root/clients/$pc.pub"
-    if [ "$mode" = uninstall ] || { [ "$mode" = unused ] && [ -z "$(ls -A "$root/clients" 2>/dev/null)" ]; }; then
-      remove_helper
-    fi
-  fi
+  [ ! -d "$root" ] || lock
   local keys="$HOME/.ssh/authorized_keys"
   # every authorized_keys writer holds this lock, including uninstall
   exec 8>"$HOME/.ssh/.oyasumivr-keys.lock"
   flock -w 10 8 || exit 75
+
+  # remove the key lines before the records the uninstall script finds them by
   if [ -f "$keys" ]; then
     local temp
     temp=$(mktemp "$HOME/.ssh/authorized_keys.XXXXXX")
@@ -274,6 +274,14 @@ cleanup() {
     }' "$keys" >"$temp"
     chmod --reference="$keys" "$temp"
     mv "$temp" "$keys"
+  fi
+
+  # then the token, and the helper when the mode asks for it
+  if [ -d "$root" ]; then
+    rm -f "$root/clients/$pc" "$root/clients/$pc.pub"
+    if [ "$mode" = uninstall ] || { [ "$mode" = unused ] && [ -z "$(ls -A "$root/clients" 2>/dev/null)" ]; }; then
+      remove_helper
+    fi
   fi
 }
 

@@ -145,7 +145,7 @@ file. `ERROR_CODES` in `steam-frame-pairing-modal.component.ts` maps them from `
 | SF-301 | `wrongDeviceAccessLeft` | cleanup on a wrong headset did not report done                               |
 
 Device Manager shows these in the explanation of a problem pill, from `FRAME_STATUS_ROWS`, the
-maintenance pills, and `UPDATE_FAILURE_CODES`. The unpair dialog shows `UNPAIR_FAILURE_CODES` on
+maintenance pills, and `UPDATE_FAILURE_CODES`. The unpair dialog shows `UNPAIR_FAILURES` on
 its Couldn't unpair page:
 
 | Code   | Connection status       | What happened                                                       |
@@ -166,6 +166,7 @@ its Couldn't unpair page:
 | SF-422 | unpair `hostKeyChanged` | the SSH host key at the address differs from the pinned one         |
 | SF-423 | unpair `helperBusy`     | another PC held the maintenance or authorized_keys lock             |
 | SF-424 | unpair `failed`         | any other cleanup failure; the core logs the message                |
+| SF-425 | unpair `rejected`       | the headset rejects this PC's SSH key, so nothing on it changed     |
 
 SF-404 (`helperOutdated`) has no explanation: its Update helper pill starts the update.
 
@@ -205,8 +206,10 @@ offers two modes of `helper.sh cleanup`:
 - `uninstall` stops the service and removes it with the helper folder. Other PCs keep their key
   lines, so they see `helperMissing`.
 
-A cleanup that cannot get the maintenance lock changes nothing and reports busy. The service deletes the local pairing only after the headset reports `done`. Otherwise the dialog
-shows "Couldn't unpair" with Try again and Forget on this PC. Forget deletes only local data. A
+A cleanup that cannot get the maintenance or authorized_keys lock changes nothing and reports busy. The service deletes the local pairing only after the headset reports `done`. Otherwise the dialog
+shows "Couldn't unpair" with Try again and Forget on this PC, including when the headset rejects
+this PC's key, because then nothing on it changed. Cancel cleanup and wrong-headset cleanup count a
+rejected key as done. Forget deletes only local data. A
 pairing whose key the headset rejects shows `pairingRemoved`, with Pair again and Forget on this PC.
 
 ## Connection

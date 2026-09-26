@@ -74,8 +74,13 @@ pub(super) async fn run(
 /// so the uninstall script on the headset can find it.
 pub async fn open(access: &Access, pc_id: &str, public_key: &str) -> Result<Session, SshError> {
     let session = ssh::connect(access).await?;
+    record(&session, pc_id, public_key).await;
+    Ok(session)
+}
+
+async fn record(session: &Session, pc_id: &str, public_key: &str) {
     match run(
-        &session,
+        session,
         &["record", pc_id],
         format!("{public_key}\n").as_bytes(),
     )
@@ -88,7 +93,6 @@ pub async fn open(access: &Access, pc_id: &str, public_key: &str) -> Result<Sess
         ),
         Err(error) => warn!("[SteamFrame] Could not record this PC's key: {error:?}"),
     }
-    Ok(session)
 }
 
 #[derive(Deserialize, Debug, Clone, PartialEq)]
@@ -477,6 +481,10 @@ async fn setup_session(
         }
         _ => {}
     }
+    // a new helper folder had no clients/ when the session recorded this PC's key
+    if inspected.created {
+        record(session, &request.pc_id, &request.public_key).await;
+    }
     let bundled_is_current = inspected.replaced
         || inspected
             .installed
@@ -581,7 +589,7 @@ pub async fn cleanup(request: CleanupRequest) -> CleanupOutcome {
     // a rejected login means our access is already gone
     let session = match ssh::connect(&request.access).await {
         Ok(session) => session,
-        Err(SshError::Rejected) => return CleanupOutcome::Done,
+        Err(SshError::Rejected) => return CleanupOutcome::Rejected,
         Err(SshError::Unreachable) => return CleanupOutcome::Unreachable,
         Err(SshError::HostKeyChanged) => return CleanupOutcome::HostKeyChanged,
         Err(SshError::Failed(message)) => return CleanupOutcome::Failed { message },
