@@ -118,10 +118,10 @@
               <!-- Action Buttons -->
               <div class="device-actions" (click)="$event.stopPropagation()">
                 @if (frameRow(device)?.pill; as pill) {
-                  @if (pill.detail) {
+                  @if (pill.detail || pill.startsUpdate) {
                     <button
                       [class]="'frame-pill frame-pill-button frame-pill-' + pill.tone"
-                      (click)="explainFramePill(pill)"
+                      (click)="onFramePill(device, pill)"
                     >
                       <i class="material-icons">{{ pill.icon }}</i>
                       {{ 'steamFrame.status.' + pill.key | transloco }}
@@ -129,15 +129,12 @@
                   } @else {
                     <span [class]="'frame-pill frame-pill-' + pill.tone">
                       <i class="material-icons">{{ pill.icon }}</i>
-                      {{ 'steamFrame.status.' + pill.key | transloco: { time: pill.time } }}
+                      {{ 'steamFrame.status.' + pill.key | transloco: pill.params }}
                     </span>
                   }
                 }
                 @if (frameRow(device)?.action; as action) {
-                  <button
-                    class="btn btn-primary btn-frame"
-                    (click)="framePairing.openWizard(device)"
-                  >
+                  <button class="btn btn-primary btn-frame" (click)="onFrameAction(device, action)">
                     {{ 'steamFrame.actions.' + action | transloco }}
                   </button>
                 }

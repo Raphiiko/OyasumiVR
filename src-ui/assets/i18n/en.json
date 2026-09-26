@@ -2792,11 +2792,20 @@
       "pair": "Pair headset",
       "pairAgain": "Pair again",
       "pairThis": "Pair this headset",
+      "reinstall": "Reinstall",
       "retry": "Retry",
       "searchAgain": "Search again",
       "sendAgain": "Send again",
       "tryAgain": "Try again",
+      "update": "Update",
       "yesPair": "Yes, pair it"
+    },
+    "details": {
+      "helper": "OyasumiVR Helper",
+      "upToDate": "Up to date",
+      "updating": "Updating…",
+      "version": "Version {version}",
+      "versionUnknown": "The version shows once the headset connects"
     },
     "errors": {
       "helperBusy": "Another PC is updating OyasumiVR Helper on this headset. Wait a minute, then try again.",
@@ -2922,14 +2931,30 @@
     "status": {
       "connected": "Connected",
       "connecting": "Connecting",
+      "helperBusy": "Helper busy",
+      "helperMissing": "Helper missing",
+      "helperUpdated": "Helper updated to {version}",
       "justNow": "just now",
       "notRecognized": "Not recognized",
       "offline": "Offline",
       "offlineSince": "Offline · {time}",
+      "pairingRemoved": "Pairing removed",
+      "reinstallFailed": "Reinstall failed",
+      "reinstalling": "Reinstalling helper",
       "updateApp": "Update OyasumiVR",
-      "updateHelper": "Update helper"
+      "updateFailed": "Update failed",
+      "updateHelper": "Update helper",
+      "updatingHelper": "Updating helper"
     },
     "statusDetail": {
+      "helperBusy": {
+        "body": "Another PC paired with this headset is updating OyasumiVR Helper. Wait a minute, then use Retry.",
+        "title": "Another PC is updating the helper"
+      },
+      "helperMissing": {
+        "body": "OyasumiVR Helper is no longer on this headset, for example because another PC uninstalled it. Use Reinstall to install it again. Other PCs paired with this headset then reconnect on their own.",
+        "title": "OyasumiVR Helper is missing"
+      },
       "helperOutdated": {
         "body": "The helper on this headset is older than this version of OyasumiVR can use. Pair the headset again to install the current helper.",
         "title": "OyasumiVR Helper needs an update"
@@ -2945,6 +2970,22 @@
       "notRecognized": {
         "body": "OyasumiVR can't confirm this is the headset you paired, for example after the headset was reset. Pair it again to reconnect.",
         "title": "Headset not recognized"
+      },
+      "pairingRemoved": {
+        "body": "The headset no longer accepts this PC, for example because OyasumiVR Helper was uninstalled on the headset. Pair the headset again to reconnect.",
+        "title": "Pairing removed on headset"
+      },
+      "reinstallFailed": {
+        "body": "OyasumiVR couldn't install OyasumiVR Helper on the headset. Make sure the headset is on and connected, then use Retry.",
+        "title": "Couldn't reinstall the helper"
+      },
+      "updateFailed": {
+        "corrupted": "The new helper arrived damaged, so OyasumiVR didn't install it. OyasumiVR keeps using the installed helper when it can. Use Retry to send it again.",
+        "notBundled": "This build of OyasumiVR doesn't include the helper, so it can't update it.",
+        "notStarted": "The new helper didn't start, so the previous version runs again. OyasumiVR keeps using it when it can. Use Retry to try again.",
+        "other": "Something went wrong during the update. OyasumiVR keeps using the installed helper when it can. Use Retry to try again.",
+        "title": "Helper update failed",
+        "unreachable": "The headset stopped responding during the update. OyasumiVR keeps using the installed helper when it can. Make sure the headset is on, then use Retry."
       }
     },
     "steps": {
