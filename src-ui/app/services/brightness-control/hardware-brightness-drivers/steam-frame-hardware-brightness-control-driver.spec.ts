@@ -125,22 +125,23 @@ describe('SteamFrameHardwareBrightnessControlDriver', () => {
     expect(h.updates).toEqual([40, 40]);
   });
 
-  it('is ready for HMD connect automations after the first report of a paired Frame', async () => {
+  it('lets HMD connect automations wait for the first report of a paired Frame', async () => {
     const h = setup();
-    let ready: boolean | undefined;
-    void h.driver.whenHmdReady().then((value) => (ready = value));
-    await Promise.resolve();
-    expect(ready).toBeUndefined();
+    const waiting = h.driver.whenFrameReports();
+    expect(waiting).not.toBeNull();
     h.report(brightness(40));
-    await vi.waitFor(() => expect(ready).toBe(true));
+    expect(await waiting).toBe(true);
 
-    // another headset is ready at once, and a lost HMD never is
+    // nothing waits once the Frame reported, or for another headset
+    expect(h.driver.whenFrameReports()).toBeNull();
     h.devices.next([{ class: 'HMD', serialNumber: 'OTHER' } as OVRDevice]);
-    expect(await h.driver.whenHmdReady()).toBe(true);
+    expect(h.driver.whenFrameReports()).toBeNull();
+
+    // a Frame that leaves before its report is never ready
     h.devices.next([{ class: 'HMD', serialNumber: SERIAL } as OVRDevice]);
     h.report(null);
-    const waiting = h.driver.whenHmdReady();
+    const leaving = h.driver.whenFrameReports();
     h.devices.next([]);
-    expect(await waiting).toBe(false);
+    expect(await leaving).toBe(false);
   });
 });

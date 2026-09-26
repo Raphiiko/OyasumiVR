@@ -428,9 +428,8 @@ export class BrightnessCctAutomationService {
       (c) => c.BRIGHTNESS_AUTOMATIONS
     );
 
-    if (brightnessAutomation)
-      void this.hardwareBrightnessControl.driverSteamFrame.whenHmdReady().then((ready) => {
-        if (!ready) return;
+    if (brightnessAutomation) {
+      const runBrightness = () =>
         this.onAutomationTrigger(
           brightnessAutomation,
           config[brightnessAutomation],
@@ -439,7 +438,13 @@ export class BrightnessCctAutomationService {
           true,
           false
         );
+      // a paired Frame's hardware brightness can change only after its first report
+      const frameReport = this.hardwareBrightnessControl.driverSteamFrame.whenFrameReports();
+      runBrightness();
+      void frameReport?.then((reported) => {
+        if (reported) runBrightness();
       });
+    }
     if (cctAutomation)
       this.onAutomationTrigger(cctAutomation, config[cctAutomation], true, false, false, true);
   }

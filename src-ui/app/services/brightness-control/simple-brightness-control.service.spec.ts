@@ -15,7 +15,7 @@ async function setup(advancedMode = false, reportsBrightness = false) {
   const hardware = {
     driverIsAvailable: new BehaviorSubject(false),
     brightnessBounds: new BehaviorSubject([20, 100]),
-    adoptedBrightness: new Subject<number>(),
+    adoptedBrightness: new Subject<{ percentage: number; bounds: [number, number] }>(),
     lastActiveDriver: reportsBrightness ? { reportsBrightness: true } : null,
     setBrightness: vi.fn<Dependencies[1]['setBrightness']>().mockResolvedValue(undefined),
     cancelActiveTransition: vi.fn(),
@@ -163,7 +163,7 @@ describe('simple brightness with a device that reports its brightness', () => {
   it('derives the value from hardware at the minimum and keeps software dimming', async () => {
     const h = await reporting();
     h.software.brightness = 50;
-    h.hardware.adoptedBrightness.next(9);
+    h.hardware.adoptedBrightness.next({ percentage: 9, bounds: [9, 125] });
     await settle();
     expect(h.service.brightness).toBe(4.5);
     expect(h.software.setBrightness).not.toHaveBeenCalled();
@@ -172,11 +172,11 @@ describe('simple brightness with a device that reports its brightness', () => {
   it('derives the value from hardware above the minimum and clears software dimming', async () => {
     const h = await reporting();
     h.software.brightness = 50;
-    h.hardware.adoptedBrightness.next(67);
+    h.hardware.adoptedBrightness.next({ percentage: 67, bounds: [9, 125] });
     await settle();
     expect(h.service.brightness).toBeCloseTo(9 + (58 / 116) * 91);
     expect(h.software.setBrightness).toHaveBeenCalledExactlyOnceWith(100, expect.anything());
-    h.hardware.adoptedBrightness.next(125);
+    h.hardware.adoptedBrightness.next({ percentage: 125, bounds: [9, 125] });
     await settle();
     expect(h.service.brightness).toBe(100);
     expect(h.software.setBrightness).toHaveBeenCalledOnce();
@@ -185,7 +185,7 @@ describe('simple brightness with a device that reports its brightness', () => {
   it('ignores reports in advanced mode', async () => {
     const h = await reporting();
     h.mode(true);
-    h.hardware.adoptedBrightness.next(67);
+    h.hardware.adoptedBrightness.next({ percentage: 67, bounds: [9, 125] });
     await settle();
     expect(h.service.brightness).toBe(100);
   });
@@ -202,6 +202,44 @@ describe('simple brightness with a device that reports its brightness', () => {
     expect(h.hardware.setBrightness).not.toHaveBeenCalled();
     expect(h.service.brightness).toBe(40);
     expect(h.software.brightness).toBe(40);
+  });
+
+  it('ignores reports while a simple change is being applied', async () => {
+    const h = await reporting();
+    let finishSoftware!: () => void;
+    h.software.setBrightness.mockImplementationOnce(
+      (percentage: number) =>
+        new Promise<void>((resolve) => {
+          finishSoftware = () => {
+            h.software.brightness = percentage;
+            resolve();
+          };
+        })
+    );
+    const change = h.service.setBrightness(5);
+    await settle();
+    h.hardware.adoptedBrightness.next({ percentage: 20, bounds: [9, 125] });
+    await settle();
+    finishSoftware();
+    await change;
+    expect(h.software.setBrightness).toHaveBeenCalledOnce();
+    expect(h.software.brightness).toBeCloseTo((5 / 9) * 100);
+    expect(h.service.brightness).toBe(5);
+  });
+
+  it('finishes a running transition in one command when the driver becomes available', async () => {
+    const h = await setup(false, true);
+    h.hardware.brightnessBounds.next([9, 125]);
+    h.service.transitionBrightness(50, 60000, { logReason: 'AT_SUNSET' });
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    h.hardware.setBrightness.mockClear();
+    h.hardware.driverIsAvailable.next(true);
+    await settle();
+    await settle();
+    expect(h.service.brightness).toBe(50);
+    expect(h.hardware.setBrightness).toHaveBeenCalledOnce();
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(h.hardware.setBrightness).toHaveBeenCalledOnce();
   });
 
   it('sets a transition target in one command', async () => {

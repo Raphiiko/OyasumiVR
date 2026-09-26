@@ -15,7 +15,7 @@ import {
   of,
   shareReplay,
   startWith,
-  Subject,
+  ReplaySubject,
   switchMap,
 } from 'rxjs';
 import { isEqual } from 'lodash';
@@ -33,6 +33,11 @@ import { AppSettings } from '../../models/settings';
 import { clamp } from '../../utils/number-utils';
 import { SteamFrameHardwareBrightnessControlDriver } from './hardware-brightness-drivers/steam-frame-hardware-brightness-control-driver';
 import { SteamFramePairingService } from '../steam-frame-pairing.service';
+
+export interface AdoptedBrightness {
+  percentage: number;
+  bounds: [number, number];
+}
 
 @Injectable({
   providedIn: 'root',
@@ -59,8 +64,12 @@ export class HardwareBrightnessControlService {
     shareReplay(1)
   );
   public readonly brightnessBounds: Observable<[number, number]>;
-  private _adoptedBrightness = new Subject<number>();
-  /** Values the active driver read from the device, which the cache took without a write. */
+  /** Replays the latest value to services that subscribe after the driver reported it. */
+  private _adoptedBrightness = new ReplaySubject<AdoptedBrightness>(1);
+  /**
+   * Values the active driver read from the device, which the cache took without a write. Each
+   * carries the driver's bounds at that moment, which `brightnessBounds` may not reflect yet.
+   */
   public readonly adoptedBrightness = this._adoptedBrightness.asObservable();
 
   get brightness(): number {
@@ -97,10 +106,16 @@ export class HardwareBrightnessControlService {
       });
     // show what the device reports, without writing it back
     this.driver
-      .pipe(switchMap((driver) => driver?.brightnessUpdates ?? EMPTY))
-      .subscribe((percentage) => {
-        this._brightness.next(percentage);
-        this._adoptedBrightness.next(percentage);
+      .pipe(
+        switchMap((driver) =>
+          (driver?.brightnessUpdates ?? EMPTY).pipe(
+            map((percentage) => ({ percentage, bounds: driver!.getBrightnessBounds() }))
+          )
+        )
+      )
+      .subscribe((adopted) => {
+        this._brightness.next(adopted.percentage);
+        this._adoptedBrightness.next(adopted);
       });
     // a reporting driver's bounds can change with each report
     const driverBounds = this.driver.pipe(
@@ -126,6 +141,8 @@ export class HardwareBrightnessControlService {
       .pipe(
         distinctUntilChanged(),
         filter(Boolean),
+        // a reporting driver supplies its value itself, and a fetch would hide a pending request
+        filter((driver) => !driver.reportsBrightness),
         switchMap((driver) => driver.isAvailable()),
         distinctUntilChanged(),
         filter(Boolean),

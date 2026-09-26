@@ -13,7 +13,10 @@ import { info } from '@tauri-apps/plugin-log';
 import { CancellableTask } from '../../utils/cancellable-task';
 import { BrightnessTransitionTask } from './brightness-transition';
 import { AutomationConfigService } from '../automation-config.service';
-import { HardwareBrightnessControlService } from './hardware-brightness-control.service';
+import {
+  AdoptedBrightness,
+  HardwareBrightnessControlService,
+} from './hardware-brightness-control.service';
 import { SoftwareBrightnessControlService } from './software-brightness-control.service';
 import { lerp } from '../../utils/number-utils';
 import { clamp } from 'lodash';
@@ -33,6 +36,8 @@ export class SimpleBrightnessControlService {
   private _activeTransition = new BehaviorSubject<BrightnessTransitionTask | undefined>(undefined);
   public readonly activeTransition = this._activeTransition.asObservable();
   private hardwareBrightnessDriverAvailable = false;
+  /** Counts running `setBrightness` calls, whose own replies must not be adopted midway. */
+  private settingBrightness = 0;
   public readonly advancedMode = this._advancedMode.asObservable();
 
   get brightness(): number {
@@ -87,15 +92,28 @@ export class SimpleBrightnessControlService {
           logReason: undefined,
         });
       });
-    this.hardwareBrightnessControl.adoptedBrightness.subscribe((hardware) =>
-      this.adoptHardwareBrightness(hardware)
+    // a running transition would write a reporting device at every step, so finish it at once
+    this.hardwareBrightnessControl.driverIsAvailable
+      .pipe(filter(Boolean))
+      .subscribe(() => this.finishTransitionForReportingDriver());
+    this.hardwareBrightnessControl.adoptedBrightness.subscribe((adopted) =>
+      this.adoptHardwareBrightness(adopted)
     );
   }
 
+  private finishTransitionForReportingDriver() {
+    const transition = this._activeTransition.value;
+    if (!transition || !this.hardwareBrightnessControl.lastActiveDriver?.reportsBrightness) return;
+    this.setBrightness(transition.targetBrightness, {
+      cancelActiveTransition: true,
+      logReason: null,
+    });
+  }
+
   /** Derives the simple value from a hardware value the device reported. */
-  private async adoptHardwareBrightness(hardware: number) {
-    if (this._advancedMode.value || this._activeTransition.value) return;
-    const [min, max] = await firstValueFrom(this.hardwareBrightnessControl.brightnessBounds);
+  private async adoptHardwareBrightness({ percentage: hardware, bounds }: AdoptedBrightness) {
+    if (this._advancedMode.value || this._activeTransition.value || this.settingBrightness) return;
+    const [min, max] = bounds;
     if (hardware <= min + 0.01) {
       this._brightness.next(clamp((min * this.softwareBrightnessControl.brightness) / 100, 0, 100));
       return;
@@ -167,6 +185,18 @@ export class SimpleBrightnessControlService {
   }
 
   async setBrightness(
+    percentage: number,
+    options: Partial<SetBrightnessOrCCTOptions> = SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS
+  ) {
+    this.settingBrightness++;
+    try {
+      await this.applyBrightness(percentage, options);
+    } finally {
+      this.settingBrightness--;
+    }
+  }
+
+  private async applyBrightness(
     percentage: number,
     options: Partial<SetBrightnessOrCCTOptions> = SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS
   ) {

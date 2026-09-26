@@ -46,6 +46,7 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
   override readonly brightnessUpdates = this.updates.asObservable();
   private readonly hmd: Observable<ActiveHmd>;
   private readonly available: Observable<boolean>;
+  private currentHmd: ActiveHmd = { kind: 'none' };
   private frame: { pairingId: string; brightness: SteamFrameBrightness } | null = null;
   /** Set while a command runs; a newer value waits in `pending` and replaces an older one. */
   private sending = false;
@@ -121,14 +122,18 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
   }
 
   /**
-   * Resolves once brightness may change for the HMD that is active now: at once for a headset
-   * without a pairing, and after the first report for a paired Frame. False when no HMD is left.
+   * Waits for the first report of the paired Frame that is the active HMD. Null when no Frame is
+   * waiting for one; resolves false when that Frame stops being the active HMD first.
    */
-  whenHmdReady(): Promise<boolean> {
+  whenFrameReports(): Promise<boolean> | null {
+    const waiting = this.currentHmd;
+    if (waiting.kind !== 'frame' || this.frame) return null;
+    const isWaitingFrame = (hmd: ActiveHmd) =>
+      hmd.kind === 'frame' && hmd.pairingId === waiting.pairingId;
     return firstValueFrom(
       combineLatest([this.hmd, this.available]).pipe(
-        filter(([hmd, available]) => hmd.kind !== 'frame' || available),
-        map(([hmd]) => hmd.kind !== 'none')
+        filter(([hmd, available]) => available || !isWaitingFrame(hmd)),
+        map(([hmd, available]) => available && isWaitingFrame(hmd))
       )
     );
   }
@@ -154,6 +159,7 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
 
   /** Adopts each report, unless a command runs: then the requested value stays on screen. */
   private onHmd(hmd: ActiveHmd) {
+    this.currentHmd = hmd;
     if (hmd.kind !== 'frame' || !this.usable(hmd.brightness)) {
       this.frame = null;
       return;

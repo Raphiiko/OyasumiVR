@@ -1,20 +1,24 @@
 import { invoke } from '@tauri-apps/api/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
+import { AUTOMATION_CONFIGS_DEFAULT } from '../../models/automations';
 import { APP_SETTINGS_DEFAULT } from '../../models/settings';
 import type { OVRDevice } from '../../models/ovr-device';
 import type { SteamFrameConnectionState, SteamFramePairing } from '../../models/steam-frame';
 import { HardwareBrightnessControlService } from './hardware-brightness-control.service';
+import { SimpleBrightnessControlService } from './simple-brightness-control.service';
 
 vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn(async () => false) }));
 vi.mock('@tauri-apps/api/event', () => ({ listen: vi.fn(async () => () => {}) }));
 vi.mock('@tauri-apps/plugin-log', () => ({ info: vi.fn(), warn: vi.fn() }));
 type Dependencies = ConstructorParameters<typeof HardwareBrightnessControlService>;
+type SimpleDependencies = ConstructorParameters<typeof SimpleBrightnessControlService>;
 
 const settle = () => new Promise((resolve) => setTimeout(resolve, 0));
 
-/** A service whose only available driver is a paired Frame reporting 40% within 20%–110%. */
-async function setup() {
+/** A service whose only available driver is a paired Frame reporting within 20%–110%. */
+async function setup(initial: number | null = 40) {
+  vi.mocked(invoke).mockImplementation(async () => false);
   const connections = new BehaviorSubject<Record<string, SteamFrameConnectionState>>({});
   const service = new HardwareBrightnessControlService(
     {
@@ -41,7 +45,7 @@ async function setup() {
   const writes = () =>
     vi.mocked(invoke).mock.calls.filter(([command]) => command === 'steam_frame_set_brightness');
   vi.mocked(invoke).mockClear();
-  report(40);
+  if (initial !== null) report(initial);
   await settle();
   return { service, report, writes };
 }
@@ -50,14 +54,15 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
   it('shows reports and their bounds without writing them', async () => {
     const h = await setup();
     const adopted: number[] = [];
-    h.service.adoptedBrightness.subscribe((value) => adopted.push(value));
+    h.service.adoptedBrightness.subscribe((value) => adopted.push(value.percentage));
     expect(await firstValueFrom(h.service.driverIsAvailable)).toBe(true);
     expect(h.service.brightness).toBe(40);
     expect(await firstValueFrom(h.service.brightnessBounds)).toEqual([20, 110]);
     h.report(150);
     await settle();
     expect(h.service.brightness).toBe(110);
-    expect(adopted).toEqual([110]);
+    // the report from before the subscription replays first
+    expect(adopted).toEqual([40, 110]);
     expect(h.writes()).toEqual([]);
   });
 
@@ -73,5 +78,52 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
       ['steam_frame_set_brightness', { pairingId: 'p', percentage: 80 }],
     ]);
     expect(h.service.brightness).toBe(80);
+  });
+
+  it('keeps a pending request on screen past the availability delay', async () => {
+    const h = await setup();
+    vi.mocked(invoke).mockImplementation((command) =>
+      command === 'steam_frame_set_brightness' ? new Promise(() => {}) : Promise.resolve(false)
+    );
+    void h.service.setBrightness(80);
+    await new Promise((resolve) => setTimeout(resolve, 700));
+    expect(h.service.brightness).toBe(80);
+  });
+});
+
+describe('simple brightness following a Steam Frame', () => {
+  async function simple(hardware: HardwareBrightnessControlService, softwareBrightness: number) {
+    const software = {
+      brightness: softwareBrightness,
+      setBrightness: vi.fn(async (percentage: number) => {
+        software.brightness = percentage;
+      }),
+      cancelActiveTransition: vi.fn(),
+    };
+    const service = new SimpleBrightnessControlService(
+      { configs: new BehaviorSubject(structuredClone(AUTOMATION_CONFIGS_DEFAULT)) } as never,
+      hardware,
+      software as unknown as SimpleDependencies[2]
+    );
+    await service.init();
+    return { service, software };
+  }
+
+  it('derives the first report with the Frame bounds and keeps software dimming', async () => {
+    const h = await setup(null);
+    const s = await simple(h.service, 50);
+    h.report(20);
+    await settle();
+    expect(s.service.brightness).toBe(10);
+    expect(s.software.setBrightness).not.toHaveBeenCalled();
+    expect(h.writes()).toEqual([]);
+  });
+
+  it('derives a report that arrived before simple mode started', async () => {
+    const h = await setup(40);
+    const s = await simple(h.service, 100);
+    await settle();
+    expect(s.service.brightness).toBeCloseTo(20 + (20 / 90) * 80);
+    expect(h.writes()).toEqual([]);
   });
 });
