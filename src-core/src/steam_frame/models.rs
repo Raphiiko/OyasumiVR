@@ -208,6 +208,7 @@ mod tests {
     #[test]
     fn allowlist_matches_exactly() {
         assert!(identity("Valve", "Deckard DV2").is_supported());
+        assert!(identity("Valve", "Steam Frame").is_supported());
         for (manufacturer, model) in [
             ("Valve", "Deckard"),
             ("Valve", "deckard dv2"),

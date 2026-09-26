@@ -14,10 +14,16 @@ pub const PROTOCOL_VERSION: u32 = 1;
 pub const HELPER_PORT: u16 = 38440;
 pub const HELPER_PATH: &str = "resources/frame-helper/oyasumivr-frame-helper";
 /// The one place that decides which headsets offer pairing, matched exactly.
-pub const SUPPORTED_MODELS: &[SupportedModel] = &[SupportedModel {
-    manufacturer: "Valve",
-    model: "Deckard DV2",
-}];
+pub const SUPPORTED_MODELS: &[SupportedModel] = &[
+    SupportedModel {
+        manufacturer: "Valve",
+        model: "Deckard DV2",
+    },
+    SupportedModel {
+        manufacturer: "Valve",
+        model: "Steam Frame",
+    },
+];
 
 /// A PC names its token file on the headset, so the name must stay a single safe path segment.
 pub fn valid_pc_id(pc_id: &str) -> bool {
