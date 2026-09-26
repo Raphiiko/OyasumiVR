@@ -18,6 +18,11 @@ if ! flock -w 60 9; then
   echo "Another PC is updating OyasumiVR Helper. Try again in a minute." >&2
   exit 75
 fi
+exec 8>"$HOME/.ssh/.oyasumivr-keys.lock"
+if ! flock -w 10 8; then
+  echo "Another PC is changing SSH access on this headset. Try again in a minute." >&2
+  exit 75
+fi
 
 systemctl --user disable --now "$unit" 2>/dev/null || true
 rm -f "$units/$unit" "$units/default.target.wants/$unit"

@@ -108,8 +108,13 @@ cleanup() {
     exec 9>"$root/maintenance.lock"
     flock -w 45 9 && locked=1
   fi
-  rm -f "$root/clients/$pc" "$root/clients/$pc.pub"
+  if [ "$locked" = 1 ]; then
+    rm -f "$root/clients/$pc" "$root/clients/$pc.pub"
+  fi
   local keys="$HOME/.ssh/authorized_keys"
+  # every authorized_keys writer holds this lock, including uninstall
+  exec 8>"$HOME/.ssh/.oyasumivr-keys.lock"
+  flock -w 10 8 || exit 75
   if [ -f "$keys" ]; then
     local temp
     temp=$(mktemp "$HOME/.ssh/authorized_keys.XXXXXX")
@@ -120,8 +125,8 @@ cleanup() {
     chmod --reference="$keys" "$temp"
     mv "$temp" "$keys"
   fi
+  [ "$locked" = 1 ] || [ ! -d "$root" ] || exit 75
   if [ "$remove_helper" = 1 ] && [ -d "$root" ]; then
-    [ "$locked" = 1 ] || exit 75
     if [ -z "$(ls -A "$root/clients" 2>/dev/null)" ]; then
       systemctl --user disable --now "$unit" 2>/dev/null || true
       rm -f "$units/$unit" "$units/default.target.wants/$unit"
