@@ -34,6 +34,7 @@ export class SteamFramePairingService {
   private readonly _connections = signal<Record<string, SteamFrameConnectionState>>({});
   private readonly _flow = signal<SteamFrameFlow | null>(null);
   private cancelRequested = false;
+  private search = 0;
   private setupAttemptId?: string;
 
   readonly pairings$ = new BehaviorSubject<SteamFramePairing[]>([]);
@@ -137,9 +138,10 @@ export class SteamFramePairingService {
   }
 
   async discover() {
+    const search = ++this.search;
     this.patchFlow({ page: 'search', manualAddress: undefined, error: undefined, busy: true });
     const candidates = await invoke<SteamFrameCandidate[]>('steam_frame_discover_headsets');
-    if (this.stopForCancel()) return;
+    if (this.stopForCancel() || search !== this.search) return;
     this.patchFlow({
       busy: false,
       candidates,
@@ -150,9 +152,10 @@ export class SteamFramePairingService {
 
   async connectManual(address: string) {
     address = address.trim();
+    const search = ++this.search;
     this.patchFlow({ page: 'search', manualAddress: address, error: undefined, busy: true });
     const user = await invoke<string | null>('steam_frame_get_ssh_user', { address });
-    if (this.stopForCancel()) return;
+    if (this.stopForCancel() || search !== this.search) return;
     this.patchFlow({
       busy: false,
       candidates: user ? [{ name: address, address }] : [],
@@ -173,7 +176,7 @@ export class SteamFramePairingService {
     if (this.stopForCancel()) return;
     if (!user) return this.patchFlow({ page: 'notfound', busy: false });
     const pairing = await this.preparePairing(flow, candidate.address, user);
-    if (!pairing || this.stopForCancel()) return;
+    if (this.stopForCancel() || !pairing) return;
     await this.register();
   }
 
@@ -188,16 +191,18 @@ export class SteamFramePairingService {
     if (probe.status === 'hostKeyChanged')
       return this.patchFlow({ page: 'hostKeyChanged', busy: false });
     this.patchFlow({ page: 'awaiting' });
+    const mayBeApproved = !!pairing.mayBeApproved;
+    await this.updatePairing(pairing.deviceId, { mayBeApproved: true });
     const outcome = await invoke<SteamFrameRegisterOutcome>('steam_frame_request_approval', {
       address: pairing.address,
       publicKey: pairing.publicKey,
     });
     info(`[SteamFramePairing] Registration: ${outcome}`);
     if (outcome === 'registered' || outcome === 'lost' || outcome === 'failed') {
-      await this.updatePairing(pairing.deviceId, { mayBeApproved: true });
       if (this.cancelRequested) return this.finishCancel();
       return this.confirmAccess();
     }
+    await this.updatePairing(pairing.deviceId, { mayBeApproved });
     if (this.stopForCancel()) return;
     const pages: Partial<Record<SteamFrameRegisterOutcome, SteamFramePage>> = {
       declined: 'declined',
@@ -279,6 +284,7 @@ export class SteamFramePairingService {
           lastSeen: Date.now(),
         });
         await this.pushPairings();
+        this.cancelRequested = false;
         return this.patchFlow({ page: 'success', busy: false });
       case 'wrongDevice': {
         this.patchFlow({ page: 'wrongDevice' });
@@ -413,9 +419,14 @@ export class SteamFramePairingService {
     if (existing && !existing.complete) {
       return this.updatePairing(flow.deviceId, { address, user });
     }
-    const credentials = await invoke<{ privateKey: string; publicKey: string; token: string }>(
-      'steam_frame_create_pairing_keys'
-    );
+    let credentials: { privateKey: string; publicKey: string; token: string };
+    try {
+      credentials = await invoke('steam_frame_create_pairing_keys');
+    } catch (e) {
+      error(`[SteamFramePairing] Could not create the pairing key: ${e}`);
+      this.patchFlow({ page: 'found', busy: false, error: 'keys' });
+      return undefined;
+    }
     const pairing: SteamFramePairing = {
       id: uuidv4(),
       deviceId: flow.deviceId,
@@ -431,7 +442,7 @@ export class SteamFramePairingService {
     } catch (e) {
       error(`[SteamFramePairing] Could not save the pairing key: ${e}`);
       this.setPairings(this._pairings().filter((p) => p.id !== pairing.id));
-      this.patchFlow({ page: 'uncertain', busy: false, error: 'persistence' });
+      this.patchFlow({ page: 'found', busy: false, error: 'persistence' });
       return undefined;
     }
     await this.pushPairings();
@@ -517,5 +528,6 @@ export class SteamFramePairingService {
       version: 1,
       pairings,
     } satisfies SteamFramePairingData);
+    await SETTINGS_STORE.save();
   }
 }
