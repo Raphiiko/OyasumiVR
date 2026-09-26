@@ -15,7 +15,7 @@ export class EventLogAcceptedInviteRequestEntryParser extends EventLogEntryParse
   override headerInfoSubTitle(entry: EventLogAcceptedInviteRequest): string {
     switch (entry.mode) {
       case 'DISABLED':
-        return '';
+        return 'comp.event-log-entry.type.acceptedInviteRequest.subtitle.anyone';
       case 'WHITELIST':
         return 'comp.event-log-entry.type.acceptedInviteRequest.subtitle.whitelist';
       case 'BLACKLIST':

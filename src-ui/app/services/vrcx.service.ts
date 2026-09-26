@@ -76,7 +76,7 @@ export class VRCXService {
     const reasonKey =
       entry.type === 'acceptedInviteRequest'
         ? {
-            DISABLED: null,
+            DISABLED: 'subtitle.anyone',
             WHITELIST: 'subtitle.whitelist',
             BLACKLIST: 'subtitle.blacklist',
             JOIN_ME: 'subtitle.joinMe',

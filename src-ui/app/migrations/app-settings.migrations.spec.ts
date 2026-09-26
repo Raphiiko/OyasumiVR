@@ -23,7 +23,7 @@ describe('app settings migration 14 to 15', () => {
 describe('app settings migration 15 to 16', () => {
   it('turns on the social VRCX logs and keeps the existing choice', async () => {
     const result = await runMigrations(
-      { version: 15, vrcxLogsEnabled: [] } as Versioned,
+      { version: 15, vrcxLogsEnabled: ['SleepMode'] } as Versioned,
       APP_SETTINGS_MIGRATION
     );
 
@@ -31,7 +31,7 @@ describe('app settings migration 15 to 16', () => {
     if (result.status === 'migrated') {
       expect(result.value).toMatchObject({
         version: 16,
-        vrcxLogsEnabled: ['Invites', 'StatusChanges', 'GroupChanges'],
+        vrcxLogsEnabled: ['SleepMode', 'Invites', 'StatusChanges', 'GroupChanges'],
       });
     }
   });

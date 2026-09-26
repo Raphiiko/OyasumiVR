@@ -441,24 +441,25 @@ export class VRChatAPI {
     }
   }
 
+  /** Resolves to the response message text VRChat attached, if any. */
   public async declineInviteOrInviteRequest(
     notificationId: string,
     notificationType: 'invite' | 'requestInvite',
     message: string
-  ): Promise<void> {
+  ): Promise<string | undefined> {
     const cacheGeneration = this.cacheGeneration;
     await this.requireCurrentUser('declining an invite or invite request');
-    let messageSlot: number | undefined;
+    let messageEx: InviteMessageEx | null = null;
     if (message) {
-      const messageEx = await this.ensureInviteMessage(
+      messageEx = await this.ensureInviteMessage(
         notificationType === 'invite' ? 'response' : 'requestResponse',
         message
       ).catch((e) => {
         error(`[VRChat] Sending invite without message, failed to allocate message slot: ${e}`);
         return null;
       });
-      if (messageEx) messageSlot = messageEx.slot;
-      else error(`[VRChat] Sending invite without message, failed to allocate message slot.`);
+      if (!messageEx)
+        error(`[VRChat] Sending invite without message, failed to allocate message slot.`);
     }
     try {
       const result = await this.apiCallQueue.queueTask<Response>({
@@ -468,7 +469,7 @@ export class VRChatAPI {
           return requestVRChat(`${BASE_URL}/invite/${notificationId}/response`, {
             method: 'POST',
             headers: await this.getDefaultHeaders({}, cacheGeneration),
-            body: JSON.stringify({ responseSlot: messageSlot }),
+            body: JSON.stringify({ responseSlot: messageEx?.slot }),
           });
         },
       });
@@ -477,19 +478,25 @@ export class VRChatAPI {
     } catch (e) {
       error(`[VRChat] Failed to decline invite or invite request: ${JSON.stringify(e)}`);
     }
+    return messageEx?.message;
   }
 
-  public async inviteUser(inviteeId: string, instanceId: string, message?: string): Promise<void> {
+  /** Resolves to the invite message text VRChat attached, if any. */
+  public async inviteUser(
+    inviteeId: string,
+    instanceId: string,
+    message?: string
+  ): Promise<string | undefined> {
     const cacheGeneration = this.cacheGeneration;
     await this.requireCurrentUser('inviting a user');
-    let messageSlot: number | undefined;
+    let messageEx: InviteMessageEx | null = null;
     if (message) {
-      const messageEx = await this.ensureInviteMessage('message', message).catch((e) => {
+      messageEx = await this.ensureInviteMessage('message', message).catch((e) => {
         error(`[VRChat] Sending invite without message, failed to allocate message slot: ${e}`);
         return null;
       });
-      if (messageEx) messageSlot = messageEx.slot;
-      else error(`[VRChat] Sending invite without message, failed to allocate message slot.`);
+      if (!messageEx)
+        error(`[VRChat] Sending invite without message, failed to allocate message slot.`);
     }
     try {
       const result = await this.apiCallQueue.queueTask<Response>({
@@ -497,7 +504,7 @@ export class VRChatAPI {
         runnable: async () => {
           this.ensureCacheGeneration(cacheGeneration);
           return requestVRChat(`${BASE_URL}/invite/${inviteeId}`, {
-            body: JSON.stringify({ instanceId, messageSlot }),
+            body: JSON.stringify({ instanceId, messageSlot: messageEx?.slot }),
             method: 'POST',
             headers: await this.getDefaultHeaders({}, cacheGeneration),
           });
@@ -505,6 +512,7 @@ export class VRChatAPI {
       });
       this.ensureCacheGeneration(cacheGeneration);
       this.requireSuccessfulResponse(result);
+      return messageEx?.message;
     } catch (e) {
       if (e === VRCHAT_API_STALE_REQUEST) throw e;
       const failure = requestFailure('VRChat invite request failed', e);

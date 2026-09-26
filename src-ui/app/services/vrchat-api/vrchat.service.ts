@@ -243,21 +243,21 @@ export class VRChatService {
   public async inviteUser(
     inviteeId: string,
     options?: { instanceId?: string; message?: string }
-  ): Promise<void> {
+  ): Promise<string | undefined> {
     const instanceId = options?.instanceId ?? this.worldSubject.value.instanceId;
     if (!instanceId) {
       error('[VRChat] Tried inviting a user when the current world instance is unknown');
       throw new Error('Cannot invite a user when the current world instance is unknown');
     }
-    await this.api.inviteUser(inviteeId, instanceId, options?.message);
+    return this.api.inviteUser(inviteeId, instanceId, options?.message);
   }
 
   public async declineInviteOrInviteRequest(
     notificationId: string,
     notificationType: 'invite' | 'requestInvite',
     message: string
-  ): Promise<void> {
-    await this.api.declineInviteOrInviteRequest(notificationId, notificationType, message);
+  ): Promise<string | undefined> {
+    return this.api.declineInviteOrInviteRequest(notificationId, notificationType, message);
   }
 
   public listFriends(): Promise<LimitedUserFriend[]> {

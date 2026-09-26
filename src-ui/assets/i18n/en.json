@@ -319,6 +319,7 @@
       "type": {
         "acceptedInviteRequest": {
           "subtitle": {
+            "anyone": "As invite requests from anyone are accepted",
             "blacklist": "As this player was not blacklisted",
             "joinMe": "As your status was Join Me",
             "whitelist": "As this player was whitelisted"

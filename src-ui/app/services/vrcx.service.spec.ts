@@ -58,10 +58,12 @@ describe('VRCXService', () => {
     ]);
   });
 
-  it('leaves out the reason and reply when there are none', () => {
+  it('leaves out the reply when none was sent', () => {
     const log = createService(ALL);
     expect(log({ type: 'acceptedInviteRequest', displayName: 'Alice', mode: 'DISABLED' })).toEqual([
-      { msg: `Auto-accepted invite request from 'Alice'` },
+      {
+        msg: `Auto-accepted invite request from 'Alice' | As invite requests from anyone are accepted`,
+      },
     ]);
   });
 
