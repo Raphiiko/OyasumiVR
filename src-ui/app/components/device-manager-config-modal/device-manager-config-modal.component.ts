@@ -20,6 +20,15 @@ import {
   LighthouseV1IdWizardModalOutputModel,
 } from '../lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
 import { SteamFramePairingService } from 'src-ui/app/services/steam-frame-pairing.service';
+import { SteamFrameConnectionStatus } from 'src-ui/app/models/steam-frame';
+
+/** Statuses whose connection loop still runs an update the user requests. */
+const UPDATABLE_STATUSES: SteamFrameConnectionStatus[] = [
+  'connecting',
+  'connected',
+  'offline',
+  'helperOutdated',
+];
 
 export interface DeviceManagerConfigModalInputModel {
   device: DMKnownDevice;
@@ -118,7 +127,10 @@ export class DeviceManagerConfigModalComponent
       pairing,
       version: state?.helperVersion ?? pairing.helperVersion,
       updating: maintenance === 'updating',
-      canUpdate: !!state?.updateAvailable || maintenance === 'failed' || maintenance === 'busy',
+      canUpdate:
+        !!state &&
+        UPDATABLE_STATUSES.includes(state.status) &&
+        (state.updateAvailable || maintenance === 'failed' || maintenance === 'busy'),
       // only a helper that answers can be called up to date
       upToDate: state?.status === 'connected',
     };

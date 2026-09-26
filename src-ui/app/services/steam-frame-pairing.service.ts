@@ -46,7 +46,10 @@ export class SteamFramePairingService {
   readonly pairings$ = new BehaviorSubject<SteamFramePairing[]>([]);
   readonly connections = this._connections.asReadonly();
   readonly flow = this._flow.asReadonly();
-  /** Reinstalls started from Device Manager, by pairing id; `failed` stays until one succeeds. */
+  /**
+   * Reinstalls started from Device Manager, by pairing id. `failed` stays while the helper is
+   * missing or offline.
+   */
   readonly reinstalls = this._reinstalls.asReadonly();
   readonly flowPairing = computed(() => {
     const flow = this._flow();
