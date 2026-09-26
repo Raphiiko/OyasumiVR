@@ -441,12 +441,12 @@ export class VRChatAPI {
     }
   }
 
-  /** Resolves to the response message text VRChat attached; undefined when the decline failed. */
+  /** Resolves to null when the decline failed, otherwise to the response message VRChat attached. */
   public async declineInviteOrInviteRequest(
     notificationId: string,
     notificationType: 'invite' | 'requestInvite',
     message: string
-  ): Promise<string | undefined> {
+  ): Promise<{ reply?: string } | null> {
     const cacheGeneration = this.cacheGeneration;
     await this.requireCurrentUser('declining an invite or invite request');
     let messageEx: InviteMessageEx | null = null;
@@ -475,10 +475,10 @@ export class VRChatAPI {
       });
       this.ensureCacheGeneration(cacheGeneration);
       this.requireSuccessfulResponse(result);
-      return messageEx?.message;
+      return { reply: messageEx?.message };
     } catch (e) {
       error(`[VRChat] Failed to decline invite or invite request: ${JSON.stringify(e)}`);
-      return undefined;
+      return null;
     }
   }
 

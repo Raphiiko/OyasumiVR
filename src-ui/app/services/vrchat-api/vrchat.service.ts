@@ -256,7 +256,7 @@ export class VRChatService {
     notificationId: string,
     notificationType: 'invite' | 'requestInvite',
     message: string
-  ): Promise<string | undefined> {
+  ): Promise<{ reply?: string } | null> {
     return this.api.declineInviteOrInviteRequest(notificationId, notificationType, message);
   }
 
