@@ -48,6 +48,7 @@ the helper token pass through `protectSecret` before the first save.
 | `steam_frame_count_other_pcs`       | the unpair dialog                           | before it offers Unpair and Uninstall helper                                                                                      |
 | `steam_frame_sync_connections`      | `pushPairings`                              | after every change to the completed pairings                                                                                      |
 | `steam_frame_update_helper`         | Update and Retry in Device Manager          | a manual helper update; the result arrives as connection state                                                                    |
+| `steam_frame_set_brightness`        | the Frame brightness driver                 | each brightness write; the reply carries the value the helper applied                                                             |
 
 The core emits two events. `STEAM_FRAME_SETUP_STAGE` reports the setup step, and `installed` once
 this attempt installed the helper. `STEAM_FRAME_CONNECTION_STATE` reports each pairing's status.
@@ -248,6 +249,36 @@ A failed WSS attempt takes one of three recovery paths before it counts as offli
   A missing helper folder shows `helperMissing`, and only Reinstall creates it again. When SSH cannot
   reach the headset, or another host answers at its old address, the core browses mDNS for it at a
   new address, and accepts it only when that helper presents the pinned certificate.
+
+## Brightness
+
+The helper runs one brightness task with one SteamVR session, opened as a background app from the
+runtime in `openvrpaths.vrpath`. It reads `steamvr.analogGain` and the HMD's analog gain capability
+every 250 ms, and it only writes on a PC's command.
+
+```mermaid
+sequenceDiagram
+  participant P as PC
+  participant C as Connection task
+  participant T as Brightness task
+  T->>T: poll every 250 ms, compare with the last value read or written
+  C->>P: hello, then {"type":"brightness", ...}
+  T-->>C: snapshot on a change made elsewhere, a capability change, or runtime loss and return
+  C->>P: {"type":"brightness", ...}
+  P->>C: {"type":"setBrightness","id":7,"percentage":50}
+  C->>T: command
+  T->>T: read, then clamp and write
+  T-->>C: reply, and a snapshot for the other PCs
+  C->>P: {"type":"setBrightnessResult","id":7,"percentage":50}
+```
+
+- A snapshot has `runtime`, `supported`, and, while supported, `min`, `max`, and `percentage`. The
+  percentage can lie outside the bounds. The bounds are 9%–125% within the HMD's gain limits.
+- The percentage uses the Index curve: gain = (p/100)^2.2 below 100%, p/100 from there.
+- A reply has `percentage` or `error`: `unsupported`, `runtimeUnavailable`, or `writeFailed`. The
+  core adds `offline` when no connection is open or it closes before the reply.
+- The core keeps the last snapshot in the connection state as `brightness`, and clears it while not
+  connected.
 
 ## Updates
 
