@@ -55,11 +55,12 @@ run_current() {
   fi
 }
 
-# install VERSION SHA256 PORT SEEN, with the helper executable on stdin;
-# SEEN is the SHA-256 of the inspect output the PC decided on; prints "created" for a first install
+# install VERSION SHA256 PORT SEEN FRESH, with the helper executable on stdin; SEEN is the
+# SHA-256 of the inspect output the PC decided on, FRESH 1 allows creating a missing helper folder;
+# prints "created" for a first install
 install() {
-  local version=$1 digest=$2 port=$3 seen=$4
-  mkdir -p "$root"
+  local version=$1 digest=$2 port=$3 seen=$4 fresh=${5:-0}
+  [ "$fresh" != 1 ] || mkdir -p "$root"
   lock
   [ "$(printf %s "$(inspect)" | sha256sum | cut -c1-64)" = "$seen" ] || exit 73
   # a first installation that fails removes everything it created
