@@ -11,8 +11,15 @@ units="$HOME/.config/systemd/user"
 # lock [SECONDS], 60 by default; must stay under the SSH inactivity timeout in ssh.rs.
 # The first step under the lock removes an upload that an earlier operation left behind.
 lock() {
-  exec 9>"$root/maintenance.lock"
-  flock -w "${1:-60}" 9 || exit 75
+  local deadline=$((SECONDS + ${1:-60}))
+  while :; do
+    [ -d "$root" ] || exit 69
+    exec 9>"$root/maintenance.lock"
+    flock -w "$((deadline > SECONDS ? deadline - SECONDS : 1))" 9 || exit 75
+    # removing the helper deletes the lock file, so a lock won on the old file protects nothing
+    [ "$(stat -Lc %i /proc/self/fd/9)" = "$(stat -c %i "$root/maintenance.lock" 2>/dev/null)" ] && break
+    exec 9>&-
+  done
   rm -rf "$root/staging"
 }
 
