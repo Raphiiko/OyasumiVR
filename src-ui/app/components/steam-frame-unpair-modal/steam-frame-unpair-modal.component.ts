@@ -3,7 +3,7 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { fadeUp } from '../../utils/animations';
 import { SteamFramePairingService } from '../../services/steam-frame-pairing.service';
-import { STEAM_FRAME_UNINSTALL_COMMAND } from '../../models/steam-frame';
+import { STEAM_FRAME_UNINSTALL_COMMAND, SteamFrameUnpairFailure } from '../../models/steam-frame';
 
 export interface SteamFrameUnpairModalInputModel {
   deviceId: string;
@@ -12,6 +12,13 @@ export interface SteamFrameUnpairModalInputModel {
 }
 
 type UnpairPage = 'checking' | 'choose' | 'working' | 'failed' | 'forget';
+
+const UNPAIR_FAILURE_CODES: Record<SteamFrameUnpairFailure, string> = {
+  unreachable: 'SF-421',
+  hostKeyChanged: 'SF-422',
+  helperBusy: 'SF-423',
+  failed: 'SF-424',
+};
 
 @Component({
   selector: 'app-steam-frame-unpair-modal',
@@ -34,6 +41,7 @@ export class SteamFrameUnpairModalComponent
   readonly otherPcs = signal(0);
   readonly uninstalling = signal(false);
   readonly copied = signal(false);
+  readonly failureCode = signal('');
   readonly uninstallCommand = STEAM_FRAME_UNINSTALL_COMMAND;
   /** Whether the last attempt uninstalled the helper, so Try again repeats it; unset before one. */
   private choice?: boolean;
@@ -48,7 +56,7 @@ export class SteamFrameUnpairModalComponent
     if (!pairing) return this.close();
     this.page.set('checking');
     const count = await this.framePairing.otherPcCount(pairing);
-    if (count === null) return this.page.set('failed');
+    if (typeof count !== 'number') return this.fail(count);
     this.otherPcs.set(count);
     this.page.set('choose');
   }
@@ -59,7 +67,13 @@ export class SteamFrameUnpairModalComponent
     this.choice = uninstall;
     this.uninstalling.set(uninstall);
     this.page.set('working');
-    if (await this.framePairing.unpair(pairing, uninstall)) return this.close();
+    const failure = await this.framePairing.unpair(pairing, uninstall);
+    if (!failure) return this.close();
+    this.fail(failure);
+  }
+
+  private fail(failure: SteamFrameUnpairFailure) {
+    this.failureCode.set(UNPAIR_FAILURE_CODES[failure]);
     this.page.set('failed');
   }
 

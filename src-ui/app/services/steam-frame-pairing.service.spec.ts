@@ -539,14 +539,14 @@ describe('Steam Frame unpairing', () => {
   it('deletes the local pairing only after the headset cleanup succeeds', async () => {
     const { service, pairing } = await paired();
     handlers['steam_frame_remove_access'] = () => ({ status: 'unreachable' });
-    expect(await service.unpair(pairing, true)).toBe(false);
+    expect(await service.unpair(pairing, true)).toBe('unreachable');
     expect(calls('steam_frame_remove_access').at(-1).request).toMatchObject({
       pcId: pairing.id,
       mode: 'uninstall',
     });
     expect(service.pairingFor(device.id)).toBeDefined();
     handlers['steam_frame_remove_access'] = () => ({ status: 'done' });
-    expect(await service.unpair(pairing, false)).toBe(true);
+    expect(await service.unpair(pairing, false)).toBeNull();
     expect(calls('steam_frame_remove_access').at(-1).request.mode).toBe('keep');
     expect(service.pairingFor(device.id)).toBeUndefined();
     expect(calls('steam_frame_sync_connections').at(-1).pairings).toEqual([]);
@@ -567,6 +567,6 @@ describe('Steam Frame unpairing', () => {
     handlers['steam_frame_count_other_pcs'] = () => ({ status: 'rejected' });
     expect(await service.otherPcCount(pairing)).toBe(0);
     handlers['steam_frame_count_other_pcs'] = () => ({ status: 'unreachable' });
-    expect(await service.otherPcCount(pairing)).toBeNull();
+    expect(await service.otherPcCount(pairing)).toBe('unreachable');
   });
 });

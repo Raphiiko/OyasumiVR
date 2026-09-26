@@ -21,6 +21,7 @@ import {
   SteamFrameRegisterOutcome,
   SteamFrameSetupResult,
   SteamFrameSetupStage,
+  SteamFrameUnpairFailure,
 } from '../models/steam-frame';
 import { protectSecret, unprotectSecret } from '../utils/secrets';
 import { ModalService } from './modal.service';
@@ -461,27 +462,30 @@ export class SteamFramePairingService {
     this._reinstalls.set(state ? { ...others, [pairingId]: state } : others);
   }
 
-  /** Counts the other PCs using this headset's helper. `null` when the headset can't be asked. */
-  async otherPcCount(pairing: SteamFramePairing): Promise<number | null> {
+  /** Counts the other PCs using this headset's helper, or says why the headset can't be asked. */
+  async otherPcCount(pairing: SteamFramePairing): Promise<number | SteamFrameUnpairFailure> {
     const outcome = await invoke<SteamFrameOtherPcsOutcome>('steam_frame_count_other_pcs', {
       access: this.accessOf(pairing),
       pcId: pairing.id,
       publicKey: pairing.publicKey,
     });
     if (outcome.status === 'ok') return outcome.count;
-    return outcome.status === 'rejected' ? 0 : null;
+    return outcome.status === 'rejected' ? 0 : outcome.status;
   }
 
   /**
    * Removes this PC's access from the headset, and the helper when `uninstall`, then the local
-   * pairing. Returns false, keeping the local pairing, when the headset cleanup failed.
+   * pairing. Returns why the headset cleanup failed, keeping the local pairing, or null.
    */
-  async unpair(pairing: SteamFramePairing, uninstall: boolean): Promise<boolean> {
+  async unpair(
+    pairing: SteamFramePairing,
+    uninstall: boolean
+  ): Promise<SteamFrameUnpairFailure | null> {
     const outcome = await this.cleanup(pairing, uninstall ? 'uninstall' : 'keep');
     info(`[SteamFramePairing] Unpair: ${outcome.status}`);
-    if (outcome.status !== 'done') return false;
+    if (outcome.status !== 'done') return outcome.status;
     await this.removePairing(pairing.deviceId);
-    return true;
+    return null;
   }
 
   /** Deletes the pairing on this PC only. The headset keeps the helper and this PC's access. */
