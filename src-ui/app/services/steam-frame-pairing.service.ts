@@ -165,7 +165,31 @@ export class SteamFramePairingService {
   }
 
   /** Starts pairing with the selected headset. Saved access skips the approval prompt. */
-  async pair() {
+  pair() {
+    return this.guarded(() => this.pairSteps());
+  }
+
+  /** Sends one registration request, unless the saved key already works. Only a user action calls this. */
+  register() {
+    return this.guarded(() => this.registerSteps());
+  }
+
+  runSetup() {
+    return this.guarded(() => this.setupSteps());
+  }
+
+  /** Ends a step that failed unexpectedly, such as a settings write, on its page with Cancel available. */
+  private async guarded(step: () => Promise<void>) {
+    try {
+      await step();
+    } catch (e) {
+      error(`[SteamFramePairing] A pairing step failed: ${e}`);
+      if (this.stopForCancel()) return;
+      this.patchFlow({ busy: false, error: 'persistence' });
+    }
+  }
+
+  private async pairSteps() {
     const flow = this._flow();
     const candidate = flow?.candidates[flow.selected];
     if (!flow || !candidate) return;
@@ -180,8 +204,7 @@ export class SteamFramePairingService {
     await this.register();
   }
 
-  /** Sends one registration request, unless the saved key already works. Only a user action calls this. */
-  async register() {
+  private async registerSteps() {
     const pairing = this.flowPairing();
     if (!pairing) return;
     this.patchFlow({ page: 'request', error: undefined, busy: true });
@@ -192,7 +215,14 @@ export class SteamFramePairingService {
       return this.patchFlow({ page: 'hostKeyChanged', busy: false });
     this.patchFlow({ page: 'awaiting' });
     const mayBeApproved = !!pairing.mayBeApproved;
-    await this.updatePairing(pairing.deviceId, { mayBeApproved: true });
+    try {
+      await this.updatePairing(pairing.deviceId, { mayBeApproved: true });
+    } catch (e) {
+      error(`[SteamFramePairing] Could not save the attempt before the request: ${e}`);
+      if (this.stopForCancel()) return;
+      return this.patchFlow({ page: 'found', busy: false, error: 'persistence' });
+    }
+    if (this.stopForCancel()) return;
     const outcome = await invoke<SteamFrameRegisterOutcome>('steam_frame_request_approval', {
       address: pairing.address,
       publicKey: pairing.publicKey,
@@ -253,7 +283,7 @@ export class SteamFramePairingService {
     await this.runSetup();
   }
 
-  async runSetup() {
+  private async setupSteps() {
     const pairing = this.flowPairing();
     const flow = this._flow();
     if (!pairing?.hostKeyPin || !flow) return;
@@ -330,32 +360,45 @@ export class SteamFramePairingService {
   /** Removes what this attempt left on the headset, then the local pairing. */
   async finishCancel() {
     this.cancelRequested = false;
-    let pairing = this.flowPairing();
+    const pairing = this.flowPairing();
     if (!pairing || pairing.complete) return this.endFlow();
     this.patchFlow({ page: 'cancelling', error: undefined, busy: true });
+    let removed = false;
+    try {
+      removed = await this.removeAttempt(pairing);
+    } catch (e) {
+      error(`[SteamFramePairing] Could not finish cancelling: ${e}`);
+    }
+    if (removed) this.endFlow();
+    else this.patchFlow({ page: 'cleanupFailed', busy: false });
+  }
+
+  /** Returns false while the headset may still hold this PC's access. */
+  private async removeAttempt(pairing: SteamFramePairing): Promise<boolean> {
     if (!pairing.hostKeyPin && pairing.mayBeApproved) {
       const probe = await this.probeUntilReady(pairing);
       if (probe.status === 'ok') {
-        pairing = await this.updatePairing(pairing.deviceId, { hostKeyPin: probe.hostKeyPin });
+        pairing = (await this.updatePairing(pairing.deviceId, { hostKeyPin: probe.hostKeyPin }))!;
       } else if (probe.status !== 'rejected') {
-        return this.patchFlow({ page: 'cleanupFailed', busy: false });
+        return false;
       }
     }
-    if (pairing?.hostKeyPin) {
+    if (pairing.hostKeyPin) {
       const outcome = await this.cleanup(pairing, !!pairing.helperInstalledByPairing);
-      if (outcome.status !== 'done') {
-        return this.patchFlow({ page: 'cleanupFailed', busy: false });
-      }
+      if (outcome.status !== 'done') return false;
     }
-    await this.removePairing(pairing!.deviceId);
-    this.endFlow();
+    await this.removePairing(pairing.deviceId);
+    return true;
   }
 
   /** Forgets a cancelled attempt on this PC after cleanup failed. */
   async leaveCleanup() {
     const pairing = this.flowPairing();
-    if (pairing && !pairing.complete) await this.removePairing(pairing.deviceId);
-    this.endFlow();
+    try {
+      if (pairing && !pairing.complete) await this.removePairing(pairing.deviceId);
+    } finally {
+      this.endFlow();
+    }
   }
 
   private endFlow() {
@@ -436,12 +479,13 @@ export class SteamFramePairingService {
       ...credentials,
       complete: false,
     };
-    this.setPairings([...this._pairings().filter((p) => p.deviceId !== flow.deviceId), pairing]);
+    const previous = this._pairings();
+    this.setPairings([...previous.filter((p) => p.deviceId !== flow.deviceId), pairing]);
     try {
       await this.save();
     } catch (e) {
       error(`[SteamFramePairing] Could not save the pairing key: ${e}`);
-      this.setPairings(this._pairings().filter((p) => p.id !== pairing.id));
+      this.setPairings(previous);
       this.patchFlow({ page: 'found', busy: false, error: 'persistence' });
       return undefined;
     }
