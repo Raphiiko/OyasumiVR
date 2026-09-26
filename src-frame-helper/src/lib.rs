@@ -69,18 +69,22 @@ pub fn ensure_certificate(
     let dir = root.join("tls");
     let cert_path = dir.join("cert.pem");
     let key_path = dir.join("key.pem");
+
     // reuse the stored identity when it still works
     if let Ok(identity) = load_certificate(&cert_path, &key_path) {
         return Ok(identity);
     }
+
     // otherwise generate a self-signed one
     let generated = rcgen::generate_simple_self_signed(vec!["oyasumivr-frame-helper".into()])
         .map_err(io::Error::other)?;
+
     // store it readable by this user only
     create_private_dir(&dir)?;
     write_private(&key_path, generated.signing_key.serialize_pem().as_bytes())?;
     write_private(&cert_path, generated.cert.pem().as_bytes())?;
-    // read it back, so the caller gets what is on disk
+
+    // read it back from disk
     load_certificate(&cert_path, &key_path)
 }
 
@@ -122,6 +126,7 @@ fn create_private_dir(dir: &Path) -> io::Result<()> {
 /// Writes the file with mode 600 through a temporary file, so a crash never leaves half a file.
 fn write_private(path: &Path, contents: &[u8]) -> io::Result<()> {
     let temp = path.with_extension("tmp");
+
     // open the temporary file with owner-only access
     let mut options = std::fs::OpenOptions::new();
     options.write(true).create(true).truncate(true);
@@ -130,10 +135,12 @@ fn write_private(path: &Path, contents: &[u8]) -> io::Result<()> {
         use std::os::unix::fs::OpenOptionsExt;
         options.mode(0o600);
     }
+
     // write and flush it to disk
     let mut file = options.open(&temp)?;
     io::Write::write_all(&mut file, contents)?;
     file.sync_all()?;
+
     // swap it into place
     std::fs::rename(temp, path)
 }
@@ -163,6 +170,7 @@ fn read_identity() -> Option<Identity> {
     parse_identity(&std::fs::read_to_string(path).ok()?)
 }
 
+/// The PC id names a token file, so it must stay a single safe path segment.
 fn valid_pc_id(pc_id: &str) -> bool {
     (1..=64).contains(&pc_id.len())
         && pc_id
@@ -184,10 +192,12 @@ fn authorized(root: &Path, request: &Request) -> bool {
     ) else {
         return false;
     };
+
     // reject ids that are not a safe file name
     if !valid_pc_id(pc_id) || token.is_empty() {
         return false;
     }
+
     // compare with that PC's token file
     std::fs::read_to_string(root.join("clients").join(pc_id))
         .is_ok_and(|expected| constant_time_eq(expected.trim().as_bytes(), token.as_bytes()))
@@ -206,6 +216,7 @@ async fn handle(stream: TcpStream, acceptor: TlsAcceptor, root: Arc<PathBuf>) {
     let Ok(Ok(tls)) = tokio::time::timeout(HANDSHAKE_TIMEOUT, acceptor.accept(stream)).await else {
         return;
     };
+
     // upgrade to a websocket, only with a valid token
     let config = WebSocketConfig::default()
         .max_message_size(Some(64 << 10))
@@ -221,6 +232,7 @@ async fn handle(stream: TcpStream, acceptor: TlsAcceptor, root: Arc<PathBuf>) {
     let Ok(Ok(mut socket)) = tokio::time::timeout(HANDSHAKE_TIMEOUT, accept).await else {
         return;
     };
+
     // send the version and headset identity
     let hello = Hello {
         r#type: "hello",
@@ -233,6 +245,7 @@ async fn handle(stream: TcpStream, acceptor: TlsAcceptor, root: Arc<PathBuf>) {
     if socket.send(Message::text(hello)).await.is_err() {
         return;
     }
+
     // keep the socket open until the PC closes it
     while let Some(Ok(message)) = socket.next().await {
         if message.is_close() {
