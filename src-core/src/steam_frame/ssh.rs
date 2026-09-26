@@ -37,10 +37,12 @@ pub fn create_credentials(comment: &str) -> Result<Credentials, String> {
         .chars()
         .map(|c| if c.is_ascii_graphic() { c } else { '-' })
         .collect();
+
     // generate the key pair
     let keypair = RsaKeypair::random(&mut rand::rng(), 3072).map_err(|e| e.to_string())?;
     let key =
         PrivateKey::new(KeypairData::from(keypair), comment.clone()).map_err(|e| e.to_string())?;
+
     // encode both halves in OpenSSH format
     let mut public_key = key.public_key().clone();
     public_key.set_comment("");
@@ -106,10 +108,12 @@ pub async fn connect(access: &Access) -> Result<Session, SshError> {
         expected: access.host_key_pin.clone(),
         observed: observed.clone(),
     };
+    // must stay longer than the 45 s lock wait in helper.sh
     let config = Arc::new(client::Config {
         inactivity_timeout: Some(Duration::from_secs(60)),
         ..Default::default()
     });
+
     // connect; a wrong host key gets its own error
     let address = (access.address.as_str(), 22);
     let mut handle = match tokio::time::timeout(
@@ -126,12 +130,14 @@ pub async fn connect(access: &Access) -> Result<Session, SshError> {
         Ok(Err(error)) => return Err(SshError::Failed(error.to_string())),
         Ok(Ok(handle)) => handle,
     };
+
     // record the host key for a first-login pin
     let host_key_pin = observed
         .lock()
         .unwrap()
         .clone()
         .ok_or_else(|| SshError::Failed("no host key".into()))?;
+
     // log in with the strongest accepted RSA signature
     let hash = handle
         .best_supported_rsa_hash()
@@ -158,11 +164,13 @@ impl Session {
     /// Runs one command to completion, feeding it `stdin` and then end of file.
     pub async fn exec(&self, command: &str, stdin: &[u8]) -> Result<Output, SshError> {
         let failed = |e: russh::Error| SshError::Failed(e.to_string());
+
         // start the command and send all of stdin
         let mut channel = self.handle.channel_open_session().await.map_err(failed)?;
         channel.exec(true, command).await.map_err(failed)?;
         channel.data(stdin).await.map_err(failed)?;
         channel.eof().await.map_err(failed)?;
+
         // collect output until the channel closes
         let mut output = Output {
             status: u32::MAX,
