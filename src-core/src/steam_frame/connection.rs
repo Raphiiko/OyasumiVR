@@ -160,6 +160,8 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>) {
                     && maintenance::take_automatic_attempt(&pairing.id).await
                 {
                     wss::close(*socket).await;
+                    // the helper answered, so a problem status from an earlier attempt is stale
+                    state.status = Status::Connecting;
                     if maintain(&mut state, &pairing, &mut notice).await {
                         return;
                     }

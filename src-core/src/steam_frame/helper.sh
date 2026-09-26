@@ -97,7 +97,7 @@ install() {
     rm -rf "$root/releases/$version"
     mkdir "$root/releases/$version"
     mv "$root/staging/$binary" "$root/releases/$version/$binary"
-    if [ -n "$old" ]; then
+    if [ -n "$old" ] && [ -x "$root/$old/$binary" ]; then
       ln -sfn "$old" "$root/previous.new"
       mv -T "$root/previous.new" "$root/previous"
     fi
