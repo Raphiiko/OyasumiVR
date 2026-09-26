@@ -36,6 +36,7 @@ fn command(arguments: &[&str]) -> String {
     command
 }
 
+/// True for an argument the remote shell passes through unchanged.
 fn plain_word(argument: &str) -> bool {
     !argument.is_empty()
         && argument
@@ -43,6 +44,7 @@ fn plain_word(argument: &str) -> bool {
             .all(|b| b.is_ascii_alphanumeric() || b"-._".contains(&b))
 }
 
+/// Runs one `helper.sh` step over SSH, refusing any argument that needs quoting.
 async fn run(session: &Session, arguments: &[&str], stdin: &[u8]) -> Result<ssh::Output, SshError> {
     if !arguments.iter().all(|argument| plain_word(argument)) {
         return Err(SshError::Failed(format!(
@@ -80,15 +82,18 @@ pub fn install_decision(
     bundled: &str,
     protocol: u32,
 ) -> InstallDecision {
+    // nothing installed yet
     let Some(installed) = installed else {
         return InstallDecision::Install;
     };
+    // an unreadable version gets replaced
     let (Ok(installed_version), Ok(bundled_version)) = (
         semver::Version::parse(&installed.version),
         semver::Version::parse(bundled),
     ) else {
         return InstallDecision::Install;
     };
+    // older gets replaced, same or compatible newer is kept
     if installed_version < bundled_version {
         InstallDecision::Install
     } else if installed_version == bundled_version || installed.accepts(protocol) {
@@ -147,6 +152,7 @@ pub async fn provision(
     token: &str,
     public_key: &str,
 ) -> Result<Provisioned, ProvisionError> {
+    // write the token and key files, start the helper
     let stdin = format!(
         "{token}
 {public_key}
@@ -166,6 +172,7 @@ pub async fn provision(
             )))
         }
     }
+    // first line holds the port, the rest the certificate
     let stdout = output.stdout();
     let (config, certificate) = stdout.split_once('\n').unwrap_or((&stdout, ""));
     let config: Config = serde_json::from_str(config)
@@ -200,11 +207,13 @@ pub async fn setup(request: SetupRequest, on_stage: impl Fn(Stage)) -> SetupResu
     SetupResult { outcome, installed }
 }
 
+/// Checks the request, then runs the setup steps in one SSH session.
 async fn run_setup(
     request: &SetupRequest,
     on_stage: &impl Fn(Stage),
     installed: &mut bool,
 ) -> Result<SetupOutcome, SetupOutcome> {
+    // refuse requests that setup cannot run safely
     if !valid_pc_id(&request.pc_id) {
         return Err(SetupOutcome::Failed {
             message: "invalid PC id".into(),
@@ -220,12 +229,14 @@ async fn run_setup(
             message: "this headset model is not supported".into(),
         });
     }
+    // run every step in one session
     let session = ssh::connect(&request.access).await?;
     let result = setup_session(request, &session, on_stage, installed).await;
     session.close().await;
     result
 }
 
+/// The setup steps: verify the headset, install the helper, provision, and handshake.
 async fn setup_session(
     request: &SetupRequest,
     session: &Session,
@@ -234,6 +245,7 @@ async fn setup_session(
 ) -> Result<SetupOutcome, SetupOutcome> {
     let failed = |message: String| SetupOutcome::Failed { message };
 
+    // verify: the headset is the one SteamVR reported
     on_stage(Stage::Verify);
     let settings = run(session, &["identity"], b"").await?.stdout();
     match parse_identity(&settings) {
@@ -248,6 +260,7 @@ async fn setup_session(
         Some(_) => {}
     }
 
+    // install: compare the installed helper with the bundled one
     on_stage(Stage::Install);
     let bundled_version = env!("CARGO_PKG_VERSION");
     let inspect = run(session, &["inspect"], b"").await?.stdout();
@@ -257,6 +270,7 @@ async fn setup_session(
         || current
             .as_ref()
             .is_some_and(|info| info.version == bundled_version);
+    // stop, keep, or upload and install the bundled helper
     match decision {
         InstallDecision::NeedsAppUpdate => {
             return Err(SetupOutcome::NeedsAppUpdate {
@@ -292,6 +306,7 @@ async fn setup_session(
         }
     }
 
+    // leave an uninstall script that matches this helper
     if bundled_is_current {
         let output = run(session, &["uninstaller"], UNINSTALL.as_bytes()).await?;
         if output.status != 0 {
@@ -299,6 +314,7 @@ async fn setup_session(
         }
     }
 
+    // connection: give this PC a token, start the helper
     on_stage(Stage::Connection);
     let provisioned = provision(session, &request.pc_id, &request.token, &request.public_key)
         .await
@@ -308,7 +324,9 @@ async fn setup_session(
             ProvisionError::Busy => SetupOutcome::HelperBusy,
             ProvisionError::Failed(message) => failed(message),
         })?;
+    // prove it works with an authenticated handshake
     let hello = handshake(request, &provisioned).await?;
+    // the running helper must speak our protocol and version
     if !hello.info.accepts(PROTOCOL_VERSION) {
         return Err(SetupOutcome::NeedsAppUpdate {
             helper_version: hello.info.version,
@@ -363,11 +381,13 @@ async fn handshake(
 /// Removes this PC's token file and key lines, and the helper when this attempt installed it
 /// and no other PC has a token file.
 pub async fn cleanup(request: CleanupRequest) -> CleanupOutcome {
+    // refuse an id that is not a safe file name
     if !valid_pc_id(&request.pc_id) {
         return CleanupOutcome::Failed {
             message: "invalid PC id".into(),
         };
     }
+    // a rejected login means our access is already gone
     let session = match ssh::connect(&request.access).await {
         Ok(session) => session,
         Err(SshError::Rejected) => return CleanupOutcome::Done,
@@ -375,6 +395,7 @@ pub async fn cleanup(request: CleanupRequest) -> CleanupOutcome {
         Err(SshError::HostKeyChanged) => return CleanupOutcome::HostKeyChanged,
         Err(SshError::Failed(message)) => return CleanupOutcome::Failed { message },
     };
+    // remove token file, key line, and maybe the helper
     let remove_helper = if request.remove_helper { "1" } else { "0" };
     let result = run(
         &session,
@@ -383,6 +404,7 @@ pub async fn cleanup(request: CleanupRequest) -> CleanupOutcome {
     )
     .await;
     session.close().await;
+    // map the exit status to an outcome
     match result {
         Ok(output) if output.status == 0 => CleanupOutcome::Done,
         Ok(output) if output.status == EXIT_BUSY => CleanupOutcome::HelperBusy,

@@ -13,6 +13,7 @@ static CLIENT: LazyLock<reqwest::Client> = LazyLock::new(|| {
         .expect("the devkit HTTP client must build")
 });
 
+/// The devkit service URL, with brackets around an IPv6 address.
 fn url(address: &str, path: &str) -> String {
     let host = if address.contains(':') {
         format!("[{address}]")
@@ -37,6 +38,7 @@ pub async fn login_name(address: &str) -> Option<String> {
     (!name.is_empty() && !name.contains(char::is_whitespace)).then_some(name)
 }
 
+/// Maps the devkit answer to an outcome. The service reports every refusal as 403.
 pub fn classify(status: StatusCode, body: &str) -> RegisterOutcome {
     match status {
         StatusCode::OK if body.trim() == "Registered" => RegisterOutcome::Registered,
@@ -50,12 +52,14 @@ pub fn classify(status: StatusCode, body: &str) -> RegisterOutcome {
 
 /// Posts this PC's public key. The headset holds the request open while the user decides.
 pub async fn register(address: &str, public_key: &str) -> RegisterOutcome {
+    // wait up to a minute for the headset user
     let response = CLIENT
         .post(url(address, "/register"))
         .body(public_key.to_owned())
         .timeout(Duration::from_secs(60))
         .send()
         .await;
+    // no answer after sending may still mean approved
     let response = match response {
         Ok(response) => response,
         Err(error) if error.is_connect() => return RegisterOutcome::Unreachable,

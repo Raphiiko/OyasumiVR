@@ -30,12 +30,14 @@ pub async fn steam_frame_get_ssh_user(address: String) -> Option<String> {
 
 #[tauri::command]
 pub async fn steam_frame_create_pairing_keys() -> Result<PairingKeys, String> {
+    // name the key after this PC
     let computer = std::env::var("COMPUTERNAME").unwrap_or_else(|_| "PC".into());
     let credentials = tokio::task::spawn_blocking(move || {
         ssh::create_credentials(&format!("OyasumiVR@{computer}"))
     })
     .await
     .map_err(|e| e.to_string())??;
+    // add a random token for the helper
     Ok(PairingKeys {
         private_key: credentials.private_key,
         public_key: credentials.public_key,

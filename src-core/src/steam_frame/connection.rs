@@ -37,6 +37,7 @@ static STATES: LazyLock<Mutex<HashMap<String, State>>> = LazyLock::new(Default::
 pub async fn set_pairings(pairings: Vec<Pairing>) {
     let mut connections = CONNECTIONS.lock().await;
     let mut kept = HashMap::new();
+    // keep unchanged pairings, restart changed or new ones
     for pairing in pairings {
         if !valid_pc_id(&pairing.id) {
             warn!("[SteamFrame] Ignored a pairing with an invalid id");
@@ -63,6 +64,7 @@ pub async fn set_pairings(pairings: Vec<Pairing>) {
             replaced.task.abort();
         }
     }
+    // stop connections whose pairing is gone
     for (id, connection) in connections.drain() {
         connection.task.abort();
         STATES.lock().await.remove(&id);
@@ -70,10 +72,12 @@ pub async fn set_pairings(pairings: Vec<Pairing>) {
     *connections = kept;
 }
 
+/// The last state of every running connection.
 pub async fn states() -> Vec<State> {
     STATES.lock().await.values().cloned().collect()
 }
 
+/// Stores the state and sends it to the UI.
 async fn publish(state: &State) {
     STATES
         .lock()
@@ -89,7 +93,9 @@ enum Attempt {
     Failed(Status),
 }
 
+/// Keeps one pairing connected for the life of the task, retrying with backoff.
 async fn run(shared: Arc<Mutex<Pairing>>) {
+    // announce that this pairing is connecting
     let initial = shared.lock().await.clone();
     let mut state = State {
         pairing_id: initial.id.clone(),
@@ -103,12 +109,14 @@ async fn run(shared: Arc<Mutex<Pairing>>) {
     let mut backoff = Duration::from_secs(2);
     let mut retries = 0;
     loop {
+        // try once; a repair gets at most two immediate retries
         let pairing = shared.lock().await.clone();
         let result = match attempt(&pairing, &shared).await {
             Attempt::Retry if retries >= 2 => Attempt::Failed(Status::Offline),
             result => result,
         };
         match result {
+            // connected: refuse an unusable helper, else hold the socket
             Attempt::Connected(socket, hello) => {
                 let pairing = shared.lock().await.clone();
                 state.address = pairing.access.address;
@@ -137,10 +145,12 @@ async fn run(shared: Arc<Mutex<Pairing>>) {
                     continue;
                 }
             }
+            // something this PC trusts changed, so try again now
             Attempt::Retry => {
                 retries += 1;
                 continue;
             }
+            // failed: report it, stop on a changed host key
             Attempt::Failed(status) => {
                 let pairing = shared.lock().await.clone();
                 state.address = pairing.access.address;
@@ -155,6 +165,7 @@ async fn run(shared: Arc<Mutex<Pairing>>) {
                 }
             }
         }
+        // wait before the next attempt, doubling up to a minute
         tokio::time::sleep(backoff).await;
         backoff = (backoff * 2).min(MAX_BACKOFF);
         retries = 0;
@@ -179,6 +190,7 @@ fn incompatibility(hello: &Hello, expected: &Identity) -> Option<Status> {
     None
 }
 
+/// Connects once, and repairs what it can when the connection fails.
 async fn attempt(pairing: &Pairing, shared: &Mutex<Pairing>) -> Attempt {
     let result = wss::connect(
         &pairing.access.address,
@@ -200,6 +212,7 @@ async fn attempt(pairing: &Pairing, shared: &Mutex<Pairing>) -> Attempt {
     }
 }
 
+/// Only a changed host key needs its own status; any other SSH error means offline.
 fn ssh_failure(error: SshError) -> Attempt {
     match error {
         SshError::HostKeyChanged => Attempt::Failed(Status::HostKeyChanged),
@@ -230,12 +243,14 @@ async fn restore_token(pairing: &Pairing) -> Attempt {
 
 /// Trusts a new helper certificate only when the pinned SSH host shows that same certificate.
 async fn repin(pairing: &Pairing, shared: &Mutex<Pairing>, observed: &str) -> Attempt {
+    // read the helper certificate over the pinned SSH host
     let session = match ssh::connect(&pairing.access).await {
         Ok(session) => session,
         Err(error) => return ssh_failure(error),
     };
     let result = setup::provision(&session, &pairing.id, &pairing.token, &pairing.public_key).await;
     session.close().await;
+    // trust it only if WSS saw the same one
     match result {
         Ok(provisioned) if provisioned.cert_pin == observed => {
             info!("[SteamFrame] Pinned the helper's new certificate");
@@ -256,6 +271,7 @@ async fn repin(pairing: &Pairing, shared: &Mutex<Pairing>, observed: &str) -> At
 /// Looks for the headset at another address. A candidate counts only when its helper presents
 /// the pinned certificate.
 async fn find_moved_helper(pairing: &Pairing, shared: &Mutex<Pairing>) -> Attempt {
+    // try every devkit service found at another address
     for candidate in discovery::discover(Duration::from_secs(2)).await {
         if candidate.address == pairing.access.address {
             continue;
@@ -268,6 +284,7 @@ async fn find_moved_helper(pairing: &Pairing, shared: &Mutex<Pairing>) -> Attemp
             &pairing.token,
         )
         .await;
+        // a wrong token still proves the pinned certificate
         let verified = match result {
             Ok((socket, _)) => {
                 wss::close(socket).await;
@@ -275,6 +292,7 @@ async fn find_moved_helper(pairing: &Pairing, shared: &Mutex<Pairing>) -> Attemp
             }
             Err(error) => error == WssError::Unauthorized,
         };
+        // store the new address and retry there
         if verified {
             info!(
                 "[SteamFrame] The paired headset moved to {}",
@@ -289,6 +307,7 @@ async fn find_moved_helper(pairing: &Pairing, shared: &Mutex<Pairing>) -> Attemp
 
 /// Keeps the connection open until the helper stops answering.
 async fn hold(mut socket: Socket) {
+    // ping on a timer, give up after long silence
     let mut ticker = tokio::time::interval(PING_INTERVAL);
     let mut last_heard = Instant::now();
     loop {
