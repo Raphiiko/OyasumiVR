@@ -6,56 +6,19 @@ capturing page screenshots and DOM state. CDP does not exercise native focus or 
 PowerShell with user32 and screen capture for native-window behavior, or when CDP cannot attach to
 the reviewed target. Keep the two layers distinct in the evidence.
 
-## Reserve the desktop
+## Prepare the session
 
-Ask the user before launching or operating OyasumiVR. Run the claim, launch, verification, and
-cleanup work in one persistent PowerShell session, then acquire the global test slot:
-
-```powershell
-$owned = $false
-$mutex = [System.Threading.Mutex]::new($true, 'Global\OyasumiVR-AgentUI-Test', [ref]$owned)
-if (-not $owned) {
-    $mutex.Dispose()
-    throw 'Another agent is testing OyasumiVR. Wait or ask the user; do not compete for the app.'
-}
-```
-
-Inspect existing processes by full executable path and command line:
-
-```powershell
-$workspace = (Resolve-Path .).Path
-$executable = Join-Path $workspace 'src-core\target\debug\oyasumivr.exe'
-
-Get-CimInstance Win32_Process | Where-Object {
-    $_.ExecutablePath -eq $executable -or
-    $_.Name -ieq 'oyasumivr.exe' -or
-    $_.CommandLine -imatch 'tauri dev|ng serve oyasumivr'
-} | Select-Object ProcessId, Name, ExecutablePath, CommandLine
-```
-
-```powershell
-Get-NetTCPConnection -LocalPort 4200 -State Listen -ErrorAction SilentlyContinue |
-    ForEach-Object {
-        $owner = Get-CimInstance Win32_Process -Filter "ProcessId=$($_.OwningProcess)"
-        [pscustomobject]@{
-            Port = $_.LocalPort
-            ProcessId = $_.OwningProcess
-            Path = $owner.ExecutablePath
-            CommandLine = $owner.CommandLine
-        }
-    }
-```
-
-Never stop or reuse a process from another worktree or an unowned session. If the scan cannot prove
-that port 4200 and every OyasumiVR process are unrelated to the app, stop and ask the user. This
-phase is complete when `$owned` is true and either there is no frontend listener or the user has
-resolved the conflict.
-
-## Launch the reviewed build
+Ask the user before launching or operating OyasumiVR. Run the launch, verification, and cleanup
+work in one persistent PowerShell session. Each worktree runs its own isolated instance beside the
+others, as described in [parallel app instances](parallel-instances.md). Before any step that needs
+a shared resource (SteamVR, VRChat, elevated features, Bluetooth, native input), claim its lock from
+that document.
 
 Record the commit and create an evidence directory before starting:
 
 ```powershell
+$workspace = (Resolve-Path .).Path
+$executable = Join-Path $workspace 'src-core\target\debug\oyasumivr.exe'
 $head = git rev-parse HEAD
 $treeStatus = git status --porcelain
 $session = Join-Path ([IO.Path]::GetTempPath()) "oyasumivr-ui-$([Guid]::NewGuid().ToString('N'))"
@@ -63,44 +26,60 @@ New-Item -ItemType Directory -Path $session | Out-Null
 $head, $treeStatus | Set-Content (Join-Path $session 'head.txt')
 ```
 
-Set the WebView2 debugging argument in the same persistent session that starts npm, then launch the
-repository's development profile:
+Check that this worktree has no instance running yet:
 
 ```powershell
-$cdpPort = 9222
-if (Get-NetTCPConnection -LocalPort $cdpPort -State Listen -ErrorAction SilentlyContinue) {
-    throw "CDP port $cdpPort is already in use; choose an unused port."
-}
-$env:WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS = "--remote-debugging-port=$cdpPort"
-$dev = Start-Process npm.cmd -ArgumentList run,dev -WorkingDirectory $workspace -PassThru -NoNewWindow `
+Get-CimInstance Win32_Process | Where-Object {
+    $_.ExecutablePath -eq $executable -or
+    ($_.Name -in 'node.exe', 'cargo.exe' -and $_.CommandLine -like "*$workspace\*")
+} | Select-Object ProcessId, Name, ExecutablePath, CommandLine
+```
+
+Instances from other worktrees are expected; leave them alone. If a process from this worktree runs
+and this session did not start it, stop and ask the user.
+
+## Launch the reviewed build
+
+Start the isolated instance and read its ports from the launch line:
+
+```powershell
+$dev = Start-Process npm.cmd -ArgumentList run,dev:isolated -WorkingDirectory $workspace -PassThru -NoNewWindow `
     -RedirectStandardOutput (Join-Path $session 'dev.out.log') `
     -RedirectStandardError (Join-Path $session 'dev.err.log')
 $dev | Select-Object Id, ProcessName, Path
+
+$deadline = [DateTime]::UtcNow.AddSeconds(30)
+do {
+    $launch = Select-String -Path (Join-Path $session 'dev.out.log') `
+        -Pattern '^\[dev-isolated\] identifier=(\S+) ui=http://localhost:(\d+) cdp=(\d+)' -ErrorAction SilentlyContinue |
+        Select-Object -First 1
+    if (-not $launch) { Start-Sleep -Milliseconds 500 }
+} while (-not $launch -and [DateTime]::UtcNow -lt $deadline)
+if (-not $launch) { throw 'dev:isolated printed no launch line.' }
+$identifier = $launch.Matches[0].Groups[1].Value
+$uiPort = [int]$launch.Matches[0].Groups[2].Value
+$cdpPort = [int]$launch.Matches[0].Groups[3].Value
 ```
 
-Wait for frontend and backend startup, then prove their identity:
+Wait for frontend and backend startup, then prove their identity. The first build in a worktree
+compiles the core crate again, so allow several minutes:
 
 ```powershell
-$deadline = [DateTime]::UtcNow.AddSeconds(60)
-$frontendMatched = $false
+$deadline = [DateTime]::UtcNow.AddMinutes(10)
+$process = $null
 do {
-    $frontendPid = Get-NetTCPConnection -LocalPort 4200 -State Listen -ErrorAction SilentlyContinue |
+    $frontendPid = Get-NetTCPConnection -LocalPort $uiPort -State Listen -ErrorAction SilentlyContinue |
         Select-Object -First 1 -ExpandProperty OwningProcess
-    if ($frontendPid) {
-        $frontend = Get-CimInstance Win32_Process -Filter "ProcessId=$frontendPid"
-        if ($frontend.CommandLine -like "*$workspace*") {
-            $frontendMatched = $true
-            break
-        }
-    }
-    Start-Sleep -Milliseconds 500
-} while (-not $frontendMatched -and [DateTime]::UtcNow -lt $deadline)
-if (-not $frontendMatched) {
-    throw "No frontend from $workspace owns port 4200."
-}
+    $process = Get-CimInstance Win32_Process -Filter "Name='oyasumivr.exe'" |
+        Where-Object ExecutablePath -eq $executable
+    if ($frontendPid -and $process) { break }
+    Start-Sleep -Seconds 2
+} while ([DateTime]::UtcNow -lt $deadline)
 
-$process = Get-CimInstance Win32_Process -Filter "Name='oyasumivr.exe'" |
-    Where-Object ExecutablePath -eq $executable
+$frontend = Get-CimInstance Win32_Process -Filter "ProcessId=$frontendPid"
+if ($frontend.CommandLine -notlike "*$workspace\*") {
+    throw "No frontend from $workspace owns port $uiPort."
+}
 if (@($process).Count -ne 1) {
     throw "Expected one reviewed OyasumiVR process, found $(@($process).Count)."
 }
@@ -109,7 +88,7 @@ $frontend | Select-Object ProcessId, ExecutablePath, CommandLine
 $process | Select-Object ProcessId, ExecutablePath, CommandLine
 ```
 
-Do not continue until the recorded HEAD is the reviewed HEAD, port 4200 is owned by this worktree,
+Do not continue until the recorded HEAD is the reviewed HEAD, `$uiPort` is owned by this worktree,
 exactly one backend has the exact `$executable` path, and `$dev` is the test's recorded root process.
 
 ## Verify the WebView2 target
@@ -138,9 +117,9 @@ $version | Select-Object Browser
 $targets | Select-Object title, url, webSocketDebuggerUrl
 ```
 
-Select the target whose URL starts with `http://localhost:4200`, not another app or the splashscreen.
-Record its `webSocketDebuggerUrl`, CDP port, and target URL. If there is not exactly one reviewed
-frontend target, stop and reconcile startup before driving the app.
+Select the target whose URL starts with `http://localhost:$uiPort`, not another app or the
+splashscreen. Record its `webSocketDebuggerUrl`, CDP port, and target URL. If there is not exactly
+one reviewed frontend target, stop and reconcile startup before driving the app.
 
 Connect with `System.Net.WebSockets.ClientWebSocket` or a temporary local CDP client. Use
 `Input.dispatchMouseEvent` and `Input.dispatchKeyEvent` for browser-level user input,
@@ -161,7 +140,10 @@ its before-and-after state is captured from the reviewed target.
 
 For native focus, geometry, resizing, OS-level input, or when CDP cannot attach, drive the real
 window from the same session. Use `System.Windows.Automation` where its accessibility tree can find
-or verify a native control more reliably than coordinates. Initialize once:
+or verify a native control more reliably than coordinates. Other agents share the foreground window
+and the mouse, so hold the `NativeInput` lock from
+[parallel app instances](parallel-instances.md) from each focus call until the screenshot after
+the action. Initialize once:
 
 ```powershell
 Add-Type -AssemblyName System.Drawing
@@ -248,14 +230,7 @@ claiming verification. Preserve the `$session` directory until its evidence has 
 
 Before stopping anything, enumerate the descendants of `$dev.Id` with their paths and command lines.
 Stop `$dev` first, then only descendants still running from that recorded tree. Remove only files
-created in `$session`, after the user has the evidence or agrees it can be removed. Release the claim
-from the owning session:
+created in `$session`, after the user has the evidence or agrees it can be removed. Release every
+shared-resource lock this session still holds.
 
-```powershell
-if ($owned) {
-    $mutex.ReleaseMutex()
-    $mutex.Dispose()
-}
-```
-
-If a process, port, focus, or mutex belongs to another test, leave it alone and ask the user.
+If a process, port, focus, or lock belongs to another test, leave it alone.

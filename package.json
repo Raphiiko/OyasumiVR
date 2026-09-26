@@ -7,6 +7,7 @@
   "scripts": {
     "//1": "=== Development ===",
     "dev": "npm run tauri dev -- -- -- --core-mode dev --overlay-sidecar-mode dev",
+    "dev:isolated": "node scripts/dev-isolated.mjs",
     "start": "npm run tauri dev",
     "start:ui": "node scripts/pre-build.js && ng serve oyasumivr",
     "start:overlay": "cd src-overlay-sidecar && dotnet build && dotnet run -- dev",
