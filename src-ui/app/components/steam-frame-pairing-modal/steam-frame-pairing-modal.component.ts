@@ -3,10 +3,10 @@ import { FormsModule } from '@angular/forms';
 import { openUrl } from '@tauri-apps/plugin-opener';
 import { TranslocoModule } from '@jsverse/transloco';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
-import { FramePairingService } from '../../services/frame-pairing.service';
-import { FramePage, FrameSetupStage } from '../../models/frame';
+import { SteamFramePairingService } from '../../services/steam-frame-pairing.service';
+import { SteamFramePage, SteamFrameSetupStage } from '../../models/steam-frame';
 
-const STEP_OF_PAGE: Record<FramePage, number> = {
+const STEP_OF_PAGE: Record<SteamFramePage, number> = {
   intro: 0,
   devmode: 1,
   pairhost: 2,
@@ -31,7 +31,7 @@ const STEP_OF_PAGE: Record<FramePage, number> = {
   success: 6,
 };
 
-const ILLUSTRATIONS: Partial<Record<FramePage, string>> = {
+const ILLUSTRATIONS: Partial<Record<SteamFramePage, string>> = {
   devmode: 'settings',
   pairhost: 'settings',
   search: 'searching',
@@ -46,7 +46,7 @@ const ILLUSTRATIONS: Partial<Record<FramePage, string>> = {
   success: 'paired',
 };
 
-const BACK: Partial<Record<FramePage, FramePage>> = {
+const BACK: Partial<Record<SteamFramePage, SteamFramePage>> = {
   devmode: 'intro',
   pairhost: 'devmode',
   found: 'pairhost',
@@ -55,15 +55,15 @@ const BACK: Partial<Record<FramePage, FramePage>> = {
 };
 
 @Component({
-  selector: 'app-frame-pairing-modal',
+  selector: 'app-steam-frame-pairing-modal',
   standalone: true,
   imports: [FormsModule, TranslocoModule],
-  templateUrl: './frame-pairing-modal.component.html',
-  styleUrl: './frame-pairing-modal.component.scss',
+  templateUrl: './steam-frame-pairing-modal.component.html',
+  styleUrl: './steam-frame-pairing-modal.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FramePairingModalComponent extends BaseModalComponent<void, void> {
-  protected readonly frame = inject(FramePairingService);
+export class SteamFramePairingModalComponent extends BaseModalComponent<void, void> {
+  protected readonly pairing = inject(SteamFramePairingService);
   readonly stepLabels = [
     'before',
     'developer',
@@ -73,10 +73,10 @@ export class FramePairingModalComponent extends BaseModalComponent<void, void> {
     'install',
     'finished',
   ];
-  readonly stages: FrameSetupStage[] = ['verify', 'install', 'connection'];
+  readonly stages: SteamFrameSetupStage[] = ['verify', 'install', 'connection'];
   readonly address = signal('');
 
-  readonly flow = this.frame.flow;
+  readonly flow = this.pairing.flow;
   readonly page = computed(() => this.flow()?.page ?? 'intro');
   readonly busy = computed(() => !!this.flow()?.busy);
   readonly step = computed(() => STEP_OF_PAGE[this.page()]);
@@ -110,6 +110,6 @@ export class FramePairingModalComponent extends BaseModalComponent<void, void> {
   }
 
   connectManual() {
-    if (this.validAddress()) void this.frame.connectManual(this.address());
+    if (this.validAddress()) void this.pairing.connectManual(this.address());
   }
 }

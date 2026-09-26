@@ -1,8 +1,13 @@
-<div class="guide" *transloco="let t; prefix: 'frame'" role="dialog" aria-labelledby="frame-title">
+<div
+  class="guide"
+  *transloco="let t; prefix: 'steamFrame'"
+  role="dialog"
+  aria-labelledby="steam-frame-title"
+>
   <nav class="trail" [attr.aria-label]="t('steps.label')">
     <div class="trail-edge">
       @if (back(); as target) {
-        <button class="plain" (click)="frame.go(target)">
+        <button class="plain" (click)="pairing.go(target)">
           <i class="material-icons" aria-hidden="true">arrow_back</i>{{ t('actions.back') }}
         </button>
       }
@@ -26,7 +31,7 @@
     </span>
     <div class="trail-edge end">
       @if (!['success', 'cancelling', 'cleanupFailed', 'setupFailed'].includes(page())) {
-        <button class="plain" (click)="frame.cancel()">{{ t('actions.cancelPairing') }}</button>
+        <button class="plain" (click)="pairing.cancel()">{{ t('actions.cancelPairing') }}</button>
       }
     </div>
   </nav>
@@ -34,7 +39,7 @@
     <div class="instruction-group" [class.illustrated]="!!illustration()">
       <div class="instruction-row">
         <div class="instructions">
-          <h1 id="frame-title" aria-live="polite">
+          <h1 id="steam-frame-title" aria-live="polite">
             @switch (page()) {
               @case ('search') {
                 {{
@@ -117,7 +122,7 @@
                   class="candidate"
                   [class.selected]="flow()?.selected === i"
                   [attr.aria-pressed]="flow()?.selected === i"
-                  (click)="frame.select(i)"
+                  (click)="pairing.select(i)"
                 >
                   @if ((flow()?.candidates?.length ?? 0) > 1) {
                     <span class="radio" aria-hidden="true"></span>
@@ -133,9 +138,9 @@
           }
           @if (page() === 'manual') {
             <form (ngSubmit)="connectManual()" class="address-form">
-              <label for="frame-address">{{ t('pages.manual.label') }}</label>
+              <label for="steam-frame-address">{{ t('pages.manual.label') }}</label>
               <input
-                id="frame-address"
+                id="steam-frame-address"
                 name="address"
                 [ngModel]="address()"
                 (ngModelChange)="address.set($event)"
@@ -143,9 +148,9 @@
                 autocomplete="off"
                 spellcheck="false"
                 [attr.aria-invalid]="!!address() && !validAddress()"
-                aria-describedby="frame-address-hint"
+                aria-describedby="steam-frame-address-hint"
               />
-              <span id="frame-address-hint">{{ t('pages.manual.hint') }}</span>
+              <span id="steam-frame-address-hint">{{ t('pages.manual.hint') }}</span>
             </form>
           }
           @if (page() === 'setup' || page() === 'setupFailed') {
@@ -181,11 +186,11 @@
             @if (animated()) {
               <source
                 media="(prefers-reduced-motion: reduce)"
-                [srcset]="'assets/images/frame-pairing/' + image + '-static.svg'"
+                [srcset]="'assets/images/steam-frame-pairing/' + image + '-static.svg'"
               />
             }
             <img
-              [src]="'assets/images/frame-pairing/' + image + '.svg'"
+              [src]="'assets/images/steam-frame-pairing/' + image + '.svg'"
               width="180"
               height="120"
               alt=""
@@ -201,51 +206,51 @@
         }
         <div class="spacer"></div>
         @if (busy()) {
-          <button class="btn btn-secondary" (click)="frame.closeWizard()">{{
+          <button class="btn btn-secondary" (click)="pairing.closeWizard()">{{
             t('actions.closeForNow')
           }}</button>
         }
         @switch (page()) {
           @case ('intro') {
-            <button class="btn btn-primary" (click)="frame.go('devmode')">{{
+            <button class="btn btn-primary" (click)="pairing.go('devmode')">{{
               t('actions.continue')
             }}</button>
           }
           @case ('devmode') {
-            <button class="btn btn-primary" (click)="frame.go('pairhost')">{{
+            <button class="btn btn-primary" (click)="pairing.go('pairhost')">{{
               t('actions.continue')
             }}</button>
           }
           @case ('pairhost') {
-            <button class="btn btn-primary" (click)="frame.discover()">{{
+            <button class="btn btn-primary" (click)="pairing.discover()">{{
               t('actions.continue')
             }}</button>
           }
           @case ('search') {
             @if (!flow()?.manualAddress) {
-              <button class="btn btn-secondary" (click)="frame.go('manual')">{{
+              <button class="btn btn-secondary" (click)="pairing.go('manual')">{{
                 t('actions.enterAddress')
               }}</button>
             }
           }
           @case ('found') {
-            <button class="btn btn-secondary" (click)="frame.go('manual')">{{
+            <button class="btn btn-secondary" (click)="pairing.go('manual')">{{
               t('actions.enterAddress')
             }}</button>
-            <button class="btn btn-secondary" (click)="frame.discover()">{{
+            <button class="btn btn-secondary" (click)="pairing.discover()">{{
               t('actions.searchAgain')
             }}</button>
-            <button class="btn btn-primary" (click)="frame.pair()">
+            <button class="btn btn-primary" (click)="pairing.pair()">
               {{
                 t((flow()?.candidates?.length ?? 0) > 1 ? 'actions.pairThis' : 'actions.yesPair')
               }}
             </button>
           }
           @case ('notfound') {
-            <button class="btn btn-secondary" (click)="frame.go('manual')">{{
+            <button class="btn btn-secondary" (click)="pairing.go('manual')">{{
               t('actions.enterAddress')
             }}</button>
-            <button class="btn btn-primary" (click)="frame.discover()">{{
+            <button class="btn btn-primary" (click)="pairing.discover()">{{
               t('actions.searchAgain')
             }}</button>
           }
@@ -255,53 +260,53 @@
             </button>
           }
           @case ('notready') {
-            <button class="btn btn-primary" (click)="frame.register()">{{
+            <button class="btn btn-primary" (click)="pairing.register()">{{
               t('actions.tryAgain')
             }}</button>
           }
           @case ('declined') {
-            <button class="btn btn-primary" (click)="frame.register()">{{
+            <button class="btn btn-primary" (click)="pairing.register()">{{
               t('actions.sendAgain')
             }}</button>
           }
           @case ('timeout') {
-            <button class="btn btn-primary" (click)="frame.register()">{{
+            <button class="btn btn-primary" (click)="pairing.register()">{{
               t('actions.sendAgain')
             }}</button>
           }
           @case ('uncertain') {
-            <button class="btn btn-primary" (click)="frame.register()">{{
+            <button class="btn btn-primary" (click)="pairing.register()">{{
               t('actions.sendAgain')
             }}</button>
           }
           @case ('accessLost') {
-            <button class="btn btn-primary" (click)="frame.go('pairhost')">{{
+            <button class="btn btn-primary" (click)="pairing.go('pairhost')">{{
               t('actions.continue')
             }}</button>
           }
           @case ('wrongDevice') {
-            <button class="btn btn-primary" [disabled]="busy()" (click)="frame.discover()">{{
+            <button class="btn btn-primary" [disabled]="busy()" (click)="pairing.discover()">{{
               t('actions.findHeadset')
             }}</button>
           }
           @case ('setupFailed') {
-            <button class="btn btn-secondary" (click)="frame.closeWizard()">{{
+            <button class="btn btn-secondary" (click)="pairing.closeWizard()">{{
               t('actions.closeForNow')
             }}</button>
-            <button class="btn btn-secondary" (click)="frame.cancel()">
+            <button class="btn btn-secondary" (click)="pairing.cancel()">
               {{ t('actions.cancelPairing') }}
             </button>
-            <button class="btn btn-primary" (click)="frame.runSetup()">{{
+            <button class="btn btn-primary" (click)="pairing.runSetup()">{{
               t('actions.retry')
             }}</button>
           }
           @case ('needsUpdate') {
-            <button class="btn btn-primary" (click)="frame.closeWizard()">{{
+            <button class="btn btn-primary" (click)="pairing.closeWizard()">{{
               t('actions.close')
             }}</button>
           }
           @case ('hostKeyChanged') {
-            <button class="btn btn-primary" (click)="frame.closeWizard()">{{
+            <button class="btn btn-primary" (click)="pairing.closeWizard()">{{
               t('actions.close')
             }}</button>
           }
@@ -309,12 +314,12 @@
             <button class="btn btn-secondary" (click)="copyUninstallCommand()">{{
               t(copied() ? 'actions.copied' : 'actions.copyCommand')
             }}</button>
-            <button class="btn btn-primary" (click)="frame.leaveCleanup()">{{
+            <button class="btn btn-primary" (click)="pairing.leaveCleanup()">{{
               t('actions.done')
             }}</button>
           }
           @case ('success') {
-            <button class="btn btn-primary" (click)="frame.closeWizard()">{{
+            <button class="btn btn-primary" (click)="pairing.closeWizard()">{{
               t('actions.done')
             }}</button>
           }
