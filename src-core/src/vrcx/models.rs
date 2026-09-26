@@ -1,27 +1,15 @@
 use serde::Serialize;
 pub enum VrcxNotificationSenderError {
-    UnableToConnect(std::io::Error),
-    SendFailed(std::io::Error),
+    UnableToConnect,
+    SendFailed,
     NotConnected,
 }
 #[derive(Serialize, Debug)]
 pub enum EventType {
-    OnEvent,
-    OnOperationResponse,
-    OnOperationRequest,
-    VRCEvent,
-    Event7List,
     VrcxMessage,
-    Ping,
-    MsgPing,
-    LaunchCommand,
-    VRCXLaunch,
 }
 #[derive(Serialize, Debug)]
 pub enum MessageType {
-    CustomTag,
-    ClearCustomTag,
-    Noty,
     External,
 }
 #[derive(Serialize, Debug)]
