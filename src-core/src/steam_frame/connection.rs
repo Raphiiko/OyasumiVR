@@ -30,7 +30,7 @@ struct Connection {
     task: JoinHandle<()>,
 }
 
-/// The running task per pairing id, with the pairing it started from.
+/// The running task per pairing id, with the pairing it shares and updates.
 static CONNECTIONS: LazyLock<Mutex<HashMap<String, Connection>>> = LazyLock::new(Default::default);
 /// The last published state per pairing id, removed when its pairing goes.
 static STATES: LazyLock<Mutex<HashMap<String, State>>> = LazyLock::new(Default::default);

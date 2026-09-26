@@ -49,14 +49,14 @@ fn instance_names(response: &[u8]) -> Vec<String> {
 /// Binds the mDNS port when it can, so answers sent to the multicast group arrive too. Other
 /// mDNS listeners share the port through address reuse.
 fn socket(interfaces: &[Ipv4Addr]) -> std::io::Result<UdpSocket> {
-    // open a UDP socket that shares the mDNS port
+    // open a UDP socket
     let socket = socket2::Socket::new(
         socket2::Domain::IPV4,
         socket2::Type::DGRAM,
         Some(socket2::Protocol::UDP),
     )?;
 
-    // prefer port 5353, else any port
+    // share port 5353 with other listeners, else any port
     socket.set_reuse_address(true)?;
     if socket
         .bind(&SocketAddrV4::new(Ipv4Addr::UNSPECIFIED, 5353).into())
