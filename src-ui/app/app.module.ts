@@ -251,6 +251,7 @@ import { ProgressiveScrollBlurComponent } from './components/progressive-scroll-
 import { FrameLimiterViewComponent } from './views/dashboard-view/views/frame-limiter-view/frame-limiter-view.component';
 import { FrameLimiterSelectorComponent } from './components/frame-limiter-selector/frame-limiter-selector.component';
 import { FrameLimiterService } from './services/frame-limiter.service';
+import { SteamFramePairingService } from './services/steam-frame-pairing.service';
 import { FrameLimitAutomationsService } from './services/frame-limit-automations.service';
 import { FrameLimiterAddApplicationModalComponent } from './views/dashboard-view/views/frame-limiter-view/modals/frame-limiter-add-application-modal/frame-limiter-add-application-modal.component';
 import { OscAddressAutocompleteComponent } from './components/osc-script-simple-editor/osc-address-autocomplete/osc-address-autocomplete.component';
@@ -520,6 +521,7 @@ export class AppModule {
     private updateService: UpdateService,
     private messageCenterService: MessageCenterService,
     private frameLimiterService: FrameLimiterService,
+    private framePairingService: SteamFramePairingService,
     private deviceManagerService: DeviceManagerService,
     private storeSnapshotService: StoreSnapshotService,
     private migrationCoordinatorService: MigrationCoordinatorService,
@@ -673,7 +675,15 @@ export class AppModule {
           ]);
           await Promise.all([
             // Initialize Device Manager
-            this.logInit('DeviceManagerService initialization', this.deviceManagerService.init()),
+            this.logInit(
+              'DeviceManagerService initialization',
+              this.deviceManagerService.init()
+            ).then(() =>
+              this.logInit(
+                'Initializing Steam Frame pairing',
+                this.framePairingService.init()
+              ).catch(() => {})
+            ),
             // Initialize Steam support
             await this.logInit('Initializing Steam', this.steamService.init()),
             // Initialize Discord support
