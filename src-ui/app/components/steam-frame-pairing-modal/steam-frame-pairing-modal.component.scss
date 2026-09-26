@@ -176,6 +176,12 @@ p {
 .error {
   color: #f56c6c;
 }
+.error-code {
+  display: block;
+  margin-top: 0.25em;
+  font-size: 0.85em;
+  opacity: 0.8;
+}
 .failed {
   color: #f56c6c;
 }
