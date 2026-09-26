@@ -1,10 +1,10 @@
-export interface FrameIdentity {
+export interface SteamFrameIdentity {
   serial: string;
   model: string;
   manufacturer: string;
 }
 
-export interface FrameCandidate {
+export interface SteamFrameCandidate {
   name: string;
   address: string;
 }
@@ -13,10 +13,10 @@ export interface FrameCandidate {
  * One pairing attempt or completed pairing, in memory with its secrets readable.
  * `hostKeyPin` is set once the headset approved this PC; `complete` once setup finished.
  */
-export interface FramePairing {
+export interface SteamFramePairing {
   id: string;
   deviceId: string;
-  identity: FrameIdentity;
+  identity: SteamFrameIdentity;
   address: string;
   user: string;
   privateKey: string;
@@ -33,12 +33,12 @@ export interface FramePairing {
   helperVersion?: string;
 }
 
-export interface FramePairingData {
+export interface SteamFramePairingData {
   version: 1;
-  pairings: FramePairing[];
+  pairings: SteamFramePairing[];
 }
 
-export type FrameConnectionStatus =
+export type SteamFrameConnectionStatus =
   | 'connecting'
   | 'connected'
   | 'offline'
@@ -47,26 +47,26 @@ export type FrameConnectionStatus =
   | 'helperOutdated'
   | 'hostKeyChanged';
 
-export interface FrameConnectionState {
+export interface SteamFrameConnectionState {
   pairingId: string;
-  status: FrameConnectionStatus;
+  status: SteamFrameConnectionStatus;
   lastSeen?: number;
   helperVersion?: string;
   address: string;
   certPin: string;
 }
 
-export type FrameRegisterOutcome =
+export type SteamFrameRegisterOutcome =
   'registered' | 'declined' | 'timeout' | 'notReady' | 'unreachable' | 'lost' | 'failed';
 
-export type FrameProbeOutcome =
+export type SteamFrameProbeOutcome =
   | { status: 'ok'; hostKeyPin: string }
   | { status: 'rejected' | 'unreachable' | 'hostKeyChanged' }
   | { status: 'failed'; message: string };
 
-export type FrameSetupStage = 'verify' | 'install' | 'connection';
+export type SteamFrameSetupStage = 'verify' | 'install' | 'connection';
 
-export type FrameSetupResult = { installed: boolean } & (
+export type SteamFrameSetupResult = { installed: boolean } & (
   | {
       status: 'complete';
       certPin: string;
@@ -86,11 +86,11 @@ export type FrameSetupResult = { installed: boolean } & (
     }
 );
 
-export type FrameCleanupOutcome =
+export type SteamFrameCleanupOutcome =
   | { status: 'done' | 'unreachable' | 'hostKeyChanged' | 'helperBusy' }
   | { status: 'failed'; message: string };
 
-export type FramePage =
+export type SteamFramePage =
   | 'intro'
   | 'devmode'
   | 'pairhost'
@@ -115,15 +115,15 @@ export type FramePage =
   | 'success';
 
 /** The wizard's state. It lives in the service, so closing the wizard leaves setup running. */
-export interface FrameFlow {
+export interface SteamFrameFlow {
   deviceId: string;
-  identity: FrameIdentity;
-  page: FramePage;
-  candidates: FrameCandidate[];
+  identity: SteamFrameIdentity;
+  page: SteamFramePage;
+  candidates: SteamFrameCandidate[];
   selected: number;
   manualAddress?: string;
-  stage: FrameSetupStage;
-  /** A translation key under `frame.errors`. */
+  stage: SteamFrameSetupStage;
+  /** A translation key under `steamFrame.errors`. */
   error?: string;
   busy: boolean;
 }
