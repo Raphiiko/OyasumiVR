@@ -24,6 +24,8 @@ import { protectSecret, unprotectSecret } from '../utils/secrets';
 import { ModalService } from './modal.service';
 import { DeviceManagerService } from './device-manager.service';
 
+type SetupStageEvent = { attemptId: string; stage: SteamFrameSetupStage | 'installed' };
+
 /** Owns Steam Frame pairing records and runs the pairing wizard's steps. */
 @Injectable({
   providedIn: 'root',
@@ -33,8 +35,11 @@ export class SteamFramePairingService {
   private readonly _pairings = signal<SteamFramePairing[]>([]);
   private readonly _connections = signal<Record<string, SteamFrameConnectionState>>({});
   private readonly _flow = signal<SteamFrameFlow | null>(null);
+  /** Set when Cancel arrives during a step; that step finishes the cancel when it returns. */
   private cancelRequested = false;
+  /** Bumped by every search and page change, so a result from an older search is dropped. */
   private search = 0;
+  /** The running setup; stage events from any other attempt are ignored. */
   private setupAttemptId?: string;
 
   readonly pairings$ = new BehaviorSubject<SteamFramePairing[]>([]);
@@ -54,28 +59,32 @@ export class SteamFramePairingService {
   async init() {
     this.supportedModels.set(await invoke('steam_frame_get_supported_models'));
     await this.load();
+
     // follow connection states and the running setup's stages
     await listen<SteamFrameConnectionState>('STEAM_FRAME_CONNECTION_STATE', (event) =>
       this.onConnectionState(event.payload)
     );
-    await listen<{ attemptId: string; stage: SteamFrameSetupStage | 'installed' }>(
-      'STEAM_FRAME_SETUP_STAGE',
-      (event) => {
-        const { attemptId, stage } = event.payload;
-        if (attemptId !== this.setupAttemptId) return;
-        const deviceId = this._flow()?.deviceId;
-        if (stage !== 'installed') this.patchFlow({ stage });
-        else if (deviceId) void this.markHelperInstalled(deviceId);
-      }
+    await listen<SetupStageEvent>('STEAM_FRAME_SETUP_STAGE', (event) =>
+      this.onSetupStage(event.payload)
     );
+
     // catch up on states sent before we listened
     for (const state of await invoke<SteamFrameConnectionState[]>(
       'steam_frame_get_connection_states'
     )) {
       this.onConnectionState(state);
     }
+
     // start connections for the saved pairings
     await this.pushPairings();
+  }
+
+  /** Shows the running setup's stage, and records when it installed the helper. */
+  private onSetupStage({ attemptId, stage }: SetupStageEvent) {
+    if (attemptId !== this.setupAttemptId) return;
+    if (stage !== 'installed') return this.patchFlow({ stage });
+    const deviceId = this._flow()?.deviceId;
+    if (deviceId) void this.markHelperInstalled(deviceId);
   }
 
   isSupported(manufacturer?: string, model?: string): boolean {
@@ -104,6 +113,7 @@ export class SteamFramePairingService {
   async openWizard(device: DMKnownDevice) {
     const identity = this.identityOf(device);
     if (!identity || !this.deviceManager.isDeviceObserved(device.id)) return;
+
     // start a fresh flow unless a step still runs
     if (!this._flow()?.busy) {
       this.cancelRequested = false;
@@ -117,6 +127,7 @@ export class SteamFramePairingService {
         busy: false,
       });
     }
+
     // open the modal once; closing drops an idle flow
     if (this.modalService.isModalOpen('steam-frame-pairing')) return;
     const { SteamFramePairingModalComponent } =
@@ -216,6 +227,7 @@ export class SteamFramePairingService {
     const flow = this._flow();
     const candidate = flow?.candidates[flow.selected];
     if (!flow || !candidate) return;
+
     // make sure the devkit service still answers
     this.patchFlow({ page: 'request', error: undefined, busy: true });
     const user = await invoke<string | null>('steam_frame_get_ssh_user', {
@@ -223,6 +235,7 @@ export class SteamFramePairingService {
     });
     if (this.stopForCancel()) return;
     if (!user) return this.patchFlow({ page: 'notfound', busy: false });
+
     // save the attempt, then ask for approval
     const pairing = await this.preparePairing(flow, candidate.address, user);
     if (this.stopForCancel() || !pairing) return;
@@ -232,6 +245,7 @@ export class SteamFramePairingService {
   private async registerSteps() {
     const pairing = this.flowPairing();
     if (!pairing) return;
+
     // skip the prompt when this PC's key already works
     this.patchFlow({ page: 'request', error: undefined, busy: true });
     const probe = await this.probe(pairing);
@@ -239,6 +253,7 @@ export class SteamFramePairingService {
     if (probe.status === 'ok') return this.approved(probe.hostKeyPin);
     if (probe.status === 'hostKeyChanged')
       return this.patchFlow({ page: 'hostKeyChanged', busy: false });
+
     // record that the headset may approve, before asking
     this.patchFlow({ page: 'awaiting' });
     const mayBeApproved = !!pairing.mayBeApproved;
@@ -250,17 +265,20 @@ export class SteamFramePairingService {
       return this.patchFlow({ page: 'found', busy: false, error: 'persistence' });
     }
     if (this.stopForCancel()) return;
+
     // ask the user on the headset and wait
     const outcome = await invoke<SteamFrameRegisterOutcome>('steam_frame_request_approval', {
       address: pairing.address,
       publicKey: pairing.publicKey,
     });
     info(`[SteamFramePairing] Registration: ${outcome}`);
+
     // approved or unclear: check whether access works
     if (outcome === 'registered' || outcome === 'lost' || outcome === 'failed') {
       if (this.cancelRequested) return this.finishCancel();
       return this.confirmAccess();
     }
+
     // a clear no: restore the flag and show why
     await this.updatePairing(pairing.deviceId, { mayBeApproved });
     if (this.stopForCancel()) return;
@@ -279,6 +297,7 @@ export class SteamFramePairingService {
     const pairing = this.flowPairing();
     if (!pairing) return;
     const probe = await this.probeUntilReady(pairing);
+
     // access works: continue, or pin it for Cancel
     if (probe.status === 'ok') {
       if (this.cancelRequested) {
@@ -319,6 +338,7 @@ export class SteamFramePairingService {
     const pairing = this.flowPairing();
     const flow = this._flow();
     if (!pairing?.hostKeyPin || !flow) return;
+
     // run setup; stage events update the page
     this.setupAttemptId = uuidv4();
     this.patchFlow({ page: 'setup', stage: 'verify', error: undefined, busy: true });
@@ -333,11 +353,13 @@ export class SteamFramePairingService {
       },
     });
     info(`[SteamFramePairing] Setup: ${result.status}`);
+
     // remember an install, so Cancel removes that helper
     if (result.installed) {
       await this.markHelperInstalled(pairing.deviceId);
     }
     if (this.cancelRequested) return this.finishCancel();
+
     // show the page for the outcome
     switch (result.status) {
       // save the finished pairing and start its connection
@@ -352,6 +374,7 @@ export class SteamFramePairingService {
         await this.pushPairings();
         this.cancelRequested = false;
         return this.patchFlow({ page: 'success', busy: false });
+
       // another headset answered: undo our access there
       case 'wrongDevice': {
         this.patchFlow({ page: 'wrongDevice' });
@@ -398,8 +421,10 @@ export class SteamFramePairingService {
   async finishCancel() {
     this.cancelRequested = false;
     const pairing = this.flowPairing();
+
     // nothing to undo for a finished pairing
     if (!pairing || pairing.complete) return this.endFlow();
+
     // undo the attempt, or offer a way out
     this.patchFlow({ page: 'cancelling', error: undefined, busy: true });
     let removed = false;
@@ -423,11 +448,13 @@ export class SteamFramePairingService {
         return false;
       }
     }
+
     // remove our key, token, and any helper we installed
     if (pairing.hostKeyPin) {
       const outcome = await this.cleanup(pairing, !!pairing.helperInstalledByPairing);
       if (outcome.status !== 'done') return false;
     }
+
     // headset is clean; a failed local delete is harmless
     try {
       await this.removePairing(pairing.deviceId);
@@ -514,6 +541,7 @@ export class SteamFramePairingService {
     if (existing && !existing.complete) {
       return this.updatePairing(flow.deviceId, { address, user });
     }
+
     // create a new key and token
     let credentials: { privateKey: string; publicKey: string; token: string };
     try {
@@ -523,6 +551,7 @@ export class SteamFramePairingService {
       this.patchFlow({ page: 'found', busy: false, error: 'keys' });
       return undefined;
     }
+
     // replace any older pairing for this headset, and save
     const pairing: SteamFramePairing = {
       id: uuidv4(),
@@ -543,6 +572,7 @@ export class SteamFramePairingService {
       this.patchFlow({ page: 'found', busy: false, error: 'persistence' });
       return undefined;
     }
+
     // the old pairing's connection stops
     await this.pushPairings();
     return pairing;
@@ -588,6 +618,7 @@ export class SteamFramePairingService {
   /** Shows a connection state, and saves what the core learned about the headset. */
   private onConnectionState(state: SteamFrameConnectionState) {
     this._connections.set({ ...this._connections(), [state.pairingId]: state });
+
     // save newer contact, version, address, or certificate
     const pairing = this._pairings().find((p) => p.id === state.pairingId);
     if (!pairing) return;
@@ -632,6 +663,7 @@ export class SteamFramePairingService {
     this.setPairings(pairings);
   }
 
+  /** The last queued save; the next save starts after it settles. */
   private saving: Promise<void> = Promise.resolve();
 
   /** Writes one save at a time, each from the pairings as they are when it starts. */
