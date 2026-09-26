@@ -10,6 +10,7 @@ units="$HOME/.config/systemd/user"
 lock() {
   mkdir -p "$root"
   exec 9>"$root/maintenance.lock"
+  # must stay under the 60 s SSH inactivity timeout in ssh.rs
   flock -w 45 9 || exit 75
 }
 
@@ -57,9 +58,11 @@ EOF
 
 # uninstaller, with the uninstall script on stdin
 uninstaller() {
-  cat >"$root/uninstall.tmp"
-  chmod 755 "$root/uninstall.tmp"
-  mv "$root/uninstall.tmp" "$root/uninstall"
+  local temp
+  temp=$(mktemp "$root/uninstall.XXXXXX")
+  cat >"$temp"
+  chmod 755 "$temp"
+  mv "$temp" "$root/uninstall"
 }
 
 # provision PC_ID, with this PC's token and then its public key on stdin;
@@ -74,10 +77,16 @@ provision() {
   mkdir -p "$root/clients"
   (umask 077 && printf '%s' "$token" >"$root/clients/$pc.tmp")
   mv "$root/clients/$pc.tmp" "$root/clients/$pc"
-  printf '%s
-' "$key" >"$root/clients/$pc.pub.tmp"
+  printf '%s\n' "$key" >"$root/clients/$pc.pub.tmp"
   mv "$root/clients/$pc.pub.tmp" "$root/clients/$pc.pub"
-  systemctl --user start "$unit"
+  # restart a process that still runs an older release
+  local pid
+  pid=$(systemctl --user show -p MainPID --value "$unit" 2>/dev/null || echo 0)
+  if [ "${pid:-0}" != 0 ] && [ "$(readlink -f "/proc/$pid/exe")" != "$(readlink -f "$root/current/$binary")" ]; then
+    systemctl --user restart "$unit"
+  else
+    systemctl --user start "$unit"
+  fi
   for _ in $(seq 40); do
     [ -f "$root/tls/cert.pem" ] && break
     sleep 0.25
@@ -94,6 +103,11 @@ cleanup() {
   key=$(cat)
   type=$(cut -d' ' -f1 <<<"$key")
   data=$(cut -d' ' -f2 <<<"$key")
+  local locked=0
+  if [ -d "$root" ]; then
+    exec 9>"$root/maintenance.lock"
+    flock -w 45 9 && locked=1
+  fi
   rm -f "$root/clients/$pc" "$root/clients/$pc.pub"
   local keys="$HOME/.ssh/authorized_keys"
   if [ -f "$keys" ]; then
@@ -107,7 +121,7 @@ cleanup() {
     mv "$temp" "$keys"
   fi
   if [ "$remove_helper" = 1 ] && [ -d "$root" ]; then
-    lock
+    [ "$locked" = 1 ] || exit 75
     if [ -z "$(ls -A "$root/clients" 2>/dev/null)" ]; then
       systemctl --user disable --now "$unit" 2>/dev/null || true
       rm -f "$units/$unit" "$units/default.target.wants/$unit"

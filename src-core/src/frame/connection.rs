@@ -90,13 +90,16 @@ pub async fn set_pairings(pairings: Vec<Pairing>) {
         let id = pairing.id.clone();
         let shared = Arc::new(Mutex::new(pairing));
         let task = tokio::spawn(run(shared.clone()));
-        kept.insert(
+        let replaced = kept.insert(
             id,
             Connection {
                 pairing: shared,
                 task,
             },
         );
+        if let Some(replaced) = replaced {
+            replaced.task.abort();
+        }
     }
     for (id, connection) in connections.drain() {
         connection.task.abort();
