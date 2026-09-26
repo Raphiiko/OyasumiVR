@@ -146,13 +146,13 @@ export class HardwareBrightnessControlService {
       .pipe(
         distinctUntilChanged(),
         filter(Boolean),
-        // a reporting driver supplies its value itself, and a fetch would hide a pending request
-        filter((driver) => !driver.reportsBrightness),
         switchMap((driver) => driver.isAvailable()),
         distinctUntilChanged(),
         filter(Boolean),
         delay(500),
-        switchMap(() => this.fetchBrightness())
+        // a reporting driver supplies its value itself, and a fetch would hide a pending request;
+        // it can take over during the delay, so check the driver that is active now
+        switchMap(() => (this.driver.value?.reportsBrightness ? EMPTY : this.fetchBrightness()))
       )
       .subscribe();
     await listen<number>('setHardwareBrightness', async (event) => {

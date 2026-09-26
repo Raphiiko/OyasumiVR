@@ -17,15 +17,20 @@ type SimpleDependencies = ConstructorParameters<typeof SimpleBrightnessControlSe
 const settle = () => new Promise((resolve) => setTimeout(resolve, 0));
 
 /** A service whose only available driver is a paired Frame reporting within 20%–110%. */
-async function setup(initial: number | null = 40) {
-  vi.mocked(invoke).mockImplementation(async () => false);
+async function setup(
+  initial: number | null = 40,
+  commands: (command: string) => Promise<unknown> = async () => false
+) {
+  vi.mocked(invoke).mockImplementation(commands);
   const connections = new BehaviorSubject<Record<string, SteamFrameConnectionState>>({});
   const service = new HardwareBrightnessControlService(
     {
       status: new BehaviorSubject('INITIALIZED'),
       devices: new BehaviorSubject([{ class: 'HMD', serialNumber: 'FP1' } as OVRDevice]),
     } as unknown as Dependencies[0],
-    { settings: new BehaviorSubject(structuredClone(APP_SETTINGS_DEFAULT)) } as Dependencies[1],
+    {
+      settings: new BehaviorSubject(structuredClone(APP_SETTINGS_DEFAULT)),
+    } as unknown as Dependencies[1],
     {
       pairings$: new BehaviorSubject([
         { id: 'p', complete: true, identity: { serial: 'FP1' } } as SteamFramePairing,
@@ -84,6 +89,19 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
     const h = await setup();
     vi.mocked(invoke).mockImplementation((command) =>
       command === 'steam_frame_set_brightness' ? new Promise(() => {}) : Promise.resolve(false)
+    );
+    void h.service.setBrightness(80);
+    await new Promise((resolve) => setTimeout(resolve, 700));
+    expect(h.service.brightness).toBe(80);
+  });
+
+  it('keeps a pending request when the Frame takes over from a Beyond during the delay', async () => {
+    const h = await setup(null, async (command) => command === 'bigscreen_beyond_is_connected');
+    expect(await firstValueFrom(h.service.driverIsAvailable)).toBe(true);
+    h.report(40);
+    await settle();
+    vi.mocked(invoke).mockImplementation((command) =>
+      command === 'steam_frame_set_brightness' ? new Promise(() => {}) : Promise.resolve(true)
     );
     void h.service.setBrightness(80);
     await new Promise((resolve) => setTimeout(resolve, 700));
