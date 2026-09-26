@@ -42,7 +42,7 @@ import {
   LighthouseV1IdWizardModalOutputModel,
 } from 'src-ui/app/components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
 import { LighthouseV1IdWizardModalInputModel } from 'src-ui/app/components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
-import { FramePairingService } from 'src-ui/app/services/frame-pairing.service';
+import { SteamFramePairingService } from 'src-ui/app/services/steam-frame-pairing.service';
 import { TranslocoService } from '@jsverse/transloco';
 import { FLAVOUR } from 'src-ui/build';
 
@@ -51,7 +51,7 @@ interface FramePill {
   icon: string;
   tone: 'neutral' | 'warn' | 'bad';
   time?: string;
-  /** A key under `frame.statusDetail` whose title and body explain the pill when clicked. */
+  /** A key under `steamFrame.statusDetail` whose title and body explain the pill when clicked. */
   detail?: string;
 }
 
@@ -119,7 +119,7 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     private destroyRef: DestroyRef,
     private domSanitizer: DomSanitizer,
     private cdr: ChangeDetectorRef,
-    protected framePairing: FramePairingService,
+    protected framePairing: SteamFramePairingService,
     private transloco: TranslocoService
   ) {}
 
@@ -547,8 +547,8 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
   explainFramePill(pill: FramePill) {
     this.modalService
       .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
-        title: `frame.statusDetail.${pill.detail}.title`,
-        message: `frame.statusDetail.${pill.detail}.body`,
+        title: `steamFrame.statusDetail.${pill.detail}.title`,
+        message: `steamFrame.statusDetail.${pill.detail}.body`,
         confirmButtonText: 'shared.modals.ok',
         showCancel: false,
       })
@@ -557,7 +557,7 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
 
   private timeAgo(time: number): string {
     const minutes = Math.round((time - Date.now()) / 60000);
-    if (minutes === 0) return this.transloco.translate('frame.status.justNow');
+    if (minutes === 0) return this.transloco.translate('steamFrame.status.justNow');
     const format = new Intl.RelativeTimeFormat(this.transloco.getActiveLang(), { numeric: 'auto' });
     if (minutes > -60) return format.format(minutes, 'minute');
     if (minutes > -60 * 24) return format.format(Math.round(minutes / 60), 'hour');
