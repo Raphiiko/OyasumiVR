@@ -1,0 +1,352 @@
+:host {
+  display: flex !important;
+  flex-direction: column;
+}
+.guide {
+  flex: 1;
+  min-height: 0;
+  margin: 0 1em 1em;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface-1);
+  border-radius: 0.5em;
+  overflow: hidden;
+}
+.trail {
+  display: grid;
+  grid-template-columns: 9em minmax(0, 1fr) auto minmax(0, 1fr) 9em;
+  align-items: center;
+  gap: 1em;
+  padding: 0.75em 1em;
+  border-bottom: 1px solid var(--color-surface-2);
+}
+.trail-edge,
+.previous,
+.next,
+.current {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 0.5em;
+}
+.previous,
+.end {
+  justify-content: flex-end;
+}
+.previous,
+.next {
+  color: var(--color-text-3);
+  font-size: 0.95em;
+}
+.previous span {
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+}
+.previous i,
+.complete {
+  color: #67c23a;
+}
+.current {
+  padding: 0.3em 0.9em;
+  border-radius: 1em;
+  background: var(--color-surface-2);
+  font-weight: 500;
+  font-size: 0.95em;
+}
+.dot {
+  width: 0.55em;
+  height: 0.55em;
+  border-radius: 50%;
+  background: var(--color-primary);
+  flex-shrink: 0;
+}
+.plain {
+  border: 0;
+  border-radius: 0.5em;
+  background: transparent;
+  color: var(--color-text-2);
+  padding: 0.4em 0.6em;
+  font: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  cursor: pointer;
+}
+.plain:hover {
+  background: var(--color-surface-2);
+  color: var(--color-text-0);
+}
+.guide-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 2.5em 2em 2em;
+}
+.instruction-group {
+  width: 40em;
+  max-width: 100%;
+  margin: 0 auto;
+}
+.instruction-group.illustrated {
+  width: 58em;
+}
+.instruction-row {
+  display: flex;
+  gap: 3em;
+  align-items: flex-start;
+}
+.instructions {
+  width: 40em;
+  min-width: 0;
+  max-width: 100%;
+}
+h1 {
+  margin: 0 0 0.75em;
+  font-size: 1.9em;
+  font-weight: 500;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+h1:focus {
+  outline: none;
+}
+.copy {
+  font-size: 1.1em;
+  line-height: 1.55;
+  color: var(--color-text-1);
+}
+p {
+  margin: 0 0 0.75em;
+  overflow-wrap: anywhere;
+}
+:host ::ng-deep .copy a {
+  color: var(--color-primary);
+  cursor: pointer;
+}
+:host ::ng-deep .copy kbd {
+  font: inherit;
+  font-weight: 500;
+  background: var(--color-surface-3);
+  color: var(--color-text-0);
+  padding: 0.05em 0.4em;
+  border-radius: 0.25em;
+}
+.pairing-illustration {
+  width: 15em;
+  height: 10em;
+  flex: 0 0 15em;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+.actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75em;
+  margin-top: 1.25em;
+}
+.actions .btn {
+  padding: 0.6em 1.25em;
+}
+.actions .btn-primary {
+  padding: 0.6em 1.5em;
+  font-size: 1.05em;
+}
+.spacer {
+  flex: 1;
+}
+.busy-text {
+  color: var(--color-text-2);
+}
+.spinner {
+  display: inline-block;
+  flex: 0 0 1.25em;
+  width: 1.25em;
+  height: 1.25em;
+  border: 2px solid var(--color-primary);
+  border-color: var(--color-primary) transparent;
+  border-radius: 50%;
+  animation: frame-spin 1.2s linear infinite;
+}
+.error {
+  color: #f56c6c;
+}
+.error-code {
+  display: block;
+  margin-top: 0.25em;
+  font-size: 0.85em;
+  opacity: 0.8;
+}
+.failed {
+  color: #f56c6c;
+}
+.candidates {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+  margin: 0.25em 0 0.75em;
+}
+.candidate {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  padding: 0.7em 1em;
+  border-radius: 0.5em;
+  border: 1px solid var(--color-surface-3);
+  background: var(--color-surface-2);
+  color: var(--color-text-0);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.candidate.selected {
+  border-color: var(--color-primary);
+}
+.candidate > span:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+  min-width: 0;
+}
+.candidate img {
+  width: 2em;
+  height: 2em;
+  filter: invert(0.8);
+}
+.candidate code {
+  color: var(--color-text-2);
+  overflow-wrap: anywhere;
+  font-size: 0.85em;
+}
+.radio {
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  border: 2px solid var(--color-text-3);
+}
+.selected .radio {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+.address-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+  max-width: 22em;
+  margin: 0.5em 0 1em;
+}
+.address-form input {
+  background: var(--color-surface-3);
+  color: var(--color-text-0);
+  border: 1px solid transparent;
+  border-radius: 0.5em;
+  padding: 0.6em 0.75em;
+  font-family: 'Fira Code', monospace;
+  width: 100%;
+}
+.address-form span,
+.address-form label {
+  color: var(--color-text-2);
+  font-size: 0.9em;
+}
+.setup-stages {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6em;
+  margin: 0.75em 0 1em;
+  font-size: 1.05em;
+}
+.setup-stages li {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+}
+.setup-stages li > :first-child {
+  width: 1.25em;
+  flex-shrink: 0;
+}
+.pending-dot {
+  display: block;
+  height: 1.25em;
+  border: 2px solid var(--color-surface-4);
+  border-radius: 50%;
+}
+.future {
+  color: var(--color-text-3);
+}
+.command {
+  margin: 0.25em 0 0.75em;
+  padding: 0.75em 1em;
+  border-radius: 0.5em;
+  background: var(--color-surface-2);
+  color: var(--color-text-0);
+  font-family: 'Fira Code', monospace;
+  font-size: 0.85em;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  user-select: text;
+}
+.note {
+  color: var(--color-text-2);
+}
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+@keyframes frame-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (max-width: 760px) {
+  .trail {
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0.5em;
+  }
+  .previous,
+  .next {
+    display: none;
+  }
+  .instruction-row {
+    gap: 1.5em;
+  }
+  .guide-scroll {
+    padding: 2.5em 1.25em 2em;
+  }
+}
+@media (max-width: 580px) {
+  .instruction-row {
+    flex-direction: column;
+  }
+  .pairing-illustration {
+    flex-basis: auto;
+    align-self: center;
+  }
+  .trail {
+    font-size: 0.9em;
+  }
+  .actions .spacer {
+    display: none;
+  }
+  .actions {
+    justify-content: flex-end;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+  }
+}

@@ -16,6 +16,8 @@ export type DMDeviceType = (typeof DMDeviceTypes)[number];
 export interface DMKnownDevice {
   id: string;
   typeName: string;
+  /** OpenVR manufacturer, recorded for OpenVR devices once they are seen. */
+  manufacturer?: string;
   defaultName: string;
   nickname?: string;
   deviceType: DMDeviceType;
