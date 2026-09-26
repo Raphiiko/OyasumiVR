@@ -2,6 +2,7 @@ use std::{path::PathBuf, process::ExitCode};
 
 use oyasumivr_frame_helper::{bind, serve, INFO};
 
+/// The data directory from the argument, or `~/.local/share/oyasumivr_helper`.
 fn data_dir(argument: Option<String>) -> Option<PathBuf> {
     argument.map(PathBuf::from).or_else(|| {
         std::env::var_os("HOME")
@@ -13,10 +14,12 @@ fn data_dir(argument: Option<String>) -> Option<PathBuf> {
 async fn main() -> ExitCode {
     let mut args = std::env::args().skip(1);
     match args.next().as_deref() {
+        // print version and protocol range as JSON
         Some("info") => {
             println!("{}", serde_json::to_string(&INFO).unwrap());
             ExitCode::SUCCESS
         }
+        // run the websocket server until it fails
         Some("serve") => {
             let Some(root) = data_dir(args.next()) else {
                 eprintln!("HOME is not set");
