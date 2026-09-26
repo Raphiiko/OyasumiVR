@@ -22,8 +22,7 @@ const UNINSTALL: &str = include_str!("uninstall.sh");
 const EXIT_BUSY: u32 = 75;
 const EXIT_MISSING: u32 = 69;
 
-/// Builds the remote command for one script step. The script travels base64 encoded, so the
-/// login shell never has to parse its quoting.
+/// Builds the remote command for one script step, with the script itself base64 encoded.
 fn command(arguments: &[&str]) -> String {
     let mut command = format!(
         "bash -c \"$(printf %s {} | base64 -d)\" helper.sh",
@@ -86,6 +85,7 @@ pub fn install_decision(
     let Some(installed) = installed else {
         return InstallDecision::Install;
     };
+
     // an unreadable version gets replaced
     let (Ok(installed_version), Ok(bundled_version)) = (
         semver::Version::parse(&installed.version),
@@ -93,6 +93,7 @@ pub fn install_decision(
     ) else {
         return InstallDecision::Install;
     };
+
     // older gets replaced, same or compatible newer is kept
     if installed_version < bundled_version {
         InstallDecision::Install
@@ -172,6 +173,7 @@ pub async fn provision(
             )))
         }
     }
+
     // first line holds the port, the rest the certificate
     let stdout = output.stdout();
     let (config, certificate) = stdout.split_once('\n').unwrap_or((&stdout, ""));
@@ -229,6 +231,7 @@ async fn run_setup(
             message: "this headset model is not supported".into(),
         });
     }
+
     // run every step in one session
     let session = ssh::connect(&request.access).await?;
     let result = setup_session(request, &session, on_stage, installed).await;
@@ -270,6 +273,7 @@ async fn setup_session(
         || current
             .as_ref()
             .is_some_and(|info| info.version == bundled_version);
+
     // stop, keep, or upload and install the bundled helper
     match decision {
         InstallDecision::NeedsAppUpdate => {
@@ -324,8 +328,10 @@ async fn setup_session(
             ProvisionError::Busy => SetupOutcome::HelperBusy,
             ProvisionError::Failed(message) => failed(message),
         })?;
+
     // prove it works with an authenticated handshake
     let hello = handshake(request, &provisioned).await?;
+
     // the running helper must speak our protocol and version
     if !hello.info.accepts(PROTOCOL_VERSION) {
         return Err(SetupOutcome::NeedsAppUpdate {
@@ -387,6 +393,7 @@ pub async fn cleanup(request: CleanupRequest) -> CleanupOutcome {
             message: "invalid PC id".into(),
         };
     }
+
     // a rejected login means our access is already gone
     let session = match ssh::connect(&request.access).await {
         Ok(session) => session,
@@ -395,6 +402,7 @@ pub async fn cleanup(request: CleanupRequest) -> CleanupOutcome {
         Err(SshError::HostKeyChanged) => return CleanupOutcome::HostKeyChanged,
         Err(SshError::Failed(message)) => return CleanupOutcome::Failed { message },
     };
+
     // remove token file, key line, and maybe the helper
     let remove_helper = if request.remove_helper { "1" } else { "0" };
     let result = run(
@@ -404,6 +412,7 @@ pub async fn cleanup(request: CleanupRequest) -> CleanupOutcome {
     )
     .await;
     session.close().await;
+
     // map the exit status to an outcome
     match result {
         Ok(output) if output.status == 0 => CleanupOutcome::Done,
