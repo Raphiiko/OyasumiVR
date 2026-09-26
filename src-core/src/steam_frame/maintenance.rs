@@ -85,10 +85,13 @@ fn ssh_outcome(error: SshError) -> UpdateOutcome {
 }
 
 async fn update_session(session: &Session, pairing: &Pairing, digest: &str) -> UpdateOutcome {
+    // install the bundled helper when the installed one needs it
     let inspected = match setup::install_bundled(session, false, false).await {
         Ok(inspected) => inspected,
         Err(error) => return install_failure(error),
     };
+
+    // otherwise finish an interrupted update, or stop because nothing changes
     let bundled_on_disk = inspected
         .installed
         .as_ref()
@@ -112,12 +115,16 @@ async fn update_session(session: &Session, pairing: &Pairing, digest: &str) -> U
         },
         _ => return UpdateOutcome::Unchanged,
     }
+
+    // keep the new helper once it answers
     if verify(pairing, Some(digest)).await {
         prune(session).await;
         return UpdateOutcome::Updated {
             version: BUNDLED_VERSION.to_owned(),
         };
     }
+
+    // else roll back, unless another PC replaced the helper meanwhile
     match setup::run(session, &["rollback", BUNDLED_VERSION], b"").await {
         Ok(output) if output.status == EXIT_CHANGED => {
             info!("[SteamFrame] Another PC replaced the helper during this update");
@@ -223,6 +230,7 @@ pub async fn recover(pairing: &Pairing) -> Recovery {
 }
 
 async fn recover_session(session: &Session, pairing: &Pairing) -> Recovery {
+    // start the service
     match setup::run(session, &["start"], b"").await {
         Ok(output) if output.status == EXIT_MISSING => return Recovery::Missing,
         Ok(output) if output.status == EXIT_BUSY => return Recovery::Down,
@@ -232,10 +240,12 @@ async fn recover_session(session: &Session, pairing: &Pairing) -> Recovery {
     if verify(pairing, None).await {
         return Recovery::Running;
     }
+
+    // once per app start, repair the current release
     if !AUTOMATIC_REPAIRS.lock().await.insert(pairing.id.clone()) {
         return Recovery::Down;
     }
-    // the rollback below only applies to the release that is current now
+    // rollback below applies only to the release that is current now
     let mut current = match setup::run(session, &["current"], b"").await {
         Ok(output) if output.status == 0 => output.stdout().trim().to_owned(),
         _ => return Recovery::Down,
@@ -254,6 +264,8 @@ async fn recover_session(session: &Session, pairing: &Pairing) -> Recovery {
         Err(InstallError::Busy) => return Recovery::Down,
         Err(error) => warn!("[SteamFrame] Could not repair the helper: {error:?}"),
     }
+
+    // then roll back to the previous release
     if current.is_empty() {
         return Recovery::Down;
     }
