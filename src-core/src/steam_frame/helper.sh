@@ -156,13 +156,14 @@ start() {
   run_current
 }
 
-# rollback [VERSION]: points current back at previous and restarts the service; with VERSION,
-# only while current is still that release, and exits 73 when another PC replaced it
+# rollback [VERSION [SHA256]]: points current back at previous and restarts the service; with
+# VERSION, only while current is still that release with that executable, and exits 73 otherwise
 rollback() {
-  local version=${1:-}
+  local version=${1:-} digest=${2:-}
   [ -d "$root" ] || exit 69
   lock
   [ -z "$version" ] || [ "$(readlink "$root/current" 2>/dev/null)" = "releases/$version" ] || exit 73
+  [ -z "$digest" ] || printf '%s  %s\n' "$digest" "$root/current/$binary" | sha256sum -c --status - || exit 73
   local previous
   previous=$(readlink "$root/previous" 2>/dev/null) || exit 69
   [ -x "$root/$previous/$binary" ] || exit 69
