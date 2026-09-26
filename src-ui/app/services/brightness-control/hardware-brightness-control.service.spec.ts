@@ -126,4 +126,18 @@ describe('simple brightness following a Steam Frame', () => {
     expect(s.service.brightness).toBeCloseTo(20 + (20 / 90) * 80);
     expect(h.writes()).toEqual([]);
   });
+
+  it('shows the value the headset kept after a failed write', async () => {
+    const h = await setup(40);
+    const s = await simple(h.service, 100);
+    vi.mocked(invoke).mockImplementation((command) =>
+      command === 'steam_frame_set_brightness'
+        ? Promise.reject('writeFailed')
+        : Promise.resolve(false)
+    );
+    await s.service.setBrightness(80);
+    await settle();
+    expect(h.service.brightness).toBe(40);
+    expect(s.service.brightness).toBeCloseTo(20 + (20 / 90) * 80);
+  });
 });

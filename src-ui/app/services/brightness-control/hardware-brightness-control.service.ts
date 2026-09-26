@@ -103,6 +103,11 @@ export class HardwareBrightnessControlService {
         const availableDriver = driverList.find((_, i) => drivers[i]);
         if (availableDriver) this.lastActiveDriver = availableDriver;
         this.driver.next(availableDriver ?? null);
+        // a running transition would write a reporting device at every step, so finish it at once
+        const transition = this._activeTransition.value;
+        if (transition && availableDriver?.reportsBrightness) {
+          this.setBrightness(transition.targetBrightness, { cancelActiveTransition: true });
+        }
       });
     // show what the device reports, without writing it back
     this.driver

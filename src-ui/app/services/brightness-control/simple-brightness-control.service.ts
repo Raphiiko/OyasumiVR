@@ -38,6 +38,8 @@ export class SimpleBrightnessControlService {
   private hardwareBrightnessDriverAvailable = false;
   /** Counts running `setBrightness` calls, whose own replies must not be adopted midway. */
   private settingBrightness = 0;
+  /** The latest report skipped while `settingBrightness` was above zero. */
+  private deferredAdoption: AdoptedBrightness | null = null;
   public readonly advancedMode = this._advancedMode.asObservable();
 
   get brightness(): number {
@@ -111,8 +113,13 @@ export class SimpleBrightnessControlService {
   }
 
   /** Derives the simple value from a hardware value the device reported. */
-  private async adoptHardwareBrightness({ percentage: hardware, bounds }: AdoptedBrightness) {
-    if (this._advancedMode.value || this._activeTransition.value || this.settingBrightness) return;
+  private async adoptHardwareBrightness(adopted: AdoptedBrightness) {
+    if (this._advancedMode.value || this._activeTransition.value) return;
+    if (this.settingBrightness) {
+      this.deferredAdoption = adopted;
+      return;
+    }
+    const { percentage: hardware, bounds } = adopted;
     const [min, max] = bounds;
     if (hardware <= min + 0.01) {
       this._brightness.next(clamp((min * this.softwareBrightnessControl.brightness) / 100, 0, 100));
@@ -193,6 +200,20 @@ export class SimpleBrightnessControlService {
       await this.applyBrightness(percentage, options);
     } finally {
       this.settingBrightness--;
+      this.adoptDeferredReport();
+    }
+  }
+
+  /**
+   * Adopts a report skipped during the last change, such as the value kept after a failed write.
+   * A report the hardware cache no longer shows is an older reply and stays skipped.
+   */
+  private adoptDeferredReport() {
+    const deferred = this.deferredAdoption;
+    if (this.settingBrightness || !deferred) return;
+    this.deferredAdoption = null;
+    if (deferred.percentage === this.hardwareBrightnessControl.brightness) {
+      void this.adoptHardwareBrightness(deferred);
     }
   }
 
