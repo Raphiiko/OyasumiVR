@@ -59,6 +59,7 @@ pub async fn register(address: &str, public_key: &str) -> RegisterOutcome {
         .timeout(Duration::from_secs(60))
         .send()
         .await;
+
     // no answer after sending may still mean approved
     let response = match response {
         Ok(response) => response,
