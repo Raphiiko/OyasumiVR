@@ -142,6 +142,15 @@ file. `ERROR_CODES` in `steam-frame-pairing-modal.component.ts` maps them from `
 | SF-204 | `setupFailed`           | any other setup failure; the core logs the message                           |
 | SF-301 | `wrongDeviceAccessLeft` | cleanup on a wrong headset did not report done                               |
 
+Device Manager shows these in the explanation of a problem pill, from `FRAME_PILLS`:
+
+| Code   | Connection status | What happened                                                       |
+| ------ | ----------------- | ------------------------------------------------------------------- |
+| SF-401 | `identityChanged` | the helper reports another headset's serial, model, or manufacturer |
+| SF-402 | `hostKeyChanged`  | the SSH host key at the address differs from the pinned one         |
+| SF-403 | `needsAppUpdate`  | the helper's lowest protocol is above this build's                  |
+| SF-404 | `helperOutdated`  | the helper's highest protocol is below this build's                 |
+
 ## Cancel
 
 ```mermaid
