@@ -32,10 +32,12 @@ dirs = "6.0.0"
 discord-sdk = "0.4.0"
 futures = "0.3.34"
 futures-util = "0.3.33"
+hickory-proto = { version = "=0.26.1", features = ["mdns"] }
 hidapi = "2.6.7"
 http-body-util = "0.1.5"
 hyper = { version = "1.11.0", features = ["http1", "server"] }
 hyper-util = { version = "0.1.20", features = ["tokio"] }
+if-addrs = "0.14"
 log = { version = "0.4.34", features = ["release_max_level_info"] }
 md5 = "0.8.1"
 mime = "0.3.17"
@@ -47,11 +49,17 @@ prost = "0.14.4"
 readonly = "0.2.14"
 regex = "1.13.1"
 sentry = { version = "0.49.2", default-features = false }
+semver = "1.0.28"
 reqwest = { version = "0.13.5", default-features = false, features = ["charset", "http2", "rustls-no-provider", "system-proxy"] }
 rodio = "0.22.2"
+rand = "0.10.2"
 rosc = "0.11.4"
+russh = { version = "0.63.3", default-features = false, features = ["ring", "rsa"] }
+rustls = { version = "0.23", default-features = false, features = ["ring", "std"] }
 serde = { version = "1.0.229", features = ["derive"] }
 serde_json = "1.0.151"
+sha2 = "0.10.9"
+socket2 = "0.6"
 steamlocate = "2.1.1"
 steamworks = { version = "0.13.1", features = ["raw-bindings"] }
 strum = "0.28.0"
@@ -78,6 +86,8 @@ tempfile = "3.27.0"
 time = "0.3.55"
 tokio = { version = "1.53.1", features = ["full"] }
 tokio-stream = { version = "0.1.19", features = ["full"] }
+tokio-rustls = { version = "0.26.5", default-features = false, features = ["ring"] }
+tokio-tungstenite = { version = "0.30.0", default-features = false, features = ["handshake"] }
 tokio-util = "0.7.19"
 tonic = "0.14.6"
 tonic-prost = "0.14.6"
