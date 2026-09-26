@@ -619,6 +619,8 @@ pub async fn count_other_pcs(access: &Access, pc_id: &str, public_key: &str) -> 
             message: "invalid PC id".into(),
         };
     }
+
+    // log in, recording this PC's key
     let session = match open(access, pc_id, public_key).await {
         Ok(session) => session,
         Err(SshError::Rejected) => return OtherPcsOutcome::Rejected,
@@ -626,6 +628,8 @@ pub async fn count_other_pcs(access: &Access, pc_id: &str, public_key: &str) -> 
         Err(SshError::HostKeyChanged) => return OtherPcsOutcome::HostKeyChanged,
         Err(SshError::Failed(message)) => return OtherPcsOutcome::Failed { message },
     };
+
+    // count the token files of other PCs
     let result = run(&session, &["clients", pc_id], b"").await;
     session.close().await;
     match result {

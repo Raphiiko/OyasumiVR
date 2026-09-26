@@ -35,6 +35,7 @@ export class SteamFrameUnpairModalComponent
   readonly uninstalling = signal(false);
   readonly copied = signal(false);
   readonly uninstallCommand = STEAM_FRAME_UNINSTALL_COMMAND;
+  /** Whether the last attempt uninstalled the helper, so Try again repeats it; unset before one. */
   private choice?: boolean;
 
   ngOnInit() {
