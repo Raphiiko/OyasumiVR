@@ -29,6 +29,7 @@ describe('check selection', () => {
       'src-core/tauri.conf.json',
       'src-core/Cargo.toml',
       'src-elevated-sidecar/Cargo.toml',
+      'src-frame-helper/Cargo.toml',
       'src-privileged-launcher/Cargo.toml',
       'src-shared-rust/Cargo.toml',
     ])
@@ -73,7 +74,7 @@ describe('check selection', () => {
     expect(expandCheck('format')).toEqual(
       expect.arrayContaining(['format:web', 'format:csharp', 'format:core', 'format:memory-watch'])
     );
-    expect(expandCheck('build:rust')).toHaveLength(6);
+    expect(expandCheck('build:rust')).toHaveLength(7);
     expect(expandCheck('all')).toEqual(Object.keys(checks));
     expect(() => expandCheck('imaginary')).toThrow('Unknown check');
   });

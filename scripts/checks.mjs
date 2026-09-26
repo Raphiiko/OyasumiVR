@@ -8,6 +8,7 @@ export const crates = {
   'shared-rust': 'src-shared-rust',
   'elevated-sidecar': 'src-elevated-sidecar',
   'privileged-launcher': 'src-privileged-launcher',
+  'frame-helper': 'src-frame-helper',
   'memory-watch': 'src-memory-watch',
   'signing-tool': 'tools/sign-elevated-sidecar',
 };
@@ -104,7 +105,7 @@ for (const [component, directory] of Object.entries(crates)) {
     if (component === 'core' && operation !== 'format') args.splice(1, 0, '--no-default-features');
     checks[`${operation}:${component}`] = {
       group: 'native',
-      windows: operation !== 'format',
+      windows: operation !== 'format' && component !== 'frame-helper',
       cwd: directory,
       command: ['cargo', ...args],
     };
@@ -138,6 +139,7 @@ export function checkName(id) {
     'shared-rust': 'Shared Rust',
     'elevated-sidecar': 'Rust elevated sidecar',
     'privileged-launcher': 'Rust privileged launcher',
+    'frame-helper': 'Rust Steam Frame helper',
     'memory-watch': 'Rust memory watch',
     'signing-tool': 'Rust signing tool',
   };
