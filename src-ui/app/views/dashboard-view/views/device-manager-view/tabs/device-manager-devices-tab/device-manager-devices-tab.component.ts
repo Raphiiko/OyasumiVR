@@ -27,7 +27,7 @@ import {
   LighthouseDevice,
   LighthouseDevicePowerState,
 } from '../../../../../../models/lighthouse-device';
-import { combineLatest, firstValueFrom } from 'rxjs';
+import { combineLatest, firstValueFrom, interval } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   DevicePowerState,
@@ -42,6 +42,58 @@ import {
   LighthouseV1IdWizardModalOutputModel,
 } from 'src-ui/app/components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
 import { LighthouseV1IdWizardModalInputModel } from 'src-ui/app/components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
+import { SteamFramePairingService } from 'src-ui/app/services/steam-frame-pairing.service';
+import { TranslocoService } from '@jsverse/transloco';
+import { FLAVOUR } from 'src-ui/build';
+
+interface FramePill {
+  key: string;
+  icon: string;
+  tone: 'neutral' | 'warn' | 'bad';
+  time?: string;
+  /** A key under `steamFrame.statusDetail` whose title and body explain the pill when clicked. */
+  detail?: string;
+  /** Shown in the explanation, so a user report names the exact status. */
+  code?: string;
+}
+
+/** A healthy Frame gets only a badge on its icon; any other state gets only a pill. */
+interface FrameRow {
+  badge?: 'connected' | 'connecting';
+  pill?: FramePill;
+  action?: 'pair' | 'pairAgain';
+}
+
+const FRAME_PILLS: Record<string, FramePill> = {
+  identityChanged: {
+    key: 'notRecognized',
+    icon: 'error',
+    tone: 'bad',
+    detail: 'notRecognized',
+    code: 'SF-401',
+  },
+  hostKeyChanged: {
+    key: 'notRecognized',
+    icon: 'error',
+    tone: 'bad',
+    detail: 'notRecognized',
+    code: 'SF-402',
+  },
+  needsAppUpdate: {
+    key: 'updateApp',
+    icon: 'update',
+    tone: 'warn',
+    detail: FLAVOUR === 'STEAM' ? 'needsAppUpdateSteam' : 'needsAppUpdate',
+    code: 'SF-403',
+  },
+  helperOutdated: {
+    key: 'updateHelper',
+    icon: 'update',
+    tone: 'warn',
+    detail: 'helperOutdated',
+    code: 'SF-404',
+  },
+};
 
 type DeviceGroupType = DMDeviceType | 'PREVIOUSLY_SEEN';
 
@@ -87,7 +139,9 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     private modalService: ModalService,
     private destroyRef: DestroyRef,
     private domSanitizer: DomSanitizer,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    protected framePairing: SteamFramePairingService,
+    private transloco: TranslocoService
   ) {}
 
   ngOnInit() {
@@ -111,6 +165,11 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
         this.initializeFuse();
         this.cdr.markForCheck();
       });
+
+    // keep the relative last-seen times current
+    interval(30000)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.cdr.markForCheck());
 
     // Initialize tag filter to "All tags"
     this.updateTagFilterOptions();
@@ -483,6 +542,68 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     } else if (action === 'power-on') {
       await this.powerOnDevice(device);
     }
+  }
+
+  /** Pairing status and action for a supported Steam Frame, or null for any other device. */
+  frameRow(device: DMKnownDevice): FrameRow | null {
+    if (!this.framePairing.identityOf(device)) return null;
+    const active = this.isDeviceObserved(device.id);
+    const pairing = this.framePairing.pairingFor(device.id);
+
+    // unpaired: offer pairing while SteamVR uses it
+    if (!pairing?.complete) return active ? { action: 'pair' } : null;
+
+    // healthy: a badge only
+    const status = this.framePairing.connections()[pairing.id]?.status ?? 'connecting';
+    if (status === 'connected' || status === 'connecting') return { badge: status };
+
+    // offline: show when it was last seen
+    if (status === 'offline') {
+      return pairing.lastSeen
+        ? {
+            pill: {
+              key: 'offlineSince',
+              icon: 'cloud_off',
+              tone: 'neutral',
+              time: this.timeAgo(pairing.lastSeen),
+            },
+          }
+        : { pill: { key: 'offline', icon: 'cloud_off', tone: 'neutral' } };
+    }
+
+    // a problem: its pill, and Pair again when unrecognized
+    return {
+      pill: FRAME_PILLS[status],
+      action: FRAME_PILLS[status].key === 'notRecognized' && active ? 'pairAgain' : undefined,
+    };
+  }
+
+  /** Opens the explanation for a clicked pill. */
+  explainFramePill(pill: FramePill) {
+    this.modalService
+      .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
+        title: `steamFrame.statusDetail.${pill.detail}.title`,
+        message: {
+          string: 'steamFrame.statusDetail.withCode',
+          values: {
+            body: this.transloco.translate(`steamFrame.statusDetail.${pill.detail}.body`),
+            code: pill.code ?? '',
+          },
+        },
+        confirmButtonText: 'shared.modals.ok',
+        showCancel: false,
+      })
+      .subscribe();
+  }
+
+  /** Formats a past time as "just now" or a relative time in the active language. */
+  private timeAgo(time: number): string {
+    const minutes = Math.trunc((time - Date.now()) / 60000);
+    if (minutes === 0) return this.transloco.translate('steamFrame.status.justNow');
+    const format = new Intl.RelativeTimeFormat(this.transloco.getActiveLang(), { numeric: 'auto' });
+    if (minutes > -60) return format.format(minutes, 'minute');
+    if (minutes > -60 * 24) return format.format(Math.round(minutes / 60), 'hour');
+    return format.format(Math.round(minutes / (60 * 24)), 'day');
   }
 
   async configureDevice(device: DMKnownDevice) {
