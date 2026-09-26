@@ -127,6 +127,21 @@ flowchart TD
   and returns the port and certificate. The core pins that certificate.
 - Every step is safe to repeat, so Retry continues without a new approval.
 
+## Error codes
+
+The wizard shows a code under each error message, so a user report names the failure without a log
+file. `ERROR_CODES` in `steam-frame-pairing-modal.component.ts` maps them from `flow.error`.
+
+| Code   | `flow.error`            | What failed                                                                  |
+| ------ | ----------------------- | ---------------------------------------------------------------------------- |
+| SF-101 | `persistence`           | a settings write on this PC                                                  |
+| SF-102 | `keys`                  | creating the SSH key pair (`steam_frame_create_pairing_keys`)                |
+| SF-201 | `offline`               | setup could not reach the headset over SSH                                   |
+| SF-202 | `identityMissing`       | `steamvr.vrsettings` on the headset lacks the serial, model, or manufacturer |
+| SF-203 | `helperBusy`            | another PC held the helper lock for 45 s                                     |
+| SF-204 | `setupFailed`           | any other setup failure; the core logs the message                           |
+| SF-301 | `wrongDeviceAccessLeft` | cleanup on a wrong headset did not report done                               |
+
 ## Cancel
 
 ```mermaid
