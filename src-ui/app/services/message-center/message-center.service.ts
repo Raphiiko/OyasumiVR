@@ -16,7 +16,7 @@ import { VRChatWebsocketConnectionMonitor } from './monitors/vrchat-websocket-co
 import { OverlaySidecarMessageMonitor } from './monitors/overlay-sidecar-message-monitor';
 import { ElevatedFeaturesMessageMonitor } from './monitors/elevated-features-message-monitor';
 import { LighthouseConnectsFailingMessageMonitor } from './monitors/lighthouse-connects-failing-message-monitor';
-import { FramePairingMessageMonitor } from './monitors/frame-pairing-message-monitor';
+import { SteamFramePairingMessageMonitor } from './monitors/steam-frame-pairing-message-monitor';
 
 export interface MessageAction {
   label: string;
@@ -66,7 +66,7 @@ export class MessageCenterService {
       new VRChatOSCMessageMonitor(this),
       new VRChatWebsocketConnectionMonitor(this),
       new OverlaySidecarMessageMonitor(this),
-      new FramePairingMessageMonitor(this),
+      new SteamFramePairingMessageMonitor(this),
     ];
   }
 
