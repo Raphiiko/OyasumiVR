@@ -2,12 +2,12 @@ import { inject } from '@angular/core';
 import { combineLatest } from 'rxjs';
 import { MessageMonitor } from './message-monitor';
 import { DeviceManagerService } from '../../device-manager.service';
-import { FramePairingService } from '../../frame-pairing.service';
+import { SteamFramePairingService } from '../../steam-frame-pairing.service';
 
 /** Invites pairing for each connected Steam Frame that has no completed pairing. */
-export class FramePairingMessageMonitor extends MessageMonitor {
+export class SteamFramePairingMessageMonitor extends MessageMonitor {
   private deviceManager = inject(DeviceManagerService);
-  private framePairing = inject(FramePairingService);
+  private framePairing = inject(SteamFramePairingService);
   private shownIds = new Set<string>();
 
   public override init() {
@@ -24,13 +24,13 @@ export class FramePairingMessageMonitor extends MessageMonitor {
         ids.add(id);
         this.messageCenter.addMessage({
           id,
-          title: 'frame.invitation.title',
-          message: 'frame.invitation.body',
+          title: 'steamFrame.invitation.title',
+          message: 'steamFrame.invitation.body',
           hideable: true,
           type: 'info',
           actions: [
             {
-              label: 'frame.actions.pair',
+              label: 'steamFrame.actions.pair',
               action: () => this.framePairing.openWizard(device),
             },
           ],
