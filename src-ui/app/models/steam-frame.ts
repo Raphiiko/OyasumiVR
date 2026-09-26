@@ -1,3 +1,6 @@
+/** Removes the helper and every recorded PC key line, run on the headset itself. */
+export const STEAM_FRAME_UNINSTALL_COMMAND = 'bash ~/.local/share/oyasumivr_helper/uninstall';
+
 export interface SteamFrameIdentity {
   serial: string;
   model: string;
@@ -98,6 +101,13 @@ export type SteamFrameSetupResult = { installed: boolean } & (
         | 'unreachable';
     }
 );
+
+export type SteamFrameCleanupMode = 'keep' | 'unused' | 'uninstall';
+
+export type SteamFrameOtherPcsOutcome =
+  | { status: 'ok'; count: number }
+  | { status: 'rejected' | 'unreachable' | 'hostKeyChanged' }
+  | { status: 'failed'; message: string };
 
 export type SteamFrameCleanupOutcome =
   | { status: 'done' | 'unreachable' | 'hostKeyChanged' | 'helperBusy' }

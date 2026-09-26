@@ -9,7 +9,8 @@ use sha2::{Digest, Sha256};
 use super::{
     hex,
     models::{
-        CleanupOutcome, CleanupRequest, Identity, SetupOutcome, SetupRequest, SetupResult, Stage,
+        Access, CleanupMode, CleanupOutcome, CleanupRequest, Identity, OtherPcsOutcome,
+        SetupOutcome, SetupRequest, SetupResult, Stage,
     },
     ssh::{self, Session, SshError},
     valid_pc_id,
@@ -67,6 +68,27 @@ pub(super) async fn run(
         )));
     }
     session.exec(&command(arguments), stdin).await
+}
+
+/// Logs in, then records this PC's public key in the helper folder when the helper is installed,
+/// so the uninstall script on the headset can find it.
+pub async fn open(access: &Access, pc_id: &str, public_key: &str) -> Result<Session, SshError> {
+    let session = ssh::connect(access).await?;
+    match run(
+        &session,
+        &["record", pc_id],
+        format!("{public_key}\n").as_bytes(),
+    )
+    .await
+    {
+        Ok(output) if output.status == 0 => {}
+        Ok(output) => warn!(
+            "[SteamFrame] Recording this PC's key exited with {}",
+            output.status
+        ),
+        Err(error) => warn!("[SteamFrame] Could not record this PC's key: {error:?}"),
+    }
+    Ok(session)
 }
 
 #[derive(Deserialize, Debug, Clone, PartialEq)]
@@ -384,7 +406,7 @@ async fn run_setup(
         });
     }
     // run every step in one session
-    let session = ssh::connect(&request.access).await?;
+    let session = open(&request.access, &request.pc_id, &request.public_key).await?;
     let result = setup_session(request, &session, on_stage, installed).await;
     // a failed reinstall removes a helper folder it created
     if result.is_err() && installed.created && request.remove_on_failure {
@@ -547,8 +569,8 @@ async fn retry_handshake(
     }
 }
 
-/// Removes this PC's token file and key lines, and the helper when this attempt installed it
-/// and no other PC has a token file.
+/// Removes this PC's access from the headset, and the helper as `mode` asks. A headset that
+/// already rejects this PC's key counts as done.
 pub async fn cleanup(request: CleanupRequest) -> CleanupOutcome {
     // refuse an id that is not a safe file name
     if !valid_pc_id(&request.pc_id) {
@@ -564,11 +586,15 @@ pub async fn cleanup(request: CleanupRequest) -> CleanupOutcome {
         Err(SshError::HostKeyChanged) => return CleanupOutcome::HostKeyChanged,
         Err(SshError::Failed(message)) => return CleanupOutcome::Failed { message },
     };
-    // remove token file, key line, and maybe the helper
-    let remove_helper = if request.remove_helper { "1" } else { "0" };
+    // remove the token file and key lines, and the helper as the mode asks
+    let mode = match request.mode {
+        CleanupMode::Keep => "keep",
+        CleanupMode::Unused => "unused",
+        CleanupMode::Uninstall => "uninstall",
+    };
     let result = run(
         &session,
-        &["cleanup", &request.pc_id, remove_helper],
+        &["cleanup", &request.pc_id, mode],
         request.public_key.as_bytes(),
     )
     .await;
@@ -581,6 +607,42 @@ pub async fn cleanup(request: CleanupRequest) -> CleanupOutcome {
             message: format!("cleanup exited with {}", output.status),
         },
         Err(error) => CleanupOutcome::Failed {
+            message: format!("{error:?}"),
+        },
+    }
+}
+
+/// Counts the other PCs that hold a token for the helper on this headset.
+pub async fn count_other_pcs(access: &Access, pc_id: &str, public_key: &str) -> OtherPcsOutcome {
+    if !valid_pc_id(pc_id) {
+        return OtherPcsOutcome::Failed {
+            message: "invalid PC id".into(),
+        };
+    }
+
+    // log in, recording this PC's key
+    let session = match open(access, pc_id, public_key).await {
+        Ok(session) => session,
+        Err(SshError::Rejected) => return OtherPcsOutcome::Rejected,
+        Err(SshError::Unreachable) => return OtherPcsOutcome::Unreachable,
+        Err(SshError::HostKeyChanged) => return OtherPcsOutcome::HostKeyChanged,
+        Err(SshError::Failed(message)) => return OtherPcsOutcome::Failed { message },
+    };
+
+    // count the token files of other PCs
+    let result = run(&session, &["clients", pc_id], b"").await;
+    session.close().await;
+    match result {
+        Ok(output) if output.status == 0 => match output.stdout().trim().parse() {
+            Ok(count) => OtherPcsOutcome::Ok { count },
+            Err(_) => OtherPcsOutcome::Failed {
+                message: format!("unreadable client count: {}", output.stdout()),
+            },
+        },
+        Ok(output) => OtherPcsOutcome::Failed {
+            message: format!("counting clients exited with {}", output.status),
+        },
+        Err(error) => OtherPcsOutcome::Failed {
             message: format!("{error:?}"),
         },
     }
@@ -670,6 +732,105 @@ mod tests {
         assert_eq!(parse_identity(&settings("")), None);
         assert_eq!(parse_identity(""), None);
         assert_eq!(parse_identity(r#"{"steamvr":{}}"#), None);
+    }
+
+    /// Git Bash on Windows, bash elsewhere. `None` when neither exists.
+    fn bash() -> Option<std::path::PathBuf> {
+        let candidates = if cfg!(windows) {
+            vec!["C:/Program Files/Git/bin/bash.exe"]
+        } else {
+            vec!["/bin/bash", "/usr/bin/bash"]
+        };
+        candidates
+            .into_iter()
+            .map(std::path::PathBuf::from)
+            .find(|path| path.exists())
+    }
+
+    /// Runs one helper.sh command with HOME in `home`, and flock and systemctl stubbed out.
+    fn run_script(home: &std::path::Path, arguments: &[&str], stdin: &str) -> Option<i32> {
+        use std::io::Write;
+        use std::os::windows::process::CommandExt;
+        let bash = bash()?;
+        let stubs = home.join("stubs");
+        std::fs::create_dir_all(&stubs).unwrap();
+        for stub in ["flock", "systemctl"] {
+            std::fs::write(stubs.join(stub), "#!/bin/sh\nexit 0\n").unwrap();
+        }
+        // Git Bash cuts a long -c argument, so the script runs from a file
+        let script = home.join("helper.sh");
+        std::fs::write(
+            &script,
+            format!(
+                "chmod +x \"$HOME/stubs/\"*; PATH=\"$HOME/stubs:$PATH\"
+{SCRIPT}"
+            ),
+        )
+        .unwrap();
+        let mut child = std::process::Command::new(bash)
+            .arg(script)
+            .args(arguments)
+            .env("HOME", home)
+            .creation_flags(windows_sys::Win32::System::Threading::CREATE_NO_WINDOW)
+            .stdin(std::process::Stdio::piped())
+            .spawn()
+            .unwrap();
+        child
+            .stdin
+            .take()
+            .unwrap()
+            .write_all(stdin.as_bytes())
+            .unwrap();
+        child.wait().unwrap().code()
+    }
+
+    #[test]
+    fn cleanup_removes_only_this_pcs_key_lines() {
+        let home = tempfile::tempdir().unwrap();
+        let ssh = home.path().join(".ssh");
+        std::fs::create_dir_all(&ssh).unwrap();
+        let keys = [
+            "ssh-ed25519 AAAAOTHER other@host",
+            "ssh-rsa AAAATHIS OyasumiVR@PC",
+            "no-pty ssh-rsa AAAATHIS OyasumiVR@PC",
+            "ssh-rsa AAAATHISLONGER someone-else",
+            "ssh-rsa AAAATHIS OyasumiVR@PC",
+            "",
+            "ssh-ed25519 AAAAOTHER2 second@host",
+        ];
+        std::fs::write(ssh.join("authorized_keys"), keys.join("\n") + "\n").unwrap();
+        let root = home.path().join(".local/share/oyasumivr_helper/clients");
+        std::fs::create_dir_all(&root).unwrap();
+        for file in ["pc-a", "pc-a.pub", "pc-b", "pc-b.pub"] {
+            std::fs::write(root.join(file), "x").unwrap();
+        }
+        let Some(status) = run_script(
+            home.path(),
+            &["cleanup", "pc-a", "keep"],
+            "ssh-rsa AAAATHIS OyasumiVR@PC\n",
+        ) else {
+            eprintln!("skipped: no bash");
+            return;
+        };
+        assert_eq!(status, 0);
+        let left = std::fs::read_to_string(ssh.join("authorized_keys")).unwrap();
+        assert_eq!(
+            left,
+            [
+                "ssh-ed25519 AAAAOTHER other@host",
+                "ssh-rsa AAAATHISLONGER someone-else",
+                "",
+                "ssh-ed25519 AAAAOTHER2 second@host",
+                "",
+            ]
+            .join("\n")
+        );
+        let mut clients: Vec<_> = std::fs::read_dir(&root)
+            .unwrap()
+            .map(|entry| entry.unwrap().file_name().into_string().unwrap())
+            .collect();
+        clients.sort();
+        assert_eq!(clients, ["pc-b", "pc-b.pub"]);
     }
 
     #[test]

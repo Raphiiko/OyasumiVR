@@ -209,7 +209,7 @@ describe('Steam Frame pairing flow', () => {
     const service = await start();
     await service.pair();
     await service.cancel();
-    expect(calls('steam_frame_remove_access')[0].request).toMatchObject({ removeHelper: true });
+    expect(calls('steam_frame_remove_access')[0].request).toMatchObject({ mode: 'unused' });
   });
 
   it('closes the wizard when the headset is clean but the local delete fails', async () => {
@@ -249,7 +249,7 @@ describe('Steam Frame pairing flow', () => {
     await service.pair();
     expect(service.flow()?.page).toBe('wrongDevice');
     expect(calls('steam_frame_remove_access')[0].request).toMatchObject({
-      removeHelper: false,
+      mode: 'keep',
       pcId: expect.any(String),
     });
     expect(service.pairingFor(device.id)).toBeUndefined();
@@ -308,7 +308,7 @@ describe('Steam Frame pairing flow', () => {
     const service = await start();
     await service.pair();
     await service.cancel();
-    expect(calls('steam_frame_remove_access')[0].request).toMatchObject({ removeHelper: true });
+    expect(calls('steam_frame_remove_access')[0].request).toMatchObject({ mode: 'unused' });
     expect(service.pairingFor(device.id)).toBeUndefined();
     expect(service.flow()).toBeNull();
   });
@@ -493,5 +493,48 @@ describe('Steam Frame helper maintenance', () => {
     await service.reinstallHelper(pairing);
     expect(service.pairingFor(device.id)?.certPin).toBe('CERT');
     expect(service.reinstalls()).toEqual({ [pairing.id]: 'failed' });
+  });
+});
+
+describe('Steam Frame unpairing', () => {
+  async function paired() {
+    handlers['steam_frame_check_ssh_access'] = () => ({ status: 'ok', hostKeyPin: 'PIN' });
+    const service = await start();
+    await service.pair();
+    return { service, pairing: service.pairingFor(device.id)! };
+  }
+
+  it('deletes the local pairing only after the headset cleanup succeeds', async () => {
+    const { service, pairing } = await paired();
+    handlers['steam_frame_remove_access'] = () => ({ status: 'unreachable' });
+    expect(await service.unpair(pairing, true)).toBe(false);
+    expect(calls('steam_frame_remove_access').at(-1).request).toMatchObject({
+      pcId: pairing.id,
+      mode: 'uninstall',
+    });
+    expect(service.pairingFor(device.id)).toBeDefined();
+    handlers['steam_frame_remove_access'] = () => ({ status: 'done' });
+    expect(await service.unpair(pairing, false)).toBe(true);
+    expect(calls('steam_frame_remove_access').at(-1).request.mode).toBe('keep');
+    expect(service.pairingFor(device.id)).toBeUndefined();
+    expect(calls('steam_frame_sync_connections').at(-1).pairings).toEqual([]);
+  });
+
+  it('forgets the pairing without contacting the headset', async () => {
+    const { service, pairing } = await paired();
+    const cleanups = calls('steam_frame_remove_access').length;
+    await service.forget(pairing);
+    expect(calls('steam_frame_remove_access')).toHaveLength(cleanups);
+    expect(service.pairingFor(device.id)).toBeUndefined();
+  });
+
+  it('counts other PCs, and treats a removed pairing as none', async () => {
+    const { service, pairing } = await paired();
+    handlers['steam_frame_count_other_pcs'] = () => ({ status: 'ok', count: 2 });
+    expect(await service.otherPcCount(pairing)).toBe(2);
+    handlers['steam_frame_count_other_pcs'] = () => ({ status: 'rejected' });
+    expect(await service.otherPcCount(pairing)).toBe(0);
+    handlers['steam_frame_count_other_pcs'] = () => ({ status: 'unreachable' });
+    expect(await service.otherPcCount(pairing)).toBeNull();
   });
 });

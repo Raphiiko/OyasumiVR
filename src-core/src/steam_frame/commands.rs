@@ -3,12 +3,13 @@ use std::time::Duration;
 use super::{
     connection, devkit, discovery, hex,
     models::{
-        Access, Candidate, CleanupOutcome, CleanupRequest, Pairing, PairingKeys, ProbeOutcome,
-        RegisterOutcome, SetupRequest, SetupResult, StageEvent, State, SupportedModel,
+        Access, Candidate, CleanupOutcome, CleanupRequest, OtherPcsOutcome, Pairing, PairingKeys,
+        ProbeOutcome, RegisterOutcome, SetupRequest, SetupResult, StageEvent, State,
+        SupportedModel,
     },
     setup,
     ssh::{self, SshError},
-    SUPPORTED_MODELS,
+    valid_pc_id, SUPPORTED_MODELS,
 };
 use crate::utils::send_event;
 
@@ -52,8 +53,17 @@ pub async fn steam_frame_request_approval(address: String, public_key: String) -
 
 /// Tries this PC's saved key, and reports the host key a first login would pin.
 #[tauri::command]
-pub async fn steam_frame_check_ssh_access(access: Access) -> ProbeOutcome {
-    match ssh::connect(&access).await {
+pub async fn steam_frame_check_ssh_access(
+    access: Access,
+    pc_id: String,
+    public_key: String,
+) -> ProbeOutcome {
+    if !valid_pc_id(&pc_id) {
+        return ProbeOutcome::Failed {
+            message: "invalid PC id".into(),
+        };
+    }
+    match setup::open(&access, &pc_id, &public_key).await {
         Ok(session) => {
             let host_key_pin = session.host_key_pin.clone();
             session.close().await;
@@ -82,6 +92,15 @@ pub async fn steam_frame_set_up_helper(request: SetupRequest) -> SetupResult {
 #[tauri::command]
 pub async fn steam_frame_remove_access(request: CleanupRequest) -> CleanupOutcome {
     setup::cleanup(request).await
+}
+
+#[tauri::command]
+pub async fn steam_frame_count_other_pcs(
+    access: Access,
+    pc_id: String,
+    public_key: String,
+) -> OtherPcsOutcome {
+    setup::count_other_pcs(&access, &pc_id, &public_key).await
 }
 
 #[tauri::command]

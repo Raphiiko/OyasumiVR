@@ -133,6 +133,14 @@
                     </span>
                   }
                 }
+                @if (frameRow(device)?.secondaryAction; as action) {
+                  <button
+                    class="btn btn-secondary btn-frame"
+                    (click)="onFrameAction(device, action)"
+                  >
+                    {{ 'steamFrame.actions.' + action | transloco }}
+                  </button>
+                }
                 @if (frameRow(device)?.action; as action) {
                   <button class="btn btn-primary btn-frame" (click)="onFrameAction(device, action)">
                     {{ 'steamFrame.actions.' + action | transloco }}

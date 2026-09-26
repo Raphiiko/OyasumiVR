@@ -63,13 +63,14 @@ interface FramePill {
   startsUpdate?: boolean;
 }
 
-type FrameAction = 'pair' | 'pairAgain' | 'retryUpdate' | 'reinstall';
+type FrameAction = 'pair' | 'pairAgain' | 'retryUpdate' | 'reinstall' | 'forget';
 
 /** A healthy Frame gets only a badge on its icon; any other state gets only a pill. */
 interface FrameRow {
   badge?: 'connected' | 'connecting';
   pill?: FramePill;
   action?: FrameAction;
+  secondaryAction?: FrameAction;
 }
 
 /** Statuses that outrank helper maintenance, with their pill and action. */
@@ -85,6 +86,7 @@ const FRAME_STATUS_ROWS: Partial<Record<SteamFrameConnectionStatus, FrameRow>> =
   pairingRemoved: {
     pill: { key: 'pairingRemoved', icon: 'link_off', tone: 'bad', detail: 'pairingRemoved' },
     action: 'pairAgain',
+    secondaryAction: 'forget',
   },
   helperMissing: {
     pill: { key: 'helperMissing', icon: 'error', tone: 'bad', detail: 'helperMissing' },
@@ -575,7 +577,9 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     // a problem: its pill, and Pair again only while SteamVR uses it
     const statusRow = FRAME_STATUS_ROWS[status];
     if (statusRow) {
-      return statusRow.action === 'pairAgain' && !active ? { pill: statusRow.pill } : statusRow;
+      return statusRow.action === 'pairAgain' && !active
+        ? { ...statusRow, action: undefined }
+        : statusRow;
     }
 
     // a helper update in progress or just finished
@@ -665,7 +669,17 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
         return pairing && this.framePairing.updateHelper(pairing);
       case 'reinstall':
         return pairing && this.framePairing.reinstallHelper(pairing);
+      case 'forget':
+        return this.forgetFrame(device);
     }
+  }
+
+  private async forgetFrame(device: DMKnownDevice) {
+    const { SteamFrameUnpairModalComponent } =
+      await import('src-ui/app/components/steam-frame-unpair-modal/steam-frame-unpair-modal.component');
+    this.modalService
+      .addModal(SteamFrameUnpairModalComponent, { deviceId: device.id, removedOnHeadset: true })
+      .subscribe();
   }
 
   /** Formats a past time as "just now" or a relative time in the active language. */

@@ -127,6 +127,14 @@ export class DeviceManagerConfigModalComponent
     if (helper) void this.framePairing.updateHelper(helper.pairing);
   }
 
+  async unpairFrame() {
+    const { SteamFrameUnpairModalComponent } =
+      await import('../steam-frame-unpair-modal/steam-frame-unpair-modal.component');
+    this.modalService
+      .addModal(SteamFrameUnpairModalComponent, { deviceId: this.device.id })
+      .subscribe();
+  }
+
   // TrackBy functions
   trackTagBy(index: number, tag: DMDeviceTag): string {
     return tag.id;
