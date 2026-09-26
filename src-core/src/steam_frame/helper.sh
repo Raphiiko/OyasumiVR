@@ -63,6 +63,7 @@ install() {
   [ "$fresh" != 1 ] || mkdir -p "$root"
   lock
   [ "$(printf %s "$(inspect)" | sha256sum | cut -c1-64)" = "$seen" ] || exit 73
+
   # a first installation that fails removes everything it created
   local created=0
   if [ ! -d "$root/releases" ]; then

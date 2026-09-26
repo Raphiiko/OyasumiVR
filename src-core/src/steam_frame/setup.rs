@@ -389,6 +389,7 @@ async fn run_setup(
     // run every step in one session
     let session = ssh::connect(&request.access).await?;
     let result = setup_session(request, &session, on_stage, installed).await;
+
     // a failed reinstall removes a helper folder it created
     if result.is_err() && installed.created && request.remove_on_failure {
         match run(&session, &["uninstall_helper", &request.pc_id], b"").await {
@@ -439,6 +440,7 @@ async fn setup_session(
             InstallError::Ssh(error) => error.into(),
             error => failed(format!("{error:?}")),
         })?;
+
     // stop on an incompatible helper, else keep its uninstall script current
     match inspected.decision {
         InstallDecision::NeedsAppUpdate => {
