@@ -20,7 +20,7 @@ use super::{
 };
 use crate::utils::{get_time, send_event};
 
-const EVENT: &str = "FRAME_CONNECTION_STATE";
+const EVENT: &str = "STEAM_FRAME_CONNECTION_STATE";
 const PING_INTERVAL: Duration = Duration::from_secs(15);
 const SILENCE_LIMIT: Duration = Duration::from_secs(40);
 const MAX_BACKOFF: Duration = Duration::from_secs(60);
@@ -77,7 +77,7 @@ pub async fn set_pairings(pairings: Vec<Pairing>) {
     let mut kept = HashMap::new();
     for pairing in pairings {
         if !valid_pc_id(&pairing.id) {
-            warn!("[Frame] Ignored a pairing with an invalid id");
+            warn!("[SteamFrame] Ignored a pairing with an invalid id");
             continue;
         }
         if let Some(connection) = connections.remove(&pairing.id) {
@@ -155,7 +155,7 @@ async fn run(shared: Arc<Mutex<Pairing>>) {
                     wss::close(*socket).await;
                     if state.status != status {
                         warn!(
-                            "[Frame] Helper is unusable ({status:?}): it reports headset {:?} and protocols {}-{}, the pairing expects {:?} and protocol {PROTOCOL_VERSION}",
+                            "[SteamFrame] Helper is unusable ({status:?}): it reports headset {:?} and protocols {}-{}, the pairing expects {:?} and protocol {PROTOCOL_VERSION}",
                             hello.identity, hello.info.protocol_min, hello.info.protocol_max, pairing.identity
                         );
                     }
@@ -188,7 +188,7 @@ async fn run(shared: Arc<Mutex<Pairing>>) {
                     publish(&state).await;
                 }
                 if status == Status::HostKeyChanged {
-                    warn!("[Frame] The headset's SSH host key differs from the pinned one, so the connection stops until it is paired again");
+                    warn!("[SteamFrame] The headset's SSH host key differs from the pinned one, so the connection stops until it is paired again");
                     return;
                 }
             }
@@ -232,7 +232,7 @@ async fn attempt(pairing: &Pairing, shared: &Mutex<Pairing>) -> Attempt {
         Err(WssError::CertificateChanged(observed)) => repin(pairing, shared, &observed).await,
         Err(WssError::Unreachable) => find_moved_helper(pairing, shared).await,
         Err(WssError::Failed(message)) => {
-            warn!("[Frame] Helper connection failed: {message}");
+            warn!("[SteamFrame] Helper connection failed: {message}");
             Attempt::Failed(Status::Offline)
         }
     }
@@ -255,12 +255,12 @@ async fn restore_token(pairing: &Pairing) -> Attempt {
     session.close().await;
     match result {
         Ok(_) => {
-            info!("[Frame] Restored this PC's helper token");
+            info!("[SteamFrame] Restored this PC's helper token");
             Attempt::Retry
         }
         Err(ProvisionError::Ssh(error)) => ssh_failure(error),
         Err(error) => {
-            warn!("[Frame] Could not restore this PC's helper token: {error:?}");
+            warn!("[SteamFrame] Could not restore this PC's helper token: {error:?}");
             Attempt::Failed(Status::Offline)
         }
     }
@@ -276,14 +276,14 @@ async fn repin(pairing: &Pairing, shared: &Mutex<Pairing>, observed: &str) -> At
     session.close().await;
     match result {
         Ok(provisioned) if provisioned.cert_pin == observed => {
-            info!("[Frame] Pinned the helper's new certificate");
+            info!("[SteamFrame] Pinned the helper's new certificate");
             let mut pairing = shared.lock().await;
             pairing.cert_pin = provisioned.cert_pin;
             pairing.port = provisioned.port;
             Attempt::Retry
         }
         Ok(_) => {
-            warn!("[Frame] The helper certificate differs from the one the headset holds");
+            warn!("[SteamFrame] The helper certificate differs from the one the headset holds");
             Attempt::Failed(Status::Offline)
         }
         Err(ProvisionError::Ssh(error)) => ssh_failure(error),
@@ -314,7 +314,10 @@ async fn find_moved_helper(pairing: &Pairing, shared: &Mutex<Pairing>) -> Attemp
             Err(error) => error == WssError::Unauthorized,
         };
         if verified {
-            info!("[Frame] The paired headset moved to {}", candidate.address);
+            info!(
+                "[SteamFrame] The paired headset moved to {}",
+                candidate.address
+            );
             shared.lock().await.access.address = candidate.address;
             return Attempt::Retry;
         }
@@ -346,7 +349,7 @@ async fn hold(mut socket: Socket) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::frame::setup::HelperInfo;
+    use crate::steam_frame::setup::HelperInfo;
 
     fn hello(identity: Option<Identity>, min: u32, max: u32) -> Hello {
         Hello {

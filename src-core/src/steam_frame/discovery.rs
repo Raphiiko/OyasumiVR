@@ -68,7 +68,7 @@ fn socket(interfaces: &[Ipv4Addr]) -> std::io::Result<UdpSocket> {
     }
     for interface in interfaces {
         if let Err(error) = socket.join_multicast_v4(&MDNS_GROUP, interface) {
-            warn!("[Frame] Could not browse on {interface}: {error}");
+            warn!("[SteamFrame] Could not browse on {interface}: {error}");
         }
     }
     socket.set_nonblocking(true)?;
@@ -92,7 +92,7 @@ pub async fn discover(duration: Duration) -> Vec<Candidate> {
     let socket = match socket(&interfaces) {
         Ok(socket) => socket,
         Err(error) => {
-            warn!("[Frame] Could not open the mDNS socket: {error}");
+            warn!("[SteamFrame] Could not open the mDNS socket: {error}");
             return Vec::new();
         }
     };

@@ -247,7 +247,7 @@ pub async fn setup(request: SetupRequest, on_stage: impl Fn(Stage)) -> SetupResu
     let outcome = match run_setup(&request, &on_stage, &mut installed).await {
         Ok(outcome) | Err(outcome) => outcome,
     };
-    info!("[Frame] Setup finished: {outcome:?}");
+    info!("[SteamFrame] Setup finished: {outcome:?}");
     SetupResult { outcome, installed }
 }
 
@@ -291,7 +291,7 @@ async fn setup_session(
         None => return Err(SetupOutcome::IdentityMissing),
         Some(identity) if identity != request.identity => {
             warn!(
-                "[Frame] Headset identity {identity:?} differs from {:?}",
+                "[SteamFrame] Headset identity {identity:?} differs from {:?}",
                 request.identity
             );
             return Err(SetupOutcome::WrongDevice);

@@ -6,7 +6,6 @@ mod discord;
 mod elevated_sidecar;
 mod error_reporting;
 mod flavour;
-mod frame;
 mod globals;
 mod grpc;
 mod hardware;
@@ -21,6 +20,7 @@ mod os;
 mod osc;
 mod overlay_sidecar;
 mod steam;
+mod steam_frame;
 mod store_safety;
 mod system_tray;
 mod telemetry;
@@ -576,15 +576,15 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         error_reporting::set_error_reporting_enabled,
         error_reporting::allow_ui_event,
         vrcx::commands::vrcx_log,
-        frame::commands::frame_supported_models,
-        frame::commands::frame_discover,
-        frame::commands::frame_login_name,
-        frame::commands::frame_create_credentials,
-        frame::commands::frame_register,
-        frame::commands::frame_probe,
-        frame::commands::frame_setup,
-        frame::commands::frame_cleanup,
-        frame::commands::frame_set_pairings,
-        frame::commands::frame_connection_states,
+        steam_frame::commands::steam_frame_get_supported_models,
+        steam_frame::commands::steam_frame_discover_headsets,
+        steam_frame::commands::steam_frame_get_ssh_user,
+        steam_frame::commands::steam_frame_create_pairing_keys,
+        steam_frame::commands::steam_frame_request_approval,
+        steam_frame::commands::steam_frame_check_ssh_access,
+        steam_frame::commands::steam_frame_set_up_helper,
+        steam_frame::commands::steam_frame_remove_access,
+        steam_frame::commands::steam_frame_sync_connections,
+        steam_frame::commands::steam_frame_get_connection_states,
     ]
 }
