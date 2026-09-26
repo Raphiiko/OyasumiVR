@@ -4,22 +4,22 @@ import { listen } from '@tauri-apps/api/event';
 import { error, info } from '@tauri-apps/plugin-log';
 import { BehaviorSubject } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
-import { SETTINGS_KEY_FRAME_PAIRING, SETTINGS_STORE } from '../globals';
+import { SETTINGS_KEY_STEAM_FRAME_PAIRING, SETTINGS_STORE } from '../globals';
 import { DMKnownDevice } from '../models/device-manager';
 import {
-  FrameCandidate,
-  FrameCleanupOutcome,
-  FrameConnectionState,
-  FrameFlow,
-  FrameIdentity,
-  FramePage,
-  FramePairing,
-  FramePairingData,
-  FrameProbeOutcome,
-  FrameRegisterOutcome,
-  FrameSetupResult,
-  FrameSetupStage,
-} from '../models/frame';
+  SteamFrameCandidate,
+  SteamFrameCleanupOutcome,
+  SteamFrameConnectionState,
+  SteamFrameFlow,
+  SteamFrameIdentity,
+  SteamFramePage,
+  SteamFramePairing,
+  SteamFramePairingData,
+  SteamFrameProbeOutcome,
+  SteamFrameRegisterOutcome,
+  SteamFrameSetupResult,
+  SteamFrameSetupStage,
+} from '../models/steam-frame';
 import { protectSecret, unprotectSecret } from '../utils/secrets';
 import { ModalService } from './modal.service';
 import { DeviceManagerService } from './device-manager.service';
@@ -28,15 +28,15 @@ import { DeviceManagerService } from './device-manager.service';
 @Injectable({
   providedIn: 'root',
 })
-export class FramePairingService {
+export class SteamFramePairingService {
   private readonly supportedModels = signal<{ manufacturer: string; model: string }[]>([]);
-  private readonly _pairings = signal<FramePairing[]>([]);
-  private readonly _connections = signal<Record<string, FrameConnectionState>>({});
-  private readonly _flow = signal<FrameFlow | null>(null);
+  private readonly _pairings = signal<SteamFramePairing[]>([]);
+  private readonly _connections = signal<Record<string, SteamFrameConnectionState>>({});
+  private readonly _flow = signal<SteamFrameFlow | null>(null);
   private cancelRequested = false;
   private setupAttemptId?: string;
 
-  readonly pairings$ = new BehaviorSubject<FramePairing[]>([]);
+  readonly pairings$ = new BehaviorSubject<SteamFramePairing[]>([]);
   readonly connections = this._connections.asReadonly();
   readonly flow = this._flow.asReadonly();
   readonly flowPairing = computed(() => {
@@ -50,13 +50,13 @@ export class FramePairingService {
   ) {}
 
   async init() {
-    this.supportedModels.set(await invoke('frame_supported_models'));
+    this.supportedModels.set(await invoke('steam_frame_get_supported_models'));
     await this.load();
-    await listen<FrameConnectionState>('FRAME_CONNECTION_STATE', (event) =>
+    await listen<SteamFrameConnectionState>('STEAM_FRAME_CONNECTION_STATE', (event) =>
       this.onConnectionState(event.payload)
     );
-    await listen<{ attemptId: string; stage: FrameSetupStage | 'installed' }>(
-      'FRAME_SETUP_STAGE',
+    await listen<{ attemptId: string; stage: SteamFrameSetupStage | 'installed' }>(
+      'STEAM_FRAME_SETUP_STAGE',
       (event) => {
         const { attemptId, stage } = event.payload;
         if (attemptId !== this.setupAttemptId) return;
@@ -65,7 +65,9 @@ export class FramePairingService {
         else if (deviceId) void this.updatePairing(deviceId, { helperInstalledByPairing: true });
       }
     );
-    for (const state of await invoke<FrameConnectionState[]>('frame_connection_states')) {
+    for (const state of await invoke<SteamFrameConnectionState[]>(
+      'steam_frame_get_connection_states'
+    )) {
       this.onConnectionState(state);
     }
     await this.pushPairings();
@@ -75,7 +77,7 @@ export class FramePairingService {
     return this.supportedModels().some((m) => m.manufacturer === manufacturer && m.model === model);
   }
 
-  identityOf(device: DMKnownDevice): FrameIdentity | null {
+  identityOf(device: DMKnownDevice): SteamFrameIdentity | null {
     if (
       !device.id.startsWith('OVR_HMD_') ||
       !this.isSupported(device.manufacturer, device.typeName)
@@ -88,7 +90,7 @@ export class FramePairingService {
     };
   }
 
-  pairingFor(deviceId: string): FramePairing | undefined {
+  pairingFor(deviceId: string): SteamFramePairing | undefined {
     return this._pairings().find((p) => p.deviceId === deviceId);
   }
 
@@ -108,13 +110,13 @@ export class FramePairingService {
         busy: false,
       });
     }
-    if (this.modalService.isModalOpen('frame-pairing')) return;
-    const { FramePairingModalComponent } =
-      await import('../components/frame-pairing-modal/frame-pairing-modal.component');
+    if (this.modalService.isModalOpen('steam-frame-pairing')) return;
+    const { SteamFramePairingModalComponent } =
+      await import('../components/steam-frame-pairing-modal/steam-frame-pairing-modal.component');
     this.modalService
-      .addModal(FramePairingModalComponent, undefined, {
-        id: 'frame-pairing',
-        wrapperDefaultClass: 'modal-wrapper-frame-pairing',
+      .addModal(SteamFramePairingModalComponent, undefined, {
+        id: 'steam-frame-pairing',
+        wrapperDefaultClass: 'modal-wrapper-steam-frame-pairing',
         closeOnEscape: false,
       })
       .subscribe(() => {
@@ -123,10 +125,10 @@ export class FramePairingService {
   }
 
   closeWizard() {
-    this.modalService.closeModal('frame-pairing');
+    this.modalService.closeModal('steam-frame-pairing');
   }
 
-  go(page: FramePage) {
+  go(page: SteamFramePage) {
     this.patchFlow({ page, error: undefined });
   }
 
@@ -136,7 +138,7 @@ export class FramePairingService {
 
   async discover() {
     this.patchFlow({ page: 'search', manualAddress: undefined, error: undefined, busy: true });
-    const candidates = await invoke<FrameCandidate[]>('frame_discover');
+    const candidates = await invoke<SteamFrameCandidate[]>('steam_frame_discover_headsets');
     if (this.stopForCancel()) return;
     this.patchFlow({
       busy: false,
@@ -149,7 +151,7 @@ export class FramePairingService {
   async connectManual(address: string) {
     address = address.trim();
     this.patchFlow({ page: 'search', manualAddress: address, error: undefined, busy: true });
-    const user = await invoke<string | null>('frame_login_name', { address });
+    const user = await invoke<string | null>('steam_frame_get_ssh_user', { address });
     if (this.stopForCancel()) return;
     this.patchFlow({
       busy: false,
@@ -165,7 +167,9 @@ export class FramePairingService {
     const candidate = flow?.candidates[flow.selected];
     if (!flow || !candidate) return;
     this.patchFlow({ page: 'request', error: undefined, busy: true });
-    const user = await invoke<string | null>('frame_login_name', { address: candidate.address });
+    const user = await invoke<string | null>('steam_frame_get_ssh_user', {
+      address: candidate.address,
+    });
     if (this.stopForCancel()) return;
     if (!user) return this.patchFlow({ page: 'notfound', busy: false });
     const pairing = await this.preparePairing(flow, candidate.address, user);
@@ -184,18 +188,18 @@ export class FramePairingService {
     if (probe.status === 'hostKeyChanged')
       return this.patchFlow({ page: 'hostKeyChanged', busy: false });
     this.patchFlow({ page: 'awaiting' });
-    const outcome = await invoke<FrameRegisterOutcome>('frame_register', {
+    const outcome = await invoke<SteamFrameRegisterOutcome>('steam_frame_request_approval', {
       address: pairing.address,
       publicKey: pairing.publicKey,
     });
-    info(`[FramePairing] Registration: ${outcome}`);
+    info(`[SteamFramePairing] Registration: ${outcome}`);
     if (outcome === 'registered' || outcome === 'lost' || outcome === 'failed') {
       await this.updatePairing(pairing.deviceId, { mayBeApproved: true });
       if (this.cancelRequested) return this.finishCancel();
       return this.confirmAccess();
     }
     if (this.stopForCancel()) return;
-    const pages: Partial<Record<FrameRegisterOutcome, FramePage>> = {
+    const pages: Partial<Record<SteamFrameRegisterOutcome, SteamFramePage>> = {
       declined: 'declined',
       timeout: 'timeout',
       notReady: 'notready',
@@ -224,7 +228,7 @@ export class FramePairingService {
   }
 
   /** Probes a few times, because sshd may still be starting right after an approval. */
-  private async probeUntilReady(pairing: FramePairing): Promise<FrameProbeOutcome> {
+  private async probeUntilReady(pairing: SteamFramePairing): Promise<SteamFrameProbeOutcome> {
     let probe = await this.probe(pairing);
     for (
       let attempt = 1;
@@ -250,7 +254,7 @@ export class FramePairingService {
     if (!pairing?.hostKeyPin || !flow) return;
     this.setupAttemptId = uuidv4();
     this.patchFlow({ page: 'setup', stage: 'verify', error: undefined, busy: true });
-    const result = await invoke<FrameSetupResult>('frame_setup', {
+    const result = await invoke<SteamFrameSetupResult>('steam_frame_set_up_helper', {
       request: {
         attemptId: this.setupAttemptId,
         access: this.accessOf(pairing),
@@ -260,7 +264,7 @@ export class FramePairingService {
         identity: flow.identity,
       },
     });
-    info(`[FramePairing] Setup: ${result.status}`);
+    info(`[SteamFramePairing] Setup: ${result.status}`);
     if (result.installed) {
       await this.updatePairing(pairing.deviceId, { helperInstalledByPairing: true });
     }
@@ -360,17 +364,17 @@ export class FramePairingService {
     return true;
   }
 
-  private setPairings(pairings: FramePairing[]) {
+  private setPairings(pairings: SteamFramePairing[]) {
     this._pairings.set(pairings);
     this.pairings$.next(pairings);
   }
 
-  private patchFlow(patch: Partial<FrameFlow>) {
+  private patchFlow(patch: Partial<SteamFrameFlow>) {
     const flow = this._flow();
     if (flow) this._flow.set({ ...flow, ...patch });
   }
 
-  private accessOf(pairing: FramePairing) {
+  private accessOf(pairing: SteamFramePairing) {
     return {
       address: pairing.address,
       user: pairing.user,
@@ -379,12 +383,14 @@ export class FramePairingService {
     };
   }
 
-  private probe(pairing: FramePairing) {
-    return invoke<FrameProbeOutcome>('frame_probe', { access: this.accessOf(pairing) });
+  private probe(pairing: SteamFramePairing) {
+    return invoke<SteamFrameProbeOutcome>('steam_frame_check_ssh_access', {
+      access: this.accessOf(pairing),
+    });
   }
 
-  private cleanup(pairing: FramePairing, removeHelper: boolean) {
-    return invoke<FrameCleanupOutcome>('frame_cleanup', {
+  private cleanup(pairing: SteamFramePairing, removeHelper: boolean) {
+    return invoke<SteamFrameCleanupOutcome>('steam_frame_remove_access', {
       request: {
         access: this.accessOf(pairing),
         pcId: pairing.id,
@@ -399,18 +405,18 @@ export class FramePairingService {
    * keeps its key; a completed pairing is replaced by a new one.
    */
   private async preparePairing(
-    flow: FrameFlow,
+    flow: SteamFrameFlow,
     address: string,
     user: string
-  ): Promise<FramePairing | undefined> {
+  ): Promise<SteamFramePairing | undefined> {
     const existing = this.pairingFor(flow.deviceId);
     if (existing && !existing.complete) {
       return this.updatePairing(flow.deviceId, { address, user });
     }
     const credentials = await invoke<{ privateKey: string; publicKey: string; token: string }>(
-      'frame_create_credentials'
+      'steam_frame_create_pairing_keys'
     );
-    const pairing: FramePairing = {
+    const pairing: SteamFramePairing = {
       id: uuidv4(),
       deviceId: flow.deviceId,
       identity: flow.identity,
@@ -423,7 +429,7 @@ export class FramePairingService {
     try {
       await this.save();
     } catch (e) {
-      error(`[FramePairing] Could not save the pairing key: ${e}`);
+      error(`[SteamFramePairing] Could not save the pairing key: ${e}`);
       this.setPairings(this._pairings().filter((p) => p.id !== pairing.id));
       this.patchFlow({ page: 'uncertain', busy: false, error: 'persistence' });
       return undefined;
@@ -432,8 +438,8 @@ export class FramePairingService {
     return pairing;
   }
 
-  private async updatePairing(deviceId: string, patch: Partial<FramePairing>) {
-    let updated: FramePairing | undefined;
+  private async updatePairing(deviceId: string, patch: Partial<SteamFramePairing>) {
+    let updated: SteamFramePairing | undefined;
     this.setPairings(
       this._pairings().map((p) => (p.deviceId === deviceId ? (updated = { ...p, ...patch }) : p))
     );
@@ -447,11 +453,11 @@ export class FramePairingService {
     await this.pushPairings();
   }
 
-  private onConnectionState(state: FrameConnectionState) {
+  private onConnectionState(state: SteamFrameConnectionState) {
     this._connections.set({ ...this._connections(), [state.pairingId]: state });
     const pairing = this._pairings().find((p) => p.id === state.pairingId);
     if (!pairing) return;
-    const patch: Partial<FramePairing> = {};
+    const patch: Partial<SteamFramePairing> = {};
     if (state.lastSeen && state.lastSeen > (pairing.lastSeen ?? 0)) patch.lastSeen = state.lastSeen;
     if (state.helperVersion && state.helperVersion !== pairing.helperVersion)
       patch.helperVersion = state.helperVersion;
@@ -472,17 +478,17 @@ export class FramePairingService {
         publicKey: p.publicKey,
         identity: p.identity,
       }));
-    await invoke('frame_set_pairings', { pairings });
+    await invoke('steam_frame_sync_connections', { pairings });
   }
 
   private async load() {
-    const data = await SETTINGS_STORE.get<FramePairingData>(SETTINGS_KEY_FRAME_PAIRING);
-    const pairings: FramePairing[] = [];
+    const data = await SETTINGS_STORE.get<SteamFramePairingData>(SETTINGS_KEY_STEAM_FRAME_PAIRING);
+    const pairings: SteamFramePairing[] = [];
     for (const stored of data?.pairings ?? []) {
       const privateKey = await unprotectSecret(stored.privateKey);
       const token = await unprotectSecret(stored.token);
       if (!privateKey || !token) {
-        error(`[FramePairing] Skipped pairing ${stored.id}: its secrets cannot be read`);
+        error(`[SteamFramePairing] Skipped pairing ${stored.id}: its secrets cannot be read`);
         continue;
       }
       pairings.push({ ...stored, privateKey, token });
@@ -507,9 +513,9 @@ export class FramePairingService {
         token: (await protectSecret(p.token))!,
       }))
     );
-    await SETTINGS_STORE.set(SETTINGS_KEY_FRAME_PAIRING, {
+    await SETTINGS_STORE.set(SETTINGS_KEY_STEAM_FRAME_PAIRING, {
       version: 1,
       pairings,
-    } satisfies FramePairingData);
+    } satisfies SteamFramePairingData);
   }
 }
