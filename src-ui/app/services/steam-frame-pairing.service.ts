@@ -671,6 +671,7 @@ export class SteamFramePairingService {
   /** Shows a connection state, and saves what the core learned about the headset. */
   private onConnectionState(state: SteamFrameConnectionState) {
     this._connections.set({ ...this._connections(), [state.pairingId]: state });
+
     // a failed reinstall stops mattering once the helper is back
     const reinstall = this._reinstalls()[state.pairingId];
     if (reinstall === 'failed' && !['helperMissing', 'offline'].includes(state.status)) {
