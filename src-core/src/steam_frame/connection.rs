@@ -354,7 +354,11 @@ async fn attempt(pairing: &Pairing, shared: &Mutex<Pairing>) -> Attempt {
             Recovery::Missing => Attempt::Failed(Status::HelperMissing),
             Recovery::Down => Attempt::Failed(Status::Offline),
             Recovery::Unreachable => find_moved_helper(pairing, shared).await,
-            Recovery::HostKeyChanged => Attempt::Failed(Status::HostKeyChanged),
+            // another host may use the old address now
+            Recovery::HostKeyChanged => match find_moved_helper(pairing, shared).await {
+                Attempt::Retry => Attempt::Retry,
+                _ => Attempt::Failed(Status::HostKeyChanged),
+            },
             Recovery::Rejected => Attempt::Failed(Status::PairingRemoved),
         },
         Err(WssError::Failed(message)) => {

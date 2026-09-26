@@ -95,7 +95,7 @@ async fn update_session(session: &Session, pairing: &Pairing, digest: &str) -> U
         .is_some_and(|info| info.version == BUNDLED_VERSION);
     match inspected.decision {
         InstallDecision::NeedsAppUpdate => return UpdateOutcome::NeedsAppUpdate,
-        _ if inspected.replaced => {}
+        _ if inspected.replaced => keep_uninstaller(session).await,
         _ if bundled_on_disk && verify(pairing, Some(digest)).await => {
             prune(session).await;
             return UpdateOutcome::Unchanged;
@@ -133,6 +133,12 @@ async fn update_session(session: &Session, pairing: &Pairing, digest: &str) -> U
         Err(error) => warn!("[SteamFrame] Could not roll the helper back: {error:?}"),
     }
     UpdateOutcome::Failed(FailReason::NotStarted)
+}
+
+async fn keep_uninstaller(session: &Session) {
+    if let Err(error) = setup::write_uninstaller(session).await {
+        warn!("[SteamFrame] Could not write the uninstall script: {error:?}");
+    }
 }
 
 async fn prune(session: &Session) {
@@ -207,7 +213,7 @@ pub async fn recover(pairing: &Pairing) -> Recovery {
         Err(SshError::Rejected) => return Recovery::Rejected,
         Err(SshError::Failed(message)) => {
             warn!("[SteamFrame] Could not reach the headset to start the helper: {message}");
-            return Recovery::Down;
+            return Recovery::Unreachable;
         }
     };
     let recovery = recover_session(&session, pairing).await;
@@ -229,26 +235,31 @@ async fn recover_session(session: &Session, pairing: &Pairing) -> Recovery {
     if !AUTOMATIC_REPAIRS.lock().await.insert(pairing.id.clone()) {
         return Recovery::Down;
     }
+    // the rollback below only applies to the release that is current now
+    let mut current = match setup::run(session, &["current"], b"").await {
+        Ok(output) if output.status == 0 => output.stdout().trim().to_owned(),
+        _ => return Recovery::Down,
+    };
     warn!("[SteamFrame] The helper does not start, so the current release is repaired");
-    let current = match setup::install_bundled(session, true, false).await {
+    match setup::install_bundled(session, true, false).await {
         Ok(inspected) if inspected.replaced => {
+            keep_uninstaller(session).await;
             if verify(pairing, bundled_digest()).await {
                 return Recovery::Running;
             }
-            Some(BUNDLED_VERSION.to_owned())
+            current = BUNDLED_VERSION.to_owned();
         }
-        Ok(inspected) => inspected.installed.map(|info| info.version),
+        Ok(_) => {}
         Err(InstallError::Missing) => return Recovery::Missing,
-        Err(error) => {
-            warn!("[SteamFrame] Could not repair the helper: {error:?}");
-            None
-        }
-    };
+        Err(InstallError::Busy) => return Recovery::Down,
+        Err(error) => warn!("[SteamFrame] Could not repair the helper: {error:?}"),
+    }
+    if current.is_empty() {
+        return Recovery::Down;
+    }
     warn!("[SteamFrame] The repaired helper does not start, so the previous release runs again");
-    let mut rollback = vec!["rollback"];
-    rollback.extend(current.as_deref());
     let rolled_back = matches!(
-        setup::run(session, &rollback, b"").await,
+        setup::run(session, &["rollback", &current], b"").await,
         Ok(output) if output.status == 0
     );
     if rolled_back && verify(pairing, None).await {

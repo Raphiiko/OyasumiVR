@@ -286,7 +286,6 @@ pub async fn install_bundled(
         .await?;
         match output.status {
             0 => {
-                write_uninstaller(session).await?;
                 return Ok(Inspected {
                     installed,
                     decision,
@@ -307,7 +306,8 @@ pub async fn install_bundled(
     Err(InstallError::Busy)
 }
 
-async fn write_uninstaller(session: &Session) -> Result<(), InstallError> {
+/// Writes the uninstall script that matches the bundled helper.
+pub(super) async fn write_uninstaller(session: &Session) -> Result<(), InstallError> {
     let output = run(session, &["uninstaller"], UNINSTALL.as_bytes()).await?;
     if output.status == 0 {
         Ok(())
@@ -429,16 +429,17 @@ async fn setup_session(
             *installed = true;
             on_stage(Stage::Installed);
         }
-        _ if inspected
+        _ => {}
+    }
+    let bundled_is_current = inspected.replaced
+        || inspected
             .installed
             .as_ref()
-            .is_some_and(|info| info.version == BUNDLED_VERSION) =>
-        {
-            write_uninstaller(session)
-                .await
-                .map_err(|_| failed("could not write the uninstall script".into()))?;
-        }
-        _ => {}
+            .is_some_and(|info| info.version == BUNDLED_VERSION);
+    if bundled_is_current {
+        write_uninstaller(session)
+            .await
+            .map_err(|_| failed("could not write the uninstall script".into()))?;
     }
 
     // connection: give this PC a token, start the helper
