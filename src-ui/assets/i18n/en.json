@@ -2947,7 +2947,8 @@
       "notRecognized": {
         "body": "OyasumiVR can't confirm this is the headset you paired, for example after the headset was reset. Pair it again to reconnect.",
         "title": "Headset not recognized"
-      }
+      },
+      "withCode": "{body}<br /><br /><small>Error code: {code}</small>"
     },
     "steps": {
       "approve": "Approve",

@@ -53,6 +53,8 @@ interface FramePill {
   time?: string;
   /** A key under `steamFrame.statusDetail` whose title and body explain the pill when clicked. */
   detail?: string;
+  /** Shown in the explanation, so a user report names the exact status. */
+  code?: string;
 }
 
 /** A healthy Frame gets only a badge on its icon; any other state gets only a pill. */
@@ -63,15 +65,34 @@ interface FrameRow {
 }
 
 const FRAME_PILLS: Record<string, FramePill> = {
-  identityChanged: { key: 'notRecognized', icon: 'error', tone: 'bad', detail: 'notRecognized' },
-  hostKeyChanged: { key: 'notRecognized', icon: 'error', tone: 'bad', detail: 'notRecognized' },
+  identityChanged: {
+    key: 'notRecognized',
+    icon: 'error',
+    tone: 'bad',
+    detail: 'notRecognized',
+    code: 'SF-401',
+  },
+  hostKeyChanged: {
+    key: 'notRecognized',
+    icon: 'error',
+    tone: 'bad',
+    detail: 'notRecognized',
+    code: 'SF-402',
+  },
   needsAppUpdate: {
     key: 'updateApp',
     icon: 'update',
     tone: 'warn',
     detail: FLAVOUR === 'STEAM' ? 'needsAppUpdateSteam' : 'needsAppUpdate',
+    code: 'SF-403',
   },
-  helperOutdated: { key: 'updateHelper', icon: 'update', tone: 'warn', detail: 'helperOutdated' },
+  helperOutdated: {
+    key: 'updateHelper',
+    icon: 'update',
+    tone: 'warn',
+    detail: 'helperOutdated',
+    code: 'SF-404',
+  },
 };
 
 type DeviceGroupType = DMDeviceType | 'PREVIOUSLY_SEEN';
@@ -562,7 +583,13 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     this.modalService
       .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
         title: `steamFrame.statusDetail.${pill.detail}.title`,
-        message: `steamFrame.statusDetail.${pill.detail}.body`,
+        message: {
+          string: 'steamFrame.statusDetail.withCode',
+          values: {
+            body: this.transloco.translate(`steamFrame.statusDetail.${pill.detail}.body`),
+            code: pill.code ?? '',
+          },
+        },
         confirmButtonText: 'shared.modals.ok',
         showCancel: false,
       })
