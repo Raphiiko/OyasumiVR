@@ -82,6 +82,14 @@ Run the relevant `check:<operation>:<component>` npm scripts for changed code. `
 runs all checks on Windows; `npm run check:quick` runs portable checks. Translation and generated
 README checks are read-only; fix their source files and rerun the relevant generator when needed.
 
+## Running the app
+
+Start the app with `npm run dev:isolated`. It gives the worktree its own identifier, settings, and
+ports, so it runs beside other worktrees' instances. SteamVR, VRChat, elevated features, Bluetooth,
+and native input stay shared: claim the resource's lock before a test uses it. Every instance
+connects to a running SteamVR by itself. For the locks, the
+ports, and overlay work, read [parallel app instances](docs/agents/parallel-instances.md).
+
 ## Desktop UI verification
 
 When a ticket changes user-visible desktop behavior, verify the real OyasumiVR window by following
