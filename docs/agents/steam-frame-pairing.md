@@ -46,6 +46,7 @@ the helper token pass through `protectSecret` before the first save.
 | `steam_frame_set_up_helper`         | `runSetup`                                  | after SSH access works; Retry calls it again                                                                                      |
 | `steam_frame_remove_access`         | `finishCancel`, different headset           | Cancel after approval, and a wrong headset                                                                                        |
 | `steam_frame_sync_connections`      | `pushPairings`                              | after every change to the completed pairings                                                                                      |
+| `steam_frame_update_helper`         | Update and Retry in Device Manager          | a manual helper update; the result arrives as connection state                                                                    |
 
 The core emits two events. `STEAM_FRAME_SETUP_STAGE` reports the setup step, and `installed` once
 this attempt installed the helper. `STEAM_FRAME_CONNECTION_STATE` reports each pairing's status.
@@ -189,7 +190,10 @@ stateDiagram-v2
   connecting --> identityChanged: the helper reports another headset
   connecting --> needsAppUpdate: the helper needs a newer protocol
   connecting --> helperOutdated: the helper is too old
+  connecting --> helperMissing: SSH works, the helper folder is gone
+  connecting --> pairingRemoved: the headset rejects this PC's key
   hostKeyChanged --> [*]: stops until the headset is paired again
+  pairingRemoved --> [*]: stops until the headset is paired again
 ```
 
 A failed WSS attempt takes one of three recovery paths before it counts as offline:
@@ -198,8 +202,44 @@ A failed WSS attempt takes one of three recovery paths before it counts as offli
   tries again.
 - `CertificateChanged`: the core reads the certificate over SSH, and pins it only when it matches the
   one the helper presented.
-- `Unreachable`: the core browses mDNS for the headset at a new address, and accepts it only when that
-  helper presents the pinned certificate.
+- `Unreachable`: the core logs in over SSH and runs `helper.sh start`. When the helper still does not
+  answer, it repairs the current release and then rolls back to the previous one, once per app start
+  and separately from the automatic update.
+  A missing helper folder shows `helperMissing`, and only Reinstall creates it again. When SSH cannot
+  reach the headset either, the core browses mDNS for it at a new address, and accepts it only when
+  that helper presents the pinned certificate.
+
+## Updates
+
+Each connection compares the helper's hello with the bundled helper. An older helper, or the same
+version with a different executable digest, gets one automatic update per app start. The user can
+start the same update from Device Manager at any time.
+
+```mermaid
+flowchart TD
+  A["helper.sh inspect"] --> B{"decision"}
+  B -- "older, or same version with other files" --> C["helper.sh install, under the lock"]
+  B -- "the bundled version is on disk already" --> S["helper.sh start, when it is not running"]
+  B -- "newer" --> U["unchanged, or needsAppUpdate"]
+  C --> V{"WSS hello reports the bundled version and digest?"}
+  S --> V
+  V -- "yes" --> P["helper.sh prune: keep current and previous"]
+  V -- "no" --> R["helper.sh rollback: current back to previous"]
+```
+
+- Every command that takes the lock deletes `staging/` first. `install` then checks the helper did
+  not change since `inspect`, uploads into `staging/`, checks the digest, moves the release into
+  place, points `previous` at the old release, switches `current`, and restarts the service. A second
+  PC that waited for the lock finds the new helper and changes nothing.
+- A same-version repair moves the replaced release to `releases/<version>.replaced` and points
+  `previous` at it, so rollback always has a working target. A failed first installation removes the
+  helper folder again.
+- `rollback <version>` changes nothing and exits 73 when `current` no longer points at that release,
+  so a PC never rolls back a helper another PC just installed.
+- An interrupted update needs no record. The next contact finds the old helper still running, the new
+  release on disk but not running, or the new helper running, and finishes from there.
+- The connection state carries `maintenance`: `updating`, `updated` for a minute, `failed` with a
+  reason, or `busy` when another PC held the lock for 60 seconds.
 
 ## On the headset
 
@@ -207,10 +247,12 @@ A failed WSS attempt takes one of three recovery paths before it counts as offli
 | ------------------------------------------------------- | --------------------------------------------------- |
 | `~/.local/share/oyasumivr_helper/releases/<version>`    | installed helper versions                           |
 | `~/.local/share/oyasumivr_helper/current`               | link to the running version                         |
+| `~/.local/share/oyasumivr_helper/previous`              | link to the version before it, for rollback         |
+| `~/.local/share/oyasumivr_helper/staging/`              | the upload in progress                              |
 | `~/.local/share/oyasumivr_helper/config.json`           | the WSS port                                        |
 | `~/.local/share/oyasumivr_helper/tls/`                  | the helper's certificate and key                    |
 | `~/.local/share/oyasumivr_helper/clients/<pc-id>`       | one token per paired PC, plus its `.pub` key record |
-| `~/.local/share/oyasumivr_helper/maintenance.lock`      | held by install, provision, and cleanup             |
+| `~/.local/share/oyasumivr_helper/maintenance.lock`      | held by every change to the helper folder           |
 | `~/.local/share/oyasumivr_helper/uninstall`             | removes the helper and every recorded key line      |
 | `~/.ssh/.oyasumivr-keys.lock`                           | held by every `authorized_keys` rewrite             |
 | `~/.config/systemd/user/oyasumivr-frame-helper.service` | the user service                                    |
