@@ -279,7 +279,7 @@ cleanup() {
   # remove the token, and the helper when the mode asks for it
   if [ -d "$root" ]; then
     rm -f "$root/clients/$pc" "$root/clients/$pc.pub"
-    if [ "$mode" = uninstall ] || { [ "$mode" = unused ] && [ -z "$(ls -A "$root/clients" 2>/dev/null)" ]; }; then
+    if [ "$mode" = uninstall ] || { [ "$mode" = unused ] && [ "$(clients "$pc")" = 0 ]; }; then
       remove_helper
     fi
   fi
