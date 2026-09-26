@@ -359,7 +359,7 @@ export class DeviceManagerService {
           devices,
           deviceIds: devices.map((d) => this.getIdForOpenVRDevice(d)),
         })),
-        // Update any already known devices that have received a different default name or manufacturer
+        // update known devices whose default name or manufacturer changed
         tap(({ devices, deviceIds }) => {
           devices.forEach((device, deviceIndex) => {
             const deviceId = deviceIds[deviceIndex];
