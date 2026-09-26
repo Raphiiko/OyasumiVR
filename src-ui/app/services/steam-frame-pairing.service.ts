@@ -8,10 +8,12 @@ import { SETTINGS_KEY_STEAM_FRAME_PAIRING, SETTINGS_STORE } from '../globals';
 import { DMKnownDevice } from '../models/device-manager';
 import {
   SteamFrameCandidate,
+  SteamFrameCleanupMode,
   SteamFrameCleanupOutcome,
   SteamFrameConnectionState,
   SteamFrameFlow,
   SteamFrameIdentity,
+  SteamFrameOtherPcsOutcome,
   SteamFramePage,
   SteamFramePairing,
   SteamFramePairingData,
@@ -381,7 +383,7 @@ export class SteamFramePairingService {
       // another headset answered: undo our access there
       case 'wrongDevice': {
         this.patchFlow({ page: 'wrongDevice' });
-        const outcome = await this.cleanup(pairing, false);
+        const outcome = await this.cleanup(pairing, 'keep');
         await this.removePairing(pairing.deviceId);
         this.cancelRequested = false;
         return this.patchFlow({
@@ -450,6 +452,34 @@ export class SteamFramePairingService {
     this._reinstalls.set(state ? { ...others, [pairingId]: state } : others);
   }
 
+  /** Counts the other PCs using this headset's helper. `null` when the headset can't be asked. */
+  async otherPcCount(pairing: SteamFramePairing): Promise<number | null> {
+    const outcome = await invoke<SteamFrameOtherPcsOutcome>('steam_frame_count_other_pcs', {
+      access: this.accessOf(pairing),
+      pcId: pairing.id,
+      publicKey: pairing.publicKey,
+    });
+    if (outcome.status === 'ok') return outcome.count;
+    return outcome.status === 'rejected' ? 0 : null;
+  }
+
+  /**
+   * Removes this PC's access from the headset, and the helper when `uninstall`, then the local
+   * pairing. Returns false, keeping the local pairing, when the headset cleanup failed.
+   */
+  async unpair(pairing: SteamFramePairing, uninstall: boolean): Promise<boolean> {
+    const outcome = await this.cleanup(pairing, uninstall ? 'uninstall' : 'keep');
+    info(`[SteamFramePairing] Unpair: ${outcome.status}`);
+    if (outcome.status !== 'done') return false;
+    await this.removePairing(pairing.deviceId);
+    return true;
+  }
+
+  /** Deletes the pairing on this PC only. The headset keeps the helper and this PC's access. */
+  async forget(pairing: SteamFramePairing) {
+    await this.removePairing(pairing.deviceId);
+  }
+
   /** Stops pairing. A running step finishes first, then this PC's approval is removed. */
   async cancel() {
     const flow = this._flow();
@@ -495,7 +525,10 @@ export class SteamFramePairingService {
 
     // remove our key, token, and any helper we installed
     if (pairing.hostKeyPin) {
-      const outcome = await this.cleanup(pairing, !!pairing.helperInstalledByPairing);
+      const outcome = await this.cleanup(
+        pairing,
+        pairing.helperInstalledByPairing ? 'unused' : 'keep'
+      );
       if (outcome.status !== 'done') return false;
     }
 
@@ -556,17 +589,19 @@ export class SteamFramePairingService {
   private probe(pairing: SteamFramePairing) {
     return invoke<SteamFrameProbeOutcome>('steam_frame_check_ssh_access', {
       access: this.accessOf(pairing),
+      pcId: pairing.id,
+      publicKey: pairing.publicKey,
     });
   }
 
-  /** Removes this PC's access from the headset, and the helper when asked. */
-  private cleanup(pairing: SteamFramePairing, removeHelper: boolean) {
+  /** Removes this PC's access from the headset, and the helper as `mode` asks. */
+  private cleanup(pairing: SteamFramePairing, mode: SteamFrameCleanupMode) {
     return invoke<SteamFrameCleanupOutcome>('steam_frame_remove_access', {
       request: {
         access: this.accessOf(pairing),
         pcId: pairing.id,
         publicKey: pairing.publicKey,
-        removeHelper,
+        mode,
       },
     });
   }

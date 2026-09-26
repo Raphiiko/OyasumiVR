@@ -44,7 +44,8 @@ the helper token pass through `protectSecret` before the first save.
 | `steam_frame_check_ssh_access`      | `register`, `confirmAccess`, `finishCancel` | before every approval request, after a `registered`, `lost`, or `failed` answer, and on Cancel when the headset may have approved |
 | `steam_frame_request_approval`      | `register`                                  | only after a user action, when the saved key does not work yet                                                                    |
 | `steam_frame_set_up_helper`         | `runSetup`                                  | after SSH access works; Retry calls it again                                                                                      |
-| `steam_frame_remove_access`         | `finishCancel`, different headset           | Cancel after approval, and a wrong headset                                                                                        |
+| `steam_frame_remove_access`         | `finishCancel`, different headset, `unpair` | Cancel after approval, a wrong headset, and Unpair                                                                                |
+| `steam_frame_count_other_pcs`       | the unpair dialog                           | before it offers Keep helper and Uninstall helper                                                                                 |
 | `steam_frame_sync_connections`      | `pushPairings`                              | after every change to the completed pairings                                                                                      |
 | `steam_frame_update_helper`         | Update and Retry in Device Manager          | a manual helper update; the result arrives as connection state                                                                    |
 
@@ -146,9 +147,27 @@ flowchart TD
   F -- "failed" --> X
 ```
 
-`steam_frame_remove_access` runs `helper.sh cleanup`. It removes this PC's key line and token file,
-plus the helper when this attempt installed it and no other PC has a token. "Couldn't finish
-cleaning up" shows `bash ~/.local/share/oyasumivr_helper/uninstall`.
+`steam_frame_remove_access` runs `helper.sh cleanup` with mode `unused` when this attempt installed
+the helper, and `keep` otherwise. Every mode removes this PC's key lines and token file. `unused` also
+removes the helper when no other PC has a token. "Couldn't finish cleaning up" shows
+`bash ~/.local/share/oyasumivr_helper/uninstall`.
+
+Every other SSH session starts with `helper.sh record`, which writes `clients/<pc-id>.pub` while the
+helper is installed. The uninstall script on the headset reads those files to find every OyasumiVR
+key line.
+
+## Unpair
+
+Device details open `SteamFrameUnpairModalComponent`. It counts the other PCs with a token, then
+offers two modes of `helper.sh cleanup`:
+
+- `keep` leaves the helper running for the other PCs.
+- `uninstall` stops the service and removes it with the helper folder. Other PCs keep their key
+  lines, so they see `helperMissing`.
+
+A cleanup that cannot get the maintenance lock changes nothing and reports busy. The service deletes the local pairing only after the headset reports `done`. Otherwise the dialog
+shows "Couldn't unpair" with Try again and Forget on this PC. Forget deletes only local data. A
+pairing whose key the headset rejects shows `pairingRemoved`, with Pair again and Forget on this PC.
 
 ## Connection
 

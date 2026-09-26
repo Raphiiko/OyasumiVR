@@ -5,7 +5,11 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { isValidHostname, isValidIPv4, isValidIPv6 } from '../../utils/regex-utils';
 import { SteamFramePairingService } from '../../services/steam-frame-pairing.service';
-import { SteamFramePage, SteamFrameSetupStage } from '../../models/steam-frame';
+import {
+  STEAM_FRAME_UNINSTALL_COMMAND,
+  SteamFramePage,
+  SteamFrameSetupStage,
+} from '../../models/steam-frame';
 
 const STEP_OF_PAGE: Record<SteamFramePage, number> = {
   intro: 0,
@@ -92,7 +96,7 @@ export class SteamFramePairingModalComponent extends BaseModalComponent<void, vo
     return isValidIPv4(address) || isValidIPv6(address) || isValidHostname(address);
   });
 
-  readonly uninstallCommand = 'bash ~/.local/share/oyasumivr_helper/uninstall';
+  readonly uninstallCommand = STEAM_FRAME_UNINSTALL_COMMAND;
   readonly copied = signal(false);
 
   async copyUninstallCommand() {
