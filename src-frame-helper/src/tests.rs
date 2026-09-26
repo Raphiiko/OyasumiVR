@@ -177,6 +177,24 @@ fn certificate_is_created_once() {
 }
 
 #[test]
+fn unusable_certificate_is_replaced() {
+    let root = tempfile::tempdir().unwrap();
+    let (first, _) = ensure_certificate(root.path()).unwrap();
+    let other = rcgen::generate_simple_self_signed(vec!["other".into()]).unwrap();
+    std::fs::write(
+        root.path().join("tls/key.pem"),
+        other.signing_key.serialize_pem(),
+    )
+    .unwrap();
+    let (second, key) = ensure_certificate(root.path()).unwrap();
+    assert_ne!(first, second);
+    assert!(tls_config(second.clone(), key).is_ok());
+    std::fs::write(root.path().join("tls/cert.pem"), "").unwrap();
+    let (third, _) = ensure_certificate(root.path()).unwrap();
+    assert_ne!(second, third);
+}
+
+#[test]
 fn identity_needs_all_three_values() {
     let full = r#"{"LastKnown":{"HMDSerialNumber":"S1","HMDModel":"M","HMDManufacturer":"V"}}"#;
     assert_eq!(

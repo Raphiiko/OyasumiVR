@@ -62,23 +62,47 @@ struct Hello {
     identity: Option<Identity>,
 }
 
-/// Loads the helper's TLS identity from `tls/`, creating it first when either file is missing.
+/// Loads the helper's TLS identity from `tls/`, creating a new one when it is missing or unusable.
 pub fn ensure_certificate(
     root: &Path,
 ) -> io::Result<(CertificateDer<'static>, PrivateKeyDer<'static>)> {
     let dir = root.join("tls");
     let cert_path = dir.join("cert.pem");
     let key_path = dir.join("key.pem");
-    if !cert_path.exists() || !key_path.exists() {
-        let generated = rcgen::generate_simple_self_signed(vec!["oyasumivr-frame-helper".into()])
-            .map_err(io::Error::other)?;
-        create_private_dir(&dir)?;
-        write_private(&key_path, generated.signing_key.serialize_pem().as_bytes())?;
-        write_private(&cert_path, generated.cert.pem().as_bytes())?;
+    if let Ok(identity) = load_certificate(&cert_path, &key_path) {
+        return Ok(identity);
     }
-    let cert = CertificateDer::from_pem_file(&cert_path).map_err(io::Error::other)?;
-    let key = PrivateKeyDer::from_pem_file(&key_path).map_err(io::Error::other)?;
+    let generated = rcgen::generate_simple_self_signed(vec!["oyasumivr-frame-helper".into()])
+        .map_err(io::Error::other)?;
+    create_private_dir(&dir)?;
+    write_private(&key_path, generated.signing_key.serialize_pem().as_bytes())?;
+    write_private(&cert_path, generated.cert.pem().as_bytes())?;
+    load_certificate(&cert_path, &key_path)
+}
+
+/// Fails unless both files parse and the key belongs to the certificate.
+fn load_certificate(
+    cert_path: &Path,
+    key_path: &Path,
+) -> io::Result<(CertificateDer<'static>, PrivateKeyDer<'static>)> {
+    let cert = CertificateDer::from_pem_file(cert_path).map_err(io::Error::other)?;
+    let key = PrivateKeyDer::from_pem_file(key_path).map_err(io::Error::other)?;
+    tls_config(cert.clone(), key.clone_key())?;
     Ok((cert, key))
+}
+
+fn tls_config(
+    cert: CertificateDer<'static>,
+    key: PrivateKeyDer<'static>,
+) -> io::Result<ServerConfig> {
+    ServerConfig::builder_with_provider(Arc::new(rustls::crypto::ring::default_provider()))
+        .with_safe_default_protocol_versions()
+        .and_then(|builder| {
+            builder
+                .with_no_client_auth()
+                .with_single_cert(vec![cert], key)
+        })
+        .map_err(io::Error::other)
 }
 
 fn create_private_dir(dir: &Path) -> io::Result<()> {
@@ -100,7 +124,9 @@ fn write_private(path: &Path, contents: &[u8]) -> io::Result<()> {
         use std::os::unix::fs::OpenOptionsExt;
         options.mode(0o600);
     }
-    io::Write::write_all(&mut options.open(&temp)?, contents)?;
+    let mut file = options.open(&temp)?;
+    io::Write::write_all(&mut file, contents)?;
+    file.sync_all()?;
     std::fs::rename(temp, path)
 }
 
@@ -202,15 +228,7 @@ pub async fn bind(root: &Path) -> io::Result<(TcpListener, TlsAcceptor)> {
     let config: Config = serde_json::from_slice(&std::fs::read(root.join("config.json"))?)
         .map_err(io::Error::other)?;
     let (cert, key) = ensure_certificate(root)?;
-    let tls =
-        ServerConfig::builder_with_provider(Arc::new(rustls::crypto::ring::default_provider()))
-            .with_safe_default_protocol_versions()
-            .and_then(|builder| {
-                builder
-                    .with_no_client_auth()
-                    .with_single_cert(vec![cert], key)
-            })
-            .map_err(io::Error::other)?;
+    let tls = tls_config(cert, key)?;
     let listener = TcpListener::bind(("0.0.0.0", config.port)).await?;
     Ok((listener, TlsAcceptor::from(Arc::new(tls))))
 }
@@ -218,8 +236,15 @@ pub async fn bind(root: &Path) -> io::Result<(TcpListener, TlsAcceptor)> {
 pub async fn serve(root: PathBuf, listener: TcpListener, acceptor: TlsAcceptor) -> io::Result<()> {
     let root = Arc::new(root);
     loop {
-        let (stream, _) = listener.accept().await?;
-        tokio::spawn(handle(stream, acceptor.clone(), root.clone()));
+        match listener.accept().await {
+            Ok((stream, _)) => {
+                tokio::spawn(handle(stream, acceptor.clone(), root.clone()));
+            }
+            Err(error) => {
+                eprintln!("accept failed: {error}");
+                tokio::time::sleep(Duration::from_millis(100)).await;
+            }
+        }
     }
 }
 

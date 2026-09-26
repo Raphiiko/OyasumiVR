@@ -80,12 +80,17 @@ sharedCargoToml = sharedCargoToml.replaceAll(
 );
 writeFileSync('src-shared-rust/Cargo.toml', sharedCargoToml);
 
-// Frame helper cargo toml
+// frame helper cargo toml
 let helperCargoToml = readFileSync('src-frame-helper/Cargo.toml').toString();
 helperCargoToml = helperCargoToml.replaceAll(
   /\[package\](\r?\n)name = "oyasumivr-frame-helper"\1version = "[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?"/g,
   `[package]$1name = "oyasumivr-frame-helper"$1version = "${version}"`
 );
+if (!helperCargoToml.includes(`version = "${version}"`)) {
+  throw new Error(
+    'Could not set the version in src-frame-helper/Cargo.toml. The [package] block may have been reordered.'
+  );
+}
 writeFileSync('src-frame-helper/Cargo.toml', helperCargoToml);
 
 // Cargo lockfiles
