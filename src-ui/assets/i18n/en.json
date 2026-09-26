@@ -2801,9 +2801,10 @@
     "errors": {
       "helperBusy": "Another PC is updating OyasumiVR Helper on this headset. Wait a minute, then try again.",
       "identityMissing": "OyasumiVR couldn't confirm which headset this is. Make sure the headset is awake, then try again.",
+      "keys": "OyasumiVR couldn't create a pairing key on this PC. Try again.",
       "offline": "The headset couldn't be reached. Check that it is awake and on the same network, then try again.",
       "persistence": "OyasumiVR couldn't save the pairing on this PC. Check that local storage is available and try again.",
-      "wrongDeviceAccessLeft": "OyasumiVR couldn't reach that headset to remove this PC's approval. The approval can't be used anymore, because this PC deleted its key, and you can remove it in the headset's developer settings."
+      "wrongDeviceAccessLeft": "OyasumiVR couldn't confirm that it removed this PC's approval from that headset. The approval can't be used anymore, because this PC deleted its key, and you can remove it in the headset's developer settings."
     },
     "headset": "Steam Frame",
     "pages": {
