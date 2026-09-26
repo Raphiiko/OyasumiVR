@@ -67,16 +67,17 @@
       <div class="pane-content">
         @if (removedOnHeadset) {
           <p>{{ t('unpair.forget.removed') }}</p>
+          <p>{{ t('unpair.forget.removedCommand') }}</p>
         } @else {
           <p>{{ t('unpair.forget.body') }}</p>
           <p>{{ t('unpair.forget.command') }}</p>
-          <div class="command-row">
-            <pre class="command">{{ uninstallCommand }}</pre>
-            <button class="btn btn-secondary" (click)="copyCommand()">
-              {{ t(copied() ? 'actions.copied' : 'actions.copyCommand') }}
-            </button>
-          </div>
         }
+        <div class="command-row">
+          <pre class="command">{{ uninstallCommand }}</pre>
+          <button class="btn btn-secondary" (click)="copyCommand()">
+            {{ t(copied() ? 'actions.copied' : 'actions.copyCommand') }}
+          </button>
+        </div>
       </div>
       <div class="pane-actions spread">
         <button class="btn btn-secondary" (click)="close()">{{ t('actions.cancel') }}</button>
