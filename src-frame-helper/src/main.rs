@@ -1,6 +1,6 @@
 use std::{path::PathBuf, process::ExitCode};
 
-use oyasumivr_frame_helper::{bind, serve, INFO};
+use oyasumivr_frame_helper::{bind, info, serve};
 
 /// The data directory from the argument, or `~/.local/share/oyasumivr_helper`.
 fn data_dir(argument: Option<String>) -> Option<PathBuf> {
@@ -16,7 +16,7 @@ async fn main() -> ExitCode {
     match args.next().as_deref() {
         // print version and protocol range as JSON
         Some("info") => {
-            println!("{}", serde_json::to_string(&INFO).unwrap());
+            println!("{}", serde_json::to_string(&info()).unwrap());
             ExitCode::SUCCESS
         }
         // run the websocket server until it fails

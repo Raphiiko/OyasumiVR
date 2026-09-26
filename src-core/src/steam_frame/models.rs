@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use super::SUPPORTED_MODELS;
+use super::{maintenance::FailReason, SUPPORTED_MODELS};
 
 #[derive(Serialize, Clone, Copy)]
 pub struct SupportedModel {
@@ -75,6 +75,24 @@ pub enum Status {
     NeedsAppUpdate,
     HelperOutdated,
     HostKeyChanged,
+    /// SSH works, but the helper folder is gone. Only Reinstall creates it again.
+    HelperMissing,
+    /// The headset rejects this PC's key under the pinned host key.
+    PairingRemoved,
+}
+
+#[derive(Serialize, Clone, Debug, PartialEq)]
+#[serde(tag = "kind", rename_all = "camelCase")]
+pub enum Maintenance {
+    Updating,
+    Updated {
+        version: String,
+    },
+    Failed {
+        reason: FailReason,
+    },
+    /// Another PC held the maintenance lock.
+    Busy,
 }
 
 #[derive(Serialize, Clone, Debug)]
@@ -85,6 +103,9 @@ pub struct State {
     /// Milliseconds since the epoch of the last authenticated contact in this session.
     pub last_seen: Option<u64>,
     pub helper_version: Option<String>,
+    /// Whether the helper is older than the bundled one, or has other files at the same version.
+    pub update_available: bool,
+    pub maintenance: Option<Maintenance>,
     /// The address and certificate this PC now trusts, which may differ from the stored ones.
     pub address: String,
     pub cert_pin: String,
@@ -99,6 +120,9 @@ pub struct SetupRequest {
     pub token: String,
     pub public_key: String,
     pub identity: Identity,
+    /// Remove a helper this call installed when setup fails, as Reinstall does.
+    #[serde(default)]
+    pub remove_on_failure: bool,
 }
 
 #[derive(Serialize, Clone, Copy, Debug, PartialEq)]
