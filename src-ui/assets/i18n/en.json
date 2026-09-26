@@ -3028,9 +3028,9 @@
       },
       "forget": {
         "body": "Only this PC's pairing information is deleted. OyasumiVR Helper and this PC's access stay on the headset until you remove them there.",
-        "command": "To remove them, run this on the headset:",
+        "command": "To remove them, run this on the headset. It also removes OyasumiVR Helper for every other PC paired with this headset:",
         "removed": "The headset already removed this PC's access. Forgetting deletes the pairing information on this PC.",
-        "removedCommand": "If OyasumiVR Helper is still on the headset, run this there to remove it:",
+        "removedCommand": "If OyasumiVR Helper is still on the headset, run this there to remove it. It also removes it for every other PC paired with this headset:",
         "title": "Forget Steam Frame on this PC?"
       },
       "working": {

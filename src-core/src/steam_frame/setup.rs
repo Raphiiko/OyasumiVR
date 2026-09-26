@@ -578,7 +578,7 @@ async fn retry_handshake(
 }
 
 /// Removes this PC's access from the headset, and the helper as `mode` asks. A headset that
-/// already rejects this PC's key counts as done.
+/// already rejects this PC's key returns `Rejected`, with nothing on it changed.
 pub async fn cleanup(request: CleanupRequest) -> CleanupOutcome {
     // refuse an id that is not a safe file name
     if !valid_pc_id(&request.pc_id) {
