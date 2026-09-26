@@ -500,6 +500,7 @@ async fn setup_session(
         }
         _ => {}
     }
+
     // a new helper folder had no clients/ when the session recorded this PC's key
     if inspected.created {
         record(session, &request.pc_id, &request.public_key).await;
