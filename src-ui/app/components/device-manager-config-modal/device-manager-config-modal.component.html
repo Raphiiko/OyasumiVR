@@ -90,7 +90,7 @@
             <button class="btn btn-primary" (click)="updateFrameHelper()">
               {{ 'steamFrame.actions.update' | transloco }}
             </button>
-          } @else {
+          } @else if (helper.upToDate) {
             <span class="frame-up-to-date">{{ 'steamFrame.details.upToDate' | transloco }}</span>
           }
         </app-setting-row>

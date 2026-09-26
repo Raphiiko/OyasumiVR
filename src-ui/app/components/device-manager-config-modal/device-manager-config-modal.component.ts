@@ -119,6 +119,8 @@ export class DeviceManagerConfigModalComponent
       version: state?.helperVersion ?? pairing.helperVersion,
       updating: maintenance === 'updating',
       canUpdate: !!state?.updateAvailable || maintenance === 'failed' || maintenance === 'busy',
+      // only a helper that answers can be called up to date
+      upToDate: state?.status === 'connected',
     };
   }
 
