@@ -205,7 +205,7 @@
           <span class="busy-text" role="status">{{ t('waiting.' + page()) }}</span>
         }
         <div class="spacer"></div>
-        @if (busy()) {
+        @if (busy() && page() !== 'cancelling') {
           <button class="btn btn-secondary" (click)="pairing.closeWizard()">{{
             t('actions.closeForNow')
           }}</button>

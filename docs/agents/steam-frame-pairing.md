@@ -34,18 +34,18 @@ the helper token pass through `protectSecret` before the first save.
 
 ## Commands
 
-| Command                             | Called by                                   | When                                                           |
-| ----------------------------------- | ------------------------------------------- | -------------------------------------------------------------- |
-| `steam_frame_get_supported_models`  | service `init`                              | app start, to decide where Pair headset shows                  |
-| `steam_frame_get_connection_states` | service `init`                              | app start, for statuses the core already has                   |
-| `steam_frame_discover_headsets`     | `discover`                                  | the wizard's Find headset step                                 |
-| `steam_frame_get_ssh_user`          | `connectManual`, `pair`                     | a typed address, and before each pairing                       |
-| `steam_frame_create_pairing_keys`   | `preparePairing`                            | the first pairing attempt for a headset; retries reuse the key |
-| `steam_frame_check_ssh_access`      | `register`, `confirmAccess`, `finishCancel` | before every approval request, and after an unclear answer     |
-| `steam_frame_request_approval`      | `register`                                  | only after a user action, when the saved key does not work yet |
-| `steam_frame_set_up_helper`         | `runSetup`                                  | after SSH access works; Retry calls it again                   |
-| `steam_frame_remove_access`         | `finishCancel`, different headset           | Cancel after approval, and a wrong headset                     |
-| `steam_frame_sync_connections`      | `pushPairings`                              | after every change to the completed pairings                   |
+| Command                             | Called by                                   | When                                                                                                                              |
+| ----------------------------------- | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `steam_frame_get_supported_models`  | service `init`                              | app start, to decide where Pair headset shows                                                                                     |
+| `steam_frame_get_connection_states` | service `init`                              | app start, for statuses the core already has                                                                                      |
+| `steam_frame_discover_headsets`     | `discover`                                  | the wizard's Find headset step                                                                                                    |
+| `steam_frame_get_ssh_user`          | `connectManual`, `pair`                     | a typed address, and before each pairing                                                                                          |
+| `steam_frame_create_pairing_keys`   | `preparePairing`                            | the first pairing attempt for a headset; retries reuse the key                                                                    |
+| `steam_frame_check_ssh_access`      | `register`, `confirmAccess`, `finishCancel` | before every approval request, after a `registered`, `lost`, or `failed` answer, and on Cancel when the headset may have approved |
+| `steam_frame_request_approval`      | `register`                                  | only after a user action, when the saved key does not work yet                                                                    |
+| `steam_frame_set_up_helper`         | `runSetup`                                  | after SSH access works; Retry calls it again                                                                                      |
+| `steam_frame_remove_access`         | `finishCancel`, different headset           | Cancel after approval, and a wrong headset                                                                                        |
+| `steam_frame_sync_connections`      | `pushPairings`                              | after every change to the completed pairings                                                                                      |
 
 The core emits two events. `STEAM_FRAME_SETUP_STAGE` reports the setup step, and `installed` once
 this attempt installed the helper. `STEAM_FRAME_CONNECTION_STATE` reports each pairing's status.
@@ -74,12 +74,17 @@ sequenceDiagram
   alt the saved key works already
     C-->>S: ok and host key
   else no access yet
+    Note over S: save the attempt as possibly approved
     S->>C: steam_frame_request_approval
     C->>H: POST /register with the public key
     H-->>User: approval prompt in the headset
-    C-->>S: registered, declined, timeout, notReady, lost, or failed
-    Note over S: declined, timeout, and notReady wait for the user to retry
-    S->>C: steam_frame_check_ssh_access, up to 6 tries
+    alt registered, lost, or failed
+      C-->>S: the headset may have approved
+      S->>C: steam_frame_check_ssh_access, up to 6 tries
+    else declined, timeout, notReady, or unreachable
+      C-->>S: a clear no
+      Note over S: show the matching page and wait for the user to retry
+    end
   end
   Note over S: pin the SSH host key
   S->>C: steam_frame_set_up_helper
@@ -88,9 +93,10 @@ sequenceDiagram
   S->>C: steam_frame_sync_connections
 ```
 
-A registration answer of `lost` or `failed` can still mean the headset approved the key, so the
-service probes SSH before it shows "Approval couldn't be confirmed". It never sends a second registration by
-itself.
+The service saves the attempt as possibly approved before the request leaves, because the headset
+can approve it even when the answer never arrives. A clear no puts the earlier value back. An answer
+of `lost` or `failed` can still mean the headset approved the key, so the service probes SSH before
+it shows "Approval couldn't be confirmed". It never sends a second registration by itself.
 
 ## Setup on the headset
 
@@ -108,7 +114,8 @@ flowchart TD
   D -- "same, or newer and compatible" --> F["reuse"]
   D -- "newer and incompatible" --> N["needsAppUpdate, nothing replaced"]
   E --> G["helper.sh uninstaller"]
-  F --> G
+  F -- "same version" --> G
+  F -- "newer version" --> H
   G --> H["connection: helper.sh provision, under the lock"]
   H --> I["WSS handshake with the new token"]
   I --> J["complete"]
