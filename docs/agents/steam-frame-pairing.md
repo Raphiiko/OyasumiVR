@@ -206,7 +206,7 @@ offers two modes of `helper.sh cleanup`:
 - `uninstall` stops the service and removes it with the helper folder. Other PCs keep their key
   lines, so they see `helperMissing`.
 
-A cleanup that cannot get the maintenance or authorized_keys lock changes nothing and reports busy. The service deletes the local pairing only after the headset reports `done`. Otherwise the dialog
+A cleanup takes the maintenance and authorized_keys locks before it changes anything, reports busy when it cannot get them, and removes the key lines last, so Try again can finish a partial cleanup. The service deletes the local pairing only after the headset reports `done`. Otherwise the dialog
 shows "Couldn't unpair" with Try again and Forget on this PC, including when the headset rejects
 this PC's key, because then nothing on it changed. Cancel cleanup and wrong-headset cleanup count a
 rejected key as done. Forget deletes only local data. A

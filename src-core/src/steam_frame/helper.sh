@@ -264,7 +264,15 @@ cleanup() {
   exec 8>"$HOME/.ssh/.oyasumivr-keys.lock"
   flock -w 10 8 || exit 75
 
-  # remove the key lines before the records the uninstall script finds them by
+  # remove the token, and the helper when the mode asks for it
+  if [ -d "$root" ]; then
+    rm -f "$root/clients/$pc" "$root/clients/$pc.pub"
+    if [ "$mode" = uninstall ] || { [ "$mode" = unused ] && [ -z "$(ls -A "$root/clients" 2>/dev/null)" ]; }; then
+      remove_helper
+    fi
+  fi
+
+  # remove the key lines last, so a failed step above leaves this PC able to try again
   if [ -f "$keys" ]; then
     local temp
     temp=$(mktemp "$HOME/.ssh/authorized_keys.XXXXXX")
@@ -274,14 +282,6 @@ cleanup() {
     }' "$keys" >"$temp"
     chmod --reference="$keys" "$temp"
     mv "$temp" "$keys"
-  fi
-
-  # then the token, and the helper when the mode asks for it
-  if [ -d "$root" ]; then
-    rm -f "$root/clients/$pc" "$root/clients/$pc.pub"
-    if [ "$mode" = uninstall ] || { [ "$mode" = unused ] && [ -z "$(ls -A "$root/clients" 2>/dev/null)" ]; }; then
-      remove_helper
-    fi
   fi
 }
 
