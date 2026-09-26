@@ -46,7 +46,7 @@ export class SteamFramePairingService {
   readonly pairings$ = new BehaviorSubject<SteamFramePairing[]>([]);
   readonly connections = this._connections.asReadonly();
   readonly flow = this._flow.asReadonly();
-  /** Reinstalls started from Device Manager, by pairing id. */
+  /** Reinstalls started from Device Manager, by pairing id; `failed` stays until one succeeds. */
   readonly reinstalls = this._reinstalls.asReadonly();
   readonly flowPairing = computed(() => {
     const flow = this._flow();
@@ -418,6 +418,8 @@ export class SteamFramePairingService {
   /** Installs the helper again after it went missing, and pins its new certificate. */
   async reinstallHelper(pairing: SteamFramePairing) {
     if (this._reinstalls()[pairing.id] === 'running') return;
+
+    // run setup as a fresh install that removes itself when it fails
     this.setReinstall(pairing.id, 'running');
     const result = await invoke<SteamFrameSetupResult>('steam_frame_set_up_helper', {
       request: {
@@ -432,6 +434,8 @@ export class SteamFramePairingService {
     });
     info(`[SteamFramePairing] Reinstall: ${result.status}`);
     if (result.status !== 'complete') return this.setReinstall(pairing.id, 'failed');
+
+    // pin the new certificate and reconnect with it
     await this.updatePairing(pairing.deviceId, {
       certPin: result.certPin,
       port: result.port,
