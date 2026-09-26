@@ -47,14 +47,18 @@ run_current() {
 }
 
 # install VERSION SHA256 PORT SEEN, with the helper executable on stdin;
-# SEEN is the SHA-256 of the inspect output the PC decided on
+# SEEN is the SHA-256 of the inspect output the PC decided on; prints "created" for a first install
 install() {
   local version=$1 digest=$2 port=$3 seen=$4
   mkdir -p "$root"
   lock
   [ "$(printf %s "$(inspect)" | sha256sum | cut -c1-64)" = "$seen" ] || exit 73
   # a first installation that fails removes everything it created
-  [ -d "$root/releases" ] || trap '[ $? = 0 ] || remove_helper' EXIT
+  local created=0
+  if [ ! -d "$root/releases" ]; then
+    created=1
+    trap '[ $? = 0 ] || remove_helper' EXIT
+  fi
 
   # upload and check the executable
   mkdir -p "$root/staging" "$root/releases" "$root/clients" "$units/default.target.wants"
@@ -108,6 +112,7 @@ EOF
   mv -T "$root/current.new" "$root/current"
   systemctl --user daemon-reload
   systemctl --user restart "$unit"
+  [ "$created" = 0 ] || echo created
 }
 
 # uninstaller, with the uninstall script on stdin
