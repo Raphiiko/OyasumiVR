@@ -109,7 +109,12 @@
             }
           </div>
           @if (flow()?.error; as error) {
-            <p class="error" role="alert">{{ t('errors.' + error) }}</p>
+            <p class="error" role="alert">
+              {{ t('errors.' + error) }}
+              @if (errorCode(); as code) {
+                <span class="error-code">{{ t('errorCode', { code }) }}</span>
+              }
+            </p>
           }
           @if (page() === 'found') {
             <div class="candidates">
