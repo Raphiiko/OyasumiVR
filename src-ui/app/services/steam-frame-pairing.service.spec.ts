@@ -199,6 +199,34 @@ describe('Steam Frame pairing flow', () => {
     expect(calls('steam_frame_remove_access')).toHaveLength(1);
   });
 
+  it('still removes the helper it installed when that fact could not be saved', async () => {
+    handlers['steam_frame_check_ssh_access'] = () => ({ status: 'ok', hostKeyPin: 'PIN' });
+    handlers['steam_frame_set_up_helper'] = () => ({ status: 'unreachable', installed: true });
+    store.save
+      .mockResolvedValueOnce(undefined)
+      .mockResolvedValueOnce(undefined)
+      .mockRejectedValueOnce(new Error('disk full'));
+    const service = await start();
+    await service.pair();
+    await service.cancel();
+    expect(calls('steam_frame_remove_access')[0].request).toMatchObject({ removeHelper: true });
+  });
+
+  it('closes the wizard when the headset is clean but the local delete fails', async () => {
+    handlers['steam_frame_check_ssh_access'] = () => ({ status: 'ok', hostKeyPin: 'PIN' });
+    handlers['steam_frame_set_up_helper'] = () => ({
+      status: 'failed',
+      message: 'x',
+      installed: false,
+    });
+    const service = await start();
+    await service.pair();
+    store.save.mockRejectedValue(new Error('disk full'));
+    await service.cancel();
+    expect(calls('steam_frame_remove_access')).toHaveLength(1);
+    expect(service.flow()).toBeNull();
+  });
+
   it('offers a working retry when the pairing key cannot be created', async () => {
     handlers['steam_frame_create_pairing_keys'] = () => Promise.reject(new Error('no entropy'));
     handlers['steam_frame_request_approval'] = () => 'declined';
@@ -344,20 +372,25 @@ describe('Steam Frame pairing flow', () => {
     }
   });
 
-  it('offers a way out when saving fails during cancel', async () => {
-    handlers['steam_frame_check_ssh_access'] = () => ({ status: 'ok', hostKeyPin: 'PIN' });
-    handlers['steam_frame_set_up_helper'] = () => ({
-      status: 'failed',
-      message: 'x',
-      installed: false,
-    });
-    const service = await start();
-    await service.pair();
-    store.save.mockRejectedValue(new Error('disk full'));
-    await service.cancel();
-    expect(service.flow()).toMatchObject({ page: 'cleanupFailed', busy: false });
-    await service.leaveCleanup();
-    expect(service.flow()).toBeNull();
+  it('offers a way out when saving the pin fails during cancel', async () => {
+    vi.useFakeTimers();
+    try {
+      const service = await start();
+      const pairing = service.pair();
+      await vi.advanceTimersByTimeAsync(20000);
+      await pairing;
+      expect(service.flow()?.page).toBe('uncertain');
+      handlers['steam_frame_check_ssh_access'] = () => ({ status: 'ok', hostKeyPin: 'PIN' });
+      store.save.mockRejectedValue(new Error('disk full'));
+      const cancel = service.cancel();
+      await vi.advanceTimersByTimeAsync(20000);
+      await cancel;
+      expect(service.flow()).toMatchObject({ page: 'cleanupFailed', busy: false });
+      await service.leaveCleanup();
+      expect(service.flow()).toBeNull();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('sends no request when the attempt cannot be saved first', async () => {
