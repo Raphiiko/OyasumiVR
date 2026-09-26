@@ -118,6 +118,7 @@ pub async fn connect(
             Ok(Ok(tcp)) => tcp,
             _ => return Err(WssError::Unreachable),
         };
+
     // TLS that trusts only the pinned certificate
     let provider = Arc::new(rustls::crypto::ring::default_provider());
     let observed = Arc::new(Mutex::new(None));
@@ -138,6 +139,7 @@ pub async fn connect(
         tokio_rustls::TlsConnector::from(Arc::new(config)).connect(server_name, tcp),
     )
     .await;
+
     // report a changed certificate when the handshake saw one
     let tls = match tls {
         Ok(Ok(tls)) => tls,
@@ -150,6 +152,7 @@ pub async fn connect(
             })
         }
     };
+
     // request the upgrade with this PC's id and token
     let mut request = "wss://oyasumivr-frame-helper/"
         .into_client_request()
@@ -165,6 +168,7 @@ pub async fn connect(
             .parse()
             .map_err(|_| WssError::Unauthorized)?,
     );
+
     // wait for the upgrade and the first message
     let handshake = tokio::time::timeout(Duration::from_secs(10), async {
         let (mut socket, _) = tokio_tungstenite::client_async(request, tls).await?;
@@ -175,6 +179,7 @@ pub async fn connect(
         Ok::<_, tungstenite::Error>((socket, hello))
     })
     .await;
+
     // map the result; the first message must be hello
     match handshake {
         Err(_) => Err(WssError::Unreachable),
@@ -194,7 +199,7 @@ pub async fn connect(
     }
 }
 
-/// Closes the socket and ignores a failure, because the connection is done anyway.
+/// Closes the socket, ignoring a failure.
 pub async fn close(mut socket: Socket) {
     let _ = socket.close(None).await;
 }
