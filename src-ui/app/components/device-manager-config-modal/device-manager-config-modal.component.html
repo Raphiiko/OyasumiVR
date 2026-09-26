@@ -73,6 +73,29 @@
         </label>
       </app-setting-row>
 
+      @if (frameHelper(); as helper) {
+        <app-setting-row
+          label="steamFrame.details.helper"
+          [descriptionText]="
+            helper.version
+              ? ('steamFrame.details.version' | transloco: { version: helper.version })
+              : ('steamFrame.details.versionUnknown' | transloco)
+          "
+        >
+          @if (helper.updating) {
+            <button class="btn btn-secondary" disabled>
+              {{ 'steamFrame.details.updating' | transloco }}
+            </button>
+          } @else if (helper.canUpdate) {
+            <button class="btn btn-primary" (click)="updateFrameHelper()">
+              {{ 'steamFrame.actions.update' | transloco }}
+            </button>
+          } @else {
+            <span class="frame-up-to-date">{{ 'steamFrame.details.upToDate' | transloco }}</span>
+          }
+        </app-setting-row>
+      }
+
       <!-- Lighthouse V1 Identifier Section -->
       @if (v1LighthouseMode !== 'NONE') {
         <app-setting-row

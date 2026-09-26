@@ -19,6 +19,7 @@ import {
   LighthouseV1IdWizardModalInputModel,
   LighthouseV1IdWizardModalOutputModel,
 } from '../lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
+import { SteamFramePairingService } from 'src-ui/app/services/steam-frame-pairing.service';
 
 export interface DeviceManagerConfigModalInputModel {
   device: DMKnownDevice;
@@ -55,7 +56,8 @@ export class DeviceManagerConfigModalComponent
     protected lighthouseService: LighthouseService,
     private deviceManager: DeviceManagerService,
     private destroyRef: DestroyRef,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private framePairing: SteamFramePairingService
   ) {
     super();
   }
@@ -104,6 +106,25 @@ export class DeviceManagerConfigModalComponent
   close() {
     this.saveNickname();
     super.close();
+  }
+
+  /** The paired Steam Frame helper's version and update state, or null for any other device. */
+  frameHelper() {
+    const pairing = this.framePairing.pairingFor(this.device.id);
+    if (!pairing?.complete) return null;
+    const state = this.framePairing.connections()[pairing.id];
+    const maintenance = state?.maintenance?.kind;
+    return {
+      pairing,
+      version: state?.helperVersion ?? pairing.helperVersion,
+      updating: maintenance === 'updating',
+      canUpdate: !!state?.updateAvailable || maintenance === 'failed' || maintenance === 'busy',
+    };
+  }
+
+  updateFrameHelper() {
+    const helper = this.frameHelper();
+    if (helper) void this.framePairing.updateHelper(helper.pairing);
   }
 
   // TrackBy functions
