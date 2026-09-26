@@ -94,8 +94,8 @@ install() {
     fi
     mv "$root/staging/$binary" "$root/releases/$version/$binary"
   else
-    rm -rf "$root/releases/$version"
-    mkdir "$root/releases/$version"
+    # replace the executable by one rename, because previous can point at this release
+    mkdir -p "$root/releases/$version"
     mv "$root/staging/$binary" "$root/releases/$version/$binary"
     # a repair keeps a working previous release rather than the current one that does not start
     local target=$old
