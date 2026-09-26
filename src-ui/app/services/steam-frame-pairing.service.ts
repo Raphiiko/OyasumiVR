@@ -63,7 +63,7 @@ export class SteamFramePairingService {
         if (attemptId !== this.setupAttemptId) return;
         const deviceId = this._flow()?.deviceId;
         if (stage !== 'installed') this.patchFlow({ stage });
-        else if (deviceId) void this.updatePairing(deviceId, { helperInstalledByPairing: true });
+        else if (deviceId) void this.markHelperInstalled(deviceId);
       }
     );
     for (const state of await invoke<SteamFrameConnectionState[]>(
@@ -314,7 +314,7 @@ export class SteamFramePairingService {
     });
     info(`[SteamFramePairing] Setup: ${result.status}`);
     if (result.installed) {
-      await this.updatePairing(pairing.deviceId, { helperInstalledByPairing: true });
+      await this.markHelperInstalled(pairing.deviceId);
     }
     if (this.cancelRequested) return this.finishCancel();
     switch (result.status) {
@@ -400,7 +400,11 @@ export class SteamFramePairingService {
       const outcome = await this.cleanup(pairing, !!pairing.helperInstalledByPairing);
       if (outcome.status !== 'done') return false;
     }
-    await this.removePairing(pairing.deviceId);
+    try {
+      await this.removePairing(pairing.deviceId);
+    } catch (e) {
+      error(`[SteamFramePairing] Could not delete the cancelled attempt on this PC: ${e}`);
+    }
     return true;
   }
 
@@ -409,9 +413,10 @@ export class SteamFramePairingService {
     const pairing = this.flowPairing();
     try {
       if (pairing && !pairing.complete) await this.removePairing(pairing.deviceId);
-    } finally {
-      this.endFlow();
+    } catch (e) {
+      error(`[SteamFramePairing] Could not delete the cancelled attempt on this PC: ${e}`);
     }
+    this.endFlow();
   }
 
   private endFlow() {
@@ -504,6 +509,20 @@ export class SteamFramePairingService {
     }
     await this.pushPairings();
     return pairing;
+  }
+
+  /** Keeps the marker in memory even when the save fails, so Cancel still removes that helper. */
+  private async markHelperInstalled(deviceId: string) {
+    this.setPairings(
+      this._pairings().map((p) =>
+        p.deviceId === deviceId ? { ...p, helperInstalledByPairing: true } : p
+      )
+    );
+    try {
+      await this.save();
+    } catch (e) {
+      error(`[SteamFramePairing] Could not save that this attempt installed the helper: ${e}`);
+    }
   }
 
   /** Applies the change only if it reaches the disk; a failed save restores the previous pairings. */
