@@ -55,10 +55,14 @@ install() {
   [ "$(printf %s "$(inspect)" | sha256sum | cut -c1-64)" = "$seen" ] || exit 73
   # a first installation that fails removes everything it created
   [ -d "$root/releases" ] || trap '[ $? = 0 ] || remove_helper' EXIT
+
+  # upload and check the executable
   mkdir -p "$root/staging" "$root/releases" "$root/clients" "$units/default.target.wants"
   cat >"$root/staging/$binary"
   printf '%s  %s\n' "$digest" "$root/staging/$binary" | sha256sum -c --status - || exit 65
   chmod 755 "$root/staging/$binary"
+
+  # put the release in place, keeping a rollback target
   local old
   old=$(readlink "$root/current" 2>/dev/null || true)
   if [ "$old" = "releases/$version" ] && [ -d "$root/releases/$version" ]; then
@@ -84,6 +88,8 @@ install() {
     fi
   fi
   rmdir "$root/staging"
+
+  # write the config and unit, switch current, restart
   [ -f "$root/config.json" ] || printf '{"port":%d}\n' "$port" >"$root/config.json"
   cat >"$units/$unit" <<EOF
 [Unit]

@@ -130,7 +130,7 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>) {
     publish(&state).await;
     let mut backoff = Duration::from_secs(2);
     let mut retries = 0;
-    // when the "updated" notice clears
+    // deadline of the "updated" notice, set by a successful update
     let mut notice: Option<Instant> = None;
     loop {
         // try once; a repair gets at most two immediate retries
@@ -147,18 +147,9 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>) {
                 state.cert_pin = pairing.cert_pin.clone();
                 state.helper_version = Some(hello.info.version.clone());
                 state.update_available = update_available(&hello);
-                let settled = match &state.maintenance {
-                    Some(Maintenance::Failed { .. } | Maintenance::Busy) => !state.update_available,
-                    Some(Maintenance::Updated { version }) => {
-                        *version != hello.info.version
-                            || notice.is_none_or(|deadline| deadline <= Instant::now())
-                    }
-                    _ => false,
-                };
-                if settled {
-                    state.maintenance = None;
-                    notice = None;
-                }
+                settle_maintenance(&mut state, &hello, &mut notice);
+
+                // update an older helper, once per app start
                 let incompatible = incompatibility(&hello, &pairing.identity);
                 if state.update_available
                     && incompatible != Some(Status::IdentityChanged)
@@ -170,6 +161,8 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>) {
                     }
                     continue;
                 }
+
+                // refuse an unusable helper, else hold the socket
                 if let Some(status) = incompatible {
                     wss::close(*socket).await;
                     if state.status != status {
@@ -243,6 +236,23 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>) {
         }
         backoff = (backoff * 2).min(MAX_BACKOFF);
         retries = 0;
+    }
+}
+
+/// Clears a failed or busy notice once no update is needed, and an updated notice once the helper
+/// changed or its minute is up.
+fn settle_maintenance(state: &mut State, hello: &Hello, notice: &mut Option<Instant>) {
+    let settled = match &state.maintenance {
+        Some(Maintenance::Failed { .. } | Maintenance::Busy) => !state.update_available,
+        Some(Maintenance::Updated { version }) => {
+            *version != hello.info.version
+                || notice.is_none_or(|deadline| deadline <= Instant::now())
+        }
+        _ => false,
+    };
+    if settled {
+        state.maintenance = None;
+        *notice = None;
     }
 }
 
