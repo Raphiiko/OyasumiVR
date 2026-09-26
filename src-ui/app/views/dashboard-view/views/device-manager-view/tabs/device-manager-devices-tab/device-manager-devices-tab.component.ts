@@ -65,7 +65,7 @@ interface FramePill {
   code?: string;
 }
 
-type FrameAction = 'pair' | 'pairAgain' | 'retryUpdate' | 'reinstall';
+type FrameAction = 'pair' | 'pairAgain' | 'retryUpdate' | 'reinstall' | 'retryReinstall';
 
 /** A healthy Frame gets only a badge on its icon; any other state gets only a pill. */
 interface FrameRow {
@@ -601,7 +601,7 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     if (reinstall === 'running') {
       return { pill: { key: 'reinstalling', icon: 'sync', tone: 'neutral' } };
     }
-    if (reinstall === 'failed' && status === 'helperMissing') {
+    if (reinstall === 'failed' && (status === 'helperMissing' || status === 'offline')) {
       return {
         pill: {
           key: 'reinstallFailed',
@@ -610,7 +610,7 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
           detail: 'reinstallFailed',
           code: 'SF-408',
         },
-        action: 'reinstall',
+        action: 'retryReinstall',
       };
     }
 
@@ -721,6 +721,7 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
       case 'retryUpdate':
         return pairing && this.framePairing.updateHelper(pairing);
       case 'reinstall':
+      case 'retryReinstall':
         return pairing && this.framePairing.reinstallHelper(pairing);
     }
   }

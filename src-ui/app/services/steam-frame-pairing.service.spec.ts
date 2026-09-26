@@ -494,4 +494,36 @@ describe('Steam Frame helper maintenance', () => {
     expect(service.pairingFor(device.id)?.certPin).toBe('CERT');
     expect(service.reinstalls()).toEqual({ [pairing.id]: 'failed' });
   });
+
+  it('reports a reinstall as failed when saving the new certificate fails', async () => {
+    const { service, pairing } = await paired();
+    handlers['steam_frame_set_up_helper'] = () => ({
+      status: 'complete',
+      installed: true,
+      certPin: 'NEW',
+      port: 38441,
+      helperVersion: '1.1.0',
+    });
+    store.save.mockRejectedValueOnce(new Error('disk full'));
+    await service.reinstallHelper(pairing);
+    expect(service.reinstalls()).toEqual({ [pairing.id]: 'failed' });
+  });
+
+  it('forgets a failed reinstall once the helper connects again', async () => {
+    const { service, pairing } = await paired();
+    handlers['steam_frame_set_up_helper'] = () => ({ status: 'unreachable', installed: false });
+    await service.reinstallHelper(pairing);
+    const state = (status: string) => ({
+      pairingId: pairing.id,
+      status,
+      updateAvailable: false,
+      maintenance: null,
+      address: pairing.address,
+      certPin: 'CERT',
+    });
+    (service as any).onConnectionState(state('offline'));
+    expect(service.reinstalls()).toEqual({ [pairing.id]: 'failed' });
+    (service as any).onConnectionState(state('connected'));
+    expect(service.reinstalls()).toEqual({});
+  });
 });
