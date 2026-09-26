@@ -188,6 +188,7 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>) {
                             return;
                         }
                     } else {
+                        drop_updated_notice(&mut state, &mut notice);
                         state.status = Status::Offline;
                         publish(&state).await;
                     }
@@ -204,7 +205,8 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>) {
                 let pairing = shared.lock().await.clone();
                 state.address = pairing.access.address;
                 state.cert_pin = pairing.cert_pin;
-                if state.status != status {
+                let dropped = drop_updated_notice(&mut state, &mut notice);
+                if state.status != status || dropped {
                     state.status = status;
                     publish(&state).await;
                 }
@@ -254,6 +256,16 @@ fn settle_maintenance(state: &mut State, hello: &Hello, notice: &mut Option<Inst
         state.maintenance = None;
         *notice = None;
     }
+}
+
+/// Clears an "updated" notice, which only shows while connected. Returns whether one was set.
+fn drop_updated_notice(state: &mut State, notice: &mut Option<Instant>) -> bool {
+    if !matches!(state.maintenance, Some(Maintenance::Updated { .. })) {
+        return false;
+    }
+    state.maintenance = None;
+    *notice = None;
+    true
 }
 
 fn update_available(hello: &Hello) -> bool {
