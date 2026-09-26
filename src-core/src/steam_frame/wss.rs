@@ -19,7 +19,7 @@ use tokio_tungstenite::{
     WebSocketStream,
 };
 
-use super::{hex, setup::HelperInfo, Identity};
+use super::{hex, models::Identity, setup::HelperInfo};
 
 pub type Socket = WebSocketStream<TlsStream<TcpStream>>;
 

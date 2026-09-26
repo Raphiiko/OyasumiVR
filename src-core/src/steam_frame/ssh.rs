@@ -12,7 +12,7 @@ use russh::{
     ChannelMsg,
 };
 
-use super::Access;
+use super::models::Access;
 
 #[derive(Debug, PartialEq)]
 pub enum SshError {

@@ -6,17 +6,17 @@ use std::{
 
 use futures_util::{SinkExt, StreamExt};
 use log::{info, warn};
-use serde::{Deserialize, Serialize};
 use tokio::{sync::Mutex, task::JoinHandle};
 use tokio_tungstenite::tungstenite::Message;
 
 use super::{
     discovery,
+    models::{Identity, Pairing, State, Status},
     setup::{self, ProvisionError},
     ssh::{self, SshError},
     valid_pc_id,
     wss::{self, Hello, Socket, WssError},
-    Access, Identity, PROTOCOL_VERSION,
+    PROTOCOL_VERSION,
 };
 use crate::utils::{get_time, send_event};
 
@@ -24,44 +24,6 @@ const EVENT: &str = "STEAM_FRAME_CONNECTION_STATE";
 const PING_INTERVAL: Duration = Duration::from_secs(15);
 const SILENCE_LIMIT: Duration = Duration::from_secs(40);
 const MAX_BACKOFF: Duration = Duration::from_secs(60);
-
-/// A completed pairing, as the UI stores it.
-#[derive(Deserialize, Clone, Debug, PartialEq)]
-#[serde(rename_all = "camelCase")]
-pub struct Pairing {
-    pub id: String,
-    pub access: Access,
-    pub port: u16,
-    pub cert_pin: String,
-    pub token: String,
-    pub public_key: String,
-    pub identity: Identity,
-}
-
-#[derive(Serialize, Clone, Copy, Debug, PartialEq)]
-#[serde(rename_all = "camelCase")]
-pub enum Status {
-    Connecting,
-    Connected,
-    Offline,
-    IdentityChanged,
-    NeedsAppUpdate,
-    HelperOutdated,
-    HostKeyChanged,
-}
-
-#[derive(Serialize, Clone, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct State {
-    pub pairing_id: String,
-    pub status: Status,
-    /// Milliseconds since the epoch of the last authenticated contact in this session.
-    pub last_seen: Option<u64>,
-    pub helper_version: Option<String>,
-    /// The address and certificate this PC now trusts, which may differ from the stored ones.
-    pub address: String,
-    pub cert_pin: String,
-}
 
 struct Connection {
     pairing: Arc<Mutex<Pairing>>,

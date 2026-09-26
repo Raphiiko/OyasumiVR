@@ -4,22 +4,16 @@ use std::{
     time::Duration,
 };
 
+use super::models::Candidate;
 use hickory_proto::{
     op::{Message, Query},
     rr::{Name, RData, RecordType},
 };
 use log::warn;
-use serde::Serialize;
 use tokio::{net::UdpSocket, time::Instant};
 
 const SERVICE: &str = "_steamos-devkit._tcp.local.";
 const MDNS_GROUP: Ipv4Addr = Ipv4Addr::new(224, 0, 0, 251);
-
-#[derive(Serialize, Clone, Debug, PartialEq)]
-pub struct Candidate {
-    pub name: String,
-    pub address: String,
-}
 
 fn query() -> Option<Vec<u8>> {
     let mut message = Message::query();

@@ -1,7 +1,7 @@
 use std::{sync::LazyLock, time::Duration};
 
+use super::models::RegisterOutcome;
 use reqwest::StatusCode;
-use serde::Serialize;
 
 const PORT: u16 = 32000;
 
@@ -12,19 +12,6 @@ static CLIENT: LazyLock<reqwest::Client> = LazyLock::new(|| {
         .build()
         .expect("the devkit HTTP client must build")
 });
-
-#[derive(Serialize, Debug, PartialEq)]
-#[serde(rename_all = "camelCase")]
-pub enum RegisterOutcome {
-    Registered,
-    Declined,
-    Timeout,
-    NotReady,
-    Unreachable,
-    /// The request may have reached the headset, but no answer came back.
-    Lost,
-    Failed,
-}
 
 fn url(address: &str, path: &str) -> String {
     let host = if address.contains(':') {

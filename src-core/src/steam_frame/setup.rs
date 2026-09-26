@@ -3,15 +3,18 @@ use std::time::Duration;
 use base64::{engine::general_purpose::STANDARD, Engine};
 use log::{info, warn};
 use rustls::pki_types::{pem::PemObject, CertificateDer};
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use sha2::{Digest, Sha256};
 
 use super::{
     hex,
+    models::{
+        CleanupOutcome, CleanupRequest, Identity, SetupOutcome, SetupRequest, SetupResult, Stage,
+    },
     ssh::{self, Session, SshError},
     valid_pc_id,
     wss::{self, Hello, WssError},
-    Access, Identity, HELPER_PATH, HELPER_PORT, PROTOCOL_VERSION,
+    HELPER_PATH, HELPER_PORT, PROTOCOL_VERSION,
 };
 
 const SCRIPT: &str = include_str!("helper.sh");
@@ -173,60 +176,6 @@ pub async fn provision(
         port: config.port,
         cert_pin,
     })
-}
-
-#[derive(Deserialize, Clone)]
-#[serde(rename_all = "camelCase")]
-pub struct SetupRequest {
-    pub attempt_id: String,
-    pub access: Access,
-    pub pc_id: String,
-    pub token: String,
-    pub public_key: String,
-    pub identity: Identity,
-}
-
-#[derive(Serialize, Clone, Copy, Debug, PartialEq)]
-#[serde(rename_all = "camelCase")]
-pub enum Stage {
-    Verify,
-    Install,
-    /// This attempt installed the helper. Not a visible step.
-    Installed,
-    Connection,
-}
-
-#[derive(Serialize, Debug, PartialEq)]
-#[serde(tag = "status", rename_all = "camelCase")]
-pub enum SetupOutcome {
-    #[serde(rename_all = "camelCase")]
-    Complete {
-        cert_pin: String,
-        port: u16,
-        helper_version: String,
-    },
-    WrongDevice,
-    IdentityMissing,
-    #[serde(rename_all = "camelCase")]
-    NeedsAppUpdate {
-        helper_version: String,
-    },
-    HelperBusy,
-    HostKeyChanged,
-    Rejected,
-    Unreachable,
-    Failed {
-        message: String,
-    },
-}
-
-#[derive(Serialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct SetupResult {
-    #[serde(flatten)]
-    pub outcome: SetupOutcome,
-    /// Whether this call installed the helper, so a cancelled pairing knows to remove it.
-    pub installed: bool,
 }
 
 impl From<SshError> for SetupOutcome {
@@ -409,25 +358,6 @@ async fn handshake(
             }
         }
     }
-}
-
-#[derive(Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct CleanupRequest {
-    pub access: Access,
-    pub pc_id: String,
-    pub public_key: String,
-    pub remove_helper: bool,
-}
-
-#[derive(Serialize, Debug, PartialEq)]
-#[serde(tag = "status", rename_all = "camelCase")]
-pub enum CleanupOutcome {
-    Done,
-    Unreachable,
-    HostKeyChanged,
-    HelperBusy,
-    Failed { message: String },
 }
 
 /// Removes this PC's token file and key lines, and the helper when this attempt installed it
