@@ -84,7 +84,7 @@ install() {
   previous=$(readlink "$root/previous" 2>/dev/null || true)
   if [ "$old" = "releases/$version" ] && [ -d "$root/releases/$version" ]; then
     # same-version repair; without another rollback target, keep a copy of the replaced one
-    if [ -z "$previous" ] || [ "$previous" = "$old" ] || [ ! -d "$root/$previous" ]; then
+    if [ -z "$previous" ] || [ "$previous" = "$old" ] || [ ! -x "$root/$previous/$binary" ]; then
       rm -rf "$root/releases/$version.replaced.new"
       cp -a "$root/releases/$version" "$root/releases/$version.replaced.new"
       rm -rf "$root/releases/$version.replaced"
