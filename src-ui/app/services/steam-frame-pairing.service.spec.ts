@@ -319,6 +319,41 @@ describe('Steam Frame pairing flow', () => {
     }
   });
 
+  it('offers a way out when saving fails during cancel', async () => {
+    handlers['steam_frame_check_ssh_access'] = () => ({ status: 'ok', hostKeyPin: 'PIN' });
+    handlers['steam_frame_set_up_helper'] = () => ({
+      status: 'failed',
+      message: 'x',
+      installed: false,
+    });
+    const service = await start();
+    await service.pair();
+    store.save.mockRejectedValue(new Error('disk full'));
+    await service.cancel();
+    expect(service.flow()).toMatchObject({ page: 'cleanupFailed', busy: false });
+    await service.leaveCleanup();
+    expect(service.flow()).toBeNull();
+  });
+
+  it('sends no request when the attempt cannot be saved first', async () => {
+    const service = await start();
+    await service.pair();
+    expect(calls('steam_frame_request_approval')).toHaveLength(1);
+    store.save.mockRejectedValue(new Error('disk full'));
+    await service.register();
+    expect(calls('steam_frame_request_approval')).toHaveLength(1);
+    expect(service.flow()).toMatchObject({ page: 'found', busy: false, error: 'persistence' });
+  }, 15000);
+
+  it('leaves a busy step when a save fails after approval', async () => {
+    handlers['steam_frame_check_ssh_access'] = () => ({ status: 'ok', hostKeyPin: 'PIN' });
+    store.save.mockResolvedValueOnce(undefined).mockRejectedValueOnce(new Error('disk full'));
+    const service = await start();
+    await service.pair();
+    expect(service.flow()).toMatchObject({ busy: false, error: 'persistence' });
+    expect(calls('steam_frame_set_up_helper')).toHaveLength(0);
+  });
+
   it('keeps the attempt when cleanup cannot reach the headset', async () => {
     handlers['steam_frame_check_ssh_access'] = () => ({ status: 'ok', hostKeyPin: 'PIN' });
     handlers['steam_frame_set_up_helper'] = () => ({
