@@ -629,7 +629,10 @@ export class SteamFramePairingService {
       patch.helperVersion = state.helperVersion;
     if (state.address !== pairing.address) patch.address = state.address;
     if (state.certPin !== pairing.certPin) patch.certPin = state.certPin;
-    if (Object.keys(patch).length) void this.updatePairing(pairing.deviceId, patch);
+    if (!Object.keys(patch).length) return;
+    this.updatePairing(pairing.deviceId, patch).catch((e) =>
+      error(`[SteamFramePairing] Could not save the connection state: ${e}`)
+    );
   }
 
   /** Sends the complete pairings to the core, which keeps one connection per pairing. */
