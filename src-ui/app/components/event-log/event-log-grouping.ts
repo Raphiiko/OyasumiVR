@@ -22,7 +22,6 @@ export interface EventLogSingle {
 
 export type EventLogItem = EventLogGroup | EventLogSingle;
 
-// ponytail: fixed gap between members, per-cause windows if a delayed automation falls outside it
 export const EVENT_LOG_GROUP_GAP = 60 * 1000;
 
 const CAUSE_BY_REASON: Record<string, EventLogCause> = {
