@@ -14,19 +14,19 @@
         @if (!advancedMode) {
           <div class="brightness-value" @vshrink>
             <span class="monospace">{{ config.brightness }}%</span>
-            <app-icon name="brightness" />
+            <app-icon name="brightness" class="icon-mono" />
           </div>
         }
         @if (advancedMode) {
           <div class="brightness-value" @vshrink>
             <span class="monospace">{{ config.softwareBrightness }}%</span>
-            <app-icon name="image" />
+            <app-icon name="image" class="icon-mono" />
           </div>
         }
         @if (advancedMode) {
           <div class="brightness-value" @vshrink>
             <span class="monospace">{{ config.hardwareBrightness }}%</span>
-            <app-icon name="monitor" />
+            <app-icon name="monitor" class="icon-mono" />
           </div>
         }
       </div>

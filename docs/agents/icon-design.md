@@ -13,8 +13,9 @@ question mark in a circle, a chevron) keep their usual shape and take on this st
   drawn by hand fails, even when its concept is right.
 - **Both sizes.** Every icon reads at 18 px in the sidebar and looks full at 96 to 128 px on a
   SteamVR overlay button. Check both before you keep an icon.
-- **Real logos.** A third-party brand (VRChat, SteamVR) keeps its real silhouette, drawn in the
-  set's tones.
+- **Real logos.** A third-party brand (VRChat) keeps its real silhouette, drawn in the set's
+  tones. A status that only names a brand can use a plain icon instead: the SteamVR status pill
+  shows `headset`.
 
 ## Tones
 
@@ -49,11 +50,16 @@ Error and caution share one level, `--color-caution`.
 Two kinds of icon draw in one tone. The first is a control whose states set its text color, such as
 a window button or a slider marker. The second is an icon that labels a value, such as a slider end
 or the fan and brightness pills in the status bar. Add `class="icon-mono"`, and all four tones
-become `currentColor`. Use it only on
-icons without inner details, because one tone merges an inner detail into the body. Power symbols
-use it. Other icons in a power button (`button.btn-power`), such as the device icons on the bulk
-power button, take the state color as their base at rest and turn one tone on hover, where the
-button fills with that color.
+become `currentColor`. One tone merges inner details into the body, so use it only where the
+silhouette alone carries the meaning, and check the icon in one tone first. Where an inner detail
+is the meaning, such as the hollow center of `brightness-low`, draw the difference into the
+silhouette. Power symbols use one tone. Other icons in a power button (`button.btn-power`), such as
+`key`, `standby`, or the device icons on the bulk power button, keep their details: they take the
+state color as their base at rest and turn one tone on hover, where the button fills with that
+color.
+
+A disabled control grays its icons through `--icon-color`, so duotone icons follow the disabled
+state without a class.
 
 Control glyphs are the exception to the plush style: the chevrons and the window buttons
 (`window-minimize`, `window-maximize`, `window-close`). They are hand-drawn thin strokes on a

@@ -53,6 +53,10 @@ $unit-width: 2em;
     width: $unit-width;
     background-color: var(--color-surface-2);
     border-radius: 0 0.5em 0.5em 0;
+
+    app-icon {
+      font-size: 1.28em;
+    }
   }
 }
 

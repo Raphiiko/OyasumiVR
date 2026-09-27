@@ -92,6 +92,11 @@ svg.svg-icon {
   overflow: visible;
 }
 
+// a disabled control grays its icons, since its text color alone no longer reaches them
+:disabled app-icon {
+  --icon-color: var(--color-text-4);
+}
+
 // one tone that follows the text color, for state-colored controls and icons that label a value
 app-icon.icon-mono,
 svg.svg-icon.icon-mono {
