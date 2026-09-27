@@ -461,7 +461,7 @@ async fn setup_session(
     let settings = run(session, &["identity"], b"").await?.stdout();
     match parse_identity(&settings) {
         None => return Err(SetupOutcome::IdentityMissing),
-        Some(identity) if identity != request.identity => {
+        Some(identity) if !identity.same_headset(&request.identity) => {
             warn!(
                 "[SteamFrame] Headset identity {identity:?} differs from {:?}",
                 request.identity

@@ -356,7 +356,7 @@ fn incompatibility(hello: &Hello, expected: &Identity) -> Option<Status> {
     if hello
         .identity
         .as_ref()
-        .is_some_and(|identity| identity != expected)
+        .is_some_and(|identity| !identity.same_headset(expected))
     {
         return Some(Status::IdentityChanged);
     }
