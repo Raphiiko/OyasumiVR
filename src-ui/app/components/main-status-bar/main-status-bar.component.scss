@@ -171,11 +171,9 @@ $background-color: var(--color-surface-2);
 
     app-icon {
       font-size: 1.06em;
-      opacity: 0.5;
 
       &.mic-muted {
         --icon-color: var(--color-alert-error);
-        opacity: 1;
       }
     }
 

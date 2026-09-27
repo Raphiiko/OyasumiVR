@@ -220,7 +220,7 @@
     >
       @if (['INACTIVE', 'INITIALIZED'].includes((openvr.status | async) ?? '')) {
         <div class="pill-icon" @hshrink>
-          <img draggable="false" src="/assets/img/steamvr_icon.png" />
+          <app-icon name="headset" />
         </div>
       }
       @if (['INITIALIZING'].includes((openvr.status | async) ?? '')) {
@@ -244,7 +244,7 @@
       <ng-container *ngVar="user | async as user">
         @if (!user || user.status === 'offline') {
           <div class="pill-icon" @hshrink>
-            <img draggable="false" src="/assets/img/vrc_icon.png" />
+            <app-icon name="vrchat" />
           </div>
         }
         @if (user && user.status !== 'offline') {
