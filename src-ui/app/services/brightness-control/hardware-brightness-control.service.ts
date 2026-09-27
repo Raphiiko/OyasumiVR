@@ -172,17 +172,18 @@ export class HardwareBrightnessControlService {
     options: Partial<SetBrightnessOrCCTOptions> = SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS
   ): CancellableTask {
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
-    if (this._brightness.value === percentage) {
-      const task = new CancellableTask();
-      task.start();
-      return task;
-    }
-    // no PC loop writes a device that reports its own brightness
+    // no PC loop writes a device that reports its own brightness; its cache can show a clamped
+    // value, so an equal target is still written
     if (this.driver.value?.reportsBrightness) {
       this.cancelActiveTransition();
       const task = new CancellableTask(() =>
         this.setBrightness(percentage, { cancelActiveTransition: false, logReason: opt.logReason })
       );
+      task.start();
+      return task;
+    }
+    if (this._brightness.value === percentage) {
+      const task = new CancellableTask();
       task.start();
       return task;
     }

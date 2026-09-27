@@ -121,6 +121,20 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
       ['steam_frame_set_brightness', { pairingId: 'p', percentage: 110 }],
     ]);
   });
+
+  it('writes a transition target that equals the clamped cache', async () => {
+    const h = await setup(40);
+    h.report(150);
+    await settle();
+    vi.mocked(invoke).mockImplementation(async (command, args) =>
+      command === 'steam_frame_set_brightness' ? (args as { percentage: number }).percentage : false
+    );
+    h.service.transitionBrightness(110, 10000);
+    await settle();
+    expect(h.writes()).toEqual([
+      ['steam_frame_set_brightness', { pairingId: 'p', percentage: 110 }],
+    ]);
+  });
 });
 
 describe('simple brightness following a Steam Frame', () => {
