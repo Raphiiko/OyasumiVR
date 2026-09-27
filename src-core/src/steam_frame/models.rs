@@ -16,9 +16,9 @@ pub struct Identity {
 }
 
 impl Identity {
-    /// The PC and the headset can report different model names for one headset, so the model is ignored.
+    /// The PC and the headset can report different model names for one headset, so only the serial counts.
     pub fn same_headset(&self, other: &Identity) -> bool {
-        self.serial == other.serial && self.manufacturer == other.manufacturer
+        self.serial == other.serial
     }
 
     pub fn is_supported(&self) -> bool {
@@ -251,12 +251,11 @@ mod tests {
     }
 
     #[test]
-    fn same_headset_ignores_the_model() {
+    fn same_headset_compares_the_serial() {
         assert!(identity("Valve", "Steam Frame").same_headset(&identity("Valve", "Deckard MP")));
         let mut other = identity("Valve", "Steam Frame");
         other.serial = "FPTEST000002".into();
         assert!(!identity("Valve", "Steam Frame").same_headset(&other));
-        assert!(!identity("Valve", "Steam Frame").same_headset(&identity("Other", "Steam Frame")));
     }
 
     #[test]

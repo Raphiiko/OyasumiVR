@@ -65,7 +65,8 @@ sequenceDiagram
   User->>S: Find headset
   S->>C: steam_frame_discover_headsets
   C->>H: mDNS _steamos-devkit._tcp
-  C-->>S: candidates
+  C->>H: SSH host key per address, no login
+  C-->>S: candidates, one per host key
   User->>S: Pair (pair)
   S->>C: steam_frame_get_ssh_user
   C->>H: GET /login-name
@@ -107,7 +108,7 @@ match the wizard's progress list.
 
 ```mermaid
 flowchart TD
-  A["verify: helper.sh identity"] --> B{"serial and manufacturer match?"}
+  A["verify: helper.sh identity"] --> B{"serial matches?"}
   B -- "no" --> W["wrongDevice: the service calls steam_frame_remove_access"]
   B -- "a value is missing" --> M["identityMissing"]
   B -- "yes" --> C["install: helper.sh inspect"]
@@ -150,7 +151,7 @@ its Couldn't unpair page:
 
 | Code   | Connection status       | What happened                                                     |
 | ------ | ----------------------- | ----------------------------------------------------------------- |
-| SF-401 | `identityChanged`       | the helper reports another headset's serial or manufacturer       |
+| SF-401 | `identityChanged`       | the helper reports another headset's serial                       |
 | SF-402 | `hostKeyChanged`        | the SSH host key at the address differs from the pinned one       |
 | SF-403 | `needsAppUpdate`        | the helper's lowest protocol is above this build's                |
 | SF-406 | `helperMissing`         | SSH works, but the helper folder is gone                          |

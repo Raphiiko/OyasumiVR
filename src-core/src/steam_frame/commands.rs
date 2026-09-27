@@ -18,9 +18,28 @@ pub fn steam_frame_get_supported_models() -> Vec<SupportedModel> {
     SUPPORTED_MODELS.to_vec()
 }
 
+/// One candidate per headset: addresses that show the same SSH host key are one headset.
 #[tauri::command]
 pub async fn steam_frame_discover_headsets() -> Vec<Candidate> {
-    discovery::discover(Duration::from_secs(3)).await
+    let candidates = discovery::discover(Duration::from_secs(3)).await;
+    let pins = futures::future::join_all(
+        candidates
+            .iter()
+            .map(|candidate| ssh::host_key_pin(&candidate.address)),
+    )
+    .await;
+    distinct_headsets(candidates, pins)
+}
+
+/// Keeps the first candidate per host key; a candidate without a key stays on its own.
+fn distinct_headsets(candidates: Vec<Candidate>, pins: Vec<Option<String>>) -> Vec<Candidate> {
+    let mut seen = std::collections::HashSet::new();
+    candidates
+        .into_iter()
+        .zip(pins)
+        .filter(|(_, pin)| pin.as_ref().is_none_or(|pin| seen.insert(pin.clone())))
+        .map(|(candidate, _)| candidate)
+        .collect()
 }
 
 /// `None` when no devkit service answers at the address.
@@ -118,4 +137,34 @@ pub async fn steam_frame_update_helper(pairing_id: String) -> bool {
 #[tauri::command]
 pub async fn steam_frame_get_connection_states() -> Vec<State> {
     connection::states().await
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn candidate(address: &str) -> Candidate {
+        Candidate {
+            name: "Steam Frame".into(),
+            address: address.into(),
+        }
+    }
+
+    #[test]
+    fn distinct_headsets_merges_addresses_with_one_host_key() {
+        let candidates = [
+            "10.35.78.1",
+            "192.168.1.115",
+            "192.168.1.120",
+            "192.168.1.130",
+        ]
+        .map(candidate)
+        .to_vec();
+        let pins = vec![Some("A".into()), Some("A".into()), Some("B".into()), None];
+        let addresses: Vec<String> = distinct_headsets(candidates, pins)
+            .into_iter()
+            .map(|c| c.address)
+            .collect();
+        assert_eq!(addresses, ["10.35.78.1", "192.168.1.120", "192.168.1.130"]);
+    }
 }

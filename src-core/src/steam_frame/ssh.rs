@@ -160,6 +160,25 @@ pub async fn connect(access: &Access) -> Result<Session, SshError> {
     })
 }
 
+/// Reads the host key fingerprint without logging in; `None` when the handshake fails.
+pub async fn host_key_pin(address: &str) -> Option<String> {
+    let observed = Arc::new(Mutex::new(None));
+    let handler = Client {
+        expected: None,
+        observed: observed.clone(),
+    };
+    let connect = client::connect(Arc::new(client::Config::default()), (address, 22), handler);
+    let handle = tokio::time::timeout(Duration::from_secs(3), connect)
+        .await
+        .ok()?
+        .ok()?;
+    let _ = handle
+        .disconnect(russh::Disconnect::ByApplication, "", "en")
+        .await;
+    let pin = observed.lock().unwrap().take();
+    pin
+}
+
 impl Session {
     /// Runs one command to completion, feeding it `stdin` and then end of file. A channel that
     /// closes without an exit status counts as a lost connection.
