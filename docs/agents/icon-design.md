@@ -53,6 +53,11 @@ use it. Other icons in a power button (`button.btn-power`), such as the device i
 power button, take the state color as their base at rest and turn one tone on hover, where the
 button fills with that color.
 
+Control glyphs are the exception to the plush style: the chevrons and the window buttons
+(`window-minimize`, `window-maximize`, `window-close`). They are hand-drawn thin strokes on a
+16-unit grid, with a 1.7 stroke width and round caps, drawn in `currentColor`. They follow the text
+around them and need no class.
+
 A plain colored dot, such as a VRChat status, is `<span class="status-dot">` with a background
 color, not an icon.
 
@@ -81,7 +86,8 @@ The sanitizer strips `<svg>` from plain strings, so wrap such a string in
 
 ## SVG format
 
-- The root `<svg>` has `id="icon"`, which the `<use>` references point at.
+- The root `<svg>` has `id="icon"`, which the `<use>` references point at, and
+  `overflow="visible"`, so anti-aliased edges at the crop boundary are not cut off.
 - A square `viewBox` cropped to the shape, with no background rectangle.
 - Every fill and stroke names its tone through a variable, such as
   `style="fill:var(--icon-inner)"`, never a hex value. An element with a stroke and no fill states

@@ -1,1 +1,1 @@
-<svg id="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect x="3.5" y="3.5" width="9" height="9" rx="2" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" style="fill:none;stroke:var(--icon-body)"/></svg>
+<svg id="icon" overflow="visible" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect x="3.5" y="3.5" width="9" height="9" rx="2" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" fill="none" stroke="currentColor"/></svg>
