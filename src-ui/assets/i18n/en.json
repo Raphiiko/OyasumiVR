@@ -2897,9 +2897,9 @@
         "title": "Headset found, but not ready to pair"
       },
       "pairhost": {
-        "path": "In the headset, open <kbd>Settings</kbd> › <kbd>Developer</kbd> › <kbd>Pair new host</kbd>.",
+        "path": "In the headset, open <kbd>Settings</kbd> › <kbd>Developer</kbd>. Under <kbd>Development Kit</kbd>, select <kbd>Pair new host</kbd>.",
         "return": "Leave that screen open, take the headset off, and continue here.",
-        "title": "Open Pair new host"
+        "title": "Select Pair new host"
       },
       "request": {
         "body": "This may take a moment.",
