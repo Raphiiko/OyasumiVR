@@ -19,6 +19,9 @@ async function setup(advancedMode = false, reportsBrightness = false) {
     lastActiveDriver: (reportsBrightness ? { reportsBrightness: true } : null) as {
       reportsBrightness: boolean;
     } | null,
+    activeDriver: (reportsBrightness ? { reportsBrightness: true } : null) as {
+      reportsBrightness: boolean;
+    } | null,
     onDriverChange: new Subject<void>(),
     setBrightness: vi.fn<Dependencies[1]['setBrightness']>().mockResolvedValue(undefined),
     cancelActiveTransition: vi.fn(),
@@ -255,6 +258,7 @@ describe('simple brightness with a device that reports its brightness', () => {
     await new Promise((resolve) => setTimeout(resolve, 50));
     // availability stays true; only the active driver changes
     h.hardware.lastActiveDriver = { reportsBrightness: true };
+    h.hardware.activeDriver = h.hardware.lastActiveDriver;
     h.hardware.setBrightness.mockClear();
     h.hardware.onDriverChange.next();
     await settle();
@@ -271,5 +275,30 @@ describe('simple brightness with a device that reports its brightness', () => {
     expect(task.isComplete()).toBe(true);
     expect(h.hardware.setBrightness).toHaveBeenCalledOnce();
     expect(h.service.brightness).toBe(50);
+  });
+
+  it('gives the simple value to a device that takes over from a reporting one', async () => {
+    const h = await reporting();
+    h.hardware.onDriverChange.next();
+    await h.service.setBrightness(60);
+    h.software.setBrightness.mockClear();
+    h.hardware.setBrightness.mockClear();
+    // a Beyond that stayed available takes over; availability never turns false
+    h.hardware.activeDriver = { reportsBrightness: false };
+    h.hardware.lastActiveDriver = h.hardware.activeDriver;
+    h.hardware.onDriverChange.next();
+    await settle();
+    expect(h.hardware.setBrightness).toHaveBeenCalledOnce();
+    expect(h.service.brightness).toBe(60);
+  });
+
+  it('ignores a replayed report once the reporting device is gone', async () => {
+    const h = await reporting();
+    h.hardware.activeDriver = null;
+    h.software.brightness = 50;
+    h.hardware.adoptedBrightness.next({ percentage: 67, bounds: [9, 125] });
+    await settle();
+    expect(h.service.brightness).toBe(100);
+    expect(h.software.setBrightness).not.toHaveBeenCalled();
   });
 });

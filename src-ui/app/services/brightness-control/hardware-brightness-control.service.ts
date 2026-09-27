@@ -49,6 +49,11 @@ export class HardwareBrightnessControlService {
   /** The driver that was available last; it stays set after that driver becomes unavailable. */
   public lastActiveDriver: HardwareBrightnessControlDriver | null = null;
 
+  /** The driver in use now; null while none is available. */
+  get activeDriver(): HardwareBrightnessControlDriver | null {
+    return this.driver.value;
+  }
+
   private driver: BehaviorSubject<HardwareBrightnessControlDriver | null> =
     new BehaviorSubject<HardwareBrightnessControlDriver | null>(null);
   private _brightness: BehaviorSubject<number> = new BehaviorSubject<number>(100);

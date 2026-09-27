@@ -17,6 +17,7 @@ import {
   AdoptedBrightness,
   HardwareBrightnessControlService,
 } from './hardware-brightness-control.service';
+import { HardwareBrightnessControlDriver } from './hardware-brightness-drivers/hardware-brightness-control-driver';
 import { SoftwareBrightnessControlService } from './software-brightness-control.service';
 import { lerp } from '../../utils/number-utils';
 import { clamp } from 'lodash';
@@ -38,6 +39,8 @@ export class SimpleBrightnessControlService {
   private hardwareBrightnessDriverAvailable = false;
   /** Counts running `setBrightness` calls, whose own replies must not be adopted midway. */
   private settingBrightness = 0;
+  /** The active driver at the last driver change, to recognize a handoff between drivers. */
+  private previousDriver: HardwareBrightnessControlDriver | null = null;
   /** The latest report skipped while `settingBrightness` was above zero. */
   private deferredAdoption: AdoptedBrightness | null = null;
   public readonly advancedMode = this._advancedMode.asObservable();
@@ -94,14 +97,29 @@ export class SimpleBrightnessControlService {
           logReason: undefined,
         });
       });
-    // a running transition would write a reporting device at every step, so finish it at once;
     // the driver can change while availability stays true
-    this.hardwareBrightnessControl.onDriverChange.subscribe(() =>
-      this.finishTransitionForReportingDriver()
-    );
+    this.hardwareBrightnessControl.onDriverChange.subscribe(() => this.onDriverChange());
     this.hardwareBrightnessControl.adoptedBrightness.subscribe((adopted) =>
       this.adoptHardwareBrightness(adopted)
     );
+  }
+
+  private onDriverChange() {
+    const driver = this.hardwareBrightnessControl.activeDriver;
+    const previous = this.previousDriver;
+    this.previousDriver = driver;
+    // a running transition would write a reporting device at every step, so finish it at once
+    this.finishTransitionForReportingDriver();
+    // a device taking over from a reporting one never saw the simple value
+    if (
+      !this._advancedMode.value &&
+      previous?.reportsBrightness &&
+      driver &&
+      driver !== previous &&
+      !driver.reportsBrightness
+    ) {
+      this.setBrightness(this.brightness, { cancelActiveTransition: true, logReason: undefined });
+    }
   }
 
   private finishTransitionForReportingDriver() {
@@ -116,6 +134,8 @@ export class SimpleBrightnessControlService {
   /** Derives the simple value from a hardware value the device reported. */
   private async adoptHardwareBrightness(adopted: AdoptedBrightness) {
     if (this._advancedMode.value || this._activeTransition.value) return;
+    // a replayed report can come from a device that is no longer in use
+    if (!this.hardwareBrightnessControl.activeDriver?.reportsBrightness) return;
     if (this.settingBrightness) {
       this.deferredAdoption = adopted;
       return;
