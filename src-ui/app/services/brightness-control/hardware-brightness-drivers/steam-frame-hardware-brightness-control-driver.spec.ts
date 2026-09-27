@@ -46,7 +46,7 @@ function setup() {
       } as SteamFrameConnectionState,
     });
   const available = () => firstValueFrom(driver.isAvailable());
-  return { status, devices, pairings, driver, updates, report, available };
+  return { status, devices, pairings, connections, driver, updates, report, available };
 }
 
 describe('SteamFrameHardwareBrightnessControlDriver', () => {
@@ -143,5 +143,36 @@ describe('SteamFrameHardwareBrightnessControlDriver', () => {
     const leaving = h.driver.whenFrameReports();
     h.devices.next([]);
     expect(await leaving).toBe(false);
+  });
+
+  it('shows the new Frame, not a reply from the previous one, after a switch', async () => {
+    const h = setup();
+    h.report(brightness(40));
+    let reply!: (value: number) => void;
+    vi.mocked(invoke).mockImplementation(
+      () => new Promise((resolve) => (reply = resolve as (value: number) => void))
+    );
+    const command = h.driver.setBrightnessPercentage(90);
+    // a second paired Frame becomes the active HMD while the command runs
+    h.pairings.next([
+      ...h.pairings.value,
+      {
+        id: 'pairing-2',
+        complete: true,
+        identity: { serial: 'FPTEST000002' },
+      } as SteamFramePairing,
+    ]);
+    h.devices.next([{ class: 'HMD', serialNumber: 'FPTEST000002' } as OVRDevice]);
+    h.connections.next({
+      ...h.connections.value,
+      'pairing-2': {
+        pairingId: 'pairing-2',
+        status: 'connected',
+        brightness: brightness(25),
+      } as SteamFrameConnectionState,
+    });
+    reply(90);
+    await command;
+    expect(h.updates.at(-1)).toBe(25);
   });
 });

@@ -98,11 +98,13 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
 
     // send the newest value until none waits
     let applied: number | null = null;
+    let sentTo: string | null = null;
     while (this.pending !== null && this.frame) {
       const target = this.pending;
       this.pending = null;
+      sentTo = this.frame.pairingId;
       applied = await invoke<number>('steam_frame_set_brightness', {
-        pairingId: this.frame.pairingId,
+        pairingId: sentTo,
         percentage: target,
       }).catch((e) => {
         warn(`[SteamFrameHardwareBrightnessControlDriver] Could not set brightness: ${e}`);
@@ -112,8 +114,9 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
     this.sending = false;
     this.pending = null;
 
-    // show what the headset holds now
-    const current = applied ?? this.reportedPercentage();
+    // show what the active headset holds now; a reply from a Frame that stopped being active is stale
+    const replyApplies = applied !== null && sentTo === this.frame?.pairingId;
+    const current = replyApplies ? applied : this.reportedPercentage();
     if (current !== null) this.updates.next(current);
   }
 

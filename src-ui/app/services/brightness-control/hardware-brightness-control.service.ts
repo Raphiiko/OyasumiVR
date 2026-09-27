@@ -225,7 +225,8 @@ export class HardwareBrightnessControlService {
     const driver = await firstValueFrom(this.driver);
     if (!driver) return;
     if (opt.cancelActiveTransition) this.cancelActiveTransition();
-    if (!force && percentage == this.brightness) return;
+    // a reporting device can hold a value the cache shows clamped, so it always gets the write
+    if (!force && percentage == this.brightness && !driver.reportsBrightness) return;
     this._brightness.next(percentage);
     await driver.setBrightnessPercentage(percentage);
     if (opt.logReason) {

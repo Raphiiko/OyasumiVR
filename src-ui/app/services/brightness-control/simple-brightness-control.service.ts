@@ -94,10 +94,11 @@ export class SimpleBrightnessControlService {
           logReason: undefined,
         });
       });
-    // a running transition would write a reporting device at every step, so finish it at once
-    this.hardwareBrightnessControl.driverIsAvailable
-      .pipe(filter(Boolean))
-      .subscribe(() => this.finishTransitionForReportingDriver());
+    // a running transition would write a reporting device at every step, so finish it at once;
+    // the driver can change while availability stays true
+    this.hardwareBrightnessControl.onDriverChange.subscribe(() =>
+      this.finishTransitionForReportingDriver()
+    );
     this.hardwareBrightnessControl.adoptedBrightness.subscribe((adopted) =>
       this.adoptHardwareBrightness(adopted)
     );

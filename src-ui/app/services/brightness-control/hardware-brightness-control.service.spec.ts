@@ -107,6 +107,20 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
     await new Promise((resolve) => setTimeout(resolve, 700));
     expect(h.service.brightness).toBe(80);
   });
+
+  it('writes a bound the cache shows only because it clamped the report', async () => {
+    const h = await setup(40);
+    h.report(150);
+    await settle();
+    expect(h.service.brightness).toBe(110);
+    vi.mocked(invoke).mockImplementation(async (command, args) =>
+      command === 'steam_frame_set_brightness' ? (args as { percentage: number }).percentage : false
+    );
+    await h.service.setBrightness(110);
+    expect(h.writes()).toEqual([
+      ['steam_frame_set_brightness', { pairingId: 'p', percentage: 110 }],
+    ]);
+  });
 });
 
 describe('simple brightness following a Steam Frame', () => {

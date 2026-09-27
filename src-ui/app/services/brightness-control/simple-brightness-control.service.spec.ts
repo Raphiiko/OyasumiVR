@@ -16,7 +16,10 @@ async function setup(advancedMode = false, reportsBrightness = false) {
     driverIsAvailable: new BehaviorSubject(false),
     brightnessBounds: new BehaviorSubject([20, 100]),
     adoptedBrightness: new Subject<{ percentage: number; bounds: [number, number] }>(),
-    lastActiveDriver: reportsBrightness ? { reportsBrightness: true } : null,
+    lastActiveDriver: (reportsBrightness ? { reportsBrightness: true } : null) as {
+      reportsBrightness: boolean;
+    } | null,
+    onDriverChange: new Subject<void>(),
     setBrightness: vi.fn<Dependencies[1]['setBrightness']>().mockResolvedValue(undefined),
     cancelActiveTransition: vi.fn(),
   };
@@ -234,10 +237,29 @@ describe('simple brightness with a device that reports its brightness', () => {
     await new Promise((resolve) => setTimeout(resolve, 50));
     h.hardware.setBrightness.mockClear();
     h.hardware.driverIsAvailable.next(true);
+    h.hardware.onDriverChange.next();
     await settle();
     await settle();
     expect(h.service.brightness).toBe(50);
     expect(h.hardware.setBrightness).toHaveBeenCalledOnce();
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(h.hardware.setBrightness).toHaveBeenCalledOnce();
+  });
+
+  it('finishes a running transition when a Frame replaces another available driver', async () => {
+    const h = await setup(false, false);
+    h.hardware.brightnessBounds.next([9, 125]);
+    h.hardware.driverIsAvailable.next(true);
+    await settle();
+    h.service.transitionBrightness(50, 60000, { logReason: 'AT_SUNSET' });
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    // availability stays true; only the active driver changes
+    h.hardware.lastActiveDriver = { reportsBrightness: true };
+    h.hardware.setBrightness.mockClear();
+    h.hardware.onDriverChange.next();
+    await settle();
+    await settle();
+    expect(h.service.brightness).toBe(50);
     await new Promise((resolve) => setTimeout(resolve, 50));
     expect(h.hardware.setBrightness).toHaveBeenCalledOnce();
   });
