@@ -2859,7 +2859,7 @@
       },
       "devmode": {
         "enable": "Turn on <kbd>Developer Mode</kbd>.",
-        "path": "Put on the headset and open <kbd>Settings</kbd> › <kbd>System</kbd>.",
+        "open": "Put on the headset and open <kbd>Settings</kbd> › <kbd>System</kbd>.",
         "title": "Turn on Developer Mode"
       },
       "found": {
@@ -2897,8 +2897,9 @@
         "title": "Headset found, but not ready to pair"
       },
       "pairhost": {
-        "path": "In the headset, open <kbd>Settings</kbd> › <kbd>Developer</kbd>. Under <kbd>Development Kit</kbd>, select <kbd>Pair new host</kbd>.",
+        "open": "Put on the headset and open <kbd>Settings</kbd> › <kbd>Developer</kbd>.",
         "return": "Leave that screen open, take the headset off, and continue here.",
+        "select": "Under <kbd>Development Kit</kbd>, select <kbd>Pair new host</kbd>.",
         "title": "Select Pair new host"
       },
       "request": {
