@@ -28,6 +28,7 @@ export const EVENT_LOG_GROUP_GAP = 60 * 1000;
 const CAUSE_BY_REASON: Record<string, EventLogCause> = {
   SLEEP_MODE_ENABLED: 'sleepModeEnabled',
   SLEEP_MODE_ENABLE: 'sleepModeEnabled',
+  SLEEP_TRIGGER: 'sleepModeEnabled',
   SLEEP_MODE_DISABLED: 'sleepModeDisabled',
   SLEEP_MODE_DISABLE: 'sleepModeDisabled',
   SLEEP_PREPARATION: 'sleepPreparation',
@@ -52,8 +53,12 @@ export function eventLogCause(entry: EventLogEntry): EventLogCause | undefined {
 /**
  * Folds the entries a single cause produced into one group.
  * Expects entries newest first, and keeps that order for the items and for each group's entries.
+ * Hidden types still bound their groups, so hiding a trigger does not merge adjacent bursts.
  */
-export function groupEventLog(entries: EventLogEntry[]): EventLogItem[] {
+export function groupEventLog(
+  entries: EventLogEntry[],
+  hiddenTypes: EventLogType[] = []
+): EventLogItem[] {
   const items: EventLogItem[] = [];
   const openGroups = new Map<EventLogCause, { group: EventLogGroup; oldestTime: number }>();
 
@@ -81,10 +86,14 @@ export function groupEventLog(entries: EventLogEntry[]): EventLogItem[] {
     }
   }
 
-  // unwrap groups with a single member
-  return items.map((item) => {
-    if (item.kind === 'entry') return item;
-    const members = item.trigger ? [item.trigger, ...item.entries] : item.entries;
-    return members.length === 1 ? { kind: 'entry', id: members[0].id, entry: members[0] } : item;
+  // drop hidden entries, then unwrap groups with a single member
+  const isVisible = (entry: EventLogEntry) => !hiddenTypes.includes(entry.type);
+  return items.flatMap((item): EventLogItem[] => {
+    if (item.kind === 'entry') return isVisible(item.entry) ? [item] : [];
+    const trigger = item.trigger && isVisible(item.trigger) ? item.trigger : undefined;
+    const groupEntries = item.entries.filter(isVisible);
+    const members = trigger ? [trigger, ...groupEntries] : groupEntries;
+    if (members.length > 1) return [{ ...item, trigger, entries: groupEntries }];
+    return members.map((entry) => ({ kind: 'entry', id: entry.id, entry }));
   });
 }

@@ -62,10 +62,7 @@ export class EventLogComponent implements OnInit, AfterViewInit {
     this.itemsInView = combineLatest([this.eventLog.eventLog, this.showCount, this.filters]).pipe(
       map(
         ([log, showCount, filters]) =>
-          [groupEventLog(log.logs.filter((log) => !filters.includes(log.type))), showCount] as [
-            EventLogItem[],
-            number,
-          ]
+          [groupEventLog(log.logs, filters), showCount] as [EventLogItem[], number]
       ),
       tap(([items]) => {
         this.entries = items.length;

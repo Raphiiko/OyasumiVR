@@ -11,6 +11,10 @@ const gpu = (time: number, reason = 'SLEEP_MODE_ENABLED') =>
   entry(time, { type: 'gpuPowerLimitChanged', reason });
 const brightness = (time: number, reason = 'SLEEP_MODE_ENABLE') =>
   entry(time, { type: 'hardwareBrightnessChanged', reason });
+const shutdown = (time: number) =>
+  entry(time, { type: 'shutdownSequenceStarted', reason: 'SLEEP_TRIGGER' });
+const sleepOff = (time: number) =>
+  entry(time, { type: 'sleepModeDisabled', reason: { type: 'MANUAL' } });
 const invite = (time: number) =>
   entry(time, { type: 'declinedInvite', reason: 'SLEEP_MODE_ENABLED' });
 
@@ -57,5 +61,33 @@ describe('groupEventLog', () => {
   it('leaves a lone trigger ungrouped', () => {
     const trigger = sleepOn(1000);
     expect(groupEventLog([trigger])).toEqual([{ kind: 'entry', id: trigger.id, entry: trigger }]);
+  });
+
+  it('folds a shutdown started by sleep mode into its group', () => {
+    const [group] = groupEventLog([shutdown(20000), gpu(2000), sleepOn(1000)]);
+    expect(group.kind === 'group' && group.entries).toHaveLength(2);
+  });
+
+  it('keeps bursts apart when their triggers are hidden', () => {
+    const later = [gpu(40000, 'SLEEP_MODE_DISABLED'), brightness(40000, 'SLEEP_MODE_DISABLE')];
+    const earlier = [gpu(5000, 'SLEEP_MODE_DISABLED'), brightness(5000, 'SLEEP_MODE_DISABLE')];
+    const items = groupEventLog(
+      [...later, sleepOff(39000), ...earlier, sleepOff(4000)],
+      ['sleepModeDisabled']
+    );
+    expect(items).toMatchObject([
+      { kind: 'group', entries: later },
+      { kind: 'group', entries: earlier },
+    ]);
+    expect(items.every((item) => item.kind === 'group' && !item.trigger)).toBe(true);
+  });
+
+  it('drops hidden entries and unwraps what is left', () => {
+    const effect = gpu(2000);
+    const items = groupEventLog(
+      [effect, brightness(1500), sleepOn(1000)],
+      ['sleepModeEnabled', 'hardwareBrightnessChanged']
+    );
+    expect(items).toEqual([{ kind: 'entry', id: effect.id, entry: effect }]);
   });
 });
