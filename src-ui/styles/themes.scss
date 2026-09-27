@@ -5,6 +5,11 @@ body {
   --color-primary: #ff5370;
   --color-primary-hover: #ff7a93;
   --color-primary-active: #e63e5c;
+  // fixed lightness keeps the inner tone at 4.5:1 or more against the body for any primary
+  --icon-accent: var(--color-primary);
+  --icon-inner: oklch(from var(--color-primary) 0.49 c h);
+  --icon-body: oklch(from var(--color-primary) 0.907 calc(c * 0.24) h);
+  --icon-shade: oklch(from var(--color-primary) 0.35 calc(c * 0.62) h);
   --color-secondary: var(--color-surface-0);
   --color-secondary-hover: var(--color-surface-1);
   --color-surface-0: #0d0d0d;
