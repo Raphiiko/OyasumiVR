@@ -102,11 +102,6 @@ export class EventLogComponent implements OnInit, AfterViewInit {
     return CAUSE_ICONS[group.cause];
   }
 
-  /** Distinct icons of the group's entries, in list order. */
-  protected groupIcons(group: EventLogGroup): string[] {
-    return [...new Set(group.entries.map((entry) => EVENT_LOG_ICONS[entry.type]))];
-  }
-
   protected groupTime(group: EventLogGroup): number {
     return eventLogItemTime(group);
   }

@@ -73,13 +73,6 @@
                   [transloco]="'comp.event-log.group.count'"
                   [translocoParams]="{ count: item.entries.length }"
                 ></span>
-                @if (!expandedGroups.has(item.id)) {
-                  <span class="group-icons">
-                    @for (icon of groupIcons(item); track icon) {
-                      <app-icon [name]="icon" />
-                    }
-                  </span>
-                }
                 <app-icon class="group-chevron icon-mono" name="chevron-down" />
               </div>
             </app-event-log-entry>
