@@ -158,4 +158,9 @@
     font-size: 1.2em;
     margin-right: 0;
   }
+
+  // the controller's diagonal shape leaves its right side empty, which reads as a wider gap
+  app-icon[name='controller'] {
+    margin-right: -0.12em;
+  }
 }
