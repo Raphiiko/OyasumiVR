@@ -319,7 +319,9 @@
       "type": {
         "acceptedInviteRequest": {
           "subtitle": {
+            "anyone": "As invite requests from anyone are accepted",
             "blacklist": "As this player was not blacklisted",
+            "joinMe": "As your status was Join Me",
             "whitelist": "As this player was whitelisted"
           },
           "title": "Auto-accepted invite request from ''{displayName}''"
@@ -2254,14 +2256,28 @@
         "title": "VRChat"
       },
       "vrcx": {
+        "groupChanges": {
+          "description": "Log VRChat group changes made by OyasumiVR",
+          "title": "Group changes"
+        },
+        "invites": {
+          "description": "Log invites and invite requests that OyasumiVR accepted or declined",
+          "title": "Invites"
+        },
         "logs": {
           "onSleepDisable": "Sleep mode disabled",
           "onSleepEnable": "Sleep mode enabled",
-          "onSleepPreparation": "Preparing for sleep"
+          "onSleepPreparation": "Preparing for sleep",
+          "reply": "Reply: \"{message}\"",
+          "statusChanged": "Changed your VRChat status to {status}"
         },
         "sleepModeChanges": {
           "description": "Log changes to sleep mode to the game log in VRCX",
           "title": "Sleep mode"
+        },
+        "statusChanges": {
+          "description": "Log VRChat status changes made by OyasumiVR",
+          "title": "Status changes"
         },
         "title": "VRCX Logging"
       }

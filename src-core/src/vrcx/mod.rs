@@ -1,4 +1,3 @@
-#![allow(dead_code)]
 pub mod commands;
 pub mod models;
 use models::*;
@@ -11,7 +10,7 @@ use std::{
 
 use log::warn;
 use named_pipe::PipeClient;
-pub static VRCX_NORITICATION_SENDER: LazyLock<Mutex<NotificationSender>> =
+pub static VRCX_NOTIFICATION_SENDER: LazyLock<Mutex<NotificationSender>> =
     LazyLock::new(Mutex::default);
 #[derive(Default)]
 pub struct NotificationSender {
@@ -24,7 +23,7 @@ impl NotificationSender {
             get_pipe_path(),
             Duration::from_millis(10).as_millis() as u32,
         )
-        .map_err(VrcxNotificationSenderError::UnableToConnect)?;
+        .map_err(|_| VrcxNotificationSenderError::UnableToConnect)?;
         sender.set_write_timeout(Some(Duration::from_millis(100)));
         sender.set_read_timeout(Some(Duration::from_millis(100)));
         self.sender = Some(sender);
@@ -49,7 +48,7 @@ impl NotificationSender {
                         self.sender = None;
                         return Err(VrcxNotificationSenderError::NotConnected);
                     }
-                    _ => return Err(VrcxNotificationSenderError::SendFailed(err)),
+                    _ => return Err(VrcxNotificationSenderError::SendFailed),
                 };
             }
             Ok(())
@@ -57,10 +56,6 @@ impl NotificationSender {
             Err(VrcxNotificationSenderError::NotConnected)
         }
     }
-}
-pub fn init() {
-    //try to connect
-    VRCX_NORITICATION_SENDER.lock().unwrap().connect().ok();
 }
 
 fn get_pipe_path() -> String {
@@ -73,7 +68,7 @@ fn get_pipe_path() -> String {
     };
     let hash = env::var(&username_env_name)
         .unwrap_or_else(|err| {
-            warn!("[Core] failed getting '{username_env_name}' enviroment variable: {err:?}");
+            warn!("[Core] failed getting '{username_env_name}' environment variable: {err:?}");
             "".to_string()
         })
         .chars()

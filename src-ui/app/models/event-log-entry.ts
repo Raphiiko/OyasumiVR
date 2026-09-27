@@ -193,7 +193,8 @@ export interface EventLogCCTChanged extends EventLogBase {
 export interface EventLogAcceptedInviteRequest extends EventLogBase {
   type: 'acceptedInviteRequest';
   displayName: string;
-  mode: 'DISABLED' | 'WHITELIST' | 'BLACKLIST';
+  mode: 'DISABLED' | 'WHITELIST' | 'BLACKLIST' | 'JOIN_ME';
+  message?: string;
 }
 
 export interface EventLogDeclinedInviteRequest extends EventLogBase {
@@ -204,12 +205,14 @@ export interface EventLogDeclinedInviteRequest extends EventLogBase {
     | 'PLAYER_COUNT_CONDITION_FAILED'
     | 'NOT_ON_WHITELIST'
     | 'ON_BLACKLIST';
+  message?: string;
 }
 
 export interface EventLogDeclinedInvite extends EventLogBase {
   type: 'declinedInvite';
   displayName: string;
   reason: 'SLEEP_MODE_ENABLED';
+  message?: string;
 }
 
 export interface EventLogStatusChangedOnPlayerCountChange extends EventLogBase {

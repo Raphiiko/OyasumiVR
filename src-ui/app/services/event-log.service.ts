@@ -6,7 +6,7 @@ import {
   EventLogEntry,
   EventLogTurnedOffOpenVRDevices,
 } from '../models/event-log-entry';
-import { async, BehaviorSubject, Observable, throttleTime } from 'rxjs';
+import { async, BehaviorSubject, Observable, Subject, throttleTime } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 
 import { EVENT_LOG_STORE } from '../globals';
@@ -23,6 +23,9 @@ export class EventLogService {
     structuredClone(EVENT_LOG_DEFAULT)
   );
   public eventLog: Observable<EventLog> = this._eventLog.asObservable();
+  private _loggedEvents = new Subject<EventLogEntry>();
+  /** Emits each entry passed to logEvent, not the entries loaded from storage. */
+  public loggedEvents: Observable<EventLogEntry> = this._loggedEvents.asObservable();
   private storeWriter = new EventLogStoreWriter(EVENT_LOG_STORE);
 
   constructor() {}
@@ -57,6 +60,7 @@ export class EventLogService {
     }
     // Update the event log
     this._eventLog.next(this._eventLog.value);
+    this._loggedEvents.next(fullEvent);
   }
 
   /** Empty device lists produce no event. */

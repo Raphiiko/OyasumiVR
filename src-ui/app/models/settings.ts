@@ -4,7 +4,7 @@ import { OneTimeFlag } from './one-time-flags';
 import { EventLogType } from './event-log-entry';
 
 export interface AppSettings {
-  version: 15;
+  version: 16;
   // General Settings
   userLanguage: string;
   userLanguagePicked: boolean;
@@ -67,7 +67,7 @@ export interface AppSettings {
   vrcxLogsEnabled: VRCXEventLogType[];
 }
 
-export type VRCXEventLogType = 'SleepMode';
+export type VRCXEventLogType = 'SleepMode' | 'Invites' | 'StatusChanges' | 'GroupChanges';
 
 export type DiscordActivityMode = 'ENABLED' | 'ONLY_ASLEEP' | 'DISABLED';
 
@@ -95,7 +95,7 @@ export const NotificationTypes = [
 export type NotificationType = (typeof NotificationTypes)[number];
 
 export const APP_SETTINGS_DEFAULT: AppSettings = {
-  version: 15,
+  version: 16,
   // General Settings
   userLanguage: 'en',
   userLanguagePicked: false,
@@ -154,7 +154,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   bigscreenBeyondUnsafeBrightness: false,
   bigscreenBeyondBrightnessFanSafety: true,
   // VRCX
-  vrcxLogsEnabled: ['SleepMode'],
+  vrcxLogsEnabled: ['SleepMode', 'Invites', 'StatusChanges', 'GroupChanges'],
 };
 
 export type ExecutableReferenceStatus =
