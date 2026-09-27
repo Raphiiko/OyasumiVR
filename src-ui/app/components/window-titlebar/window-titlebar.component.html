@@ -25,7 +25,7 @@
     [tooltipMode]="'bottom'"
     (click)="messageCenter.toggle()"
   >
-    <app-icon name="comment" />
+    <app-icon name="comment" class="icon-mono" />
     @if ((messageCenter.messages | async)?.length) {
       <div class="message-center-badge-bg" @fade>
         <div class="message-center-badge"></div>
