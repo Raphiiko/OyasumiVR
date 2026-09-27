@@ -32,10 +32,12 @@ describe('groupEventLog', () => {
     });
   });
 
-  it('keeps unrelated entries in place around a group', () => {
-    const items = groupEventLog([gpu(3000), invite(2500), brightness(2000), sleepOn(1000)]);
-    expect(items.map((item) => item.kind)).toEqual(['group', 'entry']);
-    expect(items[0].kind === 'group' && items[0].entries).toHaveLength(2);
+  it('places a group at its trigger time, below newer unrelated entries', () => {
+    const between = invite(2500);
+    const items = groupEventLog([gpu(3000), between, brightness(2000), sleepOn(1000)]);
+    expect(items.map((item) => item.kind)).toEqual(['entry', 'group']);
+    expect(items[0]).toMatchObject({ entry: between });
+    expect(items[1].kind === 'group' && items[1].entries).toHaveLength(2);
   });
 
   it('closes a group at its trigger', () => {
@@ -89,5 +91,15 @@ describe('groupEventLog', () => {
       ['sleepModeEnabled', 'hardwareBrightnessChanged']
     );
     expect(items).toEqual([{ kind: 'entry', id: effect.id, entry: effect }]);
+  });
+
+  it('reorders what is left when a group loses its newest member', () => {
+    const between = invite(2500);
+    const effect = brightness(2000);
+    const items = groupEventLog(
+      [gpu(3000), between, effect, sleepOn(1000)],
+      ['gpuPowerLimitChanged', 'sleepModeEnabled']
+    );
+    expect(items.map((item) => item.id)).toEqual([between.id, effect.id]);
   });
 });

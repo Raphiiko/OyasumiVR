@@ -137,7 +137,7 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
     private cdr: ChangeDetectorRef
   ) {}
 
-  _entry?: EventLogEntry;
+  @Input() entry?: EventLogEntry;
   /** Hides the subtitle and the date, for entries that share them with their group header. */
   @Input() compact = false;
   @Input() showTime = true;
@@ -146,15 +146,6 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
   @Input() titleKey?: string;
   /** Time for a header row that has no entry of its own. */
   @Input() time?: number;
-
-  @Input() set entry(entry: EventLogEntry | undefined) {
-    this._entry = entry;
-    this.rebuild();
-  }
-
-  get entry(): EventLogEntry | undefined {
-    return this._entry;
-  }
 
   ngOnInit() {
     this.ngOnChanges();
@@ -165,7 +156,7 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
   }
 
   get entryTime(): number | undefined {
-    return this._entry?.time ?? this.time;
+    return this.entry?.time ?? this.time;
   }
 
   ngOnChanges() {
@@ -179,16 +170,16 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
       if (this.titleKey) this.headerInfoTitle = this.translate.translate(this.titleKey);
       return;
     }
-    let key = this.parser.headerInfoTitle(this._entry);
+    let key = this.parser.headerInfoTitle(this.entry);
     if (key) {
       this.headerInfoTitle = this.sanitizer.bypassSecurityTrustHtml(
-        this.translate.translate(key, this.parser?.headerInfoTitleParams(this._entry) ?? {})
+        this.translate.translate(key, this.parser?.headerInfoTitleParams(this.entry) ?? {})
       );
     }
-    key = this.parser.headerInfoSubTitle(this._entry);
+    key = this.parser.headerInfoSubTitle(this.entry);
     if (key) {
       this.headerInfoSubTitle = this.sanitizer.bypassSecurityTrustHtml(
-        this.translate.translate(key, this.parser?.headerInfoSubTitleParams(this._entry) ?? {})
+        this.translate.translate(key, this.parser?.headerInfoSubTitleParams(this.entry) ?? {})
       );
     }
   }

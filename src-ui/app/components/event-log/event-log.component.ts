@@ -22,7 +22,13 @@ import {
   EventLogFilterDialogOutputModel,
 } from './event-log-filter-dialog/event-log-filter-dialog.component';
 import { AppSettingsService } from '../../services/app-settings.service';
-import { EventLogCause, EventLogGroup, EventLogItem, groupEventLog } from './event-log-grouping';
+import {
+  EventLogCause,
+  EventLogGroup,
+  EventLogItem,
+  eventLogItemTime,
+  groupEventLog,
+} from './event-log-grouping';
 import { EVENT_LOG_ICONS } from './event-log-entry/event-log-entry.component';
 
 const CAUSE_ICONS: Record<EventLogCause, string> = {
@@ -102,7 +108,7 @@ export class EventLogComponent implements OnInit, AfterViewInit {
   }
 
   protected groupTime(group: EventLogGroup): number {
-    return group.trigger?.time ?? group.entries[group.entries.length - 1].time;
+    return eventLogItemTime(group);
   }
 
   /** False when the entry happened within the same second as its group header. */

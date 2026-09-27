@@ -50,9 +50,15 @@ export function eventLogCause(entry: EventLogEntry): EventLogCause | undefined {
   return typeof reason === 'string' ? CAUSE_BY_REASON[reason] : undefined;
 }
 
+/** Time a row shows: the trigger's, or the oldest entry's when the group has no trigger. */
+export function eventLogItemTime(item: EventLogItem): number {
+  if (item.kind === 'entry') return item.entry.time;
+  return item.trigger?.time ?? item.entries[item.entries.length - 1].time;
+}
+
 /**
  * Folds the entries a single cause produced into one group.
- * Expects entries newest first, and keeps that order for the items and for each group's entries.
+ * Expects entries newest first. Items come out sorted by the time they show, newest first.
  * Hidden types still bound their groups, so hiding a trigger does not merge adjacent bursts.
  */
 export function groupEventLog(
@@ -88,7 +94,7 @@ export function groupEventLog(
 
   // drop hidden entries, then unwrap groups with a single member
   const isVisible = (entry: EventLogEntry) => !hiddenTypes.includes(entry.type);
-  return items.flatMap((item): EventLogItem[] => {
+  const visibleItems = items.flatMap((item): EventLogItem[] => {
     if (item.kind === 'entry') return isVisible(item.entry) ? [item] : [];
     const trigger = item.trigger && isVisible(item.trigger) ? item.trigger : undefined;
     const groupEntries = item.entries.filter(isVisible);
@@ -96,4 +102,7 @@ export function groupEventLog(
     if (members.length > 1) return [{ ...item, trigger, entries: groupEntries }];
     return members.map((entry) => ({ kind: 'entry', id: entry.id, entry }));
   });
+
+  // place each group at the time its header shows
+  return visibleItems.sort((a, b) => eventLogItemTime(b) - eventLogItemTime(a));
 }
