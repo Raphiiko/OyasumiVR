@@ -46,6 +46,42 @@ import { EventLogFrameLimitChangedEntryParser } from './entry-parsers/frame-limi
 import { EventLogRunAutomationExecutedEntryParser } from './entry-parsers/run-automation-executed';
 import { EventLogEntry } from '../../../models/event-log-entry';
 
+export const EVENT_LOG_ICONS: Record<EventLogEntry['type'], string> = {
+  sleepModeEnabled: 'sleep',
+  sleepModeDisabled: 'sleep-off',
+  turnedOffOpenVRDevices: 'controller',
+  lighthouseSetPowerState: 'base-station',
+  gpuPowerLimitChanged: 'gpu',
+  simpleBrightnessChanged: 'brightness',
+  hardwareBrightnessChanged: 'brightness',
+  softwareBrightnessChanged: 'brightness',
+  cctChanged: 'brightness-cct',
+  acceptedInviteRequest: 'invite',
+  declinedInviteRequest: 'invite',
+  declinedInvite: 'invite',
+  statusChangedOnPlayerCountChange: 'status',
+  statusChangedOnGeneralEvent: 'status',
+  sleepDetectorEnableCancelled: 'sleep-off',
+  renderResolutionChanged: 'resolution',
+  chaperoneFadeDistanceChanged: 'chaperone',
+  shutdownSequenceStarted: 'shutdown',
+  shutdownSequenceCancelled: 'shutdown',
+  windowsPowerPolicySet: 'power',
+  changedVRChatMicMuteState: 'mic-off',
+  changedSystemMicMuteState: 'mic-off',
+  changedSystemMicControllerButtonBehavior: 'mic',
+  msiAfterburnerProfileSet: 'gauge',
+  changedAudioDeviceVolume: 'volume',
+  mutedAudioDevice: 'volume-off',
+  unmutedAudioDevice: 'volume',
+  bsbFanSpeedChanged: 'fan',
+  bsbLedChanged: 'sparkle',
+  vrchatAvatarChanged: 'avatar',
+  vrchatGroupChanged: 'group',
+  frameLimitChanged: 'monitor',
+  runAutomationExecuted: 'run',
+};
+
 @Component({
   selector: 'app-event-log-entry',
   templateUrl: './event-log-entry.component.html',
@@ -102,6 +138,15 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
   ) {}
 
   _entry?: EventLogEntry;
+  /** Hides the subtitle and the date, for entries that share them with their group header. */
+  @Input() compact = false;
+  @Input() showTime = true;
+  @Input() icon?: string;
+  /** Translation key for a header row that has no entry of its own. */
+  @Input() titleKey?: string;
+  /** Time for a header row that has no entry of its own. */
+  @Input() time?: number;
+
   @Input() set entry(entry: EventLogEntry | undefined) {
     this._entry = entry;
     this.rebuild();
@@ -119,13 +164,21 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
     });
   }
 
+  get entryTime(): number | undefined {
+    return this._entry?.time ?? this.time;
+  }
+
   ngOnChanges() {
     this.parser = this.parsers.find((parser) => parser.entryType() === this.entry?.type);
     this.rebuild();
   }
 
   rebuild() {
-    if (!this.parser) return;
+    this.headerInfoSubTitle = undefined;
+    if (!this.parser) {
+      if (this.titleKey) this.headerInfoTitle = this.translate.translate(this.titleKey);
+      return;
+    }
     let key = this.parser.headerInfoTitle(this._entry);
     if (key) {
       this.headerInfoTitle = this.sanitizer.bypassSecurityTrustHtml(

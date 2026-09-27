@@ -741,6 +741,16 @@
         "message": "Are you sure you want to clear the event log? This cannot be undone.",
         "title": "Confirm clear"
       },
+      "group": {
+        "cause": {
+          "sleepModeDisabled": "Sleep mode disabled",
+          "sleepModeEnabled": "Sleep mode enabled",
+          "sleepPreparation": "Prepared for sleep",
+          "sunrise": "At sunrise",
+          "sunset": "At sunset"
+        },
+        "count": "{count, plural, one {1 action} other {# actions}}"
+      },
       "no-logs": "No events have been logged yet.\nLogs are kept for at most 48 hours.",
       "openFilters": "Filter Events",
       "show-more": "Show More",

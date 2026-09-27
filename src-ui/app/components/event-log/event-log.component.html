@@ -38,12 +38,65 @@
       </div>
     }
     <div class="event-logs" @noop>
-      @for (entry of logsInView | async; track trackLogEntryBy($index, entry)) {
-        <app-event-log-entry
-          [entry]="entry"
-          @vshrink
-          [@.disabled]="animationPause"
-        ></app-event-log-entry>
+      @for (item of itemsInView | async; track item.id) {
+        @if (item.kind === 'entry') {
+          <app-event-log-entry
+            class="item"
+            [entry]="item.entry"
+            [icon]="entryIcon(item.entry)"
+            @vshrink
+            [@.disabled]="animationPause"
+          />
+        } @else {
+          <div
+            class="item group"
+            [class.expanded]="expandedGroups.has(item.id)"
+            @vshrink
+            [@.disabled]="animationPause"
+          >
+            <app-event-log-entry
+              class="group-header"
+              role="button"
+              tabindex="0"
+              [attr.aria-expanded]="expandedGroups.has(item.id)"
+              [entry]="item.trigger"
+              [titleKey]="'comp.event-log.group.cause.' + item.cause"
+              [time]="groupTime(item)"
+              [icon]="causeIcon(item)"
+              (click)="toggleGroup(item)"
+              (keydown.enter)="toggleGroup(item)"
+              (keydown.space)="toggleGroup(item); $event.preventDefault()"
+            >
+              <div class="group-summary">
+                <span
+                  class="group-count"
+                  [transloco]="'comp.event-log.group.count'"
+                  [translocoParams]="{ count: item.entries.length }"
+                ></span>
+                @if (!expandedGroups.has(item.id)) {
+                  <span class="group-icons">
+                    @for (icon of groupIcons(item); track icon) {
+                      <app-icon [name]="icon" />
+                    }
+                  </span>
+                }
+                <app-icon class="group-chevron icon-mono" name="chevron-down" />
+              </div>
+            </app-event-log-entry>
+            @if (expandedGroups.has(item.id)) {
+              <div class="group-entries" @vshrink>
+                @for (entry of item.entries; track entry.id) {
+                  <app-event-log-entry
+                    [entry]="entry"
+                    [icon]="entryIcon(entry)"
+                    [compact]="true"
+                    [showTime]="showEntryTime(entry, item)"
+                  />
+                }
+              </div>
+            }
+          </div>
+        }
       }
       @if (hasMore()) {
         <div class="show-more" @vshrink [@.disabled]="animationPause">
