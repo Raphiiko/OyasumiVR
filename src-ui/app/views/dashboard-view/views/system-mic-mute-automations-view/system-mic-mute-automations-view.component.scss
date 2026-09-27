@@ -21,14 +21,8 @@
     height: 3em;
     width: 3em;
 
-    i.material-icons {
-      &.muted {
-        color: var(--color-alert-error);
-      }
-
-      &.unmuted {
-        color: var(--color-text-1);
-      }
+    app-icon.muted {
+      --icon-color: var(--color-alert-error);
     }
 
     > * {

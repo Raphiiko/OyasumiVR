@@ -24,8 +24,7 @@
       .search-icon {
         position: absolute;
         left: 0.75em;
-        color: var(--color-text-3);
-        font-size: 1.2em;
+        font-size: 1.02em;
         z-index: 1;
         pointer-events: none;
       }
@@ -91,8 +90,6 @@
         width: 1.5em;
         height: 1.5em;
         margin-right: 0.75em;
-        filter: invert(91%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%)
-          contrast(100%);
       }
 
       .group-label {
@@ -163,8 +160,6 @@
             width: 2em;
             height: 2em;
             flex-shrink: 0;
-            filter: invert(91%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%)
-              contrast(100%);
           }
 
           .device-info {
@@ -184,8 +179,7 @@
             }
 
             .hidden-icon {
-              font-size: 1em;
-              color: var(--color-text-3);
+              font-size: 0.85em;
               opacity: 0.7;
               transition: opacity 0.15s ease;
 
@@ -230,10 +224,10 @@
             }
 
             .battery-icon {
-              font-size: 1.2em;
+              font-size: 1.02em;
 
               &.charging {
-                color: var(--color-alert-success);
+                --icon-color: var(--color-alert-success);
               }
             }
           }
@@ -245,8 +239,8 @@
 
             .btn-forget {
               background: var(--color-surface-3);
-              border: none;
               color: var(--color-text-2);
+              border: none;
               padding: 0.5em;
               border-radius: var(--surface-border-radius);
               cursor: pointer;
@@ -262,8 +256,8 @@
                 color: white;
               }
 
-              i {
-                font-size: 1.2em;
+              app-icon {
+                font-size: 1.02em;
               }
             }
           }
@@ -337,8 +331,8 @@
   color: var(--color-text-3);
   text-align: center;
 
-  i {
-    font-size: 3em;
+  app-icon {
+    font-size: 2.55em;
     margin-bottom: 0.5em;
     opacity: 0.6;
   }

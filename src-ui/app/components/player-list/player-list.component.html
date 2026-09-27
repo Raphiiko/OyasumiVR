@@ -23,7 +23,7 @@
               [tooltip]="'comp.player-list.addFriends'"
               [tooltipMode]="'right'"
             >
-              <i class="material-icons">add</i>
+              <app-icon name="add" />
             </button>
             <button
               class="player-list-action"
@@ -32,7 +32,7 @@
               [tooltip]="'comp.player-list.clearPlayers'"
               [tooltipMode]="'right'"
             >
-              <i class="material-icons">clear</i>
+              <app-icon name="close" />
             </button>
             <button
               class="player-list-action"
@@ -41,7 +41,7 @@
               [tooltip]="'comp.player-list.savePreset'"
               [tooltipMode]="'right'"
             >
-              <i class="material-icons">save</i>
+              <app-icon name="save" />
             </button>
             <button
               class="player-list-action"
@@ -50,7 +50,7 @@
               [tooltip]="'comp.player-list.loadPreset'"
               [tooltipMode]="'right'"
             >
-              <i class="material-icons">file_open</i>
+              <app-icon name="file-open" />
             </button>
           </div>
           <div class="players-list" @noop>
@@ -69,7 +69,7 @@
                 </div>
                 <div class="player-right">
                   <button class="btn" (click)="removePlayer(player)">
-                    <i class="material-icons">clear</i>
+                    <app-icon name="close" />
                   </button>
                 </div>
               </div>

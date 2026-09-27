@@ -22,21 +22,21 @@ export class VRChatMicMuteAutomationsViewComponent implements OnInit {
       id: 'NONE',
       label: 'vrchatMicMuteAutomations.muteOptions.NONE',
       htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
-        '<i class="material-icons" style="margin-right: 0.5em">mic_none</i>'
+        '<svg class="svg-icon" style="margin-right: 0.5em"><use href="/assets/icons/mic-dash.svg#icon"/></svg>'
       ),
     },
     {
       id: 'MUTE',
       label: 'vrchatMicMuteAutomations.muteOptions.MUTE',
       htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
-        '<i class="material-icons" style="margin-right: 0.5em">mic_off</i>'
+        '<svg class="svg-icon" style="margin-right: 0.5em"><use href="/assets/icons/mic-off.svg#icon"/></svg>'
       ),
     },
     {
       id: 'UNMUTE',
       label: 'vrchatMicMuteAutomations.muteOptions.UNMUTE',
       htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
-        '<i class="material-icons" style="margin-right: 0.5em">mic</i>'
+        '<svg class="svg-icon" style="margin-right: 0.5em"><use href="/assets/icons/mic.svg#icon"/></svg>'
       ),
     },
   ];

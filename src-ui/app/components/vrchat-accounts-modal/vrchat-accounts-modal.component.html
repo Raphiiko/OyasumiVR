@@ -13,12 +13,12 @@
             [disabled]="!selectable"
             (click)="activate(profile)"
           >
-            <i class="material-icons-round account-icon">account_circle</i>
+            <app-icon name="account" class="account-icon" />
             <span class="account-label">
               <span class="account-name">{{ accountName(profile) }}</span>
               @if (!active && profile.secretLocked) {
                 <span class="account-status locked">
-                  <i class="material-icons-round">lock</i>
+                  <app-icon name="lock" />
                   <span transloco="comp.vrchat-accounts-modal.locked"></span>
                 </span>
               }
@@ -48,7 +48,7 @@
               [tooltip]="'comp.vrchat-accounts-modal.forget.tooltip'"
               tooltipMode="top"
             >
-              <i class="material-icons">delete</i>
+              <app-icon name="delete" />
             </button>
           </div>
         </div>
@@ -63,7 +63,7 @@
       transloco="shared.modals.close"
     ></button>
     <button class="btn btn-primary" [disabled]="!!busyProfileId" (click)="addAccount()">
-      <i class="material-icons">add</i>
+      <app-icon name="add" />
       <span transloco="comp.vrchat-accounts-modal.add"></span>
     </button>
   </div>

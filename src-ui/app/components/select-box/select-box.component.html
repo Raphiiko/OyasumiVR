@@ -37,7 +37,7 @@
       </div>
     }
     <div class="select-box-arrow">
-      <i class="material-icons">expand_more</i>
+      <app-icon name="chevron-down" />
     </div>
   </div>
   <div class="dropdown-container" [class.expand-up]="expandUp">
@@ -71,7 +71,7 @@
           </div>
           @if (item.infoAction) {
             <a class="select-item-info noselect" (click)="item.infoAction()">
-              <i class="material-icons-round noselect">info</i>
+              <app-icon name="info" class="noselect" />
             </a>
           }
         </div>

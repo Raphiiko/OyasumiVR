@@ -136,7 +136,7 @@
       }
 
       .experimental-flag {
-        i.material-icons {
+        app-icon {
           line-height: 0;
           vertical-align: middle;
           margin-left: 0.25em;
@@ -144,13 +144,15 @@
         }
 
         color: var(--color-alert-warning);
+        --icon-color: var(--color-alert-warning);
       }
 
       &.conflict {
-        i.material-icons {
+        app-icon {
           line-height: 0;
           vertical-align: center;
           color: var(--color-alert-warning);
+          --icon-color: var(--color-alert-warning);
           margin-right: 0.25em;
         }
 

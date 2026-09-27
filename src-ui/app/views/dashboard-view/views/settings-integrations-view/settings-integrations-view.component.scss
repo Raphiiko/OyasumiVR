@@ -56,11 +56,11 @@
     height: 100%;
     padding-bottom: 0.75em;
 
-    i {
+    app-icon {
       flex-shrink: 0;
       margin-right: 0.25em;
-      font-size: 1.4em;
-      color: var(--color-alert-success);
+      font-size: 1.19em;
+      --icon-color: var(--color-alert-success);
     }
 
     &-account {
@@ -118,6 +118,6 @@
   }
 }
 
-.material-icons.success {
-  color: var(--color-success);
+app-icon.success {
+  --icon-color: var(--color-success);
 }

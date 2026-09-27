@@ -21,9 +21,11 @@
       >
         <div class="tab-label">
           @if (nvmlErrors | async) {
-            <i class="material-icons" style="color: var(--color-warning)" @hshrink>
-              error_outline
-            </i>
+            <app-icon
+              name="exclamation-circle"
+              style="--icon-color: var(--color-warning)"
+              @hshrink
+            />
           }
           <span transloco="gpu-automations.tabs.powerLimiting"></span>
         </div>
@@ -35,9 +37,11 @@
       >
         <div class="tab-label">
           @if (msiAfterburnerErrors | async) {
-            <i class="material-icons" style="color: var(--color-warning)" @hshrink>
-              error_outline
-            </i>
+            <app-icon
+              name="exclamation-circle"
+              style="--icon-color: var(--color-warning)"
+              @hshrink
+            />
           }
           <span transloco="gpu-automations.tabs.msiAfterburner"></span>
         </div>
@@ -56,10 +60,10 @@
     <div class="pane-content pane-content-disabled">
       <div class="icon">
         @if (['DISABLED'].includes(panel)) {
-          <i class="material-icons">info</i>
+          <app-icon name="info" />
         }
         @if (['NO_SIDECAR'].includes(panel)) {
-          <i class="material-icons"> warning </i>
+          <app-icon name="warning" />
         }
       </div>
       <div class="description" [innerHTML]="disabledMessage | transloco"></div>

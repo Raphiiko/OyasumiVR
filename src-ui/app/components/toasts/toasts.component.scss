@@ -43,30 +43,33 @@ $status-bar-height: 2.8em;
 }
 
 .toast-icon {
-  width: 1.3em;
-  height: 1.3em;
   flex-shrink: 0;
-  font-size: 1.3em;
-  color: var(--color-text-3);
 
   .type-success & {
-    color: var(--color-vrchat-status-green);
+    --icon-color: var(--color-vrchat-status-green);
   }
 
   .type-warning & {
-    color: var(--color-vrchat-status-orange);
+    --icon-color: var(--color-vrchat-status-orange);
   }
 
   .type-error & {
-    color: var(--color-vrchat-status-red);
+    --icon-color: var(--color-vrchat-status-red);
   }
 
   .type-info & {
-    color: var(--color-vrchat-status-blue);
+    --icon-color: var(--color-vrchat-status-blue);
   }
 }
 
+app-icon.toast-icon {
+  font-size: 1.11em;
+}
+
 .spinner {
+  width: 1.3em;
+  height: 1.3em;
+  font-size: 1.3em;
   border: 0.15em solid rgba(255, 255, 255, 0.15);
   border-top-color: var(--color-primary);
   border-radius: 50%;
@@ -91,15 +94,9 @@ $status-bar-height: 2.8em;
   border: none;
   padding: 0;
   cursor: pointer;
-  color: var(--color-text-4);
-  transition: color 0.15s ease;
 
-  &:hover {
-    color: var(--color-text-1);
-  }
-
-  i {
-    font-size: 1.3em;
+  app-icon {
+    font-size: 1.11em;
     display: block;
   }
 }

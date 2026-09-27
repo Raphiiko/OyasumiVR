@@ -26,12 +26,10 @@
     padding: 1em 1em;
     flex-shrink: 0;
 
-    img {
+    app-icon {
       width: 1.5em;
       height: 1.5em;
       vertical-align: middle;
-      filter: invert(91%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%)
-        contrast(100%);
     }
   }
 
@@ -76,12 +74,10 @@
       font-weight: 700;
     }
 
-    img {
+    app-icon {
       width: 1.5em;
       height: 1.5em;
       vertical-align: middle;
-      filter: invert(91%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%)
-        contrast(100%);
     }
 
     &-left {

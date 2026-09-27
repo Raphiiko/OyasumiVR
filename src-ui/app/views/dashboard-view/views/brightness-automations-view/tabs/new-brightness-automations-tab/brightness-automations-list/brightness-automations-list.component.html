@@ -5,9 +5,7 @@
     @for (event of events; track event) {
       <div class="setting-row">
         <div class="setting-row-icon">
-          <i class="material-symbols-outlined" [class.icon-filled]="event.iconFilled">{{
-            event.icon
-          }}</i>
+          <app-icon [name]="event.icon" />
         </div>
         <div class="setting-row-label">
           <span>{{ 'brightness-automations.' + event.name + '.title' | transloco }}</span>
@@ -29,7 +27,7 @@
               "
               [tooltipMode]="'left'"
             >
-              <i class="material-symbols-outlined">head_mounted_device</i>
+              <app-icon name="headset" />
             </div>
           }
           <app-brightness-automation-config-label

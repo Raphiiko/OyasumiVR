@@ -19,7 +19,7 @@
                 (click)="onSleepModeEnableExpanded = !onSleepModeEnableExpanded"
                 [title]="(onSleepModeEnableExpanded ? 'Collapse' : 'Expand') + ' command input'"
               >
-                <i class="material-symbols-outlined">expand_more</i>
+                <app-icon name="chevron-down" />
               </button>
               <label class="switch-toggle">
                 <input
@@ -53,7 +53,7 @@
                     (click)="testCommands(onSleepModeEnableCommands)"
                     [disabled]="!onSleepModeEnableCommands.trim()"
                   >
-                    <i class="material-symbols-outlined icon-filled">play_arrow</i>
+                    <app-icon name="play" />
                     <span transloco="runAutomations.testCommands"></span>
                   </button>
                 </div>
@@ -75,7 +75,7 @@
                 (click)="onSleepModeDisableExpanded = !onSleepModeDisableExpanded"
                 [title]="(onSleepModeDisableExpanded ? 'Collapse' : 'Expand') + ' command input'"
               >
-                <i class="material-symbols-outlined">expand_more</i>
+                <app-icon name="chevron-down" />
               </button>
               <label class="switch-toggle">
                 <input
@@ -109,7 +109,7 @@
                     (click)="testCommands(onSleepModeDisableCommands)"
                     [disabled]="!onSleepModeDisableCommands.trim()"
                   >
-                    <i class="material-symbols-outlined icon-filled">play_arrow</i>
+                    <app-icon name="play" />
                     <span transloco="runAutomations.testCommands"></span>
                   </button>
                 </div>
@@ -131,7 +131,7 @@
                 (click)="onSleepPreparationExpanded = !onSleepPreparationExpanded"
                 [title]="(onSleepPreparationExpanded ? 'Collapse' : 'Expand') + ' command input'"
               >
-                <i class="material-symbols-outlined">expand_more</i>
+                <app-icon name="chevron-down" />
               </button>
               <label class="switch-toggle">
                 <input
@@ -165,7 +165,7 @@
                     (click)="testCommands(onSleepPreparationCommands)"
                     [disabled]="!onSleepPreparationCommands.trim()"
                   >
-                    <i class="material-symbols-outlined icon-filled">play_arrow</i>
+                    <app-icon name="play" />
                     <span transloco="runAutomations.testCommands"></span>
                   </button>
                 </div>

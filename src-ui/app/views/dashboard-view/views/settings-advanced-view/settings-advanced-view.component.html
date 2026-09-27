@@ -54,7 +54,7 @@
             description="settings.advanced.translation.loadFile.description"
           >
             <button class="btn btn-primary" (click)="loadLanguageFile()">
-              <i class="material-icons-round">file_open</i>
+              <app-icon name="file-open" />
               <span transloco="settings.advanced.translation.loadFile.action"></span>
             </button>
           </app-setting-row>
@@ -93,7 +93,7 @@
             description="settings.advanced.logs.openFolder.description"
           >
             <button class="btn btn-primary" (click)="openLogsFolder()">
-              <i class="material-icons-round">folder</i>
+              <app-icon name="folder" />
               <span transloco="settings.advanced.logs.openFolder.action"></span>
             </button>
           </app-setting-row>
@@ -108,7 +108,7 @@
             [disabled]="checkedPersistentStorageItems.length === 0"
             (click)="clearPersistentStorage()"
           >
-            <i class="material-icons-round">delete_forever</i>
+            <app-icon name="delete" />
             <span transloco="settings.advanced.persistentData.clearData"></span>
           </button>
         </div>

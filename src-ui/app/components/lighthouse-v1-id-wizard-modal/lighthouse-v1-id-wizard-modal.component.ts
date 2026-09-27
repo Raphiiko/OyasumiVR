@@ -129,7 +129,7 @@ export class LighthouseV1IdWizardModalComponent
         this.automaticDetectionSteps.push(stepSteam);
         if (openVrInitialized) {
           stepSteam.loader = false;
-          stepSteam.icon = 'check_circle';
+          stepSteam.icon = 'check-circle';
           stepSteam.subtitle = 'comp.lv1-id-wizard-modal.automaticDetection.steps.running';
         } else {
           return;
@@ -142,7 +142,7 @@ export class LighthouseV1IdWizardModalComponent
         };
         this.automaticDetectionSteps.push(connectDeviceStep);
         if (trackedDeviceDetected) {
-          connectDeviceStep.icon = 'check_circle';
+          connectDeviceStep.icon = 'check-circle';
           connectDeviceStep.loader = false;
           connectDeviceStep.subtitle =
             'comp.lv1-id-wizard-modal.automaticDetection.steps.deviceDetected';

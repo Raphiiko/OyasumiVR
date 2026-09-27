@@ -21,12 +21,12 @@
       [tooltipMode]="'bottom'"
       [tooltipTextAlign]="'center'"
     >
-      <i class="material-symbols-outlined">info</i>
+      <app-icon name="info" />
     </span>
   }
   <div class="header-row-buttons">
     <app-dropdown-button [items]="addCommandItems" (itemSelect)="onAdd($event)">
-      <i class="material-icons">add</i>
+      <app-icon name="add" />
       <span transloco="comp.osc-script-simple-editor.addCommand"></span>
     </app-dropdown-button>
     <button class="btn btn-secondary" (click)="testCode()" [disabled]="testing || !validated">
@@ -34,7 +34,7 @@
         <div class="small-spinner" @hshrink></div>
       }
       @if (!testing) {
-        <i class="material-icons" @hshrink>play_arrow</i>
+        <app-icon name="play" @hshrink />
       }
       @if (!testing) {
         <span @hshrink transloco="comp.osc-script-simple-editor.test"></span>
@@ -113,7 +113,7 @@
                   (click)="removeParameter(i, j)"
                   @hshrink
                 >
-                  <i class="material-icons">clear</i>
+                  <app-icon name="close" />
                 </button>
               }
             </div>
@@ -121,7 +121,7 @@
           <div>
             @if (command.parameters.length < MAX_PARAMETERS_PER_COMMAND) {
               <button class="btn btn-secondary btn-add-parameter" (click)="addParameter(i)">
-                <i class="material-icons">add</i>
+                <app-icon name="add" />
                 <span transloco="comp.osc-script-simple-editor.addParameter"></span>
               </button>
             }
@@ -137,11 +137,11 @@
         </div>
         @if (getErrorsForAction(i).length) {
           <div class="simple-command-error-icon" @hshrink (mouseenter)="hoverOnAction(i, $event)">
-            <i class="material-icons-round">error</i>
+            <app-icon name="exclamation-circle" />
           </div>
         }
         <button class="btn simple-command-remove-button" (click)="removeCommand(command)">
-          <i class="material-icons">clear</i>
+          <app-icon name="close" />
         </button>
       }
       @if (command.type === 'SLEEP') {
@@ -162,18 +162,18 @@
         </div>
         @if (getErrorsForAction(i).length) {
           <div class="simple-command-error-icon" @hshrink (mouseenter)="hoverOnAction(i, $event)">
-            <i class="material-icons-round">error</i>
+            <app-icon name="exclamation-circle" />
           </div>
         }
         <button class="btn simple-command-remove-button" (click)="removeCommand(command)">
-          <i class="material-icons">clear</i>
+          <app-icon name="close" />
         </button>
       }
     </div>
   }
   @if (!_script.commands.length) {
     <div class="no-commands" @vshrink>
-      <i class="material-icons-round">add_circle_outline</i>
+      <app-icon name="add" />
       <span transloco="comp.osc-script-simple-editor.action.none"></span>
     </div>
   }

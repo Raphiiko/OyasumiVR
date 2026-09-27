@@ -19,7 +19,7 @@
       (click)="toggleSleepMode()"
     >
       <div class="pill-icon">
-        <i class="material-icons-round">nights_stay</i>
+        <app-icon name="sleep" />
       </div>
       @if (state.hover) {
         <span @hshrink>{{ 'comp.main-status-bar.sleepMode.label' | transloco }}:&nbsp;</span>
@@ -34,7 +34,7 @@
     @if (snowverlayAvailable) {
       <div class="pill clickable snowverlay" (click)="toggleSnowverlay()">
         <div class="pill-icon" [class.active]="snowverlayActive">
-          <i class="material-icons-round">ac_unit</i>
+          <app-icon name="snowflake" />
         </div>
       </div>
     }
@@ -53,7 +53,7 @@
         @hshrink
       >
         <div class="pill-icon nomargin" @hshrink>
-          <i class="material-icons-round mic-muted">mic_off</i>
+          <app-icon name="mic-off" class="mic-muted" />
         </div>
         @if (state.hover) {
           <span
@@ -99,11 +99,11 @@
         @hshrink
       >
         <div class="pill-icon" @hshrink>
-          <i
-            class="material-icons-round heart-icon"
+          <app-icon
+            name="heart-pulse"
+            class="heart-icon"
             [style.animation-duration]="60 / ((pulsoid.heartRate | async) ?? 1) + 's'"
-            >favorite</i
-          >
+          />
         </div>
         @if (state.hover) {
           <span @hshrink>{{ 'comp.main-status-bar.heartrate' | transloco }}:&nbsp;</span>
@@ -124,7 +124,7 @@
         @hshrink
       >
         <div class="pill-icon" @hshrink>
-          <i class="material-symbols-outlined icon-filled">mode_fan</i>
+          <app-icon name="fan" />
         </div>
         @if (state.hover) {
           <span @hshrink>{{ 'comp.main-status-bar.bsbFanSpeed.label' | transloco }}:&nbsp;</span>
@@ -170,7 +170,7 @@
         [class.breathing]="brightnessCctAutomations.anyBrightnessTransitionActive | async"
       >
         <div class="pill-icon" @hshrink>
-          <i class="material-icons-round">brightness_medium</i>
+          <app-icon name="brightness" />
         </div>
         @if (state.hover) {
           <span @hshrink>{{ 'comp.main-status-bar.brightness.simple' | transloco }}:&nbsp;</span>
@@ -194,7 +194,7 @@
         [class.breathing]="brightnessCctAutomations.anyBrightnessTransitionActive | async"
       >
         <div class="pill-icon" @hshrink>
-          <i class="material-icons-round">monitor</i>
+          <app-icon name="monitor" />
         </div>
         <span>
           <span
@@ -208,7 +208,7 @@
           >
         </span>
         <div class="pill-icon" @hshrink>
-          <i class="material-icons-round">image</i>
+          <app-icon name="image" />
         </div>
       </div>
     }
@@ -249,9 +249,7 @@
         }
         @if (user && user.status !== 'offline') {
           <div class="pill-icon" @hshrink>
-            <i class="material-icons-round" [style.color]="getStatusColor(user.status)"
-              >brightness_1</i
-            >
+            <span class="status-dot" [style.background]="getStatusColor(user.status)"></span>
           </div>
         }
         @if (state.hover) {

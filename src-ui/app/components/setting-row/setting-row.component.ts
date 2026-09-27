@@ -16,7 +16,7 @@ export class SettingRowComponent {
   @Input() description?: string;
   @Input() labelText?: string;
   @Input() descriptionText?: string;
-  /** Renders the warning glyph and bold title used for conflicting settings. */
+  /** Renders the warning icon and bold title used for conflicting settings. */
   @Input() conflict = false;
   @Input() actionClass?: string;
 }

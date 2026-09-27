@@ -1,6 +1,6 @@
 @if (hasSelection) {
   <button class="btn-clear" @hshrink (click)="clearSelection()">
-    <i class="material-icons">clear</i>
+    <app-icon name="close" />
   </button>
 }
 <button class="btn-main" [class.selected]="hasSelection" (click)="openModal()" @noop>

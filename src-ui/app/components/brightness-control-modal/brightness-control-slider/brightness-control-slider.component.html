@@ -1,12 +1,12 @@
 <div class="brightness-slider-bar-row">
   @if (mode === 'BRIGHTNESS') {
-    <i class="material-icons brightness-level-icon">brightness_5</i>
+    <app-icon name="brightness" class="brightness-level-icon" />
   }
   @if (mode === 'CCT') {
-    <i class="material-symbols-outlined brightness-level-icon">thermometer_minus</i>
+    <app-icon name="thermometer-cold" class="brightness-level-icon" />
   }
   @if (mode === 'FAN_SPEED') {
-    <i class="material-symbols-outlined brightness-level-icon icon-filled">mode_fan_off</i>
+    <app-icon name="fan-off" class="brightness-level-icon" />
   }
   <div class="brightness-slider-bar" (mousedown)="onDragStart($event)" [class.cct]="mode === 'CCT'">
     <div
@@ -30,12 +30,12 @@
     <div class="brightness-slider-bar-range-guide" #rangeGuideEl></div>
   </div>
   @if (mode === 'BRIGHTNESS') {
-    <i class="material-icons brightness-level-icon">brightness_7</i>
+    <app-icon name="brightness" class="brightness-level-icon" />
   }
   @if (mode === 'CCT') {
-    <i class="material-symbols-outlined brightness-level-icon">thermometer_add</i>
+    <app-icon name="thermometer-warm" class="brightness-level-icon" />
   }
   @if (mode === 'FAN_SPEED') {
-    <i class="material-symbols-outlined brightness-level-icon icon-filled">mode_fan</i>
+    <app-icon name="fan" class="brightness-level-icon" />
   }
 </div>

@@ -24,7 +24,7 @@
               @if (vrchat.user | async) {
                 <div class="connected">
                   <div class="connected-info">
-                    <i class="material-icons-round">check_circle</i>
+                    <app-icon name="check-circle" />
                     <div class="connected-info-account">
                       {{ (vrchat.user | async)?.displayName }}
                     </div>
@@ -80,7 +80,7 @@
                     [tooltip]="'settings.integrations.reveal'"
                     [tooltipMode]="'top'"
                   >
-                    <i class="material-icons-round">check_circle</i>
+                    <app-icon name="check-circle" />
                     <div
                       class="connected-info-account obfuscated"
                       [obfuscatedValue]="(pulsoid.loggedInUser | async) ?? ''"
@@ -106,10 +106,10 @@
                     (click)="copyToClipboard('PULSOID')"
                   >
                     @if (!copiedToClipboard.includes('PULSOID')) {
-                      <i class="material-icons">copy_all</i>
+                      <app-icon name="copy" />
                     }
                     @if (copiedToClipboard.includes('PULSOID')) {
-                      <i class="material-icons success">check</i>
+                      <app-icon class="success" name="check" />
                     }
                   </button>
                   <button
@@ -149,7 +149,7 @@
                 @if (data.mqttClient) {
                   <div class="connected">
                     <div class="connected-info">
-                      <i class="material-icons-round">check_circle</i>
+                      <app-icon name="check-circle" />
                       <div class="connected-info-account">
                         {{ data.mqttClient.options.host }}
                       </div>

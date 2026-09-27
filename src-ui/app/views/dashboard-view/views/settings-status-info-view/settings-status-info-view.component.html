@@ -13,12 +13,12 @@
             <button class="btn btn-primary btn-copy" (click)="copyToClipboard()">
               @if (!copiedToClipboard.includes('ALL_DATA')) {
                 <span @hshrink>
-                  <i class="material-icons">copy_all</i>
+                  <app-icon name="copy" />
                   <span transloco="settings.statusInfo.copy.action"></span>
                 </span>
               }
               @if (copiedToClipboard.includes('ALL_DATA')) {
-                <i class="material-icons success" @hshrink>check</i>
+                <app-icon class="success" name="check" @hshrink />
               }
             </button>
           </div>

@@ -18,6 +18,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SliderComponent, SliderStyle } from '../slider/slider.component';
 import { clamp, ensurePrecision, floatPrecision } from '../../utils/number-utils';
 import { flushOnDestroy } from '../../utils/rxjs-utils';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-slider-setting',
@@ -43,7 +44,11 @@ export class SliderSettingComponent implements OnInit, OnChanges {
   }
 
   @Input() step = 1;
-  @Input() unit?: string;
+  /** Rendered as trusted HTML so it can hold icon markup; pass only fixed strings from templates. */
+  @Input() set unit(value: string | undefined) {
+    this.unitHtml = value === undefined ? undefined : this.sanitizer.bypassSecurityTrustHtml(value);
+  }
+  unitHtml?: SafeHtml;
   @Input() snapValues: number[] = [];
   @Input() snapDistance = 5;
   @Input() disabled = false;
@@ -61,7 +66,8 @@ export class SliderSettingComponent implements OnInit, OnChanges {
 
   constructor(
     private destroyRef: DestroyRef,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {

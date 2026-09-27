@@ -25,15 +25,15 @@
 }
 
 .icon {
-  font-size: 2.5em;
+  font-size: 2.13em;
   &.icon-info {
-    color: var(--color-info);
+    --icon-color: var(--color-info);
   }
   &.icon-warning {
-    color: var(--color-warning);
+    --icon-color: var(--color-warning);
   }
   &.icon-error {
-    color: var(--color-caution);
+    --icon-color: var(--color-caution);
   }
 }
 

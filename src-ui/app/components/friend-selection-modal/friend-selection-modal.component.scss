@@ -63,21 +63,15 @@
       white-space: nowrap;
     }
 
-    i {
+    app-icon {
       flex-shrink: 0;
-      color: var(--color-text-3);
-      font-size: 1.25em;
+      font-size: 1.06em;
       margin-left: 0.25em;
-      transition: all 0.15s ease;
     }
 
     &:hover {
       cursor: pointer;
       border-color: var(--color-surface-5);
-
-      i {
-        color: var(--color-text-1);
-      }
     }
 
     &:active {

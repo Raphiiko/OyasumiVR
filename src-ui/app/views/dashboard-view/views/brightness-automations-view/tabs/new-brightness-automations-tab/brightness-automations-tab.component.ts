@@ -6,7 +6,6 @@ export interface BrightnessEventViewModel {
   name: BrightnessEvent;
   inProgress: boolean;
   icon: string;
-  iconFilled?: boolean;
   sunMode?: 'SUNSET' | 'SUNRISE';
 }
 
@@ -22,18 +21,17 @@ export class BrightnessAutomationsTabComponent implements OnInit {
   protected editEvent?: BrightnessEventViewModel;
 
   protected events: Array<BrightnessEventViewModel> = [
-    { name: 'SLEEP_MODE_ENABLE', inProgress: false, icon: 'bedtime' },
-    { name: 'SLEEP_MODE_DISABLE', inProgress: false, icon: 'bedtime_off' },
+    { name: 'SLEEP_MODE_ENABLE', inProgress: false, icon: 'sleep' },
+    { name: 'SLEEP_MODE_DISABLE', inProgress: false, icon: 'sleep-off' },
     { name: 'SLEEP_PREPARATION', inProgress: false, icon: 'bed' },
-    { name: 'AT_SUNSET', inProgress: false, icon: 'wb_twilight', sunMode: 'SUNSET' },
+    { name: 'AT_SUNSET', inProgress: false, icon: 'twilight', sunMode: 'SUNSET' },
     {
       name: 'AT_SUNRISE',
       inProgress: false,
-      icon: 'wb_twilight',
-      iconFilled: true,
+      icon: 'twilight',
       sunMode: 'SUNRISE',
     },
-    { name: 'HMD_CONNECT', inProgress: false, icon: 'head_mounted_device' },
+    { name: 'HMD_CONNECT', inProgress: false, icon: 'headset' },
   ];
 
   constructor() {}

@@ -43,21 +43,21 @@ export class SystemMicMuteAutomationsViewComponent implements OnInit, OnDestroy 
       id: 'KEEP',
       label: 'systemMicMuteAutomations.vrchat.worldJoinBehaviour.options.KEEP',
       htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
-        '<i class="material-icons" style="margin-right: 0.5em">mic_none</i>'
+        '<svg class="svg-icon" style="margin-right: 0.5em"><use href="/assets/icons/mic-dash.svg#icon"/></svg>'
       ),
     },
     {
       id: 'MUTE',
       label: 'systemMicMuteAutomations.vrchat.worldJoinBehaviour.options.MUTE',
       htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
-        '<i class="material-icons" style="margin-right: 0.5em">mic_off</i>'
+        '<svg class="svg-icon" style="margin-right: 0.5em"><use href="/assets/icons/mic-off.svg#icon"/></svg>'
       ),
     },
     {
       id: 'UNMUTE',
       label: 'systemMicMuteAutomations.vrchat.worldJoinBehaviour.options.UNMUTE',
       htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
-        '<i class="material-icons" style="margin-right: 0.5em">mic</i>'
+        '<svg class="svg-icon" style="margin-right: 0.5em"><use href="/assets/icons/mic.svg#icon"/></svg>'
       ),
     },
   ];
@@ -67,21 +67,21 @@ export class SystemMicMuteAutomationsViewComponent implements OnInit, OnDestroy 
       id: 'NONE',
       label: 'systemMicMuteAutomations.muteOptions.NONE',
       htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
-        '<i class="material-icons" style="margin-right: 0.5em">mic_none</i>'
+        '<svg class="svg-icon" style="margin-right: 0.5em"><use href="/assets/icons/mic-dash.svg#icon"/></svg>'
       ),
     },
     {
       id: 'MUTE',
       label: 'systemMicMuteAutomations.muteOptions.MUTE',
       htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
-        '<i class="material-icons" style="margin-right: 0.5em">mic_off</i>'
+        '<svg class="svg-icon" style="margin-right: 0.5em"><use href="/assets/icons/mic-off.svg#icon"/></svg>'
       ),
     },
     {
       id: 'UNMUTE',
       label: 'systemMicMuteAutomations.muteOptions.UNMUTE',
       htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
-        '<i class="material-icons" style="margin-right: 0.5em">mic</i>'
+        '<svg class="svg-icon" style="margin-right: 0.5em"><use href="/assets/icons/mic.svg#icon"/></svg>'
       ),
     },
   ];

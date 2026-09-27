@@ -44,28 +44,28 @@ export class StatusAutomationsGeneralTabComponent implements OnInit {
       id: 'join me',
       label: vrcStatusToString(UserStatus.JoinMe),
       htmlPrefix: this.sanitizer.bypassSecurityTrustHtml(
-        '<i class="material-icons-round" style="color: var(--color-vrchat-status-blue); font-size: 1.25em; margin-right: 0.25em;">brightness_1</i>'
+        '<span class="status-dot" style="background: var(--color-vrchat-status-blue); font-size: 1.25em; margin-right: 0.25em;"></span>'
       ),
     },
     {
       id: 'active',
       label: vrcStatusToString(UserStatus.Active),
       htmlPrefix: this.sanitizer.bypassSecurityTrustHtml(
-        '<i class="material-icons-round" style="color: var(--color-vrchat-status-green); font-size: 1.25em; margin-right: 0.25em;">brightness_1</i>'
+        '<span class="status-dot" style="background: var(--color-vrchat-status-green); font-size: 1.25em; margin-right: 0.25em;"></span>'
       ),
     },
     {
       id: 'ask me',
       label: vrcStatusToString(UserStatus.AskMe),
       htmlPrefix: this.sanitizer.bypassSecurityTrustHtml(
-        '<i class="material-icons-round" style="color: var(--color-vrchat-status-orange); font-size: 1.25em; margin-right: 0.25em;">brightness_1</i>'
+        '<span class="status-dot" style="background: var(--color-vrchat-status-orange); font-size: 1.25em; margin-right: 0.25em;"></span>'
       ),
     },
     {
       id: 'busy',
       label: vrcStatusToString(UserStatus.Busy),
       htmlPrefix: this.sanitizer.bypassSecurityTrustHtml(
-        '<i class="material-icons-round" style="color: var(--color-vrchat-status-red); font-size: 1.25em; margin-right: 0.25em;">brightness_1</i>'
+        '<span class="status-dot" style="background: var(--color-vrchat-status-red); font-size: 1.25em; margin-right: 0.25em;"></span>'
       ),
     },
   ];

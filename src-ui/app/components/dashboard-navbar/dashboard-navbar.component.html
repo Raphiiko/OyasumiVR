@@ -46,9 +46,7 @@
         <app-icon name="headset" />
       </div>
       <div class="menu-item-label" transloco="comp.dashboard-navbar.hardwareAutomations"></div>
-      <div class="menu-item-submenu-icon"
-        ><i class="material-icons-round">arrow_forward_ios</i></div
-      >
+      <div class="menu-item-submenu-icon"><app-icon name="chevron-right" class="icon-mono" /></div>
     </div>
 
     <div
@@ -71,9 +69,7 @@
         <app-icon name="vrchat" />
       </div>
       <div class="menu-item-label" transloco="comp.dashboard-navbar.vrcAutomations"></div>
-      <div class="menu-item-submenu-icon"
-        ><i class="material-icons-round">arrow_forward_ios</i></div
-      >
+      <div class="menu-item-submenu-icon"><app-icon name="chevron-right" class="icon-mono" /></div>
     </div>
 
     <div
@@ -92,9 +88,7 @@
         <app-icon name="automations" />
       </div>
       <div class="menu-item-label" transloco="comp.dashboard-navbar.miscAutomations"></div>
-      <div class="menu-item-submenu-icon"
-        ><i class="material-icons-round">arrow_forward_ios</i></div
-      >
+      <div class="menu-item-submenu-icon"><app-icon name="chevron-right" class="icon-mono" /></div>
     </div>
 
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'shutdownAutomations'">
@@ -134,11 +128,11 @@
       <div class="menu-item-label" transloco="comp.dashboard-navbar.settings.subMenu"></div>
       @if (updateAvailable | async) {
         <div class="menu-item-icon-suffix update" @fade>
-          <i class="material-icons-round">notification_important</i>
+          <app-icon name="warning" />
         </div>
       }
       <div class="menu-item-submenu-icon">
-        <i class="material-icons-round">arrow_forward_ios</i>
+        <app-icon name="chevron-right" class="icon-mono" />
       </div>
     </div>
 
@@ -154,7 +148,7 @@
     <div class="submenu" @subMenu>
       <div class="menu-header">
         <button class="btn" (click)="openSubMenu('GENERAL')">
-          <i class="material-icons-round">arrow_back_ios_new</i>
+          <app-icon name="chevron-left" class="icon-mono" />
           <div class="menu-header-label" transloco="comp.dashboard-navbar.vrcAutomations"></div>
         </button>
       </div>
@@ -226,7 +220,7 @@
     <div class="submenu" @subMenu>
       <div class="menu-header">
         <button class="btn" (click)="openSubMenu('GENERAL')">
-          <i class="material-icons-round">arrow_back_ios_new</i>
+          <app-icon name="chevron-left" class="icon-mono" />
           <div
             class="menu-header-label"
             transloco="comp.dashboard-navbar.hardwareAutomations"
@@ -293,7 +287,7 @@
     <div class="submenu" @subMenu>
       <div class="menu-header">
         <button class="btn" (click)="openSubMenu('GENERAL')">
-          <i class="material-icons-round">arrow_back_ios_new</i>
+          <app-icon name="chevron-left" class="icon-mono" />
           <div class="menu-header-label" transloco="comp.dashboard-navbar.miscAutomations"></div>
         </button>
       </div>
@@ -327,7 +321,7 @@
     <div class="submenu" @subMenu>
       <div class="menu-header">
         <button class="btn" (click)="openSubMenu('GENERAL')">
-          <i class="material-icons-round">arrow_back_ios_new</i>
+          <app-icon name="chevron-left" class="icon-mono" />
           <div class="menu-header-label" transloco="comp.dashboard-navbar.settings.subMenu"></div>
         </button>
       </div>
@@ -376,7 +370,7 @@
         <div class="menu-item-label" transloco="comp.dashboard-navbar.settings.updates"></div>
         @if (updateAvailable | async) {
           <div class="menu-item-icon-suffix update" @fade>
-            <i class="material-icons-round">notification_important</i>
+            <app-icon name="warning" />
           </div>
         }
       </div>

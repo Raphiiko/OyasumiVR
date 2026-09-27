@@ -8,7 +8,7 @@
   (contextmenu)="onRightClick($event)"
 >
   @if (!isLoading) {
-    <i class="material-icons">{{ iconName }}</i>
+    <app-icon [name]="iconName" />
   }
   @if (isLoading) {
     <div class="small-spinner" [class]="spinnerClass"></div>

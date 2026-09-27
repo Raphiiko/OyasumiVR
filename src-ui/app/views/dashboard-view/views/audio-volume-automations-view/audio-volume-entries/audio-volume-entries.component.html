@@ -16,7 +16,7 @@
         [tooltipMode]="'left'"
         (click)="addAudioDevice()"
       >
-        <i class="material-icons">add</i>
+        <app-icon name="add" />
       </button>
     </div>
   </div>
@@ -30,7 +30,7 @@
       ></span>
     </div>
     <div class="right">
-      <i class="material-icons">keyboard_arrow_down</i>
+      <app-icon name="chevron-down" />
     </div>
   </div>
 }
@@ -41,10 +41,10 @@
         <div class="setting-row">
           <div class="setting-row-icon">
             @if (automation.audioDeviceRef.type === 'Render') {
-              <i class="material-icons">volume_up</i>
+              <app-icon name="volume" />
             }
             @if (automation.audioDeviceRef.type === 'Capture') {
-              <i class="material-icons">mic</i>
+              <app-icon name="mic" />
             }
           </div>
           <div class="setting-row-label">
@@ -72,7 +72,7 @@
               [tooltipMode]="'left'"
               (click)="removeAutomation(automation)"
             >
-              <i class="material-icons">clear</i>
+              <app-icon name="close" />
             </button>
           </div>
         </div>

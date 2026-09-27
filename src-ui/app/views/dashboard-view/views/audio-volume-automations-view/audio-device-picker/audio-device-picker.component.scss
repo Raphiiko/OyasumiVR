@@ -12,8 +12,8 @@
 .tab {
   flex: 1;
 
-  &-label > i.material-icons-round {
-    font-size: 1.25em;
+  &-label > app-icon {
+    font-size: 1.06em;
   }
 }
 
@@ -43,8 +43,7 @@
   padding: 1em 1em 6em 1em;
 
   &-icon {
-    font-size: 3em;
-    color: var(--color-text-3);
+    font-size: 2.55em;
   }
 
   &-label {
@@ -85,8 +84,8 @@
     flex-shrink: 0;
     margin-right: 0.75em;
 
-    i {
-      font-size: 1.25em;
+    app-icon {
+      font-size: 1.06em;
       vertical-align: center;
     }
   }

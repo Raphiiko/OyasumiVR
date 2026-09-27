@@ -4,7 +4,7 @@
     (click)="previewSound()"
     [disabled]="(playingSound$ | async) || !soundConfig?.enabled"
   >
-    <i class="material-symbols-outlined icon-filled">play_arrow</i>
+    <app-icon name="play" />
   </button>
 
   <button
@@ -13,7 +13,7 @@
     [disabled]="!soundConfig?.enabled"
     (click)="openSoundModal()"
   >
-    <i class="material-symbols-outlined icon-filled">music_note</i>
+    <app-icon name="music-note" />
     <span>{{ soundConfig?.sound?.name || (label | transloco) }}</span>
     @if (
       $safeNavigationMigration(soundConfig?.volume) !== undefined &&

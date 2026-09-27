@@ -70,8 +70,7 @@
   }
 
   .version-copied {
-    color: var(--color-surface-5);
-    font-size: 0.8em;
+    font-size: 0.68em;
     margin-left: 0.2em;
   }
 }
@@ -116,9 +115,8 @@
     }
   }
 
-  i.material-symbols-outlined,
-  i.material-icons {
-    font-size: 1.2em !important;
+  app-icon {
+    font-size: 1.02em !important;
   }
 }
 
@@ -138,6 +136,7 @@
 
   &.has-messages {
     color: var(--message-center-attention);
+    --icon-color: var(--message-center-attention);
 
     &::before {
       content: '';

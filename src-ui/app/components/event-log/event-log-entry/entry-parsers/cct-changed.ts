@@ -20,9 +20,9 @@ export class EventLogCCTChangedEntryParser extends EventLogEntryParser<EventLogC
   } {
     return {
       temperature: entry.value.toString(10),
-      icon: `<i class="material-icons-round" style="color: ${
+      icon: `<span class="status-dot" style="background: ${
         this.cssColorCache[entry.value] ?? this.getCSSColorForCCT(entry.value)
-      }">brightness_1</i>`,
+      }"></span>`,
     };
   }
 

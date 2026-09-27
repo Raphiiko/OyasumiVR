@@ -1,7 +1,7 @@
 <div class="bg" @fade (click)="close.emit()"></div>
 <div class="btn-close-container">
   <button class="btn-close" @fadeRight (click)="close.emit()">
-    <i class="material-icons-outlined">arrow_forward_ios</i>
+    <app-icon name="chevron-right" />
   </button>
 </div>
 <div class="pane" @fadeRight>
@@ -107,7 +107,7 @@
                 tooltipMode="left"
                 (click)="updateBrightness('SIMPLE', 'CURRENT')"
               >
-                <i class="material-icons">copy_all</i>
+                <app-icon name="copy" />
               </button>
               <app-slider-setting
                 unit="%"
@@ -130,7 +130,7 @@
                 tooltipMode="left"
                 (click)="updateBrightness('SOFTWARE', 'CURRENT')"
               >
-                <i class="material-icons">copy_all</i>
+                <app-icon name="copy" />
               </button>
               <app-slider-setting
                 unit="%"
@@ -153,7 +153,7 @@
                 tooltipMode="left"
                 (click)="updateBrightness('HARDWARE', 'CURRENT')"
               >
-                <i class="material-icons">copy_all</i>
+                <app-icon name="copy" />
               </button>
               <app-slider-setting
                 unit="%"
@@ -182,7 +182,7 @@
             @fade
             (click)="appSettingsService.promptDialogForOneTimeFlag('CCT_CONTROL_WARNING_DIALOG')"
           >
-            <i class="material-symbols-outlined">warning</i>
+            <app-icon name="warning" />
           </span>
         }
       </div>

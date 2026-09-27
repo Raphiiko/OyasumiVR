@@ -13,7 +13,7 @@
       -{{ FLAVOUR }} ({{ BUILD_ID }})
     </span>
     @if (versionCopied()) {
-      <i class="material-symbols-outlined version-copied">check</i>
+      <app-icon name="check" class="version-copied" />
     }
   </button>
 </div>
@@ -25,7 +25,7 @@
     [tooltipMode]="'bottom'"
     (click)="messageCenter.toggle()"
   >
-    <i class="material-symbols-outlined icon-filled">mode_comment</i>
+    <app-icon name="messages" />
     @if ((messageCenter.messages | async)?.length) {
       <div class="message-center-badge-bg" @fade>
         <div class="message-center-badge"></div>
@@ -36,12 +36,12 @@
     <span class="separator">|</span>
   </div>
   <button class="titlebar-button btn-minimize" (click)="minimize()">
-    <i class="material-symbols-outlined">remove</i>
+    <app-icon name="minus" class="icon-mono" />
   </button>
   <button class="titlebar-button btn-maximize" (click)="maximize()">
-    <i class="material-symbols-outlined">check_box_outline_blank</i>
+    <app-icon name="maximize" class="icon-mono" />
   </button>
   <button class="titlebar-button btn-close" (click)="close()">
-    <i class="material-icons">close</i>
+    <app-icon name="close" class="icon-mono" />
   </button>
 </div>

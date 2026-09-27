@@ -8,13 +8,13 @@
     <div class="tab-bar">
       <div class="tab" [class.active]="activeTab === 'SIMPLE'" (click)="activeTab = 'SIMPLE'">
         <div class="tab-label">
-          <i class="material-icons">auto_awesome</i>
+          <app-icon name="sparkle" />
           <span transloco="comp.osc-script-modal.simple"></span>
         </div>
       </div>
       <div class="tab" [class.active]="activeTab === 'SCRIPT'" (click)="activeTab = 'SCRIPT'">
         <div class="tab-label">
-          <i class="material-icons">code</i>
+          <app-icon name="code" />
           <span transloco="comp.osc-script-modal.script"></span>
         </div>
       </div>

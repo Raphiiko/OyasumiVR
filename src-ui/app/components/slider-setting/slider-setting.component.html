@@ -18,7 +18,7 @@
 }
 <div
   class="input-container"
-  [class.has-unit]="!!unit"
+  [class.has-unit]="!!unitHtml"
   (mouseenter)="onMouseEnter()"
   [class.overlay-active]="showOverlay"
   [class.disabled]="disabled"
@@ -34,7 +34,7 @@
     (blur)="onInputBlur()"
     #inputValue
   />
-  @if (unit) {
-    <div class="unit"><span [innerHTML]="unit"></span></div>
+  @if (unitHtml) {
+    <div class="unit"><span [innerHTML]="unitHtml"></span></div>
   }
 </div>

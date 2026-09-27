@@ -8,9 +8,9 @@
           [title]="'Turn off all devices'"
           (click)="turnOffAllOVRDevices()"
         >
-          <img [src]="'/assets/img/icon_controller.png'" class="category-icon" />
-          <img [src]="'/assets/img/icon_tracker.png'" class="category-icon" />
-          <i class="material-icons">power_settings_new</i>
+          <app-icon name="controller" />
+          <app-icon name="tracker" />
+          <app-icon name="power" />
         </button>
       </div>
     }
@@ -70,7 +70,7 @@
             @for (device of category.devices; track device) {
               <app-device-list-item
                 [lighthouseDevice]="device"
-                [icon]="'lighthouse'"
+                [icon]="'base-station'"
               ></app-device-list-item>
             }
           </div>
@@ -79,7 +79,7 @@
     }
     @if (!deviceCategories.length) {
       <div class="device-list-empty" [@vshrink]>
-        <i class="material-icons">info</i>
+        <app-icon name="info" />
         <span transloco="comp.device-list.noDevices"></span>
       </div>
     }
@@ -91,9 +91,9 @@
       [routerLink]="'/dashboard/deviceManager'"
       [title]="'comp.dashboard-navbar.deviceManager' | transloco"
     >
-      <img src="/assets/img/icon_controller.png" class="device-manager-icon" />
+      <app-icon name="controller" class="device-manager-icon" />
       <span class="device-manager-label" transloco="comp.dashboard-navbar.deviceManager"></span>
-      <i class="material-icons-round">arrow_forward_ios</i>
+      <app-icon name="chevron-right" class="chevron-icon" />
     </button>
   </div>
 </div>

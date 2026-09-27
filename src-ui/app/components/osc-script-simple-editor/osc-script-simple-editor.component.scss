@@ -37,8 +37,8 @@
     padding: 0.5em 1em;
     height: 0;
 
-    i.material-icons {
-      font-size: 1.25em;
+    app-icon {
+      font-size: 1.06em;
     }
   }
 }
@@ -62,8 +62,8 @@
     color: var(--color-text-3);
     padding: 2em 1em;
 
-    i.material-icons-round {
-      font-size: 3em;
+    app-icon {
+      font-size: 2.55em;
     }
 
     span {
@@ -106,8 +106,9 @@
       color: var(--color-caution-hover);
     }
 
-    i.material-icons-round {
-      font-size: 1.25em;
+    app-icon {
+      --icon-color: var(--color-caution);
+      font-size: 1.06em;
     }
   }
 
@@ -161,7 +162,7 @@
   &-remove-button {
     padding: 0;
 
-    i.material-icons {
+    app-icon {
       margin: 0;
     }
   }

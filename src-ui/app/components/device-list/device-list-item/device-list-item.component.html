@@ -2,7 +2,7 @@
   <div class="wrapper">
     <div class="header-bar">
       <div class="header-bar-icon">
-        <img [src]="'/assets/img/icon_' + icon + '.png'" class="category-icon" />
+        <app-icon [name]="icon ?? 'device'" class="category-icon" />
       </div>
       <div class="header-bar-info">
         <div class="device-name" [transloco]="deviceTypeName"></div>
@@ -54,9 +54,7 @@
               {{ batteryPercentageString }}
             </span>
           }
-          <i class="material-icons">
-            {{ isCharging ? 'battery_charging_full' : 'battery_std' }}
-          </i>
+          <app-icon [name]="isCharging ? 'battery' : 'battery-level'" />
         </div>
       </div>
     }
