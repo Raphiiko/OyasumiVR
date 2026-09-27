@@ -2257,11 +2257,11 @@
       },
       "vrcx": {
         "groupChanges": {
-          "description": "Log changes OyasumiVR made to the VRChat group you represent, with the reason",
+          "description": "Log VRChat group changes made by OyasumiVR",
           "title": "Group changes"
         },
         "invites": {
-          "description": "Log invites and invite requests that OyasumiVR accepted or declined, with the reason and the reply message",
+          "description": "Log invites and invite requests that OyasumiVR accepted or declined",
           "title": "Invites"
         },
         "logs": {
@@ -2276,7 +2276,7 @@
           "title": "Sleep mode"
         },
         "statusChanges": {
-          "description": "Log VRChat status changes made by OyasumiVR, with the reason",
+          "description": "Log VRChat status changes made by OyasumiVR",
           "title": "Status changes"
         },
         "title": "VRCX Logging"
