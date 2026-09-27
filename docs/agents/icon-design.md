@@ -18,8 +18,8 @@ question mark in a circle, a chevron) keep their usual shape and take on this st
 
 ## Tones
 
-Each icon uses three tones and an optional shade. Each tone has one job and one theme variable,
-defined in `src-ui/styles/themes.scss`:
+Each icon uses three tones and an optional shade. Each tone has one job and one variable, which
+`app-icon` defines in `src-ui/app/components/icon/icon.component.scss`:
 
 | Tone   | Variable        | Job                                                              |
 | ------ | --------------- | ---------------------------------------------------------------- |
@@ -28,11 +28,22 @@ defined in `src-ui/styles/themes.scss`:
 | accent | `--icon-accent` | a part that sticks out onto the background: rings, sparkles, a z |
 | shade  | `--icon-shade`  | a clean even-width edge where one part overlaps another          |
 
-The accent is `--color-primary`. It reads well against the dark background but too weakly against
-the pale body, so it never sits inside the body: the pink primary on its body measures 2.33:1. The
-other three tones derive from the primary in OKLCH. They keep its hue and set a fixed lightness, so
-the inner tone measures 5.36:1 against the body for the pink. A formula this simple cannot hold
-4.5:1 for every possible color, so measure a new primary before you use it.
+The accent is the base color: `--icon-color` when an ancestor sets it, `--color-primary` otherwise.
+It reads well against the dark background but too weakly against the pale body, so it never sits
+inside the body: the pink primary on its body measures 2.33:1. The other three tones derive from the
+base color in OKLCH. They keep its hue and set a fixed lightness, so the inner tone stays at 4.5:1 or
+more against the body for any base color (5.05:1 for the pink). A color change needs no icon edits.
+
+Set `--icon-color` where the context has its own color:
+
+| Context                     | `--icon-color`                                |
+| --------------------------- | --------------------------------------------- |
+| anywhere else               | unset, so the primary applies                 |
+| an alert, toast, or message | its severity color, such as `--color-warning` |
+| a VRChat status             | the status color                              |
+| a primary button            | the button's text color                       |
+
+Error and caution share one level, `--color-caution`.
 
 ## Using an icon
 
@@ -56,11 +67,17 @@ before you draw a new one.
 
 ## Drawing a new icon
 
-1. Draw against finished icons from this set, and draw a related group together, so the shapes and
-   proportions stay consistent. Describe each icon to yourself as simple geometric parts.
-2. Draw in two working colors: one for the body, and one for details and parts.
-3. Save one SVG per icon. Drop any background rectangle, and crop the `viewBox` square to the
-   shape, measuring rotated shapes after their transform.
-4. Map every fill and stroke to a tone variable: body, accent, or shade.
-5. Mark each detail that lies inside the body as the inner tone.
-6. Check the icon at 18 px and at 128 px in the pink tones before you commit it.
+Icons come from QuiverAI's Arrow 2 model, through the web app at `app.quiver.ai`. Arrow follows a
+reference image more closely than words, and drifts in color between requests.
+
+1. Render a reference image: six to nine finished icons from this set on a dark navy background,
+   drawn in pale lavender `#D2CBFF` with periwinkle `#616DE1` details. Arrow reproduces the style
+   most reliably in these two colors.
+2. Request up to eight icons in one prompt, as one sheet in a 4x2 grid, so they come out
+   consistent. Describe the style from this document, name the two colors, and describe each icon
+   as simple geometric parts.
+3. Split the sheet into one SVG per icon: cut at the widest empty gaps between shapes, drop the
+   background rectangle, and crop each `viewBox` to its shape.
+4. Snap every fill and stroke to the nearest of body, accent, and shade.
+5. Turn each accent shape that lies inside a body shape's bounds into the inner tone.
+6. Check the result at 18 px and at 128 px in the pink tones before you commit it.
