@@ -46,8 +46,10 @@ Set `--icon-color` where the context has its own color:
 
 Error and caution share one level, `--color-caution`.
 
-A control whose states set its text color, such as a window button or a slider marker, draws its
-icon in one tone: add `class="icon-mono"`, and all four tones become `currentColor`. Use it only on
+Two kinds of icon draw in one tone. The first is a control whose states set its text color, such as
+a window button or a slider marker. The second is an icon that labels a value, such as a slider end
+or the fan and brightness pills in the status bar. Add `class="icon-mono"`, and all four tones
+become `currentColor`. Use it only on
 icons without inner details, because one tone merges an inner detail into the body. Power symbols
 use it. Other icons in a power button (`button.btn-power`), such as the device icons on the bulk
 power button, take the state color as their base at rest and turn one tone on hover, where the

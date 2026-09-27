@@ -13,17 +13,6 @@
     .brightness-type-icon {
       margin-right: 1em;
     }
-
-    .brightness-level-icon {
-      // the ends match the slider gradient, which runs from warm orange to cool white-blue
-      &.warm {
-        --icon-color: #ff8a3d;
-      }
-
-      &.cool {
-        --icon-color: #8ec5ff;
-      }
-    }
   }
 
   &-bar {

@@ -124,7 +124,7 @@
         @hshrink
       >
         <div class="pill-icon" @hshrink>
-          <app-icon name="fan" />
+          <app-icon name="fan" class="icon-mono" />
         </div>
         @if (state.hover) {
           <span @hshrink>{{ 'comp.main-status-bar.bsbFanSpeed.label' | transloco }}:&nbsp;</span>
@@ -170,7 +170,7 @@
         [class.breathing]="brightnessCctAutomations.anyBrightnessTransitionActive | async"
       >
         <div class="pill-icon" @hshrink>
-          <app-icon name="brightness" />
+          <app-icon name="brightness" class="icon-mono" />
         </div>
         @if (state.hover) {
           <span @hshrink>{{ 'comp.main-status-bar.brightness.simple' | transloco }}:&nbsp;</span>
@@ -194,7 +194,7 @@
         [class.breathing]="brightnessCctAutomations.anyBrightnessTransitionActive | async"
       >
         <div class="pill-icon" @hshrink>
-          <app-icon name="monitor" />
+          <app-icon name="monitor" class="icon-mono" />
         </div>
         <span>
           <span
@@ -208,7 +208,7 @@
           >
         </span>
         <div class="pill-icon" @hshrink>
-          <app-icon name="image" />
+          <app-icon name="image" class="icon-mono" />
         </div>
       </div>
     }

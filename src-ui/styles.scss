@@ -92,7 +92,7 @@ svg.svg-icon {
   overflow: visible;
 }
 
-// one tone that follows the text color, for controls whose own states set the color
+// one tone that follows the text color, for state-colored controls and icons that label a value
 app-icon.icon-mono,
 svg.svg-icon.icon-mono {
   --icon-accent: currentColor;

@@ -1,12 +1,12 @@
 <div class="brightness-slider-bar-row">
   @if (mode === 'BRIGHTNESS') {
-    <app-icon name="brightness-low" class="brightness-level-icon" />
+    <app-icon name="brightness-low" class="brightness-level-icon icon-mono" />
   }
   @if (mode === 'CCT') {
-    <app-icon name="flame" class="brightness-level-icon warm" />
+    <app-icon name="flame" class="brightness-level-icon icon-mono" />
   }
   @if (mode === 'FAN_SPEED') {
-    <app-icon name="fan-off" class="brightness-level-icon" />
+    <app-icon name="fan-off" class="brightness-level-icon icon-mono" />
   }
   <div class="brightness-slider-bar" (mousedown)="onDragStart($event)" [class.cct]="mode === 'CCT'">
     <div
@@ -30,12 +30,12 @@
     <div class="brightness-slider-bar-range-guide" #rangeGuideEl></div>
   </div>
   @if (mode === 'BRIGHTNESS') {
-    <app-icon name="brightness-high" class="brightness-level-icon" />
+    <app-icon name="brightness-high" class="brightness-level-icon icon-mono" />
   }
   @if (mode === 'CCT') {
-    <app-icon name="snowflake" class="brightness-level-icon cool" />
+    <app-icon name="snowflake" class="brightness-level-icon icon-mono" />
   }
   @if (mode === 'FAN_SPEED') {
-    <app-icon name="fan" class="brightness-level-icon" />
+    <app-icon name="fan" class="brightness-level-icon icon-mono" />
   }
 </div>
