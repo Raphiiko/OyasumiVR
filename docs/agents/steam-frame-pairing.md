@@ -280,16 +280,16 @@ flowchart TD
 
 ## On the headset
 
-| Path                                                    | What it holds                                       |
-| ------------------------------------------------------- | --------------------------------------------------- |
-| `~/.local/share/oyasumivr_helper/releases/<version>`    | installed helper versions                           |
-| `~/.local/share/oyasumivr_helper/current`               | link to the running version                         |
-| `~/.local/share/oyasumivr_helper/previous`              | link to the version before it, for rollback         |
-| `~/.local/share/oyasumivr_helper/staging/`              | the upload in progress                              |
-| `~/.local/share/oyasumivr_helper/config.json`           | the WSS port                                        |
-| `~/.local/share/oyasumivr_helper/tls/`                  | the helper's certificate and key                    |
-| `~/.local/share/oyasumivr_helper/clients/<pc-id>`       | one token per paired PC, plus its `.pub` key record |
-| `~/.local/share/oyasumivr_helper/maintenance.lock`      | held by every change to the helper folder           |
-| `~/.local/share/oyasumivr_helper/uninstall`             | removes the helper and every recorded key line      |
-| `~/.ssh/.oyasumivr-keys.lock`                           | held by every `authorized_keys` rewrite             |
-| `~/.config/systemd/user/oyasumivr-frame-helper.service` | the user service                                    |
+| Path                                                    | What it holds                                                    |
+| ------------------------------------------------------- | ---------------------------------------------------------------- |
+| `~/.local/share/oyasumivr_helper/releases/<version>`    | installed helper versions                                        |
+| `~/.local/share/oyasumivr_helper/current`               | link to the running version                                      |
+| `~/.local/share/oyasumivr_helper/previous`              | link to the version before it, for rollback                      |
+| `~/.local/share/oyasumivr_helper/staging/`              | the upload in progress                                           |
+| `~/.local/share/oyasumivr_helper/config.json`           | the WSS port                                                     |
+| `~/.local/share/oyasumivr_helper/tls/`                  | the helper's certificate and key                                 |
+| `~/.local/share/oyasumivr_helper/clients/<pc-id>`       | one token per paired PC, plus its `.pub` key record              |
+| `~/.local/share/oyasumivr_helper/maintenance.lock`      | held by every change to the helper folder                        |
+| `~/.local/share/oyasumivr_helper/uninstall`             | removes the helper and every recorded key line                   |
+| `~/.ssh/.oyasumivr-keys.lock`                           | held by every `authorized_keys` rewrite; deleted with the helper |
+| `~/.config/systemd/user/oyasumivr-frame-helper.service` | the user service                                                 |

@@ -24,6 +24,18 @@ lock() {
   rm -rf "$root/staging"
 }
 
+# keys_lock: takes the lock every authorized_keys writer holds, including uninstall, for 10 s at most
+keys_lock() {
+  local file="$HOME/.ssh/.oyasumivr-keys.lock" deadline=$((SECONDS + 10))
+  while :; do
+    exec 8>"$file"
+    flock -w "$((deadline > SECONDS ? deadline - SECONDS : 1))" 8 || exit 75
+    # uninstall deletes the lock file, so a lock won on the old file protects nothing
+    [ "$(stat -Lc %i /proc/self/fd/8)" = "$(stat -c %i "$file" 2>/dev/null)" ] && break
+    exec 8>&-
+  done
+}
+
 identity() {
   cat "$HOME/.config/openvr/config/steamvr.vrsettings" 2>/dev/null || true
 }
@@ -212,6 +224,7 @@ remove_helper() {
   systemctl --user disable --now "$unit" 2>/dev/null || true
   rm -f "$units/$unit" "$units/default.target.wants/$unit"
   systemctl --user daemon-reload || true
+  rmdir "$units/default.target.wants" "$units" 2>/dev/null || true
   rm -rf "$root"
 }
 
@@ -241,8 +254,7 @@ record() {
   [ -d "$root/clients" ] || return 0
   [ "$(cat "$root/clients/$pc.pub" 2>/dev/null)" != "$key" ] || return 0
   # the uninstall script reads clients/*.pub under this lock
-  exec 8>"$HOME/.ssh/.oyasumivr-keys.lock"
-  flock -w 10 8 || exit 75
+  keys_lock
   [ -d "$root/clients" ] || return 0
   printf '%s\n' "$key" >"$root/clients/$pc.pub.tmp"
   mv "$root/clients/$pc.pub.tmp" "$root/clients/$pc.pub"
@@ -276,9 +288,7 @@ cleanup() {
     locked=1
   fi
   local keys="$HOME/.ssh/authorized_keys"
-  # every authorized_keys writer holds this lock, including uninstall
-  exec 8>"$HOME/.ssh/.oyasumivr-keys.lock"
-  flock -w 10 8 || exit 75
+  keys_lock
 
   # remove the token, and the helper when the mode asks for it, only in a folder held under the lock
   if [ "$locked" = 1 ] && [ -d "$root" ]; then
@@ -299,6 +309,9 @@ cleanup() {
     chmod --reference="$keys" "$temp"
     mv "$temp" "$keys"
   fi
+
+  # without a helper the lock file is the last trace on the headset
+  [ -d "$root" ] || rm -f "$HOME/.ssh/.oyasumivr-keys.lock"
 }
 
 case "${1:-}" in
