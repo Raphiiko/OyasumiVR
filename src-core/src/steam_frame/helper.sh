@@ -270,14 +270,18 @@ cleanup() {
   type=$(cut -d' ' -f1 <<<"$key")
   data=$(cut -d' ' -f2 <<<"$key")
   # a busy helper changes nothing, so a retry can still log in
-  [ ! -d "$root" ] || lock
+  local locked=0
+  if [ -d "$root" ]; then
+    lock
+    locked=1
+  fi
   local keys="$HOME/.ssh/authorized_keys"
   # every authorized_keys writer holds this lock, including uninstall
   exec 8>"$HOME/.ssh/.oyasumivr-keys.lock"
   flock -w 10 8 || exit 75
 
-  # remove the token, and the helper when the mode asks for it
-  if [ -d "$root" ]; then
+  # remove the token, and the helper when the mode asks for it, only in a folder held under the lock
+  if [ "$locked" = 1 ] && [ -d "$root" ]; then
     rm -f "$root/clients/$pc" "$root/clients/$pc.pub"
     if [ "$mode" = uninstall ] || { [ "$mode" = unused ] && [ "$(clients "$pc")" = 0 ]; }; then
       remove_helper
