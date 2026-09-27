@@ -132,11 +132,16 @@ EOF
   [ "$created" = 0 ] || echo created
 }
 
-# uninstaller, with the uninstall script on stdin
+# uninstaller VERSION, with the uninstall script on stdin; writes it only while current is that release
 uninstaller() {
-  local temp
+  local version=$1 temp
   temp=$(mktemp "$root/uninstall.XXXXXX")
   cat >"$temp"
+  lock
+  if [ "$(readlink "$root/current" 2>/dev/null)" != "releases/$version" ]; then
+    rm -f "$temp"
+    return 0
+  fi
   chmod 755 "$temp"
   mv "$temp" "$root/uninstall"
 }

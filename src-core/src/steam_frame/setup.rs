@@ -326,9 +326,14 @@ pub async fn install_bundled(
     Err(InstallError::Busy)
 }
 
-/// Writes the uninstall script that matches the bundled helper.
+/// Writes the bundled helper's uninstall script, only while that release is current.
 pub(super) async fn write_uninstaller(session: &Session) -> Result<(), InstallError> {
-    let output = run(session, &["uninstaller"], UNINSTALL.as_bytes()).await?;
+    let output = run(
+        session,
+        &["uninstaller", BUNDLED_VERSION],
+        UNINSTALL.as_bytes(),
+    )
+    .await?;
     if output.status == 0 {
         Ok(())
     } else {
