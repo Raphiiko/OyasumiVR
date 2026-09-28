@@ -11,6 +11,7 @@ import type {
 } from '../../models/steam-frame';
 import { HardwareBrightnessControlService } from './hardware-brightness-control.service';
 import { SimpleBrightnessControlService } from './simple-brightness-control.service';
+import { VALVE_INDEX_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS } from './hardware-brightness-drivers/valve-index-hardware-brightness-control-driver';
 
 vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn(async () => false) }));
 vi.mock('@tauri-apps/api/event', () => ({ listen: vi.fn(async () => () => {}) }));
@@ -33,6 +34,7 @@ async function setup(
     {
       status: new BehaviorSubject('INITIALIZED'),
       devices,
+      analogGainUpdates: new Subject<number>(),
     } as unknown as Dependencies[0],
     {
       settings: new BehaviorSubject(structuredClone(APP_SETTINGS_DEFAULT)),
@@ -273,24 +275,24 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
   });
 });
 
-describe('simple brightness following a Steam Frame', () => {
-  async function simple(hardware: HardwareBrightnessControlService, softwareBrightness: number) {
-    const software = {
-      brightness: softwareBrightness,
-      setBrightness: vi.fn(async (percentage: number) => {
-        software.brightness = percentage;
-      }),
-      cancelActiveTransition: vi.fn(),
-    };
-    const service = new SimpleBrightnessControlService(
-      { configs: new BehaviorSubject(structuredClone(AUTOMATION_CONFIGS_DEFAULT)) } as never,
-      hardware,
-      software as unknown as SimpleDependencies[2]
-    );
-    await service.init();
-    return { service, software };
-  }
+async function simple(hardware: HardwareBrightnessControlService, softwareBrightness: number) {
+  const software = {
+    brightness: softwareBrightness,
+    setBrightness: vi.fn(async (percentage: number) => {
+      software.brightness = percentage;
+    }),
+    cancelActiveTransition: vi.fn(),
+  };
+  const service = new SimpleBrightnessControlService(
+    { configs: new BehaviorSubject(structuredClone(AUTOMATION_CONFIGS_DEFAULT)) } as never,
+    hardware,
+    software as unknown as SimpleDependencies[2]
+  );
+  await service.init();
+  return { service, software };
+}
 
+describe('simple brightness following a Steam Frame', () => {
   it('derives the first report with the Frame bounds and keeps software dimming', async () => {
     const h = await setup(null);
     const s = await simple(h.service, 50);
@@ -336,5 +338,98 @@ describe('simple brightness following a Steam Frame', () => {
     await settle();
     expect(h.service.brightness).toBe(40);
     expect(s.service.brightness).toBeCloseTo(9 + (31 / 116) * 91);
+  });
+});
+
+/** Gain for a percentage below 100, by the Index's gamma curve. */
+const gainFor = (percentage: number) => Math.pow(percentage / 100, 2.2);
+
+/** A service whose only available driver is a Valve Index, with SteamVR holding `initialGain`. */
+async function setupIndex(initialGain = 1) {
+  vi.mocked(invoke).mockImplementation(async () => false);
+  const analogGainUpdates = new Subject<number>();
+  let gain = initialGain;
+  const settings = new BehaviorSubject(structuredClone(APP_SETTINGS_DEFAULT));
+  const openvr = {
+    status: new BehaviorSubject('INITIALIZED'),
+    devices: new BehaviorSubject([
+      { class: 'HMD', manufacturerName: 'Valve', modelNumber: 'Index' } as OVRDevice,
+    ]),
+    analogGainUpdates,
+    getAnalogGain: vi.fn(async () => gain),
+    setAnalogGain: vi.fn(async (value: number) => {
+      gain = value;
+    }),
+  };
+  /** SteamVR changes the gain and reports it, as its own brightness slider does. */
+  const outsideChange = (value: number) => {
+    gain = value;
+    analogGainUpdates.next(value);
+  };
+  const write = (value: number) => {
+    gain = value;
+  };
+  const service = new HardwareBrightnessControlService(
+    openvr as unknown as Dependencies[0],
+    { settings } as unknown as Dependencies[1],
+    {
+      pairings$: new BehaviorSubject([]),
+      connections$: new BehaviorSubject({}),
+      fadeEnded$: new Subject(),
+    } as unknown as Dependencies[2]
+  );
+  await service.init();
+  await new Promise((resolve) => setTimeout(resolve, 600));
+  return { service, openvr, settings, analogGainUpdates, outsideChange, write };
+}
+
+describe('HardwareBrightnessControlService with a Valve Index', () => {
+  it('follows a change made in SteamVR without writing it back', async () => {
+    const h = await setupIndex(gainFor(60));
+    expect(h.service.brightness).toBe(60);
+    h.outsideChange(1.2);
+    await settle();
+    expect(h.service.brightness).toBe(120);
+    expect(h.openvr.setAnalogGain).not.toHaveBeenCalled();
+  });
+
+  it('runs a transition on this PC that a late echo does not pull back', async () => {
+    const h = await setupIndex();
+    // each write arrives with the echo of the write before it
+    let previous: number | null = null;
+    h.openvr.setAnalogGain.mockImplementation(async (value: number) => {
+      if (previous !== null) h.analogGainUpdates.next(previous);
+      previous = value;
+      h.write(value);
+    });
+    const shown: number[] = [];
+    h.service.brightnessStream.subscribe((value) => shown.push(value));
+    const task = h.service.transitionBrightness(50, 200);
+    await firstValueFrom(task.onComplete);
+    expect(h.openvr.setAnalogGain.mock.calls.length).toBeGreaterThan(2);
+    expect(h.service.brightness).toBe(50);
+    for (let i = 1; i < shown.length; i++)
+      expect(shown[i]).toBeLessThanOrEqual(shown[i - 1] + 1e-9);
+  });
+
+  it('clamps the brightness when the maximum drops below it', async () => {
+    const h = await setupIndex(1.5);
+    expect(h.service.brightness).toBe(150);
+    h.settings.next({ ...h.settings.value, valveIndexMaxBrightness: 120 });
+    await settle();
+    expect(h.service.brightness).toBe(120);
+    expect(h.openvr.setAnalogGain).toHaveBeenCalledWith(1.2);
+  });
+});
+
+describe('simple brightness following a Valve Index', () => {
+  it('derives a change made in SteamVR without writing it back', async () => {
+    const h = await setupIndex();
+    const s = await simple(h.service, 100);
+    h.outsideChange(gainFor(90));
+    await settle();
+    const [min] = VALVE_INDEX_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS.softwareStops;
+    expect(s.service.brightness).toBeCloseTo(min + ((90 - min) / (160 - min)) * (100 - min));
+    expect(h.openvr.setAnalogGain).not.toHaveBeenCalled();
   });
 });
