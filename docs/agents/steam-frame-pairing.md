@@ -44,7 +44,8 @@ the helper token pass through `protectSecret` before the first save.
 | `steam_frame_check_ssh_access`      | `register`, `confirmAccess`, `finishCancel` | before every approval request, after a `registered`, `lost`, or `failed` answer, and on Cancel when the headset may have approved |
 | `steam_frame_request_approval`      | `register`                                  | only after a user action, when the saved key does not work yet                                                                    |
 | `steam_frame_set_up_helper`         | `runSetup`                                  | after SSH access works; Retry calls it again                                                                                      |
-| `steam_frame_remove_access`         | `finishCancel`, different headset           | Cancel after approval, and a wrong headset                                                                                        |
+| `steam_frame_remove_access`         | `finishCancel`, different headset, `unpair` | Cancel after approval, a wrong headset, and Unpair                                                                                |
+| `steam_frame_count_other_pcs`       | the unpair dialog                           | before it offers Unpair and Uninstall helper                                                                                      |
 | `steam_frame_sync_connections`      | `pushPairings`                              | after every change to the completed pairings                                                                                      |
 | `steam_frame_update_helper`         | Update and Retry in Device Manager          | a manual helper update; the result arrives as connection state                                                                    |
 
@@ -64,7 +65,8 @@ sequenceDiagram
   User->>S: Find headset
   S->>C: steam_frame_discover_headsets
   C->>H: mDNS _steamos-devkit._tcp
-  C-->>S: candidates
+  C->>H: SSH host key per address, no login
+  C-->>S: candidates, one per host key
   User->>S: Pair (pair)
   S->>C: steam_frame_get_ssh_user
   C->>H: GET /login-name
@@ -106,7 +108,7 @@ match the wizard's progress list.
 
 ```mermaid
 flowchart TD
-  A["verify: helper.sh identity"] --> B{"serial, model, and manufacturer match?"}
+  A["verify: helper.sh identity"] --> B{"serial matches?"}
   B -- "no" --> W["wrongDevice: the service calls steam_frame_remove_access"]
   B -- "a value is missing" --> M["identityMissing"]
   B -- "yes" --> C["install: helper.sh inspect"]
@@ -146,19 +148,19 @@ file. `ERROR_CODES` in `steam-frame-pairing-modal.component.ts` maps them from `
 Device Manager shows these in the explanation of a problem pill, from `FRAME_STATUS_ROWS`, the
 maintenance pills, and `UPDATE_FAILURE_CODES`:
 
-| Code   | Connection status    | What happened                                                       |
-| ------ | -------------------- | ------------------------------------------------------------------- |
-| SF-401 | `identityChanged`    | the helper reports another headset's serial, model, or manufacturer |
-| SF-402 | `hostKeyChanged`     | the SSH host key at the address differs from the pinned one         |
-| SF-403 | `needsAppUpdate`     | the helper's lowest protocol is above this build's                  |
-| SF-406 | `helperMissing`      | SSH works, but the helper folder is gone                            |
-| SF-407 | maintenance `busy`   | another PC held the maintenance lock for 60 s                       |
-| SF-408 | a failed Reinstall   | setup did not complete; the core logs the outcome                   |
-| SF-411 | update `unreachable` | the SSH session to the headset dropped during the update            |
-| SF-412 | update `corrupted`   | the uploaded helper did not match the bundled digest                |
-| SF-413 | update `notStarted`  | the new helper did not answer, so the previous release runs again   |
-| SF-414 | update `notBundled`  | this build carries no helper                                        |
-| SF-415 | update `other`       | any other update failure; the core logs the message                 |
+| Code   | Connection status    | What happened                                                     |
+| ------ | -------------------- | ----------------------------------------------------------------- |
+| SF-401 | `identityChanged`    | the helper reports another headset's serial                       |
+| SF-402 | `hostKeyChanged`     | the SSH host key at the address differs from the pinned one       |
+| SF-403 | `needsAppUpdate`     | the helper's lowest protocol is above this build's                |
+| SF-406 | `helperMissing`      | SSH works, but the helper folder is gone                          |
+| SF-407 | maintenance `busy`   | another PC held the maintenance lock for 60 s                     |
+| SF-408 | a failed Reinstall   | setup did not complete; the core logs the outcome                 |
+| SF-411 | update `unreachable` | the SSH session to the headset dropped during the update          |
+| SF-412 | update `corrupted`   | the uploaded helper did not match the bundled digest              |
+| SF-413 | update `notStarted`  | the new helper did not answer, so the previous release runs again |
+| SF-414 | update `notBundled`  | this build carries no helper                                      |
+| SF-415 | update `other`       | any other update failure; the core logs the message               |
 
 SF-404 (`helperOutdated`) has no explanation: its Update helper pill starts the update.
 
@@ -180,9 +182,37 @@ flowchart TD
   F -- "failed" --> X
 ```
 
-`steam_frame_remove_access` runs `helper.sh cleanup`. It removes this PC's key line and token file,
-plus the helper when this attempt installed it and no other PC has a token. "Couldn't finish
-cleaning up" shows `bash ~/.local/share/oyasumivr_helper/uninstall`.
+`steam_frame_remove_access` runs `helper.sh cleanup` with mode `unused` when this attempt installed
+the helper, and `keep` otherwise. Every mode removes this PC's key lines and token file. `unused` also
+removes the helper when no other PC has a token. "Couldn't finish cleaning up" shows
+`bash ~/.local/share/oyasumivr_helper/uninstall`.
+
+Every other SSH session starts with `helper.sh record`, which writes `clients/<pc-id>.pub` while the
+helper is installed. The uninstall script on the headset reads those files to find every OyasumiVR
+key line.
+
+## Unpair
+
+Device details open `SteamFrameUnpairModalComponent`. It counts the other PCs with a token, then
+offers two modes of `helper.sh cleanup`:
+
+- Unpair runs `unused`: the helper stays for the other PCs, and goes with this PC's access when no
+  other PC holds a token.
+- Uninstall helper, offered only when other PCs hold a token, runs `uninstall`: it stops the
+  service and removes it with the helper folder. Other PCs keep their key lines, so they see
+  `helperMissing`.
+
+A cleanup takes the maintenance and authorized_keys locks before it changes anything, reports busy
+when it cannot get them, and removes the key lines last, so Try again can finish a partial cleanup.
+The service deletes the local pairing only after the headset reports `done`. Otherwise the dialog
+shows "Couldn't unpair" with Forget, and with Try again unless the headset rejects this PC's key or
+its host key changed, because retrying cannot help then. Cancel cleanup and wrong-headset cleanup
+count a rejected key as done.
+
+Forget deletes only local data. Its page keeps the terminal uninstall command folded under "Can't
+unpair from any PC?", for a headset no paired PC can reach. A pairing whose key the headset rejects
+shows `pairingRemoved`. Device Manager shows it like an unpaired headset, and the Forget button in
+its device details opens the Forget page.
 
 ## Connection
 
@@ -253,16 +283,16 @@ flowchart TD
 
 ## On the headset
 
-| Path                                                    | What it holds                                       |
-| ------------------------------------------------------- | --------------------------------------------------- |
-| `~/.local/share/oyasumivr_helper/releases/<version>`    | installed helper versions                           |
-| `~/.local/share/oyasumivr_helper/current`               | link to the running version                         |
-| `~/.local/share/oyasumivr_helper/previous`              | link to the version before it, for rollback         |
-| `~/.local/share/oyasumivr_helper/staging/`              | the upload in progress                              |
-| `~/.local/share/oyasumivr_helper/config.json`           | the WSS port                                        |
-| `~/.local/share/oyasumivr_helper/tls/`                  | the helper's certificate and key                    |
-| `~/.local/share/oyasumivr_helper/clients/<pc-id>`       | one token per paired PC, plus its `.pub` key record |
-| `~/.local/share/oyasumivr_helper/maintenance.lock`      | held by every change to the helper folder           |
-| `~/.local/share/oyasumivr_helper/uninstall`             | removes the helper and every recorded key line      |
-| `~/.ssh/.oyasumivr-keys.lock`                           | held by every `authorized_keys` rewrite             |
-| `~/.config/systemd/user/oyasumivr-frame-helper.service` | the user service                                    |
+| Path                                                    | What it holds                                                    |
+| ------------------------------------------------------- | ---------------------------------------------------------------- |
+| `~/.local/share/oyasumivr_helper/releases/<version>`    | installed helper versions                                        |
+| `~/.local/share/oyasumivr_helper/current`               | link to the running version                                      |
+| `~/.local/share/oyasumivr_helper/previous`              | link to the version before it, for rollback                      |
+| `~/.local/share/oyasumivr_helper/staging/`              | the upload in progress                                           |
+| `~/.local/share/oyasumivr_helper/config.json`           | the WSS port                                                     |
+| `~/.local/share/oyasumivr_helper/tls/`                  | the helper's certificate and key                                 |
+| `~/.local/share/oyasumivr_helper/clients/<pc-id>`       | one token per paired PC, plus its `.pub` key record              |
+| `~/.local/share/oyasumivr_helper/maintenance.lock`      | held by every change to the helper folder                        |
+| `~/.local/share/oyasumivr_helper/uninstall`             | removes the helper and every recorded key line                   |
+| `~/.ssh/.oyasumivr-keys.lock`                           | held by every `authorized_keys` rewrite; deleted with the helper |
+| `~/.config/systemd/user/oyasumivr-frame-helper.service` | the user service                                                 |

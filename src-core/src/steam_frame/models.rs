@@ -16,6 +16,11 @@ pub struct Identity {
 }
 
 impl Identity {
+    /// The PC and the headset can report different model names for one headset, so only the serial counts.
+    pub fn same_headset(&self, other: &Identity) -> bool {
+        self.serial == other.serial
+    }
+
     pub fn is_supported(&self) -> bool {
         SUPPORTED_MODELS
             .iter()
@@ -174,17 +179,33 @@ pub struct CleanupRequest {
     pub access: Access,
     pub pc_id: String,
     pub public_key: String,
-    pub remove_helper: bool,
+    pub mode: CleanupMode,
+}
+
+/// Every mode removes this PC's token file and key lines.
+#[derive(Deserialize, Clone, Copy, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub enum CleanupMode {
+    /// The helper keeps running for other PCs.
+    Keep,
+    /// Also removes the helper when no PC holds a token any more, as a cancelled pairing does.
+    Unused,
+    /// Also removes the helper, which disconnects every other PC.
+    Uninstall,
 }
 
 #[derive(Serialize, Debug, PartialEq)]
 #[serde(tag = "status", rename_all = "camelCase")]
 pub enum CleanupOutcome {
     Done,
+    /// The headset rejects this PC's key, so the cleanup changed nothing on it.
+    Rejected,
     Unreachable,
     HostKeyChanged,
     HelperBusy,
-    Failed { message: String },
+    Failed {
+        message: String,
+    },
 }
 
 #[derive(Serialize)]
@@ -230,8 +251,17 @@ mod tests {
     }
 
     #[test]
+    fn same_headset_compares_the_serial() {
+        assert!(identity("Valve", "Steam Frame").same_headset(&identity("Valve", "Deckard MP")));
+        let mut other = identity("Valve", "Steam Frame");
+        other.serial = "FPTEST000002".into();
+        assert!(!identity("Valve", "Steam Frame").same_headset(&other));
+    }
+
+    #[test]
     fn allowlist_matches_exactly() {
         assert!(identity("Valve", "Deckard DV2").is_supported());
+        assert!(identity("Valve", "Deckard MP").is_supported());
         assert!(identity("Valve", "Steam Frame").is_supported());
         for (manufacturer, model) in [
             ("Valve", "Deckard"),
@@ -244,4 +274,19 @@ mod tests {
             assert!(!identity(manufacturer, model).is_supported(), "{model}");
         }
     }
+}
+
+#[derive(Serialize, Debug, PartialEq)]
+#[serde(tag = "status", rename_all = "camelCase")]
+pub enum OtherPcsOutcome {
+    Ok {
+        count: u32,
+    },
+    /// The headset rejects this PC's key, so the count is unknown and cleanup cannot run.
+    Rejected,
+    Unreachable,
+    HostKeyChanged,
+    Failed {
+        message: String,
+    },
 }
