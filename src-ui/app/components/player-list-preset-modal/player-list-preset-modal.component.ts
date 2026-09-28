@@ -13,6 +13,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { v4 as uuidv4 } from 'uuid';
 import { ConfirmModalComponent } from '../confirm-modal/confirm-modal.component';
 import { ModalService } from '../../services/modal.service';
+import { ToastService } from '../../services/toast.service';
 
 export interface PlayerListPresetModalInputModel {
   mode: 'load' | 'save';
@@ -37,7 +38,6 @@ export class PlayerListPresetModalComponent
   mode: 'load' | 'save' = 'load';
   playerIds?: string[];
   lists: PlayerListPreset[] = [];
-  saved = false;
   saveName = '';
 
   get validSaveName(): boolean {
@@ -53,7 +53,8 @@ export class PlayerListPresetModalComponent
     private appSettings: AppSettingsService,
     private destroyRef: DestroyRef,
     private modalService: ModalService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private toasts: ToastService
   ) {
     super();
   }
@@ -67,8 +68,7 @@ export class PlayerListPresetModalComponent
   }
 
   protected saveNewPreset() {
-    if (!this.validSaveName || this.saved) return;
-    this.saved = true;
+    if (!this.validSaveName) return;
     const name = this.sanitizedSaveName;
     this.appSettings.updateSettings({
       playerListPresets: [
@@ -80,11 +80,10 @@ export class PlayerListPresetModalComponent
         },
       ],
     });
-    setTimeout(this.close.bind(this), 1000);
+    this.onPresetSaved(name);
   }
 
   protected overwritePreset(preset: PlayerListPreset) {
-    if (this.saved) return;
     this.modalService
       .addModal(ConfirmModalComponent, {
         title: 'comp.player-list-preset-modal.confirmOverwrite.title',
@@ -98,8 +97,6 @@ export class PlayerListPresetModalComponent
       })
       .subscribe((data) => {
         if (data?.confirmed) {
-          this.saved = true;
-          this.cdr.markForCheck();
           this.appSettings.updateSettings({
             playerListPresets: this.lists.map((list) => {
               if (list.id === preset.id) {
@@ -111,9 +108,18 @@ export class PlayerListPresetModalComponent
               return list;
             }),
           });
-          setTimeout(this.close.bind(this), 1000);
+          this.onPresetSaved(preset.name);
         }
       });
+  }
+
+  private onPresetSaved(name: string) {
+    this.toasts.show({
+      type: 'success',
+      title: 'toasts.playerListPreset.saved.title',
+      message: { string: 'toasts.playerListPreset.saved.message', values: { name } },
+    });
+    this.close();
   }
 
   protected trackPresetBy(_index: number, item: PlayerListPreset) {

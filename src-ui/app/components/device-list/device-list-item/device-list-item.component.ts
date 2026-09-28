@@ -217,7 +217,12 @@ export class DeviceListItemComponent implements OnInit {
       state,
       devices: 'SINGLE',
     } as EventLogLighthouseSetPowerState);
-    await this.lighthouse.setPowerState(this._lighthouseDevice!, state, true);
+    await this.lighthouse.setPowerStateForUser(
+      this._lighthouseDevice!,
+      state,
+      this.deviceName,
+      true
+    );
   }
 
   rightClickDevicePowerButton() {
@@ -228,7 +233,10 @@ export class DeviceListItemComponent implements OnInit {
 
   async clickDevicePowerButton() {
     if (this.mode === 'openvr') {
-      const dispatched = await this.lighthouseConsole.turnOffDevices([this._ovrDevice!]);
+      const dispatched = await this.lighthouseConsole.turnOffDeviceForUser(
+        this._ovrDevice!,
+        this.deviceName
+      );
       this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'MANUAL');
     }
     if (this.mode === 'lighthouse') {
@@ -251,7 +259,11 @@ export class DeviceListItemComponent implements OnInit {
             state,
             devices: 'SINGLE',
           } as EventLogLighthouseSetPowerState);
-          await this.lighthouse.setPowerState(this._lighthouseDevice!, state);
+          await this.lighthouse.setPowerStateForUser(
+            this._lighthouseDevice!,
+            state,
+            this.deviceName
+          );
           break;
         }
         case 'sleep':
@@ -262,7 +274,11 @@ export class DeviceListItemComponent implements OnInit {
             state: 'on',
             devices: 'SINGLE',
           } as EventLogLighthouseSetPowerState);
-          await this.lighthouse.setPowerState(this._lighthouseDevice!, 'on');
+          await this.lighthouse.setPowerStateForUser(
+            this._lighthouseDevice!,
+            'on',
+            this.deviceName
+          );
           break;
         case 'unknown':
           this.rightClickDevicePowerButton();

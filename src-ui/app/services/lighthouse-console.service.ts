@@ -7,6 +7,7 @@ import { OVRDevice } from '../models/ovr-device';
 import { error, info } from '@tauri-apps/plugin-log';
 import { ExecutableReferenceStatus } from '../models/settings';
 import { listen } from '@tauri-apps/api/event';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +22,8 @@ export class LighthouseConsoleService {
 
   constructor(
     private appSettings: AppSettingsService,
-    private openvr: OpenVRService
+    private openvr: OpenVRService,
+    private toasts: ToastService
   ) {
     this.init();
   }
@@ -108,6 +110,23 @@ export class LighthouseConsoleService {
         .map((device) => device.serialNumber)
         .filter((serialNumber): serialNumber is string => !!serialNumber)
     );
+  }
+
+  /** Turns off one device for a user action, and shows a toast when it could not be turned off. */
+  async turnOffDeviceForUser(ovrDevice: OVRDevice, deviceName: string) {
+    const dispatched = await this.turnOffDevices([ovrDevice]);
+    if (!dispatched.length) {
+      this.toasts.show({
+        type: 'error',
+        title: { string: 'toasts.devicePower.turnOffFailed.title', values: { name: deviceName } },
+        message:
+          this._consoleStatus.value === 'SUCCESS'
+            ? 'toasts.devicePower.turnOffFailed.commandFailed'
+            : 'toasts.devicePower.turnOffFailed.consoleNotReady',
+        duration: 6000,
+      });
+    }
+    return dispatched;
   }
 
   private queuePowerOff(deviceSerialNumbers: string[]) {

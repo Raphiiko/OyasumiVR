@@ -10,9 +10,9 @@ import {
   ConfirmModalOutputModel,
 } from '../../../../components/confirm-modal/confirm-modal.component';
 import { combineLatest, debounceTime, firstValueFrom, Subject } from 'rxjs';
-import { message } from '@tauri-apps/plugin-dialog';
 import { TranslationSuggestion } from '../../models/translation-suggestion';
 import { vshrink } from '../../../../utils/animations';
+import { ToastService } from '../../../../services/toast.service';
 
 interface TranslationRowEntry {
   key: string;
@@ -49,7 +49,8 @@ export class TranslationEditorViewComponent {
   constructor(
     private translationEditService: TranslationEditService,
     private router: Router,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private toasts: ToastService
   ) {
     this.translationEditService.editLocale.pipe(takeUntilDestroyed()).subscribe((locale) => {
       if (!locale) {
@@ -157,29 +158,29 @@ export class TranslationEditorViewComponent {
     if (!this.locale) return;
     if (await this.translationEditService.saveToFile(this.locale)) {
       this.changesMade = false;
+      this.toasts.show({ type: 'success', title: 'Translation file saved' });
     }
   }
 
   async updateTranslations() {
     const result = await this.translationEditService.updateTranslations();
     if (!result) return;
-    await message(
-      'Your translations have been updated!\n\nIn total, ' +
-        result.added +
-        ' translation(s) were added and ' +
-        result.keysRemoved +
-        ' translation(s) were removed.'
-    );
+    this.toasts.show({
+      type: 'success',
+      title: 'Translations updated',
+      message: `${result.added} translation(s) added, ${result.keysRemoved} translation(s) removed.`,
+    });
   }
 
   async checkForSuggestions() {
     if (!this.locale) return;
     const suggestions = await this.translationEditService.determineSuggestions(this.locale);
-    if (suggestions && suggestions.length) {
-      message(suggestions.length + ' suggestion(s) have been found!');
-    } else {
-      message('No suggestions have been found.');
-    }
+    this.toasts.show({
+      type: 'info',
+      title: suggestions?.length
+        ? `${suggestions.length} suggestion(s) found`
+        : 'No suggestions found',
+    });
   }
 
   applySuggestion(entry: TranslationRowEntry) {

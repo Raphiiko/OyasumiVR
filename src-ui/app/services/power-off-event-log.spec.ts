@@ -1,6 +1,7 @@
 import '@angular/compiler';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { ToastService } from './toast.service';
 import { LighthouseConsoleService } from './lighthouse-console.service';
 import { EventLogService } from './event-log.service';
 import { DeviceListItemComponent } from '../components/device-list/device-list-item/device-list-item.component';
@@ -58,7 +59,8 @@ async function createConsole(devices: OVRDevice[], valid = true) {
         currentDevices.next(
           currentDevices.value.map((current) => (current.index === device.index ? device : current))
         ),
-    } as unknown as ConstructorParameters<typeof LighthouseConsoleService>[1]
+    } as unknown as ConstructorParameters<typeof LighthouseConsoleService>[1],
+    new ToastService()
   );
   await vi.advanceTimersByTimeAsync(0);
   invoke.mockResolvedValue({
@@ -370,7 +372,7 @@ describe('power-off event producers', () => {
     const log = new EventLogService();
     const record = vi.spyOn(log, 'logTurnedOffOpenVRDevices');
     const devices = new BehaviorSubject([controller, tracker]);
-    const consoleService = { turnOffDevices: powerOff };
+    const consoleService = { turnOffDevices: powerOff, turnOffDeviceForUser: powerOff };
     const deviceManager = {
       getIdForOpenVRDevice: () => '',
       getKnownDeviceById: () => undefined,

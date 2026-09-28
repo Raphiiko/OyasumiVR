@@ -71,7 +71,9 @@ export class SettingsUpdatesViewComponent implements OnInit {
     if (this.updateOrCheckInProgress) return;
     this.requestInProgress = true;
     await Promise.allSettled([
-      this.updateAvailable.update ? this.update.installUpdate() : this.update.checkForUpdate(false),
+      this.updateAvailable.update
+        ? this.update.installUpdate()
+        : this.update.checkForUpdate(false, true),
       new Promise((resolve) => setTimeout(resolve, 1000)),
     ]);
     this.requestInProgress = false;

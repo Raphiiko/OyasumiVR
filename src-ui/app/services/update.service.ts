@@ -1,12 +1,12 @@
 import { Injectable, signal } from '@angular/core';
 import { BehaviorSubject, filter, interval, switchMap, take } from 'rxjs';
 import { relaunch } from '@tauri-apps/plugin-process';
-import { ConfirmModalComponent } from '../components/confirm-modal/confirm-modal.component';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { UpdateModalComponent } from '../components/update-modal/update-modal.component';
 import { FLAVOUR } from '../../build';
 import { error, info } from '@tauri-apps/plugin-log';
 import { check, Update } from '@tauri-apps/plugin-updater';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +19,10 @@ export class UpdateService {
   readonly installing = signal(false);
   private pendingInstallation?: Promise<void>;
 
-  constructor(private modalService: ModalService) {}
+  constructor(
+    private modalService: ModalService,
+    private toasts: ToastService
+  ) {}
 
   async init() {
     if (FLAVOUR === 'STANDALONE') {
@@ -36,7 +39,8 @@ export class UpdateService {
     }
   }
 
-  async checkForUpdate(showDialog = false) {
+  /** Pass `reportFailure` when the user asked for the check, so a failed check shows a toast. */
+  async checkForUpdate(showDialog = false, reportFailure = false) {
     // Only ever check for updates in the STANDALONE flavour
     if (FLAVOUR !== 'STANDALONE') {
       this._updateAvailable.next({
@@ -52,6 +56,14 @@ export class UpdateService {
     } catch (e) {
       // Leaving `checked` false keeps the 10 minute retry schedule active
       error(`[Update] Could not check for updates: ${e}`);
+      if (reportFailure) {
+        this.toasts.show({
+          type: 'error',
+          title: 'toasts.update.checkFailed.title',
+          message: 'toasts.update.checkFailed.message',
+          duration: 6000,
+        });
+      }
       return;
     }
     if (update) {
@@ -97,15 +109,13 @@ export class UpdateService {
       info(`[Update] Update complete. Relaunching...`);
       await relaunch();
     } catch (e) {
-      info(`[Update] Update error occurred: ${e}`);
-      this.modalService
-        .addModal(ConfirmModalComponent, {
-          title: 'updater.modals.error.title',
-          message: 'updater.modals.error.title',
-          confirmButtonText: 'shared.modals.ok',
-          showCancel: false,
-        })
-        .subscribe();
+      error(`[Update] Update error occurred: ${e}`);
+      this.toasts.show({
+        type: 'error',
+        title: 'toasts.update.installFailed.title',
+        message: 'toasts.update.installFailed.message',
+        duration: 6000,
+      });
     }
   }
 }

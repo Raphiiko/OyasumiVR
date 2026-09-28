@@ -12,6 +12,8 @@ import type { LimitedUserGroups } from 'vrchat';
 import { combineLatest } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 import { error } from '@tauri-apps/plugin-log';
+import { ToastService } from '../../../../services/toast.service';
+import { VRCHAT_API_STALE_REQUEST } from '../../../../services/vrchat-api/vrchat-api';
 import { DomSanitizer } from '@angular/platform-browser';
 
 // Define a custom type for our group ID values
@@ -59,7 +61,8 @@ export class VRChatGroupAutomationsViewComponent implements OnInit {
     private vrchat: VRChatService,
     private destroyRef: DestroyRef,
     private automationConfigService: AutomationConfigService,
-    private domSanitizer: DomSanitizer
+    private domSanitizer: DomSanitizer,
+    private toasts: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -104,6 +107,13 @@ export class VRChatGroupAutomationsViewComponent implements OnInit {
       this.groups.next(groups);
     } catch (e) {
       error('Failed to load VRChat groups: ' + e);
+      if (e === VRCHAT_API_STALE_REQUEST) return;
+      this.toasts.show({
+        type: 'error',
+        title: 'toasts.vrchat.groupsFailed.title',
+        message: 'toasts.vrchat.requestFailed',
+        duration: 6000,
+      });
     }
   }
 

@@ -1,4 +1,4 @@
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AppSettingsService } from './app-settings.service';
 import type { LighthouseDevice } from '../models/lighthouse-device';
@@ -13,6 +13,7 @@ vi.mock('@tauri-apps/api/core', () => ({ invoke: (...args: unknown[]) => invoke(
 vi.mock('@tauri-apps/api/event', () => ({ listen: vi.fn(async () => () => {}) }));
 
 import { LighthouseService } from './lighthouse.service';
+import { ToastService } from './toast.service';
 
 function device(): LighthouseDevice {
   return {
@@ -43,7 +44,7 @@ function makeService(d: LighthouseDevice) {
   const appSettings = {
     settings: new BehaviorSubject({ v1LighthouseIdentifiers: {} }),
   } as unknown as AppSettingsService;
-  const service = new LighthouseService(appSettings);
+  const service = new LighthouseService(appSettings, new ToastService());
   service['_devices'].next([d]);
   return service;
 }
@@ -141,5 +142,57 @@ describe('LighthouseService.setPowerState', () => {
     await vi.advanceTimersByTimeAsync(10000);
     await normal;
     expect(d.transitioningToPowerState).toBeUndefined();
+  });
+});
+
+describe('LighthouseService.setPowerStateForUser', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    invoke.mockReset();
+  });
+
+  afterEach(() => vi.useRealTimers());
+
+  async function toastsAfter(
+    reportedState: LighthouseDevice['powerState'] | null,
+    requested: LighthouseDevice['powerState'] = 'sleep',
+    deviceType: LighthouseDevice['deviceType'] = 'lighthouseV2'
+  ) {
+    invoke.mockResolvedValue(undefined);
+    const d = {
+      ...device(),
+      deviceType,
+      powerState: requested === 'on' ? 'sleep' : 'on',
+    } as LighthouseDevice;
+    const service = makeService(d);
+    service['v1Identifiers'][d.id] = 'ABCD1234';
+    const toasts = service['toasts'];
+    const settled = service.setPowerStateForUser(d, requested, 'Living Room');
+    if (reportedState) d.powerState = reportedState;
+    await vi.advanceTimersByTimeAsync(10000);
+    await settled;
+    return firstValueFrom(toasts.toasts);
+  }
+
+  it('shows an error toast when the device never reports the new state', async () => {
+    const shown = await toastsAfter(null);
+    expect(shown).toHaveLength(1);
+    expect(shown[0].type).toBe('error');
+    expect(shown[0].title).toEqual({
+      string: 'toasts.devicePower.lighthouseFailed.title',
+      values: { name: 'Living Room' },
+    });
+  });
+
+  it('shows no toast when the device reaches the new state', async () => {
+    expect(await toastsAfter('sleep')).toHaveLength(0);
+  });
+
+  it('accepts sleep from a V1 base station asked for standby', async () => {
+    expect(await toastsAfter('sleep', 'standby', 'lighthouseV1')).toHaveLength(0);
+  });
+
+  it('accepts a base station that is still booting after turning on', async () => {
+    expect(await toastsAfter('booting', 'on')).toHaveLength(0);
   });
 });

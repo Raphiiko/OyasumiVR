@@ -1803,14 +1803,6 @@
       }
     }
   },
-  "pulsoid": {
-    "login": {
-      "error": {
-        "message": "การเข้าสู่ระบบด้วยบัญชี Pulsoid ล้มเหลว โปรดลองอีกครั้งในภายหลัง หากปัญหายังคงอยู่ โปรดติดต่อฝ่ายสนับสนุน\n\n{errorDetails}",
-        "title": "เข้าสู่ระบบ Pulsoid ล้มเหลว"
-      }
-    }
-  },
   "resolution-automations": {
     "description": "ปรับความละเอียดเรนเดอร์ของ SteamVR โดยอัตโนมัติ",
     "onSleepDisable": {
@@ -1953,36 +1945,6 @@
         "vrManifestReregister": {
           "action": "ลงทะเบียน Manifest ใหม่",
           "description": "ลงทะเบียน Application Manifest ของ OyasumiVR กับ SteamVR ใหม่",
-          "modal": {
-            "FLAVOUR_NOT_ELIGIBLE": {
-              "message": "เนื่องจากใช้ OyasumiVR เวอร์ชันที่ไม่รองรับ (เช่น เวอร์ชัน Steam) Application Manifest จึงถูกยกเลิกการลงทะเบียนแต่ไม่ได้ลงทะเบียนใหม่ นี่ไม่ใช่ข้อผิดพลาด กรุณารีสตาร์ท OyasumiVR",
-              "title": "ยกเลิกการลงทะเบียน Application Manifest"
-            },
-            "MANIFEST_ADD_FAILED": {
-              "message": "ลบ Manifest แล้ว แต่ไม่สามารถเพิ่มใหม่ได้ กรุณารีสตาร์ท OyasumiVR และตรวจสอบบันทึก",
-              "title": "ลงทะเบียน VR Application Manifest ใหม่ล้มเหลว"
-            },
-            "MANIFEST_CHECK_FAILED": {
-              "message": "ไม่สามารถตรวจสอบได้ว่าลงทะเบียน Manifest แล้วหรือยัง กรุณารีสตาร์ท OyasumiVR และตรวจสอบบันทึก",
-              "title": "ลงทะเบียน VR Application Manifest ใหม่ล้มเหลว"
-            },
-            "MANIFEST_NOT_REGISTERED": {
-              "message": "Manifest ไม่ได้ลงทะเบียน กรุณารีสตาร์ท OyasumiVR",
-              "title": "ลงทะเบียน VR Application Manifest ใหม่ล้มเหลว"
-            },
-            "MANIFEST_REMOVE_FAILED": {
-              "message": "ไม่สามารถลบ Manifest ได้ ตรวจสอบบันทึก",
-              "title": "ลงทะเบียน VR Application Manifest ใหม่ล้มเหลว"
-            },
-            "UNKNOWN": {
-              "message": "ไม่สามารถลงทะเบียน Manifest ใหม่ได้เนื่องจากข้อผิดพลาดที่ไม่ทราบสาเหตุ กรุณารีสตาร์ท OyasumiVR และตรวจสอบบันทึก",
-              "title": "ลงทะเบียน VR Application Manifest ใหม่ล้มเหลว"
-            },
-            "success": {
-              "message": "ลงทะเบียน Manifest ของ OyasumiVR กับ SteamVR สำเร็จแล้ว",
-              "title": "ลงทะเบียน VR Application Manifest ใหม่สำเร็จ"
-            }
-          },
           "title": "ลงทะเบียน SteamVR Application Manifest ใหม่"
         }
       }
@@ -2828,11 +2790,47 @@
     "quit": "ออกจาก OyasumiVR",
     "sleepMode": "โหมดนอนหลับ"
   },
-  "updater": {
-    "modals": {
-      "error": {
+  "toasts": {
+    "pulsoid": {
+      "loginFailed": {
+        "message": "การเข้าสู่ระบบด้วยบัญชี Pulsoid ล้มเหลว โปรดลองอีกครั้งในภายหลัง หากปัญหายังคงอยู่ โปรดติดต่อฝ่ายสนับสนุน\n\n{errorDetails}",
+        "title": "เข้าสู่ระบบ Pulsoid ล้มเหลว"
+      }
+    },
+    "update": {
+      "installFailed": {
         "message": "ติดตั้งอัปเดตล้มเหลว กรุณาลองใหม่อีกครั้งภายหลัง",
         "title": "อัปเดตล้มเหลว"
+      }
+    },
+    "vrManifestReregister": {
+      "FLAVOUR_NOT_ELIGIBLE": {
+        "message": "เนื่องจากใช้ OyasumiVR เวอร์ชันที่ไม่รองรับ (เช่น เวอร์ชัน Steam) Application Manifest จึงถูกยกเลิกการลงทะเบียนแต่ไม่ได้ลงทะเบียนใหม่ นี่ไม่ใช่ข้อผิดพลาด กรุณารีสตาร์ท OyasumiVR",
+        "title": "ยกเลิกการลงทะเบียน Application Manifest"
+      },
+      "MANIFEST_ADD_FAILED": {
+        "message": "ลบ Manifest แล้ว แต่ไม่สามารถเพิ่มใหม่ได้ กรุณารีสตาร์ท OyasumiVR และตรวจสอบบันทึก",
+        "title": "ลงทะเบียน VR Application Manifest ใหม่ล้มเหลว"
+      },
+      "MANIFEST_CHECK_FAILED": {
+        "message": "ไม่สามารถตรวจสอบได้ว่าลงทะเบียน Manifest แล้วหรือยัง กรุณารีสตาร์ท OyasumiVR และตรวจสอบบันทึก",
+        "title": "ลงทะเบียน VR Application Manifest ใหม่ล้มเหลว"
+      },
+      "MANIFEST_NOT_REGISTERED": {
+        "message": "Manifest ไม่ได้ลงทะเบียน กรุณารีสตาร์ท OyasumiVR",
+        "title": "ลงทะเบียน VR Application Manifest ใหม่ล้มเหลว"
+      },
+      "MANIFEST_REMOVE_FAILED": {
+        "message": "ไม่สามารถลบ Manifest ได้ ตรวจสอบบันทึก",
+        "title": "ลงทะเบียน VR Application Manifest ใหม่ล้มเหลว"
+      },
+      "UNKNOWN": {
+        "message": "ไม่สามารถลงทะเบียน Manifest ใหม่ได้เนื่องจากข้อผิดพลาดที่ไม่ทราบสาเหตุ กรุณารีสตาร์ท OyasumiVR และตรวจสอบบันทึก",
+        "title": "ลงทะเบียน VR Application Manifest ใหม่ล้มเหลว"
+      },
+      "success": {
+        "message": "ลงทะเบียน Manifest ของ OyasumiVR กับ SteamVR สำเร็จแล้ว",
+        "title": "ลงทะเบียน VR Application Manifest ใหม่สำเร็จ"
       }
     }
   },

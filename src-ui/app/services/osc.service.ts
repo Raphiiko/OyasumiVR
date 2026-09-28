@@ -20,6 +20,7 @@ import {
 import { OscMethod } from './osc-control/osc-method';
 import { AppSettingsService } from './app-settings.service';
 import { AvatarContext } from '../models/avatar-context';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root',
@@ -53,7 +54,10 @@ export class OscService {
   >([]);
   private avatarContext: AvatarContext | null = null;
 
-  constructor(private appSettings: AppSettingsService) {}
+  constructor(
+    private appSettings: AppSettingsService,
+    private toasts: ToastService
+  ) {}
 
   async init() {
     await listen<OSCMessageRaw>('OSC_MESSAGE', (data) => {
@@ -226,6 +230,20 @@ export class OscService {
       },
       true
     );
+  }
+
+  /** Runs a script for the user, and warns them with a toast when it has nowhere to go. */
+  async testScript(script: OscScript) {
+    if (!this.getOscTargetAddresses().length) {
+      this.toasts.show({
+        type: 'warning',
+        title: 'toasts.oscTest.noTarget.title',
+        message: 'toasts.oscTest.noTarget.message',
+        duration: 6000,
+      });
+      return;
+    }
+    await this.runScript(script);
   }
 
   async runScript(script: OscScript) {

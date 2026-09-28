@@ -1417,14 +1417,6 @@
       }
     }
   },
-  "pulsoid": {
-    "login": {
-      "error": {
-        "message": "Die Anmeldung mit deinen Pulsoid Account ist fehlgeschlagen. Bitte versuche es später erneut. Sollte dieses Problem öfter auftretten, dann verständige bitte unseren Support.\n\n{errorDetails}",
-        "title": "Pulsoid Anmeldung fehlgeschlagen"
-      }
-    }
-  },
   "resolution-automations": {
     "description": "OyasumiVR kann automatisch deine render Auflösung von SteamVR anpassen, wenn der Schlafmodus de- oder aktiviert wird.",
     "onSleepDisable": {
@@ -1531,36 +1523,6 @@
         "vrManifestReregister": {
           "action": "Neuangelegtes Manifest",
           "description": "Neuangelegte OyasumiVR Anwendungs Manifest mit SteamVR",
-          "modal": {
-            "FLAVOUR_NOT_ELIGIBLE": {
-              "message": "Da du eine nicht berechtigte Version von OyasumiVR verwendest (Zum Beispiel die Steam Version) konnte das Anwendungsmanifest zwar unregistriert, aber nicht neu registriert werden. Dies ist ein Fehler! Bitte starte OyasumiVR neu.",
-              "title": "Anwendungsmanifest unregistriert"
-            },
-            "MANIFEST_ADD_FAILED": {
-              "message": "Das Manifest wurde entfernt, aber konnte nicht mehr erstellt werden. Bitte starte OyasumiVR neu und prüfe den Verlauf.",
-              "title": "Neuanlegung des VR Anwendungsmanifestes fehlgeschlagen"
-            },
-            "MANIFEST_CHECK_FAILED": {
-              "message": "Es konnte nicht geprüft werden, ob das OyasumiVR Manifst bereits mit SteamVR registriert wurde. Bitte starte OyasumiVR neu und prüfe den Verlauf.",
-              "title": "Neuanlegung des VR Anwendungsmanifestes fehlgeschlagen"
-            },
-            "MANIFEST_NOT_REGISTERED": {
-              "message": "OyasumiVR hat kein registriertes Manifest mit SteamVR. Es wurde nich neuregistriert. Bitte starte OyasumiVR neu.",
-              "title": "Neuanlegung des VR Anwendungsmanifestes fehlgeschlagen"
-            },
-            "MANIFEST_REMOVE_FAILED": {
-              "message": "Das Manifest konnte nicht entfert werden. Bitte checke den Verlauf.",
-              "title": "Neuanlegung des VR Anwendungsmanifestes fehlgeschlagen"
-            },
-            "UNKNOWN": {
-              "message": "OyasumiVRs Manifest konnte wegen eines unbekannten Fehlers nicht neuregistriert werden. Bitte starte OyasumiVR neu und prüfe den Verlauf.",
-              "title": "Neuanlegung des VR Anwendungsmanifestes fehlgeschlagen"
-            },
-            "success": {
-              "message": "OyasumiVRs Manifest wurde erfolgreich neuregistriert mit SteamVR.",
-              "title": "Neuanlegung des VR Anwendungsmanifestes durchgeführt"
-            }
-          },
           "title": "Neuregistrierung des SteamVR Anwendungsmanifest"
         }
       }
@@ -2347,11 +2309,47 @@
       }
     }
   },
-  "updater": {
-    "modals": {
-      "error": {
+  "toasts": {
+    "pulsoid": {
+      "loginFailed": {
+        "message": "Die Anmeldung mit deinen Pulsoid Account ist fehlgeschlagen. Bitte versuche es später erneut. Sollte dieses Problem öfter auftretten, dann verständige bitte unseren Support.\n\n{errorDetails}",
+        "title": "Pulsoid Anmeldung fehlgeschlagen"
+      }
+    },
+    "update": {
+      "installFailed": {
         "message": "Das Update konnte nicht installiert werden. Bitte versuche es später erneut.",
         "title": "Update fehlgeschlagen"
+      }
+    },
+    "vrManifestReregister": {
+      "FLAVOUR_NOT_ELIGIBLE": {
+        "message": "Da du eine nicht berechtigte Version von OyasumiVR verwendest (Zum Beispiel die Steam Version) konnte das Anwendungsmanifest zwar unregistriert, aber nicht neu registriert werden. Dies ist ein Fehler! Bitte starte OyasumiVR neu.",
+        "title": "Anwendungsmanifest unregistriert"
+      },
+      "MANIFEST_ADD_FAILED": {
+        "message": "Das Manifest wurde entfernt, aber konnte nicht mehr erstellt werden. Bitte starte OyasumiVR neu und prüfe den Verlauf.",
+        "title": "Neuanlegung des VR Anwendungsmanifestes fehlgeschlagen"
+      },
+      "MANIFEST_CHECK_FAILED": {
+        "message": "Es konnte nicht geprüft werden, ob das OyasumiVR Manifst bereits mit SteamVR registriert wurde. Bitte starte OyasumiVR neu und prüfe den Verlauf.",
+        "title": "Neuanlegung des VR Anwendungsmanifestes fehlgeschlagen"
+      },
+      "MANIFEST_NOT_REGISTERED": {
+        "message": "OyasumiVR hat kein registriertes Manifest mit SteamVR. Es wurde nich neuregistriert. Bitte starte OyasumiVR neu.",
+        "title": "Neuanlegung des VR Anwendungsmanifestes fehlgeschlagen"
+      },
+      "MANIFEST_REMOVE_FAILED": {
+        "message": "Das Manifest konnte nicht entfert werden. Bitte checke den Verlauf.",
+        "title": "Neuanlegung des VR Anwendungsmanifestes fehlgeschlagen"
+      },
+      "UNKNOWN": {
+        "message": "OyasumiVRs Manifest konnte wegen eines unbekannten Fehlers nicht neuregistriert werden. Bitte starte OyasumiVR neu und prüfe den Verlauf.",
+        "title": "Neuanlegung des VR Anwendungsmanifestes fehlgeschlagen"
+      },
+      "success": {
+        "message": "OyasumiVRs Manifest wurde erfolgreich neuregistriert mit SteamVR.",
+        "title": "Neuanlegung des VR Anwendungsmanifestes durchgeführt"
       }
     }
   },

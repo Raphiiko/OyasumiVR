@@ -174,7 +174,7 @@ export class OscScriptCodeEditorComponent implements OnInit, AfterViewInit {
     this.testing = true;
     this.cdr.markForCheck();
     await Promise.all([
-      this.osc.runScript(script),
+      this.osc.testScript(script),
       new Promise((resolve) => setTimeout(resolve, 1000)),
     ]);
     this.testing = false;
