@@ -15,6 +15,7 @@ import { listen } from '@tauri-apps/api/event';
 import {
   SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS,
   SetBrightnessOrCCTOptions,
+  SetBrightnessOrCCTReason,
 } from '../brightness-control/brightness-control-models';
 import { CancellableTask } from '../../utils/cancellable-task';
 import { info, warn } from '@tauri-apps/plugin-log';
@@ -30,6 +31,10 @@ import {
   SteamFrameConnectionState,
   SteamFramePairing,
 } from '../../models/steam-frame';
+import { SteamFrameCctFade, SteamFrameFadeTask } from '../steam-frame-fade-task';
+
+/** A transition on the PC, or a fade the Frame's helper runs. */
+type CctTransition = CancellableTask & { readonly targetCCT: number };
 
 /** A Frame report that carries a value. */
 type FrameCct = SteamFrameCct & { kelvin: number };
@@ -46,7 +51,7 @@ type CctTarget =
 })
 export class CCTControlService {
   private _cct: BehaviorSubject<number> = new BehaviorSubject<number>(6600);
-  private _activeTransition = new BehaviorSubject<CCTTransitionTask | undefined>(undefined);
+  private _activeTransition = new BehaviorSubject<CctTransition | undefined>(undefined);
   private target = new BehaviorSubject<CctTarget>({ kind: 'none' });
   public readonly activeTransition = this._activeTransition.asObservable();
   public cctCSSColor: string = 'white';
@@ -106,12 +111,12 @@ export class CCTControlService {
     options: Partial<SetBrightnessOrCCTOptions> = SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS
   ): CancellableTask {
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
-    // no PC loop writes a Frame, so it gets the target in one command
+    // no PC loop writes a Frame; its helper fades, and nothing is written before its first report
     if (this.target.value.kind === 'frame') {
       this.cancelActiveTransition();
-      const task = new CancellableTask(() =>
-        this.setCCT(temperature, { cancelActiveTransition: false, logReason: opt.logReason })
-      );
+      const fade = this.frameFade(temperature, duration, opt.logReason);
+      if (fade) return this.activate(fade, opt.logReason);
+      const task = new CancellableTask();
       task.start();
       return task;
     }
@@ -127,19 +132,47 @@ export class CCTControlService {
       duration,
       { logReason: opt.logReason }
     );
-    transition.onComplete.subscribe(() => {
-      if (transition.isComplete() && this._activeTransition.value === transition)
-        this._activeTransition.next(undefined);
-    });
-    transition.onError.subscribe(() => {
-      if (transition.isError() && this._activeTransition.value === transition)
-        this._activeTransition.next(undefined);
-    });
-    if (opt.logReason) {
-      info(`[CCTControl] Starting CCT transition (Reason: ${opt.logReason})`);
+    return this.activate(transition, opt.logReason);
+  }
+
+  /** A fade on the active Frame's helper, or null while it cannot take one. */
+  private frameFade(
+    temperature: number,
+    duration: number,
+    logReason: SetBrightnessOrCCTReason | null
+  ): SteamFrameCctFade | null {
+    const target = this.target.value;
+    if (target.kind !== 'frame' || !target.pairingId || !target.cct) return null;
+    if (!this.cctControlEnabled) return null;
+    const kelvin = clamp(Math.round(temperature), 1000, 10000);
+    return new SteamFrameCctFade(
+      kelvin,
+      { pairingId: target.pairingId, control: 'cct', target: kelvin, durationMs: duration },
+      this.steamFrames,
+      (value) => this.setCCT(value, { cancelActiveTransition: false, logReason })
+    );
+  }
+
+  /** Makes the transition the active one until it ends, and starts it. */
+  private activate(
+    transition: CctTransition,
+    logReason: SetBrightnessOrCCTReason | null
+  ): CctTransition {
+    const clear = () => {
+      if (this._activeTransition.value === transition) this._activeTransition.next(undefined);
+    };
+    transition.onComplete.subscribe(() => transition.isComplete() && clear());
+    transition.onError.subscribe(() => transition.isError() && clear());
+    // a helper fade cancels itself on an outcome other than completed
+    if (transition instanceof SteamFrameFadeTask) transition.onCancelled.subscribe(clear);
+    if (logReason) {
+      info(`[CCTControl] Starting CCT transition (Reason: ${logReason})`);
     }
     this._activeTransition.next(transition);
-    transition.start();
+    const started = transition.start();
+    if (transition instanceof SteamFrameFadeTask) {
+      started.catch((e) => warn(`[CCTControl] The Steam Frame refused a fade: ${e}`));
+    }
     return transition;
   }
 
@@ -220,8 +253,10 @@ export class CCTControlService {
     }
     if (target.kind !== 'frame' || !target.cct) return;
 
-    // a running transition would write the Frame at every step, so it stops here
-    const transition = this._activeTransition.value;
+    // a running transition would write the Frame at every step, so it stops here; a helper fade
+    // goes on
+    const running = this._activeTransition.value;
+    const transition = running instanceof SteamFrameFadeTask ? undefined : running;
     if (transition) this.cancelActiveTransition();
 
     // show the headset's value, unless a command runs: then the requested value stays on screen

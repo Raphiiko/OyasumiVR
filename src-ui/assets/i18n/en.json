@@ -2942,6 +2942,7 @@
       "updateApp": "Update OyasumiVR",
       "updateFailed": "Update failed",
       "updateHelper": "Update helper",
+      "updateWaiting": "Update waiting for fades to finish",
       "updatingHelper": "Updating helper"
     },
     "statusDetail": {

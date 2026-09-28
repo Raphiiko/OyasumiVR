@@ -1,11 +1,12 @@
 import { invoke } from '@tauri-apps/api/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 import { APP_SETTINGS_DEFAULT } from '../../models/settings';
 import type { OVRDevice } from '../../models/ovr-device';
 import type {
   SteamFrameCct,
   SteamFrameConnectionState,
+  SteamFrameFadeEnded,
   SteamFramePairing,
 } from '../../models/steam-frame';
 import { CCTControlService } from './cct-control.service';
@@ -52,6 +53,7 @@ async function setup(
   const status = new BehaviorSubject('INITIALIZED');
   const devices = new BehaviorSubject([{ index: 0, class: 'HMD', ...hmd } as OVRDevice]);
   const connections = new BehaviorSubject<Record<string, SteamFrameConnectionState>>({});
+  const fadeEnded = new Subject<SteamFrameFadeEnded>();
   const settings = new BehaviorSubject({
     ...structuredClone(APP_SETTINGS_DEFAULT),
     cctControlEnabled: enabled,
@@ -64,14 +66,15 @@ async function setup(
     {
       pairings$: new BehaviorSubject(paired ? [pairing, pairingB] : []),
       connections$: connections,
+      fadeEnded$: fadeEnded,
     } as unknown as Dependencies[2]
   );
   await service.init();
   await settle();
-  const report = (cct: SteamFrameCct | null, pairingId = 'p') =>
+  const report = (cct: SteamFrameCct | null, pairingId = 'p', fades = false) =>
     connections.next({
       ...connections.value,
-      [pairingId]: { pairingId, status: 'connected', cct } as SteamFrameConnectionState,
+      [pairingId]: { pairingId, status: 'connected', cct, fades } as SteamFrameConnectionState,
     });
   const activate = (device: Partial<OVRDevice>) =>
     devices.next([{ index: 0, class: 'HMD', ...device } as OVRDevice]);
@@ -85,7 +88,20 @@ async function setup(
       .map(([, args]) => args as { pairingId: string; kelvin: number })
       .filter((args) => args.pairingId === pairingId)
       .map((args) => args.kelvin);
-  return { service, status, report, activate, calls, frameWrites, frameWritesTo, reply, settings };
+  const end = (operation: string, outcome: SteamFrameFadeEnded['outcome']) =>
+    fadeEnded.next({ pairingId: 'p', control: 'cct', operation, outcome });
+  return {
+    service,
+    status,
+    report,
+    activate,
+    calls,
+    frameWrites,
+    frameWritesTo,
+    reply,
+    settings,
+    end,
+  };
 }
 
 describe('CCTControlService with a Steam Frame', () => {
@@ -185,7 +201,27 @@ describe('CCTControlService with a Steam Frame', () => {
     expect(h.service.cct).toBe(2500);
   });
 
-  it('sets a transition target in one command', async () => {
+  it('fades through the helper, and keeps the fade through reports', async () => {
+    const h = await setup(FRAME);
+    h.report(snapshot(6600), 'p', true);
+    await settle();
+    const task = h.service.transitionCCT(3000, 10000);
+    await settle();
+    const [[, args]] = h.calls('steam_frame_fade');
+    const { operation, ...request } = (args as { request: { operation: string } }).request;
+    expect(request).toEqual({ control: 'cct', target: 3000, durationMs: 10000 });
+    h.report(snapshot(5000), 'p', true);
+    await settle();
+    expect(h.service.cct).toBe(5000);
+    expect(await firstValueFrom(h.service.activeTransition)).toBe(task);
+    expect(h.frameWrites()).toEqual([]);
+    h.end(operation, 'externalChange');
+    await settle();
+    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
+    expect(h.frameWrites()).toEqual([]);
+  });
+
+  it('sets a transition target in one command on a helper without fades', async () => {
     const h = await setup(FRAME);
     h.report(snapshot(6600));
     await settle();

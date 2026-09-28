@@ -314,8 +314,8 @@ OpenVR HMD, its connection is `connected`, and the report says `available`. It k
 flight and replaces a waiting one with the newest value. Reports reach the shown value without a
 write, also with CCT control disabled, and a set to the shown Kelvin writes when `exact` is false.
 While the active HMD is an allowlisted Frame model without that path, it writes nothing, and it
-never writes the PC's own gains for a Frame. Transitions set their target in one command. The HMD
-connect automation reruns once after the first report, as for brightness.
+never writes the PC's own gains for a Frame. Transitions run as helper fades. The HMD connect
+automation reruns once after the first report, as for brightness.
 
 ## Fades
 
@@ -370,6 +370,19 @@ During standby a set writes as usual, and a fade writes its target at once and r
 `completed`. The helper remembers what it wrote. On leaving standby it reads both controls and
 writes a remembered value once more when the read differs, because the runtime may not keep a
 write made in standby. A cancelled fade never resumes.
+
+### On the PC
+
+`SteamFrameFadeTask` is the `CancellableTask` for one helper fade. `CCTControlService` makes it
+the active transition.
+
+- It completes on `completed`, and every other outcome cancels it. Cancelling it from outside sends
+  `cancelFade` with its operation ID.
+- While the connection is down it completes at its end time. When a report after a reconnect no
+  longer carries its fade, it ends as `missed`.
+- A `maintenance` refusal waits for the hold to end or the handshake to return, then sends the fade
+  again for the time that remains. With no time left it sets the target.
+- A helper whose hello lacks `fades` gets the target in one set command.
 
 ### Maintenance hold
 

@@ -127,6 +127,7 @@ export class DeviceManagerConfigModalComponent
       pairing,
       version: state?.helperVersion ?? pairing.helperVersion,
       updating: maintenance === 'updating',
+      waiting: maintenance === 'waiting',
       canUpdate:
         !!state &&
         UPDATABLE_STATUSES.includes(state.status) &&

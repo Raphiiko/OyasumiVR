@@ -646,6 +646,8 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     switch (maintenance?.kind) {
       case 'updating':
         return { pill: { key: 'updatingHelper', icon: 'sync', tone: 'neutral' } };
+      case 'waiting':
+        return { pill: { key: 'updateWaiting', icon: 'hourglass_empty', tone: 'neutral' } };
       case 'updated':
         return {
           pill: {

@@ -86,6 +86,10 @@
             <button class="btn btn-secondary" disabled>
               {{ 'steamFrame.details.updating' | transloco }}
             </button>
+          } @else if (helper.waiting) {
+            <button class="btn btn-secondary" disabled>
+              {{ 'steamFrame.status.updateWaiting' | transloco }}
+            </button>
           } @else if (helper.canUpdate) {
             <button class="btn btn-primary" (click)="updateFrameHelper()">
               {{ 'steamFrame.actions.update' | transloco }}

@@ -56,7 +56,7 @@ export type SteamFrameUpdateFailReason =
   'unreachable' | 'corrupted' | 'notStarted' | 'notBundled' | 'other';
 
 export type SteamFrameMaintenance =
-  | { kind: 'updating' | 'busy' }
+  | { kind: 'updating' | 'busy' | 'waiting' }
   | { kind: 'updated'; version: string }
   | { kind: 'failed'; reason: SteamFrameUpdateFailReason };
 
@@ -74,7 +74,35 @@ export interface SteamFrameConnectionState {
   brightness: SteamFrameBrightness | null;
   /** The helper's last color temperature report; null while not connected. */
   cct: SteamFrameCct | null;
+  /** The helper on the open connection runs fades itself. */
+  fades: boolean;
+  /** The helper refuses new fades for a maintenance hold, from this PC or another one. */
+  hold: boolean;
 }
+
+/** A fade the helper runs, in a report. `target` is in percent or Kelvin. */
+export interface SteamFrameFade {
+  operation: string;
+  target: number;
+  remainingMs: number;
+  /** Milliseconds since the epoch on this PC's clock. */
+  endsAt: number;
+}
+
+export type SteamFrameControl = 'brightness' | 'cct';
+
+export type SteamFrameFadeOutcome =
+  'completed' | 'superseded' | 'cancelled' | 'externalChange' | 'standby' | 'runtimeUnavailable';
+
+export interface SteamFrameFadeEnded {
+  pairingId: string;
+  control: SteamFrameControl;
+  operation: string;
+  outcome: SteamFrameFadeOutcome;
+}
+
+export type SteamFrameFadeError =
+  'unsupported' | 'runtimeUnavailable' | 'writeFailed' | 'maintenance' | 'offline';
 
 /** The headset's hardware brightness in percent, as the helper reports it. */
 export interface SteamFrameBrightness {
@@ -85,6 +113,7 @@ export interface SteamFrameBrightness {
   max: number | null;
   /** The headset's value, which can lie outside `min` and `max`. */
   percentage: number | null;
+  fade: SteamFrameFade | null;
 }
 
 /** The headset's color temperature, as the helper reports it. */
@@ -96,6 +125,7 @@ export interface SteamFrameCct {
   kelvin: number | null;
   /** True when the gains lie on the curve at `kelvin`. */
   exact: boolean | null;
+  fade: SteamFrameFade | null;
 }
 
 export type SteamFrameRegisterOutcome =
