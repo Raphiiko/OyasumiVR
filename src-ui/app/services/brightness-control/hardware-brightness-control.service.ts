@@ -19,12 +19,13 @@ import {
   switchMap,
 } from 'rxjs';
 import { isEqual } from 'lodash';
-import { info } from '@tauri-apps/plugin-log';
+import { info, warn } from '@tauri-apps/plugin-log';
 import { CancellableTask } from '../../utils/cancellable-task';
 import { BrightnessTransitionTask } from './brightness-transition';
 import {
   SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS,
   SetBrightnessOrCCTOptions,
+  SetBrightnessOrCCTReason,
 } from './brightness-control-models';
 import { listen } from '@tauri-apps/api/event';
 import { BigscreenBeyondHardwareBrightnessControlDriver } from './hardware-brightness-drivers/bigscreen-beyond-hardware-brightness-control-driver';
@@ -33,6 +34,10 @@ import { AppSettings } from '../../models/settings';
 import { clamp } from '../../utils/number-utils';
 import { SteamFrameHardwareBrightnessControlDriver } from './hardware-brightness-drivers/steam-frame-hardware-brightness-control-driver';
 import { SteamFramePairingService } from '../steam-frame-pairing.service';
+import { SteamFrameFadeTask } from '../steam-frame-fade-task';
+
+/** A transition on the PC, or a fade the Frame's helper runs. */
+export type HardwareBrightnessTransition = CancellableTask & { readonly targetBrightness: number };
 
 export interface AdoptedBrightness {
   percentage: number;
@@ -57,7 +62,9 @@ export class HardwareBrightnessControlService {
   private driver: BehaviorSubject<HardwareBrightnessControlDriver | null> =
     new BehaviorSubject<HardwareBrightnessControlDriver | null>(null);
   private _brightness: BehaviorSubject<number> = new BehaviorSubject<number>(100);
-  private _activeTransition = new BehaviorSubject<BrightnessTransitionTask | undefined>(undefined);
+  private _activeTransition = new BehaviorSubject<HardwareBrightnessTransition | undefined>(
+    undefined
+  );
   public readonly activeTransition = this._activeTransition.asObservable();
   public readonly onDriverChange: Observable<void> = this.driver.pipe(
     distinctUntilChanged(),
@@ -99,7 +106,8 @@ export class HardwareBrightnessControlService {
       this.appSettingsService.settings,
       openvr,
       steamFrames.pairings$,
-      steamFrames.connections$
+      steamFrames.connections$,
+      steamFrames.fadeEnded$
     );
     const driverList = [this.driverValveIndex, this.driverSteamFrame, this.driverBigscreenBeyond];
     combineLatest(driverList.map((driver) => driver.isAvailable()))
@@ -182,6 +190,12 @@ export class HardwareBrightnessControlService {
       task.start();
       return task;
     }
+    // a Frame's helper runs the fade
+    const fade = this.frameFade(percentage, duration, opt.logReason);
+    if (fade) {
+      this.cancelActiveTransition();
+      return this.activate(fade, opt.logReason);
+    }
     this._activeTransition.value?.cancel();
     const transition = new BrightnessTransitionTask(
       'HARDWARE',
@@ -192,21 +206,43 @@ export class HardwareBrightnessControlService {
       duration,
       { logReason: opt.logReason }
     );
-    transition.onComplete.subscribe(() => {
-      if (transition.isComplete() && this._activeTransition.value === transition)
-        this._activeTransition.next(undefined);
+    return this.activate(transition, opt.logReason);
+  }
+
+  private frameFade(
+    percentage: number,
+    duration: number,
+    logReason: SetBrightnessOrCCTReason | null
+  ): HardwareBrightnessTransition | null {
+    if (this.driver.value !== this.driverSteamFrame) return null;
+    return this.driverSteamFrame.fade({
+      target: percentage,
+      durationMs: duration,
+      shownTarget: percentage,
+      set: (target) => this.setBrightness(target, { cancelActiveTransition: false, logReason }),
     });
-    transition.onError.subscribe(() => {
-      if (transition.isError() && this._activeTransition.value === transition)
-        this._activeTransition.next(undefined);
-    });
-    if (opt.logReason) {
-      info(
-        `[BrightnessControl] Starting hardware brightness transition (Reason: ${opt.logReason})`
-      );
+  }
+
+  /** Makes the transition the active one until it ends, and starts it. */
+  private activate(
+    transition: HardwareBrightnessTransition,
+    logReason: SetBrightnessOrCCTReason | null
+  ): HardwareBrightnessTransition {
+    const clear = () => {
+      if (this._activeTransition.value === transition) this._activeTransition.next(undefined);
+    };
+    transition.onComplete.subscribe(() => transition.isComplete() && clear());
+    transition.onError.subscribe(() => transition.isError() && clear());
+    // a helper fade cancels itself on an outcome other than completed
+    if (transition instanceof SteamFrameFadeTask) transition.onCancelled.subscribe(clear);
+    if (logReason) {
+      info(`[BrightnessControl] Starting hardware brightness transition (Reason: ${logReason})`);
     }
     this._activeTransition.next(transition);
-    transition.start();
+    const started = transition.start();
+    if (transition instanceof SteamFrameFadeTask) {
+      started.catch((e) => warn(`[BrightnessControl] The Steam Frame refused a fade: ${e}`));
+    }
     return transition;
   }
 

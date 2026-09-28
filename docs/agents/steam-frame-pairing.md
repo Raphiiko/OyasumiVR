@@ -287,8 +287,8 @@ sequenceDiagram
 On the PC, `SteamFrameHardwareBrightnessControlDriver` is available while the paired Frame is the
 active OpenVR HMD, its connection is `connected`, and the report says `supported`. It keeps one
 command in flight and replaces a waiting one with the newest value. Its reports reach the hardware
-brightness cache without a write, and simple mode derives its value from them. Transitions run
-through the PC loop, so each step waits for the helper's reply. The HMD connect automation runs at once. For a paired Frame that has not
+brightness cache without a write, and simple mode derives its value from them. Transitions run as
+helper fades, described under [Fades](#fades). The HMD connect automation runs at once. For a paired Frame that has not
 reported yet, it runs once more after the first report, unless another brightness automation ran
 in the meantime.
 
@@ -373,8 +373,8 @@ write made in standby. A cancelled fade never resumes.
 
 ### On the PC
 
-`SteamFrameFadeTask` is the `CancellableTask` for one helper fade. `CCTControlService` makes it
-the active transition.
+`SteamFrameFadeTask` is the `CancellableTask` for one helper fade. The hardware brightness service,
+the simple brightness service, and `CCTControlService` make it the active transition.
 
 - It completes on `completed`, and every other outcome cancels it. Cancelling it from outside sends
   `cancelFade` with its operation ID.
@@ -383,6 +383,12 @@ the active transition.
 - A `maintenance` refusal waits for the hold to end or the handshake to return, then sends the fade
   again for the time that remains. With no time left it sets the target.
 - A helper whose hello lacks `fades` gets the target in one set command.
+
+In simple mode the helper runs the hardware part of the simple curve, and the PC runs the software
+part on the same curve from the accept reply. On `externalChange` or `missed` the software part
+stops and the simple value follows the headset, as for any report. On any other outcome the
+software part stops where it is. In advanced mode the software transition runs on the PC as before,
+so a headset change ends only the hardware fade.
 
 ### Maintenance hold
 

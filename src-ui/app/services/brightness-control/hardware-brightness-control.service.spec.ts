@@ -1,10 +1,14 @@
 import { invoke } from '@tauri-apps/api/core';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 import { AUTOMATION_CONFIGS_DEFAULT } from '../../models/automations';
 import { APP_SETTINGS_DEFAULT } from '../../models/settings';
 import type { OVRDevice } from '../../models/ovr-device';
-import type { SteamFrameConnectionState, SteamFramePairing } from '../../models/steam-frame';
+import type {
+  SteamFrameConnectionState,
+  SteamFrameFadeEnded,
+  SteamFramePairing,
+} from '../../models/steam-frame';
 import { HardwareBrightnessControlService } from './hardware-brightness-control.service';
 import { SimpleBrightnessControlService } from './simple-brightness-control.service';
 
@@ -23,6 +27,7 @@ async function setup(
 ) {
   vi.mocked(invoke).mockImplementation(commands);
   const connections = new BehaviorSubject<Record<string, SteamFrameConnectionState>>({});
+  const fadeEnded = new Subject<SteamFrameFadeEnded>();
   const service = new HardwareBrightnessControlService(
     {
       status: new BehaviorSubject('INITIALIZED'),
@@ -36,15 +41,31 @@ async function setup(
         { id: 'p', complete: true, identity: { serial: 'FP1' } } as SteamFramePairing,
       ]),
       connections$: connections,
+      fadeEnded$: fadeEnded,
     } as unknown as Dependencies[2]
   );
   await service.init();
-  const report = (percentage: number) =>
+  const report = (
+    percentage: number,
+    {
+      fades = true,
+      status = 'connected',
+      fade,
+    }: { fades?: boolean; status?: string; fade?: string } = {}
+  ) =>
     connections.next({
       p: {
         pairingId: 'p',
-        status: 'connected',
-        brightness: { runtime: true, supported: true, min: 20, max: 110, percentage },
+        status,
+        fades,
+        brightness: {
+          runtime: true,
+          supported: true,
+          min: 20,
+          max: 110,
+          percentage,
+          fade: fade ? { operation: fade, target: 0, remainingMs: 1, endsAt: 0 } : null,
+        },
       } as SteamFrameConnectionState,
     });
   const writes = () =>
@@ -52,7 +73,11 @@ async function setup(
   vi.mocked(invoke).mockClear();
   if (initial !== null) report(initial);
   await settle();
-  return { service, report, writes };
+  const fades = () =>
+    vi.mocked(invoke).mock.calls.filter(([command]) => command === 'steam_frame_fade');
+  const end = (operation: string, outcome: SteamFrameFadeEnded['outcome']) =>
+    fadeEnded.next({ pairingId: 'p', control: 'brightness', operation, outcome });
+  return { service, report, writes, fades, end };
 }
 
 describe('HardwareBrightnessControlService with a Steam Frame', () => {
@@ -71,18 +96,61 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
     expect(h.writes()).toEqual([]);
   });
 
-  it('fades a transition through the PC loop', async () => {
+  it('runs a transition as one helper fade, through a reconnect', async () => {
     const h = await setup();
+    vi.mocked(invoke).mockImplementation(async () => undefined);
+    const task = h.service.transitionBrightness(80, 10000);
+    await settle();
+    const [[, args]] = h.fades();
+    const { operation, ...request } = (args as { request: { operation: string } }).request;
+    expect(request).toEqual({ control: 'brightness', target: 80, durationMs: 10000 });
+    expect(h.writes()).toEqual([]);
+    expect(await firstValueFrom(h.service.activeTransition)).toBe(task);
+
+    // the connection drops and returns; the fade goes on
+    h.report(50, { status: 'offline' });
+    await settle();
+    h.report(55, { fade: operation });
+    await settle();
+    expect(await firstValueFrom(h.service.activeTransition)).toBe(task);
+    expect(h.writes()).toEqual([]);
+    expect(h.service.brightness).toBe(55);
+
+    h.end(operation, 'completed');
+    await settle();
+    expect(task.isComplete()).toBe(true);
+    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
+  });
+
+  it('drops a helper fade the headset changed, and shows the change', async () => {
+    const h = await setup();
+    vi.mocked(invoke).mockImplementation(async () => undefined);
+    const task = h.service.transitionBrightness(80, 10000);
+    await settle();
+    const operation = (h.fades()[0][1] as { request: { operation: string } }).request.operation;
+    h.report(30);
+    h.end(operation, 'externalChange');
+    await settle();
+    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
+    expect(task.isCancelled() || task.isComplete()).toBe(true);
+    expect(h.service.brightness).toBe(30);
+    expect(h.writes()).toEqual([]);
+  });
+
+  it('sets the target in one command on a helper without fades', async () => {
+    const h = await setup();
+    h.report(40, { fades: false });
+    await settle();
     vi.mocked(invoke).mockImplementation(async (command, args) =>
       command === 'steam_frame_set_brightness' ? (args as { percentage: number }).percentage : false
     );
-    const task = h.service.transitionBrightness(80, 200);
-    await firstValueFrom(task.onComplete);
-    const targets = h.writes().map(([, args]) => (args as { percentage: number }).percentage);
-    expect(targets.length).toBeGreaterThan(2);
-    expect(targets).toEqual([...targets].sort((a, b) => a - b));
-    expect(targets.at(-1)).toBe(80);
-    expect(h.service.brightness).toBe(80);
+    const task = h.service.transitionBrightness(80, 10000);
+    await settle();
+    expect(task.isComplete()).toBe(true);
+    expect(h.fades()).toEqual([]);
+    expect(h.writes()).toEqual([
+      ['steam_frame_set_brightness', { pairingId: 'p', percentage: 80 }],
+    ]);
   });
 
   it('keeps a pending request on screen past the availability delay', async () => {
@@ -117,21 +185,6 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
       command === 'steam_frame_set_brightness' ? (args as { percentage: number }).percentage : false
     );
     await h.service.setBrightness(110);
-    expect(h.writes()).toEqual([
-      ['steam_frame_set_brightness', { pairingId: 'p', percentage: 110 }],
-    ]);
-  });
-
-  it('writes a transition target that equals the clamped cache', async () => {
-    const h = await setup(40);
-    h.report(150);
-    await settle();
-    vi.mocked(invoke).mockImplementation(async (command, args) =>
-      command === 'steam_frame_set_brightness' ? (args as { percentage: number }).percentage : false
-    );
-    const task = h.service.transitionBrightness(110, 10000);
-    await settle();
-    expect(task.isComplete()).toBe(true);
     expect(h.writes()).toEqual([
       ['steam_frame_set_brightness', { pairingId: 'p', percentage: 110 }],
     ]);
