@@ -36,6 +36,11 @@ export const VALVE_INDEX_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: HardwareBrig
     riskThreshold: 160,
   };
 
+interface WrittenGain {
+  target: number;
+  gain: number;
+}
+
 type IndexOpenVR = Pick<
   OpenVRService,
   'status' | 'devices' | 'analogGainUpdates' | 'getAnalogGain' | 'setAnalogGain'
@@ -52,6 +57,8 @@ export class ValveIndexHardwareBrightnessControlDriver extends HardwareBrightnes
   /** Set while a write runs; a newer value waits in `pending` and replaces an older one. */
   private sending = false;
   private pending: number | null = null;
+  /** Set when a report arrives during a write, which then reads the gain again before it ends. */
+  private reportSkipped = false;
 
   constructor(
     appSettings: Observable<AppSettings>,
@@ -101,16 +108,20 @@ export class ValveIndexHardwareBrightnessControlDriver extends HardwareBrightnes
     if (this.sending) return;
     this.sending = true;
 
-    // write the newest value until none waits
+    // write the newest value until none waits, and read again after a skipped report
+    let written: WrittenGain | null = null;
     let current: number | null = null;
-    while (this.pending !== null) {
+    while (this.pending !== null || this.reportSkipped) {
       const target = this.pending;
       this.pending = null;
-      current = await this.write(target);
+      this.reportSkipped = false;
+      if (target !== null) written = await this.write(target);
+      const held = await this.openvr.getAnalogGain().catch(() => null);
+      current = held === null ? null : this.heldPercentage(held, written);
     }
     this.sending = false;
 
-    // reports that arrived during the write were skipped, so show the value SteamVR holds now
+    // show the value SteamVR holds now, in place of the skipped reports
     if (current !== null) this.updates.next(this.clampToBounds(current));
   }
 
@@ -118,22 +129,21 @@ export class ValveIndexHardwareBrightnessControlDriver extends HardwareBrightnes
     return this.available;
   }
 
-  /**
-   * Writes the gain, then reads it back. Returns the target when SteamVR holds it, the value it
-   * holds when a change outside OyasumiVR came in between, or null when the read failed.
-   */
-  private async write(target: number): Promise<number | null> {
+  /** Writes the gain; null when SteamVR refused it. */
+  private async write(target: number): Promise<WrittenGain | null> {
     const gain = this.percentageToAnalogGain(target);
-    const written = await this.openvr.setAnalogGain(gain).then(
-      () => true,
+    return this.openvr.setAnalogGain(gain).then(
+      () => ({ target, gain }),
       (e) => {
         warn(`[ValveIndexHardwareBrightnessControlDriver] Could not set the analog gain: ${e}`);
-        return false;
+        return null;
       }
     );
-    const held = await this.openvr.getAnalogGain().catch(() => null);
-    if (held === null) return null;
-    if (written && Math.abs(held - gain) < ANALOG_GAIN_TOLERANCE) return target;
+  }
+
+  /** The written target while SteamVR still holds it, so the value shows unrounded. */
+  private heldPercentage(held: number, written: WrittenGain | null): number {
+    if (written && Math.abs(held - written.gain) < ANALOG_GAIN_TOLERANCE) return written.target;
     return Math.round(this.analogGainToPercentage(held));
   }
 
@@ -142,9 +152,13 @@ export class ValveIndexHardwareBrightnessControlDriver extends HardwareBrightnes
     if (gain !== null) this.onGainReport(gain);
   }
 
-  /** Adopts a reported gain, unless a write runs: then the requested value stays on screen. */
+  /** Adopts a reported gain, unless a write runs: then the write reads the gain again. */
   private onGainReport(gain: number) {
-    if (!this.isAvailableNow || this.sending) return;
+    if (!this.isAvailableNow) return;
+    if (this.sending) {
+      this.reportSkipped = true;
+      return;
+    }
     this.updates.next(this.clampToBounds(Math.round(this.analogGainToPercentage(gain))));
   }
 
