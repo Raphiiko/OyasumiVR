@@ -31,8 +31,10 @@ Each icon uses three tones and an optional shade. Each tone has one job and one 
 The accent is the base color: `--icon-color` when an ancestor sets it, `--color-primary` otherwise.
 It reads well against the dark background but too weakly against the pale body, so it never sits
 inside the body: the pink primary on its body measures 2.33:1. The other three tones derive from the
-base color in OKLCH. They keep its hue and set a fixed lightness, so the inner tone stays at 4.5:1 or
-more against the body for any base color (5.05:1 for the pink). A color change needs no icon edits.
+base color in OKLCH. They keep its hue and set a fixed lightness. For every base color the app uses,
+the theme and severity colors, the VRChat status colors, white, and the text grays, the inner tone
+measures at least 4.78:1 against the body (5.36:1 for the pink). A formula this simple cannot hold
+4.5:1 for every possible color, so measure a new base color before you use it.
 
 Set `--icon-color` where the context has its own color:
 
