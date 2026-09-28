@@ -456,7 +456,7 @@ export class OscScriptSimpleEditorComponent implements OnInit {
     this.testing = true;
     this.cdr.markForCheck();
     await Promise.all([
-      this.osc.runScript(this._script),
+      this.osc.testScript(this._script),
       new Promise((resolve) => setTimeout(resolve, 1000)),
     ]);
     this.testing = false;

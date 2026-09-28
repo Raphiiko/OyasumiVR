@@ -350,17 +350,22 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     const ovrDevice = this.getDeviceOVR(device);
     const lighthouseDevice = this.getDeviceLighthouse(device);
 
+    const deviceName = device.nickname ?? device.defaultName;
     if (ovrDevice && ovrDevice.canPowerOff) {
-      await this.lighthouseConsole.turnOffDevices([ovrDevice]);
+      await this.lighthouseConsole.turnOffDeviceForUser(ovrDevice, deviceName);
     } else if (lighthouseDevice) {
-      await this.lighthouse.setPowerState(lighthouseDevice, 'sleep');
+      await this.lighthouse.setPowerStateForUser(lighthouseDevice, 'sleep', deviceName);
     }
   }
 
   async powerOnDevice(device: DMKnownDevice) {
     const lighthouseDevice = this.getDeviceLighthouse(device);
     if (lighthouseDevice) {
-      await this.lighthouse.setPowerState(lighthouseDevice, 'on');
+      await this.lighthouse.setPowerStateForUser(
+        lighthouseDevice,
+        'on',
+        device.nickname ?? device.defaultName
+      );
     }
   }
 

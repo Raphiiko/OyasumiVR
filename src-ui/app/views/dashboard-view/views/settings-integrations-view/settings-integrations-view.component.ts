@@ -1,6 +1,4 @@
 import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { warn } from '@tauri-apps/plugin-log';
-import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { PulsoidService } from '../../../../services/integrations/pulsoid.service';
 import { VRChatService } from '../../../../services/vrchat-api/vrchat.service';
 import { PULSOID_REFERRAL_ID } from 'src-ui/app/globals';
@@ -16,6 +14,8 @@ import {
   DiscordActivityMode,
   VRCXEventLogType,
 } from 'src-ui/app/models/settings';
+import { ToastService } from '../../../../services/toast.service';
+import { copyWithToast } from '../../../../utils/clipboard-utils';
 import { VRChatAccountsModalComponent } from '../../../../components/vrchat-accounts-modal/vrchat-accounts-modal.component';
 
 @Component({
@@ -28,7 +28,6 @@ import { VRChatAccountsModalComponent } from '../../../../components/vrchat-acco
 export class SettingsIntegrationsViewComponent implements OnInit {
   deobfuscated: string[] = [];
   deobfuscationTimers: { [service: string]: any } = {};
-  copiedToClipboard: string[] = [];
 
   discordActivityModeOptions: SelectBoxItem[] = [
     {
@@ -59,7 +58,8 @@ export class SettingsIntegrationsViewComponent implements OnInit {
     protected mqttService: MqttService,
     protected settingsService: AppSettingsService,
     private modalService: ModalService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private toasts: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -84,23 +84,8 @@ export class SettingsIntegrationsViewComponent implements OnInit {
 
   protected readonly PULSOID_REFERRAL_ID = PULSOID_REFERRAL_ID;
 
-  protected async copyToClipboard(service: string) {
-    this.copiedToClipboard.push(service);
-    setTimeout(() => {
-      const index = this.copiedToClipboard.findIndex((s) => s === service);
-      if (index > -1) this.copiedToClipboard.splice(index, 1);
-    }, 1000);
-
-    switch (service) {
-      case 'PULSOID': {
-        const url = this.pulsoid.getLoginUrl();
-        await writeText(url);
-        break;
-      }
-      default:
-        warn('Tried copying link for unknown service');
-        break;
-    }
+  protected async copyPulsoidLoginUrl() {
+    await copyWithToast(this.toasts, this.pulsoid.getLoginUrl(), 'toasts.clipboard.pulsoidLink');
   }
 
   protected showMqttConfigModal() {

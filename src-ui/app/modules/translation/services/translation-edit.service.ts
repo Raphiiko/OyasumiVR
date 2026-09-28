@@ -4,9 +4,10 @@ import { TranslationEntries, TranslationEntry } from '../models/translation-entr
 import { DownloadableTranslation } from '../models/downloadable-translation';
 import { Router } from '@angular/router';
 import { TranslationEditUtils } from '../utils/translation-edit-utils';
-import { message, save } from '@tauri-apps/plugin-dialog';
+import { save } from '@tauri-apps/plugin-dialog';
 import { writeTextFile } from '@tauri-apps/plugin-fs';
 import { TranslationSuggestion } from '../models/translation-suggestion';
+import { ToastService } from '../../../services/toast.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +20,10 @@ export class TranslationEditService {
   private readonly _suggestions = new BehaviorSubject<TranslationSuggestion[]>([]);
   public readonly suggestions = this._suggestions.asObservable();
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private toasts: ToastService
+  ) {}
 
   public async getDownloadableTranslations(): Promise<DownloadableTranslation[]> {
     const response: any = await fetch(
@@ -52,9 +56,12 @@ export class TranslationEditService {
     const importCount = entries.filter((e) => e.values[locale] !== undefined).length;
     const discarded = Object.keys(flatLang).length - importCount;
     if (discarded > 0) {
-      message(
-        `Discarded ${discarded} translation(s) because they were not present in the English translation file.`
-      );
+      this.toasts.show({
+        type: 'warning',
+        title: `Discarded ${discarded} translation(s)`,
+        message: 'They are not present in the English translation file.',
+        duration: 8000,
+      });
     }
     // Remove empty and placeholder entries
     entries.forEach((entry) => {
@@ -141,7 +148,12 @@ export class TranslationEditService {
     try {
       await writeTextFile(filePath!, stringdata);
     } catch (e) {
-      await message('The translation file could not be saved:\n' + e);
+      this.toasts.show({
+        type: 'error',
+        title: 'Could not save the translation file',
+        message: `${e}`,
+        duration: 8000,
+      });
       return false;
     }
     return true;
@@ -172,9 +184,12 @@ export class TranslationEditService {
         ) as { [key: string]: string };
       }
     } catch (e) {
-      await message(
-        'Could not download updated translations to update your current translations:\n' + e
-      );
+      this.toasts.show({
+        type: 'error',
+        title: 'Could not download the latest translations',
+        message: `${e}`,
+        duration: 8000,
+      });
       return null;
     }
     // Add new translations

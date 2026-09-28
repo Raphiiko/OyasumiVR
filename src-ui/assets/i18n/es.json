@@ -1652,14 +1652,6 @@
       }
     }
   },
-  "pulsoid": {
-    "login": {
-      "error": {
-        "message": "No se ha podido iniciar sesión con su cuenta de Pulsoid. Vuelve a intentarlo más tarde. Si el problema persiste, ponte en contacto con el servicio de asistencia!\n\n{errorDetails}",
-        "title": "Fallo al iniciar sesión en Pulsoid"
-      }
-    }
-  },
   "resolution-automations": {
     "description": "OyasumiVR puede ajustar automáticamente la resolución de renderizado de SteamVR cuando se activa o desactiva el modo sueño.",
     "onSleepDisable": {
@@ -1788,36 +1780,6 @@
         "vrManifestReregister": {
           "action": "Retregistro manifiesto",
           "description": "Reregistros de la aplicación VR de Oyasumivr manifiesto con SteamVR.",
-          "modal": {
-            "FLAVOUR_NOT_ELIGIBLE": {
-              "message": "Como está utilizando una construcción no elegible de OyasumiVR (e.g. la versión de Steam), el manifiesto de la aplicación no ha sido registrado, pero no reregistrado. ¡Esto no es un error! Reinicie OyasumiVR.",
-              "title": "Aplicación Manifiestas no registradas"
-            },
-            "MANIFEST_ADD_FAILED": {
-              "message": "El manifiesto se eliminó, pero no se pudo agregar de nuevo.Reinicie Oyasumivr y consulte los registros.",
-              "title": "Retregistración del manifiesto de la aplicación VR falló"
-            },
-            "MANIFEST_CHECK_FAILED": {
-              "message": "No se pudo verificar si el manifiesto de OyasumiVR ya estaba registrado con SteamVR. Reinicie OyasumiVR y consulte los registros.",
-              "title": "Retregistración del manifiesto de la aplicación VR falló"
-            },
-            "MANIFEST_NOT_REGISTERED": {
-              "message": "Oyasumivr no tenía manifiesto registrado con Steamvr.No ha sido (re)registrado. Reinicie OyasumiVR.",
-              "title": "Retregistración del manifiesto de la aplicación VR falló"
-            },
-            "MANIFEST_REMOVE_FAILED": {
-              "message": "El manifiesto no pudo ser retirado.Por favor revise los registros.",
-              "title": "Retregistración del manifiesto de la aplicación VR falló"
-            },
-            "UNKNOWN": {
-              "message": "El manifiesto de OyasumiVR no pudo volver a registrarse con SteamVR debido a un error desconocido. Reinicie OyasumiVR y consulte los registros.",
-              "title": "Retregistración del manifiesto de la aplicación VR falló"
-            },
-            "success": {
-              "message": "El manifiesto de OyasumiVR se ha vuelto a grabar con éxito con SteamVR.",
-              "title": "VR Aplicación Manifiesta reregistrado"
-            }
-          },
           "title": "Reiniciar el manifiesto de la aplicación SteamVR"
         }
       }
@@ -2639,11 +2601,47 @@
     "prepareForSleep": "Prepararse para dormir",
     "sleepMode": "Modo sueño"
   },
-  "updater": {
-    "modals": {
-      "error": {
+  "toasts": {
+    "pulsoid": {
+      "loginFailed": {
+        "message": "No se ha podido iniciar sesión con su cuenta de Pulsoid. Vuelve a intentarlo más tarde. Si el problema persiste, ponte en contacto con el servicio de asistencia!\n\n{errorDetails}",
+        "title": "Fallo al iniciar sesión en Pulsoid"
+      }
+    },
+    "update": {
+      "installFailed": {
         "message": "No se ha podido instalar la actualización. Vuelva a intentarlo más tarde.",
         "title": "Actualización fallida"
+      }
+    },
+    "vrManifestReregister": {
+      "FLAVOUR_NOT_ELIGIBLE": {
+        "message": "Como está utilizando una construcción no elegible de OyasumiVR (e.g. la versión de Steam), el manifiesto de la aplicación no ha sido registrado, pero no reregistrado. ¡Esto no es un error! Reinicie OyasumiVR.",
+        "title": "Aplicación Manifiestas no registradas"
+      },
+      "MANIFEST_ADD_FAILED": {
+        "message": "El manifiesto se eliminó, pero no se pudo agregar de nuevo.Reinicie Oyasumivr y consulte los registros.",
+        "title": "Retregistración del manifiesto de la aplicación VR falló"
+      },
+      "MANIFEST_CHECK_FAILED": {
+        "message": "No se pudo verificar si el manifiesto de OyasumiVR ya estaba registrado con SteamVR. Reinicie OyasumiVR y consulte los registros.",
+        "title": "Retregistración del manifiesto de la aplicación VR falló"
+      },
+      "MANIFEST_NOT_REGISTERED": {
+        "message": "Oyasumivr no tenía manifiesto registrado con Steamvr.No ha sido (re)registrado. Reinicie OyasumiVR.",
+        "title": "Retregistración del manifiesto de la aplicación VR falló"
+      },
+      "MANIFEST_REMOVE_FAILED": {
+        "message": "El manifiesto no pudo ser retirado.Por favor revise los registros.",
+        "title": "Retregistración del manifiesto de la aplicación VR falló"
+      },
+      "UNKNOWN": {
+        "message": "El manifiesto de OyasumiVR no pudo volver a registrarse con SteamVR debido a un error desconocido. Reinicie OyasumiVR y consulte los registros.",
+        "title": "Retregistración del manifiesto de la aplicación VR falló"
+      },
+      "success": {
+        "message": "El manifiesto de OyasumiVR se ha vuelto a grabar con éxito con SteamVR.",
+        "title": "VR Aplicación Manifiesta reregistrado"
       }
     }
   },

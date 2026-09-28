@@ -103,14 +103,9 @@
                     class="btn btn-copy btn-secondary"
                     tooltip="settings.integrations.copy"
                     tooltipMode="left"
-                    (click)="copyToClipboard('PULSOID')"
+                    (click)="copyPulsoidLoginUrl()"
                   >
-                    @if (!copiedToClipboard.includes('PULSOID')) {
-                      <app-icon name="copy" />
-                    }
-                    @if (copiedToClipboard.includes('PULSOID')) {
-                      <app-icon class="success" name="check" />
-                    }
+                    <app-icon name="copy" />
                   </button>
                   <button
                     class="btn btn-primary"

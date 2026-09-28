@@ -1803,14 +1803,6 @@
       }
     }
   },
-  "pulsoid": {
-    "login": {
-      "error": {
-        "message": "使用 Pulsoid 帐户登录失败。请稍后再试。如果问题仍然存在，请联系开发者寻求帮助！\n\n{errorDetails}",
-        "title": "Pulsoid 登录失败"
-      }
-    }
-  },
   "resolution-automations": {
     "description": "当开启（或关闭）睡眠模式时，OyasumiVR 可以自动调整 SteamVR 的渲染分辨率",
     "onSleepDisable": {
@@ -1952,36 +1944,6 @@
         "vrManifestReregister": {
           "action": "重新注册",
           "description": "在 SteamVR 上重新注册程序的清单数据",
-          "modal": {
-            "FLAVOUR_NOT_ELIGIBLE": {
-              "message": "由于你使用的是 OyasumiVR 的非合格版本（例如 Steam 版本），程序清单数据已被取消注册，这并不是错误！请重启 OyasumiVR。",
-              "title": "未注册的清单数据"
-            },
-            "MANIFEST_ADD_FAILED": {
-              "message": "清单数据已成功删除，但无法重新添加它们。请重启 OyasumiVR 并查看日志。",
-              "title": "未能成功注册程序的清单数据"
-            },
-            "MANIFEST_CHECK_FAILED": {
-              "message": "无法检查 OyasumiVR 的清单数据是否已在 SteamVR 中注册。请重启 OyasumiVR 并查看日志。",
-              "title": "未能成功注册程序的清单数据"
-            },
-            "MANIFEST_NOT_REGISTERED": {
-              "message": "OyasumiVR 没有在 SteamVR 上注册过，请重新启动 OyasumiVR。",
-              "title": "未能成功注册程序的清单数据"
-            },
-            "MANIFEST_REMOVE_FAILED": {
-              "message": "无法删除清单，请查看日志以了解详情。",
-              "title": "未能成功注册程序的清单数据"
-            },
-            "UNKNOWN": {
-              "message": "由于未知错误，OyasumiVR 的清单数据无法在 SteamVR 中重新注册。请重启 OyasumiVR 并查看日志。",
-              "title": "未能成功注册程序的清单数据"
-            },
-            "success": {
-              "message": "OyasumiVR 的清单数据已成功在 SteamVR 重新注册。",
-              "title": "已重新注册程序的清单数据"
-            }
-          },
           "title": "重新注册 SteamVR 的应用程序清单"
         }
       }
@@ -2790,11 +2752,47 @@
     "quit": "退出 OyasumiVR",
     "sleepMode": "睡眠模式"
   },
-  "updater": {
-    "modals": {
-      "error": {
+  "toasts": {
+    "pulsoid": {
+      "loginFailed": {
+        "message": "使用 Pulsoid 帐户登录失败。请稍后再试。如果问题仍然存在，请联系开发者寻求帮助！\n\n{errorDetails}",
+        "title": "Pulsoid 登录失败"
+      }
+    },
+    "update": {
+      "installFailed": {
         "message": "本次更新安装失败。请稍后再试",
         "title": "更新失败"
+      }
+    },
+    "vrManifestReregister": {
+      "FLAVOUR_NOT_ELIGIBLE": {
+        "message": "由于你使用的是 OyasumiVR 的非合格版本（例如 Steam 版本），程序清单数据已被取消注册，这并不是错误！请重启 OyasumiVR。",
+        "title": "未注册的清单数据"
+      },
+      "MANIFEST_ADD_FAILED": {
+        "message": "清单数据已成功删除，但无法重新添加它们。请重启 OyasumiVR 并查看日志。",
+        "title": "未能成功注册程序的清单数据"
+      },
+      "MANIFEST_CHECK_FAILED": {
+        "message": "无法检查 OyasumiVR 的清单数据是否已在 SteamVR 中注册。请重启 OyasumiVR 并查看日志。",
+        "title": "未能成功注册程序的清单数据"
+      },
+      "MANIFEST_NOT_REGISTERED": {
+        "message": "OyasumiVR 没有在 SteamVR 上注册过，请重新启动 OyasumiVR。",
+        "title": "未能成功注册程序的清单数据"
+      },
+      "MANIFEST_REMOVE_FAILED": {
+        "message": "无法删除清单，请查看日志以了解详情。",
+        "title": "未能成功注册程序的清单数据"
+      },
+      "UNKNOWN": {
+        "message": "由于未知错误，OyasumiVR 的清单数据无法在 SteamVR 中重新注册。请重启 OyasumiVR 并查看日志。",
+        "title": "未能成功注册程序的清单数据"
+      },
+      "success": {
+        "message": "OyasumiVR 的清单数据已成功在 SteamVR 重新注册。",
+        "title": "已重新注册程序的清单数据"
       }
     }
   },

@@ -20,6 +20,8 @@ import {
 import { LighthouseDevice, LighthouseDevicePowerState } from '../models/lighthouse-device';
 import { AppSettingsService } from './app-settings.service';
 import { pRetry } from '../utils/promise-utils';
+import { ToastService } from './toast.service';
+import { error } from '@tauri-apps/plugin-log';
 
 const DEFAULT_SCAN_DURATION = 8;
 export type LighthouseStatus = 'uninitialized' | 'noAdapter' | 'adapterError' | 'ready';
@@ -59,7 +61,10 @@ export class LighthouseService {
   private transitions: { [deviceId: string]: number } = {};
   private lastTransitionId = 0;
 
-  constructor(private appSettings: AppSettingsService) {}
+  constructor(
+    private appSettings: AppSettingsService,
+    private toasts: ToastService
+  ) {}
 
   async init() {
     listen<LighthouseStatusChangedEvent>('LIGHTHOUSE_STATUS_CHANGED', (event) =>
@@ -118,16 +123,37 @@ export class LighthouseService {
       });
   }
 
+  /** Sets the power state for a user action, and shows a toast when the device does not respond. */
+  public async setPowerStateForUser(
+    device: LighthouseDevice,
+    powerState: LighthouseDevicePowerState,
+    deviceName: string,
+    force = false
+  ) {
+    const reached = await this.setPowerState(device, powerState, force).catch((e) => {
+      error(`[Lighthouse] Could not set power state of ${device.id}: ${e}`);
+      return false;
+    });
+    if (reached) return;
+    this.toasts.show({
+      type: 'error',
+      title: { string: 'toasts.devicePower.lighthouseFailed.title', values: { name: deviceName } },
+      message: 'toasts.devicePower.lighthouseFailed.message',
+      duration: 6000,
+    });
+  }
+
+  /** Resolves false when the device did not report the new state within 10 seconds. */
   public async setPowerState(
     device: LighthouseDevice,
     powerState: LighthouseDevicePowerState,
     force = false
-  ) {
+  ): Promise<boolean> {
     // If the device is a V1 and we don't have the identifier, don't send the command
     let v1Identifier = undefined;
     if (device.deviceType === 'lighthouseV1') {
       if (!this.v1Identifiers[device.id]) {
-        return;
+        return false;
       }
       v1Identifier = parseInt(this.v1Identifiers[device.id], 16);
     }
@@ -154,7 +180,7 @@ export class LighthouseService {
         500
       );
       // wait for state to change (timeout after 10 seconds)
-      await firstValueFrom(
+      const reached = await firstValueFrom(
         merge(
           interval(100).pipe(
             delay(500), // Wait 500ms before checking, to make sure the feedback in the UI lasts long enough
@@ -165,6 +191,7 @@ export class LighthouseService {
           of(null).pipe(delay(10000))
         ).pipe(take(1))
       );
+      return reached !== null;
     } finally {
       // only the owning operation may clear the marker
       if (transition !== undefined && this.transitions[device.id] === transition) {

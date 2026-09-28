@@ -1802,14 +1802,6 @@
       }
     }
   },
-  "pulsoid": {
-    "login": {
-      "error": {
-        "message": "使用 Pulsoid 帳戶登入不成功。請稍後再試。如果問題仍然存在，請聯絡我們尋求支持！{errorDetails}{errorDetails}",
-        "title": "Pulsoid 登入失敗"
-      }
-    }
-  },
   "resolution-automations": {
     "description": "當啟用或停用睡眠模式時，OyasumiVR 可以自動調整 SteamVR 的渲染解析度",
     "onSleepDisable": {
@@ -1951,36 +1943,6 @@
         "vrManifestReregister": {
           "action": "重新註冊 Manifest",
           "description": "將 OyasumiVR 的 VR 應用程式 Manifest 重新註冊至 SteamVR",
-          "modal": {
-            "FLAVOUR_NOT_ELIGIBLE": {
-              "message": "由於你使用的是不符合資格的 OyasumiVR 版本（例如 Steam 版本），應用程式的 manifest 已被取消註冊，但尚未重新註冊。這不是錯誤！請重新啟動 OyasumiVR。",
-              "title": "應用程式 Manifest 已取消註冊"
-            },
-            "MANIFEST_ADD_FAILED": {
-              "message": "已移除 Manifest，但無法重新新增。請重新啟動 OyasumiVR 並檢查日誌。",
-              "title": "VR 應用程式 Manifest 重新註冊失敗"
-            },
-            "MANIFEST_CHECK_FAILED": {
-              "message": "無法確認 OyasumiVR 的 Manifest 是否已在 SteamVR 中註冊。請重新啟動 OyasumiVR 並檢查日誌。",
-              "title": "VR 應用程式 Manifest 重新註冊失敗"
-            },
-            "MANIFEST_NOT_REGISTERED": {
-              "message": "OyasumiVR 在 SteamVR 中沒有已註冊的 Manifest，因此未進行（重新）註冊。請重新啟動 OyasumiVR。",
-              "title": "VR 應用程式 Manifest 重新註冊失敗"
-            },
-            "MANIFEST_REMOVE_FAILED": {
-              "message": "無法移除 Manifest。請檢查日誌。",
-              "title": "VR 應用程式 Manifest 重新註冊失敗"
-            },
-            "UNKNOWN": {
-              "message": "由於未知錯誤，OyasumiVR 的 Manifest 無法重新註冊至 SteamVR。請重新啟動 OyasumiVR 並檢查日誌。",
-              "title": "VR 應用程式 Manifest 重新註冊失敗"
-            },
-            "success": {
-              "message": "OyasumiVR 的列表已成功重新註冊至 SteamVR。",
-              "title": "VR 應用程式 Manifest 已重新註冊"
-            }
-          },
           "title": "重新註冊 SteamVR 應用程式 Manifest"
         }
       }
@@ -2833,11 +2795,47 @@
     "quit": "退出 OyasumiVR",
     "sleepMode": "睡眠模式"
   },
-  "updater": {
-    "modals": {
-      "error": {
+  "toasts": {
+    "pulsoid": {
+      "loginFailed": {
+        "message": "使用 Pulsoid 帳戶登入不成功。請稍後再試。如果問題仍然存在，請聯絡我們尋求支持！{errorDetails}{errorDetails}",
+        "title": "Pulsoid 登入失敗"
+      }
+    },
+    "update": {
+      "installFailed": {
         "message": "更新失敗，請稍後再試",
         "title": "更新失敗"
+      }
+    },
+    "vrManifestReregister": {
+      "FLAVOUR_NOT_ELIGIBLE": {
+        "message": "由於你使用的是不符合資格的 OyasumiVR 版本（例如 Steam 版本），應用程式的 manifest 已被取消註冊，但尚未重新註冊。這不是錯誤！請重新啟動 OyasumiVR。",
+        "title": "應用程式 Manifest 已取消註冊"
+      },
+      "MANIFEST_ADD_FAILED": {
+        "message": "已移除 Manifest，但無法重新新增。請重新啟動 OyasumiVR 並檢查日誌。",
+        "title": "VR 應用程式 Manifest 重新註冊失敗"
+      },
+      "MANIFEST_CHECK_FAILED": {
+        "message": "無法確認 OyasumiVR 的 Manifest 是否已在 SteamVR 中註冊。請重新啟動 OyasumiVR 並檢查日誌。",
+        "title": "VR 應用程式 Manifest 重新註冊失敗"
+      },
+      "MANIFEST_NOT_REGISTERED": {
+        "message": "OyasumiVR 在 SteamVR 中沒有已註冊的 Manifest，因此未進行（重新）註冊。請重新啟動 OyasumiVR。",
+        "title": "VR 應用程式 Manifest 重新註冊失敗"
+      },
+      "MANIFEST_REMOVE_FAILED": {
+        "message": "無法移除 Manifest。請檢查日誌。",
+        "title": "VR 應用程式 Manifest 重新註冊失敗"
+      },
+      "UNKNOWN": {
+        "message": "由於未知錯誤，OyasumiVR 的 Manifest 無法重新註冊至 SteamVR。請重新啟動 OyasumiVR 並檢查日誌。",
+        "title": "VR 應用程式 Manifest 重新註冊失敗"
+      },
+      "success": {
+        "message": "OyasumiVR 的列表已成功重新註冊至 SteamVR。",
+        "title": "VR 應用程式 Manifest 已重新註冊"
       }
     }
   },

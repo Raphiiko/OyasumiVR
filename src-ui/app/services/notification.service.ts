@@ -12,6 +12,7 @@ import { AddNotificationRequest } from '../../../src-grpc-web-client/oyasumi-cor
 import { listen } from '@tauri-apps/api/event';
 import { NotificationSound } from '../models/notification-sounds';
 import { SoundEffectConfig } from '../models/automations';
+import { ToastService } from './toast.service';
 
 interface XSOMessage {
   messageType: number;
@@ -36,7 +37,8 @@ export class NotificationService {
 
   constructor(
     private appSettingsService: AppSettingsService,
-    private ipcService: IPCService
+    private ipcService: IPCService,
+    private toasts: ToastService
   ) {}
 
   public async init() {
@@ -137,6 +139,12 @@ export class NotificationService {
         // Stop here and fall back to OYASUMI provider if permissions are not granted
         if (!permissionGranted) {
           this.appSettingsService.updateSettings({ notificationProvider: 'OYASUMIVR' });
+          this.toasts.show({
+            type: 'warning',
+            title: 'toasts.desktopNotificationsBlocked.title',
+            message: 'toasts.desktopNotificationsBlocked.message',
+            duration: 8000,
+          });
           return;
         }
         break;

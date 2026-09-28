@@ -1793,14 +1793,6 @@
       }
     }
   },
-  "pulsoid": {
-    "login": {
-      "error": {
-        "message": "Pulsoidアカウントでのログインに失敗しました。後でもう一度試してみてください。問題が解決しない場合は、サポートにお問い合わせください。\n\n{errorDetails}",
-        "title": "Pulsoid ログイン失敗"
-      }
-    }
-  },
   "resolution-automations": {
     "description": "SteamVRのレンダリング解像度を自動的に調整します。",
     "onSleepDisable": {
@@ -1942,36 +1934,6 @@
         "vrManifestReregister": {
           "action": "マニフェストの再登録",
           "description": "OyasumiVRのアプリケーションマニフェストをSteamVRに再登録します",
-          "modal": {
-            "FLAVOUR_NOT_ELIGIBLE": {
-              "message": "OyasumiVRの非対応ビルド（たとえば、Steam版）を使用しているため、アプリケーションマニフェストは登録解除されましたが、再登録されませんでした。これはエラーではありません。OyasumiVRを再起動してください。",
-              "title": "アプリケーションマニフェストの登録解除"
-            },
-            "MANIFEST_ADD_FAILED": {
-              "message": "マニフェストは削除されましたが、新たに追加できませんでした。OyasumiVRを再起動してログを確認してください。",
-              "title": "VRアプリケーションマニフェストの再登録失敗"
-            },
-            "MANIFEST_CHECK_FAILED": {
-              "message": "マニフェストがすでに登録されているか確認できませんでした。OyasumiVRを再起動してログを確認してください。",
-              "title": "VRアプリケーションマニフェストの再登録失敗"
-            },
-            "MANIFEST_NOT_REGISTERED": {
-              "message": "マニフェストが登録されていませんでした。OyasumiVRを再起動してください。",
-              "title": "VRアプリケーションマニフェストの再登録失敗"
-            },
-            "MANIFEST_REMOVE_FAILED": {
-              "message": "マニフェストを削除できませんでした。ログを確認してください。",
-              "title": "VRアプリケーションマニフェストの再登録失敗"
-            },
-            "UNKNOWN": {
-              "message": "マニフェストは未知のエラーのために再登録できませんでした。OyasumiVRを再起動してログを確認してください。",
-              "title": "VRアプリケーションマニフェストの再登録失敗"
-            },
-            "success": {
-              "message": "OyasumiVRのマニフェストはSteamVRに正常に再登録されました。",
-              "title": "VRアプリケーションマニフェストの再登録成功"
-            }
-          },
           "title": "SteamVRアプリケーションマニフェストの再登録"
         }
       }
@@ -2780,11 +2742,47 @@
     "quit": "OyasumiVRを終了",
     "sleepMode": "睡眠モード"
   },
-  "updater": {
-    "modals": {
-      "error": {
+  "toasts": {
+    "pulsoid": {
+      "loginFailed": {
+        "message": "Pulsoidアカウントでのログインに失敗しました。後でもう一度試してみてください。問題が解決しない場合は、サポートにお問い合わせください。\n\n{errorDetails}",
+        "title": "Pulsoid ログイン失敗"
+      }
+    },
+    "update": {
+      "installFailed": {
         "message": "アップデートのインストールに失敗しました。後ほどもう一度お試しください。",
         "title": "アップデートに失敗しました"
+      }
+    },
+    "vrManifestReregister": {
+      "FLAVOUR_NOT_ELIGIBLE": {
+        "message": "OyasumiVRの非対応ビルド（たとえば、Steam版）を使用しているため、アプリケーションマニフェストは登録解除されましたが、再登録されませんでした。これはエラーではありません。OyasumiVRを再起動してください。",
+        "title": "アプリケーションマニフェストの登録解除"
+      },
+      "MANIFEST_ADD_FAILED": {
+        "message": "マニフェストは削除されましたが、新たに追加できませんでした。OyasumiVRを再起動してログを確認してください。",
+        "title": "VRアプリケーションマニフェストの再登録失敗"
+      },
+      "MANIFEST_CHECK_FAILED": {
+        "message": "マニフェストがすでに登録されているか確認できませんでした。OyasumiVRを再起動してログを確認してください。",
+        "title": "VRアプリケーションマニフェストの再登録失敗"
+      },
+      "MANIFEST_NOT_REGISTERED": {
+        "message": "マニフェストが登録されていませんでした。OyasumiVRを再起動してください。",
+        "title": "VRアプリケーションマニフェストの再登録失敗"
+      },
+      "MANIFEST_REMOVE_FAILED": {
+        "message": "マニフェストを削除できませんでした。ログを確認してください。",
+        "title": "VRアプリケーションマニフェストの再登録失敗"
+      },
+      "UNKNOWN": {
+        "message": "マニフェストは未知のエラーのために再登録できませんでした。OyasumiVRを再起動してログを確認してください。",
+        "title": "VRアプリケーションマニフェストの再登録失敗"
+      },
+      "success": {
+        "message": "OyasumiVRのマニフェストはSteamVRに正常に再登録されました。",
+        "title": "VRアプリケーションマニフェストの再登録成功"
       }
     }
   },

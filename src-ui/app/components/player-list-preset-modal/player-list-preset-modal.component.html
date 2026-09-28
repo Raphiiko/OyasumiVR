@@ -19,11 +19,7 @@
           [placeholder]="'comp.player-list-preset-modal.namePlaceholder' | transloco"
           maxlength="24"
         />
-        <button
-          class="btn btn-primary"
-          [disabled]="saved || !validSaveName"
-          (click)="saveNewPreset()"
-        >
+        <button class="btn btn-primary" [disabled]="!validSaveName" (click)="saveNewPreset()">
           <app-icon name="save" />
           <span transloco="shared.modals.save"></span>
         </button>
@@ -47,7 +43,6 @@
           <div class="preset-actions">
             <button
               class="btn btn-secondary"
-              [disabled]="saved"
               (click)="deletePreset(list)"
               [tooltip]="'comp.player-list-preset-modal.delete'"
               [tooltipMode]="'left'"
@@ -57,7 +52,6 @@
             @if (mode === 'save') {
               <button
                 class="btn btn-secondary"
-                [disabled]="saved"
                 (click)="overwritePreset(list)"
                 [tooltip]="'comp.player-list-preset-modal.overwrite'"
                 [tooltipMode]="'left'"

@@ -11,15 +11,14 @@ import { OpenVRService } from '../../../../services/openvr.service';
 import { IPCService } from '../../../../services/ipc.service';
 import { FontLoaderService } from '../../../../services/font-loader.service';
 import { invoke } from '@tauri-apps/api/core';
-import { hshrink } from '../../../../utils/animations';
 import { TStringTranslatePipe } from '../../../../pipes/tstring-translate.pipe';
-import { writeText } from '@tauri-apps/plugin-clipboard-manager';
+import { ToastService } from '../../../../services/toast.service';
+import { copyWithToast } from '../../../../utils/clipboard-utils';
 
 @Component({
   selector: 'app-settings-status-info-view',
   templateUrl: './settings-status-info-view.component.html',
   styleUrls: ['./settings-status-info-view.component.scss'],
-  animations: [hshrink()],
   changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
@@ -32,7 +31,6 @@ export class SettingsStatusInfoViewComponent {
     }>;
   }> = [];
   compact = true;
-  copiedToClipboard: string[] = [];
 
   constructor(
     vrchat: VRChatService,
@@ -42,7 +40,8 @@ export class SettingsStatusInfoViewComponent {
     openvr: OpenVRService,
     ipc: IPCService,
     fontLoader: FontLoaderService,
-    private tsTranslate: TStringTranslatePipe
+    private tsTranslate: TStringTranslatePipe,
+    private toasts: ToastService
   ) {
     this.categories = [
       {
@@ -312,11 +311,6 @@ export class SettingsStatusInfoViewComponent {
   }
 
   async copyToClipboard() {
-    this.copiedToClipboard.push('ALL_DATA');
-    setTimeout(() => {
-      const index = this.copiedToClipboard.findIndex((s) => s === 'ALL_DATA');
-      if (index > -1) this.copiedToClipboard.splice(index, 1);
-    }, 1000);
     const data: { [s: string]: { [s: string]: string } } = {};
     for (const category of this.categories) {
       const categoryName = this.tsTranslate.transform(category.name) as string;
@@ -328,19 +322,14 @@ export class SettingsStatusInfoViewComponent {
         ) as string;
       }
     }
-    await writeText('```json\n' + JSON.stringify(data, null, 2) + '\n```');
+    const json = '```json\n' + JSON.stringify(data, null, 2) + '\n```';
+    await copyWithToast(this.toasts, json, 'toasts.clipboard.statusInfo');
   }
 
   async copyValue(entry: { key: TString; value: Observable<TString> }) {
     const keyString = this.tsTranslate.transform(entry.key) as string;
     const value = await firstValueFrom(entry.value);
     const valueString = this.tsTranslate.transform(value) as string;
-    this.copiedToClipboard.push(keyString);
-    setTimeout(() => {
-      const index = this.copiedToClipboard.findIndex((s) => s === keyString);
-      if (index > -1) this.copiedToClipboard.splice(index, 1);
-    }, 1000);
-
-    await writeText(valueString);
+    await copyWithToast(this.toasts, valueString, `${keyString}: ${valueString}`);
   }
 }

@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { message, open as openFile } from '@tauri-apps/plugin-dialog';
+import { open as openFile } from '@tauri-apps/plugin-dialog';
 import { readTextFile } from '@tauri-apps/plugin-fs';
 import {
   CACHE_STORE,
@@ -15,11 +15,7 @@ import {
 import { Router } from '@angular/router';
 import { TranslocoService } from '@jsverse/transloco';
 import { error, info } from '@tauri-apps/plugin-log';
-import {
-  ConfirmModalComponent,
-  ConfirmModalInputModel,
-  ConfirmModalOutputModel,
-} from '../../../../components/confirm-modal/confirm-modal.component';
+import { ConfirmModalComponent } from '../../../../components/confirm-modal/confirm-modal.component';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { invoke } from '@tauri-apps/api/core';
 import { relaunch } from '@tauri-apps/plugin-process';
@@ -32,6 +28,15 @@ import { AppSettingsService } from '../../../../services/app-settings.service';
 import { FLAVOUR } from '../../../../../build';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { firstValueFrom } from 'rxjs';
+import { ToastService } from '../../../../services/toast.service';
+
+const MANIFEST_REREGISTER_ERRORS = [
+  'MANIFEST_ADD_FAILED',
+  'MANIFEST_REMOVE_FAILED',
+  'MANIFEST_CHECK_FAILED',
+  'MANIFEST_NOT_REGISTERED',
+  'FLAVOUR_NOT_ELIGIBLE',
+];
 
 @Component({
   selector: 'app-settings-advanced-view',
@@ -69,7 +74,8 @@ export class SettingsAdvancedViewComponent {
     private eventLogService: EventLogService,
     private ipcService: IPCService,
     private settingsService: AppSettingsService,
-    protected openvr: OpenVRService
+    protected openvr: OpenVRService,
+    private toasts: ToastService
   ) {
     this.settingsService.settings.pipe(takeUntilDestroyed()).subscribe((settings) => {
       this.overlayGpuAcceleration = settings.overlayGpuAcceleration;
@@ -139,9 +145,11 @@ export class SettingsAdvancedViewComponent {
       translations = JSON.parse(fileData);
     } catch (e) {
       error(`[DebugSettings] Could not load translations from file: ${JSON.stringify(e)}`);
-      await message('Translations could not be loaded:\n' + e, {
-        title: 'Error loading translations',
-        kind: 'error',
+      this.toasts.show({
+        type: 'error',
+        title: 'Could not load translations',
+        message: `${e}`,
+        duration: 8000,
       });
       return;
     }
@@ -156,7 +164,7 @@ export class SettingsAdvancedViewComponent {
     this.translate.setTranslation(translations, 'DEBUG');
     // Switch language to DEBUG
     this.setUserLanguage('DEBUG');
-    await message('Translations have been loaded from ' + path, 'Translations loaded');
+    this.toasts.show({ type: 'success', title: 'Translations loaded', message: path });
   }
 
   clearPersistentStorage() {
@@ -242,7 +250,17 @@ export class SettingsAdvancedViewComponent {
         }
         info('[Settings] Finished clearing of persistent storage');
         this.checkedPersistentStorageItems = [];
-        if (askForRelaunch) {
+        if (!askForRelaunch) {
+          this.toasts.show(
+            failedClears.length
+              ? {
+                  type: 'error',
+                  title: 'toasts.persistentData.failed.title',
+                  message: 'toasts.persistentData.failed.message',
+                }
+              : { type: 'success', title: 'toasts.persistentData.cleared' }
+          );
+        } else {
           this.modalService
             .addModal(
               ConfirmModalComponent,
@@ -275,39 +293,20 @@ export class SettingsAdvancedViewComponent {
       await invoke('openvr_reregister_manifest');
     } catch (e) {
       error(`[Settings] Could not re-register VR manifest: ${JSON.stringify(e)}`);
-      switch (e) {
-        case 'MANIFEST_ADD_FAILED':
-        case 'MANIFEST_REMOVE_FAILED':
-        case 'MANIFEST_CHECK_FAILED':
-        case 'MANIFEST_NOT_REGISTERED':
-        case 'FLAVOUR_NOT_ELIGIBLE':
-          this.modalService
-            .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
-              title: `settings.advanced.troubleshooting.vrManifestReregister.modal.${e}.title`,
-              message: `settings.advanced.troubleshooting.vrManifestReregister.modal.${e}.message`,
-              showCancel: false,
-            })
-            .subscribe();
-          break;
-        default:
-          this.modalService
-            .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
-              title: `settings.advanced.troubleshooting.vrManifestReregister.modal.UNKNOWN.title`,
-              message: `settings.advanced.troubleshooting.vrManifestReregister.modal.UNKNOWN.message`,
-              showCancel: false,
-            })
-            .subscribe();
-          break;
-      }
+      const result = MANIFEST_REREGISTER_ERRORS.includes(e as string) ? (e as string) : 'UNKNOWN';
+      this.toasts.show({
+        type: result === 'FLAVOUR_NOT_ELIGIBLE' ? 'info' : 'error',
+        title: `toasts.vrManifestReregister.${result}.title`,
+        message: `toasts.vrManifestReregister.${result}.message`,
+        duration: 8000,
+      });
       return;
     }
-    this.modalService
-      .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
-        title: 'settings.advanced.troubleshooting.vrManifestReregister.modal.success.title',
-        message: 'settings.advanced.troubleshooting.vrManifestReregister.modal.success.message',
-        showCancel: false,
-      })
-      .subscribe();
+    this.toasts.show({
+      type: 'success',
+      title: 'toasts.vrManifestReregister.success.title',
+      message: 'toasts.vrManifestReregister.success.message',
+    });
   }
 
   async openDevTools() {
