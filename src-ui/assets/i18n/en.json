@@ -2820,6 +2820,7 @@
   "steamFrame": {
     "actions": {
       "back": "Back",
+      "cancel": "Cancel",
       "cancelPairing": "Cancel pairing",
       "close": "Close",
       "closeForNow": "Close for now",
@@ -2830,6 +2831,7 @@
       "done": "Done",
       "enterAddress": "Enter address",
       "findHeadset": "Find your headset",
+      "forget": "Forget",
       "pair": "Pair headset",
       "pairAgain": "Pair again",
       "pairThis": "Pair this headset",
@@ -2840,11 +2842,15 @@
       "searchAgain": "Search again",
       "sendAgain": "Send again",
       "tryAgain": "Try again",
+      "unpair": "Unpair",
+      "unpairAll": "Uninstall helper",
       "update": "Update",
       "yesPair": "Yes, pair it"
     },
     "details": {
       "helper": "OyasumiVR Helper",
+      "pairing": "Pairing",
+      "pairingDescription": "Stop using this headset with OyasumiVR on this PC",
       "upToDate": "Up to date",
       "updating": "Updating…",
       "version": "Version {version}",
@@ -2892,7 +2898,7 @@
       },
       "devmode": {
         "enable": "Turn on <kbd>Developer Mode</kbd>.",
-        "path": "Put on the headset and open <kbd>Settings</kbd> › <kbd>System</kbd>.",
+        "open": "Put on the headset and open <kbd>Settings</kbd> › <kbd>System</kbd>.",
         "title": "Turn on Developer Mode"
       },
       "found": {
@@ -2930,9 +2936,10 @@
         "title": "Headset found, but not ready to pair"
       },
       "pairhost": {
-        "path": "In the headset, open <kbd>Settings</kbd> › <kbd>Developer</kbd> › <kbd>Pair new host</kbd>.",
+        "open": "Put on the headset and open <kbd>Settings</kbd> › <kbd>Developer</kbd>.",
         "return": "Leave that screen open, take the headset off, and continue here.",
-        "title": "Open Pair new host"
+        "select": "Under <kbd>Development Kit</kbd>, select <kbd>Pair new host</kbd>.",
+        "title": "Select Pair new host"
       },
       "request": {
         "body": "This may take a moment.",
@@ -3034,6 +3041,35 @@
       "install": "Install helper",
       "label": "Pairing progress",
       "pairhost": "Pair new host"
+    },
+    "unpair": {
+      "checking": "Checking the headset…",
+      "choose": {
+        "onlyPc": "This PC stops connecting to the headset. No other PC uses OyasumiVR Helper, so it will be uninstalled from the headset too.",
+        "otherPcsMany": "This PC stops connecting to the headset. OyasumiVR Helper stays installed, because {count} other PCs still use it. To disconnect them too, uninstall the helper.",
+        "otherPcsOne": "This PC stops connecting to the headset. OyasumiVR Helper stays installed, because 1 other PC still uses it. To disconnect that PC too, uninstall the helper.",
+        "title": "Unpair Steam Frame?"
+      },
+      "failed": {
+        "helperBusy": "Another PC is updating OyasumiVR Helper on this headset. Wait a minute, then try again.",
+        "hostKeyChanged": "OyasumiVR can't confirm this is the headset you paired, so it didn't change anything on it. Forget it to remove the pairing from this PC only.",
+        "other": "Something went wrong. Try again, or forget the headset to remove the pairing from this PC only.",
+        "rejected": "This headset no longer accepts this PC, so OyasumiVR can't change anything on it. Forget it to remove the pairing from this PC only.",
+        "title": "Couldn't unpair",
+        "unreachable": "The headset didn't respond. Make sure it's on and connected, then try again."
+      },
+      "forget": {
+        "body": "This removes the pairing from this PC only. OyasumiVR Helper stays installed on the headset, and other paired PCs keep working.",
+        "command": "Run this in a terminal on the headset to uninstall OyasumiVR Helper from the headset:",
+        "noPcLeft": "Can't unpair from any PC?",
+        "removed": "This headset no longer accepts this PC. Forget it to remove the pairing from this PC only.",
+        "title": "Forget Steam Frame?"
+      },
+      "working": {
+        "removeHelper": "Removing this PC's access and uninstalling OyasumiVR Helper.",
+        "removePc": "Removing this PC's access from the headset.",
+        "title": "Unpairing Steam Frame"
+      }
     },
     "waiting": {
       "awaiting": "Waiting for your answer in the headset…",
