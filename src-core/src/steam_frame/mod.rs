@@ -22,6 +22,10 @@ pub const SUPPORTED_MODELS: &[SupportedModel] = &[
     },
     SupportedModel {
         manufacturer: "Valve",
+        model: "Deckard MP",
+    },
+    SupportedModel {
+        manufacturer: "Valve",
         model: "Steam Frame",
     },
 ];
