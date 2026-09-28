@@ -70,6 +70,19 @@ export interface SteamFrameConnectionState {
   maintenance: SteamFrameMaintenance | null;
   address: string;
   certPin: string;
+  /** The helper's last brightness report; null while not connected. */
+  brightness: SteamFrameBrightness | null;
+}
+
+/** The headset's hardware brightness in percent, as the helper reports it. */
+export interface SteamFrameBrightness {
+  /** False while the helper has no SteamVR session; nothing else is known then. */
+  runtime: boolean;
+  supported: boolean;
+  min: number | null;
+  max: number | null;
+  /** The headset's value, which can lie outside `min` and `max`. */
+  percentage: number | null;
 }
 
 export type SteamFrameRegisterOutcome =

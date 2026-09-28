@@ -7,12 +7,15 @@ import {
   combineLatest,
   delay,
   distinctUntilChanged,
+  EMPTY,
   filter,
   firstValueFrom,
   map,
   Observable,
   of,
   shareReplay,
+  startWith,
+  ReplaySubject,
   switchMap,
 } from 'rxjs';
 import { isEqual } from 'lodash';
@@ -28,6 +31,13 @@ import { BigscreenBeyondHardwareBrightnessControlDriver } from './hardware-brigh
 import { AppSettingsService } from '../app-settings.service';
 import { AppSettings } from '../../models/settings';
 import { clamp } from '../../utils/number-utils';
+import { SteamFrameHardwareBrightnessControlDriver } from './hardware-brightness-drivers/steam-frame-hardware-brightness-control-driver';
+import { SteamFramePairingService } from '../steam-frame-pairing.service';
+
+export interface AdoptedBrightness {
+  percentage: number;
+  bounds: [number, number];
+}
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +45,14 @@ import { clamp } from '../../utils/number-utils';
 export class HardwareBrightnessControlService {
   public readonly driverValveIndex: ValveIndexHardwareBrightnessControlDriver;
   public readonly driverBigscreenBeyond: BigscreenBeyondHardwareBrightnessControlDriver;
+  public readonly driverSteamFrame: SteamFrameHardwareBrightnessControlDriver;
+  /** The driver that was available last; it stays set after that driver becomes unavailable. */
+  public lastActiveDriver: HardwareBrightnessControlDriver | null = null;
+
+  /** The driver in use now; null while none is available. */
+  get activeDriver(): HardwareBrightnessControlDriver | null {
+    return this.driver.value;
+  }
 
   private driver: BehaviorSubject<HardwareBrightnessControlDriver | null> =
     new BehaviorSubject<HardwareBrightnessControlDriver | null>(null);
@@ -51,6 +69,13 @@ export class HardwareBrightnessControlService {
     shareReplay(1)
   );
   public readonly brightnessBounds: Observable<[number, number]>;
+  /** Replays the latest value to services that subscribe after the driver reported it. */
+  private _adoptedBrightness = new ReplaySubject<AdoptedBrightness>(1);
+  /**
+   * Values the active driver read from the device, which the cache took without a write. Each
+   * carries the driver's bounds at that moment, which `brightnessBounds` may not reflect yet.
+   */
+  public readonly adoptedBrightness = this._adoptedBrightness.asObservable();
 
   get brightness(): number {
     return this._brightness.value;
@@ -60,7 +85,8 @@ export class HardwareBrightnessControlService {
 
   constructor(
     openvr: OpenVRService,
-    private appSettingsService: AppSettingsService // private bsbFanAutomationService: BigscreenBeyondFanAutomationService
+    private appSettingsService: AppSettingsService, // private bsbFanAutomationService: BigscreenBeyondFanAutomationService
+    steamFrames: SteamFramePairingService
   ) {
     this.driverValveIndex = new ValveIndexHardwareBrightnessControlDriver(
       this.appSettingsService.settings,
@@ -69,14 +95,43 @@ export class HardwareBrightnessControlService {
     this.driverBigscreenBeyond = new BigscreenBeyondHardwareBrightnessControlDriver(
       this.appSettingsService.settings
     );
-    const driverList = [this.driverValveIndex, this.driverBigscreenBeyond];
+    this.driverSteamFrame = new SteamFrameHardwareBrightnessControlDriver(
+      this.appSettingsService.settings,
+      openvr,
+      steamFrames.pairings$,
+      steamFrames.connections$
+    );
+    const driverList = [this.driverValveIndex, this.driverSteamFrame, this.driverBigscreenBeyond];
     combineLatest(driverList.map((driver) => driver.isAvailable()))
       .pipe(distinctUntilChanged((a, b) => isEqual(a, b)))
       .subscribe((drivers) => {
         const availableDriver = driverList.find((_, i) => drivers[i]);
+        if (availableDriver) this.lastActiveDriver = availableDriver;
         this.driver.next(availableDriver ?? null);
       });
-    this.brightnessBounds = combineLatest([this.driver, this.appSettingsService.settings]).pipe(
+    // show what the device reports, without writing it back
+    this.driver
+      .pipe(
+        switchMap((driver) =>
+          (driver?.brightnessUpdates ?? EMPTY).pipe(
+            map((percentage) => ({ percentage, bounds: driver!.getBrightnessBounds() }))
+          )
+        )
+      )
+      .subscribe((adopted) => {
+        this._brightness.next(adopted.percentage);
+        this._adoptedBrightness.next(adopted);
+      });
+    // a pushing driver's bounds can change with each pushed value
+    const driverBounds = this.driver.pipe(
+      switchMap((driver) =>
+        (driver?.brightnessUpdates ?? EMPTY).pipe(
+          startWith(null),
+          map(() => driver)
+        )
+      )
+    );
+    this.brightnessBounds = combineLatest([driverBounds, this.appSettingsService.settings]).pipe(
       map(([driver, settings]: [HardwareBrightnessControlDriver | null, AppSettings]) => {
         if (!driver) return [0, 100] as [number, number];
         return driver.getBrightnessBounds(settings);
@@ -95,7 +150,11 @@ export class HardwareBrightnessControlService {
         distinctUntilChanged(),
         filter(Boolean),
         delay(500),
-        switchMap(() => this.fetchBrightness())
+        // a pushing driver supplies its value itself, and a fetch would hide a pending request;
+        // it can take over during the delay, so check the driver that is active now
+        switchMap(() =>
+          this.driver.value?.pushesBrightnessChanges ? EMPTY : this.fetchBrightness()
+        )
       )
       .subscribe();
     await listen<number>('setHardwareBrightness', async (event) => {
@@ -111,7 +170,15 @@ export class HardwareBrightnessControlService {
   ): CancellableTask {
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
     if (this._brightness.value === percentage) {
-      const task = new CancellableTask();
+      // a pushing device can hold a value the cache shows clamped, so it still gets the write
+      const write = this.driver.value?.pushesBrightnessChanges
+        ? () =>
+            this.setBrightness(percentage, {
+              cancelActiveTransition: true,
+              logReason: opt.logReason,
+            })
+        : undefined;
+      const task = new CancellableTask(write);
       task.start();
       return task;
     }
@@ -159,7 +226,8 @@ export class HardwareBrightnessControlService {
     const driver = await firstValueFrom(this.driver);
     if (!driver) return;
     if (opt.cancelActiveTransition) this.cancelActiveTransition();
-    if (!force && percentage == this.brightness) return;
+    // a pushing device can hold a value the cache shows clamped, so it always gets the write
+    if (!force && percentage == this.brightness && !driver.pushesBrightnessChanges) return;
     this._brightness.next(percentage);
     await driver.setBrightnessPercentage(percentage);
     if (opt.logReason) {
@@ -180,6 +248,7 @@ export class HardwareBrightnessControlService {
 
   private async initializeSafetyChecks() {
     this.brightnessBounds.subscribe((bounds) => {
+      if (this.driver.value?.pushesBrightnessChanges) return;
       const clamped = clamp(this.brightness, bounds[0], bounds[1]);
       if (clamped !== this.brightness) this.setBrightness(clamped);
     });

@@ -278,3 +278,76 @@ describe('BrightnessCctAutomationService HMD connect selection', () => {
     }
   });
 });
+
+describe('BrightnessCctAutomationService HMD connect with a Steam Frame', () => {
+  const settle = () => new Promise((resolve) => setTimeout(resolve, 0));
+
+  /** Sleep automations change brightness only; the paired Frame has not reported yet. */
+  function frameSetup() {
+    const config = buildConfig({ ...sleepEnableOn, ...sleepDisableOn });
+    config.AT_SUNSET.enabled = false;
+    config.AT_SUNRISE.enabled = false;
+    config.SLEEP_MODE_ENABLE.changeColorTemperature = false;
+    config.SLEEP_MODE_DISABLE.changeColorTemperature = false;
+    const sleepMode = new BehaviorSubject(false);
+    let report!: (reported: boolean) => void;
+    const simple = { setBrightness: vi.fn(async () => {}), cancelActiveTransition: vi.fn() };
+    const hardware = {
+      cancelActiveTransition: vi.fn(),
+      driverSteamFrame: {
+        whenFrameReports: () => new Promise<boolean>((resolve) => (report = resolve)),
+      },
+    };
+    const service = new BrightnessCctAutomationService(
+      { configs: new BehaviorSubject({ BRIGHTNESS_AUTOMATIONS: config }) } as never,
+      { mode: sleepMode } as never,
+      simple as never,
+      hardware as never,
+      { cancelActiveTransition: vi.fn() } as never,
+      {} as never,
+      { logEvent: vi.fn() } as never,
+      {} as never,
+      {} as never
+    );
+    const internals = service as unknown as {
+      onHmdConnect(): Promise<void>;
+      onAutomationTrigger(type: BrightnessEvent, config: unknown, instant: boolean): Promise<void>;
+    };
+    return { config, sleepMode, simple, internals, report: (value: boolean) => report(value) };
+  }
+
+  it('reruns the automation that fits when the Frame reports', async () => {
+    const h = frameSetup();
+    await h.internals.onHmdConnect();
+    await vi.waitFor(() =>
+      expect(h.simple.setBrightness).toHaveBeenLastCalledWith(100, expect.anything())
+    );
+    h.sleepMode.next(true);
+    h.report(true);
+    await vi.waitFor(() => expect(h.simple.setBrightness).toHaveBeenCalledTimes(2));
+    expect(h.simple.setBrightness).toHaveBeenLastCalledWith(20, expect.anything());
+  });
+
+  it('skips the rerun when another brightness automation ran meanwhile', async () => {
+    const h = frameSetup();
+    await h.internals.onHmdConnect();
+    await vi.waitFor(() => expect(h.simple.setBrightness).toHaveBeenCalled());
+    await h.internals.onAutomationTrigger('SLEEP_MODE_ENABLE', h.config.SLEEP_MODE_ENABLE, true);
+    h.simple.setBrightness.mockClear();
+    h.report(true);
+    await settle();
+    await settle();
+    expect(h.simple.setBrightness).not.toHaveBeenCalled();
+  });
+
+  it('does not rerun when the Frame leaves before it reports', async () => {
+    const h = frameSetup();
+    await h.internals.onHmdConnect();
+    await vi.waitFor(() => expect(h.simple.setBrightness).toHaveBeenCalled());
+    h.simple.setBrightness.mockClear();
+    h.report(false);
+    await settle();
+    await settle();
+    expect(h.simple.setBrightness).not.toHaveBeenCalled();
+  });
+});
