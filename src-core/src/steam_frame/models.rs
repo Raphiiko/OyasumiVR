@@ -114,6 +114,31 @@ pub struct State {
     /// The address and certificate this PC now trusts, which may differ from the stored ones.
     pub address: String,
     pub cert_pin: String,
+    /// The helper's last brightness report on the open connection; `None` while not connected.
+    pub brightness: Option<Brightness>,
+}
+
+/// The headset's hardware brightness in percent, as the helper reports it.
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct Brightness {
+    /// False while the helper has no SteamVR session; nothing else is known then.
+    pub runtime: bool,
+    pub supported: bool,
+    pub min: Option<f64>,
+    pub max: Option<f64>,
+    /// The headset's value, which can lie outside `min` and `max`.
+    pub percentage: Option<f64>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub enum SetBrightnessError {
+    Unsupported,
+    RuntimeUnavailable,
+    WriteFailed,
+    /// No open connection, or it closed before the helper replied.
+    Offline,
 }
 
 #[derive(Deserialize, Clone)]

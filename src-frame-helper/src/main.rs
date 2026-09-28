@@ -1,6 +1,6 @@
 use std::{path::PathBuf, process::ExitCode};
 
-use oyasumivr_frame_helper::{bind, info, serve};
+use oyasumivr_frame_helper::{bind, brightness, info, serve};
 
 /// The data directory from the argument, or `~/.local/share/oyasumivr_helper`.
 fn data_dir(argument: Option<String>) -> Option<PathBuf> {
@@ -27,7 +27,10 @@ async fn main() -> ExitCode {
                 return ExitCode::FAILURE;
             };
             let result = match bind(&root).await {
-                Ok((listener, acceptor)) => serve(root, listener, acceptor).await,
+                Ok((listener, acceptor)) => {
+                    let hub = brightness::start(brightness::OpenVr::default());
+                    serve(root, listener, acceptor, hub).await
+                }
                 Err(error) => Err(error),
             };
             if let Err(error) = result {
