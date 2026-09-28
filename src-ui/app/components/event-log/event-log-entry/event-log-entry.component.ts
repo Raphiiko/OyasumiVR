@@ -57,30 +57,44 @@ export const EVENT_LOG_ICONS: Record<EventLogEntry['type'], string> = {
   softwareBrightnessChanged: 'brightness',
   cctChanged: 'brightness-cct',
   acceptedInviteRequest: 'invite',
-  declinedInviteRequest: 'invite',
-  declinedInvite: 'invite',
+  declinedInviteRequest: 'invite-declined',
+  declinedInvite: 'invite-declined',
   statusChangedOnPlayerCountChange: 'status',
   statusChangedOnGeneralEvent: 'status',
-  sleepDetectorEnableCancelled: 'sleep-off',
+  sleepDetectorEnableCancelled: 'sleep-cancelled',
   renderResolutionChanged: 'resolution',
   chaperoneFadeDistanceChanged: 'chaperone',
   shutdownSequenceStarted: 'shutdown',
-  shutdownSequenceCancelled: 'shutdown',
-  windowsPowerPolicySet: 'power',
+  shutdownSequenceCancelled: 'shutdown-cancelled',
+  windowsPowerPolicySet: 'battery-settings',
   changedVRChatMicMuteState: 'mic-off',
   changedSystemMicMuteState: 'mic-off',
-  changedSystemMicControllerButtonBehavior: 'mic',
+  changedSystemMicControllerButtonBehavior: 'mic-button',
   msiAfterburnerProfileSet: 'gauge',
   changedAudioDeviceVolume: 'volume',
   mutedAudioDevice: 'volume-off',
   unmutedAudioDevice: 'volume',
   bsbFanSpeedChanged: 'fan',
-  bsbLedChanged: 'sparkle',
+  bsbLedChanged: 'light-bulb',
   vrchatAvatarChanged: 'avatar',
   vrchatGroupChanged: 'group',
-  frameLimitChanged: 'monitor',
+  frameLimitChanged: 'monitor-gauge',
   runAutomationExecuted: 'run',
 };
+
+export function eventLogIcon(entry: EventLogEntry): string {
+  switch (entry.type) {
+    case 'turnedOffOpenVRDevices':
+      if (entry.devices === 'CONTROLLER' || entry.devices === 'CONTROLLERS') return 'controller';
+      if (entry.devices === 'TRACKER' || entry.devices === 'TRACKERS') return 'tracker';
+      return 'device';
+    case 'changedVRChatMicMuteState':
+    case 'changedSystemMicMuteState':
+      return entry.muted ? 'mic-off' : 'mic';
+    default:
+      return EVENT_LOG_ICONS[entry.type];
+  }
+}
 
 @Component({
   selector: 'app-event-log-entry',

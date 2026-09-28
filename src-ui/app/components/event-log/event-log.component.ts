@@ -29,14 +29,14 @@ import {
   eventLogItemTime,
   groupEventLog,
 } from './event-log-grouping';
-import { EVENT_LOG_ICONS } from './event-log-entry/event-log-entry.component';
+import { eventLogIcon } from './event-log-entry/event-log-entry.component';
 
 const CAUSE_ICONS: Record<EventLogCause, string> = {
   sleepModeEnabled: 'sleep',
   sleepModeDisabled: 'sleep-off',
   sleepPreparation: 'bed',
-  sunset: 'twilight',
-  sunrise: 'twilight',
+  sunset: 'sunset',
+  sunrise: 'sunrise',
 };
 
 @Component({
@@ -95,7 +95,7 @@ export class EventLogComponent implements OnInit, AfterViewInit {
   }
 
   protected entryIcon(entry: EventLogEntry): string {
-    return EVENT_LOG_ICONS[entry.type];
+    return eventLogIcon(entry);
   }
 
   protected causeIcon(group: EventLogGroup): string {
