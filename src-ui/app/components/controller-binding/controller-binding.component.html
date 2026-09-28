@@ -5,7 +5,7 @@
   (click)="toggleDropdown()"
 >
   <div class="icon-wrapper">
-    <img src="/assets/img/icon_controller.png" />
+    <app-icon name="controller" />
   </div>
   @if (error && error !== 'MISSING_CONTROLLER' && error !== 'NO_CONTROLLERS') {
     <div class="text-wrapper">
@@ -33,10 +33,10 @@
     <div class="missing-controller-row">
       <div class="missing-controller missing-controller-left" [class.connected]="hasLeftHand">
         <span>L</span>
-        <img src="/assets/img/icon_controller.png" />
+        <app-icon name="controller" />
       </div>
       <div class="missing-controller missing-controller-right" [class.connected]="hasRightHand">
-        <img src="/assets/img/icon_controller.png" />
+        <app-icon name="controller" />
         <span>R</span>
       </div>
     </div>

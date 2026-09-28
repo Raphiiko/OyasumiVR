@@ -40,7 +40,7 @@
         @for (item of selection; track item) {
           <div class="pill" (click)="removeItem(item)" @hshrink>
             <div class="pill-label">{{ item.type === 'player' ? item.playerName : 'GROUP' }}</div>
-            <i class="material-icons-round">clear</i>
+            <app-icon name="close" />
           </div>
         }
       </div>
@@ -59,13 +59,11 @@
               <div class="friend-label">{{ result.displayName }}</div>
               @if (!isSelected(result)) {
                 <button class="btn" (click)="addFriend(result)" @hshrink
-                  ><i class="material-icons-round">add</i></button
-                >
+                  ><app-icon name="add"
+                /></button>
               }
               @if (isSelected(result)) {
-                <button class="btn" disabled @hshrink
-                  ><i class="material-icons-round">check</i></button
-                >
+                <button class="btn" disabled @hshrink><app-icon name="check" /></button>
               }
             </div>
           }

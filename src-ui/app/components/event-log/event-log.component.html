@@ -9,7 +9,7 @@
       (click)="openFilterDialog()"
     >
       <span>&nbsp;</span>
-      <i class="material-icons-round">filter_list</i>
+      <app-icon name="filter" />
       <span>&nbsp;</span>
       @if (filterHover) {
         <span transloco="comp.event-log.openFilters" @hshrink class="label"></span>
@@ -23,7 +23,7 @@
       [disabled]="entries === 0"
     >
       <span>&nbsp;</span>
-      <i class="material-icons-round">clear</i>
+      <app-icon name="close" />
       <span>&nbsp;</span>
       @if (clearHover) {
         <span transloco="comp.event-log.clearLog" @hshrink class="label"></span>
@@ -33,7 +33,7 @@
   <div class="pane-content">
     @if (entries === 0) {
       <div class="no-event-logs" @fade @noop>
-        <i class="material-icons-round">info</i>
+        <app-icon name="info" />
         <span transloco="comp.event-log.no-logs"></span>
       </div>
     }

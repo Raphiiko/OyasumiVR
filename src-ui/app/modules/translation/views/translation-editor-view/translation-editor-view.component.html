@@ -9,7 +9,7 @@
   </div>
   <div class="right">
     <button class="close-editor" (click)="closeEditor()">
-      <i class="material-icons">clear</i>
+      <app-icon name="close" />
     </button>
   </div>
 </div>
@@ -21,7 +21,7 @@
     [tooltipMode]="'right'"
     (click)="export()"
   >
-    <i class="material-icons">save</i>
+    <app-icon name="save" />
     <span>Export</span>
   </button>
   <button
@@ -30,7 +30,7 @@
     [tooltipMode]="'right'"
     (click)="updateTranslations()"
   >
-    <i class="material-icons">refresh</i>
+    <app-icon name="refresh" />
     <span>Update</span>
   </button>
   <button
@@ -39,7 +39,7 @@
     [tooltipMode]="'right'"
     (click)="checkForSuggestions()"
   >
-    <i class="material-icons">comment</i>
+    <app-icon name="comment" />
     <span>Check for suggestions</span>
   </button>
   <div class="action-spacer"></div>
@@ -48,7 +48,7 @@
     (click)="goPreviousPage()"
     [disabled]="paginationStart <= 0"
   >
-    <i class="material-icons">arrow_back_ios_new</i>
+    <app-icon name="chevron-left" />
   </button>
   <span class="pagination-label"
     >{{ paginationStart + 1 }}-{{ paginationEnd }} ({{ entries.length }})</span
@@ -58,7 +58,7 @@
     (click)="goNextPage()"
     [disabled]="paginationEnd >= entries.length"
   >
-    <i class="material-icons">arrow_forward_ios</i>
+    <app-icon name="chevron-right" />
   </button>
 </div>
 
@@ -96,11 +96,11 @@
             <div class="entry-suggestion-value">{{ entry.suggestion }}</div>
             <div class="entry-suggestion-actions">
               <button class="btn btn-primary" (click)="applySuggestion(entry)">
-                <i class="material-icons">check</i>
+                <app-icon name="check" />
                 <span>Apply</span>
               </button>
               <button class="btn btn-secondary" (click)="discardSuggestion(entry)">
-                <i class="material-icons">close</i>
+                <app-icon name="close" />
                 <span>Discard</span>
               </button>
             </div>

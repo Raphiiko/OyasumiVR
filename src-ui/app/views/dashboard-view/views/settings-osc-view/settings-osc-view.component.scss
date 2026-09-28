@@ -19,15 +19,15 @@
       display: flex;
       align-items: center;
 
-      .material-symbols-outlined {
-        font-size: 1.6em;
+      app-icon {
+        font-size: 1.36em;
 
         &.validation-error {
-          color: var(--color-caution);
+          --icon-color: var(--color-caution);
         }
 
         &.validation-pending {
-          color: var(--color-warning);
+          --icon-color: var(--color-warning);
           animation: osc-validation-pulse 1.5s ease-in-out infinite;
         }
       }

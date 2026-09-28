@@ -13,13 +13,14 @@ question mark in a circle, a chevron) keep their usual shape and take on this st
   drawn by hand fails, even when its concept is right.
 - **Both sizes.** Every icon reads at 18 px in the sidebar and looks full at 96 to 128 px on a
   SteamVR overlay button. Check both before you keep an icon.
-- **Real logos.** A third-party brand (VRChat, SteamVR) keeps its real silhouette, drawn in the
-  set's tones.
+- **Real logos.** A third-party brand (VRChat) keeps its real silhouette, drawn in the set's
+  tones. A status that only names a brand can use a plain icon instead: the SteamVR status pill
+  shows `headset`.
 
 ## Tones
 
-Each icon uses three tones and an optional shade. Each tone has one job and one variable, which
-`app-icon` defines in `src-ui/app/components/icon/icon.component.scss`:
+Each icon uses three tones and an optional shade. Each tone has one job and one variable, defined
+for `app-icon` and `svg.svg-icon` in `src-ui/styles.scss`:
 
 | Tone   | Variable        | Job                                                              |
 | ------ | --------------- | ---------------------------------------------------------------- |
@@ -42,10 +43,31 @@ Set `--icon-color` where the context has its own color:
 | --------------------------- | --------------------------------------------- |
 | anywhere else               | unset, so the primary applies                 |
 | an alert, toast, or message | its severity color, such as `--color-warning` |
-| a VRChat status             | the status color                              |
-| a primary button            | the button's text color                       |
+| a primary button            | white, set in `styles/buttons.scss`           |
 
 Error and caution share one level, `--color-caution`.
+
+Two kinds of icon draw in one tone. The first is a control whose states set its text color, such as
+a window button or a slider marker. The second is an icon that labels a value, such as a slider end
+or the fan and brightness pills in the status bar. Add `class="icon-mono"`, and all four tones
+become `currentColor`. One tone merges inner details into the body, so use it only where the
+silhouette alone carries the meaning, and check the icon in one tone first. Where an inner detail
+is the meaning, such as the hollow center of `brightness-low`, draw the difference into the
+silhouette. Power symbols use one tone. Other icons in a power button (`button.btn-power`), such as
+`key`, `standby`, or the device icons on the bulk power button, keep their details: they take the
+state color as their base at rest and turn one tone on hover, where the button fills with that
+color.
+
+A disabled control grays its icons through `--icon-color`, so duotone icons follow the disabled
+state without a class.
+
+Control glyphs are the exception to the plush style: the chevrons and the window buttons
+(`window-minimize`, `window-maximize`, `window-close`). They are hand-drawn thin strokes on a
+16-unit grid, with a 1.7 stroke width and round caps, drawn in `currentColor`. They follow the text
+around them and need no class.
+
+A plain colored dot, such as a VRChat status, is `<span class="status-dot">` with a background
+color, not an icon.
 
 ## Using an icon
 
@@ -55,13 +77,25 @@ Place an icon with its file name:
 <app-icon name="sleep" />
 ```
 
-`app-icon` inlines the SVG, because an `<img>` cannot read the theme variables. It is 1 em square,
-so set its size with `font-size`. Name a file for what it depicts, not for the page that shows it
-(`heart-pulse`, not `nightmare-detection`), so other pages can reuse it. Reuse an existing icon
-before you draw a new one.
+`app-icon` draws the file through `<use href="/assets/icons/sleep.svg#icon">`, because an `<img>`
+cannot read the tone variables. It is 1 em square, so set its size with `font-size`. Name a file for
+what it depicts, not for the page that shows it (`heart-pulse`, not `nightmare-detection`), so other
+pages can reuse it. Reuse an existing icon before you draw a new one.
+
+Angular creates no components inside `[innerHTML]`, so an HTML string built in TypeScript, such as a
+select-box `htmlPrefix`, uses the same file directly:
+
+```html
+<svg class="svg-icon"><use href="/assets/icons/mic.svg#icon" /></svg>
+```
+
+The sanitizer strips `<svg>` from plain strings, so wrap such a string in
+`bypassSecurityTrustHtml`. Only fixed strings from the codebase belong there, never user input.
 
 ## SVG format
 
+- The root `<svg>` has `id="icon"`, which the `<use>` references point at, and
+  `overflow="visible"`, so anti-aliased edges at the crop boundary are not cut off.
 - A square `viewBox` cropped to the shape, with no background rectangle.
 - Every fill and stroke names its tone through a variable, such as
   `style="fill:var(--icon-inner)"`, never a hex value. An element with a stroke and no fill states

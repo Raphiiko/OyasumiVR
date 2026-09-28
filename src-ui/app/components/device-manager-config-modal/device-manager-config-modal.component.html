@@ -27,7 +27,7 @@
               [tooltip]="'Clear nickname'"
               [tooltipMode]="'left'"
             >
-              <i class="material-icons">clear</i>
+              <app-icon name="close" />
             </button>
           }
         </div>
@@ -50,7 +50,7 @@
                   <div class="tag-color" [style.background-color]="tag.color"></div>
                   <span class="tag-name">{{ tag.name }}</span>
                   @if (isTagAssigned(tag)) {
-                    <i class="material-icons tag-check">check</i>
+                    <app-icon name="check" class="tag-check" />
                   }
                 </div>
               }

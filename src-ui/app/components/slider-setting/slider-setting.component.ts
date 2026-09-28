@@ -44,6 +44,8 @@ export class SliderSettingComponent implements OnInit, OnChanges {
 
   @Input() step = 1;
   @Input() unit?: string;
+  /** An icon name drawn in the unit box, after any unit text. */
+  @Input() unitIcon?: string;
   @Input() snapValues: number[] = [];
   @Input() snapDistance = 5;
   @Input() disabled = false;

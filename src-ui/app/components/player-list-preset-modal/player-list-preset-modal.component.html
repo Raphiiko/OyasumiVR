@@ -7,7 +7,7 @@
       <span transloco="comp.player-list-preset-modal.title.load"></span>
     }
     <button class="btn btn-secondary btn-icon btn-close" (click)="close()">
-      <i class="material-icons">close</i>
+      <app-icon name="close" />
     </button>
   </div>
   <div class="pane-content">
@@ -24,7 +24,7 @@
           [disabled]="saved || !validSaveName"
           (click)="saveNewPreset()"
         >
-          <i class="material-icons">save</i>
+          <app-icon name="save" />
           <span transloco="shared.modals.save"></span>
         </button>
       </div>
@@ -52,7 +52,7 @@
               [tooltip]="'comp.player-list-preset-modal.delete'"
               [tooltipMode]="'left'"
             >
-              <i class="material-icons">delete</i>
+              <app-icon name="delete" />
             </button>
             @if (mode === 'save') {
               <button
@@ -62,7 +62,7 @@
                 [tooltip]="'comp.player-list-preset-modal.overwrite'"
                 [tooltipMode]="'left'"
               >
-                <i class="material-icons">save</i>
+                <app-icon name="save" />
               </button>
             }
             @if (mode === 'load') {
@@ -72,7 +72,7 @@
                 [tooltip]="'comp.player-list-preset-modal.load'"
                 [tooltipMode]="'left'"
               >
-                <i class="material-icons">file_open</i>
+                <app-icon name="file-open" />
               </button>
             }
           </div>

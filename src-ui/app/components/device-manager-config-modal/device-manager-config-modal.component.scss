@@ -21,8 +21,8 @@
       background: var(--color-surface-3);
     }
 
-    i {
-      font-size: 1.2em;
+    app-icon {
+      font-size: 1.02em;
     }
   }
 }
@@ -81,7 +81,7 @@
     }
 
     .tag-check {
-      font-size: 1em;
+      font-size: 0.85em;
       flex-shrink: 0;
     }
   }

@@ -12,9 +12,9 @@ const EASE_OUT = 'cubic-bezier(0.2, 0.8, 0.25, 1)';
 
 const ICONS: Record<Exclude<ToastType, 'pending'>, string> = {
   info: 'info',
-  success: 'check_circle',
+  success: 'check-circle',
   warning: 'warning',
-  error: 'error',
+  error: 'exclamation-circle',
 };
 
 @Component({

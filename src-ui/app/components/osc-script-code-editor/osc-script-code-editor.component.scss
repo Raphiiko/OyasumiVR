@@ -103,7 +103,7 @@
       &:hover {
         color: var(--color-text-2);
 
-        i.material-icons-round {
+        app-icon {
           transform: scale(1.1);
         }
       }
@@ -117,9 +117,10 @@
         }
       }
 
-      i.material-icons-round {
+      app-icon {
+        --icon-color: var(--color-caution);
         transition: all 0.15s ease;
-        font-size: 1em;
+        font-size: 0.85em;
         margin: -1em 0;
       }
 

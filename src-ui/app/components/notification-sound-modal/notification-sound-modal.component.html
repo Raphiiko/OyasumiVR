@@ -10,11 +10,7 @@
             (click)="selectSound(sound)"
           >
             <div class="selection-indicator">
-              <i class="material-symbols-outlined">{{
-                soundConfig.sound.id === sound.id
-                  ? 'radio_button_checked'
-                  : 'radio_button_unchecked'
-              }}</i>
+              <app-icon [name]="soundConfig.sound.id === sound.id ? 'radio-on' : 'radio-off'" />
             </div>
             <div class="sound-info">
               <div class="sound-name"
@@ -26,7 +22,7 @@
               (click)="playSound(sound); $event.stopPropagation()"
               [disabled]="((playingSounds$ | async) ?? []).includes(sound.id)"
             >
-              <i class="material-symbols-outlined icon-filled">play_arrow</i>
+              <app-icon name="play" />
             </button>
           </div>
         }

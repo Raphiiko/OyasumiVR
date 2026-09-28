@@ -157,9 +157,8 @@
         background: var(--color-surface-1);
       }
 
-      i.material-icons-round {
-        font-size: 1.25em;
-        flex-shrink: 0;
+      app-icon {
+        font-size: 1.06em;
         margin: 0 0.5em 0 0.5em;
       }
     }
@@ -197,23 +196,18 @@
       justify-content: center;
       align-items: center;
       margin-right: 0.6em;
-
-      i {
-        font-size: 1.4em;
-        transition: color 0.2s ease;
-      }
     }
 
     &-icon-suffix {
-      color: var(--color-alert-error);
+      --icon-color: var(--color-alert-error);
 
-      i {
-        font-size: 2em;
+      app-icon {
+        font-size: 1.7em;
         margin: -0.25em 0;
       }
 
       &.update {
-        color: var(--color-alert-warning);
+        --icon-color: var(--color-alert-warning);
       }
     }
 
@@ -242,8 +236,8 @@
       width: 1.4em;
       margin-left: 0.2em;
 
-      i.material-icons-round {
-        font-size: 0.75em;
+      app-icon {
+        font-size: 1em;
         color: var(--color-text-4);
         transition:
           color 0.2s ease,
@@ -251,7 +245,7 @@
       }
     }
 
-    &:hover &-submenu-icon i {
+    &:hover &-submenu-icon app-icon {
       color: var(--color-text-3);
       transform: translateX(1px);
     }

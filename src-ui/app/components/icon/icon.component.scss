@@ -1,18 +1,12 @@
 :host {
-  // the tones resolve here, so an ancestor's --icon-color retints every icon beneath it
-  --icon-accent: var(--icon-color, var(--color-primary));
-  // fixed lightness keeps the inner tone at 4.5:1 or more against the body for the theme and status colors
-  --icon-inner: oklch(from var(--icon-accent) 0.47 c h);
-  --icon-body: oklch(from var(--icon-accent) 0.907 calc(c * 0.24) h);
-  --icon-shade: oklch(from var(--icon-accent) 0.35 calc(c * 0.62) h);
-
   display: inline-flex;
   width: 1em;
   height: 1em;
   flex-shrink: 0;
 
-  ::ng-deep svg {
+  svg {
     width: 100%;
     height: 100%;
+    overflow: visible;
   }
 }

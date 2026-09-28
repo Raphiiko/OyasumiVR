@@ -6,7 +6,7 @@
       (click)="deselectAll()"
       [disabled]="!hasAnySelection()"
     >
-      <i class="material-icons">clear_all</i>
+      <app-icon name="close" />
       <span transloco="device-manager.deviceSelector.deselectAll"></span>
     </button>
   </div>
@@ -20,13 +20,10 @@
             [class.selected]="isDeviceTypeSelected(type)"
             (click)="toggleDeviceType(type)"
           >
-            <img
-              [src]="'/assets/img/icon_' + getDeviceTypeIcon(type) + '.png'"
-              class="device-type-icon"
-            />
+            <app-icon [name]="getDeviceTypeIcon(type)" class="device-type-icon" />
             <span class="device-type-name" [transloco]="getDeviceTypeDisplayName(type)"></span>
             @if (isDeviceTypeSelected(type)) {
-              <i class="material-icons selection-indicator">check</i>
+              <app-icon name="check" class="selection-indicator" />
             }
           </div>
         }
@@ -48,7 +45,7 @@
               <div class="tag-color" [style.background-color]="tag.color"></div>
               <span class="tag-name">{{ tag.name }}</span>
               @if (isTagSelected(tag.id)) {
-                <i class="material-icons selection-indicator">check</i>
+                <app-icon name="check" class="selection-indicator" />
               }
             </div>
           }
@@ -56,7 +53,7 @@
       }
       @if (tags.length === 0) {
         <div class="empty-state-inline">
-          <i class="material-icons">label_outline</i>
+          <app-icon name="tag" />
           <span transloco="device-manager.deviceSelector.noTagsConfigured"></span>
         </div>
       }
@@ -70,7 +67,7 @@
           @for (group of deviceGroups; track trackDeviceGroupBy($index, group)) {
             <div class="device-group" [class.disabled]="isDeviceGroupDisabled(group.type)">
               <div class="device-group-header">
-                <img [src]="'/assets/img/icon_' + group.icon + '.png'" class="category-icon" />
+                <app-icon [name]="group.icon" class="category-icon" />
                 <span class="group-label" [transloco]="group.label"></span>
                 <span class="group-count">({{ group.devices.length }})</span>
               </div>
@@ -95,10 +92,7 @@
                         }
                       </div>
                     }
-                    <img
-                      [src]="'/assets/img/icon_' + getDeviceTypeIcon(device.deviceType) + '.png'"
-                      class="device-icon"
-                    />
+                    <app-icon [name]="getDeviceTypeIcon(device.deviceType)" class="device-icon" />
                     <div class="device-info">
                       <div class="device-name-line">
                         <span class="device-name">{{ device.typeName }}</span>
@@ -136,7 +130,7 @@
                       }
                     </div>
                     @if (isDeviceSelected(device.id)) {
-                      <i class="material-icons selection-indicator">check</i>
+                      <app-icon name="check" class="selection-indicator" />
                     }
                   </div>
                 }
@@ -147,7 +141,7 @@
       }
       @if (deviceGroups.length === 0) {
         <div class="empty-state-inline">
-          <i class="material-icons">devices</i>
+          <app-icon name="device" />
           <span transloco="device-manager.deviceSelector.noApplicableDevicesKnown"></span>
         </div>
       }

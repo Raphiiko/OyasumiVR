@@ -99,7 +99,7 @@
               <div class="step" @vshrink>
                 <div class="step-icon">
                   @if (step.icon) {
-                    <i class="material-icons-round">{{ step.icon }}</i>
+                    <app-icon [name]="step.icon" />
                   }
                   @if (step.loader) {
                     <span class="small-spinner"></span>

@@ -7,9 +7,9 @@
     padding: 0.5rem 1rem;
     font-size: 0.85rem;
 
-    i {
+    app-icon {
       margin-right: 0.4rem;
-      font-size: 0.9rem;
+      font-size: 0.77rem;
     }
 
     &:disabled {
@@ -72,8 +72,6 @@
       width: 1.5rem;
       height: 1.5rem;
       flex-shrink: 0;
-      filter: invert(91%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%)
-        contrast(100%);
     }
 
     .device-type-name {
@@ -82,8 +80,7 @@
     }
 
     .selection-indicator {
-      color: var(--color-primary);
-      font-size: 1.2rem;
+      font-size: 1.02rem;
     }
   }
 }
@@ -147,8 +144,7 @@
     }
 
     .selection-indicator {
-      color: var(--color-primary);
-      font-size: 1.2rem;
+      font-size: 1.02rem;
     }
   }
 }
@@ -184,8 +180,6 @@
         width: 1.5rem;
         height: 1.5rem;
         margin-right: 0.75rem;
-        filter: invert(91%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%)
-          contrast(100%);
       }
 
       .group-label {
@@ -265,8 +259,6 @@
           width: 2rem;
           height: 2rem;
           flex-shrink: 0;
-          filter: invert(91%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%)
-            contrast(100%);
         }
 
         .device-info {
@@ -348,8 +340,7 @@
         }
 
         .selection-indicator {
-          color: var(--color-primary);
-          font-size: 1.5rem;
+          font-size: 1.28rem;
           flex-shrink: 0;
         }
       }
@@ -366,12 +357,6 @@
   padding: 3rem 1rem;
   color: var(--color-text-3);
   text-align: center;
-
-  i {
-    font-size: 3rem;
-    margin-bottom: 0.5rem;
-    opacity: 0.6;
-  }
 
   span {
     font-size: 1.1rem;
@@ -391,8 +376,8 @@
   border-radius: var(--surface-border-radius);
   gap: 0.5rem;
 
-  i {
-    font-size: 1.5rem;
+  app-icon {
+    font-size: 1.28rem;
     opacity: 0.6;
   }
 

@@ -240,13 +240,13 @@ export class DeviceSelectorModalComponent
   getDeviceTypeIcon(type: DMDeviceType): string {
     switch (type) {
       case 'HMD':
-        return 'hmd';
+        return 'headset';
       case 'CONTROLLER':
         return 'controller';
       case 'TRACKER':
         return 'tracker';
       case 'LIGHTHOUSE':
-        return 'lighthouse';
+        return 'base-station';
       default:
         return 'device';
     }

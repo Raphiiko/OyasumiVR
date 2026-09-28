@@ -14,7 +14,7 @@ export class EventLogBSBLedChangedEntryParser extends EventLogEntryParser<EventL
     [p: string]: string;
   } {
     return {
-      color: `<i class="material-icons-round" style="color: rgb(${entry.color[0]},${entry.color[1]},${entry.color[2]})">brightness_1</i>`,
+      color: `<span class="status-dot" style="background: rgb(${entry.color[0]},${entry.color[1]},${entry.color[2]})"></span>`,
     };
   }
 

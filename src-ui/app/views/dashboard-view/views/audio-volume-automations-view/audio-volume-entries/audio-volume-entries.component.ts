@@ -44,21 +44,21 @@ export class AudioVolumeEntriesComponent implements OnInit {
       id: 'SET_VOLUME',
       label: 'audio-volume-automations.actionOptions.SET_VOLUME',
       htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
-        '<i class="material-icons-round" style="margin-right: 0.5em">volume_up</i>'
+        '<svg class="svg-icon" style="margin-right: 0.5em"><use href="/assets/icons/volume.svg#icon"/></svg>'
       ),
     },
     {
       id: 'MUTE',
       label: 'audio-volume-automations.actionOptions.MUTE',
       htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
-        '<i class="material-icons-round" style="margin-right: 0.5em">volume_off</i>'
+        '<svg class="svg-icon" style="margin-right: 0.5em"><use href="/assets/icons/volume-off.svg#icon"/></svg>'
       ),
     },
     {
       id: 'UNMUTE',
       label: 'audio-volume-automations.actionOptions.UNMUTE',
       htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
-        '<i class="material-icons-round" style="margin-right: 0.5em">volume_down</i>'
+        '<svg class="svg-icon" style="margin-right: 0.5em"><use href="/assets/icons/volume-down.svg#icon"/></svg>'
       ),
     },
   ];

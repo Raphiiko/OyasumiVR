@@ -18,10 +18,10 @@
                     (click)="systemMicMuteAutomationService.toggleMute()"
                   >
                     @if (muted === true) {
-                      <i class="material-icons muted">mic_off</i>
+                      <app-icon name="mic-off" class="muted" />
                     }
                     @if (muted === false) {
-                      <i class="material-icons unmuted">mic</i>
+                      <app-icon name="mic" class="unmuted" />
                     }
                   </button>
                 }

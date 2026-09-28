@@ -1,6 +1,6 @@
 @if (!!avatar) {
   <button class="btn-clear" @hshrink (click)="deselect()">
-    <i class="material-icons">clear</i>
+    <app-icon name="close" />
   </button>
 }
 <button class="btn-main" [class.selected]="!!avatar" (click)="select()" @noop>

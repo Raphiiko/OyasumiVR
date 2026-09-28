@@ -72,9 +72,8 @@
   white-space: pre-line;
   text-align: center;
 
-  i.material-icons-round {
-    font-size: 2.5em;
-    color: var(--color-text-2);
+  app-icon {
+    font-size: 2.13em;
     margin-bottom: 0.25em;
   }
 
@@ -100,8 +99,8 @@
     margin-right: 0.5em;
   }
 
-  i.material-icons-round {
-    font-size: 1em;
+  app-icon {
+    font-size: 0.85em;
     margin: 0 -0.5em;
   }
 

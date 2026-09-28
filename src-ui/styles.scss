@@ -1,6 +1,4 @@
-@use 'material-icons/iconfont/material-icons.css';
 @use 'flag-icons/css/flag-icons.min.css';
-@use 'material-symbols/index.css';
 @use 'themes.scss';
 @use 'typography.scss';
 @use 'panes.scss';
@@ -73,8 +71,39 @@ a:active {
   text-decoration: underline;
 }
 
-i.material-icons {
-  font-size: 1.5em;
+app-icon {
+  font-size: 1.25em;
+}
+
+// the tones resolve on each icon, so an ancestor's --icon-color retints every icon beneath it
+app-icon,
+svg.svg-icon {
+  --icon-accent: var(--icon-color, var(--color-primary));
+  // fixed lightness keeps the inner tone at 4.5:1 or more against the body for the theme and status colors
+  --icon-inner: oklch(from var(--icon-accent) 0.47 c h);
+  --icon-body: oklch(from var(--icon-accent) 0.907 calc(c * 0.24) h);
+  --icon-shade: oklch(from var(--icon-accent) 0.35 calc(c * 0.62) h);
+}
+
+svg.svg-icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+  overflow: visible;
+}
+
+// a disabled control grays its icons, since its text color alone no longer reaches them
+:disabled app-icon {
+  --icon-color: var(--color-text-4);
+}
+
+// one tone that follows the text color, for state-colored controls and icons that label a value
+app-icon.icon-mono,
+svg.svg-icon.icon-mono {
+  --icon-accent: currentColor;
+  --icon-inner: currentColor;
+  --icon-body: currentColor;
+  --icon-shade: currentColor;
 }
 
 img {
@@ -83,4 +112,12 @@ img {
   -moz-user-select: none;
   -o-user-select: none;
   user-select: none;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 0.75em;
+  height: 0.75em;
+  border-radius: 50%;
+  vertical-align: middle;
 }

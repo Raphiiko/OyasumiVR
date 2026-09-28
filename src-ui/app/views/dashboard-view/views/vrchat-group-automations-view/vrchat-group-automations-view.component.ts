@@ -12,6 +12,7 @@ import type { LimitedUserGroups } from 'vrchat';
 import { combineLatest } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 import { error } from '@tauri-apps/plugin-log';
+import { DomSanitizer } from '@angular/platform-browser';
 
 // Define a custom type for our group ID values
 type GroupSelectType = string | 'DONT_CHANGE' | 'CLEAR_GROUP';
@@ -38,12 +39,16 @@ export class VRChatGroupAutomationsViewComponent implements OnInit {
     {
       id: 'DONT_CHANGE',
       label: 'vrchatGroupAutomations.options.dontChange',
-      htmlPrefix: '<i class="material-symbols-outlined">chevron_right</i>',
+      htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
+        '<svg class="svg-icon"><use href="/assets/icons/chevron-right.svg#icon"/></svg>'
+      ),
     },
     {
       id: 'CLEAR_GROUP',
       label: 'vrchatGroupAutomations.options.clearGroup',
-      htmlPrefix: '<i class="material-symbols-outlined">chevron_right</i>',
+      htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
+        '<svg class="svg-icon"><use href="/assets/icons/chevron-right.svg#icon"/></svg>'
+      ),
     },
   ];
   selectedOnSleepEnable: SelectBoxItem<GroupSelectType> | undefined;
@@ -53,7 +58,8 @@ export class VRChatGroupAutomationsViewComponent implements OnInit {
   constructor(
     private vrchat: VRChatService,
     private destroyRef: DestroyRef,
-    private automationConfigService: AutomationConfigService
+    private automationConfigService: AutomationConfigService,
+    private domSanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {

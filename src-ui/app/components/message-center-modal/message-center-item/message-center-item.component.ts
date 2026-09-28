@@ -55,7 +55,7 @@ export class MessageCenterItemComponent {
       case 'warning':
         return 'warning';
       case 'error':
-        return 'error';
+        return 'exclamation-circle';
       default:
         return 'info';
     }

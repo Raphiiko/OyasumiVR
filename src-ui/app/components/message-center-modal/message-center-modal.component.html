@@ -20,9 +20,7 @@
       <span class="mc-header-title" transloco="message-center.title"></span>
       <div class="mc-header-actions">
         <button class="mc-header-toggle" (click)="toggleHidden()">
-          <i class="material-symbols-outlined" [style.opacity]="hiddenShown() ? 1.0 : 0.25"
-            >check</i
-          >
+          <app-icon name="check" [style.opacity]="hiddenShown() ? 1.0 : 0.25" />
           <span transloco="message-center.actions.showHidden"></span>
           @if (
             {
@@ -38,7 +36,7 @@
           }
         </button>
         <button class="mc-header-close" (click)="close()">
-          <i class="material-symbols-outlined">clear</i>
+          <app-icon name="close" />
         </button>
       </div>
     </div>

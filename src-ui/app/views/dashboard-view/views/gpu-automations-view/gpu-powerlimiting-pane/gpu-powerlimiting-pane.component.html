@@ -3,10 +3,10 @@
   <div class="pane-content pane-disabled">
     <div class="icon">
       @if (['INITIALIZING'].includes(panel)) {
-        <i class="material-icons">info</i>
+        <app-icon name="info" />
       }
       @if (['ERROR'].includes(panel)) {
-        <i class="material-icons"> warning </i>
+        <app-icon name="warning" />
       }
     </div>
     <div class="description" [innerHTML]="disabledMessage | tsTranslate"></div>

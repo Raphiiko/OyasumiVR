@@ -30,9 +30,7 @@
                 class="btn collapse-toggle"
                 (click)="oscOptionsExpanded = !oscOptionsExpanded"
               >
-                <i class="material-icons">
-                  {{ oscOptionsExpanded ? 'expand_less' : 'expand_more' }}
-                </i>
+                <app-icon [name]="oscOptionsExpanded ? 'chevron-up' : 'chevron-down'" />
               </button>
             </div>
           </div>
@@ -49,16 +47,22 @@
                   <div class="alert-bg"></div>
                   <div class="alert-icon">
                     @if (note.type === 'CAUTION') {
-                      <i class="material-icons-round">error_outline</i>
+                      <app-icon
+                        name="exclamation-circle"
+                        style="--icon-color: var(--color-alert-error)"
+                      />
                     }
                     @if (note.type === 'INFO') {
-                      <i class="material-icons-outlined">info</i>
+                      <app-icon name="info" style="--icon-color: var(--color-alert-info)" />
                     }
                     @if (note.type === 'SUCCESS') {
-                      <i class="material-icons-round"> check_circle_outline </i>
+                      <app-icon
+                        name="check-circle"
+                        style="--icon-color: var(--color-alert-success)"
+                      />
                     }
                     @if (note.type === 'WARNING') {
-                      <i class="material-icons-round">warning_amber</i>
+                      <app-icon name="warning" style="--icon-color: var(--color-alert-warning)" />
                     }
                   </div>
                   <div class="alert-content">{{ note.text | tsTranslate }}</div>
@@ -139,7 +143,7 @@
                         (click)="setSleepingPosition(action)"
                         [disabled]="!config.oscScripts[action]"
                       >
-                        <i class="material-icons">play_arrow</i>
+                        <app-icon name="play" />
                         <span>
                           {{
                             'oscAutomations.sleepingAnimations.options.positions.' + action
@@ -156,7 +160,7 @@
                         (click)="setFootLock(action === 'FOOT_LOCK')"
                         [disabled]="!config.oscScripts[action]"
                       >
-                        <i class="material-icons">play_arrow</i>
+                        <app-icon name="play" />
                         <span>
                           {{
                             'oscAutomations.sleepingAnimations.options.footLock.' + action

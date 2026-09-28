@@ -142,8 +142,8 @@ $header-height: 10em;
         position: relative;
         cursor: pointer;
 
-        i.material-symbols-outlined {
-          font-size: 1em;
+        app-icon {
+          font-size: 0.85em;
           transition: all 0.15s ease;
         }
 

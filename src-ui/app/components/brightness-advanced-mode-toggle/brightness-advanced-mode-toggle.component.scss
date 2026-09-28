@@ -20,19 +20,14 @@
   }
 
   .help-icon {
-    font-size: 1.2em;
-    color: var(--color-text-3);
-    transition: all 0.15s ease;
+    font-size: 1.02em;
     line-height: 0;
+    // the global border-box sizing would put this padding inside the 1em icon box
+    box-sizing: content-box;
     padding: 0.5em 0.75em 0.5em 0;
 
     &:hover {
       cursor: pointer;
-      color: var(--color-text-2);
-    }
-
-    &:active {
-      color: var(--color-text-3);
     }
   }
 

@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 export type AlertSeverity = 'info' | 'success' | 'warning' | 'error';
 
-const SEVERITY_GLYPHS: Record<AlertSeverity, string> = {
+const SEVERITY_ICONS: Record<AlertSeverity, string> = {
   info: 'info',
-  success: 'check_circle_outline',
+  success: 'check-circle',
   warning: 'warning',
-  error: 'error',
+  error: 'exclamation-circle',
 };
 
 @Component({
@@ -20,12 +20,15 @@ export class AlertComponent {
   @Input() severity: AlertSeverity = 'info';
   /** Translation key for the body. Project content instead when the body is markup. */
   @Input() message?: string;
-  /** Defaults to the severity glyph; an empty string leaves only projected [alertIcon] content. */
+  /** Icon name; defaults to the severity icon, and an empty string leaves only projected [alertIcon] content. */
   @Input() icon?: string;
-  @Input() iconClass = 'material-icons';
   @Input() contentClass?: string;
 
-  get glyph(): string {
-    return this.icon ?? SEVERITY_GLYPHS[this.severity];
+  get iconName(): string {
+    return this.icon ?? SEVERITY_ICONS[this.severity];
+  }
+
+  get iconColor(): string {
+    return `var(--color-alert-${this.severity})`;
   }
 }
