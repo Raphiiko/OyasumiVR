@@ -350,6 +350,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3eaf3ede3fee6db1a4c2ee091bf8a8b4dccdc6d17f656fb07896ee72867612f2"
 
 [[package]]
+name = "libloading"
+version = "0.8.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d7c4b02199fee7c5d21a5ae7d8cfa79a6ef5bb2fc834d6e9058e89c825efdc55"
+dependencies = [
+ "cfg-if",
+ "windows-link",
+]
+
+[[package]]
 name = "linux-raw-sys"
 version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -448,6 +458,7 @@ name = "oyasumivr-frame-helper"
 version = "26.9.0-beta.14"
 dependencies = [
  "futures-util",
+ "raphii-openvr-rs",
  "rcgen",
  "rustls",
  "serde",
@@ -521,6 +532,14 @@ name = "rand_core"
 version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "63b8176103e19a2643978565ca18b50549f6101881c443590420e4dc998a3c69"
+
+[[package]]
+name = "raphii-openvr-rs"
+version = "0.1.0"
+source = "git+https://github.com/Raphiiko/raphii-openvr-rs?rev=5dca9da201b15cf9641382a2f28e18c053adb488#5dca9da201b15cf9641382a2f28e18c053adb488"
+dependencies = [
+ "libloading",
+]
 
 [[package]]
 name = "rcgen"

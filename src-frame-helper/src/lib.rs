@@ -1,9 +1,14 @@
 use std::{
     io,
     path::{Path, PathBuf},
-    sync::Arc,
+    sync::{
+        atomic::{AtomicU64, Ordering},
+        Arc,
+    },
     time::Duration,
 };
+
+use brightness::{Command, Event, Hub, SetError, Snapshot};
 
 use futures_util::{SinkExt, StreamExt};
 use rustls::{
@@ -20,6 +25,8 @@ use tokio_tungstenite::tungstenite::{
     protocol::WebSocketConfig,
     Message,
 };
+
+pub mod brightness;
 
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 pub const PROTOCOL_MIN: u32 = 1;
@@ -67,6 +74,26 @@ pub struct Identity {
     pub serial: String,
     pub model: String,
     pub manufacturer: String,
+}
+
+#[derive(Serialize)]
+#[serde(tag = "type", rename_all = "camelCase")]
+enum Outgoing<'a> {
+    Brightness(&'a Snapshot),
+    #[serde(rename_all = "camelCase")]
+    SetBrightnessResult {
+        id: u64,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        percentage: Option<f64>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        error: Option<SetError>,
+    },
+}
+
+#[derive(Deserialize)]
+#[serde(tag = "type", rename_all = "camelCase")]
+enum Incoming {
+    SetBrightness { id: u64, percentage: f64 },
 }
 
 #[derive(Serialize)]
@@ -225,9 +252,16 @@ fn unauthorized() -> ErrorResponse {
     response
 }
 
-/// Serves one PC: TLS, token check, hello message, then holds the socket until it closes.
+/// Serves one PC: TLS, token check, hello message, then brightness until the socket closes.
 #[allow(clippy::result_large_err)] // the callback signature belongs to tungstenite
-async fn handle(stream: TcpStream, acceptor: TlsAcceptor, root: Arc<PathBuf>, info: Arc<Info>) {
+async fn handle(
+    stream: TcpStream,
+    acceptor: TlsAcceptor,
+    root: Arc<PathBuf>,
+    info: Arc<Info>,
+    hub: Arc<Hub>,
+    connection: u64,
+) {
     // finish the TLS handshake
     let Ok(Ok(tls)) = tokio::time::timeout(HANDSHAKE_TIMEOUT, acceptor.accept(stream)).await else {
         return;
@@ -249,23 +283,59 @@ async fn handle(stream: TcpStream, acceptor: TlsAcceptor, root: Arc<PathBuf>, in
         return;
     };
 
-    // send the version and headset identity
+    // send the version and headset identity, then the current brightness
     let hello = Hello {
         r#type: "hello",
         info: (*info).clone(),
         identity: read_identity(),
     };
-    let Ok(hello) = serde_json::to_string(&hello) else {
-        return;
-    };
-    if socket.send(Message::text(hello)).await.is_err() {
-        return;
+    let (snapshot, mut events) = hub.subscribe();
+    for message in [
+        serde_json::to_string(&hello),
+        serde_json::to_string(&Outgoing::Brightness(&snapshot)),
+    ] {
+        let Ok(message) = message else { return };
+        if socket.send(Message::text(message)).await.is_err() {
+            return;
+        }
     }
 
-    // keep the socket open until the PC closes it
-    while let Some(Ok(message)) = socket.next().await {
-        if message.is_close() {
-            break;
+    // pass commands to the brightness task, and its events back, until either side stops
+    loop {
+        let outgoing = tokio::select! {
+            message = socket.next() => match message {
+                Some(Ok(Message::Text(text))) => {
+                    if let Ok(Incoming::SetBrightness { id, percentage }) = serde_json::from_str(&text) {
+                        hub.send(Command { connection, id, percentage });
+                    }
+                    continue;
+                }
+                Some(Ok(message)) if !message.is_close() => continue,
+                _ => return,
+            },
+            // a lagging PC reconnects and starts from a fresh snapshot
+            event = events.recv() => match event {
+                Ok(event) => event,
+                Err(_) => return,
+            },
+        };
+        let message = match &outgoing {
+            Event::Snapshot { cause, .. } if *cause == Some(connection) => continue,
+            Event::Reply {
+                connection: target, ..
+            } if *target != connection => continue,
+            Event::Snapshot { snapshot, .. } => Outgoing::Brightness(snapshot),
+            Event::Reply { id, result, .. } => Outgoing::SetBrightnessResult {
+                id: *id,
+                percentage: result.ok(),
+                error: result.err(),
+            },
+        };
+        let Ok(message) = serde_json::to_string(&message) else {
+            return;
+        };
+        if socket.send(Message::text(message)).await.is_err() {
+            return;
         }
     }
 }
@@ -281,13 +351,27 @@ pub async fn bind(root: &Path) -> io::Result<(TcpListener, TlsAcceptor)> {
 }
 
 /// Accepts connections forever, one task per connection.
-pub async fn serve(root: PathBuf, listener: TcpListener, acceptor: TlsAcceptor) -> io::Result<()> {
+pub async fn serve(
+    root: PathBuf,
+    listener: TcpListener,
+    acceptor: TlsAcceptor,
+    hub: Arc<Hub>,
+) -> io::Result<()> {
     let root = Arc::new(root);
     let info = Arc::new(info());
+    let next_connection = AtomicU64::new(1);
     loop {
         match listener.accept().await {
             Ok((stream, _)) => {
-                tokio::spawn(handle(stream, acceptor.clone(), root.clone(), info.clone()));
+                let connection = next_connection.fetch_add(1, Ordering::Relaxed);
+                tokio::spawn(handle(
+                    stream,
+                    acceptor.clone(),
+                    root.clone(),
+                    info.clone(),
+                    hub.clone(),
+                    connection,
+                ));
             }
             Err(error) => {
                 eprintln!("accept failed: {error}");
