@@ -49,11 +49,22 @@ export type SteamFrameConnectionStatus =
   | 'helperMissing'
   | 'pairingRemoved';
 
+export type SteamFrameUpdateFailReason =
+  'unreachable' | 'corrupted' | 'notStarted' | 'notBundled' | 'other';
+
+export type SteamFrameMaintenance =
+  | { kind: 'updating' | 'busy' }
+  | { kind: 'updated'; version: string }
+  | { kind: 'failed'; reason: SteamFrameUpdateFailReason };
+
 export interface SteamFrameConnectionState {
   pairingId: string;
   status: SteamFrameConnectionStatus;
   lastSeen?: number;
   helperVersion?: string;
+  /** The helper is older than the bundled one, or has other files at the same version. */
+  updateAvailable: boolean;
+  maintenance: SteamFrameMaintenance | null;
   address: string;
   certPin: string;
 }

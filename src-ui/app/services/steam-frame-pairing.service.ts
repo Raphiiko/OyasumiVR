@@ -35,6 +35,7 @@ export class SteamFramePairingService {
   private readonly _pairings = signal<SteamFramePairing[]>([]);
   private readonly _connections = signal<Record<string, SteamFrameConnectionState>>({});
   private readonly _flow = signal<SteamFrameFlow | null>(null);
+  private readonly _reinstalls = signal<Record<string, 'running' | 'failed'>>({});
   /** Set when Cancel arrives during a step; that step finishes the cancel when it returns. */
   private cancelRequested = false;
   /** Bumped by every search and page change, so a result from an older search is dropped. */
@@ -45,6 +46,11 @@ export class SteamFramePairingService {
   readonly pairings$ = new BehaviorSubject<SteamFramePairing[]>([]);
   readonly connections = this._connections.asReadonly();
   readonly flow = this._flow.asReadonly();
+  /**
+   * Reinstalls started from Device Manager, by pairing id. `failed` stays while the helper is
+   * missing or offline.
+   */
+  readonly reinstalls = this._reinstalls.asReadonly();
   readonly flowPairing = computed(() => {
     const flow = this._flow();
     return flow ? this.pairingFor(flow.deviceId) : undefined;
@@ -407,6 +413,52 @@ export class SteamFramePairingService {
     }
   }
 
+  /** Starts a helper update. Progress and the result arrive as connection states. */
+  async updateHelper(pairing: SteamFramePairing) {
+    await invoke('steam_frame_update_helper', { pairingId: pairing.id });
+  }
+
+  /** Installs the helper again after it went missing, and pins its new certificate. */
+  async reinstallHelper(pairing: SteamFramePairing) {
+    if (this._reinstalls()[pairing.id] === 'running') return;
+
+    this.setReinstall(pairing.id, 'running');
+    try {
+      // run setup as a fresh install that removes itself when it fails
+      const result = await invoke<SteamFrameSetupResult>('steam_frame_set_up_helper', {
+        request: {
+          attemptId: uuidv4(),
+          access: this.accessOf(pairing),
+          pcId: pairing.id,
+          token: pairing.token,
+          publicKey: pairing.publicKey,
+          identity: pairing.identity,
+          removeOnFailure: true,
+        },
+      });
+      info(`[SteamFramePairing] Reinstall: ${result.status}`);
+      if (result.status !== 'complete') return this.setReinstall(pairing.id, 'failed');
+
+      // pin the new certificate and reconnect with it
+      await this.updatePairing(pairing.deviceId, {
+        certPin: result.certPin,
+        port: result.port,
+        helperVersion: result.helperVersion,
+        lastSeen: Date.now(),
+      });
+      await this.pushPairings();
+      this.setReinstall(pairing.id, undefined);
+    } catch (e) {
+      error(`[SteamFramePairing] Reinstall failed: ${e}`);
+      this.setReinstall(pairing.id, 'failed');
+    }
+  }
+
+  private setReinstall(pairingId: string, state?: 'running' | 'failed') {
+    const { [pairingId]: _, ...others } = this._reinstalls();
+    this._reinstalls.set(state ? { ...others, [pairingId]: state } : others);
+  }
+
   /** Stops pairing. A running step finishes first, then this PC's approval is removed. */
   async cancel() {
     const flow = this._flow();
@@ -619,6 +671,12 @@ export class SteamFramePairingService {
   /** Shows a connection state, and saves what the core learned about the headset. */
   private onConnectionState(state: SteamFrameConnectionState) {
     this._connections.set({ ...this._connections(), [state.pairingId]: state });
+
+    // a failed reinstall stops mattering once the helper is back
+    const reinstall = this._reinstalls()[state.pairingId];
+    if (reinstall === 'failed' && !['helperMissing', 'offline'].includes(state.status)) {
+      this.setReinstall(state.pairingId, undefined);
+    }
 
     // save newer contact, version, address, or certificate
     const pairing = this._pairings().find((p) => p.id === state.pairingId);
