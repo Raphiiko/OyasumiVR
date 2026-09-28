@@ -76,6 +76,8 @@ pub trait Backend {
     fn capability(&mut self) -> Result<Capability, RuntimeLost>;
     fn gain(&mut self) -> Result<f32, RuntimeLost>;
     fn set_gain(&mut self, gain: f32) -> Result<(), RuntimeLost>;
+    /// True while the HMD's activity level is Standby.
+    fn standby(&mut self) -> Result<bool, RuntimeLost>;
 }
 
 #[derive(Serialize, Clone, Debug, PartialEq)]
@@ -127,6 +129,8 @@ pub struct Brightness<B> {
     capability: Capability,
     /// The last gain read or written, which a later read is compared with.
     last_gain: Option<f32>,
+    /// Set by a read that differs from a known gain, cleared by `take_external_change`.
+    external_change: bool,
     snapshot: Snapshot,
 }
 
@@ -137,6 +141,7 @@ impl<B: Backend> Brightness<B> {
             connected: false,
             capability: Capability::UNSUPPORTED,
             last_gain: None,
+            external_change: false,
             snapshot: Snapshot::UNAVAILABLE,
         }
     }
@@ -183,6 +188,7 @@ impl<B: Backend> Brightness<B> {
             self.capability = capability;
         }
         if gain_changed {
+            self.external_change |= gain.is_some() && self.last_gain.is_some();
             self.last_gain = gain;
         }
         self.publish(self.current())
@@ -203,18 +209,47 @@ impl<B: Backend> Brightness<B> {
         }
     }
 
+    /// Whether a read since the last call found a gain changed elsewhere.
+    pub fn take_external_change(&mut self) -> bool {
+        std::mem::take(&mut self.external_change)
+    }
+
+    /// True when `percentage` converts to the gain read or written last.
+    pub fn holds(&self, percentage: f64) -> bool {
+        self.gain_for(percentage)
+            .is_some_and(|gain| Some(gain) == self.last_gain)
+    }
+
+    /// Writes without reading first, for a caller that has just read.
+    pub fn write_after_read(&mut self, percentage: f64) -> Result<f64, SetError> {
+        let result = self.write(percentage);
+        self.publish(self.current());
+        result
+    }
+
+    /// The writable range in percent, while gain control works.
+    pub fn bounds(&self) -> Option<(f64, f64)> {
+        (self.connected && self.capability.supported).then(|| self.capability.bounds())
+    }
+
+    /// The gain a write of `percentage` sets, within the bounds and the gain limits.
+    fn gain_for(&self, percentage: f64) -> Option<f32> {
+        let (min, max) = self.bounds()?;
+        // the bounds are rounded, so the gain limits apply once more
+        Some(
+            (percentage_to_gain(percentage.clamp(min, max)) as f32)
+                .max(self.capability.min_gain)
+                .min(self.capability.max_gain),
+        )
+    }
+
     fn write(&mut self, percentage: f64) -> Result<f64, SetError> {
         if !self.connected {
             return Err(SetError::RuntimeUnavailable);
         }
-        if !self.capability.supported {
+        let Some(gain) = self.gain_for(percentage) else {
             return Err(SetError::Unsupported);
-        }
-        let (min, max) = self.capability.bounds();
-        // the bounds are rounded, so the gain limits apply once more
-        let gain = (percentage_to_gain(percentage.clamp(min, max)) as f32)
-            .max(self.capability.min_gain)
-            .min(self.capability.max_gain);
+        };
         self.backend
             .set_gain(gain)
             .map_err(|RuntimeLost| SetError::WriteFailed)?;
@@ -345,6 +380,15 @@ impl Backend for OpenVr {
             .set_float(c"steamvr", c"analogGain", gain)
             .map_err(|_| RuntimeLost)
     }
+
+    fn standby(&mut self) -> Result<bool, RuntimeLost> {
+        let level = self
+            .context()?
+            .system()
+            .get_tracked_device_activity_level(TrackedDeviceIndex::HMD)
+            .map_err(|_| RuntimeLost)?;
+        Ok(level == raw::EDeviceActivityLevel::k_EDeviceActivityLevel_Standby)
+    }
 }
 
 #[cfg(test)]
@@ -421,6 +465,10 @@ mod tests {
                 headset.gain = gain;
                 Ok(())
             })
+        }
+
+        fn standby(&mut self) -> Result<bool, RuntimeLost> {
+            Ok(false)
         }
     }
 
