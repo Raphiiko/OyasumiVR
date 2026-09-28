@@ -18,8 +18,8 @@ question mark in a circle, a chevron) keep their usual shape and take on this st
 
 ## Tones
 
-Each icon uses three tones and an optional shade. Each tone has one job and one theme variable,
-defined in `src-ui/styles/themes.scss`:
+Each icon uses three tones and an optional shade. Each tone has one job and one variable, which
+`app-icon` defines in `src-ui/app/components/icon/icon.component.scss`:
 
 | Tone   | Variable        | Job                                                              |
 | ------ | --------------- | ---------------------------------------------------------------- |
@@ -28,11 +28,24 @@ defined in `src-ui/styles/themes.scss`:
 | accent | `--icon-accent` | a part that sticks out onto the background: rings, sparkles, a z |
 | shade  | `--icon-shade`  | a clean even-width edge where one part overlaps another          |
 
-The accent is `--color-primary`. It reads well against the dark background but too weakly against
-the pale body, so it never sits inside the body: the pink primary on its body measures 2.33:1. The
-other three tones derive from the primary in OKLCH. They keep its hue and set a fixed lightness, so
-the inner tone measures 5.36:1 against the body for the pink. A formula this simple cannot hold
-4.5:1 for every possible color, so measure a new primary before you use it.
+The accent is the base color: `--icon-color` when an ancestor sets it, `--color-primary` otherwise.
+It reads well against the dark background but too weakly against the pale body, so it never sits
+inside the body: the pink primary on its body measures 2.33:1. The other three tones derive from the
+base color in OKLCH. They keep its hue and set a fixed lightness. For every base color the app uses,
+the theme and severity colors, the VRChat status colors, white, and the text grays, the inner tone
+measures at least 4.78:1 against the body (5.36:1 for the pink). A formula this simple cannot hold
+4.5:1 for every possible color, so measure a new base color before you use it.
+
+Set `--icon-color` where the context has its own color:
+
+| Context                     | `--icon-color`                                |
+| --------------------------- | --------------------------------------------- |
+| anywhere else               | unset, so the primary applies                 |
+| an alert, toast, or message | its severity color, such as `--color-warning` |
+| a VRChat status             | the status color                              |
+| a primary button            | the button's text color                       |
+
+Error and caution share one level, `--color-caution`.
 
 ## Using an icon
 
