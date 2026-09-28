@@ -687,8 +687,11 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /** Starts the update from an Update helper pill, and opens the explanation for any other. */
-  onFramePill(device: DMKnownDevice, pill: FramePill) {
+  /**
+   * Starts the update from an Update helper pill, and opens the explanation for any other.
+   * The explanation offers the row's action as its main button.
+   */
+  onFramePill(device: DMKnownDevice, pill: FramePill, action?: FrameAction) {
     const pairing = this.framePairing.pairingFor(device.id);
     if (pill.startsUpdate) {
       if (pairing) void this.framePairing.updateHelper(pairing);
@@ -706,10 +709,15 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
             code: pill.code ?? '',
           },
         },
-        confirmButtonText: 'shared.modals.ok',
-        showCancel: false,
+        confirmButtonText: action ? `steamFrame.actions.${action}` : 'shared.modals.close',
+        cancelButtonText: 'shared.modals.close',
+        showCancel: !!action,
       })
-      .subscribe();
+      .subscribe((result) => {
+        // the row can change while the explanation is open
+        if (!action || !result?.confirmed || this.frameRow(device)?.action !== action) return;
+        void this.onFrameAction(device, action);
+      });
   }
 
   onFrameAction(device: DMKnownDevice, action: FrameAction) {
