@@ -572,9 +572,11 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     }
 
     // a problem: its pill, and Pair again when unrecognized
+    const pill = FRAME_PILLS[status];
+    if (!pill) return null;
     return {
-      pill: FRAME_PILLS[status],
-      action: FRAME_PILLS[status].key === 'notRecognized' && active ? 'pairAgain' : undefined,
+      pill,
+      action: pill.key === 'notRecognized' && active ? 'pairAgain' : undefined,
     };
   }
 
