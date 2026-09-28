@@ -1,0 +1,66 @@
+# Icon design
+
+OyasumiVR draws its icons from one custom set in `src-ui/assets/icons`. Draw every new icon to these
+rules, so it sits beside the others without standing out. Generic symbols (a warning triangle, a
+question mark in a circle, a chevron) keep their usual shape and take on this style.
+
+## Style
+
+- **Plush and solid.** Chunky filled silhouettes with heavily rounded corners. No outlines, no
+  gradients, no painted shading.
+- **Geometric.** Build shapes from perfect circles, rounded rectangles, straight lines, and smooth
+  symmetric curves. Keep symmetric objects symmetric and corner radii consistent. An icon that looks
+  drawn by hand fails, even when its concept is right.
+- **Both sizes.** Every icon reads at 18 px in the sidebar and looks full at 96 to 128 px on a
+  SteamVR overlay button. Check both before you keep an icon.
+- **Real logos.** A third-party brand (VRChat, SteamVR) keeps its real silhouette, drawn in the
+  set's tones.
+
+## Tones
+
+Each icon uses three tones and an optional shade. Each tone has one job and one theme variable,
+defined in `src-ui/styles/themes.scss`:
+
+| Tone   | Variable        | Job                                                              |
+| ------ | --------------- | ---------------------------------------------------------------- |
+| body   | `--icon-body`   | the silhouette, in a pale tint of the accent                     |
+| inner  | `--icon-inner`  | a detail that sits inside the body: letters, holes, hubs, dots   |
+| accent | `--icon-accent` | a part that sticks out onto the background: rings, sparkles, a z |
+| shade  | `--icon-shade`  | a clean even-width edge where one part overlaps another          |
+
+The accent is `--color-primary`. It reads well against the dark background but too weakly against
+the pale body, so it never sits inside the body: the pink primary on its body measures 2.33:1. The
+other three tones derive from the primary in OKLCH. They keep its hue and set a fixed lightness, so
+the inner tone measures 5.36:1 against the body for the pink. A formula this simple cannot hold
+4.5:1 for every possible color, so measure a new primary before you use it.
+
+## Using an icon
+
+Place an icon with its file name:
+
+```html
+<app-icon name="sleep" />
+```
+
+`app-icon` inlines the SVG, because an `<img>` cannot read the theme variables. It is 1 em square,
+so set its size with `font-size`. Name a file for what it depicts, not for the page that shows it
+(`heart-pulse`, not `nightmare-detection`), so other pages can reuse it. Reuse an existing icon
+before you draw a new one.
+
+## SVG format
+
+- A square `viewBox` cropped to the shape, with no background rectangle.
+- Every fill and stroke names its tone through a variable, such as
+  `style="fill:var(--icon-inner)"`, never a hex value. An element with a stroke and no fill states
+  `fill:none`.
+
+## Drawing a new icon
+
+1. Draw against finished icons from this set, and draw a related group together, so the shapes and
+   proportions stay consistent. Describe each icon to yourself as simple geometric parts.
+2. Draw in two working colors: one for the body, and one for details and parts.
+3. Save one SVG per icon. Drop any background rectangle, and crop the `viewBox` square to the
+   shape, measuring rotated shapes after their transform.
+4. Map every fill and stroke to a tone variable: body, accent, or shade.
+5. Mark each detail that lies inside the body as the inner tone.
+6. Check the icon at 18 px and at 128 px in the pink tones before you commit it.

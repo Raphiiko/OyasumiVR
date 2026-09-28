@@ -17,13 +17,13 @@
   >
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'overview'">
       <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">apps</i>
+        <app-icon name="dashboard" />
       </div>
       <div class="menu-item-label" transloco="comp.dashboard-navbar.overview"></div>
     </div>
 
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'sleepDetection'">
-      <div class="menu-item-icon-prefix"> <i class="material-icons-round">bedtime</i> </div>
+      <div class="menu-item-icon-prefix"> <app-icon name="sleep" /> </div>
       <div class="menu-item-label" transloco="comp.dashboard-navbar.sleepDetection"></div>
     </div>
 
@@ -43,7 +43,7 @@
       "
     >
       <div class="menu-item-icon-prefix">
-        <i class="material-symbols-outlined">head_mounted_device</i>
+        <app-icon name="headset" />
       </div>
       <div class="menu-item-label" transloco="comp.dashboard-navbar.hardwareAutomations"></div>
       <div class="menu-item-submenu-icon"
@@ -68,7 +68,7 @@
       "
     >
       <div class="menu-item-icon-prefix">
-        <img draggable="false" src="/assets/img/vrc_icon_stencil.png" class="vrchat-icon" />
+        <app-icon name="vrchat" />
       </div>
       <div class="menu-item-label" transloco="comp.dashboard-navbar.vrcAutomations"></div>
       <div class="menu-item-submenu-icon"
@@ -89,7 +89,7 @@
       "
     >
       <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">build</i>
+        <app-icon name="automations" />
       </div>
       <div class="menu-item-label" transloco="comp.dashboard-navbar.miscAutomations"></div>
       <div class="menu-item-submenu-icon"
@@ -99,14 +99,14 @@
 
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'shutdownAutomations'">
       <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">settings_power</i>
+        <app-icon name="shutdown" />
       </div>
       <div class="menu-item-label" transloco="comp.dashboard-navbar.shutdownAutomations"></div>
     </div>
 
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'deviceManager'">
       <div class="menu-item-icon-prefix">
-        <img draggable="false" src="/assets/img/icon_controller.png" class="device-manager-icon" />
+        <app-icon name="controller" />
       </div>
       <div class="menu-item-label" transloco="comp.dashboard-navbar.deviceManager"></div>
     </div>
@@ -129,7 +129,7 @@
       "
     >
       <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">settings</i>
+        <app-icon name="settings" />
       </div>
       <div class="menu-item-label" transloco="comp.dashboard-navbar.settings.subMenu"></div>
       @if (updateAvailable | async) {
@@ -144,7 +144,7 @@
 
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'about'">
       <div class="menu-item-icon-prefix">
-        <i class="material-symbols-outlined">info</i>
+        <app-icon name="info" />
       </div>
       <div class="menu-item-label" transloco="comp.dashboard-navbar.about"></div>
     </div>
@@ -160,13 +160,13 @@
       </div>
       <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'statusAutomations'">
         <div class="menu-item-icon-prefix">
-          <i class="material-icons-round">brightness_1</i>
+          <app-icon name="status" />
         </div>
         <div class="menu-item-label" transloco="comp.dashboard-navbar.statusAutomations"></div>
       </div>
       <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'autoInviteRequestAccept'">
         <div class="menu-item-icon-prefix">
-          <i class="material-icons-round">mark_email_read</i>
+          <app-icon name="invite" />
         </div>
         <div
           class="menu-item-label"
@@ -179,7 +179,7 @@
         [routerLink]="'vrchatMicMuteAutomations'"
       >
         <div class="menu-item-icon-prefix">
-          <i class="material-icons-round">mic_off</i>
+          <app-icon name="mic-off" />
         </div>
         <div
           class="menu-item-label"
@@ -188,7 +188,7 @@
       </div>
       <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'vrchatAvatarAutomations'">
         <div class="menu-item-icon-prefix">
-          <i class="material-symbols-outlined">groups_3</i>
+          <app-icon name="avatar" />
         </div>
         <div
           class="menu-item-label"
@@ -197,25 +197,25 @@
       </div>
       <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'vrchatGroupAutomations'">
         <div class="menu-item-icon-prefix">
-          <i class="material-symbols-outlined">group</i>
+          <app-icon name="group" />
         </div>
         <div class="menu-item-label" transloco="comp.dashboard-navbar.vrchatGroupAutomations"></div>
       </div>
       <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'joinNotifications'">
         <div class="menu-item-icon-prefix">
-          <i class="material-symbols-outlined icon-filled">person_alert</i>
+          <app-icon name="person-alert" />
         </div>
         <div class="menu-item-label" transloco="comp.dashboard-navbar.joinNotifications"></div>
       </div>
       <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'oscAutomations'">
         <div class="menu-item-icon-prefix">
-          <i class="material-icons-round">terminal</i>
+          <app-icon name="osc" />
         </div>
         <div class="menu-item-label" transloco="comp.dashboard-navbar.oscAutomations"></div>
       </div>
       <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'sleepAnimations'">
         <div class="menu-item-icon-prefix">
-          <i class="material-icons-round">settings_accessibility</i>
+          <app-icon name="sleep-animation" />
         </div>
         <div class="menu-item-label" transloco="comp.dashboard-navbar.sleepAnimations"></div>
       </div>
@@ -235,19 +235,19 @@
       </div>
       <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'powerAutomations'">
         <div class="menu-item-icon-prefix">
-          <i class="material-icons-round">battery_charging_full</i>
+          <app-icon name="battery" />
         </div>
         <div class="menu-item-label" transloco="comp.dashboard-navbar.powerAutomations"></div>
       </div>
       <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'gpuAutomations'">
         <div class="menu-item-icon-prefix">
-          <i class="material-icons-round">energy_savings_leaf</i>
+          <app-icon name="gpu" />
         </div>
         <div class="menu-item-label" transloco="comp.dashboard-navbar.gpuAutomations"></div>
       </div>
       <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'brightnessAutomations'">
         <div class="menu-item-icon-prefix">
-          <i class="material-icons-round">brightness_6</i>
+          <app-icon name="brightness" />
         </div>
         <div class="menu-item-label" transloco="comp.dashboard-navbar.brightnessAutomations"></div>
         @if (brightnessAutomation.anyBrightnessTransitionActive | async) {
@@ -256,13 +256,13 @@
       </div>
       <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'hmdAutomations'">
         <div class="menu-item-icon-prefix">
-          <i class="material-symbols-outlined">head_mounted_device</i>
+          <app-icon name="headset" />
         </div>
         <div class="menu-item-label" transloco="comp.dashboard-navbar.hmdAutomations"></div>
       </div>
       <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'audioVolumeAutomations'">
         <div class="menu-item-icon-prefix">
-          <i class="material-icons-round">volume_up</i>
+          <app-icon name="volume" />
         </div>
         <div class="menu-item-label" transloco="comp.dashboard-navbar.audioVolumeAutomations"></div>
       </div>
@@ -272,7 +272,7 @@
         [routerLink]="'systemMicMuteAutomations'"
       >
         <div class="menu-item-icon-prefix">
-          <i class="material-icons-round">mic_off</i>
+          <app-icon name="mic-off" />
         </div>
         <div
           class="menu-item-label"
@@ -281,7 +281,7 @@
       </div>
       <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'resolutionAutomations'">
         <div class="menu-item-icon-prefix">
-          <i class="material-icons-round">blur_on</i>
+          <app-icon name="resolution" />
         </div>
         <div class="menu-item-label" transloco="comp.dashboard-navbar.resolutionAutomations"></div>
       </div>
@@ -299,23 +299,23 @@
       </div>
       <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'chaperoneAutomations'">
         <div class="menu-item-icon-prefix">
-          <i class="material-symbols-outlined">guardian</i>
+          <app-icon name="chaperone" />
         </div>
         <div class="menu-item-label" transloco="comp.dashboard-navbar.chaperoneAutomations"></div>
       </div>
       <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'nightmareDetection'">
         <div class="menu-item-icon-prefix">
-          <i class="material-icons-round">notification_important</i>
+          <app-icon name="heart-pulse" />
         </div>
         <div class="menu-item-label" transloco="comp.dashboard-navbar.nightmareDetection"></div>
       </div>
       <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'frameLimitAutomations'">
-        <div class="menu-item-icon-prefix"> <i class="material-symbols-outlined">speed</i> </div>
+        <div class="menu-item-icon-prefix"> <app-icon name="gauge" /> </div>
         <div class="menu-item-label" transloco="comp.dashboard-navbar.frameLimiter"></div>
       </div>
       <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'runAutomations'">
         <div class="menu-item-icon-prefix">
-          <i class="material-icons-round">terminal</i>
+          <app-icon name="run" />
         </div>
         <div class="menu-item-label" transloco="comp.dashboard-navbar.runAutomations"></div>
       </div>
@@ -333,7 +333,7 @@
       </div>
       <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'general']">
         <div class="menu-item-icon-prefix">
-          <i class="material-icons-round">settings</i>
+          <app-icon name="settings" />
         </div>
         <div class="menu-item-label" transloco="comp.dashboard-navbar.settings.general"></div>
       </div>
@@ -343,7 +343,7 @@
         [routerLink]="['settings', 'notifications']"
       >
         <div class="menu-item-icon-prefix">
-          <i class="material-icons-round">notification_important</i>
+          <app-icon name="bell" />
         </div>
         <div class="menu-item-label" transloco="comp.dashboard-navbar.settings.notifications"></div>
       </div>
@@ -353,25 +353,25 @@
         [routerLink]="['settings', 'brightnessCct']"
       >
         <div class="menu-item-icon-prefix">
-          <i class="material-icons-round">brightness_6</i>
+          <app-icon name="brightness-cct" />
         </div>
         <div class="menu-item-label" transloco="comp.dashboard-navbar.settings.brightnessCct"></div>
       </div>
       <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'hotkeys']">
         <div class="menu-item-icon-prefix">
-          <i class="material-icons-round">keyboard</i>
+          <app-icon name="hotkey" />
         </div>
         <div class="menu-item-label" transloco="comp.dashboard-navbar.settings.hotkeys"></div>
       </div>
       <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'osc']">
         <div class="menu-item-icon-prefix">
-          <i class="material-icons-round">sync_alt</i>
+          <app-icon name="osc" />
         </div>
         <div class="menu-item-label" transloco="comp.dashboard-navbar.settings.osc"></div>
       </div>
       <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'updates']">
         <div class="menu-item-icon-prefix">
-          <i class="material-icons-round">update</i>
+          <app-icon name="update" />
         </div>
         <div class="menu-item-label" transloco="comp.dashboard-navbar.settings.updates"></div>
         @if (updateAvailable | async) {
@@ -386,13 +386,13 @@
         [routerLink]="['settings', 'integrations']"
       >
         <div class="menu-item-icon-prefix">
-          <i class="material-icons-round">power</i>
+          <app-icon name="plug" />
         </div>
         <div class="menu-item-label" transloco="comp.dashboard-navbar.settings.integrations"></div>
       </div>
       <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'advanced']">
         <div class="menu-item-icon-prefix">
-          <i class="material-icons-round">build</i>
+          <app-icon name="sliders" />
         </div>
         <div class="menu-item-label" transloco="comp.dashboard-navbar.settings.advanced"></div>
       </div>
@@ -402,7 +402,7 @@
         [routerLink]="['settings', 'statusInfo']"
       >
         <div class="menu-item-icon-prefix">
-          <i class="material-icons-round">checklist</i>
+          <app-icon name="checklist" />
         </div>
         <div class="menu-item-label" transloco="comp.dashboard-navbar.settings.statusInfo"></div>
       </div>

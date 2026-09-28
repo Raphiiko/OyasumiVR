@@ -204,10 +204,6 @@
       }
     }
 
-    &:hover &-icon-prefix i {
-      color: var(--color-text-1);
-    }
-
     &-icon-suffix {
       color: var(--color-alert-error);
 
@@ -221,25 +217,8 @@
       }
     }
 
-    &-icon-prefix {
-      color: var(--color-text-2);
-
-      img {
-        width: 1.4em;
-        height: 1.4em;
-        transition: opacity 0.2s ease;
-
-        &.vrchat-icon,
-        &.device-manager-icon,
-        &.hardware-icon {
-          filter: invert(89%) sepia(3%) saturate(871%) hue-rotate(194deg) brightness(109%)
-            contrast(89%);
-        }
-      }
-    }
-
-    &:hover &-icon-prefix img {
-      opacity: 0.9;
+    &-icon-prefix app-icon {
+      font-size: 1.75em;
     }
 
     &-label {

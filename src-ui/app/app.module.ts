@@ -42,6 +42,7 @@ import { OscScriptCodeEditorComponent } from './components/osc-script-code-edito
 import { DropdownButtonComponent } from './components/dropdown-button/dropdown-button.component';
 import { OscScriptSimpleEditorComponent } from './components/osc-script-simple-editor/osc-script-simple-editor.component';
 import { DashboardNavbarComponent } from './components/dashboard-navbar/dashboard-navbar.component';
+import { IconComponent } from './components/icon/icon.component';
 import { DeviceListComponent } from './components/device-list/device-list.component';
 import { DeviceListItemComponent } from './components/device-list/device-list-item/device-list-item.component';
 import { SleepingAnimationsAutomationService } from './services/osc-automations/sleeping-animations-automation.service';
@@ -297,6 +298,7 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
     DashboardViewComponent,
     PowerAutomationsViewComponent,
     DashboardNavbarComponent,
+    IconComponent,
     DeviceListComponent,
     DeviceListItemComponent,
     VarDirective,
