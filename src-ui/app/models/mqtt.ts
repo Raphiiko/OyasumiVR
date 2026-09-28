@@ -46,6 +46,7 @@ export interface MqttNumberProperty extends MqttPropertyBase {
   value: number;
   min?: number;
   max?: number;
+  mode?: 'auto' | 'box' | 'slider';
   unitOfMeasurement?: string;
 }
 
