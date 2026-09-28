@@ -34,25 +34,28 @@ the helper token pass through `protectSecret` before the first save.
 
 ## Commands
 
-| Command                             | Called by                                   | When                                                                                                                              |
-| ----------------------------------- | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| `steam_frame_get_supported_models`  | service `init`                              | app start, to decide where Pair headset shows                                                                                     |
-| `steam_frame_get_connection_states` | service `init`                              | app start, for statuses the core already has                                                                                      |
-| `steam_frame_discover_headsets`     | `discover`                                  | the wizard's Find headset step                                                                                                    |
-| `steam_frame_get_ssh_user`          | `connectManual`, `pair`                     | a typed address, and before each pairing                                                                                          |
-| `steam_frame_create_pairing_keys`   | `preparePairing`                            | the first pairing attempt for a headset; retries reuse the key                                                                    |
-| `steam_frame_check_ssh_access`      | `register`, `confirmAccess`, `finishCancel` | before every approval request, after a `registered`, `lost`, or `failed` answer, and on Cancel when the headset may have approved |
-| `steam_frame_request_approval`      | `register`                                  | only after a user action, when the saved key does not work yet                                                                    |
-| `steam_frame_set_up_helper`         | `runSetup`                                  | after SSH access works; Retry calls it again                                                                                      |
-| `steam_frame_remove_access`         | `finishCancel`, different headset, `unpair` | Cancel after approval, a wrong headset, and Unpair                                                                                |
-| `steam_frame_count_other_pcs`       | the unpair dialog                           | before it offers Unpair and Uninstall helper                                                                                      |
-| `steam_frame_sync_connections`      | `pushPairings`                              | after every change to the completed pairings                                                                                      |
-| `steam_frame_update_helper`         | Update and Retry in Device Manager          | a manual helper update; the result arrives as connection state                                                                    |
-| `steam_frame_set_brightness`        | the Frame brightness driver                 | each brightness write; the reply carries the value the helper applied                                                             |
-| `steam_frame_set_cct`               | `CCTControlService`                         | each color temperature write; the reply carries the snapshot the helper applied                                                   |
+| Command                             | Called by                                        | When                                                                                                                              |
+| ----------------------------------- | ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| `steam_frame_get_supported_models`  | service `init`                                   | app start, to decide where Pair headset shows                                                                                     |
+| `steam_frame_get_connection_states` | service `init`                                   | app start, for statuses the core already has                                                                                      |
+| `steam_frame_discover_headsets`     | `discover`                                       | the wizard's Find headset step                                                                                                    |
+| `steam_frame_get_ssh_user`          | `connectManual`, `pair`                          | a typed address, and before each pairing                                                                                          |
+| `steam_frame_create_pairing_keys`   | `preparePairing`                                 | the first pairing attempt for a headset; retries reuse the key                                                                    |
+| `steam_frame_check_ssh_access`      | `register`, `confirmAccess`, `finishCancel`      | before every approval request, after a `registered`, `lost`, or `failed` answer, and on Cancel when the headset may have approved |
+| `steam_frame_request_approval`      | `register`                                       | only after a user action, when the saved key does not work yet                                                                    |
+| `steam_frame_set_up_helper`         | `runSetup`                                       | after SSH access works; Retry calls it again                                                                                      |
+| `steam_frame_remove_access`         | `finishCancel`, different headset, `unpair`      | Cancel after approval, a wrong headset, and Unpair                                                                                |
+| `steam_frame_count_other_pcs`       | the unpair dialog                                | before it offers Unpair and Uninstall helper                                                                                      |
+| `steam_frame_sync_connections`      | `pushPairings`                                   | after every change to the completed pairings                                                                                      |
+| `steam_frame_update_helper`         | Update and Retry in Device Manager               | a manual helper update; the result arrives as connection state                                                                    |
+| `steam_frame_set_brightness`        | the Frame brightness driver                      | each brightness write; the reply carries the value the helper applied                                                             |
+| `steam_frame_set_cct`               | `CCTControlService`                              | each color temperature write; the reply carries the snapshot the helper applied                                                   |
+| `steam_frame_fade`                  | the Frame brightness driver, `CCTControlService` | each transition on a helper that runs fades; the reply accepts or refuses it                                                      |
+| `steam_frame_cancel_fade`           | the same                                         | a cancelled transition, by its operation ID                                                                                       |
 
-The core emits two events. `STEAM_FRAME_SETUP_STAGE` reports the setup step, and `installed` once
+The core emits three events. `STEAM_FRAME_SETUP_STAGE` reports the setup step, and `installed` once
 this attempt installed the helper. `STEAM_FRAME_CONNECTION_STATE` reports each pairing's status.
+`STEAM_FRAME_FADE_ENDED` passes on each `fadeEnded` from the helper, with the pairing id.
 
 ## Pairing
 
@@ -404,8 +407,18 @@ flowchart TD
   so a PC never rolls back a helper another PC just installed.
 - An interrupted update needs no record. The next contact finds the old helper still running, the new
   release on disk but not running, or the new helper running, and finishes from there.
-- The connection state carries `maintenance`: `updating`, `updated` for a minute, `failed` with a
-  reason, or `busy` when another PC held the lock for 60 seconds.
+- The connection state carries `maintenance`: `waiting` while a fade runs, `updating`, `updated`
+  for a minute, `failed` with a reason, or `busy` when another PC held the lock for 60 seconds.
+
+A helper that runs fades is updated only while connected, and only once no fade runs, from any PC:
+
+1. The core waits until neither snapshot carries a `fade`, and shows `waiting` meanwhile.
+2. It sends `beginMaintenance`. On `held: false` it waits for the fades again.
+3. On `held: true` it runs the update over SSH, then sends `endMaintenance` on the old socket. A
+   helper that restarted has dropped the hold already.
+
+When the connection closes while an update waits, the core gives back the automatic attempt, so
+the next connection starts the wait again. A helper without fades updates at once, as before.
 
 ## On the headset
 
