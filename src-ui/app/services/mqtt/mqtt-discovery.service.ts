@@ -190,12 +190,11 @@ export class MqttDiscoveryService {
               }
               case 'NUMBER': {
                 const newValue = parseFloat(payload.toString());
-                if (isNaN(newValue) || property.value === newValue) return;
+                if (isNaN(newValue)) return;
                 const previous = structuredClone(property);
+                // the value can change while the state publish is pending, so keep the commanded one
+                const current = { ...previous, value: newValue };
                 await this.setNumberPropertyValue(property.id, newValue);
-                const current = structuredClone(
-                  this.properties.value.find((p) => p.id === property.id)!
-                );
                 this._propertyCommands.next({ previous, current });
                 break;
               }

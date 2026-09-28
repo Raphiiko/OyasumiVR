@@ -146,4 +146,21 @@ describe('Home Assistant MQTT recovery', () => {
     await recovery;
     expect(finished).toBe(true);
   });
+
+  it('passes on number commands with the commanded value, even when unchanged', async () => {
+    const { service, client, receive } = await createService();
+    await service.initProperty(structuredClone(properties[1]));
+    const command = vi.fn();
+    service.getCommandStreamForProperty('brightness').subscribe(command);
+    const publish = Promise.withResolvers<void>();
+    client.publishAsync.mockImplementationOnce(async () => await publish.promise);
+
+    const pending = receive('OyasumiVR/brightness/set', '30');
+    await service.setNumberPropertyValue('brightness', 70);
+    publish.resolve();
+    await pending;
+    await receive('OyasumiVR/brightness/set', '70');
+
+    expect(command.mock.calls.map(([c]) => c.current.value)).toEqual([30, 70]);
+  });
 });
