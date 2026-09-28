@@ -30,17 +30,7 @@
     <div
       class="menu-item"
       (click)="openSubMenu('HARDWARE')"
-      [class.active]="
-        pathIsActive([
-          'brightnessAutomations',
-          'powerAutomations',
-          'gpuAutomations',
-          'resolutionAutomations',
-          'audioVolumeAutomations',
-          'systemMicMuteAutomations',
-          'hmdAutomations',
-        ])
-      "
+      [class.active]="pathIsActive(subMenuRoutes.HARDWARE)"
     >
       <div class="menu-item-icon-prefix">
         <app-icon name="headset" />
@@ -52,18 +42,7 @@
     <div
       class="menu-item"
       (click)="openSubMenu('VRCHAT')"
-      [class.active]="
-        pathIsActive([
-          'oscAutomations',
-          'statusAutomations',
-          'autoInviteRequestAccept',
-          'vrchatMicMuteAutomations',
-          'vrchatAvatarAutomations',
-          'vrchatGroupAutomations',
-          'joinNotifications',
-          'sleepAnimations',
-        ])
-      "
+      [class.active]="pathIsActive(subMenuRoutes.VRCHAT)"
     >
       <div class="menu-item-icon-prefix">
         <app-icon name="vrchat" />
@@ -75,14 +54,7 @@
     <div
       class="menu-item"
       (click)="openSubMenu('MISCELLANEOUS')"
-      [class.active]="
-        pathIsActive([
-          'chaperoneAutomations',
-          'nightmareDetection',
-          'frameLimitAutomations',
-          'runAutomations',
-        ])
-      "
+      [class.active]="pathIsActive(subMenuRoutes.MISCELLANEOUS)"
     >
       <div class="menu-item-icon-prefix">
         <app-icon name="automations" />
@@ -108,19 +80,7 @@
     <div
       class="menu-item"
       (click)="openSubMenu('SETTINGS')"
-      [class.active]="
-        pathIsActive([
-          'settings/general',
-          'settings/brightnessCct',
-          'settings/notifications',
-          'settings/hotkeys',
-          'settings/osc',
-          'settings/updates',
-          'settings/integrations',
-          'settings/advanced',
-          'settings/statusInfo',
-        ])
-      "
+      [class.active]="pathIsActive(subMenuRoutes.SETTINGS)"
     >
       <div class="menu-item-icon-prefix">
         <app-icon name="settings" />
