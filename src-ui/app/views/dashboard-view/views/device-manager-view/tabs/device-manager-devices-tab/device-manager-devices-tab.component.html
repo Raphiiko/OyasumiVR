@@ -117,29 +117,30 @@
               }
               <!-- Action Buttons -->
               <div class="device-actions" (click)="$event.stopPropagation()">
-                @if (frameRow(device)?.pill; as pill) {
-                  @if (pill.detail) {
+                @if (frameRow(device); as row) {
+                  @if (row.pill; as pill) {
+                    @if (pill.detail || pill.startsUpdate) {
+                      <button
+                        [class]="'frame-pill frame-pill-button frame-pill-' + pill.tone"
+                        (click)="onFramePill(device, pill, row.action)"
+                      >
+                        <i class="material-icons">{{ pill.icon }}</i>
+                        {{ 'steamFrame.status.' + pill.key | transloco }}
+                      </button>
+                    } @else {
+                      <span [class]="'frame-pill frame-pill-' + pill.tone">
+                        <i class="material-icons">{{ pill.icon }}</i>
+                        {{ 'steamFrame.status.' + pill.key | transloco: pill.params }}
+                      </span>
+                    }
+                  } @else if (row.action) {
                     <button
-                      [class]="'frame-pill frame-pill-button frame-pill-' + pill.tone"
-                      (click)="explainFramePill(pill)"
+                      class="btn btn-primary btn-frame"
+                      (click)="onFrameAction(device, row.action)"
                     >
-                      <i class="material-icons">{{ pill.icon }}</i>
-                      {{ 'steamFrame.status.' + pill.key | transloco }}
+                      {{ 'steamFrame.actions.' + row.action | transloco }}
                     </button>
-                  } @else {
-                    <span [class]="'frame-pill frame-pill-' + pill.tone">
-                      <i class="material-icons">{{ pill.icon }}</i>
-                      {{ 'steamFrame.status.' + pill.key | transloco: { time: pill.time } }}
-                    </span>
                   }
-                }
-                @if (frameRow(device)?.action; as action) {
-                  <button
-                    class="btn btn-primary btn-frame"
-                    (click)="framePairing.openWizard(device)"
-                  >
-                    {{ 'steamFrame.actions.' + action | transloco }}
-                  </button>
                 }
                 <!-- Power Button -->
                 @if (canShowPowerButton(device)) {

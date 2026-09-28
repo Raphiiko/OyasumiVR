@@ -444,3 +444,86 @@ describe('Steam Frame pairing flow', () => {
     expect(service.identityOf({ ...device, id: 'OVR_Controller_X' })).toBeNull();
   });
 });
+
+describe('Steam Frame helper maintenance', () => {
+  async function paired() {
+    handlers['steam_frame_check_ssh_access'] = () => ({ status: 'ok', hostKeyPin: 'PIN' });
+    const service = await start();
+    await service.pair();
+    return { service, pairing: service.pairingFor(device.id)! };
+  }
+
+  it('starts a helper update for the pairing', async () => {
+    handlers['steam_frame_update_helper'] = () => true;
+    const { service, pairing } = await paired();
+    await service.updateHelper(pairing);
+    expect(calls('steam_frame_update_helper')).toEqual([{ pairingId: pairing.id }]);
+  });
+
+  it('pins the certificate of a reinstalled helper and reconnects with it', async () => {
+    const { service, pairing } = await paired();
+    handlers['steam_frame_set_up_helper'] = () => ({
+      status: 'complete',
+      installed: true,
+      certPin: 'NEW',
+      port: 38441,
+      helperVersion: '1.1.0',
+    });
+    await service.reinstallHelper(pairing);
+    expect(calls('steam_frame_set_up_helper').at(-1).request).toMatchObject({
+      pcId: pairing.id,
+      removeOnFailure: true,
+      identity: pairing.identity,
+    });
+    expect(service.pairingFor(device.id)).toMatchObject({ certPin: 'NEW', port: 38441 });
+    expect(calls('steam_frame_sync_connections').at(-1).pairings[0]).toMatchObject({
+      certPin: 'NEW',
+      port: 38441,
+    });
+    expect(service.reinstalls()).toEqual({});
+  });
+
+  it('keeps the old pin and reports a failed reinstall', async () => {
+    const { service, pairing } = await paired();
+    handlers['steam_frame_set_up_helper'] = () => ({
+      status: 'failed',
+      message: 'x',
+      installed: false,
+    });
+    await service.reinstallHelper(pairing);
+    expect(service.pairingFor(device.id)?.certPin).toBe('CERT');
+    expect(service.reinstalls()).toEqual({ [pairing.id]: 'failed' });
+  });
+
+  it('reports a reinstall as failed when saving the new certificate fails', async () => {
+    const { service, pairing } = await paired();
+    handlers['steam_frame_set_up_helper'] = () => ({
+      status: 'complete',
+      installed: true,
+      certPin: 'NEW',
+      port: 38441,
+      helperVersion: '1.1.0',
+    });
+    store.save.mockRejectedValueOnce(new Error('disk full'));
+    await service.reinstallHelper(pairing);
+    expect(service.reinstalls()).toEqual({ [pairing.id]: 'failed' });
+  });
+
+  it('forgets a failed reinstall once the helper connects again', async () => {
+    const { service, pairing } = await paired();
+    handlers['steam_frame_set_up_helper'] = () => ({ status: 'unreachable', installed: false });
+    await service.reinstallHelper(pairing);
+    const state = (status: string) => ({
+      pairingId: pairing.id,
+      status,
+      updateAvailable: false,
+      maintenance: null,
+      address: pairing.address,
+      certPin: 'CERT',
+    });
+    (service as any).onConnectionState(state('offline'));
+    expect(service.reinstalls()).toEqual({ [pairing.id]: 'failed' });
+    (service as any).onConnectionState(state('connected'));
+    expect(service.reinstalls()).toEqual({});
+  });
+});
