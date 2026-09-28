@@ -13,7 +13,11 @@ import { info } from '@tauri-apps/plugin-log';
 import { CancellableTask } from '../../utils/cancellable-task';
 import { BrightnessTransitionTask } from './brightness-transition';
 import { AutomationConfigService } from '../automation-config.service';
-import { HardwareBrightnessControlService } from './hardware-brightness-control.service';
+import {
+  AdoptedBrightness,
+  HardwareBrightnessControlService,
+} from './hardware-brightness-control.service';
+import { HardwareBrightnessControlDriver } from './hardware-brightness-drivers/hardware-brightness-control-driver';
 import { SoftwareBrightnessControlService } from './software-brightness-control.service';
 import { lerp } from '../../utils/number-utils';
 import { clamp } from 'lodash';
@@ -33,6 +37,12 @@ export class SimpleBrightnessControlService {
   private _activeTransition = new BehaviorSubject<BrightnessTransitionTask | undefined>(undefined);
   public readonly activeTransition = this._activeTransition.asObservable();
   private hardwareBrightnessDriverAvailable = false;
+  /** Counts running `setBrightness` calls, whose own replies must not be adopted midway. */
+  private settingBrightness = 0;
+  /** The active driver at the last driver change, to recognize a handoff between drivers. */
+  private previousDriver: HardwareBrightnessControlDriver | null = null;
+  /** The latest report skipped while `settingBrightness` was above zero. */
+  private deferredAdoption: AdoptedBrightness | null = null;
   public readonly advancedMode = this._advancedMode.asObservable();
 
   get brightness(): number {
@@ -77,7 +87,9 @@ export class SimpleBrightnessControlService {
         tap((available) => (this.hardwareBrightnessDriverAvailable = available)),
         filter(() => !this._advancedMode.value),
         skip(1),
-        distinctUntilChanged()
+        distinctUntilChanged(),
+        // a device that pushes its brightness changes keeps its value across availability changes
+        filter(() => !this.hardwareBrightnessControl.lastActiveDriver?.pushesBrightnessChanges)
       )
       .subscribe(() => {
         this.setBrightness(this.brightness, {
@@ -85,6 +97,52 @@ export class SimpleBrightnessControlService {
           logReason: undefined,
         });
       });
+    // the driver can change while availability stays true
+    this.hardwareBrightnessControl.onDriverChange.subscribe(() => this.onDriverChange());
+    this.hardwareBrightnessControl.adoptedBrightness.subscribe((adopted) =>
+      this.adoptHardwareBrightness(adopted)
+    );
+  }
+
+  private onDriverChange() {
+    const driver = this.hardwareBrightnessControl.activeDriver;
+    const previous = this.previousDriver;
+    this.previousDriver = driver;
+    // a device taking over from a pushing one never saw the simple value
+    if (
+      !this._advancedMode.value &&
+      previous?.pushesBrightnessChanges &&
+      driver &&
+      driver !== previous &&
+      !driver.pushesBrightnessChanges
+    ) {
+      this.setBrightness(this.brightness, { cancelActiveTransition: true, logReason: undefined });
+    }
+  }
+
+  /** Derives the simple value from a hardware value the device reported. */
+  private async adoptHardwareBrightness(adopted: AdoptedBrightness) {
+    if (this._advancedMode.value || this._activeTransition.value) return;
+    // a replayed report can come from a device that is no longer in use
+    if (!this.hardwareBrightnessControl.activeDriver?.pushesBrightnessChanges) return;
+    if (this.settingBrightness) {
+      this.deferredAdoption = adopted;
+      return;
+    }
+    const { percentage: hardware, bounds } = adopted;
+    const [min, max] = bounds;
+    if (hardware <= min + 0.01) {
+      this._brightness.next(clamp((min * this.softwareBrightnessControl.brightness) / 100, 0, 100));
+      return;
+    }
+    // the headset's choice wins over leftover software dimming
+    this._brightness.next(clamp(min + ((hardware - min) / (max - min)) * (100 - min), 0, 100));
+    if (this.softwareBrightnessControl.brightness < 100) {
+      await this.softwareBrightnessControl.setBrightness(100, {
+        cancelActiveTransition: true,
+        logReason: null,
+      });
+    }
   }
 
   transitionBrightness(
@@ -94,7 +152,17 @@ export class SimpleBrightnessControlService {
   ): CancellableTask {
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
     if (this._brightness.value === percentage) {
-      const task = new CancellableTask();
+      // a pushing device's value can differ from the derived simple value, so it still gets the write
+      const write =
+        this.hardwareBrightnessDriverAvailable &&
+        this.hardwareBrightnessControl.lastActiveDriver?.pushesBrightnessChanges
+          ? () =>
+              this.setBrightness(percentage, {
+                cancelActiveTransition: true,
+                logReason: opt.logReason,
+              })
+          : undefined;
+      const task = new CancellableTask(write);
       task.start();
       return task;
     }
@@ -132,6 +200,32 @@ export class SimpleBrightnessControlService {
   }
 
   async setBrightness(
+    percentage: number,
+    options: Partial<SetBrightnessOrCCTOptions> = SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS
+  ) {
+    this.settingBrightness++;
+    try {
+      await this.applyBrightness(percentage, options);
+    } finally {
+      this.settingBrightness--;
+      this.adoptDeferredReport();
+    }
+  }
+
+  /**
+   * Adopts a report skipped during the last change, such as the value kept after a failed write.
+   * A report the hardware cache no longer shows is an older reply and stays skipped.
+   */
+  private adoptDeferredReport() {
+    const deferred = this.deferredAdoption;
+    if (this.settingBrightness || !deferred) return;
+    this.deferredAdoption = null;
+    if (deferred.percentage === this.hardwareBrightnessControl.brightness) {
+      void this.adoptHardwareBrightness(deferred);
+    }
+  }
+
+  private async applyBrightness(
     percentage: number,
     options: Partial<SetBrightnessOrCCTOptions> = SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS
   ) {

@@ -48,6 +48,7 @@ export class SteamFramePairingService {
 
   readonly pairings$ = new BehaviorSubject<SteamFramePairing[]>([]);
   readonly connections = this._connections.asReadonly();
+  readonly connections$ = new BehaviorSubject<Record<string, SteamFrameConnectionState>>({});
   readonly flow = this._flow.asReadonly();
   /**
    * Reinstalls started from Device Manager, by pairing id. `failed` stays while the helper is
@@ -711,6 +712,7 @@ export class SteamFramePairingService {
   /** Shows a connection state, and saves what the core learned about the headset. */
   private onConnectionState(state: SteamFrameConnectionState) {
     this._connections.set({ ...this._connections(), [state.pairingId]: state });
+    this.connections$.next(this._connections());
 
     // a failed reinstall stops mattering once the helper is back
     const reinstall = this._reinstalls()[state.pairingId];

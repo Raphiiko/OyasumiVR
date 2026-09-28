@@ -58,6 +58,8 @@ export class BrightnessCctAutomationService {
   private autoSunriseTime?: string;
   private sunriseSunsetLookup?: Promise<[string, string]>;
   private sleepMode: boolean = false;
+  /** Counts brightness automation runs, so a delayed rerun can tell that another one ran. */
+  private brightnessAutomationRuns = 0;
 
   public readonly anyBrightnessTransitionActive = this.lastActivatedBrightnessTransition.pipe(
     switchMap((transition) =>
@@ -428,7 +430,9 @@ export class BrightnessCctAutomationService {
       (c) => c.BRIGHTNESS_AUTOMATIONS
     );
 
-    if (brightnessAutomation)
+    if (brightnessAutomation) {
+      // a paired Frame's hardware brightness can change only after its first report
+      const frameReport = this.hardwareBrightnessControl.driverSteamFrame.whenFrameReports();
       this.onAutomationTrigger(
         brightnessAutomation,
         config[brightnessAutomation],
@@ -437,8 +441,31 @@ export class BrightnessCctAutomationService {
         true,
         false
       );
+      const runs = this.brightnessAutomationRuns;
+      void frameReport?.then((reported) => {
+        if (reported) void this.rerunHmdConnectBrightness(runs);
+      });
+    }
     if (cctAutomation)
       this.onAutomationTrigger(cctAutomation, config[cctAutomation], true, false, false, true);
+  }
+
+  /** Applies the brightness automation that fits now, unless another one ran since `runs`. */
+  private async rerunHmdConnectBrightness(runs: number) {
+    if (runs !== this.brightnessAutomationRuns) return;
+    const { brightnessAutomation } = await this.determineHmdConnectAutomations();
+    const config = await firstValueFrom(this.automationConfigService.configs).then(
+      (c) => c.BRIGHTNESS_AUTOMATIONS
+    );
+    if (!brightnessAutomation || runs !== this.brightnessAutomationRuns) return;
+    this.onAutomationTrigger(
+      brightnessAutomation,
+      config[brightnessAutomation],
+      true,
+      false,
+      true,
+      false
+    );
   }
 
   private async onAutomationTrigger(
@@ -451,6 +478,7 @@ export class BrightnessCctAutomationService {
   ) {
     // Stop if the automation is disabled
     if (!config.enabled || (!config.changeBrightness && !config.changeColorTemperature)) return;
+    if (config.changeBrightness && runBrightness) this.brightnessAutomationRuns++;
     // Determine the log reason
     const eventLogReasonMap = {
       SLEEP_MODE_ENABLE: 'SLEEP_MODE_ENABLE',
