@@ -124,7 +124,39 @@ p {
   color: var(--color-primary);
   cursor: pointer;
 }
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75em;
+  margin: 0 0 0.75em;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+
+  li {
+    position: relative;
+    padding-left: 2.25em;
+    counter-increment: step;
+  }
+
+  li::before {
+    content: counter(step);
+    position: absolute;
+    top: 0.1em;
+    left: 0;
+    width: 1.55em;
+    height: 1.55em;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--color-surface-3);
+    color: var(--color-text-0);
+    font-size: 0.9em;
+    font-weight: 600;
+  }
+}
 :host ::ng-deep .copy kbd {
+  white-space: nowrap;
   font: inherit;
   font-weight: 500;
   background: var(--color-surface-3);

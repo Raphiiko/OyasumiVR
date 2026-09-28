@@ -10,7 +10,7 @@ use super::{
         self, bundled_digest, InstallDecision, InstallError, BUNDLED_VERSION, EXIT_BUSY,
         EXIT_CHANGED, EXIT_MISSING,
     },
-    ssh::{self, Session, SshError},
+    ssh::{Session, SshError},
     wss::{self, WssError},
 };
 
@@ -62,7 +62,7 @@ pub async fn update(pairing: &Pairing) -> UpdateOutcome {
     let Some(digest) = bundled_digest() else {
         return UpdateOutcome::Failed(FailReason::NotBundled);
     };
-    let session = match ssh::connect(&pairing.access).await {
+    let session = match setup::open(&pairing.access, &pairing.id, &pairing.public_key).await {
         Ok(session) => session,
         Err(error) => return ssh_outcome(error),
     };
@@ -213,7 +213,7 @@ pub enum Recovery {
 /// Brings back a helper that does not answer while SSH works: start it, then, once per app start,
 /// repair the current release and finally roll back to the previous one.
 pub async fn recover(pairing: &Pairing) -> Recovery {
-    let session = match ssh::connect(&pairing.access).await {
+    let session = match setup::open(&pairing.access, &pairing.id, &pairing.public_key).await {
         Ok(session) => session,
         Err(SshError::Unreachable) => return Recovery::Unreachable,
         Err(SshError::HostKeyChanged) => return Recovery::HostKeyChanged,

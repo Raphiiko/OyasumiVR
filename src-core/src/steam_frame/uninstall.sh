@@ -18,15 +18,23 @@ if ! flock -w 60 9; then
   echo "Another PC is updating OyasumiVR Helper. Try again in a minute." >&2
   exit 75
 fi
-exec 8>"$HOME/.ssh/.oyasumivr-keys.lock"
-if ! flock -w 10 8; then
-  echo "Another PC is changing SSH access on this headset. Try again in a minute." >&2
-  exit 75
-fi
+keys_lock="$HOME/.ssh/.oyasumivr-keys.lock"
+deadline=$((SECONDS + 10))
+while :; do
+  exec 8>"$keys_lock"
+  if ! flock -w "$((deadline > SECONDS ? deadline - SECONDS : 1))" 8; then
+    echo "Another PC is changing SSH access on this headset. Try again in a minute." >&2
+    exit 75
+  fi
+  # another uninstall deletes the lock file, so a lock won on the old file protects nothing
+  [ "$(stat -Lc %i /proc/self/fd/8)" = "$(stat -c %i "$keys_lock" 2>/dev/null)" ] && break
+  exec 8>&-
+done
 
 systemctl --user disable --now "$unit" 2>/dev/null || true
 rm -f "$units/$unit" "$units/default.target.wants/$unit"
 systemctl --user daemon-reload 2>/dev/null || true
+rmdir "$units/default.target.wants" "$units" 2>/dev/null || true
 
 # remove every key line that a paired PC recorded in clients/
 if [ -f "$keys" ] && compgen -G "$root/clients/*.pub" >/dev/null; then
@@ -40,4 +48,5 @@ if [ -f "$keys" ] && compgen -G "$root/clients/*.pub" >/dev/null; then
 fi
 
 rm -rf "$root"
+rm -f "$keys_lock"
 echo "OyasumiVR Helper was removed."
