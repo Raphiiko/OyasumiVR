@@ -101,15 +101,17 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
     private cdr: ChangeDetectorRef
   ) {}
 
-  _entry?: EventLogEntry;
-  @Input() set entry(entry: EventLogEntry | undefined) {
-    this._entry = entry;
-    this.rebuild();
-  }
-
-  get entry(): EventLogEntry | undefined {
-    return this._entry;
-  }
+  @Input() entry?: EventLogEntry;
+  /** Hides the subtitle and the date, for entries that share them with their group header. */
+  @Input() compact = false;
+  @Input() showTime = true;
+  /** Overrides the entry's own icon, for a group header. */
+  @Input() icon?: string;
+  protected iconName?: string;
+  /** Translation key for a header row that has no entry of its own. */
+  @Input() titleKey?: string;
+  /** Time for a header row that has no entry of its own. */
+  @Input() time?: number;
 
   ngOnInit() {
     this.ngOnChanges();
@@ -119,23 +121,32 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
     });
   }
 
+  get entryTime(): number | undefined {
+    return this.entry?.time ?? this.time;
+  }
+
   ngOnChanges() {
     this.parser = this.parsers.find((parser) => parser.entryType() === this.entry?.type);
     this.rebuild();
   }
 
   rebuild() {
-    if (!this.parser) return;
-    let key = this.parser.headerInfoTitle(this._entry);
+    this.iconName = this.icon ?? (this.entry && this.parser?.icon(this.entry));
+    this.headerInfoSubTitle = undefined;
+    if (!this.parser) {
+      if (this.titleKey) this.headerInfoTitle = this.translate.translate(this.titleKey);
+      return;
+    }
+    let key = this.parser.headerInfoTitle(this.entry);
     if (key) {
       this.headerInfoTitle = this.sanitizer.bypassSecurityTrustHtml(
-        this.translate.translate(key, this.parser?.headerInfoTitleParams(this._entry) ?? {})
+        this.translate.translate(key, this.parser?.headerInfoTitleParams(this.entry) ?? {})
       );
     }
-    key = this.parser.headerInfoSubTitle(this._entry);
+    key = this.parser.headerInfoSubTitle(this.entry);
     if (key) {
       this.headerInfoSubTitle = this.sanitizer.bypassSecurityTrustHtml(
-        this.translate.translate(key, this.parser?.headerInfoSubTitleParams(this._entry) ?? {})
+        this.translate.translate(key, this.parser?.headerInfoSubTitleParams(this.entry) ?? {})
       );
     }
   }

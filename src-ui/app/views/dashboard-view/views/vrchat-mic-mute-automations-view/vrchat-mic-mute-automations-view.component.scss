@@ -10,18 +10,11 @@
   &-muted,
   &-unmuted,
   &-unknown {
-    font-size: 2em;
+    font-size: 1.7em;
   }
 
   &-muted {
-    color: var(--color-alert-error);
-  }
-
-  &-unmuted {
-  }
-
-  &-unknown {
-    color: var(--color-text-3);
+    --icon-color: var(--color-alert-error);
   }
 }
 

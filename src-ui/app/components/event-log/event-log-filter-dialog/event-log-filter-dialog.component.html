@@ -19,10 +19,10 @@
         <div class="filter" (click)="toggleFilter(filter.id)">
           <div class="filter-icon">
             @if (selectedFilters.includes(filter.id)) {
-              <div class="material-symbols-outlined">radio_button_checked</div>
+              <app-icon name="radio-on" />
             }
             @if (!selectedFilters.includes(filter.id)) {
-              <div class="material-symbols-outlined">radio_button_unchecked </div>
+              <app-icon name="radio-off" />
             }
           </div>
           <div class="filter-labels">

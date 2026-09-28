@@ -18,7 +18,7 @@
 }
 <div
   class="input-container"
-  [class.has-unit]="!!unit"
+  [class.has-unit]="!!unit || !!unitIcon"
   (mouseenter)="onMouseEnter()"
   [class.overlay-active]="showOverlay"
   [class.disabled]="disabled"
@@ -34,7 +34,14 @@
     (blur)="onInputBlur()"
     #inputValue
   />
-  @if (unit) {
-    <div class="unit"><span [innerHTML]="unit"></span></div>
+  @if (unit || unitIcon) {
+    <div class="unit">
+      @if (unit) {
+        <span [innerHTML]="unit"></span>
+      }
+      @if (unitIcon) {
+        <app-icon [name]="unitIcon" class="icon-mono" />
+      }
+    </div>
   }
 </div>

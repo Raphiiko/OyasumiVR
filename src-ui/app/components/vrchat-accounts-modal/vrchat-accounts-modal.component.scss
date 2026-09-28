@@ -24,10 +24,6 @@
   &.active {
     border-color: var(--color-primary);
     background: var(--color-surface-3);
-
-    .account-icon {
-      color: var(--color-text-1);
-    }
   }
 
   &.selectable {
@@ -36,10 +32,6 @@
     &:hover {
       border-color: var(--color-surface-4);
       background: var(--color-surface-2);
-
-      .account-icon {
-        color: var(--color-text-1);
-      }
     }
 
     &:active {
@@ -74,8 +66,7 @@
 
 .account-icon {
   flex-shrink: 0;
-  color: var(--color-text-2);
-  font-size: 2.25em;
+  font-size: 1.91em;
 }
 
 .account-label {
@@ -101,9 +92,9 @@
   font-size: 0.85em;
   color: var(--color-text-3);
 
-  i {
+  app-icon {
     flex-shrink: 0;
-    font-size: 1.15em;
+    font-size: 0.98em;
   }
 
   span {
@@ -114,6 +105,7 @@
 
   &.locked {
     color: var(--color-alert-warning);
+    --icon-color: var(--color-alert-warning);
   }
 }
 

@@ -22,7 +22,7 @@
         <div class="small-spinner" @hshrink></div>
       }
       @if (!testing) {
-        <i class="material-icons" @hshrink>play_arrow</i>
+        <app-icon name="play" @hshrink />
       }
       @if (!testing) {
         <span [@hshrink] transloco="comp.osc-script-code-editor.test"></span>
@@ -40,7 +40,7 @@
           (mouseenter)="hoverOnLine(i, $event)"
         >
           @if (getErrorsForLine(i).length) {
-            <i class="material-icons-round">error</i>
+            <app-icon name="exclamation-circle" />
           }
           <span>{{ counter }}</span>
         </div>

@@ -4,12 +4,12 @@
   }
 
   .expand-button {
-    .material-symbols-outlined {
+    app-icon {
       transition: transform 0.2s ease;
       transform: rotate(0deg);
     }
 
-    &.expanded .material-symbols-outlined {
+    &.expanded app-icon {
       transform: rotate(180deg);
     }
   }

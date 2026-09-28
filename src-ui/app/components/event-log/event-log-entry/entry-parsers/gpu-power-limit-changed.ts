@@ -6,6 +6,10 @@ export class EventLogGpuPowerLimitChangedEntryParser extends EventLogEntryParser
     return 'gpuPowerLimitChanged';
   }
 
+  icon(): string {
+    return 'gpu';
+  }
+
   override headerInfoTitle(entry: EventLogGpuPowerLimitChanged): string {
     return (
       'comp.event-log-entry.type.gpuPowerLimitChanged.title.' +

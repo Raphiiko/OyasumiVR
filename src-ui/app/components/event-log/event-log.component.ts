@@ -22,6 +22,21 @@ import {
   EventLogFilterDialogOutputModel,
 } from './event-log-filter-dialog/event-log-filter-dialog.component';
 import { AppSettingsService } from '../../services/app-settings.service';
+import {
+  EventLogCause,
+  EventLogGroup,
+  EventLogItem,
+  eventLogItemTime,
+  groupEventLog,
+} from './event-log-grouping';
+
+const CAUSE_ICONS: Record<EventLogCause, string> = {
+  sleepModeEnabled: 'sleep',
+  sleepModeDisabled: 'sleep-off',
+  sleepPreparation: 'bed',
+  sunset: 'sunset',
+  sunrise: 'sunrise',
+};
 
 @Component({
   selector: 'app-event-log',
@@ -36,7 +51,8 @@ export class EventLogComponent implements OnInit, AfterViewInit {
   private showCount = new BehaviorSubject<number>(this.pageSize);
   protected entries = 0;
 
-  protected logsInView: Observable<EventLogEntry[]>;
+  protected itemsInView: Observable<EventLogItem[]>;
+  protected expandedGroups = new Set<string>();
   animationPause = true;
   clearHover = false;
   filterHover = false;
@@ -48,20 +64,16 @@ export class EventLogComponent implements OnInit, AfterViewInit {
     private modalService: ModalService,
     private appSettings: AppSettingsService
   ) {
-    this.logsInView = combineLatest([this.eventLog.eventLog, this.showCount, this.filters]).pipe(
+    this.itemsInView = combineLatest([this.eventLog.eventLog, this.showCount, this.filters]).pipe(
       map(
         ([log, showCount, filters]) =>
-          [log.logs.filter((log) => !filters.includes(log.type)), showCount, filters] as [
-            EventLogEntry[],
-            number,
-            EventLogType[],
-          ]
+          [groupEventLog(log.logs, filters), showCount] as [EventLogItem[], number]
       ),
-      tap(([logs]) => {
-        this.entries = logs.length;
+      tap(([items]) => {
+        this.entries = items.length;
         this.cdr.detectChanges();
       }),
-      map(([logs, showCount]) => logs.slice(0, showCount)),
+      map(([items, showCount]) => items.slice(0, showCount)),
       takeUntilDestroyed()
     );
     this.appSettings.settings.pipe(takeUntilDestroyed()).subscribe((settings) => {
@@ -81,8 +93,21 @@ export class EventLogComponent implements OnInit, AfterViewInit {
     return Array.from(Array(pages).keys()).map((key) => key + 1);
   }
 
-  protected trackLogEntryBy(index: number, entry: EventLogEntry) {
-    return entry.id;
+  protected causeIcon(group: EventLogGroup): string {
+    return CAUSE_ICONS[group.cause];
+  }
+
+  protected groupTime(group: EventLogGroup): number {
+    return eventLogItemTime(group);
+  }
+
+  /** False when the entry happened within the same second as its group header. */
+  protected showEntryTime(entry: EventLogEntry, group: EventLogGroup): boolean {
+    return Math.floor(entry.time / 1000) !== Math.floor(this.groupTime(group) / 1000);
+  }
+
+  protected toggleGroup(group: EventLogGroup) {
+    if (!this.expandedGroups.delete(group.id)) this.expandedGroups.add(group.id);
   }
 
   showMore() {

@@ -3,12 +3,14 @@ import { MqttDiscoveryService } from '../mqtt-discovery.service';
 import { SimpleBrightnessControlService } from '../../brightness-control/simple-brightness-control.service';
 import { HardwareBrightnessControlService } from '../../brightness-control/hardware-brightness-control.service';
 import { SoftwareBrightnessControlService } from '../../brightness-control/software-brightness-control.service';
-import { distinctUntilChanged } from 'rxjs';
+import { distinctUntilChanged, map } from 'rxjs';
 import { MqttNumberProperty, MqttToggleProperty } from '../../../models/mqtt';
 import { AutomationConfigService } from '../../automation-config.service';
 import { isEqual } from 'lodash';
 import { ensurePrecision } from '../../../utils/number-utils';
 import { BrightnessAutomationsConfig } from '../../../models/automations';
+import { CCTControlService } from '../../cct-control/cct-control.service';
+import { AppSettingsService } from '../../app-settings.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +24,9 @@ export class BrightnessMqttIntegrationService {
     private simpleBrightness: SimpleBrightnessControlService,
     private hwBrightness: HardwareBrightnessControlService,
     private swBrightness: SoftwareBrightnessControlService,
-    private automationConfigService: AutomationConfigService
+    private automationConfigService: AutomationConfigService,
+    private cctControl: CCTControlService,
+    private appSettingsService: AppSettingsService
   ) {}
 
   async init() {
@@ -30,6 +34,7 @@ export class BrightnessMqttIntegrationService {
     await this.initHardwareBrightness();
     await this.initSoftwareBrightness();
     await this.initAdvancedMode();
+    await this.initColorTemperature();
   }
 
   private async initSimpleBrightness() {
@@ -132,5 +137,38 @@ export class BrightnessMqttIntegrationService {
           { advancedMode: command.current.value }
         );
       });
+  }
+
+  private async initColorTemperature() {
+    await this.mqtt.initProperty({
+      type: 'NUMBER',
+      id: 'colorTemperature',
+      topicPath: 'colorTemperature',
+      displayName: 'Color Temperature',
+      value: this.cctControl.cct,
+      min: 1000,
+      max: 10000,
+      mode: 'slider',
+      available: false,
+      unitOfMeasurement: 'K',
+    });
+    this.appSettingsService.settings
+      .pipe(
+        map((settings) => settings.cctControlEnabled),
+        distinctUntilChanged()
+      )
+      .subscribe((enabled) => this.mqtt.setPropertyAvailability('colorTemperature', enabled));
+    this.cctControl.cctStream.pipe(distinctUntilChanged()).subscribe((cct) => {
+      this.mqtt.setNumberPropertyValue('colorTemperature', cct);
+    });
+    this.mqtt
+      .getCommandStreamForProperty<MqttNumberProperty>('colorTemperature')
+      .subscribe((command) => this.applyColorTemperatureCommand(command.current.value));
+  }
+
+  private async applyColorTemperatureCommand(cct: number) {
+    await this.cctControl.setCCT(cct);
+    // setCCT rounds, clamps, or ignores the value, and an unchanged cctStream does not re-emit
+    await this.mqtt.setNumberPropertyValue('colorTemperature', this.cctControl.cct);
   }
 }

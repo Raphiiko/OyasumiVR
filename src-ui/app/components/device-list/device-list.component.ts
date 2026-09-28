@@ -161,7 +161,7 @@ export class DeviceListComponent implements OnInit {
       case 'GenericTracker':
         return 'tracker';
       case 'HMD':
-        return 'hmd';
+        return 'headset';
       case 'TrackingReference':
       case 'DisplayRedirect':
       case 'Invalid':
@@ -181,7 +181,7 @@ export class DeviceListComponent implements OnInit {
         devices: [],
         canBulkPowerOn: false,
         canBulkPowerOff: false,
-        icon: 'lighthouse',
+        icon: 'base-station',
       });
     }
     // Remove obsolete device category

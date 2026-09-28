@@ -221,7 +221,7 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
         id: 'all',
         label: 'device-manager.filter.allTags',
         htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
-          '<i class="material-icons" style="margin-right: 0.5em; color: var(--color-text-3);">filter_list</i>'
+          '<svg class="svg-icon" style="margin-right: 0.5em;"><use href="/assets/icons/filter.svg#icon"/></svg>'
         ),
       },
     ];
@@ -348,13 +348,13 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
   getDeviceTypeIcon(type: DeviceGroupType): string {
     switch (type) {
       case 'HMD':
-        return 'hmd';
+        return 'headset';
       case 'CONTROLLER':
         return 'controller';
       case 'TRACKER':
         return 'tracker';
       case 'LIGHTHOUSE':
-        return 'lighthouse';
+        return 'base-station';
       case 'PREVIOUSLY_SEEN':
         return 'device';
       default:
@@ -365,13 +365,13 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
   getDeviceTypeIconForDevice(type: DMDeviceType): string {
     switch (type) {
       case 'HMD':
-        return 'hmd';
+        return 'headset';
       case 'CONTROLLER':
         return 'controller';
       case 'TRACKER':
         return 'tracker';
       case 'LIGHTHOUSE':
-        return 'lighthouse';
+        return 'base-station';
       default:
         return 'device';
     }

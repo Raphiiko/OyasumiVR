@@ -4,19 +4,19 @@
     <div class="tab-bar">
       <div class="tab" [class.active]="deviceType === 'Render'" (click)="deviceType = 'Render'">
         <div class="tab-label">
-          <i class="material-icons-round">volume_up</i>
+          <app-icon name="volume" />
         </div>
       </div>
       <div class="tab" [class.active]="deviceType === 'Capture'" (click)="deviceType = 'Capture'">
         <div class="tab-label">
-          <i class="material-icons-round">mic</i>
+          <app-icon name="mic" />
         </div>
       </div>
     </div>
     @if (!(options | async)?.length) {
       <div class="no-audio-devices">
         <div class="no-audio-devices-icon">
-          <i class="material-icons-round">volume_off</i>
+          <app-icon name="volume-off" />
         </div>
         @if (deviceType === 'Capture') {
           <div
@@ -41,10 +41,10 @@
           >
             <div class="audio-device-icon">
               @if (device.deviceType === 'Render') {
-                <i class="material-icons-round">volume_up</i>
+                <app-icon name="volume" />
               }
               @if (device.deviceType === 'Capture') {
-                <i class="material-icons-round">mic</i>
+                <app-icon name="mic" />
               }
             </div>
             <div class="audio-device-name">
@@ -64,7 +64,7 @@
                 (click)="selectDevice(device)"
                 [disabled]="(disablePersistentIds || []).includes(device.persistentId!)"
               >
-                <i class="material-icons-round">add</i>
+                <app-icon name="add" />
               </button>
             </div>
           </div>

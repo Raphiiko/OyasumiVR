@@ -1,6 +1,6 @@
 @if (selected) {
   <button class="btn-clear" @hshrink (click)="deselectHotkey()">
-    <i class="material-icons">clear</i>
+    <app-icon name="close" />
   </button>
 }
 <button class="btn-main" [class.selected]="selected" (click)="selectHotkey()" @noop>

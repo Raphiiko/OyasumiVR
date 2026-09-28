@@ -9,7 +9,7 @@
       (click)="openFilterDialog()"
     >
       <span>&nbsp;</span>
-      <i class="material-icons-round">filter_list</i>
+      <app-icon name="filter" />
       <span>&nbsp;</span>
       @if (filterHover) {
         <span transloco="comp.event-log.openFilters" @hshrink class="label"></span>
@@ -23,7 +23,7 @@
       [disabled]="entries === 0"
     >
       <span>&nbsp;</span>
-      <i class="material-icons-round">clear</i>
+      <app-icon name="close" />
       <span>&nbsp;</span>
       @if (clearHover) {
         <span transloco="comp.event-log.clearLog" @hshrink class="label"></span>
@@ -33,17 +33,61 @@
   <div class="pane-content">
     @if (entries === 0) {
       <div class="no-event-logs" @fade @noop>
-        <i class="material-icons-round">info</i>
+        <app-icon name="info" />
         <span transloco="comp.event-log.no-logs"></span>
       </div>
     }
     <div class="event-logs" @noop>
-      @for (entry of logsInView | async; track trackLogEntryBy($index, entry)) {
-        <app-event-log-entry
-          [entry]="entry"
-          @vshrink
-          [@.disabled]="animationPause"
-        ></app-event-log-entry>
+      @for (item of itemsInView | async; track item.id) {
+        @if (item.kind === 'entry') {
+          <app-event-log-entry
+            class="item"
+            [entry]="item.entry"
+            @vshrink
+            [@.disabled]="animationPause"
+          />
+        } @else {
+          <div
+            class="item group"
+            [class.expanded]="expandedGroups.has(item.id)"
+            @vshrink
+            [@.disabled]="animationPause"
+          >
+            <app-event-log-entry
+              class="group-header"
+              role="button"
+              tabindex="0"
+              [attr.aria-expanded]="expandedGroups.has(item.id)"
+              [entry]="item.trigger"
+              [titleKey]="'comp.event-log.group.cause.' + item.cause"
+              [time]="groupTime(item)"
+              [icon]="causeIcon(item)"
+              (click)="toggleGroup(item)"
+              (keydown.enter)="toggleGroup(item)"
+              (keydown.space)="toggleGroup(item); $event.preventDefault()"
+            >
+              <div class="group-summary">
+                <span
+                  class="group-count"
+                  [transloco]="'comp.event-log.group.count'"
+                  [translocoParams]="{ count: item.entries.length }"
+                ></span>
+                <app-icon class="group-chevron icon-mono" name="chevron-down" />
+              </div>
+            </app-event-log-entry>
+            @if (expandedGroups.has(item.id)) {
+              <div class="group-entries" @vshrink>
+                @for (entry of item.entries; track entry.id) {
+                  <app-event-log-entry
+                    [entry]="entry"
+                    [compact]="true"
+                    [showTime]="showEntryTime(entry, item)"
+                  />
+                }
+              </div>
+            }
+          </div>
+        }
       }
       @if (hasMore()) {
         <div class="show-more" @vshrink [@.disabled]="animationPause">

@@ -6,6 +6,10 @@ export class EventLogVRChatGroupChangedEntryParser extends EventLogEntryParser<E
     return 'vrchatGroupChanged';
   }
 
+  icon(): string {
+    return 'group';
+  }
+
   override headerInfoTitle(entry: EventLogVRChatGroupChanged): string {
     return entry.isClearing
       ? 'comp.event-log-entry.type.vrchatGroupChanged.title.clear'

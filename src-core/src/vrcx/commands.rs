@@ -4,7 +4,7 @@ use crate::vrcx::*;
 
 #[tauri::command]
 pub async fn vrcx_log(msg: String) -> bool {
-    let sender = &mut VRCX_NORITICATION_SENDER.lock().unwrap();
+    let sender = &mut VRCX_NOTIFICATION_SENDER.lock().unwrap();
     if sender.sender.is_none() && sender.connect().is_err() {
         debug!("[VRCX] failed to connect to VRCX");
         return false;
@@ -21,11 +21,11 @@ pub async fn vrcx_log(msg: String) -> bool {
                     return false;
                 }
             }
-            VrcxNotificationSenderError::SendFailed(_) => {
+            VrcxNotificationSenderError::SendFailed => {
                 debug!("[VRCX] failed to send message to VRCX");
                 return false;
             }
-            VrcxNotificationSenderError::UnableToConnect(_) => unreachable!(),
+            VrcxNotificationSenderError::UnableToConnect => unreachable!(),
         };
     }
     true

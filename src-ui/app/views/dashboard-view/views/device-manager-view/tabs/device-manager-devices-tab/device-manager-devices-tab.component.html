@@ -3,7 +3,7 @@
   <div class="filter-controls">
     <div class="search-wrapper">
       <div class="input-wrapper">
-        <i class="material-symbols-outlined search-icon">search</i>
+        <app-icon name="search" class="search-icon" />
         <input
           type="text"
           [(ngModel)]="searchQuery"
@@ -32,15 +32,14 @@
     <div class="device-group" @vshrink>
       <div class="device-group-header">
         @if (group.type !== 'PREVIOUSLY_SEEN') {
-          <img [src]="'/assets/img/icon_' + group.icon + '.png'" class="category-icon" />
+          <app-icon [name]="group.icon" class="category-icon" />
         }
         @if (group.type === 'PREVIOUSLY_SEEN') {
-          <i
-            class="material-icons category-icon-text"
-            style="color: var(--color-text-3); font-size: 1.5em; margin-right: 0.75em"
-          >
-            history
-          </i>
+          <app-icon
+            name="history"
+            class="category-icon-text"
+            style="font-size: 1.28em; margin-right: 0.75em"
+          />
         }
         <span class="group-label" [transloco]="group.label"></span>
         <span class="group-count">({{ group.devices.length }})</span>
@@ -65,10 +64,8 @@
             <!-- Main Row with core device info -->
             <div class="device-main-row">
               <div class="device-icon-wrap">
-                <img
-                  [src]="
-                    '/assets/img/icon_' + getDeviceTypeIconForDevice(device.deviceType) + '.png'
-                  "
+                <app-icon
+                  [name]="getDeviceTypeIconForDevice(device.deviceType)"
                   class="device-icon"
                 />
                 @if (frameRow(device)?.badge; as badge) {
@@ -83,13 +80,12 @@
                 <div class="device-name-line">
                   <span class="device-name">{{ device.typeName }}</span>
                   @if (device.disabled) {
-                    <i
-                      class="material-icons hidden-icon"
+                    <app-icon
+                      name="eye-off"
+                      class="hidden-icon"
                       [tooltip]="'device-manager.config.disabled.tooltip' | transloco"
                       [tooltipMode]="'right'"
-                    >
-                      visibility_off
-                    </i>
+                    />
                   }
                   @if (getDeviceSerialNumber(device) && device.nickname) {
                     <span class="device-serial"> S/N: {{ getDeviceSerialNumber(device) }} </span>
@@ -110,9 +106,11 @@
               @if (getDeviceBatteryInfo(device); as battery) {
                 <div class="battery-info">
                   <span class="battery-level">{{ battery.level }}%</span>
-                  <i class="material-icons battery-icon" [class.charging]="battery.isCharging">
-                    {{ battery.isCharging ? 'battery_charging_full' : 'battery_std' }}
-                  </i>
+                  <app-icon
+                    class="battery-icon"
+                    [class.charging]="battery.isCharging"
+                    [name]="battery.isCharging ? 'battery' : 'battery-level'"
+                  />
                 </div>
               }
               <!-- Action Buttons -->
@@ -176,7 +174,7 @@
                     [tooltip]="'device-manager.actions.forget' | transloco"
                     [tooltipMode]="'left'"
                   >
-                    <i class="material-icons">delete</i>
+                    <app-icon name="delete" class="icon-mono" />
                   </button>
                 }
               </div>
@@ -203,7 +201,7 @@
   <!-- Empty State -->
   @if (deviceGroups.length === 0) {
     <div class="empty-state" @vshrink>
-      <i class="material-icons">info</i>
+      <app-icon name="info" />
       <span [transloco]="emptyStateMessage"></span>
     </div>
   }

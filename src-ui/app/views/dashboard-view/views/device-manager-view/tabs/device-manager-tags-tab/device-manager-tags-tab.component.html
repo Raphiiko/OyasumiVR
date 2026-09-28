@@ -48,7 +48,7 @@
                 [tooltip]="'device-manager.tags.edit' | transloco"
                 [tooltipMode]="'left'"
               >
-                <i class="material-icons">edit</i>
+                <app-icon name="edit" class="icon-mono" />
               </button>
               <button
                 class="btn-icon"
@@ -56,7 +56,7 @@
                 [tooltip]="'device-manager.tags.delete' | transloco"
                 [tooltipMode]="'left'"
               >
-                <i class="material-icons">delete</i>
+                <app-icon name="delete" class="icon-mono" />
               </button>
             </div>
           </div>
@@ -84,7 +84,7 @@
                 [tooltip]="'device-manager.tags.save' | transloco"
                 [tooltipMode]="'left'"
               >
-                <i class="material-icons">check</i>
+                <app-icon name="check" class="icon-mono" />
               </button>
               <button
                 class="btn-icon"
@@ -92,7 +92,7 @@
                 [tooltip]="'device-manager.tags.cancel' | transloco"
                 [tooltipMode]="'left'"
               >
-                <i class="material-icons">close</i>
+                <app-icon name="close" class="icon-mono" />
               </button>
             </div>
           </div>
@@ -105,7 +105,7 @@
 <!-- No Tags State -->
 @if (tags.length === 0) {
   <div class="empty-state" @vshrink>
-    <i class="material-icons">label_outline</i>
+    <app-icon name="tag" />
     <span transloco="device-manager.tags.empty.noTags"></span>
   </div>
 }

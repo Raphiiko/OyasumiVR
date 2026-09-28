@@ -11,6 +11,10 @@ export class EventLogStatusChangedOnGeneralEventEntryParser extends EventLogEntr
     return 'statusChangedOnGeneralEvent';
   }
 
+  icon(): string {
+    return 'status';
+  }
+
   override headerInfoTitle(): string {
     return 'comp.event-log-entry.type.statusChangedOnGeneralEvent.title';
   }
@@ -21,10 +25,10 @@ export class EventLogStatusChangedOnGeneralEventEntryParser extends EventLogEntr
     const oldStatusColor = this.getStatusColor(entry.oldStatus);
     const newStatusColor = this.getStatusColor(entry.newStatus ?? entry.oldStatus);
     return {
-      oldStatus: `<i class="material-icons-round" style="color: ${oldStatusColor}">brightness_1</i><span>'${
+      oldStatus: `<span class="status-dot" style="background: ${oldStatusColor}"></span><span>'${
         entry.oldStatusMessage.trim() ?? vrcStatusToString(entry.oldStatus)
       }'</span>`,
-      newStatus: `<i class="material-icons-round" style="color: ${newStatusColor}">brightness_1</i><span>'${
+      newStatus: `<span class="status-dot" style="background: ${newStatusColor}"></span><span>'${
         entry.newStatusMessage?.trim() ?? vrcStatusToString(entry.newStatus ?? entry.oldStatus)
       }'</span>`,
     };

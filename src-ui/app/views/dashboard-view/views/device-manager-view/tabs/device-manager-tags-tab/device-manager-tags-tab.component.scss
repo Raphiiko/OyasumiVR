@@ -124,10 +124,10 @@
         .btn-icon {
           background: var(--color-surface-3);
           border: none;
-          color: var(--color-text-2);
           cursor: pointer;
           padding: 0.5em;
           border-radius: var(--surface-border-radius);
+          color: var(--color-text-2);
           transition: all 0.15s ease;
           width: 2.5em;
           height: 2.5em;
@@ -149,8 +149,8 @@
             }
           }
 
-          i {
-            font-size: 1.2em;
+          app-icon {
+            font-size: 1.02em;
           }
         }
       }
@@ -168,8 +168,8 @@
   color: var(--color-text-3);
   text-align: center;
 
-  i {
-    font-size: 3em;
+  app-icon {
+    font-size: 2.55em;
     margin-bottom: 0.5em;
     opacity: 0.6;
   }

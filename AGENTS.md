@@ -90,6 +90,10 @@ and native input stay shared: claim the resource's lock before a test uses it. E
 connects to a running SteamVR by itself. For the locks, the
 ports, and overlay work, read [parallel app instances](docs/agents/parallel-instances.md).
 
+## Icons
+
+Before drawing, generating, or changing an icon, read [icon design](docs/agents/icon-design.md).
+
 ## Desktop UI verification
 
 When a ticket changes user-visible desktop behavior, verify the real OyasumiVR window by following

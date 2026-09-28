@@ -45,8 +45,8 @@
     overflow: hidden;
     flex: 1;
 
-    i {
-      font-size: 2.5em;
+    app-icon {
+      font-size: 2.13em;
       margin-bottom: 0.25em;
     }
   }
@@ -104,12 +104,7 @@
     color: var(--color-text-1);
     border-color: var(--color-surface-4);
 
-    .device-manager-icon {
-      filter: invert(100%) sepia(0%) saturate(7493%) hue-rotate(15deg) brightness(103%)
-        contrast(103%);
-    }
-
-    .material-icons-round {
+    .chevron-icon {
       transform: translateX(0.2em);
     }
   }
@@ -120,12 +115,7 @@
     color: var(--color-text-2);
     transform: translateY(1px);
 
-    .device-manager-icon {
-      filter: invert(60%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%)
-        contrast(100%);
-    }
-
-    .material-icons-round {
+    .chevron-icon {
       transform: translateX(0);
       opacity: 0.5;
     }
@@ -134,8 +124,6 @@
   .device-manager-icon {
     width: 1.2em;
     height: 1.2em;
-    filter: invert(70%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%) contrast(100%);
-    transition: filter 0.2s ease;
   }
 
   .device-manager-label {
@@ -145,19 +133,11 @@
     font-weight: 500;
   }
 
-  .material-icons-round {
-    font-size: 1em;
+  .chevron-icon {
+    font-size: 0.85em;
     opacity: 0.7;
     transition: all 0.2s ease;
   }
-}
-
-.category-icon {
-  width: 1.5em;
-  height: 1.5em;
-  vertical-align: middle;
-  margin-right: 1em;
-  filter: invert(91%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%) contrast(100%);
 }
 
 .btn-turn-off-all-wrapper {
@@ -174,23 +154,13 @@
   border: none;
   cursor: pointer;
 
-  .category-icon {
-    width: 1.5em;
-    height: 1.5em;
+  app-icon {
+    font-size: 1.2em;
     margin-right: 0;
-    filter: invert(24%) sepia(84%) saturate(1782%) hue-rotate(340deg) brightness(106%) contrast(93%);
-    transition: filter 0.1s ease;
   }
 
-  .material-icons {
-    font-size: 1.5em;
-    line-height: 1;
-  }
-
-  &:hover {
-    .category-icon {
-      filter: invert(99%) sepia(0%) saturate(2934%) hue-rotate(279deg) brightness(116%)
-        contrast(101%);
-    }
+  // the controller's diagonal shape leaves its right side empty, which reads as a wider gap
+  app-icon[name='controller'] {
+    margin-right: -0.12em;
   }
 }

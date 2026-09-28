@@ -1,7 +1,14 @@
-import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import {
+  Component,
+  DestroyRef,
+  OnInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
+import { filter, map, Observable, startWith } from 'rxjs';
 import { fade } from '../../utils/animations';
-import { Router } from '@angular/router';
+import { NavigationEnd, NavigationSkipped, Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { BackgroundService } from '../../services/background.service';
 import { BrightnessCctAutomationService } from '../../services/brightness-cct-automation.service';
@@ -112,6 +119,46 @@ function blurMenu(name = 'blurMenu', length = '.2s ease') {
 
 type SubMenu = 'GENERAL' | 'VRCHAT' | 'HARDWARE' | 'MISCELLANEOUS' | 'SETTINGS';
 
+/** Dashboard routes listed in each submenu, relative to `/dashboard/`. */
+const SUBMENU_ROUTES: Record<Exclude<SubMenu, 'GENERAL'>, string[]> = {
+  HARDWARE: [
+    'brightnessAutomations',
+    'powerAutomations',
+    'gpuAutomations',
+    'resolutionAutomations',
+    'audioVolumeAutomations',
+    'systemMicMuteAutomations',
+    'hmdAutomations',
+  ],
+  VRCHAT: [
+    'oscAutomations',
+    'statusAutomations',
+    'autoInviteRequestAccept',
+    'vrchatMicMuteAutomations',
+    'vrchatAvatarAutomations',
+    'vrchatGroupAutomations',
+    'joinNotifications',
+    'sleepAnimations',
+  ],
+  MISCELLANEOUS: [
+    'chaperoneAutomations',
+    'nightmareDetection',
+    'frameLimitAutomations',
+    'runAutomations',
+  ],
+  SETTINGS: [
+    'settings/general',
+    'settings/brightnessCct',
+    'settings/notifications',
+    'settings/hotkeys',
+    'settings/osc',
+    'settings/updates',
+    'settings/integrations',
+    'settings/advanced',
+    'settings/statusInfo',
+  ],
+};
+
 @Component({
   selector: 'app-dashboard-navbar',
   templateUrl: './dashboard-navbar.component.html',
@@ -127,6 +174,7 @@ type SubMenu = 'GENERAL' | 'VRCHAT' | 'HARDWARE' | 'MISCELLANEOUS' | 'SETTINGS';
 })
 export class DashboardNavbarComponent implements OnInit {
   subMenu: SubMenu = 'GENERAL';
+  protected readonly subMenuRoutes = SUBMENU_ROUTES;
   updateAvailable: Observable<boolean>;
 
   constructor(
@@ -135,12 +183,22 @@ export class DashboardNavbarComponent implements OnInit {
     protected background: BackgroundService,
     protected brightnessAutomation: BrightnessCctAutomationService,
     private modalService: ModalService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private cdr: ChangeDetectorRef
   ) {
     this.updateAvailable = this.updateService.updateAvailable.pipe(map((a) => !!a.update));
   }
 
-  async ngOnInit(): Promise<void> {}
+  async ngOnInit(): Promise<void> {
+    this.router.events
+      .pipe(
+        // the router emits NavigationSkipped, not NavigationEnd, for the current URL
+        filter((e) => e instanceof NavigationEnd || e instanceof NavigationSkipped),
+        startWith(null),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => this.openSubMenuForActiveRoute());
+  }
 
   logoClicked = 0;
 
@@ -155,6 +213,14 @@ export class DashboardNavbarComponent implements OnInit {
 
   openSubMenu(subMenu: SubMenu) {
     this.subMenu = subMenu;
+  }
+
+  private openSubMenuForActiveRoute() {
+    const subMenu = (Object.keys(SUBMENU_ROUTES) as (keyof typeof SUBMENU_ROUTES)[]).find((key) =>
+      this.pathIsActive(SUBMENU_ROUTES[key])
+    );
+    this.subMenu = subMenu ?? 'GENERAL';
+    this.cdr.markForCheck();
   }
 
   pathIsActive(strings: string[]): boolean {

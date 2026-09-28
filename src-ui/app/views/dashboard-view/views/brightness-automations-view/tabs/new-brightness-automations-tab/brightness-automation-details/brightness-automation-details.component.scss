@@ -27,7 +27,6 @@
 .btn-close {
   background: transparent;
   border: none;
-  color: var(--color-text-1);
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -56,9 +55,8 @@
   height: 2.5em;
   border: transparent 1px solid;
 
-  i {
-    color: var(--color-text-1);
-    font-size: 1.5em;
+  app-icon {
+    font-size: 1.28em;
   }
 
   &:hover {
@@ -128,11 +126,11 @@
   .warning-icon {
     cursor: pointer;
     transition: all 0.15s ease;
-    color: var(--color-warning);
+    --icon-color: var(--color-warning);
     margin-right: 0.5em;
 
-    i.material-symbols-outlined {
-      font-size: 1.5em;
+    app-icon {
+      font-size: 1.28em;
     }
 
     &:hover {

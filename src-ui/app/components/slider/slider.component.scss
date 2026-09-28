@@ -121,4 +121,8 @@ $thumb-size: 1.25em;
   align-items: center;
   justify-content: center;
   color: var(--color-text-4);
+
+  app-icon {
+    font-size: 0.7em;
+  }
 }

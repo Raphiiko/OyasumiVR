@@ -57,7 +57,7 @@
                         "
                         [tooltipMode]="'left'"
                       >
-                        <i class="material-symbols-outlined icon-filled validation-error">error</i>
+                        <app-icon class="validation-error" name="exclamation-circle" />
                       </div>
                     }
                     @if (customTargetHostValidationState === 'pending') {
@@ -68,9 +68,7 @@
                         "
                         [tooltipMode]="'left'"
                       >
-                        <i class="material-symbols-outlined icon-filled validation-pending"
-                          >hourglass_empty</i
-                        >
+                        <app-icon class="validation-pending" name="hourglass" />
                       </div>
                     }
                   </div>
@@ -98,7 +96,7 @@
                         "
                         [tooltipMode]="'left'"
                       >
-                        <i class="material-symbols-outlined icon-filled validation-error">error</i>
+                        <app-icon class="validation-error" name="exclamation-circle" />
                       </div>
                     }
                     @if (customTargetPortValidationState === 'pending') {
@@ -109,9 +107,7 @@
                         "
                         [tooltipMode]="'left'"
                       >
-                        <i class="material-symbols-outlined icon-filled validation-pending"
-                          >hourglass_empty</i
-                        >
+                        <app-icon class="validation-pending" name="hourglass" />
                       </div>
                     }
                   </div>

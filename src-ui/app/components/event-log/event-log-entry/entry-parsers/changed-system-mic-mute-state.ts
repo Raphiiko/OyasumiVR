@@ -9,6 +9,10 @@ export class EventLogChangedSystemMicMuteStateEntryParser extends EventLogEntryP
     return 'changedSystemMicMuteState';
   }
 
+  icon(entry: EventLogChangedSystemMicMuteState): string {
+    return entry.muted ? 'mic-off' : 'mic';
+  }
+
   override headerInfoTitle(entry: EventLogChangedSystemMicMuteState): string {
     return (
       'comp.event-log-entry.type.changedSystemMicMuteState.title.' +

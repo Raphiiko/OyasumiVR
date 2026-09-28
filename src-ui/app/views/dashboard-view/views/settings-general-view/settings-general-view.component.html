@@ -194,7 +194,7 @@
               />
             </div>
             <button class="file-path-bar-btn-browse" (click)="browseForLighthouseConsole()">
-              <i class="material-icons">folder</i>
+              <app-icon name="folder" />
             </button>
           </div>
           @if (lighthouseConsolePathAlert) {
@@ -207,7 +207,18 @@
               <div class="alert-bg"></div>
               <div class="alert-icon">
                 @if (!lighthouseConsolePathAlert.loadingIndicator) {
-                  <i class="material-icons"> check_circle_outline </i>
+                  <app-icon
+                    [name]="
+                      lighthouseConsolePathAlert.type === 'ERROR'
+                        ? 'exclamation-circle'
+                        : lighthouseConsolePathAlert.type === 'SUCCESS'
+                          ? 'check-circle'
+                          : 'info'
+                    "
+                    [style.--icon-color]="
+                      'var(--color-alert-' + lighthouseConsolePathAlert.type.toLowerCase() + ')'
+                    "
+                  />
                 }
                 @if (lighthouseConsolePathAlert.loadingIndicator) {
                   <div class="small-spinner"></div>

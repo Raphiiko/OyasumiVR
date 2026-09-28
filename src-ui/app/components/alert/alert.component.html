@@ -1,7 +1,7 @@
 <div class="alert-bg"></div>
 <div class="alert-icon">
-  @if (glyph) {
-    <i [class]="iconClass">{{ glyph }}</i>
+  @if (iconName) {
+    <app-icon [name]="iconName" [style.--icon-color]="iconColor" />
   }
   <ng-content select="[alertIcon]"></ng-content>
 </div>

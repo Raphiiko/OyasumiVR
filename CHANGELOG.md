@@ -19,6 +19,10 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Added
 
+- Grouped event log
+  - Actions caused by the same sleep mode change, sleep preparation, sunset, or sunrise collapse into
+    one row that expands to show them
+  - Every entry shows an icon for its type
 - Start with SteamVR can now be toggled directly in General Settings, including while SteamVR is
   stopped, and changes made in SteamVR are reflected while both applications run
 - Access the main OyasumiVR interface from the SteamVR dashboard
@@ -35,9 +39,15 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Message Center warning for when the VR overlay repeatedly fails to start, offering to turn off GPU acceleration
 - Setting to wait a moment between turning off each controller and tracker, for systems where turning them off crashes SteamVR
 - Thai language support (Community contribution by [ShikiYuri (Sk.\_Yri)](https://github.com/ShikiYuriSan))
+- More VRCX logging, each with its own toggle in the integration settings
+  - Invites and invite requests that OyasumiVR accepted or declined, with the reason and the reply message
+  - VRChat status changes made by OyasumiVR, with the reason
+  - VRChat group changes made by OyasumiVR, with the reason
 
 ### Changed
 
+- Lowered the minimum hardware brightness for the Valve Index from 20% to 9%, the lowest level the
+  headset supports
 - Quit with SteamVR is now an on/off toggle. When SteamVR stops, OyasumiVR counts down ten seconds
   before it quits, and stays open if SteamVR starts again. It also waits for a running shutdown
   sequence to finish, and cancelling the sequence cancels the quit
@@ -86,6 +96,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 ### Fixed
 
 - Fixed overlay pointers and tooltips clipping into the dashboard with SteamVR 2.17.
+- The event log no longer reports an auto-declined invite when the decline request to VRChat failed
+- The event log no longer reports a status change on sleep preparation when the status did not change
 - Restore friend pictures after the VRChat API profile changes.
 - Image-cache clearing now reports deletion failures and skips unnecessary manifest validation
 - Installing dependencies no longer changes the shared package version in the lockfile, and version bumps keep it synchronized.

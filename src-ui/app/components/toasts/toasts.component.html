@@ -9,12 +9,12 @@
         @if (toast.type === 'pending') {
           <div class="toast-icon spinner"></div>
         } @else {
-          <i class="material-symbols-outlined toast-icon">{{ iconFor(toast.type) }}</i>
+          <app-icon class="toast-icon" [name]="iconFor(toast.type)" />
         }
         <span class="toast-title">{{ toast.title | tsTranslate }}</span>
         @if (toast.dismissable) {
           <button class="toast-close" (click)="dismiss(toast)">
-            <i class="material-symbols-outlined">close</i>
+            <app-icon name="window-close" />
           </button>
         }
       </div>

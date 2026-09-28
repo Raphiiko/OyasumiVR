@@ -2,7 +2,7 @@
 <div class="setting-row-label" [class.conflict]="conflict">
   <span class="setting-row-title">
     @if (conflict) {
-      <i class="material-icons">warning</i>
+      <app-icon name="warning" />
     }
     {{ labelText ?? (label ? (label | transloco) : '')
     }}<ng-content select="[rowLabel]"></ng-content

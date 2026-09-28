@@ -60,9 +60,13 @@ export class MqttService {
   }
 
   private async destroyClient() {
-    this.client.next(null);
     const client = this.client.value;
+    this.client.next(null);
     if (!client) return;
+    // a clean disconnect does not trigger the last will, so report offline first
+    if (client.connected) {
+      await client.publishAsync('OyasumiVR/available', 'offline', { retain: true });
+    }
     await client.endAsync();
     this.setClientStatus('DISCONNECTED');
   }

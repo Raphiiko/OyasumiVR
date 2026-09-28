@@ -9,6 +9,10 @@ export class EventLogShutdownSequenceCancelledEntryParser extends EventLogEntryP
     return 'shutdownSequenceCancelled';
   }
 
+  icon(): string {
+    return 'shutdown-cancelled';
+  }
+
   override headerInfoSubTitle(entry: EventLogShutdownSequenceCancelled): string {
     return 'comp.event-log-entry.type.' + entry.type + '.reason.' + entry.reason;
   }

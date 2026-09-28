@@ -169,14 +169,11 @@ $background-color: var(--color-surface-2);
       margin-right: 0.25em;
     }
 
-    i {
-      font-size: 1.25em;
-      transition: all 0.15s ease;
-      opacity: 0.5;
+    app-icon {
+      font-size: 1.3em;
 
       &.mic-muted {
-        color: var(--color-alert-error);
-        opacity: 1;
+        --icon-color: var(--color-alert-error);
       }
     }
 
@@ -225,9 +222,8 @@ $background-color: var(--color-surface-2);
     transition: all 0.15s;
     opacity: 0.5;
 
-    i {
+    app-icon {
       opacity: 1;
-      color: white;
     }
 
     &.active {
@@ -292,12 +288,6 @@ $background-color: var(--color-surface-2);
   }
 }
 
-.vrc-status {
-  i {
-    opacity: 1;
-  }
-}
-
 .sleep-mode {
   border: 0.125em solid transparent;
   padding: 0 0.25em;
@@ -341,7 +331,7 @@ $background-color: var(--color-surface-2);
     width: 16px;
     height: 16px;
     will-change: transform;
-    color: rgb(249, 24, 128);
+    --icon-color: rgb(249, 24, 128);
     opacity: 1;
     animation: heartbeat infinite cubic-bezier(0.68, -0.55, 0.27, 1.55);
   }

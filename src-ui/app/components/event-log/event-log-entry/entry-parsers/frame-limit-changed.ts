@@ -6,6 +6,10 @@ export class EventLogFrameLimitChangedEntryParser extends EventLogEntryParser<Ev
     return 'frameLimitChanged';
   }
 
+  icon(): string {
+    return 'monitor-gauge';
+  }
+
   override headerInfoTitle(): string {
     return 'comp.event-log-entry.type.frameLimitChanged.title';
   }

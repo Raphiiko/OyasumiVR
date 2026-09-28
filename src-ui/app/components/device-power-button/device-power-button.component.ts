@@ -49,10 +49,8 @@ export class DevicePowerButtonComponent {
     switch (this.powerState) {
       case 'attention':
         return 'key';
-      case 'unknown':
-        return 'settings_power';
       default:
-        return 'power_settings_new';
+        return 'power';
     }
   }
 
