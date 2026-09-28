@@ -71,17 +71,17 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
     expect(h.writes()).toEqual([]);
   });
 
-  it('sets a transition target in one command', async () => {
+  it('fades a transition through the PC loop', async () => {
     const h = await setup();
     vi.mocked(invoke).mockImplementation(async (command, args) =>
       command === 'steam_frame_set_brightness' ? (args as { percentage: number }).percentage : false
     );
-    const task = h.service.transitionBrightness(80, 10000);
-    await settle();
-    expect(task.isComplete()).toBe(true);
-    expect(h.writes()).toEqual([
-      ['steam_frame_set_brightness', { pairingId: 'p', percentage: 80 }],
-    ]);
+    const task = h.service.transitionBrightness(80, 200);
+    await firstValueFrom(task.onComplete);
+    const targets = h.writes().map(([, args]) => (args as { percentage: number }).percentage);
+    expect(targets.length).toBeGreaterThan(2);
+    expect(targets).toEqual([...targets].sort((a, b) => a - b));
+    expect(targets.at(-1)).toBe(80);
     expect(h.service.brightness).toBe(80);
   });
 
@@ -129,8 +129,9 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
     vi.mocked(invoke).mockImplementation(async (command, args) =>
       command === 'steam_frame_set_brightness' ? (args as { percentage: number }).percentage : false
     );
-    h.service.transitionBrightness(110, 10000);
+    const task = h.service.transitionBrightness(110, 10000);
     await settle();
+    expect(task.isComplete()).toBe(true);
     expect(h.writes()).toEqual([
       ['steam_frame_set_brightness', { pairingId: 'p', percentage: 110 }],
     ]);

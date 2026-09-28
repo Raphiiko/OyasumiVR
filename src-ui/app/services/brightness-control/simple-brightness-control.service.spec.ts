@@ -233,48 +233,22 @@ describe('simple brightness with a device that reports its brightness', () => {
     expect(h.service.brightness).toBe(5);
   });
 
-  it('finishes a running transition in one command when the driver becomes available', async () => {
-    const h = await setup(false, true);
-    h.hardware.brightnessBounds.next([9, 125]);
-    h.service.transitionBrightness(50, 60000, { logReason: 'AT_SUNSET' });
-    await new Promise((resolve) => setTimeout(resolve, 50));
-    h.hardware.setBrightness.mockClear();
-    h.hardware.driverIsAvailable.next(true);
-    h.hardware.onDriverChange.next();
-    await settle();
-    await settle();
-    expect(h.service.brightness).toBe(50);
-    expect(h.hardware.setBrightness).toHaveBeenCalledOnce();
-    await new Promise((resolve) => setTimeout(resolve, 50));
-    expect(h.hardware.setBrightness).toHaveBeenCalledOnce();
-  });
-
-  it('finishes a running transition when a Frame replaces another available driver', async () => {
-    const h = await setup(false, false);
-    h.hardware.brightnessBounds.next([9, 125]);
-    h.hardware.driverIsAvailable.next(true);
-    await settle();
-    h.service.transitionBrightness(50, 60000, { logReason: 'AT_SUNSET' });
-    await new Promise((resolve) => setTimeout(resolve, 50));
-    // availability stays true; only the active driver changes
-    h.hardware.lastActiveDriver = { pushesBrightnessChanges: true };
-    h.hardware.activeDriver = h.hardware.lastActiveDriver;
-    h.hardware.setBrightness.mockClear();
-    h.hardware.onDriverChange.next();
-    await settle();
-    await settle();
-    expect(h.service.brightness).toBe(50);
-    await new Promise((resolve) => setTimeout(resolve, 50));
-    expect(h.hardware.setBrightness).toHaveBeenCalledOnce();
-  });
-
-  it('sets a transition target in one command', async () => {
+  it('fades a transition through the PC loop', async () => {
     const h = await reporting();
+    const task = h.service.transitionBrightness(50, 200);
+    await firstValueFrom(task.onComplete);
+    expect(h.hardware.setBrightness.mock.calls.length).toBeGreaterThan(2);
+    expect(h.service.brightness).toBe(50);
+  });
+
+  it('writes a transition target that equals the derived value', async () => {
+    const h = await reporting();
+    await h.service.setBrightness(50);
+    h.hardware.setBrightness.mockClear();
     const task = h.service.transitionBrightness(50, 10000);
     await settle();
     expect(task.isComplete()).toBe(true);
     expect(h.hardware.setBrightness).toHaveBeenCalledOnce();
-    expect(h.service.brightness).toBe(50);
   });
 
   it('gives the simple value to a device that takes over from a pushing one', async () => {

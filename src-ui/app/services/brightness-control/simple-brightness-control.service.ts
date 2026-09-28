@@ -108,8 +108,6 @@ export class SimpleBrightnessControlService {
     const driver = this.hardwareBrightnessControl.activeDriver;
     const previous = this.previousDriver;
     this.previousDriver = driver;
-    // a running transition would write a pushing device at every step, so finish it at once
-    this.finishTransitionForReportingDriver();
     // a device taking over from a pushing one never saw the simple value
     if (
       !this._advancedMode.value &&
@@ -120,16 +118,6 @@ export class SimpleBrightnessControlService {
     ) {
       this.setBrightness(this.brightness, { cancelActiveTransition: true, logReason: undefined });
     }
-  }
-
-  private finishTransitionForReportingDriver() {
-    const transition = this._activeTransition.value;
-    if (!transition || !this.hardwareBrightnessControl.lastActiveDriver?.pushesBrightnessChanges)
-      return;
-    this.setBrightness(transition.targetBrightness, {
-      cancelActiveTransition: true,
-      logReason: null,
-    });
   }
 
   /** Derives the simple value from a hardware value the device reported. */
@@ -163,21 +151,18 @@ export class SimpleBrightnessControlService {
     options: Partial<SetBrightnessOrCCTOptions> = SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS
   ): CancellableTask {
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
-    // no PC loop writes a device that pushes its brightness changes; its value can differ from
-    // the derived simple value, so an equal target is still written
-    if (
-      this.hardwareBrightnessDriverAvailable &&
-      this.hardwareBrightnessControl.lastActiveDriver?.pushesBrightnessChanges
-    ) {
-      this.cancelActiveTransition();
-      const task = new CancellableTask(() =>
-        this.setBrightness(percentage, { cancelActiveTransition: false, logReason: opt.logReason })
-      );
-      task.start();
-      return task;
-    }
     if (this._brightness.value === percentage) {
-      const task = new CancellableTask();
+      // a pushing device's value can differ from the derived simple value, so it still gets the write
+      const write =
+        this.hardwareBrightnessDriverAvailable &&
+        this.hardwareBrightnessControl.lastActiveDriver?.pushesBrightnessChanges
+          ? () =>
+              this.setBrightness(percentage, {
+                cancelActiveTransition: true,
+                logReason: opt.logReason,
+              })
+          : undefined;
+      const task = new CancellableTask(write);
       task.start();
       return task;
     }

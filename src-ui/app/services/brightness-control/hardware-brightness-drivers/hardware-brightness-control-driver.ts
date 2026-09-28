@@ -13,7 +13,7 @@ export abstract class HardwareBrightnessControlDriver {
   protected appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
   /**
    * True when the driver sends every brightness change the device makes. OyasumiVR shows that
-   * value instead of writing its stored one, and a transition sends only the end value.
+   * value instead of writing its stored one when the driver becomes available.
    */
   readonly pushesBrightnessChanges: boolean = false;
   /** Brightness values the device reported or applied. OyasumiVR shows them and never writes them back. */

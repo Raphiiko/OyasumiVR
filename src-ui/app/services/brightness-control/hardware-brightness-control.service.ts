@@ -108,11 +108,6 @@ export class HardwareBrightnessControlService {
         const availableDriver = driverList.find((_, i) => drivers[i]);
         if (availableDriver) this.lastActiveDriver = availableDriver;
         this.driver.next(availableDriver ?? null);
-        // a running transition would write a pushing device at every step, so finish it at once
-        const transition = this._activeTransition.value;
-        if (transition && availableDriver?.pushesBrightnessChanges) {
-          this.setBrightness(transition.targetBrightness, { cancelActiveTransition: true });
-        }
       });
     // show what the device reports, without writing it back
     this.driver
@@ -174,18 +169,16 @@ export class HardwareBrightnessControlService {
     options: Partial<SetBrightnessOrCCTOptions> = SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS
   ): CancellableTask {
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
-    // no PC loop writes a device that pushes its brightness changes; its cache can show a
-    // clamped value, so an equal target is still written
-    if (this.driver.value?.pushesBrightnessChanges) {
-      this.cancelActiveTransition();
-      const task = new CancellableTask(() =>
-        this.setBrightness(percentage, { cancelActiveTransition: false, logReason: opt.logReason })
-      );
-      task.start();
-      return task;
-    }
     if (this._brightness.value === percentage) {
-      const task = new CancellableTask();
+      // a pushing device can hold a value the cache shows clamped, so it still gets the write
+      const write = this.driver.value?.pushesBrightnessChanges
+        ? () =>
+            this.setBrightness(percentage, {
+              cancelActiveTransition: true,
+              logReason: opt.logReason,
+            })
+        : undefined;
+      const task = new CancellableTask(write);
       task.start();
       return task;
     }
