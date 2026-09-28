@@ -46,6 +46,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Changed
 
+- Lowered the minimum hardware brightness for the Valve Index from 20% to 9%, the lowest level the
+  headset supports
 - Quit with SteamVR is now an on/off toggle. When SteamVR stops, OyasumiVR counts down ten seconds
   before it quits, and stays open if SteamVR starts again. It also waits for a running shutdown
   sequence to finish, and cancelling the sequence cancels the quit
