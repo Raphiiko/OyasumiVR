@@ -39,13 +39,17 @@ measures at least 4.78:1 against the body (5.36:1 for the pink). A formula this 
 
 Set `--icon-color` where the context has its own color:
 
-| Context                     | `--icon-color`                                |
-| --------------------------- | --------------------------------------------- |
-| anywhere else               | unset, so the primary applies                 |
-| an alert, toast, or message | its severity color, such as `--color-warning` |
-| a primary button            | white, set in `styles/buttons.scss`           |
+| Context             | `--icon-color`                                |
+| ------------------- | --------------------------------------------- |
+| anywhere else       | unset, so the primary applies                 |
+| an alert or message | its severity color, such as `--color-warning` |
+| a primary button    | white, set in `styles/buttons.scss`           |
 
 Error and caution share one level, `--color-caution`.
+
+A toast status icon fills its body with a solid status color and draws its inner detail in the
+toast background, set in `toasts.component.scss`. A pale red body reads as the primary pink, so the
+error level needs the solid fill to look red.
 
 Two kinds of icon draw in one tone. The first is a control whose states set its text color, such as
 a window button or a slider marker. The second is an icon that labels a value, such as a slider end
