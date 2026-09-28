@@ -122,6 +122,7 @@ async fn valid_token_receives_hello() {
     assert_eq!(hello["version"], VERSION);
     assert_eq!(hello["protocolMin"], PROTOCOL_MIN);
     assert_eq!(hello["protocolMax"], PROTOCOL_MAX);
+    assert_eq!(hello["digest"].as_str().unwrap().len(), 64);
 }
 
 #[tokio::test]
