@@ -6,6 +6,10 @@ export class EventLogVRChatAvatarChangedEntryParser extends EventLogEntryParser<
     return 'vrchatAvatarChanged';
   }
 
+  icon(): string {
+    return 'avatar';
+  }
+
   override headerInfoTitleParams(entry: EventLogVRChatAvatarChanged): {
     [p: string]: string;
   } {

@@ -6,6 +6,10 @@ export class EventLogBSBLedChangedEntryParser extends EventLogEntryParser<EventL
     return 'bsbLedChanged';
   }
 
+  icon(): string {
+    return 'light-bulb';
+  }
+
   override headerInfoTitle(): string {
     return 'comp.event-log-entry.type.bsbLedChanged.title';
   }

@@ -6,6 +6,12 @@ export class EventLogTurnedOffOpenVRDevicesEntryParser extends EventLogEntryPars
     return 'turnedOffOpenVRDevices';
   }
 
+  icon(entry: EventLogTurnedOffOpenVRDevices): string {
+    if (entry.devices === 'CONTROLLER' || entry.devices === 'CONTROLLERS') return 'controller';
+    if (entry.devices === 'TRACKER' || entry.devices === 'TRACKERS') return 'tracker';
+    return 'device';
+  }
+
   override headerInfoTitle(entry: EventLogTurnedOffOpenVRDevices): string {
     return 'comp.event-log-entry.type.turnedOffOpenVRDevices.title.' + entry.devices;
   }

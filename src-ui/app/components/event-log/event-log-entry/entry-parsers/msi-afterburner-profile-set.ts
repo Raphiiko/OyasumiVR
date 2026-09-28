@@ -6,6 +6,10 @@ export class EventLogMsiAfterburnerProfileSetEntryParser extends EventLogEntryPa
     return 'msiAfterburnerProfileSet';
   }
 
+  icon(): string {
+    return 'gauge';
+  }
+
   override headerInfoTitle(): string {
     return 'comp.event-log-entry.type.msiAfterburnerProfileSet.title';
   }

@@ -10,6 +10,10 @@ export class EventLogFadeDistanceChangedEntryParser extends EventLogEntryParser<
     return 'chaperoneFadeDistanceChanged';
   }
 
+  icon(): string {
+    return 'chaperone';
+  }
+
   override headerInfoTitle(): string {
     return 'comp.event-log-entry.type.chaperoneFadeDistanceChanged.title';
   }

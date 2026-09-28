@@ -6,6 +6,10 @@ export class EventLogMutedAudioDeviceEntryParser extends EventLogEntryParser<Eve
     return 'mutedAudioDevice';
   }
 
+  icon(): string {
+    return 'volume-off';
+  }
+
   override headerInfoTitleParams(entry: EventLogMutedAudioDevice): {
     [p: string]: string;
   } {

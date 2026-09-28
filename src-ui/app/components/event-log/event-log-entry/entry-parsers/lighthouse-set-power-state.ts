@@ -6,6 +6,10 @@ export class EventLogLighthouseSetPowerStateEntryParser extends EventLogEntryPar
     return 'lighthouseSetPowerState';
   }
 
+  icon(): string {
+    return 'base-station';
+  }
+
   override headerInfoTitle(entry: EventLogLighthouseSetPowerState): string {
     return 'comp.event-log-entry.type.lighthouseSetPowerState.' + entry.devices + '.' + entry.state;
   }

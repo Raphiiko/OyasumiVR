@@ -6,6 +6,10 @@ export class EventLogChangedAudioDeviceVolumeEntryParser extends EventLogEntryPa
     return 'changedAudioDeviceVolume';
   }
 
+  icon(): string {
+    return 'volume';
+  }
+
   override headerInfoTitleParams(entry: EventLogChangedAudioDeviceVolume): {
     [p: string]: string;
   } {

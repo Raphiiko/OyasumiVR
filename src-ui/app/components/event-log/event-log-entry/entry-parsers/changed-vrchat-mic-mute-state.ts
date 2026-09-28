@@ -9,6 +9,10 @@ export class EventLogChangedVRChatMicMuteStateEntryParser extends EventLogEntryP
     return 'changedVRChatMicMuteState';
   }
 
+  icon(entry: EventLogChangedVRChatMicMuteState): string {
+    return entry.muted ? 'mic-off' : 'mic';
+  }
+
   override headerInfoTitle(entry: EventLogChangedVRChatMicMuteState): string {
     return (
       'comp.event-log-entry.type.changedVRChatMicMuteState.title.' +

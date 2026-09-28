@@ -9,6 +9,10 @@ export class EventLogChangedSystemMicControllerButtonBehaviorEntryParser extends
     return 'changedSystemMicControllerButtonBehavior';
   }
 
+  icon(): string {
+    return 'mic-button';
+  }
+
   override headerInfoTitle(entry: EventLogChangedSystemMicControllerButtonBehavior): string {
     return (
       'comp.event-log-entry.type.changedSystemMicControllerButtonBehavior.title.' + entry.behavior

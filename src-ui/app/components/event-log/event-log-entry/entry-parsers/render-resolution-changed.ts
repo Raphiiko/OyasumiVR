@@ -6,6 +6,10 @@ export class EventLogRenderResolutionChangedEntryParser extends EventLogEntryPar
     return 'renderResolutionChanged';
   }
 
+  icon(): string {
+    return 'resolution';
+  }
+
   override headerInfoTitle(entry: EventLogRenderResolutionChanged): string {
     return (
       'comp.event-log-entry.type.renderResolutionChanged.title.' +

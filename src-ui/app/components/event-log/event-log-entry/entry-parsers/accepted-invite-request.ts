@@ -6,6 +6,10 @@ export class EventLogAcceptedInviteRequestEntryParser extends EventLogEntryParse
     return 'acceptedInviteRequest';
   }
 
+  icon(): string {
+    return 'invite';
+  }
+
   override headerInfoTitleParams(entry: EventLogAcceptedInviteRequest): { [p: string]: string } {
     return {
       displayName: entry.displayName,

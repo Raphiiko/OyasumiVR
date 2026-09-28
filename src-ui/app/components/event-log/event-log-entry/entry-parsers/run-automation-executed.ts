@@ -6,6 +6,10 @@ export class EventLogRunAutomationExecutedEntryParser extends EventLogEntryParse
     return 'runAutomationExecuted';
   }
 
+  icon(): string {
+    return 'run';
+  }
+
   override headerInfoTitle(): string {
     return 'comp.event-log-entry.type.runAutomationExecuted.title';
   }

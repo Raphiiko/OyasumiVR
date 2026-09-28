@@ -115,3 +115,74 @@
     border-color: var(--color-primary);
   }
 }
+
+.item {
+  display: block;
+  border-bottom: 0.15em solid var(--color-surface-3);
+}
+
+// the rail runs from the header icon down to the last entry, centered on the 2em icon at 1em in
+$rail-left: 1.95em;
+
+@mixin rail($top, $bottom) {
+  content: '';
+  position: absolute;
+  left: $rail-left;
+  top: $top;
+  bottom: $bottom;
+  width: 0.1em;
+  background: var(--color-surface-4);
+}
+
+.group-header {
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: var(--color-surface-2);
+  }
+
+  &:focus-visible {
+    outline: 0.15em solid var(--color-primary);
+    outline-offset: -0.15em;
+  }
+}
+
+.group.expanded .group-header::after {
+  @include rail(50%, 0);
+}
+
+.group-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  color: var(--color-text-3);
+}
+
+.group-chevron {
+  font-size: 0.85em;
+  transition: transform 0.15s ease;
+
+  .group.expanded & {
+    transform: rotate(180deg);
+  }
+}
+
+.group-entries {
+  display: block;
+  padding-bottom: 0.4em;
+
+  app-event-log-entry {
+    position: relative;
+    padding-left: 1.6em;
+
+    &::before {
+      @include rail(0, 0);
+    }
+
+    &:last-child::before {
+      bottom: 50%;
+    }
+  }
+}
