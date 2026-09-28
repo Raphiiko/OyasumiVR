@@ -46,56 +46,6 @@ import { EventLogFrameLimitChangedEntryParser } from './entry-parsers/frame-limi
 import { EventLogRunAutomationExecutedEntryParser } from './entry-parsers/run-automation-executed';
 import { EventLogEntry } from '../../../models/event-log-entry';
 
-export const EVENT_LOG_ICONS: Record<EventLogEntry['type'], string> = {
-  sleepModeEnabled: 'sleep',
-  sleepModeDisabled: 'sleep-off',
-  turnedOffOpenVRDevices: 'controller',
-  lighthouseSetPowerState: 'base-station',
-  gpuPowerLimitChanged: 'gpu',
-  simpleBrightnessChanged: 'brightness',
-  hardwareBrightnessChanged: 'brightness',
-  softwareBrightnessChanged: 'brightness',
-  cctChanged: 'brightness-cct',
-  acceptedInviteRequest: 'invite',
-  declinedInviteRequest: 'invite-declined',
-  declinedInvite: 'invite-declined',
-  statusChangedOnPlayerCountChange: 'status',
-  statusChangedOnGeneralEvent: 'status',
-  sleepDetectorEnableCancelled: 'sleep-cancelled',
-  renderResolutionChanged: 'resolution',
-  chaperoneFadeDistanceChanged: 'chaperone',
-  shutdownSequenceStarted: 'shutdown',
-  shutdownSequenceCancelled: 'shutdown-cancelled',
-  windowsPowerPolicySet: 'battery-settings',
-  changedVRChatMicMuteState: 'mic-off',
-  changedSystemMicMuteState: 'mic-off',
-  changedSystemMicControllerButtonBehavior: 'mic-button',
-  msiAfterburnerProfileSet: 'gauge',
-  changedAudioDeviceVolume: 'volume',
-  mutedAudioDevice: 'volume-off',
-  unmutedAudioDevice: 'volume',
-  bsbFanSpeedChanged: 'fan',
-  bsbLedChanged: 'light-bulb',
-  vrchatAvatarChanged: 'avatar',
-  vrchatGroupChanged: 'group',
-  frameLimitChanged: 'monitor-gauge',
-  runAutomationExecuted: 'run',
-};
-
-export function eventLogIcon(entry: EventLogEntry): string {
-  switch (entry.type) {
-    case 'turnedOffOpenVRDevices':
-      if (entry.devices === 'CONTROLLER' || entry.devices === 'CONTROLLERS') return 'controller';
-      if (entry.devices === 'TRACKER' || entry.devices === 'TRACKERS') return 'tracker';
-      return 'device';
-    case 'changedVRChatMicMuteState':
-    case 'changedSystemMicMuteState':
-      return entry.muted ? 'mic-off' : 'mic';
-    default:
-      return EVENT_LOG_ICONS[entry.type];
-  }
-}
-
 @Component({
   selector: 'app-event-log-entry',
   templateUrl: './event-log-entry.component.html',
@@ -155,7 +105,9 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
   /** Hides the subtitle and the date, for entries that share them with their group header. */
   @Input() compact = false;
   @Input() showTime = true;
+  /** Overrides the entry's own icon, for a group header. */
   @Input() icon?: string;
+  protected iconName?: string;
   /** Translation key for a header row that has no entry of its own. */
   @Input() titleKey?: string;
   /** Time for a header row that has no entry of its own. */
@@ -179,6 +131,7 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
   }
 
   rebuild() {
+    this.iconName = this.icon ?? (this.entry && this.parser?.icon(this.entry));
     this.headerInfoSubTitle = undefined;
     if (!this.parser) {
       if (this.titleKey) this.headerInfoTitle = this.translate.translate(this.titleKey);

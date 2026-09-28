@@ -2,8 +2,8 @@
   <div class="container" [class.compact]="compact">
     <div class="header">
       <ng-content select="[eventLogPrefix]" />
-      @if (icon) {
-        <div class="header-icon"><app-icon [name]="icon" /></div>
+      @if (iconName) {
+        <div class="header-icon"><app-icon [name]="iconName" /></div>
       }
       <div class="header-info">
         <span class="title" [innerHtml]="headerInfoTitle"></span>

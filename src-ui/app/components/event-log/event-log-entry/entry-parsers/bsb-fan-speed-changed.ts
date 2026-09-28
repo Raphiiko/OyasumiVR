@@ -6,6 +6,10 @@ export class EventLogBSBFanSpeedChangedEntryParser extends EventLogEntryParser<E
     return 'bsbFanSpeedChanged';
   }
 
+  icon(): string {
+    return 'fan';
+  }
+
   override headerInfoTitle(entry: EventLogBSBFanSpeedChanged): string {
     return (
       'comp.event-log-entry.type.bsbFanSpeedChanged.title.' +

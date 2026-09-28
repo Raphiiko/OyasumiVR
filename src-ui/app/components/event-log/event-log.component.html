@@ -43,7 +43,6 @@
           <app-event-log-entry
             class="item"
             [entry]="item.entry"
-            [icon]="entryIcon(item.entry)"
             @vshrink
             [@.disabled]="animationPause"
           />
@@ -81,7 +80,6 @@
                 @for (entry of item.entries; track entry.id) {
                   <app-event-log-entry
                     [entry]="entry"
-                    [icon]="entryIcon(entry)"
                     [compact]="true"
                     [showTime]="showEntryTime(entry, item)"
                   />

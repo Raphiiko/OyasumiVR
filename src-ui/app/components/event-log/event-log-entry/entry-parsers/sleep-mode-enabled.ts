@@ -6,6 +6,10 @@ export class EventLogSleepModeEnabledEntryParser extends EventLogEntryParser<Eve
     return 'sleepModeEnabled';
   }
 
+  icon(): string {
+    return 'sleep';
+  }
+
   override headerInfoSubTitle(entry: EventLogSleepModeEnabled): string {
     switch (entry.reason.type) {
       case 'MANUAL':

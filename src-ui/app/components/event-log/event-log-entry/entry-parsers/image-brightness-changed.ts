@@ -9,6 +9,10 @@ export class EventLogSoftwareBrightnessChangedEntryParser extends EventLogEntryP
     return 'softwareBrightnessChanged';
   }
 
+  icon(): string {
+    return 'brightness';
+  }
+
   override headerInfoTitle(entry: EventLogSoftwareBrightnessChanged): string {
     return (
       'comp.event-log-entry.type.softwareBrightnessChanged.title.' +

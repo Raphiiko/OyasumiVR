@@ -29,7 +29,6 @@ import {
   eventLogItemTime,
   groupEventLog,
 } from './event-log-grouping';
-import { eventLogIcon } from './event-log-entry/event-log-entry.component';
 
 const CAUSE_ICONS: Record<EventLogCause, string> = {
   sleepModeEnabled: 'sleep',
@@ -92,10 +91,6 @@ export class EventLogComponent implements OnInit, AfterViewInit {
   get pages(): number[] {
     const pages = Math.ceil(this.entries / this.pageSize);
     return Array.from(Array(pages).keys()).map((key) => key + 1);
-  }
-
-  protected entryIcon(entry: EventLogEntry): string {
-    return eventLogIcon(entry);
   }
 
   protected causeIcon(group: EventLogGroup): string {

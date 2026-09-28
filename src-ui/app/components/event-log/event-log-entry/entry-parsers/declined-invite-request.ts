@@ -6,6 +6,10 @@ export class EventLogDeclinedInviteRequestEntryParser extends EventLogEntryParse
     return 'declinedInviteRequest';
   }
 
+  icon(): string {
+    return 'invite-declined';
+  }
+
   override headerInfoTitleParams(entry: EventLogDeclinedInviteRequest): { [p: string]: string } {
     return {
       displayName: entry.displayName,

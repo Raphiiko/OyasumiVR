@@ -7,6 +7,9 @@ export abstract class EventLogEntryParser<T extends EventLogBase> {
 
   abstract entryType(): EventLogType;
 
+  /** Name of the icon file in assets/icons. */
+  abstract icon(entry: T): string;
+
   headerInfoTitle(entry: T): string {
     return 'comp.event-log-entry.type.' + entry.type + '.title';
   }

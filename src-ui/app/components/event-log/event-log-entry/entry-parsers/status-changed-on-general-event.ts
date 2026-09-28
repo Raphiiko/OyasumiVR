@@ -11,6 +11,10 @@ export class EventLogStatusChangedOnGeneralEventEntryParser extends EventLogEntr
     return 'statusChangedOnGeneralEvent';
   }
 
+  icon(): string {
+    return 'status';
+  }
+
   override headerInfoTitle(): string {
     return 'comp.event-log-entry.type.statusChangedOnGeneralEvent.title';
   }

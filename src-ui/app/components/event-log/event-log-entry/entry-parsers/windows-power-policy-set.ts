@@ -6,6 +6,10 @@ export class EventLogWindowsPowerPolicySetEntryParser extends EventLogEntryParse
     return 'windowsPowerPolicySet';
   }
 
+  icon(): string {
+    return 'battery-settings';
+  }
+
   override headerInfoTitle(): string {
     return 'comp.event-log-entry.type.windowsPowerPolicySet.title';
   }

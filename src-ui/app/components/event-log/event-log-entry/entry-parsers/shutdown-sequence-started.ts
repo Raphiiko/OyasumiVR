@@ -6,6 +6,10 @@ export class EventLogShutdownSequenceStartedEntryParser extends EventLogEntryPar
     return 'shutdownSequenceStarted';
   }
 
+  icon(): string {
+    return 'shutdown';
+  }
+
   override headerInfoSubTitle(entry: EventLogShutdownSequenceStarted): string {
     return 'comp.event-log-entry.type.' + entry.type + '.reason.' + entry.reason;
   }
