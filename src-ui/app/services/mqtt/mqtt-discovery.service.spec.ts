@@ -72,13 +72,13 @@ describe('Home Assistant MQTT recovery', () => {
     await receive('homeassistant/status', 'online');
 
     expect(client.publishAsync.mock.calls).toEqual([
-      ['OyasumiVR/sleep/state', 'ON'],
-      ['OyasumiVR/brightness/state', '45'],
-      ['OyasumiVR/device/battery/state', '80'],
-      ['OyasumiVR/device/led/rgbState', '1,2,3'],
-      ['OyasumiVR/device/led/state', 'ON'],
-      ['OyasumiVR/brightness/available', 'online'],
-      ['OyasumiVR/device/battery/available', 'offline'],
+      ['OyasumiVR/sleep/state', 'ON', { retain: true }],
+      ['OyasumiVR/brightness/state', '45', { retain: true }],
+      ['OyasumiVR/device/battery/state', '80', { retain: true }],
+      ['OyasumiVR/device/led/rgbState', '1,2,3', { retain: true }],
+      ['OyasumiVR/device/led/state', 'ON', { retain: true }],
+      ['OyasumiVR/brightness/available', 'online', { retain: true }],
+      ['OyasumiVR/device/battery/available', 'offline', { retain: true }],
     ]);
   });
 
@@ -93,9 +93,15 @@ describe('Home Assistant MQTT recovery', () => {
 
     await receive('homeassistant/status', 'online');
 
-    expect(client.publishAsync).toHaveBeenCalledWith('OyasumiVR/sleep/state', 'OFF');
-    expect(client.publishAsync).toHaveBeenCalledWith('OyasumiVR/brightness/state', '60');
-    expect(client.publishAsync).toHaveBeenCalledWith('OyasumiVR/brightness/available', 'offline');
+    expect(client.publishAsync).toHaveBeenCalledWith('OyasumiVR/sleep/state', 'OFF', {
+      retain: true,
+    });
+    expect(client.publishAsync).toHaveBeenCalledWith('OyasumiVR/brightness/state', '60', {
+      retain: true,
+    });
+    expect(client.publishAsync).toHaveBeenCalledWith('OyasumiVR/brightness/available', 'offline', {
+      retain: true,
+    });
     expect(client.publishAsync.mock.calls.some(([topic]) => topic.includes('battery'))).toBe(false);
   });
 
@@ -113,7 +119,9 @@ describe('Home Assistant MQTT recovery', () => {
     expect(command).not.toHaveBeenCalled();
 
     await receive('OyasumiVR/sleep/set', 'OFF');
-    expect(client.publishAsync).toHaveBeenCalledWith('OyasumiVR/sleep/state', 'OFF');
+    expect(client.publishAsync).toHaveBeenCalledWith('OyasumiVR/sleep/state', 'OFF', {
+      retain: true,
+    });
     expect(command).toHaveBeenCalledOnce();
   });
 
@@ -130,16 +138,21 @@ describe('Home Assistant MQTT recovery', () => {
     let finished = false;
     const recovery = receive('homeassistant/status', 'online').then(() => (finished = true));
     await vi.waitFor(() =>
-      expect(client.publishAsync).toHaveBeenCalledWith('OyasumiVR/device/led/rgbState', '1,2,3')
+      expect(client.publishAsync).toHaveBeenCalledWith('OyasumiVR/device/led/rgbState', '1,2,3', {
+        retain: true,
+      })
     );
     expect(client.publishAsync).not.toHaveBeenCalledWith(
       'OyasumiVR/device/led/available',
-      'online'
+      'online',
+      { retain: true }
     );
     expect(finished).toBe(false);
     rgb.resolve();
     await vi.waitFor(() =>
-      expect(client.publishAsync).toHaveBeenCalledWith('OyasumiVR/device/led/available', 'online')
+      expect(client.publishAsync).toHaveBeenCalledWith('OyasumiVR/device/led/available', 'online', {
+        retain: true,
+      })
     );
     expect(finished).toBe(false);
     availability.resolve();
