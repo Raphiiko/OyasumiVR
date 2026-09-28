@@ -28,13 +28,14 @@ function setup(initialGain = 1) {
         })
       )
   );
+  const getAnalogGain = vi.fn(async () => gain);
   const settings = structuredClone(APP_SETTINGS_DEFAULT);
   settings.valveIndexMaxBrightness = 150;
   const driver = new ValveIndexHardwareBrightnessControlDriver(new BehaviorSubject(settings), {
     status,
     devices,
     analogGainUpdates,
-    getAnalogGain: vi.fn(async () => gain),
+    getAnalogGain,
     setAnalogGain,
   });
   const updates: number[] = [];
@@ -55,6 +56,7 @@ function setup(initialGain = 1) {
     analogGainUpdates,
     driver,
     updates,
+    getAnalogGain,
     setAnalogGain,
     outsideChange,
     release,
@@ -113,6 +115,20 @@ describe('ValveIndexHardwareBrightnessControlDriver', () => {
     await vi.advanceTimersByTimeAsync(500);
     // SteamVR's slider sets 120% right after the write lands
     h.setAnalogGain.mockImplementationOnce(async () => h.outsideChange(1.2));
+    await h.driver.setBrightnessPercentage(80);
+    expect(h.updates).toEqual([100, 120]);
+  });
+
+  it('reads the gain again when SteamVR changes it during the read-back', async () => {
+    const h = setup();
+    await vi.advanceTimersByTimeAsync(500);
+    h.setAnalogGain.mockImplementationOnce(async () => {});
+    // the read-back samples 100%, then SteamVR's slider sets 120% before the reply arrives
+    h.getAnalogGain.mockImplementationOnce(async () => {
+      const sampled = 1;
+      h.outsideChange(1.2);
+      return sampled;
+    });
     await h.driver.setBrightnessPercentage(80);
     expect(h.updates).toEqual([100, 120]);
   });
