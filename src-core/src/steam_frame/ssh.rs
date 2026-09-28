@@ -108,9 +108,9 @@ pub async fn connect(access: &Access) -> Result<Session, SshError> {
         expected: access.host_key_pin.clone(),
         observed: observed.clone(),
     };
-    // must stay longer than the 45 s lock wait in helper.sh
+    // must stay longer than the 60 s lock wait in helper.sh
     let config = Arc::new(client::Config {
-        inactivity_timeout: Some(Duration::from_secs(60)),
+        inactivity_timeout: Some(Duration::from_secs(90)),
         ..Default::default()
     });
 
@@ -161,7 +161,8 @@ pub async fn connect(access: &Access) -> Result<Session, SshError> {
 }
 
 impl Session {
-    /// Runs one command to completion, feeding it `stdin` and then end of file.
+    /// Runs one command to completion, feeding it `stdin` and then end of file. A channel that
+    /// closes without an exit status counts as a lost connection.
     pub async fn exec(&self, command: &str, stdin: &[u8]) -> Result<Output, SshError> {
         let failed = |e: russh::Error| SshError::Failed(e.to_string());
 
@@ -184,6 +185,9 @@ impl Session {
                 ChannelMsg::ExitStatus { exit_status } => output.status = exit_status,
                 _ => {}
             }
+        }
+        if output.status == u32::MAX {
+            return Err(SshError::Unreachable);
         }
         Ok(output)
     }
