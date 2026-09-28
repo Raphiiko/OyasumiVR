@@ -7,7 +7,7 @@ vi.mock('@tauri-apps/api/event', () => ({ listen: vi.fn(async () => () => {}) })
 vi.mock('@tauri-apps/plugin-log', () => ({ info: vi.fn(), warn: vi.fn() }));
 type Dependencies = ConstructorParameters<typeof SimpleBrightnessControlService>;
 
-async function setup(advancedMode = false, reportsBrightness = false) {
+async function setup(advancedMode = false, pushesBrightnessChanges = false) {
   const configs = new BehaviorSubject({
     ...structuredClone(AUTOMATION_CONFIGS_DEFAULT),
     BRIGHTNESS_AUTOMATIONS: { ...AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS, advancedMode },
@@ -16,11 +16,11 @@ async function setup(advancedMode = false, reportsBrightness = false) {
     driverIsAvailable: new BehaviorSubject(false),
     brightnessBounds: new BehaviorSubject([20, 100]),
     adoptedBrightness: new Subject<{ percentage: number; bounds: [number, number] }>(),
-    lastActiveDriver: (reportsBrightness ? { reportsBrightness: true } : null) as {
-      reportsBrightness: boolean;
+    lastActiveDriver: (pushesBrightnessChanges ? { pushesBrightnessChanges: true } : null) as {
+      pushesBrightnessChanges: boolean;
     } | null,
-    activeDriver: (reportsBrightness ? { reportsBrightness: true } : null) as {
-      reportsBrightness: boolean;
+    activeDriver: (pushesBrightnessChanges ? { pushesBrightnessChanges: true } : null) as {
+      pushesBrightnessChanges: boolean;
     } | null,
     onDriverChange: new Subject<void>(),
     setBrightness: vi.fn<Dependencies[1]['setBrightness']>().mockResolvedValue(undefined),
@@ -257,7 +257,7 @@ describe('simple brightness with a device that reports its brightness', () => {
     h.service.transitionBrightness(50, 60000, { logReason: 'AT_SUNSET' });
     await new Promise((resolve) => setTimeout(resolve, 50));
     // availability stays true; only the active driver changes
-    h.hardware.lastActiveDriver = { reportsBrightness: true };
+    h.hardware.lastActiveDriver = { pushesBrightnessChanges: true };
     h.hardware.activeDriver = h.hardware.lastActiveDriver;
     h.hardware.setBrightness.mockClear();
     h.hardware.onDriverChange.next();
@@ -277,14 +277,14 @@ describe('simple brightness with a device that reports its brightness', () => {
     expect(h.service.brightness).toBe(50);
   });
 
-  it('gives the simple value to a device that takes over from a reporting one', async () => {
+  it('gives the simple value to a device that takes over from a pushing one', async () => {
     const h = await reporting();
     h.hardware.onDriverChange.next();
     await h.service.setBrightness(60);
     h.software.setBrightness.mockClear();
     h.hardware.setBrightness.mockClear();
     // a Beyond that stayed available takes over; availability never turns false
-    h.hardware.activeDriver = { reportsBrightness: false };
+    h.hardware.activeDriver = { pushesBrightnessChanges: false };
     h.hardware.lastActiveDriver = h.hardware.activeDriver;
     h.hardware.onDriverChange.next();
     await settle();
@@ -292,7 +292,7 @@ describe('simple brightness with a device that reports its brightness', () => {
     expect(h.service.brightness).toBe(60);
   });
 
-  it('ignores a replayed report once the reporting device is gone', async () => {
+  it('ignores a replayed report once the pushing device is gone', async () => {
     const h = await reporting();
     h.hardware.activeDriver = null;
     h.software.brightness = 50;

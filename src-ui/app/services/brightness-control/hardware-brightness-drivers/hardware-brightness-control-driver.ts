@@ -12,11 +12,11 @@ export interface HardwareBrightnessControlDriverBounds {
 export abstract class HardwareBrightnessControlDriver {
   protected appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
   /**
-   * The device reports its own brightness, so availability and bounds changes never write it,
-   * and transitions set their target in one command.
+   * True when the driver sends every brightness change the device makes. OyasumiVR shows that
+   * value instead of writing its stored one, and a transition sends only the end value.
    */
-  readonly reportsBrightness: boolean = false;
-  /** Values read from the device or confirmed by it, to show without writing them back. */
+  readonly pushesBrightnessChanges: boolean = false;
+  /** Brightness values the device reported or applied. OyasumiVR shows them and never writes them back. */
   readonly brightnessUpdates?: Observable<number>;
 
   constructor(protected appSettings$: Observable<AppSettings>) {

@@ -40,7 +40,7 @@ type ActiveHmd =
 
 /** Sets a paired Steam Frame's brightness through its helper, which also reports it. */
 export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnessControlDriver {
-  override readonly reportsBrightness = true;
+  override readonly pushesBrightnessChanges = true;
   /** Replays the latest value, which can arrive before the driver becomes the active one. */
   private readonly updates = new ReplaySubject<number>(1);
   override readonly brightnessUpdates = this.updates.asObservable();

@@ -88,8 +88,8 @@ export class SimpleBrightnessControlService {
         filter(() => !this._advancedMode.value),
         skip(1),
         distinctUntilChanged(),
-        // a device that reports its own brightness keeps it across availability changes
-        filter(() => !this.hardwareBrightnessControl.lastActiveDriver?.reportsBrightness)
+        // a device that pushes its brightness changes keeps its value across availability changes
+        filter(() => !this.hardwareBrightnessControl.lastActiveDriver?.pushesBrightnessChanges)
       )
       .subscribe(() => {
         this.setBrightness(this.brightness, {
@@ -108,15 +108,15 @@ export class SimpleBrightnessControlService {
     const driver = this.hardwareBrightnessControl.activeDriver;
     const previous = this.previousDriver;
     this.previousDriver = driver;
-    // a running transition would write a reporting device at every step, so finish it at once
+    // a running transition would write a pushing device at every step, so finish it at once
     this.finishTransitionForReportingDriver();
-    // a device taking over from a reporting one never saw the simple value
+    // a device taking over from a pushing one never saw the simple value
     if (
       !this._advancedMode.value &&
-      previous?.reportsBrightness &&
+      previous?.pushesBrightnessChanges &&
       driver &&
       driver !== previous &&
-      !driver.reportsBrightness
+      !driver.pushesBrightnessChanges
     ) {
       this.setBrightness(this.brightness, { cancelActiveTransition: true, logReason: undefined });
     }
@@ -124,7 +124,8 @@ export class SimpleBrightnessControlService {
 
   private finishTransitionForReportingDriver() {
     const transition = this._activeTransition.value;
-    if (!transition || !this.hardwareBrightnessControl.lastActiveDriver?.reportsBrightness) return;
+    if (!transition || !this.hardwareBrightnessControl.lastActiveDriver?.pushesBrightnessChanges)
+      return;
     this.setBrightness(transition.targetBrightness, {
       cancelActiveTransition: true,
       logReason: null,
@@ -135,7 +136,7 @@ export class SimpleBrightnessControlService {
   private async adoptHardwareBrightness(adopted: AdoptedBrightness) {
     if (this._advancedMode.value || this._activeTransition.value) return;
     // a replayed report can come from a device that is no longer in use
-    if (!this.hardwareBrightnessControl.activeDriver?.reportsBrightness) return;
+    if (!this.hardwareBrightnessControl.activeDriver?.pushesBrightnessChanges) return;
     if (this.settingBrightness) {
       this.deferredAdoption = adopted;
       return;
@@ -162,11 +163,11 @@ export class SimpleBrightnessControlService {
     options: Partial<SetBrightnessOrCCTOptions> = SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS
   ): CancellableTask {
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
-    // no PC loop writes a device that reports its own brightness; its value can differ from the
-    // derived simple value, so an equal target is still written
+    // no PC loop writes a device that pushes its brightness changes; its value can differ from
+    // the derived simple value, so an equal target is still written
     if (
       this.hardwareBrightnessDriverAvailable &&
-      this.hardwareBrightnessControl.lastActiveDriver?.reportsBrightness
+      this.hardwareBrightnessControl.lastActiveDriver?.pushesBrightnessChanges
     ) {
       this.cancelActiveTransition();
       const task = new CancellableTask(() =>
