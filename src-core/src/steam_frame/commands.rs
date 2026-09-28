@@ -3,12 +3,13 @@ use std::time::Duration;
 use super::{
     connection, devkit, discovery, hex,
     models::{
-        Access, Candidate, CleanupOutcome, CleanupRequest, Pairing, PairingKeys, ProbeOutcome,
-        RegisterOutcome, SetupRequest, SetupResult, StageEvent, State, SupportedModel,
+        Access, Candidate, CleanupOutcome, CleanupRequest, OtherPcsOutcome, Pairing, PairingKeys,
+        ProbeOutcome, RegisterOutcome, SetupRequest, SetupResult, StageEvent, State,
+        SupportedModel,
     },
     setup,
     ssh::{self, SshError},
-    SUPPORTED_MODELS,
+    valid_pc_id, SUPPORTED_MODELS,
 };
 use crate::utils::send_event;
 
@@ -17,9 +18,28 @@ pub fn steam_frame_get_supported_models() -> Vec<SupportedModel> {
     SUPPORTED_MODELS.to_vec()
 }
 
+/// One candidate per headset: addresses that show the same SSH host key are one headset.
 #[tauri::command]
 pub async fn steam_frame_discover_headsets() -> Vec<Candidate> {
-    discovery::discover(Duration::from_secs(3)).await
+    let candidates = discovery::discover(Duration::from_secs(3)).await;
+    let pins = futures::future::join_all(
+        candidates
+            .iter()
+            .map(|candidate| ssh::host_key_pin(&candidate.address)),
+    )
+    .await;
+    distinct_headsets(candidates, pins)
+}
+
+/// Keeps the first candidate per host key; a candidate without a key stays on its own.
+fn distinct_headsets(candidates: Vec<Candidate>, pins: Vec<Option<String>>) -> Vec<Candidate> {
+    let mut seen = std::collections::HashSet::new();
+    candidates
+        .into_iter()
+        .zip(pins)
+        .filter(|(_, pin)| pin.as_ref().is_none_or(|pin| seen.insert(pin.clone())))
+        .map(|(candidate, _)| candidate)
+        .collect()
 }
 
 /// `None` when no devkit service answers at the address.
@@ -53,8 +73,17 @@ pub async fn steam_frame_request_approval(address: String, public_key: String) -
 
 /// Tries this PC's saved key, and reports the host key a first login would pin.
 #[tauri::command]
-pub async fn steam_frame_check_ssh_access(access: Access) -> ProbeOutcome {
-    match ssh::connect(&access).await {
+pub async fn steam_frame_check_ssh_access(
+    access: Access,
+    pc_id: String,
+    public_key: String,
+) -> ProbeOutcome {
+    if !valid_pc_id(&pc_id) {
+        return ProbeOutcome::Failed {
+            message: "invalid PC id".into(),
+        };
+    }
+    match setup::open(&access, &pc_id, &public_key).await {
         Ok(session) => {
             let host_key_pin = session.host_key_pin.clone();
             session.close().await;
@@ -86,6 +115,15 @@ pub async fn steam_frame_remove_access(request: CleanupRequest) -> CleanupOutcom
 }
 
 #[tauri::command]
+pub async fn steam_frame_count_other_pcs(
+    access: Access,
+    pc_id: String,
+    public_key: String,
+) -> OtherPcsOutcome {
+    setup::count_other_pcs(&access, &pc_id, &public_key).await
+}
+
+#[tauri::command]
 pub async fn steam_frame_sync_connections(pairings: Vec<Pairing>) {
     connection::set_pairings(pairings).await
 }
@@ -99,4 +137,34 @@ pub async fn steam_frame_update_helper(pairing_id: String) -> bool {
 #[tauri::command]
 pub async fn steam_frame_get_connection_states() -> Vec<State> {
     connection::states().await
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn candidate(address: &str) -> Candidate {
+        Candidate {
+            name: "Steam Frame".into(),
+            address: address.into(),
+        }
+    }
+
+    #[test]
+    fn distinct_headsets_merges_addresses_with_one_host_key() {
+        let candidates = [
+            "10.35.78.1",
+            "192.168.1.115",
+            "192.168.1.120",
+            "192.168.1.130",
+        ]
+        .map(candidate)
+        .to_vec();
+        let pins = vec![Some("A".into()), Some("A".into()), Some("B".into()), None];
+        let addresses: Vec<String> = distinct_headsets(candidates, pins)
+            .into_iter()
+            .map(|c| c.address)
+            .collect();
+        assert_eq!(addresses, ["10.35.78.1", "192.168.1.120", "192.168.1.130"]);
+    }
 }

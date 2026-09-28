@@ -71,12 +71,17 @@
                 <p>{{ t('pages.intro.nearby') }}</p>
               }
               @case ('devmode') {
-                <p [innerHTML]="t('pages.devmode.path')"></p>
-                <p [innerHTML]="t('pages.devmode.enable')"></p>
+                <ol class="steps">
+                  <li [innerHTML]="t('pages.devmode.open')"></li>
+                  <li [innerHTML]="t('pages.devmode.enable')"></li>
+                </ol>
               }
               @case ('pairhost') {
-                <p [innerHTML]="t('pages.pairhost.path')"></p>
-                <p>{{ t('pages.pairhost.return') }}</p>
+                <ol class="steps">
+                  <li [innerHTML]="t('pages.pairhost.open')"></li>
+                  <li [innerHTML]="t('pages.pairhost.select')"></li>
+                  <li>{{ t('pages.pairhost.return') }}</li>
+                </ol>
               }
               @case ('found') {
                 <p
