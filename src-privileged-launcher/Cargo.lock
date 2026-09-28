@@ -1101,7 +1101,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumivr-privileged-launcher"
-version = "26.9.0-beta.14"
+version = "26.9.0-beta.15"
 dependencies = [
  "base64 0.22.1",
  "log",
@@ -1115,7 +1115,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumivr-shared"
-version = "26.9.0-beta.14"
+version = "26.9.0-beta.15"
 dependencies = [
  "flexi_logger",
  "log",
