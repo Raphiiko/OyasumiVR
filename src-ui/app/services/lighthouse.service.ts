@@ -180,18 +180,24 @@ export class LighthouseService {
         500
       );
       // wait for state to change (timeout after 10 seconds)
+      // a V1 base station reports standby as sleep
+      const expected =
+        device.deviceType === 'lighthouseV1' && powerState === 'standby' ? 'sleep' : powerState;
       const reached = await firstValueFrom(
         merge(
           interval(100).pipe(
             delay(500), // Wait 500ms before checking, to make sure the feedback in the UI lasts long enough
             filter(() =>
-              this._devices.value.some((d) => d.id === device.id && d.powerState === powerState)
+              this._devices.value.some((d) => d.id === device.id && d.powerState === expected)
             )
           ),
           of(null).pipe(delay(10000))
         ).pipe(take(1))
       );
-      return reached !== null;
+      if (reached !== null) return true;
+      // a base station still booting has accepted the command to turn on
+      const current = this._devices.value.find((d) => d.id === device.id)?.powerState;
+      return expected === 'on' && current === 'booting';
     } finally {
       // only the owning operation may clear the marker
       if (transition !== undefined && this.transitions[device.id] === transition) {

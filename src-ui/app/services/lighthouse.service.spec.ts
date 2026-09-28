@@ -153,20 +153,29 @@ describe('LighthouseService.setPowerStateForUser', () => {
 
   afterEach(() => vi.useRealTimers());
 
-  async function toastsAfter(powerStateReached: boolean) {
+  async function toastsAfter(
+    reportedState: LighthouseDevice['powerState'] | null,
+    requested: LighthouseDevice['powerState'] = 'sleep',
+    deviceType: LighthouseDevice['deviceType'] = 'lighthouseV2'
+  ) {
     invoke.mockResolvedValue(undefined);
-    const d = device();
+    const d = {
+      ...device(),
+      deviceType,
+      powerState: requested === 'on' ? 'sleep' : 'on',
+    } as LighthouseDevice;
     const service = makeService(d);
+    service['v1Identifiers'][d.id] = 'ABCD1234';
     const toasts = service['toasts'];
-    const settled = service.setPowerStateForUser(d, 'sleep', 'Living Room');
-    if (powerStateReached) d.powerState = 'sleep';
+    const settled = service.setPowerStateForUser(d, requested, 'Living Room');
+    if (reportedState) d.powerState = reportedState;
     await vi.advanceTimersByTimeAsync(10000);
     await settled;
     return firstValueFrom(toasts.toasts);
   }
 
   it('shows an error toast when the device never reports the new state', async () => {
-    const shown = await toastsAfter(false);
+    const shown = await toastsAfter(null);
     expect(shown).toHaveLength(1);
     expect(shown[0].type).toBe('error');
     expect(shown[0].title).toEqual({
@@ -176,6 +185,14 @@ describe('LighthouseService.setPowerStateForUser', () => {
   });
 
   it('shows no toast when the device reaches the new state', async () => {
-    expect(await toastsAfter(true)).toHaveLength(0);
+    expect(await toastsAfter('sleep')).toHaveLength(0);
+  });
+
+  it('accepts sleep from a V1 base station asked for standby', async () => {
+    expect(await toastsAfter('sleep', 'standby', 'lighthouseV1')).toHaveLength(0);
+  });
+
+  it('accepts a base station that is still booting after turning on', async () => {
+    expect(await toastsAfter('booting', 'on')).toHaveLength(0);
   });
 });

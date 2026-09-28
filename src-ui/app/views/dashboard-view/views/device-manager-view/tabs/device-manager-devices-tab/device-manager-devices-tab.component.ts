@@ -611,6 +611,11 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
       if (!result || !result.confirmed) return;
     }
 
-    await this.lighthouse.setPowerState(lighthouseDevice, state, true);
+    await this.lighthouse.setPowerStateForUser(
+      lighthouseDevice,
+      state,
+      device.nickname ?? device.defaultName,
+      true
+    );
   }
 }
