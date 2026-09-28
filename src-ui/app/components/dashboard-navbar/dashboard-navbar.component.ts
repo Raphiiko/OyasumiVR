@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { filter, map, Observable, startWith } from 'rxjs';
 import { fade } from '../../utils/animations';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, NavigationSkipped, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { BackgroundService } from '../../services/background.service';
@@ -192,7 +192,8 @@ export class DashboardNavbarComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.router.events
       .pipe(
-        filter((e) => e instanceof NavigationEnd),
+        // the router emits NavigationSkipped, not NavigationEnd, for the current URL
+        filter((e) => e instanceof NavigationEnd || e instanceof NavigationSkipped),
         startWith(null),
         takeUntilDestroyed(this.destroyRef)
       )
