@@ -120,7 +120,8 @@ export class NotificationService {
     );
   }
 
-  public async setProvider(provider: NotificationProvider) {
+  /** Resolves to the provider that was applied, which falls back when a permission is denied. */
+  public async setProvider(provider: NotificationProvider): Promise<NotificationProvider> {
     switch (provider) {
       case 'OVRTOOLKIT':
         break;
@@ -145,12 +146,13 @@ export class NotificationService {
             message: 'toasts.desktopNotificationsBlocked.message',
             duration: 8000,
           });
-          return;
+          return 'OYASUMIVR';
         }
         break;
       }
     }
     this.appSettingsService.updateSettings({ notificationProvider: provider });
+    return provider;
   }
 
   private async clearOyasumiNotification(notificationId: string) {

@@ -65,10 +65,11 @@ export class SettingsNotificationsViewComponent implements OnInit {
       });
   }
 
-  protected onChangeProviderOption(option: SelectBoxItem | undefined) {
+  protected async onChangeProviderOption(option: SelectBoxItem | undefined) {
     option = option ?? this.providerOptions[0];
     this.providerOption = option;
-    this.notifications.setProvider(option.id as NotificationProvider);
+    const provider = await this.notifications.setProvider(option.id as NotificationProvider);
+    this.providerOption = this.providerOptions.find((o) => o.id === provider) ?? option;
   }
 
   protected isNotificationTypeChecked(type: NotificationType): boolean {
