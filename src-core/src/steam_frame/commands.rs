@@ -4,8 +4,8 @@ use super::{
     connection, devkit, discovery, hex,
     models::{
         Access, Candidate, CleanupOutcome, CleanupRequest, OtherPcsOutcome, Pairing, PairingKeys,
-        ProbeOutcome, RegisterOutcome, SetupRequest, SetupResult, StageEvent, State,
-        SupportedModel,
+        ProbeOutcome, RegisterOutcome, SetBrightnessError, SetupRequest, SetupResult, StageEvent,
+        State, SupportedModel,
     },
     setup,
     ssh::{self, SshError},
@@ -137,6 +137,15 @@ pub async fn steam_frame_update_helper(pairing_id: String) -> bool {
 #[tauri::command]
 pub async fn steam_frame_get_connection_states() -> Vec<State> {
     connection::states().await
+}
+
+/// Sets the paired headset's hardware brightness and returns the percentage the helper applied.
+#[tauri::command]
+pub async fn steam_frame_set_brightness(
+    pairing_id: String,
+    percentage: f64,
+) -> Result<f64, SetBrightnessError> {
+    connection::set_brightness(&pairing_id, percentage).await
 }
 
 #[cfg(test)]

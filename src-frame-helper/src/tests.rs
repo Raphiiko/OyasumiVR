@@ -59,6 +59,36 @@ impl ServerCertVerifier for Pinned {
     }
 }
 
+/// A headset at full brightness that accepts every write.
+struct Headset(f32);
+
+impl brightness::Backend for Headset {
+    fn connect(&mut self) -> bool {
+        true
+    }
+
+    fn disconnect(&mut self) {}
+
+    fn capability(&mut self) -> Result<brightness::Capability, brightness::RuntimeLost> {
+        Ok(brightness::Capability {
+            supported: true,
+            min_gain: 0.005,
+            max_gain: 1.25,
+        })
+    }
+
+    fn gain(&mut self) -> Result<f32, brightness::RuntimeLost> {
+        Ok(self.0)
+    }
+
+    fn set_gain(&mut self, gain: f32) -> Result<(), brightness::RuntimeLost> {
+        self.0 = gain;
+        Ok(())
+    }
+}
+
+type Socket = tokio_tungstenite::WebSocketStream<tokio_rustls::client::TlsStream<TcpStream>>;
+
 struct Helper {
     root: tempfile::TempDir,
     port: u16,
@@ -74,11 +104,16 @@ async fn start() -> Helper {
     let (listener, acceptor) = bind(root.path()).await.unwrap();
     let port = listener.local_addr().unwrap().port();
     let (cert, _) = ensure_certificate(root.path()).unwrap();
-    tokio::spawn(serve(root.path().to_owned(), listener, acceptor));
+    let hub = brightness::start(Headset(1.0));
+    // wait for the first poll, so every connection starts from the headset's value
+    while hub.subscribe().0.percentage.is_none() {
+        tokio::time::sleep(Duration::from_millis(10)).await;
+    }
+    tokio::spawn(serve(root.path().to_owned(), listener, acceptor, hub));
     Helper { root, port, cert }
 }
 
-async fn connect(helper: &Helper, headers: &[(&str, &str)]) -> Result<String, Error> {
+async fn open(helper: &Helper, headers: &[(&str, &str)]) -> Result<Socket, Error> {
     let provider = Arc::new(rustls::crypto::ring::default_provider());
     let config = ClientConfig::builder_with_provider(provider.clone())
         .with_safe_default_protocol_versions()
@@ -100,7 +135,20 @@ async fn connect(helper: &Helper, headers: &[(&str, &str)]) -> Result<String, Er
             value.parse().unwrap(),
         );
     }
-    let (mut socket, _) = tokio_tungstenite::client_async(request, tls).await?;
+    Ok(tokio_tungstenite::client_async(request, tls).await?.0)
+}
+
+async fn next_json(socket: &mut Socket) -> serde_json::Value {
+    let message = tokio::time::timeout(Duration::from_secs(5), socket.next())
+        .await
+        .expect("no message within 5 s")
+        .unwrap()
+        .unwrap();
+    serde_json::from_str(message.to_text().unwrap()).unwrap()
+}
+
+async fn connect(helper: &Helper, headers: &[(&str, &str)]) -> Result<String, Error> {
+    let mut socket = open(helper, headers).await?;
     Ok(socket.next().await.unwrap()?.into_text()?.to_string())
 }
 
@@ -123,6 +171,47 @@ async fn valid_token_receives_hello() {
     assert_eq!(hello["protocolMin"], PROTOCOL_MIN);
     assert_eq!(hello["protocolMax"], PROTOCOL_MAX);
     assert_eq!(hello["digest"].as_str().unwrap().len(), 64);
+}
+
+#[tokio::test]
+async fn relays_brightness_to_every_pc() {
+    let helper = start().await;
+    let mut a = open(
+        &helper,
+        &[(PC_ID_HEADER, "pc-a"), ("authorization", "Bearer token-a")],
+    )
+    .await
+    .unwrap();
+    let mut b = open(
+        &helper,
+        &[(PC_ID_HEADER, "pc-b"), ("authorization", "Bearer token-b")],
+    )
+    .await
+    .unwrap();
+    // each PC gets hello, then the current snapshot
+    for socket in [&mut a, &mut b] {
+        assert_eq!(next_json(socket).await["type"], "hello");
+        assert_eq!(
+            next_json(socket).await,
+            serde_json::json!({"type": "brightness", "runtime": true, "supported": true, "min": 9.0, "max": 125.0, "percentage": 100.0})
+        );
+    }
+    // the writer gets a reply, the other PC a snapshot
+    let command = r#"{"type":"setBrightness","id":7,"percentage":150}"#;
+    a.send(Message::text(command)).await.unwrap();
+    assert_eq!(
+        next_json(&mut a).await,
+        serde_json::json!({"type": "setBrightnessResult", "id": 7, "percentage": 125.0})
+    );
+    assert_eq!(next_json(&mut b).await["percentage"], 125.0);
+    // unknown messages change nothing
+    a.send(Message::text(r#"{"type":"other"}"#)).await.unwrap();
+    a.send(Message::text(
+        r#"{"type":"setBrightness","id":8,"percentage":50}"#,
+    ))
+    .await
+    .unwrap();
+    assert_eq!(next_json(&mut a).await["id"], 8);
 }
 
 #[tokio::test]
