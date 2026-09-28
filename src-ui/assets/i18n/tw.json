@@ -2798,7 +2798,7 @@
   "toasts": {
     "pulsoid": {
       "loginFailed": {
-        "message": "使用 Pulsoid 帳戶登入不成功。請稍後再試。如果問題仍然存在，請聯絡我們尋求支持！{errorDetails}{errorDetails}",
+        "message": "使用 Pulsoid 帳戶登入不成功。請稍後再試。如果問題仍然存在，請聯絡我們尋求支持！\n\n{errorDetails}",
         "title": "Pulsoid 登入失敗"
       }
     },
