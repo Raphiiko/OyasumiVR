@@ -45,7 +45,9 @@ export type SteamFrameConnectionStatus =
   | 'identityChanged'
   | 'needsAppUpdate'
   | 'helperOutdated'
-  | 'hostKeyChanged';
+  | 'hostKeyChanged'
+  | 'helperMissing'
+  | 'pairingRemoved';
 
 export interface SteamFrameConnectionState {
   pairingId: string;
