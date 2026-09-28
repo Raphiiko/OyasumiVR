@@ -12,6 +12,9 @@ import {
 import { getVersion } from '../../utils/app-utils';
 import { SleepService } from '../sleep.service';
 
+// Home Assistant subscribes to these topics only after it sets up a newly discovered entity
+const RETAINED = { retain: true };
+
 @Injectable({
   providedIn: 'root',
 })
@@ -338,6 +341,7 @@ export class MqttDiscoveryService {
             unit_of_measurement: property.unitOfMeasurement,
             min: property.min ?? 0,
             max: property.max ?? 100,
+            mode: property.mode,
           }),
           {
             retain: true,
@@ -384,18 +388,24 @@ export class MqttDiscoveryService {
       case 'TOGGLE': {
         await client.publishAsync(
           `OyasumiVR/${property.topicPath}/state`,
-          property.value ? 'ON' : 'OFF'
+          property.value ? 'ON' : 'OFF',
+          RETAINED
         );
         break;
       }
       case 'SENSOR': {
-        await client.publishAsync(`OyasumiVR/${property.topicPath}/state`, property.value);
+        await client.publishAsync(
+          `OyasumiVR/${property.topicPath}/state`,
+          property.value,
+          RETAINED
+        );
         break;
       }
       case 'NUMBER': {
         await client.publishAsync(
           `OyasumiVR/${property.topicPath}/state`,
-          property.value.toString(10)
+          property.value.toString(10),
+          RETAINED
         );
         break;
       }
@@ -403,7 +413,8 @@ export class MqttDiscoveryService {
         if (property.rgbMode) {
           await client.publishAsync(
             `OyasumiVR/${property.topicPath}/rgbState`,
-            property.rgbValue.join(',')
+            property.rgbValue.join(','),
+            RETAINED
           );
           if (property.rgbValue.every((v) => v === 0)) {
             property.state = false;
@@ -411,7 +422,8 @@ export class MqttDiscoveryService {
         }
         await client.publishAsync(
           `OyasumiVR/${property.topicPath}/state`,
-          property.state ? 'ON' : 'OFF'
+          property.state ? 'ON' : 'OFF',
+          RETAINED
         );
       }
     }
@@ -431,7 +443,8 @@ export class MqttDiscoveryService {
     if (!property || available === undefined) return;
     await client.publishAsync(
       `OyasumiVR/${property.topicPath}/available`,
-      available ? 'online' : 'offline'
+      available ? 'online' : 'offline',
+      RETAINED
     );
   }
 }

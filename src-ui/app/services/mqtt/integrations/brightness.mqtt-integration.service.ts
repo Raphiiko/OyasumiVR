@@ -148,6 +148,7 @@ export class BrightnessMqttIntegrationService {
       value: this.cctControl.cct,
       min: 1000,
       max: 10000,
+      mode: 'slider',
       available: false,
       unitOfMeasurement: 'K',
     });

@@ -66,7 +66,13 @@ describe('BrightnessMqttIntegrationService color temperature', () => {
     const { mqtt, cctStream } = await createService();
 
     expect(mqtt.initProperty).toHaveBeenCalledWith(
-      expect.objectContaining({ type: 'NUMBER', id: 'colorTemperature', min: 1000, max: 10000 })
+      expect.objectContaining({
+        type: 'NUMBER',
+        id: 'colorTemperature',
+        min: 1000,
+        max: 10000,
+        mode: 'slider',
+      })
     );
     cctStream.next(3000);
     expect(mqtt.setNumberPropertyValue).toHaveBeenCalledWith('colorTemperature', 3000);
