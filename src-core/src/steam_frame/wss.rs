@@ -29,6 +29,9 @@ pub struct Hello {
     #[serde(flatten)]
     pub info: HelperInfo,
     pub identity: Option<Identity>,
+    /// The helper runs fades itself; an older helper leaves this out.
+    #[serde(default)]
+    pub fades: bool,
 }
 
 #[derive(Debug, PartialEq)]
