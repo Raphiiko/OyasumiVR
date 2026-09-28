@@ -19,6 +19,10 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Added
 
+- Grouped event log
+  - Actions caused by the same sleep mode change, sleep preparation, sunset, or sunrise collapse into
+    one row that expands to show them
+  - Every entry shows an icon for its type
 - Start with SteamVR can now be toggled directly in General Settings, including while SteamVR is
   stopped, and changes made in SteamVR are reflected while both applications run
 - Access the main OyasumiVR interface from the SteamVR dashboard
