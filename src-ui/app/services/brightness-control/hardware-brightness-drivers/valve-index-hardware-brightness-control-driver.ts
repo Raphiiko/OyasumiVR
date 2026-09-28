@@ -15,8 +15,8 @@ const VALVE_INDEX_MAX_ANALOG_GAIN = 1.6;
 
 export const VALVE_INDEX_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: HardwareBrightnessControlDriverBounds =
   {
-    softwareStops: [20, 160],
-    hardwareStops: [20, 160],
+    softwareStops: [9, 160],
+    hardwareStops: [9, 160],
     overdriveThreshold: 100,
     riskThreshold: 160,
   };
