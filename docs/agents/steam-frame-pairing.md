@@ -210,7 +210,8 @@ A cleanup takes the maintenance and authorized_keys locks before it changes anyt
 shows "Couldn't unpair" with Try again and Forget on this PC, including when the headset rejects
 this PC's key, because then nothing on it changed. Cancel cleanup and wrong-headset cleanup count a
 rejected key as done. Forget deletes only local data. A
-pairing whose key the headset rejects shows `pairingRemoved`, with Pair again and Forget on this PC.
+pairing whose key the headset rejects shows `pairingRemoved`. Device Manager shows it like an unpaired
+headset, and Unpair in its device details opens Forget on this PC.
 
 ## Connection
 

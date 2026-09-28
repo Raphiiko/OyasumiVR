@@ -141,6 +141,11 @@ export class DeviceManagerConfigModalComponent
     if (helper) void this.framePairing.updateHelper(helper.pairing);
   }
 
+  private frameRemovedOnHeadset(): boolean {
+    const pairing = this.framePairing.pairingFor(this.device.id);
+    return !!pairing && this.framePairing.connections()[pairing.id]?.status === 'pairingRemoved';
+  }
+
   async unpairFrame() {
     const { SteamFrameUnpairModalComponent } =
       await import('../steam-frame-unpair-modal/steam-frame-unpair-modal.component');
@@ -148,7 +153,7 @@ export class DeviceManagerConfigModalComponent
     this.modalService
       .addModal(
         SteamFrameUnpairModalComponent,
-        { deviceId: this.device.id },
+        { deviceId: this.device.id, removedOnHeadset: this.frameRemovedOnHeadset() },
         { closeOnEscape: false }
       )
       .subscribe();
