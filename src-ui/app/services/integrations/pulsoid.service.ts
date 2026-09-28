@@ -5,12 +5,7 @@ import {
   SETTINGS_KEY_PULSOID_API,
   SETTINGS_STORE,
 } from '../../globals';
-import { ModalService } from '../modal.service';
-import {
-  ConfirmModalComponent,
-  ConfirmModalInputModel,
-  ConfirmModalOutputModel,
-} from '../../components/confirm-modal/confirm-modal.component';
+import { ToastService } from '../toast.service';
 import { error, info, warn } from '@tauri-apps/plugin-log';
 import {
   BehaviorSubject,
@@ -83,7 +78,7 @@ export class PulsoidService {
     })
   );
 
-  constructor(private modalService: ModalService) {}
+  constructor(private toasts: ToastService) {}
 
   async init() {
     await this.loadSettings();
@@ -183,28 +178,43 @@ export class PulsoidService {
       // Save the active profile
       if (profile) {
         await this.setActiveProfile(profile);
+        this.toasts.show({
+          type: 'success',
+          title: 'toasts.pulsoid.connected.title',
+          message: {
+            string: 'toasts.pulsoid.connected.message',
+            values: { username: profile.username },
+          },
+        });
         return;
       }
     }
     // If a validation error occurred, stop here and inform the user.
     if (errorOccurred) {
-      this.modalService
-        .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
-          title: 'pulsoid.login.error.title',
-          message: {
-            string: 'pulsoid.login.error.message',
-            values: {
-              errorDetails: errorDescription
-                ? `Pulsoid: ${errorDescription} (${errorCode})`
-                : errorCode
-                  ? `Pulsoid: ${errorCode}`
-                  : '',
+      this.toasts.show({
+        type: 'error',
+        title: 'toasts.pulsoid.loginFailed.title',
+        message: {
+          string: 'toasts.pulsoid.loginFailed.message',
+          values: {
+            errorDetails: errorDescription
+              ? ` Pulsoid: ${errorDescription} (${errorCode})`
+              : errorCode
+                ? ` Pulsoid: ${errorCode}`
+                : '',
+          },
+        },
+        duration: 10000,
+        actions: [
+          {
+            label: 'toasts.pulsoid.loginFailed.retry',
+            action: (toast) => {
+              toast.dismiss();
+              this.login();
             },
           },
-          confirmButtonText: 'Ok',
-          showCancel: false,
-        })
-        .subscribe();
+        ],
+      });
     }
   }
 

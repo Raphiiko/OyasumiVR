@@ -649,6 +649,7 @@ export class VRChatAPI {
       this.ensureCacheGeneration(cacheGeneration);
       return data;
     } catch (e) {
+      this.ensureCacheGeneration(cacheGeneration);
       error('[VRChat] Failed to list groups: ' + JSON.stringify(e));
       throw e;
     }

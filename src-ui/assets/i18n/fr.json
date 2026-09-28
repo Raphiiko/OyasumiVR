@@ -1032,9 +1032,9 @@
   "systemTray": {
     "sleepMode": "Mode sommeil"
   },
-  "updater": {
-    "modals": {
-      "error": {
+  "toasts": {
+    "update": {
+      "installFailed": {
         "message": "L'installation de la mise à jour a échouée. Veuillez réessayer ultérieurement.",
         "title": "Mise à jour échouée"
       }

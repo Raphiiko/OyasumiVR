@@ -14,6 +14,7 @@ import { AvatarEx } from '../../models/vrchat';
 import { ModalService } from '../../services/modal.service';
 import { ConfirmModalComponent } from '../confirm-modal/confirm-modal.component';
 import { VRCHAT_API_STALE_REQUEST } from '../../services/vrchat-api/vrchat-api';
+import { ToastService } from '../../services/toast.service';
 
 export interface VrcAvatarSelectModalInput {}
 
@@ -44,7 +45,8 @@ export class VrcAvatarSelectModalComponent
 
   constructor(
     private vrchat: VRChatService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private toasts: ToastService
   ) {
     super();
   }
@@ -71,6 +73,12 @@ export class VrcAvatarSelectModalComponent
       else {
         this.activeCategory = 'NO_AVATARS';
         this.cdr.markForCheck();
+        this.toasts.show({
+          type: 'error',
+          title: 'toasts.vrchat.avatarsFailed.title',
+          message: 'toasts.vrchat.requestFailed',
+          duration: 6000,
+        });
       }
       return;
     }

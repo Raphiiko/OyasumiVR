@@ -3,8 +3,9 @@ import { TranslationEditService } from '../../services/translation-edit.service'
 import { DownloadableTranslation } from '../../models/downloadable-translation';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
 import { error } from '@tauri-apps/plugin-log';
-import { message, open as openFile } from '@tauri-apps/plugin-dialog';
+import { open as openFile } from '@tauri-apps/plugin-dialog';
 import { readTextFile } from '@tauri-apps/plugin-fs';
+import { ToastService } from '../../../../services/toast.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -28,7 +29,8 @@ export class TranslationLoaderViewComponent {
 
   constructor(
     private translationEditService: TranslationEditService,
-    private router: Router
+    private router: Router,
+    private toasts: ToastService
   ) {
     this.init();
   }
@@ -132,9 +134,11 @@ export class TranslationLoaderViewComponent {
       translations = await fetch(url).then((data) => data.json());
     } catch (e) {
       error(`Could not load translations from url: ${JSON.stringify(e)}`);
-      await message('Translations could not be loaded:\n' + e, {
-        title: 'Error loading translations',
-        kind: 'error',
+      this.toasts.show({
+        type: 'error',
+        title: 'Could not load translations',
+        message: `${e}`,
+        duration: 8000,
       });
       return;
     }
@@ -159,9 +163,11 @@ export class TranslationLoaderViewComponent {
       translations = JSON.parse(fileData);
     } catch (e) {
       error(`Could not load translations from file: ${JSON.stringify(e)}`);
-      await message('Translations could not be loaded:\n' + e, {
-        title: 'Error loading translations',
-        kind: 'error',
+      this.toasts.show({
+        type: 'error',
+        title: 'Could not load translations',
+        message: `${e}`,
+        duration: 8000,
       });
       return null;
     }

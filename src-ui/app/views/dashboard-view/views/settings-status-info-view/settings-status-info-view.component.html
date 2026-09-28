@@ -11,15 +11,8 @@
           </div>
           <div class="setting-row-action">
             <button class="btn btn-primary btn-copy" (click)="copyToClipboard()">
-              @if (!copiedToClipboard.includes('ALL_DATA')) {
-                <span @hshrink>
-                  <app-icon name="copy" />
-                  <span transloco="settings.statusInfo.copy.action"></span>
-                </span>
-              }
-              @if (copiedToClipboard.includes('ALL_DATA')) {
-                <app-icon class="success" name="check" @hshrink />
-              }
+              <app-icon name="copy" />
+              <span transloco="settings.statusInfo.copy.action"></span>
             </button>
           </div>
         </div>

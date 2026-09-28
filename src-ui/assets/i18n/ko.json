@@ -1413,14 +1413,6 @@
       }
     }
   },
-  "pulsoid": {
-    "login": {
-      "error": {
-        "message": "Pulsoid 계정으로 로그인하지 못했습니다. 나중에 다시 시도하세요. 이 문제가 지속되면 문의해 주세요!\n\n{errorDetails}",
-        "title": "Pulsoid 로그인 실패"
-      }
-    }
-  },
   "resolution-automations": {
     "description": "OyasumiVR은 수면 모드가 활성화되거나 비활성화될 때 자동으로 SteamVR의 렌더 해상도를 조정할 수 있어요.",
     "onSleepDisable": {
@@ -1531,36 +1523,6 @@
         "vrManifestReregister": {
           "action": "매니페스트 재등록",
           "description": "OyasumiVR의 VR 애플리케이션 매니페스트를 SteamVR에 재등록하여요.",
-          "modal": {
-            "FLAVOUR_NOT_ELIGIBLE": {
-              "message": "OyasumiVR(예: Steam 버전)의 부적격 빌드를 사용 중이므로 응용 프로그램 매니페스트가 등록 취소되었지만 재등록되지 않았어요. 오류가 아닙니다! OyasumiVR을 다시 시작해 주세요.",
-              "title": "응용프로그램 매니페스트가 등록 해제됨"
-            },
-            "MANIFEST_ADD_FAILED": {
-              "message": "매니페스트가 제거되었지만 다시 추가할 수 없어요. 오야스미VR을 다시 시작하고 로그를 확인해 주세요.",
-              "title": "VR 애플리케이션 매니페스트 재등록 실패"
-            },
-            "MANIFEST_CHECK_FAILED": {
-              "message": "OyasumiVR의 매니페스트가 이미 스팀VR에 등록되어 있는지 확인할 수 없어요. 오야스미VR을 다시 시작하고 로그를 로그를 확인해 주세요.",
-              "title": "VR 애플리케이션 매니페스트 재등록 실패"
-            },
-            "MANIFEST_NOT_REGISTERED": {
-              "message": "스팀VR에 등록된 OyasumiVR의 매니페스트가 없어요. (재)등록되지 않았습니다. OyasumiVR을 다시 시작해 주세요.",
-              "title": "VR 애플리케이션 매니페스트 재등록 실패"
-            },
-            "MANIFEST_REMOVE_FAILED": {
-              "message": "매니페스트를 제거할 수 없습니다. 로그를 확인해 주세요.",
-              "title": "VR 애플리케이션 매니페스트 재등록 실패"
-            },
-            "UNKNOWN": {
-              "message": "알 수 없는 오류로 인해 OyasumiVR의 매니페스트를 SteamVR에 재등록하지 못하였어요. OyasumiVR을 다시 시작하고 로그를 확인해주세요.",
-              "title": "VR 애플리케이션 매니페스트 재등록 실패"
-            },
-            "success": {
-              "message": "OyasumiVR의 매니페스트가 SteamVR에 재등록되었어요.",
-              "title": "VR 애플리케이션 매니페스트 재등록 됨"
-            }
-          },
           "title": "SteamVR 애플리케이션 매니페스트 재등록"
         }
       }
@@ -2354,11 +2316,47 @@
       }
     }
   },
-  "updater": {
-    "modals": {
-      "error": {
+  "toasts": {
+    "pulsoid": {
+      "loginFailed": {
+        "message": "Pulsoid 계정으로 로그인하지 못했습니다. 나중에 다시 시도하세요. 이 문제가 지속되면 문의해 주세요!\n\n{errorDetails}",
+        "title": "Pulsoid 로그인 실패"
+      }
+    },
+    "update": {
+      "installFailed": {
         "message": "업데이트 설치에 실패했어요. 잠시 뒤에 다시 시도해주세요.",
         "title": "업데이트 실패"
+      }
+    },
+    "vrManifestReregister": {
+      "FLAVOUR_NOT_ELIGIBLE": {
+        "message": "OyasumiVR(예: Steam 버전)의 부적격 빌드를 사용 중이므로 응용 프로그램 매니페스트가 등록 취소되었지만 재등록되지 않았어요. 오류가 아닙니다! OyasumiVR을 다시 시작해 주세요.",
+        "title": "응용프로그램 매니페스트가 등록 해제됨"
+      },
+      "MANIFEST_ADD_FAILED": {
+        "message": "매니페스트가 제거되었지만 다시 추가할 수 없어요. 오야스미VR을 다시 시작하고 로그를 확인해 주세요.",
+        "title": "VR 애플리케이션 매니페스트 재등록 실패"
+      },
+      "MANIFEST_CHECK_FAILED": {
+        "message": "OyasumiVR의 매니페스트가 이미 스팀VR에 등록되어 있는지 확인할 수 없어요. 오야스미VR을 다시 시작하고 로그를 로그를 확인해 주세요.",
+        "title": "VR 애플리케이션 매니페스트 재등록 실패"
+      },
+      "MANIFEST_NOT_REGISTERED": {
+        "message": "스팀VR에 등록된 OyasumiVR의 매니페스트가 없어요. (재)등록되지 않았습니다. OyasumiVR을 다시 시작해 주세요.",
+        "title": "VR 애플리케이션 매니페스트 재등록 실패"
+      },
+      "MANIFEST_REMOVE_FAILED": {
+        "message": "매니페스트를 제거할 수 없습니다. 로그를 확인해 주세요.",
+        "title": "VR 애플리케이션 매니페스트 재등록 실패"
+      },
+      "UNKNOWN": {
+        "message": "알 수 없는 오류로 인해 OyasumiVR의 매니페스트를 SteamVR에 재등록하지 못하였어요. OyasumiVR을 다시 시작하고 로그를 확인해주세요.",
+        "title": "VR 애플리케이션 매니페스트 재등록 실패"
+      },
+      "success": {
+        "message": "OyasumiVR의 매니페스트가 SteamVR에 재등록되었어요.",
+        "title": "VR 애플리케이션 매니페스트 재등록 됨"
       }
     }
   },

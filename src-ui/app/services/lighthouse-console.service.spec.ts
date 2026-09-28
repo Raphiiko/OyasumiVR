@@ -5,6 +5,7 @@ import type { OpenVRService } from './openvr.service';
 import { APP_SETTINGS_DEFAULT, type AppSettings } from '../models/settings';
 import type { OVRDevice } from '../models/ovr-device';
 import { LighthouseConsoleService } from './lighthouse-console.service';
+import { ToastService } from './toast.service';
 
 const invoke = vi.hoisted(() => vi.fn());
 
@@ -38,7 +39,7 @@ async function createService(stdout: string) {
     devices: new BehaviorSubject<OVRDevice[]>([device]).asObservable(),
     onDeviceUpdate: vi.fn(),
   } as unknown as OpenVRService;
-  const service = new LighthouseConsoleService(appSettings, openvr);
+  const service = new LighthouseConsoleService(appSettings, openvr, new ToastService());
   // let the constructor's init() settle before the test drives the service
   await new Promise((resolve) => setTimeout(resolve, 0));
   invoke.mockImplementation(async () => ({ stdout, stderr: '', status: 0 }));

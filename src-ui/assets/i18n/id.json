@@ -724,14 +724,6 @@
       }
     }
   },
-  "pulsoid": {
-    "login": {
-      "error": {
-        "message": "Login dengan akun Pulsoid Anda tidak berhasil. Silakan coba lagi nanti. Jika masalah ini terus berlanjut, harap hubungi dukungan!\n\n{errorDetails}",
-        "title": "Login Pulsoid Gagal"
-      }
-    }
-  },
   "resolution-automations": {
     "description": "OyasumiVR dapat secara otomatis menyesuaikan resolusi render SteamVR ketika mode tidur diaktifkan atau dinonaktifkan.",
     "onSleepDisable": {
@@ -1340,9 +1332,15 @@
     },
     "title": "Otomatisasi Mute Mikrofon Sistem"
   },
-  "updater": {
-    "modals": {
-      "error": {
+  "toasts": {
+    "pulsoid": {
+      "loginFailed": {
+        "message": "Login dengan akun Pulsoid Anda tidak berhasil. Silakan coba lagi nanti. Jika masalah ini terus berlanjut, harap hubungi dukungan!\n\n{errorDetails}",
+        "title": "Login Pulsoid Gagal"
+      }
+    },
+    "update": {
+      "installFailed": {
         "message": "Pembaruan gagal diinstal. Silakan coba lagi nanti.",
         "title": "Update Gagal"
       }

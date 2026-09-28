@@ -118,6 +118,7 @@ $status-bar-height: 2.8em;
   color: var(--color-text-3);
   font-size: 0.9em;
   line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 .toast-actions {

@@ -1863,14 +1863,6 @@
       }
     }
   },
-  "pulsoid": {
-    "login": {
-      "error": {
-        "message": "Logging in with your Pulsoid account was unsuccessful. Please try again later. If this issue persists, please reach out for support!\n\n{errorDetails}",
-        "title": "Pulsoid Login Failed"
-      }
-    }
-  },
   "resolution-automations": {
     "description": "OyasumiVR can automatically adjust the render resolution of SteamVR when sleep mode is enabled or disabled.",
     "onSleepDisable": {
@@ -2014,36 +2006,6 @@
         "vrManifestReregister": {
           "action": "Reregister Manifest",
           "description": "Reregisters OyasumiVR's VR application manifest with SteamVR",
-          "modal": {
-            "FLAVOUR_NOT_ELIGIBLE": {
-              "message": "As you're using a non-eligible build of OyasumiVR (e.g. the Steam version), the application manifest has been unregistered, but not reregistered. This is not an error! Please restart OyasumiVR.",
-              "title": "Application manifest unregistered"
-            },
-            "MANIFEST_ADD_FAILED": {
-              "message": "The manifest was removed, but it could not be added back. Please restart OyasumiVR and check the logs.",
-              "title": "Reregistration of VR Application Manifest Failed"
-            },
-            "MANIFEST_CHECK_FAILED": {
-              "message": "It could not be checked if OyasumiVR's manifest was already registered with SteamVR. Please restart OyasumiVR and check the logs.",
-              "title": "Reregistration of VR Application Manifest Failed"
-            },
-            "MANIFEST_NOT_REGISTERED": {
-              "message": "OyasumiVR had no manifest registered with SteamVR. It has not been (re)registered. Please restart OyasumiVR.",
-              "title": "Reregistration of VR Application Manifest Failed"
-            },
-            "MANIFEST_REMOVE_FAILED": {
-              "message": "The manifest could not be removed. Please check the logs.",
-              "title": "Reregistration of VR Application Manifest Failed"
-            },
-            "UNKNOWN": {
-              "message": "OyasumiVR's manifest could not be reregistered with SteamVR due to an unknown error. Please restart OyasumiVR and check the logs.",
-              "title": "Reregistration of VR Application Manifest Failed"
-            },
-            "success": {
-              "message": "OyasumiVR's Manifest has successfully been reregistered with SteamVR.",
-              "title": "VR Application Manifest Reregistered"
-            }
-          },
           "title": "Reregister SteamVR application manifest"
         }
       }
@@ -3190,6 +3152,57 @@
     "sleepMode": "Sleep Mode"
   },
   "toasts": {
+    "clipboard": {
+      "copied": "Copied to clipboard",
+      "failed": "Could not copy to clipboard",
+      "pulsoidLink": "Open the link in your browser to connect Pulsoid.",
+      "statusInfo": "Paste it into a bug report or a support request."
+    },
+    "desktopNotificationsBlocked": {
+      "message": "Windows did not allow OyasumiVR to show notifications, so OyasumiVR keeps sending them to its own overlay.",
+      "title": "Desktop notifications are blocked"
+    },
+    "devicePower": {
+      "lighthouseFailed": {
+        "message": "The base station did not change its power state. Make sure it is in Bluetooth range.",
+        "title": "{name} did not respond"
+      },
+      "turnOffFailed": {
+        "commandFailed": "The Lighthouse console could not reach the device. Check the logs for details.",
+        "consoleNotReady": "Set up the SteamVR Lighthouse console in the General settings first.",
+        "title": "Could not turn off {name}"
+      }
+    },
+    "oscTest": {
+      "noTarget": {
+        "message": "OyasumiVR has no OSC target. Start VRChat with OSC enabled, or set a custom target in the OSC settings.",
+        "title": "Nothing was sent"
+      }
+    },
+    "persistentData": {
+      "cleared": "Data cleared",
+      "failed": {
+        "message": "Check the logs for details.",
+        "title": "Some data could not be cleared"
+      }
+    },
+    "playerListPreset": {
+      "saved": {
+        "message": "Saved the player list as ''{name}''.",
+        "title": "Preset saved"
+      }
+    },
+    "pulsoid": {
+      "connected": {
+        "message": "Logged in as {username}.",
+        "title": "Connected to Pulsoid"
+      },
+      "loginFailed": {
+        "message": "Try again later. If this keeps happening, reach out for support.{errorDetails}",
+        "retry": "Try again",
+        "title": "Pulsoid Login Failed"
+      }
+    },
     "quitWithSteamVR": {
       "cancelled": {
         "shutdownSequence": "The shutdown sequence was cancelled, so OyasumiVR will stay open.",
@@ -3204,14 +3217,61 @@
         "message": "OyasumiVR will quit when the shutdown sequence finishes.",
         "title": "Waiting for shutdown sequence"
       }
-    }
-  },
-  "updater": {
-    "modals": {
-      "error": {
+    },
+    "sunTimes": {
+      "failed": {
+        "message": "OyasumiVR kept the current activation time.",
+        "title": "Could not get the sunrise and sunset times"
+      }
+    },
+    "update": {
+      "checkFailed": {
+        "message": "Check your internet connection and try again.",
+        "title": "Could not check for updates"
+      },
+      "installFailed": {
         "message": "The update failed to install. Please try again later.",
         "title": "Update Failed"
       }
+    },
+    "vrManifestReregister": {
+      "FLAVOUR_NOT_ELIGIBLE": {
+        "message": "As you're using a non-eligible build of OyasumiVR (e.g. the Steam version), the application manifest has been unregistered, but not reregistered. This is not an error! Please restart OyasumiVR.",
+        "title": "Application manifest unregistered"
+      },
+      "MANIFEST_ADD_FAILED": {
+        "message": "The manifest was removed, but it could not be added back. Please restart OyasumiVR and check the logs.",
+        "title": "Reregistration of VR Application Manifest Failed"
+      },
+      "MANIFEST_CHECK_FAILED": {
+        "message": "It could not be checked if OyasumiVR's manifest was already registered with SteamVR. Please restart OyasumiVR and check the logs.",
+        "title": "Reregistration of VR Application Manifest Failed"
+      },
+      "MANIFEST_NOT_REGISTERED": {
+        "message": "OyasumiVR had no manifest registered with SteamVR. It has not been (re)registered. Please restart OyasumiVR.",
+        "title": "Reregistration of VR Application Manifest Failed"
+      },
+      "MANIFEST_REMOVE_FAILED": {
+        "message": "The manifest could not be removed. Please check the logs.",
+        "title": "Reregistration of VR Application Manifest Failed"
+      },
+      "UNKNOWN": {
+        "message": "OyasumiVR's manifest could not be reregistered with SteamVR due to an unknown error. Please restart OyasumiVR and check the logs.",
+        "title": "Reregistration of VR Application Manifest Failed"
+      },
+      "success": {
+        "message": "OyasumiVR's Manifest has successfully been reregistered with SteamVR.",
+        "title": "VR Application Manifest Reregistered"
+      }
+    },
+    "vrchat": {
+      "avatarsFailed": {
+        "title": "Could not load your avatars"
+      },
+      "groupsFailed": {
+        "title": "Could not load your VRChat groups"
+      },
+      "requestFailed": "VRChat did not respond. Try again later."
     }
   },
   "vrchatAvatarAutomations": {

@@ -1767,14 +1767,6 @@
       }
     }
   },
-  "pulsoid": {
-    "login": {
-      "error": {
-        "message": "Het is niet gelukt om in te loggen met je Pulsoid account. Probeer het a.u.b. later opnieuw. Als dit probleem zich blijft voordoen, neem a.u.b. contact op met de developer!\n\n{errorDetails}",
-        "title": "Pulsoid Login Mislukt"
-      }
-    }
-  },
   "resolution-automations": {
     "description": "OyasumiVR kan automatisch de render resolutie van SteamVR aanpassen wanneer de slaap modus wordt ingeschakeld of uitgeschakeld.",
     "onSleepDisable": {
@@ -1911,36 +1903,6 @@
         "vrManifestReregister": {
           "action": "Herregistreer Manifest",
           "description": "Herregistreert OyasumiVR's VR application manifest met SteamVR",
-          "modal": {
-            "FLAVOUR_NOT_ELIGIBLE": {
-              "message": "Als je een build van OyasumiVR gebruikt die niet in aanmerking komt (e.g. de Steam versie), dan is de registratie van het application manifest ongedaan gemaakt, maar niet opnieuw geregistreerd. Dit is geen fout! Herstart OyasumiVR a.u.b.",
-              "title": "Application manifest gederegistreerd"
-            },
-            "MANIFEST_ADD_FAILED": {
-              "message": "Het manifest was verwijderd, maar kon niet terug toegevoegd worden. Herstart a.u.b. OyasumiVR en check de log bestanden.",
-              "title": "Herregistratie van VR Application Manifest Mislukt"
-            },
-            "MANIFEST_CHECK_FAILED": {
-              "message": "Het kon niet worden gecheckt of OyasumiVR's manifest al was geregistreerd met SteamVR. Herstart a.u.b. OyasumiVR en check de log bestanden.",
-              "title": "Herregistratie van VR Application Manifest Mislukt"
-            },
-            "MANIFEST_NOT_REGISTERED": {
-              "message": "OyasumiVR had geen geregistreerd manifest met SteamVR. Het manifest is niet (her)geregistreerd. Herstart a.u.b. OyasumiVR.",
-              "title": "Herregistratie van VR Application Manifest Mislukt"
-            },
-            "MANIFEST_REMOVE_FAILED": {
-              "message": "Het manifest kon niet worden verwijderd. Check a.u.b. de log bestanden.",
-              "title": "Herregistratie van VR Application Manifest Mislukt"
-            },
-            "UNKNOWN": {
-              "message": "OyasumiVR's manifest kon niet worden hergeregistreerd met SteamVR door een onbekende fout. Herstart a.u.b. OyasumiVR en check de log bestanden.",
-              "title": "Herregistratie van VR Application Manifest Mislukt"
-            },
-            "success": {
-              "message": "OyasumiVR's Manifest is met success hergeregistreerd met SteamVR.",
-              "title": "VR Application Manifest Hergeregistreerd"
-            }
-          },
           "title": "Herregistreet SteamVR application manifest"
         }
       }
@@ -2729,11 +2691,47 @@
     "quit": "Stop OyasumiVR",
     "sleepMode": "Slaap Modus"
   },
-  "updater": {
-    "modals": {
-      "error": {
+  "toasts": {
+    "pulsoid": {
+      "loginFailed": {
+        "message": "Het is niet gelukt om in te loggen met je Pulsoid account. Probeer het a.u.b. later opnieuw. Als dit probleem zich blijft voordoen, neem a.u.b. contact op met de developer!\n\n{errorDetails}",
+        "title": "Pulsoid Login Mislukt"
+      }
+    },
+    "update": {
+      "installFailed": {
         "message": "De update kon niet geinstalleerd worden. Probeer het later nog eens.",
         "title": "Update Mislukt"
+      }
+    },
+    "vrManifestReregister": {
+      "FLAVOUR_NOT_ELIGIBLE": {
+        "message": "Als je een build van OyasumiVR gebruikt die niet in aanmerking komt (e.g. de Steam versie), dan is de registratie van het application manifest ongedaan gemaakt, maar niet opnieuw geregistreerd. Dit is geen fout! Herstart OyasumiVR a.u.b.",
+        "title": "Application manifest gederegistreerd"
+      },
+      "MANIFEST_ADD_FAILED": {
+        "message": "Het manifest was verwijderd, maar kon niet terug toegevoegd worden. Herstart a.u.b. OyasumiVR en check de log bestanden.",
+        "title": "Herregistratie van VR Application Manifest Mislukt"
+      },
+      "MANIFEST_CHECK_FAILED": {
+        "message": "Het kon niet worden gecheckt of OyasumiVR's manifest al was geregistreerd met SteamVR. Herstart a.u.b. OyasumiVR en check de log bestanden.",
+        "title": "Herregistratie van VR Application Manifest Mislukt"
+      },
+      "MANIFEST_NOT_REGISTERED": {
+        "message": "OyasumiVR had geen geregistreerd manifest met SteamVR. Het manifest is niet (her)geregistreerd. Herstart a.u.b. OyasumiVR.",
+        "title": "Herregistratie van VR Application Manifest Mislukt"
+      },
+      "MANIFEST_REMOVE_FAILED": {
+        "message": "Het manifest kon niet worden verwijderd. Check a.u.b. de log bestanden.",
+        "title": "Herregistratie van VR Application Manifest Mislukt"
+      },
+      "UNKNOWN": {
+        "message": "OyasumiVR's manifest kon niet worden hergeregistreerd met SteamVR door een onbekende fout. Herstart a.u.b. OyasumiVR en check de log bestanden.",
+        "title": "Herregistratie van VR Application Manifest Mislukt"
+      },
+      "success": {
+        "message": "OyasumiVR's Manifest is met success hergeregistreerd met SteamVR.",
+        "title": "VR Application Manifest Hergeregistreerd"
       }
     }
   },

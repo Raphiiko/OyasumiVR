@@ -12,9 +12,6 @@ vi.mock('@tauri-apps/plugin-process', () => ({ relaunch }));
 vi.mock('@tauri-apps/plugin-log', () => ({ info: vi.fn(), error: vi.fn() }));
 vi.mock('../../build', () => ({ FLAVOUR: 'STANDALONE' }));
 vi.mock('src-ui/build', () => ({ FLAVOUR: 'STANDALONE' }));
-vi.mock('../components/confirm-modal/confirm-modal.component', () => ({
-  ConfirmModalComponent: class {},
-}));
 vi.mock('src-ui/app/components/base-modal/base-modal.component', () => ({
   BaseModalComponent: class {
     close() {}
@@ -39,11 +36,14 @@ async function setup() {
   check.mockResolvedValue(update);
   relaunch.mockResolvedValue(undefined);
   const addModal = vi.fn(() => of({}));
-  const service = new UpdateService({ addModal } as unknown as ConstructorParameters<
-    typeof UpdateService
-  >[0]);
+  const showToast = vi.fn();
+  type Dependencies = ConstructorParameters<typeof UpdateService>;
+  const service = new UpdateService(
+    { addModal } as unknown as Dependencies[0],
+    { show: showToast } as unknown as Dependencies[1]
+  );
   await service.checkForUpdate();
-  return { service, download, downloadAndInstall, addModal, update };
+  return { service, download, downloadAndInstall, showToast, update };
 }
 
 afterEach(() => {
@@ -62,7 +62,7 @@ describe('update installation lifecycle', () => {
     h.download.reject(new Error('download failed'));
     await Promise.all([first, second]);
     expect(h.service.installing()).toBe(false);
-    expect(h.addModal).toHaveBeenCalledTimes(1);
+    expect(h.showToast).toHaveBeenCalledTimes(1);
     h.downloadAndInstall.mockResolvedValueOnce();
     await h.service.installUpdate();
     expect(h.downloadAndInstall).toHaveBeenCalledTimes(2);
@@ -92,7 +92,7 @@ describe('update installation lifecycle', () => {
     await first;
     expect(recreated['updateOrCheckInProgress']).toBe(false);
     expect(modal.installing).toBe(false);
-    expect(h.addModal).toHaveBeenCalledTimes(1);
+    expect(h.showToast).toHaveBeenCalledTimes(1);
   });
 
   it('waits for installation and relaunch before settling', async () => {
@@ -111,7 +111,7 @@ describe('update installation lifecycle', () => {
     restart.resolve();
     await installing;
     expect(settled).toHaveBeenCalledTimes(1);
-    expect(h.addModal).not.toHaveBeenCalled();
+    expect(h.showToast).not.toHaveBeenCalled();
   });
 
   it('handles an asynchronous installation failure once and permits retry', async () => {
@@ -119,22 +119,22 @@ describe('update installation lifecycle', () => {
     const installing = h.service.installUpdate();
     h.download.reject(new Error('download failed'));
     await installing;
-    expect(h.addModal).toHaveBeenCalledTimes(1);
+    expect(h.showToast).toHaveBeenCalledTimes(1);
     expect(relaunch).not.toHaveBeenCalled();
     h.downloadAndInstall.mockResolvedValueOnce();
     await h.service.installUpdate();
     expect(h.downloadAndInstall).toHaveBeenCalledTimes(2);
     expect(relaunch).toHaveBeenCalledTimes(1);
-    expect(h.addModal).toHaveBeenCalledTimes(1);
+    expect(h.showToast).toHaveBeenCalledTimes(1);
   });
 
-  it('handles relaunch rejection through the existing error modal', async () => {
+  it('handles relaunch rejection through the error toast', async () => {
     const h = await setup();
     relaunch.mockRejectedValueOnce(new Error('restart failed'));
     const installing = h.service.installUpdate();
     h.download.resolve();
     await installing;
-    expect(h.addModal).toHaveBeenCalledTimes(1);
+    expect(h.showToast).toHaveBeenCalledTimes(1);
   });
 
   it('does nothing when there is no update', async () => {
@@ -166,7 +166,7 @@ describe('update installation lifecycle', () => {
     h.download.reject(new Error('download failed'));
     await installing;
     expect(settings['updateOrCheckInProgress']).toBe(false);
-    expect(h.addModal).toHaveBeenCalledTimes(1);
+    expect(h.showToast).toHaveBeenCalledTimes(1);
     h.downloadAndInstall.mockResolvedValueOnce();
     const retry = settings.updateOrCheck();
     await vi.advanceTimersByTimeAsync(1000);

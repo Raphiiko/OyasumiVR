@@ -6,6 +6,7 @@ import {
 } from '../models/automations';
 import { APP_SETTINGS_DEFAULT, type AppSettings } from '../models/settings';
 import type { OVRDevice } from '../models/ovr-device';
+import { ToastService } from './toast.service';
 import { LighthouseConsoleService } from './lighthouse-console.service';
 import { GpuAutomationsService } from './gpu-automations.service';
 
@@ -37,7 +38,8 @@ function createLighthouse() {
     {
       devices: new BehaviorSubject([device]),
       onDeviceUpdate: vi.fn(),
-    } as unknown as ConstructorParameters<typeof LighthouseConsoleService>[1]
+    } as unknown as ConstructorParameters<typeof LighthouseConsoleService>[1],
+    new ToastService()
   );
   return {
     filename: 'lighthouse_console.exe',

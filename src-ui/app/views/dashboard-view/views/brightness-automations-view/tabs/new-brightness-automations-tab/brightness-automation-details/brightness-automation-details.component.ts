@@ -25,6 +25,7 @@ import { SoftwareBrightnessControlService } from '../../../../../../../services/
 import { AppSettingsService } from '../../../../../../../services/app-settings.service';
 import { invoke } from '@tauri-apps/api/core';
 import { error } from '@tauri-apps/plugin-log';
+import { ToastService } from 'src-ui/app/services/toast.service';
 
 interface BrightnessBounds {
   min: number;
@@ -73,7 +74,8 @@ export class BrightnessAutomationDetailsComponent implements OnInit {
     private hardwareBrightnessControl: HardwareBrightnessControlService,
     protected appSettingsService: AppSettingsService,
     private destroyRef: DestroyRef,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private toasts: ToastService
   ) {
     this.cctControlEnabled = toSignal(
       this.appSettingsService.settings.pipe(map((s) => s.cctControlEnabled)),
@@ -229,6 +231,12 @@ export class BrightnessAutomationDetailsComponent implements OnInit {
       }, 300);
     } catch (e) {
       error('[BrightnessAutomationDetails] Failed to get sunrise/sunset time: ' + e);
+      this.toasts.show({
+        type: 'error',
+        title: 'toasts.sunTimes.failed.title',
+        message: 'toasts.sunTimes.failed.message',
+        duration: 6000,
+      });
     }
   }
 }
