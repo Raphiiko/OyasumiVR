@@ -192,10 +192,13 @@ export class MqttDiscoveryService {
                 const newValue = parseFloat(payload.toString());
                 if (isNaN(newValue)) return;
                 const previous = structuredClone(property);
-                // the value can change while the state publish is pending, so keep the commanded one
-                const current = { ...previous, value: newValue };
-                await this.setNumberPropertyValue(property.id, newValue);
-                this._propertyCommands.next({ previous, current });
+                const statePublish = this.setNumberPropertyValue(property.id, newValue);
+                // emit before awaiting, so overlapping commands reach handlers in arrival order
+                this._propertyCommands.next({
+                  previous,
+                  current: { ...previous, value: newValue },
+                });
+                await statePublish;
                 break;
               }
               case 'LIGHT': {
