@@ -152,6 +152,12 @@ fn read(session: &mut impl ColorGains) -> Result<[f32; 3], RuntimeLost> {
         .map(|gain| gain.unwrap_or(UNSET_GAIN)))
 }
 
+/// The settings error for a key without a value. The generated enum wraps an i32 on Windows and a
+/// u32 on Linux, so the cast is needed on one platform only.
+#[allow(clippy::unnecessary_cast)]
+const UNSET_SETTING: u32 =
+    raphii_openvr_rs::raw::EVRSettingsError::VRSettingsError_UnsetSettingHasNoDefault.0 as u32;
+
 const GAIN_KEYS: [&std::ffi::CStr; 3] = [
     c"hmdDisplayColorGainR",
     c"hmdDisplayColorGainG",
@@ -165,13 +171,7 @@ impl ColorGains for OpenVr {
         for (gain, key) in gains.iter_mut().zip(GAIN_KEYS) {
             *gain = match settings.get_float(c"steamvr", key) {
                 Ok(value) => Some(value),
-                Err(raphii_openvr_rs::Error::Runtime { code, .. })
-                    if code
-                        == raphii_openvr_rs::raw::EVRSettingsError::VRSettingsError_UnsetSettingHasNoDefault.0
-                            as u32 =>
-                {
-                    None
-                }
+                Err(raphii_openvr_rs::Error::Runtime { code, .. }) if code == UNSET_SETTING => None,
                 Err(_) => return Err(RuntimeLost),
             };
         }
