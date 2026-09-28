@@ -105,16 +105,6 @@ const FRAME_STATUS_ROWS: Partial<Record<SteamFrameConnectionStatus, FrameRow>> =
     },
     action: 'pairAgain',
   },
-  pairingRemoved: {
-    pill: {
-      key: 'pairingRemoved',
-      icon: 'link_off',
-      tone: 'bad',
-      detail: 'pairingRemoved',
-      code: 'SF-405',
-    },
-    action: 'pairAgain',
-  },
   helperMissing: {
     pill: {
       key: 'helperMissing',
@@ -591,12 +581,13 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     const active = this.isDeviceObserved(device.id);
     const pairing = this.framePairing.pairingFor(device.id);
 
-    // unpaired: offer pairing while SteamVR uses it
-    if (!pairing?.complete) return active ? { action: 'pair' } : null;
+    // unpaired, or the headset removed the pairing: offer pairing while SteamVR uses it
+    const state = pairing?.complete ? this.framePairing.connections()[pairing.id] : undefined;
+    const status = state?.status ?? 'connecting';
+    if (!pairing?.complete || status === 'pairingRemoved')
+      return active ? { action: 'pair' } : null;
 
     // a reinstall from this row
-    const state = this.framePairing.connections()[pairing.id];
-    const status = state?.status ?? 'connecting';
     const reinstall = this.framePairing.reinstalls()[pairing.id];
     if (reinstall === 'running') {
       return { pill: { key: 'reinstalling', icon: 'sync', tone: 'neutral' } };

@@ -2942,7 +2942,6 @@
       "notRecognized": "Not recognized",
       "offline": "Offline",
       "offlineSince": "Offline · {time}",
-      "pairingRemoved": "Pairing removed",
       "reinstallFailed": "Reinstall failed",
       "reinstalling": "Reinstalling helper",
       "updateApp": "Update OyasumiVR",
@@ -2970,10 +2969,6 @@
       "notRecognized": {
         "body": "OyasumiVR can't confirm this is the headset you paired, for example after the headset was reset. Pair it again to reconnect.",
         "title": "Headset not recognized"
-      },
-      "pairingRemoved": {
-        "body": "The headset no longer accepts this PC, for example because OyasumiVR Helper was uninstalled on the headset. Pair the headset again to reconnect.",
-        "title": "Pairing removed on headset"
       },
       "reinstallFailed": {
         "body": "OyasumiVR couldn't install OyasumiVR Helper on the headset. Make sure the headset is on and connected, then use Retry.",

@@ -151,7 +151,6 @@ maintenance pills, and `UPDATE_FAILURE_CODES`:
 | SF-401 | `identityChanged`    | the helper reports another headset's serial, model, or manufacturer |
 | SF-402 | `hostKeyChanged`     | the SSH host key at the address differs from the pinned one         |
 | SF-403 | `needsAppUpdate`     | the helper's lowest protocol is above this build's                  |
-| SF-405 | `pairingRemoved`     | the headset rejects this PC's SSH key under the pinned host key     |
 | SF-406 | `helperMissing`      | SSH works, but the helper folder is gone                            |
 | SF-407 | maintenance `busy`   | another PC held the maintenance lock for 60 s                       |
 | SF-408 | a failed Reinstall   | setup did not complete; the core logs the outcome                   |
