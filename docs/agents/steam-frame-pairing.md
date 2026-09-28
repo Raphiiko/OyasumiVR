@@ -280,6 +280,14 @@ sequenceDiagram
 - The core keeps the last snapshot in the connection state as `brightness`, updates its percentage
   from each reply, and clears it while not connected.
 
+On the PC, `SteamFrameHardwareBrightnessControlDriver` is available while the paired Frame is the
+active OpenVR HMD, its connection is `connected`, and the report says `supported`. It keeps one
+command in flight and replaces a waiting one with the newest value. Its reports reach the hardware
+brightness cache without a write, and simple mode derives its value from them. Transitions run
+through the PC loop, so each step waits for the helper's reply. The HMD connect automation runs at once. For a paired Frame that has not
+reported yet, it runs once more after the first report, unless another brightness automation ran
+in the meantime.
+
 ## Updates
 
 Each connection compares the helper's hello with the bundled helper. An older helper, or the same
