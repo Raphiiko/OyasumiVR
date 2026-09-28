@@ -20,6 +20,7 @@ const FRAME: Partial<OVRDevice> = {
   modelNumber: 'Steam Frame',
   serialNumber: 'FP1',
 };
+const FRAME_B: Partial<OVRDevice> = { ...FRAME, serialNumber: 'FP2' };
 const INDEX: Partial<OVRDevice> = {
   manufacturerName: 'Valve',
   modelNumber: 'Index',
@@ -56,26 +57,35 @@ async function setup(
     cctControlEnabled: enabled,
   });
   const pairing = { id: 'p', complete: true, identity: { serial: 'FP1' } } as SteamFramePairing;
+  const pairingB = { id: 'q', complete: true, identity: { serial: 'FP2' } } as SteamFramePairing;
   const service = new CCTControlService(
     { status, devices } as unknown as Dependencies[0],
     { settings } as unknown as Dependencies[1],
     {
-      pairings$: new BehaviorSubject(paired ? [pairing] : []),
+      pairings$: new BehaviorSubject(paired ? [pairing, pairingB] : []),
       connections$: connections,
     } as unknown as Dependencies[2]
   );
   await service.init();
   await settle();
-  const report = (cct: SteamFrameCct | null) =>
+  const report = (cct: SteamFrameCct | null, pairingId = 'p') =>
     connections.next({
-      p: { pairingId: 'p', status: 'connected', cct } as SteamFrameConnectionState,
+      ...connections.value,
+      [pairingId]: { pairingId, status: 'connected', cct } as SteamFrameConnectionState,
     });
+  const activate = (device: Partial<OVRDevice>) =>
+    devices.next([{ index: 0, class: 'HMD', ...device } as OVRDevice]);
   const calls = (command: string) =>
     vi.mocked(invoke).mock.calls.filter(([name]) => name === command);
   const frameWrites = () =>
     calls('steam_frame_set_cct').map(([, args]) => (args as { kelvin: number }).kelvin);
   const reply = (cct: SteamFrameCct) => replies.shift()!(cct);
-  return { service, status, report, calls, frameWrites, reply, settings };
+  const frameWritesTo = (pairingId: string) =>
+    calls('steam_frame_set_cct')
+      .map(([, args]) => args as { pairingId: string; kelvin: number })
+      .filter((args) => args.pairingId === pairingId)
+      .map((args) => args.kelvin);
+  return { service, status, report, activate, calls, frameWrites, frameWritesTo, reply, settings };
 }
 
 describe('CCTControlService with a Steam Frame', () => {
@@ -203,6 +213,47 @@ describe('CCTControlService with a Steam Frame', () => {
     expect(activeTransition).toBeUndefined();
   });
 
+  it('adopts the report when a transition runs at takeover with CCT control disabled', async () => {
+    const h = await setup(FRAME, { enabled: false });
+    h.report(null);
+    h.status.next('STOPPED');
+    await settle();
+    h.service.transitionCCT(3000, 10000);
+    h.status.next('INITIALIZED');
+    await settle();
+    h.report(snapshot(4000));
+    await settle();
+    expect(h.service.cct).toBe(4000);
+    expect(h.frameWrites()).toEqual([]);
+  });
+
+  it('drops a value queued for a Frame that stopped being active', async () => {
+    const h = await setup(FRAME);
+    h.report(snapshot(6600));
+    h.report(snapshot(5500), 'q');
+    await settle();
+    await h.service.setCCT(5000);
+    await h.service.setCCT(3000);
+    expect(h.frameWritesTo('p')).toEqual([5000]);
+    h.activate(FRAME_B);
+    await settle();
+    h.reply(snapshot(5000));
+    await settle();
+    expect(h.frameWritesTo('q')).toEqual([]);
+    expect(h.service.cct).toBe(5500);
+  });
+
+  it('resolves whenFrameReports false when another Frame reports first', async () => {
+    const h = await setup(FRAME);
+    h.report(null);
+    await settle();
+    const reported = h.service.whenFrameReports();
+    h.report(snapshot(3000), 'q');
+    h.activate(FRAME_B);
+    await settle();
+    await expect(reported).resolves.toBe(false);
+  });
+
   it('resolves whenFrameReports on the first report of the waiting Frame', async () => {
     const h = await setup(FRAME);
     h.report(null);
@@ -227,6 +278,17 @@ describe('CCTControlService with a Steam Frame', () => {
 });
 
 describe('CCTControlService with an Index', () => {
+  it('writes the app value when the Index takes over from a Frame', async () => {
+    const h = await setup(FRAME);
+    h.report(snapshot(3000));
+    await settle();
+    h.activate(INDEX);
+    await settle();
+    expect(h.calls('openvr_set_analog_color_temp')).toEqual([
+      ['openvr_set_analog_color_temp', { temperature: 3000 }],
+    ]);
+  });
+
   it('writes the app value when the HMD becomes ready, and each change', async () => {
     const h = await setup(INDEX);
     expect(h.calls('openvr_set_analog_color_temp')).toEqual([

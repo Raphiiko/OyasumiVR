@@ -56,7 +56,7 @@ export class CCTControlService {
   private exact = true;
   /** Set while a Frame command runs; a newer value waits in `pending` and replaces an older one. */
   private sending = false;
-  private pending: number | null = null;
+  private pending: { kelvin: number; pairingId: string } | null = null;
 
   get cct(): number {
     return this._cct.value;
@@ -160,11 +160,11 @@ export class CCTControlService {
     cct = clamp(Math.round(cct), 1000, 10000);
     if (opt.cancelActiveTransition) this.cancelActiveTransition();
     const target = this.target.value;
-    if (target.kind === 'frame' && !target.cct) return;
+    if (target.kind === 'frame' && (!target.cct || !target.pairingId)) return;
     const frame = target.kind === 'frame';
     if (cct === this.cct && !force && (!frame || this.exact)) return;
     this._cct.next(cct);
-    if (frame) void this.sendToFrame(cct);
+    if (frame) void this.sendToFrame(cct, target.pairingId!);
     else if (target.kind === 'openvr') invoke('openvr_set_analog_color_temp', { temperature: cct });
     if (opt.logReason) {
       await info(`[CCTControl] Set CCT to ${cct}K (Reason: ${opt.logReason})`);
@@ -177,11 +177,13 @@ export class CCTControlService {
    */
   whenFrameReports(): Promise<boolean> | null {
     const waiting = this.target.value;
-    if (waiting.kind !== 'frame' || waiting.cct) return null;
+    if (waiting.kind !== 'frame' || waiting.cct || !waiting.pairingId) return null;
+    const isWaitingFrame = (target: CctTarget) =>
+      target.kind === 'frame' && target.pairingId === waiting.pairingId;
     return firstValueFrom(
       this.target.pipe(
-        filter((target) => target.kind !== 'frame' || !!target.cct),
-        map((target) => target.kind === 'frame')
+        filter((target) => !isWaitingFrame(target) || (target.kind === 'frame' && !!target.cct)),
+        map(isWaitingFrame)
       )
     );
   }
@@ -211,22 +213,22 @@ export class CCTControlService {
     const previous = this.target.value;
     this.target.next(target);
 
-    // write the app's value to an Index or other HMD once it becomes ready
-    if (target.kind === 'openvr' && previous.kind === 'none') {
+    // write the app's value to an Index or other HMD once it becomes the target
+    if (target.kind === 'openvr' && previous.kind !== 'openvr') {
       this.setCCT(this.cct, SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, true);
       return;
     }
     if (target.kind !== 'frame' || !target.cct) return;
 
-    // a running transition would write the Frame at every step, so finish it at once
+    // a running transition would write the Frame at every step, so it stops here
     const transition = this._activeTransition.value;
-    if (transition) {
-      this.setCCT(transition.targetCCT, { cancelActiveTransition: true });
-      return;
-    }
+    if (transition) this.cancelActiveTransition();
 
     // show the headset's value, unless a command runs: then the requested value stays on screen
     if (!this.sending) this.adopt(target.cct);
+
+    // then finish the transition in one command
+    if (transition) this.setCCT(transition.targetCCT);
   }
 
   private adopt(cct: FrameCct) {
@@ -234,8 +236,8 @@ export class CCTControlService {
     this._cct.next(cct.kelvin);
   }
 
-  private async sendToFrame(kelvin: number) {
-    this.pending = kelvin;
+  private async sendToFrame(kelvin: number, pairingId: string) {
+    this.pending = { kelvin, pairingId };
     if (this.sending) return;
     this.sending = true;
 
@@ -243,14 +245,15 @@ export class CCTControlService {
     let applied: SteamFrameCct | null = null;
     let sentTo: string | null = null;
     while (this.pending !== null) {
+      // a value queued for a Frame that stopped being active is dropped
       const target = this.target.value;
-      if (target.kind !== 'frame' || !target.cct || !target.pairingId) break;
-      const value = this.pending;
+      const next = this.pending;
+      if (target.kind !== 'frame' || !target.cct || target.pairingId !== next.pairingId) break;
       this.pending = null;
-      sentTo = target.pairingId;
+      sentTo = next.pairingId;
       applied = await invoke<SteamFrameCct>('steam_frame_set_cct', {
         pairingId: sentTo,
-        kelvin: value,
+        kelvin: next.kelvin,
       }).catch((e) => {
         warn(`[CCTControl] Could not set the Steam Frame color temperature: ${e}`);
         return null;
