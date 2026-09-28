@@ -49,6 +49,7 @@ the helper token pass through `protectSecret` before the first save.
 | `steam_frame_sync_connections`      | `pushPairings`                              | after every change to the completed pairings                                                                                      |
 | `steam_frame_update_helper`         | Update and Retry in Device Manager          | a manual helper update; the result arrives as connection state                                                                    |
 | `steam_frame_set_brightness`        | the Frame brightness driver                 | each brightness write; the reply carries the value the helper applied                                                             |
+| `steam_frame_set_cct`               | `CCTControlService`                         | each color temperature write; the reply carries the snapshot the helper applied                                                   |
 
 The core emits two events. `STEAM_FRAME_SETUP_STAGE` reports the setup step, and `installed` once
 this attempt installed the helper. `STEAM_FRAME_CONNECTION_STATE` reports each pairing's status.
@@ -287,6 +288,23 @@ brightness cache without a write, and simple mode derives its value from them. T
 through the PC loop, so each step waits for the helper's reply. The HMD connect automation runs at once. For a paired Frame that has not
 reported yet, it runs once more after the first report, unless another brightness automation ran
 in the meantime.
+
+## Color temperature
+
+The brightness task also tracks `steamvr.hmdDisplayColorGainR`, `G`, and `B` in the same SteamVR
+session. It polls them after brightness every 250 ms and compares each channel with the last value
+read or written, at a tolerance of 1e-5. An unset key reads as 1.0. It writes only on a PC's
+command, and sends `{"type":"cct", ...}` after the brightness snapshot on connect.
+
+- A snapshot has `available` and, while available, `gains`, `kelvin`, and `exact`. `kelvin` is the
+  integer in 1000–10000 whose gains lie nearest to the read gains divided by their largest channel.
+  `exact` says the gains equal that Kelvin's gains. `src-shared-rust/src/color_temperature.rs`
+  holds the conversion, and the helper builds that file through a `#[path]` module.
+- `{"type":"setCct","id":3,"kelvin":3000}` reads first, clamps to 1000–10000, and writes the three
+  channels unless they already match. The reply has `snapshot` or `error`: `runtimeUnavailable` or
+  `writeFailed`. The core adds `offline`.
+- A PC gets no snapshot for its own write, and every other PC gets one when the write changed the
+  gains. The core keeps the last snapshot as `cct` in the connection state.
 
 ## Updates
 

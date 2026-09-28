@@ -59,8 +59,8 @@ impl ServerCertVerifier for Pinned {
     }
 }
 
-/// A headset at full brightness that accepts every write.
-struct Headset(f32);
+/// A headset at full brightness and no tint that accepts every write.
+struct Headset(f32, [f32; 3]);
 
 impl brightness::Backend for Headset {
     fn connect(&mut self) -> bool {
@@ -87,6 +87,17 @@ impl brightness::Backend for Headset {
     }
 }
 
+impl cct::ColorGains for Headset {
+    fn color_gains(&mut self) -> Result<[Option<f32>; 3], brightness::RuntimeLost> {
+        Ok(self.1.map(Some))
+    }
+
+    fn set_color_gains(&mut self, gains: [f32; 3]) -> Result<(), brightness::RuntimeLost> {
+        self.1 = gains;
+        Ok(())
+    }
+}
+
 type Socket = tokio_tungstenite::WebSocketStream<tokio_rustls::client::TlsStream<TcpStream>>;
 
 struct Helper {
@@ -104,9 +115,9 @@ async fn start() -> Helper {
     let (listener, acceptor) = bind(root.path()).await.unwrap();
     let port = listener.local_addr().unwrap().port();
     let (cert, _) = ensure_certificate(root.path()).unwrap();
-    let hub = brightness::start(Headset(1.0));
-    // wait for the first poll, so every connection starts from the headset's value
-    while hub.subscribe().0.percentage.is_none() {
+    let hub = hub::start(Headset(1.0, [1.0; 3]));
+    // wait for the first poll, so every connection starts from the headset's values
+    while hub.subscribe().0.cct.kelvin.is_none() {
         tokio::time::sleep(Duration::from_millis(10)).await;
     }
     tokio::spawn(serve(root.path().to_owned(), listener, acceptor, hub));
@@ -188,12 +199,16 @@ async fn relays_brightness_to_every_pc() {
     )
     .await
     .unwrap();
-    // each PC gets hello, then the current snapshot
+    // each PC gets hello, then the current snapshots
     for socket in [&mut a, &mut b] {
         assert_eq!(next_json(socket).await["type"], "hello");
         assert_eq!(
             next_json(socket).await,
             serde_json::json!({"type": "brightness", "runtime": true, "supported": true, "min": 9.0, "max": 125.0, "percentage": 100.0})
+        );
+        assert_eq!(
+            next_json(socket).await,
+            serde_json::json!({"type": "cct", "available": true, "gains": [1.0, 1.0, 1.0], "kelvin": 6600, "exact": true})
         );
     }
     // the writer gets a reply, the other PC a snapshot
@@ -212,6 +227,57 @@ async fn relays_brightness_to_every_pc() {
     .await
     .unwrap();
     assert_eq!(next_json(&mut a).await["id"], 8);
+}
+
+#[tokio::test]
+async fn relays_color_temperature_to_every_pc() {
+    let helper = start().await;
+    let mut a = open(
+        &helper,
+        &[(PC_ID_HEADER, "pc-a"), ("authorization", "Bearer token-a")],
+    )
+    .await
+    .unwrap();
+    let mut b = open(
+        &helper,
+        &[(PC_ID_HEADER, "pc-b"), ("authorization", "Bearer token-b")],
+    )
+    .await
+    .unwrap();
+    for socket in [&mut a, &mut b] {
+        for _ in 0..3 {
+            next_json(socket).await;
+        }
+    }
+    // the writer gets a reply with the applied snapshot, the other PC a snapshot
+    // f32 gains go through JSON text, as the helper writes them
+    let gains: serde_json::Value = serde_json::from_str(
+        &serde_json::to_string(&color_temperature::kelvin_to_f32_gains(3000)).unwrap(),
+    )
+    .unwrap();
+    let applied =
+        serde_json::json!({"available": true, "gains": gains, "kelvin": 3000, "exact": true});
+    b.send(Message::text(r#"{"type":"setCct","id":4,"kelvin":3000}"#))
+        .await
+        .unwrap();
+    assert_eq!(
+        next_json(&mut b).await,
+        serde_json::json!({"type": "setCctResult", "id": 4, "snapshot": applied})
+    );
+    let mut snapshot = applied.clone();
+    snapshot["type"] = "cct".into();
+    assert_eq!(next_json(&mut a).await, snapshot);
+    // an equal set replies without a snapshot for the other PC
+    b.send(Message::text(r#"{"type":"setCct","id":5,"kelvin":3000}"#))
+        .await
+        .unwrap();
+    assert_eq!(next_json(&mut b).await["id"], 5);
+    a.send(Message::text(
+        r#"{"type":"setBrightness","id":1,"percentage":50}"#,
+    ))
+    .await
+    .unwrap();
+    assert_eq!(next_json(&mut a).await["type"], "setBrightnessResult");
 }
 
 #[tokio::test]
