@@ -141,7 +141,7 @@ export class DeviceManagerConfigModalComponent
     if (helper) void this.framePairing.updateHelper(helper.pairing);
   }
 
-  private frameRemovedOnHeadset(): boolean {
+  frameRemovedOnHeadset(): boolean {
     const pairing = this.framePairing.pairingFor(this.device.id);
     return !!pairing && this.framePairing.connections()[pairing.id]?.status === 'pairingRemoved';
   }

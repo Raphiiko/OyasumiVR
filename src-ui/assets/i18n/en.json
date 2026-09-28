@@ -2790,9 +2790,7 @@
       "done": "Done",
       "enterAddress": "Enter address",
       "findHeadset": "Find your headset",
-      "forget": "Forget on this PC",
-      "forgetOnThisPc": "Forget on this PC",
-      "keepHelper": "Keep helper",
+      "forget": "Forget",
       "pair": "Pair headset",
       "pairAgain": "Pair again",
       "pairThis": "Pair this headset",
@@ -2803,15 +2801,15 @@
       "searchAgain": "Search again",
       "sendAgain": "Send again",
       "tryAgain": "Try again",
-      "uninstallHelper": "Uninstall helper",
       "unpair": "Unpair",
+      "unpairAll": "Uninstall helper",
       "update": "Update",
       "yesPair": "Yes, pair it"
     },
     "details": {
       "helper": "OyasumiVR Helper",
       "pairing": "Pairing",
-      "pairingDescription": "Remove this PC's pairing with the headset",
+      "pairingDescription": "Stop using this headset with OyasumiVR on this PC",
       "upToDate": "Up to date",
       "updating": "Updating…",
       "version": "Version {version}",
@@ -3006,34 +3004,30 @@
     "unpair": {
       "checking": "Checking the headset…",
       "choose": {
-        "body": "Keep helper removes only this PC's access from the headset. Uninstall helper also removes OyasumiVR Helper, which every PC paired with this headset uses.",
-        "command": "To remove the helper later on the headset itself, run:",
-        "otherPcsMany": "{count} other PCs use this helper. Uninstalling it disconnects them until one of them reinstalls the helper.",
-        "otherPcsOne": "1 other PC uses this helper. Uninstalling it disconnects that PC until it reinstalls the helper.",
+        "onlyPc": "This PC stops connecting to the headset. No other PC uses OyasumiVR Helper, so it will be uninstalled from the headset too.",
+        "otherPcsMany": "This PC stops connecting to the headset. OyasumiVR Helper stays installed, because {count} other PCs still use it. To disconnect them too, uninstall the helper.",
+        "otherPcsOne": "This PC stops connecting to the headset. OyasumiVR Helper stays installed, because 1 other PC still uses it. To disconnect that PC too, uninstall the helper.",
         "title": "Unpair Steam Frame?"
       },
       "failed": {
-        "body": "The headset didn't respond. Turn it on and try again.",
-        "code": "Error code: {code}",
-        "forget": "You can also forget the pairing on this PC only. OyasumiVR Helper and this PC's access would stay on the headset until you remove them there.",
         "helperBusy": "Another PC is updating OyasumiVR Helper on this headset. Wait a minute, then try again.",
-        "hostKeyChanged": "The headset answered, but OyasumiVR can't confirm it is the headset you paired, so it changed nothing on it.",
-        "other": "Something went wrong while removing this PC's access from the headset. Try again.",
-        "rejected": "The headset no longer accepts this PC, so OyasumiVR couldn't change anything on it.",
-        "title": "Couldn't unpair"
+        "hostKeyChanged": "OyasumiVR can't confirm this is the headset you paired, so it didn't change anything on it. Forget it to remove the pairing from this PC only.",
+        "other": "Something went wrong. Try again, or forget the headset to remove the pairing from this PC only.",
+        "rejected": "This headset no longer accepts this PC, so OyasumiVR can't change anything on it. Forget it to remove the pairing from this PC only.",
+        "title": "Couldn't unpair",
+        "unreachable": "The headset didn't respond. Make sure it's on and connected, then try again."
       },
       "forget": {
-        "body": "Only this PC's pairing information is deleted. OyasumiVR Helper and this PC's access stay on the headset until you remove them there.",
-        "command": "To remove them, run this on the headset. It also removes OyasumiVR Helper for every other PC paired with this headset:",
-        "removed": "Forgetting deletes the pairing information on this PC.",
-        "removedCommand": "If OyasumiVR Helper is still on the headset, run this there to remove it. It also removes it for every other PC paired with this headset:",
-        "title": "Forget Steam Frame on this PC?"
+        "body": "This removes the pairing from this PC only. OyasumiVR Helper stays installed on the headset, and other paired PCs keep working.",
+        "command": "Run this in a terminal on the headset to uninstall OyasumiVR Helper from the headset:",
+        "noPcLeft": "Can't unpair from any PC?",
+        "removed": "This headset no longer accepts this PC. Forget it to remove the pairing from this PC only.",
+        "title": "Forget Steam Frame?"
       },
       "working": {
-        "button": "Removing…",
-        "keep": "Removing this PC's access from the headset.",
-        "title": "Unpairing Steam Frame",
-        "uninstall": "Removing OyasumiVR Helper and this PC's access from the headset."
+        "removeHelper": "Removing this PC's access and uninstalling OyasumiVR Helper.",
+        "removePc": "Removing this PC's access from the headset.",
+        "title": "Unpairing Steam Frame"
       }
     },
     "waiting": {

@@ -45,7 +45,7 @@ the helper token pass through `protectSecret` before the first save.
 | `steam_frame_request_approval`      | `register`                                  | only after a user action, when the saved key does not work yet                                                                    |
 | `steam_frame_set_up_helper`         | `runSetup`                                  | after SSH access works; Retry calls it again                                                                                      |
 | `steam_frame_remove_access`         | `finishCancel`, different headset, `unpair` | Cancel after approval, a wrong headset, and Unpair                                                                                |
-| `steam_frame_count_other_pcs`       | the unpair dialog                           | before it offers Keep helper and Uninstall helper                                                                                 |
+| `steam_frame_count_other_pcs`       | the unpair dialog                           | before it offers Unpair and Uninstall helper                                                                                      |
 | `steam_frame_sync_connections`      | `pushPairings`                              | after every change to the completed pairings                                                                                      |
 | `steam_frame_update_helper`         | Update and Retry in Device Manager          | a manual helper update; the result arrives as connection state                                                                    |
 
@@ -146,27 +146,21 @@ file. `ERROR_CODES` in `steam-frame-pairing-modal.component.ts` maps them from `
 | SF-301 | `wrongDeviceAccessLeft` | cleanup on a wrong headset did not report done                               |
 
 Device Manager shows these in the explanation of a problem pill, from `FRAME_STATUS_ROWS`, the
-maintenance pills, and `UPDATE_FAILURE_CODES`. The unpair dialog shows `UNPAIR_FAILURES` on
-its Couldn't unpair page:
+maintenance pills, and `UPDATE_FAILURE_CODES`:
 
-| Code   | Connection status       | What happened                                                     |
-| ------ | ----------------------- | ----------------------------------------------------------------- |
-| SF-401 | `identityChanged`       | the helper reports another headset's serial                       |
-| SF-402 | `hostKeyChanged`        | the SSH host key at the address differs from the pinned one       |
-| SF-403 | `needsAppUpdate`        | the helper's lowest protocol is above this build's                |
-| SF-406 | `helperMissing`         | SSH works, but the helper folder is gone                          |
-| SF-407 | maintenance `busy`      | another PC held the maintenance lock for 60 s                     |
-| SF-408 | a failed Reinstall      | setup did not complete; the core logs the outcome                 |
-| SF-411 | update `unreachable`    | the SSH session to the headset dropped during the update          |
-| SF-412 | update `corrupted`      | the uploaded helper did not match the bundled digest              |
-| SF-413 | update `notStarted`     | the new helper did not answer, so the previous release runs again |
-| SF-414 | update `notBundled`     | this build carries no helper                                      |
-| SF-415 | update `other`          | any other update failure; the core logs the message               |
-| SF-421 | unpair `unreachable`    | the headset did not answer over SSH                               |
-| SF-422 | unpair `hostKeyChanged` | the SSH host key at the address differs from the pinned one       |
-| SF-423 | unpair `helperBusy`     | another PC held the maintenance or authorized_keys lock           |
-| SF-424 | unpair `failed`         | any other cleanup failure; the core logs the message              |
-| SF-425 | unpair `rejected`       | the headset rejects this PC's SSH key, so nothing on it changed   |
+| Code   | Connection status    | What happened                                                     |
+| ------ | -------------------- | ----------------------------------------------------------------- |
+| SF-401 | `identityChanged`    | the helper reports another headset's serial                       |
+| SF-402 | `hostKeyChanged`     | the SSH host key at the address differs from the pinned one       |
+| SF-403 | `needsAppUpdate`     | the helper's lowest protocol is above this build's                |
+| SF-406 | `helperMissing`      | SSH works, but the helper folder is gone                          |
+| SF-407 | maintenance `busy`   | another PC held the maintenance lock for 60 s                     |
+| SF-408 | a failed Reinstall   | setup did not complete; the core logs the outcome                 |
+| SF-411 | update `unreachable` | the SSH session to the headset dropped during the update          |
+| SF-412 | update `corrupted`   | the uploaded helper did not match the bundled digest              |
+| SF-413 | update `notStarted`  | the new helper did not answer, so the previous release runs again |
+| SF-414 | update `notBundled`  | this build carries no helper                                      |
+| SF-415 | update `other`       | any other update failure; the core logs the message               |
 
 SF-404 (`helperOutdated`) has no explanation: its Update helper pill starts the update.
 
@@ -202,16 +196,23 @@ key line.
 Device details open `SteamFrameUnpairModalComponent`. It counts the other PCs with a token, then
 offers two modes of `helper.sh cleanup`:
 
-- `keep` leaves the helper running for the other PCs.
-- `uninstall` stops the service and removes it with the helper folder. Other PCs keep their key
-  lines, so they see `helperMissing`.
+- Unpair runs `unused`: the helper stays for the other PCs, and goes with this PC's access when no
+  other PC holds a token.
+- Uninstall helper, offered only when other PCs hold a token, runs `uninstall`: it stops the
+  service and removes it with the helper folder. Other PCs keep their key lines, so they see
+  `helperMissing`.
 
-A cleanup takes the maintenance and authorized_keys locks before it changes anything, reports busy when it cannot get them, and removes the key lines last, so Try again can finish a partial cleanup. The service deletes the local pairing only after the headset reports `done`. Otherwise the dialog
-shows "Couldn't unpair" with Try again and Forget on this PC, including when the headset rejects
-this PC's key, because then nothing on it changed. Cancel cleanup and wrong-headset cleanup count a
-rejected key as done. Forget deletes only local data. A
-pairing whose key the headset rejects shows `pairingRemoved`. Device Manager shows it like an unpaired
-headset, and Unpair in its device details opens Forget on this PC.
+A cleanup takes the maintenance and authorized_keys locks before it changes anything, reports busy
+when it cannot get them, and removes the key lines last, so Try again can finish a partial cleanup.
+The service deletes the local pairing only after the headset reports `done`. Otherwise the dialog
+shows "Couldn't unpair" with Forget, and with Try again unless the headset rejects this PC's key or
+its host key changed, because retrying cannot help then. Cancel cleanup and wrong-headset cleanup
+count a rejected key as done.
+
+Forget deletes only local data. Its page keeps the terminal uninstall command folded under "Can't
+unpair from any PC?", for a headset no paired PC can reach. A pairing whose key the headset rejects
+shows `pairingRemoved`. Device Manager shows it like an unpaired headset, and the Forget button in
+its device details opens the Forget page.
 
 ## Connection
 

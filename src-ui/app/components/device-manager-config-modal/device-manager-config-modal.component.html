@@ -99,7 +99,9 @@
           description="steamFrame.details.pairingDescription"
         >
           <button class="btn btn-secondary" (click)="unpairFrame()">
-            {{ 'steamFrame.actions.unpair' | transloco }}
+            {{
+              'steamFrame.actions.' + (frameRemovedOnHeadset() ? 'forget' : 'unpair') | transloco
+            }}
           </button>
         </app-setting-row>
       }

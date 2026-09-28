@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { fadeUp } from '../../utils/animations';
@@ -13,13 +20,19 @@ export interface SteamFrameUnpairModalInputModel {
 
 type UnpairPage = 'checking' | 'choose' | 'working' | 'failed' | 'forget';
 
-/** The error code and the `unpair.failed` body key for each failure. */
-const UNPAIR_FAILURES: Record<SteamFrameUnpairFailure, { code: string; body: string }> = {
-  unreachable: { code: 'SF-421', body: 'body' },
-  rejected: { code: 'SF-425', body: 'rejected' },
-  hostKeyChanged: { code: 'SF-422', body: 'hostKeyChanged' },
-  helperBusy: { code: 'SF-423', body: 'helperBusy' },
-  failed: { code: 'SF-424', body: 'other' },
+interface UnpairFailure {
+  /** The key under `unpair.failed` that explains it. */
+  body: string;
+  /** Try again can succeed; otherwise the dialog offers only Forget. */
+  retryable: boolean;
+}
+
+const UNPAIR_FAILURES: Record<SteamFrameUnpairFailure, UnpairFailure> = {
+  unreachable: { body: 'unreachable', retryable: true },
+  rejected: { body: 'rejected', retryable: false },
+  hostKeyChanged: { body: 'hostKeyChanged', retryable: false },
+  helperBusy: { body: 'helperBusy', retryable: true },
+  failed: { body: 'other', retryable: true },
 };
 
 @Component({
@@ -42,6 +55,8 @@ export class SteamFrameUnpairModalComponent
   readonly page = signal<UnpairPage>('checking');
   readonly otherPcs = signal(0);
   readonly uninstalling = signal(false);
+  /** The running unpair removes the helper: Unpair all PCs, or Unpair on the only paired PC. */
+  readonly removesHelper = computed(() => this.uninstalling() || this.otherPcs() === 0);
   readonly copied = signal(false);
   readonly failure = signal(UNPAIR_FAILURES.failed);
   readonly uninstallCommand = STEAM_FRAME_UNINSTALL_COMMAND;

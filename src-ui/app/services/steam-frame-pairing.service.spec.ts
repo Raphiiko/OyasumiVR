@@ -547,7 +547,7 @@ describe('Steam Frame unpairing', () => {
     expect(service.pairingFor(device.id)).toBeDefined();
     handlers['steam_frame_remove_access'] = () => ({ status: 'done' });
     expect(await service.unpair(pairing, false)).toBeNull();
-    expect(calls('steam_frame_remove_access').at(-1).request.mode).toBe('keep');
+    expect(calls('steam_frame_remove_access').at(-1).request.mode).toBe('unused');
     expect(service.pairingFor(device.id)).toBeUndefined();
     expect(calls('steam_frame_sync_connections').at(-1).pairings).toEqual([]);
   });

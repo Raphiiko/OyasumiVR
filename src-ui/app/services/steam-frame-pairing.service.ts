@@ -475,14 +475,14 @@ export class SteamFramePairingService {
   }
 
   /**
-   * Removes this PC's access from the headset, and the helper when `uninstall`, then the local
-   * pairing. Returns why the headset cleanup failed, keeping the local pairing, or null.
+   * Removes this PC's access from the headset, then the local pairing. The helper goes too when
+   * `uninstall`, or when no other PC uses it. Returns why the headset cleanup failed, or null.
    */
   async unpair(
     pairing: SteamFramePairing,
     uninstall: boolean
   ): Promise<SteamFrameUnpairFailure | null> {
-    const outcome = await this.cleanup(pairing, uninstall ? 'uninstall' : 'keep');
+    const outcome = await this.cleanup(pairing, uninstall ? 'uninstall' : 'unused');
     info(`[SteamFramePairing] Unpair: ${outcome.status}`);
     if (outcome.status !== 'done') return outcome.status;
     await this.removePairing(pairing.deviceId);
