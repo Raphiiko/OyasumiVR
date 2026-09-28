@@ -58,8 +58,9 @@ export class BrightnessCctAutomationService {
   private autoSunriseTime?: string;
   private sunriseSunsetLookup?: Promise<[string, string]>;
   private sleepMode: boolean = false;
-  /** Counts brightness automation runs, so a delayed rerun can tell that another one ran. */
+  /** Count automation runs per channel, so a delayed rerun can tell that another one ran. */
   private brightnessAutomationRuns = 0;
+  private cctAutomationRuns = 0;
 
   public readonly anyBrightnessTransitionActive = this.lastActivatedBrightnessTransition.pipe(
     switchMap((transition) =>
@@ -443,28 +444,39 @@ export class BrightnessCctAutomationService {
       );
       const runs = this.brightnessAutomationRuns;
       void frameReport?.then((reported) => {
-        if (reported) void this.rerunHmdConnectBrightness(runs);
+        if (reported) void this.rerunHmdConnect('brightness', runs);
       });
     }
-    if (cctAutomation)
+    if (cctAutomation) {
+      // a paired Frame's color temperature can change only after its first report
+      const frameReport = this.cctControl.whenFrameReports();
       this.onAutomationTrigger(cctAutomation, config[cctAutomation], true, false, false, true);
+      const runs = this.cctAutomationRuns;
+      void frameReport?.then((reported) => {
+        if (reported) void this.rerunHmdConnect('cct', runs);
+      });
+    }
   }
 
-  /** Applies the brightness automation that fits now, unless another one ran since `runs`. */
-  private async rerunHmdConnectBrightness(runs: number) {
-    if (runs !== this.brightnessAutomationRuns) return;
-    const { brightnessAutomation } = await this.determineHmdConnectAutomations();
+  /** Applies the channel's automation that fits now, unless another one ran since `runs`. */
+  private async rerunHmdConnect(channel: 'brightness' | 'cct', runs: number) {
+    const currentRuns = () =>
+      channel === 'brightness' ? this.brightnessAutomationRuns : this.cctAutomationRuns;
+    if (runs !== currentRuns()) return;
+    const automations = await this.determineHmdConnectAutomations();
+    const automation =
+      channel === 'brightness' ? automations.brightnessAutomation : automations.cctAutomation;
     const config = await firstValueFrom(this.automationConfigService.configs).then(
       (c) => c.BRIGHTNESS_AUTOMATIONS
     );
-    if (!brightnessAutomation || runs !== this.brightnessAutomationRuns) return;
+    if (!automation || runs !== currentRuns()) return;
     this.onAutomationTrigger(
-      brightnessAutomation,
-      config[brightnessAutomation],
+      automation,
+      config[automation],
       true,
       false,
-      true,
-      false
+      channel === 'brightness',
+      channel === 'cct'
     );
   }
 
@@ -479,6 +491,7 @@ export class BrightnessCctAutomationService {
     // Stop if the automation is disabled
     if (!config.enabled || (!config.changeBrightness && !config.changeColorTemperature)) return;
     if (config.changeBrightness && runBrightness) this.brightnessAutomationRuns++;
+    if (config.changeColorTemperature && runCCT) this.cctAutomationRuns++;
     // Determine the log reason
     const eventLogReasonMap = {
       SLEEP_MODE_ENABLE: 'SLEEP_MODE_ENABLE',
