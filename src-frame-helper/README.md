@@ -12,6 +12,10 @@ oyasumivr-frame-helper serve [DATA_DIR]  # defaults to ~/.local/share/oyasumivr_
 accepts a WebSocket upgrade only when its `Authorization: Bearer` token equals the contents of
 `DATA_DIR/clients/<pc-id>`, where the PC names itself in the `X-OyasumiVR-PC` header.
 
+After the hello, the helper reports the headset's hardware brightness and accepts `setBrightness`
+commands. It reads it through the SteamVR runtime registered in `~/.config/openvr/openvrpaths.vrpath`.
+[Steam Frame pairing](../docs/agents/steam-frame-pairing.md#brightness) describes the messages.
+
 ## Building
 
 `npm run start:ui` and `npm run _build:pre` build it through `build.mjs` for

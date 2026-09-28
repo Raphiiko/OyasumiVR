@@ -1,13 +1,14 @@
 use std::{
     collections::HashMap,
-    sync::{Arc, LazyLock},
+    sync::{Arc, LazyLock, Mutex as StdMutex},
     time::{Duration, Instant},
 };
 
 use futures_util::{SinkExt, StreamExt};
 use log::{info, warn};
+use serde::Deserialize;
 use tokio::{
-    sync::{Mutex, Notify},
+    sync::{mpsc, oneshot, Mutex, Notify},
     task::JoinHandle,
 };
 use tokio_tungstenite::tungstenite::Message;
@@ -15,7 +16,7 @@ use tokio_tungstenite::tungstenite::Message;
 use super::{
     discovery,
     maintenance::{self, Recovery, UpdateOutcome},
-    models::{Identity, Maintenance, Pairing, State, Status},
+    models::{Brightness, Identity, Maintenance, Pairing, SetBrightnessError, State, Status},
     setup::{
         self, bundled_digest, install_decision, InstallDecision, ProvisionError, BUNDLED_VERSION,
     },
@@ -31,11 +32,28 @@ const PING_INTERVAL: Duration = Duration::from_secs(15);
 const SILENCE_LIMIT: Duration = Duration::from_secs(40);
 const MAX_BACKOFF: Duration = Duration::from_secs(60);
 const UPDATED_NOTICE: Duration = Duration::from_secs(60);
+const BRIGHTNESS_TIMEOUT: Duration = Duration::from_secs(5);
+
+type BrightnessReply = oneshot::Sender<Result<f64, SetBrightnessError>>;
+/// Holds a sender only while the connection is open, so a command never waits for a reconnect.
+type BrightnessSlot = Arc<StdMutex<Option<mpsc::Sender<(f64, BrightnessReply)>>>>;
 
 struct Connection {
     pairing: Arc<Mutex<Pairing>>,
     task: JoinHandle<()>,
     update: Arc<Notify>,
+    brightness: BrightnessSlot,
+}
+
+#[derive(Deserialize)]
+#[serde(tag = "type", rename_all = "camelCase")]
+enum HelperMessage {
+    Brightness(Brightness),
+    SetBrightnessResult {
+        id: u64,
+        percentage: Option<f64>,
+        error: Option<SetBrightnessError>,
+    },
 }
 
 /// The running task per pairing id, with the pairing it shares and updates.
@@ -64,13 +82,15 @@ pub async fn set_pairings(pairings: Vec<Pairing>) {
         let id = pairing.id.clone();
         let shared = Arc::new(Mutex::new(pairing));
         let update = Arc::new(Notify::new());
-        let task = tokio::spawn(run(shared.clone(), update.clone()));
+        let brightness = BrightnessSlot::default();
+        let task = tokio::spawn(run(shared.clone(), update.clone(), brightness.clone()));
         let replaced = kept.insert(
             id,
             Connection {
                 pairing: shared,
                 task,
                 update,
+                brightness,
             },
         );
         if let Some(replaced) = replaced {
@@ -99,6 +119,27 @@ pub async fn request_update(pairing_id: &str) -> bool {
     true
 }
 
+/// Sets the headset's hardware brightness and returns the value the helper applied.
+pub async fn set_brightness(pairing_id: &str, percentage: f64) -> Result<f64, SetBrightnessError> {
+    let sender = CONNECTIONS
+        .lock()
+        .await
+        .get(pairing_id)
+        .and_then(|connection| connection.brightness.lock().unwrap().clone())
+        .ok_or(SetBrightnessError::Offline)?;
+    let (reply, result) = oneshot::channel();
+    let exchange = async {
+        sender
+            .send((percentage, reply))
+            .await
+            .map_err(|_| SetBrightnessError::Offline)?;
+        result.await.map_err(|_| SetBrightnessError::Offline)?
+    };
+    tokio::time::timeout(BRIGHTNESS_TIMEOUT, exchange)
+        .await
+        .unwrap_or(Err(SetBrightnessError::Offline))
+}
+
 /// The last state of every running connection.
 pub async fn states() -> Vec<State> {
     STATES.lock().await.values().cloned().collect()
@@ -121,7 +162,7 @@ enum Attempt {
 }
 
 /// Keeps one pairing connected for the life of the task, retrying with backoff.
-async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>) {
+async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>, brightness: BrightnessSlot) {
     // announce that this pairing is connecting
     let initial = shared.lock().await.clone();
     let mut state = State {
@@ -133,6 +174,7 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>) {
         maintenance: None,
         address: initial.access.address.clone(),
         cert_pin: initial.cert_pin.clone(),
+        brightness: None,
     };
     publish(&state).await;
     let mut backoff = Duration::from_secs(2);
@@ -189,8 +231,10 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>) {
                     backoff = Duration::from_secs(2);
                     retries = 0;
                     let requested =
-                        hold_connected(&mut socket, &update, &mut state, &mut notice).await;
+                        hold_connected(&mut socket, &update, &brightness, &mut state, &mut notice)
+                            .await;
                     wss::close(*socket).await;
+                    state.brightness = None;
                     state.last_seen = Some(get_time() as u64);
                     if requested {
                         if maintain(&mut state, &pairing, &mut notice).await {
@@ -331,23 +375,70 @@ async fn maintain(state: &mut State, pairing: &Pairing, notice: &mut Option<Inst
 }
 
 /// Holds a connected socket until it closes, or returns true when an update is requested.
-/// Clears the "updated" notice when its minute is up.
+/// Relays brightness meanwhile, and clears the "updated" notice when its minute is up.
 async fn hold_connected(
     socket: &mut Socket,
     update: &Notify,
+    brightness: &BrightnessSlot,
     state: &mut State,
     notice: &mut Option<Instant>,
 ) -> bool {
-    loop {
-        match hold(socket, update, *notice).await {
-            Wake::Closed => return false,
-            Wake::Update => return true,
+    let (sender, requests) = mpsc::channel(16);
+    *brightness.lock().unwrap() = Some(sender);
+    let mut relay = Relay {
+        requests,
+        pending: HashMap::new(),
+        next_id: 0,
+    };
+    let requested = loop {
+        match hold(socket, update, *notice, &mut relay, state).await {
+            Wake::Closed => break false,
+            Wake::Update => break true,
             Wake::NoticeExpired => {
                 *notice = None;
                 state.maintenance = None;
                 publish(state).await;
             }
         }
+    };
+    // dropping the relay answers every waiting command with Offline
+    *brightness.lock().unwrap() = None;
+    requested
+}
+
+/// Brightness commands on one open connection.
+struct Relay {
+    requests: mpsc::Receiver<(f64, BrightnessReply)>,
+    /// Commands sent to the helper and not answered yet, by message id.
+    pending: HashMap<u64, BrightnessReply>,
+    next_id: u64,
+}
+
+/// Applies one helper message: a brightness report, or the answer to a command.
+async fn receive(text: &str, relay: &mut Relay, state: &mut State) {
+    match serde_json::from_str(text) {
+        Ok(HelperMessage::Brightness(brightness)) => {
+            state.brightness = Some(brightness);
+            publish(state).await;
+        }
+        Ok(HelperMessage::SetBrightnessResult {
+            id,
+            percentage,
+            error,
+        }) => {
+            // the helper sends this PC no snapshot for its own write, so record the value here
+            if let (Some(applied), Some(brightness)) = (percentage, state.brightness.as_mut()) {
+                if brightness.percentage != Some(applied) {
+                    brightness.percentage = Some(applied);
+                    publish(state).await;
+                }
+            }
+            if let Some(reply) = relay.pending.remove(&id) {
+                let error = error.unwrap_or(SetBrightnessError::WriteFailed);
+                let _ = reply.send(percentage.ok_or(error));
+            }
+        }
+        Err(_) => {}
     }
 }
 
@@ -511,7 +602,13 @@ enum Wake {
 
 /// Keeps the connection open until the helper stops answering, an update is requested, or the
 /// notice deadline passes.
-async fn hold(socket: &mut Socket, update: &Notify, notice: Option<Instant>) -> Wake {
+async fn hold(
+    socket: &mut Socket,
+    update: &Notify,
+    notice: Option<Instant>,
+    relay: &mut Relay,
+    state: &mut State,
+) -> Wake {
     // ping on a timer, give up after long silence
     let mut ticker = tokio::time::interval(PING_INTERVAL);
     let mut last_heard = Instant::now();
@@ -526,8 +623,25 @@ async fn hold(socket: &mut Socket, update: &Notify, notice: Option<Instant>) -> 
         tokio::select! {
             message = socket.next() => match message {
                 Some(Ok(Message::Close(_))) | Some(Err(_)) | None => return Wake::Closed,
-                Some(Ok(_)) => last_heard = Instant::now(),
+                Some(Ok(message)) => {
+                    last_heard = Instant::now();
+                    if let Message::Text(text) = message {
+                        receive(&text, relay, state).await;
+                    }
+                }
             },
+            Some((percentage, reply)) = relay.requests.recv() => {
+                relay.next_id += 1;
+                let command = serde_json::json!({
+                    "type": "setBrightness",
+                    "id": relay.next_id,
+                    "percentage": percentage,
+                });
+                if socket.send(Message::text(command.to_string())).await.is_err() {
+                    return Wake::Closed;
+                }
+                relay.pending.insert(relay.next_id, reply);
+            }
             _ = ticker.tick() => {
                 if last_heard.elapsed() > SILENCE_LIMIT
                     || socket.send(Message::Ping(Vec::new().into())).await.is_err()
@@ -586,5 +700,47 @@ mod tests {
             incompatibility(&hello(Some(expected.clone()), 0, 0), &expected),
             Some(Status::HelperOutdated)
         );
+    }
+
+    #[test]
+    fn reads_the_helper_brightness_messages() {
+        let parse = |text: &str| serde_json::from_str::<HelperMessage>(text).unwrap();
+        let HelperMessage::Brightness(full) = parse(
+            r#"{"type":"brightness","runtime":true,"supported":true,"min":9.0,"max":125.0,"percentage":100.0}"#,
+        ) else {
+            panic!("not a brightness report");
+        };
+        assert_eq!(
+            full,
+            Brightness {
+                runtime: true,
+                supported: true,
+                min: Some(9.0),
+                max: Some(125.0),
+                percentage: Some(100.0),
+            }
+        );
+        let HelperMessage::Brightness(unavailable) =
+            parse(r#"{"type":"brightness","runtime":false,"supported":false}"#)
+        else {
+            panic!("not a brightness report");
+        };
+        assert_eq!(unavailable.percentage, None);
+        assert!(matches!(
+            parse(r#"{"type":"setBrightnessResult","id":7,"percentage":125.0}"#),
+            HelperMessage::SetBrightnessResult {
+                id: 7,
+                percentage: Some(125.0),
+                error: None
+            }
+        ));
+        assert!(matches!(
+            parse(r#"{"type":"setBrightnessResult","id":8,"error":"runtimeUnavailable"}"#),
+            HelperMessage::SetBrightnessResult {
+                id: 8,
+                percentage: None,
+                error: Some(SetBrightnessError::RuntimeUnavailable)
+            }
+        ));
     }
 }
