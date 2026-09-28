@@ -38,32 +38,35 @@ $status-bar-height: 2.8em;
 .toast-head {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.7em;
+  // a length, so the icon and close button can center on the first title line through 1lh
+  line-height: 1.5em;
 }
 
+// a solid status color with a cutout detail, since a pale red tint reads as the primary pink
 .toast-icon {
   flex-shrink: 0;
+  font-size: 1.11em;
+  margin-block: calc((1lh - 1em) / 2);
+  --icon-body: var(--toast-status-color);
+  --icon-inner: var(--color-surface-1);
 
   .type-success & {
-    --icon-color: var(--color-vrchat-status-green);
+    --toast-status-color: #4caf50;
   }
 
   .type-warning & {
-    --icon-color: var(--color-vrchat-status-orange);
+    --toast-status-color: #ffb300;
   }
 
   .type-error & {
-    --icon-color: var(--color-vrchat-status-red);
+    --toast-status-color: #e53935;
   }
 
   .type-info & {
-    --icon-color: var(--color-vrchat-status-blue);
+    --toast-status-color: #2196f3;
   }
-}
-
-.toast-head > .toast-icon {
-  font-size: 1.11em;
 }
 
 .spinner {
@@ -90,14 +93,23 @@ $status-bar-height: 2.8em;
 
 .toast-close {
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  height: 1lh;
+  line-height: inherit;
   background: none;
   border: none;
   padding: 0;
+  color: var(--color-text-4);
   cursor: pointer;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: var(--color-text-1);
+  }
 
   app-icon {
     font-size: 1.11em;
-    display: block;
   }
 }
 

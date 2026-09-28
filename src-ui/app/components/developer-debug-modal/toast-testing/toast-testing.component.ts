@@ -30,6 +30,15 @@ export class ToastTestingComponent implements OnDestroy {
     this.toastService.show({ type: 'success', title: 'Copied to clipboard', duration: 3000 });
   }
 
+  protected showLongTitle() {
+    this.toastService.show({
+      type: 'error',
+      title: 'A toast with a title that runs long enough to wrap onto a second line',
+      message: 'The icon and the close button stay beside the first line of the title.',
+      duration: 8000,
+    });
+  }
+
   protected showWithActions() {
     this.toastService.show({
       type: 'warning',
