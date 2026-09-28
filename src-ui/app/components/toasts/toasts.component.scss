@@ -62,15 +62,15 @@ $status-bar-height: 2.8em;
   }
 }
 
-app-icon.toast-icon {
+.toast-head > .toast-icon {
   font-size: 1.11em;
 }
 
 .spinner {
-  width: 1.3em;
-  height: 1.3em;
-  font-size: 1.3em;
-  border: 0.15em solid rgba(255, 255, 255, 0.15);
+  box-sizing: border-box;
+  width: 1em;
+  height: 1em;
+  border: 0.2em solid rgba(255, 255, 255, 0.15);
   border-top-color: var(--color-primary);
   border-radius: 50%;
   animation: toast-spinner 0.9s linear infinite;
