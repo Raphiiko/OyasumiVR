@@ -2064,14 +2064,10 @@
       "changelog": "Registro de cambios",
       "checkForUpdates": "Comprobar actualizaciones",
       "install": "Instalar v{version}",
-      "noUpdate": "Actualmente está ejecutando OyasumiVR v{version} que es la última versión!",
-      "notChecked": "OyasumiVR aún no ha comprobado si hay actualizaciones.",
-      "title": "Acrualizaciones",
-      "updateAvailable": "¡Una nueva versión de OyasumiVR está disponible! Actualmente está ejecutando v{currentVersion}.\nLa versión más reciente es v{latestVersion}.",
-      "updatesDisabled": {
-        "DEV": "Como se está ejecutando una versión de desarrollo de OyasumiVR, las actualizaciones se han desactivado.\nSi desea instalar una nueva versión de OyasumiVR, descargue y ejecute el instalador manualmente.",
-        "STEAM": "Has instalado la versión Steam de OyasumiVR.\nPor lo tanto, ¡las nuevas actualizaciones de OyasumiVR se proporcionan a través de Steam!"
-      }
+      "status": {
+        "notChecked": "OyasumiVR aún no ha comprobado si hay actualizaciones."
+      },
+      "title": "Acrualizaciones"
     }
   },
   "shared": {

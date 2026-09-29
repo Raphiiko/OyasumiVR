@@ -1774,14 +1774,10 @@
       "changelog": "Журнал змін",
       "checkForUpdates": "Перевірка наявності оновлень",
       "install": "Встановити v{version}",
-      "noUpdate": "Ви використовуєте останню версію OyasumiVR v{version}!",
-      "notChecked": "OyasumiVR ще не перевіряв наявність оновлень.",
-      "title": "Оновлення",
-      "updateAvailable": "Доступна нова версія OyasumiVR! Ви використовуєте v{currentVersion}.\nНайновіша версія — v{latestVersion}.",
-      "updatesDisabled": {
-        "DEV": "Оскільки ви використовуєте збірку OyasumiVR для розробників, оновлення вимкнено.\nЯкщо ви хочете встановити нову версію OyasumiVR, завантажте та запустіть інсталятор вручну.",
-        "STEAM": "Ви встановили Steam версію OyasumiVR.\nНові оновлення OyasumiVR надаються через Steam!"
-      }
+      "status": {
+        "notChecked": "OyasumiVR ще не перевіряв наявність оновлень."
+      },
+      "title": "Оновлення"
     }
   },
   "shared": {

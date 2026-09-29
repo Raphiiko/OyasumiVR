@@ -823,9 +823,9 @@
     "updates": {
       "checkForUpdates": "Rechercher des mises à jour",
       "install": "Installer v{version}",
-      "noUpdate": "Vous utilisez actuellement la dernière version d'OyasumiVR (v{version}) !",
-      "notChecked": "OyasumiVR n'a pas encore recherché de mises à jour.",
-      "updateAvailable": "Une nouvelle version d'OyasumiVR est disponible! Vous utilisez actuellement la v{currentVersion}.\nLa nouvelle version est la v{latestVersion}."
+      "status": {
+        "notChecked": "OyasumiVR n'a pas encore recherché de mises à jour."
+      }
     }
   },
   "shared": {
