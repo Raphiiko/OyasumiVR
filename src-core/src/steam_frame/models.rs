@@ -116,6 +116,9 @@ pub struct State {
     pub cert_pin: String,
     /// The helper's last brightness report on the open connection; `None` while not connected.
     pub brightness: Option<Brightness>,
+    /// The helper's last color temperature report on the open connection; `None` while not
+    /// connected.
+    pub cct: Option<Cct>,
 }
 
 /// The headset's hardware brightness in percent, as the helper reports it.
@@ -135,6 +138,29 @@ pub struct Brightness {
 #[serde(rename_all = "camelCase")]
 pub enum SetBrightnessError {
     Unsupported,
+    RuntimeUnavailable,
+    WriteFailed,
+    /// No open connection, or it closed before the helper replied.
+    Offline,
+}
+
+/// The headset's color temperature, as the helper reports it.
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct Cct {
+    /// False while the helper has no SteamVR session; nothing else is known then.
+    pub available: bool,
+    /// The red, green, and blue display gains.
+    pub gains: Option<[f32; 3]>,
+    /// The nearest integer Kelvin on OyasumiVR's curve.
+    pub kelvin: Option<u32>,
+    /// True when the gains lie on the curve at `kelvin`.
+    pub exact: Option<bool>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub enum SetCctError {
     RuntimeUnavailable,
     WriteFailed,
     /// No open connection, or it closed before the helper replied.

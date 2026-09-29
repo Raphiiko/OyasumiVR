@@ -16,7 +16,10 @@ use tokio_tungstenite::tungstenite::Message;
 use super::{
     discovery,
     maintenance::{self, Recovery, UpdateOutcome},
-    models::{Brightness, Identity, Maintenance, Pairing, SetBrightnessError, State, Status},
+    models::{
+        Brightness, Cct, Identity, Maintenance, Pairing, SetBrightnessError, SetCctError, State,
+        Status,
+    },
     setup::{
         self, bundled_digest, install_decision, InstallDecision, ProvisionError, BUNDLED_VERSION,
     },
@@ -32,17 +35,29 @@ const PING_INTERVAL: Duration = Duration::from_secs(15);
 const SILENCE_LIMIT: Duration = Duration::from_secs(40);
 const MAX_BACKOFF: Duration = Duration::from_secs(60);
 const UPDATED_NOTICE: Duration = Duration::from_secs(60);
-const BRIGHTNESS_TIMEOUT: Duration = Duration::from_secs(5);
+const COMMAND_TIMEOUT: Duration = Duration::from_secs(5);
 
 type BrightnessReply = oneshot::Sender<Result<f64, SetBrightnessError>>;
+type CctReply = oneshot::Sender<Result<Cct, SetCctError>>;
 /// Holds a sender only while the connection is open, so a command never waits for a reconnect.
-type BrightnessSlot = Arc<StdMutex<Option<mpsc::Sender<(f64, BrightnessReply)>>>>;
+type CommandSlot = Arc<StdMutex<Option<mpsc::Sender<Command>>>>;
+
+/// A command for the helper, with where its answer goes.
+enum Command {
+    SetBrightness(f64, BrightnessReply),
+    SetCct(u32, CctReply),
+}
+
+enum Reply {
+    Brightness(BrightnessReply),
+    Cct(CctReply),
+}
 
 struct Connection {
     pairing: Arc<Mutex<Pairing>>,
     task: JoinHandle<()>,
     update: Arc<Notify>,
-    brightness: BrightnessSlot,
+    commands: CommandSlot,
 }
 
 #[derive(Deserialize)]
@@ -53,6 +68,12 @@ enum HelperMessage {
         id: u64,
         percentage: Option<f64>,
         error: Option<SetBrightnessError>,
+    },
+    Cct(Cct),
+    SetCctResult {
+        id: u64,
+        snapshot: Option<Cct>,
+        error: Option<SetCctError>,
     },
 }
 
@@ -82,15 +103,15 @@ pub async fn set_pairings(pairings: Vec<Pairing>) {
         let id = pairing.id.clone();
         let shared = Arc::new(Mutex::new(pairing));
         let update = Arc::new(Notify::new());
-        let brightness = BrightnessSlot::default();
-        let task = tokio::spawn(run(shared.clone(), update.clone(), brightness.clone()));
+        let commands = CommandSlot::default();
+        let task = tokio::spawn(run(shared.clone(), update.clone(), commands.clone()));
         let replaced = kept.insert(
             id,
             Connection {
                 pairing: shared,
                 task,
                 update,
-                brightness,
+                commands,
             },
         );
         if let Some(replaced) = replaced {
@@ -121,23 +142,36 @@ pub async fn request_update(pairing_id: &str) -> bool {
 
 /// Sets the headset's hardware brightness and returns the value the helper applied.
 pub async fn set_brightness(pairing_id: &str, percentage: f64) -> Result<f64, SetBrightnessError> {
+    let command = |reply| Command::SetBrightness(percentage, reply);
+    send(pairing_id, command, SetBrightnessError::Offline).await
+}
+
+/// Sets the headset's color temperature and returns the snapshot the helper applied.
+pub async fn set_cct(pairing_id: &str, kelvin: u32) -> Result<Cct, SetCctError> {
+    let command = |reply| Command::SetCct(kelvin, reply);
+    send(pairing_id, command, SetCctError::Offline).await
+}
+
+/// Sends a command on the open connection and waits for its answer, or `offline` without one.
+async fn send<T, E: Copy>(
+    pairing_id: &str,
+    command: impl FnOnce(oneshot::Sender<Result<T, E>>) -> Command,
+    offline: E,
+) -> Result<T, E> {
     let sender = CONNECTIONS
         .lock()
         .await
         .get(pairing_id)
-        .and_then(|connection| connection.brightness.lock().unwrap().clone())
-        .ok_or(SetBrightnessError::Offline)?;
+        .and_then(|connection| connection.commands.lock().unwrap().clone())
+        .ok_or(offline)?;
     let (reply, result) = oneshot::channel();
     let exchange = async {
-        sender
-            .send((percentage, reply))
-            .await
-            .map_err(|_| SetBrightnessError::Offline)?;
-        result.await.map_err(|_| SetBrightnessError::Offline)?
+        sender.send(command(reply)).await.map_err(|_| offline)?;
+        result.await.map_err(|_| offline)?
     };
-    tokio::time::timeout(BRIGHTNESS_TIMEOUT, exchange)
+    tokio::time::timeout(COMMAND_TIMEOUT, exchange)
         .await
-        .unwrap_or(Err(SetBrightnessError::Offline))
+        .unwrap_or(Err(offline))
 }
 
 /// The last state of every running connection.
@@ -162,7 +196,7 @@ enum Attempt {
 }
 
 /// Keeps one pairing connected for the life of the task, retrying with backoff.
-async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>, brightness: BrightnessSlot) {
+async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>, commands: CommandSlot) {
     // announce that this pairing is connecting
     let initial = shared.lock().await.clone();
     let mut state = State {
@@ -175,6 +209,7 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>, brightness: Brigh
         address: initial.access.address.clone(),
         cert_pin: initial.cert_pin.clone(),
         brightness: None,
+        cct: None,
     };
     publish(&state).await;
     let mut backoff = Duration::from_secs(2);
@@ -231,10 +266,11 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>, brightness: Brigh
                     backoff = Duration::from_secs(2);
                     retries = 0;
                     let requested =
-                        hold_connected(&mut socket, &update, &brightness, &mut state, &mut notice)
+                        hold_connected(&mut socket, &update, &commands, &mut state, &mut notice)
                             .await;
                     wss::close(*socket).await;
                     state.brightness = None;
+                    state.cct = None;
                     state.last_seen = Some(get_time() as u64);
                     if requested {
                         if maintain(&mut state, &pairing, &mut notice).await {
@@ -375,16 +411,16 @@ async fn maintain(state: &mut State, pairing: &Pairing, notice: &mut Option<Inst
 }
 
 /// Holds a connected socket until it closes, or returns true when an update is requested.
-/// Relays brightness meanwhile, and clears the "updated" notice when its minute is up.
+/// Relays brightness and color temperature meanwhile, and clears the "updated" notice when its minute is up.
 async fn hold_connected(
     socket: &mut Socket,
     update: &Notify,
-    brightness: &BrightnessSlot,
+    commands: &CommandSlot,
     state: &mut State,
     notice: &mut Option<Instant>,
 ) -> bool {
     let (sender, requests) = mpsc::channel(16);
-    *brightness.lock().unwrap() = Some(sender);
+    *commands.lock().unwrap() = Some(sender);
     let mut relay = Relay {
         requests,
         pending: HashMap::new(),
@@ -402,19 +438,20 @@ async fn hold_connected(
         }
     };
     // dropping the relay answers every waiting command with Offline
-    *brightness.lock().unwrap() = None;
+    *commands.lock().unwrap() = None;
     requested
 }
 
-/// Brightness commands on one open connection.
+/// Helper commands on one open connection.
 struct Relay {
-    requests: mpsc::Receiver<(f64, BrightnessReply)>,
+    requests: mpsc::Receiver<Command>,
     /// Commands sent to the helper and not answered yet, by message id.
-    pending: HashMap<u64, BrightnessReply>,
+    pending: HashMap<u64, Reply>,
     next_id: u64,
 }
 
-/// Applies one helper message: a brightness report, or the answer to a command.
+/// Applies one helper message: a brightness or color temperature report, or the answer to a
+/// command.
 async fn receive(text: &str, relay: &mut Relay, state: &mut State) {
     match serde_json::from_str(text) {
         Ok(HelperMessage::Brightness(brightness)) => {
@@ -433,9 +470,28 @@ async fn receive(text: &str, relay: &mut Relay, state: &mut State) {
                     publish(state).await;
                 }
             }
-            if let Some(reply) = relay.pending.remove(&id) {
+            if let Some(Reply::Brightness(reply)) = relay.pending.remove(&id) {
                 let error = error.unwrap_or(SetBrightnessError::WriteFailed);
                 let _ = reply.send(percentage.ok_or(error));
+            }
+        }
+        Ok(HelperMessage::Cct(cct)) => {
+            state.cct = Some(cct);
+            publish(state).await;
+        }
+        Ok(HelperMessage::SetCctResult {
+            id,
+            snapshot,
+            error,
+        }) => {
+            // as for brightness, the reply is this PC's only report of its own write
+            if let Some(applied) = snapshot.as_ref().filter(|s| state.cct.as_ref() != Some(s)) {
+                state.cct = Some(applied.clone());
+                publish(state).await;
+            }
+            if let Some(Reply::Cct(reply)) = relay.pending.remove(&id) {
+                let error = error.unwrap_or(SetCctError::WriteFailed);
+                let _ = reply.send(snapshot.ok_or(error));
             }
         }
         Err(_) => {}
@@ -630,17 +686,23 @@ async fn hold(
                     }
                 }
             },
-            Some((percentage, reply)) = relay.requests.recv() => {
+            Some(command) = relay.requests.recv() => {
                 relay.next_id += 1;
-                let command = serde_json::json!({
-                    "type": "setBrightness",
-                    "id": relay.next_id,
-                    "percentage": percentage,
-                });
-                if socket.send(Message::text(command.to_string())).await.is_err() {
+                let id = relay.next_id;
+                let (message, reply) = match command {
+                    Command::SetBrightness(percentage, reply) => (
+                        serde_json::json!({"type": "setBrightness", "id": id, "percentage": percentage}),
+                        Reply::Brightness(reply),
+                    ),
+                    Command::SetCct(kelvin, reply) => (
+                        serde_json::json!({"type": "setCct", "id": id, "kelvin": kelvin}),
+                        Reply::Cct(reply),
+                    ),
+                };
+                if socket.send(Message::text(message.to_string())).await.is_err() {
                     return Wake::Closed;
                 }
-                relay.pending.insert(relay.next_id, reply);
+                relay.pending.insert(id, reply);
             }
             _ = ticker.tick() => {
                 if last_heard.elapsed() > SILENCE_LIMIT
@@ -740,6 +802,46 @@ mod tests {
                 id: 8,
                 percentage: None,
                 error: Some(SetBrightnessError::RuntimeUnavailable)
+            }
+        ));
+    }
+
+    #[test]
+    fn reads_the_helper_cct_messages() {
+        let parse = |text: &str| serde_json::from_str::<HelperMessage>(text).unwrap();
+        let off_curve = Cct {
+            available: true,
+            gains: Some([1.0, 0.6, 0.2]),
+            kelvin: Some(2313),
+            exact: Some(false),
+        };
+        let HelperMessage::Cct(report) = parse(
+            r#"{"type":"cct","available":true,"gains":[1.0,0.6,0.2],"kelvin":2313,"exact":false}"#,
+        ) else {
+            panic!("not a cct report");
+        };
+        assert_eq!(report, off_curve);
+        let HelperMessage::Cct(unavailable) = parse(r#"{"type":"cct","available":false}"#) else {
+            panic!("not a cct report");
+        };
+        assert_eq!(unavailable.kelvin, None);
+        let HelperMessage::SetCctResult {
+            id,
+            snapshot,
+            error,
+        } = parse(
+            r#"{"type":"setCctResult","id":3,"snapshot":{"available":true,"gains":[1.0,0.6,0.2],"kelvin":2313,"exact":false}}"#,
+        )
+        else {
+            panic!("not a cct reply");
+        };
+        assert_eq!((id, snapshot, error), (3, Some(off_curve), None));
+        assert!(matches!(
+            parse(r#"{"type":"setCctResult","id":4,"error":"writeFailed"}"#),
+            HelperMessage::SetCctResult {
+                id: 4,
+                snapshot: None,
+                error: Some(SetCctError::WriteFailed)
             }
         ));
     }
