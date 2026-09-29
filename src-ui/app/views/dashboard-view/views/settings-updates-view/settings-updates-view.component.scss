@@ -38,18 +38,10 @@ h2 {
   padding: 1.1em 1.25em;
   margin-bottom: 1.75em;
   background: var(--color-surface-1);
-  border: 1px solid transparent;
   border-radius: var(--surface-border-radius);
 
   &.highlight {
-    background:
-      linear-gradient(var(--color-surface-1), var(--color-surface-1)) padding-box,
-      linear-gradient(
-          120deg,
-          var(--color-primary),
-          color-mix(in srgb, var(--color-primary) 10%, transparent) 60%
-        )
-        border-box;
+    box-shadow: inset 0 0 0 1px var(--color-primary);
   }
 
   > .btn {

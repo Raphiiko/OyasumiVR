@@ -105,7 +105,11 @@
           >
             <div class="release-rail"><div class="release-dot"></div></div>
             <div class="release-body">
-              <button class="release-header" (click)="toggleRelease(release.version)">
+              <button
+                class="release-header"
+                [attr.aria-expanded]="openReleases.has(release.version)"
+                (click)="toggleRelease(release.version)"
+              >
                 <span class="release-version">
                   {{
                     release.unreleased ? ('settings.updates.upcoming' | transloco) : release.version
