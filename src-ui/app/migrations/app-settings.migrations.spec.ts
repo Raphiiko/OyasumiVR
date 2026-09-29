@@ -87,6 +87,17 @@ describe('settings store migration of CCT automations', () => {
     expect(cctFlags(decision.contents)).toEqual([false, false, false, false, false, false]);
   });
 
+  it('turns off CCT in brightness automations after a per-key recovery', async () => {
+    const candidate = store(false);
+    const parsed = JSON.parse(candidate.contents);
+    parsed.VRCHAT_API = { version: 'invalid' };
+    candidate.contents = JSON.stringify(parsed);
+    const decision = await decideStoreMigration([candidate], SETTINGS_STORE_MIGRATION);
+    expect(decision.action).toBe('install-defaults');
+    if (decision.action !== 'install-defaults') return;
+    expect(cctFlags(decision.contents)).toEqual([false, false, false, false, false, false]);
+  });
+
   it.each([
     ['color temperature control was on', store(true)],
     ['the settings already migrated', store(false, 17)],

@@ -3,3 +3,8 @@
   display: flex;
   overflow: hidden;
 }
+
+app-setting-row.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}

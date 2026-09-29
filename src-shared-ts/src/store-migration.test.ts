@@ -399,3 +399,41 @@ test('runs afterMigrations with the unmigrated source and installs its changes',
   if (decision.action !== 'install') return;
   assert.deepEqual(JSON.parse(decision.contents).OTHER, { flag: false, sourceVersion: 1 });
 });
+
+test('runs afterMigrations on a per-key recovery with each key from its own candidate', async () => {
+  const seen: Record<string, unknown>[] = [];
+  const decision = await decideStoreMigration(
+    [
+      candidate('live', 'live', {
+        FIRST: { version: 3, value: 'future' },
+        SECOND: { version: 1, value: 'live' },
+      }),
+      candidate('checkpoint', 'checkpoint', {
+        FIRST: { version: 1, value: 'checkpoint' },
+        SECOND: { version: 3, value: 'future' },
+      }),
+    ],
+    {
+      storeName: 'settings',
+      migrations: {
+        FIRST: migration(2, { 1: (data) => ({ ...data, version: 2 }) }),
+        SECOND: migration(2, { 1: (data) => ({ ...data, version: 2 }) }),
+      },
+      defaults: {
+        FIRST: { version: 2, value: 'first default' },
+        SECOND: { version: 2, value: 'second default' },
+      },
+      afterMigrations: (source, migrated) => {
+        seen.push(structuredClone(source));
+        (migrated['SECOND'] as { value: string }).value = 'changed by hook';
+      },
+    }
+  );
+  assert.equal(decision.action, 'install-defaults');
+  if (decision.action !== 'install-defaults') return;
+  assert.deepEqual(seen.at(-1), {
+    FIRST: { version: 1, value: 'checkpoint' },
+    SECOND: { version: 1, value: 'live' },
+  });
+  assert.equal(JSON.parse(decision.contents).SECOND.value, 'changed by hook');
+});

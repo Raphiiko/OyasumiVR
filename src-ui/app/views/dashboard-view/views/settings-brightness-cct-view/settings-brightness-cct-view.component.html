@@ -12,28 +12,34 @@
           <app-setting-row
             label="settings.brightnessCct.cctControl.unsupportedHmds.title"
             description="settings.brightnessCct.cctControl.unsupportedHmds.description"
-            [descriptionText]="
-              listedHmd
-                ? ('settings.brightnessCct.cctControl.unsupportedHmds.listedHmd' | transloco: hmd!)
-                : undefined
-            "
+            [class.disabled]="listedHmd"
           >
-            <label class="switch-toggle" [class.disabled]="listedHmd">
+            <label class="switch-toggle">
               <input
                 type="checkbox"
-                [checked]="listedHmd || appSettings.cctControlOnUnsupportedHmds"
+                [checked]="appSettings.cctControlOnUnsupportedHmds"
                 [disabled]="listedHmd"
                 (change)="toggleCCTControlOnUnsupportedHmds()"
               />
               <span class="switch-toggle-slider"></span>
             </label>
           </app-setting-row>
-          @if (appSettings.cctControlOnUnsupportedHmds && hmd && !listedHmd) {
+          @if (listedHmd) {
+            <app-alert
+              severity="info"
+              message="settings.brightnessCct.cctControl.unsupportedHmds.listedHmd"
+              @vshrink
+            ></app-alert>
+          }
+          @if (hmd && !listedHmd) {
             <app-alert severity="info" @vshrink>
               <span>
                 {{
                   'settings.brightnessCct.cctControl.unsupportedHmds.unlistedHmd' | transloco: hmd
                 }}
+                @if (!appSettings.cctControlOnUnsupportedHmds) {
+                  {{ 'settings.brightnessCct.cctControl.unsupportedHmds.tryIt' | transloco }}
+                }
                 <a href="https://discord.gg/7MqdPJhYxC" target="_blank">{{
                   'settings.brightnessCct.cctControl.unsupportedHmds.report' | transloco
                 }}</a>

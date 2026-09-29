@@ -5,7 +5,10 @@ export interface StoreMigrationSpec {
   storeName: string;
   migrations: Record<string, MigrationDefinition<Versioned>>;
   defaults: Record<string, unknown>;
-  /** Runs after every key migrated, to move data between keys; `source` is the unmigrated store. */
+  /**
+   * Runs after every key migrated, to move data between keys. `source` holds each key's unmigrated
+   * value from the candidate that supplied it, which differs per key after a per-key recovery.
+   */
   afterMigrations?: (source: Record<string, unknown>, migrated: Record<string, unknown>) => void;
 }
 
@@ -275,9 +278,12 @@ function recoveredContents(evaluations: CandidateEvaluation[], spec: StoreMigrat
       if (!(key in spec.migrations)) contents[key] = value;
     }
   }
+  const source: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(spec.defaults)) {
-    const recovered = evaluations.find((evaluation) => key in evaluation.resolved)?.resolved[key];
-    contents[key] = structuredClone(recovered ?? value);
+    const supplier = evaluations.find((evaluation) => key in evaluation.resolved);
+    contents[key] = structuredClone(supplier?.resolved[key] ?? value);
+    if (supplier?.parsed && key in supplier.parsed) source[key] = supplier.parsed[key];
   }
+  spec.afterMigrations?.(source, contents);
   return JSON.stringify(contents);
 }
