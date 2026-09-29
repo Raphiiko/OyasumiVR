@@ -1511,10 +1511,6 @@
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "此預設檔使用的解決方法存在一些問題。 如果你不能使用較新的 GoGo Loco 預設，請僅使用此預設檔。 如果你的角色仍然使用舊版本的 GoGo Loco，建議你將你的角色更新使用最新的 GoGo Loco 版本",
     "GORONE_LEGACY_PRESET_WARNING": "v4.0 及以上版本的此預製件已包含轉向功能，與此預設不相容。如果你的模型使用的是較舊版本的預製件，該預設仍然可用。",
     "oneTimeFlagDialogs": {
-      "CCT_CONTROL_WARNING_DIALOG": {
-        "message": "請注意，顯示器色溫控制僅適用於某些原生 SteamVR 頭戴裝置，例如 Valve Index、大螢幕 Beyond 或 HTC Vive（Pro）。\n\n如果你未使用這些頭戴裝置，該功能可能對你無效。\n\n如果需要，你可以在設定中禁用顯示器色溫控制。",
-        "title": "功能可用性"
-      },
       "OSC_SCRIPT_SIMPLE_EDITOR_VRCHAT_AUTOCOMPLETE_INFO": {
         "message": "若要自動完成 VRChat 角色的參數，你必須執行 VRChat 並佩戴所需的頭像。\n\n如果你沒有執行 VRChat，你仍然可以使用簡單的編輯器，但你將無法獲得自動完成功能",
         "title": "自動完成"
@@ -1966,10 +1962,6 @@
         "title": "Bigscreen Beyond"
       },
       "cctControl": {
-        "enabled": {
-          "description": "如果你使用其他應用程式來控制顯示器的色溫，請停用此功能 (例如 LuxVR 或 OVR 進階設定)",
-          "title": "啟用色溫控制"
-        },
         "title": "色溫"
       },
       "description": "在這裡你可以找到任何與亮度和色溫相關的設定。",

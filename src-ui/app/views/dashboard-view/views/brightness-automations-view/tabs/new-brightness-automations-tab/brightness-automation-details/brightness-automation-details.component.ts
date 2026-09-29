@@ -22,7 +22,6 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { HardwareBrightnessControlService } from '../../../../../../../services/brightness-control/hardware-brightness-control.service';
 import { SimpleBrightnessControlService } from '../../../../../../../services/brightness-control/simple-brightness-control.service';
 import { SoftwareBrightnessControlService } from '../../../../../../../services/brightness-control/software-brightness-control.service';
-import { AppSettingsService } from '../../../../../../../services/app-settings.service';
 import { invoke } from '@tauri-apps/api/core';
 import { error } from '@tauri-apps/plugin-log';
 import { ToastService } from 'src-ui/app/services/toast.service';
@@ -47,7 +46,6 @@ export class BrightnessAutomationDetailsComponent implements OnInit {
   eventId = input.required<BrightnessEvent>();
   advancedMode: Signal<boolean>;
   config: Signal<BrightnessEventAutomationConfig>;
-  cctControlEnabled: Signal<boolean>;
   protected brightnessBounds: Record<BrightnessType, BrightnessBounds> = {
     SIMPLE: { min: 5, max: 100 },
     SOFTWARE: { min: 5, max: 100 },
@@ -72,15 +70,10 @@ export class BrightnessAutomationDetailsComponent implements OnInit {
     private simpleBrightnessControl: SimpleBrightnessControlService,
     private softwareBrightnessControl: SoftwareBrightnessControlService,
     private hardwareBrightnessControl: HardwareBrightnessControlService,
-    protected appSettingsService: AppSettingsService,
     private destroyRef: DestroyRef,
     private cdr: ChangeDetectorRef,
     private toasts: ToastService
   ) {
-    this.cctControlEnabled = toSignal(
-      this.appSettingsService.settings.pipe(map((s) => s.cctControlEnabled)),
-      { initialValue: false }
-    );
     const automationsConfig = toSignal(
       this.automationConfigService.configs.pipe(map((c) => c.BRIGHTNESS_AUTOMATIONS))
     );
@@ -89,11 +82,6 @@ export class BrightnessAutomationDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
-    // The template calls appSettingsService.oneTimeFlagSet(), which no signal
-    // covers, so any settings change has to recheck the view.
-    this.appSettingsService.settings
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.cdr.markForCheck());
     this.hardwareBrightnessControl.brightnessBounds
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(async (bounds) => {

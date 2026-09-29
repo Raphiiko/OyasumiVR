@@ -1,6 +1,9 @@
 <div class="b-modal-container" @fadeUp (clickOutside)="close()">
   <div class="sliders-container">
-    <div class="brightness-slider">
+    <div
+      class="brightness-slider"
+      [class.disabled]="(cctControl.driverIsAvailable | async) === false"
+    >
       <app-brightness-control-slider
         [value]="(cctControl.cctStream | async) ?? 6600"
         [min]="1000"

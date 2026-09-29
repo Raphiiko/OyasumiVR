@@ -4,7 +4,7 @@ import { OneTimeFlag } from './one-time-flags';
 import { EventLogType } from './event-log-entry';
 
 export interface AppSettings {
-  version: 16;
+  version: 17;
   // General Settings
   userLanguage: string;
   userLanguagePicked: boolean;
@@ -56,7 +56,7 @@ export interface AppSettings {
   mqttProtectedPassword: string | null;
   mqttSecureSocket: boolean;
   // Brightness & CCT
-  cctControlEnabled: boolean;
+  cctControlOnUnsupportedHmds: boolean; // Try SteamVR color gains on headsets not on the list
   cctSoftwareMode: boolean;
   // HW Specific
   valveIndexMaxBrightness: number; // User limit
@@ -95,7 +95,7 @@ export const NotificationTypes = [
 export type NotificationType = (typeof NotificationTypes)[number];
 
 export const APP_SETTINGS_DEFAULT: AppSettings = {
-  version: 16,
+  version: 17,
   // General Settings
   userLanguage: 'en',
   userLanguagePicked: false,
@@ -146,7 +146,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   mqttProtectedPassword: null,
   mqttSecureSocket: false,
   // Brightness & CCT
-  cctControlEnabled: true,
+  cctControlOnUnsupportedHmds: false,
   cctSoftwareMode: false,
   // HW Specific
   valveIndexMaxBrightness: 160,
