@@ -9,7 +9,6 @@ export interface ChangelogItem {
 
 export interface ChangelogSection {
   kind: ChangelogSectionKind;
-  title: string;
   items: ChangelogItem[];
 }
 
@@ -38,19 +37,15 @@ export function parseChangelog(markdown: string): ChangelogRelease[] {
     }
     if (!release) continue;
 
-    // start a section on every level 3 heading
+    // switch section on every level 3 heading, one section per kind
     if (token.type === 'heading' && token.depth === 3) {
-      section = { kind: sectionKind(token.text), title: token.text.trim(), items: [] };
-      release.sections.push(section);
+      section = sectionOf(release, sectionKind(token.text));
       continue;
     }
 
     // collect list items into the current section
     if (token.type === 'list') {
-      if (!section) {
-        section = { kind: 'other', title: '', items: [] };
-        release.sections.push(section);
-      }
+      section ??= sectionOf(release, 'other');
       section.items.push(...parseList(token as Tokens.List));
     }
   }
@@ -61,6 +56,15 @@ export function parseChangelog(markdown: string): ChangelogRelease[] {
       .sort((a, b) => SECTION_ORDER.indexOf(a.kind) - SECTION_ORDER.indexOf(b.kind));
   }
   return releases.filter((r) => r.sections.length);
+}
+
+function sectionOf(release: ChangelogRelease, kind: ChangelogSectionKind): ChangelogSection {
+  let section = release.sections.find((s) => s.kind === kind);
+  if (!section) {
+    section = { kind, items: [] };
+    release.sections.push(section);
+  }
+  return section;
 }
 
 function sectionKind(title: string): ChangelogSectionKind {

@@ -38,18 +38,19 @@ export class SettingsUpdatesViewComponent implements OnInit {
   protected openReleases = new Set<string>();
   protected readonly SECTION_ICONS = SECTION_ICONS;
   protected FLAVOUR = FLAVOUR;
-  private requestInProgress = false;
+  /** Set for a manual check, kept for at least one second so the spinner does not flash. */
+  private checkInProgress = false;
 
   protected get updateOrCheckInProgress() {
-    return this.requestInProgress || this.update.installing();
+    return this.checkInProgress || this.update.installing();
   }
 
   protected get updateState(): UpdateState {
     if (this.FLAVOUR === 'STEAM') return 'steam';
     if (this.FLAVOUR === 'DEV') return 'dev';
     if (this.update.installing()) return 'installing';
+    if (this.checkInProgress) return 'checking';
     if (this.updateAvailable.update) return 'available';
-    if (this.requestInProgress) return 'checking';
     return this.updateAvailable.checked ? 'upToDate' : 'unchecked';
   }
 
@@ -83,14 +84,14 @@ export class SettingsUpdatesViewComponent implements OnInit {
 
   async updateOrCheck() {
     if (this.updateOrCheckInProgress) return;
-    this.requestInProgress = true;
+    if (this.updateAvailable.update) return this.update.installUpdate();
+
+    this.checkInProgress = true;
     await Promise.allSettled([
-      this.updateAvailable.update
-        ? this.update.installUpdate()
-        : this.update.checkForUpdate(false, true),
+      this.update.checkForUpdate(false, true),
       new Promise((resolve) => setTimeout(resolve, 1000)),
     ]);
-    this.requestInProgress = false;
+    this.checkInProgress = false;
   }
 
   protected toggleRelease(version: string) {
