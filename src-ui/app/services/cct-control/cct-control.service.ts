@@ -166,7 +166,11 @@ export class CCTControlService {
     // log which driver serves which headset, once both have settled
     const hmd = this.openvr.devices.pipe(
       map((devices) => devices.find((d) => d.index === 0 && d.class === 'HMD')),
-      map((hmd) => (hmd ? `${hmd.manufacturerName} ${hmd.modelNumber}` : null)),
+      map((hmd) =>
+        hmd
+          ? `manufacturer "${hmd.manufacturerName ?? ''}", model "${hmd.modelNumber ?? ''}"`
+          : null
+      ),
       distinctUntilChanged()
     );
     combineLatest([this.activeDriver, hmd])
@@ -174,10 +178,10 @@ export class CCTControlService {
       .subscribe(([driver, hmd]) => {
         if (!hmd) return;
         if (driver) {
-          info(`[CCTControl] Using the ${driver.name} driver for HMD ${hmd}`);
+          info(`[CCTControl] Using the ${driver.name} driver for the HMD with ${hmd}`);
           return;
         }
-        info(`[CCTControl] No color temperature driver supports HMD ${hmd}`);
+        info(`[CCTControl] No color temperature driver supports the HMD with ${hmd}`);
         // SteamVR keeps the gains across sessions, so clear a tint an earlier session left
         this.driverSteamVr.setCCT(NEUTRAL_CCT);
       });
