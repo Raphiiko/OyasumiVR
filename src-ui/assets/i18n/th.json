@@ -1964,10 +1964,6 @@
         "title": "Bigscreen Beyond"
       },
       "cctControl": {
-        "enabled": {
-          "description": "ปิดใช้งานหากใช้แอปพลิเคชันอื่น (เช่น LuxVR หรือ OVR Advanced Settings) ควบคุมอุณหภูมิสีของจอแสดงผล",
-          "title": "เปิดใช้งานการควบคุมอุณหภูมิสี"
-        },
         "title": "อุณหภูมิสี"
       },
       "description": "ตั้งค่าเกี่ยวกับความสว่างและอุณหภูมิสี",

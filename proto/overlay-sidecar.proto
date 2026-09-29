@@ -175,7 +175,6 @@ message OyasumiSidecarCCTState {
   uint32 max = 4;
   bool transitioning = 5;
   uint32 transition_target = 6;
-  bool available = 7;
 }
 
 enum VrcStatus {

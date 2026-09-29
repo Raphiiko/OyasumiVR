@@ -116,13 +116,12 @@ export class OverlayStateSyncService {
       hardwareMaxBrightness: 160,
     },
     cctState: {
-      enabled: APP_SETTINGS_DEFAULT.cctControlEnabled,
+      enabled: false,
       value: 6600,
       min: 1000,
       max: 10000,
       transitioning: false,
       transitionTarget: 6600,
-      available: false,
     },
     sleepPreparationAvailable: false,
     sleepPreparationTimedOut: false,
@@ -410,19 +409,9 @@ export class OverlayStateSyncService {
   }
 
   private updateState_WhenCCTStateChanges() {
-    this.appSettings.settings
-      .pipe(
-        map((settings) => settings.cctControlEnabled),
-        distinctUntilChanged()
-      )
-      .subscribe((enabled) => {
-        const state = structuredClone(this.state.value);
-        state.cctState!.enabled = enabled;
-        this.state.next(state);
-      });
     this.cctService.driverIsAvailable.subscribe((available) => {
       const state = structuredClone(this.state.value);
-      state.cctState!.available = available;
+      state.cctState!.enabled = available;
       this.state.next(state);
     });
     this.cctService.cctStream.pipe(distinctUntilChanged()).subscribe((value) => {

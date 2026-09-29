@@ -42,8 +42,6 @@ export class CCTControlService {
   private writableDriver: CctControlDriver | null = null;
   public readonly activeTransition = this._activeTransition.asObservable();
   public cctCSSColor: string = 'white';
-  private cctControlEnabled: boolean = false;
-  private initialized = false;
 
   get cct(): number {
     return this._cct.value;
@@ -53,7 +51,7 @@ export class CCTControlService {
 
   constructor(
     private openvr: OpenVRService,
-    private appSettingsService: AppSettingsService
+    appSettingsService: AppSettingsService
   ) {
     this.driverSteamVr = new SteamVrCctControlDriver(openvr, appSettingsService.settings);
     const drivers: CctControlDriver[] = [this.driverSteamVr];
@@ -70,14 +68,7 @@ export class CCTControlService {
   }
 
   async init() {
-    this.appSettingsService.settings.subscribe((settings) => {
-      this.cctControlEnabled = settings.cctControlEnabled;
-      if (!this.initialized) {
-        this.setCCT(this.cct);
-        this.watchDrivers();
-      }
-      this.initialized = true;
-    });
+    this.watchDrivers();
     this._cct.pipe(distinctUntilChanged()).subscribe((cct) => {
       this.cctCSSColor = getCSSColorForCCT(cct);
     });
@@ -140,7 +131,6 @@ export class CCTControlService {
     options: Partial<SetBrightnessOrCCTOptions> = SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS,
     force = false
   ) {
-    if (!this.cctControlEnabled) return;
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
     cct = clamp(Math.round(cct), 1000, 10000);
     if (opt.cancelActiveTransition) this.cancelActiveTransition();

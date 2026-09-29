@@ -1542,10 +1542,6 @@
         "title": "Bigscreen Beyond"
       },
       "cctControl": {
-        "enabled": {
-          "description": "디스플레이 색온도를 조절하는 다른 애플리케이션(예: LuxVR, OVR Advanced Settings)을 사용한다면 이 기능을 비활성화해주세요.",
-          "title": "색온도 제어 활성화"
-        },
         "title": "색온도"
       },
       "description": "여기에서는 밝기와 색온도와 관련된 설정을 찾을 수 있어요.",

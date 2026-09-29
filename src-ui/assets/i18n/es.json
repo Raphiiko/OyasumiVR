@@ -1799,10 +1799,6 @@
         "title": "Bigscreen Beyond"
       },
       "cctControl": {
-        "enabled": {
-          "description": "Desactiva esta opción si utilizas otras aplicaciones para controlar la temperatura de color de tu pantalla (por ejemplo, LuxVR u OVR Advanced Settings).",
-          "title": "Activar el control de la temperatura de color"
-        },
         "title": "Temperatura de color"
       },
       "description": "Aquí encontrarás los ajustes relacionados con el brillo y la temperatura de color.",

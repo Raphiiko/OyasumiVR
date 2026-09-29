@@ -10,26 +10,14 @@
         <h2 transloco="settings.brightnessCct.cctControl.title"></h2>
         <div class="settings">
           <app-setting-row
-            label="settings.brightnessCct.cctControl.enabled.title"
-            description="settings.brightnessCct.cctControl.enabled.description"
-          >
-            <label class="switch-toggle">
-              <input
-                type="checkbox"
-                [checked]="appSettings.cctControlEnabled"
-                (change)="toggleCCTControl()"
-              />
-              <span class="switch-toggle-slider"></span>
-            </label>
-          </app-setting-row>
-          <app-setting-row
             label="settings.brightnessCct.cctControl.unsupportedHmds.title"
             description="settings.brightnessCct.cctControl.unsupportedHmds.description"
           >
-            <label class="switch-toggle">
+            <label class="switch-toggle" [class.disabled]="listedHmd">
               <input
                 type="checkbox"
-                [checked]="appSettings.cctControlOnUnsupportedHmds"
+                [checked]="listedHmd || appSettings.cctControlOnUnsupportedHmds"
+                [disabled]="listedHmd"
                 (change)="toggleCCTControlOnUnsupportedHmds()"
               />
               <span class="switch-toggle-slider"></span>

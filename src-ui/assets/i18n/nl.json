@@ -1922,10 +1922,6 @@
         "title": "Bigscreen Beyond"
       },
       "cctControl": {
-        "enabled": {
-          "description": "Schakel dit uit als je andere software gebruikt om de kleur temperatuur van je scherm aan te passen (bijvoorbeeld LuxVR of OVR Advanced Settings)",
-          "title": "Kleur temperatuur besturing inschakelen"
-        },
         "title": "Kleur Temperatuur"
       },
       "description": "Hier vind je alle instellingen gerelateerd aan beeld helderheid en kleur temperatuur.",

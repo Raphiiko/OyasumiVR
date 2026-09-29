@@ -2025,10 +2025,6 @@
         "title": "Bigscreen Beyond"
       },
       "cctControl": {
-        "enabled": {
-          "description": "Disable this if you use other applications to control your display's color temperature (e.g. LuxVR or OVR Advanced Settings)",
-          "title": "Enable color temperature control"
-        },
         "title": "Color Temperature",
         "unsupportedHmds": {
           "description": "Use color temperature control on headsets that OyasumiVR has not confirmed. It only works if the headset applies SteamVR's display color settings.",

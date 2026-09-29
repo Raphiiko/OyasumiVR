@@ -56,7 +56,6 @@ export interface AppSettings {
   mqttProtectedPassword: string | null;
   mqttSecureSocket: boolean;
   // Brightness & CCT
-  cctControlEnabled: boolean;
   cctControlOnUnsupportedHmds: boolean; // Try SteamVR color gains on headsets not on the list
   cctSoftwareMode: boolean;
   // HW Specific
@@ -147,7 +146,6 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   mqttProtectedPassword: null,
   mqttSecureSocket: false,
   // Brightness & CCT
-  cctControlEnabled: true,
   cctControlOnUnsupportedHmds: false,
   cctSoftwareMode: false,
   // HW Specific

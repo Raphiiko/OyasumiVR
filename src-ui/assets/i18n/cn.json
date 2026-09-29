@@ -1963,10 +1963,6 @@
         "title": "Bigscreen Beyond"
       },
       "cctControl": {
-        "enabled": {
-          "description": "如果你使用其他应用程序来控制显示器的色温（例如 LuxVR 或 OVR Advanced Settings），请禁用此选项",
-          "title": "启用色温控制"
-        },
         "title": "色温"
       },
       "description": "在这里你会找到与亮度和色温相关的所有设置",

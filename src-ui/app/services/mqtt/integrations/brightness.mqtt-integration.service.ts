@@ -3,14 +3,13 @@ import { MqttDiscoveryService } from '../mqtt-discovery.service';
 import { SimpleBrightnessControlService } from '../../brightness-control/simple-brightness-control.service';
 import { HardwareBrightnessControlService } from '../../brightness-control/hardware-brightness-control.service';
 import { SoftwareBrightnessControlService } from '../../brightness-control/software-brightness-control.service';
-import { combineLatest, distinctUntilChanged, map } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs';
 import { MqttNumberProperty, MqttToggleProperty } from '../../../models/mqtt';
 import { AutomationConfigService } from '../../automation-config.service';
 import { isEqual } from 'lodash';
 import { ensurePrecision } from '../../../utils/number-utils';
 import { BrightnessAutomationsConfig } from '../../../models/automations';
 import { CCTControlService } from '../../cct-control/cct-control.service';
-import { AppSettingsService } from '../../app-settings.service';
 
 @Injectable({
   providedIn: 'root',
@@ -25,8 +24,7 @@ export class BrightnessMqttIntegrationService {
     private hwBrightness: HardwareBrightnessControlService,
     private swBrightness: SoftwareBrightnessControlService,
     private automationConfigService: AutomationConfigService,
-    private cctControl: CCTControlService,
-    private appSettingsService: AppSettingsService
+    private cctControl: CCTControlService
   ) {}
 
   async init() {
@@ -152,14 +150,8 @@ export class BrightnessMqttIntegrationService {
       available: false,
       unitOfMeasurement: 'K',
     });
-    combineLatest([
-      this.appSettingsService.settings.pipe(map((settings) => settings.cctControlEnabled)),
-      this.cctControl.driverIsAvailable,
-    ])
-      .pipe(
-        map(([enabled, available]) => enabled && available),
-        distinctUntilChanged()
-      )
+    this.cctControl.driverIsAvailable
+      .pipe(distinctUntilChanged())
       .subscribe((available) => this.mqtt.setPropertyAvailability('colorTemperature', available));
     this.cctControl.cctStream.pipe(distinctUntilChanged()).subscribe((cct) => {
       this.mqtt.setNumberPropertyValue('colorTemperature', cct);

@@ -21,6 +21,8 @@ export class SettingsBrightnessCctViewComponent implements OnInit {
   protected appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
   /** The active HMD's identity when it is not on the SteamVR color temperature list. */
   protected unlistedHmd: { manufacturer: string; model: string } | null = null;
+  /** True while the active HMD is on the SteamVR color temperature list. */
+  protected listedHmd = false;
 
   constructor(
     private appSettingsService: AppSettingsService,
@@ -36,8 +38,9 @@ export class SettingsBrightnessCctViewComponent implements OnInit {
       });
     this.openvr.devices.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((devices) => {
       const hmd = devices.find((d) => d.index === 0 && d.class === 'HMD');
+      this.listedHmd = !!hmd && isSteamVrCctSupportedHmd(hmd);
       this.unlistedHmd =
-        hmd && !isSteamVrCctSupportedHmd(hmd)
+        hmd && !this.listedHmd
           ? { manufacturer: hmd.manufacturerName ?? '', model: hmd.modelNumber ?? '' }
           : null;
     });
@@ -98,12 +101,6 @@ export class SettingsBrightnessCctViewComponent implements OnInit {
     number = clamp(number, this.bigscreenBeyondMin, this.bigscreenBeyondMax);
     this.appSettingsService.updateSettings({
       bigscreenBeyondMaxBrightness: number,
-    });
-  }
-
-  toggleCCTControl() {
-    this.appSettingsService.updateSettings({
-      cctControlEnabled: !this.appSettings.cctControlEnabled,
     });
   }
 

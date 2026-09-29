@@ -18,7 +18,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { combineLatest, interval, map, startWith, switchMap } from 'rxjs';
 import { BrightnessCctAutomationService } from '../../../../../../../services/brightness-cct-automation.service';
 import { fade } from '../../../../../../../utils/animations';
-import { AppSettingsService } from '../../../../../../../services/app-settings.service';
 import { BrightnessEventViewModel } from '../brightness-automations-tab.component';
 import { SleepService } from '../../../../../../../services/sleep.service';
 import { uniq } from 'lodash';
@@ -37,7 +36,6 @@ export class BrightnessAutomationsListComponent implements OnInit {
   );
   @Input() events!: Array<BrightnessEventViewModel>;
   @Output() editEvent = new EventEmitter<BrightnessEventViewModel>();
-  protected cctControlEnabled = false;
   protected hmdConnectAutomations: Record<BrightnessEvent, 'active' | 'potential' | false> = {
     AT_SUNRISE: false,
     AT_SUNSET: false,
@@ -51,18 +49,11 @@ export class BrightnessAutomationsListComponent implements OnInit {
     private automationConfigService: AutomationConfigService,
     private brightnessCctAutomations: BrightnessCctAutomationService,
     private destroyRef: DestroyRef,
-    private appSettingsService: AppSettingsService,
     private sleepService: SleepService,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    this.appSettingsService.settings
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((settings) => {
-        this.cctControlEnabled = settings.cctControlEnabled;
-        this.cdr.markForCheck();
-      });
     this.events.forEach((event) => {
       combineLatest([
         this.brightnessCctAutomations.isBrightnessTransitionActive(event.name),

@@ -172,37 +172,35 @@
       }
     </div>
   </div>
-  @if (cctControlEnabled()) {
-    <div class="setting-category">
-      <h3 transloco="brightness-automations.changeTemperature.category"></h3>
-      <div class="settings">
-        <app-setting-row
-          label="brightness-automations.changeTemperature.title"
-          description="brightness-automations.changeTemperature.description"
-        >
-          <label class="switch-toggle" [class.disabled]="!config().changeBrightness">
-            <input
-              type="checkbox"
-              [checked]="config().changeColorTemperature"
-              (change)="toggleChangeColorTemperature()"
-              [disabled]="!config().changeBrightness"
-            />
-            <span class="switch-toggle-slider"></span>
-          </label>
-        </app-setting-row>
-        @if (config().changeColorTemperature) {
-          <div class="setting-row-group" @vshrink>
-            <app-setting-row label="brightness-automations.temperature.title">
-              <app-cct-input-setting
-                [value]="config().colorTemperature"
-                (valueChange)="updateColorTemperature($event)"
-              ></app-cct-input-setting>
-            </app-setting-row>
-          </div>
-        }
-      </div>
+  <div class="setting-category">
+    <h3 transloco="brightness-automations.changeTemperature.category"></h3>
+    <div class="settings">
+      <app-setting-row
+        label="brightness-automations.changeTemperature.title"
+        description="brightness-automations.changeTemperature.description"
+      >
+        <label class="switch-toggle" [class.disabled]="!config().changeBrightness">
+          <input
+            type="checkbox"
+            [checked]="config().changeColorTemperature"
+            (change)="toggleChangeColorTemperature()"
+            [disabled]="!config().changeBrightness"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </app-setting-row>
+      @if (config().changeColorTemperature) {
+        <div class="setting-row-group" @vshrink>
+          <app-setting-row label="brightness-automations.temperature.title">
+            <app-cct-input-setting
+              [value]="config().colorTemperature"
+              (valueChange)="updateColorTemperature($event)"
+            ></app-cct-input-setting>
+          </app-setting-row>
+        </div>
+      }
     </div>
-  }
+  </div>
   <div class="setting-category">
     <h3 transloco="brightness-automations.miscConfig"></h3>
     <div class="settings">

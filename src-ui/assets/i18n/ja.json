@@ -1953,10 +1953,6 @@
         "title": "Bigscreen Beyond"
       },
       "cctControl": {
-        "enabled": {
-          "description": "他のアプリケーション（例: LuxVRやOVR Advanced Settings）でディスプレイの色温度を制御している場合は、これを無効にしてください",
-          "title": "色温度制御を有効にする"
-        },
         "title": "色温度"
       },
       "description": "輝度や色温度に関連する設定を行えます。",

@@ -474,10 +474,6 @@ export interface OyasumiSidecarCCTState {
    * @generated from protobuf field: uint32 transition_target = 6
    */
   transitionTarget: number;
-  /**
-   * @generated from protobuf field: bool available = 7
-   */
-  available: boolean;
 }
 /**
  * @generated from protobuf enum OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode
@@ -2560,7 +2556,6 @@ class OyasumiSidecarCCTState$Type extends MessageType<OyasumiSidecarCCTState> {
       { no: 4, name: 'max', kind: 'scalar', T: 13 /*ScalarType.UINT32*/ },
       { no: 5, name: 'transitioning', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
       { no: 6, name: 'transition_target', kind: 'scalar', T: 13 /*ScalarType.UINT32*/ },
-      { no: 7, name: 'available', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
     ]);
   }
   create(value?: PartialMessage<OyasumiSidecarCCTState>): OyasumiSidecarCCTState {
@@ -2571,7 +2566,6 @@ class OyasumiSidecarCCTState$Type extends MessageType<OyasumiSidecarCCTState> {
     message.max = 0;
     message.transitioning = false;
     message.transitionTarget = 0;
-    message.available = false;
     if (value !== undefined) reflectionMergePartial<OyasumiSidecarCCTState>(this, message, value);
     return message;
   }
@@ -2603,9 +2597,6 @@ class OyasumiSidecarCCTState$Type extends MessageType<OyasumiSidecarCCTState> {
           break;
         case /* uint32 transition_target */ 6:
           message.transitionTarget = reader.uint32();
-          break;
-        case /* bool available */ 7:
-          message.available = reader.bool();
           break;
         default:
           let u = options.readUnknownField;
@@ -2644,8 +2635,6 @@ class OyasumiSidecarCCTState$Type extends MessageType<OyasumiSidecarCCTState> {
     /* uint32 transition_target = 6; */
     if (message.transitionTarget !== 0)
       writer.tag(6, WireType.Varint).uint32(message.transitionTarget);
-    /* bool available = 7; */
-    if (message.available !== false) writer.tag(7, WireType.Varint).bool(message.available);
     let u = options.writeUnknownFields;
     if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
     return writer;

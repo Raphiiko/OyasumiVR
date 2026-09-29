@@ -34,6 +34,7 @@ function from15to16(data: any): any {
 
 function from16to17(data: any): any {
   data.version = 17;
+  delete data.cctControlEnabled;
   data.oneTimeFlags = (data.oneTimeFlags ?? []).filter(
     (flag: string) => flag !== 'CCT_CONTROL_WARNING_DIALOG'
   );
