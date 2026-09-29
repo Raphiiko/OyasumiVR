@@ -306,6 +306,14 @@ command, and sends `{"type":"cct", ...}` after the brightness snapshot on connec
 - A PC gets no snapshot for its own write, and every other PC gets one when the write changed the
   gains. The core keeps the last snapshot as `cct` in the connection state.
 
+On the PC, `SteamFrameCctControlDriver` sends CCT through the helper while the paired Frame is the
+active OpenVR HMD, its connection is `connected`, and the report says `available`. It keeps one
+command in flight and replaces a waiting one with the newest value. Reports reach the shown value
+without a write, and a set to the shown Kelvin writes when `exact` is false. The driver also matches
+an allowlisted Frame model without that path, so `CCTControlService` writes nothing then and the
+SteamVR color gain driver never writes the PC's own gains for a Frame. Transitions set their target in one command. The HMD
+connect automation reruns once after the first report, as for brightness.
+
 ## Updates
 
 Each connection compares the helper's hello with the bundled helper. An older helper, or the same

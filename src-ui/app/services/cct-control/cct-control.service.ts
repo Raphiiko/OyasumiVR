@@ -4,6 +4,7 @@ import {
   combineLatest,
   debounceTime,
   distinctUntilChanged,
+  EMPTY,
   map,
   Observable,
   of,
@@ -27,6 +28,8 @@ import { clamp } from '../../utils/number-utils';
 import { AppSettingsService } from '../app-settings.service';
 import { CctControlDriver } from './cct-control-drivers/cct-control-driver';
 import { SteamVrCctControlDriver } from './cct-control-drivers/steamvr-cct-control-driver';
+import { SteamFrameCctControlDriver } from './cct-control-drivers/steam-frame-cct-control-driver';
+import { SteamFramePairingService } from '../steam-frame-pairing.service';
 
 /** Gives SteamVR color gains of exactly 1.0 on every channel. */
 const NEUTRAL_CCT = 6600;
@@ -38,9 +41,12 @@ export class CCTControlService {
   private _cct: BehaviorSubject<number> = new BehaviorSubject<number>(6600);
   private _activeTransition = new BehaviorSubject<CCTTransitionTask | undefined>(undefined);
   public readonly driverSteamVr: SteamVrCctControlDriver;
+  public readonly driverSteamFrame: SteamFrameCctControlDriver;
   /** The driver that matches the active HMD; null while none does. */
   public readonly activeDriver: Observable<CctControlDriver | null>;
   public readonly driverIsAvailable: Observable<boolean>;
+  /** The driver that matches the active HMD; null while none does. */
+  private currentDriver: CctControlDriver | null = null;
   /** The active driver while it can write; null otherwise. */
   private writableDriver: CctControlDriver | null = null;
   public readonly activeTransition = this._activeTransition.asObservable();
@@ -54,11 +60,17 @@ export class CCTControlService {
 
   constructor(
     private openvr: OpenVRService,
-    appSettingsService: AppSettingsService
+    appSettingsService: AppSettingsService,
+    steamFrames: SteamFramePairingService
   ) {
     this.driverSteamVr = new SteamVrCctControlDriver(openvr, appSettingsService.settings);
+    this.driverSteamFrame = new SteamFrameCctControlDriver(
+      openvr,
+      steamFrames.pairings$,
+      steamFrames.connections$
+    );
     // the SteamVR driver can match any headset, so it stays last
-    const drivers: CctControlDriver[] = [this.driverSteamVr];
+    const drivers: CctControlDriver[] = [this.driverSteamFrame, this.driverSteamVr];
     this.activeDriver = combineLatest(drivers.map((driver) => driver.matches())).pipe(
       map((matches) => drivers.find((_, i) => matches[i]) ?? null),
       distinctUntilChanged(),
@@ -87,7 +99,7 @@ export class CCTControlService {
     options: Partial<SetBrightnessOrCCTOptions> = SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS
   ): CancellableTask {
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
-    if (this.writableDriver?.skipsTransitions) {
+    if (this.currentDriver?.skipsTransitions) {
       this.cancelActiveTransition();
       const task = new CancellableTask(() =>
         this.setCCT(temperature, { cancelActiveTransition: false, logReason: opt.logReason })
@@ -138,7 +150,10 @@ export class CCTControlService {
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
     cct = clamp(Math.round(cct), 1000, 10000);
     if (opt.cancelActiveTransition) this.cancelActiveTransition();
-    if (cct === this.cct && !force) return;
+    const driver = this.currentDriver;
+    // a driver that pushes its values owns the shown one, so nothing changes before it can write
+    if (driver?.pushesCctChanges && driver !== this.writableDriver) return;
+    if (cct === this.cct && !force && !this.writableDriver?.writesUnchangedValue) return;
     this._cct.next(cct);
     await this.writableDriver?.setCCT(cct);
     if (opt.logReason) {
@@ -146,8 +161,23 @@ export class CCTControlService {
     }
   }
 
+  /**
+   * Waits for the first report of the Frame that is the active HMD. Null when no Frame is waiting
+   * for one; resolves false when that HMD stops being active first.
+   */
+  whenFrameReports(): Promise<boolean> | null {
+    return this.driverSteamFrame.whenFrameReports();
+  }
+
   private watchDrivers() {
-    // write the app's value once a driver can write it
+    this.activeDriver.subscribe((driver) => (this.currentDriver = driver));
+
+    // show the values a driver pushes, without writing them back
+    this.activeDriver
+      .pipe(switchMap((driver) => driver?.cctUpdates ?? EMPTY))
+      .subscribe((kelvin) => this._cct.next(kelvin));
+
+    // write the app's value once a driver can write it, unless the driver pushes its own
     this.activeDriver
       .pipe(
         switchMap((driver) =>
@@ -157,11 +187,7 @@ export class CCTControlService {
         startWith(null),
         pairwise()
       )
-      .subscribe(([previous, driver]) => {
-        this.writableDriver = driver;
-        if (driver && !previous)
-          this.setCCT(this.cct, SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, true);
-      });
+      .subscribe(([previous, driver]) => this.onWritableDriver(previous, driver));
 
     // log which driver serves which headset, once both have settled
     const hmd = this.openvr.devices.pipe(
@@ -185,5 +211,20 @@ export class CCTControlService {
         // SteamVR keeps the gains across sessions, so clear a tint an earlier session left
         this.driverSteamVr.setCCT(NEUTRAL_CCT);
       });
+  }
+
+  private onWritableDriver(previous: CctControlDriver | null, driver: CctControlDriver | null) {
+    this.writableDriver = driver;
+    if (!driver || previous) return;
+    if (!driver.pushesCctChanges) {
+      this.setCCT(this.cct, SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, true);
+      return;
+    }
+
+    // a running transition would write the headset at every step, so it finishes in one command
+    const transition = this._activeTransition.value;
+    if (!transition) return;
+    this.cancelActiveTransition();
+    this.setCCT(transition.targetCCT);
   }
 }

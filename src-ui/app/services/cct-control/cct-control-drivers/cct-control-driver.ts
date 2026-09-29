@@ -5,6 +5,18 @@ export abstract class CctControlDriver {
   abstract readonly name: string;
   /** True when the driver sets a value in one command, so the service runs no transition steps. */
   readonly skipsTransitions: boolean = false;
+  /**
+   * True when the driver sends every value the device holds. OyasumiVR shows that value instead of
+   * writing its stored one when the driver becomes available, and writes nothing before then.
+   */
+  readonly pushesCctChanges: boolean = false;
+  /** Values the device reported or applied. OyasumiVR shows them and never writes them back. */
+  readonly cctUpdates?: Observable<number>;
+
+  /** True when a set to the shown value still needs a write. */
+  get writesUnchangedValue(): boolean {
+    return false;
+  }
 
   /** Whether the active HMD belongs to this driver, including while the driver cannot write yet. */
   abstract matches(): Observable<boolean>;
