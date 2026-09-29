@@ -1,12 +1,10 @@
 use std::{
     path::{Path, PathBuf},
-    sync::{mpsc, Arc, Mutex},
     time::{Duration, Instant},
 };
 
 use raphii_openvr_rs::{raw, Context, TrackedDeviceIndex};
 use serde::Serialize;
-use tokio::sync::broadcast;
 
 pub const POLL_INTERVAL: Duration = Duration::from_millis(250);
 const RECONNECT_INTERVAL: Duration = Duration::from_secs(2);
@@ -147,6 +145,11 @@ impl<B: Backend> Brightness<B> {
         &self.snapshot
     }
 
+    /// The backend while a runtime session is open.
+    pub fn session(&mut self) -> Option<&mut B> {
+        self.connected.then_some(&mut self.backend)
+    }
+
     /// Reads the headset and returns a new snapshot when anything changed since the last read or
     /// write.
     pub fn poll(&mut self) -> Option<Snapshot> {
@@ -255,7 +258,7 @@ pub struct OpenVr {
 }
 
 impl OpenVr {
-    fn context(&self) -> Result<&Context, RuntimeLost> {
+    pub(crate) fn context(&self) -> Result<&Context, RuntimeLost> {
         self.context.as_ref().ok_or(RuntimeLost)
     }
 }
@@ -344,97 +347,10 @@ impl Backend for OpenVr {
     }
 }
 
-pub struct Command {
-    pub connection: u64,
-    pub id: u64,
-    pub percentage: f64,
-}
-
-#[derive(Clone, Debug)]
-pub enum Event {
-    /// `cause` names the connection whose write produced it; that connection gets a reply instead.
-    Snapshot {
-        snapshot: Snapshot,
-        cause: Option<u64>,
-    },
-    Reply {
-        connection: u64,
-        id: u64,
-        result: Result<f64, SetError>,
-    },
-}
-
-/// Connects the brightness task with the PC connections.
-pub struct Hub {
-    /// Held while an event is sent, so a new subscriber never receives an event older than the
-    /// snapshot it starts from.
-    latest: Mutex<Snapshot>,
-    events: broadcast::Sender<Event>,
-    commands: mpsc::Sender<Command>,
-}
-
-impl Hub {
-    /// The current snapshot and every event after it.
-    pub fn subscribe(&self) -> (Snapshot, broadcast::Receiver<Event>) {
-        let latest = self.latest.lock().unwrap();
-        (latest.clone(), self.events.subscribe())
-    }
-
-    pub fn send(&self, command: Command) {
-        let _ = self.commands.send(command);
-    }
-
-    fn publish(&self, snapshot: Snapshot, cause: Option<u64>) {
-        let mut latest = self.latest.lock().unwrap();
-        *latest = snapshot.clone();
-        let _ = self.events.send(Event::Snapshot { snapshot, cause });
-    }
-}
-
-/// Runs the brightness task on its own thread: a poll every 250 ms, and commands in order.
-pub fn start<B: Backend + Send + 'static>(backend: B) -> Arc<Hub> {
-    let (commands, receiver) = mpsc::channel();
-    let hub = Arc::new(Hub {
-        latest: Mutex::new(Snapshot::UNAVAILABLE),
-        events: broadcast::channel(256).0,
-        commands,
-    });
-    let task_hub = hub.clone();
-    std::thread::spawn(move || run(Brightness::new(backend), &task_hub, receiver));
-    hub
-}
-
-fn run<B: Backend>(mut brightness: Brightness<B>, hub: &Hub, commands: mpsc::Receiver<Command>) {
-    let mut next_poll = Instant::now();
-    loop {
-        match commands.recv_timeout(next_poll.saturating_duration_since(Instant::now())) {
-            Ok(command) => {
-                let outcome = brightness.set(command.percentage);
-                if let Some(snapshot) = outcome.before {
-                    hub.publish(snapshot, None);
-                }
-                if let Some(snapshot) = outcome.after {
-                    hub.publish(snapshot, Some(command.connection));
-                }
-                let _ = hub.events.send(Event::Reply {
-                    connection: command.connection,
-                    id: command.id,
-                    result: outcome.result,
-                });
-            }
-            Err(mpsc::RecvTimeoutError::Timeout) => {
-                if let Some(snapshot) = brightness.poll() {
-                    hub.publish(snapshot, None);
-                }
-                next_poll = Instant::now() + POLL_INTERVAL;
-            }
-            Err(mpsc::RecvTimeoutError::Disconnected) => return,
-        }
-    }
-}
-
 #[cfg(test)]
 mod tests {
+    use std::sync::{Arc, Mutex};
+
     use super::*;
 
     const FRAME: Capability = Capability {
