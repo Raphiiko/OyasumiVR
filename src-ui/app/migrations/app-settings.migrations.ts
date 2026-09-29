@@ -41,22 +41,6 @@ function from16to17(data: any): any {
   return data;
 }
 
-/** Keeps CCT out of brightness automations for users who had color temperature control off. */
-export function keepCctAutomationsOffWhenCctWasDisabled(
-  source: Record<string, unknown>,
-  migrated: Record<string, unknown>
-) {
-  const appSettings = source['APP_SETTINGS'] as { version?: number; cctControlEnabled?: boolean };
-  if (!appSettings || (appSettings.version ?? 0) >= 17 || appSettings.cctControlEnabled !== false)
-    return;
-  const brightness = (migrated['AUTOMATION_CONFIGS'] as any)?.BRIGHTNESS_AUTOMATIONS;
-  if (!brightness) return;
-  for (const config of Object.values(brightness)) {
-    if (config && typeof config === 'object' && 'changeColorTemperature' in config)
-      (config as { changeColorTemperature: boolean }).changeColorTemperature = false;
-  }
-}
-
 async function from11to12(data: any): Promise<any> {
   data.mqttProtectedPassword = await protectSecret(data.mqttPassword);
   data.mqttPassword = null;
