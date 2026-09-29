@@ -8,7 +8,7 @@ use std::{
     time::Duration,
 };
 
-use brightness::{Command, Event, Hub, SetError, Snapshot};
+use hub::{Action, Command, Event, Hub};
 
 use futures_util::{SinkExt, StreamExt};
 use rustls::{
@@ -27,6 +27,10 @@ use tokio_tungstenite::tungstenite::{
 };
 
 pub mod brightness;
+pub mod cct;
+#[path = "../../src-shared-rust/src/color_temperature.rs"]
+pub mod color_temperature;
+pub mod hub;
 
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 pub const PROTOCOL_MIN: u32 = 1;
@@ -79,21 +83,60 @@ pub struct Identity {
 #[derive(Serialize)]
 #[serde(tag = "type", rename_all = "camelCase")]
 enum Outgoing<'a> {
-    Brightness(&'a Snapshot),
+    Brightness(&'a brightness::Snapshot),
+    Cct(&'a cct::Snapshot),
     #[serde(rename_all = "camelCase")]
     SetBrightnessResult {
         id: u64,
         #[serde(skip_serializing_if = "Option::is_none")]
         percentage: Option<f64>,
         #[serde(skip_serializing_if = "Option::is_none")]
-        error: Option<SetError>,
+        error: Option<brightness::SetError>,
     },
+    SetCctResult {
+        id: u64,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        snapshot: Option<&'a cct::Snapshot>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        error: Option<cct::SetError>,
+    },
+}
+
+impl<'a> Outgoing<'a> {
+    /// The message for one PC connection, or `None` for an event that belongs to another PC.
+    fn of(event: &'a Event, connection: u64) -> Option<Self> {
+        let own = |cause: &Option<u64>| *cause == Some(connection);
+        Some(match event {
+            Event::Brightness { cause, .. } | Event::Cct { cause, .. } if own(cause) => {
+                return None
+            }
+            Event::BrightnessReply { connection: c, .. }
+            | Event::CctReply { connection: c, .. }
+                if *c != connection =>
+            {
+                return None
+            }
+            Event::Brightness { snapshot, .. } => Self::Brightness(snapshot),
+            Event::Cct { snapshot, .. } => Self::Cct(snapshot),
+            Event::BrightnessReply { id, result, .. } => Self::SetBrightnessResult {
+                id: *id,
+                percentage: result.ok(),
+                error: result.as_ref().err().copied(),
+            },
+            Event::CctReply { id, result, .. } => Self::SetCctResult {
+                id: *id,
+                snapshot: result.as_ref().ok(),
+                error: result.as_ref().err().copied(),
+            },
+        })
+    }
 }
 
 #[derive(Deserialize)]
 #[serde(tag = "type", rename_all = "camelCase")]
 enum Incoming {
     SetBrightness { id: u64, percentage: f64 },
+    SetCct { id: u64, kelvin: i64 },
 }
 
 #[derive(Serialize)]
@@ -252,7 +295,8 @@ fn unauthorized() -> ErrorResponse {
     response
 }
 
-/// Serves one PC: TLS, token check, hello message, then brightness until the socket closes.
+/// Serves one PC: TLS, token check, hello message, then brightness and color temperature until the
+/// socket closes.
 #[allow(clippy::result_large_err)] // the callback signature belongs to tungstenite
 async fn handle(
     stream: TcpStream,
@@ -283,16 +327,17 @@ async fn handle(
         return;
     };
 
-    // send the version and headset identity, then the current brightness
+    // send the version and headset identity, then the current brightness and color temperature
     let hello = Hello {
         r#type: "hello",
         info: (*info).clone(),
         identity: read_identity(),
     };
-    let (snapshot, mut events) = hub.subscribe();
+    let (latest, mut events) = hub.subscribe();
     for message in [
         serde_json::to_string(&hello),
-        serde_json::to_string(&Outgoing::Brightness(&snapshot)),
+        serde_json::to_string(&Outgoing::Brightness(&latest.brightness)),
+        serde_json::to_string(&Outgoing::Cct(&latest.cct)),
     ] {
         let Ok(message) = message else { return };
         if socket.send(Message::text(message)).await.is_err() {
@@ -300,14 +345,17 @@ async fn handle(
         }
     }
 
-    // pass commands to the brightness task, and its events back, until either side stops
+    // pass commands to the headset task, and its events back, until either side stops
     loop {
-        let outgoing = tokio::select! {
+        let event = tokio::select! {
             message = socket.next() => match message {
                 Some(Ok(Message::Text(text))) => {
-                    if let Ok(Incoming::SetBrightness { id, percentage }) = serde_json::from_str(&text) {
-                        hub.send(Command { connection, id, percentage });
-                    }
+                    let (id, action) = match serde_json::from_str(&text) {
+                        Ok(Incoming::SetBrightness { id, percentage }) => (id, Action::SetBrightness(percentage)),
+                        Ok(Incoming::SetCct { id, kelvin }) => (id, Action::SetCct(kelvin)),
+                        Err(_) => continue,
+                    };
+                    hub.send(Command { connection, id, action });
                     continue;
                 }
                 Some(Ok(message)) if !message.is_close() => continue,
@@ -319,17 +367,8 @@ async fn handle(
                 Err(_) => return,
             },
         };
-        let message = match &outgoing {
-            Event::Snapshot { cause, .. } if *cause == Some(connection) => continue,
-            Event::Reply {
-                connection: target, ..
-            } if *target != connection => continue,
-            Event::Snapshot { snapshot, .. } => Outgoing::Brightness(snapshot),
-            Event::Reply { id, result, .. } => Outgoing::SetBrightnessResult {
-                id: *id,
-                percentage: result.ok(),
-                error: result.err(),
-            },
+        let Some(message) = Outgoing::of(&event, connection) else {
+            continue;
         };
         let Ok(message) = serde_json::to_string(&message) else {
             return;

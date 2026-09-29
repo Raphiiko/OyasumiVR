@@ -3,9 +3,9 @@ use std::time::Duration;
 use super::{
     connection, devkit, discovery, hex,
     models::{
-        Access, Candidate, CleanupOutcome, CleanupRequest, OtherPcsOutcome, Pairing, PairingKeys,
-        ProbeOutcome, RegisterOutcome, SetBrightnessError, SetupRequest, SetupResult, StageEvent,
-        State, SupportedModel,
+        Access, Candidate, Cct, CleanupOutcome, CleanupRequest, OtherPcsOutcome, Pairing,
+        PairingKeys, ProbeOutcome, RegisterOutcome, SetBrightnessError, SetCctError, SetupRequest,
+        SetupResult, StageEvent, State, SupportedModel,
     },
     setup,
     ssh::{self, SshError},
@@ -146,6 +146,12 @@ pub async fn steam_frame_set_brightness(
     percentage: f64,
 ) -> Result<f64, SetBrightnessError> {
     connection::set_brightness(&pairing_id, percentage).await
+}
+
+/// Sets the paired headset's color temperature and returns the snapshot the helper applied.
+#[tauri::command]
+pub async fn steam_frame_set_cct(pairing_id: String, kelvin: u32) -> Result<Cct, SetCctError> {
+    connection::set_cct(&pairing_id, kelvin).await
 }
 
 #[cfg(test)]
