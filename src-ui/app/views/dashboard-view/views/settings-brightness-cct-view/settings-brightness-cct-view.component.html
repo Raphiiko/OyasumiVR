@@ -38,13 +38,32 @@
               @vshrink
             ></app-alert>
           }
-          @if (unlistedHmd) {
-            <app-alert severity="info" @vshrink>
+          @if (unlistedHmd && hmd) {
+            <app-alert severity="info" contentClass="flex-row" @vshrink>
               <span
+                class="unlisted-hmd-text"
                 [innerHTML]="
                   'settings.brightnessCct.cctControl.unsupportedHmds.unlistedHmd' | transloco
                 "
               ></span>
+              <dl class="unlisted-hmd-identity">
+                <dt>{{
+                  'settings.brightnessCct.cctControl.unsupportedHmds.manufacturer' | transloco
+                }}</dt>
+                <dd [class.empty]="!hmd.manufacturer">
+                  {{
+                    hmd.manufacturer ||
+                      ('settings.brightnessCct.cctControl.unsupportedHmds.notReported' | transloco)
+                  }}
+                </dd>
+                <dt>{{ 'settings.brightnessCct.cctControl.unsupportedHmds.model' | transloco }}</dt>
+                <dd [class.empty]="!hmd.model">
+                  {{
+                    hmd.model ||
+                      ('settings.brightnessCct.cctControl.unsupportedHmds.notReported' | transloco)
+                  }}
+                </dd>
+              </dl>
             </app-alert>
           }
         </div>
