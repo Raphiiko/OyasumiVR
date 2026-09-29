@@ -32,6 +32,14 @@ function from15to16(data: any): any {
   return data;
 }
 
+function from16to17(data: any): any {
+  data.version = 17;
+  data.oneTimeFlags = (data.oneTimeFlags ?? []).filter(
+    (flag: string) => flag !== 'CCT_CONTROL_WARNING_DIALOG'
+  );
+  return data;
+}
+
 async function from11to12(data: any): Promise<any> {
   data.mqttProtectedPassword = await protectSecret(data.mqttPassword);
   data.mqttPassword = null;
@@ -157,6 +165,7 @@ export const APP_SETTINGS_MIGRATION: MigrationDefinition<Versioned> = {
     13: from13to14,
     14: from14to15,
     15: from15to16,
+    16: from16to17,
   },
   normalizeCurrentVersion: (data) => normalizeWithDefaults(APP_SETTINGS_DEFAULT, data),
 };

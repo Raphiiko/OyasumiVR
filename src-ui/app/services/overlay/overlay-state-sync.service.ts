@@ -122,6 +122,7 @@ export class OverlayStateSyncService {
       max: 10000,
       transitioning: false,
       transitionTarget: 6600,
+      available: false,
     },
     sleepPreparationAvailable: false,
     sleepPreparationTimedOut: false,
@@ -419,6 +420,11 @@ export class OverlayStateSyncService {
         state.cctState!.enabled = enabled;
         this.state.next(state);
       });
+    this.cctService.driverIsAvailable.subscribe((available) => {
+      const state = structuredClone(this.state.value);
+      state.cctState!.available = available;
+      this.state.next(state);
+    });
     this.cctService.cctStream.pipe(distinctUntilChanged()).subscribe((value) => {
       const state = structuredClone(this.state.value);
       state.cctState!.value = value;

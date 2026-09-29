@@ -153,7 +153,9 @@
         @if (state.hover) {
           <span @hshrink>{{ 'comp.main-status-bar.cctControl.label' | transloco }}:&nbsp;</span>
         }
-        <span class="monospace">{{ cctControl.cctStream | async }}K</span>
+        <span class="monospace" [class.inactive]="(cctControl.driverIsAvailable | async) === false"
+          >{{ cctControl.cctStream | async }}K</span
+        >
       </div>
     }
     @if ((simpleBrightnessControl.advancedMode | async) === false) {

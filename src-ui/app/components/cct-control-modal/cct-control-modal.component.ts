@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import { fadeUp, hshrink, vshrink } from '../../utils/animations';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { ModalOptions } from '../../services/modal.service';
@@ -7,7 +7,6 @@ import { asyncScheduler, Subject, switchMap, throttleTime } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { CCTControlService } from '../../services/cct-control/cct-control.service';
-import { AppSettingsService } from '../../services/app-settings.service';
 
 @Component({
   selector: 'app-cct-control-modal',
@@ -17,15 +16,14 @@ import { AppSettingsService } from '../../services/app-settings.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
-export class CCTControlModalComponent extends BaseModalComponent<void, void> implements OnInit {
+export class CCTControlModalComponent extends BaseModalComponent<void, void> {
   protected readonly setCCT = new Subject<number>();
 
   constructor(
     protected cctControl: CCTControlService,
     protected router: Router,
     public automationConfigService: AutomationConfigService,
-    private destroyRef: DestroyRef,
-    private appSettings: AppSettingsService
+    private destroyRef: DestroyRef
   ) {
     super();
     this.setCCT
@@ -35,10 +33,6 @@ export class CCTControlModalComponent extends BaseModalComponent<void, void> imp
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
-  }
-
-  async ngOnInit(): Promise<void> {
-    await this.appSettings.promptDialogForOneTimeFlag('CCT_CONTROL_WARNING_DIALOG');
   }
 
   override getOptionsOverride(): Partial<ModalOptions> {

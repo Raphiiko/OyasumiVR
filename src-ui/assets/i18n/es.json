@@ -1368,10 +1368,6 @@
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "Este preajuste utiliza una solución que tiene algunos problemas. Por favor, utiliza este preajuste sólo si no puedes utilizar el preajuste GoGo Loco más reciente. Si tu avatar todavía utiliza una versión anterior de GoGo Loco, se recomienda que actualices tu avatar para utilizar la última versión de GoGo Loco.",
     "GORONE_LEGACY_PRESET_WARNING": "Las versiones v4.0 y superiores de este prefab ya contienen la funcionalidad de giro, y no son compatibles con este preajuste. Este preajuste sigue disponible si su avatar utiliza versiones anteriores de este prefab.",
     "oneTimeFlagDialogs": {
-      "CCT_CONTROL_WARNING_DIALOG": {
-        "message": "Ten en cuenta que el control de la temperatura del color de la pantalla solo está disponible con determinados cascos SteamVR nativos, como Valve Index, Bigscreen Beyond o HTC Vive (Pro).\n\nSi no utilizas uno de estos auriculares, es probable que esta función no tenga ningún efecto para ti.\n\nSi lo deseas, puedes desactivar el control de la temperatura de color de la pantalla en la configuración.",
-        "title": "Funciones disponibles"
-      },
       "OSC_SCRIPT_SIMPLE_EDITOR_VRCHAT_AUTOCOMPLETE_INFO": {
         "title": "Automático-completions"
       },

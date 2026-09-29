@@ -5,6 +5,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { VALVE_INDEX_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS } from '../../../../services/brightness-control/hardware-brightness-drivers/valve-index-hardware-brightness-control-driver';
 import { BIGSCREEN_BEYOND_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS } from '../../../../services/brightness-control/hardware-brightness-drivers/bigscreen-beyond-hardware-brightness-control-driver';
 import { clamp } from '../../../../utils/number-utils';
+import { OpenVRService } from '../../../../services/openvr.service';
+import { isSteamVrCctSupportedHmd } from '../../../../services/cct-control/cct-control-drivers/steamvr-cct-control-driver';
+import { vshrink } from '../../../../utils/animations';
 
 @Component({
   selector: 'app-settings-brightness-cct-view',
@@ -12,12 +15,16 @@ import { clamp } from '../../../../utils/number-utils';
   styleUrl: './settings-brightness-cct-view.component.scss',
   changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
+  animations: [vshrink()],
 })
 export class SettingsBrightnessCctViewComponent implements OnInit {
   protected appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
+  /** The active HMD's identity when it is not on the SteamVR color temperature list. */
+  protected unlistedHmd: { manufacturer: string; model: string } | null = null;
 
   constructor(
     private appSettingsService: AppSettingsService,
+    private openvr: OpenVRService,
     private destroyRef: DestroyRef
   ) {}
 
@@ -27,6 +34,13 @@ export class SettingsBrightnessCctViewComponent implements OnInit {
       .subscribe((settings) => {
         this.appSettings = settings;
       });
+    this.openvr.devices.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((devices) => {
+      const hmd = devices.find((d) => d.index === 0 && d.class === 'HMD');
+      this.unlistedHmd =
+        hmd && !isSteamVrCctSupportedHmd(hmd)
+          ? { manufacturer: hmd.manufacturerName ?? '', model: hmd.modelNumber ?? '' }
+          : null;
+    });
   }
 
   get valveIndexMin() {
@@ -90,6 +104,12 @@ export class SettingsBrightnessCctViewComponent implements OnInit {
   toggleCCTControl() {
     this.appSettingsService.updateSettings({
       cctControlEnabled: !this.appSettings.cctControlEnabled,
+    });
+  }
+
+  toggleCCTControlOnUnsupportedHmds() {
+    this.appSettingsService.updateSettings({
+      cctControlOnUnsupportedHmds: !this.appSettings.cctControlOnUnsupportedHmds,
     });
   }
 }

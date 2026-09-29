@@ -30,8 +30,31 @@ describe('app settings migration 15 to 16', () => {
     expect(result.status).toBe('migrated');
     if (result.status === 'migrated') {
       expect(result.value).toMatchObject({
-        version: 16,
         vrcxLogsEnabled: ['SleepMode', 'Invites', 'StatusChanges', 'GroupChanges'],
+      });
+    }
+  });
+});
+
+describe('app settings migration 16 to 17', () => {
+  it('drops the retired CCT warning flag and keeps the others', async () => {
+    const result = await runMigrations(
+      {
+        version: 16,
+        oneTimeFlags: [
+          'CCT_CONTROL_WARNING_DIALOG',
+          'OSC_SCRIPT_SIMPLE_EDITOR_VRCHAT_AUTOCOMPLETE_INFO',
+        ],
+      } as Versioned,
+      APP_SETTINGS_MIGRATION
+    );
+
+    expect(result.status).toBe('migrated');
+    if (result.status === 'migrated') {
+      expect(result.value).toMatchObject({
+        version: 17,
+        oneTimeFlags: ['OSC_SCRIPT_SIMPLE_EDITOR_VRCHAT_AUTOCOMPLETE_INFO'],
+        cctControlOnUnsupportedHmds: false,
       });
     }
   });

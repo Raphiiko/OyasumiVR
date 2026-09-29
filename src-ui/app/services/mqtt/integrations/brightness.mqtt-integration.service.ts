@@ -3,7 +3,7 @@ import { MqttDiscoveryService } from '../mqtt-discovery.service';
 import { SimpleBrightnessControlService } from '../../brightness-control/simple-brightness-control.service';
 import { HardwareBrightnessControlService } from '../../brightness-control/hardware-brightness-control.service';
 import { SoftwareBrightnessControlService } from '../../brightness-control/software-brightness-control.service';
-import { distinctUntilChanged, map } from 'rxjs';
+import { combineLatest, distinctUntilChanged, map } from 'rxjs';
 import { MqttNumberProperty, MqttToggleProperty } from '../../../models/mqtt';
 import { AutomationConfigService } from '../../automation-config.service';
 import { isEqual } from 'lodash';
@@ -152,12 +152,15 @@ export class BrightnessMqttIntegrationService {
       available: false,
       unitOfMeasurement: 'K',
     });
-    this.appSettingsService.settings
+    combineLatest([
+      this.appSettingsService.settings.pipe(map((settings) => settings.cctControlEnabled)),
+      this.cctControl.driverIsAvailable,
+    ])
       .pipe(
-        map((settings) => settings.cctControlEnabled),
+        map(([enabled, available]) => enabled && available),
         distinctUntilChanged()
       )
-      .subscribe((enabled) => this.mqtt.setPropertyAvailability('colorTemperature', enabled));
+      .subscribe((available) => this.mqtt.setPropertyAvailability('colorTemperature', available));
     this.cctControl.cctStream.pipe(distinctUntilChanged()).subscribe((cct) => {
       this.mqtt.setNumberPropertyValue('colorTemperature', cct);
     });

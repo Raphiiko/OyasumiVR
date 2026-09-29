@@ -117,33 +117,6 @@
   }
 }
 
-.setting-category-title-row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-
-  .warning-icon {
-    cursor: pointer;
-    transition: all 0.15s ease;
-    --icon-color: var(--color-warning);
-    margin-right: 0.5em;
-
-    app-icon {
-      font-size: 1.28em;
-    }
-
-    &:hover {
-      transform: translateY(-0.1em);
-    }
-
-    &:active {
-      transform: translateY(0);
-      opacity: 0.6;
-    }
-  }
-}
-
 .auto-toggle-container {
   display: flex;
   align-items: center;

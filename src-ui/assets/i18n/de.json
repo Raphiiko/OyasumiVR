@@ -1164,10 +1164,6 @@
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "Die Voreinstellung verwendet einen Workaround, der derzeit ein paar Fehler hat. Bitte nutze diese Voreinstellungen nur, wenn du die neueren GoGo Loco Voreinstellungen nicht verwenden kannst. Solltest du einen Avatar mit einer älteren Version verwenden, solltest du diesen auf die aktuellste GoGo Loco Version updaten",
     "GORONE_LEGACY_PRESET_WARNING": "Version v4.0 und höher dieser Voreinstellung beinhalten bereits Drehfunktionen und sind nicht kompatibel mit dieser Voreinstellung. Die Voreinstellung ist immernoch verfühbar wenn dein Avatar eine ältere Version dieser Voreinstellung verwendet",
     "oneTimeFlagDialogs": {
-      "CCT_CONTROL_WARNING_DIALOG": {
-        "message": "Bitte beachten , dass die Steuerung der Farbtemperatur der Anzeige nur mit bestimmten nativen SteamVR-Headsets verfügbar ist, z. B. dem Valve Index, Bigscreen Beyond oder HTC Vive (Pro).\n\nWenn keines dieser Headsets verwenden, wird diese Funktion wahrscheinlich keine Auswirkungen für Sie haben.\n\nSie können die Steuerung der Farbtemperatur in den Einstellungen deaktivieren, wenn Sie dies wünschen.",
-        "title": "Feature Verfügbarkeit"
-      },
       "acknowledge": "Ich verstehe"
     },
     "oscScriptEditorErrors": {

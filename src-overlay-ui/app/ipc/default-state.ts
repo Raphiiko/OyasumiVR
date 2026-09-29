@@ -63,6 +63,7 @@ export const DEFAULT_OYASUMI_STATE: OyasumiSidecarState = {
     max: 10000,
     transitioning: false,
     transitionTarget: 6600,
+    available: false,
   },
   sleepPreparationAvailable: false,
   sleepPreparationTimedOut: false,

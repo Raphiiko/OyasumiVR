@@ -174,18 +174,7 @@
   </div>
   @if (cctControlEnabled()) {
     <div class="setting-category">
-      <div class="setting-category-title-row">
-        <h3 transloco="brightness-automations.changeTemperature.category"></h3>
-        @if (!appSettingsService.oneTimeFlagSet('CCT_CONTROL_WARNING_DIALOG')) {
-          <span
-            class="warning-icon"
-            @fade
-            (click)="appSettingsService.promptDialogForOneTimeFlag('CCT_CONTROL_WARNING_DIALOG')"
-          >
-            <app-icon name="warning" />
-          </span>
-        }
-      </div>
+      <h3 transloco="brightness-automations.changeTemperature.category"></h3>
       <div class="settings">
         <app-setting-row
           label="brightness-automations.changeTemperature.title"
