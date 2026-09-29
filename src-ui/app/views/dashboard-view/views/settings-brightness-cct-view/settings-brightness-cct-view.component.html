@@ -31,21 +31,13 @@
               @vshrink
             ></app-alert>
           }
-          @if (hmd && !listedHmd) {
+          @if (hmdConnected && !listedHmd) {
             <app-alert severity="info" @vshrink>
-              <span class="unlisted-hmd">
-                <span>{{
-                  'settings.brightnessCct.cctControl.unsupportedHmds.unlistedHmd' | transloco: hmd
-                }}</span>
-                @if (!appSettings.cctControlOnUnsupportedHmds) {
-                  <span>{{
-                    'settings.brightnessCct.cctControl.unsupportedHmds.tryIt' | transloco
-                  }}</span>
-                }
-                <a href="https://discord.gg/7MqdPJhYxC" target="_blank">{{
-                  'settings.brightnessCct.cctControl.unsupportedHmds.report' | transloco
-                }}</a>
-              </span>
+              <span
+                [innerHTML]="
+                  'settings.brightnessCct.cctControl.unsupportedHmds.unlistedHmd' | transloco
+                "
+              ></span>
             </app-alert>
           }
         </div>

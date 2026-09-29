@@ -335,7 +335,7 @@ OyasumiVR can also control the color temperature of your VR headset's display. B
 <br><br>
 With the sunset and sunrise triggers, you can have OyasumiVR automatically adjust the color temperature of your display to match the time of day.
 <br><br>
-<i>Note that this feature is supported on the Valve Index and the Bigscreen Beyond. On other headsets, you can try it through the "Try on unsupported headsets" setting.</i>
+<i>Note that this feature is supported on the Valve Index and the Bigscreen Beyond. On other headsets, you can try it through the "Enable on unsupported headsets" setting.</i>
     </td>
     <td width="380"><img src="https://github.com/user-attachments/assets/bfa3fd71-9ec1-4d61-8255-8a716b2ea09c"></td>
   </tr>

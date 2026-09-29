@@ -19,8 +19,7 @@ import { vshrink } from '../../../../utils/animations';
 })
 export class SettingsBrightnessCctViewComponent implements OnInit {
   protected appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
-  /** The active HMD's identity; null while no HMD is connected. */
-  protected hmd: { manufacturer: string; model: string } | null = null;
+  protected hmdConnected = false;
   /** True while the active HMD is on the SteamVR color temperature list. */
   protected listedHmd = false;
 
@@ -39,9 +38,7 @@ export class SettingsBrightnessCctViewComponent implements OnInit {
     this.openvr.devices.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((devices) => {
       const hmd = devices.find((d) => d.index === 0 && d.class === 'HMD');
       this.listedHmd = !!hmd && isSteamVrCctSupportedHmd(hmd);
-      this.hmd = hmd
-        ? { manufacturer: hmd.manufacturerName ?? '', model: hmd.modelNumber ?? '' }
-        : null;
+      this.hmdConnected = !!hmd;
     });
   }
 

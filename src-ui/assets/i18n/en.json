@@ -2027,12 +2027,10 @@
       "cctControl": {
         "title": "Color Temperature",
         "unsupportedHmds": {
-          "description": "Use color temperature control on headsets that OyasumiVR has not confirmed. It only works if the headset applies SteamVR's display color settings.",
-          "listedHmd": "OyasumiVR supports color temperature control on your headset, so this setting is not needed.",
-          "report": "Let us know on Discord whether it works.",
-          "title": "Try on unsupported headsets",
-          "tryIt": "Turn on this setting to try it.",
-          "unlistedHmd": "OyasumiVR has not confirmed color temperature control on your headset, which reports manufacturer \"{manufacturer}\" and model \"{model}\"."
+          "description": "Turn this on to enable color temperature control, even though it's not known to work for your headset.",
+          "listedHmd": "Color temperature control is supported on your headset.",
+          "title": "Enable on unsupported headsets",
+          "unlistedHmd": "Color temperature control might still work on some headsets, if enabled. If your headset does turn out to work despite being unsupported, please let us know on <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a>!"
         }
       },
       "description": "Here you'll find any settings related to brightness and color temperature.",
