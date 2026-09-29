@@ -1,3 +1,4 @@
+use oyasumivr_shared::color_temperature;
 use raphii_openvr_rs as ovr;
 use std::ffi::CStr;
 
@@ -5,7 +6,7 @@ use crate::openvr::{
     devices::get_devices, models::TrackedDeviceClass, settings_interface_available, OVR_CONTEXT,
 };
 
-pub async fn set_color_temp(mut temperature: Option<u32>) -> Result<(f64, f64, f64), String> {
+pub async fn set_color_temp(temperature: Option<u32>) -> Result<(f64, f64, f64), String> {
     let devices = get_devices().await;
     let device = devices
         .iter()
@@ -21,38 +22,9 @@ pub async fn set_color_temp(mut temperature: Option<u32>) -> Result<(f64, f64, f
     if !settings_interface_available(context) {
         return Err("OPENVR_NOT_INITIALISED".to_string());
     }
-    if temperature.is_none() {
-        temperature = Some(6600);
-    }
-    // Color temperature to RGB conversion based on algorithm by Tanner Helland
-    // https://tannerhelland.com/2012/09/18/convert-temperature-rgb-algorithm-code.html
-    let temperature = temperature.unwrap().clamp(1000, 10000);
-    let temperature = (temperature as f64) / 100.0;
-    let red = if temperature <= 66.0 {
-        255.0
-    } else {
-        let red = temperature - 60.0;
-        let red = 329.698727446 * red.powf(-0.1332047592);
-        red.clamp(0.0, 255.0)
-    } / 255.0;
-    let green = if temperature <= 66.0 {
-        let green = temperature;
-        let green = 99.4708025861 * green.ln() - 161.1195681661;
-        green.clamp(0.0, 255.0)
-    } else {
-        let green = temperature - 60.0;
-        let green = 288.1221695283 * green.powf(-0.0755148492);
-        green.clamp(0.0, 255.0)
-    } / 255.0;
-    let blue = if temperature >= 66.0 {
-        255.0
-    } else if temperature <= 19.0 {
-        0.0
-    } else {
-        let blue = temperature - 10.0;
-        let blue = 138.5177312231 * blue.ln() - 305.0447927307;
-        blue.clamp(0.0, 255.0)
-    } / 255.0;
+    let [red, green, blue] = color_temperature::kelvin_to_gains(
+        temperature.unwrap_or(color_temperature::NEUTRAL_KELVIN),
+    );
     let settings = &context.settings();
     let _ = settings.set_float(
         CStr::from_bytes_with_nul(ovr::raw::k_pch_SteamVR_Section).unwrap(),
