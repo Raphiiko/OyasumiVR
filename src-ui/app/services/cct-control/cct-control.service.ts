@@ -28,6 +28,9 @@ import { AppSettingsService } from '../app-settings.service';
 import { CctControlDriver } from './cct-control-drivers/cct-control-driver';
 import { SteamVrCctControlDriver } from './cct-control-drivers/steamvr-cct-control-driver';
 
+/** Gives SteamVR color gains of exactly 1.0 on every channel. */
+const NEUTRAL_CCT = 6600;
+
 @Injectable({
   providedIn: 'root',
 })
@@ -54,6 +57,7 @@ export class CCTControlService {
     appSettingsService: AppSettingsService
   ) {
     this.driverSteamVr = new SteamVrCctControlDriver(openvr, appSettingsService.settings);
+    // the SteamVR driver can match any headset, so it stays last
     const drivers: CctControlDriver[] = [this.driverSteamVr];
     this.activeDriver = combineLatest(drivers.map((driver) => driver.matches())).pipe(
       map((matches) => drivers.find((_, i) => matches[i]) ?? null),
@@ -169,8 +173,13 @@ export class CCTControlService {
       .pipe(debounceTime(500), distinctUntilChanged(isEqual))
       .subscribe(([driver, hmd]) => {
         if (!hmd) return;
-        if (driver) info(`[CCTControl] Using the ${driver.name} driver for HMD ${hmd}`);
-        else info(`[CCTControl] No color temperature driver supports HMD ${hmd}`);
+        if (driver) {
+          info(`[CCTControl] Using the ${driver.name} driver for HMD ${hmd}`);
+          return;
+        }
+        info(`[CCTControl] No color temperature driver supports HMD ${hmd}`);
+        // SteamVR keeps the gains across sessions, so clear a tint an earlier session left
+        this.driverSteamVr.setCCT(NEUTRAL_CCT);
       });
   }
 }

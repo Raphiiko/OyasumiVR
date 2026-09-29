@@ -134,28 +134,28 @@
         >
       </div>
     }
-    <div
-      class="pill cct-control clickable"
-      *ngVar="{ hover: false }; let state"
-      (mouseenter)="state.hover = true"
-      (mouseleave)="state.hover = false"
-      [tooltip]="'comp.main-status-bar.cctControl.tooltip'"
-      [tooltipMode]="'top'"
-      [tooltipMargin]="8"
-      (click)="openCCTControlModal()"
-      @hshrink
-      [class.breathing]="brightnessCctAutomations.anyCCTTransitionActive | async"
-    >
-      <div class="pill-icon" @hshrink>
-        <div class="colortemp-icon" [style.background-color]="cctControl.cctCSSColor"></div>
-      </div>
-      @if (state.hover) {
-        <span @hshrink>{{ 'comp.main-status-bar.cctControl.label' | transloco }}:&nbsp;</span>
-      }
-      <span class="monospace" [class.inactive]="(cctControl.driverIsAvailable | async) === false"
-        >{{ cctControl.cctStream | async }}K</span
+    @if (cctControl.driverIsAvailable | async) {
+      <div
+        class="pill cct-control clickable"
+        *ngVar="{ hover: false }; let state"
+        (mouseenter)="state.hover = true"
+        (mouseleave)="state.hover = false"
+        [tooltip]="'comp.main-status-bar.cctControl.tooltip'"
+        [tooltipMode]="'top'"
+        [tooltipMargin]="8"
+        (click)="openCCTControlModal()"
+        @hshrink
+        [class.breathing]="brightnessCctAutomations.anyCCTTransitionActive | async"
       >
-    </div>
+        <div class="pill-icon" @hshrink>
+          <div class="colortemp-icon" [style.background-color]="cctControl.cctCSSColor"></div>
+        </div>
+        @if (state.hover) {
+          <span @hshrink>{{ 'comp.main-status-bar.cctControl.label' | transloco }}:&nbsp;</span>
+        }
+        <span class="monospace">{{ cctControl.cctStream | async }}K</span>
+      </div>
+    }
     @if ((simpleBrightnessControl.advancedMode | async) === false) {
       <div
         class="pill brightness-simple clickable"

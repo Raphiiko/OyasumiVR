@@ -5,6 +5,8 @@ export interface StoreMigrationSpec {
   storeName: string;
   migrations: Record<string, MigrationDefinition<Versioned>>;
   defaults: Record<string, unknown>;
+  /** Runs after every key migrated, to move data between keys; `source` is the unmigrated store. */
+  afterMigrations?: (source: Record<string, unknown>, migrated: Record<string, unknown>) => void;
 }
 
 export type StoreCandidateKind = 'live' | 'snapshot' | 'checkpoint';
@@ -238,6 +240,7 @@ async function evaluateCandidate(
       migratedAnyKey,
     };
   }
+  spec.afterMigrations?.(parsed, migrated);
   return {
     report: { ...report, viable: true, atTarget: !migratedAnyKey },
     parsed,

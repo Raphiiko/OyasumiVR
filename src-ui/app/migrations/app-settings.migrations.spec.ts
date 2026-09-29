@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { runMigrations, Versioned } from 'src-shared-ts/src/migration-runner';
 import { APP_SETTINGS_MIGRATION } from './app-settings.migrations';
+import { SETTINGS_STORE_MIGRATION } from './store-migrations';
+import { decideStoreMigration } from 'src-shared-ts/src/store-migration';
+import { APP_SETTINGS_DEFAULT } from '../models/settings';
+import { AUTOMATION_CONFIGS_DEFAULT } from '../models/automations';
 
 describe('app settings migration 14 to 15', () => {
   it.each([
@@ -59,5 +63,36 @@ describe('app settings migration 16 to 17', () => {
       });
       expect(result.value).not.toHaveProperty('cctControlEnabled');
     }
+  });
+});
+
+describe('settings store migration of CCT automations', () => {
+  const store = (cctControlEnabled: boolean, version = 16) => ({
+    id: 'live',
+    kind: 'live' as const,
+    contents: JSON.stringify({
+      APP_SETTINGS: { ...structuredClone(APP_SETTINGS_DEFAULT), version, cctControlEnabled },
+      AUTOMATION_CONFIGS: structuredClone(AUTOMATION_CONFIGS_DEFAULT),
+    }),
+  });
+  const cctFlags = (contents: string) =>
+    Object.values(JSON.parse(contents).AUTOMATION_CONFIGS.BRIGHTNESS_AUTOMATIONS)
+      .filter((c): c is { changeColorTemperature: boolean } => typeof c === 'object')
+      .map((c) => c.changeColorTemperature);
+
+  it('turns off CCT in brightness automations when color temperature control was off', async () => {
+    const decision = await decideStoreMigration([store(false)], SETTINGS_STORE_MIGRATION);
+    expect(decision.action).toBe('install');
+    if (decision.action !== 'install') return;
+    expect(cctFlags(decision.contents)).toEqual([false, false, false, false, false, false]);
+  });
+
+  it.each([
+    ['color temperature control was on', store(true)],
+    ['the settings already migrated', store(false, 17)],
+  ])('keeps CCT in brightness automations when %s', async (_, candidate) => {
+    const decision = await decideStoreMigration([candidate], SETTINGS_STORE_MIGRATION);
+    const contents = decision.action === 'install' ? decision.contents : candidate.contents;
+    expect(cctFlags(contents)).toEqual([true, true, true, true, true, true]);
   });
 });

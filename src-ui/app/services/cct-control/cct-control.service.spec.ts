@@ -16,8 +16,12 @@ const QUEST: Partial<OVRDevice> = { manufacturerName: 'Oculus', modelNumber: 'Qu
 
 /** Waits past the driver's 100 ms debounce of OpenVR changes. */
 const settle = () => new Promise((resolve) => setTimeout(resolve, 150));
+/** Waits past the service's 500 ms settle before it logs and resets an unclaimed headset. */
+const settleUnclaimed = () => new Promise((resolve) => setTimeout(resolve, 800));
 
 async function setup(hmd: Partial<OVRDevice> | null, tryUnsupported = false) {
+  // a previous test's service can still finish its settle and write
+  await settleUnclaimed();
   vi.mocked(invoke).mockClear();
   const status = new BehaviorSubject('INITIALIZED');
   const devices = new BehaviorSubject(hmd ? [{ index: 0, class: 'HMD', ...hmd } as OVRDevice] : []);
@@ -56,13 +60,24 @@ describe('CCTControlService driver selection', () => {
     expect(writes()).toEqual([6600, 3000]);
   });
 
-  it('writes nothing to a headset that is not on the list', async () => {
+  it('only resets a headset that is not on the list to neutral', async () => {
     const { service, writes } = await setup(QUEST);
 
     expect(await firstValueFrom(service.driverIsAvailable)).toBe(false);
     expect(await firstValueFrom(service.activeDriver)).toBeNull();
+    await settleUnclaimed();
+    expect(writes()).toEqual([6600]);
     await service.setCCT(3000);
+    await settleUnclaimed();
     expect(service.cct).toBe(3000);
+    expect(writes()).toEqual([6600]);
+  });
+
+  it('writes nothing while no headset is connected', async () => {
+    const { service, writes } = await setup(null);
+
+    await service.setCCT(3000);
+    await settleUnclaimed();
     expect(writes()).toEqual([]);
   });
 
@@ -74,10 +89,14 @@ describe('CCTControlService driver selection', () => {
     expect(await firstValueFrom(service.driverIsAvailable)).toBe(true);
     expect(writes()).toEqual([6600]);
 
-    setTryUnsupported(false);
-    await settle();
     await service.setCCT(3000);
-    expect(writes()).toEqual([6600]);
+    expect(writes()).toEqual([6600, 3000]);
+
+    setTryUnsupported(false);
+    await settleUnclaimed();
+    expect(writes()).toEqual([6600, 3000, 6600]);
+    await service.setCCT(4000);
+    expect(writes()).toEqual([6600, 3000, 6600]);
   });
 
   it('writes the stored value once a listed headset becomes active', async () => {

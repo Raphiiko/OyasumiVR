@@ -383,3 +383,19 @@ test('restores the most recent compatible state across an A/B/A/B channel round 
   assert.equal(backToB.selectedId, 'live');
   assert.equal(JSON.parse(backToB.contents).CONFIG.channel, 'release-updated');
 });
+
+test('runs afterMigrations with the unmigrated source and installs its changes', async () => {
+  const decision = await decideStoreMigration(
+    [candidate('live', 'live', { CONFIG: { version: 1, value: 'live' }, OTHER: { flag: true } })],
+    {
+      ...spec(),
+      afterMigrations: (source, migrated) => {
+        const version = (source['CONFIG'] as Versioned).version;
+        migrated['OTHER'] = { flag: false, sourceVersion: version };
+      },
+    }
+  );
+  assert.equal(decision.action, 'install');
+  if (decision.action !== 'install') return;
+  assert.deepEqual(JSON.parse(decision.contents).OTHER, { flag: false, sourceVersion: 1 });
+});

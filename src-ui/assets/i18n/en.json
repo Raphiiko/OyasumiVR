@@ -2028,6 +2028,7 @@
         "title": "Color Temperature",
         "unsupportedHmds": {
           "description": "Use color temperature control on headsets that OyasumiVR has not confirmed. It only works if the headset applies SteamVR's display color settings.",
+          "listedHmd": "Your {manufacturer} {model} supports color temperature control, so OyasumiVR always uses it and this setting has no effect.",
           "report": "Let us know on Discord.",
           "title": "Try on unsupported headsets",
           "unlistedHmd": "Your headset reports itself as {manufacturer} {model}. Does color temperature control work on it?"
