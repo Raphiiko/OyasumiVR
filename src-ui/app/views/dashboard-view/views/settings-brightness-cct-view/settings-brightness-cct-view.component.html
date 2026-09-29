@@ -10,18 +10,62 @@
         <h2 transloco="settings.brightnessCct.cctControl.title"></h2>
         <div class="settings">
           <app-setting-row
-            label="settings.brightnessCct.cctControl.enabled.title"
-            description="settings.brightnessCct.cctControl.enabled.description"
+            label="settings.brightnessCct.cctControl.unsupportedHmds.title"
+            description="settings.brightnessCct.cctControl.unsupportedHmds.description"
+            [class.disabled]="!unlistedHmd"
           >
             <label class="switch-toggle">
               <input
                 type="checkbox"
-                [checked]="appSettings.cctControlEnabled"
-                (change)="toggleCCTControl()"
+                [checked]="appSettings.cctControlOnUnsupportedHmds"
+                [disabled]="!unlistedHmd"
+                (change)="toggleCCTControlOnUnsupportedHmds()"
               />
               <span class="switch-toggle-slider"></span>
             </label>
           </app-setting-row>
+          @if (listedHmd) {
+            <app-alert
+              severity="info"
+              message="settings.brightnessCct.cctControl.unsupportedHmds.listedHmd"
+              @vshrink
+            ></app-alert>
+          }
+          @if (!hmdConnected) {
+            <app-alert
+              severity="info"
+              message="settings.brightnessCct.cctControl.unsupportedHmds.noHmd"
+              @vshrink
+            ></app-alert>
+          }
+          @if (unlistedHmd && hmd) {
+            <app-alert severity="info" contentClass="flex-row" @vshrink>
+              <span
+                class="unlisted-hmd-text"
+                [innerHTML]="
+                  'settings.brightnessCct.cctControl.unsupportedHmds.unlistedHmd' | transloco
+                "
+              ></span>
+              <dl class="unlisted-hmd-identity">
+                <dt>{{
+                  'settings.brightnessCct.cctControl.unsupportedHmds.manufacturer' | transloco
+                }}</dt>
+                <dd [class.empty]="!hmd.manufacturer">
+                  {{
+                    hmd.manufacturer ||
+                      ('settings.brightnessCct.cctControl.unsupportedHmds.notReported' | transloco)
+                  }}
+                </dd>
+                <dt>{{ 'settings.brightnessCct.cctControl.unsupportedHmds.model' | transloco }}</dt>
+                <dd [class.empty]="!hmd.model">
+                  {{
+                    hmd.model ||
+                      ('settings.brightnessCct.cctControl.unsupportedHmds.notReported' | transloco)
+                  }}
+                </dd>
+              </dl>
+            </app-alert>
+          }
         </div>
       </div>
 

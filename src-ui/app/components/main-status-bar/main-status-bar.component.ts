@@ -48,7 +48,6 @@ export class MainStatusBarComponent implements OnInit {
   protected snowverlayAvailable = isHolidaysEventActive();
   protected snowverlayActive = false;
   protected mqttStatus: 'DISABLED' | 'CONNECTED' | 'DISCONNECTED' | 'ERROR' = 'DISABLED';
-  protected cctControlEnabled = false;
 
   constructor(
     private sleepService: SleepService,
@@ -75,7 +74,6 @@ export class MainStatusBarComponent implements OnInit {
   ngOnInit(): void {
     this.settings.settings.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((settings) => {
       this.snowverlayActive = !settings.hideSnowverlay && this.snowverlayAvailable;
-      this.cctControlEnabled = settings.cctControlEnabled;
       this.cdr.markForCheck();
     });
     this.mqttService.clientStatus.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((status) => {

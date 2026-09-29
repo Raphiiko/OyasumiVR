@@ -1479,10 +1479,6 @@
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "Deze preset gebruikt een workaround die niet helemaal goed werkt. Gebruik deze preset alleen als je de nieuwere GoGo Loco preset niet kunt gebruiken. Als je avatar nog een oudere versie van GoGo Loco gebruikt, is het aan te raden om je avatar te updaten naar de nieuwste versie van GoGo Loco.",
     "GORONE_LEGACY_PRESET_WARNING": "Versies v4.0 van deze prefab bevatten al functionaliteit om automatisch om te rollen, en zijn niet compatible met deze preset. Deze preset is alleen nog beschikbaar als je avatar oudere versies van deze prefab gebruikt.",
     "oneTimeFlagDialogs": {
-      "CCT_CONTROL_WARNING_DIALOG": {
-        "message": "Let op dat het aanpassen van de kleur temperatuur alleen beschikbaar is op sommige native SteamVR headsets, zoals de Valve Index, Bigscreen Beyond, of HTC Vive (Pro).\n\nAls een andere headset gebruikt, is de kans groot dat deze feature geen effect zal hebben.\n\nJe kan kleur temperatuur besturing uitschakelen in de instellingen als je dat wilt.",
-        "title": "Feature Beschikbaarheid"
-      },
       "OSC_SCRIPT_SIMPLE_EDITOR_VRCHAT_AUTOCOMPLETE_INFO": {
         "message": "Om automatische aanvullingen voor je VRChat avatar parameters te krijgen, moet VRChat draaien en moet je je gewenste avatar dragen.\\n\\nAls VRChat niet draait, kun je nog steeds de eenvoudige editor gebruiken, maar je krijgt geen automatische aanvullingen.",
         "title": "Automatische Aanvullingen"
@@ -1926,10 +1922,6 @@
         "title": "Bigscreen Beyond"
       },
       "cctControl": {
-        "enabled": {
-          "description": "Schakel dit uit als je andere software gebruikt om de kleur temperatuur van je scherm aan te passen (bijvoorbeeld LuxVR of OVR Advanced Settings)",
-          "title": "Kleur temperatuur besturing inschakelen"
-        },
         "title": "Kleur Temperatuur"
       },
       "description": "Hier vind je alle instellingen gerelateerd aan beeld helderheid en kleur temperatuur.",
@@ -2157,12 +2149,8 @@
     "updates": {
       "checkForUpdates": "Updates checken",
       "install": "Installeer v{version}",
-      "noUpdate": "Je draait nu OyasumiVR v{version}, en dat is de laatste versie!",
-      "notChecked": "OyasumiVR heeft nog niet gecheckt of er een update beschikbaar is.",
-      "updateAvailable": "Er is een nieuwe update beschikbaar voor OyasumiVR! Je draait op dit moment v{currentVersion}.\nDe nieuwste versie is v{latestVersion}.",
-      "updatesDisabled": {
-        "DEV": "Omdat je een development build van OyasumiVR draait is de mogelijkheid om voor updates te checken uitgeschakeld. \nAls je een nieuwere versie van OyasumiVR wilt installeren, download en installeer deze dan met de hand.",
-        "STEAM": "Je hebt de Steam versie van OyasumiVR geinstalleerd.\nNieuwe updates komen daarom binnen via Steam!"
+      "status": {
+        "notChecked": "OyasumiVR heeft nog niet gecheckt of er een update beschikbaar is."
       }
     }
   },

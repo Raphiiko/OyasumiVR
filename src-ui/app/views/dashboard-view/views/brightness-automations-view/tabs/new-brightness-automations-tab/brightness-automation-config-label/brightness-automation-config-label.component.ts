@@ -13,7 +13,6 @@ import { hshrink, vshrink } from '../../../../../../../utils/animations';
 })
 export class BrightnessAutomationConfigLabelComponent {
   @Input() public advancedMode = false;
-  @Input() public cctControlEnabled = false;
   @Input() public config?: BrightnessEventAutomationConfig;
   protected readonly getCSSColorForCCT = getCSSColorForCCT;
 }

@@ -1512,10 +1512,6 @@
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "这个预设使用的处理方法存在一些问题。 如果你不能使用 GoGo Loco 的新版本，请使用这个预设。 即使是这样，依然建议你将模型更新到最新的 GoGo Loco 版本",
     "GORONE_LEGACY_PRESET_WARNING": "此预设中的 v4.0 及以上版本已经包含了转向功能，并且与此预设不兼容。如果你的模型使用了此预设的旧版本，它仍然可用",
     "oneTimeFlagDialogs": {
-      "CCT_CONTROL_WARNING_DIALOG": {
-        "message": "请注意，色温控制仅适用于某些原生的 SteamVR 头显，例如Valve Index、Bigscreen Beyond 或 HTC Vive（Pro）。\n\n如果你不使用这些头显，这个功能可能对你来说没什么效果。\n\n因此，如果你觉得这比较多余，那么可以在设置中禁用色温控制。",
-        "title": "功能可用性"
-      },
       "OSC_SCRIPT_SIMPLE_EDITOR_VRCHAT_AUTOCOMPLETE_INFO": {
         "message": "要获取 VRChat 模型参数的自动补全，请确保 VRChat 正在运行且已使用目标模型。\\n未运行 VRChat 时仍可使用简易编辑器，但无法获得自动补全。",
         "title": "自动补全"
@@ -1967,10 +1963,6 @@
         "title": "Bigscreen Beyond"
       },
       "cctControl": {
-        "enabled": {
-          "description": "如果你使用其他应用程序来控制显示器的色温（例如 LuxVR 或 OVR Advanced Settings），请禁用此选项",
-          "title": "启用色温控制"
-        },
         "title": "色温"
       },
       "description": "在这里你会找到与亮度和色温相关的所有设置",
@@ -2206,14 +2198,10 @@
       "changelog": "更新日志",
       "checkForUpdates": "检查更新",
       "install": "安装版本 {version}",
-      "noUpdate": "你当前运行的是最新版本 {version}！",
-      "notChecked": "OyasumiVR 尚未检查更新",
-      "title": "更新",
-      "updateAvailable": "新版本的 OyasumiVR 现已推出！ 你当前正在使用版本 {currentVersion}。\n最新版本是 {latestVersion}。",
-      "updatesDisabled": {
-        "DEV": "你目前正在使用开发版本的 OyasumiVR ，因此自动更新已被关闭。\n如果你想安装新版本，请手动下载并运行安装程序。",
-        "STEAM": "你已经安装了 Steam 版本的 OyasumiVR。因此，OyasumiVR 更新将通过 Steam 提供！"
-      }
+      "status": {
+        "notChecked": "OyasumiVR 尚未检查更新"
+      },
+      "title": "更新"
     }
   },
   "shared": {

@@ -1,8 +1,6 @@
 import { BehaviorSubject, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 import type { MqttNumberProperty } from '../../../models/mqtt';
-import type { AppSettings } from '../../../models/settings';
-import type { AppSettingsService } from '../../app-settings.service';
 import type { AutomationConfigService } from '../../automation-config.service';
 import type { HardwareBrightnessControlService } from '../../brightness-control/hardware-brightness-control.service';
 import type { SimpleBrightnessControlService } from '../../brightness-control/simple-brightness-control.service';
@@ -40,17 +38,16 @@ async function createService() {
       return cctStream.value;
     },
     cctStream,
+    driverIsAvailable: new BehaviorSubject(true),
     setCCT: vi.fn(async (cct: number) => cctStream.next(Math.round(cct))),
   };
-  const settings = new BehaviorSubject({ cctControlEnabled: true } as AppSettings);
   const service = new BrightnessMqttIntegrationService(
     mqtt as unknown as MqttDiscoveryService,
     brightness() as unknown as SimpleBrightnessControlService,
     brightness() as unknown as HardwareBrightnessControlService,
     brightness() as unknown as SoftwareBrightnessControlService,
     {} as AutomationConfigService,
-    cctControl as unknown as CCTControlService,
-    { settings } as unknown as AppSettingsService
+    cctControl as unknown as CCTControlService
   );
   await service.init();
   const sendCommand = (value: number) =>
@@ -58,7 +55,7 @@ async function createService() {
       previous: { value: cctStream.value } as MqttNumberProperty,
       current: { value } as MqttNumberProperty,
     });
-  return { mqtt, cctControl, cctStream, settings, sendCommand };
+  return { mqtt, cctControl, cctStream, sendCommand };
 }
 
 describe('BrightnessMqttIntegrationService color temperature', () => {
@@ -78,12 +75,13 @@ describe('BrightnessMqttIntegrationService color temperature', () => {
     expect(mqtt.setNumberPropertyValue).toHaveBeenCalledWith('colorTemperature', 3000);
   });
 
-  it('follows the color temperature control setting for availability', async () => {
-    const { mqtt, settings } = await createService();
+  it('marks the color temperature unavailable while no driver can write it', async () => {
+    const { mqtt, cctControl } = await createService();
 
-    expect(mqtt.setPropertyAvailability).toHaveBeenCalledWith('colorTemperature', true);
-    settings.next({ cctControlEnabled: false } as AppSettings);
+    cctControl.driverIsAvailable.next(false);
     expect(mqtt.setPropertyAvailability).toHaveBeenLastCalledWith('colorTemperature', false);
+    cctControl.driverIsAvailable.next(true);
+    expect(mqtt.setPropertyAvailability).toHaveBeenLastCalledWith('colorTemperature', true);
   });
 
   it('applies commands and republishes the applied value', async () => {

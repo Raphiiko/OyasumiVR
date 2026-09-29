@@ -6,52 +6,394 @@
   overflow: hidden;
 }
 
-.updates-disabled {
-  @extend .pane;
-  background: var(--color-surface-1);
-  padding: 1em;
-  font-weight: 600;
-  white-space: pre-line;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-
-  img {
-    flex-shrink: 0;
-    width: 4em;
-    height: 4em;
-    margin: 0.5em 1em 0.5em 0.5em;
-  }
-
-  span {
-    flex: 1;
-  }
+[data-kind='added'] {
+  --kind-color: var(--color-vrchat-status-green);
 }
 
-.update-checker {
-  @extend .pane;
-  background: var(--color-surface-1);
-  padding: 1em;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-bottom: 1em;
+[data-kind='changed'] {
+  --kind-color: var(--color-vrchat-status-blue);
+}
 
-  p {
-    margin-bottom: 0;
-    white-space: pre;
+[data-kind='fixed'] {
+  --kind-color: var(--color-vrchat-status-orange);
+}
+
+[data-kind='removed'] {
+  --kind-color: var(--color-vrchat-status-red);
+}
+
+[data-kind='other'] {
+  --kind-color: var(--color-text-3);
+}
+
+h2 {
+  margin-bottom: 0.5em;
+}
+
+.version-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1.1em;
+  padding: 1.1em 1.25em;
+  margin-bottom: 1.75em;
+  background: var(--color-surface-1);
+  border-radius: var(--surface-border-radius);
+
+  &.highlight {
+    box-shadow: inset 0 0 0 1px var(--color-primary);
   }
 
-  button {
-    margin-right: 1em;
+  > .btn {
     flex-shrink: 0;
     white-space: nowrap;
   }
+
+  &-logo {
+    position: relative;
+    flex-shrink: 0;
+    width: 3.75em;
+    height: 3.75em;
+
+    > img:first-child {
+      width: 100%;
+      height: 100%;
+      border-radius: 0.9em;
+    }
+  }
+
+  &-sublogo {
+    position: absolute;
+    right: -0.35em;
+    bottom: -0.35em;
+    width: 1.7em;
+    height: 1.7em;
+    border-radius: 50%;
+    border: 0.2em solid var(--color-surface-1);
+    background: var(--color-surface-1);
+  }
+
+  &-main {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &-title {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.6em;
+  }
+
+  &-name {
+    font-size: 1.3em;
+    font-weight: 600;
+  }
+
+  &-version {
+    font-size: 1.3em;
+    color: var(--color-text-3);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &-channel {
+    font-size: 0.85em;
+    font-weight: 500;
+    padding: 0.1em 0.65em;
+    border-radius: 1em;
+    background: var(--color-surface-3);
+    color: var(--color-text-3);
+  }
+
+  &-status {
+    --status-color: var(--color-text-4);
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin-top: 0.3em;
+    color: var(--color-text-3);
+    line-height: 1.45;
+
+    &[data-state='upToDate'] {
+      --status-color: var(--color-vrchat-status-green);
+    }
+
+    &[data-state='available'],
+    &[data-state='installing'] {
+      --status-color: var(--color-primary);
+    }
+
+    app-icon {
+      font-size: 1.1em;
+      color: var(--status-color);
+      --icon-inner: var(--color-surface-1);
+    }
+
+    .small-spinner {
+      flex-shrink: 0;
+      font-size: 0.75em;
+      --spinner-color: var(--status-color);
+    }
+
+    ::ng-deep b {
+      color: var(--color-text-1);
+      font-weight: 600;
+    }
+  }
+
+  &-progress {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    overflow: hidden;
+    border-radius: 0 0 var(--surface-border-radius) var(--surface-border-radius);
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 35%;
+      background: var(--color-primary);
+      animation: indeterminate 1.2s ease-in-out infinite;
+    }
+  }
 }
 
-.pane-changelog {
-  @extend .pane;
-  background: var(--color-surface-1);
-  padding: 1em;
-  overflow-y: auto;
+.status-dot {
+  flex-shrink: 0;
+  width: 0.55em;
+  height: 0.55em;
+  margin: 0 0.25em;
+  border-radius: 50%;
+  background: var(--status-color);
+}
+
+@keyframes indeterminate {
+  from {
+    left: -35%;
+  }
+  to {
+    left: 100%;
+  }
+}
+
+.release {
+  display: grid;
+  grid-template-columns: 1.25em 1fr;
+  column-gap: 1em;
+
+  &.latest .release-dot {
+    background: var(--color-primary);
+    box-shadow: 0 0 0 0.3em color-mix(in srgb, var(--color-primary) 25%, transparent);
+  }
+
+  &.upcoming .release-dot {
+    background: var(--color-vrchat-status-blue);
+    box-shadow: 0 0 0 0.3em color-mix(in srgb, var(--color-vrchat-status-blue) 25%, transparent);
+  }
+
+  &.open {
+    .release-summary {
+      opacity: 0;
+    }
+
+    .release-chevron {
+      transform: rotate(90deg);
+    }
+  }
+
+  &:first-child .release-rail::after {
+    top: 1.3em;
+  }
+
+  &:last-child .release-rail::after {
+    bottom: auto;
+    height: 1.3em;
+  }
+
+  &-rail {
+    position: relative;
+    display: flex;
+    justify-content: center;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--color-surface-3);
+    }
+  }
+
+  &-dot {
+    z-index: 1;
+    margin-top: 0.95em;
+    width: 0.75em;
+    height: 0.75em;
+    border-radius: 50%;
+    background: var(--color-surface-5);
+  }
+
+  &-body {
+    min-width: 0;
+    padding-bottom: 1.25em;
+  }
+
+  &-header {
+    all: unset;
+    box-sizing: border-box;
+    position: sticky;
+    top: -2em;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+    width: calc(100% + 0.75em);
+    margin-left: -0.75em;
+    padding: 0.45em 0.75em;
+    border-radius: var(--surface-border-radius);
+    background: var(--color-surface-2);
+    cursor: pointer;
+
+    &:hover {
+      background: var(--color-surface-3);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: -2px;
+    }
+  }
+
+  &-version {
+    font-size: 1.25em;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &-badge {
+    font-size: 0.75em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.15em 0.6em;
+    border-radius: 1em;
+    white-space: nowrap;
+    background: color-mix(in srgb, var(--color-vrchat-status-blue) 18%, transparent);
+    color: var(--color-vrchat-status-blue);
+  }
+
+  &-summary {
+    display: flex;
+    gap: 1em;
+    margin-left: auto;
+    font-size: 0.9em;
+    color: var(--color-text-4);
+    white-space: nowrap;
+    transition: opacity 0.15s ease;
+
+    span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4em;
+
+      &::before {
+        content: '';
+        width: 0.5em;
+        height: 0.5em;
+        border-radius: 50%;
+        background: var(--kind-color);
+      }
+    }
+  }
+
+  &-chevron {
+    font-size: 1em;
+    color: var(--color-text-4);
+    transition: transform 0.15s ease;
+  }
+
+  &-sections {
+    margin-top: 0.4em;
+    padding: 0.25em 1.25em;
+    background: var(--color-surface-1);
+    border-radius: var(--surface-border-radius);
+  }
+
+  &-section {
+    display: grid;
+    grid-template-columns: 7em 1fr;
+    gap: 1em;
+    padding: 0.8em 0;
+
+    & + & {
+      border-top: 1px solid var(--color-surface-2);
+    }
+  }
+
+  &-section-label {
+    position: sticky;
+    top: 1.3em;
+    align-self: start;
+    display: flex;
+    align-items: center;
+    gap: 0.45em;
+    margin-top: 0.35em;
+    font-size: 0.8em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--kind-color);
+
+    app-icon {
+      font-size: 1em;
+      --icon-inner: var(--color-surface-1);
+    }
+  }
+
+  &-items {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--color-text-2);
+    line-height: 1.55;
+
+    li {
+      position: relative;
+      margin: 0.25em 0;
+      padding-left: 1em;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0.1em;
+        top: 0.65em;
+        width: 0.35em;
+        height: 0.35em;
+        border-radius: 50%;
+        background: var(--color-text-4);
+      }
+    }
+
+    .release-items {
+      margin-top: 0.1em;
+      color: var(--color-text-3);
+
+      li::before {
+        background: transparent;
+        border: 1px solid var(--color-text-4);
+      }
+    }
+
+    ::ng-deep code {
+      font-size: 0.95em;
+      padding: 0.05em 0.35em;
+      border-radius: 0.25em;
+      background: var(--color-surface-3);
+    }
+  }
 }

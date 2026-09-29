@@ -134,7 +134,7 @@
         >
       </div>
     }
-    @if (cctControlEnabled) {
+    @if (cctControl.driverIsAvailable | async) {
       <div
         class="pill cct-control clickable"
         *ngVar="{ hover: false }; let state"

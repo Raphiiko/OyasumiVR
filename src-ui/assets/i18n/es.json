@@ -1368,10 +1368,6 @@
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "Este preajuste utiliza una solución que tiene algunos problemas. Por favor, utiliza este preajuste sólo si no puedes utilizar el preajuste GoGo Loco más reciente. Si tu avatar todavía utiliza una versión anterior de GoGo Loco, se recomienda que actualices tu avatar para utilizar la última versión de GoGo Loco.",
     "GORONE_LEGACY_PRESET_WARNING": "Las versiones v4.0 y superiores de este prefab ya contienen la funcionalidad de giro, y no son compatibles con este preajuste. Este preajuste sigue disponible si su avatar utiliza versiones anteriores de este prefab.",
     "oneTimeFlagDialogs": {
-      "CCT_CONTROL_WARNING_DIALOG": {
-        "message": "Ten en cuenta que el control de la temperatura del color de la pantalla solo está disponible con determinados cascos SteamVR nativos, como Valve Index, Bigscreen Beyond o HTC Vive (Pro).\n\nSi no utilizas uno de estos auriculares, es probable que esta función no tenga ningún efecto para ti.\n\nSi lo deseas, puedes desactivar el control de la temperatura de color de la pantalla en la configuración.",
-        "title": "Funciones disponibles"
-      },
       "OSC_SCRIPT_SIMPLE_EDITOR_VRCHAT_AUTOCOMPLETE_INFO": {
         "title": "Automático-completions"
       },
@@ -1803,10 +1799,6 @@
         "title": "Bigscreen Beyond"
       },
       "cctControl": {
-        "enabled": {
-          "description": "Desactiva esta opción si utilizas otras aplicaciones para controlar la temperatura de color de tu pantalla (por ejemplo, LuxVR u OVR Advanced Settings).",
-          "title": "Activar el control de la temperatura de color"
-        },
         "title": "Temperatura de color"
       },
       "description": "Aquí encontrarás los ajustes relacionados con el brillo y la temperatura de color.",
@@ -2064,14 +2056,10 @@
       "changelog": "Registro de cambios",
       "checkForUpdates": "Comprobar actualizaciones",
       "install": "Instalar v{version}",
-      "noUpdate": "Actualmente está ejecutando OyasumiVR v{version} que es la última versión!",
-      "notChecked": "OyasumiVR aún no ha comprobado si hay actualizaciones.",
-      "title": "Acrualizaciones",
-      "updateAvailable": "¡Una nueva versión de OyasumiVR está disponible! Actualmente está ejecutando v{currentVersion}.\nLa versión más reciente es v{latestVersion}.",
-      "updatesDisabled": {
-        "DEV": "Como se está ejecutando una versión de desarrollo de OyasumiVR, las actualizaciones se han desactivado.\nSi desea instalar una nueva versión de OyasumiVR, descargue y ejecute el instalador manualmente.",
-        "STEAM": "Has instalado la versión Steam de OyasumiVR.\nPor lo tanto, ¡las nuevas actualizaciones de OyasumiVR se proporcionan a través de Steam!"
-      }
+      "status": {
+        "notChecked": "OyasumiVR aún no ha comprobado si hay actualizaciones."
+      },
+      "title": "Acrualizaciones"
     }
   },
   "shared": {

@@ -974,12 +974,8 @@
     "updates": {
       "changelog": "Daftar Perubahan",
       "checkForUpdates": "Periksa pembaruan",
-      "noUpdate": "Anda saat ini sedang menjalankan OyasumiVR v{version} yang merupakan versi terbaru!",
-      "notChecked": "OyasumiVR belum memeriksa pembaruan.",
-      "updateAvailable": "Versi baru OyasumiVR telah tersedia! Anda sedang menjalankan v{currentVersion}.\nVersi terbaru adalah v{latestVersion}.",
-      "updatesDisabled": {
-        "DEV": "Karena Anda menjalankan versi pengembangan OyasumiVR, pembaruan telah dinonaktifkan.\nJika Anda ingin menginstal versi baru OyasumiVR, silakan unduh dan jalankan penginstal secara manual.",
-        "STEAM": "Anda telah menginstal OyasumiVR versi Steam.\nOleh karena itu, pembaruan OyasumiVR baru disediakan melalui Steam!"
+      "status": {
+        "notChecked": "OyasumiVR belum memeriksa pembaruan."
       }
     }
   },

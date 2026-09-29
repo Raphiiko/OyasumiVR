@@ -5,6 +5,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { VALVE_INDEX_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS } from '../../../../services/brightness-control/hardware-brightness-drivers/valve-index-hardware-brightness-control-driver';
 import { BIGSCREEN_BEYOND_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS } from '../../../../services/brightness-control/hardware-brightness-drivers/bigscreen-beyond-hardware-brightness-control-driver';
 import { clamp } from '../../../../utils/number-utils';
+import { OpenVRService } from '../../../../services/openvr.service';
+import { isSteamVrCctSupportedHmd } from '../../../../services/cct-control/cct-control-drivers/steamvr-cct-control-driver';
+import { vshrink } from '../../../../utils/animations';
 
 @Component({
   selector: 'app-settings-brightness-cct-view',
@@ -12,12 +15,21 @@ import { clamp } from '../../../../utils/number-utils';
   styleUrl: './settings-brightness-cct-view.component.scss',
   changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
+  animations: [vshrink()],
 })
 export class SettingsBrightnessCctViewComponent implements OnInit {
   protected appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
+  protected hmdConnected = false;
+  /** The active HMD's allowlist identity; null while no HMD is connected. */
+  protected hmd: { manufacturer: string; model: string } | null = null;
+  /** True while the active HMD is on the SteamVR color temperature list. */
+  protected listedHmd = false;
+  /** True while an HMD is active that is not on the list; only then can the setting change. */
+  protected unlistedHmd = false;
 
   constructor(
     private appSettingsService: AppSettingsService,
+    private openvr: OpenVRService,
     private destroyRef: DestroyRef
   ) {}
 
@@ -27,6 +39,15 @@ export class SettingsBrightnessCctViewComponent implements OnInit {
       .subscribe((settings) => {
         this.appSettings = settings;
       });
+    this.openvr.devices.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((devices) => {
+      const hmd = devices.find((d) => d.index === 0 && d.class === 'HMD');
+      this.listedHmd = !!hmd && isSteamVrCctSupportedHmd(hmd);
+      this.hmdConnected = !!hmd;
+      this.hmd = hmd
+        ? { manufacturer: hmd.manufacturerName ?? '', model: hmd.modelNumber ?? '' }
+        : null;
+      this.unlistedHmd = this.hmdConnected && !this.listedHmd;
+    });
   }
 
   get valveIndexMin() {
@@ -87,9 +108,9 @@ export class SettingsBrightnessCctViewComponent implements OnInit {
     });
   }
 
-  toggleCCTControl() {
+  toggleCCTControlOnUnsupportedHmds() {
     this.appSettingsService.updateSettings({
-      cctControlEnabled: !this.appSettings.cctControlEnabled,
+      cctControlOnUnsupportedHmds: !this.appSettings.cctControlOnUnsupportedHmds,
     });
   }
 }
