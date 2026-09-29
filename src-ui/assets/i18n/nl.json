@@ -2157,12 +2157,8 @@
     "updates": {
       "checkForUpdates": "Updates checken",
       "install": "Installeer v{version}",
-      "noUpdate": "Je draait nu OyasumiVR v{version}, en dat is de laatste versie!",
-      "notChecked": "OyasumiVR heeft nog niet gecheckt of er een update beschikbaar is.",
-      "updateAvailable": "Er is een nieuwe update beschikbaar voor OyasumiVR! Je draait op dit moment v{currentVersion}.\nDe nieuwste versie is v{latestVersion}.",
-      "updatesDisabled": {
-        "DEV": "Omdat je een development build van OyasumiVR draait is de mogelijkheid om voor updates te checken uitgeschakeld. \nAls je een nieuwere versie van OyasumiVR wilt installeren, download en installeer deze dan met de hand.",
-        "STEAM": "Je hebt de Steam versie van OyasumiVR geinstalleerd.\nNieuwe updates komen daarom binnen via Steam!"
+      "status": {
+        "notChecked": "OyasumiVR heeft nog niet gecheckt of er een update beschikbaar is."
       }
     }
   },

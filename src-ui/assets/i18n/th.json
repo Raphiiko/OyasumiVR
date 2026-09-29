@@ -2244,14 +2244,10 @@
       "changelog": "บันทึกการเปลี่ยนแปลง",
       "checkForUpdates": "ตรวจสอบอัปเดต",
       "install": "ติดตั้ง v{version}",
-      "noUpdate": "คุณกำลังใช้ OyasumiVR เวอร์ชันล่าสุด (v{version})!",
-      "notChecked": "ยังไม่ได้ตรวจสอบอัปเดต",
-      "title": "อัปเดต",
-      "updateAvailable": "มี OyasumiVR เวอร์ชันใหม่! ปัจจุบันคุณใช้ v{currentVersion}\nเวอร์ชันล่าสุดคือ v{latestVersion}",
-      "updatesDisabled": {
-        "DEV": "หากต้องการติดตั้ง OyasumiVR เวอร์ชันใหม่ กรุณาดาวน์โหลดตัวติดตั้งและเรียกใช้ด้วยตนเอง",
-        "STEAM": "เนื่องจากติดตั้งเวอร์ชัน Steam อัปเดตใหม่จะได้รับผ่าน Steam!"
-      }
+      "status": {
+        "notChecked": "ยังไม่ได้ตรวจสอบอัปเดต"
+      },
+      "title": "อัปเดต"
     }
   },
   "shared": {

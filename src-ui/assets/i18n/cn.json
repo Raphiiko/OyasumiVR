@@ -2206,14 +2206,10 @@
       "changelog": "更新日志",
       "checkForUpdates": "检查更新",
       "install": "安装版本 {version}",
-      "noUpdate": "你当前运行的是最新版本 {version}！",
-      "notChecked": "OyasumiVR 尚未检查更新",
-      "title": "更新",
-      "updateAvailable": "新版本的 OyasumiVR 现已推出！ 你当前正在使用版本 {currentVersion}。\n最新版本是 {latestVersion}。",
-      "updatesDisabled": {
-        "DEV": "你目前正在使用开发版本的 OyasumiVR ，因此自动更新已被关闭。\n如果你想安装新版本，请手动下载并运行安装程序。",
-        "STEAM": "你已经安装了 Steam 版本的 OyasumiVR。因此，OyasumiVR 更新将通过 Steam 提供！"
-      }
+      "status": {
+        "notChecked": "OyasumiVR 尚未检查更新"
+      },
+      "title": "更新"
     }
   },
   "shared": {

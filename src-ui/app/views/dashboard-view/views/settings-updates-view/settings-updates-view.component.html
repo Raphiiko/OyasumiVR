@@ -2,69 +2,164 @@
   <div class="pane-title" transloco="settings.updates.title"></div>
   <div class="pane-content scroll">
     <div class="setting-view-container">
-      <div class="setting-category">
-        @if (FLAVOUR !== 'STANDALONE') {
-          <div class="updates-disabled">
-            @if (FLAVOUR === 'DEV') {
-              <img src="/assets/img/icon_150x150.png" />
-            }
-            @if (FLAVOUR === 'STEAM') {
-              <img src="/assets/img/steam_icon.png" />
-            }
-            @if (FLAVOUR === 'DEV') {
-              <span transloco="settings.updates.updatesDisabled.DEV"></span>
-            }
-            @if (FLAVOUR === 'STEAM') {
-              <span transloco="settings.updates.updatesDisabled.STEAM"></span>
-            }
+      <div
+        class="version-card"
+        [class.highlight]="updateState === 'available' || updateState === 'installing'"
+      >
+        <div class="version-card-logo">
+          <img src="/assets/img/icon_150x150.png" />
+          @if (updateState === 'steam') {
+            <img class="version-card-sublogo" src="/assets/img/steam_icon.png" />
+          }
+        </div>
+        <div class="version-card-main">
+          <div class="version-card-title">
+            <span class="version-card-name">OyasumiVR</span>
+            <span class="version-card-version">v{{ version }}</span>
+            <span
+              class="version-card-channel"
+              [transloco]="'settings.updates.channel.' + FLAVOUR"
+            ></span>
           </div>
-        }
-        @if (FLAVOUR === 'STANDALONE') {
-          <div class="update-checker">
-            <button
-              class="btn"
-              [class.btn-secondary]="!updateAvailable.update"
-              [class.btn-primary]="updateAvailable.update"
-              (click)="updateOrCheck()"
-              [disabled]="updateOrCheckInProgress"
-            >
-              @if (updateOrCheckInProgress) {
-                <div class="small-spinner" @hshrink></div>
+          <div class="version-card-status" [attr.data-state]="updateState">
+            @switch (updateState) {
+              @case ('steam') {
+                <span class="status-dot"></span>
+                <span transloco="settings.updates.status.STEAM"></span>
               }
-              @if (!updateOrCheckInProgress) {
+              @case ('dev') {
+                <app-icon class="icon-mono" name="info" />
+                <span transloco="settings.updates.status.DEV"></span>
+              }
+              @case ('unchecked') {
+                <span class="status-dot"></span>
+                <span transloco="settings.updates.status.notChecked"></span>
+              }
+              @case ('checking') {
+                <div class="small-spinner"></div>
+                <span transloco="settings.updates.status.checking"></span>
+              }
+              @case ('upToDate') {
+                <app-icon class="icon-mono" name="check-circle" />
+                <span transloco="settings.updates.status.upToDate"></span>
+              }
+              @case ('available') {
+                <app-icon class="icon-mono" name="sparkle" />
                 <span
-                  [transloco]="
-                    updateAvailable.update
-                      ? 'settings.updates.install'
-                      : 'settings.updates.checkForUpdates'
+                  [innerHtml]="
+                    'settings.updates.status.available'
+                      | transloco: { version: updateAvailable.update?.version }
                   "
-                  [translocoParams]="{ version: updateAvailable.update?.version || '' }"
-                  @hshrink
                 ></span>
               }
-            </button>
-            @if (!updateAvailable.checked) {
-              <p transloco="settings.updates.notChecked"></p>
-            }
-            @if (updateAvailable.checked && updateAvailable.update) {
-              <p
-                transloco="settings.updates.updateAvailable"
-                [translocoParams]="{
-                  currentVersion: version,
-                  latestVersion: updateAvailable.update.version,
-                }"
-              ></p>
-            }
-            @if (updateAvailable.checked && !updateAvailable.update) {
-              <p transloco="settings.updates.noUpdate" [translocoParams]="{ version: version }"></p>
+              @case ('installing') {
+                <div class="small-spinner"></div>
+                <span
+                  [innerHtml]="
+                    'settings.updates.status.installing'
+                      | transloco: { version: updateAvailable.update?.version }
+                  "
+                ></span>
+              }
             }
           </div>
+        </div>
+        @if (updateState === 'available') {
+          <button class="btn btn-primary" (click)="updateOrCheck()">
+            {{
+              'settings.updates.install' | transloco: { version: updateAvailable.update?.version }
+            }}
+          </button>
+        }
+        @if (
+          updateState === 'unchecked' || updateState === 'checking' || updateState === 'upToDate'
+        ) {
+          <button
+            class="btn btn-secondary"
+            (click)="updateOrCheck()"
+            [disabled]="updateState === 'checking'"
+          >
+            <app-icon name="refresh" />
+            <span
+              [transloco]="
+                updateState === 'upToDate'
+                  ? 'settings.updates.checkAgain'
+                  : 'settings.updates.checkForUpdates'
+              "
+            ></span>
+          </button>
+        }
+        @if (updateState === 'installing') {
+          <div class="version-card-progress"></div>
         }
       </div>
-      <div class="setting-category">
-        <h2 transloco="settings.updates.changelog"></h2>
-        <div class="pane-changelog" [innerHtml]="changelog"></div>
+
+      <h2 transloco="settings.updates.changelog"></h2>
+      <div class="timeline">
+        @for (release of releases; track release.version) {
+          <div
+            class="release"
+            [class.open]="openReleases.has(release.version)"
+            [class.latest]="release.latest"
+            [class.upcoming]="release.unreleased"
+          >
+            <div class="release-rail"><div class="release-dot"></div></div>
+            <div class="release-body">
+              <button class="release-header" (click)="toggleRelease(release.version)">
+                <span class="release-version">
+                  {{
+                    release.unreleased ? ('settings.updates.upcoming' | transloco) : release.version
+                  }}
+                </span>
+                @if (release.unreleased) {
+                  <span class="release-badge" transloco="settings.updates.inDevelopment"></span>
+                }
+                <span class="release-summary">
+                  @for (section of release.sections; track section.kind) {
+                    <span [attr.data-kind]="section.kind">
+                      {{
+                        'settings.updates.summary.' + section.kind
+                          | transloco: { count: section.items.length }
+                      }}
+                    </span>
+                  }
+                </span>
+                <app-icon class="release-chevron icon-mono" name="chevron-right" />
+              </button>
+              @if (openReleases.has(release.version)) {
+                <div class="release-sections">
+                  @for (section of release.sections; track section.kind) {
+                    <div class="release-section" [attr.data-kind]="section.kind">
+                      <div class="release-section-label">
+                        <app-icon class="icon-mono" [name]="SECTION_ICONS[section.kind]" />
+                        <span [transloco]="'settings.updates.sections.' + section.kind"></span>
+                      </div>
+                      <ng-container
+                        *ngTemplateOutlet="itemList; context: { $implicit: section.items }"
+                      ></ng-container>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        }
       </div>
     </div>
   </div>
 </div>
+
+<ng-template #itemList let-items>
+  <ul class="release-items">
+    @for (item of items; track $index) {
+      <li>
+        <span [innerHtml]="item.html"></span>
+        @if (item.children.length) {
+          <ng-container
+            *ngTemplateOutlet="itemList; context: { $implicit: item.children }"
+          ></ng-container>
+        }
+      </li>
+    }
+  </ul>
+</ng-template>

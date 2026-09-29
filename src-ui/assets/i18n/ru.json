@@ -2251,14 +2251,10 @@
       "changelog": "Журнал изменений",
       "checkForUpdates": "Проверка наличия обновлений",
       "install": "Установить v{version}",
-      "noUpdate": "Вы используете последнюю версию OyasumiVR v{version}!",
-      "notChecked": "OyasumiVR еще не проверял наличие обновлений.",
-      "title": "Обновления",
-      "updateAvailable": "Доступна новая версия OyasumiVR! Вы используете v{currentVersion}.\nНовейшая версия — v{latestVersion}.",
-      "updatesDisabled": {
-        "DEV": "Поскольку Вы используете сборку OyasumiVR для разработчиков, обновления отключены.\nЕсли Вы хотите установить новую версию OyasumiVR, загрузите и запустите установщик вручную.",
-        "STEAM": "Вы установили версию OyasumiVR для Steam.\nПоэтому новые обновления OyasumiVR предоставляются через Steam!"
-      }
+      "status": {
+        "notChecked": "OyasumiVR еще не проверял наличие обновлений."
+      },
+      "title": "Обновления"
     }
   },
   "shared": {

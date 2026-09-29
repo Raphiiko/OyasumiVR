@@ -2196,14 +2196,10 @@
       "changelog": "変更履歴",
       "checkForUpdates": "アップデートを確認する",
       "install": "v{version}をインストール",
-      "noUpdate": "最新版のOyasumiVR（v{version}）を利用しています！",
-      "notChecked": "まだアップデートを確認をしていません",
-      "title": "アップデート",
-      "updateAvailable": "OyasumiVRの最新版が登場！現在、あなたはv{currentVersion}を利用しています。\n最新版はv{latestVersion}です",
-      "updatesDisabled": {
-        "DEV": "新バージョンのOyasumiVRをインストールしたい場合は、手動でインストーラーをダウンロードして実行してください",
-        "STEAM": "Steam版をインストールしているため、新しいアップデートはSteamを通じて提供されます！"
-      }
+      "status": {
+        "notChecked": "まだアップデートを確認をしていません"
+      },
+      "title": "アップデート"
     }
   },
   "shared": {
