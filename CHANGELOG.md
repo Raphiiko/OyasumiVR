@@ -46,6 +46,9 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Changed
 
+- Color temperature control is now limited to supported headsets (Valve Index, Bigscreen Beyond).
+  If it worked on your headset before, please turn on "Enable on unsupported headsets" in the
+  Brightness & CCT settings, and let us know on Discord.
 - Lowered the minimum hardware brightness for the Valve Index from 20% to 9%, the lowest level the
   headset supports
 - Quit with SteamVR is now an on/off toggle. When SteamVR stops, OyasumiVR counts down ten seconds
