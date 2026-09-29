@@ -2029,6 +2029,7 @@
         "unsupportedHmds": {
           "description": "Turn this on to enable color temperature control, even though it's not known to work for your headset.",
           "listedHmd": "Color temperature control is supported on your headset.",
+          "noHmd": "Connect your headset to change this setting.",
           "title": "Enable on unsupported headsets",
           "unlistedHmd": "Color temperature control might still work on some headsets, if enabled. If your headset does turn out to work despite being unsupported, please let us know on <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a>!"
         }

@@ -12,13 +12,13 @@
           <app-setting-row
             label="settings.brightnessCct.cctControl.unsupportedHmds.title"
             description="settings.brightnessCct.cctControl.unsupportedHmds.description"
-            [class.disabled]="listedHmd"
+            [class.disabled]="!unlistedHmd"
           >
             <label class="switch-toggle">
               <input
                 type="checkbox"
                 [checked]="appSettings.cctControlOnUnsupportedHmds"
-                [disabled]="listedHmd"
+                [disabled]="!unlistedHmd"
                 (change)="toggleCCTControlOnUnsupportedHmds()"
               />
               <span class="switch-toggle-slider"></span>
@@ -31,7 +31,14 @@
               @vshrink
             ></app-alert>
           }
-          @if (hmdConnected && !listedHmd) {
+          @if (!hmdConnected) {
+            <app-alert
+              severity="info"
+              message="settings.brightnessCct.cctControl.unsupportedHmds.noHmd"
+              @vshrink
+            ></app-alert>
+          }
+          @if (unlistedHmd) {
             <app-alert severity="info" @vshrink>
               <span
                 [innerHTML]="

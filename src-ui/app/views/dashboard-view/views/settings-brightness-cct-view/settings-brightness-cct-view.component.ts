@@ -22,6 +22,8 @@ export class SettingsBrightnessCctViewComponent implements OnInit {
   protected hmdConnected = false;
   /** True while the active HMD is on the SteamVR color temperature list. */
   protected listedHmd = false;
+  /** True while an HMD is active that is not on the list; only then can the setting change. */
+  protected unlistedHmd = false;
 
   constructor(
     private appSettingsService: AppSettingsService,
@@ -39,6 +41,7 @@ export class SettingsBrightnessCctViewComponent implements OnInit {
       const hmd = devices.find((d) => d.index === 0 && d.class === 'HMD');
       this.listedHmd = !!hmd && isSteamVrCctSupportedHmd(hmd);
       this.hmdConnected = !!hmd;
+      this.unlistedHmd = this.hmdConnected && !this.listedHmd;
     });
   }
 
