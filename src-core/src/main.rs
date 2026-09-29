@@ -590,5 +590,6 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         steam_frame::commands::steam_frame_update_helper,
         steam_frame::commands::steam_frame_count_other_pcs,
         steam_frame::commands::steam_frame_set_brightness,
+        steam_frame::commands::steam_frame_set_cct,
     ]
 }
