@@ -1103,7 +1103,7 @@ dependencies = [
 name = "oyasumivr-privileged-launcher"
 version = "26.9.0-beta.16"
 dependencies = [
- "base64 0.22.1",
+ "base64 0.23.1",
  "log",
  "minisign",
  "minisign-verify",

@@ -15,7 +15,7 @@ serde_json = "1.0.151"
 
 # Test-only, so it never reaches the shipped binary.
 [dev-dependencies]
-base64 = "0.22"
+base64 = "0.23"
 minisign = "0.7.9"
 
 [dependencies.windows]

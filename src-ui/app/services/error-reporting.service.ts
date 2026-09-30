@@ -64,10 +64,14 @@ export class ErrorReportingService {
       Sentry.init({
         dsn: DSN,
         release: version,
-        sendDefaultPii: false,
+        dataCollection: {
+          userInfo: false,
+          cookies: false,
+          httpHeaders: false,
+          httpBodies: [],
+          urlQueryParams: false,
+        },
         sendClientReports: false,
-        enableLogs: false,
-        enableMetrics: false,
         maxBreadcrumbs: 0,
         transportOptions: { bufferSize: 2 },
         beforeBreadcrumb: () => null,
