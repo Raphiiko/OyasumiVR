@@ -49,6 +49,8 @@ export class CCTControlService {
   private currentDriver: CctControlDriver | null = null;
   /** The active driver while it can write; null otherwise. */
   private writableDriver: CctControlDriver | null = null;
+  /** The newest value set while a pushing driver could not write; cleared when the driver changes. */
+  private deferredCCT: number | null = null;
   public readonly activeTransition = this._activeTransition.asObservable();
   public cctCSSColor: string = 'white';
 
@@ -152,7 +154,10 @@ export class CCTControlService {
     if (opt.cancelActiveTransition) this.cancelActiveTransition();
     const driver = this.currentDriver;
     // a driver that pushes its values owns the shown one, so nothing changes before it can write
-    if (driver?.pushesCctChanges && driver !== this.writableDriver) return;
+    if (driver?.pushesCctChanges && driver !== this.writableDriver) {
+      this.deferredCCT = cct;
+      return;
+    }
     if (cct === this.cct && !force && !this.writableDriver?.writesUnchangedValue) return;
     this._cct.next(cct);
     await this.writableDriver?.setCCT(cct);
@@ -170,7 +175,10 @@ export class CCTControlService {
   }
 
   private watchDrivers() {
-    this.activeDriver.subscribe((driver) => (this.currentDriver = driver));
+    this.activeDriver.subscribe((driver) => {
+      if (driver !== this.currentDriver) this.deferredCCT = null;
+      this.currentDriver = driver;
+    });
 
     // show the values a driver pushes, without writing them back
     this.activeDriver
@@ -223,8 +231,9 @@ export class CCTControlService {
 
     // a running transition would write the headset at every step, so it finishes in one command
     const transition = this._activeTransition.value;
-    if (!transition) return;
-    this.cancelActiveTransition();
-    this.setCCT(transition.targetCCT);
+    const target = transition?.targetCCT ?? this.deferredCCT;
+    this.deferredCCT = null;
+    if (transition) this.cancelActiveTransition();
+    if (target !== null) this.setCCT(target);
   }
 }

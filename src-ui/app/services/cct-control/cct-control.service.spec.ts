@@ -319,6 +319,43 @@ describe('CCTControlService with a Steam Frame', () => {
     expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
   });
 
+  it('applies a transition target that ended before the first report', async () => {
+    const h = await setup(FRAME);
+    h.report(null);
+    h.status.next('STOPPED');
+    await settle();
+    // the transition ends after the Frame matches and before its first report
+    const task = h.service.transitionCCT(3000, 400);
+    h.status.next('INITIALIZED');
+    await new Promise((resolve) => setTimeout(resolve, 600));
+    expect(task.isComplete()).toBe(true);
+    expect(h.frameWrites()).toEqual([]);
+    h.report(snapshot(6000));
+    await settle();
+    expect(h.frameWrites()).toEqual([3000]);
+  });
+
+  it('applies a value set before the first report once the Frame reports', async () => {
+    const h = await setup(FRAME);
+    h.report(null);
+    await settle();
+    await h.service.setCCT(2800);
+    expect(h.service.cct).toBe(6600);
+    h.report(snapshot(6000));
+    await settle();
+    expect(h.frameWrites()).toEqual([2800]);
+  });
+
+  it('drops a value set before the first report when another headset takes over', async () => {
+    const h = await setup(FRAME);
+    h.report(null);
+    await settle();
+    await h.service.setCCT(2800);
+    h.activate(INDEX);
+    await settle();
+    expect(h.writes()).toEqual([6600]);
+  });
+
   it('drops a value queued for a Frame that stopped being active', async () => {
     const h = await setup(FRAME);
     h.report(snapshot(6600));
