@@ -896,8 +896,8 @@ async fn request_hold(
         publish(state).await;
     }
 
-    // ask for the hold once no fade runs
-    if waiting || relay.hold_request.is_some() {
+    // ask for the hold once no fade runs and no other PC holds it
+    if waiting || state.hold || relay.hold_request.is_some() {
         return Ok(false);
     }
     relay.next_id += 1;
