@@ -34,7 +34,7 @@ time = { version = "0.3.55", features = ["formatting", "macros"] }
 
 # Test-only, so it never reaches a shipped binary.
 [dev-dependencies]
-base64 = "0.22"
+base64 = "0.23"
 
 [profile.release]
 panic = "abort"   # Strip expensive panic clean-up logic
