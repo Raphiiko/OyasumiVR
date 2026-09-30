@@ -8,9 +8,7 @@ import {
   map,
   Observable,
   of,
-  pairwise,
   shareReplay,
-  startWith,
   switchMap,
 } from 'rxjs';
 import { isEqual } from 'lodash';
@@ -166,14 +164,6 @@ export class CCTControlService {
     }
   }
 
-  /**
-   * Waits for the first report of the Frame that is the active HMD. Null when no Frame is waiting
-   * for one; resolves false when that HMD stops being active first.
-   */
-  whenFrameReports(): Promise<boolean> | null {
-    return this.driverSteamFrame.whenFrameReports();
-  }
-
   private watchDrivers() {
     this.activeDriver.subscribe((driver) => {
       if (driver !== this.currentDriver) this.deferredCCT = null;
@@ -191,11 +181,9 @@ export class CCTControlService {
         switchMap((driver) =>
           (driver?.isAvailable() ?? of(false)).pipe(map((available) => (available ? driver : null)))
         ),
-        distinctUntilChanged(),
-        startWith(null),
-        pairwise()
+        distinctUntilChanged()
       )
-      .subscribe(([previous, driver]) => this.onWritableDriver(previous, driver));
+      .subscribe((driver) => this.onWritableDriver(driver));
 
     // log which driver serves which headset, once both have settled
     const hmd = this.openvr.devices.pipe(
@@ -221,9 +209,9 @@ export class CCTControlService {
       });
   }
 
-  private onWritableDriver(previous: CctControlDriver | null, driver: CctControlDriver | null) {
+  private onWritableDriver(driver: CctControlDriver | null) {
     this.writableDriver = driver;
-    if (!driver || previous) return;
+    if (!driver) return;
     if (!driver.pushesCctChanges) {
       this.setCCT(this.cct, SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, true);
       return;

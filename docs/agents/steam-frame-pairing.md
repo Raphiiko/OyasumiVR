@@ -311,9 +311,9 @@ active OpenVR HMD, its connection is `connected`, and the report says `available
 command in flight and replaces a waiting one with the newest value. Reports reach the shown value
 without a write, and a set to the shown Kelvin writes when `exact` is false. The driver also matches
 an allowlisted Frame model without that path, so `CCTControlService` writes nothing then and the
-SteamVR color gain driver never writes the PC's own gains for a Frame. A value set before the first
-report is written when that report arrives. Transitions set their target in one command. The HMD
-connect automation reruns once after the first report, as for brightness.
+SteamVR color gain driver never writes the PC's own gains for a Frame. The newest value set before
+the first report, such as the HMD connect automation's, is written when that report arrives.
+Transitions set their target in one command.
 
 ## Updates
 

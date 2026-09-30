@@ -346,6 +346,17 @@ describe('CCTControlService with a Steam Frame', () => {
     expect(h.frameWrites()).toEqual([2800]);
   });
 
+  it('writes only the newest value set before the first report', async () => {
+    const h = await setup(FRAME);
+    h.report(null);
+    await settle();
+    await h.service.setCCT(2000);
+    await h.service.setCCT(4500);
+    h.report(snapshot(6600));
+    await settle();
+    expect(h.frameWrites()).toEqual([4500]);
+  });
+
   it('drops a value set before the first report when another headset takes over', async () => {
     const h = await setup(FRAME);
     h.report(null);
@@ -372,39 +383,6 @@ describe('CCTControlService with a Steam Frame', () => {
     expect(h.service.cct).toBe(5500);
   });
 
-  it('resolves whenFrameReports false when another Frame reports first', async () => {
-    const h = await setup(FRAME);
-    h.report(null);
-    await settle();
-    const reported = h.service.whenFrameReports();
-    h.report(snapshot(3000), 'q');
-    h.activate(FRAME_B);
-    await settle();
-    await expect(reported).resolves.toBe(false);
-  });
-
-  it('resolves whenFrameReports on the first report of the waiting Frame', async () => {
-    const h = await setup(FRAME);
-    h.report(null);
-    await settle();
-    const reported = h.service.whenFrameReports();
-    expect(reported).not.toBeNull();
-    h.report(snapshot(3000));
-    await settle();
-    await expect(reported).resolves.toBe(true);
-    expect(h.service.whenFrameReports()).toBeNull();
-  });
-
-  it('resolves whenFrameReports false when the Frame leaves first', async () => {
-    const h = await setup(FRAME);
-    h.report(null);
-    await settle();
-    const reported = h.service.whenFrameReports();
-    h.status.next('STOPPED');
-    await settle();
-    await expect(reported).resolves.toBe(false);
-  });
-
   it('writes the app value when the Index takes over from a Frame', async () => {
     const h = await setup(FRAME);
     h.report(snapshot(3000));
@@ -412,6 +390,26 @@ describe('CCTControlService with a Steam Frame', () => {
     h.activate(INDEX);
     await settle();
     expect(h.writes()).toEqual([3000]);
-    expect(h.service.whenFrameReports()).toBeNull();
+  });
+
+  it('writes the app value when the Index takes over from a Frame while trying any headset', async () => {
+    const h = await setup(FRAME, { tryUnsupported: true });
+    h.report(snapshot(3000));
+    await settle();
+    h.activate(INDEX);
+    await settle();
+    expect(h.writes()).toEqual([3000]);
+  });
+
+  it('finishes a running Index transition in one command when a reporting Frame takes over', async () => {
+    const h = await setup(INDEX);
+    h.report(snapshot(6000));
+    await settle();
+    h.service.transitionCCT(3000, 10000);
+    await settle();
+    h.activate(FRAME);
+    await settle();
+    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
+    expect(h.frameWrites()).toEqual([3000]);
   });
 });

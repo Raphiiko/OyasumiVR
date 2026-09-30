@@ -5,8 +5,6 @@ import {
   combineLatest,
   debounceTime,
   distinctUntilChanged,
-  filter,
-  firstValueFrom,
   from,
   map,
   Observable,
@@ -130,23 +128,6 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
     if (target.kind !== 'frame' || !target.cct) return;
     const replyApplies = applied?.kelvin != null && sentTo === target.pairingId;
     this.adopt(replyApplies ? (applied as FrameCct) : target.cct);
-  }
-
-  /**
-   * Waits for the first report of the Frame that is the active HMD. Null when no Frame is waiting
-   * for one; resolves false when that HMD stops being active first.
-   */
-  whenFrameReports(): Promise<boolean> | null {
-    const waiting = this.currentHmd;
-    if (waiting.kind !== 'frame' || waiting.cct || !waiting.pairingId) return null;
-    const isWaitingFrame = (hmd: ActiveHmd) =>
-      hmd.kind === 'frame' && hmd.pairingId === waiting.pairingId;
-    return firstValueFrom(
-      this.hmd.pipe(
-        filter((hmd) => !isWaitingFrame(hmd) || (hmd.kind === 'frame' && !!hmd.cct)),
-        map(isWaitingFrame)
-      )
-    );
   }
 
   private activeHmd(
