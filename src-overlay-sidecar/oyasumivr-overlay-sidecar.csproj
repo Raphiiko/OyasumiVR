@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <RuntimeFrameworkVersion>10.0.10</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>10.0.12</RuntimeFrameworkVersion>
     <SelfContained>true</SelfContained>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
@@ -16,20 +16,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CefSharp.OffScreen.NETCore" Version="150.0.110" />
-    <PackageReference Include="Grpc.AspNetCore.Web" Version="2.83.0"/>
+    <PackageReference Include="CefSharp.OffScreen.NETCore" Version="152.0.100" />
+    <PackageReference Include="Grpc.AspNetCore.Web" Version="2.84.0"/>
     <PackageReference Include="Serilog" Version="4.4.0"/>
     <PackageReference Include="Serilog.AspNetCore" Version="10.0.0"/>
     <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1"/>
     <PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0"/>
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0"/>
-    <PackageReference Include="Sentry" Version="6.8.0"/>
+    <PackageReference Include="Sentry" Version="6.11.1"/>
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0"/>
-    <PackageReference Include="Grpc.AspNetCore" Version="2.83.0"/>
-    <PackageReference Include="Google.Protobuf" Version="3.35.1"/>
-    <PackageReference Include="Grpc.Net.Client" Version="2.83.0"/>
-    <PackageReference Include="Grpc.Tools" Version="2.83.0" PrivateAssets="All"/>
-    <PackageReference Include="System.Drawing.Common" Version="10.0.10" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.84.0"/>
+    <PackageReference Include="Google.Protobuf" Version="3.36.2"/>
+    <PackageReference Include="Grpc.Net.Client" Version="2.84.0"/>
+    <PackageReference Include="Grpc.Tools" Version="2.84.0" PrivateAssets="All"/>
+    <PackageReference Include="System.Drawing.Common" Version="10.0.12" />
   </ItemGroup>
 
   <ItemGroup>

@@ -67,7 +67,7 @@ public static class ErrorReporting
           options.SendClientReports = false;
           options.AutoSessionTracking = false;
           options.EnableLogs = false;
-          options.EnableMetrics = false;
+          options.SetBeforeSendMetric(_ => null);
           options.TracesSampleRate = 0;
           options.ProfilesSampleRate = 0;
           options.CaptureFailedRequests = false;
