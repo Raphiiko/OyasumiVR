@@ -373,8 +373,9 @@ write made in standby. A cancelled fade never resumes.
 ### Maintenance hold
 
 `{"type":"beginMaintenance","id":5}` answers `beginMaintenanceResult` with `held: false` while a
-fade runs. Otherwise the helper refuses new fades until `{"type":"endMaintenance"}`, a restart, or
-120 s, and sets keep working. Every PC gets `{"type":"maintenance","held":true}` when a hold begins
+fade runs or another connection holds maintenance. Otherwise the helper refuses new fades until
+`{"type":"endMaintenance"}` from the same connection, a restart, or 120 s, and sets keep working.
+The owner can renew its hold. Every PC gets `{"type":"maintenance","held":true}` when a hold begins
 and `held: false` when it ends.
 
 ## Updates

@@ -147,7 +147,8 @@ pub struct Controls<B> {
     fades: [Option<Fade>; 2],
     /// Set while the headset is in standby.
     standby: Option<StandbyWrites>,
-    hold_until: Option<Instant>,
+    /// The connection that holds maintenance, and when the hold ends by itself.
+    hold: Option<(u64, Instant)>,
     next_poll: Instant,
     /// The time of the current tick or command.
     now: Instant,
@@ -161,7 +162,7 @@ impl<B: Backend + ColorGains> Controls<B> {
             cct: Cct::default(),
             fades: [None, None],
             standby: None,
-            hold_until: None,
+            hold: None,
             next_poll: now,
             now,
             events: Vec::new(),
@@ -179,7 +180,7 @@ impl<B: Backend + ColorGains> Controls<B> {
             .iter()
             .flatten()
             .map(|fade| fade.next_step)
-            .chain(self.hold_until)
+            .chain(self.hold.map(|(_, until)| until))
             .fold(self.next_poll, Instant::min)
     }
 
@@ -189,7 +190,7 @@ impl<B: Backend + ColorGains> Controls<B> {
         if suspended {
             self.enter_standby();
         }
-        if self.hold_until.is_some_and(|until| until <= now) {
+        if self.hold.is_some_and(|(_, until)| until <= now) {
             self.end_hold();
         }
         if self.next_poll <= now {
@@ -256,10 +257,13 @@ impl<B: Backend + ColorGains> Controls<B> {
                 }
             }
             Action::BeginMaintenance => {
-                let held = self.fades.iter().all(Option::is_none);
+                let free = self.hold.is_none_or(|(owner, _)| owner == connection);
+                let held = free && self.fades.iter().all(Option::is_none);
                 if held {
-                    self.hold_until = Some(now + HOLD_LIMIT);
-                    self.events.push(Event::Hold(true));
+                    if self.hold.is_none() {
+                        self.events.push(Event::Hold(true));
+                    }
+                    self.hold = Some((connection, now + HOLD_LIMIT));
                 }
                 self.events.push(Event::MaintenanceReply {
                     connection,
@@ -267,7 +271,11 @@ impl<B: Backend + ColorGains> Controls<B> {
                     held,
                 });
             }
-            Action::EndMaintenance => self.end_hold(),
+            Action::EndMaintenance => {
+                if self.hold.is_some_and(|(owner, _)| owner == connection) {
+                    self.end_hold();
+                }
+            }
         }
     }
 
@@ -394,7 +402,7 @@ impl<B: Backend + ColorGains> Controls<B> {
     /// Accepts a fade. `Ok(true)` means it completed at once: in standby, where nobody sees the
     /// display, and for a zero duration.
     fn start_fade(&mut self, request: FadeRequest) -> Result<bool, FadeError> {
-        if self.hold_until.is_some() {
+        if self.hold.is_some() {
             return Err(FadeError::Maintenance);
         }
         self.read_standby();
@@ -522,7 +530,7 @@ impl<B: Backend + ColorGains> Controls<B> {
     }
 
     fn end_hold(&mut self) {
-        if self.hold_until.take().is_some() {
+        if self.hold.take().is_some() {
             self.events.push(Event::Hold(false));
         }
     }

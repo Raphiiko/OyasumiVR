@@ -656,6 +656,32 @@ fn a_maintenance_hold_refuses_fades_and_allows_sets() {
 }
 
 #[test]
+fn a_maintenance_hold_belongs_to_the_connection_that_took_it() {
+    let mut rig = Rig::new();
+    assert_eq!(
+        hold_reply(&rig.send(2, Action::BeginMaintenance)),
+        Some(true)
+    );
+
+    // another PC can neither take the hold nor end it
+    assert_eq!(
+        hold_reply(&rig.send(3, Action::BeginMaintenance)),
+        Some(false)
+    );
+    assert_eq!(rig.send(3, Action::EndMaintenance), []);
+    assert_eq!(
+        fade_reply(&rig.fade(Control::Cct, "a", 3000.0, 1000)),
+        Some(Err(FadeError::Maintenance))
+    );
+
+    // the owner renews it without a second notice, and ends it
+    assert!(!rig
+        .send(2, Action::BeginMaintenance)
+        .contains(&Event::Hold(true)));
+    assert_eq!(rig.send(2, Action::EndMaintenance), [Event::Hold(false)]);
+}
+
+#[test]
 fn a_maintenance_hold_ends_after_120_s() {
     let mut rig = Rig::new();
     rig.send(2, Action::BeginMaintenance);
