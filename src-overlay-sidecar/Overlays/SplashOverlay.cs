@@ -54,7 +54,7 @@ public class SplashOverlay : BaseWebOverlay
     // Lerp the position
     if (_updatedPositionOnce)
     {
-      targetTransform = Matrix4x4.Lerp(currentTransform, targetTransform, 0.02f);
+      targetTransform = MathUtils.LerpRigid(currentTransform, targetTransform, 0.02f);
     }
 
     // Apply the transformation
