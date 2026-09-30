@@ -59,6 +59,8 @@ export class ValveIndexHardwareBrightnessControlDriver extends HardwareBrightnes
   private pending: number | null = null;
   /** Set when a report arrives during a write, which then reads the gain again before it ends. */
   private reportSkipped = false;
+  /** Counts SteamVR's gain reports, so a slower initial read can tell that a newer one arrived. */
+  private reports = 0;
 
   constructor(
     appSettings: Observable<AppSettings>,
@@ -87,7 +89,10 @@ export class ValveIndexHardwareBrightnessControlDriver extends HardwareBrightnes
         })
       )
       .subscribe(() => void this.readInitialGain());
-    this.openvr.analogGainUpdates.subscribe((gain) => this.onGainReport(gain));
+    this.openvr.analogGainUpdates.subscribe((gain) => {
+      this.reports++;
+      this.onGainReport(gain);
+    });
   }
 
   getBrightnessConfiguration(): HardwareBrightnessControlDriverBounds {
@@ -148,8 +153,9 @@ export class ValveIndexHardwareBrightnessControlDriver extends HardwareBrightnes
   }
 
   private async readInitialGain() {
+    const reports = this.reports;
     const gain = await this.openvr.getAnalogGain().catch(() => null);
-    if (gain !== null) this.onGainReport(gain);
+    if (gain !== null && reports === this.reports) this.onGainReport(gain);
   }
 
   /** Adopts a reported gain, unless a write runs: then the write reads the gain again. */
