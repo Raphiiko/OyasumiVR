@@ -99,6 +99,9 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 ### Fixed
 
 - Fixed overlay pointers and tooltips clipping into the dashboard with SteamVR 2.17.
+- The splash screen and VR notifications no longer stretch or skew while they move into place
+  after you turn your head
+- VR notifications now tilt toward your eyes, as intended
 - The event log no longer reports an auto-declined invite when the decline request to VRChat failed
 - The event log no longer reports a status change on sleep preparation when the status did not change
 - Restore friend pictures after the VRChat API profile changes.
