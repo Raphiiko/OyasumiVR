@@ -8,7 +8,7 @@ edition = "2021"
 # Every dependency here runs elevated, so the bar for adding one is high.
 [dependencies]
 log = { version = "0.4.34", features = ["std"] }
-minisign-verify = "0.2.5"
+minisign-verify = "0.3.0"
 oyasumivr-shared = { path = "../src-shared-rust" }
 serde = { version = "1.0.229", features = ["derive"] }
 serde_json = "1.0.151"
@@ -16,7 +16,7 @@ serde_json = "1.0.151"
 # Test-only, so it never reaches the shipped binary.
 [dev-dependencies]
 base64 = "0.23"
-minisign = "0.7.9"
+minisign = "0.10.0"
 
 [dependencies.windows]
 version = "0.62.2"
