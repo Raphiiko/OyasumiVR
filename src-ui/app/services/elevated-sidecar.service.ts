@@ -89,7 +89,7 @@ export class ElevatedSidecarService {
     if (!wasEnabled || interactive || ['promptDeclined', 'notSupported'].includes(result.result)) {
       this.appSettings.updateSettings({ elevatedFeaturesEnabled: false });
     }
-    if (!interactive && result.result !== 'promptDeclined') {
+    if (!interactive) {
       this._failure.next({ operation: 'enable', result });
     }
     return result;
