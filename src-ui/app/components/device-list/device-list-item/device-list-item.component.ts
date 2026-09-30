@@ -55,7 +55,12 @@ export class DeviceListItemComponent implements OnInit {
     const knownDevice = this.deviceManager.getKnownDeviceById(
       this.deviceManager.getIdForOpenVRDevice(device)
     );
-    if (!knownDevice) return;
+    if (!knownDevice) {
+      // the row stays mounted, so it must not keep a pair action for a device it no longer knows
+      this.frameToPair = undefined;
+      if (this.powerButtonState === 'attention') this.powerButtonState = 'hide';
+      return;
+    }
 
     this.mode = 'openvr';
     this.deviceTypeName = knownDevice.typeName;
