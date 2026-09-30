@@ -21,7 +21,7 @@ import {
   MSIAfterburnerAutomationConfig,
 } from '../models/automations';
 
-import { GPUDevice, GPUPowerLimit } from '../models/gpu-device';
+import { GPUDevice, GPUPowerLimit, GPUPowerLimitUnit } from '../models/gpu-device';
 import { NvmlService } from './nvml.service';
 import { NvmlDevice } from '../models/nvml-device';
 import { SleepService } from './sleep.service';
@@ -34,6 +34,9 @@ import {
   EventLogGpuPowerLimitChanged,
   EventLogMsiAfterburnerProfileSet,
 } from '../models/event-log-entry';
+
+const GPU_POWER_LIMIT_SCALE = 1000;
+const ADLX_POWER_LIMIT_SHIFT_PERCENT = 100;
 
 @Injectable({
   providedIn: 'root',
@@ -79,8 +82,9 @@ export class GpuAutomationsService {
     );
   }
 
+  /** Subscribes once at startup to device discovery, default GPU selection, and sleep automations. */
   async init() {
-    // Process detected NVIDIA cards
+    // Process detected GPUs from elevated sidecar backends (NVML/ADLX).
     this.nvml.devices
       .pipe(
         tap((nvmlDevices) => {
@@ -201,6 +205,7 @@ export class GpuAutomationsService {
     );
   }
 
+  /** Applies enabled rules on sleep transitions, skipping initial state and logging only success. */
   private setupPowerLimitOnSleepAutomations() {
     const setupOnSleepAutomation = (on: 'ENABLE' | 'DISABLE') => {
       const getAutomationConfig = () => {
@@ -244,16 +249,26 @@ export class GpuAutomationsService {
             info('[GpuAutomations] Setting power limit');
             const powerLimit = getAutomationConfig().resetToDefault
               ? selectedDevice!.defaultPowerLimit!
-              : getAutomationConfig().powerLimit || selectedDevice!.defaultPowerLimit!;
-            return this.nvml.setPowerLimit(selectedDevice!.id, powerLimit * 1000).then(() => {
-              this.eventLog.logEvent({
-                type: 'gpuPowerLimitChanged',
-                device: selectedDevice!.name,
-                limit: powerLimit,
-                resetToDefault: getAutomationConfig().resetToDefault,
-                reason: on === 'ENABLE' ? 'SLEEP_MODE_ENABLED' : 'SLEEP_MODE_DISABLED',
-              } as EventLogGpuPowerLimitChanged);
-            });
+              : (this.normalizeConfiguredPowerLimit(
+                  selectedDevice!,
+                  getAutomationConfig().powerLimit
+                ) ?? selectedDevice!.defaultPowerLimit!);
+            return this.nvml
+              .setPowerLimit(
+                selectedDevice!.id,
+                this.encodePowerLimitForCommand(selectedDevice!, powerLimit)
+              )
+              .then((success) => {
+                if (!success) return;
+                this.eventLog.logEvent({
+                  type: 'gpuPowerLimitChanged',
+                  device: selectedDevice!.name,
+                  limit: powerLimit,
+                  limitUnit: selectedDevice!.powerLimitUnit,
+                  resetToDefault: getAutomationConfig().resetToDefault,
+                  reason: on === 'ENABLE' ? 'SLEEP_MODE_ENABLED' : 'SLEEP_MODE_DISABLED',
+                } as EventLogGpuPowerLimitChanged);
+              });
           })
         )
         .subscribe();
@@ -262,28 +277,78 @@ export class GpuAutomationsService {
     setupOnSleepAutomation('DISABLE');
   }
 
+  /** Decodes wire limits to AMD percentage offsets or NVIDIA watts and derives tuning support. */
   private mapNvmlDeviceToGPUDevice(nvmlDevice: NvmlDevice): GPUDevice {
+    const isAdlxDevice = nvmlDevice.uuid.startsWith('adlx:');
+    const powerLimitUnit: GPUPowerLimitUnit = isAdlxDevice ? '%' : 'W';
+    const minPowerLimit = this.mapPowerLimitValue(nvmlDevice.minPowerLimit, isAdlxDevice);
+    const maxPowerLimit = this.mapPowerLimitValue(nvmlDevice.maxPowerLimit, isAdlxDevice);
+    const defaultPowerLimit = this.mapPowerLimitValue(nvmlDevice.defaultPowerLimit, isAdlxDevice);
+    const powerLimit = this.mapPowerLimitValue(nvmlDevice.powerLimit, isAdlxDevice);
+
     return {
       id: nvmlDevice.uuid,
-      type: 'NVIDIA',
+      type: isAdlxDevice ? 'AMD' : 'NVIDIA',
+      powerLimitUnit,
       name: nvmlDevice.name,
       supportsPowerLimiting:
-        typeof nvmlDevice.minPowerLimit === 'number' &&
-        typeof nvmlDevice.maxPowerLimit === 'number' &&
-        typeof nvmlDevice.defaultPowerLimit === 'number' &&
-        (nvmlDevice.minPowerLimit !== nvmlDevice.defaultPowerLimit ||
-          nvmlDevice.maxPowerLimit !== nvmlDevice.defaultPowerLimit) &&
-        nvmlDevice.maxPowerLimit > nvmlDevice.minPowerLimit,
-      minPowerLimit:
-        nvmlDevice.minPowerLimit !== undefined ? nvmlDevice.minPowerLimit / 1000 : undefined,
-      maxPowerLimit:
-        nvmlDevice.maxPowerLimit !== undefined ? nvmlDevice.maxPowerLimit / 1000 : undefined,
-      defaultPowerLimit:
-        nvmlDevice.defaultPowerLimit !== undefined
-          ? nvmlDevice.defaultPowerLimit / 1000
-          : undefined,
-      powerLimit: nvmlDevice.powerLimit !== undefined ? nvmlDevice.powerLimit / 1000 : undefined,
+        typeof minPowerLimit === 'number' &&
+        typeof maxPowerLimit === 'number' &&
+        typeof defaultPowerLimit === 'number' &&
+        (minPowerLimit !== defaultPowerLimit || maxPowerLimit !== defaultPowerLimit) &&
+        maxPowerLimit > minPowerLimit,
+      minPowerLimit,
+      maxPowerLimit,
+      defaultPowerLimit,
+      powerLimit,
     };
+  }
+
+  /** Divides wire values by 1000 and removes AMD's +100 offset; missing readings stay undefined. */
+  private mapPowerLimitValue(value: number | undefined, isAdlxDevice: boolean): number | undefined {
+    if (value === undefined) return undefined;
+
+    const scaledValue = value / GPU_POWER_LIMIT_SCALE;
+    return isAdlxDevice ? scaledValue - ADLX_POWER_LIMIT_SHIFT_PERCENT : scaledValue;
+  }
+
+  /**
+   * Keeps in-range AMD offsets; otherwise subtracts 100 and clamps to known driver bounds.
+   * Missing values and NVIDIA watt limits pass through unchanged.
+   */
+  public normalizeConfiguredPowerLimit(
+    device: GPUDevice,
+    configuredLimit: number | undefined
+  ): number | undefined {
+    if (configuredLimit === undefined) return undefined;
+    if (device.type !== 'AMD') return configuredLimit;
+
+    const minPowerLimit = device.minPowerLimit;
+    const maxPowerLimit = device.maxPowerLimit;
+    if (
+      typeof minPowerLimit === 'number' &&
+      typeof maxPowerLimit === 'number' &&
+      configuredLimit >= minPowerLimit &&
+      configuredLimit <= maxPowerLimit
+    ) {
+      return configuredLimit;
+    }
+
+    const normalizedLimit = configuredLimit - ADLX_POWER_LIMIT_SHIFT_PERCENT;
+    if (typeof minPowerLimit === 'number' && typeof maxPowerLimit === 'number') {
+      return Math.min(Math.max(normalizedLimit, minPowerLimit), maxPowerLimit);
+    }
+
+    return normalizedLimit;
+  }
+
+  /** Encodes watts as milliwatts or AMD offsets as `(offset + 100) * 1000`, rounding down. */
+  private encodePowerLimitForCommand(device: GPUDevice, powerLimit: number): number {
+    if (device.type === 'AMD') {
+      return Math.floor((powerLimit + ADLX_POWER_LIMIT_SHIFT_PERCENT) * GPU_POWER_LIMIT_SCALE);
+    }
+
+    return Math.floor(powerLimit * GPU_POWER_LIMIT_SCALE);
   }
 
   async setupMSIAfterburnerProfileSleepAutomations() {

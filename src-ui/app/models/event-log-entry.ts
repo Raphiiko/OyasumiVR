@@ -3,6 +3,7 @@ import { LighthouseDevicePowerState } from './lighthouse-device';
 import { SleepModeStatusChangeReason } from './sleep-mode';
 import type { UserStatus } from './vrchat';
 import { AudioDeviceParsedName, AudioDeviceType } from './audio-device';
+import type { GPUPowerLimitUnit } from './gpu-device';
 
 export type EventLog = {
   version: 5;
@@ -152,6 +153,7 @@ export interface EventLogGpuPowerLimitChanged extends EventLogBase {
   reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED';
   device: string;
   limit: number;
+  limitUnit?: GPUPowerLimitUnit;
   resetToDefault: boolean;
 }
 

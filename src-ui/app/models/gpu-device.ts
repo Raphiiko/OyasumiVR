@@ -1,7 +1,10 @@
+export type GPUPowerLimitUnit = 'W' | '%';
+
 export interface GPUDevice {
   name: string;
   id: string;
-  type: 'NVIDIA';
+  type: 'NVIDIA' | 'AMD';
+  powerLimitUnit: GPUPowerLimitUnit;
   supportsPowerLimiting: boolean;
   minPowerLimit?: number;
   maxPowerLimit?: number;

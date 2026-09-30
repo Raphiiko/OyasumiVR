@@ -24,8 +24,8 @@ use windows_sys::Win32::System::LibraryLoader::{
 
 mod afterburner;
 mod cleanup;
+mod gpu_power;
 mod grpc;
-mod nvml;
 
 static ERROR_REPORTING_ENABLED: LazyLock<Arc<AtomicBool>> =
     LazyLock::new(|| Arc::new(AtomicBool::new(false)));
@@ -58,6 +58,8 @@ fn main() {
         .block_on(run());
 }
 
+/// Requires elevation and core connection arguments; initializes GPU backends after core acceptance.
+/// Watches the core for exit, terminating the sidecar on startup failure or core shutdown.
 async fn run() {
     let args: Vec<String> = env::args().collect();
     // Parse the arguments
@@ -104,8 +106,7 @@ async fn run() {
         error!("The core did not accept this sidecar: {e}");
         std::process::exit(1);
     }
-    // Init NVML
-    nvml::init();
+    gpu_power::init();
     // Keep an eye on the main process and quit alongside it
     watch_main_process(main_pid).await;
 }
