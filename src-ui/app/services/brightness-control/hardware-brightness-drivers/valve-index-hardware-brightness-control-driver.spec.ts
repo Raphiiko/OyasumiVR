@@ -75,6 +75,17 @@ describe('ValveIndexHardwareBrightnessControlDriver', () => {
     expect(h.setAnalogGain).not.toHaveBeenCalled();
   });
 
+  it('keeps a SteamVR report that arrives during the initial read', async () => {
+    const h = setup(gainFor(60));
+    let answer = (_: number) => {};
+    h.getAnalogGain.mockImplementationOnce(() => new Promise((resolve) => (answer = resolve)));
+    await vi.advanceTimersByTimeAsync(500);
+    h.outsideChange(gainFor(80));
+    answer(gainFor(60));
+    await vi.advanceTimersByTimeAsync(0);
+    expect(h.updates).toEqual([80]);
+  });
+
   it('adopts a change made outside OyasumiVR without writing it back', async () => {
     const h = setup();
     await vi.advanceTimersByTimeAsync(500);
