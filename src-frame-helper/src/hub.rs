@@ -147,12 +147,14 @@ fn run<B: Backend + ColorGains>(
         let wait = controls
             .next_wake()
             .saturating_duration_since(Instant::now());
-        match commands.recv_timeout(wait) {
+        let received = commands.recv_timeout(wait);
+        // tick first, so a suspend ends the old fades and not one a command starts after resume
+        controls.tick(Instant::now(), clock.suspended());
+        match received {
             Ok(command) => controls.command(command, Instant::now()),
             Err(mpsc::RecvTimeoutError::Timeout) => {}
             Err(mpsc::RecvTimeoutError::Disconnected) => return,
         }
-        controls.tick(Instant::now(), clock.suspended());
         for event in controls.take_events() {
             hub.publish(event);
         }
