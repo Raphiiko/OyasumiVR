@@ -143,7 +143,7 @@ export class CCTControlService {
     cct = clamp(Math.round(cct), 1000, 10000);
     if (opt.cancelActiveTransition) this.cancelActiveTransition();
     const driver = this.driver;
-    if (driver?.cctUpdates) {
+    if (driver?.pushesCctChanges) {
       await driver.setCCT(cct);
     } else {
       if (cct === this.cct && !force) return;
@@ -158,16 +158,16 @@ export class CCTControlService {
   private watchDrivers() {
     this.activeDriver.subscribe((driver) => this.onDriver(driver));
 
-    // show the values a driver reports, without writing them back
+    // show the values a driver pushes, without writing them back
     this.activeDriver
       .pipe(switchMap((driver) => driver?.cctUpdates ?? EMPTY))
       .subscribe((kelvin) => this._cct.next(kelvin));
 
-    // write the app's value once a driver can write it, unless the driver reports its own
+    // write the app's value once a driver can write it, unless the driver pushes its own
     this.activeDriver
       .pipe(
         switchMap((driver) =>
-          driver && !driver.cctUpdates ? driver.isAvailable().pipe(filter(Boolean)) : EMPTY
+          driver && !driver.pushesCctChanges ? driver.isAvailable().pipe(filter(Boolean)) : EMPTY
         )
       )
       .subscribe(() => this.setCCT(this.cct, SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, true));

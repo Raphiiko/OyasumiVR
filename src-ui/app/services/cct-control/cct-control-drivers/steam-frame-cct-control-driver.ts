@@ -35,6 +35,7 @@ type ActiveHmd =
 export class SteamFrameCctControlDriver extends CctControlDriver {
   readonly name = 'Steam Frame helper';
   override readonly skipsTransitions = true;
+  override readonly pushesCctChanges = true;
   /** Replays the latest value, which can arrive before the driver becomes the active one. */
   private readonly updates = new ReplaySubject<number>(1);
   override readonly cctUpdates = this.updates.asObservable();

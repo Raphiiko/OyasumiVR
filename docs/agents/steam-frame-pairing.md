@@ -313,8 +313,8 @@ without a write, and a set to the shown Kelvin writes when `exact` is false. The
 an allowlisted Frame model without that path and drops its sets then, so the SteamVR color gain
 driver never writes the PC's own gains for a Frame. The driver keeps the newest value set before the
 paired Frame's first report, such as the HMD connect automation's, and sends it with that report.
-`CCTControlService` hands every set to the matching driver, and a driver with `cctUpdates` owns
-the shown value. Transitions set their target in one command.
+`CCTControlService` hands every set to the matching driver, and a driver with `pushesCctChanges`
+owns the shown value. Transitions set their target in one command.
 
 ## Updates
 
