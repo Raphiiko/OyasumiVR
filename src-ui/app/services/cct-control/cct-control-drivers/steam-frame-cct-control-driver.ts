@@ -99,7 +99,8 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
   async setCCT(kelvin: number): Promise<void> {
     const hmd = this.currentHmd;
     if (hmd.kind !== 'frame' || !hmd.pairingId) return;
-    if (hmd.cct && kelvin === this.shown && this.exact) return;
+    // while a command runs, `shown` and `exact` describe the request, not the headset
+    if (!this.sending && hmd.cct && kelvin === this.shown && this.exact) return;
     this.pending = { kelvin, pairingId: hmd.pairingId };
     if (!hmd.cct) return;
     this.show(kelvin);

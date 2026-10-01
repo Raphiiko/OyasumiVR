@@ -351,6 +351,20 @@ describe('CCTControlService with a Steam Frame', () => {
     expect(h.writes()).toEqual([6600]);
   });
 
+  it('sends a set for a Frame that took over while a command to another Frame runs', async () => {
+    const h = await setup(FRAME);
+    h.report(snapshot(6600));
+    h.report(snapshot(5500), 'q');
+    await settle();
+    await h.service.setCCT(3000);
+    h.activate(FRAME_B);
+    await settle();
+    await h.service.setCCT(3000);
+    h.reply(snapshot(3000));
+    await settle();
+    expect(h.frameWritesTo('q')).toEqual([3000]);
+  });
+
   it('drops a value set before the first report when another Frame takes over', async () => {
     const h = await setup(FRAME);
     h.report(null);
