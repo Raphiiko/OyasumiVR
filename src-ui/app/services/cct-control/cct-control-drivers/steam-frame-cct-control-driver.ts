@@ -18,6 +18,7 @@ import {
   SteamFramePairing,
 } from '../../../models/steam-frame';
 import type { OpenVRService, OpenVRStatus } from '../../openvr.service';
+import type { SteamFramePairingService } from '../../steam-frame-pairing.service';
 import { CctControlDriver } from './cct-control-driver';
 
 /** A Frame report that carries a value. */
@@ -34,7 +35,6 @@ type ActiveHmd =
 export class SteamFrameCctControlDriver extends CctControlDriver {
   readonly name = 'Steam Frame helper';
   override readonly skipsTransitions = true;
-  override readonly pushesCctChanges = true;
   /** Replays the latest value, which can arrive before the driver becomes the active one. */
   private readonly updates = new ReplaySubject<number>(1);
   override readonly cctUpdates = this.updates.asObservable();
@@ -42,16 +42,18 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
   private readonly matching: Observable<boolean>;
   private readonly available: Observable<boolean>;
   private currentHmd: ActiveHmd = { kind: 'none' };
+  /** The value last sent to `cctUpdates`. */
+  private shown: number | null = null;
   /** False while the Frame's gains lie off the curve, so a set to the shown value still writes. */
   private exact = true;
   /** Set while a command runs; a newer value waits in `pending` and replaces an older one. */
   private sending = false;
+  /** Also holds a value set before the paired Frame's first report, which goes out with it. */
   private pending: { kelvin: number; pairingId: string } | null = null;
 
   constructor(
     openvr: Pick<OpenVRService, 'status' | 'devices'>,
-    pairings: Observable<SteamFramePairing[]>,
-    connections: Observable<Record<string, SteamFrameConnectionState>>
+    steamFrames: Pick<SteamFramePairingService, 'pairings$' | 'connections$'>
   ) {
     super();
     const frameModels = from(
@@ -60,7 +62,12 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
       )
     );
     const openvrHmd = combineLatest([openvr.status, openvr.devices]).pipe(debounceTime(100));
-    this.hmd = combineLatest([openvrHmd, pairings, connections, frameModels]).pipe(
+    this.hmd = combineLatest([
+      openvrHmd,
+      steamFrames.pairings$,
+      steamFrames.connections$,
+      frameModels,
+    ]).pipe(
       map(([[status, devices], pairings, connections, frameModels]) =>
         this.activeHmd(status, devices, pairings, connections, frameModels)
       ),
@@ -80,10 +87,6 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
     this.hmd.subscribe((hmd) => this.onHmd(hmd));
   }
 
-  override get writesUnchangedValue(): boolean {
-    return !this.exact;
-  }
-
   matches(): Observable<boolean> {
     return this.matching;
   }
@@ -94,8 +97,11 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
 
   async setCCT(kelvin: number): Promise<void> {
     const hmd = this.currentHmd;
-    if (hmd.kind !== 'frame' || !hmd.pairingId || !hmd.cct) return;
+    if (hmd.kind !== 'frame' || !hmd.pairingId) return;
+    if (hmd.cct && kelvin === this.shown && this.exact) return;
     this.pending = { kelvin, pairingId: hmd.pairingId };
+    if (!hmd.cct) return;
+    this.show(kelvin);
     if (!this.sending) void this.sendPending();
   }
 
@@ -121,7 +127,6 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
       });
     }
     this.sending = false;
-    this.pending = null;
 
     // show what the active headset holds now; a reply from a Frame that stopped being active is stale
     const target = this.currentHmd;
@@ -154,12 +159,30 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
   /** Adopts each report, unless a command runs: then the requested value stays on screen. */
   private onHmd(hmd: ActiveHmd) {
     this.currentHmd = hmd;
+
+    // a waiting value belongs to the Frame it was set for
+    const pending = this.pending;
+    if (pending && (hmd.kind !== 'frame' || hmd.pairingId !== pending.pairingId)) {
+      this.pending = null;
+    }
     if (hmd.kind !== 'frame' || !hmd.cct || this.sending) return;
+
+    // a value set before the first report goes out with it
+    if (this.pending) {
+      this.show(this.pending.kelvin);
+      void this.sendPending();
+      return;
+    }
     this.adopt(hmd.cct);
   }
 
   private adopt(cct: FrameCct) {
     this.exact = !!cct.exact;
-    this.updates.next(cct.kelvin);
+    this.show(cct.kelvin);
+  }
+
+  private show(kelvin: number) {
+    this.shown = kelvin;
+    this.updates.next(kelvin);
   }
 }

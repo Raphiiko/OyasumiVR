@@ -5,6 +5,7 @@ import {
   debounceTime,
   distinctUntilChanged,
   EMPTY,
+  filter,
   map,
   Observable,
   of,
@@ -43,12 +44,7 @@ export class CCTControlService {
   /** The driver that matches the active HMD; null while none does. */
   public readonly activeDriver: Observable<CctControlDriver | null>;
   public readonly driverIsAvailable: Observable<boolean>;
-  /** The driver that matches the active HMD; null while none does. */
-  private currentDriver: CctControlDriver | null = null;
-  /** The active driver while it can write; null otherwise. */
-  private writableDriver: CctControlDriver | null = null;
-  /** The newest value set while a pushing driver could not write; cleared when the driver changes. */
-  private deferredCCT: number | null = null;
+  private driver: CctControlDriver | null = null;
   public readonly activeTransition = this._activeTransition.asObservable();
   public cctCSSColor: string = 'white';
 
@@ -64,11 +60,7 @@ export class CCTControlService {
     steamFrames: SteamFramePairingService
   ) {
     this.driverSteamVr = new SteamVrCctControlDriver(openvr, appSettingsService.settings);
-    this.driverSteamFrame = new SteamFrameCctControlDriver(
-      openvr,
-      steamFrames.pairings$,
-      steamFrames.connections$
-    );
+    this.driverSteamFrame = new SteamFrameCctControlDriver(openvr, steamFrames);
     // the SteamVR driver can match any headset, so it stays last
     const drivers: CctControlDriver[] = [this.driverSteamFrame, this.driverSteamVr];
     this.activeDriver = combineLatest(drivers.map((driver) => driver.matches())).pipe(
@@ -99,7 +91,7 @@ export class CCTControlService {
     options: Partial<SetBrightnessOrCCTOptions> = SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS
   ): CancellableTask {
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
-    if (this.currentDriver?.skipsTransitions) {
+    if (this.driver?.skipsTransitions) {
       this.cancelActiveTransition();
       const task = new CancellableTask(() =>
         this.setCCT(temperature, { cancelActiveTransition: false, logReason: opt.logReason })
@@ -150,40 +142,35 @@ export class CCTControlService {
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
     cct = clamp(Math.round(cct), 1000, 10000);
     if (opt.cancelActiveTransition) this.cancelActiveTransition();
-    const driver = this.currentDriver;
-    // a driver that pushes its values owns the shown one, so nothing changes before it can write
-    if (driver?.pushesCctChanges && driver !== this.writableDriver) {
-      this.deferredCCT = cct;
-      return;
+    const driver = this.driver;
+    if (driver?.cctUpdates) {
+      await driver.setCCT(cct);
+    } else {
+      if (cct === this.cct && !force) return;
+      this._cct.next(cct);
+      await driver?.setCCT(cct);
     }
-    if (cct === this.cct && !force && !this.writableDriver?.writesUnchangedValue) return;
-    this._cct.next(cct);
-    await this.writableDriver?.setCCT(cct);
     if (opt.logReason) {
       await info(`[CCTControl] Set CCT to ${cct}K (Reason: ${opt.logReason})`);
     }
   }
 
   private watchDrivers() {
-    this.activeDriver.subscribe((driver) => {
-      if (driver !== this.currentDriver) this.deferredCCT = null;
-      this.currentDriver = driver;
-    });
+    this.activeDriver.subscribe((driver) => this.onDriver(driver));
 
-    // show the values a driver pushes, without writing them back
+    // show the values a driver reports, without writing them back
     this.activeDriver
       .pipe(switchMap((driver) => driver?.cctUpdates ?? EMPTY))
       .subscribe((kelvin) => this._cct.next(kelvin));
 
-    // write the app's value once a driver can write it, unless the driver pushes its own
+    // write the app's value once a driver can write it, unless the driver reports its own
     this.activeDriver
       .pipe(
         switchMap((driver) =>
-          (driver?.isAvailable() ?? of(false)).pipe(map((available) => (available ? driver : null)))
-        ),
-        distinctUntilChanged()
+          driver && !driver.cctUpdates ? driver.isAvailable().pipe(filter(Boolean)) : EMPTY
+        )
       )
-      .subscribe((driver) => this.onWritableDriver(driver));
+      .subscribe(() => this.setCCT(this.cct, SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, true));
 
     // log which driver serves which headset, once both have settled
     const hmd = this.openvr.devices.pipe(
@@ -209,19 +196,12 @@ export class CCTControlService {
       });
   }
 
-  private onWritableDriver(driver: CctControlDriver | null) {
-    this.writableDriver = driver;
-    if (!driver) return;
-    if (!driver.pushesCctChanges) {
-      this.setCCT(this.cct, SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, true);
-      return;
-    }
-
-    // a running transition would write the headset at every step, so it finishes in one command
+  /** A driver that skips transitions finishes a running one in one command. */
+  private onDriver(driver: CctControlDriver | null) {
+    this.driver = driver;
     const transition = this._activeTransition.value;
-    const target = transition?.targetCCT ?? this.deferredCCT;
-    this.deferredCCT = null;
-    if (transition) this.cancelActiveTransition();
-    if (target !== null) this.setCCT(target);
+    if (!driver?.skipsTransitions || !transition) return;
+    this.cancelActiveTransition();
+    this.setCCT(transition.targetCCT);
   }
 }
