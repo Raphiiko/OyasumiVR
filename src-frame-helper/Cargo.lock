@@ -458,6 +458,7 @@ name = "oyasumivr-frame-helper"
 version = "26.9.0-beta.14"
 dependencies = [
  "futures-util",
+ "libc",
  "raphii-openvr-rs",
  "rcgen",
  "rustls",
