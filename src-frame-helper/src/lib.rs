@@ -107,13 +107,6 @@ enum Outgoing<'a> {
         operation: &'a str,
         outcome: Outcome,
     },
-    BeginMaintenanceResult {
-        id: u64,
-        held: bool,
-    },
-    Maintenance {
-        held: bool,
-    },
     #[serde(rename_all = "camelCase")]
     SetBrightnessResult {
         id: u64,
@@ -142,7 +135,6 @@ impl<'a> Outgoing<'a> {
             Event::BrightnessReply { connection: c, .. }
             | Event::CctReply { connection: c, .. }
             | Event::FadeReply { connection: c, .. }
-            | Event::MaintenanceReply { connection: c, .. }
                 if *c != connection =>
             {
                 return None
@@ -168,11 +160,6 @@ impl<'a> Outgoing<'a> {
                 operation,
                 outcome: *outcome,
             },
-            Event::MaintenanceReply { id, held, .. } => Self::BeginMaintenanceResult {
-                id: *id,
-                held: *held,
-            },
-            Event::Hold(held) => Self::Maintenance { held: *held },
             Event::BrightnessReply { id, result, .. } => Self::SetBrightnessResult {
                 id: *id,
                 percentage: result.ok(),
@@ -210,10 +197,6 @@ enum Incoming {
     CancelFade {
         operation: String,
     },
-    BeginMaintenance {
-        id: u64,
-    },
-    EndMaintenance,
 }
 
 #[derive(Deserialize)]
@@ -254,8 +237,6 @@ impl Incoming {
                 (id, Action::Fade(request))
             }
             Self::CancelFade { operation } => (0, Action::CancelFade(operation)),
-            Self::BeginMaintenance { id } => (id, Action::BeginMaintenance),
-            Self::EndMaintenance => (0, Action::EndMaintenance),
             _ => return None,
         })
     }
@@ -268,8 +249,6 @@ struct Hello {
     #[serde(flatten)]
     info: Info,
     identity: Option<Identity>,
-    /// This helper runs fades, so a PC sends fade commands instead of one set per transition.
-    fades: bool,
 }
 
 /// Loads the helper's TLS identity from `tls/`, creating a new one when it is missing or unusable.
@@ -456,7 +435,6 @@ async fn handle(
         r#type: "hello",
         info: (*info).clone(),
         identity: read_identity(),
-        fades: true,
     };
     let (latest, mut events) = hub.subscribe();
     for message in [
