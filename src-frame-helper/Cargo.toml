@@ -16,6 +16,9 @@ tokio = { version = "1.53.1", features = ["fs", "io-util", "macros", "net", "rt"
 tokio-rustls = { version = "0.26.5", default-features = false, features = ["ring"] }
 tokio-tungstenite = { version = "0.30.0", default-features = false, features = ["handshake"] }
 
+[target.'cfg(target_os = "linux")'.dependencies]
+libc = "0.2.189"
+
 [dependencies.raphii-openvr-rs]
 git = "https://github.com/Raphiiko/raphii-openvr-rs"
 rev = "5dca9da201b15cf9641382a2f28e18c053adb488"
