@@ -3,9 +3,9 @@ use std::time::Duration;
 use super::{
     connection, devkit, discovery, hex,
     models::{
-        Access, Candidate, Cct, CleanupOutcome, CleanupRequest, OtherPcsOutcome, Pairing,
-        PairingKeys, ProbeOutcome, RegisterOutcome, SetBrightnessError, SetCctError, SetupRequest,
-        SetupResult, StageEvent, State, SupportedModel,
+        Access, Candidate, Cct, CleanupOutcome, CleanupRequest, FadeError, FadeRequest,
+        OtherPcsOutcome, Pairing, PairingKeys, ProbeOutcome, RegisterOutcome, SetBrightnessError,
+        SetCctError, SetupRequest, SetupResult, StageEvent, State, SupportedModel,
     },
     setup,
     ssh::{self, SshError},
@@ -152,6 +152,17 @@ pub async fn steam_frame_set_brightness(
 #[tauri::command]
 pub async fn steam_frame_set_cct(pairing_id: String, kelvin: u32) -> Result<Cct, SetCctError> {
     connection::set_cct(&pairing_id, kelvin).await
+}
+
+/// Starts a fade on the helper. The outcome arrives as a `STEAM_FRAME_FADE_ENDED` event.
+#[tauri::command]
+pub async fn steam_frame_fade(pairing_id: String, request: FadeRequest) -> Result<(), FadeError> {
+    connection::fade(&pairing_id, request).await
+}
+
+#[tauri::command]
+pub async fn steam_frame_cancel_fade(pairing_id: String, operation: String) {
+    connection::cancel_fade(&pairing_id, operation).await
 }
 
 #[cfg(test)]
