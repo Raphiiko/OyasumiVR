@@ -313,10 +313,11 @@ On the PC, `SteamFrameCctControlDriver` sends CCT through the helper while the p
 active OpenVR HMD, its connection is `connected`, and the report says `available`. It keeps one
 command in flight and replaces a waiting one with the newest value. Reports reach the shown value
 without a write, and a set to the shown Kelvin writes when `exact` is false. The driver also matches
-an allowlisted Frame model without that path, so `CCTControlService` writes nothing then and the
-SteamVR color gain driver never writes the PC's own gains for a Frame. A value set before the first
-report is written when that report arrives. Transitions set their target in one command. The HMD
-connect automation reruns once after the first report, as for brightness.
+an allowlisted Frame model without that path and drops its sets then, so the SteamVR color gain
+driver never writes the PC's own gains while a Frame is the active HMD. The driver keeps the newest
+value set before the paired Frame's first report, such as the HMD connect automation's, and sends it
+with that report. `CCTControlService` hands every set to the matching driver, and a driver with
+`pushesCctChanges` owns the shown value. Transitions set their target in one command.
 
 ## Fades
 
