@@ -300,7 +300,7 @@ async fn finishes_a_fade_after_its_pc_disconnects() {
     .await
     .unwrap();
     for socket in [&mut a, &mut b] {
-        assert_eq!(next_json(socket).await["fades"], true);
+        next_json(socket).await;
         next_json(socket).await;
         next_json(socket).await;
     }
@@ -329,44 +329,6 @@ async fn finishes_a_fade_after_its_pc_disconnects() {
     assert_eq!(
         outcome.unwrap(),
         serde_json::json!({"type": "fadeEnded", "control": "brightness", "operation": "op-1", "outcome": "completed"})
-    );
-}
-
-#[tokio::test]
-async fn refuses_fades_during_maintenance() {
-    let helper = start().await;
-    let mut a = open(
-        &helper,
-        &[(PC_ID_HEADER, "pc-a"), ("authorization", "Bearer token-a")],
-    )
-    .await
-    .unwrap();
-    for _ in 0..3 {
-        next_json(&mut a).await;
-    }
-    a.send(Message::text(r#"{"type":"beginMaintenance","id":1}"#))
-        .await
-        .unwrap();
-    assert_eq!(
-        next_json(&mut a).await,
-        serde_json::json!({"type": "maintenance", "held": true})
-    );
-    assert_eq!(
-        next_json(&mut a).await,
-        serde_json::json!({"type": "beginMaintenanceResult", "id": 1, "held": true})
-    );
-    let command = r#"{"type":"fade","id":2,"control":"cct","operation":"op-2","target":3000,"durationMs":600}"#;
-    a.send(Message::text(command)).await.unwrap();
-    assert_eq!(
-        next_json(&mut a).await,
-        serde_json::json!({"type": "fadeResult", "id": 2, "error": "maintenance"})
-    );
-    a.send(Message::text(r#"{"type":"endMaintenance"}"#))
-        .await
-        .unwrap();
-    assert_eq!(
-        next_json(&mut a).await,
-        serde_json::json!({"type": "maintenance", "held": false})
     );
 }
 

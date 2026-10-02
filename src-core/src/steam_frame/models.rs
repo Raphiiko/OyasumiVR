@@ -121,6 +121,18 @@ pub struct State {
     pub cct: Option<Cct>,
 }
 
+/// A fade the helper runs. `target` is in percent or Kelvin.
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct Fade {
+    pub operation: String,
+    pub target: f64,
+    pub remaining_ms: u64,
+    /// Milliseconds since the epoch on this PC's clock, set when the report arrives.
+    #[serde(default)]
+    pub ends_at: u64,
+}
+
 /// The headset's hardware brightness in percent, as the helper reports it.
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
@@ -132,6 +144,63 @@ pub struct Brightness {
     pub max: Option<f64>,
     /// The headset's value, which can lie outside `min` and `max`.
     pub percentage: Option<f64>,
+    #[serde(default)]
+    pub fade: Option<Fade>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub enum Control {
+    Brightness,
+    Cct,
+}
+
+#[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub enum FadeOutcome {
+    Completed,
+    Superseded,
+    Cancelled,
+    ExternalChange,
+    Standby,
+    RuntimeUnavailable,
+}
+
+/// The helper ended a fade, sent to the UI as `STEAM_FRAME_FADE_ENDED`.
+#[derive(Serialize, Clone, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct FadeEnded {
+    pub pairing_id: String,
+    pub control: Control,
+    pub operation: String,
+    pub outcome: FadeOutcome,
+}
+
+#[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub enum FadeError {
+    Unsupported,
+    RuntimeUnavailable,
+    WriteFailed,
+    /// No open connection, or it closed before the helper replied.
+    Offline,
+}
+
+/// A fade for the helper. `simple` is a simple-mode curve from and to, for brightness only.
+#[derive(Deserialize, Clone, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct FadeRequest {
+    pub control: Control,
+    pub operation: String,
+    pub target: f64,
+    pub duration_ms: u64,
+    pub simple: Option<SimpleCurve>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Copy, Debug)]
+pub struct SimpleCurve {
+    pub from: f64,
+    pub to: f64,
 }
 
 #[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq)]
@@ -156,6 +225,8 @@ pub struct Cct {
     pub kelvin: Option<u32>,
     /// True when the gains lie on the curve at `kelvin`.
     pub exact: Option<bool>,
+    #[serde(default)]
+    pub fade: Option<Fade>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq)]
