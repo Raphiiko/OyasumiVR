@@ -85,6 +85,10 @@ impl brightness::Backend for Headset {
         self.0 = gain;
         Ok(())
     }
+
+    fn standby(&mut self) -> Result<bool, brightness::RuntimeLost> {
+        Ok(false)
+    }
 }
 
 impl cct::ColorGains for Headset {
@@ -278,6 +282,92 @@ async fn relays_color_temperature_to_every_pc() {
     .await
     .unwrap();
     assert_eq!(next_json(&mut a).await["type"], "setBrightnessResult");
+}
+
+#[tokio::test]
+async fn finishes_a_fade_after_its_pc_disconnects() {
+    let helper = start().await;
+    let mut a = open(
+        &helper,
+        &[(PC_ID_HEADER, "pc-a"), ("authorization", "Bearer token-a")],
+    )
+    .await
+    .unwrap();
+    let mut b = open(
+        &helper,
+        &[(PC_ID_HEADER, "pc-b"), ("authorization", "Bearer token-b")],
+    )
+    .await
+    .unwrap();
+    for socket in [&mut a, &mut b] {
+        assert_eq!(next_json(socket).await["fades"], true);
+        next_json(socket).await;
+        next_json(socket).await;
+    }
+
+    // the sender gets a reply and progress, then leaves
+    let command = r#"{"type":"fade","id":3,"control":"brightness","operation":"op-1","target":50,"durationMs":600}"#;
+    a.send(Message::text(command)).await.unwrap();
+    let report = next_json(&mut a).await;
+    assert_eq!(report["type"], "brightness");
+    assert_eq!(report["fade"]["operation"], "op-1");
+    assert_eq!(report["fade"]["target"], 50.0);
+    assert_eq!(
+        next_json(&mut a).await,
+        serde_json::json!({"type": "fadeResult", "id": 3})
+    );
+    drop(a);
+
+    // the other PC follows the fade to its end
+    let mut outcome = None;
+    while outcome.is_none() {
+        let message = next_json(&mut b).await;
+        if message["type"] == "fadeEnded" {
+            outcome = Some(message);
+        }
+    }
+    assert_eq!(
+        outcome.unwrap(),
+        serde_json::json!({"type": "fadeEnded", "control": "brightness", "operation": "op-1", "outcome": "completed"})
+    );
+}
+
+#[tokio::test]
+async fn refuses_fades_during_maintenance() {
+    let helper = start().await;
+    let mut a = open(
+        &helper,
+        &[(PC_ID_HEADER, "pc-a"), ("authorization", "Bearer token-a")],
+    )
+    .await
+    .unwrap();
+    for _ in 0..3 {
+        next_json(&mut a).await;
+    }
+    a.send(Message::text(r#"{"type":"beginMaintenance","id":1}"#))
+        .await
+        .unwrap();
+    assert_eq!(
+        next_json(&mut a).await,
+        serde_json::json!({"type": "maintenance", "held": true})
+    );
+    assert_eq!(
+        next_json(&mut a).await,
+        serde_json::json!({"type": "beginMaintenanceResult", "id": 1, "held": true})
+    );
+    let command = r#"{"type":"fade","id":2,"control":"cct","operation":"op-2","target":3000,"durationMs":600}"#;
+    a.send(Message::text(command)).await.unwrap();
+    assert_eq!(
+        next_json(&mut a).await,
+        serde_json::json!({"type": "fadeResult", "id": 2, "error": "maintenance"})
+    );
+    a.send(Message::text(r#"{"type":"endMaintenance"}"#))
+        .await
+        .unwrap();
+    assert_eq!(
+        next_json(&mut a).await,
+        serde_json::json!({"type": "maintenance", "held": false})
+    );
 }
 
 #[tokio::test]
