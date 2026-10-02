@@ -72,6 +72,8 @@ export interface SteamFrameConnectionState {
   certPin: string;
   /** The helper's last brightness report; null while not connected. */
   brightness: SteamFrameBrightness | null;
+  /** The helper's last color temperature report; null while not connected. */
+  cct: SteamFrameCct | null;
 }
 
 /** The headset's hardware brightness in percent, as the helper reports it. */
@@ -83,6 +85,17 @@ export interface SteamFrameBrightness {
   max: number | null;
   /** The headset's value, which can lie outside `min` and `max`. */
   percentage: number | null;
+}
+
+/** The headset's color temperature, as the helper reports it. */
+export interface SteamFrameCct {
+  /** False while the helper has no SteamVR session; nothing else is known then. */
+  available: boolean;
+  gains: [number, number, number] | null;
+  /** The nearest integer Kelvin on OyasumiVR's curve. */
+  kelvin: number | null;
+  /** True when the gains lie on the curve at `kelvin`. */
+  exact: boolean | null;
 }
 
 export type SteamFrameRegisterOutcome =
