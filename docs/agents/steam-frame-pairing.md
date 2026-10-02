@@ -316,6 +316,68 @@ value set before the paired Frame's first report, such as the HMD connect automa
 with that report. `CCTControlService` hands every set to the matching driver, and a driver with
 `pushesCctChanges` owns the shown value. Transitions set their target in one command.
 
+## Fades
+
+A helper whose hello says `"fades": true` runs brightness and color temperature transitions itself,
+so a fade finishes while no PC is connected. It steps each fade at 60 Hz in the same task that
+polls, and every step reads before it writes, as a set does.
+
+```mermaid
+sequenceDiagram
+  participant P as PC
+  participant T as Headset task
+  participant O as Other PCs
+  P->>T: {"type":"fade","id":4,"control":"brightness","operation":"f1","target":30,"durationMs":60000}
+  T-->>P: snapshot with "fade": {"operation":"f1","target":30,"remainingMs":60000}
+  T-->>O: the same snapshot
+  T-->>P: {"type":"fadeResult","id":4}
+  loop every 16.7 ms
+    T->>T: read, then write the next smoothstep value unless it equals the last write
+  end
+  T-->>P: a snapshot with the fade, at most every 250 ms
+  T-->>O: the same snapshot
+  T-->>P: {"type":"fadeEnded","control":"brightness","operation":"f1","outcome":"completed"}
+  T-->>O: the same outcome
+```
+
+- A fade starts from the value read at acceptance and ends on `target`, in percent or Kelvin. A
+  brightness fade can carry `"simple": {"from": 80, "to": 0}`. The helper then eases the simple
+  value and maps each step to hardware with the split in `SimpleBrightnessControlService`, so
+  hardware holds its minimum while the simple value is below it.
+- The reply is `fadeResult` with an `error` when refused: `unsupported`, `runtimeUnavailable`,
+  `writeFailed`, or `maintenance`. A fade longer than 24 hours gets no reply.
+- `fadeEnded` goes to every PC with one outcome:
+
+| Outcome              | Cause                                                                      |
+| -------------------- | -------------------------------------------------------------------------- |
+| `completed`          | the last step wrote the target                                             |
+| `superseded`         | a set or fade command for the same control, from any PC                    |
+| `cancelled`          | `{"type":"cancelFade","operation":"f1"}` from any PC; other IDs do nothing |
+| `externalChange`     | a read found that control changed on the headset                           |
+| `standby`            | headset standby, or a system suspend; ends both controls' fades            |
+| `runtimeUnavailable` | SteamVR stopped; ends both controls' fades                                 |
+
+A brightness command never ends a color temperature fade, and the reverse.
+
+### Headset standby
+
+The helper reads the HMD's activity level at every poll and before every write. Level Standby
+means headset standby. The helper also treats a system suspend as standby entry: the boot clock
+then runs more than a second ahead of the monotonic clock between two ticks.
+
+During standby a set writes as usual, and a fade writes its target at once and reports
+`completed`. The helper remembers what it wrote. On leaving standby it reads both controls and
+writes a remembered value once more when the read differs, because the runtime may not keep a
+write made in standby. A cancelled fade never resumes.
+
+### Maintenance hold
+
+`{"type":"beginMaintenance","id":5}` answers `beginMaintenanceResult` with `held: false` while a
+fade runs or another connection holds maintenance. Otherwise the helper refuses new fades until
+`{"type":"endMaintenance"}` from the same connection, a restart, or 120 s, and sets keep working.
+The owner can renew its hold. Every PC gets `{"type":"maintenance","held":true}` when a hold begins
+and `held: false` when it ends.
+
 ## Updates
 
 Each connection compares the helper's hello with the bundled helper. An older helper, or the same
