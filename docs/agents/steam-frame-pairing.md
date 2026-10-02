@@ -49,7 +49,7 @@ the helper token pass through `protectSecret` before the first save.
 | `steam_frame_sync_connections`      | `pushPairings`                              | after every change to the completed pairings                                                                                      |
 | `steam_frame_update_helper`         | Update and Retry in Device Manager          | a manual helper update; the result arrives as connection state                                                                    |
 | `steam_frame_set_brightness`        | the Frame brightness driver                 | each brightness write; the reply carries the value the helper applied                                                             |
-| `steam_frame_set_cct`               | `CCTControlService`                         | each color temperature write; the reply carries the snapshot the helper applied                                                   |
+| `steam_frame_set_cct`               | the Frame color temperature driver          | each color temperature write; the reply carries the snapshot the helper applied                                                   |
 
 The core emits two events. `STEAM_FRAME_SETUP_STAGE` reports the setup step, and `installed` once
 this attempt installed the helper. `STEAM_FRAME_CONNECTION_STATE` reports each pairing's status.
@@ -305,6 +305,16 @@ command, and sends `{"type":"cct", ...}` after the brightness snapshot on connec
   `writeFailed`. The core adds `offline`.
 - A PC gets no snapshot for its own write, and every other PC gets one when the write changed the
   gains. The core keeps the last snapshot as `cct` in the connection state.
+
+On the PC, `SteamFrameCctControlDriver` sends CCT through the helper while the paired Frame is the
+active OpenVR HMD, its connection is `connected`, and the report says `available`. It keeps one
+command in flight and replaces a waiting one with the newest value. Reports reach the shown value
+without a write, and a set to the shown Kelvin writes when `exact` is false. The driver also matches
+an allowlisted Frame model without that path and drops its sets then, so the SteamVR color gain
+driver never writes the PC's own gains while a Frame is the active HMD. The driver keeps the newest
+value set before the paired Frame's first report, such as the HMD connect automation's, and sends it
+with that report. `CCTControlService` hands every set to the matching driver, and a driver with
+`pushesCctChanges` owns the shown value. Transitions set their target in one command.
 
 ## Updates
 
