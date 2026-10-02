@@ -347,7 +347,7 @@ sequenceDiagram
   value and maps each step to hardware with the split in `SimpleBrightnessControlService`, so
   hardware holds its minimum while the simple value is below it.
 - The reply is `fadeResult` with an `error` when refused: `unsupported`, `runtimeUnavailable`,
-  `writeFailed`, or `maintenance`. A fade longer than 24 hours gets no reply.
+  or `writeFailed`. A fade longer than 24 hours gets no reply.
 - `fadeEnded` goes to every PC with one outcome:
 
 | Outcome              | Cause                                                                      |
@@ -371,14 +371,6 @@ During standby a set writes as usual, and a fade writes its target at once and r
 `completed`. The helper remembers what it wrote. On leaving standby it reads both controls and
 writes a remembered value once more when the read differs, because the runtime may not keep a
 write made in standby. A cancelled fade never resumes.
-
-### Maintenance hold
-
-`{"type":"beginMaintenance","id":5}` answers `beginMaintenanceResult` with `held: false` while a
-fade runs or another connection holds maintenance. Otherwise the helper refuses new fades until
-`{"type":"endMaintenance"}` from the same connection, a restart, or 120 s, and sets keep working.
-The owner can renew its hold. Every PC gets `{"type":"maintenance","held":true}` when a hold begins
-and `held: false` when it ends.
 
 ## Updates
 
@@ -409,18 +401,10 @@ flowchart TD
   so a PC never rolls back a helper another PC just installed.
 - An interrupted update needs no record. The next contact finds the old helper still running, the new
   release on disk but not running, or the new helper running, and finishes from there.
-- The connection state carries `maintenance`: `waiting` while a fade runs, `updating`, `updated`
-  for a minute, `failed` with a reason, or `busy` when another PC held the lock for 60 seconds.
-
-A helper that runs fades is updated only while connected, and only once no fade runs, from any PC:
-
-1. The core waits until neither snapshot carries a `fade`, and shows `waiting` meanwhile.
-2. It sends `beginMaintenance`. On `held: false` it waits for the fades again.
-3. On `held: true` it runs the update over SSH, then sends `endMaintenance` on the old socket. A
-   helper that restarted has dropped the hold already.
-
-When the connection closes while an update waits, the core gives back the automatic attempt, so
-the next connection starts the wait again. A helper without fades updates at once, as before.
+- The connection state carries `maintenance`: `updating`, `updated` for a minute, `failed` with a
+  reason, or `busy` when another PC held the lock for 60 seconds.
+- An update restarts the helper without waiting for a fade. The fade stops where it was, and no
+  `fadeEnded` follows for it.
 
 ## On the headset
 

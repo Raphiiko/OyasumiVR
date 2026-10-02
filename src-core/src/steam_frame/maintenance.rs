@@ -27,11 +27,6 @@ pub async fn take_automatic_attempt(pairing_id: &str) -> bool {
     AUTOMATIC_UPDATES.lock().await.insert(pairing_id.to_owned())
 }
 
-/// Gives back this app start's automatic update, for an update that never started.
-pub async fn release_automatic_attempt(pairing_id: &str) {
-    AUTOMATIC_UPDATES.lock().await.remove(pairing_id);
-}
-
 #[derive(Serialize, Clone, Copy, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub enum FailReason {

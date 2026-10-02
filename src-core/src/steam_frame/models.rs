@@ -98,8 +98,6 @@ pub enum Maintenance {
     },
     /// Another PC held the maintenance lock.
     Busy,
-    /// An update waits until no fade runs on the headset.
-    Waiting,
 }
 
 #[derive(Serialize, Clone, Debug)]
@@ -123,8 +121,6 @@ pub struct State {
     pub cct: Option<Cct>,
     /// The helper on the open connection runs fades itself.
     pub fades: bool,
-    /// The helper refuses new fades for a maintenance hold, from this PC or another one.
-    pub hold: bool,
 }
 
 /// A fade the helper runs. `target` is in percent or Kelvin.
@@ -188,8 +184,6 @@ pub enum FadeError {
     Unsupported,
     RuntimeUnavailable,
     WriteFailed,
-    /// A maintenance hold refuses fades until the helper restarts or the hold ends.
-    Maintenance,
     /// No open connection, or it closed before the helper replied.
     Offline,
 }

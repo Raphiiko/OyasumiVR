@@ -89,13 +89,6 @@ enum HelperMessage {
         operation: String,
         outcome: FadeOutcome,
     },
-    BeginMaintenanceResult {
-        id: u64,
-        held: bool,
-    },
-    Maintenance {
-        held: bool,
-    },
 }
 
 /// The running task per pairing id, with the pairing it shares and updates.
@@ -249,7 +242,6 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>, commands: Command
         brightness: None,
         cct: None,
         fades: false,
-        hold: false,
     };
     publish(&state).await;
     let mut backoff = Duration::from_secs(2);
@@ -273,13 +265,12 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>, commands: Command
                 state.update_available = update_available(&hello);
                 settle_maintenance(&mut state, &hello, &mut notice);
 
-                // update an older helper, once per app start; a helper that runs fades waits for
-                // them while connected
+                // update an older helper, once per app start
                 let incompatible = incompatibility(&hello, &pairing.identity);
-                let automatic = state.update_available
+                if state.update_available
                     && incompatible != Some(Status::IdentityChanged)
-                    && maintenance::take_automatic_attempt(&pairing.id).await;
-                if automatic && (!hello.fades || incompatible.is_some()) {
+                    && maintenance::take_automatic_attempt(&pairing.id).await
+                {
                     wss::close(*socket).await;
                     // the helper answered, so a problem status from an earlier attempt is stale
                     state.status = Status::Connecting;
@@ -307,44 +298,22 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>, commands: Command
                     publish(&state).await;
                     backoff = Duration::from_secs(2);
                     retries = 0;
-                    let held = hold_connected(
-                        &mut socket,
-                        &update,
-                        &commands,
-                        &mut state,
-                        &mut notice,
-                        automatic,
-                    )
-                    .await;
+                    let requested =
+                        hold_connected(&mut socket, &update, &commands, &mut state, &mut notice)
+                            .await;
+                    wss::close(*socket).await;
                     state.brightness = None;
                     state.cct = None;
                     state.fades = false;
-                    state.hold = false;
                     state.last_seen = Some(get_time() as u64);
-                    match held {
-                        Held::Update => {
-                            let stop = maintain(&mut state, &pairing, &mut notice).await;
-                            // a restarted helper dropped the hold already; any other one keeps it
-                            let end = serde_json::json!({"type": "endMaintenance"});
-                            let _ = socket.send(Message::text(end.to_string())).await;
-                            wss::close(*socket).await;
-                            if stop {
-                                return;
-                            }
+                    if requested {
+                        if maintain(&mut state, &pairing, &mut notice).await {
+                            return;
                         }
-                        Held::Closed { update_waiting } => {
-                            wss::close(*socket).await;
-                            // the next connection runs the waiting update as its automatic one
-                            if update_waiting {
-                                maintenance::release_automatic_attempt(&pairing.id).await;
-                            }
-                            drop_updated_notice(&mut state, &mut notice);
-                            if state.maintenance == Some(Maintenance::Waiting) {
-                                state.maintenance = None;
-                            }
-                            state.status = Status::Offline;
-                            publish(&state).await;
-                        }
+                    } else {
+                        drop_updated_notice(&mut state, &mut notice);
+                        state.status = Status::Offline;
+                        publish(&state).await;
                     }
                     continue;
                 }
@@ -475,55 +444,37 @@ async fn maintain(state: &mut State, pairing: &Pairing, notice: &mut Option<Inst
     )
 }
 
-enum Held {
-    /// Run the update now. A helper that runs fades refuses new ones until it restarts.
-    Update,
-    Closed {
-        update_waiting: bool,
-    },
-}
-
-/// Holds a connected socket until it closes or an update can start. Relays brightness and color
-/// temperature meanwhile, and clears the "updated" notice when its minute is up. `update_wanted`
-/// starts an update as soon as no fade runs.
+/// Holds a connected socket until it closes, or returns true when an update is requested.
+/// Relays brightness, color temperature, and fades meanwhile, and clears the "updated" notice when
+/// its minute is up.
 async fn hold_connected(
     socket: &mut Socket,
     update: &Notify,
     commands: &CommandSlot,
     state: &mut State,
     notice: &mut Option<Instant>,
-    update_wanted: bool,
-) -> Held {
+) -> bool {
     let (sender, requests) = mpsc::channel(16);
     *commands.lock().unwrap() = Some(sender);
     let mut relay = Relay {
         requests,
         pending: HashMap::new(),
         next_id: 0,
-        update_wanted,
-        hold_request: None,
-        held: false,
     };
-    let held = loop {
+    let requested = loop {
         match hold(socket, update, *notice, &mut relay, state).await {
-            Wake::Closed => {
-                break Held::Closed {
-                    update_waiting: relay.update_wanted,
-                }
-            }
-            Wake::Update => break Held::Update,
+            Wake::Closed => break false,
+            Wake::Update => break true,
             Wake::NoticeExpired => {
                 *notice = None;
-                if state.maintenance != Some(Maintenance::Waiting) {
-                    state.maintenance = None;
-                    publish(state).await;
-                }
+                state.maintenance = None;
+                publish(state).await;
             }
         }
     };
     // dropping the relay answers every waiting command with Offline
     *commands.lock().unwrap() = None;
-    held
+    requested
 }
 
 /// Helper commands on one open connection.
@@ -532,18 +483,6 @@ struct Relay {
     /// Commands sent to the helper and not answered yet, by message id.
     pending: HashMap<u64, Reply>,
     next_id: u64,
-    /// An update waits for the fades to end, and then for the helper's maintenance hold.
-    update_wanted: bool,
-    /// The id of the `beginMaintenance` sent and not answered yet.
-    hold_request: Option<u64>,
-    /// The helper granted the hold, so the update can start.
-    held: bool,
-}
-
-/// A fade runs on the headset, from this PC or another one.
-fn fading(state: &State) -> bool {
-    let brightness = state.brightness.as_ref().is_some_and(|b| b.fade.is_some());
-    brightness || state.cct.as_ref().is_some_and(|c| c.fade.is_some())
 }
 
 /// Applies one helper message: a brightness or color temperature report, or the answer to a
@@ -613,16 +552,6 @@ async fn receive(text: &str, relay: &mut Relay, state: &mut State) {
                 outcome,
             };
             send_event(FADE_ENDED_EVENT, ended).await;
-        }
-        Ok(HelperMessage::BeginMaintenanceResult { id, held }) => {
-            if relay.hold_request == Some(id) {
-                relay.hold_request = None;
-                relay.held = held;
-            }
-        }
-        Ok(HelperMessage::Maintenance { held }) => {
-            state.hold = held;
-            publish(state).await;
         }
         Err(_) => {}
     }
@@ -806,13 +735,6 @@ async fn hold(
     };
     tokio::pin!(notice_expired);
     loop {
-        if relay.update_wanted {
-            match request_hold(socket, relay, state).await {
-                Ok(true) => return Wake::Update,
-                Ok(false) => {}
-                Err(()) => return Wake::Closed,
-            }
-        }
         tokio::select! {
             message = socket.next() => match message {
                 Some(Ok(Message::Close(_))) | Some(Err(_)) | None => return Wake::Closed,
@@ -867,47 +789,10 @@ async fn hold(
                     return Wake::Closed;
                 }
             }
-            _ = update.notified() => {
-                if !state.fades {
-                    return Wake::Update;
-                }
-                relay.update_wanted = true;
-            }
+            _ = update.notified() => return Wake::Update,
             _ = &mut notice_expired => return Wake::NoticeExpired,
         }
     }
-}
-
-/// Moves a wanted update on: shows that it waits while a fade runs, and asks for the helper's
-/// maintenance hold once none does. Returns true once the helper granted it.
-async fn request_hold(
-    socket: &mut Socket,
-    relay: &mut Relay,
-    state: &mut State,
-) -> Result<bool, ()> {
-    if relay.held {
-        return Ok(true);
-    }
-
-    // show the wait while a fade runs
-    let waiting = fading(state);
-    if waiting != (state.maintenance == Some(Maintenance::Waiting)) {
-        state.maintenance = waiting.then_some(Maintenance::Waiting);
-        publish(state).await;
-    }
-
-    // ask for the hold once no fade runs and no other PC holds it
-    if waiting || state.hold || relay.hold_request.is_some() {
-        return Ok(false);
-    }
-    relay.next_id += 1;
-    let message = serde_json::json!({"type": "beginMaintenance", "id": relay.next_id});
-    socket
-        .send(Message::text(message.to_string()))
-        .await
-        .map_err(drop)?;
-    relay.hold_request = Some(relay.next_id);
-    Ok(false)
 }
 
 #[cfg(test)]
@@ -1064,10 +949,10 @@ mod tests {
             HelperMessage::FadeResult { id: 2, error: None }
         ));
         assert!(matches!(
-            parse(r#"{"type":"fadeResult","id":3,"error":"maintenance"}"#),
+            parse(r#"{"type":"fadeResult","id":3,"error":"writeFailed"}"#),
             HelperMessage::FadeResult {
                 id: 3,
-                error: Some(FadeError::Maintenance)
+                error: Some(FadeError::WriteFailed)
             }
         ));
         let HelperMessage::FadeEnded {
@@ -1084,47 +969,5 @@ mod tests {
             (control, operation.as_str(), outcome),
             (Control::Cct, "f2", FadeOutcome::ExternalChange)
         );
-        assert!(matches!(
-            parse(r#"{"type":"beginMaintenanceResult","id":4,"held":false}"#),
-            HelperMessage::BeginMaintenanceResult { id: 4, held: false }
-        ));
-        assert!(matches!(
-            parse(r#"{"type":"maintenance","held":true}"#),
-            HelperMessage::Maintenance { held: true }
-        ));
-    }
-
-    #[test]
-    fn a_fade_on_either_control_counts_as_fading() {
-        let cct = |fade: Option<Fade>| Cct {
-            available: true,
-            gains: Some([1.0; 3]),
-            kelvin: Some(6600),
-            exact: Some(true),
-            fade,
-        };
-        let fade = Fade {
-            operation: "f1".into(),
-            target: 3000.0,
-            remaining_ms: 100,
-            ends_at: 0,
-        };
-        let mut state = State {
-            pairing_id: "p".into(),
-            status: Status::Connected,
-            last_seen: None,
-            helper_version: None,
-            update_available: true,
-            maintenance: None,
-            address: String::new(),
-            cert_pin: String::new(),
-            brightness: None,
-            cct: Some(cct(None)),
-            fades: true,
-            hold: false,
-        };
-        assert!(!fading(&state));
-        state.cct = Some(cct(Some(fade)));
-        assert!(fading(&state));
     }
 }
