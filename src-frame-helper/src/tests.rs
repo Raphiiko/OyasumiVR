@@ -300,7 +300,7 @@ async fn finishes_a_fade_after_its_pc_disconnects() {
     .await
     .unwrap();
     for socket in [&mut a, &mut b] {
-        assert_eq!(next_json(socket).await["fades"], true);
+        next_json(socket).await;
         next_json(socket).await;
         next_json(socket).await;
     }

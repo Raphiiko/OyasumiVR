@@ -50,7 +50,7 @@ the helper token pass through `protectSecret` before the first save.
 | `steam_frame_update_helper`         | Update and Retry in Device Manager               | a manual helper update; the result arrives as connection state                                                                    |
 | `steam_frame_set_brightness`        | the Frame brightness driver                      | each brightness write; the reply carries the value the helper applied                                                             |
 | `steam_frame_set_cct`               | the Frame color temperature driver               | each color temperature write; the reply carries the snapshot the helper applied                                                   |
-| `steam_frame_fade`                  | the Frame brightness driver, `CCTControlService` | each transition on a helper that runs fades; the reply accepts or refuses it                                                      |
+| `steam_frame_fade`                  | the Frame brightness driver, `CCTControlService` | each transition; the reply accepts or refuses it                                                                                  |
 | `steam_frame_cancel_fade`           | the same                                         | a cancelled transition, by its operation ID                                                                                       |
 
 The core emits three events. `STEAM_FRAME_SETUP_STAGE` reports the setup step, and `installed` once
@@ -320,9 +320,9 @@ connect automation reruns once after the first report, as for brightness.
 
 ## Fades
 
-A helper whose hello says `"fades": true` runs brightness and color temperature transitions itself,
-so a fade finishes while no PC is connected. It steps each fade at 60 Hz in the same task that
-polls, and every step reads before it writes, as a set does.
+The helper runs brightness and color temperature transitions itself, so a fade finishes while no
+PC is connected. It steps each fade at 60 Hz in the same task that polls, and every step reads
+before it writes, as a set does.
 
 ```mermaid
 sequenceDiagram

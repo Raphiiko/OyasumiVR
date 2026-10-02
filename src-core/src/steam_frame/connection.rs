@@ -241,7 +241,6 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>, commands: Command
         cert_pin: initial.cert_pin.clone(),
         brightness: None,
         cct: None,
-        fades: false,
     };
     publish(&state).await;
     let mut backoff = Duration::from_secs(2);
@@ -294,7 +293,6 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>, commands: Command
                 } else {
                     state.status = Status::Connected;
                     state.last_seen = Some(get_time() as u64);
-                    state.fades = hello.fades;
                     publish(&state).await;
                     backoff = Duration::from_secs(2);
                     retries = 0;
@@ -304,7 +302,6 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>, commands: Command
                     wss::close(*socket).await;
                     state.brightness = None;
                     state.cct = None;
-                    state.fades = false;
                     state.last_seen = Some(get_time() as u64);
                     if requested {
                         if maintain(&mut state, &pairing, &mut notice).await {
@@ -809,7 +806,6 @@ mod tests {
                 digest: None,
             },
             identity,
-            fades: false,
         }
     }
 

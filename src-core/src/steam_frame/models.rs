@@ -119,8 +119,6 @@ pub struct State {
     /// The helper's last color temperature report on the open connection; `None` while not
     /// connected.
     pub cct: Option<Cct>,
-    /// The helper on the open connection runs fades itself.
-    pub fades: bool,
 }
 
 /// A fade the helper runs. `target` is in percent or Kelvin.

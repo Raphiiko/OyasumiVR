@@ -249,8 +249,6 @@ struct Hello {
     #[serde(flatten)]
     info: Info,
     identity: Option<Identity>,
-    /// This helper runs fades, so a PC sends fade commands instead of one set per transition.
-    fades: bool,
 }
 
 /// Loads the helper's TLS identity from `tls/`, creating a new one when it is missing or unusable.
@@ -437,7 +435,6 @@ async fn handle(
         r#type: "hello",
         info: (*info).clone(),
         identity: read_identity(),
-        fades: true,
     };
     let (latest, mut events) = hub.subscribe();
     for message in [
