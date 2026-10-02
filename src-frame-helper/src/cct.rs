@@ -71,6 +71,8 @@ pub struct SetOutcome {
 pub struct Cct {
     /// The last gains read or written, which a later read is compared with.
     last: Option<[f32; 3]>,
+    /// Set by a read that differs from known gains, cleared by `take_external_change`.
+    external_change: bool,
     snapshot: Snapshot,
 }
 
@@ -78,6 +80,7 @@ impl Default for Cct {
     fn default() -> Self {
         Self {
             last: None,
+            external_change: false,
             snapshot: Snapshot::UNAVAILABLE,
         }
     }
@@ -94,6 +97,7 @@ impl Cct {
         match session.map(read) {
             Some(Ok(gains)) => {
                 if !self.last.is_some_and(|last| gains_equal(last, gains)) {
+                    self.external_change |= self.last.is_some();
                     self.last = Some(gains);
                 }
             }
@@ -115,6 +119,28 @@ impl Cct {
         }
     }
 
+    /// Whether a read since the last call found gains changed elsewhere.
+    pub fn take_external_change(&mut self) -> bool {
+        std::mem::take(&mut self.external_change)
+    }
+
+    /// True when the last gains read or written equal `kelvin`'s gains.
+    pub fn holds(&self, kelvin: i64) -> bool {
+        self.last
+            .is_some_and(|last| gains_equal(last, kelvin_to_f32_gains(clamp(kelvin))))
+    }
+
+    /// Writes without reading first, for a caller that has just read.
+    pub fn write_after_read(
+        &mut self,
+        session: Option<&mut impl ColorGains>,
+        kelvin: i64,
+    ) -> Result<(), SetError> {
+        let result = self.write(session, kelvin);
+        self.publish();
+        result
+    }
+
     fn write(
         &mut self,
         session: Option<&mut impl ColorGains>,
@@ -123,8 +149,7 @@ impl Cct {
         let (Some(session), Some(last)) = (session, self.last) else {
             return Err(SetError::RuntimeUnavailable);
         };
-        let kelvin = kelvin.clamp(MIN_KELVIN.into(), MAX_KELVIN.into()) as u32;
-        let gains = kelvin_to_f32_gains(kelvin);
+        let gains = kelvin_to_f32_gains(clamp(kelvin));
         if gains_equal(last, gains) {
             return Ok(());
         }
@@ -144,6 +169,10 @@ impl Cct {
         self.snapshot = snapshot.clone();
         Some(snapshot)
     }
+}
+
+fn clamp(kelvin: i64) -> u32 {
+    kelvin.clamp(MIN_KELVIN.into(), MAX_KELVIN.into()) as u32
 }
 
 fn read(session: &mut impl ColorGains) -> Result<[f32; 3], RuntimeLost> {
