@@ -25,8 +25,6 @@ pub enum Action {
     SetCct(i64),
     Fade(FadeRequest),
     CancelFade(String),
-    BeginMaintenance,
-    EndMaintenance,
 }
 
 /// `cause` names the connection whose write produced a snapshot; that connection gets a reply
@@ -63,14 +61,6 @@ pub enum Event {
         operation: String,
         outcome: Outcome,
     },
-    /// False when a hold was refused because a fade runs.
-    MaintenanceReply {
-        connection: u64,
-        id: u64,
-        held: bool,
-    },
-    /// A maintenance hold began or ended.
-    Hold(bool),
 }
 
 #[derive(Clone, Debug)]
