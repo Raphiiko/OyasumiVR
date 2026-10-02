@@ -17,8 +17,8 @@ use super::{
     discovery,
     maintenance::{self, Recovery, UpdateOutcome},
     models::{
-        Brightness, Cct, Identity, Maintenance, Pairing, SetBrightnessError, SetCctError, State,
-        Status,
+        Brightness, Cct, Control, FadeEnded, FadeError, FadeOutcome, FadeRequest, Identity,
+        Maintenance, Pairing, SetBrightnessError, SetCctError, State, Status,
     },
     setup::{
         self, bundled_digest, install_decision, InstallDecision, ProvisionError, BUNDLED_VERSION,
@@ -31,6 +31,7 @@ use super::{
 use crate::utils::{get_time, send_event};
 
 const EVENT: &str = "STEAM_FRAME_CONNECTION_STATE";
+const FADE_ENDED_EVENT: &str = "STEAM_FRAME_FADE_ENDED";
 const PING_INTERVAL: Duration = Duration::from_secs(15);
 const SILENCE_LIMIT: Duration = Duration::from_secs(40);
 const MAX_BACKOFF: Duration = Duration::from_secs(60);
@@ -39,6 +40,7 @@ const COMMAND_TIMEOUT: Duration = Duration::from_secs(5);
 
 type BrightnessReply = oneshot::Sender<Result<f64, SetBrightnessError>>;
 type CctReply = oneshot::Sender<Result<Cct, SetCctError>>;
+type FadeReply = oneshot::Sender<Result<(), FadeError>>;
 /// Holds a sender only while the connection is open, so a command never waits for a reconnect.
 type CommandSlot = Arc<StdMutex<Option<mpsc::Sender<Command>>>>;
 
@@ -46,11 +48,14 @@ type CommandSlot = Arc<StdMutex<Option<mpsc::Sender<Command>>>>;
 enum Command {
     SetBrightness(f64, BrightnessReply),
     SetCct(u32, CctReply),
+    Fade(FadeRequest, FadeReply),
+    CancelFade(String),
 }
 
 enum Reply {
     Brightness(BrightnessReply),
     Cct(CctReply),
+    Fade(FadeReply),
 }
 
 struct Connection {
@@ -74,6 +79,15 @@ enum HelperMessage {
         id: u64,
         snapshot: Option<Cct>,
         error: Option<SetCctError>,
+    },
+    FadeResult {
+        id: u64,
+        error: Option<FadeError>,
+    },
+    FadeEnded {
+        control: Control,
+        operation: String,
+        outcome: FadeOutcome,
     },
 }
 
@@ -152,18 +166,35 @@ pub async fn set_cct(pairing_id: &str, kelvin: u32) -> Result<Cct, SetCctError> 
     send(pairing_id, command, SetCctError::Offline).await
 }
 
+/// Starts a fade on the helper. `Ok` means the helper accepted it; the outcome arrives as a
+/// `STEAM_FRAME_FADE_ENDED` event.
+pub async fn fade(pairing_id: &str, request: FadeRequest) -> Result<(), FadeError> {
+    let command = |reply| Command::Fade(request, reply);
+    send(pairing_id, command, FadeError::Offline).await
+}
+
+/// Cancels a fade by its operation ID. The helper ignores an ID it does not run.
+pub async fn cancel_fade(pairing_id: &str, operation: String) {
+    if let Some(sender) = sender(pairing_id).await {
+        let _ = sender.send(Command::CancelFade(operation)).await;
+    }
+}
+
+async fn sender(pairing_id: &str) -> Option<mpsc::Sender<Command>> {
+    CONNECTIONS
+        .lock()
+        .await
+        .get(pairing_id)
+        .and_then(|connection| connection.commands.lock().unwrap().clone())
+}
+
 /// Sends a command on the open connection and waits for its answer, or `offline` without one.
 async fn send<T, E: Copy>(
     pairing_id: &str,
     command: impl FnOnce(oneshot::Sender<Result<T, E>>) -> Command,
     offline: E,
 ) -> Result<T, E> {
-    let sender = CONNECTIONS
-        .lock()
-        .await
-        .get(pairing_id)
-        .and_then(|connection| connection.commands.lock().unwrap().clone())
-        .ok_or(offline)?;
+    let sender = sender(pairing_id).await.ok_or(offline)?;
     let (reply, result) = oneshot::channel();
     let exchange = async {
         sender.send(command(reply)).await.map_err(|_| offline)?;
@@ -411,7 +442,8 @@ async fn maintain(state: &mut State, pairing: &Pairing, notice: &mut Option<Inst
 }
 
 /// Holds a connected socket until it closes, or returns true when an update is requested.
-/// Relays brightness and color temperature meanwhile, and clears the "updated" notice when its minute is up.
+/// Relays brightness, color temperature, and fades meanwhile, and clears the "updated" notice when
+/// its minute is up.
 async fn hold_connected(
     socket: &mut Socket,
     update: &Notify,
@@ -454,7 +486,10 @@ struct Relay {
 /// command.
 async fn receive(text: &str, relay: &mut Relay, state: &mut State) {
     match serde_json::from_str(text) {
-        Ok(HelperMessage::Brightness(brightness)) => {
+        Ok(HelperMessage::Brightness(mut brightness)) => {
+            if let Some(fade) = brightness.fade.as_mut() {
+                fade.ends_at = get_time() as u64 + fade.remaining_ms;
+            }
             state.brightness = Some(brightness);
             publish(state).await;
         }
@@ -475,7 +510,10 @@ async fn receive(text: &str, relay: &mut Relay, state: &mut State) {
                 let _ = reply.send(percentage.ok_or(error));
             }
         }
-        Ok(HelperMessage::Cct(cct)) => {
+        Ok(HelperMessage::Cct(mut cct)) => {
+            if let Some(fade) = cct.fade.as_mut() {
+                fade.ends_at = get_time() as u64 + fade.remaining_ms;
+            }
             state.cct = Some(cct);
             publish(state).await;
         }
@@ -493,6 +531,24 @@ async fn receive(text: &str, relay: &mut Relay, state: &mut State) {
                 let error = error.unwrap_or(SetCctError::WriteFailed);
                 let _ = reply.send(snapshot.ok_or(error));
             }
+        }
+        Ok(HelperMessage::FadeResult { id, error }) => {
+            if let Some(Reply::Fade(reply)) = relay.pending.remove(&id) {
+                let _ = reply.send(error.map_or(Ok(()), Err));
+            }
+        }
+        Ok(HelperMessage::FadeEnded {
+            control,
+            operation,
+            outcome,
+        }) => {
+            let ended = FadeEnded {
+                pairing_id: state.pairing_id.clone(),
+                control,
+                operation,
+                outcome,
+            };
+            send_event(FADE_ENDED_EVENT, ended).await;
         }
         Err(_) => {}
     }
@@ -698,6 +754,25 @@ async fn hold(
                         serde_json::json!({"type": "setCct", "id": id, "kelvin": kelvin}),
                         Reply::Cct(reply),
                     ),
+                    Command::Fade(request, reply) => (
+                        serde_json::json!({
+                            "type": "fade",
+                            "id": id,
+                            "control": request.control,
+                            "operation": request.operation,
+                            "target": request.target,
+                            "durationMs": request.duration_ms,
+                            "simple": request.simple,
+                        }),
+                        Reply::Fade(reply),
+                    ),
+                    Command::CancelFade(operation) => {
+                        let message = serde_json::json!({"type": "cancelFade", "operation": operation});
+                        if socket.send(Message::text(message.to_string())).await.is_err() {
+                            return Wake::Closed;
+                        }
+                        continue;
+                    }
                 };
                 if socket.send(Message::text(message.to_string())).await.is_err() {
                     return Wake::Closed;
@@ -720,7 +795,7 @@ async fn hold(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::steam_frame::setup::HelperInfo;
+    use crate::steam_frame::{models::Fade, setup::HelperInfo};
 
     fn hello(identity: Option<Identity>, min: u32, max: u32) -> Hello {
         Hello {
@@ -780,6 +855,7 @@ mod tests {
                 min: Some(9.0),
                 max: Some(125.0),
                 percentage: Some(100.0),
+                fade: None,
             }
         );
         let HelperMessage::Brightness(unavailable) =
@@ -814,6 +890,7 @@ mod tests {
             gains: Some([1.0, 0.6, 0.2]),
             kelvin: Some(2313),
             exact: Some(false),
+            fade: None,
         };
         let HelperMessage::Cct(report) = parse(
             r#"{"type":"cct","available":true,"gains":[1.0,0.6,0.2],"kelvin":2313,"exact":false}"#,
@@ -844,5 +921,49 @@ mod tests {
                 error: Some(SetCctError::WriteFailed)
             }
         ));
+    }
+
+    #[test]
+    fn reads_the_helper_fade_messages() {
+        let parse = |text: &str| serde_json::from_str::<HelperMessage>(text).unwrap();
+        let HelperMessage::Brightness(report) = parse(
+            r#"{"type":"brightness","runtime":true,"supported":true,"min":9.0,"max":125.0,"percentage":80.0,"fade":{"operation":"f1","target":30.0,"remainingMs":1500}}"#,
+        ) else {
+            panic!("not a brightness report");
+        };
+        assert_eq!(
+            report.fade,
+            Some(Fade {
+                operation: "f1".into(),
+                target: 30.0,
+                remaining_ms: 1500,
+                ends_at: 0,
+            })
+        );
+        assert!(matches!(
+            parse(r#"{"type":"fadeResult","id":2}"#),
+            HelperMessage::FadeResult { id: 2, error: None }
+        ));
+        assert!(matches!(
+            parse(r#"{"type":"fadeResult","id":3,"error":"writeFailed"}"#),
+            HelperMessage::FadeResult {
+                id: 3,
+                error: Some(FadeError::WriteFailed)
+            }
+        ));
+        let HelperMessage::FadeEnded {
+            control,
+            operation,
+            outcome,
+        } = parse(
+            r#"{"type":"fadeEnded","control":"cct","operation":"f2","outcome":"externalChange"}"#,
+        )
+        else {
+            panic!("not a fade outcome");
+        };
+        assert_eq!(
+            (control, operation.as_str(), outcome),
+            (Control::Cct, "f2", FadeOutcome::ExternalChange)
+        );
     }
 }
