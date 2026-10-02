@@ -8,6 +8,7 @@ use std::{
     time::Duration,
 };
 
+use controls::{Control, FadeError, FadeReport, FadeRequest, Outcome};
 use hub::{Action, Command, Event, Hub};
 
 use futures_util::{SinkExt, StreamExt};
@@ -30,6 +31,7 @@ pub mod brightness;
 pub mod cct;
 #[path = "../../src-shared-rust/src/color_temperature.rs"]
 pub mod color_temperature;
+pub mod controls;
 pub mod hub;
 
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -83,8 +85,35 @@ pub struct Identity {
 #[derive(Serialize)]
 #[serde(tag = "type", rename_all = "camelCase")]
 enum Outgoing<'a> {
-    Brightness(&'a brightness::Snapshot),
-    Cct(&'a cct::Snapshot),
+    Brightness {
+        #[serde(flatten)]
+        snapshot: &'a brightness::Snapshot,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        fade: Option<&'a FadeReport>,
+    },
+    Cct {
+        #[serde(flatten)]
+        snapshot: &'a cct::Snapshot,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        fade: Option<&'a FadeReport>,
+    },
+    FadeResult {
+        id: u64,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        error: Option<FadeError>,
+    },
+    FadeEnded {
+        control: Control,
+        operation: &'a str,
+        outcome: Outcome,
+    },
+    BeginMaintenanceResult {
+        id: u64,
+        held: bool,
+    },
+    Maintenance {
+        held: bool,
+    },
     #[serde(rename_all = "camelCase")]
     SetBrightnessResult {
         id: u64,
@@ -112,12 +141,38 @@ impl<'a> Outgoing<'a> {
             }
             Event::BrightnessReply { connection: c, .. }
             | Event::CctReply { connection: c, .. }
+            | Event::FadeReply { connection: c, .. }
+            | Event::MaintenanceReply { connection: c, .. }
                 if *c != connection =>
             {
                 return None
             }
-            Event::Brightness { snapshot, .. } => Self::Brightness(snapshot),
-            Event::Cct { snapshot, .. } => Self::Cct(snapshot),
+            Event::Brightness { snapshot, fade, .. } => Self::Brightness {
+                snapshot,
+                fade: fade.as_ref(),
+            },
+            Event::Cct { snapshot, fade, .. } => Self::Cct {
+                snapshot,
+                fade: fade.as_ref(),
+            },
+            Event::FadeReply { id, result, .. } => Self::FadeResult {
+                id: *id,
+                error: result.err(),
+            },
+            Event::FadeEnded {
+                control,
+                operation,
+                outcome,
+            } => Self::FadeEnded {
+                control: *control,
+                operation,
+                outcome: *outcome,
+            },
+            Event::MaintenanceReply { id, held, .. } => Self::BeginMaintenanceResult {
+                id: *id,
+                held: *held,
+            },
+            Event::Hold(held) => Self::Maintenance { held: *held },
             Event::BrightnessReply { id, result, .. } => Self::SetBrightnessResult {
                 id: *id,
                 percentage: result.ok(),
@@ -135,8 +190,75 @@ impl<'a> Outgoing<'a> {
 #[derive(Deserialize)]
 #[serde(tag = "type", rename_all = "camelCase")]
 enum Incoming {
-    SetBrightness { id: u64, percentage: f64 },
-    SetCct { id: u64, kelvin: i64 },
+    SetBrightness {
+        id: u64,
+        percentage: f64,
+    },
+    SetCct {
+        id: u64,
+        kelvin: i64,
+    },
+    #[serde(rename_all = "camelCase")]
+    Fade {
+        id: u64,
+        control: Control,
+        operation: String,
+        target: f64,
+        duration_ms: u64,
+        simple: Option<SimpleCurve>,
+    },
+    CancelFade {
+        operation: String,
+    },
+    BeginMaintenance {
+        id: u64,
+    },
+    EndMaintenance,
+}
+
+#[derive(Deserialize)]
+struct SimpleCurve {
+    from: f64,
+    to: f64,
+}
+
+impl Incoming {
+    /// The message id and action, or `None` for a message with values the helper cannot use.
+    fn into_action(self) -> Option<(u64, Action)> {
+        Some(match self {
+            Self::SetBrightness { id, percentage } if percentage.is_finite() => {
+                (id, Action::SetBrightness(percentage))
+            }
+            Self::SetCct { id, kelvin } => (id, Action::SetCct(kelvin)),
+            Self::Fade {
+                id,
+                control,
+                operation,
+                target,
+                duration_ms,
+                simple,
+            } if target.is_finite()
+                && operation.len() <= 64
+                && Duration::from_millis(duration_ms) <= controls::MAX_DURATION
+                && simple
+                    .as_ref()
+                    .is_none_or(|curve| curve.from.is_finite() && curve.to.is_finite()) =>
+            {
+                let request = FadeRequest {
+                    control,
+                    operation,
+                    target,
+                    duration: Duration::from_millis(duration_ms),
+                    simple: simple.map(|curve| (curve.from, curve.to)),
+                };
+                (id, Action::Fade(request))
+            }
+            Self::CancelFade { operation } => (0, Action::CancelFade(operation)),
+            Self::BeginMaintenance { id } => (id, Action::BeginMaintenance),
+            Self::EndMaintenance => (0, Action::EndMaintenance),
+            _ => return None,
+        })
+    }
 }
 
 #[derive(Serialize)]
@@ -146,6 +268,8 @@ struct Hello {
     #[serde(flatten)]
     info: Info,
     identity: Option<Identity>,
+    /// This helper runs fades, so a PC sends fade commands instead of one set per transition.
+    fades: bool,
 }
 
 /// Loads the helper's TLS identity from `tls/`, creating a new one when it is missing or unusable.
@@ -332,12 +456,19 @@ async fn handle(
         r#type: "hello",
         info: (*info).clone(),
         identity: read_identity(),
+        fades: true,
     };
     let (latest, mut events) = hub.subscribe();
     for message in [
         serde_json::to_string(&hello),
-        serde_json::to_string(&Outgoing::Brightness(&latest.brightness)),
-        serde_json::to_string(&Outgoing::Cct(&latest.cct)),
+        serde_json::to_string(&Outgoing::Brightness {
+            snapshot: &latest.brightness,
+            fade: latest.brightness_fade.as_ref(),
+        }),
+        serde_json::to_string(&Outgoing::Cct {
+            snapshot: &latest.cct,
+            fade: latest.cct_fade.as_ref(),
+        }),
     ] {
         let Ok(message) = message else { return };
         if socket.send(Message::text(message)).await.is_err() {
@@ -350,11 +481,8 @@ async fn handle(
         let event = tokio::select! {
             message = socket.next() => match message {
                 Some(Ok(Message::Text(text))) => {
-                    let (id, action) = match serde_json::from_str(&text) {
-                        Ok(Incoming::SetBrightness { id, percentage }) => (id, Action::SetBrightness(percentage)),
-                        Ok(Incoming::SetCct { id, kelvin }) => (id, Action::SetCct(kelvin)),
-                        Err(_) => continue,
-                    };
+                    let parsed = serde_json::from_str::<Incoming>(&text).ok().and_then(Incoming::into_action);
+                    let Some((id, action)) = parsed else { continue };
                     hub.send(Command { connection, id, action });
                     continue;
                 }
