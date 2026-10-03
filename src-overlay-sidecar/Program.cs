@@ -12,6 +12,7 @@ public static class Program
 {
   public static bool GpuAccelerated = true;
   public static SidecarMode Mode = SidecarMode.Release;
+  public static string? AppKey;
 
   public static void Main(string[] args)
   {
@@ -40,6 +41,7 @@ public static class Program
       }
     }
 
+    AppKey = args.FirstOrDefault(a => a.StartsWith("--app-key=", StringComparison.Ordinal))?["--app-key=".Length..];
     var errorReportingEnabled = args.Contains("--error-reporting-enabled");
     ErrorReporting.Initialize(errorReportingEnabled, GetAppVersion(mainProcessId));
 
