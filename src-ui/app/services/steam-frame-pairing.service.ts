@@ -2,7 +2,7 @@ import { Injectable, computed, signal } from '@angular/core';
 import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
 import { error, info } from '@tauri-apps/plugin-log';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import { SETTINGS_KEY_STEAM_FRAME_PAIRING, SETTINGS_STORE } from '../globals';
 import { DMKnownDevice } from '../models/device-manager';
@@ -11,6 +11,7 @@ import {
   SteamFrameCleanupMode,
   SteamFrameCleanupOutcome,
   SteamFrameConnectionState,
+  SteamFrameFadeEnded,
   SteamFrameFlow,
   SteamFrameIdentity,
   SteamFrameOtherPcsOutcome,
@@ -49,6 +50,8 @@ export class SteamFramePairingService {
   readonly pairings$ = new BehaviorSubject<SteamFramePairing[]>([]);
   readonly connections = this._connections.asReadonly();
   readonly connections$ = new BehaviorSubject<Record<string, SteamFrameConnectionState>>({});
+  /** Every fade a helper ended, from this PC or another one. */
+  readonly fadeEnded$ = new Subject<SteamFrameFadeEnded>();
   readonly flow = this._flow.asReadonly();
   /**
    * Reinstalls started from Device Manager, by pairing id. `failed` stays while the helper is
@@ -76,6 +79,9 @@ export class SteamFramePairingService {
     );
     await listen<SetupStageEvent>('STEAM_FRAME_SETUP_STAGE', (event) =>
       this.onSetupStage(event.payload)
+    );
+    await listen<SteamFrameFadeEnded>('STEAM_FRAME_FADE_ENDED', (event) =>
+      this.fadeEnded$.next(event.payload)
     );
 
     // catch up on states sent before we listened

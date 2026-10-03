@@ -1,8 +1,17 @@
-import { BehaviorSubject, firstValueFrom, Subject } from 'rxjs';
-import { describe, expect, it, vi } from 'vitest';
+import { invoke } from '@tauri-apps/api/core';
+import { BehaviorSubject, firstValueFrom, ReplaySubject, Subject } from 'rxjs';
+import { describe, expect, it, vi, onTestFinished } from 'vitest';
 import { AUTOMATION_CONFIGS_DEFAULT } from '../../models/automations';
+import type {
+  SteamFrameConnectionState,
+  SteamFrameFadeEnded,
+  SteamFrameFadeOutcome,
+} from '../../models/steam-frame';
+import { SteamFrameBrightnessFade } from '../steam-frame-fade-task';
+import type { SteamFrameBrightnessFadeOptions } from './hardware-brightness-drivers/steam-frame-hardware-brightness-control-driver';
 import { SimpleBrightnessControlService } from './simple-brightness-control.service';
 
+vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn(async () => undefined) }));
 vi.mock('@tauri-apps/api/event', () => ({ listen: vi.fn(async () => () => {}) }));
 vi.mock('@tauri-apps/plugin-log', () => ({ info: vi.fn(), warn: vi.fn() }));
 type Dependencies = ConstructorParameters<typeof SimpleBrightnessControlService>;
@@ -15,13 +24,15 @@ async function setup(advancedMode = false, pushesBrightnessChanges = false) {
   const hardware = {
     driverIsAvailable: new BehaviorSubject(false),
     brightnessBounds: new BehaviorSubject([20, 100]),
-    adoptedBrightness: new Subject<{ percentage: number; bounds: [number, number] }>(),
+    adoptedBrightness: new ReplaySubject<{ percentage: number; bounds: [number, number] }>(1),
     lastActiveDriver: (pushesBrightnessChanges ? { pushesBrightnessChanges: true } : null) as {
       pushesBrightnessChanges: boolean;
     } | null,
     activeDriver: (pushesBrightnessChanges ? { pushesBrightnessChanges: true } : null) as {
       pushesBrightnessChanges: boolean;
     } | null,
+    driverSteamFrame: {} as object,
+    activeFramePairing: new BehaviorSubject<string | null | undefined>('p'),
     onDriverChange: new Subject<void>(),
     setBrightness: vi.fn<Dependencies[1]['setBrightness']>().mockResolvedValue(undefined),
     cancelActiveTransition: vi.fn(),
@@ -233,22 +244,12 @@ describe('simple brightness with a device that reports its brightness', () => {
     expect(h.service.brightness).toBe(5);
   });
 
-  it('fades a transition through the PC loop', async () => {
+  it('runs a PC transition for a pushing device that is not a Frame', async () => {
     const h = await reporting();
-    const task = h.service.transitionBrightness(50, 200);
-    await firstValueFrom(task.onComplete);
+    h.service.transitionBrightness(50, 200, { logReason: 'AT_SUNSET' });
+    await new Promise((resolve) => setTimeout(resolve, 120));
     expect(h.hardware.setBrightness.mock.calls.length).toBeGreaterThan(2);
-    expect(h.service.brightness).toBe(50);
-  });
-
-  it('writes a transition target that equals the derived value', async () => {
-    const h = await reporting();
-    await h.service.setBrightness(50);
-    h.hardware.setBrightness.mockClear();
-    const task = h.service.transitionBrightness(50, 10000);
-    await settle();
-    expect(task.isComplete()).toBe(true);
-    expect(h.hardware.setBrightness).toHaveBeenCalledOnce();
+    expect(invoke).not.toHaveBeenCalledWith('steam_frame_fade', expect.anything());
   });
 
   it('gives the simple value to a device that takes over from a pushing one', async () => {
@@ -274,5 +275,223 @@ describe('simple brightness with a device that reports its brightness', () => {
     await settle();
     expect(h.service.brightness).toBe(100);
     expect(h.software.setBrightness).not.toHaveBeenCalled();
+  });
+});
+
+describe('simple brightness fading a Steam Frame', () => {
+  const wait = (ms = 0) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  async function frame() {
+    const h = await setup();
+    const connections = new BehaviorSubject<Record<string, SteamFrameConnectionState>>({
+      p: { pairingId: 'p', status: 'connected' } as SteamFrameConnectionState,
+    });
+    const fadeEnded = new Subject<SteamFrameFadeEnded>();
+    const driver = {
+      pushesBrightnessChanges: true,
+      getBrightnessBounds: () => [9, 125] as [number, number],
+      fade: (o: SteamFrameBrightnessFadeOptions) =>
+        new SteamFrameBrightnessFade(
+          o.shownTarget,
+          {
+            pairingId: 'p',
+            control: 'brightness',
+            target: o.target,
+            durationMs: o.durationMs,
+            simple: o.simple,
+          },
+          { connections$: connections, fadeEnded$: fadeEnded },
+          o.onAccept
+        ),
+    };
+    h.hardware.driverSteamFrame = driver;
+    h.hardware.activeDriver = driver;
+    h.hardware.lastActiveDriver = driver;
+    h.hardware.brightnessBounds.next([9, 125]);
+    h.hardware.driverIsAvailable.next(true);
+    await wait();
+    h.software.setBrightness.mockClear();
+    h.hardware.setBrightness.mockClear();
+    vi.mocked(invoke).mockClear();
+    const sent = () => {
+      const call = vi.mocked(invoke).mock.calls.find(([name]) => name === 'steam_frame_fade');
+      return (call?.[1] as { request: Record<string, unknown> & { operation: string } })?.request;
+    };
+    const end = (outcome: SteamFrameFadeOutcome) =>
+      fadeEnded.next({
+        pairingId: 'p',
+        control: 'brightness',
+        operation: sent().operation,
+        outcome,
+      });
+    return { ...h, sent, end };
+  }
+
+  it('cancels the fade and sets its target when another headset takes over', async () => {
+    const h = await frame();
+    h.service.transitionBrightness(0, 10000);
+    await wait();
+    h.hardware.activeFramePairing.next(null);
+    await wait();
+    expect(vi.mocked(invoke).mock.calls.map(([name]) => name)).toContain('steam_frame_cancel_fade');
+    expect(h.service.brightness).toBe(0);
+    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
+  });
+
+  it('sets the target, software part included, when the helper refuses the fade', async () => {
+    const h = await frame();
+    const accept = vi.mocked(invoke).getMockImplementation()!;
+    onTestFinished(() => void vi.mocked(invoke).mockImplementation(accept));
+    vi.mocked(invoke).mockImplementation(async (command, args) => {
+      if (command === 'steam_frame_fade') throw 'offline';
+      return accept(command, args);
+    });
+    h.service.transitionBrightness(0, 10000);
+    await wait();
+    await wait();
+    expect(h.service.brightness).toBe(0);
+    expect(h.software.brightness).toBe(0);
+    expect(h.hardware.setBrightness).toHaveBeenCalled();
+    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
+  });
+
+  it('fades hardware on the helper and software on this PC along one curve', async () => {
+    const h = await frame();
+    const task = h.service.transitionBrightness(0, 200, { logReason: 'AT_SUNSET' });
+    await wait();
+    const { operation: _, ...request } = h.sent();
+    expect(request).toEqual({
+      control: 'brightness',
+      target: 9,
+      durationMs: 200,
+      simple: { from: 100, to: 0 },
+    });
+    await wait(260);
+    expect(h.software.brightness).toBe(0);
+    expect(h.service.brightness).toBe(0);
+    expect(h.hardware.setBrightness).not.toHaveBeenCalled();
+    h.end('completed');
+    await wait();
+    expect(task.isComplete()).toBe(true);
+    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
+  });
+
+  it('stops the software part and adopts the headset after a headset change', async () => {
+    const h = await frame();
+    h.service.transitionBrightness(0, 10_000, { logReason: 'AT_SUNSET' });
+    await wait(50);
+    // skipped while the fade runs
+    h.hardware.adoptedBrightness.next({ percentage: 67, bounds: [9, 125] });
+    await wait();
+    expect(h.service.brightness).toBeGreaterThan(99);
+    h.end('externalChange');
+    await wait();
+    expect(h.service.brightness).toBeCloseTo(9 + (58 / 116) * 91);
+    expect(h.software.brightness).toBe(100);
+    const calls = h.software.setBrightness.mock.calls.length;
+    await wait(50);
+    expect(h.software.setBrightness.mock.calls.length).toBe(calls);
+  });
+
+  it('stops the software part where it is on standby', async () => {
+    const h = await frame();
+    h.service.transitionBrightness(0, 400, { logReason: 'AT_SUNSET' });
+    await wait(200);
+    h.end('standby');
+    await wait();
+    const stopped = h.service.brightness;
+    const calls = h.software.setBrightness.mock.calls.length;
+    expect(stopped).toBeGreaterThan(0);
+    expect(stopped).toBeLessThan(100);
+    await wait(300);
+    expect(h.service.brightness).toBe(stopped);
+    expect(h.software.setBrightness.mock.calls.length).toBe(calls);
+    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
+  });
+
+  it('ends the software part on its target when the helper completes first', async () => {
+    const h = await frame();
+    h.service.transitionBrightness(0, 10_000, { logReason: 'AT_SUNSET' });
+    await wait(50);
+    h.end('completed');
+    await wait();
+    expect(h.service.brightness).toBe(0);
+    expect(h.software.brightness).toBe(0);
+    await h.service.setBrightness(70);
+    await wait(100);
+    expect(h.service.brightness).toBe(70);
+  });
+
+  it('sets the target once the next headset becomes available', async () => {
+    const h = await frame();
+    h.service.transitionBrightness(0, 10_000);
+    await wait();
+    h.hardware.driverIsAvailable.next(false);
+    h.hardware.activeFramePairing.next('q');
+    await wait();
+    expect(h.service.brightness).toBe(0);
+    expect(h.hardware.setBrightness).not.toHaveBeenCalled();
+    h.hardware.driverIsAvailable.next(true);
+    await wait();
+    expect(h.service.brightness).toBe(0);
+    expect(h.hardware.setBrightness).toHaveBeenCalled();
+  });
+
+  it('keeps a newer set over a handoff target that waits for the next headset', async () => {
+    const h = await frame();
+    h.service.transitionBrightness(0, 10_000);
+    await wait();
+    h.hardware.driverIsAvailable.next(false);
+    h.hardware.activeFramePairing.next('q');
+    await wait();
+    await h.service.setBrightness(70);
+    h.hardware.driverIsAvailable.next(true);
+    await wait();
+    expect(h.service.brightness).toBe(70);
+  });
+
+  it('never lets a software part that ended mid-write write its final target', async () => {
+    const h = await frame();
+    let release!: () => void;
+    let calls = 0;
+    const write = h.software.setBrightness.getMockImplementation()!;
+    h.software.setBrightness.mockImplementation((...args) =>
+      ++calls === 1 ? new Promise<void>((resolve) => (release = resolve)) : write(...args)
+    );
+    h.service.transitionBrightness(0, 100);
+    await wait(40);
+    h.end('completed');
+    await wait(120);
+    await h.service.setBrightness(70);
+    release();
+    await wait(50);
+    expect(h.service.brightness).toBe(70);
+  });
+
+  it('skips the hardware write of an older set once a helper fade starts', async () => {
+    const h = await frame();
+    let release!: () => void;
+    h.software.setBrightness.mockImplementationOnce(
+      () => new Promise<void>((resolve) => (release = resolve))
+    );
+    void h.service.setBrightness(50);
+    await wait();
+    h.service.transitionBrightness(0, 10_000);
+    await wait();
+    release();
+    await wait();
+    expect(h.hardware.setBrightness).not.toHaveBeenCalled();
+  });
+
+  it('cancels the helper fade when the transition is cancelled', async () => {
+    const h = await frame();
+    h.service.transitionBrightness(0, 10_000, { logReason: 'AT_SUNSET' });
+    await wait();
+    h.service.cancelActiveTransition();
+    await wait();
+    expect(invoke).toHaveBeenCalledWith('steam_frame_cancel_fade', {
+      pairingId: 'p',
+      operation: h.sent().operation,
+    });
   });
 });
