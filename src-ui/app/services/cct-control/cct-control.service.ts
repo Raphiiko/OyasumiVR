@@ -14,7 +14,7 @@ import {
 } from 'rxjs';
 import { isEqual } from 'lodash';
 import { CCTTransitionTask } from './cct-transition';
-import { SteamFrameFadeTask } from '../steam-frame/steam-frame-fade-task';
+import { DeviceFade } from '../../utils/device-fade';
 import { listen } from '@tauri-apps/api/event';
 import {
   SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS,
@@ -27,12 +27,12 @@ import { getCSSColorForCCT } from 'src-shared-ts/src/cct-utils';
 import { OpenVRService } from '../openvr.service';
 import { clamp } from '../../utils/number-utils';
 import { AppSettingsService } from '../app-settings.service';
-import { CctControlDriver } from './cct-control-drivers/cct-control-driver';
+import { CctControlDriver, CctFade } from './cct-control-drivers/cct-control-driver';
 import { SteamVrCctControlDriver } from './cct-control-drivers/steamvr-cct-control-driver';
 import { SteamFrameCctControlDriver } from './cct-control-drivers/steam-frame-cct-control-driver';
 import { SteamFramePairingService } from '../steam-frame/steam-frame-pairing.service';
 
-/** A transition on the PC, or a fade the Frame's helper runs. */
+/** A transition on the PC, or a fade the device runs. */
 type CctTransition = CancellableTask & { readonly targetCCT: number };
 
 /** Gives SteamVR color gains of exactly 1.0 on every channel. */
@@ -98,7 +98,7 @@ export class CCTControlService {
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
     if (this.driver?.skipsTransitions) {
       this.cancelActiveTransition();
-      const fade = this.frameFade(temperature, duration);
+      const fade = this.deviceFade(temperature, duration);
       if (fade) return this.activate(fade, opt.logReason);
       const task = new CancellableTask(() =>
         this.setCCT(temperature, { cancelActiveTransition: false, logReason: opt.logReason })
@@ -121,13 +121,9 @@ export class CCTControlService {
     return this.activate(transition, opt.logReason);
   }
 
-  /** A fade on the active Frame's helper, or null while no driver takes one. */
-  private frameFade(temperature: number, duration: number): CctTransition | null {
-    if (this.driver !== this.driverSteamFrame) return null;
-    const kelvin = clamp(Math.round(temperature), 1000, 10000);
-    // the helper would hold a fade to the value it already has for the whole duration
-    if (kelvin === this.cct && !this.driverSteamFrame.writesUnchangedValue) return null;
-    return this.driverSteamFrame.fade(kelvin, duration);
+  /** A fade the active device runs itself, or null while no driver takes one. */
+  private deviceFade(temperature: number, duration: number): CctFade | null {
+    return this.driver?.fade(clamp(Math.round(temperature), 1000, 10000), duration) ?? null;
   }
 
   /** Makes the transition the active one until it ends, and starts it. */
@@ -140,9 +136,13 @@ export class CCTControlService {
     };
     transition.onComplete.subscribe(() => transition.isComplete() && clear());
     transition.onError.subscribe(() => transition.isError() && clear());
-    // a helper fade cancels itself on an outcome other than completed
-    if (transition instanceof SteamFrameFadeTask) {
-      transition.onCancelled.subscribe(clear);
+    // a device fade cancels itself on an end other than completed
+    if (transition instanceof DeviceFade) {
+      transition.onCancelled.subscribe(() => {
+        clear();
+        // another headset gets the target in one command
+        if (transition.end === 'deviceGone') this.setCCT(transition.targetCCT);
+      });
       // runs with the error status, so no newer request can start in between
       transition.onError.subscribe((error) => this.onFadeRefused(transition, error));
     }
@@ -151,13 +151,13 @@ export class CCTControlService {
     }
     this._activeTransition.next(transition);
     const started = transition.start();
-    if (transition instanceof SteamFrameFadeTask) started.catch(() => {});
+    if (transition instanceof DeviceFade) started.catch(() => {});
     return transition;
   }
 
   /** Sets the target in one command instead. */
   private onFadeRefused(fade: CctTransition, error: unknown) {
-    warn(`[CCTControl] The Steam Frame refused a fade: ${error}`);
+    warn(`[CCTControl] The headset refused a color temperature fade: ${error}`);
     this.setCCT(fade.targetCCT, { cancelActiveTransition: false });
   }
 
@@ -191,7 +191,6 @@ export class CCTControlService {
 
   private watchDrivers() {
     this.activeDriver.subscribe((driver) => this.onDriver(driver));
-    this.driverSteamFrame.activePairing.subscribe((pairing) => this.onActivePairing(pairing));
 
     // show the values a driver pushes, without writing them back
     this.activeDriver
@@ -231,21 +230,12 @@ export class CCTControlService {
       });
   }
 
-  /** A helper fade belongs to one Frame, so another headset gets its target in one command. */
-  private onActivePairing(pairing: string | null | undefined) {
-    const fade = this._activeTransition.value;
-    if (!(fade instanceof SteamFrameFadeTask) || pairing === undefined) return;
-    if (pairing === fade.pairingId) return;
-    this.cancelActiveTransition();
-    this.setCCT(fade.targetCCT);
-  }
-
   /** A driver that skips transitions finishes a running PC transition in one command. */
   private onDriver(driver: CctControlDriver | null) {
     this.driver = driver;
     const transition = this._activeTransition.value;
     if (!driver?.skipsTransitions || !transition) return;
-    if (transition instanceof SteamFrameFadeTask) return;
+    if (transition instanceof DeviceFade) return;
     this.cancelActiveTransition();
     this.setCCT(transition.targetCCT);
   }
