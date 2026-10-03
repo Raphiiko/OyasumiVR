@@ -96,6 +96,7 @@ public class OvrManager
   {
     var nextInit = DateTime.MinValue;
     var loggedMissingInterfaces = false;
+    var unknownAppKeyAttempts = 0;
     var e = new VREvent_t();
     var actionHandles = new Dictionary<string, ulong>();
     var actionSetHandles = new Dictionary<string, ulong>();
@@ -150,6 +151,13 @@ public class OvrManager
               {
                 var identifyError =
                   OpenVR.Applications?.IdentifyApplication((uint)Environment.ProcessId, Program.AppKey);
+                // the core registers the key on its own init, which can come after ours on a first run
+                if (identifyError == EVRApplicationError.UnknownApplication && ++unknownAppKeyAttempts < 6)
+                {
+                  OpenVR.Shutdown();
+                  continue;
+                }
+
                 if (identifyError is not null and not EVRApplicationError.None)
                   Log.Error($"Could not identify as {Program.AppKey}: {identifyError}");
               }
