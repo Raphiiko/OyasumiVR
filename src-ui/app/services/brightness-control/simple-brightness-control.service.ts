@@ -8,7 +8,6 @@ import {
   Observable,
   skip,
   take,
-  takeUntil,
   tap,
 } from 'rxjs';
 import { info, warn } from '@tauri-apps/plugin-log';
@@ -19,7 +18,10 @@ import {
   AdoptedBrightness,
   HardwareBrightnessControlService,
 } from './hardware-brightness-control.service';
-import { HardwareBrightnessControlDriver } from './hardware-brightness-drivers/hardware-brightness-control-driver';
+import {
+  HardwareBrightnessControlDriver,
+  HardwareBrightnessFade,
+} from './hardware-brightness-drivers/hardware-brightness-control-driver';
 import { SoftwareBrightnessControlService } from './software-brightness-control.service';
 import { lerp } from '../../utils/number-utils';
 import { clamp } from 'lodash';
@@ -29,13 +31,13 @@ import {
   SetBrightnessOrCCTReason,
 } from './brightness-control-models';
 import { listen } from '@tauri-apps/api/event';
-import { SteamFrameBrightnessFade, SteamFrameFadeTask } from '../steam-frame/steam-frame-fade-task';
+import { DeviceFade } from '../../utils/device-fade';
 
 type SimpleTransition = CancellableTask & { readonly targetBrightness: number };
 
 /**
  * Splits a simple value into software and hardware brightness: software dimming below the
- * hardware minimum, hardware above it. The Steam Frame helper splits a fade's curve the same way.
+ * hardware minimum, hardware above it. A device that fades a simple curve splits it the same way.
  */
 export function splitSimpleBrightness(
   percentage: number,
@@ -52,7 +54,7 @@ export function splitSimpleBrightness(
 export class SimpleBrightnessControlService {
   private _advancedMode = new BehaviorSubject(false);
   private _modeGeneration = 0;
-  /** Bumped by every set and helper fade, so an older set skips its late hardware write. */
+  /** Bumped by every set and device fade, so an older set skips its late hardware write. */
   private _writeGeneration = 0;
   private _brightness: BehaviorSubject<number> = new BehaviorSubject<number>(100);
   private _activeTransition = new BehaviorSubject<SimpleTransition | undefined>(undefined);
@@ -123,30 +125,18 @@ export class SimpleBrightnessControlService {
     this.hardwareBrightnessControl.adoptedBrightness.subscribe((adopted) =>
       this.adoptHardwareBrightness(adopted)
     );
-    this.hardwareBrightnessControl.activeFramePairing.subscribe((pairing) =>
-      this.onActiveFramePairing(pairing)
-    );
   }
 
-  /** A helper fade belongs to one Frame, so another headset gets its target in one command. */
-  private onActiveFramePairing(pairing: string | null | undefined) {
-    const fade = this._activeTransition.value;
-    if (!(fade instanceof SteamFrameFadeTask) || pairing === undefined) return;
-    if (pairing === fade.pairingId) return;
-    this.cancelActiveTransition();
-    const target = fade.targetBrightness;
+  /** Sets the target of a fade another headset ended, and again once its driver is available. */
+  private handOff(target: number) {
     const options = { cancelActiveTransition: false, logReason: null };
     this.setBrightness(target, options);
     const writeGeneration = this._writeGeneration;
     const modeGeneration = this._modeGeneration;
 
-    // a pushing next driver gets the hardware part once available, unless the HMD changes again
+    // a pushing next driver gets the hardware part once available
     this.hardwareBrightnessControl.driverIsAvailable
-      .pipe(
-        filter(Boolean),
-        take(1),
-        takeUntil(this.hardwareBrightnessControl.activeFramePairing.pipe(skip(1)))
-      )
+      .pipe(filter(Boolean), take(1))
       .subscribe(() => {
         // a newer set or a mode switch meanwhile wins over the old target
         if (writeGeneration !== this._writeGeneration) return;
@@ -217,7 +207,7 @@ export class SimpleBrightnessControlService {
       task.start();
       return task;
     }
-    const fade = this.frameFade(percentage, duration, opt.logReason);
+    const fade = this.deviceFade(percentage, duration, opt.logReason);
     if (fade) return fade;
     this._activeTransition.value?.cancel();
     const transition = new BrightnessTransitionTask(
@@ -233,22 +223,21 @@ export class SimpleBrightnessControlService {
   }
 
   /**
-   * A fade on the active Frame. The helper runs the hardware part of the simple curve, and this PC
-   * runs the software part on the same curve from the accept reply.
+   * A fade the active device runs. The device runs the hardware part of the simple curve, and this
+   * PC runs the software part on the same curve once the device accepts.
    */
-  private frameFade(
+  private deviceFade(
     percentage: number,
     duration: number,
     logReason: SetBrightnessOrCCTReason | null
   ): SimpleTransition | null {
-    const driver = this.hardwareBrightnessControl.driverSteamFrame;
-    if (!this.hardwareBrightnessDriverAvailable) return null;
-    if (this.hardwareBrightnessControl.activeDriver !== driver) return null;
+    const driver = this.hardwareBrightnessControl.activeDriver;
+    if (!this.hardwareBrightnessDriverAvailable || !driver) return null;
     const from = this.brightness;
     const to = clamp(percentage, 0, 100);
     const bounds = driver.getBrightnessBounds();
     let software: BrightnessTransitionTask | undefined;
-    const fade = driver.fade({
+    const fade = this.hardwareBrightnessControl.deviceFade({
       target: splitSimpleBrightness(to, bounds).hardware,
       durationMs: duration,
       simple: { from, to },
@@ -269,8 +258,8 @@ export class SimpleBrightnessControlService {
     if (!fade) return null;
     this.cancelActiveTransition();
     this._writeGeneration++;
-    fade.onCancelled.subscribe(() => this.onFrameFadeCancelled(fade, software));
-    // the helper can complete first, such as in standby, so the software part ends on its target
+    fade.onCancelled.subscribe(() => this.onDeviceFadeCancelled(fade, software));
+    // the device can complete first, such as in standby, so the software part ends on its target
     fade.onComplete.subscribe(() => {
       if (fade.end !== 'completed') return;
       software?.cancel();
@@ -280,16 +269,17 @@ export class SimpleBrightnessControlService {
   }
 
   /**
-   * Stops the software part where it is. After a headset change the headset's value wins, by
-   * the rule for reports.
+   * Stops the software part where it is. After a change on the headset the headset's value wins,
+   * by the rule for reports, and another headset taking over gets the target.
    */
-  private onFrameFadeCancelled(
-    fade: SteamFrameBrightnessFade,
-    software?: BrightnessTransitionTask
-  ) {
+  private onDeviceFadeCancelled(fade: HardwareBrightnessFade, software?: BrightnessTransitionTask) {
     software?.cancel();
     if (this._activeTransition.value === fade) this._activeTransition.next(undefined);
-    if (fade.end !== 'externalChange' && fade.end !== 'missed') return;
+    if (fade.end === 'deviceGone') {
+      this.handOff(fade.targetBrightness);
+      return;
+    }
+    if (fade.end !== 'changedOnDevice') return;
     void firstValueFrom(this.hardwareBrightnessControl.adoptedBrightness).then((adopted) =>
       this.adoptHardwareBrightness(adopted)
     );
@@ -315,7 +305,7 @@ export class SimpleBrightnessControlService {
     transition.onComplete.subscribe(() => transition.isComplete() && clear());
     transition.onError.subscribe(() => transition.isError() && clear());
     // runs with the error status, so no newer request can start in between
-    if (transition instanceof SteamFrameFadeTask) {
+    if (transition instanceof DeviceFade) {
       transition.onError.subscribe((error) => this.onFadeRefused(transition, error));
     }
     if (logReason) {
@@ -323,13 +313,13 @@ export class SimpleBrightnessControlService {
     }
     this._activeTransition.next(transition);
     const started = transition.start();
-    if (transition instanceof SteamFrameFadeTask) started.catch(() => {});
+    if (transition instanceof DeviceFade) started.catch(() => {});
     return transition;
   }
 
   /** Sets the target in one command instead. */
   private onFadeRefused(fade: SimpleTransition, error: unknown) {
-    warn(`[BrightnessControl] The Steam Frame refused a fade: ${error}`);
+    warn(`[BrightnessControl] The headset refused a brightness fade: ${error}`);
     this.setBrightness(fade.targetBrightness, { cancelActiveTransition: false });
   }
 

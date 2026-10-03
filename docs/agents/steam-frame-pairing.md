@@ -375,10 +375,15 @@ write made in standby. A cancelled fade never resumes.
 
 ### On the PC
 
-`SteamFrameFadeTask` is the `CancellableTask` for one helper fade. The hardware brightness service
-and the simple brightness service make it the active transition.
+The brightness services know only `DeviceFade`, a `CancellableTask` for a fade the device runs
+itself. A driver returns one from `fade()`, and the base driver returns null, so other headsets
+keep the PC transition. A `DeviceFade` ends as `completed`, `changedOnDevice`, `deviceGone`, or
+`stopped`.
 
-- It completes on `completed`, and every other outcome cancels it. Cancelling it from outside sends
+`SteamFrameFadeTask` is the Frame driver's `DeviceFade` for one helper fade.
+
+- It completes on `completed`, and every other outcome cancels it. `externalChange` and `missed`
+  end it as `changedOnDevice`, the other outcomes as `stopped`. Cancelling it from outside sends
   `cancelFade` with its operation ID.
 - While the connection is down it completes at its end time. When a report after a reconnect no
   longer carries its fade, it ends as `missed`.
@@ -386,15 +391,16 @@ and the simple brightness service make it the active transition.
   target instead.
 - A connected state without a report counts as down, because a helper update clears the reports
   without leaving `connected`.
-- When another headset becomes the active HMD during a fade, the service cancels the fade and sets
-  its target on the next driver that becomes available.
+- When another headset becomes the active HMD during a fade, the task ends as `deviceGone` and
+  sends `cancelFade`. The service then sets the fade's target on the next driver that becomes
+  available.
 
-In simple mode the helper runs the hardware part of the simple curve, and the PC runs the software
+In simple mode the device runs the hardware part of the simple curve, and the PC runs the software
 part on the same curve from the accept reply. On `completed` the software part ends on its target,
-because the helper can complete first, such as in standby. On `externalChange` or `missed` the
-software part stops and the simple value follows the headset, as for any report. On any other
-outcome the software part stops where it is. In advanced mode the software transition runs on the
-PC as before, so a headset change ends only the hardware fade.
+because the device can complete first, such as in standby. On `changedOnDevice` the software part
+stops and the simple value follows the headset, as for any report. On any other end the software
+part stops where it is. In advanced mode the software transition runs on the PC as before, so a
+headset change ends only the hardware fade.
 
 ## Updates
 

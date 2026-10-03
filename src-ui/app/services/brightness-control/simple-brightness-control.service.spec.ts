@@ -8,7 +8,10 @@ import type {
   SteamFrameFadeOutcome,
 } from '../../models/steam-frame';
 import { SteamFrameBrightnessFade } from '../steam-frame/steam-frame-fade-task';
-import type { SteamFrameBrightnessFadeOptions } from './hardware-brightness-drivers/steam-frame-hardware-brightness-control-driver';
+import type {
+  HardwareBrightnessFade,
+  HardwareBrightnessFadeOptions,
+} from './hardware-brightness-drivers/hardware-brightness-control-driver';
 import { SimpleBrightnessControlService } from './simple-brightness-control.service';
 
 vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn(async () => undefined) }));
@@ -28,11 +31,14 @@ async function setup(advancedMode = false, pushesBrightnessChanges = false) {
     lastActiveDriver: (pushesBrightnessChanges ? { pushesBrightnessChanges: true } : null) as {
       pushesBrightnessChanges: boolean;
     } | null,
-    activeDriver: (pushesBrightnessChanges ? { pushesBrightnessChanges: true } : null) as {
+    activeDriver: (pushesBrightnessChanges
+      ? { pushesBrightnessChanges: true, getBrightnessBounds: () => [20, 100] }
+      : null) as {
       pushesBrightnessChanges: boolean;
     } | null,
-    driverSteamFrame: {} as object,
-    activeFramePairing: new BehaviorSubject<string | null | undefined>('p'),
+    deviceFade: vi.fn<(o: HardwareBrightnessFadeOptions) => HardwareBrightnessFade | null>(
+      () => null
+    ),
     onDriverChange: new Subject<void>(),
     setBrightness: vi.fn<Dependencies[1]['setBrightness']>().mockResolvedValue(undefined),
     cancelActiveTransition: vi.fn(),
@@ -287,10 +293,11 @@ describe('simple brightness fading a Steam Frame', () => {
       p: { pairingId: 'p', status: 'connected' } as SteamFrameConnectionState,
     });
     const fadeEnded = new Subject<SteamFrameFadeEnded>();
+    const activePairing = new BehaviorSubject<string | null | undefined>('p');
     const driver = {
       pushesBrightnessChanges: true,
       getBrightnessBounds: () => [9, 125] as [number, number],
-      fade: (o: SteamFrameBrightnessFadeOptions) =>
+      fade: (o: HardwareBrightnessFadeOptions) =>
         new SteamFrameBrightnessFade(
           o.shownTarget,
           {
@@ -300,11 +307,11 @@ describe('simple brightness fading a Steam Frame', () => {
             durationMs: o.durationMs,
             simple: o.simple,
           },
-          { connections$: connections, fadeEnded$: fadeEnded },
+          { connections$: connections, fadeEnded$: fadeEnded, activePairing$: activePairing },
           o.onAccept
         ),
     };
-    h.hardware.driverSteamFrame = driver;
+    h.hardware.deviceFade.mockImplementation((o) => driver.fade(o));
     h.hardware.activeDriver = driver;
     h.hardware.lastActiveDriver = driver;
     h.hardware.brightnessBounds.next([9, 125]);
@@ -324,14 +331,14 @@ describe('simple brightness fading a Steam Frame', () => {
         operation: sent().operation,
         outcome,
       });
-    return { ...h, sent, end };
+    return { ...h, sent, end, activePairing };
   }
 
   it('cancels the fade and sets its target when another headset takes over', async () => {
     const h = await frame();
     h.service.transitionBrightness(0, 10000);
     await wait();
-    h.hardware.activeFramePairing.next(null);
+    h.activePairing.next(null);
     await wait();
     expect(vi.mocked(invoke).mock.calls.map(([name]) => name)).toContain('steam_frame_cancel_fade');
     expect(h.service.brightness).toBe(0);
@@ -427,7 +434,7 @@ describe('simple brightness fading a Steam Frame', () => {
     h.service.transitionBrightness(0, 10_000);
     await wait();
     h.hardware.driverIsAvailable.next(false);
-    h.hardware.activeFramePairing.next('q');
+    h.activePairing.next('q');
     await wait();
     expect(h.service.brightness).toBe(0);
     expect(h.hardware.setBrightness).not.toHaveBeenCalled();
@@ -442,7 +449,7 @@ describe('simple brightness fading a Steam Frame', () => {
     h.service.transitionBrightness(0, 10_000);
     await wait();
     h.hardware.driverIsAvailable.next(false);
-    h.hardware.activeFramePairing.next('q');
+    h.activePairing.next('q');
     await wait();
     await h.service.setBrightness(70);
     h.hardware.driverIsAvailable.next(true);

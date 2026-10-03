@@ -4,15 +4,17 @@ import {
   firstValueFrom,
   map,
   NEVER,
+  Subscription,
   Observable,
   of,
   race,
   ReplaySubject,
   switchMap,
+  take,
   timer,
 } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
-import { CancellableTask } from '../../utils/cancellable-task';
+import { DeviceFade, DeviceFadeEnd } from '../../utils/device-fade';
 import {
   SteamFrameConnectionState,
   SteamFrameControl,
@@ -27,6 +29,8 @@ export type SteamFrameFadeEnd = SteamFrameFadeOutcome | 'missed';
 export interface SteamFrameFadeSource {
   connections$: Observable<Record<string, SteamFrameConnectionState>>;
   fadeEnded$: Observable<SteamFrameFadeEnded>;
+  /** The paired Frame's id while it is the active HMD, null for another HMD, undefined for none. */
+  activePairing$: Observable<string | null | undefined>;
 }
 
 /** A fade for the helper. `target` is in percent or Kelvin. */
@@ -41,14 +45,14 @@ export interface SteamFrameFadeRequest {
 
 /**
  * A fade the helper runs. It completes on outcome `completed`, and at its end time while the
- * helper connection is down. Every other outcome cancels it. Cancelling it from outside cancels
- * the fade on the helper.
+ * helper connection is down. Every other outcome cancels it, and so does another HMD becoming
+ * the active one. Cancelling it from outside cancels the fade on the helper.
  */
-export class SteamFrameFadeTask extends CancellableTask {
+export class SteamFrameFadeTask extends DeviceFade {
   readonly operation = uuidv4();
   readonly pairingId: string;
-  /** How the fade ended, set before the task cancels itself; null after a cancel from outside. */
-  end: SteamFrameFadeEnd | null = null;
+  /** The helper's outcome, set with `end`. */
+  outcome: SteamFrameFadeEnd | null = null;
 
   constructor(
     private readonly request: SteamFrameFadeRequest,
@@ -70,6 +74,7 @@ export class SteamFrameFadeTask extends CancellableTask {
         map((e) => e.outcome)
       )
       .subscribe(outcome);
+    const handoff = this.cancelWhenDeviceGone();
     try {
       const error = await this.send();
       if (this.isCancelled()) {
@@ -88,11 +93,31 @@ export class SteamFrameFadeTask extends CancellableTask {
         this.cancelOnHelper();
         return;
       }
-      this.end = end;
-      if (end !== 'completed') this.cancel();
+      this.finish(end);
     } finally {
       subscription.unsubscribe();
+      handoff.unsubscribe();
     }
+  }
+
+  private finish(outcome: SteamFrameFadeEnd) {
+    this.outcome = outcome;
+    this.end = deviceFadeEnd(outcome);
+    if (outcome !== 'completed') this.cancel();
+  }
+
+  /** Another HMD taking over ends the fade, which the helper then stops. */
+  private cancelWhenDeviceGone(): Subscription {
+    return this.frames.activePairing$
+      .pipe(
+        filter((pairing) => pairing !== undefined && pairing !== this.pairingId),
+        take(1)
+      )
+      .subscribe(() => {
+        if (this.isCancelled() || this.isComplete() || this.isError()) return;
+        this.end = 'deviceGone';
+        this.cancel();
+      });
   }
 
   private send(): Promise<SteamFrameFadeError | null> {
@@ -156,4 +181,9 @@ export class SteamFrameBrightnessFade extends SteamFrameFadeTask {
   ) {
     super(...args);
   }
+}
+
+function deviceFadeEnd(outcome: SteamFrameFadeEnd): DeviceFadeEnd {
+  if (outcome === 'completed') return 'completed';
+  return outcome === 'externalChange' || outcome === 'missed' ? 'changedOnDevice' : 'stopped';
 }

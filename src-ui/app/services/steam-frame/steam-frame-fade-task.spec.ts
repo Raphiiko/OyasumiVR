@@ -27,10 +27,11 @@ function setup(durationMs = 60_000) {
   });
   const connections = new BehaviorSubject<Record<string, SteamFrameConnectionState>>({});
   const fadeEnded = new Subject<SteamFrameFadeEnded>();
+  const activePairing = new BehaviorSubject<string | null | undefined>('p');
   const onAccept = vi.fn();
   const task = new SteamFrameFadeTask(
     { pairingId: 'p', control: 'brightness', target: 30, durationMs },
-    { connections$: connections, fadeEnded$: fadeEnded },
+    { connections$: connections, fadeEnded$: fadeEnded, activePairing$: activePairing },
     onAccept
   );
   const state = (
@@ -70,7 +71,7 @@ function setup(durationMs = 60_000) {
   task.onCancelled.subscribe(() => statuses.push('cancelled'));
   task.onComplete.subscribe(() => statuses.push('completed'));
   state('connected');
-  return { task, state, end, reply, fades, cancels, onAccept, statuses };
+  return { task, state, end, reply, fades, cancels, onAccept, statuses, activePairing };
 }
 
 describe('SteamFrameFadeTask', () => {
@@ -102,7 +103,8 @@ describe('SteamFrameFadeTask', () => {
       h.end(outcome);
       await done;
       expect(h.statuses[0]).toBe('cancelled');
-      expect(h.task.end).toBe(outcome);
+      expect(h.task.outcome).toBe(outcome);
+      expect(h.task.end).toBe(outcome === 'externalChange' ? 'changedOnDevice' : 'stopped');
       expect(h.cancels()).toEqual([]);
     }
   );
@@ -147,7 +149,8 @@ describe('SteamFrameFadeTask', () => {
     h.state('offline');
     h.state('connected', { fade: false });
     await done;
-    expect(h.task.end).toBe('missed');
+    expect(h.task.outcome).toBe('missed');
+    expect(h.task.end).toBe('changedOnDevice');
     expect(h.statuses[0]).toBe('cancelled');
   });
 
@@ -167,7 +170,8 @@ describe('SteamFrameFadeTask', () => {
     h.state('connected', { report: false });
     h.state('connected', { fade: false });
     await done;
-    expect(h.task.end).toBe('missed');
+    expect(h.task.outcome).toBe('missed');
+    expect(h.task.end).toBe('changedOnDevice');
   });
 
   it('cancels the fade on the helper when cancelled from outside', async () => {
@@ -180,6 +184,22 @@ describe('SteamFrameFadeTask', () => {
       ['steam_frame_cancel_fade', { pairingId: 'p', operation: h.task.operation }],
     ]);
     expect(h.task.end).toBeNull();
+  });
+
+  it('ends as deviceGone and cancels on the helper when another HMD takes over', async () => {
+    const h = setup();
+    const done = h.task.start();
+    await h.reply();
+    h.activePairing.next(undefined);
+    await wait(0);
+    expect(h.statuses).toEqual([]);
+    h.activePairing.next(null);
+    await done;
+    expect(h.statuses[0]).toBe('cancelled');
+    expect(h.task.end).toBe('deviceGone');
+    expect(h.cancels()).toEqual([
+      ['steam_frame_cancel_fade', { pairingId: 'p', operation: h.task.operation }],
+    ]);
   });
 
   it('fails when the helper refuses it', async () => {

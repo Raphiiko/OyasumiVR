@@ -28,6 +28,7 @@ import { clamp } from '../../../utils/number-utils';
 import {
   HardwareBrightnessControlDriver,
   HardwareBrightnessControlDriverBounds,
+  HardwareBrightnessFadeOptions,
 } from './hardware-brightness-control-driver';
 
 export const STEAM_FRAME_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: HardwareBrightnessControlDriverBounds =
@@ -42,17 +43,6 @@ export const STEAM_FRAME_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: HardwareBrig
 type ActiveHmd =
   | { kind: 'none' | 'other' }
   | { kind: 'frame'; pairingId: string; brightness: SteamFrameBrightness | null };
-
-export interface SteamFrameBrightnessFadeOptions {
-  /** Hardware brightness in percent. */
-  target: number;
-  durationMs: number;
-  simple?: SteamFrameFadeRequest['simple'];
-  /** The target the UI shows, which differs from `target` for a simple-mode curve. */
-  shownTarget: number;
-  /** Runs once the helper accepts the fade. */
-  onAccept?: () => void;
-}
 
 /** Sets a paired Steam Frame's brightness through its helper, which also reports it. */
 export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnessControlDriver {
@@ -149,7 +139,7 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
   }
 
   /** A fade the active Frame's helper runs, or null while no Frame reports. Drops a waiting set. */
-  fade(options: SteamFrameBrightnessFadeOptions): SteamFrameBrightnessFade | null {
+  override fade(options: HardwareBrightnessFadeOptions): SteamFrameBrightnessFade | null {
     if (!this.frame) return null;
     // a waiting set would go out after the fade and supersede it
     this.pending = null;
@@ -160,7 +150,11 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
       durationMs: options.durationMs,
       simple: options.simple,
     };
-    const frames = { connections$: this.connections, fadeEnded$: this.fadeEnded };
+    const frames = {
+      connections$: this.connections,
+      fadeEnded$: this.fadeEnded,
+      activePairing$: this.activePairing,
+    };
     return new SteamFrameBrightnessFade(options.shownTarget, request, frames, options.onAccept);
   }
 

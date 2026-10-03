@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HardwareBrightnessControlDriver } from './hardware-brightness-drivers/hardware-brightness-control-driver';
+import {
+  HardwareBrightnessControlDriver,
+  HardwareBrightnessFade,
+  HardwareBrightnessFadeOptions,
+} from './hardware-brightness-drivers/hardware-brightness-control-driver';
 import { ValveIndexHardwareBrightnessControlDriver } from './hardware-brightness-drivers/valve-index-hardware-brightness-control-driver';
 import { OpenVRService } from '../openvr.service';
 import {
@@ -9,9 +13,7 @@ import {
   distinctUntilChanged,
   EMPTY,
   filter,
-  skip,
   take,
-  takeUntil,
   firstValueFrom,
   map,
   Observable,
@@ -37,9 +39,9 @@ import { AppSettings } from '../../models/settings';
 import { clamp } from '../../utils/number-utils';
 import { SteamFrameHardwareBrightnessControlDriver } from './hardware-brightness-drivers/steam-frame-hardware-brightness-control-driver';
 import { SteamFramePairingService } from '../steam-frame/steam-frame-pairing.service';
-import { SteamFrameFadeTask } from '../steam-frame/steam-frame-fade-task';
+import { DeviceFade } from '../../utils/device-fade';
 
-/** A transition on the PC, or a fade the Frame's helper runs. */
+/** A transition on the PC, or a fade the device runs. */
 export type HardwareBrightnessTransition = CancellableTask & { readonly targetBrightness: number };
 
 export interface AdoptedBrightness {
@@ -54,8 +56,6 @@ export class HardwareBrightnessControlService {
   public readonly driverValveIndex: ValveIndexHardwareBrightnessControlDriver;
   public readonly driverBigscreenBeyond: BigscreenBeyondHardwareBrightnessControlDriver;
   public readonly driverSteamFrame: SteamFrameHardwareBrightnessControlDriver;
-  /** The paired Frame's id while it is the active HMD, null for another HMD, undefined for none. */
-  public readonly activeFramePairing: Observable<string | null | undefined>;
   /** The driver that was available last; it stays set after that driver becomes unavailable. */
   public lastActiveDriver: HardwareBrightnessControlDriver | null = null;
   private readonly drivers: HardwareBrightnessControlDriver[];
@@ -128,8 +128,6 @@ export class HardwareBrightnessControlService {
         if (availableDriver) this.lastActiveDriver = availableDriver;
         this.driver.next(availableDriver ?? null);
       });
-    this.activeFramePairing = this.driverSteamFrame.activePairing;
-    this.activeFramePairing.subscribe((pairing) => this.onActiveFramePairing(pairing));
     // show what the device reports, without writing it back
     this.driver
       .pipe(
@@ -204,8 +202,11 @@ export class HardwareBrightnessControlService {
       task.start();
       return task;
     }
-    // a Frame's helper runs the fade
-    const fade = this.frameFade(percentage, duration);
+    const fade = this.deviceFade({
+      target: percentage,
+      durationMs: duration,
+      shownTarget: percentage,
+    });
     if (fade) {
       this.cancelActiveTransition();
       return this.activate(fade, opt.logReason);
@@ -223,13 +224,9 @@ export class HardwareBrightnessControlService {
     return this.activate(transition, opt.logReason);
   }
 
-  private frameFade(percentage: number, duration: number): HardwareBrightnessTransition | null {
-    if (this.driver.value !== this.driverSteamFrame) return null;
-    return this.driverSteamFrame.fade({
-      target: percentage,
-      durationMs: duration,
-      shownTarget: percentage,
-    });
+  /** A fade the active device runs itself, or null when it cannot run one now. */
+  deviceFade(options: HardwareBrightnessFadeOptions): HardwareBrightnessFade | null {
+    return this.driver.value?.fade(options) ?? null;
   }
 
   /** Makes the transition the active one until it ends, and starts it. */
@@ -242,9 +239,12 @@ export class HardwareBrightnessControlService {
     };
     transition.onComplete.subscribe(() => transition.isComplete() && clear());
     transition.onError.subscribe(() => transition.isError() && clear());
-    if (transition instanceof SteamFrameFadeTask) {
-      // a helper fade cancels itself on an outcome other than completed
-      transition.onCancelled.subscribe(clear);
+    if (transition instanceof DeviceFade) {
+      // a device fade cancels itself on an end other than completed
+      transition.onCancelled.subscribe(() => {
+        clear();
+        if (transition.end === 'deviceGone') this.handOff(transition.targetBrightness);
+      });
       // runs with the error status, so no newer request can start in between
       transition.onError.subscribe((error) => this.onFadeRefused(transition, error));
     }
@@ -254,31 +254,23 @@ export class HardwareBrightnessControlService {
     this._requestGeneration++;
     this._activeTransition.next(transition);
     const started = transition.start();
-    if (transition instanceof SteamFrameFadeTask) started.catch(() => {});
+    if (transition instanceof DeviceFade) started.catch(() => {});
     return transition;
   }
 
   /** Sets the target in one command instead. */
   private onFadeRefused(fade: HardwareBrightnessTransition, error: unknown) {
-    warn(`[BrightnessControl] The Steam Frame refused a fade: ${error}`);
+    warn(`[BrightnessControl] The headset refused a brightness fade: ${error}`);
     this.setBrightness(fade.targetBrightness, { cancelActiveTransition: false });
   }
 
-  /** A helper fade belongs to one Frame, so another headset gets its target in one command. */
-  private onActiveFramePairing(pairing: string | null | undefined) {
-    const fade = this._activeTransition.value;
-    if (!(fade instanceof SteamFrameFadeTask) || pairing === undefined) return;
-    if (pairing === fade.pairingId) return;
-    this.cancelActiveTransition();
+  /** Sets the target of a fade another headset ended, once that headset's driver is available. */
+  private handOff(target: number) {
     const generation = this._requestGeneration;
-
-    // the next headset's driver becomes available after the handoff, unless the HMD changes again
-    this.driver
-      .pipe(filter(Boolean), take(1), takeUntil(this.activeFramePairing.pipe(skip(1))))
-      .subscribe(() => {
-        // a newer set or transition meanwhile wins over the old target
-        if (generation === this._requestGeneration) this.setBrightness(fade.targetBrightness);
-      });
+    this.driver.pipe(filter(Boolean), take(1)).subscribe(() => {
+      // a newer set or transition meanwhile wins over the old target
+      if (generation === this._requestGeneration) this.setBrightness(target);
+    });
   }
 
   cancelActiveTransition() {
