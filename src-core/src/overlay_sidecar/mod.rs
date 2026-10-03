@@ -30,7 +30,11 @@ pub async fn init() {
         "oyasumivr-overlay-sidecar.exe".to_string(),
         tx,
         true,
-        vec![],
+        if crate::BUILD_FLAVOUR == crate::flavour::BuildFlavour::Steam {
+            vec![]
+        } else {
+            vec![format!("--app-key={}", crate::globals::STEAM_APP_KEY)]
+        },
         SidecarLaunch::Spawn,
     ));
     // Listen for sidecar stop signals

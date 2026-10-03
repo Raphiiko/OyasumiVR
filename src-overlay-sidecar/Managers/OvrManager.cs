@@ -145,6 +145,15 @@ public class OvrManager
 
               loggedMissingInterfaces = false;
 
+              // Steam reports this process as the Steam app when the core runs Steamworks
+              if (Program.AppKey != null)
+              {
+                var identifyError =
+                  OpenVR.Applications?.IdentifyApplication((uint)Environment.ProcessId, Program.AppKey);
+                if (identifyError is not null and not EVRApplicationError.None)
+                  Log.Error($"Could not identify as {Program.AppKey}: {identifyError}");
+              }
+
               var inputError = _input.SetActionManifestPath(GetActionManifestPath());
               if (inputError != 0)
               {
