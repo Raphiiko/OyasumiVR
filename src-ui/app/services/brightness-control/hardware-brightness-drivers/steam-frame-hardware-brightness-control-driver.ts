@@ -17,8 +17,13 @@ import type { OpenVRService, OpenVRStatus } from '../../openvr.service';
 import {
   SteamFrameBrightness,
   SteamFrameConnectionState,
+  SteamFrameFadeEnded,
   SteamFramePairing,
 } from '../../../models/steam-frame';
+import {
+  SteamFrameBrightnessFade,
+  SteamFrameFadeRequest,
+} from '../../steam-frame/steam-frame-fade-task';
 import { clamp } from '../../../utils/number-utils';
 import {
   HardwareBrightnessControlDriver,
@@ -38,6 +43,17 @@ type ActiveHmd =
   | { kind: 'none' | 'other' }
   | { kind: 'frame'; pairingId: string; brightness: SteamFrameBrightness | null };
 
+export interface SteamFrameBrightnessFadeOptions {
+  /** Hardware brightness in percent. */
+  target: number;
+  durationMs: number;
+  simple?: SteamFrameFadeRequest['simple'];
+  /** The target the UI shows, which differs from `target` for a simple-mode curve. */
+  shownTarget: number;
+  /** Runs once the helper accepts the fade. */
+  onAccept?: () => void;
+}
+
 /** Sets a paired Steam Frame's brightness through its helper, which also reports it. */
 export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnessControlDriver {
   override readonly pushesBrightnessChanges = true;
@@ -46,6 +62,8 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
   override readonly brightnessUpdates = this.updates.asObservable();
   private readonly hmd: Observable<ActiveHmd>;
   private readonly available: Observable<boolean>;
+  /** The paired Frame's id while it is the active HMD, null for another HMD, undefined for none. */
+  readonly activePairing: Observable<string | null | undefined>;
   private currentHmd: ActiveHmd = { kind: 'none' };
   private frame: { pairingId: string; brightness: SteamFrameBrightness } | null = null;
   /** Set while a command runs; a newer value waits in `pending` and replaces an older one. */
@@ -56,7 +74,8 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
     appSettings: Observable<AppSettings>,
     openvr: Pick<OpenVRService, 'status' | 'devices'>,
     pairings: Observable<SteamFramePairing[]>,
-    connections: Observable<Record<string, SteamFrameConnectionState>>
+    private readonly connections: Observable<Record<string, SteamFrameConnectionState>>,
+    private readonly fadeEnded: Observable<SteamFrameFadeEnded>
   ) {
     super(appSettings);
     this.hmd = combineLatest([openvr.status, openvr.devices, pairings, connections]).pipe(
@@ -64,6 +83,11 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
         this.activeHmd(status, devices, pairings, connections)
       ),
       distinctUntilChanged(isEqual),
+      shareReplay(1)
+    );
+    this.activePairing = this.hmd.pipe(
+      map((hmd) => (hmd.kind === 'none' ? undefined : hmd.kind === 'frame' ? hmd.pairingId : null)),
+      distinctUntilChanged(),
       shareReplay(1)
     );
     this.available = this.hmd.pipe(
@@ -122,6 +146,22 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
 
   isAvailable(): Observable<boolean> {
     return this.available;
+  }
+
+  /** A fade the active Frame's helper runs, or null while no Frame reports. Drops a waiting set. */
+  fade(options: SteamFrameBrightnessFadeOptions): SteamFrameBrightnessFade | null {
+    if (!this.frame) return null;
+    // a waiting set would go out after the fade and supersede it
+    this.pending = null;
+    const request: SteamFrameFadeRequest = {
+      pairingId: this.frame.pairingId,
+      control: 'brightness',
+      target: this.softwarePercentageToHardwarePercentage(options.target),
+      durationMs: options.durationMs,
+      simple: options.simple,
+    };
+    const frames = { connections$: this.connections, fadeEnded$: this.fadeEnded };
+    return new SteamFrameBrightnessFade(options.shownTarget, request, frames, options.onAccept);
   }
 
   /** A paired Frame that is the active HMD becomes available with its first report. */
