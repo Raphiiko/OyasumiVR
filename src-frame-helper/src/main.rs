@@ -1,0 +1,46 @@
+use std::{path::PathBuf, process::ExitCode};
+
+use oyasumivr_frame_helper::{bind, brightness, hub, info, serve};
+
+/// The data directory from the argument, or `~/.local/share/oyasumivr_helper`.
+fn data_dir(argument: Option<String>) -> Option<PathBuf> {
+    argument.map(PathBuf::from).or_else(|| {
+        std::env::var_os("HOME")
+            .map(|home| PathBuf::from(home).join(".local/share/oyasumivr_helper"))
+    })
+}
+
+#[tokio::main(flavor = "current_thread")]
+async fn main() -> ExitCode {
+    let mut args = std::env::args().skip(1);
+    match args.next().as_deref() {
+        // print version and protocol range as JSON
+        Some("info") => {
+            println!("{}", serde_json::to_string(&info()).unwrap());
+            ExitCode::SUCCESS
+        }
+
+        // run the websocket server until it fails
+        Some("serve") => {
+            let Some(root) = data_dir(args.next()) else {
+                eprintln!("HOME is not set");
+                return ExitCode::FAILURE;
+            };
+            let result = match bind(&root).await {
+                Ok((listener, acceptor)) => {
+                    let hub = hub::start(brightness::OpenVr::default());
+                    serve(root, listener, acceptor, hub).await
+                }
+                Err(error) => Err(error),
+            };
+            if let Err(error) = result {
+                eprintln!("{error}");
+            }
+            ExitCode::FAILURE
+        }
+        _ => {
+            eprintln!("usage: oyasumivr-frame-helper info | serve [DATA_DIR]");
+            ExitCode::FAILURE
+        }
+    }
+}

@@ -63,10 +63,19 @@
           <div class="device-header" (click)="configureDevice(device)">
             <!-- Main Row with core device info -->
             <div class="device-main-row">
-              <app-icon
-                [name]="getDeviceTypeIconForDevice(device.deviceType)"
-                class="device-icon"
-              />
+              <div class="device-icon-wrap">
+                <app-icon
+                  [name]="getDeviceTypeIconForDevice(device.deviceType)"
+                  class="device-icon"
+                />
+                @if (frameRow(device)?.badge; as badge) {
+                  <span
+                    [class]="'frame-badge frame-badge-' + badge"
+                    role="img"
+                    [attr.aria-label]="'steamFrame.status.' + badge | transloco"
+                  ></span>
+                }
+              </div>
               <div class="device-info">
                 <div class="device-name-line">
                   <span class="device-name">{{ device.typeName }}</span>
@@ -106,6 +115,31 @@
               }
               <!-- Action Buttons -->
               <div class="device-actions" (click)="$event.stopPropagation()">
+                @if (frameRow(device); as row) {
+                  @if (row.pill; as pill) {
+                    @if (pill.detail || pill.startsUpdate) {
+                      <button
+                        [class]="'frame-pill frame-pill-button frame-pill-' + pill.tone"
+                        (click)="onFramePill(device, pill, row.action)"
+                      >
+                        <i class="material-icons">{{ pill.icon }}</i>
+                        {{ 'steamFrame.status.' + pill.key | transloco }}
+                      </button>
+                    } @else {
+                      <span [class]="'frame-pill frame-pill-' + pill.tone">
+                        <i class="material-icons">{{ pill.icon }}</i>
+                        {{ 'steamFrame.status.' + pill.key | transloco: pill.params }}
+                      </span>
+                    }
+                  } @else if (row.action) {
+                    <button
+                      class="btn btn-primary btn-frame"
+                      (click)="onFrameAction(device, row.action)"
+                    >
+                      {{ 'steamFrame.actions.' + row.action | transloco }}
+                    </button>
+                  }
+                }
                 <!-- Power Button -->
                 @if (canShowPowerButton(device)) {
                   <app-device-power-button

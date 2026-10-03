@@ -1,3 +1,4 @@
+pub mod color_temperature;
 pub mod error_reporting;
 pub mod handshake;
 pub mod logging;

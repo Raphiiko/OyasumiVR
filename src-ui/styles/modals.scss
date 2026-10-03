@@ -47,6 +47,20 @@
   will-change: auto;
 }
 
+.modal-wrapper-steam-frame-pairing {
+  position: fixed;
+  inset: 32px 0 0 0;
+  z-index: 100;
+  background: var(--color-surface-0);
+  border-radius: 0 0 var(--window-border-radius) var(--window-border-radius);
+  opacity: 0;
+  transition: opacity 0.15s ease-in-out;
+
+  &.in {
+    opacity: 1;
+  }
+}
+
 .modal {
   @extend .pane;
 

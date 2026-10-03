@@ -27,7 +27,7 @@ import {
   LighthouseDevice,
   LighthouseDevicePowerState,
 } from '../../../../../../models/lighthouse-device';
-import { combineLatest, firstValueFrom } from 'rxjs';
+import { combineLatest, firstValueFrom, interval } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   DevicePowerState,
@@ -42,6 +42,89 @@ import {
   LighthouseV1IdWizardModalOutputModel,
 } from 'src-ui/app/components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
 import { LighthouseV1IdWizardModalInputModel } from 'src-ui/app/components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
+import { SteamFramePairingService } from 'src-ui/app/services/steam-frame-pairing.service';
+import { TranslocoService } from '@jsverse/transloco';
+import { FLAVOUR } from 'src-ui/build';
+import {
+  SteamFrameConnectionState,
+  SteamFrameConnectionStatus,
+} from 'src-ui/app/models/steam-frame';
+
+interface FramePill {
+  key: string;
+  icon: string;
+  tone: 'neutral' | 'warn' | 'bad';
+  params?: Record<string, string>;
+  /** A key under `steamFrame.statusDetail` whose title explains the pill when clicked. */
+  detail?: string;
+  /** The key under `detail` that holds the explanation, `body` by default. */
+  detailBody?: string;
+  /** Clicking the pill starts a helper update instead of explaining it. */
+  startsUpdate?: boolean;
+  /** Shown in the explanation, so a user report names the exact status. */
+  code?: string;
+}
+
+type FrameAction = 'pair' | 'pairAgain' | 'retryUpdate' | 'reinstall' | 'retryReinstall';
+
+/** A healthy Frame gets only a badge on its icon; any other state gets only a pill. */
+interface FrameRow {
+  badge?: 'connected' | 'connecting';
+  pill?: FramePill;
+  action?: FrameAction;
+}
+
+/** Codes for an update failure, by the reason the core reports. */
+const UPDATE_FAILURE_CODES: Record<string, string> = {
+  unreachable: 'SF-411',
+  corrupted: 'SF-412',
+  notStarted: 'SF-413',
+  notBundled: 'SF-414',
+  other: 'SF-415',
+};
+
+/** Statuses that outrank helper maintenance, with their pill and action. */
+const FRAME_STATUS_ROWS: Partial<Record<SteamFrameConnectionStatus, FrameRow>> = {
+  identityChanged: {
+    pill: {
+      key: 'notRecognized',
+      icon: 'error',
+      tone: 'bad',
+      detail: 'notRecognized',
+      code: 'SF-401',
+    },
+    action: 'pairAgain',
+  },
+  hostKeyChanged: {
+    pill: {
+      key: 'notRecognized',
+      icon: 'error',
+      tone: 'bad',
+      detail: 'notRecognized',
+      code: 'SF-402',
+    },
+    action: 'pairAgain',
+  },
+  helperMissing: {
+    pill: {
+      key: 'helperMissing',
+      icon: 'error',
+      tone: 'bad',
+      detail: 'helperMissing',
+      code: 'SF-406',
+    },
+    action: 'reinstall',
+  },
+  needsAppUpdate: {
+    pill: {
+      key: 'updateApp',
+      icon: 'update',
+      tone: 'warn',
+      detail: FLAVOUR === 'STEAM' ? 'needsAppUpdateSteam' : 'needsAppUpdate',
+      code: 'SF-403',
+    },
+  },
+};
 
 type DeviceGroupType = DMDeviceType | 'PREVIOUSLY_SEEN';
 
@@ -87,7 +170,9 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     private modalService: ModalService,
     private destroyRef: DestroyRef,
     private domSanitizer: DomSanitizer,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    protected framePairing: SteamFramePairingService,
+    private transloco: TranslocoService
   ) {}
 
   ngOnInit() {
@@ -111,6 +196,11 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
         this.initializeFuse();
         this.cdr.markForCheck();
       });
+
+    // keep the relative last-seen times current
+    interval(30000)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.cdr.markForCheck());
 
     // Initialize tag filter to "All tags"
     this.updateTagFilterOptions();
@@ -488,6 +578,166 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     } else if (action === 'power-on') {
       await this.powerOnDevice(device);
     }
+  }
+
+  /** Pairing status and action for a supported Steam Frame, or null for any other device. */
+  frameRow(device: DMKnownDevice): FrameRow | null {
+    if (!this.framePairing.identityOf(device)) return null;
+    const active = this.isDeviceObserved(device.id);
+    const pairing = this.framePairing.pairingFor(device.id);
+
+    // unpaired, or the headset removed the pairing: offer pairing while SteamVR uses it
+    const state = pairing?.complete ? this.framePairing.connections()[pairing.id] : undefined;
+    const status = state?.status ?? 'connecting';
+    if (!pairing?.complete || status === 'pairingRemoved')
+      return active ? { action: 'pair' } : null;
+
+    // a reinstall from this row
+    const reinstall = this.framePairing.reinstalls()[pairing.id];
+    if (reinstall === 'running') {
+      return { pill: { key: 'reinstalling', icon: 'sync', tone: 'neutral' } };
+    }
+    if (reinstall === 'failed' && (status === 'helperMissing' || status === 'offline')) {
+      return {
+        pill: {
+          key: 'reinstallFailed',
+          icon: 'error',
+          tone: 'bad',
+          detail: 'reinstallFailed',
+          code: 'SF-408',
+        },
+        action: 'retryReinstall',
+      };
+    }
+
+    // a problem: its pill, and Pair again only while SteamVR uses it
+    const statusRow = FRAME_STATUS_ROWS[status];
+    if (statusRow) {
+      return statusRow.action === 'pairAgain' && !active ? { pill: statusRow.pill } : statusRow;
+    }
+
+    // a helper update in progress or just finished
+    const maintenanceRow = this.frameMaintenanceRow(state);
+    if (maintenanceRow) return maintenanceRow;
+
+    // healthy: a badge only
+    if (status === 'connected' || status === 'connecting') return { badge: status };
+
+    // offline: show when it was last seen
+    if (status === 'offline') {
+      return pairing.lastSeen
+        ? {
+            pill: {
+              key: 'offlineSince',
+              icon: 'cloud_off',
+              tone: 'neutral',
+              params: { time: this.timeAgo(pairing.lastSeen) },
+            },
+          }
+        : { pill: { key: 'offline', icon: 'cloud_off', tone: 'neutral' } };
+    }
+
+    // an outdated helper: the pill starts the update
+    return { pill: { key: 'updateHelper', icon: 'update', tone: 'warn', startsUpdate: true } };
+  }
+
+  private frameMaintenanceRow(state?: SteamFrameConnectionState): FrameRow | null {
+    const maintenance = state?.maintenance;
+    switch (maintenance?.kind) {
+      case 'updating':
+        return { pill: { key: 'updatingHelper', icon: 'sync', tone: 'neutral' } };
+      case 'updated':
+        return {
+          pill: {
+            key: 'helperUpdated',
+            icon: 'check_circle',
+            tone: 'neutral',
+            params: { version: maintenance.version },
+          },
+        };
+      case 'failed':
+        return {
+          pill: {
+            key: 'updateFailed',
+            icon: 'error',
+            tone: 'bad',
+            detail: 'updateFailed',
+            detailBody: maintenance.reason,
+            code: UPDATE_FAILURE_CODES[maintenance.reason],
+          },
+          action: 'retryUpdate',
+        };
+      case 'busy':
+        return {
+          pill: {
+            key: 'helperBusy',
+            icon: 'hourglass_empty',
+            tone: 'warn',
+            detail: 'helperBusy',
+            code: 'SF-407',
+          },
+          action: 'retryUpdate',
+        };
+      default:
+        return null;
+    }
+  }
+
+  /**
+   * Starts the update from an Update helper pill, and opens the explanation for any other.
+   * The explanation offers the row's action as its main button.
+   */
+  onFramePill(device: DMKnownDevice, pill: FramePill, action?: FrameAction) {
+    const pairing = this.framePairing.pairingFor(device.id);
+    if (pill.startsUpdate) {
+      if (pairing) void this.framePairing.updateHelper(pairing);
+      return;
+    }
+    this.modalService
+      .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
+        title: `steamFrame.statusDetail.${pill.detail}.title`,
+        message: {
+          string: 'steamFrame.statusDetail.withCode',
+          values: {
+            body: this.transloco.translate(
+              `steamFrame.statusDetail.${pill.detail}.${pill.detailBody ?? 'body'}`
+            ),
+            code: pill.code ?? '',
+          },
+        },
+        confirmButtonText: action ? `steamFrame.actions.${action}` : 'shared.modals.close',
+        cancelButtonText: 'shared.modals.close',
+        showCancel: !!action,
+      })
+      .subscribe((result) => {
+        // the row can change while the explanation is open
+        if (!action || !result?.confirmed || this.frameRow(device)?.action !== action) return;
+        void this.onFrameAction(device, action);
+      });
+  }
+
+  onFrameAction(device: DMKnownDevice, action: FrameAction) {
+    const pairing = this.framePairing.pairingFor(device.id);
+    switch (action) {
+      case 'pair':
+      case 'pairAgain':
+        return this.framePairing.openWizard(device);
+      case 'retryUpdate':
+        return pairing && this.framePairing.updateHelper(pairing);
+      case 'reinstall':
+      case 'retryReinstall':
+        return pairing && this.framePairing.reinstallHelper(pairing);
+    }
+  }
+
+  /** Formats a past time as "just now" or a relative time in the active language. */
+  private timeAgo(time: number): string {
+    const minutes = Math.trunc((time - Date.now()) / 60000);
+    if (minutes === 0) return this.transloco.translate('steamFrame.status.justNow');
+    const format = new Intl.RelativeTimeFormat(this.transloco.getActiveLang(), { numeric: 'auto' });
+    if (minutes > -60) return format.format(minutes, 'minute');
+    if (minutes > -60 * 24) return format.format(Math.round(minutes / 60), 'hour');
+    return format.format(Math.round(minutes / (60 * 24)), 'day');
   }
 
   async configureDevice(device: DMKnownDevice) {
