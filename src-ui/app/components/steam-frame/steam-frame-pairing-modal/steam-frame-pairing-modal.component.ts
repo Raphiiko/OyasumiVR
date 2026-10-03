@@ -2,14 +2,14 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { FormsModule } from '@angular/forms';
 import { openUrl } from '@tauri-apps/plugin-opener';
 import { TranslocoModule } from '@jsverse/transloco';
-import { BaseModalComponent } from '../base-modal/base-modal.component';
-import { isValidHostname, isValidIPv4, isValidIPv6 } from '../../utils/regex-utils';
-import { SteamFramePairingService } from '../../services/steam-frame-pairing.service';
+import { BaseModalComponent } from '../../base-modal/base-modal.component';
+import { isValidHostname, isValidIPv4, isValidIPv6 } from '../../../utils/regex-utils';
+import { SteamFramePairingService } from '../../../services/steam-frame/steam-frame-pairing.service';
 import {
   STEAM_FRAME_UNINSTALL_COMMAND,
   SteamFramePage,
   SteamFrameSetupStage,
-} from '../../models/steam-frame';
+} from '../../../models/steam-frame';
 
 const STEP_OF_PAGE: Record<SteamFramePage, number> = {
   intro: 0,

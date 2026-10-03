@@ -28,7 +28,7 @@ import { AppSettingsService } from '../app-settings.service';
 import { CctControlDriver } from './cct-control-drivers/cct-control-driver';
 import { SteamVrCctControlDriver } from './cct-control-drivers/steamvr-cct-control-driver';
 import { SteamFrameCctControlDriver } from './cct-control-drivers/steam-frame-cct-control-driver';
-import { SteamFramePairingService } from '../steam-frame-pairing.service';
+import { SteamFramePairingService } from '../steam-frame/steam-frame-pairing.service';
 
 /** Gives SteamVR color gains of exactly 1.0 on every channel. */
 const NEUTRAL_CCT = 6600;

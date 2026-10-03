@@ -33,6 +33,14 @@ export abstract class HardwareBrightnessControlDriver {
 
   abstract isAvailable(): Observable<boolean>;
 
+  /**
+   * Waits until the active HMD, which belongs to this driver but cannot take a write yet, becomes
+   * available. Null when no such HMD waits; resolves false when it stops being the active HMD first.
+   */
+  whenDeviceReady(): Promise<boolean> | null {
+    return null;
+  }
+
   protected softwarePercentageToHardwarePercentage(percentage: number): number {
     const config = this.getBrightnessConfiguration();
     const bounds = this.getBrightnessBounds();

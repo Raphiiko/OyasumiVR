@@ -431,8 +431,8 @@ export class BrightnessCctAutomationService {
     );
 
     if (brightnessAutomation) {
-      // a paired Frame's hardware brightness can change only after its first report
-      const frameReport = this.hardwareBrightnessControl.driverSteamFrame.whenFrameReports();
+      // an HMD whose driver is not available yet takes the automation once it becomes available
+      const hmdReady = this.hardwareBrightnessControl.whenActiveHmdReady();
       this.onAutomationTrigger(
         brightnessAutomation,
         config[brightnessAutomation],
@@ -442,8 +442,8 @@ export class BrightnessCctAutomationService {
         false
       );
       const runs = this.brightnessAutomationRuns;
-      void frameReport?.then((reported) => {
-        if (reported) void this.rerunHmdConnectBrightness(runs);
+      void hmdReady?.then((ready) => {
+        if (ready) void this.rerunHmdConnectBrightness(runs);
       });
     }
     if (cctAutomation)
