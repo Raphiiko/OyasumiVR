@@ -68,6 +68,8 @@ export class HardwareBrightnessControlService {
   private driver: BehaviorSubject<HardwareBrightnessControlDriver | null> =
     new BehaviorSubject<HardwareBrightnessControlDriver | null>(null);
   private _brightness: BehaviorSubject<number> = new BehaviorSubject<number>(100);
+  /** The driver the cached brightness came from; another driver's device can hold any value. */
+  private brightnessDriver: HardwareBrightnessControlDriver | null = null;
   /** Bumped by every set and transition, so a waiting handoff target yields to a newer request. */
   private _requestGeneration = 0;
   private _activeTransition = new BehaviorSubject<HardwareBrightnessTransition | undefined>(
@@ -133,11 +135,12 @@ export class HardwareBrightnessControlService {
       .pipe(
         switchMap((driver) =>
           (driver?.brightnessUpdates ?? EMPTY).pipe(
-            map((percentage) => ({ percentage, bounds: driver!.getBrightnessBounds() }))
+            map((percentage) => ({ percentage, bounds: driver!.getBrightnessBounds(), driver }))
           )
         )
       )
-      .subscribe((adopted) => {
+      .subscribe(({ driver, ...adopted }) => {
+        this.brightnessDriver = driver;
         this._brightness.next(adopted.percentage);
         this._adoptedBrightness.next(adopted);
       });
@@ -296,7 +299,15 @@ export class HardwareBrightnessControlService {
     if (!driver) return;
     if (opt.cancelActiveTransition) this.cancelActiveTransition();
     // a pushing device can hold a value the cache shows clamped, so it always gets the write
-    if (!force && percentage == this.brightness && !driver.pushesBrightnessChanges) return;
+    if (
+      !force &&
+      percentage == this.brightness &&
+      driver === this.brightnessDriver &&
+      !driver.pushesBrightnessChanges
+    ) {
+      return;
+    }
+    this.brightnessDriver = driver;
     this._brightness.next(percentage);
     await driver.setBrightnessPercentage(percentage);
     if (opt.logReason) {
@@ -316,8 +327,10 @@ export class HardwareBrightnessControlService {
   }
 
   async fetchBrightness(): Promise<number | undefined> {
-    const brightness = (await this.driver.value?.getBrightnessPercentage()) ?? undefined;
+    const driver = this.driver.value;
+    const brightness = (await driver?.getBrightnessPercentage()) ?? undefined;
     if (brightness !== undefined) {
+      this.brightnessDriver = driver;
       this._brightness.next(brightness);
       await info(`[BrightnessControl] Fetched hardware brightness (${brightness}%)`);
     }

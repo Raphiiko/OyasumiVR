@@ -178,6 +178,29 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
     expect(setBrightness).toHaveBeenCalledWith(80);
   });
 
+  it('writes a handoff target the next headset only appears to hold', async () => {
+    const h = await setup();
+    vi.mocked(invoke).mockImplementation(async () => undefined);
+    h.service.transitionBrightness(20, 10000);
+    await settle();
+    // the Frame reached the target, which is also the next headset's floor
+    h.report(20, { fade: 'running' });
+    await settle();
+    expect(h.service.brightness).toBe(20);
+    h.devices.next([{ class: 'HMD', serialNumber: 'LHR-1' } as OVRDevice]);
+    await settle();
+
+    const nextDriver = {
+      isAvailable: () => new BehaviorSubject(true),
+      getBrightnessBounds: () => [20, 160],
+      getBrightnessPercentage: async () => 100,
+      setBrightnessPercentage: vi.fn(async () => {}),
+    };
+    h.service['driver'].next(nextDriver as unknown as typeof h.service.driverValveIndex);
+    await settle();
+    expect(nextDriver.setBrightnessPercentage).toHaveBeenCalledWith(20);
+  });
+
   it('drops a helper fade the headset changed, and shows the change', async () => {
     const h = await setup();
     vi.mocked(invoke).mockImplementation(async () => undefined);
