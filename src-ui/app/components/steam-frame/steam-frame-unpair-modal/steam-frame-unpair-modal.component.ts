@@ -7,10 +7,13 @@ import {
   signal,
 } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
-import { BaseModalComponent } from '../base-modal/base-modal.component';
-import { fadeUp } from '../../utils/animations';
-import { SteamFramePairingService } from '../../services/steam-frame-pairing.service';
-import { STEAM_FRAME_UNINSTALL_COMMAND, SteamFrameUnpairFailure } from '../../models/steam-frame';
+import { BaseModalComponent } from '../../base-modal/base-modal.component';
+import { fadeUp } from '../../../utils/animations';
+import { SteamFramePairingService } from '../../../services/steam-frame/steam-frame-pairing.service';
+import {
+  STEAM_FRAME_UNINSTALL_COMMAND,
+  SteamFrameUnpairFailure,
+} from '../../../models/steam-frame';
 
 export interface SteamFrameUnpairModalInputModel {
   deviceId: string;

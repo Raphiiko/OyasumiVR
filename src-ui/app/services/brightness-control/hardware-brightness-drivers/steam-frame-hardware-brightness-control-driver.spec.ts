@@ -127,20 +127,20 @@ describe('SteamFrameHardwareBrightnessControlDriver', () => {
 
   it('lets HMD connect automations wait for the first report of a paired Frame', async () => {
     const h = setup();
-    const waiting = h.driver.whenFrameReports();
+    const waiting = h.driver.whenDeviceReady();
     expect(waiting).not.toBeNull();
     h.report(brightness(40));
     expect(await waiting).toBe(true);
 
     // nothing waits once the Frame reported, or for another headset
-    expect(h.driver.whenFrameReports()).toBeNull();
+    expect(h.driver.whenDeviceReady()).toBeNull();
     h.devices.next([{ class: 'HMD', serialNumber: 'OTHER' } as OVRDevice]);
-    expect(h.driver.whenFrameReports()).toBeNull();
+    expect(h.driver.whenDeviceReady()).toBeNull();
 
     // a Frame that leaves before its report is never ready
     h.devices.next([{ class: 'HMD', serialNumber: SERIAL } as OVRDevice]);
     h.report(null);
-    const leaving = h.driver.whenFrameReports();
+    const leaving = h.driver.whenDeviceReady();
     h.devices.next([]);
     expect(await leaving).toBe(false);
   });

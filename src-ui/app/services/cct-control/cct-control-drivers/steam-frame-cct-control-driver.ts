@@ -18,7 +18,7 @@ import {
   SteamFramePairing,
 } from '../../../models/steam-frame';
 import type { OpenVRService, OpenVRStatus } from '../../openvr.service';
-import type { SteamFramePairingService } from '../../steam-frame-pairing.service';
+import type { SteamFramePairingService } from '../../steam-frame/steam-frame-pairing.service';
 import { CctControlDriver } from './cct-control-driver';
 
 /** A Frame report that carries a value. */

@@ -294,9 +294,7 @@ describe('BrightnessCctAutomationService HMD connect with a Steam Frame', () => 
     const simple = { setBrightness: vi.fn(async () => {}), cancelActiveTransition: vi.fn() };
     const hardware = {
       cancelActiveTransition: vi.fn(),
-      driverSteamFrame: {
-        whenFrameReports: () => new Promise<boolean>((resolve) => (report = resolve)),
-      },
+      whenActiveHmdReady: () => new Promise<boolean>((resolve) => (report = resolve)),
     };
     const service = new BrightnessCctAutomationService(
       { configs: new BehaviorSubject({ BRIGHTNESS_AUTOMATIONS: config }) } as never,

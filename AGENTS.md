@@ -28,6 +28,16 @@ OyasumiVR is a Windows desktop app for VRChat users, built with Tauri.
 
 The core talks to the sidecars over gRPC. The `.proto` files live in `proto`.
 
+## Headset-specific code
+
+Code for one headset follows the usual folders: its drivers sit beside the other drivers, its
+components under `src-ui/app/components/`, and its models under `src-ui/app/models/`. Several files
+of one kind for the same headset share a subfolder named after it, such as `services/steam-frame/`
+and `components/steam-frame/`. Generic services, components, and views reach a headset only through
+the brightness and CCT drivers and their hooks, such as `whenDeviceReady`. Registration points are
+the only generic files that name a headset: `app.module.ts`, the driver lists in the brightness and
+CCT services, and the message-center monitor list.
+
 ## Elevated features
 
 GPU power limiting and MSI Afterburner profiles need administrator rights, and OyasumiVR asks for

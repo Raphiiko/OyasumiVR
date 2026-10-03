@@ -19,7 +19,7 @@ import {
   LighthouseV1IdWizardModalInputModel,
   LighthouseV1IdWizardModalOutputModel,
 } from '../lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
-import { SteamFramePairingService } from 'src-ui/app/services/steam-frame-pairing.service';
+import { SteamFramePairingService } from 'src-ui/app/services/steam-frame/steam-frame-pairing.service';
 import { SteamFrameConnectionStatus } from 'src-ui/app/models/steam-frame';
 
 /** Statuses whose connection loop still runs an update the user requests. */
@@ -148,7 +148,7 @@ export class DeviceManagerConfigModalComponent
 
   async unpairFrame() {
     const { SteamFrameUnpairModalComponent } =
-      await import('../steam-frame-unpair-modal/steam-frame-unpair-modal.component');
+      await import('../steam-frame/steam-frame-unpair-modal/steam-frame-unpair-modal.component');
     // an unpair keeps running after the dialog closes, so Escape must not look like a cancel
     this.modalService
       .addModal(

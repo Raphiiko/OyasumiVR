@@ -5,12 +5,14 @@ import { describe, expect, it, vi } from 'vitest';
 import { DMKnownDevice } from '../../../models/device-manager';
 import { SteamFramePairing } from '../../../models/steam-frame';
 import { DeviceManagerService } from '../../device-manager.service';
-import { SteamFramePairingService } from '../../steam-frame-pairing.service';
+import { SteamFramePairingService } from '../../steam-frame/steam-frame-pairing.service';
 import { MessageCenterService, MessageItem } from '../message-center.service';
 import { SteamFramePairingMessageMonitor } from './steam-frame-pairing-message-monitor';
 
 vi.mock('../../device-manager.service', () => ({ DeviceManagerService: class {} }));
-vi.mock('../../steam-frame-pairing.service', () => ({ SteamFramePairingService: class {} }));
+vi.mock('../../steam-frame/steam-frame-pairing.service', () => ({
+  SteamFramePairingService: class {},
+}));
 vi.mock('../message-center.service', () => ({ MessageCenterService: class {} }));
 
 const hmd = (serial: string, typeName: string): DMKnownDevice => ({
