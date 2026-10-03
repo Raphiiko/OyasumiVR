@@ -110,11 +110,6 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
     return this.available;
   }
 
-  /** True while the Frame's gains lie off the curve, so even a set to the shown value writes. */
-  get writesUnchangedValue() {
-    return !this.exact;
-  }
-
   async setCCT(kelvin: number): Promise<void> {
     const hmd = this.currentHmd;
     if (hmd.kind !== 'frame' || !hmd.pairingId) return;
@@ -156,10 +151,15 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
     this.adopt(replyApplies ? (applied as FrameCct) : target.cct);
   }
 
-  /** A fade on the active Frame's helper, or null before that Frame reports. Drops a waiting set. */
-  fade(kelvin: number, durationMs: number) {
+  /**
+   * A fade on the active Frame's helper, or null before that Frame reports or when it already
+   * holds the value. Drops a waiting set.
+   */
+  override fade(kelvin: number, durationMs: number): SteamFrameCctFade | null {
     const hmd = this.currentHmd;
     if (hmd.kind !== 'frame' || !hmd.pairingId || !hmd.cct) return null;
+    // the helper would hold a fade to the value it already has for the whole duration
+    if (kelvin === this.shown && this.exact) return null;
     // a waiting set would go out after the fade and supersede it
     this.pending = null;
     return new SteamFrameCctFade(
