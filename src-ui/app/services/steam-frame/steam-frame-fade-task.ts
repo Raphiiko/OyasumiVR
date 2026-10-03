@@ -190,6 +190,15 @@ export class SteamFrameBrightnessFade extends SteamFrameFadeTask {
   }
 }
 
+export class SteamFrameCctFade extends SteamFrameFadeTask {
+  constructor(
+    readonly targetCCT: number,
+    ...args: ConstructorParameters<typeof SteamFrameFadeTask>
+  ) {
+    super(...args);
+  }
+}
+
 function deviceFadeEnd(outcome: SteamFrameFadeEnd): DeviceFadeEnd {
   if (outcome === 'completed') return 'completed';
   return outcome === 'externalChange' || outcome === 'missed' ? 'changedOnDevice' : 'stopped';
