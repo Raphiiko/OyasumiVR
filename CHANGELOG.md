@@ -46,6 +46,9 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Changed
 
+- Color temperature control is now limited to supported headsets (Valve Index, Bigscreen Beyond).
+  If it worked on your headset before, please turn on "Enable on unsupported headsets" in the
+  Brightness & CCT settings, and let us know on Discord.
 - Lowered the minimum hardware brightness for the Valve Index from 20% to 9%, the lowest level the
   headset supports
 - Quit with SteamVR is now an on/off toggle. When SteamVR stops, OyasumiVR counts down ten seconds
@@ -96,6 +99,9 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 ### Fixed
 
 - Fixed overlay pointers and tooltips clipping into the dashboard with SteamVR 2.17.
+- The splash screen and VR notifications no longer stretch or skew while they move into place
+  after you turn your head
+- VR notifications now tilt toward your eyes, as intended
 - The event log no longer reports an auto-declined invite when the decline request to VRChat failed
 - The event log no longer reports a status change on sleep preparation when the status did not change
 - Restore friend pictures after the VRChat API profile changes.

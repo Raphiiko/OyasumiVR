@@ -1,6 +1,6 @@
 [package]
 name = "oyasumivr"
-version = "26.9.0-beta.15"
+version = "26.9.0-beta.16"
 description = ""
 authors = ["Raphiiko"]
 license = "MIT"
@@ -22,13 +22,13 @@ tauri-plugin-updater = "2.11.0"
 
 [dependencies]
 async-recursion = "1.1.1"
-base64 = "0.22.1"
-btleplug = { git = "https://github.com/Raphiiko/btleplug", rev = "be495282b8b671a4a832cafbe2dbd76db6c1c8d8" }
+base64 = "0.23.1"
+btleplug = "0.13.3"
 byteorder = "1.5.0"
 bytes = "1.12.1"
 chrono = "0.4.45"
 cronjob = "0.4.17"
-dirs = "6.0.0"
+dirs = "7.0.0"
 discord-sdk = "0.4.0"
 futures = "0.3.34"
 futures-util = "0.3.33"

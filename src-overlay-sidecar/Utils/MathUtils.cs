@@ -8,22 +8,22 @@ public static class MathUtils
 {
   public static float ToRadians(this float degrees)
   {
-    return (int)(degrees * (CMath.PI / 180));
+    return (float)(degrees * (CMath.PI / 180));
   }
 
   public static float ToDegrees(this float degrees)
   {
-    return (int)(degrees * (180 / CMath.PI));
+    return (float)(degrees * (180 / CMath.PI));
   }
 
   public static double ToRadians(this double degrees)
   {
-    return (int)(degrees * (CMath.PI / 180));
+    return degrees * (CMath.PI / 180);
   }
 
   public static double ToDegrees(this double degrees)
   {
-    return (int)(degrees * (180 / CMath.PI));
+    return degrees * (180 / CMath.PI);
   }
 
   /// <summary>
@@ -125,6 +125,17 @@ public static class MathUtils
     var rotation = Matrix4x4.CreateFromQuaternion(Quaternion.CreateFromRotationMatrix(matrix));
     var offset = Matrix4x4.CreateTranslation(0, 0, -1f);
     return Vector3.Normalize((offset * rotation).Translation);
+  }
+
+  /// <summary>
+  /// Interpolates two rigid transforms without shear: slerps the rotation, lerps the translation, drops scale.
+  /// </summary>
+  public static Matrix4x4 LerpRigid(Matrix4x4 from, Matrix4x4 to, float t)
+  {
+    var rotation = Quaternion.Slerp(Quaternion.CreateFromRotationMatrix(from), Quaternion.CreateFromRotationMatrix(to), t);
+    var result = Matrix4x4.CreateFromQuaternion(Quaternion.Normalize(rotation));
+    result.Translation = Vector3.Lerp(from.Translation, to.Translation, t);
+    return result;
   }
 
   public static float Lerp(float v1, float v2, float t)

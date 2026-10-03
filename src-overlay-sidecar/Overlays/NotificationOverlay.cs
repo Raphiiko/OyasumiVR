@@ -80,7 +80,7 @@ public class NotificationOverlay : BaseWebOverlay
     // Lerp the position
     if (_updatedPositionOnce)
     {
-      targetTransform = Matrix4x4.Lerp(currentTransform, targetTransform, 0.04f);
+      targetTransform = MathUtils.LerpRigid(currentTransform, targetTransform, 0.04f);
     }
     // Apply the transformation
     var transform = targetTransform.ToHmdMatrix34_t();

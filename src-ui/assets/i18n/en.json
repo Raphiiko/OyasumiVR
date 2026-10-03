@@ -1491,6 +1491,13 @@
         },
         "enable": {
           "title": "Administrative permissions are unavailable"
+        },
+        "startupPromptDeclined": {
+          "actions": {
+            "enable": "Turn back on"
+          },
+          "message": "OyasumiVR asked for administrative permissions at startup, and the request was declined. Features that need administrative permissions are now off.",
+          "title": "Administrative permissions are off"
         }
       },
       "gpuAutomationsAfterburnerError": {

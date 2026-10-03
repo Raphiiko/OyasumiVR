@@ -14,6 +14,11 @@ export class ElevatedFeaturesMessageMonitor extends MessageMonitor {
         this.messageCenter.removeMessage('elevatedFeaturesFailure');
         return;
       }
+      // only the startup enable publishes enable failures, so a declined prompt here came from it
+      if (failure.operation === 'enable' && failure.result.result === 'promptDeclined') {
+        this.showStartupPromptDeclined();
+        return;
+      }
       this.messageCenter.addMessage({
         id: 'elevatedFeaturesFailure',
         title: `message-center.messages.elevatedFeaturesFailure.${failure.operation}.title`,
@@ -40,6 +45,22 @@ export class ElevatedFeaturesMessageMonitor extends MessageMonitor {
           },
         ],
       });
+    });
+  }
+
+  private showStartupPromptDeclined() {
+    this.messageCenter.addMessage({
+      id: 'elevatedFeaturesFailure',
+      title: 'message-center.messages.elevatedFeaturesFailure.startupPromptDeclined.title',
+      message: 'message-center.messages.elevatedFeaturesFailure.startupPromptDeclined.message',
+      type: 'warning',
+      actions: [
+        {
+          label:
+            'message-center.messages.elevatedFeaturesFailure.startupPromptDeclined.actions.enable',
+          action: () => this.elevatedFeatures.enable(),
+        },
+      ],
     });
   }
 }
