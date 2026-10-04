@@ -4,8 +4,6 @@ import { isEqual } from 'lodash';
 import {
   combineLatest,
   distinctUntilChanged,
-  filter,
-  firstValueFrom,
   map,
   Observable,
   ReplaySubject,
@@ -46,7 +44,6 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
   override readonly brightnessUpdates = this.updates.asObservable();
   private readonly hmd: Observable<ActiveHmd>;
   private readonly available: Observable<boolean>;
-  private currentHmd: ActiveHmd = { kind: 'none' };
   private frame: { pairingId: string; brightness: SteamFrameBrightness } | null = null;
   /** Set while a command runs; a newer value waits in `pending` and replaces an older one. */
   private sending = false;
@@ -124,20 +121,6 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
     return this.available;
   }
 
-  /** A paired Frame that is the active HMD becomes available with its first report. */
-  override whenDeviceReady(): Promise<boolean> | null {
-    const waiting = this.currentHmd;
-    if (waiting.kind !== 'frame' || this.frame) return null;
-    const isWaitingFrame = (hmd: ActiveHmd) =>
-      hmd.kind === 'frame' && hmd.pairingId === waiting.pairingId;
-    return firstValueFrom(
-      combineLatest([this.hmd, this.available]).pipe(
-        filter(([hmd, available]) => available || !isWaitingFrame(hmd)),
-        map(([hmd, available]) => available && isWaitingFrame(hmd))
-      )
-    );
-  }
-
   private activeHmd(
     status: OpenVRStatus,
     devices: OVRDevice[],
@@ -159,7 +142,6 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
 
   /** Adopts each report, unless a command runs: then the requested value stays on screen. */
   private onHmd(hmd: ActiveHmd) {
-    this.currentHmd = hmd;
     if (hmd.kind !== 'frame' || !this.usable(hmd.brightness)) {
       this.frame = null;
       return;

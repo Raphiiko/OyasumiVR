@@ -48,7 +48,6 @@ export class HardwareBrightnessControlService {
   public readonly driverSteamFrame: SteamFrameHardwareBrightnessControlDriver;
   /** The driver that was available last; it stays set after that driver becomes unavailable. */
   public lastActiveDriver: HardwareBrightnessControlDriver | null = null;
-  private readonly drivers: HardwareBrightnessControlDriver[];
 
   /** The driver in use now; null while none is available. */
   get activeDriver(): HardwareBrightnessControlDriver | null {
@@ -103,7 +102,6 @@ export class HardwareBrightnessControlService {
       steamFrames.connections$
     );
     const driverList = [this.driverValveIndex, this.driverSteamFrame, this.driverBigscreenBeyond];
-    this.drivers = driverList;
     combineLatest(driverList.map((driver) => driver.isAvailable()))
       .pipe(distinctUntilChanged((a, b) => isEqual(a, b)))
       .subscribe((drivers) => {
@@ -237,15 +235,6 @@ export class HardwareBrightnessControlService {
         `[BrightnessControl] Set hardware brightness to ${percentage}% (Reason: ${opt.logReason})`
       );
     }
-  }
-
-  /** See `HardwareBrightnessControlDriver.whenDeviceReady`; null when no driver's HMD waits. */
-  whenActiveHmdReady(): Promise<boolean> | null {
-    for (const driver of this.drivers) {
-      const ready = driver.whenDeviceReady();
-      if (ready) return ready;
-    }
-    return null;
   }
 
   async fetchBrightness(): Promise<number | undefined> {

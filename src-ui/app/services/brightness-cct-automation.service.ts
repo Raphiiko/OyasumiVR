@@ -20,8 +20,10 @@ import {
   startWith,
   switchMap,
   take,
+  takeUntil,
   tap,
   timeout,
+  timer,
 } from 'rxjs';
 import { CancellableTask } from '../utils/cancellable-task';
 import { EventLogService } from './event-log.service';
@@ -41,6 +43,9 @@ import { error } from '@tauri-apps/plugin-log';
 import { listen } from '@tauri-apps/api/event';
 import { OpenVRService } from './openvr.service';
 import { invoke } from '@tauri-apps/api/core';
+
+/** How long the HMD connect automation waits for a brightness driver to become available. */
+const HMD_CONNECT_DRIVER_WAIT_MS = 10000;
 
 @Injectable({
   providedIn: 'root',
@@ -431,8 +436,9 @@ export class BrightnessCctAutomationService {
     );
 
     if (brightnessAutomation) {
-      // an HMD whose driver is not available yet takes the automation once it becomes available
-      const hmdReady = this.hardwareBrightnessControl.whenActiveHmdReady();
+      const driverAvailable = await firstValueFrom(
+        this.hardwareBrightnessControl.driverIsAvailable
+      );
       this.onAutomationTrigger(
         brightnessAutomation,
         config[brightnessAutomation],
@@ -441,10 +447,14 @@ export class BrightnessCctAutomationService {
         true,
         false
       );
+
+      // a brightness driver that becomes available shortly after the HMD connects reruns it
       const runs = this.brightnessAutomationRuns;
-      void hmdReady?.then((ready) => {
-        if (ready) void this.rerunHmdConnectBrightness(runs);
-      });
+      if (!driverAvailable) {
+        this.hardwareBrightnessControl.driverIsAvailable
+          .pipe(filter(Boolean), take(1), takeUntil(timer(HMD_CONNECT_DRIVER_WAIT_MS)))
+          .subscribe(() => this.rerunHmdConnectBrightness(runs));
+      }
     }
     if (cctAutomation)
       this.onAutomationTrigger(cctAutomation, config[cctAutomation], true, false, false, true);
