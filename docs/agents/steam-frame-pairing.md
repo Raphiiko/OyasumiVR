@@ -50,7 +50,7 @@ the helper token pass through `protectSecret` before the first save.
 | `steam_frame_update_helper`         | Update and Retry in Device Manager          | a manual helper update; the result arrives as connection state                                                                    |
 | `steam_frame_set_brightness`        | the Frame brightness driver                 | each brightness write; the reply carries the value the helper applied                                                             |
 | `steam_frame_set_cct`               | the Frame color temperature driver          | each color temperature write; the reply carries the snapshot the helper applied                                                   |
-| `steam_frame_fade`                  | `SteamFrameFadeTask`                        | each brightness transition; the reply accepts or refuses it                                                                       |
+| `steam_frame_fade`                  | `SteamFrameFadeTask`                        | each brightness and color temperature transition; the reply accepts or refuses it                                                 |
 | `steam_frame_cancel_fade`           | the same                                    | a cancelled transition, by its operation ID                                                                                       |
 
 The core emits three events. `STEAM_FRAME_SETUP_STAGE` reports the setup step, and `installed` once
@@ -317,7 +317,10 @@ an allowlisted Frame model without that path and drops its sets then, so the Ste
 driver never writes the PC's own gains while a Frame is the active HMD. The driver keeps the newest
 value set before the paired Frame's first report, such as the HMD connect automation's, and sends it
 with that report. `CCTControlService` hands every set to the matching driver, and a driver with
-`pushesCctChanges` owns the shown value. Transitions set their target in one command.
+`pushesCctChanges` owns the shown value. Transitions run as helper fades. A fade lasts at most 24
+hours, and a fade to the value the Frame already holds does not start. When another headset becomes
+the active HMD during a fade, the new headset gets the target in one command. A transition that
+starts before the Frame's first report sets its target in one command.
 
 ## Fades
 
@@ -375,10 +378,10 @@ write made in standby. A cancelled fade never resumes.
 
 ### On the PC
 
-The brightness services know only `DeviceFade`, a `CancellableTask` for a fade the device runs
-itself. A driver returns one from `fade()`, and the base driver returns null, so other headsets
-keep the PC transition. A `DeviceFade` ends as `completed`, `changedOnDevice`, `deviceGone`, or
-`stopped`.
+The brightness services and `CCTControlService` know only `DeviceFade`, a `CancellableTask` for a
+fade the device runs itself. A driver returns one from `fade()`, and the base drivers return null,
+so other headsets keep the PC transition. A `DeviceFade` ends as `completed`, `changedOnDevice`,
+`deviceGone`, or `stopped`.
 
 `SteamFrameFadeTask` is the Frame driver's `DeviceFade` for one helper fade.
 
