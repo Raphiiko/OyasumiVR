@@ -185,6 +185,18 @@ pub async fn task() {
                         }
                     }
                 }
+                // Steamworks makes Steam report this process as the Steam app, so claim our own key
+                if crate::BUILD_FLAVOUR != crate::flavour::BuildFlavour::Steam {
+                    let ctx = OVR_CONTEXT.lock().await;
+                    if let Err(e) = ctx
+                        .as_ref()
+                        .unwrap()
+                        .applications()
+                        .identify_application(std::process::id(), STEAM_APP_KEY)
+                    {
+                        error!("[Core] Could not identify as {STEAM_APP_KEY}: {e}");
+                    }
+                }
                 ovr_active = true;
                 update_status(OpenVRStatus::Initialized).await;
                 // Set up SteamVR Input

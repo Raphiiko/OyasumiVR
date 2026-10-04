@@ -137,7 +137,7 @@ winreg = "0.56.0"
 
 [dependencies.raphii-openvr-rs]
 git = "https://github.com/Raphiiko/raphii-openvr-rs"
-rev = "5dca9da201b15cf9641382a2f28e18c053adb488"
+rev = "539ecf2c37343a8a2ef8530bd80be5ac3c089e04"
 
 [dependencies.oyasumivr_oscquery]
 git = "https://github.com/Raphiiko/oyasumivr_oscquery.git"
