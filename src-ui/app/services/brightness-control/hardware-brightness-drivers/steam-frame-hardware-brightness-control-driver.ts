@@ -124,11 +124,8 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
     return this.available;
   }
 
-  /**
-   * Waits for the first report of the paired Frame that is the active HMD. Null when no Frame is
-   * waiting for one; resolves false when that Frame stops being the active HMD first.
-   */
-  whenFrameReports(): Promise<boolean> | null {
+  /** A paired Frame that is the active HMD becomes available with its first report. */
+  override whenDeviceReady(): Promise<boolean> | null {
     const waiting = this.currentHmd;
     if (waiting.kind !== 'frame' || this.frame) return null;
     const isWaitingFrame = (hmd: ActiveHmd) =>
