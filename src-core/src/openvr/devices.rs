@@ -76,6 +76,9 @@ pub async fn on_ovr_event(event: ovr::system::VREvent) {
                 update_device(event.tracked_device_index(), true).await;
             }
         }
+        ovr::raw::EVREventType::VREvent_SteamVRSectionSettingChanged => {
+            super::brightness_analog::on_steamvr_section_changed().await;
+        }
         _ => {}
     }
 }

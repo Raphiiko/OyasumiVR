@@ -331,7 +331,7 @@ export class HardwareBrightnessControlService {
 
   private async initializeSafetyChecks() {
     this.brightnessBounds.subscribe((bounds) => {
-      if (this.driver.value?.pushesBrightnessChanges) return;
+      if (this.driver.value?.reportsBrightnessBounds) return;
       const clamped = clamp(this.brightness, bounds[0], bounds[1]);
       if (clamped !== this.brightness) this.setBrightness(clamped);
     });

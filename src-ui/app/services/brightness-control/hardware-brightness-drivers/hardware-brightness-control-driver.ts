@@ -32,6 +32,11 @@ export abstract class HardwareBrightnessControlDriver {
    * value, and does not write its stored one when the driver's availability changes.
    */
   readonly pushesBrightnessChanges: boolean = false;
+  /**
+   * True when the device reports its bounds with each value, which the driver shows clamped.
+   * OyasumiVR then does not clamp and write the stored value when the bounds change.
+   */
+  readonly reportsBrightnessBounds: boolean = false;
   /** Brightness values the device reported or applied. OyasumiVR shows them and never writes them back. */
   readonly brightnessUpdates?: Observable<number>;
 
