@@ -321,9 +321,10 @@ value set while the paired Frame cannot take it, such as the HMD connect automat
 once the Frame reports, unless it waited longer than two minutes. `CCTControlService` hands every
 set to the matching driver, and a driver with `pushesCctChanges` owns the shown value. Transitions
 run as helper fades. A fade lasts at most 24 hours, and a fade to the value the Frame already holds
-does not start. When another headset becomes the active HMD during a fade, the new headset gets the
-target in one command. A transition that starts before the Frame's first report waits for it, as
-described under [Fades](#fades).
+does not start, also when a waiting fade's first report shows that value. A transition to the shown
+value stops a running fade. When another headset becomes the active HMD during a fade, the new
+headset gets the target in one command. A transition that starts before the Frame's first report
+waits for it, as described under [Fades](#fades).
 
 ## Fades
 
