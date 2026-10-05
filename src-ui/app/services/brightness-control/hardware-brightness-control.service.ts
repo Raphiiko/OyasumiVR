@@ -18,6 +18,7 @@ import {
   map,
   Observable,
   of,
+  pairwise,
   shareReplay,
   startWith,
   ReplaySubject,
@@ -104,6 +105,13 @@ export class HardwareBrightnessControlService {
     private appSettingsService: AppSettingsService, // private bsbFanAutomationService: BigscreenBeyondFanAutomationService
     steamFrames: SteamFramePairingService
   ) {
+    // a fade the previous device ran ends first, so its target reaches the next one
+    this.driver.pipe(pairwise()).subscribe(([previous, driver]) => {
+      const transition = this._activeTransition.value;
+      if (driver && driver !== previous && transition instanceof DeviceFade) {
+        transition.endAsDeviceGone();
+      }
+    });
     this.driverValveIndex = new ValveIndexHardwareBrightnessControlDriver(
       this.appSettingsService.settings,
       openvr

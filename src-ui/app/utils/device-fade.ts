@@ -13,4 +13,13 @@ export type DeviceFadeEnd = 'completed' | 'changedOnDevice' | 'deviceGone' | 'st
 export abstract class DeviceFade extends CancellableTask {
   /** How the fade ended, set before the task cancels itself; null after a cancel from outside. */
   end: DeviceFadeEnd | null = null;
+  /** How long the device runs the fade, which can be shorter than requested. */
+  abstract readonly durationMs: number;
+
+  /** Ends a running fade because another device took over; its service hands the target on. */
+  endAsDeviceGone() {
+    if (this.isCancelled() || this.isComplete() || this.isError()) return;
+    this.end = 'deviceGone';
+    this.cancel();
+  }
 }

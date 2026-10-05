@@ -400,7 +400,11 @@ keep the PC transition. A `DeviceFade` ends as `completed`, `changedOnDevice`, `
   without leaving `connected`.
 - When another headset becomes the active HMD during a fade, the task ends as `deviceGone` and
   sends `cancelFade`. The service then sets the fade's target on the driver of the next headset,
-  which keeps it until that headset can take it.
+  which keeps it until that headset can take it. A service whose driver changes ends the fade the
+  same way before it writes anything else, so the next headset gets the target, not the value the
+  fade had reached.
+- In simple mode the software part runs for the duration the device runs, which is at most 24
+  hours.
 
 In simple mode the device runs the hardware part of the simple curve, and the PC runs the software
 part on the same curve from the accept reply. On `completed` the software part ends on its target,
