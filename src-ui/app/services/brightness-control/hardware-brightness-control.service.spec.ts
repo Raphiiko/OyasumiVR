@@ -95,17 +95,38 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
     expect(h.service.brightness).toBe(80);
   });
 
-  it('keeps a pending request when the Frame takes over from a Beyond during the delay', async () => {
+  it('picks the paired Frame before its first report, over a connected Beyond', async () => {
     const h = await setup(null, async (command) => command === 'bigscreen_beyond_is_connected');
-    expect(await firstValueFrom(h.service.driverIsAvailable)).toBe(true);
+    await settle();
+    expect(h.service.activeDriver).toBe(h.service.driverSteamFrame);
+    expect(await firstValueFrom(h.service.driverIsAvailable)).toBe(false);
+  });
+
+  it('sends a value set before the first report once the Frame reports', async () => {
+    const h = await setup(null);
+    vi.mocked(invoke).mockImplementation(async (command, args) =>
+      command === 'steam_frame_set_brightness' ? (args as { percentage: number }).percentage : false
+    );
+    await h.service.setBrightness(80);
+    expect(h.writes()).toEqual([]);
     h.report(40);
     await settle();
-    vi.mocked(invoke).mockImplementation((command) =>
-      command === 'steam_frame_set_brightness' ? new Promise(() => {}) : Promise.resolve(true)
-    );
-    void h.service.setBrightness(80);
-    await new Promise((resolve) => setTimeout(resolve, 700));
+    expect(h.writes()).toEqual([
+      ['steam_frame_set_brightness', { pairingId: 'p', percentage: 80 }],
+    ]);
     expect(h.service.brightness).toBe(80);
+  });
+
+  it('drops a value that waited for the Frame longer than two minutes', async () => {
+    const h = await setup(null);
+    await h.service.setBrightness(80);
+    const now = Date.now();
+    vi.spyOn(Date, 'now').mockReturnValue(now + 120_001);
+    h.report(40);
+    vi.mocked(Date.now).mockRestore();
+    await settle();
+    expect(h.writes()).toEqual([]);
+    expect(h.service.brightness).toBe(40);
   });
 
   it('writes a bound the cache shows only because it clamped the report', async () => {
@@ -164,6 +185,21 @@ describe('simple brightness following a Steam Frame', () => {
     expect(s.service.brightness).toBe(10);
     expect(s.software.setBrightness).not.toHaveBeenCalled();
     expect(h.writes()).toEqual([]);
+  });
+
+  it('gives a paired Frame its part of a value set before the first report', async () => {
+    const h = await setup(null);
+    const s = await simple(h.service, 100);
+    vi.mocked(invoke).mockImplementation(async (command, args) =>
+      command === 'steam_frame_set_brightness' ? (args as { percentage: number }).percentage : false
+    );
+    await s.service.setBrightness(60);
+    expect(s.software.brightness).toBe(100);
+    expect(h.writes()).toEqual([]);
+    h.report(40);
+    await settle();
+    expect(h.writes()).toHaveLength(1);
+    expect(s.software.brightness).toBe(100);
   });
 
   it('derives a report that arrived before simple mode started', async () => {

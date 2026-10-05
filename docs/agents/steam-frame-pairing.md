@@ -284,13 +284,15 @@ sequenceDiagram
 - The core keeps the last snapshot in the connection state as `brightness`, updates its percentage
   from each reply, and clears it while not connected.
 
-On the PC, `SteamFrameHardwareBrightnessControlDriver` is available while the paired Frame is the
-active OpenVR HMD, its connection is `connected`, and the report says `supported`. It keeps one
-command in flight and replaces a waiting one with the newest value. Its reports reach the hardware
-brightness cache without a write, and simple mode derives its value from them. Transitions run
-through the PC loop, so each step waits for the helper's reply. The HMD connect automation runs at once. For a paired Frame that has not
-reported yet, it runs once more after the first report, unless another brightness automation ran
-in the meantime.
+On the PC, `SteamFrameHardwareBrightnessControlDriver` matches while the paired Frame is the active
+OpenVR HMD, so the hardware brightness service picks it before the Frame can take a set. It is
+available while the connection is `connected` and the report says `supported`. It keeps one command
+in flight and replaces a waiting one with the newest value. A value set while the Frame cannot take
+it waits and goes out once the Frame reports, unless it waited longer than two minutes. Its reports
+reach the hardware brightness cache without a write, and simple mode derives its value from them.
+Simple mode gives every matching driver its hardware part, so a paired Frame that has not reported
+yet gets that part once it reports. Transitions run through the PC loop, so each step waits for the
+helper's reply.
 
 ## Color temperature
 
@@ -315,9 +317,10 @@ command in flight and replaces a waiting one with the newest value. Reports reac
 without a write, and a set to the shown Kelvin writes when `exact` is false. The driver also matches
 an allowlisted Frame model without that path and drops its sets then, so the SteamVR color gain
 driver never writes the PC's own gains while a Frame is the active HMD. The driver keeps the newest
-value set before the paired Frame's first report, such as the HMD connect automation's, and sends it
-with that report. `CCTControlService` hands every set to the matching driver, and a driver with
-`pushesCctChanges` owns the shown value. Transitions set their target in one command.
+value set while the paired Frame cannot take it, such as the HMD connect automation's, and sends it
+once the Frame reports, unless it waited longer than two minutes. `CCTControlService` hands every
+set to the matching driver, and a driver with `pushesCctChanges` owns the shown value. Transitions
+set their target in one command.
 
 ## Fades
 
