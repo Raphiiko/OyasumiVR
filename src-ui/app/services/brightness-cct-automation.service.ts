@@ -20,10 +20,8 @@ import {
   startWith,
   switchMap,
   take,
-  takeUntil,
   tap,
   timeout,
-  timer,
 } from 'rxjs';
 import { CancellableTask } from '../utils/cancellable-task';
 import { EventLogService } from './event-log.service';
@@ -44,9 +42,6 @@ import { listen } from '@tauri-apps/api/event';
 import { OpenVRService } from './openvr.service';
 import { invoke } from '@tauri-apps/api/core';
 
-/** How long the HMD connect automation waits for a brightness driver to become available. */
-const HMD_CONNECT_DRIVER_WAIT_MS = 10000;
-
 @Injectable({
   providedIn: 'root',
 })
@@ -63,8 +58,6 @@ export class BrightnessCctAutomationService {
   private autoSunriseTime?: string;
   private sunriseSunsetLookup?: Promise<[string, string]>;
   private sleepMode: boolean = false;
-  /** Counts brightness automation runs, so a delayed rerun can tell that another one ran. */
-  private brightnessAutomationRuns = 0;
 
   public readonly anyBrightnessTransitionActive = this.lastActivatedBrightnessTransition.pipe(
     switchMap((transition) =>
@@ -435,10 +428,7 @@ export class BrightnessCctAutomationService {
       (c) => c.BRIGHTNESS_AUTOMATIONS
     );
 
-    if (brightnessAutomation) {
-      const driverAvailable = await firstValueFrom(
-        this.hardwareBrightnessControl.driverIsAvailable
-      );
+    if (brightnessAutomation)
       this.onAutomationTrigger(
         brightnessAutomation,
         config[brightnessAutomation],
@@ -447,35 +437,8 @@ export class BrightnessCctAutomationService {
         true,
         false
       );
-
-      // a brightness driver that becomes available shortly after the HMD connects reruns it
-      const runs = this.brightnessAutomationRuns;
-      if (!driverAvailable) {
-        this.hardwareBrightnessControl.driverIsAvailable
-          .pipe(filter(Boolean), take(1), takeUntil(timer(HMD_CONNECT_DRIVER_WAIT_MS)))
-          .subscribe(() => this.rerunHmdConnectBrightness(runs));
-      }
-    }
     if (cctAutomation)
       this.onAutomationTrigger(cctAutomation, config[cctAutomation], true, false, false, true);
-  }
-
-  /** Applies the brightness automation that fits now, unless another one ran since `runs`. */
-  private async rerunHmdConnectBrightness(runs: number) {
-    if (runs !== this.brightnessAutomationRuns) return;
-    const { brightnessAutomation } = await this.determineHmdConnectAutomations();
-    const config = await firstValueFrom(this.automationConfigService.configs).then(
-      (c) => c.BRIGHTNESS_AUTOMATIONS
-    );
-    if (!brightnessAutomation || runs !== this.brightnessAutomationRuns) return;
-    this.onAutomationTrigger(
-      brightnessAutomation,
-      config[brightnessAutomation],
-      true,
-      false,
-      true,
-      false
-    );
   }
 
   private async onAutomationTrigger(
@@ -488,7 +451,6 @@ export class BrightnessCctAutomationService {
   ) {
     // Stop if the automation is disabled
     if (!config.enabled || (!config.changeBrightness && !config.changeColorTemperature)) return;
-    if (config.changeBrightness && runBrightness) this.brightnessAutomationRuns++;
     // Determine the log reason
     const eventLogReasonMap = {
       SLEEP_MODE_ENABLE: 'SLEEP_MODE_ENABLE',
@@ -536,8 +498,9 @@ export class BrightnessCctAutomationService {
       const advancedMode = await firstValueFrom(this.automationConfigService.configs).then(
         (c) => c.BRIGHTNESS_AUTOMATIONS.advancedMode
       );
-      const hardwareBrightnessAvailable =
-        advancedMode && (await firstValueFrom(this.hardwareBrightnessControl.driverIsAvailable));
+      // the headset's driver keeps a value until the headset can take it
+      const usesHardwareBrightness =
+        advancedMode && this.hardwareBrightnessControl.activeDriver !== null;
       if (!forceInstant && config.transition) {
         const tasks: CancellableTask[] = await (async () => {
           if (advancedMode) {
@@ -550,7 +513,7 @@ export class BrightnessCctAutomationService {
                 }
               ),
             ];
-            if (hardwareBrightnessAvailable) {
+            if (usesHardwareBrightness) {
               tasks.push(
                 this.hardwareBrightnessControl.transitionBrightness(
                   config.hardwareBrightness,
@@ -583,7 +546,7 @@ export class BrightnessCctAutomationService {
           await this.softwareBrightnessControl.setBrightness(config.softwareBrightness, {
             logReason,
           });
-          if (hardwareBrightnessAvailable) {
+          if (usesHardwareBrightness) {
             await this.hardwareBrightnessControl.setBrightness(config.hardwareBrightness, {
               logReason,
             });
@@ -603,7 +566,7 @@ export class BrightnessCctAutomationService {
             transition: config.transition,
             transitionTime: config.transitionTime,
           });
-          if (hardwareBrightnessAvailable) {
+          if (usesHardwareBrightness) {
             this.eventLog.logEvent({
               type: 'hardwareBrightnessChanged',
               reason: eventLogReason,

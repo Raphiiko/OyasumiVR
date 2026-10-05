@@ -46,10 +46,10 @@ export class HardwareBrightnessControlService {
   public readonly driverValveIndex: ValveIndexHardwareBrightnessControlDriver;
   public readonly driverBigscreenBeyond: BigscreenBeyondHardwareBrightnessControlDriver;
   public readonly driverSteamFrame: SteamFrameHardwareBrightnessControlDriver;
-  /** The driver that was available last; it stays set after that driver becomes unavailable. */
+  /** The driver that matched last; it stays set after that driver stops matching. */
   public lastActiveDriver: HardwareBrightnessControlDriver | null = null;
 
-  /** The driver in use now; null while none is available. */
+  /** The driver that matches the active HMD, also before it can write; null while none does. */
   get activeDriver(): HardwareBrightnessControlDriver | null {
     return this.driver.value;
   }
@@ -102,12 +102,12 @@ export class HardwareBrightnessControlService {
       steamFrames.connections$
     );
     const driverList = [this.driverValveIndex, this.driverSteamFrame, this.driverBigscreenBeyond];
-    combineLatest(driverList.map((driver) => driver.isAvailable()))
+    combineLatest(driverList.map((driver) => driver.matches()))
       .pipe(distinctUntilChanged((a, b) => isEqual(a, b)))
-      .subscribe((drivers) => {
-        const availableDriver = driverList.find((_, i) => drivers[i]);
-        if (availableDriver) this.lastActiveDriver = availableDriver;
-        this.driver.next(availableDriver ?? null);
+      .subscribe((matches) => {
+        const matchingDriver = driverList.find((_, i) => matches[i]);
+        if (matchingDriver) this.lastActiveDriver = matchingDriver;
+        this.driver.next(matchingDriver ?? null);
       });
     // show what the device reports, without writing it back
     this.driver

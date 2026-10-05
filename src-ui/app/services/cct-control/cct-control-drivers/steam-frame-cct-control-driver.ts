@@ -16,6 +16,7 @@ import {
   SteamFrameCct,
   SteamFrameConnectionState,
   SteamFramePairing,
+  STEAM_FRAME_WAITING_SET_MS,
 } from '../../../models/steam-frame';
 import type { OpenVRService, OpenVRStatus } from '../../openvr.service';
 import type { SteamFramePairingService } from '../../steam-frame/steam-frame-pairing.service';
@@ -49,8 +50,8 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
   private exact = true;
   /** Set while a command runs; a newer value waits in `pending` and replaces an older one. */
   private sending = false;
-  /** Also holds a value set before the paired Frame's first report, which goes out with it. */
-  private pending: { kelvin: number; pairingId: string } | null = null;
+  /** Also holds a value set while the paired Frame cannot take it, which goes out once it can. */
+  private pending: { kelvin: number; pairingId: string; setAt: number } | null = null;
 
   constructor(
     openvr: Pick<OpenVRService, 'status' | 'devices'>,
@@ -101,7 +102,7 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
     if (hmd.kind !== 'frame' || !hmd.pairingId) return;
     // while a command runs, `shown` holds the request, not the headset's value
     if (!this.sending && hmd.cct && kelvin === this.shown && this.exact) return;
-    this.pending = { kelvin, pairingId: hmd.pairingId };
+    this.pending = { kelvin, pairingId: hmd.pairingId, setAt: Date.now() };
     if (!hmd.cct) return;
     this.show(kelvin);
     if (!this.sending) void this.sendPending();
@@ -169,12 +170,13 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
     }
     if (hmd.kind !== 'frame' || !hmd.cct || this.sending) return;
 
-    // a value set before the first report goes out with it
-    if (this.pending) {
+    // a value set while the Frame could not take it goes out now, unless it waited too long
+    if (this.pending && Date.now() - this.pending.setAt <= STEAM_FRAME_WAITING_SET_MS) {
       this.show(this.pending.kelvin);
       void this.sendPending();
       return;
     }
+    this.pending = null;
     this.adopt(hmd.cct);
   }
 
