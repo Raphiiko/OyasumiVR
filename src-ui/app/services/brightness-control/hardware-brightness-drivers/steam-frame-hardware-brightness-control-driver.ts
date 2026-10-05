@@ -148,13 +148,17 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
     return this.available;
   }
 
-  /** A fade the active Frame's helper runs, or null while no Frame reports. Drops a waiting set. */
+  /**
+   * A fade the paired Frame's helper runs, or null while no paired Frame is the active HMD. A Frame
+   * that reports too late for the fade gets its target as a set instead. Drops a waiting set.
+   */
   override fade(options: HardwareBrightnessFadeOptions): SteamFrameBrightnessFade | null {
-    if (!this.frame) return null;
+    const hmd = this.currentHmd;
+    if (hmd.kind !== 'frame') return null;
     // a waiting set would go out after the fade and supersede it
     this.pending = null;
     const request: SteamFrameFadeRequest = {
-      pairingId: this.frame.pairingId,
+      pairingId: hmd.pairingId,
       control: 'brightness',
       target: this.softwarePercentageToHardwarePercentage(options.target),
       durationMs: options.durationMs,
@@ -165,7 +169,14 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
       fadeEnded$: this.fadeEnded,
       activePairing$: this.activePairing,
     };
-    return new SteamFrameBrightnessFade(options.shownTarget, request, frames, options.onAccept);
+    const setTarget = () => void this.setBrightnessPercentage(options.target);
+    return new SteamFrameBrightnessFade(
+      options.shownTarget,
+      request,
+      frames,
+      options.onAccept,
+      setTarget
+    );
   }
 
   override matches(): Observable<boolean> {

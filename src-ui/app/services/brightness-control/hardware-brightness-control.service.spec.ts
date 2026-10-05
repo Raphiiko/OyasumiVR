@@ -248,6 +248,40 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
     expect(h.service.brightness).toBe(80);
   });
 
+  it('runs a fade at full length when the Frame reports before its planned end', async () => {
+    const h = await setup(null);
+    h.service.transitionBrightness(80, 10_000);
+    await settle();
+    const fades = () => vi.mocked(invoke).mock.calls.filter(([c]) => c === 'steam_frame_fade');
+    expect(fades()).toEqual([]);
+    h.report(40);
+    await settle();
+    expect(fades()).toEqual([
+      [
+        'steam_frame_fade',
+        expect.objectContaining({
+          request: expect.objectContaining({ target: 80, durationMs: 10_000 }),
+        }),
+      ],
+    ]);
+  });
+
+  it('sets the target of a fade the Frame reported too late for', async () => {
+    const h = await setup(null);
+    vi.mocked(invoke).mockImplementation(async (command, args) =>
+      command === 'steam_frame_set_brightness' ? (args as { percentage: number }).percentage : false
+    );
+    const task = h.service.transitionBrightness(80, 20);
+    await firstValueFrom(task.onComplete);
+    h.report(40);
+    await settle();
+    expect(vi.mocked(invoke).mock.calls.filter(([c]) => c === 'steam_frame_fade')).toEqual([]);
+    expect(h.writes()).toEqual([
+      ['steam_frame_set_brightness', { pairingId: 'p', percentage: 80 }],
+    ]);
+    expect(h.service.brightness).toBe(80);
+  });
+
   it('drops a value that waited for the Frame longer than two minutes', async () => {
     const h = await setup(null);
     await h.service.setBrightness(80);
