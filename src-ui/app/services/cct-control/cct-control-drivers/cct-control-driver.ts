@@ -7,8 +7,6 @@ export type CctFade = DeviceFade & { readonly targetCCT: number };
 export abstract class CctControlDriver {
   /** Names the driver in the log. */
   abstract readonly name: string;
-  /** True when the driver sets a value in one command, so the service runs no transition steps. */
-  readonly skipsTransitions: boolean = false;
   /**
    * True when the driver sends every color temperature change the device makes. OyasumiVR shows
    * that value instead of writing its stored one, and leaves it to skip a set it does not need.
