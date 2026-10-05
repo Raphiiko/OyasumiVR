@@ -399,6 +399,22 @@ describe('CCTControlService with a Steam Frame', () => {
     expect(h.writes().at(-1)).toBe(1800);
   });
 
+  it('keeps a helper fade when the same Frame returns after SteamVR restarts', async () => {
+    const h = await setup(FRAME);
+    h.report(snapshot(6600));
+    await settle();
+    const task = h.service.transitionCCT(1800, 10000);
+    await settle();
+    h.status.next('STOPPED');
+    await settle();
+    h.status.next('INITIALIZED');
+    await settle();
+    expect(h.calls('steam_frame_cancel_fade')).toEqual([]);
+    expect(h.frameWrites()).toEqual([]);
+    expect(await firstValueFrom(h.service.activeTransition)).toBe(task);
+    task.cancel();
+  });
+
   it('stops a running fade when a transition asks for the value the Frame holds', async () => {
     const h = await setup(FRAME);
     h.report(snapshot(6600));
