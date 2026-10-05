@@ -21,10 +21,7 @@ import {
 import type { OpenVRService, OpenVRStatus } from '../../openvr.service';
 import { SteamFrameCctFade } from '../../steam-frame/steam-frame-fade-task';
 import type { SteamFramePairingService } from '../../steam-frame/steam-frame-pairing.service';
-import { CctControlDriver } from './cct-control-driver';
-
-/** The longest fade the helper accepts. */
-const MAX_FADE_MS = 24 * 60 * 60 * 1000;
+import { CctControlDriver, CctFadeOptions } from './cct-control-driver';
 
 /** A Frame report that carries a value. */
 type FrameCct = SteamFrameCct & { kelvin: number };
@@ -156,7 +153,7 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
    * already holds the value. A Frame that reports too late for the fade gets its target as a set
    * instead. Drops a waiting set.
    */
-  override fade(kelvin: number, durationMs: number): SteamFrameCctFade | null {
+  override fade({ target: kelvin, durationMs }: CctFadeOptions): SteamFrameCctFade | null {
     const hmd = this.currentHmd;
     if (hmd.kind !== 'frame' || !hmd.pairingId) return null;
     // the helper would hold a fade to the value it already has for the whole duration
@@ -169,7 +166,7 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
         pairingId: hmd.pairingId,
         control: 'cct',
         target: kelvin,
-        durationMs: Math.min(durationMs, MAX_FADE_MS),
+        durationMs,
       },
       {
         connections$: this.steamFrames.connections$,

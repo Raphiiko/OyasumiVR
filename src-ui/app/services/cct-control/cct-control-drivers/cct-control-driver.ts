@@ -1,6 +1,12 @@
 import { Observable } from 'rxjs';
 import { DeviceFade } from '../../../utils/device-fade';
 
+export interface CctFadeOptions {
+  /** Color temperature in Kelvin. */
+  target: number;
+  durationMs: number;
+}
+
 /** A color temperature fade the device runs; `targetCCT` is the value the UI shows as the target. */
 export type CctFade = DeviceFade & { readonly targetCCT: number };
 
@@ -30,7 +36,7 @@ export abstract class CctControlDriver {
   abstract setCCT(kelvin: number): Promise<void>;
 
   /** A fade the device runs itself, or null when it cannot run one now. */
-  fade(_kelvin: number, _durationMs: number): CctFade | null {
+  fade(_options: CctFadeOptions): CctFade | null {
     return null;
   }
 }
