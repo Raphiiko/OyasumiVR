@@ -270,6 +270,10 @@ $background-color: var(--color-surface-2);
   }
 }
 
+.vrc-status .status-dot {
+  height: 0.75em;
+}
+
 .brightness-advanced {
   span:first-of-type {
     margin-left: 0.25em;
