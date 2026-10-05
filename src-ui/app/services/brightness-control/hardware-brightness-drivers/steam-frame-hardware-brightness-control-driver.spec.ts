@@ -158,14 +158,18 @@ describe('SteamFrameHardwareBrightnessControlDriver', () => {
     expect(h.updates.at(-1)).toBe(25);
   });
 
-  it('creates a fade for the reporting Frame, in hardware percent', async () => {
+  it('creates a fade for the paired Frame that starts with its report, in hardware percent', async () => {
     const h = setup();
     const options = { target: 200, durationMs: 1000, shownTarget: 200 };
+    h.devices.next([{ class: 'HMD', serialNumber: 'OTHER' } as OVRDevice]);
     expect(h.driver.fade(options)).toBeNull();
-    h.report(brightness(40));
+    h.devices.next([{ class: 'HMD', serialNumber: SERIAL } as OVRDevice]);
     const fade = h.driver.fade(options)!;
     vi.mocked(invoke).mockResolvedValue(undefined);
     void fade.start();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(invoke).not.toHaveBeenCalled();
+    h.report(brightness(40));
     await new Promise((resolve) => setTimeout(resolve, 0));
     expect(invoke).toHaveBeenCalledWith('steam_frame_fade', {
       pairingId: 'pairing-1',

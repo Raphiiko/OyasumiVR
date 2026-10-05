@@ -47,6 +47,9 @@ export interface SteamFrameFadeRequest {
  * A fade the helper runs. It completes on outcome `completed`, and at its end time while the
  * helper connection is down. Every other outcome cancels it, and so does another HMD becoming
  * the active one. Cancelling it from outside cancels the fade on the helper.
+ *
+ * A Frame that does not report yet gets the fade at full length once it reports. When that takes
+ * past the fade's planned end, the task completes and runs `onLate` instead.
  */
 export class SteamFrameFadeTask extends DeviceFade {
   readonly operation = uuidv4();
@@ -58,7 +61,9 @@ export class SteamFrameFadeTask extends DeviceFade {
     private readonly request: SteamFrameFadeRequest,
     private readonly frames: SteamFrameFadeSource,
     /** Runs once the helper accepts the fade. */
-    private readonly onAccept?: () => void
+    private readonly onAccept?: () => void,
+    /** Runs when the Frame first reports after the fade's planned end, so it never started. */
+    private readonly onLate?: () => void
   ) {
     super();
     this.pairingId = request.pairingId;
@@ -66,6 +71,24 @@ export class SteamFrameFadeTask extends DeviceFade {
   }
 
   private async run(): Promise<void> {
+    const handoff = this.cancelWhenDeviceGone();
+    try {
+      // wait for a report, until the fade would have ended
+      const late = timer(this.request.durationMs).pipe(map(() => false));
+      const reported = await firstValueFrom(race(this.reported(), late, this.cancelled()));
+      if (reported === null) return;
+      if (!reported) {
+        this.end = 'completed';
+        this.onLate?.();
+        return;
+      }
+      await this.runFade();
+    } finally {
+      handoff.unsubscribe();
+    }
+  }
+
+  private async runFade(): Promise<void> {
     // listen before sending, so a short fade's outcome is not lost
     const outcome = new ReplaySubject<SteamFrameFadeEnd>(1);
     const subscription = this.frames.fadeEnded$
@@ -74,7 +97,6 @@ export class SteamFrameFadeTask extends DeviceFade {
         map((e) => e.outcome)
       )
       .subscribe(outcome);
-    const handoff = this.cancelWhenDeviceGone();
     try {
       const error = await this.send();
       if (this.isCancelled()) {
@@ -96,7 +118,6 @@ export class SteamFrameFadeTask extends DeviceFade {
       this.finish(end);
     } finally {
       subscription.unsubscribe();
-      handoff.unsubscribe();
     }
   }
 
@@ -146,6 +167,20 @@ export class SteamFrameFadeTask extends DeviceFade {
     return this.frames.connections$.pipe(map((states) => states[this.request.pairingId]));
   }
 
+  /** The report for this fade's control; a helper update keeps `connected` and clears it. */
+  private report(state: SteamFrameConnectionState | undefined) {
+    if (state?.status !== 'connected') return null;
+    return this.request.control === 'brightness' ? state.brightness : state.cct;
+  }
+
+  private reported(): Observable<true> {
+    return this.connection().pipe(
+      filter((state) => !!this.report(state)),
+      take(1),
+      map(() => true as const)
+    );
+  }
+
   /**
    * Completes at the end time while the connection is down or reports nothing. After that, a report
    * without this fade means the helper ended it meanwhile.
@@ -154,13 +189,7 @@ export class SteamFrameFadeTask extends DeviceFade {
     let wasDown = false;
     return this.connection().pipe(
       switchMap((state): Observable<SteamFrameFadeEnd> => {
-        // a helper update keeps the status connected and only clears the reports
-        const report =
-          state?.status !== 'connected'
-            ? null
-            : this.request.control === 'brightness'
-              ? state.brightness
-              : state.cct;
+        const report = this.report(state);
         if (!report) {
           wasDown = true;
           return timer(Math.max(0, endsAt - Date.now())).pipe(map(() => 'completed' as const));
