@@ -373,6 +373,41 @@ describe('simple brightness fading a Steam Frame', () => {
     expect(h.hardware.setBrightness).toHaveBeenLastCalledWith(9, expect.anything());
   });
 
+  it('keeps the fade when the same driver returns after a gap without any', async () => {
+    const h = await frame();
+    const driver = h.hardware.activeDriver;
+    h.hardware.onDriverChange.next();
+    const task = h.service.transitionBrightness(0, 10000);
+    await wait();
+    h.hardware.activeDriver = null;
+    h.hardware.onDriverChange.next();
+    h.hardware.activeDriver = driver;
+    h.hardware.onDriverChange.next();
+    await wait();
+    expect(vi.mocked(invoke).mock.calls.map(([name]) => name)).not.toContain(
+      'steam_frame_cancel_fade'
+    );
+    expect(await firstValueFrom(h.service.activeTransition)).toBe(task);
+    task.cancel();
+  });
+
+  it('gives the target to a driver that becomes available before the driver change', async () => {
+    const h = await frame();
+    h.hardware.onDriverChange.next();
+    h.service.transitionBrightness(0, 10000);
+    await wait();
+    h.hardware.driverIsAvailable.next(false);
+    const beyond = { pushesBrightnessChanges: false, getBrightnessBounds: () => [9, 125] };
+    h.hardware.activeDriver = beyond as never;
+    h.hardware.lastActiveDriver = beyond as never;
+    h.hardware.driverIsAvailable.next(true);
+    h.hardware.onDriverChange.next();
+    await wait();
+    expect(vi.mocked(invoke).mock.calls.map(([name]) => name)).toContain('steam_frame_cancel_fade');
+    expect(h.service.brightness).toBe(0);
+    expect(h.hardware.setBrightness).toHaveBeenLastCalledWith(9, expect.anything());
+  });
+
   it('sets the target, software part included, when the helper refuses the fade', async () => {
     const h = await frame();
     const accept = vi.mocked(invoke).getMockImplementation()!;
