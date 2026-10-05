@@ -26,6 +26,12 @@ async function setup(advancedMode = false, pushesBrightnessChanges = false) {
     setBrightness: vi.fn<Dependencies[1]['setBrightness']>().mockResolvedValue(undefined),
     cancelActiveTransition: vi.fn(),
   };
+  // a driver that does not push matches exactly while it is available
+  if (!pushesBrightnessChanges) {
+    hardware.driverIsAvailable.subscribe(
+      (available) => (hardware.activeDriver = available ? { pushesBrightnessChanges: false } : null)
+    );
+  }
   const software = {
     brightness: 100,
     setBrightness: vi.fn<Dependencies[2]['setBrightness']>(async (percentage: number) => {
@@ -198,7 +204,10 @@ describe('simple brightness with a device that reports its brightness', () => {
 
   it('writes nothing when the driver becomes available or unavailable', async () => {
     const h = await setup(false, true);
+    const frame = h.hardware.activeDriver;
+    h.hardware.activeDriver = null;
     await h.service.setBrightness(40);
+    h.hardware.activeDriver = frame;
     h.software.setBrightness.mockClear();
     h.hardware.driverIsAvailable.next(true);
     await settle();

@@ -34,7 +34,7 @@ import { AppSettingsService } from '../app-settings.service';
 import { AppSettings } from '../../models/settings';
 import { clamp } from '../../utils/number-utils';
 import { SteamFrameHardwareBrightnessControlDriver } from './hardware-brightness-drivers/steam-frame-hardware-brightness-control-driver';
-import { SteamFramePairingService } from '../steam-frame-pairing.service';
+import { SteamFramePairingService } from '../steam-frame/steam-frame-pairing.service';
 
 export interface AdoptedBrightness {
   percentage: number;
@@ -52,10 +52,10 @@ export class HardwareBrightnessControlService {
   public readonly driverSteamVRAnalogGain: SteamVRAnalogGainHardwareBrightnessControlDriver;
   /** True while a driver made for the connected headset is available. */
   public readonly headsetDriverIsAvailable: Observable<boolean>;
-  /** The driver that was available last; it stays set after that driver becomes unavailable. */
+  /** The driver that matched last; it stays set after that driver stops matching. */
   public lastActiveDriver: HardwareBrightnessControlDriver | null = null;
 
-  /** The driver in use now; null while none is available. */
+  /** The driver for the active HMD; null while none matches. */
   get activeDriver(): HardwareBrightnessControlDriver | null {
     return this.driver.value;
   }
@@ -130,9 +130,9 @@ export class HardwareBrightnessControlService {
     );
     // the generic SteamVR analog gain driver only serves headsets that no driver above claims
     const driverList = [...headsetDrivers, this.driverSteamVRAnalogGain];
-    combineLatest(driverList.map((driver) => driver.isAvailable()))
+    combineLatest(driverList.map((driver) => driver.matches()))
       .pipe(distinctUntilChanged((a, b) => isEqual(a, b)))
-      .subscribe((drivers) => this.selectDriver(driverList.find((_, i) => drivers[i]) ?? null));
+      .subscribe((matches) => this.selectDriver(driverList.find((_, i) => matches[i]) ?? null));
     // the cached percentage maps to a different gain once the range changes, so write it again
     this.driverSteamVRAnalogGain.rangeChanges.subscribe(() => {
       if (this.driver.value !== this.driverSteamVRAnalogGain) return;

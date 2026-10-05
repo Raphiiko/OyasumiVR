@@ -1,7 +1,7 @@
 import '@angular/compiler';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { SteamFramePairingService } from './steam-frame-pairing.service';
-import { DMKnownDevice } from '../models/device-manager';
+import { DMKnownDevice } from '../../models/device-manager';
 
 const { invoke, store } = vi.hoisted(() => ({
   invoke: vi.fn(),
@@ -10,9 +10,12 @@ const { invoke, store } = vi.hoisted(() => ({
 vi.mock('@tauri-apps/api/core', () => ({ invoke }));
 vi.mock('@tauri-apps/api/event', () => ({ listen: vi.fn(async () => () => {}) }));
 vi.mock('@tauri-apps/plugin-log', () => ({ info: vi.fn(), error: vi.fn() }));
-vi.mock('../globals', () => ({ SETTINGS_STORE: store, SETTINGS_KEY_STEAM_FRAME_PAIRING: 'FRAME' }));
-vi.mock('./device-manager.service', () => ({ DeviceManagerService: class {} }));
-vi.mock('../utils/secrets', () => ({
+vi.mock('../../globals', () => ({
+  SETTINGS_STORE: store,
+  SETTINGS_KEY_STEAM_FRAME_PAIRING: 'FRAME',
+}));
+vi.mock('../device-manager.service', () => ({ DeviceManagerService: class {} }));
+vi.mock('../../utils/secrets', () => ({
   protectSecret: async (plain: string) => `protected:${plain}`,
   unprotectSecret: async (stored: string) => stored.replace('protected:', ''),
 }));

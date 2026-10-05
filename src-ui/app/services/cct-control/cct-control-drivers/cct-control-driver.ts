@@ -13,18 +13,17 @@ export abstract class CctControlDriver {
   /** Values the device reported or applied. OyasumiVR shows them and never writes them back. */
   readonly cctUpdates?: Observable<number>;
 
-  /** Whether the active HMD belongs to this driver, including while the driver cannot write yet. */
+  /**
+   * Whether the active HMD belongs to this driver. It gets every set and keeps or drops one it
+   * cannot send yet.
+   */
   abstract matches(): Observable<boolean>;
 
   /**
-   * Whether the driver can write now. OyasumiVR reads it only while `matches` is true, and writes
-   * its stored value when it turns true, unless the driver pushes its own.
+   * Whether the device is connected, for the UI. OyasumiVR writes its stored value when it turns
+   * true, unless the driver pushes its own.
    */
   abstract isAvailable(): Observable<boolean>;
 
-  /**
-   * Called while the driver matches, also before it is available. The driver drops or keeps a
-   * value it cannot apply yet.
-   */
   abstract setCCT(kelvin: number): Promise<void>;
 }
