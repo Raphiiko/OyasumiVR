@@ -402,7 +402,8 @@ keep the PC transition. A `DeviceFade` ends as `completed`, `changedOnDevice`, `
   sends `cancelFade`. The service then sets the fade's target on the driver of the next headset,
   which keeps it until that headset can take it. A service whose driver changes ends the fade the
   same way before it writes anything else, so the next headset gets the target, not the value the
-  fade had reached.
+  fade had reached. A gap without any driver, such as a SteamVR restart, followed by the same driver
+  is no change, and the fade keeps running.
 - In simple mode the software part runs for the duration the device runs, which is at most 24
   hours.
 
