@@ -1,5 +1,7 @@
 /** Removes the helper and every recorded PC key line, run on the headset itself. */
 export const STEAM_FRAME_UNINSTALL_COMMAND = 'bash ~/.local/share/oyasumivr_helper/uninstall';
+/** How long a value set while the paired Frame cannot take it still goes out once it can. */
+export const STEAM_FRAME_WAITING_SET_MS = 120_000;
 
 export interface SteamFrameIdentity {
   serial: string;

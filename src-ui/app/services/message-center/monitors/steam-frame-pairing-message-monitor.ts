@@ -3,7 +3,7 @@ import { combineLatest } from 'rxjs';
 import { MessageMonitor } from './message-monitor';
 import { DMKnownDevice } from '../../../models/device-manager';
 import { DeviceManagerService } from '../../device-manager.service';
-import { SteamFramePairingService } from '../../steam-frame-pairing.service';
+import { SteamFramePairingService } from '../../steam-frame/steam-frame-pairing.service';
 
 /** Invites pairing for each connected Steam Frame that has no completed pairing. */
 export class SteamFramePairingMessageMonitor extends MessageMonitor {

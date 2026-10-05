@@ -4,8 +4,8 @@ import { listen } from '@tauri-apps/api/event';
 import { error, info } from '@tauri-apps/plugin-log';
 import { BehaviorSubject } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
-import { SETTINGS_KEY_STEAM_FRAME_PAIRING, SETTINGS_STORE } from '../globals';
-import { DMKnownDevice } from '../models/device-manager';
+import { SETTINGS_KEY_STEAM_FRAME_PAIRING, SETTINGS_STORE } from '../../globals';
+import { DMKnownDevice } from '../../models/device-manager';
 import {
   SteamFrameCandidate,
   SteamFrameCleanupMode,
@@ -22,10 +22,10 @@ import {
   SteamFrameSetupResult,
   SteamFrameSetupStage,
   SteamFrameUnpairFailure,
-} from '../models/steam-frame';
-import { protectSecret, unprotectSecret } from '../utils/secrets';
-import { ModalService } from './modal.service';
-import { DeviceManagerService } from './device-manager.service';
+} from '../../models/steam-frame';
+import { protectSecret, unprotectSecret } from '../../utils/secrets';
+import { ModalService } from '../modal.service';
+import { DeviceManagerService } from '../device-manager.service';
 
 type SetupStageEvent = { attemptId: string; stage: SteamFrameSetupStage | 'installed' };
 
@@ -141,7 +141,7 @@ export class SteamFramePairingService {
     // open the modal once; closing drops an idle flow
     if (this.modalService.isModalOpen('steam-frame-pairing')) return;
     const { SteamFramePairingModalComponent } =
-      await import('../components/steam-frame-pairing-modal/steam-frame-pairing-modal.component');
+      await import('../../components/steam-frame/steam-frame-pairing-modal/steam-frame-pairing-modal.component');
     this.modalService
       .addModal(SteamFramePairingModalComponent, undefined, {
         id: 'steam-frame-pairing',
