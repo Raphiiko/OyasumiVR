@@ -4,8 +4,6 @@ import { isEqual } from 'lodash';
 import {
   combineLatest,
   distinctUntilChanged,
-  filter,
-  firstValueFrom,
   map,
   Observable,
   ReplaySubject,
@@ -18,6 +16,7 @@ import {
   SteamFrameBrightness,
   SteamFrameConnectionState,
   SteamFramePairing,
+  STEAM_FRAME_WAITING_SET_MS,
 } from '../../../models/steam-frame';
 import { clamp } from '../../../utils/number-utils';
 import {
@@ -45,12 +44,14 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
   private readonly updates = new ReplaySubject<number>(1);
   override readonly brightnessUpdates = this.updates.asObservable();
   private readonly hmd: Observable<ActiveHmd>;
+  private readonly matching: Observable<boolean>;
   private readonly available: Observable<boolean>;
   private currentHmd: ActiveHmd = { kind: 'none' };
   private frame: { pairingId: string; brightness: SteamFrameBrightness } | null = null;
   /** Set while a command runs; a newer value waits in `pending` and replaces an older one. */
   private sending = false;
-  private pending: number | null = null;
+  /** Also holds a value set while the paired Frame cannot take it, which goes out once it can. */
+  private pending: { percentage: number; pairingId: string; setAt: number } | null = null;
 
   constructor(
     appSettings: Observable<AppSettings>,
@@ -64,6 +65,11 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
         this.activeHmd(status, devices, pairings, connections)
       ),
       distinctUntilChanged(isEqual),
+      shareReplay(1)
+    );
+    this.matching = this.hmd.pipe(
+      map((hmd) => hmd.kind === 'frame'),
+      distinctUntilChanged(),
       shareReplay(1)
     );
     this.available = this.hmd.pipe(
@@ -92,27 +98,31 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
   }
 
   async setBrightnessPercentage(percentage: number): Promise<void> {
-    this.pending = this.softwarePercentageToHardwarePercentage(percentage);
-    if (this.sending) return;
+    const hmd = this.currentHmd;
+    if (hmd.kind !== 'frame') return;
+    this.pending = { percentage, pairingId: hmd.pairingId, setAt: Date.now() };
+    if (!this.sending && this.frame) await this.sendPending();
+  }
+
+  private async sendPending() {
     this.sending = true;
 
-    // send the newest value until none waits
+    // send the newest value until none waits; a Frame that cannot take it keeps it waiting
     let applied: number | null = null;
     let sentTo: string | null = null;
-    while (this.pending !== null && this.frame) {
-      const target = this.pending;
+    while (this.pending && this.frame?.pairingId === this.pending.pairingId) {
+      const { percentage } = this.pending;
       this.pending = null;
       sentTo = this.frame.pairingId;
       applied = await invoke<number>('steam_frame_set_brightness', {
         pairingId: sentTo,
-        percentage: target,
+        percentage: this.softwarePercentageToHardwarePercentage(percentage),
       }).catch((e) => {
         warn(`[SteamFrameHardwareBrightnessControlDriver] Could not set brightness: ${e}`);
         return null;
       });
     }
     this.sending = false;
-    this.pending = null;
 
     // show what the active headset holds now; a reply from a Frame that stopped being active is stale
     const replyApplies = applied !== null && sentTo === this.frame?.pairingId;
@@ -124,21 +134,8 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
     return this.available;
   }
 
-  /**
-   * Waits for the first report of the paired Frame that is the active HMD. Null when no Frame is
-   * waiting for one; resolves false when that Frame stops being the active HMD first.
-   */
-  whenFrameReports(): Promise<boolean> | null {
-    const waiting = this.currentHmd;
-    if (waiting.kind !== 'frame' || this.frame) return null;
-    const isWaitingFrame = (hmd: ActiveHmd) =>
-      hmd.kind === 'frame' && hmd.pairingId === waiting.pairingId;
-    return firstValueFrom(
-      combineLatest([this.hmd, this.available]).pipe(
-        filter(([hmd, available]) => available || !isWaitingFrame(hmd)),
-        map(([hmd, available]) => available && isWaitingFrame(hmd))
-      )
-    );
+  override matches(): Observable<boolean> {
+    return this.matching;
   }
 
   private activeHmd(
@@ -163,12 +160,25 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
   /** Adopts each report, unless a command runs: then the requested value stays on screen. */
   private onHmd(hmd: ActiveHmd) {
     this.currentHmd = hmd;
+
+    // a waiting value belongs to the Frame it was set for
+    const pending = this.pending;
+    if (pending && (hmd.kind !== 'frame' || hmd.pairingId !== pending.pairingId)) {
+      this.pending = null;
+    }
     if (hmd.kind !== 'frame' || !this.usable(hmd.brightness)) {
       this.frame = null;
       return;
     }
     this.frame = { pairingId: hmd.pairingId, brightness: hmd.brightness };
     if (this.sending) return;
+
+    // a value set while the Frame could not take it goes out now, unless it waited too long
+    if (this.pending && Date.now() - this.pending.setAt <= STEAM_FRAME_WAITING_SET_MS) {
+      void this.sendPending();
+      return;
+    }
+    this.pending = null;
     const current = this.reportedPercentage();
     if (current !== null) this.updates.next(current);
   }
