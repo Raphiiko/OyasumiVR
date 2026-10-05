@@ -341,6 +341,20 @@ describe('CCTControlService with a Steam Frame', () => {
     expect(h.frameWrites()).toEqual([4500]);
   });
 
+  it('drops a value that waited for the Frame longer than two minutes', async () => {
+    const h = await setup(FRAME);
+    h.report(null);
+    await settle();
+    await h.service.setCCT(2800);
+    const now = Date.now();
+    vi.spyOn(Date, 'now').mockReturnValue(now + 120_001);
+    h.report(snapshot(6000));
+    vi.mocked(Date.now).mockRestore();
+    await settle();
+    expect(h.frameWrites()).toEqual([]);
+    expect(h.service.cct).toBe(6000);
+  });
+
   it('drops a value set before the first report when another headset takes over', async () => {
     const h = await setup(FRAME);
     h.report(null);
