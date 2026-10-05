@@ -322,8 +322,8 @@ once the Frame reports, unless it waited longer than two minutes. `CCTControlSer
 set to the matching driver, and a driver with `pushesCctChanges` owns the shown value. Transitions
 run as helper fades. A fade lasts at most 24 hours, and a fade to the value the Frame already holds
 does not start. When another headset becomes the active HMD during a fade, the new headset gets the
-target in one command. A transition that starts before the Frame's first report sets its target in
-one command.
+target in one command. A transition that starts before the Frame's first report waits for it, as
+described under [Fades](#fades).
 
 ## Fades
 

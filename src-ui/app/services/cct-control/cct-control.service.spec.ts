@@ -394,16 +394,36 @@ describe('CCTControlService with a Steam Frame', () => {
     expect(h.writes()).toEqual([3000]);
   });
 
-  it('sets the target of a transition that starts before the first report', async () => {
+  it('runs a fade at full length when the Frame reports before its planned end', async () => {
     const h = await setup(FRAME);
     h.report(null);
     await settle();
-    const task = h.service.transitionCCT(3000, 10000);
+    h.service.transitionCCT(3000, 10000);
     await settle();
-    expect(task.isComplete()).toBe(true);
     expect(h.calls('steam_frame_fade')).toEqual([]);
     h.report(snapshot(6600));
     await settle();
+    expect(h.calls('steam_frame_fade')).toEqual([
+      [
+        'steam_frame_fade',
+        expect.objectContaining({
+          request: expect.objectContaining({ target: 3000, durationMs: 10000 }),
+        }),
+      ],
+    ]);
+    expect(h.frameWrites()).toEqual([]);
+  });
+
+  it('sets the target of a fade the Frame reported too late for', async () => {
+    const h = await setup(FRAME);
+    h.report(null);
+    await settle();
+    const task = h.service.transitionCCT(3000, 20);
+    await settle();
+    expect(task.isComplete()).toBe(true);
+    h.report(snapshot(6600));
+    await settle();
+    expect(h.calls('steam_frame_fade')).toEqual([]);
     expect(h.frameWrites()).toEqual([3000]);
   });
 
