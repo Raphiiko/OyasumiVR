@@ -270,10 +270,10 @@ $background-color: var(--color-surface-2);
   }
 }
 
-// whole pixels, a fractional size paints the circle as an oval
+// rem keeps the size a whole 9px, a fractional size paints the circle as an oval
 .vrc-status .status-dot {
-  width: 9px;
-  height: 9px;
+  width: 0.75rem;
+  height: 0.75rem;
 }
 
 .brightness-advanced {
