@@ -78,14 +78,18 @@ export class SteamFrameFadeTask extends DeviceFade {
     this.work = () => this.run();
   }
 
+  get durationMs(): number {
+    return this.request.durationMs;
+  }
+
   private async run(): Promise<void> {
     const handoff = this.cancelWhenDeviceGone();
     try {
       // wait for a report, until the fade would have ended
-      const late = timer(this.request.durationMs).pipe(map(() => false));
+      const late = timer(this.request.durationMs).pipe(map(() => 'late' as const));
       const reported = await firstValueFrom(race(this.reported(), late, this.cancelled()));
-      if (reported === null) return;
-      if (!reported) {
+      if (reported === null || this.isCancelled()) return;
+      if (reported === 'late') {
         this.end = 'completed';
         this.onLate?.();
         return;
@@ -123,6 +127,8 @@ export class SteamFrameFadeTask extends DeviceFade {
         this.cancelOnHelper();
         return;
       }
+      // a cancel from outside can land while the outcome resolves, and then wins
+      if (this.isCancelled()) return;
       this.finish(end);
     } finally {
       subscription.unsubscribe();
@@ -142,11 +148,7 @@ export class SteamFrameFadeTask extends DeviceFade {
         filter((pairing) => pairing !== undefined && pairing !== this.pairingId),
         take(1)
       )
-      .subscribe(() => {
-        if (this.isCancelled() || this.isComplete() || this.isError()) return;
-        this.end = 'deviceGone';
-        this.cancel();
-      });
+      .subscribe(() => this.endAsDeviceGone());
   }
 
   private send(): Promise<SteamFrameFadeError | null> {
