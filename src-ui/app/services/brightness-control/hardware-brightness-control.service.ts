@@ -49,7 +49,7 @@ export class HardwareBrightnessControlService {
   /** The driver that matched last; it stays set after that driver stops matching. */
   public lastActiveDriver: HardwareBrightnessControlDriver | null = null;
 
-  /** The driver that matches the active HMD, also before it can write; null while none does. */
+  /** The driver for the active HMD; null while none matches. */
   get activeDriver(): HardwareBrightnessControlDriver | null {
     return this.driver.value;
   }

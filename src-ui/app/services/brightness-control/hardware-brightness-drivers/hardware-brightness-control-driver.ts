@@ -31,12 +31,12 @@ export abstract class HardwareBrightnessControlDriver {
 
   abstract getBrightnessBounds(appSettings?: AppSettings): [number, number];
 
-  /** Whether the driver can write now. OyasumiVR reads it only while `matches` is true. */
+  /** Whether the device is connected and reports its brightness, for the UI and for reading it. */
   abstract isAvailable(): Observable<boolean>;
 
   /**
-   * Whether the active HMD belongs to this driver, including while the driver cannot write yet.
-   * Such a driver keeps or drops a value it cannot write yet.
+   * Whether the active HMD belongs to this driver. It gets every set and keeps or drops one it
+   * cannot send yet.
    */
   matches(): Observable<boolean> {
     return this.isAvailable();
