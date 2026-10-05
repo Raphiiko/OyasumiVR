@@ -384,6 +384,48 @@ describe('CCTControlService with a Steam Frame', () => {
     expect(h.writes()).toEqual([3000]);
   });
 
+  it('writes a helper fade target to an Index that takes over while trying any headset', async () => {
+    const h = await setup(FRAME, { tryUnsupported: true });
+    h.report(snapshot(6600));
+    await settle();
+    h.service.transitionCCT(1800, 10000);
+    await settle();
+    h.report(snapshot(5000));
+    await settle();
+    h.activate(INDEX);
+    await settle();
+    expect(h.calls('steam_frame_cancel_fade')).toHaveLength(1);
+    expect(h.writes()).not.toContain(5000);
+    expect(h.writes().at(-1)).toBe(1800);
+  });
+
+  it('stops a running fade when a transition asks for the value the Frame holds', async () => {
+    const h = await setup(FRAME);
+    h.report(snapshot(6600));
+    await settle();
+    h.service.transitionCCT(1800, 10000);
+    await settle();
+    h.report(snapshot(5000));
+    await settle();
+    h.service.transitionCCT(5000, 10000);
+    await settle();
+    expect(h.calls('steam_frame_cancel_fade')).toHaveLength(1);
+    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
+  });
+
+  it('starts no waiting fade when the first report holds its target exactly', async () => {
+    const h = await setup(FRAME);
+    h.report(null);
+    await settle();
+    const task = h.service.transitionCCT(6600, 10000);
+    await settle();
+    h.report(snapshot(6600));
+    await settle();
+    expect(h.calls('steam_frame_fade')).toEqual([]);
+    expect(task.isComplete()).toBe(true);
+    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
+  });
+
   it('runs a fade at full length when the Frame reports before its planned end', async () => {
     const h = await setup(FRAME);
     h.report(null);

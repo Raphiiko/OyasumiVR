@@ -102,6 +102,7 @@ export class CCTControlService {
       return this.activate(fade, opt.logReason);
     }
     if (this._cct.value === temperature) {
+      this.cancelActiveTransition();
       const task = new CancellableTask();
       task.start();
       return task;
@@ -185,8 +186,18 @@ export class CCTControlService {
     }
   }
 
+  /** A fade the previous device ran ends first, so its target reaches the next one. */
+  private onDriver(driver: CctControlDriver | null) {
+    const previous = this.driver;
+    this.driver = driver;
+    const transition = this._activeTransition.value;
+    if (driver && driver !== previous && transition instanceof DeviceFade) {
+      transition.endAsDeviceGone();
+    }
+  }
+
   private watchDrivers() {
-    this.activeDriver.subscribe((driver) => (this.driver = driver));
+    this.activeDriver.subscribe((driver) => this.onDriver(driver));
 
     // show the values a driver pushes, without writing them back
     this.activeDriver
