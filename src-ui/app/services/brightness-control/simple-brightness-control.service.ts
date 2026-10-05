@@ -153,12 +153,19 @@ export class SimpleBrightnessControlService {
     const driver = this.hardwareBrightnessControl.activeDriver;
     const previous = this.previousDriver;
     this.previousDriver = driver;
+    if (!driver || driver === previous) return;
+
+    // a fade the previous device ran ends first, so its target reaches this one
+    const transition = this._activeTransition.value;
+    if (transition instanceof DeviceFade) {
+      transition.endAsDeviceGone();
+      return;
+    }
+
     // a device taking over from a pushing one never saw the simple value
     if (
       !this._advancedMode.value &&
       previous?.pushesBrightnessChanges &&
-      driver &&
-      driver !== previous &&
       !driver.pushesBrightnessChanges
     ) {
       this.setBrightness(this.brightness, { cancelActiveTransition: true, logReason: undefined });
@@ -251,7 +258,7 @@ export class SimpleBrightnessControlService {
           async () => from,
           async () => [0, 100],
           to,
-          duration,
+          fade!.durationMs,
           { logReason }
         );
         void software.start();
