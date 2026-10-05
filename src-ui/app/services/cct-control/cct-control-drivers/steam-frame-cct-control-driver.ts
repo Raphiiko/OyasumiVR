@@ -153,14 +153,15 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
   }
 
   /**
-   * A fade on the active Frame's helper, or null before that Frame reports or when it already
-   * holds the value. Drops a waiting set.
+   * A fade on the paired Frame's helper, or null while no paired Frame is the active HMD or it
+   * already holds the value. A Frame that reports too late for the fade gets its target as a set
+   * instead. Drops a waiting set.
    */
   override fade(kelvin: number, durationMs: number): SteamFrameCctFade | null {
     const hmd = this.currentHmd;
-    if (hmd.kind !== 'frame' || !hmd.pairingId || !hmd.cct) return null;
+    if (hmd.kind !== 'frame' || !hmd.pairingId) return null;
     // the helper would hold a fade to the value it already has for the whole duration
-    if (kelvin === this.shown && this.exact) return null;
+    if (hmd.cct && kelvin === this.shown && this.exact) return null;
     // a waiting set would go out after the fade and supersede it
     this.pending = null;
     return new SteamFrameCctFade(
@@ -175,7 +176,9 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
         connections$: this.steamFrames.connections$,
         fadeEnded$: this.steamFrames.fadeEnded$,
         activePairing$: this.activePairing,
-      }
+      },
+      undefined,
+      () => void this.setCCT(kelvin)
     );
   }
 
