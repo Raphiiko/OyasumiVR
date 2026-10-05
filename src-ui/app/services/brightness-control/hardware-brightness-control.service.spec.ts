@@ -218,6 +218,21 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
     expect(nextDriver.setBrightnessPercentage).toHaveBeenCalledWith(30);
   });
 
+  it('keeps a helper fade when the same driver returns after a gap without any', async () => {
+    const h = await setup();
+    vi.mocked(invoke).mockImplementation(async () => undefined);
+    const task = h.service.transitionBrightness(30, 10000);
+    await settle();
+    h.service['driver'].next(null);
+    h.service['driver'].next(h.service.driverSteamFrame);
+    await settle();
+    expect(vi.mocked(invoke).mock.calls.map(([name]) => name)).not.toContain(
+      'steam_frame_cancel_fade'
+    );
+    expect(await firstValueFrom(h.service.activeTransition)).toBe(task);
+    task.cancel();
+  });
+
   it('drops a helper fade the headset changed, and shows the change', async () => {
     const h = await setup();
     vi.mocked(invoke).mockImplementation(async () => undefined);

@@ -16,6 +16,12 @@ export abstract class DeviceFade extends CancellableTask {
   /** How long the device runs the fade, which can be shorter than requested. */
   abstract readonly durationMs: number;
 
+  /** A cancel from outside wins over a completed end that has not reached the task status yet. */
+  override cancel() {
+    if (this.end === 'completed' && !this.isComplete()) this.end = null;
+    super.cancel();
+  }
+
   /** Ends a running fade because another device took over; its service hands the target on. */
   endAsDeviceGone() {
     if (this.isCancelled() || this.isComplete() || this.isError()) return;

@@ -105,12 +105,11 @@ export class HardwareBrightnessControlService {
     private appSettingsService: AppSettingsService, // private bsbFanAutomationService: BigscreenBeyondFanAutomationService
     steamFrames: SteamFramePairingService
   ) {
-    // a fade the previous device ran ends first, so its target reaches the next one
-    this.driver.pipe(pairwise()).subscribe(([previous, driver]) => {
+    // a fade another device ran ends first, so its target reaches the next one; a gap without
+    // a driver is no headset change
+    this.driver.pipe(filter(Boolean), pairwise()).subscribe(([previous, driver]) => {
       const transition = this._activeTransition.value;
-      if (driver && driver !== previous && transition instanceof DeviceFade) {
-        transition.endAsDeviceGone();
-      }
+      if (driver !== previous && transition instanceof DeviceFade) transition.endAsDeviceGone();
     });
     this.driverValveIndex = new ValveIndexHardwareBrightnessControlDriver(
       this.appSettingsService.settings,

@@ -63,6 +63,8 @@ export class SimpleBrightnessControlService {
   private settingBrightness = 0;
   /** The active driver at the last driver change, to recognize a handoff between drivers. */
   private previousDriver: HardwareBrightnessControlDriver | null = null;
+  /** The last driver that was not null, so a gap without a driver is no headset change. */
+  private lastDriver: HardwareBrightnessControlDriver | null = null;
   /** The latest report skipped while `settingBrightness` was above zero. */
   private deferredAdoption: AdoptedBrightness | null = null;
   public readonly advancedMode = this._advancedMode.asObservable();
@@ -110,7 +112,9 @@ export class SimpleBrightnessControlService {
         skip(1),
         distinctUntilChanged(),
         // a device that pushes its brightness changes keeps its value across availability changes
-        filter(() => !this.hardwareBrightnessControl.lastActiveDriver?.pushesBrightnessChanges)
+        filter(() => !this.hardwareBrightnessControl.lastActiveDriver?.pushesBrightnessChanges),
+        // the driver change hands a running device fade's target on instead
+        filter(() => !(this._activeTransition.value instanceof DeviceFade))
       )
       .subscribe(() => {
         this.setBrightness(this.brightness, {
@@ -153,14 +157,17 @@ export class SimpleBrightnessControlService {
     const driver = this.hardwareBrightnessControl.activeDriver;
     const previous = this.previousDriver;
     this.previousDriver = driver;
-    if (!driver || driver === previous) return;
+    if (!driver) return;
+    const lastDriver = this.lastDriver;
+    this.lastDriver = driver;
 
-    // a fade the previous device ran ends first, so its target reaches this one
+    // a fade another device ran ends first, so its target reaches this one
     const transition = this._activeTransition.value;
     if (transition instanceof DeviceFade) {
-      transition.endAsDeviceGone();
+      if (driver !== lastDriver) transition.endAsDeviceGone();
       return;
     }
+    if (driver === previous) return;
 
     // a device taking over from a pushing one never saw the simple value
     if (
