@@ -298,7 +298,11 @@ describe('simple brightness fading a Steam Frame', () => {
   async function frame() {
     const h = await setup();
     const connections = new BehaviorSubject<Record<string, SteamFrameConnectionState>>({
-      p: { pairingId: 'p', status: 'connected' } as SteamFrameConnectionState,
+      p: {
+        pairingId: 'p',
+        status: 'connected',
+        brightness: { runtime: true, supported: true, min: 9, max: 125, percentage: 100 },
+      } as SteamFrameConnectionState,
     });
     const fadeEnded = new Subject<SteamFrameFadeEnded>();
     const activePairing = new BehaviorSubject<string | null | undefined>('p');
