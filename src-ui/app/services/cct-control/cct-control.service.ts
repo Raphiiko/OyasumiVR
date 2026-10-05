@@ -96,15 +96,10 @@ export class CCTControlService {
     options: Partial<SetBrightnessOrCCTOptions> = SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS
   ): CancellableTask {
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
-    if (this.driver?.skipsTransitions) {
+    const fade = this.deviceFade(temperature, duration);
+    if (fade) {
       this.cancelActiveTransition();
-      const fade = this.deviceFade(temperature, duration);
-      if (fade) return this.activate(fade, opt.logReason);
-      const task = new CancellableTask(() =>
-        this.setCCT(temperature, { cancelActiveTransition: false, logReason: opt.logReason })
-      );
-      task.start();
-      return task;
+      return this.activate(fade, opt.logReason);
     }
     if (this._cct.value === temperature) {
       const task = new CancellableTask();
@@ -190,7 +185,7 @@ export class CCTControlService {
   }
 
   private watchDrivers() {
-    this.activeDriver.subscribe((driver) => this.onDriver(driver));
+    this.activeDriver.subscribe((driver) => (this.driver = driver));
 
     // show the values a driver pushes, without writing them back
     this.activeDriver
@@ -228,15 +223,5 @@ export class CCTControlService {
         // SteamVR keeps the gains across sessions, so clear a tint an earlier session left
         this.driverSteamVr.setCCT(NEUTRAL_CCT);
       });
-  }
-
-  /** A driver that skips transitions finishes a running PC transition in one command. */
-  private onDriver(driver: CctControlDriver | null) {
-    this.driver = driver;
-    const transition = this._activeTransition.value;
-    if (!driver?.skipsTransitions || !transition) return;
-    if (transition instanceof DeviceFade) return;
-    this.cancelActiveTransition();
-    this.setCCT(transition.targetCCT);
   }
 }
