@@ -200,16 +200,6 @@ describe('CCTControlService transitions', () => {
     expect(writes().at(-1)).toBe(3000);
     expect(await firstValueFrom(service.activeTransition)).toBeUndefined();
   });
-
-  it('sets the target in one command for a driver that skips transitions', async () => {
-    const { service, writes } = await setup(INDEX);
-    Object.defineProperty(service.driverSteamVr, 'skipsTransitions', { value: true });
-
-    service.transitionCCT(3000, 1000);
-    await Promise.resolve();
-    expect(await firstValueFrom(service.activeTransition)).toBeUndefined();
-    expect(writes()).toEqual([6600, 3000]);
-  });
 });
 
 describe('CCTControlService with a Steam Frame', () => {
@@ -427,19 +417,21 @@ describe('CCTControlService with a Steam Frame', () => {
     expect(h.frameWrites()).toEqual([3000]);
   });
 
-  it('finishes a running transition in one command when the Frame takes over', async () => {
+  it('keeps stepping a running transition on the Frame that takes over', async () => {
     const h = await setup(FRAME);
     h.report(null);
     h.status.next('STOPPED');
     await settle();
     // a transition that started with no HMD runs a PC loop
-    h.service.transitionCCT(3000, 10000, { logReason: 'SLEEP_MODE_ENABLE' });
+    const task = h.service.transitionCCT(3000, 10000, { logReason: 'SLEEP_MODE_ENABLE' });
     h.status.next('INITIALIZED');
     await settle();
     h.report(snapshot(6000));
     await settle();
-    expect(h.frameWrites()).toEqual([3000]);
-    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
+    expect(await firstValueFrom(h.service.activeTransition)).toBe(task);
+    expect(h.frameWrites()).toHaveLength(1);
+    expect(h.frameWrites()[0]).toBeGreaterThan(3000);
+    task.cancel();
   });
 
   it('applies a value set before the first report once the Frame reports', async () => {
@@ -549,15 +541,17 @@ describe('CCTControlService with a Steam Frame', () => {
     expect(h.writes()).toEqual([3000]);
   });
 
-  it('finishes a running Index transition in one command when a reporting Frame takes over', async () => {
+  it('keeps stepping a running Index transition on a reporting Frame that takes over', async () => {
     const h = await setup(INDEX);
     h.report(snapshot(6000));
     await settle();
-    h.service.transitionCCT(3000, 10000, { logReason: 'SLEEP_MODE_ENABLE' });
+    const task = h.service.transitionCCT(3000, 10000, { logReason: 'SLEEP_MODE_ENABLE' });
     await settle();
     h.activate(FRAME);
     await settle();
-    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
-    expect(h.frameWrites()).toEqual([3000]);
+    expect(await firstValueFrom(h.service.activeTransition)).toBe(task);
+    expect(h.frameWrites()).toHaveLength(1);
+    expect(h.frameWrites()[0]).toBeGreaterThan(3000);
+    task.cancel();
   });
 });
