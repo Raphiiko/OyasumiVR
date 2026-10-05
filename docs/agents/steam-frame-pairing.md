@@ -388,6 +388,9 @@ keep the PC transition. A `DeviceFade` ends as `completed`, `changedOnDevice`, `
 - It completes on `completed`, and every other outcome cancels it. `externalChange` and `missed`
   end it as `changedOnDevice`, the other outcomes as `stopped`. Cancelling it from outside sends
   `cancelFade` with its operation ID.
+- A fade for a paired Frame that does not report yet waits for the first report, then runs at
+  full length. When that report comes after the fade's planned end, the task completes without a
+  fade, and the driver keeps the target as a set.
 - While the connection is down it completes at its end time. When a report after a reconnect no
   longer carries its fade, it ends as `missed`.
 - A refused fade fails the task with the helper's error, and the service that started it sets the
