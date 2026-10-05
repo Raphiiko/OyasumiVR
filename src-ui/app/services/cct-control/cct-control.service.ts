@@ -118,7 +118,8 @@ export class CCTControlService {
 
   /** A fade the active device runs itself, or null while no driver takes one. */
   private deviceFade(temperature: number, duration: number): CctFade | null {
-    return this.driver?.fade(clamp(Math.round(temperature), 1000, 10000), duration) ?? null;
+    const target = clamp(Math.round(temperature), 1000, 10000);
+    return this.driver?.fade({ target, durationMs: duration }) ?? null;
   }
 
   /** Makes the transition the active one until it ends, and starts it. */
