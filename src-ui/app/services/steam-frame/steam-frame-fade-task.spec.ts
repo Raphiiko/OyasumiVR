@@ -111,6 +111,14 @@ describe('SteamFrameFadeTask', () => {
     }
   );
 
+  it('cuts a fade longer than the 24 hours the helper accepts', async () => {
+    const h = setup(2 * 24 * 60 * 60 * 1000);
+    void h.task.start();
+    await h.reply();
+    expect(h.fades()).toEqual([expect.objectContaining({ durationMs: 24 * 60 * 60 * 1000 })]);
+    h.task.cancel();
+  });
+
   it('waits for a report, then sends the fade at full length', async () => {
     const h = setup(200, { reported: false });
     const done = h.task.start();
