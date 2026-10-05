@@ -130,6 +130,18 @@ describe('SteamFrameFadeTask', () => {
     expect(h.task.end).toBeNull();
   });
 
+  it('stays cancelled when a cancel lands after the completed end, before the task status', async () => {
+    const h = setup();
+    const done = h.task.start();
+    await h.reply();
+    h.end('completed');
+    while (h.task.end !== 'completed') await Promise.resolve();
+    expect(h.task.isComplete()).toBe(false);
+    h.task.cancel();
+    await done;
+    expect(h.task.end).toBeNull();
+  });
+
   it('waits for a report, then sends the fade at full length', async () => {
     const h = setup(200, { reported: false });
     const done = h.task.start();
