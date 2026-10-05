@@ -23,6 +23,9 @@ import {
   SteamFrameFadeOutcome,
 } from '../../models/steam-frame';
 
+/** The longest fade the helper accepts; it sends no reply to a longer one. */
+export const STEAM_FRAME_MAX_FADE_MS = 24 * 60 * 60 * 1000;
+
 /** How a fade ended. `missed` means the helper dropped it while this PC was disconnected. */
 export type SteamFrameFadeEnd = SteamFrameFadeOutcome | 'missed';
 
@@ -33,7 +36,7 @@ export interface SteamFrameFadeSource {
   activePairing$: Observable<string | null | undefined>;
 }
 
-/** A fade for the helper. `target` is in percent or Kelvin. */
+/** A fade for the helper. `target` is in percent or Kelvin. A longer fade than 24 hours is cut. */
 export interface SteamFrameFadeRequest {
   pairingId: string;
   control: SteamFrameControl;
@@ -54,11 +57,12 @@ export interface SteamFrameFadeRequest {
 export class SteamFrameFadeTask extends DeviceFade {
   readonly operation = uuidv4();
   readonly pairingId: string;
+  private readonly request: SteamFrameFadeRequest;
   /** The helper's outcome, set with `end`. */
   outcome: SteamFrameFadeEnd | null = null;
 
   constructor(
-    private readonly request: SteamFrameFadeRequest,
+    request: SteamFrameFadeRequest,
     private readonly frames: SteamFrameFadeSource,
     /** Runs once the helper accepts the fade. */
     private readonly onAccept?: () => void,
@@ -66,6 +70,10 @@ export class SteamFrameFadeTask extends DeviceFade {
     private readonly onLate?: () => void
   ) {
     super();
+    this.request = {
+      ...request,
+      durationMs: Math.min(request.durationMs, STEAM_FRAME_MAX_FADE_MS),
+    };
     this.pairingId = request.pairingId;
     this.work = () => this.run();
   }

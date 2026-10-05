@@ -385,6 +385,7 @@ keep the PC transition. A `DeviceFade` ends as `completed`, `changedOnDevice`, `
 
 `SteamFrameFadeTask` is the Frame driver's `DeviceFade` for one helper fade.
 
+- It cuts a fade longer than 24 hours to 24 hours, because the helper does not reply to one.
 - It completes on `completed`, and every other outcome cancels it. `externalChange` and `missed`
   end it as `changedOnDevice`, the other outcomes as `stopped`. Cancelling it from outside sends
   `cancelFade` with its operation ID.
