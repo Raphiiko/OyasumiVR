@@ -31,7 +31,16 @@ export abstract class HardwareBrightnessControlDriver {
 
   abstract getBrightnessBounds(appSettings?: AppSettings): [number, number];
 
+  /** Whether the device is connected and reports its brightness, for the UI and for reading it. */
   abstract isAvailable(): Observable<boolean>;
+
+  /**
+   * Whether the active HMD belongs to this driver. It gets every set and keeps or drops one it
+   * cannot send yet.
+   */
+  matches(): Observable<boolean> {
+    return this.isAvailable();
+  }
 
   protected softwarePercentageToHardwarePercentage(percentage: number): number {
     const config = this.getBrightnessConfiguration();

@@ -42,7 +42,7 @@ import {
   LighthouseV1IdWizardModalOutputModel,
 } from 'src-ui/app/components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
 import { LighthouseV1IdWizardModalInputModel } from 'src-ui/app/components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
-import { SteamFramePairingService } from 'src-ui/app/services/steam-frame-pairing.service';
+import { SteamFramePairingService } from 'src-ui/app/services/steam-frame/steam-frame-pairing.service';
 import { TranslocoService } from '@jsverse/transloco';
 import { FLAVOUR } from 'src-ui/build';
 import {

@@ -36,7 +36,6 @@ export class SimpleBrightnessControlService {
   private _brightness: BehaviorSubject<number> = new BehaviorSubject<number>(100);
   private _activeTransition = new BehaviorSubject<BrightnessTransitionTask | undefined>(undefined);
   public readonly activeTransition = this._activeTransition.asObservable();
-  private hardwareBrightnessDriverAvailable = false;
   /** Counts running `setBrightness` calls, whose own replies must not be adopted midway. */
   private settingBrightness = 0;
   /** The active driver at the last driver change, to recognize a handoff between drivers. */
@@ -84,7 +83,6 @@ export class SimpleBrightnessControlService {
     // Set brightness when the hardware brightness driver availability changes
     this.hardwareBrightnessControl.driverIsAvailable
       .pipe(
-        tap((available) => (this.hardwareBrightnessDriverAvailable = available)),
         filter(() => !this._advancedMode.value),
         skip(1),
         distinctUntilChanged(),
@@ -153,15 +151,13 @@ export class SimpleBrightnessControlService {
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
     if (this._brightness.value === percentage) {
       // a pushing device's value can differ from the derived simple value, so it still gets the write
-      const write =
-        this.hardwareBrightnessDriverAvailable &&
-        this.hardwareBrightnessControl.lastActiveDriver?.pushesBrightnessChanges
-          ? () =>
-              this.setBrightness(percentage, {
-                cancelActiveTransition: true,
-                logReason: opt.logReason,
-              })
-          : undefined;
+      const write = this.hardwareBrightnessControl.activeDriver?.pushesBrightnessChanges
+        ? () =>
+            this.setBrightness(percentage, {
+              cancelActiveTransition: true,
+              logReason: opt.logReason,
+            })
+        : undefined;
       const task = new CancellableTask(write);
       task.start();
       return task;
@@ -240,8 +236,9 @@ export class SimpleBrightnessControlService {
     // Calculate brightnesses
     let softwareBrightness = percentage;
     let hardwareBrightness = 100;
-    // If the hardware brightness driver is available, intelligently switch between the two brightnesses
-    if (this.hardwareBrightnessDriverAvailable) {
+    // a matching driver keeps its part until the headset can take it
+    const usesHardware = this.hardwareBrightnessControl.activeDriver !== null;
+    if (usesHardware) {
       const softwareBrightnessRange = [0, 0];
       const hardwareBrightnessRange = await firstValueFrom(
         this.hardwareBrightnessControl.brightnessBounds
@@ -268,7 +265,7 @@ export class SimpleBrightnessControlService {
       logReason: null,
     });
     if (modeGeneration !== this._modeGeneration) return;
-    if (this.hardwareBrightnessDriverAvailable) {
+    if (usesHardware) {
       await this.hardwareBrightnessControl.setBrightness(hardwareBrightness, {
         cancelActiveTransition: true,
         logReason: null,
