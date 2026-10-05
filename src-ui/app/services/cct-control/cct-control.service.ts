@@ -50,6 +50,8 @@ export class CCTControlService {
   public readonly activeDriver: Observable<CctControlDriver | null>;
   public readonly driverIsAvailable: Observable<boolean>;
   private driver: CctControlDriver | null = null;
+  /** The last driver that was not null, so a gap without a driver is no headset change. */
+  private lastDriver: CctControlDriver | null = null;
   public readonly activeTransition = this._activeTransition.asObservable();
   public cctCSSColor: string = 'white';
 
@@ -186,14 +188,14 @@ export class CCTControlService {
     }
   }
 
-  /** A fade the previous device ran ends first, so its target reaches the next one. */
+  /** A fade another device ran ends first, so its target reaches the next one. */
   private onDriver(driver: CctControlDriver | null) {
-    const previous = this.driver;
     this.driver = driver;
+    if (!driver) return;
+    const lastDriver = this.lastDriver;
+    this.lastDriver = driver;
     const transition = this._activeTransition.value;
-    if (driver && driver !== previous && transition instanceof DeviceFade) {
-      transition.endAsDeviceGone();
-    }
+    if (driver !== lastDriver && transition instanceof DeviceFade) transition.endAsDeviceGone();
   }
 
   private watchDrivers() {
