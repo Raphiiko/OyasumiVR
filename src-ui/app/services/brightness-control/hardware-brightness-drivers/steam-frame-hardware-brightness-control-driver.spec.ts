@@ -1,11 +1,12 @@
 import { invoke } from '@tauri-apps/api/core';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { APP_SETTINGS_DEFAULT } from '../../../models/settings';
 import type { OVRDevice } from '../../../models/ovr-device';
 import type {
   SteamFrameBrightness,
   SteamFrameConnectionState,
+  SteamFrameFadeEnded,
   SteamFramePairing,
 } from '../../../models/steam-frame';
 import type { OpenVRStatus } from '../../openvr.service';
@@ -33,7 +34,8 @@ function setup() {
     new BehaviorSubject(structuredClone(APP_SETTINGS_DEFAULT)),
     { status, devices },
     pairings,
-    connections
+    connections,
+    new Subject<SteamFrameFadeEnded>()
   );
   const updates: number[] = [];
   driver.brightnessUpdates.subscribe((value) => updates.push(value));
@@ -154,5 +156,22 @@ describe('SteamFrameHardwareBrightnessControlDriver', () => {
     reply(90);
     await command;
     expect(h.updates.at(-1)).toBe(25);
+  });
+
+  it('creates a fade for the reporting Frame, in hardware percent', async () => {
+    const h = setup();
+    const options = { target: 200, durationMs: 1000, shownTarget: 200 };
+    expect(h.driver.fade(options)).toBeNull();
+    h.report(brightness(40));
+    const fade = h.driver.fade(options)!;
+    vi.mocked(invoke).mockResolvedValue(undefined);
+    void fade.start();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(invoke).toHaveBeenCalledWith('steam_frame_fade', {
+      pairingId: 'pairing-1',
+      request: { control: 'brightness', target: 125, durationMs: 1000, operation: fade.operation },
+    });
+    expect(fade.targetBrightness).toBe(200);
+    fade.cancel();
   });
 });

@@ -7,9 +7,10 @@ import {
   map,
   Observable,
   skip,
+  take,
   tap,
 } from 'rxjs';
-import { info } from '@tauri-apps/plugin-log';
+import { info, warn } from '@tauri-apps/plugin-log';
 import { CancellableTask } from '../../utils/cancellable-task';
 import { BrightnessTransitionTask } from './brightness-transition';
 import { AutomationConfigService } from '../automation-config.service';
@@ -17,15 +18,35 @@ import {
   AdoptedBrightness,
   HardwareBrightnessControlService,
 } from './hardware-brightness-control.service';
-import { HardwareBrightnessControlDriver } from './hardware-brightness-drivers/hardware-brightness-control-driver';
+import {
+  HardwareBrightnessControlDriver,
+  HardwareBrightnessFade,
+} from './hardware-brightness-drivers/hardware-brightness-control-driver';
 import { SoftwareBrightnessControlService } from './software-brightness-control.service';
 import { lerp } from '../../utils/number-utils';
 import { clamp } from 'lodash';
 import {
   SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS,
   SetBrightnessOrCCTOptions,
+  SetBrightnessOrCCTReason,
 } from './brightness-control-models';
 import { listen } from '@tauri-apps/api/event';
+import { DeviceFade } from '../../utils/device-fade';
+
+type SimpleTransition = CancellableTask & { readonly targetBrightness: number };
+
+/**
+ * Splits a simple value into software and hardware brightness: software dimming below the
+ * hardware minimum, hardware above it. A device that fades a simple curve splits it the same way.
+ */
+export function splitSimpleBrightness(
+  percentage: number,
+  [min, max]: [number, number]
+): { software: number; hardware: number } {
+  const floor = Math.max(min, 0);
+  if (percentage < floor) return { software: lerp(0, 100, percentage / floor), hardware: min };
+  return { software: 100, hardware: lerp(min, max, (percentage - floor) / (100 - floor)) };
+}
 
 @Injectable({
   providedIn: 'root',
@@ -33,8 +54,10 @@ import { listen } from '@tauri-apps/api/event';
 export class SimpleBrightnessControlService {
   private _advancedMode = new BehaviorSubject(false);
   private _modeGeneration = 0;
+  /** Bumped by every set and device fade, so an older set skips its late hardware write. */
+  private _writeGeneration = 0;
   private _brightness: BehaviorSubject<number> = new BehaviorSubject<number>(100);
-  private _activeTransition = new BehaviorSubject<BrightnessTransitionTask | undefined>(undefined);
+  private _activeTransition = new BehaviorSubject<SimpleTransition | undefined>(undefined);
   public readonly activeTransition = this._activeTransition.asObservable();
   /** Counts running `setBrightness` calls, whose own replies must not be adopted midway. */
   private settingBrightness = 0;
@@ -102,6 +125,30 @@ export class SimpleBrightnessControlService {
     );
   }
 
+  /**
+   * Sets the target of a fade another headset ended. The next headset's driver keeps it until the
+   * headset can take it, and a headset no driver matches yet gets it once one does.
+   */
+  private handOff(target: number) {
+    const options = { cancelActiveTransition: false, logReason: null };
+    this.setBrightness(target, options);
+    if (this.hardwareBrightnessControl.activeDriver) return;
+    const writeGeneration = this._writeGeneration;
+    const modeGeneration = this._modeGeneration;
+
+    this.hardwareBrightnessControl.onDriverChange
+      .pipe(
+        filter(() => this.hardwareBrightnessControl.activeDriver !== null),
+        take(1)
+      )
+      .subscribe(() => {
+        // a newer set or a mode switch meanwhile wins over the old target
+        if (writeGeneration !== this._writeGeneration) return;
+        if (modeGeneration !== this._modeGeneration) return;
+        this.setBrightness(target, options);
+      });
+  }
+
   private onDriverChange() {
     const driver = this.hardwareBrightnessControl.activeDriver;
     const previous = this.previousDriver;
@@ -162,6 +209,8 @@ export class SimpleBrightnessControlService {
       task.start();
       return task;
     }
+    const fade = this.deviceFade(percentage, duration, opt.logReason);
+    if (fade) return fade;
     this._activeTransition.value?.cancel();
     const transition = new BrightnessTransitionTask(
       'SIMPLE',
@@ -172,20 +221,108 @@ export class SimpleBrightnessControlService {
       duration,
       { logReason: opt.logReason }
     );
-    transition.onComplete.subscribe(() => {
-      if (transition.isComplete() && this._activeTransition.value === transition)
-        this._activeTransition.next(undefined);
+    return this.activate(transition, opt.logReason);
+  }
+
+  /**
+   * A fade the active device runs. The device runs the hardware part of the simple curve, and this
+   * PC runs the software part on the same curve once the device accepts.
+   */
+  private deviceFade(
+    percentage: number,
+    duration: number,
+    logReason: SetBrightnessOrCCTReason | null
+  ): SimpleTransition | null {
+    const driver = this.hardwareBrightnessControl.activeDriver;
+    if (!driver) return null;
+    const from = this.brightness;
+    const to = clamp(percentage, 0, 100);
+    const bounds = driver.getBrightnessBounds();
+    let software: BrightnessTransitionTask | undefined;
+    const fade = this.hardwareBrightnessControl.deviceFade({
+      target: splitSimpleBrightness(to, bounds).hardware,
+      durationMs: duration,
+      simple: { from, to },
+      shownTarget: to,
+      onAccept: () => {
+        software = new BrightnessTransitionTask(
+          'SIMPLE',
+          (simple) => this.applySoftwarePart(simple, bounds),
+          async () => from,
+          async () => [0, 100],
+          to,
+          duration,
+          { logReason }
+        );
+        void software.start();
+      },
     });
-    transition.onError.subscribe(() => {
-      if (transition.isError() && this._activeTransition.value === transition)
-        this._activeTransition.next(undefined);
+    if (!fade) return null;
+    this.cancelActiveTransition();
+    this._writeGeneration++;
+    fade.onCancelled.subscribe(() => this.onDeviceFadeCancelled(fade, software));
+    // the device can complete first, such as in standby, so the software part ends on its target
+    fade.onComplete.subscribe(() => {
+      if (fade.end !== 'completed') return;
+      software?.cancel();
+      void this.applySoftwarePart(to, bounds);
     });
-    if (opt.logReason) {
-      info(`[BrightnessControl] Starting brightness transition (Reason: ${opt.logReason})`);
+    return this.activate(fade, logReason);
+  }
+
+  /**
+   * Stops the software part where it is. After a change on the headset the headset's value wins,
+   * by the rule for reports, and another headset taking over gets the target.
+   */
+  private onDeviceFadeCancelled(fade: HardwareBrightnessFade, software?: BrightnessTransitionTask) {
+    software?.cancel();
+    if (this._activeTransition.value === fade) this._activeTransition.next(undefined);
+    if (fade.end === 'deviceGone') {
+      this.handOff(fade.targetBrightness);
+      return;
+    }
+    if (fade.end !== 'changedOnDevice') return;
+    void firstValueFrom(this.hardwareBrightnessControl.adoptedBrightness).then((adopted) =>
+      this.adoptHardwareBrightness(adopted)
+    );
+  }
+
+  /** Shows a simple value and writes only its software part. */
+  private async applySoftwarePart(simple: number, bounds: [number, number]) {
+    this._brightness.next(simple);
+    await this.softwareBrightnessControl.setBrightness(
+      splitSimpleBrightness(simple, bounds).software,
+      { cancelActiveTransition: true, logReason: null }
+    );
+  }
+
+  /** Makes the transition the active one until it ends, and starts it. */
+  private activate(
+    transition: SimpleTransition,
+    logReason: SetBrightnessOrCCTReason | null
+  ): SimpleTransition {
+    const clear = () => {
+      if (this._activeTransition.value === transition) this._activeTransition.next(undefined);
+    };
+    transition.onComplete.subscribe(() => transition.isComplete() && clear());
+    transition.onError.subscribe(() => transition.isError() && clear());
+    // runs with the error status, so no newer request can start in between
+    if (transition instanceof DeviceFade) {
+      transition.onError.subscribe((error) => this.onFadeRefused(transition, error));
+    }
+    if (logReason) {
+      info(`[BrightnessControl] Starting brightness transition (Reason: ${logReason})`);
     }
     this._activeTransition.next(transition);
-    transition.start();
+    const started = transition.start();
+    if (transition instanceof DeviceFade) started.catch(() => {});
     return transition;
+  }
+
+  /** Sets the target in one command instead. */
+  private onFadeRefused(fade: SimpleTransition, error: unknown) {
+    warn(`[BrightnessControl] The headset refused a brightness fade: ${error}`);
+    this.setBrightness(fade.targetBrightness, { cancelActiveTransition: false });
   }
 
   cancelActiveTransition() {
@@ -228,6 +365,7 @@ export class SimpleBrightnessControlService {
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
     percentage = clamp(percentage, 0, 100);
     const modeGeneration = this._modeGeneration;
+    const writeGeneration = ++this._writeGeneration;
     if (opt.cancelActiveTransition) this.cancelActiveTransition();
     this._brightness.next(percentage);
     if (opt.logReason) {
@@ -239,24 +377,11 @@ export class SimpleBrightnessControlService {
     // a matching driver keeps its part until the headset can take it
     const usesHardware = this.hardwareBrightnessControl.activeDriver !== null;
     if (usesHardware) {
-      const softwareBrightnessRange = [0, 0];
-      const hardwareBrightnessRange = await firstValueFrom(
-        this.hardwareBrightnessControl.brightnessBounds
-      );
-      if (hardwareBrightnessRange[0] > 0) {
-        softwareBrightnessRange[1] = hardwareBrightnessRange[0];
-      }
-      if (percentage >= 0 && percentage < softwareBrightnessRange[1]) {
-        hardwareBrightness = hardwareBrightnessRange[0];
-        softwareBrightness = lerp(0, 100, percentage / softwareBrightnessRange[1]);
-      } else {
-        softwareBrightness = 100;
-        hardwareBrightness = lerp(
-          hardwareBrightnessRange[0],
-          hardwareBrightnessRange[1],
-          (percentage - softwareBrightnessRange[1]) / (100 - softwareBrightnessRange[1])
-        );
-      }
+      const bounds = await firstValueFrom(this.hardwareBrightnessControl.brightnessBounds);
+      ({ software: softwareBrightness, hardware: hardwareBrightness } = splitSimpleBrightness(
+        percentage,
+        bounds
+      ));
     }
     // Set brightnesses
     if (modeGeneration !== this._modeGeneration) return;
@@ -265,6 +390,7 @@ export class SimpleBrightnessControlService {
       logReason: null,
     });
     if (modeGeneration !== this._modeGeneration) return;
+    if (writeGeneration !== this._writeGeneration) return;
     if (usesHardware) {
       await this.hardwareBrightnessControl.setBrightness(hardwareBrightness, {
         cancelActiveTransition: true,

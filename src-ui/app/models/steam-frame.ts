@@ -78,6 +78,29 @@ export interface SteamFrameConnectionState {
   cct: SteamFrameCct | null;
 }
 
+/** A fade the helper runs, in a report. `target` is in percent or Kelvin. */
+export interface SteamFrameFade {
+  operation: string;
+  target: number;
+  remainingMs: number;
+  /** Milliseconds since the epoch on this PC's clock. */
+  endsAt: number;
+}
+
+export type SteamFrameControl = 'brightness' | 'cct';
+
+export type SteamFrameFadeOutcome =
+  'completed' | 'superseded' | 'cancelled' | 'externalChange' | 'standby' | 'runtimeUnavailable';
+
+export interface SteamFrameFadeEnded {
+  pairingId: string;
+  control: SteamFrameControl;
+  operation: string;
+  outcome: SteamFrameFadeOutcome;
+}
+
+export type SteamFrameFadeError = 'unsupported' | 'runtimeUnavailable' | 'writeFailed' | 'offline';
+
 /** The headset's hardware brightness in percent, as the helper reports it. */
 export interface SteamFrameBrightness {
   /** False while the helper has no SteamVR session; nothing else is known then. */
@@ -87,6 +110,7 @@ export interface SteamFrameBrightness {
   max: number | null;
   /** The headset's value, which can lie outside `min` and `max`. */
   percentage: number | null;
+  fade: SteamFrameFade | null;
 }
 
 /** The headset's color temperature, as the helper reports it. */
@@ -98,6 +122,7 @@ export interface SteamFrameCct {
   kelvin: number | null;
   /** True when the gains lie on the curve at `kelvin`. */
   exact: boolean | null;
+  fade: SteamFrameFade | null;
 }
 
 export type SteamFrameRegisterOutcome =
