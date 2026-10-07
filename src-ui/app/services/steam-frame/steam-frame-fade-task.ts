@@ -76,14 +76,7 @@ export class SteamFrameFadeTask extends DeviceFade {
 
   private async run(): Promise<void> {
     const otherHmd = this.cancelWhenAnotherHmdIsActive();
-    try {
-      await this.runFade();
-    } finally {
-      otherHmd.unsubscribe();
-    }
-  }
 
-  private async runFade(): Promise<void> {
     // listen before sending, so a short fade's outcome is not lost
     const outcome = new ReplaySubject<SteamFrameFadeEnd>(1);
     const subscription = this.frames.fadeEnded$
@@ -115,6 +108,7 @@ export class SteamFrameFadeTask extends DeviceFade {
       this.finish(end);
     } finally {
       subscription.unsubscribe();
+      otherHmd.unsubscribe();
     }
   }
 
