@@ -78,8 +78,9 @@ export interface SteamFrameConnectionState {
   cct: SteamFrameCct | null;
 }
 
-/** A fade the helper runs, in a report. `target` is in percent or Kelvin. */
+/** A fade the helper runs, in a report. `target` is in percent for brightness, Kelvin for cct. */
 export interface SteamFrameFade {
+  /** The ID OyasumiVR gave the fade when it started it. */
   operation: string;
   target: number;
   remainingMs: number;
@@ -89,9 +90,15 @@ export interface SteamFrameFade {
 
 export type SteamFrameControl = 'brightness' | 'cct';
 
+/**
+ * How the helper ended a fade. `superseded` means a newer set or fade for the same control, from
+ * any PC. `externalChange` means the value changed on the headset. `standby` and
+ * `runtimeUnavailable` end the fades of both controls.
+ */
 export type SteamFrameFadeOutcome =
   'completed' | 'superseded' | 'cancelled' | 'externalChange' | 'standby' | 'runtimeUnavailable';
 
+/** A fade the helper ended, started by this PC or another one. */
 export interface SteamFrameFadeEnded {
   pairingId: string;
   control: SteamFrameControl;
@@ -99,6 +106,7 @@ export interface SteamFrameFadeEnded {
   outcome: SteamFrameFadeOutcome;
 }
 
+/** Why a fade was refused. The helper sends the first three, and the core adds `offline`. */
 export type SteamFrameFadeError = 'unsupported' | 'runtimeUnavailable' | 'writeFailed' | 'offline';
 
 /** The headset's hardware brightness in percent, as the helper reports it. */
