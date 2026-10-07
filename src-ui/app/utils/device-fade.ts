@@ -1,10 +1,7 @@
 import { CancellableTask } from './cancellable-task';
 
-/**
- * How a fade the device ran ended. `changedOnDevice` means the device's value no longer follows
- * the fade, and `deviceGone` means another device took over before the fade ended.
- */
-export type DeviceFadeEnd = 'completed' | 'changedOnDevice' | 'deviceGone' | 'stopped';
+/** How a fade the device ran ended. `changedOnDevice` means the device's value no longer follows it. */
+export type DeviceFadeEnd = 'completed' | 'changedOnDevice' | 'stopped';
 
 /**
  * A transition the device runs itself. It completes on `completed` and cancels itself on every
@@ -20,12 +17,5 @@ export abstract class DeviceFade extends CancellableTask {
   override cancel() {
     if (this.end === 'completed' && !this.isComplete()) this.end = null;
     super.cancel();
-  }
-
-  /** Ends a running fade because another device took over; its service hands the target on. */
-  endAsDeviceGone() {
-    if (this.isCancelled() || this.isComplete() || this.isError()) return;
-    this.end = 'deviceGone';
-    this.cancel();
   }
 }
