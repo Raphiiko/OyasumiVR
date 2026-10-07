@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs';
 import { DeviceFade } from '../../../utils/device-fade';
 
+/** What the CCT service asks a driver to fade. */
 export interface CctFadeOptions {
   /** Color temperature in Kelvin. */
   target: number;
