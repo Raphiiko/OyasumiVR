@@ -16,8 +16,6 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { DeviceFade, DeviceFadeEnd } from '../../utils/device-fade';
 import {
-  SteamFrameBrightness,
-  SteamFrameCct,
   SteamFrameConnectionState,
   SteamFrameControl,
   SteamFrameFadeEnded,

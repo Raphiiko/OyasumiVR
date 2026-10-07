@@ -50,8 +50,6 @@ export class CCTControlService {
   public readonly activeDriver: Observable<CctControlDriver | null>;
   public readonly driverIsAvailable: Observable<boolean>;
   private driver: CctControlDriver | null = null;
-  /** The last driver that was not null, so a gap without a driver is no headset change. */
-  private lastDriver: CctControlDriver | null = null;
   public readonly activeTransition = this._activeTransition.asObservable();
   public cctCSSColor: string = 'white';
 
@@ -137,11 +135,7 @@ export class CCTControlService {
     transition.onError.subscribe(() => transition.isError() && clear());
     // a device fade cancels itself on an end other than completed
     if (transition instanceof DeviceFade) {
-      transition.onCancelled.subscribe(() => {
-        clear();
-        // another headset gets the target in one command
-        if (transition.end === 'deviceGone') this.setCCT(transition.targetCCT);
-      });
+      transition.onCancelled.subscribe(clear);
       // runs with the error status, so no newer request can start in between
       transition.onError.subscribe((error) => this.onFadeRefused(transition, error));
     }
@@ -188,18 +182,8 @@ export class CCTControlService {
     }
   }
 
-  /** A fade another device ran ends first, so its target reaches the next one. */
-  private onDriver(driver: CctControlDriver | null) {
-    this.driver = driver;
-    if (!driver) return;
-    const lastDriver = this.lastDriver;
-    this.lastDriver = driver;
-    const transition = this._activeTransition.value;
-    if (driver !== lastDriver && transition instanceof DeviceFade) transition.endAsDeviceGone();
-  }
-
   private watchDrivers() {
-    this.activeDriver.subscribe((driver) => this.onDriver(driver));
+    this.activeDriver.subscribe((driver) => (this.driver = driver));
 
     // show the values a driver pushes, without writing them back
     this.activeDriver
