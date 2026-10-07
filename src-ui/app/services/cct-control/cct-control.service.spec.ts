@@ -1,11 +1,12 @@
 import { invoke } from '@tauri-apps/api/core';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 import { APP_SETTINGS_DEFAULT } from '../../models/settings';
 import type { OVRDevice } from '../../models/ovr-device';
 import type {
   SteamFrameCct,
   SteamFrameConnectionState,
+  SteamFrameFadeEnded,
   SteamFramePairing,
 } from '../../models/steam-frame';
 import { CCTControlService } from './cct-control.service';
@@ -35,7 +36,7 @@ const settle = () => new Promise((resolve) => setTimeout(resolve, 150));
 const settleUnclaimed = () => new Promise((resolve) => setTimeout(resolve, 800));
 
 function snapshot(kelvin: number, exact = true): SteamFrameCct {
-  return { available: true, gains: [1, 1, 1], kelvin, exact };
+  return { available: true, gains: [1, 1, 1], kelvin, exact, fade: null };
 }
 
 async function setup(
@@ -58,6 +59,7 @@ async function setup(
   const status = new BehaviorSubject('INITIALIZED');
   const devices = new BehaviorSubject(hmd ? [{ index: 0, class: 'HMD', ...hmd } as OVRDevice] : []);
   const connections = new BehaviorSubject<Record<string, SteamFrameConnectionState>>({});
+  const fadeEnded = new Subject<SteamFrameFadeEnded>();
   const settings = new BehaviorSubject({
     ...structuredClone(APP_SETTINGS_DEFAULT),
     cctControlOnUnsupportedHmds: tryUnsupported,
@@ -70,6 +72,7 @@ async function setup(
     {
       pairings$: new BehaviorSubject(paired ? [pairing, pairingB] : []),
       connections$: connections,
+      fadeEnded$: fadeEnded,
     } as unknown as Dependencies[2]
   );
   await service.init();
@@ -92,6 +95,8 @@ async function setup(
       ...connections.value,
       [pairingId]: { pairingId, status: 'connected', cct } as SteamFrameConnectionState,
     });
+  const end = (operation: string, outcome: SteamFrameFadeEnded['outcome']) =>
+    fadeEnded.next({ pairingId: 'p', control: 'cct', operation, outcome });
   const reply = (cct: SteamFrameCct) => replies.shift()!(cct);
   const setTryUnsupported = (value: boolean) =>
     settings.next({ ...settings.value, cctControlOnUnsupportedHmds: value });
@@ -108,6 +113,7 @@ async function setup(
     reply,
     setTryUnsupported,
     activate,
+    end,
   };
 }
 
@@ -193,16 +199,6 @@ describe('CCTControlService transitions', () => {
     expect(writes().length).toBeGreaterThan(3);
     expect(writes().at(-1)).toBe(3000);
     expect(await firstValueFrom(service.activeTransition)).toBeUndefined();
-  });
-
-  it('sets the target in one command for a driver that skips transitions', async () => {
-    const { service, writes } = await setup(INDEX);
-    Object.defineProperty(service.driverSteamVr, 'skipsTransitions', { value: true });
-
-    service.transitionCCT(3000, 1000);
-    await Promise.resolve();
-    expect(await firstValueFrom(service.activeTransition)).toBeUndefined();
-    expect(writes()).toEqual([6600, 3000]);
   });
 });
 
@@ -294,29 +290,157 @@ describe('CCTControlService with a Steam Frame', () => {
     expect(h.service.cct).toBe(2500);
   });
 
-  it('sets a transition target in one command', async () => {
+  it('fades through the helper, and keeps the fade through reports', async () => {
     const h = await setup(FRAME);
     h.report(snapshot(6600));
     await settle();
     const task = h.service.transitionCCT(3000, 10000);
     await settle();
+    const [[, args]] = h.calls('steam_frame_fade');
+    const { operation, ...request } = (args as { request: { operation: string } }).request;
+    expect(request).toEqual({ control: 'cct', target: 3000, durationMs: 10000 });
+    h.report(snapshot(5000));
+    await settle();
+    expect(h.service.cct).toBe(5000);
+    expect(await firstValueFrom(h.service.activeTransition)).toBe(task);
+    expect(h.frameWrites()).toEqual([]);
+    h.end(operation, 'externalChange');
+    await settle();
+    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
+    expect(h.frameWrites()).toEqual([]);
+  });
+
+  it('drops a waiting set when a helper fade starts, so the set cannot supersede it', async () => {
+    const h = await setup(FRAME);
+    h.report(snapshot(6600));
+    await settle();
+    await h.service.setCCT(5000);
+    await h.service.setCCT(4000);
+    h.service.transitionCCT(3000, 10000);
+    await settle();
+    expect(h.calls('steam_frame_fade')).toHaveLength(1);
+    h.reply(snapshot(5000));
+    await settle();
+    expect(h.frameWrites()).toEqual([5000]);
+  });
+
+  it('sets the target when the helper refuses the fade', async () => {
+    const h = await setup(FRAME);
+    h.report(snapshot(6600));
+    await settle();
+    const impl = vi.mocked(invoke).getMockImplementation()!;
+    vi.mocked(invoke).mockImplementation(async (command, args) =>
+      command === 'steam_frame_fade' ? Promise.reject('offline') : impl(command, args)
+    );
+    h.service.transitionCCT(3000, 10000);
+    await settle();
+    expect(h.frameWrites()).toEqual([3000]);
+    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
+  });
+
+  it('runs no helper fade to the value the Frame already holds', async () => {
+    const h = await setup(FRAME);
+    h.report(snapshot(3000));
+    await settle();
+    h.service.transitionCCT(3000, 10000);
+    await settle();
+    expect(h.calls('steam_frame_fade')).toEqual([]);
+    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
+  });
+
+  it('limits a helper fade to the 24 hours the helper accepts', async () => {
+    const h = await setup(FRAME);
+    h.report(snapshot(6600));
+    await settle();
+    h.service.transitionCCT(3000, 25 * 60 * 60 * 1000);
+    await settle();
+    const [[, args]] = h.calls('steam_frame_fade');
+    expect((args as { request: { durationMs: number } }).request.durationMs).toBe(86400000);
+  });
+
+  it('cancels a helper fade when another Frame becomes active', async () => {
+    const h = await setup(FRAME);
+    h.report(snapshot(6600));
+    h.report(snapshot(5000), 'q');
+    await settle();
+    h.service.transitionCCT(3000, 10000);
+    await settle();
+    h.activate(FRAME_B);
+    await settle();
+    expect(h.calls('steam_frame_cancel_fade')).toHaveLength(1);
+    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
+  });
+
+  it('cancels a helper fade when an Index takes over', async () => {
+    const h = await setup(FRAME);
+    h.report(snapshot(6600));
+    await settle();
+    h.service.transitionCCT(3000, 10000);
+    await settle();
+    h.activate(INDEX);
+    await settle();
+    expect(h.calls('steam_frame_cancel_fade')).toHaveLength(1);
+    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
+  });
+
+  it('keeps a helper fade when the same Frame returns after SteamVR restarts', async () => {
+    const h = await setup(FRAME);
+    h.report(snapshot(6600));
+    await settle();
+    const task = h.service.transitionCCT(1800, 10000);
+    await settle();
+    h.status.next('STOPPED');
+    await settle();
+    h.status.next('INITIALIZED');
+    await settle();
+    expect(h.calls('steam_frame_cancel_fade')).toEqual([]);
+    expect(h.frameWrites()).toEqual([]);
+    expect(await firstValueFrom(h.service.activeTransition)).toBe(task);
+    task.cancel();
+  });
+
+  it('stops a running fade when a transition asks for the value the Frame holds', async () => {
+    const h = await setup(FRAME);
+    h.report(snapshot(6600));
+    await settle();
+    h.service.transitionCCT(1800, 10000);
+    await settle();
+    h.report(snapshot(5000));
+    await settle();
+    h.service.transitionCCT(5000, 10000);
+    await settle();
+    expect(h.calls('steam_frame_cancel_fade')).toHaveLength(1);
+    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
+  });
+
+  it('runs a PC transition before the first report and sends its last value after it', async () => {
+    const h = await setup(FRAME);
+    h.report(null);
+    await settle();
+    const task = h.service.transitionCCT(3000, 20);
+    await settle();
     expect(task.isComplete()).toBe(true);
+    h.report(snapshot(6600));
+    await settle();
+    expect(h.calls('steam_frame_fade')).toEqual([]);
     expect(h.frameWrites()).toEqual([3000]);
   });
 
-  it('finishes a running transition in one command when the Frame takes over', async () => {
+  it('keeps stepping a running transition on the Frame that takes over', async () => {
     const h = await setup(FRAME);
     h.report(null);
     h.status.next('STOPPED');
     await settle();
     // a transition that started with no HMD runs a PC loop
-    h.service.transitionCCT(3000, 10000, { logReason: 'SLEEP_MODE_ENABLE' });
+    const task = h.service.transitionCCT(3000, 10000, { logReason: 'SLEEP_MODE_ENABLE' });
     h.status.next('INITIALIZED');
     await settle();
     h.report(snapshot(6000));
     await settle();
-    expect(h.frameWrites()).toEqual([3000]);
-    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
+    expect(await firstValueFrom(h.service.activeTransition)).toBe(task);
+    expect(h.frameWrites()).toHaveLength(1);
+    expect(h.frameWrites()[0]).toBeGreaterThan(3000);
+    task.cancel();
   });
 
   it('applies a value set before the first report once the Frame reports', async () => {
@@ -426,15 +550,17 @@ describe('CCTControlService with a Steam Frame', () => {
     expect(h.writes()).toEqual([3000]);
   });
 
-  it('finishes a running Index transition in one command when a reporting Frame takes over', async () => {
+  it('keeps stepping a running Index transition on a reporting Frame that takes over', async () => {
     const h = await setup(INDEX);
     h.report(snapshot(6000));
     await settle();
-    h.service.transitionCCT(3000, 10000, { logReason: 'SLEEP_MODE_ENABLE' });
+    const task = h.service.transitionCCT(3000, 10000, { logReason: 'SLEEP_MODE_ENABLE' });
     await settle();
     h.activate(FRAME);
     await settle();
-    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
-    expect(h.frameWrites()).toEqual([3000]);
+    expect(await firstValueFrom(h.service.activeTransition)).toBe(task);
+    expect(h.frameWrites()).toHaveLength(1);
+    expect(h.frameWrites()[0]).toBeGreaterThan(3000);
+    task.cancel();
   });
 });

@@ -190,6 +190,16 @@ export class SteamFrameBrightnessFade extends SteamFrameFadeTask {
   }
 }
 
+/** A color temperature fade. `targetCCT` is the value the UI shows as the target. */
+export class SteamFrameCctFade extends SteamFrameFadeTask {
+  constructor(
+    readonly targetCCT: number,
+    ...args: ConstructorParameters<typeof SteamFrameFadeTask>
+  ) {
+    super(...args);
+  }
+}
+
 function deviceFadeEnd(outcome: SteamFrameFadeEnd): DeviceFadeEnd {
   if (outcome === 'completed') return 'completed';
   return outcome === 'externalChange' || outcome === 'missed' ? 'changedOnDevice' : 'stopped';

@@ -19,8 +19,9 @@ import {
   STEAM_FRAME_WAITING_SET_MS,
 } from '../../../models/steam-frame';
 import type { OpenVRService, OpenVRStatus } from '../../openvr.service';
+import { SteamFrameCctFade } from '../../steam-frame/steam-frame-fade-task';
 import type { SteamFramePairingService } from '../../steam-frame/steam-frame-pairing.service';
-import { CctControlDriver } from './cct-control-driver';
+import { CctControlDriver, CctFadeOptions } from './cct-control-driver';
 
 /** A Frame report that carries a value. */
 type FrameCct = SteamFrameCct & { kelvin: number };
@@ -35,13 +36,14 @@ type ActiveHmd =
 /** Sets a paired Steam Frame's color temperature through its helper, which also reports it. */
 export class SteamFrameCctControlDriver extends CctControlDriver {
   readonly name = 'Steam Frame helper';
-  override readonly skipsTransitions = true;
   override readonly pushesCctChanges = true;
   /** Replays the latest value, which can arrive before the driver becomes the active one. */
   private readonly updates = new ReplaySubject<number>(1);
   override readonly cctUpdates = this.updates.asObservable();
   private readonly hmd: Observable<ActiveHmd>;
   private readonly matching: Observable<boolean>;
+  /** The paired Frame's id while it is the active HMD, null for another HMD, undefined for none. */
+  readonly activePairing: Observable<string | null | undefined>;
   private readonly available: Observable<boolean>;
   private currentHmd: ActiveHmd = { kind: 'none' };
   /** The value last sent to `cctUpdates`. */
@@ -55,7 +57,10 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
 
   constructor(
     openvr: Pick<OpenVRService, 'status' | 'devices'>,
-    steamFrames: Pick<SteamFramePairingService, 'pairings$' | 'connections$'>
+    private readonly steamFrames: Pick<
+      SteamFramePairingService,
+      'pairings$' | 'connections$' | 'fadeEnded$'
+    >
   ) {
     super();
     const frameModels = from(
@@ -74,6 +79,11 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
         this.activeHmd(status, devices, pairings, connections, frameModels)
       ),
       distinctUntilChanged(isEqual),
+      shareReplay(1)
+    );
+    this.activePairing = this.hmd.pipe(
+      map((hmd) => (hmd.kind === 'none' ? undefined : hmd.kind === 'frame' ? hmd.pairingId : null)),
+      distinctUntilChanged(),
       shareReplay(1)
     );
     this.matching = this.hmd.pipe(
@@ -136,6 +146,33 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
     if (target.kind !== 'frame' || !target.cct) return;
     const replyApplies = applied?.kelvin != null && sentTo === target.pairingId;
     this.adopt(replyApplies ? (applied as FrameCct) : target.cct);
+  }
+
+  /**
+   * A fade on the paired Frame's helper, or null while the active HMD is no Frame that reports, or
+   * the Frame already holds the value. Drops a waiting set.
+   */
+  override fade({ target: kelvin, durationMs }: CctFadeOptions): SteamFrameCctFade | null {
+    const hmd = this.currentHmd;
+    if (hmd.kind !== 'frame' || !hmd.pairingId || !hmd.cct) return null;
+    // the helper would hold a fade to the value it already has for the whole duration
+    if (kelvin === this.shown && this.exact) return null;
+    // a waiting set would go out after the fade and supersede it
+    this.pending = null;
+    return new SteamFrameCctFade(
+      kelvin,
+      {
+        pairingId: hmd.pairingId,
+        control: 'cct',
+        target: kelvin,
+        durationMs,
+      },
+      {
+        connections$: this.steamFrames.connections$,
+        fadeEnded$: this.steamFrames.fadeEnded$,
+        activePairing$: this.activePairing,
+      }
+    );
   }
 
   private activeHmd(
