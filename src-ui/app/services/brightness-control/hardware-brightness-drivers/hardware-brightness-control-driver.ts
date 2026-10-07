@@ -10,6 +10,7 @@ export interface HardwareBrightnessControlDriverBounds {
   riskThreshold: number; // Starting percentage where manufacturer (but not hardware) support stops
 }
 
+/** What a service asks a driver to fade. */
 export interface HardwareBrightnessFadeOptions {
   /** Brightness in the driver's percent, as `setBrightnessPercentage` takes it. */
   target: number;

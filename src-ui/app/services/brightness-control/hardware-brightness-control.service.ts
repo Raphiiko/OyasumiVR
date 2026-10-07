@@ -45,6 +45,10 @@ import { DeviceFade } from '../../utils/device-fade';
 /** A transition on the PC, or a fade the device runs. */
 export type HardwareBrightnessTransition = CancellableTask & { readonly targetBrightness: number };
 
+/**
+ * A value the active driver reported by itself, which the cache shows without writing it back.
+ * `percentage` is in the driver's percent, and `bounds` are the driver's bounds at that report.
+ */
 export interface AdoptedBrightness {
   percentage: number;
   bounds: [number, number];
@@ -241,7 +245,7 @@ export class HardwareBrightnessControlService {
     });
     if (fade) {
       this.cancelActiveTransition();
-      return this.activate(fade, opt.logReason);
+      return this.activateTransition(fade, opt.logReason);
     }
     this._activeTransition.value?.cancel();
     const transition = new BrightnessTransitionTask(
@@ -253,7 +257,7 @@ export class HardwareBrightnessControlService {
       duration,
       { logReason: opt.logReason }
     );
-    return this.activate(transition, opt.logReason);
+    return this.activateTransition(transition, opt.logReason);
   }
 
   /** A fade the active device runs itself, or null when it cannot run one now. */
@@ -262,7 +266,7 @@ export class HardwareBrightnessControlService {
   }
 
   /** Makes the transition the active one until it ends, and starts it. */
-  private activate(
+  private activateTransition(
     transition: HardwareBrightnessTransition,
     logReason: SetBrightnessOrCCTReason | null
   ): HardwareBrightnessTransition {
