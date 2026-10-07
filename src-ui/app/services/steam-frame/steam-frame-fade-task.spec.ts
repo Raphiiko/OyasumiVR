@@ -16,7 +16,7 @@ const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 type FadeArgs = { pairingId: string; request: { operation: string; durationMs: number } };
 
-function setup(durationMs = 60_000, { reported = true } = {}) {
+function setup(durationMs = 60_000) {
   const replies: ((error: SteamFrameFadeError | null) => void)[] = [];
   vi.mocked(invoke).mockReset();
   vi.mocked(invoke).mockImplementation(async (command) => {
@@ -29,12 +29,10 @@ function setup(durationMs = 60_000, { reported = true } = {}) {
   const fadeEnded = new Subject<SteamFrameFadeEnded>();
   const activePairing = new BehaviorSubject<string | null | undefined>('p');
   const onAccept = vi.fn();
-  const onLate = vi.fn();
   const task = new SteamFrameFadeTask(
     { pairingId: 'p', control: 'brightness', target: 30, durationMs },
     { connections$: connections, fadeEnded$: fadeEnded, activePairing$: activePairing },
-    onAccept,
-    onLate
+    onAccept
   );
   const state = (
     status: SteamFrameConnectionState['status'],
@@ -72,8 +70,8 @@ function setup(durationMs = 60_000, { reported = true } = {}) {
   const statuses: string[] = [];
   task.onCancelled.subscribe(() => statuses.push('cancelled'));
   task.onComplete.subscribe(() => statuses.push('completed'));
-  state('connected', { report: reported });
-  return { task, state, end, reply, fades, cancels, onAccept, onLate, statuses, activePairing };
+  state('connected');
+  return { task, state, end, reply, fades, cancels, onAccept, statuses, activePairing };
 }
 
 describe('SteamFrameFadeTask', () => {
@@ -140,39 +138,6 @@ describe('SteamFrameFadeTask', () => {
     h.task.cancel();
     await done;
     expect(h.task.end).toBeNull();
-  });
-
-  it('waits for a report, then sends the fade at full length', async () => {
-    const h = setup(200, { reported: false });
-    const done = h.task.start();
-    await wait(50);
-    expect(h.fades()).toEqual([]);
-    h.state('connected');
-    await h.reply();
-    expect(h.fades()).toEqual([expect.objectContaining({ durationMs: 200 })]);
-    h.end('completed');
-    await done;
-    expect(h.statuses).toEqual(['completed']);
-    expect(h.onLate).not.toHaveBeenCalled();
-  });
-
-  it('completes and runs onLate when no report comes before the planned end', async () => {
-    const h = setup(20, { reported: false });
-    await h.task.start();
-    expect(h.fades()).toEqual([]);
-    expect(h.onLate).toHaveBeenCalledOnce();
-    expect(h.task.end).toBe('completed');
-    expect(h.statuses).toEqual(['completed']);
-  });
-
-  it('sends nothing when cancelled while it waits for a report', async () => {
-    const h = setup(60_000, { reported: false });
-    const done = h.task.start();
-    h.task.cancel();
-    await done;
-    expect(h.fades()).toEqual([]);
-    expect(h.cancels()).toEqual([]);
-    expect(h.onLate).not.toHaveBeenCalled();
   });
 
   it('keeps an outcome that arrives before the reply', async () => {
@@ -252,7 +217,7 @@ describe('SteamFrameFadeTask', () => {
     expect(h.task.end).toBeNull();
   });
 
-  it('ends as deviceGone and cancels on the helper when another HMD takes over', async () => {
+  it('cancels on the helper when another HMD takes over, but not in a gap without one', async () => {
     const h = setup();
     const done = h.task.start();
     await h.reply();
@@ -262,7 +227,7 @@ describe('SteamFrameFadeTask', () => {
     h.activePairing.next(null);
     await done;
     expect(h.statuses[0]).toBe('cancelled');
-    expect(h.task.end).toBe('deviceGone');
+    expect(h.task.end).toBeNull();
     expect(h.cancels()).toEqual([
       ['steam_frame_cancel_fade', { pairingId: 'p', operation: h.task.operation }],
     ]);

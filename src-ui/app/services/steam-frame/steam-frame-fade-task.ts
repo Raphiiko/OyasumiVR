@@ -50,9 +50,6 @@ export interface SteamFrameFadeRequest {
  * A fade the helper runs. It completes on outcome `completed`, and at its end time while the
  * helper connection is down. Every other outcome cancels it, and so does another HMD becoming
  * the active one. Cancelling it from outside cancels the fade on the helper.
- *
- * A Frame that does not report yet gets the fade at full length once it reports. When that takes
- * past the fade's planned end, the task completes and runs `onLate` instead.
  */
 export class SteamFrameFadeTask extends DeviceFade {
   readonly operation = uuidv4();
@@ -65,9 +62,7 @@ export class SteamFrameFadeTask extends DeviceFade {
     request: SteamFrameFadeRequest,
     private readonly frames: SteamFrameFadeSource,
     /** Runs once the helper accepts the fade. */
-    private readonly onAccept?: () => void,
-    /** Runs when the Frame first reports after the fade's planned end, so it never started. */
-    private readonly onLate?: () => void
+    private readonly onAccept?: () => void
   ) {
     super();
     this.request = {
@@ -83,20 +78,11 @@ export class SteamFrameFadeTask extends DeviceFade {
   }
 
   private async run(): Promise<void> {
-    const handoff = this.cancelWhenDeviceGone();
+    const otherHmd = this.cancelWhenAnotherHmdIsActive();
     try {
-      // wait for a report, until the fade would have ended
-      const late = timer(this.request.durationMs).pipe(map(() => 'late' as const));
-      const reported = await firstValueFrom(race(this.reported(), late, this.cancelled()));
-      if (reported === null || this.isCancelled()) return;
-      if (reported === 'late') {
-        this.end = 'completed';
-        this.onLate?.();
-        return;
-      }
       await this.runFade();
     } finally {
-      handoff.unsubscribe();
+      otherHmd.unsubscribe();
     }
   }
 
@@ -141,14 +127,14 @@ export class SteamFrameFadeTask extends DeviceFade {
     if (outcome !== 'completed') this.cancel();
   }
 
-  /** Another HMD taking over ends the fade, which the helper then stops. */
-  private cancelWhenDeviceGone(): Subscription {
+  /** A gap without an HMD keeps the fade; another HMD cancels it. */
+  private cancelWhenAnotherHmdIsActive(): Subscription {
     return this.frames.activePairing$
       .pipe(
         filter((pairing) => pairing !== undefined && pairing !== this.pairingId),
         take(1)
       )
-      .subscribe(() => this.endAsDeviceGone());
+      .subscribe(() => this.cancel());
   }
 
   private send(): Promise<SteamFrameFadeError | null> {
@@ -181,14 +167,6 @@ export class SteamFrameFadeTask extends DeviceFade {
   private report(state: SteamFrameConnectionState | undefined) {
     if (state?.status !== 'connected') return null;
     return this.request.control === 'brightness' ? state.brightness : state.cct;
-  }
-
-  private reported(): Observable<true> {
-    return this.connection().pipe(
-      filter((state) => !!this.report(state)),
-      take(1),
-      map(() => true as const)
-    );
   }
 
   /**
