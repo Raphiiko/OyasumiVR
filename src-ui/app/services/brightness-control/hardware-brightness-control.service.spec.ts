@@ -174,7 +174,7 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
       getBrightnessBounds: () => [0, 100],
       getBrightnessPercentage: async () => 80,
     };
-    h.service['driver'].next(nextDriver as unknown as typeof h.service.driverValveIndex);
+    h.service['_activeDriver'].next(nextDriver as unknown as typeof h.service.driverValveIndex);
     await settle();
     expect(setBrightness).toHaveBeenCalledWith(80);
   });
@@ -197,7 +197,7 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
       getBrightnessPercentage: async () => 100,
       setBrightnessPercentage: vi.fn(async () => {}),
     };
-    h.service['driver'].next(nextDriver as unknown as typeof h.service.driverValveIndex);
+    h.service['_activeDriver'].next(nextDriver as unknown as typeof h.service.driverValveIndex);
     await settle();
     expect(nextDriver.setBrightnessPercentage).toHaveBeenCalledWith(20);
   });
@@ -213,7 +213,7 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
       getBrightnessPercentage: async () => 100,
       setBrightnessPercentage: vi.fn(async () => {}),
     };
-    h.service['driver'].next(nextDriver as unknown as typeof h.service.driverValveIndex);
+    h.service['_activeDriver'].next(nextDriver as unknown as typeof h.service.driverValveIndex);
     await settle();
     expect(vi.mocked(invoke).mock.calls.map(([name]) => name)).toContain('steam_frame_cancel_fade');
     expect(nextDriver.setBrightnessPercentage).toHaveBeenCalledWith(30);
@@ -224,8 +224,8 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
     vi.mocked(invoke).mockImplementation(async () => undefined);
     const task = h.service.transitionBrightness(30, 10000);
     await settle();
-    h.service['driver'].next(null);
-    h.service['driver'].next(h.service.driverSteamFrame);
+    h.service['_activeDriver'].next(null);
+    h.service['_activeDriver'].next(h.service.driverSteamFrame);
     await settle();
     expect(vi.mocked(invoke).mock.calls.map(([name]) => name)).not.toContain(
       'steam_frame_cancel_fade'
