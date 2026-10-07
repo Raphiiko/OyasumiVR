@@ -152,7 +152,7 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
     expect(h.writes()).toHaveLength(1);
   });
 
-  it('cancels a helper fade and sets its target once another headset takes over', async () => {
+  it('cancels a helper fade when another headset takes over', async () => {
     const h = await setup();
     vi.mocked(invoke).mockImplementation(async () => undefined);
     h.service.transitionBrightness(80, 10000);
@@ -166,56 +166,6 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
     expect(cancels).toHaveLength(1);
     expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
     expect(setBrightness).not.toHaveBeenCalled();
-
-    // the new headset's driver becomes available later
-    const nextDriver = {
-      isAvailable: () => new BehaviorSubject(false),
-      getBrightnessBounds: () => [0, 100],
-      getBrightnessPercentage: async () => 80,
-    };
-    h.service['_activeDriver'].next(nextDriver as unknown as typeof h.service.driverValveIndex);
-    await settle();
-    expect(setBrightness).toHaveBeenCalledWith(80);
-  });
-
-  it('writes a handoff target the next headset only appears to hold', async () => {
-    const h = await setup();
-    vi.mocked(invoke).mockImplementation(async () => undefined);
-    h.service.transitionBrightness(20, 10000);
-    await settle();
-    // the Frame reached the target, which is also the next headset's floor
-    h.report(20, { fade: 'running' });
-    await settle();
-    expect(h.service.brightness).toBe(20);
-    h.devices.next([{ class: 'HMD', serialNumber: 'LHR-1' } as OVRDevice]);
-    await settle();
-
-    const nextDriver = {
-      isAvailable: () => new BehaviorSubject(true),
-      getBrightnessBounds: () => [20, 160],
-      getBrightnessPercentage: async () => 100,
-      setBrightnessPercentage: vi.fn(async () => {}),
-    };
-    h.service['_activeDriver'].next(nextDriver as unknown as typeof h.service.driverValveIndex);
-    await settle();
-    expect(nextDriver.setBrightnessPercentage).toHaveBeenCalledWith(20);
-  });
-
-  it('gives a fade target to a driver that takes over before the fade sees the headset change', async () => {
-    const h = await setup();
-    vi.mocked(invoke).mockImplementation(async () => undefined);
-    h.service.transitionBrightness(30, 10000);
-    await settle();
-    const nextDriver = {
-      isAvailable: () => new BehaviorSubject(true),
-      getBrightnessBounds: () => [20, 160],
-      getBrightnessPercentage: async () => 100,
-      setBrightnessPercentage: vi.fn(async () => {}),
-    };
-    h.service['_activeDriver'].next(nextDriver as unknown as typeof h.service.driverValveIndex);
-    await settle();
-    expect(vi.mocked(invoke).mock.calls.map(([name]) => name)).toContain('steam_frame_cancel_fade');
-    expect(nextDriver.setBrightnessPercentage).toHaveBeenCalledWith(30);
   });
 
   it('keeps a helper fade when the same driver returns after a gap without any', async () => {
@@ -280,25 +230,7 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
     expect(h.service.brightness).toBe(80);
   });
 
-  it('runs a fade at full length when the Frame reports before its planned end', async () => {
-    const h = await setup(null);
-    h.service.transitionBrightness(80, 10_000);
-    await settle();
-    const fades = () => vi.mocked(invoke).mock.calls.filter(([c]) => c === 'steam_frame_fade');
-    expect(fades()).toEqual([]);
-    h.report(40);
-    await settle();
-    expect(fades()).toEqual([
-      [
-        'steam_frame_fade',
-        expect.objectContaining({
-          request: expect.objectContaining({ target: 80, durationMs: 10_000 }),
-        }),
-      ],
-    ]);
-  });
-
-  it('sets the target of a fade the Frame reported too late for', async () => {
+  it('runs a PC transition before the first report and sends its last value after it', async () => {
     const h = await setup(null);
     vi.mocked(invoke).mockImplementation(async (command, args) =>
       command === 'steam_frame_set_brightness' ? (args as { percentage: number }).percentage : false

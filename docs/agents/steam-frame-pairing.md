@@ -380,8 +380,7 @@ write made in standby. A cancelled fade never resumes.
 
 The brightness services know only `DeviceFade`, a `CancellableTask` for a fade the device runs
 itself. A driver returns one from `fade()`, and the base driver returns null, so other headsets
-keep the PC transition. A `DeviceFade` ends as `completed`, `changedOnDevice`, `deviceGone`, or
-`stopped`.
+keep the PC transition. A `DeviceFade` ends as `completed`, `changedOnDevice`, or `stopped`.
 
 `SteamFrameFadeTask` is the Frame driver's `DeviceFade` for one helper fade.
 
@@ -389,21 +388,17 @@ keep the PC transition. A `DeviceFade` ends as `completed`, `changedOnDevice`, `
 - It completes on `completed`, and every other outcome cancels it. `externalChange` and `missed`
   end it as `changedOnDevice`, the other outcomes as `stopped`. Cancelling it from outside sends
   `cancelFade` with its operation ID.
-- A fade for a paired Frame that does not report yet waits for the first report, then runs at
-  full length. When that report comes after the fade's planned end, the task completes without a
-  fade, and the driver keeps the target as a set.
+- The Frame driver returns a fade only while the Frame reports. Before the first report the
+  service runs the PC transition, and the driver holds its last value as a waiting set.
 - While the connection is down it completes at its end time. When a report after a reconnect no
   longer carries its fade, it ends as `missed`.
 - A refused fade fails the task with the helper's error, and the service that started it sets the
   target instead.
 - A connected state without a report counts as down, because a helper update clears the reports
   without leaving `connected`.
-- When another headset becomes the active HMD during a fade, the task ends as `deviceGone` and
-  sends `cancelFade`. The service then sets the fade's target on the driver of the next headset,
-  which keeps it until that headset can take it. A service whose driver changes ends the fade the
-  same way before it writes anything else, so the next headset gets the target, not the value the
-  fade had reached. A gap without any driver, such as a SteamVR restart, followed by the same driver
-  is no change, and the fade keeps running.
+- When another headset becomes the active HMD during a fade, the task cancels itself and sends
+  `cancelFade`. The next headset keeps its own brightness until the next set. A gap without any
+  HMD, such as a SteamVR restart, keeps the fade running.
 - In simple mode the software part runs for the duration the device runs, which is at most 24
   hours.
 
@@ -411,8 +406,7 @@ In simple mode the device runs the hardware part of the simple curve, and the PC
 part on the same curve from the accept reply. On `completed` the software part ends on its target,
 because the device can complete first, such as in standby. On `changedOnDevice` the software part
 stops and the simple value follows the headset, as for any report. On any other end the software
-part stops where it is. In advanced mode the software transition runs on the PC as before, so a
-headset change ends only the hardware fade.
+part stops where it is. In advanced mode the software transition runs on the PC as before.
 
 ## Updates
 
