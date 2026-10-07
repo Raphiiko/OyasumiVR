@@ -28,9 +28,6 @@ async function setup(advancedMode = false, pushesBrightnessChanges = false) {
     driverIsAvailable: new BehaviorSubject(false),
     brightnessBounds: new BehaviorSubject([20, 100]),
     adoptedBrightness: new ReplaySubject<{ percentage: number; bounds: [number, number] }>(1),
-    lastActiveDriver: (pushesBrightnessChanges ? { pushesBrightnessChanges: true } : null) as {
-      pushesBrightnessChanges: boolean;
-    } | null,
     activeDriver: (pushesBrightnessChanges
       ? { pushesBrightnessChanges: true, getBrightnessBounds: () => [20, 100] }
       : null) as {
@@ -274,7 +271,6 @@ describe('simple brightness with a device that reports its brightness', () => {
     h.hardware.setBrightness.mockClear();
     // a Beyond that stayed available takes over; availability never turns false
     h.hardware.activeDriver = { pushesBrightnessChanges: false };
-    h.hardware.lastActiveDriver = h.hardware.activeDriver;
     h.hardware.onDriverChange.next();
     await settle();
     expect(h.hardware.setBrightness).toHaveBeenCalledOnce();
@@ -325,7 +321,6 @@ describe('simple brightness fading a Steam Frame', () => {
     };
     h.hardware.deviceFade.mockImplementation((o) => driver.fade(o));
     h.hardware.activeDriver = driver;
-    h.hardware.lastActiveDriver = driver;
     h.hardware.brightnessBounds.next([9, 125]);
     h.hardware.driverIsAvailable.next(true);
     await wait();
@@ -399,7 +394,6 @@ describe('simple brightness fading a Steam Frame', () => {
     h.hardware.driverIsAvailable.next(false);
     const beyond = { pushesBrightnessChanges: false, getBrightnessBounds: () => [9, 125] };
     h.hardware.activeDriver = beyond as never;
-    h.hardware.lastActiveDriver = beyond as never;
     h.hardware.driverIsAvailable.next(true);
     h.hardware.onDriverChange.next();
     await wait();

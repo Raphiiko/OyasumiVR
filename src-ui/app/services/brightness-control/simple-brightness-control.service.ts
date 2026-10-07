@@ -112,7 +112,12 @@ export class SimpleBrightnessControlService {
         skip(1),
         distinctUntilChanged(),
         // a device that pushes its brightness changes keeps its value across availability changes
-        filter(() => !this.hardwareBrightnessControl.lastActiveDriver?.pushesBrightnessChanges),
+        // availability can change before onDriverChange updates lastDriver, so ask the active one
+        filter(
+          () =>
+            !(this.hardwareBrightnessControl.activeDriver ?? this.lastDriver)
+              ?.pushesBrightnessChanges
+        ),
         // the driver change hands a running device fade's target on instead
         filter(() => !(this._activeTransition.value instanceof DeviceFade))
       )
