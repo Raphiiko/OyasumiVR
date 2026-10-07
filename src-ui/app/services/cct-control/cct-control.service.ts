@@ -99,7 +99,7 @@ export class CCTControlService {
     const fade = this.deviceFade(temperature, duration);
     if (fade) {
       this.cancelActiveTransition();
-      return this.activate(fade, opt.logReason);
+      return this.activateTransition(fade, opt.logReason);
     }
     if (this._cct.value === temperature) {
       this.cancelActiveTransition();
@@ -114,7 +114,7 @@ export class CCTControlService {
       duration,
       { logReason: opt.logReason }
     );
-    return this.activate(transition, opt.logReason);
+    return this.activateTransition(transition, opt.logReason);
   }
 
   /** A fade the active device runs itself, or null while no driver takes one. */
@@ -124,7 +124,7 @@ export class CCTControlService {
   }
 
   /** Makes the transition the active one until it ends, and starts it. */
-  private activate(
+  private activateTransition(
     transition: CctTransition,
     logReason: SetBrightnessOrCCTReason | null
   ): CctTransition {
