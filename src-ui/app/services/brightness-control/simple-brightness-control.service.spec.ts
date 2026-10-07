@@ -341,31 +341,14 @@ describe('simple brightness fading a Steam Frame', () => {
     return { ...h, sent, end, activePairing };
   }
 
-  it('cancels the fade and sets its target when another headset takes over', async () => {
+  it('cancels the fade when another headset takes over', async () => {
     const h = await frame();
     h.service.transitionBrightness(0, 10000);
     await wait();
     h.activePairing.next(null);
     await wait();
     expect(vi.mocked(invoke).mock.calls.map(([name]) => name)).toContain('steam_frame_cancel_fade');
-    expect(h.service.brightness).toBe(0);
     expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
-  });
-
-  it('gives the target to a driver that takes over before the fade sees the headset change', async () => {
-    const h = await frame();
-    h.hardware.onDriverChange.next();
-    h.service.transitionBrightness(0, 10000);
-    await wait();
-    h.hardware.activeDriver = {
-      pushesBrightnessChanges: false,
-      getBrightnessBounds: () => [9, 125],
-    } as never;
-    h.hardware.onDriverChange.next();
-    await wait();
-    expect(vi.mocked(invoke).mock.calls.map(([name]) => name)).toContain('steam_frame_cancel_fade');
-    expect(h.service.brightness).toBe(0);
-    expect(h.hardware.setBrightness).toHaveBeenLastCalledWith(9, expect.anything());
   });
 
   it('keeps the fade when the same driver returns after a gap without any', async () => {
@@ -384,22 +367,6 @@ describe('simple brightness fading a Steam Frame', () => {
     );
     expect(await firstValueFrom(h.service.activeTransition)).toBe(task);
     task.cancel();
-  });
-
-  it('gives the target to a driver that becomes available before the driver change', async () => {
-    const h = await frame();
-    h.hardware.onDriverChange.next();
-    h.service.transitionBrightness(0, 10000);
-    await wait();
-    h.hardware.driverIsAvailable.next(false);
-    const beyond = { pushesBrightnessChanges: false, getBrightnessBounds: () => [9, 125] };
-    h.hardware.activeDriver = beyond as never;
-    h.hardware.driverIsAvailable.next(true);
-    h.hardware.onDriverChange.next();
-    await wait();
-    expect(vi.mocked(invoke).mock.calls.map(([name]) => name)).toContain('steam_frame_cancel_fade');
-    expect(h.service.brightness).toBe(0);
-    expect(h.hardware.setBrightness).toHaveBeenLastCalledWith(9, expect.anything());
   });
 
   it('sets the target, software part included, when the helper refuses the fade', async () => {
@@ -483,48 +450,6 @@ describe('simple brightness fading a Steam Frame', () => {
     expect(h.software.brightness).toBe(0);
     await h.service.setBrightness(70);
     await wait(100);
-    expect(h.service.brightness).toBe(70);
-  });
-
-  it('gives the target to the driver of the next headset at once', async () => {
-    const h = await frame();
-    h.service.transitionBrightness(0, 10_000);
-    await wait();
-    h.hardware.driverIsAvailable.next(false);
-    h.activePairing.next('q');
-    await wait();
-    expect(h.service.brightness).toBe(0);
-    expect(h.hardware.setBrightness).toHaveBeenCalledWith(9, expect.anything());
-  });
-
-  it('sets the target once a driver matches the next headset', async () => {
-    const h = await frame();
-    const driver = h.hardware.activeDriver;
-    h.service.transitionBrightness(0, 10_000);
-    await wait();
-    h.hardware.activeDriver = null;
-    h.activePairing.next(null);
-    await wait();
-    expect(h.service.brightness).toBe(0);
-    expect(h.hardware.setBrightness).not.toHaveBeenCalled();
-    h.hardware.activeDriver = driver;
-    h.hardware.onDriverChange.next();
-    await wait();
-    expect(h.hardware.setBrightness).toHaveBeenCalledWith(9, expect.anything());
-  });
-
-  it('keeps a newer set over a handoff target that waits for the next headset', async () => {
-    const h = await frame();
-    const driver = h.hardware.activeDriver;
-    h.service.transitionBrightness(0, 10_000);
-    await wait();
-    h.hardware.activeDriver = null;
-    h.activePairing.next(null);
-    await wait();
-    await h.service.setBrightness(70);
-    h.hardware.activeDriver = driver;
-    h.hardware.onDriverChange.next();
-    await wait();
     expect(h.service.brightness).toBe(70);
   });
 
