@@ -7,7 +7,6 @@ import {
   map,
   Observable,
   skip,
-  take,
   tap,
 } from 'rxjs';
 import { info, warn } from '@tauri-apps/plugin-log';
@@ -63,7 +62,7 @@ export class SimpleBrightnessControlService {
   private settingBrightness = 0;
   /** The active driver at the last driver change, to recognize a handoff between drivers. */
   private previousDriver: HardwareBrightnessControlDriver | null = null;
-  /** The last driver that was not null, so a gap without a driver is no headset change. */
+  /** The last driver that was not null; it stays set through a gap without a driver. */
   private lastDriver: HardwareBrightnessControlDriver | null = null;
   /** The latest report skipped while `settingBrightness` was above zero. */
   private deferredAdoption: AdoptedBrightness | null = null;
@@ -117,9 +116,7 @@ export class SimpleBrightnessControlService {
           () =>
             !(this.hardwareBrightnessControl.activeDriver ?? this.lastDriver)
               ?.pushesBrightnessChanges
-        ),
-        // the driver change hands a running device fade's target on instead
-        filter(() => !(this._activeTransition.value instanceof DeviceFade))
+        )
       )
       .subscribe(() => {
         this.setBrightness(this.brightness, {
@@ -134,50 +131,17 @@ export class SimpleBrightnessControlService {
     );
   }
 
-  /**
-   * Sets the target of a fade another headset ended. The next headset's driver keeps it until the
-   * headset can take it, and a headset no driver matches yet gets it once one does.
-   */
-  private handOff(target: number) {
-    const options = { cancelActiveTransition: false, logReason: null };
-    this.setBrightness(target, options);
-    if (this.hardwareBrightnessControl.activeDriver) return;
-    const writeGeneration = this._writeGeneration;
-    const modeGeneration = this._modeGeneration;
-
-    this.hardwareBrightnessControl.onDriverChange
-      .pipe(
-        filter(() => this.hardwareBrightnessControl.activeDriver !== null),
-        take(1)
-      )
-      .subscribe(() => {
-        // a newer set or a mode switch meanwhile wins over the old target
-        if (writeGeneration !== this._writeGeneration) return;
-        if (modeGeneration !== this._modeGeneration) return;
-        this.setBrightness(target, options);
-      });
-  }
-
   private onDriverChange() {
     const driver = this.hardwareBrightnessControl.activeDriver;
     const previous = this.previousDriver;
     this.previousDriver = driver;
-    if (!driver) return;
-    const lastDriver = this.lastDriver;
-    this.lastDriver = driver;
-
-    // a fade another device ran ends first, so its target reaches this one
-    const transition = this._activeTransition.value;
-    if (transition instanceof DeviceFade) {
-      if (driver !== lastDriver) transition.endAsDeviceGone();
-      return;
-    }
-    if (driver === previous) return;
-
+    if (driver) this.lastDriver = driver;
     // a device taking over from a pushing one never saw the simple value
     if (
       !this._advancedMode.value &&
       previous?.pushesBrightnessChanges &&
+      driver &&
+      driver !== previous &&
       !driver.pushesBrightnessChanges
     ) {
       this.setBrightness(this.brightness, { cancelActiveTransition: true, logReason: undefined });
@@ -291,15 +255,11 @@ export class SimpleBrightnessControlService {
 
   /**
    * Stops the software part where it is. After a change on the headset the headset's value wins,
-   * by the rule for reports, and another headset taking over gets the target.
+   * by the rule for reports.
    */
   private onDeviceFadeCancelled(fade: HardwareBrightnessFade, software?: BrightnessTransitionTask) {
     software?.cancel();
     if (this._activeTransition.value === fade) this._activeTransition.next(undefined);
-    if (fade.end === 'deviceGone') {
-      this.handOff(fade.targetBrightness);
-      return;
-    }
     if (fade.end !== 'changedOnDevice') return;
     void firstValueFrom(this.hardwareBrightnessControl.adoptedBrightness).then((adopted) =>
       this.adoptHardwareBrightness(adopted)
