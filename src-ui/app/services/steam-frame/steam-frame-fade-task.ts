@@ -190,6 +190,7 @@ export class SteamFrameBrightnessFade extends SteamFrameFadeTask {
   }
 }
 
+/** A color temperature fade. `targetCCT` is the value the UI shows as the target. */
 export class SteamFrameCctFade extends SteamFrameFadeTask {
   constructor(
     readonly targetCCT: number,
