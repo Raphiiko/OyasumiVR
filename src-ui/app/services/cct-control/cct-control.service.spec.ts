@@ -358,7 +358,7 @@ describe('CCTControlService with a Steam Frame', () => {
     expect((args as { request: { durationMs: number } }).request.durationMs).toBe(86400000);
   });
 
-  it('moves a helper fade target to another Frame that becomes active', async () => {
+  it('cancels a helper fade when another Frame becomes active', async () => {
     const h = await setup(FRAME);
     h.report(snapshot(6600));
     h.report(snapshot(5000), 'q');
@@ -368,11 +368,10 @@ describe('CCTControlService with a Steam Frame', () => {
     h.activate(FRAME_B);
     await settle();
     expect(h.calls('steam_frame_cancel_fade')).toHaveLength(1);
-    expect(h.frameWritesTo('q')).toEqual([3000]);
     expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
   });
 
-  it('writes a helper fade target to an Index that takes over', async () => {
+  it('cancels a helper fade when an Index takes over', async () => {
     const h = await setup(FRAME);
     h.report(snapshot(6600));
     await settle();
@@ -381,22 +380,7 @@ describe('CCTControlService with a Steam Frame', () => {
     h.activate(INDEX);
     await settle();
     expect(h.calls('steam_frame_cancel_fade')).toHaveLength(1);
-    expect(h.writes()).toEqual([3000]);
-  });
-
-  it('writes a helper fade target to an Index that takes over while trying any headset', async () => {
-    const h = await setup(FRAME, { tryUnsupported: true });
-    h.report(snapshot(6600));
-    await settle();
-    h.service.transitionCCT(1800, 10000);
-    await settle();
-    h.report(snapshot(5000));
-    await settle();
-    h.activate(INDEX);
-    await settle();
-    expect(h.calls('steam_frame_cancel_fade')).toHaveLength(1);
-    expect(h.writes()).not.toContain(5000);
-    expect(h.writes().at(-1)).toBe(1800);
+    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
   });
 
   it('keeps a helper fade when the same Frame returns after SteamVR restarts', async () => {
@@ -429,40 +413,7 @@ describe('CCTControlService with a Steam Frame', () => {
     expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
   });
 
-  it('starts no waiting fade when the first report holds its target exactly', async () => {
-    const h = await setup(FRAME);
-    h.report(null);
-    await settle();
-    const task = h.service.transitionCCT(6600, 10000);
-    await settle();
-    h.report(snapshot(6600));
-    await settle();
-    expect(h.calls('steam_frame_fade')).toEqual([]);
-    expect(task.isComplete()).toBe(true);
-    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
-  });
-
-  it('runs a fade at full length when the Frame reports before its planned end', async () => {
-    const h = await setup(FRAME);
-    h.report(null);
-    await settle();
-    h.service.transitionCCT(3000, 10000);
-    await settle();
-    expect(h.calls('steam_frame_fade')).toEqual([]);
-    h.report(snapshot(6600));
-    await settle();
-    expect(h.calls('steam_frame_fade')).toEqual([
-      [
-        'steam_frame_fade',
-        expect.objectContaining({
-          request: expect.objectContaining({ target: 3000, durationMs: 10000 }),
-        }),
-      ],
-    ]);
-    expect(h.frameWrites()).toEqual([]);
-  });
-
-  it('sets the target of a fade the Frame reported too late for', async () => {
+  it('runs a PC transition before the first report and sends its last value after it', async () => {
     const h = await setup(FRAME);
     h.report(null);
     await settle();
