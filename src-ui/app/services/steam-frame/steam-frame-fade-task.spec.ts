@@ -103,7 +103,6 @@ describe('SteamFrameFadeTask', () => {
       h.end(outcome);
       await done;
       expect(h.statuses[0]).toBe('cancelled');
-      expect(h.task.outcome).toBe(outcome);
       expect(h.task.end).toBe(outcome === 'externalChange' ? 'changedOnDevice' : 'stopped');
       expect(h.cancels()).toEqual([]);
     }
@@ -180,7 +179,6 @@ describe('SteamFrameFadeTask', () => {
     h.state('offline');
     h.state('connected', { fade: false });
     await done;
-    expect(h.task.outcome).toBe('missed');
     expect(h.task.end).toBe('changedOnDevice');
     expect(h.statuses[0]).toBe('cancelled');
   });
@@ -201,7 +199,6 @@ describe('SteamFrameFadeTask', () => {
     h.state('connected', { report: false });
     h.state('connected', { fade: false });
     await done;
-    expect(h.task.outcome).toBe('missed');
     expect(h.task.end).toBe('changedOnDevice');
   });
 

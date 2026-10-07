@@ -29,6 +29,7 @@ export const STEAM_FRAME_MAX_FADE_MS = 24 * 60 * 60 * 1000;
 /** How a fade ended. `missed` means the helper dropped it while this PC was disconnected. */
 export type SteamFrameFadeEnd = SteamFrameFadeOutcome | 'missed';
 
+/** What a fade task watches while it runs. */
 export interface SteamFrameFadeSource {
   connections$: Observable<Record<string, SteamFrameConnectionState>>;
   fadeEnded$: Observable<SteamFrameFadeEnded>;
@@ -53,10 +54,7 @@ export interface SteamFrameFadeRequest {
  */
 export class SteamFrameFadeTask extends DeviceFade {
   readonly operation = uuidv4();
-  readonly pairingId: string;
   private readonly request: SteamFrameFadeRequest;
-  /** The helper's outcome, set with `end`. */
-  outcome: SteamFrameFadeEnd | null = null;
 
   constructor(
     request: SteamFrameFadeRequest,
@@ -69,7 +67,6 @@ export class SteamFrameFadeTask extends DeviceFade {
       ...request,
       durationMs: Math.min(request.durationMs, STEAM_FRAME_MAX_FADE_MS),
     };
-    this.pairingId = request.pairingId;
     this.work = () => this.run();
   }
 
@@ -122,7 +119,6 @@ export class SteamFrameFadeTask extends DeviceFade {
   }
 
   private finish(outcome: SteamFrameFadeEnd) {
-    this.outcome = outcome;
     this.end = deviceFadeEnd(outcome);
     if (outcome !== 'completed') this.cancel();
   }
@@ -131,7 +127,7 @@ export class SteamFrameFadeTask extends DeviceFade {
   private cancelWhenAnotherHmdIsActive(): Subscription {
     return this.frames.activePairing$
       .pipe(
-        filter((pairing) => pairing !== undefined && pairing !== this.pairingId),
+        filter((pairing) => pairing !== undefined && pairing !== this.request.pairingId),
         take(1)
       )
       .subscribe(() => this.cancel());
