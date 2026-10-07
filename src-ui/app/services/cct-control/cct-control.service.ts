@@ -49,7 +49,8 @@ export class CCTControlService {
   /** The driver that matches the active HMD; null while none does. */
   public readonly activeDriver: Observable<CctControlDriver | null>;
   public readonly driverIsAvailable: Observable<boolean>;
-  private driver: CctControlDriver | null = null;
+  /** The latest value of `activeDriver`. */
+  private currentDriver: CctControlDriver | null = null;
   public readonly activeTransition = this._activeTransition.asObservable();
   public cctCSSColor: string = 'white';
 
@@ -120,7 +121,7 @@ export class CCTControlService {
   /** A fade the active device runs itself, or null while no driver takes one. */
   private deviceFade(temperature: number, duration: number): CctFade | null {
     const target = clamp(Math.round(temperature), 1000, 10000);
-    return this.driver?.fade({ target, durationMs: duration }) ?? null;
+    return this.currentDriver?.fade({ target, durationMs: duration }) ?? null;
   }
 
   /** Makes the transition the active one until it ends, and starts it. */
@@ -169,7 +170,7 @@ export class CCTControlService {
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
     cct = clamp(Math.round(cct), 1000, 10000);
     if (opt.cancelActiveTransition) this.cancelActiveTransition();
-    const driver = this.driver;
+    const driver = this.currentDriver;
     if (driver?.pushesCctChanges) {
       await driver.setCCT(cct);
     } else {
@@ -183,7 +184,7 @@ export class CCTControlService {
   }
 
   private watchDrivers() {
-    this.activeDriver.subscribe((driver) => (this.driver = driver));
+    this.activeDriver.subscribe((driver) => (this.currentDriver = driver));
 
     // show the values a driver pushes, without writing them back
     this.activeDriver
