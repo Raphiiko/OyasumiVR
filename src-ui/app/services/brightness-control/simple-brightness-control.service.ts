@@ -223,7 +223,7 @@ export class SimpleBrightnessControlService {
     const to = clamp(percentage, 0, 100);
     const bounds = driver.getBrightnessBounds();
     let software: BrightnessTransitionTask | undefined;
-    const fade = this.hardwareBrightnessControl.deviceFade({
+    const fade = driver.fade({
       target: splitSimpleBrightness(to, bounds).hardware,
       durationMs: duration,
       simple: { from, to },
