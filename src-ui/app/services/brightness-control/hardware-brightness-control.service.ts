@@ -57,30 +57,28 @@ export class HardwareBrightnessControlService {
   public readonly driverValveIndex: ValveIndexHardwareBrightnessControlDriver;
   public readonly driverBigscreenBeyond: BigscreenBeyondHardwareBrightnessControlDriver;
   public readonly driverSteamFrame: SteamFrameHardwareBrightnessControlDriver;
-  /** The driver that matched last; it stays set after that driver stops matching. */
-  public lastActiveDriver: HardwareBrightnessControlDriver | null = null;
 
   /** The driver for the active HMD; null while none matches. */
   get activeDriver(): HardwareBrightnessControlDriver | null {
-    return this.driver.value;
+    return this._activeDriver.value;
   }
 
-  private driver: BehaviorSubject<HardwareBrightnessControlDriver | null> =
+  private _activeDriver: BehaviorSubject<HardwareBrightnessControlDriver | null> =
     new BehaviorSubject<HardwareBrightnessControlDriver | null>(null);
   private _brightness: BehaviorSubject<number> = new BehaviorSubject<number>(100);
   /** The driver the cached brightness came from; another driver's device can hold any value. */
-  private brightnessDriver: HardwareBrightnessControlDriver | null = null;
+  private brightnessSourceDriver: HardwareBrightnessControlDriver | null = null;
   /** Bumped by every set and transition, so a waiting handoff target yields to a newer request. */
   private _requestGeneration = 0;
   private _activeTransition = new BehaviorSubject<HardwareBrightnessTransition | undefined>(
     undefined
   );
   public readonly activeTransition = this._activeTransition.asObservable();
-  public readonly onDriverChange: Observable<void> = this.driver.pipe(
+  public readonly onDriverChange: Observable<void> = this._activeDriver.pipe(
     distinctUntilChanged(),
     map(() => void 0)
   );
-  public readonly driverIsAvailable = this.driver.pipe(
+  public readonly driverIsAvailable = this._activeDriver.pipe(
     switchMap((driver) => driver?.isAvailable() ?? of(false)),
     distinctUntilChanged(),
     shareReplay(1)
@@ -107,7 +105,7 @@ export class HardwareBrightnessControlService {
   ) {
     // a fade another device ran ends first, so its target reaches the next one; a gap without
     // a driver is no headset change
-    this.driver.pipe(filter(Boolean), pairwise()).subscribe(([previous, driver]) => {
+    this._activeDriver.pipe(filter(Boolean), pairwise()).subscribe(([previous, driver]) => {
       const transition = this._activeTransition.value;
       if (driver !== previous && transition instanceof DeviceFade) transition.endAsDeviceGone();
     });
@@ -130,11 +128,10 @@ export class HardwareBrightnessControlService {
       .pipe(distinctUntilChanged((a, b) => isEqual(a, b)))
       .subscribe((matches) => {
         const matchingDriver = driverList.find((_, i) => matches[i]);
-        if (matchingDriver) this.lastActiveDriver = matchingDriver;
-        this.driver.next(matchingDriver ?? null);
+        this._activeDriver.next(matchingDriver ?? null);
       });
     // show what the device reports, without writing it back
-    this.driver
+    this._activeDriver
       .pipe(
         switchMap((driver) =>
           (driver?.brightnessUpdates ?? EMPTY).pipe(
@@ -143,12 +140,12 @@ export class HardwareBrightnessControlService {
         )
       )
       .subscribe(({ driver, ...adopted }) => {
-        this.brightnessDriver = driver;
+        this.brightnessSourceDriver = driver;
         this._brightness.next(adopted.percentage);
         this._adoptedBrightness.next(adopted);
       });
     // a pushing driver's bounds can change with each pushed value
-    const driverBounds = this.driver.pipe(
+    const driverBounds = this._activeDriver.pipe(
       switchMap((driver) =>
         (driver?.brightnessUpdates ?? EMPTY).pipe(
           startWith(null),
@@ -167,7 +164,7 @@ export class HardwareBrightnessControlService {
   }
 
   async init() {
-    this.driver
+    this._activeDriver
       .pipe(
         distinctUntilChanged(),
         filter(Boolean),
@@ -178,7 +175,7 @@ export class HardwareBrightnessControlService {
         // a pushing driver supplies its value itself, and a fetch would hide a pending request;
         // it can take over during the delay, so check the driver that is active now
         switchMap(() =>
-          this.driver.value?.pushesBrightnessChanges ? EMPTY : this.fetchBrightness()
+          this._activeDriver.value?.pushesBrightnessChanges ? EMPTY : this.fetchBrightness()
         )
       )
       .subscribe();
@@ -196,7 +193,7 @@ export class HardwareBrightnessControlService {
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
     if (this._brightness.value === percentage) {
       // a pushing device can hold a value the cache shows clamped, so it still gets the write
-      const write = this.driver.value?.pushesBrightnessChanges
+      const write = this._activeDriver.value?.pushesBrightnessChanges
         ? () =>
             this.setBrightness(percentage, {
               cancelActiveTransition: true,
@@ -231,7 +228,7 @@ export class HardwareBrightnessControlService {
 
   /** A fade the active device runs itself, or null when it cannot run one now. */
   deviceFade(options: HardwareBrightnessFadeOptions): HardwareBrightnessFade | null {
-    return this.driver.value?.fade(options) ?? null;
+    return this._activeDriver.value?.fade(options) ?? null;
   }
 
   /** Makes the transition the active one until it ends, and starts it. */
@@ -272,7 +269,7 @@ export class HardwareBrightnessControlService {
   /** Sets the target of a fade another headset ended, once a driver matches the next headset. */
   private handOff(target: number) {
     const generation = this._requestGeneration;
-    this.driver.pipe(filter(Boolean), take(1)).subscribe(() => {
+    this._activeDriver.pipe(filter(Boolean), take(1)).subscribe(() => {
       // a newer set or transition meanwhile wins over the old target
       if (generation === this._requestGeneration) this.setBrightness(target);
     });
@@ -292,19 +289,19 @@ export class HardwareBrightnessControlService {
   ) {
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
     this._requestGeneration++;
-    const driver = await firstValueFrom(this.driver);
+    const driver = await firstValueFrom(this._activeDriver);
     if (!driver) return;
     if (opt.cancelActiveTransition) this.cancelActiveTransition();
     // a pushing device can hold a value the cache shows clamped, so it always gets the write
     if (
       !force &&
       percentage == this.brightness &&
-      driver === this.brightnessDriver &&
+      driver === this.brightnessSourceDriver &&
       !driver.pushesBrightnessChanges
     ) {
       return;
     }
-    this.brightnessDriver = driver;
+    this.brightnessSourceDriver = driver;
     this._brightness.next(percentage);
     await driver.setBrightnessPercentage(percentage);
     if (opt.logReason) {
@@ -315,10 +312,10 @@ export class HardwareBrightnessControlService {
   }
 
   async fetchBrightness(): Promise<number | undefined> {
-    const driver = this.driver.value;
+    const driver = this._activeDriver.value;
     const brightness = (await driver?.getBrightnessPercentage()) ?? undefined;
     if (brightness !== undefined) {
-      this.brightnessDriver = driver;
+      this.brightnessSourceDriver = driver;
       this._brightness.next(brightness);
       await info(`[BrightnessControl] Fetched hardware brightness (${brightness}%)`);
     }
@@ -327,7 +324,7 @@ export class HardwareBrightnessControlService {
 
   private async initializeSafetyChecks() {
     this.brightnessBounds.subscribe((bounds) => {
-      if (this.driver.value?.pushesBrightnessChanges) return;
+      if (this._activeDriver.value?.pushesBrightnessChanges) return;
       const clamped = clamp(this.brightness, bounds[0], bounds[1]);
       if (clamped !== this.brightness) this.setBrightness(clamped);
     });
