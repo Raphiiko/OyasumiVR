@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  HardwareBrightnessControlDriver,
-  HardwareBrightnessFade,
-  HardwareBrightnessFadeOptions,
-} from './hardware-brightness-drivers/hardware-brightness-control-driver';
+import { HardwareBrightnessControlDriver } from './hardware-brightness-drivers/hardware-brightness-control-driver';
 import { ValveIndexHardwareBrightnessControlDriver } from './hardware-brightness-drivers/valve-index-hardware-brightness-control-driver';
 import { OpenVRService } from '../openvr.service';
 import {
@@ -195,7 +191,7 @@ export class HardwareBrightnessControlService {
       task.start();
       return task;
     }
-    const fade = this.deviceFade({
+    const fade = this._activeDriver.value?.fade({
       target: percentage,
       durationMs: duration,
       shownTarget: percentage,
@@ -215,11 +211,6 @@ export class HardwareBrightnessControlService {
       { logReason: opt.logReason }
     );
     return this.activateTransition(transition, opt.logReason);
-  }
-
-  /** A fade the active device runs itself, or null when it cannot run one now. */
-  deviceFade(options: HardwareBrightnessFadeOptions): HardwareBrightnessFade | null {
-    return this._activeDriver.value?.fade(options) ?? null;
   }
 
   /** Makes the transition the active one until it ends, and starts it. */

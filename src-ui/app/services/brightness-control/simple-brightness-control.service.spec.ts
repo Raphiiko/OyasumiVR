@@ -8,10 +8,7 @@ import type {
   SteamFrameFadeOutcome,
 } from '../../models/steam-frame';
 import { SteamFrameBrightnessFade } from '../steam-frame/steam-frame-fade-task';
-import type {
-  HardwareBrightnessFade,
-  HardwareBrightnessFadeOptions,
-} from './hardware-brightness-drivers/hardware-brightness-control-driver';
+import type { HardwareBrightnessFadeOptions } from './hardware-brightness-drivers/hardware-brightness-control-driver';
 import { SimpleBrightnessControlService } from './simple-brightness-control.service';
 
 vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn(async () => undefined) }));
@@ -29,13 +26,10 @@ async function setup(advancedMode = false, pushesBrightnessChanges = false) {
     brightnessBounds: new BehaviorSubject([20, 100]),
     adoptedBrightness: new ReplaySubject<{ percentage: number; bounds: [number, number] }>(1),
     activeDriver: (pushesBrightnessChanges
-      ? { pushesBrightnessChanges: true, getBrightnessBounds: () => [20, 100] }
+      ? { pushesBrightnessChanges: true, getBrightnessBounds: () => [20, 100], fade: () => null }
       : null) as {
       pushesBrightnessChanges: boolean;
     } | null,
-    deviceFade: vi.fn<(o: HardwareBrightnessFadeOptions) => HardwareBrightnessFade | null>(
-      () => null
-    ),
     onDriverChange: new Subject<void>(),
     setBrightness: vi.fn<Dependencies[1]['setBrightness']>().mockResolvedValue(undefined),
     cancelActiveTransition: vi.fn(),
@@ -319,7 +313,6 @@ describe('simple brightness fading a Steam Frame', () => {
           o.onAccept
         ),
     };
-    h.hardware.deviceFade.mockImplementation((o) => driver.fade(o));
     h.hardware.activeDriver = driver;
     h.hardware.brightnessBounds.next([9, 125]);
     h.hardware.driverIsAvailable.next(true);
