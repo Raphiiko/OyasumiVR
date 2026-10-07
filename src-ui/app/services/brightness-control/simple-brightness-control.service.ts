@@ -32,6 +32,7 @@ import {
 import { listen } from '@tauri-apps/api/event';
 import { DeviceFade } from '../../utils/device-fade';
 
+/** A transition on the PC, or a fade the device runs. */
 type SimpleTransition = CancellableTask & { readonly targetBrightness: number };
 
 /**
@@ -60,7 +61,7 @@ export class SimpleBrightnessControlService {
   public readonly activeTransition = this._activeTransition.asObservable();
   /** Counts running `setBrightness` calls, whose own replies must not be adopted midway. */
   private settingBrightness = 0;
-  /** The active driver at the last driver change, to recognize a handoff between drivers. */
+  /** The active driver at the last driver change, to see one driver take over from another. */
   private previousDriver: HardwareBrightnessControlDriver | null = null;
   /** The last driver that was not null; it stays set through a gap without a driver. */
   private lastDriver: HardwareBrightnessControlDriver | null = null;
@@ -204,7 +205,7 @@ export class SimpleBrightnessControlService {
       duration,
       { logReason: opt.logReason }
     );
-    return this.activate(transition, opt.logReason);
+    return this.activateTransition(transition, opt.logReason);
   }
 
   /**
@@ -250,7 +251,7 @@ export class SimpleBrightnessControlService {
       software?.cancel();
       void this.applySoftwarePart(to, bounds);
     });
-    return this.activate(fade, logReason);
+    return this.activateTransition(fade, logReason);
   }
 
   /**
@@ -276,7 +277,7 @@ export class SimpleBrightnessControlService {
   }
 
   /** Makes the transition the active one until it ends, and starts it. */
-  private activate(
+  private activateTransition(
     transition: SimpleTransition,
     logReason: SetBrightnessOrCCTReason | null
   ): SimpleTransition {
