@@ -2145,7 +2145,7 @@
         "title": "VRChat"
       },
       "vrcx": {
-        "logs": {
+        "logEntries": {
           "onSleepDisable": "睡眠模式已停用",
           "onSleepEnable": "已啟用睡眠模式",
           "onSleepPreparation": "睡前準備"

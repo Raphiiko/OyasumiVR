@@ -2147,7 +2147,7 @@
         "title": "VRChat"
       },
       "vrcx": {
-        "logs": {
+        "logEntries": {
           "onSleepDisable": "Режим сна отключен",
           "onSleepEnable": "Режим сна включен",
           "onSleepPreparation": "Готовлюсь ко сну"

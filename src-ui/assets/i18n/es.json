@@ -1979,7 +1979,7 @@
         "title": "VRChat"
       },
       "vrcx": {
-        "logs": {
+        "logEntries": {
           "onSleepDisable": "Modo sueño desactivado",
           "onSleepEnable": "Modo sueño activado",
           "onSleepPreparation": "Preparándose para dormir"

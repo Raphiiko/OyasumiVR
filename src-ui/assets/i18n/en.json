@@ -2255,13 +2255,14 @@
           "description": "Log invites and invite requests that OyasumiVR accepted or declined",
           "title": "Invites"
         },
-        "logs": {
+        "logEntries": {
           "onSleepDisable": "Sleep mode disabled",
           "onSleepEnable": "Sleep mode enabled",
           "onSleepPreparation": "Preparing for sleep",
           "reply": "Reply: \"{message}\"",
           "statusChanged": "Changed your VRChat status to {status}"
         },
+        "logs": "Logs",
         "sleepModeChanges": {
           "description": "Log changes to sleep mode to the game log in VRCX",
           "title": "Sleep mode"

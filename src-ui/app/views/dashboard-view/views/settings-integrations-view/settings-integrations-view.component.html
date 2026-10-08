@@ -4,11 +4,11 @@
     <div class="tab" [class.active]="activeTab === 'PROVIDERS'" (click)="activeTab = 'PROVIDERS'">
       <div class="tab-label" transloco="settings.integrations.tabs.providers"></div>
     </div>
-    <div class="tab" [class.active]="activeTab === 'DISCORD'" (click)="activeTab = 'DISCORD'">
-      <div class="tab-label" transloco="settings.integrations.tabs.discord"></div>
-    </div>
     <div class="tab" [class.active]="activeTab === 'VRCX'" (click)="activeTab = 'VRCX'">
       <div class="tab-label" transloco="settings.integrations.tabs.vrcx"></div>
+    </div>
+    <div class="tab" [class.active]="activeTab === 'DISCORD'" (click)="activeTab = 'DISCORD'">
+      <div class="tab-label" transloco="settings.integrations.tabs.discord"></div>
     </div>
   </div>
   <div class="pane-content scroll">
@@ -181,6 +181,28 @@
           </div>
         </div>
       }
+      @if (activeTab === 'VRCX') {
+        <div class="setting-category">
+          <h2 transloco="settings.integrations.vrcx.logs"></h2>
+          <div class="settings">
+            @for (log of vrcxLogOptions; track log.type) {
+              <app-setting-row
+                [label]="log.key + '.title'"
+                [description]="log.key + '.description'"
+              >
+                <label class="switch-toggle">
+                  <input
+                    type="checkbox"
+                    [checked]="appSettings.vrcxLogsEnabled.includes(log.type)"
+                    (change)="toggleVrcxLog(log.type)"
+                  />
+                  <span class="switch-toggle-slider"></span>
+                </label>
+              </app-setting-row>
+            }
+          </div>
+        </div>
+      }
       @if (activeTab === 'DISCORD') {
         <div class="setting-category">
           <div class="settings">
@@ -212,27 +234,6 @@
                 </label>
               </app-setting-row>
             </div>
-          </div>
-        </div>
-      }
-      @if (activeTab === 'VRCX') {
-        <div class="setting-category">
-          <div class="settings">
-            @for (log of vrcxLogOptions; track log.type) {
-              <app-setting-row
-                [label]="log.key + '.title'"
-                [description]="log.key + '.description'"
-              >
-                <label class="switch-toggle">
-                  <input
-                    type="checkbox"
-                    [checked]="appSettings.vrcxLogsEnabled.includes(log.type)"
-                    (change)="toggleVrcxLog(log.type)"
-                  />
-                  <span class="switch-toggle-slider"></span>
-                </label>
-              </app-setting-row>
-            }
           </div>
         </div>
       }

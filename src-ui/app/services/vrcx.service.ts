@@ -35,14 +35,14 @@ export class VRCXService {
       this.log(
         'SleepMode',
         this.translate.translate(
-          `settings.integrations.vrcx.logs.${sleepMode ? 'onSleepEnable' : 'onSleepDisable'}`
+          `settings.integrations.vrcx.logEntries.${sleepMode ? 'onSleepEnable' : 'onSleepDisable'}`
         )
       );
     });
     this.sleepPreparation.onSleepPreparation.subscribe(() => {
       this.log(
         'SleepMode',
-        this.translate.translate('settings.integrations.vrcx.logs.onSleepPreparation')
+        this.translate.translate('settings.integrations.vrcx.logEntries.onSleepPreparation')
       );
     });
     this.eventLog.loggedEvents.subscribe((entry) => this.logEventLogEntry(entry));
@@ -86,7 +86,7 @@ export class VRCXService {
       this.eventLogText(entry.type, 'title', { displayName: entry.displayName }),
       reasonKey && this.eventLogText(entry.type, reasonKey),
       entry.message &&
-        this.translate.translate('settings.integrations.vrcx.logs.reply', {
+        this.translate.translate('settings.integrations.vrcx.logEntries.reply', {
           message: entry.message,
         })
     );
@@ -98,7 +98,7 @@ export class VRCXService {
     const status = vrcStatusToString(entry.newStatus ?? entry.oldStatus);
     const statusMessage = (entry.newStatusMessage ?? entry.oldStatusMessage)?.trim();
     return this.join(
-      this.translate.translate('settings.integrations.vrcx.logs.statusChanged', {
+      this.translate.translate('settings.integrations.vrcx.logEntries.statusChanged', {
         status: statusMessage ? `'${statusMessage}' (${status})` : status,
       }),
       this.eventLogText(entry.type, `reason.${entry.reason}`, {
