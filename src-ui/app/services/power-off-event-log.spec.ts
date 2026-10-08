@@ -151,13 +151,24 @@ describe('power-off command results and actual event log', () => {
     ]);
   });
 
-  it('retains an earlier successful dispatch when console validation changes mid-batch', async () => {
+  it('dispatches all devices at once when the delay is off', async () => {
     const { service } = await createConsole([controller, tracker]);
+    const pending = service.turnOffDevices([controller, tracker]);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(invoke).toHaveBeenCalledTimes(2);
+    expect(await pending).toEqual([controller, tracker]);
+  });
+
+  it('retains an earlier successful dispatch when console validation changes mid-batch', async () => {
+    const { service, settings } = await createConsole([controller, tracker]);
+    settings.next({ ...settings.value, lighthousePowerOffDelay: true });
     invoke.mockImplementationOnce(async () => {
       await service.setConsolePath('invalid');
       return { status: 0 };
     });
-    expect(await service.turnOffDevices([controller, tracker])).toEqual([controller]);
+    const pending = service.turnOffDevices([controller, tracker]);
+    await vi.advanceTimersByTimeAsync(100);
+    expect(await pending).toEqual([controller]);
     expect(invoke).toHaveBeenCalledOnce();
   });
 

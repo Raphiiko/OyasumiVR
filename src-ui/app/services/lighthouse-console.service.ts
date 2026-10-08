@@ -154,31 +154,43 @@ export class LighthouseConsoleService {
         device.dongleId &&
         !device.isTurningOff
     );
-    // dispatch devices sequentially and collect successful process exits
+    // dispatch all devices at once unless the user opted into spacing them out
+    if (!settings.lighthousePowerOffDelay) {
+      if (generation !== this.validationGeneration) return [];
+      const results = await Promise.all(
+        ovrDevices.map((device) => this.powerOffDevice(device, lighthouseConsolePath))
+      );
+      return ovrDevices.filter((_, index) => results[index]);
+    }
+
+    // dispatch devices sequentially, since parallel power-offs crash SteamVR for some users
     const dispatched: OVRDevice[] = [];
     for (const [index, device] of ovrDevices.entries()) {
       if (generation !== this.validationGeneration) break;
-      this.openvr.onDeviceUpdate(Object.assign({}, device, { isTurningOff: true }));
-      info(`[Lighthouse] Turning off device ${device.class}:${device.serialNumber}`);
-      try {
-        const output = await invoke<{ status: number }>('run_command', {
-          command: lighthouseConsolePath,
-          args: ['/serial', device.dongleId, 'poweroff'],
-        });
-        if (output.status === 0) dispatched.push(device);
-        else
-          error(
-            `[Lighthouse] Power-off command failed for ${device.serialNumber}: exit ${output.status}`
-          );
-      } catch (e) {
-        error(
-          `[Lighthouse] Could not turn off device ${device.class}:${device.serialNumber}: ${e}`
-        );
-      }
-      if (settings.lighthousePowerOffDelay && index < ovrDevices.length - 1) {
+      if (await this.powerOffDevice(device, lighthouseConsolePath)) dispatched.push(device);
+      if (index < ovrDevices.length - 1) {
         await new Promise((resolve) => setTimeout(resolve, 100));
       }
     }
     return dispatched;
+  }
+
+  /** Resolves true when the console exits with status 0. */
+  private async powerOffDevice(device: OVRDevice, lighthouseConsolePath: string): Promise<boolean> {
+    this.openvr.onDeviceUpdate(Object.assign({}, device, { isTurningOff: true }));
+    info(`[Lighthouse] Turning off device ${device.class}:${device.serialNumber}`);
+    try {
+      const output = await invoke<{ status: number }>('run_command', {
+        command: lighthouseConsolePath,
+        args: ['/serial', device.dongleId, 'poweroff'],
+      });
+      if (output.status === 0) return true;
+      error(
+        `[Lighthouse] Power-off command failed for ${device.serialNumber}: exit ${output.status}`
+      );
+    } catch (e) {
+      error(`[Lighthouse] Could not turn off device ${device.class}:${device.serialNumber}: ${e}`);
+    }
+    return false;
   }
 }
