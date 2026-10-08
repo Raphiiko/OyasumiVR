@@ -53,13 +53,11 @@ pub async fn set_analog_gain(analog_gain: f32) -> Result<(), String> {
     if !settings_interface_available(context) {
         return Err("OPENVR_NOT_INITIALISED".to_string());
     }
-    if context
+    context
         .settings()
         .set_float(section(), c"analogGain", analog_gain)
-        .is_ok()
-    {
-        *KNOWN_ANALOG_GAIN.lock().await = Some(analog_gain);
-    }
+        .map_err(|_| "ANALOG_GAIN_WRITE_FAILED".to_string())?;
+    *KNOWN_ANALOG_GAIN.lock().await = Some(analog_gain);
     Ok(())
 }
 
