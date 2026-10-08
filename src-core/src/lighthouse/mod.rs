@@ -4,7 +4,10 @@ pub mod models;
 use std::{
     collections::{HashMap, HashSet},
     path::PathBuf,
-    sync::{Arc, LazyLock},
+    sync::{
+        atomic::{AtomicU32, Ordering},
+        Arc, LazyLock,
+    },
     time::{Duration, Instant},
 };
 
@@ -62,11 +65,7 @@ static PROCESSING_DEVICES: LazyLock<Mutex<HashSet<PeripheralId>>> =
 // Per device: consecutive connect failures, and when the last one happened
 static CONNECT_BACKOFFS: LazyLock<std::sync::Mutex<HashMap<PeripheralId, (u32, Instant)>>> =
     LazyLock::new(|| std::sync::Mutex::new(HashMap::new()));
-static RADIO_RECOVERY: LazyLock<std::sync::Mutex<RadioRecovery>> =
-    LazyLock::new(std::sync::Mutex::default);
-static LAST_ADVERTISEMENTS: LazyLock<std::sync::Mutex<HashMap<PeripheralId, Instant>>> =
-    LazyLock::new(|| std::sync::Mutex::new(HashMap::new()));
-static LAST_RADIO_RECOVERY: LazyLock<Mutex<Option<Instant>>> = LazyLock::new(|| Mutex::new(None));
+static CONNECT_FAILURE_STREAK: AtomicU32 = AtomicU32::new(0);
 static PENDING_RESTORE_FILE_LOCK: LazyLock<std::sync::Mutex<()>> =
     LazyLock::new(|| std::sync::Mutex::new(()));
 static RADIO_RECOVERY_LOCK: LazyLock<Mutex<()>> = LazyLock::new(|| Mutex::new(()));
@@ -74,10 +73,8 @@ static RADIO_RECOVERY_LOCK: LazyLock<Mutex<()>> = LazyLock::new(|| Mutex::new(()
 const CONNECT_TIMEOUT: Duration = Duration::from_secs(15);
 const CONNECT_RETRY_COOLDOWN: Duration = Duration::from_secs(10);
 const CONNECT_BACKOFF_MAX: Duration = Duration::from_secs(300);
-// Known lighthouses that advertise but refuse every connect are the signature of a wedged stack
-const RADIO_RECOVERY_THRESHOLD: u32 = 6;
-const ADVERTISEMENT_MAX_AGE: Duration = Duration::from_secs(60);
-const RADIO_RECOVERY_COOLDOWN: Duration = Duration::from_secs(300);
+// Failing connects to every device at once is the signature of a wedged stack
+const STUCK_STACK_THRESHOLD: u32 = 6;
 const RADIO_ON_ATTEMPTS: u32 = 3;
 const RADIO_RESTORE_TIMEOUT: Duration = Duration::from_secs(60);
 const RADIO_RESTORE_RETRY_COOLDOWN: Duration = Duration::from_secs(30);
@@ -253,18 +250,12 @@ async fn scan_for_devices(duration: Duration) {
                         break;
                     }
                 };
-                LAST_ADVERTISEMENTS.lock().unwrap().insert(device_id.clone(), Instant::now());
                 if let Ok(peripheral) = adapter.peripheral(&device_id).await {
                     tokio::spawn(handle_discovered_device(peripheral));
                 }
             }
         }
     }
-    // Other devices rotate random addresses, so drop the stale ones
-    LAST_ADVERTISEMENTS
-        .lock()
-        .unwrap()
-        .retain(|_, at| at.elapsed() < ADVERTISEMENT_MAX_AGE);
     if let Err(err) = adapter.stop_scan().await {
         warn!("[Core] Failed to stop scanning for lighthouse devices: {err}");
         *ADAPTER.lock().await = None;
@@ -641,10 +632,10 @@ async fn ensure_connected(device: &Peripheral, device_name: &str) -> Result<(), 
     match device.connect_with_timeout(CONNECT_TIMEOUT).await {
         Ok(()) => {
             CONNECT_BACKOFFS.lock().unwrap().remove(&device_id);
-            RADIO_RECOVERY.lock().unwrap().record_success(&device_id);
+            CONNECT_FAILURE_STREAK.store(0, Ordering::Relaxed);
         }
         Err(err) => {
-            register_connect_failure(&device_id).await;
+            register_connect_failure(&device_id, device_name, &err);
             return Err(LighthouseError::FailedToConnect(err));
         }
     }
@@ -673,7 +664,7 @@ fn backoff_elapsed(device_id: &PeripheralId) -> bool {
     }
 }
 
-async fn register_connect_failure(device_id: &PeripheralId) {
+fn register_connect_failure(device_id: &PeripheralId, device_name: &str, err: &btleplug::Error) {
     {
         let mut backoffs = CONNECT_BACKOFFS.lock().unwrap();
         let entry = backoffs
@@ -682,100 +673,25 @@ async fn register_connect_failure(device_id: &PeripheralId) {
         entry.0 += 1;
         entry.1 = Instant::now();
     }
-
-    // count only failures that a radio cycle could fix
-    let last_advertisement = LAST_ADVERTISEMENTS.lock().unwrap().get(device_id).copied();
-    let known = {
-        let devices = LIGHTHOUSE_DEVICES.lock().await;
-        // Before the first lighthouse connects, a wedged stack fails every discovery
-        devices.is_empty() || devices.iter().any(|d| d.id == *device_id)
-    };
-    let eligible = counts_toward_radio_recovery(known, last_advertisement);
-    if !RADIO_RECOVERY
-        .lock()
-        .unwrap()
-        .record_failure(device_id, eligible)
-    {
-        return;
+    // Warns once per streak; a successful connect starts a new streak
+    let streak = CONNECT_FAILURE_STREAK.fetch_add(1, Ordering::Relaxed) + 1;
+    if streak == STUCK_STACK_THRESHOLD {
+        warn!("[Core] {streak} lighthouse connects failed in a row, the last to {device_name}: {err}. If the base stations are on and in range, the Windows Bluetooth stack may be stuck: turn Bluetooth off and on, or restart the PC.");
     }
+}
 
-    // cycle the radio, then keep retrying any radio it failed to turn back on
-    let mut last_recovery = LAST_RADIO_RECOVERY.lock().await;
-    if last_recovery.is_some_and(|at| at.elapsed() < RADIO_RECOVERY_COOLDOWN) {
-        return;
-    }
-    *last_recovery = Some(Instant::now());
-    drop(last_recovery);
-    let cycle = tokio::task::spawn_blocking(|| {
-        let Ok(runtime) = tokio::runtime::Builder::new_current_thread()
+/// Turns every Bluetooth radio off and back on, which drops every Bluetooth device on the PC.
+pub async fn restart_bluetooth_radio() -> Result<(), String> {
+    warn!("[Core] Restarting the bluetooth radio");
+    tokio::task::spawn_blocking(|| {
+        let runtime = tokio::runtime::Builder::new_current_thread()
             .enable_all()
             .build()
-        else {
-            warn!("[Core] Failed to start a runtime to cycle the bluetooth radio");
-            return;
-        };
-        runtime.block_on(async {
-            warn!("[Core] Bluetooth connects keep failing while devices are in range, cycling the bluetooth radio to recover");
-            if let Err(err) = cycle_bluetooth_radio().await {
-                warn!("[Core] Failed to cycle the bluetooth radio: {err}");
-            }
-        });
-    });
-    tokio::spawn(async move {
-        let _ = cycle.await;
-        if pending_restores_remain() {
-            retry_pending_radio_restores().await;
-        }
-    });
-}
-
-fn counts_toward_radio_recovery(known: bool, last_advertisement: Option<Instant>) -> bool {
-    known && last_advertisement.is_some_and(|at| at.elapsed() < ADVERTISEMENT_MAX_AGE)
-}
-
-/// Decides when failed lighthouse connects justify cycling the bluetooth radio.
-#[derive(Default)]
-struct RadioRecovery {
-    streak: u32,
-    // Devices that failed since the last success; frozen while disarmed
-    suspects: HashSet<PeripheralId>,
-    // Suspects when the streak last reached the threshold, kept until the cycle disarms
-    cycle_suspects: HashSet<PeripheralId>,
-    // Set once a cycle turned a radio off, cleared when a suspect connects again
-    disarmed: bool,
-}
-
-impl RadioRecovery {
-    /// Returns true when the streak reaches the threshold and the radio should be cycled.
-    fn record_failure(&mut self, device_id: &PeripheralId, eligible: bool) -> bool {
-        if self.disarmed || !eligible {
-            return false;
-        }
-        self.suspects.insert(device_id.clone());
-        self.streak += 1;
-        if self.streak < RADIO_RECOVERY_THRESHOLD {
-            return false;
-        }
-        self.streak = 0;
-        self.cycle_suspects = self.suspects.clone();
-        true
-    }
-
-    fn record_success(&mut self, device_id: &PeripheralId) {
-        // A cycle only re-arms once it fixed a device that was failing before it
-        if self.disarmed && !self.suspects.contains(device_id) {
-            return;
-        }
-        self.disarmed = false;
-        self.streak = 0;
-        self.suspects.clear();
-    }
-
-    /// Called for every radio a cycle turns off; restores the suspects frozen at the trigger.
-    fn disarm(&mut self) {
-        self.suspects = self.cycle_suspects.clone();
-        self.disarmed = true;
-    }
+            .map_err(|err| format!("failed to start a runtime: {err}"))?;
+        runtime.block_on(cycle_bluetooth_radio())
+    })
+    .await
+    .map_err(|err| err.to_string())?
 }
 
 async fn cycle_bluetooth_radio() -> Result<(), String> {
@@ -979,7 +895,6 @@ async fn cycle_radio(radio: &BluetoothRadio, pending_ids: &[String]) -> RadioCyc
             "turning the '{name}' radio off was refused ({status:?})"
         )));
     }
-    RADIO_RECOVERY.lock().unwrap().disarm();
     sleep(Duration::from_secs(3)).await;
     match radio.State() {
         Ok(RadioState::Off) => {}
@@ -1329,7 +1244,7 @@ async fn reset() {
         processing_devices_guard.clear();
     }
     CONNECT_BACKOFFS.lock().unwrap().clear();
-    RADIO_RECOVERY.lock().unwrap().streak = 0;
+    CONNECT_FAILURE_STREAK.store(0, Ordering::Relaxed);
 }
 
 #[cfg(test)]
@@ -1472,49 +1387,5 @@ mod tests {
         assert_eq!(connect_backoff_delay(3), Duration::from_secs(40));
         assert_eq!(connect_backoff_delay(6), CONNECT_BACKOFF_MAX);
         assert_eq!(connect_backoff_delay(60), CONNECT_BACKOFF_MAX);
-    }
-
-    #[test]
-    fn radio_recovery_counts_only_advertising_known_devices() {
-        let now = Instant::now();
-        let stale = now.checked_sub(ADVERTISEMENT_MAX_AGE * 2).unwrap();
-        assert!(counts_toward_radio_recovery(true, Some(now)));
-        assert!(!counts_toward_radio_recovery(true, None));
-        assert!(!counts_toward_radio_recovery(true, Some(stale)));
-        assert!(!counts_toward_radio_recovery(false, Some(now)));
-    }
-
-    #[test]
-    fn radio_recovery_rearms_only_when_a_failing_device_connects() {
-        let failing = PeripheralId::from(btleplug::api::BDAddr::from([2, 0, 0, 0, 0, 1]));
-        let healthy = PeripheralId::from(btleplug::api::BDAddr::from([2, 0, 0, 0, 0, 2]));
-        let mut recovery = RadioRecovery::default();
-
-        // ineligible failures never build a streak
-        for _ in 0..RADIO_RECOVERY_THRESHOLD * 2 {
-            assert!(!recovery.record_failure(&failing, false));
-        }
-
-        // eligible failures trigger at the threshold
-        for _ in 1..RADIO_RECOVERY_THRESHOLD {
-            assert!(!recovery.record_failure(&failing, true));
-        }
-        assert!(recovery.record_failure(&failing, true));
-
-        // another device connecting before the radio turns off keeps the cycle's suspects
-        recovery.record_success(&healthy);
-
-        // while disarmed, failures and other devices connecting change nothing
-        recovery.disarm();
-        for _ in 0..RADIO_RECOVERY_THRESHOLD * 2 {
-            assert!(!recovery.record_failure(&failing, true));
-        }
-        recovery.record_success(&healthy);
-        assert!(recovery.disarmed);
-
-        // the failing device connecting again re-arms it
-        recovery.record_success(&failing);
-        assert!(!recovery.disarmed);
-        assert!(recovery.suspects.is_empty());
     }
 }
