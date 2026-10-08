@@ -2278,7 +2278,7 @@
           },
           "INVITE_AUTOMATIONS": {
             "description": "Get a notification when OyasumiVR automatically accepts an invite request, or declines an invite or invite request",
-            "title": "Automatically Handled Invites"
+            "title": "Automatically Handled Invites and Invite Requests"
           },
           "SLEEP_MODE_DISABLED": {
             "description": "Get a notification when the sleep mode is deactivated",
