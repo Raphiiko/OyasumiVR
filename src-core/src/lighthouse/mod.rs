@@ -739,6 +739,8 @@ struct RadioRecovery {
     streak: u32,
     // Devices that failed since the last success; frozen while disarmed
     suspects: HashSet<PeripheralId>,
+    // Suspects when the streak last reached the threshold, kept until the cycle disarms
+    cycle_suspects: HashSet<PeripheralId>,
     // Set once a cycle turned a radio off, cleared when a suspect connects again
     disarmed: bool,
 }
@@ -755,18 +757,23 @@ impl RadioRecovery {
             return false;
         }
         self.streak = 0;
+        self.cycle_suspects = self.suspects.clone();
         true
     }
 
     fn record_success(&mut self, device_id: &PeripheralId) {
         // A cycle only re-arms once it fixed a device that was failing before it
-        if self.disarmed && !self.suspects.is_empty() && !self.suspects.contains(device_id) {
+        if self.disarmed && !self.suspects.contains(device_id) {
             return;
         }
-        *self = Self::default();
+        self.disarmed = false;
+        self.streak = 0;
+        self.suspects.clear();
     }
 
+    /// Called for every radio a cycle turns off; restores the suspects frozen at the trigger.
     fn disarm(&mut self) {
+        self.suspects = self.cycle_suspects.clone();
         self.disarmed = true;
     }
 }
@@ -1493,6 +1500,9 @@ mod tests {
             assert!(!recovery.record_failure(&failing, true));
         }
         assert!(recovery.record_failure(&failing, true));
+
+        // another device connecting before the radio turns off keeps the cycle's suspects
+        recovery.record_success(&healthy);
 
         // while disarmed, failures and other devices connecting change nothing
         recovery.disarm();
