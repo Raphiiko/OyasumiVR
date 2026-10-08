@@ -1,8 +1,6 @@
 import { MessageMonitor } from './message-monitor';
 import { listen } from '@tauri-apps/api/event';
-import { appLogDir } from '@tauri-apps/api/path';
 import { invoke } from '@tauri-apps/api/core';
-import { openUrl } from '@tauri-apps/plugin-opener';
 import { error } from '@tauri-apps/plugin-log';
 
 const MESSAGE_ID = 'lighthouseConnectsFailing';
@@ -30,21 +28,11 @@ export class LighthouseConnectsFailingMessageMonitor extends MessageMonitor {
         ? 'message-center.messages.lighthouseConnectsFailing.restartFailed'
         : 'message-center.messages.lighthouseConnectsFailing.message',
       type: 'warning',
+      hideable: true,
       actions: [
         {
           label: 'message-center.messages.lighthouseConnectsFailing.actions.restartBluetooth',
           action: () => this.restartBluetooth(),
-        },
-        {
-          label: 'message-center.actions.openLogFolder',
-          action: async () => {
-            const path = (await appLogDir()) + '\\OyasumiVR.log';
-            await invoke('show_in_folder', { path });
-          },
-        },
-        {
-          label: 'message-center.actions.supportDiscord',
-          action: () => openUrl('https://discord.gg/7MqdPJhYxC'),
         },
       ],
     });
