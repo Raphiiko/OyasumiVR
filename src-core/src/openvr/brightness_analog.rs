@@ -8,8 +8,8 @@ use crate::utils::send_event;
 use raphii_openvr_rs as ovr;
 use tokio::sync::Mutex;
 
-/// The gain OyasumiVR last read, wrote, or reported, so a change it made itself is not reported.
-/// Only update it while holding the OpenVR context lock, so it stays in step with SteamVR.
+/// The gain OyasumiVR last wrote or reported, so the settings event of its own write is skipped.
+/// Set it only while holding the OpenVR context lock, so it stays in step with SteamVR.
 static KNOWN_ANALOG_GAIN: LazyLock<Mutex<Option<f32>>> = LazyLock::new(|| Mutex::new(None));
 
 fn section() -> &'static CStr {
@@ -35,13 +35,10 @@ pub async fn get_analog_gain() -> Result<f32, String> {
     if !settings_interface_available(context) {
         return Err("OPENVR_NOT_INITIALISED".to_string());
     }
-    match context.settings().get_float(section(), c"analogGain") {
-        Ok(analog_gain) => {
-            *KNOWN_ANALOG_GAIN.lock().await = Some(analog_gain);
-            Ok(analog_gain)
-        }
-        Err(_) => Err("ANALOG_GAIN_NOT_FOUND".to_string()),
-    }
+    context
+        .settings()
+        .get_float(section(), c"analogGain")
+        .map_err(|_| "ANALOG_GAIN_NOT_FOUND".to_string())
 }
 
 pub async fn set_analog_gain(analog_gain: f32) -> Result<(), String> {
@@ -66,7 +63,7 @@ pub async fn set_analog_gain(analog_gain: f32) -> Result<(), String> {
     Ok(())
 }
 
-/// Reports the gain to the UI when it differs from the one OyasumiVR last read, wrote, or reported.
+/// Reports the gain to the UI when it differs from the one OyasumiVR last wrote or reported.
 pub async fn on_steamvr_section_changed() {
     if !hmd_present().await {
         return;
@@ -86,12 +83,11 @@ pub async fn on_steamvr_section_changed() {
         return;
     }
     *known = Some(analog_gain);
-    drop(known);
-    drop(context_guard);
+    // emit before a write can take the lock, so the UI gets this report before that write ends
     send_event("OVR_ANALOG_GAIN_UPDATE", analog_gain).await;
 }
 
-/// Call after the OpenVR context is gone.
+/// Forgets the gain. Call after the context is gone, so the next session reports its first change.
 pub async fn on_ovr_quit() {
     *KNOWN_ANALOG_GAIN.lock().await = None;
 }
