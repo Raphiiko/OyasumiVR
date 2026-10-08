@@ -12,6 +12,7 @@ import {
   Observable,
   skip,
   startWith,
+  Subject,
 } from 'rxjs';
 import { orderBy } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
@@ -30,6 +31,11 @@ export class OpenVRService {
   public devices: Observable<OVRDevice[]> = this._devices.asObservable();
 
   private powerControlledSerials = new Set<string>();
+
+  private _analogGainUpdates = new Subject<number>();
+  /** SteamVR's analog gain after a change that OyasumiVR did not make itself. */
+  public analogGainUpdates: Observable<number> = this._analogGainUpdates.asObservable();
+
   private autoLaunchQueue: Promise<void> = Promise.resolve();
   private autoLaunchSession = 0;
 
@@ -64,6 +70,9 @@ export class OpenVRService {
         deviceSession++;
         this.onStatusUpdate(event.payload);
       }),
+      listen<number>('OVR_ANALOG_GAIN_UPDATE', (event) =>
+        this._analogGainUpdates.next(event.payload)
+      ),
     ]);
     // A status update sent while the listener above was still being registered is never delivered
     const status = await invoke<OpenVRStatus>('openvr_status');
