@@ -2124,8 +2124,7 @@
         },
         "activityModeVRCCondition": {
           "title": "只有在 VRChat 运行时才显示"
-        },
-        "title": "Discord"
+        }
       },
       "homeAssistant": {
         "description": "通过将 OyasumiVR 连接到你的 Home Assistant 实例，可以让它与你的智能家居整合，使你能够构建自己强大的自动化设施",
@@ -2137,6 +2136,9 @@
         "title": "Pulsoid"
       },
       "reveal": "显示",
+      "tabs": {
+        "discord": "Discord"
+      },
       "title": "集成插件",
       "vrchat": {
         "description": "链接你的 VRChat 账户, 即可访问 OyasumiVR 的一些与 VRChat 相关的自动化功能。",

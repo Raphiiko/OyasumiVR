@@ -2125,8 +2125,7 @@
         },
         "activityModeVRCCondition": {
           "title": "Отображать активность только когда открыт VRChat"
-        },
-        "title": "Discord"
+        }
       },
       "homeAssistant": {
         "description": "Интегрируйте OyasumiVR с остальной частью Вашего умного дома, подключив его к Home Assistant, что позволит Вам создавать собственные средства автоматизации и управлять различными интеллектуальными устройствами.",
@@ -2138,13 +2137,17 @@
         "title": "Pulsoid"
       },
       "reveal": "Раскрыть",
+      "tabs": {
+        "discord": "Discord",
+        "vrcx": "Логгирование VRCX"
+      },
       "title": "Интеграции",
       "vrchat": {
         "description": "Привязка Вашей учетной записи обеспечивает доступ к некоторым средствам автоматизации OyasumiVR, связанным с VRChat.",
         "title": "VRChat"
       },
       "vrcx": {
-        "logs": {
+        "logEntries": {
           "onSleepDisable": "Режим сна отключен",
           "onSleepEnable": "Режим сна включен",
           "onSleepPreparation": "Готовлюсь ко сну"
@@ -2152,8 +2155,7 @@
         "sleepModeChanges": {
           "description": "Записывать изменения режима сна в журнал игры в VRCX",
           "title": "Режим сна"
-        },
-        "title": "Логгирование VRCX"
+        }
       }
     },
     "notifications": {

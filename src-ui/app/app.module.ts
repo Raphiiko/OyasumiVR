@@ -170,6 +170,9 @@ import { SettingsOscViewComponent } from './views/dashboard-view/views/settings-
 import { SettingsGeneralViewComponent } from './views/dashboard-view/views/settings-general-view/settings-general-view.component';
 import { SettingsUpdatesViewComponent } from './views/dashboard-view/views/settings-updates-view/settings-updates-view.component';
 import { SettingsIntegrationsViewComponent } from './views/dashboard-view/views/settings-integrations-view/settings-integrations-view.component';
+import { SettingsIntegrationsProvidersTabComponent } from './views/dashboard-view/views/settings-integrations-view/tabs/settings-integrations-providers-tab/settings-integrations-providers-tab.component';
+import { SettingsIntegrationsVrcxTabComponent } from './views/dashboard-view/views/settings-integrations-view/tabs/settings-integrations-vrcx-tab/settings-integrations-vrcx-tab.component';
+import { SettingsIntegrationsDiscordTabComponent } from './views/dashboard-view/views/settings-integrations-view/tabs/settings-integrations-discord-tab/settings-integrations-discord-tab.component';
 import { SettingsHotkeyViewComponent } from './views/dashboard-view/views/settings-hotkey-view/settings-hotkey-view.component';
 import { HotkeySelectorComponent } from './components/hotkey-selector/hotkey-selector.component';
 import { HotkeySelectorModalComponent } from './components/hotkey-selector-modal/hotkey-selector-modal.component';
@@ -374,6 +377,9 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
     BrightnessControlSliderComponent,
     ClickOutsideDirective,
     SettingsIntegrationsViewComponent,
+    SettingsIntegrationsProvidersTabComponent,
+    SettingsIntegrationsVrcxTabComponent,
+    SettingsIntegrationsDiscordTabComponent,
     ObfuscatedValueDirective,
     HeartRateCalmPeriodEnableSleepModeModalComponent,
     HeartRateChartComponent,

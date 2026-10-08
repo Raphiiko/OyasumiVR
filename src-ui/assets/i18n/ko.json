@@ -1703,8 +1703,7 @@
         },
         "activityModeVRCCondition": {
           "title": "VRChat이 실행되는 동안에만 활동 표시"
-        },
-        "title": "디스코드"
+        }
       },
       "homeAssistant": {
         "description": "Home Assistant 인스턴스에 연결하여 OyasumiVR을 나머지 스마트홈 시스템과 연동하여 자신만의 강력한 자동화 기능을 구축하고 다양한 스마트 기기를 제어할 수 있어요.",
@@ -1716,6 +1715,9 @@
         "title": "Pulsoid"
       },
       "reveal": "표시",
+      "tabs": {
+        "discord": "디스코드"
+      },
       "title": "연동",
       "vrchat": {
         "description": "계정을 연결하면 OyasumiVR의 VRChat 관련 자동화 기능을 이용할 수 있어요.",

@@ -1,0 +1,32 @@
+<div class="setting-category">
+  <div class="settings">
+    <app-setting-row
+      label="settings.integrations.discord.activityMode.title"
+      description="settings.integrations.discord.activityMode.description"
+    >
+      <app-select-box
+        [type]="'SMALL'"
+        class="discord-activity-mode-dropdown"
+        [items]="discordActivityModeOptions"
+        [selected]="discordActivityModeOption"
+        (selectedChange)="onChangeDiscordActivityMode($event)"
+      ></app-select-box>
+    </app-setting-row>
+    <div class="setting-row-group">
+      <app-setting-row label="settings.integrations.discord.activityModeVRCCondition.title">
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="appSettings.discordActivityOnlyWhileVRChatIsRunning"
+            (change)="
+              setDiscordActivityOnlyWhenVRChatIsRunning(
+                !appSettings.discordActivityOnlyWhileVRChatIsRunning
+              )
+            "
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </app-setting-row>
+    </div>
+  </div>
+</div>

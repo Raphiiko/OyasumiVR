@@ -1703,8 +1703,7 @@
         },
         "activityModeVRCCondition": {
           "title": "Nur zeigen während VRChat läuft"
-        },
-        "title": "Discord"
+        }
       },
       "homeAssistant": {
         "description": "Integriere OyasumiVR mit dem Rest deines Smart Homes durch die Verbindung mit Home Assistant. Dies erlaubt es dir deine eigenen nützlichen Automationen zu erstellen und viele diverse smart Geräte zu steuern.",
@@ -1716,6 +1715,9 @@
         "title": "Pulsoid"
       },
       "reveal": "Anzeigen",
+      "tabs": {
+        "discord": "Discord"
+      },
       "title": "Integrationen",
       "vrchat": {
         "description": "Das Verknüpfen deines VRChat accounts gibt dir die Möglichkeit VRChat spezifische Automationen zu verwenden.",

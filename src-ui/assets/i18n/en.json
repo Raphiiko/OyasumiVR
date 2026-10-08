@@ -2222,8 +2222,7 @@
         },
         "activityModeVRCCondition": {
           "title": "Only show activity while VRChat is running"
-        },
-        "title": "Discord"
+        }
       },
       "homeAssistant": {
         "description": "Integrate OyasumiVR with the rest of your smart home by connecting it up to your Home Assistant instance, enabling you to build your own powerful automations and control various smart devices.",
@@ -2235,6 +2234,11 @@
         "title": "Pulsoid"
       },
       "reveal": "Reveal",
+      "tabs": {
+        "discord": "Discord",
+        "providers": "Providers",
+        "vrcx": "VRCX"
+      },
       "title": "Integrations",
       "vrchat": {
         "accounts": "Accounts",
@@ -2251,13 +2255,14 @@
           "description": "Log invites and invite requests that OyasumiVR accepted or declined",
           "title": "Invites"
         },
-        "logs": {
+        "logEntries": {
           "onSleepDisable": "Sleep mode disabled",
           "onSleepEnable": "Sleep mode enabled",
           "onSleepPreparation": "Preparing for sleep",
           "reply": "Reply: \"{message}\"",
           "statusChanged": "Changed your VRChat status to {status}"
         },
+        "logs": "Logs",
         "sleepModeChanges": {
           "description": "Log changes to sleep mode to the game log in VRCX",
           "title": "Sleep mode"
@@ -2265,8 +2270,7 @@
         "statusChanges": {
           "description": "Log VRChat status changes made by OyasumiVR",
           "title": "Status changes"
-        },
-        "title": "VRCX Logging"
+        }
       }
     },
     "notifications": {
