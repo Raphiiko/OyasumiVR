@@ -2157,10 +2157,6 @@
     "notifications": {
       "notifications": {
         "category": {
-          "AUTO_ACCEPTED_INVITE_REQUEST": {
-            "description": "當 OyasumiVR 自動接受某人的加入請求時通知你",
-            "title": "已自動接受加入請求"
-          },
           "AUTO_UPDATED_VRC_STATUS": {
             "description": "當 OyasumiVR 自動更新你的 VRChat 狀態時通知你",
             "title": "VRChat 狀態已更新"

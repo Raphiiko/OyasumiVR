@@ -44,7 +44,9 @@ function from16to17(data: any): any {
 function from17to18(data: any): any {
   data.version = 18;
   data.notificationsEnabled = {
-    types: [...new Set([...(data.notificationsEnabled?.types ?? []), 'AUTO_DECLINED_INVITE'])],
+    types: (data.notificationsEnabled?.types ?? []).map((t: string) =>
+      t === 'AUTO_ACCEPTED_INVITE_REQUEST' ? 'INVITE_AUTOMATIONS' : t
+    ),
   };
   return data;
 }

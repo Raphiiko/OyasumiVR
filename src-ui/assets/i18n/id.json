@@ -945,10 +945,6 @@
     "notifications": {
       "notifications": {
         "category": {
-          "AUTO_ACCEPTED_INVITE_REQUEST": {
-            "description": "Dapatkan pemberitahuan ketika OyasumiVR secara otomatis menerima permintaan undangan dari seseorang",
-            "title": "Permintaan Undangan yang Diterima Secara Otomatis"
-          },
           "SLEEP_MODE_DISABLED": {
             "description": "Dapatkan pemberitahuan ketika mode tidur dinonaktifkan",
             "title": "Mode Tidur Dimatikan"

@@ -1987,10 +1987,6 @@
     "notifications": {
       "notifications": {
         "category": {
-          "AUTO_ACCEPTED_INVITE_REQUEST": {
-            "description": "Recibe una notificación cuando OyasumiVR acepte automáticamente la solicitud de invitación de alguien.",
-            "title": "Solicitud de invitación aceptada automáticamente"
-          },
           "AUTO_UPDATED_VRC_STATUS": {
             "description": "Recibe una notificación cuando OyasumiVR haya actualizado automáticamente tu estado en VRChat.",
             "title": "Estado de VRChat actualizado"

@@ -2099,10 +2099,6 @@
     "notifications": {
       "notifications": {
         "category": {
-          "AUTO_ACCEPTED_INVITE_REQUEST": {
-            "description": "Ontvang een notificatie wanneer OyasumiVR automatisch iemands invite request heeft geaccepteerd",
-            "title": "Invite Request Automatisch Geaccepteerd"
-          },
           "AUTO_UPDATED_VRC_STATUS": {
             "description": "Krijg een notificatie wanner Oyasumi automatisch je VRChat status heeft veranderd",
             "title": "VRChat Status Veranderd"

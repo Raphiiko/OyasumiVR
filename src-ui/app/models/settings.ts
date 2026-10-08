@@ -89,8 +89,7 @@ export const NotificationTypes = [
   'SLEEP_MODE_ENABLED',
   'SLEEP_MODE_DISABLED',
   'AUTO_UPDATED_VRC_STATUS',
-  'AUTO_ACCEPTED_INVITE_REQUEST',
-  'AUTO_DECLINED_INVITE',
+  'INVITE_AUTOMATIONS',
 ] as const;
 
 export type NotificationType = (typeof NotificationTypes)[number];

@@ -43,11 +43,12 @@ with [SemVer](https://semver.org/) prerelease suffixes:
   - Invites and invite requests that OyasumiVR accepted or declined, with the reason and the reply message
   - VRChat status changes made by OyasumiVR, with the reason
   - VRChat group changes made by OyasumiVR, with the reason
-- Notification when OyasumiVR automatically declines an invite or an invite request, with its own
-  toggle in the notification settings
+- Notification when OyasumiVR automatically declines an invite or an invite request
 
 ### Changed
 
+- The notification setting for automatically accepted invite requests is now "Automatically Handled
+  Invites", and also covers automatically declined invites and invite requests
 - Color temperature control is now limited to supported headsets (Valve Index, Bigscreen Beyond).
   If it worked on your headset before, please turn on "Enable on unsupported headsets" in the
   Brightness & CCT settings, and let us know on Discord.

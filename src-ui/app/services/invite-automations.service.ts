@@ -244,7 +244,7 @@ export class InviteAutomationsService {
       message: this.getInviteRequestAcceptMessage(config),
     });
     this.playInviteRequestSound(config, true, sleepMode);
-    if (await this.notifications.notificationTypeEnabled('AUTO_ACCEPTED_INVITE_REQUEST')) {
+    if (await this.notifications.notificationTypeEnabled('INVITE_AUTOMATIONS')) {
       await this.notifications.send(
         this.translate.translate('notifications.autoAcceptedInviteRequest.content', {
           username: notification.senderUsername,
@@ -289,7 +289,7 @@ export class InviteAutomationsService {
     key: 'autoDeclinedInvite' | 'autoDeclinedInviteRequest',
     username: Notification['senderUsername']
   ) {
-    if (!(await this.notifications.notificationTypeEnabled('AUTO_DECLINED_INVITE'))) return;
+    if (!(await this.notifications.notificationTypeEnabled('INVITE_AUTOMATIONS'))) return;
     await this.notifications.send(
       this.translate.translate(`notifications.${key}.content`, { username })
     );

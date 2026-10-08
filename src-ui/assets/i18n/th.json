@@ -2152,10 +2152,6 @@
     "notifications": {
       "notifications": {
         "category": {
-          "AUTO_ACCEPTED_INVITE_REQUEST": {
-            "description": "เมื่ออนุมัติ คำขอเข้าร่วม อัตโนมัติ",
-            "title": "เมื่ออนุมัติ คำขอเข้าร่วม"
-          },
           "AUTO_UPDATED_VRC_STATUS": {
             "description": "รับการแจ้งเตือนเมื่อ OyasumiVR อัปเดตสถานะ VRChat ของคุณโดยอัตโนมัติ",
             "title": "สถานะ VRChat ถูกอัปเดต"

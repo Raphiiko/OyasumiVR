@@ -2272,17 +2272,13 @@
     "notifications": {
       "notifications": {
         "category": {
-          "AUTO_ACCEPTED_INVITE_REQUEST": {
-            "description": "Get a notification when OyasumiVR has automatically accepted someones invite request",
-            "title": "Automatically Accepted Invite-Request"
-          },
-          "AUTO_DECLINED_INVITE": {
-            "description": "Get a notification when OyasumiVR has automatically declined someone's invite or invite request",
-            "title": "Automatically Declined Invite"
-          },
           "AUTO_UPDATED_VRC_STATUS": {
             "description": "Get a notification when OyasumiVR has automatically updated your VRChat status",
             "title": "VRChat Status Updated"
+          },
+          "INVITE_AUTOMATIONS": {
+            "description": "Get a notification when OyasumiVR automatically accepts an invite request, or declines an invite or invite request",
+            "title": "Automatically Handled Invites"
           },
           "SLEEP_MODE_DISABLED": {
             "description": "Get a notification when the sleep mode is deactivated",

@@ -2136,10 +2136,6 @@
     "notifications": {
       "notifications": {
         "category": {
-          "AUTO_ACCEPTED_INVITE_REQUEST": {
-            "description": "Req Inviteを自動承認したとき",
-            "title": "Req Inviteの承認時"
-          },
           "AUTO_UPDATED_VRC_STATUS": {
             "description": "OyasumiVRが自動的にあなたのVRChatステータスを更新した際に通知を受け取る",
             "title": "VRChatステータスが更新されました"
