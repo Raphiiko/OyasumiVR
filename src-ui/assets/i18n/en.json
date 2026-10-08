@@ -2381,7 +2381,7 @@
       },
       "summary": {
         "added": "{count} new",
-        "changed": "{count} improved",
+        "changed": "{count} changed",
         "fixed": "{count} fixed",
         "other": "{count} other",
         "removed": "{count} removed"
