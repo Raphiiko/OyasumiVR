@@ -1,6 +1,6 @@
 import { invoke } from '@tauri-apps/api/core';
 import { BehaviorSubject, firstValueFrom, Subject } from 'rxjs';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { AUTOMATION_CONFIGS_DEFAULT } from '../../models/automations';
 import { APP_SETTINGS_DEFAULT } from '../../models/settings';
 import type { OVRDevice } from '../../models/ovr-device';
@@ -384,6 +384,8 @@ async function setupIndex(initialGain = 1) {
 }
 
 describe('HardwareBrightnessControlService with a Valve Index', () => {
+  afterEach(() => vi.useRealTimers());
+
   it('follows a change made in SteamVR without writing it back', async () => {
     const h = await setupIndex(gainFor(60));
     expect(h.service.brightness).toBe(60);
@@ -404,8 +406,10 @@ describe('HardwareBrightnessControlService with a Valve Index', () => {
     });
     const shown: number[] = [];
     h.service.brightnessStream.subscribe((value) => shown.push(value));
-    const task = h.service.transitionBrightness(50, 200);
-    await firstValueFrom(task.onComplete);
+    vi.useFakeTimers();
+    const completed = firstValueFrom(h.service.transitionBrightness(50, 200).onComplete);
+    await vi.advanceTimersByTimeAsync(250);
+    await completed;
     expect(h.openvr.setAnalogGain.mock.calls.length).toBeGreaterThan(2);
     expect(h.service.brightness).toBe(50);
     for (let i = 1; i < shown.length; i++)

@@ -86,6 +86,33 @@ describe('ValveIndexHardwareBrightnessControlDriver', () => {
     expect(h.updates).toEqual([80]);
   });
 
+  it('keeps its own write that finishes during the initial read', async () => {
+    const h = setup(gainFor(60));
+    let answer = (_: number) => {};
+    h.getAnalogGain.mockImplementationOnce(() => new Promise((resolve) => (answer = resolve)));
+    await vi.advanceTimersByTimeAsync(500);
+    const set = h.driver.setBrightnessPercentage(80);
+    await h.release();
+    await set;
+    answer(gainFor(60));
+    await vi.advanceTimersByTimeAsync(0);
+    expect(h.updates).toEqual([80]);
+  });
+
+  it('drops an initial read from before the Index was last unavailable', async () => {
+    const h = setup(gainFor(60));
+    let answer = (_: number) => {};
+    h.getAnalogGain.mockImplementationOnce(() => new Promise((resolve) => (answer = resolve)));
+    await vi.advanceTimersByTimeAsync(500);
+    h.status.next('INACTIVE');
+    await vi.advanceTimersByTimeAsync(0);
+    h.status.next('INITIALIZED');
+    await vi.advanceTimersByTimeAsync(500);
+    answer(gainFor(30));
+    await vi.advanceTimersByTimeAsync(0);
+    expect(h.updates).toEqual([60]);
+  });
+
   it('adopts a change made outside OyasumiVR without writing it back', async () => {
     const h = setup();
     await vi.advanceTimersByTimeAsync(500);
