@@ -99,8 +99,7 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
   }
 
   getBrightnessBounds(): [number, number] {
-    const stops = STEAM_FRAME_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS.hardwareStops;
-    return [stops[0], stops[stops.length - 1]];
+    return STEAM_FRAME_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS.hardwareStops as [number, number];
   }
 
   async getBrightnessPercentage(): Promise<number> {
