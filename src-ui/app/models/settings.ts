@@ -4,7 +4,7 @@ import { OneTimeFlag } from './one-time-flags';
 import { EventLogType } from './event-log-entry';
 
 export interface AppSettings {
-  version: 17;
+  version: 18;
   // General Settings
   userLanguage: string;
   userLanguagePicked: boolean;
@@ -90,12 +90,13 @@ export const NotificationTypes = [
   'SLEEP_MODE_DISABLED',
   'AUTO_UPDATED_VRC_STATUS',
   'AUTO_ACCEPTED_INVITE_REQUEST',
+  'AUTO_DECLINED_INVITE',
 ] as const;
 
 export type NotificationType = (typeof NotificationTypes)[number];
 
 export const APP_SETTINGS_DEFAULT: AppSettings = {
-  version: 17,
+  version: 18,
   // General Settings
   userLanguage: 'en',
   userLanguagePicked: false,
