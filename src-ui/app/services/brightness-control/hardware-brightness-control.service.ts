@@ -14,8 +14,8 @@ import {
   Observable,
   of,
   shareReplay,
-  startWith,
   ReplaySubject,
+  skip,
   switchMap,
 } from 'rxjs';
 import { isEqual } from 'lodash';
@@ -131,16 +131,10 @@ export class HardwareBrightnessControlService {
         this._brightness.next(adopted.percentage);
         this._adoptedBrightness.next(adopted);
       });
-    // a pushing driver's bounds can change with each pushed value
-    const driverBounds = this._activeDriver.pipe(
-      switchMap((driver) =>
-        (driver?.brightnessUpdates ?? EMPTY).pipe(
-          startWith(null),
-          map(() => driver)
-        )
-      )
-    );
-    this.brightnessBounds = combineLatest([driverBounds, this.appSettingsService.settings]).pipe(
+    this.brightnessBounds = combineLatest([
+      this._activeDriver,
+      this.appSettingsService.settings,
+    ]).pipe(
       map(([driver, settings]: [HardwareBrightnessControlDriver | null, AppSettings]) => {
         if (!driver) return [0, 100] as [number, number];
         return driver.getBrightnessBounds(settings);
@@ -280,11 +274,24 @@ export class HardwareBrightnessControlService {
     return brightness;
   }
 
+  /** Clamps the brightness when a setting narrows the active driver's bounds. */
   private async initializeSafetyChecks() {
-    this.brightnessBounds.subscribe((bounds) => {
-      if (this._activeDriver.value?.pushesBrightnessChanges) return;
-      const clamped = clamp(this.brightness, bounds[0], bounds[1]);
-      if (clamped !== this.brightness) this.setBrightness(clamped);
-    });
+    this._activeDriver
+      .pipe(
+        // skip the bounds at a driver switch: the cached value belongs to the previous device
+        switchMap((driver) =>
+          driver
+            ? this.appSettingsService.settings.pipe(
+                map((settings) => driver.getBrightnessBounds(settings)),
+                distinctUntilChanged(isEqual),
+                skip(1)
+              )
+            : EMPTY
+        )
+      )
+      .subscribe((bounds) => {
+        const clamped = clamp(this.brightness, bounds[0], bounds[1]);
+        if (clamped !== this.brightness) this.setBrightness(clamped);
+      });
   }
 }

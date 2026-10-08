@@ -20,7 +20,7 @@ type SimpleDependencies = ConstructorParameters<typeof SimpleBrightnessControlSe
 
 const settle = () => new Promise((resolve) => setTimeout(resolve, 0));
 
-/** A service whose only available driver is a paired Frame reporting within 20%–110%. */
+/** A service whose only available driver is a paired Frame. */
 async function setup(
   initial: number | null = 40,
   commands: (command: string) => Promise<unknown> = async () => false
@@ -57,8 +57,8 @@ async function setup(
         brightness: {
           runtime: true,
           supported: true,
-          min: 20,
-          max: 110,
+          min: 9,
+          max: 125,
           percentage,
           fade: fade ? { operation: fade, target: 0, remainingMs: 1, endsAt: 0 } : null,
         },
@@ -83,12 +83,12 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
     h.service.adoptedBrightness.subscribe((value) => adopted.push(value.percentage));
     expect(await firstValueFrom(h.service.driverIsAvailable)).toBe(true);
     expect(h.service.brightness).toBe(40);
-    expect(await firstValueFrom(h.service.brightnessBounds)).toEqual([20, 110]);
+    expect(await firstValueFrom(h.service.brightnessBounds)).toEqual([9, 125]);
     h.report(150);
     await settle();
-    expect(h.service.brightness).toBe(110);
+    expect(h.service.brightness).toBe(125);
     // the report from before the subscription replays first
-    expect(adopted).toEqual([40, 110]);
+    expect(adopted).toEqual([40, 125]);
     expect(h.writes()).toEqual([]);
   });
 
@@ -262,13 +262,13 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
     const h = await setup(40);
     h.report(150);
     await settle();
-    expect(h.service.brightness).toBe(110);
+    expect(h.service.brightness).toBe(125);
     vi.mocked(invoke).mockImplementation(async (command, args) =>
       command === 'steam_frame_set_brightness' ? (args as { percentage: number }).percentage : false
     );
-    await h.service.setBrightness(110);
+    await h.service.setBrightness(125);
     expect(h.writes()).toEqual([
-      ['steam_frame_set_brightness', { pairingId: 'p', percentage: 110 }],
+      ['steam_frame_set_brightness', { pairingId: 'p', percentage: 125 }],
     ]);
   });
 });
@@ -294,9 +294,9 @@ describe('simple brightness following a Steam Frame', () => {
   it('derives the first report with the Frame bounds and keeps software dimming', async () => {
     const h = await setup(null);
     const s = await simple(h.service, 50);
-    h.report(20);
+    h.report(9);
     await settle();
-    expect(s.service.brightness).toBe(10);
+    expect(s.service.brightness).toBe(4.5);
     expect(s.software.setBrightness).not.toHaveBeenCalled();
     expect(h.writes()).toEqual([]);
   });
@@ -320,7 +320,7 @@ describe('simple brightness following a Steam Frame', () => {
     const h = await setup(40);
     const s = await simple(h.service, 100);
     await settle();
-    expect(s.service.brightness).toBeCloseTo(20 + (20 / 90) * 80);
+    expect(s.service.brightness).toBeCloseTo(9 + (31 / 116) * 91);
     expect(h.writes()).toEqual([]);
   });
 
@@ -335,6 +335,6 @@ describe('simple brightness following a Steam Frame', () => {
     await s.service.setBrightness(80);
     await settle();
     expect(h.service.brightness).toBe(40);
-    expect(s.service.brightness).toBeCloseTo(20 + (20 / 90) * 80);
+    expect(s.service.brightness).toBeCloseTo(9 + (31 / 116) * 91);
   });
 });
