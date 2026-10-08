@@ -545,6 +545,7 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         lighthouse::commands::lighthouse_get_status,
         lighthouse::commands::lighthouse_get_scanning_status,
         lighthouse::commands::lighthouse_reset,
+        lighthouse::commands::lighthouse_restart_bluetooth_radio,
         steam::commands::steam_active,
         steam::commands::steam_achievement_get,
         steam::commands::steam_achievement_set,

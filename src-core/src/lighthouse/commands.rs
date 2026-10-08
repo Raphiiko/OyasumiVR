@@ -43,3 +43,8 @@ pub async fn lighthouse_get_scanning_status() -> bool {
 pub async fn lighthouse_reset() {
     super::reset().await
 }
+
+#[tauri::command]
+pub async fn lighthouse_restart_bluetooth_radio() -> Result<(), String> {
+    super::restart_bluetooth_radio().await
+}
