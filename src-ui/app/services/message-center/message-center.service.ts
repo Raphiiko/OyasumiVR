@@ -90,9 +90,12 @@ export class MessageCenterService {
     }
   }
 
+  /** Appends the message, or replaces the one with the same id in its current position. */
   public addMessage(message: MessageItem) {
-    let messages = this._messages.value.filter((m) => m.id !== message.id);
-    messages = [...messages, message];
+    const messages = [...this._messages.value];
+    const index = messages.findIndex((m) => m.id === message.id);
+    if (index === -1) messages.push(message);
+    else messages[index] = message;
     this._messages.next(messages);
   }
 
