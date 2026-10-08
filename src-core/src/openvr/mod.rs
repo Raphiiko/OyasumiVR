@@ -348,6 +348,7 @@ async fn shutdown_ovr() {
     *context = None;
     drop(context);
     devices::on_ovr_quit().await;
+    brightness_analog::on_ovr_quit().await;
 }
 
 pub fn settings_interface_available(context: &ovr::Context) -> bool {
