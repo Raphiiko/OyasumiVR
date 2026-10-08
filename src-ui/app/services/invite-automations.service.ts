@@ -81,7 +81,7 @@ export class InviteAutomationsService {
           reason: 'SLEEP_MODE_ENABLED',
           message: declined.reply,
         } as EventLogDeclinedInvite);
-        await this.sendDeclinedNotification('autoDeclinedInvite', notification.senderUsername);
+        void this.sendDeclinedNotification('autoDeclinedInvite', notification.senderUsername);
       }
     }
     // Play a sound if configured
@@ -280,7 +280,7 @@ export class InviteAutomationsService {
         reason,
         message: declined.reply,
       } as EventLogDeclinedInviteRequest);
-      await this.sendDeclinedNotification('autoDeclinedInviteRequest', notification.senderUsername);
+      void this.sendDeclinedNotification('autoDeclinedInviteRequest', notification.senderUsername);
     }
     return true;
   }

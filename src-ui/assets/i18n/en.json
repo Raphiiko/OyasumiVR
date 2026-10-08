@@ -2277,7 +2277,7 @@
             "title": "Automatically Accepted Invite-Request"
           },
           "AUTO_DECLINED_INVITE": {
-            "description": "Get a notification when OyasumiVR has automatically declined someones invite or invite request",
+            "description": "Get a notification when OyasumiVR has automatically declined someone's invite or invite request",
             "title": "Automatically Declined Invite"
           },
           "AUTO_UPDATED_VRC_STATUS": {
