@@ -676,9 +676,10 @@ fn counts_toward_stuck_stack(
 }
 
 /// Turns every Bluetooth radio off and back on, which drops every Bluetooth device on the PC.
+/// Clears the connect backoffs afterwards, so the stations are retried right away.
 pub async fn restart_bluetooth_radio() -> Result<(), String> {
     warn!("[Core] Restarting the bluetooth radio");
-    tokio::task::spawn_blocking(|| {
+    let result = tokio::task::spawn_blocking(|| {
         let runtime = tokio::runtime::Builder::new_current_thread()
             .enable_all()
             .build()
@@ -686,7 +687,9 @@ pub async fn restart_bluetooth_radio() -> Result<(), String> {
         runtime.block_on(cycle_bluetooth_radio())
     })
     .await
-    .map_err(|err| err.to_string())?
+    .map_err(|err| err.to_string())?;
+    CONNECT_BACKOFFS.lock().unwrap().clear();
+    result
 }
 
 async fn cycle_bluetooth_radio() -> Result<(), String> {
