@@ -5,7 +5,7 @@ use std::{
     collections::{HashMap, HashSet},
     path::PathBuf,
     sync::{
-        atomic::{AtomicU32, Ordering},
+        atomic::{AtomicBool, AtomicU32, Ordering},
         Arc, LazyLock,
     },
     time::{Duration, Instant},
@@ -66,6 +66,10 @@ static PROCESSING_DEVICES: LazyLock<Mutex<HashSet<PeripheralId>>> =
 static CONNECT_BACKOFFS: LazyLock<std::sync::Mutex<HashMap<PeripheralId, (u32, Instant)>>> =
     LazyLock::new(|| std::sync::Mutex::new(HashMap::new()));
 static CONNECT_FAILURE_STREAK: AtomicU32 = AtomicU32::new(0);
+static LAST_ADVERTISEMENTS: LazyLock<std::sync::Mutex<HashMap<PeripheralId, Instant>>> =
+    LazyLock::new(|| std::sync::Mutex::new(HashMap::new()));
+// Cleared by a radio cycle, set again by the next successful connect
+static RADIO_RECOVERY_ARMED: AtomicBool = AtomicBool::new(true);
 static LAST_RADIO_RECOVERY: LazyLock<Mutex<Option<Instant>>> = LazyLock::new(|| Mutex::new(None));
 static PENDING_RESTORE_FILE_LOCK: LazyLock<std::sync::Mutex<()>> =
     LazyLock::new(|| std::sync::Mutex::new(()));
@@ -74,8 +78,9 @@ static RADIO_RECOVERY_LOCK: LazyLock<Mutex<()>> = LazyLock::new(|| Mutex::new(()
 const CONNECT_TIMEOUT: Duration = Duration::from_secs(15);
 const CONNECT_RETRY_COOLDOWN: Duration = Duration::from_secs(10);
 const CONNECT_BACKOFF_MAX: Duration = Duration::from_secs(300);
-// Failing connects to every device at once is the signature of a wedged stack
+// Known lighthouses that advertise but refuse every connect are the signature of a wedged stack
 const RADIO_RECOVERY_THRESHOLD: u32 = 6;
+const ADVERTISEMENT_MAX_AGE: Duration = Duration::from_secs(60);
 const RADIO_RECOVERY_COOLDOWN: Duration = Duration::from_secs(300);
 const RADIO_ON_ATTEMPTS: u32 = 3;
 const RADIO_RESTORE_TIMEOUT: Duration = Duration::from_secs(60);
@@ -252,6 +257,12 @@ async fn scan_for_devices(duration: Duration) {
                         break;
                     }
                 };
+                {
+                    let mut advertisements = LAST_ADVERTISEMENTS.lock().unwrap();
+                    // Other devices rotate random addresses, so drop the stale ones
+                    advertisements.retain(|_, at| at.elapsed() < ADVERTISEMENT_MAX_AGE);
+                    advertisements.insert(device_id.clone(), Instant::now());
+                }
                 if let Ok(peripheral) = adapter.peripheral(&device_id).await {
                     tokio::spawn(handle_discovered_device(peripheral));
                 }
@@ -635,6 +646,7 @@ async fn ensure_connected(device: &Peripheral, device_name: &str) -> Result<(), 
         Ok(()) => {
             CONNECT_BACKOFFS.lock().unwrap().remove(&device_id);
             CONNECT_FAILURE_STREAK.store(0, Ordering::Relaxed);
+            RADIO_RECOVERY_ARMED.store(true, Ordering::Relaxed);
         }
         Err(err) => {
             register_connect_failure(&device_id).await;
@@ -675,6 +687,20 @@ async fn register_connect_failure(device_id: &PeripheralId) {
         entry.0 += 1;
         entry.1 = Instant::now();
     }
+
+    // count only failures that a radio cycle could fix
+    let last_advertisement = LAST_ADVERTISEMENTS.lock().unwrap().get(device_id).copied();
+    let known = LIGHTHOUSE_DEVICES
+        .lock()
+        .await
+        .iter()
+        .any(|d| d.id == *device_id);
+    let armed = RADIO_RECOVERY_ARMED.load(Ordering::Relaxed);
+    if !counts_toward_radio_recovery(known, last_advertisement, armed) {
+        return;
+    }
+
+    // cycle the radio once the streak is long enough
     let streak = CONNECT_FAILURE_STREAK.fetch_add(1, Ordering::Relaxed) + 1;
     if streak < RADIO_RECOVERY_THRESHOLD {
         return;
@@ -686,6 +712,7 @@ async fn register_connect_failure(device_id: &PeripheralId) {
     }
     *last_recovery = Some(Instant::now());
     drop(last_recovery);
+    RADIO_RECOVERY_ARMED.store(false, Ordering::Relaxed);
     tokio::task::spawn_blocking(|| {
         let Ok(runtime) = tokio::runtime::Builder::new_current_thread()
             .enable_all()
@@ -701,6 +728,14 @@ async fn register_connect_failure(device_id: &PeripheralId) {
             }
         });
     });
+}
+
+fn counts_toward_radio_recovery(
+    known: bool,
+    last_advertisement: Option<Instant>,
+    armed: bool,
+) -> bool {
+    armed && known && last_advertisement.is_some_and(|at| at.elapsed() < ADVERTISEMENT_MAX_AGE)
 }
 
 async fn cycle_bluetooth_radio() -> Result<(), String> {
@@ -1396,5 +1431,16 @@ mod tests {
         assert_eq!(connect_backoff_delay(3), Duration::from_secs(40));
         assert_eq!(connect_backoff_delay(6), CONNECT_BACKOFF_MAX);
         assert_eq!(connect_backoff_delay(60), CONNECT_BACKOFF_MAX);
+    }
+
+    #[test]
+    fn radio_recovery_ignores_absent_unknown_and_disarmed_devices() {
+        let now = Instant::now();
+        let stale = now.checked_sub(ADVERTISEMENT_MAX_AGE * 2).unwrap();
+        assert!(counts_toward_radio_recovery(true, Some(now), true));
+        assert!(!counts_toward_radio_recovery(true, None, true));
+        assert!(!counts_toward_radio_recovery(true, Some(stale), true));
+        assert!(!counts_toward_radio_recovery(false, Some(now), true));
+        assert!(!counts_toward_radio_recovery(true, Some(now), false));
     }
 }
