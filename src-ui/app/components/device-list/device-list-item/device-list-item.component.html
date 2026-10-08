@@ -17,6 +17,8 @@
             [id]="'btn-power-' + cssId"
             [powerState]="getDevicePowerState()"
             [anchorName]="powerButtonAnchorId"
+            [customIcon]="frameToPair ? 'link' : ''"
+            [title]="frameToPair ? ('steamFrame.actions.pair' | transloco) : ''"
             [allowUnknownClick]="mode === 'lighthouse'"
             (powerAction)="handleDevicePowerAction($event)"
             (rightClick)="rightClickDevicePowerButton()"
