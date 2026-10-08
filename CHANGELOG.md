@@ -43,6 +43,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
   - Invites and invite requests that OyasumiVR accepted or declined, with the reason and the reply message
   - VRChat status changes made by OyasumiVR, with the reason
   - VRChat group changes made by OyasumiVR, with the reason
+- Notification when OyasumiVR automatically declines an invite or an invite request, with its own
+  toggle in the notification settings
 
 ### Changed
 
