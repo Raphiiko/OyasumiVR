@@ -65,7 +65,8 @@ static CONNECT_BACKOFFS: LazyLock<std::sync::Mutex<HashMap<PeripheralId, (u32, I
     LazyLock::new(|| std::sync::Mutex::new(HashMap::new()));
 static CONNECT_FAILURE_STREAK: AtomicU32 = AtomicU32::new(0);
 // Like CONNECT_FAILURE_STREAK, but counts only failures to known stations that still advertise.
-// Its events are sent while it is held, so the UI receives them in the order of the changes.
+// A failure is counted and each event is sent while it is held, so a successful connect
+// cannot land between a failure and its count, and the UI receives events in order.
 static VISIBLE_CONNECT_FAILURE_STREAK: LazyLock<Mutex<u32>> = LazyLock::new(|| Mutex::new(0));
 static LAST_ADVERTISEMENTS: LazyLock<std::sync::Mutex<HashMap<PeripheralId, Instant>>> =
     LazyLock::new(|| std::sync::Mutex::new(HashMap::new()));
@@ -643,6 +644,7 @@ async fn register_connect_failure(
     }
 
     // tell the UI once per streak, counting only stations that are known and still advertising
+    let mut visible_streak = VISIBLE_CONNECT_FAILURE_STREAK.lock().await;
     let known = LIGHTHOUSE_DEVICES
         .lock()
         .await
@@ -652,7 +654,6 @@ async fn register_connect_failure(
     if !counts_toward_stuck_stack(known, last_advertisement, Instant::now()) {
         return;
     }
-    let mut visible_streak = VISIBLE_CONNECT_FAILURE_STREAK.lock().await;
     *visible_streak += 1;
     if *visible_streak == STUCK_STACK_THRESHOLD {
         send_event(EVENT_CONNECTS_FAILING, ()).await;
