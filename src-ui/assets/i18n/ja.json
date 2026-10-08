@@ -2114,8 +2114,7 @@
         },
         "activityModeVRCCondition": {
           "title": "VRChat実行中の場合のみ表示する"
-        },
-        "title": "Discord"
+        }
       },
       "homeAssistant": {
         "description": "Home Assistantインスタンスに接続して、スマートホームデバイスと連携し、更なる自動化環境を構築したり、さまざまなスマートデバイスを制御したりできます。",
@@ -2127,6 +2126,9 @@
         "title": "Pulsoid"
       },
       "reveal": "表示",
+      "tabs": {
+        "discord": "Discord"
+      },
       "title": "連携",
       "vrchat": {
         "description": "アカウントをリンクさせると、VRChat関係の自動化を利用できるようになります",

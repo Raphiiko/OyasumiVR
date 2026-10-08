@@ -1958,8 +1958,7 @@
         },
         "activityModeVRCCondition": {
           "title": "Mostrar sólo la actividad mientras VRChat está funcionando"
-        },
-        "title": "Discord"
+        }
       },
       "homeAssistant": {
         "description": "Integre OyasumiVR con el resto de su hogar inteligente conectándolo a su instancia de HomeAssistant, lo que le permitirá crear sus propias automatizaciones potentes y controlar varios dispositivos inteligentes.",
@@ -1971,6 +1970,9 @@
         "title": "Pulsoid"
       },
       "reveal": "Revelar",
+      "tabs": {
+        "discord": "Discord"
+      },
       "title": "Integraciones",
       "vrchat": {
         "description": "Vincular tu cuenta te da acceso a algunas de las automatizaciones de OyasumiVR relacionadas con VRChat.",

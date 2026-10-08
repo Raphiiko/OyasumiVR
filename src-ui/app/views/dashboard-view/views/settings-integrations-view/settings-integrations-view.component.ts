@@ -26,6 +26,7 @@ import { VRChatAccountsModalComponent } from '../../../../components/vrchat-acco
   standalone: false,
 })
 export class SettingsIntegrationsViewComponent implements OnInit {
+  activeTab: 'PROVIDERS' | 'DISCORD' | 'VRCX' = 'PROVIDERS';
   deobfuscated: string[] = [];
   deobfuscationTimers: { [service: string]: any } = {};
 

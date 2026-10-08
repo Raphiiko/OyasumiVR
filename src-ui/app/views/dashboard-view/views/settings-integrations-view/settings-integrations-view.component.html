@@ -1,225 +1,241 @@
 <div class="pane fill">
   <div class="pane-title" transloco="settings.integrations.title"></div>
+  <div class="tab-bar">
+    <div class="tab" [class.active]="activeTab === 'PROVIDERS'" (click)="activeTab = 'PROVIDERS'">
+      <div class="tab-label" transloco="settings.integrations.tabs.providers"></div>
+    </div>
+    <div class="tab" [class.active]="activeTab === 'DISCORD'" (click)="activeTab = 'DISCORD'">
+      <div class="tab-label" transloco="settings.integrations.tabs.discord"></div>
+    </div>
+    <div class="tab" [class.active]="activeTab === 'VRCX'" (click)="activeTab = 'VRCX'">
+      <div class="tab-label" transloco="settings.integrations.tabs.vrcx"></div>
+    </div>
+  </div>
   <div class="pane-content scroll">
     <div class="setting-view-container">
-      <p transloco="settings.integrations.description"></p>
-      <div class="setting-category">
-        <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-icon">
-              <a href="https://vrchat.com/" target="_blank">
-                <img class="vrchat-logo clickable-logo" src="/assets/img/vrc_icon.png" />
-              </a>
-            </div>
-            <div class="setting-row-label">
-              <span [innerHtml]="'settings.integrations.vrchat.title' | transloco"></span>
-              <span [innerHtml]="'settings.integrations.vrchat.description' | transloco"></span>
-              <a
-                target="_blank"
-                href="https://vrchat.com"
-                transloco="settings.integrations.providerLink"
-              ></a>
-            </div>
-            <div class="setting-row-action">
-              @if (vrchat.user | async) {
-                <div class="connected">
-                  <div class="connected-info">
-                    <app-icon name="check-circle" />
-                    <div class="connected-info-account">
-                      {{ (vrchat.user | async)?.displayName }}
-                    </div>
-                  </div>
-                  <button
-                    class="btn btn-secondary connected-disconnect"
-                    (click)="showVRChatAccountsModal()"
-                    transloco="settings.integrations.vrchat.accounts"
-                  ></button>
-                </div>
-              }
-              @if ((vrchat.user | async) === null) {
-                @if ((vrchat.profiles | async)?.length) {
-                  <button
-                    class="btn btn-primary"
-                    (click)="showVRChatAccountsModal()"
-                    transloco="settings.integrations.vrchat.chooseAccount"
-                  ></button>
-                } @else {
-                  <button
-                    class="btn btn-primary"
-                    (click)="vrchat.prepareNewLogin()"
-                    transloco="settings.integrations.connect"
-                  ></button>
-                }
-              }
-            </div>
-          </div>
-
-          <div class="setting-row">
-            <div class="setting-row-icon">
-              <a
-                [href]="'https://pulsoid.net/pricing?promo_campaign_id=' + PULSOID_REFERRAL_ID"
-                target="_blank"
-              >
-                <img class="pulsoid-logo clickable-logo" src="/assets/img/pulsoid-logo.png" />
-              </a>
-            </div>
-            <div class="setting-row-label">
-              <span [innerHtml]="'settings.integrations.pulsoid.title' | transloco"></span>
-              <span [innerHtml]="'settings.integrations.pulsoid.description' | transloco"></span>
-              <a
-                target="_blank"
-                [href]="'https://pulsoid.net/pricing?promo_campaign_id=' + PULSOID_REFERRAL_ID"
-                transloco="settings.integrations.providerLink"
-              ></a>
-            </div>
-            <div class="setting-row-action">
-              @if (pulsoid.loggedInUser | async) {
-                <div class="connected">
-                  <div
-                    class="connected-info"
-                    [tooltip]="'settings.integrations.reveal'"
-                    [tooltipMode]="'top'"
-                  >
-                    <app-icon name="check-circle" />
-                    <div
-                      class="connected-info-account obfuscated"
-                      [obfuscatedValue]="(pulsoid.loggedInUser | async) ?? ''"
-                      [obfuscatedMaxLength]="16"
-                      [deobfuscatedMaxLength]="32"
-                      [deobfuscate]="deobfuscated.includes('PULSOID')"
-                      (click)="deobfuscate('PULSOID')"
-                    ></div>
-                  </div>
-                  <button
-                    class="btn btn-secondary connected-disconnect"
-                    (click)="pulsoid.logout()"
-                    transloco="settings.integrations.disconnect"
-                  ></button>
-                </div>
-              }
-              @if ((pulsoid.loggedInUser | async) === null) {
-                <div class="connect-row">
-                  <button
-                    class="btn btn-copy btn-secondary"
-                    tooltip="settings.integrations.copy"
-                    tooltipMode="left"
-                    (click)="copyPulsoidLoginUrl()"
-                  >
-                    <app-icon name="copy" />
-                  </button>
-                  <button
-                    class="btn btn-primary"
-                    (click)="pulsoid.login()"
-                    transloco="settings.integrations.connect"
-                  ></button>
-                </div>
-              }
-            </div>
-          </div>
-
-          <div class="setting-row">
-            <div class="setting-row-icon">
-              <a href="https://www.home-assistant.io/" target="_blank">
-                <img class="hass-logo clickable-logo" src="/assets/img/hass_logo.png" />
-              </a>
-            </div>
-            <div class="setting-row-label">
-              <span [innerHtml]="'settings.integrations.homeAssistant.title' | transloco"></span>
-              <span
-                [innerHtml]="'settings.integrations.homeAssistant.description' | transloco"
-              ></span>
-              <a
-                target="_blank"
-                href="https://www.home-assistant.io/"
-                transloco="settings.integrations.providerLink"
-              ></a>
-            </div>
-            @if (
-              {
-                mqttClient: (mqttService.client | async),
-              };
-              as data
-            ) {
+      @if (activeTab === 'PROVIDERS') {
+        <p transloco="settings.integrations.description"></p>
+        <div class="setting-category">
+          <div class="settings">
+            <div class="setting-row">
+              <div class="setting-row-icon">
+                <a href="https://vrchat.com/" target="_blank">
+                  <img class="vrchat-logo clickable-logo" src="/assets/img/vrc_icon.png" />
+                </a>
+              </div>
+              <div class="setting-row-label">
+                <span [innerHtml]="'settings.integrations.vrchat.title' | transloco"></span>
+                <span [innerHtml]="'settings.integrations.vrchat.description' | transloco"></span>
+                <a
+                  target="_blank"
+                  href="https://vrchat.com"
+                  transloco="settings.integrations.providerLink"
+                ></a>
+              </div>
               <div class="setting-row-action">
-                @if (data.mqttClient) {
+                @if (vrchat.user | async) {
                   <div class="connected">
                     <div class="connected-info">
                       <app-icon name="check-circle" />
                       <div class="connected-info-account">
-                        {{ data.mqttClient.options.host }}
+                        {{ (vrchat.user | async)?.displayName }}
                       </div>
                     </div>
                     <button
                       class="btn btn-secondary connected-disconnect"
-                      (click)="showMqttConfigModal()"
-                      transloco="settings.integrations.configure"
+                      (click)="showVRChatAccountsModal()"
+                      transloco="settings.integrations.vrchat.accounts"
                     ></button>
                   </div>
                 }
-                @if (!data.mqttClient) {
-                  <button
-                    class="btn btn-primary"
-                    (click)="showMqttConfigModal()"
-                    transloco="settings.integrations.configure"
-                  ></button>
+                @if ((vrchat.user | async) === null) {
+                  @if ((vrchat.profiles | async)?.length) {
+                    <button
+                      class="btn btn-primary"
+                      (click)="showVRChatAccountsModal()"
+                      transloco="settings.integrations.vrchat.chooseAccount"
+                    ></button>
+                  } @else {
+                    <button
+                      class="btn btn-primary"
+                      (click)="vrchat.prepareNewLogin()"
+                      transloco="settings.integrations.connect"
+                    ></button>
+                  }
                 }
               </div>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-row-icon">
+                <a
+                  [href]="'https://pulsoid.net/pricing?promo_campaign_id=' + PULSOID_REFERRAL_ID"
+                  target="_blank"
+                >
+                  <img class="pulsoid-logo clickable-logo" src="/assets/img/pulsoid-logo.png" />
+                </a>
+              </div>
+              <div class="setting-row-label">
+                <span [innerHtml]="'settings.integrations.pulsoid.title' | transloco"></span>
+                <span [innerHtml]="'settings.integrations.pulsoid.description' | transloco"></span>
+                <a
+                  target="_blank"
+                  [href]="'https://pulsoid.net/pricing?promo_campaign_id=' + PULSOID_REFERRAL_ID"
+                  transloco="settings.integrations.providerLink"
+                ></a>
+              </div>
+              <div class="setting-row-action">
+                @if (pulsoid.loggedInUser | async) {
+                  <div class="connected">
+                    <div
+                      class="connected-info"
+                      [tooltip]="'settings.integrations.reveal'"
+                      [tooltipMode]="'top'"
+                    >
+                      <app-icon name="check-circle" />
+                      <div
+                        class="connected-info-account obfuscated"
+                        [obfuscatedValue]="(pulsoid.loggedInUser | async) ?? ''"
+                        [obfuscatedMaxLength]="16"
+                        [deobfuscatedMaxLength]="32"
+                        [deobfuscate]="deobfuscated.includes('PULSOID')"
+                        (click)="deobfuscate('PULSOID')"
+                      ></div>
+                    </div>
+                    <button
+                      class="btn btn-secondary connected-disconnect"
+                      (click)="pulsoid.logout()"
+                      transloco="settings.integrations.disconnect"
+                    ></button>
+                  </div>
+                }
+                @if ((pulsoid.loggedInUser | async) === null) {
+                  <div class="connect-row">
+                    <button
+                      class="btn btn-copy btn-secondary"
+                      tooltip="settings.integrations.copy"
+                      tooltipMode="left"
+                      (click)="copyPulsoidLoginUrl()"
+                    >
+                      <app-icon name="copy" />
+                    </button>
+                    <button
+                      class="btn btn-primary"
+                      (click)="pulsoid.login()"
+                      transloco="settings.integrations.connect"
+                    ></button>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-row-icon">
+                <a href="https://www.home-assistant.io/" target="_blank">
+                  <img class="hass-logo clickable-logo" src="/assets/img/hass_logo.png" />
+                </a>
+              </div>
+              <div class="setting-row-label">
+                <span [innerHtml]="'settings.integrations.homeAssistant.title' | transloco"></span>
+                <span
+                  [innerHtml]="'settings.integrations.homeAssistant.description' | transloco"
+                ></span>
+                <a
+                  target="_blank"
+                  href="https://www.home-assistant.io/"
+                  transloco="settings.integrations.providerLink"
+                ></a>
+              </div>
+              @if (
+                {
+                  mqttClient: (mqttService.client | async),
+                };
+                as data
+              ) {
+                <div class="setting-row-action">
+                  @if (data.mqttClient) {
+                    <div class="connected">
+                      <div class="connected-info">
+                        <app-icon name="check-circle" />
+                        <div class="connected-info-account">
+                          {{ data.mqttClient.options.host }}
+                        </div>
+                      </div>
+                      <button
+                        class="btn btn-secondary connected-disconnect"
+                        (click)="showMqttConfigModal()"
+                        transloco="settings.integrations.configure"
+                      ></button>
+                    </div>
+                  }
+                  @if (!data.mqttClient) {
+                    <button
+                      class="btn btn-primary"
+                      (click)="showMqttConfigModal()"
+                      transloco="settings.integrations.configure"
+                    ></button>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      }
+      @if (activeTab === 'DISCORD') {
+        <div class="setting-category">
+          <div class="settings">
+            <app-setting-row
+              label="settings.integrations.discord.activityMode.title"
+              description="settings.integrations.discord.activityMode.description"
+            >
+              <app-select-box
+                [type]="'SMALL'"
+                class="discord-activity-mode-dropdown"
+                [items]="discordActivityModeOptions"
+                [selected]="discordActivityModeOption"
+                (selectedChange)="onChangeDiscordActivityMode($event)"
+              ></app-select-box>
+            </app-setting-row>
+            <div class="setting-row-group">
+              <app-setting-row label="settings.integrations.discord.activityModeVRCCondition.title">
+                <label class="switch-toggle">
+                  <input
+                    type="checkbox"
+                    [checked]="appSettings.discordActivityOnlyWhileVRChatIsRunning"
+                    (change)="
+                      setDiscordActivityOnlyWhenVRChatIsRunning(
+                        !appSettings.discordActivityOnlyWhileVRChatIsRunning
+                      )
+                    "
+                  />
+                  <span class="switch-toggle-slider"></span>
+                </label>
+              </app-setting-row>
+            </div>
+          </div>
+        </div>
+      }
+      @if (activeTab === 'VRCX') {
+        <div class="setting-category">
+          <div class="settings">
+            @for (log of vrcxLogOptions; track log.type) {
+              <app-setting-row
+                [label]="log.key + '.title'"
+                [description]="log.key + '.description'"
+              >
+                <label class="switch-toggle">
+                  <input
+                    type="checkbox"
+                    [checked]="appSettings.vrcxLogsEnabled.includes(log.type)"
+                    (change)="toggleVrcxLog(log.type)"
+                  />
+                  <span class="switch-toggle-slider"></span>
+                </label>
+              </app-setting-row>
             }
           </div>
         </div>
-      </div>
-
-      <div class="setting-category">
-        <h2 transloco="settings.integrations.discord.title"></h2>
-        <div class="settings">
-          <app-setting-row
-            label="settings.integrations.discord.activityMode.title"
-            description="settings.integrations.discord.activityMode.description"
-          >
-            <app-select-box
-              [type]="'SMALL'"
-              class="discord-activity-mode-dropdown"
-              [items]="discordActivityModeOptions"
-              [selected]="discordActivityModeOption"
-              (selectedChange)="onChangeDiscordActivityMode($event)"
-            ></app-select-box>
-          </app-setting-row>
-          <div class="setting-row-group">
-            <app-setting-row label="settings.integrations.discord.activityModeVRCCondition.title">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="appSettings.discordActivityOnlyWhileVRChatIsRunning"
-                  (change)="
-                    setDiscordActivityOnlyWhenVRChatIsRunning(
-                      !appSettings.discordActivityOnlyWhileVRChatIsRunning
-                    )
-                  "
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </app-setting-row>
-          </div>
-        </div>
-      </div>
-
-      <div class="setting-category">
-        <h2 transloco="settings.integrations.vrcx.title"></h2>
-        <div class="settings">
-          @for (log of vrcxLogOptions; track log.type) {
-            <app-setting-row [label]="log.key + '.title'" [description]="log.key + '.description'">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="appSettings.vrcxLogsEnabled.includes(log.type)"
-                  (change)="toggleVrcxLog(log.type)"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </app-setting-row>
-          }
-        </div>
-      </div>
+      }
     </div>
   </div>
 </div>

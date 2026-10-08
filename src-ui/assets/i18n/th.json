@@ -2119,8 +2119,7 @@
         },
         "activityModeVRCCondition": {
           "title": "แสดงเฉพาะเมื่อ VRChat ทำงานอยู่"
-        },
-        "title": "Discord"
+        }
       },
       "homeAssistant": {
         "description": "เชื่อมต่อกับ Home Assistant เพื่อทำงานร่วมกับอุปกรณ์ Smart Home สร้างสภาพแวดล้อมอัตโนมัติเพิ่มเติม หรือควบคุมอุปกรณ์อัจฉริยะต่างๆ",
@@ -2132,6 +2131,9 @@
         "title": "Pulsoid"
       },
       "reveal": "แสดง",
+      "tabs": {
+        "discord": "Discord"
+      },
       "title": "การเชื่อมต่อ",
       "vrchat": {
         "description": "เชื่อมโยงบัญชีเพื่อใช้ระบบอัตโนมัติที่เกี่ยวข้องกับ VRChat",

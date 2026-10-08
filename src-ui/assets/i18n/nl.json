@@ -2078,8 +2078,7 @@
         },
         "activityModeVRCCondition": {
           "title": "Alleen de activiteit tonen wanneer VRChat actief is"
-        },
-        "title": "Discord"
+        }
       },
       "homeAssistant": {
         "description": "Door OyasumiVR met Home Assistant te verbinden, kun je integreren met de rest van je smart home. Hiermee kan je verschillende slimme apparaten bedienen en je eigen krachtige automatiseringen bouwen.",
@@ -2090,6 +2089,9 @@
         "title": "Pulsoid"
       },
       "reveal": "Toon",
+      "tabs": {
+        "discord": "Discord"
+      },
       "title": "Integraties",
       "vrchat": {
         "description": "Het koppelen van je account geeft je de mogelijkheid om OyasumiVR's VRChat-gerelateerde automatiseringen te gebruiken.",
