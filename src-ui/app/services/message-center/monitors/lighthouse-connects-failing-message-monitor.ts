@@ -8,11 +8,18 @@ import { error } from '@tauri-apps/plugin-log';
 const MESSAGE_ID = 'lighthouseConnectsFailing';
 
 export class LighthouseConnectsFailingMessageMonitor extends MessageMonitor {
+  // set by a failing streak, cleared by the next successful connect
+  private failing = false;
+
   public override async init(): Promise<void> {
-    await listen('LIGHTHOUSE_CONNECTS_FAILING', () => this.showMessage(false));
-    await listen('LIGHTHOUSE_CONNECTS_RECOVERED', () =>
-      this.messageCenter.removeMessage(MESSAGE_ID)
-    );
+    await listen('LIGHTHOUSE_CONNECTS_FAILING', () => {
+      this.failing = true;
+      this.showMessage(false);
+    });
+    await listen('LIGHTHOUSE_CONNECTS_RECOVERED', () => {
+      this.failing = false;
+      this.messageCenter.removeMessage(MESSAGE_ID);
+    });
   }
 
   private showMessage(restartFailed: boolean) {
@@ -48,7 +55,7 @@ export class LighthouseConnectsFailingMessageMonitor extends MessageMonitor {
       await invoke('lighthouse_restart_bluetooth_radio');
     } catch (e) {
       error(`[LighthouseConnectsFailing] Could not restart the bluetooth radio: ${e}`);
-      this.showMessage(true);
+      if (this.failing) this.showMessage(true);
     }
   }
 }

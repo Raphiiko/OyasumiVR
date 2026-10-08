@@ -64,8 +64,9 @@ static PROCESSING_DEVICES: LazyLock<Mutex<HashSet<PeripheralId>>> =
 static CONNECT_BACKOFFS: LazyLock<std::sync::Mutex<HashMap<PeripheralId, (u32, Instant)>>> =
     LazyLock::new(|| std::sync::Mutex::new(HashMap::new()));
 static CONNECT_FAILURE_STREAK: AtomicU32 = AtomicU32::new(0);
-// Like CONNECT_FAILURE_STREAK, but counts only failures to known stations that still advertise
-static VISIBLE_CONNECT_FAILURE_STREAK: AtomicU32 = AtomicU32::new(0);
+// Like CONNECT_FAILURE_STREAK, but counts only failures to known stations that still advertise.
+// Its events are sent while it is held, so the UI receives them in the order of the changes.
+static VISIBLE_CONNECT_FAILURE_STREAK: LazyLock<Mutex<u32>> = LazyLock::new(|| Mutex::new(0));
 static LAST_ADVERTISEMENTS: LazyLock<std::sync::Mutex<HashMap<PeripheralId, Instant>>> =
     LazyLock::new(|| std::sync::Mutex::new(HashMap::new()));
 static RADIO_RECOVERY_LOCK: LazyLock<Mutex<()>> = LazyLock::new(|| Mutex::new(()));
@@ -157,7 +158,10 @@ pub async fn start_scan(duration: Duration) {
         LighthouseScanningStatusChangedEvent { scanning: true },
     )
     .await;
+    let started = Instant::now();
     scan_for_devices(duration).await;
+    // The UI schedules the next scan only after a window that lasts longer than its debounce
+    sleep(duration.saturating_sub(started.elapsed())).await;
     set_scanning_status(false).await;
 }
 
@@ -585,8 +589,7 @@ async fn ensure_connected(device: &Peripheral, device_name: &str) -> Result<(), 
         Ok(()) => {
             CONNECT_BACKOFFS.lock().unwrap().remove(&device_id);
             CONNECT_FAILURE_STREAK.store(0, Ordering::Relaxed);
-            VISIBLE_CONNECT_FAILURE_STREAK.store(0, Ordering::Relaxed);
-            send_event(EVENT_CONNECTS_RECOVERED, ()).await;
+            reset_visible_failure_streak().await;
         }
         Err(err) => {
             register_connect_failure(&device_id, device_name, &err).await;
@@ -649,10 +652,17 @@ async fn register_connect_failure(
     if !counts_toward_stuck_stack(known, last_advertisement, Instant::now()) {
         return;
     }
-    let visible_streak = VISIBLE_CONNECT_FAILURE_STREAK.fetch_add(1, Ordering::Relaxed) + 1;
-    if visible_streak == STUCK_STACK_THRESHOLD {
+    let mut visible_streak = VISIBLE_CONNECT_FAILURE_STREAK.lock().await;
+    *visible_streak += 1;
+    if *visible_streak == STUCK_STACK_THRESHOLD {
         send_event(EVENT_CONNECTS_FAILING, ()).await;
     }
+}
+
+async fn reset_visible_failure_streak() {
+    let mut visible_streak = VISIBLE_CONNECT_FAILURE_STREAK.lock().await;
+    *visible_streak = 0;
+    send_event(EVENT_CONNECTS_RECOVERED, ()).await;
 }
 
 /// Stations that are off or out of range stop advertising, so their failures do not count.
@@ -993,8 +1003,7 @@ async fn reset() {
     }
     CONNECT_BACKOFFS.lock().unwrap().clear();
     CONNECT_FAILURE_STREAK.store(0, Ordering::Relaxed);
-    VISIBLE_CONNECT_FAILURE_STREAK.store(0, Ordering::Relaxed);
-    send_event(EVENT_CONNECTS_RECOVERED, ()).await;
+    reset_visible_failure_streak().await;
 }
 
 #[cfg(test)]
