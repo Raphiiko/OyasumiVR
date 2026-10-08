@@ -1526,6 +1526,14 @@
         "message": "GPU automations are enabled, but OyasumiVR cannot run them without administrative permissions.\n\nEnable administrative permissions or disable GPU automations.",
         "title": "GPU Automations Unavailable"
       },
+      "lighthouseConnectsFailing": {
+        "actions": {
+          "restartBluetooth": "Restart Bluetooth"
+        },
+        "message": "OyasumiVR can see your base stations but cannot connect to them. Restarting Bluetooth usually fixes this. Restarting briefly disconnects all Bluetooth devices, such as headphones and controllers.",
+        "restartFailed": "OyasumiVR can see your base stations but cannot connect to them, and restarting Bluetooth failed. Restart your PC to fix this.",
+        "title": "Cannot connect to base stations"
+      },
       "lighthouseConsoleError": {
         "message": "The lighthouse console could not be found or is not working properly. Without access to the lighthouse console, OyasumiVR will likely not be able to turn off your controllers and trackers. Please check your configuration.",
         "title": "Lighthouse Console Unavailable"
