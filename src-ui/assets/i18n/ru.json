@@ -2159,10 +2159,6 @@
     "notifications": {
       "notifications": {
         "category": {
-          "AUTO_ACCEPTED_INVITE_REQUEST": {
-            "description": "Получать уведомление, когда OyasumiVR автоматически принимает чей-то запрос на присоединение.",
-            "title": "Автоматически принят запрос на присоединение"
-          },
           "AUTO_UPDATED_VRC_STATUS": {
             "description": "Получать уведомление когда OyasumiVR автоматически обновил Ваш статус VRChat",
             "title": "Статус VRChat обновлен"

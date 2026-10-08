@@ -1637,6 +1637,12 @@
     "autoAcceptedInviteRequest": {
       "content": "Automatically accepted invite request from {username}"
     },
+    "autoDeclinedInvite": {
+      "content": "Automatically declined invite from {username}"
+    },
+    "autoDeclinedInviteRequest": {
+      "content": "Automatically declined invite request from {username}"
+    },
     "sleepCheck": {
       "content": "Sleep mode will be enabled in 20 seconds.\nAre you asleep?\n\nTo cancel:\nShake your head or press any controller button"
     },
@@ -2266,13 +2272,13 @@
     "notifications": {
       "notifications": {
         "category": {
-          "AUTO_ACCEPTED_INVITE_REQUEST": {
-            "description": "Get a notification when OyasumiVR has automatically accepted someones invite request",
-            "title": "Automatically Accepted Invite-Request"
-          },
           "AUTO_UPDATED_VRC_STATUS": {
             "description": "Get a notification when OyasumiVR has automatically updated your VRChat status",
             "title": "VRChat Status Updated"
+          },
+          "INVITE_AUTOMATIONS": {
+            "description": "Get a notification when OyasumiVR automatically accepts an invite request, or declines an invite or invite request",
+            "title": "Automatically Handled Invites and Invite Requests"
           },
           "SLEEP_MODE_DISABLED": {
             "description": "Get a notification when the sleep mode is deactivated",

@@ -81,6 +81,7 @@ export class InviteAutomationsService {
           reason: 'SLEEP_MODE_ENABLED',
           message: declined.reply,
         } as EventLogDeclinedInvite);
+        void this.sendDeclinedNotification('autoDeclinedInvite', notification.senderUsername);
       }
     }
     // Play a sound if configured
@@ -185,24 +186,12 @@ export class InviteAutomationsService {
     // Stop if sleep mode is disabled and it's required to be enabled
     if (config.onlyIfSleepModeEnabled && !sleepMode) {
       warn('[VRChat] Ignoring invite request because sleep mode is disabled');
-      const message = await this.getInviteRequestDeclineMessage(config);
-      if (message) {
-        const declined = await this.vrchat.declineInviteOrInviteRequest(
-          notification.id,
-          'requestInvite',
-          message
-        );
-        await this.vrchat.deleteNotification(notification.id);
-        if (declined) {
-          this.eventLog.logEvent({
-            type: 'declinedInviteRequest',
-            displayName: notification.senderUsername,
-            reason: 'SLEEP_MODE_ENABLED_CONDITION_FAILED',
-            message: declined.reply,
-          } as EventLogDeclinedInviteRequest);
-        }
-      }
-      this.playInviteRequestSound(config, !!message, sleepMode);
+      const declined = await this.declineInviteRequest(
+        notification,
+        config,
+        'SLEEP_MODE_ENABLED_CONDITION_FAILED'
+      );
+      this.playInviteRequestSound(config, declined, sleepMode);
       return;
     }
     // Stop if there is a player count limit set, and there are more people in the instance than the limit
@@ -212,24 +201,12 @@ export class InviteAutomationsService {
         warn(
           `[VRChat] Ignoring invite request because there are too many players in the instance (${world.players.length}>=${config.onlyBelowPlayerCount})`
         );
-        const message = await this.getInviteRequestDeclineMessage(config);
-        if (message) {
-          const declined = await this.vrchat.declineInviteOrInviteRequest(
-            notification.id,
-            'requestInvite',
-            message
-          );
-          await this.vrchat.deleteNotification(notification.id);
-          if (declined) {
-            this.eventLog.logEvent({
-              type: 'declinedInviteRequest',
-              displayName: notification.senderUsername,
-              reason: 'PLAYER_COUNT_CONDITION_FAILED',
-              message: declined.reply,
-            } as EventLogDeclinedInviteRequest);
-          }
-        }
-        this.playInviteRequestSound(config, !!message, sleepMode);
+        const declined = await this.declineInviteRequest(
+          notification,
+          config,
+          'PLAYER_COUNT_CONDITION_FAILED'
+        );
+        this.playInviteRequestSound(config, declined, sleepMode);
         return;
       }
     }
@@ -241,24 +218,12 @@ export class InviteAutomationsService {
         // Stop if the player is not on the whitelist
         if (!config.playerIds.includes(notification.senderUserId)) {
           warn('[VRChat] Ignoring invite request because player is not on whitelist');
-          const message = await this.getInviteRequestDeclineMessage(config);
-          if (message) {
-            const declined = await this.vrchat.declineInviteOrInviteRequest(
-              notification.id,
-              'requestInvite',
-              message
-            );
-            await this.vrchat.deleteNotification(notification.id);
-            if (declined) {
-              this.eventLog.logEvent({
-                type: 'declinedInviteRequest',
-                displayName: notification.senderUsername,
-                reason: 'NOT_ON_WHITELIST',
-                message: declined.reply,
-              } as EventLogDeclinedInviteRequest);
-            }
-          }
-          this.playInviteRequestSound(config, !!message, sleepMode);
+          const declined = await this.declineInviteRequest(
+            notification,
+            config,
+            'NOT_ON_WHITELIST'
+          );
+          this.playInviteRequestSound(config, declined, sleepMode);
           return;
         }
         break;
@@ -266,24 +231,8 @@ export class InviteAutomationsService {
         // Stop if the player is on the blacklist
         if (config.playerIds.includes(notification.senderUserId)) {
           warn('[VRChat] Ignoring invite request because player is on blacklist');
-          const message = await this.getInviteRequestDeclineMessage(config);
-          if (message) {
-            const declined = await this.vrchat.declineInviteOrInviteRequest(
-              notification.id,
-              'requestInvite',
-              message
-            );
-            await this.vrchat.deleteNotification(notification.id);
-            if (declined) {
-              this.eventLog.logEvent({
-                type: 'declinedInviteRequest',
-                displayName: notification.senderUsername,
-                reason: 'ON_BLACKLIST',
-                message: declined.reply,
-              } as EventLogDeclinedInviteRequest);
-            }
-          }
-          this.playInviteRequestSound(config, !!message, sleepMode);
+          const declined = await this.declineInviteRequest(notification, config, 'ON_BLACKLIST');
+          this.playInviteRequestSound(config, declined, sleepMode);
           return;
         }
         break;
@@ -295,7 +244,7 @@ export class InviteAutomationsService {
       message: this.getInviteRequestAcceptMessage(config),
     });
     this.playInviteRequestSound(config, true, sleepMode);
-    if (await this.notifications.notificationTypeEnabled('AUTO_ACCEPTED_INVITE_REQUEST')) {
+    if (await this.notifications.notificationTypeEnabled('INVITE_AUTOMATIONS')) {
       await this.notifications.send(
         this.translate.translate('notifications.autoAcceptedInviteRequest.content', {
           username: notification.senderUsername,
@@ -308,6 +257,42 @@ export class InviteAutomationsService {
       mode: config.listMode,
       message: reply,
     } as EventLogAcceptedInviteRequest);
+  }
+
+  /** Resolves to whether the decline automation handled the request. */
+  private async declineInviteRequest(
+    notification: Notification,
+    config: AutoAcceptInviteRequestsAutomationConfig,
+    reason: EventLogDeclinedInviteRequest['reason']
+  ): Promise<boolean> {
+    const message = await this.getInviteRequestDeclineMessage(config);
+    if (!message) return false;
+    const declined = await this.vrchat.declineInviteOrInviteRequest(
+      notification.id,
+      'requestInvite',
+      message
+    );
+    await this.vrchat.deleteNotification(notification.id);
+    if (declined) {
+      this.eventLog.logEvent({
+        type: 'declinedInviteRequest',
+        displayName: notification.senderUsername,
+        reason,
+        message: declined.reply,
+      } as EventLogDeclinedInviteRequest);
+      void this.sendDeclinedNotification('autoDeclinedInviteRequest', notification.senderUsername);
+    }
+    return true;
+  }
+
+  private async sendDeclinedNotification(
+    key: 'autoDeclinedInvite' | 'autoDeclinedInviteRequest',
+    username: Notification['senderUsername']
+  ) {
+    if (!(await this.notifications.notificationTypeEnabled('INVITE_AUTOMATIONS'))) return;
+    await this.notifications.send(
+      this.translate.translate(`notifications.${key}.content`, { username })
+    );
   }
 
   private getInviteRequestAcceptMessage(

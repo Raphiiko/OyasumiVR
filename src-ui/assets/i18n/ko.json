@@ -1725,10 +1725,6 @@
     "notifications": {
       "notifications": {
         "category": {
-          "AUTO_ACCEPTED_INVITE_REQUEST": {
-            "description": "OyasumiVR이 자동으로 누군가의 인바이트 리퀘스트를 수락했을 때 알림을 받아요.",
-            "title": "인바이트 리퀘스트 자동 수락"
-          },
           "AUTO_UPDATED_VRC_STATUS": {
             "description": "OyasumiVR이 VRChat 스테이터스를 자동으로 업데이트하면 알림 받기",
             "title": "VRChat 스테이터스 갱신됨"

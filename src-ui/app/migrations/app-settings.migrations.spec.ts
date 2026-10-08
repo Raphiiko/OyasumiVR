@@ -53,11 +53,37 @@ describe('app settings migration 16 to 17', () => {
     expect(result.status).toBe('migrated');
     if (result.status === 'migrated') {
       expect(result.value).toMatchObject({
-        version: 17,
+        version: 18,
         oneTimeFlags: ['OSC_SCRIPT_SIMPLE_EDITOR_VRCHAT_AUTOCOMPLETE_INFO'],
         cctControlOnUnsupportedHmds: false,
       });
       expect(result.value).not.toHaveProperty('cctControlEnabled');
     }
   });
+});
+
+describe('app settings migration 17 to 18', () => {
+  it.each([
+    [
+      ['SLEEP_MODE_ENABLED', 'AUTO_ACCEPTED_INVITE_REQUEST'],
+      ['SLEEP_MODE_ENABLED', 'INVITE_AUTOMATIONS'],
+    ],
+    [['SLEEP_MODE_ENABLED'], ['SLEEP_MODE_ENABLED']],
+  ])(
+    'carries the accepted invite request choice over to invite notifications',
+    async (types, expected) => {
+      const result = await runMigrations(
+        { version: 17, notificationsEnabled: { types } } as Versioned,
+        APP_SETTINGS_MIGRATION
+      );
+
+      expect(result.status).toBe('migrated');
+      if (result.status === 'migrated') {
+        expect(result.value).toMatchObject({
+          version: 18,
+          notificationsEnabled: { types: expected },
+        });
+      }
+    }
+  );
 });

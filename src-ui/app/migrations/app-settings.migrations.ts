@@ -41,6 +41,16 @@ function from16to17(data: any): any {
   return data;
 }
 
+function from17to18(data: any): any {
+  data.version = 18;
+  data.notificationsEnabled = {
+    types: (data.notificationsEnabled?.types ?? []).map((t: string) =>
+      t === 'AUTO_ACCEPTED_INVITE_REQUEST' ? 'INVITE_AUTOMATIONS' : t
+    ),
+  };
+  return data;
+}
+
 async function from11to12(data: any): Promise<any> {
   data.mqttProtectedPassword = await protectSecret(data.mqttPassword);
   data.mqttPassword = null;
@@ -167,6 +177,7 @@ export const APP_SETTINGS_MIGRATION: MigrationDefinition<Versioned> = {
     14: from14to15,
     15: from15to16,
     16: from16to17,
+    17: from17to18,
   },
   normalizeCurrentVersion: (data) => normalizeWithDefaults(APP_SETTINGS_DEFAULT, data),
 };
