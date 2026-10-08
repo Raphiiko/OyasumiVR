@@ -41,6 +41,8 @@ static EVENT_STATUS_CHANGED: &str = "LIGHTHOUSE_STATUS_CHANGED";
 static EVENT_SCANNING_STATUS_CHANGED: &str = "LIGHTHOUSE_SCANNING_STATUS_CHANGED";
 static EVENT_DEVICE_DISCOVERED: &str = "LIGHTHOUSE_DEVICE_DISCOVERED";
 static EVENT_DEVICE_POWER_STATE_CHANGED: &str = "LIGHTHOUSE_DEVICE_POWER_STATE_CHANGED";
+static EVENT_CONNECTS_FAILING: &str = "LIGHTHOUSE_CONNECTS_FAILING";
+static EVENT_CONNECTS_RECOVERED: &str = "LIGHTHOUSE_CONNECTS_RECOVERED";
 
 // const LIGHTHOUSE_V2_IDENTIFY_CHARACTERISTIC: Uuid =
 //     Uuid::from_u128(0x00008421_1212_EFDE_1523_785FEABCD124);
@@ -62,6 +64,10 @@ static PROCESSING_DEVICES: LazyLock<Mutex<HashSet<PeripheralId>>> =
 static CONNECT_BACKOFFS: LazyLock<std::sync::Mutex<HashMap<PeripheralId, (u32, Instant)>>> =
     LazyLock::new(|| std::sync::Mutex::new(HashMap::new()));
 static CONNECT_FAILURE_STREAK: AtomicU32 = AtomicU32::new(0);
+// Like CONNECT_FAILURE_STREAK, but counts only failures to known stations that still advertise
+static VISIBLE_CONNECT_FAILURE_STREAK: AtomicU32 = AtomicU32::new(0);
+static LAST_ADVERTISEMENTS: LazyLock<std::sync::Mutex<HashMap<PeripheralId, Instant>>> =
+    LazyLock::new(|| std::sync::Mutex::new(HashMap::new()));
 static RADIO_RECOVERY_LOCK: LazyLock<Mutex<()>> = LazyLock::new(|| Mutex::new(()));
 
 const CONNECT_TIMEOUT: Duration = Duration::from_secs(15);
@@ -69,6 +75,7 @@ const CONNECT_RETRY_COOLDOWN: Duration = Duration::from_secs(10);
 const CONNECT_BACKOFF_MAX: Duration = Duration::from_secs(300);
 // Failing connects to every device at once is the signature of a wedged stack
 const STUCK_STACK_THRESHOLD: u32 = 6;
+const ADVERTISEMENT_MAX_AGE: Duration = Duration::from_secs(60);
 const RADIO_ON_ATTEMPTS: u32 = 3;
 
 pub async fn init() {
@@ -190,6 +197,7 @@ async fn scan_for_devices(duration: Duration) {
                         break;
                     }
                 };
+                LAST_ADVERTISEMENTS.lock().unwrap().insert(device_id.clone(), Instant::now());
                 if let Ok(peripheral) = adapter.peripheral(&device_id).await {
                     tokio::spawn(handle_discovered_device(peripheral));
                 }
@@ -204,6 +212,10 @@ async fn scan_for_devices(duration: Duration) {
     if let Err(err) = adapter.clear_peripherals().await {
         warn!("[Core] Failed to clear bluetooth scan results: {err}");
     }
+    LAST_ADVERTISEMENTS
+        .lock()
+        .unwrap()
+        .retain(|_, at| at.elapsed() < ADVERTISEMENT_MAX_AGE);
 }
 
 pub async fn get_devices() -> Vec<LighthouseDeviceModel> {
@@ -573,9 +585,11 @@ async fn ensure_connected(device: &Peripheral, device_name: &str) -> Result<(), 
         Ok(()) => {
             CONNECT_BACKOFFS.lock().unwrap().remove(&device_id);
             CONNECT_FAILURE_STREAK.store(0, Ordering::Relaxed);
+            VISIBLE_CONNECT_FAILURE_STREAK.store(0, Ordering::Relaxed);
+            send_event(EVENT_CONNECTS_RECOVERED, ()).await;
         }
         Err(err) => {
-            register_connect_failure(&device_id, device_name, &err);
+            register_connect_failure(&device_id, device_name, &err).await;
             return Err(LighthouseError::FailedToConnect(err));
         }
     }
@@ -604,7 +618,12 @@ fn backoff_elapsed(device_id: &PeripheralId) -> bool {
     }
 }
 
-fn register_connect_failure(device_id: &PeripheralId, device_name: &str, err: &btleplug::Error) {
+async fn register_connect_failure(
+    device_id: &PeripheralId,
+    device_name: &str,
+    err: &btleplug::Error,
+) {
+    // update the per-device backoff
     {
         let mut backoffs = CONNECT_BACKOFFS.lock().unwrap();
         let entry = backoffs
@@ -613,11 +632,36 @@ fn register_connect_failure(device_id: &PeripheralId, device_name: &str, err: &b
         entry.0 += 1;
         entry.1 = Instant::now();
     }
+
     // Warns once per streak; a successful connect starts a new streak
     let streak = CONNECT_FAILURE_STREAK.fetch_add(1, Ordering::Relaxed) + 1;
     if streak == STUCK_STACK_THRESHOLD {
         warn!("[Core] {streak} lighthouse connects failed in a row, the last to {device_name}: {err}. If the base stations are on and in range, the Windows Bluetooth stack may be stuck: turn Bluetooth off and on, or restart the PC.");
     }
+
+    // tell the UI once per streak, counting only stations that are known and still advertising
+    let known = LIGHTHOUSE_DEVICES
+        .lock()
+        .await
+        .iter()
+        .any(|d| d.id == *device_id);
+    let last_advertisement = LAST_ADVERTISEMENTS.lock().unwrap().get(device_id).copied();
+    if !counts_toward_stuck_stack(known, last_advertisement, Instant::now()) {
+        return;
+    }
+    let visible_streak = VISIBLE_CONNECT_FAILURE_STREAK.fetch_add(1, Ordering::Relaxed) + 1;
+    if visible_streak == STUCK_STACK_THRESHOLD {
+        send_event(EVENT_CONNECTS_FAILING, ()).await;
+    }
+}
+
+/// Stations that are off or out of range stop advertising, so their failures do not count.
+fn counts_toward_stuck_stack(
+    known: bool,
+    last_advertisement: Option<Instant>,
+    now: Instant,
+) -> bool {
+    known && last_advertisement.is_some_and(|at| now.duration_since(at) < ADVERTISEMENT_MAX_AGE)
 }
 
 /// Turns every Bluetooth radio off and back on, which drops every Bluetooth device on the PC.
@@ -949,6 +993,8 @@ async fn reset() {
     }
     CONNECT_BACKOFFS.lock().unwrap().clear();
     CONNECT_FAILURE_STREAK.store(0, Ordering::Relaxed);
+    VISIBLE_CONNECT_FAILURE_STREAK.store(0, Ordering::Relaxed);
+    send_event(EVENT_CONNECTS_RECOVERED, ()).await;
 }
 
 #[cfg(test)]
@@ -987,5 +1033,16 @@ mod tests {
         assert_eq!(connect_backoff_delay(3), Duration::from_secs(40));
         assert_eq!(connect_backoff_delay(6), CONNECT_BACKOFF_MAX);
         assert_eq!(connect_backoff_delay(60), CONNECT_BACKOFF_MAX);
+    }
+
+    #[test]
+    fn only_known_advertising_stations_count_toward_stuck_stack() {
+        let now = Instant::now() + Duration::from_secs(120);
+        let recent = Some(now - Duration::from_secs(5));
+        let stale = Some(now - ADVERTISEMENT_MAX_AGE);
+        assert!(counts_toward_stuck_stack(true, recent, now));
+        assert!(!counts_toward_stuck_stack(true, stale, now));
+        assert!(!counts_toward_stuck_stack(true, None, now));
+        assert!(!counts_toward_stuck_stack(false, recent, now));
     }
 }

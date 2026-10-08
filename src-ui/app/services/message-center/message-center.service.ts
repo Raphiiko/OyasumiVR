@@ -15,6 +15,7 @@ import { VRChatOSCMessageMonitor } from './monitors/vrchat-osc-message-monitor';
 import { VRChatWebsocketConnectionMonitor } from './monitors/vrchat-websocket-connection-monitor';
 import { OverlaySidecarMessageMonitor } from './monitors/overlay-sidecar-message-monitor';
 import { ElevatedFeaturesMessageMonitor } from './monitors/elevated-features-message-monitor';
+import { LighthouseConnectsFailingMessageMonitor } from './monitors/lighthouse-connects-failing-message-monitor';
 
 export interface MessageAction {
   label: string;
@@ -60,6 +61,7 @@ export class MessageCenterService {
       new GpuAutomationMessageMonitor(this),
       new ElevatedFeaturesMessageMonitor(this),
       new LighthouseConsoleMonitor(this),
+      new LighthouseConnectsFailingMessageMonitor(this),
       new VRChatOSCMessageMonitor(this),
       new VRChatWebsocketConnectionMonitor(this),
       new OverlaySidecarMessageMonitor(this),
