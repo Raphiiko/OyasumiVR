@@ -84,14 +84,15 @@ describe('SteamFrameHardwareBrightnessControlDriver', () => {
     expect(vi.mocked(invoke)).not.toHaveBeenCalled();
   });
 
-  it('adopts each report with its bounds, clamped, and never writes it', async () => {
+  it('adopts each report clamped to the Frame range, and never writes it', async () => {
     const h = setup();
+    // the helper's own range does not change OyasumiVR's
     h.report(brightness(40, { min: 20, max: 110 }));
-    expect(h.driver.getBrightnessBounds()).toEqual([20, 110]);
-    h.report(brightness(140, { min: 20, max: 110 }));
-    h.report(brightness(5, { min: 20, max: 110 }));
-    expect(h.updates).toEqual([40, 110, 20]);
-    expect(await h.driver.getBrightnessPercentage()).toBe(20);
+    expect(h.driver.getBrightnessBounds()).toEqual([9, 125]);
+    h.report(brightness(140));
+    h.report(brightness(5));
+    expect(h.updates).toEqual([40, 125, 9]);
+    expect(await h.driver.getBrightnessPercentage()).toBe(9);
     expect(vi.mocked(invoke)).not.toHaveBeenCalled();
   });
 
