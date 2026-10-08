@@ -115,6 +115,11 @@ export class SteamVRAnalogGainHardwareBrightnessControlDriver extends HardwareBr
     const range = this.range;
     if (!range) return 100;
     const storedGain = await this.openvr.getAnalogGain().catch(() => DEFAULT_ANALOG_GAIN);
+    return Math.round(this.gainToSoftwarePercentage(storedGain, range));
+  }
+
+  /** Maps a gain SteamVR holds, also one outside the range, to an unrounded software percentage. */
+  protected gainToSoftwarePercentage(storedGain: number, range: [number, number]): number {
     const gain = clamp(storedGain, range[0], range[1]);
     const stops = this.getBrightnessConfiguration().hardwareStops;
     const hardwarePercentage = clamp(
@@ -122,7 +127,7 @@ export class SteamVRAnalogGainHardwareBrightnessControlDriver extends HardwareBr
       stops[0],
       stops[stops.length - 1]
     );
-    return Math.round(this.hardwarePercentageToSoftwarePercentage(hardwarePercentage));
+    return this.hardwarePercentageToSoftwarePercentage(hardwarePercentage);
   }
 
   async setBrightnessPercentage(percentage: number): Promise<void> {
