@@ -3,7 +3,6 @@ import { BehaviorSubject, firstValueFrom, ReplaySubject, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 import { AUTOMATION_CONFIGS_DEFAULT } from '../../models/automations';
 import type {
-  SteamFrameConnectionState,
   SteamFrameFadeEnded,
   SteamFrameFadeOutcome,
 } from '../../models/steam-frame';
@@ -273,13 +272,6 @@ describe('simple brightness fading a Steam Frame', () => {
 
   async function frame() {
     const h = await setup();
-    const connections = new BehaviorSubject<Record<string, SteamFrameConnectionState>>({
-      p: {
-        pairingId: 'p',
-        status: 'connected',
-        brightness: { runtime: true, supported: true, min: 9, max: 125, percentage: 100 },
-      } as SteamFrameConnectionState,
-    });
     const fadeEnded = new Subject<SteamFrameFadeEnded>();
     const driver = {
       pushesBrightnessChanges: true,
@@ -294,7 +286,7 @@ describe('simple brightness fading a Steam Frame', () => {
             durationMs: o.durationMs,
             simple: o.simple,
           },
-          { connections$: connections, fadeEnded$: fadeEnded },
+          { fadeEnded$: fadeEnded },
           o.onAccept
         ),
     };
