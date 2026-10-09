@@ -150,7 +150,7 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
       durationMs: options.durationMs,
       simple: options.simple,
     };
-    const frames = { connections$: this.connections, fadeEnded$: this.fadeEnded };
+    const frames = { fadeEnded$: this.fadeEnded };
     return new SteamFrameBrightnessFade(options.shownTarget, request, frames, options.onAccept);
   }
 

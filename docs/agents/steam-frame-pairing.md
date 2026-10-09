@@ -369,10 +369,8 @@ so other headsets keep the PC transition. A `DeviceFade` ends as `completed`, `c
   with its operation ID.
 - The Frame driver returns a fade only while the Frame reports. Before the first report the
   service runs the PC transition, and the driver holds its last value as a waiting set.
-- While the connection is down it completes at its end time.
+- It completes at its end time when no outcome reaches this PC, such as after a disconnect.
 - A refused fade fails the task with the helper's error.
-- A connected state without a report counts as down, because a helper update clears the reports
-  without leaving `connected`.
 - In simple mode the software part runs for the duration the device runs, which is at most 24
   hours.
 
