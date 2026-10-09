@@ -92,6 +92,11 @@ Every instance connects to a running SteamVR by itself. Bluetooth stays off unle
 Bluetooth or Lighthouse functionality: then claim its lock and start with `--bluetooth`. For the
 locks, the build step, the ports, and overlay work, read [parallel app instances](docs/agents/parallel-instances.md).
 
+## Steam Frame
+
+Before changing Steam Frame pairing, the frame helper, or the Frame's brightness, color temperature,
+or fades, read [Steam Frame pairing](docs/agents/steam-frame-pairing.md).
+
 ## Icons
 
 Before drawing, generating, or changing an icon, read [icon design](docs/agents/icon-design.md).
