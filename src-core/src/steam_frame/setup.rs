@@ -10,7 +10,7 @@ use super::{
     hex,
     models::{
         Access, CleanupMode, CleanupOutcome, CleanupRequest, Identity, OtherPcsOutcome,
-        SetupOutcome, SetupRequest, SetupResult, Stage,
+        SetupOutcome, SetupRequest, Stage,
     },
     ssh::{self, Session, SshError},
     valid_pc_id,
@@ -67,31 +67,6 @@ pub(super) async fn run(
         )));
     }
     session.exec(&command(arguments), stdin).await
-}
-
-/// Logs in, then records this PC's public key in the helper folder when the helper is installed,
-/// so the uninstall script on the headset can find it.
-pub async fn open(access: &Access, pc_id: &str, public_key: &str) -> Result<Session, SshError> {
-    let session = ssh::connect(access).await?;
-    record(&session, pc_id, public_key).await;
-    Ok(session)
-}
-
-async fn record(session: &Session, pc_id: &str, public_key: &str) {
-    match run(
-        session,
-        &["record", pc_id],
-        format!("{public_key}\n").as_bytes(),
-    )
-    .await
-    {
-        Ok(output) if output.status == 0 => {}
-        Ok(output) => warn!(
-            "[SteamFrame] Recording this PC's key exited with {}",
-            output.status
-        ),
-        Err(error) => warn!("[SteamFrame] Could not record this PC's key: {error:?}"),
-    }
 }
 
 #[derive(Deserialize, Debug, Clone, PartialEq)]
@@ -192,7 +167,6 @@ struct Config {
 #[derive(Debug, PartialEq)]
 pub enum ProvisionError {
     HelperMissing,
-    Busy,
     Ssh(SshError),
     Failed(String),
 }
@@ -217,7 +191,11 @@ pub async fn provision(
     match output.status {
         0 => {}
         EXIT_MISSING => return Err(ProvisionError::HelperMissing),
-        EXIT_BUSY => return Err(ProvisionError::Busy),
+        EXIT_BUSY => {
+            return Err(ProvisionError::Failed(
+                "another PC held the helper lock".into(),
+            ))
+        }
         status => {
             return Err(ProvisionError::Failed(format!(
                 "provisioning exited with {status}: {}",
@@ -243,7 +221,6 @@ pub async fn provision(
 pub enum InstallError {
     /// The helper folder is absent, and this call may not create it.
     Missing,
-    Busy,
     /// The uploaded executable did not match the bundled digest.
     Corrupted,
     Ssh(SshError),
@@ -261,8 +238,6 @@ pub struct Inspected {
     pub decision: InstallDecision,
     /// Whether this call installed the bundled helper.
     pub replaced: bool,
-    /// Whether that install was the first one in an empty helper folder.
-    pub created: bool,
 }
 
 /// Installs the bundled helper when the installed one needs it, deciding again when another PC
@@ -302,7 +277,6 @@ pub async fn install_bundled(
                 installed,
                 decision,
                 replaced: false,
-                created: false,
             });
         }
 
@@ -334,12 +308,15 @@ pub async fn install_bundled(
                     installed,
                     decision,
                     replaced: true,
-                    created: output.stdout().lines().any(|line| line == "created"),
                 });
             }
             EXIT_CHANGED => continue,
             EXIT_MISSING => return Err(InstallError::Missing),
-            EXIT_BUSY => return Err(InstallError::Busy),
+            EXIT_BUSY => {
+                return Err(InstallError::Failed(
+                    "another PC held the helper lock".into(),
+                ))
+            }
             EXIT_DIGEST => return Err(InstallError::Corrupted),
             status => {
                 return Err(InstallError::Failed(format!(
@@ -349,7 +326,9 @@ pub async fn install_bundled(
             }
         }
     }
-    Err(InstallError::Busy)
+    Err(InstallError::Failed(
+        "the helper kept changing during installation".into(),
+    ))
 }
 
 /// Writes the bundled helper's uninstall script, only while that release is current.
@@ -382,32 +361,18 @@ impl From<SshError> for SetupOutcome {
 
 /// Verifies the headset, installs or reuses the helper, and completes only after an
 /// authenticated WSS handshake. Every step is safe to repeat, which is what Resume relies on.
-pub async fn setup(request: SetupRequest, on_stage: impl Fn(Stage)) -> SetupResult {
-    let mut installed = Installed::default();
-    let outcome = match run_setup(&request, &on_stage, &mut installed).await {
+pub async fn setup(request: SetupRequest, on_stage: impl Fn(Stage)) -> SetupOutcome {
+    let outcome = match run_setup(&request, &on_stage).await {
         Ok(outcome) | Err(outcome) => outcome,
     };
     info!("[SteamFrame] Setup finished: {outcome:?}");
-    SetupResult {
-        outcome,
-        installed: installed.any,
-    }
-}
-
-/// What this setup call installed, so a failure knows what to remove.
-#[derive(Default)]
-struct Installed {
-    /// This call installed the bundled helper.
-    any: bool,
-    /// That install created the helper folder.
-    created: bool,
+    outcome
 }
 
 /// Checks the request, then runs the setup steps in one SSH session.
 async fn run_setup(
     request: &SetupRequest,
     on_stage: &impl Fn(Stage),
-    installed: &mut Installed,
 ) -> Result<SetupOutcome, SetupOutcome> {
     // refuse requests that setup cannot run safely
     if !valid_pc_id(&request.pc_id) {
@@ -427,22 +392,8 @@ async fn run_setup(
     }
 
     // run every step in one session
-    let session = open(&request.access, &request.pc_id, &request.public_key).await?;
-    let result = setup_session(request, &session, on_stage, installed).await;
-
-    // a failed reinstall removes a helper folder it created
-    if result.is_err() && installed.created && request.remove_on_failure {
-        match run(&session, &["uninstall_helper", &request.pc_id], b"").await {
-            Ok(output) if output.status == 0 => *installed = Installed::default(),
-            Ok(output) => warn!(
-                "[SteamFrame] Removing the helper after a failed install exited with {}",
-                output.status
-            ),
-            Err(error) => {
-                warn!("[SteamFrame] Could not remove the helper after a failed install: {error:?}")
-            }
-        }
-    }
+    let session = ssh::connect(&request.access).await?;
+    let result = setup_session(request, &session, on_stage).await;
     session.close().await;
     result
 }
@@ -452,7 +403,6 @@ async fn setup_session(
     request: &SetupRequest,
     session: &Session,
     on_stage: &impl Fn(Stage),
-    installed: &mut Installed,
 ) -> Result<SetupOutcome, SetupOutcome> {
     let failed = |message: String| SetupOutcome::Failed { message };
 
@@ -476,34 +426,18 @@ async fn setup_session(
     let inspected = install_bundled(session, false, true)
         .await
         .map_err(|error| match error {
-            InstallError::Busy => SetupOutcome::HelperBusy,
             InstallError::Ssh(error) => error.into(),
             error => failed(format!("{error:?}")),
         })?;
 
     // stop on an incompatible helper, else keep its uninstall script current
-    match inspected.decision {
-        InstallDecision::NeedsAppUpdate => {
-            return Err(SetupOutcome::NeedsAppUpdate {
-                helper_version: inspected
-                    .installed
-                    .map(|info| info.version)
-                    .unwrap_or_default(),
-            })
-        }
-        _ if inspected.replaced => {
-            *installed = Installed {
-                any: true,
-                created: inspected.created,
-            };
-            on_stage(Stage::Installed);
-        }
-        _ => {}
-    }
-
-    // a new helper folder had no clients/ when the session recorded this PC's key
-    if inspected.created {
-        record(session, &request.pc_id, &request.public_key).await;
+    if inspected.decision == InstallDecision::NeedsAppUpdate {
+        return Err(SetupOutcome::NeedsAppUpdate {
+            helper_version: inspected
+                .installed
+                .map(|info| info.version)
+                .unwrap_or_default(),
+        });
     }
     let bundled_is_current = inspected.replaced
         || inspected
@@ -523,7 +457,6 @@ async fn setup_session(
         .map_err(|error| match error {
             ProvisionError::Ssh(error) => error.into(),
             ProvisionError::HelperMissing => failed("the helper is not installed".into()),
-            ProvisionError::Busy => SetupOutcome::HelperBusy,
             ProvisionError::Failed(message) => failed(message),
         })?;
 
@@ -536,7 +469,7 @@ async fn setup_session(
             helper_version: hello.info.version,
         });
     }
-    if installed.any && hello.info.version != BUNDLED_VERSION {
+    if inspected.replaced && hello.info.version != BUNDLED_VERSION {
         return Err(failed(format!(
             "the helper reports version {} after installing {BUNDLED_VERSION}",
             hello.info.version
@@ -620,7 +553,6 @@ pub async fn cleanup(request: CleanupRequest) -> CleanupOutcome {
 
     // remove the token file and key lines, and the helper as the mode asks
     let mode = match request.mode {
-        CleanupMode::Keep => "keep",
         CleanupMode::Unused => "unused",
         CleanupMode::Uninstall => "uninstall",
     };
@@ -635,7 +567,12 @@ pub async fn cleanup(request: CleanupRequest) -> CleanupOutcome {
     // map the exit status to an outcome
     match result {
         Ok(output) if output.status == 0 => CleanupOutcome::Done,
-        Ok(output) if output.status == EXIT_BUSY => CleanupOutcome::HelperBusy,
+        Ok(output) if output.status == EXIT_BUSY => {
+            warn!("[SteamFrame] Another PC held the helper lock, so cleanup stopped");
+            CleanupOutcome::Failed {
+                message: "another PC held the helper lock".into(),
+            }
+        }
         Ok(output) => CleanupOutcome::Failed {
             message: format!("cleanup exited with {}", output.status),
         },
@@ -646,15 +583,15 @@ pub async fn cleanup(request: CleanupRequest) -> CleanupOutcome {
 }
 
 /// Counts the other PCs that hold a token for the helper on this headset.
-pub async fn count_other_pcs(access: &Access, pc_id: &str, public_key: &str) -> OtherPcsOutcome {
+pub async fn count_other_pcs(access: &Access, pc_id: &str) -> OtherPcsOutcome {
     if !valid_pc_id(pc_id) {
         return OtherPcsOutcome::Failed {
             message: "invalid PC id".into(),
         };
     }
 
-    // log in, recording this PC's key
-    let session = match open(access, pc_id, public_key).await {
+    // log in
+    let session = match ssh::connect(access).await {
         Ok(session) => session,
         Err(SshError::Rejected) => return OtherPcsOutcome::Rejected,
         Err(SshError::Unreachable) => return OtherPcsOutcome::Unreachable,
@@ -839,7 +776,7 @@ mod tests {
         }
         let Some(status) = run_script(
             home.path(),
-            &["cleanup", "pc-a", "keep"],
+            &["cleanup", "pc-a", "unused"],
             "ssh-rsa AAAATHIS OyasumiVR@PC\n",
         ) else {
             eprintln!("skipped: no bash");

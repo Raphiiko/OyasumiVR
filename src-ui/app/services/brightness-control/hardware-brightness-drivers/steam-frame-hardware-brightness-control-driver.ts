@@ -38,10 +38,9 @@ export const STEAM_FRAME_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: HardwareBrig
     riskThreshold: 125,
   };
 
-/** The active HMD: no HMD, a headset without a pairing, or a paired Frame. */
+/** The active HMD: a paired Frame, or none for no HMD and for a headset without a pairing. */
 type ActiveHmd =
-  | { kind: 'none' | 'other' }
-  | { kind: 'frame'; pairingId: string; brightness: SteamFrameBrightness | null };
+  { kind: 'none' } | { kind: 'frame'; pairingId: string; brightness: SteamFrameBrightness | null };
 
 /** Sets a paired Steam Frame's brightness through its helper, which also reports it. */
 export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnessControlDriver {
@@ -52,8 +51,6 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
   private readonly hmd: Observable<ActiveHmd>;
   private readonly matching: Observable<boolean>;
   private readonly available: Observable<boolean>;
-  /** The paired Frame's id while it is the active HMD, null for another HMD, undefined for none. */
-  readonly activePairing: Observable<string | null | undefined>;
   private currentHmd: ActiveHmd = { kind: 'none' };
   private frame: { pairingId: string; brightness: SteamFrameBrightness } | null = null;
   /** Set while a command runs; a newer value waits in `pending` and replaces an older one. */
@@ -74,11 +71,6 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
         this.activeHmd(status, devices, pairings, connections)
       ),
       distinctUntilChanged(isEqual),
-      shareReplay(1)
-    );
-    this.activePairing = this.hmd.pipe(
-      map((hmd) => (hmd.kind === 'none' ? undefined : hmd.kind === 'frame' ? hmd.pairingId : null)),
-      distinctUntilChanged(),
       shareReplay(1)
     );
     this.matching = this.hmd.pipe(
@@ -158,11 +150,7 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
       durationMs: options.durationMs,
       simple: options.simple,
     };
-    const frames = {
-      connections$: this.connections,
-      fadeEnded$: this.fadeEnded,
-      activePairing$: this.activePairing,
-    };
+    const frames = { connections$: this.connections, fadeEnded$: this.fadeEnded };
     return new SteamFrameBrightnessFade(options.shownTarget, request, frames, options.onAccept);
   }
 
@@ -179,7 +167,7 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
     const serial = devices.find((d) => d.class === 'HMD')?.serialNumber;
     if (status !== 'INITIALIZED' || !serial) return { kind: 'none' };
     const pairing = pairings.find((p) => p.complete && p.identity.serial === serial);
-    if (!pairing) return { kind: 'other' };
+    if (!pairing) return { kind: 'none' };
     const state = connections[pairing.id];
     const brightness = state?.status === 'connected' ? (state.brightness ?? null) : null;
     return { kind: 'frame', pairingId: pairing.id, brightness };

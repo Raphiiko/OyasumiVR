@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use super::{maintenance::FailReason, SUPPORTED_MODELS};
+use super::SUPPORTED_MODELS;
 
 #[derive(Serialize, Clone, Copy)]
 pub struct SupportedModel {
@@ -76,7 +76,6 @@ pub enum Status {
     Connecting,
     Connected,
     Offline,
-    IdentityChanged,
     NeedsAppUpdate,
     HelperOutdated,
     HostKeyChanged,
@@ -90,14 +89,8 @@ pub enum Status {
 #[serde(tag = "kind", rename_all = "camelCase")]
 pub enum Maintenance {
     Updating,
-    Updated {
-        version: String,
-    },
-    Failed {
-        reason: FailReason,
-    },
-    /// Another PC held the maintenance lock.
-    Busy,
+    Updated { version: String },
+    Failed,
 }
 
 #[derive(Serialize, Clone, Debug)]
@@ -105,8 +98,6 @@ pub enum Maintenance {
 pub struct State {
     pub pairing_id: String,
     pub status: Status,
-    /// Milliseconds since the epoch of the last authenticated contact in this session.
-    pub last_seen: Option<u64>,
     pub helper_version: Option<String>,
     /// Whether the helper is older than the bundled one, or has other files at the same version.
     pub update_available: bool,
@@ -121,18 +112,6 @@ pub struct State {
     pub cct: Option<Cct>,
 }
 
-/// A fade the helper runs. `target` is in percent or Kelvin.
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
-#[serde(rename_all = "camelCase")]
-pub struct Fade {
-    pub operation: String,
-    pub target: f64,
-    pub remaining_ms: u64,
-    /// Milliseconds since the epoch on this PC's clock, set when the report arrives.
-    #[serde(default)]
-    pub ends_at: u64,
-}
-
 /// The headset's hardware brightness in percent, as the helper reports it.
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
@@ -144,8 +123,6 @@ pub struct Brightness {
     pub max: Option<f64>,
     /// The headset's value, which can lie outside `min` and `max`.
     pub percentage: Option<f64>,
-    #[serde(default)]
-    pub fade: Option<Fade>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq)]
@@ -219,14 +196,10 @@ pub enum SetBrightnessError {
 pub struct Cct {
     /// False while the helper has no SteamVR session; nothing else is known then.
     pub available: bool,
-    /// The red, green, and blue display gains.
-    pub gains: Option<[f32; 3]>,
     /// The nearest integer Kelvin on OyasumiVR's curve.
     pub kelvin: Option<u32>,
-    /// True when the gains lie on the curve at `kelvin`.
+    /// True when the display gains lie on the curve at `kelvin`.
     pub exact: Option<bool>,
-    #[serde(default)]
-    pub fade: Option<Fade>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq)]
@@ -247,9 +220,6 @@ pub struct SetupRequest {
     pub token: String,
     pub public_key: String,
     pub identity: Identity,
-    /// Remove a helper this call installed when setup fails, as Reinstall does.
-    #[serde(default)]
-    pub remove_on_failure: bool,
 }
 
 #[derive(Serialize, Clone, Copy, Debug, PartialEq)]
@@ -257,8 +227,6 @@ pub struct SetupRequest {
 pub enum Stage {
     Verify,
     Install,
-    /// This attempt installed the helper. Not a visible step.
-    Installed,
     Connection,
 }
 
@@ -277,22 +245,12 @@ pub enum SetupOutcome {
     NeedsAppUpdate {
         helper_version: String,
     },
-    HelperBusy,
     HostKeyChanged,
     Rejected,
     Unreachable,
     Failed {
         message: String,
     },
-}
-
-#[derive(Serialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct SetupResult {
-    #[serde(flatten)]
-    pub outcome: SetupOutcome,
-    /// Whether this call installed the helper, so a cancelled pairing knows to remove it.
-    pub installed: bool,
 }
 
 #[derive(Deserialize)]
@@ -308,8 +266,6 @@ pub struct CleanupRequest {
 #[derive(Deserialize, Clone, Copy, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub enum CleanupMode {
-    /// The helper keeps running for other PCs.
-    Keep,
     /// Also removes the helper when no PC holds a token any more, as a cancelled pairing does.
     Unused,
     /// Also removes the helper, which disconnects every other PC.
@@ -324,7 +280,6 @@ pub enum CleanupOutcome {
     Rejected,
     Unreachable,
     HostKeyChanged,
-    HelperBusy,
     Failed {
         message: String,
     },

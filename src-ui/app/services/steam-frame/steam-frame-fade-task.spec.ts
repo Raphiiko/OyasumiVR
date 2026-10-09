@@ -27,30 +27,19 @@ function setup(durationMs = 60_000) {
   });
   const connections = new BehaviorSubject<Record<string, SteamFrameConnectionState>>({});
   const fadeEnded = new Subject<SteamFrameFadeEnded>();
-  const activePairing = new BehaviorSubject<string | null | undefined>('p');
   const onAccept = vi.fn();
   const task = new SteamFrameFadeTask(
     { pairingId: 'p', control: 'brightness', target: 30, durationMs },
-    { connections$: connections, fadeEnded$: fadeEnded, activePairing$: activePairing },
+    { connections$: connections, fadeEnded$: fadeEnded },
     onAccept
   );
-  const state = (
-    status: SteamFrameConnectionState['status'],
-    { fade = true, report = true } = {}
-  ) =>
+  const state = (status: SteamFrameConnectionState['status'], { report = true } = {}) =>
     connections.next({
       p: {
         pairingId: 'p',
         status,
         brightness:
-          status === 'connected' && report
-            ? ({
-                percentage: 50,
-                fade: fade
-                  ? { operation: task.operation, target: 30, remainingMs: 1, endsAt: 0 }
-                  : null,
-              } as SteamFrameBrightness)
-            : null,
+          status === 'connected' && report ? ({ percentage: 50 } as SteamFrameBrightness) : null,
       } as SteamFrameConnectionState,
     });
   const end = (outcome: SteamFrameFadeOutcome, operation = task.operation) =>
@@ -71,7 +60,7 @@ function setup(durationMs = 60_000) {
   task.onCancelled.subscribe(() => statuses.push('cancelled'));
   task.onComplete.subscribe(() => statuses.push('completed'));
   state('connected');
-  return { task, state, end, reply, fades, cancels, onAccept, statuses, activePairing };
+  return { task, state, end, reply, fades, cancels, onAccept, statuses };
 }
 
 describe('SteamFrameFadeTask', () => {
@@ -172,17 +161,6 @@ describe('SteamFrameFadeTask', () => {
     await done;
   });
 
-  it('ends as missed after a reconnect that no longer reports it', async () => {
-    const h = setup();
-    const done = h.task.start();
-    await h.reply();
-    h.state('offline');
-    h.state('connected', { fade: false });
-    await done;
-    expect(h.task.end).toBe('changedOnDevice');
-    expect(h.statuses[0]).toBe('cancelled');
-  });
-
   it('treats a connected state without a report as down, as during a helper update', async () => {
     const h = setup(80);
     const done = h.task.start();
@@ -190,16 +168,6 @@ describe('SteamFrameFadeTask', () => {
     h.state('connected', { report: false });
     await done;
     expect(h.statuses).toEqual(['completed']);
-  });
-
-  it('ends as missed when the restarted helper reports without it', async () => {
-    const h = setup();
-    const done = h.task.start();
-    await h.reply();
-    h.state('connected', { report: false });
-    h.state('connected', { fade: false });
-    await done;
-    expect(h.task.end).toBe('changedOnDevice');
   });
 
   it('cancels the fade on the helper when cancelled from outside', async () => {
@@ -212,22 +180,6 @@ describe('SteamFrameFadeTask', () => {
       ['steam_frame_cancel_fade', { pairingId: 'p', operation: h.task.operation }],
     ]);
     expect(h.task.end).toBeNull();
-  });
-
-  it('cancels on the helper when another HMD takes over, but not in a gap without one', async () => {
-    const h = setup();
-    const done = h.task.start();
-    await h.reply();
-    h.activePairing.next(undefined);
-    await wait(0);
-    expect(h.statuses).toEqual([]);
-    h.activePairing.next(null);
-    await done;
-    expect(h.statuses[0]).toBe('cancelled');
-    expect(h.task.end).toBeNull();
-    expect(h.cancels()).toEqual([
-      ['steam_frame_cancel_fade', { pairingId: 'p', operation: h.task.operation }],
-    ]);
   });
 
   it('fails when the helper refuses it', async () => {

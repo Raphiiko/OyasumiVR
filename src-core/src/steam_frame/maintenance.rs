@@ -1,7 +1,6 @@
 use std::{collections::HashSet, sync::LazyLock, time::Duration};
 
 use log::{info, warn};
-use serde::Serialize;
 use tokio::sync::Mutex;
 
 use super::{
@@ -10,7 +9,7 @@ use super::{
         self, bundled_digest, InstallDecision, InstallError, BUNDLED_VERSION, EXIT_BUSY,
         EXIT_CHANGED, EXIT_MISSING,
     },
-    ssh::{Session, SshError},
+    ssh::{self, Session, SshError},
     wss::{self, WssError},
 };
 
@@ -27,8 +26,7 @@ pub async fn take_automatic_attempt(pairing_id: &str) -> bool {
     AUTOMATIC_UPDATES.lock().await.insert(pairing_id.to_owned())
 }
 
-#[derive(Serialize, Clone, Copy, Debug, PartialEq)]
-#[serde(rename_all = "camelCase")]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum FailReason {
     /// The headset stopped answering over SSH.
     Unreachable,
@@ -50,7 +48,6 @@ pub enum UpdateOutcome {
     Unchanged,
     NeedsAppUpdate,
     Missing,
-    Busy,
     Failed(FailReason),
     HostKeyChanged,
     Rejected,
@@ -62,7 +59,7 @@ pub async fn update(pairing: &Pairing) -> UpdateOutcome {
     let Some(digest) = bundled_digest() else {
         return UpdateOutcome::Failed(FailReason::NotBundled);
     };
-    let session = match setup::open(&pairing.access, &pairing.id, &pairing.public_key).await {
+    let session = match ssh::connect(&pairing.access).await {
         Ok(session) => session,
         Err(error) => return ssh_outcome(error),
     };
@@ -106,7 +103,10 @@ async fn update_session(session: &Session, pairing: &Pairing, digest: &str) -> U
         // an interrupted update can leave the old process running after the switch
         _ if bundled_on_disk => match setup::run(session, &["start"], b"").await {
             Ok(output) if output.status == 0 => {}
-            Ok(output) if output.status == EXIT_BUSY => return UpdateOutcome::Busy,
+            Ok(output) if output.status == EXIT_BUSY => {
+                warn!("[SteamFrame] Another PC held the helper lock, so the helper update stopped");
+                return UpdateOutcome::Failed(FailReason::Other);
+            }
             Ok(output) => warn!(
                 "[SteamFrame] Starting the helper exited with {}",
                 output.status
@@ -157,7 +157,6 @@ async fn prune(session: &Session) {
 fn install_failure(error: InstallError) -> UpdateOutcome {
     match error {
         InstallError::Missing => UpdateOutcome::Missing,
-        InstallError::Busy => UpdateOutcome::Busy,
         InstallError::Corrupted => UpdateOutcome::Failed(FailReason::Corrupted),
         InstallError::Ssh(error) => ssh_outcome(error),
         InstallError::Failed(message) => {
@@ -213,7 +212,7 @@ pub enum Recovery {
 /// Brings back a helper that does not answer while SSH works: start it, then, once per app start,
 /// repair the current release and finally roll back to the previous one.
 pub async fn recover(pairing: &Pairing) -> Recovery {
-    let session = match setup::open(&pairing.access, &pairing.id, &pairing.public_key).await {
+    let session = match ssh::connect(&pairing.access).await {
         Ok(session) => session,
         Err(SshError::Unreachable) => return Recovery::Unreachable,
         Err(SshError::HostKeyChanged) => return Recovery::HostKeyChanged,
@@ -233,7 +232,10 @@ async fn recover_session(session: &Session, pairing: &Pairing) -> Recovery {
     // start the service
     match setup::run(session, &["start"], b"").await {
         Ok(output) if output.status == EXIT_MISSING => return Recovery::Missing,
-        Ok(output) if output.status == EXIT_BUSY => return Recovery::Down,
+        Ok(output) if output.status == EXIT_BUSY => {
+            info!("[SteamFrame] Another PC held the helper lock, so the helper was not started");
+            return Recovery::Down;
+        }
         Ok(_) => {}
         Err(_) => return Recovery::Down,
     }
@@ -265,7 +267,6 @@ async fn recover_session(session: &Session, pairing: &Pairing) -> Recovery {
         }
         Ok(_) => {}
         Err(InstallError::Missing) => return Recovery::Missing,
-        Err(InstallError::Busy) => return Recovery::Down,
         Err(error) => warn!("[SteamFrame] Could not repair the helper: {error:?}"),
     }
 
