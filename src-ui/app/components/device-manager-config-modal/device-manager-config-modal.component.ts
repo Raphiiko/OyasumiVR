@@ -130,7 +130,7 @@ export class DeviceManagerConfigModalComponent
       canUpdate:
         !!state &&
         UPDATABLE_STATUSES.includes(state.status) &&
-        (state.updateAvailable || maintenance === 'failed' || maintenance === 'busy'),
+        (state.updateAvailable || maintenance === 'failed'),
       // only a helper that answers can be called up to date
       upToDate: state?.status === 'connected',
     };

@@ -8,7 +8,7 @@ use tokio::sync::broadcast;
 use crate::{
     brightness::{self, Backend},
     cct::{self, ColorGains},
-    controls::{Control, Controls, FadeError, FadeReport, FadeRequest, Outcome},
+    controls::{Control, Controls, FadeError, FadeRequest, Outcome},
 };
 
 /// A boot clock that runs this much further than the monotonic one means the system slept.
@@ -33,12 +33,10 @@ pub enum Action {
 pub enum Event {
     Brightness {
         snapshot: brightness::Snapshot,
-        fade: Option<FadeReport>,
         cause: Option<u64>,
     },
     Cct {
         snapshot: cct::Snapshot,
-        fade: Option<FadeReport>,
         cause: Option<u64>,
     },
     BrightnessReply {
@@ -66,9 +64,7 @@ pub enum Event {
 #[derive(Clone, Debug)]
 pub struct Latest {
     pub brightness: brightness::Snapshot,
-    pub brightness_fade: Option<FadeReport>,
     pub cct: cct::Snapshot,
-    pub cct_fade: Option<FadeReport>,
 }
 
 /// Connects the headset task with the PC connections.
@@ -94,14 +90,8 @@ impl Hub {
     fn publish(&self, event: Event) {
         let mut latest = self.latest.lock().unwrap();
         match &event {
-            Event::Brightness { snapshot, fade, .. } => {
-                latest.brightness = snapshot.clone();
-                latest.brightness_fade = fade.clone();
-            }
-            Event::Cct { snapshot, fade, .. } => {
-                latest.cct = snapshot.clone();
-                latest.cct_fade = fade.clone();
-            }
+            Event::Brightness { snapshot, .. } => latest.brightness = snapshot.clone(),
+            Event::Cct { snapshot, .. } => latest.cct = snapshot.clone(),
             _ => {}
         }
         let _ = self.events.send(event);
@@ -115,9 +105,7 @@ pub fn start<B: Backend + ColorGains + Send + 'static>(backend: B) -> Arc<Hub> {
     let hub = Arc::new(Hub {
         latest: Mutex::new(Latest {
             brightness: brightness::Snapshot::UNAVAILABLE,
-            brightness_fade: None,
             cct: cct::Snapshot::UNAVAILABLE,
-            cct_fade: None,
         }),
         events: broadcast::channel(256).0,
         commands,
