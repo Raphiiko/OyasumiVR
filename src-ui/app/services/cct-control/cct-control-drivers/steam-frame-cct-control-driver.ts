@@ -160,7 +160,7 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
         target: kelvin,
         durationMs,
       },
-      { connections$: this.steamFrames.connections$, fadeEnded$: this.steamFrames.fadeEnded$ }
+      { fadeEnded$: this.steamFrames.fadeEnded$ }
     );
   }
 

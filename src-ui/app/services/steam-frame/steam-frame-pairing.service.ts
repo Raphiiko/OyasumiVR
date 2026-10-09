@@ -46,6 +46,8 @@ export class SteamFramePairingService {
   private search = 0;
   /** The running setup; stage events from any other attempt are ignored. */
   private setupAttemptId?: string;
+  /** Helper-updated notices by pairing id and version, so each shows for one minute per app run. */
+  private readonly updatedNotices = new Map<string, 'shown' | 'hidden'>();
 
   readonly pairings$ = new BehaviorSubject<SteamFramePairing[]>([]);
   readonly connections = this._connections.asReadonly();
@@ -682,13 +684,20 @@ export class SteamFramePairingService {
 
   /** Deletes the pairing, saves, and stops its connection. */
   private async removePairing(deviceId: string) {
-    this.setPairings(this._pairings().filter((p) => p.deviceId !== deviceId));
-    await this.save();
+    const previous = this._pairings();
+    this.setPairings(previous.filter((p) => p.deviceId !== deviceId));
+    try {
+      await this.save();
+    } catch (e) {
+      this.setPairings(previous);
+      throw e;
+    }
     await this.pushPairings();
   }
 
   /** Shows a connection state, and saves what the core learned about the headset. */
   private onConnectionState(state: SteamFrameConnectionState) {
+    state = this.timeUpdatedNotice(state);
     this._connections.set({ ...this._connections(), [state.pairingId]: state });
     this.connections$.next(this._connections());
 
@@ -707,6 +716,22 @@ export class SteamFramePairingService {
   }
 
   /** Sends the complete pairings to the core, which keeps one connection per pairing. */
+  /** Keeps a helper-updated notice for one minute after it first shows, then drops it. */
+  private timeUpdatedNotice(state: SteamFrameConnectionState): SteamFrameConnectionState {
+    if (state.maintenance?.kind !== 'updated') return state;
+    const key = `${state.pairingId}:${state.maintenance.version}`;
+    if (this.updatedNotices.get(key) === 'hidden') return { ...state, maintenance: null };
+    if (!this.updatedNotices.has(key)) {
+      this.updatedNotices.set(key, 'shown');
+      setTimeout(() => {
+        this.updatedNotices.set(key, 'hidden');
+        const current = this._connections()[state.pairingId];
+        if (current) this.onConnectionState(current);
+      }, 60_000);
+    }
+    return state;
+  }
+
   private async pushPairings() {
     const pairings = this._pairings()
       .filter((p) => p.complete && p.hostKeyPin && p.certPin && p.port)

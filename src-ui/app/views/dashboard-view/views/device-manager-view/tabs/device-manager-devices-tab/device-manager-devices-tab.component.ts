@@ -134,8 +134,6 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
 
   private _tagFilterOptions: SelectBoxItem[] = [];
   private _fuse: Fuse<DMKnownDevice> | null = null;
-  /** Helper-updated pills by pairing id and version: a timer while shown, null once hidden. */
-  private readonly updatedNotices = new Map<string, ReturnType<typeof setTimeout> | null>();
 
   constructor(
     private deviceManager: DeviceManagerService,
@@ -170,14 +168,6 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
         this.initializeFuse();
         this.cdr.markForCheck();
       });
-
-    // hide each helper-updated pill a minute after it first shows
-    this.framePairing.connections$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((states) => this.timeUpdatedNotices(states));
-    this.destroyRef.onDestroy(() =>
-      this.updatedNotices.forEach((timer) => timer && clearTimeout(timer))
-    );
 
     // Initialize tag filter to "All tags"
     this.updateTagFilterOptions();
@@ -601,9 +591,6 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
       case 'updating':
         return { pill: { key: 'updatingHelper', icon: 'sync', tone: 'neutral' } };
       case 'updated':
-        if (this.updatedNotices.get(`${state!.pairingId}:${maintenance.version}`) === null) {
-          return null;
-        }
         return {
           pill: {
             key: 'helperUpdated',
@@ -624,20 +611,6 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
         };
       default:
         return null;
-    }
-  }
-
-  /** Starts the one-minute timer of each helper-updated pill the first time it shows. */
-  private timeUpdatedNotices(states: Record<string, SteamFrameConnectionState>) {
-    for (const state of Object.values(states)) {
-      if (state.maintenance?.kind !== 'updated') continue;
-      const key = `${state.pairingId}:${state.maintenance.version}`;
-      if (this.updatedNotices.has(key)) continue;
-      const timer = setTimeout(() => {
-        this.updatedNotices.set(key, null);
-        this.cdr.markForCheck();
-      }, 60_000);
-      this.updatedNotices.set(key, timer);
     }
   }
 
