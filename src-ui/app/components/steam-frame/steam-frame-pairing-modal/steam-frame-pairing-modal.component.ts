@@ -85,7 +85,12 @@ export class SteamFramePairingModalComponent extends BaseModalComponent<void, vo
   readonly flow = this.pairing.flow;
   readonly page = computed(() => this.flow()?.page ?? 'intro');
   readonly busy = computed(() => !!this.flow()?.busy);
-  readonly step = computed(() => STEP_OF_PAGE[this.page()]);
+  /** A failed access check shows the setup-failed page while the flow is still at step 4. */
+  readonly step = computed(() =>
+    this.page() === 'setupFailed' && !this.pairing.flowPairing()?.hostKeyPin
+      ? STEP_OF_PAGE.awaiting
+      : STEP_OF_PAGE[this.page()]
+  );
   readonly illustration = computed(() => ILLUSTRATIONS[this.page()]);
   readonly animated = computed(() =>
     ['searching', 'approval-pending', 'setup-running'].includes(this.illustration() ?? '')
