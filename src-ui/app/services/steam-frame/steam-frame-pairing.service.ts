@@ -354,7 +354,9 @@ export class SteamFramePairingService {
   private async setupSteps() {
     const pairing = this.flowPairing();
     const flow = this._flow();
-    if (!pairing?.hostKeyPin || !flow) return;
+    if (!pairing || !flow) return;
+    // a failed access check lands on the setup page too, so Retry checks access again
+    if (!pairing.hostKeyPin) return this.registerSteps();
 
     // run setup; stage events update the page
     this.setupAttemptId = uuidv4();
