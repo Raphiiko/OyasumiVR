@@ -485,7 +485,12 @@ export class SteamFramePairingService {
     const outcome = await this.cleanup(pairing, uninstall ? 'uninstall' : 'unused');
     info(`[SteamFramePairing] Unpair: ${outcome.status}`);
     if (outcome.status !== 'done') return outcome.status;
-    await this.removePairing(pairing.deviceId);
+    try {
+      await this.removePairing(pairing.deviceId);
+    } catch (e) {
+      error(`[SteamFramePairing] Could not save the unpaired state: ${e}`);
+      return 'failed';
+    }
     return null;
   }
 
