@@ -203,9 +203,10 @@ most twice per backoff step.
   when it matches the one the helper presented.
 - `Unreachable`: the core runs `helper.sh start`. When the helper still does not answer, it installs
   the bundled helper unless a newer one is there. When that does not start either, it rolls back to
-  the previous release. It repairs once per app start, apart from the automatic update. When SSH cannot reach the headset,
-  or another host answers at its old address, the core browses mDNS for it at a new address. It
-  accepts that address only when the helper there presents the pinned certificate.
+  the previous release. It repairs once per app start, apart from the automatic update.
+- When SSH cannot reach the headset, or another host answers at its old address, the core browses
+  mDNS for the headset at a new address. It accepts that address only when the helper there
+  presents the pinned certificate.
 
 ## Brightness and color temperature
 
@@ -246,8 +247,9 @@ Color temperature:
   match. The reply has `snapshot` or `error`: `runtimeUnavailable` or `writeFailed`. Only the other
   PCs get a snapshot, and only when the write changed the gains.
 
-The helper drops a `setBrightness` or `fade` with a non-finite number without a reply. The core keeps the last
-snapshots in the connection state as `brightness` and `cct`, and clears them while not connected.
+The helper drops a `setBrightness` or `fade` with a non-finite number without a reply. The core
+keeps the last snapshots in the connection state as `brightness` and `cct`, and clears them while
+not connected.
 
 ### On the PC
 
