@@ -8,7 +8,7 @@ use std::{
     time::Duration,
 };
 
-use controls::{Control, FadeError, FadeReport, FadeRequest, Outcome};
+use controls::{Control, FadeError, FadeRequest, Outcome};
 use hub::{Action, Command, Event, Hub};
 
 use futures_util::{SinkExt, StreamExt};
@@ -75,27 +75,16 @@ pub fn info() -> Info {
     }
 }
 
-#[derive(Serialize, Debug, PartialEq)]
-pub struct Identity {
-    pub serial: String,
-    pub model: String,
-    pub manufacturer: String,
-}
-
 #[derive(Serialize)]
 #[serde(tag = "type", rename_all = "camelCase")]
 enum Outgoing<'a> {
     Brightness {
         #[serde(flatten)]
         snapshot: &'a brightness::Snapshot,
-        #[serde(skip_serializing_if = "Option::is_none")]
-        fade: Option<&'a FadeReport>,
     },
     Cct {
         #[serde(flatten)]
         snapshot: &'a cct::Snapshot,
-        #[serde(skip_serializing_if = "Option::is_none")]
-        fade: Option<&'a FadeReport>,
     },
     FadeResult {
         id: u64,
@@ -139,14 +128,8 @@ impl<'a> Outgoing<'a> {
             {
                 return None
             }
-            Event::Brightness { snapshot, fade, .. } => Self::Brightness {
-                snapshot,
-                fade: fade.as_ref(),
-            },
-            Event::Cct { snapshot, fade, .. } => Self::Cct {
-                snapshot,
-                fade: fade.as_ref(),
-            },
+            Event::Brightness { snapshot, .. } => Self::Brightness { snapshot },
+            Event::Cct { snapshot, .. } => Self::Cct { snapshot },
             Event::FadeReply { id, result, .. } => Self::FadeResult {
                 id: *id,
                 error: result.err(),
@@ -248,7 +231,6 @@ struct Hello {
     r#type: &'static str,
     #[serde(flatten)]
     info: Info,
-    identity: Option<Identity>,
 }
 
 /// Loads the helper's TLS identity from `tls/`, creating a new one when it is missing or unusable.
@@ -334,31 +316,6 @@ fn write_private(path: &Path, contents: &[u8]) -> io::Result<()> {
     std::fs::rename(temp, path)
 }
 
-/// Reads the headset identity SteamVR last recorded. `None` when any of the three values is missing.
-pub fn parse_identity(settings: &str) -> Option<Identity> {
-    let settings: serde_json::Value = serde_json::from_str(settings).ok()?;
-    let last_known = settings.get("LastKnown")?;
-    let field = |key: &str| {
-        last_known
-            .get(key)?
-            .as_str()
-            .filter(|value| !value.is_empty())
-            .map(str::to_owned)
-    };
-    Some(Identity {
-        serial: field("HMDSerialNumber")?,
-        model: field("HMDModel")?,
-        manufacturer: field("HMDManufacturer")?,
-    })
-}
-
-/// Reads the identity from this user's SteamVR settings file.
-fn read_identity() -> Option<Identity> {
-    let home = std::env::var_os("HOME")?;
-    let path = Path::new(&home).join(".config/openvr/config/steamvr.vrsettings");
-    parse_identity(&std::fs::read_to_string(path).ok()?)
-}
-
 /// The PC id names a token file, so it must stay a single safe path segment.
 fn valid_pc_id(pc_id: &str) -> bool {
     (1..=64).contains(&pc_id.len())
@@ -430,22 +387,19 @@ async fn handle(
         return;
     };
 
-    // send the version and headset identity, then the current brightness and color temperature
+    // send the version, then the current brightness and color temperature
     let hello = Hello {
         r#type: "hello",
         info: (*info).clone(),
-        identity: read_identity(),
     };
     let (latest, mut events) = hub.subscribe();
     for message in [
         serde_json::to_string(&hello),
         serde_json::to_string(&Outgoing::Brightness {
             snapshot: &latest.brightness,
-            fade: latest.brightness_fade.as_ref(),
         }),
         serde_json::to_string(&Outgoing::Cct {
             snapshot: &latest.cct,
-            fade: latest.cct_fade.as_ref(),
         }),
     ] {
         let Ok(message) = message else { return };

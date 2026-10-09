@@ -48,10 +48,7 @@ async function setup(
     } as unknown as Dependencies[2]
   );
   await service.init();
-  const report = (
-    percentage: number,
-    { status = 'connected', fade }: { status?: string; fade?: string } = {}
-  ) =>
+  const report = (percentage: number, { status = 'connected' }: { status?: string } = {}) =>
     connections.next({
       p: {
         pairingId: 'p',
@@ -62,7 +59,6 @@ async function setup(
           min: 9,
           max: 125,
           percentage,
-          fade: fade ? { operation: fade, target: 0, remainingMs: 1, endsAt: 0 } : null,
         },
       } as SteamFrameConnectionState,
     });
@@ -108,7 +104,7 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
     // the connection drops and returns; the fade goes on
     h.report(50, { status: 'offline' });
     await settle();
-    h.report(55, { fade: operation });
+    h.report(55);
     await settle();
     expect(await firstValueFrom(h.service.activeTransition)).toBe(task);
     expect(h.writes()).toEqual([]);
@@ -117,21 +113,6 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
     h.end(operation, 'completed');
     await settle();
     expect(task.isComplete()).toBe(true);
-    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
-  });
-
-  it('sets the target when the helper refuses the fade', async () => {
-    const h = await setup();
-    vi.mocked(invoke).mockImplementation(async (command, args) => {
-      if (command === 'steam_frame_fade') throw 'offline';
-      return command === 'steam_frame_set_brightness'
-        ? (args as { percentage: number }).percentage
-        : undefined;
-    });
-    h.service.transitionBrightness(80, 10000);
-    await settle();
-    await settle();
-    expect(h.writes()).toHaveLength(1);
     expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
   });
 
@@ -152,22 +133,6 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
     replies.shift()!(60);
     await settle();
     expect(h.writes()).toHaveLength(1);
-  });
-
-  it('cancels a helper fade when another headset takes over', async () => {
-    const h = await setup();
-    vi.mocked(invoke).mockImplementation(async () => undefined);
-    h.service.transitionBrightness(80, 10000);
-    await settle();
-    const setBrightness = vi.spyOn(h.service, 'setBrightness').mockResolvedValue();
-    h.devices.next([{ class: 'HMD', serialNumber: 'LHR-1' } as OVRDevice]);
-    await settle();
-    const cancels = vi
-      .mocked(invoke)
-      .mock.calls.filter(([command]) => command === 'steam_frame_cancel_fade');
-    expect(cancels).toHaveLength(1);
-    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
-    expect(setBrightness).not.toHaveBeenCalled();
   });
 
   it('keeps a helper fade when the same driver returns after a gap without any', async () => {

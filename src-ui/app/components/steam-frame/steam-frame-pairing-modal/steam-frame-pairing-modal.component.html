@@ -115,12 +115,7 @@
             }
           </div>
           @if (flow()?.error; as error) {
-            <p class="error" role="alert">
-              {{ t('errors.' + error) }}
-              @if (errorCode(); as code) {
-                <span class="error-code">{{ t('errorCode', { code }) }}</span>
-              }
-            </p>
+            <p class="error" role="alert">{{ t('errors.' + error) }}</p>
           }
           @if (page() === 'found') {
             <div class="candidates">
@@ -290,11 +285,6 @@
               t('actions.sendAgain')
             }}</button>
           }
-          @case ('accessLost') {
-            <button class="btn btn-primary" (click)="pairing.go('pairhost')">{{
-              t('actions.continue')
-            }}</button>
-          }
           @case ('wrongDevice') {
             <button class="btn btn-primary" [disabled]="busy()" (click)="pairing.discover()">{{
               t('actions.findHeadset')
@@ -316,14 +306,9 @@
               t('actions.close')
             }}</button>
           }
-          @case ('hostKeyChanged') {
-            <button class="btn btn-primary" (click)="pairing.closeWizard()">{{
-              t('actions.close')
-            }}</button>
-          }
           @case ('cleanupFailed') {
             <button class="btn btn-secondary" (click)="copyUninstallCommand()">{{
-              t(copied() ? 'actions.copied' : 'actions.copyCommand')
+              t('actions.copyCommand')
             }}</button>
             <button class="btn btn-primary" (click)="pairing.leaveCleanup()">{{
               t('actions.done')

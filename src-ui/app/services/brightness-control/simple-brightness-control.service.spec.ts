@@ -1,6 +1,6 @@
 import { invoke } from '@tauri-apps/api/core';
 import { BehaviorSubject, firstValueFrom, ReplaySubject, Subject } from 'rxjs';
-import { describe, expect, it, vi, onTestFinished } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { AUTOMATION_CONFIGS_DEFAULT } from '../../models/automations';
 import type {
   SteamFrameConnectionState,
@@ -257,20 +257,6 @@ describe('simple brightness with a device that reports its brightness', () => {
     expect(invoke).not.toHaveBeenCalledWith('steam_frame_fade', expect.anything());
   });
 
-  it('gives the simple value to a device that takes over from a pushing one', async () => {
-    const h = await reporting();
-    h.hardware.onDriverChange.next();
-    await h.service.setBrightness(60);
-    h.software.setBrightness.mockClear();
-    h.hardware.setBrightness.mockClear();
-    // a Beyond that stayed available takes over; availability never turns false
-    h.hardware.activeDriver = { pushesBrightnessChanges: false };
-    h.hardware.onDriverChange.next();
-    await settle();
-    expect(h.hardware.setBrightness).toHaveBeenCalledOnce();
-    expect(h.service.brightness).toBe(60);
-  });
-
   it('ignores a replayed report once the pushing device is gone', async () => {
     const h = await reporting();
     h.hardware.activeDriver = null;
@@ -295,7 +281,6 @@ describe('simple brightness fading a Steam Frame', () => {
       } as SteamFrameConnectionState,
     });
     const fadeEnded = new Subject<SteamFrameFadeEnded>();
-    const activePairing = new BehaviorSubject<string | null | undefined>('p');
     const driver = {
       pushesBrightnessChanges: true,
       getBrightnessBounds: () => [9, 125] as [number, number],
@@ -309,7 +294,7 @@ describe('simple brightness fading a Steam Frame', () => {
             durationMs: o.durationMs,
             simple: o.simple,
           },
-          { connections$: connections, fadeEnded$: fadeEnded, activePairing$: activePairing },
+          { connections$: connections, fadeEnded$: fadeEnded },
           o.onAccept
         ),
     };
@@ -331,53 +316,8 @@ describe('simple brightness fading a Steam Frame', () => {
         operation: sent().operation,
         outcome,
       });
-    return { ...h, sent, end, activePairing };
+    return { ...h, sent, end };
   }
-
-  it('cancels the fade when another headset takes over', async () => {
-    const h = await frame();
-    h.service.transitionBrightness(0, 10000);
-    await wait();
-    h.activePairing.next(null);
-    await wait();
-    expect(vi.mocked(invoke).mock.calls.map(([name]) => name)).toContain('steam_frame_cancel_fade');
-    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
-  });
-
-  it('keeps the fade when the same driver returns after a gap without any', async () => {
-    const h = await frame();
-    const driver = h.hardware.activeDriver;
-    h.hardware.onDriverChange.next();
-    const task = h.service.transitionBrightness(0, 10000);
-    await wait();
-    h.hardware.activeDriver = null;
-    h.hardware.onDriverChange.next();
-    h.hardware.activeDriver = driver;
-    h.hardware.onDriverChange.next();
-    await wait();
-    expect(vi.mocked(invoke).mock.calls.map(([name]) => name)).not.toContain(
-      'steam_frame_cancel_fade'
-    );
-    expect(await firstValueFrom(h.service.activeTransition)).toBe(task);
-    task.cancel();
-  });
-
-  it('sets the target, software part included, when the helper refuses the fade', async () => {
-    const h = await frame();
-    const accept = vi.mocked(invoke).getMockImplementation()!;
-    onTestFinished(() => void vi.mocked(invoke).mockImplementation(accept));
-    vi.mocked(invoke).mockImplementation(async (command, args) => {
-      if (command === 'steam_frame_fade') throw 'offline';
-      return accept(command, args);
-    });
-    h.service.transitionBrightness(0, 10000);
-    await wait();
-    await wait();
-    expect(h.service.brightness).toBe(0);
-    expect(h.software.brightness).toBe(0);
-    expect(h.hardware.setBrightness).toHaveBeenCalled();
-    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
-  });
 
   it('fades hardware on the helper and software on this PC along one curve', async () => {
     const h = await frame();

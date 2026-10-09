@@ -64,7 +64,6 @@ beforeEach(() => {
     steam_frame_request_approval: () => 'registered',
     steam_frame_set_up_helper: () => ({
       status: 'complete',
-      installed: true,
       certPin: 'CERT',
       port: 38440,
       helperVersion: '1.0.0',
@@ -193,7 +192,6 @@ describe('Steam Frame pairing flow', () => {
     store.save
       .mockResolvedValueOnce(undefined)
       .mockResolvedValueOnce(undefined)
-      .mockResolvedValueOnce(undefined)
       .mockRejectedValueOnce(new Error('disk full'));
     const service = await start();
     await service.pair();
@@ -202,25 +200,11 @@ describe('Steam Frame pairing flow', () => {
     expect(calls('steam_frame_remove_access')).toHaveLength(1);
   });
 
-  it('still removes the helper it installed when that fact could not be saved', async () => {
-    handlers['steam_frame_check_ssh_access'] = () => ({ status: 'ok', hostKeyPin: 'PIN' });
-    handlers['steam_frame_set_up_helper'] = () => ({ status: 'unreachable', installed: true });
-    store.save
-      .mockResolvedValueOnce(undefined)
-      .mockResolvedValueOnce(undefined)
-      .mockRejectedValueOnce(new Error('disk full'));
-    const service = await start();
-    await service.pair();
-    await service.cancel();
-    expect(calls('steam_frame_remove_access')[0].request).toMatchObject({ mode: 'unused' });
-  });
-
   it('closes the wizard when the headset is clean but the local delete fails', async () => {
     handlers['steam_frame_check_ssh_access'] = () => ({ status: 'ok', hostKeyPin: 'PIN' });
     handlers['steam_frame_set_up_helper'] = () => ({
       status: 'failed',
       message: 'x',
-      installed: false,
     });
     const service = await start();
     await service.pair();
@@ -247,12 +231,12 @@ describe('Steam Frame pairing flow', () => {
 
   it('removes this PC from a different headset and forgets the key', async () => {
     handlers['steam_frame_check_ssh_access'] = () => ({ status: 'ok', hostKeyPin: 'PIN' });
-    handlers['steam_frame_set_up_helper'] = () => ({ status: 'wrongDevice', installed: false });
+    handlers['steam_frame_set_up_helper'] = () => ({ status: 'wrongDevice' });
     const service = await start();
     await service.pair();
     expect(service.flow()?.page).toBe('wrongDevice');
     expect(calls('steam_frame_remove_access')[0].request).toMatchObject({
-      mode: 'keep',
+      mode: 'unused',
       pcId: expect.any(String),
     });
     expect(service.pairingFor(device.id)).toBeUndefined();
@@ -261,7 +245,7 @@ describe('Steam Frame pairing flow', () => {
   it('shows the different-headset result when cancelled during its cleanup', async () => {
     let finish!: () => void;
     handlers['steam_frame_check_ssh_access'] = () => ({ status: 'ok', hostKeyPin: 'PIN' });
-    handlers['steam_frame_set_up_helper'] = () => ({ status: 'wrongDevice', installed: false });
+    handlers['steam_frame_set_up_helper'] = () => ({ status: 'wrongDevice' });
     handlers['steam_frame_remove_access'] = () =>
       new Promise((resolve) => (finish = () => resolve({ status: 'unreachable' })));
     const service = await start();
@@ -280,18 +264,16 @@ describe('Steam Frame pairing flow', () => {
 
   it('keeps an interrupted setup as a checkpoint that resumes without approval', async () => {
     handlers['steam_frame_check_ssh_access'] = () => ({ status: 'ok', hostKeyPin: 'PIN' });
-    handlers['steam_frame_set_up_helper'] = () => ({ status: 'unreachable', installed: true });
+    handlers['steam_frame_set_up_helper'] = () => ({ status: 'unreachable' });
     const service = await start();
     await service.pair();
     expect(service.flow()?.page).toBe('setupFailed');
     expect(service.pairingFor(device.id)).toMatchObject({
       complete: false,
       hostKeyPin: 'PIN',
-      helperInstalledByPairing: true,
     });
     handlers['steam_frame_set_up_helper'] = () => ({
       status: 'complete',
-      installed: false,
       certPin: 'CERT',
       port: 38440,
       helperVersion: '1.0.0',
@@ -301,12 +283,11 @@ describe('Steam Frame pairing flow', () => {
     expect(service.pairingFor(device.id)?.complete).toBe(true);
   });
 
-  it('removes the approval and the helper this attempt installed when cancelled', async () => {
+  it('removes the approval, and the helper when no other PC uses it, when cancelled', async () => {
     handlers['steam_frame_check_ssh_access'] = () => ({ status: 'ok', hostKeyPin: 'PIN' });
     handlers['steam_frame_set_up_helper'] = () => ({
       status: 'failed',
       message: 'x',
-      installed: true,
     });
     const service = await start();
     await service.pair();
@@ -420,7 +401,6 @@ describe('Steam Frame pairing flow', () => {
     handlers['steam_frame_set_up_helper'] = () => ({
       status: 'failed',
       message: 'x',
-      installed: false,
     });
     handlers['steam_frame_remove_access'] = () => ({ status: 'unreachable' });
     const service = await start();
@@ -467,7 +447,6 @@ describe('Steam Frame helper maintenance', () => {
     const { service, pairing } = await paired();
     handlers['steam_frame_set_up_helper'] = () => ({
       status: 'complete',
-      installed: true,
       certPin: 'NEW',
       port: 38441,
       helperVersion: '1.1.0',
@@ -475,7 +454,6 @@ describe('Steam Frame helper maintenance', () => {
     await service.reinstallHelper(pairing);
     expect(calls('steam_frame_set_up_helper').at(-1).request).toMatchObject({
       pcId: pairing.id,
-      removeOnFailure: true,
       identity: pairing.identity,
     });
     expect(service.pairingFor(device.id)).toMatchObject({ certPin: 'NEW', port: 38441 });
@@ -486,47 +464,14 @@ describe('Steam Frame helper maintenance', () => {
     expect(service.reinstalls()).toEqual({});
   });
 
-  it('keeps the old pin and reports a failed reinstall', async () => {
+  it('keeps the old pin after a failed reinstall', async () => {
     const { service, pairing } = await paired();
     handlers['steam_frame_set_up_helper'] = () => ({
       status: 'failed',
       message: 'x',
-      installed: false,
     });
     await service.reinstallHelper(pairing);
     expect(service.pairingFor(device.id)?.certPin).toBe('CERT');
-    expect(service.reinstalls()).toEqual({ [pairing.id]: 'failed' });
-  });
-
-  it('reports a reinstall as failed when saving the new certificate fails', async () => {
-    const { service, pairing } = await paired();
-    handlers['steam_frame_set_up_helper'] = () => ({
-      status: 'complete',
-      installed: true,
-      certPin: 'NEW',
-      port: 38441,
-      helperVersion: '1.1.0',
-    });
-    store.save.mockRejectedValueOnce(new Error('disk full'));
-    await service.reinstallHelper(pairing);
-    expect(service.reinstalls()).toEqual({ [pairing.id]: 'failed' });
-  });
-
-  it('forgets a failed reinstall once the helper connects again', async () => {
-    const { service, pairing } = await paired();
-    handlers['steam_frame_set_up_helper'] = () => ({ status: 'unreachable', installed: false });
-    await service.reinstallHelper(pairing);
-    const state = (status: string) => ({
-      pairingId: pairing.id,
-      status,
-      updateAvailable: false,
-      maintenance: null,
-      address: pairing.address,
-      certPin: 'CERT',
-    });
-    (service as any).onConnectionState(state('offline'));
-    expect(service.reinstalls()).toEqual({ [pairing.id]: 'failed' });
-    (service as any).onConnectionState(state('connected'));
     expect(service.reinstalls()).toEqual({});
   });
 });

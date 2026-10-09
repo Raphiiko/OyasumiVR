@@ -5,6 +5,8 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { BaseModalComponent } from '../../base-modal/base-modal.component';
 import { isValidHostname, isValidIPv4, isValidIPv6 } from '../../../utils/regex-utils';
 import { SteamFramePairingService } from '../../../services/steam-frame/steam-frame-pairing.service';
+import { ToastService } from '../../../services/toast.service';
+import { copyWithToast } from '../../../utils/clipboard-utils';
 import {
   STEAM_FRAME_UNINSTALL_COMMAND,
   SteamFramePage,
@@ -26,11 +28,9 @@ const STEP_OF_PAGE: Record<SteamFramePage, number> = {
   declined: 4,
   timeout: 4,
   uncertain: 4,
-  accessLost: 4,
   setup: 5,
   setupFailed: 5,
   needsUpdate: 5,
-  hostKeyChanged: 5,
   cancelling: 5,
   cleanupFailed: 5,
   success: 6,
@@ -51,17 +51,6 @@ const ILLUSTRATIONS: Partial<Record<SteamFramePage, string>> = {
   success: 'paired',
 };
 
-/** Codes the user can quote in a report. `docs/agents/steam-frame-pairing.md` lists them. */
-const ERROR_CODES: Record<string, string> = {
-  persistence: 'SF-101',
-  keys: 'SF-102',
-  offline: 'SF-201',
-  identityMissing: 'SF-202',
-  helperBusy: 'SF-203',
-  setupFailed: 'SF-204',
-  wrongDeviceAccessLeft: 'SF-301',
-};
-
 const BACK: Partial<Record<SteamFramePage, SteamFramePage>> = {
   devmode: 'intro',
   pairhost: 'devmode',
@@ -80,6 +69,7 @@ const BACK: Partial<Record<SteamFramePage, SteamFramePage>> = {
 })
 export class SteamFramePairingModalComponent extends BaseModalComponent<void, void> {
   protected readonly pairing = inject(SteamFramePairingService);
+  private readonly toasts = inject(ToastService);
   readonly stepLabels = [
     'before',
     'developer',
@@ -100,7 +90,6 @@ export class SteamFramePairingModalComponent extends BaseModalComponent<void, vo
   readonly animated = computed(() =>
     ['searching', 'approval-pending', 'setup-running'].includes(this.illustration() ?? '')
   );
-  readonly errorCode = computed(() => ERROR_CODES[this.flow()?.error ?? '']);
   readonly back = computed(() => (this.busy() ? undefined : BACK[this.page()]));
   readonly stageIndex = computed(() => this.stages.indexOf(this.flow()?.stage ?? 'verify'));
   readonly validAddress = computed(() => {
@@ -109,11 +98,9 @@ export class SteamFramePairingModalComponent extends BaseModalComponent<void, vo
   });
 
   readonly uninstallCommand = STEAM_FRAME_UNINSTALL_COMMAND;
-  readonly copied = signal(false);
 
-  async copyUninstallCommand() {
-    await navigator.clipboard.writeText(this.uninstallCommand);
-    this.copied.set(true);
+  copyUninstallCommand() {
+    return copyWithToast(this.toasts, this.uninstallCommand);
   }
 
   /** Opens links in the translated copy in the browser instead of this window. */

@@ -19,7 +19,7 @@ import {
   switchMap,
 } from 'rxjs';
 import { isEqual } from 'lodash';
-import { info, warn } from '@tauri-apps/plugin-log';
+import { info } from '@tauri-apps/plugin-log';
 import { CancellableTask } from '../../utils/cancellable-task';
 import { BrightnessTransitionTask } from './brightness-transition';
 import {
@@ -220,8 +220,6 @@ export class HardwareBrightnessControlService {
     if (transition instanceof DeviceFade) {
       // a device fade cancels itself on an end other than completed
       transition.onCancelled.subscribe(clear);
-      // runs with the error status, so no newer request can start in between
-      transition.onError.subscribe((error) => this.onFadeRefused(transition, error));
     }
     if (logReason) {
       info(`[BrightnessControl] Starting hardware brightness transition (Reason: ${logReason})`);
@@ -230,12 +228,6 @@ export class HardwareBrightnessControlService {
     const started = transition.start();
     if (transition instanceof DeviceFade) started.catch(() => {});
     return transition;
-  }
-
-  /** Sets the target in one command instead. */
-  private onFadeRefused(fade: HardwareBrightnessTransition, error: unknown) {
-    warn(`[BrightnessControl] The headset refused a brightness fade: ${error}`);
-    this.setBrightness(fade.targetBrightness, { cancelActiveTransition: false });
   }
 
   cancelActiveTransition() {

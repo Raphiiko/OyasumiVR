@@ -22,7 +22,7 @@ import {
   SetBrightnessOrCCTReason,
 } from '../brightness-control/brightness-control-models';
 import { CancellableTask } from '../../utils/cancellable-task';
-import { info, warn } from '@tauri-apps/plugin-log';
+import { info } from '@tauri-apps/plugin-log';
 import { getCSSColorForCCT } from 'src-shared-ts/src/cct-utils';
 import { OpenVRService } from '../openvr.service';
 import { clamp } from '../../utils/number-utils';
@@ -137,8 +137,6 @@ export class CCTControlService {
     // a device fade cancels itself on an end other than completed
     if (transition instanceof DeviceFade) {
       transition.onCancelled.subscribe(clear);
-      // runs with the error status, so no newer request can start in between
-      transition.onError.subscribe((error) => this.onFadeRefused(transition, error));
     }
     if (logReason) {
       info(`[CCTControl] Starting CCT transition (Reason: ${logReason})`);
@@ -147,12 +145,6 @@ export class CCTControlService {
     const started = transition.start();
     if (transition instanceof DeviceFade) started.catch(() => {});
     return transition;
-  }
-
-  /** Sets the target in one command instead. */
-  private onFadeRefused(fade: CctTransition, error: unknown) {
-    warn(`[CCTControl] The headset refused a color temperature fade: ${error}`);
-    this.setCCT(fade.targetCCT, { cancelActiveTransition: false });
   }
 
   cancelActiveTransition() {

@@ -212,7 +212,7 @@ async fn relays_brightness_to_every_pc() {
         );
         assert_eq!(
             next_json(socket).await,
-            serde_json::json!({"type": "cct", "available": true, "gains": [1.0, 1.0, 1.0], "kelvin": 6600, "exact": true})
+            serde_json::json!({"type": "cct", "available": true, "kelvin": 6600, "exact": true})
         );
     }
     // the writer gets a reply, the other PC a snapshot
@@ -254,13 +254,7 @@ async fn relays_color_temperature_to_every_pc() {
         }
     }
     // the writer gets a reply with the applied snapshot, the other PC a snapshot
-    // f32 gains go through JSON text, as the helper writes them
-    let gains: serde_json::Value = serde_json::from_str(
-        &serde_json::to_string(&color_temperature::kelvin_to_f32_gains(3000)).unwrap(),
-    )
-    .unwrap();
-    let applied =
-        serde_json::json!({"available": true, "gains": gains, "kelvin": 3000, "exact": true});
+    let applied = serde_json::json!({"available": true, "kelvin": 3000, "exact": true});
     b.send(Message::text(r#"{"type":"setCct","id":4,"kelvin":3000}"#))
         .await
         .unwrap();
@@ -305,13 +299,9 @@ async fn finishes_a_fade_after_its_pc_disconnects() {
         next_json(socket).await;
     }
 
-    // the sender gets a reply and progress, then leaves
+    // the sender gets a reply, then leaves
     let command = r#"{"type":"fade","id":3,"control":"brightness","operation":"op-1","target":50,"durationMs":600}"#;
     a.send(Message::text(command)).await.unwrap();
-    let report = next_json(&mut a).await;
-    assert_eq!(report["type"], "brightness");
-    assert_eq!(report["fade"]["operation"], "op-1");
-    assert_eq!(report["fade"]["target"], 50.0);
     assert_eq!(
         next_json(&mut a).await,
         serde_json::json!({"type": "fadeResult", "id": 3})
@@ -400,21 +390,4 @@ fn unusable_certificate_is_replaced() {
     std::fs::write(root.path().join("tls/cert.pem"), "").unwrap();
     let (third, _) = ensure_certificate(root.path()).unwrap();
     assert_ne!(second, third);
-}
-
-#[test]
-fn identity_needs_all_three_values() {
-    let full = r#"{"LastKnown":{"HMDSerialNumber":"S1","HMDModel":"M","HMDManufacturer":"V"}}"#;
-    assert_eq!(
-        parse_identity(full),
-        Some(Identity {
-            serial: "S1".into(),
-            model: "M".into(),
-            manufacturer: "V".into(),
-        })
-    );
-    let partial = r#"{"LastKnown":{"HMDSerialNumber":"S1","HMDModel":"","HMDManufacturer":"V"}}"#;
-    assert_eq!(parse_identity(partial), None);
-    assert_eq!(parse_identity("{}"), None);
-    assert_eq!(parse_identity("not json"), None);
 }

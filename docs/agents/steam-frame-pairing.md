@@ -53,8 +53,8 @@ the helper token pass through `protectSecret` before the first save.
 | `steam_frame_fade`                  | `SteamFrameFadeTask`                        | each brightness and color temperature transition; the reply accepts or refuses it                                                 |
 | `steam_frame_cancel_fade`           | the same                                    | a cancelled transition, by its operation ID                                                                                       |
 
-The core emits three events. `STEAM_FRAME_SETUP_STAGE` reports the setup step, and `installed` once
-this attempt installed the helper. `STEAM_FRAME_CONNECTION_STATE` reports each pairing's status.
+The core emits three events. `STEAM_FRAME_SETUP_STAGE` reports the setup step.
+`STEAM_FRAME_CONNECTION_STATE` reports each pairing's status.
 `STEAM_FRAME_FADE_ENDED` passes on each `fadeEnded` from the helper, with the pairing id.
 
 ## Pairing
@@ -130,44 +130,24 @@ flowchart TD
 ```
 
 - `install` checks under the lock that the helper did not change since `inspect`. If it did, it
-  reports busy, and Retry decides again.
+  fails, and Retry decides again.
 - `provision` writes `clients/<pc-id>` and `clients/<pc-id>.pub`, starts or restarts the service,
   and returns the port and certificate. The core pins that certificate.
 - Every step is safe to repeat, so Retry continues without a new approval.
 
-## Error codes
+## Errors
 
-The wizard shows a code under each error message, so a user report names the failure without a log
-file. `ERROR_CODES` in `steam-frame-pairing-modal.component.ts` maps them from `flow.error`.
+The wizard maps `flow.error` to a page: `persistence` (a settings write on this PC), `keys`
+(creating the SSH key pair), `offline` (setup could not reach the headset over SSH),
+`identityMissing` (`steamvr.vrsettings` on the headset lacks the serial, model, or manufacturer),
+`setupFailed` (any other setup failure, including a changed host key or a rejected key mid-wizard),
+and `wrongDeviceAccessLeft` (cleanup on a wrong headset did not report done). The core logs the
+cause of every failure.
 
-| Code   | `flow.error`            | What failed                                                                  |
-| ------ | ----------------------- | ---------------------------------------------------------------------------- |
-| SF-101 | `persistence`           | a settings write on this PC                                                  |
-| SF-102 | `keys`                  | creating the SSH key pair (`steam_frame_create_pairing_keys`)                |
-| SF-201 | `offline`               | setup could not reach the headset over SSH                                   |
-| SF-202 | `identityMissing`       | `steamvr.vrsettings` on the headset lacks the serial, model, or manufacturer |
-| SF-203 | `helperBusy`            | another PC held the helper lock for 60 s                                     |
-| SF-204 | `setupFailed`           | any other setup failure; the core logs the message                           |
-| SF-301 | `wrongDeviceAccessLeft` | cleanup on a wrong headset did not report done                               |
-
-Device Manager shows these in the explanation of a problem pill, from `FRAME_STATUS_ROWS`, the
-maintenance pills, and `UPDATE_FAILURE_CODES`:
-
-| Code   | Connection status    | What happened                                                     |
-| ------ | -------------------- | ----------------------------------------------------------------- |
-| SF-401 | `identityChanged`    | the helper reports another headset's serial                       |
-| SF-402 | `hostKeyChanged`     | the SSH host key at the address differs from the pinned one       |
-| SF-403 | `needsAppUpdate`     | the helper's lowest protocol is above this build's                |
-| SF-406 | `helperMissing`      | SSH works, but the helper folder is gone                          |
-| SF-407 | maintenance `busy`   | another PC held the maintenance lock for 60 s                     |
-| SF-408 | a failed Reinstall   | setup did not complete; the core logs the outcome                 |
-| SF-411 | update `unreachable` | the SSH session to the headset dropped during the update          |
-| SF-412 | update `corrupted`   | the uploaded helper did not match the bundled digest              |
-| SF-413 | update `notStarted`  | the new helper did not answer, so the previous release runs again |
-| SF-414 | update `notBundled`  | this build carries no helper                                      |
-| SF-415 | update `other`       | any other update failure; the core logs the message               |
-
-SF-404 (`helperOutdated`) has no explanation: its Update helper pill starts the update.
+Device Manager explains a problem pill from `FRAME_STATUS_ROWS`: `hostKeyChanged` (the SSH host key
+at the address differs from the pinned one), `needsAppUpdate` (the helper's lowest protocol is above
+this build's), `helperMissing` (SSH works, but the helper folder is gone), and a failed update. The
+`helperOutdated` pill has no explanation: it starts the update.
 
 ## Cancel
 
@@ -187,14 +167,12 @@ flowchart TD
   F -- "failed" --> X
 ```
 
-`steam_frame_remove_access` runs `helper.sh cleanup` with mode `unused` when this attempt installed
-the helper, and `keep` otherwise. Every mode removes this PC's key lines and token file. `unused` also
-removes the helper when no other PC has a token. "Couldn't finish cleaning up" shows
-`bash ~/.local/share/oyasumivr_helper/uninstall`.
+`steam_frame_remove_access` runs `helper.sh cleanup` with mode `unused`: it removes this PC's key
+lines and token file, and the helper too when no other PC has a token. "Couldn't finish cleaning up"
+shows `bash ~/.local/share/oyasumivr_helper/uninstall`.
 
-Every other SSH session starts with `helper.sh record`, which writes `clients/<pc-id>.pub` while the
-helper is installed. The uninstall script on the headset reads those files to find every OyasumiVR
-key line.
+`provision` writes `clients/<pc-id>.pub` beside the token. The uninstall script on the headset reads
+those files to find every OyasumiVR key line.
 
 ## Unpair
 
@@ -207,8 +185,8 @@ offers two modes of `helper.sh cleanup`:
   service and removes it with the helper folder. Other PCs keep their key lines, so they see
   `helperMissing`.
 
-A cleanup takes the maintenance and authorized_keys locks before it changes anything, reports busy
-when it cannot get them, and removes the key lines last, so Try again can finish a partial cleanup.
+A cleanup takes the maintenance and authorized_keys locks before it changes anything, fails when it
+cannot get them, and removes the key lines last, so Try again can finish a partial cleanup.
 The service deletes the local pairing only after the headset reports `done`. Otherwise the dialog
 shows "Couldn't unpair" with Forget, and with Try again unless the headset rejects this PC's key or
 its host key changed, because retrying cannot help then. Cancel cleanup and wrong-headset cleanup
@@ -232,7 +210,6 @@ stateDiagram-v2
   connecting --> offline: attempt failed, retry with backoff up to 60 s
   offline --> connecting: next attempt
   connecting --> hostKeyChanged: the SSH host key differs from the pin
-  connecting --> identityChanged: the helper reports another headset
   connecting --> needsAppUpdate: the helper needs a newer protocol
   connecting --> helperOutdated: the helper is too old
   connecting --> helperMissing: SSH works, the helper folder is gone
@@ -301,9 +278,9 @@ session. It polls them after brightness every 250 ms and compares each channel w
 read or written, at a tolerance of 1e-5. An unset key reads as 1.0. It writes only on a PC's
 command, and sends `{"type":"cct", ...}` after the brightness snapshot on connect.
 
-- A snapshot has `available` and, while available, `gains`, `kelvin`, and `exact`. `kelvin` is the
-  integer in 1000–10000 whose gains lie nearest to the read gains divided by their largest channel.
-  `exact` says the gains equal that Kelvin's gains. `src-shared-rust/src/color_temperature.rs`
+- A snapshot has `available` and, while available, `kelvin` and `exact`. `kelvin` is the integer in
+  1000–10000 whose gains lie nearest to the read gains divided by their largest channel. `exact`
+  says the gains equal that Kelvin's gains. `src-shared-rust/src/color_temperature.rs`
   holds the conversion, and the helper builds that file through a `#[path]` module.
 - `{"type":"setCct","id":3,"kelvin":3000}` reads first, clamps to 1000–10000, and writes the three
   channels unless they already match. The reply has `snapshot` or `error`: `runtimeUnavailable` or
@@ -336,13 +313,11 @@ sequenceDiagram
   participant T as Headset task
   participant O as Other PCs
   P->>T: {"type":"fade","id":4,"control":"brightness","operation":"f1","target":30,"durationMs":60000}
-  T-->>P: snapshot with "fade": {"operation":"f1","target":30,"remainingMs":60000}
-  T-->>O: the same snapshot
   T-->>P: {"type":"fadeResult","id":4}
   loop every 16.7 ms
     T->>T: read, then write the next smoothstep value unless it equals the last write
   end
-  T-->>P: a snapshot with the fade, at most every 250 ms
+  T-->>P: a snapshot with the new value, at most every 250 ms
   T-->>O: the same snapshot
   T-->>P: {"type":"fadeEnded","control":"brightness","operation":"f1","outcome":"completed"}
   T-->>O: the same outcome
@@ -373,8 +348,9 @@ The helper reads the HMD's activity level at every poll and before every write. 
 means headset standby. The helper also treats a system suspend as standby entry: the boot clock
 then runs more than a second ahead of the monotonic clock between two ticks.
 
-During standby a set writes as usual, and a fade writes its target at once and reports
-`completed`. The helper remembers what it wrote. On leaving standby it reads both controls and
+Entering standby ends every running fade with `standby`. During standby a set writes as usual, and
+a fade accepted then writes its target at once and reports `completed`. The helper remembers what
+it wrote. On leaving standby it reads both controls and
 writes a remembered value once more when the read differs, because the runtime may not keep a
 write made in standby. A cancelled fade never resumes.
 
@@ -388,20 +364,15 @@ so other headsets keep the PC transition. A `DeviceFade` ends as `completed`, `c
 `SteamFrameFadeTask` is the Frame driver's `DeviceFade` for one helper fade.
 
 - It cuts a fade longer than 24 hours to 24 hours, because the helper does not reply to one.
-- It completes on `completed`, and every other outcome cancels it. `externalChange` and `missed`
-  end it as `changedOnDevice`, the other outcomes as `stopped`. Cancelling it from outside sends
-  `cancelFade` with its operation ID.
+- It completes on `completed`, and every other outcome cancels it. `externalChange` ends it as
+  `changedOnDevice`, the other outcomes as `stopped`. Cancelling it from outside sends `cancelFade`
+  with its operation ID.
 - The Frame driver returns a fade only while the Frame reports. Before the first report the
   service runs the PC transition, and the driver holds its last value as a waiting set.
-- While the connection is down it completes at its end time. When a report after a reconnect no
-  longer carries its fade, it ends as `missed`.
-- A refused fade fails the task with the helper's error, and the service that started it sets the
-  target instead.
+- While the connection is down it completes at its end time.
+- A refused fade fails the task with the helper's error.
 - A connected state without a report counts as down, because a helper update clears the reports
   without leaving `connected`.
-- When another headset becomes the active HMD during a fade, the task cancels itself and sends
-  `cancelFade`. The next headset keeps its own brightness until the next set. A gap without any
-  HMD, such as a SteamVR restart, keeps the fade running.
 - In simple mode the software part runs for the duration the device runs, which is at most 24
   hours.
 
@@ -440,8 +411,9 @@ flowchart TD
   so a PC never rolls back a helper another PC just installed.
 - An interrupted update needs no record. The next contact finds the old helper still running, the new
   release on disk but not running, or the new helper running, and finishes from there.
-- The connection state carries `maintenance`: `updating`, `updated` for a minute, `failed` with a
-  reason, or `busy` when another PC held the lock for 60 seconds.
+- The connection state carries `maintenance`: `updating`, `updated`, or `failed`. Device Manager
+  shows `updated` for a minute. A lock another PC held for 60 seconds counts as `failed`; the core
+  logs the reason of every failure.
 - An update restarts the helper without waiting for a fade. The fade stops where it was, and no
   `fadeEnded` follows for it.
 

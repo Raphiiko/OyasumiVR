@@ -28,7 +28,7 @@ import { protectSecret, unprotectSecret } from '../../utils/secrets';
 import { ModalService } from '../modal.service';
 import { DeviceManagerService } from '../device-manager.service';
 
-type SetupStageEvent = { attemptId: string; stage: SteamFrameSetupStage | 'installed' };
+type SetupStageEvent = { attemptId: string; stage: SteamFrameSetupStage };
 
 /** Owns Steam Frame pairing records and runs the pairing wizard's steps. */
 @Injectable({
@@ -39,7 +39,7 @@ export class SteamFramePairingService {
   private readonly _pairings = signal<SteamFramePairing[]>([]);
   private readonly _connections = signal<Record<string, SteamFrameConnectionState>>({});
   private readonly _flow = signal<SteamFrameFlow | null>(null);
-  private readonly _reinstalls = signal<Record<string, 'running' | 'failed'>>({});
+  private readonly _reinstalls = signal<Record<string, 'running'>>({});
   /** Set when Cancel arrives during a step; that step finishes the cancel when it returns. */
   private cancelRequested = false;
   /** Bumped by every search and page change, so a result from an older search is dropped. */
@@ -53,10 +53,7 @@ export class SteamFramePairingService {
   /** Every fade a helper ended, from this PC or another one. */
   readonly fadeEnded$ = new Subject<SteamFrameFadeEnded>();
   readonly flow = this._flow.asReadonly();
-  /**
-   * Reinstalls started from Device Manager, by pairing id. `failed` stays while the helper is
-   * missing or offline.
-   */
+  /** Reinstalls started from Device Manager that still run, by pairing id. */
   readonly reinstalls = this._reinstalls.asReadonly();
   readonly flowPairing = computed(() => {
     const flow = this._flow();
@@ -95,12 +92,10 @@ export class SteamFramePairingService {
     await this.pushPairings();
   }
 
-  /** Shows the running setup's stage, and records when it installed the helper. */
+  /** Shows the running setup's stage. */
   private onSetupStage({ attemptId, stage }: SetupStageEvent) {
     if (attemptId !== this.setupAttemptId) return;
-    if (stage !== 'installed') return this.patchFlow({ stage });
-    const deviceId = this._flow()?.deviceId;
-    if (deviceId) void this.markHelperInstalled(deviceId);
+    this.patchFlow({ stage });
   }
 
   isSupported(manufacturer?: string, model?: string): boolean {
@@ -267,8 +262,10 @@ export class SteamFramePairingService {
     const probe = await this.probe(pairing);
     if (this.stopForCancel()) return;
     if (probe.status === 'ok') return this.approved(probe.hostKeyPin);
-    if (probe.status === 'hostKeyChanged')
-      return this.patchFlow({ page: 'hostKeyChanged', busy: false });
+    if (probe.status === 'hostKeyChanged') {
+      error('[SteamFramePairing] Access check: hostKeyChanged');
+      return this.patchFlow({ page: 'setupFailed', busy: false, error: 'setupFailed' });
+    }
 
     // record that the headset may approve, before asking
     this.patchFlow({ page: 'awaiting' });
@@ -323,8 +320,10 @@ export class SteamFramePairingService {
       return this.approved(probe.hostKeyPin);
     }
     if (this.stopForCancel()) return;
-    if (probe.status === 'hostKeyChanged')
-      return this.patchFlow({ page: 'hostKeyChanged', busy: false });
+    if (probe.status === 'hostKeyChanged') {
+      error('[SteamFramePairing] Access check: hostKeyChanged');
+      return this.patchFlow({ page: 'setupFailed', busy: false, error: 'setupFailed' });
+    }
     this.patchFlow({ page: 'uncertain', busy: false });
   }
 
@@ -369,11 +368,6 @@ export class SteamFramePairingService {
       },
     });
     info(`[SteamFramePairing] Setup: ${result.status}`);
-
-    // remember an install, so Cancel removes that helper
-    if (result.installed) {
-      await this.markHelperInstalled(pairing.deviceId);
-    }
     if (this.cancelRequested) return this.finishCancel();
 
     // show the page for the outcome
@@ -385,7 +379,6 @@ export class SteamFramePairingService {
           certPin: result.certPin,
           port: result.port,
           helperVersion: result.helperVersion,
-          lastSeen: Date.now(),
         });
         await this.pushPairings();
         this.cancelRequested = false;
@@ -394,7 +387,7 @@ export class SteamFramePairingService {
       // another headset answered: undo our access there
       case 'wrongDevice': {
         this.patchFlow({ page: 'wrongDevice' });
-        const outcome = await this.cleanup(pairing, 'keep');
+        const outcome = await this.cleanup(pairing, 'unused');
         await this.removePairing(pairing.deviceId);
         this.cancelRequested = false;
         return this.patchFlow({
@@ -408,19 +401,17 @@ export class SteamFramePairingService {
       case 'needsAppUpdate':
         return this.patchFlow({ page: 'needsUpdate', busy: false });
       case 'hostKeyChanged':
-        return this.patchFlow({ page: 'hostKeyChanged', busy: false });
       case 'rejected':
-        return this.patchFlow({ page: 'accessLost', busy: false });
+        error(`[SteamFramePairing] Setup: ${result.status}`);
+        return this.patchFlow({ page: 'setupFailed', busy: false, error: 'setupFailed' });
       default:
         return this.patchFlow({
           page: 'setupFailed',
           busy: false,
           error:
-            {
-              identityMissing: 'identityMissing',
-              helperBusy: 'helperBusy',
-              unreachable: 'offline',
-            }[result.status as string] ?? 'setupFailed',
+            { identityMissing: 'identityMissing', unreachable: 'offline' }[
+              result.status as string
+            ] ?? 'setupFailed',
         });
     }
   }
@@ -432,11 +423,11 @@ export class SteamFramePairingService {
 
   /** Installs the helper again after it went missing, and pins its new certificate. */
   async reinstallHelper(pairing: SteamFramePairing) {
-    if (this._reinstalls()[pairing.id] === 'running') return;
+    if (this._reinstalls()[pairing.id]) return;
 
     this.setReinstall(pairing.id, 'running');
     try {
-      // run setup as a fresh install that removes itself when it fails
+      // run setup as a fresh install
       const result = await invoke<SteamFrameSetupResult>('steam_frame_set_up_helper', {
         request: {
           attemptId: uuidv4(),
@@ -445,28 +436,29 @@ export class SteamFramePairingService {
           token: pairing.token,
           publicKey: pairing.publicKey,
           identity: pairing.identity,
-          removeOnFailure: true,
         },
       });
       info(`[SteamFramePairing] Reinstall: ${result.status}`);
-      if (result.status !== 'complete') return this.setReinstall(pairing.id, 'failed');
+      if (result.status !== 'complete') {
+        error(`[SteamFramePairing] Reinstall failed: ${result.status}`);
+        return;
+      }
 
       // pin the new certificate and reconnect with it
       await this.updatePairing(pairing.deviceId, {
         certPin: result.certPin,
         port: result.port,
         helperVersion: result.helperVersion,
-        lastSeen: Date.now(),
       });
       await this.pushPairings();
-      this.setReinstall(pairing.id, undefined);
     } catch (e) {
       error(`[SteamFramePairing] Reinstall failed: ${e}`);
-      this.setReinstall(pairing.id, 'failed');
+    } finally {
+      this.setReinstall(pairing.id, undefined);
     }
   }
 
-  private setReinstall(pairingId: string, state?: 'running' | 'failed') {
+  private setReinstall(pairingId: string, state?: 'running') {
     const { [pairingId]: _, ...others } = this._reinstalls();
     this._reinstalls.set(state ? { ...others, [pairingId]: state } : others);
   }
@@ -476,7 +468,6 @@ export class SteamFramePairingService {
     const outcome = await invoke<SteamFrameOtherPcsOutcome>('steam_frame_count_other_pcs', {
       access: this.accessOf(pairing),
       pcId: pairing.id,
-      publicKey: pairing.publicKey,
     });
     return outcome.status === 'ok' ? outcome.count : outcome.status;
   }
@@ -544,12 +535,9 @@ export class SteamFramePairingService {
       }
     }
 
-    // remove our key, token, and any helper we installed
+    // remove our key and token, and the helper when no other PC uses it
     if (pairing.hostKeyPin) {
-      const outcome = await this.cleanup(
-        pairing,
-        pairing.helperInstalledByPairing ? 'unused' : 'keep'
-      );
+      const outcome = await this.cleanup(pairing, 'unused');
       if (!['done', 'rejected'].includes(outcome.status)) return false;
     }
 
@@ -610,8 +598,6 @@ export class SteamFramePairingService {
   private probe(pairing: SteamFramePairing) {
     return invoke<SteamFrameProbeOutcome>('steam_frame_check_ssh_access', {
       access: this.accessOf(pairing),
-      pcId: pairing.id,
-      publicKey: pairing.publicKey,
     });
   }
 
@@ -678,20 +664,6 @@ export class SteamFramePairingService {
     return pairing;
   }
 
-  /** Keeps the marker in memory even when the save fails, so Cancel still removes that helper. */
-  private async markHelperInstalled(deviceId: string) {
-    this.setPairings(
-      this._pairings().map((p) =>
-        p.deviceId === deviceId ? { ...p, helperInstalledByPairing: true } : p
-      )
-    );
-    try {
-      await this.save();
-    } catch (e) {
-      error(`[SteamFramePairing] Could not save that this attempt installed the helper: ${e}`);
-    }
-  }
-
   /** Applies the change only if it reaches the disk; a failed save restores the previous pairings. */
   private async updatePairing(deviceId: string, patch: Partial<SteamFramePairing>) {
     const previous = this._pairings();
@@ -720,17 +692,10 @@ export class SteamFramePairingService {
     this._connections.set({ ...this._connections(), [state.pairingId]: state });
     this.connections$.next(this._connections());
 
-    // a failed reinstall stops mattering once the helper is back
-    const reinstall = this._reinstalls()[state.pairingId];
-    if (reinstall === 'failed' && !['helperMissing', 'offline'].includes(state.status)) {
-      this.setReinstall(state.pairingId, undefined);
-    }
-
-    // save newer contact, version, address, or certificate
+    // save a newer version, address, or certificate
     const pairing = this._pairings().find((p) => p.id === state.pairingId);
     if (!pairing) return;
     const patch: Partial<SteamFramePairing> = {};
-    if (state.lastSeen && state.lastSeen > (pairing.lastSeen ?? 0)) patch.lastSeen = state.lastSeen;
     if (state.helperVersion && state.helperVersion !== pairing.helperVersion)
       patch.helperVersion = state.helperVersion;
     if (state.address !== pairing.address) patch.address = state.address;

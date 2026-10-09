@@ -58,10 +58,8 @@ fn socket(interfaces: &[Ipv4Addr]) -> std::io::Result<UdpSocket> {
 
     // share port 5353 with other listeners, else any port
     socket.set_reuse_address(true)?;
-    if socket
-        .bind(&SocketAddrV4::new(Ipv4Addr::UNSPECIFIED, 5353).into())
-        .is_err()
-    {
+    if let Err(error) = socket.bind(&SocketAddrV4::new(Ipv4Addr::UNSPECIFIED, 5353).into()) {
+        warn!("[SteamFrame] Could not bind the mDNS port, so answers to the group are missed: {error}");
         socket.bind(&SocketAddrV4::new(Ipv4Addr::UNSPECIFIED, 0).into())?;
     }
 

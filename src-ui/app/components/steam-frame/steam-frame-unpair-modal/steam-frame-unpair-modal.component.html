@@ -69,11 +69,11 @@
             <code>{{ uninstallCommand }}</code>
             <button
               class="copy"
-              [attr.aria-label]="t(copied() ? 'actions.copied' : 'actions.copyCommand')"
-              [title]="t(copied() ? 'actions.copied' : 'actions.copyCommand')"
+              [attr.aria-label]="t('actions.copyCommand')"
+              [title]="t('actions.copyCommand')"
               (click)="copyCommand()"
             >
-              <i class="material-icons">{{ copied() ? 'check' : 'content_copy' }}</i>
+              <i class="material-icons">content_copy</i>
             </button>
           </div>
         </details>

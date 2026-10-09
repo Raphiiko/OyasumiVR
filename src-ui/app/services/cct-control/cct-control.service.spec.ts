@@ -36,7 +36,7 @@ const settle = () => new Promise((resolve) => setTimeout(resolve, 150));
 const settleUnclaimed = () => new Promise((resolve) => setTimeout(resolve, 800));
 
 function snapshot(kelvin: number, exact = true): SteamFrameCct {
-  return { available: true, gains: [1, 1, 1], kelvin, exact, fade: null };
+  return { available: true, kelvin, exact };
 }
 
 async function setup(
@@ -285,7 +285,7 @@ describe('CCTControlService with a Steam Frame', () => {
     const h = await setup(FRAME);
     h.report(snapshot(2500));
     await settle();
-    h.report({ available: false, gains: null, kelvin: null, exact: null });
+    h.report({ available: false, kelvin: null, exact: null });
     await settle();
     expect(h.service.cct).toBe(2500);
   });
@@ -324,20 +324,6 @@ describe('CCTControlService with a Steam Frame', () => {
     expect(h.frameWrites()).toEqual([5000]);
   });
 
-  it('sets the target when the helper refuses the fade', async () => {
-    const h = await setup(FRAME);
-    h.report(snapshot(6600));
-    await settle();
-    const impl = vi.mocked(invoke).getMockImplementation()!;
-    vi.mocked(invoke).mockImplementation(async (command, args) =>
-      command === 'steam_frame_fade' ? Promise.reject('offline') : impl(command, args)
-    );
-    h.service.transitionCCT(3000, 10000);
-    await settle();
-    expect(h.frameWrites()).toEqual([3000]);
-    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
-  });
-
   it('runs no helper fade to the value the Frame already holds', async () => {
     const h = await setup(FRAME);
     h.report(snapshot(3000));
@@ -356,19 +342,6 @@ describe('CCTControlService with a Steam Frame', () => {
     await settle();
     const [[, args]] = h.calls('steam_frame_fade');
     expect((args as { request: { durationMs: number } }).request.durationMs).toBe(86400000);
-  });
-
-  it('cancels a helper fade when another Frame becomes active', async () => {
-    const h = await setup(FRAME);
-    h.report(snapshot(6600));
-    h.report(snapshot(5000), 'q');
-    await settle();
-    h.service.transitionCCT(3000, 10000);
-    await settle();
-    h.activate(FRAME_B);
-    await settle();
-    expect(h.calls('steam_frame_cancel_fade')).toHaveLength(1);
-    expect(await firstValueFrom(h.service.activeTransition)).toBeUndefined();
   });
 
   it('cancels a helper fade when an Index takes over', async () => {

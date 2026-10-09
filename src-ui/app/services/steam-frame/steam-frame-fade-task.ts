@@ -4,13 +4,10 @@ import {
   firstValueFrom,
   map,
   NEVER,
-  Subscription,
   Observable,
-  of,
   race,
   ReplaySubject,
   switchMap,
-  take,
   timer,
 } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
@@ -26,15 +23,12 @@ import {
 /** The longest fade the helper accepts; it sends no reply to a longer one. */
 export const STEAM_FRAME_MAX_FADE_MS = 24 * 60 * 60 * 1000;
 
-/** How a fade ended. `missed` means the helper dropped it while this PC was disconnected. */
-export type SteamFrameFadeEnd = SteamFrameFadeOutcome | 'missed';
+export type SteamFrameFadeEnd = SteamFrameFadeOutcome;
 
 /** What a fade task watches while it runs. */
 export interface SteamFrameFadeSource {
   connections$: Observable<Record<string, SteamFrameConnectionState>>;
   fadeEnded$: Observable<SteamFrameFadeEnded>;
-  /** The paired Frame's id while it is the active HMD, null for another HMD, undefined for none. */
-  activePairing$: Observable<string | null | undefined>;
 }
 
 /** A fade for the helper. `target` is in percent or Kelvin. A longer fade than 24 hours is cut. */
@@ -49,8 +43,8 @@ export interface SteamFrameFadeRequest {
 
 /**
  * A fade the helper runs. It completes on outcome `completed`, and at its end time while the
- * helper connection is down. Every other outcome cancels it, and so does another HMD becoming
- * the active one. Cancelling it from outside cancels the fade on the helper.
+ * helper connection is down. Every other outcome cancels it. Cancelling it from outside cancels
+ * the fade on the helper.
  */
 export class SteamFrameFadeTask extends DeviceFade {
   readonly operation = uuidv4();
@@ -75,8 +69,6 @@ export class SteamFrameFadeTask extends DeviceFade {
   }
 
   private async run(): Promise<void> {
-    const otherHmd = this.cancelWhenAnotherHmdIsActive();
-
     // listen before sending, so a short fade's outcome is not lost
     const outcome = new ReplaySubject<SteamFrameFadeEnd>(1);
     const subscription = this.frames.fadeEnded$
@@ -108,23 +100,12 @@ export class SteamFrameFadeTask extends DeviceFade {
       this.finish(end);
     } finally {
       subscription.unsubscribe();
-      otherHmd.unsubscribe();
     }
   }
 
   private finish(outcome: SteamFrameFadeEnd) {
     this.end = deviceFadeEnd(outcome);
     if (outcome !== 'completed') this.cancel();
-  }
-
-  /** A gap without an HMD keeps the fade; another HMD cancels it. */
-  private cancelWhenAnotherHmdIsActive(): Subscription {
-    return this.frames.activePairing$
-      .pipe(
-        filter((pairing) => pairing !== undefined && pairing !== this.request.pairingId),
-        take(1)
-      )
-      .subscribe(() => this.cancel());
   }
 
   private send(): Promise<SteamFrameFadeError | null> {
@@ -159,23 +140,14 @@ export class SteamFrameFadeTask extends DeviceFade {
     return this.request.control === 'brightness' ? state.brightness : state.cct;
   }
 
-  /**
-   * Completes at the end time while the connection is down or reports nothing. After that, a report
-   * without this fade means the helper ended it meanwhile.
-   */
+  /** Completes at the end time while the connection is down or reports nothing. */
   private untilEndWhileDown(endsAt: number): Observable<SteamFrameFadeEnd> {
-    let wasDown = false;
     return this.connection().pipe(
-      switchMap((state): Observable<SteamFrameFadeEnd> => {
-        const report = this.report(state);
-        if (!report) {
-          wasDown = true;
-          return timer(Math.max(0, endsAt - Date.now())).pipe(map(() => 'completed' as const));
-        }
-        if (!wasDown) return NEVER;
-        wasDown = false;
-        return report.fade?.operation === this.operation ? NEVER : of('missed' as const);
-      })
+      switchMap((state) =>
+        this.report(state)
+          ? NEVER
+          : timer(Math.max(0, endsAt - Date.now())).pipe(map(() => 'completed' as const))
+      )
     );
   }
 }
@@ -202,5 +174,5 @@ export class SteamFrameCctFade extends SteamFrameFadeTask {
 
 function deviceFadeEnd(outcome: SteamFrameFadeEnd): DeviceFadeEnd {
   if (outcome === 'completed') return 'completed';
-  return outcome === 'externalChange' || outcome === 'missed' ? 'changedOnDevice' : 'stopped';
+  return outcome === 'externalChange' ? 'changedOnDevice' : 'stopped';
 }

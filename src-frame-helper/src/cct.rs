@@ -22,8 +22,6 @@ pub trait ColorGains {
 pub struct Snapshot {
     /// False while no SteamVR session is open; nothing else is known then.
     pub available: bool,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub gains: Option<[f32; 3]>,
     /// The nearest integer Kelvin on OyasumiVR's curve.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub kelvin: Option<u32>,
@@ -35,7 +33,6 @@ pub struct Snapshot {
 impl Snapshot {
     pub const UNAVAILABLE: Self = Self {
         available: false,
-        gains: None,
         kelvin: None,
         exact: None,
     };
@@ -44,7 +41,6 @@ impl Snapshot {
         let (kelvin, exact) = gains_to_kelvin(gains);
         Self {
             available: true,
-            gains: Some(gains),
             kelvin: Some(kelvin),
             exact: Some(exact),
         }
@@ -280,8 +276,7 @@ mod tests {
         assert_eq!(cct.poll(Some(&mut headset)), Some(at(6600)));
         headset.gains[2] = Some(0.5);
         let snapshot = cct.poll(Some(&mut headset)).unwrap();
-        assert_eq!(snapshot.gains, Some([1.0, 1.0, 0.5]));
-        assert_eq!(snapshot.exact, Some(false));
+        assert_eq!((snapshot.kelvin, snapshot.exact), (Some(3795), Some(false)));
     }
 
     #[test]
@@ -306,7 +301,7 @@ mod tests {
         headset.gains[0] = Some(target[0]);
         headset.gains[1] = Some(target[1]);
         let partial = cct.poll(Some(&mut headset)).unwrap();
-        assert_eq!(partial.gains, Some([target[0], target[1], 1.0]));
+        assert_eq!(partial.exact, Some(false));
         headset.gains[2] = Some(target[2]);
         assert_eq!(cct.poll(Some(&mut headset)), Some(at(2000)));
     }

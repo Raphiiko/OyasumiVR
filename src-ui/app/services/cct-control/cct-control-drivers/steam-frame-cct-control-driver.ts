@@ -27,11 +27,11 @@ import { CctControlDriver, CctFadeOptions } from './cct-control-driver';
 type FrameCct = SteamFrameCct & { kelvin: number };
 
 /**
- * The active HMD. A Frame model goes through its helper only, and `cct` stays null until this
- * PC's paired Frame reports one.
+ * The active HMD, `none` for no HMD and for a headset of another model without a pairing. A Frame
+ * model goes through its helper only, and `cct` stays null until this PC's paired Frame reports one.
  */
 type ActiveHmd =
-  { kind: 'none' | 'other' } | { kind: 'frame'; pairingId: string | null; cct: FrameCct | null };
+  { kind: 'none' } | { kind: 'frame'; pairingId: string | null; cct: FrameCct | null };
 
 /** Sets a paired Steam Frame's color temperature through its helper, which also reports it. */
 export class SteamFrameCctControlDriver extends CctControlDriver {
@@ -42,8 +42,6 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
   override readonly cctUpdates = this.updates.asObservable();
   private readonly hmd: Observable<ActiveHmd>;
   private readonly matching: Observable<boolean>;
-  /** The paired Frame's id while it is the active HMD, null for another HMD, undefined for none. */
-  readonly activePairing: Observable<string | null | undefined>;
   private readonly available: Observable<boolean>;
   private currentHmd: ActiveHmd = { kind: 'none' };
   /** The value last sent to `cctUpdates`. */
@@ -79,11 +77,6 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
         this.activeHmd(status, devices, pairings, connections, frameModels)
       ),
       distinctUntilChanged(isEqual),
-      shareReplay(1)
-    );
-    this.activePairing = this.hmd.pipe(
-      map((hmd) => (hmd.kind === 'none' ? undefined : hmd.kind === 'frame' ? hmd.pairingId : null)),
-      distinctUntilChanged(),
       shareReplay(1)
     );
     this.matching = this.hmd.pipe(
@@ -167,11 +160,7 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
         target: kelvin,
         durationMs,
       },
-      {
-        connections$: this.steamFrames.connections$,
-        fadeEnded$: this.steamFrames.fadeEnded$,
-        activePairing$: this.activePairing,
-      }
+      { connections$: this.steamFrames.connections$, fadeEnded$: this.steamFrames.fadeEnded$ }
     );
   }
 
@@ -189,7 +178,7 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
     const isFrameModel = frameModels.some(
       (m) => m.manufacturer === hmd?.manufacturerName && m.model === hmd?.modelNumber
     );
-    if (!pairing && !isFrameModel) return { kind: 'other' };
+    if (!pairing && !isFrameModel) return { kind: 'none' };
     const state = pairing ? connections[pairing.id] : undefined;
     const cct = state?.status === 'connected' ? state.cct : null;
     const reported = cct?.available && cct.kelvin !== null ? (cct as FrameCct) : null;

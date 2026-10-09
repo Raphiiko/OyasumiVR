@@ -5,7 +5,7 @@ import { DMKnownDevice } from '../../../models/device-manager';
 import { DeviceManagerService } from '../../device-manager.service';
 import { SteamFramePairingService } from '../../steam-frame/steam-frame-pairing.service';
 
-/** Invites pairing for each connected Steam Frame that has no completed pairing. */
+/** Invites pairing for each connected Steam Frame without a completed pairing the headset keeps. */
 export class SteamFramePairingMessageMonitor extends MessageMonitor {
   private deviceManager = inject(DeviceManagerService);
   private framePairing = inject(SteamFramePairingService);
@@ -17,6 +17,7 @@ export class SteamFramePairingMessageMonitor extends MessageMonitor {
       this.deviceManager.knownDevices,
       this.deviceManager.observedDevices,
       this.framePairing.pairings$,
+      this.framePairing.connections$,
     ]).subscribe(([knownDevices, observedIds]) => this.update(knownDevices, observedIds));
   }
 
@@ -25,7 +26,9 @@ export class SteamFramePairingMessageMonitor extends MessageMonitor {
     const ids = new Set<string>();
     for (const device of knownDevices) {
       if (!observedIds.includes(device.id) || !this.framePairing.identityOf(device)) continue;
-      if (this.framePairing.pairingFor(device.id)?.complete) continue;
+      const pairing = this.framePairing.pairingFor(device.id);
+      const status = pairing && this.framePairing.connections()[pairing.id]?.status;
+      if (pairing?.complete && status !== 'pairingRemoved') continue;
       const id = `framePairable-${device.id}`;
       ids.add(id);
       this.messageCenter.addMessage({
