@@ -67,7 +67,7 @@ sequenceDiagram
   S->>C: steam_frame_get_ssh_user
   C->>H: GET /login-name
   S->>C: steam_frame_create_pairing_keys
-  Note over S: save the protected key before any request
+  Note over S: save the protected key before its first use
   S->>C: steam_frame_check_ssh_access
   alt the saved key works already
     C-->>S: ok and host key
