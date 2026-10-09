@@ -51,10 +51,12 @@ export class CCTTransitionTask extends CancellableTask {
       // Sleep to match the frequency
       await new Promise((resolve) => setTimeout(resolve, 1000 / this.options.frequency!));
       // Stop if the transition was cancelled
-      if (task.isCancelled() && this.options.logReason) {
-        info(
-          `[CCTControl] Cancelled running CCT transition (${currentCCT}%=>${this.targetCCT}%, ${this.duration}ms, Reason: ${this.options.logReason})`
-        );
+      if (task.isCancelled()) {
+        if (this.options.logReason) {
+          info(
+            `[CCTControl] Cancelled running CCT transition (${currentCCT}%=>${this.targetCCT}%, ${this.duration}ms, Reason: ${this.options.logReason})`
+          );
+        }
         return;
       }
       // Calculate the required cct
