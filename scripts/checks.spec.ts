@@ -43,7 +43,13 @@ describe('check selection', () => {
   });
   it('checks dependent Rust crates without unrelated components', () => {
     const selected = selectChecks(['src-shared-rust/src/lib.rs']);
-    for (const name of ['core', 'shared-rust', 'elevated-sidecar', 'privileged-launcher'])
+    for (const name of [
+      'core',
+      'shared-rust',
+      'elevated-sidecar',
+      'privileged-launcher',
+      'frame-helper',
+    ])
       expect(selected).toContain(`test:${name}`);
     expect(selected).not.toContain('build:memory-watch');
     expect(selected).not.toContain('build:ui');
