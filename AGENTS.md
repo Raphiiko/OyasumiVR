@@ -90,6 +90,11 @@ and native input stay shared: claim the resource's lock before a test uses it. E
 connects to a running SteamVR by itself. For the locks, the
 ports, and overlay work, read [parallel app instances](docs/agents/parallel-instances.md).
 
+## Steam Frame
+
+Before changing Steam Frame pairing, the frame helper, or the Frame's brightness, color temperature,
+or fades, read [Steam Frame pairing](docs/agents/steam-frame-pairing.md).
+
 ## Icons
 
 Before drawing, generating, or changing an icon, read [icon design](docs/agents/icon-design.md).

@@ -14,7 +14,7 @@ accepts a WebSocket upgrade only when its `Authorization: Bearer` token equals t
 
 After the hello, the helper reports the headset's hardware brightness and color temperature, and
 accepts `setBrightness`, `setCct`, and `fade` commands. It reads both through the SteamVR runtime registered
-in `~/.config/openvr/openvrpaths.vrpath`. [Steam Frame pairing](../docs/agents/steam-frame-pairing.md#brightness)
+in `~/.config/openvr/openvrpaths.vrpath`. [Steam Frame pairing](../docs/agents/steam-frame-pairing.md#brightness-and-color-temperature)
 describes the messages.
 
 ## Building
