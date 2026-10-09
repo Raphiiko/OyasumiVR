@@ -1,9 +1,7 @@
 import { invoke } from '@tauri-apps/api/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type {
-  SteamFrameBrightness,
-  SteamFrameConnectionState,
   SteamFrameFadeEnded,
   SteamFrameFadeError,
   SteamFrameFadeOutcome,
@@ -25,23 +23,13 @@ function setup(durationMs = 60_000) {
       replies.push((error) => (error ? reject(error) : resolve(undefined)))
     );
   });
-  const connections = new BehaviorSubject<Record<string, SteamFrameConnectionState>>({});
   const fadeEnded = new Subject<SteamFrameFadeEnded>();
   const onAccept = vi.fn();
   const task = new SteamFrameFadeTask(
     { pairingId: 'p', control: 'brightness', target: 30, durationMs },
-    { connections$: connections, fadeEnded$: fadeEnded },
+    { fadeEnded$: fadeEnded },
     onAccept
   );
-  const state = (status: SteamFrameConnectionState['status'], { report = true } = {}) =>
-    connections.next({
-      p: {
-        pairingId: 'p',
-        status,
-        brightness:
-          status === 'connected' && report ? ({ percentage: 50 } as SteamFrameBrightness) : null,
-      } as SteamFrameConnectionState,
-    });
   const end = (outcome: SteamFrameFadeOutcome, operation = task.operation) =>
     fadeEnded.next({ pairingId: 'p', control: 'brightness', operation, outcome });
   const reply = async (error: SteamFrameFadeError | null = null) => {
@@ -59,8 +47,7 @@ function setup(durationMs = 60_000) {
   const statuses: string[] = [];
   task.onCancelled.subscribe(() => statuses.push('cancelled'));
   task.onComplete.subscribe(() => statuses.push('completed'));
-  state('connected');
-  return { task, state, end, reply, fades, cancels, onAccept, statuses };
+  return { task, end, reply, fades, cancels, onAccept, statuses };
 }
 
 describe('SteamFrameFadeTask', () => {
@@ -138,34 +125,12 @@ describe('SteamFrameFadeTask', () => {
     expect(h.task.end).toBe('completed');
   });
 
-  it('completes at its end time while the connection is down', async () => {
+  it('completes at its end time when no outcome reaches this PC', async () => {
     const h = setup(80);
     const done = h.task.start();
     await h.reply();
-    h.state('offline');
     await wait(30);
     expect(h.statuses).toEqual([]);
-    await done;
-    expect(h.statuses).toEqual(['completed']);
-  });
-
-  it('keeps running after a reconnect that still reports it', async () => {
-    const h = setup();
-    const done = h.task.start();
-    await h.reply();
-    h.state('offline');
-    h.state('connected');
-    await wait(5);
-    expect(h.statuses).toEqual([]);
-    h.end('completed');
-    await done;
-  });
-
-  it('treats a connected state without a report as down, as during a helper update', async () => {
-    const h = setup(80);
-    const done = h.task.start();
-    await h.reply();
-    h.state('connected', { report: false });
     await done;
     expect(h.statuses).toEqual(['completed']);
   });

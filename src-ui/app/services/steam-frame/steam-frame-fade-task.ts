@@ -1,19 +1,8 @@
 import { invoke } from '@tauri-apps/api/core';
-import {
-  filter,
-  firstValueFrom,
-  map,
-  NEVER,
-  Observable,
-  race,
-  ReplaySubject,
-  switchMap,
-  timer,
-} from 'rxjs';
+import { filter, firstValueFrom, map, Observable, race, ReplaySubject, timer } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import { DeviceFade, DeviceFadeEnd } from '../../utils/device-fade';
 import {
-  SteamFrameConnectionState,
   SteamFrameControl,
   SteamFrameFadeEnded,
   SteamFrameFadeError,
@@ -27,7 +16,6 @@ export type SteamFrameFadeEnd = SteamFrameFadeOutcome;
 
 /** What a fade task watches while it runs. */
 export interface SteamFrameFadeSource {
-  connections$: Observable<Record<string, SteamFrameConnectionState>>;
   fadeEnded$: Observable<SteamFrameFadeEnded>;
 }
 
@@ -42,9 +30,9 @@ export interface SteamFrameFadeRequest {
 }
 
 /**
- * A fade the helper runs. It completes on outcome `completed`, and at its end time while the
- * helper connection is down. Every other outcome cancels it. Cancelling it from outside cancels
- * the fade on the helper.
+ * A fade the helper runs. It completes on outcome `completed`, or at its end time when no outcome
+ * reached this PC, such as after a disconnect. Every other outcome cancels it. Cancelling it from
+ * outside cancels the fade on the helper.
  */
 export class SteamFrameFadeTask extends DeviceFade {
   readonly operation = uuidv4();
@@ -86,11 +74,9 @@ export class SteamFrameFadeTask extends DeviceFade {
       if (error) throw error;
       this.onAccept?.();
 
-      // wait for the outcome, the end time while disconnected, or a cancel from outside
-      const endsAt = Date.now() + this.request.durationMs;
-      const end = await firstValueFrom(
-        race(outcome, this.untilEndWhileDown(endsAt), this.cancelled())
-      );
+      // wait for the outcome, the end time, or a cancel from outside
+      const endOfFade = timer(this.request.durationMs).pipe(map(() => 'completed' as const));
+      const end = await firstValueFrom(race(outcome, endOfFade, this.cancelled()));
       if (end === null) {
         this.cancelOnHelper();
         return;
@@ -128,27 +114,6 @@ export class SteamFrameFadeTask extends DeviceFade {
 
   private cancelled(): Observable<null> {
     return this.onCancelled.pipe(map(() => null));
-  }
-
-  private connection(): Observable<SteamFrameConnectionState | undefined> {
-    return this.frames.connections$.pipe(map((states) => states[this.request.pairingId]));
-  }
-
-  /** The report for this fade's control; a helper update keeps `connected` and clears it. */
-  private report(state: SteamFrameConnectionState | undefined) {
-    if (state?.status !== 'connected') return null;
-    return this.request.control === 'brightness' ? state.brightness : state.cct;
-  }
-
-  /** Completes at the end time while the connection is down or reports nothing. */
-  private untilEndWhileDown(endsAt: number): Observable<SteamFrameFadeEnd> {
-    return this.connection().pipe(
-      switchMap((state) =>
-        this.report(state)
-          ? NEVER
-          : timer(Math.max(0, endsAt - Date.now())).pipe(map(() => 'completed' as const))
-      )
-    );
   }
 }
 
