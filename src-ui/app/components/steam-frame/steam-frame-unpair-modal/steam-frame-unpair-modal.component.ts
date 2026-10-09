@@ -10,6 +10,8 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { BaseModalComponent } from '../../base-modal/base-modal.component';
 import { fadeUp } from '../../../utils/animations';
 import { SteamFramePairingService } from '../../../services/steam-frame/steam-frame-pairing.service';
+import { ToastService } from '../../../services/toast.service';
+import { copyWithToast } from '../../../utils/clipboard-utils';
 import {
   STEAM_FRAME_UNINSTALL_COMMAND,
   SteamFrameUnpairFailure,
@@ -34,7 +36,6 @@ const UNPAIR_FAILURES: Record<SteamFrameUnpairFailure, UnpairFailure> = {
   unreachable: { body: 'unreachable', retryable: true },
   rejected: { body: 'rejected', retryable: false },
   hostKeyChanged: { body: 'hostKeyChanged', retryable: false },
-  helperBusy: { body: 'helperBusy', retryable: true },
   failed: { body: 'other', retryable: true },
 };
 
@@ -55,12 +56,12 @@ export class SteamFrameUnpairModalComponent
   removedOnHeadset?: boolean;
 
   private readonly framePairing = inject(SteamFramePairingService);
+  private readonly toasts = inject(ToastService);
   readonly page = signal<UnpairPage>('checking');
   readonly otherPcs = signal(0);
   readonly uninstalling = signal(false);
   /** The running unpair removes the helper: Unpair all PCs, or Unpair on the only paired PC. */
   readonly removesHelper = computed(() => this.uninstalling() || this.otherPcs() === 0);
-  readonly copied = signal(false);
   readonly failure = signal(UNPAIR_FAILURES.failed);
   readonly uninstallCommand = STEAM_FRAME_UNINSTALL_COMMAND;
   /** Whether the last attempt uninstalled the helper, so Try again repeats it; unset before one. */
@@ -107,8 +108,7 @@ export class SteamFrameUnpairModalComponent
     this.close();
   }
 
-  async copyCommand() {
-    await navigator.clipboard.writeText(this.uninstallCommand);
-    this.copied.set(true);
+  copyCommand() {
+    return copyWithToast(this.toasts, this.uninstallCommand);
   }
 }

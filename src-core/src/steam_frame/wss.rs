@@ -19,16 +19,14 @@ use tokio_tungstenite::{
     WebSocketStream,
 };
 
-use super::{hex, models::Identity, setup::HelperInfo};
+use super::{hex, setup::HelperInfo};
 
 pub type Socket = WebSocketStream<TlsStream<TcpStream>>;
 
 #[derive(Deserialize, Debug, Clone)]
-#[serde(rename_all = "camelCase")]
 pub struct Hello {
     #[serde(flatten)]
     pub info: HelperInfo,
-    pub identity: Option<Identity>,
 }
 
 #[derive(Debug, PartialEq)]

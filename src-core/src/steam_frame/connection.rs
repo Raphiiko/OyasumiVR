@@ -17,25 +17,24 @@ use super::{
     discovery,
     maintenance::{self, Recovery, UpdateOutcome},
     models::{
-        Brightness, Cct, Control, FadeEnded, FadeError, FadeOutcome, FadeRequest, Identity,
-        Maintenance, Pairing, SetBrightnessError, SetCctError, State, Status,
+        Brightness, Cct, Control, FadeEnded, FadeError, FadeOutcome, FadeRequest, Maintenance,
+        Pairing, SetBrightnessError, SetCctError, State, Status,
     },
     setup::{
         self, bundled_digest, install_decision, InstallDecision, ProvisionError, BUNDLED_VERSION,
     },
-    ssh::SshError,
+    ssh::{self, SshError},
     valid_pc_id,
     wss::{self, Hello, Socket, WssError},
     PROTOCOL_VERSION,
 };
-use crate::utils::{get_time, send_event};
+use crate::utils::send_event;
 
 const EVENT: &str = "STEAM_FRAME_CONNECTION_STATE";
 const FADE_ENDED_EVENT: &str = "STEAM_FRAME_FADE_ENDED";
 const PING_INTERVAL: Duration = Duration::from_secs(15);
 const SILENCE_LIMIT: Duration = Duration::from_secs(40);
 const MAX_BACKOFF: Duration = Duration::from_secs(60);
-const UPDATED_NOTICE: Duration = Duration::from_secs(60);
 const COMMAND_TIMEOUT: Duration = Duration::from_secs(5);
 
 type BrightnessReply = oneshot::Sender<Result<f64, SetBrightnessError>>;
@@ -233,7 +232,6 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>, commands: Command
     let mut state = State {
         pairing_id: initial.id.clone(),
         status: Status::Connecting,
-        last_seen: None,
         helper_version: None,
         update_available: false,
         maintenance: None,
@@ -245,8 +243,6 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>, commands: Command
     publish(&state).await;
     let mut backoff = Duration::from_secs(2);
     let mut retries = 0;
-    // deadline of the "updated" notice, set by a successful update
-    let mut notice: Option<Instant> = None;
     loop {
         // try once; a repair gets at most two immediate retries
         let pairing = shared.lock().await.clone();
@@ -262,57 +258,49 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>, commands: Command
                 state.cert_pin = pairing.cert_pin.clone();
                 state.helper_version = Some(hello.info.version.clone());
                 state.update_available = update_available(&hello);
-                settle_maintenance(&mut state, &hello, &mut notice);
+                settle_maintenance(&mut state, &hello);
 
                 // update an older helper, once per app start
-                let incompatible = incompatibility(&hello, &pairing.identity);
-                if state.update_available
-                    && incompatible != Some(Status::IdentityChanged)
-                    && maintenance::take_automatic_attempt(&pairing.id).await
+                if state.update_available && maintenance::take_automatic_attempt(&pairing.id).await
                 {
                     wss::close(*socket).await;
                     // the helper answered, so a problem status from an earlier attempt is stale
                     state.status = Status::Connecting;
-                    if maintain(&mut state, &pairing, &mut notice).await {
+                    if maintain(&mut state, &pairing).await {
                         return;
                     }
                     continue;
                 }
 
                 // refuse an unusable helper, else hold the socket
-                if let Some(status) = incompatible {
+                if let Some(status) = incompatibility(&hello) {
                     wss::close(*socket).await;
                     if state.status != status {
                         warn!(
-                            "[SteamFrame] Helper is unusable ({status:?}): it reports headset {:?} and protocols {}-{}, the pairing expects {:?} and protocol {PROTOCOL_VERSION}",
-                            hello.identity, hello.info.protocol_min, hello.info.protocol_max, pairing.identity
+                            "[SteamFrame] Helper is unusable ({status:?}): it speaks protocols {}-{}, this app speaks protocol {PROTOCOL_VERSION}",
+                            hello.info.protocol_min, hello.info.protocol_max
                         );
                     }
                     state.status = status;
                     publish(&state).await;
                 } else {
                     state.status = Status::Connected;
-                    state.last_seen = Some(get_time() as u64);
                     publish(&state).await;
                     backoff = Duration::from_secs(2);
                     retries = 0;
                     let requested =
-                        hold_connected(&mut socket, &update, &commands, &mut state, &mut notice)
-                            .await;
+                        hold_connected(&mut socket, &update, &commands, &mut state).await;
                     wss::close(*socket).await;
                     state.brightness = None;
                     state.cct = None;
-                    state.last_seen = Some(get_time() as u64);
                     if requested {
-                        if maintain(&mut state, &pairing, &mut notice).await {
+                        if maintain(&mut state, &pairing).await {
                             return;
                         }
-                    } else {
-                        drop_updated_notice(&mut state, &mut notice);
-                        state.status = Status::Offline;
-                        publish(&state).await;
+                        continue;
                     }
-                    continue;
+                    state.status = Status::Offline;
+                    publish(&state).await;
                 }
             }
 
@@ -327,8 +315,7 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>, commands: Command
                 let pairing = shared.lock().await.clone();
                 state.address = pairing.access.address;
                 state.cert_pin = pairing.cert_pin;
-                let dropped = drop_updated_notice(&mut state, &mut notice);
-                if state.status != status || dropped {
+                if state.status != status {
                     state.status = status;
                     publish(&state).await;
                 }
@@ -351,7 +338,7 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>, commands: Command
             _ = tokio::time::sleep(backoff) => {}
             _ = update.notified() => {
                 let pairing = shared.lock().await.clone();
-                if maintain(&mut state, &pairing, &mut notice).await {
+                if maintain(&mut state, &pairing).await {
                     return;
                 }
                 backoff = Duration::from_secs(2);
@@ -364,31 +351,17 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>, commands: Command
     }
 }
 
-/// Clears a failed or busy notice once no update is needed, and an updated notice once the helper
-/// changed or its minute is up.
-fn settle_maintenance(state: &mut State, hello: &Hello, notice: &mut Option<Instant>) {
+/// Clears a failed notice once no update is needed, and an updated notice once the helper version
+/// changed.
+fn settle_maintenance(state: &mut State, hello: &Hello) {
     let settled = match &state.maintenance {
-        Some(Maintenance::Failed { .. } | Maintenance::Busy) => !state.update_available,
-        Some(Maintenance::Updated { version }) => {
-            *version != hello.info.version
-                || notice.is_none_or(|deadline| deadline <= Instant::now())
-        }
+        Some(Maintenance::Failed) => !state.update_available,
+        Some(Maintenance::Updated { version }) => *version != hello.info.version,
         _ => false,
     };
     if settled {
         state.maintenance = None;
-        *notice = None;
     }
-}
-
-/// Clears an "updated" notice, which only shows while connected. Returns whether one was set.
-fn drop_updated_notice(state: &mut State, notice: &mut Option<Instant>) -> bool {
-    if !matches!(state.maintenance, Some(Maintenance::Updated { .. })) {
-        return false;
-    }
-    state.maintenance = None;
-    *notice = None;
-    true
 }
 
 fn update_available(hello: &Hello) -> bool {
@@ -405,13 +378,12 @@ fn update_available(hello: &Hello) -> bool {
 
 /// Runs one helper update and publishes its progress and result. Returns true when the
 /// connection must stop until the headset is paired again.
-async fn maintain(state: &mut State, pairing: &Pairing, notice: &mut Option<Instant>) -> bool {
+async fn maintain(state: &mut State, pairing: &Pairing) -> bool {
     state.maintenance = Some(Maintenance::Updating);
     publish(state).await;
     state.maintenance = match maintenance::update(pairing).await {
         UpdateOutcome::Updated { version } => {
             state.update_available = false;
-            *notice = Some(Instant::now() + UPDATED_NOTICE);
             Some(Maintenance::Updated { version })
         }
         UpdateOutcome::Unchanged => None,
@@ -423,8 +395,10 @@ async fn maintain(state: &mut State, pairing: &Pairing, notice: &mut Option<Inst
             state.status = Status::HelperMissing;
             None
         }
-        UpdateOutcome::Busy => Some(Maintenance::Busy),
-        UpdateOutcome::Failed(reason) => Some(Maintenance::Failed { reason }),
+        UpdateOutcome::Failed(reason) => {
+            warn!("[SteamFrame] Helper update failed: {reason:?}");
+            Some(Maintenance::Failed)
+        }
         UpdateOutcome::HostKeyChanged => {
             state.status = Status::HostKeyChanged;
             None
@@ -442,14 +416,12 @@ async fn maintain(state: &mut State, pairing: &Pairing, notice: &mut Option<Inst
 }
 
 /// Holds a connected socket until it closes, or returns true when an update is requested.
-/// Relays brightness, color temperature, and fades meanwhile, and clears the "updated" notice when
-/// its minute is up.
+/// Relays brightness, color temperature, and fades meanwhile.
 async fn hold_connected(
     socket: &mut Socket,
     update: &Notify,
     commands: &CommandSlot,
     state: &mut State,
-    notice: &mut Option<Instant>,
 ) -> bool {
     let (sender, requests) = mpsc::channel(16);
     *commands.lock().unwrap() = Some(sender);
@@ -458,17 +430,7 @@ async fn hold_connected(
         pending: HashMap::new(),
         next_id: 0,
     };
-    let requested = loop {
-        match hold(socket, update, *notice, &mut relay, state).await {
-            Wake::Closed => break false,
-            Wake::Update => break true,
-            Wake::NoticeExpired => {
-                *notice = None;
-                state.maintenance = None;
-                publish(state).await;
-            }
-        }
-    };
+    let requested = matches!(hold(socket, update, &mut relay, state).await, Wake::Update);
     // dropping the relay answers every waiting command with Offline
     *commands.lock().unwrap() = None;
     requested
@@ -486,10 +448,7 @@ struct Relay {
 /// command.
 async fn receive(text: &str, relay: &mut Relay, state: &mut State) {
     match serde_json::from_str(text) {
-        Ok(HelperMessage::Brightness(mut brightness)) => {
-            if let Some(fade) = brightness.fade.as_mut() {
-                fade.ends_at = get_time() as u64 + fade.remaining_ms;
-            }
+        Ok(HelperMessage::Brightness(brightness)) => {
             state.brightness = Some(brightness);
             publish(state).await;
         }
@@ -510,10 +469,7 @@ async fn receive(text: &str, relay: &mut Relay, state: &mut State) {
                 let _ = reply.send(percentage.ok_or(error));
             }
         }
-        Ok(HelperMessage::Cct(mut cct)) => {
-            if let Some(fade) = cct.fade.as_mut() {
-                fade.ends_at = get_time() as u64 + fade.remaining_ms;
-            }
+        Ok(HelperMessage::Cct(cct)) => {
             state.cct = Some(cct);
             publish(state).await;
         }
@@ -555,14 +511,7 @@ async fn receive(text: &str, relay: &mut Relay, state: &mut State) {
 }
 
 /// Returns why this helper cannot be used, if it cannot.
-fn incompatibility(hello: &Hello, expected: &Identity) -> Option<Status> {
-    if hello
-        .identity
-        .as_ref()
-        .is_some_and(|identity| !identity.same_headset(expected))
-    {
-        return Some(Status::IdentityChanged);
-    }
+fn incompatibility(hello: &Hello) -> Option<Status> {
     if hello.info.protocol_min > PROTOCOL_VERSION {
         return Some(Status::NeedsAppUpdate);
     }
@@ -617,7 +566,7 @@ fn ssh_failure(error: SshError) -> Attempt {
 /// The helper no longer knows this PC's token, so write it again over SSH.
 async fn restore_token(pairing: &Pairing) -> Attempt {
     // write the token file again over SSH
-    let session = match setup::open(&pairing.access, &pairing.id, &pairing.public_key).await {
+    let session = match ssh::connect(&pairing.access).await {
         Ok(session) => session,
         Err(error) => return ssh_failure(error),
     };
@@ -642,7 +591,7 @@ async fn restore_token(pairing: &Pairing) -> Attempt {
 /// Trusts a new helper certificate only when the pinned SSH host shows that same certificate.
 async fn repin(pairing: &Pairing, shared: &Mutex<Pairing>, observed: &str) -> Attempt {
     // read the helper certificate over the pinned SSH host
-    let session = match setup::open(&pairing.access, &pairing.id, &pairing.public_key).await {
+    let session = match ssh::connect(&pairing.access).await {
         Ok(session) => session,
         Err(error) => return ssh_failure(error),
     };
@@ -709,28 +658,13 @@ async fn find_moved_helper(pairing: &Pairing, shared: &Mutex<Pairing>) -> Attemp
 enum Wake {
     Closed,
     Update,
-    NoticeExpired,
 }
 
-/// Keeps the connection open until the helper stops answering, an update is requested, or the
-/// notice deadline passes.
-async fn hold(
-    socket: &mut Socket,
-    update: &Notify,
-    notice: Option<Instant>,
-    relay: &mut Relay,
-    state: &mut State,
-) -> Wake {
+/// Keeps the connection open until the helper stops answering or an update is requested.
+async fn hold(socket: &mut Socket, update: &Notify, relay: &mut Relay, state: &mut State) -> Wake {
     // ping on a timer, give up after long silence
     let mut ticker = tokio::time::interval(PING_INTERVAL);
     let mut last_heard = Instant::now();
-    let notice_expired = async {
-        match notice {
-            Some(deadline) => tokio::time::sleep_until(deadline.into()).await,
-            None => std::future::pending().await,
-        }
-    };
-    tokio::pin!(notice_expired);
     loop {
         tokio::select! {
             message = socket.next() => match message {
@@ -787,7 +721,6 @@ async fn hold(
                 }
             }
             _ = update.notified() => return Wake::Update,
-            _ = &mut notice_expired => return Wake::NoticeExpired,
         }
     }
 }
@@ -795,9 +728,9 @@ async fn hold(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::steam_frame::{models::Fade, setup::HelperInfo};
+    use crate::steam_frame::setup::HelperInfo;
 
-    fn hello(identity: Option<Identity>, min: u32, max: u32) -> Hello {
+    fn hello(min: u32, max: u32) -> Hello {
         Hello {
             info: HelperInfo {
                 version: "26.10.0".into(),
@@ -805,38 +738,14 @@ mod tests {
                 protocol_max: max,
                 digest: None,
             },
-            identity,
-        }
-    }
-
-    fn identity(serial: &str) -> Identity {
-        Identity {
-            serial: serial.into(),
-            model: "Deckard DV2".into(),
-            manufacturer: "Valve".into(),
         }
     }
 
     #[test]
     fn detects_unusable_helpers() {
-        let expected = identity("FPTEST000001");
-        assert_eq!(
-            incompatibility(&hello(Some(expected.clone()), 1, 1), &expected),
-            None
-        );
-        assert_eq!(incompatibility(&hello(None, 1, 1), &expected), None);
-        assert_eq!(
-            incompatibility(&hello(Some(identity("FPTEST000002")), 1, 1), &expected),
-            Some(Status::IdentityChanged)
-        );
-        assert_eq!(
-            incompatibility(&hello(Some(expected.clone()), 2, 3), &expected),
-            Some(Status::NeedsAppUpdate)
-        );
-        assert_eq!(
-            incompatibility(&hello(Some(expected.clone()), 0, 0), &expected),
-            Some(Status::HelperOutdated)
-        );
+        assert_eq!(incompatibility(&hello(1, 1)), None);
+        assert_eq!(incompatibility(&hello(2, 3)), Some(Status::NeedsAppUpdate));
+        assert_eq!(incompatibility(&hello(0, 0)), Some(Status::HelperOutdated));
     }
 
     #[test]
@@ -855,7 +764,6 @@ mod tests {
                 min: Some(9.0),
                 max: Some(125.0),
                 percentage: Some(100.0),
-                fade: None,
             }
         );
         let HelperMessage::Brightness(unavailable) =
@@ -887,14 +795,12 @@ mod tests {
         let parse = |text: &str| serde_json::from_str::<HelperMessage>(text).unwrap();
         let off_curve = Cct {
             available: true,
-            gains: Some([1.0, 0.6, 0.2]),
             kelvin: Some(2313),
             exact: Some(false),
-            fade: None,
         };
-        let HelperMessage::Cct(report) = parse(
-            r#"{"type":"cct","available":true,"gains":[1.0,0.6,0.2],"kelvin":2313,"exact":false}"#,
-        ) else {
+        let HelperMessage::Cct(report) =
+            parse(r#"{"type":"cct","available":true,"kelvin":2313,"exact":false}"#)
+        else {
             panic!("not a cct report");
         };
         assert_eq!(report, off_curve);
@@ -907,7 +813,7 @@ mod tests {
             snapshot,
             error,
         } = parse(
-            r#"{"type":"setCctResult","id":3,"snapshot":{"available":true,"gains":[1.0,0.6,0.2],"kelvin":2313,"exact":false}}"#,
+            r#"{"type":"setCctResult","id":3,"snapshot":{"available":true,"kelvin":2313,"exact":false}}"#,
         )
         else {
             panic!("not a cct reply");
@@ -926,20 +832,6 @@ mod tests {
     #[test]
     fn reads_the_helper_fade_messages() {
         let parse = |text: &str| serde_json::from_str::<HelperMessage>(text).unwrap();
-        let HelperMessage::Brightness(report) = parse(
-            r#"{"type":"brightness","runtime":true,"supported":true,"min":9.0,"max":125.0,"percentage":80.0,"fade":{"operation":"f1","target":30.0,"remainingMs":1500}}"#,
-        ) else {
-            panic!("not a brightness report");
-        };
-        assert_eq!(
-            report.fade,
-            Some(Fade {
-                operation: "f1".into(),
-                target: 30.0,
-                remaining_ms: 1500,
-                ends_at: 0,
-            })
-        );
         assert!(matches!(
             parse(r#"{"type":"fadeResult","id":2}"#),
             HelperMessage::FadeResult { id: 2, error: None }

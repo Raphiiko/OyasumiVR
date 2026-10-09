@@ -1,6 +1,6 @@
 # Runs on the headset through `bash -c`, as `helper.sh <command> [arguments]`.
 # Exit codes: 64 usage or bad input, 65 digest mismatch, 69 helper missing, 70 no certificate,
-# 73 the helper changed since the PC inspected it, 75 busy.
+# 73 the helper changed since the PC inspected it, 75 another PC held a lock past its wait.
 set -euo pipefail
 
 root="$HOME/.local/share/oyasumivr_helper"
@@ -70,8 +70,7 @@ run_current() {
 
 # install VERSION SHA256 PORT SEEN FRESH KEEP, with the helper executable on stdin; SEEN is the
 # SHA-256 of the inspect output the PC decided on, FRESH 1 allows creating a missing helper folder,
-# KEEP 1 keeps a working previous release because current does not start; prints "created" for a
-# first install
+# KEEP 1 keeps a working previous release because current does not start
 install() {
   local version=$1 digest=$2 port=$3 seen=$4 fresh=${5:-0} keep=${6:-0}
   [ "$fresh" != 1 ] || mkdir -p "$root"
@@ -79,9 +78,7 @@ install() {
   [ "$(printf %s "$(inspect)" | sha256sum | cut -c1-64)" = "$seen" ] || exit 73
 
   # a first installation that fails removes everything it created
-  local created=0
   if [ ! -d "$root/releases" ]; then
-    created=1
     trap '[ $? = 0 ] || remove_helper' EXIT
   fi
 
@@ -142,7 +139,6 @@ EOF
   mv -T "$root/current.new" "$root/current"
   systemctl --user daemon-reload
   systemctl --user restart "$unit"
-  [ "$created" = 0 ] || echo created
 }
 
 # uninstaller VERSION, with the uninstall script on stdin; writes it only while current is that release
@@ -228,38 +224,6 @@ remove_helper() {
   rm -rf "$root"
 }
 
-# uninstall_helper PC_ID: removes this PC's token files, then the helper when no other PC holds a
-# token; leaves authorized_keys alone
-uninstall_helper() {
-  local pc=$1 file
-  [ -d "$root" ] || return 0
-  lock
-  rm -f "$root/clients/$pc" "$root/clients/$pc.pub"
-  for file in "$root"/clients/*; do
-    [ -f "$file" ] || continue
-    case "${file##*/}" in
-      *.*) ;;
-      *) return 0 ;;
-    esac
-  done
-  remove_helper
-}
-
-# record PC_ID, with this PC's public key on stdin; keeps clients/PC_ID.pub current while the
-# helper is installed, so the uninstall script can find the key
-record() {
-  local pc=$1 key
-  IFS= read -r key || true
-  [[ $key =~ $public_key ]] || exit 64
-  [ -d "$root/clients" ] || return 0
-  [ "$(cat "$root/clients/$pc.pub" 2>/dev/null)" != "$key" ] || return 0
-  # the uninstall script reads clients/*.pub under this lock
-  keys_lock
-  [ -d "$root/clients" ] || return 0
-  printf '%s\n' "$key" >"$root/clients/$pc.pub.tmp"
-  mv "$root/clients/$pc.pub.tmp" "$root/clients/$pc.pub"
-}
-
 # clients PC_ID: prints how many other PCs hold a token
 clients() {
   local pc=$1 count=0 file
@@ -273,11 +237,11 @@ clients() {
   echo "$count"
 }
 
-# cleanup PC_ID MODE, with this PC's public key on stdin. Every mode removes this PC's token and
+# cleanup PC_ID MODE, with this PC's public key on stdin. Both modes remove this PC's token and
 # key lines; unused also removes the helper when no PC holds a token, uninstall always does.
 cleanup() {
   local pc=$1 mode=$2 key type data
-  [[ $mode =~ ^(keep|unused|uninstall)$ ]] || exit 64
+  [[ $mode =~ ^(unused|uninstall)$ ]] || exit 64
   key=$(cat)
   type=$(cut -d' ' -f1 <<<"$key")
   data=$(cut -d' ' -f2 <<<"$key")
@@ -315,6 +279,6 @@ cleanup() {
 }
 
 case "${1:-}" in
-  identity | inspect | present | current | install | uninstaller | provision | record | clients | start | rollback | prune | uninstall_helper | cleanup) "$@" ;;
+  identity | inspect | present | current | install | uninstaller | provision | clients | start | rollback | prune | cleanup) "$@" ;;
   *) exit 64 ;;
 esac
