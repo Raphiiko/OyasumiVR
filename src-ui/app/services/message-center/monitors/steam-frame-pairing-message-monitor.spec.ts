@@ -3,7 +3,7 @@ import { Injector, runInInjectionContext } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 import { DMKnownDevice } from '../../../models/device-manager';
-import { SteamFramePairing } from '../../../models/steam-frame';
+import { SteamFrameConnectionState, SteamFramePairing } from '../../../models/steam-frame';
 import { DeviceManagerService } from '../../device-manager.service';
 import { SteamFramePairingService } from '../../steam-frame/steam-frame-pairing.service';
 import { MessageCenterService, MessageItem } from '../message-center.service';
@@ -32,10 +32,13 @@ function start() {
   const known = new BehaviorSubject([frame, index]);
   const observed = new BehaviorSubject([frame.id, index.id]);
   const pairings$ = new BehaviorSubject<SteamFramePairing[]>([]);
+  const connections$ = new BehaviorSubject<Record<string, SteamFrameConnectionState>>({});
   const messages = new Map<string, MessageItem>();
   const openWizard = vi.fn();
   const framePairing = {
     pairings$,
+    connections$,
+    connections: () => connections$.value,
     identityOf: (d: DMKnownDevice) => (d.typeName === 'Deckard DV2' ? {} : null),
     pairingFor: (id: string) => pairings$.value.find((p) => p.deviceId === id),
     openWizard,
@@ -58,7 +61,7 @@ function start() {
     () => new SteamFramePairingMessageMonitor(messageCenter)
   );
   monitor.init();
-  return { frame, observed, pairings$, messages, openWizard };
+  return { frame, observed, pairings$, connections$, messages, openWizard };
 }
 
 describe('Steam Frame pairing invitation', () => {
@@ -79,5 +82,13 @@ describe('Steam Frame pairing invitation', () => {
     expect(h.messages.size).toBe(1);
     h.observed.next([]);
     expect(h.messages.size).toBe(0);
+  });
+
+  it('invites a paired Frame again once the headset removed the pairing', () => {
+    const h = start();
+    h.pairings$.next([{ id: 'p', deviceId: h.frame.id, complete: true } as SteamFramePairing]);
+    expect(h.messages.size).toBe(0);
+    h.connections$.next({ p: { status: 'pairingRemoved' } as SteamFrameConnectionState });
+    expect(h.messages.size).toBe(1);
   });
 });

@@ -23,15 +23,6 @@ pub enum Control {
 
 const CONTROLS: [Control; 2] = [Control::Brightness, Control::Cct];
 
-/// The active fade in a snapshot. `target` is in percent or Kelvin.
-#[derive(Serialize, Clone, Debug, PartialEq)]
-#[serde(rename_all = "camelCase")]
-pub struct FadeReport {
-    pub operation: String,
-    pub target: f64,
-    pub remaining_ms: u64,
-}
-
 #[derive(Serialize, Clone, Copy, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub enum Outcome {
@@ -337,11 +328,7 @@ impl<B: Backend + ColorGains> Controls<B> {
         self.report_change(Control::Brightness, outcome.before.is_some());
         self.after_read();
         if let Some(snapshot) = outcome.after {
-            self.events.push(Event::Brightness {
-                snapshot,
-                fade: None,
-                cause,
-            });
+            self.events.push(Event::Brightness { snapshot, cause });
         }
         if let (Ok(applied), Some(written)) = (outcome.result, self.standby.as_mut()) {
             written.brightness = Some(applied);
@@ -356,11 +343,7 @@ impl<B: Backend + ColorGains> Controls<B> {
         self.report_change(Control::Cct, outcome.before.is_some());
         self.after_read();
         if let Some(snapshot) = outcome.after {
-            self.events.push(Event::Cct {
-                snapshot,
-                fade: None,
-                cause,
-            });
+            self.events.push(Event::Cct { snapshot, cause });
         }
         if let (Ok(_), Some(written)) = (&outcome.result, self.standby.as_mut()) {
             written.cct = Some(kelvin);
@@ -417,7 +400,6 @@ impl<B: Backend + ColorGains> Controls<B> {
             next_step: now + STEP_INTERVAL,
             next_report: now + REPORT_INTERVAL,
         });
-        self.report(control, None);
         Ok(false)
     }
 
@@ -501,24 +483,14 @@ impl<B: Backend + ColorGains> Controls<B> {
         }
     }
 
-    /// Sends the control's snapshot with its active fade.
     fn report(&mut self, control: Control, cause: Option<u64>) {
-        let fade = self.fade(control).map(|fade| FadeReport {
-            operation: fade.operation.clone(),
-            target: fade.target,
-            remaining_ms: (fade.start + fade.duration)
-                .saturating_duration_since(self.now)
-                .as_millis() as u64,
-        });
         self.events.push(match control {
             Control::Brightness => Event::Brightness {
                 snapshot: self.brightness.snapshot().clone(),
-                fade,
                 cause,
             },
             Control::Cct => Event::Cct {
                 snapshot: self.cct.snapshot().clone(),
-                fade,
                 cause,
             },
         });

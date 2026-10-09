@@ -32,9 +32,7 @@ export interface SteamFramePairing {
   mayBeApproved?: boolean;
   certPin?: string;
   port?: number;
-  helperInstalledByPairing?: boolean;
   complete: boolean;
-  lastSeen?: number;
   helperVersion?: string;
 }
 
@@ -47,25 +45,18 @@ export type SteamFrameConnectionStatus =
   | 'connecting'
   | 'connected'
   | 'offline'
-  | 'identityChanged'
   | 'needsAppUpdate'
   | 'helperOutdated'
   | 'hostKeyChanged'
   | 'helperMissing'
   | 'pairingRemoved';
 
-export type SteamFrameUpdateFailReason =
-  'unreachable' | 'corrupted' | 'notStarted' | 'notBundled' | 'other';
-
 export type SteamFrameMaintenance =
-  | { kind: 'updating' | 'busy' }
-  | { kind: 'updated'; version: string }
-  | { kind: 'failed'; reason: SteamFrameUpdateFailReason };
+  { kind: 'updating' | 'failed' } | { kind: 'updated'; version: string };
 
 export interface SteamFrameConnectionState {
   pairingId: string;
   status: SteamFrameConnectionStatus;
-  lastSeen?: number;
   helperVersion?: string;
   /** The helper is older than the bundled one, or has other files at the same version. */
   updateAvailable: boolean;
@@ -76,16 +67,6 @@ export interface SteamFrameConnectionState {
   brightness: SteamFrameBrightness | null;
   /** The helper's last color temperature report; null while not connected. */
   cct: SteamFrameCct | null;
-}
-
-/** A fade the helper runs, in a report. `target` is in percent for brightness, Kelvin for cct. */
-export interface SteamFrameFade {
-  /** The ID OyasumiVR gave the fade when it started it. */
-  operation: string;
-  target: number;
-  remainingMs: number;
-  /** Milliseconds since the epoch on this PC's clock. */
-  endsAt: number;
 }
 
 export type SteamFrameControl = 'brightness' | 'cct';
@@ -118,19 +99,16 @@ export interface SteamFrameBrightness {
   max: number | null;
   /** The headset's value, which can lie outside `min` and `max`. */
   percentage: number | null;
-  fade: SteamFrameFade | null;
 }
 
 /** The headset's color temperature, as the helper reports it. */
 export interface SteamFrameCct {
   /** False while the helper has no SteamVR session; nothing else is known then. */
   available: boolean;
-  gains: [number, number, number] | null;
   /** The nearest integer Kelvin on OyasumiVR's curve. */
   kelvin: number | null;
   /** True when the gains lie on the curve at `kelvin`. */
   exact: boolean | null;
-  fade: SteamFrameFade | null;
 }
 
 export type SteamFrameRegisterOutcome =
@@ -143,7 +121,7 @@ export type SteamFrameProbeOutcome =
 
 export type SteamFrameSetupStage = 'verify' | 'install' | 'connection';
 
-export type SteamFrameSetupResult = { installed: boolean } & (
+export type SteamFrameSetupResult =
   | {
       status: 'complete';
       certPin: string;
@@ -152,18 +130,9 @@ export type SteamFrameSetupResult = { installed: boolean } & (
     }
   | { status: 'needsAppUpdate'; helperVersion: string }
   | { status: 'failed'; message: string }
-  | {
-      status:
-        | 'wrongDevice'
-        | 'identityMissing'
-        | 'helperBusy'
-        | 'hostKeyChanged'
-        | 'rejected'
-        | 'unreachable';
-    }
-);
+  | { status: 'wrongDevice' | 'identityMissing' | 'hostKeyChanged' | 'rejected' | 'unreachable' };
 
-export type SteamFrameCleanupMode = 'keep' | 'unused' | 'uninstall';
+export type SteamFrameCleanupMode = 'unused' | 'uninstall';
 
 export type SteamFrameOtherPcsOutcome =
   | { status: 'ok'; count: number }
@@ -171,12 +140,11 @@ export type SteamFrameOtherPcsOutcome =
   | { status: 'failed'; message: string };
 
 export type SteamFrameCleanupOutcome =
-  | { status: 'done' | 'rejected' | 'unreachable' | 'hostKeyChanged' | 'helperBusy' }
+  | { status: 'done' | 'rejected' | 'unreachable' | 'hostKeyChanged' }
   | { status: 'failed'; message: string };
 
 /** Why the headset could not be asked or cleaned up while unpairing. */
-export type SteamFrameUnpairFailure =
-  'rejected' | 'unreachable' | 'hostKeyChanged' | 'helperBusy' | 'failed';
+export type SteamFrameUnpairFailure = 'rejected' | 'unreachable' | 'hostKeyChanged' | 'failed';
 
 export type SteamFramePage =
   | 'intro'
@@ -192,12 +160,10 @@ export type SteamFramePage =
   | 'declined'
   | 'timeout'
   | 'uncertain'
-  | 'accessLost'
   | 'wrongDevice'
   | 'setup'
   | 'setupFailed'
   | 'needsUpdate'
-  | 'hostKeyChanged'
   | 'cancelling'
   | 'cleanupFailed'
   | 'success';

@@ -9,7 +9,7 @@ import {
   skip,
   tap,
 } from 'rxjs';
-import { info, warn } from '@tauri-apps/plugin-log';
+import { info } from '@tauri-apps/plugin-log';
 import { CancellableTask } from '../../utils/cancellable-task';
 import { BrightnessTransitionTask } from './brightness-transition';
 import { AutomationConfigService } from '../automation-config.service';
@@ -61,8 +61,6 @@ export class SimpleBrightnessControlService {
   public readonly activeTransition = this._activeTransition.asObservable();
   /** Counts running `setBrightness` calls, whose own replies must not be adopted midway. */
   private settingBrightness = 0;
-  /** The active driver at the last driver change, to see one driver take over from another. */
-  private previousDriver: HardwareBrightnessControlDriver | null = null;
   /** The last driver that was not null; it stays set through a gap without a driver. */
   private lastDriver: HardwareBrightnessControlDriver | null = null;
   /** The latest report skipped while `settingBrightness` was above zero. */
@@ -134,19 +132,7 @@ export class SimpleBrightnessControlService {
 
   private onDriverChange() {
     const driver = this.hardwareBrightnessControl.activeDriver;
-    const previous = this.previousDriver;
-    this.previousDriver = driver;
     if (driver) this.lastDriver = driver;
-    // a device taking over from a pushing one never saw the simple value
-    if (
-      !this._advancedMode.value &&
-      previous?.pushesBrightnessChanges &&
-      driver &&
-      driver !== previous &&
-      !driver.pushesBrightnessChanges
-    ) {
-      this.setBrightness(this.brightness, { cancelActiveTransition: true, logReason: undefined });
-    }
   }
 
   /** Derives the simple value from a hardware value the device reported. */
@@ -286,10 +272,6 @@ export class SimpleBrightnessControlService {
     };
     transition.onComplete.subscribe(() => transition.isComplete() && clear());
     transition.onError.subscribe(() => transition.isError() && clear());
-    // runs with the error status, so no newer request can start in between
-    if (transition instanceof DeviceFade) {
-      transition.onError.subscribe((error) => this.onFadeRefused(transition, error));
-    }
     if (logReason) {
       info(`[BrightnessControl] Starting brightness transition (Reason: ${logReason})`);
     }
@@ -297,12 +279,6 @@ export class SimpleBrightnessControlService {
     const started = transition.start();
     if (transition instanceof DeviceFade) started.catch(() => {});
     return transition;
-  }
-
-  /** Sets the target in one command instead. */
-  private onFadeRefused(fade: SimpleTransition, error: unknown) {
-    warn(`[BrightnessControl] The headset refused a brightness fade: ${error}`);
-    this.setBrightness(fade.targetBrightness, { cancelActiveTransition: false });
   }
 
   cancelActiveTransition() {
