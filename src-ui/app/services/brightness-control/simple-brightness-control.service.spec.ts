@@ -2,10 +2,7 @@ import { invoke } from '@tauri-apps/api/core';
 import { BehaviorSubject, firstValueFrom, ReplaySubject, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 import { AUTOMATION_CONFIGS_DEFAULT } from '../../models/automations';
-import type {
-  SteamFrameFadeEnded,
-  SteamFrameFadeOutcome,
-} from '../../models/steam-frame';
+import type { SteamFrameFadeEnded, SteamFrameFadeOutcome } from '../../models/steam-frame';
 import { SteamFrameBrightnessFade } from '../steam-frame/steam-frame-fade-task';
 import type { HardwareBrightnessFadeOptions } from './hardware-brightness-drivers/hardware-brightness-control-driver';
 import { SimpleBrightnessControlService } from './simple-brightness-control.service';
