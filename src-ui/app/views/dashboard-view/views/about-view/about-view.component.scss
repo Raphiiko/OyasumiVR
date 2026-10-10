@@ -107,9 +107,8 @@
 
     .role {
       color: var(--color-text-3);
-      font-size: 0.8em;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
+      font-size: 1.1em;
+      font-weight: 300;
       line-height: 1.4;
     }
 
@@ -188,25 +187,37 @@
 }
 
 .section-title {
-  font-size: 0.85em;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--color-text-4);
-  padding-bottom: 0.6em;
+  font-size: 1.6em;
+  font-weight: 300;
+  line-height: 1.2;
+  color: var(--color-text-2);
+  padding-bottom: 0.35em;
 }
 
 .supporters {
   padding-top: 1em;
+  margin-bottom: 0.6em;
 }
 
+// tiers arrive highest first: each step down shows one z fewer and reads lighter and dimmer
 .supporter-tier {
-  &:not(:last-child) {
-    padding-bottom: 0.4em;
+  display: grid;
+  grid-template-columns: 2.6em 9.5em 1fr;
+  column-gap: 0.9em;
+  align-items: center;
+  padding: 0.7em 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+  &:last-child {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   &-label {
-    color: var(--color-text-4);
-    font-size: 0.85em;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    color: var(--color-text-2);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   &-members {
@@ -216,25 +227,67 @@
     gap: 0 0.9em;
 
     span {
+      font-size: 1.2em;
       line-height: 1.4;
     }
   }
 }
 
-// tiers arrive highest first, and each step down reads slightly smaller and dimmer
-.tier-rank-0 .supporter-tier-members span {
-  font-size: 1.35em;
-  color: var(--color-text-1);
+.tier-icon {
+  font-size: 2.6em;
 }
 
-.tier-rank-1 .supporter-tier-members span {
-  font-size: 1.25em;
-  color: var(--color-text-2);
+.tier-rank-0 {
+  .supporter-tier-members span {
+    font-weight: 600;
+    color: var(--color-text-1);
+  }
 }
 
-.tier-rank-2 .supporter-tier-members span {
-  font-size: 1.15em;
-  color: var(--color-text-3);
+.tier-rank-1 {
+  .tier-icon {
+    opacity: 0.85;
+  }
+
+  .supporter-tier-members span {
+    font-weight: 500;
+    color: var(--color-text-1);
+  }
+}
+
+.tier-rank-2 {
+  .tier-icon {
+    opacity: 0.65;
+  }
+
+  .supporter-tier-members span {
+    font-weight: 400;
+    color: var(--color-text-3);
+  }
+}
+
+@keyframes tier-icon-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-0.06em);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tier-icon {
+    animation: tier-icon-float 3.2s ease-in-out infinite;
+  }
+
+  .tier-rank-1 .tier-icon {
+    animation-delay: -1.1s;
+  }
+
+  .tier-rank-2 .tier-icon {
+    animation-delay: -2.2s;
+  }
 }
 
 .credits {
