@@ -13,17 +13,19 @@ export class DeepLinkService {
     await onOpenUrl(async (urls) => {
       for (const strurl of urls) {
         let url: URL | null = null;
-        info(`[DeepLinkService] Received deep link call: ${strurl}`);
+        // the query and fragment can carry access tokens, so they stay out of the log
+        const loggableUrl = strurl.split(/[?#]/)[0];
+        info(`[DeepLinkService] Received deep link call: ${loggableUrl}`);
         try {
           url = new URL(strurl);
         } catch {
-          await warn(`[DeepLinkService] Failed to parse deep link URL: ${strurl}`);
+          await warn(`[DeepLinkService] Failed to parse deep link URL: ${loggableUrl}`);
           return;
         }
         try {
           await this.handleDeepLinkCall(url);
         } catch {
-          await warn(`[DeepLinkService] Failed to handle deep link call for URL: ${strurl}`);
+          await warn(`[DeepLinkService] Failed to handle deep link call for URL: ${loggableUrl}`);
         }
       }
     });
@@ -53,7 +55,6 @@ export class DeepLinkService {
         break;
       default:
         await warn(`[DeepLinkService] Couldn't handle deep link type: ${route[0]}`);
-        await warn(`[DeepLinkService] - href: ${url.href}`);
         await warn(`[DeepLinkService] - hostname: ${url.hostname}`);
         await warn(`[DeepLinkService] - pathname: ${url.pathname}`);
     }
