@@ -22,9 +22,13 @@ async function requestVRChat(
   init?: RequestInit & ClientOptions
 ): Promise<Response> {
   info(`[VRChat] API Request: ${input}`);
+  const headers = new Headers(init?.headers);
+  // VRChat answers 403 to a request with an Origin it does not know; an empty value makes the http plugin drop the header
+  headers.set('Origin', '');
   try {
     const response = await tauriFetch(input, {
       ...init,
+      headers,
     });
     return response;
   } catch (e) {
@@ -298,10 +302,21 @@ export class VRChatAPI {
       warn(`[VRChat] 2FA Verification failed: Invalid code`);
       throw 'INVALID_CODE';
     }
+    if (response.status === 401) {
+      warn(
+        `[VRChat] 2FA Verification failed: login session rejected (${describeResponse(response, responseData)})`
+      );
+      throw 'LOGIN_SESSION_EXPIRED';
+    }
+    if (response.status === 429) {
+      warn(`[VRChat] 2FA Verification failed: rate limited`);
+      throw 'RATE_LIMITED';
+    }
     if (!response.ok || responseData?.verified !== true) {
       error(
-        `[VRChat] Received unexpected response from /auth/twofactorauth/${method}/verify: ${JSON.stringify(
-          response
+        `[VRChat] Received unexpected response from /auth/twofactorauth/${method}/verify: ${describeResponse(
+          response,
+          responseData
         )}`
       );
       throw 'UNEXPECTED_RESPONSE';
@@ -347,12 +362,14 @@ export class VRChatAPI {
         case '"Missing Credentials"':
           throw 'MISSING_CREDENTIALS';
         default:
-          error(`[VRChat] Authentication rejected: ${JSON.stringify(response)}`);
+          error(`[VRChat] Authentication rejected: ${describeResponse(response, responseData)}`);
           throw 'AUTHENTICATION_REJECTED';
       }
     }
     if (!response.ok) {
-      error(`[VRChat] Received unexpected response from /auth/user: ${JSON.stringify(response)}`);
+      error(
+        `[VRChat] Received unexpected response from /auth/user: ${describeResponse(response, responseData)}`
+      );
       throw 'UNEXPECTED_RESPONSE';
     }
     if (!responseData || typeof responseData !== 'object') {
@@ -987,6 +1004,10 @@ export class VRChatAPI {
     await this.trackWrite(this.updateProfile(profileId, patch));
     this.ensureCacheGeneration(cacheGeneration);
   }
+}
+
+function describeResponse(response: Response, body: unknown): string {
+  return `HTTP ${response.status} ${JSON.stringify(body ?? null)}`;
 }
 
 function requestFailure(message: string, cause: unknown): Error {
