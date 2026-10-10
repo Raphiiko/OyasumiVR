@@ -309,7 +309,9 @@ export class VRChatAPI {
       throw 'LOGIN_SESSION_EXPIRED';
     }
     if (response.status === 429) {
-      warn(`[VRChat] 2FA Verification failed: rate limited`);
+      warn(
+        `[VRChat] 2FA Verification failed: rate limited (${describeResponse(response, responseData)})`
+      );
       throw 'RATE_LIMITED';
     }
     if (!response.ok || responseData?.verified !== true) {
