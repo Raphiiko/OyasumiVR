@@ -1361,7 +1361,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumivr-elevated-sidecar"
-version = "26.10.0-beta.17"
+version = "26.10.0-beta.18"
 dependencies = [
  "codesigned",
  "directories",
@@ -1384,7 +1384,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumivr-shared"
-version = "26.10.0-beta.17"
+version = "26.10.0-beta.18"
 dependencies = [
  "flexi_logger",
  "log",
