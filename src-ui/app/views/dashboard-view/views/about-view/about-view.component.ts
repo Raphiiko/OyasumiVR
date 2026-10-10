@@ -96,10 +96,10 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.background.setBackground('/assets/img/about_bg.jpg');
     await this.supporterCache.waitForInitialisation();
     // Fetch supporters list if we don't have it yet (or if the cache expired)
-    let supporters = this.supporterCache.get();
+    const supporters = this.supporterCache.get();
     if (supporters === undefined) {
       try {
-        const response = await fetch('https://getsupporters-fgf7bxmuba-ew.a.run.app');
+        const response = await fetch('https://api.raphii.co/oyasumivr/supporters');
         if (response.ok) {
           const data: { [tier: string]: string[] } = await response.json();
           await this.supporterCache.set(
@@ -115,9 +115,8 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
         // Ignore failure, we'll just not show the list.
       }
     } else {
-      supporters = structuredClone(supporters);
+      // reshuffle in memory only, as set() would restart the cache TTL
       supporters.forEach((tier) => (tier.supporters = shuffle(tier.supporters)));
-      await this.supporterCache.set(supporters);
     }
   }
 
