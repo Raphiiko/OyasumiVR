@@ -101,6 +101,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- The supporter list on the About page now shows every active Patreon supporter, instead of about
+  half of them
 - Fixed VRChat two-factor login, status changes, invite handling, notification dismissal, and logout
   failing after a change to the VRChat API
 - VRChat login errors now say when the login attempt expired or VRChat is limiting login attempts,
