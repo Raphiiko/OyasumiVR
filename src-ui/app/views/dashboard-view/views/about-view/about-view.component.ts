@@ -115,7 +115,6 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
         // Ignore failure, we'll just not show the list.
       }
     } else {
-      // reshuffle in memory only, as set() would restart the cache TTL
       supporters.forEach((tier) => (tier.supporters = shuffle(tier.supporters)));
     }
   }
