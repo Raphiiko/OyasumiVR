@@ -44,7 +44,7 @@ export class VRChatLoginModalComponent
   password = '';
   loggingIn = false;
   error = '';
-  rememberCredentials = false;
+  rememberCredentials = true;
   autoLogin = false;
   newAccount = false;
   keepActiveProfile = false;
@@ -64,13 +64,13 @@ export class VRChatLoginModalComponent
     if (this.initialError) this.setLoginError(this.initialError);
     this.vrchat.activeProfile
       .pipe(
-        map((profile) => profile?.rememberCredentials ?? false),
+        map((profile) => !profile?.userId || profile.rememberCredentials),
         take(1),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(async (rememberCredentials) => {
         try {
-          this.rememberCredentials = this.newAccount ? false : rememberCredentials;
+          this.rememberCredentials = rememberCredentials;
           const credentials = this.newAccount ? null : await this.vrchat.loadCredentials();
           if (credentials) {
             this.username = credentials.username;
@@ -167,6 +167,8 @@ export class VRChatLoginModalComponent
     switch (error) {
       case 'CHECK_EMAIL':
       case 'INVALID_CREDENTIALS':
+      case 'LOGIN_SESSION_EXPIRED':
+      case 'RATE_LIMITED':
       case 'UNEXPECTED_RESPONSE':
       case 'UNSUPPORTED_2FA_METHOD':
         this.error = `comp.vrchat-login-modal.errors.${error}`;
