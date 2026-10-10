@@ -55,6 +55,13 @@ export function getActiveVRChatProfile(settings: VRChatApiSettings): VRChatAccou
   return settings.profiles.find((profile) => profile.id === settings.activeProfileId) ?? null;
 }
 
+/** A fresh draft has no account yet, so only it and a missing profile start with credentials remembered. */
+export function rememberCredentialsByDefault(profile: VRChatAccountProfile | null): boolean {
+  if (!profile) return true;
+  if (profile.draft && !profile.sourceProfileId) return true;
+  return profile.rememberCredentials;
+}
+
 export function normalizeVRChatAccountProfile(
   profile: Partial<VRChatAccountProfile>
 ): VRChatAccountProfile {
