@@ -20,23 +20,13 @@ import { ModalService } from 'src-ui/app/services/modal.service';
 import { invoke } from '@tauri-apps/api/core';
 import { relaunch } from '@tauri-apps/plugin-process';
 import { EventLogService } from '../../../../services/event-log.service';
-import { appLogDir } from '@tauri-apps/api/path';
 import { IPCService } from '../../../../services/ipc.service';
 import { SetDebugTranslationsRequest } from '../../../../../../src-grpc-web-client/overlay-sidecar_pb';
-import { OpenVRService } from 'src-ui/app/services/openvr.service';
 import { AppSettingsService } from '../../../../services/app-settings.service';
 import { FLAVOUR } from '../../../../../build';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { firstValueFrom } from 'rxjs';
 import { ToastService } from '../../../../services/toast.service';
-
-const MANIFEST_REREGISTER_ERRORS = [
-  'MANIFEST_ADD_FAILED',
-  'MANIFEST_REMOVE_FAILED',
-  'MANIFEST_CHECK_FAILED',
-  'MANIFEST_NOT_REGISTERED',
-  'FLAVOUR_NOT_ELIGIBLE',
-];
 
 @Component({
   selector: 'app-settings-advanced-view',
@@ -62,7 +52,6 @@ export class SettingsAdvancedViewComponent {
   ];
   checkedPersistentStorageItems: string[] = [];
   memoryWatcherActive = FLAVOUR === 'DEV';
-  devToolsAvailable = invoke<boolean>('dev_tools_available');
   overlayGpuAcceleration = true;
   openVrInitDelayFix = false;
   lighthousePowerOffDelay = false;
@@ -74,7 +63,6 @@ export class SettingsAdvancedViewComponent {
     private eventLogService: EventLogService,
     private ipcService: IPCService,
     private settingsService: AppSettingsService,
-    protected openvr: OpenVRService,
     private toasts: ToastService
   ) {
     this.settingsService.settings.pipe(takeUntilDestroyed()).subscribe((settings) => {
@@ -280,37 +268,6 @@ export class SettingsAdvancedViewComponent {
             });
         }
       });
-  }
-
-  async openLogsFolder() {
-    const path = await appLogDir().then((dir) => dir + '\\OyasumiVR.log');
-    await invoke('show_in_folder', { path });
-  }
-
-  async reregisterVRManifest() {
-    if ((await firstValueFrom(this.openvr.status)) !== 'INITIALIZED') return;
-    try {
-      await invoke('openvr_reregister_manifest');
-    } catch (e) {
-      error(`[Settings] Could not re-register VR manifest: ${JSON.stringify(e)}`);
-      const result = MANIFEST_REREGISTER_ERRORS.includes(e as string) ? (e as string) : 'UNKNOWN';
-      this.toasts.show({
-        type: result === 'FLAVOUR_NOT_ELIGIBLE' ? 'info' : 'error',
-        title: `toasts.vrManifestReregister.${result}.title`,
-        message: `toasts.vrManifestReregister.${result}.message`,
-        duration: 8000,
-      });
-      return;
-    }
-    this.toasts.show({
-      type: 'success',
-      title: 'toasts.vrManifestReregister.success.title',
-      message: 'toasts.vrManifestReregister.success.message',
-    });
-  }
-
-  async openDevTools() {
-    await invoke('open_dev_tools');
   }
 
   setOverlayGpuAcceleration(enabled: boolean) {

@@ -86,20 +86,6 @@
         </div>
       </div>
       <div class="setting-category">
-        <h2 transloco="settings.advanced.logs.title"></h2>
-        <div class="settings">
-          <app-setting-row
-            label="settings.advanced.logs.openFolder.title"
-            description="settings.advanced.logs.openFolder.description"
-          >
-            <button class="btn btn-primary" (click)="openLogsFolder()">
-              <app-icon name="folder" />
-              <span transloco="settings.advanced.logs.openFolder.action"></span>
-            </button>
-          </app-setting-row>
-        </div>
-      </div>
-      <div class="setting-category">
         <h2 transloco="settings.advanced.persistentData.title"></h2>
         <div class="action-row">
           <p transloco="settings.advanced.persistentData.description"></p>
@@ -155,36 +141,6 @@
               </div>
             }
           </div>
-        </div>
-      </div>
-      <div class="setting-category">
-        <h2 transloco="settings.advanced.troubleshooting.title"></h2>
-        <p transloco="settings.advanced.troubleshooting.description"></p>
-        <div class="settings">
-          <app-setting-row
-            label="settings.advanced.troubleshooting.vrManifestReregister.title"
-            description="settings.advanced.troubleshooting.vrManifestReregister.description"
-          >
-            <button
-              class="btn btn-primary"
-              (click)="reregisterVRManifest()"
-              [disabled]="(openvr.status | async) !== 'INITIALIZED'"
-            >
-              <span
-                transloco="settings.advanced.troubleshooting.vrManifestReregister.action"
-              ></span>
-            </button>
-          </app-setting-row>
-          @if (devToolsAvailable | async) {
-            <app-setting-row
-              label="settings.advanced.troubleshooting.devTools.title"
-              description="settings.advanced.troubleshooting.devTools.description"
-            >
-              <button class="btn btn-primary" (click)="openDevTools()">
-                <span transloco="settings.advanced.troubleshooting.devTools.action"></span>
-              </button>
-            </app-setting-row>
-          }
         </div>
       </div>
     </div>

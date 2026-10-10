@@ -245,8 +245,8 @@
         "integrations": "Integrations",
         "notifications": "Notification Settings",
         "osc": "OSC Settings",
-        "statusInfo": "Status Information",
         "subMenu": "Settings",
+        "troubleshooting": "Troubleshooting",
         "updates": "Updates"
       },
       "shutdownAutomations": "Shutdown Sequence",
@@ -1930,14 +1930,6 @@
         },
         "title": "Application"
       },
-      "logs": {
-        "openFolder": {
-          "action": "Open Log Folder",
-          "description": "Opens the location of OyasumiVR's log files in your file explorer",
-          "title": "Open log folder"
-        },
-        "title": "Log Files"
-      },
       "persistentData": {
         "clearData": "Clear Data",
         "clearModal": {
@@ -2013,20 +2005,6 @@
           "title": "Load translation file"
         },
         "title": "Language & Translation"
-      },
-      "troubleshooting": {
-        "description": "This section contains some options related to troubleshooting. You generally shouldn't need to use these unless you're being asked to use them when getting support.",
-        "devTools": {
-          "action": "Open DevTools",
-          "description": "Opens the Edge Developer Tools, for debugging purposes",
-          "title": "Open Developer Tools"
-        },
-        "title": "Troubleshooting",
-        "vrManifestReregister": {
-          "action": "Reregister Manifest",
-          "description": "Reregisters OyasumiVR's VR application manifest with SteamVR",
-          "title": "Reregister SteamVR application manifest"
-        }
       }
     },
     "brightnessCct": {
@@ -2357,14 +2335,104 @@
       },
       "title": "OSC Settings"
     },
-    "statusInfo": {
-      "copy": {
-        "action": "Copy",
-        "description": "Copy all of the information below to your clipboard",
-        "title": "Copy to clipboard"
+    "troubleshooting": {
+      "status": {
+        "adminPrivileges": {
+          "disabling": "Turning off",
+          "enabling": "Turning on",
+          "failure": {
+            "cleanupFailed": "Failed to turn off: {reason}",
+            "installFailed": "The install failed.",
+            "notSupported": "This Windows account cannot grant them.",
+            "promptDeclined": "The permission prompt was declined.",
+            "taskFailed": "Failed to start: {reason}"
+          },
+          "label": "Administrative permissions",
+          "notRunning": "On, not running",
+          "off": "Off",
+          "running": "On, running"
+        },
+        "bluetooth": {
+          "adapterError": "Adapter error",
+          "label": "Bluetooth",
+          "noAdapter": "No adapter",
+          "ready": "Adapter found",
+          "uninitialized": "Not in use"
+        },
+        "mqtt": {
+          "CONNECTED": "Connected",
+          "DISABLED": "Off",
+          "DISCONNECTED": "Not connected",
+          "ERROR": "Connection error",
+          "label": "MQTT"
+        },
+        "osc": {
+          "hours": "Last message {value} h ago",
+          "label": "OSC",
+          "minutes": "Last message {value} min ago",
+          "noMessages": "No messages yet",
+          "off": "Off",
+          "seconds": "Last message {value} s ago"
+        },
+        "overlay": {
+          "label": "Overlay",
+          "notRunning": "Not running",
+          "running": "Running"
+        },
+        "pulsoid": {
+          "label": "Pulsoid",
+          "loggedIn": "Logged in",
+          "loggedOut": "Not logged in"
+        },
+        "steamvr": {
+          "INACTIVE": "Not running",
+          "INITIALIZED": "Running",
+          "INITIALIZING": "Starting",
+          "label": "SteamVR"
+        },
+        "steamvrAutoLaunch": {
+          "label": "SteamVR auto-launch",
+          "off": "Off",
+          "on": "On"
+        },
+        "title": "Status",
+        "vrchat": {
+          "label": "VRChat",
+          "notRunning": "Not running",
+          "running": "Running"
+        },
+        "vrchatAccount": {
+          "label": "VRChat account",
+          "loggedIn": "Logged in",
+          "loggedOut": "Not logged in"
+        }
       },
-      "description": "Here you'll find some technical information regarding OyasumiVR and some of its internals. This is mainly used for debugging purposes and might be useful when troubleshooting, or getting support.",
-      "title": "Status Information"
+      "support": {
+        "title": "Support",
+        "version": {
+          "build": "{flavour} build {buildId}",
+          "copy": "Copy"
+        }
+      },
+      "title": "Troubleshooting",
+      "tools": {
+        "devTools": {
+          "action": "Open DevTools",
+          "description": "Opens the Edge Developer Tools, for debugging purposes",
+          "title": "Open Developer Tools"
+        },
+        "logs": {
+          "action": "Open Log Folder",
+          "description": "Opens the location of OyasumiVR's log files in your file explorer",
+          "title": "Open log folder"
+        },
+        "title": "Tools",
+        "vrManifestReregister": {
+          "action": "Reregister Manifest",
+          "description": "Reregisters OyasumiVR's VR application manifest with SteamVR",
+          "title": "Reregister SteamVR application manifest"
+        }
+      }
     },
     "updates": {
       "changelog": "Changelog",
@@ -2946,7 +3014,7 @@
       "copied": "Copied to clipboard",
       "failed": "Could not copy to clipboard",
       "pulsoidLink": "Open the link in your browser to connect Pulsoid.",
-      "statusInfo": "Paste it into a bug report or a support request."
+      "version": "Paste it into a bug report or a support request."
     },
     "desktopNotificationsBlocked": {
       "message": "Windows did not allow OyasumiVR to show notifications, so OyasumiVR keeps sending them to its own overlay.",

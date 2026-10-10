@@ -241,7 +241,6 @@
         "hotkeys": "快捷键",
         "integrations": "集成插件",
         "notifications": "通知",
-        "statusInfo": "调试信息",
         "subMenu": "设置",
         "updates": "更新"
       },
@@ -1847,14 +1846,6 @@
         },
         "title": "应用程序"
       },
-      "logs": {
-        "openFolder": {
-          "action": "打开日志文件夹",
-          "description": "在你的资源管理器中打开 OyasumiVR 日志文件所在的位置",
-          "title": "打开日志文件夹"
-        },
-        "title": "日志文件"
-      },
       "persistentData": {
         "clearData": "清除数据",
         "clearModal": {
@@ -1928,20 +1919,6 @@
           "title": "加载语言文件"
         },
         "title": "语言和翻译"
-      },
-      "troubleshooting": {
-        "description": "本部分包含与故障排查相关的选项。通常情况下你无需使用，除非在寻求支持时被特别要求。",
-        "devTools": {
-          "action": "打开界面调试工具",
-          "description": "用于调试 OyasumiVR 的 UI 界面",
-          "title": "界面调试工具"
-        },
-        "title": "故障排查",
-        "vrManifestReregister": {
-          "action": "重新注册",
-          "description": "在 SteamVR 上重新注册程序的清单数据",
-          "title": "重新注册 SteamVR 的应用程序清单"
-        }
       }
     },
     "brightnessCct": {
@@ -2183,14 +2160,24 @@
         }
       }
     },
-    "statusInfo": {
-      "copy": {
-        "action": "复制",
-        "description": "将下面的所有信息复制到剪贴板",
-        "title": "复制到剪贴板"
-      },
-      "description": "这里有一些关于 OyasumiVR 及其内部的技术信息。这些信息主要用于调试，在寻求支持时可能会有所帮助。",
-      "title": "调试信息"
+    "troubleshooting": {
+      "tools": {
+        "devTools": {
+          "action": "打开界面调试工具",
+          "description": "用于调试 OyasumiVR 的 UI 界面",
+          "title": "界面调试工具"
+        },
+        "logs": {
+          "action": "打开日志文件夹",
+          "description": "在你的资源管理器中打开 OyasumiVR 日志文件所在的位置",
+          "title": "打开日志文件夹"
+        },
+        "vrManifestReregister": {
+          "action": "重新注册",
+          "description": "在 SteamVR 上重新注册程序的清单数据",
+          "title": "重新注册 SteamVR 的应用程序清单"
+        }
+      }
     },
     "updates": {
       "changelog": "更新日志",

@@ -353,12 +353,15 @@
       <div
         class="menu-item"
         [routerLinkActive]="'active'"
-        [routerLink]="['settings', 'statusInfo']"
+        [routerLink]="['settings', 'troubleshooting']"
       >
         <div class="menu-item-icon-prefix">
           <app-icon name="checklist" />
         </div>
-        <div class="menu-item-label" transloco="comp.dashboard-navbar.settings.statusInfo"></div>
+        <div
+          class="menu-item-label"
+          transloco="comp.dashboard-navbar.settings.troubleshooting"
+        ></div>
       </div>
     </div>
   }

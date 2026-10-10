@@ -233,7 +233,6 @@
         "hotkeys": "ショートカットキー設定",
         "integrations": "外部連携",
         "notifications": "通知設定",
-        "statusInfo": "ステータス情報",
         "subMenu": "設定",
         "updates": "アップデート"
       },
@@ -1837,14 +1836,6 @@
         },
         "title": "アプリ"
       },
-      "logs": {
-        "openFolder": {
-          "action": "フォルダを開く",
-          "description": "エクスプローラーでログファイルの場所を開きます",
-          "title": "ログフォルダを開く"
-        },
-        "title": "ログファイル"
-      },
       "persistentData": {
         "clearData": "データクリア",
         "clearModal": {
@@ -1918,20 +1909,6 @@
           "title": "翻訳ファイルを読み込む"
         },
         "title": "言語・翻訳"
-      },
-      "troubleshooting": {
-        "description": "トラブルシューティングに関連するいくつかのオプションが含まれます。通常、使用する必要はありません。",
-        "devTools": {
-          "action": "開発者ツールを開く",
-          "description": "デバッグ目的でEdgeの開発者ツールを開きます",
-          "title": "開発者ツールを開く"
-        },
-        "title": "トラブルシューティング",
-        "vrManifestReregister": {
-          "action": "マニフェストの再登録",
-          "description": "OyasumiVRのアプリケーションマニフェストをSteamVRに再登録します",
-          "title": "SteamVRアプリケーションマニフェストの再登録"
-        }
       }
     },
     "brightnessCct": {
@@ -2173,14 +2150,24 @@
         }
       }
     },
-    "statusInfo": {
-      "copy": {
-        "action": "コピー",
-        "description": "以下の情報をすべてクリップボードにコピーします",
-        "title": "クリップボードにコピー"
-      },
-      "description": "OyasumiVRとその内部の技術的な情報が表示されます。主にデバッグ目的で使用され、トラブルシューティングやサポートの際に役立つことがあります。",
-      "title": "ステータス情報"
+    "troubleshooting": {
+      "tools": {
+        "devTools": {
+          "action": "開発者ツールを開く",
+          "description": "デバッグ目的でEdgeの開発者ツールを開きます",
+          "title": "開発者ツールを開く"
+        },
+        "logs": {
+          "action": "フォルダを開く",
+          "description": "エクスプローラーでログファイルの場所を開きます",
+          "title": "ログフォルダを開く"
+        },
+        "vrManifestReregister": {
+          "action": "マニフェストの再登録",
+          "description": "OyasumiVRのアプリケーションマニフェストをSteamVRに再登録します",
+          "title": "SteamVRアプリケーションマニフェストの再登録"
+        }
+      }
     },
     "updates": {
       "changelog": "変更履歴",

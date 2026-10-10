@@ -180,7 +180,7 @@ import { DeviceSelectorComponent } from './components/device-selector/device-sel
 import { DeviceSelectorModalComponent } from './components/device-selector-modal/device-selector-modal.component';
 import { HotkeyService } from './services/hotkey.service';
 import { HotkeyHandlerService } from './services/hotkey-handler.service';
-import { SettingsStatusInfoViewComponent } from './views/dashboard-view/views/settings-status-info-view/settings-status-info-view.component';
+import { SettingsTroubleshootingViewComponent } from './views/dashboard-view/views/settings-troubleshooting-view/settings-troubleshooting-view.component';
 import { ask } from '@tauri-apps/plugin-dialog';
 import { exit } from '@tauri-apps/plugin-process';
 import { OscControlService } from './services/osc-control/osc-control.service';
@@ -400,7 +400,7 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
     HotkeySelectorModalComponent,
     DeviceSelectorComponent,
     DeviceSelectorModalComponent,
-    SettingsStatusInfoViewComponent,
+    SettingsTroubleshootingViewComponent,
     SnowverlayComponent,
     HmdAutomationsViewComponent,
     HmdAutomationsBigscreenBeyondTabComponent,

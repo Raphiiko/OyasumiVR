@@ -238,7 +238,6 @@
         "hotkeys": "Hotkey Instellingen",
         "integrations": "Integraties",
         "notifications": "Notificatie instellingen",
-        "statusInfo": "Status Informatie",
         "subMenu": "Instellingen"
       },
       "shutdownAutomations": "Afsluit Procedure",
@@ -1808,14 +1807,6 @@
         },
         "title": "Applicatie"
       },
-      "logs": {
-        "openFolder": {
-          "action": "Open Map",
-          "description": "Opent de map waar OyasumiVR de logbestanden opslaat.",
-          "title": "Open Map"
-        },
-        "title": "Logbestanden"
-      },
       "persistentData": {
         "clearData": "Verwijder Gegevens",
         "clearModal": {
@@ -1889,18 +1880,6 @@
           "title": "Laad vertalingsbestand"
         },
         "title": "Taal & Vertalen"
-      },
-      "troubleshooting": {
-        "description": "Deze sectie bevat enkele opties gerelateerd aan probleemoplossing. Je hoeft deze over het algemeen niet te gebruiken, tenzij je wordt gevraagd om ze te gebruiken bij het krijgen van ondersteuning.",
-        "devTools": {
-          "description": "Opent de Edge Developer Tools, om fouten mee op te sporen"
-        },
-        "title": "Probleemoplossing",
-        "vrManifestReregister": {
-          "action": "Herregistreer Manifest",
-          "description": "Herregistreert OyasumiVR's VR application manifest met SteamVR",
-          "title": "Herregistreet SteamVR application manifest"
-        }
       }
     },
     "brightnessCct": {
@@ -2135,14 +2114,22 @@
         }
       }
     },
-    "statusInfo": {
-      "copy": {
-        "action": "Kopieer",
-        "description": "Kopieer alle onderstaande informatie naar je klembord",
-        "title": "Kopieer naar klembord"
-      },
-      "description": "Hier kun je wat technische informatie vinden van OyasumiVR's interne werking. Dit kan vooral gebruikt worden voor foutopsporing, en kan handig zijn wanneer je om ondersteuning vraagt.",
-      "title": "Status Informatie"
+    "troubleshooting": {
+      "tools": {
+        "devTools": {
+          "description": "Opent de Edge Developer Tools, om fouten mee op te sporen"
+        },
+        "logs": {
+          "action": "Open Map",
+          "description": "Opent de map waar OyasumiVR de logbestanden opslaat.",
+          "title": "Open Map"
+        },
+        "vrManifestReregister": {
+          "action": "Herregistreer Manifest",
+          "description": "Herregistreert OyasumiVR's VR application manifest met SteamVR",
+          "title": "Herregistreet SteamVR application manifest"
+        }
+      }
     },
     "updates": {
       "checkForUpdates": "Updates checken",

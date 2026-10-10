@@ -241,7 +241,6 @@
         "integrations": "การเชื่อมต่อภายนอก",
         "notifications": "การแจ้งเตือน",
         "osc": "การตั้งค่า OSC",
-        "statusInfo": "ข้อมูลสถานะ",
         "subMenu": "ตั้งค่า",
         "updates": "อัปเดต"
       },
@@ -1847,14 +1846,6 @@
         },
         "title": "แอปพลิเคชัน"
       },
-      "logs": {
-        "openFolder": {
-          "action": "เปิดโฟลเดอร์",
-          "description": "เปิดตำแหน่งไฟล์บันทึกใน Explorer",
-          "title": "เปิดโฟลเดอร์บันทึก"
-        },
-        "title": "ไฟล์บันทึก"
-      },
       "persistentData": {
         "clearData": "ล้างข้อมูล",
         "clearModal": {
@@ -1929,20 +1920,6 @@
           "title": "โหลดไฟล์แปล"
         },
         "title": "ภาษาและการแปล"
-      },
-      "troubleshooting": {
-        "description": "รวมตัวเลือกสำหรับการแก้ปัญหา โดยปกติไม่จำเป็นต้องใช้",
-        "devTools": {
-          "action": "เปิดเครื่องมือนักพัฒนา",
-          "description": "เปิดเครื่องมือนักพัฒนา Edge เพื่อการดีบัก",
-          "title": "เปิดเครื่องมือนักพัฒนา"
-        },
-        "title": "การแก้ปัญหา",
-        "vrManifestReregister": {
-          "action": "ลงทะเบียน Manifest ใหม่",
-          "description": "ลงทะเบียน Application Manifest ของ OyasumiVR กับ SteamVR ใหม่",
-          "title": "ลงทะเบียน SteamVR Application Manifest ใหม่"
-        }
       }
     },
     "brightnessCct": {
@@ -2221,14 +2198,24 @@
       },
       "title": "การตั้งค่า OSC"
     },
-    "statusInfo": {
-      "copy": {
-        "action": "คัดลอก",
-        "description": "คัดลอกข้อมูลทั้งหมดด้านล่างไปยังคลิปบอร์ด",
-        "title": "คัดลอกไปยังคลิปบอร์ด"
-      },
-      "description": "แสดงข้อมูลทางเทคนิคของ OyasumiVR และภายใน ใช้สำหรับการดีบักและอาจเป็นประโยชน์เมื่อแก้ปัญหาหรือติดต่อสนับสนุน",
-      "title": "ข้อมูลสถานะ"
+    "troubleshooting": {
+      "tools": {
+        "devTools": {
+          "action": "เปิดเครื่องมือนักพัฒนา",
+          "description": "เปิดเครื่องมือนักพัฒนา Edge เพื่อการดีบัก",
+          "title": "เปิดเครื่องมือนักพัฒนา"
+        },
+        "logs": {
+          "action": "เปิดโฟลเดอร์",
+          "description": "เปิดตำแหน่งไฟล์บันทึกใน Explorer",
+          "title": "เปิดโฟลเดอร์บันทึก"
+        },
+        "vrManifestReregister": {
+          "action": "ลงทะเบียน Manifest ใหม่",
+          "description": "ลงทะเบียน Application Manifest ของ OyasumiVR กับ SteamVR ใหม่",
+          "title": "ลงทะเบียน SteamVR Application Manifest ใหม่"
+        }
+      }
     },
     "updates": {
       "changelog": "บันทึกการเปลี่ยนแปลง",
