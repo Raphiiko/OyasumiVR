@@ -79,6 +79,7 @@
             <div class="section-title" transloco="about.supporters"></div>
             @for (tier of supporterCache.get() ?? []; track tier; let rank = $index) {
               <div class="supporter-tier" [ngClass]="'tier-rank-' + (rank < 2 ? rank : 2)">
+                <app-icon class="tier-icon" [name]="'z-' + (3 - (rank < 2 ? rank : 2))" />
                 <div class="supporter-tier-label">{{ tier.name }}</div>
                 <div class="supporter-tier-members">
                   @for (supporter of tier.supporters; track $index) {
