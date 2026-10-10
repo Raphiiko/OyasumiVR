@@ -47,6 +47,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Changed
 
+- "Remember Credentials" is now enabled by default in the VRChat login window
 - The notification setting for automatically accepted invite requests is now "Automatically Handled
   Invites and Invite Requests", and also covers automatically declined invites and invite requests
 - Color temperature control is now limited to supported headsets (Valve Index, Bigscreen Beyond).
@@ -101,6 +102,10 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed VRChat two-factor login, status changes, invite handling, notification dismissal, and logout
+  failing, because VRChat started rejecting the requests OyasumiVR sent
+- VRChat login errors now say when the login attempt expired or VRChat is limiting login attempts,
+  instead of reporting an unknown error
 - Fixed overlay pointers and tooltips clipping into the dashboard with SteamVR 2.17.
 - The splash screen and VR notifications no longer stretch or skew while they move into place
   after you turn your head
