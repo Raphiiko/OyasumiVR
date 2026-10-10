@@ -12,7 +12,6 @@ import { VRChatLoginTFAModalComponent } from '../vrchat-login-tfa-modal/vrchat-l
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { ModalService } from '../../services/modal.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { rememberCredentialsByDefault } from '../../models/vrchat-api-settings';
 import {
   twoFactorMethodFromError,
   VRChatTwoFactorMethod,
@@ -64,14 +63,9 @@ export class VRChatLoginModalComponent
   async ngOnInit(): Promise<void> {
     if (this.initialError) this.setLoginError(this.initialError);
     this.vrchat.activeProfile
-      .pipe(
-        map((profile) => this.newAccount || rememberCredentialsByDefault(profile)),
-        take(1),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe(async (rememberCredentials) => {
+      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
+      .subscribe(async () => {
         try {
-          this.rememberCredentials = rememberCredentials;
           const credentials = this.newAccount ? null : await this.vrchat.loadCredentials();
           if (credentials) {
             this.username = credentials.username;
