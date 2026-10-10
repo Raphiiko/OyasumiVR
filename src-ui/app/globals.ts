@@ -10,6 +10,7 @@ export const SETTINGS_KEY_SLEEP_MODE = 'SLEEP_MODE';
 export const SETTINGS_KEY_TELEMETRY_SETTINGS = 'TELEMETRY_SETTINGS';
 export const SETTINGS_KEY_THEMING_SETTINGS = 'THEMING_SETTINGS';
 export const SETTINGS_KEY_PULSOID_API = 'PULSOID_API';
+export const SETTINGS_KEY_STEAM_FRAME_PAIRING = 'STEAM_FRAME_PAIRING';
 export const SETTINGS_FILE = 'settings.dat';
 export const CACHE_FILE = 'cache.dat';
 export const EVENT_LOG_FILE = 'event_log.dat';

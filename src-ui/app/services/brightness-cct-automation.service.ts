@@ -498,8 +498,9 @@ export class BrightnessCctAutomationService {
       const advancedMode = await firstValueFrom(this.automationConfigService.configs).then(
         (c) => c.BRIGHTNESS_AUTOMATIONS.advancedMode
       );
-      const hardwareBrightnessAvailable =
-        advancedMode && (await firstValueFrom(this.hardwareBrightnessControl.driverIsAvailable));
+      // the headset's driver keeps a value until the headset can take it
+      const usesHardwareBrightness =
+        advancedMode && this.hardwareBrightnessControl.activeDriver !== null;
       if (!forceInstant && config.transition) {
         const tasks: CancellableTask[] = await (async () => {
           if (advancedMode) {
@@ -512,7 +513,7 @@ export class BrightnessCctAutomationService {
                 }
               ),
             ];
-            if (hardwareBrightnessAvailable) {
+            if (usesHardwareBrightness) {
               tasks.push(
                 this.hardwareBrightnessControl.transitionBrightness(
                   config.hardwareBrightness,
@@ -545,7 +546,7 @@ export class BrightnessCctAutomationService {
           await this.softwareBrightnessControl.setBrightness(config.softwareBrightness, {
             logReason,
           });
-          if (hardwareBrightnessAvailable) {
+          if (usesHardwareBrightness) {
             await this.hardwareBrightnessControl.setBrightness(config.hardwareBrightness, {
               logReason,
             });
@@ -565,7 +566,7 @@ export class BrightnessCctAutomationService {
             transition: config.transition,
             transitionTime: config.transitionTime,
           });
-          if (hardwareBrightnessAvailable) {
+          if (usesHardwareBrightness) {
             this.eventLog.logEvent({
               type: 'hardwareBrightnessChanged',
               reason: eventLogReason,

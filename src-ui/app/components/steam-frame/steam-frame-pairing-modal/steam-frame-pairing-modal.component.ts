@@ -1,0 +1,122 @@
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { openUrl } from '@tauri-apps/plugin-opener';
+import { TranslocoModule } from '@jsverse/transloco';
+import { BaseModalComponent } from '../../base-modal/base-modal.component';
+import { isValidHostname, isValidIPv4, isValidIPv6 } from '../../../utils/regex-utils';
+import { SteamFramePairingService } from '../../../services/steam-frame/steam-frame-pairing.service';
+import { ToastService } from '../../../services/toast.service';
+import { copyWithToast } from '../../../utils/clipboard-utils';
+import {
+  STEAM_FRAME_UNINSTALL_COMMAND,
+  SteamFramePage,
+  SteamFrameSetupStage,
+} from '../../../models/steam-frame';
+
+const STEP_OF_PAGE: Record<SteamFramePage, number> = {
+  intro: 0,
+  devmode: 1,
+  pairhost: 2,
+  search: 3,
+  found: 3,
+  notfound: 3,
+  manual: 3,
+  notready: 3,
+  wrongDevice: 3,
+  request: 4,
+  awaiting: 4,
+  declined: 4,
+  timeout: 4,
+  uncertain: 4,
+  setup: 5,
+  setupFailed: 5,
+  needsUpdate: 5,
+  cancelling: 5,
+  cleanupFailed: 5,
+  success: 6,
+};
+
+const ILLUSTRATIONS: Partial<Record<SteamFramePage, string>> = {
+  devmode: 'settings',
+  pairhost: 'settings',
+  search: 'searching',
+  found: 'devices',
+  request: 'devices',
+  notfound: 'not-found',
+  awaiting: 'approval-pending',
+  declined: 'request-stopped',
+  timeout: 'request-stopped',
+  setup: 'setup-running',
+  setupFailed: 'setup-interrupted',
+  success: 'paired',
+};
+
+const BACK: Partial<Record<SteamFramePage, SteamFramePage>> = {
+  devmode: 'intro',
+  pairhost: 'devmode',
+  found: 'pairhost',
+  notfound: 'pairhost',
+  manual: 'pairhost',
+};
+
+@Component({
+  selector: 'app-steam-frame-pairing-modal',
+  standalone: true,
+  imports: [FormsModule, TranslocoModule],
+  templateUrl: './steam-frame-pairing-modal.component.html',
+  styleUrl: './steam-frame-pairing-modal.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class SteamFramePairingModalComponent extends BaseModalComponent<void, void> {
+  protected readonly pairing = inject(SteamFramePairingService);
+  private readonly toasts = inject(ToastService);
+  readonly stepLabels = [
+    'before',
+    'developer',
+    'pairhost',
+    'find',
+    'approve',
+    'install',
+    'finished',
+  ];
+  readonly stages: SteamFrameSetupStage[] = ['verify', 'install', 'connection'];
+  readonly address = signal('');
+
+  readonly flow = this.pairing.flow;
+  readonly page = computed(() => this.flow()?.page ?? 'intro');
+  readonly busy = computed(() => !!this.flow()?.busy);
+  /** A failed access check shows the setup-failed page while the flow is still at step 4. */
+  readonly step = computed(() =>
+    this.page() === 'setupFailed' && !this.pairing.flowPairing()?.hostKeyPin
+      ? STEP_OF_PAGE.awaiting
+      : STEP_OF_PAGE[this.page()]
+  );
+  readonly illustration = computed(() => ILLUSTRATIONS[this.page()]);
+  readonly animated = computed(() =>
+    ['searching', 'approval-pending', 'setup-running'].includes(this.illustration() ?? '')
+  );
+  readonly back = computed(() => (this.busy() ? undefined : BACK[this.page()]));
+  readonly stageIndex = computed(() => this.stages.indexOf(this.flow()?.stage ?? 'verify'));
+  readonly validAddress = computed(() => {
+    const address = this.address().trim();
+    return isValidIPv4(address) || isValidIPv6(address) || isValidHostname(address);
+  });
+
+  readonly uninstallCommand = STEAM_FRAME_UNINSTALL_COMMAND;
+
+  copyUninstallCommand() {
+    return copyWithToast(this.toasts, this.uninstallCommand);
+  }
+
+  /** Opens links in the translated copy in the browser instead of this window. */
+  openLink(event: MouseEvent) {
+    const link = (event.target as HTMLElement).closest('a');
+    if (!link) return;
+    event.preventDefault();
+    void openUrl(link.href);
+  }
+
+  connectManual() {
+    if (this.validAddress()) void this.pairing.connectManual(this.address());
+  }
+}

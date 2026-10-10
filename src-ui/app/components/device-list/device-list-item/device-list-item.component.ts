@@ -14,7 +14,7 @@ import { EventLogService } from '../../../services/event-log.service';
 import { LighthouseDevice, LighthouseDevicePowerState } from 'src-ui/app/models/lighthouse-device';
 import { LighthouseService } from 'src-ui/app/services/lighthouse.service';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
-import { distinctUntilChanged, firstValueFrom, map, skip } from 'rxjs';
+import { distinctUntilChanged, firstValueFrom, map, merge, skip } from 'rxjs';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { OpenVRService } from '../../../services/openvr.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -34,6 +34,8 @@ import {
 } from '../../device-power-button/device-power-button.component';
 import { isEqual } from 'lodash';
 import { DeviceManagerService } from 'src-ui/app/services/device-manager.service';
+import { SteamFramePairingService } from 'src-ui/app/services/steam-frame/steam-frame-pairing.service';
+import { DMKnownDevice } from 'src-ui/app/models/device-manager';
 
 @Component({
   selector: 'app-device-list-item',
@@ -53,7 +55,12 @@ export class DeviceListItemComponent implements OnInit {
     const knownDevice = this.deviceManager.getKnownDeviceById(
       this.deviceManager.getIdForOpenVRDevice(device)
     );
-    if (!knownDevice) return;
+    if (!knownDevice) {
+      // the row stays mounted, so it must not keep a pair action for a device it no longer knows
+      this.frameToPair = undefined;
+      if (this.powerButtonState === 'attention') this.powerButtonState = 'hide';
+      return;
+    }
 
     this.mode = 'openvr';
     this.deviceTypeName = knownDevice.typeName;
@@ -65,7 +72,9 @@ export class DeviceListItemComponent implements OnInit {
       ? Math.floor(device.battery * 1000) / 10 + '%'
       : 0 + '%';
     this.status = null;
-    if (device.isTurningOff) this.powerButtonState = 'turn_off_busy';
+    this.frameToPair = this.framePairable(knownDevice) ? knownDevice : undefined;
+    if (this.frameToPair) this.powerButtonState = 'attention';
+    else if (device.isTurningOff) this.powerButtonState = 'turn_off_busy';
     else if (device.canPowerOff && device.dongleId) this.powerButtonState = 'turn_off';
     else this.powerButtonState = 'hide';
     this.cssId = this.sanitizeIdentifierForCSS(device.serialNumber ?? '');
@@ -85,6 +94,7 @@ export class DeviceListItemComponent implements OnInit {
     this.mode = 'lighthouse';
     this.deviceTypeName = knownDevice.typeName;
     this.deviceName = knownDevice.nickname ?? knownDevice.defaultName;
+    this.frameToPair = undefined;
     this.showBattery = false;
     this.isCharging = false;
     this.batteryPercentage = 100;
@@ -155,6 +165,8 @@ export class DeviceListItemComponent implements OnInit {
   cssId = '';
   _lighthouseDevice?: LighthouseDevice;
   _ovrDevice?: OVRDevice;
+  /** Set while this row is a Steam Frame that has no working pairing. */
+  frameToPair?: DMKnownDevice;
 
   constructor(
     private lighthouseConsole: LighthouseConsoleService,
@@ -165,6 +177,7 @@ export class DeviceListItemComponent implements OnInit {
     private destroyRef: DestroyRef,
     private modalService: ModalService,
     private deviceManager: DeviceManagerService,
+    private framePairing: SteamFramePairingService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -189,11 +202,25 @@ export class DeviceListItemComponent implements OnInit {
         if (this._lighthouseDevice) this.lighthouseDevice = this._lighthouseDevice;
         this.cdr.markForCheck();
       });
-    this.deviceManager.knownDevices.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      if (this._ovrDevice) this.ovrDevice = this._ovrDevice;
-      if (this._lighthouseDevice) this.lighthouseDevice = this._lighthouseDevice;
-      this.cdr.markForCheck();
-    });
+    merge(
+      this.deviceManager.knownDevices,
+      this.framePairing.pairings$,
+      this.framePairing.connections$
+    )
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        if (this._ovrDevice) this.ovrDevice = this._ovrDevice;
+        if (this._lighthouseDevice) this.lighthouseDevice = this._lighthouseDevice;
+        this.cdr.markForCheck();
+      });
+  }
+
+  /** Whether the headset is a Steam Frame without a completed pairing the headset still knows. */
+  private framePairable(device: DMKnownDevice): boolean {
+    if (!this.framePairing.identityOf(device)) return false;
+    const pairing = this.framePairing.pairingFor(device.id);
+    if (!pairing?.complete) return true;
+    return this.framePairing.connections()[pairing.id]?.status === 'pairingRemoved';
   }
 
   async onForceLHState(state: LighthouseDevicePowerState) {
@@ -232,6 +259,10 @@ export class DeviceListItemComponent implements OnInit {
   }
 
   async clickDevicePowerButton() {
+    if (this.frameToPair) {
+      await this.framePairing.openWizard(this.frameToPair);
+      return;
+    }
     if (this.mode === 'openvr') {
       const dispatched = await this.lighthouseConsole.turnOffDeviceForUser(
         this._ovrDevice!,
