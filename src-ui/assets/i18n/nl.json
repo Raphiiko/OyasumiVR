@@ -592,14 +592,14 @@
             "SLEEP_MODE_ENABLED": "Omdat de slaapmodus werd ingeschakeld",
             "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
           },
-          "title": "Je VRChat status veranderd van {oldStatus} naar {newStatus}"
+          "title": "Je VRChat status is veranderd van {oldStatus} naar {newStatus}"
         },
         "statusChangedOnPlayerCountChange": {
           "reason": {
             "AT_LIMIT_OR_ABOVE": "Omdat het aantal spelers in je wereld de limiet van {threshold} bereikte",
             "BELOW_LIMIT": "Omdat het aantal spelers in je wereld onder {threshold} zakte"
           },
-          "title": "Je VRChat status veranderd van {oldStatus} naar {newStatus}"
+          "title": "Je VRChat status is veranderd van {oldStatus} naar {newStatus}"
         },
         "turnedOffOpenVRDevices": {
           "reason": {
@@ -635,7 +635,7 @@
             "SLEEP_MODE_ENABLED": "Omdat de slaapmodus werd ingeschakeld",
             "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
           },
-          "title": "Je VRChat avatar veranderd naar \"{avatarName}\""
+          "title": "Je VRChat avatar is veranderd naar \"{avatarName}\""
         },
         "vrchatGroupChanged": {
           "reason": {
@@ -645,7 +645,7 @@
           },
           "title": {
             "clear": "Je vertegenwoordigt VRChat groep \"{groupName}\" niet meer",
-            "set": "De VRChat groep die je vertegenwoordigt veranderd naar \"{groupName}\""
+            "set": "De VRChat groep die je vertegenwoordigt is veranderd naar \"{groupName}\""
           }
         },
         "windowsPowerPolicySet": {
@@ -2137,7 +2137,7 @@
           "onSleepEnable": "Slaapmodus ingeschakeld",
           "onSleepPreparation": "Voorbereiden op slapen",
           "reply": "Antwoord: \"{message}\"",
-          "statusChanged": "Je VRChat status veranderd naar {status}"
+          "statusChanged": "Je VRChat status is veranderd naar {status}"
         },
         "logs": "Logs",
         "sleepModeChanges": {
