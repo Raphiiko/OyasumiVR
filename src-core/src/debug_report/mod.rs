@@ -274,8 +274,10 @@ pub async fn create(sources: ReportSources) -> Result<usize, String> {
     let mut files = Vec::new();
 
     // report.json with the system, SteamVR, Steam Frame and app state
-    let (mut report, steam_frame) =
-        tokio::join!(system::collect(), crate::steam_frame::diagnostics::collect());
+    let (mut report, steam_frame) = tokio::join!(
+        system::collect(),
+        crate::steam_frame::diagnostics::collect()
+    );
     report["steamFrame"] = steam_frame.summary;
     report["ui"] = sources.ui_state;
     let report = serde_json::to_string_pretty(&report).map_err(|e| e.to_string())?;
