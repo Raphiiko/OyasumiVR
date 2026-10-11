@@ -20,14 +20,6 @@ pub static TELEMETRY_ENABLED: LazyLock<AtomicBool> = LazyLock::new(|| AtomicBool
 
 pub async fn init_telemetry(handle: &tauri::AppHandle) {
     *TELEMETRY_INITIALIZED.lock().await = true;
-    if !TELEMETRY_ENABLED.load(Ordering::Relaxed) {
-        return;
-    }
-    info!("[Core] Initializing telemetry");
-    let flavour = serde_json::to_string(&BUILD_FLAVOUR)
-        .unwrap()
-        .to_uppercase();
-    let _ = handle.track_event("app_started", Some(json!({ "flavour": flavour.clone() })));
     // the aptabase plugin starts a new session after 4 hours without events
     tokio::task::spawn(async {
         loop {
@@ -40,4 +32,12 @@ pub async fn init_telemetry(handle: &tauri::AppHandle) {
             }
         }
     });
+    if !TELEMETRY_ENABLED.load(Ordering::Relaxed) {
+        return;
+    }
+    info!("[Core] Initializing telemetry");
+    let flavour = serde_json::to_string(&BUILD_FLAVOUR)
+        .unwrap()
+        .to_uppercase();
+    let _ = handle.track_event("app_started", Some(json!({ "flavour": flavour.clone() })));
 }

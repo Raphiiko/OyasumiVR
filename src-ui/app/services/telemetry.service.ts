@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { SETTINGS_KEY_TELEMETRY_SETTINGS, SETTINGS_STORE } from '../globals';
 import {
   asyncScheduler,
@@ -17,6 +17,7 @@ import { invoke } from '@tauri-apps/api/core';
 import { trackEvent } from '@aptabase/tauri';
 import { isEqual } from 'lodash';
 import { getVersion } from '../utils/app-utils';
+import { FeatureSnapshotService } from './feature-snapshot.service';
 
 @Injectable({
   providedIn: 'root',
@@ -27,11 +28,13 @@ export class TelemetryService {
   );
   public settings: Observable<TelemetrySettings> = this._settings.asObservable();
 
-  constructor() {}
+  constructor(private injector: Injector) {}
 
   async init() {
     await this.loadSettings();
     await this.trackVersionChange();
+    // resolved lazily: its dependencies are not initialized yet, and some of them use this service
+    this.injector.get(FeatureSnapshotService).init();
     this.settings
       .pipe(
         map((settings) => settings.enabled),
@@ -99,17 +102,15 @@ export class TelemetryService {
     if (!this._settings.value.enabled) return;
     const now = Date.now();
     const propString = JSON.stringify(props);
-    const reportingCache = structuredClone(this._settings.value.reportingCache);
-    const lastEvent = reportingCache.find((e) => e.event === event);
+    const lastEvent = this._settings.value.reportingCache.find((e) => e.event === event);
     // If the event is in the cache and the timeout has not expired, and the value has not changed, do not track it
     if (lastEvent && now - lastEvent.timestamp < lastEvent.timeout) {
       if (!allowValueOverride || lastEvent.lastValue === propString) return;
     }
     // Track the event
     await this.trackEvent(event, props);
-    // Remove the event from the cache if it already exists
-    if (lastEvent) reportingCache.splice(reportingCache.indexOf(lastEvent), 1);
-    // Add the event to the cache
+    // read the cache again: other throttled events may have updated it during the await
+    const reportingCache = this._settings.value.reportingCache.filter((e) => e.event !== event);
     reportingCache.push({
       event,
       timestamp: now,

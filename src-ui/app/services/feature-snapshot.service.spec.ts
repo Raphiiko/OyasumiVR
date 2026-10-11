@@ -28,7 +28,7 @@ describe('buildFeatureSnapshot', () => {
     const snapshot = buildFeatureSnapshot(context());
     const used = Object.keys(snapshot).filter((key) => snapshot[key] === 1);
     expect(used).toEqual([
-      'sleep_on_steamvr_status',
+      'vrcx_logs',
       'discord_presence',
       'osc_server',
       'lighthouse_power_control',
@@ -36,7 +36,7 @@ describe('buildFeatureSnapshot', () => {
     ]);
   });
 
-  it('counts a master switch only when a sub-option is on', () => {
+  it('counts brightness and device power by their options', () => {
     expect(buildFeatureSnapshot(context()).brightness).toBe(0);
     const snapshot = buildFeatureSnapshot(
       context((a) => {
@@ -46,5 +46,20 @@ describe('buildFeatureSnapshot', () => {
     );
     expect(snapshot.brightness).toBe(1);
     expect(snapshot.device_power).toBe(1);
+  });
+
+  it('reads the options of automations whose enabled flag has no effect', () => {
+    const snapshot = buildFeatureSnapshot(
+      context((a) => {
+        a.AUDIO_DEVICE_AUTOMATIONS.onSleepEnableAutomations = [{} as never];
+        a.SYSTEM_MIC_MUTE_AUTOMATIONS.onSleepModeEnableState = 'MUTE' as never;
+        a.SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS.disableOnSteamVRStop = true;
+        a.OSC_GENERAL.onSleepModeEnable = { version: 1, commands: [{} as never] } as never;
+      })
+    );
+    expect(snapshot.audio_devices).toBe(1);
+    expect(snapshot.system_mic_mute).toBe(1);
+    expect(snapshot.wake_on_steamvr_stop).toBe(1);
+    expect(snapshot.osc_scripts).toBe(1);
   });
 });
