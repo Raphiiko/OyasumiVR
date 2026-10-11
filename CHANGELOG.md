@@ -51,6 +51,11 @@ with [SemVer](https://semver.org/) prerelease suffixes:
     developer tools
   - Tweaks tab: VR overlay GPU acceleration, the OpenVR initialization delay and the delay between
     device power-offs, each with a button to reset it to its default
+- Debug reports on the Troubleshooting page
+  - Uploads OyasumiVR's logs, settings and system details for the developer, and returns a report
+    code
+  - Passwords and login details are left out
+  - Can be saved as a file instead when the upload fails
 
 ### Changed
 
