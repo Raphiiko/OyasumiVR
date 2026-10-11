@@ -97,7 +97,7 @@ export class BrightnessAutomationDetailsComponent implements OnInit {
     await this.automationConfigService.updateAutomationConfig<BrightnessEventAutomationConfig>(
       'BRIGHTNESS_AUTOMATIONS',
       {
-        [this.eventId()]: Object.assign(this.config(), config),
+        [this.eventId()]: { ...this.config(), ...config },
       }
     );
   }
