@@ -235,12 +235,7 @@
       "resolutionAutomations": "解析度自動化",
       "runAutomations": "執行自動化",
       "settings": {
-        "brightnessCct": "亮度與色溫設定",
-        "general": "一般設定",
-        "hotkeys": "快捷鍵設定",
         "integrations": "整合功能",
-        "notifications": "通知設定",
-        "osc": "OSC 設定",
         "subMenu": "設定",
         "updates": "更新"
       },

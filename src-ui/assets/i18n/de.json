@@ -223,11 +223,7 @@
       "powerAutomations": "Energie-Automatisierungen",
       "resolutionAutomations": "Auflösung",
       "settings": {
-        "brightnessCct": "Helligkeit und CCT Einstellungen",
-        "general": "Allgemeine Einstellungen",
-        "hotkeys": "Tastenbelegung",
         "integrations": "Integrationen",
-        "notifications": "Benachrichtigungen",
         "subMenu": "Einstellungen"
       },
       "shutdownAutomations": "Herunterfahrsequenz",

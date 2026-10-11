@@ -232,11 +232,7 @@
       "resolutionAutomations": "Resolutie Automatiseringen",
       "runAutomations": "Uitvoer Automatiseringen",
       "settings": {
-        "brightnessCct": "Helderheid & CCT Instellingen",
-        "general": "Algemene Instellingen",
-        "hotkeys": "Hotkey Instellingen",
         "integrations": "Integraties",
-        "notifications": "Notificatie instellingen",
         "subMenu": "Instellingen"
       },
       "shutdownAutomations": "Afsluit Procedure",

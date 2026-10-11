@@ -235,12 +235,7 @@
       "resolutionAutomations": "Автоматизация разрешения",
       "runAutomations": "Автоматизации Выполнения",
       "settings": {
-        "brightnessCct": "Настройки яркости и цветовой температуры",
-        "general": "Общие настройки",
-        "hotkeys": "Настройки горячих клавиш",
         "integrations": "Интеграции",
-        "notifications": "Настройки уведомлений",
-        "osc": "Настройки OSC",
         "subMenu": "Настройки",
         "updates": "Обновления"
       },

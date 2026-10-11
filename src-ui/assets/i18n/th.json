@@ -234,12 +234,7 @@
       "resolutionAutomations": "ความละเอียด",
       "runAutomations": "Command Prompt",
       "settings": {
-        "brightnessCct": "ตั้งค่าความสว่างและสี",
-        "general": "ทั่วไป",
-        "hotkeys": "คีย์ลัด",
         "integrations": "การเชื่อมต่อภายนอก",
-        "notifications": "การแจ้งเตือน",
-        "osc": "การตั้งค่า OSC",
         "subMenu": "ตั้งค่า",
         "updates": "อัปเดต"
       },

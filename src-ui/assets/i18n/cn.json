@@ -235,11 +235,7 @@
       "resolutionAutomations": "分辨率",
       "runAutomations": "自动化命令",
       "settings": {
-        "brightnessCct": "亮度与色温",
-        "general": "常规",
-        "hotkeys": "快捷键",
         "integrations": "集成插件",
-        "notifications": "通知",
         "subMenu": "设置",
         "updates": "更新"
       },

@@ -233,12 +233,7 @@
       "resolutionAutomations": "Automatizaciones de resolución",
       "runAutomations": "Ejecutar automatizaciones",
       "settings": {
-        "brightnessCct": "Ajustes de brillo y CCT",
-        "general": "Ajustes generales",
-        "hotkeys": "Ajustes de teclas",
         "integrations": "Integraciones",
-        "notifications": "Ajustes de notificaciones",
-        "osc": "Ajustes de OSC",
         "subMenu": "Ajustes",
         "updates": "Actualizaciones"
       },

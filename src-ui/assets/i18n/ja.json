@@ -227,11 +227,7 @@
       "resolutionAutomations": "解像度",
       "runAutomations": "コマンドプロンプト",
       "settings": {
-        "brightnessCct": "輝度と色温度の設定",
-        "general": "一般設定",
-        "hotkeys": "ショートカットキー設定",
         "integrations": "外部連携",
-        "notifications": "通知設定",
         "subMenu": "設定",
         "updates": "アップデート"
       },
