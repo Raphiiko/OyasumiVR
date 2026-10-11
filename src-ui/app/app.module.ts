@@ -50,6 +50,7 @@ import { SleepingAnimationsAutomationService } from './services/osc-automations/
 import { ElevatedSidecarService } from './services/elevated-sidecar.service';
 import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
 import { TelemetryService } from './services/telemetry.service';
+import { FeatureSnapshotService } from './services/feature-snapshot.service';
 import { ErrorReportingService } from './services/error-reporting.service';
 import { LanguageSelectModalComponent } from './components/language-select-modal/language-select-modal.component';
 import { AppSettingsService } from './services/app-settings.service';
@@ -500,6 +501,7 @@ export class AppModule {
     private oscControlService: OscControlService,
     private elevatedSidecarService: ElevatedSidecarService,
     private telemetryService: TelemetryService,
+    private featureSnapshotService: FeatureSnapshotService,
     private errorReportingService: ErrorReportingService,
     private appSettingsService: AppSettingsService,
     private modalService: ModalService,
@@ -879,6 +881,7 @@ export class AppModule {
               this.frameLimitAutomationsService.init()
             ),
           ]);
+          await this.logInit('Initializing feature snapshot', this.featureSnapshotService.init());
           await info(`[Init] Initialization complete! (took ${Date.now() - initStartTime}ms)`);
           await globalEmit('init_action', {
             action: 'Finishing up',

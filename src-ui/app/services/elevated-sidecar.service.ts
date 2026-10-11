@@ -10,6 +10,7 @@ import {
   ConfirmModalInputModel,
   ConfirmModalOutputModel,
 } from '../components/confirm-modal/confirm-modal.component';
+import { TelemetryService } from './telemetry.service';
 
 export type EnableResult =
   | { result: 'ok' }
@@ -38,7 +39,8 @@ export class ElevatedSidecarService {
 
   constructor(
     private appSettings: AppSettingsService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private telemetry: TelemetryService
   ) {}
 
   async init() {
@@ -75,6 +77,12 @@ export class ElevatedSidecarService {
     let result: EnableResult;
     do {
       result = await this.tryEnable();
+      if (interactive || result.result !== 'ok') {
+        this.telemetry.trackEvent('elevated_features_enable', {
+          result: result.result,
+          interactive: interactive ? 1 : 0,
+        });
+      }
       if (result.result === 'ok') {
         this.appSettings.updateSettings({ elevatedFeaturesEnabled: true });
         this._failure.next(null);

@@ -51,7 +51,12 @@ export class AppComponent implements OnInit {
         tap((userLanguage) => translate.setActiveLang(userLanguage)),
         debounceTime(10000),
         tap((userLanguage) =>
-          this.telemetry.trackEvent('use_language', { language: userLanguage })
+          this.telemetry.trackThrottledEvent(
+            'use_language',
+            { language: userLanguage },
+            1000 * 60 * 60 * 24,
+            true
+          )
         ),
         takeUntilDestroyed()
       )

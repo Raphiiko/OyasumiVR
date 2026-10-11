@@ -16,6 +16,7 @@ import { TELEMETRY_SETTINGS_DEFAULT, TelemetrySettings } from '../models/telemet
 import { invoke } from '@tauri-apps/api/core';
 import { trackEvent } from '@aptabase/tauri';
 import { isEqual } from 'lodash';
+import { getVersion } from '../utils/app-utils';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +31,7 @@ export class TelemetryService {
 
   async init() {
     await this.loadSettings();
+    await this.trackVersionChange();
     this.settings
       .pipe(
         map((settings) => settings.enabled),
@@ -56,6 +58,14 @@ export class TelemetryService {
         });
         this.saveSettings();
       });
+  }
+
+  private async trackVersionChange() {
+    const version = await getVersion();
+    const { lastVersion } = this._settings.value;
+    if (lastVersion === version) return;
+    if (lastVersion) await this.trackEvent('app_version_changed', { fromVersion: lastVersion });
+    await this.updateSettings({ lastVersion: version });
   }
 
   async loadSettings() {
