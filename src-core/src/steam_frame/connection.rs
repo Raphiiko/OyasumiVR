@@ -209,6 +209,21 @@ pub async fn states() -> Vec<State> {
     STATES.lock().await.values().cloned().collect()
 }
 
+/// The pairing of every connection, with what the connection learned since it started.
+pub async fn pairings() -> Vec<Pairing> {
+    let shared: Vec<_> = CONNECTIONS
+        .lock()
+        .await
+        .values()
+        .map(|connection| connection.pairing.clone())
+        .collect();
+    let mut pairings = Vec::with_capacity(shared.len());
+    for pairing in shared {
+        pairings.push(pairing.lock().await.clone());
+    }
+    pairings
+}
+
 /// Stores the state and sends it to the UI.
 async fn publish(state: &State) {
     STATES

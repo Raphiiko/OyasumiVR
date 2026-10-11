@@ -717,14 +717,15 @@ mod tests {
             .find(|path| path.exists())
     }
 
-    /// Runs one helper.sh command with HOME in `home`, and flock and systemctl stubbed out.
+    /// Runs one helper.sh command with HOME in `home`, and flock, systemctl and journalctl
+    /// stubbed out.
     fn run_script(home: &std::path::Path, arguments: &[&str], stdin: &str) -> Option<i32> {
         use std::io::Write;
         use std::os::windows::process::CommandExt;
         let bash = bash()?;
         let stubs = home.join("stubs");
         std::fs::create_dir_all(&stubs).unwrap();
-        for stub in ["flock", "systemctl"] {
+        for stub in ["flock", "systemctl", "journalctl"] {
             std::fs::write(stubs.join(stub), "#!/bin/sh\nexit 0\n").unwrap();
         }
         // Git Bash cuts a long -c argument, so the script runs from a file
@@ -801,6 +802,18 @@ mod tests {
             .collect();
         clients.sort();
         assert_eq!(clients, ["pc-b", "pc-b.pub"]);
+    }
+
+    #[test]
+    fn diagnostics_run_without_a_release_and_need_the_helper_folder() {
+        let home = tempfile::tempdir().unwrap();
+        let Some(missing) = run_script(home.path(), &["diagnostics"], "") else {
+            eprintln!("skipped: no bash");
+            return;
+        };
+        assert_eq!(missing, EXIT_MISSING as i32);
+        std::fs::create_dir_all(home.path().join(".local/share/oyasumivr_helper")).unwrap();
+        assert_eq!(run_script(home.path(), &["diagnostics"], ""), Some(0));
     }
 
     #[test]
