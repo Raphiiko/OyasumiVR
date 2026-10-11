@@ -18,6 +18,7 @@ import { vshrink } from '../../../../utils/animations';
   animations: [vshrink()],
 })
 export class SettingsBrightnessCctViewComponent implements OnInit {
+  protected readonly defaults = APP_SETTINGS_DEFAULT;
   protected appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
   protected hmdConnected = false;
   /** The active HMD's allowlist identity; null while no HMD is connected. */

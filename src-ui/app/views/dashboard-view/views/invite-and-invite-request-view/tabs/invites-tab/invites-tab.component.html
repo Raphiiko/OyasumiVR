@@ -3,6 +3,9 @@
     <app-setting-row
       label="invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.title"
       description="invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.description"
+      [value]="config.declineInvitesWhileAsleep"
+      [defaultValue]="defaults.declineInvitesWhileAsleep"
+      (resetToDefault)="updateConfig({ declineInvitesWhileAsleep: $event })"
     >
       <label class="switch-toggle">
         <input
@@ -17,6 +20,9 @@
       <div class="setting-row-group" @vshrink>
         <app-setting-row
           label="invite-and-invite-requests.invitesTab.options.declineOnInviteWhileAsleep.customMessage.title"
+          [value]="config.declineInviteMessage"
+          [defaultValue]="defaults.declineInviteMessage"
+          (resetToDefault)="updateDeclineInviteWhileAsleepCustomMessage.next($event)"
         >
           <input
             maxlength="64"

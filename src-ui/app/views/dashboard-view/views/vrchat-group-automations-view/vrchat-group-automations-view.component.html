@@ -18,6 +18,9 @@
           <app-setting-row
             label="vrchatGroupAutomations.onSleepEnable.title"
             description="vrchatGroupAutomations.onSleepEnable.description"
+            [value]="config.representGroupIdOnSleepModeEnable"
+            [defaultValue]="defaults.representGroupIdOnSleepModeEnable"
+            (resetToDefault)="updateGroupOnSleepEnable($event)"
           >
             <app-select-box
               [disabled]="!loggedIn"
@@ -30,6 +33,9 @@
           <app-setting-row
             label="vrchatGroupAutomations.onSleepDisable.title"
             description="vrchatGroupAutomations.onSleepDisable.description"
+            [value]="config.representGroupIdOnSleepModeDisable"
+            [defaultValue]="defaults.representGroupIdOnSleepModeDisable"
+            (resetToDefault)="updateGroupOnSleepDisable($event)"
           >
             <app-select-box
               [disabled]="!loggedIn"
@@ -42,6 +48,9 @@
           <app-setting-row
             label="vrchatGroupAutomations.onSleepPreparation.title"
             description="vrchatGroupAutomations.onSleepPreparation.description"
+            [value]="config.representGroupIdOnSleepPreparation"
+            [defaultValue]="defaults.representGroupIdOnSleepPreparation"
+            (resetToDefault)="updateGroupOnSleepPreparation($event)"
           >
             <app-select-box
               [disabled]="!loggedIn"

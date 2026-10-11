@@ -17,6 +17,9 @@
         <app-setting-row
           label="join-notifications.joinNotifications.title"
           description="join-notifications.joinNotifications.description"
+          [value]="config.joinNotification"
+          [defaultValue]="defaults.joinNotification"
+          (resetToDefault)="setJoinNotificationModeOption($event)"
         >
           <app-select-box
             class="preset-select-box"
@@ -33,6 +36,9 @@
         <app-setting-row
           label="join-notifications.joinSounds.title"
           description="join-notifications.joinSounds.description"
+          [value]="config.joinSoundMode"
+          [defaultValue]="defaults.joinSoundMode"
+          (resetToDefault)="setJoinSoundModeOption($event)"
         >
           <app-select-box
             class="preset-select-box"
@@ -49,6 +55,9 @@
             <app-setting-row
               label="join-notifications.joinSound.title"
               description="join-notifications.joinSound.description"
+              [value]="config.joinSound"
+              [defaultValue]="defaults.joinSound"
+              (resetToDefault)="updateJoinSound($event)"
             >
               <app-notification-sound-button
                 [toggleable]="false"
@@ -61,6 +70,9 @@
         <app-setting-row
           label="join-notifications.onlyWhenPreviouslyAlone.title"
           description="join-notifications.onlyWhenPreviouslyAlone.description"
+          [value]="config.onlyWhenPreviouslyAlone"
+          [defaultValue]="defaults.onlyWhenPreviouslyAlone"
+          (resetToDefault)="updateConfig({ onlyWhenPreviouslyAlone: $event })"
         >
           <label class="switch-toggle">
             <input
@@ -76,6 +88,9 @@
         <app-setting-row
           label="join-notifications.leaveNotifications.title"
           description="join-notifications.leaveNotifications.description"
+          [value]="config.leaveNotification"
+          [defaultValue]="defaults.leaveNotification"
+          (resetToDefault)="setLeaveNotificationModeOption($event)"
         >
           <app-select-box
             class="preset-select-box"
@@ -92,6 +107,9 @@
         <app-setting-row
           label="join-notifications.leaveSounds.title"
           description="join-notifications.leaveSounds.description"
+          [value]="config.leaveSoundMode"
+          [defaultValue]="defaults.leaveSoundMode"
+          (resetToDefault)="setLeaveSoundModeOption($event)"
         >
           <app-select-box
             class="preset-select-box"
@@ -108,6 +126,9 @@
             <app-setting-row
               label="join-notifications.leaveSound.title"
               description="join-notifications.leaveSound.description"
+              [value]="config.leaveSound"
+              [defaultValue]="defaults.leaveSound"
+              (resetToDefault)="updateLeaveSound($event)"
             >
               <app-notification-sound-button
                 [toggleable]="false"
@@ -120,6 +141,9 @@
         <app-setting-row
           label="join-notifications.onlyWhenLeftAlone.title"
           description="join-notifications.onlyWhenLeftAlone.description"
+          [value]="config.onlyWhenLeftAlone"
+          [defaultValue]="defaults.onlyWhenLeftAlone"
+          (resetToDefault)="updateConfig({ onlyWhenLeftAlone: $event })"
         >
           <label class="switch-toggle">
             <input
@@ -132,7 +156,12 @@
         </app-setting-row>
       </div>
       <div class="settings">
-        <app-setting-row label="join-notifications.onlyWhenSleepModeActive.title">
+        <app-setting-row
+          label="join-notifications.onlyWhenSleepModeActive.title"
+          [value]="config.onlyDuringSleepMode"
+          [defaultValue]="defaults.onlyDuringSleepMode"
+          (resetToDefault)="updateConfig({ onlyDuringSleepMode: $event })"
+        >
           <label class="switch-toggle">
             <input
               type="checkbox"

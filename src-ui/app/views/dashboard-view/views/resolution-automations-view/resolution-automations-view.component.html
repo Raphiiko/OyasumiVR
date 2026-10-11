@@ -8,6 +8,11 @@
           <app-setting-row
             label="resolution-automations.onSleepEnable.title"
             description="resolution-automations.onSleepEnable.description"
+            [value]="onSleepModeEnableConfig.enabled"
+            [defaultValue]="defaults.RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE.enabled"
+            (resetToDefault)="
+              setAutomationEnabled('RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE', $event)
+            "
           >
             <label class="switch-toggle">
               <input
@@ -27,6 +32,11 @@
             <app-setting-row
               label="resolution-automations.renderResolution.title"
               [class.disabled]="!onSleepModeEnableConfig.enabled"
+              [value]="onSleepModeEnableConfig.resolution"
+              [defaultValue]="defaults.RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE.resolution"
+              (resetToDefault)="
+                setRenderResolution('RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE', $event)
+              "
             >
               @if (onSleepModeEnableConfig.resolution !== null) {
                 <span transloco="resolution-automations.renderResolution.custom"></span>
@@ -67,6 +77,11 @@
           <app-setting-row
             label="resolution-automations.onSleepDisable.title"
             description="resolution-automations.onSleepDisable.description"
+            [value]="onSleepModeDisableConfig.enabled"
+            [defaultValue]="defaults.RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE.enabled"
+            (resetToDefault)="
+              setAutomationEnabled('RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE', $event)
+            "
           >
             <label class="switch-toggle">
               <input
@@ -86,6 +101,11 @@
             <app-setting-row
               label="resolution-automations.renderResolution.title"
               [class.disabled]="!onSleepModeDisableConfig.enabled"
+              [value]="onSleepModeDisableConfig.resolution"
+              [defaultValue]="defaults.RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE.resolution"
+              (resetToDefault)="
+                setRenderResolution('RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE', $event)
+              "
             >
               @if (onSleepModeDisableConfig.resolution !== null) {
                 <span transloco="resolution-automations.renderResolution.custom"></span>

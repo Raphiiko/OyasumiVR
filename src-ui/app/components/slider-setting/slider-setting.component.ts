@@ -74,6 +74,8 @@ export class SliderSettingComponent implements OnInit, OnChanges {
   }
 
   private commitInput(strValue: string) {
+    // a value set from outside, such as a reset, replaces the typed text this commit was queued for
+    if (this.inputEl && strValue !== this.inputEl.nativeElement.value) return;
     let value = parseFloat(strValue);
     if (!Number.isFinite(value)) return;
     const precision = Math.max(floatPrecision(this.min), floatPrecision(this.step));

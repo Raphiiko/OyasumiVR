@@ -21,6 +21,9 @@
     <app-setting-row
       label="power-automations.devices.turnOff.triggers.onSleepModeEnable"
       description="power-automations.devices.turnOff.subtitle"
+      [value]="devicePowerAutomations.turnOffDevicesOnSleepModeEnable"
+      [defaultValue]="automationDefaults.DEVICE_POWER_AUTOMATIONS.turnOffDevicesOnSleepModeEnable"
+      (resetToDefault)="updateDeviceSelection('turnOffDevicesOnSleepModeEnable', $event)"
     >
       <app-device-selector
         [allowedDeviceTypes]="['CONTROLLER', 'TRACKER', 'LIGHTHOUSE']"
@@ -32,6 +35,9 @@
     <app-setting-row
       label="power-automations.devices.turnOff.triggers.onSleepModeDisable"
       description="power-automations.devices.turnOff.subtitle"
+      [value]="devicePowerAutomations.turnOffDevicesOnSleepModeDisable"
+      [defaultValue]="automationDefaults.DEVICE_POWER_AUTOMATIONS.turnOffDevicesOnSleepModeDisable"
+      (resetToDefault)="updateDeviceSelection('turnOffDevicesOnSleepModeDisable', $event)"
     >
       <app-device-selector
         [allowedDeviceTypes]="['CONTROLLER', 'TRACKER', 'LIGHTHOUSE']"
@@ -43,6 +49,9 @@
     <app-setting-row
       label="power-automations.devices.turnOff.triggers.onSleepPreparation"
       description="power-automations.devices.turnOff.subtitle"
+      [value]="devicePowerAutomations.turnOffDevicesOnSleepPreparation"
+      [defaultValue]="automationDefaults.DEVICE_POWER_AUTOMATIONS.turnOffDevicesOnSleepPreparation"
+      (resetToDefault)="updateDeviceSelection('turnOffDevicesOnSleepPreparation', $event)"
     >
       <app-device-selector
         [allowedDeviceTypes]="['CONTROLLER', 'TRACKER', 'LIGHTHOUSE']"
@@ -55,6 +64,9 @@
     <app-setting-row
       label="power-automations.devices.turnOff.triggers.onDeviceCharging"
       description="power-automations.devices.turnOff.subtitle"
+      [value]="devicePowerAutomations.turnOffDevicesWhenCharging"
+      [defaultValue]="automationDefaults.DEVICE_POWER_AUTOMATIONS.turnOffDevicesWhenCharging"
+      (resetToDefault)="updateDeviceSelection('turnOffDevicesWhenCharging', $event)"
     >
       <app-device-selector
         [allowedDeviceTypes]="['CONTROLLER', 'TRACKER']"
@@ -66,6 +78,18 @@
     <app-setting-row
       label="power-automations.devices.turnOff.triggers.onBatteryLevel"
       description="power-automations.devices.turnOff.subtitle"
+      [value]="{
+        turnOffDevicesBelowBatteryLevel: devicePowerAutomations.turnOffDevicesBelowBatteryLevel,
+        turnOffDevicesBelowBatteryLevel_threshold:
+          devicePowerAutomations.turnOffDevicesBelowBatteryLevel_threshold,
+      }"
+      [defaultValue]="{
+        turnOffDevicesBelowBatteryLevel:
+          automationDefaults.DEVICE_POWER_AUTOMATIONS.turnOffDevicesBelowBatteryLevel,
+        turnOffDevicesBelowBatteryLevel_threshold:
+          automationDefaults.DEVICE_POWER_AUTOMATIONS.turnOffDevicesBelowBatteryLevel_threshold,
+      }"
+      (resetToDefault)="updateConfig($event)"
     >
       <app-slider-setting
         class="slider-battery-level"
@@ -88,6 +112,12 @@
       <app-setting-row
         label="power-automations.devices.turnOff.triggers.onlyWhileSleepModeEnabled"
         [class.disabled]="!hasBatteryLevelDeviceSelection"
+        [value]="devicePowerAutomations.turnOffDevicesBelowBatteryLevel_onlyWhileAsleep"
+        [defaultValue]="
+          automationDefaults.DEVICE_POWER_AUTOMATIONS
+            .turnOffDevicesBelowBatteryLevel_onlyWhileAsleep
+        "
+        (resetToDefault)="updateBatteryLevelOnlyWhileAsleep($event)"
       >
         <label class="switch-toggle">
           <input
@@ -108,6 +138,9 @@
     <app-setting-row
       label="power-automations.devices.turnOff.triggers.onSteamVRStop"
       description="power-automations.devices.turnOff.subtitle"
+      [value]="devicePowerAutomations.turnOffDevicesOnSteamVRStop"
+      [defaultValue]="automationDefaults.DEVICE_POWER_AUTOMATIONS.turnOffDevicesOnSteamVRStop"
+      (resetToDefault)="updateDeviceSelection('turnOffDevicesOnSteamVRStop', $event)"
     >
       <app-device-selector
         [allowedDeviceTypes]="['CONTROLLER', 'TRACKER', 'LIGHTHOUSE']"
@@ -127,6 +160,9 @@
     <app-setting-row
       label="power-automations.devices.turnOn.triggers.onSleepModeDisable"
       description="power-automations.devices.turnOn.subtitle"
+      [value]="devicePowerAutomations.turnOnDevicesOnSleepModeDisable"
+      [defaultValue]="automationDefaults.DEVICE_POWER_AUTOMATIONS.turnOnDevicesOnSleepModeDisable"
+      (resetToDefault)="updateDeviceSelection('turnOnDevicesOnSleepModeDisable', $event)"
     >
       <app-device-selector
         [allowedDeviceTypes]="['LIGHTHOUSE']"
@@ -139,6 +175,9 @@
     <app-setting-row
       label="power-automations.devices.turnOn.triggers.onOyasumiStart"
       description="power-automations.devices.turnOn.subtitle"
+      [value]="devicePowerAutomations.turnOnDevicesOnOyasumiStart"
+      [defaultValue]="automationDefaults.DEVICE_POWER_AUTOMATIONS.turnOnDevicesOnOyasumiStart"
+      (resetToDefault)="updateDeviceSelection('turnOnDevicesOnOyasumiStart', $event)"
     >
       <app-device-selector
         [allowedDeviceTypes]="['LIGHTHOUSE']"
@@ -150,6 +189,9 @@
     <app-setting-row
       label="power-automations.devices.turnOn.triggers.onSteamVRStart"
       description="power-automations.devices.turnOn.subtitle"
+      [value]="devicePowerAutomations.turnOnDevicesOnSteamVRStart"
+      [defaultValue]="automationDefaults.DEVICE_POWER_AUTOMATIONS.turnOnDevicesOnSteamVRStart"
+      (resetToDefault)="updateDeviceSelection('turnOnDevicesOnSteamVRStart', $event)"
     >
       <app-device-selector
         [allowedDeviceTypes]="['LIGHTHOUSE']"

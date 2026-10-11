@@ -42,6 +42,7 @@ export class SettingsNotificationsViewComponent implements OnInit {
     },
   ];
   protected providerOption: SelectBoxItem = this.providerOptions[0];
+  protected readonly defaults = APP_SETTINGS_DEFAULT;
   private notificationsEnabled: NotificationType[] = [];
   protected generalNotificationVolume = APP_SETTINGS_DEFAULT.generalNotificationVolume;
   protected playingTestSound = false;
@@ -70,6 +71,10 @@ export class SettingsNotificationsViewComponent implements OnInit {
     this.providerOption = option;
     const provider = await this.notifications.setProvider(option.id as NotificationProvider);
     this.providerOption = this.providerOptions.find((o) => o.id === provider) ?? option;
+  }
+
+  protected async setProvider(provider: NotificationProvider) {
+    await this.onChangeProviderOption(this.providerOptions.find((o) => o.id === provider));
   }
 
   protected isNotificationTypeChecked(type: NotificationType): boolean {

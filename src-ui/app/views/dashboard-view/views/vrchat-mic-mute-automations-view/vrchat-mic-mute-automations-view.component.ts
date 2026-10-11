@@ -1,7 +1,10 @@
 import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
-import { VRChatMicMuteAutomationsConfig } from '../../../../models/automations';
+import {
+  AUTOMATION_CONFIGS_DEFAULT,
+  VRChatMicMuteAutomationsConfig,
+} from '../../../../models/automations';
 import { map } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -17,6 +20,8 @@ import { hshrink } from 'src-ui/app/utils/animations';
   standalone: false,
 })
 export class VRChatMicMuteAutomationsViewComponent implements OnInit {
+  readonly defaults = AUTOMATION_CONFIGS_DEFAULT.VRCHAT_MIC_MUTE_AUTOMATIONS;
+  config: VRChatMicMuteAutomationsConfig = structuredClone(this.defaults);
   muteActionOptions: SelectBoxItem[] = [
     {
       id: 'NONE',
@@ -58,6 +63,7 @@ export class VRChatMicMuteAutomationsViewComponent implements OnInit {
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((config) => {
+        this.config = config;
         this.onSleepEnableMuteOption = this.muteActionOptions.find(
           (o) => o.id === config.onSleepModeEnable
         );
@@ -72,9 +78,9 @@ export class VRChatMicMuteAutomationsViewComponent implements OnInit {
 
   async onChangeMuteOption(
     automation: 'ON_SLEEP_ENABLE' | 'ON_SLEEP_DISABLE' | 'ON_SLEEP_PREPARATION',
-    option: SelectBoxItem | undefined
+    mode: string | undefined
   ) {
-    if (!option) return;
+    if (!mode) return;
     const keyMap = {
       ON_SLEEP_ENABLE: 'onSleepModeEnable',
       ON_SLEEP_DISABLE: 'onSleepModeDisable',
@@ -84,7 +90,7 @@ export class VRChatMicMuteAutomationsViewComponent implements OnInit {
     await this.automationConfigService.updateAutomationConfig<VRChatMicMuteAutomationsConfig>(
       'VRCHAT_MIC_MUTE_AUTOMATIONS',
       {
-        [key]: option!.id as 'MUTE' | 'UNMUTE' | 'NONE',
+        [key]: mode as 'MUTE' | 'UNMUTE' | 'NONE',
       }
     );
   }

@@ -4,6 +4,9 @@
     <app-setting-row
       label="sleep-detection.sleepDetection.automation.title"
       description="sleep-detection.sleepDetection.automation.description"
+      [value]="automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.enabled"
+      [defaultValue]="automationDefaults.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.enabled"
+      (resetToDefault)="updateConfig('SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR', { enabled: $event })"
     >
       <label class="switch-toggle">
         <input
@@ -59,6 +62,9 @@
     <app-setting-row
       label="sleep-detection.modals.enableForSleepDetector.sensitivity.title"
       description="sleep-detection.modals.enableForSleepDetector.sensitivity.description"
+      [value]="automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.sensitivity"
+      [defaultValue]="automationDefaults.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.sensitivity"
+      (resetToDefault)="setSensitivityOption($event)"
     >
       <app-select-box
         type="SMALL"
@@ -68,30 +74,48 @@
       ></app-select-box>
     </app-setting-row>
 
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span transloco="sleep-detection.modals.enableForSleepDetector.sleepCheck.title"></span>
-        <span
-          [innerHtml]="
-            'sleep-detection.modals.enableForSleepDetector.sleepCheck.description' | transloco
-          "
-        ></span>
-      </div>
-      <div class="setting-row-action">
-        <label class="switch-toggle">
-          <input
-            [checked]="automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.sleepCheck"
-            (change)="toggleSleepCheck()"
-            type="checkbox"
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
-      </div>
-    </div>
+    <app-setting-row
+      label="sleep-detection.modals.enableForSleepDetector.sleepCheck.title"
+      [value]="automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.sleepCheck"
+      [defaultValue]="automationDefaults.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.sleepCheck"
+      (resetToDefault)="
+        updateConfig('SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR', { sleepCheck: $event })
+      "
+    >
+      <span
+        rowDescription
+        [innerHtml]="
+          'sleep-detection.modals.enableForSleepDetector.sleepCheck.description' | transloco
+        "
+      ></span>
+      <label class="switch-toggle">
+        <input
+          [checked]="automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.sleepCheck"
+          (change)="toggleSleepCheck()"
+          type="checkbox"
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </app-setting-row>
 
     <app-setting-row
       label="sleep-detection.modals.enableForSleepDetector.timeWindow.title"
       description="sleep-detection.modals.enableForSleepDetector.timeWindow.description"
+      [value]="{
+        activationWindow: automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindow,
+        activationWindowStart:
+          automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindowStart,
+        activationWindowEnd:
+          automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindowEnd,
+      }"
+      [defaultValue]="{
+        activationWindow: automationDefaults.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindow,
+        activationWindowStart:
+          automationDefaults.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindowStart,
+        activationWindowEnd:
+          automationDefaults.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindowEnd,
+      }"
+      (resetToDefault)="updateConfig('SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR', $event)"
     >
       @if (automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindow) {
         <div class="input-wrapper" @fade>
@@ -135,6 +159,11 @@
     <app-setting-row
       label="sleep-detection.modals.enableForSleepDetector.detectionWindow.title"
       description="sleep-detection.modals.enableForSleepDetector.detectionWindow.description"
+      [value]="automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.detectionWindowMinutes"
+      [defaultValue]="
+        automationDefaults.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.detectionWindowMinutes
+      "
+      (resetToDefault)="onDetectionWindowChange($event)"
     >
       <app-slider-setting
         [unit]="'sleep-detection.modals.enableForSleepDetector.detectionWindow.unit' | transloco"
@@ -151,6 +180,13 @@
     <app-setting-row
       label="sleep-detection.modals.enableForSleepDetector.considerControllerPresence.title"
       description="sleep-detection.modals.enableForSleepDetector.considerControllerPresence.description"
+      [value]="automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.considerControllerPresence"
+      [defaultValue]="
+        automationDefaults.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.considerControllerPresence
+      "
+      (resetToDefault)="
+        updateConfig('SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR', { considerControllerPresence: $event })
+      "
     >
       <label class="switch-toggle">
         <input
@@ -167,6 +203,11 @@
     <app-setting-row
       label="sleep-detection.modals.enableForSleepDetector.considerSleepingPose.title"
       description="sleep-detection.modals.enableForSleepDetector.considerSleepingPose.description"
+      [value]="automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.considerSleepingPose"
+      [defaultValue]="automationDefaults.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.considerSleepingPose"
+      (resetToDefault)="
+        updateConfig('SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR', { considerSleepingPose: $event })
+      "
     >
       <label class="switch-toggle">
         <input

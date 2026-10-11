@@ -34,6 +34,7 @@ import { vshrink } from 'src-ui/app/utils/animations';
   animations: [vshrink()],
 })
 export class StatusAutomationsGeneralTabComponent implements OnInit {
+  readonly defaults = AUTOMATION_CONFIGS_DEFAULT.CHANGE_STATUS_GENERAL_EVENTS;
   UserStatus = UserStatus;
   loggedIn = false;
   config: ChangeStatusGeneralEventsAutomationConfig = structuredClone(

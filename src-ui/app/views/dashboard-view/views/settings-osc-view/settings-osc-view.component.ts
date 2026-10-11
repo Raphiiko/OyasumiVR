@@ -31,6 +31,7 @@ export class SettingsOscViewComponent implements OnInit {
   protected oscCustomTargetHost = structuredClone(APP_SETTINGS_DEFAULT.oscCustomTargetHost);
   protected oscCustomTargetPort = structuredClone(APP_SETTINGS_DEFAULT.oscCustomTargetPort);
   protected oscServerEnabled = structuredClone(APP_SETTINGS_DEFAULT.oscServerEnabled);
+  protected readonly defaults = APP_SETTINGS_DEFAULT;
 
   // Validation states
   protected customTargetHostValidationState: 'valid' | 'invalid' | 'pending' = 'valid';

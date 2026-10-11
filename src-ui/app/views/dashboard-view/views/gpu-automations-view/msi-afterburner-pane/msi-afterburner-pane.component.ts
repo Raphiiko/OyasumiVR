@@ -33,6 +33,7 @@ export class MsiAfterburnerPaneComponent implements OnInit {
     loadingIndicator?: boolean;
   };
   msiAfterburnerPathInputChange: Subject<string | null> = new Subject();
+  readonly automationDefaults = AUTOMATION_CONFIGS_DEFAULT;
   appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
   config: MSIAfterburnerAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.MSI_AFTERBURNER

@@ -5,6 +5,7 @@ import {
   OnInit,
   ChangeDetectionStrategy,
 } from '@angular/core';
+import { AUTOMATION_CONFIGS_DEFAULT } from '../../../../../../models/automations';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../../utils/animations';
 import { Router } from '@angular/router';
@@ -34,6 +35,7 @@ export class HeartRateCalmPeriodEnableSleepModeModalComponent
   >
   implements OnInit, HeartRateCalmPeriodEnableSleepModeModalInputModel
 {
+  readonly automationDefaults = AUTOMATION_CONFIGS_DEFAULT;
   duration = 0;
   threshold = 0;
   mode: 'SETTINGS' | 'HISTORY' = 'SETTINGS';

@@ -3,7 +3,12 @@
   <div class="pane-content">
     <p transloco="sleep-detection.modals.enableAtTime.description"></p>
     <div class="settings">
-      <app-setting-row label="sleep-detection.modals.enableAtTime.time">
+      <app-setting-row
+        label="sleep-detection.modals.enableAtTime.time"
+        [value]="time"
+        [defaultValue]="automationDefaults.SLEEP_MODE_ENABLE_AT_TIME.time"
+        (resetToDefault)="time = $event"
+      >
         <div class="input-wrapper">
           <input type="time" (change)="time = timeInput.value" [value]="time" #timeInput />
         </div>

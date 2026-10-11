@@ -17,6 +17,7 @@ export class SettingsIntegrationsVrcxTabComponent implements OnInit {
     { type: 'GroupChanges', key: 'settings.integrations.vrcx.groupChanges' },
   ];
   appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
+  protected readonly defaults = APP_SETTINGS_DEFAULT;
 
   constructor(
     private settingsService: AppSettingsService,

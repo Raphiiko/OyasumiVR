@@ -18,6 +18,7 @@ import { flushOnDestroy } from '../../../../utils/rxjs-utils';
   standalone: false,
 })
 export class RunAutomationsViewComponent implements OnInit {
+  readonly automationDefaults = AUTOMATION_CONFIGS_DEFAULT;
   config: RunAutomationsConfig = structuredClone(AUTOMATION_CONFIGS_DEFAULT.RUN_AUTOMATIONS);
   onSleepModeEnableCommands: string = '';
   onSleepModeDisableCommands: string = '';

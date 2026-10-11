@@ -2,7 +2,13 @@
   <h2 transloco="settings.integrations.vrcx.logs"></h2>
   <div class="settings">
     @for (log of vrcxLogOptions; track log.type) {
-      <app-setting-row [label]="log.key + '.title'" [description]="log.key + '.description'">
+      <app-setting-row
+        [label]="log.key + '.title'"
+        [description]="log.key + '.description'"
+        [value]="appSettings.vrcxLogsEnabled.includes(log.type)"
+        [defaultValue]="defaults.vrcxLogsEnabled.includes(log.type)"
+        (resetToDefault)="toggleVrcxLog(log.type)"
+      >
         <label class="switch-toggle">
           <input
             type="checkbox"

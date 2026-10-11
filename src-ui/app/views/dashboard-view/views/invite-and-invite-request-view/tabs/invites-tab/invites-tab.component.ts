@@ -17,6 +17,7 @@ import { flushOnDestroy } from 'src-ui/app/utils/rxjs-utils';
   animations: [vshrink()],
 })
 export class InvitesTabComponent implements OnInit {
+  readonly defaults = AUTOMATION_CONFIGS_DEFAULT.AUTO_ACCEPT_INVITE_REQUESTS;
   config: AutoAcceptInviteRequestsAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.AUTO_ACCEPT_INVITE_REQUESTS
   );

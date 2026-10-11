@@ -24,48 +24,43 @@
       <div class="setting-category">
         <h3 transloco="brightness-automations.activation.category"></h3>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span
-                [transloco]="
-                  'brightness-automations.activationTime.' + sunMode + '.title' | transloco
-                "
-              ></span>
-              <span
-                [transloco]="
-                  'brightness-automations.activationTime.' + sunMode + '.description' | transloco
-                "
-              ></span>
+          <app-setting-row
+            [label]="'brightness-automations.activationTime.' + sunMode + '.title'"
+            [description]="'brightness-automations.activationTime.' + sunMode + '.description'"
+            [value]="asSunConfig(config()).autoUpdateTime"
+            [defaultValue]="asSunConfig(defaults[eventId()]).autoUpdateTime"
+            (resetToDefault)="toggleAutoUpdateTime()"
+          >
+            <div
+              class="auto-toggle-container"
+              tooltip="brightness-automations.autoUpdateTimeTooltip"
+              tooltipMode="left"
+            >
+              <span class="auto-label">Auto</span>
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="asSunConfig(config()).autoUpdateTime"
+                  (change)="toggleAutoUpdateTime()"
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
             </div>
-            <div class="setting-row-action">
-              <div
-                class="auto-toggle-container"
-                tooltip="brightness-automations.autoUpdateTimeTooltip"
-                tooltipMode="left"
-              >
-                <span class="auto-label">Auto</span>
-                <label class="switch-toggle">
-                  <input
-                    type="checkbox"
-                    [checked]="asSunConfig(config()).autoUpdateTime"
-                    (change)="toggleAutoUpdateTime()"
-                  />
-                  <span class="switch-toggle-slider"></span>
-                </label>
-              </div>
-              <input
-                type="time"
-                [value]="asSunConfig(config()).activationTime"
-                (input)="updateActivationTime(timeInput.value)"
-                #timeInput
-                [class.anim-vshake]="vshakeElements.includes('ACTIVATION_TIME')"
-                [disabled]="asSunConfig(config()).autoUpdateTime"
-              />
-            </div>
-          </div>
+            <input
+              type="time"
+              [value]="asSunConfig(config()).activationTime"
+              (input)="updateActivationTime(timeInput.value)"
+              #timeInput
+              [class.anim-vshake]="vshakeElements.includes('ACTIVATION_TIME')"
+              [disabled]="asSunConfig(config()).autoUpdateTime"
+            />
+          </app-setting-row>
           <app-setting-row
             label="brightness-automations.onlyWhenSleepModeDisabled.title"
             description="brightness-automations.onlyWhenSleepModeDisabled.description"
+            [value]="asSunConfig(config()).onlyWhenSleepDisabled"
+            [defaultValue]="asSunConfig(defaults[eventId()]).onlyWhenSleepDisabled"
+            (resetToDefault)="updateConfig({ onlyWhenSleepDisabled: $event })"
           >
             <label class="switch-toggle" [class.disabled]="!config().changeColorTemperature">
               <input
@@ -86,6 +81,9 @@
       <app-setting-row
         label="brightness-automations.changeBrightness.title"
         description="brightness-automations.changeBrightness.description"
+        [value]="config().changeBrightness"
+        [defaultValue]="defaults[eventId()].changeBrightness"
+        (resetToDefault)="updateConfig({ changeBrightness: $event })"
       >
         <label class="switch-toggle" [class.disabled]="!config().changeColorTemperature">
           <input
@@ -100,7 +98,13 @@
       @if (config().changeBrightness) {
         <div class="setting-row-group" @vshrink>
           @if (!advancedMode() && config().changeBrightness) {
-            <app-setting-row label="brightness-automations.brightness.title" @vshrink>
+            <app-setting-row
+              label="brightness-automations.brightness.title"
+              @vshrink
+              [value]="config().brightness"
+              [defaultValue]="defaults[eventId()].brightness"
+              (resetToDefault)="updateBrightness('SIMPLE', $event)"
+            >
               <button
                 class="btn btn-copy btn-secondary"
                 tooltip="brightness-automations.copyBrightness"
@@ -123,7 +127,13 @@
             </app-setting-row>
           }
           @if (advancedMode() && config().changeBrightness) {
-            <app-setting-row label="brightness-automations.softwareBrightness.title" @vshrink>
+            <app-setting-row
+              label="brightness-automations.softwareBrightness.title"
+              @vshrink
+              [value]="config().softwareBrightness"
+              [defaultValue]="defaults[eventId()].softwareBrightness"
+              (resetToDefault)="updateBrightness('SOFTWARE', $event)"
+            >
               <button
                 class="btn btn-copy btn-secondary"
                 tooltip="brightness-automations.copyBrightness"
@@ -146,7 +156,13 @@
             </app-setting-row>
           }
           @if (advancedMode() && config().changeBrightness) {
-            <app-setting-row label="brightness-automations.hardwareBrightness.title" @vshrink>
+            <app-setting-row
+              label="brightness-automations.hardwareBrightness.title"
+              @vshrink
+              [value]="config().hardwareBrightness"
+              [defaultValue]="defaults[eventId()].hardwareBrightness"
+              (resetToDefault)="updateBrightness('HARDWARE', $event)"
+            >
               <button
                 class="btn btn-copy btn-secondary"
                 tooltip="brightness-automations.copyBrightness"
@@ -178,6 +194,9 @@
       <app-setting-row
         label="brightness-automations.changeTemperature.title"
         description="brightness-automations.changeTemperature.description"
+        [value]="config().changeColorTemperature"
+        [defaultValue]="defaults[eventId()].changeColorTemperature"
+        (resetToDefault)="updateConfig({ changeColorTemperature: $event })"
       >
         <label class="switch-toggle" [class.disabled]="!config().changeBrightness">
           <input
@@ -191,7 +210,12 @@
       </app-setting-row>
       @if (config().changeColorTemperature) {
         <div class="setting-row-group" @vshrink>
-          <app-setting-row label="brightness-automations.temperature.title">
+          <app-setting-row
+            label="brightness-automations.temperature.title"
+            [value]="config().colorTemperature"
+            [defaultValue]="defaults[eventId()].colorTemperature"
+            (resetToDefault)="updateColorTemperature($event)"
+          >
             <app-cct-input-setting
               [value]="config().colorTemperature"
               (valueChange)="updateColorTemperature($event)"
@@ -207,6 +231,9 @@
       <app-setting-row
         label="brightness-automations.transition.title"
         description="brightness-automations.transition.description"
+        [value]="config().transition"
+        [defaultValue]="defaults[eventId()].transition"
+        (resetToDefault)="updateConfig({ transition: $event })"
       >
         <label class="switch-toggle">
           <input type="checkbox" [checked]="config().transition" (change)="toggleTransition()" />
@@ -218,6 +245,9 @@
           <app-setting-row
             label="brightness-automations.transitionTime.title"
             description="brightness-automations.transitionTime.description"
+            [value]="config().transitionTime"
+            [defaultValue]="defaults[eventId()].transitionTime"
+            (resetToDefault)="updateTransitionTime($event)"
           >
             <app-duration-input-setting
               [value]="config().transitionTime"

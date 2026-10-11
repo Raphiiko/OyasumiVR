@@ -1,4 +1,5 @@
 import { Component, HostBinding, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { AUTOMATION_CONFIGS_DEFAULT } from '../../../../../../models/automations';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, triggerChildren } from '../../../../../../utils/animations';
 
@@ -24,6 +25,7 @@ export class TimeDisableSleepModeModalComponent
   >
   implements OnInit, TimeDisableSleepModeModalInputModel
 {
+  readonly automationDefaults = AUTOMATION_CONFIGS_DEFAULT;
   time: string | null = null;
 
   @HostBinding('[@fadeUp]') get fadeUp() {

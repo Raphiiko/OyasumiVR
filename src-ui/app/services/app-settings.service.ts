@@ -27,8 +27,9 @@ import {
   providedIn: 'root',
 })
 export class AppSettingsService {
+  // Callers edit settings objects in place, so this must never hold the shared default constant
   private _settings: BehaviorSubject<AppSettings> = new BehaviorSubject<AppSettings>(
-    APP_SETTINGS_DEFAULT
+    structuredClone(APP_SETTINGS_DEFAULT)
   );
   settings: Observable<AppSettings> = this._settings.asObservable();
   private storedMqttPassword: { plain: string; protected: string } | null = null;

@@ -1,67 +1,95 @@
 <div class="setting-category">
   <p transloco="sleep-detection.enableAutomations.description"></p>
   <div class="settings">
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span transloco="sleep-detection.enableAutomations.atTime"></span>
-        <span>
-          @if (automationConfigs.SLEEP_MODE_ENABLE_AT_TIME.time) {
-            <span @fade>
-              {{ automationConfigs.SLEEP_MODE_ENABLE_AT_TIME.time }}
-            </span>
-          }
-        </span>
-      </div>
-      <div class="setting-row-action">
-        <button class="btn btn-automation-settings" (click)="openModal_EnableSleepModeAtTime()">
-          <app-icon name="settings" />
-        </button>
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="automationConfigs.SLEEP_MODE_ENABLE_AT_TIME.enabled"
-            (change)="toggleAutomation('SLEEP_MODE_ENABLE_AT_TIME')"
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
-      </div>
-    </div>
+    <app-setting-row
+      label="sleep-detection.enableAutomations.atTime"
+      [value]="automationConfigs.SLEEP_MODE_ENABLE_AT_TIME"
+      [defaultValue]="automationDefaults.SLEEP_MODE_ENABLE_AT_TIME"
+      (resetToDefault)="updateConfig('SLEEP_MODE_ENABLE_AT_TIME', $event)"
+    >
+      <span rowDescription>
+        @if (automationConfigs.SLEEP_MODE_ENABLE_AT_TIME.time) {
+          <span @fade>
+            {{ automationConfigs.SLEEP_MODE_ENABLE_AT_TIME.time }}
+          </span>
+        }
+      </span>
+      <button class="btn btn-automation-settings" (click)="openModal_EnableSleepModeAtTime()">
+        <app-icon name="settings" />
+      </button>
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="automationConfigs.SLEEP_MODE_ENABLE_AT_TIME.enabled"
+          (change)="toggleAutomation('SLEEP_MODE_ENABLE_AT_TIME')"
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </app-setting-row>
 
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span
-          [innerHtml]="
-            'sleep-detection.enableAutomations.atBatteryPercentage'
-              | transloco
-                : { value: automationConfigs.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.threshold }
-          "
-        ></span>
-        <span>{{
-          deviceClassesToString(
-            automationConfigs.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.triggerClasses,
-            'sleep-detection.modals.enableAtBatteryPercentage.'
-          )
-        }}</span>
-      </div>
-      <div class="setting-row-action">
-        <button
-          class="btn btn-automation-settings"
-          (click)="openModal_EnableSleepModeAtBatteryPercentage()"
-        >
-          <app-icon name="settings" />
-        </button>
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="automationConfigs.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.enabled"
-            (change)="toggleAutomation('SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE')"
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
-      </div>
-    </div>
+    <app-setting-row
+      [value]="{
+        enabled: automationConfigs.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.enabled,
+        controller:
+          automationConfigs.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.triggerClasses.includes(
+            'Controller'
+          ),
+        tracker:
+          automationConfigs.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.triggerClasses.includes(
+            'GenericTracker'
+          ),
+        threshold: automationConfigs.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.threshold,
+      }"
+      [defaultValue]="{
+        enabled: automationDefaults.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.enabled,
+        controller:
+          automationDefaults.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.triggerClasses.includes(
+            'Controller'
+          ),
+        tracker:
+          automationDefaults.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.triggerClasses.includes(
+            'GenericTracker'
+          ),
+        threshold: automationDefaults.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.threshold,
+      }"
+      (resetToDefault)="resetConfig('SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE')"
+    >
+      <span
+        rowLabel
+        [innerHtml]="
+          'sleep-detection.enableAutomations.atBatteryPercentage'
+            | transloco
+              : { value: automationConfigs.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.threshold }
+        "
+      ></span>
+      <span rowDescription>{{
+        deviceClassesToString(
+          automationConfigs.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.triggerClasses,
+          'sleep-detection.modals.enableAtBatteryPercentage.'
+        )
+      }}</span>
+      <button
+        class="btn btn-automation-settings"
+        (click)="openModal_EnableSleepModeAtBatteryPercentage()"
+      >
+        <app-icon name="settings" />
+      </button>
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="automationConfigs.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.enabled"
+          (change)="toggleAutomation('SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE')"
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </app-setting-row>
 
-    <app-setting-row label="sleep-detection.enableAutomations.onControllersPoweredOff.title">
+    <app-setting-row
+      label="sleep-detection.enableAutomations.onControllersPoweredOff.title"
+      [value]="automationConfigs.SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF"
+      [defaultValue]="automationDefaults.SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF"
+      (resetToDefault)="updateConfig('SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF', $event)"
+    >
       <label class="switch-toggle">
         <input
           type="checkbox"
@@ -103,33 +131,32 @@
       </div>
     }
 
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span class="row-title">
-          <span transloco="sleep-detection.enableAutomations.onHeartRateCalmPeriod.title"></span>
-        </span>
-        <span
-          [innerHtml]="
-            'sleep-detection.enableAutomations.onHeartRateCalmPeriod.description' | transloco
-          "
-        ></span>
-      </div>
-      <div class="setting-row-action">
-        <button
-          class="btn btn-automation-settings"
-          (click)="openModal_EnableSleepModeOnHeartRateCalmPeriod()"
-        >
-          <app-icon name="settings" />
-        </button>
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="automationConfigs.SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD.enabled"
-            (change)="toggleAutomation('SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD')"
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
-      </div>
-    </div>
+    <app-setting-row
+      label="sleep-detection.enableAutomations.onHeartRateCalmPeriod.title"
+      [value]="automationConfigs.SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD"
+      [defaultValue]="automationDefaults.SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD"
+      (resetToDefault)="updateConfig('SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD', $event)"
+    >
+      <span
+        rowDescription
+        [innerHtml]="
+          'sleep-detection.enableAutomations.onHeartRateCalmPeriod.description' | transloco
+        "
+      ></span>
+      <button
+        class="btn btn-automation-settings"
+        (click)="openModal_EnableSleepModeOnHeartRateCalmPeriod()"
+      >
+        <app-icon name="settings" />
+      </button>
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="automationConfigs.SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD.enabled"
+          (change)="toggleAutomation('SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD')"
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </app-setting-row>
   </div>
 </div>

@@ -35,6 +35,7 @@ import { DeviceSelection } from 'src-ui/app/models/device-manager';
   standalone: false,
 })
 export class ShutdownAutomationsSettingsTabComponent implements OnInit {
+  protected readonly defaults = AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS;
   protected config: ShutdownAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS
   );
@@ -107,6 +108,13 @@ export class ShutdownAutomationsSettingsTabComponent implements OnInit {
       this.config.turnOffDevices.types.length === 0 &&
       this.config.turnOffDevices.tagIds.length === 0 &&
       !this.config.powerDownWindows
+    );
+  }
+
+  protected async updateConfig(patch: Partial<ShutdownAutomationsConfig>) {
+    await this.automationConfigs.updateAutomationConfig<ShutdownAutomationsConfig>(
+      'SHUTDOWN_AUTOMATIONS',
+      patch
     );
   }
 

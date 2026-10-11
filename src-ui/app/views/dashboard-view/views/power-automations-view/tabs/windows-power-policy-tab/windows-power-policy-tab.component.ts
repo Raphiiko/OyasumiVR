@@ -2,6 +2,7 @@ import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular
 import { AutomationConfigService } from '../../../../../../services/automation-config.service';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
+  AutomationConfigs,
   WindowsPowerPolicyOnSleepModeAutomationConfig,
 } from '../../../../../../models/automations';
 import { Router } from '@angular/router';
@@ -18,6 +19,8 @@ import { combineLatest, tap } from 'rxjs';
   standalone: false,
 })
 export class WindowsPowerPolicyTabComponent implements OnInit {
+  protected readonly automationDefaults = AUTOMATION_CONFIGS_DEFAULT;
+  protected automationConfigs: AutomationConfigs = AUTOMATION_CONFIGS_DEFAULT;
   protected policyOptions: SelectBoxItem[] = [
     {
       id: 'NONE',
@@ -67,6 +70,7 @@ export class WindowsPowerPolicyTabComponent implements OnInit {
     ])
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(([configs]) => {
+        this.automationConfigs = configs;
         // Update options when the windows power policies are updated
         this.onSleepModeEnablePolicy =
           this.policyOptions.find(

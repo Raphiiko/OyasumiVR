@@ -4,8 +4,9 @@
     <app-setting-row
       label="settings.troubleshooting.tweaks.overlayGpuAcceleration.title"
       description="settings.troubleshooting.tweaks.overlayGpuAcceleration.description"
-      [canReset]="!isDefault('overlayGpuAcceleration')"
-      (resetToDefault)="reset('overlayGpuAcceleration')"
+      [value]="settings.overlayGpuAcceleration"
+      [defaultValue]="defaults.overlayGpuAcceleration"
+      (resetToDefault)="update({ overlayGpuAcceleration: $event })"
     >
       <label class="switch-toggle">
         <input
@@ -19,8 +20,9 @@
     <app-setting-row
       label="settings.troubleshooting.tweaks.openVrInitDelayFix.title"
       description="settings.troubleshooting.tweaks.openVrInitDelayFix.description"
-      [canReset]="!isDefault('openVrInitDelayFix')"
-      (resetToDefault)="reset('openVrInitDelayFix')"
+      [value]="settings.openVrInitDelayFix"
+      [defaultValue]="defaults.openVrInitDelayFix"
+      (resetToDefault)="update({ openVrInitDelayFix: $event })"
     >
       <label class="switch-toggle">
         <input
@@ -34,8 +36,9 @@
     <app-setting-row
       label="settings.general.lighthouseConsole.powerOffDelay.title"
       description="settings.general.lighthouseConsole.powerOffDelay.description"
-      [canReset]="!isDefault('lighthousePowerOffDelay')"
-      (resetToDefault)="reset('lighthousePowerOffDelay')"
+      [value]="settings.lighthousePowerOffDelay"
+      [defaultValue]="defaults.lighthousePowerOffDelay"
+      (resetToDefault)="update({ lighthousePowerOffDelay: $event })"
     >
       <label class="switch-toggle">
         <input

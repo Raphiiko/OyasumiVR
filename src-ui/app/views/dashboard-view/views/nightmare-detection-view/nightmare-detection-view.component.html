@@ -8,6 +8,9 @@
           <app-setting-row
             label="nightmare-detection.bpmThreshold.title"
             description="nightmare-detection.bpmThreshold.description"
+            [value]="config.heartRateThreshold"
+            [defaultValue]="defaults.heartRateThreshold"
+            (resetToDefault)="updateThreshold($event)"
           >
             <app-slider-setting
               [unit]="'nightmare-detection.bpmThreshold.unit' | transloco"
@@ -21,6 +24,9 @@
           <app-setting-row
             label="nightmare-detection.duration.title"
             description="nightmare-detection.duration.description"
+            [value]="config.periodDuration"
+            [defaultValue]="defaults.periodDuration"
+            (resetToDefault)="updateConfig({ periodDuration: $event })"
           >
             <app-slider-setting
               [min]="1"
@@ -50,6 +56,9 @@
           <app-setting-row
             label="nightmare-detection.disableSleepMode.title"
             description="nightmare-detection.disableSleepMode.description"
+            [value]="config.disableSleepMode"
+            [defaultValue]="defaults.disableSleepMode"
+            (resetToDefault)="updateConfig({ disableSleepMode: $event })"
           >
             <label class="switch-toggle">
               <input
@@ -63,6 +72,9 @@
           <app-setting-row
             label="nightmare-detection.playSound.title"
             description="nightmare-detection.playSound.description"
+            [value]="config.sound"
+            [defaultValue]="defaults.sound"
+            (resetToDefault)="updateSound($event)"
           >
             <app-notification-sound-button
               [soundConfig]="config.sound"

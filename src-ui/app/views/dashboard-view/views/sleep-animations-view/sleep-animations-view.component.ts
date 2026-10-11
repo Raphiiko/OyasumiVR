@@ -47,6 +47,7 @@ export class SleepAnimationsViewComponent implements OnInit {
       infoAction: this.buildPresetInfoAction(preset),
     })),
   ];
+  readonly defaults = AUTOMATION_CONFIGS_DEFAULT.SLEEPING_ANIMATIONS;
   config: SleepingAnimationsAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SLEEPING_ANIMATIONS
   );

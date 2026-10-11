@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { fade, fadeRight, vshrink } from '../../../../../../../utils/animations';
 import {
+  AUTOMATION_CONFIGS_DEFAULT,
   BrightnessEvent,
   BrightnessEventAutomationConfig,
   SunBrightnessEventAutomationConfig,
@@ -63,6 +64,7 @@ export class BrightnessAutomationDetailsComponent implements OnInit {
     HARDWARE: 5,
   };
   protected vshakeElements: string[] = [];
+  protected readonly defaults = AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS;
   @Input() sunMode: 'SUNSET' | 'SUNRISE' | undefined;
 
   constructor(
@@ -91,7 +93,7 @@ export class BrightnessAutomationDetailsComponent implements OnInit {
       });
   }
 
-  private async updateConfig(config: Partial<BrightnessEventAutomationConfig>) {
+  protected async updateConfig(config: Partial<BrightnessEventAutomationConfig>) {
     await this.automationConfigService.updateAutomationConfig<BrightnessEventAutomationConfig>(
       'BRIGHTNESS_AUTOMATIONS',
       {

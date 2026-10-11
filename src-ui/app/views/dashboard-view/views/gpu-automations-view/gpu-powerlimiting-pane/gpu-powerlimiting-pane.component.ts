@@ -1,8 +1,9 @@
 import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { GPUDevice, GPUPowerLimit } from '../../../../../models/gpu-device';
+import { AUTOMATION_CONFIGS_DEFAULT } from '../../../../../models/automations';
 import { NvmlService } from '../../../../../services/nvml.service';
 import { GpuAutomationsService } from '../../../../../services/gpu-automations.service';
-import { debounceTime, firstValueFrom, Subject } from 'rxjs';
+import { debounceTime, firstValueFrom, groupBy, mergeMap, Subject } from 'rxjs';
 import { noop, vshrink } from '../../../../../utils/animations';
 import { TString } from 'src-ui/app/models/translatable-string';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -17,6 +18,7 @@ import { flushOnDestroy } from '../../../../../utils/rxjs-utils';
   standalone: false,
 })
 export class GpuPowerlimitingPaneComponent implements OnInit {
+  protected readonly gpuDefaults = AUTOMATION_CONFIGS_DEFAULT.GPU_POWER_LIMITS;
   protected panel: 'PREINIT' | 'INITIALIZING' | 'ERROR' | 'ENABLED' = 'PREINIT';
   protected disabledMessage: TString = '';
   protected gpuDevices: Array<GPUDevice & { selected: boolean }> = [];
@@ -25,9 +27,10 @@ export class GpuPowerlimitingPaneComponent implements OnInit {
   protected powerLimitOnSleepEnable?: GPUPowerLimit;
   protected onSleepDisableAutomationEnabled = false;
   protected powerLimitOnSleepDisable?: GPUPowerLimit;
+  /** Carries limit changes and resets per card, so a reset replaces that card's pending change. */
   protected readonly powerLimitChange: Subject<{
     automation: 'SLEEP_ENABLE' | 'SLEEP_DISABLE';
-    limit: GPUPowerLimit;
+    limit?: GPUPowerLimit;
   }> = new Subject();
 
   constructor(
@@ -92,8 +95,18 @@ export class GpuPowerlimitingPaneComponent implements OnInit {
     });
     flushOnDestroy(this.powerLimitChange, destroyRef);
     this.powerLimitChange
-      .pipe(debounceTime(100), takeUntilDestroyed())
+      .pipe(
+        groupBy(({ automation }) => automation),
+        mergeMap((changes) => changes.pipe(debounceTime(100))),
+        takeUntilDestroyed()
+      )
       .subscribe(async ({ automation, limit }) => {
+        if (!limit) {
+          await this.gpuAutomations.resetPowerLimitAutomation(
+            automation === 'SLEEP_ENABLE' ? 'onSleepEnable' : 'onSleepDisable'
+          );
+          return;
+        }
         switch (automation) {
           case 'SLEEP_ENABLE':
             await this.gpuAutomations.setSleepEnablePowerLimit(limit);

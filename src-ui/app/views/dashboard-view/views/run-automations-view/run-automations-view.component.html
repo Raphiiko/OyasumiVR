@@ -6,31 +6,31 @@
         <p transloco="runAutomations.description"></p>
         <div class="settings">
           <!-- On Sleep Enable -->
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="runAutomations.onSleepEnable.title"></span>
-              <span transloco="runAutomations.onSleepEnable.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <button
-                class="btn btn-icon expand-button"
-                type="button"
-                [class.expanded]="onSleepModeEnableExpanded"
-                (click)="onSleepModeEnableExpanded = !onSleepModeEnableExpanded"
-                [title]="(onSleepModeEnableExpanded ? 'Collapse' : 'Expand') + ' command input'"
-              >
-                <app-icon name="chevron-down" />
-              </button>
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="config.onSleepModeEnable"
-                  (change)="toggleSleepModeEnable()"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
+          <app-setting-row
+            label="runAutomations.onSleepEnable.title"
+            description="runAutomations.onSleepEnable.description"
+            [value]="config.onSleepModeEnable"
+            [defaultValue]="automationDefaults.RUN_AUTOMATIONS.onSleepModeEnable"
+            (resetToDefault)="toggleSleepModeEnable()"
+          >
+            <button
+              class="btn btn-icon expand-button"
+              type="button"
+              [class.expanded]="onSleepModeEnableExpanded"
+              (click)="onSleepModeEnableExpanded = !onSleepModeEnableExpanded"
+              [title]="(onSleepModeEnableExpanded ? 'Collapse' : 'Expand') + ' command input'"
+            >
+              <app-icon name="chevron-down" />
+            </button>
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="config.onSleepModeEnable"
+                (change)="toggleSleepModeEnable()"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
 
           <!-- Command input for On Sleep Enable -->
           @if (onSleepModeEnableExpanded) {
@@ -62,31 +62,31 @@
           }
 
           <!-- On Sleep Disable -->
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="runAutomations.onSleepDisable.title"></span>
-              <span transloco="runAutomations.onSleepDisable.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <button
-                class="btn btn-icon expand-button"
-                type="button"
-                [class.expanded]="onSleepModeDisableExpanded"
-                (click)="onSleepModeDisableExpanded = !onSleepModeDisableExpanded"
-                [title]="(onSleepModeDisableExpanded ? 'Collapse' : 'Expand') + ' command input'"
-              >
-                <app-icon name="chevron-down" />
-              </button>
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="config.onSleepModeDisable"
-                  (change)="toggleSleepModeDisable()"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
+          <app-setting-row
+            label="runAutomations.onSleepDisable.title"
+            description="runAutomations.onSleepDisable.description"
+            [value]="config.onSleepModeDisable"
+            [defaultValue]="automationDefaults.RUN_AUTOMATIONS.onSleepModeDisable"
+            (resetToDefault)="toggleSleepModeDisable()"
+          >
+            <button
+              class="btn btn-icon expand-button"
+              type="button"
+              [class.expanded]="onSleepModeDisableExpanded"
+              (click)="onSleepModeDisableExpanded = !onSleepModeDisableExpanded"
+              [title]="(onSleepModeDisableExpanded ? 'Collapse' : 'Expand') + ' command input'"
+            >
+              <app-icon name="chevron-down" />
+            </button>
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="config.onSleepModeDisable"
+                (change)="toggleSleepModeDisable()"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
 
           <!-- Command input for On Sleep Disable -->
           @if (onSleepModeDisableExpanded) {
@@ -118,31 +118,31 @@
           }
 
           <!-- On Sleep Preparation -->
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="runAutomations.onSleepPreparation.title"></span>
-              <span transloco="runAutomations.onSleepPreparation.description"></span>
-            </div>
-            <div class="setting-row-action">
-              <button
-                class="btn btn-icon expand-button"
-                type="button"
-                [class.expanded]="onSleepPreparationExpanded"
-                (click)="onSleepPreparationExpanded = !onSleepPreparationExpanded"
-                [title]="(onSleepPreparationExpanded ? 'Collapse' : 'Expand') + ' command input'"
-              >
-                <app-icon name="chevron-down" />
-              </button>
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="config.onSleepPreparation"
-                  (change)="toggleSleepPreparation()"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
+          <app-setting-row
+            label="runAutomations.onSleepPreparation.title"
+            description="runAutomations.onSleepPreparation.description"
+            [value]="config.onSleepPreparation"
+            [defaultValue]="automationDefaults.RUN_AUTOMATIONS.onSleepPreparation"
+            (resetToDefault)="toggleSleepPreparation()"
+          >
+            <button
+              class="btn btn-icon expand-button"
+              type="button"
+              [class.expanded]="onSleepPreparationExpanded"
+              (click)="onSleepPreparationExpanded = !onSleepPreparationExpanded"
+              [title]="(onSleepPreparationExpanded ? 'Collapse' : 'Expand') + ' command input'"
+            >
+              <app-icon name="chevron-down" />
+            </button>
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="config.onSleepPreparation"
+                (change)="toggleSleepPreparation()"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
 
           <!-- Command input for On Sleep Preparation -->
           @if (onSleepPreparationExpanded) {

@@ -2,6 +2,7 @@ import { Component, HostBinding, OnInit, ChangeDetectionStrategy } from '@angula
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, triggerChildren } from '../../../../../../utils/animations';
 import { OVRDeviceClass } from '../../../../../../models/ovr-device';
+import { AUTOMATION_CONFIGS_DEFAULT } from '../../../../../../models/automations';
 
 export interface DevicePowerOnDisableSleepModeModalInputModel {
   triggerClasses: OVRDeviceClass[];
@@ -25,6 +26,7 @@ export class DevicePowerOnDisableSleepModeModalComponent
   >
   implements OnInit, DevicePowerOnDisableSleepModeModalInputModel
 {
+  readonly automationDefaults = AUTOMATION_CONFIGS_DEFAULT;
   triggerClasses: OVRDeviceClass[] = [];
 
   @HostBinding('[@fadeUp]') get fadeUp() {

@@ -35,6 +35,9 @@ export class HmdAutomationsBigscreenBeyondTabComponent implements OnInit {
   protected readonly rgbAutomationEnableKeys = AUTOMATION_ENABLE_KEYS as Array<
     keyof BigscreenBeyondRgbControlAutomationsConfig
   >;
+  protected readonly fanControlDefaults = AUTOMATION_CONFIGS_DEFAULT.BIGSCREEN_BEYOND_FAN_CONTROL;
+  protected readonly rgbControlDefaults = AUTOMATION_CONFIGS_DEFAULT.BIGSCREEN_BEYOND_RGB_CONTROL;
+  protected readonly appSettingsDefaults = APP_SETTINGS_DEFAULT;
   protected rgbControlConfig: BigscreenBeyondRgbControlAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.BIGSCREEN_BEYOND_RGB_CONTROL
   );
@@ -80,6 +83,28 @@ export class HmdAutomationsBigscreenBeyondTabComponent implements OnInit {
       'BIGSCREEN_BEYOND_RGB_CONTROL',
       {
         [key]: !this.rgbControlConfig[key],
+      }
+    );
+  }
+
+  async resetFanAutomation(automation: keyof BigscreenBeyondFanControlAutomationsConfig) {
+    const speedKey = this.asFanControlKey(automation + 'FanSpeed');
+    await this.automationConfigService.updateAutomationConfig<BigscreenBeyondFanControlAutomationsConfig>(
+      'BIGSCREEN_BEYOND_FAN_CONTROL',
+      {
+        [automation]: this.fanControlDefaults[automation],
+        [speedKey]: this.fanControlDefaults[speedKey],
+      }
+    );
+  }
+
+  async resetRgbAutomation(automation: keyof BigscreenBeyondRgbControlAutomationsConfig) {
+    const rgbKey = this.asRgbControlKey(automation + 'Rgb');
+    await this.automationConfigService.updateAutomationConfig<BigscreenBeyondRgbControlAutomationsConfig>(
+      'BIGSCREEN_BEYOND_RGB_CONTROL',
+      {
+        [automation]: this.rgbControlDefaults[automation],
+        [rgbKey]: structuredClone(this.rgbControlDefaults[rgbKey]),
       }
     );
   }

@@ -183,6 +183,9 @@
           <app-setting-row
             label="oscAutomations.sleepingAnimations.options.general.onlySwitchAnimations"
             description="oscAutomations.sleepingAnimations.options.general.onlyIfSleepModeEnabled"
+            [value]="config.onlyIfSleepModeEnabled"
+            [defaultValue]="defaults.onlyIfSleepModeEnabled"
+            (resetToDefault)="updateConfig({ onlyIfSleepModeEnabled: $event })"
           >
             <label class="switch-toggle">
               <input
@@ -201,6 +204,9 @@
         <div class="settings">
           <app-setting-row
             label="oscAutomations.sleepingAnimations.options.general.lockFeetOnSleepModeEnable"
+            [value]="config.lockFeetOnSleepModeEnable"
+            [defaultValue]="defaults.lockFeetOnSleepModeEnable"
+            (resetToDefault)="updateConfig({ lockFeetOnSleepModeEnable: $event })"
           >
             <label class="switch-toggle">
               <input
@@ -215,6 +221,9 @@
           </app-setting-row>
           <app-setting-row
             label="oscAutomations.sleepingAnimations.options.general.unlockFeetOnSleepModeDisable"
+            [value]="config.unlockFeetOnSleepModeDisable"
+            [defaultValue]="defaults.unlockFeetOnSleepModeDisable"
+            (resetToDefault)="updateConfig({ unlockFeetOnSleepModeDisable: $event })"
           >
             <label class="switch-toggle">
               <input
@@ -231,6 +240,9 @@
           </app-setting-row>
           <app-setting-row
             label="oscAutomations.sleepingAnimations.options.general.unlockFeetOnAutomationDisable"
+            [value]="config.unlockFeetOnAutomationDisable"
+            [defaultValue]="defaults.unlockFeetOnAutomationDisable"
+            (resetToDefault)="updateConfig({ unlockFeetOnAutomationDisable: $event })"
           >
             <label class="switch-toggle">
               <input
@@ -247,6 +259,9 @@
           </app-setting-row>
           <app-setting-row
             label="oscAutomations.sleepingAnimations.options.general.releaseFootLockOnPoseChange"
+            [value]="config.releaseFootLockOnPoseChange"
+            [defaultValue]="defaults.releaseFootLockOnPoseChange"
+            (resetToDefault)="updateConfig({ releaseFootLockOnPoseChange: $event })"
           >
             <label class="switch-toggle">
               <input
@@ -265,6 +280,9 @@
             <app-setting-row
               label="oscAutomations.sleepingAnimations.options.general.footLockReleaseWindow"
               [class.disabled]="!config.releaseFootLockOnPoseChange"
+              [value]="config.footLockReleaseWindow"
+              [defaultValue]="defaults.footLockReleaseWindow"
+              (resetToDefault)="updateFootLockReleaseWindow($event)"
             >
               <app-slider-setting
                 [step]="1"
@@ -283,34 +301,33 @@
       <div class="setting-category">
         <h3 transloco="oscAutomations.sleepingAnimations.options.general.advanced.title"></h3>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span
-                transloco="oscAutomations.sleepingAnimations.options.general.advanced.avatarReloadWorkaround.title"
-              ></span>
-              <span
-                [innerHtml]="
-                  'oscAutomations.sleepingAnimations.options.general.advanced.avatarReloadWorkaround.description'
-                    | transloco
+          <app-setting-row
+            label="oscAutomations.sleepingAnimations.options.general.advanced.avatarReloadWorkaround.title"
+            [value]="config.enableAvatarReloadOnFBTDisableWorkaround"
+            [defaultValue]="defaults.enableAvatarReloadOnFBTDisableWorkaround"
+            (resetToDefault)="updateConfig({ enableAvatarReloadOnFBTDisableWorkaround: $event })"
+          >
+            <span
+              rowDescription
+              [innerHtml]="
+                'oscAutomations.sleepingAnimations.options.general.advanced.avatarReloadWorkaround.description'
+                  | transloco
+              "
+            ></span>
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="config.enableAvatarReloadOnFBTDisableWorkaround"
+                (change)="
+                  updateConfig({
+                    enableAvatarReloadOnFBTDisableWorkaround:
+                      !config.enableAvatarReloadOnFBTDisableWorkaround,
+                  })
                 "
-              ></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="config.enableAvatarReloadOnFBTDisableWorkaround"
-                  (change)="
-                    updateConfig({
-                      enableAvatarReloadOnFBTDisableWorkaround:
-                        !config.enableAvatarReloadOnFBTDisableWorkaround,
-                    })
-                  "
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
         </div>
       </div>
     </div>

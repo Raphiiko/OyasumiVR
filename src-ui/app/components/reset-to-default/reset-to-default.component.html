@@ -1,0 +1,11 @@
+@if (canReset()) {
+  <button
+    type="button"
+    class="reset-to-default"
+    [tooltip]="'shared.common.resetToDefault'"
+    [attr.aria-label]="'shared.common.resetToDefault' | transloco"
+    (click)="reset()"
+  >
+    <app-icon name="undo" class="icon-mono" />
+  </button>
+}

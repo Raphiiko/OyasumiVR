@@ -19,6 +19,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   standalone: false,
 })
 export class ChaperoneAutomationsViewComponent implements OnInit {
+  protected readonly defaults = AUTOMATION_CONFIGS_DEFAULT;
   protected onSleepModeEnableConfig: ChaperoneFadeDistanceOnSleepModeAutomationConfig =
     structuredClone(AUTOMATION_CONFIGS_DEFAULT.CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE);
   protected onSleepModeDisableConfig: ChaperoneFadeDistanceOnSleepModeAutomationConfig =

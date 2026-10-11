@@ -12,6 +12,8 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   BrightnessAutomationsConfig,
   BrightnessEvent,
+  BrightnessEventAutomationConfig,
+  BrightnessEvents,
 } from '../../../../../../../models/automations';
 import { AutomationConfigService } from '../../../../../../../services/automation-config.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -20,7 +22,7 @@ import { BrightnessCctAutomationService } from '../../../../../../../services/br
 import { fade } from '../../../../../../../utils/animations';
 import { BrightnessEventViewModel } from '../brightness-automations-tab.component';
 import { SleepService } from '../../../../../../../services/sleep.service';
-import { uniq } from 'lodash';
+import { omit, uniq } from 'lodash';
 
 @Component({
   selector: 'app-brightness-automations-list',
@@ -34,6 +36,10 @@ export class BrightnessAutomationsListComponent implements OnInit {
   protected config: BrightnessAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS
   );
+  protected readonly eventDefaults = BrightnessAutomationsListComponent.resettableFields(
+    AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS
+  );
+  protected eventValues = BrightnessAutomationsListComponent.resettableFields(this.config);
   @Input() events!: Array<BrightnessEventViewModel>;
   @Output() editEvent = new EventEmitter<BrightnessEventViewModel>();
   protected hmdConnectAutomations: Record<BrightnessEvent, 'active' | 'potential' | false> = {
@@ -76,6 +82,7 @@ export class BrightnessAutomationsListComponent implements OnInit {
       )
       .subscribe((config) => {
         this.config = config;
+        this.eventValues = BrightnessAutomationsListComponent.resettableFields(config);
         // Request refresh of HMD connect indicators when configurations change
         this.updateHmdConnectIndicators();
         this.cdr.markForCheck();
@@ -131,6 +138,19 @@ export class BrightnessAutomationsListComponent implements OnInit {
           this.cdr.markForCheck();
         }
       );
+  }
+
+  /** Leaves out activationTime, which the app fills in from the sun times. */
+  private static resettableFields(config: BrightnessAutomationsConfig) {
+    return Object.fromEntries(
+      BrightnessEvents.map((event) => [event, omit(config[event], 'activationTime')])
+    ) as Record<BrightnessEvent, Partial<BrightnessEventAutomationConfig>>;
+  }
+
+  resetEvent(name: BrightnessEvent) {
+    this.automationConfigService.updateAutomationConfig('BRIGHTNESS_AUTOMATIONS', {
+      [name]: structuredClone(AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS[name]),
+    });
   }
 
   toggleEvent(name: BrightnessEvent) {

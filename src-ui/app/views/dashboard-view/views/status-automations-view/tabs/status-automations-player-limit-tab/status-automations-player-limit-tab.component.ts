@@ -37,6 +37,7 @@ import { flushOnDestroy } from '../../../../../../utils/rxjs-utils';
   standalone: false,
 })
 export class StatusAutomationsPlayerLimitTabComponent implements OnInit {
+  readonly defaults = AUTOMATION_CONFIGS_DEFAULT.CHANGE_STATUS_BASED_ON_PLAYER_COUNT;
   UserStatus = UserStatus;
   loggedIn = false;
   limit: BehaviorSubject<number> = new BehaviorSubject<number>(1);
@@ -116,8 +117,8 @@ export class StatusAutomationsPlayerLimitTabComponent implements OnInit {
           this.cdr.markForCheck();
         }),
         distinctUntilChanged(),
-        filter((limit) => limit !== this.config.limit),
         debounceTime(300),
+        filter((limit) => limit !== this.config.limit),
         switchMap((limit) => this.updateConfig({ limit })),
         takeUntilDestroyed(this.destroyRef)
       )

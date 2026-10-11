@@ -18,7 +18,12 @@
     </app-alert>
   }
   <div class="settings">
-    <app-setting-row label="shutdown-automations.sequence.turnOffDevices.title">
+    <app-setting-row
+      label="shutdown-automations.sequence.turnOffDevices.title"
+      [value]="config.turnOffDevices"
+      [defaultValue]="defaults.turnOffDevices"
+      (resetToDefault)="onChangeDeviceSelection($event)"
+    >
       <app-device-selector
         [allowedDeviceTypes]="['CONTROLLER', 'TRACKER', 'LIGHTHOUSE']"
         [selection]="config.turnOffDevices"
@@ -29,6 +34,9 @@
     <app-setting-row
       label="shutdown-automations.sequence.quitSteamVR.title"
       description="shutdown-automations.sequence.quitSteamVR.description"
+      [value]="config.quitSteamVR"
+      [defaultValue]="defaults.quitSteamVR"
+      (resetToDefault)="updateConfig({ quitSteamVR: $event })"
     >
       <label class="switch-toggle">
         <input type="checkbox" [checked]="config.quitSteamVR" (change)="toggleQuitSteamVR()" />
@@ -39,6 +47,15 @@
     <app-setting-row
       label="shutdown-automations.sequence.powerDownWindows.title"
       description="shutdown-automations.sequence.powerDownWindows.description"
+      [value]="{
+        powerDownWindows: config.powerDownWindows,
+        powerDownWindowsMode: config.powerDownWindowsMode,
+      }"
+      [defaultValue]="{
+        powerDownWindows: defaults.powerDownWindows,
+        powerDownWindowsMode: defaults.powerDownWindowsMode,
+      }"
+      (resetToDefault)="updateConfig($event)"
     >
       @if (config.powerDownWindows) {
         <div class="power-down-select-box-wrapper" @fade>

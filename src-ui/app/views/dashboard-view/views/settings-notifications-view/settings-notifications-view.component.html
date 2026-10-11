@@ -7,6 +7,9 @@
           <app-setting-row
             label="settings.notifications.provider.title"
             description="settings.notifications.provider.description"
+            [value]="providerOption.id"
+            [defaultValue]="defaults.notificationProvider"
+            (resetToDefault)="setProvider($event)"
           >
             <app-select-box
               class="provider-dropdown"
@@ -19,6 +22,9 @@
           <app-setting-row
             label="settings.notifications.volume.title"
             description="settings.notifications.volume.description"
+            [value]="generalNotificationVolume"
+            [defaultValue]="defaults.generalNotificationVolume"
+            (resetToDefault)="setGeneralNotificationVolume($event)"
           >
             <button class="btn btn-secondary" (click)="testSound()">
               @if (!playingTestSound) {
@@ -42,29 +48,29 @@
           ></app-setting-row>
           <div class="setting-row-group">
             @for (notificationType of notificationTypes; track notificationType) {
-              <div class="setting-row compact">
-                <div class="setting-row-label">
-                  <span>{{
-                    'settings.notifications.notifications.category.' + notificationType + '.title'
-                      | transloco
-                  }}</span>
-                  <span>{{
-                    'settings.notifications.notifications.category.' +
-                      notificationType +
-                      '.description' | transloco
-                  }}</span>
-                </div>
-                <div class="setting-row-action">
-                  <label class="check-toggle">
-                    <input
-                      type="checkbox"
-                      [checked]="isNotificationTypeChecked(notificationType)"
-                      (change)="toggleNotificationType(notificationType)"
-                    />
-                    <span class="check-toggle-checkmark"></span>
-                  </label>
-                </div>
-              </div>
+              <app-setting-row
+                class="compact"
+                [label]="
+                  'settings.notifications.notifications.category.' + notificationType + '.title'
+                "
+                [description]="
+                  'settings.notifications.notifications.category.' +
+                  notificationType +
+                  '.description'
+                "
+                [value]="isNotificationTypeChecked(notificationType)"
+                [defaultValue]="defaults.notificationsEnabled.types.includes(notificationType)"
+                (resetToDefault)="toggleNotificationType(notificationType)"
+              >
+                <label class="check-toggle">
+                  <input
+                    type="checkbox"
+                    [checked]="isNotificationTypeChecked(notificationType)"
+                    (change)="toggleNotificationType(notificationType)"
+                  />
+                  <span class="check-toggle-checkmark"></span>
+                </label>
+              </app-setting-row>
             }
           </div>
         </div>
