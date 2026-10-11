@@ -1,76 +1,27 @@
 <div class="pane fill">
   <div class="pane-title" transloco="settings.troubleshooting.title"></div>
+  <div class="tab-bar">
+    <div class="tab" [class.active]="activeTab === 'STATUS'" (click)="activeTab = 'STATUS'">
+      <div class="tab-label" transloco="settings.troubleshooting.tabs.status"></div>
+    </div>
+    <div class="tab" [class.active]="activeTab === 'TOOLS'" (click)="activeTab = 'TOOLS'">
+      <div class="tab-label" transloco="settings.troubleshooting.tabs.tools"></div>
+    </div>
+    <div class="tab" [class.active]="activeTab === 'TWEAKS'" (click)="activeTab = 'TWEAKS'">
+      <div class="tab-label" transloco="settings.troubleshooting.tabs.tweaks"></div>
+    </div>
+  </div>
   <div class="pane-content scroll">
     <div class="setting-view-container">
-      <div class="setting-category">
-        <h2 transloco="settings.troubleshooting.support.title"></h2>
-        <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span>v{{ version | async }}</span>
-              <span>{{ build | tsTranslate }}</span>
-            </div>
-            <div class="setting-row-action">
-              <button class="btn btn-secondary" (click)="copyVersion()">
-                <app-icon name="copy" />
-                <span transloco="settings.troubleshooting.support.version.copy"></span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="setting-category">
-        <h2 transloco="settings.troubleshooting.status.title"></h2>
-        <div class="status-grid">
-          @for (line of status; track line.label) {
-            <div class="status-tile" [class.wide]="line.wide">
-              <div class="status-tile-label" [transloco]="line.label"></div>
-              <div class="status-tile-value">{{ (line.value | async) ?? '' | tsTranslate }}</div>
-              @if (line.detail | async; as detail) {
-                <div class="status-tile-detail">{{ detail | tsTranslate }}</div>
-              }
-            </div>
-          }
-        </div>
-      </div>
-
-      <div class="setting-category">
-        <h2 transloco="settings.troubleshooting.tools.title"></h2>
-        <div class="settings">
-          <app-setting-row
-            label="settings.troubleshooting.tools.logs.title"
-            description="settings.troubleshooting.tools.logs.description"
-          >
-            <button class="btn btn-primary" (click)="openLogsFolder()">
-              <app-icon name="folder" />
-              <span transloco="settings.troubleshooting.tools.logs.action"></span>
-            </button>
-          </app-setting-row>
-          <app-setting-row
-            label="settings.troubleshooting.tools.vrManifestReregister.title"
-            description="settings.troubleshooting.tools.vrManifestReregister.description"
-          >
-            <button
-              class="btn btn-primary"
-              (click)="reregisterVRManifest()"
-              [disabled]="(openvr.status | async) !== 'INITIALIZED'"
-            >
-              <span transloco="settings.troubleshooting.tools.vrManifestReregister.action"></span>
-            </button>
-          </app-setting-row>
-          @if (devToolsAvailable | async) {
-            <app-setting-row
-              label="settings.troubleshooting.tools.devTools.title"
-              description="settings.troubleshooting.tools.devTools.description"
-            >
-              <button class="btn btn-primary" (click)="openDevTools()">
-                <span transloco="settings.troubleshooting.tools.devTools.action"></span>
-              </button>
-            </app-setting-row>
-          }
-        </div>
-      </div>
+      @if (activeTab === 'STATUS') {
+        <app-settings-troubleshooting-status-tab></app-settings-troubleshooting-status-tab>
+      }
+      @if (activeTab === 'TOOLS') {
+        <app-settings-troubleshooting-tools-tab></app-settings-troubleshooting-tools-tab>
+      }
+      @if (activeTab === 'TWEAKS') {
+        <app-settings-troubleshooting-tweaks-tab></app-settings-troubleshooting-tweaks-tab>
+      }
     </div>
   </div>
 </div>

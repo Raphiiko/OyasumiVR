@@ -233,7 +233,6 @@
       "resolutionAutomations": "Automatizaciones de resolución",
       "runAutomations": "Ejecutar automatizaciones",
       "settings": {
-        "advanced": "Ajustes avanzados",
         "brightnessCct": "Ajustes de brillo y CCT",
         "general": "Ajustes generales",
         "hotkeys": "Ajustes de teclas",
@@ -1739,7 +1738,6 @@
         },
         "title": "Datos persistentes"
       },
-      "title": "Ajustes avanzados",
       "translation": {
         "contribute": {
           "description": "Contribuya con las traducciones que faltan o ayude a añadir nuevos idiomas!",

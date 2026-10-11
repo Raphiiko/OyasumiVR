@@ -3,39 +3,3 @@
   display: flex;
   overflow: hidden;
 }
-
-button app-icon {
-  font-size: 1.06em;
-}
-
-.status-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.5em;
-}
-
-.status-tile {
-  padding: 0.75em 1em;
-  background: var(--color-surface-1);
-  border-radius: var(--surface-border-radius);
-
-  &.wide {
-    grid-column: span 2;
-  }
-
-  &-label {
-    color: var(--color-text-3);
-    font-size: 0.9em;
-    margin-bottom: 0.25em;
-  }
-
-  &-value {
-    font-size: 1.1em;
-    font-weight: 500;
-  }
-
-  &-detail {
-    color: var(--color-text-3);
-    margin-top: 0.25em;
-  }
-}

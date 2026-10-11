@@ -226,7 +226,6 @@
       "powerAutomations": "전원 자동화",
       "resolutionAutomations": "해상도 자동화",
       "settings": {
-        "advanced": "고급 설정",
         "brightnessCct": "밝기 & 색온도 설정",
         "general": "일반 설정",
         "hotkeys": "단축키 설정",
@@ -1482,7 +1481,6 @@
         },
         "title": "영구 데이터"
       },
-      "title": "고급 설정",
       "translation": {
         "contribute": {
           "description": "누락된 번역을 제공하거나 새로운 언어 추가를 도와주세요!",

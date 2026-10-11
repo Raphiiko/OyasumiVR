@@ -223,7 +223,6 @@
       "powerAutomations": "Energie-Automatisierungen",
       "resolutionAutomations": "Auflösung",
       "settings": {
-        "advanced": "Erweiterte Einstellungen",
         "brightnessCct": "Helligkeit und CCT Einstellungen",
         "general": "Allgemeine Einstellungen",
         "hotkeys": "Tastenbelegung",
@@ -1483,7 +1482,6 @@
         },
         "title": "Bestehende Daten"
       },
-      "title": "Erweiterte Einstellungen",
       "translation": {
         "contribute": {
           "description": "Füge fehlende Übersetzungen hinzu oder helfe uns neue Sprachen hinzuzufügen. (Oder überabeite Grammatik; Sinn der Übersetzung im Deutschen)",

@@ -238,7 +238,6 @@
       "resolutionAutomations": "Resolution Automations",
       "runAutomations": "Run Automations",
       "settings": {
-        "advanced": "Advanced Settings",
         "brightnessCct": "Brightness & CCT Settings",
         "general": "General Settings",
         "hotkeys": "Hotkey Settings",
@@ -246,6 +245,7 @@
         "notifications": "Notification Settings",
         "osc": "OSC Settings",
         "subMenu": "Settings",
+        "translationAndData": "Translation & Data",
         "troubleshooting": "Troubleshooting",
         "updates": "Updates"
       },
@@ -1919,17 +1919,6 @@
   },
   "settings": {
     "advanced": {
-      "application": {
-        "openVrInitDelayFix": {
-          "description": "Enabling this will make OyasumiVR wait a bit to interact with SteamVR once it has been detected, giving SteamVR some extra time to start. If you're experiencing issues with launching SteamVR while OyasumiVR is already running, this can help.",
-          "title": "Delay OpenVR Initialization"
-        },
-        "overlayGpuAcceleration": {
-          "description": "If you are experiencing issues with the overlay not rendering properly, disabling this option could fix the issue on some systems (e.g. those with hybrid graphics).",
-          "title": "VR Overlay GPU Acceleration"
-        },
-        "title": "Application"
-      },
       "persistentData": {
         "clearData": "Clear Data",
         "clearModal": {
@@ -1987,7 +1976,6 @@
         },
         "title": "Persistent Data"
       },
-      "title": "Advanced Settings",
       "translation": {
         "contribute": {
           "description": "Contribute missing translations, or help add new languages!",
@@ -2335,6 +2323,9 @@
       },
       "title": "OSC Settings"
     },
+    "translationAndData": {
+      "title": "Translation & Data"
+    },
     "troubleshooting": {
       "status": {
         "adminPrivileges": {
@@ -2414,6 +2405,11 @@
           "copy": "Copy"
         }
       },
+      "tabs": {
+        "status": "Status",
+        "tools": "Tools",
+        "tweaks": "Tweaks"
+      },
       "title": "Troubleshooting",
       "tools": {
         "devTools": {
@@ -2426,11 +2422,20 @@
           "description": "Opens the location of OyasumiVR's log files in your file explorer",
           "title": "Open log folder"
         },
-        "title": "Tools",
         "vrManifestReregister": {
           "action": "Reregister Manifest",
           "description": "Reregisters OyasumiVR's VR application manifest with SteamVR",
           "title": "Reregister SteamVR application manifest"
+        }
+      },
+      "tweaks": {
+        "openVrInitDelayFix": {
+          "description": "Enabling this will make OyasumiVR wait a bit to interact with SteamVR once it has been detected, giving SteamVR some extra time to start. If you're experiencing issues with launching SteamVR while OyasumiVR is already running, this can help.",
+          "title": "Delay OpenVR Initialization"
+        },
+        "overlayGpuAcceleration": {
+          "description": "If you are experiencing issues with the overlay not rendering properly, disabling this option could fix the issue on some systems (e.g. those with hybrid graphics).",
+          "title": "VR Overlay GPU Acceleration"
         }
       }
     },

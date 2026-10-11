@@ -1,0 +1,35 @@
+<div class="setting-category">
+  <div class="settings">
+    <app-setting-row
+      label="settings.troubleshooting.tools.logs.title"
+      description="settings.troubleshooting.tools.logs.description"
+    >
+      <button class="btn btn-primary" (click)="openLogsFolder()">
+        <app-icon name="folder" />
+        <span transloco="settings.troubleshooting.tools.logs.action"></span>
+      </button>
+    </app-setting-row>
+    <app-setting-row
+      label="settings.troubleshooting.tools.vrManifestReregister.title"
+      description="settings.troubleshooting.tools.vrManifestReregister.description"
+    >
+      <button
+        class="btn btn-primary"
+        (click)="reregisterVRManifest()"
+        [disabled]="(openvr.status | async) !== 'INITIALIZED'"
+      >
+        <span transloco="settings.troubleshooting.tools.vrManifestReregister.action"></span>
+      </button>
+    </app-setting-row>
+    @if (devToolsAvailable | async) {
+      <app-setting-row
+        label="settings.troubleshooting.tools.devTools.title"
+        description="settings.troubleshooting.tools.devTools.description"
+      >
+        <button class="btn btn-primary" (click)="openDevTools()">
+          <span transloco="settings.troubleshooting.tools.devTools.action"></span>
+        </button>
+      </app-setting-row>
+    }
+  </div>
+</div>

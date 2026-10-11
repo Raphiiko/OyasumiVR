@@ -235,7 +235,6 @@
       "resolutionAutomations": "分辨率",
       "runAutomations": "自动化命令",
       "settings": {
-        "advanced": "高级选项",
         "brightnessCct": "亮度与色温",
         "general": "常规",
         "hotkeys": "快捷键",
@@ -1835,17 +1834,6 @@
   },
   "settings": {
     "advanced": {
-      "application": {
-        "openVrInitDelayFix": {
-          "description": "启用此选项后，OyasumiVR 将在检测到 SteamVR 后稍作等待再进行交互，从而给予 SteamVR 额外的启动时间。如果你在 OyasumiVR 运行时遇到 SteamVR 启动问题，开启此选项可能有所帮助。",
-          "title": "延迟初始化 OpenVR"
-        },
-        "overlayGpuAcceleration": {
-          "description": "如果你遇到叠加层渲染异常的问题，禁用此选项可能能在某些系统（如使用混合输出的笔记本）上解决问题。",
-          "title": "VR叠加层GPU加速"
-        },
-        "title": "应用程序"
-      },
       "persistentData": {
         "clearData": "清除数据",
         "clearModal": {
@@ -1901,7 +1889,6 @@
         },
         "title": "数据管理"
       },
-      "title": "高级选项",
       "translation": {
         "contribute": {
           "description": "贡献缺失的翻译，或帮助添加新的语言",
@@ -2176,6 +2163,16 @@
           "action": "重新注册",
           "description": "在 SteamVR 上重新注册程序的清单数据",
           "title": "重新注册 SteamVR 的应用程序清单"
+        }
+      },
+      "tweaks": {
+        "openVrInitDelayFix": {
+          "description": "启用此选项后，OyasumiVR 将在检测到 SteamVR 后稍作等待再进行交互，从而给予 SteamVR 额外的启动时间。如果你在 OyasumiVR 运行时遇到 SteamVR 启动问题，开启此选项可能有所帮助。",
+          "title": "延迟初始化 OpenVR"
+        },
+        "overlayGpuAcceleration": {
+          "description": "如果你遇到叠加层渲染异常的问题，禁用此选项可能能在某些系统（如使用混合输出的笔记本）上解决问题。",
+          "title": "VR叠加层GPU加速"
         }
       }
     },

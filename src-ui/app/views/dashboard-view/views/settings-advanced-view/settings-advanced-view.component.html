@@ -1,51 +1,7 @@
 <div class="pane fill">
-  <div class="pane-title" transloco="settings.advanced.title"></div>
+  <div class="pane-title" transloco="settings.translationAndData.title"></div>
   <div class="pane-content scroll">
     <div class="setting-view-container">
-      <div class="setting-category">
-        <h2 transloco="settings.advanced.application.title"></h2>
-        <div class="settings">
-          <app-setting-row
-            label="settings.advanced.application.overlayGpuAcceleration.title"
-            description="settings.advanced.application.overlayGpuAcceleration.description"
-          >
-            <label class="switch-toggle">
-              <input
-                type="checkbox"
-                [checked]="overlayGpuAcceleration"
-                (change)="setOverlayGpuAcceleration(!overlayGpuAcceleration)"
-              />
-              <span class="switch-toggle-slider"></span>
-            </label>
-          </app-setting-row>
-          <app-setting-row
-            label="settings.advanced.application.openVrInitDelayFix.title"
-            description="settings.advanced.application.openVrInitDelayFix.description"
-          >
-            <label class="switch-toggle">
-              <input
-                type="checkbox"
-                [checked]="openVrInitDelayFix"
-                (change)="setOpenVrInitDelayFix(!openVrInitDelayFix)"
-              />
-              <span class="switch-toggle-slider"></span>
-            </label>
-          </app-setting-row>
-          <app-setting-row
-            label="settings.general.lighthouseConsole.powerOffDelay.title"
-            description="settings.general.lighthouseConsole.powerOffDelay.description"
-          >
-            <label class="switch-toggle">
-              <input
-                type="checkbox"
-                [checked]="lighthousePowerOffDelay"
-                (change)="setLighthousePowerOffDelay(!lighthousePowerOffDelay)"
-              />
-              <span class="switch-toggle-slider"></span>
-            </label>
-          </app-setting-row>
-        </div>
-      </div>
       <div class="setting-category">
         <h2 transloco="settings.advanced.translation.title"></h2>
         <div class="settings">

@@ -24,7 +24,6 @@ import { IPCService } from '../../../../services/ipc.service';
 import { SetDebugTranslationsRequest } from '../../../../../../src-grpc-web-client/overlay-sidecar_pb';
 import { AppSettingsService } from '../../../../services/app-settings.service';
 import { FLAVOUR } from '../../../../../build';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { firstValueFrom } from 'rxjs';
 import { ToastService } from '../../../../services/toast.service';
 
@@ -52,9 +51,6 @@ export class SettingsAdvancedViewComponent {
   ];
   checkedPersistentStorageItems: string[] = [];
   memoryWatcherActive = FLAVOUR === 'DEV';
-  overlayGpuAcceleration = true;
-  openVrInitDelayFix = false;
-  lighthousePowerOffDelay = false;
 
   constructor(
     private router: Router,
@@ -64,13 +60,7 @@ export class SettingsAdvancedViewComponent {
     private ipcService: IPCService,
     private settingsService: AppSettingsService,
     private toasts: ToastService
-  ) {
-    this.settingsService.settings.pipe(takeUntilDestroyed()).subscribe((settings) => {
-      this.overlayGpuAcceleration = settings.overlayGpuAcceleration;
-      this.openVrInitDelayFix = settings.openVrInitDelayFix;
-      this.lighthousePowerOffDelay = settings.lighthousePowerOffDelay;
-    });
-  }
+  ) {}
 
   isPersistentStorageItemChecked(key: string) {
     if (key === 'ALL') {
@@ -268,17 +258,5 @@ export class SettingsAdvancedViewComponent {
             });
         }
       });
-  }
-
-  setOverlayGpuAcceleration(enabled: boolean) {
-    this.settingsService.updateSettings({ overlayGpuAcceleration: enabled });
-  }
-
-  setOpenVrInitDelayFix(enabled: boolean) {
-    this.settingsService.updateSettings({ openVrInitDelayFix: enabled });
-  }
-
-  setLighthousePowerOffDelay(enabled: boolean) {
-    this.settingsService.updateSettings({ lighthousePowerOffDelay: enabled });
   }
 }

@@ -227,7 +227,6 @@
       "resolutionAutomations": "解像度",
       "runAutomations": "コマンドプロンプト",
       "settings": {
-        "advanced": "詳細設定",
         "brightnessCct": "輝度と色温度の設定",
         "general": "一般設定",
         "hotkeys": "ショートカットキー設定",
@@ -1825,17 +1824,6 @@
   },
   "settings": {
     "advanced": {
-      "application": {
-        "openVrInitDelayFix": {
-          "description": "SteamVRが検出された後、OyasumiVRは少し待ってから処理を開始します。",
-          "title": "OpenVR初期化の遅延"
-        },
-        "overlayGpuAcceleration": {
-          "description": "オーバーレイが正しく描画されない場合、この設定を無効にすると一部の環境（例：ハイブリッドGPU）で問題が解決することがあります。",
-          "title": "VRオーバーレイのGPUアクセラレーション"
-        },
-        "title": "アプリ"
-      },
       "persistentData": {
         "clearData": "データクリア",
         "clearModal": {
@@ -1891,7 +1879,6 @@
         },
         "title": "保存データ"
       },
-      "title": "詳細設定",
       "translation": {
         "contribute": {
           "description": "不足している翻訳の提供や、新しい言語の追加にご協力ください！",
@@ -2166,6 +2153,16 @@
           "action": "マニフェストの再登録",
           "description": "OyasumiVRのアプリケーションマニフェストをSteamVRに再登録します",
           "title": "SteamVRアプリケーションマニフェストの再登録"
+        }
+      },
+      "tweaks": {
+        "openVrInitDelayFix": {
+          "description": "SteamVRが検出された後、OyasumiVRは少し待ってから処理を開始します。",
+          "title": "OpenVR初期化の遅延"
+        },
+        "overlayGpuAcceleration": {
+          "description": "オーバーレイが正しく描画されない場合、この設定を無効にすると一部の環境（例：ハイブリッドGPU）で問題が解決することがあります。",
+          "title": "VRオーバーレイのGPUアクセラレーション"
         }
       }
     },
