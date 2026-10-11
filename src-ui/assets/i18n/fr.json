@@ -1369,8 +1369,8 @@
       }
     },
     "playerList": {
-      "blacklist": "Liste noire de joueurs",
-      "whitelist": "Liste blanche de joueurs"
+      "blacklist": "Liste noire",
+      "whitelist": "Liste blanche"
     },
     "soundsTab": {
       "options": {
@@ -1459,7 +1459,7 @@
       "hide": "Masquer",
       "moreInfo": "Plus d'informations",
       "openLogFolder": "Ouvrir les journaux",
-      "showHidden": "Afficher les messages masqués",
+      "showHidden": "Voir les masqués",
       "supportDiscord": "Discord d'assistance",
       "unhide": "Réafficher"
     },
@@ -1557,7 +1557,7 @@
         "title": "Websocket VRChat indisponible"
       }
     },
-    "title": "Centre de messages",
+    "title": "Messages",
     "tooltip": "Centre de messages"
   },
   "migration-recovery": {
@@ -1683,7 +1683,7 @@
       "currentPose": "Position actuelle",
       "customPreset": "Animations personnalisées",
       "description": "OyasumiVR peut changer automatiquement les animations de votre avatar quand vous changez de position de sommeil. Cela peut être utile si vous n'avez pas de full body tracking, ou si vous (ou OyasumiVR) éteignez vos trackers pendant la nuit. Voici un <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">exemple</a> du résultat.\n\nDes préréglages sont disponibles pour plusieurs prefabs de locomotion d'avatar, mais vous pouvez aussi définir vos propres animations.",
-      "enable": "Activer les animations de sommeil automatiques",
+      "enable": "Activer les animations automatiques",
       "manualControl": "Contrôle manuel",
       "options": {
         "footLock": {
@@ -2365,14 +2365,14 @@
           "hours": "Dernier message il y a {value} h",
           "label": "OSC",
           "minutes": "Dernier message il y a {value} min",
-          "noMessages": "Aucun message pour l'instant",
+          "noMessages": "Aucun message",
           "off": "Désactivé",
           "seconds": "Dernier message il y a {value} s"
         },
         "overlay": {
           "label": "Overlay",
           "notRunning": "Arrêté",
-          "running": "En cours d'exécution"
+          "running": "Lancé"
         },
         "pulsoid": {
           "label": "Pulsoid",
@@ -2381,7 +2381,7 @@
         },
         "steamvr": {
           "INACTIVE": "Arrêté",
-          "INITIALIZED": "En cours d'exécution",
+          "INITIALIZED": "Lancé",
           "INITIALIZING": "Démarrage",
           "label": "SteamVR"
         },
@@ -2394,7 +2394,7 @@
         "vrchat": {
           "label": "VRChat",
           "notRunning": "Arrêté",
-          "running": "En cours d'exécution"
+          "running": "Lancé"
         },
         "vrchatAccount": {
           "label": "Compte VRChat",
@@ -2496,7 +2496,7 @@
       "vrcLoginRequired": "Cette fonctionnalité nécessite d'être connecté à un compte VRChat."
     },
     "logo": {
-      "tagline": "Outils de sommeil en VR"
+      "tagline": "Outils de sommeil VR"
     },
     "modals": {
       "back": "Retour",
@@ -2989,7 +2989,7 @@
       "worldJoinBehaviour": {
         "description": "Comportement de votre micro quand vous changez de monde dans VRChat",
         "options": {
-          "KEEP": "Garder le dernier état",
+          "KEEP": "Dernier état",
           "MUTE": "Coupé par défaut",
           "UNMUTE": "Activé par défaut"
         },
