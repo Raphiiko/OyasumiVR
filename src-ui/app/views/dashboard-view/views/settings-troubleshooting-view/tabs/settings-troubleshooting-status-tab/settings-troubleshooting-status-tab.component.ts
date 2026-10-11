@@ -31,8 +31,22 @@ import { ModalService } from '../../../../../../services/modal.service';
 import { getVersion } from '../../../../../../utils/app-utils';
 import { DebugReportModalComponent } from '../../debug-report-modal/debug-report-modal.component';
 import { copyWithToast } from '../../../../../../utils/clipboard-utils';
+import { SteamFramePairingService } from '../../../../../../services/steam-frame/steam-frame-pairing.service';
+import { SteamFrameConnectionStatus } from '../../../../../../models/steam-frame';
 
 const DEBUG_REPORT_MODAL_ID = 'debugReport';
+
+/** The status line text per connection status, as Device Manager words it. */
+const STEAM_FRAME_STATUS_KEYS: Record<SteamFrameConnectionStatus, string> = {
+  connecting: 'steamFrame.status.connecting',
+  connected: 'steamFrame.status.connected',
+  offline: 'steamFrame.status.offline',
+  needsAppUpdate: 'steamFrame.status.updateApp',
+  helperOutdated: 'steamFrame.status.updateHelper',
+  hostKeyChanged: 'steamFrame.status.notRecognized',
+  helperMissing: 'steamFrame.status.helperMissing',
+  pairingRemoved: 'settings.troubleshooting.status.steamFrame.pairingRemoved',
+};
 
 const FLAVOUR_NAMES: Record<BuildFlavour, string> = {
   STEAM: 'Steam',
@@ -77,6 +91,7 @@ export class SettingsTroubleshootingStatusTabComponent {
     private toasts: ToastService,
     private modals: ModalService,
     private fontLoader: FontLoaderService,
+    private steamFrame: SteamFramePairingService,
     protected debugReports: DebugReportService
   ) {
     const settings = this.appSettings.settings;
@@ -146,6 +161,10 @@ export class SettingsTroubleshootingStatusTabComponent {
             (user) => `settings.troubleshooting.status.pulsoid.${user ? 'loggedIn' : 'loggedOut'}`
           )
         ),
+      },
+      {
+        label: 'settings.troubleshooting.status.steamFrame.label',
+        value: this.steamFrameStatus(),
       },
       {
         label: 'settings.troubleshooting.status.bluetooth.label',
@@ -279,6 +298,18 @@ export class SettingsTroubleshootingStatusTabComponent {
         };
       }),
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
+    );
+  }
+
+  // ponytail: with several paired headsets, shows the first one; list each if that ever matters
+  private steamFrameStatus(): Observable<TString> {
+    return combineLatest([this.steamFrame.pairings$, this.steamFrame.connections$]).pipe(
+      map(([pairings, connections]) => {
+        const pairing = pairings.find((p) => p.complete);
+        if (!pairing) return 'settings.troubleshooting.status.steamFrame.notPaired';
+        return STEAM_FRAME_STATUS_KEYS[connections[pairing.id]?.status ?? 'connecting'];
+      }),
+      distinctUntilChanged()
     );
   }
 

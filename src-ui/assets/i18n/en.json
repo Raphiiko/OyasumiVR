@@ -2415,6 +2415,11 @@
           "loggedIn": "Logged in",
           "loggedOut": "Not logged in"
         },
+        "steamFrame": {
+          "label": "Steam Frame",
+          "notPaired": "Not paired",
+          "pairingRemoved": "Pairing removed"
+        },
         "steamvr": {
           "INACTIVE": "Not running",
           "INITIALIZED": "Running",
