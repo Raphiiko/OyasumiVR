@@ -125,7 +125,7 @@
                       }
                     : undefined
                 "
-                (resetToDefault)="gpuAutomations.resetPowerLimitAutomation('onSleepEnable')"
+                (resetToDefault)="powerLimitChange.next({ automation: 'SLEEP_ENABLE' })"
               />
             </div>
             <p transloco="gpu-automations.powerLimiting.activatingSleepMode.description"></p>
@@ -167,7 +167,7 @@
                       }
                     : undefined
                 "
-                (resetToDefault)="gpuAutomations.resetPowerLimitAutomation('onSleepDisable')"
+                (resetToDefault)="powerLimitChange.next({ automation: 'SLEEP_DISABLE' })"
               />
             </div>
             <p transloco="gpu-automations.powerLimiting.deactivatingSleepMode.description"></p>

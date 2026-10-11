@@ -1,5 +1,5 @@
 import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, Subject } from 'rxjs';
 import { open as openFile } from '@tauri-apps/plugin-dialog';
 import {
   APP_SETTINGS_DEFAULT,
@@ -43,7 +43,7 @@ export class SettingsGeneralViewComponent implements OnInit {
     type: 'INFO' | 'SUCCESS' | 'ERROR';
     loadingIndicator?: boolean;
   };
-  lighthouseConsolePathInputChange: Subject<string> = new Subject();
+  lighthouseConsolePathInputChange: Subject<string | null> = new Subject();
   telemetrySettings: TelemetrySettings = structuredClone(TELEMETRY_SETTINGS_DEFAULT);
   lighthousePowerOffModeOptions: SelectBoxItem[] = [
     {
@@ -94,7 +94,12 @@ export class SettingsGeneralViewComponent implements OnInit {
       .subscribe((status) => this.processLighthouseConsoleStatus(status));
     flushOnDestroy(this.lighthouseConsolePathInputChange, this.destroyRef);
     this.lighthouseConsolePathInputChange
-      .pipe(distinctUntilChanged(), debounceTime(500), takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        distinctUntilChanged(),
+        debounceTime(500),
+        filter((path): path is string => path !== null),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe(async (path) => {
         await this.lighthouse.setConsolePath(path);
       });
@@ -154,7 +159,10 @@ export class SettingsGeneralViewComponent implements OnInit {
         },
       ],
     });
-    if (path && typeof path === 'string') await this.lighthouse.setConsolePath(path);
+    if (path && typeof path === 'string') {
+      this.lighthouseConsolePathInputChange.next(null);
+      await this.lighthouse.setConsolePath(path);
+    }
   }
 
   async setElevatedFeaturesEnabled(enabled: boolean) {

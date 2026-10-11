@@ -60,6 +60,10 @@ export abstract class SleepDetectionTabComponent implements OnInit {
     );
   }
 
+  async resetConfig(automation: AutomationType) {
+    await this.updateConfig(automation, structuredClone(this.automationDefaults[automation]));
+  }
+
   protected getStringForDuration(duration: string): string {
     return getStringForDuration(this.translate, duration);
   }

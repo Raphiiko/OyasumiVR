@@ -27,9 +27,10 @@ export class GpuPowerlimitingPaneComponent implements OnInit {
   protected powerLimitOnSleepEnable?: GPUPowerLimit;
   protected onSleepDisableAutomationEnabled = false;
   protected powerLimitOnSleepDisable?: GPUPowerLimit;
+  /** Carries limit changes and resets, so a reset replaces a change that is still debouncing. */
   protected readonly powerLimitChange: Subject<{
     automation: 'SLEEP_ENABLE' | 'SLEEP_DISABLE';
-    limit: GPUPowerLimit;
+    limit?: GPUPowerLimit;
   }> = new Subject();
 
   constructor(
@@ -96,6 +97,12 @@ export class GpuPowerlimitingPaneComponent implements OnInit {
     this.powerLimitChange
       .pipe(debounceTime(100), takeUntilDestroyed())
       .subscribe(async ({ automation, limit }) => {
+        if (!limit) {
+          await this.gpuAutomations.resetPowerLimitAutomation(
+            automation === 'SLEEP_ENABLE' ? 'onSleepEnable' : 'onSleepDisable'
+          );
+          return;
+        }
         switch (automation) {
           case 'SLEEP_ENABLE':
             await this.gpuAutomations.setSleepEnablePowerLimit(limit);

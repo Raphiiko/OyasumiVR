@@ -117,8 +117,8 @@ export class StatusAutomationsPlayerLimitTabComponent implements OnInit {
           this.cdr.markForCheck();
         }),
         distinctUntilChanged(),
-        filter((limit) => limit !== this.config.limit),
         debounceTime(300),
+        filter((limit) => limit !== this.config.limit),
         switchMap((limit) => this.updateConfig({ limit })),
         takeUntilDestroyed(this.destroyRef)
       )

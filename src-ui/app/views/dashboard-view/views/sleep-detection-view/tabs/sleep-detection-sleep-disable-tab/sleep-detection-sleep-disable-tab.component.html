@@ -55,9 +55,29 @@
 
     <app-setting-row
       label="sleep-detection.disableAutomations.onDevicePowerOn"
-      [value]="automationConfigs.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON"
-      [defaultValue]="automationDefaults.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON"
-      (resetToDefault)="updateConfig('SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON', $event)"
+      [value]="{
+        enabled: automationConfigs.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON.enabled,
+        controller:
+          automationConfigs.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON.triggerClasses.includes(
+            'Controller'
+          ),
+        tracker:
+          automationConfigs.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON.triggerClasses.includes(
+            'GenericTracker'
+          ),
+      }"
+      [defaultValue]="{
+        enabled: automationDefaults.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON.enabled,
+        controller:
+          automationDefaults.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON.triggerClasses.includes(
+            'Controller'
+          ),
+        tracker:
+          automationDefaults.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON.triggerClasses.includes(
+            'GenericTracker'
+          ),
+      }"
+      (resetToDefault)="resetConfig('SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON')"
     >
       <span rowDescription>{{
         deviceClassesToString(
@@ -123,8 +143,24 @@
 
     <app-setting-row
       label="sleep-detection.disableAutomations.onPlayerJoinOrLeave"
-      [value]="automationConfigs.SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE"
-      [defaultValue]="automationDefaults.SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE"
+      [value]="{
+        enabled: automationConfigs.SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE.enabled,
+        joinMode: automationConfigs.SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE.joinMode,
+        leaveMode: automationConfigs.SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE.leaveMode,
+        onlyWhenPreviouslyAlone:
+          automationConfigs.SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE.onlyWhenPreviouslyAlone,
+        onlyWhenLeftAlone:
+          automationConfigs.SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE.onlyWhenLeftAlone,
+      }"
+      [defaultValue]="{
+        enabled: automationDefaults.SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE.enabled,
+        joinMode: automationDefaults.SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE.joinMode,
+        leaveMode: automationDefaults.SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE.leaveMode,
+        onlyWhenPreviouslyAlone:
+          automationDefaults.SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE.onlyWhenPreviouslyAlone,
+        onlyWhenLeftAlone:
+          automationDefaults.SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE.onlyWhenLeftAlone,
+      }"
       (resetToDefault)="updateConfig('SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE', $event)"
     >
       <button

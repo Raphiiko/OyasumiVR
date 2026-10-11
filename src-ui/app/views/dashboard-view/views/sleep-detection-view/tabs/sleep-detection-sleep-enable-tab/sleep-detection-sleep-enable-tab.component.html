@@ -28,9 +28,31 @@
     </app-setting-row>
 
     <app-setting-row
-      [value]="automationConfigs.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE"
-      [defaultValue]="automationDefaults.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE"
-      (resetToDefault)="updateConfig('SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE', $event)"
+      [value]="{
+        enabled: automationConfigs.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.enabled,
+        controller:
+          automationConfigs.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.triggerClasses.includes(
+            'Controller'
+          ),
+        tracker:
+          automationConfigs.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.triggerClasses.includes(
+            'GenericTracker'
+          ),
+        threshold: automationConfigs.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.threshold,
+      }"
+      [defaultValue]="{
+        enabled: automationDefaults.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.enabled,
+        controller:
+          automationDefaults.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.triggerClasses.includes(
+            'Controller'
+          ),
+        tracker:
+          automationDefaults.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.triggerClasses.includes(
+            'GenericTracker'
+          ),
+        threshold: automationDefaults.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.threshold,
+      }"
+      (resetToDefault)="resetConfig('SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE')"
     >
       <span
         rowLabel
