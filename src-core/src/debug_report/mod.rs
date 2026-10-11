@@ -127,6 +127,7 @@ fn is_secret_key(key: &str) -> bool {
         "cookie",
         "secret",
         "credentials",
+        "privatekey",
         "username",
         "loginidentifier",
     ]
@@ -272,8 +273,10 @@ pub async fn create(sources: ReportSources) -> Result<usize, String> {
 
     let mut files = Vec::new();
 
-    // report.json with the system, SteamVR and app state
-    let mut report = system::collect().await;
+    // report.json with the system, SteamVR, Steam Frame and app state
+    let (mut report, steam_frame) =
+        tokio::join!(system::collect(), crate::steam_frame::diagnostics::collect());
+    report["steamFrame"] = steam_frame.summary;
     report["ui"] = sources.ui_state;
     let report = serde_json::to_string_pretty(&report).map_err(|e| e.to_string())?;
     files.push(ReportFile::text(
@@ -309,6 +312,14 @@ pub async fn create(sources: ReportSources) -> Result<usize, String> {
         files.extend(collect_memory_watch(
             &dir.join("OyasumiVR").join("memory-watch"),
             profile,
+        ));
+    }
+
+    // the Steam Frame helper's state and log, read from each paired headset
+    for (pairing_id, text) in steam_frame.helper_output {
+        files.push(ReportFile::text(
+            format!("steam-frame/{pairing_id}.txt"),
+            scrub_text(&text, profile),
         ));
     }
 
@@ -450,7 +461,9 @@ mod tests {
                 "pendingTwoFactorLoginIdentifier": "login"}]},
             "APP_SETTINGS": {"mqttPassword": "", "mqttProtectedPassword": "x", "mqttHost": "10.0.0.2",
                 "mqttUsername": "mqtt", "oscServerEnabled": true},
-            "PULSOID_API": {"accessToken": "t", "username": "pulsoid", "expiresAt": 5}
+            "PULSOID_API": {"accessToken": "t", "username": "pulsoid", "expiresAt": 5},
+            "STEAM_FRAME_PAIRING": {"pairings": [{"privateKey": "k", "token": "t",
+                "publicKey": "ssh-rsa AAAA", "certPin": "c"}]}
         }"#;
         let scrubbed: Value = serde_json::from_str(&scrub_settings(json, None).unwrap()).unwrap();
         let profile = &scrubbed["VRCHAT_API"]["profiles"][0];
@@ -471,6 +484,11 @@ mod tests {
         assert_eq!(scrubbed["PULSOID_API"]["accessToken"], REMOVED);
         assert_eq!(scrubbed["PULSOID_API"]["username"], REMOVED);
         assert_eq!(scrubbed["PULSOID_API"]["expiresAt"], 5);
+        let pairing = &scrubbed["STEAM_FRAME_PAIRING"]["pairings"][0];
+        assert_eq!(pairing["privateKey"], REMOVED);
+        assert_eq!(pairing["token"], REMOVED);
+        assert_eq!(pairing["publicKey"], "ssh-rsa AAAA");
+        assert_eq!(pairing["certPin"], "c");
     }
 
     #[test]
