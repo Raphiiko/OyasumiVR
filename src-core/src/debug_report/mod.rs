@@ -23,12 +23,13 @@ const REMOVED: &str = "<removed>";
 /// The last built report, so a retry or a save sends the same zip.
 static PENDING_REPORT: LazyLock<Mutex<Option<Vec<u8>>>> = LazyLock::new(|| Mutex::new(None));
 
-// a value stops at a backslash, so an escaped quote in serialized JSON stays intact
+// a value stops before `\"`, so an escaped quote in serialized JSON stays intact
 static TOKEN_PARAM: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"(?i)\b(\w*(?:token|password|secret|cookie))=[^&\s#'\x22\\]+").unwrap()
+    Regex::new(r"(?i)\b(\w*(?:token|password|secret|cookie))=(?:[^&\s#'\x22\\]|\\[^\x22])+")
+        .unwrap()
 });
 static BEARER_TOKEN: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"(?i)\b(bearer)\s+[^\s'\x22\\]+").unwrap());
+    LazyLock::new(|| Regex::new(r"(?i)\b(bearer)\s+(?:[^\s'\x22\\]|\\[^\x22])+").unwrap());
 
 pub struct ReportFile {
     pub name: String,
@@ -424,12 +425,19 @@ mod tests {
 
     #[test]
     fn scrub_settings_keeps_quoted_commands_valid_json() {
-        let json = r#"{"AUTOMATION_CONFIGS": {"SHUTDOWN": {"onSleepModeEnableCommands":
-            "curl -H \"Authorization: Bearer abc\" \"https://x.invalid/?token=t\""}}}"#;
+        let json = r#"{"RUN_AUTOMATIONS": {
+            "onSleepModeEnableCommands": "curl -H \"Authorization: Bearer abc\" \"https://x/?token=t\"",
+            "onSleepModeDisableCommands": "curl -d \"password=\\a\" -d \"password=b\\c\" -d \"password=d\\\\\""
+        }}"#;
         let scrubbed: Value = serde_json::from_str(&scrub_settings(json, None).unwrap()).unwrap();
+        let commands = &scrubbed["RUN_AUTOMATIONS"];
         assert_eq!(
-            scrubbed["AUTOMATION_CONFIGS"]["SHUTDOWN"]["onSleepModeEnableCommands"],
-            r#"curl -H "Authorization: Bearer <removed>" "https://x.invalid/?token=<removed>""#
+            commands["onSleepModeEnableCommands"],
+            r#"curl -H "Authorization: Bearer <removed>" "https://x/?token=<removed>""#
+        );
+        assert_eq!(
+            commands["onSleepModeDisableCommands"],
+            r#"curl -d "password=<removed>" -d "password=<removed>" -d "password=<removed>""#
         );
     }
 
