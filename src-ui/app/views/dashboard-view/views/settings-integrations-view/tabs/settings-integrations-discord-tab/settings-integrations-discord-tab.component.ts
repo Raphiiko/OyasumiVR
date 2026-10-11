@@ -26,6 +26,7 @@ export class SettingsIntegrationsDiscordTabComponent implements OnInit {
     },
   ];
   discordActivityModeOption: SelectBoxItem | undefined;
+  protected readonly defaults = APP_SETTINGS_DEFAULT;
   appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
 
   constructor(
@@ -50,8 +51,10 @@ export class SettingsIntegrationsDiscordTabComponent implements OnInit {
 
   protected onChangeDiscordActivityMode(option: SelectBoxItem | undefined) {
     if (!option) return;
-    this.settingsService.updateSettings({
-      discordActivityMode: option!.id as DiscordActivityMode,
-    });
+    this.setDiscordActivityMode(option.id as DiscordActivityMode);
+  }
+
+  protected setDiscordActivityMode(discordActivityMode: DiscordActivityMode) {
+    this.settingsService.updateSettings({ discordActivityMode });
   }
 }

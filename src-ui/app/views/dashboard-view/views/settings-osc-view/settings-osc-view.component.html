@@ -16,6 +16,9 @@
           <app-setting-row
             label="settings.osc.targets.vrchat.title"
             description="settings.osc.targets.vrchat.description"
+            [value]="isTargetEnabled('VRCHAT_OSCQUERY')"
+            [defaultValue]="defaults.oscTargets.includes('VRCHAT_OSCQUERY')"
+            (resetToDefault)="setTargetEnabled('VRCHAT_OSCQUERY', $event)"
           >
             <label class="switch-toggle">
               <input
@@ -31,6 +34,9 @@
           <app-setting-row
             label="settings.osc.targets.custom.title"
             description="settings.osc.targets.custom.description"
+            [value]="isTargetEnabled('CUSTOM')"
+            [defaultValue]="defaults.oscTargets.includes('CUSTOM')"
+            (resetToDefault)="setTargetEnabled('CUSTOM', $event)"
           >
             <label class="switch-toggle">
               <input
@@ -45,6 +51,11 @@
             <app-setting-row
               label="settings.osc.targets.custom.host.title"
               description="settings.osc.targets.custom.host.description"
+              [value]="oscCustomTargetHost"
+              [defaultValue]="defaults.oscCustomTargetHost"
+              (resetToDefault)="
+                oscCustomTargetHost = $event; customTargetHostChangeSubject.next($event)
+              "
             >
               <div class="input-with-validation">
                 @if (customTargetHostValidationState !== 'valid') {
@@ -84,6 +95,11 @@
             <app-setting-row
               label="settings.osc.targets.custom.port.title"
               description="settings.osc.targets.custom.port.description"
+              [value]="oscCustomTargetPort"
+              [defaultValue]="defaults.oscCustomTargetPort"
+              (resetToDefault)="
+                oscCustomTargetPort = $event; customTargetPortChangeSubject.next($event)
+              "
             >
               <div class="input-with-validation">
                 @if (customTargetPortValidationState !== 'valid') {
@@ -132,6 +148,9 @@
           <app-setting-row
             label="settings.osc.advanced.oscServerEnabled.title"
             description="settings.osc.advanced.oscServerEnabled.description"
+            [value]="oscServerEnabled"
+            [defaultValue]="defaults.oscServerEnabled"
+            (resetToDefault)="setOscServerEnabled($event)"
           >
             <label class="switch-toggle">
               <input

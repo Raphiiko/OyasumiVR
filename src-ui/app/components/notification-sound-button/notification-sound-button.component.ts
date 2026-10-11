@@ -65,8 +65,7 @@ export class NotificationSoundButtonComponent {
 
   public toggleSound(): void {
     if (this.soundConfig) {
-      this.soundConfig.enabled = !this.soundConfig.enabled;
-      this.soundConfigChange.emit(this.soundConfig);
+      this.soundConfigChange.emit({ ...this.soundConfig, enabled: !this.soundConfig.enabled });
     }
   }
 }

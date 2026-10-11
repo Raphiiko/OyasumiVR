@@ -3,6 +3,9 @@
     <app-setting-row
       label="invite-and-invite-requests.soundsTab.options.playSoundOnInviteRequest.title"
       description="invite-and-invite-requests.soundsTab.options.playSoundOnInviteRequest.description"
+      [value]="config.playSoundOnInviteRequest"
+      [defaultValue]="defaults.playSoundOnInviteRequest"
+      (resetToDefault)="updateConfig({ playSoundOnInviteRequest: $event })"
     >
       <app-notification-sound-button
         [soundConfig]="config.playSoundOnInviteRequest"
@@ -14,6 +17,9 @@
         <app-setting-row
           label="invite-and-invite-requests.soundsTab.options.playSoundOnInviteRequest.onlyWhenAsleep.title"
           description="invite-and-invite-requests.soundsTab.options.playSoundOnInviteRequest.onlyWhenAsleep.description"
+          [value]="config.playSoundOnInviteRequest_onlyWhenAsleep"
+          [defaultValue]="defaults.playSoundOnInviteRequest_onlyWhenAsleep"
+          (resetToDefault)="updateConfig({ playSoundOnInviteRequest_onlyWhenAsleep: $event })"
         >
           <label class="switch-toggle">
             <input
@@ -32,6 +38,9 @@
         <app-setting-row
           label="invite-and-invite-requests.soundsTab.options.playSoundOnInviteRequest.onlyWhenUnhandled.title"
           description="invite-and-invite-requests.soundsTab.options.playSoundOnInviteRequest.onlyWhenUnhandled.description"
+          [value]="config.playSoundOnInviteRequest_onlyWhenUnhandled"
+          [defaultValue]="defaults.playSoundOnInviteRequest_onlyWhenUnhandled"
+          (resetToDefault)="updateConfig({ playSoundOnInviteRequest_onlyWhenUnhandled: $event })"
         >
           <label class="switch-toggle">
             <input
@@ -52,6 +61,9 @@
     <app-setting-row
       label="invite-and-invite-requests.soundsTab.options.playSoundOnInvite.title"
       description="invite-and-invite-requests.soundsTab.options.playSoundOnInvite.description"
+      [value]="config.playSoundOnInvite"
+      [defaultValue]="defaults.playSoundOnInvite"
+      (resetToDefault)="updateConfig({ playSoundOnInvite: $event })"
     >
       <app-notification-sound-button
         [soundConfig]="config.playSoundOnInvite"
@@ -63,6 +75,9 @@
         <app-setting-row
           label="invite-and-invite-requests.soundsTab.options.playSoundOnInvite.onlyWhenAsleep.title"
           description="invite-and-invite-requests.soundsTab.options.playSoundOnInvite.onlyWhenAsleep.description"
+          [value]="config.playSoundOnInvite_onlyWhenAsleep"
+          [defaultValue]="defaults.playSoundOnInvite_onlyWhenAsleep"
+          (resetToDefault)="updateConfig({ playSoundOnInvite_onlyWhenAsleep: $event })"
         >
           <label class="switch-toggle">
             <input

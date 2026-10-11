@@ -3,6 +3,9 @@
     <app-setting-row
       label="settings.integrations.discord.activityMode.title"
       description="settings.integrations.discord.activityMode.description"
+      [value]="appSettings.discordActivityMode"
+      [defaultValue]="defaults.discordActivityMode"
+      (resetToDefault)="setDiscordActivityMode($event)"
     >
       <app-select-box
         [type]="'SMALL'"
@@ -13,7 +16,12 @@
       ></app-select-box>
     </app-setting-row>
     <div class="setting-row-group">
-      <app-setting-row label="settings.integrations.discord.activityModeVRCCondition.title">
+      <app-setting-row
+        label="settings.integrations.discord.activityModeVRCCondition.title"
+        [value]="appSettings.discordActivityOnlyWhileVRChatIsRunning"
+        [defaultValue]="defaults.discordActivityOnlyWhileVRChatIsRunning"
+        (resetToDefault)="setDiscordActivityOnlyWhenVRChatIsRunning($event)"
+      >
         <label class="switch-toggle">
           <input
             type="checkbox"

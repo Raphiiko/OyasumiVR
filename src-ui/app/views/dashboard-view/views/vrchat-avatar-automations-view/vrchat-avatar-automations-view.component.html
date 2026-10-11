@@ -18,6 +18,9 @@
           <app-setting-row
             label="vrchatAvatarAutomations.onSleepEnable.title"
             description="vrchatAvatarAutomations.onSleepEnable.description"
+            [value]="config.onSleepEnable"
+            [defaultValue]="defaults.onSleepEnable"
+            (resetToDefault)="updateOnSleepEnable($event)"
           >
             <app-vrc-avatar-select-button
               [avatar]="this.config.onSleepEnable"
@@ -27,6 +30,9 @@
           <app-setting-row
             label="vrchatAvatarAutomations.onSleepDisable.title"
             description="vrchatAvatarAutomations.onSleepDisable.description"
+            [value]="config.onSleepDisable"
+            [defaultValue]="defaults.onSleepDisable"
+            (resetToDefault)="updateOnSleepDisable($event)"
           >
             <app-vrc-avatar-select-button
               [avatar]="this.config.onSleepDisable"
@@ -36,6 +42,9 @@
           <app-setting-row
             label="vrchatAvatarAutomations.onSleepPreparation.title"
             description="vrchatAvatarAutomations.onSleepPreparation.description"
+            [value]="config.onSleepPreparation"
+            [defaultValue]="defaults.onSleepPreparation"
+            (resetToDefault)="updateOnSleepPreparation($event)"
           >
             <app-vrc-avatar-select-button
               [avatar]="this.config.onSleepPreparation"

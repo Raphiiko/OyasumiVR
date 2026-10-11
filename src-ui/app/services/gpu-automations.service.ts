@@ -183,6 +183,15 @@ export class GpuAutomationsService {
     );
   }
 
+  async resetPowerLimitAutomation(automation: 'onSleepEnable' | 'onSleepDisable') {
+    const config = structuredClone(this.currentPowerLimitsConfig);
+    config[automation] = structuredClone(AUTOMATION_CONFIGS_DEFAULT.GPU_POWER_LIMITS[automation]);
+    await this.automationConfig.updateAutomationConfig<GPUPowerLimitsAutomationConfig>(
+      'GPU_POWER_LIMITS',
+      config
+    );
+  }
+
   async togglePowerLimitOnSleepEnabledAutomation() {
     const config = structuredClone(this.currentPowerLimitsConfig);
     config.onSleepEnable.enabled = !config.onSleepEnable.enabled;

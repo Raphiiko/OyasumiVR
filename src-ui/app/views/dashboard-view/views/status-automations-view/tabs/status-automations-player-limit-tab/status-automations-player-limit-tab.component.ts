@@ -37,6 +37,7 @@ import { flushOnDestroy } from '../../../../../../utils/rxjs-utils';
   standalone: false,
 })
 export class StatusAutomationsPlayerLimitTabComponent implements OnInit {
+  readonly defaults = AUTOMATION_CONFIGS_DEFAULT.CHANGE_STATUS_BASED_ON_PLAYER_COUNT;
   UserStatus = UserStatus;
   loggedIn = false;
   limit: BehaviorSubject<number> = new BehaviorSubject<number>(1);

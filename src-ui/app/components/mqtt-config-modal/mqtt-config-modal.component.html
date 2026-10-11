@@ -59,6 +59,9 @@
       <app-setting-row
         label="comp.mqtt-config-modal.mqttEnabled.title"
         description="comp.mqtt-config-modal.mqttEnabled.description"
+        [value]="config.enabled"
+        [defaultValue]="defaults.mqttEnabled"
+        (resetToDefault)="config.enabled = $event"
       >
         <label class="switch-toggle">
           <input
@@ -115,6 +118,9 @@
         <app-setting-row
           label="comp.mqtt-config-modal.ssl.title"
           description="comp.mqtt-config-modal.ssl.description"
+          [value]="config.secureSocket"
+          [defaultValue]="defaults.mqttSecureSocket"
+          (resetToDefault)="config.secureSocket = $event"
           @vshrink
         >
           <label class="switch-toggle">

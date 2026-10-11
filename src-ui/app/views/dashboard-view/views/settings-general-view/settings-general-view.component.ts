@@ -33,6 +33,8 @@ import { OVRInputEventAction } from 'src-ui/app/models/ovr-input-event';
   standalone: false,
 })
 export class SettingsGeneralViewComponent implements OnInit {
+  readonly defaults = APP_SETTINGS_DEFAULT;
+  readonly telemetryDefaults = TELEMETRY_SETTINGS_DEFAULT;
   appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
   languages = LANGUAGES;
   lighthouseConsoleStatus: ExecutableReferenceStatus = 'UNKNOWN';
@@ -161,6 +163,10 @@ export class SettingsGeneralViewComponent implements OnInit {
       return;
     }
     await this.elevatedSidecar.enable();
+  }
+
+  update(changes: Partial<AppSettings>) {
+    this.settingsService.updateSettings(changes);
   }
 
   setTelemetryEnabled(enabled: boolean) {

@@ -3,48 +3,47 @@
   <h2 transloco="brightness-automations.events"></h2>
   <div class="settings">
     @for (event of events; track event) {
-      <div class="setting-row">
+      <app-setting-row
+        [label]="'brightness-automations.' + event.name + '.title'"
+        [value]="eventValues[event.name]"
+        [defaultValue]="eventDefaults[event.name]"
+        (resetToDefault)="resetEvent(event.name)"
+      >
         <div class="setting-row-icon">
           <app-icon [name]="event.icon" />
         </div>
-        <div class="setting-row-label">
-          <span>{{ 'brightness-automations.' + event.name + '.title' | transloco }}</span>
-          <span></span>
-        </div>
-        <div class="setting-row-action">
-          @if (event.inProgress) {
-            <div class="small-spinner" @fade></div>
-          }
-          @if (hmdConnectAutomations[event.name]) {
-            <div
-              class="hmd-connect-indicator"
-              @fade
-              [ngClass]="{ potential: hmdConnectAutomations[event.name] === 'potential' }"
-              [tooltip]="
-                hmdConnectAutomations[event.name] === 'potential'
-                  ? 'brightness-automations.hmdConnectPotentialEventTooltip'
-                  : 'brightness-automations.hmdConnectEventTooltip'
-              "
-              [tooltipMode]="'left'"
-            >
-              <app-icon name="headset" />
-            </div>
-          }
-          <app-brightness-automation-config-label
-            [advancedMode]="config.advancedMode"
-            [config]="config[event.name]"
-            (click)="editEvent.emit(event)"
-          ></app-brightness-automation-config-label>
-          <label class="switch-toggle">
-            <input
-              type="checkbox"
-              [checked]="config[event.name].enabled"
-              (change)="toggleEvent(event.name)"
-            />
-            <span class="switch-toggle-slider"></span>
-          </label>
-        </div>
-      </div>
+        @if (event.inProgress) {
+          <div class="small-spinner" @fade></div>
+        }
+        @if (hmdConnectAutomations[event.name]) {
+          <div
+            class="hmd-connect-indicator"
+            @fade
+            [ngClass]="{ potential: hmdConnectAutomations[event.name] === 'potential' }"
+            [tooltip]="
+              hmdConnectAutomations[event.name] === 'potential'
+                ? 'brightness-automations.hmdConnectPotentialEventTooltip'
+                : 'brightness-automations.hmdConnectEventTooltip'
+            "
+            [tooltipMode]="'left'"
+          >
+            <app-icon name="headset" />
+          </div>
+        }
+        <app-brightness-automation-config-label
+          [advancedMode]="config.advancedMode"
+          [config]="config[event.name]"
+          (click)="editEvent.emit(event)"
+        ></app-brightness-automation-config-label>
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="config[event.name].enabled"
+            (change)="toggleEvent(event.name)"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </app-setting-row>
     }
   </div>
 </div>

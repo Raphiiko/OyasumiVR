@@ -8,6 +8,11 @@
           <app-setting-row
             label="chaperone-automations.onSleepEnable.title"
             description="chaperone-automations.onSleepEnable.description"
+            [value]="onSleepModeEnableConfig.enabled"
+            [defaultValue]="defaults.CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE.enabled"
+            (resetToDefault)="
+              setAutomationEnabled('CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE', $event)
+            "
           >
             <label class="switch-toggle">
               <input
@@ -27,6 +32,11 @@
             <app-setting-row
               label="chaperone-automations.fadeDistance.title"
               [class.disabled]="!onSleepModeEnableConfig.enabled"
+              [value]="onSleepModeEnableConfig.fadeDistance"
+              [defaultValue]="defaults.CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE.fadeDistance"
+              (resetToDefault)="
+                setFadeDistance('CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE', $event)
+              "
             >
               <app-slider-setting
                 unit="m"
@@ -46,6 +56,11 @@
           <app-setting-row
             label="chaperone-automations.onSleepDisable.title"
             description="chaperone-automations.onSleepDisable.description"
+            [value]="onSleepModeDisableConfig.enabled"
+            [defaultValue]="defaults.CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE.enabled"
+            (resetToDefault)="
+              setAutomationEnabled('CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE', $event)
+            "
           >
             <label class="switch-toggle">
               <input
@@ -65,6 +80,11 @@
             <app-setting-row
               label="chaperone-automations.fadeDistance.title"
               [class.disabled]="!onSleepModeDisableConfig.enabled"
+              [value]="onSleepModeDisableConfig.fadeDistance"
+              [defaultValue]="defaults.CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE.fadeDistance"
+              (resetToDefault)="
+                setFadeDistance('CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE', $event)
+              "
             >
               <app-slider-setting
                 unit="m"

@@ -19,6 +19,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   standalone: false,
 })
 export class ResolutionAutomationsViewComponent implements OnInit {
+  protected readonly defaults = AUTOMATION_CONFIGS_DEFAULT;
   protected onSleepModeEnableConfig: RenderResolutionOnSleepModeAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE
   );

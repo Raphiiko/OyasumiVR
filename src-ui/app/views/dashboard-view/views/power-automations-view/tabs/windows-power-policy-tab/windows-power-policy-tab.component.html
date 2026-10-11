@@ -10,6 +10,9 @@
     <app-setting-row
       label="power-automations.windowsPowerPolicy.sleepModeEnable.title"
       description="power-automations.windowsPowerPolicy.sleepModeEnable.description"
+      [value]="automationConfigs.WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE.enabled"
+      [defaultValue]="automationDefaults.WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE.enabled"
+      (resetToDefault)="setPolicy('ON_ENABLE', policyOptions[0])"
     >
       <app-select-box
         type="SMALL"
@@ -21,6 +24,9 @@
     <app-setting-row
       label="power-automations.windowsPowerPolicy.sleepModeDisable.title"
       description="power-automations.windowsPowerPolicy.sleepModeDisable.description"
+      [value]="automationConfigs.WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE.enabled"
+      [defaultValue]="automationDefaults.WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE.enabled"
+      (resetToDefault)="setPolicy('ON_DISABLE', policyOptions[0])"
     >
       <app-select-box
         type="SMALL"

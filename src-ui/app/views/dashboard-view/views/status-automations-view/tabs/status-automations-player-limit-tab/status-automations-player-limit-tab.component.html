@@ -9,6 +9,9 @@
   <app-setting-row
     label="status-automations.playerLimit.enable.title"
     description="status-automations.playerLimit.enable.description"
+    [value]="config.enabled"
+    [defaultValue]="defaults.enabled"
+    (resetToDefault)="updateConfig({ enabled: $event })"
   >
     <label class="switch-toggle">
       <input
@@ -27,7 +30,14 @@
     </app-alert>
   }
   <div class="limit-setting">
-    <h3 transloco="status-automations.playerLimit.playerLimit"></h3>
+    <h3 class="heading-with-reset">
+      <span transloco="status-automations.playerLimit.playerLimit"></span>
+      <app-reset-to-default
+        [value]="limit.value"
+        [defaultValue]="defaults.limit"
+        (resetToDefault)="onLimitChange($event)"
+      />
+    </h3>
     <app-player-count-sleep-visualization
       [count]="limit.value"
     ></app-player-count-sleep-visualization>
@@ -64,6 +74,15 @@
   <app-setting-row
     label="status-automations.playerLimit.belowLimit.title"
     description="status-automations.playerLimit.belowLimit.description.status"
+    [value]="{
+      statusBelowLimitEnabled: config.statusBelowLimitEnabled,
+      statusBelowLimit: config.statusBelowLimit,
+    }"
+    [defaultValue]="{
+      statusBelowLimitEnabled: defaults.statusBelowLimitEnabled,
+      statusBelowLimit: defaults.statusBelowLimit,
+    }"
+    (resetToDefault)="updateConfig($event)"
   >
     <label class="switch-toggle">
       <input
@@ -82,37 +101,49 @@
       [disabled]="!config.statusBelowLimitEnabled"
     ></app-select-box>
   </app-setting-row>
-  <div class="setting-row">
-    <div class="setting-row-label">
-      <span></span>
-      <span transloco="status-automations.playerLimit.belowLimit.description.statusMessage"></span>
-    </div>
-    <div class="setting-row-action">
-      <label class="switch-toggle">
-        <input
-          type="checkbox"
-          [checked]="config.statusMessageBelowLimitEnabled"
-          (change)="
-            updateConfig({ statusMessageBelowLimitEnabled: !config.statusMessageBelowLimitEnabled })
-          "
-        />
-        <span class="switch-toggle-slider"></span>
-      </label>
+  <app-setting-row
+    description="status-automations.playerLimit.belowLimit.description.statusMessage"
+    [value]="{
+      statusMessageBelowLimitEnabled: config.statusMessageBelowLimitEnabled,
+      statusMessageBelowLimit: config.statusMessageBelowLimit,
+    }"
+    [defaultValue]="{
+      statusMessageBelowLimitEnabled: defaults.statusMessageBelowLimitEnabled,
+      statusMessageBelowLimit: defaults.statusMessageBelowLimit,
+    }"
+    (resetToDefault)="updateConfig($event)"
+  >
+    <label class="switch-toggle">
       <input
-        type="text"
-        [disabled]="!config.statusMessageBelowLimitEnabled"
-        maxlength="32"
-        [value]="config.statusMessageBelowLimit"
-        (input)="
-          onChangeStatusMessage('statusMessageBelowLimit', belowLimitStatusMessageInput.value)
+        type="checkbox"
+        [checked]="config.statusMessageBelowLimitEnabled"
+        (change)="
+          updateConfig({ statusMessageBelowLimitEnabled: !config.statusMessageBelowLimitEnabled })
         "
-        #belowLimitStatusMessageInput
       />
-    </div>
-  </div>
+      <span class="switch-toggle-slider"></span>
+    </label>
+    <input
+      type="text"
+      [disabled]="!config.statusMessageBelowLimitEnabled"
+      maxlength="32"
+      [value]="config.statusMessageBelowLimit"
+      (input)="onChangeStatusMessage('statusMessageBelowLimit', belowLimitStatusMessageInput.value)"
+      #belowLimitStatusMessageInput
+    />
+  </app-setting-row>
   <app-setting-row
     label="status-automations.playerLimit.atLimitOrAbove.title"
     description="status-automations.playerLimit.atLimitOrAbove.description.status"
+    [value]="{
+      statusAtLimitOrAboveEnabled: config.statusAtLimitOrAboveEnabled,
+      statusAtLimitOrAbove: config.statusAtLimitOrAbove,
+    }"
+    [defaultValue]="{
+      statusAtLimitOrAboveEnabled: defaults.statusAtLimitOrAboveEnabled,
+      statusAtLimitOrAbove: defaults.statusAtLimitOrAbove,
+    }"
+    (resetToDefault)="updateConfig($event)"
   >
     <label class="switch-toggle">
       <input
@@ -133,42 +164,47 @@
       [disabled]="!config.statusAtLimitOrAboveEnabled"
     ></app-select-box>
   </app-setting-row>
-  <div class="setting-row">
-    <div class="setting-row-label">
-      <span></span>
-      <span
-        transloco="status-automations.playerLimit.atLimitOrAbove.description.statusMessage"
-      ></span>
-    </div>
-    <div class="setting-row-action">
-      <label class="switch-toggle">
-        <input
-          type="checkbox"
-          [checked]="config.statusMessageAtLimitOrAboveEnabled"
-          (change)="
-            updateConfig({
-              statusMessageAtLimitOrAboveEnabled: !config.statusMessageAtLimitOrAboveEnabled,
-            })
-          "
-        />
-        <span class="switch-toggle-slider"></span>
-      </label>
+  <app-setting-row
+    description="status-automations.playerLimit.atLimitOrAbove.description.statusMessage"
+    [value]="{
+      statusMessageAtLimitOrAboveEnabled: config.statusMessageAtLimitOrAboveEnabled,
+      statusMessageAtLimitOrAbove: config.statusMessageAtLimitOrAbove,
+    }"
+    [defaultValue]="{
+      statusMessageAtLimitOrAboveEnabled: defaults.statusMessageAtLimitOrAboveEnabled,
+      statusMessageAtLimitOrAbove: defaults.statusMessageAtLimitOrAbove,
+    }"
+    (resetToDefault)="updateConfig($event)"
+  >
+    <label class="switch-toggle">
       <input
-        type="text"
-        [disabled]="!config.statusMessageAtLimitOrAboveEnabled"
-        maxlength="32"
-        [value]="config.statusMessageAtLimitOrAbove"
-        (input)="
-          onChangeStatusMessage(
-            'statusMessageAtLimitOrAbove',
-            atLimitOrAboveStatusMessageInput.value
-          )
+        type="checkbox"
+        [checked]="config.statusMessageAtLimitOrAboveEnabled"
+        (change)="
+          updateConfig({
+            statusMessageAtLimitOrAboveEnabled: !config.statusMessageAtLimitOrAboveEnabled,
+          })
         "
-        #atLimitOrAboveStatusMessageInput
       />
-    </div>
-  </div>
-  <app-setting-row label="status-automations.playerLimit.onlyIfSleepModeEnabled">
+      <span class="switch-toggle-slider"></span>
+    </label>
+    <input
+      type="text"
+      [disabled]="!config.statusMessageAtLimitOrAboveEnabled"
+      maxlength="32"
+      [value]="config.statusMessageAtLimitOrAbove"
+      (input)="
+        onChangeStatusMessage('statusMessageAtLimitOrAbove', atLimitOrAboveStatusMessageInput.value)
+      "
+      #atLimitOrAboveStatusMessageInput
+    />
+  </app-setting-row>
+  <app-setting-row
+    label="status-automations.playerLimit.onlyIfSleepModeEnabled"
+    [value]="config.onlyIfSleepModeEnabled"
+    [defaultValue]="defaults.onlyIfSleepModeEnabled"
+    (resetToDefault)="updateConfig({ onlyIfSleepModeEnabled: $event })"
+  >
     <label class="switch-toggle">
       <input
         type="checkbox"

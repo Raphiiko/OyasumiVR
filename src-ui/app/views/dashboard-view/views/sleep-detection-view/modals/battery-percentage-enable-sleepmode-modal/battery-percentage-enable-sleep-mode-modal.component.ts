@@ -2,6 +2,7 @@ import { Component, HostBinding, OnInit, ChangeDetectionStrategy } from '@angula
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../../utils/animations';
 import { OVRDeviceClass } from '../../../../../../models/ovr-device';
+import { AUTOMATION_CONFIGS_DEFAULT } from '../../../../../../models/automations';
 import { TranslocoService } from '@jsverse/transloco';
 import { uniq } from 'lodash';
 
@@ -30,6 +31,7 @@ export class BatteryPercentageEnableSleepModeModalComponent
   >
   implements OnInit, BatteryPercentageEnableSleepModeModalInputModel
 {
+  readonly automationDefaults = AUTOMATION_CONFIGS_DEFAULT;
   triggerClasses: OVRDeviceClass[] = [];
   threshold = 0;
 

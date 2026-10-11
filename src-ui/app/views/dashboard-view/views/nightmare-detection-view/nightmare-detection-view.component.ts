@@ -28,6 +28,7 @@ import { hshrink } from '../../../../utils/animations';
   standalone: false,
 })
 export class NightmareDetectionViewComponent implements OnInit {
+  protected readonly defaults = AUTOMATION_CONFIGS_DEFAULT.NIGHTMARE_DETECTION;
   protected config: NightmareDetectionAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.NIGHTMARE_DETECTION
   );
@@ -118,6 +119,13 @@ export class NightmareDetectionViewComponent implements OnInit {
     }
     // Return the parsed value and unit
     return [value, unit!];
+  }
+
+  async updateConfig(changes: Partial<NightmareDetectionAutomationsConfig>) {
+    await this.automationConfigService.updateAutomationConfig<NightmareDetectionAutomationsConfig>(
+      'NIGHTMARE_DETECTION',
+      changes
+    );
   }
 
   async updateThreshold(threshold: number) {

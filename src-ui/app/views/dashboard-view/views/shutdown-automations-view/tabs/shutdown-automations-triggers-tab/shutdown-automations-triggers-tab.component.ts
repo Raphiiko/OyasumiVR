@@ -22,6 +22,7 @@ import { fade, vshrink } from '../../../../../../utils/animations';
   standalone: false,
 })
 export class ShutdownAutomationsTriggersTabComponent implements OnInit {
+  protected readonly defaults = AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS;
   protected config: ShutdownAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS
   );
@@ -55,6 +56,13 @@ export class ShutdownAutomationsTriggersTabComponent implements OnInit {
           .join(':');
         this.cdr.markForCheck();
       });
+  }
+
+  protected async updateConfig(patch: Partial<ShutdownAutomationsConfig>) {
+    await this.automationConfigs.updateAutomationConfig<ShutdownAutomationsConfig>(
+      'SHUTDOWN_AUTOMATIONS',
+      patch
+    );
   }
 
   async onChangeOnSleepActivationWindowStart(value: string) {

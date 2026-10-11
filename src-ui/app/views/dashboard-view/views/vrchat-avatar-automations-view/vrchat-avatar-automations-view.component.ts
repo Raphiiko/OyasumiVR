@@ -19,6 +19,7 @@ import { PersistedAvatar } from '../../../../models/vrchat';
   standalone: false,
 })
 export class VRChatAvatarAutomationsViewComponent implements OnInit {
+  readonly defaults = AUTOMATION_CONFIGS_DEFAULT.VRCHAT_AVATAR_AUTOMATIONS;
   loggedIn = false;
   config: VRChatAvatarAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.VRCHAT_AVATAR_AUTOMATIONS

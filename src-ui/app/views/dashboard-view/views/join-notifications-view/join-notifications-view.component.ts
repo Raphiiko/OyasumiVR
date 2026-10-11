@@ -23,6 +23,7 @@ import { VRChatService } from '../../../../services/vrchat-api/vrchat.service';
   standalone: false,
 })
 export class JoinNotificationsViewComponent implements OnInit {
+  readonly defaults = AUTOMATION_CONFIGS_DEFAULT.JOIN_NOTIFICATIONS;
   notificationOptions: SelectBoxItem[] = [
     {
       id: 'EVERYONE',

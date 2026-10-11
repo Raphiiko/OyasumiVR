@@ -1,149 +1,146 @@
 <div class="setting-category">
   <p transloco="sleep-detection.disableAutomations.description"></p>
   <div class="settings">
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span transloco="sleep-detection.disableAutomations.atTime"></span>
-        <span>
-          @if (automationConfigs.SLEEP_MODE_DISABLE_AT_TIME.time) {
-            <span @fade>
-              {{ automationConfigs.SLEEP_MODE_DISABLE_AT_TIME.time }}
-            </span>
-          }
-        </span>
-      </div>
-      <div class="setting-row-action">
-        <button class="btn btn-automation-settings" (click)="openModal_DisableSleepModeAtTime()">
-          <app-icon name="settings" />
-        </button>
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="automationConfigs.SLEEP_MODE_DISABLE_AT_TIME.enabled"
-            (change)="toggleAutomation('SLEEP_MODE_DISABLE_AT_TIME')"
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
-      </div>
-    </div>
+    <app-setting-row
+      label="sleep-detection.disableAutomations.atTime"
+      [value]="automationConfigs.SLEEP_MODE_DISABLE_AT_TIME"
+      [defaultValue]="automationDefaults.SLEEP_MODE_DISABLE_AT_TIME"
+      (resetToDefault)="updateConfig('SLEEP_MODE_DISABLE_AT_TIME', $event)"
+    >
+      <span rowDescription>
+        @if (automationConfigs.SLEEP_MODE_DISABLE_AT_TIME.time) {
+          <span @fade>
+            {{ automationConfigs.SLEEP_MODE_DISABLE_AT_TIME.time }}
+          </span>
+        }
+      </span>
+      <button class="btn btn-automation-settings" (click)="openModal_DisableSleepModeAtTime()">
+        <app-icon name="settings" />
+      </button>
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="automationConfigs.SLEEP_MODE_DISABLE_AT_TIME.enabled"
+          (change)="toggleAutomation('SLEEP_MODE_DISABLE_AT_TIME')"
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </app-setting-row>
 
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span transloco="sleep-detection.disableAutomations.afterTime.title"></span>
-        <span>
-          @if (automationConfigs.SLEEP_MODE_DISABLE_AFTER_TIME.duration) {
-            <span @fade>
-              {{ getStringForDuration(automationConfigs.SLEEP_MODE_DISABLE_AFTER_TIME.duration) }}
-            </span>
-          }
-        </span>
-      </div>
-      <div class="setting-row-action">
-        <button class="btn btn-automation-settings" (click)="openModal_DisableSleepModeAfterTime()">
-          <app-icon name="settings" />
-        </button>
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="automationConfigs.SLEEP_MODE_DISABLE_AFTER_TIME.enabled"
-            (change)="toggleAutomation('SLEEP_MODE_DISABLE_AFTER_TIME')"
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
-      </div>
-    </div>
+    <app-setting-row
+      label="sleep-detection.disableAutomations.afterTime.title"
+      [value]="automationConfigs.SLEEP_MODE_DISABLE_AFTER_TIME"
+      [defaultValue]="automationDefaults.SLEEP_MODE_DISABLE_AFTER_TIME"
+      (resetToDefault)="updateConfig('SLEEP_MODE_DISABLE_AFTER_TIME', $event)"
+    >
+      <span rowDescription>
+        @if (automationConfigs.SLEEP_MODE_DISABLE_AFTER_TIME.duration) {
+          <span @fade>
+            {{ getStringForDuration(automationConfigs.SLEEP_MODE_DISABLE_AFTER_TIME.duration) }}
+          </span>
+        }
+      </span>
+      <button class="btn btn-automation-settings" (click)="openModal_DisableSleepModeAfterTime()">
+        <app-icon name="settings" />
+      </button>
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="automationConfigs.SLEEP_MODE_DISABLE_AFTER_TIME.enabled"
+          (change)="toggleAutomation('SLEEP_MODE_DISABLE_AFTER_TIME')"
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </app-setting-row>
 
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span transloco="sleep-detection.disableAutomations.onDevicePowerOn"></span>
-        <span>{{
-          deviceClassesToString(
-            automationConfigs.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON.triggerClasses,
-            'sleep-detection.modals.disableOnDevicePowerOn.'
-          )
-        }}</span>
-      </div>
-      <div class="setting-row-action">
-        <button
-          class="btn btn-automation-settings"
-          (click)="openModal_DisableSleepModeOnDevicePowerOn()"
-        >
-          <app-icon name="settings" />
-        </button>
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="automationConfigs.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON.enabled"
-            (change)="toggleAutomation('SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON')"
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
-      </div>
-    </div>
+    <app-setting-row
+      label="sleep-detection.disableAutomations.onDevicePowerOn"
+      [value]="automationConfigs.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON"
+      [defaultValue]="automationDefaults.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON"
+      (resetToDefault)="updateConfig('SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON', $event)"
+    >
+      <span rowDescription>{{
+        deviceClassesToString(
+          automationConfigs.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON.triggerClasses,
+          'sleep-detection.modals.disableOnDevicePowerOn.'
+        )
+      }}</span>
+      <button
+        class="btn btn-automation-settings"
+        (click)="openModal_DisableSleepModeOnDevicePowerOn()"
+      >
+        <app-icon name="settings" />
+      </button>
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="automationConfigs.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON.enabled"
+          (change)="toggleAutomation('SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON')"
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </app-setting-row>
 
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span transloco="sleep-detection.disableAutomations.onSteamVRStop"></span>
-        <span> </span>
-      </div>
-      <div class="setting-row-action">
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="automationConfigs.SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS.disableOnSteamVRStop"
-            (change)="
-              toggleAutomation('SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS', 'disableOnSteamVRStop')
-            "
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
-      </div>
-    </div>
+    <app-setting-row
+      label="sleep-detection.disableAutomations.onSteamVRStop"
+      [value]="automationConfigs.SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS.disableOnSteamVRStop"
+      [defaultValue]="automationDefaults.SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS.disableOnSteamVRStop"
+      (resetToDefault)="
+        updateConfig('SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS', { disableOnSteamVRStop: $event })
+      "
+    >
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="automationConfigs.SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS.disableOnSteamVRStop"
+          (change)="toggleAutomation('SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS', 'disableOnSteamVRStop')"
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </app-setting-row>
 
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span transloco="sleep-detection.disableAutomations.onUprightPose"></span>
-        <span> </span>
-      </div>
-      <div class="setting-row-action">
-        <button
-          class="btn btn-automation-settings"
-          (click)="openModal_DisableSleepModeOnUprightPose()"
-        >
-          <app-icon name="settings" />
-        </button>
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="automationConfigs.SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE.enabled"
-            (change)="toggleAutomation('SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE', 'enabled')"
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
-      </div>
-    </div>
+    <app-setting-row
+      label="sleep-detection.disableAutomations.onUprightPose"
+      [value]="automationConfigs.SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE"
+      [defaultValue]="automationDefaults.SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE"
+      (resetToDefault)="updateConfig('SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE', $event)"
+    >
+      <button
+        class="btn btn-automation-settings"
+        (click)="openModal_DisableSleepModeOnUprightPose()"
+      >
+        <app-icon name="settings" />
+      </button>
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="automationConfigs.SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE.enabled"
+          (change)="toggleAutomation('SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE', 'enabled')"
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </app-setting-row>
 
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span transloco="sleep-detection.disableAutomations.onPlayerJoinOrLeave"></span>
-        <span> </span>
-      </div>
-      <div class="setting-row-action">
-        <button
-          class="btn btn-automation-settings"
-          (click)="openModal_DisableSleepModeOnPlayerJoinOrLeave()"
-        >
-          <app-icon name="settings" />
-        </button>
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="automationConfigs.SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE.enabled"
-            (change)="toggleAutomation('SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE', 'enabled')"
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
-      </div>
-    </div>
+    <app-setting-row
+      label="sleep-detection.disableAutomations.onPlayerJoinOrLeave"
+      [value]="automationConfigs.SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE"
+      [defaultValue]="automationDefaults.SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE"
+      (resetToDefault)="updateConfig('SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE', $event)"
+    >
+      <button
+        class="btn btn-automation-settings"
+        (click)="openModal_DisableSleepModeOnPlayerJoinOrLeave()"
+      >
+        <app-icon name="settings" />
+      </button>
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="automationConfigs.SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE.enabled"
+          (change)="toggleAutomation('SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE', 'enabled')"
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </app-setting-row>
   </div>
 </div>

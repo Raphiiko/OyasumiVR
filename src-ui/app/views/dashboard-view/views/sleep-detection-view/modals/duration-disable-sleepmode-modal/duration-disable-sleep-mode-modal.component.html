@@ -3,22 +3,17 @@
   <div class="pane-content">
     <p transloco="sleep-detection.modals.disableAfterTime.description"></p>
     <div class="settings">
-      <div class="setting-row">
-        <div class="setting-row-label">
-          <span transloco="sleep-detection.modals.disableAfterTime.time"></span>
-          <span>{{ getStringForDuration(duration) }}</span>
+      <app-setting-row
+        label="sleep-detection.modals.disableAfterTime.time"
+        [descriptionText]="getStringForDuration(duration)"
+        [value]="duration"
+        [defaultValue]="automationDefaults.SLEEP_MODE_DISABLE_AFTER_TIME.duration"
+        (resetToDefault)="duration = $event"
+      >
+        <div class="input-wrapper">
+          <input type="time" (change)="duration = timeInput.value" [value]="duration" #timeInput />
         </div>
-        <div class="setting-row-action">
-          <div class="input-wrapper">
-            <input
-              type="time"
-              (change)="duration = timeInput.value"
-              [value]="duration"
-              #timeInput
-            />
-          </div>
-        </div>
-      </div>
+      </app-setting-row>
     </div>
   </div>
   <div class="pane-actions spread">

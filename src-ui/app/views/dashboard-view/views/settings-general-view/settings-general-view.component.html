@@ -31,6 +31,9 @@
           <app-setting-row
             label="settings.general.sleepMode.startupBehaviour.title"
             description="settings.general.sleepMode.startupBehaviour.description"
+            [value]="appSettings.sleepModeStartupBehaviour"
+            [defaultValue]="defaults.sleepModeStartupBehaviour"
+            (resetToDefault)="update({ sleepModeStartupBehaviour: $event })"
           >
             <app-select-box
               class="sleep-mode-startup-behaviour-dropdown"
@@ -48,6 +51,9 @@
           <app-setting-row
             label="settings.general.systemTray.close.label"
             description="settings.general.systemTray.close.description"
+            [value]="appSettings.exitInSystemTray"
+            [defaultValue]="defaults.exitInSystemTray"
+            (resetToDefault)="setExitInSystemTray($event)"
           >
             <label class="switch-toggle">
               <input
@@ -61,6 +67,9 @@
           <app-setting-row
             label="settings.general.systemTray.start.label"
             description="settings.general.systemTray.start.description"
+            [value]="appSettings.startInSystemTray"
+            [defaultValue]="defaults.startInSystemTray"
+            (resetToDefault)="setStartInSystemTray($event)"
           >
             <label class="switch-toggle">
               <input
@@ -80,6 +89,9 @@
           <app-setting-row
             label="settings.general.overlay.overlayMenu.title"
             description="settings.general.overlay.overlayMenu.description"
+            [value]="appSettings.overlayMenuEnabled"
+            [defaultValue]="defaults.overlayMenuEnabled"
+            (resetToDefault)="setOverlayMenuEnabled($event)"
           >
             <label class="switch-toggle">
               <input
@@ -101,6 +113,9 @@
           <app-setting-row
             label="settings.general.overlay.onlyOpenMenuWhenVRChatRunning.title"
             description="settings.general.overlay.onlyOpenMenuWhenVRChatRunning.description"
+            [value]="appSettings.overlayMenuOnlyOpenWhenVRChatIsRunning"
+            [defaultValue]="defaults.overlayMenuOnlyOpenWhenVRChatIsRunning"
+            (resetToDefault)="setOverlayMenuOnlyOpenWhenVRChatIsRunning($event)"
           >
             <label class="switch-toggle">
               <input
@@ -124,6 +139,9 @@
           <app-setting-row
             label="settings.general.lighthousePowerControl.enable.title"
             description="settings.general.lighthousePowerControl.enable.description"
+            [value]="appSettings.lighthousePowerControl"
+            [defaultValue]="defaults.lighthousePowerControl"
+            (resetToDefault)="setLighthousePowerControl($event)"
           >
             <label class="switch-toggle">
               <input
@@ -137,6 +155,9 @@
           <app-setting-row
             label="settings.general.lighthousePowerControl.powerOffMode.title"
             description="settings.general.lighthousePowerControl.powerOffMode.description"
+            [value]="appSettings.lighthousePowerOffState"
+            [defaultValue]="defaults.lighthousePowerOffState"
+            (resetToDefault)="update({ lighthousePowerOffState: $event })"
           >
             <app-select-box
               class="lighthouse-power-off-mode-dropdown"
@@ -154,6 +175,9 @@
           <app-setting-row
             label="settings.general.startWithSteamVR.label"
             description="settings.general.startWithSteamVR.description"
+            [value]="appSettings.startWithSteamVR"
+            [defaultValue]="defaults.startWithSteamVR"
+            (resetToDefault)="setStartWithSteamVR($event)"
           >
             <label class="switch-toggle">
               <input
@@ -167,6 +191,9 @@
           <app-setting-row
             label="settings.general.stopWithSteamVR.label"
             description="settings.general.stopWithSteamVR.description"
+            [value]="appSettings.quitWithSteamVR"
+            [defaultValue]="defaults.quitWithSteamVR"
+            (resetToDefault)="setQuitWithSteamVR($event)"
           >
             <label class="switch-toggle">
               <input
@@ -181,7 +208,16 @@
       </div>
 
       <div class="setting-category">
-        <h2 transloco="settings.general.lighthouseConsole.title"></h2>
+        <h2>
+          <span class="heading-with-reset">
+            <span transloco="settings.general.lighthouseConsole.title"></span>
+            <app-reset-to-default
+              [value]="appSettings.lighthouseConsolePath"
+              [defaultValue]="defaults.lighthouseConsolePath"
+              (resetToDefault)="lighthouseConsolePathInputChange.next($event)"
+            />
+          </span>
+        </h2>
         <p [innerHTML]="'settings.general.lighthouseConsole.description' | transloco"></p>
         <div class="settings-lighthouse-console">
           <div class="file-path-bar">
@@ -235,6 +271,9 @@
           <app-setting-row
             label="settings.general.lighthouseConsole.powerOffDelay.title"
             description="settings.general.lighthouseConsole.powerOffDelay.description"
+            [value]="appSettings.lighthousePowerOffDelay"
+            [defaultValue]="defaults.lighthousePowerOffDelay"
+            (resetToDefault)="setLighthousePowerOffDelay($event)"
           >
             <label class="switch-toggle">
               <input
@@ -277,22 +316,25 @@
       <div class="setting-category">
         <h2 transloco="settings.general.telemetry.title"></h2>
         <div class="settings">
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span transloco="settings.general.telemetry.label"></span>
-              <span [innerHtml]="'settings.general.telemetry.description' | transloco"></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="telemetrySettings.enabled"
-                  (change)="setTelemetryEnabled(!telemetrySettings.enabled)"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
+          <app-setting-row
+            label="settings.general.telemetry.label"
+            [value]="telemetrySettings.enabled"
+            [defaultValue]="telemetryDefaults.enabled"
+            (resetToDefault)="setTelemetryEnabled($event)"
+          >
+            <span
+              rowDescription
+              [innerHtml]="'settings.general.telemetry.description' | transloco"
+            ></span>
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="telemetrySettings.enabled"
+                (change)="setTelemetryEnabled(!telemetrySettings.enabled)"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
         </div>
       </div>
     </div>

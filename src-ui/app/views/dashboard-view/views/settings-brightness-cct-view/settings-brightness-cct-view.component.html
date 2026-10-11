@@ -13,6 +13,9 @@
             label="settings.brightnessCct.cctControl.unsupportedHmds.title"
             description="settings.brightnessCct.cctControl.unsupportedHmds.description"
             [class.disabled]="!unlistedHmd"
+            [value]="appSettings.cctControlOnUnsupportedHmds"
+            [defaultValue]="defaults.cctControlOnUnsupportedHmds"
+            (resetToDefault)="toggleCCTControlOnUnsupportedHmds()"
           >
             <label class="switch-toggle">
               <input
@@ -75,6 +78,9 @@
           <app-setting-row
             label="settings.brightnessCct.valveIndex.maxBrightness.title"
             description="settings.brightnessCct.valveIndex.maxBrightness.description"
+            [value]="appSettings.valveIndexMaxBrightness"
+            [defaultValue]="defaults.valveIndexMaxBrightness"
+            (resetToDefault)="changeValveIndexMaxBrightness($event)"
           >
             <app-slider-setting
               [min]="valveIndexMin"
@@ -93,6 +99,9 @@
           <app-setting-row
             label="settings.brightnessCct.bigscreenBeyond.maxBrightness.title"
             description="settings.brightnessCct.bigscreenBeyond.maxBrightness.description"
+            [value]="appSettings.bigscreenBeyondMaxBrightness"
+            [defaultValue]="defaults.bigscreenBeyondMaxBrightness"
+            (resetToDefault)="changeBigscreenBeyondMaxBrightness($event)"
           >
             <app-slider-setting
               [min]="bigscreenBeyondMin"
@@ -102,64 +111,54 @@
               unit="%"
             ></app-slider-setting>
           </app-setting-row>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span class="row-title">
-                <span
-                  transloco="settings.brightnessCct.bigscreenBeyond.permitRiskRange.title"
-                ></span>
-                <span
-                  class="experimental-flag"
-                  [tooltip]="'settings.brightnessCct.bigscreenBeyond.permitRiskRange.warning'"
-                  [tooltipMode]="'right'"
-                >
-                  <app-icon name="warning" />
-                </span>
-              </span>
-              <span
-                transloco="settings.brightnessCct.bigscreenBeyond.permitRiskRange.description"
-              ></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="!appSettings.bigscreenBeyondUnsafeBrightness"
-                  (change)="toggleBigscreenBeyondUnsafeBrightness()"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label">
-              <span class="row-title">
-                <span
-                  transloco="settings.brightnessCct.bigscreenBeyond.forceFanSafety.title"
-                ></span>
-                <span
-                  class="experimental-flag"
-                  [tooltip]="'settings.brightnessCct.bigscreenBeyond.forceFanSafety.warning'"
-                  [tooltipMode]="'right'"
-                >
-                  <app-icon name="warning" />
-                </span>
-              </span>
-              <span
-                transloco="settings.brightnessCct.bigscreenBeyond.forceFanSafety.description"
-              ></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="appSettings.bigscreenBeyondBrightnessFanSafety"
-                  (change)="toggleBigscreenBeyondForceFanBrightnessSafety()"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
+          <app-setting-row
+            label="settings.brightnessCct.bigscreenBeyond.permitRiskRange.title"
+            description="settings.brightnessCct.bigscreenBeyond.permitRiskRange.description"
+            [value]="appSettings.bigscreenBeyondUnsafeBrightness"
+            [defaultValue]="defaults.bigscreenBeyondUnsafeBrightness"
+            (resetToDefault)="toggleBigscreenBeyondUnsafeBrightness()"
+          >
+            <span
+              rowLabel
+              class="experimental-flag"
+              [tooltip]="'settings.brightnessCct.bigscreenBeyond.permitRiskRange.warning'"
+              [tooltipMode]="'right'"
+            >
+              <app-icon name="warning" />
+            </span>
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="!appSettings.bigscreenBeyondUnsafeBrightness"
+                (change)="toggleBigscreenBeyondUnsafeBrightness()"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
+          <app-setting-row
+            label="settings.brightnessCct.bigscreenBeyond.forceFanSafety.title"
+            description="settings.brightnessCct.bigscreenBeyond.forceFanSafety.description"
+            [value]="appSettings.bigscreenBeyondBrightnessFanSafety"
+            [defaultValue]="defaults.bigscreenBeyondBrightnessFanSafety"
+            (resetToDefault)="toggleBigscreenBeyondForceFanBrightnessSafety()"
+          >
+            <span
+              rowLabel
+              class="experimental-flag"
+              [tooltip]="'settings.brightnessCct.bigscreenBeyond.forceFanSafety.warning'"
+              [tooltipMode]="'right'"
+            >
+              <app-icon name="warning" />
+            </span>
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="appSettings.bigscreenBeyondBrightnessFanSafety"
+                (change)="toggleBigscreenBeyondForceFanBrightnessSafety()"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
         </div>
       </div>
     </div>

@@ -7,7 +7,12 @@
     <div class="pane-content">
       <p transloco="sleep-detection.modals.disableForPlayerJoinLeave.description"></p>
       <div class="settings">
-        <app-setting-row label="sleep-detection.modals.disableForPlayerJoinLeave.onJoin.title">
+        <app-setting-row
+          label="sleep-detection.modals.disableForPlayerJoinLeave.onJoin.title"
+          [value]="config.joinMode"
+          [defaultValue]="defaults.joinMode"
+          (resetToDefault)="setJoinTriggerOption($event)"
+        >
           <app-select-box
             class="preset-select-box"
             [type]="'SMALL'"
@@ -21,6 +26,9 @@
         <app-setting-row
           label="sleep-detection.modals.disableForPlayerJoinLeave.onlyWhenPreviouslyAlone.title"
           description="sleep-detection.modals.disableForPlayerJoinLeave.onlyWhenPreviouslyAlone.description"
+          [value]="config.onlyWhenPreviouslyAlone"
+          [defaultValue]="defaults.onlyWhenPreviouslyAlone"
+          (resetToDefault)="config.onlyWhenPreviouslyAlone = $event"
         >
           <label class="switch-toggle">
             <input
@@ -33,7 +41,12 @@
         </app-setting-row>
       </div>
       <div class="settings">
-        <app-setting-row label="sleep-detection.modals.disableForPlayerJoinLeave.onLeave.title">
+        <app-setting-row
+          label="sleep-detection.modals.disableForPlayerJoinLeave.onLeave.title"
+          [value]="config.leaveMode"
+          [defaultValue]="defaults.leaveMode"
+          (resetToDefault)="setLeaveTriggerOption($event)"
+        >
           <app-select-box
             class="preset-select-box"
             [type]="'SMALL'"
@@ -47,6 +60,9 @@
         <app-setting-row
           label="sleep-detection.modals.disableForPlayerJoinLeave.onlyWhenLeftAlone.title"
           description="sleep-detection.modals.disableForPlayerJoinLeave.onlyWhenLeftAlone.description"
+          [value]="config.onlyWhenLeftAlone"
+          [defaultValue]="defaults.onlyWhenLeftAlone"
+          (resetToDefault)="config.onlyWhenLeftAlone = $event"
         >
           <label class="switch-toggle">
             <input

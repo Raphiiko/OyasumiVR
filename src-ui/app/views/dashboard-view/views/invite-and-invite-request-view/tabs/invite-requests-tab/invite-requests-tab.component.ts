@@ -27,6 +27,7 @@ interface PresetOptions {
   standalone: false,
 })
 export class InviteRequestsTabComponent implements OnInit {
+  readonly defaults = AUTOMATION_CONFIGS_DEFAULT.AUTO_ACCEPT_INVITE_REQUESTS;
   @Input() loggedIn = false;
   @Input() isOnBusyStatus = false;
   @Input() isOnJoinMeStatus = false;

@@ -21,6 +21,7 @@ import { vshrink } from 'src-ui/app/utils/animations';
 export class DevicesTabComponent implements OnInit {
   lighthouseStatus: LighthouseStatus = 'uninitialized';
   lighthousePowerControlDisabled = false;
+  readonly automationDefaults = AUTOMATION_CONFIGS_DEFAULT;
   devicePowerAutomations: DevicePowerAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.DEVICE_POWER_AUTOMATIONS
   );
@@ -55,6 +56,13 @@ export class DevicesTabComponent implements OnInit {
       {
         [automation]: deviceSelection,
       }
+    );
+  }
+
+  async updateConfig(config: Partial<DevicePowerAutomationsConfig>) {
+    await this.automationConfigService.updateAutomationConfig<DevicePowerAutomationsConfig>(
+      'DEVICE_POWER_AUTOMATIONS',
+      config
     );
   }
 

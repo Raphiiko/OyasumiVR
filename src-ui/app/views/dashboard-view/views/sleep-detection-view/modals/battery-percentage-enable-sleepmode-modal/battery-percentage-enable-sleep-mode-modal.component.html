@@ -1,48 +1,63 @@
 <div class="pane modal-md" @fadeUp>
   <div class="pane-title" transloco="sleep-detection.modals.enableAtBatteryPercentage.title"></div>
   <div class="pane-content">
-    <div class="automation-settings">
-      <div class="automation-settings-row">
-        <div
-          class="automation-settings-row-label"
-          transloco="sleep-detection.modals.enableAtBatteryPercentage.whenA"
-        ></div>
-        <div class="automation-settings-row-controls">
-          <label class="check-toggle">
-            <span
-              class="check-toggle-label"
-              transloco="sleep-detection.modals.enableAtBatteryPercentage.Controller"
-            ></span>
-            <input
-              type="checkbox"
-              [checked]="triggerClasses.includes('Controller')"
-              (change)="toggleClass('Controller')"
-            />
-            <span class="check-toggle-checkmark"></span>
-          </label>
-          <label class="check-toggle">
-            <span
-              class="check-toggle-label"
-              transloco="sleep-detection.modals.enableAtBatteryPercentage.GenericTracker"
-            ></span>
-            <input
-              type="checkbox"
-              [checked]="triggerClasses.includes('GenericTracker')"
-              (change)="toggleClass('GenericTracker')"
-            />
-            <span class="check-toggle-checkmark"></span>
-          </label>
-        </div>
-      </div>
-      <div class="automation-settings-row">
-        <div
-          class="automation-settings-row-label"
-          transloco="sleep-detection.modals.enableAtBatteryPercentage.fallsBelow"
-        ></div>
-        <div class="automation-settings-row-controls">
-          <app-slider-setting [(value)]="threshold" unit="%"></app-slider-setting>
-        </div>
-      </div>
+    <div class="settings">
+      <app-setting-row
+        label="sleep-detection.modals.enableAtBatteryPercentage.whenA"
+        actionClass="stacked"
+        [value]="{
+          controller: triggerClasses.includes('Controller'),
+          tracker: triggerClasses.includes('GenericTracker'),
+        }"
+        [defaultValue]="{
+          controller:
+            automationDefaults.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.triggerClasses.includes(
+              'Controller'
+            ),
+          tracker:
+            automationDefaults.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.triggerClasses.includes(
+              'GenericTracker'
+            ),
+        }"
+        (resetToDefault)="
+          triggerClasses = [
+            ...automationDefaults.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.triggerClasses,
+          ]
+        "
+      >
+        <label class="check-toggle">
+          <span
+            class="check-toggle-label"
+            transloco="sleep-detection.modals.enableAtBatteryPercentage.Controller"
+          ></span>
+          <input
+            type="checkbox"
+            [checked]="triggerClasses.includes('Controller')"
+            (change)="toggleClass('Controller')"
+          />
+          <span class="check-toggle-checkmark"></span>
+        </label>
+        <label class="check-toggle">
+          <span
+            class="check-toggle-label"
+            transloco="sleep-detection.modals.enableAtBatteryPercentage.GenericTracker"
+          ></span>
+          <input
+            type="checkbox"
+            [checked]="triggerClasses.includes('GenericTracker')"
+            (change)="toggleClass('GenericTracker')"
+          />
+          <span class="check-toggle-checkmark"></span>
+        </label>
+      </app-setting-row>
+      <app-setting-row
+        label="sleep-detection.modals.enableAtBatteryPercentage.fallsBelow"
+        [value]="threshold"
+        [defaultValue]="automationDefaults.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.threshold"
+        (resetToDefault)="threshold = $event"
+      >
+        <app-slider-setting [(value)]="threshold" unit="%"></app-slider-setting>
+      </app-setting-row>
     </div>
   </div>
   <div class="pane-actions spread">

@@ -19,7 +19,8 @@ export class SettingRowComponent {
   /** Renders the warning icon and bold title used for conflicting settings. */
   @Input() conflict = false;
   @Input() actionClass?: string;
-  /** Shows a reset icon beside the title; set it while the setting differs from its default. */
-  @Input() canReset = false;
-  @Output() resetToDefault = new EventEmitter<void>();
+  /** Passed to the reset icon beside the title; see ResetToDefaultComponent. */
+  @Input() value?: unknown;
+  @Input() defaultValue?: unknown;
+  @Output() resetToDefault = new EventEmitter<any>();
 }

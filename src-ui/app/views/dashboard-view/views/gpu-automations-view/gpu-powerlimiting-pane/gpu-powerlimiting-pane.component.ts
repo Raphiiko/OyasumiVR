@@ -1,5 +1,6 @@
 import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { GPUDevice, GPUPowerLimit } from '../../../../../models/gpu-device';
+import { AUTOMATION_CONFIGS_DEFAULT } from '../../../../../models/automations';
 import { NvmlService } from '../../../../../services/nvml.service';
 import { GpuAutomationsService } from '../../../../../services/gpu-automations.service';
 import { debounceTime, firstValueFrom, Subject } from 'rxjs';
@@ -17,6 +18,7 @@ import { flushOnDestroy } from '../../../../../utils/rxjs-utils';
   standalone: false,
 })
 export class GpuPowerlimitingPaneComponent implements OnInit {
+  protected readonly gpuDefaults = AUTOMATION_CONFIGS_DEFAULT.GPU_POWER_LIMITS;
   protected panel: 'PREINIT' | 'INITIALIZING' | 'ERROR' | 'ENABLED' = 'PREINIT';
   protected disabledMessage: TString = '';
   protected gpuDevices: Array<GPUDevice & { selected: boolean }> = [];

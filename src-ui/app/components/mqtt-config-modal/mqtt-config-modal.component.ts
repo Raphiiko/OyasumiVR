@@ -24,6 +24,7 @@ import { error } from '@tauri-apps/plugin-log';
   standalone: false,
 })
 export class MqttConfigModalComponent extends BaseModalComponent<void, void> implements OnInit {
+  readonly defaults = APP_SETTINGS_DEFAULT;
   config = MqttService.mapAppSettingsToMqttConfig(structuredClone(APP_SETTINGS_DEFAULT));
   testResult: 'idle' | 'testing' | 'success' | 'error' = 'idle';
   testError = '';

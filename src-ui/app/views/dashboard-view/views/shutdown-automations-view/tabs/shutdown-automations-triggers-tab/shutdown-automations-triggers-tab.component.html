@@ -3,6 +3,9 @@
     <app-setting-row
       label="shutdown-automations.triggers.enabled.title"
       description="shutdown-automations.triggers.enabled.description"
+      [value]="config.triggersEnabled"
+      [defaultValue]="defaults.triggersEnabled"
+      (resetToDefault)="updateConfig({ triggersEnabled: $event })"
     >
       <label class="switch-toggle">
         <input
@@ -21,6 +24,9 @@
     <app-setting-row
       label="shutdown-automations.triggers.whenAsleep.title"
       description="shutdown-automations.triggers.whenAsleep.description"
+      [value]="config.triggerOnSleep"
+      [defaultValue]="defaults.triggerOnSleep"
+      (resetToDefault)="updateConfig({ triggerOnSleep: $event })"
     >
       <label class="switch-toggle">
         <input
@@ -37,6 +43,9 @@
           label="shutdown-automations.triggers.whenAsleepDuration.title"
           description="shutdown-automations.triggers.whenAsleepDuration.description"
           [class.disabled]="!config.triggerOnSleep"
+          [value]="config.triggerOnSleepDuration"
+          [defaultValue]="defaults.triggerOnSleepDuration"
+          (resetToDefault)="onSleepDurationChange($event)"
         >
           <app-duration-input-setting
             [value]="config.triggerOnSleepDuration"
@@ -47,6 +56,17 @@
           label="shutdown-automations.triggers.whenAsleepTimeWindow.title"
           description="shutdown-automations.triggers.whenAsleepTimeWindow.description"
           [class.disabled]="!config.triggerOnSleep"
+          [value]="{
+            triggerOnSleepActivationWindow: config.triggerOnSleepActivationWindow,
+            triggerOnSleepActivationWindowStart: config.triggerOnSleepActivationWindowStart,
+            triggerOnSleepActivationWindowEnd: config.triggerOnSleepActivationWindowEnd,
+          }"
+          [defaultValue]="{
+            triggerOnSleepActivationWindow: defaults.triggerOnSleepActivationWindow,
+            triggerOnSleepActivationWindowStart: defaults.triggerOnSleepActivationWindowStart,
+            triggerOnSleepActivationWindowEnd: defaults.triggerOnSleepActivationWindowEnd,
+          }"
+          (resetToDefault)="updateConfig($event)"
         >
           @if (config.triggerOnSleepActivationWindow) {
             <div class="input-wrapper" @fade>
@@ -89,6 +109,9 @@
     <app-setting-row
       label="shutdown-automations.triggers.whenAlone.title"
       description="shutdown-automations.triggers.whenAlone.description"
+      [value]="config.triggerWhenAlone"
+      [defaultValue]="defaults.triggerWhenAlone"
+      (resetToDefault)="updateConfig({ triggerWhenAlone: $event })"
     >
       <label class="switch-toggle">
         <input
@@ -105,6 +128,9 @@
           label="shutdown-automations.triggers.whenAloneDuration.title"
           description="shutdown-automations.triggers.whenAloneDuration.description"
           [class.disabled]="!config.triggerWhenAlone"
+          [value]="config.triggerWhenAloneDuration"
+          [defaultValue]="defaults.triggerWhenAloneDuration"
+          (resetToDefault)="whenAloneDurationChange($event)"
         >
           <app-duration-input-setting
             [value]="config.triggerWhenAloneDuration"
@@ -115,6 +141,17 @@
           label="shutdown-automations.triggers.whenAloneTimeWindow.title"
           description="shutdown-automations.triggers.whenAloneTimeWindow.description"
           [class.disabled]="!config.triggerWhenAlone"
+          [value]="{
+            triggerWhenAloneActivationWindow: config.triggerWhenAloneActivationWindow,
+            triggerWhenAloneActivationWindowStart: config.triggerWhenAloneActivationWindowStart,
+            triggerWhenAloneActivationWindowEnd: config.triggerWhenAloneActivationWindowEnd,
+          }"
+          [defaultValue]="{
+            triggerWhenAloneActivationWindow: defaults.triggerWhenAloneActivationWindow,
+            triggerWhenAloneActivationWindowStart: defaults.triggerWhenAloneActivationWindowStart,
+            triggerWhenAloneActivationWindowEnd: defaults.triggerWhenAloneActivationWindowEnd,
+          }"
+          (resetToDefault)="updateConfig($event)"
         >
           @if (config.triggerWhenAloneActivationWindow) {
             <div class="input-wrapper" @fade>
@@ -156,6 +193,9 @@
           label="shutdown-automations.triggers.whenAloneOnlyWhenSleepModeEnabled.title"
           description="shutdown-automations.triggers.whenAloneOnlyWhenSleepModeEnabled.description"
           [class.disabled]="!config.triggerWhenAlone"
+          [value]="config.triggerWhenAloneOnlyWhenSleepModeActive"
+          [defaultValue]="defaults.triggerWhenAloneOnlyWhenSleepModeActive"
+          (resetToDefault)="updateConfig({ triggerWhenAloneOnlyWhenSleepModeActive: $event })"
         >
           <label class="switch-toggle">
             <input

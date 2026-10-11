@@ -13,6 +13,11 @@
           <app-setting-row
             label="sleep-detection.modals.enableOnHeartRateCalmPeriod.bpm.title"
             description="sleep-detection.modals.enableOnHeartRateCalmPeriod.bpm.description"
+            [value]="threshold"
+            [defaultValue]="
+              automationDefaults.SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD.heartRateThreshold
+            "
+            (resetToDefault)="threshold = $event"
           >
             <app-slider-setting
               [unit]="'sleep-detection.modals.enableOnHeartRateCalmPeriod.bpm.unit' | transloco"
@@ -26,6 +31,11 @@
           <app-setting-row
             label="sleep-detection.modals.enableOnHeartRateCalmPeriod.duration.title"
             description="sleep-detection.modals.enableOnHeartRateCalmPeriod.duration.description"
+            [value]="duration"
+            [defaultValue]="
+              automationDefaults.SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD.periodDuration
+            "
+            (resetToDefault)="duration = $event"
           >
             <app-slider-setting
               [unit]="

@@ -4,7 +4,14 @@
       <p [innerHtml]="'gpu-automations.msiAfterburner.description' | transloco"></p>
       <img draggable="false" src="/assets/img/afterburner_icon.png" />
     </div>
-    <h3 transloco="gpu-automations.msiAfterburner.executable.title"></h3>
+    <h3 class="heading-with-reset">
+      <span transloco="gpu-automations.msiAfterburner.executable.title"></span>
+      <app-reset-to-default
+        [value]="config.msiAfterburnerPath"
+        [defaultValue]="automationDefaults.MSI_AFTERBURNER.msiAfterburnerPath"
+        (resetToDefault)="msiAfterburnerPathInputChange.next($event)"
+      />
+    </h3>
     <p [innerHtml]="'gpu-automations.msiAfterburner.executable.description' | transloco"></p>
     <div class="file-path-bar">
       <div class="file-path-bar-path">
@@ -54,6 +61,9 @@
       <app-setting-row
         label="gpu-automations.msiAfterburner.sleepModeEnable.title"
         description="gpu-automations.msiAfterburner.sleepModeEnable.description"
+        [value]="config.onSleepEnableProfile"
+        [defaultValue]="automationDefaults.MSI_AFTERBURNER.onSleepEnableProfile"
+        (resetToDefault)="changeProfile('ON_ENABLE', profileOptions[$event])"
       >
         <app-select-box
           type="SMALL"
@@ -65,6 +75,9 @@
       <app-setting-row
         label="gpu-automations.msiAfterburner.sleepModeDisable.title"
         description="gpu-automations.msiAfterburner.sleepModeDisable.description"
+        [value]="config.onSleepDisableProfile"
+        [defaultValue]="automationDefaults.MSI_AFTERBURNER.onSleepDisableProfile"
+        (resetToDefault)="changeProfile('ON_DISABLE', profileOptions[$event])"
       >
         <app-select-box
           type="SMALL"

@@ -35,6 +35,7 @@ import { listen, UnlistenFn } from '@tauri-apps/api/event';
   standalone: false,
 })
 export class SystemMicMuteAutomationsViewComponent implements OnInit, OnDestroy {
+  readonly defaults = AUTOMATION_CONFIGS_DEFAULT.SYSTEM_MIC_MUTE_AUTOMATIONS;
   config: SystemMicMuteAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SYSTEM_MIC_MUTE_AUTOMATIONS
   );
@@ -235,6 +236,13 @@ export class SystemMicMuteAutomationsViewComponent implements OnInit, OnDestroy 
 
   ngOnDestroy() {
     if (this.micLevelUnlisten) this.micLevelUnlisten();
+  }
+
+  async updateConfig(patch: Partial<SystemMicMuteAutomationsConfig>) {
+    await this.automationConfigService.updateAutomationConfig<SystemMicMuteAutomationsConfig>(
+      'SYSTEM_MIC_MUTE_AUTOMATIONS',
+      patch
+    );
   }
 
   async onChangeAudioDevice($event: SelectBoxItem | undefined) {

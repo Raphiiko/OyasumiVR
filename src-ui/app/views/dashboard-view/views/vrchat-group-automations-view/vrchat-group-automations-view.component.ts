@@ -28,6 +28,7 @@ type GroupSelectType = string | 'DONT_CHANGE' | 'CLEAR_GROUP';
   standalone: false,
 })
 export class VRChatGroupAutomationsViewComponent implements OnInit {
+  readonly defaults = AUTOMATION_CONFIGS_DEFAULT.VRCHAT_GROUP_AUTOMATIONS;
   private groups: BehaviorSubject<LimitedUserGroups[]> = new BehaviorSubject<LimitedUserGroups[]>(
     []
   );

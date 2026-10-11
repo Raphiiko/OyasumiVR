@@ -57,6 +57,7 @@ export class PlayerJoinLeaveDisableSleepModeModalComponent
   ];
   joinTriggerOption: SelectBoxItem | undefined;
   leaveTriggerOption: SelectBoxItem | undefined;
+  readonly defaults = AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE;
   config: SleepModeDisableOnPlayerJoinOrLeaveAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE
   );
@@ -93,10 +94,12 @@ export class PlayerJoinLeaveDisableSleepModeModalComponent
   setJoinTriggerOption(option: JoinNotificationsMode | undefined) {
     if (!option) return;
     this.config.joinMode = option;
+    this.joinTriggerOption = this.triggerOptions.find((o) => o.id === option);
   }
 
   setLeaveTriggerOption(option: JoinNotificationsMode | undefined) {
     if (!option) return;
     this.config.leaveMode = option;
+    this.leaveTriggerOption = this.triggerOptions.find((o) => o.id === option);
   }
 }

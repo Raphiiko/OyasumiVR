@@ -10,6 +10,15 @@
     <app-setting-row
       label="status-automations.general.onSleepEnable.title"
       description="status-automations.general.onSleepEnable.description.status"
+      [value]="{
+        changeStatusOnSleepModeEnable: config.changeStatusOnSleepModeEnable,
+        statusOnSleepModeEnable: config.statusOnSleepModeEnable,
+      }"
+      [defaultValue]="{
+        changeStatusOnSleepModeEnable: defaults.changeStatusOnSleepModeEnable,
+        statusOnSleepModeEnable: defaults.statusOnSleepModeEnable,
+      }"
+      (resetToDefault)="updateConfig($event)"
     >
       <label class="switch-toggle">
         <input
@@ -30,37 +39,51 @@
         [disabled]="!config.changeStatusOnSleepModeEnable"
       ></app-select-box>
     </app-setting-row>
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span></span>
-        <span transloco="status-automations.general.onSleepEnable.description.statusMessage"></span>
-      </div>
-      <div class="setting-row-action">
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="config.changeStatusMessageOnSleepModeEnable"
-            (change)="
-              updateConfig({
-                changeStatusMessageOnSleepModeEnable: !config.changeStatusMessageOnSleepModeEnable,
-              })
-            "
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
+    <app-setting-row
+      description="status-automations.general.onSleepEnable.description.statusMessage"
+      [value]="{
+        changeStatusMessageOnSleepModeEnable: config.changeStatusMessageOnSleepModeEnable,
+        statusMessageOnSleepModeEnable: config.statusMessageOnSleepModeEnable,
+      }"
+      [defaultValue]="{
+        changeStatusMessageOnSleepModeEnable: defaults.changeStatusMessageOnSleepModeEnable,
+        statusMessageOnSleepModeEnable: defaults.statusMessageOnSleepModeEnable,
+      }"
+      (resetToDefault)="updateConfig($event)"
+    >
+      <label class="switch-toggle">
         <input
-          type="text"
-          [disabled]="!config.changeStatusMessageOnSleepModeEnable"
-          maxlength="32"
-          [value]="config.statusMessageOnSleepModeEnable"
-          (input)="updateStatusMessage('ON_SLEEP_ENABLE', onSleepEnableStatusMessageInput.value)"
-          #onSleepEnableStatusMessageInput
+          type="checkbox"
+          [checked]="config.changeStatusMessageOnSleepModeEnable"
+          (change)="
+            updateConfig({
+              changeStatusMessageOnSleepModeEnable: !config.changeStatusMessageOnSleepModeEnable,
+            })
+          "
         />
-      </div>
-    </div>
+        <span class="switch-toggle-slider"></span>
+      </label>
+      <input
+        type="text"
+        [disabled]="!config.changeStatusMessageOnSleepModeEnable"
+        maxlength="32"
+        [value]="config.statusMessageOnSleepModeEnable"
+        (input)="updateStatusMessage('ON_SLEEP_ENABLE', onSleepEnableStatusMessageInput.value)"
+        #onSleepEnableStatusMessageInput
+      />
+    </app-setting-row>
     <app-setting-row
       label="status-automations.general.onSleepDisable.title"
       description="status-automations.general.onSleepDisable.description.status"
+      [value]="{
+        changeStatusOnSleepModeDisable: config.changeStatusOnSleepModeDisable,
+        statusOnSleepModeDisable: config.statusOnSleepModeDisable,
+      }"
+      [defaultValue]="{
+        changeStatusOnSleepModeDisable: defaults.changeStatusOnSleepModeDisable,
+        statusOnSleepModeDisable: defaults.statusOnSleepModeDisable,
+      }"
+      (resetToDefault)="updateConfig($event)"
     >
       <label class="switch-toggle">
         <input
@@ -83,40 +106,51 @@
         [disabled]="!config.changeStatusOnSleepModeDisable"
       ></app-select-box>
     </app-setting-row>
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span></span>
-        <span
-          transloco="status-automations.general.onSleepDisable.description.statusMessage"
-        ></span>
-      </div>
-      <div class="setting-row-action">
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="config.changeStatusMessageOnSleepModeDisable"
-            (change)="
-              updateConfig({
-                changeStatusMessageOnSleepModeDisable:
-                  !config.changeStatusMessageOnSleepModeDisable,
-              })
-            "
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
+    <app-setting-row
+      description="status-automations.general.onSleepDisable.description.statusMessage"
+      [value]="{
+        changeStatusMessageOnSleepModeDisable: config.changeStatusMessageOnSleepModeDisable,
+        statusMessageOnSleepModeDisable: config.statusMessageOnSleepModeDisable,
+      }"
+      [defaultValue]="{
+        changeStatusMessageOnSleepModeDisable: defaults.changeStatusMessageOnSleepModeDisable,
+        statusMessageOnSleepModeDisable: defaults.statusMessageOnSleepModeDisable,
+      }"
+      (resetToDefault)="updateConfig($event)"
+    >
+      <label class="switch-toggle">
         <input
-          type="text"
-          [disabled]="!config.changeStatusMessageOnSleepModeDisable"
-          maxlength="32"
-          [value]="config.statusMessageOnSleepModeDisable"
-          (input)="updateStatusMessage('ON_SLEEP_DISABLE', onSleepDisableStatusMessageInput.value)"
-          #onSleepDisableStatusMessageInput
+          type="checkbox"
+          [checked]="config.changeStatusMessageOnSleepModeDisable"
+          (change)="
+            updateConfig({
+              changeStatusMessageOnSleepModeDisable: !config.changeStatusMessageOnSleepModeDisable,
+            })
+          "
         />
-      </div>
-    </div>
+        <span class="switch-toggle-slider"></span>
+      </label>
+      <input
+        type="text"
+        [disabled]="!config.changeStatusMessageOnSleepModeDisable"
+        maxlength="32"
+        [value]="config.statusMessageOnSleepModeDisable"
+        (input)="updateStatusMessage('ON_SLEEP_DISABLE', onSleepDisableStatusMessageInput.value)"
+        #onSleepDisableStatusMessageInput
+      />
+    </app-setting-row>
     <app-setting-row
       label="status-automations.general.onSleepPreparation.title"
       description="status-automations.general.onSleepPreparation.description.status"
+      [value]="{
+        changeStatusOnSleepPreparation: config.changeStatusOnSleepPreparation,
+        statusOnSleepPreparation: config.statusOnSleepPreparation,
+      }"
+      [defaultValue]="{
+        changeStatusOnSleepPreparation: defaults.changeStatusOnSleepPreparation,
+        statusOnSleepPreparation: defaults.statusOnSleepPreparation,
+      }"
+      (resetToDefault)="updateConfig($event)"
     >
       <label class="switch-toggle">
         <input
@@ -139,39 +173,41 @@
         [disabled]="!config.changeStatusOnSleepPreparation"
       ></app-select-box>
     </app-setting-row>
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span></span>
-        <span
-          transloco="status-automations.general.onSleepPreparation.description.statusMessage"
-        ></span>
-      </div>
-      <div class="setting-row-action">
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="config.changeStatusMessageOnSleepPreparation"
-            (change)="
-              updateConfig({
-                changeStatusMessageOnSleepPreparation:
-                  !config.changeStatusMessageOnSleepPreparation,
-              })
-            "
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
+    <app-setting-row
+      description="status-automations.general.onSleepPreparation.description.statusMessage"
+      [value]="{
+        changeStatusMessageOnSleepPreparation: config.changeStatusMessageOnSleepPreparation,
+        statusMessageOnSleepPreparation: config.statusMessageOnSleepPreparation,
+      }"
+      [defaultValue]="{
+        changeStatusMessageOnSleepPreparation: defaults.changeStatusMessageOnSleepPreparation,
+        statusMessageOnSleepPreparation: defaults.statusMessageOnSleepPreparation,
+      }"
+      (resetToDefault)="updateConfig($event)"
+    >
+      <label class="switch-toggle">
         <input
-          type="text"
-          [disabled]="!config.changeStatusMessageOnSleepPreparation"
-          maxlength="32"
-          [value]="config.statusMessageOnSleepPreparation"
-          (input)="
-            updateStatusMessage('ON_SLEEP_PREPARATION', onSleepPreparationStatusMessageInput.value)
+          type="checkbox"
+          [checked]="config.changeStatusMessageOnSleepPreparation"
+          (change)="
+            updateConfig({
+              changeStatusMessageOnSleepPreparation: !config.changeStatusMessageOnSleepPreparation,
+            })
           "
-          #onSleepPreparationStatusMessageInput
         />
-      </div>
-    </div>
+        <span class="switch-toggle-slider"></span>
+      </label>
+      <input
+        type="text"
+        [disabled]="!config.changeStatusMessageOnSleepPreparation"
+        maxlength="32"
+        [value]="config.statusMessageOnSleepPreparation"
+        (input)="
+          updateStatusMessage('ON_SLEEP_PREPARATION', onSleepPreparationStatusMessageInput.value)
+        "
+        #onSleepPreparationStatusMessageInput
+      />
+    </app-setting-row>
   </div>
 </div>
 <app-alert severity="warning" style="margin-top: 1em" contentClass="with-action">

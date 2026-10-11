@@ -24,6 +24,9 @@
     <app-setting-row
       label="invite-and-invite-requests.inviteRequestsTab.options.enable.title"
       description="invite-and-invite-requests.inviteRequestsTab.options.enable.description"
+      [value]="config.enabled"
+      [defaultValue]="defaults.enabled"
+      (resetToDefault)="updateConfig({ enabled: $event })"
     >
       <label class="switch-toggle">
         <input
@@ -39,6 +42,9 @@
     <app-setting-row
       label="invite-and-invite-requests.inviteRequestsTab.options.listMode.title"
       description="invite-and-invite-requests.inviteRequestsTab.options.listMode.description"
+      [value]="config.listMode"
+      [defaultValue]="defaults.listMode"
+      (resetToDefault)="setListMode($event)"
     >
       <app-select-box
         [items]="listModeOptions"
@@ -49,6 +55,9 @@
     <app-setting-row
       label="invite-and-invite-requests.inviteRequestsTab.options.acceptMessage.title"
       description="invite-and-invite-requests.inviteRequestsTab.options.acceptMessage.description"
+      [value]="config.acceptMessageEnabled"
+      [defaultValue]="defaults.acceptMessageEnabled"
+      (resetToDefault)="updateConfig({ acceptMessageEnabled: $event })"
     >
       <label class="switch-toggle">
         <input
@@ -63,6 +72,9 @@
       <div class="setting-row-group" @vshrink>
         <app-setting-row
           label="invite-and-invite-requests.inviteRequestsTab.options.acceptMessage.customMessage.title"
+          [value]="config.acceptInviteRequestMessage"
+          [defaultValue]="defaults.acceptInviteRequestMessage"
+          (resetToDefault)="updateAcceptInviteRequestCustomMessage.next($event)"
         >
           <input
             maxlength="64"
@@ -85,6 +97,9 @@
     <app-setting-row
       label="invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.title"
       description="invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.description"
+      [value]="config.declineOnRequest"
+      [defaultValue]="defaults.declineOnRequest"
+      (resetToDefault)="setDeclineOnRequestOption($event)"
     >
       <app-select-box
         [class]="'small-select-box'"
@@ -99,6 +114,9 @@
         <app-setting-row
           label="invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.customMessage.title"
           description="invite-and-invite-requests.inviteRequestsTab.options.declineOnRequest.customMessage.description"
+          [value]="config.declineInviteRequestMessage"
+          [defaultValue]="defaults.declineInviteRequestMessage"
+          (resetToDefault)="updateDeclineInviteRequestCustomMessage.next($event)"
         >
           <input
             maxlength="64"
@@ -124,6 +142,9 @@
   <div class="settings">
     <app-setting-row
       label="invite-and-invite-requests.inviteRequestsTab.options.onlyIfSleepModeEnabled.title"
+      [value]="config.onlyIfSleepModeEnabled"
+      [defaultValue]="defaults.onlyIfSleepModeEnabled"
+      (resetToDefault)="updateConfig({ onlyIfSleepModeEnabled: $event })"
     >
       <label class="switch-toggle">
         <input
@@ -135,46 +156,50 @@
       </label>
     </app-setting-row>
 
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span
-          style="display: initial"
-          [innerHtml]="
-            'invite-and-invite-requests.inviteRequestsTab.options.onlyBelowPlayerCount.title'
-              | transloco
-                : {
-                    count: config.onlyBelowPlayerCount,
-                  }
+    <app-setting-row
+      description="invite-and-invite-requests.inviteRequestsTab.options.onlyBelowPlayerCount.description"
+      [value]="{
+        onlyBelowPlayerCount: config.onlyBelowPlayerCount,
+        onlyBelowPlayerCountEnabled: config.onlyBelowPlayerCountEnabled,
+      }"
+      [defaultValue]="{
+        onlyBelowPlayerCount: defaults.onlyBelowPlayerCount,
+        onlyBelowPlayerCountEnabled: defaults.onlyBelowPlayerCountEnabled,
+      }"
+      (resetToDefault)="updateConfig($event)"
+    >
+      <span
+        rowLabel
+        [innerHtml]="
+          'invite-and-invite-requests.inviteRequestsTab.options.onlyBelowPlayerCount.title'
+            | transloco
+              : {
+                  count: config.onlyBelowPlayerCount,
+                }
+        "
+      ></span>
+      <app-slider-setting
+        class="with-margin"
+        unitIcon="avatar"
+        [min]="2"
+        [max]="100"
+        [value]="config.onlyBelowPlayerCount"
+        (valueChange)="updateConfig({ onlyBelowPlayerCount: $event })"
+        [disabled]="!config.onlyBelowPlayerCountEnabled"
+      ></app-slider-setting>
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="config.onlyBelowPlayerCountEnabled"
+          (change)="
+            updateConfig({
+              onlyBelowPlayerCountEnabled: !config.onlyBelowPlayerCountEnabled,
+            })
           "
-        ></span>
-        <span
-          transloco="invite-and-invite-requests.inviteRequestsTab.options.onlyBelowPlayerCount.description"
-        ></span>
-      </div>
-      <div class="setting-row-action">
-        <app-slider-setting
-          class="with-margin"
-          unitIcon="avatar"
-          [min]="2"
-          [max]="100"
-          [value]="config.onlyBelowPlayerCount"
-          (valueChange)="updateConfig({ onlyBelowPlayerCount: $event })"
-          [disabled]="!config.onlyBelowPlayerCountEnabled"
-        ></app-slider-setting>
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="config.onlyBelowPlayerCountEnabled"
-            (change)="
-              updateConfig({
-                onlyBelowPlayerCountEnabled: !config.onlyBelowPlayerCountEnabled,
-              })
-            "
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
-      </div>
-    </div>
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </app-setting-row>
   </div>
   <h2 transloco="invite-and-invite-requests.inviteRequestsTab.otherAutomations.title"></h2>
   <p transloco="invite-and-invite-requests.inviteRequestsTab.otherAutomations.description"></p>
@@ -182,6 +207,9 @@
     <app-setting-row
       label="invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepEnable.title"
       description="invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepEnable.description"
+      [value]="config.presetOnSleepEnable"
+      [defaultValue]="defaults.presetOnSleepEnable"
+      (resetToDefault)="setPresetOption('onSleepEnable', $event ?? 'NONE')"
     >
       <app-select-box
         class="preset-select-box"
@@ -194,6 +222,9 @@
     <app-setting-row
       label="invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepDisable.title"
       description="invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepDisable.description"
+      [value]="config.presetOnSleepDisable"
+      [defaultValue]="defaults.presetOnSleepDisable"
+      (resetToDefault)="setPresetOption('onSleepDisable', $event ?? 'NONE')"
     >
       <app-select-box
         class="preset-select-box"
@@ -206,6 +237,9 @@
     <app-setting-row
       label="invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepPreparation.title"
       description="invite-and-invite-requests.inviteRequestsTab.otherAutomations.changeListPreset.onSleepPreparation.description"
+      [value]="config.presetOnSleepPreparation"
+      [defaultValue]="defaults.presetOnSleepPreparation"
+      (resetToDefault)="setPresetOption('onSleepPreparation', $event ?? 'NONE')"
     >
       <app-select-box
         class="preset-select-box"

@@ -1,4 +1,5 @@
 import { Component, HostBinding, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { AUTOMATION_CONFIGS_DEFAULT } from '../../../../../../models/automations';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../../utils/animations';
 import { TranslocoService } from '@jsverse/transloco';
@@ -26,6 +27,7 @@ export class UprightPoseDisableSleepModeModalComponent
   >
   implements OnInit, UprightPoseDisableSleepModeModalInputModel
 {
+  readonly automationDefaults = AUTOMATION_CONFIGS_DEFAULT;
   set duration(value: number) {
     this.durationInternal = Math.round(Math.min(59000, Math.max(value, 1000)) / 1000);
   }

@@ -1,39 +1,55 @@
 <div class="pane modal-md" @fadeUp>
   <div class="pane-title" transloco="sleep-detection.modals.disableOnDevicePowerOn.title"></div>
   <div class="pane-content">
-    <div class="automation-settings">
-      <div class="automation-settings-row">
-        <div
-          class="automation-settings-row-label"
-          transloco="sleep-detection.modals.disableOnDevicePowerOn.whenTurningOn"
-        ></div>
-        <div class="automation-settings-row-controls">
-          <label class="check-toggle">
-            <span
-              class="check-toggle-label"
-              transloco="sleep-detection.modals.disableOnDevicePowerOn.Controller"
-            ></span>
-            <input
-              type="checkbox"
-              [checked]="triggerClasses.includes('Controller')"
-              (change)="toggleClass('Controller')"
-            />
-            <span class="check-toggle-checkmark"></span>
-          </label>
-          <label class="check-toggle">
-            <span
-              class="check-toggle-label"
-              transloco="sleep-detection.modals.disableOnDevicePowerOn.GenericTracker"
-            ></span>
-            <input
-              type="checkbox"
-              [checked]="triggerClasses.includes('GenericTracker')"
-              (change)="toggleClass('GenericTracker')"
-            />
-            <span class="check-toggle-checkmark"></span>
-          </label>
-        </div>
-      </div>
+    <div class="settings">
+      <app-setting-row
+        label="sleep-detection.modals.disableOnDevicePowerOn.whenTurningOn"
+        actionClass="stacked"
+        [value]="{
+          controller: triggerClasses.includes('Controller'),
+          tracker: triggerClasses.includes('GenericTracker'),
+        }"
+        [defaultValue]="{
+          controller:
+            automationDefaults.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON.triggerClasses.includes(
+              'Controller'
+            ),
+          tracker:
+            automationDefaults.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON.triggerClasses.includes(
+              'GenericTracker'
+            ),
+        }"
+        (resetToDefault)="
+          triggerClasses = [
+            ...automationDefaults.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON.triggerClasses,
+          ]
+        "
+      >
+        <label class="check-toggle">
+          <span
+            class="check-toggle-label"
+            transloco="sleep-detection.modals.disableOnDevicePowerOn.Controller"
+          ></span>
+          <input
+            type="checkbox"
+            [checked]="triggerClasses.includes('Controller')"
+            (change)="toggleClass('Controller')"
+          />
+          <span class="check-toggle-checkmark"></span>
+        </label>
+        <label class="check-toggle">
+          <span
+            class="check-toggle-label"
+            transloco="sleep-detection.modals.disableOnDevicePowerOn.GenericTracker"
+          ></span>
+          <input
+            type="checkbox"
+            [checked]="triggerClasses.includes('GenericTracker')"
+            (change)="toggleClass('GenericTracker')"
+          />
+          <span class="check-toggle-checkmark"></span>
+        </label>
+      </app-setting-row>
     </div>
   </div>
   <div class="pane-actions spread">

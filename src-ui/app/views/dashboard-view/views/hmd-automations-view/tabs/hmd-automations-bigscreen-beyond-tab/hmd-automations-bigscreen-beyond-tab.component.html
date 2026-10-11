@@ -6,6 +6,15 @@
       <app-setting-row
         [label]="'hmd-automations.bigscreenBeyond.fanControl.' + automation + '.title'"
         [description]="'hmd-automations.bigscreenBeyond.fanControl.' + automation + '.description'"
+        [value]="[
+          fanControlConfig[automation],
+          fanControlConfig[asFanControlKey(automation + 'FanSpeed')],
+        ]"
+        [defaultValue]="[
+          fanControlDefaults[automation],
+          fanControlDefaults[asFanControlKey(automation + 'FanSpeed')],
+        ]"
+        (resetToDefault)="resetFanAutomation(automation)"
       >
         <app-slider-setting
           class="with-margin"
@@ -28,60 +37,54 @@
     }
   </div>
   <div class="settings">
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span class="row-title">
-          <span
-            transloco="hmd-automations.bigscreenBeyond.fanControl.allowUnsafeFanSpeed.title"
-          ></span>
-          <span
-            class="experimental-flag"
-            [tooltip]="'hmd-automations.bigscreenBeyond.fanControl.allowUnsafeFanSpeed.warning'"
-            [tooltipMode]="'right'"
-          >
-            <app-icon name="warning" />
-          </span>
-        </span>
-        <span
-          transloco="hmd-automations.bigscreenBeyond.fanControl.allowUnsafeFanSpeed.description"
-        ></span>
-      </div>
-      <div class="setting-row-action">
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="!fanControlConfig.allowUnsafeFanSpeed"
-            (change)="toggleUnsafeFanSpeed()"
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
-      </div>
-    </div>
-    <div class="setting-row">
-      <div class="setting-row-label">
-        <span class="row-title">
-          <span transloco="settings.brightnessCct.bigscreenBeyond.forceFanSafety.title"></span>
-          <span
-            class="experimental-flag"
-            [tooltip]="'settings.brightnessCct.bigscreenBeyond.forceFanSafety.warning'"
-            [tooltipMode]="'right'"
-          >
-            <app-icon name="warning" />
-          </span>
-        </span>
-        <span transloco="settings.brightnessCct.bigscreenBeyond.forceFanSafety.description"></span>
-      </div>
-      <div class="setting-row-action">
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="appSettings.bigscreenBeyondBrightnessFanSafety"
-            (change)="toggleBigscreenBeyondForceFanBrightnessSafety()"
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
-      </div>
-    </div>
+    <app-setting-row
+      label="hmd-automations.bigscreenBeyond.fanControl.allowUnsafeFanSpeed.title"
+      description="hmd-automations.bigscreenBeyond.fanControl.allowUnsafeFanSpeed.description"
+      [value]="fanControlConfig.allowUnsafeFanSpeed"
+      [defaultValue]="fanControlDefaults.allowUnsafeFanSpeed"
+      (resetToDefault)="toggleUnsafeFanSpeed()"
+    >
+      <span
+        rowLabel
+        class="experimental-flag"
+        [tooltip]="'hmd-automations.bigscreenBeyond.fanControl.allowUnsafeFanSpeed.warning'"
+        [tooltipMode]="'right'"
+      >
+        <app-icon name="warning" />
+      </span>
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="!fanControlConfig.allowUnsafeFanSpeed"
+          (change)="toggleUnsafeFanSpeed()"
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </app-setting-row>
+    <app-setting-row
+      label="settings.brightnessCct.bigscreenBeyond.forceFanSafety.title"
+      description="settings.brightnessCct.bigscreenBeyond.forceFanSafety.description"
+      [value]="appSettings.bigscreenBeyondBrightnessFanSafety"
+      [defaultValue]="appSettingsDefaults.bigscreenBeyondBrightnessFanSafety"
+      (resetToDefault)="toggleBigscreenBeyondForceFanBrightnessSafety()"
+    >
+      <span
+        rowLabel
+        class="experimental-flag"
+        [tooltip]="'settings.brightnessCct.bigscreenBeyond.forceFanSafety.warning'"
+        [tooltipMode]="'right'"
+      >
+        <app-icon name="warning" />
+      </span>
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="appSettings.bigscreenBeyondBrightnessFanSafety"
+          (change)="toggleBigscreenBeyondForceFanBrightnessSafety()"
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </app-setting-row>
   </div>
 </div>
 <div class="setting-category">
@@ -91,6 +94,15 @@
       <app-setting-row
         [label]="'hmd-automations.bigscreenBeyond.rgb.' + automation + '.title'"
         [description]="'hmd-automations.bigscreenBeyond.rgb.' + automation + '.description'"
+        [value]="[
+          rgbControlConfig[automation],
+          rgbControlConfig[asRgbControlKey(automation + 'Rgb')],
+        ]"
+        [defaultValue]="[
+          rgbControlDefaults[automation],
+          rgbControlDefaults[asRgbControlKey(automation + 'Rgb')],
+        ]"
+        (resetToDefault)="resetRgbAutomation(automation)"
       >
         <app-color-picker
           class="with-margin"

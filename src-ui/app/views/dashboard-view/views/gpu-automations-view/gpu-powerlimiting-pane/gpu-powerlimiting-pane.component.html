@@ -110,6 +110,23 @@
                 <span class="switch-toggle-slider"></span>
               </label>
               <h3 transloco="gpu-automations.powerLimiting.activatingSleepMode.title"></h3>
+              <app-reset-to-default
+                [value]="{
+                  enabled: onSleepEnableAutomationEnabled,
+                  default: powerLimitOnSleepEnable?.default,
+                  limit: powerLimitOnSleepEnable?.limit,
+                }"
+                [defaultValue]="
+                  selectedGpu
+                    ? {
+                        enabled: gpuDefaults.onSleepEnable.enabled,
+                        default: gpuDefaults.onSleepEnable.resetToDefault,
+                        limit: selectedGpu.defaultPowerLimit ?? 0,
+                      }
+                    : undefined
+                "
+                (resetToDefault)="gpuAutomations.resetPowerLimitAutomation('onSleepEnable')"
+              />
             </div>
             <p transloco="gpu-automations.powerLimiting.activatingSleepMode.description"></p>
             <app-power-limit-input
@@ -135,6 +152,23 @@
                 <span class="switch-toggle-slider"></span>
               </label>
               <h3 transloco="gpu-automations.powerLimiting.deactivatingSleepMode.title"></h3>
+              <app-reset-to-default
+                [value]="{
+                  enabled: onSleepDisableAutomationEnabled,
+                  default: powerLimitOnSleepDisable?.default,
+                  limit: powerLimitOnSleepDisable?.limit,
+                }"
+                [defaultValue]="
+                  selectedGpu
+                    ? {
+                        enabled: gpuDefaults.onSleepDisable.enabled,
+                        default: gpuDefaults.onSleepDisable.resetToDefault,
+                        limit: selectedGpu.defaultPowerLimit ?? 0,
+                      }
+                    : undefined
+                "
+                (resetToDefault)="gpuAutomations.resetPowerLimitAutomation('onSleepDisable')"
+              />
             </div>
             <p transloco="gpu-automations.powerLimiting.deactivatingSleepMode.description"></p>
             <app-power-limit-input

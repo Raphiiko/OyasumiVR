@@ -8,6 +8,9 @@
           <app-setting-row
             label="systemMicMuteAutomations.audioDevice.title"
             description="systemMicMuteAutomations.audioDevice.description"
+            [value]="config.audioDevicePersistentId"
+            [defaultValue]="defaults.audioDevicePersistentId"
+            (resetToDefault)="updateConfig({ audioDevicePersistentId: $event })"
           >
             <div class="audio-device-row">
               <ng-container *ngVar="systemMicMuteAutomationService.isMicMuted | async as muted">
@@ -42,6 +45,9 @@
           <app-setting-row
             label="systemMicMuteAutomations.stateAutomations.onSleepModeEnable.title"
             description="systemMicMuteAutomations.stateAutomations.onSleepModeEnable.description"
+            [value]="config.onSleepModeEnableState"
+            [defaultValue]="defaults.onSleepModeEnableState"
+            (resetToDefault)="updateConfig({ onSleepModeEnableState: $event })"
           >
             <app-select-box
               type="SMALL"
@@ -54,6 +60,9 @@
           <app-setting-row
             label="systemMicMuteAutomations.stateAutomations.onSleepModeDisable.title"
             description="systemMicMuteAutomations.stateAutomations.onSleepModeDisable.description"
+            [value]="config.onSleepModeDisableState"
+            [defaultValue]="defaults.onSleepModeDisableState"
+            (resetToDefault)="updateConfig({ onSleepModeDisableState: $event })"
           >
             <app-select-box
               type="SMALL"
@@ -66,6 +75,9 @@
           <app-setting-row
             label="systemMicMuteAutomations.stateAutomations.onSleepPreparation.title"
             description="systemMicMuteAutomations.stateAutomations.onSleepPreparation.description"
+            [value]="config.onSleepPreparationState"
+            [defaultValue]="defaults.onSleepPreparationState"
+            (resetToDefault)="updateConfig({ onSleepPreparationState: $event })"
           >
             <app-select-box
               type="SMALL"
@@ -83,6 +95,9 @@
           <app-setting-row
             label="systemMicMuteAutomations.vrchat.worldJoinBehaviour.title"
             description="systemMicMuteAutomations.vrchat.worldJoinBehaviour.description"
+            [value]="config.vrchatWorldJoinBehaviour"
+            [defaultValue]="defaults.vrchatWorldJoinBehaviour"
+            (resetToDefault)="updateConfig({ vrchatWorldJoinBehaviour: $event })"
           >
             <app-select-box
               type="SMALL"
@@ -101,6 +116,9 @@
           <app-setting-row
             label="systemMicMuteAutomations.overlayIndicator.enabled.title"
             description="systemMicMuteAutomations.overlayIndicator.enabled.description"
+            [value]="config.overlayMuteIndicator"
+            [defaultValue]="defaults.overlayMuteIndicator"
+            (resetToDefault)="updateConfig({ overlayMuteIndicator: $event })"
           >
             <label class="switch-toggle">
               <input
@@ -116,6 +134,9 @@
               <app-setting-row
                 label="systemMicMuteAutomations.overlayIndicator.opacity.title"
                 description="systemMicMuteAutomations.overlayIndicator.opacity.description"
+                [value]="config.overlayMuteIndicatorOpacity"
+                [defaultValue]="defaults.overlayMuteIndicatorOpacity"
+                (resetToDefault)="updateConfig({ overlayMuteIndicatorOpacity: $event })"
                 [class.disabled]="!config.overlayMuteIndicator"
               >
                 <app-slider-setting
@@ -130,6 +151,9 @@
               <app-setting-row
                 label="systemMicMuteAutomations.overlayIndicator.fade.title"
                 description="systemMicMuteAutomations.overlayIndicator.fade.description"
+                [value]="config.overlayMuteIndicatorFade"
+                [defaultValue]="defaults.overlayMuteIndicatorFade"
+                (resetToDefault)="updateConfig({ overlayMuteIndicatorFade: $event })"
                 [class.disabled]="!config.overlayMuteIndicator"
               >
                 <label class="switch-toggle">
@@ -144,6 +168,9 @@
               <app-setting-row
                 label="systemMicMuteAutomations.overlayIndicator.voiceActivityMode.title"
                 description="systemMicMuteAutomations.overlayIndicator.voiceActivityMode.description"
+                [value]="config.voiceActivationMode"
+                [defaultValue]="defaults.voiceActivationMode"
+                (resetToDefault)="updateConfig({ voiceActivationMode: $event })"
                 [class.disabled]="!config.overlayMuteIndicator"
               >
                 <app-select-box
@@ -158,6 +185,9 @@
                 <app-setting-row
                   label="systemMicMuteAutomations.overlayIndicator.hardwareVoiceActivityThreshold.title"
                   description="systemMicMuteAutomations.overlayIndicator.hardwareVoiceActivityThreshold.description"
+                  [value]="config.hardwareVoiceActivationThreshold"
+                  [defaultValue]="defaults.hardwareVoiceActivationThreshold"
+                  (resetToDefault)="updateConfig({ hardwareVoiceActivationThreshold: $event })"
                   [class.disabled]="!config.overlayMuteIndicator"
                   @vshrink
                 >
@@ -186,6 +216,9 @@
           <app-setting-row
             label="systemMicMuteAutomations.controllerBinding.enabled.title"
             description="systemMicMuteAutomations.controllerBinding.enabled.description"
+            [value]="config.controllerBinding"
+            [defaultValue]="defaults.controllerBinding"
+            (resetToDefault)="updateConfig({ controllerBinding: $event })"
           >
             <label class="switch-toggle">
               <input
@@ -210,6 +243,11 @@
               <app-setting-row
                 label="systemMicMuteAutomations.controllerBinding.mode.title"
                 description="systemMicMuteAutomations.controllerBinding.mode.description"
+                [value]="config.controllerBindingBehavior"
+                [defaultValue]="defaults.controllerBindingBehavior"
+                (resetToDefault)="
+                  systemMicMuteAutomationService.setDefaultControlButtonBehavior($event)
+                "
                 [class.disabled]="!config.controllerBinding"
               >
                 <app-select-box
@@ -236,6 +274,9 @@
               <app-setting-row
                 label="systemMicMuteAutomations.controllerBinding.volume.title"
                 description="systemMicMuteAutomations.controllerBinding.volume.description"
+                [value]="config.muteSoundVolume"
+                [defaultValue]="defaults.muteSoundVolume"
+                (resetToDefault)="updateConfig({ muteSoundVolume: $event })"
                 [class.disabled]="!config.controllerBinding"
               >
                 <app-slider-setting
@@ -258,6 +299,11 @@
             <app-setting-row
               label="systemMicMuteAutomations.controllerBinding.onSleepModeEnable.title"
               description="systemMicMuteAutomations.controllerBinding.onSleepModeEnable.description"
+              [value]="config.onSleepModeEnableControllerBindingBehavior"
+              [defaultValue]="defaults.onSleepModeEnableControllerBindingBehavior"
+              (resetToDefault)="
+                updateConfig({ onSleepModeEnableControllerBindingBehavior: $event })
+              "
               [class.disabled]="!config.controllerBinding"
             >
               <app-select-box
@@ -273,6 +319,11 @@
             <app-setting-row
               label="systemMicMuteAutomations.controllerBinding.onSleepModeDisable.title"
               description="systemMicMuteAutomations.controllerBinding.onSleepModeDisable.description"
+              [value]="config.onSleepModeDisableControllerBindingBehavior"
+              [defaultValue]="defaults.onSleepModeDisableControllerBindingBehavior"
+              (resetToDefault)="
+                updateConfig({ onSleepModeDisableControllerBindingBehavior: $event })
+              "
               [class.disabled]="!config.controllerBinding"
             >
               <app-select-box
@@ -289,6 +340,11 @@
             <app-setting-row
               label="systemMicMuteAutomations.controllerBinding.onSleepPreparation.title"
               description="systemMicMuteAutomations.controllerBinding.onSleepPreparation.description"
+              [value]="config.onSleepPreparationControllerBindingBehavior"
+              [defaultValue]="defaults.onSleepPreparationControllerBindingBehavior"
+              (resetToDefault)="
+                updateConfig({ onSleepPreparationControllerBindingBehavior: $event })
+              "
               [class.disabled]="!config.controllerBinding"
             >
               <app-select-box

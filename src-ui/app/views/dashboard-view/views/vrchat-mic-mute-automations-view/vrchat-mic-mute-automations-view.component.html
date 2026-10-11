@@ -54,37 +54,46 @@
           <app-setting-row
             label="vrchatMicMuteAutomations.onSleepModeEnable.title"
             description="vrchatMicMuteAutomations.onSleepModeEnable.description"
+            [value]="config.onSleepModeEnable"
+            [defaultValue]="defaults.onSleepModeEnable"
+            (resetToDefault)="onChangeMuteOption('ON_SLEEP_ENABLE', $event)"
           >
             <app-select-box
               type="SMALL"
               class="action-dropdown"
               [items]="muteActionOptions"
               [selected]="onSleepEnableMuteOption"
-              (selectedChange)="onChangeMuteOption('ON_SLEEP_ENABLE', $event)"
+              (selectedChange)="onChangeMuteOption('ON_SLEEP_ENABLE', $event?.id)"
             ></app-select-box>
           </app-setting-row>
           <app-setting-row
             label="vrchatMicMuteAutomations.onSleepModeDisable.title"
             description="vrchatMicMuteAutomations.onSleepModeDisable.description"
+            [value]="config.onSleepModeDisable"
+            [defaultValue]="defaults.onSleepModeDisable"
+            (resetToDefault)="onChangeMuteOption('ON_SLEEP_DISABLE', $event)"
           >
             <app-select-box
               type="SMALL"
               class="action-dropdown"
               [items]="muteActionOptions"
               [selected]="onSleepDisableMuteOption"
-              (selectedChange)="onChangeMuteOption('ON_SLEEP_DISABLE', $event)"
+              (selectedChange)="onChangeMuteOption('ON_SLEEP_DISABLE', $event?.id)"
             ></app-select-box>
           </app-setting-row>
           <app-setting-row
             label="vrchatMicMuteAutomations.onSleepPreparation.title"
             description="vrchatMicMuteAutomations.onSleepPreparation.description"
+            [value]="config.onSleepPreparation"
+            [defaultValue]="defaults.onSleepPreparation"
+            (resetToDefault)="onChangeMuteOption('ON_SLEEP_PREPARATION', $event)"
           >
             <app-select-box
               type="SMALL"
               class="action-dropdown"
               [items]="muteActionOptions"
               [selected]="onSleepPreparationMuteOption"
-              (selectedChange)="onChangeMuteOption('ON_SLEEP_PREPARATION', $event)"
+              (selectedChange)="onChangeMuteOption('ON_SLEEP_PREPARATION', $event?.id)"
             ></app-select-box>
           </app-setting-row>
         </div>

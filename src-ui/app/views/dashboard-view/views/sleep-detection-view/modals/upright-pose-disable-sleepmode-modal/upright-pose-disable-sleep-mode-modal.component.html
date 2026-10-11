@@ -6,6 +6,9 @@
       <app-setting-row
         label="sleep-detection.modals.disableForUprightPose.duration.title"
         description="sleep-detection.modals.disableForUprightPose.duration.description"
+        [value]="durationInternal * 1000"
+        [defaultValue]="automationDefaults.SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE.duration"
+        (resetToDefault)="duration = $event"
       >
         <app-slider-setting
           [(value)]="durationInternal"

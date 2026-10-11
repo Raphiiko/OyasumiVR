@@ -1,5 +1,6 @@
 import {
   AUTOMATION_CONFIGS_DEFAULT,
+  AutomationConfig,
   AutomationConfigs,
   AutomationType,
 } from '../../../../../models/automations';
@@ -24,6 +25,7 @@ import { OVRDeviceClass } from '../../../../../models/ovr-device';
   standalone: false,
 })
 export abstract class SleepDetectionTabComponent implements OnInit {
+  protected readonly automationDefaults = AUTOMATION_CONFIGS_DEFAULT;
   protected automationConfigs: AutomationConfigs = structuredClone(AUTOMATION_CONFIGS_DEFAULT);
   protected automationConfigService = inject(AutomationConfigService);
   protected destroyRef = inject(DestroyRef);
@@ -49,6 +51,13 @@ export abstract class SleepDetectionTabComponent implements OnInit {
     await this.automationConfigService.updateAutomationConfig(automation, {
       [field]: !((this.automationConfigs[automation] as any)[field] as any),
     } as any);
+  }
+
+  async updateConfig(automation: AutomationType, changes: object) {
+    await this.automationConfigService.updateAutomationConfig(
+      automation,
+      changes as Partial<AutomationConfig>
+    );
   }
 
   protected getStringForDuration(duration: string): string {

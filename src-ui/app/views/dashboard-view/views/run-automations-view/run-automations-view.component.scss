@@ -1,17 +1,15 @@
-.setting-row-action {
-  .btn.btn-icon {
+.setting-row .expand-button {
+  &.btn.btn-icon {
     margin-right: 0.75em;
   }
 
-  .expand-button {
-    app-icon {
-      transition: transform 0.2s ease;
-      transform: rotate(0deg);
-    }
+  app-icon {
+    transition: transform 0.2s ease;
+    transform: rotate(0deg);
+  }
 
-    &.expanded app-icon {
-      transform: rotate(180deg);
-    }
+  &.expanded app-icon {
+    transform: rotate(180deg);
   }
 }
 
