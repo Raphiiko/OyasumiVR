@@ -1324,7 +1324,7 @@
         },
         "onlyBelowPlayerCount": {
           "description": "Jijzelf telt ook mee",
-          "title": "Alleen als er minder dan <strong>{count, plural, one {#</strong> speler} other {#</strong> spelers}} in je wereld zijn"
+          "title": "Alleen als er minder dan <strong>{count, plural, one {#</strong> speler in je wereld is} other {#</strong> spelers in je wereld zijn}}"
         },
         "onlyIfSleepModeEnabled": {
           "title": "Alleen als de slaapmodus is ingeschakeld"
@@ -1566,7 +1566,7 @@
   },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "Deze preset gebruikt een workaround die wat problemen heeft. Gebruik deze preset alleen als je de nieuwere GoGo Loco preset niet kunt gebruiken. Als je avatar nog een oudere versie van GoGo Loco gebruikt, raden we aan je avatar bij te werken naar de nieuwste versie van GoGo Loco.",
-    "GORONE_LEGACY_PRESET_WARNING": "Versie v4.0 en hoger van deze prefab bevatten al functionaliteit om te draaien, en zijn niet compatibel met deze preset. Deze preset blijft beschikbaar als je avatar een oudere versie van deze prefab gebruikt.",
+    "GORONE_LEGACY_PRESET_WARNING": "Versies v4.0 en hoger van deze prefab bevatten al functionaliteit om te draaien, en zijn niet compatibel met deze preset. Deze preset blijft beschikbaar als je avatar een oudere versie van deze prefab gebruikt.",
     "WEBVIEW2_MISSING": "OyasumiVR heeft Microsoft Edge WebView2 nodig, maar dat is niet geïnstalleerd.\n\nInstalleer het en start OyasumiVR opnieuw. De downloadpagina openen?",
     "oneTimeFlagDialogs": {
       "OSC_SCRIPT_SIMPLE_EDITOR_VRCHAT_AUTOCOMPLETE_INFO": {
@@ -2125,7 +2125,7 @@
       },
       "vrcx": {
         "groupChanges": {
-          "description": "Log wijzigingen in je VRChat groep die OyasumiVR heeft gemaakt",
+          "description": "Log wanneer OyasumiVR verandert welke VRChat groep je vertegenwoordigt",
           "title": "Groepswijzigingen"
         },
         "invites": {
@@ -2865,7 +2865,7 @@
         },
         "title": "Onder de limiet"
       },
-      "description": "OyasumiVR kan het aantal mensen dat je joint beperken, door je status automatisch in te stellen\nop basis van het aantal spelers in je wereld.",
+      "description": "OyasumiVR kan beperken hoeveel mensen je joinen, door je status automatisch in te stellen\nop basis van het aantal spelers in je wereld.",
       "disableToEdit": "Schakel deze automatisering uit voordat je wijzigingen aanbrengt.",
       "enable": {
         "description": "Verander je status automatisch op basis van het aantal spelers in je VRChat instance",
@@ -3061,7 +3061,7 @@
         "title": "Afsluiten met SteamVR geannuleerd"
       },
       "pending": {
-        "message": "SteamVR is gestopt. OyasumiVR sluit af zodra automatiseringen de tijd hebben gehad om uit te voeren.",
+        "message": "SteamVR is gestopt. OyasumiVR sluit af zodra automatiseringen de tijd hebben gehad om te draaien.",
         "title": "OyasumiVR sluit over 10 seconden af"
       },
       "waiting": {
