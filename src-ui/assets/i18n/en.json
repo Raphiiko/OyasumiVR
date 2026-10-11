@@ -1585,6 +1585,8 @@
       "floatOutOfBounds": "The value must be a valid float value between -1.0 and 1.0.",
       "floatTooPrecise": "The value can only have a precision of 3 decimals maximum.",
       "intOutOfBounds": "The value must be a valid integer between 0 and 255.",
+      "invalidFloat": "The value must be a valid float.",
+      "invalidInteger": "The value must be a valid integer.",
       "invalidSyntax": "Invalid syntax.",
       "maxParameterCountExceeded": "Maximum allowed parameter count per command is {value}.",
       "noFloatMilliseconds": "Millisecond values have to be defined as a whole number.",
