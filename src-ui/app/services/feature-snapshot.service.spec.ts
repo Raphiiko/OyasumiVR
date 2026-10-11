@@ -62,4 +62,11 @@ describe('buildFeatureSnapshot', () => {
     expect(snapshot.wake_on_steamvr_stop).toBe(1);
     expect(snapshot.osc_scripts).toBe(1);
   });
+
+  it('counts system mic mute when only the world join behaviour is set', () => {
+    const snapshot = buildFeatureSnapshot(
+      context((a) => (a.SYSTEM_MIC_MUTE_AUTOMATIONS.vrchatWorldJoinBehaviour = 'MUTE' as never))
+    );
+    expect(snapshot.system_mic_mute).toBe(1);
+  });
 });

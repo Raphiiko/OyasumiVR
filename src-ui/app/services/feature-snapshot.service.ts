@@ -91,6 +91,7 @@ export function buildFeatureSnapshot(ctx: FeatureSnapshotContext): Record<string
     system_mic_mute:
       sysMic.controllerBinding ||
       sysMic.overlayMuteIndicator ||
+      sysMic.vrchatWorldJoinBehaviour !== 'KEEP' ||
       [
         sysMic.onSleepModeEnableState,
         sysMic.onSleepModeDisableState,
