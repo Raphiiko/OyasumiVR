@@ -740,89 +740,6 @@
     "title": "Otomatisasi Resolusi"
   },
   "settings": {
-    "advanced": {
-      "logs": {
-        "openFolder": {
-          "action": "Buka folder log",
-          "description": "Membuka lokasi file log OyasumiVR di file explorer Anda",
-          "title": "Buka folder log"
-        },
-        "title": "File log"
-      },
-      "persistentData": {
-        "clearData": "Hapus Data",
-        "clearModal": {
-          "message": "Apakah Anda yakin ingin menghapus data berikut ini? Ini tidak dapat dikembalikan!\n\n{items}",
-          "title": "Konfirmasi Penghapusan Data"
-        },
-        "dataType": {
-          "all": {
-            "description": "Semua data yang disimpan OyasumiVR, termasuk semua pengaturan Anda",
-            "title": "Semua Data"
-          },
-          "appCache": {
-            "description": "Semua data yang disimpan sementara, seperti respons API VRChat",
-            "title": "Cache Data"
-          },
-          "appSettings": {
-            "description": "Semua pengaturan umum OyasumiVR",
-            "title": "Pengaturan Aplikasi"
-          },
-          "automationSettings": {
-            "description": "Semua pengaturan khusus untuk salah satu otomatisasi OyasumiVR",
-            "title": "Pengaturan Otomasi"
-          },
-          "eventLog": {
-            "description": "Peristiwa yang dicatat dalam ikhtisar",
-            "title": "Log Event"
-          },
-          "imageCache": {
-            "description": "Semua gambar yang disimpan sementara, seperti ikon pemutar VRChat",
-            "title": "Cache Gambar"
-          },
-          "integrations": {
-            "description": "Data khusus untuk integrasi (tidak termasuk VRChat), seperti data autentikasi",
-            "title": "Intergrasi Data"
-          },
-          "logs": {
-            "description": "File log yang dibuat oleh OyasumiVR",
-            "title": "File Log"
-          },
-          "miscData": {
-            "description": "Semua data lain yang disimpan OyasumiVR, tidak tercakup dalam kategori lain",
-            "title": "Data Lainnya"
-          },
-          "vrcData": {
-            "description": "Data khusus untuk VRChat, seperti data otentikasi",
-            "title": "Data VRChat"
-          }
-        },
-        "description": "Mengelola data yang disimpan OyasumiVR di disk Anda",
-        "relaunchModal": {
-          "relaunch": "Mulai ulang OyasumiVR Sekarang",
-          "title": "Mulai ulang OyasumiVR"
-        },
-        "title": "Data Persisten"
-      },
-      "translation": {
-        "contribute": {
-          "description": "Kontribusikan terjemahan yang belum ada, atau bantu tambahkan bahasa baru!",
-          "docs": "Pelajari Caranya",
-          "title": "Bantu dengan menyumbangkan terjemahan"
-        },
-        "editor": {
-          "action": "Editor Luncuran",
-          "description": "Luncurkan editor terjemahan OyasumiVR untuk mengedit dan membuat terjemahan",
-          "title": "Editor Terjemahan"
-        },
-        "loadFile": {
-          "action": "Muat file",
-          "description": "Muat file bahasa khusus. Berguna saat menguji terjemahan baru.",
-          "title": "Muat file terjemahan"
-        },
-        "title": "Bahasa & Terjemahan"
-      }
-    },
     "general": {
       "adminPrivileges": {
         "description": "Beberapa fitur, seperti mengontrol batas daya GPU Anda, membutuhkan hak istimewa administrator. Mengaktifkan ini hanya memintanya sekali. Setelah itu OyasumiVR menyiapkan fitur-fitur ini tanpa bertanya lagi.",
@@ -965,6 +882,90 @@
         "description": "Atur tingkat volume di mana beberapa jenis notifikasi memutar suaranya",
         "test": "Tes",
         "title": "Volume Pemberitahuan Umum"
+      }
+    },
+    "translationAndData": {
+      "persistentData": {
+        "clearData": "Hapus Data",
+        "clearModal": {
+          "message": "Apakah Anda yakin ingin menghapus data berikut ini? Ini tidak dapat dikembalikan!\n\n{items}",
+          "title": "Konfirmasi Penghapusan Data"
+        },
+        "dataType": {
+          "all": {
+            "description": "Semua data yang disimpan OyasumiVR, termasuk semua pengaturan Anda",
+            "title": "Semua Data"
+          },
+          "appCache": {
+            "description": "Semua data yang disimpan sementara, seperti respons API VRChat",
+            "title": "Cache Data"
+          },
+          "appSettings": {
+            "description": "Semua pengaturan umum OyasumiVR",
+            "title": "Pengaturan Aplikasi"
+          },
+          "automationSettings": {
+            "description": "Semua pengaturan khusus untuk salah satu otomatisasi OyasumiVR",
+            "title": "Pengaturan Otomasi"
+          },
+          "eventLog": {
+            "description": "Peristiwa yang dicatat dalam ikhtisar",
+            "title": "Log Event"
+          },
+          "imageCache": {
+            "description": "Semua gambar yang disimpan sementara, seperti ikon pemutar VRChat",
+            "title": "Cache Gambar"
+          },
+          "integrations": {
+            "description": "Data khusus untuk integrasi (tidak termasuk VRChat), seperti data autentikasi",
+            "title": "Intergrasi Data"
+          },
+          "logs": {
+            "description": "File log yang dibuat oleh OyasumiVR",
+            "title": "File Log"
+          },
+          "miscData": {
+            "description": "Semua data lain yang disimpan OyasumiVR, tidak tercakup dalam kategori lain",
+            "title": "Data Lainnya"
+          },
+          "vrcData": {
+            "description": "Data khusus untuk VRChat, seperti data otentikasi",
+            "title": "Data VRChat"
+          }
+        },
+        "description": "Mengelola data yang disimpan OyasumiVR di disk Anda",
+        "relaunchModal": {
+          "relaunch": "Mulai ulang OyasumiVR Sekarang",
+          "title": "Mulai ulang OyasumiVR"
+        },
+        "title": "Data Persisten"
+      },
+      "translation": {
+        "contribute": {
+          "description": "Kontribusikan terjemahan yang belum ada, atau bantu tambahkan bahasa baru!",
+          "docs": "Pelajari Caranya",
+          "title": "Bantu dengan menyumbangkan terjemahan"
+        },
+        "editor": {
+          "action": "Editor Luncuran",
+          "description": "Luncurkan editor terjemahan OyasumiVR untuk mengedit dan membuat terjemahan",
+          "title": "Editor Terjemahan"
+        },
+        "loadFile": {
+          "action": "Muat file",
+          "description": "Muat file bahasa khusus. Berguna saat menguji terjemahan baru.",
+          "title": "Muat file terjemahan"
+        },
+        "title": "Bahasa & Terjemahan"
+      }
+    },
+    "troubleshooting": {
+      "tools": {
+        "logs": {
+          "action": "Buka folder log",
+          "description": "Membuka lokasi file log OyasumiVR di file explorer Anda",
+          "title": "Buka folder log"
+        }
       }
     },
     "updates": {

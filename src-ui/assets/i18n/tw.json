@@ -235,14 +235,7 @@
       "resolutionAutomations": "解析度自動化",
       "runAutomations": "執行自動化",
       "settings": {
-        "advanced": "進階設定",
-        "brightnessCct": "亮度與色溫設定",
-        "general": "一般設定",
-        "hotkeys": "快捷鍵設定",
         "integrations": "整合功能",
-        "notifications": "通知設定",
-        "osc": "OSC 設定",
-        "statusInfo": "狀態資訊",
         "subMenu": "設定",
         "updates": "更新"
       },
@@ -1834,115 +1827,6 @@
     "title": "執行自動化"
   },
   "settings": {
-    "advanced": {
-      "application": {
-        "openVrInitDelayFix": {
-          "description": "啟用此功能會讓 OyasumiVR 在偵測到 SteamVR 後稍等一會才與 SteamVR 互動，讓 SteamVR 有一些額外的時間啟動。 如果你在 OyasumiVR 已執行時遇到啟動 SteamVR 的問題，這個功能可以幫到你。",
-          "title": "延遲 OpenVR 初始化"
-        },
-        "overlayGpuAcceleration": {
-          "description": "如果你遇到覆疊圖層無法正常渲染的問題，停用此選項可以解決某些系統（例如使用混合顯示卡的系統）上的問題。",
-          "title": "VR 嵌入介面 GPU 加速"
-        },
-        "title": "應用程式"
-      },
-      "logs": {
-        "openFolder": {
-          "action": "打開日誌資料夾",
-          "description": "在你的檔案資源管理器中打開 OyasumiVR 的日誌檔案的位置",
-          "title": "打開日誌資料夾"
-        },
-        "title": "日誌檔案"
-      },
-      "persistentData": {
-        "clearData": "清除數據",
-        "clearModal": {
-          "message": "你確定要刪除以下資料嗎？此操作無法撤銷！\n\n{items}",
-          "title": "確認清除資料"
-        },
-        "dataType": {
-          "all": {
-            "description": "OyasumiVR 儲存的所有資料，包括你的所有設定",
-            "title": "所有資料"
-          },
-          "appCache": {
-            "description": "所有暫時儲存的資料，例如 VRChat API 的回應",
-            "title": "資料快取"
-          },
-          "appSettings": {
-            "description": "OyasumiVR 的所有一般設定",
-            "title": "應用程式設定"
-          },
-          "automationSettings": {
-            "description": "OyasumiVR 某個自動化專用的所有設定",
-            "title": "自動化設定"
-          },
-          "eventLog": {
-            "description": "記錄在概覽中的事件",
-            "title": "事件日誌"
-          },
-          "imageCache": {
-            "description": "所有暫時儲存的圖片，例如 VRChat 用戶頭像",
-            "title": "圖片快取"
-          },
-          "integrations": {
-            "description": "整合服務的特定資料（不包含 VRChat），例如驗證資料",
-            "title": "整合資料"
-          },
-          "logs": {
-            "description": "OyasumiVR 所建立的日誌檔案",
-            "title": "日誌檔案"
-          },
-          "miscData": {
-            "description": "OyasumiVR 儲存的所有其他資料，不屬於其他類別的部分",
-            "title": "其他資料"
-          },
-          "vrcData": {
-            "description": "VRChat 專屬的資料，例如驗證資料",
-            "title": "VRChat 資料"
-          }
-        },
-        "description": "管理 OyasumiVR 儲存在你磁碟上的資料",
-        "relaunchModal": {
-          "relaunch": "現在重新啟動 OyasumiVR",
-          "title": "重新啟動 OyasumiVR"
-        },
-        "title": "持久化資料"
-      },
-      "title": "進階設定",
-      "translation": {
-        "contribute": {
-          "description": "協助補充缺失的翻譯，或協助新增新的語言！",
-          "docs": "了解如何",
-          "title": "透過貢獻翻譯來協助"
-        },
-        "editor": {
-          "action": "啟動編輯器",
-          "description": "啟動 OyasumiVR 的翻譯編輯器，以便編輯和建立翻譯內容",
-          "title": "翻譯編輯器"
-        },
-        "loadFile": {
-          "action": "載入檔案",
-          "description": "載入自訂語言檔。在測試新翻譯時很有用。",
-          "title": "載入翻譯檔案"
-        },
-        "title": "語言與翻譯"
-      },
-      "troubleshooting": {
-        "description": "本區包含一些與故障排除相關的選項。 一般而言，你不需要使用這些選項，除非你在尋求支援時被要求使用這些選項",
-        "devTools": {
-          "action": "開啟開發工具",
-          "description": "打開用於除錯的 Edge 開發工具",
-          "title": "開啟開發者工具"
-        },
-        "title": "疑難排解",
-        "vrManifestReregister": {
-          "action": "重新註冊 Manifest",
-          "description": "將 OyasumiVR 的 VR 應用程式 Manifest 重新註冊至 SteamVR",
-          "title": "重新註冊 SteamVR 應用程式 Manifest"
-        }
-      }
-    },
     "brightnessCct": {
       "bigscreenBeyond": {
         "forceFanSafety": {
@@ -2226,14 +2110,109 @@
       },
       "title": "OSC 設定"
     },
-    "statusInfo": {
-      "copy": {
-        "action": "複製",
-        "description": "將以下所有資訊複製到剪貼簿中",
-        "title": "複製到剪貼簿"
+    "translationAndData": {
+      "persistentData": {
+        "clearData": "清除數據",
+        "clearModal": {
+          "message": "你確定要刪除以下資料嗎？此操作無法撤銷！\n\n{items}",
+          "title": "確認清除資料"
+        },
+        "dataType": {
+          "all": {
+            "description": "OyasumiVR 儲存的所有資料，包括你的所有設定",
+            "title": "所有資料"
+          },
+          "appCache": {
+            "description": "所有暫時儲存的資料，例如 VRChat API 的回應",
+            "title": "資料快取"
+          },
+          "appSettings": {
+            "description": "OyasumiVR 的所有一般設定",
+            "title": "應用程式設定"
+          },
+          "automationSettings": {
+            "description": "OyasumiVR 某個自動化專用的所有設定",
+            "title": "自動化設定"
+          },
+          "eventLog": {
+            "description": "記錄在概覽中的事件",
+            "title": "事件日誌"
+          },
+          "imageCache": {
+            "description": "所有暫時儲存的圖片，例如 VRChat 用戶頭像",
+            "title": "圖片快取"
+          },
+          "integrations": {
+            "description": "整合服務的特定資料（不包含 VRChat），例如驗證資料",
+            "title": "整合資料"
+          },
+          "logs": {
+            "description": "OyasumiVR 所建立的日誌檔案",
+            "title": "日誌檔案"
+          },
+          "miscData": {
+            "description": "OyasumiVR 儲存的所有其他資料，不屬於其他類別的部分",
+            "title": "其他資料"
+          },
+          "vrcData": {
+            "description": "VRChat 專屬的資料，例如驗證資料",
+            "title": "VRChat 資料"
+          }
+        },
+        "description": "管理 OyasumiVR 儲存在你磁碟上的資料",
+        "relaunchModal": {
+          "relaunch": "現在重新啟動 OyasumiVR",
+          "title": "重新啟動 OyasumiVR"
+        },
+        "title": "持久化資料"
       },
-      "description": "在這裡，你可以找到一些有關 OyasumiVR 及其內部結構的技術資訊。這些資訊主要用於除錯目的，在排除故障或獲得支持時可能會有用。",
-      "title": "狀態資訊"
+      "translation": {
+        "contribute": {
+          "description": "協助補充缺失的翻譯，或協助新增新的語言！",
+          "docs": "了解如何",
+          "title": "透過貢獻翻譯來協助"
+        },
+        "editor": {
+          "action": "啟動編輯器",
+          "description": "啟動 OyasumiVR 的翻譯編輯器，以便編輯和建立翻譯內容",
+          "title": "翻譯編輯器"
+        },
+        "loadFile": {
+          "action": "載入檔案",
+          "description": "載入自訂語言檔。在測試新翻譯時很有用。",
+          "title": "載入翻譯檔案"
+        },
+        "title": "語言與翻譯"
+      }
+    },
+    "troubleshooting": {
+      "tools": {
+        "devTools": {
+          "action": "開啟開發工具",
+          "description": "打開用於除錯的 Edge 開發工具",
+          "title": "開啟開發者工具"
+        },
+        "logs": {
+          "action": "打開日誌資料夾",
+          "description": "在你的檔案資源管理器中打開 OyasumiVR 的日誌檔案的位置",
+          "title": "打開日誌資料夾"
+        },
+        "vrManifestReregister": {
+          "action": "重新註冊 Manifest",
+          "description": "將 OyasumiVR 的 VR 應用程式 Manifest 重新註冊至 SteamVR",
+          "title": "重新註冊 SteamVR 應用程式 Manifest"
+        }
+      },
+      "tweaks": {
+        "openVrInitDelayFix": {
+          "description": "啟用此功能會讓 OyasumiVR 在偵測到 SteamVR 後稍等一會才與 SteamVR 互動，讓 SteamVR 有一些額外的時間啟動。 如果你在 OyasumiVR 已執行時遇到啟動 SteamVR 的問題，這個功能可以幫到你。",
+          "title": "延遲 OpenVR 初始化"
+        },
+        "overlayGpuAcceleration": {
+          "description": "如果你遇到覆疊圖層無法正常渲染的問題，停用此選項可以解決某些系統（例如使用混合顯示卡的系統）上的問題。",
+          "title": "VR 嵌入介面 GPU 加速"
+        }
+      }
     },
     "updates": {
       "changelog": "更新日誌",

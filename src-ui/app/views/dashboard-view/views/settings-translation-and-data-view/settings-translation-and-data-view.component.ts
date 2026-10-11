@@ -20,33 +20,22 @@ import { ModalService } from 'src-ui/app/services/modal.service';
 import { invoke } from '@tauri-apps/api/core';
 import { relaunch } from '@tauri-apps/plugin-process';
 import { EventLogService } from '../../../../services/event-log.service';
-import { appLogDir } from '@tauri-apps/api/path';
 import { IPCService } from '../../../../services/ipc.service';
 import { SetDebugTranslationsRequest } from '../../../../../../src-grpc-web-client/overlay-sidecar_pb';
-import { OpenVRService } from 'src-ui/app/services/openvr.service';
 import { AppSettingsService } from '../../../../services/app-settings.service';
 import { FLAVOUR } from '../../../../../build';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { firstValueFrom } from 'rxjs';
 import { ToastService } from '../../../../services/toast.service';
 
-const MANIFEST_REREGISTER_ERRORS = [
-  'MANIFEST_ADD_FAILED',
-  'MANIFEST_REMOVE_FAILED',
-  'MANIFEST_CHECK_FAILED',
-  'MANIFEST_NOT_REGISTERED',
-  'FLAVOUR_NOT_ELIGIBLE',
-];
-
 @Component({
-  selector: 'app-settings-advanced-view',
-  templateUrl: './settings-advanced-view.component.html',
-  styleUrls: ['./settings-advanced-view.component.scss'],
+  selector: 'app-settings-translation-and-data-view',
+  templateUrl: './settings-translation-and-data-view.component.html',
+  styleUrls: ['./settings-translation-and-data-view.component.scss'],
   animations: [],
   changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
-export class SettingsAdvancedViewComponent {
+export class SettingsTranslationAndDataViewComponent {
   persistentStorageItems: Array<{
     key: string;
   }> = [
@@ -62,10 +51,6 @@ export class SettingsAdvancedViewComponent {
   ];
   checkedPersistentStorageItems: string[] = [];
   memoryWatcherActive = FLAVOUR === 'DEV';
-  devToolsAvailable = invoke<boolean>('dev_tools_available');
-  overlayGpuAcceleration = true;
-  openVrInitDelayFix = false;
-  lighthousePowerOffDelay = false;
 
   constructor(
     private router: Router,
@@ -74,15 +59,8 @@ export class SettingsAdvancedViewComponent {
     private eventLogService: EventLogService,
     private ipcService: IPCService,
     private settingsService: AppSettingsService,
-    protected openvr: OpenVRService,
     private toasts: ToastService
-  ) {
-    this.settingsService.settings.pipe(takeUntilDestroyed()).subscribe((settings) => {
-      this.overlayGpuAcceleration = settings.overlayGpuAcceleration;
-      this.openVrInitDelayFix = settings.openVrInitDelayFix;
-      this.lighthousePowerOffDelay = settings.lighthousePowerOffDelay;
-    });
-  }
+  ) {}
 
   isPersistentStorageItemChecked(key: string) {
     if (key === 'ALL') {
@@ -170,16 +148,16 @@ export class SettingsAdvancedViewComponent {
   clearPersistentStorage() {
     this.modalService
       .addModal(ConfirmModalComponent, {
-        title: 'settings.advanced.persistentData.clearModal.title',
+        title: 'settings.translationAndData.persistentData.clearModal.title',
         message: {
-          string: 'settings.advanced.persistentData.clearModal.message',
+          string: 'settings.translationAndData.persistentData.clearModal.message',
           values: {
             items: this.checkedPersistentStorageItems
               .map(
                 (item) =>
                   ' • ' +
                   this.translate.translate(
-                    `settings.advanced.persistentData.dataType.${item}.title`
+                    `settings.translationAndData.persistentData.dataType.${item}.title`
                   )
               )
               .join('\n'),
@@ -265,11 +243,12 @@ export class SettingsAdvancedViewComponent {
             .addModal(
               ConfirmModalComponent,
               {
-                title: 'settings.advanced.persistentData.relaunchModal.title',
+                title: 'settings.translationAndData.persistentData.relaunchModal.title',
                 message: failedClears.length
-                  ? 'settings.advanced.persistentData.relaunchModal.partialFailureMessage'
-                  : 'settings.advanced.persistentData.relaunchModal.message',
-                confirmButtonText: 'settings.advanced.persistentData.relaunchModal.relaunch',
+                  ? 'settings.translationAndData.persistentData.relaunchModal.partialFailureMessage'
+                  : 'settings.translationAndData.persistentData.relaunchModal.message',
+                confirmButtonText:
+                  'settings.translationAndData.persistentData.relaunchModal.relaunch',
                 showCancel: false,
               },
               { closeOnEscape: false }
@@ -280,48 +259,5 @@ export class SettingsAdvancedViewComponent {
             });
         }
       });
-  }
-
-  async openLogsFolder() {
-    const path = await appLogDir().then((dir) => dir + '\\OyasumiVR.log');
-    await invoke('show_in_folder', { path });
-  }
-
-  async reregisterVRManifest() {
-    if ((await firstValueFrom(this.openvr.status)) !== 'INITIALIZED') return;
-    try {
-      await invoke('openvr_reregister_manifest');
-    } catch (e) {
-      error(`[Settings] Could not re-register VR manifest: ${JSON.stringify(e)}`);
-      const result = MANIFEST_REREGISTER_ERRORS.includes(e as string) ? (e as string) : 'UNKNOWN';
-      this.toasts.show({
-        type: result === 'FLAVOUR_NOT_ELIGIBLE' ? 'info' : 'error',
-        title: `toasts.vrManifestReregister.${result}.title`,
-        message: `toasts.vrManifestReregister.${result}.message`,
-        duration: 8000,
-      });
-      return;
-    }
-    this.toasts.show({
-      type: 'success',
-      title: 'toasts.vrManifestReregister.success.title',
-      message: 'toasts.vrManifestReregister.success.message',
-    });
-  }
-
-  async openDevTools() {
-    await invoke('open_dev_tools');
-  }
-
-  setOverlayGpuAcceleration(enabled: boolean) {
-    this.settingsService.updateSettings({ overlayGpuAcceleration: enabled });
-  }
-
-  setOpenVrInitDelayFix(enabled: boolean) {
-    this.settingsService.updateSettings({ openVrInitDelayFix: enabled });
-  }
-
-  setLighthousePowerOffDelay(enabled: boolean) {
-    this.settingsService.updateSettings({ lighthousePowerOffDelay: enabled });
   }
 }

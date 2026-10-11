@@ -5,8 +5,19 @@
       <app-icon name="warning" />
     }
     {{ labelText ?? (label ? (label | transloco) : '')
-    }}<ng-content select="[rowLabel]"></ng-content
-  ></span>
+    }}<ng-content select="[rowLabel]"></ng-content>
+    @if (canReset) {
+      <button
+        type="button"
+        class="setting-row-reset"
+        [tooltip]="'shared.common.resetToDefault'"
+        [attr.aria-label]="'shared.common.resetToDefault' | transloco"
+        (click)="resetToDefault.emit()"
+      >
+        <app-icon name="undo" class="icon-mono" />
+      </button>
+    }
+  </span>
   <span class="setting-row-description"
     >{{ descriptionText ?? (description ? (description | transloco) : '')
     }}<ng-content select="[rowDescription]"></ng-content

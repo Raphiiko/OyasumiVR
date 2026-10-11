@@ -238,15 +238,15 @@
       "resolutionAutomations": "Resolution Automations",
       "runAutomations": "Run Automations",
       "settings": {
-        "advanced": "Advanced Settings",
-        "brightnessCct": "Brightness & CCT Settings",
-        "general": "General Settings",
-        "hotkeys": "Hotkey Settings",
+        "brightnessCct": "Brightness & CCT",
+        "general": "General",
+        "hotkeys": "Hotkeys",
         "integrations": "Integrations",
-        "notifications": "Notification Settings",
-        "osc": "OSC Settings",
-        "statusInfo": "Status Information",
+        "notifications": "Notifications",
+        "osc": "OSC",
         "subMenu": "Settings",
+        "translationAndData": "Translation & Data",
+        "troubleshooting": "Troubleshooting",
         "updates": "Updates"
       },
       "shutdownAutomations": "Shutdown Sequence",
@@ -1918,117 +1918,6 @@
     "title": "Run Automations"
   },
   "settings": {
-    "advanced": {
-      "application": {
-        "openVrInitDelayFix": {
-          "description": "Enabling this will make OyasumiVR wait a bit to interact with SteamVR once it has been detected, giving SteamVR some extra time to start. If you're experiencing issues with launching SteamVR while OyasumiVR is already running, this can help.",
-          "title": "Delay OpenVR Initialization"
-        },
-        "overlayGpuAcceleration": {
-          "description": "If you are experiencing issues with the overlay not rendering properly, disabling this option could fix the issue on some systems (e.g. those with hybrid graphics).",
-          "title": "VR Overlay GPU Acceleration"
-        },
-        "title": "Application"
-      },
-      "logs": {
-        "openFolder": {
-          "action": "Open Log Folder",
-          "description": "Opens the location of OyasumiVR's log files in your file explorer",
-          "title": "Open log folder"
-        },
-        "title": "Log Files"
-      },
-      "persistentData": {
-        "clearData": "Clear Data",
-        "clearModal": {
-          "message": "Are you sure you want to delete the following data? This cannot be reverted!\n\n{items}",
-          "title": "Confirm clearing data"
-        },
-        "dataType": {
-          "all": {
-            "description": "All data that OyasumiVR stores, including all your settings",
-            "title": "All Data"
-          },
-          "appCache": {
-            "description": "All data that is stored temporarily, such as VRChat API responses",
-            "title": "Data Cache"
-          },
-          "appSettings": {
-            "description": "All of OyasumiVR's general settings",
-            "title": "Application Settings"
-          },
-          "automationSettings": {
-            "description": "All settings specific to one of OyasumiVR's automations",
-            "title": "Automation Settings"
-          },
-          "eventLog": {
-            "description": "The events that are logged in the overview",
-            "title": "Event Log"
-          },
-          "imageCache": {
-            "description": "All images that are stored temporarily, such as VRChat player icons",
-            "title": "Image Cache"
-          },
-          "integrations": {
-            "description": "Data specific to integrations (excluding VRChat), such as authentication data",
-            "title": "Integration Data"
-          },
-          "logs": {
-            "description": "The log files that OyasumiVR creates",
-            "title": "Log Files"
-          },
-          "miscData": {
-            "description": "All other data that OyasumiVR stores, not covered by other categories",
-            "title": "Other Data"
-          },
-          "vrcData": {
-            "description": "Data specific to VRChat, such as authentication data",
-            "title": "VRChat Data"
-          }
-        },
-        "description": "Manage the data that OyasumiVR stores on your disk",
-        "relaunchModal": {
-          "message": "The requested data has been cleared. OyasumiVR needs to restart for this to take effect.",
-          "partialFailureMessage": "Some requested data could not be cleared. OyasumiVR still needs to restart.",
-          "relaunch": "Restart OyasumiVR now",
-          "title": "Restart OyasumiVR"
-        },
-        "title": "Persistent Data"
-      },
-      "title": "Advanced Settings",
-      "translation": {
-        "contribute": {
-          "description": "Contribute missing translations, or help add new languages!",
-          "docs": "Learn How",
-          "title": "Help out by contributing translations"
-        },
-        "editor": {
-          "action": "Launch Editor",
-          "description": "Launch OyasumiVR's translation editor for editing and creating translations",
-          "title": "Translation Editor"
-        },
-        "loadFile": {
-          "action": "Load File",
-          "description": "Load a custom language file. Useful when testing new translations.",
-          "title": "Load translation file"
-        },
-        "title": "Language & Translation"
-      },
-      "troubleshooting": {
-        "description": "This section contains some options related to troubleshooting. You generally shouldn't need to use these unless you're being asked to use them when getting support.",
-        "devTools": {
-          "action": "Open DevTools",
-          "description": "Opens the Edge Developer Tools, for debugging purposes",
-          "title": "Open Developer Tools"
-        },
-        "title": "Troubleshooting",
-        "vrManifestReregister": {
-          "action": "Reregister Manifest",
-          "description": "Reregisters OyasumiVR's VR application manifest with SteamVR",
-          "title": "Reregister SteamVR application manifest"
-        }
-      }
-    },
     "brightnessCct": {
       "bigscreenBeyond": {
         "forceFanSafety": {
@@ -2357,14 +2246,198 @@
       },
       "title": "OSC Settings"
     },
-    "statusInfo": {
-      "copy": {
-        "action": "Copy",
-        "description": "Copy all of the information below to your clipboard",
-        "title": "Copy to clipboard"
+    "translationAndData": {
+      "persistentData": {
+        "clearData": "Clear Data",
+        "clearModal": {
+          "message": "Are you sure you want to delete the following data? This cannot be reverted!\n\n{items}",
+          "title": "Confirm clearing data"
+        },
+        "dataType": {
+          "all": {
+            "description": "All data that OyasumiVR stores, including all your settings",
+            "title": "All Data"
+          },
+          "appCache": {
+            "description": "All data that is stored temporarily, such as VRChat API responses",
+            "title": "Data Cache"
+          },
+          "appSettings": {
+            "description": "All of OyasumiVR's general settings",
+            "title": "Application Settings"
+          },
+          "automationSettings": {
+            "description": "All settings specific to one of OyasumiVR's automations",
+            "title": "Automation Settings"
+          },
+          "eventLog": {
+            "description": "The events that are logged in the overview",
+            "title": "Event Log"
+          },
+          "imageCache": {
+            "description": "All images that are stored temporarily, such as VRChat player icons",
+            "title": "Image Cache"
+          },
+          "integrations": {
+            "description": "Data specific to integrations (excluding VRChat), such as authentication data",
+            "title": "Integration Data"
+          },
+          "logs": {
+            "description": "The log files that OyasumiVR creates",
+            "title": "Log Files"
+          },
+          "miscData": {
+            "description": "All other data that OyasumiVR stores, not covered by other categories",
+            "title": "Other Data"
+          },
+          "vrcData": {
+            "description": "Data specific to VRChat, such as authentication data",
+            "title": "VRChat Data"
+          }
+        },
+        "description": "Manage the data that OyasumiVR stores on your disk",
+        "relaunchModal": {
+          "message": "The requested data has been cleared. OyasumiVR needs to restart for this to take effect.",
+          "partialFailureMessage": "Some requested data could not be cleared. OyasumiVR still needs to restart.",
+          "relaunch": "Restart OyasumiVR now",
+          "title": "Restart OyasumiVR"
+        },
+        "title": "Persistent Data"
       },
-      "description": "Here you'll find some technical information regarding OyasumiVR and some of its internals. This is mainly used for debugging purposes and might be useful when troubleshooting, or getting support.",
-      "title": "Status Information"
+      "title": "Translation & Data",
+      "translation": {
+        "contribute": {
+          "description": "Contribute missing translations, or help add new languages!",
+          "docs": "Learn How",
+          "title": "Help out by contributing translations"
+        },
+        "editor": {
+          "action": "Launch Editor",
+          "description": "Launch OyasumiVR's translation editor for editing and creating translations",
+          "title": "Translation Editor"
+        },
+        "loadFile": {
+          "action": "Load File",
+          "description": "Load a custom language file. Useful when testing new translations.",
+          "title": "Load translation file"
+        },
+        "title": "Language & Translation"
+      }
+    },
+    "troubleshooting": {
+      "status": {
+        "adminPrivileges": {
+          "disabling": "Turning off",
+          "enabling": "Turning on",
+          "failure": {
+            "cleanupFailed": "Failed to turn off: {reason}",
+            "installFailed": "The install failed.",
+            "notSupported": "This Windows account cannot grant them.",
+            "promptDeclined": "The permission prompt was declined.",
+            "taskFailed": "Failed to start: {reason}"
+          },
+          "label": "Administrative permissions",
+          "notRunning": "On, not running",
+          "off": "Off",
+          "running": "On, running"
+        },
+        "bluetooth": {
+          "adapterError": "Adapter error",
+          "label": "Bluetooth",
+          "noAdapter": "No adapter",
+          "ready": "Adapter found",
+          "uninitialized": "Not in use"
+        },
+        "mqtt": {
+          "CONNECTED": "Connected",
+          "DISABLED": "Off",
+          "DISCONNECTED": "Not connected",
+          "ERROR": "Connection error",
+          "label": "MQTT"
+        },
+        "osc": {
+          "hours": "Last message {value} h ago",
+          "label": "OSC",
+          "minutes": "Last message {value} min ago",
+          "noMessages": "No messages yet",
+          "off": "Off",
+          "seconds": "Last message {value} s ago"
+        },
+        "overlay": {
+          "label": "Overlay",
+          "notRunning": "Not running",
+          "running": "Running"
+        },
+        "pulsoid": {
+          "label": "Pulsoid",
+          "loggedIn": "Logged in",
+          "loggedOut": "Not logged in"
+        },
+        "steamvr": {
+          "INACTIVE": "Not running",
+          "INITIALIZED": "Running",
+          "INITIALIZING": "Starting",
+          "label": "SteamVR"
+        },
+        "steamvrAutoLaunch": {
+          "label": "SteamVR auto-launch",
+          "off": "Off",
+          "on": "On"
+        },
+        "title": "Status",
+        "vrchat": {
+          "label": "VRChat",
+          "notRunning": "Not running",
+          "running": "Running"
+        },
+        "vrchatAccount": {
+          "label": "VRChat account",
+          "loggedIn": "Logged in",
+          "loggedOut": "Not logged in"
+        }
+      },
+      "support": {
+        "title": "Support",
+        "version": {
+          "build": "{flavour} build {buildId}",
+          "copy": "Copy"
+        }
+      },
+      "tabs": {
+        "status": "Status",
+        "tools": "Tools",
+        "tweaks": "Tweaks"
+      },
+      "title": "Troubleshooting",
+      "tools": {
+        "description": "These tools can help find and fix problems with OyasumiVR. You usually only need them when the developer asks you to use one.",
+        "devTools": {
+          "action": "Open DevTools",
+          "description": "Opens the Edge Developer Tools, for debugging purposes",
+          "title": "Open Developer Tools"
+        },
+        "logs": {
+          "action": "Open Log Folder",
+          "description": "Opens the location of OyasumiVR's log files in your file explorer",
+          "title": "Open log folder"
+        },
+        "vrManifestReregister": {
+          "action": "Reregister Manifest",
+          "description": "Reregisters OyasumiVR's VR application manifest with SteamVR",
+          "title": "Reregister SteamVR application manifest"
+        }
+      },
+      "tweaks": {
+        "description": "These settings can help when you experience issues. Only change them if you're experiencing issues. Otherwise, they are best left at their defaults.",
+        "openVrInitDelayFix": {
+          "description": "Enabling this will make OyasumiVR wait a bit to interact with SteamVR once it has been detected, giving SteamVR some extra time to start. If you're experiencing issues with launching SteamVR while OyasumiVR is already running, this can help.",
+          "title": "Delay OpenVR Initialization"
+        },
+        "overlayGpuAcceleration": {
+          "description": "If you are experiencing issues with the overlay not rendering properly, disabling this option could fix the issue on some systems (e.g. those with hybrid graphics).",
+          "title": "VR Overlay GPU Acceleration"
+        }
+      }
     },
     "updates": {
       "changelog": "Changelog",
@@ -2407,6 +2480,7 @@
   "shared": {
     "common": {
       "none": "None",
+      "resetToDefault": "Reset to default",
       "vrcLoginRequired": "This feature requires you to be logged in with a VRChat account."
     },
     "logo": {
@@ -2946,7 +3020,7 @@
       "copied": "Copied to clipboard",
       "failed": "Could not copy to clipboard",
       "pulsoidLink": "Open the link in your browser to connect Pulsoid.",
-      "statusInfo": "Paste it into a bug report or a support request."
+      "version": "Paste it into a bug report or a support request."
     },
     "desktopNotificationsBlocked": {
       "message": "Windows did not allow OyasumiVR to show notifications, so OyasumiVR keeps sending them to its own overlay.",

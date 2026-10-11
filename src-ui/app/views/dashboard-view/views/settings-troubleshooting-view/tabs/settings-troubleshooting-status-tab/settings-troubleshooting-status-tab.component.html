@@ -1,0 +1,32 @@
+<div class="setting-category">
+  <h2 transloco="settings.troubleshooting.support.title"></h2>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label">
+        <span>v{{ version | async }}</span>
+        <span>{{ build | tsTranslate }}</span>
+      </div>
+      <div class="setting-row-action">
+        <button class="btn btn-secondary" (click)="copyVersion()">
+          <app-icon name="copy" />
+          <span transloco="settings.troubleshooting.support.version.copy"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="setting-category">
+  <h2 transloco="settings.troubleshooting.status.title"></h2>
+  <div class="status-grid">
+    @for (line of status; track line.label) {
+      <div class="status-tile" [class.wide]="line.wide">
+        <div class="status-tile-label" [transloco]="line.label"></div>
+        <div class="status-tile-value">{{ (line.value | async) ?? '' | tsTranslate }}</div>
+        @if (line.detail | async; as detail) {
+          <div class="status-tile-detail">{{ detail | tsTranslate }}</div>
+        }
+      </div>
+    }
+  </div>
+</div>

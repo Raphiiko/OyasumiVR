@@ -26,9 +26,9 @@ import { SettingsGeneralViewComponent } from './views/dashboard-view/views/setti
 import { SettingsNotificationsViewComponent } from './views/dashboard-view/views/settings-notifications-view/settings-notifications-view.component';
 import { SettingsUpdatesViewComponent } from './views/dashboard-view/views/settings-updates-view/settings-updates-view.component';
 import { SettingsIntegrationsViewComponent } from './views/dashboard-view/views/settings-integrations-view/settings-integrations-view.component';
-import { SettingsAdvancedViewComponent } from './views/dashboard-view/views/settings-advanced-view/settings-advanced-view.component';
+import { SettingsTranslationAndDataViewComponent } from './views/dashboard-view/views/settings-translation-and-data-view/settings-translation-and-data-view.component';
 import { SettingsHotkeyViewComponent } from './views/dashboard-view/views/settings-hotkey-view/settings-hotkey-view.component';
-import { SettingsStatusInfoViewComponent } from './views/dashboard-view/views/settings-status-info-view/settings-status-info-view.component';
+import { SettingsTroubleshootingViewComponent } from './views/dashboard-view/views/settings-troubleshooting-view/settings-troubleshooting-view.component';
 import { SettingsOscViewComponent } from './views/dashboard-view/views/settings-osc-view/settings-osc-view.component';
 import { HmdAutomationsViewComponent } from './views/dashboard-view/views/hmd-automations-view/hmd-automations-view.component';
 import { JoinNotificationsViewComponent } from './views/dashboard-view/views/join-notifications-view/join-notifications-view.component';
@@ -168,12 +168,12 @@ const routes: Routes = [
             component: SettingsIntegrationsViewComponent,
           },
           {
-            path: 'advanced',
-            component: SettingsAdvancedViewComponent,
+            path: 'translationAndData',
+            component: SettingsTranslationAndDataViewComponent,
           },
           {
-            path: 'statusInfo',
-            component: SettingsStatusInfoViewComponent,
+            path: 'troubleshooting',
+            component: SettingsTroubleshootingViewComponent,
           },
           {
             path: '**',

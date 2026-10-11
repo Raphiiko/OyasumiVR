@@ -227,13 +227,7 @@
       "resolutionAutomations": "解像度",
       "runAutomations": "コマンドプロンプト",
       "settings": {
-        "advanced": "詳細設定",
-        "brightnessCct": "輝度と色温度の設定",
-        "general": "一般設定",
-        "hotkeys": "ショートカットキー設定",
         "integrations": "外部連携",
-        "notifications": "通知設定",
-        "statusInfo": "ステータス情報",
         "subMenu": "設定",
         "updates": "アップデート"
       },
@@ -1825,115 +1819,6 @@
     "title": "コマンドの実行"
   },
   "settings": {
-    "advanced": {
-      "application": {
-        "openVrInitDelayFix": {
-          "description": "SteamVRが検出された後、OyasumiVRは少し待ってから処理を開始します。",
-          "title": "OpenVR初期化の遅延"
-        },
-        "overlayGpuAcceleration": {
-          "description": "オーバーレイが正しく描画されない場合、この設定を無効にすると一部の環境（例：ハイブリッドGPU）で問題が解決することがあります。",
-          "title": "VRオーバーレイのGPUアクセラレーション"
-        },
-        "title": "アプリ"
-      },
-      "logs": {
-        "openFolder": {
-          "action": "フォルダを開く",
-          "description": "エクスプローラーでログファイルの場所を開きます",
-          "title": "ログフォルダを開く"
-        },
-        "title": "ログファイル"
-      },
-      "persistentData": {
-        "clearData": "データクリア",
-        "clearModal": {
-          "message": "以下のデータを削除しますか？元に戻せません。\n\n{items}",
-          "title": "消去の確認"
-        },
-        "dataType": {
-          "all": {
-            "description": "OyasumiVRが保存する全てのデータ",
-            "title": "全データ"
-          },
-          "appCache": {
-            "description": "VRChat APIレスポンスなど、一時的に保存される全てのデータ",
-            "title": "データキャッシュ"
-          },
-          "appSettings": {
-            "description": "一般設定の全てのデータ",
-            "title": "アプリケーション設定"
-          },
-          "automationSettings": {
-            "description": "自動化関係の全てのデータ",
-            "title": "自動化の設定"
-          },
-          "eventLog": {
-            "description": "概要に記録されるイベント",
-            "title": "イベントログ"
-          },
-          "imageCache": {
-            "description": "VRChatのプレイヤーアイコンなど、一時的に保存される全ての画像データ",
-            "title": "画像キャッシュ"
-          },
-          "integrations": {
-            "description": "VRChatを除く連携データ、認証データなど",
-            "title": "連携データ"
-          },
-          "logs": {
-            "description": "ログデータ",
-            "title": "ログファイル"
-          },
-          "miscData": {
-            "description": "他のカテゴリーに含まれない全てのデータ",
-            "title": "その他のデータ"
-          },
-          "vrcData": {
-            "description": "認証情報など、VRChat特有のデータ",
-            "title": "VRChatデータ"
-          }
-        },
-        "description": "OyasumiVRがローカルディスクに保存するデータの管理ができます。",
-        "relaunchModal": {
-          "relaunch": "OyasumiVRを今すぐ再起動する",
-          "title": "OyasumiVRを再起動する"
-        },
-        "title": "保存データ"
-      },
-      "title": "詳細設定",
-      "translation": {
-        "contribute": {
-          "description": "不足している翻訳の提供や、新しい言語の追加にご協力ください！",
-          "docs": "もっと詳しく",
-          "title": "翻訳に貢献できます！"
-        },
-        "editor": {
-          "action": "エディタを起動",
-          "description": "OyasumiVRの翻訳エディタを起動して、翻訳の編集と作成を行います",
-          "title": "翻訳エディタ"
-        },
-        "loadFile": {
-          "action": "ファイルを読み込む",
-          "description": "カスタム言語ファイルを読み込みます。翻訳のテストに使用します",
-          "title": "翻訳ファイルを読み込む"
-        },
-        "title": "言語・翻訳"
-      },
-      "troubleshooting": {
-        "description": "トラブルシューティングに関連するいくつかのオプションが含まれます。通常、使用する必要はありません。",
-        "devTools": {
-          "action": "開発者ツールを開く",
-          "description": "デバッグ目的でEdgeの開発者ツールを開きます",
-          "title": "開発者ツールを開く"
-        },
-        "title": "トラブルシューティング",
-        "vrManifestReregister": {
-          "action": "マニフェストの再登録",
-          "description": "OyasumiVRのアプリケーションマニフェストをSteamVRに再登録します",
-          "title": "SteamVRアプリケーションマニフェストの再登録"
-        }
-      }
-    },
     "brightnessCct": {
       "bigscreenBeyond": {
         "forceFanSafety": {
@@ -2173,14 +2058,109 @@
         }
       }
     },
-    "statusInfo": {
-      "copy": {
-        "action": "コピー",
-        "description": "以下の情報をすべてクリップボードにコピーします",
-        "title": "クリップボードにコピー"
+    "translationAndData": {
+      "persistentData": {
+        "clearData": "データクリア",
+        "clearModal": {
+          "message": "以下のデータを削除しますか？元に戻せません。\n\n{items}",
+          "title": "消去の確認"
+        },
+        "dataType": {
+          "all": {
+            "description": "OyasumiVRが保存する全てのデータ",
+            "title": "全データ"
+          },
+          "appCache": {
+            "description": "VRChat APIレスポンスなど、一時的に保存される全てのデータ",
+            "title": "データキャッシュ"
+          },
+          "appSettings": {
+            "description": "一般設定の全てのデータ",
+            "title": "アプリケーション設定"
+          },
+          "automationSettings": {
+            "description": "自動化関係の全てのデータ",
+            "title": "自動化の設定"
+          },
+          "eventLog": {
+            "description": "概要に記録されるイベント",
+            "title": "イベントログ"
+          },
+          "imageCache": {
+            "description": "VRChatのプレイヤーアイコンなど、一時的に保存される全ての画像データ",
+            "title": "画像キャッシュ"
+          },
+          "integrations": {
+            "description": "VRChatを除く連携データ、認証データなど",
+            "title": "連携データ"
+          },
+          "logs": {
+            "description": "ログデータ",
+            "title": "ログファイル"
+          },
+          "miscData": {
+            "description": "他のカテゴリーに含まれない全てのデータ",
+            "title": "その他のデータ"
+          },
+          "vrcData": {
+            "description": "認証情報など、VRChat特有のデータ",
+            "title": "VRChatデータ"
+          }
+        },
+        "description": "OyasumiVRがローカルディスクに保存するデータの管理ができます。",
+        "relaunchModal": {
+          "relaunch": "OyasumiVRを今すぐ再起動する",
+          "title": "OyasumiVRを再起動する"
+        },
+        "title": "保存データ"
       },
-      "description": "OyasumiVRとその内部の技術的な情報が表示されます。主にデバッグ目的で使用され、トラブルシューティングやサポートの際に役立つことがあります。",
-      "title": "ステータス情報"
+      "translation": {
+        "contribute": {
+          "description": "不足している翻訳の提供や、新しい言語の追加にご協力ください！",
+          "docs": "もっと詳しく",
+          "title": "翻訳に貢献できます！"
+        },
+        "editor": {
+          "action": "エディタを起動",
+          "description": "OyasumiVRの翻訳エディタを起動して、翻訳の編集と作成を行います",
+          "title": "翻訳エディタ"
+        },
+        "loadFile": {
+          "action": "ファイルを読み込む",
+          "description": "カスタム言語ファイルを読み込みます。翻訳のテストに使用します",
+          "title": "翻訳ファイルを読み込む"
+        },
+        "title": "言語・翻訳"
+      }
+    },
+    "troubleshooting": {
+      "tools": {
+        "devTools": {
+          "action": "開発者ツールを開く",
+          "description": "デバッグ目的でEdgeの開発者ツールを開きます",
+          "title": "開発者ツールを開く"
+        },
+        "logs": {
+          "action": "フォルダを開く",
+          "description": "エクスプローラーでログファイルの場所を開きます",
+          "title": "ログフォルダを開く"
+        },
+        "vrManifestReregister": {
+          "action": "マニフェストの再登録",
+          "description": "OyasumiVRのアプリケーションマニフェストをSteamVRに再登録します",
+          "title": "SteamVRアプリケーションマニフェストの再登録"
+        }
+      },
+      "tweaks": {
+        "openVrInitDelayFix": {
+          "description": "SteamVRが検出された後、OyasumiVRは少し待ってから処理を開始します。",
+          "title": "OpenVR初期化の遅延"
+        },
+        "overlayGpuAcceleration": {
+          "description": "オーバーレイが正しく描画されない場合、この設定を無効にすると一部の環境（例：ハイブリッドGPU）で問題が解決することがあります。",
+          "title": "VRオーバーレイのGPUアクセラレーション"
+        }
+      }
     },
     "updates": {
       "changelog": "変更履歴",

@@ -52,7 +52,6 @@ export class TooltipDirective implements AfterViewInit, OnChanges, OnDestroy {
     const tooltipElement = document.createElement('div');
     tooltipElement.classList.add('ovr-tooltip');
     tooltipElement.classList.add('ovr-tooltip-text-align-' + this.textAlign);
-    tooltipElement.style.fontSize = getComputedStyle(this.elementRef.nativeElement).fontSize;
     const container = document.createElement('div');
     container.classList.add('ovr-tooltip-container');
     tooltipElement.appendChild(container);

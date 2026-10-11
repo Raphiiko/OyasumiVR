@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 /**
  * `label` and `description` accept translation keys; their Text variants accept rendered text.
@@ -19,4 +19,7 @@ export class SettingRowComponent {
   /** Renders the warning icon and bold title used for conflicting settings. */
   @Input() conflict = false;
   @Input() actionClass?: string;
+  /** Shows a reset icon beside the title; set it while the setting differs from its default. */
+  @Input() canReset = false;
+  @Output() resetToDefault = new EventEmitter<void>();
 }

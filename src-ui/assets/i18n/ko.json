@@ -226,13 +226,7 @@
       "powerAutomations": "전원 자동화",
       "resolutionAutomations": "해상도 자동화",
       "settings": {
-        "advanced": "고급 설정",
-        "brightnessCct": "밝기 & 색온도 설정",
-        "general": "일반 설정",
-        "hotkeys": "단축키 설정",
         "integrations": "연동",
-        "notifications": "알림 설정",
-        "statusInfo": "상태 정보",
         "subMenu": "설정",
         "updates": "업데이트"
       },
@@ -1427,102 +1421,6 @@
     "title": "해상도 자동화"
   },
   "settings": {
-    "advanced": {
-      "logs": {
-        "openFolder": {
-          "action": "로그 폴더 열기",
-          "description": "파일 탐색기에서 OyasumiVR의 로그 파일 위치를 열어요.",
-          "title": "로그 폴더 열기"
-        },
-        "title": "로그 파일"
-      },
-      "persistentData": {
-        "clearData": "데이터 삭제",
-        "clearModal": {
-          "message": "다음 데이터를 삭제할까요? 이 데이터는 되돌릴 수 없습니다!\n\n{items}",
-          "title": "데이터 삭제 확인"
-        },
-        "dataType": {
-          "all": {
-            "description": "모든 설정을 포함하여 OyasumiVR이 저장하는 모든 데이터",
-            "title": "모든 데이터"
-          },
-          "appCache": {
-            "description": "임시로 저장되는 모든 데이터(예: VRChat API 응답)",
-            "title": "데이터 캐시"
-          },
-          "appSettings": {
-            "description": "OyasumiVR의 모든 일반 설정",
-            "title": "애플리케이션 설정"
-          },
-          "automationSettings": {
-            "description": "OyasumiVR의 자동화 기능 각각에 대한 모든 설정",
-            "title": "자동화 설정"
-          },
-          "eventLog": {
-            "description": "기본 개요에 기록된 이벤트",
-            "title": "이벤트 로그"
-          },
-          "imageCache": {
-            "description": "임시로 저장되는 모든 이미지 (예: VRChat 플레이어 아이콘)",
-            "title": "이미지 캐시"
-          },
-          "integrations": {
-            "description": "인증 데이터 등 연동과 관련된 데이터(VRChat 제외)",
-            "title": "연동 데이터"
-          },
-          "logs": {
-            "description": "OyasumiVR이 생성하는 로그 파일",
-            "title": "로그 파일"
-          },
-          "miscData": {
-            "description": "다른 카테고리에서 다루지 않는 OyasumiVR이 저장하는 기타 모든 데이터",
-            "title": "기타 데이터"
-          },
-          "vrcData": {
-            "description": "인증 데이터와 같은 VRChat 관련 데이터",
-            "title": "VRChat 데이터"
-          }
-        },
-        "description": "OyasumiVR이 디스크에 저장하는 데이터를 관리합니다.",
-        "relaunchModal": {
-          "relaunch": "지금 재시작",
-          "title": "OyasumiVR 재시작"
-        },
-        "title": "영구 데이터"
-      },
-      "title": "고급 설정",
-      "translation": {
-        "contribute": {
-          "description": "누락된 번역을 제공하거나 새로운 언어 추가를 도와주세요!",
-          "docs": "방법 알아보기",
-          "title": "번역 기여를 통해 도움 주기"
-        },
-        "editor": {
-          "action": "에디터 실행",
-          "description": "OyasumiVR의 번역 에디터를 실행하여 번역 파일을 편집하거나 생성해요.",
-          "title": "번역 에디터"
-        },
-        "loadFile": {
-          "action": "파일 불러오기",
-          "description": "사용자 지정 언어 파일을 불러와요. 새 번역을 테스트할 때 유용합니다.",
-          "title": "번역 파일 불러오기"
-        },
-        "title": "언어 & 번역"
-      },
-      "troubleshooting": {
-        "devTools": {
-          "action": "DevTools 열기",
-          "description": "디버깅 목적으로 Edge의 개발자 도구를 엽니다.",
-          "title": "개발자 도구 열기"
-        },
-        "vrManifestReregister": {
-          "action": "매니페스트 재등록",
-          "description": "OyasumiVR의 VR 애플리케이션 매니페스트를 SteamVR에 재등록하여요.",
-          "title": "SteamVR 애플리케이션 매니페스트 재등록"
-        }
-      }
-    },
     "brightnessCct": {
       "bigscreenBeyond": {
         "forceFanSafety": {
@@ -1754,14 +1652,99 @@
         "title": "일반 알림 음량"
       }
     },
-    "statusInfo": {
-      "copy": {
-        "action": "복사",
-        "description": "아래의 모든 정보를 클립보드에 복사합니다.",
-        "title": "클립보드에 복사"
+    "translationAndData": {
+      "persistentData": {
+        "clearData": "데이터 삭제",
+        "clearModal": {
+          "message": "다음 데이터를 삭제할까요? 이 데이터는 되돌릴 수 없습니다!\n\n{items}",
+          "title": "데이터 삭제 확인"
+        },
+        "dataType": {
+          "all": {
+            "description": "모든 설정을 포함하여 OyasumiVR이 저장하는 모든 데이터",
+            "title": "모든 데이터"
+          },
+          "appCache": {
+            "description": "임시로 저장되는 모든 데이터(예: VRChat API 응답)",
+            "title": "데이터 캐시"
+          },
+          "appSettings": {
+            "description": "OyasumiVR의 모든 일반 설정",
+            "title": "애플리케이션 설정"
+          },
+          "automationSettings": {
+            "description": "OyasumiVR의 자동화 기능 각각에 대한 모든 설정",
+            "title": "자동화 설정"
+          },
+          "eventLog": {
+            "description": "기본 개요에 기록된 이벤트",
+            "title": "이벤트 로그"
+          },
+          "imageCache": {
+            "description": "임시로 저장되는 모든 이미지 (예: VRChat 플레이어 아이콘)",
+            "title": "이미지 캐시"
+          },
+          "integrations": {
+            "description": "인증 데이터 등 연동과 관련된 데이터(VRChat 제외)",
+            "title": "연동 데이터"
+          },
+          "logs": {
+            "description": "OyasumiVR이 생성하는 로그 파일",
+            "title": "로그 파일"
+          },
+          "miscData": {
+            "description": "다른 카테고리에서 다루지 않는 OyasumiVR이 저장하는 기타 모든 데이터",
+            "title": "기타 데이터"
+          },
+          "vrcData": {
+            "description": "인증 데이터와 같은 VRChat 관련 데이터",
+            "title": "VRChat 데이터"
+          }
+        },
+        "description": "OyasumiVR이 디스크에 저장하는 데이터를 관리합니다.",
+        "relaunchModal": {
+          "relaunch": "지금 재시작",
+          "title": "OyasumiVR 재시작"
+        },
+        "title": "영구 데이터"
       },
-      "description": "여기에서는 OyasumiVR과 그 내부에 관한 몇 가지 기술 정보를 확인할 수 있어요. 주로 디버깅 목적으로 사용되며 문제를 해결하거나 지원을 받을 때 유용할 수 있습니다.",
-      "title": "상태 정보"
+      "translation": {
+        "contribute": {
+          "description": "누락된 번역을 제공하거나 새로운 언어 추가를 도와주세요!",
+          "docs": "방법 알아보기",
+          "title": "번역 기여를 통해 도움 주기"
+        },
+        "editor": {
+          "action": "에디터 실행",
+          "description": "OyasumiVR의 번역 에디터를 실행하여 번역 파일을 편집하거나 생성해요.",
+          "title": "번역 에디터"
+        },
+        "loadFile": {
+          "action": "파일 불러오기",
+          "description": "사용자 지정 언어 파일을 불러와요. 새 번역을 테스트할 때 유용합니다.",
+          "title": "번역 파일 불러오기"
+        },
+        "title": "언어 & 번역"
+      }
+    },
+    "troubleshooting": {
+      "tools": {
+        "devTools": {
+          "action": "DevTools 열기",
+          "description": "디버깅 목적으로 Edge의 개발자 도구를 엽니다.",
+          "title": "개발자 도구 열기"
+        },
+        "logs": {
+          "action": "로그 폴더 열기",
+          "description": "파일 탐색기에서 OyasumiVR의 로그 파일 위치를 열어요.",
+          "title": "로그 폴더 열기"
+        },
+        "vrManifestReregister": {
+          "action": "매니페스트 재등록",
+          "description": "OyasumiVR의 VR 애플리케이션 매니페스트를 SteamVR에 재등록하여요.",
+          "title": "SteamVR 애플리케이션 매니페스트 재등록"
+        }
+      }
     },
     "updates": {
       "changelog": "변경 사항",

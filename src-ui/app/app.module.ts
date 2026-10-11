@@ -164,7 +164,7 @@ import { AudioVolumeEntriesComponent } from './views/dashboard-view/views/audio-
 import { AudioDevicePickerComponent } from './views/dashboard-view/views/audio-volume-automations-view/audio-device-picker/audio-device-picker.component';
 import { AudioDeviceAutomationsService } from './services/audio-device-automations.service';
 import { WindowsService } from './services/windows.service';
-import { SettingsAdvancedViewComponent } from './views/dashboard-view/views/settings-advanced-view/settings-advanced-view.component';
+import { SettingsTranslationAndDataViewComponent } from './views/dashboard-view/views/settings-translation-and-data-view/settings-translation-and-data-view.component';
 import { SettingsNotificationsViewComponent } from './views/dashboard-view/views/settings-notifications-view/settings-notifications-view.component';
 import { SettingsOscViewComponent } from './views/dashboard-view/views/settings-osc-view/settings-osc-view.component';
 import { SettingsGeneralViewComponent } from './views/dashboard-view/views/settings-general-view/settings-general-view.component';
@@ -180,7 +180,10 @@ import { DeviceSelectorComponent } from './components/device-selector/device-sel
 import { DeviceSelectorModalComponent } from './components/device-selector-modal/device-selector-modal.component';
 import { HotkeyService } from './services/hotkey.service';
 import { HotkeyHandlerService } from './services/hotkey-handler.service';
-import { SettingsStatusInfoViewComponent } from './views/dashboard-view/views/settings-status-info-view/settings-status-info-view.component';
+import { SettingsTroubleshootingViewComponent } from './views/dashboard-view/views/settings-troubleshooting-view/settings-troubleshooting-view.component';
+import { SettingsTroubleshootingStatusTabComponent } from './views/dashboard-view/views/settings-troubleshooting-view/tabs/settings-troubleshooting-status-tab/settings-troubleshooting-status-tab.component';
+import { SettingsTroubleshootingToolsTabComponent } from './views/dashboard-view/views/settings-troubleshooting-view/tabs/settings-troubleshooting-tools-tab/settings-troubleshooting-tools-tab.component';
+import { SettingsTroubleshootingTweaksTabComponent } from './views/dashboard-view/views/settings-troubleshooting-view/tabs/settings-troubleshooting-tweaks-tab/settings-troubleshooting-tweaks-tab.component';
 import { ask } from '@tauri-apps/plugin-dialog';
 import { exit } from '@tauri-apps/plugin-process';
 import { OscControlService } from './services/osc-control/osc-control.service';
@@ -340,7 +343,7 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
     SettingsNotificationsViewComponent,
     SettingsOscViewComponent,
     SettingsUpdatesViewComponent,
-    SettingsAdvancedViewComponent,
+    SettingsTranslationAndDataViewComponent,
     VRChatLoginModalComponent,
     VRChatLoginTFAModalComponent,
     VRChatAccountsModalComponent,
@@ -400,7 +403,10 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
     HotkeySelectorModalComponent,
     DeviceSelectorComponent,
     DeviceSelectorModalComponent,
-    SettingsStatusInfoViewComponent,
+    SettingsTroubleshootingViewComponent,
+    SettingsTroubleshootingStatusTabComponent,
+    SettingsTroubleshootingToolsTabComponent,
+    SettingsTroubleshootingTweaksTabComponent,
     SnowverlayComponent,
     HmdAutomationsViewComponent,
     HmdAutomationsBigscreenBeyondTabComponent,

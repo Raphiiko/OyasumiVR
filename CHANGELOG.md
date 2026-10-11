@@ -44,6 +44,13 @@ with [SemVer](https://semver.org/) prerelease suffixes:
   - VRChat status changes made by OyasumiVR, with the reason
   - VRChat group changes made by OyasumiVR, with the reason
 - Notification when OyasumiVR automatically declines an invite or an invite request
+- Troubleshooting page under Settings, replacing Status Information
+  - Status tab: OyasumiVR's version and build with a copy button, and the current state of
+    SteamVR, VRChat, the VR overlay, OSC, MQTT, Pulsoid, Bluetooth and administrator access
+  - Tools tab: open the log folder, reregister the SteamVR application manifest, and open the
+    developer tools
+  - Tweaks tab: VR overlay GPU acceleration, the OpenVR initialization delay and the delay between
+    device power-offs, each with a button to reset it to its default
 
 ### Changed
 
@@ -98,6 +105,10 @@ with [SemVer](https://semver.org/) prerelease suffixes:
   longer works, and the features report as unavailable.
 - The Steam release no longer reinstalls Microsoft Edge WebView2 on every update. When the runtime
   is missing, OyasumiVR now shows a Japanese or English dialog that links Microsoft's download page
+- Advanced Settings is now called Translation & Data. Its troubleshooting tools and settings moved to
+  the new Troubleshooting page
+- The settings menu no longer repeats "Settings" in its labels, such as "General" instead of
+  "General Settings"
 
 ### Fixed
 
@@ -238,6 +249,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Fixed standalone releases never checking for updates again after the check at startup failed, for
   example when your network was not up yet. OyasumiVR now retries every ten minutes until a check
   succeeds
+- Tooltips now have the same text size everywhere, instead of following the size of the element
+  they belong to
 
 ### Removed
 
