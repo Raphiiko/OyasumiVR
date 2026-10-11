@@ -2,6 +2,7 @@
 
 mod cn_compliance;
 mod commands;
+mod debug_report;
 mod discord;
 mod elevated_sidecar;
 mod error_reporting;
@@ -558,6 +559,10 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         commands::nvml::nvml_set_power_management_limit,
         commands::debug::dev_tools_available,
         commands::debug::open_dev_tools,
+        debug_report::commands::debug_report_create,
+        debug_report::commands::debug_report_upload,
+        debug_report::commands::debug_report_save,
+        debug_report::commands::debug_report_discard,
         cn_compliance::cn_compliance_mode,
         commands::time::get_sunrise_sunset_time,
         commands::secrets::protect_secret,
