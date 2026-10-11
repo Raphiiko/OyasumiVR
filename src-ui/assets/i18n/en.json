@@ -2863,7 +2863,7 @@
         },
         "title": "Below the limit"
       },
-      "description": "OyasumiVR can limit the number of people who join you, by automatically setting your status based on how many players there are in your world.",
+      "description": "OyasumiVR can limit the number of people who join you, by automatically setting your status\nbased on how many players there are in your world.",
       "disableToEdit": "Please disable this automation before you make any changes.",
       "enable": {
         "description": "Automatically change your status based on the number of players in your VRChat world instance",
