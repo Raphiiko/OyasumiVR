@@ -2327,6 +2327,34 @@
       "title": "Translation & Data"
     },
     "troubleshooting": {
+      "debugReport": {
+        "confirm": {
+          "contents": "This sends your OyasumiVR logs, settings and system details to the developer, to help find the cause of a problem. Your passwords and login details will NOT be included.",
+          "title": "Upload a debug report?",
+          "when": "Only upload a debug report when the developer asks for one. Debug reports are deleted after 5 days."
+        },
+        "done": {
+          "copied": "Copied",
+          "copy": "Copy code",
+          "message": "Send this code to the developer:",
+          "title": "Debug report uploaded"
+        },
+        "failed": {
+          "buildMessage": "OyasumiVR could not create the debug report. Try again.",
+          "message": "Try again, or save the debug report as a file to manually send it to the developer instead.",
+          "save": "Save to file",
+          "title": "The upload failed"
+        },
+        "saveFailed": "Could not save the debug report",
+        "saved": "Debug report saved",
+        "saving": "Saving the debug report…",
+        "tooLarge": {
+          "message": "Save the debug report as a file to manually send it to the developer instead.",
+          "title": "The debug report is too large to upload"
+        },
+        "upload": "Upload",
+        "uploading": "Uploading the debug report…"
+      },
       "status": {
         "adminPrivileges": {
           "disabling": "Turning off",
@@ -2399,6 +2427,12 @@
         }
       },
       "support": {
+        "debugReport": {
+          "action": "Upload debug report",
+          "description": "Upload a debug report when the developer asks for one.",
+          "title": "Debug report"
+        },
+        "recentCode": "Your last report code",
         "title": "Support",
         "version": {
           "build": "{flavour} build {buildId}",

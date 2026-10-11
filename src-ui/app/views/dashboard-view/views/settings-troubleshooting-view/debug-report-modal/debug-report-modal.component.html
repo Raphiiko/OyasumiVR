@@ -1,0 +1,93 @@
+<div class="pane modal modal-md" @fadeUp>
+  @switch (step) {
+    @case ('confirm') {
+      <div class="pane-title" transloco="settings.troubleshooting.debugReport.confirm.title"></div>
+      <div class="pane-content">
+        <p transloco="settings.troubleshooting.debugReport.confirm.contents"></p>
+        <p transloco="settings.troubleshooting.debugReport.confirm.when"></p>
+      </div>
+      <div class="pane-actions spread">
+        <button #cancelButton class="btn btn-secondary" (click)="close()">
+          <span transloco="shared.modals.cancel"></span>
+        </button>
+        <button class="btn btn-primary" (click)="upload()">
+          <span transloco="settings.troubleshooting.debugReport.upload"></span>
+        </button>
+      </div>
+    }
+    @case ('done') {
+      <div class="pane-title" transloco="settings.troubleshooting.debugReport.done.title"></div>
+      <div class="pane-content">
+        <p transloco="settings.troubleshooting.debugReport.done.message"></p>
+        <div class="report-code">{{ reportCode }}</div>
+      </div>
+      <div class="pane-actions spread">
+        <button class="btn btn-secondary" (click)="close()">
+          <span transloco="shared.modals.close"></span>
+        </button>
+        <button class="btn btn-primary" (click)="copyCode()">
+          <app-icon [name]="codeCopied ? 'check' : 'copy'" />
+          <span
+            [transloco]="
+              codeCopied
+                ? 'settings.troubleshooting.debugReport.done.copied'
+                : 'settings.troubleshooting.debugReport.done.copy'
+            "
+          ></span>
+        </button>
+      </div>
+    }
+    @case ('failed') {
+      <div class="pane-title" transloco="settings.troubleshooting.debugReport.failed.title"></div>
+      <div class="pane-content">
+        <p
+          [transloco]="
+            reportCreated
+              ? 'settings.troubleshooting.debugReport.failed.message'
+              : 'settings.troubleshooting.debugReport.failed.buildMessage'
+          "
+        ></p>
+      </div>
+      <div class="pane-actions spread">
+        <button class="btn btn-secondary" (click)="close()">
+          <span transloco="shared.modals.close"></span>
+        </button>
+        @if (reportCreated) {
+          <button class="btn btn-secondary" (click)="saveToFile()">
+            <span transloco="settings.troubleshooting.debugReport.failed.save"></span>
+          </button>
+        }
+        <button class="btn btn-primary" (click)="upload()">
+          <span transloco="shared.modals.retry"></span>
+        </button>
+      </div>
+    }
+    @case ('tooLarge') {
+      <div class="pane-title" transloco="settings.troubleshooting.debugReport.tooLarge.title"></div>
+      <div class="pane-content">
+        <p transloco="settings.troubleshooting.debugReport.tooLarge.message"></p>
+      </div>
+      <div class="pane-actions spread">
+        <button class="btn btn-secondary" (click)="close()">
+          <span transloco="shared.modals.close"></span>
+        </button>
+        <button class="btn btn-primary" (click)="saveToFile()">
+          <span transloco="settings.troubleshooting.debugReport.failed.save"></span>
+        </button>
+      </div>
+    }
+    @default {
+      <div class="pane-title" transloco="settings.troubleshooting.debugReport.confirm.title"></div>
+      <div class="pane-content working">
+        <div class="small-spinner"></div>
+        <span
+          [transloco]="
+            step === 'saving'
+              ? 'settings.troubleshooting.debugReport.saving'
+              : 'settings.troubleshooting.debugReport.uploading'
+          "
+        ></span>
+      </div>
+    }
+  }
+</div>

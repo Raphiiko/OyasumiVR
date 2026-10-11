@@ -1,6 +1,28 @@
 <div class="setting-category">
   <h2 transloco="settings.troubleshooting.support.title"></h2>
   <div class="settings">
+    <app-setting-row
+      label="settings.troubleshooting.support.debugReport.title"
+      description="settings.troubleshooting.support.debugReport.description"
+    >
+      <button class="btn btn-primary" (click)="openDebugReport()">
+        <span transloco="settings.troubleshooting.support.debugReport.action"></span>
+      </button>
+    </app-setting-row>
+    @if (debugReports.recentCode | async; as code) {
+      <div class="setting-row">
+        <div class="setting-row-label">
+          <span class="recent-code">{{ code }}</span>
+          <span transloco="settings.troubleshooting.support.recentCode"></span>
+        </div>
+        <div class="setting-row-action">
+          <button class="btn btn-secondary" (click)="copyRecentCode(code)">
+            <app-icon name="copy" />
+            <span transloco="settings.troubleshooting.debugReport.done.copy"></span>
+          </button>
+        </div>
+      </div>
+    }
     <div class="setting-row">
       <div class="setting-row-label">
         <span>v{{ version | async }}</span>

@@ -1,5 +1,14 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { combineLatest, distinctUntilChanged, interval, map, Observable, startWith } from 'rxjs';
+import { invoke } from '@tauri-apps/api/core';
+import {
+  combineLatest,
+  distinctUntilChanged,
+  firstValueFrom,
+  interval,
+  map,
+  Observable,
+  startWith,
+} from 'rxjs';
 import { BUILD_ID, BuildFlavour, FLAVOUR } from '../../../../../../../build';
 import { TString } from '../../../../../../models/translatable-string';
 import { AppSettingsService } from '../../../../../../services/app-settings.service';
@@ -15,10 +24,15 @@ import { OscService } from '../../../../../../services/osc.service';
 import { OverlayService } from '../../../../../../services/overlay/overlay.service';
 import { ToastService } from '../../../../../../services/toast.service';
 import { VRChatService } from '../../../../../../services/vrchat-api/vrchat.service';
+import { DebugReportService } from '../../../../../../services/debug-report.service';
+import { FontLoaderService } from '../../../../../../services/font-loader.service';
+import { ModalService } from '../../../../../../services/modal.service';
 import { getVersion } from '../../../../../../utils/app-utils';
+import { DebugReportModalComponent } from '../../debug-report-modal/debug-report-modal.component';
 import { copyWithToast } from '../../../../../../utils/clipboard-utils';
 
 const T = 'settings.troubleshooting.';
+const DEBUG_REPORT_MODAL_ID = 'debugReport';
 
 const FLAVOUR_NAMES: Record<BuildFlavour, string> = {
   STEAM: 'Steam',
@@ -58,7 +72,10 @@ export class SettingsTroubleshootingStatusTabComponent {
     private mqtt: MqttService,
     private pulsoid: PulsoidService,
     private lighthouse: LighthouseService,
-    private toasts: ToastService
+    private toasts: ToastService,
+    private modals: ModalService,
+    private fontLoader: FontLoaderService,
+    protected debugReports: DebugReportService
   ) {
     const settings = this.appSettings.settings;
     this.status = [
@@ -113,6 +130,69 @@ export class SettingsTroubleshootingStatusTabComponent {
         wide: true,
       },
     ];
+  }
+
+  /** Opens one debug report dialog at most, because the core keeps one pending zip for it. */
+  openDebugReport() {
+    if (this.modals.isModalOpen(DEBUG_REPORT_MODAL_ID)) return;
+    this.modals
+      .addModal(
+        DebugReportModalComponent,
+        { collectUiState: () => this.collectUiState() },
+        { id: DEBUG_REPORT_MODAL_ID }
+      )
+      .subscribe();
+  }
+
+  /** The state only the UI knows, for the report.json of a debug report. */
+  private async collectUiState(): Promise<Record<string, unknown>> {
+    const first = <T>(source: Observable<T>) => firstValueFrom(source);
+    const port = (command: string) => invoke<number | null>(command).catch(() => null);
+    const settings = await first(this.appSettings.settings);
+    return {
+      app: { version: await this.version, flavour: FLAVOUR, buildId: BUILD_ID },
+      steamvr: {
+        status: await first(this.openvr.status),
+        autoLaunch: settings.startWithSteamVR,
+      },
+      overlaySidecarStarted: await first(this.overlay.sidecarStarted),
+      vrchat: {
+        processActive: await first(this.vrchat.vrchatProcessActive),
+        status: await first(this.vrchat.status),
+        websocketStatus: await first(this.vrchat.websocketStatus),
+        oscAddress: await first(this.osc.vrchatOscAddress),
+        oscQueryAddress: await first(this.osc.vrchatOscQueryAddress),
+      },
+      osc: {
+        serverEnabled: settings.oscServerEnabled,
+        serverAddress: await first(this.osc.oscServerAddress),
+        oscQueryServerAddress: await first(this.osc.oscQueryServerAddress),
+        lastMessageAt: this.osc.lastMessageAt.value,
+      },
+      elevatedFeatures: {
+        enabled: settings.elevatedFeaturesEnabled,
+        operation: await first(this.elevatedSidecar.operation),
+        sidecarStarted: await first(this.elevatedSidecar.sidecarStarted),
+        failure: await first(this.elevatedSidecar.failure),
+      },
+      mqttStatus: this.mqtt.clientStatus.value,
+      pulsoidLoggedIn: !!(await first(this.pulsoid.loggedInUser)),
+      lighthouse: {
+        status: await first(this.lighthouse.status),
+        devices: await first(this.lighthouse.devices),
+      },
+      ports: {
+        coreHttp: this.fontLoader.httpServerPort,
+        coreGrpc: await port('get_core_grpc_port'),
+        coreGrpcWeb: await port('get_core_grpc_web_port'),
+        elevatedSidecarGrpc: await port('elevated_sidecar_get_grpc_port'),
+        overlaySidecarGrpc: await port('overlay_sidecar_get_grpc_port'),
+      },
+    };
+  }
+
+  async copyRecentCode(code: string) {
+    await copyWithToast(this.toasts, code);
   }
 
   async copyVersion() {

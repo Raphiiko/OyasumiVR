@@ -1,0 +1,27 @@
+.pane-content {
+  white-space: pre-wrap;
+}
+
+.working {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1em;
+}
+
+.report-code {
+  margin-top: 0.5em;
+  padding: 0.5em;
+  text-align: center;
+  font-family: 'Fira Code', monospace;
+  font-size: 2.5em;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  background: var(--color-surface-1);
+  border-radius: var(--surface-border-radius);
+  user-select: text;
+}
+
+button app-icon {
+  font-size: 1.06em;
+}
