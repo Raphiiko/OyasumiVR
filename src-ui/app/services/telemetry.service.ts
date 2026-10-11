@@ -42,12 +42,6 @@ export class TelemetryService {
       )
       .subscribe();
 
-    addEventListener('unhandledrejection', (e) => {
-      this.trackEvent('ui_promise_rejected', {
-        type: e.reason?.constructor?.name ?? typeof e.reason,
-      });
-    });
-
     // Clean up the reporting cache
     interval(60000)
       .pipe(startWith(null))
