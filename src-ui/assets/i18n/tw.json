@@ -537,7 +537,7 @@
         "sleepModeDisabled": {
           "reason": {
             "automation": {
-              "NIGHTMARE_DETECTION": "由於偵測到你可能正在做噩夢",
+              "NIGHTMARE_DETECTION": "由於偵測到你可能正在做惡夢",
               "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "由於 SteamVR 已結束",
               "SLEEP_MODE_DISABLE_AFTER_TIME": "由於睡眠模式已開啟足夠長的時間",
               "SLEEP_MODE_DISABLE_AT_TIME": "在排程時間",
@@ -1605,21 +1605,21 @@
       "title": "最低心率",
       "unit": "BPM"
     },
-    "description": "當啟用任何相關自動化時，此功能會在你睡眠期間透過檢查長時間心率升高來偵測你是否可能正在做噩夢。當偵測到可能的噩夢時，你可以選擇讓 OyasumiVR 嘗試喚醒你。噩夢偵測僅在睡眠模式開啟時運作。\n\n<b>注意：</b>此功能需要啟用 <a class=\"integrationsPageLink\">Pulsoid 整合</a>。",
+    "description": "當啟用任何相關自動化時，此功能會在你睡眠期間透過檢查長時間心率升高來偵測你是否可能正在做惡夢。當偵測到可能的惡夢時，你可以選擇讓 OyasumiVR 嘗試喚醒你。惡夢偵測僅在睡眠模式開啟時運作。\n\n<b>注意：</b>此功能需要啟用 <a class=\"integrationsPageLink\">Pulsoid 整合</a>。",
     "disableSleepMode": {
-      "description": "在你可能正在做噩夢時關閉睡眠模式",
+      "description": "在你可能正在做惡夢時關閉睡眠模式",
       "title": "關閉睡眠模式"
     },
     "duration": {
       "description": "心率需要持續超過閾值多久，OyasumiVR 才會觸發惡夢偵測",
       "title": "持續時間"
     },
-    "notification": "偵測到你可能在做噩夢，因為你的心率已長時間偏高。",
+    "notification": "偵測到你可能在做惡夢，因為你的心率已長時間偏高。",
     "playSound": {
-      "description": "當你可能正在做噩夢時，讓 OyasumiVR 透過聲音喚醒你",
+      "description": "當你可能正在做惡夢時，讓 OyasumiVR 透過聲音喚醒你",
       "title": "播放聲音"
     },
-    "title": "噩夢偵測"
+    "title": "惡夢偵測"
   },
   "notification-sound": {
     "title": "選擇通知音效",
