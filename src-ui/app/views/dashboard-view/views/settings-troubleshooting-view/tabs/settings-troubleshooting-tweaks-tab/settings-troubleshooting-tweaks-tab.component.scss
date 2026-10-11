@@ -1,0 +1,14 @@
+.tweaks-description {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1em;
+
+  p {
+    flex: 1;
+  }
+
+  button {
+    flex-shrink: 0;
+  }
+}

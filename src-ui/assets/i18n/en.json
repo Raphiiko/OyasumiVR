@@ -2429,6 +2429,7 @@
         }
       },
       "tweaks": {
+        "description": "These settings can help when you experience issues. Only change them if you're experiencing issues; otherwise, they are best left at their defaults.",
         "openVrInitDelayFix": {
           "description": "Enabling this will make OyasumiVR wait a bit to interact with SteamVR once it has been detected, giving SteamVR some extra time to start. If you're experiencing issues with launching SteamVR while OyasumiVR is already running, this can help.",
           "title": "Delay OpenVR Initialization"
@@ -2436,7 +2437,8 @@
         "overlayGpuAcceleration": {
           "description": "If you are experiencing issues with the overlay not rendering properly, disabling this option could fix the issue on some systems (e.g. those with hybrid graphics).",
           "title": "VR Overlay GPU Acceleration"
-        }
+        },
+        "resetAll": "Reset to defaults"
       }
     },
     "updates": {
@@ -2480,6 +2482,7 @@
   "shared": {
     "common": {
       "none": "None",
+      "resetToDefault": "Reset to default",
       "vrcLoginRequired": "This feature requires you to be logged in with a VRChat account."
     },
     "logo": {

@@ -135,6 +135,24 @@
         color: var(--color-text-3);
       }
 
+      .setting-row-reset {
+        display: inline-flex;
+        margin-left: 0.4em;
+        padding: 0;
+        border: none;
+        background: none;
+        line-height: 0;
+        cursor: pointer;
+        color: var(--color-text-3);
+        --icon-body: currentColor;
+        transition: color 0.15s ease;
+
+        &:hover,
+        &:focus-visible {
+          color: var(--color-text-1);
+        }
+      }
+
       .experimental-flag {
         app-icon {
           line-height: 0;

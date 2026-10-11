@@ -1,14 +1,25 @@
+<div class="tweaks-description">
+  <p transloco="settings.troubleshooting.tweaks.description"></p>
+  <button
+    class="btn btn-secondary"
+    [disabled]="allDefault"
+    (click)="resetAll()"
+    transloco="settings.troubleshooting.tweaks.resetAll"
+  ></button>
+</div>
 <div class="setting-category">
   <div class="settings">
     <app-setting-row
       label="settings.troubleshooting.tweaks.overlayGpuAcceleration.title"
       description="settings.troubleshooting.tweaks.overlayGpuAcceleration.description"
+      [canReset]="!isDefault('overlayGpuAcceleration')"
+      (resetToDefault)="reset(['overlayGpuAcceleration'])"
     >
       <label class="switch-toggle">
         <input
           type="checkbox"
-          [checked]="overlayGpuAcceleration"
-          (change)="setOverlayGpuAcceleration(!overlayGpuAcceleration)"
+          [checked]="settings.overlayGpuAcceleration"
+          (change)="update({ overlayGpuAcceleration: !settings.overlayGpuAcceleration })"
         />
         <span class="switch-toggle-slider"></span>
       </label>
@@ -16,12 +27,14 @@
     <app-setting-row
       label="settings.troubleshooting.tweaks.openVrInitDelayFix.title"
       description="settings.troubleshooting.tweaks.openVrInitDelayFix.description"
+      [canReset]="!isDefault('openVrInitDelayFix')"
+      (resetToDefault)="reset(['openVrInitDelayFix'])"
     >
       <label class="switch-toggle">
         <input
           type="checkbox"
-          [checked]="openVrInitDelayFix"
-          (change)="setOpenVrInitDelayFix(!openVrInitDelayFix)"
+          [checked]="settings.openVrInitDelayFix"
+          (change)="update({ openVrInitDelayFix: !settings.openVrInitDelayFix })"
         />
         <span class="switch-toggle-slider"></span>
       </label>
@@ -29,12 +42,14 @@
     <app-setting-row
       label="settings.general.lighthouseConsole.powerOffDelay.title"
       description="settings.general.lighthouseConsole.powerOffDelay.description"
+      [canReset]="!isDefault('lighthousePowerOffDelay')"
+      (resetToDefault)="reset(['lighthousePowerOffDelay'])"
     >
       <label class="switch-toggle">
         <input
           type="checkbox"
-          [checked]="lighthousePowerOffDelay"
-          (change)="setLighthousePowerOffDelay(!lighthousePowerOffDelay)"
+          [checked]="settings.lighthousePowerOffDelay"
+          (change)="update({ lighthousePowerOffDelay: !settings.lighthousePowerOffDelay })"
         />
         <span class="switch-toggle-slider"></span>
       </label>
