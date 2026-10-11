@@ -441,7 +441,6 @@
           }
         },
         "sleepDetectorEnableCancelled": {
-          "subtitle": "유저가 깨어있었기 때문에 수면 모드의 자동 실행을 취소했어요.",
           "title": "수면 모드 자동 실행이 취소됨"
         },
         "sleepModeDisabled": {
@@ -512,7 +511,6 @@
         "turnedOffOpenVRDevices": {
           "reason": {
             "BATTERY_LEVEL": "배터리 잔량이 {threshold}% 아래로 내려가 기기를 껐어요.",
-            "CHARGING": "기기가 충전중으로 기기를 껐어요.",
             "HOTKEY": "단축키가 감지되어 설정을 변경했어요.",
             "MANUAL": "수동으로 기기를 껐어요.",
             "OSC_CONTROL": "OSC를 통해 기기를 껐어요.",
@@ -591,8 +589,7 @@
           "title": "VRChat 아바타"
         },
         "VRCHAT_INVITES": {
-          "description": "VRChat 인바이트 및 인바이트 리퀘스트와 관련된 이벤트",
-          "title": "VRChat 인바이트 리퀘스트"
+          "description": "VRChat 인바이트 및 인바이트 리퀘스트와 관련된 이벤트"
         },
         "VRCHAT_STATUS": {
           "description": "VRChat 스테이터스와 관련된 이벤트",

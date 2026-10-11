@@ -209,7 +209,6 @@
           }
         },
         "sleepDetectorEnableCancelled": {
-          "subtitle": "Saat pengguna masih terjaga",
           "title": "Pengaktifan otomatis mode tidur dibatalkan"
         },
         "sleepModeDisabled": {
@@ -256,7 +255,6 @@
         "turnedOffOpenVRDevices": {
           "reason": {
             "BATTERY_LEVEL": "Saat level baterai turun di bawah {threshold}%",
-            "CHARGING": "Disaat perangkat mengisi ulang",
             "MANUAL": "Dimatikan manual",
             "OSC_CONTROL": "Dimatikan via OSC",
             "SLEEP_MODE_ENABLED": "Disaat mode tidur menyala"

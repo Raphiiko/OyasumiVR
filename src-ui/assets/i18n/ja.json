@@ -438,11 +438,8 @@
           },
           "reasons": {
             "HOTKEY": "ショートカットキーが押下された",
-            "MANUAL": "手動でオンにした",
             "OYASUMI_START": "OyasumiVRの起動に合わせて",
-            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
-            "STEAMVR_START": "SteamVRの起動に合わせて",
-            "STEAMVR_STOP": "SteamVRが停止した"
+            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった"
           }
         },
         "msiAfterburnerProfileSet": {
@@ -506,7 +503,6 @@
           }
         },
         "sleepDetectorEnableCancelled": {
-          "subtitle": "ユーザーがまだ起きていた",
           "title": "睡眠モードの有効化をキャンセル"
         },
         "sleepModeDisabled": {
@@ -579,7 +575,6 @@
         "turnedOffOpenVRDevices": {
           "reason": {
             "BATTERY_LEVEL": "バッテリー残量が{threshold}%未満に低下したため",
-            "CHARGING": "充電器に接続された",
             "HOTKEY": "ショートカットキーが押されたため",
             "MANUAL": "手動でオフにした",
             "OSC_CONTROL": "OSCによってオフになった",
@@ -683,8 +678,7 @@
           "title": "VRChatグループ"
         },
         "VRCHAT_INVITES": {
-          "description": "VRChatのReq Inviteや承認に関連するログ",
-          "title": "VRChat通知"
+          "description": "VRChatのReq Inviteや承認に関連するログ"
         },
         "VRCHAT_STATUS": {
           "description": "VRChatのステータス変更に関連するログ",
@@ -1011,7 +1005,6 @@
       "deviceTypes": {
         "CONTROLLER": "コントローラー",
         "HMD": "HMD",
-        "LIGHTHOUSE": "ベースステーション",
         "TRACKER": "トラッカー"
       },
       "individualDevices": "個別選択",
@@ -1023,7 +1016,6 @@
     "deviceType": {
       "CONTROLLER": "コントローラー",
       "HMD": "HMD",
-      "LIGHTHOUSE": "ベースステーション",
       "PREVIOUSLY_SEEN": "過去に確認済み",
       "TRACKER": "トラッカー"
     },

@@ -448,11 +448,8 @@
           },
           "reasons": {
             "HOTKEY": "При нажатии горячей клавиши",
-            "MANUAL": "Включена вручную",
             "OYASUMI_START": "Так как OyasumiVR запустился",
-            "SLEEP_MODE_DISABLED": "Так как режим сна был отключен",
-            "STEAMVR_START": "Так как SteamVR запущен",
-            "STEAMVR_STOP": "Так как SteamVR остановлен"
+            "SLEEP_MODE_DISABLED": "Так как режим сна был отключен"
           }
         },
         "msiAfterburnerProfileSet": {
@@ -516,7 +513,6 @@
           }
         },
         "sleepDetectorEnableCancelled": {
-          "subtitle": "Поскольку пользователь еще не спал",
           "title": "Автоматическое включение режима сна отменено"
         },
         "sleepModeDisabled": {
@@ -589,7 +585,6 @@
         "turnedOffOpenVRDevices": {
           "reason": {
             "BATTERY_LEVEL": "Так как уровень заряда батареи упал ниже {threshold}%",
-            "CHARGING": "Пока устройство заряжается",
             "HOTKEY": "При нажатии горячей клавиши",
             "MANUAL": "Выключено вручную",
             "OSC_CONTROL": "Выключено через OSC",
@@ -693,8 +688,7 @@
           "title": "Группа VRChat"
         },
         "VRCHAT_INVITES": {
-          "description": "События, связанные с приглашениями и запросами на приглашение VRChat",
-          "title": "Запросы на приглашение VRChat"
+          "description": "События, связанные с приглашениями и запросами на приглашение VRChat"
         },
         "VRCHAT_STATUS": {
           "description": "События, связанные с изменениями в Вашем VRChat статусе",
@@ -1022,7 +1016,6 @@
       "deviceTypes": {
         "CONTROLLER": "Все контроллеры",
         "HMD": "Все шлемы",
-        "LIGHTHOUSE": "Все базовые станции",
         "TRACKER": "Все трекеры"
       },
       "individualDevices": "Индивидуальные устройства",
@@ -1034,7 +1027,6 @@
     "deviceType": {
       "CONTROLLER": "Контроллеры",
       "HMD": "Шлемы",
-      "LIGHTHOUSE": "Базовые станции",
       "PREVIOUSLY_SEEN": "Ранее обнаруженные",
       "TRACKER": "Трекеры"
     },

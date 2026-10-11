@@ -437,11 +437,8 @@
           },
           "reasons": {
             "HOTKEY": "Omdat een hotkey was geactiveerd",
-            "MANUAL": "Handmatig aangezet",
             "OYASUMI_START": "Omdat OyasumiVR opstartte",
-            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
-            "STEAMVR_START": "Omdat SteamVR draait",
-            "STEAMVR_STOP": "Omdat SteamVR gestopt is"
+            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld"
           }
         },
         "msiAfterburnerProfileSet": {
@@ -505,7 +502,6 @@
           }
         },
         "sleepDetectorEnableCancelled": {
-          "subtitle": "Omdat de gebruiker nog wakker is",
           "title": "Automatische inschakeling van slaapmodus geannuleerd"
         },
         "sleepModeDisabled": {
@@ -578,7 +574,6 @@
         "turnedOffOpenVRDevices": {
           "reason": {
             "BATTERY_LEVEL": "Omdat het batterijniveau onder {threshold}% kwam",
-            "CHARGING": "Omdat het apparaat aan het opladen is",
             "HOTKEY": "Omdat een hotkey was geactiveerd",
             "MANUAL": "Handmatig uitgeschakeld",
             "OSC_CONTROL": "Uitgeschakeld via OSC",
@@ -998,7 +993,6 @@
       "deviceTypes": {
         "CONTROLLER": "Alle Controllers",
         "HMD": "Alle Headsets",
-        "LIGHTHOUSE": "Alle Lighthouses",
         "TRACKER": "Alle Trackers"
       },
       "individualDevices": "Individuele Apparaten",

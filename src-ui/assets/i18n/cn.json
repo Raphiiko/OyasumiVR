@@ -448,11 +448,8 @@
           },
           "reasons": {
             "HOTKEY": "由于你按下了快捷键",
-            "MANUAL": "手动设置",
             "OYASUMI_START": "由于 OyasumiVR 启动",
-            "SLEEP_MODE_DISABLED": "因为已关闭睡眠模式",
-            "STEAMVR_START": "由于 SteamVR 开启",
-            "STEAMVR_STOP": "由于 SteamVR 关闭"
+            "SLEEP_MODE_DISABLED": "因为已关闭睡眠模式"
           }
         },
         "msiAfterburnerProfileSet": {
@@ -516,7 +513,6 @@
           }
         },
         "sleepDetectorEnableCancelled": {
-          "subtitle": "由于你仍处于清醒状态",
           "title": "取消了睡眠模式的自动启用"
         },
         "sleepModeDisabled": {
@@ -589,7 +585,6 @@
         "turnedOffOpenVRDevices": {
           "reason": {
             "BATTERY_LEVEL": "当电池电量低于 {threshold}% 时",
-            "CHARGING": "当设备正在充电的时候",
             "HOTKEY": "因为你按下了快捷键",
             "MANUAL": "手动关闭",
             "OSC_CONTROL": "通过 OSC 关闭",
@@ -693,8 +688,7 @@
           "title": "VRChat 群组"
         },
         "VRCHAT_INVITES": {
-          "description": "与你的 VRChat 好友邀请相关的事件",
-          "title": "VRChat 邀请/加入请求"
+          "description": "与你的 VRChat 好友邀请相关的事件"
         },
         "VRCHAT_STATUS": {
           "description": "与 VRChat 状态变化相关的事件",
@@ -1022,7 +1016,6 @@
       "deviceTypes": {
         "CONTROLLER": "所有控制器",
         "HMD": "所有头显",
-        "LIGHTHOUSE": "所有定位基站",
         "TRACKER": "所有追踪器"
       },
       "individualDevices": "单独设备",
@@ -1034,7 +1027,6 @@
     "deviceType": {
       "CONTROLLER": "控制器",
       "HMD": "头显",
-      "LIGHTHOUSE": "基站",
       "PREVIOUSLY_SEEN": "已识别过的设备",
       "TRACKER": "追踪器"
     },

@@ -180,7 +180,6 @@
           }
         },
         "sleepDetectorEnableCancelled": {
-          "subtitle": "Car l'utilisateur est toujours éveillé",
           "title": "Activation automatique du mode sommeil refusée"
         },
         "sleepModeDisabled": {
@@ -232,7 +231,6 @@
         },
         "turnedOffOpenVRDevices": {
           "reason": {
-            "CHARGING": "À la mise en charge",
             "MANUAL": "Éteint manuellement",
             "OSC_CONTROL": "Éteint via OSC",
             "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",

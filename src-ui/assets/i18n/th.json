@@ -447,11 +447,8 @@
           },
           "reasons": {
             "HOTKEY": "กดคีย์ลัดแล้ว",
-            "MANUAL": "เปิดด้วยตนเอง",
             "OYASUMI_START": "พร้อมกับการเริ่ม OyasumiVR",
-            "SLEEP_MODE_DISABLED": "ปิดโหมดนอนหลับแล้ว",
-            "STEAMVR_START": "พร้อมกับการเริ่ม SteamVR",
-            "STEAMVR_STOP": "SteamVR หยุดทำงานแล้ว"
+            "SLEEP_MODE_DISABLED": "ปิดโหมดนอนหลับแล้ว"
           }
         },
         "msiAfterburnerProfileSet": {
@@ -515,7 +512,6 @@
           }
         },
         "sleepDetectorEnableCancelled": {
-          "subtitle": "ผู้ใช้ยังตื่นอยู่",
           "title": "ยกเลิกการเปิดโหมดนอนหลับ"
         },
         "sleepModeDisabled": {
@@ -588,7 +584,6 @@
         "turnedOffOpenVRDevices": {
           "reason": {
             "BATTERY_LEVEL": "ระดับแบตเตอรี่ลดลงต่ำกว่า {threshold}%",
-            "CHARGING": "เชื่อมต่อที่ชาร์จแล้ว",
             "HOTKEY": "กดคีย์ลัดแล้ว",
             "MANUAL": "ปิดด้วยตนเอง",
             "OSC_CONTROL": "ปิดโดย OSC",
@@ -692,8 +687,7 @@
           "title": "กลุ่ม VRChat"
         },
         "VRCHAT_INVITES": {
-          "description": "บันทึกที่เกี่ยวข้องกับ คำขอเข้าร่วม และการอนุมัติใน VRChat",
-          "title": "การแจ้งเตือน VRChat"
+          "description": "บันทึกที่เกี่ยวข้องกับ คำขอเข้าร่วม และการอนุมัติใน VRChat"
         },
         "VRCHAT_STATUS": {
           "description": "บันทึกที่เกี่ยวข้องกับการเปลี่ยนสถานะ VRChat",
@@ -1021,7 +1015,6 @@
       "deviceTypes": {
         "CONTROLLER": "คอนโทรลเลอร์",
         "HMD": "Headset",
-        "LIGHTHOUSE": "Base Station",
         "TRACKER": "Tracker"
       },
       "individualDevices": "เลือกรายตัว",
@@ -1033,7 +1026,6 @@
     "deviceType": {
       "CONTROLLER": "คอนโทรลเลอร์",
       "HMD": "Headset",
-      "LIGHTHOUSE": "Base Station",
       "PREVIOUSLY_SEEN": "เคยพบเห็น",
       "TRACKER": "Tracker"
     },

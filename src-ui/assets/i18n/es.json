@@ -445,11 +445,8 @@
           },
           "reasons": {
             "HOTKEY": "Como se presionó una tecla de acceso rápido",
-            "MANUAL": "Encendido manual",
             "OYASUMI_START": "Cuando OyasumiVR comenzó",
-            "SLEEP_MODE_DISABLED": "Ya que el modo sueño estaba desactivado",
-            "STEAMVR_START": "Cuando SteamVR comenzó",
-            "STEAMVR_STOP": "Cuando SteamVR se detuvo"
+            "SLEEP_MODE_DISABLED": "Ya que el modo sueño estaba desactivado"
           }
         },
         "msiAfterburnerProfileSet": {
@@ -513,7 +510,6 @@
           }
         },
         "sleepDetectorEnableCancelled": {
-          "subtitle": "Ya que el usuario aún estaba despierto",
           "title": "Activación automática del modo sueño cancelada"
         },
         "sleepModeDisabled": {
@@ -586,7 +582,6 @@
         "turnedOffOpenVRDevices": {
           "reason": {
             "BATTERY_LEVEL": "Ya que el nivel de batería cayó por debajo del {threshold}%",
-            "CHARGING": "Ya que este dispositivo estaba cargando",
             "HOTKEY": "Ya que se presionó la tecla de acceso rápido",
             "MANUAL": "Apagado manualmente",
             "OSC_CONTROL": "Apagado via OSC",
@@ -688,8 +683,7 @@
           "title": "Grupo de VRChat"
         },
         "VRCHAT_INVITES": {
-          "description": "Eventos relacionados con las invitaciones y solicitudes de invitación de VRChat",
-          "title": "Solicitudes de invitación a VRChat"
+          "description": "Eventos relacionados con las invitaciones y solicitudes de invitación de VRChat"
         },
         "VRCHAT_STATUS": {
           "description": "Eventos relacionados con cambios en tu estado de VRChat",
@@ -998,7 +992,6 @@
     },
     "deviceType": {
       "CONTROLLER": "Controladores",
-      "LIGHTHOUSE": "Estaciones base",
       "PREVIOUSLY_SEEN": "Vistos anteriormente"
     },
     "tabs": {

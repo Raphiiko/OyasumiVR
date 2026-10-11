@@ -438,7 +438,6 @@
           }
         },
         "sleepDetectorEnableCancelled": {
-          "subtitle": "Оскільки користувач ще не спав",
           "title": "Автоматичне вмикання режиму сну скасовано"
         },
         "sleepModeDisabled": {
@@ -509,7 +508,6 @@
         "turnedOffOpenVRDevices": {
           "reason": {
             "BATTERY_LEVEL": "Оскільки рівень заряду батареї впав нижче {threshold}%",
-            "CHARGING": "Поки пристрій заряджається",
             "HOTKEY": "При натисканні гарячої клавіші",
             "MANUAL": "Вимкнено вручну",
             "OSC_CONTROL": "Вимкнено через OSC",
@@ -588,8 +586,7 @@
           "title": "VRChat аватар"
         },
         "VRCHAT_INVITES": {
-          "description": "Події, пов'язані із запрошеннями та запитами на запрошення VRChat",
-          "title": "Запити на запрошення VRChat"
+          "description": "Події, пов'язані із запрошеннями та запитами на запрошення VRChat"
         },
         "VRCHAT_STATUS": {
           "description": "Події, пов'язані зі змінами вашого статусу VRChat",
