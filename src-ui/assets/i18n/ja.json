@@ -1715,7 +1715,7 @@
         },
         "positions": {
           "SIDE_BACK": "仰向け",
-          "SIDE_FRONT": "うつぶせ",
+          "SIDE_FRONT": "起き上がり",
           "SIDE_LEFT": "左向き",
           "SIDE_RIGHT": "右向き",
           "UNKNOWN": "不明",
