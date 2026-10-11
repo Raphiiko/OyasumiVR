@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
 /**
  * `label` and `description` accept translation keys; their Text variants accept rendered text.
@@ -12,15 +12,15 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
   standalone: false,
 })
 export class SettingRowComponent {
-  @Input() label?: string;
-  @Input() description?: string;
-  @Input() labelText?: string;
-  @Input() descriptionText?: string;
+  readonly label = input<string>();
+  readonly description = input<string>();
+  readonly labelText = input<string>();
+  readonly descriptionText = input<string>();
   /** Renders the warning icon and bold title used for conflicting settings. */
-  @Input() conflict = false;
-  @Input() actionClass?: string;
+  readonly conflict = input(false);
+  readonly actionClass = input<string>();
   /** Passed to the reset icon beside the title; see ResetToDefaultComponent. */
-  @Input() value?: unknown;
-  @Input() defaultValue?: unknown;
-  @Output() resetToDefault = new EventEmitter<any>();
+  readonly value = input<unknown>();
+  readonly defaultValue = input<unknown>();
+  readonly resetToDefault = output<any>();
 }

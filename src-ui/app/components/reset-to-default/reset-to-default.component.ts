@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { isEqual } from 'lodash';
 
 /** An undo icon that shows while `value` deeply differs from `defaultValue`. */
@@ -10,17 +10,17 @@ import { isEqual } from 'lodash';
   standalone: false,
 })
 export class ResetToDefaultComponent {
-  @Input() value?: unknown;
+  readonly value = input<unknown>();
   /** Leave undefined to never show the icon. */
-  @Input() defaultValue?: unknown;
+  readonly defaultValue = input<unknown>();
   /** Emits a copy of `defaultValue` when the icon is clicked. */
-  @Output() resetToDefault = new EventEmitter<any>();
+  readonly resetToDefault = output<any>();
 
-  get canReset(): boolean {
-    return this.defaultValue !== undefined && !isEqual(this.value, this.defaultValue);
-  }
+  protected readonly canReset = computed(
+    () => this.defaultValue() !== undefined && !isEqual(this.value(), this.defaultValue())
+  );
 
-  reset() {
-    this.resetToDefault.emit(structuredClone(this.defaultValue));
+  protected reset() {
+    this.resetToDefault.emit(structuredClone(this.defaultValue()));
   }
 }
