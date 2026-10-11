@@ -2437,8 +2437,7 @@
         "overlayGpuAcceleration": {
           "description": "If you are experiencing issues with the overlay not rendering properly, disabling this option could fix the issue on some systems (e.g. those with hybrid graphics).",
           "title": "VR Overlay GPU Acceleration"
-        },
-        "resetAll": "Reset to defaults"
+        }
       }
     },
     "updates": {

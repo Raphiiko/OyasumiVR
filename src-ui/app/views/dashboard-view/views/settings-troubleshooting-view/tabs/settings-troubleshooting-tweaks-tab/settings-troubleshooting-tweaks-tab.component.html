@@ -1,19 +1,11 @@
-<div class="tweaks-description">
-  <p transloco="settings.troubleshooting.tweaks.description"></p>
-  <button
-    class="btn btn-secondary"
-    [disabled]="allDefault"
-    (click)="resetAll()"
-    transloco="settings.troubleshooting.tweaks.resetAll"
-  ></button>
-</div>
+<p transloco="settings.troubleshooting.tweaks.description"></p>
 <div class="setting-category">
   <div class="settings">
     <app-setting-row
       label="settings.troubleshooting.tweaks.overlayGpuAcceleration.title"
       description="settings.troubleshooting.tweaks.overlayGpuAcceleration.description"
       [canReset]="!isDefault('overlayGpuAcceleration')"
-      (resetToDefault)="reset(['overlayGpuAcceleration'])"
+      (resetToDefault)="reset('overlayGpuAcceleration')"
     >
       <label class="switch-toggle">
         <input
@@ -28,7 +20,7 @@
       label="settings.troubleshooting.tweaks.openVrInitDelayFix.title"
       description="settings.troubleshooting.tweaks.openVrInitDelayFix.description"
       [canReset]="!isDefault('openVrInitDelayFix')"
-      (resetToDefault)="reset(['openVrInitDelayFix'])"
+      (resetToDefault)="reset('openVrInitDelayFix')"
     >
       <label class="switch-toggle">
         <input
@@ -43,7 +35,7 @@
       label="settings.general.lighthouseConsole.powerOffDelay.title"
       description="settings.general.lighthouseConsole.powerOffDelay.description"
       [canReset]="!isDefault('lighthousePowerOffDelay')"
-      (resetToDefault)="reset(['lighthousePowerOffDelay'])"
+      (resetToDefault)="reset('lighthousePowerOffDelay')"
     >
       <label class="switch-toggle">
         <input
