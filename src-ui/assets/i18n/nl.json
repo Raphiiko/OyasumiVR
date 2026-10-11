@@ -232,13 +232,11 @@
       "resolutionAutomations": "Resolutie Automatiseringen",
       "runAutomations": "Uitvoer Automatiseringen",
       "settings": {
-        "advanced": "Geavanceerde Instellingen",
         "brightnessCct": "Helderheid & CCT Instellingen",
         "general": "Algemene Instellingen",
         "hotkeys": "Hotkey Instellingen",
         "integrations": "Integraties",
         "notifications": "Notificatie instellingen",
-        "statusInfo": "Status Informatie",
         "subMenu": "Instellingen"
       },
       "shutdownAutomations": "Afsluit Procedure",
@@ -1797,25 +1795,6 @@
   },
   "settings": {
     "advanced": {
-      "application": {
-        "openVrInitDelayFix": {
-          "description": "Het inschakelen hiervan zorgt ervoor dat OyasumiVR even wacht om te interacteren met SteamVR zodra het is gedetecteerd, waardoor SteamVR wat extra tijd krijgt om op te starten. Als je problemen ondervindt met het starten van SteamVR terwijl OyasumiVR al draait, kan dit helpen.",
-          "title": "OpenVR Initialisatie Vertragen"
-        },
-        "overlayGpuAcceleration": {
-          "description": "Als je problemen ondervindt met de overlay die niet goed wordt weergegeven, kan het uitschakelen van deze optie het probleem oplossen op sommige systemen (bijv. die met hybride graphics).",
-          "title": "VR Overlay GPU Accelleratie"
-        },
-        "title": "Applicatie"
-      },
-      "logs": {
-        "openFolder": {
-          "action": "Open Map",
-          "description": "Opent de map waar OyasumiVR de logbestanden opslaat.",
-          "title": "Open Map"
-        },
-        "title": "Logbestanden"
-      },
       "persistentData": {
         "clearData": "Verwijder Gegevens",
         "clearModal": {
@@ -1871,7 +1850,6 @@
         },
         "title": "Opgeslagen Gegevens"
       },
-      "title": "Geavanceerde Instellingen",
       "translation": {
         "contribute": {
           "description": "Help met het toevoegen van missende vertalingen, of hele nieuwe talen!",
@@ -1889,18 +1867,6 @@
           "title": "Laad vertalingsbestand"
         },
         "title": "Taal & Vertalen"
-      },
-      "troubleshooting": {
-        "description": "Deze sectie bevat enkele opties gerelateerd aan probleemoplossing. Je hoeft deze over het algemeen niet te gebruiken, tenzij je wordt gevraagd om ze te gebruiken bij het krijgen van ondersteuning.",
-        "devTools": {
-          "description": "Opent de Edge Developer Tools, om fouten mee op te sporen"
-        },
-        "title": "Probleemoplossing",
-        "vrManifestReregister": {
-          "action": "Herregistreer Manifest",
-          "description": "Herregistreert OyasumiVR's VR application manifest met SteamVR",
-          "title": "Herregistreet SteamVR application manifest"
-        }
       }
     },
     "brightnessCct": {
@@ -2135,14 +2101,32 @@
         }
       }
     },
-    "statusInfo": {
-      "copy": {
-        "action": "Kopieer",
-        "description": "Kopieer alle onderstaande informatie naar je klembord",
-        "title": "Kopieer naar klembord"
+    "troubleshooting": {
+      "tools": {
+        "devTools": {
+          "description": "Opent de Edge Developer Tools, om fouten mee op te sporen"
+        },
+        "logs": {
+          "action": "Open Map",
+          "description": "Opent de map waar OyasumiVR de logbestanden opslaat.",
+          "title": "Open Map"
+        },
+        "vrManifestReregister": {
+          "action": "Herregistreer Manifest",
+          "description": "Herregistreert OyasumiVR's VR application manifest met SteamVR",
+          "title": "Herregistreet SteamVR application manifest"
+        }
       },
-      "description": "Hier kun je wat technische informatie vinden van OyasumiVR's interne werking. Dit kan vooral gebruikt worden voor foutopsporing, en kan handig zijn wanneer je om ondersteuning vraagt.",
-      "title": "Status Informatie"
+      "tweaks": {
+        "openVrInitDelayFix": {
+          "description": "Het inschakelen hiervan zorgt ervoor dat OyasumiVR even wacht om te interacteren met SteamVR zodra het is gedetecteerd, waardoor SteamVR wat extra tijd krijgt om op te starten. Als je problemen ondervindt met het starten van SteamVR terwijl OyasumiVR al draait, kan dit helpen.",
+          "title": "OpenVR Initialisatie Vertragen"
+        },
+        "overlayGpuAcceleration": {
+          "description": "Als je problemen ondervindt met de overlay die niet goed wordt weergegeven, kan het uitschakelen van deze optie het probleem oplossen op sommige systemen (bijv. die met hybride graphics).",
+          "title": "VR Overlay GPU Accelleratie"
+        }
+      }
     },
     "updates": {
       "checkForUpdates": "Updates checken",

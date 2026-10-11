@@ -235,13 +235,11 @@
       "resolutionAutomations": "分辨率",
       "runAutomations": "自动化命令",
       "settings": {
-        "advanced": "高级选项",
         "brightnessCct": "亮度与色温",
         "general": "常规",
         "hotkeys": "快捷键",
         "integrations": "集成插件",
         "notifications": "通知",
-        "statusInfo": "调试信息",
         "subMenu": "设置",
         "updates": "更新"
       },
@@ -1836,25 +1834,6 @@
   },
   "settings": {
     "advanced": {
-      "application": {
-        "openVrInitDelayFix": {
-          "description": "启用此选项后，OyasumiVR 将在检测到 SteamVR 后稍作等待再进行交互，从而给予 SteamVR 额外的启动时间。如果你在 OyasumiVR 运行时遇到 SteamVR 启动问题，开启此选项可能有所帮助。",
-          "title": "延迟初始化 OpenVR"
-        },
-        "overlayGpuAcceleration": {
-          "description": "如果你遇到叠加层渲染异常的问题，禁用此选项可能能在某些系统（如使用混合输出的笔记本）上解决问题。",
-          "title": "VR叠加层GPU加速"
-        },
-        "title": "应用程序"
-      },
-      "logs": {
-        "openFolder": {
-          "action": "打开日志文件夹",
-          "description": "在你的资源管理器中打开 OyasumiVR 日志文件所在的位置",
-          "title": "打开日志文件夹"
-        },
-        "title": "日志文件"
-      },
       "persistentData": {
         "clearData": "清除数据",
         "clearModal": {
@@ -1910,7 +1889,6 @@
         },
         "title": "数据管理"
       },
-      "title": "高级选项",
       "translation": {
         "contribute": {
           "description": "贡献缺失的翻译，或帮助添加新的语言",
@@ -1928,20 +1906,6 @@
           "title": "加载语言文件"
         },
         "title": "语言和翻译"
-      },
-      "troubleshooting": {
-        "description": "本部分包含与故障排查相关的选项。通常情况下你无需使用，除非在寻求支持时被特别要求。",
-        "devTools": {
-          "action": "打开界面调试工具",
-          "description": "用于调试 OyasumiVR 的 UI 界面",
-          "title": "界面调试工具"
-        },
-        "title": "故障排查",
-        "vrManifestReregister": {
-          "action": "重新注册",
-          "description": "在 SteamVR 上重新注册程序的清单数据",
-          "title": "重新注册 SteamVR 的应用程序清单"
-        }
       }
     },
     "brightnessCct": {
@@ -2183,14 +2147,34 @@
         }
       }
     },
-    "statusInfo": {
-      "copy": {
-        "action": "复制",
-        "description": "将下面的所有信息复制到剪贴板",
-        "title": "复制到剪贴板"
+    "troubleshooting": {
+      "tools": {
+        "devTools": {
+          "action": "打开界面调试工具",
+          "description": "用于调试 OyasumiVR 的 UI 界面",
+          "title": "界面调试工具"
+        },
+        "logs": {
+          "action": "打开日志文件夹",
+          "description": "在你的资源管理器中打开 OyasumiVR 日志文件所在的位置",
+          "title": "打开日志文件夹"
+        },
+        "vrManifestReregister": {
+          "action": "重新注册",
+          "description": "在 SteamVR 上重新注册程序的清单数据",
+          "title": "重新注册 SteamVR 的应用程序清单"
+        }
       },
-      "description": "这里有一些关于 OyasumiVR 及其内部的技术信息。这些信息主要用于调试，在寻求支持时可能会有所帮助。",
-      "title": "调试信息"
+      "tweaks": {
+        "openVrInitDelayFix": {
+          "description": "启用此选项后，OyasumiVR 将在检测到 SteamVR 后稍作等待再进行交互，从而给予 SteamVR 额外的启动时间。如果你在 OyasumiVR 运行时遇到 SteamVR 启动问题，开启此选项可能有所帮助。",
+          "title": "延迟初始化 OpenVR"
+        },
+        "overlayGpuAcceleration": {
+          "description": "如果你遇到叠加层渲染异常的问题，禁用此选项可能能在某些系统（如使用混合输出的笔记本）上解决问题。",
+          "title": "VR叠加层GPU加速"
+        }
+      }
     },
     "updates": {
       "changelog": "更新日志",

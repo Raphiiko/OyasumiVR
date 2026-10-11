@@ -227,13 +227,11 @@
       "resolutionAutomations": "解像度",
       "runAutomations": "コマンドプロンプト",
       "settings": {
-        "advanced": "詳細設定",
         "brightnessCct": "輝度と色温度の設定",
         "general": "一般設定",
         "hotkeys": "ショートカットキー設定",
         "integrations": "外部連携",
         "notifications": "通知設定",
-        "statusInfo": "ステータス情報",
         "subMenu": "設定",
         "updates": "アップデート"
       },
@@ -1826,25 +1824,6 @@
   },
   "settings": {
     "advanced": {
-      "application": {
-        "openVrInitDelayFix": {
-          "description": "SteamVRが検出された後、OyasumiVRは少し待ってから処理を開始します。",
-          "title": "OpenVR初期化の遅延"
-        },
-        "overlayGpuAcceleration": {
-          "description": "オーバーレイが正しく描画されない場合、この設定を無効にすると一部の環境（例：ハイブリッドGPU）で問題が解決することがあります。",
-          "title": "VRオーバーレイのGPUアクセラレーション"
-        },
-        "title": "アプリ"
-      },
-      "logs": {
-        "openFolder": {
-          "action": "フォルダを開く",
-          "description": "エクスプローラーでログファイルの場所を開きます",
-          "title": "ログフォルダを開く"
-        },
-        "title": "ログファイル"
-      },
       "persistentData": {
         "clearData": "データクリア",
         "clearModal": {
@@ -1900,7 +1879,6 @@
         },
         "title": "保存データ"
       },
-      "title": "詳細設定",
       "translation": {
         "contribute": {
           "description": "不足している翻訳の提供や、新しい言語の追加にご協力ください！",
@@ -1918,20 +1896,6 @@
           "title": "翻訳ファイルを読み込む"
         },
         "title": "言語・翻訳"
-      },
-      "troubleshooting": {
-        "description": "トラブルシューティングに関連するいくつかのオプションが含まれます。通常、使用する必要はありません。",
-        "devTools": {
-          "action": "開発者ツールを開く",
-          "description": "デバッグ目的でEdgeの開発者ツールを開きます",
-          "title": "開発者ツールを開く"
-        },
-        "title": "トラブルシューティング",
-        "vrManifestReregister": {
-          "action": "マニフェストの再登録",
-          "description": "OyasumiVRのアプリケーションマニフェストをSteamVRに再登録します",
-          "title": "SteamVRアプリケーションマニフェストの再登録"
-        }
       }
     },
     "brightnessCct": {
@@ -2173,14 +2137,34 @@
         }
       }
     },
-    "statusInfo": {
-      "copy": {
-        "action": "コピー",
-        "description": "以下の情報をすべてクリップボードにコピーします",
-        "title": "クリップボードにコピー"
+    "troubleshooting": {
+      "tools": {
+        "devTools": {
+          "action": "開発者ツールを開く",
+          "description": "デバッグ目的でEdgeの開発者ツールを開きます",
+          "title": "開発者ツールを開く"
+        },
+        "logs": {
+          "action": "フォルダを開く",
+          "description": "エクスプローラーでログファイルの場所を開きます",
+          "title": "ログフォルダを開く"
+        },
+        "vrManifestReregister": {
+          "action": "マニフェストの再登録",
+          "description": "OyasumiVRのアプリケーションマニフェストをSteamVRに再登録します",
+          "title": "SteamVRアプリケーションマニフェストの再登録"
+        }
       },
-      "description": "OyasumiVRとその内部の技術的な情報が表示されます。主にデバッグ目的で使用され、トラブルシューティングやサポートの際に役立つことがあります。",
-      "title": "ステータス情報"
+      "tweaks": {
+        "openVrInitDelayFix": {
+          "description": "SteamVRが検出された後、OyasumiVRは少し待ってから処理を開始します。",
+          "title": "OpenVR初期化の遅延"
+        },
+        "overlayGpuAcceleration": {
+          "description": "オーバーレイが正しく描画されない場合、この設定を無効にすると一部の環境（例：ハイブリッドGPU）で問題が解決することがあります。",
+          "title": "VRオーバーレイのGPUアクセラレーション"
+        }
+      }
     },
     "updates": {
       "changelog": "変更履歴",

@@ -233,14 +233,12 @@
       "resolutionAutomations": "Automatizaciones de resolución",
       "runAutomations": "Ejecutar automatizaciones",
       "settings": {
-        "advanced": "Ajustes avanzados",
         "brightnessCct": "Ajustes de brillo y CCT",
         "general": "Ajustes generales",
         "hotkeys": "Ajustes de teclas",
         "integrations": "Integraciones",
         "notifications": "Ajustes de notificaciones",
         "osc": "Ajustes de OSC",
-        "statusInfo": "Información de estado",
         "subMenu": "Ajustes",
         "updates": "Actualizaciones"
       },
@@ -1685,14 +1683,6 @@
   },
   "settings": {
     "advanced": {
-      "logs": {
-        "openFolder": {
-          "action": "Abrir carpeta de registro",
-          "description": "Abre la ubicación de los archivos de registro de OyasumiVR en tu explorador de archivos",
-          "title": "Abrir carpeta de registro"
-        },
-        "title": "Archivos de registro"
-      },
       "persistentData": {
         "clearData": "Borrar datos",
         "clearModal": {
@@ -1748,7 +1738,6 @@
         },
         "title": "Datos persistentes"
       },
-      "title": "Ajustes avanzados",
       "translation": {
         "contribute": {
           "description": "Contribuya con las traducciones que faltan o ayude a añadir nuevos idiomas!",
@@ -1766,18 +1755,6 @@
           "title": "Cargar archivo de traducción"
         },
         "title": "Idiomas y traducción"
-      },
-      "troubleshooting": {
-        "devTools": {
-          "action": "Abrir DevTools",
-          "description": "Abre las herramientas de desarrollo Edge, con fines de depuración",
-          "title": "Abrir herramientas de desarrollo"
-        },
-        "vrManifestReregister": {
-          "action": "Retregistro manifiesto",
-          "description": "Reregistros de la aplicación VR de Oyasumivr manifiesto con SteamVR.",
-          "title": "Reiniciar el manifiesto de la aplicación SteamVR"
-        }
       }
     },
     "brightnessCct": {
@@ -2041,14 +2018,24 @@
       },
       "title": "Ajustes de OSC"
     },
-    "statusInfo": {
-      "copy": {
-        "action": "Copiar",
-        "description": "Copie toda la información siguiente en el portapapeles",
-        "title": "Copiar al portapapeles"
-      },
-      "description": "Aquí encontrarás información técnica sobre OyasumiVR y algunos de sus componentes internos. Esto se utiliza principalmente para fines de depuración y puede ser útil cuando la solución de problemas, o conseguir apoyo.",
-      "title": "Información de estado"
+    "troubleshooting": {
+      "tools": {
+        "devTools": {
+          "action": "Abrir DevTools",
+          "description": "Abre las herramientas de desarrollo Edge, con fines de depuración",
+          "title": "Abrir herramientas de desarrollo"
+        },
+        "logs": {
+          "action": "Abrir carpeta de registro",
+          "description": "Abre la ubicación de los archivos de registro de OyasumiVR en tu explorador de archivos",
+          "title": "Abrir carpeta de registro"
+        },
+        "vrManifestReregister": {
+          "action": "Retregistro manifiesto",
+          "description": "Reregistros de la aplicación VR de Oyasumivr manifiesto con SteamVR.",
+          "title": "Reiniciar el manifiesto de la aplicación SteamVR"
+        }
+      }
     },
     "updates": {
       "changelog": "Registro de cambios",

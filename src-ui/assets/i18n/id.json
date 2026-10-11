@@ -741,14 +741,6 @@
   },
   "settings": {
     "advanced": {
-      "logs": {
-        "openFolder": {
-          "action": "Buka folder log",
-          "description": "Membuka lokasi file log OyasumiVR di file explorer Anda",
-          "title": "Buka folder log"
-        },
-        "title": "File log"
-      },
       "persistentData": {
         "clearData": "Hapus Data",
         "clearModal": {
@@ -965,6 +957,15 @@
         "description": "Atur tingkat volume di mana beberapa jenis notifikasi memutar suaranya",
         "test": "Tes",
         "title": "Volume Pemberitahuan Umum"
+      }
+    },
+    "troubleshooting": {
+      "tools": {
+        "logs": {
+          "action": "Buka folder log",
+          "description": "Membuka lokasi file log OyasumiVR di file explorer Anda",
+          "title": "Buka folder log"
+        }
       }
     },
     "updates": {

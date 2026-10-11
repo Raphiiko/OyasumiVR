@@ -29,6 +29,8 @@ export class OscService {
   private readonly scriptQueue: TaskQueue = new TaskQueue({ runUniqueTasksConcurrently: true });
   private readonly _messages: Subject<OSCMessage> = new Subject<OSCMessage>();
   public readonly messages: Observable<OSCMessage> = this._messages.asObservable();
+  /** Time in ms of the last whitelisted OSC message, or null before the first one. */
+  public readonly lastMessageAt = new BehaviorSubject<number | null>(null);
   private readonly _vrchatOscAddress: BehaviorSubject<string | null> = new BehaviorSubject<
     string | null
   >(null);
@@ -61,6 +63,7 @@ export class OscService {
 
   async init() {
     await listen<OSCMessageRaw>('OSC_MESSAGE', (data) => {
+      this.lastMessageAt.next(Date.now());
       this._messages.next(parseOSCMessage(data.payload));
     });
     this._oscMethods

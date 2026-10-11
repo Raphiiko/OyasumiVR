@@ -235,14 +235,12 @@
       "resolutionAutomations": "解析度自動化",
       "runAutomations": "執行自動化",
       "settings": {
-        "advanced": "進階設定",
         "brightnessCct": "亮度與色溫設定",
         "general": "一般設定",
         "hotkeys": "快捷鍵設定",
         "integrations": "整合功能",
         "notifications": "通知設定",
         "osc": "OSC 設定",
-        "statusInfo": "狀態資訊",
         "subMenu": "設定",
         "updates": "更新"
       },
@@ -1835,25 +1833,6 @@
   },
   "settings": {
     "advanced": {
-      "application": {
-        "openVrInitDelayFix": {
-          "description": "啟用此功能會讓 OyasumiVR 在偵測到 SteamVR 後稍等一會才與 SteamVR 互動，讓 SteamVR 有一些額外的時間啟動。 如果你在 OyasumiVR 已執行時遇到啟動 SteamVR 的問題，這個功能可以幫到你。",
-          "title": "延遲 OpenVR 初始化"
-        },
-        "overlayGpuAcceleration": {
-          "description": "如果你遇到覆疊圖層無法正常渲染的問題，停用此選項可以解決某些系統（例如使用混合顯示卡的系統）上的問題。",
-          "title": "VR 嵌入介面 GPU 加速"
-        },
-        "title": "應用程式"
-      },
-      "logs": {
-        "openFolder": {
-          "action": "打開日誌資料夾",
-          "description": "在你的檔案資源管理器中打開 OyasumiVR 的日誌檔案的位置",
-          "title": "打開日誌資料夾"
-        },
-        "title": "日誌檔案"
-      },
       "persistentData": {
         "clearData": "清除數據",
         "clearModal": {
@@ -1909,7 +1888,6 @@
         },
         "title": "持久化資料"
       },
-      "title": "進階設定",
       "translation": {
         "contribute": {
           "description": "協助補充缺失的翻譯，或協助新增新的語言！",
@@ -1927,20 +1905,6 @@
           "title": "載入翻譯檔案"
         },
         "title": "語言與翻譯"
-      },
-      "troubleshooting": {
-        "description": "本區包含一些與故障排除相關的選項。 一般而言，你不需要使用這些選項，除非你在尋求支援時被要求使用這些選項",
-        "devTools": {
-          "action": "開啟開發工具",
-          "description": "打開用於除錯的 Edge 開發工具",
-          "title": "開啟開發者工具"
-        },
-        "title": "疑難排解",
-        "vrManifestReregister": {
-          "action": "重新註冊 Manifest",
-          "description": "將 OyasumiVR 的 VR 應用程式 Manifest 重新註冊至 SteamVR",
-          "title": "重新註冊 SteamVR 應用程式 Manifest"
-        }
       }
     },
     "brightnessCct": {
@@ -2226,14 +2190,34 @@
       },
       "title": "OSC 設定"
     },
-    "statusInfo": {
-      "copy": {
-        "action": "複製",
-        "description": "將以下所有資訊複製到剪貼簿中",
-        "title": "複製到剪貼簿"
+    "troubleshooting": {
+      "tools": {
+        "devTools": {
+          "action": "開啟開發工具",
+          "description": "打開用於除錯的 Edge 開發工具",
+          "title": "開啟開發者工具"
+        },
+        "logs": {
+          "action": "打開日誌資料夾",
+          "description": "在你的檔案資源管理器中打開 OyasumiVR 的日誌檔案的位置",
+          "title": "打開日誌資料夾"
+        },
+        "vrManifestReregister": {
+          "action": "重新註冊 Manifest",
+          "description": "將 OyasumiVR 的 VR 應用程式 Manifest 重新註冊至 SteamVR",
+          "title": "重新註冊 SteamVR 應用程式 Manifest"
+        }
       },
-      "description": "在這裡，你可以找到一些有關 OyasumiVR 及其內部結構的技術資訊。這些資訊主要用於除錯目的，在排除故障或獲得支持時可能會有用。",
-      "title": "狀態資訊"
+      "tweaks": {
+        "openVrInitDelayFix": {
+          "description": "啟用此功能會讓 OyasumiVR 在偵測到 SteamVR 後稍等一會才與 SteamVR 互動，讓 SteamVR 有一些額外的時間啟動。 如果你在 OyasumiVR 已執行時遇到啟動 SteamVR 的問題，這個功能可以幫到你。",
+          "title": "延遲 OpenVR 初始化"
+        },
+        "overlayGpuAcceleration": {
+          "description": "如果你遇到覆疊圖層無法正常渲染的問題，停用此選項可以解決某些系統（例如使用混合顯示卡的系統）上的問題。",
+          "title": "VR 嵌入介面 GPU 加速"
+        }
+      }
     },
     "updates": {
       "changelog": "更新日誌",

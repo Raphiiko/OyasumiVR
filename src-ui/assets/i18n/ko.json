@@ -226,13 +226,11 @@
       "powerAutomations": "전원 자동화",
       "resolutionAutomations": "해상도 자동화",
       "settings": {
-        "advanced": "고급 설정",
         "brightnessCct": "밝기 & 색온도 설정",
         "general": "일반 설정",
         "hotkeys": "단축키 설정",
         "integrations": "연동",
         "notifications": "알림 설정",
-        "statusInfo": "상태 정보",
         "subMenu": "설정",
         "updates": "업데이트"
       },
@@ -1428,14 +1426,6 @@
   },
   "settings": {
     "advanced": {
-      "logs": {
-        "openFolder": {
-          "action": "로그 폴더 열기",
-          "description": "파일 탐색기에서 OyasumiVR의 로그 파일 위치를 열어요.",
-          "title": "로그 폴더 열기"
-        },
-        "title": "로그 파일"
-      },
       "persistentData": {
         "clearData": "데이터 삭제",
         "clearModal": {
@@ -1491,7 +1481,6 @@
         },
         "title": "영구 데이터"
       },
-      "title": "고급 설정",
       "translation": {
         "contribute": {
           "description": "누락된 번역을 제공하거나 새로운 언어 추가를 도와주세요!",
@@ -1509,18 +1498,6 @@
           "title": "번역 파일 불러오기"
         },
         "title": "언어 & 번역"
-      },
-      "troubleshooting": {
-        "devTools": {
-          "action": "DevTools 열기",
-          "description": "디버깅 목적으로 Edge의 개발자 도구를 엽니다.",
-          "title": "개발자 도구 열기"
-        },
-        "vrManifestReregister": {
-          "action": "매니페스트 재등록",
-          "description": "OyasumiVR의 VR 애플리케이션 매니페스트를 SteamVR에 재등록하여요.",
-          "title": "SteamVR 애플리케이션 매니페스트 재등록"
-        }
       }
     },
     "brightnessCct": {
@@ -1754,14 +1731,24 @@
         "title": "일반 알림 음량"
       }
     },
-    "statusInfo": {
-      "copy": {
-        "action": "복사",
-        "description": "아래의 모든 정보를 클립보드에 복사합니다.",
-        "title": "클립보드에 복사"
-      },
-      "description": "여기에서는 OyasumiVR과 그 내부에 관한 몇 가지 기술 정보를 확인할 수 있어요. 주로 디버깅 목적으로 사용되며 문제를 해결하거나 지원을 받을 때 유용할 수 있습니다.",
-      "title": "상태 정보"
+    "troubleshooting": {
+      "tools": {
+        "devTools": {
+          "action": "DevTools 열기",
+          "description": "디버깅 목적으로 Edge의 개발자 도구를 엽니다.",
+          "title": "개발자 도구 열기"
+        },
+        "logs": {
+          "action": "로그 폴더 열기",
+          "description": "파일 탐색기에서 OyasumiVR의 로그 파일 위치를 열어요.",
+          "title": "로그 폴더 열기"
+        },
+        "vrManifestReregister": {
+          "action": "매니페스트 재등록",
+          "description": "OyasumiVR의 VR 애플리케이션 매니페스트를 SteamVR에 재등록하여요.",
+          "title": "SteamVR 애플리케이션 매니페스트 재등록"
+        }
+      }
     },
     "updates": {
       "changelog": "변경 사항",

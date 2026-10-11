@@ -234,14 +234,12 @@
       "resolutionAutomations": "ความละเอียด",
       "runAutomations": "Command Prompt",
       "settings": {
-        "advanced": "ขั้นสูง",
         "brightnessCct": "ตั้งค่าความสว่างและสี",
         "general": "ทั่วไป",
         "hotkeys": "คีย์ลัด",
         "integrations": "การเชื่อมต่อภายนอก",
         "notifications": "การแจ้งเตือน",
         "osc": "การตั้งค่า OSC",
-        "statusInfo": "ข้อมูลสถานะ",
         "subMenu": "ตั้งค่า",
         "updates": "อัปเดต"
       },
@@ -1836,25 +1834,6 @@
   },
   "settings": {
     "advanced": {
-      "application": {
-        "openVrInitDelayFix": {
-          "description": "เมื่อเปิดใช้งาน OyasumiVR จะรอสักครู่ก่อนเริ่มทำงานร่วมกับ SteamVR หลังจากตรวจพบ SteamVR แล้ว เพื่อให้ SteamVR มีเวลาเริ่มต้นเพิ่มขึ้น หากคุณพบปัญหาในการเปิด SteamVR ขณะที่ OyasumiVR ทำงานอยู่แล้ว ตัวเลือกนี้อาจช่วยได้",
-          "title": "หน่วงเวลาเริ่มต้น OpenVR"
-        },
-        "overlayGpuAcceleration": {
-          "description": "หากโอเวอร์เลย์แสดงผลไม่ถูกต้อง การปิดการตั้งค่านี้อาจช่วยแก้ปัญหาในบางสภาพแวดล้อมได้ (เช่น Hybrid GPU)",
-          "title": "การเร่งความเร็ว GPU ของ VR Overlay"
-        },
-        "title": "แอปพลิเคชัน"
-      },
-      "logs": {
-        "openFolder": {
-          "action": "เปิดโฟลเดอร์",
-          "description": "เปิดตำแหน่งไฟล์บันทึกใน Explorer",
-          "title": "เปิดโฟลเดอร์บันทึก"
-        },
-        "title": "ไฟล์บันทึก"
-      },
       "persistentData": {
         "clearData": "ล้างข้อมูล",
         "clearModal": {
@@ -1911,7 +1890,6 @@
         },
         "title": "ข้อมูลที่บันทึก"
       },
-      "title": "ตั้งค่าขั้นสูง",
       "translation": {
         "contribute": {
           "description": "ช่วยแปลส่วนที่ขาดหายไปหรือเพิ่มภาษาใหม่!",
@@ -1929,20 +1907,6 @@
           "title": "โหลดไฟล์แปล"
         },
         "title": "ภาษาและการแปล"
-      },
-      "troubleshooting": {
-        "description": "รวมตัวเลือกสำหรับการแก้ปัญหา โดยปกติไม่จำเป็นต้องใช้",
-        "devTools": {
-          "action": "เปิดเครื่องมือนักพัฒนา",
-          "description": "เปิดเครื่องมือนักพัฒนา Edge เพื่อการดีบัก",
-          "title": "เปิดเครื่องมือนักพัฒนา"
-        },
-        "title": "การแก้ปัญหา",
-        "vrManifestReregister": {
-          "action": "ลงทะเบียน Manifest ใหม่",
-          "description": "ลงทะเบียน Application Manifest ของ OyasumiVR กับ SteamVR ใหม่",
-          "title": "ลงทะเบียน SteamVR Application Manifest ใหม่"
-        }
       }
     },
     "brightnessCct": {
@@ -2221,14 +2185,34 @@
       },
       "title": "การตั้งค่า OSC"
     },
-    "statusInfo": {
-      "copy": {
-        "action": "คัดลอก",
-        "description": "คัดลอกข้อมูลทั้งหมดด้านล่างไปยังคลิปบอร์ด",
-        "title": "คัดลอกไปยังคลิปบอร์ด"
+    "troubleshooting": {
+      "tools": {
+        "devTools": {
+          "action": "เปิดเครื่องมือนักพัฒนา",
+          "description": "เปิดเครื่องมือนักพัฒนา Edge เพื่อการดีบัก",
+          "title": "เปิดเครื่องมือนักพัฒนา"
+        },
+        "logs": {
+          "action": "เปิดโฟลเดอร์",
+          "description": "เปิดตำแหน่งไฟล์บันทึกใน Explorer",
+          "title": "เปิดโฟลเดอร์บันทึก"
+        },
+        "vrManifestReregister": {
+          "action": "ลงทะเบียน Manifest ใหม่",
+          "description": "ลงทะเบียน Application Manifest ของ OyasumiVR กับ SteamVR ใหม่",
+          "title": "ลงทะเบียน SteamVR Application Manifest ใหม่"
+        }
       },
-      "description": "แสดงข้อมูลทางเทคนิคของ OyasumiVR และภายใน ใช้สำหรับการดีบักและอาจเป็นประโยชน์เมื่อแก้ปัญหาหรือติดต่อสนับสนุน",
-      "title": "ข้อมูลสถานะ"
+      "tweaks": {
+        "openVrInitDelayFix": {
+          "description": "เมื่อเปิดใช้งาน OyasumiVR จะรอสักครู่ก่อนเริ่มทำงานร่วมกับ SteamVR หลังจากตรวจพบ SteamVR แล้ว เพื่อให้ SteamVR มีเวลาเริ่มต้นเพิ่มขึ้น หากคุณพบปัญหาในการเปิด SteamVR ขณะที่ OyasumiVR ทำงานอยู่แล้ว ตัวเลือกนี้อาจช่วยได้",
+          "title": "หน่วงเวลาเริ่มต้น OpenVR"
+        },
+        "overlayGpuAcceleration": {
+          "description": "หากโอเวอร์เลย์แสดงผลไม่ถูกต้อง การปิดการตั้งค่านี้อาจช่วยแก้ปัญหาในบางสภาพแวดล้อมได้ (เช่น Hybrid GPU)",
+          "title": "การเร่งความเร็ว GPU ของ VR Overlay"
+        }
+      }
     },
     "updates": {
       "changelog": "บันทึกการเปลี่ยนแปลง",
