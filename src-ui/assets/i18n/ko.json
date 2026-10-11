@@ -28,9 +28,6 @@
     "automations": {
       "label": "자동화 {count}개"
     },
-    "config": {
-      "title": "설정"
-    },
     "description": "잠들거나 일어날 때 오디오 장치의 볼륨을 자동으로 변경해보세요! 이 기능은 다른 사람이 수면을 방해하는 것을 방지하고 싶을 때 유용합니다.",
     "devices": {
       "description": "볼륨을 자동화할 오디오 장치를 선택해요.",
@@ -115,7 +112,6 @@
     "detailsTitle": "이벤트",
     "events": "이벤트",
     "hardwareBrightness": {
-      "description": "디스플레이 자체의 밝기를 조절해요.",
       "title": "조절할 하드웨어 밝기"
     },
     "miscConfig": "기타 옵션",
@@ -132,7 +128,6 @@
       "title": "수면 모드가 비활성화된 경우에만"
     },
     "softwareBrightness": {
-      "description": "VR 헤드셋에 표시되는 이미지의 밝기를 조절해요.",
       "title": "조절할 소프트웨어 밝기"
     },
     "temperature": {
@@ -174,9 +169,6 @@
     },
     "cct-control-modal": {
       "colorTemperature": "색온도"
-    },
-    "color-picker-modal": {
-      "title": "색상 선택"
     },
     "confirm-modal": {
       "defaultTitle": "확인"
@@ -283,12 +275,10 @@
         "booting": "부팅 중",
         "on": "활성",
         "sleep": "슬립 모드",
-        "standby": "대기 모드",
-        "unknown": "알 수 없음"
+        "standby": "대기 모드"
       },
       "noDevices": "발견된 기기가 없어요.",
-      "title": "기기",
-      "turnOffAll": "모두"
+      "title": "기기"
     },
     "event-log-entry": {
       "type": {
@@ -740,7 +730,6 @@
       "description": "OyasumiVR은 MQTT를 통해 Home Assistant와 통신할 수 있어요. 이를 설정하려면 아래에 MQTT 브로커에 대한 연결 세부 정보를 알려주세요.",
       "mqttEnabled": {
         "description": "MQTT 연동 활성화/비활성화",
-        "test": "연결 테스트",
         "title": "연동 활성화"
       },
       "password": {
@@ -811,7 +800,6 @@
         "message": "''{name}''이라는 프리셋을 덮어쓰시겠어요?",
         "title": "확실한가요?"
       },
-      "currentPresets": "현재 프리셋",
       "delete": "프리셋 삭제",
       "load": "프리셋 불러오기",
       "namePlaceholder": "프리셋 이름",
@@ -887,7 +875,7 @@
         "INVALID_FORMAT": "유효한 2단계 인증 코드는 6자리 숫자에요. 입력 내용을 확인해주세요.",
         "LAST_CODE_INVALID": "입력된 2단계 인증 코드가 잘못되었어요."
       },
-      "logginInAs": "다음과 같이 VRChat에 로그인하고 있어요:",
+      "loggingInAs": "다음과 같이 VRChat에 로그인하고 있어요:",
       "title": "2단계 인증"
     }
   },
@@ -1015,11 +1003,6 @@
         "onSleepPreparation": {
           "description": "수면 준비 시 HMD의 LED 색상을 변경해요.",
           "title": "수면 준비 시작 시"
-        },
-        "pickerTitle": {
-          "onSleepDisable": "수면 모드 비활성화 시의 Beyond의 LED 색상을 설정하기",
-          "onSleepEnable": "수면 모드 활성화 시의 Beyond의 LED 색상을 설정하기",
-          "onSleepPreparation": "수면 준비 시의 Beyond의 LED 색상을 설정하기"
         },
         "title": "RGB Led"
       }
@@ -1290,10 +1273,6 @@
         }
       },
       "presetAuthor": "{author} 제작"
-    },
-    "tab": {
-      "general": "일반",
-      "sleepingAnimations": "수면 애니메이션"
     },
     "title": "OSC 자동화"
   },
@@ -1815,20 +1794,8 @@
       },
       "run": "시퀀스 실행",
       "title": "종료 시퀀스 동작",
-      "turnOffBaseStations": {
-        "description": "아직 켜져있는 모든 베이스스테이션을 꺼요.",
-        "title": "베이스스테이션 끄기"
-      },
-      "turnOffControllers": {
-        "description": "컨트롤러의 전원을 꺼요.",
-        "title": "컨트롤러 끄기"
-      },
       "turnOffDevices": {
         "title": "기기 끄기"
-      },
-      "turnOffTrackers": {
-        "description": "트래커의 전원을 꺼요.",
-        "title": "트래커 끄기"
       }
     },
     "tabs": {
@@ -1906,7 +1873,6 @@
         "title": "심박수가 일정 시간 동안 안정될 때"
       }
     },
-    "experimentalAutomation": "이 자동화 기능은 실험 단계로, 아직 안정적이지 않을 수 있어요.",
     "modals": {
       "disableAfterTime": {
         "description": "일정 시간 동안 활성화된 후 수면 모드를 비활성화하여요.",
@@ -1960,10 +1926,6 @@
       "enableAtBatteryPercentage": {
         "Controller": "컨트롤러",
         "GenericTracker": "트래커",
-        "errors": {
-          "thresholdNotInteger": "조건 값은 숫자이여야 해요.",
-          "thresholdOutOfRange": "조건 값은 0%에서 100% 사이여야 해요."
-        },
         "fallsBelow": "조건 값",
         "title": "수면 모드 활성화",
         "whenA": "기준 기기"
@@ -1987,7 +1949,6 @@
           "description": "활성화되면 수면 감지기가 잠자는 자세도 고려하게 되어요.",
           "title": "수면 자세 감지"
         },
-        "description": "이 기능을 활성화하면 OyasumiVR은 사용자의 움직임을 기반으로 사용자가 잠든 것으로 판단하면 자동으로 수면 모드를 활성화해요.",
         "detectionWindow": {
           "description": "OyasumiVR이 사용자가 잠든 것을 감지하기까지 얼마나 기다려야 할까요?",
           "title": "감지 기간",
@@ -2011,8 +1972,7 @@
         "timeWindow": {
           "description": "하루 중 특정 시간 사이에만 수면 모드를 활성화하도록 수면 감지를 허용해요.",
           "title": "활성화 기간"
-        },
-        "title": "수면 모드 활성화"
+        }
       },
       "enableOnHeartRateCalmPeriod": {
         "bpm": {
@@ -2114,7 +2074,6 @@
           "status": "변경할 스테이터스",
           "statusMessage": "변경할 스테이터스 메시지"
         },
-        "script": "수면 모드 비활성화 됨",
         "title": "수면 모드 비활성화 시"
       },
       "onSleepEnable": {
@@ -2122,7 +2081,6 @@
           "status": "변경할 스테이터스",
           "statusMessage": "변경할 스테이터스 메시지"
         },
-        "script": "수면 모드 활성화 됨",
         "title": "수면 모드 활성화 시"
       },
       "onSleepPreparation": {
@@ -2130,7 +2088,6 @@
           "status": "변경할 스테이터스",
           "statusMessage": "변경할 스테이터스 메시지"
         },
-        "script": "수면 준비",
         "title": "수면 준비 시작 시"
       }
     },
@@ -2173,9 +2130,6 @@
         "DEFAULT": "기본 장치:\n{deviceName}"
       },
       "title": "마이크 오디오 장치"
-    },
-    "config": {
-      "title": "설정"
     },
     "controllerBinding": {
       "automations": "컨트롤러 바인딩 자동화",
@@ -2333,17 +2287,14 @@
     "description": "여기에서 특정 이벤트가 발생하면 VRChat 아바타가 자동으로 변경되도록 OyasumiVR을 설정할 수 있어요. 잠들거나 일어났을 때 자동으로 아바타를 변경하고 싶을 때 유용하게 사용할 수 있습니다.",
     "onSleepDisable": {
       "description": "아바타를 다음으로 변경",
-      "script": "수면 모드 비활성화 됨",
       "title": "수면 모드 비활성화 시"
     },
     "onSleepEnable": {
       "description": "아바타를 다음으로 변경",
-      "script": "수면 모드 활성화 됨",
       "title": "수면 모드 활성화 시"
     },
     "onSleepPreparation": {
       "description": "아바타를 다음으로 변경",
-      "script": "수면 준비",
       "title": "수면 준비 시작 시"
     },
     "title": "아바타 자동화"

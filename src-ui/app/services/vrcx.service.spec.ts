@@ -97,7 +97,7 @@ describe('VRCXService', () => {
       })
     ).toEqual([
       {
-        msg: `Changed your VRChat status to 'Full' (Do Not Disturb) | As the amount of players in your world reached the limit of 4`,
+        msg: `Changed your VRChat status to 'Full' (Do Not Disturb) | As the number of players in your world reached the limit of 4`,
       },
     ]);
   });

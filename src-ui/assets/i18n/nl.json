@@ -27,9 +27,6 @@
     "automations": {
       "label": "{count, plural, one {1 Automatisering} other {# Automatiseringen}}"
     },
-    "config": {
-      "title": "Configuratie"
-    },
     "description": "Verander automatisch het volume van je geluidsapparaten wanneer je in slaap valt, of wakker word! Dit kan handig zijn als je wilt voorkomen dat mensen je storen terwijl je slaapt.",
     "devices": {
       "description": "Kies een geluidsapparaat om het volume van te automatiseren",
@@ -114,7 +111,6 @@
     "detailsTitle": "Moment",
     "events": "Logboek",
     "hardwareBrightness": {
-      "description": "Past de helderheid van het fysieke scherm aan",
       "title": "Zet de hardware helderheid naar"
     },
     "hmdConnectEventTooltip": "Deze instellingen worden toegepast wanneer je headset verbinding maakt met SteamVR",
@@ -133,7 +129,6 @@
       "title": "Alleen wanneer de slaap modus is uitgeschakeld"
     },
     "softwareBrightness": {
-      "description": "Past de helderheid aan van het beeld dat in je VR headset word getoont",
       "title": "Zet de software helderheid naar"
     },
     "temperature": {
@@ -175,9 +170,6 @@
     },
     "cct-control-modal": {
       "colorTemperature": "Kleur Temperatuur"
-    },
-    "color-picker-modal": {
-      "title": "Kies een kleur"
     },
     "confirm-modal": {
       "defaultTitle": "Bevestig"
@@ -283,12 +275,10 @@
         "booting": "Aan het starten",
         "on": "Actief",
         "sleep": "Slaap modus",
-        "standby": "Standby modus",
-        "unknown": "Onbekende Status"
+        "standby": "Standby modus"
       },
       "noDevices": "Geen apparaten gedetecteerd",
-      "title": "Apparaten",
-      "turnOffAll": "ALLE"
+      "title": "Apparaten"
     },
     "device-selector": {
       "noSelection": "Selecteer Apparaten",
@@ -400,7 +390,6 @@
         },
         "frameLimitChanged": {
           "reason": {
-            "HMD_CONNECT": "Omdat je headset verbonden werd",
             "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
             "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
             "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
@@ -824,7 +813,6 @@
       "description": "OyasumiVR kan met Home Assistant communiceren via MQTT. Stel hier onder de toegangsgegevens in van je MQTT broker.",
       "mqttEnabled": {
         "description": "Schakel de MQTT integratie in of uit.",
-        "test": "Test Verbinding",
         "title": "Integratie Inschakelen"
       },
       "password": {
@@ -891,7 +879,6 @@
         "message": "Weet je zeker dat je preset \"{name}\" wilt overschrijven?",
         "title": "Afsluit procedure starten"
       },
-      "currentPresets": "Huidige Presets",
       "delete": "Verwijder Preset",
       "load": "Laad Preset",
       "namePlaceholder": "Preset naam",
@@ -967,7 +954,7 @@
         "INVALID_FORMAT": "Een 2FA code bestaat altijd uit een reeks van 6 cijfers. Deze code is niet correct.",
         "LAST_CODE_INVALID": "De 2FA code is onjuist."
       },
-      "logginInAs": "Je logt in bij VRChat als:",
+      "loggingInAs": "Je logt in bij VRChat als:",
       "title": "Twee-Factor Authenticatie"
     }
   },
@@ -1039,8 +1026,6 @@
       "placeholder": "Zoek apparaten..."
     },
     "status": {
-      "notObserved": "Niet Verbonden",
-      "observed": "Verbonden",
       "turningOff": "Uitschakelen...",
       "turningOn": "Inschakelen..."
     },
@@ -1205,11 +1190,6 @@
           "description": "Verander de kleur van de RGB LED wanneer je je voorbereid om te gaan slapen",
           "title": "Wanneer ik me voorbereid om te gaan slapen"
         },
-        "pickerTitle": {
-          "onSleepDisable": "Stel de Beyond LED kleur in wanneer je wakker word",
-          "onSleepEnable": "Stel de Beyond LED kleur in wanneer je in slaap valt",
-          "onSleepPreparation": "Stel de Beyond LED kleur in wanneer je je voorbereid om te gaan slapen"
-        },
         "title": "RGB Led"
       }
     },
@@ -1306,7 +1286,6 @@
       "options": {
         "declineOnInviteWhileAsleep": {
           "customMessage": {
-            "description": "Voer het bericht in om te verzenden wanneer een uitnodiging wordt geweigerd",
             "placeholder": "Ik slaap op dit moment! (Afgewezen door OyasumiVR)",
             "title": "Aangepast bericht"
           },
@@ -1619,10 +1598,6 @@
         }
       },
       "presetAuthor": "van {author}"
-    },
-    "tab": {
-      "general": "Algemeen",
-      "sleepingAnimations": "Slaap Animaties"
     },
     "title": "OSC Automatiseringen"
   },
@@ -2190,20 +2165,8 @@
       },
       "run": "Start Afsluit Procedure",
       "title": "Afsluit Procedure Acties",
-      "turnOffBaseStations": {
-        "description": "Dit zet alle base stations uit die nog aan staan",
-        "title": "Zet base stations uit"
-      },
-      "turnOffControllers": {
-        "description": "Dit zet alle controllers uit die nog aan staan",
-        "title": "Zet controllers uit"
-      },
       "turnOffDevices": {
         "title": "Zet apparaten uit"
-      },
-      "turnOffTrackers": {
-        "description": "Dit zet alle trackers uit die nog aan staan",
-        "title": "Zet trackers uit"
       }
     },
     "tabs": {
@@ -2280,7 +2243,6 @@
         "title": "Wanneer je hartslag laag genoeg is voor een bepaalde periode"
       }
     },
-    "experimentalAutomation": "Deze automatisering is momenteel nog experimenteel en het kan zijn dat deze nog niet betrouwbaar is.",
     "modals": {
       "disableAfterTime": {
         "description": "Schakel de slaap modus uit nadat deze actief is geweest voor een bepaalde tijd.",
@@ -2332,10 +2294,6 @@
         "whenTurningOn": "Bij het aanzetten van"
       },
       "enableAtBatteryPercentage": {
-        "errors": {
-          "thresholdNotInteger": "Het percentage moet een geheel getal zijn.",
-          "thresholdOutOfRange": "Het percentage moet tussen de 0% en 100% vallen."
-        },
         "fallsBelow": "Valt onder de",
         "title": "Slaap modus inschakelen",
         "whenA": "Wanneer een"
@@ -2359,7 +2317,6 @@
           "description": "Wanneer dit aan staat, zal de slaap detector ook naar je slaap houding kijken.",
           "title": "Slaap houding gebruiken"
         },
-        "description": "Met deze feature zal OyasumiVR automatisch de slaap modus inschakelen wanneer je in slaap bent gevallen. Dit is gebaseerd op de beweging van je VR headset.",
         "detectionWindow": {
           "description": "Hoe lang OyasumiVR zal wachten voordat het aanneemt dat je in slaap gevallen bent",
           "title": "Detectie venster",
@@ -2383,8 +2340,7 @@
         "timeWindow": {
           "description": "Sta slaap detectie alleen toe om de slaap modus te activeren tussen bepaalde tijden",
           "title": "Tijdsvenster"
-        },
-        "title": "Slaap modus inschakelen"
+        }
       },
       "enableOnHeartRateCalmPeriod": {
         "bpm": {
@@ -2487,7 +2443,6 @@
           "status": "Verander mijn status naar",
           "statusMessage": "Verander mijn status bericht naar"
         },
-        "script": "Slaap Modus Uitgeschakeld",
         "title": "Wanneer ik wakker word"
       },
       "onSleepEnable": {
@@ -2495,7 +2450,6 @@
           "status": "Verander mijn status naar",
           "statusMessage": "Verander mijn status bericht naar"
         },
-        "script": "Slaap Modus Ingeschakeld",
         "title": "Wanneer ik ga slapen"
       },
       "onSleepPreparation": {
@@ -2503,7 +2457,6 @@
           "status": "Verander mijn status naar",
           "statusMessage": "Verander mijn status bericht naar"
         },
-        "script": "Slaap Voorbereiding",
         "title": "Wanneer ik me voorbereid om te gaan slapen"
       }
     },
@@ -2546,9 +2499,6 @@
         "DEFAULT": "Standaard Microfoon: {deviceName}"
       },
       "title": "Microfoon apparaat"
-    },
-    "config": {
-      "title": "Configuratie"
     },
     "controllerBinding": {
       "automations": "Controller Binding Automatiseringen",
@@ -2705,17 +2655,14 @@
     "description": "Hier kan je OyasumiVR configureren om automatisch je VRChat avatar te veranderen bij verschillende gebeurtenissen. Dit kan handig zijn als je van avatar wilt wisselen wanneer je in slaap valt, of wakker word!",
     "onSleepDisable": {
       "description": "Verander mijn avatar naar",
-      "script": "Slaap Modus Uitgeschakeld",
       "title": "Wanneer ik wakker word"
     },
     "onSleepEnable": {
       "description": "Verander mijn avatar naar",
-      "script": "Slaap Modus Ingeschakeld",
       "title": "Wanneer ik ga slapen"
     },
     "onSleepPreparation": {
       "description": "Verander mijn avatar naar",
-      "script": "Slaap Voorbereiding",
       "title": "Wanneer ik me voorbereid om te gaan slapen"
     },
     "title": "Avatar Automatiseringen"

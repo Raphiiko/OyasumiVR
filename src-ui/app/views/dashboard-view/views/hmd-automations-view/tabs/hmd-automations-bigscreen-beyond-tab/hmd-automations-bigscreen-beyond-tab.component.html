@@ -96,7 +96,6 @@
           class="with-margin"
           [disabled]="!rgbControlConfig[automation]"
           [color]="asColor(rgbControlConfig[asRgbControlKey(automation + 'Rgb')])"
-          [title]="'hmd-automations.bigscreenBeyond.rgb.pickerTitle.' + automation"
           (colorChange)="updateRgbAutomation(automation, $event)"
         ></app-color-picker>
         <label class="switch-toggle">

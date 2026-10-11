@@ -19,9 +19,6 @@
     "modeInfoModal": {
       "title": "Mode Kontrol Kecerahan"
     },
-    "softwareBrightness": {
-      "description": "Menyesuaikan kecerahan gambar yang ditampilkan di headset VR Anda"
-    },
     "title": "Automasi Kecerahan"
   },
   "chaperone-automations": {
@@ -104,12 +101,10 @@
       "lighthouseStatus": {
         "on": "Aktif",
         "sleep": "Tertidur",
-        "standby": "SIaga",
-        "unknown": "Status tidak diketahui"
+        "standby": "SIaga"
       },
       "noDevices": "Tidak ada perangkat ditemukan",
-      "title": "Perangkat",
-      "turnOffAll": "SEMUA"
+      "title": "Perangkat"
     },
     "event-log-entry": {
       "type": {
@@ -622,10 +617,6 @@
       },
       "presetAuthor": "dari {author}"
     },
-    "tab": {
-      "general": "Umum",
-      "sleepingAnimations": "Animasi tidur"
-    },
     "title": "Otomasi OSC"
   },
   "overlay": {
@@ -1031,20 +1022,8 @@
         "title": "Keluar SteamVR"
       },
       "run": "Jalankan urutan",
-      "turnOffBaseStations": {
-        "description": "Mematikan semua base stations yang masih aktif",
-        "title": "Matikan base stations"
-      },
-      "turnOffControllers": {
-        "description": "Mematikan kontrolermu",
-        "title": "Matikan Kontroler"
-      },
       "turnOffDevices": {
         "title": "Matikan Perangkat"
-      },
-      "turnOffTrackers": {
-        "description": "Mematikan trackermu",
-        "title": "Matikan tracker"
       }
     },
     "title": "Urutan Shutdown",
@@ -1086,7 +1065,6 @@
         "title": "Saat detak jantung saya tenang untuk jangka waktu tertentu"
       }
     },
-    "experimentalAutomation": "Otomatisasi ini bersifat eksperimental dan mungkin belum dapat diandalkan.",
     "modals": {
       "disableAtTime": {
         "description": "Menonaktifkan mode tidur pada waktu tertentu dalam sehari.",
@@ -1100,10 +1078,6 @@
       },
       "enableAtBatteryPercentage": {
         "Controller": "Kontroler",
-        "errors": {
-          "thresholdNotInteger": "Nilai persentase harus berupa angka bulat.",
-          "thresholdOutOfRange": "Persentasenya harus antara 0% dan 100%."
-        },
         "fallsBelow": "Jatuh dibawah",
         "title": "Nyalakan mode tidur",
         "whenA": "Ketika"
@@ -1119,7 +1093,6 @@
           "description": "Anda perlu mengkalibrasi setidaknya satu kali sebelum mencoba menggunakan fitur ini.",
           "title": "Kalibrasi"
         },
-        "description": "Dengan mengaktifkan fitur ini, OyasumiVR akan secara otomatis mengaktifkan mode tidur apabila ia menebak bahwa Anda tertidur berdasarkan gerakan Anda.",
         "detectionWindow": {
           "description": "Berapa lama OyasumiVR harus menunggu sebelum mendeteksi Anda tertidur",
           "title": "Jendela deteksi",
@@ -1143,8 +1116,7 @@
         "timeWindow": {
           "description": "Hanya izinkan deteksi tidur untuk mengaktifkan mode tidur di antara jam-jam tertentu dalam sehari",
           "title": "Jendela aktivasi"
-        },
-        "title": "Nyalakan mode tidur"
+        }
       },
       "enableOnHeartRateCalmPeriod": {
         "bpm": {
@@ -1242,9 +1214,6 @@
         "DEFAULT": "Perangkat Bawaan:\n{deviceName}"
       },
       "title": "Perangkat audio mikrofon"
-    },
-    "config": {
-      "title": "Konfigurasi"
     },
     "controllerBinding": {
       "automations": "Otomatisasi Binding Kontroler",

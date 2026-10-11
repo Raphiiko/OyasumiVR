@@ -59,8 +59,7 @@
       "lighthouseStatus": {
         "on": "Actif"
       },
-      "title": "Appareils",
-      "turnOffAll": "TOUT"
+      "title": "Appareils"
     },
     "event-log-entry": {
       "type": {
@@ -642,10 +641,6 @@
       },
       "presetAuthor": "par {author}"
     },
-    "tab": {
-      "general": "Général",
-      "sleepingAnimations": "Animations de sommeil"
-    },
     "title": "Automatisations OSC"
   },
   "overlay": {
@@ -890,10 +885,6 @@
       },
       "enableAtBatteryPercentage": {
         "Controller": "Contrôleur",
-        "errors": {
-          "thresholdNotInteger": "Le pourcentage doit être un nombre entier.",
-          "thresholdOutOfRange": "Le pourcentage doit être entre 0% et 100%."
-        },
         "fallsBelow": "Se décharge sous",
         "title": "Activer le mode sommeil",
         "whenA": "Quand un"
@@ -920,8 +911,7 @@
         },
         "sleepCheck": {
           "title": "Me demander si je suis eveillé(e) avant d'activer le mode sommeil"
-        },
-        "title": "Activer le mode sommeil"
+        }
       },
       "enableOnHeartRateCalmPeriod": {
         "title": "Activer le mode sommeil"
@@ -978,11 +968,9 @@
     },
     "general": {
       "onSleepDisable": {
-        "script": "Mode sommeil désactivé",
         "title": "Quand je me réveille"
       },
       "onSleepEnable": {
-        "script": "Mode sommeil activé",
         "title": "Quand je vais dormir"
       }
     },
@@ -1042,11 +1030,9 @@
   },
   "vrchatAvatarAutomations": {
     "onSleepDisable": {
-      "script": "Mode sommeil désactivé",
       "title": "Quand je me réveille"
     },
     "onSleepEnable": {
-      "script": "Mode sommeil activé",
       "title": "Quand je vais dormir"
     }
   },

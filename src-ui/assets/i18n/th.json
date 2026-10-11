@@ -28,9 +28,6 @@
     "automations": {
       "label": "{count} การทำงานอัตโนมัติ"
     },
-    "config": {
-      "title": "การตั้งค่า"
-    },
     "description": "เปลี่ยนระดับเสียงของอุปกรณ์เสียงโดยอัตโนมัติเมื่อคุณหลับหรือตื่นนอน มีประโยชน์หากคุณไม่ต้องการให้คนอื่นมารบกวนการนอนของคุณ",
     "devices": {
       "description": "เลือกอุปกรณ์เสียงเพื่อตั้งระดับเสียงโดยอัตโนมัติ",
@@ -116,7 +113,6 @@
     "detailsTitle": "เหตุการณ์",
     "events": "เหตุการณ์",
     "hardwareBrightness": {
-      "description": "ปรับความสว่างของจอแสดงผล",
       "title": "ปรับความสว่างฮาร์ดแวร์"
     },
     "hmdConnectEventTooltip": "กำลังใช้งาน\nจะถูกนำไปใช้เมื่อ VR headset เชื่อมต่อกับ SteamVR",
@@ -135,7 +131,6 @@
       "title": "เฉพาะเมื่อปิดโหมดนอนหลับ"
     },
     "softwareBrightness": {
-      "description": "ปรับความสว่างของภาพที่แสดงใน VR headset",
       "title": "เปลี่ยนความสว่างซอฟต์แวร์"
     },
     "temperature": {
@@ -177,9 +172,6 @@
     },
     "cct-control-modal": {
       "colorTemperature": "อุณหภูมิสี"
-    },
-    "color-picker-modal": {
-      "title": "เลือกสี"
     },
     "confirm-modal": {
       "defaultTitle": "ยืนยัน"
@@ -293,12 +285,10 @@
         "booting": "กำลังบูต",
         "on": "ทำงาน",
         "sleep": "สลีป",
-        "standby": "สแตนด์บาย",
-        "unknown": "ไม่ทราบสถานะ"
+        "standby": "สแตนด์บาย"
       },
       "noDevices": "ไม่มีอุปกรณ์",
-      "title": "อุปกรณ์",
-      "turnOffAll": "ทั้งหมด"
+      "title": "อุปกรณ์"
     },
     "device-selector": {
       "noSelection": "เลือกอุปกรณ์",
@@ -410,7 +400,6 @@
         },
         "frameLimitChanged": {
           "reason": {
-            "HMD_CONNECT": "VR headset เชื่อมต่อแล้ว",
             "SLEEP_MODE_DISABLED": "ปิดโหมดนอนหลับแล้ว",
             "SLEEP_MODE_ENABLED": "เปิดโหมดนอนหลับแล้ว",
             "SLEEP_PREPARATION": "เตรียมตัวนอนแล้ว"
@@ -842,7 +831,6 @@
       "description": "สามารถสื่อสารกับ Home Assistant ผ่าน MQTT ได้ หากต้องการตั้งค่า ให้ระบุรายละเอียดการเชื่อมต่อ MQTT Broker ด้านล่าง",
       "mqttEnabled": {
         "description": "เปิดหรือปิดการเชื่อมต่อ MQTT",
-        "test": "ทดสอบการเชื่อมต่อ",
         "title": "เปิดใช้งานการเชื่อมต่อ"
       },
       "password": {
@@ -914,7 +902,6 @@
         "message": "คุณแน่ใจหรือไม่ที่จะเขียนทับพรีเซ็ต ''{name}''?",
         "title": "ยืนยันการเขียนทับ?"
       },
-      "currentPresets": "พรีเซ็ตปัจจุบัน",
       "delete": "ลบ",
       "load": "โหลด",
       "namePlaceholder": "ป้อนชื่อ",
@@ -990,7 +977,7 @@
         "INVALID_FORMAT": "รหัส 2FA ที่ถูกต้องคือตัวเลข 6 หลัก โปรดตรวจสอบข้อมูลที่ป้อน",
         "LAST_CODE_INVALID": "รหัส 2FA ที่ป้อนไม่ถูกต้อง"
       },
-      "logginInAs": "คุณกำลังเข้าสู่ระบบ VRChat ในชื่อ:",
+      "loggingInAs": "คุณกำลังเข้าสู่ระบบ VRChat ในชื่อ:",
       "title": "การยืนยันตัวตนสองชั้น"
     }
   },
@@ -1066,8 +1053,6 @@
       "placeholder": "ค้นหาอุปกรณ์..."
     },
     "status": {
-      "notObserved": "ไม่ได้เชื่อมต่อ",
-      "observed": "เชื่อมต่อแล้ว",
       "turningOff": "กำลังปิดเครื่อง...",
       "turningOn": "กำลังเปิดเครื่อง..."
     },
@@ -1235,11 +1220,6 @@
           "description": "เปลี่ยนสีไฟ Headset LED เมื่อเตรียมตัวนอน",
           "title": "เมื่อเตรียมตัวนอน"
         },
-        "pickerTitle": {
-          "onSleepDisable": "ตั้งค่าสี LED Beyond",
-          "onSleepEnable": "ตั้งค่าสี LED Beyond เมื่อนอนหลับ",
-          "onSleepPreparation": "ตั้งค่าสี LED Beyond"
-        },
         "title": "RGB LED"
       }
     },
@@ -1338,7 +1318,6 @@
       "options": {
         "declineOnInviteWhileAsleep": {
           "customMessage": {
-            "description": "ป้อนข้อความที่จะส่งเมื่อปฏิเสธ คำเชิญ",
             "placeholder": "ตอนนี้กำลังหลับอยู่! (ปฏิเสธโดย OyasumiVR)",
             "title": "ข้อความที่กำหนดเอง"
           },
@@ -1652,10 +1631,6 @@
         }
       },
       "presetAuthor": "โดย {author}"
-    },
-    "tab": {
-      "general": "ทั่วไป",
-      "sleepingAnimations": "อนิเมชั่นการนอนหลับ"
     },
     "title": "OSC อัตโนมัติ"
   },
@@ -2279,20 +2254,8 @@
       },
       "run": "ดำเนินการปิดระบบ",
       "title": "คำสั่งเมื่อปิดระบบ",
-      "turnOffBaseStations": {
-        "description": "ปิด Base Station ที่ทำงานอยู่",
-        "title": "ปิด Base Station"
-      },
-      "turnOffControllers": {
-        "description": "ปิดคอนโทรลเลอร์",
-        "title": "ปิดคอนโทรลเลอร์"
-      },
       "turnOffDevices": {
         "title": "ปิดอุปกรณ์"
-      },
-      "turnOffTrackers": {
-        "description": "ปิด Tracker",
-        "title": "ปิด Tracker"
       }
     },
     "tabs": {
@@ -2370,7 +2333,6 @@
         "title": "เมื่อตรวจพบการนอนหลับจากอัตราการเต้นของหัวใจ"
       }
     },
-    "experimentalAutomation": "ฟังก์ชันทดลอง การทำงานอาจไม่เสถียร",
     "modals": {
       "disableAfterTime": {
         "description": "ปิดโหมดนอนหลับหลังจากเวลาผ่านไป",
@@ -2424,10 +2386,6 @@
       "enableAtBatteryPercentage": {
         "Controller": "คอนโทรลเลอร์",
         "GenericTracker": "Tracker",
-        "errors": {
-          "thresholdNotInteger": "กรุณาระบุเป็นตัวเลข",
-          "thresholdOutOfRange": "กรุณาระบุค่าระหว่าง 0 ถึง 100"
-        },
         "fallsBelow": "ระดับแบตเตอรี่",
         "title": "เปิดโหมดนอนหลับ",
         "whenA": "เป้าหมาย"
@@ -2451,7 +2409,6 @@
           "description": "พิจารณาทิศทางของ Headset",
           "title": "พิจารณาท่านอน"
         },
-        "description": "ตรวจจับการนอนหลับและเข้าสู่โหมดนอนหลับ\nหาก Headset มีการเคลื่อนไหว ตัวจับเวลาจะรีเซ็ตและเริ่มวัดใหม่",
         "detectionWindow": {
           "description": "หากไม่มีการเคลื่อนไหวตามเวลาที่กำหนด จะถือว่านอนหลับ",
           "title": "ตัวจับเวลาการตรวจจับ",
@@ -2475,8 +2432,7 @@
         "timeWindow": {
           "description": "เปิดใช้งานเฉพาะในช่วงเวลาที่กำหนด",
           "title": "ช่วงเวลาที่เปิดใช้งาน"
-        },
-        "title": "เปิดโหมดนอนหลับ"
+        }
       },
       "enableOnHeartRateCalmPeriod": {
         "bpm": {
@@ -2579,7 +2535,6 @@
           "status": "ตั้งค่าสถานะ",
           "statusMessage": "ตั้งค่าข้อความสถานะ"
         },
-        "script": "ปิดโหมดนอนหลับ",
         "title": "เมื่อตื่นนอน"
       },
       "onSleepEnable": {
@@ -2587,7 +2542,6 @@
           "status": "ตั้งค่าสถานะ",
           "statusMessage": "ตั้งค่าข้อความสถานะ"
         },
-        "script": "เปิดโหมดนอนหลับ",
         "title": "เมื่อนอนหลับ"
       },
       "onSleepPreparation": {
@@ -2595,7 +2549,6 @@
           "status": "ตั้งค่าสถานะ",
           "statusMessage": "ตั้งค่าข้อความสถานะ"
         },
-        "script": "เตรียมตัวนอน",
         "title": "เมื่อเตรียมตัวนอน"
       }
     },
@@ -2638,9 +2591,6 @@
         "DEFAULT": "อุปกรณ์เริ่มต้น:\n{deviceName}"
       },
       "title": "อุปกรณ์เสียงไมโครโฟน"
-    },
-    "config": {
-      "title": "การกำหนดค่า"
     },
     "controllerBinding": {
       "automations": "Controller Binding อัตโนมัติ",
@@ -2803,17 +2753,14 @@
     "description": "เปลี่ยน Avatar VRChat โดยอัตโนมัติ",
     "onSleepDisable": {
       "description": "เปลี่ยน Avatar",
-      "script": "ปิดโหมดนอนหลับ",
       "title": "เมื่อตื่นนอน"
     },
     "onSleepEnable": {
       "description": "เปลี่ยน Avatar",
-      "script": "เปิดโหมดนอนหลับ",
       "title": "เมื่อนอนหลับ"
     },
     "onSleepPreparation": {
       "description": "เปลี่ยน Avatar",
-      "script": "เตรียมตัวนอน",
       "title": "เมื่อเตรียมตัวนอน"
     },
     "title": "เปลี่ยน Avatar"
