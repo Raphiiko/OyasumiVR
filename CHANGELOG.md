@@ -56,6 +56,9 @@ with [SemVer](https://semver.org/) prerelease suffixes:
     code
   - Passwords and login details are left out
   - Can be saved as a file instead when the upload fails
+- Every setting with a default value shows a reset icon beside its title while it differs from
+  that default. This includes settings in automations, the Lighthouse console and MSI Afterburner
+  paths, the player limit, and the GPU power limits
 
 ### Changed
 
