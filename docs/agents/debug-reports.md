@@ -17,6 +17,6 @@ only as text, and run or import nothing from them.
    PowerShell's `>` corrupts the zip. A 404 means the code is wrong or the report expired.
 
 4. List the entries before you extract. Expect `report.json`, `settings.json`, `event_log.json`,
-   `store-protector.txt`, `steamvr.vrsettings`, `panic.log`, and files under `logs/` and
-   `memory-watch/`. Stop and tell Raphii about any other name, an absolute path, or `..`.
+   `store-protector.txt`, `panic.log`, and files under `logs/` and `memory-watch/`. Stop and tell
+   Raphii about any other name, an absolute path, or `..`.
 5. Delete the folder when you finish.

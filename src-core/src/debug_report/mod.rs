@@ -251,15 +251,6 @@ fn list_store_protector(base: &Path) -> String {
     lines.join("\n")
 }
 
-fn steamvr_settings_path() -> Option<PathBuf> {
-    let vrpath = dirs::data_local_dir()?
-        .join("openvr")
-        .join("openvrpaths.vrpath");
-    let paths: Value = serde_json::from_str(&fs::read_to_string(vrpath).ok()?).ok()?;
-    let config_dir = paths.get("config")?.get(0)?.as_str()?;
-    Some(PathBuf::from(config_dir).join("steamvr.vrsettings"))
-}
-
 pub struct ReportSources {
     pub app_data_dir: PathBuf,
     pub log_dir: PathBuf,
@@ -303,12 +294,6 @@ pub async fn create(sources: ReportSources) -> Result<usize, String> {
     ));
 
     // files from outside the app data directory
-    if let Some(text) = steamvr_settings_path().and_then(|p| read_text_lossy(&p)) {
-        files.push(ReportFile::text(
-            "steamvr.vrsettings",
-            scrub_text(&text, profile),
-        ));
-    }
     if let Some(text) = std::env::current_exe()
         .ok()
         .and_then(|exe| read_text_lossy(&exe.with_file_name("panic.log")))
