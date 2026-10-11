@@ -116,9 +116,17 @@ fn short_path(path: &Path) -> Option<PathBuf> {
 
 fn is_secret_key(key: &str) -> bool {
     let key = key.to_ascii_lowercase();
-    ["password", "token", "cookie", "secret", "credentials"]
-        .iter()
-        .any(|word| key.contains(word))
+    [
+        "password",
+        "token",
+        "cookie",
+        "secret",
+        "credentials",
+        "username",
+        "loginidentifier",
+    ]
+    .iter()
+    .any(|word| key.contains(word))
 }
 
 fn scrub_value(value: &mut Value) {
@@ -421,10 +429,11 @@ mod tests {
         let json = r#"{
             "VRCHAT_API": {"profiles": [{"authCookie": "a", "twoFactorCookie": null,
                 "rememberedCredentials": {"username": "u", "password": "p"}, "protectedSecret": "s",
-                "userId": "usr_1"}]},
+                "userId": "usr_1", "username": "login", "displayName": "Raphii",
+                "pendingTwoFactorLoginIdentifier": "login"}]},
             "APP_SETTINGS": {"mqttPassword": "", "mqttProtectedPassword": "x", "mqttHost": "10.0.0.2",
-                "oscServerEnabled": true},
-            "PULSOID_API": {"accessToken": "t", "expiresAt": 5}
+                "mqttUsername": "mqtt", "oscServerEnabled": true},
+            "PULSOID_API": {"accessToken": "t", "username": "pulsoid", "expiresAt": 5}
         }"#;
         let scrubbed: Value = serde_json::from_str(&scrub_settings(json, None).unwrap()).unwrap();
         let profile = &scrubbed["VRCHAT_API"]["profiles"][0];
@@ -433,12 +442,17 @@ mod tests {
         assert_eq!(profile["rememberedCredentials"], REMOVED);
         assert_eq!(profile["protectedSecret"], REMOVED);
         assert_eq!(profile["userId"], "usr_1");
+        assert_eq!(profile["username"], REMOVED);
+        assert_eq!(profile["displayName"], "Raphii");
+        assert_eq!(profile["pendingTwoFactorLoginIdentifier"], REMOVED);
         let app = &scrubbed["APP_SETTINGS"];
         assert_eq!(app["mqttPassword"], "");
         assert_eq!(app["mqttProtectedPassword"], REMOVED);
         assert_eq!(app["mqttHost"], "10.0.0.2");
+        assert_eq!(app["mqttUsername"], REMOVED);
         assert_eq!(app["oscServerEnabled"], true);
         assert_eq!(scrubbed["PULSOID_API"]["accessToken"], REMOVED);
+        assert_eq!(scrubbed["PULSOID_API"]["username"], REMOVED);
         assert_eq!(scrubbed["PULSOID_API"]["expiresAt"], 5);
     }
 
