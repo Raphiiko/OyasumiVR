@@ -278,7 +278,21 @@ cleanup() {
   [ -d "$root" ] || rm -f "$HOME/.ssh/.oyasumivr-keys.lock"
 }
 
+# diagnostics: prints the releases, the service state and the service log of the past 7 days
+diagnostics() {
+  present
+  echo "current: $(current)"
+  echo "previous: $(readlink "$root/previous" 2>/dev/null || true)"
+  echo "releases: $(ls "$root/releases" 2>/dev/null | tr '\n' ' ' || true)"
+  echo "info: $(inspect)"
+  echo
+  systemctl --user show "$unit" --no-pager \
+    -p LoadState,ActiveState,SubState,Result,NRestarts,ExecMainStatus,ActiveEnterTimestamp 2>&1 || true
+  echo
+  journalctl --user -u "$unit" --no-pager -o short-iso --since -7d -n 2000 2>&1 || true
+}
+
 case "${1:-}" in
-  identity | inspect | present | current | install | uninstaller | provision | clients | start | rollback | prune | cleanup) "$@" ;;
+  identity | inspect | present | current | install | uninstaller | provision | clients | start | rollback | prune | cleanup | diagnostics) "$@" ;;
   *) exit 64 ;;
 esac
