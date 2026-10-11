@@ -3,7 +3,7 @@ import { GPUDevice, GPUPowerLimit } from '../../../../../models/gpu-device';
 import { AUTOMATION_CONFIGS_DEFAULT } from '../../../../../models/automations';
 import { NvmlService } from '../../../../../services/nvml.service';
 import { GpuAutomationsService } from '../../../../../services/gpu-automations.service';
-import { debounceTime, firstValueFrom, Subject } from 'rxjs';
+import { debounceTime, firstValueFrom, groupBy, mergeMap, Subject } from 'rxjs';
 import { noop, vshrink } from '../../../../../utils/animations';
 import { TString } from 'src-ui/app/models/translatable-string';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -27,7 +27,7 @@ export class GpuPowerlimitingPaneComponent implements OnInit {
   protected powerLimitOnSleepEnable?: GPUPowerLimit;
   protected onSleepDisableAutomationEnabled = false;
   protected powerLimitOnSleepDisable?: GPUPowerLimit;
-  /** Carries limit changes and resets, so a reset replaces a change that is still debouncing. */
+  /** Carries limit changes and resets per card, so a reset replaces that card's pending change. */
   protected readonly powerLimitChange: Subject<{
     automation: 'SLEEP_ENABLE' | 'SLEEP_DISABLE';
     limit?: GPUPowerLimit;
@@ -95,7 +95,11 @@ export class GpuPowerlimitingPaneComponent implements OnInit {
     });
     flushOnDestroy(this.powerLimitChange, destroyRef);
     this.powerLimitChange
-      .pipe(debounceTime(100), takeUntilDestroyed())
+      .pipe(
+        groupBy(({ automation }) => automation),
+        mergeMap((changes) => changes.pipe(debounceTime(100))),
+        takeUntilDestroyed()
+      )
       .subscribe(async ({ automation, limit }) => {
         if (!limit) {
           await this.gpuAutomations.resetPowerLimitAutomation(
