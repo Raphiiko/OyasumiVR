@@ -7,17 +7,6 @@ use windows::Win32::Graphics::Dxgi::{
 
 use crate::{elevated_sidecar::launcher, globals::STEAM_APP_KEY};
 
-/// Other VR tools whose presence often explains an issue.
-const OTHER_VR_APPS: &[&str] = &[
-    "XSOverlay.exe",
-    "AdvancedSettings.exe",
-    "VRCX.exe",
-    "VirtualDesktop.Streamer.exe",
-    "OVRServer_x64.exe",
-    "vrmonitor.exe",
-    "VRChat.exe",
-];
-
 pub async fn collect() -> Value {
     let launcher_state = tokio::task::spawn_blocking(launcher::state)
         .await
@@ -26,13 +15,6 @@ pub async fn collect() -> Value {
     let last_launcher_result = launcher::last_launcher_result().map(
         |code| json!({ "code": code, "description": launcher::describe_launcher_result(code) }),
     );
-
-    let mut running_apps = Vec::new();
-    for name in OTHER_VR_APPS {
-        if crate::utils::is_process_active(name, false).await {
-            running_apps.push(*name);
-        }
-    }
 
     let devices = crate::openvr::devices::get_devices().await;
 
@@ -45,7 +27,6 @@ pub async fn collect() -> Value {
             "webview2Version": tauri::webview_version().ok(),
         },
         "system": system_info(),
-        "runningApps": running_apps,
         "elevatedFeatures": {
             "usesScheduledTask": crate::elevated_sidecar::uses_scheduled_task().await,
             "sidecarStarted": crate::elevated_sidecar::commands::elevated_sidecar_started().await,
