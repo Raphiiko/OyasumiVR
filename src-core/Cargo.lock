@@ -3927,7 +3927,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumivr"
-version = "26.10.0-beta.19"
+version = "26.10.0-beta.20"
 dependencies = [
  "async-recursion",
  "base64 0.23.1",
@@ -4010,7 +4010,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumivr-shared"
-version = "26.10.0-beta.19"
+version = "26.10.0-beta.20"
 dependencies = [
  "flexi_logger",
  "log",
