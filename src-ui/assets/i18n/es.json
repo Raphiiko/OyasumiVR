@@ -28,9 +28,6 @@
     "automations": {
       "label": "{count, plural, one {1 automatización} other {# automatizaciones}}"
     },
-    "config": {
-      "title": "Configuración"
-    },
     "description": "¡Cambie automáticamente el volumen de sus dispositivos de audio cuando se duerma o se despierta! Esto puede ser útil si desea evitar que otros perturben su sueño.",
     "devices": {
       "description": "Seleccione un dispositivo de audio para automatizar su nivel de volumen",
@@ -116,7 +113,6 @@
     "detailsTitle": "Evento",
     "events": "Eventos",
     "hardwareBrightness": {
-      "description": "Ajusta el brillo de la pantalla.",
       "title": "Cambia el brillo del hardware a"
     },
     "hmdConnectEventTooltip": "Estas configuraciones se aplicarán cuando tu visor se conecte a SteamVR",
@@ -135,7 +131,6 @@
       "title": "Sólo mientras el modo sueño está desactivado"
     },
     "softwareBrightness": {
-      "description": "Ajusta el brillo de la imagen mostrada en tu visor de RV",
       "title": "Cambia el brillo del software a"
     },
     "temperature": {
@@ -177,9 +172,6 @@
     },
     "cct-control-modal": {
       "colorTemperature": "Temperatura de color"
-    },
-    "color-picker-modal": {
-      "title": "Seleccionar color"
     },
     "confirm-modal": {
       "defaultTitle": "Confirmar"
@@ -291,12 +283,10 @@
         "booting": "Arrancando",
         "on": "Activo",
         "sleep": "Durmiendo",
-        "standby": "En espera",
-        "unknown": "Estado desconocido"
+        "standby": "En espera"
       },
       "noDevices": "No se detectaron dispositivos",
-      "title": "Dispositivos",
-      "turnOffAll": "TODO"
+      "title": "Dispositivos"
     },
     "device-selector": {
       "noSelection": "Seleccionar dispositivos",
@@ -408,7 +398,6 @@
         },
         "frameLimitChanged": {
           "reason": {
-            "HMD_CONNECT": "Ya que tu visor se conectó",
             "SLEEP_MODE_DISABLED": "Ya que el modo sueño estaba desactivado",
             "SLEEP_MODE_ENABLED": "Ya que el modo sueño estaba activado",
             "SLEEP_PREPARATION": "Mientras te preparabas para dormir"
@@ -456,11 +445,8 @@
           },
           "reasons": {
             "HOTKEY": "Como se presionó una tecla de acceso rápido",
-            "MANUAL": "Encendido manual",
             "OYASUMI_START": "Cuando OyasumiVR comenzó",
-            "SLEEP_MODE_DISABLED": "Ya que el modo sueño estaba desactivado",
-            "STEAMVR_START": "Cuando SteamVR comenzó",
-            "STEAMVR_STOP": "Cuando SteamVR se detuvo"
+            "SLEEP_MODE_DISABLED": "Ya que el modo sueño estaba desactivado"
           }
         },
         "msiAfterburnerProfileSet": {
@@ -524,7 +510,6 @@
           }
         },
         "sleepDetectorEnableCancelled": {
-          "subtitle": "Ya que el usuario aún estaba despierto",
           "title": "Activación automática del modo sueño cancelada"
         },
         "sleepModeDisabled": {
@@ -597,7 +582,6 @@
         "turnedOffOpenVRDevices": {
           "reason": {
             "BATTERY_LEVEL": "Ya que el nivel de batería cayó por debajo del {threshold}%",
-            "CHARGING": "Ya que este dispositivo estaba cargando",
             "HOTKEY": "Ya que se presionó la tecla de acceso rápido",
             "MANUAL": "Apagado manualmente",
             "OSC_CONTROL": "Apagado via OSC",
@@ -699,8 +683,7 @@
           "title": "Grupo de VRChat"
         },
         "VRCHAT_INVITES": {
-          "description": "Eventos relacionados con las invitaciones y solicitudes de invitación de VRChat",
-          "title": "Solicitudes de invitación a VRChat"
+          "description": "Eventos relacionados con las invitaciones y solicitudes de invitación de VRChat"
         },
         "VRCHAT_STATUS": {
           "description": "Eventos relacionados con cambios en tu estado de VRChat",
@@ -837,7 +820,6 @@
       "description": "OyasumiVR puede comunicarse con Home Assistant a través de MQTT. Para configurarlo, facilite a continuación los datos de conexión de su agente MQTT.",
       "mqttEnabled": {
         "description": "Habilitar o deshabilitar la integración MQTT",
-        "test": "Conexión de prueba",
         "title": "Habilitar la integración"
       },
       "password": {
@@ -903,7 +885,6 @@
         "message": "¿Estás seguro de que quieres sobrescribir tu preset llamado ''{name}''?",
         "title": "¿Estás seguro?"
       },
-      "currentPresets": "Preajustes actuales",
       "delete": "Borrar preajuste",
       "load": "Cargar preajuste",
       "namePlaceholder": "Nombre de preajuste",
@@ -979,7 +960,7 @@
         "INVALID_FORMAT": "Un código 2FA válido es una secuencia de 6 números. Por favor, verifique su entrada.",
         "LAST_CODE_INVALID": "El código 2FA que has proporcionado era incorrecto."
       },
-      "logginInAs": "Estás iniciando sesión en VRCHAT como:",
+      "loggingInAs": "Estás iniciando sesión en VRCHAT como:",
       "title": "Autenticación de dos factores"
     }
   },
@@ -1011,7 +992,6 @@
     },
     "deviceType": {
       "CONTROLLER": "Controladores",
-      "LIGHTHOUSE": "Estaciones base",
       "PREVIOUSLY_SEEN": "Vistos anteriormente"
     },
     "tabs": {
@@ -1151,11 +1131,6 @@
           "description": "Cambiar el color del LED del HMD cuando me preparo para dormir",
           "title": "Cuando me preparo para dormir"
         },
-        "pickerTitle": {
-          "onSleepDisable": "Configura el color del LED al despertar",
-          "onSleepEnable": "Configura el color del LED al ir a dormir",
-          "onSleepPreparation": "Ajusta el color del LED cuando te prepares a dormir"
-        },
         "title": "RGB Led"
       }
     },
@@ -1252,7 +1227,6 @@
       "options": {
         "declineOnInviteWhileAsleep": {
           "customMessage": {
-            "description": "Introduzca el mensaje que se enviará cuando se rechace una invitación",
             "placeholder": "¡Estoy durmiendo! (Rechazado por OyasumiVR)",
             "title": "Mensaje personalizado"
           },
@@ -1506,9 +1480,6 @@
           "title": "Posiciones para dormir"
         }
       }
-    },
-    "tab": {
-      "sleepingAnimations": "Animaciones para dormir"
     },
     "title": "Automatizaciones OSC"
   },
@@ -1813,7 +1784,6 @@
         "title": "Bandeja de sistema"
       },
       "telemetry": {
-        "description": "OyasumiVR recopila telemetría anónima para ayudar a encontrar errores y mejorar la aplicación. Esto incluye informes de fallos y errores, información de versión, inicios de la aplicación, preferencias de idioma y otras estadísticas básicas de uso. La telemetría no contiene información que permita identificarte ni puede vincularse a una persona concreta. Como no es posible determinar qué datos de telemetría te pertenecen, no se pueden atender solicitudes de eliminación de datos individuales. Puedes desactivar la telemetría en cualquier momento en los ajustes generales de OyasumiVR.",
         "label": "Enviar datos de uso anónimos",
         "title": "Telemetría"
       },
@@ -2101,20 +2071,8 @@
       },
       "run": "Secuencia de ejecución",
       "title": "Acciones de secuencia de apagado",
-      "turnOffBaseStations": {
-        "description": "Apaga las estaciones base que siguen activas",
-        "title": "Apagar las estaciones base"
-      },
-      "turnOffControllers": {
-        "description": "Apaga tus mandos",
-        "title": "Apagar los controladores"
-      },
       "turnOffDevices": {
         "title": "Apagar los dispositivos"
-      },
-      "turnOffTrackers": {
-        "description": "Apaga tus trackers",
-        "title": "Desactivar trackers"
       }
     },
     "tabs": {
@@ -2191,7 +2149,6 @@
         "title": "Cuando mi ritmo cardíaco se calma durante un periodo de tiempo"
       }
     },
-    "experimentalAutomation": "Esta automatización es experimental y puede que aún no sea fiable.",
     "modals": {
       "disableAfterTime": {
         "description": "Deshabilite el modo sueño después de haber sido habilitado durante un cierto período de tiempo.",
@@ -2243,10 +2200,6 @@
       },
       "enableAtBatteryPercentage": {
         "Controller": "Controlador",
-        "errors": {
-          "thresholdNotInteger": "El valor porcentual tiene que ser un número entero.",
-          "thresholdOutOfRange": "El porcentaje debe estar comprendido entre el 0% y el 100%."
-        },
         "fallsBelow": "Cae por debajo de",
         "title": "Activar el modo sueño",
         "whenA": "Cuando un"
@@ -2270,7 +2223,6 @@
           "description": "Cuando está activado, el detector de sueño también tendrá en cuenta tu postura al dormir.",
           "title": "Considera la postura para dormir"
         },
-        "description": "Con esta función activada, OyasumiVR activará automáticamente el modo de reposo cuando adivine que estás dormido basándose en tu movimiento.",
         "detectionWindow": {
           "description": "Cuánto tiempo debe esperar OyasumiVR antes de detectar que estás dormido",
           "title": "Ventana de detección",
@@ -2294,8 +2246,7 @@
         "timeWindow": {
           "description": "Permitir que la detección de sueño active el modo sueño sólo entre determinadas horas del día.",
           "title": "Ventana de activación"
-        },
-        "title": "Activar el modo sueño"
+        }
       },
       "enableOnHeartRateCalmPeriod": {
         "bpm": {
@@ -2397,7 +2348,6 @@
           "status": "Establecer mi estado a",
           "statusMessage": "Establecer mi mensaje de estado a"
         },
-        "script": "Modo sueño desactivado",
         "title": "Cuando me despierto"
       },
       "onSleepEnable": {
@@ -2405,7 +2355,6 @@
           "status": "Establecer mi estado a",
           "statusMessage": "Establecer mi mensaje de estado a"
         },
-        "script": "Modo sueño activado",
         "title": "Cuando me voy a dormir"
       },
       "onSleepPreparation": {
@@ -2413,7 +2362,6 @@
           "status": "Establecer mi estado a",
           "statusMessage": "Establecer mi mensaje de estado a"
         },
-        "script": "Preparación para dormir",
         "title": "Cuando me preparo para dormir"
       }
     },
@@ -2455,9 +2403,6 @@
         "DEFAULT": "Dispositivo predeterminado:\n{deviceName}"
       },
       "title": "Dispositivo de audio del micrófono"
-    },
-    "config": {
-      "title": "Configuración"
     },
     "controllerBinding": {
       "automations": "Automatizaciones de enlace del controlador",
@@ -2617,17 +2562,14 @@
     "description": "Aquí puedes configurar OyasumiVR para que cambie automáticamente tu avatar de VRChat cuando ocurran ciertos eventos. Esto puede ser útil si quieres cambiar de avatar cuando te duermes o te despiertas.",
     "onSleepDisable": {
       "description": "Cambiar mi avatar a",
-      "script": "Modo sueño desactivado",
       "title": "Cuando me despierto"
     },
     "onSleepEnable": {
       "description": "Cambiar mi avatar a",
-      "script": "Modo sueño activado",
       "title": "Cuando me voy a dormir"
     },
     "onSleepPreparation": {
       "description": "Cambiar mi avatar a",
-      "script": "Preparación para dormir",
       "title": "Cuando me preparo para dormir"
     },
     "title": "Automatizaciones Avatar"

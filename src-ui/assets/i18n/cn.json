@@ -29,9 +29,6 @@
     "automations": {
       "label": "{count} 个自动化"
     },
-    "config": {
-      "title": "设置"
-    },
     "description": "当你入睡（或醒来）时，自动改变音频设备的音量！如果你想防止他人打扰你的睡眠，这将会非常有用。",
     "devices": {
       "description": "选择音频设备以自动调节其音量大小",
@@ -117,7 +114,6 @@
     "detailsTitle": "事件",
     "events": "事件",
     "hardwareBrightness": {
-      "description": "调整显示屏本身的亮度",
       "title": "将硬件亮度更改为"
     },
     "hmdConnectEventTooltip": "这些设置将在你的头显连接到 SteamVR 时应用",
@@ -136,7 +132,6 @@
       "title": "仅在睡眠模式禁用时"
     },
     "softwareBrightness": {
-      "description": "调整 VR 头显的图像亮度",
       "title": "将软件亮度更改为"
     },
     "temperature": {
@@ -178,9 +173,6 @@
     },
     "cct-control-modal": {
       "colorTemperature": "色温"
-    },
-    "color-picker-modal": {
-      "title": "选择颜色"
     },
     "confirm-modal": {
       "defaultTitle": "确认"
@@ -294,12 +286,10 @@
         "booting": "启动中",
         "on": "启动",
         "sleep": "休眠",
-        "standby": "待机",
-        "unknown": "未知状态"
+        "standby": "待机"
       },
       "noDevices": "没有检测到控制器或追踪器",
-      "title": "设备",
-      "turnOffAll": "全部"
+      "title": "设备"
     },
     "device-selector": {
       "noSelection": "选择设备",
@@ -411,7 +401,6 @@
         },
         "frameLimitChanged": {
           "reason": {
-            "HMD_CONNECT": "因为头显连接而触发",
             "SLEEP_MODE_DISABLED": "因为已关闭睡眠模式",
             "SLEEP_MODE_ENABLED": "因为已开启睡眠模式",
             "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
@@ -459,11 +448,8 @@
           },
           "reasons": {
             "HOTKEY": "由于你按下了快捷键",
-            "MANUAL": "手动设置",
             "OYASUMI_START": "由于 OyasumiVR 启动",
-            "SLEEP_MODE_DISABLED": "因为已关闭睡眠模式",
-            "STEAMVR_START": "由于 SteamVR 开启",
-            "STEAMVR_STOP": "由于 SteamVR 关闭"
+            "SLEEP_MODE_DISABLED": "因为已关闭睡眠模式"
           }
         },
         "msiAfterburnerProfileSet": {
@@ -527,7 +513,6 @@
           }
         },
         "sleepDetectorEnableCancelled": {
-          "subtitle": "由于你仍处于清醒状态",
           "title": "取消了睡眠模式的自动启用"
         },
         "sleepModeDisabled": {
@@ -600,7 +585,6 @@
         "turnedOffOpenVRDevices": {
           "reason": {
             "BATTERY_LEVEL": "当电池电量低于 {threshold}% 时",
-            "CHARGING": "当设备正在充电的时候",
             "HOTKEY": "因为你按下了快捷键",
             "MANUAL": "手动关闭",
             "OSC_CONTROL": "通过 OSC 关闭",
@@ -704,8 +688,7 @@
           "title": "VRChat 群组"
         },
         "VRCHAT_INVITES": {
-          "description": "与你的 VRChat 好友邀请相关的事件",
-          "title": "VRChat 邀请/加入请求"
+          "description": "与你的 VRChat 好友邀请相关的事件"
         },
         "VRCHAT_STATUS": {
           "description": "与 VRChat 状态变化相关的事件",
@@ -843,7 +826,6 @@
       "description": "OyasumiVR 可以通过 MQTT 与 Home Assistant 通信。为了设置这个，请在下面提供你的 MQTT broker 的连接细节。",
       "mqttEnabled": {
         "description": "启用或禁用 MQTT 集成",
-        "test": "测试连接",
         "title": "启用 MQTT"
       },
       "password": {
@@ -915,7 +897,6 @@
         "message": "你确定要覆盖名为''{name}''的预设吗？",
         "title": "你确定吗？"
       },
-      "currentPresets": "当前预设",
       "delete": "删除预设",
       "load": "加载预设",
       "namePlaceholder": "预设名称",
@@ -991,7 +972,7 @@
         "INVALID_FORMAT": "有效的验证代码是由 6 个数字组成的，请确认你输入的代码是正确的",
         "LAST_CODE_INVALID": "你提供的验证代码不正确"
       },
-      "logginInAs": "当前正在尝试登录的账户:",
+      "loggingInAs": "当前正在尝试登录的账户:",
       "title": "双重认证"
     }
   },
@@ -1035,7 +1016,6 @@
       "deviceTypes": {
         "CONTROLLER": "所有控制器",
         "HMD": "所有头显",
-        "LIGHTHOUSE": "所有定位基站",
         "TRACKER": "所有追踪器"
       },
       "individualDevices": "单独设备",
@@ -1047,7 +1027,6 @@
     "deviceType": {
       "CONTROLLER": "控制器",
       "HMD": "头显",
-      "LIGHTHOUSE": "基站",
       "PREVIOUSLY_SEEN": "已识别过的设备",
       "TRACKER": "追踪器"
     },
@@ -1067,8 +1046,6 @@
       "placeholder": "搜索设备..."
     },
     "status": {
-      "notObserved": "未连接",
-      "observed": "已连接",
       "turningOff": "正在关闭...",
       "turningOn": "正在开启..."
     },
@@ -1236,11 +1213,6 @@
           "description": "在我准备睡觉时改变 HMD LED 的颜色",
           "title": "当我准备睡觉时"
         },
-        "pickerTitle": {
-          "onSleepDisable": "设置醒来时的 Beyond LED 颜色",
-          "onSleepEnable": "设置入睡时的 Beyond LED 颜色",
-          "onSleepPreparation": "设置睡眠准备时的 Beyond LED 颜色"
-        },
         "title": "RGB Led"
       }
     },
@@ -1339,7 +1311,6 @@
       "options": {
         "declineOnInviteWhileAsleep": {
           "customMessage": {
-            "description": "输入当拒绝邀请时发送的消息",
             "placeholder": "我正在睡觉哦！（由 OyasumiVR 自动拒绝）",
             "title": "自定义消息"
           },
@@ -1654,10 +1625,6 @@
       },
       "presetAuthor": "由 {author} 制作"
     },
-    "tab": {
-      "general": "一般设置",
-      "sleepingAnimations": "睡眠动画"
-    },
     "title": "OSC 自动化"
   },
   "overlay": {
@@ -1967,7 +1934,6 @@
         "title": "系统托盘"
       },
       "telemetry": {
-        "description": "OyasumiVR 会收集匿名遥测数据，以帮助发现错误并改进应用程序。这些数据包括崩溃和错误报告、版本信息、应用程序启动、语言偏好设置以及其他基本使用统计数据。遥测数据不包含可识别个人身份的信息，也无法与特定个人关联。由于无法确定哪些遥测数据属于你，因此无法处理个人数据删除请求。你可以随时在 OyasumiVR 的常规设置中禁用遥测。",
         "label": "发送匿名的使用数据",
         "title": "匿名统计数据收集"
       },
@@ -2242,20 +2208,8 @@
       },
       "run": "运行序列",
       "title": "配置关机序列",
-      "turnOffBaseStations": {
-        "description": "关闭任何活动的基站",
-        "title": "关闭基站"
-      },
-      "turnOffControllers": {
-        "description": "关闭你的控制器",
-        "title": "关闭控制器"
-      },
       "turnOffDevices": {
         "title": "关闭设备"
-      },
-      "turnOffTrackers": {
-        "description": "关闭你的追踪器",
-        "title": "关闭追踪器"
       }
     },
     "tabs": {
@@ -2333,7 +2287,6 @@
         "title": "当我的心率在一段时间内保持平稳时"
       }
     },
-    "experimentalAutomation": "这个自动化操作目前是实验性的，并不稳定。",
     "modals": {
       "disableAfterTime": {
         "description": "在睡眠模式启用一定时间后禁用它",
@@ -2387,10 +2340,6 @@
       "enableAtBatteryPercentage": {
         "Controller": "控制器",
         "GenericTracker": "追踪器",
-        "errors": {
-          "thresholdNotInteger": "百分比值必须是整数",
-          "thresholdOutOfRange": "百分比必须介于 0% 和 100% 之间"
-        },
         "fallsBelow": "电量降低到",
         "title": "开启睡眠模式",
         "whenA": "当其中一个"
@@ -2414,7 +2363,6 @@
           "description": "启用后，睡眠检测器还将考虑你的睡眠姿势",
           "title": "考虑睡眠姿势"
         },
-        "description": "OyasumiVR 在开始检测你的睡眠状态之前应等待多长时间。启用该功能后，当 OyasumiVR 根据你的动作认为你在睡觉时，它将自动开启睡眠模式",
         "detectionWindow": {
           "description": "OyasumiVR 应该等待多久才开始检测你的睡眠状态",
           "title": "检测阈值",
@@ -2438,8 +2386,7 @@
         "timeWindow": {
           "description": "只允许检测器在一天中的某些时段启动睡眠模式",
           "title": "时段限制"
-        },
-        "title": "开启睡眠模式"
+        }
       },
       "enableOnHeartRateCalmPeriod": {
         "bpm": {
@@ -2542,7 +2489,6 @@
           "status": "将我的状态设置为",
           "statusMessage": "将我的状态消息设置为"
         },
-        "script": "关闭睡眠模式",
         "title": "当我醒来时"
       },
       "onSleepEnable": {
@@ -2550,7 +2496,6 @@
           "status": "将我的状态设置为",
           "statusMessage": "将我的状态消息设置为"
         },
-        "script": "开启睡眠模式",
         "title": "当我入睡时"
       },
       "onSleepPreparation": {
@@ -2558,7 +2503,6 @@
           "status": "将我的状态设置为",
           "statusMessage": "将我的状态消息设置为"
         },
-        "script": "睡眠准备",
         "title": "当我准备睡觉时"
       }
     },
@@ -2601,9 +2545,6 @@
         "DEFAULT": "默认麦克风:\n{deviceName}"
       },
       "title": "使用的麦克风设备"
-    },
-    "config": {
-      "title": "设置"
     },
     "controllerBinding": {
       "automations": "按键行为",
@@ -2766,17 +2707,14 @@
     "description": "在这里，你可以配置 OyasumiVR 在特定事件发生时自动为你更换 VRChat 模型。如果你希望在入睡（或醒来）时更换模型，这可能会很有用。",
     "onSleepDisable": {
       "description": "将我的模型更换为",
-      "script": "关闭睡眠模式",
       "title": "当我醒来时"
     },
     "onSleepEnable": {
       "description": "将我的模型更换为",
-      "script": "开启睡眠模式",
       "title": "当我入睡时"
     },
     "onSleepPreparation": {
       "description": "将我的模型更换为",
-      "script": "睡眠准备",
       "title": "当我准备入睡时"
     },
     "title": "模型"

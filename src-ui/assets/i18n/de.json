@@ -27,9 +27,6 @@
     "automations": {
       "label": "{count, plural, one {1 Automatisierung} other {# Automatisierungen}}"
     },
-    "config": {
-      "title": "Einstellung"
-    },
     "description": "Passt die Lautstärke deiner Audiogeräte automatisch an, wenn du einschläfst oder aufwachst. Das kann nützlich sein, wenn du verhindern willst, dass andere dich beim Schlafen stören",
     "devices": {
       "description": "Wähle ein Audiogerät aus um dessen Lautstärke zu automatisieren",
@@ -112,7 +109,6 @@
     "copyBrightness": "Kopiere den derzeitigen Helligkeitswert",
     "description": "OyasumiVR kann automatisch Helligkeit sowie Farbtemperaturen deines VR-Headsets zu bestimten Zeitpunkten anpassen (Schlafen und Aufwecken)",
     "hardwareBrightness": {
-      "description": "Bildschirmhelligkeit anpassen",
       "title": "Bildschirmhelligkeit ändern zu"
     },
     "miscConfig": "Andere Optionen",
@@ -129,7 +125,6 @@
       "title": "Nur wenn der Schlafmodus aktiviert ist ausführen"
     },
     "softwareBrightness": {
-      "description": "Passe die Helligkeit des im VR-Headset angezeigten Bildes an",
       "title": "Softwarehelligkeit ändern zu"
     },
     "temperature": {
@@ -171,9 +166,6 @@
     },
     "cct-control-modal": {
       "colorTemperature": "Farbtemperatur"
-    },
-    "color-picker-modal": {
-      "title": "Farbe auswählen"
     },
     "confirm-modal": {
       "defaultTitle": "Bestätigen"
@@ -277,12 +269,10 @@
         "booting": "Startet",
         "on": "Aktiv",
         "sleep": "Bereitschaft",
-        "standby": "Stand-by",
-        "unknown": "Unbekannter Status"
+        "standby": "Stand-by"
       },
       "noDevices": "Keine Geräte erkannt",
-      "title": "Geräte",
-      "turnOffAll": "ALLE"
+      "title": "Geräte"
     },
     "event-log-entry": {
       "type": {
@@ -410,11 +400,8 @@
           },
           "reasons": {
             "HOTKEY": "Da ein Hotkey gedrückt wurde",
-            "MANUAL": "Manuell eingeschaltet",
             "OYASUMI_START": "Da OyasumiVR gestartet ist",
-            "SLEEP_MODE_DISABLED": "Da der Schlafmodus ausgeschaltet war",
-            "STEAMVR_START": "Da SteamVR gestartet ist",
-            "STEAMVR_STOP": "Da SteamVR gestoppt ist"
+            "SLEEP_MODE_DISABLED": "Da der Schlafmodus ausgeschaltet war"
           }
         },
         "msiAfterburnerProfileSet": {
@@ -470,7 +457,6 @@
           }
         },
         "sleepDetectorEnableCancelled": {
-          "subtitle": "Da der Nutzer noch wach war",
           "title": "Automatisches Einschalten des Schlafmodus abgebrochen"
         },
         "sleepModeDisabled": {
@@ -541,7 +527,6 @@
         "turnedOffOpenVRDevices": {
           "reason": {
             "BATTERY_LEVEL": "Weil deine Battery unter {threshold}% gefallen ist",
-            "CHARGING": "Da das Gerät auflädt",
             "HOTKEY": "Da ein Hotkey gedrückt wurde",
             "MANUAL": "Manuell ausgeschaltet",
             "OSC_CONTROL": "Via OSC ausgeschaltet",
@@ -622,8 +607,7 @@
           "title": "Vrchat Avatar"
         },
         "VRCHAT_INVITES": {
-          "description": "Events bezüglich der VRChat Einladungen und Einladungsanfragen",
-          "title": "Vrchat Einladeanfragen"
+          "description": "Events bezüglich der VRChat Einladungen und Einladungsanfragen"
         },
         "VRCHAT_STATUS": {
           "description": "Events mit Bezug zu Änderungen vom VRChat Status"
@@ -757,7 +741,6 @@
       "description": "OyasumiVR kann mit den Home Assistant über MQTT kommunizieren. Um dies einzurichten, trage bitte die nötigen Informationen unten ein.",
       "mqttEnabled": {
         "description": "Aktiviere oder Deaktivierte die MQTT Integration",
-        "test": "Verbindung testen",
         "title": "Integration aktivieren"
       },
       "password": {
@@ -821,7 +804,6 @@
         "message": "Sicher, dass du deine Voreinstellung ''{name}'' überschreiben willst?",
         "title": "Bist du sicher?"
       },
-      "currentPresets": "Momentane Voreinstellung",
       "delete": "Voreinstellung löschen",
       "load": "Voreinstellung laden",
       "namePlaceholder": "Name voreinstellen",
@@ -896,7 +878,7 @@
         "INVALID_FORMAT": "Ein gültiger 2FA Code hat 6 Nummern. Bitte überprüfe deine Eingabe.",
         "LAST_CODE_INVALID": "Der 2FA Code war inkorrekt"
       },
-      "logginInAs": "Du bist in VRChat eingelogt als:",
+      "loggingInAs": "Du bist in VRChat eingelogt als:",
       "title": "Zwei Faktor Authentifizierung"
     }
   },
@@ -1024,11 +1006,6 @@
         "onSleepPreparation": {
           "description": "Ändere die VR-Headset Led-Farbe, wenn ich mich vorbereite schlafen zu gehen",
           "title": "Wenn ich mich fürs Schlafen vorbereite"
-        },
-        "pickerTitle": {
-          "onSleepDisable": "Ändere die Beyond LED-Farbe wenn ich aufwache",
-          "onSleepEnable": "Ändere die Beyond LED-Farbe wenn Schlafen gehe",
-          "onSleepPreparation": "Ändere die Beyond LED-Farbe wenn mich vorbereite Schlafen zu gehen"
         },
         "title": "RGB Led"
       }
@@ -1298,10 +1275,6 @@
       },
       "presetAuthor": "von {author}"
     },
-    "tab": {
-      "general": "Generell",
-      "sleepingAnimations": "Schlafanimationen"
-    },
     "title": "OSC-Automatisierungen"
   },
   "overlay": {
@@ -1562,7 +1535,6 @@
         "title": "Taskleiste"
       },
       "telemetry": {
-        "description": "OyasumiVR sammelt anonyme Telemetriedaten, um Fehler zu finden und die Anwendung zu verbessern. Dazu gehören Absturz- und Fehlerberichte, Versionsinformationen, Anwendungsstarts, Spracheinstellungen und weitere grundlegende Nutzungsstatistiken. Die Telemetriedaten enthalten keine personenbezogenen Informationen und lassen sich keiner bestimmten Person zuordnen. Da nicht ermittelt werden kann, welche Telemetriedaten zu dir gehören, können Anfragen zur Löschung einzelner Daten nicht erfüllt werden. Du kannst die Telemetrie jederzeit in den allgemeinen Einstellungen von OyasumiVR deaktivieren.",
         "label": "Sende anonymisierte Nutzerdaten",
         "title": "Telemetrie"
       },
@@ -1811,20 +1783,8 @@
       },
       "run": "Sequenz srarten",
       "title": "Herunterfahrsequenzaktionen",
-      "turnOffBaseStations": {
-        "description": "Schaltet alle Basistationen aus, die immernoch aktiv sind",
-        "title": "Alle Basisstationen ausschalten"
-      },
-      "turnOffControllers": {
-        "description": "Schaltet deine Kontroller aus",
-        "title": "Kontroller ausschalten"
-      },
       "turnOffDevices": {
         "title": "Geräte ausschalten"
-      },
-      "turnOffTrackers": {
-        "description": "Tracker ausschalten",
-        "title": "Tracker ausschalten"
       }
     },
     "tabs": {
@@ -1902,7 +1862,6 @@
         "title": "Wenn die Herzfrequenz für eine gewisse Zeit ruhig ist"
       }
     },
-    "experimentalAutomation": "Diese Automation is experimentel und eventuell nicht verlässlich",
     "modals": {
       "disableAfterTime": {
         "description": "Den Schlafmodus deaktivieren, wenn dieser für eine gewisse Zeit aktiviert war",
@@ -1954,10 +1913,6 @@
       },
       "enableAtBatteryPercentage": {
         "Controller": "Kontroller",
-        "errors": {
-          "thresholdNotInteger": "Die Prozentzahl muss eine ganze Nummer sein",
-          "thresholdOutOfRange": "Die Prozentzahl muss zwischen 0% und 100% liegen"
-        },
         "fallsBelow": "Fällt unter",
         "title": "Schlafmodus aktivieren",
         "whenA": "Wenn ein"
@@ -1981,7 +1936,6 @@
           "description": "Wenn aktiv, wird der Schlafdetector auch deine Schlafpose berücksichtigen",
           "title": "Schlafpose berücksichtigen"
         },
-        "description": "Wenn diese Funktion deaktiviert ist wird OyasumiVR atomatisch den Schlafmodus aktivieren, wenn es anhand deiner Bewegung erkennt, dass du eingeschlafen bist",
         "detectionWindow": {
           "description": "Wie lange OyasumiVR warten soll bevor es erkennt, dass du eingeschlafen bist",
           "title": "Zeitfenster zum Einschätzen, ob geschlafen wird",
@@ -2005,8 +1959,7 @@
         "timeWindow": {
           "description": "Den Schlafdetektor nur zwischen bestimmten Zeiten den Schlafmodus aktivieren",
           "title": "Zeitfenster"
-        },
-        "title": "Schlafmodus aktivieren"
+        }
       },
       "enableOnHeartRateCalmPeriod": {
         "bpm": {
@@ -2108,7 +2061,6 @@
           "status": "Setze meinen Status zu",
           "statusMessage": "Setze meine Status Nachricht zu"
         },
-        "script": "Schlaf Modus deaktivieren",
         "title": "Wenn ich aufwache"
       },
       "onSleepEnable": {
@@ -2116,7 +2068,6 @@
           "status": "Setze meinen Status zu",
           "statusMessage": "Setze meine Status Nachricht zu"
         },
-        "script": "Schlaf Modus aktivieren",
         "title": "Wenn ich einschlafe"
       },
       "onSleepPreparation": {
@@ -2124,7 +2075,6 @@
           "status": "Setze meinen Status zu",
           "statusMessage": "Setze meine Status Nachricht zu"
         },
-        "script": "Schlafvorbereitung",
         "title": "Wenn ich mich fürs Schlafen vorbereite"
       }
     },
@@ -2167,9 +2117,6 @@
         "DEFAULT": "Derzeitiges Gerät:\n{deviceName}"
       },
       "title": "Eingabegerät"
-    },
-    "config": {
-      "title": "Einstellung"
     },
     "controllerBinding": {
       "automations": "Kontrollertastenzuweisung Automationen",
@@ -2327,17 +2274,14 @@
     "description": "Hier kannst du OyasumiVR einrichten um zu bestimmten Events deinen VRChat Avatar automatisch zu ändern. Dies kann besonders nützlich sein, wenn du einschläfst oder aufwachst",
     "onSleepDisable": {
       "description": "Ändere meinen Avatar zu",
-      "script": "Schlafmodus deaktiviert",
       "title": "Wenn ich aufwache"
     },
     "onSleepEnable": {
       "description": "Ändere meinen Avatar zu",
-      "script": "Schlafmodus aktiviert",
       "title": "Wenn ich einschlafe"
     },
     "onSleepPreparation": {
       "description": "Ändere meinen Avatar zu",
-      "script": "Schlafvorbereitung",
       "title": "Wenn ich mich fürs Schlafen vorbereite"
     },
     "title": "Avatar Automationen"

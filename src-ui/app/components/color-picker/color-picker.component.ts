@@ -8,7 +8,6 @@ import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from 
   standalone: false,
 })
 export class ColorPickerComponent {
-  @Input() public title?: string;
   @Input() public disabled = false;
   protected _color: [number, number, number] = [255, 255, 255];
   public get color(): [number, number, number] {

@@ -52,7 +52,7 @@ export class PlayerJoinLeaveDisableSleepModeModalComponent
     },
     {
       id: 'DISABLED',
-      label: 'join-notifications.modeOptions.DISABLED',
+      label: 'sleep-detection.modals.disableForPlayerJoinLeave.triggerOptions.DISABLED',
     },
   ];
   joinTriggerOption: SelectBoxItem | undefined;

@@ -28,9 +28,6 @@
     "automations": {
       "label": "{count}つの自動化"
     },
-    "config": {
-      "title": "設定"
-    },
     "description": "オーディオデバイスの音量を自動的に変更します。騒音で起こされたくない場合に使用します。",
     "devices": {
       "description": "音量を自動化するオーディオデバイスを選択します",
@@ -116,7 +113,6 @@
     "detailsTitle": "イベント",
     "events": "イベント",
     "hardwareBrightness": {
-      "description": "ディスプレイの輝度を調整します",
       "title": "ハードウェアの輝度を調整する"
     },
     "hmdConnectEventTooltip": "適用中\nHMDがSteamVRに接続されたときに適用されます",
@@ -135,7 +131,6 @@
       "title": "睡眠モード無効時のみ"
     },
     "softwareBrightness": {
-      "description": "HMDに表示される映像の明るさを調整します",
       "title": "ソフトウェアの明るさを変更する"
     },
     "temperature": {
@@ -177,9 +172,6 @@
     },
     "cct-control-modal": {
       "colorTemperature": "色温度"
-    },
-    "color-picker-modal": {
-      "title": "色を選択"
     },
     "confirm-modal": {
       "defaultTitle": "確認"
@@ -284,12 +276,10 @@
         "booting": "起動中",
         "on": "動作中",
         "sleep": "スリープ",
-        "standby": "スタンバイ",
-        "unknown": "不明な状態"
+        "standby": "スタンバイ"
       },
       "noDevices": "デバイスがありません",
-      "title": "デバイス",
-      "turnOffAll": "すべて"
+      "title": "デバイス"
     },
     "device-selector": {
       "noSelection": "デバイス選択",
@@ -401,7 +391,6 @@
         },
         "frameLimitChanged": {
           "reason": {
-            "HMD_CONNECT": "HMDが接続された",
             "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
             "SLEEP_PREPARATION": "就寝準備をした"
@@ -449,11 +438,8 @@
           },
           "reasons": {
             "HOTKEY": "ショートカットキーが押下された",
-            "MANUAL": "手動でオンにした",
             "OYASUMI_START": "OyasumiVRの起動に合わせて",
-            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
-            "STEAMVR_START": "SteamVRの起動に合わせて",
-            "STEAMVR_STOP": "SteamVRが停止した"
+            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった"
           }
         },
         "msiAfterburnerProfileSet": {
@@ -517,7 +503,6 @@
           }
         },
         "sleepDetectorEnableCancelled": {
-          "subtitle": "ユーザーがまだ起きていた",
           "title": "睡眠モードの有効化をキャンセル"
         },
         "sleepModeDisabled": {
@@ -590,7 +575,6 @@
         "turnedOffOpenVRDevices": {
           "reason": {
             "BATTERY_LEVEL": "バッテリー残量が{threshold}%未満に低下したため",
-            "CHARGING": "充電器に接続された",
             "HOTKEY": "ショートカットキーが押されたため",
             "MANUAL": "手動でオフにした",
             "OSC_CONTROL": "OSCによってオフになった",
@@ -694,8 +678,7 @@
           "title": "VRChatグループ"
         },
         "VRCHAT_INVITES": {
-          "description": "VRChatのReq Inviteや承認に関連するログ",
-          "title": "VRChat通知"
+          "description": "VRChatのReq Inviteや承認に関連するログ"
         },
         "VRCHAT_STATUS": {
           "description": "VRChatのステータス変更に関連するログ",
@@ -833,7 +816,6 @@
       "description": "MQTT経由でHome Assistantと通信できます。これを設定するには、以下に MQTT ブローカーの接続詳細を提供してください。",
       "mqttEnabled": {
         "description": "MQTT連携を有効または無効にします",
-        "test": "接続テスト",
         "title": "連携を有効にする"
       },
       "password": {
@@ -905,7 +887,6 @@
         "message": "''{name}'' のプリセットを上書きしてもよろしいですか？",
         "title": "本当に上書きしますか？"
       },
-      "currentPresets": "現在のプリセット",
       "delete": "削除",
       "load": "読み込み",
       "namePlaceholder": "名前を入力してください",
@@ -1024,7 +1005,6 @@
       "deviceTypes": {
         "CONTROLLER": "コントローラー",
         "HMD": "HMD",
-        "LIGHTHOUSE": "ベースステーション",
         "TRACKER": "トラッカー"
       },
       "individualDevices": "個別選択",
@@ -1036,7 +1016,6 @@
     "deviceType": {
       "CONTROLLER": "コントローラー",
       "HMD": "HMD",
-      "LIGHTHOUSE": "ベースステーション",
       "PREVIOUSLY_SEEN": "過去に確認済み",
       "TRACKER": "トラッカー"
     },
@@ -1056,8 +1035,6 @@
       "placeholder": "デバイスを検索……"
     },
     "status": {
-      "notObserved": "未接続",
-      "observed": "接続済み",
       "turningOff": "電源をオフにしています……",
       "turningOn": "電源をオンにしています……"
     },
@@ -1225,11 +1202,6 @@
           "description": "就寝準備が押下された際にHMD LEDの色を変更します",
           "title": "就寝準備時"
         },
-        "pickerTitle": {
-          "onSleepDisable": "Beyond LEDの色を設定する",
-          "onSleepEnable": "就寝時にBeyond LEDの色を設定する",
-          "onSleepPreparation": "Beyond LEDの色を設定する"
-        },
         "title": "RGB LED"
       }
     },
@@ -1328,7 +1300,6 @@
       "options": {
         "declineOnInviteWhileAsleep": {
           "customMessage": {
-            "description": "Inviteを辞退する際に送信するテキストを入力してください",
             "placeholder": "現在は就寝中です！（OyasumiVR により辞退されました）",
             "title": "カスタムメッセージ"
           },
@@ -1644,10 +1615,6 @@
       },
       "presetAuthor": "{author}による"
     },
-    "tab": {
-      "general": "一般",
-      "sleepingAnimations": "睡眠アニメーション"
-    },
     "title": "OSC自動化"
   },
   "overlay": {
@@ -1957,7 +1924,6 @@
         "title": "システムトレイ"
       },
       "telemetry": {
-        "description": "OyasumiVRは、不具合の発見とアプリケーションの改善のために匿名のテレメトリデータを収集します。これにはクラッシュやエラーのレポート、バージョン情報、アプリケーションの起動、言語設定、その他の基本的な使用統計が含まれます。テレメトリには個人を特定できる情報は含まれず、特定の個人に結び付けることはできません。どのテレメトリデータがあなたのものかを判別できないため、個別のデータ削除依頼には対応できません。テレメトリは、OyasumiVRの一般設定からいつでも無効にできます。",
         "label": "利用データの送信（匿名）",
         "title": "データの送信"
       },
@@ -2232,20 +2198,8 @@
       },
       "run": "シャットダウン実行",
       "title": "シャットダウン実行のアクション",
-      "turnOffBaseStations": {
-        "description": "動作中のベースステーションをオフにします",
-        "title": "ベースステーションをオフにする"
-      },
-      "turnOffControllers": {
-        "description": "コントローラーをオフにします",
-        "title": "コントローラーをオフにする"
-      },
       "turnOffDevices": {
         "title": "デバイスをオフにする"
-      },
-      "turnOffTrackers": {
-        "description": "トラッカーをオフにします",
-        "title": "トラッカーをオフにする"
       }
     },
     "tabs": {
@@ -2323,7 +2277,6 @@
         "title": "心拍数から寝落ちを検知したとき"
       }
     },
-    "experimentalAutomation": "実験的機能のため、動作が不安定になる可能性があります。",
     "modals": {
       "disableAfterTime": {
         "description": "一定時間が経過すると睡眠モードを無効にします",
@@ -2377,10 +2330,6 @@
       "enableAtBatteryPercentage": {
         "Controller": "コントローラー",
         "GenericTracker": "トラッカー",
-        "errors": {
-          "thresholdNotInteger": "数字で指定してください。",
-          "thresholdOutOfRange": "0以上100以下の範囲で指定してください。"
-        },
         "fallsBelow": "バッテリー残量",
         "title": "睡眠モードの有効化",
         "whenA": "対象"
@@ -2404,7 +2353,6 @@
           "description": "HMDの向きを考慮します",
           "title": "姿勢による判定"
         },
-        "description": "寝落ちを検知して睡眠モードに移行します\nHMDに一定の動作があった場合はタイマーをリセットして再度測定を開始します",
         "detectionWindow": {
           "description": "一定の動作がない場合は寝落ちと判定されます",
           "title": "検知タイマー",
@@ -2428,8 +2376,7 @@
         "timeWindow": {
           "description": "特定の時間帯にのみ有効にする",
           "title": "有効な時間帯"
-        },
-        "title": "睡眠モードの有効化"
+        }
       },
       "enableOnHeartRateCalmPeriod": {
         "bpm": {
@@ -2532,7 +2479,6 @@
           "status": "ステータスの設定",
           "statusMessage": "ステータスメッセージの設定"
         },
-        "script": "睡眠モードを無効化",
         "title": "起床時"
       },
       "onSleepEnable": {
@@ -2540,7 +2486,6 @@
           "status": "ステータスの設定",
           "statusMessage": "ステータスメッセージの設定"
         },
-        "script": "睡眠モードを有効化",
         "title": "睡眠時"
       },
       "onSleepPreparation": {
@@ -2548,7 +2493,6 @@
           "status": "ステータスの設定",
           "statusMessage": "ステータスメッセージの設定"
         },
-        "script": "就寝準備",
         "title": "就寝準備時"
       }
     },
@@ -2591,9 +2535,6 @@
         "DEFAULT": "デフォルトデバイス:\n{deviceName}"
       },
       "title": "マイクのオーディオデバイス"
-    },
-    "config": {
-      "title": "構成"
     },
     "controllerBinding": {
       "automations": "コントローラーバインド自動化",
@@ -2756,17 +2697,14 @@
     "description": "VRChatアバターを自動的に変更します。",
     "onSleepDisable": {
       "description": "アバターを変更する",
-      "script": "睡眠モードを無効化",
       "title": "起床時"
     },
     "onSleepEnable": {
       "description": "アバターを変更する",
-      "script": "睡眠モードを有効化",
       "title": "睡眠時"
     },
     "onSleepPreparation": {
       "description": "アバターを変更する",
-      "script": "睡眠準備",
       "title": "就寝準備時"
     },
     "title": "アバター変更"
