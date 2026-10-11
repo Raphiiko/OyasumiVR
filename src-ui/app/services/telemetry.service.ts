@@ -44,7 +44,7 @@ export class TelemetryService {
 
     addEventListener('unhandledrejection', (e) => {
       this.trackEvent('ui_promise_rejected', {
-        message: (e.reason?.message || e.reason || e).toString(),
+        type: e.reason?.constructor?.name ?? typeof e.reason,
       });
     });
 
