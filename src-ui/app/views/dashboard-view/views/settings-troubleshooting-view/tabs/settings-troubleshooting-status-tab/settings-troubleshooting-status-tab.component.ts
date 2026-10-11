@@ -18,8 +18,6 @@ import { VRChatService } from '../../../../../../services/vrchat-api/vrchat.serv
 import { getVersion } from '../../../../../../utils/app-utils';
 import { copyWithToast } from '../../../../../../utils/clipboard-utils';
 
-const T = 'settings.troubleshooting.';
-
 const FLAVOUR_NAMES: Record<BuildFlavour, string> = {
   STEAM: 'Steam',
   STANDALONE: 'Standalone',
@@ -43,7 +41,7 @@ interface StatusLine {
 export class SettingsTroubleshootingStatusTabComponent {
   protected readonly version = getVersion();
   protected readonly build: TString = {
-    string: T + 'support.version.build',
+    string: 'settings.troubleshooting.support.version.build',
     values: { flavour: FLAVOUR_NAMES[FLAVOUR], buildId: BUILD_ID },
   };
   protected readonly status: StatusLine[];
@@ -63,53 +61,69 @@ export class SettingsTroubleshootingStatusTabComponent {
     const settings = this.appSettings.settings;
     this.status = [
       {
-        label: T + 'status.steamvr.label',
-        value: this.openvr.status.pipe(map((s) => T + 'status.steamvr.' + s)),
+        label: 'settings.troubleshooting.status.steamvr.label',
+        value: this.openvr.status.pipe(map((s) => `settings.troubleshooting.status.steamvr.${s}`)),
       },
       {
-        label: T + 'status.steamvrAutoLaunch.label',
+        label: 'settings.troubleshooting.status.steamvrAutoLaunch.label',
         value: settings.pipe(
-          map((s) => T + 'status.steamvrAutoLaunch.' + (s.startWithSteamVR ? 'on' : 'off'))
+          map(
+            (s) =>
+              `settings.troubleshooting.status.steamvrAutoLaunch.${s.startWithSteamVR ? 'on' : 'off'}`
+          )
         ),
       },
       {
-        label: T + 'status.overlay.label',
+        label: 'settings.troubleshooting.status.overlay.label',
         value: this.overlay.sidecarStarted.pipe(
-          map((started) => T + 'status.overlay.' + (started ? 'running' : 'notRunning'))
+          map(
+            (started) =>
+              `settings.troubleshooting.status.overlay.${started ? 'running' : 'notRunning'}`
+          )
         ),
       },
       {
-        label: T + 'status.vrchat.label',
+        label: 'settings.troubleshooting.status.vrchat.label',
         value: this.vrchat.vrchatProcessActive.pipe(
-          map((active) => T + 'status.vrchat.' + (active ? 'running' : 'notRunning'))
+          map(
+            (active) =>
+              `settings.troubleshooting.status.vrchat.${active ? 'running' : 'notRunning'}`
+          )
         ),
       },
       {
-        label: T + 'status.vrchatAccount.label',
+        label: 'settings.troubleshooting.status.vrchatAccount.label',
         value: this.vrchat.status.pipe(
-          map((s) => T + 'status.vrchatAccount.' + (s === 'LOGGED_IN' ? 'loggedIn' : 'loggedOut'))
+          map(
+            (s) =>
+              `settings.troubleshooting.status.vrchatAccount.${s === 'LOGGED_IN' ? 'loggedIn' : 'loggedOut'}`
+          )
         ),
       },
-      { label: T + 'status.osc.label', value: this.oscStatus() },
+      { label: 'settings.troubleshooting.status.osc.label', value: this.oscStatus() },
       {
-        label: T + 'status.adminPrivileges.label',
+        label: 'settings.troubleshooting.status.adminPrivileges.label',
         value: this.adminPrivilegesStatus(),
         detail: this.elevatedSidecar.failure.pipe(map((f) => this.describeFailure(f))),
         wide: true,
       },
       {
-        label: T + 'status.mqtt.label',
-        value: this.mqtt.clientStatus.pipe(map((s) => T + 'status.mqtt.' + s)),
+        label: 'settings.troubleshooting.status.mqtt.label',
+        value: this.mqtt.clientStatus.pipe(map((s) => `settings.troubleshooting.status.mqtt.${s}`)),
       },
       {
-        label: T + 'status.pulsoid.label',
+        label: 'settings.troubleshooting.status.pulsoid.label',
         value: this.pulsoid.loggedInUser.pipe(
-          map((user) => T + 'status.pulsoid.' + (user ? 'loggedIn' : 'loggedOut'))
+          map(
+            (user) => `settings.troubleshooting.status.pulsoid.${user ? 'loggedIn' : 'loggedOut'}`
+          )
         ),
       },
       {
-        label: T + 'status.bluetooth.label',
-        value: this.lighthouse.status.pipe(map((s) => T + 'status.bluetooth.' + s)),
+        label: 'settings.troubleshooting.status.bluetooth.label',
+        value: this.lighthouse.status.pipe(
+          map((s) => `settings.troubleshooting.status.bluetooth.${s}`)
+        ),
         wide: true,
       },
     ];
@@ -124,40 +138,53 @@ export class SettingsTroubleshootingStatusTabComponent {
     const tick = interval(1000).pipe(startWith(0));
     return combineLatest([this.appSettings.settings, this.osc.lastMessageAt, tick]).pipe(
       map(([settings, lastMessageAt]) => {
-        if (!settings.oscServerEnabled) return T + 'status.osc.off';
-        if (lastMessageAt === null) return T + 'status.osc.noMessages';
+        if (!settings.oscServerEnabled) return 'settings.troubleshooting.status.osc.off';
+        if (lastMessageAt === null) return 'settings.troubleshooting.status.osc.noMessages';
         const seconds = Math.floor((Date.now() - lastMessageAt) / 1000);
         if (seconds < 60)
-          return { string: T + 'status.osc.seconds', values: { value: `${seconds}` } };
+          return {
+            string: 'settings.troubleshooting.status.osc.seconds',
+            values: { value: `${seconds}` },
+          };
         const minutes = Math.floor(seconds / 60);
         if (minutes < 60)
-          return { string: T + 'status.osc.minutes', values: { value: `${minutes}` } };
-        return { string: T + 'status.osc.hours', values: { value: `${Math.floor(minutes / 60)}` } };
+          return {
+            string: 'settings.troubleshooting.status.osc.minutes',
+            values: { value: `${minutes}` },
+          };
+        return {
+          string: 'settings.troubleshooting.status.osc.hours',
+          values: { value: `${Math.floor(minutes / 60)}` },
+        };
       }),
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     );
   }
 
   private adminPrivilegesStatus(): Observable<TString> {
-    const p = T + 'status.adminPrivileges.';
     return combineLatest([
       this.appSettings.settings,
       this.elevatedSidecar.operation,
       this.elevatedSidecar.sidecarStarted,
     ]).pipe(
       map(([settings, operation, started]) => {
-        if (operation !== 'idle') return p + operation;
-        if (!settings.elevatedFeaturesEnabled) return p + 'off';
-        return p + (started ? 'running' : 'notRunning');
+        if (operation !== 'idle')
+          return `settings.troubleshooting.status.adminPrivileges.${operation}`;
+        if (!settings.elevatedFeaturesEnabled)
+          return 'settings.troubleshooting.status.adminPrivileges.off';
+        return `settings.troubleshooting.status.adminPrivileges.${started ? 'running' : 'notRunning'}`;
       })
     );
   }
 
   private describeFailure(failure: ElevatedFeaturesFailure | null): TString | null {
     if (!failure) return null;
-    const p = T + 'status.adminPrivileges.failure.';
     const result = failure.result;
-    if ('reason' in result) return { string: p + result.result, values: { reason: result.reason } };
-    return p + result.result;
+    if ('reason' in result)
+      return {
+        string: `settings.troubleshooting.status.adminPrivileges.failure.${result.result}`,
+        values: { reason: result.reason },
+      };
+    return `settings.troubleshooting.status.adminPrivileges.failure.${result.result}`;
   }
 }

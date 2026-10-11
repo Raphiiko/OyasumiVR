@@ -29,7 +29,7 @@ export class SettingsTroubleshootingToolsTabComponent {
   ) {}
 
   async openLogsFolder() {
-    const path = await appLogDir().then((dir) => dir + '\\OyasumiVR.log');
+    const path = await appLogDir().then((dir) => `${dir}\\OyasumiVR.log`);
     await invoke('show_in_folder', { path });
   }
 
