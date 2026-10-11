@@ -1784,7 +1784,6 @@
         "title": "Bandeja de sistema"
       },
       "telemetry": {
-        "description": "OyasumiVR recopila telemetría anónima para ayudar a encontrar errores y mejorar la aplicación. Esto incluye informes de fallos y errores, información de versión, inicios de la aplicación, preferencias de idioma y otras estadísticas básicas de uso. La telemetría no contiene información que permita identificarte ni puede vincularse a una persona concreta. Como no es posible determinar qué datos de telemetría te pertenecen, no se pueden atender solicitudes de eliminación de datos individuales. Puedes desactivar la telemetría en cualquier momento en los ajustes generales de OyasumiVR.",
         "label": "Enviar datos de uso anónimos",
         "title": "Telemetría"
       },

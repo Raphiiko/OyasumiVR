@@ -2057,7 +2057,7 @@
         "title": "System Tray"
       },
       "telemetry": {
-        "description": "OyasumiVR collects anonymous telemetry to help find bugs and improve the application. This includes crash and error reports, version information, application starts, language preferences, and other basic usage statistics. Telemetry does not contain personally identifiable information and cannot be linked to a specific person. Because there is no way to determine which telemetry belongs to you, individual data deletion requests cannot be fulfilled. You can disable telemetry at any time in OyasumiVR's general settings.",
+        "description": "Helps find bugs and improve OyasumiVR. Sends crash and error reports, version information, app starts, language preferences, and basic usage statistics. This data contains no personal information and cannot be traced back to you, which also means it cannot be deleted on request.",
         "label": "Send anonymous usage data",
         "title": "Telemetry"
       },

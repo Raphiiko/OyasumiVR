@@ -1892,7 +1892,6 @@
         "title": "Systeemvak"
       },
       "telemetry": {
-        "description": "OyasumiVR verzamelt anonieme telemetrie om bugs te vinden en de applicatie te verbeteren. Dit omvat crash- en foutrapporten, versiegegevens, het starten van de applicatie, taalvoorkeuren en andere basisstatistieken over het gebruik. Telemetrie bevat geen persoonlijk identificeerbare informatie en kan niet aan een specifieke persoon worden gekoppeld. Omdat niet kan worden vastgesteld welke telemetrie van jou is, kunnen verzoeken om individuele gegevens te verwijderen niet worden uitgevoerd. Je kunt telemetrie op elk moment uitschakelen in de algemene instellingen van OyasumiVR.",
         "label": "Verstuur anonieme telemetrie data",
         "title": "Telemetrie"
       },
