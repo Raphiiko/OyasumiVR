@@ -2412,6 +2412,7 @@
       },
       "title": "Troubleshooting",
       "tools": {
+        "description": "These tools can help find and fix problems with OyasumiVR. You usually only need them when the developer asks you to use one.",
         "devTools": {
           "action": "Open DevTools",
           "description": "Opens the Edge Developer Tools, for debugging purposes",
