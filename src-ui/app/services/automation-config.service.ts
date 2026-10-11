@@ -15,8 +15,9 @@ import { listen } from '@tauri-apps/api/event';
   providedIn: 'root',
 })
 export class AutomationConfigService {
+  // Callers edit config objects in place, so this must never hold the shared default constant
   private _configs: BehaviorSubject<AutomationConfigs> = new BehaviorSubject<AutomationConfigs>(
-    AUTOMATION_CONFIGS_DEFAULT
+    structuredClone(AUTOMATION_CONFIGS_DEFAULT)
   );
   configs: Observable<AutomationConfigs> = this._configs.asObservable();
 
