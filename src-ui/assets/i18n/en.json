@@ -2430,7 +2430,7 @@
         }
       },
       "tweaks": {
-        "description": "These settings can help when you experience issues. Only change them if you're experiencing issues; otherwise, they are best left at their defaults.",
+        "description": "These settings can help when you experience issues. Only change them if you're experiencing issues. Otherwise, they are best left at their defaults.",
         "openVrInitDelayFix": {
           "description": "Enabling this will make OyasumiVR wait a bit to interact with SteamVR once it has been detected, giving SteamVR some extra time to start. If you're experiencing issues with launching SteamVR while OyasumiVR is already running, this can help.",
           "title": "Delay OpenVR Initialization"
