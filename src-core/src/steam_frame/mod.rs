@@ -1,6 +1,7 @@
 pub mod commands;
 mod connection;
 mod devkit;
+pub mod diagnostics;
 mod discovery;
 mod maintenance;
 mod models;
