@@ -4,7 +4,7 @@ mod chaperone;
 mod colortemp_analog;
 pub mod commands;
 mod dashboard;
-mod devices;
+pub mod devices;
 mod framelimiter;
 mod gesture_detector;
 mod models;

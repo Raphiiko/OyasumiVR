@@ -184,6 +184,7 @@ import { SettingsTroubleshootingViewComponent } from './views/dashboard-view/vie
 import { SettingsTroubleshootingStatusTabComponent } from './views/dashboard-view/views/settings-troubleshooting-view/tabs/settings-troubleshooting-status-tab/settings-troubleshooting-status-tab.component';
 import { SettingsTroubleshootingToolsTabComponent } from './views/dashboard-view/views/settings-troubleshooting-view/tabs/settings-troubleshooting-tools-tab/settings-troubleshooting-tools-tab.component';
 import { SettingsTroubleshootingTweaksTabComponent } from './views/dashboard-view/views/settings-troubleshooting-view/tabs/settings-troubleshooting-tweaks-tab/settings-troubleshooting-tweaks-tab.component';
+import { DebugReportModalComponent } from './views/dashboard-view/views/settings-troubleshooting-view/debug-report-modal/debug-report-modal.component';
 import { ask } from '@tauri-apps/plugin-dialog';
 import { exit } from '@tauri-apps/plugin-process';
 import { OscControlService } from './services/osc-control/osc-control.service';
@@ -407,6 +408,7 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
     SettingsTroubleshootingStatusTabComponent,
     SettingsTroubleshootingToolsTabComponent,
     SettingsTroubleshootingTweaksTabComponent,
+    DebugReportModalComponent,
     SnowverlayComponent,
     HmdAutomationsViewComponent,
     HmdAutomationsBigscreenBeyondTabComponent,
