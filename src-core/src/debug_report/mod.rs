@@ -23,9 +23,12 @@ const REMOVED: &str = "<removed>";
 /// The last built report, so a retry or a save sends the same zip.
 static PENDING_REPORT: LazyLock<Mutex<Option<Vec<u8>>>> = LazyLock::new(|| Mutex::new(None));
 
+// a value stops at a backslash, so an escaped quote in serialized JSON stays intact
 static TOKEN_PARAM: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"(?i)\b(\w*(?:token|password|secret|cookie))=[^&\s#'\x22]+").unwrap()
+    Regex::new(r"(?i)\b(\w*(?:token|password|secret|cookie))=[^&\s#'\x22\\]+").unwrap()
 });
+static BEARER_TOKEN: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"(?i)\b(bearer)\s+[^\s'\x22\\]+").unwrap());
 
 pub struct ReportFile {
     pub name: String,
@@ -41,10 +44,11 @@ impl ReportFile {
     }
 }
 
-/// Replaces the user's name in profile paths, and the values of token-like URL parameters.
-/// `profile` comes from `profile_path_pattern`.
+/// Replaces the user's name in profile paths, the values of token-like URL parameters, and
+/// bearer tokens. `profile` comes from `profile_path_pattern`.
 pub fn scrub_text(text: &str, profile: Option<&Regex>) -> String {
     let text = TOKEN_PARAM.replace_all(text, format!("$1={REMOVED}"));
+    let text = BEARER_TOKEN.replace_all(&text, format!("$1 {REMOVED}"));
     match profile {
         Some(profile) => profile.replace_all(&text, "${1}<user>${2}").into_owned(),
         None => text.into_owned(),
@@ -406,6 +410,26 @@ mod tests {
             scrub_text(text, None),
             "oyasumivr://x#access_token=<removed>&state=s1 wss://pipeline?authToken=<removed>&x=1 \
              ?accessToken=<removed>&clientSecret=<removed>&tokens=3"
+        );
+    }
+
+    #[test]
+    fn scrub_text_removes_bearer_tokens() {
+        let text = r#"curl -H "Authorization: Bearer abc.def-1" -H 'authorization: bearer xyz' x"#;
+        assert_eq!(
+            scrub_text(text, None),
+            r#"curl -H "Authorization: Bearer <removed>" -H 'authorization: bearer <removed>' x"#
+        );
+    }
+
+    #[test]
+    fn scrub_settings_keeps_quoted_commands_valid_json() {
+        let json = r#"{"AUTOMATION_CONFIGS": {"SHUTDOWN": {"onSleepModeEnableCommands":
+            "curl -H \"Authorization: Bearer abc\" \"https://x.invalid/?token=t\""}}}"#;
+        let scrubbed: Value = serde_json::from_str(&scrub_settings(json, None).unwrap()).unwrap();
+        assert_eq!(
+            scrubbed["AUTOMATION_CONFIGS"]["SHUTDOWN"]["onSleepModeEnableCommands"],
+            r#"curl -H "Authorization: Bearer <removed>" "https://x.invalid/?token=<removed>""#
         );
     }
 
