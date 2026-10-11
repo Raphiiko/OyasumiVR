@@ -155,7 +155,7 @@ const SUBMENU_ROUTES: Record<Exclude<SubMenu, 'GENERAL'>, string[]> = {
     'settings/updates',
     'settings/integrations',
     'settings/troubleshooting',
-    'settings/advanced',
+    'settings/translationAndData',
   ],
 };
 

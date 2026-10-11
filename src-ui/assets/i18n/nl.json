@@ -1790,81 +1790,6 @@
     "title": "Uitvoer Automatiseringen"
   },
   "settings": {
-    "advanced": {
-      "persistentData": {
-        "clearData": "Verwijder Gegevens",
-        "clearModal": {
-          "message": "Weet je zeker dat je de volgende gegevens wilt verwijderen? Dit kan niet ongedaan worden gemaakt!\n\n{items}",
-          "title": "Bevestig verwijderen"
-        },
-        "dataType": {
-          "all": {
-            "description": "Alle gegevens die OyasumiVR opslaat, inclusief al je instellingen",
-            "title": "Alle Gegevens"
-          },
-          "appCache": {
-            "description": "Alle gegevens die OyasumiVR tijdelijk opslaat, zoals VRChat API responses",
-            "title": "Gegevens Cache"
-          },
-          "appSettings": {
-            "description": "Alle algemene instellingen van OyasumiVR",
-            "title": "Applicatie Instellingen"
-          },
-          "automationSettings": {
-            "description": "Alle instellingen van elk van OyasumiVR's automatiseringen",
-            "title": "Instellingen van Automatiseringen"
-          },
-          "eventLog": {
-            "description": "Alle gebeurtenissen die OyasumiVR heeft gelogd in het overzicht",
-            "title": "Logboek"
-          },
-          "imageCache": {
-            "description": "Alle afbeeldingen die OyasumiVR tijdelijk opslaat, zoals de profielplaatjes van VRChat spelers",
-            "title": "Afbeeldings Cache"
-          },
-          "integrations": {
-            "description": "Alle gegevens gerelateerd aan integraties (behalve VRChat), zoals authenticatie sleutels",
-            "title": "Integratie Data"
-          },
-          "logs": {
-            "description": "De bestanden waar OyasumiVR de logs naar weg schrijft",
-            "title": "Logbestanden"
-          },
-          "miscData": {
-            "description": "Alle overige gegevens die Oyasumi opslaat die niet onder andere opties vallen",
-            "title": "Overige Gegevens"
-          },
-          "vrcData": {
-            "description": "Alle gegevens gerelateerd aan VRChat, zoals authenticatie sleutels",
-            "title": "VRChat Gegevens"
-          }
-        },
-        "description": "Beheer de gegevens die OyasumiVR opslaat op je schijf",
-        "relaunchModal": {
-          "relaunch": "Herstart OyasumiVR nu",
-          "title": "Herstart OyasumiVR"
-        },
-        "title": "Opgeslagen Gegevens"
-      },
-      "translation": {
-        "contribute": {
-          "description": "Help met het toevoegen van missende vertalingen, of hele nieuwe talen!",
-          "docs": "Leer Hoe",
-          "title": "Help mee met vertalen"
-        },
-        "editor": {
-          "action": "Start Editor",
-          "description": "Start OyasumiVR's vertalingseditor voor het bewerken en maken van vertalingen",
-          "title": "Vertalingseditor"
-        },
-        "loadFile": {
-          "action": "Laad Bestand",
-          "description": "Laad een eigen vertalingsbestand. Dit is handig wanneer je je eigen vertalingen wilt testen.",
-          "title": "Laad vertalingsbestand"
-        },
-        "title": "Taal & Vertalen"
-      }
-    },
     "brightnessCct": {
       "bigscreenBeyond": {
         "forceFanSafety": {
@@ -2095,6 +2020,81 @@
           "description": "Dit uitschakelen deactiveert de ingebouwde OSC en OSCQuery servers. Let op dat verschillende functies van OyasumiVR stoppen met werken als je dit uitschakelt, zonder waarschuwingen. Deze optie bestaat puur voor debugging doeleinden en mag niet worden uitgeschakeld tijdens normaal gebruik.",
           "title": "OSC & OSCQuery Servers"
         }
+      }
+    },
+    "translationAndData": {
+      "persistentData": {
+        "clearData": "Verwijder Gegevens",
+        "clearModal": {
+          "message": "Weet je zeker dat je de volgende gegevens wilt verwijderen? Dit kan niet ongedaan worden gemaakt!\n\n{items}",
+          "title": "Bevestig verwijderen"
+        },
+        "dataType": {
+          "all": {
+            "description": "Alle gegevens die OyasumiVR opslaat, inclusief al je instellingen",
+            "title": "Alle Gegevens"
+          },
+          "appCache": {
+            "description": "Alle gegevens die OyasumiVR tijdelijk opslaat, zoals VRChat API responses",
+            "title": "Gegevens Cache"
+          },
+          "appSettings": {
+            "description": "Alle algemene instellingen van OyasumiVR",
+            "title": "Applicatie Instellingen"
+          },
+          "automationSettings": {
+            "description": "Alle instellingen van elk van OyasumiVR's automatiseringen",
+            "title": "Instellingen van Automatiseringen"
+          },
+          "eventLog": {
+            "description": "Alle gebeurtenissen die OyasumiVR heeft gelogd in het overzicht",
+            "title": "Logboek"
+          },
+          "imageCache": {
+            "description": "Alle afbeeldingen die OyasumiVR tijdelijk opslaat, zoals de profielplaatjes van VRChat spelers",
+            "title": "Afbeeldings Cache"
+          },
+          "integrations": {
+            "description": "Alle gegevens gerelateerd aan integraties (behalve VRChat), zoals authenticatie sleutels",
+            "title": "Integratie Data"
+          },
+          "logs": {
+            "description": "De bestanden waar OyasumiVR de logs naar weg schrijft",
+            "title": "Logbestanden"
+          },
+          "miscData": {
+            "description": "Alle overige gegevens die Oyasumi opslaat die niet onder andere opties vallen",
+            "title": "Overige Gegevens"
+          },
+          "vrcData": {
+            "description": "Alle gegevens gerelateerd aan VRChat, zoals authenticatie sleutels",
+            "title": "VRChat Gegevens"
+          }
+        },
+        "description": "Beheer de gegevens die OyasumiVR opslaat op je schijf",
+        "relaunchModal": {
+          "relaunch": "Herstart OyasumiVR nu",
+          "title": "Herstart OyasumiVR"
+        },
+        "title": "Opgeslagen Gegevens"
+      },
+      "translation": {
+        "contribute": {
+          "description": "Help met het toevoegen van missende vertalingen, of hele nieuwe talen!",
+          "docs": "Leer Hoe",
+          "title": "Help mee met vertalen"
+        },
+        "editor": {
+          "action": "Start Editor",
+          "description": "Start OyasumiVR's vertalingseditor voor het bewerken en maken van vertalingen",
+          "title": "Vertalingseditor"
+        },
+        "loadFile": {
+          "action": "Laad Bestand",
+          "description": "Laad een eigen vertalingsbestand. Dit is handig wanneer je je eigen vertalingen wilt testen.",
+          "title": "Laad vertalingsbestand"
+        },
+        "title": "Taal & Vertalen"
       }
     },
     "troubleshooting": {

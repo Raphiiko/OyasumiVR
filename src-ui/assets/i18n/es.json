@@ -1677,81 +1677,6 @@
     "title": "Ejecutar automatizaciones"
   },
   "settings": {
-    "advanced": {
-      "persistentData": {
-        "clearData": "Borrar datos",
-        "clearModal": {
-          "message": "¿Está seguro de que desea eliminar los siguientes datos? ¡Esto no se puede revertir!\n\n{items}",
-          "title": "Confirmar borrado de datos"
-        },
-        "dataType": {
-          "all": {
-            "description": "Todos los datos que OyasumiVR almacena, incluyendo todos sus ajustes",
-            "title": "Todos los datos"
-          },
-          "appCache": {
-            "description": "Todos los datos que se almacenan temporalmente, como las respuestas de la API de VRChat",
-            "title": "Caché de datos"
-          },
-          "appSettings": {
-            "description": "Todos los ajustes generales de OyasumiVR",
-            "title": "Ajustes de la aplicación"
-          },
-          "automationSettings": {
-            "description": "Todos los ajustes específicos de una de las automatizaciones de OyasumiVR",
-            "title": "Ajustes de automatización"
-          },
-          "eventLog": {
-            "description": "Los eventos que se registran en el resumen",
-            "title": "Registro de eventos"
-          },
-          "imageCache": {
-            "description": "Todas las imágenes que se almacenan temporalmente, como los iconos de los reproductores de VRChat",
-            "title": "Caché de imagen"
-          },
-          "integrations": {
-            "description": "Datos específicos de las integraciones (excepto VRChat), como los datos de autenticación",
-            "title": "Datos de integración"
-          },
-          "logs": {
-            "description": "Los archivos de registro que crea OyasumiVR",
-            "title": "Archivos de registro"
-          },
-          "miscData": {
-            "description": "Todos los demás datos que OyasumiVR almacena, no cubiertos por otras categorías",
-            "title": "Otros datos"
-          },
-          "vrcData": {
-            "description": "Datos específicos de VRChat, como los de autenticación",
-            "title": "VRChat Datos"
-          }
-        },
-        "description": "Gestiona los datos que OyasumiVR almacena en tu disco",
-        "relaunchModal": {
-          "relaunch": "Reinicia OyasumiVR ahora",
-          "title": "Reiniciar OyasumiVR"
-        },
-        "title": "Datos persistentes"
-      },
-      "translation": {
-        "contribute": {
-          "description": "Contribuya con las traducciones que faltan o ayude a añadir nuevos idiomas!",
-          "docs": "Aprende cómo",
-          "title": "Colabora aportando traducciones"
-        },
-        "editor": {
-          "action": "Editor de lanzamiento",
-          "description": "Lanzar el editor de traducción de Oyasumivr para editar y crear traducciones",
-          "title": "Editor de traducción"
-        },
-        "loadFile": {
-          "action": "Cargar archivo",
-          "description": "Carga un archivo de idioma personalizado. Útil para probar nuevas traducciones.",
-          "title": "Cargar archivo de traducción"
-        },
-        "title": "Idiomas y traducción"
-      }
-    },
     "brightnessCct": {
       "bigscreenBeyond": {
         "forceFanSafety": {
@@ -2012,6 +1937,81 @@
         }
       },
       "title": "Ajustes de OSC"
+    },
+    "translationAndData": {
+      "persistentData": {
+        "clearData": "Borrar datos",
+        "clearModal": {
+          "message": "¿Está seguro de que desea eliminar los siguientes datos? ¡Esto no se puede revertir!\n\n{items}",
+          "title": "Confirmar borrado de datos"
+        },
+        "dataType": {
+          "all": {
+            "description": "Todos los datos que OyasumiVR almacena, incluyendo todos sus ajustes",
+            "title": "Todos los datos"
+          },
+          "appCache": {
+            "description": "Todos los datos que se almacenan temporalmente, como las respuestas de la API de VRChat",
+            "title": "Caché de datos"
+          },
+          "appSettings": {
+            "description": "Todos los ajustes generales de OyasumiVR",
+            "title": "Ajustes de la aplicación"
+          },
+          "automationSettings": {
+            "description": "Todos los ajustes específicos de una de las automatizaciones de OyasumiVR",
+            "title": "Ajustes de automatización"
+          },
+          "eventLog": {
+            "description": "Los eventos que se registran en el resumen",
+            "title": "Registro de eventos"
+          },
+          "imageCache": {
+            "description": "Todas las imágenes que se almacenan temporalmente, como los iconos de los reproductores de VRChat",
+            "title": "Caché de imagen"
+          },
+          "integrations": {
+            "description": "Datos específicos de las integraciones (excepto VRChat), como los datos de autenticación",
+            "title": "Datos de integración"
+          },
+          "logs": {
+            "description": "Los archivos de registro que crea OyasumiVR",
+            "title": "Archivos de registro"
+          },
+          "miscData": {
+            "description": "Todos los demás datos que OyasumiVR almacena, no cubiertos por otras categorías",
+            "title": "Otros datos"
+          },
+          "vrcData": {
+            "description": "Datos específicos de VRChat, como los de autenticación",
+            "title": "VRChat Datos"
+          }
+        },
+        "description": "Gestiona los datos que OyasumiVR almacena en tu disco",
+        "relaunchModal": {
+          "relaunch": "Reinicia OyasumiVR ahora",
+          "title": "Reiniciar OyasumiVR"
+        },
+        "title": "Datos persistentes"
+      },
+      "translation": {
+        "contribute": {
+          "description": "Contribuya con las traducciones que faltan o ayude a añadir nuevos idiomas!",
+          "docs": "Aprende cómo",
+          "title": "Colabora aportando traducciones"
+        },
+        "editor": {
+          "action": "Editor de lanzamiento",
+          "description": "Lanzar el editor de traducción de Oyasumivr para editar y crear traducciones",
+          "title": "Editor de traducción"
+        },
+        "loadFile": {
+          "action": "Cargar archivo",
+          "description": "Carga un archivo de idioma personalizado. Útil para probar nuevas traducciones.",
+          "title": "Cargar archivo de traducción"
+        },
+        "title": "Idiomas y traducción"
+      }
     },
     "troubleshooting": {
       "tools": {

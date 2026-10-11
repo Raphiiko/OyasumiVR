@@ -1829,81 +1829,6 @@
     "title": "自动化命令"
   },
   "settings": {
-    "advanced": {
-      "persistentData": {
-        "clearData": "清除数据",
-        "clearModal": {
-          "message": "你确定要删除以下数据吗？这是不可能被恢复的! \n\n{items}",
-          "title": "确认清除数据"
-        },
-        "dataType": {
-          "all": {
-            "description": "OyasumiVR 存储的所有数据，包括你的所有设置",
-            "title": "所有数据"
-          },
-          "appCache": {
-            "description": "所有临时存储的数据，如 VRChat API 的响应",
-            "title": "数据缓存"
-          },
-          "appSettings": {
-            "description": "OyasumiVR 的所有一般设置",
-            "title": "程序设置"
-          },
-          "automationSettings": {
-            "description": "OyasumiVR 自动化功能的所有设置",
-            "title": "自动化设置"
-          },
-          "eventLog": {
-            "description": "被记录在概览中的事件",
-            "title": "事件日志"
-          },
-          "imageCache": {
-            "description": "所有临时存储的图片，如 VRChat 播放器图标",
-            "title": "图片缓存"
-          },
-          "integrations": {
-            "description": "集成插件们在 OyasumiVR 存储的数据",
-            "title": "集成数据"
-          },
-          "logs": {
-            "description": "OyasumiVR 创建的日志文件",
-            "title": "日志文件"
-          },
-          "miscData": {
-            "description": "除以上类别外，OyasumiVR 存储的所有其他数据。",
-            "title": "其他数据"
-          },
-          "vrcData": {
-            "description": "VRChat 特有的数据，如 OSC 设置",
-            "title": "VRChat 数据"
-          }
-        },
-        "description": "管理 OyasumiVR 存储在你磁盘上的数据",
-        "relaunchModal": {
-          "relaunch": "现在就重启 OyasumiVR",
-          "title": "重新启动 OyasumiVR"
-        },
-        "title": "数据管理"
-      },
-      "translation": {
-        "contribute": {
-          "description": "贡献缺失的翻译，或帮助添加新的语言",
-          "docs": "查看指南",
-          "title": "帮助翻译此应用"
-        },
-        "editor": {
-          "action": "启动编辑器",
-          "description": "启动 OyasumiVR 的翻译编辑器，编辑和创建翻译内容",
-          "title": "界面翻译文本编辑器"
-        },
-        "loadFile": {
-          "action": "载入文件",
-          "description": "加载一个自定义的语言文件。在测试新的翻译时很有用。",
-          "title": "加载语言文件"
-        },
-        "title": "语言和翻译"
-      }
-    },
     "brightnessCct": {
       "bigscreenBeyond": {
         "forceFanSafety": {
@@ -2141,6 +2066,81 @@
           "description": "关闭此选项将禁用内置的 OSCQuery 服务器。请注意，关闭后 OyasumiVR 的部分功能将无法使用，且不会有任何警告。此选项仅用于调试目的，一般使用时不应关闭。",
           "title": "OSC 与 OSCQuery 服务器"
         }
+      }
+    },
+    "translationAndData": {
+      "persistentData": {
+        "clearData": "清除数据",
+        "clearModal": {
+          "message": "你确定要删除以下数据吗？这是不可能被恢复的! \n\n{items}",
+          "title": "确认清除数据"
+        },
+        "dataType": {
+          "all": {
+            "description": "OyasumiVR 存储的所有数据，包括你的所有设置",
+            "title": "所有数据"
+          },
+          "appCache": {
+            "description": "所有临时存储的数据，如 VRChat API 的响应",
+            "title": "数据缓存"
+          },
+          "appSettings": {
+            "description": "OyasumiVR 的所有一般设置",
+            "title": "程序设置"
+          },
+          "automationSettings": {
+            "description": "OyasumiVR 自动化功能的所有设置",
+            "title": "自动化设置"
+          },
+          "eventLog": {
+            "description": "被记录在概览中的事件",
+            "title": "事件日志"
+          },
+          "imageCache": {
+            "description": "所有临时存储的图片，如 VRChat 播放器图标",
+            "title": "图片缓存"
+          },
+          "integrations": {
+            "description": "集成插件们在 OyasumiVR 存储的数据",
+            "title": "集成数据"
+          },
+          "logs": {
+            "description": "OyasumiVR 创建的日志文件",
+            "title": "日志文件"
+          },
+          "miscData": {
+            "description": "除以上类别外，OyasumiVR 存储的所有其他数据。",
+            "title": "其他数据"
+          },
+          "vrcData": {
+            "description": "VRChat 特有的数据，如 OSC 设置",
+            "title": "VRChat 数据"
+          }
+        },
+        "description": "管理 OyasumiVR 存储在你磁盘上的数据",
+        "relaunchModal": {
+          "relaunch": "现在就重启 OyasumiVR",
+          "title": "重新启动 OyasumiVR"
+        },
+        "title": "数据管理"
+      },
+      "translation": {
+        "contribute": {
+          "description": "贡献缺失的翻译，或帮助添加新的语言",
+          "docs": "查看指南",
+          "title": "帮助翻译此应用"
+        },
+        "editor": {
+          "action": "启动编辑器",
+          "description": "启动 OyasumiVR 的翻译编辑器，编辑和创建翻译内容",
+          "title": "界面翻译文本编辑器"
+        },
+        "loadFile": {
+          "action": "载入文件",
+          "description": "加载一个自定义的语言文件。在测试新的翻译时很有用。",
+          "title": "加载语言文件"
+        },
+        "title": "语言和翻译"
       }
     },
     "troubleshooting": {

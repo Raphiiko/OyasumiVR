@@ -28,14 +28,14 @@ import { firstValueFrom } from 'rxjs';
 import { ToastService } from '../../../../services/toast.service';
 
 @Component({
-  selector: 'app-settings-advanced-view',
-  templateUrl: './settings-advanced-view.component.html',
-  styleUrls: ['./settings-advanced-view.component.scss'],
+  selector: 'app-settings-translation-and-data-view',
+  templateUrl: './settings-translation-and-data-view.component.html',
+  styleUrls: ['./settings-translation-and-data-view.component.scss'],
   animations: [],
   changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
-export class SettingsAdvancedViewComponent {
+export class SettingsTranslationAndDataViewComponent {
   persistentStorageItems: Array<{
     key: string;
   }> = [
@@ -148,16 +148,16 @@ export class SettingsAdvancedViewComponent {
   clearPersistentStorage() {
     this.modalService
       .addModal(ConfirmModalComponent, {
-        title: 'settings.advanced.persistentData.clearModal.title',
+        title: 'settings.translationAndData.persistentData.clearModal.title',
         message: {
-          string: 'settings.advanced.persistentData.clearModal.message',
+          string: 'settings.translationAndData.persistentData.clearModal.message',
           values: {
             items: this.checkedPersistentStorageItems
               .map(
                 (item) =>
                   ' • ' +
                   this.translate.translate(
-                    `settings.advanced.persistentData.dataType.${item}.title`
+                    `settings.translationAndData.persistentData.dataType.${item}.title`
                   )
               )
               .join('\n'),
@@ -243,11 +243,12 @@ export class SettingsAdvancedViewComponent {
             .addModal(
               ConfirmModalComponent,
               {
-                title: 'settings.advanced.persistentData.relaunchModal.title',
+                title: 'settings.translationAndData.persistentData.relaunchModal.title',
                 message: failedClears.length
-                  ? 'settings.advanced.persistentData.relaunchModal.partialFailureMessage'
-                  : 'settings.advanced.persistentData.relaunchModal.message',
-                confirmButtonText: 'settings.advanced.persistentData.relaunchModal.relaunch',
+                  ? 'settings.translationAndData.persistentData.relaunchModal.partialFailureMessage'
+                  : 'settings.translationAndData.persistentData.relaunchModal.message',
+                confirmButtonText:
+                  'settings.translationAndData.persistentData.relaunchModal.relaunch',
                 showCancel: false,
               },
               { closeOnEscape: false }

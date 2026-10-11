@@ -1424,79 +1424,6 @@
     "title": "Auflösungsautomatisierungen"
   },
   "settings": {
-    "advanced": {
-      "persistentData": {
-        "clearData": "Daten löschen",
-        "clearModal": {
-          "message": "Bist du sicher, dass du die folgenden Daten löschen willst. Dies kann nicht rückgängig gemacht werden!\n\n{items}",
-          "title": "Daten Löschen bestätigen"
-        },
-        "dataType": {
-          "all": {
-            "description": "Alle Daten, die OyasamiVR sammelt, inklusive aller Einstellungen",
-            "title": "Alle Daten"
-          },
-          "appCache": {
-            "description": "Alle Daten sind temprär gespeichert (zum Beispiel die VRChat API Response)",
-            "title": "Datenzwischenspeicher"
-          },
-          "appSettings": {
-            "description": "Alle generellen OyasumiVRs Einstellungen",
-            "title": "Anwendungseinstellungen"
-          },
-          "automationSettings": {
-            "description": "Alle für eine OyasumiVR Automation spezifischen Einstellungen",
-            "title": "Automationseinstellungen"
-          },
-          "eventLog": {
-            "description": "Die Events, die gespeichert wurden, im Überblick"
-          },
-          "imageCache": {
-            "description": "Alle Bilder sind temporär gespeichert (zum Beispiel VRChat Spielersymbole)",
-            "title": "Bilderzwischenspeicher"
-          },
-          "integrations": {
-            "description": "Daten spezifische Integrationen (außer VRChat), wie Verifizierungsdaten",
-            "title": "Integrations Daten"
-          },
-          "logs": {
-            "description": "Die Log Dateien, die OyasumiVR generiert"
-          },
-          "miscData": {
-            "description": "Alle anderen Datenm die OyasumiVR speichert, die nicht bereits erwähnt wurden",
-            "title": "Andere Daten"
-          },
-          "vrcData": {
-            "description": "Daten VRChat spezifisch, wie zum Beispiel Verifizierungsdaten",
-            "title": "VRchat Daten"
-          }
-        },
-        "description": "Verwalte Daten, die OyasumiVR auf deiner Festplatte speichert",
-        "relaunchModal": {
-          "relaunch": "OyasumiVR jetzt starten",
-          "title": "OyasumiVR neustarten"
-        },
-        "title": "Bestehende Daten"
-      },
-      "translation": {
-        "contribute": {
-          "description": "Füge fehlende Übersetzungen hinzu oder helfe uns neue Sprachen hinzuzufügen. (Oder überabeite Grammatik; Sinn der Übersetzung im Deutschen)",
-          "docs": "Lerne wie",
-          "title": "Hilf uns durch Übersetzungen!"
-        },
-        "editor": {
-          "action": "Editor starten",
-          "description": "Starte OyasumVR's Übersetzungseditor und starte zu übersetzen.",
-          "title": "Übersetzungseditor"
-        },
-        "loadFile": {
-          "action": "Datei laden",
-          "description": "Lade eine eigen Sprachdatei. Das kann nützlich sein, wenn du neue Übersetzungen testest.",
-          "title": "Sprachdatei laden"
-        },
-        "title": "Sprache & Übersetzung"
-      }
-    },
     "brightnessCct": {
       "bigscreenBeyond": {
         "forceFanSafety": {
@@ -1725,6 +1652,79 @@
       "volume": {
         "description": "Setze das Lautstärkelevel der Benachrichtigungssounds fest",
         "title": "Allgemeine Benachrichtigungslautstärke"
+      }
+    },
+    "translationAndData": {
+      "persistentData": {
+        "clearData": "Daten löschen",
+        "clearModal": {
+          "message": "Bist du sicher, dass du die folgenden Daten löschen willst. Dies kann nicht rückgängig gemacht werden!\n\n{items}",
+          "title": "Daten Löschen bestätigen"
+        },
+        "dataType": {
+          "all": {
+            "description": "Alle Daten, die OyasamiVR sammelt, inklusive aller Einstellungen",
+            "title": "Alle Daten"
+          },
+          "appCache": {
+            "description": "Alle Daten sind temprär gespeichert (zum Beispiel die VRChat API Response)",
+            "title": "Datenzwischenspeicher"
+          },
+          "appSettings": {
+            "description": "Alle generellen OyasumiVRs Einstellungen",
+            "title": "Anwendungseinstellungen"
+          },
+          "automationSettings": {
+            "description": "Alle für eine OyasumiVR Automation spezifischen Einstellungen",
+            "title": "Automationseinstellungen"
+          },
+          "eventLog": {
+            "description": "Die Events, die gespeichert wurden, im Überblick"
+          },
+          "imageCache": {
+            "description": "Alle Bilder sind temporär gespeichert (zum Beispiel VRChat Spielersymbole)",
+            "title": "Bilderzwischenspeicher"
+          },
+          "integrations": {
+            "description": "Daten spezifische Integrationen (außer VRChat), wie Verifizierungsdaten",
+            "title": "Integrations Daten"
+          },
+          "logs": {
+            "description": "Die Log Dateien, die OyasumiVR generiert"
+          },
+          "miscData": {
+            "description": "Alle anderen Datenm die OyasumiVR speichert, die nicht bereits erwähnt wurden",
+            "title": "Andere Daten"
+          },
+          "vrcData": {
+            "description": "Daten VRChat spezifisch, wie zum Beispiel Verifizierungsdaten",
+            "title": "VRchat Daten"
+          }
+        },
+        "description": "Verwalte Daten, die OyasumiVR auf deiner Festplatte speichert",
+        "relaunchModal": {
+          "relaunch": "OyasumiVR jetzt starten",
+          "title": "OyasumiVR neustarten"
+        },
+        "title": "Bestehende Daten"
+      },
+      "translation": {
+        "contribute": {
+          "description": "Füge fehlende Übersetzungen hinzu oder helfe uns neue Sprachen hinzuzufügen. (Oder überabeite Grammatik; Sinn der Übersetzung im Deutschen)",
+          "docs": "Lerne wie",
+          "title": "Hilf uns durch Übersetzungen!"
+        },
+        "editor": {
+          "action": "Editor starten",
+          "description": "Starte OyasumVR's Übersetzungseditor und starte zu übersetzen.",
+          "title": "Übersetzungseditor"
+        },
+        "loadFile": {
+          "action": "Datei laden",
+          "description": "Lade eine eigen Sprachdatei. Das kann nützlich sein, wenn du neue Übersetzungen testest.",
+          "title": "Sprachdatei laden"
+        },
+        "title": "Sprache & Übersetzung"
       }
     },
     "troubleshooting": {

@@ -3,61 +3,61 @@
   <div class="pane-content scroll">
     <div class="setting-view-container">
       <div class="setting-category">
-        <h2 transloco="settings.advanced.translation.title"></h2>
+        <h2 transloco="settings.translationAndData.translation.title"></h2>
         <div class="settings">
           <app-setting-row
-            label="settings.advanced.translation.loadFile.title"
-            description="settings.advanced.translation.loadFile.description"
+            label="settings.translationAndData.translation.loadFile.title"
+            description="settings.translationAndData.translation.loadFile.description"
           >
             <button class="btn btn-primary" (click)="loadLanguageFile()">
               <app-icon name="file-open" />
-              <span transloco="settings.advanced.translation.loadFile.action"></span>
+              <span transloco="settings.translationAndData.translation.loadFile.action"></span>
             </button>
           </app-setting-row>
           <app-setting-row
-            label="settings.advanced.translation.contribute.title"
-            description="settings.advanced.translation.contribute.description"
+            label="settings.translationAndData.translation.contribute.title"
+            description="settings.translationAndData.translation.contribute.description"
           >
             <a
               class="btn btn-primary"
               target="_blank"
               href="https://github.com/Raphiiko/OyasumiVR/wiki/Adding-Translations"
             >
-              <span transloco="settings.advanced.translation.contribute.docs"></span>
+              <span transloco="settings.translationAndData.translation.contribute.docs"></span>
             </a>
           </app-setting-row>
           <div class="setting-row">
             <div class="setting-row-label">
               <span>
-                <span transloco="settings.advanced.translation.editor.title"></span>
+                <span transloco="settings.translationAndData.translation.editor.title"></span>
               </span>
-              <span transloco="settings.advanced.translation.editor.description"></span>
+              <span transloco="settings.translationAndData.translation.editor.description"></span>
             </div>
             <div class="setting-row-action">
               <button class="btn btn-primary" [routerLink]="['/translation', 'loader']">
-                <span transloco="settings.advanced.translation.editor.action"></span>
+                <span transloco="settings.translationAndData.translation.editor.action"></span>
               </button>
             </div>
           </div>
         </div>
       </div>
       <div class="setting-category">
-        <h2 transloco="settings.advanced.persistentData.title"></h2>
+        <h2 transloco="settings.translationAndData.persistentData.title"></h2>
         <div class="action-row">
-          <p transloco="settings.advanced.persistentData.description"></p>
+          <p transloco="settings.translationAndData.persistentData.description"></p>
           <button
             class="btn btn-secondary"
             [disabled]="checkedPersistentStorageItems.length === 0"
             (click)="clearPersistentStorage()"
           >
             <app-icon name="delete" />
-            <span transloco="settings.advanced.persistentData.clearData"></span>
+            <span transloco="settings.translationAndData.persistentData.clearData"></span>
           </button>
         </div>
         <div class="settings">
           <app-setting-row
-            label="settings.advanced.persistentData.dataType.all.title"
-            description="settings.advanced.persistentData.dataType.all.description"
+            label="settings.translationAndData.persistentData.dataType.all.title"
+            description="settings.translationAndData.persistentData.dataType.all.description"
           >
             <label class="check-toggle">
               <input
@@ -74,13 +74,15 @@
                 <div class="setting-row-label">
                   <span
                     [transloco]="
-                      'settings.advanced.persistentData.dataType.' + item.key + '.title' | transloco
+                      'settings.translationAndData.persistentData.dataType.' + item.key + '.title'
+                        | transloco
                     "
                   ></span>
                   <span
                     [transloco]="
-                      'settings.advanced.persistentData.dataType.' + item.key + '.description'
-                        | transloco
+                      'settings.translationAndData.persistentData.dataType.' +
+                        item.key +
+                        '.description' | transloco
                     "
                   ></span>
                 </div>

@@ -164,7 +164,7 @@ import { AudioVolumeEntriesComponent } from './views/dashboard-view/views/audio-
 import { AudioDevicePickerComponent } from './views/dashboard-view/views/audio-volume-automations-view/audio-device-picker/audio-device-picker.component';
 import { AudioDeviceAutomationsService } from './services/audio-device-automations.service';
 import { WindowsService } from './services/windows.service';
-import { SettingsAdvancedViewComponent } from './views/dashboard-view/views/settings-advanced-view/settings-advanced-view.component';
+import { SettingsTranslationAndDataViewComponent } from './views/dashboard-view/views/settings-translation-and-data-view/settings-translation-and-data-view.component';
 import { SettingsNotificationsViewComponent } from './views/dashboard-view/views/settings-notifications-view/settings-notifications-view.component';
 import { SettingsOscViewComponent } from './views/dashboard-view/views/settings-osc-view/settings-osc-view.component';
 import { SettingsGeneralViewComponent } from './views/dashboard-view/views/settings-general-view/settings-general-view.component';
@@ -343,7 +343,7 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
     SettingsNotificationsViewComponent,
     SettingsOscViewComponent,
     SettingsUpdatesViewComponent,
-    SettingsAdvancedViewComponent,
+    SettingsTranslationAndDataViewComponent,
     VRChatLoginModalComponent,
     VRChatLoginTFAModalComponent,
     VRChatAccountsModalComponent,

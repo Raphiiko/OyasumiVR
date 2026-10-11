@@ -1819,81 +1819,6 @@
     "title": "コマンドの実行"
   },
   "settings": {
-    "advanced": {
-      "persistentData": {
-        "clearData": "データクリア",
-        "clearModal": {
-          "message": "以下のデータを削除しますか？元に戻せません。\n\n{items}",
-          "title": "消去の確認"
-        },
-        "dataType": {
-          "all": {
-            "description": "OyasumiVRが保存する全てのデータ",
-            "title": "全データ"
-          },
-          "appCache": {
-            "description": "VRChat APIレスポンスなど、一時的に保存される全てのデータ",
-            "title": "データキャッシュ"
-          },
-          "appSettings": {
-            "description": "一般設定の全てのデータ",
-            "title": "アプリケーション設定"
-          },
-          "automationSettings": {
-            "description": "自動化関係の全てのデータ",
-            "title": "自動化の設定"
-          },
-          "eventLog": {
-            "description": "概要に記録されるイベント",
-            "title": "イベントログ"
-          },
-          "imageCache": {
-            "description": "VRChatのプレイヤーアイコンなど、一時的に保存される全ての画像データ",
-            "title": "画像キャッシュ"
-          },
-          "integrations": {
-            "description": "VRChatを除く連携データ、認証データなど",
-            "title": "連携データ"
-          },
-          "logs": {
-            "description": "ログデータ",
-            "title": "ログファイル"
-          },
-          "miscData": {
-            "description": "他のカテゴリーに含まれない全てのデータ",
-            "title": "その他のデータ"
-          },
-          "vrcData": {
-            "description": "認証情報など、VRChat特有のデータ",
-            "title": "VRChatデータ"
-          }
-        },
-        "description": "OyasumiVRがローカルディスクに保存するデータの管理ができます。",
-        "relaunchModal": {
-          "relaunch": "OyasumiVRを今すぐ再起動する",
-          "title": "OyasumiVRを再起動する"
-        },
-        "title": "保存データ"
-      },
-      "translation": {
-        "contribute": {
-          "description": "不足している翻訳の提供や、新しい言語の追加にご協力ください！",
-          "docs": "もっと詳しく",
-          "title": "翻訳に貢献できます！"
-        },
-        "editor": {
-          "action": "エディタを起動",
-          "description": "OyasumiVRの翻訳エディタを起動して、翻訳の編集と作成を行います",
-          "title": "翻訳エディタ"
-        },
-        "loadFile": {
-          "action": "ファイルを読み込む",
-          "description": "カスタム言語ファイルを読み込みます。翻訳のテストに使用します",
-          "title": "翻訳ファイルを読み込む"
-        },
-        "title": "言語・翻訳"
-      }
-    },
     "brightnessCct": {
       "bigscreenBeyond": {
         "forceFanSafety": {
@@ -2131,6 +2056,81 @@
           "description": "オフにするとOyasumiVRの内蔵OSC及びOSCQueryサーバーが無効になります。多くの機能が警告なしに使えなくなるため、通常はオフにしないでください。これはデバッグ用です。",
           "title": "OSCとOSCQueryサーバー"
         }
+      }
+    },
+    "translationAndData": {
+      "persistentData": {
+        "clearData": "データクリア",
+        "clearModal": {
+          "message": "以下のデータを削除しますか？元に戻せません。\n\n{items}",
+          "title": "消去の確認"
+        },
+        "dataType": {
+          "all": {
+            "description": "OyasumiVRが保存する全てのデータ",
+            "title": "全データ"
+          },
+          "appCache": {
+            "description": "VRChat APIレスポンスなど、一時的に保存される全てのデータ",
+            "title": "データキャッシュ"
+          },
+          "appSettings": {
+            "description": "一般設定の全てのデータ",
+            "title": "アプリケーション設定"
+          },
+          "automationSettings": {
+            "description": "自動化関係の全てのデータ",
+            "title": "自動化の設定"
+          },
+          "eventLog": {
+            "description": "概要に記録されるイベント",
+            "title": "イベントログ"
+          },
+          "imageCache": {
+            "description": "VRChatのプレイヤーアイコンなど、一時的に保存される全ての画像データ",
+            "title": "画像キャッシュ"
+          },
+          "integrations": {
+            "description": "VRChatを除く連携データ、認証データなど",
+            "title": "連携データ"
+          },
+          "logs": {
+            "description": "ログデータ",
+            "title": "ログファイル"
+          },
+          "miscData": {
+            "description": "他のカテゴリーに含まれない全てのデータ",
+            "title": "その他のデータ"
+          },
+          "vrcData": {
+            "description": "認証情報など、VRChat特有のデータ",
+            "title": "VRChatデータ"
+          }
+        },
+        "description": "OyasumiVRがローカルディスクに保存するデータの管理ができます。",
+        "relaunchModal": {
+          "relaunch": "OyasumiVRを今すぐ再起動する",
+          "title": "OyasumiVRを再起動する"
+        },
+        "title": "保存データ"
+      },
+      "translation": {
+        "contribute": {
+          "description": "不足している翻訳の提供や、新しい言語の追加にご協力ください！",
+          "docs": "もっと詳しく",
+          "title": "翻訳に貢献できます！"
+        },
+        "editor": {
+          "action": "エディタを起動",
+          "description": "OyasumiVRの翻訳エディタを起動して、翻訳の編集と作成を行います",
+          "title": "翻訳エディタ"
+        },
+        "loadFile": {
+          "action": "ファイルを読み込む",
+          "description": "カスタム言語ファイルを読み込みます。翻訳のテストに使用します",
+          "title": "翻訳ファイルを読み込む"
+        },
+        "title": "言語・翻訳"
       }
     },
     "troubleshooting": {
