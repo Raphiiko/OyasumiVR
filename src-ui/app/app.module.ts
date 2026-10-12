@@ -98,6 +98,7 @@ import localeID from '@angular/common/locales/id';
 import localeRU from '@angular/common/locales/ru';
 import localeUK from '@angular/common/locales/uk';
 import localeDE from '@angular/common/locales/de';
+import localeTH from '@angular/common/locales/th';
 import { ResolutionAutomationsViewComponent } from './views/dashboard-view/views/resolution-automations-view/resolution-automations-view.component';
 import { RenderResolutionAutomationService } from './services/render-resolution-automation.service';
 import { ChaperoneFadeDistanceAutomationService } from './services/fade-distance-automation.service';
@@ -297,6 +298,7 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
   localeRU,
   localeUK,
   localeDE,
+  localeTH,
 ].forEach((locale) => registerLocaleData(locale));
 
 @NgModule({
