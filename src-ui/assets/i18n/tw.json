@@ -804,7 +804,7 @@
       "verifyIdAction": "驗證識別碼"
     },
     "main-status-bar": {
-      "active": "執行中",
+      "active": "已開啟",
       "brightness": {
         "simple": "亮度",
         "tooltip": "亮度控制"
@@ -818,8 +818,8 @@
         "tooltip": "色溫控制"
       },
       "heartrate": "心率",
-      "inactive": "未啟動",
-      "loggedOut": "已登出",
+      "inactive": "已關閉",
+      "loggedOut": "未登入",
       "mqttStatus": {
         "label": "MQTT",
         "tooltip": "設定：整合功能"
@@ -834,7 +834,7 @@
         "INITIALIZING": "等待啟動"
       },
       "systemMicMuted": {
-        "label": "靜音",
+        "label": "已靜音",
         "tooltip": {
           "NAVIGATE": "系統麥克風：\n自動化",
           "TOGGLE_MUTE": "系統麥克風：\n取消靜音"

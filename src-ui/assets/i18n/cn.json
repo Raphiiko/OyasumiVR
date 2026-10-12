@@ -804,7 +804,7 @@
       "verifyIdAction": "验证 ID"
     },
     "main-status-bar": {
-      "active": "运行中",
+      "active": "已开启",
       "brightness": {
         "simple": "亮度",
         "tooltip": "亮度调整"
@@ -818,7 +818,7 @@
         "tooltip": "色温控制"
       },
       "heartrate": "心率",
-      "inactive": "未启动",
+      "inactive": "已关闭",
       "loggedOut": "未登录",
       "mqttStatus": {
         "label": "MQTT",
