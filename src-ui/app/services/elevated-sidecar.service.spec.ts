@@ -5,7 +5,7 @@ import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
 import { AppSettingsService } from './app-settings.service';
 import { ElevatedSidecarService, EnableResult } from './elevated-sidecar.service';
 import { ModalService } from './modal.service';
-import type { TelemetryService } from './telemetry.service';
+import type { TelemetryService } from './telemetry/telemetry.service';
 
 const { invoke } = vi.hoisted(() => ({ invoke: vi.fn() }));
 vi.mock('@tauri-apps/api/core', () => ({ invoke }));

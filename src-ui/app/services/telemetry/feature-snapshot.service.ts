@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { firstValueFrom, timer } from 'rxjs';
-import { AppSettings } from '../models/settings';
-import { AutomationConfigs } from '../models/automations';
-import { DeviceSelection } from '../models/device-manager';
-import { AppSettingsService } from './app-settings.service';
-import { AutomationConfigService } from './automation-config.service';
-import { VRChatService } from './vrchat-api/vrchat.service';
-import { PulsoidService } from './integrations/pulsoid.service';
+import { AppSettings } from '../../models/settings';
+import { AutomationConfigs } from '../../models/automations';
+import { DeviceSelection } from '../../models/device-manager';
+import { AppSettingsService } from '../app-settings.service';
+import { AutomationConfigService } from '../automation-config.service';
+import { VRChatService } from '../vrchat-api/vrchat.service';
+import { PulsoidService } from '../integrations/pulsoid.service';
 import { TelemetryService } from './telemetry.service';
 
 const ONE_DAY = 1000 * 60 * 60 * 24;

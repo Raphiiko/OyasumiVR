@@ -15,7 +15,7 @@ import {
   tap,
 } from 'rxjs';
 import { fade } from './utils/animations';
-import { TelemetryService } from './services/telemetry.service';
+import { TelemetryService } from './services/telemetry/telemetry.service';
 import { isHolidaysEventActive } from './utils/event-utils';
 
 @Component({

@@ -1,5 +1,5 @@
 import { Injectable, Injector } from '@angular/core';
-import { SETTINGS_KEY_TELEMETRY_SETTINGS, SETTINGS_STORE } from '../globals';
+import { SETTINGS_KEY_TELEMETRY_SETTINGS, SETTINGS_STORE } from '../../globals';
 import {
   asyncScheduler,
   BehaviorSubject,
@@ -11,12 +11,12 @@ import {
   switchMap,
   throttleTime,
 } from 'rxjs';
-import { TELEMETRY_SETTINGS_DEFAULT, TelemetrySettings } from '../models/telemetry-settings';
+import { TELEMETRY_SETTINGS_DEFAULT, TelemetrySettings } from '../../models/telemetry-settings';
 
 import { invoke } from '@tauri-apps/api/core';
 import { trackEvent } from '@aptabase/tauri';
 import { isEqual } from 'lodash';
-import { getVersion } from '../utils/app-utils';
+import { getVersion } from '../../utils/app-utils';
 import { FeatureSnapshotService } from './feature-snapshot.service';
 
 @Injectable({

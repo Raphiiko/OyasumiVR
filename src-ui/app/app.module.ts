@@ -49,7 +49,7 @@ import { DeviceListItemComponent } from './components/device-list/device-list-it
 import { SleepingAnimationsAutomationService } from './services/osc-automations/sleeping-animations-automation.service';
 import { ElevatedSidecarService } from './services/elevated-sidecar.service';
 import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
-import { TelemetryService } from './services/telemetry.service';
+import { TelemetryService } from './services/telemetry/telemetry.service';
 import { ErrorReportingService } from './services/error-reporting.service';
 import { LanguageSelectModalComponent } from './components/language-select-modal/language-select-modal.component';
 import { AppSettingsService } from './services/app-settings.service';

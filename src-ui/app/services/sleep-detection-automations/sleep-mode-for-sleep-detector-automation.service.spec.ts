@@ -6,7 +6,7 @@ import type { EventLogService } from '../event-log.service';
 import type { NotificationService } from '../notification.service';
 import type { OpenVRInputService } from '../openvr-input.service';
 import type { SleepService } from '../sleep.service';
-import type { TelemetryService } from '../telemetry.service';
+import type { TelemetryService } from '../telemetry/telemetry.service';
 import { AUTOMATION_CONFIGS_DEFAULT, type AutomationConfigs } from '../../models/automations';
 import type { SleepDetectorStateReport } from '../../models/events';
 import { OVRInputEventAction } from '../../models/ovr-input-event';

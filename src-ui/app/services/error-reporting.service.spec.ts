@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { invoke } from '@tauri-apps/api/core';
 import * as Sentry from '@sentry/angular';
 import { ErrorReportingService } from './error-reporting.service';
-import type { TelemetryService } from './telemetry.service';
+import type { TelemetryService } from './telemetry/telemetry.service';
 import type { StoreSnapshotService } from './store-snapshot.service';
 
 vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn(async () => undefined) }));

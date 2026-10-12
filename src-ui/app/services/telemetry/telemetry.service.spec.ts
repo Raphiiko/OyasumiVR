@@ -6,7 +6,7 @@ import { TelemetryService } from './telemetry.service';
 const { trackEvent } = vi.hoisted(() => ({ trackEvent: vi.fn() }));
 vi.mock('@aptabase/tauri', () => ({ trackEvent }));
 vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn() }));
-vi.mock('../globals', () => ({
+vi.mock('../../globals', () => ({
   SETTINGS_KEY_TELEMETRY_SETTINGS: 'TELEMETRY_SETTINGS',
   SETTINGS_STORE: { get: vi.fn(), set: vi.fn() },
 }));

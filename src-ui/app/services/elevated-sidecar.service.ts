@@ -10,7 +10,7 @@ import {
   ConfirmModalInputModel,
   ConfirmModalOutputModel,
 } from '../components/confirm-modal/confirm-modal.component';
-import { TelemetryService } from './telemetry.service';
+import { TelemetryService } from './telemetry/telemetry.service';
 
 export type EnableResult =
   | { result: 'ok' }

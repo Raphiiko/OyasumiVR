@@ -1,7 +1,7 @@
 import '@angular/compiler';
 import { describe, expect, it } from 'vitest';
-import { APP_SETTINGS_DEFAULT } from '../models/settings';
-import { AUTOMATION_CONFIGS_DEFAULT, AutomationConfigs } from '../models/automations';
+import { APP_SETTINGS_DEFAULT } from '../../models/settings';
+import { AUTOMATION_CONFIGS_DEFAULT, AutomationConfigs } from '../../models/automations';
 import { buildFeatureSnapshot, FeatureSnapshotContext } from './feature-snapshot.service';
 
 function context(edit: (a: AutomationConfigs) => void = () => {}): FeatureSnapshotContext {
