@@ -171,7 +171,8 @@ It adds Try again unless the headset rejects this PC's key or its host key chang
 Forget deletes only local data. Its page keeps the terminal uninstall command folded under "Can't
 unpair from any PC?". Device Manager's Forget on a known device that is not connected also forgets
 its pairing. A pairing whose key the headset rejects shows `pairingRemoved`, and Device Manager
-treats it as unpaired.
+treats it as unpaired. Pairing it again keeps the pairing id, so `provision` overwrites its old
+token.
 
 ## Connection
 
