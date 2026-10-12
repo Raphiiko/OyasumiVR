@@ -19,248 +19,69 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Added
 
-- Grouped event log
-  - Actions caused by the same sleep mode change, sleep preparation, sunset, or sunrise collapse into
-    one row that expands to show them
-  - Every entry shows an icon for its type
-- Start with SteamVR can now be toggled directly in General Settings, including while SteamVR is
-  stopped, and changes made in SteamVR are reflected while both applications run
-- Access the main OyasumiVR interface from the SteamVR dashboard
-- Regression coverage for removing Windows registry paths from error-report filenames
-- Multiple VRChat account profiles
-  - Switch between accounts without entering their credentials again
-  - Saved sessions and credentials are protected with the Windows Data Protection API
-  - Existing VRChat logins are migrated automatically
-- Anonymous crash and error reporting, controlled by the existing telemetry setting
-- OSC Settings view
-  - Custom target for OSC messages (e.g. for use with Resonite, OSC routers, or when OSCQuery is not available)
-  - VRChat (OSCQuery) target (allows for disabling OSC messages being sent to VRChat)
-- Home Assistant switch for the VRChat microphone mute
-- Message Center warning for when the VR overlay repeatedly fails to start, offering to turn off GPU acceleration
-- Setting to wait a moment between turning off each controller and tracker, for systems where turning them off crashes SteamVR
-- Thai language support (Community contribution by [ShikiYuri (Sk.\_Yri)](https://github.com/ShikiYuriSan))
-- More VRCX logging, each with its own toggle in the integration settings
-  - Invites and invite requests that OyasumiVR accepted or declined, with the reason and the reply message
-  - VRChat status changes made by OyasumiVR, with the reason
-  - VRChat group changes made by OyasumiVR, with the reason
-- Notification when OyasumiVR automatically declines an invite or an invite request
-- Troubleshooting page under Settings, replacing Status Information
-  - Status tab: OyasumiVR's version and build with a copy button, and the current state of
-    SteamVR, VRChat, the VR overlay, OSC, MQTT, Pulsoid, Bluetooth and administrator access
-  - Tools tab: open the log folder, reregister the SteamVR application manifest, and open the
-    developer tools
-  - Tweaks tab: VR overlay GPU acceleration, the OpenVR initialization delay and the delay between
-    device power-offs, each with a button to reset it to its default
-- Debug reports on the Troubleshooting page
-  - Uploads OyasumiVR's logs, settings and system details for the developer, and returns a report
-    code
-  - Passwords and login details are left out
-  - Can be saved as a file instead when the upload fails
+- The full OyasumiVR interface in the SteamVR dashboard, usable with your controllers
+- Multiple VRChat accounts: save several accounts and switch between them without logging in again
+- VRCX integration
+  - Log sleep mode changes (@sofoxe1)
+  - Log invites and invite requests that OyasumiVR handled automatically
+  - Log VRChat status changes made by OyasumiVR
+  - Log VRChat group changes made by OyasumiVR
+- OSC settings page
+  - Send OSC messages to a custom address, for use with Resonite, OSC routers, or when OSCQuery is
+    not available
+  - Turn off sending OSC messages to VRChat
+- Grouped event log: actions caused by the same sleep mode change, sleep preparation, sunset or
+  sunrise collapse into one expandable row, and every entry shows an icon for its type
+- Home Assistant switch for muting your VRChat microphone
+- Troubleshooting view
+  - Debug reporting for better support
+- Thai language support (@ShikiYuriSan)
+- Notifications for invites and invite requests that OyasumiVR declines automatically
+- Start with SteamVR can now be turned on or off directly in General Settings
 - Settings can be reset to their default value
+- Setting to turn off controllers and trackers one at a time, for systems where turning several off
+  at once crashes SteamVR
 
 ### Changed
 
-- The notification setting for automatically accepted invite requests is now "Automatically Handled
-  Invites and Invite Requests", and also covers automatically declined invites and invite requests
-- Color temperature control is now limited to supported headsets (Valve Index, Bigscreen Beyond).
-  If it worked on your headset before, please turn on "Enable on unsupported headsets" in the
-  Brightness & CCT settings, and let us know on Discord.
-- Lowered the minimum hardware brightness for the Valve Index from 20% to 9%, the lowest level the
-  headset supports
-- Quit with SteamVR is now an on/off toggle. When SteamVR stops, OyasumiVR counts down ten seconds
-  before it quits, and stays open if SteamVR starts again. It also waits for a running shutdown
-  sequence to finish, and cancelling the sequence cancels the quit
-- The Message Center now uses a focused amber glow and a steady notification dot to draw attention to messages.
-- Repeated language activation reuses CJK fonts already loading or loaded.
-- Disabled and friend-independent automations no longer request friend-list refreshes.
-- Image downloads reuse HTTP connections and avoid extra copies of each downloaded image.
-- Sleeping-pose consumers share detection work and receive the latest pose when opened.
-- Unchanged SteamVR device properties no longer trigger redundant window updates.
-- Sleep detection computes movement totals once per report instead of on every pose update.
-- Removed an unused frontend OpenVR device-fetch method; device updates still arrive through events.
-- VRChat OSCQuery discovery runs inside OyasumiVR and no longer starts a separate mDNS sidecar process.
-
-- Redesigned the About view so growing credits scroll inside the view instead of making the
-  window grow
-- OyasumiVR no longer rewrites a settings file when nothing in it changed
-- Turning devices on when OyasumiVR starts now takes precedence over turning them off for a stopped
-  SteamVR, so devices covered by both automations are left on
-- OyasumiVR now loads NVIDIA's NVML library from the Windows system directory only. A driver old
-  enough to have installed `nvml.dll` somewhere else loses GPU power limiting until you update it.
-- Improved the Traditional Chinese translations
-- Updated the Russian translations
-- OyasumiVR's window now does less work while it is open
-- Updated OyasumiVR's internal components
-- Developer tools no longer open automatically in debug builds and are no longer included in
-  release builds
-- OyasumiVR no longer opens a console window by default in debug builds. Launch any build with
-  `--console` to open one
-- The Chinese Steam release is now the same build as the international Steam release. It switches to
-  CN compliance mode at runtime.
-- The Run Automations commands are now stored as plain text, so you can read and edit them in
-  OyasumiVR's settings file
-- Your Pulsoid token is now stored with the Windows Data Protection API instead of in plain text, so
-  only your Windows account can read it. Copying OyasumiVR's settings to another Windows account or PC
-  no longer carries your Pulsoid login over
-- Your MQTT password is now stored with the Windows Data Protection API instead of in plain text, so
-  only your Windows account can read it
-- Features that need administrator access, such as GPU power limiting, now ask for it once instead
-  of on every launch. The "ask for administrator privileges on startup" setting and the
-  once-or-always dialog are replaced by a single toggle. These features now need an account that
-  can elevate: on a standard user account, typing an administrator's password into the prompt no
-  longer works, and the features report as unavailable.
-- The Steam release no longer reinstalls Microsoft Edge WebView2 on every update. When the runtime
-  is missing, OyasumiVR now shows a Japanese or English dialog that links Microsoft's download page
-- Advanced Settings is now called Translation & Data. Its troubleshooting tools and settings moved to
-  the new Troubleshooting page
-- The settings menu no longer repeats "Settings" in its labels, such as "General" instead of
-  "General Settings"
+- Features that need administrator access now ask for it only once, instead of on every launch
+- Quit with SteamVR is now an on/off toggle
+- Valve Index hardware brightness now goes down to 9% instead of 20%, and is more accurate between
+  levels
+- Steam updates no longer reinstall Microsoft Edge WebView2 every time. If you do not have it
+  installed, OyasumiVR asks you to install it
+- Improved encryption of stored credentials
+- Improved translations for Traditional Chinese (@XoF-eLtTiL), Simplified Chinese (@DynamicLoader),
+  Russian (@Pacmard), Spanish (@B4sicallyF0x), German (@shadow11177) and Dutch
+- Various performance improvements
 
 ### Fixed
 
-- Fixed VRChat two-factor login, status changes, invite handling, notification dismissal, and logout
-  failing after a change to the VRChat API
-- VRChat login errors now say when the login attempt expired or VRChat is limiting login attempts,
-  instead of reporting an unknown error
-- Fixed overlay pointers and tooltips clipping into the dashboard with SteamVR 2.17.
-- The splash screen and VR notifications no longer stretch or skew while they move into place
-  after you turn your head
-- VR notifications now tilt toward your eyes, as intended
-- The event log no longer reports an auto-declined invite when the decline request to VRChat failed
-- The event log no longer reports a status change on sleep preparation when the status did not change
-- Restore friend pictures after the VRChat API profile changes.
-- Image-cache clearing now reports deletion failures and skips unnecessary manifest validation
-- Installing dependencies no longer changes the shared package version in the lockfile, and version bumps keep it synchronized.
-- Controller bindings now show a retry message when loading fails instead of asking you to configure a binding.
-- Device power-off events now exclude skipped devices and failed commands.
-- Controller actions no longer stay pressed after SteamVR disconnects.
-- Run Automations now saves pending command edits when you leave the page.
-
-- Fixed VRChat log timestamps allowing the Quick Eeper achievement after its 20-minute window.
-
-- Fixed OpenVR device updates changing the tracked-index order of the device list.
-
-- Fixed missing image content types on the first request to the image cache.
-
-- Fixed overlay notification readiness and notification IDs used for dismissal.
-
-- Fixed custom OSC targets rejecting hostnames such as localhost
-
-- Fixed OpenVR device caches retaining records after a session ends
-
-- Automatic sunrise and sunset lookup no longer saves a false clock time during polar day or night
-
-- Fixed manually entered MSI Afterburner paths not being saved
-
-- Fixed duplicate update installations and allowed retries after installation or restart failures
-
-- Fixed switching from advanced to simple brightness mode not restoring the saved brightness
-
-- Fixed device selections not refreshing immediately after tag or disabled-state changes
-
-- Fixed charging power-off automation using an outdated device selection
-
-- Fixed outdated validation results overriding the current Lighthouse Console or MSI Afterburner path
-
-- Fixed the leave sound never playing when the leave notification was turned off
-- Fixed the sunset and sunrise brightness automations running when your headset reconnected while
-  sleep mode was on, even with "Only while sleep mode is disabled" enabled
-- Fixed clicks and slider drags failing when both controllers pointed at the VR overlay
-- Fixed queued controller and tracker power-off requests targeting the wrong device when SteamVR
-  reused its device index
-- Fixed corrupted image-cache metadata preventing OyasumiVR from starting
-- Fixed VRChat world and player updates, join and leave notifications, and related automations
-  stopping after VRChat had been running for more than 24 hours
-- Fixed OyasumiVR staying on a closed VRChat client's log after another client was launched
-- Fixed VRChat two-factor login and the restoration of saved sessions
-- Fixed player-count status automations not reacting when sleep mode changed
-- Fixed the sleep detector turning sleep mode back on after its confirmation countdown was canceled by
-  disabling the automation or changing sleep mode manually
-- Fixed base stations being turned off when OyasumiVR was started while SteamVR was already running
-- Fixed base station control leaking memory in the Windows Bluetooth service, which could use up all
-  of the system's memory
-- Fixed base stations not being controllable again after they briefly went out of Bluetooth range
-- Fixed Bluetooth recovery reporting success when Windows refused to turn a radio off or on.
-  Radios that cannot be restored are retried later
-- Fixed the Windows notification provider not showing any notifications
-- Fixed the VR overlay failing to start when system-wide ad blockers or proxies intercepted
-  OyasumiVR's local connection
+- Fixed VRChat login issues
+- Fixed friend pictures not showing after a change to the VRChat API
+- Fixed join and leave notifications, player tracking and related automations stopping after VRChat
+  ran for more than 24 hours, or when you ran more than one VRChat client
+- VR overlay stability fixes
+- Mitigations for issues in SteamVR 2.17
 - Fixed settings being reset when upgrading from very old versions of OyasumiVR, or when switching
   between release and beta builds
-- Fixed OyasumiVR using up an entire CPU core when Windows stopped reporting the microphone level
-  for the capture device used by the system microphone automations
-- Fixed OyasumiVR looking up your sunrise and sunset times up to three times when it started
-- Fixed the main UI waiting 50 ms after the core's HTTP port was already available, so font
-  loading starts sooner
-- Fixed the event log recording the wrong brightness values for brightness automations, when
-  advanced mode was enabled
-- Fixed the event log recording a headset hardware brightness change on headsets that have no
-  hardware brightness control
-- Fixed the event log showing an internal label instead of the reason for headset brightness changes
-  at sunset and sunrise
-- The VR overlay now writes the reason for an unexpected shutdown to its log file, instead of stopping without a trace
-- Changing the VR overlay's GPU acceleration setting now restarts it right away, instead of waiting out the retry delay
-  of up to five minutes
-- OyasumiVR now keeps retrying when the VR overlay cannot be started at all, instead of giving up for the rest of the
-  session
-- Fixed SteamVR sometimes crashing when OyasumiVR turned off several base stations at once
-- Fixed OyasumiVR shutting down on its own when SteamVR reported an event it did not recognise
-- Fixed the brightness and color temperature sliders in the VR overlay jumping to 100%
-- Fixed the VR overlay restarting itself over and over again on some systems
-- Fixed the VR overlay showing nothing but the cursor on systems with more than one graphics card. It now always
-  renders on the same graphics card as SteamVR, so assigning OyasumiVR to a specific card in the Windows graphics
-  settings is no longer needed
-- Fixed the "GPU acceleration" setting for the VR overlay. Turning it off left the overlay blank instead of switching
-  to software rendering
-- The VR overlay no longer leaves temporary files on your disk
-- Fixed the Valve Index's hardware brightness being slightly off at levels in between the ones OyasumiVR had measured
-  (Thanks to help from [coolGi](https://github.com/coolGi69))
-- Fixed OyasumiVR getting stuck on "Initializing" for SteamVR, which only a restart cleared
-- Fixed the VR overlay crashing on startup, and when SteamVR was restarted
-- The VR overlay now stops with an explanation in its log when its browser engine cannot start, instead of crashing
-- Fixed fractional values typed into slider settings, such as chaperone fade distances, being truncated
-- Fixed canceling the hotkey selector clearing the hotkey from view while the old hotkey stayed active
-- The hotkey selector no longer shows a hotkey that Windows refused to register
-- Fixed closing the hotkey selector with Escape discarding the hotkey you just pressed
-- Fixed a hotkey you set running its action twice, until you restarted OyasumiVR
-- Fixed OyasumiVR dropping an action's working hotkey when it could not register the replacement
-- Fixed changing a hotkey sometimes leaving the old key combination claimed system-wide, where it did
-  nothing and could not be freed until you restarted OyasumiVR
-- Fixed one hotkey being unavailable, because another application had taken it, stopping your
-  remaining hotkeys from working again after you closed the hotkey selector
-- Fixed the shutdown sequence force-quitting SteamVR right away. It now asks SteamVR to close first,
-  and only forces it after five seconds
-- Fixed cleared application settings being restored by the next settings change when you chose to
-  restart later instead of immediately. OyasumiVR now blocks all settings writes after clearing data,
-  and the restart prompt can no longer be dismissed
+- Fixed the Windows notification provider not showing any notifications
+- Fixed hotkeys running their action twice, staying claimed after you changed them, or no longer
+  working after you closed the hotkey selector
+- Fixed some changes not being saved properly
+- Fixed the shutdown sequence force-quitting SteamVR right away. It now asks SteamVR to close first
+- Fixed notification sounds sometimes not playing
+- Fixed OyasumiVR using a full CPU core when Windows stopped reporting the microphone level
+- Fixed sunset and sunrise brightness automations not respecting the sleep mode condition
+- Fixed player-count status automations not reacting to sleep mode changes
+- Fixed the sleeping animation preset for GoGo Loco 1.8+ not changing your avatar's sleeping pose
+  (@ColorlessColor)
+- Fixed the Bigscreen Beyond fan staying locked at 100% after you turned off the fan safety
+- Fixed the brightness and color temperature sliders in the VR overlay jumping to 100% (@Map1en)
+- Fixed device selections in power automations not updating right away after you changed a device's
+  tags or disabled it
+- Fixed the event log showing wrong or misleading entries for several automations
 - Various stability improvements
-
-- Fixed controller and input origin labels breaking when a localized-name lookup failed
-- Fixed OpenVR aborting when its settings interface was unavailable
-- Fixed stale subscriptions after closing the OSC script editor and Device Manager modal
-- Fixed notification sounds staying silent for the rest of the session when no audio output device
-  was available while OyasumiVR started. Sounds now play again as soon as a device is available,
-  without restarting OyasumiVR
-- Fixed the controller binding indicator in General Settings showing blank or outdated information
-  after a failed binding lookup, until you navigated away from the settings and back
-- Panic reports no longer include your Windows account name from embedded source paths
-- Fixed OyasumiVR's splash screen being hidden instead of closed while closing to the system tray
-  was enabled, which left OyasumiVR running without a window after you turned the option off and
-  closed the window
-- Fixed a value you typed into a settings field being discarded when you left the page straight
-  away. This also affected the OSC host and port, and the battery percentage and upright pose
-  modals when you pressed Save immediately after typing
-- Fixed the Bigscreen Beyond fan staying locked at 100% after turning off the fan safety, while the
-  headset brightness was still above 100%
-- Fixed standalone releases never checking for updates again after the check at startup failed, for
-  example when your network was not up yet. OyasumiVR now retries every ten minutes until a check
-  succeeds
-- Tooltips now have the same text size everywhere, instead of following the size of the element
-  they belong to
-
-### Removed
-
-- Removed the `flags.toml` file, and the command profiling it could switch on. Both were developer debugging tools
 
 ## [25.6.12]
 
