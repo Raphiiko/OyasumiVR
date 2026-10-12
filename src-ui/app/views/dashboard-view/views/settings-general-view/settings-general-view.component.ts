@@ -10,7 +10,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SelectBoxItem } from 'src-ui/app/components/select-box/select-box.component';
 import { LighthouseDevicePowerState } from 'src-ui/app/models/lighthouse-device';
 import { OpenVRService } from 'src-ui/app/services/openvr.service';
-import { TelemetryService } from 'src-ui/app/services/telemetry.service';
+import { TelemetryService } from 'src-ui/app/services/telemetry/telemetry.service';
 import { LighthouseConsoleService } from 'src-ui/app/services/lighthouse-console.service';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 import { ElevatedSidecarService } from 'src-ui/app/services/elevated-sidecar.service';

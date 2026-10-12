@@ -1,6 +1,6 @@
 import { ApplicationRef } from '@angular/core';
 import { AppSettingsService } from './app-settings.service';
-import { TelemetryService } from './telemetry.service';
+import { TelemetryService } from './telemetry/telemetry.service';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { invoke } from '@tauri-apps/api/core';

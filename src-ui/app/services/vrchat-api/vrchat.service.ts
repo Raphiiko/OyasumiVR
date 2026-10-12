@@ -28,7 +28,7 @@ import type {
   VRChatOnPlayerLeftEvent,
 } from '../../models/vrchat-log-event';
 import type { VRChatSocketStatus } from './vrchat-socket';
-import { ErrorReportingService } from '../error-reporting.service';
+import { ErrorReportingService } from '../telemetry/error-reporting.service';
 import {
   normalizeVRChatProfiles,
   patchVRChatProfile,

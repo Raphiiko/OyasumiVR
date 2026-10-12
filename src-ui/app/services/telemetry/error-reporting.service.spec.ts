@@ -4,7 +4,7 @@ import { invoke } from '@tauri-apps/api/core';
 import * as Sentry from '@sentry/angular';
 import { ErrorReportingService } from './error-reporting.service';
 import type { TelemetryService } from './telemetry.service';
-import type { StoreSnapshotService } from './store-snapshot.service';
+import type { StoreSnapshotService } from '../store-snapshot.service';
 
 vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn(async () => undefined) }));
 vi.mock('@sentry/angular', () => ({
@@ -12,9 +12,9 @@ vi.mock('@sentry/angular', () => ({
   close: vi.fn(async () => true),
   captureException: vi.fn(),
 }));
-vi.mock('../../build', () => ({ FLAVOUR: 'STEAM' }));
-vi.mock('../../environments/environment', () => ({ environment: { production: true } }));
-vi.mock('../utils/app-utils', () => ({ getVersion: vi.fn(async () => 'test') }));
+vi.mock('../../../build', () => ({ FLAVOUR: 'STEAM' }));
+vi.mock('../../../environments/environment', () => ({ environment: { production: true } }));
+vi.mock('../../utils/app-utils', () => ({ getVersion: vi.fn(async () => 'test') }));
 
 describe('initialization error consent', () => {
   beforeEach(() => vi.clearAllMocks());

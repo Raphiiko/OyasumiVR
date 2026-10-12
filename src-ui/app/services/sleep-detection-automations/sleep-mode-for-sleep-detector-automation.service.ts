@@ -25,7 +25,7 @@ import { EventLogService } from '../event-log.service';
 import { OpenVRInputService } from '../openvr-input.service';
 import { OVRInputEventAction } from '../../models/ovr-input-event';
 import { SleepingPose } from '../../models/sleeping-pose';
-import { TelemetryService } from '../telemetry.service';
+import { TelemetryService } from '../telemetry/telemetry.service';
 import { getBuiltInNotificationSound } from '../../models/notification-sounds';
 
 export type SleepDetectorStateReportHandlingResult =

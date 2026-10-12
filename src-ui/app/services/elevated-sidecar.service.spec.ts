@@ -5,6 +5,7 @@ import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
 import { AppSettingsService } from './app-settings.service';
 import { ElevatedSidecarService, EnableResult } from './elevated-sidecar.service';
 import { ModalService } from './modal.service';
+import type { TelemetryService } from './telemetry/telemetry.service';
 
 const { invoke } = vi.hoisted(() => ({ invoke: vi.fn() }));
 vi.mock('@tauri-apps/api/core', () => ({ invoke }));
@@ -25,7 +26,13 @@ function setup(enableResult: EnableResult) {
     updateSettings: (update: Partial<AppSettings>) =>
       settings.next({ ...settings.value, ...update }),
   } as unknown as AppSettingsService;
-  const service = new ElevatedSidecarService(appSettings, {} as ModalService);
+  const service = new ElevatedSidecarService(
+    appSettings,
+    {} as ModalService,
+    {
+      trackEvent: vi.fn(),
+    } as unknown as TelemetryService
+  );
   return { service, settings };
 }
 

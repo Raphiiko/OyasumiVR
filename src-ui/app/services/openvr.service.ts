@@ -16,7 +16,7 @@ import {
 import { orderBy } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
 import { error, info } from '@tauri-apps/plugin-log';
-import { TelemetryService } from './telemetry.service';
+import { TelemetryService } from './telemetry/telemetry.service';
 
 export type OpenVRStatus = 'INACTIVE' | 'INITIALIZING' | 'INITIALIZED';
 
