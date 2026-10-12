@@ -11,6 +11,7 @@ export const LOCALE_LOADERS: Record<string, () => Promise<{ default: Translation
   ko: () => import('../../../src-ui/assets/i18n/ko.json'),
   nl: () => import('../../../src-ui/assets/i18n/nl.json'),
   ru: () => import('../../../src-ui/assets/i18n/ru.json'),
+  th: () => import('../../../src-ui/assets/i18n/th.json'),
   tw: () => import('../../../src-ui/assets/i18n/tw.json'),
   uk: () => import('../../../src-ui/assets/i18n/uk.json'),
 };
