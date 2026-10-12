@@ -14,7 +14,7 @@ vi.mock('src-ui/app/services/modal.service', () => ({ ModalService: class {} }))
 vi.mock('./vrchat-api/vrchat-api', () => ({ VRChatAPI: class {} }));
 vi.mock('./vrchat-api/vrchat-auth', () => ({ VRChatAuth: class {} }));
 vi.mock('./vrchat-api/vrchat-socket', () => ({ VRChatSocket: class {} }));
-vi.mock('./error-reporting.service', () => ({ ErrorReportingService: class {} }));
+vi.mock('./telemetry/error-reporting.service', () => ({ ErrorReportingService: class {} }));
 vi.mock('src-ui/app/models/vrchat-api-settings', () => import('../models/vrchat-api-settings'));
 
 const time = 1787517755000;

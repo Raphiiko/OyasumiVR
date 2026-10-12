@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api/core';
 import * as Sentry from '@sentry/angular';
 import { distinctUntilChanged, map } from 'rxjs';
-import { FLAVOUR } from '../../build';
-import { environment } from '../../environments/environment';
-import { getVersion } from '../utils/app-utils';
-import { TelemetryService } from './telemetry/telemetry.service';
-import { StoreSnapshotService } from './store-snapshot.service';
+import { FLAVOUR } from '../../../build';
+import { environment } from '../../../environments/environment';
+import { getVersion } from '../../utils/app-utils';
+import { TelemetryService } from './telemetry.service';
+import { StoreSnapshotService } from '../store-snapshot.service';
 
 const DSN = 'https://a08e4e04b7a24cafb5eb6c4ff701e52e@sentry.raphii.co/1';
 
