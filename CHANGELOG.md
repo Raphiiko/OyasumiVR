@@ -21,36 +21,36 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 - The full OyasumiVR interface in the SteamVR dashboard, usable with your controllers
 - Multiple VRChat accounts: save several accounts and switch between them without logging in again
+- VRCX integration
+  - Log sleep mode changes (@sofoxe1)
+  - Log invites and invite requests that OyasumiVR handled automatically
+  - Log VRChat status changes made by OyasumiVR
+  - Log VRChat group changes made by OyasumiVR
 - OSC settings page
   - Send OSC messages to a custom address, for use with Resonite, OSC routers, or when OSCQuery is
     not available
   - Turn off sending OSC messages to VRChat
 - Grouped event log: actions caused by the same sleep mode change, sleep preparation, sunset or
   sunrise collapse into one expandable row, and every entry shows an icon for its type
+- Home Assistant switch for muting your VRChat microphone
 - Troubleshooting view
   - Debug reporting for better support
-- Settings can be reset to their default value
-- Start with SteamVR can now be turned on or off directly in General Settings
+- Thai language support (@ShikiYuriSan)
 - Notifications for invites and invite requests that OyasumiVR declines automatically
-- VRCX integration
-  - Log sleep mode changes (@sofoxe1)
-  - Log invites and invite requests that OyasumiVR handled automatically
-  - Log VRChat status changes made by OyasumiVR
-  - Log VRChat group changes made by OyasumiVR
+- Start with SteamVR can now be turned on or off directly in General Settings
+- Settings can be reset to their default value
 - Setting to turn off controllers and trackers one at a time, for systems where turning several off
   at once crashes SteamVR
-- Home Assistant switch for muting your VRChat microphone
-- Thai language support (@ShikiYuriSan)
 
 ### Changed
 
 - Features that need administrator access now ask for it only once, instead of on every launch
+- Quit with SteamVR is now an on/off toggle
 - Valve Index hardware brightness now goes down to 9% instead of 20%, and is more accurate between
   levels
-- Quit with SteamVR is now an on/off toggle
-- Improved encryption of stored credentials
 - Steam updates no longer reinstall Microsoft Edge WebView2 every time. If you do not have it
   installed, OyasumiVR asks you to install it
+- Improved encryption of stored credentials
 - Improved translations for Traditional Chinese (@XoF-eLtTiL), Simplified Chinese (@DynamicLoader),
   Russian (@Pacmard), Spanish (@B4sicallyF0x), German (@shadow11177) and Dutch
 - Various performance improvements
@@ -62,24 +62,24 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Fixed join and leave notifications, player tracking and related automations stopping after VRChat
   ran for more than 24 hours, or when you ran more than one VRChat client
 - VR overlay stability fixes
-- Fixed the brightness and color temperature sliders in the VR overlay jumping to 100% (@Map1en)
 - Mitigations for issues in SteamVR 2.17
-- Fixed the Windows notification provider not showing any notifications
 - Fixed settings being reset when upgrading from very old versions of OyasumiVR, or when switching
   between release and beta builds
+- Fixed the Windows notification provider not showing any notifications
+- Fixed hotkeys running their action twice, staying claimed after you changed them, or no longer
+  working after you closed the hotkey selector
 - Fixed some changes not being saved properly
+- Fixed the shutdown sequence force-quitting SteamVR right away. It now asks SteamVR to close first
+- Fixed notification sounds sometimes not playing
+- Fixed OyasumiVR using a full CPU core when Windows stopped reporting the microphone level
 - Fixed sunset and sunrise brightness automations not respecting the sleep mode condition
 - Fixed player-count status automations not reacting to sleep mode changes
 - Fixed the sleeping animation preset for GoGo Loco 1.8+ not changing your avatar's sleeping pose
   (@ColorlessColor)
+- Fixed the Bigscreen Beyond fan staying locked at 100% after you turned off the fan safety
+- Fixed the brightness and color temperature sliders in the VR overlay jumping to 100% (@Map1en)
 - Fixed device selections in power automations not updating right away after you changed a device's
   tags or disabled it
-- Fixed the Bigscreen Beyond fan staying locked at 100% after you turned off the fan safety
-- Fixed the shutdown sequence force-quitting SteamVR right away. It now asks SteamVR to close first
-- Fixed notification sounds sometimes not playing
-- Fixed hotkeys running their action twice, staying claimed after you changed them, or no longer
-  working after you closed the hotkey selector
-- Fixed OyasumiVR using a full CPU core when Windows stopped reporting the microphone level
 - Fixed the event log showing wrong or misleading entries for several automations
 - Various stability improvements
 
