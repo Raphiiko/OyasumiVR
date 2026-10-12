@@ -106,6 +106,22 @@ describe('Steam Frame pairing flow', () => {
     });
   });
 
+  it('keeps the pairing id when it pairs a paired headset again', async () => {
+    handlers['steam_frame_check_ssh_access'] = () => ({ status: 'ok', hostKeyPin: 'PIN' });
+    const service = await start();
+    await service.pair();
+    const first = service.pairingFor(device.id)!;
+    await service.openWizard(device);
+    await service.connectManual('192.168.1.42');
+    await service.pair();
+    expect(calls('steam_frame_create_pairing_keys')).toHaveLength(2);
+    expect(service.pairingFor(device.id)).toMatchObject({ id: first.id, complete: true });
+    expect(calls('steam_frame_set_up_helper').map((a) => a.request.pcId)).toEqual([
+      first.id,
+      first.id,
+    ]);
+  });
+
   it('never repeats a declined request by itself, and retries with the same key', async () => {
     handlers['steam_frame_request_approval'] = () => 'declined';
     const service = await start();

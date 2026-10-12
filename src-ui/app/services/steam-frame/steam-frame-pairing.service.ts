@@ -624,7 +624,7 @@ export class SteamFramePairingService {
 
   /**
    * Returns the attempt for this headset, saved before any registration. An unfinished attempt
-   * keeps its key; a completed pairing is replaced by a new one.
+   * keeps its key; a completed pairing is replaced by a new one with the same id.
    */
   private async preparePairing(
     flow: SteamFrameFlow,
@@ -649,7 +649,8 @@ export class SteamFramePairingService {
 
     // replace any older pairing for this headset, and save
     const pairing: SteamFramePairing = {
-      id: uuidv4(),
+      // provisioning then overwrites the replaced pairing's client record on the headset
+      id: existing?.id ?? uuidv4(),
       deviceId: flow.deviceId,
       identity: flow.identity,
       address,
