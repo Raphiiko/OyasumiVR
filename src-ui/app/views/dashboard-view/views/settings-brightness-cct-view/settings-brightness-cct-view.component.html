@@ -5,12 +5,15 @@
   </div>
   <div class="pane-content scroll">
     <div class="setting-view-container">
+      @let automationsHint =
+        ('settings.brightnessCct.automationsHint' | transloco: { link: '{link}' }).split('{link}');
       <p>
-        <span transloco="settings.brightnessCct.description"></span>&ngsp;
-        <a
+        <span transloco="settings.brightnessCct.description"></span>&ngsp;{{ automationsHint[0]
+        }}<a
           [routerLink]="['/dashboard', 'brightnessAutomations']"
           transloco="settings.brightnessCct.automationsLink"
-        ></a>
+        ></a
+        >{{ automationsHint[1] }}
       </p>
       <div class="setting-category">
         <div class="settings">
