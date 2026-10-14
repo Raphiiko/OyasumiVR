@@ -37,20 +37,20 @@ describe('PSVR2HardwareBrightnessControlDriver', () => {
     }
   });
 
-  it('maps 10% to 100% onto the full gain range and reads the same percentage back', async () => {
+  it('maps 50% to 100% onto the full gain range and reads the same percentage back', async () => {
     const { driver, analogGain } = createDriver(PSVR2_WITH_TOOLKIT);
-    await driver.setBrightnessPercentage(10);
+    await driver.setBrightnessPercentage(50);
     expect(analogGain()).toBe(0);
     await driver.setBrightnessPercentage(100);
     expect(analogGain()).toBe(1);
-    await driver.setBrightnessPercentage(55);
+    await driver.setBrightnessPercentage(75);
     expect(analogGain()).toBeCloseTo(Math.pow(0.5, 2.2));
-    expect(await driver.getBrightnessPercentage()).toBe(55);
+    expect(await driver.getBrightnessPercentage()).toBe(75);
   });
 
-  it('leaves brightness below 10% to software brightness', async () => {
+  it('leaves brightness below 50% to software brightness', async () => {
     const { driver, analogGain } = createDriver(PSVR2_WITH_TOOLKIT);
-    expect(driver.getBrightnessBounds()).toEqual([10, 100]);
+    expect(driver.getBrightnessBounds()).toEqual([50, 100]);
     await driver.setBrightnessPercentage(0);
     expect(analogGain()).toBe(0);
   });

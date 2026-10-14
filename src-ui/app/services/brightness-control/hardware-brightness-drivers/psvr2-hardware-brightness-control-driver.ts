@@ -11,10 +11,10 @@ import { AppSettings } from '../../../models/settings';
 // step = ceil(gain^(1/2.2) * 31), and advertises that range on the HMD.
 const PSVR2_BRIGHTNESS_GAMMA = 2.2;
 
-// The panel's lowest step still lights up, so it sits at 10% on OyasumiVR's scale.
+// The panel's lowest step still lights up, so it sits at 50% on OyasumiVR's scale.
 export const PSVR2_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: HardwareBrightnessControlDriverBounds =
   {
-    softwareStops: [10, 100],
+    softwareStops: [50, 100],
     hardwareStops: [0, 100],
     overdriveThreshold: 100,
     riskThreshold: 100,
