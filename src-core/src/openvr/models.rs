@@ -156,6 +156,9 @@ pub struct OVRDevice {
     pub hmd_on_head: Option<bool>,
     pub hmd_activity: Option<String>,
     pub display_frequency: Option<f32>,
+    pub display_supports_analog_gain: Option<bool>,
+    pub display_min_analog_gain: Option<f32>,
+    pub display_max_analog_gain: Option<f32>,
 }
 
 #[derive(Clone, Serialize, Deserialize)]

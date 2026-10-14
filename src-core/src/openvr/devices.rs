@@ -223,6 +223,9 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
     let mut hmd_on_head = None;
     let mut hmd_activity = None;
     let mut display_frequency = None;
+    let mut display_supports_analog_gain = None;
+    let mut display_min_analog_gain = None;
+    let mut display_max_analog_gain = None;
     if class == TrackedDeviceClass::HMD {
         let activity_level = system
             .get_tracked_device_activity_level(device_index)
@@ -252,6 +255,24 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
                 ovr::raw::ETrackedDeviceProperty::Prop_DisplayFrequency_Float,
             )
             .ok();
+        display_supports_analog_gain = system
+            .get_tracked_device_property(
+                device_index,
+                ovr::raw::ETrackedDeviceProperty::Prop_DisplaySupportsAnalogGain_Bool,
+            )
+            .ok();
+        display_min_analog_gain = system
+            .get_tracked_device_property(
+                device_index,
+                ovr::raw::ETrackedDeviceProperty::Prop_DisplayMinAnalogGain_Float,
+            )
+            .ok();
+        display_max_analog_gain = system
+            .get_tracked_device_property(
+                device_index,
+                ovr::raw::ETrackedDeviceProperty::Prop_DisplayMaxAnalogGain_Float,
+            )
+            .ok();
     }
 
     let device = OVRDevice {
@@ -274,6 +295,9 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
         hmd_on_head,
         hmd_activity,
         display_frequency,
+        display_supports_analog_gain,
+        display_min_analog_gain,
+        display_max_analog_gain,
     };
 
     // publish changed snapshots after releasing the device cache
@@ -450,7 +474,9 @@ mod tests {
             "isCharging": false, "dongleId": "dongle", "serialNumber": "serial",
             "hardwareRevision": "1", "manufacturerName": "manufacturer",
             "modelNumber": "model", "handleType": "HandPrimary",
-            "hmdOnHead": false, "hmdActivity": "Idle", "displayFrequency": 90.0
+            "hmdOnHead": false, "hmdActivity": "Idle", "displayFrequency": 90.0,
+            "displaySupportsAnalogGain": true, "displayMinAnalogGain": 0.1,
+            "displayMaxAnalogGain": 1.0
         }))
         .unwrap()
     }
@@ -485,6 +511,9 @@ mod tests {
             ("hmdOnHead", serde_json::json!(true)),
             ("hmdActivity", serde_json::json!("UserInteraction")),
             ("displayFrequency", serde_json::json!(120.0)),
+            ("displaySupportsAnalogGain", serde_json::json!(false)),
+            ("displayMinAnalogGain", serde_json::json!(0.2)),
+            ("displayMaxAnalogGain", serde_json::json!(0.9)),
         ];
         assert_eq!(baseline.as_object().unwrap().len(), changes.len());
         for (field, value) in changes {

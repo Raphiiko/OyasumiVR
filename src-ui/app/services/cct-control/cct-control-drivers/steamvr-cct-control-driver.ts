@@ -16,6 +16,7 @@ import { CctControlDriver } from './cct-control-driver';
 export const STEAMVR_CCT_SUPPORTED_HMDS: { manufacturer: string; model: string }[] = [
   { manufacturer: 'Valve', model: 'Index' },
   { manufacturer: 'Bigscreen', model: 'Beyond' },
+  { manufacturer: 'SIE', model: 'PS VR2' },
 ];
 
 export function isSteamVrCctSupportedHmd(
