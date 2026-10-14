@@ -204,7 +204,7 @@
       },
       "slot": {
         "click": "クリック",
-        "double": "ダブルプレス",
+        "double": "ダブルクリック",
         "held": "ホールド",
         "long": "長押し",
         "touch": "タッチ"
@@ -221,7 +221,7 @@
       "gpuAutomations": "GPUの電力",
       "hardwareAutomations": "ハードウェア",
       "hmdAutomations": "HMDの自動化",
-      "joinNotifications": "Join通知",
+      "joinNotifications": "参加通知",
       "miscAutomations": "その他",
       "nightmareDetection": "悪夢の検知",
       "oscAutomations": "OSC",
@@ -312,7 +312,7 @@
           "subtitle": {
             "anyone": "全員からの招待リクエストを承認する設定だった",
             "blacklist": "ブラックリストと合致しなかった",
-            "joinMe": "ステータスがJoin Meだった",
+            "joinMe": "ステータスが青（だれでもおいで）だった",
             "whitelist": "ホワイトリストと合致した"
           },
           "title": "''{displayName}''からの招待リクエストを自動的に承認"
@@ -543,7 +543,7 @@
               "SLEEP_MODE_DISABLE_AT_TIME": "予定時刻による",
               "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "デバイスの電源が入った",
               "SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE": {
-                "join": "{name}がJoinした",
+                "join": "{name}が参加した",
                 "leave": "{name}が退出した"
               },
               "SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE": "起き上がっていた",
@@ -1404,18 +1404,18 @@
     "title": "招待と招待リクエスト"
   },
   "join-notifications": {
-    "description": "プレイヤーがJoinまたは退出すると、通知メッセージまたはサウンドを再生します。Joinしてくれた人と会いたい場合に使用します。",
+    "description": "プレイヤーが参加または退出すると、通知メッセージまたはサウンドを再生します。参加してくれた人と会いたい場合に使用します。",
     "joinNotifications": {
-      "description": "プレイヤーがJoinしたときに通知を表示する",
-      "title": "Join通知"
+      "description": "プレイヤーが参加したときに通知を表示する",
+      "title": "参加通知"
     },
     "joinSound": {
       "description": "再生されるサウンド",
       "title": "サウンド"
     },
     "joinSounds": {
-      "description": "プレイヤーがJoinしたときにサウンドを再生する",
-      "title": "Join音"
+      "description": "プレイヤーが参加したときにサウンドを再生する",
+      "title": "参加音"
     },
     "leaveNotifications": {
       "description": "プレイヤーが退出したときに通知を表示する",
@@ -1437,7 +1437,7 @@
       "WHITELIST": "リスト上のプレイヤー"
     },
     "notification": {
-      "join": "{name}がJoinしました",
+      "join": "{name}が参加しました",
       "leave": "{name}が退出しました"
     },
     "onlyWhenLeftAlone": {
@@ -1445,13 +1445,13 @@
       "title": "最後の一人になったとき"
     },
     "onlyWhenPreviouslyAlone": {
-      "description": "プレイヤーがJoinした際、あなたが元から一人だった場合に通知します",
+      "description": "プレイヤーが参加した際、あなたが元から一人だった場合に通知します",
       "title": "初めから一人だったとき"
     },
     "onlyWhenSleepModeActive": {
       "title": "睡眠モードが有効な場合のみ"
     },
-    "title": "Join通知"
+    "title": "参加通知"
   },
   "message-center": {
     "actions": {
@@ -2609,7 +2609,7 @@
       "atTime": "時刻指定",
       "description": "任意の設定に基づいて睡眠モードを無効にします。",
       "onDevicePowerOn": "デバイスの電源がオンになったとき",
-      "onPlayerJoinOrLeave": "他のプレイヤーがJoin、退出したとき",
+      "onPlayerJoinOrLeave": "他のプレイヤーが参加、退出したとき",
       "onSteamVRStop": "SteamVRが終了したとき",
       "onUprightPose": "睡眠後、起き上がっているとき"
     },
@@ -2642,9 +2642,9 @@
         "title": "睡眠モードの無効化"
       },
       "disableForPlayerJoinLeave": {
-        "description": "他のプレイヤーがJoinまたは退出すると、睡眠モードを無効にします。特定のフレンドを出迎えたい場合や、一人になったときに睡眠モードを無効にしたい場合に使用します",
+        "description": "他のプレイヤーが参加または退出すると、睡眠モードを無効にします。特定のフレンドを出迎えたい場合や、一人になったときに睡眠モードを無効にしたい場合に使用します",
         "onJoin": {
-          "title": "他のプレイヤーがJoinしたとき"
+          "title": "他のプレイヤーが参加したとき"
         },
         "onLeave": {
           "title": "他のプレイヤーが退出したとき"
@@ -2654,7 +2654,7 @@
           "title": "最後の一人になったとき"
         },
         "onlyWhenPreviouslyAlone": {
-          "description": "他のプレイヤーがJoinする際、あなたが元から一人だった場合に無効化します",
+          "description": "他のプレイヤーが参加する際、あなたが元から一人だった場合に無効化します",
           "title": "初めから一人だったとき"
         },
         "title": "睡眠モードの無効化",
@@ -2822,7 +2822,7 @@
   "status-automations": {
     "behaviourWarning": "OyasumiVRによるステータス変更は、すぐに反映されない場合があります。これはVRChatのキャッシュによるものであり、少し経てば更新されます。",
     "behaviourWarningFAQ": {
-      "message": "ステータス変更の挙動に関するFAQは以下をご覧ください。\n\nQ: VRChat上で青（だれでもおいで）に表示されていなくても、招待リクエストは自動的に承認されますか？\nA: OyasumiVRがステータスを青（だれでもおいで）に変更した場合は、受け取った招待リクエストを自動承認します。\n\nQ: ステータスが更新されないのでJoinできません。\nA: ステータスの更新は、他のユーザーに表示されるまでに時間がかかる場合があります。Joinできない場合は、メインメニューからプロフィールを開いて自身のステータスを強制的に更新することも可能です。",
+      "message": "ステータス変更の挙動に関するFAQは以下をご覧ください。\n\nQ: VRChat上で青（だれでもおいで）に表示されていなくても、招待リクエストは自動的に承認されますか？\nA: OyasumiVRがステータスを青（だれでもおいで）に変更した場合は、受け取った招待リクエストを自動承認します。\n\nQ: ステータスが更新されないので参加できません。\nA: ステータスの更新は、他のユーザーに表示されるまでに時間がかかる場合があります。参加できない場合は、メインメニューからプロフィールを開いて自身のステータスを強制的に更新することも可能です。",
       "title": "ステータス自動化 FAQ"
     },
     "general": {
@@ -2865,7 +2865,7 @@
         },
         "title": "制限未満"
       },
-      "description": "ワールドにいる人数に応じてステータスを自動設定し、Joinできる人数を制限できます。",
+      "description": "ワールドにいる人数に応じてステータスを自動設定し、参加できる人数を制限できます。",
       "disableToEdit": "変更する場合は一度無効にしてください。",
       "enable": {
         "description": "VRChatのワールドインスタンスにいる人数に応じてステータスを変更します",
