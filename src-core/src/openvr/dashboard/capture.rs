@@ -143,11 +143,10 @@ impl CaptureHost {
         bounds.right += origin.x;
         bounds.bottom += origin.y;
         let window = if cloaked {
-            cloaked_window(width, height)
+            cloaked_window(width, height)?
         } else {
-            off_screen_window(width, height)
-        }
-        .map_err(at("CreateWindowExW"))?;
+            off_screen_window(width, height).map_err(at("CreateWindowExW"))?
+        };
         let host = Self {
             window,
             child,
@@ -213,7 +212,13 @@ unsafe fn create_item(
         } else {
             "tool window host"
         };
-        let host = CaptureHost::new(child, width, height, cloaked)?;
+        let host = match CaptureHost::new(child, width, height, cloaked) {
+            Ok(host) => host,
+            Err(error) => {
+                failures.push(format!("{label}: {error}"));
+                continue;
+            }
+        };
         let mut rect = RECT::default();
         let _ = GetWindowRect(host.window, &mut rect);
         let host_info = format!(
@@ -262,9 +267,9 @@ unsafe fn off_screen_window(width: u32, height: u32) -> windows::core::Result<HW
 
 /// A popup on the primary monitor that DWM never draws.
 ///
-/// Windows 10 creates capture items only for windows that Alt+Tab would list, and sizes the item
-/// to the part of the window on a monitor.
-unsafe fn cloaked_window(width: u32, height: u32) -> windows::core::Result<HWND> {
+/// Windows 10 creates capture items only for windows that Alt+Tab would list, and gives a window
+/// with no part on a monitor a 0x0 item.
+unsafe fn cloaked_window(width: u32, height: u32) -> Result<HWND, String> {
     let window = CreateWindowExW(
         WINDOW_EX_STYLE(0),
         w!("STATIC"),
@@ -278,7 +283,8 @@ unsafe fn cloaked_window(width: u32, height: u32) -> windows::core::Result<HWND>
         None,
         None,
         None,
-    )?;
+    )
+    .map_err(at("CreateWindowExW"))?;
     let cloak = BOOL::from(true);
     if let Err(error) = DwmSetWindowAttribute(
         window,
@@ -287,7 +293,7 @@ unsafe fn cloaked_window(width: u32, height: u32) -> windows::core::Result<HWND>
         size_of::<BOOL>() as u32,
     ) {
         let _ = DestroyWindow(window);
-        return Err(error);
+        return Err(at("DwmSetWindowAttribute")(error));
     }
     Ok(window)
 }
