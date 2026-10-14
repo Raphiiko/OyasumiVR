@@ -8,6 +8,7 @@ import {
   map,
   Observable,
   startWith,
+  switchMap,
 } from 'rxjs';
 import { BUILD_ID, BuildFlavour, FLAVOUR } from '../../../../../../../build';
 import { TString } from '../../../../../../models/translatable-string';
@@ -101,6 +102,12 @@ export class SettingsTroubleshootingStatusTabComponent {
         ),
       },
       {
+        label: 'settings.troubleshooting.status.steamvrDashboard.label',
+        value: this.dashboardRenderMode().pipe(
+          map((mode) => `settings.troubleshooting.status.steamvrDashboard.${mode}`)
+        ),
+      },
+      {
         label: 'settings.troubleshooting.status.vrchat.label',
         value: this.vrchat.vrchatProcessActive.pipe(
           map(
@@ -171,6 +178,7 @@ export class SettingsTroubleshootingStatusTabComponent {
         autoLaunch: settings.startWithSteamVR,
       },
       overlaySidecarStarted: await first(this.overlay.sidecarStarted),
+      steamvrDashboardRenderMode: await first(this.dashboardRenderMode()),
       vrchat: {
         processActive: await first(this.vrchat.vrchatProcessActive),
         status: await first(this.vrchat.status),
@@ -213,6 +221,14 @@ export class SettingsTroubleshootingStatusTabComponent {
   async copyVersion() {
     const text = `v${await this.version}-${FLAVOUR} (${BUILD_ID})`;
     await copyWithToast(this.toasts, text, 'toasts.clipboard.version');
+  }
+
+  private dashboardRenderMode(): Observable<string> {
+    return interval(2000).pipe(
+      startWith(0),
+      switchMap(() => invoke<string>('openvr_dashboard_render_mode')),
+      distinctUntilChanged()
+    );
   }
 
   private oscStatus(): Observable<TString> {

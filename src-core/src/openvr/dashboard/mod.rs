@@ -7,7 +7,7 @@ use self::{
     input::{DashboardInput, KeyboardRequest, KeyboardRequests, PointerEvent},
     texture::DashboardTexture,
 };
-use super::DASHBOARD_GPU_ACCELERATION;
+use super::{DASHBOARD_GPU_ACCELERATION, DASHBOARD_RENDER_MODE};
 use crate::globals::TAURI_APP_HANDLE;
 use raphii_openvr_rs::{raw, Context};
 use std::{
@@ -43,6 +43,11 @@ const FRAME_INTERVAL: Duration = Duration::from_millis(100);
 const FIRST_FRAME_TIMEOUT: Duration = Duration::from_secs(5);
 const CAPTURE_TIMEOUT: Duration = Duration::from_secs(5);
 const MAX_PNG_BYTES: u64 = 32 * 1024 * 1024;
+
+pub const RENDER_NONE: u8 = 0;
+pub const RENDER_GPU: u8 = 1;
+pub const RENDER_CPU: u8 = 2;
+pub const RENDER_CPU_FALLBACK: u8 = 3;
 
 const MOUSE_MOVE: u32 = raw::EVREventType::VREvent_MouseMove.0 as u32;
 const MOUSE_BUTTON_DOWN: u32 = raw::EVREventType::VREvent_MouseButtonDown.0 as u32;
@@ -308,6 +313,7 @@ impl DashboardOverlay {
                 .map_err(message)?;
             overlay.set_overlay_texture()?;
         }
+        overlay.publish_render_mode();
         log::info!("[Dashboard] Dashboard overlay registered");
         Ok(overlay)
     }
@@ -378,6 +384,18 @@ impl DashboardOverlay {
             self.gpu = gpu;
             self.failed = false;
         }
+        self.publish_render_mode();
+    }
+
+    fn publish_render_mode(&self) {
+        let mode = if self.gpu {
+            RENDER_GPU
+        } else if self.gpu_failed && DASHBOARD_GPU_ACCELERATION.load(Ordering::Acquire) {
+            RENDER_CPU_FALLBACK
+        } else {
+            RENDER_CPU
+        };
+        DASHBOARD_RENDER_MODE.store(mode, Ordering::Release);
     }
 
     fn submit_frame(&mut self) -> Result<(), String> {
@@ -640,6 +658,7 @@ impl DashboardOverlay {
 
 impl Drop for DashboardOverlay {
     fn drop(&mut self) {
+        DASHBOARD_RENDER_MODE.store(RENDER_NONE, Ordering::Release);
         self.deactivate();
         let Some(destroy) = self.table.DestroyOverlay else {
             return;

@@ -96,6 +96,16 @@ pub async fn openvr_get_devices() -> Vec<OVRDevice> {
 }
 
 #[tauri::command]
+pub fn openvr_dashboard_render_mode() -> &'static str {
+    match super::DASHBOARD_RENDER_MODE.load(std::sync::atomic::Ordering::Acquire) {
+        super::dashboard::RENDER_GPU => "hardware",
+        super::dashboard::RENDER_CPU => "software",
+        super::dashboard::RENDER_CPU_FALLBACK => "softwareFallback",
+        _ => "notRendering",
+    }
+}
+
+#[tauri::command]
 pub async fn openvr_status() -> String {
     let status = super::OVR_STATUS.lock().await;
     let status_str = serde_json::to_string(&*status).unwrap();

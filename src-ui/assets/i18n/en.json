@@ -2390,6 +2390,13 @@
           "off": "Off",
           "on": "On"
         },
+        "steamvrDashboard": {
+          "hardware": "Hardware accelerated",
+          "label": "SteamVR dashboard",
+          "notRendering": "Not rendering",
+          "software": "Software rendered",
+          "softwareFallback": "Software rendered (fallback)"
+        },
         "title": "Status",
         "vrchat": {
           "label": "VRChat",

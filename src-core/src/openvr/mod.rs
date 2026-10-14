@@ -25,7 +25,7 @@ use raphii_openvr_rs as ovr;
 use sleep_detector::SleepDetector;
 use std::{
     sync::{
-        atomic::{AtomicBool, Ordering},
+        atomic::{AtomicBool, AtomicU8, Ordering},
         LazyLock,
     },
     time::{Duration, Instant},
@@ -42,6 +42,8 @@ pub struct OpenVRInputContext {
 
 pub static OVR_CONTEXT: LazyLock<Mutex<Option<ovr::Context>>> = LazyLock::new(Default::default);
 pub static DASHBOARD_GPU_ACCELERATION: AtomicBool = AtomicBool::new(false);
+/// How the SteamVR dashboard overlay captures the UI; one of the `dashboard::RENDER_*` values.
+pub static DASHBOARD_RENDER_MODE: AtomicU8 = AtomicU8::new(dashboard::RENDER_NONE);
 static OVR_STATUS: LazyLock<Mutex<OpenVRStatus>> =
     LazyLock::new(|| Mutex::new(OpenVRStatus::Inactive));
 static OVR_ACTIVE: LazyLock<Mutex<bool>> = LazyLock::new(|| Mutex::new(false));

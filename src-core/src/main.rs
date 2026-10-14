@@ -472,6 +472,7 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
     tauri::generate_handler![
         openvr::commands::openvr_get_devices,
         openvr::commands::openvr_status,
+        openvr::commands::openvr_dashboard_render_mode,
         openvr::commands::openvr_get_analog_gain,
         openvr::commands::openvr_set_analog_gain,
         openvr::commands::openvr_get_supersample_scale,
