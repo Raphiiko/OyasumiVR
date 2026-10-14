@@ -81,21 +81,29 @@ writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
 writeFileSync(notesPath, notes + '\n');
 
 // publish the release, then point the updater at it
-run('gh', [
-  'release',
-  'create',
-  tag,
-  ...assets,
-  manifestPath,
-  '--repo',
-  REPOSITORY,
-  '--target',
-  commit,
-  '--title',
-  `OyasumiVR v${version}`,
-  '--notes-file',
-  notesPath,
-]);
+// a rerun after a failed gist update finds the release and refreshes it instead
+const releaseExists =
+  spawnSync('gh', ['release', 'view', tag, '--repo', REPOSITORY], { stdio: 'ignore' }).status === 0;
+if (releaseExists) {
+  run('gh', ['release', 'upload', tag, ...assets, manifestPath, '--repo', REPOSITORY, '--clobber']);
+  run('gh', ['release', 'edit', tag, '--repo', REPOSITORY, '--notes-file', notesPath]);
+} else {
+  run('gh', [
+    'release',
+    'create',
+    tag,
+    ...assets,
+    manifestPath,
+    '--repo',
+    REPOSITORY,
+    '--target',
+    commit,
+    '--title',
+    `OyasumiVR v${version}`,
+    '--notes-file',
+    notesPath,
+  ]);
+}
 run('gh', ['api', '--method', 'PATCH', `gists/${UPDATE_MANIFEST_GIST}`, '--input', '-'], {
   input: JSON.stringify({
     files: { [UPDATE_MANIFEST_FILE]: { content: readFileSync(manifestPath, 'utf8') } },

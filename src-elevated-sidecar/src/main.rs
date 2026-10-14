@@ -36,17 +36,16 @@ fn main() {
     // The runtime below is built by hand, so nothing loads a DLL before this narrows the search.
     let dll_search_restricted =
         unsafe { SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_SYSTEM32) } != 0;
+    let args: Vec<String> = env::args().collect();
+    // before logging, which would recreate the app data folder the uninstaller may have deleted
+    if args.iter().any(|arg| arg == "--uninstall") {
+        let user_sid = switch_string(&args, "uninstall-user-sid");
+        let code = i32::from(cleanup::uninstall_privileged_launcher(user_sid).is_err());
+        std::process::exit(code);
+    }
     init_logging();
     if !dll_search_restricted {
         error!("Could not restrict the DLL search path to System32");
-    }
-    let args: Vec<String> = env::args().collect();
-    if args.iter().any(|arg| arg == "--uninstall") {
-        if let Err(e) = cleanup::uninstall_privileged_launcher() {
-            error!("Uninstall cleanup failed: {e}");
-            std::process::exit(1);
-        }
-        std::process::exit(0);
     }
     if let Some(parent_pid) = switch_value(&args, "cleanup-parent-pid") {
         let result = switch_string(&args, "cleanup-token")
