@@ -459,8 +459,7 @@ mod tests {
         use super::PrivilegedLauncherLock;
         use std::time::Duration;
 
-        // the owner may reopen this file, unlike the real descriptor, which an unelevated test
-        // process cannot open twice
+        // an unelevated test process cannot reopen a file under the real descriptor
         const OWNER_DESCRIPTOR: &str = "D:P(A;;FA;;;SY)(A;;FA;;;BA)(A;;FA;;;OW)";
         let path = lock_path("wait");
 
