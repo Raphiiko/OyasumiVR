@@ -159,7 +159,7 @@ impl Desktop {
         if let Some(device) = device {
             let mut child = HWND::default();
             self.controller.ParentWindow(&mut child).map_err(message)?;
-            self.gpu = Some(DashboardCapture::new(child, device, WIDTH, HEIGHT).map_err(message)?);
+            self.gpu = Some(DashboardCapture::new(child, device, WIDTH, HEIGHT)?);
         }
         let webview = self.controller.CoreWebView2().map_err(message)?;
         self.input = Some(DashboardInput::new(
@@ -378,7 +378,7 @@ impl DashboardOverlay {
                         .map_err(message)?;
                 }
                 CapturedFrame::Gpu(frame) => {
-                    self.texture.copy(&frame.texture).map_err(message)?;
+                    self.texture.copy(&frame.texture)?;
                 }
             }
             self.set_overlay_texture()?;
@@ -658,7 +658,10 @@ unsafe fn capture_frame(
             .as_ref()
             .and_then(|desktop| desktop.gpu.as_ref())
         {
-            if let Some(frame) = gpu.next_frame().map_err(message)? {
+            if let Some(frame) = gpu
+                .next_frame()
+                .map_err(|error| format!("Frame capture: {error}"))?
+            {
                 *capture.frame.lock().unwrap() = Some(Ok(CapturedFrame::Gpu(frame)));
             }
             capture.busy.store(false, Ordering::Release);
