@@ -98,8 +98,11 @@ export class HardwareBrightnessControlService {
       .subscribe((drivers) => {
         const availableDriver = driverList.find((_, i) => drivers[i]) ?? null;
         // SteamVR keeps the gain, so undo the analog gain driver's dimming when nothing takes over
-        if (this.driver.value === this.driverAnalogGain && !availableDriver) {
-          this.driverAnalogGain.restoreMaximumGain();
+        if (
+          this.driver.value === this.driverAnalogGain &&
+          !availableDriver &&
+          this.driverAnalogGain.restoreMaximumGain()
+        ) {
           this._brightness.next(100);
         }
         this.driver.next(availableDriver);

@@ -75,10 +75,14 @@ export class AnalogGainHardwareBrightnessControlDriver extends HardwareBrightnes
     this.openvr.setAnalogGain(min + ((max - min) * percentage) / 100);
   }
 
-  /** Writes the maximum gain, so a headset this driver dimmed is not left dim once it lets go. */
-  restoreMaximumGain() {
-    if (!this.range) return;
+  /**
+   * Writes the maximum gain, so a headset this driver dimmed is not left dim once it lets go.
+   * Returns false without writing when no headset reports a range.
+   */
+  restoreMaximumGain(): boolean {
+    if (!this.range) return false;
     this.openvr.setAnalogGain(this.range[1]);
+    return true;
   }
 
   isAvailable(): Observable<boolean> {

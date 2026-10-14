@@ -27,12 +27,13 @@ function setup() {
     hardwareBrightnessOnUnsupportedHmds: true,
   });
   const devices = new BehaviorSubject<Partial<OVRDevice>[]>([UNSUPPORTED_HMD]);
+  const status = new BehaviorSubject('INITIALIZED');
   let analogGain = 0.8;
   const setAnalogGain = vi.fn(async (value: number) => {
     analogGain = value;
   });
   const openvr = {
-    status: new BehaviorSubject('INITIALIZED'),
+    status,
     devices,
     getAnalogGain: async () => analogGain,
     setAnalogGain,
@@ -43,7 +44,7 @@ function setup() {
   );
   const enable = (value: boolean) =>
     settings.next({ ...settings.value, hardwareBrightnessOnUnsupportedHmds: value });
-  return { service, devices, enable, setAnalogGain, analogGain: () => analogGain };
+  return { service, devices, status, enable, setAnalogGain, analogGain: () => analogGain };
 }
 
 describe('HardwareBrightnessControlService with the analog gain driver', () => {
@@ -73,6 +74,21 @@ describe('HardwareBrightnessControlService with the analog gain driver', () => {
     await h.service.setBrightness(60);
 
     expect(h.analogGain()).toBeCloseTo(0.5);
+  });
+
+  it('raises the gain after SteamVR restarts with the headset still dimmed', async () => {
+    const h = setup();
+    await settle();
+    await h.service.setBrightness(60);
+    h.status.next('STOPPED');
+    await settle();
+    expect(h.analogGain()).toBeCloseTo(0.5);
+
+    h.status.next('INITIALIZED');
+    await settle();
+    await h.service.setBrightness(100);
+
+    expect(h.analogGain()).toBeCloseTo(0.8);
   });
 
   it('leaves the gain to the headset driver that takes over', async () => {
