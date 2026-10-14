@@ -76,20 +76,10 @@ impl DashboardTexture {
         })
     }
 
-    pub unsafe fn upload(&self, rgba: &[u8], width: u32) -> windows::core::Result<()> {
-        let mut pixels = rgba.to_vec();
-        for pixel in pixels.chunks_exact_mut(4) {
-            pixel.swap(0, 2);
-        }
+    pub unsafe fn upload(&self, bgra: &[u8], width: u32) -> windows::core::Result<()> {
         self.device.GetDeviceRemovedReason()?;
-        self.context.UpdateSubresource(
-            &self.texture,
-            0,
-            None,
-            pixels.as_ptr().cast(),
-            width * 4,
-            0,
-        );
+        self.context
+            .UpdateSubresource(&self.texture, 0, None, bgra.as_ptr().cast(), width * 4, 0);
         self.finish()
     }
 
