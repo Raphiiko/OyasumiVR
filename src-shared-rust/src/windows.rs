@@ -1,45 +1,113 @@
 use std::io::Error;
 use std::os::windows::ffi::OsStrExt;
 
-use windows::Win32::Foundation::{CloseHandle, HANDLE, WAIT_ABANDONED, WAIT_OBJECT_0};
+use windows::Win32::Foundation::{CloseHandle, HANDLE};
 use windows::Win32::Security::{GetTokenInformation, TokenElevation, TOKEN_ELEVATION, TOKEN_QUERY};
-use windows::Win32::System::Threading::{
-    CreateMutexW, GetCurrentProcess, OpenProcessToken, ReleaseMutex, WaitForSingleObject,
-};
+use windows::Win32::System::Threading::{GetCurrentProcess, OpenProcessToken};
 
-pub const PRIVILEGED_LAUNCHER_MUTEX: &str = "Global\\OyasumiVRPrivilegedLauncherInstall";
+const PRIVILEGED_LAUNCHER_LOCK: &str = "privileged.lock";
 pub const PRIVILEGED_LAUNCHER_CLEANUP_TOKEN: &str = "cleanup.token";
 pub const PRIVILEGED_LAUNCHER_CLEANUP_EXE: &str = "oyasumivr-elevated-cleanup.exe";
 
-pub struct PrivilegedLauncherLock(HANDLE);
+/// Full control for SYSTEM and Administrators only, so a standard user cannot open the lock file
+/// and hold it.
+const LOCK_DESCRIPTOR: &str = "D:P(A;;FA;;;SY)(A;;FA;;;BA)";
+
+/// Serializes installing and removing the privileged launcher across processes and sessions.
+///
+/// Held as `%ProgramFiles%\OyasumiVR\privileged.lock`, open with no sharing, until dropped or the
+/// process exits.
+pub struct PrivilegedLauncherLock {
+    _file: std::fs::File,
+}
 
 impl PrivilegedLauncherLock {
     pub fn acquire() -> std::result::Result<Self, Error> {
-        let name: Vec<u16> = std::ffi::OsStr::new(PRIVILEGED_LAUNCHER_MUTEX)
-            .encode_wide()
-            .chain(std::iter::once(0))
-            .collect();
-        let handle = unsafe { CreateMutexW(None, false, windows::core::PCWSTR(name.as_ptr())) }
-            .map_err(Error::from)?;
-        let wait = unsafe { WaitForSingleObject(handle, 30_000) };
-        if wait != WAIT_OBJECT_0 && wait != WAIT_ABANDONED {
-            unsafe {
-                let _ = CloseHandle(handle);
+        let dir = program_files()?.join("OyasumiVR");
+        std::fs::create_dir_all(&dir)?;
+        Self::acquire_at(
+            &dir.join(PRIVILEGED_LAUNCHER_LOCK),
+            LOCK_DESCRIPTOR,
+            std::time::Duration::from_secs(30),
+        )
+    }
+
+    fn acquire_at(
+        path: &std::path::Path,
+        descriptor: &str,
+        timeout: std::time::Duration,
+    ) -> std::result::Result<Self, Error> {
+        const ERROR_SHARING_VIOLATION: i32 = 32;
+
+        let deadline = std::time::Instant::now() + timeout;
+        loop {
+            match open_lock_file(path, descriptor) {
+                Ok(file) => return Ok(Self { _file: file }),
+                Err(e) if e.raw_os_error() != Some(ERROR_SHARING_VIOLATION) => return Err(e),
+                Err(_) if std::time::Instant::now() >= deadline => {
+                    return Err(Error::other(
+                        "timed out waiting for the privileged launcher lock",
+                    ))
+                }
+                Err(_) => std::thread::sleep(std::time::Duration::from_millis(100)),
             }
-            return Err(Error::other(
-                "timed out waiting for the privileged launcher lock",
-            ));
         }
-        Ok(Self(handle))
     }
 }
 
-impl Drop for PrivilegedLauncherLock {
-    fn drop(&mut self) {
-        unsafe {
-            let _ = ReleaseMutex(self.0);
-            let _ = CloseHandle(self.0);
-        }
+/// Opens or creates the lock file with no sharing. `descriptor` applies only when it is created.
+fn open_lock_file(
+    path: &std::path::Path,
+    descriptor: &str,
+) -> std::result::Result<std::fs::File, Error> {
+    use std::os::windows::io::FromRawHandle;
+    use windows::core::PCWSTR;
+    use windows::Win32::Foundation::{LocalFree, GENERIC_READ, GENERIC_WRITE, HLOCAL};
+    use windows::Win32::Security::Authorization::{
+        ConvertStringSecurityDescriptorToSecurityDescriptorW, SDDL_REVISION_1,
+    };
+    use windows::Win32::Security::{PSECURITY_DESCRIPTOR, SECURITY_ATTRIBUTES};
+    use windows::Win32::Storage::FileSystem::{
+        CreateFileW, FILE_ATTRIBUTE_NORMAL, FILE_SHARE_NONE, OPEN_ALWAYS,
+    };
+
+    let wide: Vec<u16> = path
+        .as_os_str()
+        .encode_wide()
+        .chain(std::iter::once(0))
+        .collect();
+    let descriptor: Vec<u16> = descriptor
+        .encode_utf16()
+        .chain(std::iter::once(0))
+        .collect();
+
+    unsafe {
+        let mut security = PSECURITY_DESCRIPTOR::default();
+        ConvertStringSecurityDescriptorToSecurityDescriptorW(
+            PCWSTR(descriptor.as_ptr()),
+            SDDL_REVISION_1,
+            &mut security,
+            None,
+        )
+        .map_err(Error::from)?;
+        let attributes = SECURITY_ATTRIBUTES {
+            nLength: std::mem::size_of::<SECURITY_ATTRIBUTES>() as u32,
+            lpSecurityDescriptor: security.0,
+            bInheritHandle: false.into(),
+        };
+        let handle = CreateFileW(
+            PCWSTR(wide.as_ptr()),
+            (GENERIC_READ | GENERIC_WRITE).0,
+            FILE_SHARE_NONE,
+            Some(&attributes),
+            OPEN_ALWAYS,
+            FILE_ATTRIBUTE_NORMAL,
+            None,
+        )
+        // the windows crate's error carries an HRESULT, which io::Error cannot map to a kind
+        .map_err(|_| Error::last_os_error());
+        let _ = LocalFree(Some(HLOCAL(security.0)));
+        Ok(std::fs::File::from_raw_handle(handle?.0))
     }
 }
 
@@ -375,6 +443,102 @@ mod tests {
             assert!(text.contains("D:P"), "the DACL must be protected: {text}");
             assert!(text.contains("FA;;;SY"), "{text}");
             assert!(text.contains("FA;;;BA"), "{text}");
+        }
+    }
+
+    fn lock_path(name: &str) -> std::path::PathBuf {
+        let dir =
+            std::env::temp_dir().join(format!("oyasumivr-lock-test-{}-{name}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        dir.join(super::PRIVILEGED_LAUNCHER_LOCK)
+    }
+
+    #[test]
+    fn a_second_holder_waits_for_the_first_to_release_the_lock() {
+        use super::PrivilegedLauncherLock;
+        use std::time::Duration;
+
+        // the owner may reopen this file, unlike the real descriptor, which an unelevated test
+        // process cannot open twice
+        const OWNER_DESCRIPTOR: &str = "D:P(A;;FA;;;SY)(A;;FA;;;BA)(A;;FA;;;OW)";
+        let path = lock_path("wait");
+
+        let first = PrivilegedLauncherLock::acquire_at(&path, OWNER_DESCRIPTOR, Duration::ZERO)
+            .expect("an unheld lock is free");
+        let busy =
+            PrivilegedLauncherLock::acquire_at(&path, OWNER_DESCRIPTOR, Duration::from_millis(300));
+        assert!(
+            busy.as_ref()
+                .is_err_and(|e| e.to_string().contains("timed out")),
+            "a held lock must time out, got {:?}",
+            busy.err()
+        );
+
+        let release = std::thread::spawn(move || {
+            std::thread::sleep(Duration::from_millis(300));
+            drop(first);
+        });
+        PrivilegedLauncherLock::acquire_at(&path, OWNER_DESCRIPTOR, Duration::from_secs(10))
+            .expect("the lock must be free once the first holder drops it");
+        release.join().unwrap();
+    }
+
+    #[test]
+    fn the_lock_file_admits_only_system_and_administrators() {
+        use std::os::windows::io::AsRawHandle;
+        use windows::Win32::Foundation::{LocalFree, HANDLE, HLOCAL};
+        use windows::Win32::Security::Authorization::{
+            ConvertSecurityDescriptorToStringSecurityDescriptorW, GetSecurityInfo, SDDL_REVISION_1,
+            SE_FILE_OBJECT,
+        };
+        use windows::Win32::Security::{DACL_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR};
+
+        let path = lock_path("dacl");
+        let lock = super::PrivilegedLauncherLock::acquire_at(
+            &path,
+            super::LOCK_DESCRIPTOR,
+            std::time::Duration::ZERO,
+        )
+        .expect("an unheld lock is free");
+
+        let text = unsafe {
+            let mut security = PSECURITY_DESCRIPTOR::default();
+            let read = GetSecurityInfo(
+                HANDLE(lock._file.as_raw_handle()),
+                SE_FILE_OBJECT,
+                DACL_SECURITY_INFORMATION,
+                None,
+                None,
+                None,
+                None,
+                Some(&mut security),
+            );
+            assert!(read.is_ok(), "cannot read the lock file's DACL: {read:?}");
+            let mut text = windows::core::PWSTR::null();
+            ConvertSecurityDescriptorToStringSecurityDescriptorW(
+                security,
+                SDDL_REVISION_1,
+                DACL_SECURITY_INFORMATION,
+                &mut text,
+                None,
+            )
+            .unwrap();
+            let result = text.to_string().unwrap();
+            let _ = LocalFree(Some(HLOCAL(text.0 as *mut _)));
+            let _ = LocalFree(Some(HLOCAL(security.0)));
+            result
+        };
+        assert_eq!(text, "D:P(A;;FA;;;SY)(A;;FA;;;BA)");
+
+        // an unelevated process standing in for a hostile one must not even open the file
+        if !super::is_elevated() {
+            drop(lock);
+            let open = std::fs::OpenOptions::new().read(true).open(&path);
+            assert_eq!(
+                open.err().map(|e| e.kind()),
+                Some(std::io::ErrorKind::PermissionDenied)
+            );
         }
     }
 
