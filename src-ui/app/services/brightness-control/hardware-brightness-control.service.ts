@@ -25,6 +25,7 @@ import {
 } from './brightness-control-models';
 import { listen } from '@tauri-apps/api/event';
 import { BigscreenBeyondHardwareBrightnessControlDriver } from './hardware-brightness-drivers/bigscreen-beyond-hardware-brightness-control-driver';
+import { PSVR2HardwareBrightnessControlDriver } from './hardware-brightness-drivers/psvr2-hardware-brightness-control-driver';
 import { AppSettingsService } from '../app-settings.service';
 import { AppSettings } from '../../models/settings';
 import { clamp } from '../../utils/number-utils';
@@ -35,6 +36,7 @@ import { clamp } from '../../utils/number-utils';
 export class HardwareBrightnessControlService {
   public readonly driverValveIndex: ValveIndexHardwareBrightnessControlDriver;
   public readonly driverBigscreenBeyond: BigscreenBeyondHardwareBrightnessControlDriver;
+  public readonly driverPSVR2: PSVR2HardwareBrightnessControlDriver;
 
   private driver: BehaviorSubject<HardwareBrightnessControlDriver | null> =
     new BehaviorSubject<HardwareBrightnessControlDriver | null>(null);
@@ -69,7 +71,11 @@ export class HardwareBrightnessControlService {
     this.driverBigscreenBeyond = new BigscreenBeyondHardwareBrightnessControlDriver(
       this.appSettingsService.settings
     );
-    const driverList = [this.driverValveIndex, this.driverBigscreenBeyond];
+    this.driverPSVR2 = new PSVR2HardwareBrightnessControlDriver(
+      this.appSettingsService.settings,
+      openvr
+    );
+    const driverList = [this.driverValveIndex, this.driverBigscreenBeyond, this.driverPSVR2];
     combineLatest(driverList.map((driver) => driver.isAvailable()))
       .pipe(distinctUntilChanged((a, b) => isEqual(a, b)))
       .subscribe((drivers) => {
