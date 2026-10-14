@@ -32,7 +32,9 @@ with [SemVer](https://semver.org/) prerelease suffixes:
   - Turn off sending OSC messages to VRChat
 - Grouped event log: actions caused by the same sleep mode change, sleep preparation, sunset or
   sunrise collapse into one expandable row, and every entry shows an icon for its type
-- Home Assistant switch for muting your VRChat microphone
+- Home Assistant
+  - Switch for muting your VRChat microphone
+  - Control of your headset's color temperature
 - Troubleshooting view
   - Debug reporting for better support
 - Thai language support (@ShikiYuriSan)
