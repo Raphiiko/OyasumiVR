@@ -13,7 +13,7 @@ use raphii_openvr_rs::{raw, Context};
 use std::{
     cell::RefCell,
     sync::{
-        atomic::{AtomicBool, Ordering},
+        atomic::{AtomicBool, AtomicUsize, Ordering},
         Arc, Mutex,
     },
     time::{Duration, Instant},
@@ -24,9 +24,15 @@ use windows::{
     core::{s, w, Interface, BOOL},
     Win32::{
         Foundation::{HWND, RECT},
-        Graphics::Direct3D11::ID3D11Device,
+        Graphics::{
+            Direct3D11::ID3D11Device,
+            Imaging::{
+                CLSID_WICImagingFactory, GUID_WICPixelFormat32bppBGRA, IWICImagingFactory,
+                WICConvertBitmapSource, WICDecodeMetadataCacheOnDemand,
+            },
+        },
         System::{
-            Com::{IStream, STATFLAG_NONAME, STATSTG, STREAM_SEEK_SET},
+            Com::{CoCreateInstance, IStream, CLSCTX_INPROC_SERVER, STREAM_SEEK_SET},
             LibraryLoader::{GetModuleHandleW, GetProcAddress},
         },
         UI::Shell::SHCreateMemStream,
@@ -39,10 +45,12 @@ const UI_ZOOM: f64 = 1.25;
 const INPUT_WIDTH: u32 = (WIDTH as f64 / UI_ZOOM) as u32;
 const INPUT_HEIGHT: u32 = (HEIGHT as f64 / UI_ZOOM) as u32;
 const PANEL_HEIGHT_METERS: f32 = 1.5;
-const FRAME_INTERVAL: Duration = Duration::from_millis(100);
+const CPU_FRAME_INTERVAL: Duration = Duration::from_millis(33);
+/// More than one capture in flight hides the WebView's readback latency.
+const CPU_CAPTURES_IN_FLIGHT: usize = 3;
+const CPU_STATS_INTERVAL: Duration = Duration::from_secs(30);
 const FIRST_FRAME_TIMEOUT: Duration = Duration::from_secs(5);
 const CAPTURE_TIMEOUT: Duration = Duration::from_secs(5);
-const MAX_PNG_BYTES: u64 = 32 * 1024 * 1024;
 
 pub const RENDER_NONE: u8 = 0;
 pub const RENDER_GPU: u8 = 1;
@@ -59,8 +67,53 @@ const KEYBOARD_DONE: u32 = raw::EVREventType::VREvent_KeyboardDone.0 as u32;
 const KEYBOARD_CLOSED: u32 = raw::EVREventType::VREvent_KeyboardClosed.0 as u32;
 
 enum CapturedFrame {
-    Cpu(Vec<u8>),
+    Cpu(CpuFrame),
     Gpu(GpuFrame),
+}
+
+struct CpuFrame {
+    bgra: Vec<u8>,
+    capture: Duration,
+    decode: Duration,
+}
+
+/// CPU capture timings since `started`, for the periodic log line.
+struct CpuStats {
+    started: Instant,
+    frames: u32,
+    capture: Duration,
+    decode: Duration,
+}
+
+impl CpuStats {
+    fn new() -> Self {
+        Self {
+            started: Instant::now(),
+            frames: 0,
+            capture: Duration::ZERO,
+            decode: Duration::ZERO,
+        }
+    }
+
+    fn record(&mut self, frame: &CpuFrame) {
+        if self.frames == 0 {
+            self.started = Instant::now();
+        }
+        self.frames += 1;
+        self.capture += frame.capture;
+        self.decode += frame.decode;
+        let elapsed = self.started.elapsed();
+        if elapsed < CPU_STATS_INTERVAL {
+            return;
+        }
+        log::info!(
+            "[Dashboard] CPU capture: {:.1} fps, capture {:?}, decode {:?} on average",
+            self.frames as f64 / elapsed.as_secs_f64(),
+            self.capture / self.frames,
+            self.decode / self.frames
+        );
+        *self = Self::new();
+    }
 }
 type Frame = Result<CapturedFrame, String>;
 
@@ -68,7 +121,7 @@ type Frame = Result<CapturedFrame, String>;
 #[derive(Default)]
 struct CaptureState {
     active: AtomicBool,
-    busy: AtomicBool,
+    pending: AtomicUsize,
     frame: Mutex<Option<Frame>>,
 }
 
@@ -217,7 +270,9 @@ pub struct DashboardOverlay {
     texture: DashboardTexture,
     capture: Arc<CaptureState>,
     next_frame: Instant,
-    capture_started: Instant,
+    /// Last request made while idle, or last frame arrival; the capture timeout counts from it.
+    capture_progress: Instant,
+    cpu_stats: CpuStats,
     activation_started: Option<Instant>,
     selected: bool,
     failed: bool,
@@ -260,7 +315,8 @@ impl DashboardOverlay {
             texture,
             capture: Arc::default(),
             next_frame: Instant::now(),
-            capture_started: Instant::now(),
+            capture_progress: Instant::now(),
+            cpu_stats: CpuStats::new(),
             activation_started: None,
             selected: false,
             failed: false,
@@ -306,15 +362,8 @@ impl DashboardOverlay {
                 tauri::image::Image::from_bytes(include_bytes!("../../../icons/128x128.png"))
                     .map_err(message)?;
             overlay.set_raw_image(overlay.thumbnail, &icon)?;
-            let blank = tauri::image::Image::new_owned(
-                [24, 24, 28, 255].repeat((WIDTH * HEIGHT) as usize),
-                WIDTH,
-                HEIGHT,
-            );
-            overlay
-                .texture
-                .upload(blank.rgba(), blank.width())
-                .map_err(message)?;
+            let blank = [28, 24, 24, 255].repeat((WIDTH * HEIGHT) as usize);
+            overlay.texture.upload(&blank, WIDTH).map_err(message)?;
             overlay.set_overlay_texture()?;
         }
         overlay.publish_render_mode();
@@ -406,16 +455,12 @@ impl DashboardOverlay {
         let Some(frame) = self.capture.frame.lock().unwrap().take() else {
             return Ok(());
         };
+        self.capture_progress = Instant::now();
         unsafe {
             match frame? {
-                CapturedFrame::Cpu(png) => {
-                    let image = tauri::image::Image::from_bytes(&png).map_err(message)?;
-                    if image.width() != WIDTH || image.height() != HEIGHT {
-                        return Err("Unexpected dashboard frame dimensions".into());
-                    }
-                    self.texture
-                        .upload(image.rgba(), image.width())
-                        .map_err(message)?;
+                CapturedFrame::Cpu(frame) => {
+                    self.texture.upload(&frame.bgra, WIDTH).map_err(message)?;
+                    self.cpu_stats.record(&frame);
                 }
                 CapturedFrame::Gpu(frame) => {
                     self.texture.copy(&frame.texture)?;
@@ -437,23 +482,24 @@ impl DashboardOverlay {
     }
 
     fn request_frame(&mut self) -> Result<(), String> {
-        if self.capture.busy.load(Ordering::Acquire) {
-            if self.capture_started.elapsed() > CAPTURE_TIMEOUT {
-                return Err("WebView capture timed out".into());
-            }
-            return Ok(());
+        let pending = self.capture.pending.load(Ordering::Acquire);
+        if pending > 0 && self.capture_progress.elapsed() > CAPTURE_TIMEOUT {
+            return Err("WebView capture timed out".into());
         }
-        if Instant::now() < self.next_frame {
-            return Ok(());
-        }
-        let interval = if self.gpu {
-            Duration::ZERO
+        let (interval, in_flight) = if self.gpu {
+            (Duration::ZERO, 1)
         } else {
-            FRAME_INTERVAL
+            (CPU_FRAME_INTERVAL, CPU_CAPTURES_IN_FLIGHT)
         };
-        self.next_frame = Instant::now() + interval;
-        self.capture_started = Instant::now();
-        self.capture.busy.store(true, Ordering::Release);
+        if pending >= in_flight || Instant::now() < self.next_frame {
+            return Ok(());
+        }
+        // a fixed schedule, because the OpenVR tick rounds every wait up
+        self.next_frame = (self.next_frame + interval).max(Instant::now());
+        if pending == 0 {
+            self.capture_progress = Instant::now();
+        }
+        self.capture.pending.fetch_add(1, Ordering::AcqRel);
         self.capture.active.store(true, Ordering::Release);
         let window = self.window.clone();
         let capture = self.capture.clone();
@@ -462,7 +508,7 @@ impl DashboardOverlay {
         self.window
             .with_webview(move |webview| {
                 if !capture.active.load(Ordering::Acquire) {
-                    capture.busy.store(false, Ordering::Release);
+                    capture.pending.fetch_sub(1, Ordering::AcqRel);
                     return;
                 }
                 let result = unsafe {
@@ -472,7 +518,7 @@ impl DashboardOverlay {
                 };
                 if let Err(error) = result {
                     *capture.frame.lock().unwrap() = Some(Err(error));
-                    capture.busy.store(false, Ordering::Release);
+                    capture.pending.fetch_sub(1, Ordering::AcqRel);
                 }
             })
             .map_err(message)
@@ -639,6 +685,7 @@ impl DashboardOverlay {
         }
         self.keyboard = Arc::new(Mutex::new(None));
         self.has_frame = false;
+        self.cpu_stats = CpuStats::new();
         self.activation_started = None;
         // callbacks of the previous capture must not reach the next activation
         self.capture.active.store(false, Ordering::Release);
@@ -711,60 +758,68 @@ unsafe fn capture_frame(
             {
                 *capture.frame.lock().unwrap() = Some(Ok(CapturedFrame::Gpu(frame)));
             }
-            capture.busy.store(false, Ordering::Release);
+            capture.pending.fetch_sub(1, Ordering::AcqRel);
             return Ok(());
         }
-        capture_png(
+        capture_jpeg(
             &controller.CoreWebView2().map_err(message)?,
             capture.clone(),
         )
     })
 }
 
-unsafe fn capture_png(webview: &ICoreWebView2, capture: Arc<CaptureState>) -> Result<(), String> {
+unsafe fn capture_jpeg(webview: &ICoreWebView2, capture: Arc<CaptureState>) -> Result<(), String> {
     let stream = SHCreateMemStream(None).ok_or("Could not allocate capture stream")?;
     let output = stream.clone();
+    let started = Instant::now();
     let handler = CapturePreviewCompletedHandler::create(Box::new(move |result| {
         if capture.active.load(Ordering::Acquire) {
+            let captured = started.elapsed();
             let frame = result
                 .map_err(message)
-                .and_then(|_| read_stream(&output))
-                .map(CapturedFrame::Cpu);
+                .and_then(|_| decode_bgra(&output))
+                .map(|bgra| {
+                    CapturedFrame::Cpu(CpuFrame {
+                        bgra,
+                        capture: captured,
+                        decode: started.elapsed() - captured,
+                    })
+                });
             *capture.frame.lock().unwrap() = Some(frame);
         }
-        capture.busy.store(false, Ordering::Release);
+        capture.pending.fetch_sub(1, Ordering::AcqRel);
         Ok(())
     }));
     webview
         .CapturePreview(
-            COREWEBVIEW2_CAPTURE_PREVIEW_IMAGE_FORMAT_PNG,
+            COREWEBVIEW2_CAPTURE_PREVIEW_IMAGE_FORMAT_JPEG,
             &stream,
             &handler,
         )
         .map_err(message)
 }
 
-unsafe fn read_stream(stream: &IStream) -> Result<Vec<u8>, String> {
-    let mut stat = STATSTG::default();
-    stream.Stat(&mut stat, STATFLAG_NONAME).map_err(message)?;
-    if stat.cbSize == 0 || stat.cbSize > MAX_PNG_BYTES {
-        return Err("Invalid capture size".into());
-    }
-    let mut bytes = vec![0; stat.cbSize as usize];
+/// Runs on the main thread, which has COM initialised.
+unsafe fn decode_bgra(stream: &IStream) -> Result<Vec<u8>, String> {
     stream.Seek(0, STREAM_SEEK_SET, None).map_err(message)?;
-    let mut read = 0;
-    stream
-        .Read(
-            bytes.as_mut_ptr().cast(),
-            bytes.len() as u32,
-            Some(&mut read),
-        )
-        .ok()
+    let factory: IWICImagingFactory =
+        CoCreateInstance(&CLSID_WICImagingFactory, None, CLSCTX_INPROC_SERVER).map_err(message)?;
+    let frame = factory
+        .CreateDecoderFromStream(stream, std::ptr::null(), WICDecodeMetadataCacheOnDemand)
+        .and_then(|decoder| decoder.GetFrame(0))
         .map_err(message)?;
-    if read as usize != bytes.len() {
-        return Err("Incomplete capture".into());
+    let (mut width, mut height) = (0, 0);
+    frame.GetSize(&mut width, &mut height).map_err(message)?;
+    if width != WIDTH || height != HEIGHT {
+        return Err(format!(
+            "Unexpected dashboard frame dimensions {width}x{height}"
+        ));
     }
-    Ok(bytes)
+    let bgra = WICConvertBitmapSource(&GUID_WICPixelFormat32bppBGRA, &frame).map_err(message)?;
+    let mut pixels = vec![0; (WIDTH * HEIGHT * 4) as usize];
+    bgra.CopyPixels(std::ptr::null(), WIDTH * 4, &mut pixels)
+        .map_err(message)?;
+    Ok(pixels)
 }
 
 fn keyboard_text(input: &[std::ffi::c_char]) -> String {
