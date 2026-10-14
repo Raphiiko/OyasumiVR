@@ -9,11 +9,13 @@ export class LighthouseConnectsFailingMessageMonitor extends MessageMonitor {
   // set by a failing streak, cleared by the next successful connect
   private failing = false;
   private restarting = false;
+  // set by a successful restart, so the message stays away for the rest of the session
+  private restarted = false;
 
   public override async init(): Promise<void> {
     await listen('LIGHTHOUSE_CONNECTS_FAILING', () => {
       this.failing = true;
-      this.showMessage(false);
+      if (!this.restarting && !this.restarted) this.showMessage(false);
     });
     await listen('LIGHTHOUSE_CONNECTS_RECOVERED', () => {
       this.failing = false;
@@ -42,8 +44,10 @@ export class LighthouseConnectsFailingMessageMonitor extends MessageMonitor {
   private async restartBluetooth() {
     if (this.restarting) return;
     this.restarting = true;
+    this.messageCenter.removeMessage(MESSAGE_ID);
     try {
       await invoke('lighthouse_restart_bluetooth_radio');
+      this.restarted = true;
     } catch (e) {
       error(`[LighthouseConnectsFailing] Could not restart the bluetooth radio: ${e}`);
       if (this.failing) this.showMessage(true);

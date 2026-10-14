@@ -689,6 +689,9 @@ pub async fn restart_bluetooth_radio() -> Result<(), String> {
     .await
     .map_err(|err| err.to_string())?;
     CONNECT_BACKOFFS.lock().unwrap().clear();
+    if result.is_ok() {
+        info!("[Core] Restarted the bluetooth radio");
+    }
     result
 }
 
