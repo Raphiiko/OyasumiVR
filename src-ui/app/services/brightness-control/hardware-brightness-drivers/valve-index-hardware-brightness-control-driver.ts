@@ -1,11 +1,8 @@
-import {
-  HardwareBrightnessControlDriver,
-  HardwareBrightnessControlDriverBounds,
-} from './hardware-brightness-control-driver';
+import { HardwareBrightnessControlDriverBounds } from './hardware-brightness-control-driver';
+import { SteamVRAnalogGainHardwareBrightnessControlDriver } from './steamvr-analog-gain-hardware-brightness-control-driver';
 import { clamp } from '../../../utils/number-utils';
-import { OpenVRService } from '../../openvr.service';
-import { combineLatest, debounceTime, map, Observable } from 'rxjs';
 import { AppSettings } from '../../../models/settings';
+import { OVRDevice } from '../../../models/ovr-device';
 
 // Up to an analog gain of 1.0, the Index's panel maps gain to perceived
 // brightness along a gamma curve: percentage = 100 * gain^(1/2.2). Past 1.0 the
@@ -21,12 +18,28 @@ export const VALVE_INDEX_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: HardwareBrig
     riskThreshold: 160,
   };
 
-export class ValveIndexHardwareBrightnessControlDriver extends HardwareBrightnessControlDriver {
-  constructor(
-    appSettings: Observable<AppSettings>,
-    private openvr: OpenVRService
-  ) {
-    super(appSettings);
+export class ValveIndexHardwareBrightnessControlDriver extends SteamVRAnalogGainHardwareBrightnessControlDriver {
+  protected servesHmd(hmd: OVRDevice): boolean {
+    return hmd.manufacturerName === 'Valve' && hmd.modelNumber === 'Index';
+  }
+
+  protected gainRange(): [number, number] {
+    return [0, VALVE_INDEX_MAX_ANALOG_GAIN];
+  }
+
+  protected gainToHardwarePercentage(gain: number): number {
+    if (gain >= 1) return gain * 100;
+    return Math.pow(gain, 1 / VALVE_INDEX_BRIGHTNESS_GAMMA) * 100;
+  }
+
+  protected hardwarePercentageToGain(percentage: number): number {
+    if (percentage >= 100) return percentage / 100;
+    return Math.pow(clamp(percentage, 0, 100) / 100, VALVE_INDEX_BRIGHTNESS_GAMMA);
+  }
+
+  // the stops match one to one, and a gain above the user's maximum must read as what it is
+  protected hardwarePercentageToSoftwarePercentage(percentage: number): number {
+    return percentage;
   }
 
   getBrightnessConfiguration(): HardwareBrightnessControlDriverBounds {
@@ -36,40 +49,5 @@ export class ValveIndexHardwareBrightnessControlDriver extends HardwareBrightnes
   getBrightnessBounds(appSettings?: AppSettings): [number, number] {
     const config = this.getBrightnessConfiguration();
     return [config.softwareStops[0], (appSettings ?? this.appSettings).valveIndexMaxBrightness];
-  }
-
-  async getBrightnessPercentage(): Promise<number> {
-    return Math.round(this.analogGainToPercentage(await this.openvr.getAnalogGain()));
-  }
-
-  async setBrightnessPercentage(percentage: number): Promise<void> {
-    percentage = this.softwarePercentageToHardwarePercentage(percentage);
-    const analogGain = this.percentageToAnalogGain(percentage);
-    this.openvr.setAnalogGain(analogGain);
-  }
-
-  isAvailable(): Observable<boolean> {
-    return combineLatest([this.openvr.status, this.openvr.devices]).pipe(
-      debounceTime(0),
-      map(([status, devices]) => {
-        const hmd = devices.find((d) => d.class === 'HMD');
-        return (
-          status === 'INITIALIZED' &&
-          !!hmd &&
-          hmd.manufacturerName === 'Valve' &&
-          hmd.modelNumber === 'Index'
-        );
-      })
-    );
-  }
-
-  private analogGainToPercentage(analogGain: number): number {
-    if (analogGain >= 1) return clamp(analogGain, 1, VALVE_INDEX_MAX_ANALOG_GAIN) * 100;
-    return Math.pow(clamp(analogGain, 0, 1), 1 / VALVE_INDEX_BRIGHTNESS_GAMMA) * 100;
-  }
-
-  private percentageToAnalogGain(percentage: number): number {
-    if (percentage >= 100) return clamp(percentage / 100, 1, VALVE_INDEX_MAX_ANALOG_GAIN);
-    return Math.pow(clamp(percentage, 0, 100) / 100, VALVE_INDEX_BRIGHTNESS_GAMMA);
   }
 }

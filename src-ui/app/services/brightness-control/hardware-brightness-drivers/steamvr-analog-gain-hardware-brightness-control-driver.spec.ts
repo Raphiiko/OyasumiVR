@@ -1,9 +1,9 @@
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, filter, firstValueFrom } from 'rxjs';
 import { describe, expect, it } from 'vitest';
 import { APP_SETTINGS_DEFAULT } from '../../../models/settings';
 import { OVRDevice } from '../../../models/ovr-device';
 import { OpenVRService } from '../../openvr.service';
-import { AnalogGainHardwareBrightnessControlDriver } from './analog-gain-hardware-brightness-control-driver';
+import { SteamVRAnalogGainHardwareBrightnessControlDriver } from './steamvr-analog-gain-hardware-brightness-control-driver';
 
 const ANALOG_GAIN_HMD = {
   manufacturerName: 'Example',
@@ -27,11 +27,11 @@ function createDriver(hmd: Partial<OVRDevice> | null, enabled = true) {
     ...APP_SETTINGS_DEFAULT,
     hardwareBrightnessOnUnsupportedHmds: enabled,
   });
-  const driver = new AnalogGainHardwareBrightnessControlDriver(settings, openvr);
+  const driver = new SteamVRAnalogGainHardwareBrightnessControlDriver(settings, openvr);
   return { driver, analogGain: () => analogGain };
 }
 
-describe('AnalogGainHardwareBrightnessControlDriver', () => {
+describe('SteamVRAnalogGainHardwareBrightnessControlDriver', () => {
   it('is available whenever enabled with an HMD connected', async () => {
     const available = (hmd: Partial<OVRDevice> | null, enabled = true) =>
       firstValueFrom(createDriver(hmd, enabled).driver.isAvailable());
@@ -65,5 +65,29 @@ describe('AnalogGainHardwareBrightnessControlDriver', () => {
     expect(await driver.getBrightnessPercentage()).toBe(60);
     await driver.setBrightnessPercentage(0);
     expect(analogGain()).toBeCloseTo(0.2);
+  });
+
+  it('finishes a read that SteamVR stops in the middle of', async () => {
+    let resolveGain: (gain: number) => void = () => {};
+    const status = new BehaviorSubject('INITIALIZED');
+    const openvr = {
+      status,
+      devices: new BehaviorSubject([{ index: 0, class: 'HMD', ...ANALOG_GAIN_HMD }]),
+      getAnalogGain: () => new Promise<number>((resolve) => (resolveGain = resolve)),
+      setAnalogGain: async () => {},
+    } as unknown as OpenVRService;
+    const settings = new BehaviorSubject({
+      ...APP_SETTINGS_DEFAULT,
+      hardwareBrightnessOnUnsupportedHmds: true,
+    });
+    const driver = new SteamVRAnalogGainHardwareBrightnessControlDriver(settings, openvr);
+    await firstValueFrom(driver.isAvailable());
+
+    const read = driver.getBrightnessPercentage();
+    status.next('STOPPED');
+    await firstValueFrom(driver.isAvailable().pipe(filter((available) => !available)));
+    resolveGain(0.5);
+
+    expect(await read).toBe(60);
   });
 });

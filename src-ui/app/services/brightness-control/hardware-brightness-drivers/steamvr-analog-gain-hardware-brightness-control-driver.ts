@@ -18,7 +18,7 @@ import { AppSettings } from '../../../models/settings';
 import { OVRDevice } from '../../../models/ovr-device';
 
 // Without a known panel curve, the reported gain range maps linearly onto 20% to 100%.
-export const ANALOG_GAIN_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: HardwareBrightnessControlDriverBounds =
+export const STEAMVR_ANALOG_GAIN_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: HardwareBrightnessControlDriverBounds =
   {
     softwareStops: [20, 100],
     hardwareStops: [0, 100],
@@ -28,6 +28,8 @@ export const ANALOG_GAIN_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: HardwareBrig
 
 // SteamVR's own analogGain range, for headsets that report none
 const DEFAULT_ANALOG_GAIN_RANGE: [number, number] = [0, 1];
+// SteamVR applies this gain until something writes analogGain
+const DEFAULT_ANALOG_GAIN = 1;
 
 /** The HMD's reported analog gain range, or SteamVR's default range when it reports no usable one. */
 export function analogGainRange(hmd: OVRDevice): [number, number] {
@@ -38,9 +40,13 @@ export function analogGainRange(hmd: OVRDevice): [number, number] {
   return [min, max];
 }
 
-/** Writes SteamVR's analogGain on any headset without its own driver, when the user opts in. */
-export class AnalogGainHardwareBrightnessControlDriver extends HardwareBrightnessControlDriver {
-  /** The active HMD's range; null while unavailable. */
+/**
+ * Controls brightness through SteamVR's analogGain setting. On its own it serves any headset
+ * without a dedicated driver once the user opts in. Headset drivers extend it with their own
+ * headset match, gain range and panel curve.
+ */
+export class SteamVRAnalogGainHardwareBrightnessControlDriver extends HardwareBrightnessControlDriver {
+  /** The connected HMD's gain range, also while this driver does not serve it; null without an HMD. */
   private range: [number, number] | null = null;
   private readonly available: Observable<boolean>;
   /** Emits the new range when a connected HMD's range changes from one usable range to another. */
@@ -48,20 +54,24 @@ export class AnalogGainHardwareBrightnessControlDriver extends HardwareBrightnes
 
   constructor(
     appSettings: Observable<AppSettings>,
-    private openvr: OpenVRService
+    protected openvr: OpenVRService
   ) {
     super(appSettings);
     const state = combineLatest([this.openvr.status, this.openvr.devices, appSettings]).pipe(
       debounceTime(0),
       map(([status, devices, settings]) => {
         const hmd = devices.find((d) => d.index === 0 && d.class === 'HMD');
-        this.range = status === 'INITIALIZED' && hmd ? analogGainRange(hmd) : null;
-        return { range: this.range, enabled: settings.hardwareBrightnessOnUnsupportedHmds };
+        if (status !== 'INITIALIZED' || !hmd) {
+          this.range = null;
+          return { range: null, served: false };
+        }
+        this.range = this.gainRange(hmd);
+        return { range: this.range, served: this.servesHmd(hmd, settings) };
       }),
       shareReplay(1)
     );
     this.available = state.pipe(
-      map(({ range, enabled }) => enabled && !!range),
+      map(({ served }) => served),
       shareReplay(1)
     );
     this.rangeChanges = state.pipe(
@@ -73,30 +83,53 @@ export class AnalogGainHardwareBrightnessControlDriver extends HardwareBrightnes
     );
   }
 
-  getBrightnessConfiguration(): HardwareBrightnessControlDriverBounds {
-    return ANALOG_GAIN_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS;
+  protected servesHmd(_hmd: OVRDevice, settings: AppSettings): boolean {
+    return settings.hardwareBrightnessOnUnsupportedHmds;
   }
 
-  getBrightnessBounds(): [number, number] {
-    const config = this.getBrightnessConfiguration();
-    return [config.softwareStops[0], config.softwareStops[1]];
+  protected gainRange(hmd: OVRDevice): [number, number] {
+    return analogGainRange(hmd);
+  }
+
+  /** Maps a gain inside the range to the panel's hardware percentage. */
+  protected gainToHardwarePercentage(gain: number, [min, max]: [number, number]): number {
+    return ((gain - min) / (max - min)) * 100;
+  }
+
+  /** Maps a hardware percentage to a gain; the caller clamps the result to the range. */
+  protected hardwarePercentageToGain(percentage: number, [min, max]: [number, number]): number {
+    return min + ((max - min) * percentage) / 100;
+  }
+
+  getBrightnessConfiguration(): HardwareBrightnessControlDriverBounds {
+    return STEAMVR_ANALOG_GAIN_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS;
+  }
+
+  getBrightnessBounds(_appSettings?: AppSettings): [number, number] {
+    const stops = this.getBrightnessConfiguration().softwareStops;
+    return [stops[0], stops[stops.length - 1]];
   }
 
   async getBrightnessPercentage(): Promise<number> {
-    if (!this.range) return 100;
-    const [min, max] = this.range;
-    // SteamVR has no analogGain value until something writes one
-    const storedGain = await this.openvr.getAnalogGain().catch(() => max);
-    const analogGain = clamp(storedGain, min, max);
-    const hardwarePercentage = ((analogGain - min) / (max - min)) * 100;
+    // SteamVR can stop during the read and clear this.range, so keep the range it started with
+    const range = this.range;
+    if (!range) return 100;
+    const storedGain = await this.openvr.getAnalogGain().catch(() => DEFAULT_ANALOG_GAIN);
+    const gain = clamp(storedGain, range[0], range[1]);
+    const stops = this.getBrightnessConfiguration().hardwareStops;
+    const hardwarePercentage = clamp(
+      this.gainToHardwarePercentage(gain, range),
+      stops[0],
+      stops[stops.length - 1]
+    );
     return Math.round(this.hardwarePercentageToSoftwarePercentage(hardwarePercentage));
   }
 
   async setBrightnessPercentage(percentage: number): Promise<void> {
     if (!this.range) return;
-    const [min, max] = this.range;
-    percentage = clamp(this.softwarePercentageToHardwarePercentage(percentage), 0, 100);
-    this.openvr.setAnalogGain(min + ((max - min) * percentage) / 100);
+    const hardwarePercentage = this.softwarePercentageToHardwarePercentage(percentage);
+    const gain = this.hardwarePercentageToGain(hardwarePercentage, this.range);
+    this.openvr.setAnalogGain(clamp(gain, this.range[0], this.range[1]));
   }
 
   /**

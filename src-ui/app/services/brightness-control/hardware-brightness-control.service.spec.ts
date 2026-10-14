@@ -50,7 +50,7 @@ function setup() {
   return { service, devices, status, enable, setAnalogGain, analogGain: () => analogGain };
 }
 
-describe('HardwareBrightnessControlService with the analog gain driver', () => {
+describe('HardwareBrightnessControlService with the generic SteamVR analog gain driver', () => {
   it('restores the maximum gain when the option is turned off', async () => {
     const h = setup();
     await settle();
@@ -137,7 +137,7 @@ describe('HardwareBrightnessControlService with the analog gain driver', () => {
     expect(await h.service.driverPSVR2.getBrightnessPercentage()).toBe(50);
   });
 
-  it('shows the level of a Bigscreen Beyond that connects while the analog gain driver is active', async () => {
+  it('shows the level of a Bigscreen Beyond that connects while the generic driver is active', async () => {
     const beyondConnected = vi.mocked(listen).mock.calls.length;
     const h = setup();
     const [, onBeyondConnected] = vi
