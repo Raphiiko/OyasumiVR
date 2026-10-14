@@ -43,6 +43,8 @@ const FLAVOUR_NAMES: Record<BuildFlavour, string> = {
 interface StatusLine {
   label: string;
   value: Observable<TString>;
+  /** Untranslated text shown muted before the value. */
+  prefix?: Observable<string | undefined>;
   detail?: Observable<TString | null>;
   wide?: boolean;
 }
@@ -83,6 +85,7 @@ export class SettingsTroubleshootingStatusTabComponent {
         label: 'settings.troubleshooting.status.steamvr.label',
         value: this.openvr.status.pipe(map((s) => `settings.troubleshooting.status.steamvr.${s}`)),
       },
+      this.hmdStatus(),
       {
         label: 'settings.troubleshooting.status.steamvrAutoLaunch.label',
         value: settings.pipe(
@@ -228,6 +231,28 @@ export class SettingsTroubleshootingStatusTabComponent {
       switchMap(() => invoke<string>('openvr_dashboard_render_mode')),
       distinctUntilChanged()
     );
+  }
+
+  private hmdStatus(): StatusLine {
+    const hmd = this.openvr.devices.pipe(
+      map((devices) => devices.find((d) => d.class === 'HMD')),
+      map((d) => (d?.manufacturerName || d?.modelNumber ? d : undefined))
+    );
+    return {
+      label: 'settings.troubleshooting.status.hmd.label',
+      prefix: hmd.pipe(map((d) => d?.manufacturerName)),
+      value: hmd.pipe(
+        map((d): TString =>
+          d
+            ? {
+                string: 'settings.troubleshooting.status.hmd.value',
+                values: { model: d.modelNumber ?? '' },
+              }
+            : 'settings.troubleshooting.status.hmd.notDetected'
+        )
+      ),
+      wide: true,
+    };
   }
 
   private oscStatus(): Observable<TString> {

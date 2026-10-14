@@ -28,6 +28,10 @@ button app-icon {
     font-weight: 500;
   }
 
+  &-prefix {
+    color: var(--color-text-3);
+  }
+
   &-detail {
     color: var(--color-text-3);
     margin-top: 0.25em;

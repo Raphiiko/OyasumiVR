@@ -2354,6 +2354,11 @@
           "ready": "Adapter found",
           "uninitialized": "Not in use"
         },
+        "hmd": {
+          "label": "Headset",
+          "notDetected": "Not detected",
+          "value": "{model}"
+        },
         "mqtt": {
           "CONNECTED": "Connected",
           "DISABLED": "Off",

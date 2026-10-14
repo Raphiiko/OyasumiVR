@@ -44,7 +44,12 @@
     @for (line of status; track line.label) {
       <div class="status-tile" [class.wide]="line.wide">
         <div class="status-tile-label" [transloco]="line.label"></div>
-        <div class="status-tile-value">{{ (line.value | async) ?? '' | tsTranslate }}</div>
+        <div class="status-tile-value">
+          @if (line.prefix | async; as prefix) {
+            <span class="status-tile-prefix">{{ prefix }}</span>
+          }
+          {{ (line.value | async) ?? '' | tsTranslate }}
+        </div>
         @if (line.detail | async; as detail) {
           <div class="status-tile-detail">{{ detail | tsTranslate }}</div>
         }
