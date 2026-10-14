@@ -5,7 +5,13 @@
   </div>
   <div class="pane-content scroll">
     <div class="setting-view-container">
-      <p transloco="settings.brightnessCct.description"></p>
+      <p>
+        <span transloco="settings.brightnessCct.description"></span>
+        <a
+          [routerLink]="['/dashboard', 'brightnessAutomations']"
+          transloco="settings.brightnessCct.automationsLink"
+        ></a>
+      </p>
       <div class="setting-category">
         <div class="settings">
           <app-setting-row

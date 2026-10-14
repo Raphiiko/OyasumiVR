@@ -1897,6 +1897,7 @@
   },
   "settings": {
     "brightnessCct": {
+      "automationsLink": "Automations are on the Brightness Automations page.",
       "bigscreenBeyond": {
         "forceFanSafety": {
           "description": "Force the fan to 100% at brightness values above 100%",
@@ -1926,7 +1927,7 @@
           "unlistedHmd": "Colour temperature control might still work on some headsets, if enabled. If your headset does turn out to work despite being unsupported, please let us know on <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a>!"
         }
       },
-      "description": "Here you'll find any settings related to brightness and colour temperature.",
+      "description": "Hardware settings for brightness and colour temperature: which headsets OyasumiVR works with, and limits for specific headsets.",
       "hardwareBrightness": {
         "unsupportedHmds": {
           "description": "Turn this on to let OyasumiVR try to control your headset's brightness through SteamVR, even though it's not known to work for your headset.",
