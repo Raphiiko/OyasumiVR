@@ -124,7 +124,7 @@
       "simple": "シンプル"
     },
     "modeInfoModal": {
-      "message": "ソフトウェアかハードウェアを制御する方法があります。\n\nソフトウェア制御は画面に表示される映像の明るさを調整します。これは全てのHMDで利用可能です。\n\nハードウェア制御はHMDの輝度を直接調整します。サポートされているHMD(Valve Index, Bigscreen Beyondなど)でのみ利用可能です。\n\nシンプルモードではソフトウェアとハードウェアの明るさのバランスを自動的に変更します。ただし、サポート外のHMDを使用している場合はソフトウェア側のみ制御されます。\n\n高度なモードではそれぞれ任意の値が設定可能です。",
+      "message": "ソフトウェアかハードウェアを制御する方法があります。\n\nソフトウェア制御は画面に表示される映像の明るさを調整します。これは全てのHMDで利用可能です。\n\nハードウェア制御はHMDの輝度を直接調整します。サポートされているHMD(Valve Index, Bigscreen Beyond, PlayStation VR2など)でのみ利用可能です。\n\nシンプルモードではソフトウェアとハードウェアの明るさのバランスを自動的に変更します。ただし、サポート外のHMDを使用している場合はソフトウェア側のみ制御されます。\n\n高度なモードではそれぞれ任意の値が設定可能です。",
       "title": "輝度調整モード"
     },
     "onlyWhenSleepModeDisabled": {
@@ -1897,6 +1897,8 @@
   },
   "settings": {
     "brightnessCct": {
+      "automationsHint": "輝度と色温度の自動化は{link}で設定できます。",
+      "automationsLink": "自動化のページ",
       "bigscreenBeyond": {
         "forceFanSafety": {
           "description": "輝度が100%を超える場合、ファン速度を強制的に100%にします",
@@ -1915,19 +1917,27 @@
         "title": "Bigscreen Beyond"
       },
       "cctControl": {
-        "title": "色温度",
         "unsupportedHmds": {
-          "description": "お使いのHMDで動作が確認されていなくても、色温度コントロールを有効にします。",
+          "description": "オンにすると、お使いのHMDで動作が確認されていなくても、OyasumiVRがSteamVR経由で色温度の制御を試みます。",
           "listedHmd": "お使いのHMDは色温度コントロールに対応しています。",
           "manufacturer": "メーカー",
           "model": "モデル",
           "noHmd": "この設定を変更するには、HMDを接続してください。",
           "notReported": "不明",
-          "title": "非対応のHMDでも有効にする",
+          "title": "非対応のHMDで色温度を制御",
           "unlistedHmd": "非対応のHMDでも、有効にすると色温度コントロールが動作する場合があります。非対応のHMDで動作した場合は、ぜひ<a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a>でお知らせください！"
         }
       },
-      "description": "輝度や色温度に関連する設定を行えます。",
+      "description": "輝度と色温度のハードウェア設定です。特定のHMD向けの設定も含みます。",
+      "hardwareBrightness": {
+        "unsupportedHmds": {
+          "description": "オンにすると、お使いのHMDで動作が確認されていなくても、OyasumiVRがSteamVR経由で輝度の制御を試みます。",
+          "listedHmd": "お使いのHMDはハードウェアの輝度コントロールに対応しています。",
+          "noHmd": "この設定を変更するには、HMDを接続してください。",
+          "title": "非対応のHMDでハードウェアの輝度を制御",
+          "unlistedHmd": "非対応のHMDでも、有効にするとハードウェアの輝度コントロールが動作する場合があります。非対応のHMDで動作した場合は、ぜひ<a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a>でお知らせください！"
+        }
+      },
       "title": "輝度と色温度",
       "valveIndex": {
         "maxBrightness": {
@@ -2354,6 +2364,11 @@
           "ready": "アダプター検出済み",
           "uninitialized": "未使用"
         },
+        "hmd": {
+          "label": "HMD",
+          "notDetected": "未検出",
+          "value": "{model}"
+        },
         "mqtt": {
           "CONNECTED": "接続済み",
           "DISABLED": "オフ",
@@ -2389,6 +2404,13 @@
           "label": "SteamVRとの自動起動",
           "off": "オフ",
           "on": "オン"
+        },
+        "steamvrDashboard": {
+          "hardware": "ハードウェアアクセラレーション",
+          "label": "SteamVRダッシュボード",
+          "notRendering": "描画なし",
+          "software": "ソフトウェアレンダリング",
+          "softwareFallback": "ソフトウェアレンダリング（フォールバック）"
         },
         "title": "ステータス",
         "vrchat": {
