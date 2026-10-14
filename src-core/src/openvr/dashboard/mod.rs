@@ -13,7 +13,7 @@ use raphii_openvr_rs::{raw, Context};
 use std::{
     cell::RefCell,
     sync::{
-        atomic::{AtomicBool, AtomicU64, Ordering},
+        atomic::{AtomicBool, Ordering},
         Arc, Mutex,
     },
     time::{Duration, Instant},
@@ -75,11 +75,12 @@ struct CaptureState {
 thread_local! {
     static DESKTOP: RefCell<Option<Desktop>> = const { RefCell::new(None) };
 }
-/// Counts desktop takeovers so a deferred restore skips a desktop a newer activation reuses.
-static DESKTOP_GENERATION: AtomicU64 = AtomicU64::new(0);
 
 /// The desktop WebView state to put back when the dashboard is left.
 struct Desktop {
+    /// The capture of the activation that took over the desktop.
+    /// A capture never changes mode, so a matching owner also means a matching mode.
+    owner: Arc<CaptureState>,
     window: WebviewWindow,
     controller: ICoreWebView2Controller3,
     bounds: RECT,
@@ -94,12 +95,13 @@ struct Desktop {
 
 impl Desktop {
     unsafe fn enter(
+        owner: Arc<CaptureState>,
         window: WebviewWindow,
         controller: ICoreWebView2Controller,
         device: Option<&ID3D11Device>,
         keyboard: KeyboardRequests,
     ) -> Result<Self, String> {
-        let mut desktop = Self::save(window, controller)?;
+        let mut desktop = Self::save(owner, window, controller)?;
         if let Err(error) = desktop.apply(device, keyboard) {
             desktop.restore();
             return Err(error);
@@ -108,11 +110,13 @@ impl Desktop {
     }
 
     unsafe fn save(
+        owner: Arc<CaptureState>,
         window: WebviewWindow,
         controller: ICoreWebView2Controller,
     ) -> Result<Self, String> {
         let controller: ICoreWebView2Controller3 = controller.cast().map_err(message)?;
         let mut desktop = Self {
+            owner,
             visible: window.is_visible().map_err(message)?,
             window,
             controller,
@@ -638,14 +642,13 @@ impl DashboardOverlay {
         self.activation_started = None;
         // callbacks of the previous capture must not reach the next activation
         self.capture.active.store(false, Ordering::Release);
-        self.capture = Arc::default();
-        let generation = DESKTOP_GENERATION.load(Ordering::Acquire);
+        let capture = std::mem::take(&mut self.capture);
         let scheduled = self.window.run_on_main_thread(move || {
-            if DESKTOP_GENERATION.load(Ordering::Acquire) != generation {
-                return;
-            }
             DESKTOP.with(|saved| {
-                if let Some(desktop) = saved.borrow_mut().take() {
+                let owned = saved
+                    .borrow_mut()
+                    .take_if(|desktop| Arc::ptr_eq(&desktop.owner, &capture));
+                if let Some(desktop) = owned {
                     desktop.restore();
                 }
             });
@@ -681,19 +684,16 @@ unsafe fn capture_frame(
     capture: &Arc<CaptureState>,
 ) -> Result<(), String> {
     DESKTOP.with(|saved| {
-        DESKTOP_GENERATION.fetch_add(1, Ordering::AcqRel);
-        // a skipped deferred restore can leave a desktop set up for the other capture mode
-        let wrong_mode = saved
-            .borrow()
-            .as_ref()
-            .is_some_and(|desktop| desktop.gpu.is_some() != device.is_some());
-        if wrong_mode {
-            if let Some(desktop) = saved.borrow_mut().take() {
-                desktop.restore();
-            }
+        // a stale callback of a deactivated capture can leave its desktop behind
+        let stale = saved
+            .borrow_mut()
+            .take_if(|desktop| !Arc::ptr_eq(&desktop.owner, capture));
+        if let Some(desktop) = stale {
+            desktop.restore();
         }
         if saved.borrow().is_none() {
             *saved.borrow_mut() = Some(Desktop::enter(
+                capture.clone(),
                 window,
                 controller.clone(),
                 device,
