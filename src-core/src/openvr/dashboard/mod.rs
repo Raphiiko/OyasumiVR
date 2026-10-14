@@ -1,5 +1,6 @@
 mod capture;
 mod input;
+pub use capture::run_capture_probe_cli;
 mod texture;
 
 use self::{
