@@ -4,7 +4,7 @@ import {
 } from './hardware-brightness-control-driver';
 import { clamp } from '../../../utils/number-utils';
 import { OpenVRService } from '../../openvr.service';
-import { combineLatest, debounceTime, map, Observable } from 'rxjs';
+import { combineLatest, debounceTime, map, Observable, shareReplay } from 'rxjs';
 import { AppSettings } from '../../../models/settings';
 import { OVRDevice } from '../../../models/ovr-device';
 
@@ -41,10 +41,11 @@ export class AnalogGainHardwareBrightnessControlDriver extends HardwareBrightnes
     this.available = combineLatest([this.openvr.status, this.openvr.devices, appSettings]).pipe(
       debounceTime(0),
       map(([status, devices, settings]) => {
-        const hmd = devices.find((d) => d.class === 'HMD');
+        const hmd = devices.find((d) => d.index === 0 && d.class === 'HMD');
         this.range = status === 'INITIALIZED' ? analogGainRange(hmd) : null;
         return settings.hardwareBrightnessOnUnsupportedHmds && !!this.range;
-      })
+      }),
+      shareReplay(1)
     );
   }
 
@@ -60,7 +61,9 @@ export class AnalogGainHardwareBrightnessControlDriver extends HardwareBrightnes
   async getBrightnessPercentage(): Promise<number> {
     if (!this.range) return 100;
     const [min, max] = this.range;
-    const analogGain = clamp(await this.openvr.getAnalogGain(), min, max);
+    // SteamVR has no analogGain value until something writes one
+    const storedGain = await this.openvr.getAnalogGain().catch(() => max);
+    const analogGain = clamp(storedGain, min, max);
     const hardwarePercentage = ((analogGain - min) / (max - min)) * 100;
     return Math.round(this.hardwarePercentageToSoftwarePercentage(hardwarePercentage));
   }
@@ -70,6 +73,12 @@ export class AnalogGainHardwareBrightnessControlDriver extends HardwareBrightnes
     const [min, max] = this.range;
     percentage = clamp(this.softwarePercentageToHardwarePercentage(percentage), 0, 100);
     this.openvr.setAnalogGain(min + ((max - min) * percentage) / 100);
+  }
+
+  /** Writes the maximum gain, so a headset this driver dimmed is not left dim once it lets go. */
+  restoreMaximumGain() {
+    if (!this.range) return;
+    this.openvr.setAnalogGain(this.range[1]);
   }
 
   isAvailable(): Observable<boolean> {

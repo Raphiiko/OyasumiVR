@@ -17,7 +17,7 @@ function createDriver(hmd: Partial<OVRDevice>, enabled = true) {
   let analogGain = 0.8;
   const openvr = {
     status: new BehaviorSubject('INITIALIZED'),
-    devices: new BehaviorSubject([{ class: 'HMD', ...hmd }]),
+    devices: new BehaviorSubject([{ index: 0, class: 'HMD', ...hmd }]),
     getAnalogGain: async () => analogGain,
     setAnalogGain: async (value: number) => {
       analogGain = value;

@@ -1929,9 +1929,9 @@
       },
       "description": "Here you'll find any settings related to brightness and colour temperature.",
       "hardwareBrightness": {
-        "title": "Hardware brightness",
+        "title": "Hardware Brightness",
         "unsupportedHmds": {
-          "description": "Turn this on to enable hardware brightness control, even though it's not known to work for your headset.",
+          "description": "Turn this on to let OyasumiVR try to control your headset's brightness through SteamVR, even though it's not known to work for your headset.",
           "listedHmd": "Hardware brightness control is supported on your headset.",
           "noAnalogGain": "Your headset does not report hardware brightness support to SteamVR, so this setting has no effect on it.",
           "noHmd": "Connect your headset to change this setting.",

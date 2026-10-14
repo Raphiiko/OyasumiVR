@@ -340,7 +340,7 @@ With the shutdown sequence configured, you can fall asleep soundly in VR, knowin
 <br>
 Automate your brightness for when you sleep and wake up. OyasumiVR can smoothly transition your VR headset's brightness, so it falls down gradually as you sleep without waking you up.
 <br><br>
-It allows you to control both software brightness, as well as hardware brightness if your headset supports it (e.g. Valve Index, Bigscreen Beyond or PlayStation VR2). In addition to providing you with several automations, you can easily control your brightness levels right from the SteamVR overlay menu!
+It allows you to control both software brightness, as well as hardware brightness if your headset supports it (e.g. Valve Index, Bigscreen Beyond or PlayStation VR2). On other headsets, you can try hardware brightness through the "Enable on unsupported headsets" setting. In addition to providing you with several automations, you can easily control your brightness levels right from the SteamVR overlay menu!
 <br><br>
 🌡️ <b>Color Temperature</b>
 <br>
@@ -589,7 +589,7 @@ Mengontrol batas daya kartu grafis Anda secara langsung dengan OyasumiVR hanya d
 
 ### Otomatisasi Kecerahan
 
-Controlling the hardware brightness of the VR headset's display is currently only supported on the Valve Index, the Bigscreen Beyond, and the PlayStation VR2.
+Controlling the hardware brightness of the VR headset's display is currently supported on the Valve Index, the Bigscreen Beyond and the PlayStation VR2. On other headsets, you can try it through the "Enable on unsupported headsets" setting.
 
 Image brightness control is available on all headsets.
 

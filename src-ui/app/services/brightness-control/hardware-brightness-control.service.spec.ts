@@ -1,0 +1,76 @@
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { describe, expect, it, vi } from 'vitest';
+import { APP_SETTINGS_DEFAULT } from '../../models/settings';
+import { OVRDevice } from '../../models/ovr-device';
+import { HardwareBrightnessControlService } from './hardware-brightness-control.service';
+
+vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn(async () => false) }));
+vi.mock('@tauri-apps/api/event', () => ({ listen: vi.fn(async () => () => {}) }));
+vi.mock('@tauri-apps/plugin-log', () => ({ info: vi.fn(), warn: vi.fn() }));
+type Dependencies = ConstructorParameters<typeof HardwareBrightnessControlService>;
+
+const UNSUPPORTED_HMD: Partial<OVRDevice> = {
+  index: 0,
+  class: 'HMD',
+  manufacturerName: 'Example',
+  modelNumber: 'Headset',
+  displaySupportsAnalogGain: true,
+  displayMinAnalogGain: 0.2,
+  displayMaxAnalogGain: 0.8,
+};
+
+const settle = () => new Promise((resolve) => setTimeout(resolve, 5));
+
+function setup() {
+  const settings = new BehaviorSubject({
+    ...APP_SETTINGS_DEFAULT,
+    hardwareBrightnessOnUnsupportedHmds: true,
+  });
+  const devices = new BehaviorSubject<Partial<OVRDevice>[]>([UNSUPPORTED_HMD]);
+  let analogGain = 0.8;
+  const setAnalogGain = vi.fn(async (value: number) => {
+    analogGain = value;
+  });
+  const openvr = {
+    status: new BehaviorSubject('INITIALIZED'),
+    devices,
+    getAnalogGain: async () => analogGain,
+    setAnalogGain,
+  };
+  const service = new HardwareBrightnessControlService(
+    openvr as unknown as Dependencies[0],
+    { settings } as unknown as Dependencies[1]
+  );
+  const enable = (value: boolean) =>
+    settings.next({ ...settings.value, hardwareBrightnessOnUnsupportedHmds: value });
+  return { service, devices, enable, setAnalogGain, analogGain: () => analogGain };
+}
+
+describe('HardwareBrightnessControlService with the analog gain driver', () => {
+  it('restores the maximum gain when the option is turned off', async () => {
+    const h = setup();
+    await settle();
+    expect(await firstValueFrom(h.service.driverIsAvailable)).toBe(true);
+    await h.service.setBrightness(60);
+    expect(h.analogGain()).toBeCloseTo(0.5);
+
+    h.enable(false);
+    await settle();
+
+    expect(await firstValueFrom(h.service.driverIsAvailable)).toBe(false);
+    expect(h.analogGain()).toBeCloseTo(0.8);
+  });
+
+  it('leaves the gain to the headset driver that takes over', async () => {
+    const h = setup();
+    await settle();
+    await h.service.setBrightness(60);
+    h.setAnalogGain.mockClear();
+
+    h.devices.next([{ ...UNSUPPORTED_HMD, manufacturerName: 'Valve', modelNumber: 'Index' }]);
+    await settle();
+
+    expect(h.service.driverValveIndex).toBeDefined();
+    expect(h.setAnalogGain).not.toHaveBeenCalled();
+  });
+});

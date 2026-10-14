@@ -1,4 +1,10 @@
-import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit,
+} from '@angular/core';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../../../models/settings';
 import { AppSettingsService } from '../../../../services/app-settings.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -39,6 +45,7 @@ export class SettingsBrightnessCctViewComponent implements OnInit {
     private appSettingsService: AppSettingsService,
     private openvr: OpenVRService,
     private hardwareBrightness: HardwareBrightnessControlService,
+    private changeDetector: ChangeDetectorRef,
     private destroyRef: DestroyRef
   ) {}
 
@@ -65,6 +72,8 @@ export class SettingsBrightnessCctViewComponent implements OnInit {
         else if (headsetDriverIsAvailable) this.hardwareBrightnessState = 'LISTED';
         else if (!analogGainRange(hmd)) this.hardwareBrightnessState = 'NO_ANALOG_GAIN';
         else this.hardwareBrightnessState = 'UNLISTED';
+        // driver availability settles after OpenVRService's own render pass for the device update
+        this.changeDetector.detectChanges();
       });
   }
 
