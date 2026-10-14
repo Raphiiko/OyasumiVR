@@ -52,6 +52,21 @@ describe('LighthouseConnectsFailingMessageMonitor', () => {
     expect(messages.size).toBe(0);
   });
 
+  it('keeps the message away when connects fail again during the restart', async () => {
+    let finishRestart!: () => void;
+    vi.mocked(invoke).mockReturnValue(new Promise<void>((resolve) => (finishRestart = resolve)));
+    handlers['LIGHTHOUSE_CONNECTS_FAILING']();
+
+    const restart = clickRestart();
+    handlers['LIGHTHOUSE_CONNECTS_RECOVERED']();
+    handlers['LIGHTHOUSE_CONNECTS_FAILING']();
+    expect(messages.size).toBe(0);
+
+    finishRestart();
+    await restart;
+    expect(messages.size).toBe(0);
+  });
+
   it('shows the restart failure after a failed restart', async () => {
     vi.mocked(invoke).mockRejectedValue('radio access was refused');
     handlers['LIGHTHOUSE_CONNECTS_FAILING']();

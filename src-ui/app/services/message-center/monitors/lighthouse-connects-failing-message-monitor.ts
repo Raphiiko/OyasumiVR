@@ -15,7 +15,7 @@ export class LighthouseConnectsFailingMessageMonitor extends MessageMonitor {
   public override async init(): Promise<void> {
     await listen('LIGHTHOUSE_CONNECTS_FAILING', () => {
       this.failing = true;
-      if (!this.restarted) this.showMessage(false);
+      if (!this.restarting && !this.restarted) this.showMessage(false);
     });
     await listen('LIGHTHOUSE_CONNECTS_RECOVERED', () => {
       this.failing = false;
