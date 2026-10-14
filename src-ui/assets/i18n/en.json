@@ -1917,7 +1917,7 @@
       "cctControl": {
         "title": "Colour Temperature",
         "unsupportedHmds": {
-          "description": "Turn this on to enable colour temperature control, even though it's not known to work for your headset.",
+          "description": "Turn this on to let OyasumiVR try to control your headset's colour temperature through SteamVR, even though it's not known to work for your headset.",
           "listedHmd": "Colour temperature control is supported on your headset.",
           "manufacturer": "Manufacturer",
           "model": "Model",
