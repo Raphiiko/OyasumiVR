@@ -48,7 +48,8 @@ Two things are worth knowing before you change any of this. The install director
 the user, which is why the launcher and the staged sidecar live in Program Files instead. Disabling
 elevated features asks the running sidecar to stage a protected native cleanup copy. That copy
 deletes the task and Program Files directory after the sidecar exits, then the core removes the
-copy. Steam does not run the NSIS uninstaller.
+copy. The NSIS uninstaller runs the bundled sidecar with `--uninstall` to do the same removal,
+through `src-core/nsis/hooks.nsh`. Steam does not run the NSIS uninstaller.
 
 ## Generated files
 

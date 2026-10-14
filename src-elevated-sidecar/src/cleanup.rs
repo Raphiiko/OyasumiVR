@@ -45,6 +45,112 @@ pub fn remove_privileged_launcher() -> Result<CleanupDisposition, String> {
     }
 }
 
+/// Removes the privileged launcher of the user who runs the uninstaller. Started without
+/// elevation, it returns at once when that user has no task, and otherwise runs itself elevated
+/// with `user_sid` set to that user, so administrator credentials cannot change whose task goes.
+pub fn uninstall_privileged_launcher(user_sid: Option<&str>) -> Result<(), String> {
+    if !is_elevated() {
+        let sid =
+            current_user_sid().map_err(|e| format!("cannot read the current user SID: {e}"))?;
+        let has_task =
+            task::exists(&sid).map_err(|e| format!("cannot inspect the scheduled task: {e}"))?;
+        if !has_task {
+            return Ok(());
+        }
+        return run_elevated(&format!("--uninstall --uninstall-user-sid={sid}"));
+    }
+
+    let sid = match user_sid {
+        Some(sid) => sid.to_string(),
+        None => current_user_sid().map_err(|e| format!("cannot read the current user SID: {e}"))?,
+    };
+    let dir = privileged_dir()?;
+    let _lock = PrivilegedLauncherLock::acquire()
+        .map_err(|e| format!("cannot lock the privileged launcher installation: {e}"))?;
+    let retain_installation = task::has_other_registration(&sid)
+        .map_err(|e| format!("cannot inspect the scheduled tasks: {e}"))?;
+    if retain_installation || !dir.exists() {
+        task::unregister(&sid).map_err(|e| format!("cannot delete the scheduled task: {e}"))?;
+        return Ok(());
+    }
+
+    wait_for_staged_sidecars();
+    delete_installation(&dir, &sid)?;
+    // a per-machine install lives in this folder, and its uninstaller has deleted the rest
+    if let Some(parent) = dir.parent() {
+        let _ = std::fs::remove_dir(parent);
+    }
+    Ok(())
+}
+
+/// Starts this executable elevated and waits for it. A declined UAC prompt is an error.
+fn run_elevated(parameters: &str) -> Result<(), String> {
+    use std::os::windows::ffi::OsStrExt;
+    use windows_sys::Win32::Foundation::CloseHandle;
+    use windows_sys::Win32::System::Threading::{
+        GetExitCodeProcess, WaitForSingleObject, INFINITE,
+    };
+    use windows_sys::Win32::UI::Shell::{
+        ShellExecuteExW, SEE_MASK_NOCLOSEPROCESS, SHELLEXECUTEINFOW,
+    };
+    const SW_HIDE: i32 = 0;
+
+    let wide = |text: &std::ffi::OsStr| {
+        text.encode_wide()
+            .chain(std::iter::once(0))
+            .collect::<Vec<u16>>()
+    };
+    let exe = std::env::current_exe().map_err(|e| format!("cannot locate myself: {e}"))?;
+    let exe = wide(exe.as_os_str());
+    let verb = wide("runas".as_ref());
+    let parameters = wide(parameters.as_ref());
+
+    let mut info: SHELLEXECUTEINFOW = unsafe { std::mem::zeroed() };
+    info.cbSize = std::mem::size_of::<SHELLEXECUTEINFOW>() as u32;
+    info.fMask = SEE_MASK_NOCLOSEPROCESS;
+    info.lpVerb = verb.as_ptr();
+    info.lpFile = exe.as_ptr();
+    info.lpParameters = parameters.as_ptr();
+    info.nShow = SW_HIDE;
+    if unsafe { ShellExecuteExW(&mut info) } == 0 {
+        return Err(format!(
+            "cannot start the elevated cleanup: {}",
+            std::io::Error::last_os_error()
+        ));
+    }
+
+    let mut exit_code = 1;
+    unsafe {
+        WaitForSingleObject(info.hProcess, INFINITE);
+        GetExitCodeProcess(info.hProcess, &mut exit_code);
+        CloseHandle(info.hProcess);
+    }
+    if exit_code == 0 {
+        Ok(())
+    } else {
+        Err(format!("the elevated cleanup exited with code {exit_code}"))
+    }
+}
+
+/// A staged sidecar stops about three seconds after the core exits, and holds its directory
+/// open until then.
+fn wait_for_staged_sidecars() {
+    use sysinfo::{ProcessesToUpdate, System};
+
+    let own_pid = sysinfo::get_current_pid().ok();
+    let mut system = System::new();
+    for _ in 0..20 {
+        system.refresh_processes(ProcessesToUpdate::All, true);
+        let running = system
+            .processes_by_exact_name("oyasumivr-elevated-sidecar.exe".as_ref())
+            .any(|process| Some(process.pid()) != own_pid);
+        if !running {
+            return;
+        }
+        std::thread::sleep(std::time::Duration::from_millis(500));
+    }
+}
+
 pub fn run_cleanup_helper(parent_pid: u32, token: &str) -> Result<(), String> {
     require_elevation()?;
     wait_for_process(parent_pid)?;
@@ -182,7 +288,12 @@ fn remove_installation(dir: &Path, token: &str, user_sid: &str) -> Result<(), St
         info!("A newer privileged launcher installation cancelled cleanup");
         return Ok(());
     }
+    delete_installation(dir, user_sid)
+}
 
+/// Deletes the directory and the user's task, restoring both when either step fails. The caller
+/// holds the privileged launcher lock.
+fn delete_installation(dir: &Path, user_sid: &str) -> Result<(), String> {
     let snapshot = InstallationSnapshot::read(dir)?;
     let task_exists =
         task::exists(user_sid).map_err(|e| format!("cannot inspect the scheduled task: {e}"))?;

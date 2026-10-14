@@ -44,7 +44,8 @@
         "headerImage": "images/installer_header.bmp",
         "sidebarImage": "images/installer_sidebar.bmp",
         "displayLanguageSelector": true,
-        "installMode": "both"
+        "installMode": "both",
+        "installerHooks": "./nsis/hooks.nsh"
       }
     },
     "longDescription": "",
