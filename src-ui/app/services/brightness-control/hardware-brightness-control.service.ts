@@ -26,6 +26,7 @@ import {
 import { listen } from '@tauri-apps/api/event';
 import { BigscreenBeyondHardwareBrightnessControlDriver } from './hardware-brightness-drivers/bigscreen-beyond-hardware-brightness-control-driver';
 import { PSVR2HardwareBrightnessControlDriver } from './hardware-brightness-drivers/psvr2-hardware-brightness-control-driver';
+import { AnalogGainHardwareBrightnessControlDriver } from './hardware-brightness-drivers/analog-gain-hardware-brightness-control-driver';
 import { AppSettingsService } from '../app-settings.service';
 import { AppSettings } from '../../models/settings';
 import { clamp } from '../../utils/number-utils';
@@ -37,6 +38,9 @@ export class HardwareBrightnessControlService {
   public readonly driverValveIndex: ValveIndexHardwareBrightnessControlDriver;
   public readonly driverBigscreenBeyond: BigscreenBeyondHardwareBrightnessControlDriver;
   public readonly driverPSVR2: PSVR2HardwareBrightnessControlDriver;
+  public readonly driverAnalogGain: AnalogGainHardwareBrightnessControlDriver;
+  /** True while a driver made for the connected headset is available. */
+  public readonly headsetDriverIsAvailable: Observable<boolean>;
 
   private driver: BehaviorSubject<HardwareBrightnessControlDriver | null> =
     new BehaviorSubject<HardwareBrightnessControlDriver | null>(null);
@@ -75,13 +79,28 @@ export class HardwareBrightnessControlService {
       this.appSettingsService.settings,
       openvr
     );
-    const driverList = [this.driverValveIndex, this.driverBigscreenBeyond, this.driverPSVR2];
+    this.driverAnalogGain = new AnalogGainHardwareBrightnessControlDriver(
+      this.appSettingsService.settings,
+      openvr
+    );
+    const headsetDrivers = [this.driverValveIndex, this.driverBigscreenBeyond, this.driverPSVR2];
+    this.headsetDriverIsAvailable = combineLatest(
+      headsetDrivers.map((driver) => driver.isAvailable())
+    ).pipe(
+      map((available) => available.some(Boolean)),
+      distinctUntilChanged(),
+      shareReplay(1)
+    );
+    // the analog gain driver only serves headsets that no driver above claims
+    const driverList = [...headsetDrivers, this.driverAnalogGain];
     combineLatest(driverList.map((driver) => driver.isAvailable()))
       .pipe(distinctUntilChanged((a, b) => isEqual(a, b)))
-      .subscribe((drivers) => {
-        const availableDriver = driverList.find((_, i) => drivers[i]);
-        this.driver.next(availableDriver ?? null);
-      });
+      .subscribe((drivers) => this.selectDriver(driverList.find((_, i) => drivers[i]) ?? null));
+    // the cached percentage maps to a different gain once the range changes, so write it again
+    this.driverAnalogGain.rangeChanges.subscribe(() => {
+      if (this.driver.value !== this.driverAnalogGain) return;
+      this.setBrightness(this.brightness, { cancelActiveTransition: false, logReason: null }, true);
+    });
     this.brightnessBounds = combineLatest([this.driver, this.appSettingsService.settings]).pipe(
       map(([driver, settings]: [HardwareBrightnessControlDriver | null, AppSettings]) => {
         if (!driver) return [0, 100] as [number, number];
@@ -92,13 +111,26 @@ export class HardwareBrightnessControlService {
     );
   }
 
+  private selectDriver(driver: HardwareBrightnessControlDriver | null) {
+    if (driver === this.driver.value) return;
+    // SteamVR keeps the gain, so undo the analog gain driver's dimming when nothing takes over
+    if (
+      this.driver.value === this.driverAnalogGain &&
+      !driver &&
+      this.driverAnalogGain.restoreMaximumGain()
+    ) {
+      this._brightness.next(100);
+    }
+    this.driver.next(driver);
+  }
+
   async init() {
     this.driver
       .pipe(
         distinctUntilChanged(),
         filter(Boolean),
-        switchMap((driver) => driver.isAvailable()),
-        distinctUntilChanged(),
+        // read each newly selected driver's level, also when it takes over from another driver
+        switchMap((driver) => driver.isAvailable().pipe(distinctUntilChanged())),
         filter(Boolean),
         delay(500),
         switchMap(() => this.fetchBrightness())

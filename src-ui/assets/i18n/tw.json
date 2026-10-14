@@ -1915,7 +1915,6 @@
         "title": "Bigscreen Beyond"
       },
       "cctControl": {
-        "title": "色溫",
         "unsupportedHmds": {
           "description": "開啟後即啟用色溫控制，即使尚不確定它是否適用於你的頭戴顯示器。",
           "listedHmd": "你的頭戴顯示器支援色溫控制。",

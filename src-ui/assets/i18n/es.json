@@ -1666,9 +1666,6 @@
         },
         "title": "Bigscreen Beyond"
       },
-      "cctControl": {
-        "title": "Temperatura de color"
-      },
       "description": "Aquí encontrarás los ajustes relacionados con el brillo y la temperatura de color.",
       "title": "Brillo y CCT",
       "valveIndex": {

@@ -58,6 +58,7 @@ export interface AppSettings {
   // Brightness & CCT
   cctControlOnUnsupportedHmds: boolean; // Try SteamVR color gains on headsets not on the list
   cctSoftwareMode: boolean;
+  hardwareBrightnessOnUnsupportedHmds: boolean; // Try SteamVR analog gain on headsets without a driver
   // HW Specific
   valveIndexMaxBrightness: number; // User limit
   bigscreenBeyondMaxBrightness: number; // User limit
@@ -148,6 +149,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   // Brightness & CCT
   cctControlOnUnsupportedHmds: false,
   cctSoftwareMode: false,
+  hardwareBrightnessOnUnsupportedHmds: false,
   // HW Specific
   valveIndexMaxBrightness: 160,
   bigscreenBeyondMaxBrightness: 150,

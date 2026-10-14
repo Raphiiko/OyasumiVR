@@ -1804,9 +1804,6 @@
         },
         "title": "Bigscreen Beyond"
       },
-      "cctControl": {
-        "title": "色温度"
-      },
       "description": "輝度や色温度に関連する設定を行えます。",
       "title": "輝度と色温度",
       "valveIndex": {

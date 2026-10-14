@@ -1,4 +1,10 @@
-import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit,
+} from '@angular/core';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../../../models/settings';
 import { AppSettingsService } from '../../../../services/app-settings.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -8,6 +14,11 @@ import { clamp } from '../../../../utils/number-utils';
 import { OpenVRService } from '../../../../services/openvr.service';
 import { isSteamVrCctSupportedHmd } from '../../../../services/cct-control/cct-control-drivers/steamvr-cct-control-driver';
 import { vshrink } from '../../../../utils/animations';
+import { HardwareBrightnessControlService } from '../../../../services/brightness-control/hardware-brightness-control.service';
+import { combineLatest } from 'rxjs';
+
+/** Whether the analog gain fallback can apply to the active HMD, and why not. */
+type HardwareBrightnessState = 'NO_HMD' | 'LISTED' | 'UNLISTED';
 
 @Component({
   selector: 'app-settings-brightness-cct-view',
@@ -27,10 +38,13 @@ export class SettingsBrightnessCctViewComponent implements OnInit {
   protected listedHmd = false;
   /** True while an HMD is active that is not on the list; only then can the setting change. */
   protected unlistedHmd = false;
+  protected hardwareBrightnessState: HardwareBrightnessState = 'NO_HMD';
 
   constructor(
     private appSettingsService: AppSettingsService,
     private openvr: OpenVRService,
+    private hardwareBrightness: HardwareBrightnessControlService,
+    private changeDetector: ChangeDetectorRef,
     private destroyRef: DestroyRef
   ) {}
 
@@ -49,6 +63,16 @@ export class SettingsBrightnessCctViewComponent implements OnInit {
         : null;
       this.unlistedHmd = this.hmdConnected && !this.listedHmd;
     });
+    combineLatest([this.openvr.devices, this.hardwareBrightness.headsetDriverIsAvailable])
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(([devices, headsetDriverIsAvailable]) => {
+        const hmd = devices.find((d) => d.index === 0 && d.class === 'HMD');
+        if (!hmd) this.hardwareBrightnessState = 'NO_HMD';
+        else if (headsetDriverIsAvailable) this.hardwareBrightnessState = 'LISTED';
+        else this.hardwareBrightnessState = 'UNLISTED';
+        // driver availability settles after OpenVRService's own render pass for the device update
+        this.changeDetector.detectChanges();
+      });
   }
 
   get valveIndexMin() {
@@ -106,6 +130,12 @@ export class SettingsBrightnessCctViewComponent implements OnInit {
     number = clamp(number, this.bigscreenBeyondMin, this.bigscreenBeyondMax);
     this.appSettingsService.updateSettings({
       bigscreenBeyondMaxBrightness: number,
+    });
+  }
+
+  toggleHardwareBrightnessOnUnsupportedHmds() {
+    this.appSettingsService.updateSettings({
+      hardwareBrightnessOnUnsupportedHmds: !this.appSettings.hardwareBrightnessOnUnsupportedHmds,
     });
   }
 

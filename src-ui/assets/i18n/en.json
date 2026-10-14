@@ -1897,6 +1897,8 @@
   },
   "settings": {
     "brightnessCct": {
+      "automationsHint": "Brightness & CCT automations can be found on their {link}.",
+      "automationsLink": "automations page",
       "bigscreenBeyond": {
         "forceFanSafety": {
           "description": "Force the fan to 100% at brightness values above 100%",
@@ -1915,19 +1917,27 @@
         "title": "Bigscreen Beyond"
       },
       "cctControl": {
-        "title": "Colour Temperature",
         "unsupportedHmds": {
-          "description": "Turn this on to enable colour temperature control, even though it's not known to work for your headset.",
+          "description": "Turn this on to let OyasumiVR try to control your headset's colour temperature through SteamVR, even though it's not known to work for your headset.",
           "listedHmd": "Colour temperature control is supported on your headset.",
           "manufacturer": "Manufacturer",
           "model": "Model",
           "noHmd": "Connect your headset to change this setting.",
           "notReported": "not reported",
-          "title": "Enable on unsupported headsets",
+          "title": "Colour temperature on unsupported headsets",
           "unlistedHmd": "Colour temperature control might still work on some headsets, if enabled. If your headset does turn out to work despite being unsupported, please let us know on <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a>!"
         }
       },
-      "description": "Here you'll find any settings related to brightness and colour temperature.",
+      "description": "Hardware settings for brightness and colour temperature, including settings for specific headsets.",
+      "hardwareBrightness": {
+        "unsupportedHmds": {
+          "description": "Turn this on to let OyasumiVR try to control your headset's brightness through SteamVR, even though it's not known to work for your headset.",
+          "listedHmd": "Hardware brightness control is supported on your headset.",
+          "noHmd": "Connect your headset to change this setting.",
+          "title": "Hardware brightness on unsupported headsets",
+          "unlistedHmd": "Hardware brightness control might still work on your headset, if enabled. If your headset does turn out to work, please let us know on <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a>!"
+        }
+      },
       "title": "Brightness & CCT",
       "valveIndex": {
         "maxBrightness": {

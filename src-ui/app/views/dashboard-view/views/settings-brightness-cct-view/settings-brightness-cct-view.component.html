@@ -5,9 +5,17 @@
   </div>
   <div class="pane-content scroll">
     <div class="setting-view-container">
-      <p transloco="settings.brightnessCct.description"></p>
+      @let automationsHint =
+        ('settings.brightnessCct.automationsHint' | transloco: { link: '{link}' }).split('{link}');
+      <p>
+        <span transloco="settings.brightnessCct.description"></span>&ngsp;{{ automationsHint[0]
+        }}<a
+          [routerLink]="['/dashboard', 'brightnessAutomations']"
+          transloco="settings.brightnessCct.automationsLink"
+        ></a
+        >{{ automationsHint[1] }}
+      </p>
       <div class="setting-category">
-        <h2 transloco="settings.brightnessCct.cctControl.title"></h2>
         <div class="settings">
           <app-setting-row
             label="settings.brightnessCct.cctControl.unsupportedHmds.title"
@@ -68,6 +76,75 @@
                 </dd>
               </dl>
             </app-alert>
+          }
+          <app-setting-row
+            label="settings.brightnessCct.hardwareBrightness.unsupportedHmds.title"
+            description="settings.brightnessCct.hardwareBrightness.unsupportedHmds.description"
+            [class.disabled]="hardwareBrightnessState !== 'UNLISTED'"
+            [value]="appSettings.hardwareBrightnessOnUnsupportedHmds"
+            [defaultValue]="defaults.hardwareBrightnessOnUnsupportedHmds"
+            (resetToDefault)="toggleHardwareBrightnessOnUnsupportedHmds()"
+          >
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="appSettings.hardwareBrightnessOnUnsupportedHmds"
+                [disabled]="hardwareBrightnessState !== 'UNLISTED'"
+                (change)="toggleHardwareBrightnessOnUnsupportedHmds()"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </app-setting-row>
+          @switch (hardwareBrightnessState) {
+            @case ('NO_HMD') {
+              <app-alert
+                severity="info"
+                message="settings.brightnessCct.hardwareBrightness.unsupportedHmds.noHmd"
+                @vshrink
+              ></app-alert>
+            }
+            @case ('LISTED') {
+              <app-alert
+                severity="info"
+                message="settings.brightnessCct.hardwareBrightness.unsupportedHmds.listedHmd"
+                @vshrink
+              ></app-alert>
+            }
+            @case ('UNLISTED') {
+              @if (hmd) {
+                <app-alert severity="info" contentClass="flex-row" @vshrink>
+                  <span
+                    class="unlisted-hmd-text"
+                    [innerHTML]="
+                      'settings.brightnessCct.hardwareBrightness.unsupportedHmds.unlistedHmd'
+                        | transloco
+                    "
+                  ></span>
+                  <dl class="unlisted-hmd-identity">
+                    <dt>{{
+                      'settings.brightnessCct.cctControl.unsupportedHmds.manufacturer' | transloco
+                    }}</dt>
+                    <dd [class.empty]="!hmd.manufacturer">
+                      {{
+                        hmd.manufacturer ||
+                          ('settings.brightnessCct.cctControl.unsupportedHmds.notReported'
+                            | transloco)
+                      }}
+                    </dd>
+                    <dt>{{
+                      'settings.brightnessCct.cctControl.unsupportedHmds.model' | transloco
+                    }}</dt>
+                    <dd [class.empty]="!hmd.model">
+                      {{
+                        hmd.model ||
+                          ('settings.brightnessCct.cctControl.unsupportedHmds.notReported'
+                            | transloco)
+                      }}
+                    </dd>
+                  </dl>
+                </app-alert>
+              }
+            }
           }
         </div>
       </div>
