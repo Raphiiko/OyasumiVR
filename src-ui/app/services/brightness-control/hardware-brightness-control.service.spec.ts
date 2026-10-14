@@ -1,5 +1,6 @@
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
+import { listen } from '@tauri-apps/api/event';
 import { APP_SETTINGS_DEFAULT } from '../../models/settings';
 import { OVRDevice } from '../../models/ovr-device';
 import { HardwareBrightnessControlService } from './hardware-brightness-control.service';
@@ -20,6 +21,8 @@ const UNSUPPORTED_HMD: Partial<OVRDevice> = {
 };
 
 const settle = () => new Promise((resolve) => setTimeout(resolve, 5));
+// the service reads a newly available driver's level 500 ms after it appears
+const firstFetch = () => new Promise((resolve) => setTimeout(resolve, 600));
 
 function setup() {
   const settings = new BehaviorSubject({
@@ -107,15 +110,48 @@ describe('HardwareBrightnessControlService with the analog gain driver', () => {
     expect(h.service.brightness).toBe(60);
   });
 
-  it('writes the shown brightness through the headset driver that takes over', async () => {
+  it('shows the level of the headset driver that takes over', async () => {
     const h = setup();
-    await settle();
+    await h.service.init();
+    await firstFetch();
     await h.service.setBrightness(60);
+    h.setAnalogGain.mockClear();
 
     h.devices.next([{ ...UNSUPPORTED_HMD, manufacturerName: 'Valve', modelNumber: 'Index' }]);
-    await settle();
+    await new Promise((resolve) => setTimeout(resolve, 600));
 
-    expect(h.service.brightness).toBe(60);
-    expect(await h.service.driverValveIndex.getBrightnessPercentage()).toBe(60);
+    expect(h.setAnalogGain).not.toHaveBeenCalled();
+    expect(h.service.brightness).toBe(await h.service.driverValveIndex.getBrightnessPercentage());
+  });
+
+  it('keeps the headset driver clamp when it takes over below its range', async () => {
+    const h = setup();
+    await h.service.init();
+    await firstFetch();
+    await h.service.setBrightness(30);
+
+    h.devices.next([{ ...UNSUPPORTED_HMD, manufacturerName: 'SIE', modelNumber: 'PS VR2' }]);
+    await new Promise((resolve) => setTimeout(resolve, 600));
+
+    expect(h.service.brightness).toBe(50);
+    expect(await h.service.driverPSVR2.getBrightnessPercentage()).toBe(50);
+  });
+
+  it('shows the level of a Bigscreen Beyond that connects while the analog gain driver is active', async () => {
+    const beyondConnected = vi.mocked(listen).mock.calls.length;
+    const h = setup();
+    const [, onBeyondConnected] = vi
+      .mocked(listen)
+      .mock.calls.slice(beyondConnected)
+      .find(([event]) => event === 'BIGSCREEN_BEYOND_CONNECTED')!;
+    await h.service.init();
+    await firstFetch();
+    await h.service.setBrightness(60);
+
+    onBeyondConnected({ payload: true } as Parameters<typeof onBeyondConnected>[0]);
+    await new Promise((resolve) => setTimeout(resolve, 600));
+
+    expect(h.service.brightness).toBe(100);
+    expect(await h.service.driverBigscreenBeyond.getBrightnessPercentage()).toBe(100);
   });
 });

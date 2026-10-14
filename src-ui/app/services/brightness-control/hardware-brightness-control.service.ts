@@ -112,20 +112,16 @@ export class HardwareBrightnessControlService {
   }
 
   private selectDriver(driver: HardwareBrightnessControlDriver | null) {
-    const previous = this.driver.value;
-    if (driver === previous) return;
-
-    // SteamVR keeps the gain, so undo the analog gain driver's dimming when it lets go
-    const restored =
-      previous === this.driverAnalogGain && this.driverAnalogGain.restoreMaximumGain();
-    this.driver.next(driver);
-
-    // the new driver's hardware level is its own, so write the brightness OyasumiVR shows
-    if (previous && driver) {
-      this.setBrightness(this.brightness, { cancelActiveTransition: false, logReason: null }, true);
-    } else if (restored) {
+    if (driver === this.driver.value) return;
+    // SteamVR keeps the gain, so undo the analog gain driver's dimming when nothing takes over
+    if (
+      this.driver.value === this.driverAnalogGain &&
+      !driver &&
+      this.driverAnalogGain.restoreMaximumGain()
+    ) {
       this._brightness.next(100);
     }
+    this.driver.next(driver);
   }
 
   async init() {
@@ -133,8 +129,8 @@ export class HardwareBrightnessControlService {
       .pipe(
         distinctUntilChanged(),
         filter(Boolean),
-        switchMap((driver) => driver.isAvailable()),
-        distinctUntilChanged(),
+        // read each newly selected driver's level, also when it takes over from another driver
+        switchMap((driver) => driver.isAvailable().pipe(distinctUntilChanged())),
         filter(Boolean),
         delay(500),
         switchMap(() => this.fetchBrightness())
