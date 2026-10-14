@@ -37,6 +37,11 @@ export class ValveIndexHardwareBrightnessControlDriver extends SteamVRAnalogGain
     return Math.pow(clamp(percentage, 0, 100) / 100, VALVE_INDEX_BRIGHTNESS_GAMMA);
   }
 
+  // the stops match one to one, and a gain above the user's maximum must read as what it is
+  protected hardwarePercentageToSoftwarePercentage(percentage: number): number {
+    return percentage;
+  }
+
   getBrightnessConfiguration(): HardwareBrightnessControlDriverBounds {
     return VALVE_INDEX_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS;
   }

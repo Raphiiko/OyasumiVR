@@ -7,7 +7,7 @@ import { ValveIndexHardwareBrightnessControlDriver } from './valve-index-hardwar
 
 const VALVE_INDEX = { manufacturerName: 'Valve', modelNumber: 'Index' };
 
-function createDriver(hmd: Partial<OVRDevice>, analogGain: number | null = 1) {
+function createDriver(hmd: Partial<OVRDevice>, analogGain: number | null = 1, maxBrightness = 160) {
   const openvr = {
     status: new BehaviorSubject('INITIALIZED'),
     devices: new BehaviorSubject([{ index: 0, class: 'HMD', ...hmd }]),
@@ -19,7 +19,10 @@ function createDriver(hmd: Partial<OVRDevice>, analogGain: number | null = 1) {
       analogGain = value;
     },
   } as unknown as OpenVRService;
-  const settings = new BehaviorSubject({ ...APP_SETTINGS_DEFAULT, valveIndexMaxBrightness: 160 });
+  const settings = new BehaviorSubject({
+    ...APP_SETTINGS_DEFAULT,
+    valveIndexMaxBrightness: maxBrightness,
+  });
   const driver = new ValveIndexHardwareBrightnessControlDriver(settings, openvr);
   return { driver, analogGain: () => analogGain };
 }
@@ -44,6 +47,12 @@ describe('ValveIndexHardwareBrightnessControlDriver', () => {
     expect(await driver.getBrightnessPercentage()).toBe(130);
     await driver.setBrightnessPercentage(200);
     expect(analogGain()).toBeCloseTo(1.6);
+  });
+
+  it("reads a gain above the user's maximum as what it is", async () => {
+    const { driver } = createDriver(VALVE_INDEX, 1.3, 120);
+    await firstValueFrom(driver.isAvailable());
+    expect(await driver.getBrightnessPercentage()).toBe(130);
   });
 
   it('reads a gain below its range as its lowest brightness', async () => {
