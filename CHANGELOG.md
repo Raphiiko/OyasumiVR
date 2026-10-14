@@ -17,6 +17,10 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ## [Unreleased]
 
+### Changed
+
+- Improved Japanese translations (@Naki79)
+
 ### Fixed
 
 - Fixed the "Restart Bluetooth" button for base stations giving no feedback: the message now closes
