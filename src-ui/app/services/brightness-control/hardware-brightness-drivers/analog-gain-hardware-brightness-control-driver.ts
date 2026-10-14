@@ -8,10 +8,10 @@ import { combineLatest, debounceTime, map, Observable } from 'rxjs';
 import { AppSettings } from '../../../models/settings';
 import { OVRDevice } from '../../../models/ovr-device';
 
-// Without a known panel curve, the reported gain range maps linearly onto 10% to 100%.
+// Without a known panel curve, the reported gain range maps linearly onto 20% to 100%.
 export const ANALOG_GAIN_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: HardwareBrightnessControlDriverBounds =
   {
-    softwareStops: [10, 100],
+    softwareStops: [20, 100],
     hardwareStops: [0, 100],
     overdriveThreshold: 100,
     riskThreshold: 100,

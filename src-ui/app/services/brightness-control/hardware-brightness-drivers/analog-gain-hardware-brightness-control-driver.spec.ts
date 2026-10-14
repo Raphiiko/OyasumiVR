@@ -42,16 +42,16 @@ describe('AnalogGainHardwareBrightnessControlDriver', () => {
     expect(await available({ ...ANALOG_GAIN_HMD, displayMaxAnalogGain: 0.2 })).toBe(false);
   });
 
-  it('maps the minimum gain to 10% and the maximum gain to 100%', async () => {
+  it('maps the minimum gain to 20% and the maximum gain to 100%', async () => {
     const { driver, analogGain } = createDriver(ANALOG_GAIN_HMD);
     await firstValueFrom(driver.isAvailable());
-    await driver.setBrightnessPercentage(10);
+    await driver.setBrightnessPercentage(20);
     expect(analogGain()).toBeCloseTo(0.2);
     await driver.setBrightnessPercentage(100);
     expect(analogGain()).toBeCloseTo(0.8);
-    await driver.setBrightnessPercentage(55);
+    await driver.setBrightnessPercentage(60);
     expect(analogGain()).toBeCloseTo(0.5);
-    expect(await driver.getBrightnessPercentage()).toBe(55);
+    expect(await driver.getBrightnessPercentage()).toBe(60);
     await driver.setBrightnessPercentage(0);
     expect(analogGain()).toBeCloseTo(0.2);
   });
