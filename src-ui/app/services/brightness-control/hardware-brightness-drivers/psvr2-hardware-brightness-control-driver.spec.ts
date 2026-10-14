@@ -9,7 +9,7 @@ function createDriver(hmd: Partial<OVRDevice>) {
   let analogGain = 1;
   const openvr = {
     status: new BehaviorSubject('INITIALIZED'),
-    devices: new BehaviorSubject([{ class: 'HMD', ...hmd }]),
+    devices: new BehaviorSubject([{ index: 0, class: 'HMD', ...hmd }]),
     getAnalogGain: async () => analogGain,
     setAnalogGain: async (value: number) => {
       analogGain = value;
@@ -39,6 +39,7 @@ describe('PSVR2HardwareBrightnessControlDriver', () => {
 
   it('maps 50% to 100% onto the full gain range and reads the same percentage back', async () => {
     const { driver, analogGain } = createDriver(PSVR2_WITH_TOOLKIT);
+    await firstValueFrom(driver.isAvailable());
     await driver.setBrightnessPercentage(50);
     expect(analogGain()).toBe(0);
     await driver.setBrightnessPercentage(100);
@@ -50,6 +51,7 @@ describe('PSVR2HardwareBrightnessControlDriver', () => {
 
   it('leaves brightness below 50% to software brightness', async () => {
     const { driver, analogGain } = createDriver(PSVR2_WITH_TOOLKIT);
+    await firstValueFrom(driver.isAvailable());
     expect(driver.getBrightnessBounds()).toEqual([50, 100]);
     await driver.setBrightnessPercentage(0);
     expect(analogGain()).toBe(0);

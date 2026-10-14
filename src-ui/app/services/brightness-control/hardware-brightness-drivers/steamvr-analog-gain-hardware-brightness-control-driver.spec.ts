@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { APP_SETTINGS_DEFAULT } from '../../../models/settings';
 import { OVRDevice } from '../../../models/ovr-device';
 import { OpenVRService } from '../../openvr.service';
-import { AnalogGainHardwareBrightnessControlDriver } from './analog-gain-hardware-brightness-control-driver';
+import { SteamVRAnalogGainHardwareBrightnessControlDriver } from './steamvr-analog-gain-hardware-brightness-control-driver';
 
 const ANALOG_GAIN_HMD = {
   manufacturerName: 'Example',
@@ -27,11 +27,11 @@ function createDriver(hmd: Partial<OVRDevice> | null, enabled = true) {
     ...APP_SETTINGS_DEFAULT,
     hardwareBrightnessOnUnsupportedHmds: enabled,
   });
-  const driver = new AnalogGainHardwareBrightnessControlDriver(settings, openvr);
+  const driver = new SteamVRAnalogGainHardwareBrightnessControlDriver(settings, openvr);
   return { driver, analogGain: () => analogGain };
 }
 
-describe('AnalogGainHardwareBrightnessControlDriver', () => {
+describe('SteamVRAnalogGainHardwareBrightnessControlDriver', () => {
   it('is available whenever enabled with an HMD connected', async () => {
     const available = (hmd: Partial<OVRDevice> | null, enabled = true) =>
       firstValueFrom(createDriver(hmd, enabled).driver.isAvailable());

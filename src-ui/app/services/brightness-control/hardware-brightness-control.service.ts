@@ -26,7 +26,7 @@ import {
 import { listen } from '@tauri-apps/api/event';
 import { BigscreenBeyondHardwareBrightnessControlDriver } from './hardware-brightness-drivers/bigscreen-beyond-hardware-brightness-control-driver';
 import { PSVR2HardwareBrightnessControlDriver } from './hardware-brightness-drivers/psvr2-hardware-brightness-control-driver';
-import { AnalogGainHardwareBrightnessControlDriver } from './hardware-brightness-drivers/analog-gain-hardware-brightness-control-driver';
+import { SteamVRAnalogGainHardwareBrightnessControlDriver } from './hardware-brightness-drivers/steamvr-analog-gain-hardware-brightness-control-driver';
 import { AppSettingsService } from '../app-settings.service';
 import { AppSettings } from '../../models/settings';
 import { clamp } from '../../utils/number-utils';
@@ -38,7 +38,7 @@ export class HardwareBrightnessControlService {
   public readonly driverValveIndex: ValveIndexHardwareBrightnessControlDriver;
   public readonly driverBigscreenBeyond: BigscreenBeyondHardwareBrightnessControlDriver;
   public readonly driverPSVR2: PSVR2HardwareBrightnessControlDriver;
-  public readonly driverAnalogGain: AnalogGainHardwareBrightnessControlDriver;
+  public readonly driverSteamVRAnalogGain: SteamVRAnalogGainHardwareBrightnessControlDriver;
   /** True while a driver made for the connected headset is available. */
   public readonly headsetDriverIsAvailable: Observable<boolean>;
 
@@ -79,7 +79,7 @@ export class HardwareBrightnessControlService {
       this.appSettingsService.settings,
       openvr
     );
-    this.driverAnalogGain = new AnalogGainHardwareBrightnessControlDriver(
+    this.driverSteamVRAnalogGain = new SteamVRAnalogGainHardwareBrightnessControlDriver(
       this.appSettingsService.settings,
       openvr
     );
@@ -91,14 +91,14 @@ export class HardwareBrightnessControlService {
       distinctUntilChanged(),
       shareReplay(1)
     );
-    // the analog gain driver only serves headsets that no driver above claims
-    const driverList = [...headsetDrivers, this.driverAnalogGain];
+    // the generic SteamVR analog gain driver only serves headsets that no driver above claims
+    const driverList = [...headsetDrivers, this.driverSteamVRAnalogGain];
     combineLatest(driverList.map((driver) => driver.isAvailable()))
       .pipe(distinctUntilChanged((a, b) => isEqual(a, b)))
       .subscribe((drivers) => this.selectDriver(driverList.find((_, i) => drivers[i]) ?? null));
     // the cached percentage maps to a different gain once the range changes, so write it again
-    this.driverAnalogGain.rangeChanges.subscribe(() => {
-      if (this.driver.value !== this.driverAnalogGain) return;
+    this.driverSteamVRAnalogGain.rangeChanges.subscribe(() => {
+      if (this.driver.value !== this.driverSteamVRAnalogGain) return;
       this.setBrightness(this.brightness, { cancelActiveTransition: false, logReason: null }, true);
     });
     this.brightnessBounds = combineLatest([this.driver, this.appSettingsService.settings]).pipe(
@@ -113,11 +113,11 @@ export class HardwareBrightnessControlService {
 
   private selectDriver(driver: HardwareBrightnessControlDriver | null) {
     if (driver === this.driver.value) return;
-    // SteamVR keeps the gain, so undo the analog gain driver's dimming when nothing takes over
+    // SteamVR keeps the gain, so undo the generic driver's dimming when nothing takes over
     if (
-      this.driver.value === this.driverAnalogGain &&
+      this.driver.value === this.driverSteamVRAnalogGain &&
       !driver &&
-      this.driverAnalogGain.restoreMaximumGain()
+      this.driverSteamVRAnalogGain.restoreMaximumGain()
     ) {
       this._brightness.next(100);
     }
