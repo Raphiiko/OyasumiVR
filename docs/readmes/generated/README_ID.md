@@ -596,7 +596,6 @@ Image brightness control is available on all headsets.
 ### Color Temperature Automations
 
 Controlling the color temperature of the VR headset's display is currently supported on the Valve Index, the Bigscreen Beyond and the PlayStation VR2.
-It might work on other headsets, but your mileage may vary.
 
 ## Pembuatan
 

@@ -420,7 +420,6 @@ Color Temperature Automations
 
 {{SUPPORTED_HARDWARE_CCT_BODY}}
 Controlling the color temperature of the VR headset's display is currently supported on the Valve Index, the Bigscreen Beyond and the PlayStation VR2.
-It might work on other headsets, but your mileage may vary.
 
 {{SUPPORTED_HARDWARE_MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
 
