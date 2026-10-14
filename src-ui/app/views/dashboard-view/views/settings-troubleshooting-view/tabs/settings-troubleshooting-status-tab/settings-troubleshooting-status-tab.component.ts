@@ -127,14 +127,14 @@ export class SettingsTroubleshootingStatusTabComponent {
       },
       { label: 'settings.troubleshooting.status.osc.label', value: this.oscStatus() },
       {
+        label: 'settings.troubleshooting.status.mqtt.label',
+        value: this.mqtt.clientStatus.pipe(map((s) => `settings.troubleshooting.status.mqtt.${s}`)),
+      },
+      {
         label: 'settings.troubleshooting.status.adminPrivileges.label',
         value: this.adminPrivilegesStatus(),
         detail: this.elevatedSidecar.failure.pipe(map((f) => this.describeFailure(f))),
         wide: true,
-      },
-      {
-        label: 'settings.troubleshooting.status.mqtt.label',
-        value: this.mqtt.clientStatus.pipe(map((s) => `settings.troubleshooting.status.mqtt.${s}`)),
       },
       {
         label: 'settings.troubleshooting.status.pulsoid.label',
@@ -149,7 +149,6 @@ export class SettingsTroubleshootingStatusTabComponent {
         value: this.lighthouse.status.pipe(
           map((s) => `settings.troubleshooting.status.bluetooth.${s}`)
         ),
-        wide: true,
       },
     ];
   }
