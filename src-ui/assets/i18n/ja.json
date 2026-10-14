@@ -1545,7 +1545,7 @@
         "unknownFriend": "不明なフレンド"
       },
       "vrcLogMissing": {
-        "message": "VRChatは起動していますが、ログファイルが確認できませんでした。ログがないと招待自動承認などの機能は動作しません。VRChatでログを有効にしてください。",
+        "message": "VRChatは起動していますが、ログファイルが確認できませんでした。ログがないと招待の自動承認などの機能は動作しません。VRChatでログを有効にしてください。",
         "title": "VRChatログファイルが見つかりません"
       },
       "vrcOscMissing": {
@@ -1553,7 +1553,7 @@
         "title": "VRChat OSC(Query)が無効"
       },
       "vrcWebsocketDisconnected": {
-        "message": "VRChatにはログインしていますが、WebSocketに接続できませんでした。一部機能（招待自動承認など）が現在使用できません。",
+        "message": "VRChatにはログインしていますが、WebSocketに接続できませんでした。一部機能（招待の自動承認など）が現在使用できません。",
         "title": "VRChat WebSocketが未接続"
       }
     },
