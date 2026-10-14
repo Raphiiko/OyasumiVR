@@ -21,27 +21,74 @@ pub enum CleanupDisposition {
 
 pub fn remove_privileged_launcher() -> Result<CleanupDisposition, String> {
     require_elevation()?;
-    let _lock = PrivilegedLauncherLock::acquire()
-        .map_err(|e| format!("cannot lock the privileged launcher installation: {e}"))?;
     let sid = current_user_sid().map_err(|e| format!("cannot read the current user SID: {e}"))?;
     let dir = privileged_dir()?;
-    let retain_installation = task::has_other_registration(&sid)
-        .map_err(|e| format!("cannot inspect the scheduled tasks: {e}"))?;
-    if retain_installation || !dir.exists() {
-        task::unregister(&sid).map_err(|e| format!("cannot delete the scheduled task: {e}"))?;
+    let Some((_lock, token)) = claim_installation_removal(&dir, &sid)? else {
         return Ok(CleanupDisposition::RetainInstallation);
-    }
+    };
 
-    let token = cleanup_token();
-    let token_path = dir.join(PRIVILEGED_LAUNCHER_CLEANUP_TOKEN);
-    std::fs::write(&token_path, &token)
-        .map_err(|e| format!("cannot prepare directory cleanup: {e}"))?;
     match spawn_cleanup_helper(std::process::id(), &token) {
         Ok(process_id) => Ok(CleanupDisposition::RemoveInstallation { process_id }),
         Err(e) => {
-            let _ = std::fs::remove_file(token_path);
+            let _ = std::fs::remove_file(dir.join(PRIVILEGED_LAUNCHER_CLEANUP_TOKEN));
             Err(e)
         }
+    }
+}
+
+/// Removes the privileged launcher for the uninstaller, which runs this from the install
+/// directory, so unlike `remove_privileged_launcher` it can delete Program Files itself.
+pub fn uninstall_privileged_launcher() -> Result<(), String> {
+    require_elevation()?;
+    let sid = current_user_sid().map_err(|e| format!("cannot read the current user SID: {e}"))?;
+    let dir = privileged_dir()?;
+    let Some((lock, token)) = claim_installation_removal(&dir, &sid)? else {
+        return Ok(());
+    };
+    drop(lock);
+
+    wait_for_staged_sidecars();
+    remove_installation(&dir, &token, &sid)
+}
+
+/// Deletes the user's task and returns `None` when another user still has one, or the
+/// installation is gone. Otherwise writes and returns the token `remove_installation` expects,
+/// along with the held lock.
+fn claim_installation_removal(
+    dir: &Path,
+    user_sid: &str,
+) -> Result<Option<(PrivilegedLauncherLock, String)>, String> {
+    let lock = PrivilegedLauncherLock::acquire()
+        .map_err(|e| format!("cannot lock the privileged launcher installation: {e}"))?;
+    let retain_installation = task::has_other_registration(user_sid)
+        .map_err(|e| format!("cannot inspect the scheduled tasks: {e}"))?;
+    if retain_installation || !dir.exists() {
+        task::unregister(user_sid).map_err(|e| format!("cannot delete the scheduled task: {e}"))?;
+        return Ok(None);
+    }
+
+    let token = cleanup_token();
+    std::fs::write(dir.join(PRIVILEGED_LAUNCHER_CLEANUP_TOKEN), &token)
+        .map_err(|e| format!("cannot prepare directory cleanup: {e}"))?;
+    Ok(Some((lock, token)))
+}
+
+/// A staged sidecar stops about three seconds after the core exits, and holds its directory
+/// open until then.
+fn wait_for_staged_sidecars() {
+    use sysinfo::{ProcessesToUpdate, System};
+
+    let own_pid = sysinfo::get_current_pid().ok();
+    let mut system = System::new();
+    for _ in 0..20 {
+        system.refresh_processes(ProcessesToUpdate::All, true);
+        let running = system
+            .processes_by_exact_name("oyasumivr-elevated-sidecar.exe".as_ref())
+            .any(|process| Some(process.pid()) != own_pid);
+        if !running {
+            return;
+        }
+        std::thread::sleep(std::time::Duration::from_millis(500));
     }
 }
 

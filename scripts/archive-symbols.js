@@ -16,10 +16,19 @@ import { basename, dirname, join } from 'path';
 // Symbol server layout, so a debugger finds the exe and PDB behind a dump on its own.
 // README.txt in the store describes the layout.
 const STORE = 'X:\\Projects\\OyasumiVR\\symstore';
-const SOURCE_DIR = join('dist', 'steam', 'Win64');
 const EXECUTABLE_NAME = 'OyasumiVR.exe';
-// written only after a complete run, and outside the depot folders so it never ships
-const MANIFEST = join('dist', 'steam', 'archived-symbols.json');
+// sourceDir holds what ships; the manifest is written only after a complete run, and outside
+// sourceDir so it never ships
+const FLAVOURS = {
+  steam: {
+    sourceDir: join('dist', 'steam', 'Win64'),
+    manifest: join('dist', 'steam', 'archived-symbols.json'),
+  },
+  standalone: {
+    sourceDir: join('src-core', 'target', 'release'),
+    manifest: join('dist', 'standalone', 'archived-symbols.json'),
+  },
+};
 const PDB_DIRS = [
   'src-core/target/release',
   'src-core/target/debug',
@@ -149,15 +158,35 @@ function store(source, name, key) {
   return entry;
 }
 
+/** Lists what ships beside the executable: its sibling files, and everything under resources. */
+function shippedFiles(sourceDir) {
+  const siblings = readdirSync(sourceDir, { withFileTypes: true })
+    .filter((entry) => entry.isFile())
+    .map((entry) => entry.name);
+  const resources = join(sourceDir, 'resources');
+  if (!existsSync(resources)) return siblings;
+  return [
+    ...siblings,
+    ...readdirSync(resources, { recursive: true }).map((file) => join('resources', file)),
+  ];
+}
+
+const flavourArg = (process.argv[2] || '').toLowerCase();
+if (!Object.hasOwn(FLAVOURS, flavourArg)) {
+  console.error('Usage: node scripts/archive-symbols.js <steam|standalone> [--check]');
+  process.exit(1);
+}
+const { sourceDir, manifest } = FLAVOURS[flavourArg];
+
 if (!existsSync(STORE)) {
   console.error(`Symbol store not found at ${STORE}. Connect the NAS drive and rerun.`);
   process.exit(1);
 }
 
 if (process.argv.includes('--check')) {
-  const executable = join(SOURCE_DIR, EXECUTABLE_NAME);
+  const executable = join(sourceDir, EXECUTABLE_NAME);
   const image = existsSync(executable) && readImage(executable);
-  const entries = existsSync(MANIFEST) ? JSON.parse(readFileSync(MANIFEST, 'utf8')) : [];
+  const entries = existsSync(manifest) ? JSON.parse(readFileSync(manifest, 'utf8')) : [];
   if (
     !image ||
     !entries.includes(join(EXECUTABLE_NAME, image.imageKey, EXECUTABLE_NAME)) ||
@@ -165,19 +194,20 @@ if (process.argv.includes('--check')) {
   ) {
     console.error(
       `The symbol store has no symbols for ${executable}. ` +
-        'Run `node scripts/steam/archive-symbols.js` with the NAS drive connected, or rebuild.'
+        `Run \`node scripts/archive-symbols.js ${flavourArg}\` with the NAS drive connected, ` +
+        'or rebuild.'
     );
     process.exit(1);
   }
   process.exit(0);
 }
 
-rmSync(MANIFEST, { force: true });
+rmSync(manifest, { force: true });
 const archived = [];
 const entries = [];
-for (const file of readdirSync(SOURCE_DIR, { recursive: true })) {
+for (const file of shippedFiles(sourceDir)) {
   if (!/\.(exe|dll)$/i.test(file)) continue;
-  const binary = join(SOURCE_DIR, file);
+  const binary = join(sourceDir, file);
   const image = readImage(binary);
   const pdb = image && findPdb(binary, image);
   if (!pdb) continue;
@@ -192,6 +222,7 @@ if (!archived.includes(EXECUTABLE_NAME)) {
   );
   process.exit(1);
 }
-writeFileSync(MANIFEST, JSON.stringify(entries, null, 2) + '\n');
+mkdirSync(dirname(manifest), { recursive: true });
+writeFileSync(manifest, JSON.stringify(entries, null, 2) + '\n');
 console.log(`Archived symbols for ${archived.length} files in ${STORE}:`);
 for (const file of archived) console.log(`  ${file}`);
