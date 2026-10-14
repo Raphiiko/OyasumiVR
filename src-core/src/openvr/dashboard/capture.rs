@@ -1,5 +1,5 @@
 use windows::{
-    core::{factory, w, Interface, Result},
+    core::{factory, w, Interface},
     Graphics::{
         Capture::{
             Direct3D11CaptureFrame, Direct3D11CaptureFramePool, GraphicsCaptureItem,
@@ -18,7 +18,7 @@ use windows::{
             Direct3D11::{CreateDirect3D11DeviceFromDXGIDevice, IDirect3DDxgiInterfaceAccess},
             Graphics::Capture::IGraphicsCaptureItemInterop,
         },
-        UI::WindowsAndMessaging::*,
+        UI::{HiDpi::GetDpiForWindow, WindowsAndMessaging::*},
     },
 };
 
@@ -40,23 +40,55 @@ pub struct DashboardCapture {
 }
 
 impl DashboardCapture {
-    pub unsafe fn new(child: HWND, device: &ID3D11Device, width: u32, height: u32) -> Result<Self> {
+    pub unsafe fn new(
+        child: HWND,
+        device: &ID3D11Device,
+        width: u32,
+        height: u32,
+    ) -> Result<Self, String> {
         let host = CaptureHost::new(child, width, height)?;
         let interop: IGraphicsCaptureItemInterop =
-            factory::<GraphicsCaptureItem, IGraphicsCaptureItemInterop>()?;
-        let item: GraphicsCaptureItem = interop.CreateForWindow(host.window)?;
-        let dxgi: IDXGIDevice = device.cast()?;
-        let capture_device: IDirect3DDevice =
-            CreateDirect3D11DeviceFromDXGIDevice(&dxgi)?.cast()?;
+            factory::<GraphicsCaptureItem, IGraphicsCaptureItemInterop>()
+                .map_err(at("IGraphicsCaptureItemInterop"))?;
+        let mut rect = RECT::default();
+        let _ = GetWindowRect(host.window, &mut rect);
+        let host_info = format!(
+            "host window {}x{} at ({}, {}), {} DPI, capture supported: {:?}",
+            rect.right - rect.left,
+            rect.bottom - rect.top,
+            rect.left,
+            rect.top,
+            GetDpiForWindow(host.window),
+            GraphicsCaptureSession::IsSupported()
+        );
+        let item: GraphicsCaptureItem = interop
+            .CreateForWindow(host.window)
+            .map_err(|error| format!("CreateForWindow: {error} ({host_info})"))?;
+        let size = item.Size().map_err(at("GraphicsCaptureItem.Size"))?;
+        log::info!(
+            "[Dashboard] GPU capture item {}x{}, {host_info}",
+            size.Width,
+            size.Height
+        );
+        let dxgi: IDXGIDevice = device.cast().map_err(at("IDXGIDevice"))?;
+        let capture_device: IDirect3DDevice = CreateDirect3D11DeviceFromDXGIDevice(&dxgi)
+            .map_err(at("CreateDirect3D11DeviceFromDXGIDevice"))?
+            .cast()
+            .map_err(at("IDirect3DDevice"))?;
         let pool = Direct3D11CaptureFramePool::CreateFreeThreaded(
             &capture_device,
             DirectXPixelFormat::B8G8R8A8UIntNormalized,
             2,
-            item.Size()?,
-        )?;
-        let session = pool.CreateCaptureSession(&item)?;
-        session.SetIsCursorCaptureEnabled(false)?;
-        session.StartCapture()?;
+            size,
+        )
+        .map_err(at("CreateFreeThreaded"))?;
+        let session = pool
+            .CreateCaptureSession(&item)
+            .map_err(at("CreateCaptureSession"))?;
+        session
+            .SetIsCursorCaptureEnabled(false)
+            .map_err(at("SetIsCursorCaptureEnabled"))?;
+        session.StartCapture().map_err(at("StartCapture"))?;
         Ok(Self {
             session,
             pool,
@@ -64,23 +96,29 @@ impl DashboardCapture {
         })
     }
 
-    pub fn next_frame(&self) -> Result<Option<GpuFrame>> {
+    pub fn next_frame(&self) -> Result<Option<GpuFrame>, String> {
         let mut latest: Option<Direct3D11CaptureFrame> = None;
         for _ in 0..2 {
             let frame = match self.pool.TryGetNextFrame() {
                 Ok(frame) => frame,
                 // The WinRT bindings represent a null frame with a successful HRESULT.
                 Err(error) if error.code().is_ok() => break,
-                Err(error) => return Err(error),
+                Err(error) => return Err(at("TryGetNextFrame")(error)),
             };
             if let Some(previous) = latest.replace(frame) {
-                previous.Close()?;
+                previous
+                    .Close()
+                    .map_err(at("Direct3D11CaptureFrame.Close"))?;
             }
         }
         latest
             .map(|frame| {
-                let access: IDirect3DDxgiInterfaceAccess = frame.Surface()?.cast()?;
-                let texture = unsafe { access.GetInterface()? };
+                let access: IDirect3DDxgiInterfaceAccess = frame
+                    .Surface()
+                    .map_err(at("Direct3D11CaptureFrame.Surface"))?
+                    .cast()
+                    .map_err(at("IDirect3DDxgiInterfaceAccess"))?;
+                let texture = unsafe { access.GetInterface().map_err(at("GetInterface"))? };
                 Ok(GpuFrame {
                     texture,
                     _frame: frame,
@@ -105,13 +143,17 @@ struct CaptureHost {
 }
 
 impl CaptureHost {
-    unsafe fn new(child: HWND, width: u32, height: u32) -> Result<Self> {
-        let parent = GetParent(child)?;
+    unsafe fn new(child: HWND, width: u32, height: u32) -> Result<Self, String> {
+        let parent = GetParent(child).map_err(at("GetParent"))?;
         let mut bounds = RECT::default();
-        GetClientRect(child, &mut bounds)?;
+        GetClientRect(child, &mut bounds).map_err(at("GetClientRect"))?;
         let mut origin = POINT::default();
-        ClientToScreen(child, &mut origin).ok()?;
-        ScreenToClient(parent, &mut origin).ok()?;
+        ClientToScreen(child, &mut origin)
+            .ok()
+            .map_err(at("ClientToScreen"))?;
+        ScreenToClient(parent, &mut origin)
+            .ok()
+            .map_err(at("ScreenToClient"))?;
         bounds.left = origin.x;
         bounds.top = origin.y;
         bounds.right += origin.x;
@@ -129,14 +171,15 @@ impl CaptureHost {
             None,
             None,
             None,
-        )?;
+        )
+        .map_err(at("CreateWindowExW"))?;
         let host = Self {
             window,
             child,
             parent,
             bounds,
         };
-        SetParent(child, Some(window))?;
+        SetParent(child, Some(window)).map_err(at("SetParent"))?;
         SetWindowPos(
             child,
             None,
@@ -145,7 +188,8 @@ impl CaptureHost {
             width as i32,
             height as i32,
             SWP_NOACTIVATE | SWP_NOZORDER,
-        )?;
+        )
+        .map_err(at("SetWindowPos"))?;
         let _ = ShowWindow(window, SW_SHOWNOACTIVATE);
         Ok(host)
     }
@@ -170,4 +214,9 @@ impl Drop for CaptureHost {
             let _ = DestroyWindow(self.window);
         }
     }
+}
+
+/// Prefixes a Windows error with the capture step that returned it.
+fn at(step: &'static str) -> impl Fn(windows::core::Error) -> String {
+    move |error| format!("{step}: {error}")
 }

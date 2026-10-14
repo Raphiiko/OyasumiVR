@@ -106,6 +106,7 @@ windows = { version = "0.62.2", features = [
   "Win32_System_Registry",
   "Win32_System_RestartManager",
   "Win32_UI_WindowsAndMessaging",
+  "Win32_UI_HiDpi",
   "Win32_System_LibraryLoader",
   "Win32_Graphics_Gdi",
   "Win32_Graphics_Direct3D11",

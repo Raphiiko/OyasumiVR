@@ -8,6 +8,7 @@ import {
   map,
   Observable,
   startWith,
+  switchMap,
 } from 'rxjs';
 import { BUILD_ID, BuildFlavour, FLAVOUR } from '../../../../../../../build';
 import { TString } from '../../../../../../models/translatable-string';
@@ -101,6 +102,12 @@ export class SettingsTroubleshootingStatusTabComponent {
         ),
       },
       {
+        label: 'settings.troubleshooting.status.steamvrDashboard.label',
+        value: this.dashboardRenderMode().pipe(
+          map((mode) => `settings.troubleshooting.status.steamvrDashboard.${mode}`)
+        ),
+      },
+      {
         label: 'settings.troubleshooting.status.vrchat.label',
         value: this.vrchat.vrchatProcessActive.pipe(
           map(
@@ -120,14 +127,14 @@ export class SettingsTroubleshootingStatusTabComponent {
       },
       { label: 'settings.troubleshooting.status.osc.label', value: this.oscStatus() },
       {
+        label: 'settings.troubleshooting.status.mqtt.label',
+        value: this.mqtt.clientStatus.pipe(map((s) => `settings.troubleshooting.status.mqtt.${s}`)),
+      },
+      {
         label: 'settings.troubleshooting.status.adminPrivileges.label',
         value: this.adminPrivilegesStatus(),
         detail: this.elevatedSidecar.failure.pipe(map((f) => this.describeFailure(f))),
         wide: true,
-      },
-      {
-        label: 'settings.troubleshooting.status.mqtt.label',
-        value: this.mqtt.clientStatus.pipe(map((s) => `settings.troubleshooting.status.mqtt.${s}`)),
       },
       {
         label: 'settings.troubleshooting.status.pulsoid.label',
@@ -142,7 +149,6 @@ export class SettingsTroubleshootingStatusTabComponent {
         value: this.lighthouse.status.pipe(
           map((s) => `settings.troubleshooting.status.bluetooth.${s}`)
         ),
-        wide: true,
       },
     ];
   }
@@ -171,6 +177,7 @@ export class SettingsTroubleshootingStatusTabComponent {
         autoLaunch: settings.startWithSteamVR,
       },
       overlaySidecarStarted: await first(this.overlay.sidecarStarted),
+      steamvrDashboardRenderMode: await first(this.dashboardRenderMode()),
       vrchat: {
         processActive: await first(this.vrchat.vrchatProcessActive),
         status: await first(this.vrchat.status),
@@ -213,6 +220,14 @@ export class SettingsTroubleshootingStatusTabComponent {
   async copyVersion() {
     const text = `v${await this.version}-${FLAVOUR} (${BUILD_ID})`;
     await copyWithToast(this.toasts, text, 'toasts.clipboard.version');
+  }
+
+  private dashboardRenderMode(): Observable<string> {
+    return interval(2000).pipe(
+      startWith(0),
+      switchMap(() => invoke<string>('openvr_dashboard_render_mode')),
+      distinctUntilChanged()
+    );
   }
 
   private oscStatus(): Observable<TString> {

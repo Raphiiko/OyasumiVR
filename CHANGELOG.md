@@ -21,6 +21,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 - Fixed the "Restart Bluetooth" button for base stations giving no feedback: the message now closes
   when you click it
+- Fixed the OyasumiVR interface in the SteamVR dashboard closing as soon as it opened on some
+  systems with GPU acceleration enabled for overlays
 
 ## [26.10.0]
 

@@ -7,7 +7,7 @@ use self::{
     input::{DashboardInput, KeyboardRequest, KeyboardRequests, PointerEvent},
     texture::DashboardTexture,
 };
-use super::DASHBOARD_GPU_ACCELERATION;
+use super::{DASHBOARD_GPU_ACCELERATION, DASHBOARD_RENDER_MODE};
 use crate::globals::TAURI_APP_HANDLE;
 use raphii_openvr_rs::{raw, Context};
 use std::{
@@ -43,6 +43,11 @@ const FRAME_INTERVAL: Duration = Duration::from_millis(100);
 const FIRST_FRAME_TIMEOUT: Duration = Duration::from_secs(5);
 const CAPTURE_TIMEOUT: Duration = Duration::from_secs(5);
 const MAX_PNG_BYTES: u64 = 32 * 1024 * 1024;
+
+pub const RENDER_NONE: u8 = 0;
+pub const RENDER_GPU: u8 = 1;
+pub const RENDER_CPU: u8 = 2;
+pub const RENDER_CPU_FALLBACK: u8 = 3;
 
 const MOUSE_MOVE: u32 = raw::EVREventType::VREvent_MouseMove.0 as u32;
 const MOUSE_BUTTON_DOWN: u32 = raw::EVREventType::VREvent_MouseButtonDown.0 as u32;
@@ -158,8 +163,10 @@ impl Desktop {
         self.controller.SetIsVisible(true).map_err(message)?;
         if let Some(device) = device {
             let mut child = HWND::default();
-            self.controller.ParentWindow(&mut child).map_err(message)?;
-            self.gpu = Some(DashboardCapture::new(child, device, WIDTH, HEIGHT).map_err(message)?);
+            self.controller
+                .ParentWindow(&mut child)
+                .map_err(|error| format!("ParentWindow: {error}"))?;
+            self.gpu = Some(DashboardCapture::new(child, device, WIDTH, HEIGHT)?);
         }
         let webview = self.controller.CoreWebView2().map_err(message)?;
         self.input = Some(DashboardInput::new(
@@ -212,6 +219,8 @@ pub struct DashboardOverlay {
     failed: bool,
     has_frame: bool,
     gpu: bool,
+    /// Set when GPU capture fails; keeps this overlay on CPU capture until it is recreated.
+    gpu_failed: bool,
     keyboard: KeyboardRequests,
     keyboard_id: Option<u64>,
 }
@@ -253,6 +262,7 @@ impl DashboardOverlay {
             failed: false,
             has_frame: false,
             gpu: DASHBOARD_GPU_ACCELERATION.load(Ordering::Acquire),
+            gpu_failed: false,
             keyboard: Arc::new(Mutex::new(None)),
             keyboard_id: None,
         };
@@ -303,6 +313,7 @@ impl DashboardOverlay {
                 .map_err(message)?;
             overlay.set_overlay_texture()?;
         }
+        overlay.publish_render_mode();
         log::info!("[Dashboard] Dashboard overlay registered");
         Ok(overlay)
     }
@@ -312,6 +323,19 @@ impl DashboardOverlay {
     }
 
     pub fn tick(&mut self) -> Result<(), String> {
+        match self.tick_capture() {
+            Err(error) if self.gpu => {
+                log::warn!("[Dashboard] GPU capture failed, falling back to CPU capture: {error}");
+                self.gpu_failed = true;
+                self.deactivate();
+                self.gpu = false;
+                Ok(())
+            }
+            result => result,
+        }
+    }
+
+    fn tick_capture(&mut self) -> Result<(), String> {
         self.sync_selection()?;
         self.sync_capture_mode();
         let ready = self.is_active() && self.has_frame;
@@ -354,12 +378,24 @@ impl DashboardOverlay {
     }
 
     fn sync_capture_mode(&mut self) {
-        let gpu = DASHBOARD_GPU_ACCELERATION.load(Ordering::Acquire);
+        let gpu = DASHBOARD_GPU_ACCELERATION.load(Ordering::Acquire) && !self.gpu_failed;
         if gpu != self.gpu {
             self.deactivate();
             self.gpu = gpu;
             self.failed = false;
         }
+        self.publish_render_mode();
+    }
+
+    fn publish_render_mode(&self) {
+        let mode = if self.gpu {
+            RENDER_GPU
+        } else if self.gpu_failed && DASHBOARD_GPU_ACCELERATION.load(Ordering::Acquire) {
+            RENDER_CPU_FALLBACK
+        } else {
+            RENDER_CPU
+        };
+        DASHBOARD_RENDER_MODE.store(mode, Ordering::Release);
     }
 
     fn submit_frame(&mut self) -> Result<(), String> {
@@ -378,7 +414,7 @@ impl DashboardOverlay {
                         .map_err(message)?;
                 }
                 CapturedFrame::Gpu(frame) => {
-                    self.texture.copy(&frame.texture).map_err(message)?;
+                    self.texture.copy(&frame.texture)?;
                 }
             }
             self.set_overlay_texture()?;
@@ -622,6 +658,7 @@ impl DashboardOverlay {
 
 impl Drop for DashboardOverlay {
     fn drop(&mut self) {
+        DASHBOARD_RENDER_MODE.store(RENDER_NONE, Ordering::Release);
         self.deactivate();
         let Some(destroy) = self.table.DestroyOverlay else {
             return;
@@ -645,6 +682,16 @@ unsafe fn capture_frame(
 ) -> Result<(), String> {
     DESKTOP.with(|saved| {
         DESKTOP_GENERATION.fetch_add(1, Ordering::AcqRel);
+        // a skipped deferred restore can leave a desktop set up for the other capture mode
+        let wrong_mode = saved
+            .borrow()
+            .as_ref()
+            .is_some_and(|desktop| desktop.gpu.is_some() != device.is_some());
+        if wrong_mode {
+            if let Some(desktop) = saved.borrow_mut().take() {
+                desktop.restore();
+            }
+        }
         if saved.borrow().is_none() {
             *saved.borrow_mut() = Some(Desktop::enter(
                 window,
@@ -658,7 +705,10 @@ unsafe fn capture_frame(
             .as_ref()
             .and_then(|desktop| desktop.gpu.as_ref())
         {
-            if let Some(frame) = gpu.next_frame().map_err(message)? {
+            if let Some(frame) = gpu
+                .next_frame()
+                .map_err(|error| format!("Frame capture: {error}"))?
+            {
                 *capture.frame.lock().unwrap() = Some(Ok(CapturedFrame::Gpu(frame)));
             }
             capture.busy.store(false, Ordering::Release);

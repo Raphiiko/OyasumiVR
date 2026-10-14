@@ -2,7 +2,7 @@ use std::time::{Duration, Instant};
 use windows::{
     core::{BOOL, HRESULT},
     Win32::{
-        Foundation::{ERROR_INVALID_PARAMETER, ERROR_TIMEOUT, HMODULE},
+        Foundation::{ERROR_TIMEOUT, HMODULE},
         Graphics::{
             Direct3D::D3D_DRIVER_TYPE_UNKNOWN,
             Direct3D11::*,
@@ -97,7 +97,7 @@ impl DashboardTexture {
         &self.device
     }
 
-    pub unsafe fn copy(&self, source: &ID3D11Texture2D) -> windows::core::Result<()> {
+    pub unsafe fn copy(&self, source: &ID3D11Texture2D) -> Result<(), String> {
         let mut expected = D3D11_TEXTURE2D_DESC::default();
         let mut actual = D3D11_TEXTURE2D_DESC::default();
         self.texture.GetDesc(&mut expected);
@@ -106,10 +106,19 @@ impl DashboardTexture {
             && actual.Height == expected.Height
             && actual.Format == expected.Format;
         if !same_layout {
-            return Err(HRESULT::from_win32(ERROR_INVALID_PARAMETER.0).into());
+            return Err(format!(
+                "Captured frame is {}x{} format {}, expected {}x{} format {}",
+                actual.Width,
+                actual.Height,
+                actual.Format.0,
+                expected.Width,
+                expected.Height,
+                expected.Format.0
+            ));
         }
         self.context.CopyResource(&self.texture, source);
         self.finish()
+            .map_err(|error| format!("Frame copy: {error}"))
     }
 
     unsafe fn finish(&self) -> windows::core::Result<()> {
