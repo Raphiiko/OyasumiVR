@@ -91,6 +91,22 @@ describe('HardwareBrightnessControlService with the analog gain driver', () => {
     expect(h.analogGain()).toBeCloseTo(0.8);
   });
 
+  it('reapplies the brightness when the active headset reports a new range', async () => {
+    const h = setup();
+    h.devices.next([
+      { ...UNSUPPORTED_HMD, displayMinAnalogGain: undefined, displayMaxAnalogGain: undefined },
+    ]);
+    await settle();
+    await h.service.setBrightness(60);
+    expect(h.analogGain()).toBeCloseTo(0.5);
+
+    h.devices.next([{ ...UNSUPPORTED_HMD, displayMinAnalogGain: 0.2, displayMaxAnalogGain: 0.4 }]);
+    await settle();
+
+    expect(h.analogGain()).toBeCloseTo(0.3);
+    expect(h.service.brightness).toBe(60);
+  });
+
   it('leaves the gain to the headset driver that takes over', async () => {
     const h = setup();
     await settle();

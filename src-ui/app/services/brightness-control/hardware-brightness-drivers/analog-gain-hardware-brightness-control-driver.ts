@@ -4,7 +4,16 @@ import {
 } from './hardware-brightness-control-driver';
 import { clamp } from '../../../utils/number-utils';
 import { OpenVRService } from '../../openvr.service';
-import { combineLatest, debounceTime, map, Observable, shareReplay } from 'rxjs';
+import {
+  combineLatest,
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  map,
+  Observable,
+  pairwise,
+  shareReplay,
+} from 'rxjs';
 import { AppSettings } from '../../../models/settings';
 import { OVRDevice } from '../../../models/ovr-device';
 
@@ -34,20 +43,33 @@ export class AnalogGainHardwareBrightnessControlDriver extends HardwareBrightnes
   /** The active HMD's range; null while unavailable. */
   private range: [number, number] | null = null;
   private readonly available: Observable<boolean>;
+  /** Emits the new range when a connected HMD's range changes from one usable range to another. */
+  public readonly rangeChanges: Observable<[number, number]>;
 
   constructor(
     appSettings: Observable<AppSettings>,
     private openvr: OpenVRService
   ) {
     super(appSettings);
-    this.available = combineLatest([this.openvr.status, this.openvr.devices, appSettings]).pipe(
+    const state = combineLatest([this.openvr.status, this.openvr.devices, appSettings]).pipe(
       debounceTime(0),
       map(([status, devices, settings]) => {
         const hmd = devices.find((d) => d.index === 0 && d.class === 'HMD');
         this.range = status === 'INITIALIZED' && hmd ? analogGainRange(hmd) : null;
-        return settings.hardwareBrightnessOnUnsupportedHmds && !!this.range;
+        return { range: this.range, enabled: settings.hardwareBrightnessOnUnsupportedHmds };
       }),
       shareReplay(1)
+    );
+    this.available = state.pipe(
+      map(({ range, enabled }) => enabled && !!range),
+      shareReplay(1)
+    );
+    this.rangeChanges = state.pipe(
+      map(({ range }) => range),
+      distinctUntilChanged((a, b) => a?.[0] === b?.[0] && a?.[1] === b?.[1]),
+      pairwise(),
+      filter((pair): pair is [[number, number], [number, number]] => !!pair[0] && !!pair[1]),
+      map(([, range]) => range)
     );
   }
 

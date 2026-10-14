@@ -107,6 +107,11 @@ export class HardwareBrightnessControlService {
         }
         this.driver.next(availableDriver);
       });
+    // the cached percentage maps to a different gain once the range changes, so write it again
+    this.driverAnalogGain.rangeChanges.subscribe(() => {
+      if (this.driver.value !== this.driverAnalogGain) return;
+      this.setBrightness(this.brightness, { cancelActiveTransition: false, logReason: null }, true);
+    });
     this.brightnessBounds = combineLatest([this.driver, this.appSettingsService.settings]).pipe(
       map(([driver, settings]: [HardwareBrightnessControlDriver | null, AppSettings]) => {
         if (!driver) return [0, 100] as [number, number];
