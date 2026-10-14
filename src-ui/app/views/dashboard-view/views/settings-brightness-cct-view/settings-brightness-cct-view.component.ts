@@ -15,11 +15,10 @@ import { OpenVRService } from '../../../../services/openvr.service';
 import { isSteamVrCctSupportedHmd } from '../../../../services/cct-control/cct-control-drivers/steamvr-cct-control-driver';
 import { vshrink } from '../../../../utils/animations';
 import { HardwareBrightnessControlService } from '../../../../services/brightness-control/hardware-brightness-control.service';
-import { analogGainRange } from '../../../../services/brightness-control/hardware-brightness-drivers/analog-gain-hardware-brightness-control-driver';
 import { combineLatest } from 'rxjs';
 
 /** Whether the analog gain fallback can apply to the active HMD, and why not. */
-type HardwareBrightnessState = 'NO_HMD' | 'LISTED' | 'NO_ANALOG_GAIN' | 'UNLISTED';
+type HardwareBrightnessState = 'NO_HMD' | 'LISTED' | 'UNLISTED';
 
 @Component({
   selector: 'app-settings-brightness-cct-view',
@@ -70,7 +69,6 @@ export class SettingsBrightnessCctViewComponent implements OnInit {
         const hmd = devices.find((d) => d.index === 0 && d.class === 'HMD');
         if (!hmd) this.hardwareBrightnessState = 'NO_HMD';
         else if (headsetDriverIsAvailable) this.hardwareBrightnessState = 'LISTED';
-        else if (!analogGainRange(hmd)) this.hardwareBrightnessState = 'NO_ANALOG_GAIN';
         else this.hardwareBrightnessState = 'UNLISTED';
         // driver availability settles after OpenVRService's own render pass for the device update
         this.changeDetector.detectChanges();

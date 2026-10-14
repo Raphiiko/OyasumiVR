@@ -1933,7 +1933,6 @@
         "unsupportedHmds": {
           "description": "Turn this on to let OyasumiVR try to control your headset's brightness through SteamVR, even though it's not known to work for your headset.",
           "listedHmd": "Hardware brightness control is supported on your headset.",
-          "noAnalogGain": "Your headset does not report hardware brightness support to SteamVR, so this setting has no effect on it.",
           "noHmd": "Connect your headset to change this setting.",
           "title": "Enable on unsupported headsets",
           "unlistedHmd": "Hardware brightness control might still work on your headset, if enabled. OyasumiVR maps your headset's lowest brightness to 20% and its highest to 100%, so the percentages may not match what you see. If your headset does turn out to work, please let us know on <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a>!"

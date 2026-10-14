@@ -108,13 +108,6 @@
                 @vshrink
               ></app-alert>
             }
-            @case ('NO_ANALOG_GAIN') {
-              <app-alert
-                severity="info"
-                message="settings.brightnessCct.hardwareBrightness.unsupportedHmds.noAnalogGain"
-                @vshrink
-              ></app-alert>
-            }
             @case ('UNLISTED') {
               @if (hmd) {
                 <app-alert severity="info" contentClass="flex-row" @vshrink>

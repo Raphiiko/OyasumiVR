@@ -13,11 +13,11 @@ const ANALOG_GAIN_HMD = {
   displayMaxAnalogGain: 0.8,
 };
 
-function createDriver(hmd: Partial<OVRDevice>, enabled = true) {
+function createDriver(hmd: Partial<OVRDevice> | null, enabled = true) {
   let analogGain = 0.8;
   const openvr = {
     status: new BehaviorSubject('INITIALIZED'),
-    devices: new BehaviorSubject([{ index: 0, class: 'HMD', ...hmd }]),
+    devices: new BehaviorSubject(hmd ? [{ index: 0, class: 'HMD', ...hmd }] : []),
     getAnalogGain: async () => analogGain,
     setAnalogGain: async (value: number) => {
       analogGain = value;
@@ -32,14 +32,25 @@ function createDriver(hmd: Partial<OVRDevice>, enabled = true) {
 }
 
 describe('AnalogGainHardwareBrightnessControlDriver', () => {
-  it('is available only when enabled and the HMD reports a usable range', async () => {
-    const available = (hmd: Partial<OVRDevice>, enabled = true) =>
+  it('is available whenever enabled with an HMD connected', async () => {
+    const available = (hmd: Partial<OVRDevice> | null, enabled = true) =>
       firstValueFrom(createDriver(hmd, enabled).driver.isAvailable());
     expect(await available(ANALOG_GAIN_HMD)).toBe(true);
+    expect(await available({ ...ANALOG_GAIN_HMD, displaySupportsAnalogGain: false })).toBe(true);
     expect(await available(ANALOG_GAIN_HMD, false)).toBe(false);
-    expect(await available({ ...ANALOG_GAIN_HMD, displaySupportsAnalogGain: false })).toBe(false);
-    expect(await available({ ...ANALOG_GAIN_HMD, displayMaxAnalogGain: undefined })).toBe(false);
-    expect(await available({ ...ANALOG_GAIN_HMD, displayMaxAnalogGain: 0.2 })).toBe(false);
+    expect(await available(null)).toBe(false);
+  });
+
+  it.each([
+    ['no range', { displayMinAnalogGain: undefined, displayMaxAnalogGain: undefined }],
+    ['an empty range', { displayMaxAnalogGain: 0.2 }],
+  ])('falls back to gain 0.0 to 1.0 for an HMD with %s', async (_, range) => {
+    const { driver, analogGain } = createDriver({ ...ANALOG_GAIN_HMD, ...range });
+    await firstValueFrom(driver.isAvailable());
+    await driver.setBrightnessPercentage(20);
+    expect(analogGain()).toBe(0);
+    await driver.setBrightnessPercentage(100);
+    expect(analogGain()).toBe(1);
   });
 
   it('maps the minimum gain to 20% and the maximum gain to 100%', async () => {

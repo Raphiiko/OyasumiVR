@@ -17,17 +17,19 @@ export const ANALOG_GAIN_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: HardwareBrig
     riskThreshold: 100,
   };
 
-/** The HMD's analog gain range, or null when it does not report a usable one. */
-export function analogGainRange(hmd: OVRDevice | undefined): [number, number] | null {
-  if (!hmd?.displaySupportsAnalogGain) return null;
+// SteamVR's own analogGain range, for headsets that report none
+const DEFAULT_ANALOG_GAIN_RANGE: [number, number] = [0, 1];
+
+/** The HMD's reported analog gain range, or SteamVR's default range when it reports no usable one. */
+export function analogGainRange(hmd: OVRDevice): [number, number] {
   const min = hmd.displayMinAnalogGain;
   const max = hmd.displayMaxAnalogGain;
-  if (typeof min !== 'number' || typeof max !== 'number') return null;
-  if (!isFinite(min) || !isFinite(max) || max <= min) return null;
+  if (typeof min !== 'number' || typeof max !== 'number') return DEFAULT_ANALOG_GAIN_RANGE;
+  if (!isFinite(min) || !isFinite(max) || max <= min) return DEFAULT_ANALOG_GAIN_RANGE;
   return [min, max];
 }
 
-/** Writes SteamVR's analogGain on any headset that reports a range, when the user opts in. */
+/** Writes SteamVR's analogGain on any headset without its own driver, when the user opts in. */
 export class AnalogGainHardwareBrightnessControlDriver extends HardwareBrightnessControlDriver {
   /** The active HMD's range; null while unavailable. */
   private range: [number, number] | null = null;
@@ -42,7 +44,7 @@ export class AnalogGainHardwareBrightnessControlDriver extends HardwareBrightnes
       debounceTime(0),
       map(([status, devices, settings]) => {
         const hmd = devices.find((d) => d.index === 0 && d.class === 'HMD');
-        this.range = status === 'INITIALIZED' ? analogGainRange(hmd) : null;
+        this.range = status === 'INITIALIZED' && hmd ? analogGainRange(hmd) : null;
         return settings.hardwareBrightnessOnUnsupportedHmds && !!this.range;
       }),
       shareReplay(1)
@@ -77,7 +79,7 @@ export class AnalogGainHardwareBrightnessControlDriver extends HardwareBrightnes
 
   /**
    * Writes the maximum gain, so a headset this driver dimmed is not left dim once it lets go.
-   * Returns false without writing when no headset reports a range.
+   * Returns false without writing when no headset is connected.
    */
   restoreMaximumGain(): boolean {
     if (!this.range) return false;
