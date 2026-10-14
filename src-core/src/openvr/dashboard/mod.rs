@@ -96,6 +96,9 @@ impl CpuStats {
     }
 
     fn record(&mut self, frame: &CpuFrame) {
+        if self.frames == 0 {
+            self.started = Instant::now();
+        }
         self.frames += 1;
         self.capture += frame.capture;
         self.decode += frame.decode;
@@ -491,7 +494,8 @@ impl DashboardOverlay {
         if pending >= in_flight || Instant::now() < self.next_frame {
             return Ok(());
         }
-        self.next_frame = Instant::now() + interval;
+        // a fixed schedule, because the OpenVR tick rounds every wait up
+        self.next_frame = (self.next_frame + interval).max(Instant::now());
         if pending == 0 {
             self.capture_progress = Instant::now();
         }
@@ -681,6 +685,7 @@ impl DashboardOverlay {
         }
         self.keyboard = Arc::new(Mutex::new(None));
         self.has_frame = false;
+        self.cpu_stats = CpuStats::new();
         self.activation_started = None;
         // callbacks of the previous capture must not reach the next activation
         self.capture.active.store(false, Ordering::Release);
