@@ -249,8 +249,7 @@ export class SettingsTroubleshootingStatusTabComponent {
                 values: { model: d.modelNumber ?? '' },
               }
             : 'settings.troubleshooting.status.hmd.notDetected'
-        ),
-        distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
+        )
       ),
       wide: true,
     };
