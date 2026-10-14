@@ -4,7 +4,6 @@ mod chaperone;
 mod colortemp_analog;
 pub mod commands;
 mod dashboard;
-pub use dashboard::run_capture_probe_cli;
 pub mod devices;
 mod framelimiter;
 mod gesture_detector;

@@ -196,9 +196,6 @@ mod webview2_dialog_tests {
 
 #[tokio::main]
 async fn main() {
-    if openvr::run_capture_probe_cli() {
-        return;
-    }
     oyasumivr_shared::install_tls_provider();
     ensure_webview2_available();
 
