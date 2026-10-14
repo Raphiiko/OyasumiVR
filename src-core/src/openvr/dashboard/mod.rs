@@ -212,6 +212,8 @@ pub struct DashboardOverlay {
     failed: bool,
     has_frame: bool,
     gpu: bool,
+    /// Set when GPU capture fails; keeps this overlay on CPU capture until it is recreated.
+    gpu_failed: bool,
     keyboard: KeyboardRequests,
     keyboard_id: Option<u64>,
 }
@@ -253,6 +255,7 @@ impl DashboardOverlay {
             failed: false,
             has_frame: false,
             gpu: DASHBOARD_GPU_ACCELERATION.load(Ordering::Acquire),
+            gpu_failed: false,
             keyboard: Arc::new(Mutex::new(None)),
             keyboard_id: None,
         };
@@ -312,6 +315,19 @@ impl DashboardOverlay {
     }
 
     pub fn tick(&mut self) -> Result<(), String> {
+        match self.tick_capture() {
+            Err(error) if self.gpu => {
+                log::warn!("[Dashboard] GPU capture failed, falling back to CPU capture: {error}");
+                self.gpu_failed = true;
+                self.deactivate();
+                self.gpu = false;
+                Ok(())
+            }
+            result => result,
+        }
+    }
+
+    fn tick_capture(&mut self) -> Result<(), String> {
         self.sync_selection()?;
         self.sync_capture_mode();
         let ready = self.is_active() && self.has_frame;
@@ -354,7 +370,7 @@ impl DashboardOverlay {
     }
 
     fn sync_capture_mode(&mut self) {
-        let gpu = DASHBOARD_GPU_ACCELERATION.load(Ordering::Acquire);
+        let gpu = DASHBOARD_GPU_ACCELERATION.load(Ordering::Acquire) && !self.gpu_failed;
         if gpu != self.gpu {
             self.deactivate();
             self.gpu = gpu;

@@ -18,7 +18,7 @@ use windows::{
             Direct3D11::{CreateDirect3D11DeviceFromDXGIDevice, IDirect3DDxgiInterfaceAccess},
             Graphics::Capture::IGraphicsCaptureItemInterop,
         },
-        UI::WindowsAndMessaging::*,
+        UI::{HiDpi::GetDpiForWindow, WindowsAndMessaging::*},
     },
 };
 
@@ -50,20 +50,25 @@ impl DashboardCapture {
         let interop: IGraphicsCaptureItemInterop =
             factory::<GraphicsCaptureItem, IGraphicsCaptureItemInterop>()
                 .map_err(at("IGraphicsCaptureItemInterop"))?;
-        let item: GraphicsCaptureItem = interop
-            .CreateForWindow(host.window)
-            .map_err(at("CreateForWindow"))?;
-        let size = item.Size().map_err(at("GraphicsCaptureItem.Size"))?;
         let mut rect = RECT::default();
         let _ = GetWindowRect(host.window, &mut rect);
-        log::info!(
-            "[Dashboard] GPU capture item {}x{}, host window {}x{} at ({}, {})",
-            size.Width,
-            size.Height,
+        let host_info = format!(
+            "host window {}x{} at ({}, {}), {} DPI, capture supported: {:?}",
             rect.right - rect.left,
             rect.bottom - rect.top,
             rect.left,
-            rect.top
+            rect.top,
+            GetDpiForWindow(host.window),
+            GraphicsCaptureSession::IsSupported()
+        );
+        let item: GraphicsCaptureItem = interop
+            .CreateForWindow(host.window)
+            .map_err(|error| format!("CreateForWindow: {error} ({host_info})"))?;
+        let size = item.Size().map_err(at("GraphicsCaptureItem.Size"))?;
+        log::info!(
+            "[Dashboard] GPU capture item {}x{}, {host_info}",
+            size.Width,
+            size.Height
         );
         let dxgi: IDXGIDevice = device.cast().map_err(at("IDXGIDevice"))?;
         let capture_device: IDirect3DDevice = CreateDirect3D11DeviceFromDXGIDevice(&dxgi)
