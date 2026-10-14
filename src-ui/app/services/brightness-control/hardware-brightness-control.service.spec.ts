@@ -107,16 +107,15 @@ describe('HardwareBrightnessControlService with the analog gain driver', () => {
     expect(h.service.brightness).toBe(60);
   });
 
-  it('leaves the gain to the headset driver that takes over', async () => {
+  it('writes the shown brightness through the headset driver that takes over', async () => {
     const h = setup();
     await settle();
     await h.service.setBrightness(60);
-    h.setAnalogGain.mockClear();
 
     h.devices.next([{ ...UNSUPPORTED_HMD, manufacturerName: 'Valve', modelNumber: 'Index' }]);
     await settle();
 
-    expect(h.service.driverValveIndex).toBeDefined();
-    expect(h.setAnalogGain).not.toHaveBeenCalled();
+    expect(h.service.brightness).toBe(60);
+    expect(await h.service.driverValveIndex.getBrightnessPercentage()).toBe(60);
   });
 });
