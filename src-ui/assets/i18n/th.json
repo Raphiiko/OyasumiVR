@@ -1915,7 +1915,6 @@
         "title": "Bigscreen Beyond"
       },
       "cctControl": {
-        "title": "อุณหภูมิสี",
         "unsupportedHmds": {
           "description": "เปิดตัวเลือกนี้เพื่อเปิดใช้งานการควบคุมอุณหภูมิสี แม้จะยังไม่ทราบว่าใช้ได้กับ Headset ของคุณหรือไม่",
           "listedHmd": "Headset ของคุณรองรับการควบคุมอุณหภูมิสี",

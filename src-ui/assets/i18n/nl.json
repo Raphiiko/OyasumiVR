@@ -1915,7 +1915,6 @@
         "title": "Bigscreen Beyond"
       },
       "cctControl": {
-        "title": "Kleurtemperatuur",
         "unsupportedHmds": {
           "description": "Schakel dit in om kleurtemperatuurregeling te gebruiken, ook al is niet bekend of het met je headset werkt.",
           "listedHmd": "Kleurtemperatuurregeling wordt ondersteund op je headset.",

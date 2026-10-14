@@ -1915,7 +1915,6 @@
         "title": "Bigscreen Beyond"
       },
       "cctControl": {
-        "title": "色温",
         "unsupportedHmds": {
           "description": "开启后即启用色温控制，即使尚不确定它是否适用于你的头显。",
           "listedHmd": "你的头显支持色温控制。",

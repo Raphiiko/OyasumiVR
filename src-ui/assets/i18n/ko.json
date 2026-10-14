@@ -1415,9 +1415,6 @@
         },
         "title": "Bigscreen Beyond"
       },
-      "cctControl": {
-        "title": "색온도"
-      },
       "description": "여기에서는 밝기와 색온도와 관련된 설정을 찾을 수 있어요.",
       "title": "밝기 & 색온도",
       "valveIndex": {
