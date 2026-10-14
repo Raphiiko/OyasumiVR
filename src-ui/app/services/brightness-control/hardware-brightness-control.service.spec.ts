@@ -61,6 +61,20 @@ describe('HardwareBrightnessControlService with the analog gain driver', () => {
     expect(h.analogGain()).toBeCloseTo(0.8);
   });
 
+  it('dims again when the option is turned back on', async () => {
+    const h = setup();
+    await settle();
+    await h.service.setBrightness(60);
+    h.enable(false);
+    await settle();
+
+    h.enable(true);
+    await settle();
+    await h.service.setBrightness(60);
+
+    expect(h.analogGain()).toBeCloseTo(0.5);
+  });
+
   it('leaves the gain to the headset driver that takes over', async () => {
     const h = setup();
     await settle();
