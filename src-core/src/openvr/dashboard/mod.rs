@@ -158,7 +158,9 @@ impl Desktop {
         self.controller.SetIsVisible(true).map_err(message)?;
         if let Some(device) = device {
             let mut child = HWND::default();
-            self.controller.ParentWindow(&mut child).map_err(message)?;
+            self.controller
+                .ParentWindow(&mut child)
+                .map_err(|error| format!("ParentWindow: {error}"))?;
             self.gpu = Some(DashboardCapture::new(child, device, WIDTH, HEIGHT)?);
         }
         let webview = self.controller.CoreWebView2().map_err(message)?;
@@ -661,6 +663,16 @@ unsafe fn capture_frame(
 ) -> Result<(), String> {
     DESKTOP.with(|saved| {
         DESKTOP_GENERATION.fetch_add(1, Ordering::AcqRel);
+        // a skipped deferred restore can leave a desktop set up for the other capture mode
+        let wrong_mode = saved
+            .borrow()
+            .as_ref()
+            .is_some_and(|desktop| desktop.gpu.is_some() != device.is_some());
+        if wrong_mode {
+            if let Some(desktop) = saved.borrow_mut().take() {
+                desktop.restore();
+            }
+        }
         if saved.borrow().is_none() {
             *saved.borrow_mut() = Some(Desktop::enter(
                 window,

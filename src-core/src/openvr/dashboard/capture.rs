@@ -1,5 +1,5 @@
 use windows::{
-    core::{factory, w, Interface, Result},
+    core::{factory, w, Interface},
     Graphics::{
         Capture::{
             Direct3D11CaptureFrame, Direct3D11CaptureFramePool, GraphicsCaptureItem,
@@ -45,7 +45,7 @@ impl DashboardCapture {
         device: &ID3D11Device,
         width: u32,
         height: u32,
-    ) -> std::result::Result<Self, String> {
+    ) -> Result<Self, String> {
         let host = CaptureHost::new(child, width, height)?;
         let interop: IGraphicsCaptureItemInterop =
             factory::<GraphicsCaptureItem, IGraphicsCaptureItemInterop>()
@@ -72,8 +72,9 @@ impl DashboardCapture {
         );
         let dxgi: IDXGIDevice = device.cast().map_err(at("IDXGIDevice"))?;
         let capture_device: IDirect3DDevice = CreateDirect3D11DeviceFromDXGIDevice(&dxgi)
-            .and_then(|device| device.cast())
-            .map_err(at("CreateDirect3D11DeviceFromDXGIDevice"))?;
+            .map_err(at("CreateDirect3D11DeviceFromDXGIDevice"))?
+            .cast()
+            .map_err(at("IDirect3DDevice"))?;
         let pool = Direct3D11CaptureFramePool::CreateFreeThreaded(
             &capture_device,
             DirectXPixelFormat::B8G8R8A8UIntNormalized,
@@ -95,23 +96,29 @@ impl DashboardCapture {
         })
     }
 
-    pub fn next_frame(&self) -> Result<Option<GpuFrame>> {
+    pub fn next_frame(&self) -> Result<Option<GpuFrame>, String> {
         let mut latest: Option<Direct3D11CaptureFrame> = None;
         for _ in 0..2 {
             let frame = match self.pool.TryGetNextFrame() {
                 Ok(frame) => frame,
                 // The WinRT bindings represent a null frame with a successful HRESULT.
                 Err(error) if error.code().is_ok() => break,
-                Err(error) => return Err(error),
+                Err(error) => return Err(at("TryGetNextFrame")(error)),
             };
             if let Some(previous) = latest.replace(frame) {
-                previous.Close()?;
+                previous
+                    .Close()
+                    .map_err(at("Direct3D11CaptureFrame.Close"))?;
             }
         }
         latest
             .map(|frame| {
-                let access: IDirect3DDxgiInterfaceAccess = frame.Surface()?.cast()?;
-                let texture = unsafe { access.GetInterface()? };
+                let access: IDirect3DDxgiInterfaceAccess = frame
+                    .Surface()
+                    .map_err(at("Direct3D11CaptureFrame.Surface"))?
+                    .cast()
+                    .map_err(at("IDirect3DDxgiInterfaceAccess"))?;
+                let texture = unsafe { access.GetInterface().map_err(at("GetInterface"))? };
                 Ok(GpuFrame {
                     texture,
                     _frame: frame,
@@ -136,7 +143,7 @@ struct CaptureHost {
 }
 
 impl CaptureHost {
-    unsafe fn new(child: HWND, width: u32, height: u32) -> std::result::Result<Self, String> {
+    unsafe fn new(child: HWND, width: u32, height: u32) -> Result<Self, String> {
         let parent = GetParent(child).map_err(at("GetParent"))?;
         let mut bounds = RECT::default();
         GetClientRect(child, &mut bounds).map_err(at("GetClientRect"))?;
