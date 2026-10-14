@@ -340,7 +340,7 @@ With the shutdown sequence configured, you can fall asleep soundly in VR, knowin
 <br>
 Automate your brightness for when you sleep and wake up. OyasumiVR can smoothly transition your VR headset's brightness, so it falls down gradually as you sleep without waking you up.
 <br><br>
-It allows you to control both software brightness, as well as hardware brightness if your headset supports it (e.g. Valve Index or Bigscreen Beyond). In addition to providing you with several automations, you can easily control your brightness levels right from the SteamVR overlay menu!
+It allows you to control both software brightness, as well as hardware brightness if your headset supports it (e.g. Valve Index, Bigscreen Beyond or PlayStation VR2). In addition to providing you with several automations, you can easily control your brightness levels right from the SteamVR overlay menu!
 <br><br>
 🌡️ <b>Color Temperature</b>
 <br>
@@ -348,7 +348,7 @@ OyasumiVR can also control the color temperature of your VR headset's display. B
 <br><br>
 With the sunset and sunrise triggers, you can have OyasumiVR automatically adjust the color temperature of your display to match the time of day.
 <br><br>
-<i>Note that this feature is supported on the Valve Index and the Bigscreen Beyond. On other headsets, you can try it through the "Enable on unsupported headsets" setting.</i>
+<i>Note that this feature is supported on the Valve Index, the Bigscreen Beyond and the PlayStation VR2. On other headsets, you can try it through the "Enable on unsupported headsets" setting.</i>
     </td>
     <td width="380"><img src="https://github.com/user-attachments/assets/bfa3fd71-9ec1-4d61-8255-8a716b2ea09c"></td>
   </tr>
@@ -589,13 +589,13 @@ OyasumiVR로 그래픽 카드의 전력 제한을 직접 제어하는 것은 NVI
 
 ### 밝기 자동화
 
-Controlling the hardware brightness of the VR headset's display is currently only supported on the Valve Index, and the Bigscreen Beyond.
+Controlling the hardware brightness of the VR headset's display is currently only supported on the Valve Index, the Bigscreen Beyond, and the PlayStation VR2.
 
 Image brightness control is available on all headsets.
 
 ### Color Temperature Automations
 
-Controlling the color temperature of the VR headset's display is currently supported on the Valve Index and the Bigscreen Beyond. On other headsets, you can try it through the "Enable on unsupported headsets" setting.
+Controlling the color temperature of the VR headset's display is currently supported on the Valve Index, the Bigscreen Beyond and the PlayStation VR2. On other headsets, you can try it through the "Enable on unsupported headsets" setting.
 It might work on other headsets, but your mileage may vary.
 
 ## 기반 기술
