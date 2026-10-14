@@ -148,9 +148,9 @@
     }
   },
   "chaperone-automations": {
-    "description": "SteamVRのガーディアンのフェード距離を自動的に調整します。",
+    "description": "SteamVRのプレイエリアの境界線のフェード距離を自動的に調整します。",
     "fadeDistance": {
-      "title": "ガーディアンのフェード距離"
+      "title": "プレイエリアの境界線のフェード距離"
     },
     "onSleepDisable": {
       "description": "睡眠モード無効時にフェード距離を調整する",
@@ -160,7 +160,7 @@
       "description": "睡眠モード有効時にフェード距離を調整する",
       "title": "睡眠時"
     },
-    "title": "ガーディアンの自動化"
+    "title": "プレイエリアの境界線の自動化"
   },
   "comp": {
     "brightness-control-modal": {
@@ -215,7 +215,7 @@
       "audioVolumeAutomations": "音量",
       "autoInviteRequestAccept": "招待と招待リクエスト",
       "brightnessAutomations": "明るさ",
-      "chaperoneAutomations": "ガーディアン",
+      "chaperoneAutomations": "プレイエリアの境界線",
       "deviceManager": "デバイス管理",
       "frameLimiter": "フレームレート",
       "gpuAutomations": "GPUの電力",
@@ -395,7 +395,7 @@
             "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった"
           },
-          "title": "ガーディアンのフェード距離を{value}に設定"
+          "title": "プレイエリアの境界線のフェード距離を{value}に設定"
         },
         "declinedInvite": {
           "reason": {
