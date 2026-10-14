@@ -15,6 +15,13 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Pre-release numbering never predicts the version of the eventual stable release, and
   versions are assigned when a build is published, never before.
 
+## [Unreleased]
+
+### Fixed
+
+- Fixed the "Restart Bluetooth" button for base stations giving no feedback: the message now closes
+  when you click it
+
 ## [26.10.0]
 
 ### Added
