@@ -213,7 +213,7 @@
     "dashboard-navbar": {
       "about": "OyasumiVRについて",
       "audioVolumeAutomations": "音量",
-      "autoInviteRequestAccept": "InviteとReq Invite",
+      "autoInviteRequestAccept": "招待と招待リクエスト",
       "brightnessAutomations": "明るさ",
       "chaperoneAutomations": "ガーディアン",
       "deviceManager": "デバイス管理",
@@ -310,12 +310,12 @@
       "type": {
         "acceptedInviteRequest": {
           "subtitle": {
-            "anyone": "全員からのReq Inviteを承認する設定だった",
+            "anyone": "全員からの招待リクエストを承認する設定だった",
             "blacklist": "ブラックリストと合致しなかった",
             "joinMe": "ステータスがJoin Meだった",
             "whitelist": "ホワイトリストと合致した"
           },
-          "title": "''{displayName}''からのReq Inviteを自動的に承認"
+          "title": "''{displayName}''からの招待リクエストを自動的に承認"
         },
         "bsbFanSpeedChanged": {
           "reason": {
@@ -401,7 +401,7 @@
           "reason": {
             "SLEEP_MODE_ENABLED": "睡眠モードが有効だった"
           },
-          "title": "''{displayName}''からのInviteを自動で辞退"
+          "title": "''{displayName}''からの招待を自動で辞退"
         },
         "declinedInviteRequest": {
           "reason": {
@@ -410,7 +410,7 @@
             "PLAYER_COUNT_CONDITION_FAILED": "インスタンス人数が多かった",
             "SLEEP_MODE_ENABLED_CONDITION_FAILED": "睡眠モードが無効だった"
           },
-          "title": "''{displayName}''からのReq Inviteを自動で辞退"
+          "title": "''{displayName}''からの招待リクエストを自動で辞退"
         },
         "frameLimitChanged": {
           "reason": {
@@ -708,8 +708,8 @@
           "title": "VRChatグループ"
         },
         "VRCHAT_INVITES": {
-          "description": "VRChatのInviteやReq Inviteに関連するログ",
-          "title": "VRChatのInvite"
+          "description": "VRChatの招待や招待リクエストに関連するログ",
+          "title": "VRChatの招待"
         },
         "VRCHAT_STATUS": {
           "description": "VRChatのステータス変更に関連するログ",
@@ -1273,17 +1273,17 @@
   "invite-and-invite-requests": {
     "inviteRequestsTab": {
       "conditions": {
-        "description": "特定の条件が満たされた場合のみReq Inviteを承認できるように設定できます。",
+        "description": "特定の条件が満たされた場合のみ招待リクエストを承認できるように設定できます。",
         "title": "条件"
       },
-      "description": "自分が受け取ったReq Inviteを自動的に承認できます。ホワイトリストやブラックリストを利用すると、特定のフレンドに対してのみ許可することも可能です。",
+      "description": "自分が受け取った招待リクエストを自動的に承認できます。ホワイトリストやブラックリストを利用すると、特定のフレンドに対してのみ許可することも可能です。",
       "options": {
         "acceptMessage": {
           "customMessage": {
             "placeholder": "OyasumiVRが承認しました",
-            "title": "Inviteメッセージ"
+            "title": "招待メッセージ"
           },
-          "description": "Req Invite承認時にテキストを添える",
+          "description": "招待リクエストの承認時にテキストを添える",
           "title": "テキスト付きで承認"
         },
         "declineOnRequest": {
@@ -1292,17 +1292,17 @@
             "placeholder": "OyasumiVRが辞退しました",
             "title": "カスタムメッセージ"
           },
-          "description": "Req Inviteを自動承認しない場合に、自動で辞退メッセージを送信します",
+          "description": "招待リクエストを自動承認しない場合に、自動で辞退メッセージを送信します",
           "options": {
             "ALWAYS": "常に送信",
             "DISABLED": "送信しない",
             "WHEN_SLEEPING": "睡眠時のみ"
           },
-          "title": "承認しないReq Inviteを辞退する"
+          "title": "承認しない招待リクエストを辞退する"
         },
         "enable": {
-          "description": "フレンドからのReq Inviteを自動で承認",
-          "title": "Req Inviteの自動承認"
+          "description": "フレンドからの招待リクエストを自動で承認",
+          "title": "招待リクエストの自動承認"
         },
         "listMode": {
           "description": "プレイヤーリストの設定",
@@ -1353,8 +1353,8 @@
         "description": "この機能の動作を自動的に変更する自動化です。",
         "title": "その他の自動化"
       },
-      "userOnBusyStatus": "ステータスが赤(Busy)の場合、通常はReq Inviteを受け取りません。しかし外部ツール経由のReq Inviteである場合、OyasumiVRで制御可能です。",
-      "userOnJoinMeStatus": "ステータスが青(Join Me)の場合は設定に関わらず、VRChatがすべてのReq Inviteを承認します。"
+      "userOnBusyStatus": "ステータスが赤（取り込み中）の場合、通常は招待リクエストを受け取りません。しかし外部ツール経由の招待リクエストである場合、OyasumiVRで制御可能です。",
+      "userOnJoinMeStatus": "ステータスが青（だれでもおいで）の場合は設定に関わらず、VRChatがすべての招待リクエストを承認します。"
     },
     "invitesTab": {
       "options": {
@@ -1363,8 +1363,8 @@
             "placeholder": "現在は就寝中です！（OyasumiVR により辞退されました）",
             "title": "カスタムメッセージ"
           },
-          "description": "睡眠モード有効時はInviteを自動で辞退します。",
-          "title": "睡眠時のInviteを辞退"
+          "description": "睡眠モード有効時は招待を自動で辞退します。",
+          "title": "睡眠時の招待を辞退"
         }
       }
     },
@@ -1375,33 +1375,33 @@
     "soundsTab": {
       "options": {
         "playSoundOnInvite": {
-          "description": "Inviteを受け取ったときにサウンドを再生します",
+          "description": "招待を受け取ったときにサウンドを再生します",
           "onlyWhenAsleep": {
             "description": "睡眠モード有効時のみ再生する",
             "title": "睡眠時"
           },
-          "title": "Invite受信で再生"
+          "title": "招待受信で再生"
         },
         "playSoundOnInviteRequest": {
-          "description": "Req Inviteを受け取ったときにサウンドを再生します",
+          "description": "招待リクエストを受け取ったときにサウンドを再生します",
           "onlyWhenAsleep": {
             "description": "睡眠モード有効時のみ再生する",
             "title": "睡眠時"
           },
           "onlyWhenUnhandled": {
-            "description": "Req Inviteが自動で承認や辞退されなかった場合のみサウンドを再生します",
+            "description": "招待リクエストが自動で承認や辞退されなかった場合のみサウンドを再生します",
             "title": "自動処理されなかった時のみ"
           },
-          "title": "Req Invite受信で再生"
+          "title": "招待リクエスト受信で再生"
         }
       }
     },
     "tabs": {
-      "inviteRequests": "Req Invite",
-      "invites": "Invite",
+      "inviteRequests": "招待リクエスト",
+      "invites": "招待",
       "sounds": "サウンド"
     },
-    "title": "InviteとReq Invite"
+    "title": "招待と招待リクエスト"
   },
   "join-notifications": {
     "description": "プレイヤーがJoinまたは退出すると、通知メッセージまたはサウンドを再生します。Joinしてくれた人と会いたい場合に使用します。",
@@ -1540,12 +1540,12 @@
         "title": "睡眠検知が未調整"
       },
       "vrcInviteRequestFailedWorldUnknown": {
-        "message": "''{senderUsername}''からReq Inviteが届きましたが、ワールドが不明なため処理できませんでした。VRChatログが読み取れなかった可能性があります。",
-        "title": "Req Invite応答不可",
+        "message": "''{senderUsername}''から招待リクエストが届きましたが、ワールドが不明なため処理できませんでした。VRChatログが読み取れなかった可能性があります。",
+        "title": "招待リクエスト応答不可",
         "unknownFriend": "不明なフレンド"
       },
       "vrcLogMissing": {
-        "message": "VRChatは起動していますが、ログファイルが確認できませんでした。ログがないとInvite自動承認などの機能は動作しません。VRChatでログを有効にしてください。",
+        "message": "VRChatは起動していますが、ログファイルが確認できませんでした。ログがないと招待自動承認などの機能は動作しません。VRChatでログを有効にしてください。",
         "title": "VRChatログファイルが見つかりません"
       },
       "vrcOscMissing": {
@@ -1553,7 +1553,7 @@
         "title": "VRChat OSC(Query)が無効"
       },
       "vrcWebsocketDisconnected": {
-        "message": "VRChatにはログインしていますが、WebSocketに接続できませんでした。一部機能（Invite自動承認など）が現在使用できません。",
+        "message": "VRChatにはログインしていますが、WebSocketに接続できませんでした。一部機能（招待自動承認など）が現在使用できません。",
         "title": "VRChat WebSocketが未接続"
       }
     },
@@ -1627,13 +1627,13 @@
   },
   "notifications": {
     "autoAcceptedInviteRequest": {
-      "content": "{username}からのReq Inviteを自動承認しました。"
+      "content": "{username}からの招待リクエストを自動承認しました。"
     },
     "autoDeclinedInvite": {
-      "content": "{username}からのInviteを自動で辞退しました。"
+      "content": "{username}からの招待を自動で辞退しました。"
     },
     "autoDeclinedInviteRequest": {
-      "content": "{username}からのReq Inviteを自動で辞退しました。"
+      "content": "{username}からの招待リクエストを自動で辞退しました。"
     },
     "sleepCheck": {
       "content": "眠りましたか？20秒後に睡眠モードに切り替わります。\n\n（コントローラーのボタンを押すか、頭を軽く振ることでキャンセルできます）"
@@ -1743,7 +1743,7 @@
             "Whitelist": "ホワイトリスト"
           },
           "subtitle": "{mode}: {playerCount} 人",
-          "title": "Req Inviteの自動承認"
+          "title": "招待リクエストの自動承認"
         },
         "changeStatusBasedOnPlayerCount": {
           "subtitle": "最大 {threshold} 人",
@@ -2129,8 +2129,8 @@
           "title": "グループの変更"
         },
         "invites": {
-          "description": "OyasumiVRが承認または辞退したInviteとReq Inviteを記録します",
-          "title": "Invite"
+          "description": "OyasumiVRが承認または辞退した招待と招待リクエストを記録します",
+          "title": "招待"
         },
         "logEntries": {
           "onSleepDisable": "睡眠モードが無効になりました",
@@ -2158,8 +2158,8 @@
             "title": "VRChatステータスが更新されました"
           },
           "INVITE_AUTOMATIONS": {
-            "description": "OyasumiVRがReq Inviteを自動承認したとき、またはInviteやReq Inviteを自動で辞退したときに通知を受け取る",
-            "title": "InviteとReq Inviteの自動処理"
+            "description": "OyasumiVRが招待リクエストを自動承認したとき、または招待や招待リクエストを自動で辞退したときに通知を受け取る",
+            "title": "招待と招待リクエストの自動処理"
           },
           "SLEEP_MODE_DISABLED": {
             "description": "睡眠モードが無効になったとき",
@@ -2822,7 +2822,7 @@
   "status-automations": {
     "behaviourWarning": "OyasumiVRによるステータス変更は、すぐに反映されない場合があります。これはVRChatのキャッシュによるものであり、少し経てば更新されます。",
     "behaviourWarningFAQ": {
-      "message": "ステータス変更の挙動に関するFAQは以下をご覧ください。\n\nQ: VRChat上で青(Join Me)に表示されていなくても、Req Inviteは自動的に承認されますか？\nA: OyasumiVRがステータスを青(Join Me)に変更した場合は、受け取ったReq Inviteを自動承認します。\n\nQ: ステータスが更新されないのでJoinできません。\nA: ステータスの更新は、他のユーザーに表示されるまでに時間がかかる場合があります。Joinできない場合は、メインメニューからプロフィールを開いて自身のステータスを強制的に更新することも可能です。",
+      "message": "ステータス変更の挙動に関するFAQは以下をご覧ください。\n\nQ: VRChat上で青（だれでもおいで）に表示されていなくても、招待リクエストは自動的に承認されますか？\nA: OyasumiVRがステータスを青（だれでもおいで）に変更した場合は、受け取った招待リクエストを自動承認します。\n\nQ: ステータスが更新されないのでJoinできません。\nA: ステータスの更新は、他のユーザーに表示されるまでに時間がかかる場合があります。Joinできない場合は、メインメニューからプロフィールを開いて自身のステータスを強制的に更新することも可能です。",
       "title": "ステータス自動化 FAQ"
     },
     "general": {
