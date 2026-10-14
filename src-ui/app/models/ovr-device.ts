@@ -47,6 +47,9 @@ export interface OVRDevice {
   hmdOnHead?: boolean;
   hmdActivity?: string;
   displayFrequency?: number;
+  displaySupportsAnalogGain?: boolean;
+  displayMinAnalogGain?: number;
+  displayMaxAnalogGain?: number;
 
   // Status properties
   isTurningOff: boolean;
