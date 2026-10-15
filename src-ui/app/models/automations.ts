@@ -50,7 +50,7 @@ export type AutomationType =
   | 'RUN_AUTOMATIONS';
 
 export interface AutomationConfigs {
-  version: 20;
+  version: 21;
   // CORE SLEEP FUNCTIONALITY
   SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR: SleepModeEnableForSleepDetectorAutomationConfig;
   SLEEP_MODE_ENABLE_AT_TIME: SleepModeEnableAtTimeAutomationConfig;
@@ -517,7 +517,7 @@ export interface RunAutomationsConfig extends AutomationConfig {
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 20,
+  version: 21,
   // CORE SLEEP FUNCTIONALITY
   SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR: {
     enabled: false,
