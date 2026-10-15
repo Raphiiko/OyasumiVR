@@ -23,6 +23,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
+- Fixed sleeping position detection always reporting "Upright", which kept automatic sleeping
+  animations from changing your avatar's pose
 - Fixed the "Restart Bluetooth" button for base stations giving no feedback: the message now closes
   when you click it
 - Fixed the OyasumiVR interface in the SteamVR dashboard closing as soon as it opened on some

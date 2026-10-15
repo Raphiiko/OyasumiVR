@@ -1,0 +1,43 @@
+@if (snapshot(); as snapshot) {
+  <div class="summary">
+    <div>
+      Source: <b>{{ source() === 'live' ? 'Live headset' : 'Preview' }}</b>
+    </div>
+    <div>Quaternion: {{ formatQuaternion(snapshot.quaternion) }}</div>
+    <div>
+      Raw pose: <b [style.color]="colors[snapshot.rawPose]">{{ snapshot.rawPose }}</b>
+    </div>
+    <div>
+      Stable pose: <b [style.color]="colors[snapshot.stablePose]">{{ snapshot.stablePose }}</b>
+    </div>
+  </div>
+  <div class="flags">
+    @for (pose of priority; track pose) {
+      <span
+        class="flag"
+        [class.active]="isActive(snapshot, pose)"
+        [style.border-color]="colors[pose]"
+        >{{ pose }}</span
+      >
+    }
+  </div>
+}
+<div class="preview">
+  <div>
+    Preview an orientation (degrees, Euler YXZ). Live headset poses replace it while SteamVR runs.
+  </div>
+  @for (axis of axes; track axis) {
+    <label>
+      {{ axis }} {{ preview[axis] }}°
+      <input
+        type="range"
+        min="-180"
+        max="180"
+        step="1"
+        [value]="preview[axis]"
+        (input)="setPreview(axis, $event)"
+      />
+    </label>
+  }
+</div>
+<canvas #canvas></canvas>

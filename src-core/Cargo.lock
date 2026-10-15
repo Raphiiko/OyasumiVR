@@ -3944,6 +3944,7 @@ dependencies = [
  "http-body-util",
  "hyper",
  "hyper-util",
+ "libm",
  "log",
  "md5",
  "mime",

@@ -54,8 +54,3 @@ export interface OVRDevice {
   // Status properties
   isTurningOff: boolean;
 }
-
-export interface OVRDevicePose {
-  quaternion: [number, number, number, number];
-  position: [number, number, number];
-}

@@ -151,7 +151,7 @@ export class SleepingAnimationsAutomationService {
   }
 
   async forcePose(pose: SleepingPose) {
-    this.sleep.forcePose(pose);
+    await this.sleep.forcePose(pose);
   }
 
   async retrigger() {

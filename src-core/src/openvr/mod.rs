@@ -9,6 +9,7 @@ mod framelimiter;
 mod gesture_detector;
 mod models;
 mod sleep_detector;
+pub mod sleeping_pose;
 mod supersampling;
 
 use crate::{
@@ -73,6 +74,7 @@ pub async fn task() {
             Duration::from_millis(32)
         };
         tokio::time::sleep(interval).await;
+        sleeping_pose::on_task_tick().await;
         if *OVR_ACTIVE.lock().await {
             // If we're not active, try to initialize OpenVR
             if OVR_CONTEXT.lock().await.is_none() {

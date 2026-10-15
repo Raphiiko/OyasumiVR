@@ -1,100 +1,85 @@
-import { BehaviorSubject } from 'rxjs';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { NgZone } from '@angular/core';
+import { of } from 'rxjs';
+import { describe, expect, it, vi } from 'vitest';
 import { SleepService } from './sleep.service';
-import type { OpenVRService } from './openvr.service';
-import type { OVRDevice, OVRDevicePose } from '../models/ovr-device';
+import type { AppSettingsService } from './app-settings.service';
 import type { SleepingPose } from '../models/sleeping-pose';
 
+const core = vi.hoisted(() => ({
+  pose: 'UNKNOWN' as SleepingPose,
+  listeners: new Map<string, (event: { payload: unknown }) => void>(),
+  /** Runs while sleeping_pose_get is in flight, after the core read its answer. */
+  beforeGetResolves: undefined as (() => void) | undefined,
+}));
+
 vi.mock('@tauri-apps/plugin-log', () => ({ info: vi.fn() }));
+vi.mock('@tauri-apps/api/event', () => ({
+  listen: vi.fn(async (name: string, handler: (event: { payload: unknown }) => void) => {
+    core.listeners.set(name, handler);
+    return () => {};
+  }),
+}));
+vi.mock('@tauri-apps/api/core', () => ({
+  invoke: vi.fn(async (command: string, args?: { pose: SleepingPose }) => {
+    if (command === 'sleeping_pose_get') {
+      const pose = core.pose;
+      core.beforeGetResolves?.();
+      return pose;
+    }
+    if (command === 'sleeping_pose_force') {
+      core.pose = args!.pose;
+      core.listeners.get('SLEEPING_POSE_UPDATE')!({ payload: core.pose });
+    }
+  }),
+}));
 
-const hmd: OVRDevice = {
-  index: 0,
-  class: 'HMD',
-  role: 'Invalid',
-  battery: 0,
-  pose: null,
-  isTurningOff: false,
-};
-const pose: OVRDevicePose = { quaternion: [0, 0, 0, 1], position: [0, 0, 0] };
-
-function setup() {
-  const devices = new BehaviorSubject<OVRDevice[]>([hmd]);
-  const devicePoses = new BehaviorSubject<Record<number, OVRDevicePose>>({});
+function createService() {
+  const appSettings = { settings: of({ sleepModeStartupBehaviour: 'INACTIVE' }) };
+  const zone = { run: vi.fn((fn: () => unknown) => fn()) };
   const service = new SleepService(
-    { devices, devicePoses } as unknown as OpenVRService,
     undefined!,
     undefined!,
+    appSettings as unknown as AppSettingsService,
     undefined!,
-    undefined!
+    zone as unknown as NgZone
   );
-  const classify = vi
-    .spyOn(
-      service as unknown as { getSleepingPoseForDevicePose: (p: OVRDevicePose) => SleepingPose },
-      'getSleepingPoseForDevicePose'
-    )
-    .mockReturnValue('SIDE_LEFT');
-  return { service, classify, emit: () => devicePoses.next({ 0: pose }) };
+  return { service, zone };
 }
 
-describe('shared sleeping pose', () => {
-  beforeEach(() => vi.useFakeTimers());
-  afterEach(() => {
-    vi.clearAllTimers();
-    vi.useRealTimers();
-    vi.restoreAllMocks();
+describe('sleeping pose from the core', () => {
+  it('catches up on the pose detected before init and follows updates', async () => {
+    core.pose = 'SIDE_BACK';
+    const { service, zone } = createService();
+    const poses: SleepingPose[] = [];
+    service.pose.subscribe((pose) => poses.push(pose));
+    await service.init();
+    core.listeners.get('SLEEPING_POSE_UPDATE')!({ payload: 'SIDE_LEFT' });
+    core.listeners.get('SLEEPING_POSE_UPDATE')!({ payload: 'SIDE_LEFT' });
+    expect(poses).toEqual(['UNKNOWN', 'SIDE_BACK', 'SIDE_LEFT']);
+    expect(zone.run).toHaveBeenCalledTimes(2);
   });
 
-  it('classifies once per update for startup and view subscribers', () => {
-    const { service, classify, emit } = setup();
-    const consumers = Array.from({ length: 5 }, () => vi.fn());
-    const subscriptions = consumers.map((consumer) => service.pose.subscribe(consumer));
-    consumers.forEach((consumer) => expect(consumer).toHaveBeenLastCalledWith('UNKNOWN'));
-    emit();
-    expect(classify).toHaveBeenCalledTimes(1);
-    emit();
-    vi.advanceTimersByTime(1000);
-    expect(classify).toHaveBeenCalledTimes(2);
-    consumers.forEach((consumer) =>
-      expect(consumer.mock.calls).toEqual([['UNKNOWN'], ['SIDE_LEFT']])
-    );
-    const late = vi.fn();
-    const lateSubscription = service.pose.subscribe(late);
-    expect(late.mock.calls).toEqual([['SIDE_LEFT']]);
-    expect(classify).toHaveBeenCalledTimes(2);
-    subscriptions.forEach((subscription) => subscription.unsubscribe());
-    lateSubscription.unsubscribe();
-    emit();
-    expect(classify).toHaveBeenCalledTimes(3);
-    const reopened = service.pose.subscribe(late);
-    expect(late).toHaveBeenLastCalledWith('SIDE_LEFT');
-    expect(classify).toHaveBeenCalledTimes(3);
-    reopened.unsubscribe();
+  it('keeps an update that arrives before the catch-up answer', async () => {
+    core.pose = 'SIDE_BACK';
+    core.beforeGetResolves = () => {
+      core.pose = 'SIDE_LEFT';
+      core.listeners.get('SLEEPING_POSE_UPDATE')!({ payload: core.pose });
+    };
+    const { service } = createService();
+    const poses: SleepingPose[] = [];
+    service.pose.subscribe((pose) => poses.push(pose));
+    await service.init();
+    core.beforeGetResolves = undefined;
+    expect(poses).toEqual(['UNKNOWN', 'SIDE_LEFT']);
   });
 
-  it('shares the stability window and broadcasts forced poses', () => {
-    const { service, classify, emit } = setup();
-    const first = vi.fn();
-    const a = service.pose.subscribe(first);
-    emit();
-    vi.advanceTimersByTime(500);
-    const second = vi.fn();
-    const b = service.pose.subscribe(second);
-    emit();
-    vi.advanceTimersByTime(500);
-    expect(first).toHaveBeenLastCalledWith('SIDE_LEFT');
-    expect(second).toHaveBeenLastCalledWith('SIDE_LEFT');
-    service.forcePose('SIDE_BACK');
-    expect(first).toHaveBeenLastCalledWith('SIDE_BACK');
-    expect(second).toHaveBeenLastCalledWith('SIDE_BACK');
-    classify.mockReturnValueOnce('SIDE_LEFT').mockReturnValueOnce('SIDE_RIGHT');
-    emit();
-    emit();
-    vi.advanceTimersByTime(1000);
-    expect(first).toHaveBeenLastCalledWith('SIDE_BACK');
-    emit();
-    vi.advanceTimersByTime(1000);
-    expect(first).toHaveBeenLastCalledWith('SIDE_BACK');
-    a.unsubscribe();
-    b.unsubscribe();
+  it('forces a pose through the core', async () => {
+    core.pose = 'UNKNOWN';
+    const { service } = createService();
+    await service.init();
+    const late: SleepingPose[] = [];
+    await service.forcePose('SIDE_RIGHT');
+    service.pose.subscribe((pose) => late.push(pose));
+    expect(late).toEqual(['SIDE_RIGHT']);
   });
 });

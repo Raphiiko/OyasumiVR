@@ -40,6 +40,7 @@ log = { version = "0.4.34", features = ["release_max_level_info"] }
 md5 = "0.8.1"
 mime = "0.3.17"
 mime_guess = "2.0.5"
+libm = "0.2.16"
 nalgebra = "0.35.0"
 named_pipe = "0.4.1"
 oyasumivr-shared = { path = "../src-shared-rust" }
