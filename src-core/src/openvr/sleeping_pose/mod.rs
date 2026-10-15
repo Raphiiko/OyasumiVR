@@ -84,6 +84,14 @@ impl PoseTracker {
         self.raw_pose
     }
 
+    /// Closes the windows that ended by `now_ms`, then sets the stable pose to `pose`.
+    ///
+    /// Returns every change of the stable pose, in order.
+    pub fn force(&mut self, now_ms: u64, pose: SleepingPose) -> Vec<SleepingPose> {
+        let closed = self.advance(now_ms);
+        closed.into_iter().chain(self.set_stable(pose)).collect()
+    }
+
     /// Sets the stable pose, and returns it if it changed.
     pub fn set_stable(&mut self, pose: SleepingPose) -> Option<SleepingPose> {
         if pose == self.stable_pose {
@@ -107,14 +115,25 @@ fn now_ms() -> u64 {
     EPOCH.elapsed().as_millis() as u64
 }
 
+/// Closes the windows that ended and publishes the stable pose if it changed.
+///
+/// Call with the tracker locked, so a forced pose cannot overtake the update.
+async fn publish_closed_windows(tracker: &mut PoseTracker, now: u64) {
+    if let Some(pose) = tracker.advance(now) {
+        send_event("SLEEPING_POSE_UPDATE", pose).await;
+    }
+}
+
+/// Call on every OpenVR task iteration, whether SteamVR runs or not, so windows close on time.
+pub async fn on_task_tick() {
+    publish_closed_windows(&mut *TRACKER.lock().await, now_ms()).await;
+}
+
 /// Call on every OpenVR device tick, with the headset orientation when its pose is valid.
 pub async fn on_ovr_tick(hmd_quaternion: Option<[f64; 4]>) {
     let now = now_ms();
     let mut tracker = TRACKER.lock().await;
-    // publish under the lock, so a forced pose cannot overtake this update
-    if let Some(pose) = tracker.advance(now) {
-        send_event("SLEEPING_POSE_UPDATE", pose).await;
-    }
+    publish_closed_windows(&mut tracker, now).await;
     let mut snapshot = None;
     if let Some(quaternion) = hmd_quaternion.filter(|_| tracker.sample_due(now)) {
         let geometry = PoseGeometry::new(quaternion);

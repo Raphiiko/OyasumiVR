@@ -1,4 +1,4 @@
-use super::{classify, DebugSnapshot, PoseGeometry, SleepingPose, DEBUG_ENABLED, TRACKER};
+use super::{classify, now_ms, DebugSnapshot, PoseGeometry, SleepingPose, DEBUG_ENABLED, TRACKER};
 use crate::utils::send_event;
 use std::sync::atomic::Ordering;
 
@@ -10,7 +10,7 @@ pub async fn sleeping_pose_get() -> SleepingPose {
 #[tauri::command]
 pub async fn sleeping_pose_force(pose: SleepingPose) {
     let mut tracker = TRACKER.lock().await;
-    if let Some(pose) = tracker.set_stable(pose) {
+    for pose in tracker.force(now_ms(), pose) {
         send_event("SLEEPING_POSE_UPDATE", pose).await;
     }
 }

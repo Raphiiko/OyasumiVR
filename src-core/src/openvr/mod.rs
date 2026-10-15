@@ -74,6 +74,7 @@ pub async fn task() {
             Duration::from_millis(32)
         };
         tokio::time::sleep(interval).await;
+        sleeping_pose::on_task_tick().await;
         if *OVR_ACTIVE.lock().await {
             // If we're not active, try to initialize OpenVR
             if OVR_CONTEXT.lock().await.is_none() {

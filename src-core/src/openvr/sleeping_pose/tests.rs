@@ -126,6 +126,20 @@ fn a_forced_pose_holds_until_a_window_agrees_on_another() {
 }
 
 #[test]
+fn a_forced_pose_applies_after_a_window_that_ended_before_it() {
+    let mut tracker = PoseTracker::new(0);
+    sample(&mut tracker, 250, 0.0, 90.0);
+    sample(&mut tracker, 500, 0.0, 90.0);
+    // no tick closed the window, as while SteamVR is not running
+    assert_eq!(
+        tracker.force(5000, SleepingPose::SideRight),
+        vec![SleepingPose::SideLeft, SleepingPose::SideRight]
+    );
+    assert_eq!(tracker.advance(60000), None);
+    assert_eq!(tracker.stable_pose(), SleepingPose::SideRight);
+}
+
+#[test]
 fn closes_every_window_that_ended_during_a_gap() {
     let mut tracker = PoseTracker::new(0);
     sample(&mut tracker, 250, 0.0, 90.0);

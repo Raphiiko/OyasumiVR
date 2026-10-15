@@ -7,6 +7,8 @@ import type { SleepingPose } from '../models/sleeping-pose';
 const core = vi.hoisted(() => ({
   pose: 'UNKNOWN' as SleepingPose,
   listeners: new Map<string, (event: { payload: unknown }) => void>(),
+  /** Runs while sleeping_pose_get is in flight, after the core read its answer. */
+  beforeGetResolves: undefined as (() => void) | undefined,
 }));
 
 vi.mock('@tauri-apps/plugin-log', () => ({ info: vi.fn() }));
@@ -18,7 +20,11 @@ vi.mock('@tauri-apps/api/event', () => ({
 }));
 vi.mock('@tauri-apps/api/core', () => ({
   invoke: vi.fn(async (command: string, args?: { pose: SleepingPose }) => {
-    if (command === 'sleeping_pose_get') return core.pose;
+    if (command === 'sleeping_pose_get') {
+      const pose = core.pose;
+      core.beforeGetResolves?.();
+      return pose;
+    }
     if (command === 'sleeping_pose_force') {
       core.pose = args!.pose;
       core.listeners.get('SLEEPING_POSE_UPDATE')!({ payload: core.pose });
@@ -46,6 +52,20 @@ describe('sleeping pose from the core', () => {
     core.listeners.get('SLEEPING_POSE_UPDATE')!({ payload: 'SIDE_LEFT' });
     core.listeners.get('SLEEPING_POSE_UPDATE')!({ payload: 'SIDE_LEFT' });
     expect(poses).toEqual(['UNKNOWN', 'SIDE_BACK', 'SIDE_LEFT']);
+  });
+
+  it('keeps an update that arrives before the catch-up answer', async () => {
+    core.pose = 'SIDE_BACK';
+    core.beforeGetResolves = () => {
+      core.pose = 'SIDE_LEFT';
+      core.listeners.get('SLEEPING_POSE_UPDATE')!({ payload: core.pose });
+    };
+    const service = createService();
+    const poses: SleepingPose[] = [];
+    service.pose.subscribe((pose) => poses.push(pose));
+    await service.init();
+    core.beforeGetResolves = undefined;
+    expect(poses).toEqual(['UNKNOWN', 'SIDE_LEFT']);
   });
 
   it('forces a pose through the core', async () => {

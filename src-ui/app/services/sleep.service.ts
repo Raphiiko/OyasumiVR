@@ -66,8 +66,14 @@ export class SleepService {
     }
     this._mode.next(mode);
     // follow the core's pose, then catch up on a change sent before the listener
-    await listen<SleepingPose>('SLEEPING_POSE_UPDATE', (e) => this._pose.next(e.payload));
-    this._pose.next(await invoke<SleepingPose>('sleeping_pose_get'));
+    let updated = false;
+    await listen<SleepingPose>('SLEEPING_POSE_UPDATE', (e) => {
+      updated = true;
+      this._pose.next(e.payload);
+    });
+    const pose = await invoke<SleepingPose>('sleeping_pose_get');
+    // events and command results arrive on separate channels, so an event can be newer
+    if (!updated) this._pose.next(pose);
     // Handle events
     await listen<boolean>('setSleepMode', (e) => {
       if (e.payload) {
