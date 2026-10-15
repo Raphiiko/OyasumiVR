@@ -11,6 +11,7 @@ const webTestInputs = new Set([
   'src-core/tauri.conf.json',
   'src-core/Cargo.toml',
   'src-elevated-sidecar/Cargo.toml',
+  'src-frame-helper/Cargo.toml',
   'src-privileged-launcher/Cargo.toml',
   'src-shared-rust/Cargo.toml',
 ]);
@@ -55,7 +56,7 @@ export function selectChecks(files, fileExists = existsSync) {
         add(
           rust(
             component === 'shared-rust'
-              ? ['shared-rust', 'core', 'elevated-sidecar', 'privileged-launcher']
+              ? ['shared-rust', 'core', 'elevated-sidecar', 'privileged-launcher', 'frame-helper']
               : [component]
           )
         );
