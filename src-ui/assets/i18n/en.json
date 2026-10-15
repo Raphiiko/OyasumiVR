@@ -2414,6 +2414,7 @@
           "hardware": "Hardware accelerated",
           "label": "SteamVR dashboard",
           "notRendering": "Not rendering",
+          "pending": "Waiting for the dashboard to open",
           "software": "Software rendered",
           "softwareFallback": "Software rendered (fallback)"
         },

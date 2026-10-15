@@ -48,7 +48,7 @@ const PANEL_HEIGHT_METERS: f32 = 1.5;
 const CPU_FRAME_INTERVAL: Duration = Duration::from_millis(33);
 /// More than one capture in flight hides the WebView's readback latency.
 const CPU_CAPTURES_IN_FLIGHT: usize = 3;
-const CPU_STATS_INTERVAL: Duration = Duration::from_secs(30);
+const STATS_INTERVAL: Duration = Duration::from_secs(30);
 const FIRST_FRAME_TIMEOUT: Duration = Duration::from_secs(5);
 const CAPTURE_TIMEOUT: Duration = Duration::from_secs(5);
 
@@ -56,6 +56,7 @@ pub const RENDER_NONE: u8 = 0;
 pub const RENDER_GPU: u8 = 1;
 pub const RENDER_CPU: u8 = 2;
 pub const RENDER_CPU_FALLBACK: u8 = 3;
+pub const RENDER_PENDING: u8 = 4;
 
 const MOUSE_MOVE: u32 = raw::EVREventType::VREvent_MouseMove.0 as u32;
 const MOUSE_BUTTON_DOWN: u32 = raw::EVREventType::VREvent_MouseButtonDown.0 as u32;
@@ -103,7 +104,7 @@ impl CpuStats {
         self.capture += frame.capture;
         self.decode += frame.decode;
         let elapsed = self.started.elapsed();
-        if elapsed < CPU_STATS_INTERVAL {
+        if elapsed < STATS_INTERVAL {
             return;
         }
         log::info!(
@@ -115,6 +116,82 @@ impl CpuStats {
         *self = Self::new();
     }
 }
+
+/// GPU frame timings of one dashboard open, for the periodic and closing log lines.
+struct GpuStats {
+    /// The capture host, item and frame pool, as `DashboardCapture` describes them.
+    summary: String,
+    started: Instant,
+    frames: u32,
+    last_frame: Instant,
+    longest_gap: Duration,
+    interval_started: Instant,
+    interval_frames: u32,
+    interval_longest_gap: Duration,
+}
+
+impl GpuStats {
+    fn new(summary: String) -> Self {
+        let now = Instant::now();
+        Self {
+            summary,
+            started: now,
+            frames: 1,
+            last_frame: now,
+            longest_gap: Duration::ZERO,
+            interval_started: now,
+            interval_frames: 1,
+            interval_longest_gap: Duration::ZERO,
+        }
+    }
+
+    fn record(&mut self) {
+        let gap = self.last_frame.elapsed();
+        self.last_frame = Instant::now();
+        self.frames += 1;
+        self.interval_frames += 1;
+        self.longest_gap = self.longest_gap.max(gap);
+        self.interval_longest_gap = self.interval_longest_gap.max(gap);
+    }
+
+    fn report_if_due(&mut self) {
+        let elapsed = self.interval_started.elapsed();
+        if elapsed < STATS_INTERVAL {
+            return;
+        }
+        log::info!(
+            "[Dashboard] GPU capture: {} new frames in {:.1} s ({:.1} fps), longest gap {}, \
+             last frame {} ago, {}. Windows sends a frame only when the window redraws",
+            self.interval_frames,
+            elapsed.as_secs_f64(),
+            self.interval_frames as f64 / elapsed.as_secs_f64(),
+            millis(self.interval_longest_gap.max(self.last_frame.elapsed())),
+            millis(self.last_frame.elapsed()),
+            self.summary
+        );
+        self.interval_started = Instant::now();
+        self.interval_frames = 0;
+        self.interval_longest_gap = Duration::ZERO;
+    }
+
+    fn finish(&self, open: u32) {
+        let elapsed = self.started.elapsed();
+        log::info!(
+            "[Dashboard] Open #{open} GPU capture ended after {:.1} s: {} new frames \
+             ({:.1} fps), longest gap {}",
+            elapsed.as_secs_f64(),
+            self.frames,
+            self.frames as f64 / elapsed.as_secs_f64(),
+            millis(self.longest_gap.max(self.last_frame.elapsed()))
+        );
+    }
+}
+
+/// Formats a duration as milliseconds, which stay ASCII in the log at any length.
+fn millis(duration: Duration) -> String {
+    format!("{:.1} ms", duration.as_secs_f64() * 1000.0)
+}
+
 type Frame = Result<CapturedFrame, String>;
 
 /// Shared between the OpenVR task and the capture callbacks of one activation.
@@ -123,6 +200,8 @@ struct CaptureState {
     active: AtomicBool,
     pending: AtomicUsize,
     frame: Mutex<Option<Frame>>,
+    /// The GPU capture's host, item and frame pool, set when the capture starts.
+    gpu_summary: Mutex<Option<String>>,
 }
 
 thread_local! {
@@ -223,7 +302,9 @@ impl Desktop {
             self.controller
                 .ParentWindow(&mut child)
                 .map_err(|error| format!("ParentWindow: {error}"))?;
-            self.gpu = Some(DashboardCapture::new(child, device, WIDTH, HEIGHT)?);
+            let gpu = DashboardCapture::new(child, device, WIDTH, HEIGHT)?;
+            *self.owner.gpu_summary.lock().unwrap() = Some(gpu.summary.clone());
+            self.gpu = Some(gpu);
         }
         let webview = self.controller.CoreWebView2().map_err(message)?;
         self.input = Some(DashboardInput::new(
@@ -273,12 +354,18 @@ pub struct DashboardOverlay {
     /// Last request made while idle, or last frame arrival; the capture timeout counts from it.
     capture_progress: Instant,
     cpu_stats: CpuStats,
+    /// Set by the first GPU frame of an activation; cleared when it ends.
+    gpu_stats: Option<GpuStats>,
+    /// Dashboard opens in this app run; the current open's number while one is selected.
+    opens: u32,
     activation_started: Option<Instant>,
     selected: bool,
     failed: bool,
     has_frame: bool,
     gpu: bool,
-    /// Set when GPU capture fails; keeps this overlay on CPU capture until it is recreated.
+    /// Set by the first frame submitted in the current capture mode; cleared when the mode changes.
+    rendered: bool,
+    /// Set when GPU capture fails; keeps the current dashboard open on CPU capture.
     gpu_failed: bool,
     keyboard: KeyboardRequests,
     keyboard_id: Option<u64>,
@@ -317,11 +404,14 @@ impl DashboardOverlay {
             next_frame: Instant::now(),
             capture_progress: Instant::now(),
             cpu_stats: CpuStats::new(),
+            gpu_stats: None,
+            opens: 0,
             activation_started: None,
             selected: false,
             failed: false,
             has_frame: false,
             gpu: DASHBOARD_GPU_ACCELERATION.load(Ordering::Acquire),
+            rendered: false,
             gpu_failed: false,
             keyboard: Arc::new(Mutex::new(None)),
             keyboard_id: None,
@@ -367,7 +457,13 @@ impl DashboardOverlay {
             overlay.set_overlay_texture()?;
         }
         overlay.publish_render_mode();
-        log::info!("[Dashboard] Dashboard overlay registered");
+        let os = windows_version::OsVersion::current();
+        log::info!(
+            "[Dashboard] Dashboard overlay registered on Windows {}.{}.{}",
+            os.major,
+            os.minor,
+            os.build
+        );
         Ok(overlay)
     }
 
@@ -378,10 +474,15 @@ impl DashboardOverlay {
     pub fn tick(&mut self) -> Result<(), String> {
         match self.tick_capture() {
             Err(error) if self.gpu => {
-                log::warn!("[Dashboard] GPU capture failed, falling back to CPU capture: {error}");
+                log::warn!(
+                    "[Dashboard] Open #{}: GPU capture failed, falling back to CPU capture: {error}",
+                    self.opens
+                );
+                self.log_gpu_diagnostics();
                 self.gpu_failed = true;
                 self.deactivate();
                 self.gpu = false;
+                self.rendered = false;
                 Ok(())
             }
             result => result,
@@ -413,6 +514,9 @@ impl DashboardOverlay {
             return Ok(());
         }
         self.submit_frame()?;
+        if let Some(stats) = self.gpu_stats.as_mut() {
+            stats.report_if_due();
+        }
         self.request_frame()
     }
 
@@ -423,11 +527,43 @@ impl DashboardOverlay {
         }
         self.selected = selected;
         self.failed = false;
-        log::info!("[Dashboard] Dashboard selected: {selected}");
         if !selected {
+            log::info!("[Dashboard] Dashboard selected: false");
             self.deactivate();
+            self.gpu_failed = false;
+            return Ok(());
         }
+        self.opens += 1;
+        let main_window = match (self.window.is_visible(), self.window.is_minimized()) {
+            (Ok(false), _) => "hidden",
+            (Ok(true), Ok(true)) => "minimised",
+            (Ok(true), Ok(false)) => "visible",
+            _ => "unknown",
+        };
+        log::info!(
+            "[Dashboard] Dashboard selected: true, open #{}, main window {main_window}",
+            self.opens
+        );
         Ok(())
+    }
+
+    /// Logs the GPU capture host and WebView state; schedule it before `deactivate` drops them.
+    fn log_gpu_diagnostics(&self) {
+        let open = self.opens;
+        let scheduled = self.window.run_on_main_thread(move || {
+            DESKTOP.with(|saved| {
+                let saved = saved.borrow();
+                if let Some(gpu) = saved.as_ref().and_then(|desktop| desktop.gpu.as_ref()) {
+                    log::warn!(
+                        "[Dashboard] Open #{open} GPU capture state at the failure: {}",
+                        gpu.diagnostics()
+                    );
+                }
+            });
+        });
+        if let Err(error) = scheduled {
+            log::error!("[Dashboard] Could not schedule GPU capture diagnostics: {error}");
+        }
     }
 
     fn sync_capture_mode(&mut self) {
@@ -435,13 +571,16 @@ impl DashboardOverlay {
         if gpu != self.gpu {
             self.deactivate();
             self.gpu = gpu;
+            self.rendered = false;
             self.failed = false;
         }
         self.publish_render_mode();
     }
 
     fn publish_render_mode(&self) {
-        let mode = if self.gpu {
+        let mode = if !self.rendered {
+            RENDER_PENDING
+        } else if self.gpu {
             RENDER_GPU
         } else if self.gpu_failed && DASHBOARD_GPU_ACCELERATION.load(Ordering::Acquire) {
             RENDER_CPU_FALLBACK
@@ -464,21 +603,52 @@ impl DashboardOverlay {
                 }
                 CapturedFrame::Gpu(frame) => {
                     self.texture.copy(&frame.texture)?;
+                    if let Some(stats) = self.gpu_stats.as_mut() {
+                        stats.record();
+                    }
                 }
             }
             self.set_overlay_texture()?;
         }
         if !self.has_frame {
-            log::info!(
-                "[Dashboard] First {WIDTH}x{HEIGHT} frame submitted via {} capture in {:?}",
-                if self.gpu { "GPU" } else { "CPU" },
-                self.activation_started
-                    .map(|started| started.elapsed())
-                    .unwrap_or_default()
-            );
+            self.log_first_frame();
         }
         self.has_frame = true;
+        self.rendered = true;
         Ok(())
+    }
+
+    fn log_first_frame(&mut self) {
+        let waited = self
+            .activation_started
+            .map(|started| started.elapsed())
+            .unwrap_or_default();
+        if !self.gpu {
+            let reason = if self.gpu_failed {
+                "after a GPU failure"
+            } else {
+                "GPU acceleration off"
+            };
+            log::info!(
+                "[Dashboard] Open #{} on CPU ({reason}): first frame in {}",
+                self.opens,
+                millis(waited)
+            );
+            return;
+        }
+        let summary = self
+            .capture
+            .gpu_summary
+            .lock()
+            .unwrap()
+            .clone()
+            .unwrap_or_default();
+        log::info!(
+            "[Dashboard] Open #{} on GPU: {summary}, first frame in {}",
+            self.opens,
+            millis(waited)
+        );
+        self.gpu_stats = Some(GpuStats::new(summary));
     }
 
     fn request_frame(&mut self) -> Result<(), String> {
@@ -684,6 +854,14 @@ impl DashboardOverlay {
             log::warn!("[Dashboard] Could not hide keyboard: {error}");
         }
         self.keyboard = Arc::new(Mutex::new(None));
+        if let Some(stats) = self.gpu_stats.take() {
+            stats.finish(self.opens);
+        } else if self.activation_started.is_some() && !self.has_frame {
+            log::info!(
+                "[Dashboard] Open #{}: capture stopped before its first frame",
+                self.opens
+            );
+        }
         self.has_frame = false;
         self.cpu_stats = CpuStats::new();
         self.activation_started = None;
