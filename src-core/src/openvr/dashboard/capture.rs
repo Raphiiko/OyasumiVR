@@ -211,7 +211,13 @@ unsafe fn create_item(
     height: u32,
 ) -> Result<(CaptureHost, GraphicsCaptureItem), String> {
     let mut failures = Vec::new();
-    for cloaked in [false, true] {
+    // Windows 10 rejects the tool window host, and some of its builds abort the process instead
+    let hosts: &[bool] = if windows_version::OsVersion::current().build < 22000 {
+        &[true]
+    } else {
+        &[false, true]
+    };
+    for &cloaked in hosts {
         let label = if cloaked {
             "cloaked host"
         } else {
