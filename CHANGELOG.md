@@ -28,8 +28,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
   animations from changing your avatar's pose
 - Fixed the "Restart Bluetooth" button for base stations giving no feedback: the message now closes
   when you click it
-- Fixed the OyasumiVR interface in the SteamVR dashboard closing as soon as it opened on some
-  systems with GPU acceleration enabled for overlays
+- Fixed the OyasumiVR interface in the SteamVR dashboard closing right after it opened, or running
+  slowly on Windows 10
 - Fixed the GoGo Loco 1.8.0+ sleeping animation preset not working on avatars that install GoGo
   Loco through VRCFury
 
