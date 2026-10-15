@@ -124,7 +124,7 @@
       "simple": "Mode simple"
     },
     "modeInfoModal": {
-      "message": "OyasumiVR dispose de deux méthodes pour contrôler la luminosité de votre casque VR : le contrôle logiciel et le contrôle matériel.\n\nLe contrôle logiciel est disponible pour tous les casques. Il ajuste la luminosité de votre casque VR en modifiant la luminosité de l'image.\n\nLe contrôle matériel n'est disponible que pour les casques compatibles (Valve Index, Bigscreen Beyond). Il ajuste directement la luminosité de l'écran de votre casque, dans la plage prise en charge.\n\nEn mode simple, OyasumiVR passe en douceur du contrôle de la luminosité logicielle à celui de la luminosité matérielle, ou utilise uniquement la luminosité logicielle si la luminosité matérielle n'est pas prise en charge.\n\nSi vous préférez un contrôle direct, le mode avancé vous permet de régler la luminosité logicielle et la luminosité matérielle séparément, avec une valeur exacte pour chacune.",
+      "message": "OyasumiVR dispose de deux méthodes pour contrôler la luminosité de votre casque VR : le contrôle logiciel et le contrôle matériel.\n\nLe contrôle logiciel est disponible pour tous les casques. Il ajuste la luminosité de votre casque VR en modifiant la luminosité de l'image.\n\nLe contrôle matériel n'est disponible que pour les casques compatibles (Valve Index, Bigscreen Beyond, PlayStation VR2). Il ajuste directement la luminosité de l'écran de votre casque, dans la plage prise en charge.\n\nEn mode simple, OyasumiVR passe en douceur du contrôle de la luminosité logicielle à celui de la luminosité matérielle, ou utilise uniquement la luminosité logicielle si la luminosité matérielle n'est pas prise en charge.\n\nSi vous préférez un contrôle direct, le mode avancé vous permet de régler la luminosité logicielle et la luminosité matérielle séparément, avec une valeur exacte pour chacune.",
       "title": "Mode de contrôle de la luminosité"
     },
     "onlyWhenSleepModeDisabled": {
@@ -1904,6 +1904,8 @@
   },
   "settings": {
     "brightnessCct": {
+      "automationsHint": "Les automatisations de luminosité et de température de couleur se trouvent sur leur {link}.",
+      "automationsLink": "page d'automatisations",
       "bigscreenBeyond": {
         "forceFanSafety": {
           "description": "Force le ventilateur à 100 % lorsque la luminosité dépasse 100 %",
@@ -1922,19 +1924,27 @@
         "title": "Bigscreen Beyond"
       },
       "cctControl": {
-        "title": "Température de couleur",
         "unsupportedHmds": {
-          "description": "Activez cette option pour contrôler la température de couleur, même si son fonctionnement n'est pas confirmé pour votre casque.",
+          "description": "Activez cette option pour laisser OyasumiVR essayer de contrôler la température de couleur de votre casque via SteamVR, même si son fonctionnement n'est pas confirmé pour votre casque.",
           "listedHmd": "Le contrôle de la température de couleur est pris en charge par votre casque.",
           "manufacturer": "Fabricant",
           "model": "Modèle",
           "noHmd": "Connectez votre casque pour modifier ce paramètre.",
           "notReported": "non communiqué",
-          "title": "Activer sur les casques non pris en charge",
+          "title": "Température de couleur sur les casques non pris en charge",
           "unlistedHmd": "Le contrôle de la température de couleur peut tout de même fonctionner sur certains casques une fois activé. Si votre casque fonctionne malgré l'absence de prise en charge, faites-le-nous savoir sur <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a> !"
         }
       },
-      "description": "Vous trouverez ici tous les paramètres liés à la luminosité et à la température de couleur.",
+      "description": "Paramètres matériels de luminosité et de température de couleur, y compris des paramètres propres à certains casques.",
+      "hardwareBrightness": {
+        "unsupportedHmds": {
+          "description": "Activez cette option pour laisser OyasumiVR essayer de contrôler la luminosité de votre casque via SteamVR, même si son fonctionnement n'est pas confirmé pour votre casque.",
+          "listedHmd": "Le contrôle matériel de la luminosité est pris en charge par votre casque.",
+          "noHmd": "Connectez votre casque pour modifier ce paramètre.",
+          "title": "Luminosité matérielle sur les casques non pris en charge",
+          "unlistedHmd": "Le contrôle matériel de la luminosité peut tout de même fonctionner sur votre casque une fois activé. Si votre casque fonctionne, faites-le-nous savoir sur <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a> !"
+        }
+      },
       "title": "Luminosité et température de couleur",
       "valveIndex": {
         "maxBrightness": {
@@ -2361,6 +2371,11 @@
           "ready": "Adaptateur détecté",
           "uninitialized": "Inutilisé"
         },
+        "hmd": {
+          "label": "Casque",
+          "notDetected": "Non détecté",
+          "value": "{model}"
+        },
         "mqtt": {
           "CONNECTED": "Connecté",
           "DISABLED": "Désactivé",
@@ -2396,6 +2411,13 @@
           "label": "Lancement auto de SteamVR",
           "off": "Désactivé",
           "on": "Activé"
+        },
+        "steamvrDashboard": {
+          "hardware": "Accélération matérielle",
+          "label": "Tableau de bord SteamVR",
+          "notRendering": "Aucun rendu",
+          "software": "Rendu logiciel",
+          "softwareFallback": "Rendu logiciel (secours)"
         },
         "title": "État",
         "vrchat": {
