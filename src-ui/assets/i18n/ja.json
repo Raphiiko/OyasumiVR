@@ -1535,7 +1535,7 @@
         "title": "オーバーレイを使用できません"
       },
       "psvr2ToolkitMissing": {
-        "message": "PlayStation VR2 のハードウェア輝度を OyasumiVR で制御するには、PSVR2Toolkit のインストールが必要です。インストールされていない場合、OyasumiVR はソフトウェア輝度のみを使用します。\n\nハードウェア輝度制御を有効にするには、PSVR2Toolkit をインストールして SteamVR を再起動してください。",
+        "message": "PlayStation VR2 のハードウェア輝度と色温度を OyasumiVR で制御するには、PSVR2Toolkit のインストールが必要です。インストールされていない場合、OyasumiVR はソフトウェア輝度のみを制御できます。\n\nこれらの機能を有効にするには、PSVR2Toolkit をインストールして SteamVR を再起動してください。",
         "title": "PSVR2Toolkit がインストールされていません"
       },
       "sleepCalibrationRequired": {

@@ -1535,7 +1535,7 @@
         "title": "Overlays Niet Beschikbaar"
       },
       "psvr2ToolkitMissing": {
-        "message": "OyasumiVR kan de hardwarehelderheid van je PlayStation VR2 alleen regelen als PSVR2Toolkit is geïnstalleerd. Zonder PSVR2Toolkit gebruikt OyasumiVR alleen softwarehelderheid.\n\nInstalleer PSVR2Toolkit en start SteamVR opnieuw om hardwarehelderheid in te schakelen.",
+        "message": "OyasumiVR kan de hardwarehelderheid en kleurtemperatuur van je PlayStation VR2 alleen regelen als PSVR2Toolkit is geïnstalleerd. Zonder PSVR2Toolkit kan OyasumiVR alleen de softwarehelderheid regelen.\n\nInstalleer PSVR2Toolkit en start SteamVR opnieuw om deze functies in te schakelen.",
         "title": "PSVR2Toolkit niet geïnstalleerd"
       },
       "sleepCalibrationRequired": {
