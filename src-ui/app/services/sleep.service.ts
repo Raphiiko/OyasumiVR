@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import {
   BehaviorSubject,
   distinctUntilChanged,
@@ -46,7 +46,8 @@ export class SleepService {
     private notifications: NotificationService,
     private eventLog: EventLogService,
     private appSettings: AppSettingsService,
-    private translate: TranslocoService
+    private translate: TranslocoService,
+    private zone: NgZone
   ) {}
 
   async init() {
@@ -67,9 +68,10 @@ export class SleepService {
     this._mode.next(mode);
     // follow the core's pose, then catch up on a change sent before the listener
     let updated = false;
+    // Tauri runs event callbacks outside Angular's zone, so views would not refresh
     await listen<SleepingPose>('SLEEPING_POSE_UPDATE', (e) => {
       updated = true;
-      this._pose.next(e.payload);
+      this.zone.run(() => this._pose.next(e.payload));
     });
     const pose = await invoke<SleepingPose>('sleeping_pose_get');
     // events and command results arrive on separate channels, so an event can be newer

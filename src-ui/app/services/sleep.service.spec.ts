@@ -1,3 +1,4 @@
+import type { NgZone } from '@angular/core';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 import { SleepService } from './sleep.service';
@@ -34,24 +35,28 @@ vi.mock('@tauri-apps/api/core', () => ({
 
 function createService() {
   const appSettings = { settings: of({ sleepModeStartupBehaviour: 'INACTIVE' }) };
-  return new SleepService(
+  const zone = { run: vi.fn((fn: () => unknown) => fn()) };
+  const service = new SleepService(
     undefined!,
     undefined!,
     appSettings as unknown as AppSettingsService,
-    undefined!
+    undefined!,
+    zone as unknown as NgZone
   );
+  return { service, zone };
 }
 
 describe('sleeping pose from the core', () => {
   it('catches up on the pose detected before init and follows updates', async () => {
     core.pose = 'SIDE_BACK';
-    const service = createService();
+    const { service, zone } = createService();
     const poses: SleepingPose[] = [];
     service.pose.subscribe((pose) => poses.push(pose));
     await service.init();
     core.listeners.get('SLEEPING_POSE_UPDATE')!({ payload: 'SIDE_LEFT' });
     core.listeners.get('SLEEPING_POSE_UPDATE')!({ payload: 'SIDE_LEFT' });
     expect(poses).toEqual(['UNKNOWN', 'SIDE_BACK', 'SIDE_LEFT']);
+    expect(zone.run).toHaveBeenCalledTimes(2);
   });
 
   it('keeps an update that arrives before the catch-up answer', async () => {
@@ -60,7 +65,7 @@ describe('sleeping pose from the core', () => {
       core.pose = 'SIDE_LEFT';
       core.listeners.get('SLEEPING_POSE_UPDATE')!({ payload: core.pose });
     };
-    const service = createService();
+    const { service } = createService();
     const poses: SleepingPose[] = [];
     service.pose.subscribe((pose) => poses.push(pose));
     await service.init();
@@ -70,7 +75,7 @@ describe('sleeping pose from the core', () => {
 
   it('forces a pose through the core', async () => {
     core.pose = 'UNKNOWN';
-    const service = createService();
+    const { service } = createService();
     await service.init();
     const late: SleepingPose[] = [];
     await service.forcePose('SIDE_RIGHT');
