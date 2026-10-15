@@ -27,6 +27,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
   when you click it
 - Fixed the OyasumiVR interface in the SteamVR dashboard closing as soon as it opened on some
   systems with GPU acceleration enabled for overlays
+- Fixed the GoGo Loco 1.8.0+ sleeping animation preset not working on avatars that install GoGo
+  Loco through VRCFury
 
 ## [26.10.0]
 
