@@ -21,7 +21,6 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 - Hardware brightness and colour temperature control for the PlayStation VR2. This requires
   [PSVR2Toolkit](https://github.com/BnuuySolutions/PSVR2Toolkit)
-- A message in the message center when a PlayStation VR2 is connected without PSVR2Toolkit
 
 ### Changed
 
@@ -30,14 +29,10 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
-- Fixed sleeping position detection always reporting "Upright", which kept automatic sleeping
-  animations from changing your avatar's pose
-- Fixed the "Restart Bluetooth" button for base stations giving no feedback: the message now closes
-  when you click it
-- Fixed the OyasumiVR interface in the SteamVR dashboard closing right after it opened, or running
-  slowly on Windows 10
-- Fixed the GoGo Loco 1.8.0+ sleeping animation preset not working on avatars that install GoGo
-  Loco through VRCFury
+- Fixed dependency upgrade breaking sleeping position detection
+- Fixed the "Restart Bluetooth" button for base stations giving no feedback
+- Fixed the OyasumiVR interface in the SteamVR dashboard crashing or performing badly on Windows 10 specifically
+- Fixed the GoGo Loco 1.8.0+ sleeping animation preset not working on avatars that install GoGo Loco through VRCFury
 
 ## [26.10.0]
 
