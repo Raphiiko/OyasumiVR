@@ -1,6 +1,9 @@
-use std::sync::{
-    atomic::{AtomicBool, Ordering},
-    Arc,
+use std::{
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc,
+    },
+    time::{Duration, Instant},
 };
 use windows::{
     core::{factory, w, Interface, BOOL},
@@ -33,8 +36,8 @@ use windows::{
 };
 
 const POOL_BUFFERS: i32 = 2;
-/// Windows 10 sometimes rejects a newly shown host, then accepts it a few frames later.
-const CREATE_ATTEMPTS: u32 = 10;
+/// How long the cloaked host retries CreateForWindow; this blocks the main thread.
+const CREATE_RETRY_WINDOW: Duration = Duration::from_millis(160);
 
 pub struct GpuFrame {
     pub texture: ID3D11Texture2D,
@@ -260,17 +263,18 @@ unsafe fn create_item(
     Err(failures.join("; "))
 }
 
-/// Retries the cloaked host once per DWM frame, up to CREATE_ATTEMPTS tries.
+/// Retries the cloaked host once per DWM frame until CREATE_RETRY_WINDOW has passed.
+///
+/// Windows 10 sometimes rejects a newly shown host. A failed call takes 25-50 ms, so the
+/// last try can end up to one call after the window.
 unsafe fn create_with_retries(
     window: HWND,
     cloaked: bool,
 ) -> windows::core::Result<GraphicsCaptureItem> {
-    let attempts = if cloaked { CREATE_ATTEMPTS } else { 1 };
-    let mut attempt = 1;
+    let started = Instant::now();
     loop {
         match create_for_window(window) {
-            Err(_) if attempt < attempts => {
-                attempt += 1;
+            Err(_) if cloaked && started.elapsed() < CREATE_RETRY_WINDOW => {
                 let _ = DwmFlush();
             }
             result => return result,
