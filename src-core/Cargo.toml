@@ -90,6 +90,7 @@ uuid = { version = "1.26.1", features = [
 webview2-com = "0.39.1"
 widestring = "1.2.1"
 windows-core = { version = "0.62.2", default-features = false }
+windows-version = "0.1.7"
 windows = { version = "0.62.2", features = [
   "Win32_Foundation",
   "Win32_Globalization",
@@ -110,6 +111,7 @@ windows = { version = "0.62.2", features = [
   "Win32_UI_HiDpi",
   "Win32_System_LibraryLoader",
   "Win32_Graphics_Gdi",
+  "Win32_Graphics_Dwm",
   "Win32_Graphics_Imaging",
   "Win32_Graphics_Direct3D11",
   "Win32_Graphics_Direct3D",

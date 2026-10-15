@@ -56,6 +56,7 @@ pub const RENDER_NONE: u8 = 0;
 pub const RENDER_GPU: u8 = 1;
 pub const RENDER_CPU: u8 = 2;
 pub const RENDER_CPU_FALLBACK: u8 = 3;
+pub const RENDER_PENDING: u8 = 4;
 
 const MOUSE_MOVE: u32 = raw::EVREventType::VREvent_MouseMove.0 as u32;
 const MOUSE_BUTTON_DOWN: u32 = raw::EVREventType::VREvent_MouseButtonDown.0 as u32;
@@ -278,7 +279,9 @@ pub struct DashboardOverlay {
     failed: bool,
     has_frame: bool,
     gpu: bool,
-    /// Set when GPU capture fails; keeps this overlay on CPU capture until it is recreated.
+    /// Set by the first frame submitted in the current capture mode; cleared when the mode changes.
+    rendered: bool,
+    /// Set when GPU capture fails; keeps the current dashboard open on CPU capture.
     gpu_failed: bool,
     keyboard: KeyboardRequests,
     keyboard_id: Option<u64>,
@@ -322,6 +325,7 @@ impl DashboardOverlay {
             failed: false,
             has_frame: false,
             gpu: DASHBOARD_GPU_ACCELERATION.load(Ordering::Acquire),
+            rendered: false,
             gpu_failed: false,
             keyboard: Arc::new(Mutex::new(None)),
             keyboard_id: None,
@@ -382,6 +386,7 @@ impl DashboardOverlay {
                 self.gpu_failed = true;
                 self.deactivate();
                 self.gpu = false;
+                self.rendered = false;
                 Ok(())
             }
             result => result,
@@ -426,6 +431,7 @@ impl DashboardOverlay {
         log::info!("[Dashboard] Dashboard selected: {selected}");
         if !selected {
             self.deactivate();
+            self.gpu_failed = false;
         }
         Ok(())
     }
@@ -435,13 +441,16 @@ impl DashboardOverlay {
         if gpu != self.gpu {
             self.deactivate();
             self.gpu = gpu;
+            self.rendered = false;
             self.failed = false;
         }
         self.publish_render_mode();
     }
 
     fn publish_render_mode(&self) {
-        let mode = if self.gpu {
+        let mode = if !self.rendered {
+            RENDER_PENDING
+        } else if self.gpu {
             RENDER_GPU
         } else if self.gpu_failed && DASHBOARD_GPU_ACCELERATION.load(Ordering::Acquire) {
             RENDER_CPU_FALLBACK
@@ -478,6 +487,7 @@ impl DashboardOverlay {
             );
         }
         self.has_frame = true;
+        self.rendered = true;
         Ok(())
     }
 
