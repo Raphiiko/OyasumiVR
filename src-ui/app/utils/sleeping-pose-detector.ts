@@ -189,7 +189,8 @@ export class SleepingPoseDetector {
     const object = new THREE.Object3D().add(sphere);
     object.setRotationFromQuaternion(rotation);
     sphere.updateMatrix();
-    sphere.updateMatrixWorld(true);
+    // three only recomputes a child's world matrix when its parent forces it
+    object.updateMatrixWorld(true);
     return {
       object,
       sphere: new THREE.Sphere(sphere.getWorldPosition(new THREE.Vector3()).clone(), radius),
@@ -216,10 +217,9 @@ export class SleepingPoseDetector {
     const object = new THREE.Object3D().add(box);
     object.setRotationFromQuaternion(rotation);
     box.updateMatrix();
-    box.updateMatrixWorld(true);
-    // OBB
+    // three only recomputes a child's world matrix when its parent forces it
+    object.updateMatrixWorld(true);
     const obb = new OBB(new THREE.Vector3(0, 0, 0), new THREE.Vector3(...size).multiplyScalar(0.5));
-    box.getWorldPosition(new THREE.Vector3()); // Trigger needed somehow
     obb.applyMatrix4(box.matrixWorld);
     return {
       object,
