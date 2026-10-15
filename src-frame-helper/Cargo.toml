@@ -1,6 +1,6 @@
 [package]
 name = "oyasumivr-frame-helper"
-version = "26.10.1-beta.1"
+version = "26.10.1-beta.5"
 authors = ["Raphiiko"]
 license = "MIT"
 edition = "2021"
