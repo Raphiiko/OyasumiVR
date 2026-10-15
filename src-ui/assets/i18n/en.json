@@ -1534,6 +1534,10 @@
         },
         "title": "Overlays Unavailable"
       },
+      "psvr2ToolkitMissing": {
+        "message": "OyasumiVR can only control the hardware brightness and colour temperature of your PlayStation VR2 when PSVR2Toolkit is installed. Without it, OyasumiVR can only control the software brightness.\n\nInstall PSVR2Toolkit and restart SteamVR to enable these features.",
+        "title": "PSVR2Toolkit not installed"
+      },
       "sleepCalibrationRequired": {
         "calibrate": "Calibrate Now",
         "message": "Sleep detection is enabled, but still uncalibrated. Before using it, you should calibrate at least once to improve its accuracy.",
