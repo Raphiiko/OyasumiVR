@@ -20,6 +20,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 ### Changed
 
 - Improved Japanese translations (@Naki79)
+- Improved the performance of sleeping position detection
 
 ### Fixed
 
