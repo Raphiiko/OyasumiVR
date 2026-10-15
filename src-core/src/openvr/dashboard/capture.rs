@@ -17,7 +17,9 @@ use windows::{
         Foundation::{HWND, POINT, RECT},
         Graphics::{
             Direct3D11::{ID3D11Device, ID3D11Texture2D},
-            Dwm::{DwmGetWindowAttribute, DwmSetWindowAttribute, DWMWA_CLOAK, DWMWA_CLOAKED},
+            Dwm::{
+                DwmFlush, DwmGetWindowAttribute, DwmSetWindowAttribute, DWMWA_CLOAK, DWMWA_CLOAKED,
+            },
             Dxgi::IDXGIDevice,
             Gdi::{
                 ClientToScreen, GetMonitorInfoW, MonitorFromWindow, ScreenToClient, MONITORINFO,
@@ -38,6 +40,8 @@ use windows::{
 };
 
 const POOL_BUFFERS: i32 = 2;
+/// Windows 10 sometimes rejects a newly shown host, then accepts it a few frames later.
+const CREATE_ATTEMPTS: u32 = 10;
 
 pub struct GpuFrame {
     pub texture: ID3D11Texture2D,
@@ -84,8 +88,14 @@ impl DashboardCapture {
             log::warn!("[Dashboard] Could not watch the GPU capture item: {error}");
         }
         let summary = format!(
-            "{}, item {}x{}, pool {POOL_BUFFERS} x {}x{}, taskbar tab {}",
-            host.label, size.Width, size.Height, size.Width, size.Height, host.taskbar
+            "{}, item {}x{} on try {}, pool {POOL_BUFFERS} x {}x{}, taskbar tab {}",
+            host.label,
+            size.Width,
+            size.Height,
+            host.attempts,
+            size.Width,
+            size.Height,
+            host.taskbar
         );
         Ok(Self {
             session,
@@ -156,6 +166,8 @@ struct CaptureHost {
     label: &'static str,
     /// Outcome of removing the host from the taskbar, for the log.
     taskbar: String,
+    /// CreateForWindow calls the item took, for the log.
+    attempts: u32,
 }
 
 impl CaptureHost {
@@ -186,6 +198,7 @@ impl CaptureHost {
             bounds,
             label: host_label(cloaked),
             taskbar: "untouched".into(),
+            attempts: 0,
         };
         SetParent(child, Some(window)).map_err(at("SetParent"))?;
         SetWindowPos(
@@ -270,11 +283,12 @@ unsafe fn create_item(
                 continue;
             }
         };
-        let item = match create_for_window(host.window) {
+        let item = match create_with_retries(&mut host, cloaked) {
             Ok(item) => item,
             Err(error) => {
                 failures.push(format!(
-                    "{label}: CreateForWindow: {error} [{}, capture supported: {:?}]",
+                    "{label}: CreateForWindow after {} tries: {error} [{}, capture supported: {:?}]",
+                    host.attempts,
                     host.diagnostics(),
                     GraphicsCaptureSession::IsSupported()
                 ));
@@ -298,6 +312,23 @@ unsafe fn create_item(
         return Ok((host, item));
     }
     Err(failures.join("; "))
+}
+
+/// Retries the cloaked host once per DWM frame, up to CREATE_ATTEMPTS tries.
+unsafe fn create_with_retries(
+    host: &mut CaptureHost,
+    cloaked: bool,
+) -> windows::core::Result<GraphicsCaptureItem> {
+    let attempts = if cloaked { CREATE_ATTEMPTS } else { 1 };
+    loop {
+        host.attempts += 1;
+        match create_for_window(host.window) {
+            Err(_) if host.attempts < attempts => {
+                let _ = DwmFlush();
+            }
+            result => return result,
+        }
+    }
 }
 
 unsafe fn create_for_window(window: HWND) -> windows::core::Result<GraphicsCaptureItem> {
