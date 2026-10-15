@@ -15,11 +15,16 @@ use windows::{
             Dxgi::IDXGIDevice,
             Gdi::{ClientToScreen, ScreenToClient},
         },
+        System::Com::{CoCreateInstance, CLSCTX_INPROC_SERVER},
         System::WinRT::{
             Direct3D11::{CreateDirect3D11DeviceFromDXGIDevice, IDirect3DDxgiInterfaceAccess},
             Graphics::Capture::IGraphicsCaptureItemInterop,
         },
-        UI::{HiDpi::GetDpiForWindow, WindowsAndMessaging::*},
+        UI::{
+            HiDpi::GetDpiForWindow,
+            Shell::{ITaskbarList, TaskbarList},
+            WindowsAndMessaging::*,
+        },
     },
 };
 
@@ -168,13 +173,13 @@ impl CaptureHost {
         Ok(host)
     }
 
-    /// Takes the host out of Alt+Tab and the taskbar; call it before the capture session starts.
-    unsafe fn make_tool_window(&self) {
-        let _ = ShowWindow(self.window, SW_HIDE);
-        let ex_style = GetWindowLongPtrW(self.window, GWL_EXSTYLE) as u32
-            | (WS_EX_TOOLWINDOW | WS_EX_NOACTIVATE).0;
-        SetWindowLongPtrW(self.window, GWL_EXSTYLE, ex_style as isize);
-        let _ = ShowWindow(self.window, SW_SHOWNOACTIVATE);
+    /// Takes the host out of Alt+Tab and the taskbar while it stays a capturable window.
+    ///
+    /// Windows 10 closes the capture item of a window that is hidden or becomes a tool window.
+    unsafe fn remove_from_taskbar(&self) -> windows::core::Result<()> {
+        let taskbar: ITaskbarList = CoCreateInstance(&TaskbarList, None, CLSCTX_INPROC_SERVER)?;
+        taskbar.HrInit()?;
+        taskbar.DeleteTab(self.window)
     }
 }
 
@@ -230,18 +235,32 @@ unsafe fn create_item(
             GetDpiForWindow(host.window),
             GraphicsCaptureSession::IsSupported()
         );
-        match create_for_window(host.window) {
-            Ok(item) => {
-                if cloaked {
-                    host.make_tool_window();
-                }
-                log::info!("[Dashboard] GPU capture uses the {label}, {host_info}");
-                return Ok((host, item));
+        let item = match create_for_window(host.window) {
+            Ok(item) => item,
+            Err(error) => {
+                failures.push(format!("{label}: CreateForWindow: {error} ({host_info})"));
+                continue;
             }
-            Err(error) => failures.push(format!("{label}: {error} ({host_info})")),
+        };
+        // Windows 10 gives a window it cannot capture a 0x0 item instead of an error
+        match item.Size() {
+            Ok(size) if size.Width > 0 && size.Height > 0 => {}
+            size => {
+                failures.push(format!("{label}: item size {size:?} ({host_info})"));
+                continue;
+            }
         }
+        if cloaked {
+            if let Err(error) = host.remove_from_taskbar() {
+                log::warn!(
+                    "[Dashboard] Could not remove the capture host from the taskbar: {error}"
+                );
+            }
+        }
+        log::info!("[Dashboard] GPU capture uses the {label}, {host_info}");
+        return Ok((host, item));
     }
-    Err(format!("CreateForWindow: {}", failures.join("; ")))
+    Err(failures.join("; "))
 }
 
 unsafe fn create_for_window(window: HWND) -> windows::core::Result<GraphicsCaptureItem> {
