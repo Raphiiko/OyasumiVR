@@ -101,6 +101,7 @@ pub fn openvr_dashboard_render_mode() -> &'static str {
         super::dashboard::RENDER_GPU => "hardware",
         super::dashboard::RENDER_CPU => "software",
         super::dashboard::RENDER_CPU_FALLBACK => "softwareFallback",
+        super::dashboard::RENDER_PENDING => "pending",
         _ => "notRendering",
     }
 }
