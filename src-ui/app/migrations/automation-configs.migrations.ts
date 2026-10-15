@@ -19,6 +19,29 @@ const RUN_AUTOMATION_COMMAND_FIELDS = [
   'onSleepPreparationCommands',
 ];
 
+const GOGO_LOCO_EMOTE_ADDRESSES = ['/avatar/parameters/VRCEmote', '/avatar/parameters/Go/VRCEmote'];
+
+function from20to21(data: any): any {
+  data.version = 21;
+  const config = data.SLEEPING_ANIMATIONS;
+  if (config?.preset !== 'GOGO_LOCO_1_8_0') return data;
+  for (const pose of ['SIDE_BACK', 'SIDE_FRONT', 'SIDE_LEFT', 'SIDE_RIGHT']) {
+    const commands: any[] | undefined = config.oscScripts?.[pose]?.commands;
+    if (!commands) continue;
+    // VRCFury installs of GoGo Loco read Go/VRCEmote, other installs read VRCEmote
+    const emote = commands.findIndex((c) => GOGO_LOCO_EMOTE_ADDRESSES.includes(c.address));
+    if (emote === -1) continue;
+    const emoteCommands = GOGO_LOCO_EMOTE_ADDRESSES.map((address) => ({
+      ...structuredClone(commands[emote]),
+      address,
+    }));
+    const rest = commands.filter((c) => !GOGO_LOCO_EMOTE_ADDRESSES.includes(c.address));
+    rest.splice(emote, 0, ...emoteCommands);
+    config.oscScripts[pose].commands = rest;
+  }
+  return data;
+}
+
 async function from19to20(data: any): Promise<any> {
   if (!data.RUN_AUTOMATIONS) {
     data.version = 20;
@@ -84,6 +107,7 @@ export const AUTOMATION_CONFIGS_MIGRATION: MigrationDefinition<Versioned> = {
     17: from17to18,
     18: from18to19,
     19: from19to20,
+    20: from20to21,
   },
   normalizeCurrentVersion: (data) => normalizeWithDefaults(AUTOMATION_CONFIGS_DEFAULT, data),
 };

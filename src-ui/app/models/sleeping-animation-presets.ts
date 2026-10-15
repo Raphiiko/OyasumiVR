@@ -77,18 +77,22 @@ const GOGO_LOCO_1_8_0_PRESET: SleepingAnimationPreset = {
   oscScripts: {
     SIDE_BACK: parseOscScriptFromCode(`
 i 214 /avatar/parameters/VRCEmote
+i 214 /avatar/parameters/Go/VRCEmote
 f -1.0 /avatar/parameters/Go/Float
     `).script,
     SIDE_FRONT: parseOscScriptFromCode(`
 i 214 /avatar/parameters/VRCEmote
+i 214 /avatar/parameters/Go/VRCEmote
 f -0.75 /avatar/parameters/Go/Float
     `).script,
     SIDE_LEFT: parseOscScriptFromCode(`
 i 214 /avatar/parameters/VRCEmote
+i 214 /avatar/parameters/Go/VRCEmote
 f -0.6 /avatar/parameters/Go/Float
     `).script,
     SIDE_RIGHT: parseOscScriptFromCode(`
 i 214 /avatar/parameters/VRCEmote
+i 214 /avatar/parameters/Go/VRCEmote
 f -0.4 /avatar/parameters/Go/Float
     `).script,
     FOOT_LOCK: parseOscScriptFromCode(`
