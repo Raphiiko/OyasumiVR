@@ -17,6 +17,13 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ## [Unreleased]
 
+### Added
+
+- Hardware brightness control for the PlayStation VR2. This requires
+  [PSVR2Toolkit](https://github.com/BnuuySolutions/PSVR2Toolkit)
+- Colour temperature control for the PlayStation VR2
+- A message in the message center when a PlayStation VR2 is connected without PSVR2Toolkit
+
 ### Changed
 
 - Improved Japanese translations (@Naki79)

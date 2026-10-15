@@ -1534,6 +1534,10 @@
         },
         "title": "叠加界面不可用"
       },
+      "psvr2ToolkitMissing": {
+        "message": "只有安装了 PSVR2Toolkit，OyasumiVR 才能控制 PlayStation VR2 的硬件亮度。未安装时，OyasumiVR 只会使用软件亮度。\n\n请安装 PSVR2Toolkit 并重启 SteamVR，以启用硬件亮度控制。",
+        "title": "未安装 PSVR2Toolkit"
+      },
       "sleepCalibrationRequired": {
         "calibrate": "现在校准",
         "message": "已启用睡眠检测，但尚未校准。使用前请至少校准一次以提高准确性。",
