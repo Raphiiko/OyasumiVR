@@ -15,6 +15,12 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Pre-release numbering never predicts the version of the eventual stable release, and
   versions are assigned when a build is published, never before.
 
+## [Unreleased]
+
+### Fixed
+
+- Fixed loading a translation file from the settings not changing the language of the interface
+
 ## [26.10.1]
 
 ### Added
