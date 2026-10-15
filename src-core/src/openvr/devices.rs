@@ -1,10 +1,9 @@
 use std::collections::HashMap;
 
 use super::models::{
-    DeviceUpdateEvent, OVRDevice, OVRDevicePose, OVRHandleType, OpenVRInputEvent,
-    TrackedDeviceClass,
+    DeviceUpdateEvent, OVRDevice, OVRHandleType, OpenVRInputEvent, TrackedDeviceClass,
 };
-use super::{GestureDetector, SleepDetector, OVR_CONTEXT};
+use super::{sleeping_pose, GestureDetector, SleepDetector, OVR_CONTEXT};
 use crate::utils::send_event;
 use chrono::{DateTime, Duration, Utc};
 use log::error;
@@ -21,8 +20,6 @@ static SLEEP_DETECTOR: LazyLock<Mutex<SleepDetector>> =
 static GESTURE_DETECTOR: LazyLock<Mutex<GestureDetector>> =
     LazyLock::new(|| Mutex::new(GestureDetector::new()));
 static NEXT_DEVICE_REFRESH: LazyLock<Mutex<DateTime<Utc>>> =
-    LazyLock::new(|| Mutex::new(DateTime::from_timestamp_millis(0).unwrap()));
-static NEXT_POSE_BROADCAST: LazyLock<Mutex<DateTime<Utc>>> =
     LazyLock::new(|| Mutex::new(DateTime::from_timestamp_millis(0).unwrap()));
 static DEVICE_CLASS_CACHE: LazyLock<Mutex<HashMap<u32, TrackedDeviceClass>>> =
     LazyLock::new(|| Mutex::new(HashMap::new()));
@@ -345,68 +342,45 @@ async fn refresh_device_poses() {
             return;
         }
     };
+    let mut hmd_quaternion = None;
     for (n, pose) in poses.iter().enumerate() {
         if pose.bDeviceIsConnected && pose.bPoseIsValid {
             let matrix = pose.mDeviceToAbsoluteTracking.m;
-            // Extract quaternion
-            let q = ovr::raw::HmdQuaternion_t {
-                w: 0.0f64
-                    .max((1.0 + matrix[0][0] + matrix[1][1] + matrix[2][2]).into())
-                    .sqrt()
-                    / 2.0,
-                x: (0.0f64
-                    .max((1.0 + matrix[0][0] - matrix[1][1] - matrix[2][2]).into())
-                    .sqrt()
-                    / 2.0)
-                    .copysign((matrix[2][1] - matrix[1][2]).into()),
-                y: (0.0f64
-                    .max((1.0 - matrix[0][0] + matrix[1][1] - matrix[2][2]).into())
-                    .sqrt()
-                    / 2.0)
-                    .copysign((matrix[0][2] - matrix[2][0]).into()),
-                z: (0.0f64
-                    .max((1.0 - matrix[0][0] - matrix[1][1] + matrix[2][2]).into())
-                    .sqrt()
-                    / 2.0)
-                    .copysign((matrix[1][0] - matrix[0][1]).into()),
-            };
-            // Extract position
-            let pos = ovr::raw::HmdVector3_t {
-                v: [matrix[0][3], matrix[1][3], matrix[2][3]],
-            };
+            let q = quaternion_from_tracking_matrix(&matrix);
+            let pos = [matrix[0][3], matrix[1][3], matrix[2][3]];
             // Update sleep and gesture detectors (0 == HMD)
             if n == 0 {
-                SLEEP_DETECTOR
-                    .lock()
-                    .await
-                    .log_pose(pos.v, [q.x, q.y, q.z, q.w])
-                    .await;
-                GESTURE_DETECTOR
-                    .lock()
-                    .await
-                    .log_pose(pos.v, [q.x, q.y, q.z, q.w])
-                    .await;
-            }
-            // Emit event
-            if n == 0 {
-                // Only for the HMD, the rest is not required
-                let mut next_pose_broadcast = NEXT_POSE_BROADCAST.lock().await;
-                if (Utc::now() - *next_pose_broadcast).num_milliseconds() > 0 {
-                    *next_pose_broadcast = Utc::now() + Duration::milliseconds(250);
-                    drop(next_pose_broadcast);
-                    send_event(
-                        "OVR_POSE_UPDATE",
-                        OVRDevicePose {
-                            index: n as u32,
-                            quaternion: [q.x, q.y, q.z, q.w],
-                            position: pos.v,
-                        },
-                    )
-                    .await;
-                }
+                SLEEP_DETECTOR.lock().await.log_pose(pos, q).await;
+                GESTURE_DETECTOR.lock().await.log_pose(pos, q).await;
+                hmd_quaternion = Some(q);
             }
         }
     }
+    sleeping_pose::on_ovr_tick(hmd_quaternion).await;
+}
+
+/// The rotation of an OpenVR tracking matrix as a quaternion `[x, y, z, w]`.
+pub(crate) fn quaternion_from_tracking_matrix(matrix: &[[f32; 4]; 3]) -> [f64; 4] {
+    let w = 0.0f64
+        .max((1.0 + matrix[0][0] + matrix[1][1] + matrix[2][2]).into())
+        .sqrt()
+        / 2.0;
+    let x = (0.0f64
+        .max((1.0 + matrix[0][0] - matrix[1][1] - matrix[2][2]).into())
+        .sqrt()
+        / 2.0)
+        .copysign((matrix[2][1] - matrix[1][2]).into());
+    let y = (0.0f64
+        .max((1.0 - matrix[0][0] + matrix[1][1] - matrix[2][2]).into())
+        .sqrt()
+        / 2.0)
+        .copysign((matrix[0][2] - matrix[2][0]).into());
+    let z = (0.0f64
+        .max((1.0 - matrix[0][0] - matrix[1][1] + matrix[2][2]).into())
+        .sqrt()
+        / 2.0)
+        .copysign((matrix[1][0] - matrix[0][1]).into());
+    [x, y, z, w]
 }
 
 async fn detect_inputs() {

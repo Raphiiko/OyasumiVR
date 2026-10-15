@@ -2,7 +2,7 @@ import { ApplicationRef, Injectable } from '@angular/core';
 import { listen } from '@tauri-apps/api/event';
 import { DeviceUpdateEvent } from '../models/events';
 import { invoke } from '@tauri-apps/api/core';
-import { OVRDevice, OVRDevicePose } from '../models/ovr-device';
+import { OVRDevice } from '../models/ovr-device';
 import {
   BehaviorSubject,
   distinctUntilChanged,
@@ -28,12 +28,6 @@ export class OpenVRService {
   public status: Observable<OpenVRStatus> = this._status.asObservable();
   private _devices: BehaviorSubject<OVRDevice[]> = new BehaviorSubject<OVRDevice[]>([]);
   public devices: Observable<OVRDevice[]> = this._devices.asObservable();
-
-  private _devicePoses: BehaviorSubject<{
-    [trackingIndex: number]: OVRDevicePose;
-  }> = new BehaviorSubject<{ [p: number]: OVRDevicePose }>({});
-  public devicePoses: Observable<{ [trackingIndex: number]: OVRDevicePose }> =
-    this._devicePoses.asObservable();
 
   private autoLaunchQueue: Promise<void> = Promise.resolve();
   private autoLaunchSession = 0;
@@ -68,21 +62,6 @@ export class OpenVRService {
         statusReceived = true;
         deviceSession++;
         this.onStatusUpdate(event.payload);
-      }),
-      listen<any>('OVR_POSE_UPDATE', (event) => {
-        const poses = structuredClone(this._devicePoses.value);
-        const {
-          index,
-          quaternion,
-          position,
-        }: {
-          index: number;
-          quaternion: [number, number, number, number];
-          position: [number, number, number];
-        } = event.payload;
-        poses[index] = { quaternion, position };
-        this._devicePoses.next(poses);
-        this.appRef.tick();
       }),
     ]);
     // A status update sent while the listener above was still being registered is never delivered
@@ -168,7 +147,6 @@ export class OpenVRService {
       case 'INACTIVE':
       case 'INITIALIZING':
         this._devices.next([]);
-        this._devicePoses.next({});
         break;
       case 'INITIALIZED':
         this.syncAutoLaunch();

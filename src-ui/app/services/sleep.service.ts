@@ -1,26 +1,16 @@
 import { Injectable } from '@angular/core';
 import {
   BehaviorSubject,
-  bufferTime,
-  combineLatest,
   distinctUntilChanged,
   filter,
   firstValueFrom,
   map,
-  merge,
   Observable,
-  shareReplay,
-  startWith,
   Subject,
 } from 'rxjs';
 import { SleepModeStatusChangeReason } from '../models/sleep-mode';
 import { SETTINGS_KEY_SLEEP_MODE, SETTINGS_STORE } from '../globals';
 import { SleepingPose } from '../models/sleeping-pose';
-import { uniq } from 'lodash';
-import { OpenVRService } from './openvr.service';
-import { OVRDevicePose } from '../models/ovr-device';
-import { SleepingPoseDetector } from '../utils/sleeping-pose-detector';
-import * as THREE from 'three';
 import { info } from '@tauri-apps/plugin-log';
 import { NotificationService } from './notification.service';
 import { TranslocoService } from '@jsverse/transloco';
@@ -28,6 +18,7 @@ import { EventLogService } from './event-log.service';
 import { EventLogSleepModeDisabled, EventLogSleepModeEnabled } from '../models/event-log-entry';
 import { AppSettingsService } from './app-settings.service';
 import { listen } from '@tauri-apps/api/event';
+import { invoke } from '@tauri-apps/api/core';
 
 @Injectable({
   providedIn: 'root',
@@ -38,8 +29,9 @@ export class SleepService {
     filter((v) => v !== null),
     map((v) => v as boolean)
   );
-  private poseDetector: SleepingPoseDetector = new SleepingPoseDetector();
-  private forcePose$: Subject<SleepingPose> = new Subject<SleepingPose>();
+  private _pose = new BehaviorSubject<SleepingPose>('UNKNOWN');
+  /** The stable sleeping pose the core detects from the headset. */
+  public pose: Observable<SleepingPose> = this._pose.pipe(distinctUntilChanged());
 
   private readonly _onSleepModeChange = new Subject<{
     mode: boolean;
@@ -50,29 +42,7 @@ export class SleepService {
     reason: SleepModeStatusChangeReason;
   }> = this._onSleepModeChange.asObservable();
 
-  public pose: Observable<SleepingPose> = merge(
-    combineLatest([this.openvr.devices, this.openvr.devicePoses]).pipe(
-      map(([devices, poses]) => {
-        const hmdDevice = devices.find((d) => d.class === 'HMD');
-        if (!hmdDevice) return null;
-        return poses[hmdDevice.index] || null;
-      }),
-      filter((hmdPose) => hmdPose !== null),
-      map((hmdPose) => this.getSleepingPoseForDevicePose(hmdPose!)),
-      bufferTime(1000),
-      filter((buffer) => buffer.length >= 2 && uniq(buffer).length === 1),
-      map((buffer) => buffer[0] as SleepingPose)
-    ),
-    this.forcePose$
-  ).pipe(
-    startWith('UNKNOWN' as SleepingPose),
-    distinctUntilChanged(),
-    // the shared window stays active between view subscriptions
-    shareReplay({ bufferSize: 1, refCount: false })
-  ) as Observable<SleepingPose>;
-
   constructor(
-    private openvr: OpenVRService,
     private notifications: NotificationService,
     private eventLog: EventLogService,
     private appSettings: AppSettingsService,
@@ -95,6 +65,9 @@ export class SleepService {
         break;
     }
     this._mode.next(mode);
+    // follow the core's pose, then catch up on a change sent before the listener
+    await listen<SleepingPose>('SLEEPING_POSE_UPDATE', (e) => this._pose.next(e.payload));
+    this._pose.next(await invoke<SleepingPose>('sleeping_pose_get'));
     // Handle events
     await listen<boolean>('setSleepMode', (e) => {
       if (e.payload) {
@@ -105,12 +78,8 @@ export class SleepService {
     });
   }
 
-  forcePose(pose: SleepingPose) {
-    this.forcePose$.next(pose);
-  }
-
-  getPoseDetectorScene(): THREE.Scene {
-    return this.poseDetector.getScene();
+  async forcePose(pose: SleepingPose) {
+    await invoke('sleeping_pose_force', { pose });
   }
 
   async enableSleepMode(reason: SleepModeStatusChangeReason) {
@@ -147,11 +116,5 @@ export class SleepService {
         this.translate.translate('notifications.sleepModeDisabled.content')
       );
     }
-  }
-
-  private getSleepingPoseForDevicePose(pose: OVRDevicePose): SleepingPose {
-    if (!pose) return this.poseDetector.sleepingPose;
-    this.poseDetector.processOrientation(pose.quaternion);
-    return this.poseDetector.sleepingPose;
   }
 }

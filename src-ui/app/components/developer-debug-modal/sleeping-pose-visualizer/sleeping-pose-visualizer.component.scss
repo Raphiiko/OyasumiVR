@@ -1,0 +1,51 @@
+.summary,
+.flags,
+.preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em 1.5em;
+  margin-bottom: 0.75em;
+}
+
+.flag {
+  border: 2px solid;
+  border-radius: 4px;
+  padding: 0.1em 0.5em;
+  opacity: 0.4;
+
+  &.active {
+    opacity: 1;
+  }
+}
+
+.views {
+  display: flex;
+  gap: 1em;
+}
+
+.view {
+  flex: 1;
+  min-width: 0;
+
+  svg {
+    width: 100%;
+    aspect-ratio: 1;
+    background: #222222;
+    border-radius: 4px;
+  }
+}
+
+.axis {
+  stroke: #555555;
+  stroke-width: 0.1;
+}
+
+.preview > div {
+  flex-basis: 100%;
+}
+
+.preview label {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}

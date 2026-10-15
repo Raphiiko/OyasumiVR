@@ -10,6 +10,13 @@
     </div>
     <div
       class="tab"
+      [class.active]="activeTab === 'SLEEPING_POSE'"
+      (click)="activeTab = 'SLEEPING_POSE'"
+    >
+      <div class="tab-label">Sleeping Pose</div>
+    </div>
+    <div
+      class="tab"
       [class.active]="activeTab === 'MISC_TESTING'"
       (click)="activeTab = 'MISC_TESTING'"
     >
@@ -26,6 +33,9 @@
   <div class="pane-content">
     @if (activeTab === 'SLEEP_DETECTION_DEBUGGER') {
       <app-debug-sleep-detection-debugger></app-debug-sleep-detection-debugger>
+    }
+    @if (activeTab === 'SLEEPING_POSE') {
+      <app-sleeping-pose-visualizer></app-sleeping-pose-visualizer>
     }
     @if (activeTab === 'MISC_TESTING') {
       <app-misc-testing [modal]="this"></app-misc-testing>

@@ -161,14 +161,6 @@ pub struct OVRDevice {
     pub display_max_analog_gain: Option<f32>,
 }
 
-#[derive(Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct OVRDevicePose {
-    pub index: u32,
-    pub quaternion: [f64; 4],
-    pub position: [f32; 3],
-}
-
 #[derive(Clone, Serialize, Deserialize, IntoStaticStr, EnumIter, PartialEq)]
 pub enum OVRHandleType {
     HandPrimary,

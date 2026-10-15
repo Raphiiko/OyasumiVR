@@ -9,6 +9,7 @@ mod framelimiter;
 mod gesture_detector;
 mod models;
 mod sleep_detector;
+pub mod sleeping_pose;
 mod supersampling;
 
 use crate::{
