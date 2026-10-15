@@ -1,19 +1,28 @@
+use std::sync::{
+    atomic::{AtomicBool, Ordering},
+    Arc,
+};
 use windows::{
     core::{factory, w, Interface, BOOL},
+    Foundation::TypedEventHandler,
     Graphics::{
         Capture::{
             Direct3D11CaptureFrame, Direct3D11CaptureFramePool, GraphicsCaptureItem,
             GraphicsCaptureSession,
         },
         DirectX::{Direct3D11::IDirect3DDevice, DirectXPixelFormat},
+        SizeInt32,
     },
     Win32::{
         Foundation::{HWND, POINT, RECT},
         Graphics::{
             Direct3D11::{ID3D11Device, ID3D11Texture2D},
-            Dwm::{DwmSetWindowAttribute, DWMWA_CLOAK},
+            Dwm::{DwmGetWindowAttribute, DwmSetWindowAttribute, DWMWA_CLOAK, DWMWA_CLOAKED},
             Dxgi::IDXGIDevice,
-            Gdi::{ClientToScreen, ScreenToClient},
+            Gdi::{
+                ClientToScreen, GetMonitorInfoW, MonitorFromWindow, ScreenToClient, MONITORINFO,
+                MONITOR_DEFAULTTONEAREST,
+            },
         },
         System::Com::{CoCreateInstance, CLSCTX_INPROC_SERVER},
         System::WinRT::{
@@ -27,6 +36,8 @@ use windows::{
         },
     },
 };
+
+const POOL_BUFFERS: i32 = 2;
 
 pub struct GpuFrame {
     pub texture: ID3D11Texture2D,
@@ -42,7 +53,12 @@ impl Drop for GpuFrame {
 pub struct DashboardCapture {
     session: GraphicsCaptureSession,
     pool: Direct3D11CaptureFramePool,
-    _host: CaptureHost,
+    _item: GraphicsCaptureItem,
+    /// Set by the item's Closed event, which Windows raises when the host stops being capturable.
+    closed: Arc<AtomicBool>,
+    host: CaptureHost,
+    /// The host, item and frame pool in use, for the log.
+    pub summary: String,
 }
 
 impl DashboardCapture {
@@ -53,39 +69,47 @@ impl DashboardCapture {
         height: u32,
     ) -> Result<Self, String> {
         let (host, item) = create_item(child, width, height)?;
-        let size = item.Size().map_err(at("GraphicsCaptureItem.Size"))?;
-        log::info!(
-            "[Dashboard] GPU capture item {}x{}",
-            size.Width,
-            size.Height
+        let (pool, session, size) = match start_session(&item, device) {
+            Ok(started) => started,
+            Err(error) => return Err(format!("{error} [{}]", host.diagnostics())),
+        };
+        let closed = Arc::new(AtomicBool::new(false));
+        let flag = closed.clone();
+        let handler = TypedEventHandler::new(move |_, _| {
+            flag.store(true, Ordering::Release);
+            log::warn!("[Dashboard] Windows closed the GPU capture item");
+            Ok(())
+        });
+        if let Err(error) = item.Closed(&handler) {
+            log::warn!("[Dashboard] Could not watch the GPU capture item: {error}");
+        }
+        let summary = format!(
+            "{}, item {}x{}, pool {POOL_BUFFERS} x {}x{}, taskbar tab {}",
+            host.label, size.Width, size.Height, size.Width, size.Height, host.taskbar
         );
-        let dxgi: IDXGIDevice = device.cast().map_err(at("IDXGIDevice"))?;
-        let capture_device: IDirect3DDevice = CreateDirect3D11DeviceFromDXGIDevice(&dxgi)
-            .map_err(at("CreateDirect3D11DeviceFromDXGIDevice"))?
-            .cast()
-            .map_err(at("IDirect3DDevice"))?;
-        let pool = Direct3D11CaptureFramePool::CreateFreeThreaded(
-            &capture_device,
-            DirectXPixelFormat::B8G8R8A8UIntNormalized,
-            2,
-            size,
-        )
-        .map_err(at("CreateFreeThreaded"))?;
-        let session = pool
-            .CreateCaptureSession(&item)
-            .map_err(at("CreateCaptureSession"))?;
-        session
-            .SetIsCursorCaptureEnabled(false)
-            .map_err(at("SetIsCursorCaptureEnabled"))?;
-        session.StartCapture().map_err(at("StartCapture"))?;
         Ok(Self {
             session,
             pool,
-            _host: host,
+            _item: item,
+            closed,
+            host,
+            summary,
         })
     }
 
+    /// The host window and WebView state, for a failure log.
+    pub fn diagnostics(&self) -> String {
+        unsafe { self.host.diagnostics() }
+    }
+
     pub fn next_frame(&self) -> Result<Option<GpuFrame>, String> {
+        if self.closed.load(Ordering::Acquire) {
+            return Err("GraphicsCaptureItem closed".into());
+        }
+        self.take_frame()
+    }
+
+    fn take_frame(&self) -> Result<Option<GpuFrame>, String> {
         let mut latest: Option<Direct3D11CaptureFrame> = None;
         for _ in 0..2 {
             let frame = match self.pool.TryGetNextFrame() {
@@ -129,6 +153,9 @@ struct CaptureHost {
     child: HWND,
     parent: HWND,
     bounds: RECT,
+    label: &'static str,
+    /// Outcome of removing the host from the taskbar, for the log.
+    taskbar: String,
 }
 
 impl CaptureHost {
@@ -157,6 +184,8 @@ impl CaptureHost {
             child,
             parent,
             bounds,
+            label: host_label(cloaked),
+            taskbar: "untouched".into(),
         };
         SetParent(child, Some(window)).map_err(at("SetParent"))?;
         SetWindowPos(
@@ -176,10 +205,25 @@ impl CaptureHost {
     /// Takes the host out of Alt+Tab and the taskbar while it stays a capturable window.
     ///
     /// Windows 10 closes the capture item of a window that is hidden or becomes a tool window.
-    unsafe fn remove_from_taskbar(&self) -> windows::core::Result<()> {
-        let taskbar: ITaskbarList = CoCreateInstance(&TaskbarList, None, CLSCTX_INPROC_SERVER)?;
-        taskbar.HrInit()?;
-        taskbar.DeleteTab(self.window)
+    unsafe fn remove_from_taskbar(&mut self) {
+        let result = CoCreateInstance::<_, ITaskbarList>(&TaskbarList, None, CLSCTX_INPROC_SERVER)
+            .and_then(|taskbar| {
+                taskbar.HrInit()?;
+                taskbar.DeleteTab(self.window)
+            });
+        self.taskbar = match result {
+            Ok(()) => "removed".into(),
+            Err(error) => format!("DeleteTab failed: {error}"),
+        };
+    }
+
+    unsafe fn diagnostics(&self) -> String {
+        format!(
+            "host {}; webview {}; taskbar tab {}",
+            window_info(self.window),
+            window_info(self.child),
+            self.taskbar
+        )
     }
 }
 
@@ -218,33 +262,22 @@ unsafe fn create_item(
         &[false, true]
     };
     for &cloaked in hosts {
-        let label = if cloaked {
-            "cloaked host"
-        } else {
-            "tool window host"
-        };
-        let host = match CaptureHost::new(child, width, height, cloaked) {
+        let label = host_label(cloaked);
+        let mut host = match CaptureHost::new(child, width, height, cloaked) {
             Ok(host) => host,
             Err(error) => {
                 failures.push(format!("{label}: {error}"));
                 continue;
             }
         };
-        let mut rect = RECT::default();
-        let _ = GetWindowRect(host.window, &mut rect);
-        let host_info = format!(
-            "host window {}x{} at ({}, {}), {} DPI, capture supported: {:?}",
-            rect.right - rect.left,
-            rect.bottom - rect.top,
-            rect.left,
-            rect.top,
-            GetDpiForWindow(host.window),
-            GraphicsCaptureSession::IsSupported()
-        );
         let item = match create_for_window(host.window) {
             Ok(item) => item,
             Err(error) => {
-                failures.push(format!("{label}: CreateForWindow: {error} ({host_info})"));
+                failures.push(format!(
+                    "{label}: CreateForWindow: {error} [{}, capture supported: {:?}]",
+                    host.diagnostics(),
+                    GraphicsCaptureSession::IsSupported()
+                ));
                 continue;
             }
         };
@@ -252,18 +285,16 @@ unsafe fn create_item(
         match item.Size() {
             Ok(size) if size.Width > 0 && size.Height > 0 => {}
             size => {
-                failures.push(format!("{label}: item size {size:?} ({host_info})"));
+                failures.push(format!(
+                    "{label}: item size {size:?} [{}]",
+                    host.diagnostics()
+                ));
                 continue;
             }
         }
         if cloaked {
-            if let Err(error) = host.remove_from_taskbar() {
-                log::warn!(
-                    "[Dashboard] Could not remove the capture host from the taskbar: {error}"
-                );
-            }
+            host.remove_from_taskbar();
         }
-        log::info!("[Dashboard] GPU capture uses the {label}, {host_info}");
         return Ok((host, item));
     }
     Err(failures.join("; "))
@@ -321,6 +352,94 @@ unsafe fn cloaked_window(width: u32, height: u32) -> Result<HWND, String> {
         return Err(at("DwmSetWindowAttribute")(error));
     }
     Ok(window)
+}
+
+unsafe fn start_session(
+    item: &GraphicsCaptureItem,
+    device: &ID3D11Device,
+) -> Result<
+    (
+        Direct3D11CaptureFramePool,
+        GraphicsCaptureSession,
+        SizeInt32,
+    ),
+    String,
+> {
+    let size = item.Size().map_err(at("GraphicsCaptureItem.Size"))?;
+    let dxgi: IDXGIDevice = device.cast().map_err(at("IDXGIDevice"))?;
+    let capture_device: IDirect3DDevice = CreateDirect3D11DeviceFromDXGIDevice(&dxgi)
+        .map_err(at("CreateDirect3D11DeviceFromDXGIDevice"))?
+        .cast()
+        .map_err(at("IDirect3DDevice"))?;
+    let pool = Direct3D11CaptureFramePool::CreateFreeThreaded(
+        &capture_device,
+        DirectXPixelFormat::B8G8R8A8UIntNormalized,
+        POOL_BUFFERS,
+        size,
+    )
+    .map_err(at("CreateFreeThreaded"))?;
+    let session = pool
+        .CreateCaptureSession(item)
+        .map_err(at("CreateCaptureSession"))?;
+    session
+        .SetIsCursorCaptureEnabled(false)
+        .map_err(at("SetIsCursorCaptureEnabled"))?;
+    session.StartCapture().map_err(at("StartCapture"))?;
+    Ok((pool, session, size))
+}
+
+fn host_label(cloaked: bool) -> &'static str {
+    if cloaked {
+        "cloaked host"
+    } else {
+        "tool window host"
+    }
+}
+
+/// Visibility, cloak, styles, relatives, placement and DPI of a window, for the log.
+unsafe fn window_info(window: HWND) -> String {
+    let mut cloaked = 0u32;
+    let cloaked = DwmGetWindowAttribute(
+        window,
+        DWMWA_CLOAKED,
+        &mut cloaked as *mut u32 as _,
+        size_of::<u32>() as u32,
+    )
+    .map(|_| cloaked.to_string())
+    .unwrap_or_else(|error| error.to_string());
+    let mut rect = RECT::default();
+    let _ = GetWindowRect(window, &mut rect);
+    let monitor = MonitorFromWindow(window, MONITOR_DEFAULTTONEAREST);
+    let mut info = MONITORINFO {
+        cbSize: size_of::<MONITORINFO>() as u32,
+        ..Default::default()
+    };
+    let monitor_rect = if GetMonitorInfoW(monitor, &mut info).as_bool() {
+        format_rect(info.rcMonitor)
+    } else {
+        "unknown".into()
+    };
+    format!(
+        "{window:?} visible {}, cloaked {cloaked}, style {:#x}, ex style {:#x}, owner {:?}, \
+         parent {:?}, rect {}, monitor {monitor:?} {monitor_rect}, {} DPI",
+        IsWindowVisible(window).as_bool(),
+        GetWindowLongPtrW(window, GWL_STYLE),
+        GetWindowLongPtrW(window, GWL_EXSTYLE),
+        GetWindow(window, GW_OWNER).unwrap_or_default(),
+        GetAncestor(window, GA_PARENT),
+        format_rect(rect),
+        GetDpiForWindow(window)
+    )
+}
+
+fn format_rect(rect: RECT) -> String {
+    format!(
+        "{}x{} at ({}, {})",
+        rect.right - rect.left,
+        rect.bottom - rect.top,
+        rect.left,
+        rect.top
+    )
 }
 
 /// Prefixes a Windows error with the capture step that returned it.
