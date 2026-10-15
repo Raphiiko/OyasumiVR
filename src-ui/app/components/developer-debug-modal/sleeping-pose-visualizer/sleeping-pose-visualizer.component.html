@@ -21,40 +21,6 @@
       >
     }
   </div>
-  <div class="views">
-    @for (view of views(); track view.title) {
-      <div class="view">
-        <div class="view-title">{{ view.title }}</div>
-        <svg viewBox="-20 -20 40 40">
-          <line x1="-20" y1="0" x2="20" y2="0" class="axis"></line>
-          <line x1="0" y1="-20" x2="0" y2="20" class="axis"></line>
-          @for (sphere of view.spheres; track $index) {
-            <circle
-              [attr.cx]="sphere.cx"
-              [attr.cy]="sphere.cy"
-              [attr.r]="sphere.r"
-              [attr.stroke]="sphere.color"
-              [attr.fill]="sphere.colliding ? sphere.color : 'none'"
-              [attr.fill-opacity]="sphere.colliding ? 0.35 : 0"
-              stroke-width="0.15"
-            ></circle>
-          }
-          @for (box of view.boxes; track box.color) {
-            @for (edge of box.edges; track $index) {
-              <line
-                [attr.x1]="edge.x1"
-                [attr.y1]="edge.y1"
-                [attr.x2]="edge.x2"
-                [attr.y2]="edge.y2"
-                [attr.stroke]="box.active ? '#ffffff' : box.color"
-                stroke-width="0.2"
-              ></line>
-            }
-          }
-        </svg>
-      </div>
-    }
-  </div>
 }
 <div class="preview">
   <div>
@@ -74,3 +40,4 @@
     </label>
   }
 </div>
+<canvas #canvas></canvas>

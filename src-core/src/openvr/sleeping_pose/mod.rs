@@ -1,3 +1,4 @@
+pub mod commands;
 mod geometry;
 #[cfg(test)]
 mod tests;
@@ -131,37 +132,5 @@ pub async fn on_ovr_tick(hmd_quaternion: Option<[f64; 4]>) {
 
     if let Some(snapshot) = snapshot {
         send_event("SLEEPING_POSE_DEBUG", snapshot).await;
-    }
-}
-
-#[tauri::command]
-pub async fn sleeping_pose_get() -> SleepingPose {
-    TRACKER.lock().await.stable_pose()
-}
-
-#[tauri::command]
-pub async fn sleeping_pose_force(pose: SleepingPose) {
-    let mut tracker = TRACKER.lock().await;
-    if let Some(pose) = tracker.set_stable(pose) {
-        send_event("SLEEPING_POSE_UPDATE", pose).await;
-    }
-}
-
-/// Starts or stops the `SLEEPING_POSE_DEBUG` event with the geometry of every classification.
-#[tauri::command]
-pub fn sleeping_pose_set_debug(enabled: bool) {
-    DEBUG_ENABLED.store(enabled, Ordering::Relaxed);
-}
-
-/// The geometry and classification of `quaternion`, without changing the tracked pose.
-#[tauri::command]
-pub async fn sleeping_pose_debug_preview(quaternion: [f64; 4]) -> DebugSnapshot {
-    let tracker = TRACKER.lock().await;
-    let geometry = PoseGeometry::new(quaternion);
-    DebugSnapshot {
-        quaternion,
-        raw_pose: classify(&geometry, tracker.raw_pose),
-        geometry,
-        stable_pose: tracker.stable_pose(),
     }
 }

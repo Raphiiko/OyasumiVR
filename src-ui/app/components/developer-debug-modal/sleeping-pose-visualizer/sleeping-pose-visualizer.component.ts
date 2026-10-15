@@ -1,13 +1,18 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  computed,
+  effect,
+  ElementRef,
   OnDestroy,
   OnInit,
   signal,
+  ViewChild,
 } from '@angular/core';
 import { invoke } from '@tauri-apps/api/core';
 import { listen, UnlistenFn } from '@tauri-apps/api/event';
+import type * as Three from 'three';
+import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { SleepingPose } from 'src-ui/app/models/sleeping-pose';
 
 type Vec3 = [number, number, number];
@@ -29,17 +34,15 @@ interface DebugSnapshot {
   stablePose: SleepingPose;
 }
 
-interface View {
-  title: string;
-  /** Maps a point to the view plane, with y pointing down. */
-  project: (p: Vec3) => [number, number];
+interface Viewer {
+  three: typeof Three;
+  renderer: Three.WebGLRenderer;
+  scene: Three.Scene;
+  camera: Three.PerspectiveCamera;
+  controls: OrbitControls;
+  content: Three.Group;
+  resize: ResizeObserver;
 }
-
-const VIEWS: View[] = [
-  { title: 'Top (x right, z down)', project: ([x, , z]) => [x, z] },
-  { title: 'Front (x right, y up)', project: ([x, y]) => [x, -y] },
-  { title: 'Side (z right, y up)', project: ([, y, z]) => [z, -y] },
-];
 
 const POSE_COLORS: Record<SleepingPose, string> = {
   UNKNOWN: '#888888',
@@ -56,7 +59,7 @@ const POSE_COLORS: Record<SleepingPose, string> = {
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
-export class SleepingPoseVisualizerComponent implements OnInit, OnDestroy {
+export class SleepingPoseVisualizerComponent implements OnInit, AfterViewInit, OnDestroy {
   protected readonly colors = POSE_COLORS;
   protected readonly priority: SleepingPose[] = [
     'SIDE_RIGHT',
@@ -68,12 +71,18 @@ export class SleepingPoseVisualizerComponent implements OnInit, OnDestroy {
   protected readonly snapshot = signal<DebugSnapshot | null>(null);
   protected readonly source = signal<'live' | 'preview'>('preview');
   protected readonly preview = { pitch: 0, yaw: 0, roll: 0 };
-  protected readonly views = computed(() => {
-    const snapshot = this.snapshot();
-    if (!snapshot) return [];
-    return VIEWS.map((view) => this.drawView(view, snapshot));
-  });
+  @ViewChild('canvas', { static: true }) private canvas!: ElementRef<HTMLCanvasElement>;
+  private readonly viewer = signal<Viewer | null>(null);
   private unlisten?: Promise<UnlistenFn>;
+  private destroyed = false;
+
+  constructor() {
+    effect(() => {
+      const viewer = this.viewer();
+      const snapshot = this.snapshot();
+      if (viewer && snapshot) this.draw(viewer, snapshot);
+    });
+  }
 
   ngOnInit() {
     this.unlisten = listen<DebugSnapshot>('SLEEPING_POSE_DEBUG', (event) => {
@@ -84,9 +93,44 @@ export class SleepingPoseVisualizerComponent implements OnInit, OnDestroy {
     this.updatePreview();
   }
 
+  async ngAfterViewInit() {
+    // load three.js only when this debug tab opens
+    const three = await import('three');
+    const { OrbitControls } = await import('three/examples/jsm/controls/OrbitControls.js');
+    if (this.destroyed) return;
+    const canvas = this.canvas.nativeElement;
+    const renderer = new three.WebGLRenderer({ canvas, antialias: true });
+    const scene = new three.Scene();
+    scene.background = new three.Color(0x222222);
+    scene.add(new three.AxesHelper(12), new three.GridHelper(40, 20, 0x555555, 0x333333));
+    const camera = new three.PerspectiveCamera(45, 1, 0.1, 500);
+    camera.position.set(28, 18, 28);
+    const controls = new OrbitControls(camera, canvas);
+    controls.update();
+    const content = new three.Group();
+    scene.add(content);
+    const render = () => renderer.render(scene, camera);
+    controls.addEventListener('change', render);
+    const resize = new ResizeObserver(() => {
+      renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+      camera.aspect = canvas.clientWidth / canvas.clientHeight;
+      camera.updateProjectionMatrix();
+      render();
+    });
+    resize.observe(canvas);
+    this.viewer.set({ three, renderer, scene, camera, controls, content, resize });
+  }
+
   ngOnDestroy() {
+    this.destroyed = true;
     invoke('sleeping_pose_set_debug', { enabled: false });
     this.unlisten?.then((unlisten) => unlisten());
+    const viewer = this.viewer();
+    if (!viewer) return;
+    viewer.resize.disconnect();
+    viewer.controls.dispose();
+    this.clear(viewer.content);
+    viewer.renderer.dispose();
   }
 
   protected async updatePreview() {
@@ -124,45 +168,62 @@ export class SleepingPoseVisualizerComponent implements OnInit, OnDestroy {
     ];
   }
 
-  private drawView(view: View, snapshot: DebugSnapshot) {
+  /** Replaces the scene content with the core's geometry; three.js only renders it. */
+  private draw(viewer: Viewer, snapshot: DebugSnapshot) {
+    const { three, content } = viewer;
     const { mainAxisSender, crossAxisSender, receivers } = snapshot.geometry;
-    const senderActive = (poses: SleepingPose[]) => poses.some((p) => this.isActive(snapshot, p));
-    return {
-      title: view.title,
-      boxes: [
-        {
-          color: '#4060ff',
-          active: senderActive(['SIDE_FRONT', 'SIDE_BACK']),
-          obb: mainAxisSender,
-        },
-        {
-          color: '#ff4040',
-          active: senderActive(['SIDE_LEFT', 'SIDE_RIGHT']),
-          obb: crossAxisSender,
-        },
-      ].map((box) => ({ ...box, edges: this.boxEdges(box.obb, view) })),
-      spheres: receivers.map((r) => {
-        const [cx, cy] = view.project(r.center);
-        return { cx, cy, r: r.radius, color: POSE_COLORS[r.pose], colliding: r.colliding };
-      }),
-    };
-  }
+    this.clear(content);
 
-  private boxEdges({ center, halfSize, axes }: Obb, view: View) {
-    // corner i takes the positive side of axis k when bit k of i is set
-    const corner = (i: number) =>
-      center.map((c, d) =>
-        axes.reduce((sum, axis, k) => sum + (i & (1 << k) ? 1 : -1) * halfSize[k] * axis[d], c)
-      ) as Vec3;
-    const edges: { x1: number; y1: number; x2: number; y2: number }[] = [];
-    for (let i = 0; i < 8; i++) {
-      for (let k = 0; k < 3; k++) {
-        if (i & (1 << k)) continue;
-        const [x1, y1] = view.project(corner(i));
-        const [x2, y2] = view.project(corner(i | (1 << k)));
-        edges.push({ x1, y1, x2, y2 });
+    // senders, drawn white while one of their receivers collides
+    const senders: [Obb, string, SleepingPose[]][] = [
+      [mainAxisSender, '#4060ff', ['SIDE_FRONT', 'SIDE_BACK']],
+      [crossAxisSender, '#ff4040', ['SIDE_LEFT', 'SIDE_RIGHT']],
+    ];
+    for (const [obb, color, poses] of senders) {
+      const active = poses.some((pose) => this.isActive(snapshot, pose));
+      const box = new three.BoxGeometry(...obb.halfSize.map((h) => h * 2));
+      const edges = new three.LineSegments(
+        new three.EdgesGeometry(box),
+        new three.LineBasicMaterial({ color: active ? '#ffffff' : color })
+      );
+      box.dispose();
+      const [x, y, z] = obb.axes.map((axis) => new three.Vector3(...axis));
+      edges.matrixAutoUpdate = false;
+      edges.matrix.makeBasis(x, y, z).setPosition(...obb.center);
+      content.add(edges);
+    }
+
+    // receivers, filled while they collide
+    for (const receiver of receivers) {
+      const color = POSE_COLORS[receiver.pose];
+      const sphere = new three.SphereGeometry(receiver.radius, 24, 12);
+      const outline = new three.LineSegments(
+        new three.WireframeGeometry(sphere),
+        new three.LineBasicMaterial({ color, transparent: true, opacity: 0.35 })
+      );
+      outline.position.set(...receiver.center);
+      content.add(outline);
+      if (receiver.colliding) {
+        const fill = new three.Mesh(
+          sphere,
+          new three.MeshBasicMaterial({ color, transparent: true, opacity: 0.3, depthWrite: false })
+        );
+        fill.position.set(...receiver.center);
+        content.add(fill);
+      } else {
+        sphere.dispose();
       }
     }
-    return edges;
+
+    viewer.renderer.render(viewer.scene, viewer.camera);
+  }
+
+  private clear(content: Three.Group) {
+    for (const child of [...content.children]) {
+      const object = child as Three.Mesh;
+      object.geometry?.dispose();
+      (object.material as Three.Material | undefined)?.dispose();
+      content.remove(object);
+    }
   }
 }
