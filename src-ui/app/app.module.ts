@@ -481,7 +481,8 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
     provideHttpClient(withXhr(), withInterceptorsFromDi()),
     provideTransloco({
       config: {
-        availableLangs: LANGUAGES.map((l) => l.code),
+        // DEBUG holds a translation file loaded at runtime; Transloco treats unlisted names as scopes
+        availableLangs: [...LANGUAGES.map((l) => l.code), 'DEBUG'],
         defaultLang: 'en',
         fallbackLang: 'en',
         missingHandler: { useFallbackTranslation: true },
