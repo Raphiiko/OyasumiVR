@@ -1719,7 +1719,7 @@
         },
         "positions": {
           "SIDE_BACK": "仰躺",
-          "SIDE_FRONT": "俯卧",
+          "SIDE_FRONT": "趴卧",
           "SIDE_LEFT": "左侧躺",
           "SIDE_RIGHT": "右侧躺",
           "UNKNOWN": "未知",
@@ -1901,6 +1901,8 @@
   },
   "settings": {
     "brightnessCct": {
+      "automationsHint": "有关亮度和色温的自动化设置，请到 {link} 查看",
+      "automationsLink": "自动化页面",
       "bigscreenBeyond": {
         "forceFanSafety": {
           "description": "当亮度值超过 100% 时，强制将风扇转速设为 100%",
@@ -1931,6 +1933,15 @@
         }
       },
       "description": "在这里你会找到与亮度和色温相关的所有设置",
+      "hardwareBrightness": {
+        "unsupportedHmds": {
+          "description": "开启此选项后，OyasumiVR 会尝试通过 SteamVR 控制你头显的亮度，尽管目前尚不确定该功能是否适用于你的头显型号",
+          "listedHmd": "你的头显支持通过硬件调节亮度",
+          "noHmd": "连接头显后才能更改此设置。",
+          "title": "在不受支持的头显设备上的硬件亮度",
+          "unlistedHmd": "启用后，硬件亮度控制可能在你的头显上仍然可用。如果你的头显确实有效，欢迎在 <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a> 上通知我们！"
+        }
+      },
       "title": "亮度和色温",
       "valveIndex": {
         "maxBrightness": {
@@ -2357,6 +2368,10 @@
           "ready": "已找到适配器",
           "uninitialized": "未使用"
         },
+        "hmd": {
+          "label": "头显",
+          "notDetected": "未检测到"
+        },
         "mqtt": {
           "CONNECTED": "已连接",
           "DISABLED": "关闭",
@@ -2392,6 +2407,14 @@
           "label": "SteamVR 自动启动",
           "off": "关闭",
           "on": "开启"
+        },
+        "steamvrDashboard": {
+          "hardware": "硬件加速",
+          "label": "SteamVR 仪表盘",
+          "notRendering": "未渲染",
+          "pending": "正在等待 SteamVR 仪表板开启",
+          "software": "软件渲染",
+          "softwareFallback": "软件渲染 （降级方案）"
         },
         "title": "状态",
         "vrchat": {
