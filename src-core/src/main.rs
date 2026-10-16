@@ -261,9 +261,9 @@ async fn main() {
             let matches = match matches {
                 Ok(matches) => matches,
                 Err(e) => {
-                    error!("[Core] Error parsing command line arguments: {e}");
-                    eprintln!("Error parsing command line arguments: {e}");
-                    error_reporting::report_cli_parse_error(&e.to_string());
+                    let message = error_reporting::report_cli_parse_error(&e.to_string());
+                    error!("[Core] {message}");
+                    eprintln!("{message}");
                     // AppHandle::exit only queues the exit, so setup would continue without matches
                     std::process::exit(1);
                 }
