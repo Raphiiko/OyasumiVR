@@ -17,6 +17,11 @@ export class DeepLinkService {
     await onOpenUrl((urls) => this.handleUrls(urls));
   }
 
+  /** Whether a link started OyasumiVR, which needs the main window even when it starts in the tray. */
+  get hasLaunchUrls(): boolean {
+    return this.launchUrls.length > 0;
+  }
+
   /** Handles the link that started OyasumiVR. Call it once the main window shows. */
   async handleLaunchUrls() {
     const urls = this.launchUrls;

@@ -83,8 +83,10 @@ fn cli_parse_error_message(error: &str, args: impl Iterator<Item = String>) -> S
     let args: Vec<String> = args
         .map(|arg| error_reporting::sanitize_value(&arg))
         .collect();
+    // the first error line names the rejected argument, so it leads to survive the length cap
+    let error = error.lines().next().unwrap_or_default();
     format!(
-        "Command line arguments rejected: {args:?}\n{}",
+        "Command line rejected: {}\nArguments: {args:?}",
         error_reporting::sanitize_value(error)
     )
 }

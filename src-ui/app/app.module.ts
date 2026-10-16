@@ -918,7 +918,10 @@ export class AppModule {
     // Close the splash screen after initialization
     await invoke('close_splashscreen');
     // Show the main window
-    if (!this.appSettingsService.settingsSync.startInSystemTray) {
+    if (
+      !this.appSettingsService.settingsSync.startInSystemTray ||
+      this.deepLinkService.hasLaunchUrls
+    ) {
       const window = getCurrentWindow();
       await window.show();
       await window.setFocus();
