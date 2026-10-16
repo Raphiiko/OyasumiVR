@@ -108,6 +108,8 @@ public static class Program
     settings.CefCommandLineArgs.Add("disable-features", "MetricsService,PersistentHistograms");
     settings.CefCommandLineArgs.Add("disable-crash-reporter", "true");
     settings.CefCommandLineArgs.Add("disable-spell-checking", "true");
+    // when elevated, Chromium relaunches itself de-elevated and Cef.Initialize returns false
+    settings.CefCommandLineArgs.Add("do-not-de-elevate");
 
     if (GpuAccelerated)
     {

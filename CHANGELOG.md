@@ -15,6 +15,16 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Pre-release numbering never predicts the version of the eventual stable release, and
   versions are assigned when a build is published, never before.
 
+## [Unreleased]
+
+### Changed
+
+- Improved Simplified Chinese translations (@xiaoBingge114514)
+
+### Fixed
+
+- Fixed the SteamVR overlays, such as the hand menu, not showing up when OyasumiVR runs as administrator
+
 ## [26.10.2]
 
 ### Fixed
