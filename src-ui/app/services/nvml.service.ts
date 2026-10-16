@@ -51,14 +51,15 @@ export class NvmlService {
 
   public async setPowerLimit(uuid: string, powerLimit: number): Promise<boolean> {
     powerLimit = Math.floor(powerLimit);
-    const success = await invoke<boolean>('nvml_set_power_management_limit', { uuid, powerLimit });
-    if (success) {
-      this._devices.next(await this.getDevices());
-      info(`[Nvml] Set gpu power limit (uuid=${uuid}, powerLimit:${powerLimit})`);
-    } else {
-      error(`[Nvml] Could not set gpu power limit (uuid=${uuid}, powerLimit:${powerLimit})`);
+    try {
+      await invoke<boolean>('nvml_set_power_management_limit', { uuid, powerLimit });
+    } catch (e) {
+      error(`[Nvml] Could not set gpu power limit (uuid=${uuid}, powerLimit:${powerLimit}): ${e}`);
+      return false;
     }
-    return success;
+    this._devices.next(await this.getDevices());
+    info(`[Nvml] Set gpu power limit (uuid=${uuid}, powerLimit:${powerLimit})`);
+    return true;
   }
 
   private getNvmlStatus(): Promise<NvmlStatus> {

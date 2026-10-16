@@ -254,15 +254,18 @@ export class GpuAutomationsService {
             const powerLimit = getAutomationConfig().resetToDefault
               ? selectedDevice!.defaultPowerLimit!
               : getAutomationConfig().powerLimit || selectedDevice!.defaultPowerLimit!;
-            return this.nvml.setPowerLimit(selectedDevice!.id, powerLimit * 1000).then(() => {
-              this.eventLog.logEvent({
-                type: 'gpuPowerLimitChanged',
-                device: selectedDevice!.name,
-                limit: powerLimit,
-                resetToDefault: getAutomationConfig().resetToDefault,
-                reason: on === 'ENABLE' ? 'SLEEP_MODE_ENABLED' : 'SLEEP_MODE_DISABLED',
-              } as EventLogGpuPowerLimitChanged);
-            });
+            return this.nvml
+              .setPowerLimit(selectedDevice!.id, powerLimit * 1000)
+              .then((success) => {
+                if (!success) return;
+                this.eventLog.logEvent({
+                  type: 'gpuPowerLimitChanged',
+                  device: selectedDevice!.name,
+                  limit: powerLimit,
+                  resetToDefault: getAutomationConfig().resetToDefault,
+                  reason: on === 'ENABLE' ? 'SLEEP_MODE_ENABLED' : 'SLEEP_MODE_DISABLED',
+                } as EventLogGpuPowerLimitChanged);
+              });
           })
         )
         .subscribe();
