@@ -629,7 +629,7 @@
         },
         "positions": {
           "SIDE_BACK": "Sur le dos",
-          "SIDE_FRONT": "Droit",
+          "SIDE_FRONT": "Sur le ventre",
           "SIDE_LEFT": "Sur le côté gauche",
           "SIDE_RIGHT": "Sur le côté droit",
           "UNKNOWN": "Inconnu",

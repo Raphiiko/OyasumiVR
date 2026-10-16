@@ -5,12 +5,12 @@ import type { UserStatus } from './vrchat';
 import { AudioDeviceParsedName, AudioDeviceType } from './audio-device';
 
 export type EventLog = {
-  version: 5;
+  version: 6;
   logs: EventLogEntry[];
 };
 
 export const EVENT_LOG_DEFAULT: EventLog = {
-  version: 5,
+  version: 6,
   logs: [],
 };
 

@@ -2,6 +2,17 @@ import { EVENT_LOG_DEFAULT } from '../models/event-log-entry';
 import type { MigrationDefinition, Versioned } from 'src-shared-ts/src/migration-runner';
 import { normalizeWithDefaults } from './migration-defaults';
 
+function from5to6(data: any): any {
+  data.version = 6;
+  data.logs = data.logs.map((log: any) => {
+    if (log.reason?.automation === 'SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE') {
+      log.reason.automation = 'SLEEP_MODE_DISABLE_ON_SIDE_FRONT_POSE';
+    }
+    return log;
+  });
+  return data;
+}
+
 function from4to5(data: any): any {
   data.version = 5;
   data.logs = data.logs.map((log: any) => {
@@ -72,6 +83,7 @@ export const EVENT_LOG_MIGRATION: MigrationDefinition<Versioned> = {
     2: from2to3,
     3: from3to4,
     4: from4to5,
+    5: from5to6,
   },
   normalizeCurrentVersion: (data) => normalizeWithDefaults(EVENT_LOG_DEFAULT, data),
 };

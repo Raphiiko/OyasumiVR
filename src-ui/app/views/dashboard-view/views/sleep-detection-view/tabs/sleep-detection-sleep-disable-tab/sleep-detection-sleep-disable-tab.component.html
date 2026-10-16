@@ -121,9 +121,9 @@
 
     <app-setting-row
       label="sleep-detection.disableAutomations.onUprightPose"
-      [value]="automationConfigs.SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE"
-      [defaultValue]="automationDefaults.SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE"
-      (resetToDefault)="updateConfig('SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE', $event)"
+      [value]="automationConfigs.SLEEP_MODE_DISABLE_ON_SIDE_FRONT_POSE"
+      [defaultValue]="automationDefaults.SLEEP_MODE_DISABLE_ON_SIDE_FRONT_POSE"
+      (resetToDefault)="updateConfig('SLEEP_MODE_DISABLE_ON_SIDE_FRONT_POSE', $event)"
     >
       <button
         class="btn btn-automation-settings"
@@ -134,8 +134,8 @@
       <label class="switch-toggle">
         <input
           type="checkbox"
-          [checked]="automationConfigs.SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE.enabled"
-          (change)="toggleAutomation('SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE', 'enabled')"
+          [checked]="automationConfigs.SLEEP_MODE_DISABLE_ON_SIDE_FRONT_POSE.enabled"
+          (change)="toggleAutomation('SLEEP_MODE_DISABLE_ON_SIDE_FRONT_POSE', 'enabled')"
         />
         <span class="switch-toggle-slider"></span>
       </label>

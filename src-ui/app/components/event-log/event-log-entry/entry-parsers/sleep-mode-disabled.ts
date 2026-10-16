@@ -25,7 +25,7 @@ export class EventLogSleepModeDisabledEntryParser extends EventLogEntryParser<Ev
           case 'SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE':
             return `comp.event-log-entry.type.sleepModeDisabled.reason.automation.${entry.reason.automation}.${entry.reason.event}`;
           case 'SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS':
-          case 'SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE':
+          case 'SLEEP_MODE_DISABLE_ON_SIDE_FRONT_POSE':
           case 'SLEEP_MODE_DISABLE_AT_TIME':
           case 'SLEEP_MODE_DISABLE_AFTER_TIME':
           case 'SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON':

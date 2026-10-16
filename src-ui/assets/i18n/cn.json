@@ -546,7 +546,7 @@
                 "join": "因为 {name} 加入了你的世界",
                 "leave": "因为 {name} 离开了你的世界"
               },
-              "SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE": "因为你保持直立姿势足够长的时间",
+              "SLEEP_MODE_DISABLE_ON_SIDE_FRONT_POSE": "因为你保持直立姿势足够长的时间",
               "unknown": "由未知的自动化操作触发"
             },
             "hotkey": "你使用快捷键关闭了睡眠模式",
@@ -1719,7 +1719,7 @@
         },
         "positions": {
           "SIDE_BACK": "仰躺",
-          "SIDE_FRONT": "直立",
+          "SIDE_FRONT": "俯卧",
           "SIDE_LEFT": "左侧躺",
           "SIDE_RIGHT": "右侧躺",
           "UNKNOWN": "未知",

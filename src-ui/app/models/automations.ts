@@ -21,7 +21,7 @@ export type AutomationType =
   | 'SLEEP_MODE_DISABLE_AT_TIME'
   | 'SLEEP_MODE_DISABLE_AFTER_TIME'
   | 'SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON'
-  | 'SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE'
+  | 'SLEEP_MODE_DISABLE_ON_SIDE_FRONT_POSE'
   | 'SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE'
   | 'DEVICE_POWER_AUTOMATIONS'
   | 'OSC_GENERAL'
@@ -50,7 +50,7 @@ export type AutomationType =
   | 'RUN_AUTOMATIONS';
 
 export interface AutomationConfigs {
-  version: 21;
+  version: 22;
   // CORE SLEEP FUNCTIONALITY
   SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR: SleepModeEnableForSleepDetectorAutomationConfig;
   SLEEP_MODE_ENABLE_AT_TIME: SleepModeEnableAtTimeAutomationConfig;
@@ -61,7 +61,7 @@ export interface AutomationConfigs {
   SLEEP_MODE_DISABLE_AT_TIME: SleepModeDisableAtTimeAutomationConfig;
   SLEEP_MODE_DISABLE_AFTER_TIME: SleepModeDisableAfterTimeAutomationConfig;
   SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON: SleepModeDisableOnDevicePowerOnAutomationConfig;
-  SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE: SleepModeDisableOnUprightPoseAutomationConfig;
+  SLEEP_MODE_DISABLE_ON_SIDE_FRONT_POSE: SleepModeDisableOnUprightPoseAutomationConfig;
   SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE: SleepModeDisableOnPlayerJoinOrLeaveAutomationConfig;
   NIGHTMARE_DETECTION: NightmareDetectionAutomationsConfig;
 
@@ -517,7 +517,7 @@ export interface RunAutomationsConfig extends AutomationConfig {
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 21,
+  version: 22,
   // CORE SLEEP FUNCTIONALITY
   SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR: {
     enabled: false,
@@ -564,7 +564,7 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     enabled: false,
     triggerClasses: ['GenericTracker', 'Controller'],
   },
-  SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE: {
+  SLEEP_MODE_DISABLE_ON_SIDE_FRONT_POSE: {
     enabled: false,
     duration: 5000,
   },

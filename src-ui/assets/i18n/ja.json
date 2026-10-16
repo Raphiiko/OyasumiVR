@@ -546,7 +546,7 @@
                 "join": "{name}が参加した",
                 "leave": "{name}が退出した"
               },
-              "SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE": "起き上がっていた",
+              "SLEEP_MODE_DISABLE_ON_SIDE_FRONT_POSE": "起き上がっていた",
               "unknown": "不明な自動機能"
             },
             "hotkey": "ショートカットキーによって無効化",
@@ -1719,7 +1719,7 @@
         },
         "positions": {
           "SIDE_BACK": "仰向け",
-          "SIDE_FRONT": "起き上がり",
+          "SIDE_FRONT": "うつ伏せ",
           "SIDE_LEFT": "左向き",
           "SIDE_RIGHT": "右向き",
           "UNKNOWN": "不明",

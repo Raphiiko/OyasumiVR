@@ -14,7 +14,7 @@ import { SleepingPose } from '../../models/sleeping-pose';
 })
 export class SleepModeDisableOnUprightPoseAutomationService {
   private config: SleepModeDisableOnUprightPoseAutomationConfig = structuredClone(
-    AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE
+    AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_DISABLE_ON_SIDE_FRONT_POSE
   );
   private lastPose?: { pose: SleepingPose; time: number };
   private disableTimeout?: number | NodeJS.Timeout;
@@ -26,7 +26,7 @@ export class SleepModeDisableOnUprightPoseAutomationService {
 
   async init() {
     this.automationConfig.configs
-      .pipe(map((configs) => configs.SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE))
+      .pipe(map((configs) => configs.SLEEP_MODE_DISABLE_ON_SIDE_FRONT_POSE))
       .subscribe((config) => (this.config = config));
 
     this.sleep.pose
@@ -68,7 +68,7 @@ export class SleepModeDisableOnUprightPoseAutomationService {
       // Disable the sleep mode
       this.sleep.disableSleepMode({
         type: 'AUTOMATION',
-        automation: 'SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE',
+        automation: 'SLEEP_MODE_DISABLE_ON_SIDE_FRONT_POSE',
       });
     }, this.config.duration);
   }

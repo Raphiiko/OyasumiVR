@@ -546,7 +546,7 @@
                 "join": "Omdat {name} je wereld joinde",
                 "leave": "Omdat {name} je wereld verliet"
               },
-              "SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE": "Omdat je lang genoeg rechtop zat",
+              "SLEEP_MODE_DISABLE_ON_SIDE_FRONT_POSE": "Omdat je lang genoeg rechtop zat",
               "unknown": "Door een onbekende automatisering"
             },
             "hotkey": "Je hebt de slaapmodus uitgeschakeld met de hotkey",
@@ -1719,7 +1719,7 @@
         },
         "positions": {
           "SIDE_BACK": "Rug",
-          "SIDE_FRONT": "Rechtop",
+          "SIDE_FRONT": "Buik",
           "SIDE_LEFT": "Linkerzij",
           "SIDE_RIGHT": "Rechterzij",
           "UNKNOWN": "Onbekend",
