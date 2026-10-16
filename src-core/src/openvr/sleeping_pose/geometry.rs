@@ -10,7 +10,6 @@ use serde::{Deserialize, Serialize};
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum SleepingPose {
     Unknown,
-    /// Prone: lying face down.
     SideFront,
     SideBack,
     SideLeft,
