@@ -223,15 +223,16 @@ async fn main() {
                 open_console();
             }
             let matches = match app.cli().matches() {
-                Ok(matches) => Some(matches),
+                Ok(matches) => matches,
                 Err(e) => {
+                    error!("[Core] Error parsing command line arguments: {e}");
                     eprintln!("Error parsing command line arguments: {e}");
-                    app.handle().exit(1);
-                    None
+                    // AppHandle::exit only queues the exit, so setup would continue without matches
+                    std::process::exit(1);
                 }
             };
             futures::executor::block_on(async {
-                *globals::TAURI_CLI_MATCHES.lock().await = matches;
+                *globals::TAURI_CLI_MATCHES.lock().await = Some(matches);
             });
             match futures::executor::block_on(tauri::async_runtime::spawn(app_setup(
                 app.handle().clone(),
