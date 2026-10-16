@@ -1,34 +1,47 @@
 import { Injectable } from '@angular/core';
 import { info, warn } from '@tauri-apps/plugin-log';
 import { PulsoidService } from './integrations/pulsoid.service';
-import { onOpenUrl } from '@tauri-apps/plugin-deep-link';
+import { getCurrent, onOpenUrl } from '@tauri-apps/plugin-deep-link';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DeepLinkService {
+  private launchUrls: string[] = [];
+
   constructor(private pulsoid: PulsoidService) {}
 
   async init() {
-    await onOpenUrl(async (urls) => {
-      for (const strurl of urls) {
-        let url: URL | null = null;
-        // the query and fragment can carry access tokens, so they stay out of the log
-        const loggableUrl = strurl.split(/[?#]/)[0];
-        info(`[DeepLinkService] Received deep link call: ${loggableUrl}`);
-        try {
-          url = new URL(strurl);
-        } catch {
-          await warn(`[DeepLinkService] Failed to parse deep link URL: ${loggableUrl}`);
-          return;
-        }
-        try {
-          await this.handleDeepLinkCall(url);
-        } catch {
-          await warn(`[DeepLinkService] Failed to handle deep link call for URL: ${loggableUrl}`);
-        }
+    // a link that starts OyasumiVR arrives as a command line argument, not as an event
+    this.launchUrls = (await getCurrent()) ?? [];
+    await onOpenUrl((urls) => this.handleUrls(urls));
+  }
+
+  /** Handles the link that started OyasumiVR. Call it once the main window shows. */
+  async handleLaunchUrls() {
+    const urls = this.launchUrls;
+    this.launchUrls = [];
+    await this.handleUrls(urls);
+  }
+
+  private async handleUrls(urls: string[]) {
+    for (const strurl of urls) {
+      let url: URL | null = null;
+      // the query and fragment can carry access tokens, so they stay out of the log
+      const loggableUrl = strurl.split(/[?#]/)[0];
+      info(`[DeepLinkService] Received deep link call: ${loggableUrl}`);
+      try {
+        url = new URL(strurl);
+      } catch {
+        await warn(`[DeepLinkService] Failed to parse deep link URL: ${loggableUrl}`);
+        return;
       }
-    });
+      try {
+        await this.handleDeepLinkCall(url);
+      } catch {
+        await warn(`[DeepLinkService] Failed to handle deep link call for URL: ${loggableUrl}`);
+      }
+    }
   }
 
   private async handleDeepLinkCall(url: URL) {

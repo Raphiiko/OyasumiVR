@@ -923,6 +923,7 @@ export class AppModule {
       await window.show();
       await window.setFocus();
     }
+    await this.deepLinkService.handleLaunchUrls();
     // Show language selection modal if user hasn't picked a language yet
     const settings = await firstValueFrom(this.appSettingsService.settings);
     if (!settings.userLanguagePicked) {
