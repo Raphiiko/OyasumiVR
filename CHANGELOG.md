@@ -17,6 +17,10 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ## [Unreleased]
 
+### Changed
+
+- Improved Simplified Chinese translations (@xiaoBingge114514)
+
 ### Fixed
 
 - Fixed the SteamVR overlays, such as the hand menu, not showing up when OyasumiVR runs as administrator
