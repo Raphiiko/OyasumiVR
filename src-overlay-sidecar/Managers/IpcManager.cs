@@ -36,8 +36,9 @@ public class IpcManager
     _initialized = true;
     var uiPath = Path.Combine(Path.GetDirectoryName(Environment.ProcessPath)!, @"ui");
     Directory.CreateDirectory(uiPath);
-    var builder = WebApplication.CreateBuilder();
+    var builder = WebApplication.CreateEmptyBuilder(new WebApplicationOptions());
     builder.Host.UseSerilog();
+    builder.WebHost.UseKestrelCore();
     builder.WebHost.ConfigureKestrel(serverOptions =>
     {
       serverOptions.Listen(IPAddress.Parse("127.0.0.1"),

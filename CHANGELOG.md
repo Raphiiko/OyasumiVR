@@ -25,6 +25,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 - Fixed the SteamVR overlays, such as the hand menu, not showing up when OyasumiVR runs as administrator
 - Fixed the GPU power limit automations stopping until a restart after the GPU refused a power limit
+- Fixed the SteamVR overlays not starting when a configuration file in the installation folder is damaged
 
 ## [26.10.2]
 
