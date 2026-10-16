@@ -546,7 +546,7 @@
                 "join": "{name} เข้ามา",
                 "leave": "{name} ออกไป"
               },
-              "SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE": "เนื่องจากคุณนั่งตัวตรงนานพอแล้ว",
+              "SLEEP_MODE_DISABLE_ON_SIDE_FRONT_POSE": "เนื่องจากคุณนั่งตัวตรงนานพอแล้ว",
               "unknown": "โดยระบบอัตโนมัติที่ไม่รู้จัก"
             },
             "hotkey": "ปิดโหมดนอนหลับด้วยคีย์ลัด",
@@ -1715,7 +1715,7 @@
         },
         "positions": {
           "SIDE_BACK": "นอนหงาย",
-          "SIDE_FRONT": "นั่งตัวตรง",
+          "SIDE_FRONT": "นอนคว่ำ",
           "SIDE_LEFT": "นอนตะแคงซ้าย",
           "SIDE_RIGHT": "นอนตะแคงขวา",
           "UNKNOWN": "ไม่ทราบ",

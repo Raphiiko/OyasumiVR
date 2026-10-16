@@ -546,7 +546,7 @@
                 "join": "As {name} joined your world",
                 "leave": "As {name} left your world"
               },
-              "SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE": "As you got upright for long enough",
+              "SLEEP_MODE_DISABLE_ON_SIDE_FRONT_POSE": "As you got upright for long enough",
               "unknown": "By an unknown automation"
             },
             "hotkey": "You disabled sleep mode by pressing the hotkey",
@@ -1719,7 +1719,7 @@
         },
         "positions": {
           "SIDE_BACK": "Back Side",
-          "SIDE_FRONT": "Upright",
+          "SIDE_FRONT": "Prone",
           "SIDE_LEFT": "Left Side",
           "SIDE_RIGHT": "Right Side",
           "UNKNOWN": "Unknown",

@@ -524,7 +524,7 @@
                 "join": "Ya que {name} se unió a tu mundo",
                 "leave": "Ya que {name} salió de tu mundo"
               },
-              "SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE": "Ya que estuviste erguido el tiempo suficiente",
+              "SLEEP_MODE_DISABLE_ON_SIDE_FRONT_POSE": "Ya que estuviste erguido el tiempo suficiente",
               "unknown": "Por una automatización desconocida"
             },
             "hotkey": "Has desactivado el modo sueño presionando la tecla de acceso rápido",
@@ -1472,7 +1472,7 @@
         },
         "positions": {
           "SIDE_BACK": "Parte trasera",
-          "SIDE_FRONT": "Vertical",
+          "SIDE_FRONT": "Boca abajo",
           "SIDE_LEFT": "Lado izquierdo",
           "SIDE_RIGHT": "Lado derecho",
           "UNKNOWN": "Desconocido",

@@ -83,12 +83,12 @@ export class SleepDetectionSleepDisableTabComponent
   openModal_DisableSleepModeOnUprightPose() {
     this.modalService
       .addModal(UprightPoseDisableSleepModeModalComponent, {
-        duration: this.automationConfigs.SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE.duration,
+        duration: this.automationConfigs.SLEEP_MODE_DISABLE_ON_SIDE_FRONT_POSE.duration,
       })
       .pipe(filter(Boolean))
       .subscribe((data) => {
         this.automationConfigService.updateAutomationConfig<SleepModeDisableOnUprightPoseAutomationConfig>(
-          'SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE',
+          'SLEEP_MODE_DISABLE_ON_SIDE_FRONT_POSE',
           {
             duration: data.duration,
           }

@@ -48,3 +48,16 @@ describe('automation configs migration 20 to 21', () => {
     expect(migrated.oscScripts).toEqual(custom.oscScripts);
   });
 });
+
+describe('automation configs migration 21 to 22', () => {
+  it('moves the upright pose config to the side front pose key', async () => {
+    const config = { enabled: true, duration: 120000 };
+    const result = await runMigrations(
+      { version: 21, SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE: config } as Versioned,
+      AUTOMATION_CONFIGS_MIGRATION
+    );
+    const value = (result as { value: any }).value;
+    expect(value.SLEEP_MODE_DISABLE_ON_SIDE_FRONT_POSE).toEqual(config);
+    expect(value.SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE).toBeUndefined();
+  });
+});

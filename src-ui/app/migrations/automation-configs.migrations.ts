@@ -21,6 +21,14 @@ const RUN_AUTOMATION_COMMAND_FIELDS = [
 
 const GOGO_LOCO_EMOTE_ADDRESSES = ['/avatar/parameters/VRCEmote', '/avatar/parameters/Go/VRCEmote'];
 
+function from21to22(data: any): any {
+  data.version = 22;
+  if (!data.SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE) return data;
+  data.SLEEP_MODE_DISABLE_ON_SIDE_FRONT_POSE = data.SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE;
+  delete data.SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE;
+  return data;
+}
+
 function from20to21(data: any): any {
   data.version = 21;
   const config = data.SLEEPING_ANIMATIONS;
@@ -108,6 +116,7 @@ export const AUTOMATION_CONFIGS_MIGRATION: MigrationDefinition<Versioned> = {
     18: from18to19,
     19: from19to20,
     20: from20to21,
+    21: from21to22,
   },
   normalizeCurrentVersion: (data) => normalizeWithDefaults(AUTOMATION_CONFIGS_DEFAULT, data),
 };

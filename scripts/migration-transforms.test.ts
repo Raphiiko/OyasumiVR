@@ -92,7 +92,7 @@ test('v8: brightness construction separates enable and disable, shutdown renames
     WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE: { enabled: true, powerPolicy: 'BALANCED' },
   });
 
-  assert.equal(result.version, 21);
+  assert.equal(result.version, 22);
   assert.deepEqual(result.BRIGHTNESS_AUTOMATIONS.SLEEP_MODE_ENABLE, {
     enabled: true,
     changeBrightness: true,
@@ -215,7 +215,7 @@ test('v14: shutdown trigger fields rename inside SHUTDOWN_AUTOMATIONS, sounds fr
     },
   });
 
-  assert.equal(result.version, 21);
+  assert.equal(result.version, 22);
   assert.equal(result.SHUTDOWN_AUTOMATIONS.triggerOnSleepDuration, 777000);
   assert.equal(result.SHUTDOWN_AUTOMATIONS.triggerOnSleepActivationWindow, true);
   assert.deepEqual(result.SHUTDOWN_AUTOMATIONS.triggerOnSleepActivationWindowStart, [21, 42]);
@@ -286,7 +286,7 @@ test('v16: brightness automations build from the frozen v17 defaults', async () 
     },
   });
 
-  assert.equal(result.version, 21);
+  assert.equal(result.version, 22);
   assert.equal(result.BRIGHTNESS_AUTOMATIONS.advancedMode, false);
   assert.deepEqual(result.BRIGHTNESS_AUTOMATIONS.SLEEP_MODE_ENABLE, {
     enabled: true,
@@ -389,7 +389,7 @@ test('v17: notification and device power automations freeze at v18 defaults', as
     TURN_OFF_DEVICES_WHEN_CHARGING: { enabled: false, deviceClasses: ['GenericTracker'] },
   });
 
-  assert.equal(result.version, 21);
+  assert.equal(result.version, 22);
   assert.equal(result.BRIGHTNESS_AUTOMATIONS.advancedMode, true);
   assert.equal(result.BRIGHTNESS_AUTOMATIONS.SLEEP_MODE_ENABLE.brightness, 17);
   assert.equal(result.JOIN_NOTIFICATIONS.joinSoundMode, 'FRIEND');
@@ -430,7 +430,7 @@ test('v2: oldest automation schema migrates end to end through the frozen defaul
     TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE: { enabled: true, deviceClasses: ['HMD'] },
   });
 
-  assert.equal(result.version, 21);
+  assert.equal(result.version, 22);
   assert.equal(result.SLEEP_MODE_ENABLE_AT_TIME.time, '23:42');
   assert.deepEqual(result.BRIGHTNESS_AUTOMATIONS.SLEEP_MODE_ENABLE, {
     enabled: false,

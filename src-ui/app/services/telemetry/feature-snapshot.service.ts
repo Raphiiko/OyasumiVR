@@ -51,7 +51,7 @@ export function buildFeatureSnapshot(ctx: FeatureSnapshotContext): Record<string
     wake_at_time: a.SLEEP_MODE_DISABLE_AT_TIME.enabled,
     wake_after_time: a.SLEEP_MODE_DISABLE_AFTER_TIME.enabled,
     wake_on_device_power_on: a.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON.enabled,
-    wake_on_upright_pose: a.SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE.enabled,
+    wake_on_upright_pose: a.SLEEP_MODE_DISABLE_ON_SIDE_FRONT_POSE.enabled,
     wake_on_player_join_leave: a.SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE.enabled,
     wake_on_steamvr_stop: a.SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS.disableOnSteamVRStop,
     nightmare_detection:

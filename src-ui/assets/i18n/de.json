@@ -471,7 +471,7 @@
                 "join": "{name} ist deiner Welt beigetretten.",
                 "leave": "{name} hat deine Welt verlassen"
               },
-              "SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE": "Weil du lange genug gestanden hast",
+              "SLEEP_MODE_DISABLE_ON_SIDE_FRONT_POSE": "Weil du lange genug gestanden hast",
               "unknown": "Durch eine unbekannte Automatisierung"
             },
             "hotkey": "Du hast den Schlafmodus durch drücken eines Hotkeys ausgeschaltet",
