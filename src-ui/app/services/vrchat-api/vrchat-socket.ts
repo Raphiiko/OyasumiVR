@@ -29,11 +29,6 @@ export interface VRChatEventHandler {
   handle: (content: string) => void | Promise<void>;
 }
 
-interface VRChatPipelineMessage {
-  type: string;
-  content: string;
-}
-
 export class VRChatSocket {
   private readonly statusSubject = new BehaviorSubject<VRChatSocketStatus>('CLOSED');
   private readonly notificationSubject = new Subject<Notification>();
@@ -41,6 +36,8 @@ export class VRChatSocket {
   private socket?: WebSocket;
   private openedAt?: number;
   private socketError = false;
+  /** Set when VRChat sends an error frame on the current socket, which it closes right after. */
+  private socketRejected = false;
   private consecutiveFailures = 0;
   /** Changes whenever pending socket work must be discarded. */
   private connectionGeneration = 0;
@@ -112,6 +109,7 @@ export class VRChatSocket {
     this.socket = socket;
     this.openedAt = undefined;
     this.socketError = false;
+    this.socketRejected = false;
     socket.onopen = () => this.handleOpen(socket);
     socket.onerror = () => this.handleError(socket);
     socket.onclose = (event) => this.handleClose(socket, event);
@@ -148,9 +146,9 @@ export class VRChatSocket {
     const reason = event.reason.trim().replace(/\s+/g, ' ').slice(0, 120) || 'none';
     const lifetimeBucket = socketLifetimeBucket(lifetime);
     info(
-      `[VRChat] Websocket connection closed: code=${event.code} clean=${event.wasClean} lifetime=${lifetimeBucket} error=${this.socketError} reason=${reason}`
+      `[VRChat] Websocket connection closed: code=${event.code} clean=${event.wasClean} lifetime=${lifetimeBucket} error=${this.socketError} rejected=${this.socketRejected} reason=${reason}`
     );
-    if (this.consecutiveFailures === FAILURE_REPORT_THRESHOLD) {
+    if (this.consecutiveFailures === FAILURE_REPORT_THRESHOLD && !this.socketRejected) {
       this.reportError(
         new Error(
           `VRChat pipeline repeatedly closed: code=${event.code} clean=${event.wasClean} lifetime=${lifetimeBucket} error=${this.socketError} reason=${reason}`
@@ -174,35 +172,49 @@ export class VRChatSocket {
   private handleMessage(socket: WebSocket, message: MessageEvent): void {
     if (this.socket !== socket) return;
 
-    let data: VRChatPipelineMessage;
+    let parsed: unknown;
     try {
-      const parsed: unknown = JSON.parse(String(message.data));
-      if (
-        typeof parsed !== 'object' ||
-        parsed === null ||
-        !('type' in parsed) ||
-        typeof parsed.type !== 'string' ||
-        !('content' in parsed) ||
-        typeof parsed.content !== 'string'
-      ) {
-        throw new Error('Invalid VRChat pipeline message');
-      }
-      data = { type: parsed.type, content: parsed.content };
-    } catch (cause) {
-      error(`[VRChat] Failed to parse websocket message: ${cause}`);
-      this.reportError(new Error('VRChat pipeline message parsing failed'));
+      parsed = JSON.parse(String(message.data));
+    } catch {
+      this.reportParseFailure('not JSON');
+      return;
+    }
+    if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+      this.reportParseFailure('not an object');
       return;
     }
 
-    const handler = this.handlers.find((candidate) => candidate.type === data.type);
+    // VRChat sends an error frame without a type, then closes the connection
+    if ('err' in parsed && typeof parsed.err === 'string') {
+      this.socketRejected = true;
+      info(`[VRChat] Pipeline rejected the connection: ${parsed.err.slice(0, 120)}`);
+      return;
+    }
+
+    if (!('type' in parsed) || typeof parsed.type !== 'string') {
+      this.reportParseFailure(`no type, keys=${Object.keys(parsed).slice(0, 5).join(',')}`);
+      return;
+    }
+    const type = parsed.type;
+    const handler = this.handlers.find((candidate) => candidate.type === type);
     if (!handler) return;
+
+    // content is usually stringified JSON, but some events send an object or no content at all
+    const content = 'content' in parsed ? parsed.content : undefined;
+    const contentString =
+      typeof content === 'string' ? content : content === undefined ? '' : JSON.stringify(content);
     try {
-      void Promise.resolve(handler.handle(data.content)).catch((cause) =>
-        this.reportHandlerError(data.type, cause)
+      void Promise.resolve(handler.handle(contentString)).catch((cause) =>
+        this.reportHandlerError(type, cause)
       );
     } catch (cause) {
-      this.reportHandlerError(data.type, cause);
+      this.reportHandlerError(type, cause);
     }
+  }
+
+  private reportParseFailure(detail: string): void {
+    error(`[VRChat] Failed to parse websocket message: ${detail}`);
+    this.reportError(new Error(`VRChat pipeline message parsing failed: ${detail}`));
   }
 
   private reportHandlerError(type: string, cause: unknown): void {
