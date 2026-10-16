@@ -522,9 +522,13 @@ impl DashboardOverlay {
                     return;
                 }
                 let result = unsafe {
-                    let controller: ICoreWebView2Controller =
-                        std::mem::transmute(webview.controller());
-                    capture_frame(window, controller, device.as_ref(), keyboard, &capture)
+                    capture_frame(
+                        window,
+                        webview.controller(),
+                        device.as_ref(),
+                        keyboard,
+                        &capture,
+                    )
                 };
                 if let Err(error) = result {
                     *capture.frame.lock().unwrap() = Some(Err(error));

@@ -141,11 +141,11 @@ rev = "1bfd8ea4943822ebda2538c7c0d46a484cc5e96d"
 # path = "../../oyasumivr_oscquery"
 
 [dependencies.tauri]
-version = "2.11.6"
+version = "2.12.4"
 features = ["tray-icon", "image-png"]
 
 [build-dependencies]
-tauri-build = { version = "2.6.3", features = [] }
+tauri-build = { version = "2.7.3", features = [] }
 tonic-prost-build = { version = "0.14.6", features = [] }
 
 [profile.release]
