@@ -3,7 +3,7 @@ import { invoke } from '@tauri-apps/api/core';
 import { NvmlDevice as NvmlDevice } from '../models/nvml-device';
 import { BehaviorSubject, delay, filter, interval, Observable, startWith, switchMap } from 'rxjs';
 import { ElevatedSidecarService } from './elevated-sidecar.service';
-import { error, info } from '@tauri-apps/plugin-log';
+import { info } from '@tauri-apps/plugin-log';
 
 export type NvmlStatus =
   | 'Initializing'
@@ -49,16 +49,12 @@ export class NvmlService {
     return invoke<NvmlDevice[]>('nvml_get_devices');
   }
 
-  public async setPowerLimit(uuid: string, powerLimit: number): Promise<boolean> {
+  /** Rejects with the sidecar's error name when NVML refuses the limit. */
+  public async setPowerLimit(uuid: string, powerLimit: number): Promise<void> {
     powerLimit = Math.floor(powerLimit);
-    const success = await invoke<boolean>('nvml_set_power_management_limit', { uuid, powerLimit });
-    if (success) {
-      this._devices.next(await this.getDevices());
-      info(`[Nvml] Set gpu power limit (uuid=${uuid}, powerLimit:${powerLimit})`);
-    } else {
-      error(`[Nvml] Could not set gpu power limit (uuid=${uuid}, powerLimit:${powerLimit})`);
-    }
-    return success;
+    await invoke<void>('nvml_set_power_management_limit', { uuid, powerLimit });
+    this._devices.next(await this.getDevices());
+    info(`[Nvml] Set gpu power limit (uuid=${uuid}, powerLimit:${powerLimit})`);
   }
 
   private getNvmlStatus(): Promise<NvmlStatus> {
