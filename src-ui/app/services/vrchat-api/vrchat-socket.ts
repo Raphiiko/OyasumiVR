@@ -39,6 +39,8 @@ export class VRChatSocket {
   /** Set when VRChat sends an error frame on the current socket, which it closes right after. */
   private socketRejected = false;
   private consecutiveFailures = 0;
+  /** Set once the current failure streak sent its repeated-close report, cleared when the streak resets. */
+  private repeatedCloseReported = false;
   /** Changes whenever pending socket work must be discarded. */
   private connectionGeneration = 0;
 
@@ -64,6 +66,7 @@ export class VRChatSocket {
         void this.openSocket();
       } else if (status === 'LOGGED_OUT') {
         this.consecutiveFailures = 0;
+        this.repeatedCloseReported = false;
         this.closeSocket();
       }
     });
@@ -141,6 +144,7 @@ export class VRChatSocket {
     const lifetime = this.openedAt === undefined ? undefined : Date.now() - this.openedAt;
     const failedBeforeHealthy = lifetime === undefined || lifetime < HEALTHY_CONNECTION_DURATION;
     this.consecutiveFailures = failedBeforeHealthy ? this.consecutiveFailures + 1 : 0;
+    if (!failedBeforeHealthy) this.repeatedCloseReported = false;
     this.socket = undefined;
     this.statusSubject.next('CLOSED');
     const reason = event.reason.trim().replace(/\s+/g, ' ').slice(0, 120) || 'none';
@@ -148,7 +152,12 @@ export class VRChatSocket {
     info(
       `[VRChat] Websocket connection closed: code=${event.code} clean=${event.wasClean} lifetime=${lifetimeBucket} error=${this.socketError} rejected=${this.socketRejected} reason=${reason}`
     );
-    if (this.consecutiveFailures === FAILURE_REPORT_THRESHOLD && !this.socketRejected) {
+    if (
+      this.consecutiveFailures >= FAILURE_REPORT_THRESHOLD &&
+      !this.socketRejected &&
+      !this.repeatedCloseReported
+    ) {
+      this.repeatedCloseReported = true;
       this.reportError(
         new Error(
           `VRChat pipeline repeatedly closed: code=${event.code} clean=${event.wasClean} lifetime=${lifetimeBucket} error=${this.socketError} reason=${reason}`

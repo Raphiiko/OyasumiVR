@@ -110,6 +110,21 @@ describe('VRChatSocket', () => {
     expect(reportError.mock.calls[0][0].message).toContain('repeatedly closed');
   });
 
+  it('reports the first unexpected close after a rejection at the threshold, once per streak', async () => {
+    const { reportError } = await createSocket();
+    let ws = FakeWebSocket.instances[0];
+
+    for (let attempt = 1; attempt <= 5; attempt++) {
+      if (attempt > 1) ws = await reconnect(attempt);
+      ws.open();
+      if (attempt === 3) ws.receive({ err: 'rejected' });
+      ws.drop();
+      expect(reportError).toHaveBeenCalledTimes(attempt < 4 ? 0 : 1);
+    }
+
+    expect(reportError.mock.calls[0][0].message).toContain('repeatedly closed');
+  });
+
   it('accepts object content and ignores unknown types and missing content', async () => {
     const { reportError, receivedUserUpdate, notifications } = await createSocket();
     const ws = FakeWebSocket.instances[0];
