@@ -254,10 +254,10 @@ export class GpuAutomationsService {
             const powerLimit = getAutomationConfig().resetToDefault
               ? selectedDevice!.defaultPowerLimit!
               : getAutomationConfig().powerLimit || selectedDevice!.defaultPowerLimit!;
+            // a rejection would error the stream and end the automation, so catch it here
             return this.nvml
               .setPowerLimit(selectedDevice!.id, powerLimit * 1000)
-              .then((success) => {
-                if (!success) return;
+              .then(() => {
                 this.eventLog.logEvent({
                   type: 'gpuPowerLimitChanged',
                   device: selectedDevice!.name,
@@ -265,6 +265,11 @@ export class GpuAutomationsService {
                   resetToDefault: getAutomationConfig().resetToDefault,
                   reason: on === 'ENABLE' ? 'SLEEP_MODE_ENABLED' : 'SLEEP_MODE_DISABLED',
                 } as EventLogGpuPowerLimitChanged);
+              })
+              .catch((e) => {
+                error(
+                  `[GpuAutomations] Could not set gpu power limit (uuid=${selectedDevice!.id}, powerLimit:${powerLimit}): ${e}`
+                );
               });
           })
         )

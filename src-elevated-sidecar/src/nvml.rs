@@ -99,7 +99,7 @@ pub fn nvml_get_devices() -> Vec<NvmlDevice> {
 pub async fn nvml_set_power_management_limit(
     uuid: String,
     limit: u32,
-) -> Result<bool, NvmlSetPowerManagementLimitError> {
+) -> Result<(), NvmlSetPowerManagementLimitError> {
     let nvml_guard = NVML_HANDLE.lock().unwrap();
     let nvml = nvml_guard.as_ref().unwrap();
 
@@ -122,5 +122,5 @@ pub async fn nvml_set_power_management_limit(
         return Err(NvmlSetPowerManagementLimitError::DeviceSetPowerLimitError);
     }
 
-    Ok(true)
+    Ok(())
 }

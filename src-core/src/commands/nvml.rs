@@ -37,7 +37,7 @@ pub async fn nvml_get_devices() -> Vec<NvmlDevice> {
 pub async fn nvml_set_power_management_limit(
     uuid: String,
     power_limit: u32,
-) -> Result<bool, NvmlSetPowerManagementLimitError> {
+) -> Result<(), NvmlSetPowerManagementLimitError> {
     let mut client_guard = SIDECAR_GRPC_CLIENT.lock().await;
     let client = client_guard.as_mut().unwrap();
     let response = match client
@@ -54,7 +54,7 @@ pub async fn nvml_set_power_management_limit(
         }
     };
     if response.success {
-        Ok(true)
+        Ok(())
     } else {
         error!(
             "[Core] Could not set NVML power management limit: {:?}",
