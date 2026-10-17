@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { warn } from '@tauri-apps/plugin-log';
 import { AutomationConfigService } from './automation-config.service';
 import { SleepService } from './sleep.service';
 import { EventLogService } from './event-log.service';
@@ -59,7 +60,12 @@ export class ChaperoneFadeDistanceAutomationService {
     if (openvrStatus !== 'INITIALIZED') {
       return;
     }
-    await this.openvr.setFadeDistance(config.fadeDistance);
+    try {
+      await this.openvr.setFadeDistance(config.fadeDistance);
+    } catch (e) {
+      warn(`[FadeDistanceAutomation] Could not set fade distance: ${e}`);
+      return;
+    }
     if (logging) {
       this.eventLog.logEvent({
         type: 'chaperoneFadeDistanceChanged',

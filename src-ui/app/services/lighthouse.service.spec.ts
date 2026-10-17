@@ -11,6 +11,7 @@ const invoke = vi.fn();
 
 vi.mock('@tauri-apps/api/core', () => ({ invoke: (...args: unknown[]) => invoke(...args) }));
 vi.mock('@tauri-apps/api/event', () => ({ listen: vi.fn(async () => () => {}) }));
+vi.mock('@tauri-apps/plugin-log', () => ({ warn: vi.fn() }));
 
 import { LighthouseService } from './lighthouse.service';
 import { ToastService } from './toast.service';
@@ -57,22 +58,19 @@ describe('LighthouseService.setPowerState', () => {
 
   afterEach(() => vi.useRealTimers());
 
-  it('clears the transition marker after every attempt fails, and still rejects', async () => {
-    invoke.mockRejectedValue(new Error('WRITE_FAILED'));
+  it('clears the transition marker after every attempt fails, and resolves false', async () => {
+    invoke.mockRejectedValue({ error: 'FailedToConnect', message: 'unreachable' });
     const d = device();
     const service = makeService(d);
     const emissions: (string | undefined)[] = [];
     service.devices.subscribe((devices) => emissions.push(devices[0].transitioningToPowerState));
 
-    const settled = service.setPowerState(d, 'sleep').then(
-      () => 'resolved',
-      (e: Error) => e.message
-    );
+    const settled = service.setPowerState(d, 'sleep');
     await vi.advanceTimersByTimeAsync(500);
     expect(powerButtonFor(d).canClick).toBe(false);
     await vi.advanceTimersByTimeAsync(4500);
 
-    expect(await settled).toBe('WRITE_FAILED');
+    expect(await settled).toBe(false);
     expect(invoke).toHaveBeenCalledTimes(4);
     expect(d.transitioningToPowerState).toBeUndefined();
     expect(emissions).toEqual([undefined, 'sleep', undefined]);
@@ -113,11 +111,11 @@ describe('LighthouseService.setPowerState', () => {
     d.powerState = 'sleep';
     const service = makeService(d);
 
-    const older = service.setPowerState(d, 'sleep').catch(() => 'failed');
+    const older = service.setPowerState(d, 'sleep');
     const newer = service.setPowerState(d, 'on');
     await vi.advanceTimersByTimeAsync(3000);
 
-    expect(await older).toBe('failed');
+    expect(await older).toBe(false);
     expect(d.transitioningToPowerState).toBe('on');
 
     d.powerState = 'on';

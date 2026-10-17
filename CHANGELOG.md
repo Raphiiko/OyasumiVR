@@ -29,6 +29,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Fixed OyasumiVR crashing when Windows shuts down or signs out
 - Fixed OyasumiVR crashing at startup when it was started by a Pulsoid login link or with a command line argument it does not recognise
 - Fixed the Discord status no longer updating after Discord restarted or lost its connection several times
+- Fixed Steam achievements not unlocking until a restart after Steam failed to read one
 - Fixed an error being reported every time VRChat rejected OyasumiVR's connection, for example after a login expired
 - Fixed OyasumiVR crashing when it read a line in the VRChat log that was not valid text
 - Fixed OyasumiVR sometimes quitting during startup

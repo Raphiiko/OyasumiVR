@@ -17,7 +17,7 @@ import {
   take,
   tap,
 } from 'rxjs';
-import { debug, error, info } from '@tauri-apps/plugin-log';
+import { debug, error, info, warn } from '@tauri-apps/plugin-log';
 import { SleepService } from './sleep.service';
 import { VRChatService } from './vrchat-api/vrchat.service';
 import { DEV_VRCHAT_USER_ID } from '../globals';
@@ -83,15 +83,25 @@ export class SteamService {
   }
 
   public async setAchievement(achievementId: string, unlocked: boolean): Promise<void> {
-    if (!this._active) throw 'STEAMWORKS_INACTIVE';
+    if (!this._active.value) throw 'STEAMWORKS_INACTIVE';
     if (unlocked) info('[Steam] Unlocking achievement: ' + achievementId);
     else info('[Steam] Locking achievement: ' + achievementId);
     return invoke('steam_achievement_set', { achievementId, unlocked });
   }
 
   public async getAchievement(achievementId: string): Promise<boolean> {
-    if (!this._active) throw 'STEAMWORKS_INACTIVE';
+    if (!this._active.value) throw 'STEAMWORKS_INACTIVE';
     return invoke<boolean>('steam_achievement_get', { achievementId });
+  }
+
+  /** Unlocks the achievement if it is still locked. Logs a failure instead of rejecting. */
+  private async unlockAchievement(achievementId: string): Promise<void> {
+    try {
+      if (await this.getAchievement(achievementId)) return;
+      await this.setAchievement(achievementId, true);
+    } catch (e) {
+      warn(`[Steam] Could not unlock achievement ${achievementId}: ${e}`);
+    }
   }
 
   // ACHIEVEMENT HANDLERS
@@ -101,9 +111,7 @@ export class SteamService {
       .pipe(
         distinctUntilChanged(),
         filter(Boolean),
-        switchMap(() => this.getAchievement(SteamAchievements.START_OYASUMIVR)),
-        filter((unlocked) => !unlocked),
-        switchMap(() => this.setAchievement(SteamAchievements.START_OYASUMIVR, true)),
+        switchMap(() => this.unlockAchievement(SteamAchievements.START_OYASUMIVR)),
         take(1)
       )
       .subscribe();
@@ -122,9 +130,7 @@ export class SteamService {
         filter((timestamps: number[]) => timestamps.length === 6),
         throttleTime(10000, asyncScheduler, { leading: true, trailing: false }),
         tap(() => debug('[Steam] SMSPAM achievement triggered')),
-        switchMap(() => this.getAchievement(SteamAchievements.SMSPAM)),
-        filter((unlocked) => !unlocked),
-        switchMap(() => this.setAchievement(SteamAchievements.SMSPAM, true))
+        switchMap(() => this.unlockAchievement(SteamAchievements.SMSPAM))
       )
       .subscribe();
   }
@@ -152,9 +158,7 @@ export class SteamService {
         filter((acc) => !!acc.trigger),
         switchMap(() => this.vrchat.vrchatProcessActive.pipe(take(1))),
         tap(() => debug('[Steam] SLEEP_8H achievement triggered')),
-        switchMap(() => this.getAchievement(SteamAchievements.SLEEP_8H)),
-        filter((unlocked) => !unlocked),
-        switchMap(() => this.setAchievement(SteamAchievements.SLEEP_8H, true))
+        switchMap(() => this.unlockAchievement(SteamAchievements.SLEEP_8H))
       )
       .subscribe();
   }
@@ -187,9 +191,7 @@ export class SteamService {
         }),
         // unlock only if the achievement is still locked
         tap(() => debug('[Steam] QUICK_EEPER achievement triggered')),
-        switchMap(() => this.getAchievement(SteamAchievements.QUICK_EEPER)),
-        filter((unlocked) => !unlocked),
-        switchMap(() => this.setAchievement(SteamAchievements.QUICK_EEPER, true))
+        switchMap(() => this.unlockAchievement(SteamAchievements.QUICK_EEPER))
       )
       .subscribe();
   }
@@ -215,9 +217,7 @@ export class SteamService {
         }),
         filter(Boolean),
         tap(() => debug('[Steam] DEV_SLEEP achievement triggered')),
-        switchMap(() => this.getAchievement(SteamAchievements.DEV_SLEEP)),
-        filter((unlocked) => !unlocked),
-        switchMap(() => this.setAchievement(SteamAchievements.DEV_SLEEP, true))
+        switchMap(() => this.unlockAchievement(SteamAchievements.DEV_SLEEP))
       )
       .subscribe();
   }
@@ -228,9 +228,7 @@ export class SteamService {
         distinctUntilChanged(),
         debounceTime(1000),
         filter((status) => status === 'CONNECTED'),
-        switchMap(() => this.getAchievement(SteamAchievements.HASS_CON)),
-        filter((unlocked) => !unlocked),
-        switchMap(() => this.setAchievement(SteamAchievements.HASS_CON, true)),
+        switchMap(() => this.unlockAchievement(SteamAchievements.HASS_CON)),
         take(1)
       )
       .subscribe();

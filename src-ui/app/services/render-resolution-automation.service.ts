@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { warn } from '@tauri-apps/plugin-log';
 import { AutomationConfigService } from './automation-config.service';
 import { SleepService } from './sleep.service';
 import { EventLogService } from './event-log.service';
@@ -52,7 +53,12 @@ export class RenderResolutionAutomationService {
     if (!config.enabled) return;
     const openvrStatus = await firstValueFrom(this.openvr.status);
     if (openvrStatus !== 'INITIALIZED') return;
-    await this.openvr.setSupersampleScale(config.resolution ? config.resolution / 100 : null);
+    try {
+      await this.openvr.setSupersampleScale(config.resolution ? config.resolution / 100 : null);
+    } catch (e) {
+      warn(`[RenderResolutionAutomation] Could not set render resolution: ${e}`);
+      return;
+    }
     if (logging) {
       this.eventLog.logEvent({
         type: 'renderResolutionChanged',
