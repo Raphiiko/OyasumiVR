@@ -107,7 +107,8 @@ When a Rust error in Bugsink shows `<unknown>` frames or bare addresses, resolve
 `debug_meta` image, takes the matching exe and PDB from the symbol store on the NAS drive, and
 prints each frame with its function, file, and line. It needs the NAS drive connected,
 `llvm-symbolizer` (`winget install LLVM.LLVM`), and `BUGSINK_AUTH_TOKEN` in `.env.local` unless you
-pass a file. A worktree has no `.env.local`: copy it from the main checkout. An event without `debug_meta` comes from an older build and cannot be resolved.
+pass a file. A worktree has no `.env.local`: copy it from the main checkout. An event without
+`debug_meta` comes from an older build and cannot be resolved.
 
 ## Desktop UI verification
 

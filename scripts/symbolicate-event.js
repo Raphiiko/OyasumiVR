@@ -68,7 +68,6 @@ function checked(value, pattern) {
 
 /** Copies the exe and PDB of an image from the store into one cache folder, where the symbolizer finds the PDB beside the exe. */
 function cacheImage(image) {
-  // the store keys match the keys archive-symbols.js writes
   const fileName = /^\w[\w.-]*$/;
   const codeId = checked(image.code_id, /^[0-9a-f]{9,16}$/i);
   const debugId = checked(image.id, new RegExp(`^${UUID}(-[0-9a-f]{1,8})?$`, 'i'));
