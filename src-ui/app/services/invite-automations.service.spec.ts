@@ -176,7 +176,9 @@ describe('InviteAutomationsService', () => {
         displayName: 'Bob',
         vrchatMessage: 'Not allowed',
       });
-      expect(notifications.send).not.toHaveBeenCalled();
+      expect(notifications.send).toHaveBeenCalledExactlyOnceWith(
+        'Could not accept invite request from Bob'
+      );
       expect(notifications.playSoundConfig).toHaveBeenCalled();
     }
   );
@@ -212,6 +214,27 @@ describe('InviteAutomationsService', () => {
       });
     }
   );
+
+  it('sends no notification for a refused invite when the type is turned off', async () => {
+    const { receive, vrchat, notifications } = createService(
+      { listMode: 'DISABLED' },
+      { notificationEnabled: false }
+    );
+    vrchat.inviteUser.mockRejectedValue(new VRChatInviteRefusedError());
+    await receive(NotificationType.RequestInvite);
+    expect(notifications.send).not.toHaveBeenCalled();
+  });
+
+  it('reports the raw body without IDs, cut short, when VRChat gives no message', async () => {
+    const { receive, vrchat, telemetry } = createService({ listMode: 'DISABLED' });
+    const body = `<html>Bob usr_c1644b5b-3ca4-45b4-97c6-a2a0de70d469 ${'x'.repeat(300)}</html>`;
+    vrchat.inviteUser.mockRejectedValue(new VRChatInviteRefusedError(undefined, body));
+    await receive(NotificationType.RequestInvite);
+    const props = (telemetry.trackEvent.mock.calls[0] as unknown[])[1] as Record<string, string>;
+    expect(props.message).toBe('');
+    expect(props.body.startsWith('<html><name> <id> xxx')).toBe(true);
+    expect(props.body).toHaveLength(200);
+  });
 
   it('logs the refusal when telemetry fails', async () => {
     const { receive, vrchat, eventLog, telemetry } = createService({ listMode: 'DISABLED' });

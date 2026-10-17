@@ -1646,6 +1646,9 @@
     "autoDeclinedInviteRequest": {
       "content": "Invite request van {username} automatisch geweigerd"
     },
+    "failedInviteRequest": {
+      "content": "Kon invite request van {username} niet accepteren"
+    },
     "sleepCheck": {
       "content": "De slaapmodus wordt over 20 seconden ingeschakeld.\nSlaap je al?\n\nAnnuleren:\nSchud je hoofd of druk op een knop van je controller"
     },

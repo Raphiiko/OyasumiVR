@@ -50,9 +50,15 @@ const PROFILE_LOGOUT_TIMEOUT = 10_000;
 
 export const VRCHAT_API_STALE_REQUEST = 'STALE_REQUEST';
 
-/** VRChat answered 403 to an invite; vrchatMessage is the reason VRChat gave, when it gave one. */
+/**
+ * VRChat answered 403 to an invite; vrchatMessage is the reason VRChat gave, when it gave one.
+ * body is the response text as VRChat sent it.
+ */
 export class VRChatInviteRefusedError extends Error {
-  constructor(readonly vrchatMessage?: string) {
+  constructor(
+    readonly vrchatMessage?: string,
+    readonly body = ''
+  ) {
     super('VRChat refused the invite');
   }
 }
@@ -546,12 +552,9 @@ export class VRChatAPI {
     } catch (e) {
       if (e === VRCHAT_API_STALE_REQUEST) throw e;
       if (e instanceof Response && e.status === 403) {
-        const body: CurrentUserErrorResponse | undefined = await e.json().catch(() => undefined);
-        warn(`[VRChat] VRChat refused the invite: ${describeResponse(e, body)}`);
-        const vrchatMessage = body?.error?.message;
-        throw new VRChatInviteRefusedError(
-          typeof vrchatMessage === 'string' ? vrchatMessage : undefined
-        );
+        const body = await e.text().catch(() => '');
+        warn(`[VRChat] VRChat refused the invite: HTTP 403 ${body}`);
+        throw new VRChatInviteRefusedError(errorMessage(body), body);
       }
       const failure = requestFailure('VRChat invite request failed', e);
       error(`[VRChat] ${failure.message}`);
@@ -1028,6 +1031,15 @@ export class VRChatAPI {
 
 function describeResponse(response: Response, body: unknown): string {
   return `HTTP ${response.status} ${JSON.stringify(body ?? null)}`;
+}
+
+function errorMessage(body: string): string | undefined {
+  try {
+    const message = (JSON.parse(body) as CurrentUserErrorResponse | null)?.error?.message;
+    return typeof message === 'string' ? message : undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 function requestFailure(message: string, cause: unknown): Error {

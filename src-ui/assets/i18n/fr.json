@@ -577,6 +577,9 @@
     }
   },
   "notifications": {
+    "failedInviteRequest": {
+      "content": "Impossible d'accepter la demande d'invitation de {username}"
+    },
     "sleepCheck": {
       "content": "Le mode sommeil s'activera dans 20 secondes. Dormez-vous ?\n\n(Hochez la tête pour annuler)"
     },

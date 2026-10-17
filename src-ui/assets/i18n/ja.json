@@ -1646,6 +1646,9 @@
     "autoDeclinedInviteRequest": {
       "content": "{username}からの招待リクエストを自動で辞退しました。"
     },
+    "failedInviteRequest": {
+      "content": "{username}からの招待リクエストを承認できませんでした。"
+    },
     "sleepCheck": {
       "content": "眠りましたか？20秒後に睡眠モードに切り替わります。\n\n（コントローラーのボタンを押すか、頭を軽く振ることでキャンセルできます）"
     },

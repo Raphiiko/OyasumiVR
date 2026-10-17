@@ -1646,6 +1646,9 @@
     "autoDeclinedInviteRequest": {
       "content": "已自動拒絕來自 {username} 的邀請請求"
     },
+    "failedInviteRequest": {
+      "content": "無法接受來自 {username} 的邀請請求"
+    },
     "sleepCheck": {
       "content": "睡眠模式將在 20 秒後開啟。\n你睡著了嗎？\n\n取消方式：\n搖頭或按任一控制器按鈕"
     },

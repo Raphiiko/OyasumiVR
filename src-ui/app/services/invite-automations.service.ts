@@ -23,6 +23,8 @@ import { openUrl } from '@tauri-apps/plugin-opener';
 import { VRChatInviteRefusedError } from './vrchat-api/vrchat-api';
 import { TelemetryService } from './telemetry/telemetry.service';
 
+// ponytail: 200 is a guess that stays under common analytics limits; Aptabase documents none
+const MAX_REFUSAL_BODY = 200;
 const UUID = /\b(?:[a-z]+_)?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/gi;
 
 @Injectable({
@@ -87,7 +89,10 @@ export class InviteAutomationsService {
           reason: 'SLEEP_MODE_ENABLED',
           message: declined.reply,
         } as EventLogDeclinedInvite);
-        void this.sendDeclinedNotification('autoDeclinedInvite', notification.senderUsername);
+        void this.sendInviteAutomationNotification(
+          'autoDeclinedInvite',
+          notification.senderUsername
+        );
       }
     }
     // Play a sound if configured
@@ -284,15 +289,28 @@ export class InviteAutomationsService {
         displayName: notification.senderUsername,
         vrchatMessage: cause.vrchatMessage,
       } as EventLogFailedInviteRequest);
+      void this.sendInviteAutomationNotification(
+        'failedInviteRequest',
+        notification.senderUsername
+      );
       this.telemetry
-        .trackEvent('vrchat_invite_refused', {
-          message: this.anonymizeVRChatMessage(cause.vrchatMessage ?? '', notification),
-        })
+        .trackEvent('vrchat_invite_refused', this.refusalTelemetry(cause, notification))
         .catch((e) => warn(`[VRChat] Could not report the refused invite to telemetry: ${e}`));
       return null;
     }
     await this.vrchat.deleteNotification(notification.id);
     return { reply };
+  }
+
+  /** Carries the raw body, cut to MAX_REFUSAL_BODY characters, only when VRChat gave no message. */
+  private refusalTelemetry(
+    refusal: VRChatInviteRefusedError,
+    notification: Notification
+  ): { [key: string]: string } {
+    const message = this.anonymizeVRChatMessage(refusal.vrchatMessage ?? '', notification);
+    if (refusal.vrchatMessage) return { message };
+    const body = this.anonymizeVRChatMessage(refusal.body, notification);
+    return { message, body: body.slice(0, MAX_REFUSAL_BODY) };
   }
 
   /** Replaces the sender's display name and any VRChat ID, so the message carries no personal data. */
@@ -325,13 +343,16 @@ export class InviteAutomationsService {
         reason,
         message: declined.reply,
       } as EventLogDeclinedInviteRequest);
-      void this.sendDeclinedNotification('autoDeclinedInviteRequest', notification.senderUsername);
+      void this.sendInviteAutomationNotification(
+        'autoDeclinedInviteRequest',
+        notification.senderUsername
+      );
     }
     return true;
   }
 
-  private async sendDeclinedNotification(
-    key: 'autoDeclinedInvite' | 'autoDeclinedInviteRequest',
+  private async sendInviteAutomationNotification(
+    key: 'autoDeclinedInvite' | 'autoDeclinedInviteRequest' | 'failedInviteRequest',
     username: Notification['senderUsername']
   ) {
     if (!(await this.notifications.notificationTypeEnabled('INVITE_AUTOMATIONS'))) return;

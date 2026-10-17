@@ -30,7 +30,7 @@ describe('VRChatAPI.inviteUser', () => {
     vi.mocked(fetch).mockResolvedValue(new Response(JSON.stringify(body), { status: 403 }));
     const { api, reportError } = await createApi();
     await expect(api.inviteUser('usr_bob', 'wrld_x:1')).rejects.toEqual(
-      new VRChatInviteRefusedError("You can't invite that user")
+      new VRChatInviteRefusedError("You can't invite that user", JSON.stringify(body))
     );
     expect(reportError).not.toHaveBeenCalled();
     expect(warn).toHaveBeenCalledWith(expect.stringContaining("You can't invite that user"));
@@ -48,6 +48,7 @@ describe('VRChatAPI.inviteUser', () => {
     const refusal = await api.inviteUser('usr_bob', 'wrld_x:1').catch((e) => e);
     expect(refusal).toBeInstanceOf(VRChatInviteRefusedError);
     expect(refusal.vrchatMessage || undefined).toBeUndefined();
+    expect(refusal.body).toBe(body ?? '');
     expect(reportError).not.toHaveBeenCalled();
     expect(warn).toHaveBeenCalledWith(expect.stringContaining('HTTP 403'));
   });
