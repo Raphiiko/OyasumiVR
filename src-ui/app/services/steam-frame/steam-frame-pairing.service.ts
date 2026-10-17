@@ -429,7 +429,7 @@ export class SteamFramePairingService {
   /** Whether this is a Frame controller that a connected headset helper can disconnect. */
   canDisconnect(device: OVRDevice): boolean {
     return (
-      device.controllerType === 'frame_controller' &&
+      device.powerMethod === 'SteamFrame' &&
       !!device.serialNumber &&
       Object.values(this._connections()).some((c) => c.status === 'connected')
     );

@@ -60,6 +60,18 @@ enum Reply {
     Disconnect(DisconnectReply),
 }
 
+impl Reply {
+    /// Whether the caller stopped waiting, as `send` does when the command times out.
+    fn is_closed(&self) -> bool {
+        match self {
+            Reply::Brightness(reply) => reply.is_closed(),
+            Reply::Cct(reply) => reply.is_closed(),
+            Reply::Fade(reply) => reply.is_closed(),
+            Reply::Disconnect(reply) => reply.is_closed(),
+        }
+    }
+}
+
 struct Connection {
     pairing: Arc<Mutex<Pairing>>,
     task: JoinHandle<()>,
@@ -751,6 +763,8 @@ async fn hold(socket: &mut Socket, update: &Notify, relay: &mut Relay, state: &m
                 if socket.send(Message::text(message.to_string())).await.is_err() {
                     return Wake::Closed;
                 }
+                // a helper that never answers would otherwise grow this map
+                relay.pending.retain(|_, waiting| !waiting.is_closed());
                 relay.pending.insert(id, reply);
             }
             _ = ticker.tick() => {
