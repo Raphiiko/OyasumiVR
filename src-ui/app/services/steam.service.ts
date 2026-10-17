@@ -94,13 +94,15 @@ export class SteamService {
     return invoke<boolean>('steam_achievement_get', { achievementId });
   }
 
-  /** Unlocks the achievement if it is still locked. Logs a failure instead of rejecting. */
-  private async unlockAchievement(achievementId: string): Promise<void> {
+  /** Unlocks the achievement if it is still locked. Resolves false and logs instead of rejecting. */
+  private async unlockAchievement(achievementId: string): Promise<boolean> {
     try {
-      if (await this.getAchievement(achievementId)) return;
+      if (await this.getAchievement(achievementId)) return true;
       await this.setAchievement(achievementId, true);
+      return true;
     } catch (e) {
       warn(`[Steam] Could not unlock achievement ${achievementId}: ${e}`);
+      return false;
     }
   }
 
@@ -112,6 +114,7 @@ export class SteamService {
         distinctUntilChanged(),
         filter(Boolean),
         switchMap(() => this.unlockAchievement(SteamAchievements.START_OYASUMIVR)),
+        filter(Boolean),
         take(1)
       )
       .subscribe();
@@ -229,6 +232,7 @@ export class SteamService {
         debounceTime(1000),
         filter((status) => status === 'CONNECTED'),
         switchMap(() => this.unlockAchievement(SteamAchievements.HASS_CON)),
+        filter(Boolean),
         take(1)
       )
       .subscribe();

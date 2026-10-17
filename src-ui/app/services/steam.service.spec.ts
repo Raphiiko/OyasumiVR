@@ -41,3 +41,28 @@ it('keeps unlocking an achievement after Steam fails to read it', async () => {
   expect(log.warn.mock.calls[0][0]).toContain('FAILED_TO_GET_STATUS');
   expect(unlock).toHaveBeenCalledWith(SteamAchievements.QUICK_EEPER, true);
 });
+
+it('retries a one-time achievement on the next trigger after a failed unlock', async () => {
+  vi.useFakeTimers();
+  const clientStatus = new Subject<string>();
+  const steam = new SteamService(
+    {} as SleepService,
+    {} as VRChatService,
+    {} as AppSettingsService,
+    { clientStatus } as unknown as MqttService
+  );
+  vi.spyOn(steam, 'getAchievement')
+    .mockRejectedValueOnce('FAILED_TO_GET_STATUS')
+    .mockResolvedValue(false);
+  const unlock = vi.spyOn(steam, 'setAchievement').mockResolvedValue();
+  await steam['handleAchievement_CONNECT_HASS']();
+
+  clientStatus.next('CONNECTED');
+  await vi.advanceTimersByTimeAsync(1000);
+  clientStatus.next('DISCONNECTED');
+  clientStatus.next('CONNECTED');
+  await vi.advanceTimersByTimeAsync(1000);
+
+  expect(unlock).toHaveBeenCalledExactlyOnceWith(SteamAchievements.HASS_CON, true);
+  vi.useRealTimers();
+});

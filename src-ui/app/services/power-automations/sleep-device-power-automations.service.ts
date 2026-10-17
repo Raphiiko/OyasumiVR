@@ -101,7 +101,7 @@ export class SleepDevicePowerAutomationsService {
       ...lighthouseDevices.map((device) =>
         this.lighthouse
           .setPowerState(device, this.appSettings.settingsSync.lighthousePowerOffState)
-          .then(() => 1)
+          .then((reached) => (reached ? 1 : 0))
       ),
     ]);
     if (results.some((result) => result.status === 'fulfilled' && result.value > 0)) {
@@ -125,11 +125,10 @@ export class SleepDevicePowerAutomationsService {
       (d) => d.powerState !== 'on' && d.powerState !== 'booting'
     ));
     // Turn on devices
-    await Promise.all([
-      // Turn on available Lighthouse devices
-      ...lighthouseDevices.map((device) => this.lighthouse.setPowerState(device, 'on')),
-    ]);
+    const reached = await Promise.all(
+      lighthouseDevices.map((device) => this.lighthouse.setPowerState(device, 'on'))
+    );
 
-    return { lighthouseDevices };
+    return { lighthouseDevices: lighthouseDevices.filter((_, i) => reached[i]) };
   }
 }

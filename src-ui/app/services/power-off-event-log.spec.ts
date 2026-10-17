@@ -264,9 +264,7 @@ describe('power-off event producers', () => {
     'sleep handles %s base-station results',
     async (outcome) => {
       const log = new EventLogService();
-      const powerOff = vi.fn(async (device: { id: string }) => {
-        if (device.id === 'FAILED') throw new Error('unreachable');
-      });
+      const powerOff = vi.fn(async (device: { id: string }) => device.id !== 'FAILED');
       const service = caller(SleepDevicePowerAutomationsService.prototype, {
         config: AUTOMATION_CONFIGS_DEFAULT.DEVICE_POWER_AUTOMATIONS,
         appSettings: { settingsSync: APP_SETTINGS_DEFAULT },
@@ -286,10 +284,8 @@ describe('power-off event producers', () => {
         lighthouse: { deviceNeedsIdentifier: () => outcome === 'skipped', setPowerState: powerOff },
         eventLog: log,
       });
-      if (outcome === 'skipped') {
-        await service['handleSleepModeEnable']();
-        expect(powerOff).not.toHaveBeenCalled();
-      } else await expect(service['handleSleepModeEnable']()).rejects.toThrow('unreachable');
+      await service['handleSleepModeEnable']();
+      if (outcome === 'skipped') expect(powerOff).not.toHaveBeenCalled();
       const logs = (await firstValueFrom(log.eventLog)).logs;
       if (outcome === 'partial')
         expect(logs).toMatchObject([{ devices: 'VARIOUS', reason: 'SLEEP_MODE_ENABLED' }]);
@@ -314,11 +310,39 @@ describe('power-off event producers', () => {
             .mockResolvedValue({ ovrDevices: [], lighthouseDevices: [], knownDevices: [] }),
         },
         lighthouseConsole: { turnOffDevices: async () => [] },
-        lighthouse: { deviceNeedsIdentifier: () => false, setPowerState: vi.fn(async () => {}) },
+        lighthouse: { deviceNeedsIdentifier: () => false, setPowerState: vi.fn(async () => true) },
         eventLog: log,
       });
       await service[method]();
       expect((await firstValueFrom(log.eventLog)).logs).toMatchObject([{ devices: 'VARIOUS' }]);
+    }
+  );
+
+  it.each([true, false])(
+    'sleep mode disable logs a base station turned on only when it reached on (%s)',
+    async (reached) => {
+      const log = new EventLogService();
+      const service = caller(SleepDevicePowerAutomationsService.prototype, {
+        config: AUTOMATION_CONFIGS_DEFAULT.DEVICE_POWER_AUTOMATIONS,
+        appSettings: { settingsSync: APP_SETTINGS_DEFAULT },
+        deviceManager: {
+          getDevicesForSelection: vi
+            .fn()
+            .mockResolvedValueOnce({ ovrDevices: [], lighthouseDevices: [] })
+            .mockResolvedValue({
+              ovrDevices: [],
+              lighthouseDevices: [{ id: 'BASE', powerState: 'sleep' }],
+              knownDevices: [],
+            }),
+        },
+        lighthouseConsole: { turnOffDevices: async () => [] },
+        lighthouse: { deviceNeedsIdentifier: () => false, setPowerState: async () => reached },
+        eventLog: log,
+      });
+      await service['handleSleepModeDisable']();
+      const logs = (await firstValueFrom(log.eventLog)).logs;
+      if (reached) expect(logs).toMatchObject([{ type: 'lighthouseSetPowerState', state: 'on' }]);
+      else expect(logs).toEqual([]);
     }
   );
 
@@ -336,6 +360,7 @@ describe('power-off event producers', () => {
         getDevicesForSelection: async () => ({
           ovrDevices: [controller],
           lighthouseDevices: [{ id: 'BASE', powerState: 'on' }],
+          knownDevices: [],
         }),
       },
       lighthouseConsole: {
@@ -343,13 +368,11 @@ describe('power-off event producers', () => {
       },
       lighthouse: {
         deviceNeedsIdentifier: () => false,
-        setPowerState: async () => {
-          throw new Error('base station unreachable');
-        },
+        setPowerState: async () => false,
       },
       eventLog: log,
     });
-    const pending = expect(service[method]()).rejects.toThrow('base station unreachable');
+    const pending = service[method]();
     await vi.advanceTimersByTimeAsync(0);
     expect((await firstValueFrom(log.eventLog)).logs).toEqual([]);
     finish([controller]);

@@ -178,7 +178,8 @@ export class LighthouseService {
           500
         );
       } catch (e) {
-        warn(`[Lighthouse] Could not set power state of ${device.id}: ${JSON.stringify(e)}`);
+        const reason = e instanceof Error ? e.message : JSON.stringify(e);
+        warn(`[Lighthouse] Could not set power state of ${device.id}: ${reason}`);
         return false;
       }
       // wait for state to change (timeout after 10 seconds)
