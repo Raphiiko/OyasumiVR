@@ -49,10 +49,7 @@ pub async fn on_discord_started() {
     // Set client and active status
     {
         *DISCORD_ACTIVE.lock().await = client.is_some();
-        let old_client = std::mem::replace(&mut *DISCORD_CLIENT.lock().await, client);
-        if let Some(old_client) = old_client {
-            disconnect(old_client.discord).await;
-        }
+        *DISCORD_CLIENT.lock().await = client;
     }
     // Try restore the last activity update
     {
@@ -72,10 +69,7 @@ pub async fn on_discord_started() {
 }
 
 pub async fn on_discord_stopped() {
-    let client = DISCORD_CLIENT.lock().await.take();
-    if let Some(c) = client {
-        disconnect(c.discord).await;
-    }
+    DISCORD_CLIENT.lock().await.take();
     *DISCORD_ACTIVE.lock().await = false;
 }
 
@@ -179,8 +173,18 @@ pub async fn update_activity(
 
 struct Client {
     pub discord: ds::Discord,
+    /// Owns the client's discord-sdk tasks, which ignore a stop request while Discord is unreachable.
+    runtime: Option<tokio::runtime::Runtime>,
     // pub user: ds::user::User,
     // pub wheel: ds::wheel::Wheel,
+}
+
+impl Drop for Client {
+    fn drop(&mut self) {
+        if let Some(runtime) = self.runtime.take() {
+            runtime.shutdown_background();
+        }
+    }
 }
 
 async fn make_client(subs: ds::Subscriptions) -> Result<Client, String> {
@@ -188,35 +192,39 @@ async fn make_client(subs: ds::Subscriptions) -> Result<Client, String> {
         error!("[Core] Could not initialize Discord SDK Client: {err}");
     }));
 
-    let discord = match ds::Discord::new(ds::DiscordApp::PlainId(APP_ID), subs, Box::new(handler)) {
+    let runtime = tokio::runtime::Builder::new_multi_thread()
+        .worker_threads(1)
+        .thread_name("discord")
+        .enable_all()
+        .build()
+        .map_err(|err| format!("failed to create Discord runtime: {err}"))?;
+    let discord = {
+        let _runtime_guard = runtime.enter();
+        ds::Discord::new(ds::DiscordApp::PlainId(APP_ID), subs, Box::new(handler))
+    };
+    let discord = match discord {
         Ok(discord) => discord,
-        Err(err) => return Err(format!("failed to create Discord client: {err}")),
+        Err(err) => {
+            runtime.shutdown_background();
+            return Err(format!("failed to create Discord client: {err}"));
+        }
+    };
+    let client = Client {
+        discord,
+        runtime: Some(runtime),
     };
 
     let mut user = wheel.user();
-    let connected = match user.0.changed().await {
-        Err(err) => Err(format!("failed to get user state: {err}")),
-        Ok(_) => match &*user.0.borrow() {
-            ds::wheel::UserState::Connected(_) => Ok(()),
-            ds::wheel::UserState::Disconnected(err) => {
-                Err(format!("failed to connect to Discord: {err}"))
-            }
-        },
-    };
-    if let Err(err) = connected {
-        disconnect(discord).await;
-        return Err(err);
+    match user.0.changed().await {
+        Ok(_) => {}
+        Err(err) => return Err(format!("failed to get user state: {err}")),
     }
+    let _user = match &*user.0.borrow() {
+        ds::wheel::UserState::Connected(user) => user.clone(),
+        ds::wheel::UserState::Disconnected(err) => {
+            return Err(format!("failed to connect to Discord: {err}"))
+        }
+    };
 
-    Ok(Client {
-        discord,
-        // user,
-        // wheel,
-    })
-}
-
-/// Stops the client's background tasks, which keep reconnecting to Discord until told to stop.
-async fn disconnect(discord: ds::Discord) {
-    // the I/O task only reads the stop message while connected, so do not wait for it forever
-    let _ = timeout(Duration::from_secs(2), discord.disconnect()).await;
+    Ok(client)
 }
