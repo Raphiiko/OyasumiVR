@@ -217,6 +217,7 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
             ovr::raw::ETrackedDeviceProperty::Prop_ModelNumber_String,
         )
         .ok();
+    let is_connected = device_connected(&system, device_index);
     let mut hmd_on_head = None;
     let mut hmd_activity = None;
     let mut display_frequency = None;
@@ -288,6 +289,7 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
         hardware_revision,
         manufacturer_name,
         model_number,
+        is_connected,
         handle_type,
         hmd_on_head,
         hmd_activity,
@@ -306,6 +308,16 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
         let event = DeviceUpdateEvent { device };
         send_event("OVR_DEVICE_UPDATE", event).await;
     }
+}
+
+/// Whether OpenVR reports the device connected. Its activation and deactivation events change this.
+fn device_connected(system: &ovr::system::System, device_index: ovr::TrackedDeviceIndex) -> bool {
+    system
+        .get_device_to_absolute_tracking_pose(
+            ovr::raw::ETrackingUniverseOrigin::TrackingUniverseStanding,
+            0.0,
+        )
+        .is_ok_and(|poses| poses[device_index.0 as usize].bDeviceIsConnected)
 }
 
 fn store_device(devices: &mut Vec<OVRDevice>, device: &OVRDevice) -> bool {
@@ -447,7 +459,7 @@ mod tests {
             "battery": 0.5, "providesBatteryStatus": true, "canPowerOff": true,
             "isCharging": false, "dongleId": "dongle", "serialNumber": "serial",
             "hardwareRevision": "1", "manufacturerName": "manufacturer",
-            "modelNumber": "model", "handleType": "HandPrimary",
+            "modelNumber": "model", "isConnected": true, "handleType": "HandPrimary",
             "hmdOnHead": false, "hmdActivity": "Idle", "displayFrequency": 90.0,
             "displaySupportsAnalogGain": true, "displayMinAnalogGain": 0.1,
             "displayMaxAnalogGain": 1.0
@@ -481,6 +493,7 @@ mod tests {
             ("hardwareRevision", serde_json::json!("2")),
             ("manufacturerName", serde_json::json!("other manufacturer")),
             ("modelNumber", serde_json::json!("other model")),
+            ("isConnected", serde_json::json!(false)),
             ("handleType", serde_json::json!("HandSecondary")),
             ("hmdOnHead", serde_json::json!(true)),
             ("hmdActivity", serde_json::json!("UserInteraction")),
@@ -522,7 +535,7 @@ mod tests {
         let device = snapshot();
         let mut devices = vec![device];
         let missing: OVRDevice = serde_json::from_value(serde_json::json!({
-            "index": 7, "class": "Controller", "role": "LeftHand"
+            "index": 7, "class": "Controller", "role": "LeftHand", "isConnected": false
         }))
         .unwrap();
         assert!(store_device(&mut devices, &missing));
@@ -532,9 +545,13 @@ mod tests {
 
     #[tokio::test]
     async fn shutdown_clears_device_caches_and_allows_immediate_refresh() {
-        OVR_DEVICES.lock().await.push(serde_json::from_value(serde_json::json!({
-            "index": 7, "class": "Controller", "role": "LeftHand", "serialNumber": "previous-session"
-        })).unwrap());
+        OVR_DEVICES.lock().await.push(
+            serde_json::from_value(serde_json::json!({
+                "index": 7, "class": "Controller", "role": "LeftHand", "isConnected": true,
+                "serialNumber": "previous-session"
+            }))
+            .unwrap(),
+        );
         DEVICE_CLASS_CACHE
             .lock()
             .await
