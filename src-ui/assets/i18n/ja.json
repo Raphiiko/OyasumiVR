@@ -412,6 +412,13 @@
           },
           "title": "''{displayName}''からの招待リクエストを自動で辞退"
         },
+        "failedInviteRequest": {
+          "subtitle": {
+            "noMessage": "VRChatがOyasumiVRによる招待を許可しませんでした",
+            "vrchatMessage": "VRChatがOyasumiVRによる招待を許可しませんでした: ''{message}''"
+          },
+          "title": "''{displayName}''からの招待リクエストを承認できませんでした"
+        },
         "frameLimitChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",

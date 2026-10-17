@@ -118,6 +118,13 @@
             "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
           }
         },
+        "failedInviteRequest": {
+          "subtitle": {
+            "noMessage": "VRChat n'a pas autorisé OyasumiVR à inviter ce joueur",
+            "vrchatMessage": "VRChat n'a pas autorisé OyasumiVR à inviter ce joueur : ''{message}''"
+          },
+          "title": "Impossible d'accepter la demande d'invitation de ''{displayName}''"
+        },
         "frameLimitChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",

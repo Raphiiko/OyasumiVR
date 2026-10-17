@@ -412,6 +412,13 @@
           },
           "title": "Invite request van \"{displayName}\" automatisch geweigerd"
         },
+        "failedInviteRequest": {
+          "subtitle": {
+            "noMessage": "VRChat stond OyasumiVR niet toe om deze speler uit te nodigen",
+            "vrchatMessage": "VRChat stond OyasumiVR niet toe om deze speler uit te nodigen: \"{message}\""
+          },
+          "title": "Kon invite request van \"{displayName}\" niet accepteren"
+        },
         "frameLimitChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Omdat de slaapmodus werd uitgeschakeld",

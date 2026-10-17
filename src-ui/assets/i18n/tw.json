@@ -412,6 +412,13 @@
           },
           "title": "已自動拒絕來自「{displayName}」的邀請請求"
         },
+        "failedInviteRequest": {
+          "subtitle": {
+            "noMessage": "VRChat 不允許 OyasumiVR 邀請此玩家",
+            "vrchatMessage": "VRChat 不允許 OyasumiVR 邀請此玩家：「{message}」"
+          },
+          "title": "無法接受來自「{displayName}」的邀請請求"
+        },
         "frameLimitChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "由於已關閉睡眠模式",

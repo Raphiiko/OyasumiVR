@@ -412,6 +412,13 @@
           },
           "title": "已自动拒绝来自“{displayName}”的邀请请求"
         },
+        "failedInviteRequest": {
+          "subtitle": {
+            "noMessage": "VRChat 不允许 OyasumiVR 邀请该玩家",
+            "vrchatMessage": "VRChat 不允许 OyasumiVR 邀请该玩家：“{message}”"
+          },
+          "title": "无法接受来自“{displayName}”的邀请请求"
+        },
         "frameLimitChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "因为已关闭睡眠模式",
