@@ -51,6 +51,7 @@
     "clean": "rimraf dist && rimraf src-overlay-sidecar/bin && rimraf src-overlay-sidecar/obj && rimraf src-overlay-ui/build && rimraf src-elevated-sidecar/target && rimraf src-privileged-launcher/target && rimraf tools/sign-elevated-sidecar/target && rimraf src-core/target && rimraf src-shared-rust/target && rimraf src-core/resources/elevated-sidecar && rimraf src-core/resources/privileged-launcher && rimraf src-core/resources/dotnet-sidecars && rimraf src-core/resources/fonts",
     "tl": "node scripts/translation-utils.js",
     "tl:check-icu": "node scripts/check-icu.mjs",
+    "symbolicate": "node scripts/symbolicate-event.js",
     "generate:readmes": "node scripts/readme-generator.js",
     "generate:grpc-web-client": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./scripts/ts-proto-gen.ps1 && prettier --loglevel silent --write src-grpc-web-client/**/*",
     "tauri": "tauri",

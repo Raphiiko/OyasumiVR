@@ -20,6 +20,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 ### Changed
 
 - Improved Simplified Chinese translations (@xiaoBingge114514)
+- Error reports now include which build of OyasumiVR sent them, so crashes can be traced back to
+  the exact line of code
 
 ### Fixed
 

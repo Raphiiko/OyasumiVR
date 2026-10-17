@@ -1,7 +1,12 @@
 use regex::Regex;
-use sentry::{protocol::Event, ClientInitGuard, ClientOptions, Envelope, Transport};
+use sentry::{
+    protocol::{Addr, DebugImage, DebugMeta, Event, SymbolicDebugImage},
+    types::{CodeId, DebugId},
+    ClientInitGuard, ClientOptions, Envelope, Transport,
+};
 use serde::{Deserialize, Serialize};
 use std::{
+    borrow::Cow,
     collections::BTreeMap,
     fs,
     path::{Path, PathBuf},
@@ -241,7 +246,10 @@ fn sanitize_event(event: &mut Event<'static>, component: &str, version: &str) {
     event.stacktrace = None;
     event.template = None;
     event.threads.values.clear();
-    event.debug_meta = Default::default();
+    event.debug_meta = Cow::Owned(DebugMeta {
+        sdk_info: None,
+        images: OWN_IMAGE.iter().cloned().collect(),
+    });
     event.breadcrumbs.values.clear();
     event.extra.clear();
     event.modules.clear();
@@ -277,6 +285,65 @@ fn sanitize_event(event: &mut Event<'static>, component: &str, version: &str) {
             }
         }
     }
+}
+
+/// The running exe's load address and PDB identity, so a stack can be resolved against the
+/// symbol store. Carries file names only, never paths.
+static OWN_IMAGE: LazyLock<Option<DebugImage>> = LazyLock::new(|| {
+    unsafe extern "C" {
+        // the MSVC linker places this symbol at the start of the module that contains it
+        static __ImageBase: u8;
+    }
+    unsafe { read_pe_image(&raw const __ImageBase) }
+});
+
+/// Reads the PE headers of a module mapped at `base`.
+///
+/// # Safety
+/// `base` must point to a PE image the loader mapped into this process.
+unsafe fn read_pe_image(base: *const u8) -> Option<DebugImage> {
+    let read_u16 = |offset: usize| unsafe { base.add(offset).cast::<u16>().read_unaligned() };
+    let read_u32 = |offset: usize| unsafe { base.add(offset).cast::<u32>().read_unaligned() };
+
+    // locate the optional header
+    if read_u16(0) != 0x5A4D {
+        return None;
+    }
+    let nt_headers = read_u32(0x3C) as usize;
+    if read_u32(nt_headers) != 0x4550 || read_u16(nt_headers + 24) != 0x20B {
+        return None;
+    }
+    let timestamp = read_u32(nt_headers + 8);
+    let optional_header = nt_headers + 24;
+    let image_size = read_u32(optional_header + 56);
+    if read_u32(optional_header + 108) <= 6 {
+        return None;
+    }
+
+    // find the CodeView record in the debug directory
+    let debug_directory = read_u32(optional_header + 112 + 6 * 8) as usize;
+    let debug_directory_size = read_u32(optional_header + 112 + 6 * 8 + 4) as usize;
+    let codeview = (0..debug_directory_size / 28)
+        .map(|index| debug_directory + index * 28)
+        .find(|&entry| read_u32(entry + 12) == 2)
+        .map(|entry| read_u32(entry + 20) as usize)
+        .filter(|&record| record != 0 && read_u32(record) == 0x5344_5352)?;
+
+    // read the PDB GUID, age and file name
+    let guid = unsafe { std::slice::from_raw_parts(base.add(codeview + 4), 16) };
+    let age = read_u32(codeview + 20);
+    let pdb_path = unsafe { std::ffi::CStr::from_ptr(base.add(codeview + 24).cast()) };
+    let exe_path = std::env::current_exe().ok()?;
+    Some(DebugImage::Symbolic(SymbolicDebugImage {
+        name: safe_filename(&exe_path.to_string_lossy()),
+        arch: Some("x86_64".into()),
+        image_addr: Addr::from(base),
+        image_size: image_size.into(),
+        image_vmaddr: Addr(0),
+        id: DebugId::from_guid_age(guid, age).ok()?,
+        code_id: Some(CodeId::new(format!("{timestamp:08X}{image_size:x}"))),
+        debug_file: Some(safe_filename(&pdb_path.to_string_lossy())),
+    }))
 }
 
 fn sanitize_frame(frame: &mut sentry::protocol::Frame) {
@@ -611,6 +678,20 @@ mod tests {
         assert!(event.server_name.is_none());
         assert!(event.extra.is_empty());
         assert_eq!(event.tags.len(), 3);
+    }
+
+    #[test]
+    fn attaches_only_the_running_exe_without_paths() {
+        let mut event = Event::default();
+        sanitize_event(&mut event, "core", "1.0.0");
+        let [DebugImage::Symbolic(image)] = event.debug_meta.images.as_slice() else {
+            panic!("expected exactly one symbolic image");
+        };
+        assert!(image.name.ends_with(".exe") && !image.name.contains(['/', '\\']));
+        let debug_file = image.debug_file.as_deref().unwrap();
+        assert!(debug_file.ends_with(".pdb") && !debug_file.contains(['/', '\\']));
+        assert!(!image.id.is_nil());
+        assert!(image.image_addr.0 != 0 && image.image_size > 0);
     }
 
     #[test]
