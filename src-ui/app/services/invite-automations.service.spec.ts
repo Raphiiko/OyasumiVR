@@ -65,12 +65,13 @@ function createService(
     deleteNotification: vi.fn(async () => {}),
     inviteUser: vi.fn(async () => undefined),
   };
+  const eventLog = { logEvent: vi.fn() };
   const service = new InviteAutomationsService(
     vrchat as unknown as VRChatService,
     { configs: new BehaviorSubject(configs) } as unknown as AutomationConfigService,
     {} as AppSettingsService,
     { mode: new BehaviorSubject(sleepMode) } as unknown as SleepService,
-    { logEvent: vi.fn() } as unknown as EventLogService,
+    eventLog as unknown as EventLogService,
     notifications as unknown as NotificationService,
     { translate } as unknown as TranslocoService,
     {} as SleepPreparationService,
@@ -85,7 +86,7 @@ function createService(
       senderUserId: 'usr_bob',
       senderUsername: 'Bob',
     } as Partial<Notification>);
-  return { receive, order, notifications, vrchat };
+  return { receive, order, notifications, vrchat, eventLog };
 }
 
 describe('InviteAutomationsService', () => {
@@ -154,4 +155,30 @@ describe('InviteAutomationsService', () => {
       expect(notifications.playSoundConfig).toHaveBeenCalled();
     }
   );
+
+  it.each([UserStatus.Active, UserStatus.JoinMe])(
+    'keeps the invite request in VRChat when VRChat refuses the invite on %s status',
+    async (status) => {
+      const { receive, vrchat, notifications, eventLog } = createService({
+        listMode: 'DISABLED',
+        playSoundOnInviteRequest_onlyWhenUnhandled: true,
+      });
+      vrchat.user.next({ status });
+      vrchat.inviteUser.mockRejectedValue(new Response(null, { status: 403 }));
+      await receive(NotificationType.RequestInvite);
+      expect(vrchat.deleteNotification).not.toHaveBeenCalled();
+      expect(eventLog.logEvent).not.toHaveBeenCalled();
+      expect(notifications.send).not.toHaveBeenCalled();
+      expect(notifications.playSoundConfig).toHaveBeenCalled();
+    }
+  );
+
+  it('removes the invite request after VRChat accepts the invite', async () => {
+    const { receive, vrchat, eventLog } = createService({ listMode: 'DISABLED' });
+    await receive(NotificationType.RequestInvite);
+    expect(vrchat.inviteUser.mock.invocationCallOrder[0]).toBeLessThan(
+      vrchat.deleteNotification.mock.invocationCallOrder[0]
+    );
+    expect(eventLog.logEvent).toHaveBeenCalled();
+  });
 });

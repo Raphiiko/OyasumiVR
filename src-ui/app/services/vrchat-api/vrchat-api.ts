@@ -501,7 +501,10 @@ export class VRChatAPI {
     }
   }
 
-  /** Resolves to the invite message text VRChat attached, if any. */
+  /**
+   * Resolves to the invite message text VRChat attached, if any.
+   * Throws an expected 403 response unreported: VRChat refuses invites it does not allow.
+   */
   public async inviteUser(
     inviteeId: string,
     instanceId: string,
@@ -535,6 +538,11 @@ export class VRChatAPI {
       return messageEx?.message;
     } catch (e) {
       if (e === VRCHAT_API_STALE_REQUEST) throw e;
+      if (e instanceof Response && e.status === 403) {
+        const body = await e.json().catch(() => undefined);
+        warn(`[VRChat] VRChat refused the invite: ${describeResponse(e, body)}`);
+        throw e;
+      }
       const failure = requestFailure('VRChat invite request failed', e);
       error(`[VRChat] ${failure.message}`);
       this.reportError(failure);

@@ -173,9 +173,9 @@ export class InviteAutomationsService {
       info(
         `[VRChat] Automatically accepting invite request from ${notification.senderUserId} (blue status)`
       );
-      await this.vrchat.deleteNotification(notification.id);
-      await this.vrchat.inviteUser(notification.senderUserId);
-      this.playInviteRequestSound(config, true, sleepMode);
+      const accepted = await this.acceptInviteRequest(notification);
+      this.playInviteRequestSound(config, !!accepted, sleepMode);
+      if (!accepted) return;
       this.eventLog.logEvent({
         type: 'acceptedInviteRequest',
         displayName: notification.senderUsername,
@@ -239,11 +239,12 @@ export class InviteAutomationsService {
     }
     // Invite the player
     info(`[VRChat] Automatically accepting invite request from ${notification.senderUserId}`);
-    await this.vrchat.deleteNotification(notification.id);
-    const reply = await this.vrchat.inviteUser(notification.senderUserId, {
-      message: this.getInviteRequestAcceptMessage(config),
-    });
-    this.playInviteRequestSound(config, true, sleepMode);
+    const accepted = await this.acceptInviteRequest(
+      notification,
+      this.getInviteRequestAcceptMessage(config)
+    );
+    this.playInviteRequestSound(config, !!accepted, sleepMode);
+    if (!accepted) return;
     if (await this.notifications.notificationTypeEnabled('INVITE_AUTOMATIONS')) {
       await this.notifications.send(
         this.translate.translate('notifications.autoAcceptedInviteRequest.content', {
@@ -255,8 +256,27 @@ export class InviteAutomationsService {
       type: 'acceptedInviteRequest',
       displayName: notification.senderUsername,
       mode: config.listMode,
-      message: reply,
+      message: accepted.reply,
     } as EventLogAcceptedInviteRequest);
+  }
+
+  /** Resolves to null when VRChat refuses the invite, which leaves the request in VRChat. */
+  private async acceptInviteRequest(
+    notification: Notification,
+    message?: string
+  ): Promise<{ reply?: string } | null> {
+    let reply: string | undefined;
+    try {
+      reply = await this.vrchat.inviteUser(notification.senderUserId, { message });
+    } catch (cause) {
+      if (!(cause instanceof Response && cause.status === 403)) throw cause;
+      warn(
+        `[VRChat] Could not accept the invite request from ${notification.senderUsername}: VRChat refused the invite to the current instance`
+      );
+      return null;
+    }
+    await this.vrchat.deleteNotification(notification.id);
+    return { reply };
   }
 
   /** Resolves to whether the decline automation handled the request. */
