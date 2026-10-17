@@ -41,6 +41,8 @@ export interface OVRDevice {
   isCharging?: boolean;
   manufacturerName?: string;
   modelNumber?: string;
+  /** False while the device is turned off, even when OyasumiVR can still read its properties. */
+  isConnected: boolean;
   providesBatteryStatus?: boolean;
   serialNumber?: string;
   pose: any;
