@@ -1,3 +1,4 @@
+import { escape } from 'lodash';
 import { EventLogEntryParser } from '../event-log-entry-parser';
 import { EventLogFailedInviteRequest, EventLogType } from '../../../../models/event-log-entry';
 
@@ -12,7 +13,7 @@ export class EventLogFailedInviteRequestEntryParser extends EventLogEntryParser<
 
   override headerInfoTitleParams(entry: EventLogFailedInviteRequest): { [p: string]: string } {
     return {
-      displayName: entry.displayName,
+      displayName: escape(entry.displayName),
     };
   }
 
@@ -23,8 +24,9 @@ export class EventLogFailedInviteRequestEntryParser extends EventLogEntryParser<
   }
 
   override headerInfoSubTitleParams(entry: EventLogFailedInviteRequest): { [p: string]: string } {
+    // the entry component renders this text as trusted HTML
     return {
-      message: entry.vrchatMessage ?? '',
+      message: escape(entry.vrchatMessage ?? ''),
     };
   }
 }
