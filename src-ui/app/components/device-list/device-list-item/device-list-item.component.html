@@ -51,6 +51,14 @@
           }
         </div>
         <div class="battery-info-label">
+          @if (frameConnected !== undefined) {
+            <span class="frame-connection" [class.connected]="frameConnected">
+              {{
+                (frameConnected ? 'steamFrame.status.connected' : 'steamFrame.status.offline')
+                  | transloco
+              }}
+            </span>
+          }
           @if (showBattery) {
             <span @fade>
               {{ batteryPercentageString }}

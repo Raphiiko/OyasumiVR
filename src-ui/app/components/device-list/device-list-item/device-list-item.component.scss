@@ -89,6 +89,25 @@
   }
 }
 
+.frame-connection {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  margin-right: auto;
+
+  &::before {
+    content: '';
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 50%;
+    background: var(--color-text-4);
+  }
+
+  &.connected::before {
+    background: #67c23a;
+  }
+}
+
 .category-icon {
   width: 1.5em;
   height: 1.5em;
