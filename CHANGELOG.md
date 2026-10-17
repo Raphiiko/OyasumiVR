@@ -20,24 +20,16 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 ### Changed
 
 - Improved Simplified Chinese translations (@xiaoBingge114514)
-- Error reports now include which build of OyasumiVR sent them, so crashes can be traced back to
-  the exact line of code
 
 ### Fixed
 
-- Fixed the SteamVR overlays, such as the hand menu, not showing up when OyasumiVR runs as administrator
+- Fixed several crashes, including when Windows shuts down and during startup
+- Fixed the SteamVR overlays, such as the hand menu, not showing up on some systems
 - Fixed the GPU power limit automations stopping until a restart after the GPU refused a power limit
-- Fixed the SteamVR overlays not starting when a configuration file in the installation folder is damaged
-- Fixed OyasumiVR crashing when Windows shuts down or signs out
-- Fixed OyasumiVR crashing at startup when it was started by a Pulsoid login link or with a command line argument it does not recognise
-- Fixed the Discord status no longer updating after Discord restarted or lost its connection several times
-- Fixed Steam achievements not unlocking until a restart after Steam failed to read one
-- Fixed OyasumiVR crashing when its window was shrunk to a few pixels
-- Fixed the invite request automation removing an invite request when VRChat refused the invite. The event log now shows the reason VRChat gave
-- Fixed an error being reported every time VRChat rejected OyasumiVR's connection, for example after a login expired
-- Fixed OyasumiVR crashing when it read a line in the VRChat log that was not valid text
-- Fixed OyasumiVR sometimes quitting during startup
-- Fixed OyasumiVR crashing when the tray icon was clicked while the main window was closing
+- Fixed invite requests being removed when VRChat refused the invite
+- Fixed the Discord status no longer updating after Discord restarted
+- Fixed Steam achievements sometimes not unlocking until a restart
+- Fixed the prone sleeping position being labelled as upright
 
 ## [26.10.2]
 
