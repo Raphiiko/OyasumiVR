@@ -68,11 +68,14 @@ async fn on_tray_icon_event(_icon: &tauri::tray::TrayIcon, event: tauri::tray::T
                 if button == MouseButton::Left {
                     let app_guard = TAURI_APP_HANDLE.lock().await;
                     let app = app_guard.as_ref().unwrap();
-                    let window = app.get_webview_window("main").unwrap();
-                    if !window.is_visible().unwrap() {
-                        window.show().unwrap();
+                    let Some(window) = app.get_webview_window("main") else {
+                        return;
+                    };
+                    // a click queued before the main window closed arrives after the runtime dropped it
+                    if window.is_visible().is_ok_and(|visible| !visible) {
+                        let _ = window.show();
                     }
-                    window.set_focus().unwrap();
+                    let _ = window.set_focus();
                 }
             }
         }
