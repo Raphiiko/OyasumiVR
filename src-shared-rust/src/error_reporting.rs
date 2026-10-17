@@ -291,6 +291,11 @@ fn sanitize_frame(frame: &mut sentry::protocol::Frame) {
     }
 }
 
+/// Redacts one value with the same rules `before_send` applies to event text.
+pub fn sanitize_value(value: &str) -> String {
+    sanitize_text(value, false)
+}
+
 fn sanitize_text(value: &str, strict: bool) -> String {
     if strict {
         return "elevated error".to_owned();

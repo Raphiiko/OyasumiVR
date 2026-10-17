@@ -27,6 +27,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Fixed the GPU power limit automations stopping until a restart after the GPU refused a power limit
 - Fixed the SteamVR overlays not starting when a configuration file in the installation folder is damaged
 - Fixed OyasumiVR crashing when Windows shuts down or signs out
+- Fixed OyasumiVR crashing at startup when it was started by a Pulsoid login link or with a command line argument it does not recognise
 
 ## [26.10.2]
 

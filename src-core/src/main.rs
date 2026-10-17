@@ -144,6 +144,31 @@ fn webview2_dialog_message(context: &tauri::Context<Wry>, locale: &str) -> Optio
 #[cfg(not(windows))]
 fn ensure_webview2_available() {}
 
+#[cfg(test)]
+mod cli_tests {
+    #[test]
+    fn recognises_only_a_lone_pulsoid_redirect() {
+        let launch = |args: &[&str]| {
+            super::is_pulsoid_redirect_launch(
+                &args.iter().map(|a| a.to_string()).collect::<Vec<_>>(),
+            )
+        };
+        let redirect = "oyasumivr://integration/pulsoid/v1/redirect#access_token=a&state=s";
+        assert!(launch(&["OyasumiVR.exe", redirect]));
+        assert!(launch(&[
+            "OyasumiVR.exe",
+            "oyasumivr://integration/pulsoid/v1/redirect?error=x"
+        ]));
+        assert!(!launch(&["OyasumiVR.exe"]));
+        assert!(!launch(&["OyasumiVR.exe", redirect, "--console"]));
+        assert!(!launch(&[
+            "OyasumiVR.exe",
+            "oyasumivr://integration/pulsoid/v1/redirectx"
+        ]));
+        assert!(!launch(&["OyasumiVR.exe", "oyasumivr://integration/other"]));
+    }
+}
+
 #[cfg(all(test, windows))]
 mod webview2_dialog_tests {
     use std::borrow::Cow;
@@ -222,19 +247,33 @@ async fn main() {
             if std::env::args_os().any(|arg| arg == "--console") {
                 open_console();
             }
-            let matches = match app.cli().matches() {
-                Ok(matches) => Some(matches),
+            let error_reporting_enabled = error_reporting_setting(app.handle());
+            error_reporting::set_enabled(app.handle(), error_reporting_enabled);
+            let args: Vec<String> = std::env::args_os()
+                .map(|arg| arg.to_string_lossy().into_owned())
+                .collect();
+            let matches = if is_pulsoid_redirect_launch(&args) {
+                // the UI reads the link from the deep link plugin and reports the failed login
+                app.cli().matches_from(args[..1].to_vec())
+            } else {
+                app.cli().matches()
+            };
+            let matches = match matches {
+                Ok(matches) => matches,
                 Err(e) => {
-                    eprintln!("Error parsing command line arguments: {e}");
-                    app.handle().exit(1);
-                    None
+                    let message = error_reporting::report_cli_parse_error(&e.to_string());
+                    error!("[Core] {message}");
+                    eprintln!("{message}");
+                    // AppHandle::exit only queues the exit, so setup would continue without matches
+                    std::process::exit(1);
                 }
             };
             futures::executor::block_on(async {
-                *globals::TAURI_CLI_MATCHES.lock().await = matches;
+                *globals::TAURI_CLI_MATCHES.lock().await = Some(matches);
             });
             match futures::executor::block_on(tauri::async_runtime::spawn(app_setup(
                 app.handle().clone(),
+                error_reporting_enabled,
             ))) {
                 Ok(_) => {}
                 Err(e) => {
@@ -357,8 +396,18 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
     builder.build()
 }
 
-async fn app_setup(app_handle: tauri::AppHandle) {
-    let error_reporting_enabled = match app_handle.store("settings.dat") {
+/// Whether a Pulsoid login redirect started OyasumiVR, which Windows passes as the only argument.
+fn is_pulsoid_redirect_launch(args: &[String]) -> bool {
+    const PULSOID_REDIRECT_URI: &str = "oyasumivr://integration/pulsoid/v1/redirect";
+    let [_, url] = args else {
+        return false;
+    };
+    url.strip_prefix(PULSOID_REDIRECT_URI)
+        .is_some_and(|rest| rest.is_empty() || rest.starts_with(['#', '?']))
+}
+
+fn error_reporting_setting(app_handle: &tauri::AppHandle) -> bool {
+    match app_handle.store("settings.dat") {
         Ok(store) => store
             .get("TELEMETRY_SETTINGS")
             .and_then(|settings| {
@@ -368,8 +417,10 @@ async fn app_setup(app_handle: tauri::AppHandle) {
             })
             .unwrap_or(false),
         Err(_) => false,
-    };
-    error_reporting::set_enabled(&app_handle, error_reporting_enabled);
+    }
+}
+
+async fn app_setup(app_handle: tauri::AppHandle, error_reporting_enabled: bool) {
     // Process elevation security args
     os::elevation::process_elevation_cli_args().await;
 

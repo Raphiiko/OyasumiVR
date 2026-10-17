@@ -1,8 +1,11 @@
 use oyasumivr_shared::error_reporting::{self, EventBudget, EventBudgetConfig};
 use sentry::ClientInitGuard;
-use std::sync::{
-    atomic::{AtomicBool, Ordering},
-    Arc, LazyLock, Mutex,
+use std::{
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc, LazyLock, Mutex,
+    },
+    time::Duration,
 };
 use tauri::Manager;
 
@@ -61,6 +64,33 @@ pub(crate) fn should_enable(enabled: bool, flavour: &crate::flavour::BuildFlavou
     enabled && *flavour != crate::flavour::BuildFlavour::Dev
 }
 
+/// Reports the rejected command line and returns the redacted report text.
+/// Waits for the send, because the caller exits next.
+pub fn report_cli_parse_error(error: &str) -> String {
+    let args = std::env::args_os()
+        .skip(1)
+        .map(|arg| arg.to_string_lossy().into_owned());
+    let message = cli_parse_error_message(error, args);
+    sentry::capture_message(&message, sentry::Level::Error);
+    if let Some(client) = sentry::Hub::current().client() {
+        client.flush(Some(Duration::from_secs(2)));
+    }
+    message
+}
+
+fn cli_parse_error_message(error: &str, args: impl Iterator<Item = String>) -> String {
+    // each argument is redacted alone, since a path match redacts to the end of its line
+    let args: Vec<String> = args
+        .map(|arg| error_reporting::sanitize_value(&arg))
+        .collect();
+    // the first error line names the rejected argument, so it leads to survive the length cap
+    let error = error.lines().next().unwrap_or_default();
+    format!(
+        "Command line rejected: {}\nArguments: {args:?}",
+        error_reporting::sanitize_value(error)
+    )
+}
+
 #[tauri::command]
 pub async fn set_error_reporting_enabled(app: tauri::AppHandle, enabled: bool) {
     let _update = UPDATE_LOCK.lock().await;
@@ -85,6 +115,22 @@ pub fn allow_ui_event(issue: String) -> bool {
 mod tests {
     use super::*;
     use crate::flavour::BuildFlavour;
+
+    #[test]
+    fn redacts_tokens_and_paths_from_rejected_arguments() {
+        let url = "oyasumivr://integration/pulsoid/v1/redirect#access_token=abc123secret&token_type=bearer&state=s1";
+        let path = r"C:\Users\John Doe\Desktop\OyasumiVR.lnk";
+        let error =
+            format!("error: unexpected argument '{url}' found\n\nUsage: OyasumiVR.exe [OPTIONS]");
+        let args = [url, path, "--minimized"].map(String::from);
+        let message = cli_parse_error_message(&error, args.into_iter());
+        assert!(!message.contains("abc123secret"));
+        assert!(!message.contains("s1"));
+        assert!(!message.contains("John"));
+        assert!(message.contains("oyasumivr://integration/pulsoid/v1/redirect#access_"));
+        assert!(message.contains("--minimized"));
+        assert!(message.contains("unexpected argument"));
+    }
 
     #[test]
     fn allows_reporting_in_steam_debug_builds() {
