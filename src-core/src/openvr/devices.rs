@@ -221,6 +221,12 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
         )
         .ok();
     let is_connected = device_connected(&system, device_index);
+    let controller_type: Option<String> = system
+        .get_tracked_device_property(
+            device_index,
+            ovr::raw::ETrackedDeviceProperty::Prop_ControllerType_String,
+        )
+        .ok();
     let mut hmd_on_head = None;
     let mut hmd_activity = None;
     let mut display_frequency = None;
@@ -293,6 +299,7 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
         manufacturer_name,
         model_number,
         is_connected,
+        controller_type,
         handle_type,
         hmd_on_head,
         hmd_activity,
@@ -462,6 +469,7 @@ mod tests {
             "isCharging": false, "dongleId": "dongle", "serialNumber": "serial",
             "hardwareRevision": "1", "manufacturerName": "manufacturer",
             "modelNumber": "model", "isConnected": true, "handleType": "HandPrimary",
+            "modelNumber": "model", "controllerType": "type", "handleType": "HandPrimary",
             "hmdOnHead": false, "hmdActivity": "Idle", "displayFrequency": 90.0,
             "displaySupportsAnalogGain": true, "displayMinAnalogGain": 0.1,
             "displayMaxAnalogGain": 1.0
@@ -496,6 +504,7 @@ mod tests {
             ("manufacturerName", serde_json::json!("other manufacturer")),
             ("modelNumber", serde_json::json!("other model")),
             ("isConnected", serde_json::json!(false)),
+            ("controllerType", serde_json::json!("other type")),
             ("handleType", serde_json::json!("HandSecondary")),
             ("hmdOnHead", serde_json::json!(true)),
             ("hmdActivity", serde_json::json!("UserInteraction")),

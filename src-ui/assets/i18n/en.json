@@ -3314,6 +3314,7 @@
       "turnOffFailed": {
         "commandFailed": "The Lighthouse console could not reach the device. Check the logs for details.",
         "consoleNotReady": "Set up the SteamVR Lighthouse console in the General settings first.",
+        "frameHelperFailed": "The Steam Frame helper could not disconnect the controller. Check the logs for details.",
         "title": "Could not turn off {name}"
       }
     },

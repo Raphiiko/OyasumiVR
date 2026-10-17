@@ -11,6 +11,7 @@ import { OpenVRService } from './openvr.service';
 import { AppSettingsService } from './app-settings.service';
 import { EventLogLighthouseSetPowerState } from '../models/event-log-entry';
 import { EventLogService } from './event-log.service';
+import { SteamFramePairingService } from './steam-frame/steam-frame-pairing.service';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +26,8 @@ export class HotkeyHandlerService {
     private lighthouseConsoleService: LighthouseConsoleService,
     private openvr: OpenVRService,
     private appSettings: AppSettingsService,
-    private eventLog: EventLogService
+    private eventLog: EventLogService,
+    private steamFrame: SteamFramePairingService
   ) {}
 
   public async init() {
@@ -77,7 +79,10 @@ export class HotkeyHandlerService {
       (device) => device.class === 'Controller'
     );
     if (!controllers.length) return;
-    const dispatched = await this.lighthouseConsoleService.turnOffDevices(controllers);
+    const [dispatched] = await Promise.all([
+      this.lighthouseConsoleService.turnOffDevices(controllers),
+      this.steamFrame.disconnectControllers(),
+    ]);
     this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'HOTKEY');
   }
 

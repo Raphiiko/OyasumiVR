@@ -355,6 +355,27 @@ because the device can complete first, such as in standby. On `changedOnDevice` 
 stops, and the simple value follows the headset. On any other end the software part stops where it
 is.
 
+## Controllers
+
+`{"type":"disconnectControllers","id":1,"serial":"96c863a69af3"}` disconnects that controller, and
+without `serial` every controller connected to the headset. They stay paired and reconnect when a
+button wakes them. The helper replies `{"type":"disconnectControllersResult","id":1}`, with an
+`error` of `runtimeUnavailable` or `writeFailed` when it fails. It ignores an empty serial or one
+longer than 64 bytes, and an unknown serial does nothing.
+
+The helper sends Steam UI's own request to the headset's SteamVR web server at `127.0.0.1:27062`:
+the text `steam_connect`, then a binary packet. It starts `02 08 2D`, a one-byte header length and a
+header with message type 45. Disconnect-all follows with `32 00`, the empty
+`disconnect_all_controllers` field 6. One controller follows with field 5, `disconnect_controller`,
+holding the serial as its field 1. The web server needs no web secret from its own origin, so the
+helper sends `Origin: http://127.0.0.1:27062`. Neither the PC's SteamVR nor OpenVR power-off reaches
+these controllers.
+
+On the PC, a Frame controller reports the OpenVR controller type `frame_controller`, with no
+`canPowerOff` and no dongle. While a headset helper is connected, its device list row shows the
+power button, which disconnects that controller. `HOTKEY_TURN_OFF_CONTROLLER_DEVICES` disconnects
+the controllers of every connected headset, next to the Lighthouse power-off.
+
 ## Updates
 
 Each connection compares the helper's hello with the bundled helper. An older helper, or the same
