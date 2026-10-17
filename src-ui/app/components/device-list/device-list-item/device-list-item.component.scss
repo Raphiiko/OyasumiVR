@@ -90,6 +90,9 @@
 }
 
 .frame-status {
+  // the smaller text centers above the percentage's baseline, so drop it onto that line
+  position: relative;
+  top: 1px;
   margin-right: auto;
   font-size: 0.85em;
   color: var(--color-text-4);
