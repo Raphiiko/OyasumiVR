@@ -21,7 +21,7 @@ import { LighthouseDevice, LighthouseDevicePowerState } from '../models/lighthou
 import { AppSettingsService } from './app-settings.service';
 import { pRetry } from '../utils/promise-utils';
 import { ToastService } from './toast.service';
-import { error } from '@tauri-apps/plugin-log';
+import { warn } from '@tauri-apps/plugin-log';
 
 const DEFAULT_SCAN_DURATION = 8;
 export type LighthouseStatus = 'uninitialized' | 'noAdapter' | 'adapterError' | 'ready';
@@ -130,10 +130,7 @@ export class LighthouseService {
     deviceName: string,
     force = false
   ) {
-    const reached = await this.setPowerState(device, powerState, force).catch((e) => {
-      error(`[Lighthouse] Could not set power state of ${device.id}: ${e}`);
-      return false;
-    });
+    const reached = await this.setPowerState(device, powerState, force);
     if (reached) return;
     this.toasts.show({
       type: 'error',
@@ -143,7 +140,7 @@ export class LighthouseService {
     });
   }
 
-  /** Resolves false when the device did not report the new state within 10 seconds. */
+  /** Resolves false when the command fails or the device does not report the new state in 10 s. */
   public async setPowerState(
     device: LighthouseDevice,
     powerState: LighthouseDevicePowerState,
@@ -169,16 +166,22 @@ export class LighthouseService {
     }
     try {
       // set the power state
-      await pRetry(
-        () =>
-          invoke('lighthouse_set_device_power_state', {
-            deviceId: device.id,
-            powerState,
-            v1Identifier,
-          }),
-        3,
-        500
-      );
+      try {
+        await pRetry(
+          () =>
+            invoke('lighthouse_set_device_power_state', {
+              deviceId: device.id,
+              powerState,
+              v1Identifier,
+            }),
+          3,
+          500
+        );
+      } catch (e) {
+        const reason = e instanceof Error ? e.message : JSON.stringify(e);
+        warn(`[Lighthouse] Could not set power state of ${device.id}: ${reason}`);
+        return false;
+      }
       // wait for state to change (timeout after 10 seconds)
       // a V1 base station reports standby as sleep
       const expected =

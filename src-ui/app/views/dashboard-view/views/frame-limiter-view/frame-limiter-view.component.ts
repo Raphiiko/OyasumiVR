@@ -1,4 +1,5 @@
 import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { warn } from '@tauri-apps/plugin-log';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import {
@@ -111,7 +112,9 @@ export class FrameLimiterViewComponent implements OnInit {
   }
 
   onFrameLimitRequested(appId: number, value: FrameLimitConfigOption) {
-    this.frameLimiterService.setFrameLimitForAppId(appId, value);
+    this.frameLimiterService
+      .setFrameLimitForAppId(appId, value)
+      .catch((e) => warn(`[FrameLimiter] Could not set frame limit for app ${appId}: ${e}`));
   }
 
   setEventFrameLimit(

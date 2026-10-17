@@ -15,7 +15,7 @@ import {
 } from 'rxjs';
 import { orderBy } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
-import { error, info } from '@tauri-apps/plugin-log';
+import { error, info, warn } from '@tauri-apps/plugin-log';
 import { TelemetryService } from './telemetry/telemetry.service';
 
 export type OpenVRStatus = 'INACTIVE' | 'INITIALIZING' | 'INITIALIZED';
@@ -99,9 +99,12 @@ export class OpenVRService {
     this.appRef.tick();
   }
 
+  /** Logs a failure instead of rejecting, as SteamVR or the headset can go away mid-transition. */
   public async setAnalogGain(analogGain: number): Promise<void> {
     if (typeof analogGain === 'number' && isFinite(analogGain)) {
-      return invoke('openvr_set_analog_gain', { analogGain });
+      return invoke<void>('openvr_set_analog_gain', { analogGain }).catch((e) =>
+        warn(`[OpenVR] Could not set analog gain: ${e}`)
+      );
     } else {
       console.error('[OpenVR] Attempted to set analogGain to invalid value', analogGain);
       error('[OpenVR] Attempted to set analogGain to invalid value: ' + analogGain);

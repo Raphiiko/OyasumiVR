@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { warn } from '@tauri-apps/plugin-log';
 import { AutomationConfigService } from './automation-config.service';
 import { SleepService } from './sleep.service';
 import { EventLogService } from './event-log.service';
@@ -107,7 +108,12 @@ export class FrameLimitAutomationsService {
     reason?: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION'
   ) {
     if (value === 'DISABLED') return;
-    await this.frameLimiterService.setFrameLimitForAppId(appId, value);
+    try {
+      await this.frameLimiterService.setFrameLimitForAppId(appId, value);
+    } catch (e) {
+      warn(`[FrameLimitAutomations] Could not set frame limit for ${appName}: ${e}`);
+      return;
+    }
 
     // Log the event - store either translation keys or percentage values
     let limitValue: string;
