@@ -7,6 +7,7 @@ import type { AppSettingsService } from './app-settings.service';
 import type { AutomationConfigService } from './automation-config.service';
 import type { EventLogService } from './event-log.service';
 import type { MessageCenterService } from './message-center/message-center.service';
+import type { TelemetryService } from './telemetry/telemetry.service';
 import type { NotificationService } from './notification.service';
 import type { SleepPreparationService } from './sleep-preparation.service';
 import type { SleepService } from './sleep.service';
@@ -67,6 +68,7 @@ function createService(
     inviteUser: vi.fn(async () => undefined),
   };
   const eventLog = { logEvent: vi.fn() };
+  const telemetry = { trackEvent: vi.fn(async () => {}) };
   const service = new InviteAutomationsService(
     vrchat as unknown as VRChatService,
     { configs: new BehaviorSubject(configs) } as unknown as AutomationConfigService,
@@ -76,7 +78,8 @@ function createService(
     notifications as unknown as NotificationService,
     { translate } as unknown as TranslocoService,
     {} as SleepPreparationService,
-    { addMessage: vi.fn() } as unknown as MessageCenterService
+    { addMessage: vi.fn() } as unknown as MessageCenterService,
+    telemetry as unknown as TelemetryService
   );
   const receive = (type: string) =>
     (
@@ -87,7 +90,7 @@ function createService(
       senderUserId: 'usr_bob',
       senderUsername: 'Bob',
     } as Partial<Notification>);
-  return { receive, order, notifications, vrchat, eventLog };
+  return { receive, order, notifications, vrchat, eventLog, telemetry };
 }
 
 describe('InviteAutomationsService', () => {
@@ -192,5 +195,18 @@ describe('InviteAutomationsService', () => {
     vrchat.inviteUser.mockRejectedValue(new Response(null, { status: 500 }));
     await expect(receive(NotificationType.RequestInvite)).rejects.toBeInstanceOf(Response);
     expect(vrchat.deleteNotification).not.toHaveBeenCalled();
+  });
+
+  it('reports the refusal message without the sender name or VRChat IDs', async () => {
+    const { receive, vrchat, telemetry } = createService({ listMode: 'DISABLED' });
+    vrchat.inviteUser.mockRejectedValue(
+      new VRChatInviteRefusedError(
+        "Bob can't join wrld_4cf554b4-430c-4f8f-b53e-1f294eed230b:1~private(usr_c1644b5b-3ca4-45b4-97c6-a2a0de70d469)"
+      )
+    );
+    await receive(NotificationType.RequestInvite);
+    expect(telemetry.trackEvent).toHaveBeenCalledExactlyOnceWith('vrchat_invite_refused', {
+      message: "<name> can't join <id>:1~private(<id>)",
+    });
   });
 });

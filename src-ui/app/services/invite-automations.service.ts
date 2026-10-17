@@ -21,6 +21,9 @@ import { SleepPreparationService } from './sleep-preparation.service';
 import { MessageCenterService } from './message-center/message-center.service';
 import { openUrl } from '@tauri-apps/plugin-opener';
 import { VRChatInviteRefusedError } from './vrchat-api/vrchat-api';
+import { TelemetryService } from './telemetry/telemetry.service';
+
+const UUID = /\b(?:[a-z]+_)?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/gi;
 
 @Injectable({
   providedIn: 'root',
@@ -35,7 +38,8 @@ export class InviteAutomationsService {
     private notifications: NotificationService,
     private translate: TranslocoService,
     private sleepPreparation: SleepPreparationService,
-    private messageCenter: MessageCenterService
+    private messageCenter: MessageCenterService,
+    private telemetry: TelemetryService
   ) {}
 
   async init() {
@@ -280,10 +284,21 @@ export class InviteAutomationsService {
         displayName: notification.senderUsername,
         vrchatMessage: cause.vrchatMessage,
       } as EventLogFailedInviteRequest);
+      void this.telemetry.trackEvent('vrchat_invite_refused', {
+        message: this.anonymizeVRChatMessage(cause.vrchatMessage ?? '', notification),
+      });
       return null;
     }
     await this.vrchat.deleteNotification(notification.id);
     return { reply };
+  }
+
+  /** Replaces the sender's display name and any VRChat ID, so the message carries no personal data. */
+  private anonymizeVRChatMessage(message: string, notification: Notification): string {
+    const named = notification.senderUsername
+      ? message.replaceAll(notification.senderUsername, '<name>')
+      : message;
+    return named.replace(UUID, '<id>');
   }
 
   /** Resolves to whether the decline automation handled the request. */
