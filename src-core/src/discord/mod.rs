@@ -49,7 +49,10 @@ pub async fn on_discord_started() {
     // Set client and active status
     {
         *DISCORD_ACTIVE.lock().await = client.is_some();
-        *DISCORD_CLIENT.lock().await = client;
+        let old_client = std::mem::replace(&mut *DISCORD_CLIENT.lock().await, client);
+        if let Some(old_client) = old_client {
+            disconnect(old_client.discord).await;
+        }
     }
     // Try restore the last activity update
     {
@@ -71,7 +74,7 @@ pub async fn on_discord_started() {
 pub async fn on_discord_stopped() {
     let client = DISCORD_CLIENT.lock().await.take();
     if let Some(c) = client {
-        std::mem::drop(c.discord.disconnect());
+        disconnect(c.discord).await;
     }
     *DISCORD_ACTIVE.lock().await = false;
 }
@@ -191,20 +194,29 @@ async fn make_client(subs: ds::Subscriptions) -> Result<Client, String> {
     };
 
     let mut user = wheel.user();
-    match user.0.changed().await {
-        Ok(_) => {}
-        Err(err) => return Err(format!("failed to get user state: {err}")),
-    }
-    let _user = match &*user.0.borrow() {
-        ds::wheel::UserState::Connected(user) => user.clone(),
-        ds::wheel::UserState::Disconnected(err) => {
-            return Err(format!("failed to connect to Discord: {err}"))
-        }
+    let connected = match user.0.changed().await {
+        Err(err) => Err(format!("failed to get user state: {err}")),
+        Ok(_) => match &*user.0.borrow() {
+            ds::wheel::UserState::Connected(_) => Ok(()),
+            ds::wheel::UserState::Disconnected(err) => {
+                Err(format!("failed to connect to Discord: {err}"))
+            }
+        },
     };
+    if let Err(err) = connected {
+        disconnect(discord).await;
+        return Err(err);
+    }
 
     Ok(Client {
         discord,
         // user,
         // wheel,
     })
+}
+
+/// Stops the client's background tasks, which keep reconnecting to Discord until told to stop.
+async fn disconnect(discord: ds::Discord) {
+    // the I/O task only reads the stop message while connected, so do not wait for it forever
+    let _ = timeout(Duration::from_secs(2), discord.disconnect()).await;
 }

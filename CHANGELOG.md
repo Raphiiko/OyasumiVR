@@ -28,6 +28,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Fixed the SteamVR overlays not starting when a configuration file in the installation folder is damaged
 - Fixed OyasumiVR crashing when Windows shuts down or signs out
 - Fixed OyasumiVR crashing at startup when it was started by a Pulsoid login link or with a command line argument it does not recognise
+- Fixed the Discord status no longer updating after Discord restarted or lost its connection several times
 - Fixed an error being reported every time VRChat rejected OyasumiVR's connection, for example after a login expired
 
 ## [26.10.2]
