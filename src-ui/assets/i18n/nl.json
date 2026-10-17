@@ -414,8 +414,8 @@
         },
         "failedInviteRequest": {
           "subtitle": {
-            "noMessage": "VRChat stond OyasumiVR niet toe om deze speler uit te nodigen",
-            "vrchatMessage": "VRChat stond OyasumiVR niet toe om deze speler uit te nodigen: \"{message}\""
+            "noMessage": "VRChat weigerde zonder een reden te geven",
+            "vrchatMessage": "VRChat weigerde omdat: \"{message}\""
           },
           "title": "Kon invite request van \"{displayName}\" niet accepteren"
         },

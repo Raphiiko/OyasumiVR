@@ -414,8 +414,8 @@
         },
         "failedInviteRequest": {
           "subtitle": {
-            "noMessage": "VRChatがOyasumiVRによる招待を許可しませんでした",
-            "vrchatMessage": "VRChatがOyasumiVRによる招待を許可しませんでした: ''{message}''"
+            "noMessage": "VRChatに拒否されました（理由は示されませんでした）",
+            "vrchatMessage": "VRChatに拒否されました。理由: ''{message}''"
           },
           "title": "''{displayName}''からの招待リクエストを承認できませんでした"
         },

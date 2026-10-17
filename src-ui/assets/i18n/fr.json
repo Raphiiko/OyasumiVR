@@ -120,8 +120,8 @@
         },
         "failedInviteRequest": {
           "subtitle": {
-            "noMessage": "VRChat n'a pas autorisé OyasumiVR à inviter ce joueur",
-            "vrchatMessage": "VRChat n'a pas autorisé OyasumiVR à inviter ce joueur : ''{message}''"
+            "noMessage": "VRChat a refusé sans donner de raison",
+            "vrchatMessage": "VRChat a refusé car : ''{message}''"
           },
           "title": "Impossible d'accepter la demande d'invitation de ''{displayName}''"
         },

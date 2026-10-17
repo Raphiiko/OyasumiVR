@@ -414,8 +414,8 @@
         },
         "failedInviteRequest": {
           "subtitle": {
-            "noMessage": "VRChat 不允許 OyasumiVR 邀請此玩家",
-            "vrchatMessage": "VRChat 不允許 OyasumiVR 邀請此玩家：「{message}」"
+            "noMessage": "VRChat 拒絕了，但未說明原因",
+            "vrchatMessage": "VRChat 拒絕了，原因：「{message}」"
           },
           "title": "無法接受來自「{displayName}」的邀請請求"
         },

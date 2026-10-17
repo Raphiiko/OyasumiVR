@@ -414,8 +414,8 @@
         },
         "failedInviteRequest": {
           "subtitle": {
-            "noMessage": "VRChat did not allow OyasumiVR to invite them",
-            "vrchatMessage": "VRChat did not allow OyasumiVR to invite them: ''{message}''"
+            "noMessage": "VRChat refused without giving a reason",
+            "vrchatMessage": "VRChat refused because: ''{message}''"
           },
           "title": "Could not accept invite request from ''{displayName}''"
         },
