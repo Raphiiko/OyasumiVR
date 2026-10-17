@@ -372,14 +372,18 @@ controllers.
 
 ### On the PC
 
-A Frame controller reports the OpenVR controller type `frame_controller`, and VRLink never sets
-`Prop_DeviceCanPowerOff_Bool`. The core sets `canPowerOff` for it from the pose's
+The core gives every OpenVR device a `powerMethod`: `SteamFrame` for the OpenVR controller type
+`frame_controller`, `Lighthouse` for a device with a dongle id, and `None` for the rest. The UI and
+the power-off routing switch on it, never on raw OpenVR strings.
+
+VRLink never sets `Prop_DeviceCanPowerOff_Bool` on a Frame controller. The core sets `canPowerOff`
+for it from the pose's
 `bDeviceIsConnected`, which changes with `TrackedDeviceActivated` and `TrackedDeviceDeactivated`.
 The controller stays in the device list and keeps its index while off. It also counts as off while
 the headset is not streaming, because the PC cannot reach it then.
 
-`LighthouseConsoleService` turns off a Frame controller through the helper while one is connected,
-and every other device through the Lighthouse console. So the device list, the hotkeys, the
+`LighthouseConsoleService` turns off a `SteamFrame` device through the helper while one is
+connected, and a `Lighthouse` device through the Lighthouse console. So the device list, the hotkeys, the
 automations, and the overlay all reach it the same way. Like a Lighthouse device, it stays busy from
 the request until OpenVR reports it off.
 

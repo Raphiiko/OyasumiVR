@@ -81,7 +81,10 @@ export class DeviceListItemComponent implements OnInit {
     this.helperStatus = this.frameToPair ? undefined : this.helperStatusOf(knownDevice);
     if (this.frameToPair) this.powerButtonState = 'attention';
     else if (device.isTurningOff) this.powerButtonState = 'turn_off_busy';
-    else if (device.canPowerOff && (device.dongleId || this.framePairing.canDisconnect(device)))
+    else if (
+      device.canPowerOff &&
+      (device.powerMethod === 'Lighthouse' || this.framePairing.canDisconnect(device))
+    )
       this.powerButtonState = 'turn_off';
     else this.powerButtonState = 'hide';
     this.cssId = this.sanitizeIdentifierForCSS(device.serialNumber ?? '');

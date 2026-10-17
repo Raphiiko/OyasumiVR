@@ -121,11 +121,12 @@ export class LighthouseConsoleService {
       this.toasts.show({
         type: 'error',
         title: { string: 'toasts.devicePower.turnOffFailed.title', values: { name: deviceName } },
-        message: this.steamFrame.canDisconnect(ovrDevice)
-          ? 'toasts.devicePower.turnOffFailed.frameHelperFailed'
-          : this._consoleStatus.value === 'SUCCESS'
-            ? 'toasts.devicePower.turnOffFailed.commandFailed'
-            : 'toasts.devicePower.turnOffFailed.consoleNotReady',
+        message:
+          ovrDevice.powerMethod === 'SteamFrame'
+            ? 'toasts.devicePower.turnOffFailed.frameHelperFailed'
+            : this._consoleStatus.value === 'SUCCESS'
+              ? 'toasts.devicePower.turnOffFailed.commandFailed'
+              : 'toasts.devicePower.turnOffFailed.consoleNotReady',
         duration: 6000,
       });
     }
@@ -154,9 +155,7 @@ export class LighthouseConsoleService {
 
     // Frame controllers go through the headset helper, the rest through the console
     const frameControllers = requested.filter((device) => this.steamFrame.canDisconnect(device));
-    const consoleDevices = requested.filter(
-      (device) => device.dongleId && !frameControllers.includes(device)
-    );
+    const consoleDevices = requested.filter((device) => device.powerMethod === 'Lighthouse');
     const [frameDispatched, consoleDispatched] = await Promise.all([
       Promise.all(frameControllers.map((device) => this.disconnectFrameController(device))),
       this.runConsolePowerOff(consoleDevices),
