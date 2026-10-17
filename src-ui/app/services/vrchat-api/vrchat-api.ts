@@ -50,6 +50,13 @@ const PROFILE_LOGOUT_TIMEOUT = 10_000;
 
 export const VRCHAT_API_STALE_REQUEST = 'STALE_REQUEST';
 
+/** VRChat answered 403 to an invite; vrchatMessage is the reason VRChat gave, when it gave one. */
+export class VRChatInviteRefusedError extends Error {
+  constructor(readonly vrchatMessage?: string) {
+    super('VRChat refused the invite');
+  }
+}
+
 export type VRChatTwoFactorMethod = 'totp' | 'emailotp';
 
 export interface VRChatCredentials {
@@ -503,7 +510,7 @@ export class VRChatAPI {
 
   /**
    * Resolves to the invite message text VRChat attached, if any.
-   * Throws an expected 403 response unreported: VRChat refuses invites it does not allow.
+   * Throws VRChatInviteRefusedError unreported on a 403: VRChat refuses invites it does not allow.
    */
   public async inviteUser(
     inviteeId: string,
@@ -539,9 +546,12 @@ export class VRChatAPI {
     } catch (e) {
       if (e === VRCHAT_API_STALE_REQUEST) throw e;
       if (e instanceof Response && e.status === 403) {
-        const body = await e.json().catch(() => undefined);
+        const body: CurrentUserErrorResponse | undefined = await e.json().catch(() => undefined);
         warn(`[VRChat] VRChat refused the invite: ${describeResponse(e, body)}`);
-        throw e;
+        const vrchatMessage = body?.error?.message;
+        throw new VRChatInviteRefusedError(
+          typeof vrchatMessage === 'string' ? vrchatMessage : undefined
+        );
       }
       const failure = requestFailure('VRChat invite request failed', e);
       error(`[VRChat] ${failure.message}`);

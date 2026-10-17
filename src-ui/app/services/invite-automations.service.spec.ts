@@ -15,6 +15,7 @@ import { AUTOMATION_CONFIGS_DEFAULT, type AutomationConfigs } from '../models/au
 import { NotificationType, UserStatus } from '../models/vrchat';
 import en from '../../assets/i18n/en.json';
 import { InviteAutomationsService } from './invite-automations.service';
+import { VRChatInviteRefusedError } from './vrchat-api/vrchat-api';
 
 vi.mock('@tauri-apps/plugin-log', () => ({ info: vi.fn(), warn: vi.fn(), error: vi.fn() }));
 vi.mock('@tauri-apps/plugin-opener', () => ({ openUrl: vi.fn() }));
@@ -164,10 +165,14 @@ describe('InviteAutomationsService', () => {
         playSoundOnInviteRequest_onlyWhenUnhandled: true,
       });
       vrchat.user.next({ status });
-      vrchat.inviteUser.mockRejectedValue(new Response(null, { status: 403 }));
+      vrchat.inviteUser.mockRejectedValue(new VRChatInviteRefusedError('Not allowed'));
       await receive(NotificationType.RequestInvite);
       expect(vrchat.deleteNotification).not.toHaveBeenCalled();
-      expect(eventLog.logEvent).not.toHaveBeenCalled();
+      expect(eventLog.logEvent).toHaveBeenCalledExactlyOnceWith({
+        type: 'failedInviteRequest',
+        displayName: 'Bob',
+        vrchatMessage: 'Not allowed',
+      });
       expect(notifications.send).not.toHaveBeenCalled();
       expect(notifications.playSoundConfig).toHaveBeenCalled();
     }
@@ -180,5 +185,12 @@ describe('InviteAutomationsService', () => {
       vrchat.deleteNotification.mock.invocationCallOrder[0]
     );
     expect(eventLog.logEvent).toHaveBeenCalled();
+  });
+
+  it('keeps the invite request in VRChat when the invite fails for another reason', async () => {
+    const { receive, vrchat } = createService({ listMode: 'DISABLED' });
+    vrchat.inviteUser.mockRejectedValue(new Response(null, { status: 500 }));
+    await expect(receive(NotificationType.RequestInvite)).rejects.toBeInstanceOf(Response);
+    expect(vrchat.deleteNotification).not.toHaveBeenCalled();
   });
 });

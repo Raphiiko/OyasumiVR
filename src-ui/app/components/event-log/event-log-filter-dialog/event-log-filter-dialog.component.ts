@@ -81,7 +81,12 @@ export class EventLogFilterDialogComponent
     },
     {
       id: 'VRCHAT_INVITES',
-      eventLogTypes: ['acceptedInviteRequest', 'declinedInviteRequest', 'declinedInvite'],
+      eventLogTypes: [
+        'acceptedInviteRequest',
+        'declinedInviteRequest',
+        'failedInviteRequest',
+        'declinedInvite',
+      ],
     },
     {
       id: 'VRCHAT_AVATAR',

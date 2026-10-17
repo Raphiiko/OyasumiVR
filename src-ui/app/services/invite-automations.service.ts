@@ -11,6 +11,7 @@ import {
   EventLogAcceptedInviteRequest,
   EventLogDeclinedInvite,
   EventLogDeclinedInviteRequest,
+  EventLogFailedInviteRequest,
 } from '../models/event-log-entry';
 import { NotificationService } from './notification.service';
 import { TranslocoService } from '@jsverse/transloco';
@@ -19,6 +20,7 @@ import { AutoAcceptInviteRequestsAutomationConfig } from '../models/automations'
 import { SleepPreparationService } from './sleep-preparation.service';
 import { MessageCenterService } from './message-center/message-center.service';
 import { openUrl } from '@tauri-apps/plugin-opener';
+import { VRChatInviteRefusedError } from './vrchat-api/vrchat-api';
 
 @Injectable({
   providedIn: 'root',
@@ -269,10 +271,15 @@ export class InviteAutomationsService {
     try {
       reply = await this.vrchat.inviteUser(notification.senderUserId, { message });
     } catch (cause) {
-      if (!(cause instanceof Response && cause.status === 403)) throw cause;
+      if (!(cause instanceof VRChatInviteRefusedError)) throw cause;
       warn(
         `[VRChat] Could not accept the invite request from ${notification.senderUsername}: VRChat refused the invite to the current instance`
       );
+      this.eventLog.logEvent({
+        type: 'failedInviteRequest',
+        displayName: notification.senderUsername,
+        vrchatMessage: cause.vrchatMessage,
+      } as EventLogFailedInviteRequest);
       return null;
     }
     await this.vrchat.deleteNotification(notification.id);

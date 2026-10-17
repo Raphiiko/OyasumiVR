@@ -412,6 +412,13 @@
           },
           "title": "Auto-declined invite request from ''{displayName}''"
         },
+        "failedInviteRequest": {
+          "subtitle": {
+            "noMessage": "VRChat refused the invite",
+            "vrchatMessage": "VRChat refused the invite: ''{message}''"
+          },
+          "title": "Could not accept invite request from ''{displayName}''"
+        },
         "frameLimitChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "As sleep mode was disabled",

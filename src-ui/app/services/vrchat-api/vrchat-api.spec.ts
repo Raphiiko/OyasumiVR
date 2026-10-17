@@ -4,7 +4,7 @@ import { fetch } from '@tauri-apps/plugin-http';
 import { warn } from '@tauri-apps/plugin-log';
 import type { CurrentUser } from 'vrchat';
 import type { VRChatApiSettings } from 'src-ui/app/models/vrchat-api-settings';
-import { VRChatAPI } from './vrchat-api';
+import { VRChatAPI, VRChatInviteRefusedError } from './vrchat-api';
 
 vi.mock('@tauri-apps/plugin-http', () => ({ fetch: vi.fn() }));
 vi.mock('@tauri-apps/plugin-log', () => ({ info: vi.fn(), warn: vi.fn(), error: vi.fn() }));
@@ -29,7 +29,9 @@ describe('VRChatAPI.inviteUser', () => {
     const body = { error: { message: "You can't invite that user", status_code: 403 } };
     vi.mocked(fetch).mockResolvedValue(new Response(JSON.stringify(body), { status: 403 }));
     const { api, reportError } = await createApi();
-    await expect(api.inviteUser('usr_bob', 'wrld_x:1')).rejects.toBeInstanceOf(Response);
+    await expect(api.inviteUser('usr_bob', 'wrld_x:1')).rejects.toEqual(
+      new VRChatInviteRefusedError("You can't invite that user")
+    );
     expect(reportError).not.toHaveBeenCalled();
     expect(warn).toHaveBeenCalledWith(expect.stringContaining("You can't invite that user"));
   });
