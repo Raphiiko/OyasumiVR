@@ -60,7 +60,10 @@ async function createConsole(devices: OVRDevice[], valid = true) {
           currentDevices.value.map((current) => (current.index === device.index ? device : current))
         ),
     } as unknown as ConstructorParameters<typeof LighthouseConsoleService>[1],
-    new ToastService()
+    new ToastService(),
+    { canDisconnect: () => false } as unknown as ConstructorParameters<
+      typeof LighthouseConsoleService
+    >[3]
   );
   await vi.advanceTimersByTimeAsync(0);
   invoke.mockResolvedValue({
@@ -116,7 +119,6 @@ describe('power-off command results and actual event log', () => {
       const item = caller(DeviceListItemComponent.prototype, {
         lighthouseConsole: service,
         eventLog: log,
-        framePairing: { canDisconnect: () => false },
         mode: 'openvr',
         _ovrDevice: controller,
       });
@@ -423,8 +425,6 @@ describe('power-off event producers', () => {
       lighthouse: consoleService,
       eventLog: log,
       openvr: { devices },
-      steamFrame: { disconnectControllers: async () => true },
-      framePairing: { canDisconnect: () => false },
       deviceManager,
       appSettings: { settingsSync: APP_SETTINGS_DEFAULT },
       config: {

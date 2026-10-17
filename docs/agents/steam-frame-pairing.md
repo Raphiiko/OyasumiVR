@@ -357,24 +357,31 @@ is.
 
 ## Controllers
 
-`{"type":"disconnectControllers","id":1,"serial":"96c863a69af3"}` disconnects that controller, and
-without `serial` every controller connected to the headset. They stay paired and reconnect when a
-button wakes them. The helper replies `{"type":"disconnectControllersResult","id":1}`, with an
-`error` of `runtimeUnavailable` or `writeFailed` when it fails. It ignores an empty serial or one
-longer than 64 bytes, and an unknown serial does nothing.
+`{"type":"disconnectController","id":1,"serial":"96c863a69af3"}` disconnects that controller. It
+stays paired and reconnects when a button wakes it. The helper replies
+`{"type":"disconnectControllerResult","id":1}`, with an `error` of `runtimeUnavailable` or
+`writeFailed` when it fails. It ignores an empty serial or one longer than 64 bytes, and an unknown
+serial does nothing.
 
 The helper sends Steam UI's own request to the headset's SteamVR web server at `127.0.0.1:27062`:
 the text `steam_connect`, then a binary packet. It starts `02 08 2D`, a one-byte header length and a
-header with message type 45. Disconnect-all follows with `32 00`, the empty
-`disconnect_all_controllers` field 6. One controller follows with field 5, `disconnect_controller`,
-holding the serial as its field 1. The web server needs no web secret from its own origin, so the
-helper sends `Origin: http://127.0.0.1:27062`. Neither the PC's SteamVR nor OpenVR power-off reaches
-these controllers.
+header with message type 45, and follows with field 5, `disconnect_controller`, holding the serial
+as its field 1. The web server needs no web secret from its own origin, so the helper sends
+`Origin: http://127.0.0.1:27062`. Neither the PC's SteamVR nor OpenVR power-off reaches these
+controllers.
 
-On the PC, a Frame controller reports the OpenVR controller type `frame_controller`, with no
-`canPowerOff` and no dongle. While a headset helper is connected, its device list row shows the
-power button, which disconnects that controller. `HOTKEY_TURN_OFF_CONTROLLER_DEVICES` disconnects
-the controllers of every connected headset, next to the Lighthouse power-off.
+### On the PC
+
+A Frame controller reports the OpenVR controller type `frame_controller`, and VRLink never sets
+`Prop_DeviceCanPowerOff_Bool`. The core sets `canPowerOff` for it from the pose's
+`bDeviceIsConnected`, which changes with `TrackedDeviceActivated` and `TrackedDeviceDeactivated`.
+The controller stays in the device list and keeps its index while off. It also counts as off while
+the headset is not streaming, because the PC cannot reach it then.
+
+`LighthouseConsoleService` turns off a Frame controller through the helper while one is connected,
+and every other device through the Lighthouse console. So the device list, the hotkeys, the
+automations, and the overlay all reach it the same way. Like a Lighthouse device, it stays busy from
+the request until OpenVR reports it off.
 
 ## Updates
 
