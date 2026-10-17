@@ -89,11 +89,50 @@
   }
 }
 
+.helper-status {
+  // the smaller text centers above the percentage's baseline, so drop it onto that line
+  position: relative;
+  top: 1px;
+  margin-right: auto;
+  font-size: 0.85em;
+  color: var(--color-text-4);
+}
+
+.header-bar-icon {
+  position: relative;
+  display: flex;
+  margin-right: 1.25em;
+}
+
+.helper-badge {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 3px solid var(--color-surface-2);
+  background: var(--color-text-4);
+}
+
+.helper-badge-connected {
+  background: #67c23a;
+}
+
+.helper-badge-connecting {
+  animation: helper-badge-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes helper-badge-pulse {
+  50% {
+    opacity: 0.3;
+  }
+}
+
 .category-icon {
   width: 1.5em;
   height: 1.5em;
   vertical-align: middle;
-  margin-right: 1em;
 }
 
 .wrapper {
