@@ -39,7 +39,10 @@ function createLighthouse() {
       devices: new BehaviorSubject([device]),
       onDeviceUpdate: vi.fn(),
     } as unknown as ConstructorParameters<typeof LighthouseConsoleService>[1],
-    new ToastService()
+    new ToastService(),
+    { canDisconnect: () => false } as unknown as ConstructorParameters<
+      typeof LighthouseConsoleService
+    >[3]
   );
   return {
     filename: 'lighthouse_console.exe',

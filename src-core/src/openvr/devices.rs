@@ -14,6 +14,9 @@ use std::sync::LazyLock;
 use strum::IntoEnumIterator;
 use tokio::sync::Mutex;
 
+/// The OpenVR controller type of a Steam Frame controller, which the Frame helper turns off.
+const FRAME_CONTROLLER_TYPE: &str = "frame_controller";
+
 static OVR_DEVICES: LazyLock<Mutex<Vec<OVRDevice>>> = LazyLock::new(|| Mutex::new(Vec::new()));
 static SLEEP_DETECTOR: LazyLock<Mutex<SleepDetector>> =
     LazyLock::new(|| Mutex::new(SleepDetector::new()));
@@ -226,6 +229,12 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
             ovr::raw::ETrackedDeviceProperty::Prop_ControllerType_String,
         )
         .ok();
+    // VRLink never sets the power-off property; a Frame controller can be turned off while connected
+    let can_power_off = if controller_type.as_deref() == Some(FRAME_CONTROLLER_TYPE) {
+        Some(device_connected(&system, device_index))
+    } else {
+        can_power_off
+    };
     let mut hmd_on_head = None;
     let mut hmd_activity = None;
     let mut display_frequency = None;
@@ -316,6 +325,16 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
         let event = DeviceUpdateEvent { device };
         send_event("OVR_DEVICE_UPDATE", event).await;
     }
+}
+
+/// Whether OpenVR reports the device connected. Its activation and deactivation events change this.
+fn device_connected(system: &ovr::system::System, device_index: ovr::TrackedDeviceIndex) -> bool {
+    system
+        .get_device_to_absolute_tracking_pose(
+            ovr::raw::ETrackingUniverseOrigin::TrackingUniverseStanding,
+            0.0,
+        )
+        .is_ok_and(|poses| poses[device_index.0 as usize].bDeviceIsConnected)
 }
 
 fn store_device(devices: &mut Vec<OVRDevice>, device: &OVRDevice) -> bool {

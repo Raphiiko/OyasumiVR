@@ -426,7 +426,7 @@ export class SteamFramePairingService {
     await invoke('steam_frame_update_helper', { pairingId: pairing.id });
   }
 
-  /** Whether a connected headset helper can disconnect this controller. */
+  /** Whether this is a Frame controller that a connected headset helper can disconnect. */
   canDisconnect(device: OVRDevice): boolean {
     return (
       device.controllerType === 'frame_controller' &&
@@ -436,24 +436,24 @@ export class SteamFramePairingService {
   }
 
   /**
-   * Disconnects the controller with this serial, or every controller without one, on every
-   * connected headset. They stay paired. Resolves false when a headset failed.
+   * Disconnects the controller with this serial on every connected headset. It stays paired.
+   * Resolves false when a headset failed.
    */
-  async disconnectControllers(serial?: string): Promise<boolean> {
+  async disconnectController(serial: string): Promise<boolean> {
     const connected = Object.values(this._connections()).filter((c) => c.status === 'connected');
     const results = await Promise.all(
-      connected.map((state) => this.disconnectControllersOf(state.pairingId, serial))
+      connected.map((state) => this.disconnectControllerOn(state.pairingId, serial))
     );
     return results.every(Boolean);
   }
 
-  private async disconnectControllersOf(pairingId: string, serial?: string): Promise<boolean> {
+  private async disconnectControllerOn(pairingId: string, serial: string): Promise<boolean> {
     try {
-      await invoke('steam_frame_disconnect_controllers', { pairingId, serial: serial ?? null });
-      info(`[SteamFrame] Disconnected the headset controllers${serial ? ` (${serial})` : ''}`);
+      await invoke('steam_frame_disconnect_controller', { pairingId, serial });
+      info(`[SteamFrame] Disconnected the headset controller ${serial}`);
       return true;
     } catch (e) {
-      error(`[SteamFrame] Could not disconnect the headset controllers: ${JSON.stringify(e)}`);
+      error(`[SteamFrame] Could not disconnect the headset controller: ${JSON.stringify(e)}`);
       return false;
     }
   }

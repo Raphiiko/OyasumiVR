@@ -112,7 +112,7 @@ enum Outgoing<'a> {
         #[serde(skip_serializing_if = "Option::is_none")]
         error: Option<cct::SetError>,
     },
-    DisconnectControllersResult {
+    DisconnectControllerResult {
         id: u64,
         #[serde(skip_serializing_if = "Option::is_none")]
         error: Option<vrserver::DisconnectError>,
@@ -186,9 +186,9 @@ enum Incoming {
     CancelFade {
         operation: String,
     },
-    DisconnectControllers {
+    DisconnectController {
         id: u64,
-        serial: Option<String>,
+        serial: String,
     },
 }
 
@@ -424,12 +424,12 @@ async fn handle(
             message = socket.next() => match message {
                 Some(Ok(Message::Text(text))) => {
                     let Ok(incoming) = serde_json::from_str::<Incoming>(&text) else { continue };
-                    if let Incoming::DisconnectControllers { id, serial } = incoming {
-                        if serial.as_ref().is_some_and(|s| s.is_empty() || s.len() > vrserver::MAX_SERIAL_LENGTH) {
+                    if let Incoming::DisconnectController { id, serial } = incoming {
+                        if serial.is_empty() || serial.len() > vrserver::MAX_SERIAL_LENGTH {
                             continue;
                         }
-                        let error = vrserver::disconnect_controllers(serial.as_deref()).await.err();
-                        let Ok(reply) = serde_json::to_string(&Outgoing::DisconnectControllersResult { id, error }) else { return };
+                        let error = vrserver::disconnect_controller(&serial).await.err();
+                        let Ok(reply) = serde_json::to_string(&Outgoing::DisconnectControllerResult { id, error }) else { return };
                         if socket.send(Message::text(reply)).await.is_err() {
                             return;
                         }

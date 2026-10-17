@@ -11,8 +11,6 @@ const ORIGIN: &str = "http://127.0.0.1:27062";
 const TIMEOUT: Duration = Duration::from_secs(3);
 /// Steam UI's controller pairing request header: its length 2, then message type 45.
 const REQUEST_HEADER: [u8; 3] = [0x02, 0x08, 0x2D];
-/// The request's empty `disconnect_all_controllers` body field 6.
-const DISCONNECT_ALL: [u8; 2] = [0x32, 0x00];
 /// The longest serial whose message lengths still fit in one byte each.
 pub const MAX_SERIAL_LENGTH: usize = 64;
 
@@ -23,23 +21,19 @@ pub enum DisconnectError {
     WriteFailed,
 }
 
-/// Disconnects the controller with this serial, or every connected controller without one. They
-/// stay paired and reconnect when woken. An unknown serial does nothing.
-pub async fn disconnect_controllers(serial: Option<&str>) -> Result<(), DisconnectError> {
+/// Disconnects the controller with this serial. It stays paired and reconnects when woken. An
+/// unknown serial does nothing.
+pub async fn disconnect_controller(serial: &str) -> Result<(), DisconnectError> {
     tokio::time::timeout(TIMEOUT, send_request(request(serial)))
         .await
         .unwrap_or(Err(DisconnectError::RuntimeUnavailable))
 }
 
-/// The request packet. A serial, at most [`MAX_SERIAL_LENGTH`] bytes, goes in a
+/// The request packet: the serial, at most [`MAX_SERIAL_LENGTH`] bytes, in a
 /// `disconnect_controller` body field 5, as its `serial_number` field 1.
-fn request(serial: Option<&str>) -> Vec<u8> {
-    let mut packet = REQUEST_HEADER.to_vec();
-    let Some(serial) = serial else {
-        packet.extend(DISCONNECT_ALL);
-        return packet;
-    };
+fn request(serial: &str) -> Vec<u8> {
     let length = serial.len() as u8;
+    let mut packet = REQUEST_HEADER.to_vec();
     packet.extend([0x2A, length + 2, 0x0A, length]);
     packet.extend(serial.as_bytes());
     packet
@@ -75,10 +69,9 @@ mod tests {
     use super::*;
 
     #[test]
-    fn builds_the_disconnect_requests_steam_ui_sends() {
-        assert_eq!(request(None), [0x02, 0x08, 0x2D, 0x32, 0x00]);
+    fn builds_the_disconnect_request_steam_ui_sends() {
         assert_eq!(
-            request(Some("96c863a69af3")),
+            request("96c863a69af3"),
             [
                 &[0x02, 0x08, 0x2D, 0x2A, 0x0E, 0x0A, 0x0C][..],
                 b"96c863a69af3"

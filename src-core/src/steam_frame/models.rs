@@ -213,7 +213,7 @@ pub enum SetCctError {
 
 #[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
-pub enum DisconnectControllersError {
+pub enum DisconnectControllerError {
     RuntimeUnavailable,
     WriteFailed,
     /// No open connection, or it closed before the helper replied.

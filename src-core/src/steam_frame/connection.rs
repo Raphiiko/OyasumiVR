@@ -17,7 +17,7 @@ use super::{
     discovery,
     maintenance::{self, Recovery, UpdateOutcome},
     models::{
-        Brightness, Cct, Control, DisconnectControllersError, FadeEnded, FadeError, FadeOutcome,
+        Brightness, Cct, Control, DisconnectControllerError, FadeEnded, FadeError, FadeOutcome,
         FadeRequest, Maintenance, Pairing, SetBrightnessError, SetCctError, State, Status,
     },
     setup::{
@@ -40,7 +40,7 @@ const COMMAND_TIMEOUT: Duration = Duration::from_secs(5);
 type BrightnessReply = oneshot::Sender<Result<f64, SetBrightnessError>>;
 type CctReply = oneshot::Sender<Result<Cct, SetCctError>>;
 type FadeReply = oneshot::Sender<Result<(), FadeError>>;
-type DisconnectReply = oneshot::Sender<Result<(), DisconnectControllersError>>;
+type DisconnectReply = oneshot::Sender<Result<(), DisconnectControllerError>>;
 /// Holds a sender only while the connection is open, so a command never waits for a reconnect.
 type CommandSlot = Arc<StdMutex<Option<mpsc::Sender<Command>>>>;
 
@@ -50,7 +50,7 @@ enum Command {
     SetCct(u32, CctReply),
     Fade(FadeRequest, FadeReply),
     CancelFade(String),
-    DisconnectControllers(Option<String>, DisconnectReply),
+    DisconnectController(String, DisconnectReply),
 }
 
 enum Reply {
@@ -91,9 +91,9 @@ enum HelperMessage {
         operation: String,
         outcome: FadeOutcome,
     },
-    DisconnectControllersResult {
+    DisconnectControllerResult {
         id: u64,
-        error: Option<DisconnectControllersError>,
+        error: Option<DisconnectControllerError>,
     },
 }
 
@@ -186,14 +186,13 @@ pub async fn cancel_fade(pairing_id: &str, operation: String) {
     }
 }
 
-/// Disconnects the headset controller with this serial, or every connected one without a serial.
-/// They stay paired.
-pub async fn disconnect_controllers(
+/// Disconnects the headset controller with this serial. It stays paired.
+pub async fn disconnect_controller(
     pairing_id: &str,
-    serial: Option<String>,
-) -> Result<(), DisconnectControllersError> {
-    let command = |reply| Command::DisconnectControllers(serial, reply);
-    send(pairing_id, command, DisconnectControllersError::Offline).await
+    serial: String,
+) -> Result<(), DisconnectControllerError> {
+    let command = |reply| Command::DisconnectController(serial, reply);
+    send(pairing_id, command, DisconnectControllerError::Offline).await
 }
 
 async fn sender(pairing_id: &str) -> Option<mpsc::Sender<Command>> {
@@ -538,7 +537,7 @@ async fn receive(text: &str, relay: &mut Relay, state: &mut State) {
             };
             send_event(FADE_ENDED_EVENT, ended).await;
         }
-        Ok(HelperMessage::DisconnectControllersResult { id, error }) => {
+        Ok(HelperMessage::DisconnectControllerResult { id, error }) => {
             if let Some(Reply::Disconnect(reply)) = relay.pending.remove(&id) {
                 let _ = reply.send(error.map_or(Ok(()), Err));
             }
@@ -737,8 +736,8 @@ async fn hold(socket: &mut Socket, update: &Notify, relay: &mut Relay, state: &m
                         }),
                         Reply::Fade(reply),
                     ),
-                    Command::DisconnectControllers(serial, reply) => (
-                        serde_json::json!({"type": "disconnectControllers", "id": id, "serial": serial}),
+                    Command::DisconnectController(serial, reply) => (
+                        serde_json::json!({"type": "disconnectController", "id": id, "serial": serial}),
                         Reply::Disconnect(reply),
                     ),
                     Command::CancelFade(operation) => {
