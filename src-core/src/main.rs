@@ -35,7 +35,7 @@ pub use grpc::models as Models;
 
 use cronjob::CronJob;
 use globals::{APTABASE_APP_KEY, TAURI_APP_HANDLE};
-use log::{error, info, LevelFilter};
+use log::{error, info, warn, LevelFilter};
 use oyasumivr_shared::windows::is_elevated;
 use tauri::{plugin::TauriPlugin, Manager, Wry};
 use tauri_plugin_cli::CliExt;
@@ -446,18 +446,28 @@ async fn app_setup(app_handle: tauri::AppHandle, error_reporting_enabled: bool) 
     }
     let window = app_handle.get_webview_window("main").unwrap();
     // Disable swipe navigation in main window
-    window
-        .with_webview(|webview| unsafe {
-            let settings = webview
-                .controller()
-                .CoreWebView2()
-                .unwrap()
-                .Settings()
-                .unwrap();
-            let settings: ICoreWebView2Settings6 = mem::transmute(settings);
-            settings.SetIsSwipeNavigationEnabled(false).unwrap();
-        })
-        .unwrap();
+    // this posts to the event loop from a worker thread, and Windows can refuse the post
+    if let Err(e) = window.with_webview(|webview| unsafe {
+        let settings = webview
+            .controller()
+            .CoreWebView2()
+            .unwrap()
+            .Settings()
+            .unwrap();
+        let settings: ICoreWebView2Settings6 = mem::transmute(settings);
+        settings.SetIsSwipeNavigationEnabled(false).unwrap();
+    }) {
+        // read before logging, which can overwrite the post's Win32 error
+        let os_error = std::io::Error::last_os_error();
+        warn!("[Core] Could not disable swipe navigation in the main window: {e} ({os_error})");
+        sentry::capture_message(
+            &format!(
+                "Could not disable swipe navigation: Win32 error {}",
+                os_error.raw_os_error().unwrap_or_default()
+            ),
+            sentry::Level::Warning,
+        );
+    }
     // Get dependencies
     let cache_dir = app_handle.path().app_cache_dir().unwrap();
     // Register deep link schemas if needed
