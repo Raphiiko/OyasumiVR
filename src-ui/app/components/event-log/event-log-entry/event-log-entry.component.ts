@@ -14,6 +14,7 @@ import { EventLogTurnedOffOpenVRDevicesEntryParser } from './entry-parsers/openv
 import { EventLogGpuPowerLimitChangedEntryParser } from './entry-parsers/gpu-power-limit-changed';
 import { EventLogAcceptedInviteRequestEntryParser } from './entry-parsers/accepted-invite-request';
 import { EventLogDeclinedInviteRequestEntryParser } from './entry-parsers/declined-invite-request';
+import { EventLogFailedInviteRequestEntryParser } from './entry-parsers/failed-invite-request';
 import { EventLogDeclinedInviteEntryParser } from './entry-parsers/declined-invite';
 import { EventLogStatusChangedOnPlayerCountChangeEntryParser } from './entry-parsers/status-changed-on-player-count-change';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -69,6 +70,7 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
     new EventLogSoftwareBrightnessChangedEntryParser(),
     new EventLogAcceptedInviteRequestEntryParser(),
     new EventLogDeclinedInviteRequestEntryParser(),
+    new EventLogFailedInviteRequestEntryParser(),
     new EventLogDeclinedInviteEntryParser(),
     new EventLogStatusChangedOnPlayerCountChangeEntryParser(),
     new EventLogStatusChangedOnGeneralEventEntryParser(),

@@ -412,6 +412,13 @@
           },
           "title": "Auto-declined invite request from ''{displayName}''"
         },
+        "failedInviteRequest": {
+          "subtitle": {
+            "noMessage": "VRChat refused without giving a reason",
+            "vrchatMessage": "VRChat refused because: ''{message}''"
+          },
+          "title": "Could not accept invite request from ''{displayName}''"
+        },
         "frameLimitChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
@@ -1638,6 +1645,9 @@
     },
     "autoDeclinedInviteRequest": {
       "content": "Automatically declined invite request from {username}"
+    },
+    "failedInviteRequest": {
+      "content": "Could not accept invite request from {username}"
     },
     "sleepCheck": {
       "content": "Sleep mode will be enabled in 20 seconds.\nAre you asleep?\n\nTo cancel:\nShake your head or press any controller button"

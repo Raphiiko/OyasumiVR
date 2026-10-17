@@ -25,6 +25,7 @@ export type EventLogEntry =
   | EventLogSoftwareBrightnessChanged
   | EventLogAcceptedInviteRequest
   | EventLogDeclinedInviteRequest
+  | EventLogFailedInviteRequest
   | EventLogDeclinedInvite
   | EventLogStatusChangedOnPlayerCountChange
   | EventLogStatusChangedOnGeneralEvent
@@ -65,6 +66,7 @@ export type EventLogType =
   | 'softwareBrightnessChanged'
   | 'acceptedInviteRequest'
   | 'declinedInviteRequest'
+  | 'failedInviteRequest'
   | 'declinedInvite'
   | 'statusChangedOnPlayerCountChange'
   | 'statusChangedOnGeneralEvent'
@@ -206,6 +208,12 @@ export interface EventLogDeclinedInviteRequest extends EventLogBase {
     | 'NOT_ON_WHITELIST'
     | 'ON_BLACKLIST';
   message?: string;
+}
+
+export interface EventLogFailedInviteRequest extends EventLogBase {
+  type: 'failedInviteRequest';
+  displayName: string;
+  vrchatMessage?: string;
 }
 
 export interface EventLogDeclinedInvite extends EventLogBase {

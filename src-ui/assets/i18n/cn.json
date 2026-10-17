@@ -412,6 +412,13 @@
           },
           "title": "已自动拒绝来自“{displayName}”的邀请请求"
         },
+        "failedInviteRequest": {
+          "subtitle": {
+            "noMessage": "VRChat 拒绝了，但未说明原因",
+            "vrchatMessage": "VRChat 拒绝了，原因：“{message}”"
+          },
+          "title": "无法接受来自“{displayName}”的邀请请求"
+        },
         "frameLimitChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "因为已关闭睡眠模式",
@@ -1638,6 +1645,9 @@
     },
     "autoDeclinedInviteRequest": {
       "content": "已自动拒绝来自 {username} 的邀请请求"
+    },
+    "failedInviteRequest": {
+      "content": "无法接受来自 {username} 的邀请请求"
     },
     "sleepCheck": {
       "content": "睡眠模式将在 20 秒后开启。\n你睡着了吗？\n\n取消方式：\n摇头或按任意控制器按钮"

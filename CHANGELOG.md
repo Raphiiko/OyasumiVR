@@ -31,6 +31,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Fixed the Discord status no longer updating after Discord restarted or lost its connection several times
 - Fixed Steam achievements not unlocking until a restart after Steam failed to read one
 - Fixed OyasumiVR crashing when its window was shrunk to a few pixels
+- Fixed the invite request automation removing an invite request when VRChat refused the invite. The event log now shows the reason VRChat gave
 - Fixed an error being reported every time VRChat rejected OyasumiVR's connection, for example after a login expired
 - Fixed OyasumiVR crashing when it read a line in the VRChat log that was not valid text
 - Fixed OyasumiVR sometimes quitting during startup

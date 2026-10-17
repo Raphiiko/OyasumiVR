@@ -11,6 +11,7 @@ import {
   EventLogAcceptedInviteRequest,
   EventLogDeclinedInvite,
   EventLogDeclinedInviteRequest,
+  EventLogFailedInviteRequest,
 } from '../models/event-log-entry';
 import { NotificationService } from './notification.service';
 import { TranslocoService } from '@jsverse/transloco';
@@ -19,6 +20,12 @@ import { AutoAcceptInviteRequestsAutomationConfig } from '../models/automations'
 import { SleepPreparationService } from './sleep-preparation.service';
 import { MessageCenterService } from './message-center/message-center.service';
 import { openUrl } from '@tauri-apps/plugin-opener';
+import { VRChatInviteRefusedError } from './vrchat-api/vrchat-api';
+import { TelemetryService } from './telemetry/telemetry.service';
+
+// ponytail: 200 is a guess that stays under common analytics limits; Aptabase documents none
+const MAX_REFUSAL_BODY = 200;
+const UUID = /\b(?:[a-z]+_)?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/gi;
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +40,8 @@ export class InviteAutomationsService {
     private notifications: NotificationService,
     private translate: TranslocoService,
     private sleepPreparation: SleepPreparationService,
-    private messageCenter: MessageCenterService
+    private messageCenter: MessageCenterService,
+    private telemetry: TelemetryService
   ) {}
 
   async init() {
@@ -81,7 +89,10 @@ export class InviteAutomationsService {
           reason: 'SLEEP_MODE_ENABLED',
           message: declined.reply,
         } as EventLogDeclinedInvite);
-        void this.sendDeclinedNotification('autoDeclinedInvite', notification.senderUsername);
+        void this.sendInviteAutomationNotification(
+          'autoDeclinedInvite',
+          notification.senderUsername
+        );
       }
     }
     // Play a sound if configured
@@ -173,9 +184,9 @@ export class InviteAutomationsService {
       info(
         `[VRChat] Automatically accepting invite request from ${notification.senderUserId} (blue status)`
       );
-      await this.vrchat.deleteNotification(notification.id);
-      await this.vrchat.inviteUser(notification.senderUserId);
-      this.playInviteRequestSound(config, true, sleepMode);
+      const accepted = await this.acceptInviteRequest(notification);
+      this.playInviteRequestSound(config, !!accepted, sleepMode);
+      if (!accepted) return;
       this.eventLog.logEvent({
         type: 'acceptedInviteRequest',
         displayName: notification.senderUsername,
@@ -239,11 +250,12 @@ export class InviteAutomationsService {
     }
     // Invite the player
     info(`[VRChat] Automatically accepting invite request from ${notification.senderUserId}`);
-    await this.vrchat.deleteNotification(notification.id);
-    const reply = await this.vrchat.inviteUser(notification.senderUserId, {
-      message: this.getInviteRequestAcceptMessage(config),
-    });
-    this.playInviteRequestSound(config, true, sleepMode);
+    const accepted = await this.acceptInviteRequest(
+      notification,
+      this.getInviteRequestAcceptMessage(config)
+    );
+    this.playInviteRequestSound(config, !!accepted, sleepMode);
+    if (!accepted) return;
     if (await this.notifications.notificationTypeEnabled('INVITE_AUTOMATIONS')) {
       await this.notifications.send(
         this.translate.translate('notifications.autoAcceptedInviteRequest.content', {
@@ -255,8 +267,59 @@ export class InviteAutomationsService {
       type: 'acceptedInviteRequest',
       displayName: notification.senderUsername,
       mode: config.listMode,
-      message: reply,
+      message: accepted.reply,
     } as EventLogAcceptedInviteRequest);
+  }
+
+  /** Resolves to null when VRChat refuses the invite, which leaves the request in VRChat. */
+  private async acceptInviteRequest(
+    notification: Notification,
+    message?: string
+  ): Promise<{ reply?: string } | null> {
+    let reply: string | undefined;
+    try {
+      reply = await this.vrchat.inviteUser(notification.senderUserId, { message });
+    } catch (cause) {
+      if (!(cause instanceof VRChatInviteRefusedError)) throw cause;
+      warn(
+        `[VRChat] Could not accept the invite request from ${notification.senderUsername}: VRChat refused the invite to the current instance`
+      );
+      this.eventLog.logEvent({
+        type: 'failedInviteRequest',
+        displayName: notification.senderUsername,
+        vrchatMessage: cause.vrchatMessage,
+      } as EventLogFailedInviteRequest);
+      void this.sendInviteAutomationNotification(
+        'failedInviteRequest',
+        notification.senderUsername
+      );
+      this.telemetry
+        .trackEvent('vrchat_invite_refused', this.refusalTelemetry(cause, notification))
+        .catch((e) => warn(`[VRChat] Could not report the refused invite to telemetry: ${e}`));
+      return null;
+    }
+    await this.vrchat.deleteNotification(notification.id);
+    return { reply };
+  }
+
+  /** Carries the raw body, cut to MAX_REFUSAL_BODY characters, only when VRChat gave no message. */
+  private refusalTelemetry(
+    refusal: VRChatInviteRefusedError,
+    notification: Notification
+  ): { [key: string]: string } {
+    const message = this.anonymizeVRChatMessage(refusal.vrchatMessage ?? '', notification);
+    if (refusal.vrchatMessage) return { message };
+    const body = this.anonymizeVRChatMessage(refusal.body, notification);
+    return { message, body: body.slice(0, MAX_REFUSAL_BODY) };
+  }
+
+  /** Replaces the sender's display name and any VRChat ID, so the message carries no personal data. */
+  private anonymizeVRChatMessage(message: string, notification: Notification): string {
+    // IDs go first: a display name can match part of an ID and break the ID match
+    const withoutIds = message.replace(UUID, '<id>');
+    return notification.senderUsername
+      ? withoutIds.replaceAll(notification.senderUsername, '<name>')
+      : withoutIds;
   }
 
   /** Resolves to whether the decline automation handled the request. */
@@ -280,13 +343,16 @@ export class InviteAutomationsService {
         reason,
         message: declined.reply,
       } as EventLogDeclinedInviteRequest);
-      void this.sendDeclinedNotification('autoDeclinedInviteRequest', notification.senderUsername);
+      void this.sendInviteAutomationNotification(
+        'autoDeclinedInviteRequest',
+        notification.senderUsername
+      );
     }
     return true;
   }
 
-  private async sendDeclinedNotification(
-    key: 'autoDeclinedInvite' | 'autoDeclinedInviteRequest',
+  private async sendInviteAutomationNotification(
+    key: 'autoDeclinedInvite' | 'autoDeclinedInviteRequest' | 'failedInviteRequest',
     username: Notification['senderUsername']
   ) {
     if (!(await this.notifications.notificationTypeEnabled('INVITE_AUTOMATIONS'))) return;

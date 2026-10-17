@@ -50,6 +50,19 @@ const PROFILE_LOGOUT_TIMEOUT = 10_000;
 
 export const VRCHAT_API_STALE_REQUEST = 'STALE_REQUEST';
 
+/**
+ * VRChat answered 403 to an invite; vrchatMessage is the reason VRChat gave, when it gave one.
+ * body is the response text as VRChat sent it.
+ */
+export class VRChatInviteRefusedError extends Error {
+  constructor(
+    readonly vrchatMessage?: string,
+    readonly body = ''
+  ) {
+    super('VRChat refused the invite');
+  }
+}
+
 export type VRChatTwoFactorMethod = 'totp' | 'emailotp';
 
 export interface VRChatCredentials {
@@ -501,7 +514,10 @@ export class VRChatAPI {
     }
   }
 
-  /** Resolves to the invite message text VRChat attached, if any. */
+  /**
+   * Resolves to the invite message text VRChat attached, if any.
+   * Throws VRChatInviteRefusedError unreported on a 403: VRChat refuses invites it does not allow.
+   */
   public async inviteUser(
     inviteeId: string,
     instanceId: string,
@@ -535,6 +551,11 @@ export class VRChatAPI {
       return messageEx?.message;
     } catch (e) {
       if (e === VRCHAT_API_STALE_REQUEST) throw e;
+      if (e instanceof Response && e.status === 403) {
+        const body = await e.text().catch(() => '');
+        warn(`[VRChat] VRChat refused the invite: HTTP 403 ${body}`);
+        throw new VRChatInviteRefusedError(errorMessage(body), body);
+      }
       const failure = requestFailure('VRChat invite request failed', e);
       error(`[VRChat] ${failure.message}`);
       this.reportError(failure);
@@ -1010,6 +1031,15 @@ export class VRChatAPI {
 
 function describeResponse(response: Response, body: unknown): string {
   return `HTTP ${response.status} ${JSON.stringify(body ?? null)}`;
+}
+
+function errorMessage(body: string): string | undefined {
+  try {
+    const message = (JSON.parse(body) as CurrentUserErrorResponse | null)?.error?.message;
+    return typeof message === 'string' ? message : undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 function requestFailure(message: string, cause: unknown): Error {

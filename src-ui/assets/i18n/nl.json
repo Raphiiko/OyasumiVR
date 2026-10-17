@@ -412,6 +412,13 @@
           },
           "title": "Invite request van \"{displayName}\" automatisch geweigerd"
         },
+        "failedInviteRequest": {
+          "subtitle": {
+            "noMessage": "VRChat weigerde zonder een reden te geven",
+            "vrchatMessage": "VRChat weigerde omdat: \"{message}\""
+          },
+          "title": "Kon invite request van \"{displayName}\" niet accepteren"
+        },
         "frameLimitChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Omdat de slaapmodus werd uitgeschakeld",
@@ -1638,6 +1645,9 @@
     },
     "autoDeclinedInviteRequest": {
       "content": "Invite request van {username} automatisch geweigerd"
+    },
+    "failedInviteRequest": {
+      "content": "Kon invite request van {username} niet accepteren"
     },
     "sleepCheck": {
       "content": "De slaapmodus wordt over 20 seconden ingeschakeld.\nSlaap je al?\n\nAnnuleren:\nSchud je hoofd of druk op een knop van je controller"

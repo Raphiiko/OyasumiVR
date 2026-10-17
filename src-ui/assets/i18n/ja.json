@@ -412,6 +412,13 @@
           },
           "title": "''{displayName}''からの招待リクエストを自動で辞退"
         },
+        "failedInviteRequest": {
+          "subtitle": {
+            "noMessage": "VRChatに拒否されました（理由は示されませんでした）",
+            "vrchatMessage": "VRChatに拒否されました。理由: ''{message}''"
+          },
+          "title": "''{displayName}''からの招待リクエストを承認できませんでした"
+        },
         "frameLimitChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
@@ -1638,6 +1645,9 @@
     },
     "autoDeclinedInviteRequest": {
       "content": "{username}からの招待リクエストを自動で辞退しました。"
+    },
+    "failedInviteRequest": {
+      "content": "{username}からの招待リクエストを承認できませんでした。"
     },
     "sleepCheck": {
       "content": "眠りましたか？20秒後に睡眠モードに切り替わります。\n\n（コントローラーのボタンを押すか、頭を軽く振ることでキャンセルできます）"
