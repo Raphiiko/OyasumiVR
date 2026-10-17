@@ -3,6 +3,13 @@
     <div class="header-bar">
       <div class="header-bar-icon">
         <app-icon [name]="icon ?? 'device'" class="category-icon" />
+        @if (frameStatus) {
+          <span
+            [class]="'frame-badge frame-badge-' + frameStatus"
+            role="img"
+            [attr.aria-label]="'steamFrame.status.' + frameStatus | transloco"
+          ></span>
+        }
       </div>
       <div class="header-bar-info">
         <div class="device-name" [transloco]="deviceTypeName"></div>
@@ -51,13 +58,8 @@
           }
         </div>
         <div class="battery-info-label">
-          @if (frameConnected !== undefined) {
-            <span class="frame-connection" [class.connected]="frameConnected">
-              {{
-                (frameConnected ? 'steamFrame.status.connected' : 'steamFrame.status.offline')
-                  | transloco
-              }}
-            </span>
+          @if (frameStatus) {
+            <span class="frame-status">{{ 'steamFrame.status.' + frameStatus | transloco }}</span>
           }
           @if (showBattery) {
             <span @fade>
