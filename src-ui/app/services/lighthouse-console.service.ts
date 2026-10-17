@@ -8,6 +8,7 @@ import { error, info } from '@tauri-apps/plugin-log';
 import { ExecutableReferenceStatus } from '../models/settings';
 import { listen } from '@tauri-apps/api/event';
 import { ToastService } from './toast.service';
+import { SteamFramePairingService } from './steam-frame/steam-frame-pairing.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +24,8 @@ export class LighthouseConsoleService {
   constructor(
     private appSettings: AppSettingsService,
     private openvr: OpenVRService,
-    private toasts: ToastService
+    private toasts: ToastService,
+    private steamFrame: SteamFramePairingService
   ) {
     this.init();
   }
@@ -120,9 +122,11 @@ export class LighthouseConsoleService {
         type: 'error',
         title: { string: 'toasts.devicePower.turnOffFailed.title', values: { name: deviceName } },
         message:
-          this._consoleStatus.value === 'SUCCESS'
-            ? 'toasts.devicePower.turnOffFailed.commandFailed'
-            : 'toasts.devicePower.turnOffFailed.consoleNotReady',
+          ovrDevice.powerMethod === 'SteamFrame'
+            ? 'toasts.devicePower.turnOffFailed.frameHelperFailed'
+            : this._consoleStatus.value === 'SUCCESS'
+              ? 'toasts.devicePower.turnOffFailed.commandFailed'
+              : 'toasts.devicePower.turnOffFailed.consoleNotReady',
         duration: 6000,
       });
     }
@@ -139,21 +143,41 @@ export class LighthouseConsoleService {
   }
 
   private async runTurnOffDevices(deviceSerialNumbers: string[]): Promise<OVRDevice[]> {
+    // resolve requested serials against the current device snapshot
+    const requestedSerials = new Set(deviceSerialNumbers);
+    const requested = (await firstValueFrom(this.openvr.devices)).filter(
+      (device) =>
+        device.serialNumber &&
+        requestedSerials.has(device.serialNumber) &&
+        device.canPowerOff &&
+        !device.isTurningOff
+    );
+
+    // Frame controllers go through the headset helper, the rest through the console
+    const frameControllers = requested.filter((device) => this.steamFrame.canDisconnect(device));
+    const consoleDevices = requested.filter((device) => device.powerMethod === 'Lighthouse');
+    const [frameDispatched, consoleDispatched] = await Promise.all([
+      Promise.all(frameControllers.map((device) => this.disconnectFrameController(device))),
+      this.runConsolePowerOff(consoleDevices),
+    ]);
+    return [...frameControllers.filter((_, index) => frameDispatched[index]), ...consoleDispatched];
+  }
+
+  /** Resolves true when the helper sent the disconnect. The device stays busy until OpenVR reports it off. */
+  private async disconnectFrameController(device: OVRDevice): Promise<boolean> {
+    this.openvr.onDeviceUpdate(Object.assign({}, device, { isTurningOff: true }));
+    info(`[SteamFrame] Turning off device ${device.class}:${device.serialNumber}`);
+    if (await this.steamFrame.disconnectController(device.serialNumber!)) return true;
+    this.openvr.onDeviceUpdate(Object.assign({}, device, { isTurningOff: false }));
+    return false;
+  }
+
+  private async runConsolePowerOff(ovrDevices: OVRDevice[]): Promise<OVRDevice[]> {
     const settings = await firstValueFrom(this.appSettings.settings);
     const lighthouseConsolePath = settings.lighthouseConsolePath;
     const generation = this.validationGeneration;
     if (this._consoleStatus.value !== 'SUCCESS' || this.validatedPath !== lighthouseConsolePath)
       return [];
-    // resolve requested serials against the current device snapshot
-    const requestedSerials = new Set(deviceSerialNumbers);
-    const ovrDevices = (await firstValueFrom(this.openvr.devices)).filter(
-      (device) =>
-        device.serialNumber &&
-        requestedSerials.has(device.serialNumber) &&
-        device.canPowerOff &&
-        device.dongleId &&
-        !device.isTurningOff
-    );
     // dispatch all devices at once unless the user opted into spacing them out
     if (!settings.lighthousePowerOffDelay) {
       if (generation !== this.validationGeneration) return [];

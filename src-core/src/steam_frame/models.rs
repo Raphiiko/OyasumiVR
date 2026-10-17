@@ -211,6 +211,15 @@ pub enum SetCctError {
     Offline,
 }
 
+#[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub enum DisconnectControllerError {
+    RuntimeUnavailable,
+    WriteFailed,
+    /// No open connection, or it closed before the helper replied.
+    Offline,
+}
+
 #[derive(Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct SetupRequest {

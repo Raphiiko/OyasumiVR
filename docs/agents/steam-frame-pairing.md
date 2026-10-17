@@ -352,6 +352,40 @@ because the device can complete first, such as in standby. On `changedOnDevice` 
 stops, and the simple value follows the headset. On any other end the software part stops where it
 is.
 
+## Controllers
+
+`{"type":"disconnectController","id":1,"serial":"96c863a69af3"}` disconnects that controller. It
+stays paired and reconnects when a button wakes it. The helper replies
+`{"type":"disconnectControllerResult","id":1}`, with an `error` of `runtimeUnavailable` or
+`writeFailed` when it fails. It ignores an empty serial or one longer than 64 bytes, and an unknown
+serial does nothing.
+
+The helper sends Steam UI's own request to the headset's SteamVR web server at `127.0.0.1:27062`:
+the text `steam_connect`, then a binary packet. It starts `02 08 2D`, a one-byte header length and a
+header with message type 45, and follows with field 5, `disconnect_controller`, holding the serial
+as its field 1. The web server needs no web secret from its own origin, so the helper sends
+`Origin: http://127.0.0.1:27062`. Neither the PC's SteamVR nor OpenVR power-off reaches these
+controllers.
+
+### On the PC
+
+The core gives every OpenVR device a `powerMethod`: `SteamFrame` for the OpenVR controller type
+`frame_controller`, `Lighthouse` for a device with a dongle id, and `None` for the rest. The UI and
+the power-off routing switch on it, never on raw OpenVR strings.
+
+VRLink never sets `Prop_DeviceCanPowerOff_Bool` on a Frame controller. The core sets `canPowerOff`
+for it from the pose's
+`bDeviceIsConnected`, which changes with `TrackedDeviceActivated` and `TrackedDeviceDeactivated`.
+The controller stays in the device list and keeps its index while off. It also counts as off while
+the headset is not streaming, because the PC cannot reach it then. A controller that wakes out of
+the headset cameras' view counts as off until they first see it. Losing tracking after that leaves
+it connected.
+
+`LighthouseConsoleService` turns off a `SteamFrame` device through the helper while one is
+connected, and a `Lighthouse` device through the Lighthouse console. So the device list, the hotkeys, the
+automations, and the overlay all reach it the same way. Like a Lighthouse device, it stays busy from
+the request until OpenVR reports it off.
+
 ## Updates
 
 Each connection compares the helper's hello with the bundled helper. An older helper, or the same

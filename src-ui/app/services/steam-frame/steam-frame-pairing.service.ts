@@ -6,6 +6,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import { SETTINGS_KEY_STEAM_FRAME_PAIRING, SETTINGS_STORE } from '../../globals';
 import { DMKnownDevice } from '../../models/device-manager';
+import { OVRDevice } from '../../models/ovr-device';
 import {
   SteamFrameCandidate,
   SteamFrameCleanupMode,
@@ -423,6 +424,38 @@ export class SteamFramePairingService {
   /** Starts a helper update. Progress and the result arrive as connection states. */
   async updateHelper(pairing: SteamFramePairing) {
     await invoke('steam_frame_update_helper', { pairingId: pairing.id });
+  }
+
+  /** Whether this is a Frame controller that a connected headset helper can disconnect. */
+  canDisconnect(device: OVRDevice): boolean {
+    return (
+      device.powerMethod === 'SteamFrame' &&
+      !!device.serialNumber &&
+      Object.values(this._connections()).some((c) => c.status === 'connected')
+    );
+  }
+
+  /**
+   * Disconnects the controller with this serial on every connected headset. It stays paired.
+   * Resolves false when no headset is connected or one failed.
+   */
+  async disconnectController(serial: string): Promise<boolean> {
+    const connected = Object.values(this._connections()).filter((c) => c.status === 'connected');
+    const results = await Promise.all(
+      connected.map((state) => this.disconnectControllerOn(state.pairingId, serial))
+    );
+    return connected.length > 0 && results.every(Boolean);
+  }
+
+  private async disconnectControllerOn(pairingId: string, serial: string): Promise<boolean> {
+    try {
+      await invoke('steam_frame_disconnect_controller', { pairingId, serial });
+      info(`[SteamFrame] Disconnected the headset controller ${serial}`);
+      return true;
+    } catch (e) {
+      error(`[SteamFrame] Could not disconnect the headset controller: ${JSON.stringify(e)}`);
+      return false;
+    }
   }
 
   /** Installs the helper again after it went missing, and pins its new certificate. */

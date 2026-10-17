@@ -28,6 +28,9 @@ export type OVRHandleType =
   | 'Camera'
   | 'Keyboard';
 
+/** How OyasumiVR turns the device off. */
+export type OVRDevicePowerMethod = 'Lighthouse' | 'SteamFrame' | 'None';
+
 export interface OVRDevice {
   // Native properties
   battery: number;
@@ -41,6 +44,7 @@ export interface OVRDevice {
   isCharging?: boolean;
   manufacturerName?: string;
   modelNumber?: string;
+  powerMethod: OVRDevicePowerMethod;
   providesBatteryStatus?: boolean;
   serialNumber?: string;
   pose: any;

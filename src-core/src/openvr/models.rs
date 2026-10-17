@@ -152,6 +152,7 @@ pub struct OVRDevice {
     pub hardware_revision: Option<String>,
     pub manufacturer_name: Option<String>,
     pub model_number: Option<String>,
+    pub power_method: PowerMethod,
     pub handle_type: Option<OVRHandleType>,
     pub hmd_on_head: Option<bool>,
     pub hmd_activity: Option<String>,
@@ -159,6 +160,16 @@ pub struct OVRDevice {
     pub display_supports_analog_gain: Option<bool>,
     pub display_min_analog_gain: Option<f32>,
     pub display_max_analog_gain: Option<f32>,
+}
+
+/// How OyasumiVR turns the device off.
+#[derive(Clone, Copy, Serialize, Deserialize, PartialEq)]
+pub enum PowerMethod {
+    /// Through the Lighthouse console and the device's dongle.
+    Lighthouse,
+    /// Through the helper on a paired Steam Frame headset.
+    SteamFrame,
+    None,
 }
 
 #[derive(Clone, Serialize, Deserialize, IntoStaticStr, EnumIter, PartialEq)]

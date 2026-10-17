@@ -29,6 +29,7 @@ const controller: OVRDevice = {
   pose: null,
   serialNumber: 'CONTROLLER',
   dongleId: 'DONGLE-C',
+  powerMethod: 'Lighthouse',
   canPowerOff: true,
   isTurningOff: false,
 };
@@ -38,6 +39,7 @@ const tracker: OVRDevice = {
   class: 'GenericTracker',
   serialNumber: 'TRACKER',
   dongleId: 'DONGLE-T',
+  powerMethod: 'Lighthouse',
 };
 const path = 'C:\\fixture\\lighthouse_console.exe';
 
@@ -60,7 +62,10 @@ async function createConsole(devices: OVRDevice[], valid = true) {
           currentDevices.value.map((current) => (current.index === device.index ? device : current))
         ),
     } as unknown as ConstructorParameters<typeof LighthouseConsoleService>[1],
-    new ToastService()
+    new ToastService(),
+    { canDisconnect: () => false } as unknown as ConstructorParameters<
+      typeof LighthouseConsoleService
+    >[3]
   );
   await vi.advanceTimersByTimeAsync(0);
   invoke.mockResolvedValue({
@@ -86,7 +91,7 @@ describe('power-off command results and actual event log', () => {
       const devices =
         mode === 'filtered'
           ? [
-              { ...controller, dongleId: undefined },
+              { ...controller, dongleId: undefined, powerMethod: 'None' },
               { ...tracker, isTurningOff: true },
               { ...controller, index: 3, serialNumber: 'NO-POWER', canPowerOff: false },
             ]
@@ -211,7 +216,12 @@ describe('power-off event producers', () => {
         const devices: OVRDevice[] =
           outcome === 'single'
             ? [controller]
-            : [controller, outcome === 'skipped' ? { ...tracker, dongleId: undefined } : tracker];
+            : [
+                controller,
+                outcome === 'skipped'
+                  ? { ...tracker, dongleId: undefined, powerMethod: 'None' }
+                  : tracker,
+              ];
         devices.push({
           ...controller,
           index: 10,

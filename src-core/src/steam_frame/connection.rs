@@ -17,8 +17,8 @@ use super::{
     discovery,
     maintenance::{self, Recovery, UpdateOutcome},
     models::{
-        Brightness, Cct, Control, FadeEnded, FadeError, FadeOutcome, FadeRequest, Maintenance,
-        Pairing, SetBrightnessError, SetCctError, State, Status,
+        Brightness, Cct, Control, DisconnectControllerError, FadeEnded, FadeError, FadeOutcome,
+        FadeRequest, Maintenance, Pairing, SetBrightnessError, SetCctError, State, Status,
     },
     setup::{
         self, bundled_digest, install_decision, InstallDecision, ProvisionError, BUNDLED_VERSION,
@@ -40,6 +40,7 @@ const COMMAND_TIMEOUT: Duration = Duration::from_secs(5);
 type BrightnessReply = oneshot::Sender<Result<f64, SetBrightnessError>>;
 type CctReply = oneshot::Sender<Result<Cct, SetCctError>>;
 type FadeReply = oneshot::Sender<Result<(), FadeError>>;
+type DisconnectReply = oneshot::Sender<Result<(), DisconnectControllerError>>;
 /// Holds a sender only while the connection is open, so a command never waits for a reconnect.
 type CommandSlot = Arc<StdMutex<Option<mpsc::Sender<Command>>>>;
 
@@ -49,12 +50,26 @@ enum Command {
     SetCct(u32, CctReply),
     Fade(FadeRequest, FadeReply),
     CancelFade(String),
+    DisconnectController(String, DisconnectReply),
 }
 
 enum Reply {
     Brightness(BrightnessReply),
     Cct(CctReply),
     Fade(FadeReply),
+    Disconnect(DisconnectReply),
+}
+
+impl Reply {
+    /// Whether the caller stopped waiting, as `send` does when the command times out.
+    fn is_closed(&self) -> bool {
+        match self {
+            Reply::Brightness(reply) => reply.is_closed(),
+            Reply::Cct(reply) => reply.is_closed(),
+            Reply::Fade(reply) => reply.is_closed(),
+            Reply::Disconnect(reply) => reply.is_closed(),
+        }
+    }
 }
 
 struct Connection {
@@ -87,6 +102,10 @@ enum HelperMessage {
         control: Control,
         operation: String,
         outcome: FadeOutcome,
+    },
+    DisconnectControllerResult {
+        id: u64,
+        error: Option<DisconnectControllerError>,
     },
 }
 
@@ -177,6 +196,15 @@ pub async fn cancel_fade(pairing_id: &str, operation: String) {
     if let Some(sender) = sender(pairing_id).await {
         let _ = sender.send(Command::CancelFade(operation)).await;
     }
+}
+
+/// Disconnects the headset controller with this serial. It stays paired.
+pub async fn disconnect_controller(
+    pairing_id: &str,
+    serial: String,
+) -> Result<(), DisconnectControllerError> {
+    let command = |reply| Command::DisconnectController(serial, reply);
+    send(pairing_id, command, DisconnectControllerError::Offline).await
 }
 
 async fn sender(pairing_id: &str) -> Option<mpsc::Sender<Command>> {
@@ -521,6 +549,11 @@ async fn receive(text: &str, relay: &mut Relay, state: &mut State) {
             };
             send_event(FADE_ENDED_EVENT, ended).await;
         }
+        Ok(HelperMessage::DisconnectControllerResult { id, error }) => {
+            if let Some(Reply::Disconnect(reply)) = relay.pending.remove(&id) {
+                let _ = reply.send(error.map_or(Ok(()), Err));
+            }
+        }
         Err(_) => {}
     }
 }
@@ -715,6 +748,10 @@ async fn hold(socket: &mut Socket, update: &Notify, relay: &mut Relay, state: &m
                         }),
                         Reply::Fade(reply),
                     ),
+                    Command::DisconnectController(serial, reply) => (
+                        serde_json::json!({"type": "disconnectController", "id": id, "serial": serial}),
+                        Reply::Disconnect(reply),
+                    ),
                     Command::CancelFade(operation) => {
                         let message = serde_json::json!({"type": "cancelFade", "operation": operation});
                         if socket.send(Message::text(message.to_string())).await.is_err() {
@@ -726,6 +763,8 @@ async fn hold(socket: &mut Socket, update: &Notify, relay: &mut Relay, state: &m
                 if socket.send(Message::text(message.to_string())).await.is_err() {
                     return Wake::Closed;
                 }
+                // a helper that never answers would otherwise grow this map
+                relay.pending.retain(|_, waiting| !waiting.is_closed());
                 relay.pending.insert(id, reply);
             }
             _ = ticker.tick() => {
