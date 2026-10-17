@@ -284,9 +284,11 @@ export class InviteAutomationsService {
         displayName: notification.senderUsername,
         vrchatMessage: cause.vrchatMessage,
       } as EventLogFailedInviteRequest);
-      void this.telemetry.trackEvent('vrchat_invite_refused', {
-        message: this.anonymizeVRChatMessage(cause.vrchatMessage ?? '', notification),
-      });
+      this.telemetry
+        .trackEvent('vrchat_invite_refused', {
+          message: this.anonymizeVRChatMessage(cause.vrchatMessage ?? '', notification),
+        })
+        .catch((e) => warn(`[VRChat] Could not report the refused invite to telemetry: ${e}`));
       return null;
     }
     await this.vrchat.deleteNotification(notification.id);
