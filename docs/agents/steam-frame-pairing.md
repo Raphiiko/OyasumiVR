@@ -377,7 +377,9 @@ VRLink never sets `Prop_DeviceCanPowerOff_Bool` on a Frame controller. The core 
 for it from the pose's
 `bDeviceIsConnected`, which changes with `TrackedDeviceActivated` and `TrackedDeviceDeactivated`.
 The controller stays in the device list and keeps its index while off. It also counts as off while
-the headset is not streaming, because the PC cannot reach it then.
+the headset is not streaming, because the PC cannot reach it then. A controller that wakes out of
+the headset cameras' view counts as off until they first see it. Losing tracking after that leaves
+it connected.
 
 `LighthouseConsoleService` turns off a `SteamFrame` device through the helper while one is
 connected, and a `Lighthouse` device through the Lighthouse console. So the device list, the hotkeys, the
