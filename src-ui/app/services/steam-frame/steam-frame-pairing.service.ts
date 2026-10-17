@@ -6,7 +6,6 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import { SETTINGS_KEY_STEAM_FRAME_PAIRING, SETTINGS_STORE } from '../../globals';
 import { DMKnownDevice } from '../../models/device-manager';
-import { OVRDevice } from '../../models/ovr-device';
 import {
   SteamFrameCandidate,
   SteamFrameCleanupMode,
@@ -424,15 +423,6 @@ export class SteamFramePairingService {
   /** Starts a helper update. Progress and the result arrive as connection states. */
   async updateHelper(pairing: SteamFramePairing) {
     await invoke('steam_frame_update_helper', { pairingId: pairing.id });
-  }
-
-  /** Whether this is a Frame controller that a connected headset helper can disconnect. */
-  canDisconnect(device: OVRDevice): boolean {
-    return (
-      device.powerMethod === 'SteamFrame' &&
-      !!device.serialNumber &&
-      Object.values(this._connections()).some((c) => c.status === 'connected')
-    );
   }
 
   /**

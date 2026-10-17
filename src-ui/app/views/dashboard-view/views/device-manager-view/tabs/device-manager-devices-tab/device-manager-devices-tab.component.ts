@@ -9,7 +9,7 @@ import {
 import { DeviceManagerService } from '../../../../../../services/device-manager.service';
 import { OpenVRService } from '../../../../../../services/openvr.service';
 import { LighthouseService } from '../../../../../../services/lighthouse.service';
-import { LighthouseConsoleService } from '../../../../../../services/lighthouse-console.service';
+import { DeviceControlService } from '../../../../../../services/device-control.service';
 import { ModalService } from '../../../../../../services/modal.service';
 import { EventLogService } from '../../../../../../services/event-log.service';
 import { AppSettingsService } from '../../../../../../services/app-settings.service';
@@ -142,7 +142,7 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     private deviceManager: DeviceManagerService,
     private openvr: OpenVRService,
     private lighthouse: LighthouseService,
-    private lighthouseConsole: LighthouseConsoleService,
+    private deviceControl: DeviceControlService,
     private modalService: ModalService,
     private eventLog: EventLogService,
     private appSettings: AppSettingsService,
@@ -414,7 +414,7 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
 
     const deviceName = device.nickname ?? device.defaultName;
     if (ovrDevice && ovrDevice.canPowerOff) {
-      const dispatched = await this.lighthouseConsole.turnOffDeviceForUser(ovrDevice, deviceName);
+      const dispatched = await this.deviceControl.turnOffDeviceForUser(ovrDevice, deviceName);
       this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'MANUAL');
     } else if (lighthouseDevice) {
       const state = this.appSettings.settingsSync.lighthousePowerOffState;

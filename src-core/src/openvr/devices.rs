@@ -237,9 +237,11 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
     } else {
         PowerMethod::None
     };
-    // VRLink never sets the power-off property; a Frame controller can be turned off while connected
+    // VRLink never sets the power-off property; only a connected helper can turn a Frame controller off
     let can_power_off = if power_method == PowerMethod::SteamFrame {
-        Some(device_connected(&system, device_index))
+        Some(
+            device_connected(&system, device_index) && crate::steam_frame::helper_connected().await,
+        )
     } else {
         can_power_off
     };

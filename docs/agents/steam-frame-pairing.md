@@ -377,17 +377,18 @@ The core gives every OpenVR device a `powerMethod`: `SteamFrame` for the OpenVR 
 the power-off routing switch on it, never on raw OpenVR strings.
 
 VRLink never sets `Prop_DeviceCanPowerOff_Bool` on a Frame controller. The core sets `canPowerOff`
-for it from the pose's
-`bDeviceIsConnected`, which changes with `TrackedDeviceActivated` and `TrackedDeviceDeactivated`.
-The controller stays in the device list and keeps its index while off. It also counts as off while
-the headset is not streaming, because the PC cannot reach it then. A controller that wakes out of
-the headset cameras' view counts as off until they first see it. Losing tracking after that leaves
-it connected.
+for it while a headset helper is connected and the pose's `bDeviceIsConnected` is true. That flag
+changes with `TrackedDeviceActivated` and `TrackedDeviceDeactivated`, and the core picks up a helper
+connecting or dropping on its 5-second device refresh. The controller stays in the device list and
+keeps its index while off. It also counts as off while the headset is not streaming, because the PC
+cannot reach it then. A controller that wakes out of the headset cameras' view counts as off until
+they first see it. Losing tracking after that leaves it connected.
 
-`LighthouseConsoleService` turns off a `SteamFrame` device through the helper while one is
-connected, and a `Lighthouse` device through the Lighthouse console. So the device list, the hotkeys, the
-automations, and the overlay all reach it the same way. Like a Lighthouse device, it stays busy from
-the request until OpenVR reports it off.
+`DeviceControlService` is the entry point for device actions. It turns off a `SteamFrame` device
+through the helper, and hands a `Lighthouse` device to `LighthouseConsoleService`, which only runs
+the Lighthouse console. So the device list, the hotkeys, the automations, and the overlay all reach
+a Frame controller the same way. Like a Lighthouse device, it stays busy from the request until
+OpenVR reports it off.
 
 ## Updates
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MqttDiscoveryService } from '../mqtt-discovery.service';
 import { OpenVRService } from '../../openvr.service';
-import { LighthouseConsoleService } from '../../lighthouse-console.service';
+import { DeviceControlService } from '../../device-control.service';
 import {
   asyncScheduler,
   concatMap,
@@ -29,7 +29,7 @@ export class HmdTrackerControllerMqttIntegrationService {
   constructor(
     private mqtt: MqttDiscoveryService,
     private openvr: OpenVRService,
-    private lighthouseConsole: LighthouseConsoleService
+    private deviceControl: DeviceControlService
   ) {}
 
   async init() {
@@ -152,7 +152,7 @@ export class HmdTrackerControllerMqttIntegrationService {
       )
       .subscribe(async (command) => {
         if (!command.current.value) {
-          await this.lighthouseConsole.turnOffDevices([device]);
+          await this.deviceControl.turnOffDevices([device]);
         }
       });
   }

@@ -233,6 +233,15 @@ async fn send<T, E: Copy>(
         .unwrap_or(Err(offline))
 }
 
+/// Whether any paired headset's helper is connected.
+pub async fn helper_connected() -> bool {
+    STATES
+        .lock()
+        .await
+        .values()
+        .any(|state| state.status == Status::Connected)
+}
+
 /// The last state of every running connection.
 pub async fn states() -> Vec<State> {
     STATES.lock().await.values().cloned().collect()

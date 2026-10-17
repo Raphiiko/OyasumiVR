@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { AutomationConfigService } from '../automation-config.service';
 import { AUTOMATION_CONFIGS_DEFAULT, DevicePowerAutomationsConfig } from '../../models/automations';
-import { LighthouseConsoleService } from '../lighthouse-console.service';
+import { DeviceControlService } from '../device-control.service';
 import { SleepService } from '../sleep.service';
 import { EventLogService } from '../event-log.service';
 import { SleepPreparationService } from '../sleep-preparation.service';
@@ -28,7 +28,7 @@ export class SleepDevicePowerAutomationsService {
   constructor(
     private automationConfig: AutomationConfigService,
     private appSettings: AppSettingsService,
-    private lighthouseConsole: LighthouseConsoleService,
+    private deviceControl: DeviceControlService,
     private lighthouse: LighthouseService,
     private sleepMode: SleepService,
     private sleepPreparationService: SleepPreparationService,
@@ -97,7 +97,7 @@ export class SleepDevicePowerAutomationsService {
         !this.lighthouse.deviceNeedsIdentifier(d)
     );
     const results = await Promise.allSettled([
-      this.lighthouseConsole.turnOffDevices(ovrDevices).then((dispatched) => dispatched.length),
+      this.deviceControl.turnOffDevices(ovrDevices).then((dispatched) => dispatched.length),
       ...lighthouseDevices.map((device) =>
         this.lighthouse
           .setPowerState(device, this.appSettings.settingsSync.lighthousePowerOffState)

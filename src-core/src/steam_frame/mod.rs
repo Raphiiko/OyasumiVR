@@ -9,6 +9,7 @@ mod setup;
 mod ssh;
 mod wss;
 
+pub use connection::helper_connected;
 use models::SupportedModel;
 
 /// The helper protocol version this build speaks. A helper accepts a range of versions.

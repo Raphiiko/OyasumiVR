@@ -3,6 +3,7 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ToastService } from './toast.service';
 import { LighthouseConsoleService } from './lighthouse-console.service';
+import { DeviceControlService } from './device-control.service';
 import { EventLogService } from './event-log.service';
 import { DeviceListItemComponent } from '../components/device-list/device-list-item/device-list-item.component';
 import { DeviceListComponent } from '../components/device-list/device-list.component';
@@ -47,6 +48,16 @@ function caller<T>(prototype: T, context: object): T {
   return Object.assign(Object.create(prototype), context);
 }
 
+/** Routes through the given console; the Frame path is not exercised here. */
+function deviceControlFor(service: LighthouseConsoleService) {
+  return new DeviceControlService(
+    service,
+    {} as ConstructorParameters<typeof DeviceControlService>[1],
+    {} as ConstructorParameters<typeof DeviceControlService>[2],
+    new ToastService()
+  );
+}
+
 async function createConsole(devices: OVRDevice[], valid = true) {
   const settings = new BehaviorSubject({ ...APP_SETTINGS_DEFAULT, lighthouseConsolePath: '' });
   const currentDevices = new BehaviorSubject(devices);
@@ -62,10 +73,7 @@ async function createConsole(devices: OVRDevice[], valid = true) {
           currentDevices.value.map((current) => (current.index === device.index ? device : current))
         ),
     } as unknown as ConstructorParameters<typeof LighthouseConsoleService>[1],
-    new ToastService(),
-    { canDisconnect: () => false } as unknown as ConstructorParameters<
-      typeof LighthouseConsoleService
-    >[3]
+    new ToastService()
   );
   await vi.advanceTimersByTimeAsync(0);
   invoke.mockResolvedValue({
@@ -100,7 +108,7 @@ describe('power-off command results and actual event log', () => {
       if (mode === 'empty') expect(await service.turnOffDevices([])).toEqual([]);
       const log = new EventLogService();
       const list = caller(DeviceListComponent.prototype, {
-        lighthouseConsole: service,
+        deviceControl: deviceControlFor(service),
         eventLog: log,
         deviceManager: { getIdForOpenVRDevice: () => '', getKnownDeviceById: () => undefined },
         deviceCategories: [{ type: 'OpenVR', devices: mode === 'empty' ? [] : devices }],
@@ -119,7 +127,7 @@ describe('power-off command results and actual event log', () => {
       else invoke.mockResolvedValueOnce({ status: 1 });
       const log = new EventLogService();
       const item = caller(DeviceListItemComponent.prototype, {
-        lighthouseConsole: service,
+        deviceControl: deviceControlFor(service),
         eventLog: log,
         mode: 'openvr',
         _ovrDevice: controller,
@@ -236,14 +244,14 @@ describe('power-off event producers', () => {
         const log = new EventLogService();
         if (source === 'manual') {
           await caller(DeviceListComponent.prototype, {
-            lighthouseConsole: service,
+            deviceControl: deviceControlFor(service),
             eventLog: log,
             deviceManager: { getIdForOpenVRDevice: () => '', getKnownDeviceById: () => undefined },
             deviceCategories: [{ type: 'OpenVR', devices }],
           }).turnOffAllOVRDevices();
         } else {
           await caller(CommandOscMethod.prototype, {
-            lighthouseConsole: service,
+            deviceControl: deviceControlFor(service),
             eventLog: log,
             openvr: { devices: new BehaviorSubject(devices) },
           }).handleOSCMessage({
@@ -290,7 +298,7 @@ describe('power-off event producers', () => {
                   ],
           }),
         },
-        lighthouseConsole: { turnOffDevices: async () => [] },
+        deviceControl: { turnOffDevices: async () => [] },
         lighthouse: { deviceNeedsIdentifier: () => outcome === 'skipped', setPowerState: powerOff },
         eventLog: log,
       });
@@ -319,7 +327,7 @@ describe('power-off event producers', () => {
             })
             .mockResolvedValue({ ovrDevices: [], lighthouseDevices: [], knownDevices: [] }),
         },
-        lighthouseConsole: { turnOffDevices: async () => [] },
+        deviceControl: { turnOffDevices: async () => [] },
         lighthouse: { deviceNeedsIdentifier: () => false, setPowerState: vi.fn(async () => true) },
         eventLog: log,
       });
@@ -345,7 +353,7 @@ describe('power-off event producers', () => {
               knownDevices: [],
             }),
         },
-        lighthouseConsole: { turnOffDevices: async () => [] },
+        deviceControl: { turnOffDevices: async () => [] },
         lighthouse: { deviceNeedsIdentifier: () => false, setPowerState: async () => reached },
         eventLog: log,
       });
@@ -373,7 +381,7 @@ describe('power-off event producers', () => {
           knownDevices: [],
         }),
       },
-      lighthouseConsole: {
+      deviceControl: {
         turnOffDevices: () => new Promise<OVRDevice[]>((resolve) => (finish = resolve)),
       },
       lighthouse: {
@@ -427,8 +435,7 @@ describe('power-off event producers', () => {
       })),
     };
     const context = {
-      lighthouseConsole: consoleService,
-      lighthouseConsoleService: consoleService,
+      deviceControl: consoleService,
       lighthouse: consoleService,
       eventLog: log,
       openvr: { devices },
