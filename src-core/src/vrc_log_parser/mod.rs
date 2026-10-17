@@ -113,7 +113,7 @@ fn pick_log_path(
 }
 
 fn parse_datetime_from_line(line: String) -> Option<u64> {
-    let localtime = NaiveDateTime::parse_from_str(&line[0..19], "%Y.%m.%d %H:%M:%S").unwrap();
+    let localtime = NaiveDateTime::parse_from_str(line.get(0..19)?, "%Y.%m.%d %H:%M:%S").ok()?;
     // In the case of a DST rollback, we pick the latest possible time
     // During this hour, the logs will still be parsed in order, but their timestamps will be out of order.
     let time = Local.from_local_datetime(&localtime).latest();
@@ -133,10 +133,10 @@ async fn parse_on_player_joined(line: String, initial_load: bool) -> bool {
             None => return true,
         };
         offset += 17;
-        if offset >= line.len() {
-            return true;
-        }
-        let display_name = line[offset..].to_string();
+        let display_name = match line.get(offset..) {
+            Some(v) if !v.is_empty() => v.to_string(),
+            _ => return true,
+        };
         let time = match parse_datetime_from_line(line) {
             Some(v) => v,
             None => return true,
@@ -168,10 +168,10 @@ async fn parse_on_player_left(line: String, initial_load: bool) -> bool {
             None => return true,
         };
         offset += 15;
-        if offset >= line.len() {
-            return true;
-        }
-        let display_name = line[offset..].to_string();
+        let display_name = match line.get(offset..) {
+            Some(v) if !v.is_empty() => v.to_string(),
+            _ => return true,
+        };
         let time = match parse_datetime_from_line(line) {
             Some(v) => v,
             None => return true,
@@ -203,10 +203,10 @@ async fn parse_on_location_change(line: String, initial_load: bool) -> bool {
             None => return true,
         };
         offset += 10;
-        if offset >= line.len() {
-            return true;
-        }
-        let instance_id = line[offset..].to_string();
+        let instance_id = match line.get(offset..) {
+            Some(v) if !v.is_empty() => v.to_string(),
+            _ => return true,
+        };
         let time = match parse_datetime_from_line(line) {
             Some(v) => v,
             None => return true,
@@ -387,7 +387,8 @@ pub fn start_log_locator_task() -> CancellationToken {
 #[cfg(test)]
 mod tests {
     use super::{
-        is_current_enough, parse_datetime_from_line, pick_log_path, read_complete_line, VRCLogEvent,
+        is_current_enough, parse_datetime_from_line, parse_on_player_joined, parse_on_player_left,
+        pick_log_path, read_complete_line, VRCLogEvent,
     };
     use chrono::{Local, TimeZone, Utc};
     use std::{
@@ -433,6 +434,23 @@ mod tests {
             Some("Joined \u{3042}")
         );
         assert_eq!(read_complete_line(&mut second_write, &mut line_buf), None);
+    }
+
+    #[tokio::test]
+    async fn skips_event_lines_with_a_replacement_character_at_a_slice_offset() {
+        assert_eq!(
+            parse_datetime_from_line("2026.10.17 12:34:5\u{fffd} Log".to_string()),
+            None
+        );
+        assert_eq!(parse_datetime_from_line("short".to_string()), None);
+
+        let ts = "2026.10.17 12:34:56 Debug      -  ";
+        let joined = format!("{ts}[Behaviour] OnPlayerJoined\u{fffd}Name (usr_a)");
+        let left = format!("{ts}[Behaviour] OnPlayerLeft\u{fffd}Name (usr_a)");
+        let bad_time = "2026.10.17 12:34:5\u{fffd} Debug - [Behaviour] OnPlayerJoined Name";
+        assert!(parse_on_player_joined(joined, false).await);
+        assert!(parse_on_player_left(left, false).await);
+        assert!(parse_on_player_joined(bad_time.to_string(), false).await);
     }
 
     fn create_log(dir: &Path, name: &str, contents: &[u8]) -> (String, SystemTime) {
