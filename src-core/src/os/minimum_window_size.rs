@@ -13,7 +13,7 @@ use windows::Win32::{
 
 const SUBCLASS_ID: usize = 1;
 
-/// Keeps a window at least the system minimum tracking size, whoever resizes it.
+/// Keeps a window at least the smallest size Windows lets a user drag it to, whoever resizes it.
 ///
 /// Tauri panics when it repaints a transparent undecorated window that is smaller than its
 /// frame insets. Call this on the thread that owns the window.
