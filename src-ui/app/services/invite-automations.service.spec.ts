@@ -81,14 +81,14 @@ function createService(
     { addMessage: vi.fn() } as unknown as MessageCenterService,
     telemetry as unknown as TelemetryService
   );
-  const receive = (type: string) =>
+  const receive = (type: string, senderUsername = 'Bob') =>
     (
       service as unknown as { handleNotification(n: Partial<Notification>): Promise<void> }
     ).handleNotification({
       id: 'n',
       type,
       senderUserId: 'usr_bob',
-      senderUsername: 'Bob',
+      senderUsername,
     } as Partial<Notification>);
   return { receive, order, notifications, vrchat, eventLog, telemetry };
 }
@@ -197,16 +197,19 @@ describe('InviteAutomationsService', () => {
     expect(vrchat.deleteNotification).not.toHaveBeenCalled();
   });
 
-  it('reports the refusal message without the sender name or VRChat IDs', async () => {
-    const { receive, vrchat, telemetry } = createService({ listMode: 'DISABLED' });
-    vrchat.inviteUser.mockRejectedValue(
-      new VRChatInviteRefusedError(
-        "Bob can't join wrld_4cf554b4-430c-4f8f-b53e-1f294eed230b:1~private(usr_c1644b5b-3ca4-45b4-97c6-a2a0de70d469)"
-      )
-    );
-    await receive(NotificationType.RequestInvite);
-    expect(telemetry.trackEvent).toHaveBeenCalledExactlyOnceWith('vrchat_invite_refused', {
-      message: "<name> can't join <id>:1~private(<id>)",
-    });
-  });
+  it.each(['Bob', '3ca4'])(
+    'reports the refusal message without the sender name %s or VRChat IDs',
+    async (senderUsername) => {
+      const { receive, vrchat, telemetry } = createService({ listMode: 'DISABLED' });
+      vrchat.inviteUser.mockRejectedValue(
+        new VRChatInviteRefusedError(
+          `${senderUsername} can't join wrld_4cf554b4-430c-4f8f-b53e-1f294eed230b:1~private(usr_c1644b5b-3ca4-45b4-97c6-a2a0de70d469)`
+        )
+      );
+      await receive(NotificationType.RequestInvite, senderUsername);
+      expect(telemetry.trackEvent).toHaveBeenCalledExactlyOnceWith('vrchat_invite_refused', {
+        message: "<name> can't join <id>:1~private(<id>)",
+      });
+    }
+  );
 });

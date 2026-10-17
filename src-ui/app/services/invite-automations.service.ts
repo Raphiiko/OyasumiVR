@@ -295,10 +295,11 @@ export class InviteAutomationsService {
 
   /** Replaces the sender's display name and any VRChat ID, so the message carries no personal data. */
   private anonymizeVRChatMessage(message: string, notification: Notification): string {
-    const named = notification.senderUsername
-      ? message.replaceAll(notification.senderUsername, '<name>')
-      : message;
-    return named.replace(UUID, '<id>');
+    // IDs go first: a display name can match part of an ID and break the ID match
+    const withoutIds = message.replace(UUID, '<id>');
+    return notification.senderUsername
+      ? withoutIds.replaceAll(notification.senderUsername, '<name>')
+      : withoutIds;
   }
 
   /** Resolves to whether the decline automation handled the request. */
