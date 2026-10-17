@@ -103,9 +103,7 @@ function isExpected(event: Sentry.ErrorEvent): boolean {
     text.includes('cancelederror') ||
     text.includes('cancellederror') ||
     text.includes('resizeobserver loop') ||
-    text.includes('the operation was aborted') ||
-    // tauri returns this once its event loop has closed, so only while the app exits
-    text.includes('failed to send message to the webview')
+    text.includes('the operation was aborted')
   );
 }
 
