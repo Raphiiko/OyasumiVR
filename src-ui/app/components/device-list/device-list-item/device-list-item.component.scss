@@ -89,7 +89,7 @@
   }
 }
 
-.frame-status {
+.helper-status {
   // the smaller text centers above the percentage's baseline, so drop it onto that line
   position: relative;
   top: 1px;
@@ -104,7 +104,7 @@
   margin-right: 1.25em;
 }
 
-.frame-badge {
+.helper-badge {
   position: absolute;
   right: -4px;
   bottom: -4px;
@@ -115,22 +115,22 @@
   background: var(--color-text-4);
 }
 
-.frame-badge-connected {
+.helper-badge-connected {
   background: #67c23a;
 }
 
-.frame-badge-connecting {
-  animation: frame-badge-pulse 1.2s ease-in-out infinite;
+.helper-badge-connecting {
+  animation: helper-badge-pulse 1.2s ease-in-out infinite;
 }
 
-@keyframes frame-badge-pulse {
+@keyframes helper-badge-pulse {
   50% {
     opacity: 0.3;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .frame-badge-connecting {
+  .helper-badge-connecting {
     animation: none;
   }
 }

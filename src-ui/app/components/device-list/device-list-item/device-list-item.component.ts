@@ -58,7 +58,7 @@ export class DeviceListItemComponent implements OnInit {
     if (!knownDevice) {
       // the row stays mounted, so it must not keep a pair action for a device it no longer knows
       this.frameToPair = undefined;
-      this.frameStatus = undefined;
+      this.helperStatus = undefined;
       if (this.powerButtonState === 'attention') this.powerButtonState = 'hide';
       return;
     }
@@ -74,7 +74,7 @@ export class DeviceListItemComponent implements OnInit {
       : 0 + '%';
     this.status = null;
     this.frameToPair = this.framePairable(knownDevice) ? knownDevice : undefined;
-    this.frameStatus = this.frameToPair ? undefined : this.frameStatusOf(knownDevice);
+    this.helperStatus = this.frameToPair ? undefined : this.helperStatusOf(knownDevice);
     if (this.frameToPair) this.powerButtonState = 'attention';
     else if (device.isTurningOff) this.powerButtonState = 'turn_off_busy';
     else if (device.canPowerOff && device.dongleId) this.powerButtonState = 'turn_off';
@@ -97,7 +97,7 @@ export class DeviceListItemComponent implements OnInit {
     this.deviceTypeName = knownDevice.typeName;
     this.deviceName = knownDevice.nickname ?? knownDevice.defaultName;
     this.frameToPair = undefined;
-    this.frameStatus = undefined;
+    this.helperStatus = undefined;
     this.showBattery = false;
     this.isCharging = false;
     this.batteryPercentage = 100;
@@ -170,8 +170,8 @@ export class DeviceListItemComponent implements OnInit {
   _ovrDevice?: OVRDevice;
   /** Set while this row is a Steam Frame that has no working pairing. */
   frameToPair?: DMKnownDevice;
-  /** The helper connection of this row's paired Steam Frame; undefined when it is not paired. */
-  frameStatus?: 'connected' | 'connecting' | 'offline';
+  /** The connection to the helper on this row's paired device; undefined when it has no paired helper. */
+  helperStatus?: 'connected' | 'connecting' | 'offline';
 
   constructor(
     private lighthouseConsole: LighthouseConsoleService,
@@ -228,7 +228,7 @@ export class DeviceListItemComponent implements OnInit {
     return this.framePairing.connections()[pairing.id]?.status === 'pairingRemoved';
   }
 
-  private frameStatusOf(device: DMKnownDevice): DeviceListItemComponent['frameStatus'] {
+  private helperStatusOf(device: DMKnownDevice): DeviceListItemComponent['helperStatus'] {
     if (!this.framePairing.identityOf(device)) return undefined;
     const pairing = this.framePairing.pairingFor(device.id);
     if (!pairing?.complete) return undefined;
