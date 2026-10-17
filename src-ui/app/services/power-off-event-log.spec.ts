@@ -116,6 +116,7 @@ describe('power-off command results and actual event log', () => {
       const item = caller(DeviceListItemComponent.prototype, {
         lighthouseConsole: service,
         eventLog: log,
+        framePairing: { canDisconnect: () => false },
         mode: 'openvr',
         _ovrDevice: controller,
       });
@@ -422,6 +423,8 @@ describe('power-off event producers', () => {
       lighthouse: consoleService,
       eventLog: log,
       openvr: { devices },
+      steamFrame: { disconnectControllers: async () => true },
+      framePairing: { canDisconnect: () => false },
       deviceManager,
       appSettings: { settingsSync: APP_SETTINGS_DEFAULT },
       config: {

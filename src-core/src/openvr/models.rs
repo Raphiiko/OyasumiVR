@@ -152,6 +152,7 @@ pub struct OVRDevice {
     pub hardware_revision: Option<String>,
     pub manufacturer_name: Option<String>,
     pub model_number: Option<String>,
+    pub controller_type: Option<String>,
     pub handle_type: Option<OVRHandleType>,
     pub hmd_on_head: Option<bool>,
     pub hmd_activity: Option<String>,

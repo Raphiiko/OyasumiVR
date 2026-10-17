@@ -36,6 +36,7 @@ import { isEqual } from 'lodash';
 import { DeviceManagerService } from 'src-ui/app/services/device-manager.service';
 import { SteamFramePairingService } from 'src-ui/app/services/steam-frame/steam-frame-pairing.service';
 import { DMKnownDevice } from 'src-ui/app/models/device-manager';
+import { ToastService } from 'src-ui/app/services/toast.service';
 
 @Component({
   selector: 'app-device-list-item',
@@ -76,6 +77,7 @@ export class DeviceListItemComponent implements OnInit {
     if (this.frameToPair) this.powerButtonState = 'attention';
     else if (device.isTurningOff) this.powerButtonState = 'turn_off_busy';
     else if (device.canPowerOff && device.dongleId) this.powerButtonState = 'turn_off';
+    else if (this.framePairing.canDisconnect(device)) this.powerButtonState = 'turn_off';
     else this.powerButtonState = 'hide';
     this.cssId = this.sanitizeIdentifierForCSS(device.serialNumber ?? '');
     this.powerButtonAnchorId = '--anchor-device-pwr-btn-' + this.cssId;
@@ -178,6 +180,7 @@ export class DeviceListItemComponent implements OnInit {
     private modalService: ModalService,
     private deviceManager: DeviceManagerService,
     private framePairing: SteamFramePairingService,
+    private toasts: ToastService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -263,6 +266,10 @@ export class DeviceListItemComponent implements OnInit {
       await this.framePairing.openWizard(this.frameToPair);
       return;
     }
+    if (this.mode === 'openvr' && this.framePairing.canDisconnect(this._ovrDevice!)) {
+      await this.disconnectFrameController(this._ovrDevice!);
+      return;
+    }
     if (this.mode === 'openvr') {
       const dispatched = await this.lighthouseConsole.turnOffDeviceForUser(
         this._ovrDevice!,
@@ -319,6 +326,19 @@ export class DeviceListItemComponent implements OnInit {
           break;
       }
     }
+  }
+
+  private async disconnectFrameController(device: OVRDevice) {
+    if (await this.framePairing.disconnectControllers(device.serialNumber)) return;
+    this.toasts.show({
+      type: 'error',
+      title: {
+        string: 'toasts.devicePower.turnOffFailed.title',
+        values: { name: this.deviceName },
+      },
+      message: 'toasts.devicePower.turnOffFailed.frameHelperFailed',
+      duration: 6000,
+    });
   }
 
   private sanitizeIdentifierForCSS(serialNumber: string) {

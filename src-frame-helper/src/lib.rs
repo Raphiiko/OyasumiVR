@@ -33,6 +33,7 @@ pub mod cct;
 pub mod color_temperature;
 pub mod controls;
 pub mod hub;
+pub mod vrserver;
 
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 pub const PROTOCOL_MIN: u32 = 1;
@@ -111,6 +112,11 @@ enum Outgoing<'a> {
         #[serde(skip_serializing_if = "Option::is_none")]
         error: Option<cct::SetError>,
     },
+    DisconnectControllersResult {
+        id: u64,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        error: Option<vrserver::DisconnectError>,
+    },
 }
 
 impl<'a> Outgoing<'a> {
@@ -179,6 +185,10 @@ enum Incoming {
     },
     CancelFade {
         operation: String,
+    },
+    DisconnectControllers {
+        id: u64,
+        serial: Option<String>,
     },
 }
 
@@ -413,8 +423,19 @@ async fn handle(
         let event = tokio::select! {
             message = socket.next() => match message {
                 Some(Ok(Message::Text(text))) => {
-                    let parsed = serde_json::from_str::<Incoming>(&text).ok().and_then(Incoming::into_action);
-                    let Some((id, action)) = parsed else { continue };
+                    let Ok(incoming) = serde_json::from_str::<Incoming>(&text) else { continue };
+                    if let Incoming::DisconnectControllers { id, serial } = incoming {
+                        if serial.as_ref().is_some_and(|s| s.is_empty() || s.len() > vrserver::MAX_SERIAL_LENGTH) {
+                            continue;
+                        }
+                        let error = vrserver::disconnect_controllers(serial.as_deref()).await.err();
+                        let Ok(reply) = serde_json::to_string(&Outgoing::DisconnectControllersResult { id, error }) else { return };
+                        if socket.send(Message::text(reply)).await.is_err() {
+                            return;
+                        }
+                        continue;
+                    }
+                    let Some((id, action)) = incoming.into_action() else { continue };
                     hub.send(Command { connection, id, action });
                     continue;
                 }

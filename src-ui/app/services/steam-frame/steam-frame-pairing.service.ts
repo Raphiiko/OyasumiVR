@@ -6,6 +6,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import { SETTINGS_KEY_STEAM_FRAME_PAIRING, SETTINGS_STORE } from '../../globals';
 import { DMKnownDevice } from '../../models/device-manager';
+import { OVRDevice } from '../../models/ovr-device';
 import {
   SteamFrameCandidate,
   SteamFrameCleanupMode,
@@ -423,6 +424,38 @@ export class SteamFramePairingService {
   /** Starts a helper update. Progress and the result arrive as connection states. */
   async updateHelper(pairing: SteamFramePairing) {
     await invoke('steam_frame_update_helper', { pairingId: pairing.id });
+  }
+
+  /** Whether a connected headset helper can disconnect this controller. */
+  canDisconnect(device: OVRDevice): boolean {
+    return (
+      device.controllerType === 'frame_controller' &&
+      !!device.serialNumber &&
+      Object.values(this._connections()).some((c) => c.status === 'connected')
+    );
+  }
+
+  /**
+   * Disconnects the controller with this serial, or every controller without one, on every
+   * connected headset. They stay paired. Resolves false when a headset failed.
+   */
+  async disconnectControllers(serial?: string): Promise<boolean> {
+    const connected = Object.values(this._connections()).filter((c) => c.status === 'connected');
+    const results = await Promise.all(
+      connected.map((state) => this.disconnectControllersOf(state.pairingId, serial))
+    );
+    return results.every(Boolean);
+  }
+
+  private async disconnectControllersOf(pairingId: string, serial?: string): Promise<boolean> {
+    try {
+      await invoke('steam_frame_disconnect_controllers', { pairingId, serial: serial ?? null });
+      info(`[SteamFrame] Disconnected the headset controllers${serial ? ` (${serial})` : ''}`);
+      return true;
+    } catch (e) {
+      error(`[SteamFrame] Could not disconnect the headset controllers: ${JSON.stringify(e)}`);
+      return false;
+    }
   }
 
   /** Installs the helper again after it went missing, and pins its new certificate. */

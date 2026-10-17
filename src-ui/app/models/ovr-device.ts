@@ -41,6 +41,7 @@ export interface OVRDevice {
   isCharging?: boolean;
   manufacturerName?: string;
   modelNumber?: string;
+  controllerType?: string;
   providesBatteryStatus?: boolean;
   serialNumber?: string;
   pose: any;
