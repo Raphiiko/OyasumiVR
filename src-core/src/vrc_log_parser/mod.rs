@@ -228,14 +228,32 @@ async fn parse_on_location_change(line: String, initial_load: bool) -> bool {
     false
 }
 
+/// Returns the next newline-terminated line, decoded lossily, or `None` at the end of the file.
+/// A partial last line stays in `line_buf` until VRChat finishes writing it.
+fn read_complete_line(reader: &mut impl BufRead, line_buf: &mut Vec<u8>) -> Option<String> {
+    match reader.read_until(b'\n', line_buf) {
+        Ok(_) if line_buf.ends_with(b"\n") => {
+            let line = String::from_utf8_lossy(line_buf)
+                .trim_end_matches(['\r', '\n'])
+                .to_string();
+            line_buf.clear();
+            Some(line)
+        }
+        Ok(_) => None,
+        Err(e) => {
+            warn!("[Core] Could not read the VRChat log file: {e}");
+            None
+        }
+    }
+}
+
 fn start_log_watch_task(path: String) -> CancellationToken {
     let cancellation_token = CancellationToken::new();
     let cancellation_token_internal = cancellation_token.clone();
     tokio::spawn(async move {
         let file = File::open(path.clone()).unwrap();
-        let reader = BufReader::new(file);
-        let lines = reader.lines();
-        let mut lines_iterator = lines;
+        let mut reader = BufReader::new(file);
+        let mut line_buf = Vec::new();
         let mut first_run = true;
 
         // Use an async block to make the loop asynchronous
@@ -246,8 +264,7 @@ fn start_log_watch_task(path: String) -> CancellationToken {
             }
 
             // Process new lines
-            for line in lines_iterator.by_ref() {
-                let line = line.unwrap();
+            while let Some(line) = read_complete_line(&mut reader, &mut line_buf) {
                 if line.trim().is_empty() {
                     continue;
                 }
@@ -369,7 +386,9 @@ pub fn start_log_locator_task() -> CancellationToken {
 
 #[cfg(test)]
 mod tests {
-    use super::{is_current_enough, parse_datetime_from_line, pick_log_path, VRCLogEvent};
+    use super::{
+        is_current_enough, parse_datetime_from_line, pick_log_path, read_complete_line, VRCLogEvent,
+    };
     use chrono::{Local, TimeZone, Utc};
     use std::{
         fs,
@@ -395,6 +414,25 @@ mod tests {
         let payload = serde_json::to_value(event).unwrap();
         assert_eq!(payload["time"], 1_787_517_755_000_u64);
         assert_eq!(payload["initialLoad"], false);
+    }
+
+    #[test]
+    fn reads_complete_lines_across_split_and_invalid_utf8() {
+        let mut line_buf = Vec::new();
+
+        let mut first_write: &[u8] = b"bad \xff byte\r\nJoined \xe3\x81";
+        assert_eq!(
+            read_complete_line(&mut first_write, &mut line_buf).as_deref(),
+            Some("bad \u{fffd} byte")
+        );
+        assert_eq!(read_complete_line(&mut first_write, &mut line_buf), None);
+
+        let mut second_write: &[u8] = b"\x82\n";
+        assert_eq!(
+            read_complete_line(&mut second_write, &mut line_buf).as_deref(),
+            Some("Joined \u{3042}")
+        );
+        assert_eq!(read_complete_line(&mut second_write, &mut line_buf), None);
     }
 
     fn create_log(dir: &Path, name: &str, contents: &[u8]) -> (String, SystemTime) {
