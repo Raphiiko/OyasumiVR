@@ -1,6 +1,7 @@
 mod audio_devices;
 pub mod commands;
 pub mod elevation;
+pub mod minimum_window_size;
 mod models;
 mod sounds_gen;
 

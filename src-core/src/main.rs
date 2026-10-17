@@ -247,6 +247,9 @@ async fn main() {
             if std::env::args_os().any(|arg| arg == "--console") {
                 open_console();
             }
+            for window in app.webview_windows().values() {
+                os::minimum_window_size::enforce(window);
+            }
             let error_reporting_enabled = error_reporting_setting(app.handle());
             error_reporting::set_enabled(app.handle(), error_reporting_enabled);
             let args: Vec<String> = std::env::args_os()
