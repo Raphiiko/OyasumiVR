@@ -24,7 +24,7 @@ import { VRChatInviteRefusedError } from './vrchat-api/vrchat-api';
 import { TelemetryService } from './telemetry/telemetry.service';
 
 // ponytail: 200 is a guess that stays under common analytics limits; Aptabase documents none
-const MAX_REFUSAL_BODY = 200;
+const MAX_REFUSAL_TEXT = 200;
 const UUID = /\b(?:[a-z]+_)?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/gi;
 
 @Injectable({
@@ -276,6 +276,8 @@ export class InviteAutomationsService {
     notification: Notification,
     message?: string
   ): Promise<{ reply?: string } | null> {
+    // read before the request: a logout while it runs would hide the name to remove
+    const userName = (await firstValueFrom(this.vrchat.user))?.displayName;
     let reply: string | undefined;
     try {
       reply = await this.vrchat.inviteUser(notification.senderUserId, { message });
@@ -293,7 +295,7 @@ export class InviteAutomationsService {
         'failedInviteRequest',
         notification.senderUsername
       );
-      this.trackRefusal(cause, notification).catch((e) =>
+      this.trackRefusal(cause, [notification.senderUsername, userName]).catch((e) =>
         warn(`[VRChat] Could not report the refused invite to telemetry: ${e}`)
       );
       return null;
@@ -302,25 +304,29 @@ export class InviteAutomationsService {
     return { reply };
   }
 
-  /** Carries the raw body, cut to MAX_REFUSAL_BODY characters, only when VRChat gave no message. */
-  private async trackRefusal(refusal: VRChatInviteRefusedError, notification: Notification) {
-    const user = await firstValueFrom(this.vrchat.user);
-    const names = [notification.senderUsername, user?.displayName];
-    const message = this.anonymizeVRChatMessage(refusal.vrchatMessage ?? '', names);
-    const props: { [key: string]: string } = { message };
-    if (!refusal.vrchatMessage) {
-      props['body'] = this.anonymizeVRChatMessage(refusal.body, names).slice(0, MAX_REFUSAL_BODY);
-    }
+  /** Carries the raw body only when VRChat gave no message. Each text is cut to MAX_REFUSAL_TEXT. */
+  private async trackRefusal(
+    refusal: VRChatInviteRefusedError,
+    names: (string | null | undefined)[]
+  ) {
+    const anonymize = (text: string) =>
+      this.anonymizeVRChatMessage(text, names).slice(0, MAX_REFUSAL_TEXT);
+    const props: { [key: string]: string } = {
+      message: anonymize(refusal.vrchatMessage ?? ''),
+    };
+    if (!refusal.vrchatMessage) props['body'] = anonymize(refusal.body);
     await this.telemetry.trackEvent('vrchat_invite_refused', props);
   }
 
   /** Replaces the given display names and any VRChat ID, so the message carries no personal data. */
   private anonymizeVRChatMessage(message: string, names: (string | null | undefined)[]): string {
     // IDs go first: a display name can match part of an ID and break the ID match
-    return names.reduce<string>(
-      (text, name) => (name ? text.replaceAll(name, '<name>') : text),
-      message.replace(UUID, '<id>')
-    );
+    const withoutIds = message.replace(UUID, '<id>');
+    // longest first: a name inside another name would break the longer match
+    return names
+      .filter((name): name is string => !!name)
+      .sort((a, b) => b.length - a.length)
+      .reduce((text, name) => text.replaceAll(name, '<name>'), withoutIds);
   }
 
   /** Resolves to whether the decline automation handled the request. */

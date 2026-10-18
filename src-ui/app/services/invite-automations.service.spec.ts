@@ -227,6 +227,44 @@ describe('InviteAutomationsService', () => {
     );
   });
 
+  it('reports the refusal message without a user name that contains the sender name', async () => {
+    const { receive, vrchat, telemetry } = createService({ listMode: 'DISABLED' });
+    vrchat.user.next({ status: UserStatus.Active, displayName: 'Bobby' });
+    vrchat.inviteUser.mockRejectedValue(new VRChatInviteRefusedError("Bobby can't invite Bob"));
+    await receive(NotificationType.RequestInvite, 'Bob');
+    await vi.waitFor(() =>
+      expect(telemetry.trackEvent).toHaveBeenCalledExactlyOnceWith('vrchat_invite_refused', {
+        message: "<name> can't invite <name>",
+      })
+    );
+  });
+
+  it('reports the refusal message without the name of a user who logs out during the request', async () => {
+    const { receive, vrchat, telemetry } = createService({ listMode: 'DISABLED' });
+    vrchat.user.next({ status: UserStatus.Active, displayName: 'Alice' });
+    vrchat.inviteUser.mockImplementation(async () => {
+      vrchat.user.next(null as never);
+      throw new VRChatInviteRefusedError("Alice can't invite Bob");
+    });
+    await receive(NotificationType.RequestInvite);
+    await vi.waitFor(() =>
+      expect(telemetry.trackEvent).toHaveBeenCalledExactlyOnceWith('vrchat_invite_refused', {
+        message: "<name> can't invite <name>",
+      })
+    );
+  });
+
+  it('cuts the reported refusal message to 200 characters', async () => {
+    const { receive, vrchat, telemetry } = createService({ listMode: 'DISABLED' });
+    vrchat.inviteUser.mockRejectedValue(new VRChatInviteRefusedError('x'.repeat(201)));
+    await receive(NotificationType.RequestInvite);
+    await vi.waitFor(() =>
+      expect(telemetry.trackEvent).toHaveBeenCalledExactlyOnceWith('vrchat_invite_refused', {
+        message: 'x'.repeat(200),
+      })
+    );
+  });
+
   it('sends no notification for a refused invite when the type is turned off', async () => {
     const { receive, vrchat, notifications } = createService(
       { listMode: 'DISABLED' },
