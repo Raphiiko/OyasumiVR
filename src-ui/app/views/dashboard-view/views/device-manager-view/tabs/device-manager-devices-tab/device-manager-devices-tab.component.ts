@@ -11,6 +11,8 @@ import { OpenVRService } from '../../../../../../services/openvr.service';
 import { LighthouseService } from '../../../../../../services/lighthouse.service';
 import { LighthouseConsoleService } from '../../../../../../services/lighthouse-console.service';
 import { ModalService } from '../../../../../../services/modal.service';
+import { EventLogService } from '../../../../../../services/event-log.service';
+import { EventLogLighthouseSetPowerState } from '../../../../../../models/event-log-entry';
 import {
   DeviceManagerConfigModalComponent,
   DeviceManagerConfigModalInputModel,
@@ -85,6 +87,7 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     private lighthouse: LighthouseService,
     private lighthouseConsole: LighthouseConsoleService,
     private modalService: ModalService,
+    private eventLog: EventLogService,
     private destroyRef: DestroyRef,
     private domSanitizer: DomSanitizer,
     private cdr: ChangeDetectorRef
@@ -352,8 +355,10 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
 
     const deviceName = device.nickname ?? device.defaultName;
     if (ovrDevice && ovrDevice.canPowerOff) {
-      await this.lighthouseConsole.turnOffDeviceForUser(ovrDevice, deviceName);
+      const dispatched = await this.lighthouseConsole.turnOffDeviceForUser(ovrDevice, deviceName);
+      this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'MANUAL');
     } else if (lighthouseDevice) {
+      this.logLighthousePowerState('sleep');
       await this.lighthouse.setPowerStateForUser(lighthouseDevice, 'sleep', deviceName);
     }
   }
@@ -361,12 +366,22 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
   async powerOnDevice(device: DMKnownDevice) {
     const lighthouseDevice = this.getDeviceLighthouse(device);
     if (lighthouseDevice) {
+      this.logLighthousePowerState('on');
       await this.lighthouse.setPowerStateForUser(
         lighthouseDevice,
         'on',
         device.nickname ?? device.defaultName
       );
     }
+  }
+
+  private logLighthousePowerState(state: EventLogLighthouseSetPowerState['state']) {
+    this.eventLog.logEvent({
+      type: 'lighthouseSetPowerState',
+      reason: 'MANUAL',
+      state,
+      devices: 'SINGLE',
+    } as EventLogLighthouseSetPowerState);
   }
 
   getDevicePowerState(device: DMKnownDevice): DevicePowerState {
