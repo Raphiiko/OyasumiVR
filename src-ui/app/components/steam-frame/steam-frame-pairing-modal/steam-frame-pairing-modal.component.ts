@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { openUrl } from '@tauri-apps/plugin-opener';
 import { TranslocoModule } from '@jsverse/transloco';
 import { BaseModalComponent } from '../../base-modal/base-modal.component';
+import { IconComponent } from '../../icon/icon.component';
 import { isValidHostname, isValidIPv4, isValidIPv6 } from '../../../utils/regex-utils';
 import { SteamFramePairingService } from '../../../services/steam-frame/steam-frame-pairing.service';
 import { ToastService } from '../../../services/toast.service';
@@ -62,7 +63,7 @@ const BACK: Partial<Record<SteamFramePage, SteamFramePage>> = {
 @Component({
   selector: 'app-steam-frame-pairing-modal',
   standalone: true,
-  imports: [FormsModule, TranslocoModule],
+  imports: [FormsModule, TranslocoModule, IconComponent],
   templateUrl: './steam-frame-pairing-modal.component.html',
   styleUrl: './steam-frame-pairing-modal.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

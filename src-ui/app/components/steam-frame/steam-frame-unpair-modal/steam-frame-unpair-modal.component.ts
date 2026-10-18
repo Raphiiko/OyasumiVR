@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
 import { BaseModalComponent } from '../../base-modal/base-modal.component';
+import { IconComponent } from '../../icon/icon.component';
 import { fadeUp } from '../../../utils/animations';
 import { SteamFramePairingService } from '../../../services/steam-frame/steam-frame-pairing.service';
 import { ToastService } from '../../../services/toast.service';
@@ -42,7 +43,7 @@ const UNPAIR_FAILURES: Record<SteamFrameUnpairFailure, UnpairFailure> = {
 @Component({
   selector: 'app-steam-frame-unpair-modal',
   standalone: true,
-  imports: [TranslocoModule],
+  imports: [TranslocoModule, IconComponent],
   templateUrl: './steam-frame-unpair-modal.component.html',
   styleUrl: './steam-frame-unpair-modal.component.scss',
   animations: [fadeUp()],

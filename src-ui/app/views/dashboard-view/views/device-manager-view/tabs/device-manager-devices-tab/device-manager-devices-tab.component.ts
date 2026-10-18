@@ -77,7 +77,7 @@ const FRAME_STATUS_ROWS: Partial<Record<SteamFrameConnectionStatus, FrameRow>> =
   hostKeyChanged: {
     pill: {
       key: 'notRecognized',
-      icon: 'error',
+      icon: 'exclamation-circle',
       tone: 'bad',
       detail: 'notRecognized',
     },
@@ -86,7 +86,7 @@ const FRAME_STATUS_ROWS: Partial<Record<SteamFrameConnectionStatus, FrameRow>> =
   helperMissing: {
     pill: {
       key: 'helperMissing',
-      icon: 'error',
+      icon: 'exclamation-circle',
       tone: 'bad',
       detail: 'helperMissing',
     },
@@ -579,7 +579,7 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
 
     // a reinstall from this row
     if (this.framePairing.reinstalls()[pairing.id]) {
-      return { pill: { key: 'reinstalling', icon: 'sync', tone: 'neutral' } };
+      return { pill: { key: 'reinstalling', icon: 'refresh', tone: 'neutral' } };
     }
 
     // a problem: its pill, and Pair again only while SteamVR uses it
@@ -596,7 +596,7 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     if (status === 'connected' || status === 'connecting') return { badge: status };
 
     if (status === 'offline') {
-      return { pill: { key: 'offline', icon: 'cloud_off', tone: 'neutral' } };
+      return { pill: { key: 'offline', icon: 'plug', tone: 'neutral' } };
     }
 
     // an outdated helper: the pill starts the update
@@ -607,12 +607,12 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     const maintenance = state?.maintenance;
     switch (maintenance?.kind) {
       case 'updating':
-        return { pill: { key: 'updatingHelper', icon: 'sync', tone: 'neutral' } };
+        return { pill: { key: 'updatingHelper', icon: 'refresh', tone: 'neutral' } };
       case 'updated':
         return {
           pill: {
             key: 'helperUpdated',
-            icon: 'check_circle',
+            icon: 'check-circle',
             tone: 'neutral',
             params: { version: maintenance.version },
           },
@@ -621,7 +621,7 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
         return {
           pill: {
             key: 'updateFailed',
-            icon: 'error',
+            icon: 'exclamation-circle',
             tone: 'bad',
             detail: 'updateFailed',
           },

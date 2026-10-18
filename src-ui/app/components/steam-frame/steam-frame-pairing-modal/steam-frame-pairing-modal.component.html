@@ -9,15 +9,18 @@
     <div class="trail-edge">
       @if (back(); as target) {
         <button class="plain" (click)="pairing.go(target)">
-          <i class="material-icons" aria-hidden="true">arrow_back</i>{{ t('actions.back') }}
+          <app-icon name="chevron-left" class="icon-mono" aria-hidden="true" />{{
+            t('actions.back')
+          }}
         </button>
       }
     </div>
     <div class="previous">
       @if (step() > 0) {
         <span
-          ><i class="material-icons" aria-hidden="true">check</i
-          >{{ t('steps.' + stepLabels[step() - 1]) }}</span
+          ><app-icon name="check" class="icon-mono" aria-hidden="true" />{{
+            t('steps.' + stepLabels[step() - 1])
+          }}</span
         >
       }
     </div>
@@ -27,7 +30,7 @@
     <span class="next">
       @if (step() < 6) {
         {{ t('steps.' + stepLabels[step() + 1])
-        }}<i class="material-icons" aria-hidden="true">arrow_forward</i>
+        }}<app-icon name="chevron-right" class="icon-mono" aria-hidden="true" />
       }
     </span>
     <div class="trail-edge end">
@@ -169,10 +172,14 @@
                   [attr.aria-current]="i === stageIndex() ? 'step' : null"
                 >
                   @if (i < stageIndex()) {
-                    <i class="material-icons complete" aria-hidden="true">check_circle</i>
+                    <app-icon name="check-circle" class="icon-mono complete" aria-hidden="true" />
                   } @else if (i === stageIndex()) {
                     @if (page() === 'setupFailed') {
-                      <i class="material-icons failed" aria-hidden="true">error</i>
+                      <app-icon
+                        name="exclamation-circle"
+                        class="icon-mono failed"
+                        aria-hidden="true"
+                      />
                     } @else {
                       <span class="spinner" aria-hidden="true"></span>
                     }

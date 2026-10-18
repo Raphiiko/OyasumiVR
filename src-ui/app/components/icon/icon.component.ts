@@ -6,7 +6,6 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
   template: "<svg><use [attr.href]=\"'/assets/icons/' + name + '.svg#icon'\" /></svg>",
   styleUrls: ['./icon.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
 })
 export class IconComponent {
   @Input({ required: true }) name!: string;

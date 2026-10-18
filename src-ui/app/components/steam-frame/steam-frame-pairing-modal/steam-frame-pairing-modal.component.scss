@@ -43,7 +43,7 @@
   align-items: center;
   gap: 0.25em;
 }
-.previous i,
+.previous app-icon,
 .complete {
   color: #67c23a;
 }
@@ -295,6 +295,7 @@ p {
   gap: 0.75em;
 }
 .setup-stages li > :first-child {
+  height: 1.25em;
   width: 1.25em;
   flex-shrink: 0;
 }
