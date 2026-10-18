@@ -297,13 +297,13 @@ p {
   gap: 0.75em;
 }
 .setup-stages li > :first-child {
-  height: 1.25em;
-  width: 1.25em;
-  flex-shrink: 0;
+  flex: none;
+  font-size: 1em;
+  height: 1.5em;
+  width: 1.5em;
 }
 .pending-dot {
   display: block;
-  height: 1.25em;
   border: 2px solid var(--color-surface-4);
   border-radius: 50%;
 }
