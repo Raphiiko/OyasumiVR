@@ -3,7 +3,6 @@ import {
   Component,
   computed,
   DestroyRef,
-  Input,
   input,
   OnInit,
   output,
@@ -65,7 +64,7 @@ export class BrightnessAutomationDetailsComponent implements OnInit {
   };
   protected vshakeElements: string[] = [];
   protected readonly defaults = AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS;
-  @Input() sunMode: 'SUNSET' | 'SUNRISE' | undefined;
+  readonly sunMode = input<'SUNSET' | 'SUNRISE'>();
 
   constructor(
     private automationConfigService: AutomationConfigService,
@@ -203,7 +202,7 @@ export class BrightnessAutomationDetailsComponent implements OnInit {
   protected async autoDetermineActivationTime() {
     try {
       const [sunrise, sunset] = await invoke<[string, string]>('get_sunrise_sunset_time');
-      switch (this.sunMode) {
+      switch (this.sunMode()) {
         case 'SUNSET':
           await this.updateActivationTime(sunset);
           break;

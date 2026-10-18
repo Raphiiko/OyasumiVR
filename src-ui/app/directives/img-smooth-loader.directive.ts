@@ -2,10 +2,10 @@ import {
   Directive,
   ElementRef,
   HostListener,
-  Input,
   OnChanges,
   Renderer2,
   SimpleChanges,
+  input,
 } from '@angular/core';
 
 @Directive({
@@ -13,7 +13,7 @@ import {
   standalone: false,
 })
 export class ImgSmoothLoaderDirective implements OnChanges {
-  @Input('imgSmoothLoader') imageUrl?: string | null;
+  readonly imageUrl = input<string | null>(undefined, { alias: 'imgSmoothLoader' });
 
   constructor(
     private elementRef: ElementRef,
@@ -22,8 +22,9 @@ export class ImgSmoothLoaderDirective implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['imageUrl']?.previousValue !== changes['imageUrl']?.currentValue) {
-      if (!this.imageUrl) return;
-      this.renderer.setAttribute(this.elementRef.nativeElement, 'src', this.imageUrl ?? '');
+      const imageUrl = this.imageUrl();
+      if (!imageUrl) return;
+      this.renderer.setAttribute(this.elementRef.nativeElement, 'src', imageUrl ?? '');
       this.elementRef.nativeElement.style.transition = '';
       this.elementRef.nativeElement.style.opacity = '0';
     }

@@ -31,7 +31,7 @@
   </div>
 </div>
 <div class="code-editor-wrapper">
-  <div class="code-editor" [style.min-height]="minHeight * 1.25 + 1.5 + 'em'">
+  <div class="code-editor" [style.min-height]="minHeight() * 1.25 + 1.5 + 'em'">
     <div class="code-editor-line-numbers" #lineCounter>
       @for (counter of lineCounters | async; track counter; let i = $index) {
         <div

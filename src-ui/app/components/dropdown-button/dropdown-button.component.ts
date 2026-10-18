@@ -1,11 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, input, output } from '@angular/core';
 import { TString } from '../../models/translatable-string';
 import { fadeDown } from '../../utils/animations';
 
@@ -25,9 +18,9 @@ export interface DropdownItem {
   standalone: false,
 })
 export class DropdownButtonComponent implements OnInit {
-  @Input() disabled = false;
-  @Input() items: DropdownItem[] = [];
-  @Output() itemSelect: EventEmitter<DropdownItem> = new EventEmitter();
+  readonly disabled = input(false);
+  readonly items = input<DropdownItem[]>([]);
+  readonly itemSelect = output<DropdownItem>();
   collapsed = true;
 
   constructor() {}
@@ -35,14 +28,14 @@ export class DropdownButtonComponent implements OnInit {
   ngOnInit(): void {}
 
   clickBox() {
-    if (!this.collapsed || !this.disabled) {
+    if (!this.collapsed || !this.disabled()) {
       this.collapsed = !this.collapsed;
     }
   }
 
   selectItem(item: DropdownItem, event: MouseEvent) {
     if (event.target instanceof HTMLElement && event.target.classList.contains('noselect')) return;
-    if (!this.disabled) {
+    if (!this.disabled()) {
       this.itemSelect.emit(item);
       this.collapsed = true;
     }

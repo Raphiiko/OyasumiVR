@@ -3,8 +3,8 @@
   @for (option of frameLimitConfigOptions.slice(0, 5); track option) {
     <button
       class="selector-option"
-      [class.active]="activeValue === option"
-      [class.selected]="configuredValue === option"
+      [class.active]="activeValue() === option"
+      [class.selected]="configuredValue() === option"
       (click)="selectOption(option)"
     >
       <span [transloco]="getLabelForOption(option)" class="selector-option-label-top"></span>
@@ -20,8 +20,8 @@
       @for (option of frameLimitConfigOptions.slice(5, 7); track option) {
         <button
           class="selector-option stacked"
-          [class.active]="activeValue === option"
-          [class.selected]="configuredValue === option"
+          [class.active]="activeValue() === option"
+          [class.selected]="configuredValue() === option"
           (click)="selectOption(option)"
           [tooltip]="getTooltipForOption(option)"
           [tooltipMode]="'left'"

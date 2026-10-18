@@ -1,12 +1,11 @@
 import {
   ChangeDetectorRef,
   Component,
-  Input,
   OnInit,
-  Output,
-  EventEmitter,
   DestroyRef,
   ChangeDetectionStrategy,
+  input,
+  output,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { distinctUntilChanged, map } from 'rxjs';
@@ -24,9 +23,9 @@ import { vshrink } from 'src-ui/app/utils/animations';
   animations: [vshrink()],
 })
 export class FrameLimiterSelectorComponent implements OnInit {
-  @Input() activeValue?: FrameLimitConfigOption;
-  @Input() configuredValue?: FrameLimitConfigOption;
-  @Output() valueRequested = new EventEmitter<FrameLimitConfigOption>();
+  readonly activeValue = input<FrameLimitConfigOption>();
+  readonly configuredValue = input<FrameLimitConfigOption>();
+  readonly valueRequested = output<FrameLimitConfigOption>();
 
   hmdDisplayFrequency: number | undefined;
   frameLimitConfigOptions = FrameLimitConfigOptions.filter((o) => o !== 'DISABLED');

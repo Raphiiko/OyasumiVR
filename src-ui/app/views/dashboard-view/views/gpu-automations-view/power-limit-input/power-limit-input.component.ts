@@ -1,11 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, input, model } from '@angular/core';
 import { GPUPowerLimit } from '../../../../../models/gpu-device';
 import { vshrink } from '../../../../../utils/animations';
 
@@ -18,37 +11,34 @@ import { vshrink } from '../../../../../utils/animations';
   standalone: false,
 })
 export class PowerLimitInputComponent implements OnInit {
-  @Input() minPowerLimit = -1;
-  @Input() maxPowerLimit = -1;
-  @Input() defaultPowerLimit = -1;
+  readonly minPowerLimit = input(-1);
+  readonly maxPowerLimit = input(-1);
+  readonly defaultPowerLimit = input(-1);
 
-  @Input() powerLimit?: GPUPowerLimit;
-  @Output() powerLimitChange: EventEmitter<GPUPowerLimit> = new EventEmitter<GPUPowerLimit>();
+  readonly powerLimit = model<GPUPowerLimit>();
 
   constructor() {}
 
   ngOnInit(): void {}
 
   toggleDefault() {
-    if (!this.powerLimit) return;
-    this.powerLimit.default = !this.powerLimit?.default;
-    this.powerLimit.limit = this.defaultPowerLimit;
-    this.powerLimitChange.emit(this.powerLimit);
+    const powerLimit = this.powerLimit();
+    if (!powerLimit) return;
+    this.powerLimit.set({ default: !powerLimit.default, limit: this.defaultPowerLimit() });
   }
 
   onSliderChange(value: number) {
-    if (!this.powerLimit) return;
-    this.powerLimit.default = false;
-    this.powerLimit.limit = value;
-    this.powerLimitChange.emit(this.powerLimit);
+    const powerLimit = this.powerLimit();
+    if (!powerLimit) return;
+    this.powerLimit.set({ default: false, limit: value });
   }
 
   get isEnabled() {
     return (
-      this.powerLimit &&
-      this.minPowerLimit >= 0 &&
-      this.maxPowerLimit > 0 &&
-      this.defaultPowerLimit >= 0
+      this.powerLimit() &&
+      this.minPowerLimit() >= 0 &&
+      this.maxPowerLimit() > 0 &&
+      this.defaultPowerLimit() >= 0
     );
   }
 }

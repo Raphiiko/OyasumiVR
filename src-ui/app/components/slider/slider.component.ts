@@ -3,15 +3,14 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  EventEmitter,
   HostListener,
-  Input,
   OnChanges,
   OnDestroy,
   OnInit,
-  Output,
   ViewChild,
   ChangeDetectionStrategy,
+  input,
+  model,
 } from '@angular/core';
 import { orderBy } from 'lodash';
 import { clamp, ensurePrecision, floatPrecision } from '../../utils/number-utils';
@@ -26,15 +25,14 @@ export type SliderStyle = 'DEFAULT' | 'AUDIO_LEVEL';
   standalone: false,
 })
 export class SliderComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
-  @Input() min = 0;
-  @Input() max = 100;
-  @Input() value = 50;
-  @Input() step = 1;
-  @Input() unit?: string;
-  @Input() snapValues: number[] = [];
-  @Input() snapDistance = 5;
-  @Input() style: SliderStyle = 'DEFAULT';
-  @Output() valueChange = new EventEmitter<number>();
+  readonly min = input(0);
+  readonly max = input(100);
+  readonly value = model(50);
+  readonly step = input(1);
+  readonly unit = input<string>();
+  readonly snapValues = input<number[]>([]);
+  readonly snapDistance = input(5);
+  readonly style = input<SliderStyle>('DEFAULT');
   protected dragging = false;
   protected thumbStyleLeft = '0px';
   protected trackFillStyleWidth = '0%';
@@ -94,17 +92,17 @@ export class SliderComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
     const min = componentBounds.left + thumbBounds.width / 2;
     const max = componentBounds.left + componentBounds.width - thumbBounds.width / 2;
     const offset = clamp($event.pageX, min, max);
-    let value = ((offset - min) / (max - min)) * (this.max - this.min) + this.min;
+    let value = ((offset - min) / (max - min)) * (this.max() - this.min()) + this.min();
     // Handle snapping
     const snapTo = orderBy(
-      this.snapValues
+      this.snapValues()
         .map((snapValue) => {
           return {
             snapValue,
             distance: Math.abs(value - snapValue),
           };
         })
-        .filter((i) => i.distance <= this.snapDistance),
+        .filter((i) => i.distance <= this.snapDistance()),
       ['distance'],
       'asc'
     ).at(0)?.snapValue;
@@ -113,10 +111,11 @@ export class SliderComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
     }
     // Handle snapping to step sizes
     if (snapTo === undefined) {
-      value = Math.round(value / this.step) * this.step;
+      value = Math.round(value / this.step()) * this.step();
     }
-    this.value = clamp(ensurePrecision(value, floatPrecision(this.step)), this.min, this.max);
-    this.valueChange.emit(this.value);
+    this.value.set(
+      clamp(ensurePrecision(value, floatPrecision(this.step())), this.min(), this.max())
+    );
     this.recalculateStyles();
   };
 
@@ -126,18 +125,20 @@ export class SliderComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
     const thumbWidth = this.thumbEl?.nativeElement?.offsetWidth ?? 0;
     const min = thumbWidth / 2;
     const max = width - thumbWidth / 2;
-    const thumbOffset = ((this.value - this.min) / (this.max - this.min)) * (max - min) + min;
+    const thumbOffset =
+      ((this.value() - this.min()) / (this.max() - this.min())) * (max - min) + min;
     this.thumbStyleLeft = `${thumbOffset}px`;
     // Track fill width
-    this.trackFillStyleWidth = ((this.value - this.min) / (this.max - this.min)) * 100 + '%';
+    this.trackFillStyleWidth =
+      ((this.value() - this.min()) / (this.max() - this.min())) * 100 + '%';
     // Track stops
     const trackWidth = width - thumbWidth;
-    this.trackStopStyleLeft = this.snapValues.map((snapValue) => {
-      const stopOffset = (snapValue - this.min) / (this.max - this.min);
+    this.trackStopStyleLeft = this.snapValues().map((snapValue) => {
+      const stopOffset = (snapValue - this.min()) / (this.max() - this.min());
       return `calc(${stopOffset} * calc(${trackWidth}px - 0.15em))`;
     });
-    this.snapIndicatorStyleLeft = this.snapValues.map((snapValue) => {
-      const stopOffset = (snapValue - this.min) / (this.max - this.min);
+    this.snapIndicatorStyleLeft = this.snapValues().map((snapValue) => {
+      const stopOffset = (snapValue - this.min()) / (this.max() - this.min());
       return `calc(${stopOffset} * ${trackWidth}px - 0.5em)`;
     });
     this.cdr.detectChanges();

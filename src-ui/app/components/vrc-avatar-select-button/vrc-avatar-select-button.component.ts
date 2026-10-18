@@ -1,11 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, ChangeDetectionStrategy, model } from '@angular/core';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import {
   VrcAvatarSelectModalComponent,
@@ -24,8 +17,7 @@ import { PersistedAvatar } from '../../models/vrchat';
   standalone: false,
 })
 export class VrcAvatarSelectButtonComponent {
-  @Input() avatar: PersistedAvatar | null = null;
-  @Output() avatarChange = new EventEmitter<PersistedAvatar | null>();
+  readonly avatar = model<PersistedAvatar | null>(null);
 
   constructor(
     private modalService: ModalService,
@@ -33,8 +25,7 @@ export class VrcAvatarSelectButtonComponent {
   ) {}
 
   deselect() {
-    this.avatar = null;
-    this.avatarChange.emit(null);
+    this.avatar.set(null);
   }
 
   select() {
@@ -44,15 +35,15 @@ export class VrcAvatarSelectButtonComponent {
       )
       .subscribe((result) => {
         if (result && result.avatar !== undefined) {
-          this.avatar =
+          this.avatar.set(
             result.avatar === null
               ? null
               : {
                   name: result.avatar.name,
                   imageUrl: result.avatar.imageUrl,
                   id: result.avatar.id,
-                };
-          this.avatarChange.emit(this.avatar);
+                }
+          );
         }
         this.cdr.markForCheck();
       });

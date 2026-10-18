@@ -3,9 +3,9 @@ import {
   Directive,
   ElementRef,
   HostListener,
-  Input,
   OnChanges,
   OnDestroy,
+  input,
 } from '@angular/core';
 import { TString } from '../models/translatable-string';
 import { TStringTranslatePipe } from '../pipes/tstring-translate.pipe';
@@ -15,10 +15,10 @@ import { TStringTranslatePipe } from '../pipes/tstring-translate.pipe';
   standalone: false,
 })
 export class TooltipDirective implements AfterViewInit, OnChanges, OnDestroy {
-  @Input('tooltip') text?: TString;
-  @Input('tooltipMode') mode: 'top' | 'bottom' | 'left' | 'right' = 'top';
-  @Input('tooltipTextAlign') textAlign: 'left' | 'center' | 'right' = 'center';
-  @Input('tooltipMargin') margin?: number = 4;
+  readonly text = input<TString>(undefined, { alias: 'tooltip' });
+  readonly mode = input<'top' | 'bottom' | 'left' | 'right'>('top', { alias: 'tooltipMode' });
+  readonly textAlign = input<'left' | 'center' | 'right'>('center', { alias: 'tooltipTextAlign' });
+  readonly margin = input<number | undefined>(4, { alias: 'tooltipMargin' });
   private initialized = false;
   private tooltipElement?: HTMLElement;
   private resizeObserver?: ResizeObserver;
@@ -48,14 +48,15 @@ export class TooltipDirective implements AfterViewInit, OnChanges, OnDestroy {
   @HostListener('mouseenter')
   onMouseEnter() {
     if (!this.initialized || this.tooltipElement) return;
-    if (!this.text) return;
+    const text = this.text();
+    if (!text) return;
     const tooltipElement = document.createElement('div');
     tooltipElement.classList.add('ovr-tooltip');
-    tooltipElement.classList.add('ovr-tooltip-text-align-' + this.textAlign);
+    tooltipElement.classList.add('ovr-tooltip-text-align-' + this.textAlign());
     const container = document.createElement('div');
     container.classList.add('ovr-tooltip-container');
     tooltipElement.appendChild(container);
-    container.innerText = this.tsTranslate.transform(this.text) as string;
+    container.innerText = this.tsTranslate.transform(text) as string;
     document.body.appendChild(tooltipElement);
     this.tooltipElement = tooltipElement;
     this.positionTooltip();
@@ -75,7 +76,7 @@ export class TooltipDirective implements AfterViewInit, OnChanges, OnDestroy {
     const { width, height } = this.tooltipElement.getBoundingClientRect();
     const viewport = document.documentElement;
     const inset = 8;
-    const margin = this.margin ?? 4;
+    const margin = this.margin() ?? 4;
     const positions = {
       top: { x: anchor.left + (anchor.width - width) / 2, y: anchor.top - height - margin },
       bottom: { x: anchor.left + (anchor.width - width) / 2, y: anchor.bottom + margin },
@@ -89,7 +90,8 @@ export class TooltipDirective implements AfterViewInit, OnChanges, OnDestroy {
       right: positions.right.x + width <= viewport.clientWidth - inset,
     };
     const opposite = { top: 'bottom', bottom: 'top', left: 'right', right: 'left' } as const;
-    const mode = !fits[this.mode] && fits[opposite[this.mode]] ? opposite[this.mode] : this.mode;
+    const mode =
+      !fits[this.mode()] && fits[opposite[this.mode()]] ? opposite[this.mode()] : this.mode();
     const { x, y } = positions[mode];
     this.tooltipElement.style.left = `${Math.max(inset, Math.min(x, viewport.clientWidth - width - inset))}px`;
     this.tooltipElement.style.top = `${Math.max(inset, Math.min(y, viewport.clientHeight - height - inset))}px`;

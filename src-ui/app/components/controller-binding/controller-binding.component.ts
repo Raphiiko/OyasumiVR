@@ -1,4 +1,4 @@
-import { Component, DestroyRef, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy, input } from '@angular/core';
 import { OVRInputEventAction, OVRInputEventActionSet } from '../../models/ovr-input-event';
 import { OpenVRInputService } from '../../services/openvr-input.service';
 import { filter, firstValueFrom, interval, pairwise, startWith, switchMap, tap } from 'rxjs';
@@ -17,8 +17,8 @@ import { warn } from '@tauri-apps/plugin-log';
   standalone: false,
 })
 export class ControllerBindingComponent implements OnInit {
-  @Input() actionKey?: OVRInputEventAction;
-  @Input('actionSetKey') actionSetKeyInput?: OVRInputEventActionSet;
+  readonly actionKey = input<OVRInputEventAction>();
+  readonly actionSetKeyInput = input<OVRInputEventActionSet>(undefined, { alias: 'actionSetKey' });
   protected bindings: OVRActionBinding[] = [];
   protected error?:
     | 'MISSING_KEY'
@@ -39,15 +39,13 @@ export class ControllerBindingComponent implements OnInit {
     return this.bindings.length ? this.bindings[0] : undefined;
   }
 
-  set actionSetKey(value: OVRInputEventActionSet | undefined) {
-    this.actionSetKeyInput = value;
-  }
-
   get actionSetKey(): OVRInputEventActionSet | undefined {
-    if (this.actionSetKeyInput) return this.actionSetKeyInput;
-    if (this.actionKey)
+    const actionSetKeyInput = this.actionSetKeyInput();
+    if (actionSetKeyInput) return actionSetKeyInput;
+    const actionKey = this.actionKey();
+    if (actionKey)
       return ('/' +
-        this.actionKey
+        actionKey
           .split('/')
           .map((s) => s.trim())
           .filter((s) => s.length > 0)
@@ -86,7 +84,8 @@ export class ControllerBindingComponent implements OnInit {
     let bindings: OVRActionBinding[] = [];
     let status: OpenVRStatus | undefined = undefined;
     await (async () => {
-      if (!this.actionSetKey || !this.actionKey) {
+      const actionKey = this.actionKey();
+      if (!this.actionSetKey || !actionKey) {
         error = 'MISSING_KEY';
         return;
       }
@@ -95,7 +94,7 @@ export class ControllerBindingComponent implements OnInit {
         error = 'STEAMVR_INACTIVE';
         return;
       }
-      bindings = await this.openvrInputService.getActionBindings(this.actionSetKey, this.actionKey);
+      bindings = await this.openvrInputService.getActionBindings(this.actionSetKey, actionKey);
       if (bindings.length === 0) {
         const controllers = await firstValueFrom(this.openvr.devices).then((devices) =>
           devices.filter((d) => d.class === 'Controller')

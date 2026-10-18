@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input } from '@angular/core';
 import { hshrink } from '../../utils/animations';
 
 @Component({
@@ -10,11 +10,11 @@ import { hshrink } from '../../utils/animations';
   standalone: false,
 })
 export class PlayerCountSleepVisualizationComponent {
-  @Input() public count = 0;
-  @Input() public visualMax = 10;
-  @Input() public style: 'NORMAL' | 'SMALL' = 'NORMAL';
+  public readonly count = input(0);
+  public readonly visualMax = input(10);
+  public readonly style = input<'NORMAL' | 'SMALL'>('NORMAL');
 
   get bedLimit(): number {
-    return Math.min(this.count, this.visualMax);
+    return Math.min(this.count(), this.visualMax());
   }
 }

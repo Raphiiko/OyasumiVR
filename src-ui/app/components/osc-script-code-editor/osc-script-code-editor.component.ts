@@ -4,12 +4,14 @@ import {
   Component,
   DestroyRef,
   ElementRef,
-  EventEmitter,
-  Input,
   OnInit,
-  Output,
   ViewChild,
   ChangeDetectionStrategy,
+  effect,
+  input,
+  model,
+  output,
+  untracked,
 } from '@angular/core';
 import { BehaviorSubject, debounceTime, map, Observable, tap } from 'rxjs';
 import { OscParameterType, OscScript, OscScriptCodeValidationError } from '../../models/osc-script';
@@ -31,15 +33,10 @@ import { flushOnDestroy } from '../../utils/rxjs-utils';
 export class OscScriptCodeEditorComponent implements OnInit, AfterViewInit {
   @ViewChild('editor') editorRef!: ElementRef;
   @ViewChild('lineCounter') lineCounterRef!: ElementRef;
-  @Input() minHeight = 10;
-
-  @Input() set script(script: OscScript) {
-    this.setScript(script, false);
-  }
-
-  @Output() scriptChange = new EventEmitter<OscScript>();
-  @Output() errorCount = new EventEmitter<number>();
-  @Output() validatedChange = new EventEmitter<boolean>();
+  readonly minHeight = input(10);
+  readonly script = model.required<OscScript>();
+  readonly errorCount = output<number>();
+  readonly validatedChange = output<boolean>();
   private _code: BehaviorSubject<string> = new BehaviorSubject<string>('');
   errors: OscScriptCodeValidationError[] = [];
   tooltipErrors: OscScriptCodeValidationError[] = [];
@@ -57,7 +54,7 @@ export class OscScriptCodeEditorComponent implements OnInit, AfterViewInit {
 
   protected lineCounters: Observable<string[]> = this._code.pipe(
     map((code) => {
-      let lines = this.minHeight;
+      let lines = this.minHeight();
       if (this.editorRef) {
         lines = Math.max(lines, code.split('\n').length);
       }
@@ -71,7 +68,12 @@ export class OscScriptCodeEditorComponent implements OnInit, AfterViewInit {
     private osc: OscService,
     private destroyRef: DestroyRef,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    effect(() => {
+      const script = this.script();
+      untracked(() => this.setScript(script, false));
+    });
+  }
 
   protected setScript(script: OscScript, force = false) {
     const { script: currentScript } = parseOscScriptFromCode(this._code.value);
@@ -98,7 +100,7 @@ export class OscScriptCodeEditorComponent implements OnInit, AfterViewInit {
         this.validated = true;
         this.errors = errors;
         this.errorCount.emit(errors.length);
-        this.scriptChange.emit(script);
+        this.script.set(script);
         this.cdr.markForCheck();
       });
   }

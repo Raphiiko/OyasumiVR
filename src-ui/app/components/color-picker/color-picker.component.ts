@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, computed, input, model } from '@angular/core';
 
 @Component({
   selector: 'app-color-picker',
@@ -8,30 +8,19 @@ import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from 
   standalone: false,
 })
 export class ColorPickerComponent {
-  @Input() public disabled = false;
-  protected _color: [number, number, number] = [255, 255, 255];
-  public get color(): [number, number, number] {
-    return this._color;
-  }
-
-  @Input()
-  public set color(value: [number, number, number]) {
-    this._color = value;
-    this.hexValue = this.rgbToHex(value);
-  }
-
-  @Output() public colorChange = new EventEmitter<[number, number, number]>();
-  protected hexValue = '#ffffff';
+  public readonly disabled = input(false);
+  public readonly color = model<[number, number, number]>([255, 255, 255]);
+  protected readonly hexValue = computed(() => this.rgbToHex(this.color()));
 
   constructor() {}
 
   protected get cssColor(): string {
-    return `rgb(${this.color[0]}, ${this.color[1]}, ${this.color[2]})`;
+    const color = this.color();
+    return `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
   }
 
   onColorChange(value: string) {
-    this.color = this.hexToRgb(value);
-    this.colorChange.emit(this.color);
+    this.color.set(this.hexToRgb(value));
   }
 
   private hexToRgb(hexColor: string): [number, number, number] {

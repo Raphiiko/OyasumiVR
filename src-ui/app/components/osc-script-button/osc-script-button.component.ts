@@ -1,11 +1,10 @@
 import {
   ChangeDetectorRef,
   Component,
-  EventEmitter,
-  Input,
   OnInit,
-  Output,
   ChangeDetectionStrategy,
+  input,
+  model,
 } from '@angular/core';
 import { OscScript } from '../../models/osc-script';
 import { filter } from 'rxjs';
@@ -20,9 +19,8 @@ import { OscScriptModalComponent } from '../osc-script-modal/osc-script-modal.co
   standalone: false,
 })
 export class OscScriptButtonComponent implements OnInit {
-  @Input() label = '';
-  @Input() script?: OscScript;
-  @Output() scriptChange = new EventEmitter<OscScript>();
+  readonly label = input('');
+  readonly script = model<OscScript>();
 
   constructor(
     private modalService: ModalService,
@@ -32,7 +30,7 @@ export class OscScriptButtonComponent implements OnInit {
   ngOnInit(): void {}
 
   isSet() {
-    return !!this.script;
+    return !!this.script();
   }
 
   editScript() {
@@ -40,8 +38,8 @@ export class OscScriptButtonComponent implements OnInit {
       .addModal(
         OscScriptModalComponent,
         {
-          scriptName: this.label,
-          script: this.script,
+          scriptName: this.label(),
+          script: this.script(),
         },
         {
           closeOnEscape: false,
@@ -49,9 +47,8 @@ export class OscScriptButtonComponent implements OnInit {
       )
       .pipe(filter((data) => !!data))
       .subscribe((data) => {
-        this.script = data?.script?.commands?.length ? data.script : undefined;
+        this.script.set(data?.script?.commands?.length ? data.script : undefined);
         this.cdr.markForCheck();
-        this.scriptChange.emit(this.script);
       });
   }
 }

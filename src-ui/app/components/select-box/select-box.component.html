@@ -1,38 +1,38 @@
 <div
   class="select-box-wrapper"
   (clickOutside)="clickOutsideDropdown()"
-  [class.expand-up]="expandUp"
+  [class.expand-up]="expandUp()"
 >
   <div
     class="select-box"
-    [class.small]="type === 'SMALL'"
+    [class.small]="type() === 'SMALL'"
     (click)="clickBox()"
-    [class.disabled]="disabled"
+    [class.disabled]="disabled()"
     [class.active]="!collapsed"
   >
-    @if (selected) {
+    @if (selected(); as selectedItem) {
       <div
         class="select-item selected"
-        [class.has-subtitle]="selected.subLabel"
-        [class.small]="type === 'SMALL'"
+        [class.has-subtitle]="selectedItem.subLabel"
+        [class.small]="type() === 'SMALL'"
       >
-        @if (selected.htmlPrefix) {
-          <div class="select-item-html-prefix" [innerHtml]="selected.htmlPrefix"> </div>
+        @if (selectedItem.htmlPrefix) {
+          <div class="select-item-html-prefix" [innerHtml]="selectedItem.htmlPrefix"> </div>
         }
         <div class="select-item-content">
-          <div class="select-item-title">{{ selected.label | tsTranslate }}</div>
-          @if (selected.subLabel && type !== 'SMALL') {
+          <div class="select-item-title">{{ selectedItem.label | tsTranslate }}</div>
+          @if (selectedItem.subLabel && type() !== 'SMALL') {
             <div class="select-item-subtitle">
-              {{ selected.subLabel | tsTranslate }}
+              {{ selectedItem.subLabel | tsTranslate }}
             </div>
           }
         </div>
       </div>
     }
-    @if (!selected) {
-      <div class="select-item placeholder" [class.small]="type === 'SMALL'">
+    @if (!selected()) {
+      <div class="select-item placeholder" [class.small]="type() === 'SMALL'">
         <div class="select-item-title">
-          {{ placeholder || 'comp.select-box.defaultPlaceholder' | transloco }}
+          {{ placeholder() || 'comp.select-box.defaultPlaceholder' | transloco }}
         </div>
       </div>
     }
@@ -40,21 +40,21 @@
       <app-icon name="chevron-down" />
     </div>
   </div>
-  <div class="dropdown-container" [class.expand-up]="expandUp">
+  <div class="dropdown-container" [class.expand-up]="expandUp()">
     <ng-template #dropdownContent>
-      @if (showPlaceholderInDropdown) {
+      @if (showPlaceholderInDropdown()) {
         <div class="select-item placeholder">
           <div class="select-item-title">
-            {{ placeholder || 'comp.select-box.defaultPlaceholder' | transloco }}
+            {{ placeholder() || 'comp.select-box.defaultPlaceholder' | transloco }}
           </div>
         </div>
       }
-      @for (item of items; track item) {
+      @for (item of items(); track item) {
         <div
           class="select-item"
           (click)="select(item, $event)"
           [class.has-subtitle]="item.subLabel"
-          [class.small]="type === 'SMALL'"
+          [class.small]="type() === 'SMALL'"
         >
           @if (item.htmlPrefix) {
             <div class="select-item-html-prefix" [innerHtml]="item.htmlPrefix"> </div>
@@ -63,7 +63,7 @@
             <div class="select-item-title" [innerHtml]="item.label | tsTranslate">
               {{ item.label | tsTranslate }}
             </div>
-            @if (item.subLabel && type !== 'SMALL') {
+            @if (item.subLabel && type() !== 'SMALL') {
               <div class="select-item-subtitle" [innerHtml]="item.subLabel | tsTranslate">
                 {{ item.subLabel | tsTranslate }}
               </div>
@@ -77,12 +77,12 @@
         </div>
       }
     </ng-template>
-    @if (!collapsed && !expandUp) {
+    @if (!collapsed && !expandUp()) {
       <div class="select-box-dropdown" @fadeDown>
         <ng-container *ngTemplateOutlet="dropdownContent"></ng-container>
       </div>
     }
-    @if (!collapsed && expandUp) {
+    @if (!collapsed && expandUp()) {
       <div class="select-box-dropdown" @fadeUp>
         <ng-container *ngTemplateOutlet="dropdownContent"></ng-container>
       </div>

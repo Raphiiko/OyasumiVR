@@ -1,14 +1,14 @@
-import { AfterViewInit, Directive, ElementRef, Input, OnChanges } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, OnChanges, input } from '@angular/core';
 
 @Directive({
   selector: '[obfuscatedValue]',
   standalone: false,
 })
 export class ObfuscatedValueDirective implements AfterViewInit, OnChanges {
-  @Input('obfuscatedValue') value?: string;
-  @Input() deobfuscate?: boolean;
-  @Input() obfuscatedMaxLength?: number;
-  @Input() deobfuscatedMaxLength?: number;
+  readonly value = input<string>(undefined, { alias: 'obfuscatedValue' });
+  readonly deobfuscate = input<boolean>();
+  readonly obfuscatedMaxLength = input<number>();
+  readonly deobfuscatedMaxLength = input<number>();
   private afterViewInit = false;
 
   constructor(private elementRef: ElementRef) {}
@@ -24,14 +24,17 @@ export class ObfuscatedValueDirective implements AfterViewInit, OnChanges {
 
   private render() {
     if (!this.afterViewInit) return;
-    let value = this.value ?? '';
-    if (!this.deobfuscate) {
+    let value = this.value() ?? '';
+    const deobfuscate = this.deobfuscate();
+    if (!deobfuscate) {
       value = this.obfuscate(value);
     }
-    if (this.obfuscatedMaxLength && !this.deobfuscate) {
-      value = this.trimValue(value, this.obfuscatedMaxLength);
-    } else if (this.deobfuscatedMaxLength && this.deobfuscate) {
-      value = this.trimValue(value, this.deobfuscatedMaxLength);
+    const obfuscatedMaxLength = this.obfuscatedMaxLength();
+    const deobfuscatedMaxLength = this.deobfuscatedMaxLength();
+    if (obfuscatedMaxLength && !deobfuscate) {
+      value = this.trimValue(value, obfuscatedMaxLength);
+    } else if (deobfuscatedMaxLength && deobfuscate) {
+      value = this.trimValue(value, deobfuscatedMaxLength);
     }
     this.elementRef.nativeElement.innerText = value;
   }

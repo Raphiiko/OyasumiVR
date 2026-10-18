@@ -4,10 +4,10 @@ import {
   computed,
   ElementRef,
   inject,
-  Input,
   model,
   ViewChild,
   ChangeDetectionStrategy,
+  input,
 } from '@angular/core';
 import { clamp } from '../../utils/number-utils';
 import { fade } from '../../utils/animations';
@@ -35,11 +35,11 @@ export class DurationInputSettingComponent {
   @ViewChild('minuteInput') minuteInput?: ElementRef;
   @ViewChild('secondInput') secondInput?: ElementRef;
   inputOpen = false;
-  @Input() disabled = false;
+  readonly disabled = input(false);
   private cdr = inject(ChangeDetectorRef);
 
   openInput() {
-    if (this.disabled) {
+    if (this.disabled()) {
       this.inputOpen = false;
       return;
     }
@@ -50,7 +50,7 @@ export class DurationInputSettingComponent {
   }
 
   setSeconds($event: string) {
-    if (this.disabled) {
+    if (this.disabled()) {
       this.inputOpen = false;
       return;
     }
@@ -65,7 +65,7 @@ export class DurationInputSettingComponent {
   }
 
   setMinutes($event: string) {
-    if (this.disabled) {
+    if (this.disabled()) {
       this.inputOpen = false;
       return;
     }
@@ -77,7 +77,7 @@ export class DurationInputSettingComponent {
   }
 
   setHours($event: string) {
-    if (this.disabled) {
+    if (this.disabled()) {
       this.inputOpen = false;
       return;
     }

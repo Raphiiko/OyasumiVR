@@ -1,11 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, ChangeDetectionStrategy, input, model } from '@angular/core';
 import { ModalService } from '../../services/modal.service';
 import { NotificationSoundModalComponent } from '../notification-sound-modal/notification-sound-modal.component';
 import { SoundEffectConfig } from '../../models/automations';
@@ -20,11 +13,10 @@ import { NotificationService } from '../../services/notification.service';
   standalone: false,
 })
 export class NotificationSoundButtonComponent {
-  @Input() soundConfig?: SoundEffectConfig;
-  @Input() label: string = '';
-  @Input() description: string = '';
-  @Input() toggleable: boolean = true;
-  @Output() soundConfigChange = new EventEmitter<SoundEffectConfig>();
+  readonly soundConfig = model.required<SoundEffectConfig>();
+  readonly label = input<string>('');
+  readonly description = input<string>('');
+  readonly toggleable = input<boolean>(true);
 
   public playingSound$ = new BehaviorSubject<boolean>(false);
 
@@ -35,13 +27,13 @@ export class NotificationSoundButtonComponent {
   ) {}
 
   public openSoundModal(): void {
-    if (this.soundConfig) {
+    const soundConfig = this.soundConfig();
+    if (soundConfig) {
       this.modalService
-        .addModal(NotificationSoundModalComponent, { soundConfig: { ...this.soundConfig } })
+        .addModal(NotificationSoundModalComponent, { soundConfig: { ...soundConfig } })
         .subscribe((result) => {
           if (result) {
-            this.soundConfig = result.soundConfig;
-            this.soundConfigChange.emit(this.soundConfig);
+            this.soundConfig.set(result.soundConfig);
             this.cdr.markForCheck();
           }
         });
@@ -49,10 +41,11 @@ export class NotificationSoundButtonComponent {
   }
 
   public async previewSound(): Promise<void> {
-    if (!this.soundConfig) return;
+    const soundConfig = this.soundConfig();
+    if (!soundConfig) return;
 
     // Play sound through notification service
-    await this.notificationService.playSoundConfig(this.soundConfig);
+    await this.notificationService.playSoundConfig(soundConfig);
 
     // Update the playing state
     this.playingSound$.next(true);
@@ -60,12 +53,13 @@ export class NotificationSoundButtonComponent {
     // Reset the playing state after the sound finishes
     setTimeout(() => {
       this.playingSound$.next(false);
-    }, this.soundConfig.sound.duration * 1000);
+    }, soundConfig.sound.duration * 1000);
   }
 
   public toggleSound(): void {
-    if (this.soundConfig) {
-      this.soundConfigChange.emit({ ...this.soundConfig, enabled: !this.soundConfig.enabled });
+    const soundConfig = this.soundConfig();
+    if (soundConfig) {
+      this.soundConfig.set({ ...soundConfig, enabled: !soundConfig.enabled });
     }
   }
 }

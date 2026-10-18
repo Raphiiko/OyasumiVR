@@ -1,10 +1,10 @@
 <div class="settings">
   <div class="setting-row">
     <div class="setting-row-label">
-      @if (!automations.length) {
+      @if (!automations().length) {
         <span transloco="audio-volume-automations.devices.title.noDevices"></span>
       }
-      @if (automations.length) {
+      @if (automations().length) {
         <span transloco="audio-volume-automations.devices.title.hasDevices"></span>
       }
       <span transloco="audio-volume-automations.devices.description"></span>
@@ -21,12 +21,12 @@
     </div>
   </div>
 </div>
-@if (automations.length) {
+@if (automations().length) {
   <div class="collapse-row" @vshrink [class.collapsed]="collapsed" (click)="collapsed = !collapsed">
     <div class="left">
       <span
         transloco="audio-volume-automations.automations.label"
-        [translocoParams]="{ count: automations.length }"
+        [translocoParams]="{ count: automations().length }"
       ></span>
     </div>
     <div class="right">
@@ -36,7 +36,7 @@
 }
 @if (!collapsed) {
   <div class="settings automation-list" @vshrink>
-    @for (automation of automations; track trackAutomationBy($index, automation)) {
+    @for (automation of automations(); track trackAutomationBy($index, automation)) {
       <div @vshrink>
         <div class="setting-row">
           <div class="setting-row-icon">
@@ -77,8 +77,8 @@
           </div>
         </div>
         @if (
-          automationType === 'onSleepEnable' ||
-          automationType === 'onSleepDisable' ||
+          automationType() === 'onSleepEnable' ||
+          automationType() === 'onSleepDisable' ||
           automation.type === 'SET_VOLUME'
         ) {
           <div class="setting-row-group" @vshrink>
@@ -95,13 +95,13 @@
                 ></app-slider-setting>
               </app-setting-row>
             }
-            @if (automationType === 'onSleepEnable' || automationType === 'onSleepDisable') {
+            @if (automationType() === 'onSleepEnable' || automationType() === 'onSleepDisable') {
               <div class="setting-row">
                 <div class="setting-row-label">
                   <span transloco="audio-volume-automations.applyOnStart.title"></span>
                   <span
                     [transloco]="
-                      'audio-volume-automations.applyOnStart.description.' + automationType
+                      'audio-volume-automations.applyOnStart.description.' + automationType()
                         | transloco
                     "
                   ></span>

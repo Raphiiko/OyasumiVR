@@ -3,14 +3,13 @@ import {
   Component,
   DestroyRef,
   ElementRef,
-  EventEmitter,
-  Input,
   OnChanges,
   OnInit,
-  Output,
   SimpleChanges,
   ViewChild,
   ChangeDetectionStrategy,
+  input,
+  model,
 } from '@angular/core';
 import { fade } from '../../utils/animations';
 import { debounceTime, Subject } from 'rxjs';
@@ -28,28 +27,18 @@ import { flushOnDestroy } from '../../utils/rxjs-utils';
   standalone: false,
 })
 export class SliderSettingComponent implements OnInit, OnChanges {
-  @Input() min = 0;
-  @Input() max = 100;
-  @Input() style: SliderStyle = 'DEFAULT';
+  readonly min = input(0);
+  readonly max = input(100);
+  readonly style = input<SliderStyle>('DEFAULT');
 
-  _value = 50;
-  @Input() set value(value: number | null) {
-    if (value === null) return;
-    this._value = value;
-  }
-
-  get value(): number {
-    return this._value;
-  }
-
-  @Input() step = 1;
-  @Input() unit?: string;
+  readonly value = model(50);
+  readonly step = input(1);
+  readonly unit = input<string>();
   /** An icon name drawn in the unit box, after any unit text. */
-  @Input() unitIcon?: string;
-  @Input() snapValues: number[] = [];
-  @Input() snapDistance = 5;
-  @Input() disabled = false;
-  @Output() valueChange = new EventEmitter<number>();
+  readonly unitIcon = input<string>();
+  readonly snapValues = input<number[]>([]);
+  readonly snapDistance = input(5);
+  readonly disabled = input(false);
   protected showOverlay = false;
   protected input$ = new Subject<string>();
 
@@ -78,17 +67,16 @@ export class SliderSettingComponent implements OnInit, OnChanges {
     if (this.inputEl && strValue !== this.inputEl.nativeElement.value) return;
     let value = parseFloat(strValue);
     if (!Number.isFinite(value)) return;
-    const precision = Math.max(floatPrecision(this.min), floatPrecision(this.step));
-    const quotient = (value - this.min) / this.step;
+    const precision = Math.max(floatPrecision(this.min()), floatPrecision(this.step()));
+    const quotient = (value - this.min()) / this.step();
     const epsilon = Number.EPSILON * 4 * Math.max(1, Math.abs(quotient));
     value = clamp(
-      ensurePrecision(Math.round(quotient + epsilon) * this.step + this.min, precision),
-      this.min,
-      this.max
+      ensurePrecision(Math.round(quotient + epsilon) * this.step() + this.min(), precision),
+      this.min(),
+      this.max()
     );
-    if (value === this.value) return;
-    this.value = value;
-    this.valueChange.emit(value);
+    if (value === this.value()) return;
+    this.value.set(value);
     this.cdr.markForCheck();
   }
 
@@ -99,16 +87,15 @@ export class SliderSettingComponent implements OnInit, OnChanges {
 
   onInputBlur() {
     this.commitInput(this.inputEl!.nativeElement.value);
-    this.inputEl!.nativeElement.value = this.value.toString();
+    this.inputEl!.nativeElement.value = this.value().toString();
   }
 
   onSliderChange(value: number) {
-    this.value = value;
-    this.valueChange.emit(value);
+    this.value.set(value);
   }
 
   onMouseEnter() {
-    if (this.disabled) return;
+    if (this.disabled()) return;
     this.showOverlay = true;
   }
 }

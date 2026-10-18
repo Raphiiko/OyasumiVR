@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input } from '@angular/core';
 import { BaseModalComponent } from '../../base-modal/base-modal.component';
 import { SteamService } from 'src-ui/app/services/steam.service';
 
@@ -10,7 +10,7 @@ import { SteamService } from 'src-ui/app/services/steam.service';
   standalone: false,
 })
 export class MiscTestingComponent {
-  @Input() modal?: BaseModalComponent<any, any>;
+  readonly modal = input<BaseModalComponent<any, any>>();
 
   constructor(private steamService: SteamService) {}
 

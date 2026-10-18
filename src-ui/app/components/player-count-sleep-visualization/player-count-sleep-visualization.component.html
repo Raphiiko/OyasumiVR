@@ -1,5 +1,5 @@
-<div class="graphic" [class.small]="style === 'SMALL'">
-  <div class="bed" [style.--people]="count > bedLimit ? bedLimit + 1 : bedLimit">
+<div class="graphic" [class.small]="style() === 'SMALL'">
+  <div class="bed" [style.--people]="count() > bedLimit ? bedLimit + 1 : bedLimit">
     <div class="bed-sheets">
       <div class="under-cover"></div>
       <div class="cover"></div>
@@ -12,8 +12,8 @@
           <img draggable="false" src="/assets/img/sleeping-person.png" alt="sleeping person" />
         </div>
       }
-      @if (count > bedLimit) {
-        <div class="person-limit-exceeded"> +{{ count - bedLimit }} </div>
+      @if (count() > bedLimit) {
+        <div class="person-limit-exceeded"> +{{ count() - bedLimit }} </div>
       }
     </div>
   </div>

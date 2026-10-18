@@ -2,10 +2,10 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
-  Input,
   OnChanges,
   OnInit,
   ChangeDetectionStrategy,
+  input,
 } from '@angular/core';
 import { EventLogEntryParser } from './event-log-entry-parser';
 import { EventLogSleepModeEnabledEntryParser } from './entry-parsers/sleep-mode-enabled';
@@ -103,17 +103,17 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
     private cdr: ChangeDetectorRef
   ) {}
 
-  @Input() entry?: EventLogEntry;
+  readonly entry = input<EventLogEntry>();
   /** Hides the subtitle and the date, for entries that share them with their group header. */
-  @Input() compact = false;
-  @Input() showTime = true;
+  readonly compact = input(false);
+  readonly showTime = input(true);
   /** Overrides the entry's own icon, for a group header. */
-  @Input() icon?: string;
+  readonly icon = input<string>();
   protected iconName?: string;
   /** Translation key for a header row that has no entry of its own. */
-  @Input() titleKey?: string;
+  readonly titleKey = input<string>();
   /** Time for a header row that has no entry of its own. */
-  @Input() time?: number;
+  readonly time = input<number>();
 
   ngOnInit() {
     this.ngOnChanges();
@@ -124,31 +124,33 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
   }
 
   get entryTime(): number | undefined {
-    return this.entry?.time ?? this.time;
+    return this.entry()?.time ?? this.time();
   }
 
   ngOnChanges() {
-    this.parser = this.parsers.find((parser) => parser.entryType() === this.entry?.type);
+    this.parser = this.parsers.find((parser) => parser.entryType() === this.entry()?.type);
     this.rebuild();
   }
 
   rebuild() {
-    this.iconName = this.icon ?? (this.entry && this.parser?.icon(this.entry));
+    const entry = this.entry();
+    this.iconName = this.icon() ?? (entry && this.parser?.icon(entry));
     this.headerInfoSubTitle = undefined;
     if (!this.parser) {
-      if (this.titleKey) this.headerInfoTitle = this.translate.translate(this.titleKey);
+      const titleKey = this.titleKey();
+      if (titleKey) this.headerInfoTitle = this.translate.translate(titleKey);
       return;
     }
-    let key = this.parser.headerInfoTitle(this.entry);
+    let key = this.parser.headerInfoTitle(this.entry());
     if (key) {
       this.headerInfoTitle = this.sanitizer.bypassSecurityTrustHtml(
-        this.translate.translate(key, this.parser?.headerInfoTitleParams(this.entry) ?? {})
+        this.translate.translate(key, this.parser?.headerInfoTitleParams(this.entry()) ?? {})
       );
     }
-    key = this.parser.headerInfoSubTitle(this.entry);
+    key = this.parser.headerInfoSubTitle(this.entry());
     if (key) {
       this.headerInfoSubTitle = this.sanitizer.bypassSecurityTrustHtml(
-        this.translate.translate(key, this.parser?.headerInfoSubTitleParams(this.entry) ?? {})
+        this.translate.translate(key, this.parser?.headerInfoSubTitleParams(this.entry()) ?? {})
       );
     }
   }

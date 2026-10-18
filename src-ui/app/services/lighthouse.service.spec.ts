@@ -1,3 +1,5 @@
+import { Injector, runInInjectionContext, type InputSignal } from '@angular/core';
+import { SIGNAL } from '@angular/core/primitives/signals';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AppSettingsService } from './app-settings.service';
@@ -27,6 +29,12 @@ function device(): LighthouseDevice {
   };
 }
 
+// writes a signal input the way a template binding does
+function setInput<T>(input: InputSignal<T>, value: T) {
+  const node = input[SIGNAL];
+  node.applyValueToInputSignal(node, value);
+}
+
 // mirrors the mapping in DeviceListItemComponent
 function powerButtonFor(d: LighthouseDevice): DevicePowerButtonComponent {
   const state: DevicePowerState = d.transitioningToPowerState
@@ -36,8 +44,11 @@ function powerButtonFor(d: LighthouseDevice): DevicePowerButtonComponent {
     : d.powerState === 'on'
       ? 'on'
       : 'off';
-  const button = new DevicePowerButtonComponent();
-  button.powerState = state;
+  const button = runInInjectionContext(
+    Injector.create({ providers: [] }),
+    () => new DevicePowerButtonComponent()
+  );
+  setInput(button.powerState, state);
   return button;
 }
 

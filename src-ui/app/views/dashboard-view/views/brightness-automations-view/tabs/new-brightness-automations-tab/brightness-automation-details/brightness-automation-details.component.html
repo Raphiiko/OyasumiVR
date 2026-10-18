@@ -25,8 +25,8 @@
         <h3 transloco="brightness-automations.activation.category"></h3>
         <div class="settings">
           <app-setting-row
-            [label]="'brightness-automations.activationTime.' + sunMode + '.title'"
-            [description]="'brightness-automations.activationTime.' + sunMode + '.description'"
+            [label]="'brightness-automations.activationTime.' + sunMode() + '.title'"
+            [description]="'brightness-automations.activationTime.' + sunMode() + '.description'"
             [value]="asSunConfig(config()).autoUpdateTime"
             [defaultValue]="asSunConfig(defaults[eventId()]).autoUpdateTime"
             (resetToDefault)="toggleAutoUpdateTime()"
