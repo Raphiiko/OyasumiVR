@@ -6,7 +6,6 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
   template: "<svg><use [attr.href]=\"'/assets/icons/' + name() + '.svg#icon'\" /></svg>",
   styleUrls: ['./icon.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
   host: { '[class.mirrored]': 'mirrored()' },
 })
 export class IconComponent {

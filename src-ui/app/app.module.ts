@@ -313,7 +313,6 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
     DashboardViewComponent,
     PowerAutomationsViewComponent,
     DashboardNavbarComponent,
-    IconComponent,
     DeviceListComponent,
     DeviceListItemComponent,
     VarDirective,
@@ -474,6 +473,7 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
   exports: [SelectBoxComponent],
   imports: [
     CommonModule,
+    IconComponent,
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,

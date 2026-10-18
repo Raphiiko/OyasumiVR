@@ -125,12 +125,12 @@
                         [class]="'frame-pill frame-pill-button frame-pill-' + pill.tone"
                         (click)="onFramePill(device, pill, row.action)"
                       >
-                        <i class="material-icons">{{ pill.icon }}</i>
+                        <app-icon [name]="pill.icon" />
                         {{ 'steamFrame.status.' + pill.key | transloco }}
                       </button>
                     } @else {
                       <span [class]="'frame-pill frame-pill-' + pill.tone">
-                        <i class="material-icons">{{ pill.icon }}</i>
+                        <app-icon [name]="pill.icon" />
                         {{ 'steamFrame.status.' + pill.key | transloco: pill.params }}
                       </span>
                     }

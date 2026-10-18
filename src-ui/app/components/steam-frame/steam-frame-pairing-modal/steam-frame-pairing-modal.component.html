@@ -9,15 +9,18 @@
     <div class="trail-edge">
       @if (back(); as target) {
         <button class="plain" (click)="pairing.go(target)">
-          <i class="material-icons" aria-hidden="true">arrow_back</i>{{ t('actions.back') }}
+          <app-icon name="chevron-left" class="icon-mono" aria-hidden="true" />{{
+            t('actions.back')
+          }}
         </button>
       }
     </div>
     <div class="previous">
       @if (step() > 0) {
         <span
-          ><i class="material-icons" aria-hidden="true">check</i
-          >{{ t('steps.' + stepLabels[step() - 1]) }}</span
+          ><app-icon name="check" class="icon-mono" aria-hidden="true" />{{
+            t('steps.' + stepLabels[step() - 1])
+          }}</span
         >
       }
     </div>
@@ -27,7 +30,7 @@
     <span class="next">
       @if (step() < 6) {
         {{ t('steps.' + stepLabels[step() + 1])
-        }}<i class="material-icons" aria-hidden="true">arrow_forward</i>
+        }}<app-icon name="chevron-right" class="icon-mono" aria-hidden="true" />
       }
     </span>
     <div class="trail-edge end">
@@ -131,7 +134,10 @@
                   (click)="pairing.select(i)"
                 >
                   @if ((flow()?.candidates?.length ?? 0) > 1) {
-                    <span class="radio" aria-hidden="true"></span>
+                    <app-icon
+                      [name]="flow()?.selected === i ? 'radio-on' : 'radio-off'"
+                      aria-hidden="true"
+                    />
                   }
                   <svg class="svg-icon" aria-hidden="true">
                     <use href="/assets/icons/headset.svg#icon" />
@@ -169,10 +175,10 @@
                   [attr.aria-current]="i === stageIndex() ? 'step' : null"
                 >
                   @if (i < stageIndex()) {
-                    <i class="material-icons complete" aria-hidden="true">check_circle</i>
+                    <app-icon name="check-circle" class="complete" aria-hidden="true" />
                   } @else if (i === stageIndex()) {
                     @if (page() === 'setupFailed') {
-                      <i class="material-icons failed" aria-hidden="true">error</i>
+                      <app-icon name="exclamation-circle" class="failed" aria-hidden="true" />
                     } @else {
                       <span class="spinner" aria-hidden="true"></span>
                     }

@@ -43,9 +43,11 @@
   align-items: center;
   gap: 0.25em;
 }
-.previous i,
+.previous app-icon {
+  color: var(--color-text-success);
+}
 .complete {
-  color: #67c23a;
+  --icon-color: var(--color-text-success);
 }
 .current {
   padding: 0.3em 0.9em;
@@ -206,10 +208,10 @@ p {
   animation: frame-spin 1.2s linear infinite;
 }
 .error {
-  color: #f56c6c;
+  color: var(--color-text-caution);
 }
 .failed {
-  color: #f56c6c;
+  --icon-color: var(--color-text-caution);
 }
 .candidates {
   display: flex;
@@ -249,16 +251,6 @@ p {
   overflow-wrap: anywhere;
   font-size: 0.85em;
 }
-.radio {
-  width: 1em;
-  height: 1em;
-  border-radius: 50%;
-  border: 2px solid var(--color-text-3);
-}
-.selected .radio {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-}
 .address-form {
   display: flex;
   flex-direction: column;
@@ -295,12 +287,13 @@ p {
   gap: 0.75em;
 }
 .setup-stages li > :first-child {
-  width: 1.25em;
-  flex-shrink: 0;
+  flex: none;
+  font-size: 1em;
+  height: 1.5em;
+  width: 1.5em;
 }
 .pending-dot {
   display: block;
-  height: 1.25em;
   border: 2px solid var(--color-surface-4);
   border-radius: 50%;
 }
