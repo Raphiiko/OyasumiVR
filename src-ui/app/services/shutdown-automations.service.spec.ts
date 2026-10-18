@@ -81,6 +81,25 @@ describe('ShutdownAutomationsService sequence completion', () => {
     await expect(firstValueFrom(service.stage.pipe(take(1)))).resolves.toBe('IDLE');
   });
 
+  it('ignores a second start while the first run looks up its devices', async () => {
+    const service = setup();
+    const first = service.runSequence('MANUAL');
+    const second = service.runSequence('MANUAL');
+    expect(service['eventLog'].logEvent).toHaveBeenCalledTimes(1);
+    await vi.advanceTimersByTimeAsync(2000);
+    await Promise.all([first, second]);
+    expect(invoke.mock.calls.filter(([command]) => command === 'windows_sleep')).toHaveLength(1);
+  });
+
+  it('cancels a run that is still looking up its devices', async () => {
+    const service = setup();
+    const sequence = service.runSequence('MANUAL');
+    await service.cancelSequence('MANUAL');
+    await vi.advanceTimersByTimeAsync(2000);
+    await sequence;
+    expect(invoke).not.toHaveBeenCalledWith('windows_sleep');
+  });
+
   it('returns to idle when a sequence step rejects', async () => {
     const service = setup();
     vi.spyOn(service as never, 'turnOffDevices' as never).mockImplementation(() => {
