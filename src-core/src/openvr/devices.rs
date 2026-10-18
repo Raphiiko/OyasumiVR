@@ -310,7 +310,6 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
     }
 }
 
-/// Whether OpenVR reports the device connected. Its activation and deactivation events change this.
 fn device_connected(system: &ovr::system::System, device_index: ovr::TrackedDeviceIndex) -> bool {
     system
         .get_device_to_absolute_tracking_pose(
