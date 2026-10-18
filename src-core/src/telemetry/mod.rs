@@ -20,11 +20,16 @@ pub mod commands;
 pub static TELEMETRY_INITIALIZED: LazyLock<Mutex<bool>> = LazyLock::new(|| Mutex::new(false));
 pub static TELEMETRY_ENABLED: LazyLock<AtomicBool> = LazyLock::new(|| AtomicBool::new(false));
 
-// OpenPanel treats a bare `name/version` user agent as a server, which records no sessions
+static OS_VERSION: LazyLock<windows_version::OsVersion> =
+    LazyLock::new(windows_version::OsVersion::current);
+
+// OpenPanel records no device or session for a user agent it cannot parse an OS or browser from
 static USER_AGENT: LazyLock<String> = LazyLock::new(|| {
     format!(
-        "OyasumiVR/{} (Windows NT 10.0; Win64; x64)",
-        env!("CARGO_PKG_VERSION")
+        "OyasumiVR/{} (Windows NT {}.{})",
+        env!("CARGO_PKG_VERSION"),
+        OS_VERSION.major,
+        OS_VERSION.minor
     )
 });
 
@@ -36,20 +41,18 @@ static HTTP_CLIENT: LazyLock<reqwest::Client> = LazyLock::new(|| {
         .unwrap()
 });
 
-/// Added to every event. OpenPanel reads the `__` keys in place of what it parses from the user agent,
-/// and hides them from the property list.
+/// Added to every event. OpenPanel reads `__osVersion` in place of the version it parses from the user
+/// agent, and hides it from the property list.
 static SYSTEM_PROPERTIES: LazyLock<Map<String, Value>> = LazyLock::new(|| {
-    let os = windows_version::OsVersion::current();
+    let os = &*OS_VERSION;
     let flavour = serde_json::to_string(&BUILD_FLAVOUR)
         .unwrap()
         .trim_matches('"')
         .to_uppercase();
     let properties = json!({
         "app_version": env!("CARGO_PKG_VERSION"),
-        "__os": "Windows",
         "__osVersion": format!("{}.{}.{}", os.major, os.minor, os.build),
-        "__browser": "WebView2",
-        "__browserVersion": tauri::webview_version().unwrap_or_default(),
+        "webview_version": tauri::webview_version().unwrap_or_default(),
         "flavour": flavour,
     });
     let Value::Object(properties) = properties else {
