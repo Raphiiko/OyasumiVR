@@ -1,9 +1,10 @@
 use std::sync::atomic::Ordering;
 
 use log::info;
+use serde_json::{Map, Value};
 
 #[tauri::command]
-pub async fn set_telemetry_enabled(app_handle: tauri::AppHandle, enable: bool) {
+pub async fn set_telemetry_enabled(enable: bool) {
     let initialized = { *super::TELEMETRY_INITIALIZED.lock().await };
     let is_enabled = super::TELEMETRY_ENABLED.load(Ordering::Relaxed);
     if !initialized || is_enabled != enable {
@@ -14,7 +15,12 @@ pub async fn set_telemetry_enabled(app_handle: tauri::AppHandle, enable: bool) {
         }
         super::TELEMETRY_ENABLED.store(enable, Ordering::Relaxed);
         if !initialized {
-            super::init_telemetry(&app_handle).await;
+            super::init_telemetry().await;
         }
     }
+}
+
+#[tauri::command]
+pub async fn track_event(name: String, props: Option<Map<String, Value>>) {
+    super::track_event(&name, props);
 }

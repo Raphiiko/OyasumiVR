@@ -14,9 +14,7 @@ import {
 import { TELEMETRY_SETTINGS_DEFAULT, TelemetrySettings } from '../../models/telemetry-settings';
 
 import { invoke } from '@tauri-apps/api/core';
-import { trackEvent } from '@aptabase/tauri';
 import { isEqual } from 'lodash';
-import { getVersion } from '../../utils/app-utils';
 import { FeatureSnapshotService } from './feature-snapshot.service';
 
 @Injectable({
@@ -32,7 +30,6 @@ export class TelemetryService {
 
   async init() {
     await this.loadSettings();
-    await this.trackVersionChange();
     // resolved lazily: its dependencies are not initialized yet, and some of them use this service
     this.injector.get(FeatureSnapshotService).init();
     this.settings
@@ -63,14 +60,6 @@ export class TelemetryService {
       });
   }
 
-  private async trackVersionChange() {
-    const version = await getVersion();
-    const { lastVersion } = this._settings.value;
-    if (lastVersion === version) return;
-    if (lastVersion) await this.trackEvent('app_version_changed', { fromVersion: lastVersion });
-    await this.updateSettings({ lastVersion: version });
-  }
-
   async loadSettings() {
     const settings: TelemetrySettings | undefined = await SETTINGS_STORE.get<TelemetrySettings>(
       SETTINGS_KEY_TELEMETRY_SETTINGS
@@ -90,7 +79,7 @@ export class TelemetryService {
 
   async trackEvent(event: string, props: { [key: string]: string | number }) {
     if (!this._settings.value.enabled) return;
-    await trackEvent(event, props);
+    await invoke('track_event', { name: event, props });
   }
 
   async trackThrottledEvent(

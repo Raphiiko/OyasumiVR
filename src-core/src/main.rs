@@ -34,7 +34,7 @@ pub use flavour::BUILD_FLAVOUR;
 pub use grpc::models as Models;
 
 use cronjob::CronJob;
-use globals::{APTABASE_APP_KEY, TAURI_APP_HANDLE};
+use globals::TAURI_APP_HANDLE;
 use log::{error, info, warn, LevelFilter};
 use oyasumivr_shared::windows::is_elevated;
 use tauri::{plugin::TauriPlugin, Manager, Wry};
@@ -42,8 +42,6 @@ use tauri_plugin_cli::CliExt;
 use tauri_plugin_log::RotationStrategy;
 use tauri_plugin_store::StoreExt;
 use webview2_com::Microsoft::Web::WebView2::Win32::ICoreWebView2Settings6;
-
-use crate::globals::APTABASE_HOST;
 
 fn serialize_store_sorted(
     cache: &std::collections::HashMap<String, serde_json::Value>,
@@ -223,6 +221,7 @@ mod webview2_dialog_tests {
 async fn main() {
     oyasumivr_shared::install_tls_provider();
     ensure_webview2_available();
+    install_panic_log_hook();
 
     // Construct OyasumiVR Tauri application
     tauri::Builder::default()
@@ -241,7 +240,6 @@ async fn main() {
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
-        .plugin(configure_tauri_plugin_aptabase())
         .setup(|app| {
             #[cfg(windows)]
             if std::env::args_os().any(|arg| arg == "--console") {
@@ -319,35 +317,27 @@ fn configure_tauri_plugin_single_instance() -> TauriPlugin<Wry> {
     })
 }
 
-fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
-    tauri_plugin_aptabase::Builder::new(APTABASE_APP_KEY)
-        .with_options(tauri_plugin_aptabase::InitOptions {
-            #[allow(clippy::const_is_empty)]
-            host: if APTABASE_HOST.is_empty() {
-                None
-            } else {
-                Some(APTABASE_HOST.to_string())
-            },
-            flush_interval: tauri_plugin_aptabase::InitOptions::default().flush_interval,
-        })
-        .with_panic_hook(Box::new(|_client, info, msg| {
-            let location = info
-                .location()
-                .map(|loc| {
-                    let file = panic_location_file(loc.file());
-                    format!("{file}:{}:{}", loc.line(), loc.column())
-                })
-                .unwrap_or_default();
-
-            // Write msg and location to file
-            let panic_log_path = {
-                let full_path = std::env::current_exe().unwrap();
-                full_path.parent().unwrap().to_path_buf().join("panic.log")
-            };
-            println!("Writing panic log to {panic_log_path:#?}");
-            let _ = std::fs::write(panic_log_path, format!("{msg} ({location})\n"));
-        }))
-        .build()
+fn install_panic_log_hook() {
+    let previous_hook = std::panic::take_hook();
+    std::panic::set_hook(Box::new(move |info| {
+        let payload = info.payload();
+        let msg = payload
+            .downcast_ref::<&str>()
+            .map(|s| s.to_string())
+            .or_else(|| payload.downcast_ref::<String>().cloned())
+            .unwrap_or_else(|| format!("{payload:?}"));
+        let location = info
+            .location()
+            .map(|loc| {
+                let file = panic_location_file(loc.file());
+                format!("{file}:{}:{}", loc.line(), loc.column())
+            })
+            .unwrap_or_default();
+        let panic_log_path = std::env::current_exe().unwrap().with_file_name("panic.log");
+        println!("Writing panic log to {panic_log_path:#?}");
+        let _ = std::fs::write(panic_log_path, format!("{msg} ({location})\n"));
+        previous_hook(info);
+    }));
 }
 
 fn panic_location_file(file: &str) -> String {
@@ -647,6 +637,7 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         grpc::commands::get_core_grpc_port,
         grpc::commands::get_core_grpc_web_port,
         telemetry::commands::set_telemetry_enabled,
+        telemetry::commands::track_event,
         error_reporting::set_error_reporting_enabled,
         error_reporting::allow_ui_event,
         vrcx::commands::vrcx_log,
