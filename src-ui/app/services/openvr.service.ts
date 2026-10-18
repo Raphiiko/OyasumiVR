@@ -28,7 +28,12 @@ export class OpenVRService {
   private _status: BehaviorSubject<OpenVRStatus> = new BehaviorSubject<OpenVRStatus>('INACTIVE');
   public status: Observable<OpenVRStatus> = this._status.asObservable();
   private _devices: BehaviorSubject<OVRDevice[]> = new BehaviorSubject<OVRDevice[]>([]);
+  /** The devices OpenVR reports, with the overrides applied. */
   public devices: Observable<OVRDevice[]> = this._devices.asObservable();
+  /** The devices as OpenVR reports them, with the turn-off state OyasumiVR tracks. */
+  private reportedDevices: OVRDevice[] = [];
+  /** Field values that replace what OpenVR reports, by serial number. */
+  private overrides: Record<string, Partial<OVRDevice>> = {};
 
   private powerControlledSerials = new Set<string>();
 
@@ -84,7 +89,7 @@ export class OpenVRService {
     const devices = await invoke<OVRDevice[]>('openvr_get_devices');
     if (snapshotSession === deviceSession && this._status.value === 'INITIALIZED') {
       for (const device of devices) {
-        if (!this._devices.value.some((current) => current.index === device.index)) {
+        if (!this.reportedDevices.some((current) => current.index === device.index)) {
           this.onDeviceUpdate(device);
         }
       }
@@ -97,17 +102,39 @@ export class OpenVRService {
     device = Object.assign({}, device);
     if (device.isTurningOff === null || device.isTurningOff === undefined)
       device.isTurningOff =
-        this._devices.value.find((d) => d.index === device.index)?.isTurningOff ?? false;
-    if (!device.isConnected) device.isTurningOff = false;
-    if (device.canPowerOff && device.serialNumber)
-      this.powerControlledSerials.add(device.serialNumber);
-    this._devices.next(
-      orderBy(
-        [device, ...this._devices.value.filter((d) => d.index !== device.index)],
-        ['index'],
-        ['asc']
-      )
+        this.reportedDevices.find((d) => d.index === device.index)?.isTurningOff ?? false;
+    this.reportedDevices = orderBy(
+      [device, ...this.reportedDevices.filter((d) => d.index !== device.index)],
+      ['index'],
+      ['asc']
     );
+    this.publishDevices();
+  }
+
+  /** Marks the device busy while a turn-off runs. It clears by itself once the device disconnects. */
+  public setTurningOff(index: number, isTurningOff: boolean) {
+    const device = this.reportedDevices.find((d) => d.index === index);
+    if (!device) return;
+    device.isTurningOff = isTurningOff;
+    this.publishDevices();
+  }
+
+  /** Replaces every override. A device without one shows what OpenVR reports. */
+  // ponytail: one caller sets every override; key them by source once a second caller appears
+  public setOverrides(overrides: Record<string, Partial<OVRDevice>>) {
+    this.overrides = overrides;
+    this.publishDevices();
+  }
+
+  private publishDevices() {
+    const devices = this.reportedDevices.map((reported) => {
+      const device = { ...reported, ...this.overrides[reported.serialNumber ?? ''] };
+      if (!device.isConnected) reported.isTurningOff = device.isTurningOff = false;
+      if (device.canPowerOff && device.serialNumber)
+        this.powerControlledSerials.add(device.serialNumber);
+      return device;
+    });
+    this._devices.next(devices);
     this.appRef.tick();
   }
 
@@ -166,6 +193,7 @@ export class OpenVRService {
     switch (status) {
       case 'INACTIVE':
       case 'INITIALIZING':
+        this.reportedDevices = [];
         this._devices.next([]);
         break;
       case 'INITIALIZED':

@@ -2,10 +2,12 @@ import { Injectable, computed, signal } from '@angular/core';
 import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
 import { error, info } from '@tauri-apps/plugin-log';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, distinctUntilChanged, map, Subject } from 'rxjs';
+import { isEqual } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { SETTINGS_KEY_STEAM_FRAME_PAIRING, SETTINGS_STORE } from '../../globals';
 import { DMKnownDevice } from '../../models/device-manager';
+import { OVRDevice } from '../../models/ovr-device';
 import {
   SteamFrameCandidate,
   SteamFrameCleanupMode,
@@ -27,6 +29,7 @@ import {
 import { protectSecret, unprotectSecret } from '../../utils/secrets';
 import { ModalService } from '../modal.service';
 import { DeviceManagerService } from '../device-manager.service';
+import { OpenVRService } from '../openvr.service';
 
 type SetupStageEvent = { attemptId: string; stage: SteamFrameSetupStage };
 
@@ -64,7 +67,8 @@ export class SteamFramePairingService {
 
   constructor(
     private modalService: ModalService,
-    private deviceManager: DeviceManagerService
+    private deviceManager: DeviceManagerService,
+    private openvr: OpenVRService
   ) {}
 
   /** Loads saved pairings, subscribes to core events, and starts their connections. */
@@ -92,6 +96,14 @@ export class SteamFramePairingService {
 
     // start connections for the saved pairings
     await this.pushPairings();
+
+    // show each helper's controllers on the matching OpenVR devices
+    combineLatest([this.connections$, this.pairings$, this.openvr.devices.pipe(map(streamingHmds))])
+      .pipe(
+        map(([states, pairings, hmds]) => frameControllerOverrides(states, pairings, hmds)),
+        distinctUntilChanged(isEqual)
+      )
+      .subscribe((overrides) => this.openvr.setOverrides(overrides));
   }
 
   /** Shows the running setup's stage. */
@@ -823,4 +835,38 @@ export class SteamFramePairingService {
     } satisfies SteamFramePairingData);
     await SETTINGS_STORE.save();
   }
+}
+
+/** The serials of the connected headsets, which stream to this PC's SteamVR. */
+function streamingHmds(devices: OVRDevice[]): string[] {
+  return devices
+    .filter((d) => d.class === 'HMD' && d.isConnected && d.serialNumber)
+    .map((d) => d.serialNumber!);
+}
+
+/**
+ * OpenVR device overrides for every controller a connected helper reports, by serial. A controller
+ * can be turned off only while its headset streams to this PC.
+ */
+export function frameControllerOverrides(
+  states: Record<string, SteamFrameConnectionState>,
+  pairings: SteamFramePairing[],
+  hmds: string[]
+): Record<string, Partial<OVRDevice>> {
+  const overrides: Record<string, Partial<OVRDevice>> = {};
+  for (const state of Object.values(states)) {
+    const pairing = pairings.find((p) => p.id === state.pairingId);
+    if (state.status !== 'connected' || !pairing) continue;
+    const streaming = hmds.includes(pairing.identity.serial);
+    for (const controller of state.controllers ?? []) {
+      // a controller paired with two headsets follows the one it is connected to
+      if (overrides[controller.serial]?.isConnected) continue;
+      overrides[controller.serial] = {
+        powerMethod: 'SteamFrame',
+        isConnected: controller.connected,
+        canPowerOff: controller.connected && streaming,
+      };
+    }
+  }
+  return overrides;
 }

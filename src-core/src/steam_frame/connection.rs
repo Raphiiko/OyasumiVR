@@ -17,8 +17,9 @@ use super::{
     discovery,
     maintenance::{self, Recovery, UpdateOutcome},
     models::{
-        Brightness, Cct, Control, DisconnectControllerError, FadeEnded, FadeError, FadeOutcome,
-        FadeRequest, Maintenance, Pairing, SetBrightnessError, SetCctError, State, Status,
+        Brightness, Cct, Control, Controller, DisconnectControllerError, FadeEnded, FadeError,
+        FadeOutcome, FadeRequest, Maintenance, Pairing, SetBrightnessError, SetCctError, State,
+        Status,
     },
     setup::{
         self, bundled_digest, install_decision, InstallDecision, ProvisionError, Replace,
@@ -107,6 +108,9 @@ enum HelperMessage {
     DisconnectControllerResult {
         id: u64,
         error: Option<DisconnectControllerError>,
+    },
+    Controllers {
+        controllers: Vec<Controller>,
     },
 }
 
@@ -233,15 +237,6 @@ async fn send<T, E: Copy>(
         .unwrap_or(Err(offline))
 }
 
-/// Whether any paired headset's helper is connected.
-pub async fn helper_connected() -> bool {
-    STATES
-        .lock()
-        .await
-        .values()
-        .any(|state| state.status == Status::Connected)
-}
-
 /// The last state of every running connection.
 pub async fn states() -> Vec<State> {
     STATES.lock().await.values().cloned().collect()
@@ -292,6 +287,7 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>, commands: Command
         cert_pin: initial.cert_pin.clone(),
         brightness: None,
         cct: None,
+        controllers: None,
     };
     publish(&state).await;
     let mut backoff = Duration::from_secs(2);
@@ -346,6 +342,7 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>, commands: Command
                     wss::close(*socket).await;
                     state.brightness = None;
                     state.cct = None;
+                    state.controllers = None;
                     if requested {
                         if maintain(&mut state, &pairing).await {
                             return;
@@ -470,7 +467,7 @@ async fn maintain(state: &mut State, pairing: &Pairing) -> bool {
 }
 
 /// Holds a connected socket until it closes, or returns true when an update is requested.
-/// Relays brightness, color temperature, and fades meanwhile.
+/// Relays brightness, color temperature, controllers, and fades meanwhile.
 async fn hold_connected(
     socket: &mut Socket,
     update: &Notify,
@@ -498,8 +495,8 @@ struct Relay {
     next_id: u64,
 }
 
-/// Applies one helper message: a brightness or color temperature report, or the answer to a
-/// command.
+/// Applies one helper message: a brightness, color temperature, or controller report, or the
+/// answer to a command.
 async fn receive(text: &str, relay: &mut Relay, state: &mut State) {
     match serde_json::from_str(text) {
         Ok(HelperMessage::Brightness(brightness)) => {
@@ -559,6 +556,10 @@ async fn receive(text: &str, relay: &mut Relay, state: &mut State) {
                 outcome,
             };
             send_event(FADE_ENDED_EVENT, ended).await;
+        }
+        Ok(HelperMessage::Controllers { controllers }) => {
+            state.controllers = Some(controllers);
+            publish(state).await;
         }
         Ok(HelperMessage::DisconnectControllerResult { id, error }) => {
             if let Some(Reply::Disconnect(reply)) = relay.pending.remove(&id) {
@@ -892,6 +893,23 @@ mod tests {
                 error: Some(SetCctError::WriteFailed)
             }
         ));
+    }
+
+    #[test]
+    fn reads_the_helper_controller_messages() {
+        let HelperMessage::Controllers { controllers } = serde_json::from_str(
+            r#"{"type":"controllers","controllers":[{"serial":"ef173c419df4","connected":true}]}"#,
+        )
+        .unwrap() else {
+            panic!("not a controller report");
+        };
+        assert_eq!(
+            controllers,
+            [Controller {
+                serial: "ef173c419df4".into(),
+                connected: true
+            }]
+        );
     }
 
     #[test]

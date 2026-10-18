@@ -22,7 +22,7 @@ export class DeviceControlService {
   /** Resolves the devices a turn-off request was sent to. */
   async turnOffDevices(ovrDevices: OVRDevice[]): Promise<OVRDevice[]> {
     const [frameDispatched, consoleDispatched] = await Promise.all([
-      this.turnOffFrameControllers(ovrDevices.filter((d) => d.powerMethod === 'SteamFrame')),
+      this.turnOffFrameControllers(ovrDevices),
       this.lighthouseConsole.turnOffDevices(
         ovrDevices.filter((d) => d.powerMethod === 'Lighthouse')
       ),
@@ -32,9 +32,20 @@ export class DeviceControlService {
 
   /** Turns off one device for a user action, and shows a toast when it could not be turned off. */
   async turnOffDeviceForUser(ovrDevice: OVRDevice, deviceName: string): Promise<OVRDevice[]> {
-    if (ovrDevice.powerMethod !== 'SteamFrame')
-      return this.lighthouseConsole.turnOffDeviceForUser(ovrDevice, deviceName);
+    switch (ovrDevice.powerMethod) {
+      case 'Lighthouse':
+        return this.lighthouseConsole.turnOffDeviceForUser(ovrDevice, deviceName);
+      case 'SteamFrame':
+        return this.turnOffFrameControllerForUser(ovrDevice, deviceName);
+      case 'None':
+        return [];
+    }
+  }
 
+  private async turnOffFrameControllerForUser(
+    ovrDevice: OVRDevice,
+    deviceName: string
+  ): Promise<OVRDevice[]> {
     const dispatched = await this.turnOffFrameControllers([ovrDevice]);
     if (!dispatched.length) {
       this.toasts.show({
@@ -47,13 +58,15 @@ export class DeviceControlService {
     return dispatched;
   }
 
+  /** Turns off the Frame controllers among these devices, and ignores the rest. */
   private async turnOffFrameControllers(ovrDevices: OVRDevice[]): Promise<OVRDevice[]> {
-    if (!ovrDevices.length) return [];
+    if (!ovrDevices.some((device) => device.powerMethod === 'SteamFrame')) return [];
 
     // resolve requested serials against the current device snapshot
     const requestedSerials = new Set(ovrDevices.map((device) => device.serialNumber));
     const controllers = (await firstValueFrom(this.openvr.devices)).filter(
       (device) =>
+        device.powerMethod === 'SteamFrame' &&
         device.serialNumber &&
         requestedSerials.has(device.serialNumber) &&
         device.canPowerOff &&
@@ -66,12 +79,13 @@ export class DeviceControlService {
     return controllers.filter((_, index) => results[index]);
   }
 
-  /** Resolves true when the helper sent the disconnect. The device stays busy until OpenVR reports it off. */
+  /** Resolves true when the helper sent the disconnect. The device stays busy until it reports off. */
   private async turnOffFrameController(device: OVRDevice): Promise<boolean> {
-    this.openvr.onDeviceUpdate(Object.assign({}, device, { isTurningOff: true }));
+    if (device.powerMethod !== 'SteamFrame' || !device.serialNumber) return false;
+    this.openvr.setTurningOff(device.index, true);
     info(`[SteamFrame] Turning off device ${device.class}:${device.serialNumber}`);
-    if (await this.steamFrame.disconnectController(device.serialNumber!)) return true;
-    this.openvr.onDeviceUpdate(Object.assign({}, device, { isTurningOff: false }));
+    if (await this.steamFrame.disconnectController(device.serialNumber)) return true;
+    this.openvr.setTurningOff(device.index, false);
     return false;
   }
 }

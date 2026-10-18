@@ -14,9 +14,6 @@ use std::sync::LazyLock;
 use strum::IntoEnumIterator;
 use tokio::sync::Mutex;
 
-/// The OpenVR controller type of a Steam Frame controller.
-const FRAME_CONTROLLER_TYPE: &str = "frame_controller";
-
 static OVR_DEVICES: LazyLock<Mutex<Vec<OVRDevice>>> = LazyLock::new(|| Mutex::new(Vec::new()));
 static SLEEP_DETECTOR: LazyLock<Mutex<SleepDetector>> =
     LazyLock::new(|| Mutex::new(SleepDetector::new()));
@@ -224,27 +221,13 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
         )
         .ok();
     let is_connected = device_connected(&system, device_index);
-    let controller_type: Option<String> = system
-        .get_tracked_device_property(
-            device_index,
-            ovr::raw::ETrackedDeviceProperty::Prop_ControllerType_String,
-        )
-        .ok();
-    let power_method = if controller_type.as_deref() == Some(FRAME_CONTROLLER_TYPE) {
-        PowerMethod::SteamFrame
-    } else if dongle_id.as_deref().is_some_and(|id| !id.is_empty()) {
+    let power_method = if dongle_id.as_deref().is_some_and(|id| !id.is_empty()) {
         PowerMethod::Lighthouse
     } else {
         PowerMethod::None
     };
-    // VRLink never sets the power-off property; only a connected helper can turn a Frame controller off
-    let can_power_off = if power_method == PowerMethod::SteamFrame {
-        Some(
-            device_connected(&system, device_index) && crate::steam_frame::helper_connected().await,
-        )
-    } else {
-        can_power_off
-    };
+    // nothing can turn off a device without a power method, whatever OpenVR reports
+    let can_power_off = can_power_off.map(|can| can && power_method != PowerMethod::None);
     let mut hmd_on_head = None;
     let mut hmd_activity = None;
     let mut display_frequency = None;
@@ -523,7 +506,7 @@ mod tests {
             ("manufacturerName", serde_json::json!("other manufacturer")),
             ("modelNumber", serde_json::json!("other model")),
             ("isConnected", serde_json::json!(false)),
-            ("powerMethod", serde_json::json!("SteamFrame")),
+            ("powerMethod", serde_json::json!("None")),
             ("handleType", serde_json::json!("HandSecondary")),
             ("hmdOnHead", serde_json::json!(true)),
             ("hmdActivity", serde_json::json!("UserInteraction")),

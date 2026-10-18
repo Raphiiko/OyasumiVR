@@ -214,6 +214,10 @@ async fn relays_brightness_to_every_pc() {
             next_json(socket).await,
             serde_json::json!({"type": "cct", "available": true, "kelvin": 6600, "exact": true})
         );
+        assert_eq!(
+            next_json(socket).await,
+            serde_json::json!({"type": "controllers", "controllers": []})
+        );
     }
     // the writer gets a reply, the other PC a snapshot
     let command = r#"{"type":"setBrightness","id":7,"percentage":150}"#;
@@ -249,7 +253,7 @@ async fn relays_color_temperature_to_every_pc() {
     .await
     .unwrap();
     for socket in [&mut a, &mut b] {
-        for _ in 0..3 {
+        for _ in 0..4 {
             next_json(socket).await;
         }
     }
@@ -294,9 +298,9 @@ async fn finishes_a_fade_after_its_pc_disconnects() {
     .await
     .unwrap();
     for socket in [&mut a, &mut b] {
-        next_json(socket).await;
-        next_json(socket).await;
-        next_json(socket).await;
+        for _ in 0..4 {
+            next_json(socket).await;
+        }
     }
 
     // the sender gets a reply, then leaves

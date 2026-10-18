@@ -68,9 +68,11 @@ async function createConsole(devices: OVRDevice[], valid = true) {
     } as unknown as ConstructorParameters<typeof LighthouseConsoleService>[0],
     {
       devices: currentDevices,
-      onDeviceUpdate: (device: OVRDevice) =>
+      setTurningOff: (index: number, isTurningOff: boolean) =>
         currentDevices.next(
-          currentDevices.value.map((current) => (current.index === device.index ? device : current))
+          currentDevices.value.map((current) =>
+            current.index === index ? { ...current, isTurningOff } : current
+          )
         ),
     } as unknown as ConstructorParameters<typeof LighthouseConsoleService>[1],
     new ToastService()

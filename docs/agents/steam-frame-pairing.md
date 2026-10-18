@@ -370,25 +370,40 @@ as its field 1. The web server needs no web secret from its own origin, so the h
 `Origin: http://127.0.0.1:27062`. Neither the PC's SteamVR nor OpenVR power-off reaches these
 controllers.
 
+The helper keeps a second socket to the same web server open, and sends `02 08 2D 0A 00` on it every
+second: the same request with an empty field 1, `update`. The web server answers with a message of
+type 44. Its field 3, `connected_controller`, and field 4, `paired_controller`, each hold a
+controller whose field 1 is its serial. A socket without a state for 5 seconds counts as failed, and
+the helper opens a new one. Nobody has seen the web server send a state without a request.
+
+The helper sends every PC `{"type":"controllers","controllers":[{"serial":"96c863a69af3","connected":true}]}`
+on connect and on every change. The list holds every paired controller, sorted by serial. It is
+empty while SteamVR on the headset does not answer.
+
 ### On the PC
 
-The core gives every OpenVR device a `powerMethod`: `SteamFrame` for the OpenVR controller type
-`frame_controller`, `Lighthouse` for a device with a dongle id, and `None` for the rest. The UI and
-the power-off routing switch on it, never on raw OpenVR strings.
+The core reports OpenVR devices as OpenVR shows them. `powerMethod` is `Lighthouse` for a device
+with a dongle id and `None` for the rest, and `canPowerOff` is false for `None`. VRLink never sets
+`Prop_DeviceCanPowerOff_Bool` on a Frame controller, so the core reports it as `None`.
 
-VRLink never sets `Prop_DeviceCanPowerOff_Bool` on a Frame controller. The core sets `canPowerOff`
-for it while a headset helper is connected and the pose's `bDeviceIsConnected` is true. That flag
-changes with `TrackedDeviceActivated` and `TrackedDeviceDeactivated`, and the core picks up a helper
-connecting or dropping on its 5-second device refresh. The controller stays in the device list and
-keeps its index while off. It also counts as off while the headset is not streaming, because the PC
-cannot reach it then. A controller that wakes out of the headset cameras' view counts as off until
-they first see it. Losing tracking after that leaves it connected.
+The core keeps each helper's last list in its connection state as `controllers`, null while the
+helper is not connected. `SteamFramePairingService` turns the lists into overrides by serial, and
+`OpenVRService` applies them on top of the reported devices. For each controller a connected helper
+lists:
 
-`DeviceControlService` is the entry point for device actions. It turns off a `SteamFrame` device
-through the helper, and hands a `Lighthouse` device to `LighthouseConsoleService`, which only runs
-the Lighthouse console. So the device list, the hotkeys, the automations, and the overlay all reach
-a Frame controller the same way. Like a Lighthouse device, it stays busy from the request until
-OpenVR reports it off.
+- `powerMethod` is `SteamFrame`.
+- `isConnected` is the helper's `connected`.
+- `canPowerOff` is `connected`, while the paired headset's HMD is connected in this PC's OpenVR.
+
+A listed controller that OpenVR does not report gets no device. A controller paired with two headsets
+follows the one it is connected to. Without a connected helper, a controller shows what OpenVR
+reports, so a helper drop never looks like the controllers turning off.
+
+`DeviceControlService` is the entry point for device actions. It switches on `powerMethod`: it turns
+off a `SteamFrame` device through the helper, hands a `Lighthouse` device to
+`LighthouseConsoleService`, which only runs the Lighthouse console, and does nothing for `None`. So
+the device list, the hotkeys, the automations, and the overlay all reach a Frame controller the same
+way. Like a Lighthouse device, it stays busy from the request until it reports disconnected.
 
 ## Updates
 

@@ -177,7 +177,7 @@ export class LighthouseConsoleService {
 
   /** Resolves true when the console exits with status 0. */
   private async powerOffDevice(device: OVRDevice, lighthouseConsolePath: string): Promise<boolean> {
-    this.openvr.onDeviceUpdate(Object.assign({}, device, { isTurningOff: true }));
+    this.openvr.setTurningOff(device.index, true);
     info(`[Lighthouse] Turning off device ${device.class}:${device.serialNumber}`);
     try {
       const output = await invoke<{ status: number }>('run_command', {

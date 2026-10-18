@@ -117,6 +117,9 @@ enum Outgoing<'a> {
         #[serde(skip_serializing_if = "Option::is_none")]
         error: Option<vrserver::DisconnectError>,
     },
+    Controllers {
+        controllers: &'a [vrserver::Controller],
+    },
 }
 
 impl<'a> Outgoing<'a> {
@@ -136,6 +139,7 @@ impl<'a> Outgoing<'a> {
             }
             Event::Brightness { snapshot, .. } => Self::Brightness { snapshot },
             Event::Cct { snapshot, .. } => Self::Cct { snapshot },
+            Event::Controllers(controllers) => Self::Controllers { controllers },
             Event::FadeReply { id, result, .. } => Self::FadeResult {
                 id: *id,
                 error: result.err(),
@@ -365,8 +369,8 @@ fn unauthorized() -> ErrorResponse {
     response
 }
 
-/// Serves one PC: TLS, token check, hello message, then brightness and color temperature until the
-/// socket closes.
+/// Serves one PC: TLS, token check, hello message, then brightness, color temperature, and
+/// controllers until the socket closes.
 #[allow(clippy::result_large_err)] // the callback signature belongs to tungstenite
 async fn handle(
     stream: TcpStream,
@@ -397,7 +401,7 @@ async fn handle(
         return;
     };
 
-    // send the version, then the current brightness and color temperature
+    // send the version, then the current brightness, color temperature, and controllers
     let hello = Hello {
         r#type: "hello",
         info: (*info).clone(),
@@ -410,6 +414,9 @@ async fn handle(
         }),
         serde_json::to_string(&Outgoing::Cct {
             snapshot: &latest.cct,
+        }),
+        serde_json::to_string(&Outgoing::Controllers {
+            controllers: &latest.controllers,
         }),
     ] {
         let Ok(message) = message else { return };

@@ -9,6 +9,7 @@ use crate::{
     brightness::{self, Backend},
     cct::{self, ColorGains},
     controls::{Control, Controls, FadeError, FadeRequest, Outcome},
+    vrserver::Controller,
 };
 
 /// A boot clock that runs this much further than the monotonic one means the system slept.
@@ -59,12 +60,14 @@ pub enum Event {
         operation: String,
         outcome: Outcome,
     },
+    Controllers(Vec<Controller>),
 }
 
 #[derive(Clone, Debug)]
 pub struct Latest {
     pub brightness: brightness::Snapshot,
     pub cct: cct::Snapshot,
+    pub controllers: Vec<Controller>,
 }
 
 /// Connects the headset task with the PC connections.
@@ -87,11 +90,19 @@ impl Hub {
         let _ = self.commands.send(command);
     }
 
+    /// Publishes the headset's controllers when they differ from the last list.
+    pub fn set_controllers(&self, controllers: Vec<Controller>) {
+        if self.latest.lock().unwrap().controllers != controllers {
+            self.publish(Event::Controllers(controllers));
+        }
+    }
+
     fn publish(&self, event: Event) {
         let mut latest = self.latest.lock().unwrap();
         match &event {
             Event::Brightness { snapshot, .. } => latest.brightness = snapshot.clone(),
             Event::Cct { snapshot, .. } => latest.cct = snapshot.clone(),
+            Event::Controllers(controllers) => latest.controllers = controllers.clone(),
             _ => {}
         }
         let _ = self.events.send(event);
@@ -106,6 +117,7 @@ pub fn start<B: Backend + ColorGains + Send + 'static>(backend: B) -> Arc<Hub> {
         latest: Mutex::new(Latest {
             brightness: brightness::Snapshot::UNAVAILABLE,
             cct: cct::Snapshot::UNAVAILABLE,
+            controllers: Vec::new(),
         }),
         events: broadcast::channel(256).0,
         commands,

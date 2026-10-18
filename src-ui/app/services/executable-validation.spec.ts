@@ -37,7 +37,7 @@ function createLighthouse() {
     } as unknown as ConstructorParameters<typeof LighthouseConsoleService>[0],
     {
       devices: new BehaviorSubject([device]),
-      onDeviceUpdate: vi.fn(),
+      setTurningOff: vi.fn(),
     } as unknown as ConstructorParameters<typeof LighthouseConsoleService>[1],
     new ToastService()
   );

@@ -1,7 +1,9 @@
 import '@angular/compiler';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { SteamFramePairingService } from './steam-frame-pairing.service';
+import { frameControllerOverrides, SteamFramePairingService } from './steam-frame-pairing.service';
+import { of } from 'rxjs';
 import { DMKnownDevice } from '../../models/device-manager';
+import { SteamFrameConnectionState, SteamFramePairing } from '../../models/steam-frame';
 
 const { invoke, store } = vi.hoisted(() => ({
   invoke: vi.fn(),
@@ -15,6 +17,7 @@ vi.mock('../../globals', () => ({
   SETTINGS_KEY_STEAM_FRAME_PAIRING: 'FRAME',
 }));
 vi.mock('../device-manager.service', () => ({ DeviceManagerService: class {} }));
+vi.mock('../openvr.service', () => ({ OpenVRService: class {} }));
 vi.mock('../../utils/secrets', () => ({
   protectSecret: async (plain: string) => `protected:${plain}`,
   unprotectSecret: async (stored: string) => stored.replace('protected:', ''),
@@ -31,6 +34,8 @@ const device: DMKnownDevice = {
   disabled: false,
 };
 
+const openvr = { devices: of([]), setOverrides: vi.fn() } as any;
+
 type Handler = (args: any) => unknown;
 let handlers: Record<string, Handler>;
 let observed: boolean;
@@ -40,7 +45,8 @@ const calls = (command: string) =>
 async function start() {
   const service = new SteamFramePairingService(
     { isModalOpen: () => true, closeModal: vi.fn() } as any,
-    { isDeviceObserved: () => observed } as any
+    { isDeviceObserved: () => observed } as any,
+    openvr
   );
   await service.init();
   await service.openWizard(device);
@@ -435,7 +441,7 @@ describe('Steam Frame pairing flow', () => {
   });
 
   it('offers pairing only for allowlisted headsets', async () => {
-    const service = new SteamFramePairingService({} as any, {} as any);
+    const service = new SteamFramePairingService({} as any, {} as any, openvr);
     await service.init();
     expect(service.identityOf(device)).not.toBeNull();
     expect(service.identityOf({ ...device, typeName: 'Index' })).toBeNull();
@@ -540,5 +546,44 @@ describe('Steam Frame unpairing', () => {
     expect(await service.otherPcCount(pairing)).toBe('rejected');
     handlers['steam_frame_count_other_pcs'] = () => ({ status: 'unreachable' });
     expect(await service.otherPcCount(pairing)).toBe('unreachable');
+  });
+});
+
+describe('frameControllerOverrides', () => {
+  const pairing = (id: string, serial: string) =>
+    ({ id, identity: { serial } }) as SteamFramePairing;
+  const state = (
+    pairingId: string,
+    controllers: SteamFrameConnectionState['controllers'],
+    status: SteamFrameConnectionState['status'] = 'connected'
+  ) => ({ pairingId, status, controllers }) as SteamFrameConnectionState;
+
+  it('lets a connected controller turn off only while its headset streams here', () => {
+    const states = {
+      a: state('a', [
+        { serial: 'C1', connected: true },
+        { serial: 'C2', connected: false },
+      ]),
+    };
+    const pairings = [pairing('a', 'HMD-A')];
+    expect(frameControllerOverrides(states, pairings, ['HMD-A'])).toEqual({
+      C1: { powerMethod: 'SteamFrame', isConnected: true, canPowerOff: true },
+      C2: { powerMethod: 'SteamFrame', isConnected: false, canPowerOff: false },
+    });
+    expect(frameControllerOverrides(states, pairings, [])['C1'].canPowerOff).toBe(false);
+  });
+
+  it('skips headsets whose helper is not connected', () => {
+    const states = { a: state('a', [{ serial: 'C1', connected: true }], 'offline') };
+    expect(frameControllerOverrides(states, [pairing('a', 'HMD-A')], ['HMD-A'])).toEqual({});
+  });
+
+  it('follows the headset a shared controller is connected to', () => {
+    const states = {
+      b: state('b', [{ serial: 'C1', connected: false }]),
+      a: state('a', [{ serial: 'C1', connected: true }]),
+    };
+    const pairings = [pairing('a', 'HMD-A'), pairing('b', 'HMD-B')];
+    expect(frameControllerOverrides(states, pairings, ['HMD-A'])['C1'].isConnected).toBe(true);
   });
 });

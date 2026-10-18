@@ -67,6 +67,13 @@ export interface SteamFrameConnectionState {
   brightness: SteamFrameBrightness | null;
   /** The helper's last color temperature report; null while not connected. */
   cct: SteamFrameCct | null;
+  /** The controllers paired with the headset, from the helper's last report; null while not connected. */
+  controllers: SteamFrameController[] | null;
+}
+
+export interface SteamFrameController {
+  serial: string;
+  connected: boolean;
 }
 
 export type SteamFrameControl = 'brightness' | 'cct';
