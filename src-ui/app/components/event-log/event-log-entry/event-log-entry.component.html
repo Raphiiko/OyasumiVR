@@ -1,5 +1,5 @@
-@if (parser || (!entry && titleKey)) {
-  <div class="container" [class.compact]="compact">
+@if (parser || (!entry() && titleKey())) {
+  <div class="container" [class.compact]="compact()">
     <div class="header">
       <ng-content select="[eventLogPrefix]" />
       @if (iconName) {
@@ -7,15 +7,15 @@
       }
       <div class="header-info">
         <span class="title" [innerHtml]="headerInfoTitle"></span>
-        @if (!compact && headerInfoSubTitle) {
+        @if (!compact() && headerInfoSubTitle) {
           <span class="subtitle" [innerHtml]="headerInfoSubTitle"></span>
         }
         <ng-content />
       </div>
-      @if (showTime) {
+      @if (showTime()) {
         <div class="header-time">
           <span>{{ entryTime | localizedDate: 'EVENT_LOG_TIME' }}</span>
-          @if (!compact) {
+          @if (!compact()) {
             <span>{{ entryTime | localizedDate: 'EVENT_LOG_DATE' }}</span>
           }
         </div>

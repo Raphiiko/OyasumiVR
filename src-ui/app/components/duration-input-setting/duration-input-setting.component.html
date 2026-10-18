@@ -6,7 +6,7 @@
     (mouseenter)="mouseEnter('INPUT')"
     (mouseleave)="mouseLeave('INPUT')"
     (click)="mouseClickInput()"
-    [disabled]="disabled"
+    [disabled]="disabled()"
   />
   @if (inputOpen) {
     <div

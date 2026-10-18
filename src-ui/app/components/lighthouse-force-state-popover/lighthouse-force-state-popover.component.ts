@@ -1,12 +1,11 @@
 import {
   ChangeDetectorRef,
   Component,
-  EventEmitter,
   inject,
-  Input,
   OnInit,
-  Output,
   ChangeDetectionStrategy,
+  input,
+  output,
 } from '@angular/core';
 import { hshrink } from '../../utils/animations';
 import { LighthouseDevicePowerState, LighthouseDeviceType } from '../../models/lighthouse-device';
@@ -23,8 +22,8 @@ import { DevicePowerAction } from '../device-power-button/device-power-button.co
 export class LighthouseForceStatePopoverComponent implements OnInit {
   hoverAction = '';
   active = false;
-  @Output() action = new EventEmitter<LighthouseDevicePowerState>();
-  @Input() type?: LighthouseDeviceType;
+  readonly action = output<LighthouseDevicePowerState>();
+  readonly type = input<LighthouseDeviceType>();
   private cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {

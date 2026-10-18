@@ -2,11 +2,12 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
-  EventEmitter,
-  Input,
   OnInit,
-  Output,
   ChangeDetectionStrategy,
+  effect,
+  input,
+  model,
+  untracked,
 } from '@angular/core';
 import { TString } from '../../models/translatable-string';
 import { VRChatService } from '../../services/vrchat-api/vrchat.service';
@@ -35,12 +36,9 @@ import { noop, vshrink } from '../../utils/animations';
   standalone: false,
 })
 export class PlayerListComponent implements OnInit {
-  @Input() title: TString = 'comp.player-list.title';
-  @Output() playerIdsChange = new EventEmitter<string[]>();
-
-  @Input() set playerIds(value: string[]) {
-    this.refreshPlayerList(value);
-  }
+  readonly title = input<TString>('comp.player-list.title');
+  /** Emits only the IDs of current friends: the list drops any other ID after it loads. */
+  readonly playerIds = model<string[]>([]);
 
   playerList: LimitedUserFriend[] = [];
   loggedIn = false;
@@ -50,7 +48,12 @@ export class PlayerListComponent implements OnInit {
     private modalService: ModalService,
     private destroyRef: DestroyRef,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    effect(() => {
+      const playerIds = this.playerIds();
+      untracked(() => this.refreshPlayerList(playerIds));
+    });
+  }
 
   ngOnInit() {
     this.vrchat.status
@@ -61,10 +64,6 @@ export class PlayerListComponent implements OnInit {
         if (this.loggedIn && this.playerList.length)
           await this.refreshPlayerList(this.playerList.map((p) => p.id));
       });
-  }
-
-  private emitPlayerListChange() {
-    this.playerIdsChange.emit(this.playerList.map((p) => p.id));
   }
 
   async refreshPlayerList(playerIds: string[]) {
@@ -79,7 +78,7 @@ export class PlayerListComponent implements OnInit {
     }
     this.playerList = friends.filter((f) => playerIds.includes(f.id));
     this.cdr.markForCheck();
-    this.emitPlayerListChange();
+    this.playerIds.set(this.playerList.map((p) => p.id));
   }
 
   addPlayer() {
@@ -96,10 +95,12 @@ export class PlayerListComponent implements OnInit {
       })
       .subscribe(async (result) => {
         if (!result || result.selection === undefined) return;
-        this.playerIds = result.selection
-          .filter((r) => r.type === 'player')
-          .map((r) => r as SelectedFriendPlayer)
-          .map((r) => r.playerId);
+        await this.refreshPlayerList(
+          result.selection
+            .filter((r) => r.type === 'player')
+            .map((r) => r as SelectedFriendPlayer)
+            .map((r) => r.playerId)
+        );
       });
   }
 
@@ -114,7 +115,9 @@ export class PlayerListComponent implements OnInit {
       })
       .subscribe(async (data) => {
         if (data?.confirmed) {
-          this.playerIds = this.playerList.filter((p) => p.id !== player.id).map((p) => p.id);
+          await this.refreshPlayerList(
+            this.playerList.filter((p) => p.id !== player.id).map((p) => p.id)
+          );
         }
       });
   }
@@ -128,7 +131,7 @@ export class PlayerListComponent implements OnInit {
         },
       })
       .subscribe(async (data) => {
-        if (data?.confirmed) this.playerIds = [];
+        if (data?.confirmed) await this.refreshPlayerList([]);
       });
   }
 
@@ -141,9 +144,9 @@ export class PlayerListComponent implements OnInit {
         },
         {}
       )
-      .subscribe((result) => {
+      .subscribe(async (result) => {
         if (result?.playerIds) {
-          this.playerIds = result.playerIds;
+          await this.refreshPlayerList(result.playerIds);
         }
       });
   }

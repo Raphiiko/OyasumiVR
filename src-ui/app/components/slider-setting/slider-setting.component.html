@@ -3,14 +3,14 @@
     <div class="bg"></div>
     <div class="slider-container">
       <app-slider
-        [min]="min"
-        [max]="max"
-        [step]="step"
-        [snapDistance]="snapDistance"
-        [snapValues]="snapValues"
-        [value]="value"
+        [min]="min()"
+        [max]="max()"
+        [step]="step()"
+        [snapDistance]="snapDistance()"
+        [snapValues]="snapValues()"
+        [value]="value()"
         (valueChange)="onSliderChange($event)"
-        [style]="style"
+        [style]="style()"
         #slider
       ></app-slider>
     </div>
@@ -18,29 +18,29 @@
 }
 <div
   class="input-container"
-  [class.has-unit]="!!unit || !!unitIcon"
+  [class.has-unit]="!!unit() || !!unitIcon()"
   (mouseenter)="onMouseEnter()"
   [class.overlay-active]="showOverlay"
-  [class.disabled]="disabled"
+  [class.disabled]="disabled()"
 >
   <input
     type="number"
     class="small"
-    [min]="min"
-    [max]="max"
-    [step]="step"
-    [value]="value"
+    [min]="min()"
+    [max]="max()"
+    [step]="step()"
+    [value]="value()"
     (input)="input$.next(inputValue.value)"
     (blur)="onInputBlur()"
     #inputValue
   />
-  @if (unit || unitIcon) {
+  @if (unit() || unitIcon()) {
     <div class="unit">
-      @if (unit) {
-        <span [innerHTML]="unit"></span>
+      @if (unit()) {
+        <span [innerHTML]="unit()"></span>
       }
-      @if (unitIcon) {
-        <app-icon [name]="unitIcon" class="icon-mono" />
+      @if (unitIcon(); as icon) {
+        <app-icon [name]="icon" class="icon-mono" />
       }
     </div>
   }

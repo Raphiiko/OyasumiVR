@@ -1,4 +1,4 @@
-import { Component, DestroyRef, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectionStrategy, input } from '@angular/core';
 import { SelectBoxItem } from '../../../../../../components/select-box/select-box.component';
 import { debounceTime, distinctUntilChanged, map, skip, Subject, tap } from 'rxjs';
 import { VRChatService } from '../../../../../../services/vrchat-api/vrchat.service';
@@ -28,9 +28,9 @@ interface PresetOptions {
 })
 export class InviteRequestsTabComponent implements OnInit {
   readonly defaults = AUTOMATION_CONFIGS_DEFAULT.AUTO_ACCEPT_INVITE_REQUESTS;
-  @Input() loggedIn = false;
-  @Input() isOnBusyStatus = false;
-  @Input() isOnJoinMeStatus = false;
+  readonly loggedIn = input(false);
+  readonly isOnBusyStatus = input(false);
+  readonly isOnJoinMeStatus = input(false);
 
   listModeOption?: SelectBoxItem;
   listModeOptions: SelectBoxItem[] = [

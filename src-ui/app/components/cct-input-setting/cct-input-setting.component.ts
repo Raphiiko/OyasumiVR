@@ -3,9 +3,9 @@ import {
   Component,
   computed,
   inject,
-  Input,
   model,
   ChangeDetectionStrategy,
+  input,
 } from '@angular/core';
 import { getCSSColorForCCT } from 'src-shared-ts/src/cct-utils';
 import { fade } from '../../utils/animations';
@@ -23,7 +23,7 @@ export class CCTInputSettingComponent {
   protected inputOpen = true;
   value = model<number>(6600);
   displayValue = computed(() => Math.floor(this.value()) + 'K');
-  @Input() disabled = false;
+  readonly disabled = input(false);
   protected cctColor = 'black';
   private cdr = inject(ChangeDetectorRef);
 
@@ -37,7 +37,7 @@ export class CCTInputSettingComponent {
   }
 
   openInput() {
-    if (this.disabled) {
+    if (this.disabled()) {
       this.inputOpen = false;
       return;
     }

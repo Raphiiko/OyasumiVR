@@ -5,6 +5,6 @@
   }
   <ng-content select="[alertIcon]"></ng-content>
 </div>
-<div class="alert-content" [ngClass]="contentClass"
-  >{{ message ? (message | transloco) : '' }}<ng-content></ng-content
+<div class="alert-content" [ngClass]="contentClass()"
+  >{{ message() ? (message() | transloco) : '' }}<ng-content></ng-content
 ></div>

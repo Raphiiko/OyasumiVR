@@ -2,11 +2,13 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
-  EventEmitter,
-  Input,
+  OnDestroy,
   OnInit,
-  Output,
   ChangeDetectionStrategy,
+  effect,
+  model,
+  output,
+  untracked,
 } from '@angular/core';
 import { DropdownItem } from '../dropdown-button/dropdown-button.component';
 import {
@@ -29,7 +31,6 @@ import { OscAddressSelection } from './osc-address-autocomplete/osc-address-auto
 import { AvatarContext, VRChatAvatarParameter } from '../../models/avatar-context';
 import { VRChatService } from 'src-ui/app/services/vrchat-api/vrchat.service';
 import { AppSettingsService } from '../../services/app-settings.service';
-import { flushOnDestroy } from '../../utils/rxjs-utils';
 
 interface ValidationError {
   actionIndex: number;
@@ -44,18 +45,12 @@ interface ValidationError {
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
-export class OscScriptSimpleEditorComponent implements OnInit {
+export class OscScriptSimpleEditorComponent implements OnInit, OnDestroy {
   private validationTrigger: Subject<void> = new Subject<void>();
   protected _script: OscScript = { version: 3, commands: [] };
-  @Input() set script(script: OscScript) {
-    if (isEqual(script, this._script)) return;
-    this._script = structuredClone(script);
-    this.validationTrigger.next();
-  }
-
-  @Output() scriptChange = new EventEmitter<OscScript>();
-  @Output() errorCount = new EventEmitter<number>();
-  @Output() validatedChange = new EventEmitter<boolean>();
+  readonly script = model.required<OscScript>();
+  readonly errorCount = output<number>();
+  readonly validatedChange = output<boolean>();
   _validated = true;
   set validated(value: boolean) {
     this._validated = value;
@@ -115,10 +110,23 @@ export class OscScriptSimpleEditorComponent implements OnInit {
     protected vrchat: VRChatService,
     private appSettings: AppSettingsService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    effect(() => {
+      const script = this.script();
+      untracked(() => {
+        if (isEqual(script, this._script)) return;
+        this._script = structuredClone(script);
+        this.validationTrigger.next();
+      });
+    });
+  }
+
+  ngOnDestroy(): void {
+    // complete here, not through DestroyRef: outputs stop emitting once DestroyRef callbacks run
+    this.validationTrigger.complete();
+  }
 
   ngOnInit(): void {
-    flushOnDestroy(this.validationTrigger, this.destroyRef);
     this.validationTrigger
       .pipe(
         startWith(void 0),
@@ -133,7 +141,8 @@ export class OscScriptSimpleEditorComponent implements OnInit {
         this.validateScript();
         this.validated = true;
         this.errorCount.emit(this.errors.length);
-        this.scriptChange.emit(this._script);
+        // _script is edited in place, so a copy is needed for the model to see a change
+        this.script.set(structuredClone(this._script));
         this.cdr.markForCheck();
       });
 

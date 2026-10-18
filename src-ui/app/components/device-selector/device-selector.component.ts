@@ -2,11 +2,12 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
-  EventEmitter,
-  Input,
   OnInit,
-  Output,
   ChangeDetectionStrategy,
+  effect,
+  input,
+  model,
+  untracked,
 } from '@angular/core';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { DeviceSelection, DMDeviceType } from 'src-ui/app/models/device-manager';
@@ -26,20 +27,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   standalone: false,
 })
 export class DeviceSelectorComponent implements OnInit {
-  private _selection?: DeviceSelection;
   private lastSelection?: DeviceSelection;
 
-  @Input()
-  set selection(value: DeviceSelection | undefined) {
-    this._selection = value;
-    this.checkSelectionChange();
-  }
-  get selection(): DeviceSelection | undefined {
-    return this._selection;
-  }
-
-  @Input() allowedDeviceTypes?: DMDeviceType[];
-  @Output() selectionChange = new EventEmitter<DeviceSelection>();
+  readonly selection = model.required<DeviceSelection>();
+  readonly allowedDeviceTypes = input<DMDeviceType[]>();
 
   protected deviceCount = 0;
 
@@ -49,7 +40,12 @@ export class DeviceSelectorComponent implements OnInit {
     private translateService: TranslocoService,
     private destroyRef: DestroyRef,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    effect(() => {
+      this.selection();
+      untracked(() => this.checkSelectionChange());
+    });
+  }
 
   ngOnInit() {
     this.deviceManagerService.knownDevices
@@ -65,11 +61,10 @@ export class DeviceSelectorComponent implements OnInit {
   }
 
   get hasSelection(): boolean {
+    const selection = this.selection();
     return !!(
-      this.selection &&
-      (this.selection.devices.length > 0 ||
-        this.selection.types.length > 0 ||
-        this.selection.tagIds.length > 0)
+      selection &&
+      (selection.devices.length > 0 || selection.types.length > 0 || selection.tagIds.length > 0)
     );
   }
 
@@ -87,44 +82,44 @@ export class DeviceSelectorComponent implements OnInit {
       .addModal(
         DeviceSelectorModalComponent,
         {
-          selection: structuredClone(this.selection),
-          allowedDeviceTypes: this.allowedDeviceTypes,
+          selection: structuredClone(this.selection()),
+          allowedDeviceTypes: this.allowedDeviceTypes(),
         },
         {}
       )
       .subscribe((result) => {
         if (result && result.save) {
-          this.selection = result.selection;
-          this.selectionChange.emit(this.selection);
+          this.selection.set(result.selection);
         }
       });
   }
 
   clearSelection() {
-    this.selection = {
+    this.selection.set({
       devices: [],
       types: [],
       tagIds: [],
-    };
-    this.selectionChange.emit(this.selection);
+    });
   }
 
   private checkSelectionChange() {
-    if (!isEqual(this.selection, this.lastSelection)) {
-      this.lastSelection = this.selection ? structuredClone(this.selection) : undefined;
+    const selection = this.selection();
+    if (!isEqual(selection, this.lastSelection)) {
+      this.lastSelection = selection ? structuredClone(selection) : undefined;
       this.updateDeviceCount();
     }
   }
 
   private async updateDeviceCount() {
-    if (!this.selection) {
+    const selection = this.selection();
+    if (!selection) {
       this.deviceCount = 0;
       this.cdr.markForCheck();
       return;
     }
 
     try {
-      const devices = await this.deviceManagerService.getDevicesForSelection(this.selection);
+      const devices = await this.deviceManagerService.getDevicesForSelection(selection);
       this.deviceCount = devices.knownDevices.length;
     } catch (error) {
       console.error('Failed to get devices for selection:', error);

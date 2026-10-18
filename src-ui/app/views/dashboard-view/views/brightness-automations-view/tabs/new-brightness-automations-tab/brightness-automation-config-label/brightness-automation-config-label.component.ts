@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input } from '@angular/core';
 import { BrightnessEventAutomationConfig } from '../../../../../../../models/automations';
 import { getCSSColorForCCT } from 'src-shared-ts/src/cct-utils';
 import { hshrink, vshrink } from '../../../../../../../utils/animations';
@@ -12,7 +12,7 @@ import { hshrink, vshrink } from '../../../../../../../utils/animations';
   standalone: false,
 })
 export class BrightnessAutomationConfigLabelComponent {
-  @Input() public advancedMode = false;
-  @Input() public config?: BrightnessEventAutomationConfig;
+  public readonly advancedMode = input(false);
+  public readonly config = input<BrightnessEventAutomationConfig>();
   protected readonly getCSSColorForCCT = getCSSColorForCCT;
 }

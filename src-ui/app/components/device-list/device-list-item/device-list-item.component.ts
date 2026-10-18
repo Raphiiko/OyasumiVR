@@ -2,9 +2,11 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
-  Input,
   OnInit,
   ChangeDetectionStrategy,
+  effect,
+  input,
+  untracked,
 } from '@angular/core';
 import { OVRDevice } from 'src-ui/app/models/ovr-device';
 import { fade, hshrink, vshrink } from 'src-ui/app/utils/animations';
@@ -44,9 +46,11 @@ import { DeviceManagerService } from 'src-ui/app/services/device-manager.service
   standalone: false,
 })
 export class DeviceListItemComponent implements OnInit {
-  @Input() icon: string | undefined;
+  readonly icon = input<string>();
+  readonly ovrDevice = input<OVRDevice>();
+  readonly lighthouseDevice = input<LighthouseDevice>();
 
-  @Input() set ovrDevice(device: OVRDevice | undefined) {
+  private applyOvrDevice(device: OVRDevice | undefined) {
     if (!device) return;
     this._lighthouseDevice = undefined;
     this._ovrDevice = device;
@@ -73,7 +77,7 @@ export class DeviceListItemComponent implements OnInit {
     this.showLHStatePopover = false;
   }
 
-  @Input() set lighthouseDevice(device: LighthouseDevice | undefined) {
+  private applyLighthouseDevice(device: LighthouseDevice | undefined) {
     if (!device) return;
     this._lighthouseDevice = device;
     this._ovrDevice = undefined;
@@ -166,16 +170,25 @@ export class DeviceListItemComponent implements OnInit {
     private modalService: ModalService,
     private deviceManager: DeviceManagerService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    effect(() => {
+      const device = this.ovrDevice();
+      untracked(() => this.applyOvrDevice(device));
+    });
+    effect(() => {
+      const device = this.lighthouseDevice();
+      untracked(() => this.applyLighthouseDevice(device));
+    });
+  }
 
   ngOnInit(): void {
-    // Retrigger the setters when devices have updated
+    // reapply the devices when device data has updated
     this.openvr.devices.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      if (this._ovrDevice) this.ovrDevice = this._ovrDevice;
+      if (this._ovrDevice) this.applyOvrDevice(this._ovrDevice);
       this.cdr.markForCheck();
     });
     this.lighthouse.devices.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      if (this._lighthouseDevice) this.lighthouseDevice = this._lighthouseDevice;
+      if (this._lighthouseDevice) this.applyLighthouseDevice(this._lighthouseDevice);
       this.cdr.markForCheck();
     });
     this.appSettings.settings
@@ -186,12 +199,12 @@ export class DeviceListItemComponent implements OnInit {
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(() => {
-        if (this._lighthouseDevice) this.lighthouseDevice = this._lighthouseDevice;
+        if (this._lighthouseDevice) this.applyLighthouseDevice(this._lighthouseDevice);
         this.cdr.markForCheck();
       });
     this.deviceManager.knownDevices.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      if (this._ovrDevice) this.ovrDevice = this._ovrDevice;
-      if (this._lighthouseDevice) this.lighthouseDevice = this._lighthouseDevice;
+      if (this._ovrDevice) this.applyOvrDevice(this._ovrDevice);
+      if (this._lighthouseDevice) this.applyLighthouseDevice(this._lighthouseDevice);
       this.cdr.markForCheck();
     });
   }

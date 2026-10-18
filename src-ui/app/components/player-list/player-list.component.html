@@ -1,6 +1,6 @@
 <div class="pane-player-list-wrapper">
   <div class="pane pane-player-list">
-    <div class="pane-title">{{ title | tsTranslate }}</div>
+    <div class="pane-title">{{ title() | tsTranslate }}</div>
     @if (
       {
         isFetchingFriends: vrchat.isFetchingFriends | async,

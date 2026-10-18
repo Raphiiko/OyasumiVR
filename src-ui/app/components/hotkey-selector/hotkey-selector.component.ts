@@ -1,12 +1,12 @@
 import {
   ChangeDetectorRef,
   Component,
-  Input,
   OnChanges,
   OnDestroy,
   OnInit,
   SimpleChanges,
   ChangeDetectionStrategy,
+  input,
 } from '@angular/core';
 import { hshrink, noop } from '../../utils/animations';
 import { ModalService } from 'src-ui/app/services/modal.service';
@@ -23,7 +23,7 @@ import { Subscription } from 'rxjs';
   standalone: false,
 })
 export class HotkeySelectorComponent implements OnChanges, OnDestroy, OnInit {
-  @Input() action?: string;
+  readonly action = input<string>();
   hotkey?: string;
   private hotkeySub?: Subscription;
 
@@ -51,8 +51,9 @@ export class HotkeySelectorComponent implements OnChanges, OnDestroy, OnInit {
 
   selectHotkey() {
     this.modalService.addModal(HotkeySelectorModalComponent, {}, {}).subscribe(async (result) => {
-      if (!result?.hotkey || !this.action) return;
-      if (!(await this.hotkeyService.registerHotkey(this.action, result.hotkey))) return;
+      const action = this.action();
+      if (!result?.hotkey || !action) return;
+      if (!(await this.hotkeyService.registerHotkey(action, result.hotkey))) return;
       this.hotkey = result.hotkey;
       this.cdr.markForCheck();
     });
@@ -60,7 +61,8 @@ export class HotkeySelectorComponent implements OnChanges, OnDestroy, OnInit {
 
   async deselectHotkey() {
     this.hotkey = undefined;
-    if (this.action) await this.hotkeyService.unregisterHotkey(this.action);
+    const action = this.action();
+    if (action) await this.hotkeyService.unregisterHotkey(action);
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -71,8 +73,9 @@ export class HotkeySelectorComponent implements OnChanges, OnDestroy, OnInit {
 
   refreshHotkey() {
     this.hotkeySub?.unsubscribe();
-    if (this.action) {
-      this.hotkeySub = this.hotkeyService.getHotkeyStringForId(this.action).subscribe((hotkey) => {
+    const action = this.action();
+    if (action) {
+      this.hotkeySub = this.hotkeyService.getHotkeyStringForId(action).subscribe((hotkey) => {
         this.hotkey = hotkey;
         this.cdr.markForCheck();
       });

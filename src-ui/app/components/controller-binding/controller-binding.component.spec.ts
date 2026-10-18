@@ -1,5 +1,6 @@
 import '@angular/compiler';
-import type { DestroyRef } from '@angular/core';
+import { Injector, runInInjectionContext, type DestroyRef, type InputSignal } from '@angular/core';
+import { SIGNAL } from '@angular/core/primitives/signals';
 import { BehaviorSubject } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { OVRActionBinding } from '../../models/ovr-action-binding';
@@ -35,6 +36,12 @@ function controller(index: number, role: 'LeftHand' | 'RightHand'): OVRDevice {
   return { battery: 1, class: 'Controller', role, index, pose: {}, isTurningOff: false };
 }
 
+// writes a signal input the way a template binding does
+function setInput<T>(input: InputSignal<T>, value: T) {
+  const node = input[SIGNAL];
+  node.applyValueToInputSignal(node, value);
+}
+
 function createComponent() {
   const status = new BehaviorSubject<OpenVRStatus>('INITIALIZED');
   const devices = new BehaviorSubject<OVRDevice[]>([
@@ -47,12 +54,11 @@ function createComponent() {
     isDashboardVisible: vi.fn(async () => false),
   } as unknown as OpenVRService;
   const destroyRef = { onDestroy: () => () => {} } as unknown as DestroyRef;
-  const component = new ControllerBindingComponent(
-    new OpenVRInputService(openvr),
-    openvr,
-    destroyRef
+  const component = runInInjectionContext(
+    Injector.create({ providers: [] }),
+    () => new ControllerBindingComponent(new OpenVRInputService(openvr), openvr, destroyRef)
   );
-  component.actionKey = OVRInputEventAction.OpenOverlay;
+  setInput(component.actionKey, OVRInputEventAction.OpenOverlay);
   return component;
 }
 

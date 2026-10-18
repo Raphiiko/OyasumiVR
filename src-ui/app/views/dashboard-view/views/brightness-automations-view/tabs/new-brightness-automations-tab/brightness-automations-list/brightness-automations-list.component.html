@@ -2,7 +2,7 @@
   <p transloco="brightness-automations.description"></p>
   <h2 transloco="brightness-automations.events"></h2>
   <div class="settings">
-    @for (event of events; track event) {
+    @for (event of events(); track event) {
       <app-setting-row
         [label]="'brightness-automations.' + event.name + '.title'"
         [value]="eventValues[event.name]"

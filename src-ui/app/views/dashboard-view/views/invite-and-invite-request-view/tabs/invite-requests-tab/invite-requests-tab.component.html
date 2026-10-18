@@ -1,19 +1,19 @@
 <div class="setting-view-container">
   <p transloco="invite-and-invite-requests.inviteRequestsTab.description"></p>
-  @if (!loggedIn) {
+  @if (!loggedIn()) {
     <app-alert severity="warning" @vshrink contentClass="with-action">
       <span>{{ 'shared.common.vrcLoginRequired' | transloco }}</span>
       <button class="btn btn-secondary" (click)="login()" transloco="shared.modals.login"></button>
     </app-alert>
   }
-  @if (isOnBusyStatus) {
+  @if (isOnBusyStatus()) {
     <app-alert severity="warning" @vshrink contentClass="with-action">
       <span>{{
         'invite-and-invite-requests.inviteRequestsTab.userOnBusyStatus' | transloco
       }}</span></app-alert
     >
   }
-  @if (isOnJoinMeStatus) {
+  @if (isOnJoinMeStatus()) {
     <app-alert severity="warning" @vshrink contentClass="with-action">
       <span>{{
         'invite-and-invite-requests.inviteRequestsTab.userOnJoinMeStatus' | transloco

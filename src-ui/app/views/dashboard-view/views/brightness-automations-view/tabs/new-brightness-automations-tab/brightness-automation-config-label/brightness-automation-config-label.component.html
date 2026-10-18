@@ -1,31 +1,31 @@
-@if (config) {
+@if (config(); as automationConfig) {
   <div class="label">
-    @if (config.changeColorTemperature) {
+    @if (automationConfig.changeColorTemperature) {
       <div class="colortemp-container" @hshrink>
         <div
           class="colortemp-icon"
-          [style.background-color]="getCSSColorForCCT(config.colorTemperature)"
+          [style.background-color]="getCSSColorForCCT(automationConfig.colorTemperature)"
         ></div>
-        <span class="monospace">{{ config.colorTemperature }}K</span>
+        <span class="monospace">{{ automationConfig.colorTemperature }}K</span>
       </div>
     }
-    @if (config.changeBrightness) {
+    @if (automationConfig.changeBrightness) {
       <div class="brightness-container" @hshrink>
-        @if (!advancedMode) {
+        @if (!advancedMode()) {
           <div class="brightness-value" @vshrink>
-            <span class="monospace">{{ config.brightness }}%</span>
+            <span class="monospace">{{ automationConfig.brightness }}%</span>
             <app-icon name="brightness" class="icon-mono" />
           </div>
         }
-        @if (advancedMode) {
+        @if (advancedMode()) {
           <div class="brightness-value" @vshrink>
-            <span class="monospace">{{ config.softwareBrightness }}%</span>
+            <span class="monospace">{{ automationConfig.softwareBrightness }}%</span>
             <app-icon name="image" class="icon-mono" />
           </div>
         }
-        @if (advancedMode) {
+        @if (advancedMode()) {
           <div class="brightness-value" @vshrink>
-            <span class="monospace">{{ config.hardwareBrightness }}%</span>
+            <span class="monospace">{{ automationConfig.hardwareBrightness }}%</span>
             <app-icon name="monitor" class="icon-mono" />
           </div>
         }

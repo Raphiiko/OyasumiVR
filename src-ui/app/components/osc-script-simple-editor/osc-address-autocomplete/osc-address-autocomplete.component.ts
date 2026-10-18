@@ -3,14 +3,14 @@ import {
   Component,
   DestroyRef,
   ElementRef,
-  EventEmitter,
-  Input,
   OnChanges,
   OnInit,
-  Output,
   SimpleChanges,
   ViewChild,
   ChangeDetectionStrategy,
+  input,
+  model,
+  output,
 } from '@angular/core';
 import { BehaviorSubject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -39,10 +39,9 @@ export interface OscAddressSelection {
   standalone: false,
 })
 export class OscAddressAutocompleteComponent implements OnInit, OnChanges {
-  @Input() addresses: string[] = [];
-  @Input() value: string = '';
-  @Output() valueChange = new EventEmitter<string>();
-  @Output() addressSelected = new EventEmitter<OscAddressSelection>();
+  readonly addresses = input<string[]>([]);
+  readonly value = model<string>('');
+  readonly addressSelected = output<OscAddressSelection>();
   @ViewChild('addressInput') addressInput?: ElementRef<HTMLInputElement>;
   @ViewChild('resultsContainer') resultsContainer?: ElementRef<HTMLDivElement>;
 
@@ -84,9 +83,9 @@ export class OscAddressAutocompleteComponent implements OnInit, OnChanges {
     }
 
     if (changes['value']) {
-      this.autocompleteState.inputValue = this.value;
+      this.autocompleteState.inputValue = this.value();
       if (!this.autocompleteState.justSelected && !this.isInitialLoad) {
-        this.addressQuery.next(this.value);
+        this.addressQuery.next(this.value());
       }
       this.isInitialLoad = false;
     }
@@ -106,8 +105,8 @@ export class OscAddressAutocompleteComponent implements OnInit, OnChanges {
         },
       ],
     };
-    const fuseIndex = Fuse.createIndex([], this.addresses);
-    this.fuseSuggestions = new Fuse(this.addresses, fuseOptions, fuseIndex);
+    const fuseIndex = Fuse.createIndex([], this.addresses());
+    this.fuseSuggestions = new Fuse(this.addresses(), fuseOptions, fuseIndex);
 
     // Update suggestions if we have a current query
     if (this.autocompleteState.inputValue && !this.autocompleteState.justSelected) {
@@ -159,8 +158,7 @@ export class OscAddressAutocompleteComponent implements OnInit, OnChanges {
 
   onInputChange(event: Event): void {
     const inputValue = (event.target as HTMLInputElement).value;
-    this.value = inputValue;
-    this.valueChange.emit(inputValue);
+    this.value.set(inputValue);
     this.autocompleteState.inputValue = inputValue;
     this.autocompleteState.focusedIndex = -1; // Reset focused index when typing
     this.autocompleteState.justSelected = false; // Reset the justSelected flag when typing
@@ -182,8 +180,8 @@ export class OscAddressAutocompleteComponent implements OnInit, OnChanges {
     this.isFocused = true;
     // Only show results if the user hasn't just selected an item
     if (!this.autocompleteState.justSelected) {
-      this.autocompleteState.inputValue = this.value;
-      this.addressQuery.next(this.value);
+      this.autocompleteState.inputValue = this.value();
+      this.addressQuery.next(this.value());
     } else {
       // Reset the flag after a short delay to allow future focus events to work
       setTimeout(() => {
@@ -194,8 +192,7 @@ export class OscAddressAutocompleteComponent implements OnInit, OnChanges {
   }
 
   selectAddress(address: string): void {
-    this.value = address;
-    this.valueChange.emit(address);
+    this.value.set(address);
 
     // Emit selected address
     this.addressSelected.emit({ address });

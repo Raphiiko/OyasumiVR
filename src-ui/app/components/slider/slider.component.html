@@ -1,28 +1,28 @@
 <div
   class="track-container"
-  [class.style-audio-level]="style === 'AUDIO_LEVEL'"
+  [class.style-audio-level]="style() === 'AUDIO_LEVEL'"
   (mousedown)="onDragStart($event)"
 >
-  <div class="track" [class.style-audio-level]="style === 'AUDIO_LEVEL'">
+  <div class="track" [class.style-audio-level]="style() === 'AUDIO_LEVEL'">
     <div
       class="track-fill"
       [style.width]="trackFillStyleWidth"
-      [class.style-audio-level]="style === 'AUDIO_LEVEL'"
+      [class.style-audio-level]="style() === 'AUDIO_LEVEL'"
     ></div>
-    @if (style === 'AUDIO_LEVEL') {
+    @if (style() === 'AUDIO_LEVEL') {
       <div class="track-fill-audio-level" #audioLevelTrackFill></div>
     }
-    @for (snapValue of snapValues; track snapValue; let i = $index) {
+    @for (snapValue of snapValues(); track snapValue; let i = $index) {
       <div
         class="track-stop"
         [style.left]="trackStopStyleLeft[i]"
-        [class.surpassed]="snapValue < value"
+        [class.surpassed]="snapValue < value()"
       ></div>
     }
   </div>
   <div
     class="thumb"
-    [class.style-audio-level]="style === 'AUDIO_LEVEL'"
+    [class.style-audio-level]="style() === 'AUDIO_LEVEL'"
     #thumbEl
     [style.left]="thumbStyleLeft"
     [class.dragging]="dragging"
@@ -30,11 +30,11 @@
   ></div>
 </div>
 <div class="snap-indicator-container">
-  @for (snapValue of snapValues; track snapValue; let i = $index) {
+  @for (snapValue of snapValues(); track snapValue; let i = $index) {
     <div
       class="snap-indicator"
       [style.left]="snapIndicatorStyleLeft[i]"
-      [class.surpassed]="snapValue < value"
+      [class.surpassed]="snapValue < value()"
     >
       <app-icon name="chevron-up" class="icon-mono" />
     </div>

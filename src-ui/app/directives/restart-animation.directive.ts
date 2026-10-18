@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Directive, ElementRef, OnChanges, SimpleChanges, input } from '@angular/core';
 
 /**
  * Plays the element's CSS animation again from the start whenever the bound value changes.
@@ -21,7 +21,7 @@ import { Directive, ElementRef, Input, OnChanges, SimpleChanges } from '@angular
 })
 export class RestartAnimationDirective implements OnChanges {
   /** Any value that changes when the animation should play again. Its type does not matter. */
-  @Input() restartAnimationOn: unknown;
+  readonly restartAnimationOn = input<unknown>();
 
   constructor(private elementRef: ElementRef<HTMLElement>) {}
 

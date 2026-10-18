@@ -1,41 +1,45 @@
 <div class="brightness-slider-bar-row">
-  @if (mode === 'BRIGHTNESS') {
+  @if (mode() === 'BRIGHTNESS') {
     <app-icon name="brightness-low" class="brightness-level-icon icon-mono" />
   }
-  @if (mode === 'CCT') {
+  @if (mode() === 'CCT') {
     <app-icon name="thermometer-minus" class="brightness-level-icon icon-mono" />
   }
-  @if (mode === 'FAN_SPEED') {
+  @if (mode() === 'FAN_SPEED') {
     <app-icon name="fan-off" class="brightness-level-icon icon-mono" />
   }
-  <div class="brightness-slider-bar" (mousedown)="onDragStart($event)" [class.cct]="mode === 'CCT'">
+  <div
+    class="brightness-slider-bar"
+    (mousedown)="onDragStart($event)"
+    [class.cct]="mode() === 'CCT'"
+  >
     <div
       class="brightness-slider-bar-inner"
       [class.dragging]="dragging"
-      [class.transition-active]="transitionActive"
+      [class.transition-active]="transitionActive()"
       [style.width]="innerWidth"
     >
       <div class="brightness-slider-bar-label">
-        @if (['BRIGHTNESS', 'FAN_SPEED'].includes(mode)) {
-          <span>{{ (dragging ? dragValue : value) | number: '1.0-0' }} %</span>
+        @if (['BRIGHTNESS', 'FAN_SPEED'].includes(mode())) {
+          <span>{{ (dragging ? dragValue : value()) | number: '1.0-0' }} %</span>
         }
-        @if (['CCT'].includes(mode)) {
+        @if (['CCT'].includes(mode())) {
           <div class="colortemp-icon" [style.background-color]="cctColor"></div>
         }
-        @if (['CCT'].includes(mode)) {
-          <span>{{ dragging ? dragValue : value }}K</span>
+        @if (['CCT'].includes(mode())) {
+          <span>{{ dragging ? dragValue : value() }}K</span>
         }
       </div>
     </div>
     <div class="brightness-slider-bar-range-guide" #rangeGuideEl></div>
   </div>
-  @if (mode === 'BRIGHTNESS') {
+  @if (mode() === 'BRIGHTNESS') {
     <app-icon name="brightness-high" class="brightness-level-icon icon-mono" />
   }
-  @if (mode === 'CCT') {
+  @if (mode() === 'CCT') {
     <app-icon name="thermometer-plus" class="brightness-level-icon icon-mono" />
   }
-  @if (mode === 'FAN_SPEED') {
+  @if (mode() === 'FAN_SPEED') {
     <app-icon name="fan" class="brightness-level-icon icon-mono" />
   }
 </div>

@@ -2,11 +2,10 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
-  EventEmitter,
-  Input,
   OnInit,
-  Output,
   ChangeDetectionStrategy,
+  input,
+  output,
 } from '@angular/core';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
@@ -40,8 +39,8 @@ export class BrightnessAutomationsListComponent implements OnInit {
     AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS
   );
   protected eventValues = BrightnessAutomationsListComponent.resettableFields(this.config);
-  @Input() events!: Array<BrightnessEventViewModel>;
-  @Output() editEvent = new EventEmitter<BrightnessEventViewModel>();
+  readonly events = input.required<Array<BrightnessEventViewModel>>();
+  readonly editEvent = output<BrightnessEventViewModel>();
   protected hmdConnectAutomations: Record<BrightnessEvent, 'active' | 'potential' | false> = {
     AT_SUNRISE: false,
     AT_SUNSET: false,
@@ -60,14 +59,14 @@ export class BrightnessAutomationsListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.events.forEach((event) => {
+    this.events().forEach((event) => {
       combineLatest([
         this.brightnessCctAutomations.isBrightnessTransitionActive(event.name),
         this.brightnessCctAutomations.isCCTTransitionActive(event.name),
       ])
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(([brightnessActive, cctActive]) => {
-          // events is an @Input, mutated in place, so the parent's view is only
+          // events is an input, mutated in place, so the parent's view is only
           // rechecked because markForCheck also dirties every ancestor.
           event.inProgress = brightnessActive || cctActive;
           this.cdr.markForCheck();

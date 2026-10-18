@@ -2,7 +2,7 @@
   <input
     type="text"
     placeholder="OSC Address"
-    [value]="value"
+    [value]="value()"
     [class.showing-preview]="autocompleteState.focusedIndex >= 0 && autocompleteState.showResults"
     (input)="onInputChange($event)"
     (focus)="onFocus()"
@@ -12,7 +12,10 @@
   />
   @if (
     (autocompleteState.focusedIndex >= 0 && autocompleteState.showResults && isFocused) ||
-    (autocompleteState.previewValue && value && autocompleteState.focusedIndex === -1 && isFocused)
+    (autocompleteState.previewValue &&
+      value() &&
+      autocompleteState.focusedIndex === -1 &&
+      isFocused)
   ) {
     <div class="autocomplete-preview">
       @if (autocompleteState.focusedIndex >= 0 && autocompleteState.showResults) {
@@ -20,9 +23,9 @@
           autocompleteState.results[autocompleteState.focusedIndex]
         }}</span>
       } @else {
-        <span class="typed-part">{{ value }}</span
+        <span class="typed-part">{{ value() }}</span
         ><span class="suggested-part">{{
-          autocompleteState.previewValue!.substring(value.length)
+          autocompleteState.previewValue!.substring(value().length)
         }}</span>
       }
     </div>

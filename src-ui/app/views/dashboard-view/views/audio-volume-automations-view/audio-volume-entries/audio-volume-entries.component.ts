@@ -2,11 +2,10 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
-  EventEmitter,
-  Input,
   OnInit,
-  Output,
   ChangeDetectionStrategy,
+  input,
+  model,
 } from '@angular/core';
 import { SelectBoxItem } from '../../../../../components/select-box/select-box.component';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -34,9 +33,9 @@ import {
   standalone: false,
 })
 export class AudioVolumeEntriesComponent implements OnInit {
-  @Input() automationType?: 'onSleepEnable' | 'onSleepDisable' | 'onSleepPreparation';
-  @Input() automations: AudioVolumeAutomation[] = [];
-  @Output() automationsChange: EventEmitter<AudioVolumeAutomation[]> = new EventEmitter();
+  readonly automationType = input<'onSleepEnable' | 'onSleepDisable' | 'onSleepPreparation'>();
+  /** Entries are edited in place, so each change sets a new array for the model to emit. */
+  readonly automations = model<AudioVolumeAutomation[]>([]);
   collapsed = true;
 
   protected actionOptions: SelectBoxItem<AudioVolumeAutomationType>[] = [
@@ -75,7 +74,7 @@ export class AudioVolumeEntriesComponent implements OnInit {
 
   setVolume(automation: SetAudioVolumeAutomation, volume: number) {
     automation.volume = volume;
-    this.automationsChange.emit(this.automations);
+    this.automations.set([...this.automations()]);
   }
 
   getActionOptionForType(type: 'MUTE' | 'UNMUTE' | 'SET_VOLUME') {
@@ -98,7 +97,7 @@ export class AudioVolumeEntriesComponent implements OnInit {
         }
         break;
     }
-    this.automationsChange.emit(this.automations);
+    this.automations.set([...this.automations()]);
   }
 
   addAudioDevice() {
@@ -106,7 +105,7 @@ export class AudioVolumeEntriesComponent implements OnInit {
       .addModal<AudioDevicePickerInput, AudioDevicePickerOutput>(
         AudioDevicePickerComponent,
         {
-          disablePersistentIds: this.automations.map((a) => a.audioDeviceRef.persistentId),
+          disablePersistentIds: this.automations().map((a) => a.audioDeviceRef.persistentId),
         },
         {
           wrapperDefaultClass: 'modal-wrapper-audio-device-picker',
@@ -114,26 +113,27 @@ export class AudioVolumeEntriesComponent implements OnInit {
       )
       .pipe(filter(Boolean))
       .subscribe((res) => {
-        this.automations.push({
-          type: 'SET_VOLUME',
-          volume: Math.round(res.device.volume * 100),
-          applyOnStart: true,
-          audioDeviceRef: {
-            persistentId: res.device.persistentId!,
-            type: res.device.deviceType,
-            name: res.device.parsedName!,
+        this.automations.set([
+          ...this.automations(),
+          {
+            type: 'SET_VOLUME',
+            volume: Math.round(res.device.volume * 100),
+            applyOnStart: true,
+            audioDeviceRef: {
+              persistentId: res.device.persistentId!,
+              type: res.device.deviceType,
+              name: res.device.parsedName!,
+            },
           },
-        });
+        ]);
         this.collapsed = false;
-        this.automationsChange.emit(this.automations);
         this.cdr.markForCheck();
       });
   }
 
   removeAutomation(automation: AudioVolumeAutomation) {
-    this.automations = this.automations.filter((a) => a !== automation);
-    this.automationsChange.emit(this.automations);
-    if (!this.automations.length) this.collapsed = true;
+    this.automations.set(this.automations().filter((a) => a !== automation));
+    if (!this.automations().length) this.collapsed = true;
   }
 
   trackAutomationBy(index: number, automation: AudioVolumeAutomation) {
@@ -142,6 +142,6 @@ export class AudioVolumeEntriesComponent implements OnInit {
 
   toggleApplyOnStart(automation: AudioVolumeAutomation) {
     automation.applyOnStart = !automation.applyOnStart;
-    this.automationsChange.emit(this.automations);
+    this.automations.set([...this.automations()]);
   }
 }

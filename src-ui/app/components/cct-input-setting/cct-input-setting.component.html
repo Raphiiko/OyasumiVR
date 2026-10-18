@@ -5,7 +5,7 @@
     readonly
     (mouseenter)="mouseEnter('INPUT')"
     (mouseleave)="mouseLeave('INPUT')"
-    [disabled]="disabled"
+    [disabled]="disabled()"
     [style.background-color]="cctColor"
   />
   @if (inputOpen) {

@@ -1,4 +1,4 @@
-import { Directive, ElementRef, EventEmitter, HostListener, Output } from '@angular/core';
+import { Directive, ElementRef, HostListener, output } from '@angular/core';
 
 @Directive({
   selector: '[clickOutside]',
@@ -7,7 +7,7 @@ import { Directive, ElementRef, EventEmitter, HostListener, Output } from '@angu
 export class ClickOutsideDirective {
   constructor(private elementRef: ElementRef) {}
 
-  @Output() clickOutside = new EventEmitter<MouseEvent>();
+  readonly clickOutside = output<MouseEvent>();
 
   @HostListener('document:contextmenu', ['$event'])
   @HostListener('document:click', ['$event'])

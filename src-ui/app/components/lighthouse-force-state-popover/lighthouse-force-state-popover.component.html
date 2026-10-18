@@ -1,4 +1,4 @@
-@if (type) {
+@if (type()) {
   <div class="pane">
     @for (label of hoverAction ? [hoverAction] : []; track label) {
       <div class="label" @hshrink>
@@ -14,7 +14,7 @@
         (mouseenter)="setHoverAction('comp.device-list.lhForceState.on')"
         (mouseleave)="hoverAction = ''"
       ></app-device-power-button>
-      @if (type === 'lighthouseV2') {
+      @if (type() === 'lighthouseV2') {
         <app-device-power-button
           [powerState]="'on'"
           [customIcon]="'standby'"

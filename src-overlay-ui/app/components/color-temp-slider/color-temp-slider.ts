@@ -4,7 +4,7 @@ import {
   computed,
   ElementRef,
   input,
-  output,
+  model,
   signal,
   viewChild,
 } from '@angular/core';
@@ -28,12 +28,10 @@ export class ColorTempSlider {
   readonly step = input(50);
   readonly snapValues = input<number[]>([6600]);
   readonly snapDistance = input(400);
-  readonly value = input(6600);
+  readonly value = model(6600);
   readonly disabled = input(false);
   readonly isTransitioning = input(false);
   readonly transitionTarget = input(0);
-
-  readonly valueChange = output<number>();
 
   private readonly rangeGuide = viewChild<ElementRef<HTMLElement>>('rangeGuide');
 
@@ -72,7 +70,7 @@ export class ColorTempSlider {
     if (this.step()) value = Math.round(value / this.step()) * this.step();
     progress = (value - this.min()) / (this.max() - this.min());
     this.dragProgression.set(progress);
-    this.valueChange.emit(value);
+    this.value.set(value);
   }
 
   stopDragging(): void {

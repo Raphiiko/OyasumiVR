@@ -1,25 +1,25 @@
-@if (!!avatar) {
+@if (!!avatar()) {
   <button class="btn-clear" @hshrink (click)="deselect()">
     <app-icon name="close" />
   </button>
 }
-<button class="btn-main" [class.selected]="!!avatar" (click)="select()" @noop>
-  @if (avatar) {
+<button class="btn-main" [class.selected]="!!avatar()" (click)="select()" @noop>
+  @if (avatar(); as selectedAvatar) {
     <div @hshrink class="image">
       <img
         draggable="false"
         onerror="this.style.display = 'none'"
         loading="lazy"
-        [imgSmoothLoader]="avatar.imageUrl | imageCache: 3600 * 6"
+        [imgSmoothLoader]="selectedAvatar.imageUrl | imageCache: 3600 * 6"
       />
     </div>
   }
-  @if (avatar) {
+  @if (avatar(); as selectedAvatar) {
     <div @hshrink class="name">
-      {{ avatar.name }}
+      {{ selectedAvatar.name }}
     </div>
   }
-  @if (!avatar) {
+  @if (!avatar()) {
     <div @hshrink transloco="comp.vrc-avatar-select-button.select" class="name"></div>
   }
 </button>
