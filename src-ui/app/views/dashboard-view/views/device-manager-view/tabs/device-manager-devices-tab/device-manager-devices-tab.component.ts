@@ -12,6 +12,7 @@ import { LighthouseService } from '../../../../../../services/lighthouse.service
 import { LighthouseConsoleService } from '../../../../../../services/lighthouse-console.service';
 import { ModalService } from '../../../../../../services/modal.service';
 import { EventLogService } from '../../../../../../services/event-log.service';
+import { AppSettingsService } from '../../../../../../services/app-settings.service';
 import { EventLogLighthouseSetPowerState } from '../../../../../../models/event-log-entry';
 import {
   DeviceManagerConfigModalComponent,
@@ -88,6 +89,7 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     private lighthouseConsole: LighthouseConsoleService,
     private modalService: ModalService,
     private eventLog: EventLogService,
+    private appSettings: AppSettingsService,
     private destroyRef: DestroyRef,
     private domSanitizer: DomSanitizer,
     private cdr: ChangeDetectorRef
@@ -358,8 +360,9 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
       const dispatched = await this.lighthouseConsole.turnOffDeviceForUser(ovrDevice, deviceName);
       this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'MANUAL');
     } else if (lighthouseDevice) {
-      this.logLighthousePowerState('sleep');
-      await this.lighthouse.setPowerStateForUser(lighthouseDevice, 'sleep', deviceName);
+      const state = this.appSettings.settingsSync.lighthousePowerOffState;
+      this.logLighthousePowerState(state);
+      await this.lighthouse.setPowerStateForUser(lighthouseDevice, state, deviceName);
     }
   }
 

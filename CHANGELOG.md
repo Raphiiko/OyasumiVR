@@ -19,9 +19,10 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Fixed
 
-- Fixed the "When all controllers are turned off" automation enabling sleep mode when OyasumiVR could no longer turn your controllers off, even though they were still on
 - Fixed the shutdown sequence skipping devices that were turned off when you selected them
 - Fixed turning devices on or off from the Device Manager not showing up in the event log
+- Fixed turning off base stations from the Device Manager always putting them in sleep mode, instead of the power-off mode you chose
+- Fixed the automation that turns off charging devices turning off a controller you had just unplugged and turned on
 
 ## [26.10.3]
 
