@@ -30,7 +30,13 @@ function setup(
     { logEvent: vi.fn() } as unknown as Dependencies[6],
     { translate: (key: string) => key } as Dependencies[7],
     {} as Dependencies[8],
-    {} as Dependencies[9]
+    {
+      getDevicesForSelection: async () => ({
+        ovrDevices: [],
+        lighthouseDevices: [],
+        knownDevices: [],
+      }),
+    } as unknown as Dependencies[9]
   );
   service['config'] = {
     ...structuredClone(AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS),
@@ -129,17 +135,24 @@ describe('ShutdownAutomationsService sequence completion', () => {
 });
 
 describe('ShutdownAutomationsService device power-off', () => {
-  it('waits for the devices to disconnect, not to lose power control', async () => {
-    const controller = {
-      index: 1,
-      class: 'Controller',
-      serialNumber: 'C1',
-      canPowerOff: true,
-      isConnected: true,
-      isTurningOff: false,
-    } as OVRDevice;
-    const devices = new BehaviorSubject<OVRDevice[]>([controller]);
-    const turnOffDevices = vi.fn(async () => [controller]);
+  const controller = {
+    index: 1,
+    class: 'Controller',
+    serialNumber: 'C1',
+    canPowerOff: true,
+    isConnected: true,
+    isTurningOff: false,
+  } as OVRDevice;
+
+  function setupPowerOff(initial: OVRDevice[]) {
+    const devices = new BehaviorSubject<OVRDevice[]>(initial);
+    const turnOffDevices = vi.fn(async () => devices.value);
+    // resolves the selection against the devices as they are when the sequence runs
+    const getDevicesForSelection = vi.fn(async () => ({
+      ovrDevices: devices.value,
+      lighthouseDevices: [],
+      knownDevices: [],
+    }));
     const service = new ShutdownAutomationsService(
       {} as Dependencies[0],
       {} as Dependencies[1],
@@ -152,18 +165,31 @@ describe('ShutdownAutomationsService device power-off', () => {
       {} as Dependencies[6],
       {} as Dependencies[7],
       {} as Dependencies[8],
-      {} as Dependencies[9]
+      { getDevicesForSelection } as unknown as Dependencies[9]
     );
-    service['turnOffOvrDevices'] = [controller];
-    let done = false;
-    const turningOff = service['turnOffDevices']().then(() => (done = true));
-    expect(turnOffDevices).toHaveBeenCalledWith([controller]);
+    return { service, devices, turnOffDevices };
+  }
 
-    devices.next([{ ...controller, canPowerOff: false }]);
+  it('turns off devices that were off when the selection was made', async () => {
+    const h = setupPowerOff([{ ...controller, canPowerOff: false, isConnected: false }]);
+    h.devices.next([controller]);
+    void h.service['turnOffDevices']();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(h.turnOffDevices).toHaveBeenCalledWith([controller]);
+  });
+
+  it('waits for the devices to disconnect, not to lose power control', async () => {
+    const h = setupPowerOff([controller]);
+    let done = false;
+    const turningOff = h.service['turnOffDevices']().then(() => (done = true));
+    await vi.advanceTimersByTimeAsync(0);
+    expect(h.turnOffDevices).toHaveBeenCalledWith([controller]);
+
+    h.devices.next([{ ...controller, canPowerOff: false }]);
     await vi.advanceTimersByTimeAsync(2000);
     expect(done).toBe(false);
 
-    devices.next([{ ...controller, canPowerOff: false, isConnected: false }]);
+    h.devices.next([{ ...controller, canPowerOff: false, isConnected: false }]);
     await vi.advanceTimersByTimeAsync(250 + 1000);
     await turningOff;
     expect(done).toBe(true);
