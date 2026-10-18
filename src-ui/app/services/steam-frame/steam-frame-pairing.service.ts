@@ -425,8 +425,11 @@ export class SteamFramePairingService {
     await invoke('steam_frame_update_helper', { pairingId: pairing.id });
   }
 
-  /** Installs the helper again after it went missing, and pins its new certificate. */
-  async reinstallHelper(pairing: SteamFramePairing) {
+  /**
+   * Installs the helper again, and pins its new certificate. `repair` also replaces a helper of
+   * the bundled version.
+   */
+  async reinstallHelper(pairing: SteamFramePairing, repair = false) {
     if (this._reinstalls()[pairing.id]) return;
 
     this.setReinstall(pairing.id, 'running');
@@ -440,6 +443,7 @@ export class SteamFramePairingService {
           token: pairing.token,
           publicKey: pairing.publicKey,
           identity: pairing.identity,
+          repair,
         },
       });
       info(`[SteamFramePairing] Reinstall: ${result.status}`);
