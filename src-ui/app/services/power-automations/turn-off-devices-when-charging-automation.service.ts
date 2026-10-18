@@ -10,6 +10,10 @@ import { EventLogService } from '../event-log.service';
 import { DeviceManagerService } from '../device-manager.service';
 import { isEqual } from 'lodash';
 import { OVRDevice } from '../../models/ovr-device';
+import { sleep } from '../../utils/promise-utils';
+
+// SteamVR still reports a controller's old charging state for a moment after it reconnects
+const RECONNECT_SETTLE_MS = 10000;
 
 @Injectable({
   providedIn: 'root',
@@ -20,6 +24,8 @@ export class TurnOffDevicesWhenChargingAutomationService {
   );
   // retained object identity distinguishes separate charging sessions
   private chargingDevices: OVRDevice[] = [];
+  /** When each connected device was first seen connected, by serial number. */
+  private connectedSince = new Map<string, number>();
 
   constructor(
     private automationConfig: AutomationConfigService,
@@ -37,6 +43,8 @@ export class TurnOffDevicesWhenChargingAutomationService {
 
     // check each openvr device update for newly charging devices
     this.openvr.devices.subscribe((devices) => {
+      this.trackConnections(devices);
+
       // forget devices that disconnected or stopped charging
       this.chargingDevices = this.chargingDevices.filter((charging) =>
         devices.some((device) => device.serialNumber === charging.serialNumber && device.isCharging)
@@ -50,6 +58,11 @@ export class TurnOffDevicesWhenChargingAutomationService {
         ) {
           // mark this session before awaiting the selection lookup
           this.chargingDevices.push(device);
+
+          // let a device that just connected report its real charging state first
+          const connectedAt = this.connectedSince.get(device.serialNumber!) ?? 0;
+          const settleMs = connectedAt + RECONNECT_SETTLE_MS - Date.now();
+          if (settleMs > 0) await sleep(settleMs);
 
           // resolve the current settings into selected devices
           const selection = this.config.turnOffDevicesWhenCharging;
@@ -80,5 +93,20 @@ export class TurnOffDevicesWhenChargingAutomationService {
         }
       });
     });
+  }
+
+  private trackConnections(devices: OVRDevice[]) {
+    for (const serial of [...this.connectedSince.keys()]) {
+      if (!devices.some((device) => device.serialNumber === serial && device.isConnected))
+        this.connectedSince.delete(serial);
+    }
+    for (const device of devices) {
+      if (
+        device.isConnected &&
+        device.serialNumber &&
+        !this.connectedSince.has(device.serialNumber)
+      )
+        this.connectedSince.set(device.serialNumber, Date.now());
+    }
   }
 }
