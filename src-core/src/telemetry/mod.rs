@@ -20,16 +20,12 @@ pub mod commands;
 pub static TELEMETRY_INITIALIZED: LazyLock<Mutex<bool>> = LazyLock::new(|| Mutex::new(false));
 pub static TELEMETRY_ENABLED: LazyLock<AtomicBool> = LazyLock::new(|| AtomicBool::new(false));
 
-static OS_VERSION: LazyLock<windows_version::OsVersion> =
-    LazyLock::new(windows_version::OsVersion::current);
-
 // OpenPanel records no device or session for a user agent it cannot parse an OS or browser from
 static USER_AGENT: LazyLock<String> = LazyLock::new(|| {
     format!(
-        "OyasumiVR/{} (Windows NT {}.{})",
+        "OyasumiVR/{} ({})",
         env!("CARGO_PKG_VERSION"),
-        OS_VERSION.major,
-        OS_VERSION.minor
+        sysinfo::System::long_os_version().unwrap_or_default()
     )
 });
 
@@ -44,7 +40,7 @@ static HTTP_CLIENT: LazyLock<reqwest::Client> = LazyLock::new(|| {
 /// Added to every event. OpenPanel reads `__osVersion` in place of the version it parses from the user
 /// agent, and hides it from the property list.
 static SYSTEM_PROPERTIES: LazyLock<Map<String, Value>> = LazyLock::new(|| {
-    let os = &*OS_VERSION;
+    let os = windows_version::OsVersion::current();
     let flavour = serde_json::to_string(&BUILD_FLAVOUR)
         .unwrap()
         .trim_matches('"')
