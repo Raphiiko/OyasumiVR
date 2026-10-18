@@ -59,6 +59,7 @@ export class TurnOffDevicesWhenChargingAutomationService {
         if (
           device.isCharging &&
           device.canPowerOff &&
+          device.isConnected !== false &&
           !this.chargingDevices.some((charging) => charging.serialNumber === device.serialNumber)
         ) {
           // mark this session before awaiting the selection lookup

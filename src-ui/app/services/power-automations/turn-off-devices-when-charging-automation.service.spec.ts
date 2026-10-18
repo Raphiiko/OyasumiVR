@@ -204,6 +204,16 @@ describe('charging state after a reconnect', () => {
     expect(h.powerOff).toHaveBeenCalledTimes(1);
   });
 
+  it('does not act on a disconnected device that still reports charging', async () => {
+    vi.useFakeTimers();
+    const h = await setup();
+    const stale = { ...a, isCharging: true, isConnected: false };
+    h.devices.next([stale, b]);
+    h.devices.next([{ ...stale, battery: 0.5 }, b]);
+    await vi.advanceTimersByTimeAsync(10000);
+    expect(h.powerOff).not.toHaveBeenCalled();
+  });
+
   it('acts at once on a device put on the charger while it was on', async () => {
     vi.useFakeTimers();
     const h = await setup();
