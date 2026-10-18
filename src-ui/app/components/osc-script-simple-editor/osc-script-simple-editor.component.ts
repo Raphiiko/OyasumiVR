@@ -2,6 +2,7 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
+  OnDestroy,
   OnInit,
   ChangeDetectionStrategy,
   effect,
@@ -30,7 +31,6 @@ import { OscAddressSelection } from './osc-address-autocomplete/osc-address-auto
 import { AvatarContext, VRChatAvatarParameter } from '../../models/avatar-context';
 import { VRChatService } from 'src-ui/app/services/vrchat-api/vrchat.service';
 import { AppSettingsService } from '../../services/app-settings.service';
-import { flushOnDestroy } from '../../utils/rxjs-utils';
 
 interface ValidationError {
   actionIndex: number;
@@ -45,7 +45,7 @@ interface ValidationError {
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
-export class OscScriptSimpleEditorComponent implements OnInit {
+export class OscScriptSimpleEditorComponent implements OnInit, OnDestroy {
   private validationTrigger: Subject<void> = new Subject<void>();
   protected _script: OscScript = { version: 3, commands: [] };
   readonly script = model.required<OscScript>();
@@ -121,8 +121,12 @@ export class OscScriptSimpleEditorComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    // complete here, not through DestroyRef: outputs stop emitting once DestroyRef callbacks run
+    this.validationTrigger.complete();
+  }
+
   ngOnInit(): void {
-    flushOnDestroy(this.validationTrigger, this.destroyRef);
     this.validationTrigger
       .pipe(
         startWith(void 0),

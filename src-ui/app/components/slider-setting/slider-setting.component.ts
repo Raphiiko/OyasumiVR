@@ -4,6 +4,7 @@ import {
   DestroyRef,
   ElementRef,
   OnChanges,
+  OnDestroy,
   OnInit,
   SimpleChanges,
   ViewChild,
@@ -16,7 +17,6 @@ import { debounceTime, Subject } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SliderComponent, SliderStyle } from '../slider/slider.component';
 import { clamp, ensurePrecision, floatPrecision } from '../../utils/number-utils';
-import { flushOnDestroy } from '../../utils/rxjs-utils';
 
 @Component({
   selector: 'app-slider-setting',
@@ -26,7 +26,7 @@ import { flushOnDestroy } from '../../utils/rxjs-utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
-export class SliderSettingComponent implements OnInit, OnChanges {
+export class SliderSettingComponent implements OnInit, OnChanges, OnDestroy {
   readonly min = input(0);
   readonly max = input(100);
   readonly style = input<SliderStyle>('DEFAULT');
@@ -55,8 +55,12 @@ export class SliderSettingComponent implements OnInit, OnChanges {
     private cdr: ChangeDetectorRef
   ) {}
 
+  ngOnDestroy(): void {
+    // complete here, not through DestroyRef: outputs stop emitting once DestroyRef callbacks run
+    this.input$.complete();
+  }
+
   ngOnInit(): void {
-    flushOnDestroy(this.input$, this.destroyRef);
     this.input$
       .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
       .subscribe((strValue) => this.commitInput(strValue));

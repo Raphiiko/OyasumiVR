@@ -4,7 +4,7 @@ import {
   computed,
   ElementRef,
   input,
-  output,
+  model,
   signal,
   viewChild,
 } from '@angular/core';
@@ -24,12 +24,10 @@ export class BrightnessSlider {
   readonly label = input('');
   readonly min = input(0);
   readonly max = input(100);
-  readonly value = input(100);
+  readonly value = model(100);
   readonly disabled = input(false);
   readonly isTransitioning = input(false);
   readonly transitionTarget = input(0);
-
-  readonly valueChange = output<number>();
 
   private readonly rangeGuide = viewChild<ElementRef<HTMLElement>>('rangeGuide');
 
@@ -59,7 +57,7 @@ export class BrightnessSlider {
     if (barBounds.width <= 0) return;
     const progress = clamp((event.clientX - barBounds.left) / barBounds.width, 0, 1);
     this.dragProgression.set(progress);
-    this.valueChange.emit(Math.round(progress * (this.max() - this.min()) + this.min()));
+    this.value.set(Math.round(progress * (this.max() - this.min()) + this.min()));
   }
 
   stopDragging(): void {

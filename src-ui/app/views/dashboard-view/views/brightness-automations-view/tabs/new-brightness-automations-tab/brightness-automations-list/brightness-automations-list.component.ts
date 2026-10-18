@@ -66,7 +66,7 @@ export class BrightnessAutomationsListComponent implements OnInit {
       ])
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(([brightnessActive, cctActive]) => {
-          // events is an @Input, mutated in place, so the parent's view is only
+          // events is an input, mutated in place, so the parent's view is only
           // rechecked because markForCheck also dirties every ancestor.
           event.inProgress = brightnessActive || cctActive;
           this.cdr.markForCheck();

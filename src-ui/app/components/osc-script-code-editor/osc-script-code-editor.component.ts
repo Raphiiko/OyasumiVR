@@ -4,6 +4,7 @@ import {
   Component,
   DestroyRef,
   ElementRef,
+  OnDestroy,
   OnInit,
   ViewChild,
   ChangeDetectionStrategy,
@@ -20,7 +21,6 @@ import { isEqual } from 'lodash';
 import { OscService } from '../../services/osc.service';
 import { parseOscScriptFromCode } from '../../utils/osc-script-utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { flushOnDestroy } from '../../utils/rxjs-utils';
 
 @Component({
   selector: 'app-osc-script-code-editor',
@@ -30,7 +30,7 @@ import { flushOnDestroy } from '../../utils/rxjs-utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
-export class OscScriptCodeEditorComponent implements OnInit, AfterViewInit {
+export class OscScriptCodeEditorComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('editor') editorRef!: ElementRef;
   @ViewChild('lineCounter') lineCounterRef!: ElementRef;
   readonly minHeight = input(10);
@@ -83,8 +83,12 @@ export class OscScriptCodeEditorComponent implements OnInit, AfterViewInit {
     if (this.editorRef) this.editorRef.nativeElement.innerText = code;
   }
 
+  ngOnDestroy(): void {
+    // complete here, not through DestroyRef: outputs stop emitting once DestroyRef callbacks run
+    this._code.complete();
+  }
+
   ngOnInit(): void {
-    flushOnDestroy(this._code, this.destroyRef);
     this._code
       .pipe(
         tap(() => {
