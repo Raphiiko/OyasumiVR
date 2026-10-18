@@ -423,7 +423,7 @@ async fn setup_session(
 
     // install: compare the installed helper with the bundled one
     on_stage(Stage::Install);
-    let inspected = install_bundled(session, false, true)
+    let inspected = install_bundled(session, request.repair, true)
         .await
         .map_err(|error| match error {
             InstallError::Ssh(error) => error.into(),

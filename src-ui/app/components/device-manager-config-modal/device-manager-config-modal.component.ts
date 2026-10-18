@@ -133,12 +133,20 @@ export class DeviceManagerConfigModalComponent
         (state.updateAvailable || maintenance === 'failed'),
       // only a helper that answers can be called up to date
       upToDate: state?.status === 'connected',
+      repairing: !!this.framePairing.reinstalls()[pairing.id],
+      // a repair needs SSH access with the pinned host key
+      canRepair: state?.status !== 'hostKeyChanged' && state?.status !== 'pairingRemoved',
     };
   }
 
   updateFrameHelper() {
     const helper = this.frameHelper();
     if (helper) void this.framePairing.updateHelper(helper.pairing);
+  }
+
+  repairFrameHelper() {
+    const helper = this.frameHelper();
+    if (helper) void this.framePairing.reinstallHelper(helper.pairing, true);
   }
 
   frameRemovedOnHeadset(): boolean {
