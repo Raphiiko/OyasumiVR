@@ -215,6 +215,18 @@ describe('InviteAutomationsService', () => {
     }
   );
 
+  it('reports the refusal message without the current user name', async () => {
+    const { receive, vrchat, telemetry } = createService({ listMode: 'DISABLED' });
+    vrchat.user.next({ status: UserStatus.Active, displayName: 'Alice' });
+    vrchat.inviteUser.mockRejectedValue(new VRChatInviteRefusedError("Alice can't invite Bob"));
+    await receive(NotificationType.RequestInvite);
+    await vi.waitFor(() =>
+      expect(telemetry.trackEvent).toHaveBeenCalledExactlyOnceWith('vrchat_invite_refused', {
+        message: "<name> can't invite <name>",
+      })
+    );
+  });
+
   it('sends no notification for a refused invite when the type is turned off', async () => {
     const { receive, vrchat, notifications } = createService(
       { listMode: 'DISABLED' },

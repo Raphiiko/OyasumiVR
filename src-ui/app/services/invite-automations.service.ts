@@ -293,9 +293,9 @@ export class InviteAutomationsService {
         'failedInviteRequest',
         notification.senderUsername
       );
-      this.telemetry
-        .trackEvent('vrchat_invite_refused', this.refusalTelemetry(cause, notification))
-        .catch((e) => warn(`[VRChat] Could not report the refused invite to telemetry: ${e}`));
+      this.trackRefusal(cause, notification).catch((e) =>
+        warn(`[VRChat] Could not report the refused invite to telemetry: ${e}`)
+      );
       return null;
     }
     await this.vrchat.deleteNotification(notification.id);
@@ -303,23 +303,24 @@ export class InviteAutomationsService {
   }
 
   /** Carries the raw body, cut to MAX_REFUSAL_BODY characters, only when VRChat gave no message. */
-  private refusalTelemetry(
-    refusal: VRChatInviteRefusedError,
-    notification: Notification
-  ): { [key: string]: string } {
-    const message = this.anonymizeVRChatMessage(refusal.vrchatMessage ?? '', notification);
-    if (refusal.vrchatMessage) return { message };
-    const body = this.anonymizeVRChatMessage(refusal.body, notification);
-    return { message, body: body.slice(0, MAX_REFUSAL_BODY) };
+  private async trackRefusal(refusal: VRChatInviteRefusedError, notification: Notification) {
+    const user = await firstValueFrom(this.vrchat.user);
+    const names = [notification.senderUsername, user?.displayName];
+    const message = this.anonymizeVRChatMessage(refusal.vrchatMessage ?? '', names);
+    const props: { [key: string]: string } = { message };
+    if (!refusal.vrchatMessage) {
+      props['body'] = this.anonymizeVRChatMessage(refusal.body, names).slice(0, MAX_REFUSAL_BODY);
+    }
+    await this.telemetry.trackEvent('vrchat_invite_refused', props);
   }
 
-  /** Replaces the sender's display name and any VRChat ID, so the message carries no personal data. */
-  private anonymizeVRChatMessage(message: string, notification: Notification): string {
+  /** Replaces the given display names and any VRChat ID, so the message carries no personal data. */
+  private anonymizeVRChatMessage(message: string, names: (string | undefined)[]): string {
     // IDs go first: a display name can match part of an ID and break the ID match
-    const withoutIds = message.replace(UUID, '<id>');
-    return notification.senderUsername
-      ? withoutIds.replaceAll(notification.senderUsername, '<name>')
-      : withoutIds;
+    return names.reduce<string>(
+      (text, name) => (name ? text.replaceAll(name, '<name>') : text),
+      message.replace(UUID, '<id>')
+    );
   }
 
   /** Resolves to whether the decline automation handled the request. */
