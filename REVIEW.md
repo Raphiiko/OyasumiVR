@@ -26,3 +26,12 @@ measurements. They never describe who the user is.
   remove user paths, IDs, and names, and cut it to a fixed length. Reuse `sanitizeText` in
   `error-reporting.service.ts`, `sanitize_value` in `src-shared-rust/src/error_reporting.rs`, or
   `anonymizeVRChatMessage` in `invite-automations.service.ts`.
+
+## Angular
+
+- NG-1: Declare component and directive inputs with `input()` or `input.required()`, outputs with
+  `output()`, and two-way bindings with `model()`. Never add `@Input`, `@Output`, or
+  `EventEmitter`. An input with a matching `<name>Change` output becomes one `model()`.
+- NG-2: `takeUntilDestroyed()` is the last operator in its `pipe()`, and no `.pipe()` follows it.
+  An operator after it, such as `switchMap`, can keep a subscription alive after the component is
+  destroyed.
