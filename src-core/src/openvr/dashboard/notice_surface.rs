@@ -106,14 +106,27 @@ fn run(
 ) -> Result<(), String> {
     let mut ui = NativeUi::new(width, height, language);
     let mut renderer = Renderer::new(&mut ui, width, height)?;
+    let result = serve(&mut ui, &mut renderer, &table, overlay, commands, shared);
+    renderer.shutdown(&mut ui);
+    result
+}
+
+fn serve(
+    ui: &mut NativeUi,
+    renderer: &mut Renderer,
+    table: &raw::VR_IVROverlay_FnTable,
+    overlay: u64,
+    commands: Receiver<Command>,
+    shared: &Shared,
+) -> Result<(), String> {
     while let Ok(command) = commands.recv() {
         match command {
             Command::Move(x, y) => ui.pointer_move(x, y),
             Command::Button(down) => ui.pointer_button(down),
             Command::Leave => ui.pointer_leave(),
             Command::Render(copy) => {
-                let clicked = renderer.render(&mut ui, |frame| notice::draw(frame, &copy))?;
-                renderer.submit(&table, overlay)?;
+                let clicked = renderer.render(ui, |frame| notice::draw(frame, &copy))?;
+                renderer.submit(table, overlay)?;
                 if clicked {
                     shared.clicked.store(true, Ordering::Release);
                 }

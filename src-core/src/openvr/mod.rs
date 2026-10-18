@@ -4,6 +4,7 @@ mod chaperone;
 mod colortemp_analog;
 pub mod commands;
 mod dashboard;
+pub(crate) use dashboard::interface_table;
 pub mod devices;
 mod framelimiter;
 mod gesture_detector;

@@ -3,6 +3,7 @@
 
 pub mod notice;
 pub mod renderer;
+mod steamvr;
 
 use dear_imgui_rs::{
     Context, FontConfig, FontSource, MouseButton, StbTrueTypeFontData, StyleColor,
