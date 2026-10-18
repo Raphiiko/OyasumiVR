@@ -342,7 +342,7 @@ export class ShutdownAutomationsService {
                 )
               )
             ),
-            filter((devices) => devices.every((d) => !d.isTurningOff && !d.canPowerOff))
+            filter((devices) => devices.every((d) => !d.isTurningOff && !d.isConnected))
           ),
           of(null).pipe(delay(10000)),
           this.cancelEvent

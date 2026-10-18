@@ -43,7 +43,10 @@ export class FBTAvatarReloadWorkaroundService {
         // Detect all trackers turning off
         map((devices) =>
           devices
-            .filter((d) => d.class === 'GenericTracker' && (d.canPowerOff || d.isTurningOff))
+            .filter(
+              (d) =>
+                d.class === 'GenericTracker' && d.isConnected && this.openvr.hasHadPowerControl(d)
+            )
             .map((d) => d.serialNumber)
         ),
         pairwise(),

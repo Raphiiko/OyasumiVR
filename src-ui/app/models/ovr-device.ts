@@ -31,6 +31,7 @@ export type OVRHandleType =
 export interface OVRDevice {
   // Native properties
   battery: number;
+  /** Whether OyasumiVR can turn this device off right now. Read isConnected for whether it is on. */
   canPowerOff?: boolean;
   class: OVRDeviceClass;
   role: OVRDeviceRole;

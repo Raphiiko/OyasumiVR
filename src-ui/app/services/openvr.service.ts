@@ -29,6 +29,7 @@ export class OpenVRService {
   private _devices: BehaviorSubject<OVRDevice[]> = new BehaviorSubject<OVRDevice[]>([]);
   public devices: Observable<OVRDevice[]> = this._devices.asObservable();
 
+  private powerControlledSerials = new Set<string>();
   private autoLaunchQueue: Promise<void> = Promise.resolve();
   private autoLaunchSession = 0;
 
@@ -88,7 +89,9 @@ export class OpenVRService {
     if (device.isTurningOff === null || device.isTurningOff === undefined)
       device.isTurningOff =
         this._devices.value.find((d) => d.index === device.index)?.isTurningOff ?? false;
-    if (!device.canPowerOff) device.isTurningOff = false;
+    if (!device.isConnected) device.isTurningOff = false;
+    if (device.canPowerOff && device.serialNumber)
+      this.powerControlledSerials.add(device.serialNumber);
     this._devices.next(
       orderBy(
         [device, ...this._devices.value.filter((d) => d.index !== device.index)],
@@ -97,6 +100,11 @@ export class OpenVRService {
       )
     );
     this.appRef.tick();
+  }
+
+  /** Whether OyasumiVR could turn this device off at any point since the app started. */
+  public hasHadPowerControl(device: OVRDevice): boolean {
+    return !!device.serialNumber && this.powerControlledSerials.has(device.serialNumber);
   }
 
   /** Logs a failure instead of rejecting, as SteamVR or the headset can go away mid-transition. */

@@ -68,7 +68,7 @@ export class SleepModeEnableAtBatteryPercentageAutomationService {
     if (
       devices
         .filter((d) => d.index !== device.index) // Is not the current device
-        .filter((d) => this.config.triggerClasses.includes(d.class) && d.canPowerOff) // Can trigger
+        .filter((d) => this.config.triggerClasses.includes(d.class) && d.isConnected) // Can trigger
         .find((d) => !d.isCharging && d.battery && d.battery <= threshold) // Already meets the threshold
     )
       return;

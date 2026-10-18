@@ -34,24 +34,22 @@ export class SleepModeEnableOnControllersPoweredOffAutomationService {
   }
 
   private onDevicesUpdate(devices: OVRDevice[]) {
-    const controllers = devices.filter((d) => d.class === 'Controller');
+    const controllers = devices.filter(
+      (d) => d.class === 'Controller' && this.openvr.hasHadPowerControl(d)
+    );
 
     // forget controllers whose state is gone, such as after SteamVR stops
     this.turnedOnControllers = this.turnedOnControllers.filter((index) =>
       controllers.some((c) => c.index === index)
     );
 
-    // track controllers that are on and can be turned off
+    // track controllers that are on
     controllers.forEach((controller) => {
-      if (
-        controller.canPowerOff &&
-        controller.isConnected &&
-        !this.turnedOnControllers.includes(controller.index)
-      )
+      if (controller.isConnected && !this.turnedOnControllers.includes(controller.index))
         this.turnedOnControllers.push(controller.index);
     });
 
-    // a controller is off once it disconnects, not when it can no longer be turned off
+    // a controller is off once it disconnects
     const justTurnedOffControllers = controllers.filter(
       (c) => !c.isConnected && this.turnedOnControllers.includes(c.index)
     );

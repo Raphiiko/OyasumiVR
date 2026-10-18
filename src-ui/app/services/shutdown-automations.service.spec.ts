@@ -3,6 +3,7 @@ import { BehaviorSubject, filter, firstValueFrom, take } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AUTOMATION_CONFIGS_DEFAULT } from '../models/automations';
 import { APP_SETTINGS_DEFAULT } from '../models/settings';
+import type { OVRDevice } from '../models/ovr-device';
 import { ShutdownAutomationsService } from './shutdown-automations.service';
 
 const { invoke } = vi.hoisted(() => ({ invoke: vi.fn() }));
@@ -124,5 +125,47 @@ describe('ShutdownAutomationsService sequence completion', () => {
 
     expect(invoke).not.toHaveBeenCalledWith('windows_sleep');
     await expect(firstValueFrom(service.stage.pipe(take(1)))).resolves.toBe('IDLE');
+  });
+});
+
+describe('ShutdownAutomationsService device power-off', () => {
+  it('waits for the devices to disconnect, not to lose power control', async () => {
+    const controller = {
+      index: 1,
+      class: 'Controller',
+      serialNumber: 'C1',
+      canPowerOff: true,
+      isConnected: true,
+      isTurningOff: false,
+    } as OVRDevice;
+    const devices = new BehaviorSubject<OVRDevice[]>([controller]);
+    const turnOffDevices = vi.fn(async () => [controller]);
+    const service = new ShutdownAutomationsService(
+      {} as Dependencies[0],
+      {} as Dependencies[1],
+      {
+        settingsSync: { ...APP_SETTINGS_DEFAULT, lighthousePowerControl: false },
+      } as Dependencies[2],
+      { devices } as unknown as Dependencies[3],
+      { turnOffDevices } as unknown as Dependencies[4],
+      {} as Dependencies[5],
+      {} as Dependencies[6],
+      {} as Dependencies[7],
+      {} as Dependencies[8],
+      {} as Dependencies[9]
+    );
+    service['turnOffOvrDevices'] = [controller];
+    let done = false;
+    const turningOff = service['turnOffDevices']().then(() => (done = true));
+    expect(turnOffDevices).toHaveBeenCalledWith([controller]);
+
+    devices.next([{ ...controller, canPowerOff: false }]);
+    await vi.advanceTimersByTimeAsync(2000);
+    expect(done).toBe(false);
+
+    devices.next([{ ...controller, canPowerOff: false, isConnected: false }]);
+    await vi.advanceTimersByTimeAsync(250 + 1000);
+    await turningOff;
+    expect(done).toBe(true);
   });
 });

@@ -10,6 +10,7 @@ import { SleepModeEnableOnControllersPoweredOffAutomationService } from './sleep
 function controller(index: number, state: Partial<OVRDevice> = {}): OVRDevice {
   return {
     index,
+    serialNumber: `C${index}`,
     class: 'Controller',
     canPowerOff: true,
     isConnected: true,
@@ -23,14 +24,20 @@ async function setup() {
   const configs = structuredClone(AUTOMATION_CONFIGS_DEFAULT);
   configs.SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF.enabled = true;
   const devices = new BehaviorSubject<OVRDevice[]>([]);
+  const powerControlled = new Set<string>();
+  const emit = (list: OVRDevice[]) => {
+    list.filter((d) => d.canPowerOff).forEach((d) => powerControlled.add(d.serialNumber!));
+    devices.next(list);
+  };
+  const hasHadPowerControl = (d: OVRDevice) => powerControlled.has(d.serialNumber!);
   const enableSleepMode = vi.fn();
   const service = new SleepModeEnableOnControllersPoweredOffAutomationService(
     { configs: new BehaviorSubject(configs) } as unknown as AutomationConfigService,
-    { devices } as unknown as OpenVRService,
+    { devices, hasHadPowerControl } as unknown as OpenVRService,
     { enableSleepMode } as unknown as SleepService
   );
   await service.init();
-  return { devices, enableSleepMode };
+  return { devices: { next: emit }, enableSleepMode };
 }
 
 describe('SleepModeEnableOnControllersPoweredOffAutomationService', () => {
@@ -72,10 +79,20 @@ describe('SleepModeEnableOnControllersPoweredOffAutomationService', () => {
     expect(h.enableSleepMode).not.toHaveBeenCalled();
   });
 
-  it('ignores controllers that never turned on', async () => {
+  it('ignores controllers that OyasumiVR never could turn off', async () => {
     const h = await setup();
     h.devices.next([controller(1, { canPowerOff: false })]);
     h.devices.next([controller(1, off)]);
     expect(h.enableSleepMode).not.toHaveBeenCalled();
+  });
+
+  it('counts a controller that gains power control while on', async () => {
+    const h = await setup();
+    h.devices.next([controller(1, { canPowerOff: false })]);
+    h.devices.next([controller(1)]);
+    h.devices.next([controller(1, { canPowerOff: false })]);
+    expect(h.enableSleepMode).not.toHaveBeenCalled();
+    h.devices.next([controller(1, off)]);
+    expect(h.enableSleepMode).toHaveBeenCalledTimes(1);
   });
 });
