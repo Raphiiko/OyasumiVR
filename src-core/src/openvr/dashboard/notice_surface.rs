@@ -17,6 +17,9 @@ enum Command {
     Render(NoticeCopy),
 }
 
+/// Frames drawn after input, so imgui applies each queued event and the hover state settles.
+const REDRAWS_AFTER_INPUT: u8 = 3;
+
 /// State the surface thread reports back to the OpenVR task.
 #[derive(Default)]
 struct Shared {
@@ -32,6 +35,8 @@ pub struct NoticeSurface {
     pub language: String,
     commands: Sender<Command>,
     shared: Arc<Shared>,
+    /// Frames still to draw; input and creation set it, each queued frame lowers it.
+    redraws: u8,
 }
 
 impl NoticeSurface {
@@ -67,29 +72,36 @@ impl NoticeSurface {
             language: language.to_string(),
             commands,
             shared,
+            redraws: REDRAWS_AFTER_INPUT,
         })
     }
 
     /// `x` and `y` are surface pixels from the top left.
-    pub fn pointer_move(&self, x: f32, y: f32) {
-        let _ = self.commands.send(Command::Move(x, y));
+    pub fn pointer_move(&mut self, x: f32, y: f32) {
+        self.send(Command::Move(x, y));
     }
 
-    pub fn pointer_button(&self, down: bool) {
-        let _ = self.commands.send(Command::Button(down));
+    pub fn pointer_button(&mut self, down: bool) {
+        self.send(Command::Button(down));
     }
 
-    pub fn pointer_leave(&self) {
-        let _ = self.commands.send(Command::Leave);
+    pub fn pointer_leave(&mut self) {
+        self.send(Command::Leave);
     }
 
-    /// Queues a frame unless one is still drawing. Returns true once the button was clicked.
-    pub fn render(&self, copy: &NoticeCopy) -> Result<bool, String> {
+    fn send(&mut self, command: Command) {
+        let _ = self.commands.send(command);
+        self.redraws = REDRAWS_AFTER_INPUT;
+    }
+
+    /// Queues a frame when input is waiting and no frame is drawing. Returns true once the button was clicked.
+    pub fn render(&mut self, copy: &NoticeCopy) -> Result<bool, String> {
         if let Some(error) = self.shared.error.lock().unwrap().take() {
             return Err(error);
         }
-        if !self.shared.busy.swap(true, Ordering::AcqRel) {
+        if self.redraws > 0 && !self.shared.busy.swap(true, Ordering::AcqRel) {
             let _ = self.commands.send(Command::Render(copy.clone()));
+            self.redraws -= 1;
         }
         Ok(self.shared.clicked.swap(false, Ordering::AcqRel))
     }

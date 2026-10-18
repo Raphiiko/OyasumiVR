@@ -289,6 +289,8 @@ pub struct DashboardOverlay {
     keyboard_id: Option<u64>,
     /// Shows the desktop notice while `failed`; dropped when the dashboard is left.
     notice: Option<NoticeSurface>,
+    /// Set when the notice cannot be drawn, so it is not retried every tick; cleared when the dashboard is left.
+    notice_unavailable: bool,
 }
 
 impl DashboardOverlay {
@@ -334,6 +336,7 @@ impl DashboardOverlay {
             keyboard: Arc::new(Mutex::new(None)),
             keyboard_id: None,
             notice: None,
+            notice_unavailable: false,
         };
         // fail early on functions that every tick needs
         required(table.DestroyOverlay)?;
@@ -439,6 +442,7 @@ impl DashboardOverlay {
         log::info!("[Dashboard] Dashboard selected: {selected}");
         if !selected {
             self.notice = None;
+            self.notice_unavailable = false;
             self.deactivate();
             self.gpu_failed = false;
         }
@@ -549,6 +553,11 @@ impl DashboardOverlay {
 
     /// Draws the notice while the desktop window holds the UI; its button takes the UI back.
     fn tick_notice(&mut self) -> Result<(), String> {
+        if self.notice_unavailable {
+            self.failed_notice();
+            return Ok(());
+        }
+
         // recreate the surface when the language, and with it the font, changes
         let copy = notice_copy();
         if self
@@ -563,6 +572,7 @@ impl DashboardOverlay {
                 Ok(notice) => self.notice = Some(notice),
                 Err(error) => {
                     log::warn!("[Dashboard] Could not create the desktop notice: {error}");
+                    self.notice_unavailable = true;
                     self.failed_notice();
                     return Ok(());
                 }
@@ -574,7 +584,7 @@ impl DashboardOverlay {
             let Some(event) = self.next_event()? else {
                 break;
             };
-            let notice = self.notice.as_ref().unwrap();
+            let notice = self.notice.as_mut().unwrap();
             let mouse = unsafe { event.data.mouse };
             match event.eventType {
                 MOUSE_MOVE => notice.pointer_move(
@@ -590,7 +600,7 @@ impl DashboardOverlay {
         }
 
         // draw a frame; a click clears `failed`, so the next tick takes the desktop back
-        match self.notice.as_ref().unwrap().render(&copy) {
+        match self.notice.as_mut().unwrap().render(&copy) {
             Ok(true) => {
                 log::info!("[Dashboard] Taking the UI back from the desktop window");
                 self.notice = None;
@@ -600,6 +610,7 @@ impl DashboardOverlay {
             Err(error) => {
                 log::warn!("[Dashboard] Could not draw the desktop notice: {error}");
                 self.notice = None;
+                self.notice_unavailable = true;
                 self.failed_notice();
             }
         }

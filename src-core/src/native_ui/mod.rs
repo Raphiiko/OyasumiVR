@@ -5,9 +5,7 @@ pub mod notice;
 pub mod renderer;
 mod steamvr;
 
-use dear_imgui_rs::{
-    Context, FontConfig, FontSource, MouseButton, StbTrueTypeFontData, StyleColor,
-};
+use dear_imgui_rs::{Context, FontConfig, FontSource, MouseButton, StyleColor};
 
 const BACKGROUND: [f32; 4] = rgb(0x15, 0x15, 0x15);
 const TEXT: [f32; 4] = rgb(0xf8, 0xf8, 0xf2);
@@ -66,23 +64,29 @@ impl NativeUi {
 
 /// Loads a UI font plus a fallback for scripts it lacks, or imgui's built-in font when neither exists.
 fn load_fonts(context: &Context, language: &str) {
-    // ponytail: Windows font paths only; add fontconfig lookups when a Linux surface needs this
-    let mut sources = Vec::new();
-    for path in [
-        Some("C:\\Windows\\Fonts\\seguisb.ttf"),
+    // only Windows font paths so far; other platforms get imgui's built-in Latin font
+    let files: Vec<Vec<u8>> = [
+        Some(r"C:\Windows\Fonts\seguisb.ttf"),
         fallback_font(language),
     ]
     .into_iter()
     .flatten()
-    {
-        match StbTrueTypeFontData::from_file(path) {
-            Ok(data) => sources.push(
-                FontSource::stb_truetype(data)
-                    .with_config(FontConfig::new().merge_mode(!sources.is_empty())),
-            ),
-            Err(error) => log::warn!("[NativeUi] Could not load font {path}: {error}"),
-        }
-    }
+    .filter_map(|path| {
+        std::fs::read(path)
+            .inspect_err(|error| log::warn!("[NativeUi] Could not read font {path}: {error}"))
+            .ok()
+    })
+    .collect();
+    // the Japanese and Chinese system fonts are collections, which only the raw loader reads;
+    // these are installed Windows fonts, so they are complete and valid for stb_truetype
+    let mut sources: Vec<FontSource> = files
+        .iter()
+        .enumerate()
+        .map(|(index, data)| {
+            unsafe { FontSource::ttf_data(data) }
+                .with_config(FontConfig::new().merge_mode(index > 0))
+        })
+        .collect();
     if sources.is_empty() {
         sources.push(FontSource::default_vector());
     }
@@ -91,11 +95,11 @@ fn load_fonts(context: &Context, language: &str) {
 
 fn fallback_font(language: &str) -> Option<&'static str> {
     match language {
-        "ja" => Some("C:\\Windows\\Fonts\\YuGothM.ttc"),
-        "ko" => Some("C:\\Windows\\Fonts\\malgun.ttf"),
-        "cn" => Some("C:\\Windows\\Fonts\\msyh.ttc"),
-        "tw" => Some("C:\\Windows\\Fonts\\msjh.ttc"),
-        "th" => Some("C:\\Windows\\Fonts\\LeelawUI.ttf"),
+        "ja" => Some(r"C:\Windows\Fonts\YuGothM.ttc"),
+        "ko" => Some(r"C:\Windows\Fonts\malgun.ttf"),
+        "cn" => Some(r"C:\Windows\Fonts\msyh.ttc"),
+        "tw" => Some(r"C:\Windows\Fonts\msjh.ttc"),
+        "th" => Some(r"C:\Windows\Fonts\LeelawUI.ttf"),
         _ => None,
     }
 }
