@@ -83,7 +83,7 @@ fn ssh_outcome(error: SshError) -> UpdateOutcome {
 
 async fn update_session(session: &Session, pairing: &Pairing, digest: &str) -> UpdateOutcome {
     // install the bundled helper when the installed one needs it
-    let inspected = match setup::install_bundled(session, false, false).await {
+    let inspected = match setup::install_bundled(session, false, false, false).await {
         Ok(inspected) => inspected,
         Err(error) => return install_failure(error),
     };
@@ -256,7 +256,7 @@ async fn recover_session(session: &Session, pairing: &Pairing) -> Recovery {
     let mut current = fields.next().unwrap_or_default().to_owned();
     let mut current_digest = fields.next().map(str::to_owned);
     warn!("[SteamFrame] The helper does not start, so the current release is repaired");
-    match setup::install_bundled(session, true, false).await {
+    match setup::install_bundled(session, true, true, false).await {
         Ok(inspected) if inspected.replaced => {
             keep_uninstaller(session).await;
             if verify(pairing, bundled_digest()).await {

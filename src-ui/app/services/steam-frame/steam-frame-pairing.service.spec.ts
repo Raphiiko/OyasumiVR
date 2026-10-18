@@ -471,6 +471,7 @@ describe('Steam Frame helper maintenance', () => {
     expect(calls('steam_frame_set_up_helper').at(-1).request).toMatchObject({
       pcId: pairing.id,
       identity: pairing.identity,
+      repair: false,
     });
     expect(service.pairingFor(device.id)).toMatchObject({ certPin: 'NEW', port: 38441 });
     expect(calls('steam_frame_sync_connections').at(-1).pairings[0]).toMatchObject({
@@ -478,6 +479,13 @@ describe('Steam Frame helper maintenance', () => {
       port: 38441,
     });
     expect(service.reinstalls()).toEqual({});
+  });
+
+  it('asks setup to replace the helper on a repair', async () => {
+    const { service, pairing } = await paired();
+    handlers['steam_frame_set_up_helper'] = () => ({ status: 'failed', message: 'x' });
+    await service.reinstallHelper(pairing, true);
+    expect(calls('steam_frame_set_up_helper').at(-1).request).toMatchObject({ repair: true });
   });
 
   it('keeps the old pin after a failed reinstall', async () => {

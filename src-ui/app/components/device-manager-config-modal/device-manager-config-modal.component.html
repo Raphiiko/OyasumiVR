@@ -94,6 +94,23 @@
             <span class="frame-up-to-date">{{ 'steamFrame.details.upToDate' | transloco }}</span>
           }
         </app-setting-row>
+        @if (helper.canRepair) {
+          <app-setting-row
+            label="steamFrame.details.repair"
+            description="steamFrame.details.repairDescription"
+          >
+            <button
+              class="btn btn-secondary"
+              [disabled]="helper.repairing || helper.updating"
+              (click)="repairFrameHelper()"
+            >
+              {{
+                (helper.repairing ? 'steamFrame.details.repairing' : 'steamFrame.actions.repair')
+                  | transloco
+              }}
+            </button>
+          </app-setting-row>
+        }
         <app-setting-row
           label="steamFrame.details.pairing"
           description="steamFrame.details.pairingDescription"
