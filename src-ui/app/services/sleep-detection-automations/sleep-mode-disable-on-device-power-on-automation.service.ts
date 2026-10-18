@@ -36,13 +36,13 @@ export class SleepModeDisableOnDevicePowerOnAutomationService {
       // First initialization to compare against
       if (!this.initialized) {
         this.poweredOnDevices = devices
-          .filter((d) => d.canPowerOff && !d.isTurningOff)
+          .filter((d) => d.isConnected && !d.isTurningOff)
           .map((d) => d.index);
         this.initialized = true;
         return;
       }
       // Get current powered on devices
-      const poweredOnDevices: OVRDevice[] = devices.filter((d) => d.canPowerOff && !d.isTurningOff);
+      const poweredOnDevices: OVRDevice[] = devices.filter((d) => d.isConnected && !d.isTurningOff);
       // Remove devices from cache that are no longer powered on
       this.poweredOnDevices = this.poweredOnDevices.filter((dIndex) => {
         const result = !!poweredOnDevices.find((d) => d.index === dIndex);
@@ -62,7 +62,12 @@ export class SleepModeDisableOnDevicePowerOnAutomationService {
       // Add them to the powered on devices list
       this.poweredOnDevices.push(...newPoweredOnDevices.map((d) => d.index));
       // If none of the newly powered on devices should trigger this automation, stop here
-      if (!newPoweredOnDevices.find((d) => this.config.triggerClasses.includes(d.class))) return;
+      if (
+        !newPoweredOnDevices.find(
+          (d) => this.config.triggerClasses.includes(d.class) && this.openvr.hasHadPowerControl(d)
+        )
+      )
+        return;
       // Disable sleep mode if automation is enabled
       if (this.config.enabled) {
         this.sleep.disableSleepMode({

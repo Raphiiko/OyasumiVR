@@ -283,6 +283,7 @@ it('keeps devices in tracked-index order across arrivals and repeated updates', 
     battery: 50,
     pose: null,
     canPowerOff: true,
+    isConnected: true,
     isTurningOff: false,
   });
 
@@ -298,4 +299,63 @@ it('keeps devices in tracked-index order across arrivals and repeated updates', 
       isTurningOff: true,
     });
   }
+});
+
+it('keeps a device turning off until it disconnects', async () => {
+  const service = new OpenVRService(
+    { tick: vi.fn() } as unknown as ApplicationRef,
+    {} as AppSettingsService,
+    {} as TelemetryService
+  );
+  const device: OVRDevice = {
+    index: 1,
+    class: 'Controller',
+    role: 'LeftHand',
+    battery: 0.5,
+    pose: null,
+    canPowerOff: true,
+    isConnected: true,
+    isTurningOff: true,
+  };
+  // the core sends updates without isTurningOff
+  const coreUpdate = (state: Partial<OVRDevice>) =>
+    service.onDeviceUpdate({
+      ...device,
+      isTurningOff: undefined,
+      ...state,
+    } as unknown as OVRDevice);
+  const current = async () => (await firstValueFrom(service.devices))[0];
+
+  service.onDeviceUpdate(device);
+  coreUpdate({ canPowerOff: false });
+  expect((await current()).isTurningOff).toBe(true);
+
+  coreUpdate({ canPowerOff: false, isConnected: false });
+  expect((await current()).isTurningOff).toBe(false);
+});
+
+it('remembers devices it could turn off once', () => {
+  const service = new OpenVRService(
+    { tick: vi.fn() } as unknown as ApplicationRef,
+    {} as AppSettingsService,
+    {} as TelemetryService
+  );
+  const device: OVRDevice = {
+    index: 1,
+    class: 'Controller',
+    role: 'LeftHand',
+    serialNumber: 'C1',
+    battery: 0.5,
+    pose: null,
+    canPowerOff: false,
+    isConnected: true,
+    isTurningOff: false,
+  };
+
+  service.onDeviceUpdate(device);
+  expect(service.hasHadPowerControl(device)).toBe(false);
+  service.onDeviceUpdate({ ...device, canPowerOff: true });
+  service.onDeviceUpdate({ ...device, canPowerOff: false, isConnected: false });
+  expect(service.hasHadPowerControl(device)).toBe(true);
+  expect(service.hasHadPowerControl({ ...device, serialNumber: 'C2' })).toBe(false);
 });

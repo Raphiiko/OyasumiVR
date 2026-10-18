@@ -8,6 +8,7 @@ import {
   SleepModeEnableAtControllersPoweredOffAutomationConfig,
 } from '../../models/automations';
 import { SleepService } from '../sleep.service';
+import { OVRDevice } from '../../models/ovr-device';
 
 @Injectable({
   providedIn: 'root',
@@ -29,27 +30,40 @@ export class SleepModeEnableOnControllersPoweredOffAutomationService {
       .pipe(map((configs) => configs.SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF))
       .subscribe((config) => (this.config = config));
 
-    this.openvr.devices.subscribe(async (devices) => {
-      const controllers = devices.filter((d) => d.class === 'Controller');
-      controllers.forEach((controller) => {
-        if (controller.canPowerOff && !this.turnedOnControllers.includes(controller.index))
-          this.turnedOnControllers.push(controller.index);
-      });
-      const justTurnedOffControllers = controllers.filter(
-        (c) => !c.canPowerOff && this.turnedOnControllers.includes(c.index)
-      );
-      const allTurnedOff =
-        justTurnedOffControllers.length &&
-        justTurnedOffControllers.length === this.turnedOnControllers.length;
-      justTurnedOffControllers.forEach(
-        (c) => (this.turnedOnControllers = this.turnedOnControllers.filter((_c) => _c !== c.index))
-      );
-      if (allTurnedOff && this.config.enabled) {
-        this.sleep.enableSleepMode({
-          type: 'AUTOMATION',
-          automation: 'SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF',
-        });
-      }
+    this.openvr.devices.subscribe((devices) => this.onDevicesUpdate(devices));
+  }
+
+  private onDevicesUpdate(devices: OVRDevice[]) {
+    const controllers = devices.filter(
+      (d) => d.class === 'Controller' && this.openvr.hasHadPowerControl(d)
+    );
+
+    // forget controllers whose state is gone, such as after SteamVR stops
+    this.turnedOnControllers = this.turnedOnControllers.filter((index) =>
+      controllers.some((c) => c.index === index)
+    );
+
+    // track controllers that are on
+    controllers.forEach((controller) => {
+      if (controller.isConnected && !this.turnedOnControllers.includes(controller.index))
+        this.turnedOnControllers.push(controller.index);
     });
+
+    // a controller is off once it disconnects
+    const justTurnedOffControllers = controllers.filter(
+      (c) => !c.isConnected && this.turnedOnControllers.includes(c.index)
+    );
+    const allTurnedOff =
+      justTurnedOffControllers.length &&
+      justTurnedOffControllers.length === this.turnedOnControllers.length;
+    justTurnedOffControllers.forEach(
+      (c) => (this.turnedOnControllers = this.turnedOnControllers.filter((_c) => _c !== c.index))
+    );
+    if (allTurnedOff && this.config.enabled) {
+      this.sleep.enableSleepMode({
+        type: 'AUTOMATION',
+        automation: 'SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF',
+      });
+    }
   }
 }

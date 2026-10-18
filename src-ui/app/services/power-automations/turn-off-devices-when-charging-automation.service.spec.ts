@@ -1,5 +1,5 @@
 import { BehaviorSubject } from 'rxjs';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { AUTOMATION_CONFIGS_DEFAULT } from '../../models/automations';
 import type { OVRDevice } from '../../models/ovr-device';
 import type { DeviceSelection } from '../../models/device-manager';
@@ -141,5 +141,86 @@ describe('charging device selection', () => {
     await Promise.resolve();
     expect(h.powerOff).not.toHaveBeenCalled();
     expect(h.logEvent).not.toHaveBeenCalled();
+  });
+});
+
+describe('charging state after a reconnect', () => {
+  afterEach(() => vi.useRealTimers());
+
+  it('ignores the old charging state a device reports when it turns back on', async () => {
+    vi.useFakeTimers();
+    const h = await setup();
+    h.devices.next([{ ...a, isCharging: true, canPowerOff: false, isConnected: false }, b]);
+    h.devices.next([{ ...a, isCharging: true, isConnected: true }, b]);
+    await vi.advanceTimersByTimeAsync(2000);
+    h.devices.next([{ ...a, isCharging: false, isConnected: true }, b]);
+    await vi.advanceTimersByTimeAsync(10000);
+    expect(h.powerOff).not.toHaveBeenCalled();
+  });
+
+  it('turns off a device that is still charging once it settled', async () => {
+    vi.useFakeTimers();
+    const h = await setup();
+    h.devices.next([{ ...a, isCharging: true, isConnected: true }, b]);
+    await vi.advanceTimersByTimeAsync(9000);
+    expect(h.powerOff).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(h.powerOff).toHaveBeenCalledTimes(1);
+  });
+
+  it('acts at once on a device plugged in soon after it turned on', async () => {
+    vi.useFakeTimers();
+    const h = await setup();
+    h.devices.next([{ ...a, isConnected: true }, b]);
+    await vi.advanceTimersByTimeAsync(2000);
+    h.devices.next([{ ...a, isCharging: true, isConnected: true }, b]);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(h.powerOff).toHaveBeenCalledTimes(1);
+  });
+
+  it('acts at once once a device that connected charging reported not charging', async () => {
+    vi.useFakeTimers();
+    const h = await setup();
+    h.devices.next([{ ...a, isCharging: true, isConnected: true }, b]);
+    await vi.advanceTimersByTimeAsync(1000);
+    h.devices.next([{ ...a, isConnected: true }, b]);
+    await vi.advanceTimersByTimeAsync(1000);
+    h.devices.next([{ ...a, isCharging: true, isConnected: true }, b]);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(h.powerOff).toHaveBeenCalledTimes(1);
+  });
+
+  it('restarts the wait when a device reconnects during it', async () => {
+    vi.useFakeTimers();
+    const h = await setup();
+    h.devices.next([{ ...a, isCharging: true, isConnected: true }, b]);
+    await vi.advanceTimersByTimeAsync(3000);
+    h.devices.next([{ ...a, isCharging: true, canPowerOff: false, isConnected: false }, b]);
+    await vi.advanceTimersByTimeAsync(5000);
+    h.devices.next([{ ...a, isCharging: true, isConnected: true }, b]);
+    await vi.advanceTimersByTimeAsync(2000);
+    expect(h.powerOff).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(8000);
+    expect(h.powerOff).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not act on a disconnected device that still reports charging', async () => {
+    vi.useFakeTimers();
+    const h = await setup();
+    const stale = { ...a, isCharging: true, isConnected: false };
+    h.devices.next([stale, b]);
+    h.devices.next([{ ...stale, battery: 0.5 }, b]);
+    await vi.advanceTimersByTimeAsync(10000);
+    expect(h.powerOff).not.toHaveBeenCalled();
+  });
+
+  it('acts at once on a device put on the charger while it was on', async () => {
+    vi.useFakeTimers();
+    const h = await setup();
+    h.devices.next([{ ...a, isConnected: true }, b]);
+    await vi.advanceTimersByTimeAsync(10000);
+    h.devices.next([{ ...a, isCharging: true, isConnected: true }, b]);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(h.powerOff).toHaveBeenCalledTimes(1);
   });
 });

@@ -38,8 +38,6 @@ import { TranslocoService } from '@jsverse/transloco';
 import { VRChatService } from './vrchat-api/vrchat.service';
 import { DeviceManagerService } from './device-manager.service';
 import { DMKnownDevice } from '../models/device-manager';
-import { LighthouseDevice } from '../models/lighthouse-device';
-import { OVRDevice } from '../models/ovr-device';
 
 export type ShutdownSequenceStage = (typeof ShutdownSequenceStageOrder)[number];
 export const ShutdownSequenceStageOrder = [
@@ -65,10 +63,10 @@ export class ShutdownAutomationsService {
   private _stage = new BehaviorSubject<ShutdownSequenceStage>('IDLE');
   public stage = this._stage.asObservable();
   private cancelFlag = false;
+  /** Set for a whole run, including the device lookup before the first stage starts. */
+  private running = false;
   private cancelEvent = new Subject<void>();
   public readonly sequenceCancelled = this.cancelEvent.asObservable();
-  private turnOffOvrDevices: OVRDevice[] = [];
-  private turnOffLighthouseDevices: LighthouseDevice[] = [];
   private turnOffKnownDevices: DMKnownDevice[] = [];
 
   constructor(
@@ -97,11 +95,7 @@ export class ShutdownAutomationsService {
         map((configs) => configs.SHUTDOWN_AUTOMATIONS.turnOffDevices),
         switchMap((selection) => this.deviceManager.getDevicesForSelectionStream(selection))
       )
-      .subscribe((devices) => {
-        this.turnOffOvrDevices = devices.ovrDevices;
-        this.turnOffLighthouseDevices = devices.lighthouseDevices;
-        this.turnOffKnownDevices = devices.knownDevices;
-      });
+      .subscribe((devices) => (this.turnOffKnownDevices = devices.knownDevices));
     this.automationConfigService.configs
       .pipe(
         map((configs) => configs.SHUTDOWN_AUTOMATIONS),
@@ -179,7 +173,7 @@ export class ShutdownAutomationsService {
   }
 
   async cancelSequence(reason: 'MANUAL') {
-    if (this._stage.value === 'IDLE' || this.cancelFlag) return;
+    if (!this.running || this.cancelFlag) return;
     this.cancelFlag = true;
     this.cancelEvent.next();
     this.eventLog.logEvent({
@@ -195,7 +189,8 @@ export class ShutdownAutomationsService {
 
   async runSequence(reason: EventLogShutdownSequenceStartedReason) {
     const stages = this.getApplicableStages();
-    if (this._stage.value !== 'IDLE' || !stages.length) return;
+    if (this.running || !stages.length) return;
+    this.running = true;
     this.eventLog.logEvent({
       type: 'shutdownSequenceStarted',
       reason,
@@ -208,6 +203,7 @@ export class ShutdownAutomationsService {
     } finally {
       this._stage.next('IDLE');
       this.cancelFlag = false;
+      this.running = false;
     }
   }
 
@@ -309,23 +305,23 @@ export class ShutdownAutomationsService {
   }
 
   private async turnOffDevices(): Promise<boolean> {
+    // the selection stream skips power state changes, so resolve the current states here
+    const selected = await this.deviceManager.getDevicesForSelection(this.config.turnOffDevices);
     if (this.cancelFlag) {
       this.cancelFlag = false;
       this._stage.next('IDLE');
       return false;
     }
-
     if (
-      !this.turnOffOvrDevices.length &&
-      (!this.turnOffLighthouseDevices.length ||
-        !this.appSettings.settingsSync.lighthousePowerControl)
+      !selected.ovrDevices.length &&
+      (!selected.lighthouseDevices.length || !this.appSettings.settingsSync.lighthousePowerControl)
     )
       return true;
     this._stage.next('TURNING_OFF_DEVICES');
 
-    if (this.turnOffOvrDevices.length) {
+    if (selected.ovrDevices.length) {
       // Turn off controllers and trackers
-      const devices = structuredClone(this.turnOffOvrDevices).filter((d) => d.canPowerOff);
+      const devices = structuredClone(selected.ovrDevices).filter((d) => d.canPowerOff);
       this.lighthouseConsole.turnOffDevices(devices);
       // Wait for controllers and trackers to turn off with a timeout of 10 seconds
       await firstValueFrom(
@@ -342,7 +338,7 @@ export class ShutdownAutomationsService {
                 )
               )
             ),
-            filter((devices) => devices.every((d) => !d.isTurningOff && !d.canPowerOff))
+            filter((devices) => devices.every((d) => !d.isTurningOff && !d.isConnected))
           ),
           of(null).pipe(delay(10000)),
           this.cancelEvent
@@ -350,12 +346,9 @@ export class ShutdownAutomationsService {
       );
     }
 
-    if (
-      this.turnOffLighthouseDevices.length &&
-      this.appSettings.settingsSync.lighthousePowerControl
-    ) {
+    if (selected.lighthouseDevices.length && this.appSettings.settingsSync.lighthousePowerControl) {
       const offPowerState = this.appSettings.settingsSync.lighthousePowerOffState;
-      const devices = structuredClone(this.turnOffLighthouseDevices);
+      const devices = structuredClone(selected.lighthouseDevices);
       devices
         .filter((d) => d.powerState === 'on' || d.powerState === 'booting')
         .forEach((device) => this.lighthouse.setPowerState(device, offPowerState));

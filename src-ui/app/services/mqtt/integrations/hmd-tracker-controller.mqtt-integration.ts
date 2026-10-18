@@ -140,7 +140,7 @@ export class HmdTrackerControllerMqttIntegrationService {
       id,
       topicPath: `device/${id}`,
       displayName: 'Power',
-      value: (device.canPowerOff ?? false) && !device.isTurningOff,
+      value: device.isConnected && !device.isTurningOff,
       available: (device.canPowerOff ?? false) && !device.isTurningOff,
       device: deviceDesc,
     });
@@ -183,7 +183,7 @@ export class HmdTrackerControllerMqttIntegrationService {
     await this.mqtt.setPropertyAvailability(chargingId, device.providesBatteryStatus ?? false);
     await this.mqtt.setPropertyAvailability(roleId, !!device.handleType);
 
-    await this.mqtt.setTogglePropertyValue(id, device.canPowerOff ?? false);
+    await this.mqtt.setTogglePropertyValue(id, device.isConnected);
     await this.mqtt.setSensorPropertyValue(
       batteryId,
       device.providesBatteryStatus ? `${device.battery * 100}` : 'null'

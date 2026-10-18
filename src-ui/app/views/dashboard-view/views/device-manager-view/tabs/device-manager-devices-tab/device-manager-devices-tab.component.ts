@@ -11,6 +11,9 @@ import { OpenVRService } from '../../../../../../services/openvr.service';
 import { LighthouseService } from '../../../../../../services/lighthouse.service';
 import { LighthouseConsoleService } from '../../../../../../services/lighthouse-console.service';
 import { ModalService } from '../../../../../../services/modal.service';
+import { EventLogService } from '../../../../../../services/event-log.service';
+import { AppSettingsService } from '../../../../../../services/app-settings.service';
+import { EventLogLighthouseSetPowerState } from '../../../../../../models/event-log-entry';
 import {
   DeviceManagerConfigModalComponent,
   DeviceManagerConfigModalInputModel,
@@ -85,6 +88,8 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     private lighthouse: LighthouseService,
     private lighthouseConsole: LighthouseConsoleService,
     private modalService: ModalService,
+    private eventLog: EventLogService,
+    private appSettings: AppSettingsService,
     private destroyRef: DestroyRef,
     private domSanitizer: DomSanitizer,
     private cdr: ChangeDetectorRef
@@ -352,21 +357,34 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
 
     const deviceName = device.nickname ?? device.defaultName;
     if (ovrDevice && ovrDevice.canPowerOff) {
-      await this.lighthouseConsole.turnOffDeviceForUser(ovrDevice, deviceName);
+      const dispatched = await this.lighthouseConsole.turnOffDeviceForUser(ovrDevice, deviceName);
+      this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'MANUAL');
     } else if (lighthouseDevice) {
-      await this.lighthouse.setPowerStateForUser(lighthouseDevice, 'sleep', deviceName);
+      const state = this.appSettings.settingsSync.lighthousePowerOffState;
+      this.logLighthousePowerState(state);
+      await this.lighthouse.setPowerStateForUser(lighthouseDevice, state, deviceName);
     }
   }
 
   async powerOnDevice(device: DMKnownDevice) {
     const lighthouseDevice = this.getDeviceLighthouse(device);
     if (lighthouseDevice) {
+      this.logLighthousePowerState('on');
       await this.lighthouse.setPowerStateForUser(
         lighthouseDevice,
         'on',
         device.nickname ?? device.defaultName
       );
     }
+  }
+
+  private logLighthousePowerState(state: EventLogLighthouseSetPowerState['state']) {
+    this.eventLog.logEvent({
+      type: 'lighthouseSetPowerState',
+      reason: 'MANUAL',
+      state,
+      devices: 'SINGLE',
+    } as EventLogLighthouseSetPowerState);
   }
 
   getDevicePowerState(device: DMKnownDevice): DevicePowerState {
@@ -611,6 +629,7 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
       if (!result || !result.confirmed) return;
     }
 
+    this.logLighthousePowerState(state);
     await this.lighthouse.setPowerStateForUser(
       lighthouseDevice,
       state,
