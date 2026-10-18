@@ -96,6 +96,21 @@ pub async fn openvr_get_devices() -> Vec<OVRDevice> {
 }
 
 #[tauri::command]
+pub fn openvr_set_dashboard_notice(
+    language: String,
+    title: String,
+    message: String,
+    button: String,
+) {
+    *crate::native_ui::notice::NOTICE_COPY.lock().unwrap() = crate::native_ui::notice::NoticeCopy {
+        language,
+        title,
+        message,
+        button,
+    };
+}
+
+#[tauri::command]
 pub fn openvr_dashboard_render_mode() -> &'static str {
     match super::DASHBOARD_RENDER_MODE.load(std::sync::atomic::Ordering::Acquire) {
         super::dashboard::RENDER_GPU => "hardware",

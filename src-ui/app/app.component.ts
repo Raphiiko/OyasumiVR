@@ -17,6 +17,7 @@ import {
 import { fade } from './utils/animations';
 import { TelemetryService } from './services/telemetry/telemetry.service';
 import { isHolidaysEventActive } from './utils/event-utils';
+import { invoke } from '@tauri-apps/api/core';
 
 @Component({
   selector: 'app-root',
@@ -61,6 +62,13 @@ export class AppComponent implements OnInit {
         takeUntilDestroyed()
       )
       .subscribe();
+    // the core draws this notice itself, in the SteamVR dashboard
+    translate
+      .selectTranslateObject('steamvr-dashboard.desktopNotice')
+      .pipe(takeUntilDestroyed())
+      .subscribe((copy) =>
+        invoke('openvr_set_dashboard_notice', { language: translate.getActiveLang(), ...copy })
+      );
     // Snowverlay
     this.settings.settings
       .pipe(

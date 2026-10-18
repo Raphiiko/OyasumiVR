@@ -1,14 +1,16 @@
 mod capture;
 mod input;
+mod notice_surface;
 mod texture;
 
 use self::{
     capture::{DashboardCapture, GpuFrame},
     input::{DashboardInput, KeyboardRequest, KeyboardRequests, PointerEvent},
+    notice_surface::NoticeSurface,
     texture::DashboardTexture,
 };
 use super::{DASHBOARD_GPU_ACCELERATION, DASHBOARD_RENDER_MODE};
-use crate::globals::TAURI_APP_HANDLE;
+use crate::{globals::TAURI_APP_HANDLE, native_ui::notice::NoticeCopy};
 use raphii_openvr_rs::{raw, Context};
 use std::{
     cell::RefCell,
@@ -285,6 +287,8 @@ pub struct DashboardOverlay {
     gpu_failed: bool,
     keyboard: KeyboardRequests,
     keyboard_id: Option<u64>,
+    /// Shows the desktop notice while `failed`; dropped when the dashboard is left.
+    notice: Option<NoticeSurface>,
 }
 
 impl DashboardOverlay {
@@ -329,6 +333,7 @@ impl DashboardOverlay {
             gpu_failed: false,
             keyboard: Arc::new(Mutex::new(None)),
             keyboard_id: None,
+            notice: None,
         };
         // fail early on functions that every tick needs
         required(table.DestroyOverlay)?;
@@ -396,6 +401,9 @@ impl DashboardOverlay {
     fn tick_capture(&mut self) -> Result<(), String> {
         self.sync_selection()?;
         self.sync_capture_mode();
+        if self.selected && self.failed {
+            return self.tick_notice();
+        }
         let ready = self.is_active() && self.has_frame;
         self.poll_input(ready)?;
         if ready {
@@ -430,6 +438,7 @@ impl DashboardOverlay {
         self.failed = false;
         log::info!("[Dashboard] Dashboard selected: {selected}");
         if !selected {
+            self.notice = None;
             self.deactivate();
             self.gpu_failed = false;
         }
@@ -538,20 +547,92 @@ impl DashboardOverlay {
             .map_err(message)
     }
 
+    /// Draws the notice while the desktop window holds the UI; its button takes the UI back.
+    fn tick_notice(&mut self) -> Result<(), String> {
+        // recreate the surface when the language, and with it the font, changes
+        let copy = notice_copy();
+        if self
+            .notice
+            .as_ref()
+            .is_some_and(|notice| notice.language != copy.language)
+        {
+            self.notice = None;
+        }
+        if self.notice.is_none() {
+            match NoticeSurface::new(WIDTH, HEIGHT, &copy.language, self.table, self.main) {
+                Ok(notice) => self.notice = Some(notice),
+                Err(error) => {
+                    log::warn!("[Dashboard] Could not create the desktop notice: {error}");
+                    self.failed_notice();
+                    return Ok(());
+                }
+            }
+        }
+
+        // forward pointer input, in surface pixels from the top left
+        for _ in 0..256 {
+            let Some(event) = self.next_event()? else {
+                break;
+            };
+            let notice = self.notice.as_ref().unwrap();
+            let mouse = unsafe { event.data.mouse };
+            match event.eventType {
+                MOUSE_MOVE => notice.pointer_move(
+                    mouse.x * UI_ZOOM as f32,
+                    (INPUT_HEIGHT as f32 - mouse.y) * UI_ZOOM as f32,
+                ),
+                MOUSE_BUTTON_DOWN | MOUSE_BUTTON_UP => {
+                    notice.pointer_button(event.eventType == MOUSE_BUTTON_DOWN)
+                }
+                FOCUS_LEAVE => notice.pointer_leave(),
+                _ => {}
+            }
+        }
+
+        // draw a frame; a click clears `failed`, so the next tick takes the desktop back
+        match self.notice.as_ref().unwrap().render(&copy) {
+            Ok(true) => {
+                log::info!("[Dashboard] Taking the UI back from the desktop window");
+                self.notice = None;
+                self.failed = false;
+            }
+            Ok(false) => {}
+            Err(error) => {
+                log::warn!("[Dashboard] Could not draw the desktop notice: {error}");
+                self.notice = None;
+                self.failed_notice();
+            }
+        }
+        Ok(())
+    }
+
+    /// Without a notice, a click anywhere on the dashboard takes the UI back.
+    fn failed_notice(&mut self) {
+        while let Ok(Some(event)) = self.next_event() {
+            if event.eventType == MOUSE_BUTTON_UP {
+                self.failed = false;
+            }
+        }
+    }
+
+    fn next_event(&self) -> Result<Option<raw::VREvent_t>, String> {
+        let mut event = raw::VREvent_t::default();
+        let polled = unsafe {
+            required(self.table.PollNextOverlayEvent)?(
+                self.main,
+                &mut event,
+                std::mem::size_of::<raw::VREvent_t>() as u32,
+            )
+        };
+        Ok(polled.then_some(event))
+    }
+
     fn poll_input(&mut self, accept: bool) -> Result<(), String> {
         let mut events = Vec::new();
         for _ in 0..256 {
-            let mut event = raw::VREvent_t::default();
-            let polled = unsafe {
-                required(self.table.PollNextOverlayEvent)?(
-                    self.main,
-                    &mut event,
-                    std::mem::size_of::<raw::VREvent_t>() as u32,
-                )
-            };
-            if !polled {
+            let Some(event) = self.next_event()? else {
                 break;
-            }
+            };
             if !accept {
                 continue;
             }
@@ -834,6 +915,13 @@ unsafe fn decode_bgra(stream: &IStream) -> Result<Vec<u8>, String> {
     bgra.CopyPixels(std::ptr::null(), WIDTH * 4, &mut pixels)
         .map_err(message)?;
     Ok(pixels)
+}
+
+fn notice_copy() -> NoticeCopy {
+    crate::native_ui::notice::NOTICE_COPY
+        .lock()
+        .unwrap()
+        .clone()
 }
 
 fn keyboard_text(input: &[std::ffi::c_char]) -> String {
