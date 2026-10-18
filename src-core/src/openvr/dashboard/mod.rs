@@ -933,7 +933,7 @@ fn keyboard_text(input: &[std::ffi::c_char]) -> String {
     String::from_utf8_lossy(&bytes).into_owned()
 }
 
-unsafe fn interface_table<T: Copy>(version: &[u8]) -> Result<T, String> {
+pub(crate) unsafe fn interface_table<T: Copy>(version: &[u8]) -> Result<T, String> {
     let module = GetModuleHandleW(w!("openvr_api.dll")).map_err(message)?;
     let address = GetProcAddress(module, s!("VR_GetGenericInterface"))
         .ok_or("Missing VR_GetGenericInterface")?;
