@@ -62,26 +62,32 @@ pub fn track_event(name: &str, props: Option<Map<String, Value>>) {
     if !TELEMETRY_ENABLED.load(Ordering::Relaxed) {
         return;
     }
+    let name = name.to_string();
+    tokio::spawn(async move {
+        if let Err(e) = send_event(&name, props).await {
+            warn!("[Core] Could not send telemetry event {name}: {e}");
+        }
+    });
+}
+
+/// Sends an event and waits for OpenPanel to accept it. Ignores whether telemetry is enabled.
+async fn send_event(name: &str, props: Option<Map<String, Value>>) -> Result<(), String> {
     let mut properties = props.unwrap_or_default();
     properties.extend(SYSTEM_PROPERTIES.clone());
     let body = json!({
         "type": "track",
         "payload": { "name": name, "properties": properties },
     });
-    let name = name.to_string();
-    tokio::spawn(async move {
-        let result = HTTP_CLIENT
-            .post(format!("{OPENPANEL_API_URL}/track"))
-            .header("openpanel-client-id", OPENPANEL_CLIENT_ID)
-            .header("openpanel-client-secret", OPENPANEL_CLIENT_SECRET)
-            .json(&body)
-            .send()
-            .await
-            .and_then(|response| response.error_for_status());
-        if let Err(e) = result {
-            warn!("[Core] Could not send telemetry event {name}: {e}");
-        }
-    });
+    HTTP_CLIENT
+        .post(format!("{OPENPANEL_API_URL}/track"))
+        .header("openpanel-client-id", OPENPANEL_CLIENT_ID)
+        .header("openpanel-client-secret", OPENPANEL_CLIENT_SECRET)
+        .json(&body)
+        .send()
+        .await
+        .and_then(|response| response.error_for_status())
+        .map(|_| ())
+        .map_err(|e| e.to_string())
 }
 
 pub async fn init_telemetry() {

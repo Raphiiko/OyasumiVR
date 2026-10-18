@@ -27,4 +27,15 @@ describe('TelemetryService', () => {
     service.settings.subscribe((s) => (events = s.reportingCache.map((e) => e.event)));
     expect(events.sort()).toEqual(['feature_snapshot', 'use_language']);
   });
+
+  it('keeps a throttled event out of the cache when sending fails', async () => {
+    invoke.mockRejectedValue('offline');
+    const service = new TelemetryService({} as Injector);
+
+    await service.trackThrottledEvent('feature_snapshot', { a: 1 }, 1000);
+
+    let events: string[] = [];
+    service.settings.subscribe((s) => (events = s.reportingCache.map((e) => e.event)));
+    expect(events).toEqual([]);
+  });
 });

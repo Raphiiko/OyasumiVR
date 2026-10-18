@@ -20,7 +20,11 @@ pub async fn set_telemetry_enabled(enable: bool) {
     }
 }
 
+/// Resolves only once OpenPanel accepted the event, so the UI can retry an event that did not arrive.
 #[tauri::command]
-pub async fn track_event(name: String, props: Option<Map<String, Value>>) {
-    super::track_event(&name, props);
+pub async fn track_event(name: String, props: Option<Map<String, Value>>) -> Result<(), String> {
+    if !super::TELEMETRY_ENABLED.load(Ordering::Relaxed) {
+        return Err("telemetry is disabled in the core".into());
+    }
+    super::send_event(&name, props).await
 }
