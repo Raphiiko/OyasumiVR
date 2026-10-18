@@ -15,6 +15,14 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Pre-release numbering never predicts the version of the eventual stable release, and
   versions are assigned when a build is published, never before.
 
+## [Unreleased]
+
+### Fixed
+
+- Fixed the "When all controllers are turned off" automation enabling sleep mode when OyasumiVR could no longer turn your controllers off, even though they were still on
+- Fixed the shutdown sequence skipping devices that were turned off when you selected them
+- Fixed turning devices on or off from the Device Manager not showing up in the event log
+
 ## [26.10.3]
 
 ### Changed
