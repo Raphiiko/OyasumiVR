@@ -315,7 +315,7 @@ export class InviteAutomationsService {
   }
 
   /** Replaces the given display names and any VRChat ID, so the message carries no personal data. */
-  private anonymizeVRChatMessage(message: string, names: (string | undefined)[]): string {
+  private anonymizeVRChatMessage(message: string, names: (string | null | undefined)[]): string {
     // IDs go first: a display name can match part of an ID and break the ID match
     return names.reduce<string>(
       (text, name) => (name ? text.replaceAll(name, '<name>') : text),
