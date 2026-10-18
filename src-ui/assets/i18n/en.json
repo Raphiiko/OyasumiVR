@@ -2918,6 +2918,13 @@
     },
     "title": "Status Automations"
   },
+  "steamvr-dashboard": {
+    "desktopNotice": {
+      "button": "Show it here",
+      "message": "It can only show in one place at a time. Show it here to hide the desktop window.",
+      "title": "OyasumiVR is open on your desktop"
+    }
+  },
   "systemMicMuteAutomations": {
     "audioDevice": {
       "description": "Make sure to double check this is the exact same microphone you're using in VRChat!",
