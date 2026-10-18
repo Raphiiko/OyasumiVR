@@ -1,7 +1,4 @@
-import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { TranslocoModule } from '@jsverse/transloco';
-import { IconComponent } from '../icon/icon.component';
 
 export type AlertSeverity = 'info' | 'success' | 'warning' | 'error';
 
@@ -17,7 +14,7 @@ const SEVERITY_ICONS: Record<AlertSeverity, string> = {
   templateUrl: './alert.component.html',
   host: { class: 'alert', '[class]': 'severity' },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgClass, TranslocoModule, IconComponent],
+  standalone: false,
 })
 export class AlertComponent {
   @Input() severity: AlertSeverity = 'info';

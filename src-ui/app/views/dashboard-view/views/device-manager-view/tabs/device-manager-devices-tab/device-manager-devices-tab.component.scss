@@ -173,7 +173,7 @@
           }
 
           .frame-badge-connected {
-            background: var(--color-success-indicator);
+            background: var(--color-text-success);
           }
 
           .frame-badge-connecting {
@@ -267,7 +267,6 @@
               align-items: center;
               gap: 0.45em;
               padding: 0.3em 0.8em;
-              border: 1px solid transparent;
               border-radius: 999px;
               font-size: 0.85em;
               white-space: nowrap;
@@ -279,6 +278,7 @@
             }
 
             .frame-pill-button {
+              border: 0;
               font: inherit;
               font-size: 0.85em;
               cursor: pointer;
@@ -296,17 +296,15 @@
             }
 
             .frame-pill-warn {
-              --icon-color: var(--color-alert-warning);
-              border-color: var(--color-alert-warning);
-              background: color-mix(in srgb, var(--color-alert-warning) 50%, transparent);
-              color: var(--color-text-1);
+              --icon-color: var(--color-warning);
+              background: color-mix(in srgb, var(--color-warning) 13%, transparent);
+              color: var(--color-warning);
             }
 
             .frame-pill-bad {
-              --icon-color: var(--color-alert-error);
-              border-color: var(--color-alert-error);
-              background: color-mix(in srgb, var(--color-alert-error) 50%, transparent);
-              color: var(--color-text-1);
+              --icon-color: var(--color-text-caution);
+              background: color-mix(in srgb, var(--color-text-caution) 13%, transparent);
+              color: var(--color-text-caution);
             }
 
             .btn-frame {

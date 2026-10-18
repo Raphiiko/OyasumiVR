@@ -334,6 +334,7 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
     SelectBoxComponent,
     SettingRowComponent,
     ResetToDefaultComponent,
+    AlertComponent,
     TStringTranslatePipe,
     LocalizedDatePipe,
     ImageCachePipe,
@@ -468,7 +469,6 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
   imports: [
     CommonModule,
     IconComponent,
-    AlertComponent,
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,

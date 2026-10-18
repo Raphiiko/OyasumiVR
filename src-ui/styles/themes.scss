@@ -35,8 +35,9 @@ body {
 
   --color-success: #{materialColors.$md-light-green-900};
   --color-on-success: white;
-  // a success state drawn straight on a surface, such as a status dot; --color-success is a fill
-  --color-success-indicator: #{materialColors.$md-light-green-500};
+  // status colours for text, icons, and dots on a surface; --color-caution and --color-success are fills
+  --color-text-caution: #{materialColors.$md-red-300};
+  --color-text-success: #{materialColors.$md-light-green-600};
 
   --color-alert-info: var(--color-info);
   --color-on-alert-info: var(--color-on-info);

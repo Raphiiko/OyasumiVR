@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { FormsModule } from '@angular/forms';
 import { openUrl } from '@tauri-apps/plugin-opener';
 import { TranslocoModule } from '@jsverse/transloco';
-import { AlertComponent } from '../../alert/alert.component';
 import { BaseModalComponent } from '../../base-modal/base-modal.component';
 import { IconComponent } from '../../icon/icon.component';
 import { isValidHostname, isValidIPv4, isValidIPv6 } from '../../../utils/regex-utils';
@@ -64,7 +63,7 @@ const BACK: Partial<Record<SteamFramePage, SteamFramePage>> = {
 @Component({
   selector: 'app-steam-frame-pairing-modal',
   standalone: true,
-  imports: [FormsModule, TranslocoModule, IconComponent, AlertComponent],
+  imports: [FormsModule, TranslocoModule, IconComponent],
   templateUrl: './steam-frame-pairing-modal.component.html',
   styleUrl: './steam-frame-pairing-modal.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
