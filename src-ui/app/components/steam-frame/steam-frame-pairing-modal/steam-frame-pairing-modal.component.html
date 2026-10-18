@@ -172,14 +172,10 @@
                   [attr.aria-current]="i === stageIndex() ? 'step' : null"
                 >
                   @if (i < stageIndex()) {
-                    <app-icon name="check-circle" class="icon-mono complete" aria-hidden="true" />
+                    <app-icon name="check-circle" class="complete" aria-hidden="true" />
                   } @else if (i === stageIndex()) {
                     @if (page() === 'setupFailed') {
-                      <app-icon
-                        name="exclamation-circle"
-                        class="icon-mono failed"
-                        aria-hidden="true"
-                      />
+                      <app-icon name="exclamation-circle" class="failed" aria-hidden="true" />
                     } @else {
                       <span class="spinner" aria-hidden="true"></span>
                     }

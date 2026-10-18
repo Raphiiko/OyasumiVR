@@ -43,9 +43,11 @@
   align-items: center;
   gap: 0.25em;
 }
-.previous app-icon,
-.complete {
+.previous app-icon {
   color: #67c23a;
+}
+.complete {
+  --icon-color: #67c23a;
 }
 .current {
   padding: 0.3em 0.9em;
@@ -209,7 +211,7 @@ p {
   color: #f56c6c;
 }
 .failed {
-  color: #f56c6c;
+  --icon-color: #f56c6c;
 }
 .candidates {
   display: flex;

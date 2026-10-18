@@ -290,16 +290,19 @@
             }
 
             .frame-pill-neutral {
+              --icon-color: var(--color-text-3);
               background: var(--color-surface-3);
               color: var(--color-text-3);
             }
 
             .frame-pill-warn {
+              --icon-color: #ffb454;
               background: #fd920022;
               color: #ffb454;
             }
 
             .frame-pill-bad {
+              --icon-color: #ff8a8a;
               background: #f56c6c22;
               color: #ff8a8a;
             }
