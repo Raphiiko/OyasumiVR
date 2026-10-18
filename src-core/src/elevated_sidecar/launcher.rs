@@ -318,9 +318,13 @@ pub enum EnableResult {
     Ok,
     /// The user dismissed the UAC prompt.
     PromptDeclined,
+    /// The launcher needs an install, which a non-interactive enable does not prompt for.
+    PromptRequired,
     InstallFailed,
     TaskFailed {
         reason: String,
+        /// A fixed identifier for telemetry. Never a path, SID, or other text about the machine.
+        code: String,
     },
     /// Not an administrator account, so these features stay unavailable.
     NotSupported,
@@ -332,13 +336,14 @@ pub enum EnableResult {
 pub(super) const START_TIMEOUT: Duration =
     Duration::from_secs(crate::utils::sidecar_manager::GIVE_UP_AFTER.as_secs() + 1);
 
-/// Makes sure the launcher is installed and healthy, then starts the sidecar.
-pub async fn enable() -> EnableResult {
+/// Makes sure the launcher is installed and healthy, then starts the sidecar. Without
+/// `interactive`, a launcher that needs an install returns `PromptRequired` instead of prompting.
+pub async fn enable(interactive: bool) -> EnableResult {
     let _transition = super::TRANSITION.lock().await;
     // A build that elevates the sidecar directly has no launcher to install or check.
     let through_task = super::uses_scheduled_task().await;
     if through_task {
-        if let Some(failure) = install_if_needed().await {
+        if let Some(failure) = install_if_needed(interactive).await {
             return failure;
         }
     }
@@ -350,6 +355,7 @@ pub async fn enable() -> EnableResult {
         _ => {
             return EnableResult::TaskFailed {
                 reason: "the elevated sidecar could not be started".to_string(),
+                code: "startFailed".to_string(),
             }
         }
     }
@@ -357,21 +363,31 @@ pub async fn enable() -> EnableResult {
     // Nothing so far says a sidecar exists. The task reports only that it was asked to start, and
     // a prompt being answered says nothing either, so wait for the sidecar itself.
     if !super::wait_until_started(START_TIMEOUT).await {
-        let reason = match through_task {
-            true => last_launcher_result()
-                .map(describe_launcher_result)
-                .unwrap_or("the launcher reported no result")
-                .to_string(),
-            false => "the elevated sidecar did not report in".to_string(),
+        let (reason, code) = match (through_task, last_launcher_result()) {
+            (true, Some(result)) => (
+                describe_launcher_result(result),
+                format!("launcherExit{result}"),
+            ),
+            (true, None) => (
+                "the launcher reported no result",
+                "noLauncherResult".to_string(),
+            ),
+            (false, _) => (
+                "the elevated sidecar did not report in",
+                "notReportedIn".to_string(),
+            ),
         };
         error!("[Core] The elevated sidecar did not start: {reason}");
-        return EnableResult::TaskFailed { reason };
+        return EnableResult::TaskFailed {
+            reason: reason.to_string(),
+            code,
+        };
     }
     EnableResult::Ok
 }
 
 /// `None` when the launcher is ready to start a sidecar.
-async fn install_if_needed() -> Option<EnableResult> {
+async fn install_if_needed(interactive: bool) -> Option<EnableResult> {
     // state reads files and talks to the Task Scheduler over COM, so it does not belong on a
     // runtime worker
     match tokio::task::spawn_blocking(state).await {
@@ -381,6 +397,7 @@ async fn install_if_needed() -> Option<EnableResult> {
             return Some(EnableResult::NotSupported);
         }
         Ok(LauncherState::Ready) => return None,
+        Ok(_) if !interactive => return Some(EnableResult::PromptRequired),
         Ok(_) => {}
         Err(e) => {
             error!("[Core] Could not read the privileged launcher state: {e}");
@@ -402,9 +419,13 @@ async fn install_if_needed() -> Option<EnableResult> {
     // Anything short of Ready means nothing will run elevated, whatever the installer reported.
     match tokio::task::spawn_blocking(state).await {
         Ok(LauncherState::Ready) => None,
-        Ok(LauncherState::Untrusted { reason }) => Some(EnableResult::TaskFailed { reason }),
+        Ok(LauncherState::Untrusted { reason }) => Some(EnableResult::TaskFailed {
+            reason,
+            code: "untrustedAfterInstall".to_string(),
+        }),
         Ok(other) => Some(EnableResult::TaskFailed {
             reason: format!("the launcher is {other:?} after installing"),
+            code: "notReadyAfterInstall".to_string(),
         }),
         Err(e) => {
             error!("[Core] Could not read the privileged launcher state: {e}");
@@ -416,6 +437,26 @@ async fn install_if_needed() -> Option<EnableResult> {
 #[cfg(test)]
 mod tests {
     const SID: &str = "S-1-5-21-1-2-3-1001";
+
+    #[test]
+    fn enable_results_match_the_frontend_contract() {
+        assert_eq!(
+            serde_json::to_value(super::EnableResult::PromptRequired).unwrap(),
+            serde_json::json!({ "result": "promptRequired" })
+        );
+        assert_eq!(
+            serde_json::to_value(super::EnableResult::TaskFailed {
+                reason: "the launcher could not stage the sidecar".to_string(),
+                code: "launcherExit22".to_string(),
+            })
+            .unwrap(),
+            serde_json::json!({
+                "result": "taskFailed",
+                "reason": "the launcher could not stage the sidecar",
+                "code": "launcherExit22",
+            })
+        );
+    }
 
     #[test]
     fn accepts_the_descriptor_we_register() {

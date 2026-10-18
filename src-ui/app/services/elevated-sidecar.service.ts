@@ -15,8 +15,9 @@ import { TelemetryService } from './telemetry/telemetry.service';
 export type EnableResult =
   | { result: 'ok' }
   | { result: 'promptDeclined' }
+  | { result: 'promptRequired' }
   | { result: 'installFailed' }
-  | { result: 'taskFailed'; reason: string }
+  | { result: 'taskFailed'; reason: string; code: string }
   | { result: 'notSupported' };
 
 export type DisableResult = { result: 'ok' } | { result: 'cleanupFailed'; reason: string };
@@ -76,13 +77,12 @@ export class ElevatedSidecarService {
     const wasEnabled = this.appSettings.settingsSync.elevatedFeaturesEnabled;
     let result: EnableResult;
     do {
-      result = await this.tryEnable();
-      if (interactive || result.result !== 'ok') {
-        this.telemetry.trackEvent('elevated_features_enable', {
-          result: result.result,
-          interactive: interactive ? 1 : 0,
-        });
-      }
+      result = await this.tryEnable(interactive);
+      this.telemetry.trackEvent('elevated_features_enable', {
+        result: result.result,
+        interactive: interactive ? 1 : 0,
+        ...(result.result === 'taskFailed' && { reason: result.code }),
+      });
       if (result.result === 'ok') {
         this.appSettings.updateSettings({ elevatedFeaturesEnabled: true });
         this._failure.next(null);
@@ -103,10 +103,10 @@ export class ElevatedSidecarService {
     return result;
   }
 
-  private async tryEnable(): Promise<EnableResult> {
+  private async tryEnable(interactive: boolean): Promise<EnableResult> {
     let result: EnableResult;
     try {
-      result = await invoke<EnableResult>('elevated_features_enable');
+      result = await invoke<EnableResult>('elevated_features_enable', { interactive });
     } catch (e) {
       info(`[ElevatedSidecar] Could not enable elevated features: ${e}`);
       return { result: 'installFailed' };

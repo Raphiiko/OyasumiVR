@@ -26,14 +26,15 @@ function setup(enableResult: EnableResult) {
     updateSettings: (update: Partial<AppSettings>) =>
       settings.next({ ...settings.value, ...update }),
   } as unknown as AppSettingsService;
+  const trackEvent = vi.fn();
   const service = new ElevatedSidecarService(
     appSettings,
     {} as ModalService,
     {
-      trackEvent: vi.fn(),
+      trackEvent,
     } as unknown as TelemetryService
   );
-  return { service, settings };
+  return { service, settings, trackEvent };
 }
 
 afterEach(() => {
@@ -60,6 +61,39 @@ describe('ElevatedSidecarService', () => {
 
     expect(await firstValueFrom(h.service.failure)).toBeNull();
     expect(h.settings.value.elevatedFeaturesEnabled).toBe(false);
+  });
+
+  it('keeps elevated features on when the startup enable needs a prompt', async () => {
+    const h = setup({ result: 'promptRequired' });
+
+    await h.service.enable(false);
+
+    expect(invoke).toHaveBeenCalledWith('elevated_features_enable', { interactive: false });
+    expect(await firstValueFrom(h.service.failure)).toEqual({
+      operation: 'enable',
+      result: { result: 'promptRequired' },
+    });
+    expect(h.settings.value.elevatedFeaturesEnabled).toBe(true);
+  });
+
+  it('tracks a startup success and the code of a failed task', async () => {
+    const h = setup({ result: 'ok' });
+    await h.service.enable(false);
+
+    invoke.mockResolvedValue({
+      result: 'taskFailed',
+      reason: 'the launcher could not stage the sidecar',
+      code: 'launcherExit22',
+    });
+    await h.service.enable(false);
+
+    expect(h.trackEvent.mock.calls).toEqual([
+      ['elevated_features_enable', { result: 'ok', interactive: 0 }],
+      [
+        'elevated_features_enable',
+        { result: 'taskFailed', interactive: 0, reason: 'launcherExit22' },
+      ],
+    ]);
   });
 
   it('clears the published failure once elevated features turn on', async () => {
