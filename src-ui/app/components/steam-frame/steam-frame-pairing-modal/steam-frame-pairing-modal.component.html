@@ -134,7 +134,10 @@
                   (click)="pairing.select(i)"
                 >
                   @if ((flow()?.candidates?.length ?? 0) > 1) {
-                    <span class="radio" aria-hidden="true"></span>
+                    <app-icon
+                      [name]="flow()?.selected === i ? 'radio-on' : 'radio-off'"
+                      aria-hidden="true"
+                    />
                   }
                   <svg class="svg-icon" aria-hidden="true">
                     <use href="/assets/icons/headset.svg#icon" />

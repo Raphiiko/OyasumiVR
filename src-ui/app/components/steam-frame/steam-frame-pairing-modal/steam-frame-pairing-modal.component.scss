@@ -251,16 +251,6 @@ p {
   overflow-wrap: anywhere;
   font-size: 0.85em;
 }
-.radio {
-  width: 1em;
-  height: 1em;
-  border-radius: 50%;
-  border: 2px solid var(--color-text-3);
-}
-.selected .radio {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-}
 .address-form {
   display: flex;
   flex-direction: column;
