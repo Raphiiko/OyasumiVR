@@ -445,18 +445,14 @@ OyasumiVR 可以通过 MQTT 向 Home Assistant 联动自身的许多功能，也
 在其他头显上可能也能使用，但效果无法保证。
 
 {{TELEMETRY_HEADER}}
-Aptabase 遥测
+遥测
 
 {{TELEMETRY_BODY}}
-OyasumiVR 的遥测由 [Aptabase](https://aptabase.com) 提供。它是一种开源、隐私优先且简洁的移动与桌面应用分析工具。
-我们选择 Aptabase，是因为它可以提供崩溃报告和匿名使用数据，从而帮助改进 OyasumiVR，同时最大程度尊重你的隐私。
+OyasumiVR 会收集匿名遥测数据，用于帮助排查 bug 并改进应用。其中包括崩溃和错误报告、版本信息、应用启动、语言偏好以及其他基础使用统计。
 
-遥测信息完全匿名，不会发送任何可识别身份的信息。
-其唯一用途是报告崩溃问题，以及收集应用启动和语言偏好等基础匿名数据。
-这些信息只用于排查 bug 和改善 OyasumiVR 的整体质量。
+遥测数据不包含任何可识别个人身份的信息，也无法关联到具体的某个人。由于无法确定哪些遥测数据属于你，因此无法处理针对个人数据的删除请求。
 
-你可以在 OyasumiVR 的通用设置中选择关闭遥测功能。
-如需更多（技术性）信息，请查看（非常简洁的）[Aptabase 隐私政策](https://aptabase.com/legal/privacy)。
+你可以随时在 OyasumiVR 的通用设置中关闭遥测功能。
 
 {{BRIGHTNESS_CCT_AUTOMATIONS_HEADER}}
 

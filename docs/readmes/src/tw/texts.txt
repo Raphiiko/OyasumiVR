@@ -454,14 +454,14 @@ OyasumiVR 並非由 VRChat 認可，其內容亦不代表 VRChat 或任何參與
 OyasumiVR 的開發者及所有專案貢獻者，均不對 OyasumiVR 所造成的任何問題（無論是你的 VRChat 帳號或其他情況）負責。 使用前請自行評估風險。
 
 {{TELEMETRY_HEADER}}
-Aptabase
+遙測
 
 {{TELEMETRY_BODY}}
-OyasumiVR 的遙測功能由 [Aptabase](https://aptabase.com) 提供。Aptabase 是一套開源、重視隱私且簡潔易用的行動與桌面應用程式分析服務。 之所以選擇 Aptabase，是因為它能透過提供當機回報與匿名使用統計來協助 OyasumiVR 的開發，同時也盡可能保障你的隱私。
+OyasumiVR 會收集匿名遙測資料，用來協助找出錯誤並改善應用程式。其中包括當機與錯誤回報、版本資訊、應用程式啟動、語言偏好，以及其他基本使用統計。
 
-所有遙測資料皆為匿名收集，不會傳送任何可識別個人身分的資訊。 其唯一用途是提供上述的當機回報，以及應用程式啟動次數、語言偏好等基本的匿名使用統計。 這些資料僅用於找出並修正錯誤，以及改善 OyasumiVR 的整體使用體驗。
+遙測資料不包含任何可識別個人身分的資訊，也無法連結到特定的個人。由於無法判斷哪些遙測資料屬於你，因此無法受理個別的資料刪除請求。
 
-你可以在 OyasumiVR 的一般設定中選擇停用遙測功能。 如需了解更多（技術性）資訊，請參閱（篇幅非常短！）[Aptabase 隱私權政策](https://aptabase.com/legal/privacy)。
+你可以隨時在 OyasumiVR 的一般設定中停用遙測功能。
 
 {{SUPPORT_HEADER}}
 支援
