@@ -629,6 +629,7 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
       if (!result || !result.confirmed) return;
     }
 
+    this.logLighthousePowerState(state);
     await this.lighthouse.setPowerStateForUser(
       lighthouseDevice,
       state,
