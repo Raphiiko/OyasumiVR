@@ -1480,13 +1480,6 @@
         },
         "enable": {
           "title": "系統管理員權限無法使用"
-        },
-        "startupPromptDeclined": {
-          "actions": {
-            "enable": "重新啟用"
-          },
-          "message": "OyasumiVR 在啟動時請求系統管理員權限，但請求遭到拒絕。需要系統管理員權限的功能目前已停用。",
-          "title": "系統管理員權限已停用"
         }
       },
       "gpuAutomationsAfterburnerError": {

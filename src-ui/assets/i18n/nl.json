@@ -1480,13 +1480,6 @@
         },
         "enable": {
           "title": "Beheerdersrechten zijn niet beschikbaar"
-        },
-        "startupPromptDeclined": {
-          "actions": {
-            "enable": "Weer inschakelen"
-          },
-          "message": "OyasumiVR vroeg bij het opstarten om beheerdersrechten, en dat verzoek werd geweigerd. Functies die beheerdersrechten nodig hebben, staan nu uit.",
-          "title": "Beheerdersrechten staan uit"
         }
       },
       "gpuAutomationsAfterburnerError": {

@@ -16,7 +16,7 @@ export type EnableResult =
   | { result: 'ok' }
   | { result: 'promptDeclined' }
   | { result: 'installFailed' }
-  | { result: 'taskFailed'; reason: string }
+  | { result: 'taskFailed'; reason: string; code: string }
   | { result: 'notSupported' };
 
 export type DisableResult = { result: 'ok' } | { result: 'cleanupFailed'; reason: string };
@@ -77,12 +77,11 @@ export class ElevatedSidecarService {
     let result: EnableResult;
     do {
       result = await this.tryEnable();
-      if (interactive || result.result !== 'ok') {
-        this.telemetry.trackEvent('elevated_features_enable', {
-          result: result.result,
-          interactive: interactive ? 1 : 0,
-        });
-      }
+      this.telemetry.trackEvent('elevated_features_enable', {
+        result: result.result,
+        interactive: interactive ? 1 : 0,
+        ...(result.result === 'taskFailed' && { reason: result.code }),
+      });
       if (result.result === 'ok') {
         this.appSettings.updateSettings({ elevatedFeaturesEnabled: true });
         this._failure.next(null);
@@ -94,7 +93,7 @@ export class ElevatedSidecarService {
       break;
     } while (true);
 
-    if (!wasEnabled || interactive || ['promptDeclined', 'notSupported'].includes(result.result)) {
+    if (!wasEnabled || interactive || result.result === 'notSupported') {
       this.appSettings.updateSettings({ elevatedFeaturesEnabled: false });
     }
     if (!interactive) {

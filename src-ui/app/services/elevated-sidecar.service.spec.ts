@@ -26,14 +26,15 @@ function setup(enableResult: EnableResult) {
     updateSettings: (update: Partial<AppSettings>) =>
       settings.next({ ...settings.value, ...update }),
   } as unknown as AppSettingsService;
+  const trackEvent = vi.fn();
   const service = new ElevatedSidecarService(
     appSettings,
     {} as ModalService,
     {
-      trackEvent: vi.fn(),
+      trackEvent,
     } as unknown as TelemetryService
   );
-  return { service, settings };
+  return { service, settings, trackEvent };
 }
 
 afterEach(() => {
@@ -41,7 +42,7 @@ afterEach(() => {
 });
 
 describe('ElevatedSidecarService', () => {
-  it('publishes a declined startup prompt and turns elevated features off', async () => {
+  it('publishes a declined startup prompt and keeps elevated features on', async () => {
     const h = setup({ result: 'promptDeclined' });
 
     await h.service.enable(false);
@@ -50,7 +51,7 @@ describe('ElevatedSidecarService', () => {
       operation: 'enable',
       result: { result: 'promptDeclined' },
     });
-    expect(h.settings.value.elevatedFeaturesEnabled).toBe(false);
+    expect(h.settings.value.elevatedFeaturesEnabled).toBe(true);
   });
 
   it('publishes nothing for a prompt declined from the settings toggle', async () => {
@@ -60,6 +61,26 @@ describe('ElevatedSidecarService', () => {
 
     expect(await firstValueFrom(h.service.failure)).toBeNull();
     expect(h.settings.value.elevatedFeaturesEnabled).toBe(false);
+  });
+
+  it('tracks a startup success and the code of a failed task', async () => {
+    const h = setup({ result: 'ok' });
+    await h.service.enable(false);
+
+    invoke.mockResolvedValue({
+      result: 'taskFailed',
+      reason: 'the launcher could not stage the sidecar',
+      code: 'launcherExit22',
+    });
+    await h.service.enable(false);
+
+    expect(h.trackEvent.mock.calls).toEqual([
+      ['elevated_features_enable', { result: 'ok', interactive: 0 }],
+      [
+        'elevated_features_enable',
+        { result: 'taskFailed', interactive: 0, reason: 'launcherExit22' },
+      ],
+    ]);
   });
 
   it('clears the published failure once elevated features turn on', async () => {

@@ -1480,13 +1480,6 @@
         },
         "enable": {
           "title": "管理者権限を利用できません"
-        },
-        "startupPromptDeclined": {
-          "actions": {
-            "enable": "再び有効にする"
-          },
-          "message": "起動時に管理者権限を要求しましたが、拒否されました。管理者権限が必要な機能はオフになっています。",
-          "title": "管理者権限はオフです"
         }
       },
       "gpuAutomationsAfterburnerError": {

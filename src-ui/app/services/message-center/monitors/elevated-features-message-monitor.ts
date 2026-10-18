@@ -49,17 +49,14 @@ export class ElevatedFeaturesMessageMonitor extends MessageMonitor {
   }
 
   private showStartupPromptDeclined() {
+    const prefix = 'message-center.messages.elevatedFeaturesFailure.startupPromptNotApproved';
     this.messageCenter.addMessage({
       id: 'elevatedFeaturesFailure',
-      title: 'message-center.messages.elevatedFeaturesFailure.startupPromptDeclined.title',
-      message: 'message-center.messages.elevatedFeaturesFailure.startupPromptDeclined.message',
+      title: `${prefix}.title`,
+      message: `${prefix}.message`,
       type: 'warning',
       actions: [
-        {
-          label:
-            'message-center.messages.elevatedFeaturesFailure.startupPromptDeclined.actions.enable',
-          action: () => this.elevatedFeatures.enable(),
-        },
+        { label: `${prefix}.actions.enable`, action: () => this.elevatedFeatures.enable() },
       ],
     });
   }
