@@ -318,8 +318,6 @@ pub enum EnableResult {
     Ok,
     /// The user dismissed the UAC prompt.
     PromptDeclined,
-    /// The launcher needs an install, which a non-interactive enable does not prompt for.
-    PromptRequired,
     InstallFailed,
     TaskFailed {
         reason: String,
@@ -336,14 +334,13 @@ pub enum EnableResult {
 pub(super) const START_TIMEOUT: Duration =
     Duration::from_secs(crate::utils::sidecar_manager::GIVE_UP_AFTER.as_secs() + 1);
 
-/// Makes sure the launcher is installed and healthy, then starts the sidecar. Without
-/// `interactive`, a launcher that needs an install returns `PromptRequired` instead of prompting.
-pub async fn enable(interactive: bool) -> EnableResult {
+/// Makes sure the launcher is installed and healthy, then starts the sidecar.
+pub async fn enable() -> EnableResult {
     let _transition = super::TRANSITION.lock().await;
     // A build that elevates the sidecar directly has no launcher to install or check.
     let through_task = super::uses_scheduled_task().await;
     if through_task {
-        if let Some(failure) = install_if_needed(interactive).await {
+        if let Some(failure) = install_if_needed().await {
             return failure;
         }
     }
@@ -387,7 +384,7 @@ pub async fn enable(interactive: bool) -> EnableResult {
 }
 
 /// `None` when the launcher is ready to start a sidecar.
-async fn install_if_needed(interactive: bool) -> Option<EnableResult> {
+async fn install_if_needed() -> Option<EnableResult> {
     // state reads files and talks to the Task Scheduler over COM, so it does not belong on a
     // runtime worker
     match tokio::task::spawn_blocking(state).await {
@@ -397,7 +394,6 @@ async fn install_if_needed(interactive: bool) -> Option<EnableResult> {
             return Some(EnableResult::NotSupported);
         }
         Ok(LauncherState::Ready) => return None,
-        Ok(_) if !interactive => return Some(EnableResult::PromptRequired),
         Ok(_) => {}
         Err(e) => {
             error!("[Core] Could not read the privileged launcher state: {e}");
@@ -439,11 +435,7 @@ mod tests {
     const SID: &str = "S-1-5-21-1-2-3-1001";
 
     #[test]
-    fn enable_results_match_the_frontend_contract() {
-        assert_eq!(
-            serde_json::to_value(super::EnableResult::PromptRequired).unwrap(),
-            serde_json::json!({ "result": "promptRequired" })
-        );
+    fn task_failure_matches_the_frontend_contract() {
         assert_eq!(
             serde_json::to_value(super::EnableResult::TaskFailed {
                 reason: "the launcher could not stage the sidecar".to_string(),

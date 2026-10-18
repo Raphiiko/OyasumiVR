@@ -16,11 +16,7 @@ export class ElevatedFeaturesMessageMonitor extends MessageMonitor {
       }
       // only the startup enable publishes enable failures, so a declined prompt here came from it
       if (failure.operation === 'enable' && failure.result.result === 'promptDeclined') {
-        this.showStartupPrompt('startupPromptDeclined');
-        return;
-      }
-      if (failure.operation === 'enable' && failure.result.result === 'promptRequired') {
-        this.showStartupPrompt('startupPromptRequired');
+        this.showStartupPromptDeclined();
         return;
       }
       this.messageCenter.addMessage({
@@ -52,8 +48,8 @@ export class ElevatedFeaturesMessageMonitor extends MessageMonitor {
     });
   }
 
-  private showStartupPrompt(key: 'startupPromptDeclined' | 'startupPromptRequired') {
-    const prefix = `message-center.messages.elevatedFeaturesFailure.${key}`;
+  private showStartupPromptDeclined() {
+    const prefix = 'message-center.messages.elevatedFeaturesFailure.startupPromptNotApproved';
     this.messageCenter.addMessage({
       id: 'elevatedFeaturesFailure',
       title: `${prefix}.title`,

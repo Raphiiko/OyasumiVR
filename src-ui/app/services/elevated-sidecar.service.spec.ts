@@ -42,7 +42,7 @@ afterEach(() => {
 });
 
 describe('ElevatedSidecarService', () => {
-  it('publishes a declined startup prompt and turns elevated features off', async () => {
+  it('publishes a declined startup prompt and keeps elevated features on', async () => {
     const h = setup({ result: 'promptDeclined' });
 
     await h.service.enable(false);
@@ -51,7 +51,7 @@ describe('ElevatedSidecarService', () => {
       operation: 'enable',
       result: { result: 'promptDeclined' },
     });
-    expect(h.settings.value.elevatedFeaturesEnabled).toBe(false);
+    expect(h.settings.value.elevatedFeaturesEnabled).toBe(true);
   });
 
   it('publishes nothing for a prompt declined from the settings toggle', async () => {
@@ -61,19 +61,6 @@ describe('ElevatedSidecarService', () => {
 
     expect(await firstValueFrom(h.service.failure)).toBeNull();
     expect(h.settings.value.elevatedFeaturesEnabled).toBe(false);
-  });
-
-  it('keeps elevated features on when the startup enable needs a prompt', async () => {
-    const h = setup({ result: 'promptRequired' });
-
-    await h.service.enable(false);
-
-    expect(invoke).toHaveBeenCalledWith('elevated_features_enable', { interactive: false });
-    expect(await firstValueFrom(h.service.failure)).toEqual({
-      operation: 'enable',
-      result: { result: 'promptRequired' },
-    });
-    expect(h.settings.value.elevatedFeaturesEnabled).toBe(true);
   });
 
   it('tracks a startup success and the code of a failed task', async () => {

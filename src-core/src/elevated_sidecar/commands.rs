@@ -43,11 +43,11 @@ pub async fn elevated_sidecar_get_grpc_port() -> Option<u32> {
     }
 }
 
-/// The one call that can raise a UAC prompt, and only when `interactive`. The result distinguishes
-/// a declined prompt from a failure, which the UI reports differently.
+/// The one call that can raise a UAC prompt. The result distinguishes a declined prompt from a
+/// failure, which the UI reports differently.
 #[tauri::command]
-pub async fn elevated_features_enable(interactive: bool) -> super::launcher::EnableResult {
-    super::launcher::enable(interactive).await
+pub async fn elevated_features_enable() -> super::launcher::EnableResult {
+    super::launcher::enable().await
 }
 
 #[tauri::command]
