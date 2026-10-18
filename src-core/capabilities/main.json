@@ -70,7 +70,6 @@
     "shell:default",
     "deep-link:default",
     "log:default",
-    "aptabase:allow-track-event",
     "opener:default"
   ]
 }

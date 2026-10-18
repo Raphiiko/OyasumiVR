@@ -61,7 +61,6 @@ substring = "1.4.5"
 suncalc = "0.4.0"
 sysinfo = "0.39.6"
 system_shutdown = "4.1.0"
-tauri-plugin-aptabase = { git = "https://github.com/aptabase/tauri-plugin-aptabase", rev = "7cc36ccce0052352bda7272a4acb25a214c4b804" }
 tauri-plugin-cli = "2.4.1"
 tauri-plugin-clipboard-manager = "2.3.3"
 tauri-plugin-deep-link = "2.4.10"

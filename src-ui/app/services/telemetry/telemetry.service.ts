@@ -14,9 +14,7 @@ import {
 import { TELEMETRY_SETTINGS_DEFAULT, TelemetrySettings } from '../../models/telemetry-settings';
 
 import { invoke } from '@tauri-apps/api/core';
-import { trackEvent } from '@aptabase/tauri';
 import { isEqual } from 'lodash';
-import { getVersion } from '../../utils/app-utils';
 import { FeatureSnapshotService } from './feature-snapshot.service';
 
 @Injectable({
@@ -32,7 +30,8 @@ export class TelemetryService {
 
   async init() {
     await this.loadSettings();
-    await this.trackVersionChange();
+    // the core rejects events until it is enabled, and the throttled sync below waits 2 seconds
+    await invoke('set_telemetry_enabled', { enable: this._settings.value.enabled });
     // resolved lazily: its dependencies are not initialized yet, and some of them use this service
     this.injector.get(FeatureSnapshotService).init();
     this.settings
@@ -63,14 +62,6 @@ export class TelemetryService {
       });
   }
 
-  private async trackVersionChange() {
-    const version = await getVersion();
-    const { lastVersion } = this._settings.value;
-    if (lastVersion === version) return;
-    if (lastVersion) await this.trackEvent('app_version_changed', { fromVersion: lastVersion });
-    await this.updateSettings({ lastVersion: version });
-  }
-
   async loadSettings() {
     const settings: TelemetrySettings | undefined = await SETTINGS_STORE.get<TelemetrySettings>(
       SETTINGS_KEY_TELEMETRY_SETTINGS
@@ -88,9 +79,20 @@ export class TelemetryService {
     await this.saveSettings();
   }
 
+  /** Returns at once; a failed send is dropped. */
   async trackEvent(event: string, props: { [key: string]: string | number }) {
     if (!this._settings.value.enabled) return;
-    await trackEvent(event, props);
+    void this.send(event, props);
+  }
+
+  /** Resolves to whether the core sent the event. Never rejects. */
+  private async send(event: string, props: { [key: string]: string | number }): Promise<boolean> {
+    try {
+      await invoke('track_event', { name: event, props });
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   async trackThrottledEvent(
@@ -107,8 +109,8 @@ export class TelemetryService {
     if (lastEvent && now - lastEvent.timestamp < lastEvent.timeout) {
       if (!allowValueOverride || lastEvent.lastValue === propString) return;
     }
-    // Track the event
-    await this.trackEvent(event, props);
+    // only a sent event enters the cache, so a failed send is retried on the next call
+    if (!(await this.send(event, props))) return;
     // read the cache again: other throttled events may have updated it during the await
     const reportingCache = this._settings.value.reportingCache.filter((e) => e.event !== event);
     reportingCache.push({

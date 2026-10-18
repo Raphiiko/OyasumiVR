@@ -16,10 +16,9 @@ function context(edit: (a: AutomationConfigs) => void = () => {}): FeatureSnapsh
 }
 
 describe('buildFeatureSnapshot', () => {
-  it('sends only 0/1 values under keys Aptabase accepts', () => {
+  it('sends only 0/1 values', () => {
     const snapshot = buildFeatureSnapshot(context());
-    for (const [key, value] of Object.entries(snapshot)) {
-      expect(key.length).toBeLessThanOrEqual(40);
+    for (const value of Object.values(snapshot)) {
       expect([0, 1]).toContain(value);
     }
   });

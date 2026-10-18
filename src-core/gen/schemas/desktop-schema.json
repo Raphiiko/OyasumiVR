@@ -2517,18 +2517,6 @@
       "description": "Permission identifier",
       "oneOf": [
         {
-          "description": "Enables the track_event command without any pre-configured scope.",
-          "type": "string",
-          "const": "aptabase:allow-track-event",
-          "markdownDescription": "Enables the track_event command without any pre-configured scope."
-        },
-        {
-          "description": "Denies the track_event command without any pre-configured scope.",
-          "type": "string",
-          "const": "aptabase:deny-track-event",
-          "markdownDescription": "Denies the track_event command without any pre-configured scope."
-        },
-        {
           "description": "Allows reading the CLI matches\n#### This default permission set includes:\n\n- `allow-cli-matches`",
           "type": "string",
           "const": "cli:default",

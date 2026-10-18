@@ -23,7 +23,6 @@ import { openUrl } from '@tauri-apps/plugin-opener';
 import { VRChatInviteRefusedError } from './vrchat-api/vrchat-api';
 import { TelemetryService } from './telemetry/telemetry.service';
 
-// ponytail: 200 is a guess that stays under common analytics limits; Aptabase documents none
 const MAX_REFUSAL_TEXT = 200;
 const UUID = /\b(?:[a-z]+_)?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/gi;
 

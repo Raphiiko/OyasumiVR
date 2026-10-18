@@ -3,9 +3,8 @@ import type { Injector } from '@angular/core';
 import { describe, expect, it, vi } from 'vitest';
 import { TelemetryService } from './telemetry.service';
 
-const { trackEvent } = vi.hoisted(() => ({ trackEvent: vi.fn() }));
-vi.mock('@aptabase/tauri', () => ({ trackEvent }));
-vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn() }));
+const { invoke } = vi.hoisted(() => ({ invoke: vi.fn() }));
+vi.mock('@tauri-apps/api/core', () => ({ invoke }));
 vi.mock('../../globals', () => ({
   SETTINGS_KEY_TELEMETRY_SETTINGS: 'TELEMETRY_SETTINGS',
   SETTINGS_STORE: { get: vi.fn(), set: vi.fn() },
@@ -14,7 +13,7 @@ vi.mock('../../globals', () => ({
 describe('TelemetryService', () => {
   it('keeps every throttled event in the cache when two overlap', async () => {
     const pending: Array<() => void> = [];
-    trackEvent.mockImplementation(() => new Promise<void>((resolve) => pending.push(resolve)));
+    invoke.mockImplementation(() => new Promise<void>((resolve) => pending.push(resolve)));
     const service = new TelemetryService({} as Injector);
 
     const first = service.trackThrottledEvent('feature_snapshot', { a: 1 }, 1000);
@@ -27,5 +26,28 @@ describe('TelemetryService', () => {
     let events: string[] = [];
     service.settings.subscribe((s) => (events = s.reportingCache.map((e) => e.event)));
     expect(events.sort()).toEqual(['feature_snapshot', 'use_language']);
+  });
+
+  it('keeps a throttled event out of the cache when sending fails', async () => {
+    invoke.mockRejectedValue('offline');
+    const service = new TelemetryService({} as Injector);
+
+    await service.trackThrottledEvent('feature_snapshot', { a: 1 }, 1000);
+
+    let events: string[] = [];
+    service.settings.subscribe((s) => (events = s.reportingCache.map((e) => e.event)));
+    expect(events).toEqual([]);
+  });
+
+  it('enables telemetry in the core before init resolves', async () => {
+    vi.useFakeTimers();
+    invoke.mockReset();
+    const injector = { get: () => ({ init: () => undefined }) } as unknown as Injector;
+    const service = new TelemetryService(injector);
+
+    await service.init();
+
+    expect(invoke).toHaveBeenCalledWith('set_telemetry_enabled', { enable: true });
+    vi.useRealTimers();
   });
 });

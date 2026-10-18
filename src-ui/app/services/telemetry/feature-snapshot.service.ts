@@ -18,7 +18,7 @@ export interface FeatureSnapshotContext {
   pulsoidLoggedIn: boolean;
 }
 
-/** Feature usage as 0/1 flags, with keys of at most 40 characters for Aptabase. */
+/** Feature usage as 0/1 flags. */
 export function buildFeatureSnapshot(ctx: FeatureSnapshotContext): Record<string, number> {
   const { settings: s, automations: a } = ctx;
   const hasDevices = (sel: DeviceSelection) =>
