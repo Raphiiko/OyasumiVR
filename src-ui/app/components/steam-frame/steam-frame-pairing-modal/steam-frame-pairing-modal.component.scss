@@ -43,11 +43,9 @@
   align-items: center;
   gap: 0.25em;
 }
-.previous app-icon {
-  color: #67c23a;
-}
+.previous app-icon,
 .complete {
-  --icon-color: #67c23a;
+  --icon-color: var(--color-alert-success);
 }
 .current {
   padding: 0.3em 0.9em;
@@ -207,11 +205,8 @@ p {
   border-radius: 50%;
   animation: frame-spin 1.2s linear infinite;
 }
-.error {
-  color: #f56c6c;
-}
 .failed {
-  --icon-color: #f56c6c;
+  --icon-color: var(--color-alert-error);
 }
 .candidates {
   display: flex;

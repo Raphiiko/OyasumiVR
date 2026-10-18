@@ -173,7 +173,7 @@
           }
 
           .frame-badge-connected {
-            background: #67c23a;
+            background: var(--color-success-indicator);
           }
 
           .frame-badge-connecting {
@@ -267,6 +267,7 @@
               align-items: center;
               gap: 0.45em;
               padding: 0.3em 0.8em;
+              border: 1px solid transparent;
               border-radius: 999px;
               font-size: 0.85em;
               white-space: nowrap;
@@ -278,7 +279,6 @@
             }
 
             .frame-pill-button {
-              border: 0;
               font: inherit;
               font-size: 0.85em;
               cursor: pointer;
@@ -296,15 +296,17 @@
             }
 
             .frame-pill-warn {
-              --icon-color: #ffb454;
-              background: #fd920022;
-              color: #ffb454;
+              --icon-color: var(--color-alert-warning);
+              border-color: var(--color-alert-warning);
+              background: color-mix(in srgb, var(--color-alert-warning) 50%, transparent);
+              color: var(--color-text-1);
             }
 
             .frame-pill-bad {
-              --icon-color: #ff8a8a;
-              background: #f56c6c22;
-              color: #ff8a8a;
+              --icon-color: var(--color-alert-error);
+              border-color: var(--color-alert-error);
+              background: color-mix(in srgb, var(--color-alert-error) 50%, transparent);
+              color: var(--color-text-1);
             }
 
             .btn-frame {

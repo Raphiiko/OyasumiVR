@@ -18,7 +18,7 @@
     <div class="previous">
       @if (step() > 0) {
         <span
-          ><app-icon name="check" class="icon-mono" aria-hidden="true" />{{
+          ><app-icon name="check-circle" aria-hidden="true" />{{
             t('steps.' + stepLabels[step() - 1])
           }}</span
         >
@@ -118,7 +118,7 @@
             }
           </div>
           @if (flow()?.error; as error) {
-            <p class="error" role="alert">{{ t('errors.' + error) }}</p>
+            <app-alert severity="error" role="alert">{{ t('errors.' + error) }}</app-alert>
           }
           @if (page() === 'found') {
             <div class="candidates">
