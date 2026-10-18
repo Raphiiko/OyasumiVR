@@ -30,6 +30,8 @@ export class TelemetryService {
 
   async init() {
     await this.loadSettings();
+    // the core rejects events until it is enabled, and the throttled sync below waits 2 seconds
+    await invoke('set_telemetry_enabled', { enable: this._settings.value.enabled });
     // resolved lazily: its dependencies are not initialized yet, and some of them use this service
     this.injector.get(FeatureSnapshotService).init();
     this.settings

@@ -38,4 +38,16 @@ describe('TelemetryService', () => {
     service.settings.subscribe((s) => (events = s.reportingCache.map((e) => e.event)));
     expect(events).toEqual([]);
   });
+
+  it('enables telemetry in the core before init resolves', async () => {
+    vi.useFakeTimers();
+    invoke.mockReset();
+    const injector = { get: () => ({ init: () => undefined }) } as unknown as Injector;
+    const service = new TelemetryService(injector);
+
+    await service.init();
+
+    expect(invoke).toHaveBeenCalledWith('set_telemetry_enabled', { enable: true });
+    vi.useRealTimers();
+  });
 });

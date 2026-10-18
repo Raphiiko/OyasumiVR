@@ -64,6 +64,10 @@ pub fn track_event(name: &str, props: Option<Map<String, Value>>) {
     }
     let name = name.to_string();
     tokio::spawn(async move {
+        // telemetry may be disabled between the check above and this task running
+        if !TELEMETRY_ENABLED.load(Ordering::Relaxed) {
+            return;
+        }
         if let Err(e) = send_event(&name, props).await {
             warn!("[Core] Could not send telemetry event {name}: {e}");
         }
