@@ -240,10 +240,9 @@ p {
   gap: 0.25em;
   min-width: 0;
 }
-.candidate img {
-  width: 2em;
-  height: 2em;
-  filter: invert(0.8);
+.candidate .svg-icon {
+  flex-shrink: 0;
+  font-size: 2em;
 }
 .candidate code {
   color: var(--color-text-2);

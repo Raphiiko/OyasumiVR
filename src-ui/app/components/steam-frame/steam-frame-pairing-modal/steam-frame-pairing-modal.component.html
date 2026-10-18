@@ -133,7 +133,9 @@
                   @if ((flow()?.candidates?.length ?? 0) > 1) {
                     <span class="radio" aria-hidden="true"></span>
                   }
-                  <img src="/assets/img/icon_hmd.png" alt="" />
+                  <svg class="svg-icon" aria-hidden="true">
+                    <use href="/assets/icons/headset.svg#icon" />
+                  </svg>
                   <span>
                     <span>{{ t('headset') }}</span>
                     <code>{{ candidate.address }}</code>
