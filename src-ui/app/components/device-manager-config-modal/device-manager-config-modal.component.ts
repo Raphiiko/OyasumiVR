@@ -30,6 +30,12 @@ const UPDATABLE_STATUSES: SteamFrameConnectionStatus[] = [
   'helperOutdated',
 ];
 
+const UNREPAIRABLE_STATUSES: (SteamFrameConnectionStatus | undefined)[] = [
+  'hostKeyChanged',
+  'pairingRemoved',
+  'needsAppUpdate',
+];
+
 export interface DeviceManagerConfigModalInputModel {
   device: DMKnownDevice;
 }
@@ -134,8 +140,8 @@ export class DeviceManagerConfigModalComponent
       // only a helper that answers can be called up to date
       upToDate: state?.status === 'connected',
       repairing: !!this.framePairing.reinstalls()[pairing.id],
-      // a repair needs SSH access with the pinned host key
-      canRepair: state?.status !== 'hostKeyChanged' && state?.status !== 'pairingRemoved',
+      // a repair needs SSH access, and never replaces a newer helper
+      canRepair: !UNREPAIRABLE_STATUSES.includes(state?.status),
     };
   }
 

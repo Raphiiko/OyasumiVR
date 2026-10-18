@@ -241,11 +241,13 @@ pub struct Inspected {
 }
 
 /// Installs the bundled helper when the installed one needs it, deciding again when another PC
-/// changed the helper meanwhile. `repair` also replaces a helper of the bundled version and keeps
-/// a working previous release, and `fresh` allows creating a missing helper folder.
+/// changed the helper meanwhile. `repair` also replaces a helper of the bundled version,
+/// `keep_previous` keeps a working previous release as the rollback target instead of the current
+/// one, and `fresh` allows creating a missing helper folder.
 pub async fn install_bundled(
     session: &Session,
     repair: bool,
+    keep_previous: bool,
     fresh: bool,
 ) -> Result<Inspected, InstallError> {
     for _ in 0..3 {
@@ -287,7 +289,7 @@ pub async fn install_bundled(
         let port = HELPER_PORT.to_string();
         let seen = hex(&Sha256::digest(inspect.trim().as_bytes()));
         let fresh = if fresh { "1" } else { "0" };
-        let keep = if repair { "1" } else { "0" };
+        let keep = if keep_previous { "1" } else { "0" };
         let output = run(
             session,
             &[
@@ -423,7 +425,7 @@ async fn setup_session(
 
     // install: compare the installed helper with the bundled one
     on_stage(Stage::Install);
-    let inspected = install_bundled(session, request.repair, true)
+    let inspected = install_bundled(session, request.repair, false, true)
         .await
         .map_err(|error| match error {
             InstallError::Ssh(error) => error.into(),
@@ -450,8 +452,38 @@ async fn setup_session(
             .map_err(|_| failed("could not write the uninstall script".into()))?;
     }
 
-    // connection: give this PC a token, start the helper
+    // connect, and roll back a repair whose helper does not answer
     on_stage(Stage::Connection);
+    let outcome = connect(request, session, &inspected).await;
+    if outcome.is_err() && request.repair && inspected.replaced {
+        roll_back_repair(session).await;
+    }
+    outcome
+}
+
+/// Points current back at the previous release, unless another PC replaced the helper meanwhile.
+async fn roll_back_repair(session: &Session) {
+    let mut rollback = vec!["rollback", BUNDLED_VERSION];
+    rollback.extend(bundled_digest());
+    match run(session, &rollback, b"").await {
+        Ok(output) if output.status == 0 => {
+            warn!("[SteamFrame] The repaired helper did not answer, so the previous release runs again")
+        }
+        Ok(output) => warn!(
+            "[SteamFrame] Rolling the repaired helper back exited with {}",
+            output.status
+        ),
+        Err(error) => warn!("[SteamFrame] Could not roll the repaired helper back: {error:?}"),
+    }
+}
+
+/// Gives this PC a token, starts the helper, and checks it with an authenticated handshake.
+async fn connect(
+    request: &SetupRequest,
+    session: &Session,
+    inspected: &Inspected,
+) -> Result<SetupOutcome, SetupOutcome> {
+    let failed = |message: String| SetupOutcome::Failed { message };
     let provisioned = provision(session, &request.pc_id, &request.token, &request.public_key)
         .await
         .map_err(|error| match error {
