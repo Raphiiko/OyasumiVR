@@ -299,8 +299,7 @@
         "standby": "スタンバイ"
       },
       "noDevices": "デバイスがありません",
-      "title": "デバイス",
-      "turnOffAllDevices": "すべてのデバイスをオフにする"
+      "title": "デバイス"
     },
     "device-selector": {
       "noSelection": "デバイス選択",

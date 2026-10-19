@@ -299,8 +299,7 @@
         "standby": "Standby"
       },
       "noDevices": "Geen apparaten gedetecteerd",
-      "title": "Apparaten",
-      "turnOffAllDevices": "Alle apparaten uitschakelen"
+      "title": "Apparaten"
     },
     "device-selector": {
       "noSelection": "Selecteer Apparaten",

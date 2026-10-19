@@ -299,8 +299,7 @@
         "standby": "待機"
       },
       "noDevices": "未偵測到裝置",
-      "title": "裝置",
-      "turnOffAllDevices": "關閉所有裝置"
+      "title": "裝置"
     },
     "device-selector": {
       "noSelection": "選擇裝置",

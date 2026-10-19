@@ -46,8 +46,4 @@ export class LighthouseForceStatePopoverComponent implements OnInit {
       this.action.emit(state);
     }
   }
-
-  getButtonTitle(state: LighthouseDevicePowerState): string {
-    return `comp.device-list.lhForceState.${state}`;
-  }
 }

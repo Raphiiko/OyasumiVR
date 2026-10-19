@@ -299,8 +299,7 @@
         "standby": "待机"
       },
       "noDevices": "未检测到设备",
-      "title": "设备",
-      "turnOffAllDevices": "关闭所有设备"
+      "title": "设备"
     },
     "device-selector": {
       "noSelection": "选择设备",

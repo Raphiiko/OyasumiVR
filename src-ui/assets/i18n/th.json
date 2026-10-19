@@ -299,8 +299,7 @@
         "standby": "สแตนด์บาย"
       },
       "noDevices": "ไม่พบอุปกรณ์",
-      "title": "อุปกรณ์",
-      "turnOffAllDevices": "ปิดอุปกรณ์ทั้งหมด"
+      "title": "อุปกรณ์"
     },
     "device-selector": {
       "noSelection": "เลือกอุปกรณ์",

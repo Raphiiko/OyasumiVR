@@ -3,11 +3,7 @@
     <span transloco="comp.device-list.title"></span>
     @if (devicesCanPowerOff) {
       <div class="btn-turn-off-all-wrapper" @fade>
-        <button
-          class="btn-turn-off-all"
-          [title]="'comp.device-list.turnOffAllDevices' | transloco"
-          (click)="turnOffAllOVRDevices()"
-        >
+        <button class="btn-turn-off-all" (click)="turnOffAllOVRDevices()">
           <app-icon name="controller" />
           <app-icon name="tracker" />
           <span class="power-chip">
@@ -88,11 +84,7 @@
   </div>
 
   <div class="device-list-footer" @fade>
-    <button
-      class="device-manager-button"
-      [routerLink]="'/dashboard/deviceManager'"
-      [title]="'comp.dashboard-navbar.deviceManager' | transloco"
-    >
+    <button class="device-manager-button" [routerLink]="'/dashboard/deviceManager'">
       <app-icon name="controller" class="device-manager-icon" />
       <span class="device-manager-label" transloco="comp.dashboard-navbar.deviceManager"></span>
       <app-icon name="chevron-right" class="chevron-icon" />
