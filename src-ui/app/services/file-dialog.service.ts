@@ -18,17 +18,17 @@ export class FileDialogService {
   private dialogOpen = false;
 
   open<T extends OpenDialogOptions>(options: T): Promise<OpenDialogReturn<T> | null> {
-    return this.show(() => open(options));
+    return this.show(() => open(options), 'toasts.fileDialog.open');
   }
 
   save(options: SaveDialogOptions): Promise<string | null> {
-    return this.show(() => save(options));
+    return this.show(() => save(options), 'toasts.fileDialog.save');
   }
 
   /** Resolves to null without a dialog while another dialog is still open. */
-  private async show<T>(dialog: () => Promise<T>): Promise<T | null> {
+  private async show<T>(dialog: () => Promise<T>, toastTitle: string): Promise<T | null> {
     const alreadyOpen = this.dialogOpen;
-    void this.notifyDashboardUser();
+    void this.notifyDashboardUser(toastTitle);
     if (alreadyOpen) return null;
 
     this.dialogOpen = true;
@@ -39,9 +39,9 @@ export class FileDialogService {
     }
   }
 
-  private async notifyDashboardUser() {
+  private async notifyDashboardUser(toastTitle: string) {
     if (await this.openvr.isDashboardVisible()) {
-      this.toasts.show({ title: 'toasts.fileDialog.opened' });
+      this.toasts.show({ title: toastTitle });
     }
   }
 }

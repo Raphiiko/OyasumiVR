@@ -3065,7 +3065,8 @@
       "opened": "Link opened in your browser"
     },
     "fileDialog": {
-      "opened": "File window opened on your desktop"
+      "open": "A window opened on your desktop where you can pick the file",
+      "save": "A window opened on your desktop where you can choose where to save"
     },
     "oscTest": {
       "noTarget": {

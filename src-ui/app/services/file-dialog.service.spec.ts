@@ -31,7 +31,7 @@ describe('FileDialogService', () => {
     save.mockResolvedValueOnce('C:\\report.zip');
     expect(await h.service.save({ defaultPath: 'report.zip' })).toBe('C:\\report.zip');
     expect(save).toHaveBeenCalledWith({ defaultPath: 'report.zip' });
-    expect(h.show).toHaveBeenCalledWith({ title: 'toasts.fileDialog.opened' });
+    expect(h.show).toHaveBeenCalledWith({ title: 'toasts.fileDialog.save' });
   });
 
   it('shows no toast on the desktop', async () => {
@@ -49,6 +49,7 @@ describe('FileDialogService', () => {
     expect(await h.service.open({ multiple: false })).toBeNull();
     expect(open).toHaveBeenCalledTimes(1);
     expect(h.show).toHaveBeenCalledTimes(2);
+    expect(h.show).toHaveBeenLastCalledWith({ title: 'toasts.fileDialog.open' });
 
     finish('C:\\first.exe');
     expect(await first).toBe('C:\\first.exe');
