@@ -2,7 +2,6 @@
   type="button"
   class="swatch"
   [style.--picked-color]="cssColor()"
-  [class.off]="hexValue() === '000000'"
   [disabled]="disabled()"
   [attr.popovertarget]="popoverId"
 ></button>
@@ -14,7 +13,6 @@
         type="button"
         class="preset"
         [style.--preset-color]="'rgb(' + preset.join(', ') + ')'"
-        [class.off]="$index === 0"
         [class.selected]="isSelected(preset)"
         (click)="color.set(preset)"
       ></button>
