@@ -4,13 +4,15 @@
     @if (devicesCanPowerOff) {
       <div class="btn-turn-off-all-wrapper" @fade>
         <button
-          class="btn-turn-off-all btn-power power-off"
+          class="btn-turn-off-all"
           [title]="'comp.device-list.turnOffAllDevices' | transloco"
           (click)="turnOffAllOVRDevices()"
         >
           <app-icon name="controller" />
           <app-icon name="tracker" />
-          <app-icon name="power" class="icon-mono" />
+          <span class="power-chip">
+            <app-icon name="power" class="icon-mono" />
+          </span>
         </button>
       </div>
     }

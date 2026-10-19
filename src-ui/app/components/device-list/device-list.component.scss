@@ -150,17 +150,54 @@
   align-items: center;
   justify-content: center;
   gap: 0.4em;
-  padding: 0.25em 0.5em;
-  border: none;
+  padding: 0.2em 0.2em 0.2em 0.5em;
+  border: 1px solid var(--color-surface-3);
+  border-radius: 0.35em;
+  background: var(--color-surface-1);
+  color: var(--color-alert-error);
   cursor: pointer;
+  transition: all 0.15s ease;
 
   app-icon {
+    --icon-color: var(--color-alert-error);
     font-size: 1.2em;
     margin-right: 0;
+    transition: filter 0.15s ease;
   }
 
   // the controller's diagonal shape leaves its right side empty, which reads as a wider gap
   app-icon[name='controller'] {
     margin-right: -0.12em;
+  }
+
+  .power-chip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.6em;
+    height: 1.6em;
+    margin-left: 0.15em;
+    border-radius: 0.25em;
+    background: color-mix(in oklch, var(--color-alert-error) 18%, transparent);
+    transition: all 0.15s ease;
+
+    app-icon {
+      font-size: 1em;
+    }
+  }
+
+  &:hover {
+    border-color: color-mix(in oklch, var(--color-alert-error) 60%, var(--color-surface-3));
+    background: var(--color-surface-2);
+
+    .power-chip {
+      background: var(--color-alert-error);
+      color: var(--color-on-alert-error);
+    }
+  }
+
+  &:active > app-icon,
+  &:active .power-chip {
+    filter: brightness(0.75);
   }
 }
