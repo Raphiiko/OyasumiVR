@@ -21,6 +21,10 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 - Added a message that tells you when a link opened in your browser, while you use OyasumiVR from the SteamVR dashboard
 
+### Changed
+
+- Replaced the colour picker for the Bigscreen Beyond LED colours with one that works from the SteamVR dashboard and has colour presets
+
 ### Fixed
 
 - Fixed the shutdown sequence skipping devices that were off when you selected them or when OyasumiVR started

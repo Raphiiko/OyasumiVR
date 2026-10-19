@@ -1,53 +1,40 @@
 @use 'shadows.scss';
 
-input {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0;
-  //visibility: hidden;
-  &:not(:disabled) {
-    cursor: pointer;
-  }
-
-  &:focus {
-    border: 0;
-    box-shadow: none;
-  }
+:host {
+  display: block;
+  anchor-scope: --color-swatch;
 }
 
-.color-input-wrapper {
-  @include shadows.shadow(2, false);
+.swatch {
+  @include shadows.shadow(2, true);
+  anchor-name: --color-swatch;
   position: relative;
-  background-color: var(--picked-color);
+  display: block;
   height: 2em;
   width: 3em;
+  padding: 0;
+  overflow: hidden;
+  background-color: var(--picked-color);
   border: var(--color-surface-3) 0.2em solid;
   border-radius: 0.5em;
   transition: all 0.15s ease;
-  position: relative;
-  overflow: hidden;
-
-  &.disabled {
-    opacity: 0.5;
-  }
+  cursor: pointer;
 
   &:after {
     content: '';
-    //z-index: 10;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
     position: absolute;
+    inset: 0;
     opacity: 0.25;
     background: linear-gradient(210deg, rgba(255, 255, 255, 1) 0%, rgba(0, 0, 0, 1) 100%);
     pointer-events: none;
   }
 
-  &:not(.disabled) {
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  &:not(:disabled) {
     &:hover {
       transform: translateY(-1px);
     }
@@ -56,5 +43,138 @@ input {
       transform: translateY(0);
       opacity: 0.8;
     }
+  }
+}
+
+.picker {
+  @include shadows.shadow(5, true);
+  position-anchor: --color-swatch;
+  position-area: left center;
+  position-try-fallbacks:
+    flip-inline,
+    left span-bottom,
+    left span-top;
+  inset: auto;
+  margin: 0 0.75em;
+  padding: 1.25em;
+  width: 16.5em;
+  box-sizing: content-box;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1.25em;
+  color: var(--color-text-1);
+  background: var(--color-surface-1);
+  border: 1px solid var(--color-surface-3);
+  border-radius: var(--surface-border-radius);
+  overflow: visible;
+  opacity: 0;
+  transform: translateX(0.5em);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease,
+    overlay 0.15s allow-discrete,
+    display 0.15s allow-discrete;
+
+  &:popover-open {
+    display: flex;
+    opacity: 1;
+    transform: none;
+
+    @starting-style {
+      opacity: 0;
+      transform: translateX(0.5em);
+    }
+  }
+
+  &::backdrop {
+    background: transparent;
+  }
+}
+
+// vanilla-colorful exposes its internals as ::part
+.spectrum ::ng-deep rgb-color-picker {
+  width: 100%;
+  height: 13em;
+  gap: 0.75em;
+
+  &::part(saturation) {
+    border: 0;
+    border-radius: 0.5em;
+  }
+
+  &::part(hue) {
+    flex: 0 0 1.25em;
+    border-radius: 0.5em;
+  }
+
+  &::part(saturation-pointer),
+  &::part(hue-pointer) {
+    width: 1.5em;
+    height: 1.5em;
+    border-width: 0.15em;
+    box-shadow:
+      0 0 0 1px rgba(0, 0, 0, 0.35),
+      var(--shadow-2);
+  }
+}
+
+.presets {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.5em;
+}
+
+.preset {
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--preset-color);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+
+  &.selected {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  &:hover {
+    transform: scale(1.12);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.raw {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 0.5em;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+    min-width: 0;
+  }
+
+  span {
+    font-size: 0.75em;
+    color: var(--color-text-4);
+    padding-left: 0.25em;
+  }
+
+  input {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .raw-hex input {
+    text-transform: uppercase;
   }
 }
