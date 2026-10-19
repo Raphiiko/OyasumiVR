@@ -437,29 +437,33 @@ async fn app_setup(app_handle: tauri::AppHandle, error_reporting_enabled: bool) 
     if let Ok(logs) = app_handle.path().app_log_dir() {
         memory_watch::start(env!("CARGO_PKG_VERSION"), &logs);
     }
-    let window = app_handle.get_webview_window("main").unwrap();
-    // Disable swipe navigation in main window
-    // this posts to the event loop from a worker thread, and Windows can refuse the post
-    if let Err(e) = window.with_webview(|webview| unsafe {
-        let settings = webview
-            .controller()
-            .CoreWebView2()
-            .unwrap()
-            .Settings()
-            .unwrap();
-        let settings: ICoreWebView2Settings6 = mem::transmute(settings);
-        settings.SetIsSwipeNavigationEnabled(false).unwrap();
-    }) {
-        // read before logging, which can overwrite the post's Win32 error
-        let os_error = std::io::Error::last_os_error();
-        warn!("[Core] Could not disable swipe navigation in the main window: {e} ({os_error})");
-        sentry::capture_message(
-            &format!(
-                "Could not disable swipe navigation: Win32 error {}",
-                os_error.raw_os_error().unwrap_or_default()
-            ),
-            sentry::Level::Warning,
-        );
+    // Disable swipe navigation, autofill and password saving in every window
+    // autofill and password prompts are native popups, which never appear in the VR dashboard
+    for (label, window) in app_handle.webview_windows() {
+        // this posts to the event loop from a worker thread, and Windows can refuse the post
+        if let Err(e) = window.with_webview(|webview| unsafe {
+            let settings = webview
+                .controller()
+                .CoreWebView2()
+                .unwrap()
+                .Settings()
+                .unwrap();
+            let settings: ICoreWebView2Settings6 = mem::transmute(settings);
+            settings.SetIsSwipeNavigationEnabled(false).unwrap();
+            settings.SetIsGeneralAutofillEnabled(false).unwrap();
+            settings.SetIsPasswordAutosaveEnabled(false).unwrap();
+        }) {
+            // read before logging, which can overwrite the post's Win32 error
+            let os_error = std::io::Error::last_os_error();
+            warn!("[Core] Could not configure the webview of window {label}: {e} ({os_error})");
+            sentry::capture_message(
+                &format!(
+                    "Could not configure webview: Win32 error {}",
+                    os_error.raw_os_error().unwrap_or_default()
+                ),
+                sentry::Level::Warning,
+            );
+        }
     }
     // Get dependencies
     let cache_dir = app_handle.path().app_cache_dir().unwrap();
