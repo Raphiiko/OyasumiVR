@@ -3078,6 +3078,9 @@
         "title": "正在等待關機流程"
       }
     },
+    "showInFolder": {
+      "opened": "已在桌面上開啟資料夾"
+    },
     "sunTimes": {
       "failed": {
         "message": "OyasumiVR 保留了目前啟用時間。",

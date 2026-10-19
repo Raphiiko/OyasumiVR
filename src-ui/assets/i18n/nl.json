@@ -3078,6 +3078,9 @@
         "title": "Wachten op afsluitprocedure"
       }
     },
+    "showInFolder": {
+      "opened": "Map geopend op je bureaublad"
+    },
     "sunTimes": {
       "failed": {
         "message": "OyasumiVR heeft de huidige activatietijd behouden.",

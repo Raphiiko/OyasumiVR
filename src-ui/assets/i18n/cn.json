@@ -3101,6 +3101,9 @@
         "title": "正在等待关机流程"
       }
     },
+    "showInFolder": {
+      "opened": "已在桌面上打开文件夹"
+    },
     "sunTimes": {
       "failed": {
         "message": "OyasumiVR 保留了当前激活时间。",
