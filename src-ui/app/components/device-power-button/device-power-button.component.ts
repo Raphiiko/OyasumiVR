@@ -14,7 +14,6 @@ export type DevicePowerAction = 'power-on' | 'power-off';
 export class DevicePowerButtonComponent {
   readonly powerState = input<DevicePowerState>('unknown');
   readonly disabled = input<boolean>(false);
-  readonly title = input<string>('');
   readonly id = input<string>('');
   readonly anchorName = input<string>();
   readonly customIcon = input<string>('');
