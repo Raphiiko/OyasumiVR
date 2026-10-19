@@ -299,8 +299,7 @@
         "standby": "Standby"
       },
       "noDevices": "No devices detected",
-      "title": "Devices",
-      "turnOffAllDevices": "Turn off all devices"
+      "title": "Devices"
     },
     "device-selector": {
       "noSelection": "Select Devices",
