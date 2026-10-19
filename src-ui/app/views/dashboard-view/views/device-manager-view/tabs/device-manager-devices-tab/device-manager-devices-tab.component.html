@@ -65,6 +65,9 @@
             <div class="device-main-row">
               <app-icon
                 [name]="getDeviceTypeIconForDevice(device.deviceType)"
+                [mirrored]="
+                  device.deviceType === 'CONTROLLER' && getDeviceOVR(device)?.role === 'RightHand'
+                "
                 class="device-icon"
               />
               <div class="device-info">
