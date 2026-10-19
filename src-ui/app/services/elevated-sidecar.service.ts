@@ -88,7 +88,7 @@ export class ElevatedSidecarService {
         result = await this.tryEnable();
       } finally {
         this.interactiveEnableRunning = false;
-        this.modalService.closeModal(PROMPT_NOTICE_MODAL_ID);
+        this.closePromptNotice();
       }
       this.telemetry.trackEvent('elevated_features_enable', {
         result: result.result,
@@ -217,6 +217,12 @@ export class ElevatedSidecarService {
         { id: PROMPT_NOTICE_MODAL_ID }
       )
       .subscribe();
+  }
+
+  private closePromptNotice() {
+    this.modalService.closeModal(PROMPT_NOTICE_MODAL_ID);
+    // the modal service creates a modal one timer tick after addModal, so a later timer also closes a pending one
+    setTimeout(() => this.modalService.closeModal(PROMPT_NOTICE_MODAL_ID), 1);
   }
 
   async checkIfStarted(): Promise<boolean> {

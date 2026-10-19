@@ -1,5 +1,5 @@
 import '@angular/compiler';
-import { BehaviorSubject, EMPTY, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, EMPTY, firstValueFrom, Observable } from 'rxjs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
 import { AppSettingsService } from './app-settings.service';
@@ -29,7 +29,7 @@ function setup(enableResult: EnableResult, dashboardVisible = false) {
   } as unknown as AppSettingsService;
   const trackEvent = vi.fn();
   const modals = {
-    addModal: vi.fn(() => EMPTY),
+    addModal: vi.fn((): Observable<unknown> => EMPTY),
     closeModal: vi.fn(),
   };
   const service = new ElevatedSidecarService(
@@ -122,5 +122,33 @@ describe('ElevatedSidecarService', () => {
     await h.service.enable();
     expect(h.modals.addModal).toHaveBeenCalledOnce();
     expect(h.modals.closeModal).toHaveBeenCalledWith('elevationPromptNotice');
+  });
+
+  it('closes a notice the modal service creates after the enable resolved', async () => {
+    const h = setup({ result: 'promptDeclined' }, true);
+    let noticeOpen = false;
+    h.modals.addModal.mockImplementation(
+      () =>
+        new Observable(() => {
+          setTimeout(() => (noticeOpen = true), 1);
+        })
+    );
+    h.modals.closeModal.mockImplementation(() => (noticeOpen = false));
+    const handlers = new Map<string, () => Promise<void>>();
+    listen.mockImplementation(async (event: string, handler: () => Promise<void>) => {
+      handlers.set(event, handler);
+    });
+    await h.service.init();
+    const prompt = handlers.get('ELEVATION_PROMPT_SHOWN')!;
+    invoke.mockImplementation(async (command: string) => {
+      if (command === 'elevated_features_enable') await prompt();
+      return command === 'elevated_sidecar_started' ? false : { result: 'promptDeclined' };
+    });
+
+    await h.service.enable();
+    await new Promise((resolve) => setTimeout(resolve, 20));
+
+    expect(h.modals.addModal).toHaveBeenCalledOnce();
+    expect(noticeOpen).toBe(false);
   });
 });
