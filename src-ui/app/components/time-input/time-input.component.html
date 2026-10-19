@@ -5,6 +5,7 @@
     maxlength="8"
     spellcheck="false"
     autocomplete="off"
+    placeholder="--:--"
     [value]="text()"
     [disabled]="disabled()"
     (focus)="openDial(); field.select()"
@@ -21,7 +22,7 @@
           [class.active]="dialMode() === 'HOURS'"
           (click)="dialMode.set('HOURS')"
         >
-          {{ text().slice(0, 2) }}
+          {{ text().slice(0, 2) || '--' }}
         </button>
         <span>:</span>
         <button
@@ -29,7 +30,7 @@
           [class.active]="dialMode() === 'MINUTES'"
           (click)="dialMode.set('MINUTES')"
         >
-          {{ text().slice(3, 5) }}
+          {{ text().slice(3, 5) || '--' }}
         </button>
       </div>
       <div class="dial">
@@ -38,7 +39,9 @@
           <app-icon name="sunrise" class="dial-glyph morning" />
           <app-icon name="sunset" class="dial-glyph evening" />
         }
-        <div class="dial-hand" [style.transform]="'rotate(' + handAngle() + 'deg)'"></div>
+        @if (time()) {
+          <div class="dial-hand" [style.transform]="'rotate(' + handAngle() + 'deg)'"></div>
+        }
         <div class="dial-hub"></div>
         @if (dialMode() === 'HOURS') {
           @for (tick of hourTicks; track tick.value) {

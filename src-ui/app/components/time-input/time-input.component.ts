@@ -28,14 +28,16 @@ export class TimeInputComponent {
   readonly duration = input(false);
   protected readonly open = signal(false);
   protected readonly dialMode = signal<'HOURS' | 'MINUTES'>('HOURS');
-  protected readonly time = computed(
-    () => parseTime(this.value() ?? '') ?? ([0, 0] as [number, number])
-  );
-  protected readonly hours = computed(() => this.time()[0]);
-  protected readonly minutes = computed(() => this.time()[1]);
-  protected readonly text = computed(() => formatTime(...this.time()));
+  /** Null while the caller holds no time, which shows as an empty field. */
+  protected readonly time = computed(() => parseTime(this.value() ?? ''));
+  protected readonly hours = computed(() => this.time()?.[0] ?? null);
+  protected readonly minutes = computed(() => this.time()?.[1] ?? null);
+  protected readonly text = computed(() => {
+    const time = this.time();
+    return time ? formatTime(...time) : '';
+  });
   protected readonly handAngle = computed(() =>
-    this.dialMode() === 'HOURS' ? this.hours() * 15 : this.minutes() * 6
+    this.dialMode() === 'HOURS' ? (this.hours() ?? 0) * 15 : (this.minutes() ?? 0) * 6
   );
   protected readonly hourTicks = Array.from({ length: 24 }, (_, i) => this.tick(i, 24, i));
   protected readonly minuteTicks = Array.from({ length: 12 }, (_, i) => this.tick(i, 12, i * 5));
@@ -57,12 +59,12 @@ export class TimeInputComponent {
   }
 
   protected pickHour(hours: number) {
-    this.value.set(formatTime(hours, this.minutes()));
+    this.value.set(formatTime(hours, this.minutes() ?? 0));
     this.dialMode.set('MINUTES');
   }
 
   protected pickMinute(minutes: number) {
-    this.value.set(formatTime(this.hours(), minutes));
+    this.value.set(formatTime(this.hours() ?? 0, minutes));
     this.close();
   }
 
