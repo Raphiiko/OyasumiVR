@@ -3063,6 +3063,10 @@
     "externalLink": {
       "opened": "Link opened in your browser"
     },
+    "fileDialog": {
+      "open": "A window opened on your desktop where you can pick the file",
+      "save": "A window opened on your desktop where you can choose where to save"
+    },
     "oscTest": {
       "noTarget": {
         "message": "OyasumiVR has no OSC target. Start VRChat with OSC enabled, or set a custom target in the OSC settings.",
