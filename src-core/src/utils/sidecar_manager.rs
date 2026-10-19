@@ -265,6 +265,7 @@ impl SidecarManager {
             SidecarLaunch::ElevatedSpawn => {
                 let exe = absolute(&exe_path);
                 let arguments = args.join(" ");
+                crate::utils::send_event("ELEVATION_PROMPT_SHOWN", ()).await;
                 let joined = tokio::task::spawn_blocking(move || {
                     crate::elevated_sidecar::elevate::spawn(&exe, &arguments)
                 })

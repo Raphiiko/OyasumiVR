@@ -1972,6 +1972,10 @@
           },
           "enableFailed": {
             "title": "Could not enable administrative permissions"
+          },
+          "promptOnDesktop": {
+            "message": "Windows is asking for administrative permissions in a prompt on your desktop. SteamVR cannot show this prompt, so take off your headset to answer it.\n\nThis message closes by itself once you answer.",
+            "title": "Answer the prompt on your desktop"
           }
         },
         "errors": {

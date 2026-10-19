@@ -402,6 +402,7 @@ async fn install_if_needed() -> Option<EnableResult> {
     }
 
     // install waits for the UAC prompt, which the user may leave on screen indefinitely
+    crate::utils::send_event("ELEVATION_PROMPT_SHOWN", ()).await;
     match tokio::task::spawn_blocking(install).await {
         Ok(InstallOutcome::Ok) => {}
         Ok(InstallOutcome::PromptDeclined) => return Some(EnableResult::PromptDeclined),

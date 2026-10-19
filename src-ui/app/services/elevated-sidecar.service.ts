@@ -11,6 +11,7 @@ import {
   ConfirmModalOutputModel,
 } from '../components/confirm-modal/confirm-modal.component';
 import { TelemetryService } from './telemetry/telemetry.service';
+import { OpenVRService } from './openvr.service';
 
 export type EnableResult =
   | { result: 'ok' }
@@ -25,6 +26,8 @@ export type ElevatedFeaturesFailure =
   | { operation: 'enable'; result: Exclude<EnableResult, { result: 'ok' }> }
   | { operation: 'disable'; result: Exclude<DisableResult, { result: 'ok' }> };
 
+const PROMPT_NOTICE_MODAL_ID = 'elevationPromptNotice';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -36,11 +39,14 @@ export class ElevatedSidecarService {
   private _failure = new BehaviorSubject<ElevatedFeaturesFailure | null>(null);
   public failure = this._failure.asObservable();
   private operationQueue: Promise<unknown> = Promise.resolve();
+  /** Set while an enable started from the UI waits for the core. */
+  private interactiveEnableRunning = false;
 
   constructor(
     private appSettings: AppSettingsService,
     private modalService: ModalService,
-    private telemetry: TelemetryService
+    private telemetry: TelemetryService,
+    private openvr: OpenVRService
   ) {}
 
   async init() {
@@ -54,6 +60,7 @@ export class ElevatedSidecarService {
         info('[ElevatedSidecar] Elevated sidecar has stopped');
         this._sidecarStarted.next(false);
       }),
+      listen('ELEVATION_PROMPT_SHOWN', () => this.showPromptNotice()),
     ]);
     if (
       !this._sidecarStarted.value &&
@@ -76,7 +83,13 @@ export class ElevatedSidecarService {
     const wasEnabled = this.appSettings.settingsSync.elevatedFeaturesEnabled;
     let result: EnableResult;
     do {
-      result = await this.tryEnable();
+      this.interactiveEnableRunning = interactive;
+      try {
+        result = await this.tryEnable();
+      } finally {
+        this.interactiveEnableRunning = false;
+        this.modalService.closeModal(PROMPT_NOTICE_MODAL_ID);
+      }
       this.telemetry.trackEvent('elevated_features_enable', {
         result: result.result,
         interactive: interactive ? 1 : 0,
@@ -183,6 +196,26 @@ export class ElevatedSidecarService {
       )
     );
     return retryable && (modalResult?.confirmed ?? false);
+  }
+
+  // UAC runs on the secure desktop, which the SteamVR dashboard cannot show
+  private async showPromptNotice() {
+    if (!this.interactiveEnableRunning) return;
+    const inDashboard = await this.openvr.isDashboardVisible();
+    // the enable can finish while the dashboard check runs
+    if (!inDashboard || !this.interactiveEnableRunning) return;
+    this.modalService
+      .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(
+        ConfirmModalComponent,
+        {
+          title: 'settings.general.adminPrivileges.dialogs.promptOnDesktop.title',
+          message: 'settings.general.adminPrivileges.dialogs.promptOnDesktop.message',
+          confirmButtonText: 'shared.modals.close',
+          showCancel: false,
+        },
+        { id: PROMPT_NOTICE_MODAL_ID }
+      )
+      .subscribe();
   }
 
   async checkIfStarted(): Promise<boolean> {
