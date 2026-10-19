@@ -9,12 +9,13 @@ use super::{
 use log::{debug, error, info};
 use oyasumivr_shared::windows::is_elevated;
 use std::process::Command;
-use std::{env, path::PathBuf};
+use std::{env, os::windows::process::CommandExt, path::PathBuf};
 use tauri_plugin_shell::{process::CommandEvent, Error, ShellExt};
 use tokio::fs::File;
 use tokio::io::AsyncWriteExt;
 use tokio::sync::oneshot;
 use uuid::Uuid;
+use windows_sys::Win32::System::Threading::CREATE_NO_WINDOW;
 
 #[tauri::command]
 pub async fn play_sound(name: String, volume: f32) -> Result<(), String> {
@@ -157,10 +158,11 @@ pub async fn run_cmd_commands(commands: String) {
         batch_path.display()
     );
 
-    // Log the path of the batch file
+    // run the batch file in a console without a window
     let mut cmd_builder = Command::new("cmd");
     cmd_builder.args(["/C", batch_path.to_str().unwrap()]);
-    // cmd_builder.creation_flags(0x00000008);
+    // DETACHED_PROCESS would leave cmd without a console, and then it runs nothing at all
+    cmd_builder.creation_flags(CREATE_NO_WINDOW);
 
     debug!(
         "[Core] Attempting to spawn cmd.exe process with batch file: {}",
