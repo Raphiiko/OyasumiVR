@@ -21,7 +21,8 @@ use super::{
         Pairing, SetBrightnessError, SetCctError, State, Status,
     },
     setup::{
-        self, bundled_digest, install_decision, InstallDecision, ProvisionError, BUNDLED_VERSION,
+        self, bundled_digest, install_decision, InstallDecision, ProvisionError, Replace,
+        BUNDLED_VERSION,
     },
     ssh::{self, SshError},
     valid_pc_id,
@@ -385,7 +386,8 @@ fn update_available(hello: &Hello) -> bool {
             Some(&hello.info),
             BUNDLED_VERSION,
             bundled_digest(),
-            PROTOCOL_VERSION
+            PROTOCOL_VERSION,
+            Replace::Outdated,
         ),
         InstallDecision::Install | InstallDecision::Repair
     )

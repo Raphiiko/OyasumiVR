@@ -426,8 +426,8 @@ export class SteamFramePairingService {
   }
 
   /**
-   * Installs the helper again, and pins its new certificate. `repair` also replaces a helper of
-   * the bundled version.
+   * Installs the helper again, and pins its new certificate. `repair` replaces any installed
+   * helper with the bundled one, a newer one too.
    */
   async reinstallHelper(pairing: SteamFramePairing, repair = false) {
     if (this._reinstalls()[pairing.id]) return;

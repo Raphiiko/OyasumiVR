@@ -94,13 +94,25 @@ pub enum InstallDecision {
     NeedsAppUpdate,
 }
 
-/// Decides what to do with the helper already on the headset. A newer helper is never replaced,
-/// and an unreadable version counts as older.
+/// Which installed helper gets replaced by the bundled one.
+#[derive(Debug, PartialEq, Clone, Copy)]
+pub enum Replace {
+    /// An older, unreadable, or changed helper.
+    Outdated,
+    /// Also a helper of the bundled version.
+    SameVersion,
+    /// Any helper, a newer one too, because the user asked for the bundled helper.
+    Any,
+}
+
+/// Decides what to do with the helper already on the headset. An unreadable version counts as
+/// older.
 pub fn install_decision(
     installed: Option<&HelperInfo>,
     bundled: &str,
     bundled_digest: Option<&str>,
     protocol: u32,
+    replace: Replace,
 ) -> InstallDecision {
     // nothing installed yet
     let Some(installed) = installed else {
@@ -119,11 +131,15 @@ pub fn install_decision(
     if installed_version < bundled_version {
         InstallDecision::Install
     } else if installed_version == bundled_version {
-        if bundled_digest.is_some_and(|digest| installed.digest.as_deref() != Some(digest)) {
+        if replace != Replace::Outdated
+            || bundled_digest.is_some_and(|digest| installed.digest.as_deref() != Some(digest))
+        {
             InstallDecision::Repair
         } else {
             InstallDecision::Reuse
         }
+    } else if replace == Replace::Any {
+        InstallDecision::Install
     } else if installed.accepts(protocol) {
         InstallDecision::Reuse
     } else {
@@ -240,13 +256,12 @@ pub struct Inspected {
     pub replaced: bool,
 }
 
-/// Installs the bundled helper when the installed one needs it, deciding again when another PC
-/// changed the helper meanwhile. `repair` also replaces a helper of the bundled version,
-/// `keep_previous` keeps a working previous release as the rollback target instead of the current
-/// one, and `fresh` allows creating a missing helper folder.
+/// Installs the bundled helper when `replace` covers the installed one, deciding again when another
+/// PC changed the helper meanwhile. `keep_previous` keeps a working previous release as the rollback
+/// target instead of the current one, and `fresh` allows creating a missing helper folder.
 pub async fn install_bundled(
     session: &Session,
-    repair: bool,
+    replace: Replace,
     keep_previous: bool,
     fresh: bool,
 ) -> Result<Inspected, InstallError> {
@@ -260,20 +275,13 @@ pub async fn install_bundled(
         {
             return Err(InstallError::Missing);
         }
-        let mut decision = install_decision(
+        let decision = install_decision(
             installed.as_ref(),
             BUNDLED_VERSION,
             bundled_digest(),
             PROTOCOL_VERSION,
+            replace,
         );
-        if repair
-            && decision == InstallDecision::Reuse
-            && installed
-                .as_ref()
-                .is_some_and(|info| info.version == BUNDLED_VERSION)
-        {
-            decision = InstallDecision::Repair;
-        }
         if !matches!(decision, InstallDecision::Install | InstallDecision::Repair) {
             return Ok(Inspected {
                 installed,
@@ -425,7 +433,12 @@ async fn setup_session(
 
     // install: compare the installed helper with the bundled one
     on_stage(Stage::Install);
-    let inspected = install_bundled(session, request.repair, false, true)
+    let replace = if request.repair {
+        Replace::Any
+    } else {
+        Replace::Outdated
+    };
+    let inspected = install_bundled(session, replace, false, true)
         .await
         .map_err(|error| match error {
             InstallError::Ssh(error) => error.into(),
@@ -667,7 +680,7 @@ mod tests {
     fn install_decision_follows_compatibility_rows() {
         use InstallDecision::*;
         let decide = |installed: Option<&HelperInfo>| {
-            install_decision(installed, "26.10.0", Some("aaaa"), 1)
+            install_decision(installed, "26.10.0", Some("aaaa"), 1, Replace::Outdated)
         };
         assert_eq!(decide(None), Install);
         assert_eq!(decide(Some(&info("26.9.0", 1, 1))), Install);
@@ -684,23 +697,55 @@ mod tests {
         let mut changed = info("26.10.0", 1, 1);
         changed.digest = Some("bbbb".into());
         assert_eq!(
-            install_decision(Some(&changed), "26.10.0", Some("aaaa"), 1),
+            install_decision(
+                Some(&changed),
+                "26.10.0",
+                Some("aaaa"),
+                1,
+                Replace::Outdated
+            ),
             Repair
         );
         changed.digest = None;
         assert_eq!(
-            install_decision(Some(&changed), "26.10.0", Some("aaaa"), 1),
+            install_decision(
+                Some(&changed),
+                "26.10.0",
+                Some("aaaa"),
+                1,
+                Replace::Outdated
+            ),
             Repair
         );
         // a newer helper keeps its own files
         let mut newer = info("26.11.0", 1, 1);
         newer.digest = Some("bbbb".into());
         assert_eq!(
-            install_decision(Some(&newer), "26.10.0", Some("aaaa"), 1),
+            install_decision(Some(&newer), "26.10.0", Some("aaaa"), 1, Replace::Outdated),
             Reuse
         );
         // a build without the helper has nothing to repair with
-        assert_eq!(install_decision(Some(&changed), "26.10.0", None, 1), Reuse);
+        assert_eq!(
+            install_decision(Some(&changed), "26.10.0", None, 1, Replace::Outdated),
+            Reuse
+        );
+    }
+
+    #[test]
+    fn replace_widens_what_gets_replaced() {
+        use InstallDecision::*;
+        let decide = |installed: &HelperInfo, replace| {
+            install_decision(Some(installed), "26.10.0", Some("aaaa"), 1, replace)
+        };
+        let same = info("26.10.0", 1, 1);
+        let newer = info("26.11.0", 1, 1);
+        let incompatible = info("26.11.0", 2, 3);
+        assert_eq!(decide(&same, Replace::SameVersion), Repair);
+        assert_eq!(decide(&newer, Replace::SameVersion), Reuse);
+        assert_eq!(decide(&incompatible, Replace::SameVersion), NeedsAppUpdate);
+        assert_eq!(decide(&same, Replace::Any), Repair);
+        assert_eq!(decide(&newer, Replace::Any), Install);
+        assert_eq!(decide(&incompatible, Replace::Any), Install);
     }
 
     #[test]

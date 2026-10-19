@@ -102,7 +102,7 @@ sequenceDiagram
 `steam_frame_set_up_helper` runs these `helper.sh` commands over one SSH session. The stage names
 match the wizard's progress list. Device Manager's Reinstall, for `helperMissing`, runs the same
 command with the saved identity. Repair helper, in the device details, adds `repair`, so `install`
-also replaces a helper of the bundled version. When a repair replaced the helper and the
+replaces any installed helper with the bundled one, a newer one too. When a repair replaced the helper and the
 connection step fails, the core runs `helper.sh rollback`. It offers no repair while the status is
 `hostKeyChanged`, `pairingRemoved`, or `needsAppUpdate`.
 

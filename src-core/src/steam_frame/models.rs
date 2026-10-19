@@ -220,7 +220,7 @@ pub struct SetupRequest {
     pub token: String,
     pub public_key: String,
     pub identity: Identity,
-    /// Replaces the helper even when the bundled version is installed already.
+    /// Replaces any installed helper with the bundled one, a newer helper too.
     #[serde(default)]
     pub repair: bool,
 }

@@ -140,7 +140,7 @@ export class DeviceManagerConfigModalComponent
       // only a helper that answers can be called up to date
       upToDate: state?.status === 'connected',
       repairing: !!this.framePairing.reinstalls()[pairing.id],
-      // a repair needs SSH access, and never replaces a newer helper
+      // a repair needs SSH access
       canRepair: !UNREPAIRABLE_STATUSES.includes(state?.status),
     };
   }
