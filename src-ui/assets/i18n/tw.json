@@ -2887,6 +2887,13 @@
     },
     "title": "狀態自動化"
   },
+  "steamvr-dashboard": {
+    "desktopNotice": {
+      "button": "在這裡顯示",
+      "message": "它一次只能在一個地方顯示。在這裡顯示會隱藏桌面視窗。",
+      "title": "OyasumiVR 已在桌面上開啟"
+    }
+  },
   "systemMicMuteAutomations": {
     "audioDevice": {
       "description": "請務必仔細檢查這是否與你在 VRChat 中使用的麥克風完全相同！",
