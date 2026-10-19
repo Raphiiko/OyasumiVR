@@ -2,7 +2,15 @@ import { Injectable, computed, signal } from '@angular/core';
 import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
 import { error, info } from '@tauri-apps/plugin-log';
-import { BehaviorSubject, combineLatest, distinctUntilChanged, map, Subject } from 'rxjs';
+import {
+  asapScheduler,
+  BehaviorSubject,
+  combineLatest,
+  distinctUntilChanged,
+  map,
+  observeOn,
+  Subject,
+} from 'rxjs';
 import { isEqual } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { SETTINGS_KEY_STEAM_FRAME_PAIRING, SETTINGS_STORE } from '../../globals';
@@ -101,7 +109,9 @@ export class SteamFramePairingService {
     combineLatest([this.connections$, this.pairings$, this.openvr.devices.pipe(map(streamingHmds))])
       .pipe(
         map(([states, pairings, hmds]) => frameControllerOverrides(states, pairings, hmds)),
-        distinctUntilChanged(isEqual)
+        distinctUntilChanged(isEqual),
+        // a synchronous write would publish devices while later subscribers still get the older list
+        observeOn(asapScheduler)
       )
       .subscribe((overrides) => this.openvr.setOverrides(overrides));
   }
