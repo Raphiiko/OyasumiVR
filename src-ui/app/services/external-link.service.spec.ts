@@ -30,7 +30,6 @@ function setup(dashboardVisible: boolean) {
   const click = (anchor: FakeAnchor, init: Partial<MouseEvent> = {}) => {
     const event = {
       button: 0,
-      defaultPrevented: false,
       composedPath: () => [anchor],
       preventDefault: vi.fn(),
       stopPropagation: vi.fn(),
@@ -61,18 +60,22 @@ describe('ExternalLinkService', () => {
     expect(h.show).not.toHaveBeenCalled();
   });
 
-  it('opens new-window links in the browser', () => {
-    const h = setup(false);
+  it('shows a toast for new-window and ctrl clicked links, and leaves the click alone', async () => {
+    const h = setup(true);
     const event = h.click(new FakeAnchor('https://example.com/', '_blank'));
-    expect(event.preventDefault).toHaveBeenCalled();
-    expect(event.stopPropagation).toHaveBeenCalled();
-    expect(openUrl).toHaveBeenCalledWith('https://example.com/');
+    h.click(new FakeAnchor('https://example.com/'), { ctrlKey: true });
+    await vi.waitFor(() => expect(h.show).toHaveBeenCalledTimes(2));
+    expect(event.preventDefault).not.toHaveBeenCalled();
+    expect(event.stopPropagation).not.toHaveBeenCalled();
+    expect(openUrl).not.toHaveBeenCalled();
   });
 
-  it('leaves in-app links and other protocols to the webview', () => {
-    const h = setup(false);
+  it('shows no toast for in-app links and other protocols', async () => {
+    const h = setup(true);
     h.click(new FakeAnchor('https://example.com/'));
     h.click(new FakeAnchor('file:///C:/Windows', '_blank'));
-    expect(openUrl).not.toHaveBeenCalled();
+    h.click(new FakeAnchor('https://example.com/', '_blank'), { button: 1 });
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(h.show).not.toHaveBeenCalled();
   });
 });

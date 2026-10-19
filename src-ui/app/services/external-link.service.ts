@@ -11,9 +11,12 @@ export class ExternalLinkService {
   private openvr = inject(OpenVRService);
   private toasts = inject(ToastService);
 
-  /** Opens `target="_blank"` links, and ctrl or shift clicked links, through open(). */
+  /**
+   * Tells the user about clicked links, which the injected click handlers of tauri-plugin-shell
+   * (`target="_blank"`) and tauri-plugin-opener (also ctrl or shift clicks) open in the browser.
+   */
   init() {
-    window.addEventListener('click', (e) => this.onClick(e), { capture: true });
+    window.addEventListener('click', (e) => this.onClick(e));
   }
 
   /** Opens the URL in the default browser, and tells a user in the SteamVR dashboard it did. */
@@ -24,23 +27,24 @@ export class ExternalLinkService {
       error(`[ExternalLink] Could not open ${url}: ${e}`);
       return;
     }
-    if (await this.openvr.isDashboardVisible()) {
-      this.toasts.show({ title: 'toasts.externalLink.opened' });
-    }
+    await this.notifyOpened();
   }
 
   private onClick(e: MouseEvent) {
-    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.altKey) return;
+    if (e.button !== 0) return;
     const anchor = e
       .composedPath()
       .find((node): node is HTMLAnchorElement => node instanceof HTMLAnchorElement);
     if (!anchor?.href) return;
-    if (anchor.target !== '_blank' && !e.ctrlKey && !e.shiftKey) return;
-    const url = new URL(anchor.href);
-    if (!EXTERNAL_PROTOCOLS.includes(url.protocol)) return;
-    e.preventDefault();
-    // tauri-plugin-shell and tauri-plugin-opener inject click handlers that would open it again
-    e.stopPropagation();
-    void this.open(url.href);
+    if (!EXTERNAL_PROTOCOLS.includes(new URL(anchor.href).protocol)) return;
+    const modifiedClick = (e.ctrlKey || e.shiftKey) && !e.metaKey && !e.altKey;
+    if (anchor.target !== '_blank' && !modifiedClick) return;
+    void this.notifyOpened();
+  }
+
+  private async notifyOpened() {
+    if (await this.openvr.isDashboardVisible()) {
+      this.toasts.show({ title: 'toasts.externalLink.opened' });
+    }
   }
 }
