@@ -49,7 +49,10 @@ export class AppComponent implements OnInit {
             : translate.load(userLanguage);
           return ready.pipe(map(() => userLanguage));
         }),
-        tap((userLanguage) => translate.setActiveLang(userLanguage)),
+        tap((userLanguage) => {
+          translate.setActiveLang(userLanguage);
+          invoke('set_ui_language', { language: userLanguage });
+        }),
         debounceTime(10000),
         tap((userLanguage) =>
           this.telemetry.trackThrottledEvent(
@@ -62,13 +65,6 @@ export class AppComponent implements OnInit {
         takeUntilDestroyed()
       )
       .subscribe();
-    // the core draws this notice itself, in the SteamVR dashboard
-    translate
-      .selectTranslateObject('steamvr-dashboard.desktopNotice')
-      .pipe(takeUntilDestroyed())
-      .subscribe((copy) =>
-        invoke('openvr_set_dashboard_notice', { language: translate.getActiveLang(), ...copy })
-      );
     // Snowverlay
     this.settings.settings
       .pipe(

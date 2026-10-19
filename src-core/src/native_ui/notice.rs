@@ -1,9 +1,9 @@
 use super::MUTED;
+use crate::i18n;
 use dear_imgui_rs::{Condition, Ui, WindowFlags};
-use std::sync::{LazyLock, Mutex};
 
-/// Translated copy for the notice, pushed by the UI whenever its language changes.
-#[derive(Clone)]
+/// The notice text in the UI's current language.
+#[derive(Clone, PartialEq)]
 pub struct NoticeCopy {
     pub language: String,
     pub title: String,
@@ -11,16 +11,16 @@ pub struct NoticeCopy {
     pub button: String,
 }
 
-pub static NOTICE_COPY: LazyLock<Mutex<NoticeCopy>> = LazyLock::new(|| {
-    Mutex::new(NoticeCopy {
-        language: "en".into(),
-        title: "OyasumiVR is open on your desktop".into(),
-        message:
-            "It can only show in one place at a time. Show it here to hide the desktop window."
-                .into(),
-        button: "Show it here".into(),
-    })
-});
+impl NoticeCopy {
+    pub fn current() -> Self {
+        Self {
+            language: i18n::language(),
+            title: i18n::translate("steamvr-dashboard.desktopNotice.title"),
+            message: i18n::translate("steamvr-dashboard.desktopNotice.message"),
+            button: i18n::translate("steamvr-dashboard.desktopNotice.button"),
+        }
+    }
+}
 
 const TITLE_SIZE: f32 = 76.0;
 const MESSAGE_SIZE: f32 = 44.0;

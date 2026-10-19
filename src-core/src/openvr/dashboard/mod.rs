@@ -551,15 +551,22 @@ impl DashboardOverlay {
             .map_err(message)
     }
 
-    /// Draws the notice while the desktop window holds the UI; its button takes the UI back.
+    /// Draws the notice while the desktop window holds the UI.
+    /// The notice button, or hiding the desktop window again, gives the UI back to the dashboard.
     fn tick_notice(&mut self) -> Result<(), String> {
+        if !self.window.is_visible().map_err(message)? {
+            log::info!("[Dashboard] Desktop window hidden, taking the UI back");
+            self.notice = None;
+            self.failed = false;
+            return Ok(());
+        }
         if self.notice_unavailable {
             self.failed_notice();
             return Ok(());
         }
 
         // recreate the surface when the language, and with it the font, changes
-        let copy = notice_copy();
+        let copy = NoticeCopy::current();
         if self
             .notice
             .as_ref()
@@ -926,13 +933,6 @@ unsafe fn decode_bgra(stream: &IStream) -> Result<Vec<u8>, String> {
     bgra.CopyPixels(std::ptr::null(), WIDTH * 4, &mut pixels)
         .map_err(message)?;
     Ok(pixels)
-}
-
-fn notice_copy() -> NoticeCopy {
-    crate::native_ui::notice::NOTICE_COPY
-        .lock()
-        .unwrap()
-        .clone()
 }
 
 fn keyboard_text(input: &[std::ffi::c_char]) -> String {
