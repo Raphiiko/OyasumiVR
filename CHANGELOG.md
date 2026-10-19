@@ -23,6 +23,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Fixed turning devices on or off from the Device Manager not showing up in the event log
 - Fixed turning off base stations from the Device Manager always putting them in sleep mode, instead of the power-off mode you chose
 - Fixed the automation that turns off charging devices turning off a controller you had just unplugged and turned on
+- Fixed run automations opening a command prompt window on your desktop every time they ran
 
 ## [26.10.3]
 
