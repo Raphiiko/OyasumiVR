@@ -1,13 +1,13 @@
 import { inject } from '@angular/core';
 import { ElevatedSidecarService } from '../../elevated-sidecar.service';
 import { MessageMonitor } from './message-monitor';
-import { appLogDir } from '@tauri-apps/api/path';
-import { invoke } from '@tauri-apps/api/core';
 import { ExternalLinkService } from '../../external-link.service';
+import { ShowInFolderService } from '../../show-in-folder.service';
 
 export class ElevatedFeaturesMessageMonitor extends MessageMonitor {
   private externalLink = inject(ExternalLinkService);
   private elevatedFeatures = inject(ElevatedSidecarService);
+  private showInFolder = inject(ShowInFolderService);
 
   public override init(): void {
     this.elevatedFeatures.failure.subscribe((failure) => {
@@ -35,10 +35,7 @@ export class ElevatedFeaturesMessageMonitor extends MessageMonitor {
           },
           {
             label: 'message-center.actions.openLogFolder',
-            action: async () => {
-              const path = (await appLogDir()) + '\\OyasumiVR.log';
-              await invoke('show_in_folder', { path });
-            },
+            action: () => this.showInFolder.showLogFile(),
           },
           {
             label: 'message-center.actions.supportDiscord',

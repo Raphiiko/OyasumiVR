@@ -20,6 +20,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 ### Added
 
 - Added a message that tells you when a link opened in your browser, while you use OyasumiVR from the SteamVR dashboard
+- Added a message that tells you when a folder opened on your desktop, such as the log folder
 
 ### Changed
 

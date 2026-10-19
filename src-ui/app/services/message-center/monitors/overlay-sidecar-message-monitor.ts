@@ -11,9 +11,8 @@ import {
   skip,
 } from 'rxjs';
 import { isEqual } from 'lodash';
-import { appLogDir } from '@tauri-apps/api/path';
-import { invoke } from '@tauri-apps/api/core';
 import { ExternalLinkService } from '../../external-link.service';
+import { ShowInFolderService } from '../../show-in-folder.service';
 
 // the sidecar reports its start before it builds any overlays, so a crash loop reads as start then stop
 const FAILED_STARTS_BEFORE_WARNING = 3;
@@ -22,6 +21,7 @@ const HEALTHY_AFTER_MS = 60000;
 export class OverlaySidecarMessageMonitor extends MessageMonitor {
   private externalLink = inject(ExternalLinkService);
   private appSettings = inject(AppSettingsService);
+  private showInFolder = inject(ShowInFolderService);
   private failedStarts = new BehaviorSubject(0);
   private healthyTimeout?: ReturnType<typeof setTimeout>;
 
@@ -78,10 +78,7 @@ export class OverlaySidecarMessageMonitor extends MessageMonitor {
             : [
                 {
                   label: 'message-center.actions.openLogFolder',
-                  action: async () => {
-                    const path = (await appLogDir()) + '\\OyasumiVR.log';
-                    await invoke('show_in_folder', { path });
-                  },
+                  action: () => this.showInFolder.showLogFile(),
                 },
                 {
                   label: 'message-center.actions.supportDiscord',

@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { invoke } from '@tauri-apps/api/core';
-import { appLogDir } from '@tauri-apps/api/path';
 import { error } from '@tauri-apps/plugin-log';
 import { firstValueFrom } from 'rxjs';
 import { OpenVRService } from '../../../../../../services/openvr.service';
+import { ShowInFolderService } from '../../../../../../services/show-in-folder.service';
 import { ToastService } from '../../../../../../services/toast.service';
 
 const MANIFEST_REREGISTER_ERRORS = [
@@ -25,12 +25,12 @@ export class SettingsTroubleshootingToolsTabComponent {
 
   constructor(
     protected openvr: OpenVRService,
-    private toasts: ToastService
+    private toasts: ToastService,
+    private showInFolder: ShowInFolderService
   ) {}
 
   async openLogsFolder() {
-    const path = await appLogDir().then((dir) => `${dir}\\OyasumiVR.log`);
-    await invoke('show_in_folder', { path });
+    await this.showInFolder.showLogFile();
   }
 
   async reregisterVRManifest() {
