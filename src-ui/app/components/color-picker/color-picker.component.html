@@ -4,9 +4,9 @@
   [style.--picked-color]="cssColor()"
   [class.off]="hexValue() === '000000'"
   [disabled]="disabled()"
-  (click)="toggle()"
+  [attr.popovertarget]="popoverId"
 ></button>
-<div class="picker" popover #popover>
+<div class="picker" popover [id]="popoverId">
   <div class="spectrum" #pickerHost></div>
   <div class="presets">
     @for (preset of presets; track $index) {

@@ -29,6 +29,8 @@ const PRESETS: Rgb[] = [
   [255, 0, 140],
 ];
 
+let nextPopoverId = 0;
+
 @Component({
   selector: 'app-color-picker',
   templateUrl: './color-picker.component.html',
@@ -42,8 +44,8 @@ export class ColorPickerComponent implements AfterViewInit {
   protected readonly hexValue = computed(() => rgbToHex(this.color()));
   protected readonly cssColor = computed(() => `rgb(${this.color().join(', ')})`);
   protected readonly presets = PRESETS;
+  protected readonly popoverId = `color-picker-${nextPopoverId++}`;
 
-  private readonly popover = viewChild.required<ElementRef<HTMLElement>>('popover');
   private readonly pickerHost = viewChild.required<ElementRef<HTMLElement>>('pickerHost');
   private readonly picker = document.createElement('rgb-color-picker') as RgbColorPicker;
 
@@ -62,10 +64,6 @@ export class ColorPickerComponent implements AfterViewInit {
     this.pickerHost().nativeElement.append(this.picker);
   }
 
-  protected toggle() {
-    if (!this.disabled()) this.popover().nativeElement.togglePopover();
-  }
-
   protected isSelected(preset: Rgb): boolean {
     return preset.every((v, i) => v === this.color()[i]);
   }
@@ -80,7 +78,7 @@ export class ColorPickerComponent implements AfterViewInit {
   /** Applies a typed channel value clamped to 0-255, then rewrites the field to match. */
   protected setChannel(index: number, field: HTMLInputElement) {
     const channel = Math.round(Number(field.value));
-    if (Number.isFinite(channel)) {
+    if (field.value.trim() !== '' && Number.isFinite(channel)) {
       const color = [...this.color()] as Rgb;
       color[index] = Math.min(255, Math.max(0, channel));
       this.color.set(color);
