@@ -645,7 +645,10 @@ export class AppModule {
             Promise.resolve(this.errorReportingService.init())
           );
           this.storeSnapshotService.enablePeriodicSnapshots();
-          this.externalLinkService.init();
+          await this.logInit(
+            'Initializing link handling',
+            Promise.resolve(this.externalLinkService.init())
+          );
           // Clean cache
           await this.logInit('Cleaning cache', CachedValue.cleanCache()).catch(() => {}); // Allow initialization to continue if failed
           // Preload assets (Not blocking)
