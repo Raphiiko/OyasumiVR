@@ -5,9 +5,9 @@ import {
   AppSettings,
   ExecutableReferenceStatus,
 } from '../../../../../models/settings';
-import { open as openFile } from '@tauri-apps/plugin-dialog';
 
 import { GpuAutomationsService } from '../../../../../services/gpu-automations.service';
+import { FileDialogService } from '../../../../../services/file-dialog.service';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   MSIAfterburnerAutomationConfig,
@@ -56,7 +56,8 @@ export class MsiAfterburnerPaneComponent implements OnInit {
 
   constructor(
     protected gpuAutomations: GpuAutomationsService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private fileDialog: FileDialogService
   ) {}
 
   ngOnInit() {
@@ -105,7 +106,7 @@ export class MsiAfterburnerPaneComponent implements OnInit {
   }
 
   async browseForMsiAfterburner() {
-    const path = await openFile({
+    const path = await this.fileDialog.open({
       defaultPath: 'C:\\Program Files (x86)\\MSI Afterburner',
       directory: false,
       multiple: false,

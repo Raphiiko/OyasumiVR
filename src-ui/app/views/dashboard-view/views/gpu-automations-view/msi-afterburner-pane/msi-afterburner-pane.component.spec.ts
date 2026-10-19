@@ -6,7 +6,6 @@ import { AUTOMATION_CONFIGS_DEFAULT } from '../../../../../models/automations';
 import type { ExecutableReferenceStatus } from '../../../../../models/settings';
 
 const openFile = vi.hoisted(() => vi.fn());
-vi.mock('@tauri-apps/plugin-dialog', () => ({ open: openFile }));
 type Dependencies = ConstructorParameters<typeof MsiAfterburnerPaneComponent>;
 const typed = 'C:\\typed\\MSIAfterburner.exe';
 const browsed = 'C:\\browsed\\MSIAfterburner.exe';
@@ -38,7 +37,8 @@ function setup() {
   };
   const component = new MsiAfterburnerPaneComponent(
     gpu as unknown as Dependencies[0],
-    destroy as unknown as Dependencies[1]
+    destroy as unknown as Dependencies[1],
+    { open: openFile } as unknown as Dependencies[2]
   );
   component.ngOnInit();
   return { component, config, status, setPath, destroy, gpu };

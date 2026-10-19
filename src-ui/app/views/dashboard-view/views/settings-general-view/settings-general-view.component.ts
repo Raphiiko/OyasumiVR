@@ -1,6 +1,5 @@
 import { Component, DestroyRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { debounceTime, distinctUntilChanged, filter, Subject } from 'rxjs';
-import { open as openFile } from '@tauri-apps/plugin-dialog';
 import {
   APP_SETTINGS_DEFAULT,
   AppSettings,
@@ -14,6 +13,7 @@ import { TelemetryService } from 'src-ui/app/services/telemetry/telemetry.servic
 import { LighthouseConsoleService } from 'src-ui/app/services/lighthouse-console.service';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 import { ElevatedSidecarService } from 'src-ui/app/services/elevated-sidecar.service';
+import { FileDialogService } from 'src-ui/app/services/file-dialog.service';
 
 import { LANGUAGES } from '../../../../globals';
 import { vshrink } from '../../../../utils/animations';
@@ -82,7 +82,8 @@ export class SettingsGeneralViewComponent implements OnInit {
     private destroyRef: DestroyRef,
     private settingsService: AppSettingsService,
     private openvr: OpenVRService,
-    protected elevatedSidecar: ElevatedSidecarService
+    protected elevatedSidecar: ElevatedSidecarService,
+    private fileDialog: FileDialogService
   ) {}
 
   ngOnInit(): void {
@@ -147,7 +148,7 @@ export class SettingsGeneralViewComponent implements OnInit {
   }
 
   async browseForLighthouseConsole() {
-    const path = await openFile({
+    const path = await this.fileDialog.open({
       defaultPath:
         'C:\\Program Files (x86)\\Steam\\steamapps\\common\\SteamVR\\tools\\lighthouse\\bin\\win64',
       directory: false,

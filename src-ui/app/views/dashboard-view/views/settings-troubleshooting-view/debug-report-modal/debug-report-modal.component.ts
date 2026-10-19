@@ -9,10 +9,10 @@ import {
 } from '@angular/core';
 import { invoke } from '@tauri-apps/api/core';
 import { writeText } from '@tauri-apps/plugin-clipboard-manager';
-import { save } from '@tauri-apps/plugin-dialog';
 import { error } from '@tauri-apps/plugin-log';
 import { BaseModalComponent } from '../../../../../components/base-modal/base-modal.component';
 import { DebugReportService } from '../../../../../services/debug-report.service';
+import { FileDialogService } from '../../../../../services/file-dialog.service';
 import { ModalOptions } from '../../../../../services/modal.service';
 import { ToastService } from '../../../../../services/toast.service';
 import { fadeUp } from '../../../../../utils/animations';
@@ -48,7 +48,8 @@ export class DebugReportModalComponent
   constructor(
     private toasts: ToastService,
     private debugReports: DebugReportService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private fileDialog: FileDialogService
   ) {
     super();
   }
@@ -92,7 +93,7 @@ export class DebugReportModalComponent
     const date = [now.getFullYear(), now.getMonth() + 1, now.getDate()]
       .map((part) => part.toString().padStart(2, '0'))
       .join('-');
-    const path = await save({
+    const path = await this.fileDialog.save({
       defaultPath: `OyasumiVR-debug-report-${date}.zip`,
       filters: [{ name: 'Zip', extensions: ['zip'] }],
     });
