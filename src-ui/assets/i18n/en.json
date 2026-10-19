@@ -3061,6 +3061,9 @@
         "title": "Could not turn off {name}"
       }
     },
+    "externalLink": {
+      "opened": "Link opened in your browser"
+    },
     "oscTest": {
       "noTarget": {
         "message": "OyasumiVR has no OSC target. Start VRChat with OSC enabled, or set a custom target in the OSC settings.",

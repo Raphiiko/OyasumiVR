@@ -1,7 +1,7 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { SleepingAnimationPreset } from '../../models/sleeping-animation-presets';
-import { open } from '@tauri-apps/plugin-shell';
+import { ExternalLinkService } from '../../services/external-link.service';
 import { fadeUp } from '../../utils/animations';
 
 interface SleepingAnimationPresetModalInputModel {
@@ -21,6 +21,7 @@ export class SleepingAnimationPresetModalComponent
   implements OnInit, SleepingAnimationPresetModalInputModel
 {
   preset?: SleepingAnimationPreset;
+  private externalLink = inject(ExternalLinkService);
 
   constructor() {
     super();
@@ -29,6 +30,6 @@ export class SleepingAnimationPresetModalComponent
   ngOnInit(): void {}
 
   async openUrl(url: string) {
-    await open(url);
+    await this.externalLink.open(url);
   }
 }

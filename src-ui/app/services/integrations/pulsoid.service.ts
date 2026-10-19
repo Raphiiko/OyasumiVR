@@ -26,8 +26,8 @@ import {
   PULSOID_API_SETTINGS_DEFAULT,
   PulsoidApiSettings,
 } from '../../models/pulsoid-api-settings';
-import * as shell from '@tauri-apps/plugin-shell';
 import { protectSecret, unprotectSecret } from '../../utils/secrets';
+import { ExternalLinkService } from '../external-link.service';
 
 const HISTORY_LENGTH = 1000 * 60 * 60 * 12; // 12 hours
 
@@ -78,7 +78,10 @@ export class PulsoidService {
     })
   );
 
-  constructor(private toasts: ToastService) {}
+  constructor(
+    private toasts: ToastService,
+    private externalLink: ExternalLinkService
+  ) {}
 
   async init() {
     await this.loadSettings();
@@ -106,7 +109,7 @@ export class PulsoidService {
   }
 
   public async login() {
-    await shell.open(this.getLoginUrl());
+    await this.externalLink.open(this.getLoginUrl());
   }
 
   public getLoginUrl(): string {

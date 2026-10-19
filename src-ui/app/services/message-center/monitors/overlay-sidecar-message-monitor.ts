@@ -13,13 +13,14 @@ import {
 import { isEqual } from 'lodash';
 import { appLogDir } from '@tauri-apps/api/path';
 import { invoke } from '@tauri-apps/api/core';
-import { openUrl } from '@tauri-apps/plugin-opener';
+import { ExternalLinkService } from '../../external-link.service';
 
 // the sidecar reports its start before it builds any overlays, so a crash loop reads as start then stop
 const FAILED_STARTS_BEFORE_WARNING = 3;
 const HEALTHY_AFTER_MS = 60000;
 
 export class OverlaySidecarMessageMonitor extends MessageMonitor {
+  private externalLink = inject(ExternalLinkService);
   private appSettings = inject(AppSettingsService);
   private failedStarts = new BehaviorSubject(0);
   private healthyTimeout?: ReturnType<typeof setTimeout>;
@@ -84,7 +85,7 @@ export class OverlaySidecarMessageMonitor extends MessageMonitor {
                 },
                 {
                   label: 'message-center.actions.supportDiscord',
-                  action: () => openUrl('https://discord.gg/7MqdPJhYxC'),
+                  action: () => this.externalLink.open('https://discord.gg/7MqdPJhYxC'),
                 },
               ],
         });

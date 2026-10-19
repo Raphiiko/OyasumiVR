@@ -3,9 +3,10 @@ import { VRChatService } from '../../vrchat-api/vrchat.service';
 import { MessageMonitor } from './message-monitor';
 import { OscService } from '../../osc.service';
 import { combineLatest, debounceTime, distinctUntilChanged, filter, map, merge } from 'rxjs';
-import { openUrl } from '@tauri-apps/plugin-opener';
+import { ExternalLinkService } from '../../external-link.service';
 
 export class VRChatOSCMessageMonitor extends MessageMonitor {
+  private externalLink = inject(ExternalLinkService);
   private vrchat = inject(VRChatService);
   private osc = inject(OscService);
 
@@ -46,7 +47,7 @@ export class VRChatOSCMessageMonitor extends MessageMonitor {
               {
                 label: 'message-center.actions.moreInfo',
                 action: () => {
-                  openUrl(
+                  this.externalLink.open(
                     'https://raphii.co/oyasumivr/hidden/troubleshooting/vrchat-osc-unavailable/'
                   );
                 },

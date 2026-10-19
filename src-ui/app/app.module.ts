@@ -272,6 +272,7 @@ import { RunAutomationsViewComponent } from './views/dashboard-view/views/run-au
 import { VRChatGroupAutomationsService } from './services/vrchat-group-automations.service';
 import { RunAutomationsService } from './services/run-automations.service';
 import { openUrl } from '@tauri-apps/plugin-opener';
+import { ExternalLinkService } from './services/external-link.service';
 import { emit as globalEmit } from '@tauri-apps/api/event';
 import { DeviceManagerViewComponent } from './views/dashboard-view/views/device-manager-view/device-manager-view.component';
 import { DeviceManagerService } from './services/device-manager.service';
@@ -525,6 +526,7 @@ export class AppModule {
     private notificationService: NotificationService,
     private steamService: SteamService,
     private deepLinkService: DeepLinkService,
+    private externalLinkService: ExternalLinkService,
     private sleepPreparationService: SleepPreparationService,
     private pulsoidService: PulsoidService,
     private quitWithSteamVRService: QuitWithSteamVRService,
@@ -643,6 +645,7 @@ export class AppModule {
             Promise.resolve(this.errorReportingService.init())
           );
           this.storeSnapshotService.enablePeriodicSnapshots();
+          this.externalLinkService.init();
           // Clean cache
           await this.logInit('Cleaning cache', CachedValue.cleanCache()).catch(() => {}); // Allow initialization to continue if failed
           // Preload assets (Not blocking)
