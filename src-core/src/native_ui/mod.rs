@@ -5,7 +5,11 @@ pub mod notice;
 pub mod renderer;
 mod steamvr;
 
-use dear_imgui_rs::{Context, FontConfig, FontSource, MouseButton, StyleColor};
+use std::path::Path;
+
+use dear_imgui_rs::{
+    Context, FontConfig, FontSource, MouseButton, StbTrueTypeFontData, StyleColor,
+};
 
 const BACKGROUND: [f32; 4] = rgb(0x15, 0x15, 0x15);
 const TEXT: [f32; 4] = rgb(0xf8, 0xf8, 0xf2);
@@ -24,7 +28,7 @@ pub struct NativeUi {
 }
 
 impl NativeUi {
-    /// `language` is an OyasumiVR locale code, such as `ja`; it picks the fallback font for its script.
+    /// `language` is an OyasumiVR locale code, such as `ja`; it picks the fonts for its script.
     pub fn new(width: u32, height: u32, language: &str) -> Result<Self, String> {
         let mut context = Context::try_create().map_err(|error| error.to_string())?;
         let _ = context.set_ini_filename(None::<String>);
@@ -62,28 +66,38 @@ impl NativeUi {
     }
 }
 
-/// Loads a UI font plus a fallback for scripts it lacks, or imgui's built-in font when neither exists.
+/// Copied there by `scripts/pre-build.js`; relative to the cwd, which `main.rs` sets to the exe directory.
+const FONT_DIR: &str = "resources/fonts";
+
+/// Poppins SemiBold, which the OyasumiVR UI loads for every language.
+const UI_FONTS: [&str; 2] = [
+    "poppins-latin-600-normal.woff2",
+    "poppins-latin-ext-600-normal.woff2",
+];
+
+/// Loads the fonts the OyasumiVR UI uses for `language`, or imgui's built-in font when none load.
 fn load_fonts(context: &Context, language: &str) {
-    // other platforms get imgui's built-in Latin font
-    let files: Vec<Vec<u8>> = [
-        Some(r"C:\Windows\Fonts\seguisb.ttf"),
-        fallback_font(language),
-    ]
-    .into_iter()
-    .flatten()
-    .filter_map(|path| {
-        std::fs::read(path)
-            .inspect_err(|error| log::warn!("[NativeUi] Could not read font {path}: {error}"))
-            .ok()
-    })
-    .collect();
-    // only the raw loader reads the .ttc collections Windows ships for Japanese and Chinese
-    let mut sources: Vec<FontSource> = files
-        .iter()
+    // bundled fonts first, so their glyphs win over the system fallback for the same character
+    let bundled = UI_FONTS
+        .into_iter()
+        .chain(cjk_font(language))
+        .map(|name| (name, read_woff2(&Path::new(FONT_DIR).join(name))));
+    let system = system_fonts(language)
+        .into_iter()
+        .map(|path| (path, read_ttf(Path::new(path))));
+    let fonts: Vec<StbTrueTypeFontData> = bundled
+        .chain(system)
+        .filter_map(|(name, font)| {
+            font.inspect_err(|error| log::warn!("[NativeUi] Could not load font {name}: {error}"))
+                .ok()
+        })
+        .collect();
+
+    let mut sources: Vec<FontSource> = fonts
+        .into_iter()
         .enumerate()
-        .map(|(index, data)| {
-            unsafe { FontSource::ttf_data(data) }
-                .with_config(FontConfig::new().merge_mode(index > 0))
+        .map(|(index, font)| {
+            FontSource::stb_truetype(font).with_config(FontConfig::new().merge_mode(index > 0))
         })
         .collect();
     if sources.is_empty() {
@@ -92,13 +106,68 @@ fn load_fonts(context: &Context, language: &str) {
     context.font_atlas().add_font(&sources);
 }
 
-fn fallback_font(language: &str) -> Option<&'static str> {
+/// The Noto Sans font the OyasumiVR UI loads for `language`, which also picks the Han glyph shapes.
+fn cjk_font(language: &str) -> Option<&'static str> {
     match language {
-        "ja" => Some(r"C:\Windows\Fonts\YuGothM.ttc"),
-        "ko" => Some(r"C:\Windows\Fonts\malgun.ttf"),
-        "cn" => Some(r"C:\Windows\Fonts\msyh.ttc"),
-        "tw" => Some(r"C:\Windows\Fonts\msjh.ttc"),
-        "th" => Some(r"C:\Windows\Fonts\LeelawUI.ttf"),
+        "ja" => Some("noto-sans-jp-japanese-600-normal.woff2"),
+        "ko" => Some("noto-sans-kr-korean-600-normal.woff2"),
+        "cn" => Some("noto-sans-sc-chinese-simplified-600-normal.woff2"),
+        "tw" => Some("noto-sans-tc-chinese-traditional-600-normal.woff2"),
         _ => None,
+    }
+}
+
+/// The fonts a web view on Windows falls back to for scripts the bundled fonts lack, such as Cyrillic and Thai.
+fn system_fonts(language: &str) -> Vec<&'static str> {
+    let mut fonts = vec![r"C:\Windows\Fonts\seguisb.ttf"];
+    if language == "th" {
+        fonts.push(r"C:\Windows\Fonts\LeelawUI.ttf");
+    }
+    fonts
+}
+
+fn read_woff2(path: &Path) -> Result<StbTrueTypeFontData, String> {
+    let woff2 = std::fs::read(path).map_err(|error| error.to_string())?;
+    let ttf = woff2_patched::convert_woff2_to_ttf(&mut woff2.as_slice())
+        .map_err(|error| error.to_string())?;
+    StbTrueTypeFontData::from_bytes(ttf).map_err(|error| error.to_string())
+}
+
+fn read_ttf(path: &Path) -> Result<StbTrueTypeFontData, String> {
+    StbTrueTypeFontData::from_file(path).map_err(|error| error.to_string())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn every_bundled_font_loads_into_an_atlas() {
+        let names = UI_FONTS
+            .into_iter()
+            .chain(["ja", "ko", "cn", "tw"].into_iter().filter_map(cjk_font));
+        let context = Context::create();
+        for name in names {
+            // the fontsource packages the build copies the fonts from
+            let package = [
+                "poppins",
+                "noto-sans-jp",
+                "noto-sans-kr",
+                "noto-sans-sc",
+                "noto-sans-tc",
+            ]
+            .into_iter()
+            .find(|package| name.starts_with(package))
+            .unwrap();
+            let path = Path::new(env!("CARGO_MANIFEST_DIR"))
+                .join("../node_modules/@fontsource")
+                .join(package)
+                .join("files")
+                .join(name);
+            let font = read_woff2(&path).unwrap_or_else(|error| panic!("{name}: {error}"));
+            context
+                .font_atlas()
+                .add_font(&[FontSource::stb_truetype(font)]);
+        }
     }
 }
