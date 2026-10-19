@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { info } from '@tauri-apps/plugin-log';
+import { listen } from '@tauri-apps/api/event';
 import { OVRDevice } from '../models/ovr-device';
 import { LighthouseConsoleService } from './lighthouse-console.service';
 import { OpenVRService } from './openvr.service';
@@ -17,7 +18,28 @@ export class DeviceControlService {
     private steamFrame: SteamFramePairingService,
     private openvr: OpenVRService,
     private toasts: ToastService
-  ) {}
+  ) {
+    void listen<string>('turnOffOVRDevices', (event) => this.onOverlayTurnOff(event.payload));
+  }
+
+  /** Turns off the devices the overlay asks for, by serial. */
+  private async onOverlayTurnOff(payload: string) {
+    let serials: unknown;
+    try {
+      serials = JSON.parse(payload);
+    } catch {
+      return;
+    }
+    if (
+      !Array.isArray(serials) ||
+      !serials.every((serial): serial is string => typeof serial === 'string' && serial.length > 0)
+    )
+      return;
+    const devices = (await firstValueFrom(this.openvr.devices)).filter(
+      (device) => device.serialNumber && serials.includes(device.serialNumber)
+    );
+    await this.turnOffDevices(devices);
+  }
 
   /** Resolves the devices a turn-off request was sent to. */
   async turnOffDevices(ovrDevices: OVRDevice[]): Promise<OVRDevice[]> {

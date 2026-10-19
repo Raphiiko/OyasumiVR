@@ -6,7 +6,6 @@ import { invoke } from '@tauri-apps/api/core';
 import { OVRDevice } from '../models/ovr-device';
 import { error, info } from '@tauri-apps/plugin-log';
 import { ExecutableReferenceStatus } from '../models/settings';
-import { listen } from '@tauri-apps/api/event';
 import { ToastService } from './toast.service';
 
 @Injectable({
@@ -39,23 +38,6 @@ export class LighthouseConsoleService {
           this.setConsolePath(currentSettings.lighthouseConsolePath, false);
         }
       });
-    await listen<string>('turnOffOVRDevices', async (event) => {
-      let deviceSerialNumbers: unknown;
-      try {
-        deviceSerialNumbers = JSON.parse(event.payload);
-      } catch {
-        return;
-      }
-      if (
-        !Array.isArray(deviceSerialNumbers) ||
-        !deviceSerialNumbers.every(
-          (serialNumber): serialNumber is string =>
-            typeof serialNumber === 'string' && serialNumber.length > 0
-        )
-      )
-        return;
-      await this.queuePowerOff(deviceSerialNumbers);
-    });
   }
 
   async setConsolePath(path: string, save = true) {
