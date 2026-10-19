@@ -50,7 +50,7 @@ pub struct NoticeSurface {
     commands: Sender<Command>,
     table: raw::VR_IVROverlay_FnTable,
     overlay: u64,
-    /// Last pointer position, or None while the pointer is off the surface.
+    /// Last pointer position in whole pixels, or None while the pointer is off the surface.
     pointer: Option<(f32, f32)>,
     /// Frames still to draw; input and creation set it, each queued frame lowers it.
     redraws: u8,
@@ -77,7 +77,9 @@ impl NoticeSurface {
 
     /// `x` and `y` are surface pixels from the top left.
     pub fn pointer_move(&mut self, x: f32, y: f32) {
-        if self.pointer.replace((x, y)) != Some((x, y)) {
+        // SteamVR repeats a resting pointer's position with tiny float jitter, so compare whole pixels
+        let pixel = (x.round(), y.round());
+        if self.pointer.replace(pixel) != Some(pixel) {
             self.send(Command::Move(x, y));
         }
     }

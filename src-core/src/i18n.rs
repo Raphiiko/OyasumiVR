@@ -4,7 +4,7 @@ use serde_json::Value;
 use std::sync::{LazyLock, RwLock};
 use tauri::AppHandle;
 
-/// Embedded so lookups work in dev builds, which do not bundle the frontend assets.
+/// Embedded, so English text is there even when no translation file can be read.
 const ENGLISH: &str = include_str!("../../src-ui/assets/i18n/en.json");
 
 struct Translations {
@@ -26,15 +26,22 @@ static TRANSLATIONS: LazyLock<RwLock<Translations>> = LazyLock::new(|| {
 #[tauri::command]
 pub fn set_ui_language(app: AppHandle, language: String) {
     let active = (language != "en")
-        .then(|| {
-            app.asset_resolver()
-                .get(format!("assets/i18n/{language}.json"))
-        })
+        .then(|| read_translations(&app, &language))
         .flatten()
-        .and_then(|asset| serde_json::from_slice(&asset.bytes).ok());
+        .and_then(|bytes| serde_json::from_slice(&bytes).ok());
     let mut translations = TRANSLATIONS.write().unwrap();
     translations.language = language;
     translations.active = active;
+}
+
+fn read_translations(app: &AppHandle, language: &str) -> Option<Vec<u8>> {
+    let path = format!("assets/i18n/{language}.json");
+    if tauri::is_dev() {
+        // dev builds embed no frontend assets, so read the file from the source tree
+        let source = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../src-ui");
+        return std::fs::read(source.join(path)).ok();
+    }
+    app.asset_resolver().get(path).map(|asset| asset.bytes)
 }
 
 pub fn language() -> String {
