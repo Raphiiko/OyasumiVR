@@ -12,6 +12,7 @@ import {
 } from '../components/confirm-modal/confirm-modal.component';
 import { TelemetryService } from './telemetry/telemetry.service';
 import { OpenVRService } from './openvr.service';
+import { ElevationPromptSceneModalComponent } from '../components/elevation-prompt-scene-modal/elevation-prompt-scene-modal.component';
 
 export type EnableResult =
   | { result: 'ok' }
@@ -205,17 +206,7 @@ export class ElevatedSidecarService {
     // the enable can finish while the dashboard check runs
     if (!inDashboard || !this.interactiveEnableRunning) return;
     this.modalService
-      .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(
-        ConfirmModalComponent,
-        {
-          title: 'settings.general.adminPrivileges.dialogs.promptOnDesktop.title',
-          message: 'settings.general.adminPrivileges.dialogs.promptOnDesktop.message',
-          confirmButtonText: 'shared.modals.close',
-          showCancel: false,
-          size: 'lg',
-        },
-        { id: PROMPT_NOTICE_MODAL_ID }
-      )
+      .addModal(ElevationPromptSceneModalComponent, undefined, { id: PROMPT_NOTICE_MODAL_ID })
       .subscribe();
   }
 

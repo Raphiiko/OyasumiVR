@@ -1,0 +1,88 @@
+.modal {
+  width: 36em;
+}
+
+.illustration {
+  display: flex;
+  justify-content: center;
+  padding: 2.5em 2em 2em;
+  background: var(--color-surface-1);
+  border-bottom: 1px solid var(--color-surface-3);
+
+  svg {
+    width: 22em;
+    height: auto;
+  }
+}
+
+.pane-content {
+  text-align: center;
+
+  h2 {
+    font-size: 1.5em;
+    font-weight: 500;
+  }
+
+  p {
+    margin-bottom: 0;
+    color: var(--color-text-3);
+  }
+}
+
+.pane-actions {
+  justify-content: space-between;
+
+  .hint {
+    padding-left: 1em;
+    color: var(--color-text-4);
+  }
+}
+
+svg :is(.dot, .prompt) {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+svg .dot {
+  animation: dot-travel 1.8s ease-in-out infinite;
+
+  &:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+
+  &:nth-child(4) {
+    animation-delay: 0.6s;
+  }
+}
+
+svg .prompt {
+  animation: prompt-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes dot-travel {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.8);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+@keyframes prompt-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  svg * {
+    animation: none !important;
+  }
+}
