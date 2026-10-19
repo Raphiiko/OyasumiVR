@@ -25,8 +25,8 @@ pub struct NativeUi {
 
 impl NativeUi {
     /// `language` is an OyasumiVR locale code, such as `ja`; it picks the fallback font for its script.
-    pub fn new(width: u32, height: u32, language: &str) -> Self {
-        let mut context = Context::create();
+    pub fn new(width: u32, height: u32, language: &str) -> Result<Self, String> {
+        let mut context = Context::try_create().map_err(|error| error.to_string())?;
         let _ = context.set_ini_filename(None::<String>);
         context
             .io_mut()
@@ -41,7 +41,7 @@ impl NativeUi {
         style.set_color(StyleColor::Button, PRIMARY);
         style.set_color(StyleColor::ButtonHovered, PRIMARY_HOVER);
         style.set_color(StyleColor::ButtonActive, PRIMARY_ACTIVE);
-        Self { context }
+        Ok(Self { context })
     }
 
     /// `x` and `y` are surface pixels from the top left.
@@ -64,7 +64,7 @@ impl NativeUi {
 
 /// Loads a UI font plus a fallback for scripts it lacks, or imgui's built-in font when neither exists.
 fn load_fonts(context: &Context, language: &str) {
-    // only Windows font paths so far; other platforms get imgui's built-in Latin font
+    // other platforms get imgui's built-in Latin font
     let files: Vec<Vec<u8>> = [
         Some(r"C:\Windows\Fonts\seguisb.ttf"),
         fallback_font(language),
@@ -77,8 +77,7 @@ fn load_fonts(context: &Context, language: &str) {
             .ok()
     })
     .collect();
-    // the Japanese and Chinese system fonts are collections, which only the raw loader reads;
-    // these are installed Windows fonts, so they are complete and valid for stb_truetype
+    // only the raw loader reads the .ttc collections Windows ships for Japanese and Chinese
     let mut sources: Vec<FontSource> = files
         .iter()
         .enumerate()

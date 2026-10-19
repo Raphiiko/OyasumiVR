@@ -287,7 +287,7 @@ pub struct DashboardOverlay {
     gpu_failed: bool,
     keyboard: KeyboardRequests,
     keyboard_id: Option<u64>,
-    /// Shows the desktop notice while `failed`; dropped when the dashboard is left.
+    /// Shows the desktop notice while selected and `failed`; only `close_notice` drops it.
     notice: Option<NoticeSurface>,
     /// Set when the notice cannot be drawn, so it is not retried every tick; cleared when the dashboard is left.
     notice_unavailable: bool,
@@ -407,6 +407,7 @@ impl DashboardOverlay {
         if self.selected && self.failed {
             return self.tick_notice();
         }
+        self.close_notice();
         let ready = self.is_active() && self.has_frame;
         self.poll_input(ready)?;
         if ready {
@@ -441,7 +442,7 @@ impl DashboardOverlay {
         self.failed = false;
         log::info!("[Dashboard] Dashboard selected: {selected}");
         if !selected {
-            self.notice = None;
+            self.close_notice();
             self.notice_unavailable = false;
             self.deactivate();
             self.gpu_failed = false;
@@ -556,7 +557,7 @@ impl DashboardOverlay {
     fn tick_notice(&mut self) -> Result<(), String> {
         if !self.window.is_visible().map_err(message)? {
             log::info!("[Dashboard] Desktop window hidden, taking the UI back");
-            self.notice = None;
+            self.close_notice();
             self.failed = false;
             return Ok(());
         }
@@ -572,7 +573,7 @@ impl DashboardOverlay {
             .as_ref()
             .is_some_and(|notice| notice.language != copy.language)
         {
-            self.notice = None;
+            self.close_notice();
         }
         if self.notice.is_none() {
             match NoticeSurface::new(WIDTH, HEIGHT, &copy.language, self.table, self.main) {
@@ -610,18 +611,28 @@ impl DashboardOverlay {
         match self.notice.as_mut().unwrap().render(&copy) {
             Ok(true) => {
                 log::info!("[Dashboard] Taking the UI back from the desktop window");
-                self.notice = None;
+                self.close_notice();
                 self.failed = false;
             }
             Ok(false) => {}
             Err(error) => {
                 log::warn!("[Dashboard] Could not draw the desktop notice: {error}");
-                self.notice = None;
+                self.close_notice();
                 self.notice_unavailable = true;
                 self.failed_notice();
             }
         }
         Ok(())
+    }
+
+    /// Stops the notice thread, then shows the dashboard texture again, which holds the last WebView frame.
+    fn close_notice(&mut self) {
+        if self.notice.take().is_none() {
+            return;
+        }
+        if let Err(error) = unsafe { self.set_overlay_texture() } {
+            log::warn!("[Dashboard] Could not restore the dashboard texture: {error}");
+        }
     }
 
     /// Without a notice, a click anywhere on the dashboard takes the UI back.
@@ -822,6 +833,7 @@ impl DashboardOverlay {
 impl Drop for DashboardOverlay {
     fn drop(&mut self) {
         DASHBOARD_RENDER_MODE.store(RENDER_NONE, Ordering::Release);
+        self.close_notice();
         self.deactivate();
         let Some(destroy) = self.table.DestroyOverlay else {
             return;

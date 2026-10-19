@@ -9,6 +9,7 @@ use std::sync::{
     mpsc::{channel, Receiver, Sender},
     Arc, Mutex,
 };
+use std::thread::JoinHandle;
 
 enum Command {
     Move(f32, f32),
@@ -30,10 +31,11 @@ struct Shared {
 }
 
 /// Draws the notice on its own thread, because an imgui context and a GPU context stay on one thread.
-/// Dropping it stops the thread.
+/// Dropping it waits until the thread has released the overlay texture and its imgui context.
 pub struct NoticeSurface {
     pub language: String,
     commands: Sender<Command>,
+    thread: Option<JoinHandle<()>>,
     shared: Arc<Shared>,
     /// Frames still to draw; input and creation set it, each queued frame lowers it.
     redraws: u8,
@@ -51,7 +53,7 @@ impl NoticeSurface {
         let shared = Arc::new(Shared::default());
         let thread_shared = shared.clone();
         let thread_language = language.to_string();
-        std::thread::Builder::new()
+        let thread = std::thread::Builder::new()
             .name("dashboard-notice".into())
             .spawn(move || {
                 let result = run(
@@ -71,6 +73,7 @@ impl NoticeSurface {
         Ok(Self {
             language: language.to_string(),
             commands,
+            thread: Some(thread),
             shared,
             redraws: REDRAWS_AFTER_INPUT,
         })
@@ -107,6 +110,16 @@ impl NoticeSurface {
     }
 }
 
+impl Drop for NoticeSurface {
+    fn drop(&mut self) {
+        // disconnect the channel, so the thread leaves its loop
+        drop(std::mem::replace(&mut self.commands, channel().0));
+        if let Some(thread) = self.thread.take() {
+            let _ = thread.join();
+        }
+    }
+}
+
 fn run(
     width: u32,
     height: u32,
@@ -116,9 +129,14 @@ fn run(
     commands: Receiver<Command>,
     shared: &Shared,
 ) -> Result<(), String> {
-    let mut ui = NativeUi::new(width, height, language);
+    let mut ui = NativeUi::new(width, height, language)?;
     let mut renderer = Renderer::new(&mut ui, width, height)?;
     let result = serve(&mut ui, &mut renderer, &table, overlay, commands, shared);
+
+    // SteamVR may still read the last submitted image, so release it before the device goes
+    if let Some(clear) = table.ClearOverlayTexture {
+        unsafe { clear(overlay) };
+    }
     renderer.shutdown(&mut ui);
     result
 }
