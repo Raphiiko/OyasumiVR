@@ -9,4 +9,8 @@
     height: 100%;
     overflow: visible;
   }
+
+  &.mirrored svg {
+    transform: scaleX(-1);
+  }
 }

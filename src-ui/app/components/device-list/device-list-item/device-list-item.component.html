@@ -2,7 +2,11 @@
   <div class="wrapper">
     <div class="header-bar">
       <div class="header-bar-icon">
-        <app-icon [name]="icon() ?? 'device'" class="category-icon" />
+        <app-icon
+          [name]="icon() ?? 'device'"
+          [mirrored]="_ovrDevice?.class === 'Controller' && _ovrDevice?.role === 'RightHand'"
+          class="category-icon"
+        />
       </div>
       <div class="header-bar-info">
         <div class="device-name" [transloco]="deviceTypeName"></div>
