@@ -27,7 +27,7 @@ const STATE_MESSAGE: u64 = 44;
 const POLL_INTERVAL: Duration = Duration::from_secs(1);
 /// A socket that sends no state for this long counts as failed.
 const STATE_TIMEOUT: Duration = Duration::from_secs(5);
-/// The longest serial whose message lengths still fit in one byte each.
+/// The longest serial the helper accepts, below the 126 bytes at which a length needs two bytes.
 pub const MAX_SERIAL_LENGTH: usize = 64;
 
 type Socket = WebSocketStream<TcpStream>;
