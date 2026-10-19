@@ -28,8 +28,6 @@ mod utils;
 mod vrc_log_parser;
 mod vrcx;
 
-use std::mem;
-
 pub use flavour::BUILD_FLAVOUR;
 pub use grpc::models as Models;
 
@@ -41,7 +39,10 @@ use tauri::{plugin::TauriPlugin, Manager, Wry};
 use tauri_plugin_cli::CliExt;
 use tauri_plugin_log::RotationStrategy;
 use tauri_plugin_store::StoreExt;
-use webview2_com::Microsoft::Web::WebView2::Win32::ICoreWebView2Settings6;
+use webview2_com::Microsoft::Web::WebView2::Win32::{
+    ICoreWebView2Controller, ICoreWebView2Settings6,
+};
+use windows_core::Interface;
 
 fn serialize_store_sorted(
     cache: &std::collections::HashMap<String, serde_json::Value>,
@@ -413,6 +414,17 @@ fn error_reporting_setting(app_handle: &tauri::AppHandle) -> bool {
     }
 }
 
+/// Turns off swipe navigation, autofill, and password saving.
+/// Autofill and password prompts are native popups, which never appear in the VR dashboard.
+fn configure_webview(controller: &ICoreWebView2Controller) -> windows_core::Result<()> {
+    unsafe {
+        let settings: ICoreWebView2Settings6 = controller.CoreWebView2()?.Settings()?.cast()?;
+        settings.SetIsSwipeNavigationEnabled(false)?;
+        settings.SetIsGeneralAutofillEnabled(false)?;
+        settings.SetIsPasswordAutosaveEnabled(false)
+    }
+}
+
 async fn app_setup(app_handle: tauri::AppHandle, error_reporting_enabled: bool) {
     // Process elevation security args
     os::elevation::process_elevation_cli_args().await;
@@ -437,21 +449,18 @@ async fn app_setup(app_handle: tauri::AppHandle, error_reporting_enabled: bool) 
     if let Ok(logs) = app_handle.path().app_log_dir() {
         memory_watch::start(env!("CARGO_PKG_VERSION"), &logs);
     }
-    // Disable swipe navigation, autofill and password saving in every window
-    // autofill and password prompts are native popups, which never appear in the VR dashboard
+    // Configure every webview window
     for (label, window) in app_handle.webview_windows() {
+        let callback_label = label.clone();
         // this posts to the event loop from a worker thread, and Windows can refuse the post
-        if let Err(e) = window.with_webview(|webview| unsafe {
-            let settings = webview
-                .controller()
-                .CoreWebView2()
-                .unwrap()
-                .Settings()
-                .unwrap();
-            let settings: ICoreWebView2Settings6 = mem::transmute(settings);
-            settings.SetIsSwipeNavigationEnabled(false).unwrap();
-            settings.SetIsGeneralAutofillEnabled(false).unwrap();
-            settings.SetIsPasswordAutosaveEnabled(false).unwrap();
+        if let Err(e) = window.with_webview(move |webview| {
+            if let Err(e) = configure_webview(&webview.controller()) {
+                warn!("[Core] Could not configure the webview of window {callback_label}: {e}");
+                sentry::capture_message(
+                    &format!("Could not configure webview: {}", e.code()),
+                    sentry::Level::Warning,
+                );
+            }
         }) {
             // read before logging, which can overwrite the post's Win32 error
             let os_error = std::io::Error::last_os_error();
