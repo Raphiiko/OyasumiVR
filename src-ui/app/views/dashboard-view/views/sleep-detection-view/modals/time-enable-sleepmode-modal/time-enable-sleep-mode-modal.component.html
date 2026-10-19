@@ -10,7 +10,7 @@
         (resetToDefault)="time = $event"
       >
         <div class="input-wrapper">
-          <input type="time" (change)="time = timeInput.value" [value]="time" #timeInput />
+          <app-time-input [(value)]="time" />
         </div>
       </app-setting-row>
     </div>

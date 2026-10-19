@@ -282,14 +282,9 @@ input:checked + .switch-toggle-slider:before {
 // GENERIC INPUTS
 //
 
-input[type='time'] {
-  text-align: center;
-}
-
 input[type='number'],
 input[type='text'],
-input[type='password'],
-input[type='time'] {
+input[type='password'] {
   font-size: 1em;
   position: relative;
   border: none;
@@ -328,11 +323,6 @@ input[type='number'] {
     -webkit-appearance: none;
     margin: 0;
   }
-}
-
-input[type='time']::-webkit-calendar-picker-indicator {
-  background: none;
-  display: none;
 }
 
 .input-wrapper {
