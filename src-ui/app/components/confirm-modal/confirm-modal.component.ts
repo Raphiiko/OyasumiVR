@@ -9,6 +9,7 @@ export interface ConfirmModalInputModel {
   confirmButtonText?: TString;
   cancelButtonText?: TString;
   showCancel?: boolean;
+  size?: 'md' | 'lg';
 }
 
 export interface ConfirmModalOutputModel {
@@ -32,6 +33,7 @@ export class ConfirmModalComponent
   confirmButtonText?: TString;
   cancelButtonText?: TString;
   showCancel?: boolean;
+  size?: 'md' | 'lg';
 
   constructor() {
     super();

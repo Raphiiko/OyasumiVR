@@ -212,6 +212,7 @@ export class ElevatedSidecarService {
           message: 'settings.general.adminPrivileges.dialogs.promptOnDesktop.message',
           confirmButtonText: 'shared.modals.close',
           showCancel: false,
+          size: 'lg',
         },
         { id: PROMPT_NOTICE_MODAL_ID }
       )
