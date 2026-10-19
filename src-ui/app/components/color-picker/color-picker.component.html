@@ -1,9 +1,49 @@
-<div class="color-input-wrapper" [style.--picked-color]="cssColor" [class.disabled]="disabled()">
-  <input
-    type="color"
-    [value]="hexValue()"
-    (input)="onColorChange(colorInput.value)"
-    #colorInput
-    [disabled]="disabled()"
-  />
+<button
+  type="button"
+  class="swatch"
+  [style.--picked-color]="cssColor()"
+  [class.off]="hexValue() === '000000'"
+  [disabled]="disabled()"
+  (click)="toggle()"
+></button>
+<div class="picker" popover #popover>
+  <div class="spectrum" #pickerHost></div>
+  <div class="presets">
+    @for (preset of presets; track $index) {
+      <button
+        type="button"
+        class="preset"
+        [style.--preset-color]="'rgb(' + preset.join(', ') + ')'"
+        [class.off]="$index === 0"
+        [class.selected]="isSelected(preset)"
+        (click)="color.set(preset)"
+      ></button>
+    }
+  </div>
+  <div class="raw">
+    <label class="raw-hex">
+      <span>#</span>
+      <input
+        type="text"
+        maxlength="7"
+        spellcheck="false"
+        [value]="hexValue()"
+        (change)="setHex(hexInput)"
+        #hexInput
+      />
+    </label>
+    @for (channel of ['R', 'G', 'B']; track $index) {
+      <label class="raw-channel">
+        <span>{{ channel }}</span>
+        <input
+          type="number"
+          min="0"
+          max="255"
+          [value]="color()[$index]"
+          (change)="setChannel($index, channelInput)"
+          #channelInput
+        />
+      </label>
+    }
+  </div>
 </div>
