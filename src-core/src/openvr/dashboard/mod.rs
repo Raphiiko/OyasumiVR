@@ -566,17 +566,9 @@ impl DashboardOverlay {
             return Ok(());
         }
 
-        // recreate the surface when the language, and with it the font, changes
         let copy = NoticeCopy::current();
-        if self
-            .notice
-            .as_ref()
-            .is_some_and(|notice| notice.language != copy.language)
-        {
-            self.close_notice();
-        }
         if self.notice.is_none() {
-            match NoticeSurface::new(WIDTH, HEIGHT, &copy.language, self.table, self.main) {
+            match NoticeSurface::new(WIDTH, HEIGHT, self.table, self.main) {
                 Ok(notice) => self.notice = Some(notice),
                 Err(error) => {
                     log::warn!("[Dashboard] Could not create the desktop notice: {error}");
@@ -625,7 +617,7 @@ impl DashboardOverlay {
         Ok(())
     }
 
-    /// Stops the notice thread, then shows the dashboard texture again, which holds the last WebView frame.
+    /// Stops the notice frames, then shows the dashboard texture again, which holds the last WebView frame.
     fn close_notice(&mut self) {
         if self.notice.take().is_none() {
             return;

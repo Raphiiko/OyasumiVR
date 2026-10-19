@@ -12,7 +12,7 @@ const FORMAT: vk::Format = vk::Format::R8G8B8A8_UNORM;
 
 /// Renders imgui frames offscreen with Vulkan and submits them to an OpenVR overlay.
 /// Lives on one thread for its whole life, together with the `NativeUi` it renders.
-/// Call `shutdown` before dropping it.
+/// Its device is never destroyed: OpenVR must shut down before a texture's Vulkan objects go.
 pub struct Renderer {
     imgui: Option<AshRenderer>,
     _entry: Entry,
@@ -23,7 +23,7 @@ pub struct Renderer {
     queue_family: u32,
     width: u32,
     height: u32,
-    // null until `init` creates them; Vulkan ignores null handles on destroy
+    // null until `init` creates them
     memory: vk::DeviceMemory,
     image: vk::Image,
     view: vk::ImageView,
@@ -36,17 +36,13 @@ pub struct Renderer {
 
 impl Renderer {
     /// Creates the Vulkan device on the headset's GPU, with the extensions SteamVR needs.
-    pub fn new(ui: &mut NativeUi, width: u32, height: u32) -> Result<Self, String> {
-        Self::create(ui, width, height, Some(&SteamVr::connect()?))
+    /// Call `attach` before rendering.
+    pub fn new(width: u32, height: u32) -> Result<Self, String> {
+        Self::create(width, height, Some(&SteamVr::connect()?))
     }
 
     /// Without `steamvr`, uses the first Vulkan device and no extra extensions.
-    fn create(
-        ui: &mut NativeUi,
-        width: u32,
-        height: u32,
-        steamvr: Option<&SteamVr>,
-    ) -> Result<Self, String> {
+    fn create(width: u32, height: u32, steamvr: Option<&SteamVr>) -> Result<Self, String> {
         // load vulkan at runtime, so a missing driver is an error rather than a crash
         let entry = unsafe { Entry::load() }.map_err(message)?;
         let extensions = match steamvr {
@@ -90,11 +86,11 @@ impl Renderer {
             command_buffer: vk::CommandBuffer::null(),
             fence: vk::Fence::null(),
         };
-        unsafe { renderer.init(ui) }.map_err(message)?;
+        unsafe { renderer.init() }.map_err(message)?;
         Ok(renderer)
     }
 
-    unsafe fn init(&mut self, ui: &mut NativeUi) -> Result<(), Box<dyn std::error::Error>> {
+    unsafe fn init(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let device = &self.device;
 
         // image SteamVR copies from, so it needs transfer source and sampled usage
@@ -192,19 +188,26 @@ impl Renderer {
                 .command_buffer_count(1),
         )?[0];
         self.fence = device.create_fence(&vk::FenceCreateInfo::default(), None)?;
+        Ok(())
+    }
 
+    /// Creates the imgui backend for `ui`. Call `detach` before attaching another `NativeUi`.
+    pub fn attach(&mut self, ui: &mut NativeUi) -> Result<(), String> {
         let config = AshRendererConfig::with_render_pass(
-            device.clone(),
+            self.device.clone(),
             self.queue,
             self.command_pool,
             self.render_pass,
         );
-        self.imgui = Some(AshRenderer::with_default_allocator(
-            &self.instance,
-            self.physical_device,
-            config,
-            &mut ui.context,
-        )?);
+        let imgui = unsafe {
+            AshRenderer::with_default_allocator(
+                &self.instance,
+                self.physical_device,
+                config,
+                &mut ui.context,
+            )
+        };
+        self.imgui = Some(imgui.map_err(message)?);
         Ok(())
     }
 
@@ -215,7 +218,10 @@ impl Renderer {
         ui: &mut NativeUi,
         draw: impl FnOnce(&Ui) -> R,
     ) -> Result<R, String> {
-        let imgui = self.imgui.as_mut().ok_or("Renderer is shut down")?;
+        let imgui = self
+            .imgui
+            .as_mut()
+            .ok_or("Renderer has no NativeUi attached")?;
         let value = draw(ui.context.try_frame().map_err(message)?);
         let pending = ui
             .context
@@ -299,7 +305,7 @@ impl Renderer {
     }
 
     /// Releases the imgui backend's GPU resources. Call it while `ui` is still alive.
-    pub fn shutdown(&mut self, ui: &mut NativeUi) {
+    pub fn detach(&mut self, ui: &mut NativeUi) {
         if let Some(mut imgui) = self.imgui.take() {
             if let Err(error) = imgui.shutdown(&mut ui.context) {
                 log::warn!("[NativeUi] Could not shut down the Vulkan renderer: {error}");
@@ -320,26 +326,6 @@ impl Renderer {
                         .contains(vk::MemoryPropertyFlags::DEVICE_LOCAL)
             })
             .ok_or("No device local Vulkan memory".into())
-    }
-}
-
-impl Drop for Renderer {
-    fn drop(&mut self) {
-        // the imgui backend holds handles of this device, so it goes first
-        drop(self.imgui.take());
-        unsafe {
-            let device = &self.device;
-            let _ = device.device_wait_idle();
-            device.destroy_fence(self.fence, None);
-            device.destroy_command_pool(self.command_pool, None);
-            device.destroy_framebuffer(self.framebuffer, None);
-            device.destroy_render_pass(self.render_pass, None);
-            device.destroy_image_view(self.view, None);
-            device.destroy_image(self.image, None);
-            device.free_memory(self.memory, None);
-            device.destroy_device(None);
-            self.instance.destroy_instance(None);
-        }
     }
 }
 
