@@ -17,6 +17,10 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ## [Unreleased]
 
+### Added
+
+- Added a message that tells you when a link opened in your browser, while you use OyasumiVR from the SteamVR dashboard
+
 ### Fixed
 
 - Fixed the shutdown sequence skipping devices that were off when you selected them or when OyasumiVR started
@@ -24,6 +28,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Fixed turning off base stations from the Device Manager always putting them in sleep mode, instead of the power-off mode you chose
 - Fixed the automation that turns off charging devices turning off a controller you had just unplugged and turned on
 - Fixed run automations opening a command prompt window on your desktop every time they ran
+- Fixed the language code link in the translation editor opening inside OyasumiVR instead of in your browser
 
 ## [26.10.3]
 
