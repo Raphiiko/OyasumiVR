@@ -465,6 +465,22 @@ describe('Steam Frame helper maintenance', () => {
     expect(calls('steam_frame_update_helper')).toEqual([{ pairingId: pairing.id }]);
   });
 
+  it('disconnects a controller only on the paired headset that lists it as connected', async () => {
+    handlers['steam_frame_disconnect_controller'] = () => undefined;
+    const { service, pairing } = await paired();
+    const connected = (pairingId: string, controllers: SteamFrameConnectionState['controllers']) =>
+      (service as any).onConnectionState({ pairingId, status: 'connected', controllers });
+    connected(pairing.id, [{ serial: 'C1', connected: true }]);
+    connected('other', [{ serial: 'C1', connected: false }]);
+    connected('removed', [{ serial: 'C1', connected: true }]);
+
+    expect(await service.disconnectController('C1')).toBe(true);
+    expect(calls('steam_frame_disconnect_controller')).toEqual([
+      { pairingId: pairing.id, serial: 'C1' },
+    ]);
+    expect(await service.disconnectController('C2')).toBe(false);
+  });
+
   it('pins the certificate of a reinstalled helper and reconnects with it', async () => {
     const { service, pairing } = await paired();
     handlers['steam_frame_set_up_helper'] = () => ({

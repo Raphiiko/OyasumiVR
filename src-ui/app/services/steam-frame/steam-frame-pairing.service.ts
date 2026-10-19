@@ -438,15 +438,21 @@ export class SteamFramePairingService {
   }
 
   /**
-   * Disconnects the controller with this serial on every connected headset. It stays paired.
-   * Resolves false when no headset is connected or one failed.
+   * Disconnects the controller with this serial on each paired headset whose helper lists it as
+   * connected. It stays paired. Resolves false when no headset lists it or one failed.
    */
   async disconnectController(serial: string): Promise<boolean> {
-    const connected = Object.values(this._connections()).filter((c) => c.status === 'connected');
-    const results = await Promise.all(
-      connected.map((state) => this.disconnectControllerOn(state.pairingId, serial))
+    const pairingIds = new Set(this._pairings().map((p) => p.id));
+    const holders = Object.values(this._connections()).filter(
+      (state) =>
+        state.status === 'connected' &&
+        pairingIds.has(state.pairingId) &&
+        state.controllers?.some((c) => c.serial === serial && c.connected)
     );
-    return connected.length > 0 && results.every(Boolean);
+    const results = await Promise.all(
+      holders.map((state) => this.disconnectControllerOn(state.pairingId, serial))
+    );
+    return holders.length > 0 && results.every(Boolean);
   }
 
   private async disconnectControllerOn(pairingId: string, serial: string): Promise<boolean> {
