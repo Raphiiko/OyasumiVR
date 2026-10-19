@@ -3030,6 +3030,9 @@
         "title": "Kon {name} niet uitschakelen"
       }
     },
+    "externalLink": {
+      "opened": "Link geopend in je browser"
+    },
     "oscTest": {
       "noTarget": {
         "message": "OyasumiVR heeft geen OSC doel. Start VRChat met OSC ingeschakeld, of stel een eigen doel in bij de OSC instellingen.",
