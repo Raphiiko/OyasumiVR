@@ -4,10 +4,11 @@ import { LighthouseConsoleService } from '../../lighthouse-console.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DestroyRef, inject } from '@angular/core';
 import { ExecutableReferenceStatus } from 'src-ui/app/models/settings';
-import { openUrl } from '@tauri-apps/plugin-opener';
+import { ExternalLinkService } from '../../external-link.service';
 import { Router } from '@angular/router';
 
 export class LighthouseConsoleMonitor extends MessageMonitor {
+  private externalLink = inject(ExternalLinkService);
   private destroyRef = inject(DestroyRef);
   private lighthouseConsole = inject(LighthouseConsoleService);
   private router = inject(Router);
@@ -41,7 +42,7 @@ export class LighthouseConsoleMonitor extends MessageMonitor {
               {
                 label: 'message-center.actions.moreInfo',
                 action: () =>
-                  openUrl(
+                  this.externalLink.open(
                     'https://raphii.co/oyasumivr/hidden/troubleshooting/lighthouse-console-unavailable/'
                   ),
               },

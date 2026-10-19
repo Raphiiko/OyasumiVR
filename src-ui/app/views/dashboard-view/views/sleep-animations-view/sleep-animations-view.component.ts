@@ -18,9 +18,9 @@ import { SleepingAnimationsAutomationService } from '../../../../services/osc-au
 import { SleepService } from '../../../../services/sleep.service';
 import { ModalService } from '../../../../services/modal.service';
 import { OscScript } from '../../../../models/osc-script';
-import { open } from '@tauri-apps/plugin-shell';
 import { SleepingAnimationPresetModalComponent } from '../../../../components/sleeping-animation-preset-modal/sleeping-animation-preset-modal.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ExternalLinkService } from '../../../../services/external-link.service';
 
 @Component({
   selector: 'app-sleep-animations-view',
@@ -66,7 +66,8 @@ export class SleepAnimationsViewComponent implements OnInit {
     private sleepingAnimationsAutomation: SleepingAnimationsAutomationService,
     private sleep: SleepService,
     private modalService: ModalService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private externalLink: ExternalLinkService
   ) {}
 
   ngOnInit(): void {
@@ -135,7 +136,7 @@ export class SleepAnimationsViewComponent implements OnInit {
   buildPresetInfoAction(preset: SleepingAnimationPreset): (() => void) | undefined {
     if (preset.infoLinks) {
       if (preset.infoLinks.length === 1) {
-        return () => open(preset.infoLinks[0].url);
+        return () => this.externalLink.open(preset.infoLinks[0].url);
       } else if (preset.infoLinks.length > 1) {
         return () =>
           this.modalService.addModal(SleepingAnimationPresetModalComponent, { preset }).subscribe();

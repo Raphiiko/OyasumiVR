@@ -19,7 +19,7 @@ import { AppSettingsService } from './app-settings.service';
 import { AutoAcceptInviteRequestsAutomationConfig } from '../models/automations';
 import { SleepPreparationService } from './sleep-preparation.service';
 import { MessageCenterService } from './message-center/message-center.service';
-import { openUrl } from '@tauri-apps/plugin-opener';
+import { ExternalLinkService } from './external-link.service';
 import { VRChatInviteRefusedError } from './vrchat-api/vrchat-api';
 import { TelemetryService } from './telemetry/telemetry.service';
 
@@ -40,7 +40,8 @@ export class InviteAutomationsService {
     private translate: TranslocoService,
     private sleepPreparation: SleepPreparationService,
     private messageCenter: MessageCenterService,
-    private telemetry: TelemetryService
+    private telemetry: TelemetryService,
+    private externalLink: ExternalLinkService
   ) {}
 
   async init() {
@@ -168,7 +169,7 @@ export class InviteAutomationsService {
           {
             label: 'message-center.actions.moreInfo',
             action: () => {
-              openUrl(
+              this.externalLink.open(
                 'https://raphii.co/oyasumivr/hidden/troubleshooting/vrchat-invite-request-auto-accept-world-unknown/'
               );
             },

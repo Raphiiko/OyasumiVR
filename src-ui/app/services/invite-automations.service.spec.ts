@@ -16,6 +16,7 @@ import { AUTOMATION_CONFIGS_DEFAULT, type AutomationConfigs } from '../models/au
 import { NotificationType, UserStatus } from '../models/vrchat';
 import en from '../../assets/i18n/en.json';
 import { InviteAutomationsService } from './invite-automations.service';
+import type { ExternalLinkService } from './external-link.service';
 import { VRChatInviteRefusedError } from './vrchat-api/vrchat-api';
 
 vi.mock('@tauri-apps/plugin-log', () => ({ info: vi.fn(), warn: vi.fn(), error: vi.fn() }));
@@ -79,7 +80,8 @@ function createService(
     { translate } as unknown as TranslocoService,
     {} as SleepPreparationService,
     { addMessage: vi.fn() } as unknown as MessageCenterService,
-    telemetry as unknown as TelemetryService
+    telemetry as unknown as TelemetryService,
+    {} as ExternalLinkService
   );
   const receive = (type: string, senderUsername = 'Bob') =>
     (

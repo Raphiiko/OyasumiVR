@@ -3030,6 +3030,9 @@
         "title": "無法關閉 {name}"
       }
     },
+    "externalLink": {
+      "opened": "已在瀏覽器中開啟連結"
+    },
     "oscTest": {
       "noTarget": {
         "message": "OyasumiVR 沒有 OSC 目標。請啟動 VRChat 並啟用 OSC，或在 OSC 設定中設定自訂目標。",

@@ -1,12 +1,13 @@
 import { inject } from '@angular/core';
 import { MessageMonitor } from './message-monitor';
 import { combineLatest, distinctUntilChanged, map } from 'rxjs';
-import { openUrl } from '@tauri-apps/plugin-opener';
+import { ExternalLinkService } from '../../external-link.service';
 import { OpenVRService } from '../../openvr.service';
 
 const MESSAGE_ID = 'psvr2ToolkitMissing';
 
 export class PSVR2ToolkitMessageMonitor extends MessageMonitor {
+  private externalLink = inject(ExternalLinkService);
   private openvr = inject(OpenVRService);
 
   public override init(): void {
@@ -41,7 +42,7 @@ export class PSVR2ToolkitMessageMonitor extends MessageMonitor {
       actions: [
         {
           label: 'message-center.actions.moreInfo',
-          action: () => openUrl('https://github.com/BnuuySolutions/PSVR2Toolkit'),
+          action: () => this.externalLink.open('https://github.com/BnuuySolutions/PSVR2Toolkit'),
         },
       ],
     });

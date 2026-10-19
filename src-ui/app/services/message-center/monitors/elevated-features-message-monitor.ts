@@ -3,9 +3,10 @@ import { ElevatedSidecarService } from '../../elevated-sidecar.service';
 import { MessageMonitor } from './message-monitor';
 import { appLogDir } from '@tauri-apps/api/path';
 import { invoke } from '@tauri-apps/api/core';
-import { openUrl } from '@tauri-apps/plugin-opener';
+import { ExternalLinkService } from '../../external-link.service';
 
 export class ElevatedFeaturesMessageMonitor extends MessageMonitor {
+  private externalLink = inject(ExternalLinkService);
   private elevatedFeatures = inject(ElevatedSidecarService);
 
   public override init(): void {
@@ -41,7 +42,7 @@ export class ElevatedFeaturesMessageMonitor extends MessageMonitor {
           },
           {
             label: 'message-center.actions.supportDiscord',
-            action: () => openUrl('https://discord.gg/7MqdPJhYxC'),
+            action: () => this.externalLink.open('https://discord.gg/7MqdPJhYxC'),
           },
         ],
       });

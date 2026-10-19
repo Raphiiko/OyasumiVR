@@ -3,8 +3,9 @@ import { VRChatService } from '../../vrchat-api/vrchat.service';
 import { MessageMonitor } from './message-monitor';
 import { VRChatLogService } from '../../vrchat-log.service';
 import { combineLatest, debounceTime, distinctUntilChanged, filter, map, merge } from 'rxjs';
-import { openUrl } from '@tauri-apps/plugin-opener';
+import { ExternalLinkService } from '../../external-link.service';
 export class VRChatLogMessageMonitor extends MessageMonitor {
+  private externalLink = inject(ExternalLinkService);
   private vrchat = inject(VRChatService);
   private vrchatLog = inject(VRChatLogService);
 
@@ -41,7 +42,7 @@ export class VRChatLogMessageMonitor extends MessageMonitor {
               {
                 label: 'message-center.actions.moreInfo',
                 action: () => {
-                  openUrl(
+                  this.externalLink.open(
                     'https://raphii.co/oyasumivr/hidden/troubleshooting/vrchat-logs-required/'
                   );
                 },

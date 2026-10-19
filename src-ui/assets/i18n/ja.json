@@ -3053,6 +3053,9 @@
         "title": "{name}をオフにできませんでした"
       }
     },
+    "externalLink": {
+      "opened": "リンクをブラウザで開きました"
+    },
     "oscTest": {
       "noTarget": {
         "message": "OSCの送信先がありません。OSCを有効にしてVRChatを起動するか、OSC設定でカスタム送信先を設定してください。",
