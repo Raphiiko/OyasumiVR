@@ -1954,6 +1954,11 @@
           },
           "enableFailed": {
             "title": "Kon beheerdersrechten niet inschakelen"
+          },
+          "promptOnDesktop": {
+            "closesItself": "Dit venster sluit vanzelf zodra je antwoordt.",
+            "message": "Windows vraagt in een melding op je bureaublad om beheerdersrechten. Deze melding is in VR mogelijk niet te zien.",
+            "title": "Beantwoord de melding op je bureaublad"
           }
         },
         "errors": {

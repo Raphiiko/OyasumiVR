@@ -1954,6 +1954,11 @@
           },
           "enableFailed": {
             "title": "無法啟用系統管理員權限"
+          },
+          "promptOnDesktop": {
+            "closesItself": "回應後，此視窗會自動關閉。",
+            "message": "Windows 正在透過桌面上的提示視窗要求系統管理員權限。此提示視窗可能不會在 VR 中顯示。",
+            "title": "請在桌面上回應提示視窗"
           }
         },
         "errors": {
