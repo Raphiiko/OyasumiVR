@@ -386,9 +386,9 @@
           },
           "title": {
             "MUTE": "Muted microphone in VRChat",
-            "MUTE_FAILED": "Could not mute microphone in VRChat: OSCQuery did not report your mute state",
+            "MUTE_FAILED": "Could not mute microphone in VRChat: OSCQuery did not report your mute state. Check the Message Centre for more information.",
             "UNMUTE": "Unmuted microphone in VRChat",
-            "UNMUTE_FAILED": "Could not unmute microphone in VRChat: OSCQuery did not report your mute state"
+            "UNMUTE_FAILED": "Could not unmute microphone in VRChat: OSCQuery did not report your mute state. Check the Message Centre for more information."
           }
         },
         "chaperoneFadeDistanceChanged": {
