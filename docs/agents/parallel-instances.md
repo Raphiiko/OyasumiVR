@@ -9,7 +9,7 @@ npm run dev:isolated
 The script prints one line before the build starts:
 
 ```text
-[dev-isolated] identifier=co.raphii.oyasumi.dev.<worktree>-<hash> ui=http://localhost:<port> cdp=<port> data=%APPDATA%\co.raphii.oyasumi.dev.<worktree>-<hash>
+[dev-isolated] identifier=co.raphii.oyasumi.dev.<worktree>-<hash> ui=http://localhost:<port> cdp=<port> bluetooth=off data=%APPDATA%\co.raphii.oyasumi.dev.<worktree>-<hash>
 ```
 
 Read the frontend URL and the CDP port from that line. Each worktree runs one instance at most.
@@ -35,6 +35,14 @@ The script runs `tauri dev --config` with a patch that changes three values:
 
 The core, gRPC, HTTP, OSC, and OSCQuery servers bind ephemeral ports, so they need no patch.
 
+The instance also starts with Bluetooth off: it opens no Bluetooth adapter and scans for no
+Lighthouse base stations. To work on Bluetooth or Lighthouse functionality, start it with
+`--bluetooth` and hold the Bluetooth lock for the whole run:
+
+```powershell
+npm run dev:isolated -- --bluetooth
+```
+
 The instance starts with empty settings, so its first run shows the language picker. The data
 directory keeps that choice and every other setting for the next run in the same worktree.
 
@@ -47,7 +55,7 @@ These resources exist once per machine. Claim the matching lock before a test to
 | `Global\OyasumiVR-Test-SteamVR`     | runs while SteamVR runs, starts SteamVR, or works on the overlays      |
 | `Global\OyasumiVR-Test-VRChat`      | uses the VRChat client, a fake `VRChat.exe`, or a synthetic VRChat log |
 | `Global\OyasumiVR-Test-Elevated`    | uses GPU power limits, MSI Afterburner, or the privileged launcher     |
-| `Global\OyasumiVR-Test-Bluetooth`   | uses Lighthouse power control or the Bluetooth radio                   |
+| `Global\OyasumiVR-Test-Bluetooth`   | runs an instance started with `--bluetooth`                            |
 | `Global\OyasumiVR-Test-NativeInput` | focuses a window, moves the mouse, or captures the screen              |
 
 The reasons:
@@ -67,7 +75,8 @@ The reasons:
   fake join reaches all of them. Every instance also advertises OSCQuery as "OyasumiVR".
 - **Elevated features** use one scheduled task, one `%ProgramFiles%\OyasumiVR\privileged\`, and the
   handshake file `%LOCALAPPDATA%\co.raphii.oyasumi\elevated-sidecar-handshake.json`.
-- **Bluetooth** devices accept one controller at a time.
+- **Bluetooth** devices accept one controller at a time. Start with `--bluetooth` only when the work
+  itself is about Bluetooth or Lighthouse functionality; every other test needs no Bluetooth lock.
 - **Native input** acts on the one foreground window and the one mouse. CDP input goes to one
   WebView2 target and needs no lock. Hold `NativeInput` from the focus call until the screenshot
   after the action.

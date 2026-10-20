@@ -44,9 +44,14 @@ for (; ; uiPort++) {
 claim.unref();
 const cdpPort = uiPort + 5000;
 
+// Bluetooth devices accept one controller at a time, so instances leave Bluetooth off unless asked
+const args = process.argv.slice(2);
+const bluetooth = args.includes('--bluetooth');
+if (!bluetooth) process.env.OYASUMIVR_DEV_NO_BLUETOOTH = '1';
+
 process.env.WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS = `--remote-debugging-port=${cdpPort}`;
 console.log(
-  `[dev-isolated] identifier=${identifier} ui=http://localhost:${uiPort} cdp=${cdpPort} data=%APPDATA%\\${identifier}`
+  `[dev-isolated] identifier=${identifier} ui=http://localhost:${uiPort} cdp=${cdpPort} bluetooth=${bluetooth ? 'on' : 'off'} data=%APPDATA%\\${identifier}`
 );
 
 await tauri.run(
@@ -60,7 +65,7 @@ await tauri.run(
         beforeDevCommand: `npm run start:ui -- --port ${uiPort}`,
       },
     }),
-    ...process.argv.slice(2),
+    ...args.filter((arg) => arg !== '--bluetooth'),
   ],
   'tauri'
 );
