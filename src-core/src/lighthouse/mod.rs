@@ -81,6 +81,12 @@ const ADVERTISEMENT_MAX_AGE: Duration = Duration::from_secs(60);
 const RADIO_ON_ATTEMPTS: u32 = 3;
 
 pub async fn init() {
+    // `npm run dev:isolated` sets this unless started with `--bluetooth`
+    if tauri::is_dev() && std::env::var_os("OYASUMIVR_DEV_NO_BLUETOOTH").is_some() {
+        info!("[Core] Bluetooth is off for this dev instance");
+        return;
+    }
+
     // Initialize adapter
     let manager = match Manager::new().await {
         Ok(manager) => manager,
