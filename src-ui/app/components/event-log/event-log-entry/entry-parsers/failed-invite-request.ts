@@ -29,8 +29,4 @@ export class EventLogFailedInviteRequestEntryParser extends EventLogEntryParser<
       message: escape(entry.vrchatMessage ?? ''),
     };
   }
-
-  override isWarning(): boolean {
-    return true;
-  }
 }

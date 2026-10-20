@@ -22,6 +22,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Added a message that tells you when a link opened in your browser, while you use OyasumiVR from the SteamVR dashboard
 - Added a message that tells you when a folder opened on your desktop, such as the log folder
 - Added a message that tells you when a window to pick or save a file opened on your desktop, while you use OyasumiVR from the SteamVR dashboard
+- Added warnings to the event log for automations that could not do what you set them up to do, starting with the VRChat microphone mute automation when VRChat does not report whether you are muted
 
 ### Changed
 
@@ -36,6 +37,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Fixed the automation that turns off charging devices turning off a controller you had just unplugged and turned on
 - Fixed run automations opening a command prompt window on your desktop every time they ran
 - Fixed the language code link in the translation editor opening inside OyasumiVR instead of in your browser
+- Fixed the VRChat microphone mute automation pressing the mute button without knowing whether you were muted, which could unmute you instead
 
 ## [26.10.3]
 

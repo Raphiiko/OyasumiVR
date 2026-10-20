@@ -386,7 +386,9 @@
           },
           "title": {
             "MUTE": "已静音 VRChat 中的麦克风",
-            "UNMUTE": "已取消静音 VRChat 中的麦克风"
+            "MUTE_FAILED": "无法静音 VRChat 中的麦克风：OSCQuery 未报告你的静音状态。请查看消息中心了解详情。",
+            "UNMUTE": "已取消静音 VRChat 中的麦克风",
+            "UNMUTE_FAILED": "无法取消静音 VRChat 中的麦克风：OSCQuery 未报告你的静音状态。请查看消息中心了解详情。"
           }
         },
         "chaperoneFadeDistanceChanged": {
@@ -745,7 +747,8 @@
           "sunrise": "在日出时",
           "sunset": "在日落时"
         },
-        "count": "{count, plural, other {# 个操作}}"
+        "count": "{count, plural, other {# 个操作}}",
+        "countWithWarnings": "{count, plural, other {# 个操作}}，<span class=\"warning\">{warnings, plural, other {# 个失败}}</span>"
       },
       "no-logs": "还没有记录任何事件。\n事件记录最多保留 48 小时。",
       "openFilters": "筛选事件",
