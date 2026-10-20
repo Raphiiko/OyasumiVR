@@ -3,7 +3,6 @@ import {
   Component,
   DestroyRef,
   ElementRef,
-  HostListener,
   OnChanges,
   OnDestroy,
   OnInit,
@@ -45,6 +44,9 @@ export class SliderSettingComponent implements OnInit, OnChanges, OnDestroy {
   protected openedInDashboard = false;
   /** Watches for the dashboard to close while an overlay opened in it is showing. */
   private dashboardExit?: MutationObserver;
+  private readonly onPress = (event: MouseEvent) => {
+    if (!this.el.nativeElement.contains(event.target as Node)) this.closeOverlay();
+  };
   protected input$ = new Subject<string>();
 
   set audioLevel(value: number) {
@@ -64,7 +66,7 @@ export class SliderSettingComponent implements OnInit, OnChanges, OnDestroy {
   ngOnDestroy(): void {
     // complete here, not through DestroyRef: outputs stop emitting once DestroyRef callbacks run
     this.input$.complete();
-    this.dashboardExit?.disconnect();
+    if (this.showOverlay) this.unwatch();
   }
 
   ngOnInit(): void {
@@ -113,16 +115,26 @@ export class SliderSettingComponent implements OnInit, OnChanges, OnDestroy {
   onMouseEnter() {
     // the laser crosses fields on its way to others, so the dashboard opens on a press instead
     if (this.disabled() || inVrDashboard()) return;
-    this.openedInDashboard = false;
-    this.showOverlay = true;
+    this.openOverlay(false);
   }
 
   /** Opens the dashboard overlay without focusing the field, so the press opens no SteamVR keyboard. */
   onFieldMouseDown(event: MouseEvent) {
     if (this.disabled() || this.showOverlay || !inVrDashboard()) return;
     event.preventDefault();
-    this.openedInDashboard = true;
+    this.openOverlay(true);
+  }
+
+  onOverlayLeave() {
+    if (!this.openedInDashboard) this.closeOverlay();
+  }
+
+  private openOverlay(inDashboard: boolean) {
+    this.openedInDashboard = inDashboard;
     this.showOverlay = true;
+    // capture, because app-slider stops its presses from bubbling
+    document.addEventListener('mousedown', this.onPress, true);
+    if (!inDashboard) return;
 
     // the core removes the marker when the dashboard closes, and the overlay must not outlive it
     this.dashboardExit = new MutationObserver(() => {
@@ -133,21 +145,17 @@ export class SliderSettingComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  onOverlayLeave() {
-    if (!this.openedInDashboard) this.closeOverlay();
-  }
-
-  @HostListener('document:mousedown', ['$event'])
-  onDocumentMouseDown(event: MouseEvent) {
-    if (!this.showOverlay || this.el.nativeElement.contains(event.target as Node)) return;
-    this.closeOverlay();
-  }
-
   private closeOverlay() {
+    if (!this.showOverlay) return;
     this.showOverlay = false;
+    this.unwatch();
+    this.cdr.markForCheck();
+  }
+
+  private unwatch() {
+    document.removeEventListener('mousedown', this.onPress, true);
     this.dashboardExit?.disconnect();
     this.dashboardExit = undefined;
-    this.cdr.markForCheck();
   }
 
   stepBy(steps: number) {
