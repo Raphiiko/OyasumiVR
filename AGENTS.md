@@ -86,10 +86,10 @@ README checks are read-only; fix their source files and rerun the relevant gener
 
 Start the app with `npm run dev:isolated`. It gives the worktree its own identifier, settings, and
 ports, so it runs beside other worktrees' instances. SteamVR, VRChat, elevated features, Bluetooth,
-and native input stay shared: claim the resource's lock before a test uses it. Every instance
-connects to a running SteamVR by itself. Bluetooth stays off unless the work is about Bluetooth or
-Lighthouse functionality: then claim its lock and start with `--bluetooth`. For the locks, the
-ports, and overlay work, read [parallel app instances](docs/agents/parallel-instances.md).
+and native input stay shared: build first, then claim the resource's lock before a test uses it.
+Every instance connects to a running SteamVR by itself. Bluetooth stays off unless the work is about
+Bluetooth or Lighthouse functionality: then claim its lock and start with `--bluetooth`. For the
+locks, the build step, the ports, and overlay work, read [parallel app instances](docs/agents/parallel-instances.md).
 
 ## Icons
 
