@@ -2,10 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  DestroyRef,
   effect,
   ElementRef,
-  inject,
   input,
   model,
   signal,
@@ -13,20 +11,7 @@ import {
 } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { formatTime, parseTime } from '../../utils/time-utils';
-
-const LIFT_GAP = 12;
-// matches the transition of .setting-row in styles/settings.scss
-const LIFT_MS = 150;
-
-/** The settings row raised above the page while its dial is open. */
-interface Lift {
-  owner: TimeInputComponent;
-  row: HTMLElement;
-  placeholder: HTMLElement;
-  backdrop: HTMLElement;
-  timer?: ReturnType<typeof setTimeout>;
-}
-let activeLift: Lift | null = null;
+import { SettingRowLift } from '../setting-row/setting-row-lift';
 
 /** A 24-hour `HH:mm` field that takes typed text and opens a dial for pointer input. */
 @Component({
@@ -45,7 +30,6 @@ let activeLift: Lift | null = null;
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
-  host: { '(document:mouseup)': 'release()' },
 })
 export class TimeInputComponent {
   readonly value = model<string | null>(null);
@@ -68,10 +52,7 @@ export class TimeInputComponent {
   protected readonly hourTicks = Array.from({ length: 24 }, (_, i) => this.tick(i, 24, i));
   protected readonly minuteTicks = Array.from({ length: 12 }, (_, i) => this.tick(i, 12, i * 5));
   private readonly picker = viewChild<ElementRef<HTMLElement>>('picker');
-  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
-  /** Set from a press on the field until the button comes up. */
-  protected pointerHeld = false;
-  private pendingGlide?: () => void;
+  protected readonly lift = new SettingRowLift();
 
   constructor() {
     // the dial joins the top layer after the raised row, so it stays above it
@@ -79,10 +60,7 @@ export class TimeInputComponent {
       const picker = this.picker()?.nativeElement;
       if (!picker) return;
       picker.showPopover();
-      this.placeLift(picker);
-    });
-    inject(DestroyRef).onDestroy(() => {
-      if (activeLift?.owner === this) this.settle(activeLift);
+      this.lift.place(picker);
     });
   }
 
@@ -90,109 +68,14 @@ export class TimeInputComponent {
   protected openDial(field: HTMLInputElement) {
     if (this.disabled() || this.open()) return;
     this.dialMode.set('HOURS');
-    this.liftRow();
+    this.lift.raise();
     this.open.set(true);
     field.select();
   }
 
   protected close() {
     this.open.set(false);
-    this.pendingGlide = undefined;
-    this.lowerRow();
-  }
-
-  /** Raises the settings row into the top layer, above the modal backdrop that blurs the page. */
-  private liftRow() {
-    const row = this.host.closest<HTMLElement>('app-setting-row') ?? this.host;
-
-    // reuse the row a field in it already raised, stopped where it is until the release
-    if (activeLift?.row === row) {
-      clearTimeout(activeLift.timer);
-      activeLift.owner = this;
-      const rect = row.getBoundingClientRect();
-      row.style.left = `${rect.left}px`;
-      row.style.top = `${rect.top}px`;
-      return;
-    }
-    if (activeLift) this.settle(activeLift);
-
-    // hold the row's place in the page and raise it where it stands
-    const rect = row.getBoundingClientRect();
-    const placeholder = document.createElement('div');
-    placeholder.style.height = `${rect.height}px`;
-    row.before(placeholder);
-    row.popover = 'manual';
-    row.classList.add('time-lift');
-    Object.assign(row.style, {
-      position: 'fixed',
-      inset: 'auto',
-      margin: '0',
-      left: `${rect.left}px`,
-      top: `${rect.top}px`,
-      width: `${rect.width}px`,
-    });
-    row.showPopover();
-    const backdrop = document.createElement('div');
-    backdrop.classList.add('modal-wrapper');
-    document.body.appendChild(backdrop);
-    activeLift = { owner: this, row, placeholder, backdrop };
-  }
-
-  /** Glides the raised row and the dial to the same place on screen for every field. */
-  private placeLift(picker: HTMLElement) {
-    const lift = activeLift;
-    if (lift?.owner !== this) return;
-    const row = lift.row.getBoundingClientRect();
-    const height = row.height + LIFT_GAP + picker.offsetHeight;
-    const top = Math.max(LIFT_GAP, (window.innerHeight - height) / 2);
-    picker.style.left = `${(window.innerWidth - picker.offsetWidth) / 2}px`;
-    picker.style.top = `${top + row.height + LIFT_GAP}px`;
-    const glide = () =>
-      requestAnimationFrame(() => {
-        if (activeLift !== lift || lift.owner !== this || !this.open()) return;
-        lift.row.classList.add('lifted');
-        lift.backdrop.classList.add('in');
-        lift.row.style.left = `${(window.innerWidth - row.width) / 2}px`;
-        lift.row.style.top = `${top}px`;
-      });
-
-    // the SteamVR keyboard opens only if the field is still under the pointer at release
-    if (this.pointerHeld) this.pendingGlide = glide;
-    else glide();
-  }
-
-  protected release() {
-    this.pointerHeld = false;
-    this.pendingGlide?.();
-    this.pendingGlide = undefined;
-  }
-
-  /** Glides the row back into the page, unless another field in it opens first. */
-  private lowerRow() {
-    const lift = activeLift;
-    if (lift?.owner !== this) return;
-    clearTimeout(lift.timer);
-    lift.timer = setTimeout(() => {
-      const home = lift.placeholder.getBoundingClientRect();
-      lift.row.classList.remove('lifted');
-      lift.backdrop.classList.remove('in');
-      lift.row.style.left = `${home.left}px`;
-      lift.row.style.top = `${home.top}px`;
-      lift.timer = setTimeout(() => this.settle(lift), LIFT_MS);
-    });
-  }
-
-  private settle(lift: Lift) {
-    clearTimeout(lift.timer);
-    if (lift.row.matches(':popover-open')) lift.row.hidePopover();
-    lift.row.removeAttribute('popover');
-    lift.row.classList.remove('time-lift', 'lifted');
-    for (const property of ['position', 'inset', 'margin', 'left', 'top', 'width']) {
-      lift.row.style.removeProperty(property);
-    }
-    lift.placeholder.remove();
-    lift.backdrop.remove();
-    if (activeLift === lift) activeLift = null;
+    this.lift.lower();
   }
 
   protected pickHour(hours: number) {

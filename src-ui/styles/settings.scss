@@ -1,3 +1,5 @@
+@use 'shadows';
+
 .setting-category {
   &:not(:first-child) {
     margin-top: 1em;
@@ -198,4 +200,25 @@
   display: inline-flex;
   flex-direction: row;
   align-items: center;
+}
+
+// a settings row raised by SettingRowLift
+.setting-row-lift {
+  @include shadows.shadow(5, true);
+  overflow: visible;
+  color: inherit;
+  // an outline drawn as an inset shadow, because a border animates in from 3px in the text colour
+  border: none;
+  box-shadow:
+    var(--shadow-5),
+    inset 0 0 0 round(down, 0.15em, 1px) transparent;
+  border-radius: var(--surface-border-radius);
+  background: transparent;
+
+  &.lifted {
+    box-shadow:
+      var(--shadow-5),
+      inset 0 0 0 round(down, 0.15em, 1px) var(--color-surface-3);
+    background-color: var(--color-surface-1);
+  }
 }

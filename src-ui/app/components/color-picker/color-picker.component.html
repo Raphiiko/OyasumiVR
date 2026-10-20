@@ -4,8 +4,9 @@
   [style.--picked-color]="cssColor()"
   [disabled]="disabled()"
   [attr.popovertarget]="popoverId"
+  (click)="raiseRow(panel)"
 ></button>
-<div class="picker" popover [id]="popoverId">
+<div class="picker" popover [id]="popoverId" (toggle)="onToggle($event, panel)" #panel>
   <div class="spectrum" #pickerHost></div>
   <div class="presets">
     @for (preset of presets; track $index) {

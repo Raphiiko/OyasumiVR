@@ -171,18 +171,3 @@
     }
   }
 }
-
-// the raised settings row lives outside this component's view
-::ng-deep .time-lift {
-  @include shadows.shadow(5, true);
-  overflow: visible;
-  color: inherit;
-  border: 0.15em solid transparent;
-  border-radius: var(--surface-border-radius);
-  background: transparent;
-
-  &.lifted {
-    border-color: var(--color-surface-3);
-    background-color: var(--color-surface-1);
-  }
-}

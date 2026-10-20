@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import 'vanilla-colorful/rgb-color-picker.js';
 import type { RgbColorPicker } from 'vanilla-colorful/rgb-color-picker.js';
+import { SettingRowLift } from '../setting-row/setting-row-lift';
 
 type Rgb = [number, number, number];
 
@@ -48,6 +49,7 @@ export class ColorPickerComponent implements AfterViewInit {
 
   private readonly pickerHost = viewChild.required<ElementRef<HTMLElement>>('pickerHost');
   private readonly picker = document.createElement('rgb-color-picker') as RgbColorPicker;
+  private readonly lift = new SettingRowLift();
 
   constructor() {
     this.picker.addEventListener('color-changed', (e) => {
@@ -62,6 +64,16 @@ export class ColorPickerComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.pickerHost().nativeElement.append(this.picker);
+  }
+
+  /** Runs before popovertarget opens the panel, so the panel joins the top layer above the row. */
+  protected raiseRow(panel: HTMLElement) {
+    if (!panel.matches(':popover-open')) this.lift.raise();
+  }
+
+  protected onToggle(event: ToggleEvent, panel: HTMLElement) {
+    if (event.newState === 'open') this.lift.place(panel);
+    else this.lift.lower();
   }
 
   protected isSelected(preset: Rgb): boolean {

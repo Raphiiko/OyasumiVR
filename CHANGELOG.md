@@ -28,6 +28,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 - Replaced the colour picker for the Bigscreen Beyond LED colours with one that works from the SteamVR dashboard and has colour presets
 - Right controllers now show a mirrored controller icon in the device list and the Device Manager
+- Replaced the time fields with a 24-hour dial that works from the SteamVR dashboard
 
 ### Fixed
 
