@@ -62,6 +62,7 @@
               [titleKey]="'comp.event-log.group.cause.' + item.cause"
               [time]="groupTime(item)"
               [icon]="causeIcon(item)"
+              [warning]="warningCount(item) > 0"
               (click)="toggleGroup(item)"
               (keydown.enter)="toggleGroup(item)"
               (keydown.space)="toggleGroup(item); $event.preventDefault()"
@@ -69,8 +70,12 @@
               <div class="group-summary">
                 <span
                   class="group-count"
-                  [transloco]="'comp.event-log.group.count'"
-                  [translocoParams]="{ count: item.entries.length }"
+                  [innerHtml]="
+                    (warningCount(item)
+                      ? 'comp.event-log.group.countWithWarnings'
+                      : 'comp.event-log.group.count'
+                    ) | transloco: { count: item.entries.length, warnings: warningCount(item) }
+                  "
                 ></span>
                 <app-icon class="group-chevron icon-mono" name="chevron-down" />
               </div>

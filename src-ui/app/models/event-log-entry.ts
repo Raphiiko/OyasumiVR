@@ -274,6 +274,8 @@ export interface EventLogChangedVRChatMicMuteState extends EventLogBase {
   type: 'changedVRChatMicMuteState';
   muted: boolean;
   reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+  /** Set when the automation could not change the state; `muted` is then the target state. */
+  failure?: 'STATE_UNKNOWN';
 }
 
 export interface EventLogChangedSystemMicMuteState extends EventLogBase {

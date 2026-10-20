@@ -16,13 +16,14 @@ import { AutomationConfigService } from '../automation-config.service';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   VRChatMicMuteAutomationsConfig,
+  VRChatMicMuteStateOption,
 } from '../../models/automations';
 import { isArray } from 'lodash';
 import { SleepService } from '../sleep.service';
 import { SleepPreparationService } from '../sleep-preparation.service';
 import { EventLogService } from '../event-log.service';
 import { EventLogChangedVRChatMicMuteState } from '../../models/event-log-entry';
-import { info } from '@tauri-apps/plugin-log';
+import { info, warn } from '@tauri-apps/plugin-log';
 import { fetch } from '@tauri-apps/plugin-http';
 import { VRChatService } from '../vrchat-api/vrchat.service';
 
@@ -71,64 +72,14 @@ export class VRChatMicMuteAutomationService {
       }
     });
     // Set the muted state when sleep mode changes
-    this.sleep.mode.pipe(skip(1)).subscribe(async (mode) => {
-      let reason = null;
-      let muted = false;
-      if (mode && this.config.onSleepModeEnable !== 'NONE') {
-        if (this.config.onSleepModeEnable === 'MUTE' && !this._muted.value) {
-          reason = 'SLEEP_MODE_ENABLED';
-          muted = true;
-          info('[VRChatMicMuteAutomation] Muting microphone as the sleep mode was enabled');
-          await this.setMute(true);
-        } else if (this.config.onSleepModeEnable === 'UNMUTE' && this._muted.value) {
-          reason = 'SLEEP_MODE_ENABLED';
-          muted = false;
-          info('[VRChatMicMuteAutomation] Unmuting microphone as the sleep mode was enabled');
-          await this.setMute(false);
-        }
-      } else if (!mode && this.config.onSleepModeDisable !== 'NONE') {
-        if (this.config.onSleepModeDisable === 'MUTE' && !this._muted.value) {
-          reason = 'SLEEP_MODE_DISABLED';
-          muted = true;
-          info('[VRChatMicMuteAutomation] Muting microphone as the sleep mode was disabled');
-          await this.setMute(true);
-        } else if (this.config.onSleepModeDisable === 'UNMUTE' && this._muted.value) {
-          reason = 'SLEEP_MODE_DISABLED';
-          muted = false;
-          info('[VRChatMicMuteAutomation] Unmuting microphone as the sleep mode was disabled');
-          await this.setMute(false);
-        }
-      }
-      if (reason) {
-        this.eventLog.logEvent({
-          type: 'changedVRChatMicMuteState',
-          muted,
-          reason,
-        } as EventLogChangedVRChatMicMuteState);
-      }
+    this.sleep.mode.pipe(skip(1)).subscribe((mode) => {
+      const option = mode ? this.config.onSleepModeEnable : this.config.onSleepModeDisable;
+      this.applyAutomation(option, mode ? 'SLEEP_MODE_ENABLED' : 'SLEEP_MODE_DISABLED');
     });
     // Set the muted state when the user prepares to go to sleep
-    this.sleepPreparation.onSleepPreparation.subscribe(async () => {
-      if (this.config.onSleepPreparation !== 'NONE') {
-        if (this.config.onSleepPreparation === 'MUTE' && !this._muted.value) {
-          this.eventLog.logEvent({
-            type: 'changedVRChatMicMuteState',
-            muted: true,
-            reason: 'SLEEP_PREPARATION',
-          } as EventLogChangedVRChatMicMuteState);
-          info('[VRChatMicMuteAutomation] Muting microphone as the user prepared to go to sleep');
-          await this.setMute(true);
-        } else if (this.config.onSleepPreparation === 'UNMUTE' && this._muted.value) {
-          this.eventLog.logEvent({
-            type: 'changedVRChatMicMuteState',
-            muted: false,
-            reason: 'SLEEP_PREPARATION',
-          } as EventLogChangedVRChatMicMuteState);
-          info('[VRChatMicMuteAutomation] Unmuting microphone as the user prepared to go to sleep');
-          await this.setMute(false);
-        }
-      }
-    });
+    this.sleepPreparation.onSleepPreparation.subscribe(() =>
+      this.applyAutomation(this.config.onSleepPreparation, 'SLEEP_PREPARATION')
+    );
     // In case the muted state is not known (This happens when OyasumiVR is launched after VRChat is already active)
     // We poll the muted state through OSCQuery every 3 seconds, until it is known.
     merge(interval(3000))
@@ -160,6 +111,40 @@ export class VRChatMicMuteAutomationService {
     return run;
   }
 
+  private async applyAutomation(
+    option: VRChatMicMuteStateOption,
+    reason: EventLogChangedVRChatMicMuteState['reason']
+  ) {
+    if (option === 'NONE' || !this.vrcActive) return;
+    const muted = option === 'MUTE';
+
+    await this.fetchMutedState();
+    if (!this.vrcActive) return;
+
+    // the mic button is a toggle, so an unknown state cannot be set safely
+    if (this._muted.value === null) {
+      warn(
+        `[VRChatMicMuteAutomation] Could not ${option.toLowerCase()} the microphone (${reason}): the muted state is unknown, as VRChat's OSCQuery did not report it`
+      );
+      this.eventLog.logEvent({
+        type: 'changedVRChatMicMuteState',
+        muted,
+        reason,
+        failure: 'STATE_UNKNOWN',
+      } as EventLogChangedVRChatMicMuteState);
+      return;
+    }
+    if (this._muted.value === muted) return;
+
+    info(`[VRChatMicMuteAutomation] Setting the microphone to ${option} (${reason})`);
+    await this.setMute(muted);
+    this.eventLog.logEvent({
+      type: 'changedVRChatMicMuteState',
+      muted,
+      reason,
+    } as EventLogChangedVRChatMicMuteState);
+  }
+
   private async fetchMutedState(): Promise<boolean> {
     if (this._muted.value !== null) return true;
     const oscqAddr = await firstValueFrom(this.osc.vrchatOscQueryAddress);
@@ -167,6 +152,8 @@ export class VRChatMicMuteAutomationService {
     try {
       const resp = await fetch(`http://${oscqAddr}/avatar/parameters/MuteSelf`);
       const data: { VALUE?: boolean[] } = await resp.json().catch(() => {});
+      // a newer state may have arrived during the read, so the read is stale
+      if (this._muted.value !== null) return true;
       if (
         this.vrcActive &&
         data.VALUE &&

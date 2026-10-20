@@ -386,7 +386,9 @@
           },
           "title": {
             "MUTE": "VRChatマイクをミュート",
-            "UNMUTE": "VRChatマイクをミュート解除"
+            "MUTE_FAILED": "VRChatマイクをミュートできませんでした：OSCQueryからミュート状態を取得できませんでした。詳しくは通知センターを確認してください。",
+            "UNMUTE": "VRChatマイクをミュート解除",
+            "UNMUTE_FAILED": "VRChatマイクのミュートを解除できませんでした：OSCQueryからミュート状態を取得できませんでした。詳しくは通知センターを確認してください。"
           }
         },
         "chaperoneFadeDistanceChanged": {
@@ -745,7 +747,8 @@
           "sunrise": "日の出",
           "sunset": "日没"
         },
-        "count": "{count}件のアクション"
+        "count": "{count}件のアクション",
+        "countWithWarnings": "{count}件のアクション、<span class=\"warning\">{warnings}件失敗</span>"
       },
       "no-logs": "まだイベントが記録されていません。\nログは最大48時間保存されます。",
       "openFilters": "フィルター",

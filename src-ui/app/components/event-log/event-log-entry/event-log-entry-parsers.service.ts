@@ -1,0 +1,88 @@
+import { Injectable } from '@angular/core';
+import { EventLogEntry } from '../../../models/event-log-entry';
+import { EventLogEntryParser } from './event-log-entry-parser';
+import { EventLogSleepModeEnabledEntryParser } from './entry-parsers/sleep-mode-enabled';
+import { EventLogSleepModeDisabledEntryParser } from './entry-parsers/sleep-mode-disabled';
+import { EventLogTurnedOffOpenVRDevicesEntryParser } from './entry-parsers/openvr-device-turned-off';
+import { EventLogGpuPowerLimitChangedEntryParser } from './entry-parsers/gpu-power-limit-changed';
+import { EventLogAcceptedInviteRequestEntryParser } from './entry-parsers/accepted-invite-request';
+import { EventLogDeclinedInviteRequestEntryParser } from './entry-parsers/declined-invite-request';
+import { EventLogFailedInviteRequestEntryParser } from './entry-parsers/failed-invite-request';
+import { EventLogDeclinedInviteEntryParser } from './entry-parsers/declined-invite';
+import { EventLogStatusChangedOnPlayerCountChangeEntryParser } from './entry-parsers/status-changed-on-player-count-change';
+import { EventLogSleepDetectorEnableCancelledEntryParser } from './entry-parsers/sleep-detector-enable-cancelled';
+import { EventLogRenderResolutionChangedEntryParser } from './entry-parsers/render-resolution-changed';
+import { EventLogFadeDistanceChangedEntryParser } from './entry-parsers/fade-distance-changed';
+import { EventLogLighthouseSetPowerStateEntryParser } from './entry-parsers/lighthouse-set-power-state';
+import { EventLogShutdownSequenceStartedEntryParser } from './entry-parsers/shutdown-sequence-started';
+import { EventLogShutdownSequenceCancelledEntryParser } from './entry-parsers/shutdown-sequence-cancelled';
+import { EventLogHardwareBrightnessChangedEntryParser } from './entry-parsers/display-brightness-changed';
+import { EventLogSoftwareBrightnessChangedEntryParser } from './entry-parsers/image-brightness-changed';
+import { EventLogWindowsPowerPolicySetEntryParser } from './entry-parsers/windows-power-policy-set';
+import { EventLogMsiAfterburnerProfileSetEntryParser } from './entry-parsers/msi-afterburner-profile-set';
+import { EventLogSimpleBrightnessChangedEntryParser } from './entry-parsers/simple-brightness-changed';
+import { EventLogChangedVRChatMicMuteStateEntryParser } from './entry-parsers/changed-vrchat-mic-mute-state';
+import { EventLogChangedSystemMicControllerButtonBehaviorEntryParser } from './entry-parsers/changed-system-mic-controller-button-behavior';
+import { EventLogChangedSystemMicMuteStateEntryParser } from './entry-parsers/changed-system-mic-mute-state';
+import { EventLogChangedAudioDeviceVolumeEntryParser } from './entry-parsers/changed-audio-device-volume';
+import { EventLogMutedAudioDeviceEntryParser } from './entry-parsers/muted-audio-device';
+import { EventLogUnmutedAudioDeviceEntryParser } from './entry-parsers/unmuted-audio-device';
+import { EventLogBSBFanSpeedChangedEntryParser } from './entry-parsers/bsb-fan-speed-changed';
+import { EventLogBSBLedChangedEntryParser } from './entry-parsers/bsb-led-changed';
+import { EventLogStatusChangedOnGeneralEventEntryParser } from './entry-parsers/status-changed-on-general-event';
+import { EventLogVRChatAvatarChangedEntryParser } from './entry-parsers/vrchat-avatar-changed';
+import { EventLogVRChatGroupChangedEntryParser } from './entry-parsers/vrchat-group-changed';
+import { EventLogCCTChangedEntryParser } from './entry-parsers/cct-changed';
+import { EventLogFrameLimitChangedEntryParser } from './entry-parsers/frame-limit-changed';
+import { EventLogRunAutomationExecutedEntryParser } from './entry-parsers/run-automation-executed';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class EventLogEntryParsers {
+  private readonly parsers: EventLogEntryParser<EventLogEntry>[] = [
+    new EventLogSleepModeEnabledEntryParser(),
+    new EventLogSleepModeDisabledEntryParser(),
+    new EventLogTurnedOffOpenVRDevicesEntryParser(),
+    new EventLogLighthouseSetPowerStateEntryParser(),
+    new EventLogGpuPowerLimitChangedEntryParser(),
+    new EventLogSimpleBrightnessChangedEntryParser(),
+    new EventLogHardwareBrightnessChangedEntryParser(),
+    new EventLogSoftwareBrightnessChangedEntryParser(),
+    new EventLogAcceptedInviteRequestEntryParser(),
+    new EventLogDeclinedInviteRequestEntryParser(),
+    new EventLogFailedInviteRequestEntryParser(),
+    new EventLogDeclinedInviteEntryParser(),
+    new EventLogStatusChangedOnPlayerCountChangeEntryParser(),
+    new EventLogStatusChangedOnGeneralEventEntryParser(),
+    new EventLogSleepDetectorEnableCancelledEntryParser(),
+    new EventLogRenderResolutionChangedEntryParser(),
+    new EventLogFadeDistanceChangedEntryParser(),
+    new EventLogShutdownSequenceStartedEntryParser(),
+    new EventLogShutdownSequenceCancelledEntryParser(),
+    new EventLogWindowsPowerPolicySetEntryParser(),
+    new EventLogMsiAfterburnerProfileSetEntryParser(),
+    new EventLogChangedVRChatMicMuteStateEntryParser(),
+    new EventLogChangedSystemMicMuteStateEntryParser(),
+    new EventLogChangedSystemMicControllerButtonBehaviorEntryParser(),
+    new EventLogChangedAudioDeviceVolumeEntryParser(),
+    new EventLogMutedAudioDeviceEntryParser(),
+    new EventLogUnmutedAudioDeviceEntryParser(),
+    new EventLogBSBFanSpeedChangedEntryParser(),
+    new EventLogBSBLedChangedEntryParser(),
+    new EventLogVRChatAvatarChangedEntryParser(),
+    new EventLogVRChatGroupChangedEntryParser(),
+    new EventLogCCTChangedEntryParser(),
+    new EventLogFrameLimitChangedEntryParser(),
+    new EventLogRunAutomationExecutedEntryParser(),
+  ];
+
+  /** Undefined for a missing entry, or a type without a parser. */
+  forEntry(entry?: EventLogEntry): EventLogEntryParser<EventLogEntry> | undefined {
+    return entry && this.parsers.find((parser) => parser.entryType() === entry.type);
+  }
+
+  isWarning(entry: EventLogEntry): boolean {
+    return !!this.forEntry(entry)?.isWarning(entry);
+  }
+}

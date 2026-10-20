@@ -160,6 +160,11 @@ $rail-left: 1.95em;
   color: var(--color-text-3);
 }
 
+// the span comes from the countWithWarnings translation, so it carries no encapsulation attribute
+.group-count ::ng-deep .warning {
+  color: #ffb300;
+}
+
 .group-chevron {
   font-size: 0.85em;
   transition: transform 0.15s ease;

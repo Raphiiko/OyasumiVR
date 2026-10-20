@@ -386,7 +386,9 @@
           },
           "title": {
             "MUTE": "已靜音 VRChat 中的麥克風",
-            "UNMUTE": "已取消靜音 VRChat 中的麥克風"
+            "MUTE_FAILED": "無法將 VRChat 中的麥克風靜音：OSCQuery 未回報你的靜音狀態。請查看訊息中心以了解詳情。",
+            "UNMUTE": "已取消靜音 VRChat 中的麥克風",
+            "UNMUTE_FAILED": "無法取消 VRChat 中的麥克風靜音：OSCQuery 未回報你的靜音狀態。請查看訊息中心以了解詳情。"
           }
         },
         "chaperoneFadeDistanceChanged": {
@@ -745,7 +747,8 @@
           "sunrise": "在日出時",
           "sunset": "在日落時"
         },
-        "count": "{count, plural, other {# 個操作}}"
+        "count": "{count, plural, other {# 個操作}}",
+        "countWithWarnings": "{count, plural, other {# 個操作}}，<span class=\"warning\">{warnings, plural, other {# 個失敗}}</span>"
       },
       "no-logs": "目前尚無任何事件紀錄。\n事件紀錄最多會保留 48 小時。",
       "openFilters": "篩選事件",
