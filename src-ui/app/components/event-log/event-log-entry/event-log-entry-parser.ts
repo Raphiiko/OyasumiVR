@@ -25,4 +25,9 @@ export abstract class EventLogEntryParser<T extends EventLogBase> {
   headerInfoSubTitleParams(_entry: T): { [s: string]: string } {
     return {};
   }
+
+  /** True for an entry that reports an automation that went wrong, which the log marks as a warning. */
+  isWarning(_entry: T): boolean {
+    return false;
+  }
 }

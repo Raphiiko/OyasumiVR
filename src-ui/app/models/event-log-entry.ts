@@ -97,18 +97,6 @@ export interface EventLogBase {
   time: number;
 }
 
-/** True for an entry that reports an automation that went wrong, which the log marks as a warning. */
-export function isEventLogWarning(entry: EventLogEntry): boolean {
-  switch (entry.type) {
-    case 'failedInviteRequest':
-      return true;
-    case 'changedVRChatMicMuteState':
-      return !!entry.failure;
-    default:
-      return false;
-  }
-}
-
 export type EventLogShutdownSequenceStartedReason =
   'MANUAL' | 'HOTKEY' | 'SLEEP_TRIGGER' | 'VRC_ALONE_TRIGGER' | 'MQTT';
 

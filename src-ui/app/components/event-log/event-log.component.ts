@@ -7,7 +7,8 @@ import {
 } from '@angular/core';
 import { EventLogService } from '../../services/event-log.service';
 import { BehaviorSubject, combineLatest, map, Observable, tap } from 'rxjs';
-import { EventLogEntry, EventLogType, isEventLogWarning } from '../../models/event-log-entry';
+import { EventLogEntry, EventLogType } from '../../models/event-log-entry';
+import { EventLogEntryParsers } from './event-log-entry/event-log-entry-parsers.service';
 import { fade, hshrink, noop, vshrink } from '../../utils/animations';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import {
@@ -62,7 +63,8 @@ export class EventLogComponent implements OnInit, AfterViewInit {
     private eventLog: EventLogService,
     private cdr: ChangeDetectorRef,
     private modalService: ModalService,
-    private appSettings: AppSettingsService
+    private appSettings: AppSettingsService,
+    private parsers: EventLogEntryParsers
   ) {
     this.itemsInView = combineLatest([this.eventLog.eventLog, this.showCount, this.filters]).pipe(
       map(
@@ -102,7 +104,7 @@ export class EventLogComponent implements OnInit, AfterViewInit {
   }
 
   protected warningCount(group: EventLogGroup): number {
-    return group.entries.filter(isEventLogWarning).length;
+    return group.entries.filter((entry) => this.parsers.isWarning(entry)).length;
   }
 
   /** False when the entry happened within the same second as its group header. */

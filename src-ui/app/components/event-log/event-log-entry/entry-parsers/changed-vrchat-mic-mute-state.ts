@@ -24,4 +24,8 @@ export class EventLogChangedVRChatMicMuteStateEntryParser extends EventLogEntryP
   override headerInfoSubTitle(entry: EventLogChangedVRChatMicMuteState): string {
     return 'comp.event-log-entry.type.changedVRChatMicMuteState.reason.' + entry.reason;
   }
+
+  override isWarning(entry: EventLogChangedVRChatMicMuteState): boolean {
+    return !!entry.failure;
+  }
 }
