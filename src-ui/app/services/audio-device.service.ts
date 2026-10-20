@@ -43,13 +43,18 @@ export class AudioDeviceService {
     this._activeDevices.next(devices);
   }
 
-  async setVolume(deviceId: string, volume: number) {
-    if (!this.isActiveDevice(deviceId)) return;
+  /** Resolves false when the device is not active or Windows rejected the change. */
+  async setVolume(deviceId: string, volume: number): Promise<boolean> {
+    if (!this.isActiveDevice(deviceId)) return false;
     volume = clamp(volume, 0, 1);
     this.patchDevice(deviceId, { volume });
-    await invoke('set_audio_device_volume', { deviceId, volume });
+    return invoke('set_audio_device_volume', { deviceId, volume }).then(
+      () => true,
+      () => false
+    );
   }
 
+  /** Resolves null when the device is not active or Windows rejected the change. */
   async setMute(
     deviceId: string,
     mute: boolean
@@ -60,8 +65,11 @@ export class AudioDeviceService {
     const device = this._activeDevices.value.find((d) => d.id === deviceId);
     if (!device) return null;
     this.patchDevice(deviceId, { mute });
-    await invoke('set_audio_device_mute', { deviceId, mute });
-    return { muted: mute, device };
+    const applied = await invoke('set_audio_device_mute', { deviceId, mute }).then(
+      () => true,
+      () => false
+    );
+    return applied ? { muted: mute, device } : null;
   }
 
   isActiveDevice(deviceId: string) {

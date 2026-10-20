@@ -46,17 +46,21 @@ pub async fn set_supersample_scale(supersample_scale: Option<f32>) -> Result<(),
         return Err("OPENVR_NOT_INITIALISED".to_string());
     }
     let settings = &context.settings();
-    let _ = settings.set_bool(
-        CStr::from_bytes_with_nul(ovr::raw::k_pch_SteamVR_Section).unwrap(),
-        c"supersampleManualOverride",
-        supersample_scale.is_some(),
-    );
-    if let Some(scale) = supersample_scale {
-        let _ = settings.set_float(
+    settings
+        .set_bool(
             CStr::from_bytes_with_nul(ovr::raw::k_pch_SteamVR_Section).unwrap(),
-            c"supersampleScale",
-            scale,
-        );
+            c"supersampleManualOverride",
+            supersample_scale.is_some(),
+        )
+        .map_err(|e| format!("{e:?}"))?;
+    if let Some(scale) = supersample_scale {
+        settings
+            .set_float(
+                CStr::from_bytes_with_nul(ovr::raw::k_pch_SteamVR_Section).unwrap(),
+                c"supersampleScale",
+                scale,
+            )
+            .map_err(|e| format!("{e:?}"))?;
     }
     Ok(())
 }

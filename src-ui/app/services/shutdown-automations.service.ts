@@ -27,6 +27,7 @@ import { OpenVRService } from './openvr.service';
 import { LighthouseConsoleService } from './lighthouse-console.service';
 import { LighthouseService } from './lighthouse.service';
 import { invoke } from '@tauri-apps/api/core';
+import { warn } from '@tauri-apps/plugin-log';
 import {
   EventLogShutdownSequenceCancelled,
   EventLogShutdownSequenceStarted,
@@ -384,25 +385,20 @@ export class ShutdownAutomationsService {
     // Power down windows
     switch (this.config.powerDownWindowsMode) {
       case 'SHUTDOWN':
-        await invoke('windows_shutdown', {
-          message: this.translate.translate(
-            'shutdown-automations.sequence.powerDownWindows.shutdownMessage'
-          ),
-          timeout: 20,
-          forceCloseApps: true,
-        });
-        await firstValueFrom(merge(of(null).pipe(delay(30000)), this.cancelEvent));
+      case 'REBOOT': {
+        const mode = this.config.powerDownWindowsMode;
+        const message = this.translate.translate(
+          mode === 'SHUTDOWN'
+            ? 'shutdown-automations.sequence.powerDownWindows.shutdownMessage'
+            : 'shutdown-automations.sequence.powerDownWindows.rebootMessage'
+        );
+        const command = mode === 'SHUTDOWN' ? 'windows_shutdown' : 'windows_reboot';
+        const args = { message, timeout: 20, forceCloseApps: true };
+        if (await this.runPowerCommand(command, args)) {
+          await firstValueFrom(merge(of(null).pipe(delay(30000)), this.cancelEvent));
+        }
         break;
-      case 'REBOOT':
-        await invoke('windows_reboot', {
-          message: this.translate.translate(
-            'shutdown-automations.sequence.powerDownWindows.rebootMessage'
-          ),
-          timeout: 20,
-          forceCloseApps: true,
-        });
-        await firstValueFrom(merge(of(null).pipe(delay(30000)), this.cancelEvent));
-        break;
+      }
       case 'SLEEP':
         return this.dispatchDelayedPowerCommand('windows_sleep');
       case 'HIBERNATE':
@@ -416,7 +412,19 @@ export class ShutdownAutomationsService {
   private async dispatchDelayedPowerCommand(command: string): Promise<boolean> {
     await firstValueFrom(merge(of(null).pipe(delay(500)), this.cancelEvent));
     if (this.cancelFlag) return false;
-    void invoke(command);
+    // sleep and hibernate resolve only after the PC wakes up, so the sequence does not wait
+    void this.runPowerCommand(command);
     return true;
+  }
+
+  /** Resolves false when Windows refused the command. */
+  private runPowerCommand(command: string, args?: Record<string, unknown>): Promise<boolean> {
+    return invoke(command, args).then(
+      () => true,
+      (e) => {
+        warn(`[ShutdownAutomations] Windows refused ${command}: ${e}`);
+        return false;
+      }
+    );
   }
 }

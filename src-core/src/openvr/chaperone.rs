@@ -33,10 +33,12 @@ pub async fn set_fade_distance(fade_distance: f32) -> Result<(), String> {
         return Err("OPENVR_NOT_INITIALISED".to_string());
     }
     let settings = &context.settings();
-    let _ = settings.set_float(
-        CStr::from_bytes_with_nul(ovr::raw::k_pch_CollisionBounds_Section).unwrap(),
-        c"CollisionBoundsFadeDistance",
-        fade_distance,
-    );
+    settings
+        .set_float(
+            CStr::from_bytes_with_nul(ovr::raw::k_pch_CollisionBounds_Section).unwrap(),
+            c"CollisionBoundsFadeDistance",
+            fade_distance,
+        )
+        .map_err(|e| format!("{e:?}"))?;
     Ok(())
 }
