@@ -106,6 +106,7 @@ $overlay-border: 0.15em;
   }
 
   .slider-container {
+    position: relative;
     width: calc(var(--overlay-width) + $overlay-padding);
     height: 100%;
     padding: 0.5em;
