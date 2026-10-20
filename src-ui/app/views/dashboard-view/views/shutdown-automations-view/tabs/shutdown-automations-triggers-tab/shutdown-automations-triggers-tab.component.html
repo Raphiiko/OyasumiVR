@@ -70,13 +70,9 @@
         >
           @if (config.triggerOnSleepActivationWindow) {
             <div class="input-wrapper" @fade>
-              <input
-                type="time"
+              <app-time-input
                 [value]="onSleepActivationWindowStart"
-                (change)="
-                  onChangeOnSleepActivationWindowStart(onSleepActivationWindowStartInput.value)
-                "
-                #onSleepActivationWindowStartInput
+                (valueChange)="onChangeOnSleepActivationWindowStart($event!)"
               />
             </div>
           }
@@ -85,11 +81,9 @@
           }
           @if (config.triggerOnSleepActivationWindow) {
             <div class="input-wrapper" @fade>
-              <input
-                type="time"
+              <app-time-input
                 [value]="onSleepActivationWindowEnd"
-                (change)="onChangeOnSleepActivationWindowEnd(onSleepActivationWindowEndInput.value)"
-                #onSleepActivationWindowEndInput
+                (valueChange)="onChangeOnSleepActivationWindowEnd($event!)"
               />
             </div>
           }
@@ -155,13 +149,9 @@
         >
           @if (config.triggerWhenAloneActivationWindow) {
             <div class="input-wrapper" @fade>
-              <input
-                type="time"
+              <app-time-input
                 [value]="whenAloneActivationWindowStart"
-                (change)="
-                  onChangeWhenAloneActivationWindowStart(whenAloneActivationWindowStartInput.value)
-                "
-                #whenAloneActivationWindowStartInput
+                (valueChange)="onChangeWhenAloneActivationWindowStart($event!)"
               />
             </div>
           }
@@ -170,13 +160,9 @@
           }
           @if (config.triggerWhenAloneActivationWindow) {
             <div class="input-wrapper" @fade>
-              <input
-                type="time"
+              <app-time-input
                 [value]="whenAloneActivationWindowEnd"
-                (change)="
-                  onChangeWhenAloneActivationWindowEnd(whenAloneActivationWindowEndInput.value)
-                "
-                #whenAloneActivationWindowEndInput
+                (valueChange)="onChangeWhenAloneActivationWindowEnd($event!)"
               />
             </div>
           }

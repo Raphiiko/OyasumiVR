@@ -119,11 +119,9 @@
     >
       @if (automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindow) {
         <div class="input-wrapper" @fade>
-          <input
-            type="time"
+          <app-time-input
             [value]="activationWindowStart"
-            (change)="onChangeActivationWindowStart(activationWindowStartInput.value)"
-            #activationWindowStartInput
+            (valueChange)="onChangeActivationWindowStart($event!)"
           />
         </div>
       }
@@ -132,11 +130,9 @@
       }
       @if (automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindow) {
         <div class="input-wrapper" @fade>
-          <input
-            type="time"
+          <app-time-input
             [value]="activationWindowEnd"
-            (change)="onChangeActivationWindowEnd(activationWindowEndInput.value)"
-            #activationWindowEndInput
+            (valueChange)="onChangeActivationWindowEnd($event!)"
           />
         </div>
       }

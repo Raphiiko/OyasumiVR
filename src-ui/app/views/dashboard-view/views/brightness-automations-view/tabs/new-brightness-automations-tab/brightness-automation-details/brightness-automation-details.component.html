@@ -46,11 +46,9 @@
                 <span class="switch-toggle-slider"></span>
               </label>
             </div>
-            <input
-              type="time"
+            <app-time-input
               [value]="asSunConfig(config()).activationTime"
-              (input)="updateActivationTime(timeInput.value)"
-              #timeInput
+              (valueChange)="updateActivationTime($event!)"
               [class.anim-vshake]="vshakeElements.includes('ACTIVATION_TIME')"
               [disabled]="asSunConfig(config()).autoUpdateTime"
             />

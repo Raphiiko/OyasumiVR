@@ -1,0 +1,83 @@
+<div class="time-input" [class.open]="open()">
+  <input
+    type="text"
+    inputmode="numeric"
+    maxlength="8"
+    spellcheck="false"
+    autocomplete="off"
+    placeholder="--:--"
+    [value]="text()"
+    [disabled]="disabled()"
+    (mousedown)="pointerHeld = true"
+    (focus)="openDial(field)"
+    (click)="openDial(field)"
+    (blur)="close()"
+    (change)="commit(field)"
+    (keydown)="onKeyDown($event, field)"
+    #field
+  />
+  @if (open()) {
+    <div class="picker" popover="manual" (mousedown)="$event.preventDefault()" @dialFade #picker>
+      <div class="readout">
+        <button
+          type="button"
+          [class.active]="dialMode() === 'HOURS'"
+          (click)="dialMode.set('HOURS')"
+        >
+          {{ text().slice(0, 2) || '--' }}
+        </button>
+        <span>:</span>
+        <button
+          type="button"
+          [class.active]="dialMode() === 'MINUTES'"
+          (click)="dialMode.set('MINUTES')"
+        >
+          {{ text().slice(3, 5) || '--' }}
+        </button>
+      </div>
+      <div class="dial">
+        @if (dialMode() === 'HOURS' && !duration()) {
+          <app-icon name="sleep" class="dial-glyph night" />
+          <app-icon name="sunrise" class="dial-glyph morning" />
+          <app-icon name="sunset" class="dial-glyph evening" />
+        }
+        @if (time()) {
+          <div class="dial-hand" [style.transform]="'rotate(' + handAngle() + 'deg)'"></div>
+        }
+        <div class="dial-hub"></div>
+        @if (dialMode() === 'HOURS') {
+          @for (tick of hourTicks; track tick.value) {
+            <button
+              type="button"
+              class="dial-tick"
+              [attr.aria-label]="tick.label"
+              [class.minor]="tick.value % 2 === 1"
+              [class.selected]="tick.value === hours()"
+              [style.left]="tick.left"
+              [style.top]="tick.top"
+              (click)="pickHour(tick.value)"
+            >
+              @if (tick.value % 2 === 0 || tick.value === hours()) {
+                {{ tick.label }}
+              }
+            </button>
+          }
+        } @else {
+          @for (tick of minuteTicks; track tick.value) {
+            <button
+              type="button"
+              class="dial-tick"
+              [attr.aria-label]="tick.label"
+              [class.selected]="tick.value === minutes()"
+              [style.left]="tick.left"
+              [style.top]="tick.top"
+              (click)="pickMinute(tick.value)"
+            >
+              {{ tick.label }}
+            </button>
+          }
+        }
+      </div>
+    </div>
+  }
+</div>

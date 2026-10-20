@@ -243,6 +243,7 @@ import { BrightnessAutomationConfigLabelComponent } from './views/dashboard-view
 import { BrightnessAutomationsListComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/new-brightness-automations-tab/brightness-automations-list/brightness-automations-list.component';
 import { BrightnessAutomationDetailsComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/new-brightness-automations-tab/brightness-automation-details/brightness-automation-details.component';
 import { DurationInputSettingComponent } from './components/duration-input-setting/duration-input-setting.component';
+import { TimeInputComponent } from './components/time-input/time-input.component';
 import { CCTControlService } from './services/cct-control/cct-control.service';
 import { CCTControlModalComponent } from './components/cct-control-modal/cct-control-modal.component';
 import { SettingsBrightnessCctViewComponent } from './views/dashboard-view/views/settings-brightness-cct-view/settings-brightness-cct-view.component';
@@ -442,6 +443,7 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
     BrightnessAutomationsListComponent,
     BrightnessAutomationDetailsComponent,
     DurationInputSettingComponent,
+    TimeInputComponent,
     CCTInputSettingComponent,
     CCTControlModalComponent,
     SettingsBrightnessCctViewComponent,
