@@ -40,6 +40,7 @@
   class="input-container"
   [class.has-unit]="!!unit() || !!unitIcon()"
   (mouseenter)="onMouseEnter()"
+  (mousedown)="onFieldMouseDown($event)"
   [class.overlay-active]="showOverlay"
   [class.disabled]="disabled()"
 >
@@ -51,7 +52,6 @@
     [step]="step()"
     [value]="value()"
     (input)="input$.next(inputValue.value)"
-    (mousedown)="onInputMouseDown($event)"
     (blur)="onInputBlur()"
     #inputValue
   />

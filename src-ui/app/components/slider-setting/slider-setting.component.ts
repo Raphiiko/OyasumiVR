@@ -43,6 +43,8 @@ export class SliderSettingComponent implements OnInit, OnChanges, OnDestroy {
   protected showOverlay = false;
   /** Set when the overlay opens in the SteamVR dashboard, where it shows step buttons and stays open. */
   protected openedInDashboard = false;
+  /** Watches for the dashboard to close while an overlay opened in it is showing. */
+  private dashboardExit?: MutationObserver;
   protected input$ = new Subject<string>();
 
   set audioLevel(value: number) {
@@ -62,6 +64,7 @@ export class SliderSettingComponent implements OnInit, OnChanges, OnDestroy {
   ngOnDestroy(): void {
     // complete here, not through DestroyRef: outputs stop emitting once DestroyRef callbacks run
     this.input$.complete();
+    this.dashboardExit?.disconnect();
   }
 
   ngOnInit(): void {
@@ -95,7 +98,7 @@ export class SliderSettingComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges) {
     if (!changes['disabled']?.currentValue) return;
-    this.showOverlay = false;
+    this.closeOverlay();
   }
 
   onInputBlur() {
@@ -115,21 +118,36 @@ export class SliderSettingComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /** Opens the dashboard overlay without focusing the field, so the press opens no SteamVR keyboard. */
-  onInputMouseDown(event: MouseEvent) {
+  onFieldMouseDown(event: MouseEvent) {
     if (this.disabled() || this.showOverlay || !inVrDashboard()) return;
     event.preventDefault();
     this.openedInDashboard = true;
     this.showOverlay = true;
+
+    // the core removes the marker when the dashboard closes, and the overlay must not outlive it
+    this.dashboardExit = new MutationObserver(() => {
+      if (!inVrDashboard()) this.closeOverlay();
+    });
+    this.dashboardExit.observe(document.documentElement, {
+      attributeFilter: ['data-vr-dashboard'],
+    });
   }
 
   onOverlayLeave() {
-    if (!this.openedInDashboard) this.showOverlay = false;
+    if (!this.openedInDashboard) this.closeOverlay();
   }
 
   @HostListener('document:mousedown', ['$event'])
   onDocumentMouseDown(event: MouseEvent) {
     if (!this.showOverlay || this.el.nativeElement.contains(event.target as Node)) return;
+    this.closeOverlay();
+  }
+
+  private closeOverlay() {
     this.showOverlay = false;
+    this.dashboardExit?.disconnect();
+    this.dashboardExit = undefined;
+    this.cdr.markForCheck();
   }
 
   stepBy(steps: number) {
