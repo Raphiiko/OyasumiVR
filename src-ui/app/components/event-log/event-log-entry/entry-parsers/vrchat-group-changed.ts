@@ -11,9 +11,11 @@ export class EventLogVRChatGroupChangedEntryParser extends EventLogEntryParser<E
   }
 
   override headerInfoTitle(entry: EventLogVRChatGroupChanged): string {
-    return entry.isClearing
+    if (!entry.isClearing) return 'comp.event-log-entry.type.vrchatGroupChanged.title.set';
+    // a failed clear has no group when the group list could not be read
+    return entry.groupId
       ? 'comp.event-log-entry.type.vrchatGroupChanged.title.clear'
-      : 'comp.event-log-entry.type.vrchatGroupChanged.title.set';
+      : 'comp.event-log-entry.type.vrchatGroupChanged.title.clearUnknown';
   }
 
   override headerInfoTitleParams(entry: EventLogVRChatGroupChanged): {

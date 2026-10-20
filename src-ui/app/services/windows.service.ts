@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api/core';
 import { EventLogService } from './event-log.service';
-import { EventLogWindowsPowerPolicySet } from '../models/event-log-entry';
 import { error } from '@tauri-apps/plugin-log';
 import { BehaviorSubject } from 'rxjs';
 
@@ -34,18 +33,21 @@ export class WindowsService {
   ): Promise<void> {
     guid = guid.toUpperCase();
     await invoke<void>('set_windows_power_policy', { guid });
+    // the command reports no result, so read the active policy back
     const currentPolicy = await this.getWindowsPowerPolicy();
-    if (currentPolicy?.guid !== guid) {
+    const applied = currentPolicy?.guid === guid;
+    if (!applied) {
       error(
         `[Windows] Likely failed to set windows power policy: The newly fetched policy does not match the policy that was just set. (Set Policy = ${guid}, Actual Policy = ${currentPolicy?.name}, ${currentPolicy?.guid})`
       );
-    } else if (currentPolicy) {
-      this.eventLog.logEvent({
-        type: 'windowsPowerPolicySet',
-        reason,
-        policyName: currentPolicy?.name ?? 'Unknown Policy',
-      } as EventLogWindowsPowerPolicySet);
     }
+    const policyName = this._policies.value.find((p) => p.guid === guid)?.name;
+    this.eventLog.logEvent({
+      type: 'windowsPowerPolicySet',
+      reason,
+      policyName: policyName ?? 'Unknown Policy',
+      failure: applied ? undefined : 'UNKNOWN',
+    });
   }
 
   public async getWindowsPowerPolicy(): Promise<WindowsPowerPolicy | undefined> {

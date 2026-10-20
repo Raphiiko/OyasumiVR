@@ -306,6 +306,9 @@
       "withDevices": "{count, plural, one {1 Apparaat} other {# Apparaten}}"
     },
     "event-log-entry": {
+      "failure": {
+        "MUTE_STATE_UNKNOWN": "VRChat liet OyasumiVR niet weten of je microfoon gedempt is. Zorg dat OSC in VRChat is ingeschakeld."
+      },
       "type": {
         "acceptedInviteRequest": {
           "subtitle": {
@@ -386,9 +389,9 @@
           },
           "title": {
             "MUTE": "Microfoon gedempt in VRChat",
-            "MUTE_FAILED": "Kon microfoon niet dempen in VRChat: OSCQuery gaf de dempstatus niet door. Kijk in het Berichtencentrum voor meer informatie.",
+            "MUTE_FAILED": "Kon microfoon niet dempen in VRChat",
             "UNMUTE": "Demping van microfoon opgeheven in VRChat",
-            "UNMUTE_FAILED": "Kon demping van microfoon niet opheffen in VRChat: OSCQuery gaf de dempstatus niet door. Kijk in het Berichtencentrum voor meer informatie."
+            "UNMUTE_FAILED": "Kon demping van microfoon niet opheffen in VRChat"
           }
         },
         "chaperoneFadeDistanceChanged": {

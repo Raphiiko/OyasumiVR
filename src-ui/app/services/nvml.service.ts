@@ -15,6 +15,15 @@ export type NvmlStatus =
   | 'SidecarUnavailable'
   | 'UnknownError';
 
+/** Statuses the Message Centre posts a warning for; GpuAutomationMessageMonitor lists them too. */
+export const NVML_ERROR_STATUSES: NvmlStatus[] = [
+  'DriverNotLoaded',
+  'LibLoadingError',
+  'NoPermission',
+  'NvmlUnknownError',
+  'UnknownError',
+];
+
 @Injectable({
   providedIn: 'root',
 })

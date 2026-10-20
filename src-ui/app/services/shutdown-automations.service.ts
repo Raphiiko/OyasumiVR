@@ -9,6 +9,8 @@ import {
   distinctUntilChanged,
   filter,
   firstValueFrom,
+  from,
+  ignoreElements,
   interval,
   map,
   merge,
@@ -17,21 +19,29 @@ import {
   Subject,
   switchMap,
   take,
+  takeUntil,
   tap,
   throttleTime,
 } from 'rxjs';
-import { AUTOMATION_CONFIGS_DEFAULT, ShutdownAutomationsConfig } from '../models/automations';
+import {
+  AUTOMATION_CONFIGS_DEFAULT,
+  PowerDownWindowsMode,
+  ShutdownAutomationsConfig,
+} from '../models/automations';
 import { isEqual } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
 import { OpenVRService } from './openvr.service';
 import { DeviceControlService } from './device-control.service';
 import { LighthouseService } from './lighthouse.service';
+import { OVRDevice } from '../models/ovr-device';
 import { invoke } from '@tauri-apps/api/core';
 import { warn } from '@tauri-apps/plugin-log';
 import {
   EventLogShutdownSequenceCancelled,
   EventLogShutdownSequenceStarted,
   EventLogShutdownSequenceStartedReason,
+  EventLogShutdownSequenceStepFailed,
+  EventLogFailure,
 } from '../models/event-log-entry';
 import { EventLogService } from './event-log.service';
 import { listen } from '@tauri-apps/api/event';
@@ -287,20 +297,21 @@ export class ShutdownAutomationsService {
     this._stage.next('QUITTING_STEAMVR');
     // Quit steam
     await invoke('quit_steamvr', { kill: false });
-    // Wait up to 10 seconds for SteamVR to quit, even after a cancel
-    await firstValueFrom(
-      merge(
-        this.openvr.status.pipe(
-          filter((s) => s === 'INACTIVE'),
-          take(1)
-        ),
-        of(null).pipe(
-          delay(5000),
-          switchMap(() => invoke('quit_steamvr', { kill: true }))
-        ),
-        of(null).pipe(delay(10000))
-      )
+    // Wait up to 10 seconds for SteamVR to quit, killing it after 5, even after a cancel
+    const quit = this.openvr.status.pipe(
+      filter((s) => s === 'INACTIVE'),
+      take(1),
+      map(() => true)
     );
+    // the core reports INACTIVE only after vrserver exits, which can lag behind the kill
+    const forceQuit = of(null).pipe(
+      delay(5000),
+      takeUntil(quit),
+      switchMap(() => invoke('quit_steamvr', { kill: true })),
+      ignoreElements()
+    );
+    const steamVrQuit = await firstValueFrom(merge(quit, forceQuit, of(false).pipe(delay(10000))));
+    if (!this.cancelFlag && !steamVrQuit) this.logStepFailed('QUITTING_STEAMVR', 'UNKNOWN');
     await firstValueFrom(merge(of(null).pipe(delay(1000)), this.cancelEvent));
     return true;
   }
@@ -320,6 +331,8 @@ export class ShutdownAutomationsService {
       return true;
     this._stage.next('TURNING_OFF_DEVICES');
 
+    let failedOvrDevices: OVRDevice[] = [];
+    let lighthousesFailed = false;
     if (selected.ovrDevices.length) {
       // Turn off controllers and trackers
       const devices = structuredClone(selected.ovrDevices).filter((d) => d.canPowerOff);
@@ -345,33 +358,46 @@ export class ShutdownAutomationsService {
           this.cancelEvent
         )
       );
+      failedOvrDevices = (await firstValueFrom(this.openvr.devices)).filter(
+        (device) =>
+          device.isConnected && devices.some((d) => d.serialNumber === device.serialNumber)
+      );
     }
 
     if (selected.lighthouseDevices.length && this.appSettings.settingsSync.lighthousePowerControl) {
       const offPowerState = this.appSettings.settingsSync.lighthousePowerOffState;
-      const devices = structuredClone(selected.lighthouseDevices);
-      devices
-        .filter((d) => d.powerState === 'on' || d.powerState === 'booting')
-        .forEach((device) => this.lighthouse.setPowerState(device, offPowerState));
-      // Wait for all base stations to turn off with a timeout of 10 seconds
-      await firstValueFrom(
-        merge(
-          interval(250).pipe(
-            switchMap(() =>
-              this.lighthouse.devices.pipe(
-                map((newDevices) => newDevices.filter((d) => devices.some((d2) => d2.id === d.id)))
-              )
-            ),
-            filter((devices) => devices.every((d) => d.powerState === offPowerState))
-          ),
-          of(null).pipe(delay(10000)),
-          this.cancelEvent
-        )
+      const devices = structuredClone(selected.lighthouseDevices).filter(
+        (d) =>
+          (d.powerState === 'on' || d.powerState === 'booting') &&
+          !this.lighthouse.deviceNeedsIdentifier(d)
       );
+      // setPowerState resolves within about 11 seconds, and maps a V1's standby to sleep
+      const results = Promise.all(
+        devices.map((device) => this.lighthouse.setPowerState(device, offPowerState))
+      );
+      const reached = await firstValueFrom(
+        merge(from(results), this.cancelEvent.pipe(map(() => null)))
+      );
+      lighthousesFailed = !!reached?.some((deviceReached) => !deviceReached);
+    }
+
+    // report devices still on after the wait, unless the user cancelled
+    if (!this.cancelFlag && (failedOvrDevices.length || lighthousesFailed)) {
+      let failure: EventLogFailure = 'UNKNOWN';
+      if (!failedOvrDevices.length) failure = 'BASE_STATION_NO_RESPONSE';
+      else if (!lighthousesFailed) failure = this.deviceControl.powerOffFailure(failedOvrDevices);
+      this.logStepFailed('TURNING_OFF_DEVICES', failure);
     }
 
     await firstValueFrom(merge(of(null).pipe(delay(1000)), this.cancelEvent));
     return true;
+  }
+
+  private logStepFailed(
+    step: EventLogShutdownSequenceStepFailed['step'],
+    failure: EventLogFailure
+  ) {
+    this.eventLog.logEvent({ type: 'shutdownSequenceStepFailed', step, failure });
   }
 
   private async powerDownWindows(): Promise<boolean> {
@@ -394,35 +420,43 @@ export class ShutdownAutomationsService {
         );
         const command = mode === 'SHUTDOWN' ? 'windows_shutdown' : 'windows_reboot';
         const args = { message, timeout: 20, forceCloseApps: true };
-        if (await this.runPowerCommand(command, args)) {
+        if (await this.runPowerCommand(mode, command, args)) {
           await firstValueFrom(merge(of(null).pipe(delay(30000)), this.cancelEvent));
         }
         break;
       }
       case 'SLEEP':
-        return this.dispatchDelayedPowerCommand('windows_sleep');
+        return this.dispatchDelayedPowerCommand('SLEEP', 'windows_sleep');
       case 'HIBERNATE':
-        return this.dispatchDelayedPowerCommand('windows_hibernate');
+        return this.dispatchDelayedPowerCommand('HIBERNATE', 'windows_hibernate');
       case 'LOGOUT':
-        return this.dispatchDelayedPowerCommand('windows_logout');
+        return this.dispatchDelayedPowerCommand('LOGOUT', 'windows_logout');
     }
     return true;
   }
 
-  private async dispatchDelayedPowerCommand(command: string): Promise<boolean> {
+  private async dispatchDelayedPowerCommand(
+    mode: PowerDownWindowsMode,
+    command: string
+  ): Promise<boolean> {
     await firstValueFrom(merge(of(null).pipe(delay(500)), this.cancelEvent));
     if (this.cancelFlag) return false;
     // sleep and hibernate resolve only after the PC wakes up, so the sequence does not wait
-    void this.runPowerCommand(command);
+    void this.runPowerCommand(mode, command);
     return true;
   }
 
-  /** Resolves false when Windows refused the command. */
-  private runPowerCommand(command: string, args?: Record<string, unknown>): Promise<boolean> {
+  /** Resolves false, and logs a failed step, when Windows refused the command. */
+  private runPowerCommand(
+    mode: PowerDownWindowsMode,
+    command: string,
+    args?: Record<string, unknown>
+  ): Promise<boolean> {
     return invoke(command, args).then(
       () => true,
       (e) => {
         warn(`[ShutdownAutomations] Windows refused ${command}: ${e}`);
+        this.logStepFailed(mode, 'UNKNOWN');
         return false;
       }
     );

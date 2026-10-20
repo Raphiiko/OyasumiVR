@@ -140,7 +140,10 @@ export class LighthouseService {
     });
   }
 
-  /** Resolves false when the command fails or the device does not report the new state in 10 s. */
+  /**
+   * Resolves false when the command fails or the device does not report the new state in 10 s.
+   * Resolves true when a newer command for the device replaced this one before it finished.
+   */
   public async setPowerState(
     device: LighthouseDevice,
     powerState: LighthouseDevicePowerState,
@@ -186,18 +189,21 @@ export class LighthouseService {
       // a V1 base station reports standby as sleep
       const expected =
         device.deviceType === 'lighthouseV1' && powerState === 'standby' ? 'sleep' : powerState;
+      const replaced = () => transition !== undefined && this.transitions[device.id] !== transition;
       const reached = await firstValueFrom(
         merge(
           interval(100).pipe(
             delay(500), // Wait 500ms before checking, to make sure the feedback in the UI lasts long enough
-            filter(() =>
-              this._devices.value.some((d) => d.id === device.id && d.powerState === expected)
+            filter(
+              () =>
+                replaced() ||
+                this._devices.value.some((d) => d.id === device.id && d.powerState === expected)
             )
           ),
           of(null).pipe(delay(10000))
         ).pipe(take(1))
       );
-      if (reached !== null) return true;
+      if (reached !== null || replaced()) return true;
       // a base station still booting has accepted the command to turn on
       const current = this._devices.value.find((d) => d.id === device.id)?.powerState;
       return expected === 'on' && current === 'booting';

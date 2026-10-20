@@ -77,12 +77,21 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
       return;
     }
     let key = this.parser.headerInfoTitle(this.entry());
+    // each title has a _FAILED sibling for an entry that reports a failure
+    if (key && entry?.failure) key += '_FAILED';
     if (key) {
       this.headerInfoTitle = this.sanitizer.bypassSecurityTrustHtml(
         this.translate.translate(key, this.parser?.headerInfoTitleParams(this.entry()) ?? {})
       );
     }
-    key = this.parser.headerInfoSubTitle(this.entry());
+    // a failed entry shows its hint in place of the reason
+    if (entry?.failure) {
+      this.headerInfoSubTitle = this.sanitizer.bypassSecurityTrustHtml(
+        this.translate.translate('comp.event-log-entry.failure.' + entry.failure)
+      );
+      return;
+    }
+    key = this.compact() ? '' : this.parser.headerInfoSubTitle(this.entry());
     if (key) {
       this.headerInfoSubTitle = this.sanitizer.bypassSecurityTrustHtml(
         this.translate.translate(key, this.parser?.headerInfoSubTitleParams(this.entry()) ?? {})

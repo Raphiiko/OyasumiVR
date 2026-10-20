@@ -306,6 +306,16 @@
       "withDevices": "{count, plural, one {1 Device} other {# Devices}}"
     },
     "event-log-entry": {
+      "failure": {
+        "BASE_STATION_NO_RESPONSE": "A base station did not respond. Check that your base stations are within range of your Bluetooth adapter.",
+        "MUTE_STATE_UNKNOWN": "VRChat did not tell OyasumiVR whether your microphone is muted. Check that OSC is enabled in VRChat.",
+        "SEE_MESSAGE_CENTRE": "Check the Message Centre for more information.",
+        "UNKNOWN": "Something went wrong. If this keeps happening, ask for help on the OyasumiVR Discord.",
+        "VRCHAT_AVATAR_UNAVAILABLE": "The avatar is no longer available.",
+        "VRCHAT_LOGGED_OUT": "OyasumiVR is not logged in to your VRChat account.",
+        "VRCHAT_NOT_GROUP_MEMBER": "You are no longer a member of this group.",
+        "VRCHAT_RATE_LIMITED": "VRChat received too many requests from OyasumiVR and refused this one."
+      },
       "type": {
         "acceptedInviteRequest": {
           "subtitle": {
@@ -354,7 +364,8 @@
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
-          "title": "Volume for audio device ''{deviceName}'' set to {percentage}"
+          "title": "Volume for audio device ''{deviceName}'' set to {percentage}",
+          "title_FAILED": "Could not set the volume for audio device ''{deviceName}'' to {percentage}"
         },
         "changedSystemMicControllerButtonBehavior": {
           "reason": {
@@ -375,7 +386,9 @@
           },
           "title": {
             "MUTE": "Muted microphone: {deviceName}",
-            "UNMUTE": "Unmuted microphone: {deviceName}"
+            "MUTE_FAILED": "Could not mute microphone: {deviceName}",
+            "UNMUTE": "Unmuted microphone: {deviceName}",
+            "UNMUTE_FAILED": "Could not unmute microphone: {deviceName}"
           }
         },
         "changedVRChatMicMuteState": {
@@ -386,9 +399,9 @@
           },
           "title": {
             "MUTE": "Muted microphone in VRChat",
-            "MUTE_FAILED": "Could not mute microphone in VRChat: OSCQuery did not report your mute state. Check the Message Centre for more information.",
+            "MUTE_FAILED": "Could not mute microphone in VRChat",
             "UNMUTE": "Unmuted microphone in VRChat",
-            "UNMUTE_FAILED": "Could not unmute microphone in VRChat: OSCQuery did not report your mute state. Check the Message Centre for more information."
+            "UNMUTE_FAILED": "Could not unmute microphone in VRChat"
           }
         },
         "chaperoneFadeDistanceChanged": {
@@ -396,13 +409,15 @@
             "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled"
           },
-          "title": "Chaperone fade distance set to {value}"
+          "title": "Chaperone fade distance set to {value}",
+          "title_FAILED": "Could not set chaperone fade distance to {value}"
         },
         "declinedInvite": {
           "reason": {
             "SLEEP_MODE_ENABLED": "As the sleep mode was active"
           },
-          "title": "Auto-declined invite from ''{displayName}''"
+          "title": "Auto-declined invite from ''{displayName}''",
+          "title_FAILED": "Could not auto-decline invite from ''{displayName}''"
         },
         "declinedInviteRequest": {
           "reason": {
@@ -411,14 +426,16 @@
             "PLAYER_COUNT_CONDITION_FAILED": "As there were too many players in the instance",
             "SLEEP_MODE_ENABLED_CONDITION_FAILED": "As the sleep mode was inactive"
           },
-          "title": "Auto-declined invite request from ''{displayName}''"
+          "title": "Auto-declined invite request from ''{displayName}''",
+          "title_FAILED": "Could not auto-decline invite request from ''{displayName}''"
         },
         "failedInviteRequest": {
           "subtitle": {
             "noMessage": "VRChat refused without giving a reason",
             "vrchatMessage": "VRChat refused because: ''{message}''"
           },
-          "title": "Could not accept invite request from ''{displayName}''"
+          "title": "Could not accept invite request from ''{displayName}''",
+          "title_FAILED": "Could not accept invite request from ''{displayName}''"
         },
         "frameLimitChanged": {
           "reason": {
@@ -426,7 +443,8 @@
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
-          "title": "Frame limit for ''{appName}'' set to {limit}"
+          "title": "Frame limit for ''{appName}'' set to {limit}",
+          "title_FAILED": "Could not set the frame limit for ''{appName}'' to {limit}"
         },
         "gpuPowerLimitChanged": {
           "reason": {
@@ -434,8 +452,11 @@
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled"
           },
           "title": {
+            "noDevice_FAILED": "Could not change the power limit of your graphics card",
             "reset": "Power limit for ''{device}'' restored to {limit}",
-            "set": "Power limit for ''{device}'' set to {limit}"
+            "reset_FAILED": "Could not restore the power limit for ''{device}'' to {limit}",
+            "set": "Power limit for ''{device}'' set to {limit}",
+            "set_FAILED": "Could not set the power limit for ''{device}'' to {limit}"
           }
         },
         "hardwareBrightnessChanged": {
@@ -454,18 +475,27 @@
         "lighthouseSetPowerState": {
           "ALL": {
             "on": "Turned on all base stations",
+            "on_FAILED": "Could not turn on all base stations",
             "sleep": "Set all base stations to sleep mode",
-            "standby": "Set all base stations to standby mode"
+            "sleep_FAILED": "Could not set all base stations to sleep mode",
+            "standby": "Set all base stations to standby mode",
+            "standby_FAILED": "Could not set all base stations to standby mode"
           },
           "SINGLE": {
             "on": "Turned on a base station",
+            "on_FAILED": "Could not turn on a base station",
             "sleep": "Set a base station to sleep mode",
-            "standby": "Set a base station to standby mode"
+            "sleep_FAILED": "Could not set a base station to sleep mode",
+            "standby": "Set a base station to standby mode",
+            "standby_FAILED": "Could not set a base station to standby mode"
           },
           "VARIOUS": {
             "on": "Turned on various base stations",
+            "on_FAILED": "Could not turn on various base stations",
             "sleep": "Set various base stations to sleep mode",
-            "standby": "Set various base stations to standby mode"
+            "sleep_FAILED": "Could not set various base stations to sleep mode",
+            "standby": "Set various base stations to standby mode",
+            "standby_FAILED": "Could not set various base stations to standby mode"
           },
           "reasons": {
             "HOTKEY": "As a hotkey was pressed",
@@ -481,7 +511,8 @@
             "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled"
           },
-          "title": "MSI Afterburner's profile was set to profile {profile}"
+          "title": "MSI Afterburner's profile was set to profile {profile}",
+          "title_FAILED": "Could not set MSI Afterburner to profile {profile}"
         },
         "mutedAudioDevice": {
           "reason": {
@@ -489,7 +520,8 @@
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
-          "title": "Muted audio device ''{deviceName}''"
+          "title": "Muted audio device ''{deviceName}''",
+          "title_FAILED": "Could not mute audio device ''{deviceName}''"
         },
         "renderResolutionChanged": {
           "reason": {
@@ -498,7 +530,9 @@
           },
           "title": {
             "auto": "SteamVR render resolution set to 'auto'",
-            "custom": "SteamVR render resolution set to {value}"
+            "auto_FAILED": "Could not set SteamVR render resolution to 'auto'",
+            "custom": "SteamVR render resolution set to {value}",
+            "custom_FAILED": "Could not set SteamVR render resolution to {value}"
           }
         },
         "runAutomationExecuted": {
@@ -507,7 +541,8 @@
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
-          "title": "Ran user-defined commands through the Windows command prompt"
+          "title": "Ran user-defined commands through the Windows command prompt",
+          "title_FAILED": "Could not run user-defined commands through the Windows command prompt"
         },
         "shutdownSequenceCancelled": {
           "reason": {
@@ -524,6 +559,17 @@
             "VRC_ALONE_TRIGGER": "As you were alone in your world instance for long enough"
           },
           "title": "The shutdown sequence was started"
+        },
+        "shutdownSequenceStepFailed": {
+          "title": {
+            "HIBERNATE_FAILED": "Could not hibernate Windows during the shutdown sequence",
+            "LOGOUT_FAILED": "Could not log out of Windows during the shutdown sequence",
+            "QUITTING_STEAMVR_FAILED": "Could not quit SteamVR during the shutdown sequence",
+            "REBOOT_FAILED": "Could not restart Windows during the shutdown sequence",
+            "SHUTDOWN_FAILED": "Could not shut down Windows during the shutdown sequence",
+            "SLEEP_FAILED": "Could not put Windows to sleep during the shutdown sequence",
+            "TURNING_OFF_DEVICES_FAILED": "Could not turn off your devices during the shutdown sequence"
+          }
         },
         "simpleBrightnessChanged": {
           "reason": {
@@ -600,14 +646,16 @@
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
-          "title": "Changed your VRChat status from {oldStatus} to {newStatus}"
+          "title": "Changed your VRChat status from {oldStatus} to {newStatus}",
+          "title_FAILED": "Could not change your VRChat status from {oldStatus} to {newStatus}"
         },
         "statusChangedOnPlayerCountChange": {
           "reason": {
             "AT_LIMIT_OR_ABOVE": "As the number of players in your world reached the limit of {threshold}",
             "BELOW_LIMIT": "As the number of players in your world dropped below {threshold}"
           },
-          "title": "Changed your VRChat status from {oldStatus} to {newStatus}"
+          "title": "Changed your VRChat status from {oldStatus} to {newStatus}",
+          "title_FAILED": "Could not change your VRChat status from {oldStatus} to {newStatus}"
         },
         "turnedOffOpenVRDevices": {
           "reason": {
@@ -622,11 +670,17 @@
           },
           "title": {
             "ALL": "Turned off all devices",
+            "ALL_FAILED": "Could not turn off all devices",
             "CONTROLLER": "Turned off a controller",
             "CONTROLLERS": "Turned off multiple controllers",
+            "CONTROLLERS_FAILED": "Could not turn off multiple controllers",
+            "CONTROLLER_FAILED": "Could not turn off a controller",
             "TRACKER": "Turned off a tracker",
             "TRACKERS": "Turned off multiple trackers",
-            "VARIOUS": "Turned off various devices"
+            "TRACKERS_FAILED": "Could not turn off multiple trackers",
+            "TRACKER_FAILED": "Could not turn off a tracker",
+            "VARIOUS": "Turned off various devices",
+            "VARIOUS_FAILED": "Could not turn off various devices"
           }
         },
         "unmutedAudioDevice": {
@@ -635,7 +689,8 @@
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
-          "title": "Unmuted audio device ''{deviceName}''"
+          "title": "Unmuted audio device ''{deviceName}''",
+          "title_FAILED": "Could not unmute audio device ''{deviceName}''"
         },
         "vrchatAvatarChanged": {
           "reason": {
@@ -643,7 +698,8 @@
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
-          "title": "Changed your VRChat avatar to ''{avatarName}''"
+          "title": "Changed your VRChat avatar to ''{avatarName}''",
+          "title_FAILED": "Could not change your VRChat avatar to ''{avatarName}''"
         },
         "vrchatGroupChanged": {
           "reason": {
@@ -653,7 +709,10 @@
           },
           "title": {
             "clear": "Stopped representing VRChat group ''{groupName}''",
-            "set": "Changed the VRChat group you represent to ''{groupName}''"
+            "clearUnknown_FAILED": "Could not stop representing your VRChat group",
+            "clear_FAILED": "Could not stop representing VRChat group ''{groupName}''",
+            "set": "Changed the VRChat group you represent to ''{groupName}''",
+            "set_FAILED": "Could not change the VRChat group you represent to ''{groupName}''"
           }
         },
         "windowsPowerPolicySet": {
@@ -661,7 +720,8 @@
             "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled"
           },
-          "title": "Windows Power Policy set to the ''{policy}'' plan"
+          "title": "Windows Power Policy set to the ''{policy}'' plan",
+          "title_FAILED": "Could not set Windows Power Policy to the ''{policy}'' plan"
         }
       }
     },

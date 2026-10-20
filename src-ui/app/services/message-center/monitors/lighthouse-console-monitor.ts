@@ -1,9 +1,11 @@
 import { MessageCenterService } from '../message-center.service';
 import { MessageMonitor } from './message-monitor';
-import { LighthouseConsoleService } from '../../lighthouse-console.service';
+import {
+  LIGHTHOUSE_CONSOLE_ERROR_STATUSES,
+  LighthouseConsoleService,
+} from '../../lighthouse-console.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DestroyRef, inject } from '@angular/core';
-import { ExecutableReferenceStatus } from 'src-ui/app/models/settings';
 import { ExternalLinkService } from '../../external-link.service';
 import { Router } from '@angular/router';
 
@@ -21,17 +23,7 @@ export class LighthouseConsoleMonitor extends MessageMonitor {
     this.lighthouseConsole.consoleStatus
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((status) => {
-        if (
-          (
-            [
-              'NOT_FOUND',
-              'PERMISSION_DENIED',
-              'INVALID_FILENAME',
-              'UNKNOWN_ERROR',
-              'INVALID_EXECUTABLE',
-            ] as ExecutableReferenceStatus[]
-          ).includes(status)
-        ) {
+        if (LIGHTHOUSE_CONSOLE_ERROR_STATUSES.includes(status)) {
           this.messageCenter.addMessage({
             id: 'lighthouseConsoleError',
             type: 'warning',

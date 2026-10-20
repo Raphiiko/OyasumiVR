@@ -22,7 +22,7 @@ import {
 } from '../models/automations';
 
 import { GPUDevice, GPUPowerLimit } from '../models/gpu-device';
-import { NvmlService } from './nvml.service';
+import { NVML_ERROR_STATUSES, NvmlService } from './nvml.service';
 import { NvmlDevice } from '../models/nvml-device';
 import { SleepService } from './sleep.service';
 import { error, info, warn } from '@tauri-apps/plugin-log';
@@ -31,9 +31,18 @@ import { ExecutableReferenceStatus } from '../models/settings';
 import { ElevatedSidecarService } from './elevated-sidecar.service';
 import { EventLogService } from './event-log.service';
 import {
+  EventLogFailure,
   EventLogGpuPowerLimitChanged,
   EventLogMsiAfterburnerProfileSet,
 } from '../models/event-log-entry';
+
+/** Statuses the Message Centre posts a warning for, while the elevated sidecar runs. */
+export const MSI_AFTERBURNER_ERROR_STATUSES: ExecutableReferenceStatus[] = [
+  'NOT_FOUND',
+  'INVALID_EXECUTABLE',
+  'INVALID_SIGNATURE',
+  'UNKNOWN_ERROR',
+];
 
 @Injectable({
   providedIn: 'root',
@@ -238,45 +247,62 @@ export class GpuAutomationsService {
           filter((gpuAutomationsEnabled) => gpuAutomationsEnabled),
           // Check if on sleep disable automation is enabled
           filter(() => getAutomationConfig().enabled),
-          // Fetch selected device
+          // a rejection would error the stream and end the automation, so applyPowerLimit catches it
           switchMap(() =>
-            this.nvmlDevices.pipe(
-              take(1),
-              map((devices) =>
-                devices.find((d) => d.id === this.currentPowerLimitsConfig.selectedDeviceId)
-              )
+            this.applyPowerLimit(
+              getAutomationConfig(),
+              on === 'ENABLE' ? 'SLEEP_MODE_ENABLED' : 'SLEEP_MODE_DISABLED'
             )
-          ),
-          // Check if selected device is available and supports power limiting
-          filter((selectedDevice) => !!selectedDevice && !!selectedDevice.supportsPowerLimiting),
-          switchMap((selectedDevice) => {
-            info('[GpuAutomations] Setting power limit');
-            const powerLimit = getAutomationConfig().resetToDefault
-              ? selectedDevice!.defaultPowerLimit!
-              : getAutomationConfig().powerLimit || selectedDevice!.defaultPowerLimit!;
-            // a rejection would error the stream and end the automation, so catch it here
-            return this.nvml
-              .setPowerLimit(selectedDevice!.id, powerLimit * 1000)
-              .then(() => {
-                this.eventLog.logEvent({
-                  type: 'gpuPowerLimitChanged',
-                  device: selectedDevice!.name,
-                  limit: powerLimit,
-                  resetToDefault: getAutomationConfig().resetToDefault,
-                  reason: on === 'ENABLE' ? 'SLEEP_MODE_ENABLED' : 'SLEEP_MODE_DISABLED',
-                } as EventLogGpuPowerLimitChanged);
-              })
-              .catch((e) => {
-                error(
-                  `[GpuAutomations] Could not set gpu power limit (uuid=${selectedDevice!.id}, powerLimit:${powerLimit}): ${e}`
-                );
-              });
-          })
+          )
         )
         .subscribe();
     };
     setupOnSleepAutomation('ENABLE');
     setupOnSleepAutomation('DISABLE');
+  }
+
+  private async applyPowerLimit(
+    config: GPUPowerLimitsAutomationConfig['onSleepEnable'],
+    reason: EventLogGpuPowerLimitChanged['reason']
+  ) {
+    if (!this.currentPowerLimitsConfig.selectedDeviceId) return;
+    const devices = await firstValueFrom(this.nvmlDevices);
+    const device = devices.find((d) => d.id === this.currentPowerLimitsConfig.selectedDeviceId);
+    const powerLimit = config.resetToDefault
+      ? device?.defaultPowerLimit
+      : config.powerLimit || device?.defaultPowerLimit;
+    const logResult = (failure?: EventLogFailure) =>
+      this.eventLog.logEvent({
+        type: 'gpuPowerLimitChanged',
+        device: device?.name ?? '',
+        limit: powerLimit ?? 0,
+        resetToDefault: config.resetToDefault,
+        reason,
+        failure,
+      });
+
+    // a stopped sidecar or an NVML that is not ready also empties the list
+    if (!device?.supportsPowerLimiting || powerLimit === undefined) {
+      const sidecarStarted = await firstValueFrom(this.sidecar.sidecarStarted);
+      const nvmlStatus = await firstValueFrom(this.nvml.status);
+      if (!sidecarStarted || NVML_ERROR_STATUSES.includes(nvmlStatus)) {
+        logResult('SEE_MESSAGE_CENTRE');
+      } else if (nvmlStatus !== 'InitComplete' || device) {
+        logResult('UNKNOWN');
+      }
+      return;
+    }
+
+    info('[GpuAutomations] Setting power limit');
+    try {
+      await this.nvml.setPowerLimit(device.id, powerLimit * 1000);
+      logResult();
+    } catch (e) {
+      error(
+        `[GpuAutomations] Could not set gpu power limit (uuid=${device.id}, powerLimit:${powerLimit}): ${e}`
+      );
+      logResult('UNKNOWN');
+    }
   }
 
   private mapNvmlDeviceToGPUDevice(nvmlDevice: NvmlDevice): GPUDevice {
@@ -378,10 +404,18 @@ export class GpuAutomationsService {
     }
     const path = this.currentMSIAfterburnerConfig.msiAfterburnerPath;
     const generation = this.msiValidationGeneration;
+    const logFailure = async () =>
+      this.eventLog.logEvent({
+        type: 'msiAfterburnerProfileSet',
+        profile: index,
+        reason,
+        failure: (await this.msiAfterburnerMessagePosted()) ? 'SEE_MESSAGE_CENTRE' : 'UNKNOWN',
+      });
     if (this._msiAfterburnerStatus.value !== 'SUCCESS' || this.validatedMSIPath !== path) {
       await warn(
         `[GpuAutomations] Could not set MSI Afterburner profile as no valid installation is currently configured`
       );
+      await logFailure();
       return;
     }
     try {
@@ -406,8 +440,16 @@ export class GpuAutomationsService {
         error('[GpuAutomations] Failed to set MSI Afterburner profile: ' + e);
         this._msiAfterburnerStatus.next('UNKNOWN_ERROR');
       }
+      await logFailure();
       return;
     }
+  }
+
+  /** Whether the Message Centre explains why MSI Afterburner is not usable. */
+  private async msiAfterburnerMessagePosted(): Promise<boolean> {
+    // without the sidecar, the Message Centre asks to start it instead
+    if (!(await firstValueFrom(this.sidecar.sidecarStarted))) return true;
+    return MSI_AFTERBURNER_ERROR_STATUSES.includes(this._msiAfterburnerStatus.value);
   }
 
   async setMSIAfterburnerPath(path: string, save = true) {

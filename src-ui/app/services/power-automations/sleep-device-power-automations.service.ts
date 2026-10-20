@@ -11,11 +11,8 @@ import { LighthouseService } from '../lighthouse.service';
 import { AppSettingsService } from '../app-settings.service';
 import { map, skip } from 'rxjs';
 import { DeviceSelection } from 'src-ui/app/models/device-manager';
-import { LighthouseDevice } from 'src-ui/app/models/lighthouse-device';
-import {
-  EventLogLighthouseSetPowerState,
-  EventLogTurnedOffOpenVRDevices,
-} from 'src-ui/app/models/event-log-entry';
+import { EventLogFailure, EventLogTurnedOffOpenVRDevices } from 'src-ui/app/models/event-log-entry';
+import { error } from '@tauri-apps/plugin-log';
 
 @Injectable({
   providedIn: 'root',
@@ -66,16 +63,7 @@ export class SleepDevicePowerAutomationsService {
       this.config.turnOffDevicesOnSleepModeDisable,
       'SLEEP_MODE_DISABLED'
     );
-    const onResult = await this.turnOnSelectedDevices(this.config.turnOnDevicesOnSleepModeDisable);
-    const onDevices = onResult.lighthouseDevices.length;
-    if (onDevices > 0) {
-      this.eventLog.logEvent({
-        type: 'lighthouseSetPowerState',
-        reason: 'SLEEP_MODE_DISABLED',
-        devices: onDevices === 1 ? 'SINGLE' : 'VARIOUS',
-        state: 'on',
-      } as EventLogLighthouseSetPowerState);
-    }
+    await this.turnOnSelectedDevices(this.config.turnOnDevicesOnSleepModeDisable);
   }
 
   private async handleSleepModeEnable() {
@@ -90,30 +78,50 @@ export class SleepDevicePowerAutomationsService {
     reason: EventLogTurnedOffOpenVRDevices['reason']
   ) {
     const devices = await this.deviceManager.getDevicesForSelection(deviceSelection);
-    const ovrDevices = devices.ovrDevices.filter((d) => d.canPowerOff);
+    const ovrDevices = devices.ovrDevices.filter((d) => d.canPowerOff && !d.isTurningOff);
     const lighthouseDevices = devices.lighthouseDevices.filter(
       (d) =>
         (d.powerState === 'on' || d.powerState === 'booting') &&
         !this.lighthouse.deviceNeedsIdentifier(d)
     );
-    const results = await Promise.allSettled([
-      this.deviceControl.turnOffDevices(ovrDevices).then((dispatched) => dispatched.length),
-      ...lighthouseDevices.map((device) =>
-        this.lighthouse
-          .setPowerState(device, this.appSettings.settingsSync.lighthousePowerOffState)
-          .then((reached) => (reached ? 1 : 0))
+    const [[ovrResult], lighthouseResults] = await Promise.all([
+      Promise.allSettled([this.deviceControl.turnOffDevices(ovrDevices)]),
+      Promise.allSettled(
+        lighthouseDevices.map((device) =>
+          this.lighthouse.setPowerState(
+            device,
+            this.appSettings.settingsSync.lighthousePowerOffState
+          )
+        )
       ),
     ]);
-    if (results.some((result) => result.status === 'fulfilled' && result.value > 0)) {
+
+    // find the devices that turned off and the ones that did not
+    const dispatched = ovrResult.status === 'fulfilled' ? ovrResult.value : [];
+    const failedOvrDevices = ovrDevices.filter(
+      (device) => !dispatched.some((d) => d.serialNumber === device.serialNumber)
+    );
+    const turnedOffLighthouses = lighthouseResults.filter(
+      (result) => result.status === 'fulfilled' && result.value
+    ).length;
+    const failedLighthouses = lighthouseResults.length - turnedOffLighthouses;
+    for (const result of [ovrResult, ...lighthouseResults]) {
+      if (result.status === 'rejected')
+        error(`[DevicePower] Could not turn off a device: ${result.reason}`);
+    }
+
+    // log the result
+    if (dispatched.length + turnedOffLighthouses > 0) {
       this.eventLog.logEvent({ type: 'turnedOffOpenVRDevices', reason, devices: 'VARIOUS' });
     }
-    const failure = results.find((result) => result.status === 'rejected');
-    if (failure) throw failure.reason;
+    if (!failedOvrDevices.length && !failedLighthouses) return;
+    let failure: EventLogFailure = 'UNKNOWN';
+    if (!failedOvrDevices.length) failure = 'BASE_STATION_NO_RESPONSE';
+    else if (!failedLighthouses) failure = this.deviceControl.powerOffFailure(failedOvrDevices);
+    this.eventLog.logEvent({ type: 'turnedOffOpenVRDevices', reason, devices: 'VARIOUS', failure });
   }
 
-  private async turnOnSelectedDevices(turnOnDevicesOnSleepModeDisable: DeviceSelection): Promise<{
-    lighthouseDevices: LighthouseDevice[];
-  }> {
+  private async turnOnSelectedDevices(turnOnDevicesOnSleepModeDisable: DeviceSelection) {
     // Get devices to turn on
     const devices = await this.deviceManager.getDevicesForSelection(
       turnOnDevicesOnSleepModeDisable
@@ -122,13 +130,15 @@ export class SleepDevicePowerAutomationsService {
     devices.ovrDevices = [];
     devices.knownDevices = devices.knownDevices.filter((d) => d.deviceType === 'LIGHTHOUSE');
     const lighthouseDevices = (devices.lighthouseDevices = devices.lighthouseDevices.filter(
-      (d) => d.powerState !== 'on' && d.powerState !== 'booting'
+      (d) =>
+        d.powerState !== 'on' &&
+        d.powerState !== 'booting' &&
+        !this.lighthouse.deviceNeedsIdentifier(d)
     ));
     // Turn on devices
     const reached = await Promise.all(
       lighthouseDevices.map((device) => this.lighthouse.setPowerState(device, 'on'))
     );
-
-    return { lighthouseDevices: lighthouseDevices.filter((_, i) => reached[i]) };
+    this.eventLog.logLighthousePowerState(reached, 'on', 'SLEEP_MODE_DISABLED');
   }
 }

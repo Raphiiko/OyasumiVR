@@ -13,11 +13,7 @@ import { delay, distinctUntilChanged, firstValueFrom, map, of, skip, switchMap, 
 import { AudioDeviceParsedName } from '../models/audio-device';
 import { info } from '@tauri-apps/plugin-log';
 import { EventLogService } from './event-log.service';
-import {
-  EventLogChangedAudioDeviceVolume,
-  EventLogMutedAudioDevice,
-  EventLogUnmutedAudioDevice,
-} from '../models/event-log-entry';
+import { EventLogFailure } from '../models/event-log-entry';
 
 @Injectable({
   providedIn: 'root',
@@ -142,51 +138,40 @@ export class AudioDeviceAutomationsService {
     const device = this.audioDeviceService.getAudioDeviceForPersistentId(
       automation.audioDeviceRef.persistentId
     );
-    if (device) {
-      const deviceName = device.parsedName!.driver
-        ? `${device.parsedName?.display} (${device.parsedName?.driver})`
-        : device.parsedName!.display;
-      switch (automation.type) {
-        case 'SET_VOLUME':
-          await this.audioDeviceService.setVolume(device.id, automation.volume / 100);
-          info(
-            `[AudioDeviceAutomations] Set volume of ${automation.audioDeviceRef.type.toLowerCase()} device '${deviceName}' to ${
-              automation.volume
-            }% (Reason: ${reason})`
-          );
-          this.eventLog.logEvent({
-            type: 'changedAudioDeviceVolume',
-            volume: automation.volume,
-            deviceName: automation.audioDeviceRef.name,
-            deviceType: automation.audioDeviceRef.type,
-            reason,
-          } as EventLogChangedAudioDeviceVolume);
-          break;
-        case 'MUTE':
-          await this.audioDeviceService.setMute(device.id, true);
-          info(
-            `[AudioDeviceAutomations] Muted ${automation.audioDeviceRef.type.toLowerCase()} device '${deviceName}' (Reason: ${reason})`
-          );
-          this.eventLog.logEvent({
-            type: 'mutedAudioDevice',
-            deviceName: automation.audioDeviceRef.name,
-            deviceType: automation.audioDeviceRef.type,
-            reason,
-          } as EventLogMutedAudioDevice);
-          break;
-        case 'UNMUTE':
-          await this.audioDeviceService.setMute(device.id, false);
-          info(
-            `[AudioDeviceAutomations] Unmuted ${automation.audioDeviceRef.type.toLowerCase()} device '${deviceName}' (Reason: ${reason})`
-          );
-          this.eventLog.logEvent({
-            type: 'unmutedAudioDevice',
-            deviceName: automation.audioDeviceRef.name,
-            deviceType: automation.audioDeviceRef.type,
-            reason,
-          } as EventLogUnmutedAudioDevice);
-          break;
-      }
+
+    if (!device) return;
+
+    // apply the change
+    const applied =
+      automation.type === 'SET_VOLUME'
+        ? await this.audioDeviceService.setVolume(device.id, automation.volume / 100)
+        : !!(await this.audioDeviceService.setMute(device.id, automation.type === 'MUTE'));
+    const failure: EventLogFailure | undefined = applied ? undefined : 'UNKNOWN';
+    info(
+      `[AudioDeviceAutomations] ${failure ? `Could not apply (${failure})` : 'Applied'} ${automation.type} to ${automation.audioDeviceRef.type.toLowerCase()} device '${automation.audioDeviceRef.name.display}' (Reason: ${reason})`
+    );
+
+    // log the result
+    const common = {
+      deviceName: automation.audioDeviceRef.name,
+      deviceType: automation.audioDeviceRef.type,
+      reason,
+      failure,
+    };
+    switch (automation.type) {
+      case 'SET_VOLUME':
+        this.eventLog.logEvent({
+          type: 'changedAudioDeviceVolume',
+          volume: automation.volume,
+          ...common,
+        });
+        break;
+      case 'MUTE':
+        this.eventLog.logEvent({ type: 'mutedAudioDevice', ...common });
+        break;
+      case 'UNMUTE':
+        this.eventLog.logEvent({ type: 'unmutedAudioDevice', ...common });
+        break;
     }
   }
 }

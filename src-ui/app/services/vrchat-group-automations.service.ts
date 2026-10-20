@@ -6,9 +6,10 @@ import { SleepPreparationService } from './sleep-preparation.service';
 import { VRChatGroupAutomationsConfig } from '../models/automations';
 import { VRChatService } from './vrchat-api/vrchat.service';
 import { EventLogService } from './event-log.service';
-import { EventLogVRChatGroupChanged } from '../models/event-log-entry';
+import { EventLogFailure } from '../models/event-log-entry';
 import { error } from '@tauri-apps/plugin-log';
-import { VRCHAT_API_STALE_REQUEST } from './vrchat-api/vrchat-api';
+import { VRCHAT_API_STALE_REQUEST, vrchatFailure } from './vrchat-api/vrchat-api';
+import type { LimitedUserGroups } from 'vrchat';
 
 @Injectable({
   providedIn: 'root',
@@ -78,44 +79,38 @@ export class VRChatGroupAutomationsService {
     groupId: string | null,
     reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION'
   ) {
-    if (groupId) {
-      await this.vrchat.representGroup(groupId, true);
-
-      let groups = await this.vrchat.getUserGroups();
-      let group = groups.find((g) => g.groupId === groupId);
-      if (!group) {
-        groups = await this.vrchat.getUserGroups(true);
-        group = groups.find((g) => g.groupId === groupId);
+    let group: LimitedUserGroups | undefined;
+    let failure: EventLogFailure | undefined;
+    try {
+      if (groupId) {
+        await this.vrchat.representGroup(groupId, true);
+        group = await this.findGroup((g) => g.groupId === groupId).catch(() => undefined);
+      } else {
+        group = await this.findGroup((g) => g.isRepresenting);
+        if (!group) return;
+        await this.vrchat.representGroup(group.groupId!, false);
       }
-
-      this.eventLog.logEvent({
-        type: 'vrchatGroupChanged',
-        groupId,
-        groupName: group?.name || groupId,
-        isClearing: false,
-        reason,
-      } as EventLogVRChatGroupChanged);
-    } else {
-      let groups = await this.vrchat.getUserGroups();
-      let group = groups.find((g) => g.isRepresenting);
-      if (!group) {
-        groups = await this.vrchat.getUserGroups(true);
-        group = groups.find((g) => g.isRepresenting);
-      }
-
-      if (group) {
-        const groupId = group.groupId!;
-
-        await this.vrchat.representGroup(groupId, false);
-
-        this.eventLog.logEvent({
-          type: 'vrchatGroupChanged',
-          groupId,
-          groupName: group.name || groupId,
-          isClearing: true,
-          reason,
-        } as EventLogVRChatGroupChanged);
-      }
+    } catch (e) {
+      failure = vrchatFailure(e, groupId ? 'VRCHAT_NOT_GROUP_MEMBER' : undefined);
+      if (!failure) return;
+      error(`[VRChat] Group automation failed: ${e}`);
+      if (groupId)
+        group = await this.findGroup((g) => g.groupId === groupId).catch(() => undefined);
     }
+    const id = groupId ?? group?.groupId ?? '';
+    this.eventLog.logEvent({
+      type: 'vrchatGroupChanged',
+      groupId: id,
+      groupName: group?.name || id,
+      isClearing: !groupId,
+      reason,
+      failure,
+    });
+  }
+
+  /** Looks in the cached groups first, then asks VRChat. */
+  private async findGroup(predicate: (group: LimitedUserGroups) => boolean | undefined) {
+    const group = (await this.vrchat.getUserGroups()).find(predicate);
+    return group ?? (await this.vrchat.getUserGroups(true)).find(predicate);
   }
 }
