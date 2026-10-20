@@ -4,13 +4,14 @@ import { describe, expect, it, vi } from 'vitest';
 import { VRChatMicMuteAutomationService } from './vrchat-mic-mute-automation.service';
 
 vi.mock('@tauri-apps/plugin-log', () => ({ info: vi.fn(), warn: vi.fn() }));
-vi.mock('@tauri-apps/plugin-http', () => ({ fetch: vi.fn() }));
+const http = vi.hoisted(() => ({ fetch: vi.fn() }));
+vi.mock('@tauri-apps/plugin-http', () => http);
 vi.mock('../vrchat-api/vrchat.service', () => ({ VRChatService: class {} }));
 
 type Args = ConstructorParameters<typeof VRChatMicMuteAutomationService>;
 
-function createService(muted: boolean | null) {
-  const osc = { send_int: vi.fn(), vrchatOscQueryAddress: new BehaviorSubject(null) };
+function createService(muted: boolean | null, oscQueryAddress: string | null = null) {
+  const osc = { send_int: vi.fn(), vrchatOscQueryAddress: new BehaviorSubject(oscQueryAddress) };
   const eventLog = { logEvent: vi.fn() };
   const service = new VRChatMicMuteAutomationService(
     osc as unknown as Args[0],
@@ -49,5 +50,22 @@ describe('VRChatMicMuteAutomationService', () => {
 
     expect(osc.send_int).toHaveBeenCalled();
     expect(eventLog.logEvent.mock.calls[0][0].failure).toBeUndefined();
+  });
+
+  it('ignores a stale read that returns after another automation set the state', async () => {
+    const { internals, osc } = createService(null, '127.0.0.1:9000');
+    const muted = { json: async () => ({ VALUE: [true] }) };
+    let releaseStaleRead!: (value: typeof muted) => void;
+    http.fetch
+      .mockReturnValueOnce(new Promise((resolve) => (releaseStaleRead = resolve)))
+      .mockResolvedValueOnce(muted);
+
+    const stale = internals.applyAutomation('UNMUTE', 'SLEEP_MODE_ENABLED');
+    await internals.applyAutomation('UNMUTE', 'SLEEP_PREPARATION');
+    releaseStaleRead(muted);
+    await stale;
+
+    expect(osc.send_int).toHaveBeenCalledTimes(3);
+    expect(internals._muted.value).toBe(false);
   });
 });
