@@ -37,9 +37,13 @@ pub async fn set_app_framelimits(
             )
             .map_err(|e| format!("{e:?}"))?;
     } else {
-        let _ = settings
-            .remove_key_in_section(pch_section, pch_settings_key_additional_frames_to_predict);
-        let _ = settings.remove_key_in_section(pch_section, pch_settings_key_frames_to_throttle);
+        // SteamVR has no not-found settings error, so removing an absent key still succeeds
+        settings
+            .remove_key_in_section(pch_section, pch_settings_key_additional_frames_to_predict)
+            .map_err(|e| format!("{e:?}"))?;
+        settings
+            .remove_key_in_section(pch_section, pch_settings_key_frames_to_throttle)
+            .map_err(|e| format!("{e:?}"))?;
     }
 
     Ok(())
