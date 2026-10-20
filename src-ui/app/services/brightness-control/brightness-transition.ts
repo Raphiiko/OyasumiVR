@@ -18,10 +18,11 @@ export class BrightnessTransitionTask extends CancellableTask {
 
   constructor(
     public readonly type: 'HARDWARE' | 'SOFTWARE' | 'SIMPLE',
+    /** Resolves false when the headset refused the value; only a twice-refused target fails the transition. */
     private setBrightness: (
       percentage: number,
       options?: Partial<SetBrightnessOrCCTOptions>
-    ) => Promise<void>,
+    ) => Promise<boolean | void>,
     private getBrightness: () => Promise<number | undefined>,
     private getBrightnessBounds: () => Promise<[number, number]>,
     public readonly targetBrightness: number,
@@ -61,21 +62,25 @@ export class BrightnessTransitionTask extends CancellableTask {
       const timeExpired = Date.now() - startTime;
       const progress = clamp(timeExpired / this.duration, 0, 1);
       const brightness = smoothLerp(currentBrightness, this.targetBrightness, progress);
-      // Set the intermediary brightness
-      await this.setBrightness(brightness, {
-        cancelActiveTransition: false,
-        logReason: undefined,
-      });
+      // Set the intermediary brightness, the next frame replaces a refused one
+      await this.apply(brightness);
     }
-    // Set the final target brightness
-    await this.setBrightness(this.targetBrightness, {
-      cancelActiveTransition: false,
-      logReason: undefined,
-    });
+    // Set the final target brightness, retrying once so a single refused write does not fail it
+    if (!(await this.apply(this.targetBrightness)) && !(await this.apply(this.targetBrightness))) {
+      throw new Error(`The headset did not accept brightness ${this.targetBrightness}%`);
+    }
     if (this.options.logReason) {
       await info(
         `[BrightnessControl] Finished ${label} brightness transition (${currentBrightness}%=>${this.targetBrightness}%, ${this.duration}ms, Reason: ${this.options.logReason})`
       );
     }
+  }
+
+  private async apply(brightness: number): Promise<boolean> {
+    const applied = await this.setBrightness(brightness, {
+      cancelActiveTransition: false,
+      logReason: undefined,
+    });
+    return applied !== false;
   }
 }

@@ -70,14 +70,18 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
     return this.lastSetBrightnessPercentage;
   }
 
-  async setBrightnessPercentage(percentage: number): Promise<void> {
-    if (!this.connected.value) return;
+  async setBrightnessPercentage(percentage: number): Promise<boolean> {
+    if (!this.connected.value) return false;
     const hwPercentage = this.softwarePercentageToHardwarePercentage(percentage);
     this.lastSetBrightnessPercentage = percentage;
     const hwValue = this.swValueToHWValue(hwPercentage);
-    invoke('bigscreen_beyond_set_brightness', {
-      brightness: hwValue,
-    });
+    return invoke('bigscreen_beyond_set_brightness', { brightness: hwValue }).then(
+      () => true,
+      (e) => {
+        warn(`[BSBHardwareBrightnessControlDriver] Could not set brightness: ${e}`);
+        return false;
+      }
+    );
   }
 
   isAvailable(): Observable<boolean> {

@@ -132,3 +132,29 @@ describe('CCTControlService transitions', () => {
     expect(writes()).toEqual([6600, 3000]);
   });
 });
+
+describe('CCTControlService refused writes', () => {
+  it('writes a refused colour temperature again on a retry', async () => {
+    const { service, writes } = await setup(INDEX);
+    vi.mocked(invoke).mockImplementationOnce(async () => {
+      throw 'OPENVR_NOT_INITIALISED';
+    });
+
+    expect(await service.setCCT(3000)).toBe(false);
+    expect(await service.setCCT(3000)).toBe(true);
+    expect(writes()).toEqual([6600, 3000, 3000]);
+  });
+
+  it('retries a refused colour temperature through a transition', async () => {
+    const { service, writes } = await setup(INDEX);
+    vi.mocked(invoke).mockImplementationOnce(async () => {
+      throw 'OPENVR_NOT_INITIALISED';
+    });
+    await service.setCCT(3000);
+
+    const task = service.transitionCCT(3000, 0);
+    await settle();
+    expect(task.isComplete()).toBe(true);
+    expect(writes()).toEqual([6600, 3000, 3000]);
+  });
+});

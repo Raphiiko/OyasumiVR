@@ -125,11 +125,11 @@ export class SteamVRAnalogGainHardwareBrightnessControlDriver extends HardwareBr
     return Math.round(this.hardwarePercentageToSoftwarePercentage(hardwarePercentage));
   }
 
-  async setBrightnessPercentage(percentage: number): Promise<void> {
-    if (!this.range) return;
+  async setBrightnessPercentage(percentage: number): Promise<boolean> {
+    if (!this.range) return false;
     const hardwarePercentage = this.softwarePercentageToHardwarePercentage(percentage);
     const gain = this.hardwarePercentageToGain(hardwarePercentage, this.range);
-    this.openvr.setAnalogGain(clamp(gain, this.range[0], this.range[1]));
+    return this.openvr.setAnalogGain(clamp(gain, this.range[0], this.range[1]));
   }
 
   /**

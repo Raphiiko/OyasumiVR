@@ -31,6 +31,9 @@ export class SimpleBrightnessControlService {
   private _modeGeneration = 0;
   private _brightness: BehaviorSubject<number> = new BehaviorSubject<number>(100);
   private _activeTransition = new BehaviorSubject<BrightnessTransitionTask | undefined>(undefined);
+  /** False while the latest write to the cached brightness is pending or was refused. */
+  private brightnessApplied = true;
+  private brightnessWrites = 0;
   public readonly activeTransition = this._activeTransition.asObservable();
   private hardwareBrightnessDriverAvailable = false;
   public readonly advancedMode = this._advancedMode.asObservable();
@@ -93,7 +96,7 @@ export class SimpleBrightnessControlService {
     options: Partial<SetBrightnessOrCCTOptions> = SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS
   ): CancellableTask {
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
-    if (this._brightness.value === percentage) {
+    if (this._brightness.value === percentage && this.brightnessApplied) {
       const task = new CancellableTask();
       task.start();
       return task;
@@ -120,7 +123,8 @@ export class SimpleBrightnessControlService {
       info(`[BrightnessControl] Starting brightness transition (Reason: ${opt.logReason})`);
     }
     this._activeTransition.next(transition);
-    transition.start();
+    // the onError subscription above handles a refused step
+    transition.start().catch(() => undefined);
     return transition;
   }
 
@@ -131,18 +135,28 @@ export class SimpleBrightnessControlService {
     }
   }
 
+  /** Resolves false when the headset did not accept the hardware brightness. */
   async setBrightness(
     percentage: number,
     options: Partial<SetBrightnessOrCCTOptions> = SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS
-  ) {
+  ): Promise<boolean> {
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
     percentage = clamp(percentage, 0, 100);
     const modeGeneration = this._modeGeneration;
     if (opt.cancelActiveTransition) this.cancelActiveTransition();
     this._brightness.next(percentage);
+    const write = ++this.brightnessWrites;
+    this.brightnessApplied = false;
     if (opt.logReason) {
       await info(`[BrightnessControl] Set brightness to ${percentage}% (Reason: ${opt.logReason})`);
     }
+    const applied = await this.writeBrightness(percentage, modeGeneration);
+    if (write === this.brightnessWrites) this.brightnessApplied = applied;
+    return applied;
+  }
+
+  /** Splits the brightness between software and hardware; resolves true when the mode changed midway. */
+  private async writeBrightness(percentage: number, modeGeneration: number): Promise<boolean> {
     // Calculate brightnesses
     let softwareBrightness = percentage;
     let hardwareBrightness = 100;
@@ -168,17 +182,16 @@ export class SimpleBrightnessControlService {
       }
     }
     // Set brightnesses
-    if (modeGeneration !== this._modeGeneration) return;
+    if (modeGeneration !== this._modeGeneration) return true;
     await this.softwareBrightnessControl.setBrightness(softwareBrightness, {
       cancelActiveTransition: true,
       logReason: null,
     });
-    if (modeGeneration !== this._modeGeneration) return;
-    if (this.hardwareBrightnessDriverAvailable) {
-      await this.hardwareBrightnessControl.setBrightness(hardwareBrightness, {
-        cancelActiveTransition: true,
-        logReason: null,
-      });
-    }
+    if (modeGeneration !== this._modeGeneration) return true;
+    if (!this.hardwareBrightnessDriverAvailable) return true;
+    return this.hardwareBrightnessControl.setBrightness(hardwareBrightness, {
+      cancelActiveTransition: true,
+      logReason: null,
+    });
   }
 }

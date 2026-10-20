@@ -62,9 +62,13 @@ export class SteamVrCctControlDriver extends CctControlDriver {
     return this.matching;
   }
 
-  async setCCT(kelvin: number): Promise<void> {
-    invoke('openvr_set_analog_color_temp', { temperature: kelvin }).catch((e) =>
-      warn(`[SteamVRCCTControl] Could not set color temperature: ${e}`)
+  async setCCT(kelvin: number): Promise<boolean> {
+    return invoke('openvr_set_analog_color_temp', { temperature: kelvin }).then(
+      () => true,
+      (e) => {
+        warn(`[SteamVRCCTControl] Could not set color temperature: ${e}`);
+        return false;
+      }
     );
   }
 }

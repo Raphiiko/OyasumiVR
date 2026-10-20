@@ -107,15 +107,20 @@ export class OpenVRService {
     return !!device.serialNumber && this.powerControlledSerials.has(device.serialNumber);
   }
 
-  /** Logs a failure instead of rejecting, as SteamVR or the headset can go away mid-transition. */
-  public async setAnalogGain(analogGain: number): Promise<void> {
+  /** Resolves false instead of rejecting, as SteamVR or the headset can go away mid-transition. */
+  public async setAnalogGain(analogGain: number): Promise<boolean> {
     if (typeof analogGain === 'number' && isFinite(analogGain)) {
-      return invoke<void>('openvr_set_analog_gain', { analogGain }).catch((e) =>
-        warn(`[OpenVR] Could not set analog gain: ${e}`)
+      return invoke<void>('openvr_set_analog_gain', { analogGain }).then(
+        () => true,
+        (e) => {
+          warn(`[OpenVR] Could not set analog gain: ${e}`);
+          return false;
+        }
       );
     } else {
       console.error('[OpenVR] Attempted to set analogGain to invalid value', analogGain);
       error('[OpenVR] Attempted to set analogGain to invalid value: ' + analogGain);
+      return false;
     }
   }
 

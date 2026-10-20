@@ -46,6 +46,9 @@ export class HardwareBrightnessControlService {
     new BehaviorSubject<HardwareBrightnessControlDriver | null>(null);
   private _brightness: BehaviorSubject<number> = new BehaviorSubject<number>(100);
   private _activeTransition = new BehaviorSubject<BrightnessTransitionTask | undefined>(undefined);
+  /** False while the latest write to the cached brightness is pending or was refused. */
+  private brightnessApplied = true;
+  private brightnessWrites = 0;
   public readonly activeTransition = this._activeTransition.asObservable();
   public readonly onDriverChange: Observable<void> = this.driver.pipe(
     distinctUntilChanged(),
@@ -148,7 +151,7 @@ export class HardwareBrightnessControlService {
     options: Partial<SetBrightnessOrCCTOptions> = SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS
   ): CancellableTask {
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
-    if (this._brightness.value === percentage) {
+    if (this._brightness.value === percentage && this.brightnessApplied) {
       const task = new CancellableTask();
       task.start();
       return task;
@@ -177,7 +180,8 @@ export class HardwareBrightnessControlService {
       );
     }
     this._activeTransition.next(transition);
-    transition.start();
+    // the onError subscription above handles a refused step
+    transition.start().catch(() => undefined);
     return transition;
   }
 
@@ -188,23 +192,28 @@ export class HardwareBrightnessControlService {
     }
   }
 
+  /** Resolves false when no driver is available or the headset did not accept the value. */
   async setBrightness(
     percentage: number,
     options: Partial<SetBrightnessOrCCTOptions> = SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS,
     force = false
-  ) {
+  ): Promise<boolean> {
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
     const driver = await firstValueFrom(this.driver);
-    if (!driver) return;
+    if (!driver) return false;
     if (opt.cancelActiveTransition) this.cancelActiveTransition();
-    if (!force && percentage == this.brightness) return;
+    if (!force && percentage == this.brightness && this.brightnessApplied) return true;
     this._brightness.next(percentage);
-    await driver.setBrightnessPercentage(percentage);
+    const write = ++this.brightnessWrites;
+    this.brightnessApplied = false;
+    const applied = await driver.setBrightnessPercentage(percentage);
+    if (write === this.brightnessWrites) this.brightnessApplied = applied;
     if (opt.logReason) {
       await info(
         `[BrightnessControl] Set hardware brightness to ${percentage}% (Reason: ${opt.logReason})`
       );
     }
+    return applied;
   }
 
   async fetchBrightness(): Promise<number | undefined> {

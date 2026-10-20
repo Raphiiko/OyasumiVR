@@ -12,5 +12,6 @@ export abstract class CctControlDriver {
   /** Whether the driver can write now. OyasumiVR reads it only while `matches` is true. */
   abstract isAvailable(): Observable<boolean>;
 
-  abstract setCCT(kelvin: number): Promise<void>;
+  /** Resolves false when the headset did not accept the value. */
+  abstract setCCT(kelvin: number): Promise<boolean>;
 }

@@ -18,7 +18,8 @@ export abstract class HardwareBrightnessControlDriver {
 
   abstract getBrightnessPercentage(): Promise<number>;
 
-  abstract setBrightnessPercentage(percentage: number): Promise<void>;
+  /** Resolves false when the headset did not accept the value. */
+  abstract setBrightnessPercentage(percentage: number): Promise<boolean>;
 
   abstract getBrightnessConfiguration(): HardwareBrightnessControlDriverBounds;
 

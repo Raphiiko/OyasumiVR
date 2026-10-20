@@ -34,6 +34,7 @@ function setup() {
   let analogGain = 0.8;
   const setAnalogGain = vi.fn(async (value: number) => {
     analogGain = value;
+    return true;
   });
   const openvr = {
     status,
@@ -153,5 +154,39 @@ describe('HardwareBrightnessControlService with the generic SteamVR analog gain 
 
     expect(h.service.brightness).toBe(100);
     expect(await h.service.driverBigscreenBeyond.getBrightnessPercentage()).toBe(100);
+  });
+
+  it('writes a refused brightness again on a retry', async () => {
+    const h = setup();
+    await settle();
+    h.setAnalogGain.mockImplementationOnce(async () => false);
+
+    expect(await h.service.setBrightness(60)).toBe(false);
+    expect(await h.service.setBrightness(60)).toBe(true);
+
+    expect(h.setAnalogGain).toHaveBeenCalledTimes(2);
+    expect(h.analogGain()).toBeCloseTo(0.5);
+  });
+
+  it('skips a brightness the headset already accepted', async () => {
+    const h = setup();
+    await settle();
+    await h.service.setBrightness(60);
+    h.setAnalogGain.mockClear();
+
+    expect(await h.service.setBrightness(60)).toBe(true);
+    expect(h.setAnalogGain).not.toHaveBeenCalled();
+  });
+
+  it('ends a refused transition in the error state without an unhandled rejection', async () => {
+    const h = setup();
+    await firstFetch();
+    h.setAnalogGain.mockImplementation(async () => false);
+
+    const task = h.service.transitionBrightness(40, 0);
+    // a transition step waits one 60 Hz frame before writing
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    expect(task.isError()).toBe(true);
   });
 });

@@ -37,6 +37,9 @@ const NEUTRAL_CCT = 6600;
 export class CCTControlService {
   private _cct: BehaviorSubject<number> = new BehaviorSubject<number>(6600);
   private _activeTransition = new BehaviorSubject<CCTTransitionTask | undefined>(undefined);
+  /** False while the latest write to the cached CCT is pending or was refused. */
+  private cctApplied = true;
+  private cctWrites = 0;
   public readonly driverSteamVr: SteamVrCctControlDriver;
   /** The driver that matches the active HMD; null while none does. */
   public readonly activeDriver: Observable<CctControlDriver | null>;
@@ -95,7 +98,7 @@ export class CCTControlService {
       task.start();
       return task;
     }
-    if (this._cct.value === temperature) {
+    if (this._cct.value === temperature && this.cctApplied) {
       const task = new CancellableTask();
       task.start();
       return task;
@@ -119,7 +122,8 @@ export class CCTControlService {
       info(`[CCTControl] Starting CCT transition (Reason: ${opt.logReason})`);
     }
     this._activeTransition.next(transition);
-    transition.start();
+    // the onError subscription above handles a refused step
+    transition.start().catch(() => undefined);
     return transition;
   }
 
@@ -130,20 +134,26 @@ export class CCTControlService {
     }
   }
 
+  /** Resolves false when the headset did not accept the value. */
   async setCCT(
     cct: number,
     options: Partial<SetBrightnessOrCCTOptions> = SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS,
     force = false
-  ) {
+  ): Promise<boolean> {
     const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
     cct = clamp(Math.round(cct), 1000, 10000);
     if (opt.cancelActiveTransition) this.cancelActiveTransition();
-    if (cct === this.cct && !force) return;
+    if (cct === this.cct && !force && this.cctApplied) return true;
     this._cct.next(cct);
-    await this.writableDriver?.setCCT(cct);
+    const write = ++this.cctWrites;
+    this.cctApplied = false;
+    // without a driver the value is written once one becomes available
+    const applied = (await this.writableDriver?.setCCT(cct)) ?? true;
+    if (write === this.cctWrites) this.cctApplied = applied;
     if (opt.logReason) {
       await info(`[CCTControl] Set CCT to ${cct}K (Reason: ${opt.logReason})`);
     }
+    return applied;
   }
 
   private watchDrivers() {

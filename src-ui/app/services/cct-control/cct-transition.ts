@@ -20,10 +20,11 @@ export class CCTTransitionTask extends CancellableTask {
   private options: CCTTransitionTaskOptions;
 
   constructor(
+    /** Resolves false when the headset refused the value; only a twice-refused target fails the transition. */
     private setCCT: (
       percentage: number,
       options?: Partial<SetBrightnessOrCCTOptions>
-    ) => Promise<void>,
+    ) => Promise<boolean | void>,
     private getCCT: () => Promise<number | undefined>,
     public readonly targetCCT: number,
     public readonly duration: number,
@@ -61,21 +62,22 @@ export class CCTTransitionTask extends CancellableTask {
       const timeExpired = Date.now() - startTime;
       const progress = clamp(timeExpired / this.duration, 0, 1);
       const cct = smoothLerp(currentCCT, this.targetCCT, progress);
-      // Set the intermediary cct
-      await this.setCCT(cct, {
-        cancelActiveTransition: false,
-        logReason: undefined,
-      });
+      // Set the intermediary cct, the next frame replaces a refused one
+      await this.apply(cct);
     }
-    // Set the final target cct
-    await this.setCCT(this.targetCCT, {
-      cancelActiveTransition: false,
-      logReason: undefined,
-    });
+    // Set the final target cct, retrying once so a single refused write does not fail it
+    if (!(await this.apply(this.targetCCT)) && !(await this.apply(this.targetCCT))) {
+      throw new Error(`The headset did not accept colour temperature ${this.targetCCT}K`);
+    }
     if (this.options.logReason) {
       await info(
         `[CCTControl] Finished CCT transition (${currentCCT}%=>${this.targetCCT}%, ${this.duration}ms, Reason: ${this.options.logReason})`
       );
     }
+  }
+
+  private async apply(cct: number): Promise<boolean> {
+    const applied = await this.setCCT(cct, { cancelActiveTransition: false, logReason: undefined });
+    return applied !== false;
   }
 }
