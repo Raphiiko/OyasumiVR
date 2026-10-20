@@ -1,3 +1,5 @@
+@use 'shadows';
+
 .setting-category {
   &:not(:first-child) {
     margin-top: 1em;
@@ -198,4 +200,19 @@
   display: inline-flex;
   flex-direction: row;
   align-items: center;
+}
+
+// a settings row raised by SettingRowLift
+.setting-row-lift {
+  @include shadows.shadow(5, true);
+  overflow: visible;
+  color: inherit;
+  border: 0.15em solid transparent;
+  border-radius: var(--surface-border-radius);
+  background: transparent;
+
+  &.lifted {
+    border-color: var(--color-surface-3);
+    background-color: var(--color-surface-1);
+  }
 }
