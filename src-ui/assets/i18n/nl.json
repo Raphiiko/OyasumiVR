@@ -2894,6 +2894,13 @@
     },
     "title": "Status Automatiseringen"
   },
+  "steamvr-dashboard": {
+    "desktopNotice": {
+      "button": "Hier tonen",
+      "message": "Het kan maar op één plek tegelijk zichtbaar zijn. Toon het hier om het bureaubladvenster te verbergen.",
+      "title": "OyasumiVR is geopend op je bureaublad"
+    }
+  },
   "systemMicMuteAutomations": {
     "audioDevice": {
       "description": "Controleer goed of dit precies dezelfde microfoon is die je in VRChat gebruikt!",

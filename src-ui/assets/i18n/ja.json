@@ -2917,6 +2917,13 @@
     },
     "title": "ステータス自動化"
   },
+  "steamvr-dashboard": {
+    "desktopNotice": {
+      "button": "ここに表示",
+      "message": "同時に表示できるのは一か所だけです。ここに表示すると、デスクトップのウィンドウは非表示になります。",
+      "title": "OyasumiVRはデスクトップで開いています"
+    }
+  },
   "systemMicMuteAutomations": {
     "audioDevice": {
       "description": "VRChatで使用しているマイクであることを確認してください",

@@ -11,11 +11,13 @@ mod globals;
 mod grpc;
 mod hardware;
 mod http;
+mod i18n;
 mod image_cache;
 mod lighthouse;
 #[path = "../../src-memory-watch/integration.rs"]
 mod memory_watch;
 mod migrations;
+mod native_ui;
 mod openvr;
 mod os;
 mod osc;
@@ -540,6 +542,7 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         openvr::commands::openvr_get_devices,
         openvr::commands::openvr_status,
         openvr::commands::openvr_dashboard_render_mode,
+        i18n::set_ui_language,
         openvr::commands::openvr_get_analog_gain,
         openvr::commands::openvr_set_analog_gain,
         openvr::commands::openvr_get_supersample_scale,
