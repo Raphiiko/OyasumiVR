@@ -26,7 +26,9 @@ pub async fn nvml_status() -> NvmlStatus {
 #[tauri::command]
 pub async fn nvml_get_devices() -> Vec<NvmlDevice> {
     let mut client_guard = SIDECAR_GRPC_CLIENT.lock().await;
-    let client = client_guard.as_mut().unwrap();
+    let Some(client) = client_guard.as_mut() else {
+        return Vec::new();
+    };
     match client.get_nvml_devices(tonic::Request::new(Empty {})).await {
         Ok(response) => response.into_inner().devices,
         Err(_) => Vec::new(),
@@ -39,7 +41,10 @@ pub async fn nvml_set_power_management_limit(
     power_limit: u32,
 ) -> Result<(), NvmlSetPowerManagementLimitError> {
     let mut client_guard = SIDECAR_GRPC_CLIENT.lock().await;
-    let client = client_guard.as_mut().unwrap();
+    let Some(client) = client_guard.as_mut() else {
+        error!("[Core] Could not set the NVML power management limit: the sidecar is not running");
+        return Err(NvmlSetPowerManagementLimitError::UnknownError);
+    };
     let response = match client
         .set_nvml_power_management_limit(tonic::Request::new(NvmlPowerManagementLimitRequest {
             uuid,

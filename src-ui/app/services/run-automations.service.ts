@@ -55,7 +55,9 @@ export class RunAutomationsService {
 
   public async testCommands(commands: string): Promise<void> {
     debug(`[RunAutomationsService] Testing commands:\n${commands}`);
-    await invoke('run_cmd_commands', { commands });
+    await invoke('run_cmd_commands', { commands }).catch((e) =>
+      warn(`[RunAutomationsService] Failed to test commands: ${e}`)
+    );
   }
 
   private async onSleepModeChange(sleepMode: boolean) {

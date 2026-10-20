@@ -108,7 +108,7 @@ pub async fn run_command(command: String, args: Vec<String>) -> Result<Output, S
 }
 
 #[tauri::command]
-pub async fn run_cmd_commands(commands: String) {
+pub async fn run_cmd_commands(commands: String) -> Result<(), String> {
     info!("[Core] Running commands:\n{commands}");
 
     // Get the system temp directory
@@ -125,7 +125,7 @@ pub async fn run_cmd_commands(commands: String) {
             debug!("[Core] Successfully created batch file");
             if let Err(e) = file.write_all(commands.as_bytes()).await {
                 error!("[Core] Failed to write to batch file: {e}");
-                return;
+                return Err(e.to_string());
             }
             debug!(
                 "[Core] Successfully wrote {} bytes to batch file",
@@ -135,13 +135,13 @@ pub async fn run_cmd_commands(commands: String) {
             // Ensure file is written and closed
             if let Err(e) = file.flush().await {
                 error!("[Core] Failed to flush batch file: {e}");
-                return;
+                return Err(e.to_string());
             }
             debug!("[Core] Successfully flushed batch file to disk");
         }
         Err(e) => {
             error!("[Core] Failed to create batch file: {e}");
-            return;
+            return Err(e.to_string());
         }
     }
 
@@ -151,7 +151,7 @@ pub async fn run_cmd_commands(commands: String) {
             "[Core] Batch file does not exist after creation: {}",
             batch_path.display()
         );
-        return;
+        return Err(String::from("the batch file does not exist after creation"));
     }
     debug!(
         "[Core] Verified batch file exists: {}",
@@ -175,6 +175,7 @@ pub async fn run_cmd_commands(commands: String) {
                 "[Core] Successfully spawned cmd.exe process with PID: {:?}",
                 child.id()
             );
+            Ok(())
         }
         Err(e) => {
             error!("[Core] Failed to spawn cmd.exe process: {e}");
@@ -197,6 +198,7 @@ pub async fn run_cmd_commands(commands: String) {
                     error!("[Core] Unexpected error kind: {:?}", e.kind());
                 }
             }
+            Err(e.to_string())
         }
     }
 }
@@ -260,28 +262,43 @@ pub async fn windows_is_elevated() -> bool {
 }
 
 #[tauri::command]
-pub async fn windows_shutdown(message: String, timeout: u32, force_close_apps: bool) {
-    let _ = system_shutdown::shutdown_with_message(&message, timeout, force_close_apps);
+pub async fn windows_shutdown(
+    message: String,
+    timeout: u32,
+    force_close_apps: bool,
+) -> Result<(), String> {
+    system_shutdown::shutdown_with_message(&message, timeout, force_close_apps)
+        .map_err(|e| power_command_error("shut down", e))
 }
 
 #[tauri::command]
-pub async fn windows_reboot(message: String, timeout: u32, force_close_apps: bool) {
-    let _ = system_shutdown::reboot_with_message(&message, timeout, force_close_apps);
+pub async fn windows_reboot(
+    message: String,
+    timeout: u32,
+    force_close_apps: bool,
+) -> Result<(), String> {
+    system_shutdown::reboot_with_message(&message, timeout, force_close_apps)
+        .map_err(|e| power_command_error("restart", e))
 }
 
 #[tauri::command]
-pub async fn windows_sleep() {
-    let _ = system_shutdown::sleep();
+pub async fn windows_sleep() -> Result<(), String> {
+    system_shutdown::sleep().map_err(|e| power_command_error("sleep", e))
 }
 
 #[tauri::command]
-pub async fn windows_hibernate() {
-    let _ = system_shutdown::hibernate();
+pub async fn windows_hibernate() -> Result<(), String> {
+    system_shutdown::hibernate().map_err(|e| power_command_error("hibernate", e))
 }
 
 #[tauri::command]
-pub async fn windows_logout() {
-    let _ = system_shutdown::logout();
+pub async fn windows_logout() -> Result<(), String> {
+    system_shutdown::logout().map_err(|e| power_command_error("log out", e))
+}
+
+fn power_command_error(action: &str, e: std::io::Error) -> String {
+    error!("[Core] Could not {action} Windows: {e}");
+    e.to_string()
 }
 
 #[tauri::command]
@@ -305,33 +322,25 @@ pub async fn get_audio_devices(refresh: bool) -> Vec<AudioDeviceDto> {
 }
 
 #[tauri::command]
-pub async fn set_audio_device_volume(device_id: String, volume: f32) {
+pub async fn set_audio_device_volume(device_id: String, volume: f32) -> Result<(), String> {
     let manager_guard = super::AUDIO_DEVICE_MANAGER.lock().await;
-    let manager = match manager_guard.as_ref() {
-        Some(m) => m,
-        None => {
-            error!(
-              "[Core] Could not set audio device volume, as audio device manager was not initialized"
-          );
-            return;
-        }
+    let Some(manager) = manager_guard.as_ref() else {
+        error!(
+            "[Core] Could not set audio device volume, as audio device manager was not initialized"
+        );
+        return Err(String::from("NOT_INITIALIZED"));
     };
-    manager.set_volume(device_id, volume).await;
+    manager.set_volume(device_id, volume).await
 }
 
 #[tauri::command]
-pub async fn set_audio_device_mute(device_id: String, mute: bool) {
+pub async fn set_audio_device_mute(device_id: String, mute: bool) -> Result<(), String> {
     let manager_guard = super::AUDIO_DEVICE_MANAGER.lock().await;
-    let manager = match manager_guard.as_ref() {
-        Some(m) => m,
-        None => {
-            error!(
-              "[Core] Could not set audio device mute state, as audio device manager was not initialized"
-          );
-            return;
-        }
+    let Some(manager) = manager_guard.as_ref() else {
+        error!("[Core] Could not set audio device mute state, as audio device manager was not initialized");
+        return Err(String::from("NOT_INITIALIZED"));
     };
-    manager.set_mute(device_id, mute).await;
+    manager.set_mute(device_id, mute).await
 }
 
 #[tauri::command]

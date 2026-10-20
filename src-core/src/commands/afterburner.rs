@@ -10,7 +10,10 @@ pub async fn msi_afterburner_set_profile(
     profile: u32,
 ) -> Result<bool, SetMsiAfterburnerProfileError> {
     let mut client_guard = SIDECAR_GRPC_CLIENT.lock().await;
-    let client = client_guard.as_mut().unwrap();
+    let Some(client) = client_guard.as_mut() else {
+        error!("[Core] Could not apply a new MSI Afterburner profile: the sidecar is not running");
+        return Err(SetMsiAfterburnerProfileError::UnknownError);
+    };
     let response = match client
         .set_msi_afterburner_profile(tonic::Request::new(SetMsiAfterburnerProfileRequest {
             executable_path,

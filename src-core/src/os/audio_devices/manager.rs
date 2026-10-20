@@ -386,32 +386,34 @@ impl AudioDeviceManager {
         Ok(())
     }
 
-    pub async fn set_volume(&self, device_id: String, volume: f32) {
+    pub async fn set_volume(&self, device_id: String, volume: f32) -> Result<(), String> {
         let locked_devices = self.state.devices.lock().await;
-        if let Some(device) = locked_devices
+        let Some(device) = locked_devices
             .iter()
             .find(|device| device.get_id() == device_id)
-        {
-            if let Err(e) = device.set_volume(volume).await {
-                error!("[Core] Could not set volume for audio device ({device_id}): {e:?}");
-            }
-        } else {
+        else {
             error!("[Core] Attempted setting volume for unknown device: {device_id}");
-        }
+            return Err(String::from("DEVICE_NOT_FOUND"));
+        };
+        device.set_volume(volume).await.map_err(|e| {
+            error!("[Core] Could not set volume for audio device ({device_id}): {e:?}");
+            format!("{e:?}")
+        })
     }
 
-    pub async fn set_mute(&self, device_id: String, mute: bool) {
+    pub async fn set_mute(&self, device_id: String, mute: bool) -> Result<(), String> {
         let locked_devices = self.state.devices.lock().await;
-        if let Some(device) = locked_devices
+        let Some(device) = locked_devices
             .iter()
             .find(|device| device.get_id() == device_id)
-        {
-            if let Err(e) = device.set_mute(mute).await {
-                error!("[Core] Could not set mute state for audio device ({device_id}): {e:?}");
-            }
-        } else {
+        else {
             error!("[Core] Attempted setting mute state for unknown device: {device_id}");
-        }
+            return Err(String::from("DEVICE_NOT_FOUND"));
+        };
+        device.set_mute(mute).await.map_err(|e| {
+            error!("[Core] Could not set mute state for audio device ({device_id}): {e:?}");
+            format!("{e:?}")
+        })
     }
 }
 

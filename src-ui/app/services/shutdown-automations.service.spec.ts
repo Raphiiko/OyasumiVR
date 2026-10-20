@@ -8,11 +8,12 @@ import { ShutdownAutomationsService } from './shutdown-automations.service';
 
 const { invoke } = vi.hoisted(() => ({ invoke: vi.fn() }));
 vi.mock('@tauri-apps/api/core', () => ({ invoke }));
+vi.mock('@tauri-apps/plugin-log', () => ({ warn: vi.fn() }));
 
 type Dependencies = ConstructorParameters<typeof ShutdownAutomationsService>;
 
 function setup(
-  powerDownWindowsMode: 'SLEEP' | 'HIBERNATE' | 'LOGOUT' = 'SLEEP',
+  powerDownWindowsMode: 'SHUTDOWN' | 'REBOOT' | 'SLEEP' | 'HIBERNATE' | 'LOGOUT' = 'SLEEP',
   status = 'INACTIVE'
 ) {
   const service = new ShutdownAutomationsService(
@@ -77,7 +78,35 @@ describe('ShutdownAutomationsService sequence completion', () => {
     expect(invoke).not.toHaveBeenCalled();
     await vi.advanceTimersByTimeAsync(1);
     await sequence;
-    expect(invoke).toHaveBeenCalledWith(command);
+    expect(invoke).toHaveBeenCalledWith(command, undefined);
+    await expect(firstValueFrom(service.stage.pipe(take(1)))).resolves.toBe('IDLE');
+  });
+
+  it.each([
+    ['SHUTDOWN', 'windows_shutdown'],
+    ['REBOOT', 'windows_reboot'],
+  ] as const)('returns to idle at once when Windows refuses %s', async (mode, command) => {
+    invoke.mockImplementation(async (cmd: string) => {
+      if (cmd === command) throw 'refused';
+    });
+    const service = setup(mode);
+
+    const sequence = service.runSequence('MANUAL');
+    await vi.advanceTimersByTimeAsync(2000);
+    await sequence;
+
+    expect(invoke).toHaveBeenCalledWith(command, expect.anything());
+    await expect(firstValueFrom(service.stage.pipe(take(1)))).resolves.toBe('IDLE');
+  });
+
+  it('completes the sequence when Windows refuses a delayed power command', async () => {
+    invoke.mockRejectedValue('refused');
+    const service = setup('SLEEP');
+
+    const sequence = service.runSequence('MANUAL');
+    await vi.advanceTimersByTimeAsync(2000);
+
+    await expect(sequence).resolves.toBeUndefined();
     await expect(firstValueFrom(service.stage.pipe(take(1)))).resolves.toBe('IDLE');
   });
 

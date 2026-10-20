@@ -48,11 +48,13 @@ pub async fn set_analog_gain(analog_gain: f32) -> Result<(), String> {
             return Err("OPENVR_NOT_INITIALISED".to_string());
         }
         let settings = &context.settings();
-        let _ = settings.set_float(
-            CStr::from_bytes_with_nul(ovr::raw::k_pch_SteamVR_Section).unwrap(),
-            c"analogGain",
-            analog_gain,
-        );
+        settings
+            .set_float(
+                CStr::from_bytes_with_nul(ovr::raw::k_pch_SteamVR_Section).unwrap(),
+                c"analogGain",
+                analog_gain,
+            )
+            .map_err(|e| format!("{e:?}"))?;
         Ok(())
     } else {
         Err("NO_HMD_FOUND".to_string())

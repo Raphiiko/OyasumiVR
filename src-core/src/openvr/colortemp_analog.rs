@@ -54,20 +54,26 @@ pub async fn set_color_temp(mut temperature: Option<u32>) -> Result<(f64, f64, f
         blue.clamp(0.0, 255.0)
     } / 255.0;
     let settings = &context.settings();
-    let _ = settings.set_float(
-        CStr::from_bytes_with_nul(ovr::raw::k_pch_SteamVR_Section).unwrap(),
-        CStr::from_bytes_with_nul(ovr::raw::k_pch_SteamVR_HmdDisplayColorGainR_Float).unwrap(),
-        red as f32,
-    );
-    let _ = settings.set_float(
-        CStr::from_bytes_with_nul(ovr::raw::k_pch_SteamVR_Section).unwrap(),
-        CStr::from_bytes_with_nul(ovr::raw::k_pch_SteamVR_HmdDisplayColorGainG_Float).unwrap(),
-        green as f32,
-    );
-    let _ = settings.set_float(
-        CStr::from_bytes_with_nul(ovr::raw::k_pch_SteamVR_Section).unwrap(),
-        CStr::from_bytes_with_nul(ovr::raw::k_pch_SteamVR_HmdDisplayColorGainB_Float).unwrap(),
-        blue as f32,
-    );
+    settings
+        .set_float(
+            CStr::from_bytes_with_nul(ovr::raw::k_pch_SteamVR_Section).unwrap(),
+            CStr::from_bytes_with_nul(ovr::raw::k_pch_SteamVR_HmdDisplayColorGainR_Float).unwrap(),
+            red as f32,
+        )
+        .map_err(|e| format!("{e:?}"))?;
+    settings
+        .set_float(
+            CStr::from_bytes_with_nul(ovr::raw::k_pch_SteamVR_Section).unwrap(),
+            CStr::from_bytes_with_nul(ovr::raw::k_pch_SteamVR_HmdDisplayColorGainG_Float).unwrap(),
+            green as f32,
+        )
+        .map_err(|e| format!("{e:?}"))?;
+    settings
+        .set_float(
+            CStr::from_bytes_with_nul(ovr::raw::k_pch_SteamVR_Section).unwrap(),
+            CStr::from_bytes_with_nul(ovr::raw::k_pch_SteamVR_HmdDisplayColorGainB_Float).unwrap(),
+            blue as f32,
+        )
+        .map_err(|e| format!("{e:?}"))?;
     Ok((red, green, blue))
 }

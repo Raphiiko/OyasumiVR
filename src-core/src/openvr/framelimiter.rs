@@ -22,20 +22,28 @@ pub async fn set_app_framelimits(
     let pch_settings_key_frames_to_throttle = c"framesToThrottle";
 
     if let Some(limits) = limits {
-        let _ = settings.set_int32(
-            pch_section,
-            pch_settings_key_additional_frames_to_predict,
-            limits.additional_frames_to_predict as i32,
-        );
-        let _ = settings.set_int32(
-            pch_section,
-            pch_settings_key_frames_to_throttle,
-            limits.frames_to_throttle as i32,
-        );
+        settings
+            .set_int32(
+                pch_section,
+                pch_settings_key_additional_frames_to_predict,
+                limits.additional_frames_to_predict as i32,
+            )
+            .map_err(|e| format!("{e:?}"))?;
+        settings
+            .set_int32(
+                pch_section,
+                pch_settings_key_frames_to_throttle,
+                limits.frames_to_throttle as i32,
+            )
+            .map_err(|e| format!("{e:?}"))?;
     } else {
-        let _ = settings
-            .remove_key_in_section(pch_section, pch_settings_key_additional_frames_to_predict);
-        let _ = settings.remove_key_in_section(pch_section, pch_settings_key_frames_to_throttle);
+        // SteamVR has no not-found settings error, so removing an absent key still succeeds
+        settings
+            .remove_key_in_section(pch_section, pch_settings_key_additional_frames_to_predict)
+            .map_err(|e| format!("{e:?}"))?;
+        settings
+            .remove_key_in_section(pch_section, pch_settings_key_frames_to_throttle)
+            .map_err(|e| format!("{e:?}"))?;
     }
 
     Ok(())
