@@ -2,12 +2,9 @@
 @use 'effects';
 
 .time-input {
-  position: relative;
   display: inline-flex;
-  anchor-scope: --time-field;
 
   input {
-    anchor-name: --time-field;
     width: 5em;
     text-align: center;
     font-variant-numeric: tabular-nums;
@@ -27,12 +24,8 @@
 .picker {
   @include shadows.shadow(5, true);
   position: fixed;
-  position-anchor: --time-field;
   inset: auto;
-  top: anchor(bottom);
-  right: anchor(right);
-  margin: 0.5em 0 0 0;
-  position-try-fallbacks: flip-block;
+  margin: 0;
   padding: 1em;
   border-radius: var(--surface-border-radius);
   border: 0.15em solid var(--color-surface-3);
@@ -176,5 +169,25 @@
         display: none;
       }
     }
+  }
+}
+
+// the raised settings row lives outside this component's view
+::ng-deep .time-lift {
+  @include shadows.shadow(5, true);
+  overflow: visible;
+  color: inherit;
+  border: 0.15em solid transparent;
+  border-radius: var(--surface-border-radius);
+  background: transparent;
+  transition:
+    left 0.3s ease,
+    top 0.3s ease,
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+
+  &.lifted {
+    border-color: var(--color-surface-3);
+    background-color: var(--color-surface-1);
   }
 }

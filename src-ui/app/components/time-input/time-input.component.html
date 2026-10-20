@@ -1,4 +1,4 @@
-<div class="time-input" [class.open]="open()" (clickOutside)="close()">
+<div class="time-input" [class.open]="open()">
   <input
     type="text"
     inputmode="numeric"
@@ -8,6 +8,7 @@
     placeholder="--:--"
     [value]="text()"
     [disabled]="disabled()"
+    (mousedown)="pointerHeld = true"
     (focus)="openDial(field)"
     (click)="openDial(field)"
     (blur)="close()"
@@ -16,7 +17,7 @@
     #field
   />
   @if (open()) {
-    <div class="picker" popover="manual" (mousedown)="$event.preventDefault()" @fade #picker>
+    <div class="picker" popover="manual" (mousedown)="$event.preventDefault()" @dialFade #picker>
       <div class="readout">
         <button
           type="button"
