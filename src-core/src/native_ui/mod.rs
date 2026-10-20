@@ -142,6 +142,7 @@ mod tests {
     use super::*;
 
     #[test]
+    #[ignore = "requires the @fontsource packages that npm ci installs"]
     fn every_bundled_font_loads_into_an_atlas() {
         let names = UI_FONTS
             .into_iter()
