@@ -118,9 +118,11 @@ export class VRChatMicMuteAutomationService {
     if (option === 'NONE' || !this.vrcActive) return;
     const muted = option === 'MUTE';
 
+    await this.fetchMutedState();
+    if (!this.vrcActive) return;
+
     // the mic button is a toggle, so an unknown state cannot be set safely
-    if (!(await this.fetchMutedState())) {
-      if (!this.vrcActive) return;
+    if (this._muted.value === null) {
       warn(
         `[VRChatMicMuteAutomation] Could not ${option.toLowerCase()} the microphone (${reason}): the muted state is unknown, as VRChat's OSCQuery did not report it`
       );
@@ -135,12 +137,12 @@ export class VRChatMicMuteAutomationService {
     if (this._muted.value === muted) return;
 
     info(`[VRChatMicMuteAutomation] Setting the microphone to ${option} (${reason})`);
+    await this.setMute(muted);
     this.eventLog.logEvent({
       type: 'changedVRChatMicMuteState',
       muted,
       reason,
     } as EventLogChangedVRChatMicMuteState);
-    await this.setMute(muted);
   }
 
   private async fetchMutedState(): Promise<boolean> {

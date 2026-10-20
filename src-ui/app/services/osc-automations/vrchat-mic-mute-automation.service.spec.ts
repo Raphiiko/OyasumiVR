@@ -68,4 +68,17 @@ describe('VRChatMicMuteAutomationService', () => {
     expect(osc.send_int).toHaveBeenCalledTimes(3);
     expect(internals._muted.value).toBe(false);
   });
+
+  it('uses a state that arrives over OSC while the OSCQuery read fails', async () => {
+    const { internals, osc, eventLog } = createService(null, '127.0.0.1:9000');
+    http.fetch.mockImplementationOnce(async () => {
+      internals._muted.next(false);
+      throw new Error('connection refused');
+    });
+
+    await internals.applyAutomation('MUTE', 'SLEEP_MODE_ENABLED');
+
+    expect(osc.send_int).toHaveBeenCalledTimes(3);
+    expect(eventLog.logEvent.mock.calls[0][0].failure).toBeUndefined();
+  });
 });
