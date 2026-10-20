@@ -1965,6 +1965,11 @@
           },
           "enableFailed": {
             "title": "无法启用管理员权限"
+          },
+          "promptOnDesktop": {
+            "closesItself": "回应后，此窗口会自动关闭。",
+            "message": "Windows 正在通过桌面上的提示窗口请求管理员权限。该提示窗口可能不会在 VR 中显示。",
+            "title": "请在桌面上回应提示窗口"
           }
         },
         "errors": {

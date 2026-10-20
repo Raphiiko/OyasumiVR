@@ -1972,6 +1972,11 @@
           },
           "enableFailed": {
             "title": "Could not enable administrative permissions"
+          },
+          "promptOnDesktop": {
+            "closesItself": "This closes by itself once you answer.",
+            "message": "Windows is asking for administrative permissions in a prompt on your desktop. This prompt might not show in VR.",
+            "title": "Answer the prompt on your desktop"
           }
         },
         "errors": {
