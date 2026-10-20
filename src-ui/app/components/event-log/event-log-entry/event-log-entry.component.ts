@@ -45,7 +45,7 @@ import { EventLogVRChatGroupChangedEntryParser } from './entry-parsers/vrchat-gr
 import { EventLogCCTChangedEntryParser } from './entry-parsers/cct-changed';
 import { EventLogFrameLimitChangedEntryParser } from './entry-parsers/frame-limit-changed';
 import { EventLogRunAutomationExecutedEntryParser } from './entry-parsers/run-automation-executed';
-import { EventLogEntry } from '../../../models/event-log-entry';
+import { EventLogEntry, isEventLogWarning } from '../../../models/event-log-entry';
 
 @Component({
   selector: 'app-event-log-entry',
@@ -109,7 +109,10 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
   readonly showTime = input(true);
   /** Overrides the entry's own icon, for a group header. */
   readonly icon = input<string>();
+  /** Marks the row as a warning, for a group header with a failed action. */
+  readonly warning = input(false);
   protected iconName?: string;
+  protected isWarning = false;
   /** Translation key for a header row that has no entry of its own. */
   readonly titleKey = input<string>();
   /** Time for a header row that has no entry of its own. */
@@ -135,6 +138,7 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
   rebuild() {
     const entry = this.entry();
     this.iconName = this.icon() ?? (entry && this.parser?.icon(entry));
+    this.isWarning = this.warning() || (!this.icon() && !!entry && isEventLogWarning(entry));
     this.headerInfoSubTitle = undefined;
     if (!this.parser) {
       const titleKey = this.titleKey();

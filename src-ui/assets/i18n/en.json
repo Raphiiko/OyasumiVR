@@ -747,7 +747,8 @@
           "sunrise": "At sunrise",
           "sunset": "At sunset"
         },
-        "count": "{count, plural, one {1 action} other {# actions}}"
+        "count": "{count, plural, one {1 action} other {# actions}}",
+        "warnings": "{count, plural, one {, 1 failed} other {, # failed}}"
       },
       "no-logs": "No events have been logged yet.\nLogs are kept for at most 48 hours.",
       "openFilters": "Filter Events",

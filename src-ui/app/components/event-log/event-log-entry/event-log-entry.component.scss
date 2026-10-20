@@ -29,6 +29,16 @@
       app-icon {
         font-size: 1.1em;
       }
+
+      // the toast warning style, a solid body with a cutout, so it stays apart from the primary pink
+      .warning-badge {
+        position: absolute;
+        right: -0.3em;
+        bottom: -0.25em;
+        font-size: 0.75em;
+        --icon-body: #ffb300;
+        --icon-inner: var(--color-surface-1);
+      }
     }
 
     &-info {

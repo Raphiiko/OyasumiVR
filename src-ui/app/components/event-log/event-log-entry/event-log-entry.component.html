@@ -3,7 +3,12 @@
     <div class="header">
       <ng-content select="[eventLogPrefix]" />
       @if (iconName) {
-        <div class="header-icon"><app-icon [name]="iconName" /></div>
+        <div class="header-icon">
+          <app-icon [name]="iconName" />
+          @if (isWarning) {
+            <app-icon class="warning-badge" name="warning" />
+          }
+        </div>
       }
       <div class="header-info">
         <span class="title" [innerHtml]="headerInfoTitle"></span>

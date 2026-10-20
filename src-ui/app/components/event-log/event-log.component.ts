@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { EventLogService } from '../../services/event-log.service';
 import { BehaviorSubject, combineLatest, map, Observable, tap } from 'rxjs';
-import { EventLogEntry, EventLogType } from '../../models/event-log-entry';
+import { EventLogEntry, EventLogType, isEventLogWarning } from '../../models/event-log-entry';
 import { fade, hshrink, noop, vshrink } from '../../utils/animations';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import {
@@ -99,6 +99,10 @@ export class EventLogComponent implements OnInit, AfterViewInit {
 
   protected groupTime(group: EventLogGroup): number {
     return eventLogItemTime(group);
+  }
+
+  protected warningCount(group: EventLogGroup): number {
+    return group.entries.filter(isEventLogWarning).length;
   }
 
   /** False when the entry happened within the same second as its group header. */
