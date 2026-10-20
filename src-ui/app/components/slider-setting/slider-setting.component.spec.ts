@@ -2,6 +2,7 @@ import '@angular/compiler';
 import {
   ChangeDetectorRef,
   DestroyRef,
+  ElementRef,
   EnvironmentInjector,
   Injector,
   runInInjectionContext,
@@ -16,7 +17,7 @@ describe('SliderSettingComponent', () => {
     const cdr = { markForCheck: () => {} } as unknown as ChangeDetectorRef;
     const component = runInInjectionContext(
       injector,
-      () => new SliderSettingComponent(injector as DestroyRef, cdr)
+      () => new SliderSettingComponent(injector as DestroyRef, cdr, {} as ElementRef)
     );
     const emitted: number[] = [];
     component.value.subscribe((value) => emitted.push(value));
