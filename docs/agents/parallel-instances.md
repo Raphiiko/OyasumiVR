@@ -101,6 +101,16 @@ $steamVrLock.ReleaseMutex()
 $steamVrLock.Dispose()
 ```
 
+Build the backend before you claim a lock, so other agents do not queue behind your Rust build.
+`tauri dev` builds with `--no-default-features`, so this compiles every dependency it needs, and
+`npm run dev:isolated` then recompiles only the `oyasumivr` crate:
+
+```powershell
+cargo build --manifest-path src-core/Cargo.toml --no-default-features
+$steamVrLock = Enter-TestLock 'SteamVR'
+npm run dev:isolated
+```
+
 Windows releases a named mutex when the process that holds it exits, so a crashed session frees its
 locks. Release each lock from the same session as soon as that part of the test ends.
 
