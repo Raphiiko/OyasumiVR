@@ -37,7 +37,7 @@ use windows::{
             Com::{CoCreateInstance, IStream, CLSCTX_INPROC_SERVER, STREAM_SEEK_SET},
             LibraryLoader::{GetModuleHandleW, GetProcAddress},
         },
-        UI::Shell::SHCreateMemStream,
+        UI::{Shell::SHCreateMemStream, WindowsAndMessaging::InSendMessage},
     },
 };
 
@@ -848,6 +848,12 @@ unsafe fn capture_frame(
     capture: &Arc<CaptureState>,
 ) -> Result<(), String> {
     DESKTOP.with(|saved| {
+        // CreateForWindow makes an outgoing COM call, which Windows rejects during a sent message.
+        if InSendMessage().as_bool() {
+            capture.pending.fetch_sub(1, Ordering::AcqRel);
+            return Ok(());
+        }
+
         // a stale callback of a deactivated capture can leave its desktop behind
         let stale = saved
             .borrow_mut()
