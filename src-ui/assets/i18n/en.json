@@ -379,9 +379,6 @@
           }
         },
         "changedVRChatMicMuteState": {
-          "failure": {
-            "STATE_UNKNOWN": "VRChat's OSCQuery did not report whether you are muted"
-          },
           "reason": {
             "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
@@ -389,9 +386,9 @@
           },
           "title": {
             "MUTE": "Muted microphone in VRChat",
-            "MUTE_FAILED": "Could not mute microphone in VRChat",
+            "MUTE_FAILED": "Could not mute microphone in VRChat: OSCQuery did not report your mute state",
             "UNMUTE": "Unmuted microphone in VRChat",
-            "UNMUTE_FAILED": "Could not unmute microphone in VRChat"
+            "UNMUTE_FAILED": "Could not unmute microphone in VRChat: OSCQuery did not report your mute state"
           }
         },
         "chaperoneFadeDistanceChanged": {
