@@ -1,13 +1,12 @@
 @use 'shadows.scss';
+@use 'effects';
 
 :host {
   display: block;
-  anchor-scope: --color-swatch;
 }
 
 .swatch {
   @include shadows.shadow(2, true);
-  anchor-name: --color-swatch;
   position: relative;
   display: block;
   height: 2em;
@@ -48,14 +47,9 @@
 
 .picker {
   @include shadows.shadow(5, true);
-  position-anchor: --color-swatch;
-  position-area: left center;
-  position-try-fallbacks:
-    flip-inline,
-    left span-bottom,
-    left span-top;
+  position: fixed;
   inset: auto;
-  margin: 0 0.75em;
+  margin: 0;
   padding: 1.25em;
   width: 16.5em;
   box-sizing: content-box;
@@ -63,26 +57,32 @@
   align-items: stretch;
   gap: 1.25em;
   color: var(--color-text-1);
-  background: var(--color-surface-1);
-  border: 1px solid var(--color-surface-3);
   border-radius: var(--surface-border-radius);
+  border: 0.15em solid var(--color-surface-3);
+  background-color: color-mix(in srgb, var(--color-surface-1) 80%, transparent);
+  backdrop-filter: blur(4px);
+  @include effects.pane-radial-gradient(#fff);
   overflow: visible;
   opacity: 0;
-  transform: translateX(0.5em);
   transition:
     opacity 0.15s ease,
-    transform 0.15s ease,
     overlay 0.15s allow-discrete,
     display 0.15s allow-discrete;
 
+  // the panel drops in as the raised row reaches its place, like the time dial
   &:popover-open {
     display: flex;
     opacity: 1;
     transform: none;
+    transition:
+      opacity 0.2s 0.15s ease-out,
+      transform 0.2s 0.15s ease-out,
+      overlay 0.2s allow-discrete,
+      display 0.2s allow-discrete;
 
     @starting-style {
       opacity: 0;
-      transform: translateX(0.5em);
+      transform: translateY(-0.75em);
     }
   }
 
