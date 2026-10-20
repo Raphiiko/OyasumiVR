@@ -48,10 +48,12 @@ export class TimeInputComponent {
     effect(() => this.picker()?.nativeElement.showPopover());
   }
 
-  protected openDial() {
+  /** Selects the text as well, so typing replaces the time; a dial pick leaves the field focused. */
+  protected openDial(field: HTMLInputElement) {
     if (this.disabled() || this.open()) return;
     this.dialMode.set('HOURS');
     this.open.set(true);
+    field.select();
   }
 
   protected close() {
@@ -77,11 +79,8 @@ export class TimeInputComponent {
   protected onKeyDown(event: KeyboardEvent, field: HTMLInputElement) {
     if (event.key === 'Enter') {
       field.blur();
-      this.close();
     } else if (event.key === 'Escape') {
       field.value = this.text();
-      this.close();
-    } else if (event.key === 'Tab') {
       this.close();
     }
   }

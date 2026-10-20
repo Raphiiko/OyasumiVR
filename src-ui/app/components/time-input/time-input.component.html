@@ -8,8 +8,9 @@
     placeholder="--:--"
     [value]="text()"
     [disabled]="disabled()"
-    (focus)="openDial(); field.select()"
-    (click)="openDial()"
+    (focus)="openDial(field)"
+    (click)="openDial(field)"
+    (blur)="close()"
     (change)="commit(field)"
     (keydown)="onKeyDown($event, field)"
     #field
