@@ -15,8 +15,8 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { formatTime, parseTime } from '../../utils/time-utils';
 
 const LIFT_GAP = 12;
-// matches the row's transition in time-input.component.scss
-const LIFT_MS = 300;
+// matches the transition of .setting-row in styles/settings.scss
+const LIFT_MS = 150;
 
 /** The settings row raised above the page while its dial is open. */
 interface Lift {
@@ -97,6 +97,7 @@ export class TimeInputComponent {
 
   protected close() {
     this.open.set(false);
+    this.pendingGlide = undefined;
     this.lowerRow();
   }
 
@@ -104,10 +105,13 @@ export class TimeInputComponent {
   private liftRow() {
     const row = this.host.closest<HTMLElement>('app-setting-row') ?? this.host;
 
-    // reuse the row a neighbouring field in it already raised
+    // reuse the row a field in it already raised, stopped where it is until the release
     if (activeLift?.row === row) {
       clearTimeout(activeLift.timer);
       activeLift.owner = this;
+      const rect = row.getBoundingClientRect();
+      row.style.left = `${rect.left}px`;
+      row.style.top = `${rect.top}px`;
       return;
     }
     if (activeLift) this.settle(activeLift);
@@ -145,6 +149,7 @@ export class TimeInputComponent {
     picker.style.top = `${top + row.height + LIFT_GAP}px`;
     const glide = () =>
       requestAnimationFrame(() => {
+        if (activeLift !== lift || lift.owner !== this || !this.open()) return;
         lift.row.classList.add('lifted');
         lift.backdrop.classList.add('in');
         lift.row.style.left = `${(window.innerWidth - row.width) / 2}px`;
