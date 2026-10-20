@@ -52,7 +52,9 @@ pub struct NoticeSurface {
     overlay: u64,
     /// Last pointer position in whole pixels, or None while the pointer is off the surface.
     pointer: Option<(f32, f32)>,
-    /// Frames still to draw; input and creation set it, each queued frame lowers it.
+    /// Copy the frames show, so a language change draws again without input.
+    copy: Option<NoticeCopy>,
+    /// Frames still to draw; input, creation and new copy set it, each queued frame lowers it.
     redraws: u8,
 }
 
@@ -71,6 +73,7 @@ impl NoticeSurface {
             table,
             overlay,
             pointer: None,
+            copy: None,
             redraws: REDRAWS_AFTER_INPUT,
         })
     }
@@ -99,10 +102,14 @@ impl NoticeSurface {
         self.redraws = REDRAWS_AFTER_INPUT;
     }
 
-    /// Queues a frame when input is waiting and no frame is drawing. Returns true once the button was clicked.
+    /// Queues a frame when input or new copy is waiting and no frame is drawing. Returns true once the button was clicked.
     pub fn render(&mut self, copy: &NoticeCopy) -> Result<bool, String> {
         if let Some(error) = SHARED.error.lock().unwrap().take() {
             return Err(error);
+        }
+        if self.copy.as_ref() != Some(copy) {
+            self.copy = Some(copy.clone());
+            self.redraws = REDRAWS_AFTER_INPUT;
         }
         if self.redraws > 0 && !SHARED.busy.swap(true, Ordering::AcqRel) {
             let _ = self.commands.send(Command::Render {
@@ -226,4 +233,51 @@ fn render(
     let clicked = renderer.render(ui, |frame| notice::draw(frame, copy))?;
     renderer.submit(table, overlay)?;
     Ok(clicked)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn copy(language: &str) -> NoticeCopy {
+        NoticeCopy {
+            language: language.into(),
+            title: format!("{language} title"),
+            message: String::new(),
+            button: String::new(),
+        }
+    }
+
+    /// Renders once per finished frame and counts the frames queued.
+    fn frames(
+        surface: &mut NoticeSurface,
+        commands: &Receiver<Command>,
+        copy: &NoticeCopy,
+    ) -> usize {
+        for _ in 0..10 {
+            SHARED.busy.store(false, Ordering::Release);
+            surface.render(copy).unwrap();
+        }
+        commands.try_iter().count()
+    }
+
+    #[test]
+    fn a_language_change_draws_again_without_input() {
+        let (sender, receiver) = channel();
+        let mut surface = NoticeSurface {
+            commands: sender,
+            table: unsafe { std::mem::zeroed() },
+            overlay: 0,
+            pointer: None,
+            copy: None,
+            redraws: REDRAWS_AFTER_INPUT,
+        };
+        // dropped before the surface, so its drop does not wait for a worker
+        let commands = receiver;
+        let english = copy("en");
+
+        assert_eq!(frames(&mut surface, &commands, &english), 3);
+        assert_eq!(frames(&mut surface, &commands, &english), 0);
+        assert_eq!(frames(&mut surface, &commands, &copy("ja")), 3);
+    }
 }
