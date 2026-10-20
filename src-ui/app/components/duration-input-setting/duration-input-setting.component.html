@@ -12,7 +12,7 @@
     readonly
     (mousedown)="lift.hold()"
     (focus)="openInput()"
-    (click)="openInput()"
+    (click)="onFieldClick()"
     [disabled]="disabled()"
   />
   @if (open()) {

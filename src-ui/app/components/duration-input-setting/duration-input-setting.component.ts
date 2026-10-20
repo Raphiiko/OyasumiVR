@@ -66,6 +66,12 @@ export class DurationInputSettingComponent {
     this.open.set(true);
   }
 
+  /** A click on the open field hands focus back to the hours, since the field itself is readonly. */
+  protected onFieldClick() {
+    if (this.open()) this.hourInput()?.nativeElement.focus();
+    else this.openInput();
+  }
+
   protected close() {
     if (!this.open()) return;
     this.open.set(false);
