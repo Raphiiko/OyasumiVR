@@ -88,7 +88,7 @@ Start the app with `npm run dev:isolated`. It gives the worktree its own identif
 ports, so it runs beside other worktrees' instances. SteamVR, VRChat, elevated features, Bluetooth,
 and native input stay shared: claim the resource's lock before a test uses it. Every instance
 connects to a running SteamVR by itself. Bluetooth stays off unless the work is about Bluetooth or
-Lighthouse functionality: then start with `--bluetooth` and claim its lock. For the locks, the
+Lighthouse functionality: then claim its lock and start with `--bluetooth`. For the locks, the
 ports, and overlay work, read [parallel app instances](docs/agents/parallel-instances.md).
 
 ## Icons

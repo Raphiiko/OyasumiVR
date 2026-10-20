@@ -47,7 +47,8 @@ const cdpPort = uiPort + 5000;
 // Bluetooth devices accept one controller at a time, so instances leave Bluetooth off unless asked
 const args = process.argv.slice(2);
 const bluetooth = args.includes('--bluetooth');
-if (!bluetooth) process.env.OYASUMIVR_DEV_NO_BLUETOOTH = '1';
+if (bluetooth) delete process.env.OYASUMIVR_DEV_NO_BLUETOOTH;
+else process.env.OYASUMIVR_DEV_NO_BLUETOOTH = '1';
 
 process.env.WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS = `--remote-debugging-port=${cdpPort}`;
 console.log(

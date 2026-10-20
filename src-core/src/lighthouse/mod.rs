@@ -82,9 +82,7 @@ const RADIO_ON_ATTEMPTS: u32 = 3;
 
 pub async fn init() {
     // `npm run dev:isolated` sets this unless started with `--bluetooth`
-    if crate::BUILD_FLAVOUR == crate::flavour::BuildFlavour::Dev
-        && std::env::var_os("OYASUMIVR_DEV_NO_BLUETOOTH").is_some()
-    {
+    if tauri::is_dev() && std::env::var_os("OYASUMIVR_DEV_NO_BLUETOOTH").is_some() {
         info!("[Core] Bluetooth is off for this dev instance");
         return;
     }
