@@ -113,7 +113,11 @@ export class EventLogFilterDialogComponent
     },
     {
       id: 'SHUTDOWN_SEQUENCE',
-      eventLogTypes: ['shutdownSequenceStarted', 'shutdownSequenceCancelled'],
+      eventLogTypes: [
+        'shutdownSequenceStarted',
+        'shutdownSequenceCancelled',
+        'shutdownSequenceStepFailed',
+      ],
     },
     {
       id: 'BSB_CONTROL',

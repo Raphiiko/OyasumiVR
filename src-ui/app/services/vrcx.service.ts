@@ -54,6 +54,8 @@ export class VRCXService {
   }
 
   private logEventLogEntry(entry: EventLogEntry) {
+    // VRCX records only actions that happened
+    if (entry.failure) return;
     switch (entry.type) {
       case 'acceptedInviteRequest':
       case 'declinedInviteRequest':

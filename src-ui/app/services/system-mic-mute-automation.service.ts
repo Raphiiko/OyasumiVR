@@ -32,6 +32,7 @@ import { NotificationService } from './notification.service';
 import {
   EventLogChangedSystemMicControllerButtonBehavior,
   EventLogChangedSystemMicMuteState,
+  EventLogFailure,
 } from '../models/event-log-entry';
 import { EventLogService } from './event-log.service';
 import { invoke } from '@tauri-apps/api/core';
@@ -138,20 +139,7 @@ export class SystemMicMuteAutomationService {
         filter((state) => state !== 'NONE'),
         map((state) => state === 'MUTE'),
         delay(16), // To ensure this fires _after_ any reevaluation for the controller binding behaviour
-        switchMap((state) => this.setMute(state)),
-        tap((stateSet) => {
-          if (stateSet !== null) {
-            info(
-              `[SystemMicMuteAutomation] Setting mic mute to ${stateSet} as the sleep mode was enabled`
-            );
-            this.eventLog.logEvent({
-              type: 'changedSystemMicMuteState',
-              muted: stateSet.muted,
-              deviceName: stateSet.device?.name ?? 'Unknown',
-              reason: 'SLEEP_MODE_ENABLED',
-            } as EventLogChangedSystemMicMuteState);
-          }
-        })
+        switchMap((state) => this.setMuteAndLog(state, 'SLEEP_MODE_ENABLED'))
       )
       .subscribe();
   }
@@ -165,20 +153,7 @@ export class SystemMicMuteAutomationService {
         filter((state) => state !== 'NONE'),
         map((state) => state === 'MUTE'),
         delay(16), // To ensure this fires _after_ any reevaluation for the controller binding behaviour
-        switchMap((state) => this.setMute(state)),
-        tap((stateSet) => {
-          if (stateSet !== null) {
-            info(
-              `[SystemMicMuteAutomation] Setting mic mute to ${stateSet} as the sleep mode was disabled`
-            );
-            this.eventLog.logEvent({
-              type: 'changedSystemMicMuteState',
-              muted: stateSet.muted,
-              deviceName: stateSet.device?.name ?? 'Unknown',
-              reason: 'SLEEP_MODE_DISABLED',
-            } as EventLogChangedSystemMicMuteState);
-          }
-        })
+        switchMap((state) => this.setMuteAndLog(state, 'SLEEP_MODE_DISABLED'))
       )
       .subscribe();
   }
@@ -190,20 +165,7 @@ export class SystemMicMuteAutomationService {
         filter((state) => state !== 'NONE'),
         map((state) => state === 'MUTE'),
         delay(16), // To ensure this fires _after_ any reevaluation for the controller binding behaviour
-        switchMap((state) => this.setMute(state)),
-        tap((stateSet) => {
-          if (stateSet !== null) {
-            info(
-              `[SystemMicMuteAutomation] Setting mic mute to ${stateSet} as the user prepared to go to sleep`
-            );
-            this.eventLog.logEvent({
-              type: 'changedSystemMicMuteState',
-              muted: stateSet.muted,
-              deviceName: stateSet.device?.name ?? 'Unknown',
-              reason: 'SLEEP_PREPARATION',
-            } as EventLogChangedSystemMicMuteState);
-          }
-        })
+        switchMap((state) => this.setMuteAndLog(state, 'SLEEP_PREPARATION'))
       )
       .subscribe();
   }
@@ -367,6 +329,24 @@ export class SystemMicMuteAutomationService {
         switchMap((deviceId) => invoke('set_mic_activity_device_id', { deviceId }))
       )
       .subscribe();
+  }
+
+  private async setMuteAndLog(mute: boolean, reason: EventLogChangedSystemMicMuteState['reason']) {
+    const device = await firstValueFrom(this.captureDevice);
+    const applied = device && (await this.audioDeviceService.setMute(device.id, mute));
+    let failure: EventLogFailure | undefined;
+    if (!device) failure = 'DEVICE_NOT_FOUND';
+    else if (!applied) failure = 'UNKNOWN';
+    info(
+      `[SystemMicMuteAutomation] ${failure ? `Could not set (${failure})` : 'Set'} mic mute to ${mute} (Reason: ${reason})`
+    );
+    this.eventLog.logEvent({
+      type: 'changedSystemMicMuteState',
+      muted: mute,
+      deviceName: device?.name ?? 'Unknown',
+      reason,
+      failure,
+    });
   }
 
   private async setMute(mute: boolean): Promise<{

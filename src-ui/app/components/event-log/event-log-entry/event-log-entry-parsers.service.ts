@@ -15,6 +15,7 @@ import { EventLogRenderResolutionChangedEntryParser } from './entry-parsers/rend
 import { EventLogFadeDistanceChangedEntryParser } from './entry-parsers/fade-distance-changed';
 import { EventLogLighthouseSetPowerStateEntryParser } from './entry-parsers/lighthouse-set-power-state';
 import { EventLogShutdownSequenceStartedEntryParser } from './entry-parsers/shutdown-sequence-started';
+import { EventLogShutdownSequenceStepFailedEntryParser } from './entry-parsers/shutdown-sequence-step-failed';
 import { EventLogShutdownSequenceCancelledEntryParser } from './entry-parsers/shutdown-sequence-cancelled';
 import { EventLogHardwareBrightnessChangedEntryParser } from './entry-parsers/display-brightness-changed';
 import { EventLogSoftwareBrightnessChangedEntryParser } from './entry-parsers/image-brightness-changed';
@@ -59,6 +60,7 @@ export class EventLogEntryParsers {
     new EventLogRenderResolutionChangedEntryParser(),
     new EventLogFadeDistanceChangedEntryParser(),
     new EventLogShutdownSequenceStartedEntryParser(),
+    new EventLogShutdownSequenceStepFailedEntryParser(),
     new EventLogShutdownSequenceCancelledEntryParser(),
     new EventLogWindowsPowerPolicySetEntryParser(),
     new EventLogMsiAfterburnerProfileSetEntryParser(),

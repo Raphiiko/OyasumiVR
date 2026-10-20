@@ -25,6 +25,7 @@ import { CancellableTask } from '../../utils/cancellable-task';
 import { clamp, smoothLerp } from '../../utils/number-utils';
 import { EventLogService } from '../event-log.service';
 import { EventLogBSBLedChanged } from '../../models/event-log-entry';
+import { warn } from '@tauri-apps/plugin-log';
 
 @Injectable({
   providedIn: 'root',
@@ -88,37 +89,39 @@ export class BigscreenBeyondLedAutomationService {
   private async onSleepModeChange(sleepMode: boolean) {
     if (!this.connected.value) return;
     if (sleepMode && this.config.onSleepEnable) {
-      this.eventLog.logEvent({
-        type: 'bsbLedChanged',
-        reason: 'SLEEP_MODE_ENABLED',
-        color: this.config.onSleepEnableRgb,
-      } as EventLogBSBLedChanged);
-      await this.setLedColor(this.config.onSleepEnableRgb, false);
+      await this.setLedColorAndLog(this.config.onSleepEnableRgb, 'SLEEP_MODE_ENABLED');
     } else if (!sleepMode && this.config.onSleepDisable) {
-      this.eventLog.logEvent({
-        type: 'bsbLedChanged',
-        reason: 'SLEEP_MODE_DISABLED',
-        color: this.config.onSleepDisableRgb,
-      } as EventLogBSBLedChanged);
-      await this.setLedColor(this.config.onSleepDisableRgb, false);
+      await this.setLedColorAndLog(this.config.onSleepDisableRgb, 'SLEEP_MODE_DISABLED');
     }
   }
 
   private async onSleepPreparation() {
     if (!this.connected.value) return;
     if (this.config.onSleepPreparation) {
-      this.eventLog.logEvent({
-        type: 'bsbLedChanged',
-        reason: 'SLEEP_PREPARATION',
-        color: this.config.onSleepPreparationRgb,
-      } as EventLogBSBLedChanged);
-      await this.setLedColor(this.config.onSleepPreparationRgb, false);
+      await this.setLedColorAndLog(this.config.onSleepPreparationRgb, 'SLEEP_PREPARATION');
     }
   }
 
-  public async setLedColor(targetColor: [number, number, number], transition = true) {
+  private async setLedColorAndLog(
+    color: [number, number, number],
+    reason: EventLogBSBLedChanged['reason']
+  ) {
+    const applied = await this.setLedColor(color, false);
+    this.eventLog.logEvent({
+      type: 'bsbLedChanged',
+      reason,
+      color,
+      failure: applied ? undefined : 'DEVICE_NOT_FOUND',
+    });
+  }
+
+  /** Resolves false when the headset rejected the colour; a transition always resolves true. */
+  public async setLedColor(
+    targetColor: [number, number, number],
+    transition = true
+  ): Promise<boolean> {
     this.transitionTask?.cancel();
-    if (!this.connected.value) return;
+    if (!this.connected.value) return false;
     this._lastSetColorExt.next(targetColor);
     if (transition) {
       this.transitionTask = new CancellableTask(async (task: CancellableTask) => {
@@ -161,14 +164,21 @@ export class BigscreenBeyondLedAutomationService {
         }
       });
       await this.transitionTask.start();
-    } else {
-      invoke('bigscreen_beyond_set_led_color', {
-        r: targetColor[0],
-        g: targetColor[1],
-        b: targetColor[2],
-      });
-      this.lastSetColor = [...targetColor];
-      this._lastSetColorExt.next(this.lastSetColor);
+      return true;
     }
+    const applied = await invoke('bigscreen_beyond_set_led_color', {
+      r: targetColor[0],
+      g: targetColor[1],
+      b: targetColor[2],
+    }).then(
+      () => true,
+      (e) => {
+        warn(`[BigscreenBeyondLedAutomation] Could not set the LED colour: ${e}`);
+        return false;
+      }
+    );
+    this.lastSetColor = [...targetColor];
+    this._lastSetColorExt.next(this.lastSetColor);
+    return applied;
   }
 }

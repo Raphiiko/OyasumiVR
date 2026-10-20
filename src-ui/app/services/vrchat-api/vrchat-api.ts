@@ -1,7 +1,8 @@
 import { ClientOptions, fetch as tauriFetch } from '@tauri-apps/plugin-http';
 import { error, info, warn } from '@tauri-apps/plugin-log';
 import { getVersion } from 'src-ui/app/utils/app-utils';
-import { TaskQueue } from 'src-ui/app/utils/task-queue';
+import { TASK_QUEUE_TASK_REPLACED, TaskQueue } from 'src-ui/app/utils/task-queue';
+import type { EventLogFailure } from 'src-ui/app/models/event-log-entry';
 import { parseSetCookie as parseSetCookieHeader } from 'set-cookie-parser';
 import { stringifySetCookie as serializeCookie } from 'cookie';
 import type { CurrentUser, InviteMessage, LimitedUserFriend, LimitedUserGroups } from 'vrchat';
@@ -49,6 +50,25 @@ const DEFAULT_RATE_LIMIT_DELAY = 5_000;
 const PROFILE_LOGOUT_TIMEOUT = 10_000;
 
 export const VRCHAT_API_STALE_REQUEST = 'STALE_REQUEST';
+
+export class VRChatNotLoggedInError extends Error {}
+
+/**
+ * The event log cause for a failed VRChat call, or undefined for a call that was cancelled.
+ * unavailable is the cause for a 403 or 404, when the call names a resource that can disappear.
+ */
+export function vrchatFailure(
+  e: unknown,
+  unavailable?: EventLogFailure
+): EventLogFailure | undefined {
+  if (e === VRCHAT_API_STALE_REQUEST || e === TASK_QUEUE_TASK_REPLACED) return undefined;
+  if (e instanceof VRChatNotLoggedInError) return 'VRCHAT_LOGGED_OUT';
+  if (!(e instanceof Response)) return 'UNKNOWN';
+  if (e.status === 401) return 'VRCHAT_LOGGED_OUT';
+  if (e.status === 429) return 'VRCHAT_RATE_LIMITED';
+  if (unavailable && (e.status === 403 || e.status === 404)) return unavailable;
+  return 'UNKNOWN';
+}
 
 /**
  * VRChat answered 403 to an invite; vrchatMessage is the reason VRChat gave, when it gave one.
@@ -247,6 +267,7 @@ export class VRChatAPI {
 
   // authentication and user state
 
+  /** Resolves false when nothing changed or a newer change replaced this one; throws when the call failed. */
   public async setStatus(
     status: UserStatus | null,
     statusMessage: string | null
@@ -289,8 +310,9 @@ export class VRChatAPI {
       this.requireSuccessfulResponse(result);
       this.patchCurrentUser(body);
     } catch (e) {
+      if (!vrchatFailure(e)) return false;
       error(`[VRChat] Failed to update status: ${JSON.stringify(e)}`);
-      return false;
+      throw e;
     }
     return true;
   }
@@ -473,12 +495,12 @@ export class VRChatAPI {
     }
   }
 
-  /** Resolves to null when the decline failed, otherwise to the response message VRChat attached. */
+  /** Resolves to the response message VRChat attached; throws when the decline failed. */
   public async declineInviteOrInviteRequest(
     notificationId: string,
     notificationType: 'invite' | 'requestInvite',
     message: string
-  ): Promise<{ reply?: string } | null> {
+  ): Promise<{ reply?: string }> {
     const cacheGeneration = this.cacheGeneration;
     await this.requireCurrentUser('declining an invite or invite request');
     let messageEx: InviteMessageEx | null = null;
@@ -510,7 +532,7 @@ export class VRChatAPI {
       return { reply: messageEx?.message };
     } catch (e) {
       error(`[VRChat] Failed to decline invite or invite request: ${JSON.stringify(e)}`);
-      return null;
+      throw e;
     }
   }
 
@@ -812,7 +834,7 @@ export class VRChatAPI {
 
     const message = `Tried ${action} while not logged in`;
     error(`[VRChat] ${message}`);
-    throw new Error(message);
+    throw new VRChatNotLoggedInError(message);
   }
 
   private requireSuccessfulResponse(result: CompletionResult<Response>): Response {

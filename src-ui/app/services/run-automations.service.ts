@@ -8,6 +8,7 @@ import { invoke } from '@tauri-apps/api/core';
 import { SleepService } from './sleep.service';
 import { SleepPreparationService } from './sleep-preparation.service';
 import { EventLogService } from './event-log.service';
+import { EventLogFailure, EventLogRunAutomationExecuted } from '../models/event-log-entry';
 
 @Injectable({
   providedIn: 'root',
@@ -62,54 +63,35 @@ export class RunAutomationsService {
 
   private async onSleepModeChange(sleepMode: boolean) {
     if (sleepMode && this.config.onSleepModeEnable) {
-      const commands = await this.getCommands('onSleepModeEnable');
-      if (commands.trim()) {
-        try {
-          await invoke('run_cmd_commands', { commands });
-          this.eventLogService.logEvent({
-            type: 'runAutomationExecuted',
-            automationName: 'onSleepModeEnable',
-            reason: 'SLEEP_MODE_ENABLED',
-            commands: commands.trim(),
-          } as any);
-        } catch (error) {
-          warn(`[RunAutomationsService] Failed to execute onSleepModeEnable commands: ${error}`);
-        }
-      }
+      await this.run('onSleepModeEnable', 'SLEEP_MODE_ENABLED');
     } else if (!sleepMode && this.config.onSleepModeDisable) {
-      const commands = await this.getCommands('onSleepModeDisable');
-      if (commands.trim()) {
-        try {
-          await invoke('run_cmd_commands', { commands });
-          this.eventLogService.logEvent({
-            type: 'runAutomationExecuted',
-            automationName: 'onSleepModeDisable',
-            reason: 'SLEEP_MODE_DISABLED',
-            commands: commands.trim(),
-          } as any);
-        } catch (error) {
-          warn(`[RunAutomationsService] Failed to execute onSleepModeDisable commands: ${error}`);
-        }
-      }
+      await this.run('onSleepModeDisable', 'SLEEP_MODE_DISABLED');
     }
   }
 
   private async onSleepPreparation() {
-    if (this.config.onSleepPreparation) {
-      const commands = await this.getCommands('onSleepPreparation');
-      if (commands.trim()) {
-        try {
-          await invoke('run_cmd_commands', { commands });
-          this.eventLogService.logEvent({
-            type: 'runAutomationExecuted',
-            automationName: 'onSleepPreparation',
-            reason: 'SLEEP_PREPARATION',
-            commands: commands.trim(),
-          } as any);
-        } catch (error) {
-          warn(`[RunAutomationsService] Failed to execute onSleepPreparation commands: ${error}`);
-        }
-      }
+    if (this.config.onSleepPreparation) await this.run('onSleepPreparation', 'SLEEP_PREPARATION');
+  }
+
+  private async run(
+    automationName: 'onSleepModeEnable' | 'onSleepModeDisable' | 'onSleepPreparation',
+    reason: EventLogRunAutomationExecuted['reason']
+  ) {
+    const commands = (await this.getCommands(automationName)).trim();
+    if (!commands) return;
+    let failure: EventLogFailure | undefined;
+    try {
+      await invoke('run_cmd_commands', { commands });
+    } catch (error) {
+      warn(`[RunAutomationsService] Failed to execute ${automationName} commands: ${error}`);
+      failure = 'UNKNOWN';
     }
+    this.eventLogService.logEvent({
+      type: 'runAutomationExecuted',
+      automationName,
+      reason,
+      commands,
+      failure,
+    });
   }
 }

@@ -130,7 +130,7 @@ export class VRChatMicMuteAutomationService {
         type: 'changedVRChatMicMuteState',
         muted,
         reason,
-        failure: 'STATE_UNKNOWN',
+        failure: 'MUTE_STATE_UNKNOWN',
       } as EventLogChangedVRChatMicMuteState);
       return;
     }
