@@ -574,7 +574,7 @@ describe('frameControllerOverrides', () => {
     status: SteamFrameConnectionState['status'] = 'connected'
   ) => ({ pairingId, status, controllers }) as SteamFrameConnectionState;
 
-  it('lets a connected controller turn off only while its headset streams here', () => {
+  it('reports the controllers of a headset only while it streams here', () => {
     const states = {
       a: state('a', [
         { serial: 'C1', connected: true },
@@ -586,7 +586,7 @@ describe('frameControllerOverrides', () => {
       C1: { powerMethod: 'SteamFrame', isConnected: true, canPowerOff: true },
       C2: { powerMethod: 'SteamFrame', isConnected: false, canPowerOff: false },
     });
-    expect(frameControllerOverrides(states, pairings, [])['C1'].canPowerOff).toBe(false);
+    expect(frameControllerOverrides(states, pairings, [])).toEqual({});
   });
 
   it('skips headsets whose helper is not connected', () => {
@@ -594,12 +594,12 @@ describe('frameControllerOverrides', () => {
     expect(frameControllerOverrides(states, [pairing('a', 'HMD-A')], ['HMD-A'])).toEqual({});
   });
 
-  it('follows the headset a shared controller is connected to', () => {
+  it('takes a shared controller only from the headset that streams here', () => {
     const states = {
-      b: state('b', [{ serial: 'C1', connected: false }]),
-      a: state('a', [{ serial: 'C1', connected: true }]),
+      a: state('a', [{ serial: 'C1', connected: false }]),
+      b: state('b', [{ serial: 'C1', connected: true }]),
     };
     const pairings = [pairing('a', 'HMD-A'), pairing('b', 'HMD-B')];
-    expect(frameControllerOverrides(states, pairings, ['HMD-A'])['C1'].isConnected).toBe(true);
+    expect(frameControllerOverrides(states, pairings, ['HMD-A'])['C1'].isConnected).toBe(false);
   });
 });

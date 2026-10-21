@@ -388,16 +388,16 @@ with a dongle id and `None` for the rest, and `canPowerOff` is false for `None`.
 
 The core keeps each helper's last list in its connection state as `controllers`, null while the
 helper is not connected. `SteamFramePairingService` turns the lists into overrides by serial, and
-`OpenVRService` applies them on top of the reported devices. For each controller a connected helper
-lists:
+`OpenVRService` applies them on top of the reported devices. Only a headset whose HMD is connected
+in this PC's OpenVR counts, so a Frame used on its own never changes this PC's devices. For each
+controller its connected helper lists:
 
 - `powerMethod` is `SteamFrame`.
-- `isConnected` is the helper's `connected`.
-- `canPowerOff` is `connected`, while the paired headset's HMD is connected in this PC's OpenVR.
+- `isConnected` and `canPowerOff` are the helper's `connected`.
 
-A listed controller that OpenVR does not report gets no device. A controller paired with two headsets
-follows the one it is connected to. Without a connected helper, a controller shows what OpenVR
-reports, so a helper drop never looks like the controllers turning off.
+A listed controller that OpenVR does not report gets no device. Without a connected helper, or once
+the headset stops streaming here, a controller shows what OpenVR reports, so a helper drop never
+looks like the controllers turning off.
 
 `DeviceControlService` is the entry point for device actions. It switches on `powerMethod`: it turns
 off a `SteamFrame` device through the helper, hands a `Lighthouse` device to

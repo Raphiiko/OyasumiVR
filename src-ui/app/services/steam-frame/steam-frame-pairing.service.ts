@@ -861,8 +861,8 @@ function streamingHmds(devices: OVRDevice[]): string[] {
 }
 
 /**
- * OpenVR device overrides for every controller a connected helper reports, by serial. A controller
- * can be turned off only while its headset streams to this PC.
+ * OpenVR device overrides for the controllers that the helpers of the headsets streaming to this PC
+ * report, by serial. A headset that does not stream here is not this PC's to control.
  */
 export function frameControllerOverrides(
   states: Record<string, SteamFrameConnectionState>,
@@ -872,15 +872,14 @@ export function frameControllerOverrides(
   const overrides: Record<string, Partial<OVRDevice>> = {};
   for (const state of Object.values(states)) {
     const pairing = pairings.find((p) => p.id === state.pairingId);
-    if (state.status !== 'connected' || !pairing) continue;
-    const streaming = hmds.includes(pairing.identity.serial);
+    if (state.status !== 'connected' || !pairing || !hmds.includes(pairing.identity.serial)) {
+      continue;
+    }
     for (const controller of state.controllers ?? []) {
-      // a controller paired with two headsets follows the one it is connected to
-      if (overrides[controller.serial]?.isConnected) continue;
       overrides[controller.serial] = {
         powerMethod: 'SteamFrame',
         isConnected: controller.connected,
-        canPowerOff: controller.connected && streaming,
+        canPowerOff: controller.connected,
       };
     }
   }
