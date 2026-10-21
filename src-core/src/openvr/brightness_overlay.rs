@@ -96,9 +96,18 @@ async fn create_overlay(
         return Err(());
     }
     // Set overlay properties
-    if let Err(e) = manager.set_sort_order(overlay, 200) {
+    if let Err(e) = manager.set_sort_order(overlay, u32::MAX) {
         error!("[Core] Failed to set overlay sort order: {e}");
         return Err(());
+    }
+    for (flag, enabled) in [
+        (ovr::raw::VROverlayFlags::IsPremultiplied, true),
+        (ovr::raw::VROverlayFlags::NoBackside, false),
+    ] {
+        if let Err(e) = manager.set_flag(overlay, flag, enabled) {
+            error!("[Core] Failed to set overlay flag: {e}");
+            return Err(());
+        }
     }
     if let Err(e) = manager.set_width(overlay, 1.) {
         error!("[Core] Failed to set overlay width: {e}");
