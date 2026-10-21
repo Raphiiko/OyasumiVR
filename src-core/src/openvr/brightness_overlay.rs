@@ -76,9 +76,17 @@ async fn create_overlay(
         Ok(handle) => handle,
         Err(_) => return Err(()),
     };
-    // Set overlay image data (1 black pixel)
-    if let Err(e) = manager.set_raw_data(overlay, &[0x00, 0x00, 0x00, 0xff], 1, 1, 4) {
-        error!("[Core] Failed to set overlay image data: {e}");
+    // Set overlay image (opaque black)
+    // SteamVR cannot load a file through a verbatim \\?\ path, which canonicalize returns
+    let image_path = match std::path::absolute("resources/brightness_overlay.png") {
+        Ok(path) => path,
+        Err(e) => {
+            error!("[Core] Could not resolve the brightness overlay image: {e}");
+            return Err(());
+        }
+    };
+    if let Err(e) = manager.set_from_file(overlay, &image_path) {
+        error!("[Core] Failed to set overlay image: {e}");
         return Err(());
     }
     // Transform the overlay

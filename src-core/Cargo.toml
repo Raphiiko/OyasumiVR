@@ -136,7 +136,7 @@ woff2-patched = "0.4"
 
 [dependencies.raphii-openvr-rs]
 git = "https://github.com/Raphiiko/raphii-openvr-rs"
-rev = "5f136ef81420f476f712621e0cd3aa0f67db79fa"
+rev = "8049843b8296d7bfb6b97f7f8095f19e3e6b29b1"
 
 [dependencies.oyasumivr_oscquery]
 git = "https://github.com/Raphiiko/oyasumivr_oscquery.git"
