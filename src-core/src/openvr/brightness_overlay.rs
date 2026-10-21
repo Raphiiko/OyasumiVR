@@ -108,10 +108,6 @@ async fn create_overlay(
         error!("[Core] Failed to set overlay sort order: {e}");
         return Err(());
     }
-    if let Err(e) = manager.set_flag(overlay, ovr::raw::VROverlayFlags::NoBackside, false) {
-        error!("[Core] Failed to set overlay flag: {e}");
-        return Err(());
-    }
     if let Err(e) = manager.set_width(overlay, 1.) {
         error!("[Core] Failed to set overlay width: {e}");
         return Err(());
