@@ -13,6 +13,9 @@ import { ToastService } from './toast.service';
   providedIn: 'root',
 })
 export class DeviceControlService {
+  /** Serials of the Frame controllers whose disconnect is on its way to the helper. */
+  private frameTurnOffs = new Set<string>();
+
   constructor(
     private lighthouseConsole: LighthouseConsoleService,
     private steamFrame: SteamFramePairingService,
@@ -35,19 +38,22 @@ export class DeviceControlService {
       !serials.every((serial): serial is string => typeof serial === 'string' && serial.length > 0)
     )
       return;
-    const devices = (await firstValueFrom(this.openvr.devices)).filter(
-      (device) => device.serialNumber && serials.includes(device.serialNumber)
-    );
-    await this.turnOffDevices(devices);
+    await this.turnOffSerials(serials);
   }
 
   /** Resolves the devices a turn-off request was sent to. */
   async turnOffDevices(ovrDevices: OVRDevice[]): Promise<OVRDevice[]> {
+    return this.turnOffSerials(ovrDevices.map((device) => device.serialNumber));
+  }
+
+  private async turnOffSerials(serials: (string | undefined)[]): Promise<OVRDevice[]> {
+    // look up the current devices, since a caller can hold a copy from before the helper reported
+    const devices = (await firstValueFrom(this.openvr.devices)).filter(
+      (device) => device.serialNumber && serials.includes(device.serialNumber)
+    );
     const [frameDispatched, consoleDispatched] = await Promise.all([
-      this.turnOffFrameControllers(ovrDevices),
-      this.lighthouseConsole.turnOffDevices(
-        ovrDevices.filter((d) => d.powerMethod === 'Lighthouse')
-      ),
+      this.turnOffFrameControllers(devices),
+      this.lighthouseConsole.turnOffDevices(devices),
     ]);
     return [...frameDispatched, ...consoleDispatched];
   }
@@ -68,7 +74,7 @@ export class DeviceControlService {
     ovrDevice: OVRDevice,
     deviceName: string
   ): Promise<OVRDevice[]> {
-    const dispatched = await this.turnOffFrameControllers([ovrDevice]);
+    const dispatched = await this.turnOffDevices([ovrDevice]);
     if (!dispatched.length) {
       this.toasts.show({
         type: 'error',
@@ -82,32 +88,27 @@ export class DeviceControlService {
 
   /** Turns off the Frame controllers among these devices, and ignores the rest. */
   private async turnOffFrameControllers(ovrDevices: OVRDevice[]): Promise<OVRDevice[]> {
-    if (!ovrDevices.some((device) => device.powerMethod === 'SteamFrame')) return [];
-
-    // resolve requested serials against the current device snapshot
-    const requestedSerials = new Set(ovrDevices.map((device) => device.serialNumber));
-    const controllers = (await firstValueFrom(this.openvr.devices)).filter(
-      (device) =>
-        device.powerMethod === 'SteamFrame' &&
-        device.serialNumber &&
-        requestedSerials.has(device.serialNumber) &&
-        device.canPowerOff &&
-        !device.isTurningOff
-    );
-
+    const controllers = ovrDevices.filter((device) => device.powerMethod === 'SteamFrame');
     const results = await Promise.all(
       controllers.map((device) => this.turnOffFrameController(device))
     );
     return controllers.filter((_, index) => results[index]);
   }
 
-  /** Resolves true when the helper sent the disconnect. The device stays busy until it reports off. */
+  /** Resolves true when the helper sent the disconnect. The device then stays busy until off. */
   private async turnOffFrameController(device: OVRDevice): Promise<boolean> {
-    if (device.powerMethod !== 'SteamFrame' || !device.serialNumber) return false;
+    const serial = device.serialNumber;
+    if (!serial || !device.canPowerOff || device.isTurningOff || this.frameTurnOffs.has(serial))
+      return false;
+    this.frameTurnOffs.add(serial);
+    info(`[SteamFrame] Turning off device ${device.class}:${serial}`);
+    try {
+      if (!(await this.steamFrame.disconnectController(serial))) return false;
+    } finally {
+      this.frameTurnOffs.delete(serial);
+    }
+    // busy only once sent: busy clearing on a connected device reads as it powering on
     this.openvr.setTurningOff(device.index, true);
-    info(`[SteamFrame] Turning off device ${device.class}:${device.serialNumber}`);
-    if (await this.steamFrame.disconnectController(device.serialNumber)) return true;
-    this.openvr.setTurningOff(device.index, false);
-    return false;
+    return true;
   }
 }

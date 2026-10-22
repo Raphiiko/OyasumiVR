@@ -48,12 +48,13 @@ function caller<T>(prototype: T, context: object): T {
   return Object.assign(Object.create(prototype), context);
 }
 
-/** Routes through the given console; the Frame path is not exercised here. */
+/** Routes through the given console and its devices; the Frame path is not exercised here. */
 function deviceControlFor(service: LighthouseConsoleService) {
   return new DeviceControlService(
     service,
     {} as ConstructorParameters<typeof DeviceControlService>[1],
-    {} as ConstructorParameters<typeof DeviceControlService>[2],
+    (service as unknown as { openvr: ConstructorParameters<typeof DeviceControlService>[2] })
+      .openvr,
     new ToastService()
   );
 }

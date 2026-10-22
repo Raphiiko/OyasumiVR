@@ -399,11 +399,17 @@ A listed controller that OpenVR does not report gets no device. Without a connec
 the headset stops streaming here, a controller shows what OpenVR reports, so a helper drop never
 looks like the controllers turning off.
 
-`DeviceControlService` is the entry point for device actions. It switches on `powerMethod`: it turns
-off a `SteamFrame` device through the helper, hands a `Lighthouse` device to
-`LighthouseConsoleService`, which only runs the Lighthouse console, and does nothing for `None`. So
-the device list, the hotkeys, the automations, and the overlay all reach a Frame controller the same
-way. Like a Lighthouse device, it stays busy from the request until it reports disconnected.
+`DeviceControlService` is the entry point for device actions. It looks up the requested devices in
+the current list, since a caller such as MQTT can hold a copy from before the helper reported, and
+routes them by `powerMethod`: it turns off a `SteamFrame` device through the helper, hands a
+`Lighthouse` device to `LighthouseConsoleService`, which only runs the Lighthouse console, and does
+nothing for `None`. So the device list, the hotkeys, the automations, MQTT, and the overlay all
+reach a Frame controller the same way.
+
+A Frame controller turns busy once the helper confirms the disconnect, and stays busy until it
+reports disconnected. It does not turn busy before the reply: a busy flag that clears again on a
+connected controller reads as the controller powering on, which ends sleep mode through the
+power-on automation. A request for a controller whose disconnect is still on its way sends nothing.
 
 ## Updates
 
