@@ -194,11 +194,31 @@ describe('InviteAutomationsService', () => {
     expect(eventLog.logEvent).toHaveBeenCalled();
   });
 
-  it('keeps the invite request in VRChat when the invite fails for another reason', async () => {
-    const { receive, vrchat } = createService({ listMode: 'DISABLED' });
-    vrchat.inviteUser.mockRejectedValue(new Response(null, { status: 500 }));
-    await expect(receive(NotificationType.RequestInvite)).rejects.toBeInstanceOf(Response);
+  it.each([
+    [500, 'UNKNOWN'],
+    [401, 'VRCHAT_LOGGED_OUT'],
+    [429, 'VRCHAT_RATE_LIMITED'],
+  ])(
+    'keeps the invite request in VRChat and logs why when VRChat answers %i',
+    async (status, failure) => {
+      const { receive, vrchat, eventLog } = createService({ listMode: 'DISABLED' });
+      vrchat.inviteUser.mockRejectedValue(new Response(null, { status }));
+      await receive(NotificationType.RequestInvite);
+      expect(vrchat.deleteNotification).not.toHaveBeenCalled();
+      expect(eventLog.logEvent).toHaveBeenCalledExactlyOnceWith(
+        expect.objectContaining({ type: 'failedInviteRequest', failure })
+      );
+    }
+  );
+
+  it('keeps an invite in VRChat and logs a failed decline', async () => {
+    const { receive, vrchat, eventLog } = createService({ declineInvitesWhileAsleep: true });
+    vrchat.declineInviteOrInviteRequest.mockRejectedValue(new Response(null, { status: 401 }));
+    await receive(NotificationType.Invite);
     expect(vrchat.deleteNotification).not.toHaveBeenCalled();
+    expect(eventLog.logEvent).toHaveBeenCalledWith(
+      expect.objectContaining({ type: 'declinedInvite', failure: 'VRCHAT_LOGGED_OUT' })
+    );
   });
 
   it.each(['Bob', '3ca4'])(

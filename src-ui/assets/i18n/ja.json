@@ -306,6 +306,9 @@
       "withDevices": "{count}台のデバイス"
     },
     "event-log-entry": {
+      "failure": {
+        "MUTE_STATE_UNKNOWN": "OSCQueryからミュート状態を取得できませんでした。"
+      },
       "type": {
         "acceptedInviteRequest": {
           "subtitle": {
@@ -386,9 +389,9 @@
           },
           "title": {
             "MUTE": "VRChatマイクをミュート",
-            "MUTE_FAILED": "VRChatマイクをミュートできませんでした：OSCQueryからミュート状態を取得できませんでした。詳しくは通知センターを確認してください。",
+            "MUTE_FAILED": "VRChatマイクをミュートできませんでした",
             "UNMUTE": "VRChatマイクをミュート解除",
-            "UNMUTE_FAILED": "VRChatマイクのミュートを解除できませんでした：OSCQueryからミュート状態を取得できませんでした。詳しくは通知センターを確認してください。"
+            "UNMUTE_FAILED": "VRChatマイクのミュートを解除できませんでした"
           }
         },
         "chaperoneFadeDistanceChanged": {

@@ -20,7 +20,11 @@ import { SleepService } from '../sleep.service';
 import type { CurrentUser } from 'vrchat';
 import { UserStatus } from '../../models/vrchat';
 import { EventLogService } from '../event-log.service';
-import { EventLogStatusChangedOnPlayerCountChange } from '../../models/event-log-entry';
+import {
+  EventLogFailure,
+  EventLogStatusChangedOnPlayerCountChange,
+} from '../../models/event-log-entry';
+import { vrchatFailure } from '../vrchat-api/vrchat-api';
 import { NotificationService } from '../notification.service';
 import { TranslocoService } from '@jsverse/transloco';
 
@@ -81,9 +85,25 @@ export class StatusChangeForPlayerCountAutomationService {
       )
       .subscribe(async (newStatus) => {
         // Set new status
+        let failure: EventLogFailure | undefined;
         const success = await this.vrchat
           .setStatus(newStatus.status, newStatus.statusMessage)
-          .catch(() => false);
+          .catch((e) => {
+            failure = vrchatFailure(e);
+            return false;
+          });
+        if (failure) {
+          this.eventLog.logEvent({
+            type: 'statusChangedOnPlayerCountChange',
+            reason: newStatus.reason,
+            threshold: this.config.limit,
+            newStatus: newStatus.status ?? undefined,
+            oldStatus: newStatus.oldStatus,
+            newStatusMessage: newStatus.statusMessage ?? undefined,
+            oldStatusMessage: newStatus.oldStatusMessage,
+            failure,
+          });
+        }
         if (success) {
           if (await this.notifications.notificationTypeEnabled('AUTO_UPDATED_VRC_STATUS')) {
             await this.notifications.send(

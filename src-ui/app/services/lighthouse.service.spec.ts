@@ -135,6 +135,22 @@ describe('LighthouseService.setPowerState', () => {
     expect(d.transitioningToPowerState).toBeUndefined();
   });
 
+  it('resolves true for a command that a newer command replaced', async () => {
+    invoke.mockResolvedValue(undefined);
+    const d = device();
+    const service = makeService(d);
+
+    let olderResult: boolean | undefined;
+    const older = service.setPowerState(d, 'sleep').then((r) => (olderResult = r));
+    await vi.advanceTimersByTimeAsync(100);
+    const newer = service.setPowerState(d, 'on');
+    await vi.advanceTimersByTimeAsync(1000);
+
+    expect(olderResult).toBe(true);
+    expect(await newer).toBe(true);
+    await older;
+  });
+
   it('does not let a forced operation clear a concurrent transition', async () => {
     invoke.mockResolvedValue(undefined);
     const d = device();

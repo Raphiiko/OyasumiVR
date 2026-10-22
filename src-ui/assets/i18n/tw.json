@@ -306,6 +306,9 @@
       "withDevices": "{count, plural, other {# 個裝置}}"
     },
     "event-log-entry": {
+      "failure": {
+        "MUTE_STATE_UNKNOWN": "OSCQuery 未回報你的靜音狀態。"
+      },
       "type": {
         "acceptedInviteRequest": {
           "subtitle": {
@@ -386,9 +389,9 @@
           },
           "title": {
             "MUTE": "已靜音 VRChat 中的麥克風",
-            "MUTE_FAILED": "無法將 VRChat 中的麥克風靜音：OSCQuery 未回報你的靜音狀態。請查看訊息中心以了解詳情。",
+            "MUTE_FAILED": "無法將 VRChat 中的麥克風靜音",
             "UNMUTE": "已取消靜音 VRChat 中的麥克風",
-            "UNMUTE_FAILED": "無法取消 VRChat 中的麥克風靜音：OSCQuery 未回報你的靜音狀態。請查看訊息中心以了解詳情。"
+            "UNMUTE_FAILED": "無法取消 VRChat 中的麥克風靜音"
           }
         },
         "chaperoneFadeDistanceChanged": {

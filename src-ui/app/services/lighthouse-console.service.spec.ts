@@ -2,7 +2,11 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AppSettingsService } from './app-settings.service';
 import type { OpenVRService } from './openvr.service';
-import { APP_SETTINGS_DEFAULT, type AppSettings } from '../models/settings';
+import {
+  APP_SETTINGS_DEFAULT,
+  type AppSettings,
+  type ExecutableReferenceStatus,
+} from '../models/settings';
 import type { OVRDevice } from '../models/ovr-device';
 import { LighthouseConsoleService } from './lighthouse-console.service';
 import { ToastService } from './toast.service';
@@ -117,5 +121,21 @@ describe('LighthouseConsoleService.setConsolePath', () => {
     invoke.mockClear();
     await service.turnOffDevices([device]);
     expect(invoke).not.toHaveBeenCalled();
+  });
+});
+
+describe('LighthouseConsoleService.powerOffFailure', () => {
+  it.each([
+    ['NOT_FOUND', 'SEE_MESSAGE_CENTRE'],
+    ['INVALID_EXECUTABLE', 'SEE_MESSAGE_CENTRE'],
+    ['CHECKING', 'UNKNOWN'],
+    ['UNKNOWN', 'UNKNOWN'],
+    ['SUCCESS', 'UNKNOWN'],
+  ] as const)('hints %s as %s', async (status, failure) => {
+    const service = await createService('');
+    (
+      service as unknown as { _consoleStatus: BehaviorSubject<ExecutableReferenceStatus> }
+    )._consoleStatus.next(status);
+    expect(service.powerOffFailure).toBe(failure);
   });
 });

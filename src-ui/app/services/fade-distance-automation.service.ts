@@ -14,7 +14,7 @@ import {
   startWith,
 } from 'rxjs';
 import { OpenVRService } from './openvr.service';
-import { EventLogChaperoneFadeDistanceChanged } from '../models/event-log-entry';
+import { EventLogChaperoneFadeDistanceChanged, EventLogFailure } from '../models/event-log-entry';
 
 @Injectable({
   providedIn: 'root',
@@ -60,17 +60,19 @@ export class ChaperoneFadeDistanceAutomationService {
     if (openvrStatus !== 'INITIALIZED') {
       return;
     }
+    let failure: EventLogFailure | undefined;
     try {
       await this.openvr.setFadeDistance(config.fadeDistance);
     } catch (e) {
       warn(`[FadeDistanceAutomation] Could not set fade distance: ${e}`);
-      return;
+      failure = 'UNKNOWN';
     }
     if (logging) {
       this.eventLog.logEvent({
         type: 'chaperoneFadeDistanceChanged',
         reason: sleepMode ? 'SLEEP_MODE_ENABLED' : 'SLEEP_MODE_DISABLED',
         fadeDistance: config.fadeDistance,
+        failure,
       } as EventLogChaperoneFadeDistanceChanged);
     }
   }

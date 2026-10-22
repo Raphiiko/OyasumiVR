@@ -39,7 +39,7 @@ describe('VRChatMicMuteAutomationService', () => {
 
     expect(osc.send_int).not.toHaveBeenCalled();
     expect(eventLog.logEvent).toHaveBeenCalledWith(
-      expect.objectContaining({ muted: true, failure: 'STATE_UNKNOWN' })
+      expect.objectContaining({ muted: true, failure: 'MUTE_STATE_UNKNOWN' })
     );
   });
 

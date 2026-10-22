@@ -1,4 +1,4 @@
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, of } from 'rxjs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
@@ -73,7 +73,9 @@ function createMSI() {
     } as unknown as ConstructorParameters<typeof GpuAutomationsService>[0],
     {} as ConstructorParameters<typeof GpuAutomationsService>[1],
     {} as ConstructorParameters<typeof GpuAutomationsService>[2],
-    {} as ConstructorParameters<typeof GpuAutomationsService>[3],
+    {
+      sidecarStarted: of(true),
+    } as unknown as ConstructorParameters<typeof GpuAutomationsService>[3],
     { logEvent: vi.fn() } as unknown as ConstructorParameters<typeof GpuAutomationsService>[4]
   );
   return {

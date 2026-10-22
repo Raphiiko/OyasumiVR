@@ -128,8 +128,10 @@ describe.each(['OVR', 'LH'] as const)('%s selection membership', (kind) => {
         )
       );
       const setPowerState = vi.fn(
-        (device: LighthouseDevice, state: LighthouseDevice['powerState']) =>
-          h.lh.next(h.lh.value.map((d) => (d.id === device.id ? { ...d, powerState: state } : d)))
+        async (device: LighthouseDevice, state: LighthouseDevice['powerState']) => {
+          h.lh.next(h.lh.value.map((d) => (d.id === device.id ? { ...d, powerState: state } : d)));
+          return true;
+        }
       );
       const shutdown = new ShutdownAutomationsService(
         { mode: new BehaviorSubject(false) } as unknown as ShutdownDependencies[0],
@@ -139,7 +141,11 @@ describe.each(['OVR', 'LH'] as const)('%s selection membership', (kind) => {
         } as ShutdownDependencies[2],
         { devices: h.ovr } as unknown as ShutdownDependencies[3],
         { turnOffDevices: powerOff } as unknown as ShutdownDependencies[4],
-        { devices: h.lh, setPowerState } as unknown as ShutdownDependencies[5],
+        {
+          devices: h.lh,
+          setPowerState,
+          deviceNeedsIdentifier: () => false,
+        } as unknown as ShutdownDependencies[5],
         { logEvent: vi.fn() } as unknown as ShutdownDependencies[6],
         {} as ShutdownDependencies[7],
         {

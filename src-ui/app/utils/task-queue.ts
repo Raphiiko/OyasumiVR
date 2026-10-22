@@ -10,7 +10,7 @@ interface PendingQueueTask<T> extends QueueTask<T> {
   cancel: (error: unknown) => void;
 }
 
-const TASK_QUEUE_TASK_REPLACED = 'TASK_REPLACED';
+export const TASK_QUEUE_TASK_REPLACED = 'TASK_REPLACED';
 
 export interface TaskQueueRateLimiter {
   totalPerMinute?: number;

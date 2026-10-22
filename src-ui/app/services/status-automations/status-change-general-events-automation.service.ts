@@ -13,7 +13,8 @@ import { debounceTime, distinctUntilChanged, filter, map, skip } from 'rxjs';
 import { UserStatus } from '../../models/vrchat';
 import { TranslocoService } from '@jsverse/transloco';
 import type { CurrentUser } from 'vrchat';
-import { EventLogStatusChangedOnGeneralEvent } from '../../models/event-log-entry';
+import { EventLogFailure, EventLogStatusChangedOnGeneralEvent } from '../../models/event-log-entry';
+import { vrchatFailure } from '../vrchat-api/vrchat-api';
 import { EventLogService } from '../event-log.service';
 
 @Injectable({
@@ -73,33 +74,13 @@ export class StatusChangeGeneralEventsAutomationService {
         filter((data) => Boolean(data.status !== null || data.statusMessage !== null)),
         debounceTime(500)
       )
-      .subscribe(async ({ status, statusMessage, sleepMode }) => {
-        const oldStatus = this.vrcUser?.status;
-        const oldStatusMessage = this.vrcUser?.statusDescription;
-        const success = await this.vrchat.setStatus(status, statusMessage).catch(() => false);
-        if (success) {
-          if (await this.notifications.notificationTypeEnabled('AUTO_UPDATED_VRC_STATUS')) {
-            await this.notifications.send(
-              this.translate.translate('notifications.vrcStatusChanged.content', {
-                newStatus: (
-                  (statusMessage ?? oldStatusMessage) +
-                  ' (' +
-                  (status ?? oldStatus) +
-                  ')'
-                ).trim(),
-              })
-            );
-          }
-          this.eventLog.logEvent({
-            type: 'statusChangedOnGeneralEvent',
-            reason: sleepMode ? 'SLEEP_MODE_ENABLED' : 'SLEEP_MODE_DISABLED',
-            newStatus: status,
-            oldStatus: oldStatus,
-            newStatusMessage: statusMessage,
-            oldStatusMessage: oldStatusMessage,
-          } as EventLogStatusChangedOnGeneralEvent);
-        }
-      });
+      .subscribe(({ status, statusMessage, sleepMode }) =>
+        this.applyStatus(
+          status,
+          statusMessage,
+          sleepMode ? 'SLEEP_MODE_ENABLED' : 'SLEEP_MODE_DISABLED'
+        )
+      );
   }
 
   private handleSleepPreparation() {
@@ -119,31 +100,44 @@ export class StatusChangeGeneralEventsAutomationService {
         filter((data) => Boolean(data.status || data.statusMessage)),
         debounceTime(500)
       )
-      .subscribe(async ({ status, statusMessage }) => {
-        const oldStatus = this.vrcUser?.status;
-        const oldStatusMessage = this.vrcUser?.statusDescription;
-        const success = await this.vrchat.setStatus(status, statusMessage).catch(() => false);
-        if (!success) return;
-        if (await this.notifications.notificationTypeEnabled('AUTO_UPDATED_VRC_STATUS')) {
-          await this.notifications.send(
-            this.translate.translate('notifications.vrcStatusChanged.content', {
-              newStatus: (
-                (statusMessage ?? oldStatusMessage) +
-                ' (' +
-                (status ?? oldStatus) +
-                ')'
-              ).trim(),
-            })
-          );
-        }
-        this.eventLog.logEvent({
-          type: 'statusChangedOnGeneralEvent',
-          reason: 'SLEEP_PREPARATION',
-          newStatus: status,
-          oldStatus: oldStatus,
-          newStatusMessage: statusMessage,
-          oldStatusMessage: oldStatusMessage,
-        } as EventLogStatusChangedOnGeneralEvent);
-      });
+      .subscribe(({ status, statusMessage }) =>
+        this.applyStatus(status, statusMessage, 'SLEEP_PREPARATION')
+      );
+  }
+
+  private async applyStatus(
+    status: UserStatus | null,
+    statusMessage: string | null,
+    reason: EventLogStatusChangedOnGeneralEvent['reason']
+  ) {
+    const oldStatus = this.vrcUser?.status;
+    const oldStatusMessage = this.vrcUser?.statusDescription;
+    let failure: EventLogFailure | undefined;
+    const success = await this.vrchat.setStatus(status, statusMessage).catch((e) => {
+      failure = vrchatFailure(e);
+      return false;
+    });
+    if (!success && !failure) return;
+    if (success && (await this.notifications.notificationTypeEnabled('AUTO_UPDATED_VRC_STATUS'))) {
+      await this.notifications.send(
+        this.translate.translate('notifications.vrcStatusChanged.content', {
+          newStatus: (
+            (statusMessage ?? oldStatusMessage) +
+            ' (' +
+            (status ?? oldStatus) +
+            ')'
+          ).trim(),
+        })
+      );
+    }
+    this.eventLog.logEvent({
+      type: 'statusChangedOnGeneralEvent',
+      reason,
+      newStatus: status,
+      oldStatus: oldStatus,
+      newStatusMessage: statusMessage,
+      oldStatusMessage: oldStatusMessage,
+      failure,
+    } as EventLogStatusChangedOnGeneralEvent);
   }
 }

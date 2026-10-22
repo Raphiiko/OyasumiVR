@@ -12,7 +12,7 @@
       }
       <div class="header-info">
         <span class="title" [innerHtml]="headerInfoTitle"></span>
-        @if (!compact() && headerInfoSubTitle) {
+        @if (headerInfoSubTitle) {
           <span class="subtitle" [innerHtml]="headerInfoSubTitle"></span>
         }
         <ng-content />

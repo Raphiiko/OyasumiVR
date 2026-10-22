@@ -6,7 +6,8 @@ import { SleepPreparationService } from './sleep-preparation.service';
 import { VRChatAvatarAutomationsConfig } from '../models/automations';
 import { VRChatService } from './vrchat-api/vrchat.service';
 import { EventLogService } from './event-log.service';
-import { EventLogVRChatAvatarChanged } from '../models/event-log-entry';
+import { EventLogFailure, EventLogVRChatAvatarChanged } from '../models/event-log-entry';
+import { vrchatFailure } from './vrchat-api/vrchat-api';
 import { error } from '@tauri-apps/plugin-log';
 
 @Injectable({
@@ -43,31 +44,36 @@ export class VRChatAvatarAutomationsService {
 
   private async onSleepModeChange(sleepMode: boolean) {
     if (sleepMode && this.config?.onSleepEnable) {
-      await this.vrchat.selectAvatar(this.config.onSleepEnable.id);
-      this.eventLog.logEvent({
-        type: 'vrchatAvatarChanged',
-        avatarName: this.config.onSleepEnable.name,
-        reason: 'SLEEP_MODE_ENABLED',
-      } as EventLogVRChatAvatarChanged);
+      await this.selectAvatar(this.config.onSleepEnable, 'SLEEP_MODE_ENABLED');
     }
     if (!sleepMode && this.config?.onSleepDisable) {
-      await this.vrchat.selectAvatar(this.config.onSleepDisable.id);
-      this.eventLog.logEvent({
-        type: 'vrchatAvatarChanged',
-        avatarName: this.config.onSleepDisable.name,
-        reason: 'SLEEP_MODE_DISABLED',
-      } as EventLogVRChatAvatarChanged);
+      await this.selectAvatar(this.config.onSleepDisable, 'SLEEP_MODE_DISABLED');
     }
   }
 
   private async onSleepPreparation() {
     if (this.config?.onSleepPreparation) {
-      await this.vrchat.selectAvatar(this.config.onSleepPreparation.id);
-      this.eventLog.logEvent({
-        type: 'vrchatAvatarChanged',
-        avatarName: this.config.onSleepPreparation.name,
-        reason: 'SLEEP_PREPARATION',
-      } as EventLogVRChatAvatarChanged);
+      await this.selectAvatar(this.config.onSleepPreparation, 'SLEEP_PREPARATION');
     }
+  }
+
+  private async selectAvatar(
+    avatar: { id: string; name: string },
+    reason: EventLogVRChatAvatarChanged['reason']
+  ) {
+    let failure: EventLogFailure | undefined;
+    try {
+      await this.vrchat.selectAvatar(avatar.id);
+    } catch (e) {
+      failure = vrchatFailure(e, 'VRCHAT_AVATAR_UNAVAILABLE');
+      if (!failure) return;
+      error(`[VRChat] Failed to select avatar for ${reason}: ${e}`);
+    }
+    this.eventLog.logEvent({
+      type: 'vrchatAvatarChanged',
+      avatarName: avatar.name,
+      reason,
+      failure,
+    });
   }
 }
