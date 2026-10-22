@@ -9,7 +9,10 @@ export class StatusMessageRewrites {
   private streak: { sent: string; stored: string; count: number } | null = null;
 
   public matches(sent: string, stored: string | undefined): boolean {
-    return vrcStatusMessagesMatch(sent, stored) || this.learned.get(sent) === stored;
+    return (
+      vrcStatusMessagesMatch(sent, stored) ||
+      (stored !== undefined && this.learned.get(sent) === stored)
+    );
   }
 
   /** Ends the current streak, for a PUT response that says nothing about the stored message. */

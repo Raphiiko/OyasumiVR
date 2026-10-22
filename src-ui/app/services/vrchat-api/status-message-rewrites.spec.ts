@@ -29,6 +29,10 @@ describe('StatusMessageRewrites', () => {
     expect(rewrites.record('a...', 'a…')).toBe(false);
   });
 
+  it('treats a missing stored message as different from any message', () => {
+    expect(new StatusMessageRewrites().matches('hello', undefined)).toBe(false);
+  });
+
   it('restarts the count on reset', () => {
     const rewrites = new StatusMessageRewrites();
     rewrites.record('a...', 'a…');
