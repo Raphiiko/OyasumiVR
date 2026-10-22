@@ -40,6 +40,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Fixed run automations opening a command prompt window on your desktop every time they ran
 - Fixed the language code link in the translation editor opening inside OyasumiVR instead of in your browser
 - Fixed the VRChat microphone mute automation pressing the mute button without knowing whether you were muted, which could unmute you instead
+- Fixed the player count status automation setting the same VRChat status message again every 11 minutes when the message contained punctuation
 
 ## [26.10.3]
 
