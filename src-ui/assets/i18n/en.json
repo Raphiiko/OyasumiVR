@@ -257,6 +257,7 @@
         "GenericTracker": "Trackers",
         "HMD": "Headset",
         "Lighthouse": "Base Stations",
+        "Pulsoid": "Pulsoid",
         "other": "Others"
       },
       "deviceRole": {
@@ -299,6 +300,10 @@
         "standby": "Standby"
       },
       "noDevices": "No devices detected",
+      "pulsoid": {
+        "heartRate": "{{bpm}} BPM",
+        "name": "Heart Rate Monitor"
+      },
       "title": "Devices"
     },
     "device-selector": {
@@ -1546,6 +1551,13 @@
       "psvr2ToolkitMissing": {
         "message": "OyasumiVR can only control the hardware brightness and colour temperature of your PlayStation VR2 when PSVR2Toolkit is installed. Without it, OyasumiVR can only control the software brightness.\n\nInstall PSVR2Toolkit and restart SteamVR to enable these features.",
         "title": "PSVR2Toolkit not installed"
+      },
+      "pulsoidBatteryLevelScopeMissing": {
+        "actions": {
+          "reconnect": "Reconnect"
+        },
+        "message": "OyasumiVR can now show the battery level of your heart rate monitor in the device list. Reconnect your Pulsoid account to allow this.",
+        "title": "Reconnect Pulsoid to show battery levels"
       },
       "sleepCalibrationRequired": {
         "calibrate": "Calibrate Now",

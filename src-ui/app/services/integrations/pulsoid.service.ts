@@ -13,11 +13,13 @@ import {
   distinctUntilChanged,
   filter,
   firstValueFrom,
+  from,
   interval,
   map,
   Observable,
   of,
   switchMap,
+  tap,
   timeout,
 } from 'rxjs';
 import { fetch } from '@tauri-apps/plugin-http';
@@ -30,6 +32,10 @@ import { protectSecret, unprotectSecret } from '../../utils/secrets';
 import { ExternalLinkService } from '../external-link.service';
 
 const HISTORY_LENGTH = 1000 * 60 * 60 * 12; // 12 hours
+const BATTERY_LEVEL_SCOPE = 'data:battery_level:read';
+const REQUEST_TIMEOUT = 5000;
+/** How long after the last report the heart rate counts as stopped. */
+export const PULSOID_HEART_RATE_TIMEOUT = 10000;
 
 interface PulsoidTokenSet {
   access_token: string;
@@ -43,11 +49,26 @@ interface PulsoidProfile {
   heart_rate: boolean;
 }
 
+interface PulsoidTokenInfo {
+  scopes: string[];
+}
+
+// a message may carry several payloads, whatever its type says
 interface PulsoidMessage {
+  type: string;
+  timestamp: string;
+  heartRate?: { bpm: number };
+  batteryLevel?: { percent: number };
+}
+
+interface PulsoidLatestBatteryLevel {
   measured_at: number;
-  data: {
-    heart_rate: number;
-  };
+  data: { battery_level: { percent: number } };
+}
+
+export interface PulsoidBatteryLevel {
+  percent: number;
+  measuredAt: number;
 }
 
 export type HeartbeatRecord = [number, number]; // [timestamp, heartRate]
@@ -66,9 +87,16 @@ export class PulsoidService {
   private _lastReport = new BehaviorSubject<number>(0);
   private _heartbeatRecords = new BehaviorSubject<HeartbeatRecord[]>([]);
   public heartbeatRecords = this._heartbeatRecords.asObservable();
+  /** Scopes granted to the current token; null while unknown or logged out. */
+  private grantedScopes = new BehaviorSubject<string[] | null>(null);
+  private _batteryLevel = new BehaviorSubject<PulsoidBatteryLevel | null>(null);
+  /** Battery of the heart rate monitor itself; null when Pulsoid has none to report. */
+  public batteryLevel = this._batteryLevel.asObservable();
 
   public heartRate = this._heartRate.pipe(
-    switchMap(() => this._heartRate.pipe(timeout({ each: 10000, with: () => of(null) })))
+    switchMap(() =>
+      this._heartRate.pipe(timeout({ each: PULSOID_HEART_RATE_TIMEOUT, with: () => of(null) }))
+    )
   );
   public heartRateLastReported = this._lastReport.asObservable();
   public loggedInUser = combineLatest([this.accessToken, this.settings]).pipe(
@@ -76,6 +104,11 @@ export class PulsoidService {
       if (!accessToken || !settings.expiresAt) return null;
       return settings.username ?? null;
     })
+  );
+  /** True for a login made before OyasumiVR asked for the battery level scope. */
+  public batteryLevelScopeMissing = combineLatest([this.loggedInUser, this.grantedScopes]).pipe(
+    map(([user, scopes]) => !!user && !!scopes && !scopes.includes(BATTERY_LEVEL_SCOPE)),
+    distinctUntilChanged()
   );
 
   constructor(
@@ -129,7 +162,7 @@ export class PulsoidService {
     url.searchParams.append('client_id', PULSOID_CLIENT_ID);
     url.searchParams.append('redirect_uri', PULSOID_REDIRECT_URI);
     url.searchParams.append('response_type', 'token');
-    url.searchParams.append('scope', 'data:heart_rate:read,profile:read');
+    url.searchParams.append('scope', `data:heart_rate:read,${BATTERY_LEVEL_SCOPE},profile:read`);
     url.searchParams.append('state', state);
     return url.toString();
   }
@@ -318,47 +351,142 @@ export class PulsoidService {
   }
 
   private async manageSocketConnection() {
-    const buildSocket = () => {
-      if (this.socket) {
-        try {
-          this.socket.close();
-        } catch {
-          // Ignore any error, we just want to disconnect
-        }
-        this.socket = undefined;
-      }
-      this.socket = new WebSocket(
-        'wss://dev.pulsoid.net/api/v1/data/real_time?access_token=' + this.accessToken.value
-      );
-      this.socket.onopen = () => this.onSocketEvent('OPEN');
-      this.socket.onerror = () => this.onSocketEvent('ERROR');
-      this.socket.onclose = () => this.onSocketEvent('CLOSE');
-      this.socket.onmessage = (message) => this.onSocketEvent('MESSAGE', message);
-    };
-    // Connect and disconnect based on login status
-    this.accessToken.pipe(distinctUntilChanged()).subscribe((accessToken) => {
-      if (accessToken) {
-        buildSocket();
-      } else {
-        if (this.socket) {
-          try {
-            this.socket.close();
-          } catch {
-            // Ignore any error, we just want to disconnect
-          }
-          this.socket = undefined;
-        }
-      }
-    });
+    // look up the token's scopes first, since the socket rejects a type the token lacks
+    this.accessToken
+      .pipe(
+        distinctUntilChanged(),
+        tap(() => this.forgetPreviousToken()),
+        switchMap((accessToken) =>
+          accessToken ? from(this.fetchGrantedScopes(accessToken)) : of(null)
+        )
+      )
+      .subscribe((scopes) => this.onGrantedScopes(scopes));
     // Check connection intermittently in case of dropouts
     interval(10000)
       .pipe(filter(() => !!this.accessToken.value))
-      .subscribe(() => {
-        // Stop if we have an active connection
-        if (this.socket && this.socket.readyState === WebSocket.OPEN) return;
-        // (Re)build a connection
-        buildSocket();
+      .subscribe(() => this.checkSocketConnection());
+  }
+
+  /** Drops what belongs to the previous token, so its account's data stops at once. */
+  private forgetPreviousToken() {
+    this.grantedScopes.next(null);
+    this._batteryLevel.next(null);
+    this.closeSocket();
+  }
+
+  private onGrantedScopes(scopes: string[] | null) {
+    this.grantedScopes.next(scopes);
+    this._batteryLevel.next(null);
+    if (this.accessToken.value) {
+      this.buildSocket();
+      return;
+    }
+    this.closeSocket();
+  }
+
+  private async checkSocketConnection() {
+    // retry a failed scope lookup, and reconnect when it adds the battery level
+    if (this.grantedScopes.value === null) {
+      const accessToken = this.accessToken.value!;
+      const scopes = await this.fetchGrantedScopes(accessToken);
+      // a logout, a new login, or another lookup may have finished meanwhile
+      if (accessToken !== this.accessToken.value) return;
+      if (scopes && this.grantedScopes.value === null) {
+        this.grantedScopes.next(scopes);
+        this.buildSocket();
+        return;
+      }
+    }
+
+    // Stop if we have an active connection
+    if (this.socket && this.socket.readyState === WebSocket.OPEN) return;
+    // (Re)build a connection
+    this.buildSocket();
+  }
+
+  private buildSocket() {
+    this.closeSocket();
+    const types = ['heart_rate'];
+    if (this.canReadBatteryLevel()) types.push('battery_level');
+    this.socket = new WebSocket(
+      `wss://dev.pulsoid.net/api/v2/data/real_time?access_token=${this.accessToken.value}&types=${types.join(',')}`
+    );
+    this.socket.onopen = () => this.onSocketEvent('OPEN');
+    this.socket.onerror = () => this.onSocketEvent('ERROR');
+    this.socket.onclose = () => this.onSocketEvent('CLOSE');
+    this.socket.onmessage = (message) => this.onSocketEvent('MESSAGE', message);
+  }
+
+  private closeSocket() {
+    if (!this.socket) return;
+    try {
+      this.socket.close();
+    } catch {
+      // Ignore any error, we just want to disconnect
+    }
+    this.socket = undefined;
+  }
+
+  private canReadBatteryLevel(): boolean {
+    return this.grantedScopes.value?.includes(BATTERY_LEVEL_SCOPE) ?? false;
+  }
+
+  /** The body is null for a non-OK status; rejects when Pulsoid takes over REQUEST_TIMEOUT. */
+  private async requestApi<T>(
+    route: string,
+    accessToken: string
+  ): Promise<{ status: number; body: T | null }> {
+    // Tauri's fetch has no overall timeout, so a stalled answer would never settle
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
+    try {
+      const response = await fetch(await firstValueFrom(this.getApiUrl(route)), {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        signal: controller.signal,
       });
+      const body = response.ok ? ((await response.json()) as T) : null;
+      return { status: response.status, body };
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  /** Resolves to null when the lookup fails. */
+  private async fetchGrantedScopes(accessToken: string): Promise<string[] | null> {
+    try {
+      const { status, body } = await this.requestApi<PulsoidTokenInfo>(
+        'token/validate',
+        accessToken
+      );
+      if (!body) throw new Error(`HTTP ${status}`);
+      return body.scopes ?? [];
+    } catch (e) {
+      warn(`[Pulsoid] Could not look up the scopes of the access token: ${e}`);
+      return null;
+    }
+  }
+
+  private async fetchLatestBatteryLevel() {
+    const accessToken = this.accessToken.value;
+    if (!accessToken || !this.canReadBatteryLevel()) return;
+    try {
+      const { status, body: latest } = await this.requestApi<PulsoidLatestBatteryLevel>(
+        'data/battery_level/latest',
+        accessToken
+      );
+      // the user's Pulsoid app does not report a battery level
+      if (status === 412) return;
+      if (!latest) throw new Error(`HTTP ${status}`);
+      if (accessToken !== this.accessToken.value) return;
+      // a socket message can arrive before this response, and is newer
+      if ((this._batteryLevel.value?.measuredAt ?? 0) > latest.measured_at) return;
+      this._batteryLevel.next({
+        percent: latest.data.battery_level.percent,
+        measuredAt: latest.measured_at,
+      });
+    } catch (e) {
+      warn(`[Pulsoid] Could not fetch the latest battery level: ${e}`);
+    }
   }
 
   private async onSocketEvent(
@@ -368,6 +496,8 @@ export class PulsoidService {
     switch (event) {
       case 'OPEN':
         info(`[Pulsoid] Websocket connection opened`);
+        // the socket need not send a battery level until it changes
+        await this.fetchLatestBatteryLevel();
         return;
       case 'CLOSE':
         info(`[Pulsoid] Websocket connection closed`);
@@ -390,7 +520,15 @@ export class PulsoidService {
       warn('[Pulsoid] Could not parse socket message: ' + messageData);
       return;
     }
-    this._lastReport.next(Date.now());
-    this._heartRate.next(message.data.heart_rate);
+    if (message.heartRate) {
+      this._lastReport.next(Date.now());
+      this._heartRate.next(message.heartRate.bpm);
+    }
+    if (message.batteryLevel) {
+      this._batteryLevel.next({
+        percent: message.batteryLevel.percent,
+        measuredAt: Date.parse(message.timestamp) || Date.now(),
+      });
+    }
   }
 }
