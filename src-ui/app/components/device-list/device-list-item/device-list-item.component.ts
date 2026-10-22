@@ -35,6 +35,8 @@ import {
 import { isEqual } from 'lodash';
 import { DeviceManagerService } from 'src-ui/app/services/device-manager.service';
 
+const LOW_BATTERY_PERCENTAGE = 15;
+
 @Component({
   selector: 'app-device-list-item',
   templateUrl: './device-list-item.component.html',
@@ -319,6 +321,10 @@ export class DeviceListItemComponent implements OnInit {
       default:
         return 'unknown';
     }
+  }
+
+  isBatteryLow(): boolean {
+    return this.showBattery && !this.isCharging && this.batteryPercentage < LOW_BATTERY_PERCENTAGE;
   }
 
   canShowPowerButton(): boolean {
