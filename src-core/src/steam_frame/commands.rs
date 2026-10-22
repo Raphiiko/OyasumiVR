@@ -3,9 +3,10 @@ use std::time::Duration;
 use super::{
     connection, devkit, discovery, hex,
     models::{
-        Access, Candidate, Cct, CleanupOutcome, CleanupRequest, FadeError, FadeRequest,
-        OtherPcsOutcome, Pairing, PairingKeys, ProbeOutcome, RegisterOutcome, SetBrightnessError,
-        SetCctError, SetupOutcome, SetupRequest, StageEvent, State, SupportedModel,
+        Access, Candidate, Cct, CleanupOutcome, CleanupRequest, DisconnectControllerError,
+        FadeError, FadeRequest, OtherPcsOutcome, Pairing, PairingKeys, ProbeOutcome,
+        RegisterOutcome, SetBrightnessError, SetCctError, SetupOutcome, SetupRequest, StageEvent,
+        State, SupportedModel,
     },
     setup,
     ssh::{self, SshError},
@@ -150,6 +151,15 @@ pub async fn steam_frame_fade(pairing_id: String, request: FadeRequest) -> Resul
 #[tauri::command]
 pub async fn steam_frame_cancel_fade(pairing_id: String, operation: String) {
     connection::cancel_fade(&pairing_id, operation).await
+}
+
+/// Disconnects the paired headset's controller with this serial. It stays paired.
+#[tauri::command]
+pub async fn steam_frame_disconnect_controller(
+    pairing_id: String,
+    serial: String,
+) -> Result<(), DisconnectControllerError> {
+    connection::disconnect_controller(&pairing_id, serial).await
 }
 
 #[cfg(test)]

@@ -4,7 +4,7 @@ import { AutomationConfigService } from '../automation-config.service';
 import { OpenVRService } from '../openvr.service';
 import { map } from 'rxjs';
 import { AUTOMATION_CONFIGS_DEFAULT, DevicePowerAutomationsConfig } from '../../models/automations';
-import { LighthouseConsoleService } from '../lighthouse-console.service';
+import { DeviceControlService } from '../device-control.service';
 import { error, info } from '@tauri-apps/plugin-log';
 import { EventLogService } from '../event-log.service';
 import { DeviceManagerService } from '../device-manager.service';
@@ -30,7 +30,7 @@ export class TurnOffDevicesWhenChargingAutomationService {
   constructor(
     private automationConfig: AutomationConfigService,
     private openvr: OpenVRService,
-    private lighthouse: LighthouseConsoleService,
+    private deviceControl: DeviceControlService,
     private eventLog: EventLogService,
     private deviceManager: DeviceManagerService
   ) {}
@@ -96,7 +96,7 @@ export class TurnOffDevicesWhenChargingAutomationService {
           info(
             `[TurnOffDevicesWhenChargingAutomationService] Detected device being put on charger. Turning off device (${device.class}:${device.serialNumber})`
           );
-          const dispatched = await this.lighthouse.turnOffDevices([device]);
+          const dispatched = await this.deviceControl.turnOffDevices([device]);
           this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'CHARGING');
         }
       });

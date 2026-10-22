@@ -1,6 +1,6 @@
 use std::{path::PathBuf, process::ExitCode};
 
-use oyasumivr_frame_helper::{bind, brightness, hub, info, serve};
+use oyasumivr_frame_helper::{bind, brightness, hub, info, serve, vrserver};
 
 /// The data directory from the argument, or `~/.local/share/oyasumivr_helper`.
 fn data_dir(argument: Option<String>) -> Option<PathBuf> {
@@ -29,6 +29,7 @@ async fn main() -> ExitCode {
             let result = match bind(&root).await {
                 Ok((listener, acceptor)) => {
                     let hub = hub::start(brightness::OpenVr::default());
+                    tokio::spawn(vrserver::watch_controllers(hub.clone()));
                     serve(root, listener, acceptor, hub).await
                 }
                 Err(error) => Err(error),

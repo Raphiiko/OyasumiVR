@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { OVRDevice } from 'src-ui/app/models/ovr-device';
 import { fade, hshrink, vshrink } from 'src-ui/app/utils/animations';
-import { LighthouseConsoleService } from '../../../services/lighthouse-console.service';
+import { DeviceControlService } from '../../../services/device-control.service';
 import { EventLogLighthouseSetPowerState } from '../../../models/event-log-entry';
 import { EventLogService } from '../../../services/event-log.service';
 import { LighthouseDevice, LighthouseDevicePowerState } from 'src-ui/app/models/lighthouse-device';
@@ -81,7 +81,7 @@ export class DeviceListItemComponent implements OnInit {
     this.helperStatus = this.frameToPair ? undefined : this.helperStatusOf(knownDevice);
     if (this.frameToPair) this.powerButtonState = 'attention';
     else if (device.isTurningOff) this.powerButtonState = 'turn_off_busy';
-    else if (device.canPowerOff && device.dongleId) this.powerButtonState = 'turn_off';
+    else if (device.canPowerOff) this.powerButtonState = 'turn_off';
     else this.powerButtonState = 'hide';
     this.cssId = this.sanitizeIdentifierForCSS(device.serialNumber ?? '');
     this.powerButtonAnchorId = '--anchor-device-pwr-btn-' + this.cssId;
@@ -178,7 +178,7 @@ export class DeviceListItemComponent implements OnInit {
   helperStatus?: 'connected' | 'connecting' | 'offline';
 
   constructor(
-    private lighthouseConsole: LighthouseConsoleService,
+    private deviceControl: DeviceControlService,
     private lighthouse: LighthouseService,
     private openvr: OpenVRService,
     private eventLog: EventLogService,
@@ -290,7 +290,7 @@ export class DeviceListItemComponent implements OnInit {
       return;
     }
     if (this.mode === 'openvr') {
-      const dispatched = await this.lighthouseConsole.turnOffDeviceForUser(
+      const dispatched = await this.deviceControl.turnOffDeviceForUser(
         this._ovrDevice!,
         this.deviceName
       );

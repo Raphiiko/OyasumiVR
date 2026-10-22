@@ -33,6 +33,7 @@ pub mod cct;
 pub mod color_temperature;
 pub mod controls;
 pub mod hub;
+pub mod vrserver;
 
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 pub const PROTOCOL_MIN: u32 = 1;
@@ -111,6 +112,14 @@ enum Outgoing<'a> {
         #[serde(skip_serializing_if = "Option::is_none")]
         error: Option<cct::SetError>,
     },
+    DisconnectControllerResult {
+        id: u64,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        error: Option<vrserver::DisconnectError>,
+    },
+    Controllers {
+        controllers: &'a [vrserver::Controller],
+    },
 }
 
 impl<'a> Outgoing<'a> {
@@ -130,6 +139,7 @@ impl<'a> Outgoing<'a> {
             }
             Event::Brightness { snapshot, .. } => Self::Brightness { snapshot },
             Event::Cct { snapshot, .. } => Self::Cct { snapshot },
+            Event::Controllers(controllers) => Self::Controllers { controllers },
             Event::FadeReply { id, result, .. } => Self::FadeResult {
                 id: *id,
                 error: result.err(),
@@ -179,6 +189,10 @@ enum Incoming {
     },
     CancelFade {
         operation: String,
+    },
+    DisconnectController {
+        id: u64,
+        serial: String,
     },
 }
 
@@ -355,8 +369,8 @@ fn unauthorized() -> ErrorResponse {
     response
 }
 
-/// Serves one PC: TLS, token check, hello message, then brightness and color temperature until the
-/// socket closes.
+/// Serves one PC: TLS, token check, hello message, then brightness, color temperature, and
+/// controllers until the socket closes.
 #[allow(clippy::result_large_err)] // the callback signature belongs to tungstenite
 async fn handle(
     stream: TcpStream,
@@ -387,7 +401,7 @@ async fn handle(
         return;
     };
 
-    // send the version, then the current brightness and color temperature
+    // send the version, then the current brightness, color temperature, and controllers
     let hello = Hello {
         r#type: "hello",
         info: (*info).clone(),
@@ -401,6 +415,9 @@ async fn handle(
         serde_json::to_string(&Outgoing::Cct {
             snapshot: &latest.cct,
         }),
+        serde_json::to_string(&Outgoing::Controllers {
+            controllers: &latest.controllers,
+        }),
     ] {
         let Ok(message) = message else { return };
         if socket.send(Message::text(message)).await.is_err() {
@@ -413,8 +430,19 @@ async fn handle(
         let event = tokio::select! {
             message = socket.next() => match message {
                 Some(Ok(Message::Text(text))) => {
-                    let parsed = serde_json::from_str::<Incoming>(&text).ok().and_then(Incoming::into_action);
-                    let Some((id, action)) = parsed else { continue };
+                    let Ok(incoming) = serde_json::from_str::<Incoming>(&text) else { continue };
+                    if let Incoming::DisconnectController { id, serial } = incoming {
+                        if serial.is_empty() || serial.len() > vrserver::MAX_SERIAL_LENGTH {
+                            continue;
+                        }
+                        let error = vrserver::disconnect_controller(&serial).await.err();
+                        let Ok(reply) = serde_json::to_string(&Outgoing::DisconnectControllerResult { id, error }) else { return };
+                        if socket.send(Message::text(reply)).await.is_err() {
+                            return;
+                        }
+                        continue;
+                    }
+                    let Some((id, action)) = incoming.into_action() else { continue };
                     hub.send(Command { connection, id, action });
                     continue;
                 }

@@ -2,10 +2,21 @@ import { Injectable, computed, signal } from '@angular/core';
 import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
 import { error, info } from '@tauri-apps/plugin-log';
-import { BehaviorSubject, Subject } from 'rxjs';
+import {
+  asapScheduler,
+  BehaviorSubject,
+  combineLatest,
+  distinctUntilChanged,
+  firstValueFrom,
+  map,
+  observeOn,
+  Subject,
+} from 'rxjs';
+import { isEqual } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { SETTINGS_KEY_STEAM_FRAME_PAIRING, SETTINGS_STORE } from '../../globals';
 import { DMKnownDevice } from '../../models/device-manager';
+import { OVRDevice } from '../../models/ovr-device';
 import {
   SteamFrameCandidate,
   SteamFrameCleanupMode,
@@ -27,6 +38,8 @@ import {
 import { protectSecret, unprotectSecret } from '../../utils/secrets';
 import { ModalService } from '../modal.service';
 import { DeviceManagerService } from '../device-manager.service';
+import { OpenVRService } from '../openvr.service';
+import { ToastService } from '../toast.service';
 
 type SetupStageEvent = { attemptId: string; stage: SteamFrameSetupStage };
 
@@ -48,6 +61,8 @@ export class SteamFramePairingService {
   private setupAttemptId?: string;
   /** Helper-updated notices by pairing id and version, so each shows for one minute per app run. */
   private readonly updatedNotices = new Map<string, 'shown' | 'hidden'>();
+  /** Serials of the controllers whose disconnect is on its way to the helper. */
+  private readonly controllerTurnOffs = new Set<string>();
 
   readonly pairings$ = new BehaviorSubject<SteamFramePairing[]>([]);
   readonly connections = this._connections.asReadonly();
@@ -64,7 +79,9 @@ export class SteamFramePairingService {
 
   constructor(
     private modalService: ModalService,
-    private deviceManager: DeviceManagerService
+    private deviceManager: DeviceManagerService,
+    private openvr: OpenVRService,
+    private toasts: ToastService
   ) {}
 
   /** Loads saved pairings, subscribes to core events, and starts their connections. */
@@ -92,6 +109,16 @@ export class SteamFramePairingService {
 
     // start connections for the saved pairings
     await this.pushPairings();
+
+    // show each helper's controllers on the matching OpenVR devices
+    combineLatest([this.connections$, this.pairings$, this.openvr.devices.pipe(map(streamingHmds))])
+      .pipe(
+        map(([states, pairings, hmds]) => frameControllerOverrides(states, pairings, hmds)),
+        distinctUntilChanged(isEqual),
+        // a synchronous write would publish devices while later subscribers still get the older list
+        observeOn(asapScheduler)
+      )
+      .subscribe((overrides) => this.openvr.setOverrides(overrides));
   }
 
   /** Shows the running setup's stage. */
@@ -423,6 +450,88 @@ export class SteamFramePairingService {
   /** Starts a helper update. Progress and the result arrive as connection states. */
   async updateHelper(pairing: SteamFramePairing) {
     await invoke('steam_frame_update_helper', { pairingId: pairing.id });
+  }
+
+  /**
+   * Disconnects the controller with this serial on each paired headset whose helper lists it as
+   * connected. It stays paired. Resolves false when no headset lists it or one failed.
+   */
+  async disconnectController(serial: string): Promise<boolean> {
+    const pairingIds = new Set(this._pairings().map((p) => p.id));
+    const holders = Object.values(this._connections()).filter(
+      (state) =>
+        state.status === 'connected' &&
+        pairingIds.has(state.pairingId) &&
+        state.controllers?.some((c) => c.serial === serial && c.connected)
+    );
+    const results = await Promise.all(
+      holders.map((state) => this.disconnectControllerOn(state.pairingId, serial))
+    );
+    return holders.length > 0 && results.every(Boolean);
+  }
+
+  private async disconnectControllerOn(pairingId: string, serial: string): Promise<boolean> {
+    try {
+      await invoke('steam_frame_disconnect_controller', { pairingId, serial });
+      info(`[SteamFrame] Disconnected the headset controller ${serial}`);
+      return true;
+    } catch (e) {
+      error(`[SteamFrame] Could not disconnect the headset controller: ${JSON.stringify(e)}`);
+      return false;
+    }
+  }
+
+  /** Turns off the Frame controllers among these devices, and ignores the rest. */
+  async turnOffDevices(ovrDevices: OVRDevice[]): Promise<OVRDevice[]> {
+    // look up the current devices, since a caller can hold a copy from before the helper reported
+    const serials = new Set(ovrDevices.map((device) => device.serialNumber));
+    const controllers = (await firstValueFrom(this.openvr.devices)).filter(
+      (device) =>
+        device.powerMethod === 'SteamFrame' &&
+        device.serialNumber &&
+        serials.has(device.serialNumber)
+    );
+    const results = await Promise.all(controllers.map((device) => this.turnOffController(device)));
+    return controllers.filter((_, index) => results[index]);
+  }
+
+  /** Turns off one controller for a user action, and shows a toast when it could not be turned off. */
+  async turnOffDeviceForUser(ovrDevice: OVRDevice, deviceName: string): Promise<OVRDevice[]> {
+    // a press while the first disconnect is on its way is no failure
+    if (this.controllerTurnOffs.has(ovrDevice.serialNumber ?? '')) return [];
+    const dispatched = await this.turnOffDevices([ovrDevice]);
+    if (!dispatched.length) {
+      this.toasts.show({
+        type: 'error',
+        title: { string: 'toasts.devicePower.turnOffFailed.title', values: { name: deviceName } },
+        message: 'toasts.devicePower.turnOffFailed.frameHelperFailed',
+        duration: 6000,
+      });
+    }
+    return dispatched;
+  }
+
+  /** Resolves true when the helper sent the disconnect. The device then stays busy until off. */
+  private async turnOffController(device: OVRDevice): Promise<boolean> {
+    const serial = device.serialNumber;
+    if (
+      device.powerMethod !== 'SteamFrame' ||
+      !serial ||
+      !device.canPowerOff ||
+      device.isTurningOff ||
+      this.controllerTurnOffs.has(serial)
+    )
+      return false;
+    this.controllerTurnOffs.add(serial);
+    info(`[SteamFrame] Turning off device ${device.class}:${serial}`);
+    try {
+      if (!(await this.disconnectController(serial))) return false;
+    } finally {
+      this.controllerTurnOffs.delete(serial);
+    }
+    // busy only once sent: busy clearing on a connected device reads as it powering on
+    this.openvr.setTurningOff(device.index, true);
+    return true;
   }
 
   /**
@@ -800,4 +909,37 @@ export class SteamFramePairingService {
     } satisfies SteamFramePairingData);
     await SETTINGS_STORE.save();
   }
+}
+
+/** The serials of the connected headsets, which stream to this PC's SteamVR. */
+function streamingHmds(devices: OVRDevice[]): string[] {
+  return devices
+    .filter((d) => d.class === 'HMD' && d.isConnected && d.serialNumber)
+    .map((d) => d.serialNumber!);
+}
+
+/**
+ * OpenVR device overrides for the controllers that the helpers of the headsets streaming to this PC
+ * report, by serial. A headset that does not stream here is not this PC's to control.
+ */
+export function frameControllerOverrides(
+  states: Record<string, SteamFrameConnectionState>,
+  pairings: SteamFramePairing[],
+  hmds: string[]
+): Record<string, Partial<OVRDevice>> {
+  const overrides: Record<string, Partial<OVRDevice>> = {};
+  for (const state of Object.values(states)) {
+    const pairing = pairings.find((p) => p.id === state.pairingId);
+    if (state.status !== 'connected' || !pairing || !hmds.includes(pairing.identity.serial)) {
+      continue;
+    }
+    for (const controller of state.controllers ?? []) {
+      overrides[controller.serial] = {
+        powerMethod: 'SteamFrame',
+        isConnected: controller.connected,
+        canPowerOff: controller.connected,
+      };
+    }
+  }
+  return overrides;
 }

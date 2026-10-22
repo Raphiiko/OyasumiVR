@@ -359,3 +359,37 @@ it('remembers devices it could turn off once', () => {
   expect(service.hasHadPowerControl(device)).toBe(true);
   expect(service.hasHadPowerControl({ ...device, serialNumber: 'C2' })).toBe(false);
 });
+
+it('applies overrides by serial and falls back to the reported values', async () => {
+  const service = new OpenVRService(
+    { tick: vi.fn() } as unknown as ApplicationRef,
+    {} as AppSettingsService,
+    {} as TelemetryService
+  );
+  const device: OVRDevice = {
+    index: 1,
+    class: 'Controller',
+    role: 'LeftHand',
+    serialNumber: 'C1',
+    battery: 0.5,
+    pose: null,
+    isConnected: true,
+    powerMethod: 'None',
+    isTurningOff: false,
+  };
+  const current = async () => (await firstValueFrom(service.devices))[0];
+
+  service.onDeviceUpdate(device);
+  service.setOverrides({ C1: { powerMethod: 'SteamFrame', canPowerOff: true } });
+  expect(await current()).toMatchObject({ powerMethod: 'SteamFrame', canPowerOff: true });
+
+  // a busy device clears once the override reports it disconnected
+  service.setTurningOff(1, true);
+  expect((await current()).isTurningOff).toBe(true);
+  service.setOverrides({ C1: { powerMethod: 'SteamFrame', isConnected: false } });
+  expect(await current()).toMatchObject({ isConnected: false, isTurningOff: false });
+
+  service.setOverrides({});
+  expect(await current()).toMatchObject({ powerMethod: 'None', isConnected: true });
+  expect((await current()).canPowerOff).toBeUndefined();
+});

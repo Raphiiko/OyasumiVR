@@ -12,7 +12,7 @@ import { OSCMessage, OSCValue } from '../../models/osc-message';
 import { AvatarChangeOscMethod } from './methods/avatar-change.osc-method';
 import { CommandOscMethod } from './methods/command.osc-method';
 import { OpenVRService } from '../openvr.service';
-import { LighthouseConsoleService } from '../lighthouse-console.service';
+import { DeviceControlService } from '../device-control.service';
 import { LighthouseService } from '../lighthouse.service';
 import { EventLogService } from '../event-log.service';
 import { AppSettingsService } from '../app-settings.service';
@@ -30,7 +30,7 @@ export class OscControlService {
     automationConfig: AutomationConfigService,
     sleep: SleepService,
     openvr: OpenVRService,
-    lighthouseConsole: LighthouseConsoleService,
+    deviceControl: DeviceControlService,
     lighthouse: LighthouseService,
     eventLog: EventLogService,
     appSettings: AppSettingsService,
@@ -45,15 +45,7 @@ export class OscControlService {
         new VRCPlayerCountStatusAutomationOscMethod(osc, automationConfig),
         new VRCSleepingAnimationsOscMethod(osc, automationConfig),
         new VRCMuteSelfParamOscMethod(osc),
-        new CommandOscMethod(
-          osc,
-          this,
-          openvr,
-          lighthouseConsole,
-          lighthouse,
-          eventLog,
-          appSettings
-        ),
+        new CommandOscMethod(osc, this, openvr, deviceControl, lighthouse, eventLog, appSettings),
       ]
     );
     for (const method of this.methods) {

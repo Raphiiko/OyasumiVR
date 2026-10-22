@@ -6,7 +6,6 @@ import { invoke } from '@tauri-apps/api/core';
 import { OVRDevice } from '../models/ovr-device';
 import { error, info } from '@tauri-apps/plugin-log';
 import { ExecutableReferenceStatus } from '../models/settings';
-import { listen } from '@tauri-apps/api/event';
 import { ToastService } from './toast.service';
 
 @Injectable({
@@ -39,23 +38,6 @@ export class LighthouseConsoleService {
           this.setConsolePath(currentSettings.lighthouseConsolePath, false);
         }
       });
-    await listen<string>('turnOffOVRDevices', async (event) => {
-      let deviceSerialNumbers: unknown;
-      try {
-        deviceSerialNumbers = JSON.parse(event.payload);
-      } catch {
-        return;
-      }
-      if (
-        !Array.isArray(deviceSerialNumbers) ||
-        !deviceSerialNumbers.every(
-          (serialNumber): serialNumber is string =>
-            typeof serialNumber === 'string' && serialNumber.length > 0
-        )
-      )
-        return;
-      await this.queuePowerOff(deviceSerialNumbers);
-    });
   }
 
   async setConsolePath(path: string, save = true) {
@@ -148,6 +130,7 @@ export class LighthouseConsoleService {
     const requestedSerials = new Set(deviceSerialNumbers);
     const ovrDevices = (await firstValueFrom(this.openvr.devices)).filter(
       (device) =>
+        device.powerMethod === 'Lighthouse' &&
         device.serialNumber &&
         requestedSerials.has(device.serialNumber) &&
         device.canPowerOff &&
@@ -177,7 +160,7 @@ export class LighthouseConsoleService {
 
   /** Resolves true when the console exits with status 0. */
   private async powerOffDevice(device: OVRDevice, lighthouseConsolePath: string): Promise<boolean> {
-    this.openvr.onDeviceUpdate(Object.assign({}, device, { isTurningOff: true }));
+    this.openvr.setTurningOff(device.index, true);
     info(`[Lighthouse] Turning off device ${device.class}:${device.serialNumber}`);
     try {
       const output = await invoke<{ status: number }>('run_command', {

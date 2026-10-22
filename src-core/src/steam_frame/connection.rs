@@ -17,8 +17,9 @@ use super::{
     discovery,
     maintenance::{self, Recovery, UpdateOutcome},
     models::{
-        Brightness, Cct, Control, FadeEnded, FadeError, FadeOutcome, FadeRequest, Maintenance,
-        Pairing, SetBrightnessError, SetCctError, State, Status,
+        Brightness, Cct, Control, Controller, DisconnectControllerError, FadeEnded, FadeError,
+        FadeOutcome, FadeRequest, Maintenance, Pairing, SetBrightnessError, SetCctError, State,
+        Status,
     },
     setup::{
         self, bundled_digest, install_decision, InstallDecision, ProvisionError, Replace,
@@ -41,6 +42,7 @@ const COMMAND_TIMEOUT: Duration = Duration::from_secs(5);
 type BrightnessReply = oneshot::Sender<Result<f64, SetBrightnessError>>;
 type CctReply = oneshot::Sender<Result<Cct, SetCctError>>;
 type FadeReply = oneshot::Sender<Result<(), FadeError>>;
+type DisconnectReply = oneshot::Sender<Result<(), DisconnectControllerError>>;
 /// Holds a sender only while the connection is open, so a command never waits for a reconnect.
 type CommandSlot = Arc<StdMutex<Option<mpsc::Sender<Command>>>>;
 
@@ -50,12 +52,26 @@ enum Command {
     SetCct(u32, CctReply),
     Fade(FadeRequest, FadeReply),
     CancelFade(String),
+    DisconnectController(String, DisconnectReply),
 }
 
 enum Reply {
     Brightness(BrightnessReply),
     Cct(CctReply),
     Fade(FadeReply),
+    Disconnect(DisconnectReply),
+}
+
+impl Reply {
+    /// Whether the caller stopped waiting, as `send` does when the command times out.
+    fn is_closed(&self) -> bool {
+        match self {
+            Reply::Brightness(reply) => reply.is_closed(),
+            Reply::Cct(reply) => reply.is_closed(),
+            Reply::Fade(reply) => reply.is_closed(),
+            Reply::Disconnect(reply) => reply.is_closed(),
+        }
+    }
 }
 
 struct Connection {
@@ -88,6 +104,13 @@ enum HelperMessage {
         control: Control,
         operation: String,
         outcome: FadeOutcome,
+    },
+    DisconnectControllerResult {
+        id: u64,
+        error: Option<DisconnectControllerError>,
+    },
+    Controllers {
+        controllers: Vec<Controller>,
     },
 }
 
@@ -180,6 +203,15 @@ pub async fn cancel_fade(pairing_id: &str, operation: String) {
     }
 }
 
+/// Disconnects the headset controller with this serial. It stays paired.
+pub async fn disconnect_controller(
+    pairing_id: &str,
+    serial: String,
+) -> Result<(), DisconnectControllerError> {
+    let command = |reply| Command::DisconnectController(serial, reply);
+    send(pairing_id, command, DisconnectControllerError::Offline).await
+}
+
 async fn sender(pairing_id: &str) -> Option<mpsc::Sender<Command>> {
     CONNECTIONS
         .lock()
@@ -255,6 +287,7 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>, commands: Command
         cert_pin: initial.cert_pin.clone(),
         brightness: None,
         cct: None,
+        controllers: None,
     };
     publish(&state).await;
     let mut backoff = Duration::from_secs(2);
@@ -309,6 +342,7 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>, commands: Command
                     wss::close(*socket).await;
                     state.brightness = None;
                     state.cct = None;
+                    state.controllers = None;
                     if requested {
                         if maintain(&mut state, &pairing).await {
                             return;
@@ -433,7 +467,7 @@ async fn maintain(state: &mut State, pairing: &Pairing) -> bool {
 }
 
 /// Holds a connected socket until it closes, or returns true when an update is requested.
-/// Relays brightness, color temperature, and fades meanwhile.
+/// Relays brightness, color temperature, controllers, and fades meanwhile.
 async fn hold_connected(
     socket: &mut Socket,
     update: &Notify,
@@ -461,8 +495,8 @@ struct Relay {
     next_id: u64,
 }
 
-/// Applies one helper message: a brightness or color temperature report, or the answer to a
-/// command.
+/// Applies one helper message: a brightness, color temperature, or controller report, or the
+/// answer to a command.
 async fn receive(text: &str, relay: &mut Relay, state: &mut State) {
     match serde_json::from_str(text) {
         Ok(HelperMessage::Brightness(brightness)) => {
@@ -522,6 +556,15 @@ async fn receive(text: &str, relay: &mut Relay, state: &mut State) {
                 outcome,
             };
             send_event(FADE_ENDED_EVENT, ended).await;
+        }
+        Ok(HelperMessage::Controllers { controllers }) => {
+            state.controllers = Some(controllers);
+            publish(state).await;
+        }
+        Ok(HelperMessage::DisconnectControllerResult { id, error }) => {
+            if let Some(Reply::Disconnect(reply)) = relay.pending.remove(&id) {
+                let _ = reply.send(error.map_or(Ok(()), Err));
+            }
         }
         Err(_) => {}
     }
@@ -717,6 +760,10 @@ async fn hold(socket: &mut Socket, update: &Notify, relay: &mut Relay, state: &m
                         }),
                         Reply::Fade(reply),
                     ),
+                    Command::DisconnectController(serial, reply) => (
+                        serde_json::json!({"type": "disconnectController", "id": id, "serial": serial}),
+                        Reply::Disconnect(reply),
+                    ),
                     Command::CancelFade(operation) => {
                         let message = serde_json::json!({"type": "cancelFade", "operation": operation});
                         if socket.send(Message::text(message.to_string())).await.is_err() {
@@ -728,6 +775,8 @@ async fn hold(socket: &mut Socket, update: &Notify, relay: &mut Relay, state: &m
                 if socket.send(Message::text(message.to_string())).await.is_err() {
                     return Wake::Closed;
                 }
+                // a helper that never answers would otherwise grow this map
+                relay.pending.retain(|_, waiting| !waiting.is_closed());
                 relay.pending.insert(id, reply);
             }
             _ = ticker.tick() => {
@@ -844,6 +893,23 @@ mod tests {
                 error: Some(SetCctError::WriteFailed)
             }
         ));
+    }
+
+    #[test]
+    fn reads_the_helper_controller_messages() {
+        let HelperMessage::Controllers { controllers } = serde_json::from_str(
+            r#"{"type":"controllers","controllers":[{"serial":"ef173c419df4","connected":true}]}"#,
+        )
+        .unwrap() else {
+            panic!("not a controller report");
+        };
+        assert_eq!(
+            controllers,
+            [Controller {
+                serial: "ef173c419df4".into(),
+                connected: true
+            }]
+        );
     }
 
     #[test]

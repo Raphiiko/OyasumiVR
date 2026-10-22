@@ -5,7 +5,7 @@ import { SleepService } from './sleep.service';
 import { ShutdownAutomationsService } from './shutdown-automations.service';
 import { filter, firstValueFrom, map, take } from 'rxjs';
 import { warn } from '@tauri-apps/plugin-log';
-import { LighthouseConsoleService } from './lighthouse-console.service';
+import { DeviceControlService } from './device-control.service';
 import { LighthouseService } from './lighthouse.service';
 import { OpenVRService } from './openvr.service';
 import { AppSettingsService } from './app-settings.service';
@@ -22,7 +22,7 @@ export class HotkeyHandlerService {
     private sleepPreparation: SleepPreparationService,
     private shutdownSequence: ShutdownAutomationsService,
     private lighthouseService: LighthouseService,
-    private lighthouseConsoleService: LighthouseConsoleService,
+    private deviceControl: DeviceControlService,
     private openvr: OpenVRService,
     private appSettings: AppSettingsService,
     private eventLog: EventLogService
@@ -77,7 +77,7 @@ export class HotkeyHandlerService {
       (device) => device.class === 'Controller'
     );
     if (!controllers.length) return;
-    const dispatched = await this.lighthouseConsoleService.turnOffDevices(controllers);
+    const dispatched = await this.deviceControl.turnOffDevices(controllers);
     this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'HOTKEY');
   }
 
@@ -86,7 +86,7 @@ export class HotkeyHandlerService {
       (device) => device.class === 'GenericTracker'
     );
     if (!trackers.length) return;
-    const dispatched = await this.lighthouseConsoleService.turnOffDevices(trackers);
+    const dispatched = await this.deviceControl.turnOffDevices(trackers);
     this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'HOTKEY');
   }
 

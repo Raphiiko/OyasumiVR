@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use super::models::{
-    DeviceUpdateEvent, OVRDevice, OVRHandleType, OpenVRInputEvent, TrackedDeviceClass,
+    DeviceUpdateEvent, OVRDevice, OVRHandleType, OpenVRInputEvent, PowerMethod, TrackedDeviceClass,
 };
 use super::{sleeping_pose, GestureDetector, SleepDetector, OVR_CONTEXT};
 use crate::utils::send_event;
@@ -221,6 +221,13 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
         )
         .ok();
     let is_connected = device_connected(&system, device_index);
+    let power_method = if dongle_id.as_deref().is_some_and(|id| !id.is_empty()) {
+        PowerMethod::Lighthouse
+    } else {
+        PowerMethod::None
+    };
+    // nothing can turn off a device without a power method, whatever OpenVR reports
+    let can_power_off = can_power_off.map(|can| can && power_method != PowerMethod::None);
     let mut hmd_on_head = None;
     let mut hmd_activity = None;
     let mut display_frequency = None;
@@ -293,6 +300,7 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
         manufacturer_name,
         model_number,
         is_connected,
+        power_method,
         handle_type,
         hmd_on_head,
         hmd_activity,
@@ -313,6 +321,7 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
     }
 }
 
+/// Whether OpenVR reports the device connected. Its activation and deactivation events change this.
 fn device_connected(system: &ovr::system::System, device_index: ovr::TrackedDeviceIndex) -> bool {
     system
         .get_device_to_absolute_tracking_pose(
@@ -461,7 +470,8 @@ mod tests {
             "battery": 0.5, "providesBatteryStatus": true, "canPowerOff": true,
             "isCharging": false, "dongleId": "dongle", "serialNumber": "serial",
             "hardwareRevision": "1", "manufacturerName": "manufacturer",
-            "modelNumber": "model", "isConnected": true, "handleType": "HandPrimary",
+            "modelNumber": "model", "isConnected": true, "powerMethod": "Lighthouse",
+            "handleType": "HandPrimary",
             "hmdOnHead": false, "hmdActivity": "Idle", "displayFrequency": 90.0,
             "displaySupportsAnalogGain": true, "displayMinAnalogGain": 0.1,
             "displayMaxAnalogGain": 1.0
@@ -496,6 +506,7 @@ mod tests {
             ("manufacturerName", serde_json::json!("other manufacturer")),
             ("modelNumber", serde_json::json!("other model")),
             ("isConnected", serde_json::json!(false)),
+            ("powerMethod", serde_json::json!("None")),
             ("handleType", serde_json::json!("HandSecondary")),
             ("hmdOnHead", serde_json::json!(true)),
             ("hmdActivity", serde_json::json!("UserInteraction")),
@@ -537,7 +548,8 @@ mod tests {
         let device = snapshot();
         let mut devices = vec![device];
         let missing: OVRDevice = serde_json::from_value(serde_json::json!({
-            "index": 7, "class": "Controller", "role": "LeftHand", "isConnected": false
+            "index": 7, "class": "Controller", "role": "LeftHand", "isConnected": false,
+            "powerMethod": "None"
         }))
         .unwrap();
         assert!(store_device(&mut devices, &missing));
@@ -550,6 +562,7 @@ mod tests {
         OVR_DEVICES.lock().await.push(
             serde_json::from_value(serde_json::json!({
                 "index": 7, "class": "Controller", "role": "LeftHand", "isConnected": true,
+                "powerMethod": "None",
                 "serialNumber": "previous-session"
             }))
             .unwrap(),

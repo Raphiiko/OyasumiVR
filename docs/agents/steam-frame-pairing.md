@@ -355,6 +355,63 @@ because the device can complete first, such as in standby. On `changedOnDevice` 
 stops, and the simple value follows the headset. On any other end the software part stops where it
 is.
 
+## Controllers
+
+`{"type":"disconnectController","id":1,"serial":"96c863a69af3"}` disconnects that controller. It
+stays paired and reconnects when a button wakes it. The helper replies
+`{"type":"disconnectControllerResult","id":1}`, with an `error` of `runtimeUnavailable` or
+`writeFailed` when it fails. It ignores an empty serial or one longer than 64 bytes, and an unknown
+serial does nothing.
+
+The helper sends Steam UI's own request to the headset's SteamVR web server at `127.0.0.1:27062`:
+the text `steam_connect`, then a binary packet. It starts `02 08 2D`, a one-byte header length and a
+header with message type 45, and follows with field 5, `disconnect_controller`, holding the serial
+as its field 1. The web server needs no web secret from its own origin, so the helper sends
+`Origin: http://127.0.0.1:27062`. Neither the PC's SteamVR nor OpenVR power-off reaches these
+controllers.
+
+The helper keeps a second socket to the same web server open, and sends `02 08 2D 0A 00` on it every
+second: the same request with an empty field 1, `update`. The web server answers with a message of
+type 44. Its field 3, `connected_controller`, and field 4, `paired_controller`, each hold a
+controller whose field 1 is its serial. A socket without a state for 5 seconds counts as failed, and
+the helper opens a new one. Nobody has seen the web server send a state without a request.
+
+The helper sends every PC `{"type":"controllers","controllers":[{"serial":"96c863a69af3","connected":true}]}`
+on connect and on every change. The list holds every paired controller, sorted by serial. It is
+empty while SteamVR on the headset does not answer.
+
+### On the PC
+
+The core reports OpenVR devices as OpenVR shows them. `powerMethod` is `Lighthouse` for a device
+with a dongle id and `None` for the rest, and `canPowerOff` is false for `None`. VRLink never sets
+`Prop_DeviceCanPowerOff_Bool` on a Frame controller, so the core reports it as `None`.
+
+The core keeps each helper's last list in its connection state as `controllers`, null while the
+helper is not connected. `SteamFramePairingService` turns the lists into overrides by serial, and
+`OpenVRService` applies them on top of the reported devices. Only a headset whose HMD is connected
+in this PC's OpenVR counts, so a Frame used on its own never changes this PC's devices. For each
+controller its connected helper lists:
+
+- `powerMethod` is `SteamFrame`.
+- `isConnected` and `canPowerOff` are the helper's `connected`.
+
+A listed controller that OpenVR does not report gets no device. Without a connected helper, or once
+the headset stops streaming here, a controller shows what OpenVR reports, so a helper drop never
+looks like the controllers turning off.
+
+`DeviceControlService` is the entry point for device actions. It passes the requested devices to
+both paths, and each looks them up in the current list and keeps the ones with its own
+`powerMethod`. The lookup matters because a caller such as MQTT can hold a copy from before the
+helper reported. `SteamFramePairingService` turns off `SteamFrame` devices through the helper,
+`LighthouseConsoleService` (which only runs the Lighthouse console) turns off `Lighthouse` devices,
+and nothing turns off a `None` device. So the device list, the hotkeys,
+the automations, MQTT, and the overlay all reach a Frame controller the same way.
+
+A Frame controller turns busy once the helper confirms the disconnect, and stays busy until it
+reports disconnected. It does not turn busy before the reply: a busy flag that clears again on a
+connected controller reads as the controller powering on, which ends sleep mode through the
+power-on automation. A request for a controller whose disconnect is still on its way sends nothing.
+
 ## Updates
 
 Each connection compares the helper's hello with the bundled helper. An older helper, or the same

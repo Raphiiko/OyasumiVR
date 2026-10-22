@@ -110,6 +110,15 @@ pub struct State {
     /// The helper's last color temperature report on the open connection; `None` while not
     /// connected.
     pub cct: Option<Cct>,
+    /// The controllers paired with the headset, from the helper's last report on the open
+    /// connection; `None` while not connected.
+    pub controllers: Option<Vec<Controller>>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+pub struct Controller {
+    pub serial: String,
+    pub connected: bool,
 }
 
 /// The headset's hardware brightness in percent, as the helper reports it.
@@ -205,6 +214,15 @@ pub struct Cct {
 #[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub enum SetCctError {
+    RuntimeUnavailable,
+    WriteFailed,
+    /// No open connection, or it closed before the helper replied.
+    Offline,
+}
+
+#[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub enum DisconnectControllerError {
     RuntimeUnavailable,
     WriteFailed,
     /// No open connection, or it closed before the helper replied.
