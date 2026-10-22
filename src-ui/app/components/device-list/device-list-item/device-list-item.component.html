@@ -49,7 +49,12 @@
       <div class="battery-info" @vshrink>
         <div class="battery-info-bar">
           @if (showBattery) {
-            <div class="battery-info-bar-fill" @fade [style.width]="batteryPercentage + '%'"></div>
+            <div
+              class="battery-info-bar-fill"
+              @fade
+              [class.low]="isBatteryLow()"
+              [style.width]="batteryPercentage + '%'"
+            ></div>
           }
         </div>
         <div class="battery-info-label">

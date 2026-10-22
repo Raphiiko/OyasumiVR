@@ -37,6 +37,8 @@ import {
 import { isEqual } from 'lodash';
 import { DeviceManagerService } from 'src-ui/app/services/device-manager.service';
 
+const LOW_BATTERY_PERCENTAGE = 15;
+
 @Component({
   selector: 'app-device-list-item',
   templateUrl: './device-list-item.component.html',
@@ -64,6 +66,8 @@ export class DeviceListItemComponent implements OnInit {
     this.deviceName = knownDevice.nickname ?? knownDevice.defaultName;
     this.showBattery = Boolean(device.providesBatteryStatus || device.isCharging);
     this.isCharging = this.showBattery && (device.isCharging ?? false);
+    // the core sends null for a battery level or charging state OpenVR could not read
+    this.batteryStateKnown = device.battery != null && device.isCharging != null;
     this.batteryPercentage = this.showBattery ? device.battery * 100 : 0;
     this.batteryPercentageString = this.showBattery
       ? Math.floor(device.battery * 1000) / 10 + '%'
@@ -91,6 +95,7 @@ export class DeviceListItemComponent implements OnInit {
     this.deviceName = knownDevice.nickname ?? knownDevice.defaultName;
     this.showBattery = false;
     this.isCharging = false;
+    this.batteryStateKnown = false;
     this.batteryPercentage = 100;
     this.batteryPercentageString = '100%';
     switch (device.powerState) {
@@ -142,6 +147,8 @@ export class DeviceListItemComponent implements OnInit {
   deviceName = '';
   showBattery = false;
   isCharging = false;
+  /** False when the battery level or charging state is unknown, so the bar must not warn. */
+  batteryStateKnown = false;
   batteryPercentage = 100;
   batteryPercentageString = '100%';
   status: string | null = null;
@@ -332,6 +339,15 @@ export class DeviceListItemComponent implements OnInit {
       default:
         return 'unknown';
     }
+  }
+
+  isBatteryLow(): boolean {
+    return (
+      this.showBattery &&
+      this.batteryStateKnown &&
+      !this.isCharging &&
+      this.batteryPercentage < LOW_BATTERY_PERCENTAGE
+    );
   }
 
   canShowPowerButton(): boolean {

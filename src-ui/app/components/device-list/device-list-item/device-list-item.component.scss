@@ -82,9 +82,15 @@
 
     &-fill {
       width: 0%;
-      transition: width 0.15s ease;
+      transition:
+        width 0.15s ease,
+        background-color 0.15s ease;
       height: 100%;
       background: var(--color-primary);
+
+      &.low {
+        background: var(--color-alert-error);
+      }
     }
   }
 }
