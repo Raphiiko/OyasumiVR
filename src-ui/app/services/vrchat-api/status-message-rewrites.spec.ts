@@ -29,6 +29,14 @@ describe('StatusMessageRewrites', () => {
     expect(rewrites.record('a...', 'a…')).toBe(false);
   });
 
+  it('restarts the count on reset', () => {
+    const rewrites = new StatusMessageRewrites();
+    rewrites.record('a...', 'a…');
+    rewrites.record('a...', 'a…');
+    rewrites.reset();
+    expect(rewrites.record('a...', 'a…')).toBe(false);
+  });
+
   it('ignores rewrites the fold already covers', () => {
     const rewrites = new StatusMessageRewrites();
     for (let i = 0; i < 3; i++) expect(rewrites.record('a.', 'a․')).toBe(false);

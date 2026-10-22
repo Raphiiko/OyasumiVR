@@ -44,6 +44,12 @@ describe('describeVRChatTextRewrite', () => {
     expect(describeVRChatTextRewrite('bad word', '*** word')).toBe('text(3>3)');
   });
 
+  it('leaves out the content of a span with letter-like symbols or emoji', () => {
+    expect(describeVRChatTextRewrite('ⓢⓛⓔⓔⓟ', '?????')).toBe('text(5>5)');
+    expect(describeVRChatTextRewrite('\u{1f162}\u{1f15b} zzz', 'zzz')).toBe('text(3>0)');
+    expect(describeVRChatTextRewrite('zzz \u{1f319}', 'zzz')).toBe('text(2>0)');
+  });
+
   it('ignores differences the fold covers', () => {
     expect(describeVRChatTextRewrite('zzz. (a)', 'zzz․ （a）')).toBe('');
   });

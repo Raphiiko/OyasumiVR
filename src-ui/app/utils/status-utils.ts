@@ -23,8 +23,8 @@ const VRCHAT_SUBSTITUTED_ASCII = '@#$%&=+/\\;:,?!"<>.^{}[]()|*';
 const VRCHAT_SUBSTITUTE_PATTERN = new RegExp(`[${VRCHAT_SUBSTITUTES}]`, 'g');
 
 /** Reverses VRChat's punctuation substitutes and collapses whitespace, for comparing messages. */
-export function foldVRChatText(text: string): string {
-  return text
+export function foldVRChatText(text: string | undefined): string {
+  return (text ?? '')
     .replace(VRCHAT_SUBSTITUTE_PATTERN, (char) =>
       VRCHAT_SUBSTITUTED_ASCII.charAt(VRCHAT_SUBSTITUTES.indexOf(char))
     )
@@ -32,24 +32,28 @@ export function foldVRChatText(text: string): string {
     .trim();
 }
 
-export function vrcStatusMessagesMatch(a: string, b: string): boolean {
+export function vrcStatusMessagesMatch(a: string | undefined, b: string | undefined): boolean {
   return foldVRChatText(a) === foldVRChatText(b);
 }
 
 /**
  * Lists each changed span between two folded messages as code points, such as
- * `U+002E U+002E>U+2026`. A span with a letter or digit shows only its lengths, `text(2>3)`.
+ * `U+002E U+002E>U+2026`. A span with any character outside punctuation, spaces, and math,
+ * currency, or modifier symbols shows only its lengths, `text(2>3)`.
  */
 export function describeVRChatTextRewrite(sent: string, stored: string): string {
   return diffCodePoints(Array.from(foldVRChatText(sent)), Array.from(foldVRChatText(stored)))
     .map(({ sent, stored }) => {
-      if (/[\p{L}\p{N}]/u.test(sent.join('') + stored.join(''))) {
+      if (![...sent, ...stored].every((char) => REPORTABLE_CHAR.test(char))) {
         return `text(${sent.length}>${stored.length})`;
       }
       return `${formatCodePoints(sent)}>${formatCodePoints(stored)}`;
     })
     .join(', ');
 }
+
+// letter-like symbols such as circled letters are So, so the allowlist leaves out every other class
+const REPORTABLE_CHAR = /^[\p{P}\p{Z}\p{Sm}\p{Sc}\p{Sk}]$/u;
 
 function formatCodePoints(chars: string[]): string {
   if (!chars.length) return '-';
