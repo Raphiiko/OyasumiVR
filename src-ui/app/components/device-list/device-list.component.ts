@@ -23,11 +23,17 @@ import {
   DevicePowerAction,
 } from '../device-power-button/device-power-button.component';
 import { DeviceManagerService } from '../../services/device-manager.service';
+import {
+  PULSOID_HEART_RATE_TIMEOUT,
+  PulsoidBatteryLevel,
+  PulsoidService,
+} from '../../services/integrations/pulsoid.service';
+import { PulsoidDevice } from './device-list-item/device-list-item.component';
 
-type DisplayCategory = OpenVRDisplayCategory | LighthouseDisplayCategory;
+type DisplayCategory = OpenVRDisplayCategory | LighthouseDisplayCategory | PulsoidDisplayCategory;
 
 interface BaseDisplayCategory {
-  type: 'OpenVR' | 'Lighthouse';
+  type: 'OpenVR' | 'Lighthouse' | 'Pulsoid';
   label: string;
   icon?: string;
 }
@@ -44,6 +50,11 @@ interface LighthouseDisplayCategory extends BaseDisplayCategory {
   devices: LighthouseDevice[];
   canBulkPowerOn: boolean;
   canBulkPowerOff: boolean;
+}
+
+interface PulsoidDisplayCategory extends BaseDisplayCategory {
+  type: 'Pulsoid';
+  device: PulsoidDevice;
 }
 
 @Component({
@@ -69,7 +80,8 @@ export class DeviceListComponent implements OnInit {
     private eventLog: EventLogService,
     private destroyRef: DestroyRef,
     private appSettings: AppSettingsService,
-    private deviceManager: DeviceManagerService
+    private deviceManager: DeviceManagerService,
+    private pulsoid: PulsoidService
   ) {}
 
   ngOnInit(): void {
@@ -80,6 +92,16 @@ export class DeviceListComponent implements OnInit {
       ),
       this.lighthouse.devices.pipe(
         tap((devices) => this.processLighthouseDevices(devices)),
+        takeUntilDestroyed(this.destroyRef)
+      ),
+      combineLatest([
+        this.pulsoid.heartRate,
+        this.pulsoid.heartRateLastReported,
+        this.pulsoid.batteryLevel,
+      ]).pipe(
+        tap(([heartRate, lastReported, batteryLevel]) =>
+          this.processPulsoidDevice(heartRate, lastReported, batteryLevel)
+        ),
         takeUntilDestroyed(this.destroyRef)
       ),
     ])
@@ -220,14 +242,48 @@ export class DeviceListComponent implements OnInit {
       category.devices.some((d) => d.powerState === 'on' || d.powerState === 'booting');
   }
 
+  processPulsoidDevice(
+    heartRate: number | null,
+    lastReported: number,
+    batteryLevel: PulsoidBatteryLevel | null
+  ) {
+    // a new subscriber first receives the last heart rate, however old it is
+    const stopped = Date.now() - lastReported > PULSOID_HEART_RATE_TIMEOUT;
+    if (!heartRate || stopped) {
+      filterInPlace(this.deviceCategories, (c) => c.type !== 'Pulsoid');
+      return;
+    }
+
+    const device: PulsoidDevice = { heartRate, batteryPercentage: batteryLevel?.percent ?? null };
+    const category = this.deviceCategories.find((c) => c.type === 'Pulsoid');
+    if (category) {
+      category.device = device;
+      return;
+    }
+    this.deviceCategories.push({
+      type: 'Pulsoid',
+      label: 'comp.device-list.category.Pulsoid',
+      device,
+      icon: 'heart-pulse',
+    });
+  }
+
   sortDeviceCategories() {
-    const sortKeys = ['OpenVR-HMD', 'OpenVR-Controller', 'OpenVR-GenericTracker', 'Lighthouse'];
+    const sortKeys = [
+      'OpenVR-HMD',
+      'OpenVR-Controller',
+      'OpenVR-GenericTracker',
+      'Lighthouse',
+      'Pulsoid',
+    ];
     const getKey = (category: DisplayCategory) => {
       switch (category.type) {
         case 'OpenVR':
           return `OpenVR-${category.class}`;
         case 'Lighthouse':
           return 'Lighthouse';
+        case 'Pulsoid':
+          return 'Pulsoid';
       }
     };
     this.deviceCategories.sort((a, b) => sortKeys.indexOf(getKey(a)) - sortKeys.indexOf(getKey(b)));

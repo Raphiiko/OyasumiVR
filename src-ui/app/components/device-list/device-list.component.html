@@ -73,6 +73,19 @@
             }
           </div>
         }
+        @if (category.type === 'Pulsoid') {
+          <div>
+            <div class="device-list-category-header" [@vshrink]>
+              <div class="device-list-category-header-label">
+                <span>{{ category.label | transloco }}</span>
+              </div>
+            </div>
+            <app-device-list-item
+              [pulsoidDevice]="category.device"
+              [icon]="category.icon"
+            ></app-device-list-item>
+          </div>
+        }
       </div>
     }
     @if (!deviceCategories.length) {

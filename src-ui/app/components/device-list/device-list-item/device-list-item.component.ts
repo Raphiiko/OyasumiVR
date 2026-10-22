@@ -39,6 +39,11 @@ import { DeviceManagerService } from 'src-ui/app/services/device-manager.service
 
 const LOW_BATTERY_PERCENTAGE = 15;
 
+export interface PulsoidDevice {
+  heartRate: number;
+  batteryPercentage: number | null;
+}
+
 @Component({
   selector: 'app-device-list-item',
   templateUrl: './device-list-item.component.html',
@@ -51,6 +56,7 @@ export class DeviceListItemComponent implements OnInit {
   readonly icon = input<string>();
   readonly ovrDevice = input<OVRDevice>();
   readonly lighthouseDevice = input<LighthouseDevice>();
+  readonly pulsoidDevice = input<PulsoidDevice>();
 
   private applyOvrDevice(device: OVRDevice | undefined) {
     if (!device) return;
@@ -64,6 +70,7 @@ export class DeviceListItemComponent implements OnInit {
     this.mode = 'openvr';
     this.deviceTypeName = knownDevice.typeName;
     this.deviceName = knownDevice.nickname ?? knownDevice.defaultName;
+    this.deviceNameParams = {};
     this.showBattery = Boolean(device.providesBatteryStatus || device.isCharging);
     this.isCharging = this.showBattery && (device.isCharging ?? false);
     // the core sends null for a battery level or charging state OpenVR could not read
@@ -93,6 +100,7 @@ export class DeviceListItemComponent implements OnInit {
     this.mode = 'lighthouse';
     this.deviceTypeName = knownDevice.typeName;
     this.deviceName = knownDevice.nickname ?? knownDevice.defaultName;
+    this.deviceNameParams = {};
     this.showBattery = false;
     this.isCharging = false;
     this.batteryStateKnown = false;
@@ -142,9 +150,30 @@ export class DeviceListItemComponent implements OnInit {
     this.powerButtonAnchorId = '--anchor-device-pwr-btn-' + this.cssId;
   }
 
-  mode?: 'lighthouse' | 'openvr';
+  private applyPulsoidDevice(device: PulsoidDevice | undefined) {
+    if (!device) return;
+    this._lighthouseDevice = undefined;
+    this._ovrDevice = undefined;
+
+    this.mode = 'pulsoid';
+    this.deviceTypeName = 'comp.device-list.pulsoid.name';
+    this.deviceName = 'comp.device-list.pulsoid.heartRate';
+    this.deviceNameParams = { bpm: device.heartRate };
+    this.showBattery = device.batteryPercentage !== null;
+    this.isCharging = false;
+    this.batteryStateKnown = this.showBattery;
+    this.batteryPercentage = device.batteryPercentage ?? 0;
+    this.batteryPercentageString = this.batteryPercentage + '%';
+    this.status = null;
+    this.powerButtonState = 'hide';
+    this.cssId = 'pulsoid';
+    this.powerButtonAnchorId = '--anchor-device-pwr-btn-' + this.cssId;
+  }
+
+  mode?: 'lighthouse' | 'openvr' | 'pulsoid';
   deviceTypeName = '';
   deviceName = '';
+  deviceNameParams: Record<string, unknown> = {};
   showBattery = false;
   isCharging = false;
   /** False when the battery level or charging state is unknown, so the bar must not warn. */
@@ -185,6 +214,10 @@ export class DeviceListItemComponent implements OnInit {
     effect(() => {
       const device = this.lighthouseDevice();
       untracked(() => this.applyLighthouseDevice(device));
+    });
+    effect(() => {
+      const device = this.pulsoidDevice();
+      untracked(() => this.applyPulsoidDevice(device));
     });
   }
 
