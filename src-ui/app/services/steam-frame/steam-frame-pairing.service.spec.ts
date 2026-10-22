@@ -3,7 +3,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { frameControllerOverrides, SteamFramePairingService } from './steam-frame-pairing.service';
 import { of } from 'rxjs';
 import { DMKnownDevice } from '../../models/device-manager';
+import { OVRDevice } from '../../models/ovr-device';
 import { SteamFrameConnectionState, SteamFramePairing } from '../../models/steam-frame';
+import { ToastService } from '../toast.service';
 
 const { invoke, store } = vi.hoisted(() => ({
   invoke: vi.fn(),
@@ -46,7 +48,8 @@ async function start() {
   const service = new SteamFramePairingService(
     { isModalOpen: () => true, closeModal: vi.fn() } as any,
     { isDeviceObserved: () => observed } as any,
-    openvr
+    openvr,
+    {} as any
   );
   await service.init();
   await service.openWizard(device);
@@ -441,7 +444,7 @@ describe('Steam Frame pairing flow', () => {
   });
 
   it('offers pairing only for allowlisted headsets', async () => {
-    const service = new SteamFramePairingService({} as any, {} as any, openvr);
+    const service = new SteamFramePairingService({} as any, {} as any, openvr, {} as any);
     await service.init();
     expect(service.identityOf(device)).not.toBeNull();
     expect(service.identityOf({ ...device, typeName: 'Index' })).toBeNull();
@@ -601,5 +604,69 @@ describe('frameControllerOverrides', () => {
     };
     const pairings = [pairing('a', 'HMD-A'), pairing('b', 'HMD-B')];
     expect(frameControllerOverrides(states, pairings, ['HMD-A'])['C1'].isConnected).toBe(false);
+  });
+});
+
+describe('SteamFramePairingService controller turn-off', () => {
+  const frameController: OVRDevice = {
+    index: 3,
+    class: 'Controller',
+    role: 'LeftHand',
+    battery: 0.5,
+    pose: null,
+    serialNumber: 'FRAME-L',
+    powerMethod: 'SteamFrame',
+    isConnected: true,
+    canPowerOff: true,
+    isTurningOff: false,
+  };
+
+  function setup(disconnect: () => Promise<boolean>) {
+    const openvr = { devices: of([frameController]), setTurningOff: vi.fn() };
+    const toasts = new ToastService();
+    const service = new SteamFramePairingService({} as any, {} as any, openvr as any, toasts);
+    const disconnectController = vi
+      .spyOn(service, 'disconnectController')
+      .mockImplementation(disconnect);
+    return { service, openvr, toasts, disconnectController };
+  }
+
+  it('turns off the current device for a copy held from before the helper reported', async () => {
+    const { service, disconnectController } = setup(async () => true);
+    const stale: OVRDevice = { ...frameController, powerMethod: 'None', canPowerOff: false };
+    expect(await service.turnOffDevices([stale])).toEqual([frameController]);
+    expect(disconnectController).toHaveBeenCalledExactlyOnceWith('FRAME-L');
+  });
+
+  it('sends one disconnect for requests that overlap', async () => {
+    const { service, disconnectController } = setup(async () => true);
+    const results = await Promise.all([
+      service.turnOffDevices([frameController]),
+      service.turnOffDevices([frameController]),
+    ]);
+    expect(disconnectController).toHaveBeenCalledOnce();
+    expect(results.flat()).toHaveLength(1);
+  });
+
+  it('shows no failure for a second press while the first disconnect is on its way', async () => {
+    let reply!: (sent: boolean) => void;
+    const { service, toasts } = setup(() => new Promise((resolve) => (reply = resolve)));
+    const toast = vi.spyOn(toasts, 'show');
+    const first = service.turnOffDeviceForUser(frameController, 'Left');
+    await vi.waitFor(() => expect(reply).toBeDefined());
+    expect(await service.turnOffDeviceForUser(frameController, 'Left')).toEqual([]);
+    reply(true);
+    expect(await first).toEqual([frameController]);
+    expect(toast).not.toHaveBeenCalled();
+  });
+
+  it('marks the controller busy only once the disconnect went out', async () => {
+    const failed = setup(async () => false);
+    expect(await failed.service.turnOffDevices([frameController])).toEqual([]);
+    expect(failed.openvr.setTurningOff).not.toHaveBeenCalled();
+
+    const sent = setup(async () => true);
+    await sent.service.turnOffDevices([frameController]);
+    expect(sent.openvr.setTurningOff).toHaveBeenCalledExactlyOnceWith(3, true);
   });
 });

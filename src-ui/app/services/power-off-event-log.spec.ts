@@ -52,10 +52,10 @@ function caller<T>(prototype: T, context: object): T {
 function deviceControlFor(service: LighthouseConsoleService) {
   return new DeviceControlService(
     service,
-    {} as ConstructorParameters<typeof DeviceControlService>[1],
-    (service as unknown as { openvr: ConstructorParameters<typeof DeviceControlService>[2] })
-      .openvr,
-    new ToastService()
+    { turnOffDevices: async () => [] } as unknown as ConstructorParameters<
+      typeof DeviceControlService
+    >[1],
+    (service as unknown as { openvr: ConstructorParameters<typeof DeviceControlService>[2] }).openvr
   );
 }
 
