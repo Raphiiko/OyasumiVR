@@ -5,7 +5,7 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { BaseModalComponent } from '../../base-modal/base-modal.component';
 import { IconComponent } from '../../icon/icon.component';
 import { isValidHostname, isValidIPv4, isValidIPv6 } from '../../../utils/regex-utils';
-import { SteamFramePairingService } from '../../../services/steam-frame/steam-frame-pairing.service';
+import { SteamFrameEnrollmentService } from '../../../services/steam-frame/steam-frame-enrollment.service';
 import { ToastService } from '../../../services/toast.service';
 import { copyWithToast } from '../../../utils/clipboard-utils';
 import {
@@ -69,7 +69,7 @@ const BACK: Partial<Record<SteamFramePage, SteamFramePage>> = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SteamFramePairingModalComponent extends BaseModalComponent<void, void> {
-  protected readonly pairing = inject(SteamFramePairingService);
+  protected readonly enrollment = inject(SteamFrameEnrollmentService);
   private readonly toasts = inject(ToastService);
   readonly stepLabels = [
     'before',
@@ -83,12 +83,12 @@ export class SteamFramePairingModalComponent extends BaseModalComponent<void, vo
   readonly stages: SteamFrameSetupStage[] = ['verify', 'install', 'connection'];
   readonly address = signal('');
 
-  readonly flow = this.pairing.flow;
+  readonly flow = this.enrollment.flow;
   readonly page = computed(() => this.flow()?.page ?? 'intro');
   readonly busy = computed(() => !!this.flow()?.busy);
   /** A failed access check shows the setup-failed page while the flow is still at step 4. */
   readonly step = computed(() =>
-    this.page() === 'setupFailed' && !this.pairing.flowPairing()?.hostKeyPin
+    this.page() === 'setupFailed' && !this.enrollment.flowPairing()?.hostKeyPin
       ? STEP_OF_PAGE.awaiting
       : STEP_OF_PAGE[this.page()]
   );
@@ -118,6 +118,6 @@ export class SteamFramePairingModalComponent extends BaseModalComponent<void, vo
   }
 
   connectManual() {
-    if (this.validAddress()) void this.pairing.connectManual(this.address());
+    if (this.validAddress()) void this.enrollment.connectManual(this.address());
   }
 }

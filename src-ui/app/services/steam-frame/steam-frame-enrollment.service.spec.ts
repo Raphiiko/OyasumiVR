@@ -1,11 +1,9 @@
 import '@angular/compiler';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { frameControllerOverrides, SteamFramePairingService } from './steam-frame-pairing.service';
+import { SteamFrameEnrollmentService } from './steam-frame-enrollment.service';
+import { SteamFrameService } from './steam-frame.service';
 import { of } from 'rxjs';
 import { DMKnownDevice } from '../../models/device-manager';
-import { OVRDevice } from '../../models/ovr-device';
-import { SteamFrameConnectionState, SteamFramePairing } from '../../models/steam-frame';
-import { ToastService } from '../toast.service';
 
 const { invoke, store } = vi.hoisted(() => ({
   invoke: vi.fn(),
@@ -41,16 +39,18 @@ const openvr = { devices: of([]), setOverrides: vi.fn() } as any;
 type Handler = (args: any) => unknown;
 let handlers: Record<string, Handler>;
 let observed: boolean;
+let steamFrame: SteamFrameService;
 const calls = (command: string) =>
   invoke.mock.calls.filter(([name]) => name === command).map(([, args]) => args);
 
 async function start() {
-  const service = new SteamFramePairingService(
+  steamFrame = new SteamFrameService(openvr, {} as any);
+  const service = new SteamFrameEnrollmentService(
     { isModalOpen: () => true, closeModal: vi.fn() } as any,
     { isDeviceObserved: () => observed } as any,
-    openvr,
-    {} as any
+    steamFrame
   );
+  await steamFrame.init();
   await service.init();
   await service.openWizard(device);
   await service.connectManual('192.168.1.42');
@@ -94,7 +94,7 @@ describe('Steam Frame pairing flow', () => {
     await service.pair();
     expect(calls('steam_frame_request_approval')).toHaveLength(0);
     expect(service.flow()?.page).toBe('success');
-    expect(service.pairingFor(device.id)).toMatchObject({ complete: true, hostKeyPin: 'PIN' });
+    expect(steamFrame.pairingFor(device.id)).toMatchObject({ complete: true, hostKeyPin: 'PIN' });
   });
 
   it('saves the protected key before registering and pins the host key after approval', async () => {
@@ -119,12 +119,12 @@ describe('Steam Frame pairing flow', () => {
     handlers['steam_frame_check_ssh_access'] = () => ({ status: 'ok', hostKeyPin: 'PIN' });
     const service = await start();
     await service.pair();
-    const first = service.pairingFor(device.id)!;
+    const first = steamFrame.pairingFor(device.id)!;
     await service.openWizard(device);
     await service.connectManual('192.168.1.42');
     await service.pair();
     expect(calls('steam_frame_create_pairing_keys')).toHaveLength(2);
-    expect(service.pairingFor(device.id)).toMatchObject({ id: first.id, complete: true });
+    expect(steamFrame.pairingFor(device.id)).toMatchObject({ id: first.id, complete: true });
     expect(calls('steam_frame_set_up_helper').map((a) => a.request.pcId)).toEqual([
       first.id,
       first.id,
@@ -180,11 +180,11 @@ describe('Steam Frame pairing flow', () => {
     const service = await start();
     const pairing = service.pair();
     await vi.waitFor(() => expect(service.flow()?.page).toBe('awaiting'));
-    expect(service.pairingFor(device.id)?.mayBeApproved).toBe(true);
+    expect(steamFrame.pairingFor(device.id)?.mayBeApproved).toBe(true);
     expect(store.save).toHaveBeenCalled();
     answer('declined');
     await pairing;
-    expect(service.pairingFor(device.id)?.mayBeApproved).toBe(false);
+    expect(steamFrame.pairingFor(device.id)?.mayBeApproved).toBe(false);
   });
 
   it('ignores a discovery that finishes after a manual address', async () => {
@@ -220,7 +220,7 @@ describe('Steam Frame pairing flow', () => {
       .mockRejectedValueOnce(new Error('disk full'));
     const service = await start();
     await service.pair();
-    expect(service.pairingFor(device.id)?.complete).toBe(false);
+    expect(steamFrame.pairingFor(device.id)?.complete).toBe(false);
     await service.cancel();
     expect(calls('steam_frame_remove_access')).toHaveLength(1);
   });
@@ -264,7 +264,7 @@ describe('Steam Frame pairing flow', () => {
       mode: 'unused',
       pcId: expect.any(String),
     });
-    expect(service.pairingFor(device.id)).toBeUndefined();
+    expect(steamFrame.pairingFor(device.id)).toBeUndefined();
   });
 
   it('shows the different-headset result when cancelled during its cleanup', async () => {
@@ -284,7 +284,7 @@ describe('Steam Frame pairing flow', () => {
       busy: false,
       error: 'wrongDeviceAccessLeft',
     });
-    expect(service.pairingFor(device.id)).toBeUndefined();
+    expect(steamFrame.pairingFor(device.id)).toBeUndefined();
   });
 
   it('keeps an interrupted setup as a checkpoint that resumes without approval', async () => {
@@ -293,7 +293,7 @@ describe('Steam Frame pairing flow', () => {
     const service = await start();
     await service.pair();
     expect(service.flow()?.page).toBe('setupFailed');
-    expect(service.pairingFor(device.id)).toMatchObject({
+    expect(steamFrame.pairingFor(device.id)).toMatchObject({
       complete: false,
       hostKeyPin: 'PIN',
     });
@@ -305,7 +305,7 @@ describe('Steam Frame pairing flow', () => {
     });
     await service.runSetup();
     expect(calls('steam_frame_request_approval')).toHaveLength(0);
-    expect(service.pairingFor(device.id)?.complete).toBe(true);
+    expect(steamFrame.pairingFor(device.id)?.complete).toBe(true);
   });
 
   it('removes the approval, and the helper when no other PC uses it, when cancelled', async () => {
@@ -318,7 +318,7 @@ describe('Steam Frame pairing flow', () => {
     await service.pair();
     await service.cancel();
     expect(calls('steam_frame_remove_access')[0].request).toMatchObject({ mode: 'unused' });
-    expect(service.pairingFor(device.id)).toBeUndefined();
+    expect(steamFrame.pairingFor(device.id)).toBeUndefined();
     expect(service.flow()).toBeNull();
   });
 
@@ -339,7 +339,7 @@ describe('Steam Frame pairing flow', () => {
     await vi.waitFor(() => expect(calls('steam_frame_remove_access')).toHaveLength(1));
     expect(calls('steam_frame_remove_access')[0].request.access.hostKeyPin).toBe('PIN');
     expect(calls('steam_frame_set_up_helper')).toHaveLength(0);
-    expect(service.pairingFor(device.id)).toBeUndefined();
+    expect(steamFrame.pairingFor(device.id)).toBeUndefined();
   });
 
   it('shows the cleanup instructions when an approved attempt is cancelled out of reach', async () => {
@@ -355,7 +355,7 @@ describe('Steam Frame pairing flow', () => {
       await vi.advanceTimersByTimeAsync(20000);
       await cancel;
       expect(service.flow()?.page).toBe('cleanupFailed');
-      expect(service.pairingFor(device.id)?.mayBeApproved).toBe(true);
+      expect(steamFrame.pairingFor(device.id)?.mayBeApproved).toBe(true);
     } finally {
       vi.useRealTimers();
     }
@@ -374,7 +374,7 @@ describe('Steam Frame pairing flow', () => {
       await vi.advanceTimersByTimeAsync(20000);
       await cancel;
       expect(calls('steam_frame_remove_access')).toHaveLength(0);
-      expect(service.pairingFor(device.id)).toBeUndefined();
+      expect(steamFrame.pairingFor(device.id)).toBeUndefined();
       expect(service.flow()).toBeNull();
     } finally {
       vi.useRealTimers();
@@ -432,9 +432,9 @@ describe('Steam Frame pairing flow', () => {
     await service.pair();
     await service.cancel();
     expect(service.flow()?.page).toBe('cleanupFailed');
-    expect(service.pairingFor(device.id)).toBeDefined();
+    expect(steamFrame.pairingFor(device.id)).toBeDefined();
     await service.leaveCleanup();
-    expect(service.pairingFor(device.id)).toBeUndefined();
+    expect(steamFrame.pairingFor(device.id)).toBeUndefined();
   });
 
   it('opens the wizard only for the headset SteamVR is using now', async () => {
@@ -442,119 +442,30 @@ describe('Steam Frame pairing flow', () => {
     const service = await start();
     expect(service.flow()).toBeNull();
   });
-
-  it('offers pairing only for allowlisted headsets', async () => {
-    const service = new SteamFramePairingService({} as any, {} as any, openvr, {} as any);
-    await service.init();
-    expect(service.identityOf(device)).not.toBeNull();
-    expect(service.identityOf({ ...device, typeName: 'Index' })).toBeNull();
-    expect(service.identityOf({ ...device, manufacturer: undefined })).toBeNull();
-    expect(service.identityOf({ ...device, id: 'OVR_Controller_X' })).toBeNull();
-  });
 });
 
-describe('Steam Frame helper maintenance', () => {
+describe('Steam Frame unenrollment', () => {
   async function paired() {
     handlers['steam_frame_check_ssh_access'] = () => ({ status: 'ok', hostKeyPin: 'PIN' });
     const service = await start();
     await service.pair();
-    return { service, pairing: service.pairingFor(device.id)! };
-  }
-
-  it('starts a helper update for the pairing', async () => {
-    handlers['steam_frame_update_helper'] = () => true;
-    const { service, pairing } = await paired();
-    await service.updateHelper(pairing);
-    expect(calls('steam_frame_update_helper')).toEqual([{ pairingId: pairing.id }]);
-  });
-
-  it('disconnects a controller only on the paired headset that lists it as connected', async () => {
-    handlers['steam_frame_disconnect_controller'] = () => undefined;
-    const { service, pairing } = await paired();
-    const connected = (pairingId: string, controllers: SteamFrameConnectionState['controllers']) =>
-      (service as any).onConnectionState({ pairingId, status: 'connected', controllers });
-    connected(pairing.id, [{ serial: 'C1', connected: true }]);
-    connected('other', [{ serial: 'C1', connected: false }]);
-    connected('removed', [{ serial: 'C1', connected: true }]);
-
-    expect(await service.disconnectController('C1')).toBe(true);
-    expect(calls('steam_frame_disconnect_controller')).toEqual([
-      { pairingId: pairing.id, serial: 'C1' },
-    ]);
-    expect(await service.disconnectController('C2')).toBe(false);
-  });
-
-  it('pins the certificate of a reinstalled helper and reconnects with it', async () => {
-    const { service, pairing } = await paired();
-    handlers['steam_frame_set_up_helper'] = () => ({
-      status: 'complete',
-      certPin: 'NEW',
-      port: 38441,
-      helperVersion: '1.1.0',
-    });
-    await service.reinstallHelper(pairing);
-    expect(calls('steam_frame_set_up_helper').at(-1).request).toMatchObject({
-      pcId: pairing.id,
-      identity: pairing.identity,
-      repair: false,
-    });
-    expect(service.pairingFor(device.id)).toMatchObject({ certPin: 'NEW', port: 38441 });
-    expect(calls('steam_frame_sync_connections').at(-1).pairings[0]).toMatchObject({
-      certPin: 'NEW',
-      port: 38441,
-    });
-    expect(service.reinstalls()).toEqual({});
-  });
-
-  it('asks setup to replace the helper on a repair', async () => {
-    const { service, pairing } = await paired();
-    handlers['steam_frame_set_up_helper'] = () => ({ status: 'failed', message: 'x' });
-    await service.reinstallHelper(pairing, true);
-    expect(calls('steam_frame_set_up_helper').at(-1).request).toMatchObject({ repair: true });
-  });
-
-  it('keeps the old pin after a failed reinstall', async () => {
-    const { service, pairing } = await paired();
-    handlers['steam_frame_set_up_helper'] = () => ({
-      status: 'failed',
-      message: 'x',
-    });
-    await service.reinstallHelper(pairing);
-    expect(service.pairingFor(device.id)?.certPin).toBe('CERT');
-    expect(service.reinstalls()).toEqual({});
-  });
-});
-
-describe('Steam Frame unpairing', () => {
-  async function paired() {
-    handlers['steam_frame_check_ssh_access'] = () => ({ status: 'ok', hostKeyPin: 'PIN' });
-    const service = await start();
-    await service.pair();
-    return { service, pairing: service.pairingFor(device.id)! };
+    return { service, pairing: steamFrame.pairingFor(device.id)! };
   }
 
   it('deletes the local pairing only after the headset cleanup succeeds', async () => {
     const { service, pairing } = await paired();
     handlers['steam_frame_remove_access'] = () => ({ status: 'unreachable' });
-    expect(await service.unpair(pairing, true)).toBe('unreachable');
+    expect(await service.unenroll(pairing, true)).toBe('unreachable');
     expect(calls('steam_frame_remove_access').at(-1).request).toMatchObject({
       pcId: pairing.id,
       mode: 'uninstall',
     });
-    expect(service.pairingFor(device.id)).toBeDefined();
+    expect(steamFrame.pairingFor(device.id)).toBeDefined();
     handlers['steam_frame_remove_access'] = () => ({ status: 'done' });
-    expect(await service.unpair(pairing, false)).toBeNull();
+    expect(await service.unenroll(pairing, false)).toBeNull();
     expect(calls('steam_frame_remove_access').at(-1).request.mode).toBe('unused');
-    expect(service.pairingFor(device.id)).toBeUndefined();
+    expect(steamFrame.pairingFor(device.id)).toBeUndefined();
     expect(calls('steam_frame_sync_connections').at(-1).pairings).toEqual([]);
-  });
-
-  it('forgets the pairing without contacting the headset', async () => {
-    const { service, pairing } = await paired();
-    const cleanups = calls('steam_frame_remove_access').length;
-    await service.forget(pairing);
-    expect(calls('steam_frame_remove_access')).toHaveLength(cleanups);
-    expect(service.pairingFor(device.id)).toBeUndefined();
   });
 
   it('counts other PCs, and reports why the headset cannot be asked', async () => {
@@ -565,108 +476,5 @@ describe('Steam Frame unpairing', () => {
     expect(await service.otherPcCount(pairing)).toBe('rejected');
     handlers['steam_frame_count_other_pcs'] = () => ({ status: 'unreachable' });
     expect(await service.otherPcCount(pairing)).toBe('unreachable');
-  });
-});
-
-describe('frameControllerOverrides', () => {
-  const pairing = (id: string, serial: string) =>
-    ({ id, identity: { serial } }) as SteamFramePairing;
-  const state = (
-    pairingId: string,
-    controllers: SteamFrameConnectionState['controllers'],
-    status: SteamFrameConnectionState['status'] = 'connected'
-  ) => ({ pairingId, status, controllers }) as SteamFrameConnectionState;
-
-  it('reports the controllers of a headset only while it streams here', () => {
-    const states = {
-      a: state('a', [
-        { serial: 'C1', connected: true },
-        { serial: 'C2', connected: false },
-      ]),
-    };
-    const pairings = [pairing('a', 'HMD-A')];
-    expect(frameControllerOverrides(states, pairings, ['HMD-A'])).toEqual({
-      C1: { powerMethod: 'SteamFrame', isConnected: true, canPowerOff: true },
-      C2: { powerMethod: 'SteamFrame', isConnected: false, canPowerOff: false },
-    });
-    expect(frameControllerOverrides(states, pairings, [])).toEqual({});
-  });
-
-  it('skips headsets whose helper is not connected', () => {
-    const states = { a: state('a', [{ serial: 'C1', connected: true }], 'offline') };
-    expect(frameControllerOverrides(states, [pairing('a', 'HMD-A')], ['HMD-A'])).toEqual({});
-  });
-
-  it('takes a shared controller only from the headset that streams here', () => {
-    const states = {
-      a: state('a', [{ serial: 'C1', connected: false }]),
-      b: state('b', [{ serial: 'C1', connected: true }]),
-    };
-    const pairings = [pairing('a', 'HMD-A'), pairing('b', 'HMD-B')];
-    expect(frameControllerOverrides(states, pairings, ['HMD-A'])['C1'].isConnected).toBe(false);
-  });
-});
-
-describe('SteamFramePairingService controller turn-off', () => {
-  const frameController: OVRDevice = {
-    index: 3,
-    class: 'Controller',
-    role: 'LeftHand',
-    battery: 0.5,
-    pose: null,
-    serialNumber: 'FRAME-L',
-    powerMethod: 'SteamFrame',
-    isConnected: true,
-    canPowerOff: true,
-    isTurningOff: false,
-  };
-
-  function setup(disconnect: () => Promise<boolean>) {
-    const openvr = { devices: of([frameController]), setTurningOff: vi.fn() };
-    const toasts = new ToastService();
-    const service = new SteamFramePairingService({} as any, {} as any, openvr as any, toasts);
-    const disconnectController = vi
-      .spyOn(service, 'disconnectController')
-      .mockImplementation(disconnect);
-    return { service, openvr, toasts, disconnectController };
-  }
-
-  it('turns off the current device for a copy held from before the helper reported', async () => {
-    const { service, disconnectController } = setup(async () => true);
-    const stale: OVRDevice = { ...frameController, powerMethod: 'None', canPowerOff: false };
-    expect(await service.turnOffDevices([stale])).toEqual([frameController]);
-    expect(disconnectController).toHaveBeenCalledExactlyOnceWith('FRAME-L');
-  });
-
-  it('sends one disconnect for requests that overlap', async () => {
-    const { service, disconnectController } = setup(async () => true);
-    const results = await Promise.all([
-      service.turnOffDevices([frameController]),
-      service.turnOffDevices([frameController]),
-    ]);
-    expect(disconnectController).toHaveBeenCalledOnce();
-    expect(results.flat()).toHaveLength(1);
-  });
-
-  it('shows no failure for a second press while the first disconnect is on its way', async () => {
-    let reply!: (sent: boolean) => void;
-    const { service, toasts } = setup(() => new Promise((resolve) => (reply = resolve)));
-    const toast = vi.spyOn(toasts, 'show');
-    const first = service.turnOffDeviceForUser(frameController, 'Left');
-    await vi.waitFor(() => expect(reply).toBeDefined());
-    expect(await service.turnOffDeviceForUser(frameController, 'Left')).toEqual([]);
-    reply(true);
-    expect(await first).toEqual([frameController]);
-    expect(toast).not.toHaveBeenCalled();
-  });
-
-  it('marks the controller busy only once the disconnect went out', async () => {
-    const failed = setup(async () => false);
-    expect(await failed.service.turnOffDevices([frameController])).toEqual([]);
-    expect(failed.openvr.setTurningOff).not.toHaveBeenCalled();
-
-    const sent = setup(async () => true);
-    await sent.service.turnOffDevices([frameController]);
-    expect(sent.openvr.setTurningOff).toHaveBeenCalledExactlyOnceWith(3, true);
   });
 });

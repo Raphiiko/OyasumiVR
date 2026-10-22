@@ -19,7 +19,7 @@ import {
   LighthouseV1IdWizardModalInputModel,
   LighthouseV1IdWizardModalOutputModel,
 } from '../lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
-import { SteamFramePairingService } from 'src-ui/app/services/steam-frame/steam-frame-pairing.service';
+import { SteamFrameService } from 'src-ui/app/services/steam-frame/steam-frame.service';
 import { SteamFrameConnectionStatus } from 'src-ui/app/models/steam-frame';
 
 /** Statuses whose connection loop still runs an update the user requests. */
@@ -72,7 +72,7 @@ export class DeviceManagerConfigModalComponent
     private deviceManager: DeviceManagerService,
     private destroyRef: DestroyRef,
     private modalService: ModalService,
-    private framePairing: SteamFramePairingService
+    private steamFrame: SteamFrameService
   ) {
     super();
   }
@@ -125,9 +125,9 @@ export class DeviceManagerConfigModalComponent
 
   /** The paired Steam Frame helper's version and update state, or null for any other device. */
   frameHelper() {
-    const pairing = this.framePairing.pairingFor(this.device.id);
+    const pairing = this.steamFrame.pairingFor(this.device.id);
     if (!pairing?.complete) return null;
-    const state = this.framePairing.connections()[pairing.id];
+    const state = this.steamFrame.connections()[pairing.id];
     const maintenance = state?.maintenance?.kind;
     return {
       pairing,
@@ -139,7 +139,7 @@ export class DeviceManagerConfigModalComponent
         (state.updateAvailable || maintenance === 'failed'),
       // only a helper that answers can be called up to date
       upToDate: state?.status === 'connected',
-      repairing: !!this.framePairing.reinstalls()[pairing.id],
+      repairing: !!this.steamFrame.reinstalls()[pairing.id],
       // a repair needs SSH access
       canRepair: !UNREPAIRABLE_STATUSES.includes(state?.status),
     };
@@ -147,17 +147,17 @@ export class DeviceManagerConfigModalComponent
 
   updateFrameHelper() {
     const helper = this.frameHelper();
-    if (helper) void this.framePairing.updateHelper(helper.pairing);
+    if (helper) void this.steamFrame.updateHelper(helper.pairing);
   }
 
   repairFrameHelper() {
     const helper = this.frameHelper();
-    if (helper) void this.framePairing.reinstallHelper(helper.pairing, true);
+    if (helper) void this.steamFrame.reinstallHelper(helper.pairing, true);
   }
 
   frameRemovedOnHeadset(): boolean {
-    const pairing = this.framePairing.pairingFor(this.device.id);
-    return !!pairing && this.framePairing.connections()[pairing.id]?.status === 'pairingRemoved';
+    const pairing = this.steamFrame.pairingFor(this.device.id);
+    return !!pairing && this.steamFrame.connections()[pairing.id]?.status === 'pairingRemoved';
   }
 
   async unpairFrame() {

@@ -45,7 +45,8 @@ import {
   LighthouseV1IdWizardModalOutputModel,
 } from 'src-ui/app/components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
 import { LighthouseV1IdWizardModalInputModel } from 'src-ui/app/components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
-import { SteamFramePairingService } from 'src-ui/app/services/steam-frame/steam-frame-pairing.service';
+import { SteamFrameService } from 'src-ui/app/services/steam-frame/steam-frame.service';
+import { SteamFrameEnrollmentService } from 'src-ui/app/services/steam-frame/steam-frame-enrollment.service';
 import { FLAVOUR } from 'src-ui/build';
 import {
   SteamFrameConnectionState,
@@ -149,7 +150,8 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     private destroyRef: DestroyRef,
     private domSanitizer: DomSanitizer,
     private cdr: ChangeDetectorRef,
-    protected framePairing: SteamFramePairingService
+    protected steamFrame: SteamFrameService,
+    private frameEnrollment: SteamFrameEnrollmentService
   ) {}
 
   ngOnInit() {
@@ -567,18 +569,18 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
 
   /** Pairing status and action for a supported Steam Frame, or null for any other device. */
   frameRow(device: DMKnownDevice): FrameRow | null {
-    if (!this.framePairing.identityOf(device)) return null;
+    if (!this.steamFrame.identityOf(device)) return null;
     const active = this.isDeviceObserved(device.id);
-    const pairing = this.framePairing.pairingFor(device.id);
+    const pairing = this.steamFrame.pairingFor(device.id);
 
     // unpaired, or the headset removed the pairing: offer pairing while SteamVR uses it
-    const state = pairing?.complete ? this.framePairing.connections()[pairing.id] : undefined;
+    const state = pairing?.complete ? this.steamFrame.connections()[pairing.id] : undefined;
     const status = state?.status ?? 'connecting';
     if (!pairing?.complete || status === 'pairingRemoved')
       return active ? { action: 'pair' } : null;
 
     // a reinstall from this row
-    if (this.framePairing.reinstalls()[pairing.id]) {
+    if (this.steamFrame.reinstalls()[pairing.id]) {
       return { pill: { key: 'reinstalling', icon: 'refresh', tone: 'neutral' } };
     }
 
@@ -637,9 +639,9 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
    * The explanation offers the row's action as its main button.
    */
   onFramePill(device: DMKnownDevice, pill: FramePill, action?: FrameAction) {
-    const pairing = this.framePairing.pairingFor(device.id);
+    const pairing = this.steamFrame.pairingFor(device.id);
     if (pill.startsUpdate) {
-      if (pairing) void this.framePairing.updateHelper(pairing);
+      if (pairing) void this.steamFrame.updateHelper(pairing);
       return;
     }
     this.modalService
@@ -658,15 +660,15 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
   }
 
   onFrameAction(device: DMKnownDevice, action: FrameAction) {
-    const pairing = this.framePairing.pairingFor(device.id);
+    const pairing = this.steamFrame.pairingFor(device.id);
     switch (action) {
       case 'pair':
       case 'pairAgain':
-        return this.framePairing.openWizard(device);
+        return this.frameEnrollment.openWizard(device);
       case 'retryUpdate':
-        return pairing && this.framePairing.updateHelper(pairing);
+        return pairing && this.steamFrame.updateHelper(pairing);
       case 'reinstall':
-        return pairing && this.framePairing.reinstallHelper(pairing);
+        return pairing && this.steamFrame.reinstallHelper(pairing);
     }
   }
 
@@ -694,8 +696,8 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
 
     if (result?.confirmed) {
       // the core keeps connecting to a Frame until its pairing is gone
-      const pairing = this.framePairing.pairingFor(device.id);
-      if (pairing) await this.framePairing.forget(pairing);
+      const pairing = this.steamFrame.pairingFor(device.id);
+      if (pairing) await this.steamFrame.removePairing(pairing.deviceId);
       this.deviceManager.forgetKnownDevice(device);
     }
   }

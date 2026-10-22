@@ -36,7 +36,8 @@ import {
 } from '../../device-power-button/device-power-button.component';
 import { isEqual } from 'lodash';
 import { DeviceManagerService } from 'src-ui/app/services/device-manager.service';
-import { SteamFramePairingService } from 'src-ui/app/services/steam-frame/steam-frame-pairing.service';
+import { SteamFrameService } from 'src-ui/app/services/steam-frame/steam-frame.service';
+import { SteamFrameEnrollmentService } from 'src-ui/app/services/steam-frame/steam-frame-enrollment.service';
 import { DMKnownDevice } from 'src-ui/app/models/device-manager';
 
 @Component({
@@ -186,7 +187,8 @@ export class DeviceListItemComponent implements OnInit {
     private destroyRef: DestroyRef,
     private modalService: ModalService,
     private deviceManager: DeviceManagerService,
-    private framePairing: SteamFramePairingService,
+    private steamFrame: SteamFrameService,
+    private frameEnrollment: SteamFrameEnrollmentService,
     private cdr: ChangeDetectorRef
   ) {
     effect(() => {
@@ -220,11 +222,7 @@ export class DeviceListItemComponent implements OnInit {
         if (this._lighthouseDevice) this.applyLighthouseDevice(this._lighthouseDevice);
         this.cdr.markForCheck();
       });
-    merge(
-      this.deviceManager.knownDevices,
-      this.framePairing.pairings$,
-      this.framePairing.connections$
-    )
+    merge(this.deviceManager.knownDevices, this.steamFrame.pairings$, this.steamFrame.connections$)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         if (this._ovrDevice) this.applyOvrDevice(this._ovrDevice);
@@ -235,17 +233,17 @@ export class DeviceListItemComponent implements OnInit {
 
   /** Whether the headset is a Steam Frame without a completed pairing the headset still knows. */
   private framePairable(device: DMKnownDevice): boolean {
-    if (!this.framePairing.identityOf(device)) return false;
-    const pairing = this.framePairing.pairingFor(device.id);
+    if (!this.steamFrame.identityOf(device)) return false;
+    const pairing = this.steamFrame.pairingFor(device.id);
     if (!pairing?.complete) return true;
-    return this.framePairing.connections()[pairing.id]?.status === 'pairingRemoved';
+    return this.steamFrame.connections()[pairing.id]?.status === 'pairingRemoved';
   }
 
   private helperStatusOf(device: DMKnownDevice): DeviceListItemComponent['helperStatus'] {
-    if (!this.framePairing.identityOf(device)) return undefined;
-    const pairing = this.framePairing.pairingFor(device.id);
+    if (!this.steamFrame.identityOf(device)) return undefined;
+    const pairing = this.steamFrame.pairingFor(device.id);
     if (!pairing?.complete) return undefined;
-    const status = this.framePairing.connections()[pairing.id]?.status;
+    const status = this.steamFrame.connections()[pairing.id]?.status;
     return status === 'connected' || status === 'connecting' ? status : 'offline';
   }
 
@@ -286,7 +284,7 @@ export class DeviceListItemComponent implements OnInit {
 
   async clickDevicePowerButton() {
     if (this.frameToPair) {
-      await this.framePairing.openWizard(this.frameToPair);
+      await this.frameEnrollment.openWizard(this.frameToPair);
       return;
     }
     if (this.mode === 'openvr') {

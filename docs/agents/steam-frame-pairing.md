@@ -11,7 +11,8 @@ flowchart LR
   subgraph PC [OyasumiVR on the PC]
     UI["Device Manager, Message Center, device list"]
     Wizard["SteamFramePairingModalComponent"]
-    Service["SteamFramePairingService"]
+    Enrollment["SteamFrameEnrollmentService"]
+    Service["SteamFrameService"]
     Core["src-core/src/steam_frame"]
   end
   subgraph Headset [Steam Frame]
@@ -21,7 +22,10 @@ flowchart LR
     Helper["oyasumivr-frame-helper, WSS on port 38440"]
   end
   UI -- opens --> Wizard
-  Wizard --> Service
+  UI -- "status, helper updates, Forget" --> Service
+  Wizard --> Enrollment
+  Enrollment -- "pairing records" --> Service
+  Enrollment -- Tauri commands --> Core
   Service -- Tauri commands --> Core
   Core -- "mDNS and HTTP" --> Devkit
   Core -- "SSH with the pairing key" --> Sshd
@@ -32,29 +36,42 @@ flowchart LR
 
 | Where                                      | What                                                                       |
 | ------------------------------------------ | -------------------------------------------------------------------------- |
-| `src-ui/app/services/steam-frame/`         | the pairing service, which owns the wizard flow, and the fade task         |
+| `src-ui/app/services/steam-frame/`         | `SteamFrameEnrollmentService`, `SteamFrameService`, and the fade task      |
 | `src-ui/app/components/steam-frame/`       | the pairing wizard and the unpair dialog                                   |
 | `src-ui/app/services/*-control/*-drivers/` | the Frame brightness and color temperature drivers                         |
 | `src-core/src/steam_frame/`                | Tauri commands, discovery, SSH setup, connections, helper updates          |
 | `src-core/src/steam_frame/helper.sh`       | the commands the core runs on the headset; its header lists the exit codes |
 | `src-frame-helper/`                        | the helper, built for `aarch64-unknown-linux-gnu`                          |
 
+The UI services call the act of pairing enrollment, and keep "pairing" for the saved record. The
+screens, the core's commands, and the stored settings still say pairing.
+
+- `SteamFrameEnrollmentService` enrolls a headset through the wizard, which ends in a pairing. It
+  also unenrolls one: it removes this PC's access from the headset, then forgets the pairing.
+- `SteamFrameService` owns the pairings and everything that acts on an existing one: the
+  connections, fades, helper updates and reinstalls, controller turn-off, and forgetting a pairing.
+  `removePairing` forgets: it deletes the pairing on this PC and stops its connection, and leaves
+  the headset untouched. Enrollment writes the records through `SteamFrameService`.
+
+On screen, Unpair unenrolls, and Forget only forgets.
+
 The core emits three events: `STEAM_FRAME_SETUP_STAGE`, `STEAM_FRAME_CONNECTION_STATE`, and
 `STEAM_FRAME_FADE_ENDED`.
 
-The service stores the pairings in `settings.dat` under `STEAM_FRAME_PAIRING`. Every save encrypts
-the private key and the helper token with `protectSecret`. `load` skips a pairing whose secrets do
-not decrypt.
+`SteamFrameService` stores the pairings in `settings.dat` under `STEAM_FRAME_PAIRING`. Every save
+encrypts the private key and the helper token with `protectSecret`. `load` skips a pairing whose
+secrets do not decrypt.
 
 ## Pairing
 
 The wizard opens from Device Manager, from the Message Center invitation, and from the device list.
-The service holds the flow, so closing the wizard mid-step keeps it running, and reopening shows it.
+`SteamFrameEnrollmentService` holds the flow, so closing the wizard mid-step keeps it running, and
+reopening shows it.
 
 ```mermaid
 sequenceDiagram
   actor User
-  participant S as SteamFramePairingService
+  participant S as SteamFrameEnrollmentService
   participant C as Core
   participant H as Headset
 
@@ -88,28 +105,28 @@ sequenceDiagram
   S->>C: steam_frame_sync_connections
 ```
 
-- The headset can approve a key even when its answer never arrives. So the service saves the
+- The headset can approve a key even when its answer never arrives. So enrollment saves the
   attempt as possibly approved before the request leaves, and a clear no puts the earlier value
   back. After `lost` or `failed` it probes SSH before it shows "Approval couldn't be confirmed".
-- The service sends a registration only on a user action, never a second one by itself.
+- Enrollment sends a registration only on a user action, never a second one by itself.
 - `lost` means the request left but no answer came back, such as after the core's 60 s wait.
   `timeout` comes from the headset.
 - A retry of an unfinished attempt reuses its key. Pair again on a completed pairing creates new
-  keys and a new record, and the sync stops the old connection.
+  keys and replaces the record under the same pairing id, and the sync stops the old connection.
 
 ## Setup on the headset
 
 `steam_frame_set_up_helper` runs these `helper.sh` commands over one SSH session. The stage names
 match the wizard's progress list. Device Manager's Reinstall, for `helperMissing`, runs the same
 command with the saved identity. Repair helper, in the device details, adds `repair`, so `install`
-replaces any installed helper with the bundled one, a newer one too. When a repair replaced the helper and the
-connection step fails, the core runs `helper.sh rollback`. It offers no repair while the status is
-`hostKeyChanged`, `pairingRemoved`, or `needsAppUpdate`.
+replaces any installed helper with the bundled one, a newer one too. When a repair replaced the
+helper and the connection step fails, the core runs `helper.sh rollback`. The device details offer
+no repair while the status is `hostKeyChanged`, `pairingRemoved`, or `needsAppUpdate`.
 
 ```mermaid
 flowchart TD
   A["verify: helper.sh identity"] --> B{"serial matches?"}
-  B -- "no" --> W["wrongDevice: the service removes this PC's access"]
+  B -- "no" --> W["wrongDevice: enrollment removes this PC's access"]
   B -- "a value is missing" --> M["identityMissing"]
   B -- "yes" --> C["install: helper.sh inspect"]
   C --> D{"installed helper"}
@@ -167,15 +184,17 @@ flowchart TD
 "Couldn't finish cleaning up" shows `bash ~/.local/share/oyasumivr_helper/uninstall`.
 
 The unpair dialog opens from the device details. It counts the other PCs with a token, then offers
-Unpair, plus Uninstall helper when another PC holds a token. The service deletes the local pairing
-only after the headset reports `done`. Otherwise the dialog shows "Couldn't unpair" with Forget.
-It adds Try again unless the headset rejects this PC's key or its host key changed.
+Unpair, plus Uninstall helper when another PC holds a token. Unpair unenrolls:
+`SteamFrameEnrollmentService.unenroll` runs the cleanup, and deletes the local pairing only after
+the headset reports `done`. Otherwise the dialog shows "Couldn't unpair" with Forget. It adds Try
+again unless the headset rejects this PC's key or its host key changed. While the status is
+`pairingRemoved`, the dialog opens on Forget.
 
-Forget deletes only local data. Its page keeps the terminal uninstall command folded under "Can't
-unpair from any PC?". Device Manager's Forget on a known device that is not connected also forgets
-its pairing. A pairing whose key the headset rejects shows `pairingRemoved`, and Device Manager
-treats it as unpaired. Pairing it again keeps the pairing id, so `provision` overwrites its old
-token.
+Forget calls `SteamFrameService.removePairing`, so it deletes only local data. Its page keeps the
+terminal uninstall command folded under "Can't unpair from any PC?". Device Manager's Forget on a
+known device that is not connected also forgets its pairing. A pairing whose key the headset
+rejects shows `pairingRemoved`, and Device Manager treats it as unpaired. Pairing it again keeps
+the pairing id, so `provision` overwrites its old token.
 
 ## Connection
 
@@ -337,8 +356,8 @@ null after a cancel from outside.
 
 `SteamFrameFadeTask` is the Frame drivers' `DeviceFade` for one helper fade.
 
-- The drivers return a fade only while the Frame reports. Before the first report the service runs
-  the PC transition, and the driver holds its last value as a waiting set.
+- The drivers return a fade only while the Frame reports. Before the first report the brightness
+  or CCT service runs the PC transition, and the driver holds its last value as a waiting set.
 - It cuts a fade longer than 24 hours to 24 hours.
 - It completes on `completed`, or at its end time when no outcome reaches this PC, such as after a
   disconnect.
@@ -387,7 +406,7 @@ with a dongle id and `None` for the rest, and `canPowerOff` is false for `None`.
 `Prop_DeviceCanPowerOff_Bool` on a Frame controller, so the core reports it as `None`.
 
 The core keeps each helper's last list in its connection state as `controllers`, null while the
-helper is not connected. `SteamFramePairingService` turns the lists into overrides by serial, and
+helper is not connected. `SteamFrameService` turns the lists into overrides by serial, and
 `OpenVRService` applies them on top of the reported devices. Only a headset whose HMD is connected
 in this PC's OpenVR counts, so a Frame used on its own never changes this PC's devices. For each
 controller its connected helper lists:
@@ -402,10 +421,10 @@ looks like the controllers turning off.
 `DeviceControlService` is the entry point for device actions. It passes the requested devices to
 both paths, and each looks them up in the current list and keeps the ones with its own
 `powerMethod`. The lookup matters because a caller such as MQTT can hold a copy from before the
-helper reported. `SteamFramePairingService` turns off `SteamFrame` devices through the helper,
+helper reported. `SteamFrameService` turns off `SteamFrame` devices through the helper,
 `LighthouseConsoleService` (which only runs the Lighthouse console) turns off `Lighthouse` devices,
-and nothing turns off a `None` device. So the device list, the hotkeys,
-the automations, MQTT, and the overlay all reach a Frame controller the same way.
+and nothing turns off a `None` device. So the device list, the hotkeys, the automations, MQTT, and
+the overlay all reach a Frame controller the same way.
 
 A Frame controller turns busy once the helper confirms the disconnect, and stays busy until it
 reports disconnected. It does not turn busy before the reply: a busy flag that clears again on a
@@ -419,8 +438,8 @@ version with another executable digest, gets one automatic update per app start.
 when it starts, so a failed automatic update waits for a manual one.
 
 The device details show Update while the status is `connecting`, `connected`, `offline`, or
-`helperOutdated`, and an update is available or the last one failed. Device Manager
-also offers it on the `helperOutdated` pill and as Retry after a failed update. A build without a
+`helperOutdated`, and an update is available or the last one failed. Device Manager also offers
+it on the `helperOutdated` pill and as Retry after a failed update. A build without a
 bundled helper fails every update.
 
 ```mermaid

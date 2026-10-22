@@ -10,7 +10,8 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { BaseModalComponent } from '../../base-modal/base-modal.component';
 import { IconComponent } from '../../icon/icon.component';
 import { fadeUp } from '../../../utils/animations';
-import { SteamFramePairingService } from '../../../services/steam-frame/steam-frame-pairing.service';
+import { SteamFrameService } from '../../../services/steam-frame/steam-frame.service';
+import { SteamFrameEnrollmentService } from '../../../services/steam-frame/steam-frame-enrollment.service';
 import { ToastService } from '../../../services/toast.service';
 import { copyWithToast } from '../../../utils/clipboard-utils';
 import {
@@ -56,7 +57,8 @@ export class SteamFrameUnpairModalComponent
   deviceId!: string;
   removedOnHeadset?: boolean;
 
-  private readonly framePairing = inject(SteamFramePairingService);
+  private readonly steamFrame = inject(SteamFrameService);
+  private readonly frameEnrollment = inject(SteamFrameEnrollmentService);
   private readonly toasts = inject(ToastService);
   readonly page = signal<UnpairPage>('checking');
   readonly otherPcs = signal(0);
@@ -74,22 +76,22 @@ export class SteamFrameUnpairModalComponent
   }
 
   async check() {
-    const pairing = this.framePairing.pairingFor(this.deviceId);
+    const pairing = this.steamFrame.pairingFor(this.deviceId);
     if (!pairing) return this.close();
     this.page.set('checking');
-    const count = await this.framePairing.otherPcCount(pairing);
+    const count = await this.frameEnrollment.otherPcCount(pairing);
     if (typeof count !== 'number') return this.fail(count);
     this.otherPcs.set(count);
     this.page.set('choose');
   }
 
   async unpair(uninstall: boolean) {
-    const pairing = this.framePairing.pairingFor(this.deviceId);
+    const pairing = this.steamFrame.pairingFor(this.deviceId);
     if (!pairing) return this.close();
     this.choice = uninstall;
     this.uninstalling.set(uninstall);
     this.page.set('working');
-    const failure = await this.framePairing.unpair(pairing, uninstall);
+    const failure = await this.frameEnrollment.unenroll(pairing, uninstall);
     if (!failure) return this.close();
     this.fail(failure);
   }
@@ -104,8 +106,8 @@ export class SteamFrameUnpairModalComponent
   }
 
   async forget() {
-    const pairing = this.framePairing.pairingFor(this.deviceId);
-    if (pairing) await this.framePairing.forget(pairing);
+    const pairing = this.steamFrame.pairingFor(this.deviceId);
+    if (pairing) await this.steamFrame.removePairing(pairing.deviceId);
     this.close();
   }
 
