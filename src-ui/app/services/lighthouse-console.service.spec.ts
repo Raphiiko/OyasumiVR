@@ -20,6 +20,7 @@ const device: OVRDevice = {
   class: 'Controller',
   serialNumber: 'SERIAL-1',
   dongleId: 'DONGLE-1',
+  powerMethod: 'Lighthouse',
   canPowerOff: true,
   isTurningOff: false,
 } as OVRDevice;

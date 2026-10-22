@@ -74,6 +74,8 @@ export class DeviceControlService {
     ovrDevice: OVRDevice,
     deviceName: string
   ): Promise<OVRDevice[]> {
+    // a press while the first disconnect is on its way is no failure
+    if (this.frameTurnOffs.has(ovrDevice.serialNumber ?? '')) return [];
     const dispatched = await this.turnOffDevices([ovrDevice]);
     if (!dispatched.length) {
       this.toasts.show({
@@ -98,7 +100,13 @@ export class DeviceControlService {
   /** Resolves true when the helper sent the disconnect. The device then stays busy until off. */
   private async turnOffFrameController(device: OVRDevice): Promise<boolean> {
     const serial = device.serialNumber;
-    if (!serial || !device.canPowerOff || device.isTurningOff || this.frameTurnOffs.has(serial))
+    if (
+      device.powerMethod !== 'SteamFrame' ||
+      !serial ||
+      !device.canPowerOff ||
+      device.isTurningOff ||
+      this.frameTurnOffs.has(serial)
+    )
       return false;
     this.frameTurnOffs.add(serial);
     info(`[SteamFrame] Turning off device ${device.class}:${serial}`);

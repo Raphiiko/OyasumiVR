@@ -53,6 +53,18 @@ describe('DeviceControlService Frame controllers', () => {
     expect(results.flat()).toHaveLength(1);
   });
 
+  it('shows no failure for a second press while the first disconnect is on its way', async () => {
+    let reply!: (sent: boolean) => void;
+    const { service } = setup(() => new Promise((resolve) => (reply = resolve)));
+    const toast = vi.spyOn(ToastService.prototype, 'show');
+    const first = service.turnOffDeviceForUser(frameController, 'Left');
+    await vi.waitFor(() => expect(reply).toBeDefined());
+    expect(await service.turnOffDeviceForUser(frameController, 'Left')).toEqual([]);
+    reply(true);
+    expect(await first).toEqual([frameController]);
+    expect(toast).not.toHaveBeenCalled();
+  });
+
   it('marks the controller busy only once the disconnect went out', async () => {
     const failed = setup(async () => false);
     expect(await failed.service.turnOffDevices([frameController])).toEqual([]);

@@ -130,6 +130,7 @@ export class LighthouseConsoleService {
     const requestedSerials = new Set(deviceSerialNumbers);
     const ovrDevices = (await firstValueFrom(this.openvr.devices)).filter(
       (device) =>
+        device.powerMethod === 'Lighthouse' &&
         device.serialNumber &&
         requestedSerials.has(device.serialNumber) &&
         device.canPowerOff &&

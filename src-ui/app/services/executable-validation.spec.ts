@@ -28,7 +28,13 @@ function deferred() {
 function createLighthouse() {
   vi.spyOn(LighthouseConsoleService.prototype, 'init').mockResolvedValue();
   const settings = new BehaviorSubject({ ...APP_SETTINGS_DEFAULT });
-  const device = { index: 1, serialNumber: 'S1', dongleId: 'D1', canPowerOff: true } as OVRDevice;
+  const device = {
+    index: 1,
+    serialNumber: 'S1',
+    dongleId: 'D1',
+    powerMethod: 'Lighthouse',
+    canPowerOff: true,
+  } as OVRDevice;
   const service = new LighthouseConsoleService(
     {
       settings,
