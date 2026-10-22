@@ -29,6 +29,8 @@ import type {
 } from '../../models/vrchat-log-event';
 import type { VRChatSocketStatus } from './vrchat-socket';
 import { ErrorReportingService } from '../telemetry/error-reporting.service';
+import { TelemetryService } from '../telemetry/telemetry.service';
+import { describeVRChatTextRewrite } from '../../utils/status-utils';
 import {
   normalizeVRChatProfiles,
   patchVRChatProfile,
@@ -54,6 +56,7 @@ export class VRChatService {
   private readonly modalService = inject(ModalService);
   private readonly logService = inject(VRChatLogService);
   private readonly errorReporting = inject(ErrorReportingService);
+  private readonly telemetry = inject(TelemetryService);
 
   private readonly settingsSubject = new BehaviorSubject<VRChatApiSettings>({
     ...VRCHAT_API_SETTINGS_DEFAULT,
@@ -105,6 +108,7 @@ export class VRChatService {
       this.settings
     );
     this.api.setAuthenticationFailureHandler(() => void this.auth.revalidateSession());
+    this.api.setStatusMessageRewriteHandler(this.trackStatusMessageRewrite.bind(this));
     this.socket = new VRChatSocket(this.auth, this.api, this.settings, reportError);
     this.user = this.auth.user;
     this.status = this.auth.status;
@@ -120,6 +124,20 @@ export class VRChatService {
     this.socket.init();
     this.subscribeToLogEvents();
     await this.watchVRChatProcess();
+  }
+
+  /** Sends only the changed spans: punctuation as code points, spans with letters or digits as lengths. */
+  private trackStatusMessageRewrite(sent: string, stored: string): void {
+    void this.telemetry.trackThrottledEvent(
+      'vrchat_status_message_rewritten',
+      {
+        rewrite: describeVRChatTextRewrite(sent, stored),
+        sentLength: Array.from(sent).length,
+        storedLength: Array.from(stored).length,
+      },
+      24 * 60 * 60_000,
+      true
+    );
   }
 
   private async watchVRChatProcess(): Promise<void> {

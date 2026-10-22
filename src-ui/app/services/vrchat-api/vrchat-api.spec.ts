@@ -5,6 +5,7 @@ import { warn } from '@tauri-apps/plugin-log';
 import type { CurrentUser } from 'vrchat';
 import type { VRChatApiSettings } from 'src-ui/app/models/vrchat-api-settings';
 import { VRChatAPI, VRChatInviteRefusedError } from './vrchat-api';
+import { UserStatus } from 'src-ui/app/models/vrchat';
 
 vi.mock('@tauri-apps/plugin-http', () => ({ fetch: vi.fn() }));
 vi.mock('@tauri-apps/plugin-log', () => ({ info: vi.fn(), warn: vi.fn(), error: vi.fn() }));
@@ -15,10 +16,10 @@ const settings = {
   activeProfileId: 'p',
 } as unknown as VRChatApiSettings;
 
-async function createApi() {
+async function createApi(user: Partial<CurrentUser> = {}) {
   const reportError = vi.fn();
   const api = new VRChatAPI(of(settings), async () => {}, reportError);
-  await api.init(of({ id: 'usr_me' } as CurrentUser), () => {});
+  await api.init(of({ id: 'usr_me', ...user } as CurrentUser), () => {});
   return { api, reportError };
 }
 
@@ -58,5 +59,65 @@ describe('VRChatAPI.inviteUser', () => {
     const { api, reportError } = await createApi();
     await expect(api.inviteUser('usr_bob', 'wrld_x:1')).rejects.toBeInstanceOf(Response);
     expect(reportError).toHaveBeenCalledWith(new Error('VRChat invite request failed: HTTP 500'));
+  });
+});
+
+describe('VRChatAPI.setStatus', () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  const sentBody = () => JSON.parse(vi.mocked(fetch).mock.calls[0][1]!.body as string);
+
+  it('skips a message VRChat stored with lookalike punctuation', async () => {
+    const { api } = await createApi({
+      status: UserStatus.JoinMe,
+      statusDescription: 'Sleeping come cuddle up․',
+    });
+    await expect(api.setStatus(UserStatus.JoinMe, 'Sleeping come cuddle up.')).resolves.toBe(false);
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it('sends only the status when the message matches', async () => {
+    vi.mocked(fetch).mockResolvedValue(new Response('{}', { status: 200 }));
+    const { api } = await createApi({
+      status: UserStatus.JoinMe,
+      statusDescription: '（zzz）',
+    });
+    await expect(api.setStatus(UserStatus.Busy, '(zzz)')).resolves.toBe(true);
+    expect(sentBody()).toEqual({ status: UserStatus.Busy });
+  });
+
+  it('sends a message that differs from the stored one', async () => {
+    vi.mocked(fetch).mockResolvedValue(new Response('{}', { status: 200 }));
+    const { api } = await createApi({
+      status: UserStatus.JoinMe,
+      statusDescription: 'Sleeping come cuddle up․',
+    });
+    await expect(api.setStatus(null, 'Sleeping come cuddle up!')).resolves.toBe(true);
+    expect(sentBody()).toEqual({ statusDescription: 'Sleeping come cuddle up!' });
+  });
+
+  it('learns a rewrite VRChat returns three times in a row', async () => {
+    const stored = 'zzz…';
+    vi.mocked(fetch).mockImplementation(
+      async () => new Response(JSON.stringify({ statusDescription: stored }), { status: 200 })
+    );
+    const { api } = await createApi({ status: UserStatus.JoinMe, statusDescription: stored });
+    const onRewrite = vi.fn();
+    api.setStatusMessageRewriteHandler(onRewrite);
+    for (let i = 0; i < 3; i++) await expect(api.setStatus(null, 'zzz...')).resolves.toBe(true);
+    expect(onRewrite).toHaveBeenCalledOnce();
+    expect(onRewrite).toHaveBeenCalledWith('zzz...', stored);
+
+    await expect(api.setStatus(null, 'zzz...')).resolves.toBe(false);
+    expect(fetch).toHaveBeenCalledTimes(3);
+  });
+
+  it('learns nothing from a response without a status message', async () => {
+    vi.mocked(fetch).mockImplementation(async () => new Response('not json', { status: 200 }));
+    const { api } = await createApi({ status: UserStatus.JoinMe, statusDescription: 'zzz…' });
+    const onRewrite = vi.fn();
+    api.setStatusMessageRewriteHandler(onRewrite);
+    for (let i = 0; i < 4; i++) await expect(api.setStatus(null, 'zzz...')).resolves.toBe(true);
+    expect(onRewrite).not.toHaveBeenCalled();
   });
 });

@@ -16,6 +16,7 @@ import {
 } from 'src-ui/app/models/vrchat-api-settings';
 import { VRChatProfileSessionPatch } from './vrchat-profiles';
 import { CompletionResult } from 'src-ui/app/utils/completer';
+import { StatusMessageRewrites } from './status-message-rewrites';
 
 async function requestVRChat(
   input: URL | Request | string,
@@ -195,6 +196,8 @@ export class VRChatAPI {
   private user!: Observable<CurrentUser | null>;
   private patchCurrentUser!: (user: Partial<CurrentUser>) => void;
   private authenticationFailureHandler: () => void = () => undefined;
+  private statusMessageRewriteHandler: (sent: string, stored: string) => void = () => undefined;
+  private readonly statusMessageRewrites = new StatusMessageRewrites();
 
   constructor(
     private readonly settings: Observable<VRChatApiSettings>,
@@ -216,6 +219,11 @@ export class VRChatAPI {
 
   public setAuthenticationFailureHandler(handler: () => void): void {
     this.authenticationFailureHandler = handler;
+  }
+
+  /** Called once per session for each rewrite of a sent status message that VRChat confirms. */
+  public setStatusMessageRewriteHandler(handler: (sent: string, stored: string) => void): void {
+    this.statusMessageRewriteHandler = handler;
   }
 
   public async clearCaches(): Promise<void> {
@@ -255,10 +263,14 @@ export class VRChatAPI {
     const currentUser = await this.requireCurrentUser('setting status');
     statusMessage =
       statusMessage === null ? null : statusMessage.replace(/\s+/g, ' ').trim().slice(0, 32);
-    const statusChange = status !== null && currentUser.status !== status;
-    const statusMessageChange =
-      statusMessage !== null && currentUser.statusDescription !== statusMessage;
-    if (!statusChange && !statusMessageChange) return false;
+    if (
+      statusMessage !== null &&
+      this.statusMessageRewrites.matches(statusMessage, currentUser.statusDescription)
+    ) {
+      statusMessage = null;
+    }
+    if (status === currentUser.status) status = null;
+    if (status === null && statusMessage === null) return false;
 
     if (status !== null && statusMessage !== null) {
       info(`[VRChat] Changing status to '${statusMessage}' ('${status}')`);
@@ -286,13 +298,25 @@ export class VRChatAPI {
         true
       );
       this.ensureCacheGeneration(cacheGeneration);
-      this.requireSuccessfulResponse(result);
+      const response = this.requireSuccessfulResponse(result);
       this.patchCurrentUser(body);
+      if (statusMessage !== null) await this.recordStoredStatusMessage(statusMessage, response);
     } catch (e) {
       error(`[VRChat] Failed to update status: ${JSON.stringify(e)}`);
       return false;
     }
     return true;
+  }
+
+  private async recordStoredStatusMessage(sent: string, response: Response): Promise<void> {
+    const stored = await response
+      .json()
+      .then((user: Partial<CurrentUser>) => user?.statusDescription)
+      .catch(() => undefined);
+    if (typeof stored !== 'string') return;
+    if (!this.statusMessageRewrites.record(sent, stored)) return;
+    warn(`[VRChat] VRChat stores status message '${sent}' as '${stored}'`);
+    this.statusMessageRewriteHandler(sent, stored);
   }
 
   public async verify2FA(code: string, method: VRChatTwoFactorMethod): Promise<void> {

@@ -23,6 +23,7 @@ import { EventLogService } from '../event-log.service';
 import { EventLogStatusChangedOnPlayerCountChange } from '../../models/event-log-entry';
 import { NotificationService } from '../notification.service';
 import { TranslocoService } from '@jsverse/transloco';
+import { vrcStatusMessagesMatch } from '../../utils/status-utils';
 
 @Injectable({
   providedIn: 'root',
@@ -142,7 +143,10 @@ export class StatusChangeForPlayerCountAutomationService {
     if (newStatus.status === user.status) {
       newStatus.status = null;
     }
-    if (newStatus.statusMessage === user.statusDescription) {
+    if (
+      newStatus.statusMessage !== null &&
+      vrcStatusMessagesMatch(newStatus.statusMessage, user.statusDescription)
+    ) {
       newStatus.statusMessage = null;
     }
     return newStatus;
