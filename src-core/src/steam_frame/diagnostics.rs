@@ -23,6 +23,7 @@ pub struct Diagnostics {
 pub async fn collect() -> Diagnostics {
     let pairings = connection::pairings().await;
     let states = connection::states().await;
+    let last_seen = connection::last_seen().await;
 
     // ask every paired headset at once
     let outputs = join_all(pairings.iter().map(helper_output)).await;
@@ -38,6 +39,7 @@ pub async fn collect() -> Diagnostics {
             "hostKeyPin": pairing.access.host_key_pin,
             "certPin": pairing.cert_pin,
             "state": states.iter().find(|state| state.pairing_id == pairing.id),
+            "lastSeen": last_seen.get(&pairing.id),
         })).collect::<Vec<_>>(),
     });
     let helper_output = pairings

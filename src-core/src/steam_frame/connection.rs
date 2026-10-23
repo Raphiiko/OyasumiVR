@@ -18,8 +18,8 @@ use super::{
     maintenance::{self, Recovery, UpdateOutcome},
     models::{
         Brightness, Cct, Control, Controller, DisconnectControllerError, FadeEnded, FadeError,
-        FadeOutcome, FadeRequest, Maintenance, Pairing, SetBrightnessError, SetCctError, State,
-        Status,
+        FadeOutcome, FadeRequest, LastSeen, Maintenance, Pairing, Seen, SetBrightnessError,
+        SetCctError, State, Status,
     },
     setup::{
         self, bundled_digest, install_decision, InstallDecision, ProvisionError, Replace,
@@ -118,6 +118,8 @@ enum HelperMessage {
 static CONNECTIONS: LazyLock<Mutex<HashMap<String, Connection>>> = LazyLock::new(Default::default);
 /// The last published state per pairing id, removed when its pairing goes.
 static STATES: LazyLock<Mutex<HashMap<String, State>>> = LazyLock::new(Default::default);
+/// What each helper last reported per pairing id, for debug reports; removed when its pairing goes.
+static LAST_SEEN: LazyLock<Mutex<HashMap<String, LastSeen>>> = LazyLock::new(Default::default);
 
 /// Keeps one connection per pairing. A pairing whose settings are unchanged keeps its connection.
 pub async fn set_pairings(pairings: Vec<Pairing>) {
@@ -136,6 +138,7 @@ pub async fn set_pairings(pairings: Vec<Pairing>) {
                 continue;
             }
             connection.task.abort();
+            log_last_seen_on_abort(&pairing.id).await;
         }
         let id = pairing.id.clone();
         let shared = Arc::new(Mutex::new(pairing));
@@ -159,7 +162,9 @@ pub async fn set_pairings(pairings: Vec<Pairing>) {
     // stop connections whose pairing is gone
     for (id, connection) in connections.drain() {
         connection.task.abort();
+        log_last_seen_on_abort(&id).await;
         STATES.lock().await.remove(&id);
+        LAST_SEEN.lock().await.remove(&id);
     }
     *connections = kept;
 }
@@ -242,6 +247,11 @@ pub async fn states() -> Vec<State> {
     STATES.lock().await.values().cloned().collect()
 }
 
+/// What each helper last reported, by pairing id, including helpers that are not connected now.
+pub async fn last_seen() -> HashMap<String, LastSeen> {
+    LAST_SEEN.lock().await.clone()
+}
+
 /// The pairing of every connection, with what the connection learned since it started.
 pub async fn pairings() -> Vec<Pairing> {
     let shared: Vec<_> = CONNECTIONS
@@ -259,11 +269,51 @@ pub async fn pairings() -> Vec<Pairing> {
 
 /// Stores the state and sends it to the UI.
 async fn publish(state: &State) {
+    remember(state).await;
     STATES
         .lock()
         .await
         .insert(state.pairing_id.clone(), state.clone());
     send_event(EVENT, state.clone()).await;
+}
+
+/// Keeps the values the state holds as last seen now, and returns this pairing's last seen values.
+async fn remember(state: &State) -> LastSeen {
+    let at = chrono::Utc::now().to_rfc3339();
+    let mut all = LAST_SEEN.lock().await;
+    let seen = all.entry(state.pairing_id.clone()).or_default();
+    if let Some(brightness) = &state.brightness {
+        let (value, at) = (brightness.clone(), at.clone());
+        seen.brightness = Some(Seen { value, at });
+    }
+    if let Some(cct) = &state.cct {
+        let (value, at) = (cct.clone(), at.clone());
+        seen.cct = Some(Seen { value, at });
+    }
+    if let Some(controllers) = &state.controllers {
+        let value = controllers.clone();
+        seen.controllers = Some(Seen { value, at });
+    }
+    seen.clone()
+}
+
+/// Logs the values a connection held as it ends, so they survive an app restart in the log that
+/// debug reports bundle.
+async fn log_last_seen(state: &State) {
+    let seen = remember(state).await;
+    info!(
+        "[SteamFrame] Last seen from {}: {}",
+        state.pairing_id,
+        serde_json::to_string(&seen).unwrap_or_default()
+    );
+}
+
+/// Logs the last seen values of an aborted task's connection, which skipped its own log line.
+async fn log_last_seen_on_abort(pairing_id: &str) {
+    let state = STATES.lock().await.get(pairing_id).cloned();
+    if let Some(state) = state.filter(|state| matches!(state.status, Status::Connected)) {
+        log_last_seen(&state).await;
+    }
 }
 
 enum Attempt {
@@ -340,6 +390,7 @@ async fn run(shared: Arc<Mutex<Pairing>>, update: Arc<Notify>, commands: Command
                     let requested =
                         hold_connected(&mut socket, &update, &commands, &mut state).await;
                     wss::close(*socket).await;
+                    log_last_seen(&state).await;
                     state.brightness = None;
                     state.cct = None;
                     state.controllers = None;

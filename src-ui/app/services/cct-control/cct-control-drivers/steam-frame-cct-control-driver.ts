@@ -171,12 +171,12 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
     connections: Record<string, SteamFrameConnectionState>,
     frameModels: { manufacturer: string; model: string }[]
   ): ActiveHmd {
-    const ready = status === 'INITIALIZED' && devices.find((d) => d.index === 0)?.class === 'HMD';
-    if (!ready) return { kind: 'none' };
-    const hmd = devices.find((d) => d.class === 'HMD');
-    const pairing = pairings.find((p) => p.complete && p.identity.serial === hmd?.serialNumber);
+    const hmd = devices.find((d) => d.index === 0);
+    if (status !== 'INITIALIZED' || hmd?.class !== 'HMD' || !hmd.isConnected)
+      return { kind: 'none' };
+    const pairing = pairings.find((p) => p.complete && p.identity.serial === hmd.serialNumber);
     const isFrameModel = frameModels.some(
-      (m) => m.manufacturer === hmd?.manufacturerName && m.model === hmd?.modelNumber
+      (m) => m.manufacturer === hmd.manufacturerName && m.model === hmd.modelNumber
     );
     if (!pairing && !isFrameModel) return { kind: 'none' };
     const state = pairing ? connections[pairing.id] : undefined;
@@ -189,9 +189,9 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
   private onHmd(hmd: ActiveHmd) {
     this.currentHmd = hmd;
 
-    // a waiting value belongs to the Frame it was set for
+    // a waiting value belongs to the Frame it was set for, and outlasts a brief disconnect
     const pending = this.pending;
-    if (pending && (hmd.kind !== 'frame' || hmd.pairingId !== pending.pairingId)) {
+    if (pending && hmd.kind === 'frame' && hmd.pairingId !== pending.pairingId) {
       this.pending = null;
     }
     if (hmd.kind !== 'frame' || !hmd.cct || this.sending) return;

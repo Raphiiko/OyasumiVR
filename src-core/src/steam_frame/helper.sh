@@ -68,11 +68,12 @@ run_current() {
   fi
 }
 
-# install VERSION SHA256 PORT SEEN FRESH KEEP, with the helper executable on stdin; SEEN is the
+# install VERSION SHA256 PORT SEEN FRESH KEEP APP, with the helper executable on stdin; SEEN is the
 # SHA-256 of the inspect output the PC decided on, FRESH 1 allows creating a missing helper folder,
-# KEEP 1 keeps a working previous release because current does not start
+# KEEP 1 keeps a working previous release because current does not start, APP is the version of
+# the OyasumiVR that installs it
 install() {
-  local version=$1 digest=$2 port=$3 seen=$4 fresh=${5:-0} keep=${6:-0}
+  local version=$1 digest=$2 port=$3 seen=$4 fresh=${5:-0} keep=${6:-0} app=${7:-}
   [ "$fresh" != 1 ] || mkdir -p "$root"
   lock
   [ "$(printf %s "$(inspect)" | sha256sum | cut -c1-64)" = "$seen" ] || exit 73
@@ -119,6 +120,7 @@ install() {
     fi
   fi
   rmdir "$root/staging"
+  printf '%s\n' "$app" >"$root/releases/$version/app"
 
   # write the config and unit, switch current, restart
   [ -f "$root/config.json" ] || printf '{"port":%d}\n' "$port" >"$root/config.json"
@@ -282,6 +284,7 @@ cleanup() {
 diagnostics() {
   present
   echo "current: $(current)"
+  echo "installed by OyasumiVR: $(cat "$root/current/app" 2>/dev/null || true)"
   echo "previous: $(readlink "$root/previous" 2>/dev/null || true)"
   echo "releases: $(ls "$root/releases" 2>/dev/null | tr '\n' ' ' || true)"
   echo "info: $(inspect)"

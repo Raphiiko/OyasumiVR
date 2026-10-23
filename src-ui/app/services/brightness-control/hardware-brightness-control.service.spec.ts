@@ -30,7 +30,9 @@ async function setup(
   vi.mocked(invoke).mockImplementation(commands);
   const connections = new BehaviorSubject<Record<string, SteamFrameConnectionState>>({});
   const fadeEnded = new Subject<SteamFrameFadeEnded>();
-  const devices = new BehaviorSubject([{ class: 'HMD', serialNumber: 'FP1' } as OVRDevice]);
+  const devices = new BehaviorSubject([
+    { class: 'HMD', isConnected: true, serialNumber: 'FP1' } as OVRDevice,
+  ]);
   const service = new HardwareBrightnessControlService(
     {
       status: new BehaviorSubject('INITIALIZED'),
@@ -319,7 +321,13 @@ async function setupIndex(initialGain = 1) {
   const openvr = {
     status: new BehaviorSubject('INITIALIZED'),
     devices: new BehaviorSubject([
-      { index: 0, class: 'HMD', manufacturerName: 'Valve', modelNumber: 'Index' } as OVRDevice,
+      {
+        index: 0,
+        class: 'HMD',
+        isConnected: true,
+        manufacturerName: 'Valve',
+        modelNumber: 'Index',
+      } as OVRDevice,
     ]),
     analogGainUpdates,
     getAnalogGain: vi.fn(async () => gain),
@@ -407,6 +415,7 @@ describe('simple brightness following a Valve Index', () => {
 const UNSUPPORTED_HMD: Partial<OVRDevice> = {
   index: 0,
   class: 'HMD',
+  isConnected: true,
   manufacturerName: 'Example',
   modelNumber: 'Headset',
   displaySupportsAnalogGain: true,

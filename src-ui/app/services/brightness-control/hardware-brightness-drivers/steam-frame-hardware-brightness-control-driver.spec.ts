@@ -24,7 +24,7 @@ function brightness(percentage: number, overrides: Partial<SteamFrameBrightness>
 function setup() {
   const status = new BehaviorSubject<OpenVRStatus>('INITIALIZED');
   const devices = new BehaviorSubject<OVRDevice[]>([
-    { class: 'HMD', serialNumber: SERIAL } as OVRDevice,
+    { class: 'HMD', isConnected: true, serialNumber: SERIAL } as OVRDevice,
   ]);
   const pairings = new BehaviorSubject<SteamFramePairing[]>([
     { id: 'pairing-1', complete: true, identity: { serial: SERIAL } } as SteamFramePairing,
@@ -68,7 +68,16 @@ describe('SteamFrameHardwareBrightnessControlDriver', () => {
       ['no report yet', () => h.report(null)],
       ['no SteamVR session', () => h.report(brightness(40, { runtime: false, supported: false }))],
       ['unsupported', () => h.report(brightness(40, { supported: false }))],
-      ['another HMD', () => h.devices.next([{ class: 'HMD', serialNumber: 'OTHER' } as OVRDevice])],
+      [
+        'not streaming here',
+        () =>
+          h.devices.next([{ class: 'HMD', isConnected: false, serialNumber: SERIAL } as OVRDevice]),
+      ],
+      [
+        'another HMD',
+        () =>
+          h.devices.next([{ class: 'HMD', isConnected: true, serialNumber: 'OTHER' } as OVRDevice]),
+      ],
       ['SteamVR stopped', () => h.status.next('INACTIVE')],
       ['unfinished pairing', () => h.pairings.next([{ ...h.pairings.value[0], complete: false }])],
     ];
@@ -76,7 +85,7 @@ describe('SteamFrameHardwareBrightnessControlDriver', () => {
       change();
       expect(await h.available(), name).toBe(false);
       h.status.next('INITIALIZED');
-      h.devices.next([{ class: 'HMD', serialNumber: SERIAL } as OVRDevice]);
+      h.devices.next([{ class: 'HMD', isConnected: true, serialNumber: SERIAL } as OVRDevice]);
       h.pairings.next([{ ...h.pairings.value[0], complete: true }]);
       h.report(brightness(40));
       expect(await h.available(), `${name} restored`).toBe(true);
@@ -120,6 +129,22 @@ describe('SteamFrameHardwareBrightnessControlDriver', () => {
     expect(h.updates).toEqual([40, 69.99]);
   });
 
+  it('keeps a waiting value while the HMD is briefly not connected here', async () => {
+    const h = setup();
+    vi.mocked(invoke).mockResolvedValue(70);
+    await h.driver.setBrightnessPercentage(70);
+    h.devices.next([{ class: 'HMD', isConnected: false, serialNumber: SERIAL } as OVRDevice]);
+    h.report(brightness(40));
+    expect(vi.mocked(invoke)).not.toHaveBeenCalled();
+    h.devices.next([{ class: 'HMD', isConnected: true, serialNumber: SERIAL } as OVRDevice]);
+    await vi.waitFor(() =>
+      expect(vi.mocked(invoke)).toHaveBeenCalledWith('steam_frame_set_brightness', {
+        pairingId: 'pairing-1',
+        percentage: 70,
+      })
+    );
+  });
+
   it('shows the reported value after a failed command', async () => {
     const h = setup();
     h.report(brightness(40));
@@ -145,7 +170,9 @@ describe('SteamFrameHardwareBrightnessControlDriver', () => {
         identity: { serial: 'FPTEST000002' },
       } as SteamFramePairing,
     ]);
-    h.devices.next([{ class: 'HMD', serialNumber: 'FPTEST000002' } as OVRDevice]);
+    h.devices.next([
+      { class: 'HMD', isConnected: true, serialNumber: 'FPTEST000002' } as OVRDevice,
+    ]);
     h.connections.next({
       ...h.connections.value,
       'pairing-2': {
@@ -162,9 +189,9 @@ describe('SteamFrameHardwareBrightnessControlDriver', () => {
   it('creates a fade only for a paired Frame that reports, in hardware percent', async () => {
     const h = setup();
     const options = { target: 200, durationMs: 1000, shownTarget: 200 };
-    h.devices.next([{ class: 'HMD', serialNumber: 'OTHER' } as OVRDevice]);
+    h.devices.next([{ class: 'HMD', isConnected: true, serialNumber: 'OTHER' } as OVRDevice]);
     expect(h.driver.fade(options)).toBeNull();
-    h.devices.next([{ class: 'HMD', serialNumber: SERIAL } as OVRDevice]);
+    h.devices.next([{ class: 'HMD', isConnected: true, serialNumber: SERIAL } as OVRDevice]);
     expect(h.driver.fade(options)).toBeNull();
     h.report(brightness(40));
     const fade = h.driver.fade(options)!;

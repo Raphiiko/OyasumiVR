@@ -121,6 +121,22 @@ pub struct Controller {
     pub connected: bool,
 }
 
+/// The last brightness, color temperature, and controllers a helper reported, kept after its
+/// connection ends.
+#[derive(Serialize, Clone, Debug, Default)]
+pub struct LastSeen {
+    pub brightness: Option<Seen<Brightness>>,
+    pub cct: Option<Seen<Cct>>,
+    pub controllers: Option<Seen<Vec<Controller>>>,
+}
+
+/// A value with the last time a live connection held it, in RFC 3339.
+#[derive(Serialize, Clone, Debug)]
+pub struct Seen<T> {
+    pub value: T,
+    pub at: String,
+}
+
 /// The headset's hardware brightness in percent, as the helper reports it.
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]

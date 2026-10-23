@@ -10,6 +10,7 @@ vi.mock('@tauri-apps/plugin-log', () => ({ warn: vi.fn() }));
 const INDEX = {
   index: 0,
   class: 'HMD',
+  isConnected: true,
   manufacturerName: 'Valve',
   modelNumber: 'Index',
 } as OVRDevice;
@@ -194,7 +195,7 @@ function createDriver(hmd: Partial<OVRDevice>, analogGain: number | null = 1, ma
   const openvr = {
     status: new BehaviorSubject('INITIALIZED'),
     analogGainUpdates: new Subject<number>(),
-    devices: new BehaviorSubject([{ index: 0, class: 'HMD', ...hmd }]),
+    devices: new BehaviorSubject([{ index: 0, class: 'HMD', isConnected: true, ...hmd }]),
     getAnalogGain: async () => {
       if (analogGain === null) throw new Error('no analogGain value');
       return analogGain;

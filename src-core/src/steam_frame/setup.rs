@@ -25,7 +25,7 @@ pub(super) const EXIT_MISSING: u32 = 69;
 const EXIT_DIGEST: u32 = 65;
 pub(super) const EXIT_CHANGED: u32 = 73;
 
-pub const BUNDLED_VERSION: &str = env!("CARGO_PKG_VERSION");
+pub const BUNDLED_VERSION: &str = env!("FRAME_HELPER_VERSION");
 static BUNDLED_DIGEST: LazyLock<Option<String>> =
     LazyLock::new(|| Some(hex(&Sha256::digest(std::fs::read(HELPER_PATH).ok()?))));
 
@@ -308,6 +308,7 @@ pub async fn install_bundled(
                 &seen,
                 fresh,
                 keep,
+                env!("CARGO_PKG_VERSION"),
             ],
             &helper,
         )

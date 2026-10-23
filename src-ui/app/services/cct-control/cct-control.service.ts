@@ -194,7 +194,7 @@ export class CCTControlService {
 
     // log which driver serves which headset, once both have settled
     const hmd = this.openvr.devices.pipe(
-      map((devices) => devices.find((d) => d.index === 0 && d.class === 'HMD')),
+      map((devices) => devices.find((d) => d.index === 0 && d.class === 'HMD' && d.isConnected)),
       map((hmd) =>
         hmd
           ? `manufacturer "${hmd.manufacturerName ?? ''}", model "${hmd.modelNumber ?? ''}"`

@@ -7,7 +7,6 @@ import { expect, it } from 'vitest';
 const cargoLocks = [
   'src-core/Cargo.lock',
   'src-elevated-sidecar/Cargo.lock',
-  'src-frame-helper/Cargo.lock',
   'src-privileged-launcher/Cargo.lock',
   'src-shared-rust/Cargo.lock',
 ];
@@ -54,12 +53,17 @@ it.each(['beta', 'release'])(
       for (const path of cargoLocks) {
         const versions = [
           ...readFileSync(join(directory, path), 'utf8').matchAll(
-            /name = "oyasumivr(?:-shared|-elevated-sidecar|-frame-helper|-privileged-launcher)?"\r?\nversion = "([^"]+)"/g
+            /name = "oyasumivr(?:-shared|-elevated-sidecar|-privileged-launcher)?"\r?\nversion = "([^"]+)"/g
           ),
         ].map(([, lockedVersion]) => lockedVersion);
         expect(versions.length, path).toBeGreaterThan(0);
         expect(versions, path).toEqual(versions.map(() => version));
       }
+      // the frame helper keeps its own version
+      const helperManifest = 'src-frame-helper/Cargo.toml';
+      expect(readFileSync(join(directory, helperManifest), 'utf8')).toBe(
+        readFileSync(helperManifest, 'utf8')
+      );
     } finally {
       rmSync(directory, { recursive: true, force: true });
     }

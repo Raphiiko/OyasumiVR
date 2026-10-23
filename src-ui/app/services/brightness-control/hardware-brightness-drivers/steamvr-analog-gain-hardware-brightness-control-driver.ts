@@ -60,7 +60,7 @@ export class SteamVRAnalogGainHardwareBrightnessControlDriver extends HardwareBr
     const state = combineLatest([this.openvr.status, this.openvr.devices, appSettings]).pipe(
       debounceTime(0),
       map(([status, devices, settings]) => {
-        const hmd = devices.find((d) => d.index === 0 && d.class === 'HMD');
+        const hmd = devices.find((d) => d.index === 0 && d.class === 'HMD' && d.isConnected);
         if (status !== 'INITIALIZED' || !hmd) {
           this.range = null;
           return { range: null, served: false };
