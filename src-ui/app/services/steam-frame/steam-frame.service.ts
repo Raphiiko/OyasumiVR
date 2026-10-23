@@ -275,42 +275,24 @@ export class SteamFrameService {
 
   /** Saves the pairing in place of its headset's older one; a failed save restores the pairings. */
   async addPairing(pairing: SteamFramePairing) {
-    const previous = this._pairings();
-    this.setPairings([...previous.filter((p) => p.deviceId !== pairing.deviceId), pairing]);
-    try {
-      await this.save();
-    } catch (e) {
-      this.setPairings(previous);
-      throw e;
-    }
+    await this.change((pairings) => [
+      ...pairings.filter((p) => p.deviceId !== pairing.deviceId),
+      pairing,
+    ]);
   }
 
   /** Applies the change only if it reaches the disk; a failed save restores the previous pairings. */
   async updatePairing(deviceId: string, patch: Partial<SteamFramePairing>) {
-    const previous = this._pairings();
     let updated: SteamFramePairing | undefined;
-    this.setPairings(
-      previous.map((p) => (p.deviceId === deviceId ? (updated = { ...p, ...patch }) : p))
+    await this.change((pairings) =>
+      pairings.map((p) => (p.deviceId === deviceId ? (updated = { ...p, ...patch }) : p))
     );
-    try {
-      await this.save();
-    } catch (e) {
-      this.setPairings(previous);
-      throw e;
-    }
     return updated;
   }
 
   /** Deletes the pairing on this PC, saves, and stops its connection. The headset is untouched. */
   async removePairing(deviceId: string) {
-    const previous = this._pairings();
-    this.setPairings(previous.filter((p) => p.deviceId !== deviceId));
-    try {
-      await this.save();
-    } catch (e) {
-      this.setPairings(previous);
-      throw e;
-    }
+    await this.change((pairings) => pairings.filter((p) => p.deviceId !== deviceId));
     await this.pushPairings();
   }
 
@@ -382,12 +364,26 @@ export class SteamFrameService {
     this.setPairings(pairings);
   }
 
-  /** The last queued save; the next save starts after it settles. */
+  /** The last queued change; the next change starts after it settles. */
   private saving: Promise<void> = Promise.resolve();
 
-  /** Writes one save at a time, each from the pairings as they are when it starts. */
-  private save(): Promise<void> {
-    const next = this.saving.catch(() => undefined).then(() => this.write());
+  /**
+   * Applies and saves one change at a time; a failed save restores the pairings it started from.
+   * Queuing the rollback with the change keeps it from undoing a later change.
+   */
+  private change(apply: (pairings: SteamFramePairing[]) => SteamFramePairing[]): Promise<void> {
+    const next = this.saving
+      .catch(() => undefined)
+      .then(async () => {
+        const previous = this._pairings();
+        this.setPairings(apply(previous));
+        try {
+          await this.write();
+        } catch (e) {
+          this.setPairings(previous);
+          throw e;
+        }
+      });
     this.saving = next;
     return next;
   }

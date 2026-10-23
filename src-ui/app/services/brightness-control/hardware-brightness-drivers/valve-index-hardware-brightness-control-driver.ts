@@ -104,6 +104,7 @@ export class ValveIndexHardwareBrightnessControlDriver extends SteamVRAnalogGain
   }
 
   override async setBrightnessPercentage(percentage: number): Promise<void> {
+    if (!this.isAvailableNow) return;
     this.writeRequests.next();
     this.pending = this.softwarePercentageToHardwarePercentage(percentage);
     if (this.sending) return;
@@ -116,6 +117,8 @@ export class ValveIndexHardwareBrightnessControlDriver extends SteamVRAnalogGain
       const target = this.pending;
       this.pending = null;
       this.reportSkipped = false;
+      // the analog gain belongs to SteamVR, so a write after the Index left reaches the next HMD
+      if (!this.isAvailableNow) break;
       if (target !== null) written = await this.write(target);
       const held = await this.openvr.getAnalogGain().catch(() => null);
       current = held === null ? null : this.heldPercentage(held, written);
@@ -123,7 +126,7 @@ export class ValveIndexHardwareBrightnessControlDriver extends SteamVRAnalogGain
     this.sending = false;
 
     // show the value SteamVR holds now, in place of the skipped reports
-    if (current !== null) this.updates.next(this.clampToBounds(current));
+    if (current !== null && this.isAvailableNow) this.updates.next(this.clampToBounds(current));
   }
 
   /** Writes the gain; null when SteamVR refused it. */

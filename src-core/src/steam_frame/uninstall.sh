@@ -8,16 +8,21 @@ unit=oyasumivr-frame-helper.service
 units="$HOME/.config/systemd/user"
 keys="$HOME/.ssh/authorized_keys"
 
-if [ ! -d "$root" ]; then
-  echo "OyasumiVR Helper is not installed."
-  exit 0
-fi
-
-exec 9>"$root/maintenance.lock"
-if ! flock -w 60 9; then
-  echo "Another PC is updating OyasumiVR Helper. Try again in a minute." >&2
-  exit 75
-fi
+deadline=$((SECONDS + 60))
+while :; do
+  if [ ! -d "$root" ]; then
+    echo "OyasumiVR Helper is not installed."
+    exit 0
+  fi
+  exec 9>"$root/maintenance.lock"
+  if ! flock -w "$((deadline > SECONDS ? deadline - SECONDS : 1))" 9; then
+    echo "Another PC is updating OyasumiVR Helper. Try again in a minute." >&2
+    exit 75
+  fi
+  # removing the helper deletes the lock file, so a lock won on the old file protects nothing
+  [ "$(stat -Lc %i /proc/self/fd/9)" = "$(stat -c %i "$root/maintenance.lock" 2>/dev/null)" ] && break
+  exec 9>&-
+done
 keys_lock="$HOME/.ssh/.oyasumivr-keys.lock"
 deadline=$((SECONDS + 10))
 while :; do

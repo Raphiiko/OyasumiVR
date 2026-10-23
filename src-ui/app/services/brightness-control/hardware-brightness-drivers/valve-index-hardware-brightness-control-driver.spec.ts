@@ -187,6 +187,19 @@ describe('ValveIndexHardwareBrightnessControlDriver', () => {
     expect(h.setAnalogGain.mock.calls.map(([gain]) => gain)).toEqual([gainFor(90), gainFor(70)]);
     expect(h.updates).toEqual([100, 70]);
   });
+
+  it('drops a waiting write once the Index disconnects', async () => {
+    const h = setup();
+    await vi.advanceTimersByTimeAsync(500);
+    const first = h.driver.setBrightnessPercentage(60);
+    const second = h.driver.setBrightnessPercentage(80);
+    h.devices.next([{ ...INDEX, isConnected: false }]);
+    await vi.advanceTimersByTimeAsync(0);
+    await h.release();
+    await Promise.all([first, second]);
+    await h.driver.setBrightnessPercentage(90);
+    expect(h.setAnalogGain.mock.calls.map(([gain]) => gain)).toEqual([gainFor(60)]);
+  });
 });
 
 const VALVE_INDEX = { manufacturerName: 'Valve', modelNumber: 'Index' };

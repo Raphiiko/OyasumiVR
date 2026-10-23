@@ -38,6 +38,8 @@ export class SteamFrameEnrollmentService {
   private search = 0;
   /** The running setup; stage events from any other attempt are ignored. */
   private setupAttemptId?: string;
+  /** Set from the first open request until the wizard closes, across the modal's late registration. */
+  private wizardOpen = false;
 
   readonly flow = this._flow.asReadonly();
   readonly flowPairing = computed(() => {
@@ -84,18 +86,25 @@ export class SteamFrameEnrollmentService {
     }
 
     // open the modal once; closing drops an idle flow
-    if (this.modalService.isModalOpen('steam-frame-pairing')) return;
-    const { SteamFramePairingModalComponent } =
-      await import('../../components/steam-frame/steam-frame-pairing-modal/steam-frame-pairing-modal.component');
-    this.modalService
-      .addModal(SteamFramePairingModalComponent, undefined, {
-        id: 'steam-frame-pairing',
-        wrapperDefaultClass: 'modal-wrapper-steam-frame-pairing',
-        closeOnEscape: false,
-      })
-      .subscribe(() => {
-        if (!this._flow()?.busy) this._flow.set(null);
-      });
+    if (this.wizardOpen) return;
+    this.wizardOpen = true;
+    try {
+      const { SteamFramePairingModalComponent } =
+        await import('../../components/steam-frame/steam-frame-pairing-modal/steam-frame-pairing-modal.component');
+      this.modalService
+        .addModal(SteamFramePairingModalComponent, undefined, {
+          id: 'steam-frame-pairing',
+          wrapperDefaultClass: 'modal-wrapper-steam-frame-pairing',
+          closeOnEscape: false,
+        })
+        .subscribe(() => {
+          this.wizardOpen = false;
+          if (!this._flow()?.busy) this._flow.set(null);
+        });
+    } catch (e) {
+      this.wizardOpen = false;
+      throw e;
+    }
   }
 
   closeWizard() {

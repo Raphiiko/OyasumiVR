@@ -175,6 +175,23 @@ describe('Steam Frame forgetting', () => {
     expect(service.pairingFor(device.id)).toBeUndefined();
     expect(calls('steam_frame_sync_connections').at(-1).pairings).toEqual([]);
   });
+
+  it('stays forgotten when an earlier save fails after Forget started', async () => {
+    const service = await start();
+    let failFirstSave!: () => void;
+    store.set.mockImplementationOnce(
+      () => new Promise((_, reject) => (failFirstSave = () => reject(new Error('disk'))))
+    );
+    const update = service.updatePairing(device.id, { helperVersion: '1.1.0' });
+    const forget = service.removePairing(device.id);
+    await vi.waitFor(() => expect(failFirstSave).toBeDefined());
+    failFirstSave();
+    await expect(update).rejects.toThrow('disk');
+    await forget;
+    expect(service.pairingFor(device.id)).toBeUndefined();
+    expect(store.set.mock.calls.at(-1)?.[1].pairings).toEqual([]);
+    expect(calls('steam_frame_sync_connections').at(-1).pairings).toEqual([]);
+  });
 });
 
 describe('frameControllerOverrides', () => {

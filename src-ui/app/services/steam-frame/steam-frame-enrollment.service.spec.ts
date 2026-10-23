@@ -2,7 +2,7 @@ import '@angular/compiler';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { SteamFrameEnrollmentService } from './steam-frame-enrollment.service';
 import { SteamFrameService } from './steam-frame.service';
-import { of } from 'rxjs';
+import { NEVER, of } from 'rxjs';
 import { DMKnownDevice } from '../../models/device-manager';
 
 const { invoke, store } = vi.hoisted(() => ({
@@ -18,6 +18,10 @@ vi.mock('../../globals', () => ({
 }));
 vi.mock('../device-manager.service', () => ({ DeviceManagerService: class {} }));
 vi.mock('../openvr.service', () => ({ OpenVRService: class {} }));
+vi.mock(
+  '../../components/steam-frame/steam-frame-pairing-modal/steam-frame-pairing-modal.component',
+  () => ({ SteamFramePairingModalComponent: class {} })
+);
 vi.mock('../../utils/secrets', () => ({
   protectSecret: async (plain: string) => `protected:${plain}`,
   unprotectSecret: async (stored: string) => stored.replace('protected:', ''),
@@ -43,10 +47,13 @@ let steamFrame: SteamFrameService;
 const calls = (command: string) =>
   invoke.mock.calls.filter(([name]) => name === command).map(([, args]) => args);
 
+let addModal: ReturnType<typeof vi.fn>;
+
 async function start() {
   steamFrame = new SteamFrameService(openvr, {} as any);
+  addModal = vi.fn(() => NEVER);
   const service = new SteamFrameEnrollmentService(
-    { isModalOpen: () => true, closeModal: vi.fn() } as any,
+    { addModal, closeModal: vi.fn() } as any,
     { isDeviceObserved: () => observed } as any,
     steamFrame
   );
@@ -88,6 +95,12 @@ beforeEach(() => {
 afterEach(() => vi.resetAllMocks());
 
 describe('Steam Frame pairing flow', () => {
+  it('opens one wizard while the first has not registered its modal yet', async () => {
+    const service = await start();
+    await Promise.all([service.openWizard(device), service.openWizard(device)]);
+    expect(addModal).toHaveBeenCalledTimes(1);
+  });
+
   it('skips registration when the saved key already works', async () => {
     handlers['steam_frame_check_ssh_access'] = () => ({ status: 'ok', hostKeyPin: 'PIN' });
     const service = await start();
