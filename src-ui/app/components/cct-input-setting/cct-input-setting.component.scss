@@ -1,4 +1,5 @@
 @use 'shadows';
+@use 'effects';
 
 .wrapper {
   position: relative;
@@ -17,36 +18,67 @@
   }
 }
 
-.wrapper > input {
+.wrapper > button {
+  display: block;
   width: 5.5em;
-  text-align: center;
-  cursor: pointer;
-  anchor-name: --input-el;
-  transition: opacity 0.15s ease;
-  color: black;
+  padding: 0.5em;
+  border: none;
+  border-radius: 0.5em;
+  font: inherit;
   font-weight: 600;
+  text-align: center;
+  color: black;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
 
-  &:active {
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  &:active:not(:disabled) {
     opacity: 0.8;
   }
 }
 
-.input-container {
+.panel {
   @include shadows.shadow(5, true);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--surface-border-radius);
-  overflow: hidden;
-  border: 0.15em solid var(--color-surface-3);
-  background: rgba(black, 0.125);
-  backdrop-filter: blur(4px);
+  position: fixed;
+  inset: auto;
+  margin: 0;
   padding: 1em;
-  position: absolute;
-  position-anchor: --input-el;
-  right: anchor(left);
-  margin-right: 0.5em;
-  align-self: anchor-center;
   width: 20em;
+  box-sizing: content-box;
+  border-radius: var(--surface-border-radius);
+  border: 0.15em solid var(--color-surface-3);
+  background-color: color-mix(in srgb, var(--color-surface-1) 80%, transparent);
+  backdrop-filter: blur(4px);
+  @include effects.pane-radial-gradient(#fff);
+  color: var(--color-text-1);
+  overflow: visible;
+  opacity: 0;
+  transition:
+    opacity 0.15s ease,
+    overlay 0.15s allow-discrete,
+    display 0.15s allow-discrete;
+
+  // the panel drops in as the raised row reaches its place, like the time dial
+  &:popover-open {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.2s 0.15s ease-out,
+      transform 0.2s 0.15s ease-out,
+      overlay 0.2s allow-discrete,
+      display 0.2s allow-discrete;
+
+    @starting-style {
+      opacity: 0;
+      transform: translateY(-0.75em);
+    }
+  }
+
+  &::backdrop {
+    background: transparent;
+  }
 }

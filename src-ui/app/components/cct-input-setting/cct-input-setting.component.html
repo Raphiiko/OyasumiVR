@@ -1,29 +1,23 @@
-<div class="wrapper" (clickOutside)="inputOpen = false">
-  <input
-    type="text"
-    [value]="displayValue()"
-    readonly
-    (mouseenter)="mouseEnter('INPUT')"
-    (mouseleave)="mouseLeave('INPUT')"
+<div class="wrapper">
+  <button
+    type="button"
     [disabled]="disabled()"
-    [style.background-color]="cctColor"
-  />
-  @if (inputOpen) {
-    <div
-      class="input-container"
-      @fade
-      (mouseenter)="mouseEnter('CONTAINER')"
-      (mouseleave)="mouseLeave('CONTAINER')"
-    >
-      <app-slider
-        [min]="1000"
-        [max]="10000"
-        [snapValues]="[6600]"
-        [snapDistance]="200"
-        [value]="value()"
-        [step]="50"
-        (valueChange)="updateValue($event)"
-      ></app-slider>
-    </div>
-  }
+    [attr.popovertarget]="popoverId"
+    [style.background-color]="cctColor()"
+    (mousedown)="lift.hold()"
+    (click)="raiseRow(panel)"
+  >
+    {{ displayValue() }}
+  </button>
+</div>
+<div class="panel" popover [id]="popoverId" (toggle)="onToggle($event, panel)" #panel>
+  <app-slider
+    [min]="1000"
+    [max]="10000"
+    [snapValues]="[6600]"
+    [snapDistance]="200"
+    [value]="value()"
+    [step]="50"
+    (valueChange)="value.set($event)"
+  ></app-slider>
 </div>

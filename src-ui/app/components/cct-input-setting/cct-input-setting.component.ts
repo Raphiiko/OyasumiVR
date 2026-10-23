@@ -1,70 +1,45 @@
 import {
-  ChangeDetectorRef,
   Component,
   computed,
-  inject,
   model,
   ChangeDetectionStrategy,
   input,
+  viewChild,
 } from '@angular/core';
 import { getCSSColorForCCT } from 'src-shared-ts/src/cct-utils';
-import { fade } from '../../utils/animations';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { SettingRowLift } from '../setting-row/setting-row-lift';
+import { SliderComponent } from '../slider/slider.component';
+
+let nextPopoverId = 0;
 
 @Component({
   selector: 'app-cct-input-setting',
   templateUrl: './cct-input-setting.component.html',
   styleUrl: './cct-input-setting.component.scss',
-  animations: [fade()],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class CCTInputSettingComponent {
-  protected inputOpen = true;
   value = model<number>(6600);
   displayValue = computed(() => Math.floor(this.value()) + 'K');
   readonly disabled = input(false);
-  protected cctColor = 'black';
-  private cdr = inject(ChangeDetectorRef);
+  protected readonly cctColor = computed(() => getCSSColorForCCT(this.value()));
+  protected readonly popoverId = `cct-input-${nextPopoverId++}`;
+  protected readonly lift = new SettingRowLift();
+  private readonly slider = viewChild.required(SliderComponent);
 
-  constructor() {
-    toObservable(this.value)
-      .pipe(takeUntilDestroyed())
-      .subscribe((value) => {
-        this.cctColor = getCSSColorForCCT(value);
-        this.cdr.markForCheck();
-      });
+  /** Runs before popovertarget opens the panel, so the panel joins the top layer above the row. */
+  protected raiseRow(panel: HTMLElement) {
+    if (!panel.matches(':popover-open')) this.lift.raise();
   }
 
-  openInput() {
-    if (this.disabled()) {
-      this.inputOpen = false;
+  protected onToggle(event: ToggleEvent, panel: HTMLElement) {
+    if (event.newState !== 'open') {
+      this.lift.lower();
       return;
     }
-    this.inputOpen = true;
-  }
-
-  protected updateValue(value: number) {
-    this.value.set(value);
-  }
-
-  private mouseInside: Record<'INPUT' | 'CONTAINER', boolean> = {
-    INPUT: false,
-    CONTAINER: false,
-  };
-
-  protected mouseEnter(input: 'INPUT' | 'CONTAINER') {
-    this.mouseInside[input] = true;
-    if (!this.inputOpen) this.openInput();
-  }
-
-  protected mouseLeave(input: 'INPUT' | 'CONTAINER') {
-    this.mouseInside[input] = false;
-    setTimeout(() => {
-      if (Object.values(this.mouseInside).every((v) => !v)) {
-        this.inputOpen = false;
-        this.cdr.markForCheck();
-      }
-    }, 200);
+    // the slider measures its track width, which is zero while the panel is hidden
+    this.slider().recalculateStyles();
+    this.lift.place(panel);
   }
 }
