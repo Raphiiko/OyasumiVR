@@ -24,7 +24,10 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Added a message that tells you when a window to pick or save a file opened on your desktop, while you use OyasumiVR from the SteamVR dashboard
 - Added a message that tells you when Windows asks for administrative permissions on your desktop, while you use OyasumiVR from the SteamVR dashboard
 - Added warnings to the event log for automations that could not do what you set them up to do, starting with the VRChat microphone mute automation when VRChat does not report whether you are muted
-- Added Steam Frame support: pair your Steam Frame with OyasumiVR to control its hardware brightness and colour temperature
+- Added Steam Frame support: pair your Steam Frame with OyasumiVR to:
+  - Control its hardware brightness
+  - Control its colour temperature
+  - Turn off its controllers
 
 ### Changed
 
