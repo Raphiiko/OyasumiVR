@@ -7,6 +7,13 @@
           [mirrored]="_ovrDevice?.class === 'Controller' && _ovrDevice?.role === 'RightHand'"
           class="category-icon"
         />
+        @if (helperStatus) {
+          <span
+            [class]="'helper-badge helper-badge-' + helperStatus"
+            role="img"
+            [attr.aria-label]="'steamFrame.status.' + helperStatus | transloco"
+          ></span>
+        }
       </div>
       <div class="header-bar-info">
         <div class="device-name" [transloco]="deviceTypeName"></div>
@@ -21,6 +28,8 @@
             [id]="'btn-power-' + cssId"
             [powerState]="getDevicePowerState()"
             [anchorName]="powerButtonAnchorId"
+            [customIcon]="frameToPair ? 'link' : ''"
+            [title]="frameToPair ? ('steamFrame.actions.pair' | transloco) : ''"
             [allowUnknownClick]="mode === 'lighthouse'"
             (powerAction)="handleDevicePowerAction($event)"
             (rightClick)="rightClickDevicePowerButton()"
@@ -58,6 +67,9 @@
           }
         </div>
         <div class="battery-info-label">
+          @if (helperStatus) {
+            <span class="helper-status">{{ 'steamFrame.status.' + helperStatus | transloco }}</span>
+          }
           @if (showBattery) {
             <span @fade>
               {{ batteryPercentageString }}

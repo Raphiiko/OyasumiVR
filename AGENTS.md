@@ -21,6 +21,7 @@ OyasumiVR is a Windows desktop app for VRChat users, built with Tauri.
 | `src-overlay-ui`              | Angular frontend for the SteamVR overlays          |
 | `src-elevated-sidecar`        | Rust sidecar for actions that need admin rights    |
 | `src-privileged-launcher`     | Rust launcher that starts the elevated sidecar     |
+| `src-frame-helper`            | Rust helper installed on a paired Steam Frame      |
 | `src-shared-ts`               | TypeScript shared between the frontends            |
 | `src-shared-rust`             | Rust shared between the core and the Rust sidecars |
 | `tools/sign-elevated-sidecar` | Rust build tool that signs the elevated sidecar    |
@@ -90,6 +91,11 @@ and native input stay shared: build first, then claim the resource's lock before
 Every instance connects to a running SteamVR by itself. Bluetooth stays off unless the work is about
 Bluetooth or Lighthouse functionality: then claim its lock and start with `--bluetooth`. For the
 locks, the build step, the ports, and overlay work, read [parallel app instances](docs/agents/parallel-instances.md).
+
+## Steam Frame
+
+Before changing Steam Frame pairing, the frame helper, or the Frame's brightness, color temperature,
+or fades, read [Steam Frame pairing](docs/agents/steam-frame-pairing.md).
 
 ## Icons
 

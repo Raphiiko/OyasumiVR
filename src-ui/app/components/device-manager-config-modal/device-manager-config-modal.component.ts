@@ -19,6 +19,22 @@ import {
   LighthouseV1IdWizardModalInputModel,
   LighthouseV1IdWizardModalOutputModel,
 } from '../lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
+import { SteamFrameService } from 'src-ui/app/services/steam-frame/steam-frame.service';
+import { SteamFrameConnectionStatus } from 'src-ui/app/models/steam-frame';
+
+/** Statuses whose connection loop still runs an update the user requests. */
+const UPDATABLE_STATUSES: SteamFrameConnectionStatus[] = [
+  'connecting',
+  'connected',
+  'offline',
+  'helperOutdated',
+];
+
+const UNREPAIRABLE_STATUSES: (SteamFrameConnectionStatus | undefined)[] = [
+  'hostKeyChanged',
+  'pairingRemoved',
+  'needsAppUpdate',
+];
 
 export interface DeviceManagerConfigModalInputModel {
   device: DMKnownDevice;
@@ -55,7 +71,8 @@ export class DeviceManagerConfigModalComponent
     protected lighthouseService: LighthouseService,
     private deviceManager: DeviceManagerService,
     private destroyRef: DestroyRef,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private steamFrame: SteamFrameService
   ) {
     super();
   }
@@ -104,6 +121,56 @@ export class DeviceManagerConfigModalComponent
   close() {
     this.saveNickname();
     super.close();
+  }
+
+  /** The paired Steam Frame helper's version and update state, or null for any other device. */
+  frameHelper() {
+    const pairing = this.steamFrame.pairingFor(this.device.id);
+    if (!pairing?.complete) return null;
+    const state = this.steamFrame.connections()[pairing.id];
+    const maintenance = state?.maintenance?.kind;
+    return {
+      pairing,
+      version: state?.helperVersion ?? pairing.helperVersion,
+      updating: maintenance === 'updating',
+      canUpdate:
+        !!state &&
+        UPDATABLE_STATUSES.includes(state.status) &&
+        (state.updateAvailable || maintenance === 'failed'),
+      // only a helper that answers can be called up to date
+      upToDate: state?.status === 'connected',
+      repairing: !!this.steamFrame.reinstalls()[pairing.id],
+      // a repair needs SSH access
+      canRepair: !UNREPAIRABLE_STATUSES.includes(state?.status),
+    };
+  }
+
+  updateFrameHelper() {
+    const helper = this.frameHelper();
+    if (helper) void this.steamFrame.updateHelper(helper.pairing);
+  }
+
+  repairFrameHelper() {
+    const helper = this.frameHelper();
+    if (helper) void this.steamFrame.reinstallHelper(helper.pairing, true);
+  }
+
+  frameRemovedOnHeadset(): boolean {
+    const pairing = this.steamFrame.pairingFor(this.device.id);
+    return !!pairing && this.steamFrame.connections()[pairing.id]?.status === 'pairingRemoved';
+  }
+
+  async unpairFrame() {
+    const { SteamFrameUnpairModalComponent } =
+      await import('../steam-frame/steam-frame-unpair-modal/steam-frame-unpair-modal.component');
+    // an unpair keeps running after the dialog closes, so Escape must not look like a cancel
+    this.modalService
+      .addModal(
+        SteamFrameUnpairModalComponent,
+        { deviceId: this.device.id, removedOnHeadset: this.frameRemovedOnHeadset() },
+        { closeOnEscape: false }
+      )
+      .subscribe();
   }
 
   // TrackBy functions

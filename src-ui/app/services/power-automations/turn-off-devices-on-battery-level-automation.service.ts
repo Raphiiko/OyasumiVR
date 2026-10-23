@@ -6,7 +6,7 @@ import { combineLatest, map } from 'rxjs';
 import { AUTOMATION_CONFIGS_DEFAULT, DevicePowerAutomationsConfig } from '../../models/automations';
 import { EventLogService } from '../event-log.service';
 import { OVRDevice, OVRDeviceClass } from '../../models/ovr-device';
-import { LighthouseConsoleService } from '../lighthouse-console.service';
+import { DeviceControlService } from '../device-control.service';
 import { SleepService } from '../sleep.service';
 import { DeviceManagerService } from '../device-manager.service';
 
@@ -27,7 +27,7 @@ export class TurnOffDevicesOnBatteryLevelAutomationService {
   constructor(
     private automationConfig: AutomationConfigService,
     private openvr: OpenVRService,
-    private lighthouse: LighthouseConsoleService,
+    private deviceControl: DeviceControlService,
     private eventLog: EventLogService,
     private sleep: SleepService,
     private deviceManager: DeviceManagerService
@@ -66,7 +66,7 @@ export class TurnOffDevicesOnBatteryLevelAutomationService {
     if (currentLevel * 100 > this.config.turnOffDevicesBelowBatteryLevel_threshold) return;
     const threshold = this.config.turnOffDevicesBelowBatteryLevel_threshold;
     // record the result against the triggering battery threshold
-    const dispatched = await this.lighthouse.turnOffDevices([device]);
+    const dispatched = await this.deviceControl.turnOffDevices([device]);
     this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'BATTERY_LEVEL', {
       batteryThreshold: threshold,
     });

@@ -153,6 +153,7 @@ pub struct OVRDevice {
     pub manufacturer_name: Option<String>,
     pub model_number: Option<String>,
     pub is_connected: bool,
+    pub power_method: PowerMethod,
     pub handle_type: Option<OVRHandleType>,
     pub hmd_on_head: Option<bool>,
     pub hmd_activity: Option<String>,
@@ -160,6 +161,15 @@ pub struct OVRDevice {
     pub display_supports_analog_gain: Option<bool>,
     pub display_min_analog_gain: Option<f32>,
     pub display_max_analog_gain: Option<f32>,
+}
+
+/// How OyasumiVR turns the device off, as far as OpenVR shows it. The UI sets `SteamFrame` for
+/// the controllers a paired Steam Frame's helper reports.
+#[derive(Clone, Copy, Serialize, Deserialize, PartialEq)]
+pub enum PowerMethod {
+    /// Through the Lighthouse console and the device's dongle.
+    Lighthouse,
+    None,
 }
 
 #[derive(Clone, Serialize, Deserialize, IntoStaticStr, EnumIter, PartialEq)]

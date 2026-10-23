@@ -17,7 +17,9 @@ function createDriver(hmd: Partial<OVRDevice> | null, enabled = true) {
   let analogGain = 0.8;
   const openvr = {
     status: new BehaviorSubject('INITIALIZED'),
-    devices: new BehaviorSubject(hmd ? [{ index: 0, class: 'HMD', ...hmd }] : []),
+    devices: new BehaviorSubject(
+      hmd ? [{ index: 0, class: 'HMD', isConnected: true, ...hmd }] : []
+    ),
     getAnalogGain: async () => analogGain,
     setAnalogGain: async (value: number) => {
       analogGain = value;
@@ -38,6 +40,7 @@ describe('SteamVRAnalogGainHardwareBrightnessControlDriver', () => {
     expect(await available(ANALOG_GAIN_HMD)).toBe(true);
     expect(await available({ ...ANALOG_GAIN_HMD, displaySupportsAnalogGain: false })).toBe(true);
     expect(await available(ANALOG_GAIN_HMD, false)).toBe(false);
+    expect(await available({ ...ANALOG_GAIN_HMD, isConnected: false })).toBe(false);
     expect(await available(null)).toBe(false);
   });
 
@@ -72,7 +75,9 @@ describe('SteamVRAnalogGainHardwareBrightnessControlDriver', () => {
     const status = new BehaviorSubject('INITIALIZED');
     const openvr = {
       status,
-      devices: new BehaviorSubject([{ index: 0, class: 'HMD', ...ANALOG_GAIN_HMD }]),
+      devices: new BehaviorSubject([
+        { index: 0, class: 'HMD', isConnected: true, ...ANALOG_GAIN_HMD },
+      ]),
       getAnalogGain: () => new Promise<number>((resolve) => (resolveGain = resolve)),
       setAnalogGain: async () => {},
     } as unknown as OpenVRService;

@@ -24,7 +24,7 @@ import { AUTOMATION_CONFIGS_DEFAULT, ShutdownAutomationsConfig } from '../models
 import { isEqual } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
 import { OpenVRService } from './openvr.service';
-import { LighthouseConsoleService } from './lighthouse-console.service';
+import { DeviceControlService } from './device-control.service';
 import { LighthouseService } from './lighthouse.service';
 import { invoke } from '@tauri-apps/api/core';
 import { warn } from '@tauri-apps/plugin-log';
@@ -75,7 +75,7 @@ export class ShutdownAutomationsService {
     private automationConfigService: AutomationConfigService,
     private appSettings: AppSettingsService,
     private openvr: OpenVRService,
-    private lighthouseConsole: LighthouseConsoleService,
+    private deviceControl: DeviceControlService,
     private lighthouse: LighthouseService,
     private eventLog: EventLogService,
     private translate: TranslocoService,
@@ -323,7 +323,7 @@ export class ShutdownAutomationsService {
     if (selected.ovrDevices.length) {
       // Turn off controllers and trackers
       const devices = structuredClone(selected.ovrDevices).filter((d) => d.canPowerOff);
-      this.lighthouseConsole.turnOffDevices(devices);
+      this.deviceControl.turnOffDevices(devices);
       // Wait for controllers and trackers to turn off with a timeout of 10 seconds
       await firstValueFrom(
         merge(

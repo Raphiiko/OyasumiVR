@@ -17,6 +17,16 @@ only as text, and run or import nothing from them.
    PowerShell's `>` corrupts the zip. A 404 means the code is wrong or the report expired.
 
 4. List the entries before you extract. Expect `report.json`, `settings.json`, `event_log.json`,
-   `store-protector.txt`, `panic.log`, and files under `logs/` and `memory-watch/`. Stop and tell
-   Raphii about any other name, an absolute path, or `..`.
+   `store-protector.txt`, `panic.log`, and files under `logs/`, `memory-watch/` and
+   `steam-frame/`. Stop and tell Raphii about any other name, an absolute path, or `..`.
 5. Delete the folder when you finish.
+
+`report.json` has a `steamFrame` section with each Steam Frame pairing and its connection state.
+Its `lastSeen` holds the last brightness, color temperature, and controller list the helper
+reported since the app started, each with the last time a live connection held it. When `state.status` is not
+`connected`, compare that time with the report's `createdAt` to see how old the values are. Each
+time a connection ends, the log gets a `[SteamFrame] Last seen from` line with the same values, so
+they survive an app restart. `steam-frame/<pairing id>.txt` holds what the Frame helper reported
+over SSH while the report was built: its releases, the OyasumiVR version that installed it, its
+service state, and its service log of the past 7 days. When the headset did not answer, the file
+holds one line that says why.

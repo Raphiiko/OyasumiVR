@@ -8,7 +8,7 @@ import {
 import { flatten, groupBy, uniq } from 'lodash';
 import { fade, hshrink, triggerChildren, vshrink } from 'src-ui/app/utils/animations';
 import { OVRDevice, OVRDeviceClass } from 'src-ui/app/models/ovr-device';
-import { LighthouseConsoleService } from '../../services/lighthouse-console.service';
+import { DeviceControlService } from '../../services/device-control.service';
 import { OpenVRService } from '../../services/openvr.service';
 import { EventLogLighthouseSetPowerState } from '../../models/event-log-entry';
 import { EventLogService } from '../../services/event-log.service';
@@ -64,7 +64,7 @@ export class DeviceListComponent implements OnInit {
   constructor(
     protected openvr: OpenVRService,
     private cdr: ChangeDetectorRef,
-    private lighthouseConsole: LighthouseConsoleService,
+    private deviceControl: DeviceControlService,
     private lighthouse: LighthouseService,
     private eventLog: EventLogService,
     private destroyRef: DestroyRef,
@@ -254,7 +254,7 @@ export class DeviceListComponent implements OnInit {
   async turnOffOVRDevices(category: OpenVRDisplayCategory) {
     const devices = category.devices.filter((d) => d.canPowerOff && !this.isOpenVRDeviceHidden(d));
     if (!devices.length) return;
-    const dispatched = await this.lighthouseConsole.turnOffDevices(devices);
+    const dispatched = await this.deviceControl.turnOffDevices(devices);
     this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'MANUAL');
   }
 
@@ -309,7 +309,7 @@ export class DeviceListComponent implements OnInit {
         .map((c) => (c as OpenVRDisplayCategory).devices)
     ).filter((d) => d.canPowerOff && !this.isOpenVRDeviceHidden(d));
     if (!devices.length) return;
-    const dispatched = await this.lighthouseConsole.turnOffDevices(devices);
+    const dispatched = await this.deviceControl.turnOffDevices(devices);
     this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'MANUAL', { allDevices: devices });
   }
 

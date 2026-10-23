@@ -264,6 +264,8 @@ import { ProgressiveScrollBlurComponent } from './components/progressive-scroll-
 import { FrameLimiterViewComponent } from './views/dashboard-view/views/frame-limiter-view/frame-limiter-view.component';
 import { FrameLimiterSelectorComponent } from './components/frame-limiter-selector/frame-limiter-selector.component';
 import { FrameLimiterService } from './services/frame-limiter.service';
+import { SteamFrameService } from './services/steam-frame/steam-frame.service';
+import { SteamFrameEnrollmentService } from './services/steam-frame/steam-frame-enrollment.service';
 import { FrameLimitAutomationsService } from './services/frame-limit-automations.service';
 import { FrameLimiterAddApplicationModalComponent } from './views/dashboard-view/views/frame-limiter-view/modals/frame-limiter-add-application-modal/frame-limiter-add-application-modal.component';
 import { OscAddressAutocompleteComponent } from './components/osc-script-simple-editor/osc-address-autocomplete/osc-address-autocomplete.component';
@@ -312,7 +314,6 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
     DashboardViewComponent,
     PowerAutomationsViewComponent,
     DashboardNavbarComponent,
-    IconComponent,
     DeviceListComponent,
     DeviceListItemComponent,
     VarDirective,
@@ -473,6 +474,7 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
   exports: [SelectBoxComponent],
   imports: [
     CommonModule,
+    IconComponent,
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
@@ -549,6 +551,8 @@ export class AppModule {
     private updateService: UpdateService,
     private messageCenterService: MessageCenterService,
     private frameLimiterService: FrameLimiterService,
+    private steamFrameService: SteamFrameService,
+    private frameEnrollmentService: SteamFrameEnrollmentService,
     private deviceManagerService: DeviceManagerService,
     private storeSnapshotService: StoreSnapshotService,
     private migrationCoordinatorService: MigrationCoordinatorService,
@@ -704,9 +708,22 @@ export class AppModule {
               }
             ),
           ]);
+          // Initialize Device Manager, then Steam Frame, whose enrollment depends on it
+          const steamFrameInit = this.logInit(
+            'DeviceManagerService initialization',
+            this.deviceManagerService.init()
+          ).then(() =>
+            this.logInit('Initializing Steam Frame', this.steamFrameService.init())
+              .then(() =>
+                this.logInit(
+                  'Initializing Steam Frame enrollment',
+                  this.frameEnrollmentService.init()
+                )
+              )
+              .catch(() => {})
+          );
           await Promise.all([
-            // Initialize Device Manager
-            this.logInit('DeviceManagerService initialization', this.deviceManagerService.init()),
+            steamFrameInit,
             // Initialize Steam support
             await this.logInit('Initializing Steam', this.steamService.init()),
             // Initialize Discord support
@@ -721,23 +738,25 @@ export class AppModule {
                 this.overlayAppStateSyncService.init()
               );
             }),
-            // Initialize Brightness Control
-            await Promise.all([
-              this.logInit('Initializing CCT control', this.cctControlService.init()),
-              this.logInit(
-                'Initializing hardware brightness control',
-                this.hardwareBrightnessControlService.init()
-              ),
-              this.logInit(
-                'Initializing software brightness control',
-                this.softwareBrightnessControlService.init()
-              ),
-            ]).then(async () => {
-              await this.logInit(
-                'Initializing simple brightness control',
-                this.simpleBrightnessControlService.init()
-              );
-            }),
+            // Initialize Brightness Control once Steam Frame has loaded its pairings
+            await steamFrameInit.then(() =>
+              Promise.all([
+                this.logInit('Initializing CCT control', this.cctControlService.init()),
+                this.logInit(
+                  'Initializing hardware brightness control',
+                  this.hardwareBrightnessControlService.init()
+                ),
+                this.logInit(
+                  'Initializing software brightness control',
+                  this.softwareBrightnessControlService.init()
+                ),
+              ]).then(async () => {
+                await this.logInit(
+                  'Initializing simple brightness control',
+                  this.simpleBrightnessControlService.init()
+                );
+              })
+            ),
           ]);
           // Initialize automations
           await Promise.all([

@@ -24,6 +24,7 @@ it.each(['beta', 'release'])(
         'src-core/tauri.conf.json',
         'src-core/Cargo.toml',
         'src-elevated-sidecar/Cargo.toml',
+        'src-frame-helper/Cargo.toml',
         'src-privileged-launcher/Cargo.toml',
         'src-shared-rust/Cargo.toml',
         ...cargoLocks,
@@ -58,6 +59,11 @@ it.each(['beta', 'release'])(
         expect(versions.length, path).toBeGreaterThan(0);
         expect(versions, path).toEqual(versions.map(() => version));
       }
+      // the frame helper keeps its own version
+      const helperManifest = 'src-frame-helper/Cargo.toml';
+      expect(readFileSync(join(directory, helperManifest), 'utf8')).toBe(
+        readFileSync(helperManifest, 'utf8')
+      );
     } finally {
       rmSync(directory, { recursive: true, force: true });
     }

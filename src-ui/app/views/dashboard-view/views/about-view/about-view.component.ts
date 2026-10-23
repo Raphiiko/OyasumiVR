@@ -70,6 +70,7 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
     { name: 'coolGi', url: 'https://github.com/coolGi69', type: 'programming' },
     { name: 'ColorlessColor', url: 'https://github.com/ColorlessColor', type: 'programming' },
     { name: 'Map1en', url: 'https://github.com/Map1en', type: 'programming' },
+    { name: 'Duin', url: 'https://github.com/Duinrahaic', type: 'programming' },
     { name: 'spaecd', type: 'soundFx' },
   ];
 

@@ -20,6 +20,7 @@ const device: OVRDevice = {
   class: 'Controller',
   serialNumber: 'SERIAL-1',
   dongleId: 'DONGLE-1',
+  powerMethod: 'Lighthouse',
   canPowerOff: true,
   isTurningOff: false,
 } as OVRDevice;
@@ -37,7 +38,7 @@ async function createService(stdout: string) {
   } as unknown as AppSettingsService;
   const openvr = {
     devices: new BehaviorSubject<OVRDevice[]>([device]).asObservable(),
-    onDeviceUpdate: vi.fn(),
+    setTurningOff: vi.fn(),
   } as unknown as OpenVRService;
   const service = new LighthouseConsoleService(appSettings, openvr, new ToastService());
   // let the constructor's init() settle before the test drives the service
