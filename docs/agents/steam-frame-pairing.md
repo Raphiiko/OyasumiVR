@@ -277,7 +277,8 @@ not connected.
 ### On the PC
 
 `SteamFrameHardwareBrightnessControlDriver` matches while the paired Frame is the active OpenVR
-HMD, so the hardware brightness service picks it before the Frame can take a set. It is available
+HMD and that HMD is connected in this PC's OpenVR, so the hardware brightness service picks it
+before the Frame can take a set. It is available
 while the connection is `connected` and the report says `supported`. Its reports reach the hardware
 brightness cache without a write, and simple mode derives its value from them. The hardware and
 simple services write to it even at the cached value, because the shown value may be clamped.
@@ -288,8 +289,9 @@ without a pairing and drops its sets, so the SteamVR color gain driver never wri
 while a Frame is the active HMD.
 
 Both drivers keep one command in flight, and a newer value replaces a waiting one. A value set
-while the Frame cannot take it waits, and goes out once the Frame reports, unless it waited longer
-than two minutes.
+while the Frame cannot take it waits, also while its HMD is briefly not connected here, and goes
+out once the Frame reports, unless it waited longer than two minutes. Another Frame becoming the
+active HMD drops it.
 
 ## Fades
 
@@ -433,6 +435,10 @@ power-on automation. A request for a controller whose disconnect is still on its
 
 ## Updates
 
+The helper has its own version in `src-frame-helper/Cargo.toml`, apart from the app version. Bump
+it when the helper changes. The install records the app version that installed it, and the debug
+report shows it.
+
 Each connection compares the helper's hello with the bundled helper. An older helper, or the same
 version with another executable digest, gets one automatic update per app start. The attempt counts
 when it starts, so a failed automatic update waits for a manual one.
@@ -474,16 +480,16 @@ Manager shows `updated` for one minute, once per pairing and version per app run
 
 All paths under `~/.local/share/oyasumivr_helper/` unless noted.
 
-| Path                                                    | What it holds                                                       |
-| ------------------------------------------------------- | ------------------------------------------------------------------- |
-| `releases/<version>`                                    | installed helper versions, plus `<version>.replaced` after a repair |
-| `current`                                               | link to the running version                                         |
-| `previous`                                              | link to the version before it, for rollback                         |
-| `staging/`                                              | the upload in progress                                              |
-| `config.json`                                           | the WSS port, written only when absent                              |
-| `tls/`                                                  | the helper's certificate and key                                    |
-| `clients/<pc-id>`                                       | one token per paired PC, plus its `.pub` key record                 |
-| `maintenance.lock`                                      | held by every `helper.sh` change to the folder                      |
-| `uninstall`                                             | removes the helper and every recorded key line                      |
-| `~/.ssh/.oyasumivr-keys.lock`                           | held by every `authorized_keys` rewrite; deleted with the helper    |
-| `~/.config/systemd/user/oyasumivr-frame-helper.service` | the user service, enabled through `default.target.wants`            |
+| Path                                                    | What it holds                                                                                                    |
+| ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `releases/<version>`                                    | installed helper versions, each with `app`, the installing app version, plus `<version>.replaced` after a repair |
+| `current`                                               | link to the running version                                                                                      |
+| `previous`                                              | link to the version before it, for rollback                                                                      |
+| `staging/`                                              | the upload in progress                                                                                           |
+| `config.json`                                           | the WSS port, written only when absent                                                                           |
+| `tls/`                                                  | the helper's certificate and key                                                                                 |
+| `clients/<pc-id>`                                       | one token per paired PC, plus its `.pub` key record                                                              |
+| `maintenance.lock`                                      | held by every `helper.sh` change to the folder                                                                   |
+| `uninstall`                                             | removes the helper and every recorded key line                                                                   |
+| `~/.ssh/.oyasumivr-keys.lock`                           | held by every `authorized_keys` rewrite; deleted with the helper                                                 |
+| `~/.config/systemd/user/oyasumivr-frame-helper.service` | the user service, enabled through `default.target.wants`                                                         |

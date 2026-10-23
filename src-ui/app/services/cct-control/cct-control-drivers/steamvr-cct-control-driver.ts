@@ -46,7 +46,7 @@ export class SteamVrCctControlDriver extends CctControlDriver {
       debounceTime(100),
       map(([status, devices, tryUnsupported]) => {
         const hmd = devices.find((d) => d.index === 0);
-        if (status !== 'INITIALIZED' || hmd?.class !== 'HMD') return false;
+        if (status !== 'INITIALIZED' || hmd?.class !== 'HMD' || !hmd.isConnected) return false;
         return tryUnsupported || isSteamVrCctSupportedHmd(hmd);
       }),
       distinctUntilChanged(),

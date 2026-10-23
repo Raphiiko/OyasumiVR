@@ -4,11 +4,26 @@ fn main() {
     println!("cargo:rerun-if-changed=../proto/oyasumi-core.proto");
     println!("cargo:rerun-if-changed=../proto/overlay-sidecar.proto");
     println!("cargo:rerun-if-changed=../proto/elevated-sidecar.proto");
+    println!("cargo:rerun-if-changed=../src-frame-helper/Cargo.toml");
 
+    set_frame_helper_version();
     configure_tonic_build();
 
     // Build tauri app
     tauri_build::build()
+}
+
+/// Exposes the frame helper's own version, the first `version` line in its manifest, as
+/// `FRAME_HELPER_VERSION`.
+fn set_frame_helper_version() {
+    let manifest = std::fs::read_to_string("../src-frame-helper/Cargo.toml")
+        .expect("could not read the frame helper manifest");
+    let version = manifest
+        .lines()
+        .find_map(|line| line.strip_prefix("version = \""))
+        .and_then(|rest| rest.strip_suffix('"'))
+        .expect("the frame helper manifest has no version");
+    println!("cargo:rustc-env=FRAME_HELPER_VERSION={version}");
 }
 
 fn configure_tonic_build() {

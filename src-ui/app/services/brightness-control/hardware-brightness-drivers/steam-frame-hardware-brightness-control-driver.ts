@@ -164,7 +164,7 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
     pairings: SteamFramePairing[],
     connections: Record<string, SteamFrameConnectionState>
   ): ActiveHmd {
-    const serial = devices.find((d) => d.class === 'HMD')?.serialNumber;
+    const serial = devices.find((d) => d.class === 'HMD' && d.isConnected)?.serialNumber;
     if (status !== 'INITIALIZED' || !serial) return { kind: 'none' };
     const pairing = pairings.find((p) => p.complete && p.identity.serial === serial);
     if (!pairing) return { kind: 'none' };
@@ -181,9 +181,9 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
   private onHmd(hmd: ActiveHmd) {
     this.currentHmd = hmd;
 
-    // a waiting value belongs to the Frame it was set for
+    // a waiting value belongs to the Frame it was set for, and outlasts a brief disconnect
     const pending = this.pending;
-    if (pending && (hmd.kind !== 'frame' || hmd.pairingId !== pending.pairingId)) {
+    if (pending && hmd.kind === 'frame' && hmd.pairingId !== pending.pairingId) {
       this.pending = null;
     }
     if (hmd.kind !== 'frame' || !this.usable(hmd.brightness)) {

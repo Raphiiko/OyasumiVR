@@ -57,7 +57,9 @@ async function setup(
     return undefined;
   });
   const status = new BehaviorSubject('INITIALIZED');
-  const devices = new BehaviorSubject(hmd ? [{ index: 0, class: 'HMD', ...hmd } as OVRDevice] : []);
+  const devices = new BehaviorSubject(
+    hmd ? [{ index: 0, class: 'HMD', isConnected: true, ...hmd } as OVRDevice] : []
+  );
   const connections = new BehaviorSubject<Record<string, SteamFrameConnectionState>>({});
   const fadeEnded = new Subject<SteamFrameFadeEnded>();
   const settings = new BehaviorSubject({
@@ -101,7 +103,7 @@ async function setup(
   const setTryUnsupported = (value: boolean) =>
     settings.next({ ...settings.value, cctControlOnUnsupportedHmds: value });
   const activate = (device: Partial<OVRDevice>) =>
-    devices.next([{ index: 0, class: 'HMD', ...device } as OVRDevice]);
+    devices.next([{ index: 0, class: 'HMD', isConnected: true, ...device } as OVRDevice]);
   return {
     service,
     status,
@@ -240,6 +242,15 @@ describe('CCTControlService with a Steam Frame', () => {
     expect(h.writes()).toEqual([]);
   });
 
+  it('writes nothing to an HMD that is not connected here, with any driver', async () => {
+    const h = await setup({ ...FRAME, isConnected: false }, { tryUnsupported: true });
+    h.report(snapshot(6600));
+    await settleUnclaimed();
+    await h.service.setCCT(3000);
+    expect(h.frameWrites()).toEqual([]);
+    expect(h.writes()).toEqual([]);
+  });
+
   it('writes nothing for a paired Frame before its first report', async () => {
     const h = await setup(FRAME);
     h.report(null);
@@ -247,6 +258,21 @@ describe('CCTControlService with a Steam Frame', () => {
     await h.service.setCCT(3000);
     expect(h.frameWrites()).toEqual([]);
     expect(h.writes()).toEqual([]);
+  });
+
+  it('keeps a waiting set while the HMD is briefly not connected here', async () => {
+    const h = await setup(FRAME);
+    h.report(null);
+    await settle();
+    await h.service.setCCT(3000);
+    h.activate({ ...FRAME, isConnected: false });
+    await settle();
+    h.report(snapshot(6600));
+    await settle();
+    expect(h.frameWrites()).toEqual([]);
+    h.activate(FRAME);
+    await settle();
+    expect(h.frameWrites()).toEqual([3000]);
   });
 
   it('keeps one command in flight and replaces the waiting one', async () => {
