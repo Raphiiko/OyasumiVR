@@ -1,7 +1,17 @@
 @if (showOverlay) {
-  <div class="overlay-container" (mouseleave)="showOverlay = false" @fade>
+  <div class="overlay-container" (mouseleave)="onOverlayLeave()" @fade>
     <div class="bg"></div>
     <div class="slider-container">
+      @if (openedInDashboard) {
+        <button
+          type="button"
+          class="btn btn-secondary btn-icon"
+          [disabled]="value() <= min()"
+          (click)="stepBy(-1)"
+        >
+          <app-icon name="minus" />
+        </button>
+      }
       <app-slider
         [min]="min()"
         [max]="max()"
@@ -13,6 +23,16 @@
         [style]="style()"
         #slider
       ></app-slider>
+      @if (openedInDashboard) {
+        <button
+          type="button"
+          class="btn btn-secondary btn-icon"
+          [disabled]="value() >= max()"
+          (click)="stepBy(1)"
+        >
+          <app-icon name="add" />
+        </button>
+      }
     </div>
   </div>
 }
@@ -20,6 +40,7 @@
   class="input-container"
   [class.has-unit]="!!unit() || !!unitIcon()"
   (mouseenter)="onMouseEnter()"
+  (mousedown)="onFieldMouseDown($event)"
   [class.overlay-active]="showOverlay"
   [class.disabled]="disabled()"
 >

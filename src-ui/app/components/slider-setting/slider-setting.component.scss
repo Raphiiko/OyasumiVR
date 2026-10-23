@@ -7,6 +7,11 @@
   --overlay-width: 16em;
 }
 
+// room for the step buttons, so the track keeps its width
+:host-context(html[data-vr-dashboard]) {
+  --overlay-width: 21em;
+}
+
 $unit-width: 2em;
 
 .input-container {
@@ -101,11 +106,13 @@ $overlay-border: 0.15em;
   }
 
   .slider-container {
+    position: relative;
     width: calc(var(--overlay-width) + $overlay-padding);
     height: 100%;
     padding: 0.5em;
     display: flex;
     flex-direction: row;
     align-items: center;
+    gap: 0.5em;
   }
 }
