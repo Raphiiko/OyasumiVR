@@ -1,26 +1,28 @@
-<div class="wrapper" (clickOutside)="inputOpen = false">
+<div
+  class="wrapper"
+  [class.open]="open()"
+  (clickOutside)="close()"
+  (focusout)="onFocusOut($event, wrapper)"
+  (keydown.escape)="close()"
+  #wrapper
+>
   <input
     type="text"
     [value]="displayValue()"
     readonly
-    (mouseenter)="mouseEnter('INPUT')"
-    (mouseleave)="mouseLeave('INPUT')"
-    (click)="mouseClickInput()"
+    (mousedown)="lift.hold()"
+    (focus)="openInput()"
+    (click)="onFieldClick()"
     [disabled]="disabled()"
   />
-  @if (inputOpen) {
-    <div
-      class="input-container"
-      @fade
-      (mouseenter)="mouseEnter('CONTAINER')"
-      (mouseleave)="mouseLeave('CONTAINER')"
-    >
-      <div class="input-container-labels">
+  @if (open()) {
+    <div class="panel" popover="manual" @panelFade #panel>
+      <div class="panel-labels">
         <span>H</span>
         <span>M</span>
         <span>S</span>
       </div>
-      <div class="input-container-inputs">
+      <div class="panel-inputs">
         <input
           type="number"
           [value]="hours()"

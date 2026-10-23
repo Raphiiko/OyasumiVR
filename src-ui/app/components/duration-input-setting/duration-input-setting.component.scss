@@ -1,10 +1,10 @@
 @use 'shadows';
+@use 'effects';
 
 .wrapper > input {
   width: 5.5em;
   text-align: center;
   cursor: pointer;
-  anchor-name: --input-el;
   transition: all 0.15s ease;
 
   &:active {
@@ -12,23 +12,30 @@
   }
 }
 
-.input-container {
+.wrapper.open > input {
+  background: rgba(255, 255, 255, 0.17);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 60%, transparent);
+}
+
+.panel {
   @include shadows.shadow(5, true);
-  display: flex;
+  position: fixed;
+  inset: auto;
+  margin: 0;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   border-radius: var(--surface-border-radius);
-  overflow: hidden;
   border: 0.15em solid var(--color-surface-3);
-  background: rgba(black, 0.125);
+  background-color: color-mix(in srgb, var(--color-surface-1) 80%, transparent);
   backdrop-filter: blur(4px);
+  @include effects.pane-radial-gradient(#fff);
+  color: var(--color-text-1);
   padding: 1em;
-  position: absolute;
-  position-anchor: --input-el;
-  right: anchor(left);
-  margin-right: 0.5em;
-  align-self: anchor-center;
+
+  &:popover-open {
+    display: flex;
+  }
 
   &-labels,
   &-inputs {
