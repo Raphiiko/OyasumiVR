@@ -30,7 +30,7 @@ import { AppSettingsService } from '../app-settings.service';
 import { CctControlDriver, CctFade } from './cct-control-drivers/cct-control-driver';
 import { SteamVrCctControlDriver } from './cct-control-drivers/steamvr-cct-control-driver';
 import { SteamFrameCctControlDriver } from './cct-control-drivers/steam-frame-cct-control-driver';
-import { SteamFramePairingService } from '../steam-frame/steam-frame-pairing.service';
+import { SteamFrameService } from '../steam-frame/steam-frame.service';
 
 /** A transition on the PC, or a fade the device runs. */
 type CctTransition = CancellableTask & { readonly targetCCT: number };
@@ -63,7 +63,7 @@ export class CCTControlService {
   constructor(
     private openvr: OpenVRService,
     appSettingsService: AppSettingsService,
-    steamFrames: SteamFramePairingService
+    steamFrames: SteamFrameService
   ) {
     this.driverSteamVr = new SteamVrCctControlDriver(openvr, appSettingsService.settings);
     this.driverSteamFrame = new SteamFrameCctControlDriver(openvr, steamFrames);

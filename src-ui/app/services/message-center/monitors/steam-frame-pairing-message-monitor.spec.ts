@@ -5,13 +5,17 @@ import { describe, expect, it, vi } from 'vitest';
 import { DMKnownDevice } from '../../../models/device-manager';
 import { SteamFrameConnectionState, SteamFramePairing } from '../../../models/steam-frame';
 import { DeviceManagerService } from '../../device-manager.service';
-import { SteamFramePairingService } from '../../steam-frame/steam-frame-pairing.service';
+import { SteamFrameService } from '../../steam-frame/steam-frame.service';
+import { SteamFrameEnrollmentService } from '../../steam-frame/steam-frame-enrollment.service';
 import { MessageCenterService, MessageItem } from '../message-center.service';
 import { SteamFramePairingMessageMonitor } from './steam-frame-pairing-message-monitor';
 
 vi.mock('../../device-manager.service', () => ({ DeviceManagerService: class {} }));
-vi.mock('../../steam-frame/steam-frame-pairing.service', () => ({
-  SteamFramePairingService: class {},
+vi.mock('../../steam-frame/steam-frame.service', () => ({
+  SteamFrameService: class {},
+}));
+vi.mock('../../steam-frame/steam-frame-enrollment.service', () => ({
+  SteamFrameEnrollmentService: class {},
 }));
 vi.mock('../message-center.service', () => ({ MessageCenterService: class {} }));
 
@@ -35,13 +39,12 @@ function start() {
   const connections$ = new BehaviorSubject<Record<string, SteamFrameConnectionState>>({});
   const messages = new Map<string, MessageItem>();
   const openWizard = vi.fn();
-  const framePairing = {
+  const steamFrame = {
     pairings$,
     connections$,
     connections: () => connections$.value,
     identityOf: (d: DMKnownDevice) => (d.typeName === 'Deckard DV2' ? {} : null),
     pairingFor: (id: string) => pairings$.value.find((p) => p.deviceId === id),
-    openWizard,
   };
   const messageCenter = {
     addMessage: (m: MessageItem) => messages.set(m.id, m),
@@ -53,7 +56,8 @@ function start() {
         provide: DeviceManagerService,
         useValue: { knownDevices: known, observedDevices: observed },
       },
-      { provide: SteamFramePairingService, useValue: framePairing },
+      { provide: SteamFrameService, useValue: steamFrame },
+      { provide: SteamFrameEnrollmentService, useValue: { openWizard } },
     ],
   });
   const monitor = runInInjectionContext(

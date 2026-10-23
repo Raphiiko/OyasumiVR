@@ -3,12 +3,14 @@ import { combineLatest } from 'rxjs';
 import { MessageMonitor } from './message-monitor';
 import { DMKnownDevice } from '../../../models/device-manager';
 import { DeviceManagerService } from '../../device-manager.service';
-import { SteamFramePairingService } from '../../steam-frame/steam-frame-pairing.service';
+import { SteamFrameService } from '../../steam-frame/steam-frame.service';
+import { SteamFrameEnrollmentService } from '../../steam-frame/steam-frame-enrollment.service';
 
 /** Invites pairing for each connected Steam Frame without a completed pairing the headset keeps. */
 export class SteamFramePairingMessageMonitor extends MessageMonitor {
   private deviceManager = inject(DeviceManagerService);
-  private framePairing = inject(SteamFramePairingService);
+  private steamFrame = inject(SteamFrameService);
+  private frameEnrollment = inject(SteamFrameEnrollmentService);
   /** The invitations this monitor shows now, so the stale ones can be removed. */
   private shownIds = new Set<string>();
 
@@ -16,8 +18,8 @@ export class SteamFramePairingMessageMonitor extends MessageMonitor {
     combineLatest([
       this.deviceManager.knownDevices,
       this.deviceManager.observedDevices,
-      this.framePairing.pairings$,
-      this.framePairing.connections$,
+      this.steamFrame.pairings$,
+      this.steamFrame.connections$,
     ]).subscribe(([knownDevices, observedIds]) => this.update(knownDevices, observedIds));
   }
 
@@ -25,9 +27,9 @@ export class SteamFramePairingMessageMonitor extends MessageMonitor {
     // invite pairing for each active, unpaired Steam Frame
     const ids = new Set<string>();
     for (const device of knownDevices) {
-      if (!observedIds.includes(device.id) || !this.framePairing.identityOf(device)) continue;
-      const pairing = this.framePairing.pairingFor(device.id);
-      const status = pairing && this.framePairing.connections()[pairing.id]?.status;
+      if (!observedIds.includes(device.id) || !this.steamFrame.identityOf(device)) continue;
+      const pairing = this.steamFrame.pairingFor(device.id);
+      const status = pairing && this.steamFrame.connections()[pairing.id]?.status;
       if (pairing?.complete && status !== 'pairingRemoved') continue;
       const id = `framePairable-${device.id}`;
       ids.add(id);
@@ -40,7 +42,7 @@ export class SteamFramePairingMessageMonitor extends MessageMonitor {
         actions: [
           {
             label: 'steamFrame.actions.pair',
-            action: () => this.framePairing.openWizard(device),
+            action: () => this.frameEnrollment.openWizard(device),
           },
         ],
       });

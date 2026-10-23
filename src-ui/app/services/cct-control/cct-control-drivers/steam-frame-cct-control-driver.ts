@@ -20,7 +20,7 @@ import {
 } from '../../../models/steam-frame';
 import type { OpenVRService, OpenVRStatus } from '../../openvr.service';
 import { SteamFrameCctFade } from '../../steam-frame/steam-frame-fade-task';
-import type { SteamFramePairingService } from '../../steam-frame/steam-frame-pairing.service';
+import type { SteamFrameService } from '../../steam-frame/steam-frame.service';
 import { CctControlDriver, CctFadeOptions } from './cct-control-driver';
 
 /** A Frame report that carries a value. */
@@ -56,7 +56,7 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
   constructor(
     openvr: Pick<OpenVRService, 'status' | 'devices'>,
     private readonly steamFrames: Pick<
-      SteamFramePairingService,
+      SteamFrameService,
       'pairings$' | 'connections$' | 'fadeEnded$'
     >
   ) {

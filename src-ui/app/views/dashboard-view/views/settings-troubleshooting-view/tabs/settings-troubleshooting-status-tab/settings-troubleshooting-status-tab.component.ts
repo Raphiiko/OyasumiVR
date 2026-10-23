@@ -31,7 +31,7 @@ import { ModalService } from '../../../../../../services/modal.service';
 import { getVersion } from '../../../../../../utils/app-utils';
 import { DebugReportModalComponent } from '../../debug-report-modal/debug-report-modal.component';
 import { copyWithToast } from '../../../../../../utils/clipboard-utils';
-import { SteamFramePairingService } from '../../../../../../services/steam-frame/steam-frame-pairing.service';
+import { SteamFrameService } from '../../../../../../services/steam-frame/steam-frame.service';
 import { SteamFrameConnectionStatus } from '../../../../../../models/steam-frame';
 
 const DEBUG_REPORT_MODAL_ID = 'debugReport';
@@ -91,7 +91,7 @@ export class SettingsTroubleshootingStatusTabComponent {
     private toasts: ToastService,
     private modals: ModalService,
     private fontLoader: FontLoaderService,
-    private steamFrame: SteamFramePairingService,
+    private steamFrame: SteamFrameService,
     protected debugReports: DebugReportService
   ) {
     const settings = this.appSettings.settings;

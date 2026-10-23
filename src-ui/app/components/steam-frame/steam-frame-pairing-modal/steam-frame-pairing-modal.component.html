@@ -8,7 +8,7 @@
   <nav class="trail" [attr.aria-label]="t('steps.label')">
     <div class="trail-edge">
       @if (back(); as target) {
-        <button class="plain" (click)="pairing.go(target)">
+        <button class="plain" (click)="enrollment.go(target)">
           <app-icon name="chevron-left" class="icon-mono" aria-hidden="true" />{{
             t('actions.back')
           }}
@@ -35,7 +35,9 @@
     </span>
     <div class="trail-edge end">
       @if (!['success', 'cancelling', 'cleanupFailed', 'setupFailed'].includes(page())) {
-        <button class="plain" (click)="pairing.cancel()">{{ t('actions.cancelPairing') }}</button>
+        <button class="plain" (click)="enrollment.cancel()">{{
+          t('actions.cancelPairing')
+        }}</button>
       }
     </div>
   </nav>
@@ -131,7 +133,7 @@
                   class="candidate"
                   [class.selected]="flow()?.selected === i"
                   [attr.aria-pressed]="flow()?.selected === i"
-                  (click)="pairing.select(i)"
+                  (click)="enrollment.select(i)"
                 >
                   @if ((flow()?.candidates?.length ?? 0) > 1) {
                     <app-icon
@@ -220,51 +222,51 @@
         }
         <div class="spacer"></div>
         @if (busy() && page() !== 'cancelling') {
-          <button class="btn btn-secondary" (click)="pairing.closeWizard()">{{
+          <button class="btn btn-secondary" (click)="enrollment.closeWizard()">{{
             t('actions.closeForNow')
           }}</button>
         }
         @switch (page()) {
           @case ('intro') {
-            <button class="btn btn-primary" (click)="pairing.go('devmode')">{{
+            <button class="btn btn-primary" (click)="enrollment.go('devmode')">{{
               t('actions.continue')
             }}</button>
           }
           @case ('devmode') {
-            <button class="btn btn-primary" (click)="pairing.go('pairhost')">{{
+            <button class="btn btn-primary" (click)="enrollment.go('pairhost')">{{
               t('actions.continue')
             }}</button>
           }
           @case ('pairhost') {
-            <button class="btn btn-primary" (click)="pairing.discover()">{{
+            <button class="btn btn-primary" (click)="enrollment.discover()">{{
               t('actions.continue')
             }}</button>
           }
           @case ('search') {
             @if (!flow()?.manualAddress) {
-              <button class="btn btn-secondary" (click)="pairing.go('manual')">{{
+              <button class="btn btn-secondary" (click)="enrollment.go('manual')">{{
                 t('actions.enterAddress')
               }}</button>
             }
           }
           @case ('found') {
-            <button class="btn btn-secondary" (click)="pairing.go('manual')">{{
+            <button class="btn btn-secondary" (click)="enrollment.go('manual')">{{
               t('actions.enterAddress')
             }}</button>
-            <button class="btn btn-secondary" (click)="pairing.discover()">{{
+            <button class="btn btn-secondary" (click)="enrollment.discover()">{{
               t('actions.searchAgain')
             }}</button>
-            <button class="btn btn-primary" (click)="pairing.pair()">
+            <button class="btn btn-primary" (click)="enrollment.pair()">
               {{
                 t((flow()?.candidates?.length ?? 0) > 1 ? 'actions.pairThis' : 'actions.yesPair')
               }}
             </button>
           }
           @case ('notfound') {
-            <button class="btn btn-secondary" (click)="pairing.go('manual')">{{
+            <button class="btn btn-secondary" (click)="enrollment.go('manual')">{{
               t('actions.enterAddress')
             }}</button>
-            <button class="btn btn-primary" (click)="pairing.discover()">{{
+            <button class="btn btn-primary" (click)="enrollment.discover()">{{
               t('actions.searchAgain')
             }}</button>
           }
@@ -274,43 +276,43 @@
             </button>
           }
           @case ('notready') {
-            <button class="btn btn-primary" (click)="pairing.register()">{{
+            <button class="btn btn-primary" (click)="enrollment.register()">{{
               t('actions.tryAgain')
             }}</button>
           }
           @case ('declined') {
-            <button class="btn btn-primary" (click)="pairing.register()">{{
+            <button class="btn btn-primary" (click)="enrollment.register()">{{
               t('actions.sendAgain')
             }}</button>
           }
           @case ('timeout') {
-            <button class="btn btn-primary" (click)="pairing.register()">{{
+            <button class="btn btn-primary" (click)="enrollment.register()">{{
               t('actions.sendAgain')
             }}</button>
           }
           @case ('uncertain') {
-            <button class="btn btn-primary" (click)="pairing.register()">{{
+            <button class="btn btn-primary" (click)="enrollment.register()">{{
               t('actions.sendAgain')
             }}</button>
           }
           @case ('wrongDevice') {
-            <button class="btn btn-primary" [disabled]="busy()" (click)="pairing.discover()">{{
+            <button class="btn btn-primary" [disabled]="busy()" (click)="enrollment.discover()">{{
               t('actions.findHeadset')
             }}</button>
           }
           @case ('setupFailed') {
-            <button class="btn btn-secondary" (click)="pairing.closeWizard()">{{
+            <button class="btn btn-secondary" (click)="enrollment.closeWizard()">{{
               t('actions.closeForNow')
             }}</button>
-            <button class="btn btn-secondary" (click)="pairing.cancel()">
+            <button class="btn btn-secondary" (click)="enrollment.cancel()">
               {{ t('actions.cancelPairing') }}
             </button>
-            <button class="btn btn-primary" (click)="pairing.runSetup()">{{
+            <button class="btn btn-primary" (click)="enrollment.runSetup()">{{
               t('actions.retry')
             }}</button>
           }
           @case ('needsUpdate') {
-            <button class="btn btn-primary" (click)="pairing.closeWizard()">{{
+            <button class="btn btn-primary" (click)="enrollment.closeWizard()">{{
               t('actions.close')
             }}</button>
           }
@@ -318,12 +320,12 @@
             <button class="btn btn-secondary" (click)="copyUninstallCommand()">{{
               t('actions.copyCommand')
             }}</button>
-            <button class="btn btn-primary" (click)="pairing.leaveCleanup()">{{
+            <button class="btn btn-primary" (click)="enrollment.leaveCleanup()">{{
               t('actions.done')
             }}</button>
           }
           @case ('success') {
-            <button class="btn btn-primary" (click)="pairing.closeWizard()">{{
+            <button class="btn btn-primary" (click)="enrollment.closeWizard()">{{
               t('actions.done')
             }}</button>
           }

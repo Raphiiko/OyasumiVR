@@ -4,7 +4,7 @@ import { listen } from '@tauri-apps/api/event';
 import { OVRDevice } from '../models/ovr-device';
 import { LighthouseConsoleService } from './lighthouse-console.service';
 import { OpenVRService } from './openvr.service';
-import { SteamFramePairingService } from './steam-frame/steam-frame-pairing.service';
+import { SteamFrameService } from './steam-frame/steam-frame.service';
 
 /** Device actions for callers, routed by each device's `powerMethod`. */
 @Injectable({
@@ -13,7 +13,7 @@ import { SteamFramePairingService } from './steam-frame/steam-frame-pairing.serv
 export class DeviceControlService {
   constructor(
     private lighthouseConsole: LighthouseConsoleService,
-    private steamFrame: SteamFramePairingService,
+    private steamFrame: SteamFrameService,
     private openvr: OpenVRService
   ) {
     void listen<string>('turnOffOVRDevices', (event) => this.onOverlayTurnOff(event.payload));

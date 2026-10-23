@@ -35,7 +35,7 @@ import { AppSettingsService } from '../app-settings.service';
 import { AppSettings } from '../../models/settings';
 import { clamp } from '../../utils/number-utils';
 import { SteamFrameHardwareBrightnessControlDriver } from './hardware-brightness-drivers/steam-frame-hardware-brightness-control-driver';
-import { SteamFramePairingService } from '../steam-frame/steam-frame-pairing.service';
+import { SteamFrameService } from '../steam-frame/steam-frame.service';
 import { DeviceFade } from '../../utils/device-fade';
 
 /** A transition on the PC, or a fade the device runs. */
@@ -101,7 +101,7 @@ export class HardwareBrightnessControlService {
   constructor(
     openvr: OpenVRService,
     private appSettingsService: AppSettingsService, // private bsbFanAutomationService: BigscreenBeyondFanAutomationService
-    steamFrames: SteamFramePairingService
+    steamFrames: SteamFrameService
   ) {
     this.driverValveIndex = new ValveIndexHardwareBrightnessControlDriver(
       this.appSettingsService.settings,
