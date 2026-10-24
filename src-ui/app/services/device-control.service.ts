@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { listen } from '@tauri-apps/api/event';
 import { OVRDevice } from '../models/ovr-device';
+import { EventLogFailure } from '../models/event-log-entry';
 import { LighthouseConsoleService } from './lighthouse-console.service';
 import { OpenVRService } from './openvr.service';
 import { SteamFrameService } from './steam-frame/steam-frame.service';
@@ -45,6 +46,13 @@ export class DeviceControlService {
       this.lighthouseConsole.turnOffDevices(ovrDevices),
     ]);
     return [...frameDispatched, ...consoleDispatched];
+  }
+
+  /** Why these devices did not turn off: only the console path has a Message Centre warning. */
+  powerOffFailure(failedDevices: OVRDevice[]): EventLogFailure {
+    return failedDevices.every((device) => device.powerMethod === 'Lighthouse')
+      ? this.lighthouseConsole.powerOffFailure
+      : 'UNKNOWN';
   }
 
   /** Turns off one device for a user action, and shows a toast when it could not be turned off. */

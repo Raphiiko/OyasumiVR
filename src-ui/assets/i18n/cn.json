@@ -306,6 +306,9 @@
       "withDevices": "{count, plural, other {# 个设备}}"
     },
     "event-log-entry": {
+      "failure": {
+        "MUTE_STATE_UNKNOWN": "VRChat 未告知 OyasumiVR 你的麦克风是否已静音。请确保 VRChat 中已启用 OSC。"
+      },
       "type": {
         "acceptedInviteRequest": {
           "subtitle": {
@@ -386,9 +389,9 @@
           },
           "title": {
             "MUTE": "已静音 VRChat 中的麦克风",
-            "MUTE_FAILED": "无法静音 VRChat 中的麦克风：OSCQuery 未报告你的静音状态。请查看消息中心了解详情。",
+            "MUTE_FAILED": "无法静音 VRChat 中的麦克风",
             "UNMUTE": "已取消静音 VRChat 中的麦克风",
-            "UNMUTE_FAILED": "无法取消静音 VRChat 中的麦克风：OSCQuery 未报告你的静音状态。请查看消息中心了解详情。"
+            "UNMUTE_FAILED": "无法取消静音 VRChat 中的麦克风"
           }
         },
         "chaperoneFadeDistanceChanged": {

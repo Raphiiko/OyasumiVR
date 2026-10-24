@@ -11,6 +11,8 @@ export class EventLogGpuPowerLimitChangedEntryParser extends EventLogEntryParser
   }
 
   override headerInfoTitle(entry: EventLogGpuPowerLimitChanged): string {
+    // a failed entry has no device name when the device was not found
+    if (!entry.device) return 'comp.event-log-entry.type.gpuPowerLimitChanged.title.noDevice';
     return (
       'comp.event-log-entry.type.gpuPowerLimitChanged.title.' +
       (entry.resetToDefault ? 'reset' : 'set')

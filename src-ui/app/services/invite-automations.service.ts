@@ -12,6 +12,7 @@ import {
   EventLogDeclinedInvite,
   EventLogDeclinedInviteRequest,
   EventLogFailedInviteRequest,
+  EventLogFailure,
 } from '../models/event-log-entry';
 import { NotificationService } from './notification.service';
 import { TranslocoService } from '@jsverse/transloco';
@@ -20,7 +21,7 @@ import { AutoAcceptInviteRequestsAutomationConfig } from '../models/automations'
 import { SleepPreparationService } from './sleep-preparation.service';
 import { MessageCenterService } from './message-center/message-center.service';
 import { ExternalLinkService } from './external-link.service';
-import { VRChatInviteRefusedError } from './vrchat-api/vrchat-api';
+import { VRChatInviteRefusedError, vrchatFailure } from './vrchat-api/vrchat-api';
 import { TelemetryService } from './telemetry/telemetry.service';
 
 const MAX_REFUSAL_TEXT = 200;
@@ -76,23 +77,21 @@ export class InviteAutomationsService {
     // Decline invites if configured
     const message = await this.getInviteDeclineMessage(config);
     if (message) {
-      const declined = await this.vrchat.declineInviteOrInviteRequest(
-        notification.id,
-        'invite',
-        message
-      );
-      await this.vrchat.deleteNotification(notification.id);
+      const declined = await this.decline(notification, 'invite', message);
       if (declined) {
         this.eventLog.logEvent({
           type: 'declinedInvite',
           displayName: notification.senderUsername,
           reason: 'SLEEP_MODE_ENABLED',
           message: declined.reply,
+          failure: declined.failure,
         } as EventLogDeclinedInvite);
-        void this.sendInviteAutomationNotification(
-          'autoDeclinedInvite',
-          notification.senderUsername
-        );
+        if (!declined.failure) {
+          void this.sendInviteAutomationNotification(
+            'autoDeclinedInvite',
+            notification.senderUsername
+          );
+        }
       }
     }
     // Play a sound if configured
@@ -282,7 +281,20 @@ export class InviteAutomationsService {
     try {
       reply = await this.vrchat.inviteUser(notification.senderUserId, { message });
     } catch (cause) {
-      if (!(cause instanceof VRChatInviteRefusedError)) throw cause;
+      if (!(cause instanceof VRChatInviteRefusedError)) {
+        const failure = vrchatFailure(cause);
+        if (!failure) throw cause;
+        this.eventLog.logEvent({
+          type: 'failedInviteRequest',
+          displayName: notification.senderUsername ?? '',
+          failure,
+        });
+        void this.sendInviteAutomationNotification(
+          'failedInviteRequest',
+          notification.senderUsername
+        );
+        return null;
+      }
       warn(
         `[VRChat] Could not accept the invite request from ${notification.senderUsername}: VRChat refused the invite to the current instance`
       );
@@ -337,25 +349,44 @@ export class InviteAutomationsService {
   ): Promise<boolean> {
     const message = await this.getInviteRequestDeclineMessage(config);
     if (!message) return false;
-    const declined = await this.vrchat.declineInviteOrInviteRequest(
-      notification.id,
-      'requestInvite',
-      message
+    const declined = await this.decline(notification, 'requestInvite', message);
+    if (!declined) return false;
+    this.eventLog.logEvent({
+      type: 'declinedInviteRequest',
+      displayName: notification.senderUsername,
+      reason,
+      message: declined.reply,
+      failure: declined.failure,
+    } as EventLogDeclinedInviteRequest);
+    if (declined.failure) return false;
+    void this.sendInviteAutomationNotification(
+      'autoDeclinedInviteRequest',
+      notification.senderUsername
     );
-    await this.vrchat.deleteNotification(notification.id);
-    if (declined) {
-      this.eventLog.logEvent({
-        type: 'declinedInviteRequest',
-        displayName: notification.senderUsername,
-        reason,
-        message: declined.reply,
-      } as EventLogDeclinedInviteRequest);
-      void this.sendInviteAutomationNotification(
-        'autoDeclinedInviteRequest',
-        notification.senderUsername
-      );
-    }
     return true;
+  }
+
+  /**
+   * Declines and hides the notification. Resolves to null when the call was cancelled.
+   * A failed decline leaves the notification in VRChat, so the user can still answer it.
+   */
+  private async decline(
+    notification: Notification,
+    type: 'invite' | 'requestInvite',
+    message: string
+  ): Promise<{ reply?: string; failure?: EventLogFailure } | null> {
+    try {
+      const declined = await this.vrchat.declineInviteOrInviteRequest(
+        notification.id,
+        type,
+        message
+      );
+      await this.vrchat.deleteNotification(notification.id);
+      return declined;
+    } catch (e) {
+      const failure = vrchatFailure(e);
+      return failure ? { failure } : null;
+    }
   }
 
   private async sendInviteAutomationNotification(

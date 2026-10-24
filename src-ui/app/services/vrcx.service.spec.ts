@@ -42,6 +42,18 @@ const ALL: VRCXEventLogType[] = ['SleepMode', 'Invites', 'StatusChanges', 'Group
 describe('VRCXService', () => {
   beforeEach(() => invoke.mockClear());
 
+  it('logs nothing for a failed automation', () => {
+    const log = createService(ALL);
+    expect(
+      log({
+        type: 'declinedInviteRequest',
+        displayName: 'Bob',
+        reason: 'PLAYER_COUNT_CONDITION_FAILED',
+        failure: 'VRCHAT_RATE_LIMITED',
+      } as EventLogDraft)
+    ).toEqual([]);
+  });
+
   it('logs an accepted invite request with its reason and reply', () => {
     const log = createService(ALL);
     expect(

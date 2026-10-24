@@ -4,6 +4,8 @@ import {
   EventLog,
   EventLogDraft,
   EventLogEntry,
+  EventLogFailure,
+  EventLogLighthouseSetPowerState,
   EventLogTurnedOffOpenVRDevices,
 } from '../models/event-log-entry';
 import { async, BehaviorSubject, Observable, Subject, throttleTime } from 'rxjs';
@@ -63,11 +65,34 @@ export class EventLogService {
     this._loggedEvents.next(fullEvent);
   }
 
+  /** Logs one entry for the base stations that reached the power state, and a failed one for the rest. */
+  public logLighthousePowerState(
+    reached: boolean[],
+    state: EventLogLighthouseSetPowerState['state'],
+    reason: EventLogLighthouseSetPowerState['reason']
+  ) {
+    const changed = reached.filter((r) => r).length;
+    const failed = reached.length - changed;
+    for (const [count, failure] of [
+      [changed, undefined],
+      [failed, 'BASE_STATION_NO_RESPONSE'],
+    ] as const) {
+      if (!count) continue;
+      this.logEvent({
+        type: 'lighthouseSetPowerState',
+        reason,
+        devices: count > 1 ? 'VARIOUS' : 'SINGLE',
+        state,
+        failure,
+      });
+    }
+  }
+
   /** Empty device lists produce no event. */
   public logTurnedOffOpenVRDevices(
     devices: OVRDevice[],
     reason: EventLogTurnedOffOpenVRDevices['reason'],
-    options: { batteryThreshold?: number; allDevices?: OVRDevice[] } = {}
+    options: { batteryThreshold?: number; allDevices?: OVRDevice[]; failure?: EventLogFailure } = {}
   ) {
     if (!devices.length) return;
     let category: EventLogTurnedOffOpenVRDevices['devices'] = 'VARIOUS';
@@ -90,6 +115,7 @@ export class EventLogService {
       reason,
       devices: category,
       batteryThreshold: options.batteryThreshold,
+      failure: options.failure,
     });
   }
 

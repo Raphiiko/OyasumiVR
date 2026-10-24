@@ -17,7 +17,7 @@ import {
 import { OpenVRService } from './openvr.service';
 import { FrameLimitConfigOption } from '../models/automations';
 import { SleepPreparationService } from './sleep-preparation.service';
-import { EventLogFrameLimitChanged } from '../models/event-log-entry';
+import { EventLogFailure, EventLogFrameLimitChanged } from '../models/event-log-entry';
 
 @Injectable({
   providedIn: 'root',
@@ -108,11 +108,12 @@ export class FrameLimitAutomationsService {
     reason?: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION'
   ) {
     if (value === 'DISABLED') return;
+    let failure: EventLogFailure | undefined;
     try {
       await this.frameLimiterService.setFrameLimitForAppId(appId, value);
     } catch (e) {
       warn(`[FrameLimitAutomations] Could not set frame limit for ${appName}: ${e}`);
-      return;
+      failure = 'UNKNOWN';
     }
 
     // Log the event - store either translation keys or percentage values
@@ -139,6 +140,7 @@ export class FrameLimitAutomationsService {
         appName,
         limit: limitValue,
         reason,
+        failure,
       } as EventLogFrameLimitChanged);
     }
   }

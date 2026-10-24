@@ -108,41 +108,23 @@ export class BigscreenBeyondFanAutomationService {
   private async onSleepModeChange(sleepMode: boolean) {
     if (!this._connected.value) return;
     if (sleepMode && this.config.onSleepEnable) {
-      const speedSet = await this.setFanSpeed(this.config.onSleepEnableFanSpeed);
-      if (speedSet !== null) {
-        this.eventLog.logEvent({
-          type: 'bsbFanSpeedChanged',
-          reason: 'SLEEP_MODE_ENABLED',
-          speed: this.config.onSleepEnableFanSpeed,
-          effectiveSpeed: speedSet,
-        } as EventLogBSBFanSpeedChanged);
-      }
+      await this.setFanSpeedAndLog(this.config.onSleepEnableFanSpeed, 'SLEEP_MODE_ENABLED');
     } else if (!sleepMode && this.config.onSleepDisable) {
-      const speedSet = await this.setFanSpeed(this.config.onSleepDisableFanSpeed);
-      if (speedSet !== null) {
-        this.eventLog.logEvent({
-          type: 'bsbFanSpeedChanged',
-          reason: 'SLEEP_MODE_DISABLED',
-          speed: this.config.onSleepDisableFanSpeed,
-          effectiveSpeed: speedSet,
-        } as EventLogBSBFanSpeedChanged);
-      }
+      await this.setFanSpeedAndLog(this.config.onSleepDisableFanSpeed, 'SLEEP_MODE_DISABLED');
     }
   }
 
   private async onSleepPreparation() {
     if (!this._connected.value) return;
     if (this.config.onSleepPreparation) {
-      const speedSet = await this.setFanSpeed(this.config.onSleepPreparationFanSpeed);
-      if (speedSet !== null) {
-        this.eventLog.logEvent({
-          type: 'bsbFanSpeedChanged',
-          reason: 'SLEEP_PREPARATION',
-          speed: this.config.onSleepPreparationFanSpeed,
-          effectiveSpeed: speedSet,
-        } as EventLogBSBFanSpeedChanged);
-      }
+      await this.setFanSpeedAndLog(this.config.onSleepPreparationFanSpeed, 'SLEEP_PREPARATION');
     }
+  }
+
+  private async setFanSpeedAndLog(speed: number, reason: EventLogBSBFanSpeedChanged['reason']) {
+    const speedSet = await this.setFanSpeed(speed);
+    if (speedSet === null) return;
+    this.eventLog.logEvent({ type: 'bsbFanSpeedChanged', reason, speed, effectiveSpeed: speedSet });
   }
 
   private async handleFanSafety() {
@@ -173,6 +155,7 @@ export class BigscreenBeyondFanAutomationService {
     });
   }
 
+  /** Resolves to the speed set, or null when the headset is not connected or rejected it. */
   public async setFanSpeed(speed: number, saveAsRestore = true): Promise<number | null> {
     if (!this._connected.value) return null;
     // Keep fan speed in safe range
@@ -189,8 +172,13 @@ export class BigscreenBeyondFanAutomationService {
       speed = 100;
     // Set the fan speed
     this._fanSpeed.next(speed);
-    await invoke('bigscreen_beyond_set_fan_speed', { speed });
-    return speed;
+    return invoke('bigscreen_beyond_set_fan_speed', { speed }).then(
+      () => speed,
+      (e) => {
+        warn(`[BigscreenBeyondFanAutomation] Could not set the fan speed: ${e}`);
+        return null;
+      }
+    );
   }
 
   private getBeyondDriverSavedFanSpeed(): Promise<number | null> {

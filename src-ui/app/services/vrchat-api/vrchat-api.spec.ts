@@ -136,7 +136,7 @@ describe('VRChatAPI.setStatus', () => {
     const { api } = await createApi({ status: UserStatus.JoinMe, statusDescription: stored });
     const onRewrite = vi.fn();
     api.setStatusMessageRewriteHandler(onRewrite);
-    for (let i = 0; i < 5; i++) await api.setStatus(null, 'zzz...');
+    for (let i = 0; i < 5; i++) await api.setStatus(null, 'zzz...').catch(() => false);
     expect(onRewrite).not.toHaveBeenCalled();
     await api.setStatus(null, 'zzz...');
     expect(onRewrite).toHaveBeenCalledOnce();

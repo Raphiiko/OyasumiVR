@@ -3,6 +3,7 @@ import { LighthouseDevicePowerState } from './lighthouse-device';
 import { SleepModeStatusChangeReason } from './sleep-mode';
 import type { UserStatus } from './vrchat';
 import { AudioDeviceParsedName, AudioDeviceType } from './audio-device';
+import type { PowerDownWindowsMode } from './automations';
 
 export type EventLog = {
   version: 6;
@@ -34,6 +35,7 @@ export type EventLogEntry =
   | EventLogChaperoneFadeDistanceChanged
   | EventLogShutdownSequenceStarted
   | EventLogShutdownSequenceCancelled
+  | EventLogShutdownSequenceStepFailed
   | EventLogWindowsPowerPolicySet
   | EventLogChangedVRChatMicMuteState
   | EventLogChangedSystemMicMuteState
@@ -75,6 +77,7 @@ export type EventLogType =
   | 'chaperoneFadeDistanceChanged'
   | 'shutdownSequenceStarted'
   | 'shutdownSequenceCancelled'
+  | 'shutdownSequenceStepFailed'
   | 'windowsPowerPolicySet'
   | 'changedVRChatMicMuteState'
   | 'changedSystemMicMuteState'
@@ -95,7 +98,20 @@ export interface EventLogBase {
   id: string;
   type: EventLogType;
   time: number;
+  /** Set when the automation did not act; the entry's other fields then describe the intended action. */
+  failure?: EventLogFailure;
 }
+
+/** Why an automation did not act. Each value has a hint for the user in the event log. */
+export type EventLogFailure =
+  | 'UNKNOWN'
+  | 'SEE_MESSAGE_CENTRE'
+  | 'MUTE_STATE_UNKNOWN'
+  | 'BASE_STATION_NO_RESPONSE'
+  | 'VRCHAT_LOGGED_OUT'
+  | 'VRCHAT_RATE_LIMITED'
+  | 'VRCHAT_AVATAR_UNAVAILABLE'
+  | 'VRCHAT_NOT_GROUP_MEMBER';
 
 export type EventLogShutdownSequenceStartedReason =
   'MANUAL' | 'HOTKEY' | 'SLEEP_TRIGGER' | 'VRC_ALONE_TRIGGER' | 'MQTT';
@@ -109,6 +125,11 @@ export interface EventLogShutdownSequenceStarted extends EventLogBase {
 export interface EventLogShutdownSequenceCancelled extends EventLogBase {
   type: 'shutdownSequenceCancelled';
   reason: 'MANUAL';
+}
+
+export interface EventLogShutdownSequenceStepFailed extends EventLogBase {
+  type: 'shutdownSequenceStepFailed';
+  step: 'TURNING_OFF_DEVICES' | 'QUITTING_STEAMVR' | PowerDownWindowsMode;
 }
 
 export interface EventLogSleepModeEnabled extends EventLogBase {
@@ -274,8 +295,6 @@ export interface EventLogChangedVRChatMicMuteState extends EventLogBase {
   type: 'changedVRChatMicMuteState';
   muted: boolean;
   reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
-  /** Set when the automation could not change the state; `muted` is then the target state. */
-  failure?: 'STATE_UNKNOWN';
 }
 
 export interface EventLogChangedSystemMicMuteState extends EventLogBase {

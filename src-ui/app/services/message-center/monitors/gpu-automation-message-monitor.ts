@@ -1,7 +1,10 @@
 import { inject } from '@angular/core';
 import { MessageMonitor } from './message-monitor';
 import { NvmlService } from '../../nvml.service';
-import { GpuAutomationsService } from '../../gpu-automations.service';
+import {
+  GpuAutomationsService,
+  MSI_AFTERBURNER_ERROR_STATUSES,
+} from '../../gpu-automations.service';
 import { ElevatedSidecarService } from '../../elevated-sidecar.service';
 import { asyncScheduler, combineLatest, distinctUntilChanged, map, throttleTime } from 'rxjs';
 import { AutomationConfigService } from '../../automation-config.service';
@@ -11,7 +14,6 @@ import {
 } from 'src-ui/app/models/automations';
 import { isEqual } from 'lodash';
 import { TString } from 'src-ui/app/models/translatable-string';
-import { ExecutableReferenceStatus } from 'src-ui/app/models/settings';
 import { Router } from '@angular/router';
 
 export class GpuAutomationMessageMonitor extends MessageMonitor {
@@ -81,16 +83,7 @@ export class GpuAutomationMessageMonitor extends MessageMonitor {
               msiAfterburnerConfig.onSleepDisableProfile === 0
             )
               return { error: false };
-            if (
-              (
-                [
-                  'NOT_FOUND',
-                  'INVALID_EXECUTABLE',
-                  'INVALID_SIGNATURE',
-                  'UNKNOWN_ERROR',
-                ] as ExecutableReferenceStatus[]
-              ).includes(msiAfterburnerStatus)
-            ) {
+            if (MSI_AFTERBURNER_ERROR_STATUSES.includes(msiAfterburnerStatus)) {
               return {
                 error: true,
                 msiAfterburnerStatus,
@@ -176,6 +169,7 @@ export class GpuAutomationMessageMonitor extends MessageMonitor {
           this.messageCenter.removeMessage('gpuAutomationsNvmlError');
           return;
         }
+        // these cases match NVML_ERROR_STATUSES
         switch (nvmlStatus) {
           case 'DriverNotLoaded':
           case 'LibLoadingError':

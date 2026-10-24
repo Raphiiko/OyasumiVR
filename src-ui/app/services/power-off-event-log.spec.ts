@@ -308,9 +308,12 @@ describe('power-off event producers', () => {
       await service['handleSleepModeEnable']();
       if (outcome === 'skipped') expect(powerOff).not.toHaveBeenCalled();
       const logs = (await firstValueFrom(log.eventLog)).logs;
-      if (outcome === 'partial')
-        expect(logs).toMatchObject([{ devices: 'VARIOUS', reason: 'SLEEP_MODE_ENABLED' }]);
+      const failed = { devices: 'VARIOUS', failure: 'BASE_STATION_NO_RESPONSE' };
+      const succeeded = { devices: 'VARIOUS', reason: 'SLEEP_MODE_ENABLED' };
+      if (outcome === 'partial') expect(logs).toMatchObject([failed, succeeded]);
+      else if (outcome === 'failed') expect(logs).toMatchObject([failed]);
       else expect(logs).toEqual([]);
+      expect(logs.filter((entry) => !entry.failure)).toHaveLength(outcome === 'partial' ? 1 : 0);
     }
   );
 
@@ -362,8 +365,8 @@ describe('power-off event producers', () => {
       });
       await service['handleSleepModeDisable']();
       const logs = (await firstValueFrom(log.eventLog)).logs;
-      if (reached) expect(logs).toMatchObject([{ type: 'lighthouseSetPowerState', state: 'on' }]);
-      else expect(logs).toEqual([]);
+      expect(logs).toMatchObject([{ type: 'lighthouseSetPowerState', state: 'on' }]);
+      expect(logs[0].failure).toBe(reached ? undefined : 'BASE_STATION_NO_RESPONSE');
     }
   );
 
@@ -399,6 +402,7 @@ describe('power-off event producers', () => {
     finish([controller]);
     await pending;
     expect((await firstValueFrom(log.eventLog)).logs).toMatchObject([
+      { type: 'turnedOffOpenVRDevices', devices: 'VARIOUS', failure: 'BASE_STATION_NO_RESPONSE' },
       { type: 'turnedOffOpenVRDevices', devices: 'VARIOUS', reason },
     ]);
   });
@@ -427,7 +431,11 @@ describe('power-off event producers', () => {
     const log = new EventLogService();
     const record = vi.spyOn(log, 'logTurnedOffOpenVRDevices');
     const devices = new BehaviorSubject([controller, tracker]);
-    const consoleService = { turnOffDevices: powerOff, turnOffDeviceForUser: powerOff };
+    const consoleService = {
+      turnOffDevices: powerOff,
+      turnOffDeviceForUser: powerOff,
+      powerOffFailure: () => 'UNKNOWN',
+    };
     const deviceManager = {
       getIdForOpenVRDevice: () => '',
       getKnownDeviceById: () => undefined,
@@ -522,7 +530,9 @@ describe('power-off event producers', () => {
     await vi.advanceTimersByTimeAsync(0);
     if (!source.startsWith('sleep'))
       expect(record.mock.calls[0].slice(0, 2)).toEqual([dispatched, reason]);
+    // the sleep automations also log the tracker that did not turn off
     expect((await firstValueFrom(log.eventLog)).logs).toMatchObject([
+      ...(source.startsWith('sleep') ? [{ devices: 'VARIOUS', reason, failure: 'UNKNOWN' }] : []),
       {
         devices: source.startsWith('sleep')
           ? 'VARIOUS'
@@ -534,5 +544,20 @@ describe('power-off event producers', () => {
         reason,
       },
     ]);
+  });
+});
+
+describe('DeviceControlService.powerOffFailure', () => {
+  const frameController: OVRDevice = { ...controller, powerMethod: 'SteamFrame' };
+
+  it.each([
+    ['console devices', [controller, tracker], 'SEE_MESSAGE_CENTRE'],
+    ['a Steam Frame controller', [frameController], 'UNKNOWN'],
+    ['console and Steam Frame devices', [controller, frameController], 'UNKNOWN'],
+  ] as const)('gives the console hint only for %s', (_, failed, expected) => {
+    const deviceControl = caller(DeviceControlService.prototype, {
+      lighthouseConsole: { powerOffFailure: 'SEE_MESSAGE_CENTRE' },
+    });
+    expect(deviceControl.powerOffFailure([...failed])).toBe(expected);
   });
 });

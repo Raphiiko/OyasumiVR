@@ -7,6 +7,16 @@ import { OVRDevice } from '../models/ovr-device';
 import { error, info } from '@tauri-apps/plugin-log';
 import { ExecutableReferenceStatus } from '../models/settings';
 import { ToastService } from './toast.service';
+import { EventLogFailure } from '../models/event-log-entry';
+
+/** Statuses the Message Centre posts a warning for. */
+export const LIGHTHOUSE_CONSOLE_ERROR_STATUSES: ExecutableReferenceStatus[] = [
+  'NOT_FOUND',
+  'PERMISSION_DENIED',
+  'INVALID_FILENAME',
+  'UNKNOWN_ERROR',
+  'INVALID_EXECUTABLE',
+];
 
 @Injectable({
   providedIn: 'root',
@@ -84,6 +94,13 @@ export class LighthouseConsoleService {
     }
     this.validatedPath = path;
     this._consoleStatus.next('SUCCESS');
+  }
+
+  /** Why devices did not turn off: the Message Centre explains a console that is not usable. */
+  get powerOffFailure(): EventLogFailure {
+    return LIGHTHOUSE_CONSOLE_ERROR_STATUSES.includes(this._consoleStatus.value)
+      ? 'SEE_MESSAGE_CENTRE'
+      : 'UNKNOWN';
   }
 
   async turnOffDevices(ovrDevices: OVRDevice[]) {

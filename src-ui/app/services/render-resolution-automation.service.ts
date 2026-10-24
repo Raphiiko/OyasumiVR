@@ -13,7 +13,7 @@ import {
   skip,
   startWith,
 } from 'rxjs';
-import { EventLogRenderResolutionChanged } from '../models/event-log-entry';
+import { EventLogFailure, EventLogRenderResolutionChanged } from '../models/event-log-entry';
 import { OpenVRService } from './openvr.service';
 
 @Injectable({
@@ -53,17 +53,19 @@ export class RenderResolutionAutomationService {
     if (!config.enabled) return;
     const openvrStatus = await firstValueFrom(this.openvr.status);
     if (openvrStatus !== 'INITIALIZED') return;
+    let failure: EventLogFailure | undefined;
     try {
       await this.openvr.setSupersampleScale(config.resolution ? config.resolution / 100 : null);
     } catch (e) {
       warn(`[RenderResolutionAutomation] Could not set render resolution: ${e}`);
-      return;
+      failure = 'UNKNOWN';
     }
     if (logging) {
       this.eventLog.logEvent({
         type: 'renderResolutionChanged',
         reason: sleepMode ? 'SLEEP_MODE_ENABLED' : 'SLEEP_MODE_DISABLED',
         resolution: config.resolution,
+        failure,
       } as EventLogRenderResolutionChanged);
     }
   }
