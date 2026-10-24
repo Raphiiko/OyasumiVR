@@ -1018,7 +1018,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumivr-shared"
-version = "26.10.4-beta.3"
+version = "26.10.4-beta.4"
 dependencies = [
  "base64 0.23.1",
  "flexi_logger",
