@@ -13,6 +13,10 @@
     {
       "controller_type": "oculus_touch",
       "binding_url": "default_oculus_touch.json"
+    },
+    {
+      "controller_type": "frame_controller",
+      "binding_url": "default_frame_controller.json"
     }
   ],
   "actions": [
