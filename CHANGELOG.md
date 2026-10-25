@@ -35,6 +35,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Right controllers now show a mirrored controller icon in the device list and the Device Manager
 - Replaced the time fields with a 24-hour dial that works from the SteamVR dashboard
 - OyasumiVR now follows Valve Index brightness changes made in SteamVR
+- Debug reports now hide public IP addresses
 - VRChat status changes in the event log now show the old and new status side by side, on one line
 
 ### Fixed
@@ -47,6 +48,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Fixed the language code link in the translation editor opening inside OyasumiVR instead of in your browser
 - Fixed the VRChat microphone mute automation pressing the mute button without knowing whether you were muted, which could unmute you instead
 - Fixed the player count status automation setting the same VRChat status message again every 11 minutes when the message contained punctuation
+- Fixed OyasumiVR not finding VRChat's OSC services on PCs with several network adapters, which showed the "VRChat OSC(Query) services unavailable" warning while OSC was enabled
 
 ## [26.10.3]
 

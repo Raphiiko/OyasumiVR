@@ -4590,7 +4590,7 @@ dependencies = [
 [[package]]
 name = "oyasumivr_oscquery"
 version = "0.4.0"
-source = "git+https://github.com/Raphiiko/oyasumivr_oscquery.git?rev=1bfd8ea4943822ebda2538c7c0d46a484cc5e96d#1bfd8ea4943822ebda2538c7c0d46a484cc5e96d"
+source = "git+https://github.com/Raphiiko/oyasumivr_oscquery.git?rev=9fe5ae00331ceb39b359bddef87b9a882de0e8cd#9fe5ae00331ceb39b359bddef87b9a882de0e8cd"
 dependencies = [
  "hickory-proto",
  "http-body-util",

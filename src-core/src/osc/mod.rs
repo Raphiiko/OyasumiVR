@@ -149,8 +149,10 @@ pub async fn set_vr_chat_osc_query_address(addr: Option<(String, u16)>) {
     let current_address = VRC_OSCQUERY_ADDRESS.lock().await.clone();
 
     if current_address != address {
-        if let Some(ref addr) = address.clone() {
-            info!("[Core] Found VRChat OSCQuery address on {addr}");
+        match (&current_address, &address) {
+            (_, Some(addr)) => info!("[Core] Found VRChat OSCQuery address on {addr}"),
+            (Some(addr), None) => info!("[Core] Lost VRChat OSCQuery address {addr}"),
+            (None, None) => {}
         }
         *VRC_OSCQUERY_ADDRESS.lock().await = address.clone();
         send_event("VRC_OSCQUERY_ADDRESS_CHANGED", address.clone()).await;
@@ -162,8 +164,10 @@ pub async fn set_vr_chat_osc_address(addr: Option<(String, u16)>) {
     let current_address = VRC_OSC_ADDRESS.lock().await.clone();
 
     if current_address != address {
-        if let Some(ref addr) = address {
-            info!("[Core] Found VRChat OSC address on {addr}");
+        match (&current_address, &address) {
+            (_, Some(addr)) => info!("[Core] Found VRChat OSC address on {addr}"),
+            (Some(addr), None) => info!("[Core] Lost VRChat OSC address {addr}"),
+            (None, None) => {}
         }
         *VRC_OSC_ADDRESS.lock().await = address.clone();
         send_event("VRC_OSC_ADDRESS_CHANGED", address).await;

@@ -4,6 +4,7 @@ mod system;
 use std::{
     fs,
     io::{Cursor, Write},
+    net::{Ipv4Addr, Ipv6Addr},
     path::{Path, PathBuf},
     sync::LazyLock,
     time::{Duration, SystemTime},
@@ -30,6 +31,12 @@ static TOKEN_PARAM: LazyLock<Regex> = LazyLock::new(|| {
 });
 static BEARER_TOKEN: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?i)\b(bearer)\s+(?:[^\s'\x22\\]|\\[^\x22])+").unwrap());
+static IPV4_ADDRESS: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"\b\d{1,3}(?:\.\d{1,3}){3}\b").unwrap());
+static IPV6_ADDRESS: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"[0-9A-Fa-f]{0,4}(?::(?:\d{5}|[0-9A-Fa-f]{0,4})){2,8}(?:(?:\.\d{1,3}){3})?")
+        .unwrap()
+});
 
 pub struct ReportFile {
     pub name: String,
@@ -45,15 +52,107 @@ impl ReportFile {
     }
 }
 
-/// Replaces the user's name in profile paths, the values of token-like URL parameters, and
-/// bearer tokens. `profile` comes from `profile_path_pattern`.
+/// Replaces the user's name in profile paths, the values of token-like URL parameters, bearer
+/// tokens, and public IP addresses. `profile` comes from `profile_path_pattern`.
 pub fn scrub_text(text: &str, profile: Option<&Regex>) -> String {
     let text = TOKEN_PARAM.replace_all(text, format!("$1={REMOVED}"));
     let text = BEARER_TOKEN.replace_all(&text, format!("$1 {REMOVED}"));
+    // IPv6 goes first, so an address with an IPv4 tail is judged as a whole
+    let text = mask_public_ipv6(&text);
+    let text = mask_public_ipv4(&text);
     match profile {
         Some(profile) => profile.replace_all(&text, "${1}<user>${2}").into_owned(),
-        None => text.into_owned(),
+        None => text,
     }
+}
+
+/// Replaces each IPv4 address that can identify the user's connection with `<public-ip>`.
+/// Loopback, private, link-local, CGNAT, and multicast addresses stay readable.
+fn mask_public_ipv4(text: &str) -> String {
+    IPV4_ADDRESS
+        .replace_all(text, |caps: &regex::Captures| {
+            let found = caps.get(0).unwrap();
+            let before = &text.as_bytes()[..found.start()];
+            let after = &text.as_bytes()[found.end()..];
+            let is_version = matches!(before, [.., b'0'..=b'9', b'.'])
+                || matches!(after, [b'.', b'0'..=b'9', ..]);
+            let is_public = found
+                .as_str()
+                .parse::<Ipv4Addr>()
+                .is_ok_and(|ip| is_public_ipv4(&ip));
+            if is_public && !is_version {
+                "<public-ip>".to_owned()
+            } else {
+                found.as_str().to_owned()
+            }
+        })
+        .into_owned()
+}
+
+fn is_public_ipv4(ip: &Ipv4Addr) -> bool {
+    let [a, b, ..] = ip.octets();
+    let is_shared = a == 100 && (64..128).contains(&b);
+    !(ip.is_unspecified()
+        || ip.is_loopback()
+        || ip.is_private()
+        || ip.is_link_local()
+        || ip.is_multicast()
+        || ip.is_broadcast()
+        || is_shared)
+}
+
+/// Replaces each global unicast IPv6 address (2000::/3) with `<public-ip>`.
+/// Loopback, link-local, unique local, and multicast addresses stay readable.
+fn mask_public_ipv6(text: &str) -> String {
+    IPV6_ADDRESS
+        .replace_all(text, |caps: &regex::Captures| {
+            let found = caps.get(0).unwrap();
+            let after = &text.as_bytes()[found.end()..];
+            let ends_inside_word = matches!(after, [c, ..] if c.is_ascii_alphanumeric())
+                || matches!(after, [b'.', b'0'..=b'9', ..]);
+            if ends_inside_word {
+                return found.as_str().to_owned();
+            }
+
+            // a match can include a label before the address and a colon or port after it
+            let matched = found.as_str();
+            let starts = [0, matched.find(':').unwrap_or_default() + 1];
+            let ends = [
+                matched.len(),
+                matched.len() - usize::from(matched.ends_with(':')),
+                matched.rfind(':').unwrap_or_default(),
+            ];
+
+            // a local address such as `fd12:2345::1` also parses as global after its first group
+            let is_local = ends.iter().any(|&end| {
+                matched[..end].parse::<Ipv6Addr>().is_ok_and(|ip| {
+                    ip.is_unique_local() || ip.is_unicast_link_local() || ip.is_multicast()
+                })
+            });
+            if is_local {
+                return matched.to_owned();
+            }
+
+            let address = starts
+                .into_iter()
+                .flat_map(|start| ends.map(|end| (start, end)))
+                .find(|&(start, end)| {
+                    let before = &text.as_bytes()[..found.start() + start];
+                    let starts_inside_word = matches!(before, [.., c] if c.is_ascii_alphanumeric());
+                    let is_public = matched
+                        .get(start..end)
+                        .and_then(|candidate| candidate.parse::<Ipv6Addr>().ok())
+                        .is_some_and(|ip| ip.segments()[0] & 0xe000 == 0x2000);
+                    is_public && !starts_inside_word
+                });
+            match address {
+                Some((start, end)) => {
+                    format!("{}<public-ip>{}", &matched[..start], &matched[end..])
+                }
+                None => matched.to_owned(),
+            }
+        })
+        .into_owned()
 }
 
 /// Matches a folder from `names` directly under `Users` or a folder from `parents`.
@@ -434,6 +533,85 @@ mod tests {
             scrub_text(text, None),
             r#"curl -H "Authorization: Bearer <removed>" -H 'authorization: bearer <removed>' x"#
         );
+    }
+
+    #[test]
+    fn scrub_text_masks_public_ipv4_addresses_only() {
+        let text = "joined [100.124.184.7, 172.23.224.1, 192.168.1.6, 10.0.0.2, 169.254.1.1] \
+                    found 127.0.0.1:9000 on 224.0.0.251, peer 8.8.8.8:443 via 172.32.0.1. \
+                    gateway 1.1.1.1.";
+        assert_eq!(
+            scrub_text(text, None),
+            "joined [100.124.184.7, 172.23.224.1, 192.168.1.6, 10.0.0.2, 169.254.1.1] \
+             found 127.0.0.1:9000 on 224.0.0.251, peer <public-ip>:443 via <public-ip>. \
+             gateway <public-ip>."
+        );
+    }
+
+    #[test]
+    fn scrub_text_masks_public_ipv6_addresses_only() {
+        let text = "from [2a02:a46:1::5]:443 and 2001:db8:0:0:0:0:0:1, joined ::1 fe80::1c2b:3a4d \
+                    fd7a:115c:a1e0::1 at 12:34:56 in crate::mdns::run";
+        assert_eq!(
+            scrub_text(text, None),
+            "from [<public-ip>]:443 and <public-ip>, joined ::1 fe80::1c2b:3a4d \
+             fd7a:115c:a1e0::1 at 12:34:56 in crate::mdns::run"
+        );
+    }
+
+    #[test]
+    fn scrub_text_masks_ipv6_addresses_next_to_punctuation() {
+        let text = "ip:2001:db8::1 data:2001:db8::2 abc:2001:db8::3, failed to reach 2001:db8::4. \
+                    2a02:a46:1::5: timed out, at:2001:db8::6: refused, 2001:db8:: is a prefix";
+        assert_eq!(
+            scrub_text(text, None),
+            "ip:<public-ip> data:<public-ip> abc:<public-ip>, failed to reach <public-ip>. \
+             <public-ip>: timed out, at:<public-ip>: refused, <public-ip> is a prefix"
+        );
+    }
+
+    #[test]
+    fn scrub_text_masks_ipv6_addresses_with_an_unbracketed_port() {
+        let text = "osc 2a02:a46:1::5:12345 query 2a02:a46:1::6:9000 local fd12:3456::1:54321";
+        assert_eq!(
+            scrub_text(text, None),
+            "osc <public-ip>:12345 query <public-ip> local fd12:3456::1:54321"
+        );
+    }
+
+    #[test]
+    fn scrub_text_masks_ipv6_addresses_with_an_ipv4_tail() {
+        let text = "2606:4700::10.0.0.1 [2a02:a46::8.8.8.8]:443 ::ffff:8.8.8.8 ::ffff:10.0.0.1 \
+                    fd12:3456::10.0.0.1";
+        assert_eq!(
+            scrub_text(text, None),
+            "<public-ip> [<public-ip>]:443 ::ffff:<public-ip> ::ffff:10.0.0.1 \
+             fd12:3456::10.0.0.1"
+        );
+    }
+
+    #[test]
+    fn scrub_text_masks_full_ipv6_addresses_after_a_label() {
+        let text = "ip:2a02:a46:1234:5678:9abc:def0:1234:5678 ip:2001:db8:0:0:0:0:0:1, \
+                    2a02:a46:1234:5678:9abc:def0:1234:5678:443 \
+                    addr:2a02:a46:1234:5678:9abc:def0:1234:5678:443";
+        assert_eq!(
+            scrub_text(text, None),
+            "ip:<public-ip> ip:<public-ip>, <public-ip>:443 addr:<public-ip>:443"
+        );
+    }
+
+    #[test]
+    fn scrub_text_keeps_local_ipv6_addresses_with_a_global_looking_tail() {
+        let text = "fd12:2345:6789::1 [fd12:2345:6789::1]:5353 fe80:2001:db8::1%12 \
+                    ff02:2001:db8::1, fd12:2345:6789::1: refused";
+        assert_eq!(scrub_text(text, None), text);
+    }
+
+    #[test]
+    fn scrub_text_keeps_version_numbers() {
+        let text = "driver 31.0.15.5222, firmware 1.2.3.4.5, build 10.0.26300.1, v1.2.3.4";
+        assert_eq!(scrub_text(text, None), text);
     }
 
     #[test]
