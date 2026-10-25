@@ -602,15 +602,13 @@
             "SLEEP_MODE_DISABLED": "因为已关闭睡眠模式",
             "SLEEP_MODE_ENABLED": "因为已开启睡眠模式",
             "SLEEP_PREPARATION": "因为你准备入睡"
-          },
-          "title": "已将你的 VRChat 状态从“{oldStatus}”改为“{newStatus}”"
+          }
         },
         "statusChangedOnPlayerCountChange": {
           "reason": {
             "AT_LIMIT_OR_ABOVE": "因为你世界房间中的玩家数量已达到 {threshold} 人的上限",
             "BELOW_LIMIT": "因为你世界房间中的玩家数量已降到 {threshold} 人以下"
-          },
-          "title": "已将你的 VRChat 状态从“{oldStatus}”改为“{newStatus}”"
+          }
         },
         "turnedOffOpenVRDevices": {
           "reason": {

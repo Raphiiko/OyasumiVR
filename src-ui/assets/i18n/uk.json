@@ -495,15 +495,13 @@
             "SLEEP_MODE_DISABLED": "Оскільки сплячий режим було вимкнено",
             "SLEEP_MODE_ENABLED": "Оскільки сплячий режим був увімкнений",
             "SLEEP_PREPARATION": "Оскільки ви готувалися до сну"
-          },
-          "title": "Ваш статус VRChat змінено з {oldStatus} на {newStatus}."
+          }
         },
         "statusChangedOnPlayerCountChange": {
           "reason": {
             "AT_LIMIT_OR_ABOVE": "Оскільки кількість гравців у вашому світі сягнула межі в {threshold}",
             "BELOW_LIMIT": "Оскільки кількість гравців у вашому світі стала нижчою {threshold}"
-          },
-          "title": "Ваш статус VRChat змінено з {oldStatus} на {newStatus}."
+          }
         },
         "turnedOffOpenVRDevices": {
           "reason": {

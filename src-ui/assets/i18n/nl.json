@@ -602,15 +602,13 @@
             "SLEEP_MODE_DISABLED": "Omdat de slaapmodus werd uitgeschakeld",
             "SLEEP_MODE_ENABLED": "Omdat de slaapmodus werd ingeschakeld",
             "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
-          },
-          "title": "Je VRChat status is veranderd van {oldStatus} naar {newStatus}"
+          }
         },
         "statusChangedOnPlayerCountChange": {
           "reason": {
             "AT_LIMIT_OR_ABOVE": "Omdat het aantal spelers in je wereld de limiet van {threshold} bereikte",
             "BELOW_LIMIT": "Omdat het aantal spelers in je wereld onder {threshold} zakte"
-          },
-          "title": "Je VRChat status is veranderd van {oldStatus} naar {newStatus}"
+          }
         },
         "turnedOffOpenVRDevices": {
           "reason": {

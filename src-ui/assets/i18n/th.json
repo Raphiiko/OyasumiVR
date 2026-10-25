@@ -590,15 +590,13 @@
             "SLEEP_MODE_DISABLED": "ปิดโหมดนอนหลับแล้ว",
             "SLEEP_MODE_ENABLED": "เปิดโหมดนอนหลับแล้ว",
             "SLEEP_PREPARATION": "เตรียมตัวนอนแล้ว"
-          },
-          "title": "เปลี่ยนสถานะ VRChat จาก {oldStatus} เป็น {newStatus}"
+          }
         },
         "statusChangedOnPlayerCountChange": {
           "reason": {
             "AT_LIMIT_OR_ABOVE": "จำนวนผู้เล่นใน World ถึงขีดจำกัด {threshold} คนแล้ว",
             "BELOW_LIMIT": "จำนวนผู้เล่นใน World ลดลงต่ำกว่า {threshold} คนแล้ว"
-          },
-          "title": "เปลี่ยนสถานะ VRChat จาก {oldStatus} เป็น {newStatus}"
+          }
         },
         "turnedOffOpenVRDevices": {
           "reason": {

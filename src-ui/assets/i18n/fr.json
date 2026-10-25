@@ -226,15 +226,13 @@
           "reason": {
             "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
             "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
-          },
-          "title": "Votre statut VRChat a été changé de {oldStatus} pour {newStatus}"
+          }
         },
         "statusChangedOnPlayerCountChange": {
           "reason": {
             "AT_LIMIT_OR_ABOVE": "Car le nombre de joueurs dans votre monde a dépassé {threshold}",
             "BELOW_LIMIT": "Car le nombre de joueurs dans votre monde est inférieur à {threshold}"
-          },
-          "title": "Votre statut VRChat a été changé de {oldStatus} pour {newStatus}"
+          }
         },
         "turnedOffOpenVRDevices": {
           "reason": {

@@ -249,8 +249,7 @@
           "reason": {
             "AT_LIMIT_OR_ABOVE": "Saat jumlah player di world Anda mencapai batas {threshold}",
             "BELOW_LIMIT": "Karena jumlah player di world Anda turun di bawah {threshold}"
-          },
-          "title": "Mengubah status VRChat Anda dari {oldStatus} ke {newStatus}"
+          }
         },
         "turnedOffOpenVRDevices": {
           "reason": {
