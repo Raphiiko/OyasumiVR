@@ -4,6 +4,7 @@ mod system;
 use std::{
     fs,
     io::{Cursor, Write},
+    net::{Ipv4Addr, Ipv6Addr},
     path::{Path, PathBuf},
     sync::LazyLock,
     time::{Duration, SystemTime},
@@ -30,6 +31,10 @@ static TOKEN_PARAM: LazyLock<Regex> = LazyLock::new(|| {
 });
 static BEARER_TOKEN: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?i)\b(bearer)\s+(?:[^\s'\x22\\]|\\[^\x22])+").unwrap());
+static IPV4_ADDRESS: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"\b\d{1,3}(?:\.\d{1,3}){3}\b").unwrap());
+static IPV6_ADDRESS: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"[0-9A-Fa-f]{0,4}(?::[0-9A-Fa-f]{0,4}){2,7}").unwrap());
 
 pub struct ReportFile {
     pub name: String,
@@ -45,15 +50,75 @@ impl ReportFile {
     }
 }
 
-/// Replaces the user's name in profile paths, the values of token-like URL parameters, and
-/// bearer tokens. `profile` comes from `profile_path_pattern`.
+/// Replaces the user's name in profile paths, the values of token-like URL parameters, bearer
+/// tokens, and public IP addresses. `profile` comes from `profile_path_pattern`.
 pub fn scrub_text(text: &str, profile: Option<&Regex>) -> String {
     let text = TOKEN_PARAM.replace_all(text, format!("$1={REMOVED}"));
     let text = BEARER_TOKEN.replace_all(&text, format!("$1 {REMOVED}"));
+    let text = mask_public_ipv4(&text);
+    let text = mask_public_ipv6(&text);
     match profile {
         Some(profile) => profile.replace_all(&text, "${1}<user>${2}").into_owned(),
-        None => text.into_owned(),
+        None => text,
     }
+}
+
+/// Replaces each IPv4 address that can identify the user's connection with `<public-ip>`.
+/// Loopback, private, link-local, CGNAT, and multicast addresses stay readable.
+fn mask_public_ipv4(text: &str) -> String {
+    IPV4_ADDRESS
+        .replace_all(text, |caps: &regex::Captures| {
+            let found = caps.get(0).unwrap();
+            let before = &text.as_bytes()[..found.start()];
+            let after = &text.as_bytes()[found.end()..];
+            let is_version = matches!(before, [.., b'0'..=b'9', b'.'])
+                || matches!(after, [b'.', b'0'..=b'9', ..]);
+            let is_public = found
+                .as_str()
+                .parse::<Ipv4Addr>()
+                .is_ok_and(|ip| is_public_ipv4(&ip));
+            if is_public && !is_version {
+                "<public-ip>".to_owned()
+            } else {
+                found.as_str().to_owned()
+            }
+        })
+        .into_owned()
+}
+
+fn is_public_ipv4(ip: &Ipv4Addr) -> bool {
+    let [a, b, ..] = ip.octets();
+    let is_shared = a == 100 && (64..128).contains(&b);
+    !(ip.is_unspecified()
+        || ip.is_loopback()
+        || ip.is_private()
+        || ip.is_link_local()
+        || ip.is_multicast()
+        || ip.is_broadcast()
+        || is_shared)
+}
+
+/// Replaces each global unicast IPv6 address (2000::/3) with `<public-ip>`.
+/// Loopback, link-local, and unique local addresses stay readable.
+fn mask_public_ipv6(text: &str) -> String {
+    IPV6_ADDRESS
+        .replace_all(text, |caps: &regex::Captures| {
+            let found = caps.get(0).unwrap();
+            let before = &text.as_bytes()[..found.start()];
+            let after = &text.as_bytes()[found.end()..];
+            let is_inside_word = matches!(before, [.., c] if c.is_ascii_alphanumeric())
+                || matches!(after, [c, ..] if c.is_ascii_alphanumeric() || *c == b'.');
+            let is_public = found
+                .as_str()
+                .parse::<Ipv6Addr>()
+                .is_ok_and(|ip| ip.segments()[0] & 0xe000 == 0x2000);
+            if is_public && !is_inside_word {
+                "<public-ip>".to_owned()
+            } else {
+                found.as_str().to_owned()
+            }
+        })
+        .into_owned()
 }
 
 /// Matches a folder from `names` directly under `Users` or a folder from `parents`.
@@ -434,6 +499,36 @@ mod tests {
             scrub_text(text, None),
             r#"curl -H "Authorization: Bearer <removed>" -H 'authorization: bearer <removed>' x"#
         );
+    }
+
+    #[test]
+    fn scrub_text_masks_public_ipv4_addresses_only() {
+        let text = "joined [100.124.184.7, 172.23.224.1, 192.168.1.6, 10.0.0.2, 169.254.1.1] \
+                    found 127.0.0.1:9000 on 224.0.0.251, peer 8.8.8.8:443 via 172.32.0.1. \
+                    gateway 1.1.1.1.";
+        assert_eq!(
+            scrub_text(text, None),
+            "joined [100.124.184.7, 172.23.224.1, 192.168.1.6, 10.0.0.2, 169.254.1.1] \
+             found 127.0.0.1:9000 on 224.0.0.251, peer <public-ip>:443 via <public-ip>. \
+             gateway <public-ip>."
+        );
+    }
+
+    #[test]
+    fn scrub_text_masks_public_ipv6_addresses_only() {
+        let text = "from [2a02:a46:1::5]:443 and 2001:db8:0:0:0:0:0:1, joined ::1 fe80::1c2b:3a4d \
+                    fd7a:115c:a1e0::1 at 12:34:56 in crate::mdns::run";
+        assert_eq!(
+            scrub_text(text, None),
+            "from [<public-ip>]:443 and <public-ip>, joined ::1 fe80::1c2b:3a4d \
+             fd7a:115c:a1e0::1 at 12:34:56 in crate::mdns::run"
+        );
+    }
+
+    #[test]
+    fn scrub_text_keeps_version_numbers() {
+        let text = "driver 31.0.15.5222, firmware 1.2.3.4.5, build 10.0.26300.1, v1.2.3.4";
+        assert_eq!(scrub_text(text, None), text);
     }
 
     #[test]
