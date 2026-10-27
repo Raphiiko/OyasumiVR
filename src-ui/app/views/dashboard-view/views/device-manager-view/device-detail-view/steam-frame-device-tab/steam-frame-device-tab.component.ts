@@ -6,9 +6,9 @@ import {
   input,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DMKnownDevice } from '../../../models/device-manager';
-import { DeviceManagerService } from '../../../services/device-manager.service';
-import { SteamFrameDeviceService } from '../../../services/steam-frame/steam-frame-device.service';
+import { DMKnownDevice } from 'src-ui/app/models/device-manager';
+import { DeviceManagerService } from 'src-ui/app/services/device-manager.service';
+import { SteamFrameDeviceViewService } from 'src-ui/app/views/dashboard-view/views/device-manager-view/steam-frame-device-view.service';
 
 /** The Steam Frame tab of the device page: pairing, the OyasumiVR helper, and unpairing. */
 @Component({
@@ -22,7 +22,7 @@ export class SteamFrameDeviceTabComponent {
   readonly device = input.required<DMKnownDevice>();
 
   constructor(
-    protected frames: SteamFrameDeviceService,
+    protected frames: SteamFrameDeviceViewService,
     deviceManager: DeviceManagerService,
     cdr: ChangeDetectorRef,
     destroyRef: DestroyRef

@@ -1,16 +1,19 @@
 import { Injectable } from '@angular/core';
-import { DMKnownDevice } from '../../models/device-manager';
-import { SteamFrameConnectionState, SteamFrameConnectionStatus } from '../../models/steam-frame';
-import { DeviceManagerService } from '../device-manager.service';
-import { ModalService } from '../modal.service';
-import { SteamFrameService } from './steam-frame.service';
-import { SteamFrameEnrollmentService } from './steam-frame-enrollment.service';
+import { DMKnownDevice } from 'src-ui/app/models/device-manager';
+import {
+  SteamFrameConnectionState,
+  SteamFrameConnectionStatus,
+} from 'src-ui/app/models/steam-frame';
+import { DeviceManagerService } from 'src-ui/app/services/device-manager.service';
+import { ModalService } from 'src-ui/app/services/modal.service';
+import { SteamFrameService } from 'src-ui/app/services/steam-frame/steam-frame.service';
+import { SteamFrameEnrollmentService } from 'src-ui/app/services/steam-frame/steam-frame-enrollment.service';
 import {
   ConfirmModalComponent,
   ConfirmModalInputModel,
   ConfirmModalOutputModel,
-} from '../../components/confirm-modal/confirm-modal.component';
-import { FLAVOUR } from '../../../build';
+} from 'src-ui/app/components/confirm-modal/confirm-modal.component';
+import { FLAVOUR } from 'src-ui/build';
 
 export interface FramePill {
   key: string;
@@ -78,7 +81,7 @@ const UNREPAIRABLE_STATUSES: (SteamFrameConnectionStatus | undefined)[] = [
 
 /** The Steam Frame status and actions of one Device Manager device, for the views that show it. */
 @Injectable({ providedIn: 'root' })
-export class SteamFrameDeviceService {
+export class SteamFrameDeviceViewService {
   constructor(
     private deviceManager: DeviceManagerService,
     private modalService: ModalService,
@@ -240,7 +243,7 @@ export class SteamFrameDeviceService {
     const details = this.details(device);
     if (!details?.paired) return;
     const { SteamFrameUnpairModalComponent } =
-      await import('../../components/steam-frame/steam-frame-unpair-modal/steam-frame-unpair-modal.component');
+      await import('src-ui/app/components/steam-frame/steam-frame-unpair-modal/steam-frame-unpair-modal.component');
     // an unpair keeps running after the dialog closes, so Escape must not look like a cancel
     this.modalService
       .addModal(

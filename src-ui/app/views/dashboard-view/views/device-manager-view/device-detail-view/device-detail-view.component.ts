@@ -18,9 +18,9 @@ import { LighthouseService } from '../../../../../services/lighthouse.service';
 import { AppSettingsService } from '../../../../../services/app-settings.service';
 import {
   FramePill,
-  SteamFrameDeviceService,
-} from '../../../../../services/steam-frame/steam-frame-device.service';
-import { KnownDeviceActionsService } from '../../../../../services/known-device-actions.service';
+  SteamFrameDeviceViewService,
+} from 'src-ui/app/views/dashboard-view/views/device-manager-view/steam-frame-device-view.service';
+import { KnownDeviceViewService } from 'src-ui/app/views/dashboard-view/views/device-manager-view/known-device-view.service';
 import { SegmentedControlItem } from '../../../../../components/segmented-control/segmented-control.component';
 
 interface HeaderPill {
@@ -70,10 +70,10 @@ export class DeviceDetailViewComponent implements OnDestroy {
     private deviceManager: DeviceManagerService,
     private lighthouse: LighthouseService,
     private appSettings: AppSettingsService,
-    protected frames: SteamFrameDeviceService,
+    protected frames: SteamFrameDeviceViewService,
     private cdr: ChangeDetectorRef,
     destroyRef: DestroyRef,
-    protected devices: KnownDeviceActionsService
+    protected devices: KnownDeviceViewService
   ) {
     combineLatest([
       route.paramMap.pipe(map((params) => params.get('id'))),

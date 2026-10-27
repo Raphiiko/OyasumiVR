@@ -1,34 +1,34 @@
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { DeviceManagerService } from './device-manager.service';
-import { OpenVRService } from './openvr.service';
-import { LighthouseService } from './lighthouse.service';
-import { DeviceControlService } from './device-control.service';
-import { ModalService } from './modal.service';
-import { EventLogService } from './event-log.service';
-import { AppSettingsService } from './app-settings.service';
-import { EventLogLighthouseSetPowerState } from '../models/event-log-entry';
-import { DMDeviceType, DMKnownDevice } from '../models/device-manager';
-import { OVRDevice } from '../models/ovr-device';
-import { LighthouseDevice, LighthouseDevicePowerState } from '../models/lighthouse-device';
+import { DeviceManagerService } from 'src-ui/app/services/device-manager.service';
+import { OpenVRService } from 'src-ui/app/services/openvr.service';
+import { LighthouseService } from 'src-ui/app/services/lighthouse.service';
+import { DeviceControlService } from 'src-ui/app/services/device-control.service';
+import { ModalService } from 'src-ui/app/services/modal.service';
+import { EventLogService } from 'src-ui/app/services/event-log.service';
+import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
+import { EventLogLighthouseSetPowerState } from 'src-ui/app/models/event-log-entry';
+import { DMDeviceType, DMKnownDevice } from 'src-ui/app/models/device-manager';
+import { OVRDevice } from 'src-ui/app/models/ovr-device';
+import { LighthouseDevice, LighthouseDevicePowerState } from 'src-ui/app/models/lighthouse-device';
 import {
   DevicePowerAction,
   DevicePowerState,
-} from '../components/device-power-button/device-power-button.component';
+} from 'src-ui/app/components/device-power-button/device-power-button.component';
 import {
   ConfirmModalComponent,
   ConfirmModalInputModel,
   ConfirmModalOutputModel,
-} from '../components/confirm-modal/confirm-modal.component';
+} from 'src-ui/app/components/confirm-modal/confirm-modal.component';
 import {
   LighthouseV1IdWizardModalComponent,
   LighthouseV1IdWizardModalInputModel,
   LighthouseV1IdWizardModalOutputModel,
-} from '../components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
+} from 'src-ui/app/components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
 
 /** The live state and the user actions of one Device Manager device, shared by its views. */
 @Injectable({ providedIn: 'root' })
-export class KnownDeviceActionsService {
+export class KnownDeviceViewService {
   private ovrDevices: OVRDevice[] = [];
   private lighthouseDevices: LighthouseDevice[] = [];
 

@@ -280,7 +280,7 @@ import { emit as globalEmit } from '@tauri-apps/api/event';
 import { DeviceManagerViewComponent } from './views/dashboard-view/views/device-manager-view/device-manager-view.component';
 import { DeviceDetailViewComponent } from './views/dashboard-view/views/device-manager-view/device-detail-view/device-detail-view.component';
 import { SegmentedControlComponent } from './components/segmented-control/segmented-control.component';
-import { SteamFrameDeviceTabComponent } from './components/steam-frame/steam-frame-device-tab/steam-frame-device-tab.component';
+import { SteamFrameDeviceTabComponent } from 'src-ui/app/views/dashboard-view/views/device-manager-view/device-detail-view/steam-frame-device-tab/steam-frame-device-tab.component';
 import { DeviceManagerService } from './services/device-manager.service';
 import { DevicePowerButtonComponent } from './components/device-power-button/device-power-button.component';
 import { DeviceManagerDevicesTabComponent } from './views/dashboard-view/views/device-manager-view/tabs/device-manager-devices-tab/device-manager-devices-tab.component';

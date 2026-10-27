@@ -26,8 +26,8 @@ import { SelectBoxItem } from '../../../../../../components/select-box/select-bo
 import { DomSanitizer } from '@angular/platform-browser';
 import Fuse, { IFuseOptions } from 'fuse.js';
 import { SteamFrameService } from 'src-ui/app/services/steam-frame/steam-frame.service';
-import { KnownDeviceActionsService } from 'src-ui/app/services/known-device-actions.service';
-import { SteamFrameDeviceService } from 'src-ui/app/services/steam-frame/steam-frame-device.service';
+import { KnownDeviceViewService } from 'src-ui/app/views/dashboard-view/views/device-manager-view/known-device-view.service';
+import { SteamFrameDeviceViewService } from 'src-ui/app/views/dashboard-view/views/device-manager-view/steam-frame-device-view.service';
 
 type DeviceGroupType = DMDeviceType | 'PREVIOUSLY_SEEN';
 
@@ -73,8 +73,8 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     private cdr: ChangeDetectorRef,
     private steamFrame: SteamFrameService,
     private router: Router,
-    protected devices: KnownDeviceActionsService,
-    protected frames: SteamFrameDeviceService
+    protected devices: KnownDeviceViewService,
+    protected frames: SteamFrameDeviceViewService
   ) {}
 
   ngOnInit() {
