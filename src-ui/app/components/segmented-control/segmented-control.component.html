@@ -4,7 +4,7 @@
       role="radio"
       [attr.aria-checked]="item.id === selected()"
       [class.active]="item.id === selected()"
-      (click)="selectedChange.emit(item.id)"
+      (click)="selected.set(item.id)"
     >
       {{ item.label | transloco }}
     </button>

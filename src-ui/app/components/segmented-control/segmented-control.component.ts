@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
 
 export interface SegmentedControlItem<T extends string = string> {
   id: T;
@@ -15,6 +15,5 @@ export interface SegmentedControlItem<T extends string = string> {
 })
 export class SegmentedControlComponent<T extends string = string> {
   readonly items = input.required<SegmentedControlItem<T>[]>();
-  readonly selected = input<T>();
-  readonly selectedChange = output<T>();
+  readonly selected = model.required<T>();
 }
