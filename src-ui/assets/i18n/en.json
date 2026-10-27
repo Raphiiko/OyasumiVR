@@ -1072,7 +1072,6 @@
       },
       "tags": {
         "description": "Assign tags to organise and filter your devices",
-        "noTags": "No tags available. Create some in the Tags tab.",
         "title": "Device Tags"
       },
       "v1Identifier": {
@@ -1088,6 +1087,7 @@
       "title": "Delete Tag"
     },
     "detail": {
+      "createTags": "Create tags",
       "facts": {
         "address": "Network address",
         "bluetoothAddress": "Bluetooth address",
@@ -1100,6 +1100,7 @@
         "serialNumber": "Serial number"
       },
       "helperUpdateAvailable": "A new version of the OyasumiVR helper is available.",
+      "noTags": "No tags yet.",
       "notConnected": "Not connected",
       "pairNeedsSteamVR": "Connect the headset to SteamVR to pair it.",
       "powerOffState": {

@@ -1,4 +1,5 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { fade, vshrink } from '../../../../utils/animations';
 
 @Component({
@@ -10,7 +11,7 @@ import { fade, vshrink } from '../../../../utils/animations';
   standalone: false,
 })
 export class DeviceManagerViewComponent {
-  activeTab: 'devices' | 'tags' = 'devices';
-
-  constructor() {}
+  // a link can open the Tags tab with ?tab=tags
+  activeTab: 'devices' | 'tags' =
+    inject(ActivatedRoute).snapshot.queryParamMap.get('tab') === 'tags' ? 'tags' : 'devices';
 }

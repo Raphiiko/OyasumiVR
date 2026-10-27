@@ -902,8 +902,7 @@
         "tooltip": "Este dispositivo está desactivado"
       },
       "tags": {
-        "description": "Asigna etiquetas para organizar y filtrar tus dispositivos",
-        "noTags": "No hay etiquetas disponibles. Crea algunas en la pestaña Etiquetas."
+        "description": "Asigna etiquetas para organizar y filtrar tus dispositivos"
       },
       "v1Identifier": {
         "change": "Cambiar ID",

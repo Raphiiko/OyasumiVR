@@ -189,7 +189,12 @@
               }
             </div>
           } @else {
-            <span class="no-tags">{{ 'device-manager.config.tags.noTags' | transloco }}</span>
+            <div class="no-tags">
+              <span>{{ 'device-manager.detail.noTags' | transloco }}</span>
+              <button class="btn btn-secondary" (click)="openTags()">
+                {{ 'device-manager.detail.createTags' | transloco }}
+              </button>
+            </div>
           }
         </app-setting-row>
         <app-setting-row

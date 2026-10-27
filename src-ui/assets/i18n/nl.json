@@ -1013,7 +1013,6 @@
       },
       "tags": {
         "description": "Wijs tags toe om je apparaten te ordenen en te filteren",
-        "noTags": "Geen tags beschikbaar. Maak ze aan op het tabblad Tags.",
         "title": "Apparaattags"
       },
       "v1Identifier": {

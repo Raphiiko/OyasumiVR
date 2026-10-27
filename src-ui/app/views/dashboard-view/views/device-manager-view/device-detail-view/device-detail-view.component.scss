@@ -134,8 +134,10 @@
 }
 
 .no-tags {
+  display: flex;
+  align-items: center;
+  gap: 1em;
   color: var(--color-text-3);
-  font-style: italic;
 }
 
 .fact-value {

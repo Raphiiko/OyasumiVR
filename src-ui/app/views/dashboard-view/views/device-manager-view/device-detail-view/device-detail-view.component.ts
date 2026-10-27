@@ -144,6 +144,10 @@ export class DeviceDetailViewComponent implements OnDestroy {
     void this.router.navigate(['/dashboard/deviceManager']);
   }
 
+  openTags() {
+    void this.router.navigate(['/dashboard/deviceManager'], { queryParams: { tab: 'tags' } });
+  }
+
   startRename() {
     this.nameDraft = this.displayName;
     // the input renders on the next change detection
