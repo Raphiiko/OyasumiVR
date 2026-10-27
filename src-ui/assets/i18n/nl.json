@@ -666,79 +666,45 @@
         }
       }
     },
-    "event-log-filter-dialog": {
-      "filters": {
-        "AUDIO_CONTROL": {
-          "description": "Gebeurtenissen rond het regelen van microfoons en andere audioapparaten",
-          "title": "Audiobesturing"
-        },
-        "BRIGHTNESS_CCT": {
-          "description": "Gebeurtenissen rond het regelen van de helderheid en kleurtemperatuur van je VR headset",
-          "title": "Helderheid & CCT"
-        },
-        "BSB_CONTROL": {
-          "description": "Gebeurtenissen rond het besturen van de Bigscreen Beyond",
-          "title": "Bigscreen Beyond"
-        },
-        "DEVICE_POWER": {
-          "description": "Gebeurtenissen rond het aan- en uitzetten van apparaten zoals trackers, controllers en base stations",
-          "title": "Apparaatvoeding"
-        },
-        "FRAME_LIMITING": {
-          "description": "Gebeurtenissen rond het beperken van de framerate van applicaties",
-          "title": "Framelimiet"
-        },
-        "GPU_CONTROL": {
-          "description": "Gebeurtenissen rond het besturen van je videokaart",
-          "title": "GPU Besturing"
-        },
-        "RUN_AUTOMATIONS": {
-          "description": "Gebeurtenissen rond automatiseringen die commando's uitvoeren via de Windows opdrachtprompt",
-          "title": "Commando Automatiseringen"
-        },
-        "SHUTDOWN_SEQUENCE": {
-          "description": "Gebeurtenissen rond de afsluitprocedure",
-          "title": "Afsluitprocedure"
-        },
-        "SLEEP_MODE": {
-          "description": "Gebeurtenissen rond de slaapmodus en slaapdetectie",
-          "title": "Slaapmodus"
-        },
-        "STEAMVR_SETTINGS": {
-          "description": "Gebeurtenissen rond wijzigingen in SteamVR instellingen, zoals de renderresolutie en de activatieafstand van de chaperone",
-          "title": "SteamVR Instellingen"
-        },
-        "VRCHAT_AVATAR": {
-          "description": "Gebeurtenissen rond OyasumiVR die je VRChat avatar verandert",
-          "title": "VRChat Avatar"
-        },
-        "VRCHAT_GROUP": {
-          "description": "Gebeurtenissen rond OyasumiVR die de VRChat groep verandert die je vertegenwoordigt",
-          "title": "VRChat Groep"
-        },
-        "VRCHAT_INVITES": {
-          "description": "Gebeurtenissen rond VRChat invites en invite requests",
-          "title": "VRChat Invites"
-        },
-        "VRCHAT_STATUS": {
-          "description": "Gebeurtenissen rond wijzigingen in je VRChat status",
-          "title": "VRChat Status"
-        },
-        "WINDOWS_POWER_POLICY": {
-          "description": "Gebeurtenissen rond wijzigingen in het Windows energiebeheerschema",
-          "title": "Windows Energiebeheer"
-        }
-      },
-      "selectAll": "Alles Selecteren",
-      "selectDescription": "Selecteer welke soorten gebeurtenissen je in het logboek wilt zien",
-      "selectNone": "Niets Selecteren",
-      "title": "Logboek Filteren"
-    },
     "event-log": {
       "clearLog": "Wissen",
       "clearLogModal": {
         "message": "Weet je zeker dat je het logboek wilt wissen? Dit kan niet ongedaan worden gemaakt.",
         "title": "Wissen bevestigen"
+      },
+      "filters": {
+        "categories": {
+          "bigscreenBeyond": "Bigscreen Beyond",
+          "brightnessCct": "Helderheid & kleurtemperatuur",
+          "devicePower": "Apparaatvoeding",
+          "fadeDistance": "Activatieafstand",
+          "frameLimiting": "Framelimiet",
+          "gpu": "GPU",
+          "resolution": "Resolutie",
+          "runCommands": "Commando's uitvoeren",
+          "shutdownSequence": "Afsluitprocedure",
+          "sleepMode": "Slaapmodus",
+          "systemMic": "Systeemmicrofoon",
+          "volume": "Volume",
+          "vrchatAvatar": "Avatar",
+          "vrchatGroup": "Groep",
+          "vrchatInvites": "Invites",
+          "vrchatMicMute": "Microfoon dempen",
+          "vrchatStatus": "Status",
+          "windowsPowerPolicy": "Windows energiebeheer"
+        },
+        "groups": {
+          "general": "Algemeen",
+          "hardware": "Hardware",
+          "vrchat": "VRChat"
+        },
+        "hiddenCount": "{count} verborgen",
+        "hideAll": "Alles verbergen",
+        "hiding": "Verborgen",
+        "showAll": "Alles tonen",
+        "showEverything": "Alles weergeven",
+        "shownCount": "{shown} van {total} zichtbaar",
+        "title": "Gebeurtenissen Filteren"
       },
       "group": {
         "cause": {

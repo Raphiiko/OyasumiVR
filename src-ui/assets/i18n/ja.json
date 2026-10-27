@@ -666,79 +666,45 @@
         }
       }
     },
-    "event-log-filter-dialog": {
-      "filters": {
-        "AUDIO_CONTROL": {
-          "description": "マイクやその他のオーディオデバイスの制御に関連するログ",
-          "title": "オーディオ制御"
-        },
-        "BRIGHTNESS_CCT": {
-          "description": "HMDの輝度や色温度の制御に関連するログ",
-          "title": "輝度と色温度"
-        },
-        "BSB_CONTROL": {
-          "description": "Bigscreen Beyondの制御に関連するログ",
-          "title": "Bigscreen Beyond"
-        },
-        "DEVICE_POWER": {
-          "description": "デバイスの電源操作に関連するログ",
-          "title": "デバイスの電源"
-        },
-        "FRAME_LIMITING": {
-          "description": "フレーム制限に関連するログ",
-          "title": "フレーム制限"
-        },
-        "GPU_CONTROL": {
-          "description": "GPUの各種設定に関連するログ",
-          "title": "GPU制御"
-        },
-        "RUN_AUTOMATIONS": {
-          "description": "Windowsコマンドプロンプトに関連するログ",
-          "title": "コマンドプロンプト"
-        },
-        "SHUTDOWN_SEQUENCE": {
-          "description": "シャットダウン処理に関連するログ",
-          "title": "シャットダウン処理"
-        },
-        "SLEEP_MODE": {
-          "description": "睡眠モードおよび睡眠検出に関連するログ",
-          "title": "睡眠モード"
-        },
-        "STEAMVR_SETTINGS": {
-          "description": "SteamVR設定の変更（レンダリング解像度やフェード距離など）に関連するログ",
-          "title": "SteamVR設定"
-        },
-        "VRCHAT_AVATAR": {
-          "description": "VRChatアバターの変更に関連するログ",
-          "title": "VRChatアバター"
-        },
-        "VRCHAT_GROUP": {
-          "description": "VRChatのグループに関連するログ",
-          "title": "VRChatグループ"
-        },
-        "VRCHAT_INVITES": {
-          "description": "VRChatの招待や招待リクエストに関連するログ",
-          "title": "VRChatの招待"
-        },
-        "VRCHAT_STATUS": {
-          "description": "VRChatのステータス変更に関連するログ",
-          "title": "VRChatステータス"
-        },
-        "WINDOWS_POWER_POLICY": {
-          "description": "Windowsの電源プラン変更に関連するログ",
-          "title": "Windows電源プラン"
-        }
-      },
-      "selectAll": "すべて選択",
-      "selectDescription": "イベントログで表示したいエントリーの種類を選択",
-      "selectNone": "すべて解除",
-      "title": "イベントログのフィルター"
-    },
     "event-log": {
       "clearLog": "消去",
       "clearLogModal": {
         "message": "イベントログを消去しますか？元に戻せません。",
         "title": "消去の確認"
+      },
+      "filters": {
+        "categories": {
+          "bigscreenBeyond": "Bigscreen Beyond",
+          "brightnessCct": "輝度と色温度",
+          "devicePower": "デバイスの電源",
+          "fadeDistance": "フェード距離",
+          "frameLimiting": "フレーム制限",
+          "gpu": "GPU",
+          "resolution": "解像度",
+          "runCommands": "コマンドプロンプト",
+          "shutdownSequence": "シャットダウン処理",
+          "sleepMode": "睡眠モード",
+          "systemMic": "システムマイク",
+          "volume": "音量",
+          "vrchatAvatar": "アバター",
+          "vrchatGroup": "グループ",
+          "vrchatInvites": "招待",
+          "vrchatMicMute": "マイクミュート",
+          "vrchatStatus": "ステータス",
+          "windowsPowerPolicy": "Windows電源プラン"
+        },
+        "groups": {
+          "general": "その他",
+          "hardware": "ハードウェア",
+          "vrchat": "VRChat"
+        },
+        "hiddenCount": "{count}件を非表示",
+        "hideAll": "すべて非表示",
+        "hiding": "非表示",
+        "showAll": "すべて表示",
+        "showEverything": "すべての項目を表示",
+        "shownCount": "{total}件中{shown}件を表示",
+        "title": "イベントのフィルター"
       },
       "group": {
         "cause": {

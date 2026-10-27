@@ -666,79 +666,45 @@
         }
       }
     },
-    "event-log-filter-dialog": {
-      "filters": {
-        "AUDIO_CONTROL": {
-          "description": "与控制麦克风及其他音频设备相关的事件",
-          "title": "音频控制"
-        },
-        "BRIGHTNESS_CCT": {
-          "description": "与 VR 头显的亮度和色温相关的事件",
-          "title": "亮度与色温"
-        },
-        "BSB_CONTROL": {
-          "description": "与控制 Bigscreen Beyond 相关的事件",
-          "title": "Bigscreen Beyond"
-        },
-        "DEVICE_POWER": {
-          "description": "与设备开关（如追踪器、控制器和基站）相关的事件",
-          "title": "设备电源"
-        },
-        "FRAME_LIMITING": {
-          "description": "与程序帧率限制相关的事件",
-          "title": "帧率限制"
-        },
-        "GPU_CONTROL": {
-          "description": "与显卡控制相关的事件",
-          "title": "GPU 控制"
-        },
-        "RUN_AUTOMATIONS": {
-          "description": "与通过命令提示符运行自动化命令相关的事件",
-          "title": "运行自动化"
-        },
-        "SHUTDOWN_SEQUENCE": {
-          "description": "与关机流程相关的事件",
-          "title": "关机流程"
-        },
-        "SLEEP_MODE": {
-          "description": "与睡眠模式和睡眠检测相关的事件",
-          "title": "睡眠模式"
-        },
-        "STEAMVR_SETTINGS": {
-          "description": "与 SteamVR 设置（如渲染分辨率和淡出距离）变化相关的事件",
-          "title": "SteamVR 设置"
-        },
-        "VRCHAT_AVATAR": {
-          "description": "与 VRChat 模型切换相关的事件",
-          "title": "VRChat 模型"
-        },
-        "VRCHAT_GROUP": {
-          "description": "与 OyasumiVR 更改你所代表的 VRChat 群组相关的事件",
-          "title": "VRChat 群组"
-        },
-        "VRCHAT_INVITES": {
-          "description": "与 VRChat 邀请和邀请请求相关的事件",
-          "title": "VRChat 邀请"
-        },
-        "VRCHAT_STATUS": {
-          "description": "与 VRChat 状态变化相关的事件",
-          "title": "VRChat 状态"
-        },
-        "WINDOWS_POWER_POLICY": {
-          "description": "与 Windows 电源计划变化相关的事件",
-          "title": "Windows 电源计划"
-        }
-      },
-      "selectAll": "全选",
-      "selectDescription": "选择你想在事件日志中查看的事件类型",
-      "selectNone": "全不选",
-      "title": "筛选事件日志"
-    },
     "event-log": {
       "clearLog": "清除",
       "clearLogModal": {
         "message": "你确定要清除事件日志吗？此操作不能撤销。",
         "title": "确认清除"
+      },
+      "filters": {
+        "categories": {
+          "bigscreenBeyond": "Bigscreen Beyond",
+          "brightnessCct": "亮度与色温",
+          "devicePower": "设备电源",
+          "fadeDistance": "淡出距离",
+          "frameLimiting": "帧率限制",
+          "gpu": "GPU",
+          "resolution": "分辨率",
+          "runCommands": "运行命令",
+          "shutdownSequence": "关机流程",
+          "sleepMode": "睡眠模式",
+          "systemMic": "系统麦克风",
+          "volume": "音量",
+          "vrchatAvatar": "模型",
+          "vrchatGroup": "群组",
+          "vrchatInvites": "邀请",
+          "vrchatMicMute": "麦克风静音",
+          "vrchatStatus": "状态",
+          "windowsPowerPolicy": "Windows 电源计划"
+        },
+        "groups": {
+          "general": "通用",
+          "hardware": "硬件",
+          "vrchat": "VRChat"
+        },
+        "hiddenCount": "已隐藏 {count} 项",
+        "hideAll": "全部隐藏",
+        "hiding": "已隐藏",
+        "showAll": "全部显示",
+        "showEverything": "显示所有项目",
+        "shownCount": "显示 {shown}/{total} 项",
+        "title": "筛选事件"
       },
       "group": {
         "cause": {

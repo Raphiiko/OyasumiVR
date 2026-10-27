@@ -37,6 +37,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - OyasumiVR now follows Valve Index brightness changes made in SteamVR
 - Debug reports now hide public IP addresses
 - VRChat status changes in the event log now show the old and new status side by side, on one line
+- Replaced the event log filter window with a smaller menu under the filter button, with categories grouped like the sidebar, and changes that apply right away
 
 ### Fixed
 

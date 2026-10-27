@@ -545,61 +545,6 @@
         }
       }
     },
-    "event-log-filter-dialog": {
-      "filters": {
-        "AUDIO_CONTROL": {
-          "description": "Події, пов'язані з керуванням мікрофонами та іншими аудіопристроями",
-          "title": "Керування звуком"
-        },
-        "BRIGHTNESS_CCT": {
-          "description": "Події, пов'язані з керуванням яскравістю та колірною температурою VR гарнітури",
-          "title": "Яскравість і ККТ"
-        },
-        "BSB_CONTROL": {
-          "description": "Події, пов'язані з керуванням Bigscreen Beyond",
-          "title": "Bigscreen Beyond"
-        },
-        "DEVICE_POWER": {
-          "description": "Події, пов'язані з увімкненням і вимкненням таких пристроїв, як трекери, контролери та базові станції",
-          "title": "Потужність пристрою"
-        },
-        "GPU_CONTROL": {
-          "description": "Події, пов'язані з керуванням параметрами вашої відеокарти",
-          "title": "Керування відеокартою"
-        },
-        "SHUTDOWN_SEQUENCE": {
-          "description": "Події, пов'язані з послідовністю вимкнення",
-          "title": "Послідовність вимкнення"
-        },
-        "SLEEP_MODE": {
-          "description": "Події, пов'язані з режимом сну та виявлення сну",
-          "title": "Сплячий режим"
-        },
-        "STEAMVR_SETTINGS": {
-          "description": "Події, пов'язані зі змінами налаштувань SteamVR, такі як роздільна здатність та відстань зникнення",
-          "title": "Налаштування SteamVR"
-        },
-        "VRCHAT_AVATAR": {
-          "description": "Події, пов'язані зі зміною OyasumiVR вашого аватара у VRChat",
-          "title": "VRChat аватар"
-        },
-        "VRCHAT_INVITES": {
-          "description": "Події, пов'язані із запрошеннями та запитами на запрошення VRChat"
-        },
-        "VRCHAT_STATUS": {
-          "description": "Події, пов'язані зі змінами вашого статусу VRChat",
-          "title": "Статус VRChat"
-        },
-        "WINDOWS_POWER_POLICY": {
-          "description": "Події, пов'язані зі змінами в політиці живлення Windows",
-          "title": "Політика живлення Windows"
-        }
-      },
-      "selectAll": "Обрати всі",
-      "selectDescription": "Виберіть типи записів, які ви хотіли би побачити в журналі подій",
-      "selectNone": "Обрати жодні",
-      "title": "Фільтрування журналу подій"
-    },
     "event-log": {
       "clearLog": "Очистити",
       "clearLogModal": {

@@ -725,79 +725,45 @@
         }
       }
     },
-    "event-log-filter-dialog": {
-      "filters": {
-        "AUDIO_CONTROL": {
-          "description": "Events related to controlling microphones and other audio devices",
-          "title": "Audio Control"
-        },
-        "BRIGHTNESS_CCT": {
-          "description": "Events related to controlling the brightness and colour temperature of your VR headset",
-          "title": "Brightness & CCT"
-        },
-        "BSB_CONTROL": {
-          "description": "Events related to controlling the Bigscreen Beyond",
-          "title": "Bigscreen Beyond"
-        },
-        "DEVICE_POWER": {
-          "description": "Events related to turning on and off devices such as trackers, controllers and base stations",
-          "title": "Device Power"
-        },
-        "FRAME_LIMITING": {
-          "description": "Events related to frame rate limiting for applications",
-          "title": "Frame Limiting"
-        },
-        "GPU_CONTROL": {
-          "description": "Events related to controlling aspects of your graphics card",
-          "title": "GPU Control"
-        },
-        "RUN_AUTOMATIONS": {
-          "description": "Events related to automations running commands through the Windows command prompt",
-          "title": "Run Automations"
-        },
-        "SHUTDOWN_SEQUENCE": {
-          "description": "Events related to the shutdown sequence",
-          "title": "Shutdown Sequence"
-        },
-        "SLEEP_MODE": {
-          "description": "Events related to the sleep mode and sleep detection",
-          "title": "Sleep Mode"
-        },
-        "STEAMVR_SETTINGS": {
-          "description": "Events related to changes in SteamVR settings, such as render resolution and fade distance",
-          "title": "SteamVR Settings"
-        },
-        "VRCHAT_AVATAR": {
-          "description": "Events related to OyasumiVR changing your VRChat avatar",
-          "title": "VRChat Avatar"
-        },
-        "VRCHAT_GROUP": {
-          "description": "Events related to OyasumiVR changing the VRChat group you represent",
-          "title": "VRChat Group"
-        },
-        "VRCHAT_INVITES": {
-          "description": "Events related to VRChat invites and invite requests",
-          "title": "VRChat Invites"
-        },
-        "VRCHAT_STATUS": {
-          "description": "Events related to changes in your VRChat status",
-          "title": "VRChat Status"
-        },
-        "WINDOWS_POWER_POLICY": {
-          "description": "Events related to changes in the Windows power policy",
-          "title": "Windows Power Policy"
-        }
-      },
-      "selectAll": "Select All",
-      "selectDescription": "Select the types of entries you want to see in the event log",
-      "selectNone": "Select None",
-      "title": "Filter Event Logs"
-    },
     "event-log": {
       "clearLog": "Clear",
       "clearLogModal": {
         "message": "Are you sure you want to clear the event log? This cannot be undone.",
         "title": "Confirm clear"
+      },
+      "filters": {
+        "categories": {
+          "bigscreenBeyond": "Bigscreen Beyond",
+          "brightnessCct": "Brightness & colour temperature",
+          "devicePower": "Device power",
+          "fadeDistance": "Fade distance",
+          "frameLimiting": "Frame limiting",
+          "gpu": "GPU",
+          "resolution": "Resolution",
+          "runCommands": "Run commands",
+          "shutdownSequence": "Shutdown sequence",
+          "sleepMode": "Sleep mode",
+          "systemMic": "System mic",
+          "volume": "Volume",
+          "vrchatAvatar": "Avatar",
+          "vrchatGroup": "Group",
+          "vrchatInvites": "Invites",
+          "vrchatMicMute": "Mic mute",
+          "vrchatStatus": "Status",
+          "windowsPowerPolicy": "Windows power policy"
+        },
+        "groups": {
+          "general": "General",
+          "hardware": "Hardware",
+          "vrchat": "VRChat"
+        },
+        "hiddenCount": "{count} hidden",
+        "hideAll": "Hide all",
+        "hiding": "Hiding",
+        "showAll": "Show all",
+        "showEverything": "Show everything",
+        "shownCount": "{shown} of {total} shown",
+        "title": "Filter Events"
       },
       "group": {
         "cause": {
