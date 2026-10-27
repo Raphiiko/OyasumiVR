@@ -249,7 +249,9 @@ export class DeviceDetailViewComponent implements OnDestroy {
 
     add('manufacturer', device.manufacturer);
     add('model', device.typeName);
-    add('serialNumber', this.devices.serialOf(device));
+    // a base station's stored default name is its serial, so it still shows while offline
+    const storedSerial = device.deviceType === 'LIGHTHOUSE' ? device.defaultName : null;
+    add('serialNumber', this.devices.serialOf(device) ?? storedSerial);
     add('hardwareRevision', ovrDevice?.hardwareRevision);
     add('dongleId', ovrDevice?.dongleId);
     if (device.deviceType === 'LIGHTHOUSE') {

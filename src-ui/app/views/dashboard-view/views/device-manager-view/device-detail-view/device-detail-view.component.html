@@ -157,6 +157,7 @@
             description="device-manager.detail.powerOffState.description"
           >
             <app-segmented-control
+              label="settings.general.lighthousePowerControl.powerOffMode.title"
               [items]="powerOffStates"
               [selected]="lighthousePowerOffState"
               (selectedChange)="setPowerOffState($event)"
