@@ -1027,6 +1027,36 @@
       "message": "Weet je zeker dat je deze tag wilt verwijderen? Hij wordt van alle apparaten verwijderd.",
       "title": "Tag Verwijderen"
     },
+    "detail": {
+      "createTags": "Tags aanmaken",
+      "facts": {
+        "address": "Netwerkadres",
+        "bluetoothAddress": "Bluetooth-adres",
+        "dongleId": "Dongle-ID",
+        "hardwareRevision": "Hardwarerevisie",
+        "lastSeen": "Laatst gezien",
+        "manufacturer": "Fabrikant",
+        "model": "Model",
+        "now": "Nu",
+        "serialNumber": "Serienummer"
+      },
+      "helperUpdateAvailable": "Er is een nieuwe versie van de OyasumiVR-helper beschikbaar.",
+      "noTags": "Nog geen tags.",
+      "notConnected": "Niet verbonden",
+      "pairNeedsSteamVR": "Verbind de headset met SteamVR om hem te koppelen.",
+      "powerOffState": {
+        "description": "Geldt voor al je base stations."
+      },
+      "sections": {
+        "baseStation": "Base station",
+        "details": "Details",
+        "settings": "Instellingen"
+      },
+      "tabs": {
+        "general": "Algemeen",
+        "steamFrame": "Steam Frame"
+      }
+    },
     "deviceSelector": {
       "deselectAll": "Alles Deselecteren",
       "deviceTags": "Apparaattags",

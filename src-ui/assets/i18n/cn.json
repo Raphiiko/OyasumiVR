@@ -1027,6 +1027,36 @@
       "message": "确定要删除该标签吗？它将从所有设备中移除。",
       "title": "删除标签"
     },
+    "detail": {
+      "createTags": "创建标签",
+      "facts": {
+        "address": "网络地址",
+        "bluetoothAddress": "蓝牙地址",
+        "dongleId": "接收器 ID",
+        "hardwareRevision": "硬件版本",
+        "lastSeen": "上次识别时间",
+        "manufacturer": "制造商",
+        "model": "型号",
+        "now": "现在",
+        "serialNumber": "序列号"
+      },
+      "helperUpdateAvailable": "OyasumiVR 辅助程序有新版本可用。",
+      "noTags": "暂无标签。",
+      "notConnected": "未连接",
+      "pairNeedsSteamVR": "请将头显连接到 SteamVR 以进行配对。",
+      "powerOffState": {
+        "description": "适用于你所有的基站。"
+      },
+      "sections": {
+        "baseStation": "基站",
+        "details": "详细信息",
+        "settings": "设置"
+      },
+      "tabs": {
+        "general": "常规",
+        "steamFrame": "Steam Frame"
+      }
+    },
     "deviceSelector": {
       "deselectAll": "取消全选",
       "deviceTags": "设备标签",

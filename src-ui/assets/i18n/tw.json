@@ -1027,6 +1027,36 @@
       "message": "你確定要刪除此標籤嗎？它將從所有裝置中移除。",
       "title": "刪除標籤"
     },
+    "detail": {
+      "createTags": "建立標籤",
+      "facts": {
+        "address": "網路位址",
+        "bluetoothAddress": "藍牙位址",
+        "dongleId": "接收器 ID",
+        "hardwareRevision": "硬體版本",
+        "lastSeen": "最後偵測時間",
+        "manufacturer": "製造商",
+        "model": "型號",
+        "now": "現在",
+        "serialNumber": "序號"
+      },
+      "helperUpdateAvailable": "OyasumiVR 輔助程式有新版本可用。",
+      "noTags": "尚無標籤。",
+      "notConnected": "未連線",
+      "pairNeedsSteamVR": "請將頭戴顯示器連線到 SteamVR 以進行配對。",
+      "powerOffState": {
+        "description": "套用於你所有的定位器。"
+      },
+      "sections": {
+        "baseStation": "定位器",
+        "details": "詳細資訊",
+        "settings": "設定"
+      },
+      "tabs": {
+        "general": "一般",
+        "steamFrame": "Steam Frame"
+      }
+    },
     "deviceSelector": {
       "deselectAll": "全部取消選取",
       "deviceTags": "裝置標籤",

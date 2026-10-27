@@ -1027,6 +1027,36 @@
       "message": "このタグを全デバイスから削除します。よろしいですか？",
       "title": "タグを削除"
     },
+    "detail": {
+      "createTags": "タグを作成",
+      "facts": {
+        "address": "ネットワークアドレス",
+        "bluetoothAddress": "Bluetoothアドレス",
+        "dongleId": "ドングルID",
+        "hardwareRevision": "ハードウェアリビジョン",
+        "lastSeen": "最終確認日時",
+        "manufacturer": "メーカー",
+        "model": "モデル",
+        "now": "現在",
+        "serialNumber": "シリアル番号"
+      },
+      "helperUpdateAvailable": "OyasumiVRヘルパーの新しいバージョンがあります。",
+      "noTags": "タグはまだありません。",
+      "notConnected": "未接続",
+      "pairNeedsSteamVR": "ペアリングするには、HMDをSteamVRに接続してください。",
+      "powerOffState": {
+        "description": "すべてのベースステーションに適用されます。"
+      },
+      "sections": {
+        "baseStation": "ベースステーション",
+        "details": "詳細",
+        "settings": "設定"
+      },
+      "tabs": {
+        "general": "一般",
+        "steamFrame": "Steam Frame"
+      }
+    },
     "deviceSelector": {
       "deselectAll": "全解除",
       "deviceTags": "タグで絞り込み",
