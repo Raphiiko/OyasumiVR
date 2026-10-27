@@ -15,7 +15,5 @@ export interface SegmentedControlItem<T extends string = string> {
 })
 export class SegmentedControlComponent<T extends string = string> {
   readonly items = input.required<SegmentedControlItem<T>[]>();
-  /** A translation key that names the choice for screen readers. */
-  readonly label = input.required<string>();
   readonly selected = model.required<T>();
 }

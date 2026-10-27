@@ -160,7 +160,6 @@
             (resetToDefault)="update({ lighthousePowerOffState: $event })"
           >
             <app-segmented-control
-              label="settings.general.lighthousePowerControl.powerOffMode.title"
               [items]="lighthousePowerOffStates"
               [selected]="appSettings.lighthousePowerOffState"
               (selectedChange)="onChangeLighthousePowerOffMode($event)"

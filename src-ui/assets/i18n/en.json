@@ -1106,7 +1106,6 @@
       "powerOffState": {
         "description": "Applies to all your base stations."
       },
-      "rename": "Rename",
       "sections": {
         "baseStation": "Base station",
         "details": "Details",

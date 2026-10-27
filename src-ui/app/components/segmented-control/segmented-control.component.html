@@ -1,10 +1,6 @@
-<div class="segmented-control" role="group" [attr.aria-label]="label() | transloco">
+<div class="segmented-control">
   @for (item of items(); track item.id) {
-    <button
-      [attr.aria-pressed]="item.id === selected()"
-      [class.active]="item.id === selected()"
-      (click)="selected.set(item.id)"
-    >
+    <button [class.active]="item.id === selected()" (click)="selected.set(item.id)">
       {{ item.label | transloco }}
     </button>
   }

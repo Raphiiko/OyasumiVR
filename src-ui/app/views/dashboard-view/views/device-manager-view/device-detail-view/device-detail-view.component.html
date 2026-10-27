@@ -29,11 +29,7 @@
             (blur)="saveName()"
           />
         } @else {
-          <button
-            class="header-name"
-            [attr.aria-label]="'device-manager.detail.rename' | transloco"
-            (click)="startRename()"
-          >
+          <button class="header-name" (click)="startRename()">
             <span>{{ displayName }}</span>
             <app-icon name="edit" class="rename-icon" />
           </button>
@@ -85,8 +81,6 @@
                   <button
                     class="force-btn"
                     [class.current]="lighthouseState() === force.state"
-                    [attr.aria-pressed]="lighthouseState() === force.state"
-                    [attr.aria-label]="force.label | transloco"
                     [tooltip]="force.label | transloco"
                     [tooltipMode]="'bottom'"
                     (click)="devices.forceLighthouseState(device, force.state)"
@@ -159,7 +153,6 @@
             description="device-manager.detail.powerOffState.description"
           >
             <app-segmented-control
-              label="settings.general.lighthousePowerControl.powerOffMode.title"
               [items]="powerOffStates"
               [selected]="lighthousePowerOffState"
               (selectedChange)="setPowerOffState($event)"
