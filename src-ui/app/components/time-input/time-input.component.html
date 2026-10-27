@@ -50,7 +50,6 @@
             <button
               type="button"
               class="dial-tick"
-              [attr.aria-label]="tick.label"
               [class.minor]="tick.value % 2 === 1"
               [class.selected]="tick.value === hours()"
               [style.left]="tick.left"
@@ -67,7 +66,6 @@
             <button
               type="button"
               class="dial-tick"
-              [attr.aria-label]="tick.label"
               [class.selected]="tick.value === minutes()"
               [style.left]="tick.left"
               [style.top]="tick.top"

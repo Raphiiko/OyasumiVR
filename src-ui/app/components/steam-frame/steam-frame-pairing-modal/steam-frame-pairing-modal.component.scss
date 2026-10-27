@@ -363,8 +363,3 @@ button:disabled {
     justify-content: flex-end;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .spinner {
-    animation: none;
-  }
-}

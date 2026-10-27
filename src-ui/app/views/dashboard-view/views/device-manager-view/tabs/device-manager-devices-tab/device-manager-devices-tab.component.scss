@@ -422,9 +422,3 @@
     opacity: 0.3;
   }
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .frame-badge-connecting {
-    animation: none;
-  }
-}
