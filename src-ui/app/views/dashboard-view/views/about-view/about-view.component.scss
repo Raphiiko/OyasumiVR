@@ -276,18 +276,16 @@
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .tier-icon {
-    animation: tier-icon-float 3.2s ease-in-out infinite;
-  }
+.tier-icon {
+  animation: tier-icon-float 3.2s ease-in-out infinite;
+}
 
-  .tier-rank-1 .tier-icon {
-    animation-delay: -1.1s;
-  }
+.tier-rank-1 .tier-icon {
+  animation-delay: -1.1s;
+}
 
-  .tier-rank-2 .tier-icon {
-    animation-delay: -2.2s;
-  }
+.tier-rank-2 .tier-icon {
+  animation-delay: -2.2s;
 }
 
 .credits {

@@ -80,9 +80,3 @@ svg .prompt {
     transform: scale(1.06);
   }
 }
-
-@media (prefers-reduced-motion: reduce) {
-  svg * {
-    animation: none !important;
-  }
-}

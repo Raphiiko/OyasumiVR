@@ -1,36 +1,26 @@
-<div
-  class="guide"
-  *transloco="let t; prefix: 'steamFrame'"
-  role="dialog"
-  aria-modal="true"
-  aria-labelledby="steam-frame-title"
->
-  <nav class="trail" [attr.aria-label]="t('steps.label')">
+<div class="guide" *transloco="let t; prefix: 'steamFrame'">
+  <nav class="trail">
     <div class="trail-edge">
       @if (back(); as target) {
         <button class="plain" (click)="enrollment.go(target)">
-          <app-icon name="chevron-left" class="icon-mono" aria-hidden="true" />{{
-            t('actions.back')
-          }}
+          <app-icon name="chevron-left" class="icon-mono" />{{ t('actions.back') }}
         </button>
       }
     </div>
     <div class="previous">
       @if (step() > 0) {
         <span
-          ><app-icon name="check" class="icon-mono" aria-hidden="true" />{{
+          ><app-icon name="check" class="icon-mono" />{{
             t('steps.' + stepLabels[step() - 1])
           }}</span
         >
       }
     </div>
-    <span class="current" aria-current="step"
-      ><span class="dot"></span>{{ t('steps.' + stepLabels[step()]) }}</span
-    >
+    <span class="current"><span class="dot"></span>{{ t('steps.' + stepLabels[step()]) }}</span>
     <span class="next">
       @if (step() < 6) {
         {{ t('steps.' + stepLabels[step() + 1])
-        }}<app-icon name="chevron-right" class="icon-mono" aria-hidden="true" />
+        }}<app-icon name="chevron-right" class="icon-mono" />
       }
     </span>
     <div class="trail-edge end">
@@ -45,7 +35,7 @@
     <div class="instruction-group" [class.illustrated]="!!illustration()">
       <div class="instruction-row">
         <div class="instructions">
-          <h1 id="steam-frame-title" aria-live="polite">
+          <h1>
             @switch (page()) {
               @case ('search') {
                 {{
@@ -120,7 +110,7 @@
             }
           </div>
           @if (flow()?.error; as error) {
-            <p class="error" role="alert">{{ t('errors.' + error) }}</p>
+            <p class="error">{{ t('errors.' + error) }}</p>
           }
           @if (page() === 'found') {
             <div class="candidates">
@@ -132,16 +122,12 @@
                 <button
                   class="candidate"
                   [class.selected]="flow()?.selected === i"
-                  [attr.aria-pressed]="flow()?.selected === i"
                   (click)="enrollment.select(i)"
                 >
                   @if ((flow()?.candidates?.length ?? 0) > 1) {
-                    <app-icon
-                      [name]="flow()?.selected === i ? 'radio-on' : 'radio-off'"
-                      aria-hidden="true"
-                    />
+                    <app-icon [name]="flow()?.selected === i ? 'radio-on' : 'radio-off'" />
                   }
-                  <svg class="svg-icon" aria-hidden="true">
+                  <svg class="svg-icon">
                     <use href="/assets/icons/headset.svg#icon" />
                   </svg>
                   <span>
@@ -163,29 +149,24 @@
                 maxlength="253"
                 autocomplete="off"
                 spellcheck="false"
-                [attr.aria-invalid]="!!address() && !validAddress()"
-                aria-describedby="steam-frame-address-hint"
               />
-              <span id="steam-frame-address-hint">{{ t('pages.manual.hint') }}</span>
+              <span>{{ t('pages.manual.hint') }}</span>
             </form>
           }
           @if (page() === 'setup' || page() === 'setupFailed') {
-            <ol class="setup-stages" [attr.aria-label]="t('steps.install')">
+            <ol class="setup-stages">
               @for (stage of stages; track stage; let i = $index) {
-                <li
-                  [class.future]="i > stageIndex()"
-                  [attr.aria-current]="i === stageIndex() ? 'step' : null"
-                >
+                <li [class.future]="i > stageIndex()">
                   @if (i < stageIndex()) {
-                    <app-icon name="check-circle" class="complete" aria-hidden="true" />
+                    <app-icon name="check-circle" class="complete" />
                   } @else if (i === stageIndex()) {
                     @if (page() === 'setupFailed') {
-                      <app-icon name="exclamation-circle" class="failed" aria-hidden="true" />
+                      <app-icon name="exclamation-circle" class="failed" />
                     } @else {
-                      <span class="spinner" aria-hidden="true"></span>
+                      <span class="spinner"></span>
                     }
                   } @else {
-                    <span class="pending-dot" aria-hidden="true"></span>
+                    <span class="pending-dot"></span>
                   }
                   {{ t('stages.' + stage) }}
                 </li>
@@ -199,26 +180,19 @@
         </div>
         @if (illustration(); as image) {
           <picture class="pairing-illustration">
-            @if (animated()) {
-              <source
-                media="(prefers-reduced-motion: reduce)"
-                [srcset]="'assets/images/steam-frame-pairing/' + image + '-static.svg'"
-              />
-            }
             <img
               [src]="'assets/images/steam-frame-pairing/' + image + '.svg'"
               width="180"
               height="120"
               alt=""
-              aria-hidden="true"
             />
           </picture>
         }
       </div>
       <div class="actions">
         @if (busy()) {
-          <span class="spinner" aria-hidden="true"></span>
-          <span class="busy-text" role="status">{{ t('waiting.' + page()) }}</span>
+          <span class="spinner"></span>
+          <span class="busy-text">{{ t('waiting.' + page()) }}</span>
         }
         <div class="spacer"></div>
         @if (busy() && page() !== 'cancelling') {

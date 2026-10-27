@@ -93,9 +93,6 @@ export class SteamFramePairingModalComponent extends BaseModalComponent<void, vo
       : STEP_OF_PAGE[this.page()]
   );
   readonly illustration = computed(() => ILLUSTRATIONS[this.page()]);
-  readonly animated = computed(() =>
-    ['searching', 'approval-pending', 'setup-running'].includes(this.illustration() ?? '')
-  );
   readonly back = computed(() => (this.busy() ? undefined : BACK[this.page()]));
   readonly stageIndex = computed(() => this.stages.indexOf(this.flow()?.stage ?? 'verify'));
   readonly validAddress = computed(() => {

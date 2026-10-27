@@ -67,12 +67,7 @@
           <p>{{ t('unpair.forget.command') }}</p>
           <div class="command">
             <code>{{ uninstallCommand }}</code>
-            <button
-              class="copy"
-              [attr.aria-label]="t('actions.copyCommand')"
-              [title]="t('actions.copyCommand')"
-              (click)="copyCommand()"
-            >
+            <button class="copy" [title]="t('actions.copyCommand')" (click)="copyCommand()">
               <app-icon name="copy" class="icon-mono" />
             </button>
           </div>

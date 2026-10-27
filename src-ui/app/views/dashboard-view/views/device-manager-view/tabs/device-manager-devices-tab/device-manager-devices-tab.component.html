@@ -72,11 +72,7 @@
                   class="device-icon"
                 />
                 @if (frameRow(device)?.badge; as badge) {
-                  <span
-                    [class]="'frame-badge frame-badge-' + badge"
-                    role="img"
-                    [attr.aria-label]="'steamFrame.status.' + badge | transloco"
-                  ></span>
+                  <span [class]="'frame-badge frame-badge-' + badge"></span>
                 }
               </div>
               <div class="device-info">

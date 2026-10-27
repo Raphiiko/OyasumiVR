@@ -57,8 +57,6 @@
         @for (category of group.categories; track category.id) {
           <button
             class="popover-row"
-            role="switch"
-            [attr.aria-checked]="!isHidden(category)"
             [class.off]="isHidden(category)"
             (click)="toggleCategory(category)"
           >
@@ -123,9 +121,7 @@
           >
             <app-event-log-entry
               class="group-header"
-              role="button"
               tabindex="0"
-              [attr.aria-expanded]="expandedGroups.has(item.id)"
               [entry]="item.trigger"
               [titleKey]="'comp.event-log.group.cause.' + item.cause"
               [time]="groupTime(item)"

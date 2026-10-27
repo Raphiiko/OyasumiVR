@@ -23,7 +23,6 @@ const ICONS: Record<Exclude<ToastType, 'pending'>, string> = {
   styleUrls: ['./toasts.component.scss'],
   standalone: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { role: 'status', 'aria-live': 'polite' },
   animations: [
     trigger('toastSlot', [
       transition(':enter', [
