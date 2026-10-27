@@ -128,25 +128,26 @@ export class KnownDeviceViewService {
     return !!this.lighthouseFor(device);
   }
 
-  /**
-   * Runs the power button's action. Resolves 'chooseState' for a base station in an unknown
-   * state, which only a forced state can change.
-   */
-  async handlePowerAction(
-    device: DMKnownDevice,
-    action: DevicePowerAction
-  ): Promise<'chooseState' | void> {
+  /** Runs the power button's action. A base station in an unknown state changes only by force. */
+  async handlePowerAction(device: DMKnownDevice, action: DevicePowerAction) {
     const lighthouseDevice = this.lighthouseFor(device);
     if (lighthouseDevice) {
       if (this.lighthouse.deviceNeedsIdentifier(lighthouseDevice)) {
         await this.openLighthouseV1IdWizard(lighthouseDevice);
         return;
       }
-      if (lighthouseDevice.powerState === 'unknown') return 'chooseState';
+      if (lighthouseDevice.powerState === 'unknown') return;
     }
 
     if (action === 'power-off') await this.powerOff(device);
     else await this.powerOn(device);
+  }
+
+  /** The base station's settled power state, or null while it changes or is unknown. */
+  settledLighthouseStateOf(device: DMKnownDevice): LighthouseDevicePowerState | null {
+    const lighthouseDevice = this.lighthouseFor(device);
+    if (!lighthouseDevice || lighthouseDevice.transitioningToPowerState) return null;
+    return lighthouseDevice.powerState;
   }
 
   async forceLighthouseState(device: DMKnownDevice, state: LighthouseDevicePowerState) {

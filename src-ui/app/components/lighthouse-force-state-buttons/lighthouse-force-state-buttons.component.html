@@ -1,0 +1,11 @@
+@for (force of forceStates(); track force.state) {
+  <button
+    class="force-btn"
+    [class.current]="state() === force.state"
+    [tooltip]="force.label | transloco"
+    [tooltipMode]="'bottom'"
+    (click)="forceState.emit(force.state)"
+  >
+    <app-icon [name]="force.icon" />
+  </button>
+}

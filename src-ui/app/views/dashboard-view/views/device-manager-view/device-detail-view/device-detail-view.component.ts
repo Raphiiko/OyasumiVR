@@ -48,11 +48,6 @@ export class DeviceDetailViewComponent implements OnDestroy {
     { id: 'sleep', label: 'settings.general.lighthousePowerControl.powerOffMode.sleep.title' },
     { id: 'standby', label: 'settings.general.lighthousePowerControl.powerOffMode.standby.title' },
   ];
-  readonly forceStates = [
-    { state: 'on', icon: 'power', label: 'comp.device-list.lhForceState.on' },
-    { state: 'standby', icon: 'standby', label: 'comp.device-list.lhForceState.standby' },
-    { state: 'sleep', icon: 'sleep', label: 'comp.device-list.lhForceState.sleep' },
-  ] as const;
 
   constructor(
     route: ActivatedRoute,
@@ -187,13 +182,6 @@ export class DeviceDetailViewComponent implements OnDestroy {
   onHeaderPill(pill: FramePill) {
     const device = this.device!;
     this.frames.onPill(device, pill, this.frames.row(device)?.action);
-  }
-
-  /** The base station's settled power state, or null while it changes or is unknown. */
-  lighthouseState(): LighthouseDevicePowerState | null {
-    const lighthouseDevice = this.devices.lighthouseFor(this.device!);
-    if (!lighthouseDevice || lighthouseDevice.transitioningToPowerState) return null;
-    return lighthouseDevice.powerState;
   }
 
   setPowerOffState(state: LighthouseDevicePowerState) {

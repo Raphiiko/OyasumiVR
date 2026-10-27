@@ -75,21 +75,11 @@
         }
         @if (devices.lighthouseFor(device); as lighthouseDevice) {
           @if (v1IdentifierMode() !== 'NEEDS_ID') {
-            <div class="force-group">
-              @for (force of forceStates; track force.state) {
-                @if (force.state !== 'standby' || lighthouseDevice.deviceType === 'lighthouseV2') {
-                  <button
-                    class="force-btn"
-                    [class.current]="lighthouseState() === force.state"
-                    [tooltip]="force.label | transloco"
-                    [tooltipMode]="'bottom'"
-                    (click)="devices.forceLighthouseState(device, force.state)"
-                  >
-                    <app-icon [name]="force.icon" />
-                  </button>
-                }
-              }
-            </div>
+            <app-lighthouse-force-state-buttons
+              [type]="lighthouseDevice.deviceType"
+              [state]="devices.settledLighthouseStateOf(device)"
+              (forceState)="devices.forceLighthouseState(device, $event)"
+            />
           }
         }
         @if (devices.canShowPowerButton(device)) {

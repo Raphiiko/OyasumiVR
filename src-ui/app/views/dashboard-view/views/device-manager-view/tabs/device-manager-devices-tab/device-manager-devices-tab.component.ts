@@ -10,11 +10,9 @@ import {
   ConfirmModalOutputModel,
 } from '../../../../../../components/confirm-modal/confirm-modal.component';
 import { DMKnownDevice, DMDeviceType, DMDeviceTag } from '../../../../../../models/device-manager';
-import { LighthouseDevicePowerState } from '../../../../../../models/lighthouse-device';
 import { combineLatest } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DevicePowerAction } from '../../../../../../components/device-power-button/device-power-button.component';
-import { fade, vshrink } from '../../../../../../utils/animations';
+import { vshrink } from '../../../../../../utils/animations';
 import { SelectBoxItem } from '../../../../../../components/select-box/select-box.component';
 import { DomSanitizer } from '@angular/platform-browser';
 import Fuse, { IFuseOptions } from 'fuse.js';
@@ -35,7 +33,7 @@ interface DeviceGroup {
   selector: 'app-device-manager-devices-tab',
   templateUrl: './device-manager-devices-tab.component.html',
   styleUrls: ['./device-manager-devices-tab.component.scss'],
-  animations: [fade(), vshrink()],
+  animations: [vshrink()],
   standalone: false,
 })
 export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
@@ -48,17 +46,13 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
   selectedTagFilter: string | null = null;
   selectedTagFilterOption: SelectBoxItem | undefined;
 
-  // Lighthouse popover state
-  showLHStatePopover = false;
-  selectedPopoverDevice: DMKnownDevice | null = null;
-
   private _tagFilterOptions: SelectBoxItem[] = [];
   private _fuse: Fuse<DMKnownDevice> | null = null;
 
   constructor(
     private deviceManager: DeviceManagerService,
     private openvr: OpenVRService,
-    private lighthouse: LighthouseService,
+    protected lighthouse: LighthouseService,
     private modalService: ModalService,
     private destroyRef: DestroyRef,
     private domSanitizer: DomSanitizer,
@@ -265,12 +259,6 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     return this.deviceManager.getTagsForKnownDevice(device);
   }
 
-  async handleDevicePowerAction(device: DMKnownDevice, action: DevicePowerAction) {
-    if ((await this.devices.handlePowerAction(device, action)) === 'chooseState') {
-      this.rightClickDevicePowerButton(device);
-    }
-  }
-
   openDevice(device: DMKnownDevice) {
     void this.router.navigate(['/dashboard/deviceManager/device', device.id]);
   }
@@ -341,37 +329,5 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     } else {
       return 'device-manager.empty.noDevices';
     }
-  }
-
-  sanitizeIdForCSS(id: string): string {
-    return id.replace(/[^a-zA-Z0-9-_]/g, '_');
-  }
-
-  getPowerButtonAnchorId(device: DMKnownDevice): string {
-    return '--anchor-device-power-btn-dm-' + this.sanitizeIdForCSS(device.id);
-  }
-
-  rightClickDevicePowerButton(device: DMKnownDevice) {
-    const lighthouseDevice = this.devices.lighthouseFor(device);
-    if (lighthouseDevice && !this.lighthouse.deviceNeedsIdentifier(lighthouseDevice)) {
-      this.selectedPopoverDevice = device;
-      this.showLHStatePopover = !this.showLHStatePopover;
-    }
-  }
-
-  onClickOutsideLHStatePopover($event: MouseEvent) {
-    const targetId = ($event.target as HTMLElement).id;
-    const deviceId = this.selectedPopoverDevice
-      ? this.sanitizeIdForCSS(this.selectedPopoverDevice.id)
-      : '';
-    if (targetId === 'btn-power-dm-' + deviceId) return;
-    this.showLHStatePopover = false;
-    this.selectedPopoverDevice = null;
-  }
-
-  async onForceLHState(device: DMKnownDevice, state: LighthouseDevicePowerState) {
-    this.showLHStatePopover = false;
-    this.selectedPopoverDevice = null;
-    await this.devices.forceLighthouseState(device, state);
   }
 }

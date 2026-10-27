@@ -1,0 +1,38 @@
+// as tall as the power button beside it
+:host {
+  display: flex;
+  gap: 0.2em;
+  padding: 0.15em;
+  border-radius: 0.6em;
+  background: var(--color-surface-1);
+}
+
+.force-btn {
+  width: 2.2em;
+  height: 2.2em;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 0.45em;
+  background: none;
+  cursor: pointer;
+  opacity: 0.55;
+  transition:
+    background 0.15s ease,
+    opacity 0.15s ease;
+
+  app-icon {
+    width: 1.1em;
+    height: 1.1em;
+  }
+
+  &:hover {
+    background: var(--color-surface-3);
+    opacity: 1;
+  }
+
+  &.current {
+    background: var(--color-surface-4);
+    opacity: 1;
+  }
+}
