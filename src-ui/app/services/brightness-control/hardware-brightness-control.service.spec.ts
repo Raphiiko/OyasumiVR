@@ -34,6 +34,8 @@ const FETCH_DELAY_MS = 500;
 
 const settle = () => vi.advanceTimersByTimeAsync(DRIVER_DEBOUNCE_MS);
 const firstFetch = () => vi.advanceTimersByTimeAsync(FETCH_DELAY_MS);
+const gainWrites = ({ setAnalogGain }: ReturnType<typeof setup>) =>
+  setAnalogGain.mock.calls.map(([gain]) => gain);
 
 /** A service whose only available driver is a paired Frame. */
 async function setup(
@@ -505,7 +507,9 @@ describe('HardwareBrightnessControlService with the generic SteamVR analog gain 
     await settleDrivers();
     await h.service.setBrightness(60);
 
+    expect(await firstValueFrom(h.service.driverIsAvailable)).toBe(true);
     expect(h.analogGain()).toBeCloseTo(0.5);
+    expect(gainWrites(h)).toEqual([0.5, 0.8, 0.5]);
   });
 
   it('raises the gain after SteamVR restarts with the headset still dimmed', async () => {
@@ -521,6 +525,7 @@ describe('HardwareBrightnessControlService with the generic SteamVR analog gain 
     await h.service.setBrightness(100);
 
     expect(h.analogGain()).toBeCloseTo(0.8);
+    expect(gainWrites(h)).toEqual([0.5, 0.8]);
   });
 
   it('reapplies the brightness when the active headset reports a new range', async () => {
@@ -537,6 +542,9 @@ describe('HardwareBrightnessControlService with the generic SteamVR analog gain 
 
     expect(h.analogGain()).toBeCloseTo(0.3);
     expect(h.service.brightness).toBe(60);
+    expect(gainWrites(h).length).toBe(2);
+    expect(gainWrites(h)[0]).toBeCloseTo(0.5);
+    expect(gainWrites(h)[1]).toBeCloseTo(0.3);
   });
 
   it('shows the level of the headset driver that takes over', async () => {
@@ -550,7 +558,8 @@ describe('HardwareBrightnessControlService with the generic SteamVR analog gain 
     await firstFetch();
 
     expect(h.setAnalogGain).not.toHaveBeenCalled();
-    expect(h.service.brightness).toBe(await h.service.driverValveIndex.getBrightnessPercentage());
+    expect(h.service.brightness).toBe(73);
+    expect(await h.service.driverValveIndex.getBrightnessPercentage()).toBe(73);
   });
 
   it('shows the level of a headset driver that takes over below its range', async () => {
@@ -558,13 +567,13 @@ describe('HardwareBrightnessControlService with the generic SteamVR analog gain 
     await h.service.init();
     await firstFetch();
     await h.service.setBrightness(30);
+    h.setAnalogGain.mockClear();
 
     h.devices.next([{ ...UNSUPPORTED_HMD, manufacturerName: 'SIE', modelNumber: 'PS VR2' }]);
     await firstFetch();
 
-    const psvr2Brightness = await h.service.driverPSVR2.getBrightnessPercentage();
-    expect(psvr2Brightness).toBeGreaterThanOrEqual(50);
-    expect(h.service.brightness).toBe(psvr2Brightness);
+    expect(h.service.brightness).toBe(78);
+    expect(await h.service.driverPSVR2.getBrightnessPercentage()).toBe(78);
   });
 
   it('shows the level of a Bigscreen Beyond that connects while the generic driver is active', async () => {
@@ -581,6 +590,7 @@ describe('HardwareBrightnessControlService with the generic SteamVR analog gain 
     onBeyondConnected({ payload: true } as Parameters<typeof onBeyondConnected>[0]);
     await firstFetch();
 
+    expect(await firstValueFrom(h.service.headsetDriverIsAvailable)).toBe(true);
     expect(h.service.brightness).toBe(100);
     expect(await h.service.driverBigscreenBeyond.getBrightnessPercentage()).toBe(100);
   });

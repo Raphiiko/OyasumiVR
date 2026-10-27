@@ -136,6 +136,7 @@ describe('CCTControlService driver selection', () => {
     const { service, writes } = await setup(hmd);
 
     expect(await firstValueFrom(service.driverIsAvailable)).toBe(true);
+    expect(await firstValueFrom(service.activeDriver)).toBe(service.driverSteamVr);
     expect(writes()).toEqual([6600]);
     await service.setCCT(3000);
     expect(writes()).toEqual([6600, 3000]);
@@ -151,12 +152,15 @@ describe('CCTControlService driver selection', () => {
     await service.setCCT(3000);
     await settleUnclaimed();
     expect(service.cct).toBe(3000);
+    expect(await firstValueFrom(service.driverIsAvailable)).toBe(false);
     expect(writes()).toEqual([6600]);
   });
 
   it('writes nothing while no headset is connected', async () => {
     const { service, writes } = await setup(null);
 
+    expect(await firstValueFrom(service.driverIsAvailable)).toBe(false);
+    expect(await firstValueFrom(service.activeDriver)).toBeNull();
     await service.setCCT(3000);
     await settleUnclaimed();
     expect(writes()).toEqual([]);
@@ -175,6 +179,7 @@ describe('CCTControlService driver selection', () => {
 
     setTryUnsupported(false);
     await settleUnclaimed();
+    expect(await firstValueFrom(service.driverIsAvailable)).toBe(false);
     expect(writes()).toEqual([6600, 3000, 6600]);
     await service.setCCT(4000);
     expect(writes()).toEqual([6600, 3000, 6600]);
@@ -187,6 +192,7 @@ describe('CCTControlService driver selection', () => {
     expect(writes()).toEqual([]);
     activate(INDEX);
     await settle();
+    expect(await firstValueFrom(service.activeDriver)).toBe(service.driverSteamVr);
     expect(writes()).toEqual([4000]);
   });
 
@@ -208,8 +214,12 @@ describe('CCTControlService transitions', () => {
     expect(await firstValueFrom(service.activeTransition)).toBe(task);
     await settle();
     await vi.advanceTimersByTimeAsync(1000 / TRANSITION_FREQUENCY_HZ);
-    expect(writes().length).toBeGreaterThan(3);
-    expect(writes().at(-1)).toBe(3000);
+    const temperatures = writes();
+    expect(temperatures.length).toBeGreaterThan(3);
+    for (let index = 1; index < temperatures.length; index++) {
+      expect(temperatures[index]).toBeLessThanOrEqual(temperatures[index - 1]);
+    }
+    expect(temperatures.at(-1)).toBe(3000);
     expect(await firstValueFrom(service.activeTransition)).toBeUndefined();
   });
 });

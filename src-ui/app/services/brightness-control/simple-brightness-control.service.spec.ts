@@ -70,8 +70,8 @@ describe('simple brightness mode changes', () => {
     await h.software.setBrightness(80);
     h.software.setBrightness.mockClear();
     h.mode(false);
-    await settleMicrotasks();
     h.mode(false);
+    await settleMicrotasks();
     expect(h.software.setBrightness).toHaveBeenCalledExactlyOnceWith(40, {
       cancelActiveTransition: true,
       logReason: null,
@@ -110,10 +110,11 @@ describe('simple brightness mode changes', () => {
   it('preserves hardware availability mapping in simple mode', async () => {
     const h = await setup();
     await h.service.setBrightness(40);
+    h.software.setBrightness.mockClear();
     h.index(true);
     await settleMicrotasks();
-    expect(h.software.setBrightness).toHaveBeenLastCalledWith(100, expect.anything());
-    expect(h.hardware.setBrightness).toHaveBeenLastCalledWith(40, expect.anything());
+    expect(h.software.setBrightness).toHaveBeenCalledExactlyOnceWith(100, expect.anything());
+    expect(h.hardware.setBrightness).toHaveBeenCalledExactlyOnceWith(40, expect.anything());
     h.mode(true);
     h.hardware.setBrightness.mockClear();
     h.software.setBrightness.mockClear();
@@ -138,7 +139,7 @@ describe('simple brightness mode changes', () => {
       h.mode(false);
       await settleMicrotasks();
       h.mode(true);
-      await h.hardware.setBrightness(80);
+      await h.service.setBrightness(80);
       if (returnToSimple) {
         h.mode(false);
         await settleMicrotasks();
@@ -147,6 +148,7 @@ describe('simple brightness mode changes', () => {
       finish();
       await settleMicrotasks();
       expect(h.hardware.setBrightness).not.toHaveBeenCalled();
+      expect(h.service.brightness).toBe(80);
     }
   );
 
@@ -154,6 +156,7 @@ describe('simple brightness mode changes', () => {
     const h = await setup();
     h.index(true);
     await settleMicrotasks();
+    await h.service.setBrightness(40);
     h.mode(true);
     const bounds = new Subject<number[]>();
     h.hardware.brightnessBounds = bounds as BehaviorSubject<number[]>;
@@ -161,10 +164,14 @@ describe('simple brightness mode changes', () => {
     h.hardware.setBrightness.mockClear();
     h.mode(false);
     h.mode(true);
+    h.index(false);
+    await h.service.setBrightness(80);
+    h.software.setBrightness.mockClear();
     bounds.next([20, 100]);
     await settleMicrotasks();
     expect(h.software.setBrightness).not.toHaveBeenCalled();
     expect(h.hardware.setBrightness).not.toHaveBeenCalled();
+    expect(h.service.brightness).toBe(80);
   });
 });
 
