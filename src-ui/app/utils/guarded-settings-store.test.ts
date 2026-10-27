@@ -11,6 +11,8 @@ let setEnd = 0;
 let clearStart = 0;
 let saveEnd = 0;
 let failDeleteKey: string | null = null;
+let setCompletion = Promise.resolve();
+let nextOperationStamp = 0;
 
 const origSet = LazyStore.prototype.set;
 const origDelete = LazyStore.prototype.delete;
@@ -18,9 +20,9 @@ const origClear = LazyStore.prototype.clear;
 const origSave = LazyStore.prototype.save;
 
 LazyStore.prototype.set = async function (key: string, value: unknown) {
-  await new Promise((resolve) => setTimeout(resolve, 10));
+  await setCompletion;
   setCalls.push([key, value]);
-  setEnd = performance.now();
+  setEnd = ++nextOperationStamp;
 };
 LazyStore.prototype.delete = async function (key: string) {
   deleteCalls.push(key);
@@ -30,13 +32,12 @@ LazyStore.prototype.delete = async function (key: string) {
   return true;
 };
 LazyStore.prototype.clear = async function () {
-  clearStart = performance.now();
+  clearStart = ++nextOperationStamp;
   clearCalls++;
 };
 LazyStore.prototype.save = async function () {
-  await new Promise((resolve) => setTimeout(resolve, 10));
   saveCalls++;
-  saveEnd = performance.now();
+  saveEnd = ++nextOperationStamp;
 };
 
 afterAll(() => {
@@ -56,6 +57,8 @@ describe('GuardedSettingsStore', () => {
     clearStart = 0;
     saveEnd = 0;
     failDeleteKey = null;
+    setCompletion = Promise.resolve();
+    nextOperationStamp = 0;
   });
 
   it('passes set through before any delete or clear', async () => {
@@ -111,7 +114,14 @@ describe('GuardedSettingsStore', () => {
 
   it('serializes an overlapping set before a clear', async () => {
     const store = new GuardedSettingsStore('test.dat');
-    await Promise.all([store.set('KEY', 'stale'), store.clear()]);
+    let finishSet!: () => void;
+    setCompletion = new Promise<void>((resolve) => {
+      finishSet = resolve;
+    });
+
+    const operations = Promise.all([store.set('KEY', 'stale'), store.clear()]);
+    finishSet();
+    await operations;
     assert.equal(setCalls.length, 1);
     assert.equal(clearCalls, 1);
     assert.ok(setEnd < clearStart);

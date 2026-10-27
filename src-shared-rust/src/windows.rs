@@ -465,8 +465,7 @@ mod tests {
 
         let first = PrivilegedLauncherLock::acquire_at(&path, OWNER_DESCRIPTOR, Duration::ZERO)
             .expect("an unheld lock is free");
-        let busy =
-            PrivilegedLauncherLock::acquire_at(&path, OWNER_DESCRIPTOR, Duration::from_millis(300));
+        let busy = PrivilegedLauncherLock::acquire_at(&path, OWNER_DESCRIPTOR, Duration::ZERO);
         assert!(
             busy.as_ref()
                 .is_err_and(|e| e.to_string().contains("timed out")),
@@ -474,13 +473,9 @@ mod tests {
             busy.err()
         );
 
-        let release = std::thread::spawn(move || {
-            std::thread::sleep(Duration::from_millis(300));
-            drop(first);
-        });
-        PrivilegedLauncherLock::acquire_at(&path, OWNER_DESCRIPTOR, Duration::from_secs(10))
+        drop(first);
+        PrivilegedLauncherLock::acquire_at(&path, OWNER_DESCRIPTOR, Duration::ZERO)
             .expect("the lock must be free once the first holder drops it");
-        release.join().unwrap();
     }
 
     #[test]

@@ -1,6 +1,6 @@
 import '@angular/compiler';
 import { BehaviorSubject } from 'rxjs';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { GpuAutomationsService } from './gpu-automations.service';
 import { AUTOMATION_CONFIGS_DEFAULT } from '../models/automations';
 import type { GPUDevice } from '../models/gpu-device';
@@ -60,18 +60,33 @@ function createService(
 }
 
 describe('GpuAutomationsService sleep power limits', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it('keeps setting the limit after NVML refuses one', async () => {
     const { mode, nvml, eventLog } = createService(async () => {
       throw 'DeviceSetPowerLimitError';
     });
+    const firstError = Promise.withResolvers<void>();
+    const secondError = Promise.withResolvers<void>();
+    const thirdError = Promise.withResolvers<void>();
+    log.error.mockImplementationOnce(() => firstError.resolve());
+    log.error.mockImplementationOnce(() => secondError.resolve());
+    log.error.mockImplementationOnce(() => thirdError.resolve());
 
     mode.next(true);
-    await vi.waitFor(() => expect(log.error).toHaveBeenCalledOnce());
+    await firstError.promise;
     mode.next(false);
-    await vi.waitFor(() => expect(log.error).toHaveBeenCalledTimes(2));
+    await secondError.promise;
     mode.next(true);
-    await vi.waitFor(() => expect(log.error).toHaveBeenCalledTimes(3));
+    await thirdError.promise;
 
+    expect(log.error).toHaveBeenCalledTimes(3);
     expect(nvml.setPowerLimit.mock.calls).toEqual([
       [device.id, 150_000],
       [device.id, 250_000],
@@ -86,10 +101,13 @@ describe('GpuAutomationsService sleep power limits', () => {
 
   it('logs the change when the limit is set', async () => {
     const { mode, eventLog } = createService(async () => {});
+    const logged = Promise.withResolvers<void>();
+    eventLog.logEvent.mockImplementation(() => logged.resolve());
 
     mode.next(true);
-    await vi.waitFor(() => expect(eventLog.logEvent).toHaveBeenCalledOnce());
+    await logged.promise;
 
+    expect(eventLog.logEvent).toHaveBeenCalledOnce();
     expect(eventLog.logEvent).toHaveBeenCalledWith(
       expect.objectContaining({
         type: 'gpuPowerLimitChanged',
@@ -130,7 +148,7 @@ describe('GpuAutomationsService sleep power limits', () => {
     });
 
     mode.next(true);
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await vi.advanceTimersByTimeAsync(0);
 
     expect(nvml.setPowerLimit).not.toHaveBeenCalled();
     expect(eventLog.logEvent).not.toHaveBeenCalled();

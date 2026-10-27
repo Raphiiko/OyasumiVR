@@ -284,14 +284,15 @@ mod tests {
         std::fs::create_dir(&directory).unwrap();
         let guard = hold_directory(&directory).unwrap();
         let mut child = Command::new("powershell.exe")
-            .args(["-NoProfile", "-Command", "Start-Sleep -Milliseconds 500"])
+            .args(["-NoProfile", "-Command", "Wait-Event"])
             .creation_flags(0x08000000)
             .stdin(guard)
             .spawn()
             .unwrap();
         let blocked = std::fs::rename(&directory, &moved);
+        child.kill().unwrap();
         let status = child.wait().unwrap();
-        assert!(status.success());
+        assert!(!status.success());
         assert_eq!(blocked.unwrap_err().raw_os_error(), Some(32));
         std::fs::rename(&directory, &moved).unwrap();
         std::fs::remove_dir(moved).unwrap();

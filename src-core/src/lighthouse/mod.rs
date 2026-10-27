@@ -1023,7 +1023,7 @@ async fn reset() {
 mod tests {
     use super::*;
 
-    #[tokio::test]
+    #[tokio::test(start_paused = true)]
     #[ignore = "requires an enabled Bluetooth adapter"]
     async fn scan_windows_reuse_adapter_and_clear_results() {
         *MANAGER.lock().await = Some(Manager::new().await.unwrap());
@@ -1034,7 +1034,7 @@ mod tests {
             let peripheral = adapter.add_peripheral(&marker).await.unwrap();
             let reused = scan_adapter().await.unwrap();
             assert!(reused.peripheral(&marker).await.is_ok());
-            scan_for_devices(Duration::from_millis(250)).await;
+            scan_for_devices(Duration::from_millis(1)).await;
             assert!(ADAPTER.lock().await.is_some());
             assert!(adapter.peripheral(&marker).await.is_err());
             assert_eq!(peripheral.id(), marker);

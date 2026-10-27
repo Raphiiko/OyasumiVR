@@ -10,11 +10,19 @@ describe('EventLogStoreWriter', () => {
     let storeValue: EventLog | undefined;
     let savedValue: EventLog | undefined;
     const staleLog: EventLog = { logs: [], version: 5 };
+    let finishStaleSet!: () => void;
+    const staleSetStarted = Promise.withResolvers<void>();
+    const staleSetCompletion = new Promise<void>((resolve) => {
+      finishStaleSet = resolve;
+    });
     const writer = new EventLogStoreWriter({
       async set(_key, value) {
-        await new Promise((resolve) => setTimeout(resolve, value === staleLog ? 30 : 0));
         calls.push('set');
         storeValue = value;
+        if (value === staleLog) {
+          staleSetStarted.resolve();
+          await staleSetCompletion;
+        }
       },
       async save() {
         calls.push('save');
@@ -24,6 +32,9 @@ describe('EventLogStoreWriter', () => {
 
     const staleSave = writer.save(staleLog);
     const clear = writer.clear(defaultLog);
+    await staleSetStarted.promise;
+    assert.deepEqual(calls, ['set']);
+    finishStaleSet();
     await Promise.all([staleSave, clear]);
 
     assert.deepEqual(calls, ['set', 'set', 'save']);

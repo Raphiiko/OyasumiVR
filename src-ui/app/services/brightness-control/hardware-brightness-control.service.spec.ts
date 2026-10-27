@@ -1,6 +1,6 @@
 import { invoke } from '@tauri-apps/api/core';
 import { BehaviorSubject, firstValueFrom, Subject } from 'rxjs';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { listen } from '@tauri-apps/api/event';
 import { AUTOMATION_CONFIGS_DEFAULT } from '../../models/automations';
 import { APP_SETTINGS_DEFAULT } from '../../models/settings';
@@ -20,7 +20,20 @@ vi.mock('@tauri-apps/plugin-log', () => ({ info: vi.fn(), warn: vi.fn() }));
 type Dependencies = ConstructorParameters<typeof HardwareBrightnessControlService>;
 type SimpleDependencies = ConstructorParameters<typeof SimpleBrightnessControlService>;
 
-const settle = () => new Promise((resolve) => setTimeout(resolve, 0));
+beforeEach(() => {
+  vi.useFakeTimers();
+});
+
+afterEach(() => {
+  vi.clearAllTimers();
+  vi.useRealTimers();
+});
+
+const DRIVER_DEBOUNCE_MS = 0;
+const FETCH_DELAY_MS = 500;
+
+const settle = () => vi.advanceTimersByTimeAsync(DRIVER_DEBOUNCE_MS);
+const firstFetch = () => vi.advanceTimersByTimeAsync(FETCH_DELAY_MS);
 
 /** A service whose only available driver is a paired Frame. */
 async function setup(
@@ -174,7 +187,7 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
       command === 'steam_frame_set_brightness' ? new Promise(() => {}) : Promise.resolve(false)
     );
     void h.service.setBrightness(80);
-    await new Promise((resolve) => setTimeout(resolve, 700));
+    await vi.advanceTimersByTimeAsync(FETCH_DELAY_MS + 200);
     expect(h.service.brightness).toBe(80);
   });
 
@@ -206,7 +219,8 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
       command === 'steam_frame_set_brightness' ? (args as { percentage: number }).percentage : false
     );
     const task = h.service.transitionBrightness(80, 20);
-    await firstValueFrom(task.onComplete);
+    await vi.advanceTimersByTimeAsync(20 + 1000 / 60);
+    expect(task.isComplete()).toBe(true);
     h.report(40);
     await settle();
     expect(vi.mocked(invoke).mock.calls.filter(([c]) => c === 'steam_frame_fade')).toEqual([]);
@@ -353,7 +367,7 @@ async function setupIndex(initialGain = 1) {
     } as unknown as Dependencies[2]
   );
   await service.init();
-  await new Promise((resolve) => setTimeout(resolve, 600));
+  await firstFetch();
   return { service, openvr, settings, analogGainUpdates, outsideChange, write };
 }
 
@@ -423,9 +437,7 @@ const UNSUPPORTED_HMD: Partial<OVRDevice> = {
   displayMaxAnalogGain: 0.8,
 };
 
-const settleDrivers = () => new Promise((resolve) => setTimeout(resolve, 5));
-// the service reads a newly available driver's level 500 ms after it appears
-const firstFetch = () => new Promise((resolve) => setTimeout(resolve, 600));
+const settleDrivers = () => vi.advanceTimersByTimeAsync(DRIVER_DEBOUNCE_MS);
 
 function setupGeneric() {
   const settings = new BehaviorSubject({
@@ -460,6 +472,14 @@ function setupGeneric() {
 }
 
 describe('HardwareBrightnessControlService with the generic SteamVR analog gain driver', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it('restores the maximum gain when the option is turned off', async () => {
     const h = setupGeneric();
     await settleDrivers();
@@ -527,7 +547,7 @@ describe('HardwareBrightnessControlService with the generic SteamVR analog gain 
     h.setAnalogGain.mockClear();
 
     h.devices.next([{ ...UNSUPPORTED_HMD, manufacturerName: 'Valve', modelNumber: 'Index' }]);
-    await new Promise((resolve) => setTimeout(resolve, 600));
+    await firstFetch();
 
     expect(h.setAnalogGain).not.toHaveBeenCalled();
     expect(h.service.brightness).toBe(await h.service.driverValveIndex.getBrightnessPercentage());
@@ -540,7 +560,7 @@ describe('HardwareBrightnessControlService with the generic SteamVR analog gain 
     await h.service.setBrightness(30);
 
     h.devices.next([{ ...UNSUPPORTED_HMD, manufacturerName: 'SIE', modelNumber: 'PS VR2' }]);
-    await new Promise((resolve) => setTimeout(resolve, 600));
+    await firstFetch();
 
     const psvr2Brightness = await h.service.driverPSVR2.getBrightnessPercentage();
     expect(psvr2Brightness).toBeGreaterThanOrEqual(50);
@@ -559,7 +579,7 @@ describe('HardwareBrightnessControlService with the generic SteamVR analog gain 
     await h.service.setBrightness(60);
 
     onBeyondConnected({ payload: true } as Parameters<typeof onBeyondConnected>[0]);
-    await new Promise((resolve) => setTimeout(resolve, 600));
+    await firstFetch();
 
     expect(h.service.brightness).toBe(100);
     expect(await h.service.driverBigscreenBeyond.getBrightnessPercentage()).toBe(100);

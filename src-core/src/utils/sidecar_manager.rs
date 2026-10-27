@@ -573,7 +573,7 @@ mod tests {
         assert!(started.elapsed() < std::time::Duration::from_secs(1));
     }
 
-    #[tokio::test]
+    #[tokio::test(start_paused = true)]
     async fn waiting_on_a_process_that_stays_gives_up() {
         // our own process outlives the grace, which is the sidecar that ignored the stop
         assert!(

@@ -86,11 +86,14 @@ describe('BrightnessMqttIntegrationService color temperature', () => {
 
   it('applies commands and republishes the applied value', async () => {
     const { mqtt, cctControl, sendCommand } = await createService();
+    const republished = Promise.withResolvers<void>();
+    mqtt.setNumberPropertyValue.mockImplementation(async () => {
+      republished.resolve();
+    });
 
-    sendCommand(2500.4);
-    await vi.waitFor(() =>
-      expect(mqtt.setNumberPropertyValue).toHaveBeenLastCalledWith('colorTemperature', 2500)
-    );
-    expect(cctControl.setCCT).toHaveBeenCalledWith(2500.4);
+    sendCommand(6600.4);
+    await republished.promise;
+    expect(mqtt.setNumberPropertyValue).toHaveBeenLastCalledWith('colorTemperature', 6600);
+    expect(cctControl.setCCT).toHaveBeenCalledWith(6600.4);
   });
 });

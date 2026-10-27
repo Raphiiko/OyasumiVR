@@ -394,7 +394,6 @@ mod tests {
     use std::{
         fs,
         path::Path,
-        thread,
         time::{Duration, SystemTime},
     };
     use tempfile::tempdir;
@@ -453,17 +452,29 @@ mod tests {
         assert!(parse_on_player_joined(bad_time.to_string(), false).await);
     }
 
-    fn create_log(dir: &Path, name: &str, contents: &[u8]) -> (String, SystemTime) {
+    fn create_log(
+        dir: &Path,
+        name: &str,
+        contents: &[u8],
+        created: SystemTime,
+    ) -> (String, SystemTime) {
         let path = dir.join(name);
         fs::write(&path, contents).unwrap();
-        let created = path.metadata().unwrap().created().unwrap();
-        (path.to_str().unwrap().to_owned(), created)
+        filetime_creation::set_file_ctime(
+            &path,
+            filetime_creation::FileTime::from_system_time(created),
+        )
+        .unwrap();
+        let stored_created = path.metadata().unwrap().created().unwrap();
+        (path.to_str().unwrap().to_owned(), stored_created)
     }
 
     #[test]
     fn picks_logs_by_age_attachment_and_size() {
         let dir = tempdir().unwrap();
-        let (attached, created) = create_log(dir.path(), "output_log_old.txt", b"log");
+        let attached_created = SystemTime::UNIX_EPOCH;
+        let (attached, created) =
+            create_log(dir.path(), "output_log_old.txt", b"log", attached_created);
 
         assert_eq!(
             pick_log_path(
@@ -502,8 +513,9 @@ mod tests {
             None
         );
 
-        thread::sleep(Duration::from_millis(20));
-        let (newer, newer_created) = create_log(dir.path(), "output_log_new.txt", b"log");
+        let newer_time = attached_created + Duration::from_secs(1);
+        let (newer, newer_created) =
+            create_log(dir.path(), "output_log_new.txt", b"log", newer_time);
         assert_eq!(
             pick_log_path(
                 dir.path(),
@@ -515,7 +527,12 @@ mod tests {
         );
 
         let empty_dir = tempdir().unwrap();
-        let (_, empty_created) = create_log(empty_dir.path(), "output_log_empty.txt", b"");
+        let (_, empty_created) = create_log(
+            empty_dir.path(),
+            "output_log_empty.txt",
+            b"",
+            SystemTime::UNIX_EPOCH,
+        );
         assert_eq!(
             pick_log_path(
                 empty_dir.path(),
@@ -530,9 +547,19 @@ mod tests {
     #[test]
     fn keeps_the_log_a_vrchat_process_still_holds_open() {
         let dir = tempdir().unwrap();
-        let (running, _) = create_log(dir.path(), "output_log_running.txt", b"log");
-        thread::sleep(Duration::from_millis(20));
-        let (closed, closed_created) = create_log(dir.path(), "output_log_closed.txt", b"log");
+        let running_created = SystemTime::UNIX_EPOCH;
+        let (running, _) = create_log(
+            dir.path(),
+            "output_log_running.txt",
+            b"log",
+            running_created,
+        );
+        let (closed, closed_created) = create_log(
+            dir.path(),
+            "output_log_closed.txt",
+            b"log",
+            running_created + Duration::from_secs(1),
+        );
         let now = closed_created + Duration::from_secs(1);
         let running_path = Path::new(&running);
 
@@ -558,9 +585,19 @@ mod tests {
     #[test]
     fn drops_a_dead_attachment_even_when_it_is_the_newest_log() {
         let dir = tempdir().unwrap();
-        let (running, _) = create_log(dir.path(), "output_log_running.txt", b"log");
-        thread::sleep(Duration::from_millis(20));
-        let (closed, closed_created) = create_log(dir.path(), "output_log_closed.txt", b"log");
+        let running_created = SystemTime::UNIX_EPOCH;
+        let (running, _) = create_log(
+            dir.path(),
+            "output_log_running.txt",
+            b"log",
+            running_created,
+        );
+        let (closed, closed_created) = create_log(
+            dir.path(),
+            "output_log_closed.txt",
+            b"log",
+            running_created + Duration::from_secs(1),
+        );
         let running_path = Path::new(&running);
 
         assert_eq!(

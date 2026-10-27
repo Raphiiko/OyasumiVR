@@ -699,15 +699,16 @@ mod tests {
         let (sender, _receiver) = mpsc::sync_channel(2);
         let pending = Arc::new((Mutex::new(1), Condvar::new()));
         let worker_pending = pending.clone();
-        std::thread::spawn(move || {
-            std::thread::sleep(Duration::from_millis(20));
-            finish_pending(&worker_pending);
-        });
         let transport = TinyTransport {
             sender,
             pending,
             enabled: Arc::new(AtomicBool::new(true)),
         };
+        assert!(!transport.flush(Duration::ZERO));
+        let worker = std::thread::spawn(move || {
+            finish_pending(&worker_pending);
+        });
         assert!(transport.flush(Duration::from_secs(1)));
+        worker.join().unwrap();
     }
 }

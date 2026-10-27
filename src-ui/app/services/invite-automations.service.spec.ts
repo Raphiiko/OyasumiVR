@@ -311,9 +311,12 @@ describe('InviteAutomationsService', () => {
   it('logs the refusal when telemetry fails', async () => {
     const { receive, vrchat, eventLog, telemetry } = createService({ listMode: 'DISABLED' });
     vrchat.inviteUser.mockRejectedValue(new VRChatInviteRefusedError());
-    telemetry.trackEvent.mockRejectedValue(new Error('offline'));
-    await receive(NotificationType.RequestInvite);
-    await new Promise((resolve) => setTimeout(resolve));
+    const telemetryFailure = Promise.withResolvers<void>();
+    telemetry.trackEvent.mockImplementation(() => telemetryFailure.promise);
+    const handled = receive(NotificationType.RequestInvite);
+    await handled;
+    telemetryFailure.reject(new Error('offline'));
+    await Promise.resolve();
     expect(eventLog.logEvent).toHaveBeenCalledOnce();
     expect(vrchat.deleteNotification).not.toHaveBeenCalled();
   });

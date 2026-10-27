@@ -209,7 +209,7 @@ mod tests {
     use super::*;
 
     #[tokio::test]
-    async fn resolves_ipv4_hosts_and_sends_a_loopback_packet() {
+    async fn resolves_ipv4_hosts_and_rejects_invalid_addresses() {
         for host in ["127.0.0.1", "localhost"] {
             assert!(osc_valid_addr(format!("{host}:9000")).await);
             assert!(resolve_osc_address(&format!("{host}:9000"))
@@ -228,23 +228,31 @@ mod tests {
         ] {
             assert!(!osc_valid_addr(addr.into()).await);
         }
+    }
 
-        let receiver = UdpSocket::bind("127.0.0.1:0").unwrap();
-        receiver
-            .set_read_timeout(Some(Duration::from_secs(2)))
-            .unwrap();
+    #[tokio::test]
+    async fn sends_a_loopback_packet_with_a_bounded_timeout() {
+        let receiver = tokio::net::UdpSocket::bind("127.0.0.1:0").await.unwrap();
+        let receiver_port = receiver.local_addr().unwrap().port();
+        let receiver_task = tokio::spawn(async move {
+            let mut buffer = [0; 128];
+            let (size, _) = receiver.recv_from(&mut buffer).await.unwrap();
+            buffer[..size].to_vec()
+        });
         *OSC_SEND_SOCKET.lock().await = Some(UdpSocket::bind("127.0.0.1:0").unwrap());
         let result = osc_send(
-            format!("localhost:{}", receiver.local_addr().unwrap().port()),
+            format!("127.0.0.1:{receiver_port}"),
             "/oyasumi/test".into(),
             vec![OscType::Int(7)],
         )
         .await;
         *OSC_SEND_SOCKET.lock().await = None;
         assert_eq!(result, Ok(true));
-        let mut buffer = [0; 128];
-        let (size, _) = receiver.recv_from(&mut buffer).unwrap();
-        let (_, packet) = rosc::decoder::decode_udp(&buffer[..size]).unwrap();
+        let received = tokio::time::timeout(Duration::from_secs(2), receiver_task)
+            .await
+            .expect("the loopback packet must arrive")
+            .unwrap();
+        let (_, packet) = rosc::decoder::decode_udp(&received).unwrap();
         assert_eq!(
             packet,
             OscPacket::Message(OscMessage {
