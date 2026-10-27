@@ -253,7 +253,6 @@ import { BrightnessAdvancedModeToggleComponent } from './components/brightness-a
 import { FBTAvatarReloadWorkaroundService } from './services/workarounds/f-b-t-avatar-reload-workaround.service';
 import { AvatarContextService } from './services/avatar-context.service';
 import { LighthouseV1IdWizardModalComponent } from './components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
-import { EventLogFilterDialogComponent } from './components/event-log/event-log-filter-dialog/event-log-filter-dialog.component';
 import { getCurrentWindow } from '@tauri-apps/api/window';
 import { UpdateService } from './services/update.service';
 import { UpdateModalComponent } from './components/update-modal/update-modal.component';
@@ -452,7 +451,6 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
     SettingsBrightnessCctViewComponent,
     BrightnessAdvancedModeToggleComponent,
     LighthouseV1IdWizardModalComponent,
-    EventLogFilterDialogComponent,
     MessageCenterModalComponent,
     MessageCenterItemComponent,
     ProgressiveScrollBlurComponent,

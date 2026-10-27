@@ -2,16 +2,20 @@
   <div class="pane-title">
     <span transloco="comp.event-log.title"></span>
     <button
-      class="btn btn-secondary btn-header"
+      class="btn btn-secondary btn-header filter-button"
+      popovertarget="event-log-filter-popover"
       (mouseover)="filterHover = true"
       (mouseleave)="filterHover = false"
-      [class.active]="(filters | async)?.length ?? 0 > 0"
-      (click)="openFilterDialog()"
+      [class.active]="hiddenCategories.length > 0"
     >
       <span>&nbsp;</span>
       <app-icon name="filter" />
       <span>&nbsp;</span>
-      @if (filterHover) {
+      @if (hiddenCategories.length) {
+        <span class="label">{{
+          'comp.event-log.filters.hiddenCount' | transloco: { count: hiddenCategories.length }
+        }}</span>
+      } @else if (filterHover) {
         <span transloco="comp.event-log.openFilters" @hshrink class="label"></span>
       }
     </button>
@@ -30,6 +34,70 @@
       }
     </button>
   </div>
+  <div id="event-log-filter-popover" class="filter-popover" popover>
+    <div class="popover-title" transloco="comp.event-log.filters.title"></div>
+    <div class="popover-body">
+      @for (group of filterGroups; track group.id) {
+        @if (group.id) {
+          <div class="popover-group">
+            <app-icon [name]="group.icon" />
+            <span class="group-name">{{
+              'comp.event-log.filters.groups.' + group.id | transloco
+            }}</span>
+            <button class="link" (click)="toggleFilterGroup(group)">
+              {{
+                (groupAllShown(group)
+                  ? 'comp.event-log.filters.hideAll'
+                  : 'comp.event-log.filters.showAll'
+                ) | transloco
+              }}
+            </button>
+          </div>
+        }
+        @for (category of group.categories; track category.id) {
+          <button
+            class="popover-row"
+            role="switch"
+            [attr.aria-checked]="!isHidden(category)"
+            [class.off]="isHidden(category)"
+            (click)="toggleCategory(category)"
+          >
+            <app-icon [name]="category.icon" />
+            <span class="row-label">{{
+              'comp.event-log.filters.categories.' + category.id | transloco
+            }}</span>
+            <span class="row-count">{{ categoryCounts[category.id] || '' }}</span>
+            <span class="switch"></span>
+          </button>
+        }
+      }
+    </div>
+    <div class="popover-footer">
+      <span>{{
+        'comp.event-log.filters.shownCount'
+          | transloco
+            : { shown: categories.length - hiddenCategories.length, total: categories.length }
+      }}</span>
+      <button
+        class="link"
+        (click)="showAll()"
+        transloco="comp.event-log.filters.showEverything"
+      ></button>
+    </div>
+  </div>
+  @if (hiddenCategories.length) {
+    <div class="hidden-bar">
+      <span transloco="comp.event-log.filters.hiding"></span>
+      @for (category of hiddenCategories; track category.id) {
+        <app-icon
+          class="dim"
+          [name]="category.icon"
+          [title]="'comp.event-log.filters.categories.' + category.id | transloco"
+        />
+      }
+      <button class="link" (click)="showAll()" transloco="comp.event-log.filters.showAll"></button>
+    </div>
+  }
   <div class="pane-content">
     @if (entries === 0) {
       <div class="no-event-logs" @fade @noop>

@@ -276,13 +276,6 @@
         }
       }
     },
-    "event-log-filter-dialog": {
-      "filters": {
-        "SLEEP_MODE": {
-          "title": "Mode sommeil"
-        }
-      }
-    },
     "event-log": {
       "clearLog": "Effacer",
       "clearLogModal": {

@@ -548,61 +548,6 @@
         }
       }
     },
-    "event-log-filter-dialog": {
-      "filters": {
-        "AUDIO_CONTROL": {
-          "description": "마이크 및 기타 오디오 장치 제어와 관련된 이벤트",
-          "title": "오디오 제어"
-        },
-        "BRIGHTNESS_CCT": {
-          "description": "VR 헤드셋의 밝기 및 색온도 제어와 관련된 이벤트",
-          "title": "밝기 & 색온도"
-        },
-        "BSB_CONTROL": {
-          "description": "Bigscreen Beyond 제어와 관련된 이벤트",
-          "title": "Bigscreen Beyond"
-        },
-        "DEVICE_POWER": {
-          "description": "트래커, 컨트롤러 및 베이스스테이션과 같은 장치의 전원을 켜고 끄는 것과 관련된 이벤트",
-          "title": "장치 전원"
-        },
-        "GPU_CONTROL": {
-          "description": "그래픽 카드의 다양한 기능을 제어하는 것과 관련된 이벤트",
-          "title": "GPU 제어"
-        },
-        "SHUTDOWN_SEQUENCE": {
-          "description": "종료 시퀀스와 관련된 이벤트",
-          "title": "종료 시퀀스"
-        },
-        "SLEEP_MODE": {
-          "description": "수면 모드 및 수면 감지와 관련된 이벤트",
-          "title": "수면 모드"
-        },
-        "STEAMVR_SETTINGS": {
-          "description": "렌더 해상도 및 페이드 거리 조절 등, SteamVR 설정 변경과 관련된 이벤트",
-          "title": "SteamVR 설정"
-        },
-        "VRCHAT_AVATAR": {
-          "description": "OyasumiVR의 VRChat 아바타 변경 관련된 이벤트",
-          "title": "VRChat 아바타"
-        },
-        "VRCHAT_INVITES": {
-          "description": "VRChat 인바이트 및 인바이트 리퀘스트와 관련된 이벤트"
-        },
-        "VRCHAT_STATUS": {
-          "description": "VRChat 스테이터스와 관련된 이벤트",
-          "title": "VRChat 스테이터스"
-        },
-        "WINDOWS_POWER_POLICY": {
-          "description": "Windows 전원 관리 정책과 관련된 이벤트",
-          "title": "Windows 전원 정책"
-        }
-      },
-      "selectAll": "전부 선택",
-      "selectDescription": "이벤트 로그에서 보고 싶은 항목 유형을 선택하세요.",
-      "selectNone": "전부 해제",
-      "title": "이벤트 로그 필터링"
-    },
     "event-log": {
       "clearLog": "비우기",
       "clearLogModal": {
