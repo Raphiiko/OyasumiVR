@@ -7,13 +7,10 @@ import { DeviceControlService } from './device-control.service';
 import { ModalService } from './modal.service';
 import { EventLogService } from './event-log.service';
 import { AppSettingsService } from './app-settings.service';
-import { SteamFrameService } from './steam-frame/steam-frame.service';
-import { SteamFrameEnrollmentService } from './steam-frame/steam-frame-enrollment.service';
 import { EventLogLighthouseSetPowerState } from '../models/event-log-entry';
 import { DMDeviceType, DMKnownDevice } from '../models/device-manager';
 import { OVRDevice } from '../models/ovr-device';
 import { LighthouseDevice, LighthouseDevicePowerState } from '../models/lighthouse-device';
-import { SteamFrameConnectionState, SteamFrameConnectionStatus } from '../models/steam-frame';
 import {
   DevicePowerAction,
   DevicePowerState,
@@ -28,57 +25,6 @@ import {
   LighthouseV1IdWizardModalInputModel,
   LighthouseV1IdWizardModalOutputModel,
 } from '../components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
-import { FLAVOUR } from '../../build';
-
-export interface FramePill {
-  key: string;
-  icon: string;
-  tone: 'neutral' | 'warn' | 'bad';
-  params?: Record<string, string>;
-  /** A key under `steamFrame.statusDetail` whose title and body explain the pill when clicked. */
-  detail?: string;
-  /** Clicking the pill starts a helper update instead of explaining it. */
-  startsUpdate?: boolean;
-}
-
-export type FrameAction = 'pair' | 'pairAgain' | 'retryUpdate' | 'reinstall';
-
-/** A healthy Frame gets only a badge on its icon; any other state gets only a pill. */
-export interface FrameRow {
-  badge?: 'connected' | 'connecting';
-  pill?: FramePill;
-  action?: FrameAction;
-}
-
-/** Statuses that outrank helper maintenance, with their pill and action. */
-const FRAME_STATUS_ROWS: Partial<Record<SteamFrameConnectionStatus, FrameRow>> = {
-  hostKeyChanged: {
-    pill: {
-      key: 'notRecognized',
-      icon: 'exclamation-circle',
-      tone: 'bad',
-      detail: 'notRecognized',
-    },
-    action: 'pairAgain',
-  },
-  helperMissing: {
-    pill: {
-      key: 'helperMissing',
-      icon: 'exclamation-circle',
-      tone: 'bad',
-      detail: 'helperMissing',
-    },
-    action: 'reinstall',
-  },
-  needsAppUpdate: {
-    pill: {
-      key: 'updateApp',
-      icon: 'update',
-      tone: 'warn',
-      detail: FLAVOUR === 'STEAM' ? 'needsAppUpdateSteam' : 'needsAppUpdate',
-    },
-  },
-};
 
 /** The live state and the user actions of one Device Manager device, shared by its views. */
 @Injectable({ providedIn: 'root' })
@@ -93,9 +39,7 @@ export class KnownDeviceActionsService {
     private deviceControl: DeviceControlService,
     private modalService: ModalService,
     private eventLog: EventLogService,
-    private appSettings: AppSettingsService,
-    private steamFrame: SteamFrameService,
-    private frameEnrollment: SteamFrameEnrollmentService
+    private appSettings: AppSettingsService
   ) {
     // these subscribe before any view, so a view that re-renders on the same emission reads it here
     openvr.devices.subscribe((devices) => (this.ovrDevices = devices));
@@ -239,111 +183,6 @@ export class KnownDeviceActionsService {
         LighthouseV1IdWizardModalOutputModel
       >(LighthouseV1IdWizardModalComponent, { device: lighthouseDevice }, { closeOnEscape: false })
     );
-  }
-
-  /** Pairing status and action for a supported Steam Frame, or null for any other device. */
-  frameRow(device: DMKnownDevice): FrameRow | null {
-    if (!this.steamFrame.identityOf(device)) return null;
-    const active = this.isObserved(device);
-    const pairing = this.steamFrame.pairingFor(device.id);
-
-    // unpaired, or the headset removed the pairing: offer pairing while SteamVR uses it
-    const state = pairing?.complete ? this.steamFrame.connections()[pairing.id] : undefined;
-    const status = state?.status ?? 'connecting';
-    if (!pairing?.complete || status === 'pairingRemoved')
-      return active ? { action: 'pair' } : null;
-
-    // a reinstall from this row
-    if (this.steamFrame.reinstalls()[pairing.id]) {
-      return { pill: { key: 'reinstalling', icon: 'refresh', tone: 'neutral' } };
-    }
-
-    // a problem: its pill, and Pair again only while SteamVR uses it
-    const statusRow = FRAME_STATUS_ROWS[status];
-    if (statusRow) {
-      return statusRow.action === 'pairAgain' && !active ? { pill: statusRow.pill } : statusRow;
-    }
-
-    // a helper update in progress or just finished
-    const maintenanceRow = this.frameMaintenanceRow(state);
-    if (maintenanceRow) return maintenanceRow;
-
-    // healthy: a badge only
-    if (status === 'connected' || status === 'connecting') return { badge: status };
-
-    if (status === 'offline') {
-      return { pill: { key: 'offline', icon: 'plug', tone: 'neutral' } };
-    }
-
-    // an outdated helper: the pill starts the update
-    return { pill: { key: 'updateHelper', icon: 'update', tone: 'warn', startsUpdate: true } };
-  }
-
-  private frameMaintenanceRow(state?: SteamFrameConnectionState): FrameRow | null {
-    const maintenance = state?.maintenance;
-    switch (maintenance?.kind) {
-      case 'updating':
-        return { pill: { key: 'updatingHelper', icon: 'refresh', tone: 'neutral' } };
-      case 'updated':
-        return {
-          pill: {
-            key: 'helperUpdated',
-            icon: 'check-circle',
-            tone: 'neutral',
-            params: { version: maintenance.version },
-          },
-        };
-      case 'failed':
-        return {
-          pill: {
-            key: 'updateFailed',
-            icon: 'exclamation-circle',
-            tone: 'bad',
-            detail: 'updateFailed',
-          },
-          action: 'retryUpdate',
-        };
-      default:
-        return null;
-    }
-  }
-
-  /**
-   * Starts the update from an Update helper pill, and opens the explanation for any other.
-   * The explanation offers the row's action as its main button.
-   */
-  onFramePill(device: DMKnownDevice, pill: FramePill, action?: FrameAction) {
-    const pairing = this.steamFrame.pairingFor(device.id);
-    if (pill.startsUpdate) {
-      if (pairing) void this.steamFrame.updateHelper(pairing);
-      return;
-    }
-    this.modalService
-      .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
-        title: `steamFrame.statusDetail.${pill.detail}.title`,
-        message: `steamFrame.statusDetail.${pill.detail}.body`,
-        confirmButtonText: action ? `steamFrame.actions.${action}` : 'shared.modals.close',
-        cancelButtonText: 'shared.modals.close',
-        showCancel: !!action,
-      })
-      .subscribe((result) => {
-        // the row can change while the explanation is open
-        if (!action || !result?.confirmed || this.frameRow(device)?.action !== action) return;
-        void this.onFrameAction(device, action);
-      });
-  }
-
-  onFrameAction(device: DMKnownDevice, action: FrameAction) {
-    const pairing = this.steamFrame.pairingFor(device.id);
-    switch (action) {
-      case 'pair':
-      case 'pairAgain':
-        return this.frameEnrollment.openWizard(device);
-      case 'retryUpdate':
-        return pairing && this.steamFrame.updateHelper(pairing);
-      case 'reinstall':
-        return pairing && this.steamFrame.reinstallHelper(pairing);
-    }
   }
 
   private displayName(device: DMKnownDevice): string {

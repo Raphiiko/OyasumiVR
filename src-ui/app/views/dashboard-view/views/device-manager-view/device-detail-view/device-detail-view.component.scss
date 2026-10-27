@@ -145,15 +145,6 @@
   font-family: monospace;
 }
 
-.btn-caution {
-  background: var(--color-caution);
-  color: var(--color-on-caution);
-
-  &:hover {
-    background: var(--color-caution-hover);
-  }
-}
-
 // header
 .device-header {
   display: flex;
@@ -250,40 +241,6 @@
   border-top: 1px solid var(--color-surface-3);
 }
 
-.pair-card {
-  display: flex;
-  align-items: center;
-  gap: 1.5em;
-  padding: 1.5em;
-  background: var(--color-surface-1);
-  border-radius: var(--surface-border-radius);
-
-  .pair-icon {
-    width: 2.5em;
-    height: 2.5em;
-    flex-shrink: 0;
-  }
-
-  .pair-text {
-    flex: 1;
-
-    h2 {
-      margin: 0 0 0.3em;
-    }
-
-    p {
-      margin: 0;
-      color: var(--color-text-3);
-    }
-
-    .pair-hint {
-      margin-top: 0.5em;
-      font-size: 0.9em;
-      color: var(--color-text-4);
-    }
-  }
-}
-
 // force state buttons beside the main power button; the current state is highlighted
 .force-group {
   display: flex;
@@ -321,8 +278,4 @@
       opacity: 1;
     }
   }
-}
-
-.helper-update {
-  margin-bottom: 1em;
 }

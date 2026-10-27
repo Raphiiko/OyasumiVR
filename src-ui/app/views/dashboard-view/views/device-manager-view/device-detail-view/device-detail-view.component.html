@@ -101,7 +101,7 @@
       </div>
     </div>
 
-    @if (frame()) {
+    @if (frames.isSupported(device)) {
       <div class="tab-bar">
         <div class="tab" [class.active]="tab === 'general'" (click)="tab = 'general'">
           <div class="tab-label">{{ 'device-manager.detail.tabs.general' | transloco }}</div>
@@ -112,12 +112,12 @@
       </div>
     }
 
-    <div class="pane-content scroll" [class.under-header]="!frame()">
+    <div class="pane-content scroll" [class.under-header]="!frames.isSupported(device)">
       <div class="setting-view-container">
-        @if (tab === 'general' || !frame()) {
+        @if (tab === 'general' || !frames.isSupported(device)) {
           <ng-container *ngTemplateOutlet="general; context: { $implicit: device }" />
-        } @else if (frame(); as frame) {
-          <ng-container *ngTemplateOutlet="steamFrame; context: { $implicit: frame }" />
+        } @else {
+          <app-steam-frame-device-tab [device]="device" />
         }
       </div>
     </div>
@@ -224,98 +224,5 @@
         </app-setting-row>
       </div>
     </div>
-  </ng-template>
-
-  <ng-template #steamFrame let-frame>
-    @if (!frame.paired) {
-      <div class="pair-card">
-        <app-icon name="link" class="pair-icon" />
-        <div class="pair-text">
-          <h2>{{ 'steamFrame.invitation.title' | transloco }}</h2>
-          <p>{{ 'steamFrame.invitation.body' | transloco }}</p>
-          @if (!frame.canPair) {
-            <p class="pair-hint">{{ 'device-manager.detail.pairNeedsSteamVR' | transloco }}</p>
-          }
-        </div>
-        @if (frame.canPair) {
-          <button class="btn btn-primary" (click)="pairFrame()">
-            {{ 'steamFrame.actions.pairThis' | transloco }}
-          </button>
-        }
-      </div>
-    } @else {
-      <div class="setting-category">
-        <h2>{{ 'steamFrame.details.helper' | transloco }}</h2>
-        @if (frame.canUpdate || frame.updating) {
-          <app-alert severity="info" contentClass="with-action" class="helper-update">
-            <span>{{ 'device-manager.detail.helperUpdateAvailable' | transloco }}</span>
-            <button
-              class="btn btn-secondary"
-              [disabled]="frame.updating || frame.repairing"
-              (click)="updateFrameHelper()"
-            >
-              {{
-                (frame.updating ? 'steamFrame.details.updating' : 'steamFrame.actions.update')
-                  | transloco
-              }}
-            </button>
-          </app-alert>
-        }
-        <div class="settings">
-          <app-setting-row
-            [labelText]="
-              frame.version
-                ? ('steamFrame.details.version' | transloco: { version: frame.version })
-                : ('steamFrame.details.versionUnknown' | transloco)
-            "
-          >
-            @if (frame.upToDate) {
-              <span class="fact-value">{{ 'steamFrame.details.upToDate' | transloco }}</span>
-            }
-          </app-setting-row>
-          @if (frame.pairAgain) {
-            <app-setting-row
-              label="steamFrame.statusDetail.notRecognized.title"
-              description="steamFrame.statusDetail.notRecognized.body"
-            >
-              <button class="btn btn-primary" (click)="pairFrame()">
-                {{ 'steamFrame.actions.pairAgain' | transloco }}
-              </button>
-            </app-setting-row>
-          } @else if (frame.canRepair) {
-            <app-setting-row
-              label="steamFrame.details.repair"
-              description="steamFrame.details.repairDescription"
-            >
-              <button
-                class="btn btn-secondary"
-                [disabled]="frame.repairing || frame.updating"
-                (click)="repairFrameHelper()"
-              >
-                {{
-                  (frame.repairing ? 'steamFrame.details.repairing' : 'steamFrame.actions.repair')
-                    | transloco
-                }}
-              </button>
-            </app-setting-row>
-          }
-        </div>
-      </div>
-      <div class="setting-category">
-        <h2>{{ 'steamFrame.details.pairing' | transloco }}</h2>
-        <div class="settings">
-          <app-setting-row
-            label="steamFrame.details.pairing"
-            description="steamFrame.details.pairingDescription"
-          >
-            <button class="btn btn-caution" (click)="unpairFrame()">
-              {{
-                'steamFrame.actions.' + (frame.removedOnHeadset ? 'forget' : 'unpair') | transloco
-              }}
-            </button>
-          </app-setting-row>
-        </div>
-      </div>
-    }
   </ng-template>
 }

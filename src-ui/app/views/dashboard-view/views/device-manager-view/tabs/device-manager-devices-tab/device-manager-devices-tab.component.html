@@ -72,7 +72,7 @@
                   "
                   class="device-icon"
                 />
-                @if (devices.frameRow(device)?.badge; as badge) {
+                @if (frames.row(device)?.badge; as badge) {
                   <span [class]="'frame-badge frame-badge-' + badge"></span>
                 }
               </div>
@@ -115,12 +115,12 @@
               }
               <!-- Action Buttons -->
               <div class="device-actions" (click)="$event.stopPropagation()">
-                @if (devices.frameRow(device); as row) {
+                @if (frames.row(device); as row) {
                   @if (row.pill; as pill) {
                     @if (pill.detail || pill.startsUpdate) {
                       <button
                         [class]="'frame-pill frame-pill-button frame-pill-' + pill.tone"
-                        (click)="devices.onFramePill(device, pill, row.action)"
+                        (click)="frames.onPill(device, pill, row.action)"
                       >
                         <app-icon [name]="pill.icon" />
                         {{ 'steamFrame.status.' + pill.key | transloco }}
@@ -134,7 +134,7 @@
                   } @else if (row.action) {
                     <button
                       class="btn btn-primary btn-frame"
-                      (click)="devices.onFrameAction(device, row.action)"
+                      (click)="frames.onAction(device, row.action)"
                     >
                       {{ 'steamFrame.actions.' + row.action | transloco }}
                     </button>

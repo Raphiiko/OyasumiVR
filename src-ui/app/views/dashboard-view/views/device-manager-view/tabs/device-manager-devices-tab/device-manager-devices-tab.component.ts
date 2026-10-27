@@ -27,6 +27,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import Fuse, { IFuseOptions } from 'fuse.js';
 import { SteamFrameService } from 'src-ui/app/services/steam-frame/steam-frame.service';
 import { KnownDeviceActionsService } from 'src-ui/app/services/known-device-actions.service';
+import { SteamFrameDeviceService } from 'src-ui/app/services/steam-frame/steam-frame-device.service';
 
 type DeviceGroupType = DMDeviceType | 'PREVIOUSLY_SEEN';
 
@@ -72,7 +73,8 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     private cdr: ChangeDetectorRef,
     private steamFrame: SteamFrameService,
     private router: Router,
-    protected devices: KnownDeviceActionsService
+    protected devices: KnownDeviceActionsService,
+    protected frames: SteamFrameDeviceService
   ) {}
 
   ngOnInit() {

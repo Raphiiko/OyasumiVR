@@ -12,32 +12,16 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { combineLatest, map } from 'rxjs';
 import { DMDeviceTag, DMKnownDevice } from '../../../../../models/device-manager';
 import { LighthouseDevicePowerState } from '../../../../../models/lighthouse-device';
-import { SteamFrameConnectionStatus } from '../../../../../models/steam-frame';
 import { DeviceManagerService } from '../../../../../services/device-manager.service';
 import { OpenVRService } from '../../../../../services/openvr.service';
 import { LighthouseService } from '../../../../../services/lighthouse.service';
 import { AppSettingsService } from '../../../../../services/app-settings.service';
-import { ModalService } from '../../../../../services/modal.service';
-import { SteamFrameService } from '../../../../../services/steam-frame/steam-frame.service';
 import {
   FramePill,
-  KnownDeviceActionsService,
-} from '../../../../../services/known-device-actions.service';
+  SteamFrameDeviceService,
+} from '../../../../../services/steam-frame/steam-frame-device.service';
+import { KnownDeviceActionsService } from '../../../../../services/known-device-actions.service';
 import { SegmentedControlItem } from '../../../../../components/segmented-control/segmented-control.component';
-
-/** Statuses whose connection loop still runs an update the user requests. */
-const UPDATABLE_STATUSES: SteamFrameConnectionStatus[] = [
-  'connecting',
-  'connected',
-  'offline',
-  'helperOutdated',
-];
-
-const UNREPAIRABLE_STATUSES: (SteamFrameConnectionStatus | undefined)[] = [
-  'hostKeyChanged',
-  'pairingRemoved',
-  'needsAppUpdate',
-];
 
 interface HeaderPill {
   key: string;
@@ -86,8 +70,7 @@ export class DeviceDetailViewComponent implements OnDestroy {
     private deviceManager: DeviceManagerService,
     private lighthouse: LighthouseService,
     private appSettings: AppSettingsService,
-    private modalService: ModalService,
-    private steamFrame: SteamFrameService,
+    protected frames: SteamFrameDeviceService,
     private cdr: ChangeDetectorRef,
     destroyRef: DestroyRef,
     protected devices: KnownDeviceActionsService
@@ -192,7 +175,7 @@ export class DeviceDetailViewComponent implements OnDestroy {
   /** The state the header names, or null when the rest of the header already shows it. */
   headerPill(): HeaderPill | null {
     const device = this.device!;
-    const row = this.devices.frameRow(device);
+    const row = this.frames.row(device);
     if (row?.badge)
       return {
         key: `steamFrame.status.${row.badge}`,
@@ -213,7 +196,7 @@ export class DeviceDetailViewComponent implements OnDestroy {
 
   onHeaderPill(pill: FramePill) {
     const device = this.device!;
-    this.devices.onFramePill(device, pill, this.devices.frameRow(device)?.action);
+    this.frames.onPill(device, pill, this.frames.row(device)?.action);
   }
 
   /** The base station's settled power state, or null while it changes or is unknown. */
@@ -257,68 +240,8 @@ export class DeviceDetailViewComponent implements OnDestroy {
     if (device.deviceType === 'LIGHTHOUSE') {
       add('bluetoothAddress', this.deviceManager.getLighthouseIdForKnownDevice(device));
     }
-    add('address', this.frame()?.state?.address);
+    const frame = this.frames.details(device);
+    add('address', frame?.paired ? frame.state?.address : null);
     return facts;
-  }
-
-  /** The Steam Frame pairing and connection, or null for any other device. */
-  frame() {
-    const device = this.device!;
-    if (!this.steamFrame.identityOf(device)) return null;
-    const pairing = this.steamFrame.pairingFor(device.id);
-    const state = pairing?.complete ? this.steamFrame.connections()[pairing.id] : undefined;
-    const action = this.devices.frameRow(device)?.action;
-    if (!pairing?.complete) return { paired: false as const, canPair: action === 'pair' };
-
-    const removedOnHeadset = state?.status === 'pairingRemoved';
-    const maintenance = state?.maintenance?.kind;
-    return {
-      paired: true as const,
-      pairing,
-      state,
-      version: state?.helperVersion ?? pairing.helperVersion,
-      updating: maintenance === 'updating',
-      canUpdate:
-        !!state &&
-        UPDATABLE_STATUSES.includes(state.status) &&
-        (state.updateAvailable || maintenance === 'failed'),
-      // only a helper that answers can be called up to date
-      upToDate: state?.status === 'connected' && !state.updateAvailable,
-      repairing: !!this.steamFrame.reinstalls()[pairing.id],
-      // a repair needs SSH access
-      canRepair: !UNREPAIRABLE_STATUSES.includes(state?.status),
-      // a headset that no longer knows this PC offers pairing while SteamVR uses it
-      pairAgain: action === 'pairAgain' || (removedOnHeadset && action === 'pair'),
-      removedOnHeadset,
-    };
-  }
-
-  pairFrame() {
-    void this.devices.onFrameAction(this.device!, 'pair');
-  }
-
-  updateFrameHelper() {
-    const frame = this.frame();
-    if (frame?.paired) void this.steamFrame.updateHelper(frame.pairing);
-  }
-
-  repairFrameHelper() {
-    const frame = this.frame();
-    if (frame?.paired) void this.steamFrame.reinstallHelper(frame.pairing, true);
-  }
-
-  async unpairFrame() {
-    const frame = this.frame();
-    if (!frame?.paired) return;
-    const { SteamFrameUnpairModalComponent } =
-      await import('../../../../../components/steam-frame/steam-frame-unpair-modal/steam-frame-unpair-modal.component');
-    // an unpair keeps running after the dialog closes, so Escape must not look like a cancel
-    this.modalService
-      .addModal(
-        SteamFrameUnpairModalComponent,
-        { deviceId: this.device!.id, removedOnHeadset: frame.removedOnHeadset },
-        { closeOnEscape: false }
-      )
-      .subscribe();
   }
 }
