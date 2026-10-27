@@ -85,6 +85,8 @@
                   <button
                     class="force-btn"
                     [class.current]="lighthouseState() === force.state"
+                    [attr.aria-pressed]="lighthouseState() === force.state"
+                    [attr.aria-label]="force.label | transloco"
                     [tooltip]="force.label | transloco"
                     [tooltipMode]="'bottom'"
                     (click)="devices.forceLighthouseState(device, force.state)"
