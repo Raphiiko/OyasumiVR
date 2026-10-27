@@ -3,7 +3,9 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
+  ElementRef,
   OnDestroy,
+  viewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -60,9 +62,12 @@ interface Fact {
 export class DeviceDetailViewComponent implements OnDestroy {
   device?: DMKnownDevice;
   tags: DMDeviceTag[] = [];
-  nickname = '';
+  /** The name being typed while the header name is in edit mode, else null. */
+  nameDraft: string | null = null;
   lighthousePowerOffState: LighthouseDevicePowerState = 'sleep';
   tab: 'general' | 'frame' = 'general';
+
+  private readonly nameInput = viewChild<ElementRef<HTMLInputElement>>('nameInput');
 
   readonly powerOffStates: SegmentedControlItem<LighthouseDevicePowerState>[] = [
     { id: 'sleep', label: 'settings.general.lighthousePowerControl.powerOffMode.sleep.title' },
@@ -103,7 +108,7 @@ export class DeviceDetailViewComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this.saveNickname();
+    this.saveName();
   }
 
   private onData(
@@ -121,8 +126,7 @@ export class DeviceDetailViewComponent implements OnDestroy {
 
     // a route change to another device starts its page fresh
     if (device.id !== this.device?.id) {
-      this.saveNickname();
-      this.nickname = device.nickname ?? '';
+      this.saveName();
       this.tab = 'general';
     }
 
@@ -140,9 +144,25 @@ export class DeviceDetailViewComponent implements OnDestroy {
     void this.router.navigate(['/dashboard/deviceManager']);
   }
 
-  saveNickname() {
-    if (!this.device || this.nickname === (this.device.nickname ?? '')) return;
-    this.device = this.deviceManager.setNicknameForKnownDevice(this.device, this.nickname);
+  startRename() {
+    this.nameDraft = this.displayName;
+    // the input renders on the next change detection
+    setTimeout(() => this.nameInput()?.nativeElement.select());
+  }
+
+  /** Stores the typed name; an empty name or the original name clears the nickname. */
+  saveName() {
+    if (this.nameDraft === null || !this.device) return;
+    const name = this.nameDraft.trim();
+    // the save emits knownDevices synchronously and re-enters onData, so the draft goes first
+    this.nameDraft = null;
+    const nickname = name === this.device.defaultName ? '' : name;
+    if (nickname === (this.device.nickname ?? '')) return;
+    this.device = this.deviceManager.setNicknameForKnownDevice(this.device, nickname);
+  }
+
+  cancelRename() {
+    this.nameDraft = null;
   }
 
   isTagAssigned(tag: DMDeviceTag): boolean {
@@ -225,7 +245,7 @@ export class DeviceDetailViewComponent implements OnDestroy {
 
     add('manufacturer', device.manufacturer);
     add('model', device.typeName);
-    add('serialNumber', ovrDevice?.serialNumber);
+    add('serialNumber', this.devices.serialOf(device));
     add('hardwareRevision', ovrDevice?.hardwareRevision);
     add('dongleId', ovrDevice?.dongleId);
     if (device.deviceType === 'LIGHTHOUSE') {

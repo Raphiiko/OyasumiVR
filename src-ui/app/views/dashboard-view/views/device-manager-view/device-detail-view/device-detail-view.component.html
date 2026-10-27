@@ -16,8 +16,33 @@
         />
       </div>
       <div class="header-text">
-        <div class="header-name">{{ displayName }}</div>
+        @if (nameDraft !== null) {
+          <input
+            #nameInput
+            class="header-name-input"
+            type="text"
+            [placeholder]="device.defaultName"
+            [(ngModel)]="nameDraft"
+            [maxlength]="32"
+            (keydown.enter)="saveName()"
+            (keydown.escape)="cancelRename()"
+            (blur)="saveName()"
+          />
+        } @else {
+          <button
+            class="header-name"
+            [attr.aria-label]="'device-manager.detail.rename' | transloco"
+            (click)="startRename()"
+          >
+            <span>{{ displayName }}</span>
+            <app-icon name="edit" class="rename-icon" />
+          </button>
+        }
         <div class="header-sub">
+          @if (device.nickname) {
+            <span class="original-name">{{ device.defaultName }}</span>
+            ·
+          }
           {{ device.typeName }}
           @if (devices.roleKeyOf(device); as role) {
             · {{ role | transloco }}
@@ -74,7 +99,6 @@
         @if (devices.canShowPowerButton(device)) {
           <app-device-power-button
             [powerState]="devices.powerStateOf(device)"
-            [allowUnknownClick]="!!devices.lighthouseFor(device)"
             (powerAction)="devices.handlePowerAction(device, $event)"
           />
         }
@@ -145,20 +169,6 @@
     <div class="setting-category">
       <h2>{{ 'device-manager.detail.sections.settings' | transloco }}</h2>
       <div class="settings">
-        <app-setting-row
-          label="device-manager.config.nickname.title"
-          description="device-manager.config.nickname.description"
-        >
-          <div class="input-wrapper nickname">
-            <input
-              type="text"
-              [placeholder]="device.defaultName"
-              [(ngModel)]="nickname"
-              [maxlength]="32"
-              (change)="saveNickname()"
-            />
-          </div>
-        </app-setting-row>
         <app-setting-row
           label="device-manager.config.tags.title"
           description="device-manager.config.tags.description"

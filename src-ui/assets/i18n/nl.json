@@ -1011,10 +1011,6 @@
         "title": "Apparaat uitschakelen",
         "tooltip": "Dit apparaat is uitgeschakeld"
       },
-      "nickname": {
-        "description": "Geef dit apparaat een eigen naam zodat je het makkelijker herkent",
-        "title": "Bijnaam Apparaat"
-      },
       "tags": {
         "description": "Wijs tags toe om je apparaten te ordenen en te filteren",
         "noTags": "Geen tags beschikbaar. Maak ze aan op het tabblad Tags.",

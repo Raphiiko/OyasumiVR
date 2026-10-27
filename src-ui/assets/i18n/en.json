@@ -1070,10 +1070,6 @@
         "title": "Disable device",
         "tooltip": "This device is disabled"
       },
-      "nickname": {
-        "description": "Set a custom name for this device to make it easier to identify",
-        "title": "Device Nickname"
-      },
       "tags": {
         "description": "Assign tags to organise and filter your devices",
         "noTags": "No tags available. Create some in the Tags tab.",
@@ -1109,6 +1105,7 @@
       "powerOffState": {
         "description": "Applies to all your base stations."
       },
+      "rename": "Rename",
       "sections": {
         "baseStation": "Base station",
         "details": "Details",
