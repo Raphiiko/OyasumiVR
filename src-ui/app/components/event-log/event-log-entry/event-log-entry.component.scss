@@ -49,13 +49,49 @@
       align-items: flex-start;
       justify-content: center;
       padding: 0.5em 1em;
+      line-height: 1.65;
 
       ::ng-deep .status-dot {
         margin-right: 0.25em;
       }
 
+      ::ng-deep .status-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4em;
+        padding: 0.05em 0.6em 0.05em 0.45em;
+        border: 1px solid #3a3a3a;
+        border-radius: 999px;
+        background: var(--color-surface-3);
+        max-width: 100%;
+        box-sizing: border-box;
+        white-space: nowrap;
+        vertical-align: middle;
+        line-height: 1.4;
+
+        .status-dot {
+          flex-shrink: 0;
+          margin-right: 0;
+        }
+
+        .status-label {
+          flex: 1 1 0;
+          max-width: max-content;
+          min-width: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .status-arrow {
+          flex-shrink: 0;
+          margin: 0 0.1em;
+          color: var(--color-text-3);
+        }
+      }
+
       .title {
         font-weight: 500;
+        max-width: 100%;
       }
 
       .subtitle {

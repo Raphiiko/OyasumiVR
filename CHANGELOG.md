@@ -35,6 +35,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Right controllers now show a mirrored controller icon in the device list and the Device Manager
 - Replaced the time fields with a 24-hour dial that works from the SteamVR dashboard
 - OyasumiVR now follows Valve Index brightness changes made in SteamVR
+- VRChat status changes in the event log now show the old and new status side by side, on one line
 
 ### Fixed
 

@@ -498,15 +498,13 @@
             "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 설정을 변경했어요.",
             "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 설정을 변경했어요.",
             "SLEEP_PREPARATION": "수면 준비가 시작되어 설정을 변경했어요."
-          },
-          "title": "VRChat 스테이터스를 {oldStatus}에서 {newStatus}으로 변경함"
+          }
         },
         "statusChangedOnPlayerCountChange": {
           "reason": {
             "AT_LIMIT_OR_ABOVE": "월드의 플레이어가 {threshold}인 이상이기에 스테이터스가 변경되었어요.",
             "BELOW_LIMIT": "월드의 플레이어가 {threshold}인 미만이기에 스테이터스가 변경되었어요."
-          },
-          "title": "VRChat 스테이터스를 {oldStatus}에서 {newStatus}으로 변경함"
+          }
         },
         "turnedOffOpenVRDevices": {
           "reason": {

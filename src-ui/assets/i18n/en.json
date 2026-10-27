@@ -646,16 +646,16 @@
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
-          "title": "Changed your VRChat status from {oldStatus} to {newStatus}",
-          "title_FAILED": "Could not change your VRChat status from {oldStatus} to {newStatus}"
+          "title": "Changed your VRChat status {statusChange}",
+          "title_FAILED": "Could not change your VRChat status {statusChange}"
         },
         "statusChangedOnPlayerCountChange": {
           "reason": {
             "AT_LIMIT_OR_ABOVE": "As the number of players in your world reached the limit of {threshold}",
             "BELOW_LIMIT": "As the number of players in your world dropped below {threshold}"
           },
-          "title": "Changed your VRChat status from {oldStatus} to {newStatus}",
-          "title_FAILED": "Could not change your VRChat status from {oldStatus} to {newStatus}"
+          "title": "Changed your VRChat status {statusChange}",
+          "title_FAILED": "Could not change your VRChat status {statusChange}"
         },
         "turnedOffOpenVRDevices": {
           "reason": {
