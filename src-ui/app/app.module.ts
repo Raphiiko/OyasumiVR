@@ -278,8 +278,9 @@ import { openUrl } from '@tauri-apps/plugin-opener';
 import { ExternalLinkService } from './services/external-link.service';
 import { emit as globalEmit } from '@tauri-apps/api/event';
 import { DeviceManagerViewComponent } from './views/dashboard-view/views/device-manager-view/device-manager-view.component';
+import { DeviceDetailViewComponent } from './views/dashboard-view/views/device-manager-view/device-detail-view/device-detail-view.component';
+import { SegmentedControlComponent } from './components/segmented-control/segmented-control.component';
 import { DeviceManagerService } from './services/device-manager.service';
-import { DeviceManagerConfigModalComponent } from './components/device-manager-config-modal/device-manager-config-modal.component';
 import { DevicePowerButtonComponent } from './components/device-power-button/device-power-button.component';
 import { DeviceManagerDevicesTabComponent } from './views/dashboard-view/views/device-manager-view/tabs/device-manager-devices-tab/device-manager-devices-tab.component';
 import { DeviceManagerTagsTabComponent } from './views/dashboard-view/views/device-manager-view/tabs/device-manager-tags-tab/device-manager-tags-tab.component';
@@ -463,7 +464,8 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
     VRChatGroupAutomationsViewComponent,
     RunAutomationsViewComponent,
     DeviceManagerViewComponent,
-    DeviceManagerConfigModalComponent,
+    DeviceDetailViewComponent,
+    SegmentedControlComponent,
     DevicePowerButtonComponent,
     DeviceManagerDevicesTabComponent,
     DeviceManagerTagsTabComponent,

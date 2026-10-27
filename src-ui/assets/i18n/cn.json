@@ -1020,7 +1020,6 @@
         "noTags": "暂无可用标签，请在“标签”选项卡中创建",
         "title": "设备标签"
       },
-      "title": "配置 {deviceName}",
       "v1Identifier": {
         "change": "更改 ID",
         "description": "OyasumiVR 需要知道 V1 基站的 ID 才能控制它",
@@ -1978,11 +1977,9 @@
         "powerOffMode": {
           "description": "与待机模式不同的是，睡眠模式会关闭电机，重新开启可能需要更长时间。",
           "sleep": {
-            "description": "关闭电源：\n激光和马达",
             "title": "睡眠"
           },
           "standby": {
-            "description": "关闭电源：\n激光",
             "title": "待机"
           },
           "title": "首选的断电状态"

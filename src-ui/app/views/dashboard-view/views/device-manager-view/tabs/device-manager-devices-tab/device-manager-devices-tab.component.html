@@ -60,18 +60,19 @@
             </div>
           }
           <!-- Device Header -->
-          <div class="device-header" (click)="configureDevice(device)">
+          <div class="device-header" (click)="openDevice(device)">
             <!-- Main Row with core device info -->
             <div class="device-main-row">
               <div class="device-icon-wrap">
                 <app-icon
-                  [name]="getDeviceTypeIconForDevice(device.deviceType)"
+                  [name]="devices.typeIcon(device.deviceType)"
                   [mirrored]="
-                    device.deviceType === 'CONTROLLER' && getDeviceOVR(device)?.role === 'RightHand'
+                    device.deviceType === 'CONTROLLER' &&
+                    devices.ovrFor(device)?.role === 'RightHand'
                   "
                   class="device-icon"
                 />
-                @if (frameRow(device)?.badge; as badge) {
+                @if (devices.frameRow(device)?.badge; as badge) {
                   <span [class]="'frame-badge frame-badge-' + badge"></span>
                 }
               </div>
@@ -86,8 +87,8 @@
                       [tooltipMode]="'right'"
                     />
                   }
-                  @if (getDeviceSerialNumber(device) && device.nickname) {
-                    <span class="device-serial"> S/N: {{ getDeviceSerialNumber(device) }} </span>
+                  @if (devices.serialOf(device) && device.nickname) {
+                    <span class="device-serial"> S/N: {{ devices.serialOf(device) }} </span>
                   }
                 </div>
                 <div class="device-details">
@@ -96,13 +97,13 @@
                     {{ device.nickname || device.defaultName }}
                   </span>
                   <!-- Show role if available -->
-                  @if (getDeviceRole(device)) {
-                    <span class="device-role" [transloco]="getDeviceRole(device) ?? ''"></span>
+                  @if (devices.roleKeyOf(device)) {
+                    <span class="device-role" [transloco]="devices.roleKeyOf(device) ?? ''"></span>
                   }
                 </div>
               </div>
               <!-- Battery Info -->
-              @if (getDeviceBatteryInfo(device); as battery) {
+              @if (devices.batteryOf(device); as battery) {
                 <div class="battery-info">
                   <span class="battery-level">{{ battery.level }}%</span>
                   <app-icon
@@ -114,12 +115,12 @@
               }
               <!-- Action Buttons -->
               <div class="device-actions" (click)="$event.stopPropagation()">
-                @if (frameRow(device); as row) {
+                @if (devices.frameRow(device); as row) {
                   @if (row.pill; as pill) {
                     @if (pill.detail || pill.startsUpdate) {
                       <button
                         [class]="'frame-pill frame-pill-button frame-pill-' + pill.tone"
-                        (click)="onFramePill(device, pill, row.action)"
+                        (click)="devices.onFramePill(device, pill, row.action)"
                       >
                         <app-icon [name]="pill.icon" />
                         {{ 'steamFrame.status.' + pill.key | transloco }}
@@ -133,19 +134,19 @@
                   } @else if (row.action) {
                     <button
                       class="btn btn-primary btn-frame"
-                      (click)="onFrameAction(device, row.action)"
+                      (click)="devices.onFrameAction(device, row.action)"
                     >
                       {{ 'steamFrame.actions.' + row.action | transloco }}
                     </button>
                   }
                 }
                 <!-- Power Button -->
-                @if (canShowPowerButton(device)) {
+                @if (devices.canShowPowerButton(device)) {
                   <app-device-power-button
                     [id]="'btn-power-dm-' + sanitizeIdForCSS(device.id)"
-                    [powerState]="getDevicePowerState(device)"
+                    [powerState]="devices.powerStateOf(device)"
                     [anchorName]="getPowerButtonAnchorId(device)"
-                    [allowUnknownClick]="!!getDeviceLighthouse(device)"
+                    [allowUnknownClick]="!!devices.lighthouseFor(device)"
                     (powerAction)="handleDevicePowerAction(device, $event)"
                     (rightClick)="rightClickDevicePowerButton(device)"
                   ></app-device-power-button>
@@ -160,7 +161,7 @@
                     <app-lighthouse-force-state-popover
                       (action)="onForceLHState(device, $event)"
                       [style.position-anchor]="getPowerButtonAnchorId(device)"
-                      [type]="$safeNavigationMigration(getDeviceLighthouse(device)?.deviceType)"
+                      [type]="$safeNavigationMigration(devices.lighthouseFor(device)?.deviceType)"
                     >
                     </app-lighthouse-force-state-popover>
                   </div>

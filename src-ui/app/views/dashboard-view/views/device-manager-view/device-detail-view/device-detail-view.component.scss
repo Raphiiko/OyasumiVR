@@ -1,0 +1,292 @@
+:host {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+// breadcrumb title
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+
+  .crumb-back {
+    background: none;
+    border: 0;
+    padding: 0;
+    color: var(--color-text-4);
+    font: inherit;
+    cursor: pointer;
+    transition: color 0.15s ease;
+
+    &:hover {
+      color: var(--color-text-1);
+    }
+  }
+
+  .crumb-sep {
+    flex: 0;
+    color: var(--color-surface-5);
+    font-weight: 300;
+  }
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  padding: 0.3em 0.8em;
+  border-radius: 999px;
+  font-size: 0.85em;
+  white-space: nowrap;
+  background: var(--color-surface-3);
+  color: var(--color-text-3);
+
+  i {
+    width: 0.55em;
+    height: 0.55em;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  &.tone-bad {
+    color: var(--color-text-caution);
+    background: color-mix(in srgb, var(--color-text-caution) 13%, transparent);
+  }
+
+  &.tone-good {
+    color: var(--color-text-success);
+    background: color-mix(in srgb, var(--color-text-success) 13%, transparent);
+  }
+
+  &.clickable {
+    border: 0;
+    font: inherit;
+    font-size: 0.85em;
+    cursor: pointer;
+
+    &:hover {
+      filter: brightness(1.2);
+    }
+  }
+
+  &.tone-warn {
+    color: var(--color-warning);
+    background: color-mix(in srgb, var(--color-warning) 15%, transparent);
+  }
+}
+
+.battery {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  color: var(--color-text-2);
+
+  &.low {
+    color: var(--color-text-caution);
+    --icon-color: var(--color-text-caution);
+  }
+}
+
+.tag-chip {
+  font: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.25em 0.7em;
+  border-radius: 999px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-surface-3);
+  font-size: 0.85em;
+  color: var(--color-text-2);
+
+  i {
+    width: 0.6em;
+    height: 0.6em;
+    border-radius: 50%;
+  }
+
+  app-icon {
+    width: 0.9em;
+    height: 0.9em;
+  }
+
+  &.selected {
+    border-color: var(--color-text-4);
+    background: var(--color-surface-3);
+  }
+}
+
+// three rows fit; a fourth shows half, so the list visibly scrolls
+.tag-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4em;
+  justify-content: flex-end;
+  max-width: 30em;
+  max-height: 8.1em;
+  overflow-y: auto;
+  padding: 0.1em 0.25em 0.1em 0;
+
+  .tag-chip {
+    cursor: pointer;
+  }
+}
+
+.no-tags {
+  color: var(--color-text-3);
+  font-style: italic;
+}
+
+.nickname {
+  width: 14em;
+}
+
+.fact-value {
+  color: var(--color-text-3);
+  font-family: monospace;
+}
+
+.btn-caution {
+  background: var(--color-caution);
+  color: var(--color-on-caution);
+
+  &:hover {
+    background: var(--color-caution-hover);
+  }
+}
+
+// header
+.device-header {
+  display: flex;
+  align-items: center;
+  gap: 1.25em;
+  padding: 1.5em 2em;
+
+  .icon-ring {
+    width: 4.5em;
+    height: 4.5em;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--color-surface-1);
+    flex-shrink: 0;
+
+    app-icon {
+      width: 2.5em;
+      height: 2.5em;
+    }
+  }
+
+  .header-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+  }
+
+  .header-name {
+    font-size: 1.5em;
+    font-weight: 600;
+  }
+
+  .header-sub {
+    color: var(--color-text-3);
+    font-size: 0.9em;
+  }
+
+  .header-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4em;
+    margin-top: 0.3em;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+  }
+}
+
+// without a tab bar, a line separates the header from the content
+.pane-content.under-header {
+  border-top: 1px solid var(--color-surface-3);
+}
+
+.pair-card {
+  display: flex;
+  align-items: center;
+  gap: 1.5em;
+  padding: 1.5em;
+  background: var(--color-surface-1);
+  border-radius: var(--surface-border-radius);
+
+  .pair-icon {
+    width: 2.5em;
+    height: 2.5em;
+    flex-shrink: 0;
+  }
+
+  .pair-text {
+    flex: 1;
+
+    h2 {
+      margin: 0 0 0.3em;
+    }
+
+    p {
+      margin: 0;
+      color: var(--color-text-3);
+    }
+
+    .pair-hint {
+      margin-top: 0.5em;
+      font-size: 0.9em;
+      color: var(--color-text-4);
+    }
+  }
+}
+
+// force state buttons beside the main power button; the current state is highlighted
+.force-group {
+  display: flex;
+  gap: 0.2em;
+  padding: 0.2em;
+  border-radius: 0.6em;
+  background: var(--color-surface-1);
+
+  .force-btn {
+    width: 2.2em;
+    height: 2.2em;
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: 0.45em;
+    background: none;
+    cursor: pointer;
+    opacity: 0.55;
+    transition:
+      background 0.15s ease,
+      opacity 0.15s ease;
+
+    app-icon {
+      width: 1.1em;
+      height: 1.1em;
+    }
+
+    &:hover {
+      background: var(--color-surface-3);
+      opacity: 1;
+    }
+
+    &.current {
+      background: var(--color-surface-4);
+      opacity: 1;
+    }
+  }
+}
+
+.helper-update {
+  margin-bottom: 1em;
+}

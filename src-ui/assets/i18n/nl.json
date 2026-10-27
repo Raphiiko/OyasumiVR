@@ -1020,7 +1020,6 @@
         "noTags": "Geen tags beschikbaar. Maak ze aan op het tabblad Tags.",
         "title": "Apparaattags"
       },
-      "title": "{deviceName} Configureren",
       "v1Identifier": {
         "change": "ID Wijzigen",
         "description": "OyasumiVR moet het ID van een V1 base station weten om het te kunnen besturen",
@@ -1967,11 +1966,9 @@
         "powerOffMode": {
           "description": "In tegenstelling tot standbymodus schakelt slaapmodus ook de motoren uit, waardoor het langer kan duren om weer aan te gaan.",
           "sleep": {
-            "description": "Lasers & motoren\nuitschakelen",
             "title": "Slaap"
           },
           "standby": {
-            "description": "Lasers\nuitschakelen",
             "title": "Standby"
           },
           "title": "Gewenste uit-stand"

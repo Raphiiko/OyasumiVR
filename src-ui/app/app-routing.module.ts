@@ -37,6 +37,7 @@ import { VRChatGroupAutomationsViewComponent } from './views/dashboard-view/view
 import { SettingsBrightnessCctViewComponent } from './views/dashboard-view/views/settings-brightness-cct-view/settings-brightness-cct-view.component';
 import { RunAutomationsViewComponent } from './views/dashboard-view/views/run-automations-view/run-automations-view.component';
 import { DeviceManagerViewComponent } from './views/dashboard-view/views/device-manager-view/device-manager-view.component';
+import { DeviceDetailViewComponent } from './views/dashboard-view/views/device-manager-view/device-detail-view/device-detail-view.component';
 
 const routes: Routes = [
   {
@@ -55,6 +56,10 @@ const routes: Routes = [
       {
         path: 'deviceManager',
         component: DeviceManagerViewComponent,
+      },
+      {
+        path: 'deviceManager/device/:id',
+        component: DeviceDetailViewComponent,
       },
       {
         path: 'oscAutomations',

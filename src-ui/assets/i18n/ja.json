@@ -1020,7 +1020,6 @@
         "noTags": "利用可能なタグがありません。タグを作成してください",
         "title": "デバイスタグ"
       },
-      "title": "{deviceName}の設定",
       "v1Identifier": {
         "change": "IDを変更",
         "description": "V1ベースステーションを制御するためにはそのIDを認識する必要があります",
@@ -1978,11 +1977,9 @@
         "powerOffMode": {
           "description": "スリープモードはスタンバイモードと異なり、モーターもオフになるため復帰に時間がかかる場合があります",
           "sleep": {
-            "description": "電源オフ\nレーザー・モーター",
             "title": "スリープ"
           },
           "standby": {
-            "description": "電源オフ\nレーザー",
             "title": "スタンバイ"
           },
           "title": "優先する電源オフ状態"

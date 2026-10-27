@@ -1644,12 +1644,6 @@
         },
         "powerOffMode": {
           "description": "A diferencia del modo Standby, el modo Sleep también apaga los motores, que pueden tardar más en volver a encenderse.",
-          "sleep": {
-            "description": "Apagar\nláseres y motores"
-          },
-          "standby": {
-            "description": "Apagar\nláseres"
-          },
           "title": "Estado de apagado preferido"
         },
         "title": "Control de energía de las estaciones base SteamVR"

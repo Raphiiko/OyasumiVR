@@ -1079,7 +1079,6 @@
         "noTags": "No tags available. Create some in the Tags tab.",
         "title": "Device Tags"
       },
-      "title": "Configure {deviceName}",
       "v1Identifier": {
         "change": "Change ID",
         "description": "OyasumiVR needs to know the ID of a V1 base station in order to control it",
@@ -1091,6 +1090,34 @@
       "confirm": "Delete Tag",
       "message": "Are you sure you want to delete this tag? It will be removed from all devices.",
       "title": "Delete Tag"
+    },
+    "detail": {
+      "facts": {
+        "address": "Network address",
+        "bluetoothAddress": "Bluetooth address",
+        "dongleId": "Dongle ID",
+        "hardwareRevision": "Hardware revision",
+        "lastSeen": "Last seen",
+        "manufacturer": "Manufacturer",
+        "model": "Model",
+        "now": "Now",
+        "serialNumber": "Serial number"
+      },
+      "helperUpdateAvailable": "A new version of the OyasumiVR helper is available.",
+      "notConnected": "Not connected",
+      "pairNeedsSteamVR": "Connect the headset to SteamVR to pair it.",
+      "powerOffState": {
+        "description": "Applies to all your base stations."
+      },
+      "sections": {
+        "baseStation": "Base station",
+        "details": "Details",
+        "settings": "Settings"
+      },
+      "tabs": {
+        "general": "General",
+        "steamFrame": "Steam Frame"
+      }
     },
     "deviceSelector": {
       "deselectAll": "Deselect All",
@@ -2044,11 +2071,9 @@
         "powerOffMode": {
           "description": "Unlike Standby mode, Sleep mode also turns off the motors, which can take longer to turn back on.",
           "sleep": {
-            "description": "Power off\nlasers & motors",
             "title": "Sleep"
           },
           "standby": {
-            "description": "Power off\nlasers",
             "title": "Standby"
           },
           "title": "Preferred power off state"

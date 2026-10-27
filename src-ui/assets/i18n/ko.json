@@ -1405,11 +1405,9 @@
         "powerOffMode": {
           "description": "대기 모드와 달리 슬립 모드에서는 모터가 꺼지므로 다시 켜는 데 시간이 오래 걸릴 수 있어요.",
           "sleep": {
-            "description": "레이저 & 모터\n전원 끄기",
             "title": "슬립"
           },
           "standby": {
-            "description": "레이저\n전원 끄기",
             "title": "대기"
           },
           "title": "선호하는 전원 끄기 상태"

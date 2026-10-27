@@ -8,6 +8,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SelectBoxItem } from 'src-ui/app/components/select-box/select-box.component';
 import { LighthouseDevicePowerState } from 'src-ui/app/models/lighthouse-device';
+import { SegmentedControlItem } from 'src-ui/app/components/segmented-control/segmented-control.component';
 import { OpenVRService } from 'src-ui/app/services/openvr.service';
 import { TelemetryService } from 'src-ui/app/services/telemetry/telemetry.service';
 import { LighthouseConsoleService } from 'src-ui/app/services/lighthouse-console.service';
@@ -45,19 +46,10 @@ export class SettingsGeneralViewComponent implements OnInit {
   };
   lighthouseConsolePathInputChange: Subject<string | null> = new Subject();
   telemetrySettings: TelemetrySettings = structuredClone(TELEMETRY_SETTINGS_DEFAULT);
-  lighthousePowerOffModeOptions: SelectBoxItem[] = [
-    {
-      id: 'standby',
-      label: 'settings.general.lighthousePowerControl.powerOffMode.standby.title',
-      subLabel: 'settings.general.lighthousePowerControl.powerOffMode.standby.description',
-    },
-    {
-      id: 'sleep',
-      label: 'settings.general.lighthousePowerControl.powerOffMode.sleep.title',
-      subLabel: 'settings.general.lighthousePowerControl.powerOffMode.sleep.description',
-    },
+  readonly lighthousePowerOffStates: SegmentedControlItem<LighthouseDevicePowerState>[] = [
+    { id: 'sleep', label: 'settings.general.lighthousePowerControl.powerOffMode.sleep.title' },
+    { id: 'standby', label: 'settings.general.lighthousePowerControl.powerOffMode.standby.title' },
   ];
-  lighthousePowerOffModeOption: SelectBoxItem | undefined;
   sleepModeStartupBehaviourOptions: SelectBoxItem[] = [
     {
       id: 'PERSIST',
@@ -112,9 +104,6 @@ export class SettingsGeneralViewComponent implements OnInit {
     this.settingsService.settings
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((settings) => {
-        this.lighthousePowerOffModeOption = this.lighthousePowerOffModeOptions.find(
-          (o) => o.id === settings.lighthousePowerOffState
-        );
         this.sleepModeStartupBehaviourOption = this.sleepModeStartupBehaviourOptions.find(
           (o) => o.id === settings.sleepModeStartupBehaviour
         );
@@ -198,11 +187,8 @@ export class SettingsGeneralViewComponent implements OnInit {
     this.settingsService.updateSettings({ lighthousePowerOffDelay: enabled });
   }
 
-  onChangeLighthousePowerOffMode(option: SelectBoxItem | undefined) {
-    if (!option) return;
-    this.settingsService.updateSettings({
-      lighthousePowerOffState: option.id as LighthouseDevicePowerState,
-    });
+  onChangeLighthousePowerOffMode(state: LighthouseDevicePowerState) {
+    this.settingsService.updateSettings({ lighthousePowerOffState: state });
   }
 
   onChangeSleepModeStartupBehaviour(option: SelectBoxItem | undefined) {

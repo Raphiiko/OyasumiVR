@@ -1,0 +1,12 @@
+<div class="segmented-control" role="radiogroup">
+  @for (item of items(); track item.id) {
+    <button
+      role="radio"
+      [attr.aria-checked]="item.id === selected()"
+      [class.active]="item.id === selected()"
+      (click)="selectedChange.emit(item.id)"
+    >
+      {{ item.label | transloco }}
+    </button>
+  }
+</div>
