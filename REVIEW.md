@@ -44,4 +44,4 @@ code adds upkeep without a user who needs it.
 - A11Y-1: Add no accessibility-only code: no ARIA roles or `aria-*` attributes, no screen-reader-only
   text, no `prefers-reduced-motion` or other reduced-motion handling, no high-contrast or
   `forced-colors` styles, and no keyboard navigation or focus management added for assistive
-  technology. A review finding that asks for any of these is a note, never a blocker.
+  technology. A review finding that asks for any of these conflicts with this rule; reject it.
