@@ -672,6 +672,40 @@
         "message": "イベントログを消去しますか？元に戻せません。",
         "title": "消去の確認"
       },
+      "filters": {
+        "categories": {
+          "bigscreenBeyond": "Bigscreen Beyond",
+          "brightnessCct": "輝度と色温度",
+          "devicePower": "デバイスの電源",
+          "fadeDistance": "フェード距離",
+          "frameLimiting": "フレーム制限",
+          "gpu": "GPU",
+          "resolution": "解像度",
+          "runCommands": "コマンドプロンプト",
+          "shutdownSequence": "シャットダウン処理",
+          "sleepMode": "睡眠モード",
+          "systemMic": "システムマイク",
+          "volume": "音量",
+          "vrchatAvatar": "アバター",
+          "vrchatGroup": "グループ",
+          "vrchatInvites": "招待",
+          "vrchatMicMute": "マイクミュート",
+          "vrchatStatus": "ステータス",
+          "windowsPowerPolicy": "Windows電源プラン"
+        },
+        "groups": {
+          "general": "その他",
+          "hardware": "ハードウェア",
+          "vrchat": "VRChat"
+        },
+        "hiddenCount": "{count}件を非表示",
+        "hideAll": "すべて非表示",
+        "hiding": "非表示",
+        "showAll": "すべて表示",
+        "showEverything": "すべての項目を表示",
+        "shownCount": "{total}件中{shown}件を表示",
+        "title": "イベントのフィルター"
+      },
       "group": {
         "cause": {
           "sleepModeDisabled": "睡眠モード無効化",

@@ -672,6 +672,40 @@
         "message": "Weet je zeker dat je het logboek wilt wissen? Dit kan niet ongedaan worden gemaakt.",
         "title": "Wissen bevestigen"
       },
+      "filters": {
+        "categories": {
+          "bigscreenBeyond": "Bigscreen Beyond",
+          "brightnessCct": "Helderheid & kleurtemperatuur",
+          "devicePower": "Apparaatvoeding",
+          "fadeDistance": "Activatieafstand",
+          "frameLimiting": "Framelimiet",
+          "gpu": "GPU",
+          "resolution": "Resolutie",
+          "runCommands": "Commando's uitvoeren",
+          "shutdownSequence": "Afsluitprocedure",
+          "sleepMode": "Slaapmodus",
+          "systemMic": "Systeemmicrofoon",
+          "volume": "Volume",
+          "vrchatAvatar": "Avatar",
+          "vrchatGroup": "Groep",
+          "vrchatInvites": "Invites",
+          "vrchatMicMute": "Microfoon dempen",
+          "vrchatStatus": "Status",
+          "windowsPowerPolicy": "Windows energiebeheer"
+        },
+        "groups": {
+          "general": "Algemeen",
+          "hardware": "Hardware",
+          "vrchat": "VRChat"
+        },
+        "hiddenCount": "{count} verborgen",
+        "hideAll": "Alles verbergen",
+        "hiding": "Verborgen",
+        "showAll": "Alles tonen",
+        "showEverything": "Alles weergeven",
+        "shownCount": "{shown} van {total} zichtbaar",
+        "title": "Gebeurtenissen Filteren"
+      },
       "group": {
         "cause": {
           "sleepModeDisabled": "Slaapmodus uitgeschakeld",

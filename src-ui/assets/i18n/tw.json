@@ -672,6 +672,40 @@
         "message": "確定要清除事件紀錄嗎？此操作無法復原。",
         "title": "確認清除"
       },
+      "filters": {
+        "categories": {
+          "bigscreenBeyond": "Bigscreen Beyond",
+          "brightnessCct": "亮度與色溫",
+          "devicePower": "裝置電源",
+          "fadeDistance": "淡出距離",
+          "frameLimiting": "幀率限制",
+          "gpu": "GPU",
+          "resolution": "解析度",
+          "runCommands": "執行命令",
+          "shutdownSequence": "關機流程",
+          "sleepMode": "睡眠模式",
+          "systemMic": "系統麥克風",
+          "volume": "音量",
+          "vrchatAvatar": "角色",
+          "vrchatGroup": "群組",
+          "vrchatInvites": "邀請",
+          "vrchatMicMute": "麥克風靜音",
+          "vrchatStatus": "狀態",
+          "windowsPowerPolicy": "Windows 電源計劃"
+        },
+        "groups": {
+          "general": "通用",
+          "hardware": "硬體",
+          "vrchat": "VRChat"
+        },
+        "hiddenCount": "已隱藏 {count} 項",
+        "hideAll": "全部隱藏",
+        "hiding": "已隱藏",
+        "showAll": "全部顯示",
+        "showEverything": "顯示所有項目",
+        "shownCount": "顯示 {shown}/{total} 項",
+        "title": "篩選事件"
+      },
       "group": {
         "cause": {
           "sleepModeDisabled": "睡眠模式已關閉",

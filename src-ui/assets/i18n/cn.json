@@ -672,6 +672,40 @@
         "message": "你确定要清除事件日志吗？此操作不能撤销。",
         "title": "确认清除"
       },
+      "filters": {
+        "categories": {
+          "bigscreenBeyond": "Bigscreen Beyond",
+          "brightnessCct": "亮度与色温",
+          "devicePower": "设备电源",
+          "fadeDistance": "淡出距离",
+          "frameLimiting": "帧率限制",
+          "gpu": "GPU",
+          "resolution": "分辨率",
+          "runCommands": "运行命令",
+          "shutdownSequence": "关机流程",
+          "sleepMode": "睡眠模式",
+          "systemMic": "系统麦克风",
+          "volume": "音量",
+          "vrchatAvatar": "模型",
+          "vrchatGroup": "群组",
+          "vrchatInvites": "邀请",
+          "vrchatMicMute": "麦克风静音",
+          "vrchatStatus": "状态",
+          "windowsPowerPolicy": "Windows 电源计划"
+        },
+        "groups": {
+          "general": "通用",
+          "hardware": "硬件",
+          "vrchat": "VRChat"
+        },
+        "hiddenCount": "已隐藏 {count} 项",
+        "hideAll": "全部隐藏",
+        "hiding": "已隐藏",
+        "showAll": "全部显示",
+        "showEverything": "显示所有项目",
+        "shownCount": "显示 {shown}/{total} 项",
+        "title": "筛选事件"
+      },
       "group": {
         "cause": {
           "sleepModeDisabled": "睡眠模式已关闭",
