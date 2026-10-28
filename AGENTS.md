@@ -83,6 +83,10 @@ Run the relevant `check:<operation>:<component>` npm scripts for changed code. `
 runs all checks on Windows; `npm run check:quick` runs portable checks. Translation and generated
 README checks are read-only; fix their source files and rerun the relevant generator when needed.
 
+## Tests
+
+Read the TEST-n rules in [REVIEW.md](REVIEW.md) before you write or review a test.
+
 ## Running the app
 
 Start the app with `npm run dev:isolated`. It gives the worktree its own identifier, settings, and
