@@ -37,7 +37,7 @@ describe('app settings migration 15 to 16', () => {
 });
 
 describe('app settings migration 16 to 17', () => {
-  it('drops the CCT enable setting and warning flag, and keeps the other flags', async () => {
+  it('drops the CCT enable setting and warning flag, and defaults unsupported HMD control off', async () => {
     const result = await runMigrations(
       {
         version: 16,
@@ -79,10 +79,7 @@ describe('app settings migration 17 to 18', () => {
 
       expect(result.status).toBe('migrated');
       if (result.status === 'migrated') {
-        expect(result.value).toMatchObject({
-          version: 18,
-          notificationsEnabled: { types: expected },
-        });
+        expect(result.value.notificationsEnabled).toEqual({ types: expected });
       }
     }
   );

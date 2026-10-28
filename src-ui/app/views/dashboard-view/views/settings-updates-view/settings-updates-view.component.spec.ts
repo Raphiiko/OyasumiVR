@@ -20,6 +20,7 @@ type View = {
   FLAVOUR: string;
   updateAvailable: { checked: boolean; update?: { version: string } };
   updateState: string;
+  checkInProgress: boolean;
   updateOrCheck(): Promise<void>;
 };
 
@@ -60,8 +61,17 @@ describe('SettingsUpdatesViewComponent update state', () => {
   });
 
   it('shows installing over every other standalone state', async () => {
-    view.updateAvailable = { checked: true, update: { version: '26.10.0' } };
     installing.set(true);
+    view.updateAvailable = { checked: false };
+    expect(view.updateState).toBe('installing');
+
+    view.updateAvailable = { checked: true };
+    expect(view.updateState).toBe('installing');
+
+    view.updateAvailable = { checked: true, update: { version: '26.10.0' } };
+    expect(view.updateState).toBe('installing');
+
+    view.checkInProgress = true;
     expect(view.updateState).toBe('installing');
   });
 });

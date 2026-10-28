@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { EVENT_LOG_GROUP_GAP, groupEventLog } from './event-log-grouping';
+import { groupEventLog } from './event-log-grouping';
 import type { EventLogEntry } from '../../models/event-log-entry';
 
 let nextId = 0;
+const GROUP_GAP = 60 * 1000;
 const entry = (time: number, fields: Record<string, unknown>) =>
   ({ id: `e${nextId++}`, time, ...fields }) as unknown as EventLogEntry;
 const sleepOn = (time: number) =>
@@ -47,7 +48,7 @@ describe('groupEventLog', () => {
   });
 
   it('splits members further apart than the gap', () => {
-    const items = groupEventLog([gpu(EVENT_LOG_GROUP_GAP + 2000), gpu(1000), brightness(900)]);
+    const items = groupEventLog([gpu(GROUP_GAP + 2000), gpu(1000), brightness(900)]);
     expect(items.map((item) => item.kind)).toEqual(['entry', 'group']);
   });
 
